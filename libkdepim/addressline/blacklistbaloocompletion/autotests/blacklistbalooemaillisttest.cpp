@@ -113,6 +113,4 @@ void BlackListBalooEmailListTest::shouldExcludeDomain()
 
 }
 
-
-
 QTEST_MAIN(BlackListBalooEmailListTest)

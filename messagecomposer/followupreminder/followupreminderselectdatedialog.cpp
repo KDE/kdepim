@@ -87,10 +87,10 @@ FollowUpReminderSelectDateDialog::~FollowUpReminderSelectDateDialog()
 
 void FollowUpReminderSelectDateDialog::updateOkButton()
 {
-    mOkButton->setEnabled( !mDateComboBox->lineEdit()->text().isEmpty()
-                    && mDateComboBox->date().isValid()
-                    && (mCollectionCombobox->count() > 0)
-                    && mCollectionCombobox->currentCollection().isValid());
+    mOkButton->setEnabled(!mDateComboBox->lineEdit()->text().isEmpty()
+                          && mDateComboBox->date().isValid()
+                          && (mCollectionCombobox->count() > 0)
+                          && mCollectionCombobox->currentCollection().isValid());
 }
 
 void FollowUpReminderSelectDateDialog::slotDateChanged()

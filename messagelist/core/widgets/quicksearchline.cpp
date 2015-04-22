@@ -79,7 +79,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     initializeStatusSearchButton(quickSearchButtonLayout);
     vbox->addWidget(mQuickSearchFilterWidget);
 
-    mSearchEdit = new PimCommon::LineEditWithCompleter( this );
+    mSearchEdit = new PimCommon::LineEditWithCompleter(this);
     mSearchEdit->setPlaceholderText(i18nc("Search for messages.", "Search"));
     mSearchEdit->setObjectName(QStringLiteral("quicksearch"));
     mSearchEdit->setClearButtonShown(true);

@@ -33,14 +33,14 @@ LineEditWithCompleter::~LineEditWithCompleter()
 
 }
 
-void LineEditWithCompleter::contextMenuEvent( QContextMenuEvent*e )
+void LineEditWithCompleter::contextMenuEvent(QContextMenuEvent *e)
 {
-   QMenu *popup = KLineEdit::createStandardContextMenu();
-   popup->addSeparator();
-   //KF5 add i18n
-   popup->addAction( QLatin1String( "Clear History" ), this, SLOT(slotClearHistory()) );
-   popup->exec( e->globalPos() );
-   delete popup;
+    QMenu *popup = KLineEdit::createStandardContextMenu();
+    popup->addSeparator();
+    //KF5 add i18n
+    popup->addAction(QLatin1String("Clear History"), this, SLOT(slotClearHistory()));
+    popup->exec(e->globalPos());
+    delete popup;
 }
 
 void LineEditWithCompleter::slotClearHistory()

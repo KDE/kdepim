@@ -58,7 +58,6 @@ QStandardItemModel *FollowupReminderSelectDateDialogTest::defaultItemModel()
     return model;
 }
 
-
 void FollowupReminderSelectDateDialogTest::shouldHaveDefaultValue()
 {
     MessageComposer::FollowUpReminderSelectDateDialog dlg(0, defaultItemModel());

@@ -775,7 +775,7 @@ void AttachmentControllerBase::editAttachment(AttachmentPart::Ptr part, MessageV
         d->editorTempFile[ watcher ] = tempFile;
 
         // Delete the temp file if the composer is closed (and this object is destroyed).
-        tempFile->setParent( this ); // Manages lifetime.
+        tempFile->setParent(this);   // Manages lifetime.
         break;
     }
     case MessageViewer::EditorWatcher::CannotStart:
@@ -888,10 +888,10 @@ void AttachmentControllerBase::showAttachVcard()
 void AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog()
 {
     KEncodingFileDialog::Result result = KEncodingFileDialog::getOpenUrlAndEncoding(QString(),
-             QUrl(),
-             QString(),
-             d->wParent,
-             i18n("Attach Directory"));
+                                         QUrl(),
+                                         QString(),
+                                         d->wParent,
+                                         i18n("Attach Directory"));
     if (!result.URLs.isEmpty()) {
         const QString encoding = MessageViewer::NodeHelper::fixEncoding(result.encoding);
         attachFileDirectory(result.URLs, encoding);

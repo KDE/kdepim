@@ -230,29 +230,29 @@ public:
         return false;
     }
 
-  /**
-   * Internal handler for managing the children list.
-   */
-  void childItemDead( Item * child );
+    /**
+     * Internal handler for managing the children list.
+     */
+    void childItemDead(Item *child);
 
-  Item * const q;
+    Item *const q;
 
-  QList< Item * > *mChildItems;               ///< List of children, may be 0
-  Item * mParent;                             ///< The parent view item
-  time_t mMaxDate;                            ///< The maximum date in the subtree
-  time_t mDate;                               ///< The date of the message (or group date)
-  size_t mSize;                               ///< The size of the message in bytes
-  QString mSender;                            ///< The sender of the message (or group sender)
-  QString mReceiver;                          ///< The receiver of the message (or group receiver)
-  QString mSubject;                           ///< The subject of the message (or group subject)
-  qint64 mItemId;                             ///< The Akonadi item id
-  qint64 mParentCollectionId;                 ///< The Akonadi ID of collection that this particular item comes from (can be virtual collection)
-  Akonadi::MessageStatus mStatus;             ///< The status of the message (may be extended to groups in the future)
-  int mThisItemIndexGuess;                    ///< The guess for the index in the parent's child list
-  Item::Type mType : 4;                       ///< The type of this item
-  Item::InitialExpandStatus mInitialExpandStatus : 4; ///< The expand status we have to honor when we attach to the viewable root
-  bool mIsViewable : 1;                       ///< Is this item attacched to the viewable root ?
-  bool mUseReceiver : 1;                      ///< senderOrReceiver() returns receiver rather than sender
+    QList< Item * > *mChildItems;               ///< List of children, may be 0
+    Item *mParent;                              ///< The parent view item
+    time_t mMaxDate;                            ///< The maximum date in the subtree
+    time_t mDate;                               ///< The date of the message (or group date)
+    size_t mSize;                               ///< The size of the message in bytes
+    QString mSender;                            ///< The sender of the message (or group sender)
+    QString mReceiver;                          ///< The receiver of the message (or group receiver)
+    QString mSubject;                           ///< The subject of the message (or group subject)
+    qint64 mItemId;                             ///< The Akonadi item id
+    qint64 mParentCollectionId;                 ///< The Akonadi ID of collection that this particular item comes from (can be virtual collection)
+    Akonadi::MessageStatus mStatus;             ///< The status of the message (may be extended to groups in the future)
+    int mThisItemIndexGuess;                    ///< The guess for the index in the parent's child list
+    Item::Type mType : 4;                       ///< The type of this item
+    Item::InitialExpandStatus mInitialExpandStatus : 4; ///< The expand status we have to honor when we attach to the viewable root
+    bool mIsViewable : 1;                       ///< Is this item attacched to the viewable root ?
+    bool mUseReceiver : 1;                      ///< senderOrReceiver() returns receiver rather than sender
 };
 
 /**

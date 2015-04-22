@@ -75,10 +75,10 @@ void BlackListBalooEmailList::slotEmailFound(const QStringList &list)
     mFirstResult = true;
     clear();
     QStringList emailsAdded;
-    Q_FOREACH(const QString & mail, list) {
+    Q_FOREACH (const QString &mail, list) {
         bool excludeDomain = false;
         QString email, name;
-        KEmailAddress::extractEmailAddressAndName( mail, email, name );
+        KEmailAddress::extractEmailAddressAndName(mail, email, name);
 
         Q_FOREACH (const QString &domain, mExcludeDomain) {
             if (email.endsWith(domain)) {

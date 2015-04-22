@@ -87,5 +87,4 @@ void SearchRuleStringTest::shouldBeEmpty()
     QVERIFY(!searchrule.isEmpty());
 }
 
-
 QTEST_MAIN(SearchRuleStringTest)

@@ -35,7 +35,7 @@ class MESSAGECOMPOSER_EXPORT FollowUpReminderSelectDateDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderSelectDateDialog(QWidget *parent=Q_NULLPTR, QAbstractItemModel *model = Q_NULLPTR);
+    explicit FollowUpReminderSelectDateDialog(QWidget *parent = Q_NULLPTR, QAbstractItemModel *model = Q_NULLPTR);
     ~FollowUpReminderSelectDateDialog();
 
     QDate selectedDate() const;
