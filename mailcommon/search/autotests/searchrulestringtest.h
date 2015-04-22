@@ -31,6 +31,7 @@ private Q_SLOTS:
     void shouldHaveRequirePart_data();
     void shouldHaveRequirePart();
     void shouldMatchString_data();
+    void shouldBeEmpty();
 };
 
 #endif // SEARCHRULESTRINGTEST_H
