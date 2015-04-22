@@ -113,7 +113,7 @@ void MonitorItem::monitoredMimeTypesChanged()
 {
     const QStringList mimeTypes = mInterface->monitoredMimeTypes();
     monitoredMimeTypes = mimeTypes.join(QLatin1String(", "));
-    Q_EMIT changed(MonitorsModel::MonitorsModel::MonitoredMimeTypesColumn);
+    Q_EMIT changed(MonitorsModel::MonitoredMimeTypesColumn);
 }
 
 void MonitorItem::monitoredResourcesChanged()
@@ -127,7 +127,7 @@ void MonitorItem::monitoredResourcesChanged()
         monitoredResources += list[i];
     }
 
-    Q_EMIT changed(MonitorsModel::MonitorsModel::MonitoredResourcesColumn);
+    Q_EMIT changed(MonitorsModel::MonitoredResourcesColumn);
 }
 
 void MonitorItem::ignoredSessionsChanged()
@@ -141,6 +141,6 @@ void MonitorItem::ignoredSessionsChanged()
         ignoredSessions += list[i];
     }
 
-    Q_EMIT changed(MonitorsModel::MonitorsModel::MonitorsModel::IgnoredSessionsColumn);
+    Q_EMIT changed(MonitorsModel::IgnoredSessionsColumn);
 }
 
