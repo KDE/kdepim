@@ -59,13 +59,13 @@ static QString tzUTCOffsetStr(const KTimeZone &tz)
     QString utcStr;
     if (utcOffsetMins > 0) {
         utcStr = utcOffsetHrs >= 0 ?
-                 QString::fromLatin1("+%1:%2").arg(utcOffsetHrs).arg(utcOffsetMins) :
-                 QString::fromLatin1("%1:%2").arg(utcOffsetHrs).arg(utcOffsetMins);
+                 QStringLiteral("+%1:%2").arg(utcOffsetHrs).arg(utcOffsetMins) :
+                 QStringLiteral("%1:%2").arg(utcOffsetHrs).arg(utcOffsetMins);
 
     } else {
         utcStr = utcOffsetHrs >= 0 ?
-                 QString::fromLatin1("+%1").arg(utcOffsetHrs) :
-                 QString::fromLatin1("%1").arg(utcOffsetHrs);
+                 QStringLiteral("+%1").arg(utcOffsetHrs) :
+                 QStringLiteral("%1").arg(utcOffsetHrs);
     }
     return utcStr;
 }
@@ -74,7 +74,7 @@ static QString tzUTCOffsetStr(const KTimeZone &tz)
 static QString tzWithUTC(KTimeZones::ZoneMap::ConstIterator it)
 {
     return
-        QString::fromLatin1("%1 (UTC%2)").
+        QStringLiteral("%1 (UTC%2)").
         arg(i18n(it.key().toUtf8())).
         arg(tzUTCOffsetStr(it.value()));
 }

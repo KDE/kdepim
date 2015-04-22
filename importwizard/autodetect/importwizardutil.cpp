@@ -42,38 +42,38 @@ void ImportWizardUtil::mergeLdap(const ldapStruct &ldap)
     }
     const int port = ldap.port;
     if (port != -1) {
-        grp.writeEntry(QString::fromLatin1("SelectedPort%1").arg(numberOfLdapSelected), port);
+        grp.writeEntry(QStringLiteral("SelectedPort%1").arg(numberOfLdapSelected), port);
     }
-    grp.writeEntry(QString::fromLatin1("SelectedHost%1").arg(numberOfLdapSelected), ldap.ldapUrl.host());
+    grp.writeEntry(QStringLiteral("SelectedHost%1").arg(numberOfLdapSelected), ldap.ldapUrl.host());
     if (ldap.useSSL) {
-        grp.writeEntry(QString::fromLatin1("SelectedSecurity%1").arg(numberOfLdapSelected), QString::fromLatin1("SSL"));
+        grp.writeEntry(QStringLiteral("SelectedSecurity%1").arg(numberOfLdapSelected), QStringLiteral("SSL"));
     } else if (ldap.useTLS) {
-        grp.writeEntry(QString::fromLatin1("SelectedSecurity%1").arg(numberOfLdapSelected), QString::fromLatin1("TLS"));
+        grp.writeEntry(QStringLiteral("SelectedSecurity%1").arg(numberOfLdapSelected), QStringLiteral("TLS"));
     } else {
-        grp.writeEntry(QString::fromLatin1("SelectedSecurity%1").arg(numberOfLdapSelected), QString::fromLatin1("None"));
+        grp.writeEntry(QStringLiteral("SelectedSecurity%1").arg(numberOfLdapSelected), QStringLiteral("None"));
     }
 
     if (ldap.saslMech == QLatin1String("GSSAPI")) {
-        grp.writeEntry(QString::fromLatin1("SelectedMech%1").arg(numberOfLdapSelected), QString::fromLatin1("GSSAPI"));
-        grp.writeEntry(QString::fromLatin1("SelectedAuth%1").arg(numberOfLdapSelected), QString::fromLatin1("SASL"));
+        grp.writeEntry(QStringLiteral("SelectedMech%1").arg(numberOfLdapSelected), QStringLiteral("GSSAPI"));
+        grp.writeEntry(QStringLiteral("SelectedAuth%1").arg(numberOfLdapSelected), QStringLiteral("SASL"));
     } else if (ldap.saslMech.isEmpty()) {
-        grp.writeEntry(QString::fromLatin1("SelectedMech%1").arg(numberOfLdapSelected), QString::fromLatin1("PLAIN"));
-        grp.writeEntry(QString::fromLatin1("SelectedAuth%1").arg(numberOfLdapSelected), QString::fromLatin1("Simple"));
+        grp.writeEntry(QStringLiteral("SelectedMech%1").arg(numberOfLdapSelected), QStringLiteral("PLAIN"));
+        grp.writeEntry(QStringLiteral("SelectedAuth%1").arg(numberOfLdapSelected), QStringLiteral("Simple"));
     } else {
         qCDebug(IMPORTWIZARD_LOG) << " Mech SASL undefined" << ldap.saslMech;
     }
-    grp.writeEntry(QString::fromLatin1("SelectedVersion%1").arg(numberOfLdapSelected), QString::number(3));
-    grp.writeEntry(QString::fromLatin1("SelectedBind%1").arg(numberOfLdapSelected), ldap.dn);
+    grp.writeEntry(QStringLiteral("SelectedVersion%1").arg(numberOfLdapSelected), QString::number(3));
+    grp.writeEntry(QStringLiteral("SelectedBind%1").arg(numberOfLdapSelected), ldap.dn);
     //TODO: Verify selectedbase
-    grp.writeEntry(QString::fromLatin1("SelectedBase%1").arg(numberOfLdapSelected), ldap.ldapUrl.path());
+    grp.writeEntry(QStringLiteral("SelectedBase%1").arg(numberOfLdapSelected), ldap.ldapUrl.path());
     if (ldap.timeout != -1) {
-        grp.writeEntry(QString::fromLatin1("SelectedTimeLimit%1").arg(numberOfLdapSelected), ldap.timeout);
+        grp.writeEntry(QStringLiteral("SelectedTimeLimit%1").arg(numberOfLdapSelected), ldap.timeout);
     }
     if (ldap.limit != -1) {
-        grp.writeEntry(QString::fromLatin1("SelectedSizeLimit%1").arg(numberOfLdapSelected), ldap.limit);
+        grp.writeEntry(QStringLiteral("SelectedSizeLimit%1").arg(numberOfLdapSelected), ldap.limit);
     }
     if (!ldap.password.isEmpty()) {
-        storeInKWallet(QString::fromLatin1("SelectedPwdBind%1").arg(numberOfLdapSelected), ImportWizardUtil::Ldap, ldap.password);
+        storeInKWallet(QStringLiteral("SelectedPwdBind%1").arg(numberOfLdapSelected), ImportWizardUtil::Ldap, ldap.password);
     }
     grp.sync();
 }

@@ -159,13 +159,13 @@ QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const
     QString str;
     switch (type) {
     case Year:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(), 4, 10, QLatin1Char('0'));
+        str = QStringLiteral("%1").arg(mDateValue->value(), 4, 10, QLatin1Char('0'));
         break;
     case Month:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(), 2, 10, QLatin1Char('0'));
+        str = QStringLiteral("%1").arg(mDateValue->value(), 2, 10, QLatin1Char('0'));
         break;
     case Day:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(), 2, 10, QLatin1Char('0'));
+        str = QStringLiteral("%1").arg(mDateValue->value(), 2, 10, QLatin1Char('0'));
         break;
     case Date:
         str = mDateEdit->date().toString();
@@ -175,13 +175,13 @@ QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const
         str = mDateEdit->date().toString();
         break;
     case Hour:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(), 2, 10, QLatin1Char('0'));
+        str = QStringLiteral("%1").arg(mDateValue->value(), 2, 10, QLatin1Char('0'));
         break;
     case Minute:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(), 2, 10, QLatin1Char('0'));
+        str = QStringLiteral("%1").arg(mDateValue->value(), 2, 10, QLatin1Char('0'));
         break;
     case Second:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(), 2, 10, QLatin1Char('0'));
+        str = QStringLiteral("%1").arg(mDateValue->value(), 2, 10, QLatin1Char('0'));
         break;
     case Time:
         str = mTimeEdit->time().toString();
@@ -196,7 +196,7 @@ QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const
         str = mDateEdit->date().toString();
         break;
     case Weekday:
-        str = QString::fromLatin1("%1").arg(mDateValue->value());
+        str = QStringLiteral("%1").arg(mDateValue->value());
         break;
     }
     return str;
@@ -286,7 +286,7 @@ QString SelectDateWidget::dateType(SelectDateWidget::DateType type) const
 QString SelectDateWidget::code() const
 {
     const DateType type = mDateType->itemData(mDateType->currentIndex()).value<KSieveUi::SelectDateWidget::DateType>();
-    return QString::fromLatin1("\"%1\" \"%2\"").arg(dateType(type)).arg(dateValue(type));
+    return QStringLiteral("\"%1\" \"%2\"").arg(dateType(type)).arg(dateValue(type));
 }
 
 void SelectDateWidget::setCode(const QString &type, const QString &value)

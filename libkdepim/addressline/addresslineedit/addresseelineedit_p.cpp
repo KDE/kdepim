@@ -129,11 +129,11 @@ void AddresseeLineEditPrivate::init()
              */
 
 #if 0
-            s_static->ldapSearch->setFilter(QString::fromLatin1("&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
+            s_static->ldapSearch->setFilter(QStringLiteral("&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
                                             "(|(cn=%1*)(mail=%1*)(mail=*@%1*)(givenName=%1*)(sn=%1*))"));
 #endif
             //Fix bug 323272 "Exchange doesn't like any queries beginning with *."
-            s_static->ldapSearch->setFilter(QString::fromLatin1("&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
+            s_static->ldapSearch->setFilter(QStringLiteral("&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
                                             "(|(cn=%1*)(mail=%1*)(givenName=%1*)(sn=%1*))"));
 
         }
