@@ -69,6 +69,7 @@ private Q_SLOTS:
     void slotAutomaticFilterDouble(QListWidgetItem *item);
     void slotDeleteList(const QString &listName);
 private:
+    void updateCheckBox();
     void addManualFilter(const QString &text);
     void showAutomaticFilterList(QListWidgetItem *item);
     enum List {

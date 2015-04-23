@@ -241,6 +241,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
         QString stringRule = in.readLine();
         addManualFilter(stringRule);
     }
+    updateCheckBox();
 }
 
 
@@ -301,12 +302,16 @@ void AdBlockSettingWidget::save()
     AdBlockManager::self()->reloadConfig();
 }
 
-
-void AdBlockSettingWidget::hasChanged()
+void AdBlockSettingWidget::updateCheckBox()
 {
     // update enabled status
     checkHideAds->setEnabled(checkEnableAdblock->isChecked());
     tabWidget->setEnabled(checkEnableAdblock->isChecked());
+}
+
+void AdBlockSettingWidget::hasChanged()
+{
+    updateCheckBox();
     mChanged = true;
     emit changed(true);
 }
