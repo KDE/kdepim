@@ -30,6 +30,7 @@ private Q_SLOTS:
     void shouldHaveRequirePart();
     void shouldMatchStatus();
     void shouldMatchStatus_data();
+    void shouldBeEmpty();
 };
 
 #endif // SEARCHRULESTATUSTEST_H
