@@ -80,8 +80,6 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     QLabel *formatLabel = new QLabel(i18n("F&ormat:"), mainWidget);
     formatLabel->setObjectName(QStringLiteral("label_format"));
     mainLayout->addWidget(formatLabel, row, 0);
-    mFormatComboBox = new FormatComboBox(mainWidget);
-    formatLabel->setBuddy(mFormatComboBox);
 
     mFormatComboBox = new FormatComboBox(mainWidget);
     mainLayout->addWidget(mFormatComboBox, row, 1);
