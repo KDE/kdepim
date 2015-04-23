@@ -72,8 +72,8 @@ namespace
 QString formatInputOutputLabel(const QString &input, const QString &output, bool inputDeleted, bool outputDeleted)
 {
     return i18nc("Input file --> Output file (rarr is arrow", "%1 &rarr; %2",
-                 inputDeleted ? QString::fromLatin1("<s>%1</s>").arg(input.toHtmlEscaped()) : input.toHtmlEscaped(),
-                 outputDeleted ? QString::fromLatin1("<s>%1</s>").arg(output.toHtmlEscaped()) : output.toHtmlEscaped());
+                 inputDeleted ? QStringLiteral("<s>%1</s>").arg(input.toHtmlEscaped()) : input.toHtmlEscaped(),
+                 outputDeleted ? QStringLiteral("<s>%1</s>").arg(output.toHtmlEscaped()) : output.toHtmlEscaped());
 }
 
 class ErrorResult : public Task::Result
@@ -82,21 +82,21 @@ public:
     ErrorResult(bool sign, bool encrypt, const Error &err, const QString &errStr, const QString &input, const QString &output, const AuditLog &auditLog)
         : Task::Result(), m_sign(sign), m_encrypt(encrypt), m_error(err), m_errString(errStr), m_inputLabel(input), m_outputLabel(output), m_auditLog(auditLog) {}
 
-    /* reimp */ QString overview() const;
-    /* reimp */ QString details() const;
-    /* reimp */ int errorCode() const
+    /* reimp */ QString overview() const Q_DECL_OVERRIDE;
+    /* reimp */ QString details() const Q_DECL_OVERRIDE;
+    /* reimp */ int errorCode() const Q_DECL_OVERRIDE
     {
         return m_error.encodedError();
     }
-    /* reimp */ QString errorString() const
+    /* reimp */ QString errorString() const Q_DECL_OVERRIDE
     {
         return m_errString;
     }
-    /* reimp */ VisualCode code() const
+    /* reimp */ VisualCode code() const Q_DECL_OVERRIDE
     {
         return NeutralError;
     }
-    /* reimp */ AuditLog auditLog() const
+    /* reimp */ AuditLog auditLog() const Q_DECL_OVERRIDE
     {
         return m_auditLog;
     }

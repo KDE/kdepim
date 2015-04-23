@@ -159,7 +159,7 @@ void GrantleePrintTest::shouldDisplayContactInfo()
     address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-SpousesName") , QString(QStringLiteral("foo-spousesname")));
 
     lst << address;
-    grantleePrint->setContent(QString::fromLatin1("{% if contacts %}{% for contact in contacts %}{% if contact.%1 %}{{ contact.%1 }}{% endif %}{% endfor %}{% endif %}").arg(variable));
+    grantleePrint->setContent(QStringLiteral("{% if contacts %}{% for contact in contacts %}{% if contact.%1 %}{{ contact.%1 }}{% endif %}{% endfor %}{% endif %}").arg(variable));
 
     QCOMPARE(grantleePrint->contactsToHtml(lst), result);
     grantleePrint->deleteLater();

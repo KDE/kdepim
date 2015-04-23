@@ -70,12 +70,12 @@ public:
     EncryptEMailResult(const EncryptionResult &r, const AuditLog &auditLog)
         : Task::Result(), m_result(r), m_auditLog(auditLog) {}
 
-    /* reimp */ QString overview() const;
-    /* reimp */ QString details() const;
-    /* reimp */ int errorCode() const;
-    /* reimp */ QString errorString() const;
-    /* reimp */ VisualCode code() const;
-    /* reimp */ AuditLog auditLog() const;
+    /* reimp */ QString overview() const Q_DECL_OVERRIDE;
+    /* reimp */ QString details() const Q_DECL_OVERRIDE;
+    /* reimp */ int errorCode() const Q_DECL_OVERRIDE;
+    /* reimp */ QString errorString() const Q_DECL_OVERRIDE;
+    /* reimp */ VisualCode code() const Q_DECL_OVERRIDE;
+    /* reimp */ AuditLog auditLog() const Q_DECL_OVERRIDE;
 };
 
 QString makeResultString(const EncryptionResult &res)

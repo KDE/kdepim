@@ -51,7 +51,7 @@ QString ContactGrantleePrintGeoObject::toString() const
 {
     QString result;
     if (mGeo.isValid()) {
-        result = QString::fromLatin1("%1 %2, %3 %2").arg(mGeo.latitude()).arg(QChar(176)).arg(mGeo.longitude());
+        result = QStringLiteral("%1 %2, %3 %2").arg(mGeo.latitude()).arg(QChar(176)).arg(mGeo.longitude());
     }
     return result;
 }

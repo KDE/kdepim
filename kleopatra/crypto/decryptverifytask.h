@@ -115,18 +115,18 @@ public:
     void setProtocol(GpgME::Protocol prot);
     void autodetectProtocolFromInput();
 
-    /* reimp */ QString label() const;
+    /* reimp */ QString label() const Q_DECL_OVERRIDE;
 
-    /* reimp */ GpgME::Protocol protocol() const;
+    /* reimp */ GpgME::Protocol protocol() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
-    /* reimp */ void cancel();
+    /* reimp */ void cancel() Q_DECL_OVERRIDE;
 
 private:
-    /* reimp */ void doStart();
-    /* reimp */ QString inputLabel() const;
-    /* reimp */ QString outputLabel() const;
-    /* reimp */ unsigned long long inputSize() const;
+    /* reimp */ void doStart() Q_DECL_OVERRIDE;
+    /* reimp */ QString inputLabel() const Q_DECL_OVERRIDE;
+    /* reimp */ QString outputLabel() const Q_DECL_OVERRIDE;
+    /* reimp */ unsigned long long inputSize() const Q_DECL_OVERRIDE;
 
 private:
     class Private;
@@ -145,20 +145,20 @@ public:
     void setSignedData(const boost::shared_ptr<Input> &signedData);
 
     void setProtocol(GpgME::Protocol prot);
-    void autodetectProtocolFromInput();
+    void autodetectProtocolFromInput() Q_DECL_OVERRIDE;
 
-    /* reimp */ QString label() const;
+    /* reimp */ QString label() const Q_DECL_OVERRIDE;
 
-    /* reimp */ GpgME::Protocol protocol() const;
+    /* reimp */ GpgME::Protocol protocol() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
-    /* reimp */ void cancel();
+    /* reimp */ void cancel() Q_DECL_OVERRIDE;
 
 private:
-    /* reimp */ void doStart();
-    /* reimp */ QString inputLabel() const;
-    /* reimp */ QString outputLabel() const;
-    /* reimp */ unsigned long long inputSize() const;
+    /* reimp */ void doStart() Q_DECL_OVERRIDE;
+    /* reimp */ QString inputLabel() const Q_DECL_OVERRIDE;
+    /* reimp */ QString outputLabel() const Q_DECL_OVERRIDE;
+    /* reimp */ unsigned long long inputSize() const Q_DECL_OVERRIDE;
 
 private:
     class Private;
