@@ -76,7 +76,7 @@ QString CustomHeaderStyle::format(KMime::Message *message) const
         return headerStr + QLatin1String("</div>");
     }
 
-    headerStr = QString::fromLatin1("<div class=\"header\" dir=\"%1\">").arg(dir);
+    headerStr = QStringLiteral("<div class=\"header\" dir=\"%1\">").arg(dir);
 
     Q_FOREACH (const QString &headerToDisplay, headersToDisplay) {
         if (headerToDisplay.toLower() == QLatin1String("subject")) {

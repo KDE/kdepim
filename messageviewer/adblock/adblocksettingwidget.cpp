@@ -267,7 +267,7 @@ void AdBlockSettingWidget::save()
     const int numberItem(automaticFiltersListWidget->count());
     for (int i = 0; i < numberItem; ++i) {
         QListWidgetItem *subItem = automaticFiltersListWidget->item(i);
-        KConfigGroup grp = config.group(QString::fromLatin1("FilterList %1").arg(i));
+        KConfigGroup grp = config.group(QStringLiteral("FilterList %1").arg(i));
         grp.writeEntry(QLatin1String("FilterEnabled"), subItem->checkState() == Qt::Checked);
         grp.writeEntry(QLatin1String("url"), subItem->data(UrlList).toString());
         grp.writeEntry(QLatin1String("name"), subItem->text());

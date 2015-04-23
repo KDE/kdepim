@@ -51,7 +51,7 @@ PartNodeBodyPart::PartNodeBodyPart(KMime::Content *topLevelContent, KMime::Conte
 QString PartNodeBodyPart::makeLink(const QString &path) const
 {
     // FIXME: use a PRNG for the first arg, instead of a serial number
-    return QString::fromLatin1("x-kmail:/bodypart/%1/%2/%3")
+    return QStringLiteral("x-kmail:/bodypart/%1/%2/%3")
            .arg(serial++).arg(mContent->index().toString())
            .arg(QString::fromLatin1(QUrl::toPercentEncoding(path, "/")));
 }
