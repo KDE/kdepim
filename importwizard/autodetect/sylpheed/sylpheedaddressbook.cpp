@@ -23,7 +23,6 @@
 #include <KLocalizedString>
 
 #include <QDir>
-#include "importwizard_debug.h"
 #include <QDomDocument>
 
 SylpheedAddressBook::SylpheedAddressBook(const QDir &dir, ImportWizard *parent)

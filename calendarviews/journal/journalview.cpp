@@ -34,7 +34,6 @@
 #include "calendarview_debug.h"
 #include <QEvent>
 #include <QScrollArea>
-#include <QVBoxLayout>
 
 using namespace EventViews;
 

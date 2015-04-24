@@ -50,7 +50,6 @@
 #include <KLocalizedString>
 #include <QSaveFile>
 #include <kguiitem.h>
-#include <QDebug>
 #include <ktextedit.h>
 
 #include <qtextstream.h>

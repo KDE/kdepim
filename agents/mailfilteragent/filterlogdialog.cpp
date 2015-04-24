@@ -46,11 +46,9 @@
 #include <QSpinBox>
 #include <QStringList>
 #include <QGroupBox>
-#include <QVBoxLayout>
 
 #include <errno.h>
 #include <KSharedConfig>
-#include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QDialogButtonBox>
 #include <KConfigGroup>

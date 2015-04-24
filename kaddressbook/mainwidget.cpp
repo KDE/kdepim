@@ -68,7 +68,6 @@
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Contact/StandardContactActionManager>
 
-#include <KContacts/Addressee>
 #include <KContacts/ContactGroup>
 #include "kaddressbook_debug.h"
 #include <KCmdLineArgs>
@@ -89,7 +88,6 @@
 #include <KIconLoader>
 #include <KMessageBox>
 
-#include <QAction>
 #include <QActionGroup>
 #include <QHBoxLayout>
 #include <QHeaderView>

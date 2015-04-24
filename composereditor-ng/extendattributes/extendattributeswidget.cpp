@@ -29,7 +29,6 @@
 
 #include <QTreeWidget>
 #include <QVBoxLayout>
-#include <QLineEdit>
 #include <QWebElement>
 
 namespace ComposerEditorNG

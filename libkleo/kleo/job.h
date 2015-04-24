@@ -38,8 +38,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#include "kleo_export.h"
-
 #include <gpgme++/error.h>
 
 class QWidget;

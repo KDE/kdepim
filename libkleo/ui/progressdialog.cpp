@@ -40,7 +40,6 @@
 
 #include "kleo/job.h"
 
-#include <QDebug>
 #include <KLocalizedString>
 
 #include <QTimer>

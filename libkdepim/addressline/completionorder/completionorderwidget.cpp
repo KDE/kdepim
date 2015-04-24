@@ -43,7 +43,6 @@
 #include <QVBoxLayout>
 #include <QToolButton>
 #include <QDBusConnection>
-#include <QHBoxLayout>
 
 using namespace KPIM;
 

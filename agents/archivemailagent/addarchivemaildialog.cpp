@@ -31,7 +31,6 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QCheckBox>
-#include <QSpinBox>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>

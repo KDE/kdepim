@@ -51,7 +51,6 @@
 #include <boost/bind.hpp>
 #include <errno.h>
 #include <KSharedConfig>
-#include <KLocalizedString>
 #include <QLocale>
 
 using namespace MailCommon;

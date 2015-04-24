@@ -29,8 +29,6 @@
 #include <KMessageBox>
 #include <QFileDialog>
 #include <KRecentFilesAction>
-#include <KLocalizedString>
-#include <KLocalizedString>
 #include <KConfigGroup>
 
 #include <KNS3/KNewStuffAction>

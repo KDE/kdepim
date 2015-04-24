@@ -36,7 +36,6 @@
 #include <KConfigGroup>
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
-#include <QPushButton>
 
 #include "mixedtreemodel.h"
 

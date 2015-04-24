@@ -40,7 +40,6 @@
 #include <QPrintDialog>
 #include <QSplitter>
 #include <QStackedWidget>
-#include <QVBoxLayout>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>

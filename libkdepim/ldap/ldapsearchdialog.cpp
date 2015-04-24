@@ -54,7 +54,6 @@
 #include <kldap/ldapserver.h>
 #include <qlineedit.h>
 #include <kmessagebox.h>
-#include <QPushButton>
 
 #include <KLocale>
 #include <KConfigGroup>

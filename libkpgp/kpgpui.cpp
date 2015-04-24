@@ -44,7 +44,6 @@
 #include <QScrollBar>
 #include <QAbstractTextDocumentLayout>
 
-#include <QVBoxLayout>
 #include <kconfiggroup.h>
 #include <KLocalizedString>
 #include <kpassworddialog.h>

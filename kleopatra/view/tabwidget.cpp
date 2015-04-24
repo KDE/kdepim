@@ -56,7 +56,6 @@
 
 #include <QTreeView>
 #include <QToolButton>
-#include <QAction>
 #include <QMenu>
 #include <QVBoxLayout>
 

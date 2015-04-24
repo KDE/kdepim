@@ -36,7 +36,6 @@
 #include <QHBoxLayout>
 #include <QDir>
 #include <QPointer>
-#include "contactthemeeditor_debug.h"
 #include <QFileDialog>
 
 ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)

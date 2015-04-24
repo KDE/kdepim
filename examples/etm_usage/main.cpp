@@ -23,7 +23,6 @@
 #include <KAboutData>
 
 #include <QApplication>
-#include <KLocalizedString>
 #include <QCommandLineParser>
 
 #include "mainwindow.h"

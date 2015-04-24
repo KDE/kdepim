@@ -38,11 +38,9 @@
 #include <KToolBar>
 #include <QIcon>
 
-#include <QAction>
 #include <QFileInfo>
 #include <QWebElement>
 #include <QContextMenuEvent>
-#include "composereditorng_debug.h"
 #include <QStandardPaths>
 
 namespace ComposerEditorNG

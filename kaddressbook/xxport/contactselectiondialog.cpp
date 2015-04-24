@@ -24,7 +24,6 @@
 #include <KLocalizedString>
 #include <QDialogButtonBox>
 #include <QPushButton>
-#include <QVBoxLayout>
 
 ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionModel, bool allowToSelectTypeToExport,
         QWidget *parent)

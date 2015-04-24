@@ -52,7 +52,6 @@
 // KDE
 #include <KLocalizedString>
 #include <kiconloader.h>
-#include <QDebug>
 #include <kwindowsystem.h>
 #include <kconfig.h>
 #include <kmessagebox.h>

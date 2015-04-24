@@ -66,7 +66,6 @@
 #include <QDebug>
 #include <KLocalizedString>
 #include <KLocale>
-#include <KLocalizedString>
 
 #include <QByteArray>
 #include <QDateTime>

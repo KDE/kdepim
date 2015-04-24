@@ -31,7 +31,6 @@
 #include <QPushButton>
 #include <QApplication>
 #include <KAboutData>
-#include <KLocalizedString>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 

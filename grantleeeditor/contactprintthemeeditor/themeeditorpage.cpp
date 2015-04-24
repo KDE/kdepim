@@ -36,7 +36,6 @@
 #include <QHBoxLayout>
 #include <QDir>
 #include <QPointer>
-#include "contactprintthemeeditor_debug.h"
 #include <QFileDialog>
 
 ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)

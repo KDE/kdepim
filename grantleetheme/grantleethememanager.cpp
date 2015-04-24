@@ -31,7 +31,6 @@
 #include <QIcon>
 
 #include <QDir>
-#include <QAction>
 #include <QDirIterator>
 #include <QActionGroup>
 #include <QStandardPaths>

@@ -50,7 +50,7 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags flags) :
     const bool showPersonalDataPage = Global::typeFilter().size() == 1 && Global::typeFilter().first() == KMime::Message::mimeType();
 
     if (showPersonalDataPage) {
-        // todo: dont ask these details based on a setting of the desktop file.
+        // todo: don't ask these details based on a setting of the desktop file.
         PersonalDataPage *pdpage = new PersonalDataPage(this);
         addPage(pdpage, i18n("Provide personal data"));
         connect(pdpage, &PersonalDataPage::manualWanted, this, &Dialog::slotManualConfigWanted);

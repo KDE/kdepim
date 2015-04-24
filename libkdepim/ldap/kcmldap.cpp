@@ -38,7 +38,6 @@
 #include <QHBoxLayout>
 #include <kiconloader.h>
 #include <KLocalizedString>
-#include <QVBoxLayout>
 #include <KMessageBox>
 
 #include "ldapclientsearch.h"

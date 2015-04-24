@@ -22,7 +22,6 @@
 #include <KCalCore/ICalTimeZones>
 
 #include <KLocalizedString>
-#include <KLocalizedString>
 #include <KSystemTimeZone>
 
 using namespace IncidenceEditorNG;

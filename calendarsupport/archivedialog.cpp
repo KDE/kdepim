@@ -44,7 +44,6 @@
 #include <QCheckBox>
 #include <QFrame>
 #include <QGroupBox>
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QRadioButton>
 #include <QVBoxLayout>

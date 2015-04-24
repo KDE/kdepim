@@ -54,12 +54,10 @@
 #include <QIcon>
 #include <KStandardShortcut>
 
-#include <QAction>
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 #include <QWebFrame>
 #include <QWebElement>
-#include "composereditorng_debug.h"
 #include <QPointer>
 #include <QPrinter>
 #include <QPrintDialog>

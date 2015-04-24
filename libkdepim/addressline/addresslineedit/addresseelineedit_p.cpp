@@ -38,7 +38,6 @@
 
 #include <ldap/ldapclientsearch.h>
 #include <solid/networking.h>
-#include <AkonadiCore/Job>
 #include <addressline/addresslineedit/baloocompletionemail.h>
 #include <akonadi/contact/contactsearchjob.h>
 

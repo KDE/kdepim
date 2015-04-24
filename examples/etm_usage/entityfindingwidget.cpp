@@ -31,7 +31,6 @@
 #include <QListView>
 #include <QTreeView>
 #include <kselectionproxymodel.h>
-#include <QTreeView>
 #include <QLabel>
 #include <QSortFilterProxyModel>
 
