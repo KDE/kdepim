@@ -43,8 +43,8 @@ int main(int argc, char **argv)
                          QStringLiteral("0.99"),
                          i18n("The Management and Debugging Console for Akonadi"),
                          KAboutLicense::GPL,
-                         i18n("(c) 2006-2014 the Akonadi developer"),
-                         QStringLiteral("http://pim.kde.org/akonadi/"));
+                         i18n("(c) 2006-2015 the Akonadi developer"),
+                         QStringLiteral("https://community.kde.org/KDE_PIM/akonadi"));
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
     aboutData.addAuthor(i18n("Tobias König"), i18n("Author"), QStringLiteral("tokoe@kde.org"));
     aboutData.addAuthor(i18n("Volker Krause"),  i18n("Author"), QStringLiteral("vkrause@kde.org"));
