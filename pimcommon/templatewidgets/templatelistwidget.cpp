@@ -139,7 +139,7 @@ public:
 
     void slotImportTemplates()
     {
-        const QString templateFile = QFileDialog::getOpenFileName();
+        const QString templateFile = QFileDialog::getOpenFileName(q);
         if (!templateFile.isEmpty()) {
             KConfig conf(templateFile, KConfig::SimpleConfig);
             loadTemplates(&conf);
@@ -148,7 +148,7 @@ public:
 
     void slotExportTemplates()
     {
-        const QString templateFile = QFileDialog::getSaveFileName();
+        const QString templateFile = QFileDialog::getSaveFileName(q);
         if (!templateFile.isEmpty()) {
             KConfig conf(templateFile, KConfig::SimpleConfig);
             saveTemplates(&conf);

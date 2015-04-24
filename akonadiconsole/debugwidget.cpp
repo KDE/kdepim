@@ -215,7 +215,7 @@ void DebugWidget::saveRichText()
         return;
     }
 
-    const QString fileName = QFileDialog::getSaveFileName();
+    const QString fileName = QFileDialog::getSaveFileName(this);
     if (fileName.isEmpty()) {
         return;
     }
