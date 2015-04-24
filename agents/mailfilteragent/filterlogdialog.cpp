@@ -78,7 +78,9 @@ FilterLogDialog::FilterLogDialog(QWidget *parent)
     KGuiItem::assign(mUser1Button, KStandardGuiItem::clear());
     KGuiItem::assign(mUser2Button, KStandardGuiItem::saveAs());
     QFrame *page = new QFrame(this);
-    QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
+
+    QVBoxLayout *pageVBoxLayout = new QVBoxLayout;
+    page->setLayout(pageVBoxLayout);
     pageVBoxLayout->setMargin(0);
     mainLayout->addWidget(page);
 
@@ -151,7 +153,8 @@ FilterLogDialog::FilterLogDialog(QWidget *parent)
     //    i18n( "" ) );
 
     QWidget *hbox = new QWidget(page);
-    QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+    QHBoxLayout *hboxHBoxLayout = new QHBoxLayout;
+    hbox->setLayout(hboxHBoxLayout);
     hboxHBoxLayout->setMargin(0);
     pageVBoxLayout->addWidget(hbox);
     QLabel *logSizeLab = new QLabel(i18n("Log size limit:"), hbox);
