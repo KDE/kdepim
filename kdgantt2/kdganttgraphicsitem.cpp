@@ -110,9 +110,7 @@ GraphicsItem::~GraphicsItem()
 
 void GraphicsItem::init()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(4,4,0)
     setCacheMode(QGraphicsItem::DeviceCoordinateCache);
-#endif
     setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
     setAcceptsHoverEvents(true);
     setHandlesChildEvents(true);

@@ -46,10 +46,6 @@
 #include <algorithm>
 #include <cassert>
 
-/* Older Qt dont have this macro, so define it... */
-#ifndef QT_VERSION_CHECK
-#  define QT_VERSION_CHECK(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
-#endif
 
 /*!\class KDGantt::GraphicsScene
  * \internal
@@ -604,11 +600,7 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &_rect)
         opt.rect = labelsTabRect.toRect();
         opt.text = "";
         opt.textAlignment = Qt::AlignCenter;
-#if QT_VERSION >= QT_VERSION_CHECK(4, 4, 0)
         style()->drawControl(QStyle::CE_Header, &opt, painter, 0);
-#else
-        QApplication::style()->drawControl(QStyle::CE_Header, &opt, painter, 0);
-#endif
         scn.setTop(headerRect.bottom());
         scn.setLeft(headerRect.left());
         rect = rect.intersected(scn);
@@ -729,19 +721,11 @@ void GraphicsScene::doPrint(QPainter *painter, const QRectF &targetRect,
 #ifndef _WIN32_WCE
     assert(painter);
     d->isPrinting = true;
-#if QT_VERSION >= QT_VERSION_CHECK(4, 4, 0)
     QFont sceneFont(font());
     if (printer) {
         sceneFont = QFont(font(), printer);
         sceneFont.setPixelSize(font().pointSize());
     }
-#else
-    QFont sceneFont(painter->font());
-    if (printer) {
-        sceneFont = QFont(painter->font(), printer);
-        sceneFont.setPixelSize(painter->font().pointSize());
-    }
-#endif
 
     const QRectF oldScnRect(sceneRect());
     QRectF scnRect(oldScnRect);
