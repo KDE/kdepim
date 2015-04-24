@@ -89,7 +89,7 @@ public:
     qreal dateTimeToChartX(const QDateTime &dt) const;
     QDateTime chartXtoDateTime(qreal x) const;
 
-    int tabHeight(const QString &txt, QWidget *widget = 0) const;
+    int tabHeight(const QString &txt, QWidget *widget = Q_NULLPTR) const;
     void getAutomaticFormatters(DateTimeScaleFormatter **lower, DateTimeScaleFormatter **upper);
 
     void paintVerticalDayLines(QPainter *painter,
