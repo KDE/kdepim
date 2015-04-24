@@ -69,7 +69,7 @@ void AdBlockBlockableItemTestDialog::slotLoadFinished()
 
 void AdBlockBlockableItemTestDialog::slotOpenHtml()
 {
-    const QString fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.html"));
+    const QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), QLatin1String("*.html"));
     if (!fileName.isEmpty()) {
         mProgress->start();
         page.mainFrame()->load(QUrl::fromLocalFile(fileName));

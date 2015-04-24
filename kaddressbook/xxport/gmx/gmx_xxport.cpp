@@ -125,7 +125,7 @@ ContactList GMXXXPort::importContacts() const
 {
     ContactList contactList;
     QString fileName =
-        QFileDialog::getOpenFileName(Q_NULLPTR, QString(), QDir::homePath(), GMX_FILESELECTION_STRING);
+        QFileDialog::getOpenFileName(parentWidget(), QString(), QDir::homePath(), GMX_FILESELECTION_STRING);
 
     if (fileName.isEmpty()) {
         return contactList;

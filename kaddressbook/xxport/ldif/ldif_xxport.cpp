@@ -66,7 +66,7 @@ LDIFXXPort::LDIFXXPort(QWidget *parentWidget)
 ContactList LDIFXXPort::importContacts() const
 {
     ContactList contactList;
-    const QString fileName = QFileDialog::getOpenFileName(Q_NULLPTR , QString(),  QDir::homePath(), QLatin1String("text/x-ldif"));
+    const QString fileName = QFileDialog::getOpenFileName(parentWidget() , QString(),  QDir::homePath(), QLatin1String("text/x-ldif"));
     if (fileName.isEmpty()) {
         return contactList;
     }
