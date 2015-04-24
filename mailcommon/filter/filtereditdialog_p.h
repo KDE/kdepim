@@ -36,7 +36,7 @@ class FilterEditDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FilterEditDialog(QWidget *parent = 0);
+    explicit FilterEditDialog(QWidget *parent = Q_NULLPTR);
     virtual ~FilterEditDialog();
 
     void load(int index);

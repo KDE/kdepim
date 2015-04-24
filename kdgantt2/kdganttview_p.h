@@ -55,7 +55,7 @@ class KDGanttTreeView;
 class KDGanttTreeView : public QTreeView
 {
 public:
-    explicit KDGanttTreeView(QAbstractProxyModel *proxy, QWidget *parent = 0);
+    explicit KDGanttTreeView(QAbstractProxyModel *proxy, QWidget *parent = Q_NULLPTR);
     virtual ~KDGanttTreeView();
 
     AbstractRowController *rowController()

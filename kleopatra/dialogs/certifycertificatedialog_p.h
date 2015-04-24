@@ -94,7 +94,7 @@ class SelectUserIDsPage : public QWizardPage
 {
     Q_OBJECT
 public:
-    explicit SelectUserIDsPage(QWidget *parent = 0);
+    explicit SelectUserIDsPage(QWidget *parent = Q_NULLPTR);
     /* reimp */ bool isComplete() const;
 
     void setSelectedUserIDs(const std::vector<unsigned int> &indexes);
@@ -116,7 +116,7 @@ class SelectCheckLevelPage : public QWizardPage
 {
     Q_OBJECT
 public:
-    explicit SelectCheckLevelPage(QWidget *parent = 0);
+    explicit SelectCheckLevelPage(QWidget *parent = Q_NULLPTR);
     unsigned int checkLevel() const;
 private:
     Ui::SelectCheckLevelWidget m_ui;
@@ -126,7 +126,7 @@ class OptionsPage : public QWizardPage
 {
     Q_OBJECT
 public:
-    explicit OptionsPage(QWidget *parent = 0);
+    explicit OptionsPage(QWidget *parent = Q_NULLPTR);
 
     bool exportableCertificationSelected() const;
     void setCertificatesWithSecretKeys(const std::vector<GpgME::Key> &keys);
@@ -148,7 +148,7 @@ class SummaryPage : public QWizardPage
 {
     Q_OBJECT
 public:
-    explicit SummaryPage(QWidget *parent = 0);
+    explicit SummaryPage(QWidget *parent = Q_NULLPTR);
     /* reimp */ bool isComplete() const;
     void setComplete(bool complete);
 

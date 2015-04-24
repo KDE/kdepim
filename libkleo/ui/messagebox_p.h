@@ -48,7 +48,7 @@ class AuditLogViewer : public KDialog
 {
     Q_OBJECT
 public:
-    explicit AuditLogViewer(const QString &log, QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit AuditLogViewer(const QString &log, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
 
     ~AuditLogViewer();
 

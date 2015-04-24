@@ -74,7 +74,7 @@ class CryptoConfigComponentGUI : public QWidget
 
 public:
     CryptoConfigComponentGUI(CryptoConfigModule *module, Kleo::CryptoConfigComponent *component,
-                             QWidget *parent = 0);
+                             QWidget *parent = Q_NULLPTR);
 
     bool save();
     void load();
@@ -94,7 +94,7 @@ class CryptoConfigGroupGUI : public QObject
 
 public:
     CryptoConfigGroupGUI(CryptoConfigModule *module, Kleo::CryptoConfigGroup *group,
-                         QGridLayout *layout, QWidget *parent = 0);
+                         QGridLayout *layout, QWidget *parent = Q_NULLPTR);
 
     bool save();
     void load();
@@ -179,7 +179,7 @@ public:
                               Kleo::CryptoConfigEntry *entry,
                               const QString &entryName,
                               QGridLayout *layout,
-                              QWidget *parent = 0);
+                              QWidget *parent = Q_NULLPTR);
 
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
@@ -195,7 +195,7 @@ class CryptoConfigEntryDebugLevel : public CryptoConfigEntryGUI
     Q_OBJECT
 public:
     CryptoConfigEntryDebugLevel(CryptoConfigModule *module, Kleo::CryptoConfigEntry *entry,
-                                const QString &entryName, QGridLayout *layout, QWidget *parent = 0);
+                                const QString &entryName, QGridLayout *layout, QWidget *parent = Q_NULLPTR);
 
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
@@ -215,7 +215,7 @@ public:
                           Kleo::CryptoConfigEntry *entry,
                           const QString &entryName,
                           QGridLayout *layout,
-                          QWidget *parent = 0);
+                          QWidget *parent = Q_NULLPTR);
 
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
@@ -236,7 +236,7 @@ public:
                              Kleo::CryptoConfigEntry *entry,
                              const QString &entryName,
                              QGridLayout *layout,
-                             QWidget *parent = 0);
+                             QWidget *parent = Q_NULLPTR);
 
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
@@ -257,7 +257,7 @@ public:
                          Kleo::CryptoConfigEntry *entry,
                          const QString &entryName,
                          QGridLayout *layout,
-                         QWidget *parent = 0);
+                         QWidget *parent = Q_NULLPTR);
 
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
@@ -279,7 +279,7 @@ public:
                              Kleo::CryptoConfigEntry *entry,
                              const QString &entryName,
                              QGridLayout *layout,
-                             QWidget *parent = 0);
+                             QWidget *parent = Q_NULLPTR);
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
 private:
@@ -299,7 +299,7 @@ public:
                               Kleo::CryptoConfigEntry *entry,
                               const QString &entryName,
                               QGridLayout *layout,
-                              QWidget *parent = 0);
+                              QWidget *parent = Q_NULLPTR);
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
 private:
@@ -318,7 +318,7 @@ public:
                              Kleo::CryptoConfigEntry *entry,
                              const QString &entryName,
                              QGridLayout *layout,
-                             QWidget *parent = 0);
+                             QWidget *parent = Q_NULLPTR);
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
 private Q_SLOTS:
@@ -342,7 +342,7 @@ public:
                                Kleo::CryptoConfigEntry *entry,
                                const QString &entryName,
                                QGridLayout *layout,
-                               QWidget *parent = 0);
+                               QWidget *parent = Q_NULLPTR);
     /* reimp */ void doSave();
     /* reimp */ void doLoad();
 private Q_SLOTS:
