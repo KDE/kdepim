@@ -75,7 +75,7 @@ void NotificationMonitor::contextMenu(const QPoint & /*pos*/)
 
 void NotificationMonitor::slotSaveToFile()
 {
-    const QString fileName = QFileDialog::getSaveFileName(Q_NULLPTR, QString(), QString(), QString());
+    const QString fileName = QFileDialog::getSaveFileName(this);
     if (fileName.isEmpty()) {
         return;
     }
