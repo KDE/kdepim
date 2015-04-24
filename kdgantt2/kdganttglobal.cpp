@@ -26,7 +26,6 @@
 
 using namespace KDGantt;
 
-
 /*!\enum KDGantt::ItemDataRole
  *\ingroup KDGantt
  * The values of this enum are used for the special data roles

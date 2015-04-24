@@ -52,7 +52,6 @@ int main(int argc, char **argv)
     migrate.setUiFiles(QStringList() << QStringLiteral("kwatchgnupgui.rc"));
     migrate.migrate();
 
-
     KLocalizedString::setApplicationDomain("kwatchgnupg");
     AboutData aboutData;
 

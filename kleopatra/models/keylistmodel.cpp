@@ -370,7 +370,7 @@ public:
     using Base::index;
     /* reimp */ QModelIndex index(int row, int column, const QModelIndex &pidx = QModelIndex()) const Q_DECL_OVERRIDE
     {
-        return this->hasIndex( row, column, pidx ) ? this->createIndex( row, column, Q_NULLPTR ) : QModelIndex() ;
+        return this->hasIndex(row, column, pidx) ? this->createIndex(row, column, Q_NULLPTR) : QModelIndex() ;
     }
 
 private:

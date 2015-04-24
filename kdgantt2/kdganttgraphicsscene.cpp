@@ -46,7 +46,6 @@
 #include <algorithm>
 #include <cassert>
 
-
 /*!\class KDGantt::GraphicsScene
  * \internal
  */

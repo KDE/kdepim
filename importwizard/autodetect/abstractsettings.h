@@ -65,7 +65,6 @@ protected:
 
     void addComposerHeaderGroup(const QString &groupName, const QString &name, const QString &value);
 
-
     void addCheckMailOnStartup(const QString &agentIdentifyName, bool loginAtStartup);
     void addToManualCheck(const QString &agentIdentifyName, bool manualCheck);
     int readKmailSettings(const QString &groupName, const QString &key);

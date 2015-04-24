@@ -83,10 +83,12 @@ EditorWatcher::ErrorEditorWatcher EditorWatcher::start()
         if (dlgrc && dlg) {
             offer = dlg->service();
         }
-        if ( !dlgrc )
+        if (!dlgrc) {
             return Canceled;
-        if ( !offer )
+        }
+        if (!offer) {
             return NoServiceFound;
+        }
     }
 
 #ifdef HAVE_SYS_INOTIFY_H
@@ -112,8 +114,9 @@ EditorWatcher::ErrorEditorWatcher EditorWatcher::start()
     mEditor->setProgram(params);
     connect(mEditor, static_cast<void (KProcess::*)(int, QProcess::ExitStatus)>(&KProcess::finished), this, &EditorWatcher::editorExited);
     mEditor->start();
-    if ( !mEditor->waitForStarted() )
+    if (!mEditor->waitForStarted()) {
         return CannotStart;
+    }
     mEditorRunning = true;
 
     mEditTime.start();

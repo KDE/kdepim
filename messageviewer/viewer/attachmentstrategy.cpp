@@ -305,7 +305,7 @@ const AttachmentStrategy *AttachmentStrategy::create(Type type)
     case HeaderOnly: return headerOnly();
     }
     qCCritical(MESSAGEVIEWER_LOG) << "Unknown attachment startegy ( type =="
-                << (int)type << ") requested!";
+                                  << (int)type << ") requested!";
     return 0; // make compiler happy
 }
 

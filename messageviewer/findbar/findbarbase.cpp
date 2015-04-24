@@ -194,13 +194,13 @@ void FindBarBase::addToCompletion(const QString &text)
 
 void FindBarBase::findNext()
 {
-    searchText( false, false );
+    searchText(false, false);
     addToCompletion(mLastSearchStr);
 }
 
 void FindBarBase::findPrev()
 {
-    searchText( true, false );
+    searchText(true, false);
     addToCompletion(mLastSearchStr);
 }
 
