@@ -36,7 +36,7 @@ class AddHostDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AddHostDialog(KLDAP::LdapServer *server, QWidget *parent = 0);
+    explicit AddHostDialog(KLDAP::LdapServer *server, QWidget *parent = Q_NULLPTR);
     ~AddHostDialog();
 
 Q_SIGNALS:
