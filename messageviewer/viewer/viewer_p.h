@@ -285,7 +285,7 @@ public:
 
     /** Creates a nice mail header depending on the current selected
     header style. */
-    QString writeMsgHeader(KMime::Message *aMsg, KMime::Content *vCardNode = 0,
+    QString writeMsgHeader(KMime::Message *aMsg, KMime::Content *vCardNode = Q_NULLPTR,
                            bool topLevel = false);
 
     /** show window containing information about a vCard. */

@@ -45,7 +45,7 @@ public:
     void stopLDAPLookup();
     void setCompletedItems(const QStringList &items, bool autoSuggest);
     void addCompletionItem(const QString &string, int weight, int source,
-                           const QStringList *keyWords = 0);
+                           const QStringList *keyWords = Q_NULLPTR);
     const QStringList adjustedCompletionItems(bool fullSearch);
     void updateSearchString();
     void startSearches();

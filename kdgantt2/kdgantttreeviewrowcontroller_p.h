@@ -40,11 +40,7 @@ public:
     {
     public:
         using QTreeView::verticalOffset;
-#if QT_VERSION >= 0x040300
         using QTreeView::rowHeight;
-#else
-        using QTreeView::indexRowSizeHint;
-#endif
     };
     HackTreeView *treeview;
     QAbstractProxyModel *proxy;
