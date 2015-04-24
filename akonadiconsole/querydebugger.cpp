@@ -215,7 +215,7 @@ QueryDebugger::QueryDebugger(QWidget *parent):
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    QHBoxLayout *checkBoxLayout = new QHBoxLayout(this);
+    QHBoxLayout *checkBoxLayout = new QHBoxLayout;
 
     QCheckBox *enableCB = new QCheckBox(this);
     enableCB->setText("Enable query debugger (slows down server!)");

@@ -68,7 +68,7 @@ JobTrackerWidget::JobTrackerWidget(const char *name, QWidget *parent, const QStr
     layout->addWidget(tv);
     d->model->setEnabled(false);   // since it can be slow, default to off
 
-    QHBoxLayout *layout2 = new QHBoxLayout(this);
+    QHBoxLayout *layout2 = new QHBoxLayout;
     QPushButton *button = new QPushButton(QStringLiteral("Save to file..."), this);
     connect(button, SIGNAL(clicked(bool)),
             this, SLOT(slotSaveToFile()));
