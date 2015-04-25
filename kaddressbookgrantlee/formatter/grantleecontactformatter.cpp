@@ -134,14 +134,14 @@ static QVariantHash phoneNumberHash(const KContacts::PhoneNumber &phoneNumber, i
 
     if (!phoneNumber.isEmpty()) {
         const QString url =
-            QString::fromLatin1("<a href=\"phone:?index=%1\">%2</a>").
+            QStringLiteral("<a href=\"phone:?index=%1\">%2</a>").
             arg(counter).
             arg(phoneNumber.number());
         numberObject.insert(QLatin1String("numberLink"), url);
 
         if (phoneNumber.type() & KContacts::PhoneNumber::Cell) {
             const QString url =
-                QString::fromLatin1("<a href=\"sms:?index=%1\"><img src=\"sms_icon\" align=\"top\"/></a>").arg(counter);
+                QStringLiteral("<a href=\"sms:?index=%1\"><img src=\"sms_icon\" align=\"top\"/></a>").arg(counter);
             numberObject.insert(QLatin1String("smsLink"), url);
         }
     }
