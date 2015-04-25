@@ -33,14 +33,17 @@ class DateTimeGrid;
 class GraphicsView;
 }
 
-class KComboBox;
+namespace KPIM
+{
+class FreeBusyItemModel;
+}
 
+class KComboBox;
 class QTreeView;
 
 namespace IncidenceEditorNG
 {
 
-class FreeBusyItemModel;
 class FreeBusyGanttProxyModel;
 class RowController;
 
@@ -48,7 +51,7 @@ class INCIDENCEEDITORS_NG_EXPORT VisualFreeBusyWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit VisualFreeBusyWidget(FreeBusyItemModel *model, int spacing = 8, QWidget *parent = Q_NULLPTR);
+    explicit VisualFreeBusyWidget(KPIM::FreeBusyItemModel *model, int spacing = 8, QWidget *parent = Q_NULLPTR);
     ~VisualFreeBusyWidget();
 
 public Q_SLOTS:

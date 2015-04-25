@@ -578,10 +578,8 @@ void IncidenceDateTime::load(const KCalCore::Event::Ptr &event, bool isTemplate,
     mUi->mEndCheck->setChecked(true);   // Set to checked so we can reuse enableTimeEdits.
 
     // Start time
-    connect(mUi->mStartTimeEdit, SIGNAL(timeChanged(QTime)),  // when editing with mouse, or up/down arrows
-            SLOT(updateStartTime(QTime)));
-    connect(mUi->mStartTimeEdit, SIGNAL(timeEdited(QTime)),  // When editing with any key except up/down
-            SLOT(updateStartTime(QTime)));
+    connect(mUi->mStartTimeEdit, &KDateComboBox::timeChanged, this, &IncidenceDateTime::updateStartTime);  // when editing with mouse, or up/down arrows
+    connect(mUi->mStartTimeEdit, &KDateComboBox::timeEdited, this, &IncidenceDateTime::updateStartTime);  // When editing with any key except up/down
     connect(mUi->mStartDateEdit, &KDateComboBox::dateChanged, this, &IncidenceDateTime::updateStartDate);
     connect(mUi->mTimeZoneComboStart, static_cast<void (IncidenceEditorNG::KTimeZoneComboBox::*)(int)>(&IncidenceEditorNG::KTimeZoneComboBox::currentIndexChanged), this, &IncidenceDateTime::updateStartSpec);
     // End time

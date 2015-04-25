@@ -30,6 +30,7 @@
 #include "incidencedatetime.h"
 #include "incidencedescription.h"
 #include "incidencerecurrence.h"
+#include "incidenceresource.h"
 #include "incidencesecrecy.h"
 #include "incidencewhatwhere.h"
 #include "templatemanagementdialog.h"
@@ -67,6 +68,7 @@ namespace IncidenceEditorNG
 enum Tabs {
     GeneralTab = 0,
     AttendeesTab,
+    ResourcesTab,
     AlarmsTab,
     RecurrenceTab,
     AttachmentsTab
@@ -87,6 +89,7 @@ public:
     IncidenceDateTime *mIeDateTime;
     IncidenceAttendee *mIeAttendee;
     IncidenceRecurrence *mIeRecurrence;
+    IncidenceResource *mIeResource;
     bool mInitiallyDirty;
     Akonadi::Item mItem;
     QString typeToString(const int type) const;
@@ -104,6 +107,7 @@ public:
     void storeTemplatesInConfig(const QStringList &newTemplates);
     void updateAttachmentCount(int newCount);
     void updateAttendeeCount(int newCount);
+    void updateResourceCount(int newCount);
     void updateButtonStatus(bool isDirty);
     void showMessage(const QString &text, KMessageWidget::MessageType type);
     void slotInvalidCollection();
@@ -132,7 +136,7 @@ IncidenceDialogPrivate::IncidenceDialogPrivate(Akonadi::IncidenceChanger *change
       mCalSelector(new Akonadi::CollectionComboBox),
       mCloseOnSave(false),
       mItemManager(new EditorItemManager(this, changer)),
-      mEditor(new CombinedIncidenceEditor),
+      mEditor(new CombinedIncidenceEditor(qq)),
       mInitiallyDirty(false)
 {
     Q_Q(IncidenceDialog);
@@ -174,7 +178,11 @@ IncidenceDialogPrivate::IncidenceDialogPrivate(Akonadi::IncidenceChanger *change
     mEditor->combine(ieSecrecy);
 
     mIeAttendee = new IncidenceAttendee(qq, mIeDateTime, mUi);
+    mIeAttendee->setParent(qq);
     mEditor->combine(mIeAttendee);
+
+    mIeResource = new IncidenceResource(mIeAttendee, mIeDateTime, mUi);
+    mEditor->combine(mIeResource);
 
     q->connect(mEditor, SIGNAL(showMessage(QString,KMessageWidget::MessageType)),
                SLOT(showMessage(QString,KMessageWidget::MessageType)));
@@ -192,6 +200,8 @@ IncidenceDialogPrivate::IncidenceDialogPrivate(Akonadi::IncidenceChanger *change
                SLOT(updateAttachmentCount(int)));
     q->connect(mIeAttendee, SIGNAL(attendeeCountChanged(int)),
                SLOT(updateAttendeeCount(int)));
+    q->connect(mIeResource, SIGNAL(resourceCountChanged(int)),
+               SLOT(updateResourceCount(int)));
 }
 
 IncidenceDialogPrivate::~IncidenceDialogPrivate()
@@ -438,6 +448,21 @@ void IncidenceDialogPrivate::updateAttendeeCount(int newCount)
     }
 }
 
+void IncidenceDialogPrivate::updateResourceCount(int newCount)
+{
+    if (newCount > 0) {
+        mUi->mTabWidget->setTabText(
+            ResourcesTab,
+            i18nc("@title:tab Tab to modify attendees of an event or todo",
+                  "&Resources (%1)", newCount));
+    } else {
+        mUi->mTabWidget->setTabText(
+            ResourcesTab,
+            i18nc("@title:tab Tab to modify attendees of an event or todo",
+                  "&Resources"));
+    }
+}
+
 void IncidenceDialogPrivate::updateButtonStatus(bool isDirty)
 {
     Q_Q(IncidenceDialog);
@@ -487,6 +512,7 @@ void IncidenceDialogPrivate::handleItemSaveFinish(EditorItemManager::SaveAction 
         // Now the item is succesfull saved, reload it in the editor in order to
         // reset the dirty status of the editor.
         mEditor->load(item.payload<KCalCore::Incidence::Ptr>());
+        mEditor->load(item);
 
         // Set the buttons to a reasonable state as well (ok and apply should be
         // disabled at this point).
@@ -538,14 +564,16 @@ void IncidenceDialogPrivate::load(const Akonadi::Item &item)
     Q_ASSERT(hasSupportedPayload(item));
 
     if (CalendarSupport::hasJournal(item)) {
-        //mUi->mTabWidget->removeTab( 5 );
+        //mUi->mTabWidget->removeTab(5);
         mUi->mTabWidget->removeTab(AttachmentsTab);
         mUi->mTabWidget->removeTab(RecurrenceTab);
         mUi->mTabWidget->removeTab(AlarmsTab);
         mUi->mTabWidget->removeTab(AttendeesTab);
+        mUi->mTabWidget->removeTab(ResourcesTab);
     }
 
     mEditor->load(CalendarSupport::incidence(item));
+    mEditor->load(item);
 
     const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
     const QStringList allEmails = IncidenceEditorNG::EditorConfig::instance()->allEmails();
@@ -564,8 +592,8 @@ void IncidenceDialogPrivate::load(const Akonadi::Item &item)
     qCDebug(INCIDENCEEDITOR_LOG) << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
                                  << "; storage " << item.storageCollectionId();
 
-    if (item.parentCollection().isValid()) {
-        mCalSelector->setDefaultCollection(item.parentCollection());
+    if (item.storageCollectionId() > -1) {
+        mCalSelector->setDefaultCollection(Akonadi::Collection(item.storageCollectionId()));
     }
 
     if (!mCalSelector->mimeTypeFilter().contains("text/calendar") ||
@@ -583,6 +611,8 @@ void IncidenceDialogPrivate::load(const Akonadi::Item &item)
 
     // Initialize tab's titles
     updateAttachmentCount(incidence->attachments().size());
+    updateResourceCount(mIeResource->resourceCount());
+    updateAttendeeCount(mIeAttendee->attendeeCount());
     handleRecurrenceChange(mIeRecurrence->currentRecurrenceType());
     handleAlarmCountChange(incidence->alarms().count());
 
@@ -608,6 +638,7 @@ Akonadi::Item IncidenceDialogPrivate::save(const Akonadi::Item &item)
     newIncidence->setRelatedTo(incidenceInEditor->relatedTo());
 
     mEditor->save(newIncidence);
+    mEditor->save(result);
 
     // TODO: Remove this once we support moving of events/todo's
     mCalSelector->setEnabled(false);

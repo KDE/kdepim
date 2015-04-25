@@ -38,9 +38,7 @@ AutoCheckTreeWidget::AutoCheckTreeWidget(QWidget *parent)
 {
     connect(model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SLOT(slotRowsInserted(QModelIndex,int,int)));
-    connect(model(),
-            SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this,
+    connect(model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
             SLOT(slotDataChanged(QModelIndex,QModelIndex)));
 
     setColumnCount(2);

@@ -20,7 +20,7 @@
 
 #include "visualfreebusywidget.h"
 #include "freebusyganttproxymodel.h"
-#include "freebusyitemmodel.h"
+#include "freebusymodel/freebusyitemmodel.h"
 
 #include <kdgantt2/kdganttgraphicsview.h>
 #include <kdgantt2/kdganttview.h>
@@ -149,7 +149,7 @@ public:
 
 }
 
-VisualFreeBusyWidget::VisualFreeBusyWidget(FreeBusyItemModel *model, int spacing, QWidget *parent)
+VisualFreeBusyWidget::VisualFreeBusyWidget(KPIM::FreeBusyItemModel *model, int spacing, QWidget *parent)
     : QWidget(parent), mGanttGrid(0), mScaleCombo(0)
 {
     QVBoxLayout *topLayout = new QVBoxLayout(this);

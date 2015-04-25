@@ -40,7 +40,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit IncidenceDialog(Akonadi::IncidenceChanger *changer = 0,
+    explicit IncidenceDialog(Akonadi::IncidenceChanger *changer = Q_NULLPTR,
                              QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = 0);
     ~IncidenceDialog();
 
@@ -113,6 +113,7 @@ private:
     Q_PRIVATE_SLOT(d_ptr, void storeTemplatesInConfig(QStringList))
     Q_PRIVATE_SLOT(d_ptr, void updateAttachmentCount(int))
     Q_PRIVATE_SLOT(d_ptr, void updateAttendeeCount(int))
+    Q_PRIVATE_SLOT(d_ptr, void updateResourceCount(int))
     Q_PRIVATE_SLOT(d_ptr, void updateButtonStatus(bool))
     Q_PRIVATE_SLOT(d_ptr, void showMessage(QString, KMessageWidget::MessageType))
     Q_PRIVATE_SLOT(d_ptr, void slotInvalidCollection())

@@ -27,8 +27,7 @@ using namespace IncidenceEditorNG;
 AttendeeEditor::AttendeeEditor(QWidget *parent)
     : MultiplyingLineEditor(new AttendeeLineFactory(parent), parent)
 {
-    connect(this, SIGNAL(lineAdded(KPIM::MultiplyingLine*)),
-            SLOT(slotLineAdded(KPIM::MultiplyingLine*)));
+    connect(this, &AttendeeEditor::lineAdded, this, &AttendeeEditor::slotLineAdded);
 
     addData();
 }
@@ -40,11 +39,9 @@ void AttendeeEditor::slotLineAdded(KPIM::MultiplyingLine *line)
         return;
     }
 
-    connect(att, SIGNAL(changed()), SLOT(slotCalculateTotal()));
-    connect(att, SIGNAL(changed(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)),
-            SIGNAL(changed(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)));
-    connect(att, SIGNAL(editingFinished(KPIM::MultiplyingLine*)),
-            SIGNAL(editingFinished(KPIM::MultiplyingLine*)));
+    connect(att, &AttendeeLine::changed, this, &AttendeeEditor::slotCalculateTotal);
+    connect(att, &AttendeeLine::changed, this, &AttendeeEditor::changed);
+    connect(att, &AttendeeLine::editingFinished, this, &AttendeeEditor::editingFinished);
 }
 
 void AttendeeEditor::slotCalculateTotal()

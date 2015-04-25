@@ -140,7 +140,7 @@ public:
     /**
       Return QLabel used by this control element.
     */
-    QLabel *label();
+    QLabel *label() const;
 
     /**
       Return the QSpinBox used by this control element.
@@ -453,11 +453,18 @@ public:
     void writeConfig() Q_DECL_OVERRIDE;
 
     KComboBox *comboBox();
+
     QList<QWidget *> widgets() const Q_DECL_OVERRIDE;
+    /**
+      Return QLabel used by this control element.
+    */
+    QLabel *label() const;
+
 
 private:
     KConfigSkeleton::ItemEnum *mItem;
     KComboBox *mCombo;
+    QLabel *mLabel;
 };
 
 /**

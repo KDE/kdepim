@@ -44,30 +44,33 @@ IncidenceCategories::IncidenceCategories(Ui::EventOrTodoDesktop *ui)
 {
     setObjectName("IncidenceCategories");
 
-#ifdef KDEPIM_MOBILE_UI
-    connect(mUi->mSelectCategoriesButton, &QPushButton::clicked, this, &IncidenceCategories::selectCategories);
-#else
-    connect(mUi->mTagWidget, &KPIM::TagWidget::selectionChanged, this, &IncidenceCategories::onSelectionChanged);
-#endif
+    connect(mUi->mTagWidget, &Akonadi::TagWidget::selectionChanged, this, &IncidenceCategories::onSelectionChanged);
 }
 
-void IncidenceCategories::onSelectionChanged(const QStringList &list)
+void IncidenceCategories::onSelectionChanged(const Akonadi::Tag::List &list)
 {
-    mSelectedCategories = list;
+    mSelectedTags = list;
+    mDirty = true;
     checkDirtyStatus();
 }
 
 void IncidenceCategories::load(const KCalCore::Incidence::Ptr &incidence)
 {
     mLoadedIncidence = incidence;
+    mDirty = false;
     if (mLoadedIncidence) {
         checkForUnknownCategories(mLoadedIncidence->categories());
-        setCategories(mLoadedIncidence->categories());
     } else {
-        setCategories(QStringList());
+        mSelectedTags.clear();
     }
 
     mWasDirty = false;
+}
+
+void IncidenceCategories::load(const Akonadi::Item &item)
+{
+    mSelectedTags = item.tags();
+    mUi->mTagWidget->setSelection(item.tags());
 }
 
 void IncidenceCategories::save(const KCalCore::Incidence::Ptr &incidence)
@@ -76,45 +79,25 @@ void IncidenceCategories::save(const KCalCore::Incidence::Ptr &incidence)
     incidence->setCategories(categories());
 }
 
+void IncidenceCategories::save(Akonadi::Item &item)
+{
+    if (item.tags() != mSelectedTags) {
+        item.setTags(mSelectedTags);
+    }
+}
+
 QStringList IncidenceCategories::categories() const
 {
-    return mSelectedCategories;
+    QStringList list;
+    Q_FOREACH (const Akonadi::Tag &tag, mSelectedTags) {
+        list << tag.name();
+    }
+    return list;
 }
 
 bool IncidenceCategories::isDirty() const
 {
-    // If no Incidence was loaded, mSelectedCategories should be empty.
-    bool categoriesEqual = categories().isEmpty();
-
-    if (mLoadedIncidence) {   // There was an Incidence loaded
-        categoriesEqual =
-            (mLoadedIncidence->categories().toSet() == categories().toSet());
-    }
-    return !categoriesEqual;
-}
-
-void IncidenceCategories::selectCategories()
-{
-    QPointer<KPIM::TagSelectionDialog> dialog(new KPIM::TagSelectionDialog());
-    dialog->setSelection(categories());
-    dialog->exec();
-
-    if (dialog) {
-        setCategories(dialog->selection());
-        delete dialog;
-    }
-}
-
-void IncidenceCategories::setCategories(const QStringList &categories)
-{
-    mSelectedCategories = categories;
-#ifdef KDEPIM_MOBILE_UI
-    mUi->mCategoriesLabel->setText(mSelectedCategories.join(QStringLiteral(",")));
-#else
-    mUi->mTagWidget->setSelection(categories);
-#endif
-
-    checkDirtyStatus();
+    return mDirty;
 }
 
 void IncidenceCategories::printDebugInfo() const
@@ -125,12 +108,9 @@ void IncidenceCategories::printDebugInfo() const
 
 void IncidenceCategories::checkForUnknownCategories(const QStringList &categoriesToCheck)
 {
-#ifndef KDEPIM_MOBILE_UI // desktop only
     foreach (const QString &category, categoriesToCheck) {
-        Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(category), this);
+        Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag::genericTag(category), this);
         tagCreateJob->setMergeIfExisting(true);
+        //TODO add the missing tags to the item and add them to the list of selected tags in the widget
     }
-#else
-    Q_UNUSED(categoriesToCheck);
-#endif
 }

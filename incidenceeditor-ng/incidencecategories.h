@@ -36,19 +36,12 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
 {
     Q_OBJECT
 public:
-#ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceCategories(Ui::EventOrTodoMore *ui);
-#else
     explicit IncidenceCategories(Ui::EventOrTodoDesktop *ui);
-#endif
 
     void load(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    void load(const Akonadi::Item &item) Q_DECL_OVERRIDE;
     void save(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
-
-    /**
-     * Sets the currently selected categories.
-     */
-    void setCategories(const QStringList &categories);
+    void save(Akonadi::Item &item) Q_DECL_OVERRIDE;
 
     /**
      * Returns the list of currently selected categories.
@@ -60,8 +53,7 @@ public:
     void printDebugInfo() const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-    void selectCategories();
-    void onSelectionChanged(const QStringList &);
+    void onSelectionChanged(const Akonadi::Tag::List &);
 
 private:
 
@@ -73,12 +65,9 @@ private:
      * */
     void checkForUnknownCategories(const QStringList &categoriesToCheck);
 
-    QStringList mSelectedCategories;
-#ifdef KDEPIM_MOBILE_UI
-    Ui::EventOrTodoMore *mUi;
-#else
     Ui::EventOrTodoDesktop *mUi;
-#endif
+    Akonadi::Tag::List mSelectedTags;
+    bool mDirty;
 };
 
 }

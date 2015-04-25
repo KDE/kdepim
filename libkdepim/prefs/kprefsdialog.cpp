@@ -174,7 +174,7 @@ void KPrefsWidInt::writeConfig()
     mItem->setValue(mSpin->value());
 }
 
-QLabel *KPrefsWidInt::label()
+QLabel *KPrefsWidInt::label() const
 {
     return mLabel;
 }
@@ -490,7 +490,7 @@ KPrefsWidCombo::KPrefsWidCombo(KConfigSkeleton::ItemEnum *item, QWidget *parent)
     QWidget *hbox = new QWidget(parent);
     QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
     hboxHBoxLayout->setMargin(0);
-    new QLabel(mItem->label(), hbox);
+    mLabel = new QLabel(mItem->label(), hbox);
     mCombo = new KComboBox(hbox);
     hboxHBoxLayout->addWidget(mCombo);
     connect(mCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &KPrefsWidCombo::changed);
@@ -520,6 +520,11 @@ QList<QWidget *> KPrefsWidCombo::widgets() const
 KComboBox *KPrefsWidCombo::comboBox()
 {
     return mCombo;
+}
+
+QLabel *KPrefsWidCombo::label() const
+{
+    return mLabel;
 }
 
 KPrefsWidString::KPrefsWidString(KConfigSkeleton::ItemString *item, QWidget *parent,

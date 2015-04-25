@@ -93,12 +93,9 @@ AttachmentEditDialog::AttachmentEditDialog(AttachmentIconItem *item,
                                          item->attachment()->size(), 0)));
     }
 
-    connect(mUi->mInlineCheck, SIGNAL(stateChanged(int)),
-            SLOT(inlineChanged(int)));
-    connect(mUi->mURLRequester, SIGNAL(urlSelected(QUrl)),
-            SLOT(urlChanged(QUrl)));
-    connect(mUi->mURLRequester, SIGNAL(textChanged(QString)),
-            SLOT(urlChanged(QString)));
+    connect(mUi->mInlineCheck, &QCheckBox::stateChanged, this, &AttachmentEditDialog::inlineChanged);
+    connect(mUi->mURLRequester, &KUrlRequester::urlSelected, this, &AttachmentEditDialog::urlChanged);
+    connect(mUi->mURLRequester, &KUrlRequester::textChanged, this, &AttachmentEditDialog::urlChanged);
 }
 
 AttachmentEditDialog::~AttachmentEditDialog()

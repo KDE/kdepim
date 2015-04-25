@@ -103,6 +103,10 @@ void AttendeeComboBox::keyPressEvent(QKeyEvent *ev)
         emit leftPressed();
     } else if (ev->key() == Qt::Key_Right) {
         emit rightPressed();
+    } else if (!mMenu->isVisible() && (
+                   ev->key() == Qt::Key_Down ||
+                   ev->key() == Qt::Key_Space))  {
+        showMenu();
     } else {
         QToolButton::keyPressEvent(ev);
     }
@@ -210,35 +214,30 @@ AttendeeLine::AttendeeLine(QWidget *parent)
     topLayout->addWidget(mStateCombo);
     topLayout->addWidget(mResponseCombo);
 
-    connect(mEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
-    connect(mEdit, SIGNAL(deleteMe()),
-            SLOT(slotPropagateDeletion()), Qt::QueuedConnection);
-    connect(mEdit, SIGNAL(textChanged(QString)),
-            SLOT(slotTextChanged(QString)), Qt::QueuedConnection);
-    connect(mEdit, SIGNAL(upPressed()), SLOT(slotFocusUp()));
-    connect(mEdit, SIGNAL(downPressed()), SLOT(slotFocusDown()));
+    connect(mEdit, &AttendeeLineEdit::returnPressed, this, &AttendeeLine::slotReturnPressed);
+    connect(mEdit, &AttendeeLineEdit::deleteMe, this, &AttendeeLine::slotPropagateDeletion, Qt::QueuedConnection);
+    connect(mEdit, &AttendeeLineEdit::textChanged, this, &AttendeeLine::slotTextChanged, Qt::QueuedConnection);
+    connect(mEdit, &AttendeeLineEdit::upPressed, this, &AttendeeLine::slotFocusUp);
+    connect(mEdit, &AttendeeLineEdit::downPressed, this, &AttendeeLine::slotFocusDown);
 
-    connect(mRoleCombo, SIGNAL(rightPressed()), mEdit, SLOT(setFocus()));
-    connect(mEdit, SIGNAL(leftPressed()), mRoleCombo, SLOT(setFocus()));
+    connect(mRoleCombo, &AttendeeComboBox::rightPressed, mEdit, &AttendeeLineEdit::setFocus);
+    connect(mEdit, &AttendeeLineEdit::leftPressed, mRoleCombo, &AttendeeComboBox::setFocus);
 
-    connect(mEdit, SIGNAL(rightPressed()), mStateCombo, SLOT(setFocus()));
-    connect(mStateCombo, SIGNAL(leftPressed()), mEdit, SLOT(setFocus()));
+    connect(mEdit, &AttendeeLineEdit::rightPressed, mStateCombo, &AttendeeComboBox::setFocus);
+    connect(mStateCombo, &AttendeeComboBox::leftPressed, mEdit, &AttendeeLineEdit::setFocus);
 
-    connect(mStateCombo, SIGNAL(rightPressed()), mResponseCombo, SLOT(setFocus()));
+    connect(mStateCombo, &AttendeeComboBox::rightPressed, mResponseCombo, &AttendeeComboBox::setFocus);
 
-    connect(mResponseCombo, SIGNAL(leftPressed()), mStateCombo, SLOT(setFocus()));
-    connect(mResponseCombo, SIGNAL(rightPressed()), SIGNAL(rightPressed()));
+    connect(mResponseCombo, &AttendeeComboBox::leftPressed, mStateCombo, &AttendeeComboBox::setFocus);
+    connect(mResponseCombo, &AttendeeComboBox::rightPressed, this, &AttendeeLine::rightPressed);
 
-    connect(mEdit, SIGNAL(editingFinished()),
-            SLOT(slotHandleChange()), Qt::QueuedConnection);
-    connect(mEdit, SIGNAL(textCompleted()),
-            SLOT(slotHandleChange()), Qt::QueuedConnection);
-    connect(mEdit, SIGNAL(clearButtonClicked()),
-            SLOT(slotPropagateDeletion()), Qt::QueuedConnection);
+    connect(mEdit, &AttendeeLineEdit::editingFinished, this, &AttendeeLine::slotHandleChange, Qt::QueuedConnection);
+    connect(mEdit, &AttendeeLineEdit::textCompleted, this, &AttendeeLine::slotHandleChange, Qt::QueuedConnection);
+    connect(mEdit, &AttendeeLineEdit::clearButtonClicked, this, &AttendeeLine::slotPropagateDeletion, Qt::QueuedConnection);
 
-    connect(mRoleCombo, SIGNAL(itemChanged()), this, SLOT(slotComboChanged()));
-    connect(mStateCombo, SIGNAL(itemChanged()), this, SLOT(slotComboChanged()));
-    connect(mResponseCombo, SIGNAL(itemChanged()), this, SLOT(slotComboChanged()));
+    connect(mRoleCombo, &AttendeeComboBox::itemChanged, this, &AttendeeLine::slotComboChanged);
+    connect(mStateCombo, &AttendeeComboBox::itemChanged, this, &AttendeeLine::slotComboChanged);
+    connect(mResponseCombo, &AttendeeComboBox::itemChanged, this, &AttendeeLine::slotComboChanged);
 
 }
 

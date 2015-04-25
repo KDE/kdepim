@@ -31,6 +31,7 @@
 #include <ItemMoveJob>
 #include <Monitor>
 #include <Session>
+#include <AkonadiCore/TagFetchScope>
 
 #include <KJob>
 #include <KLocalizedString>
@@ -75,22 +76,24 @@ public:
 
     void setupMonitor();
     void moveJobFinished(KJob *job);
+    void setItem(const Akonadi::Item &item);
 };
 
 ItemEditorPrivate::ItemEditorPrivate(Akonadi::IncidenceChanger *changer, EditorItemManager *qq)
     : q_ptr(qq), mItemMonitor(0), mIsCounterProposal(false)
+    , currentAction(EditorItemManager::None)
 {
     mFetchScope.fetchFullPayload();
     mFetchScope.setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
+    mFetchScope.setFetchTags(true);
+    mFetchScope.tagFetchScope().setFetchIdOnly(false);
 
     mChanger = changer ? changer : new Akonadi::IncidenceChanger(new IndividualMailComponentFactory(qq), qq);
 
-    qq->connect(mChanger,
-                SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
+    qq->connect(mChanger, SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
                 qq, SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));
 
-    qq->connect(mChanger,
-                SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
+    qq->connect(mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
                 qq, SLOT(onCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));
 }
 
@@ -128,7 +131,7 @@ void ItemEditorPrivate::itemFetchResult(KJob *job)
 
     Akonadi::Item item = fetchJob->items().first();
     if (mItemUi->hasSupportedPayload(item)) {
-        q->load(item);
+        setItem(item);
         if (action != EditorItemManager::None) {
             // Finally enable ok/apply buttons, we've finished loading
             emit q->itemSaveFinished(action);
@@ -136,6 +139,15 @@ void ItemEditorPrivate::itemFetchResult(KJob *job)
     } else {
         mItemUi->reject(ItemEditorUi::ItemHasInvalidPayload);
     }
+}
+
+void ItemEditorPrivate::setItem(const Akonadi::Item &item)
+{
+    Q_ASSERT(item.hasPayload());
+    mPrevItem = item;
+    mItem = item;
+    mItemUi->load(item);
+    setupMonitor();
 }
 
 void ItemEditorPrivate::itemMoveResult(KJob *job)
@@ -147,7 +159,7 @@ void ItemEditorPrivate::itemMoveResult(KJob *job)
         Akonadi::ItemMoveJob *moveJob = qobject_cast<Akonadi::ItemMoveJob *>(job);
         Q_ASSERT(moveJob);
         Q_UNUSED(moveJob);
-        //Q_ASSERT( !moveJob->items().isEmpty() );
+        //Q_ASSERT(!moveJob->items().isEmpty());
         // TODO: What is reasonable behavior at this point?
         qCritical() << "Error while moving item ";// << moveJob->items().first().id() << " to collection "
         //<< moveJob->destinationCollection() << job->errorString();
@@ -155,7 +167,7 @@ void ItemEditorPrivate::itemMoveResult(KJob *job)
     } else {
         // Fetch the item again, we want a new mItem, which has an updated parentCollection
         Akonadi::Item item(mItem.id());
-        // set currentAction, so the fetchResult slot emits itemSavedFinished( Move );
+        // set currentAction, so the fetchResult slot emits itemSavedFinished(Move);
         // We could emit it here, but we should only enable ok/apply buttons after the loading
         // is complete
         currentAction = EditorItemManager::Move;
@@ -169,7 +181,8 @@ void ItemEditorPrivate::onModifyFinished(int, const Akonadi::Item &item,
 {
     Q_Q(EditorItemManager);
     if (resultCode == Akonadi::IncidenceChanger::ResultCodeSuccess) {
-        if (mItem.parentCollection() == mItemUi->selectedCollection()) {
+        if (mItem.parentCollection() == mItemUi->selectedCollection() ||
+                mItem.storageCollectionId() == mItemUi->selectedCollection().id()) {
             mItem = item;
             emit q->itemSaveFinished(EditorItemManager::Modify);
             setupMonitor();
@@ -193,8 +206,8 @@ void ItemEditorPrivate::onCreateFinished(int,
 {
     Q_Q(EditorItemManager);
     if (resultCode == Akonadi::IncidenceChanger::ResultCodeSuccess) {
+        currentAction = EditorItemManager::Create;
         q->load(item);
-        emit q->itemSaveFinished(EditorItemManager::Create);
         setupMonitor();
     } else {
         qCritical() << "Creation failed " << errorString;
@@ -204,7 +217,7 @@ void ItemEditorPrivate::onCreateFinished(int,
 
 void ItemEditorPrivate::setupMonitor()
 {
-    // Q_Q( EditorItemManager );
+    // Q_Q(EditorItemManager);
     delete mItemMonitor;
     mItemMonitor = new Akonadi::Monitor;
     mItemMonitor->ignoreSession(Akonadi::Session::defaultSession());
@@ -213,8 +226,8 @@ void ItemEditorPrivate::setupMonitor()
         mItemMonitor->setItemMonitored(mItem);
     }
 
-//   q->connect( mItemMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
-//               SLOT(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
+//   q->connect(mItemMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+//               SLOT(itemChanged(Akonadi::Item,QSet<QByteArray>)));
 }
 
 void ItemEditorPrivate::itemChanged(const Akonadi::Item &item,
@@ -295,16 +308,10 @@ void EditorItemManager::load(const Akonadi::Item &item)
 {
     Q_D(ItemEditor);
 
-    if (item.hasPayload()) {
-        d->mPrevItem = item;
-        d->mItem = item;
-        d->mItemUi->load(item);
-        d->setupMonitor();
-    } else {
-        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item, this);
-        job->setFetchScope(d->mFetchScope);
-        connect(job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)));
-    }
+    //We fetch anyways to make sure we have everything required including tags
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item, this);
+    job->setFetchScope(d->mFetchScope);
+    connect(job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)));
 }
 
 void EditorItemManager::save()
@@ -334,7 +341,8 @@ void EditorItemManager::save()
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(d->mItem);
 
         KCalCore::Incidence::Ptr oldPayload = CalendarSupport::incidence(d->mPrevItem);
-        if (d->mItem.parentCollection() == d->mItemUi->selectedCollection()) {
+        if (d->mItem.parentCollection() == d->mItemUi->selectedCollection()
+                || d->mItem.storageCollectionId() == d->mItemUi->selectedCollection().id()) {
             d->mChanger->modifyIncidence(d->mItem, oldPayload);
         } else {
             Q_ASSERT(d->mItemUi->selectedCollection().isValid());

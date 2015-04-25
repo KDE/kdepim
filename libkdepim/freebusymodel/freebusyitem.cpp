@@ -24,10 +24,13 @@
 
 #include <Akonadi/Calendar/FreeBusyManager>
 
-using namespace IncidenceEditorNG;
+using namespace KPIM;
 
 FreeBusyItem::FreeBusyItem(const KCalCore::Attendee::Ptr &attendee, QWidget *parentWidget)
-    : mAttendee(attendee), mTimerID(0), mIsDownloading(false), mParentWidget(parentWidget)
+    : mAttendee(attendee)
+    , mTimerID(0)
+    , mIsDownloading(false)
+    , mParentWidget(parentWidget)
 {
     Q_ASSERT(attendee);
     setFreeBusy(KCalCore::FreeBusy::Ptr());
