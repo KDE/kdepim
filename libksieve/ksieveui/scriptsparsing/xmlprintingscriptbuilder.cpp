@@ -47,7 +47,7 @@ void XMLPrintingScriptBuilder::stringArgument(const QString &string, bool multiL
 
 void XMLPrintingScriptBuilder::numberArgument(unsigned long number, char quantifier)
 {
-    write(QStringLiteral("num"), (quantifier ? QString::fromLatin1("quantifier=\"%1\"").arg(quantifier) : QString()) , QString::number(number));
+    write(QStringLiteral("num"), (quantifier ? QStringLiteral("quantifier=\"%1\"").arg(quantifier) : QString()) , QString::number(number));
 }
 
 void XMLPrintingScriptBuilder::commandStart(const QString &identifier)
@@ -58,10 +58,10 @@ void XMLPrintingScriptBuilder::commandStart(const QString &identifier)
             identifier == QStringLiteral("foreverypart") ||
             identifier == QStringLiteral("if") ||
             identifier == QStringLiteral("elsif")) {
-        write(QString::fromLatin1("<control name=\"%1\">").arg(identifier));
+        write(QStringLiteral("<control name=\"%1\">").arg(identifier));
         mIsAction = false;
     } else {
-        write(QString::fromLatin1("<action name=\"%1\">").arg(identifier));
+        write(QStringLiteral("<action name=\"%1\">").arg(identifier));
         mIsAction = true;
     }
 }
@@ -78,7 +78,7 @@ void XMLPrintingScriptBuilder::commandEnd()
 
 void XMLPrintingScriptBuilder::testStart(const QString &identifier)
 {
-    write(QString::fromLatin1("<test name=\"%1\">").arg(identifier));
+    write(QStringLiteral("<test name=\"%1\">").arg(identifier));
 }
 
 void XMLPrintingScriptBuilder::testEnd()
@@ -155,28 +155,28 @@ void XMLPrintingScriptBuilder::write(const QString &msg)
 void XMLPrintingScriptBuilder::write(const QString &key, const QString &value)
 {
     if (value.isEmpty()) {
-        write(QString::fromLatin1("<%1>").arg(key));
+        write(QStringLiteral("<%1>").arg(key));
         return;
     }
-    write(QString::fromLatin1("<%1>").arg(key));
+    write(QStringLiteral("<%1>").arg(key));
     write(value);
-    write(QString::fromLatin1("</%1>").arg(key));
+    write(QStringLiteral("</%1>").arg(key));
 }
 
 void XMLPrintingScriptBuilder::write(const QString &key, const QString &attribute, const QString &value)
 {
     if (value.isEmpty()) {
-        write(QString::fromLatin1("<%1/>").arg(key));
+        write(QStringLiteral("<%1/>").arg(key));
         return;
     }
 
     if (attribute.isEmpty()) {
-        write(QString::fromLatin1("<%1>").arg(key));
+        write(QStringLiteral("<%1>").arg(key));
     } else {
-        write(QString::fromLatin1("<%1 %2>").arg(key).arg(attribute));
+        write(QStringLiteral("<%1 %2>").arg(key).arg(attribute));
     }
     write(value);
-    write(QString::fromLatin1("</%1>").arg(key));
+    write(QStringLiteral("</%1>").arg(key));
 }
 
 QString XMLPrintingScriptBuilder::result() const

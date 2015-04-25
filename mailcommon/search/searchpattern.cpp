@@ -341,13 +341,13 @@ QDataStream &SearchPattern::operator>>(QDataStream &s) const
 {
     switch (op()) {
     case SearchPattern::OpAnd:
-        s << QString::fromLatin1("and");
+        s << QStringLiteral("and");
         break;
     case SearchPattern::OpOr:
-        s << QString::fromLatin1("or");
+        s << QStringLiteral("or");
         break;
     case SearchPattern::OpAll:
-        s << QString::fromLatin1("all");
+        s << QStringLiteral("all");
         break;
     }
 

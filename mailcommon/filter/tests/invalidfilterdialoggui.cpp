@@ -27,8 +27,8 @@ int main(int argc, char **argv)
     QVector<MailCommon::InvalidFilterInfo> infoLst;
     for (int i = 0; i < 10; ++i) {
         MailCommon::InvalidFilterInfo info;
-        info.setInformation(QString::fromLatin1("information %1").arg(i));
-        info.setName(QString::fromLatin1("name %1").arg(i));
+        info.setInformation(QStringLiteral("information %1").arg(i));
+        info.setName(QStringLiteral("name %1").arg(i));
         infoLst << info;
     }
     w->setInvalidFilters(infoLst);

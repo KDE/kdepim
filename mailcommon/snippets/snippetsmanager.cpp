@@ -470,7 +470,7 @@ void SnippetsManager::Private::load()
 
     for (int i = 0; i < groupCount; ++i) {
         const KConfigGroup group =
-            config->group(QString::fromLatin1("SnippetGroup_%1").arg(i));
+            config->group(QStringLiteral("SnippetGroup_%1").arg(i));
 
         const QString groupName = group.readEntry("Name");
 
@@ -480,13 +480,13 @@ void SnippetsManager::Private::load()
         const int snippetCount = group.readEntry("snippetCount", 0);
         for (int j = 0; j < snippetCount; ++j) {
             const QString snippetName =
-                group.readEntry(QString::fromLatin1("snippetName_%1").arg(j), QString());
+                group.readEntry(QStringLiteral("snippetName_%1").arg(j), QString());
 
             const QString snippetText =
-                group.readEntry(QString::fromLatin1("snippetText_%1").arg(j), QString());
+                group.readEntry(QStringLiteral("snippetText_%1").arg(j), QString());
 
             const QString snippetKeySequence =
-                group.readEntry(QString::fromLatin1("snippetKeySequence_%1").arg(j), QString());
+                group.readEntry(QStringLiteral("snippetKeySequence_%1").arg(j), QString());
 
             createSnippet(groupIndex, snippetName, snippetText, snippetKeySequence);
         }
@@ -498,10 +498,10 @@ void SnippetsManager::Private::load()
 
     for (int i = 0; i < variablesCount; ++i) {
         const QString variableKey =
-            group.readEntry(QString::fromLatin1("variableName_%1").arg(i), QString());
+            group.readEntry(QStringLiteral("variableName_%1").arg(i), QString());
 
         const QString variableValue =
-            group.readEntry(QString::fromLatin1("variableValue_%1").arg(i), QString());
+            group.readEntry(QStringLiteral("variableValue_%1").arg(i), QString());
 
         mSavedVariables.insert(variableKey, variableValue);
     }
@@ -530,7 +530,7 @@ void SnippetsManager::Private::save()
         const QModelIndex groupIndex = mModel->index(i, 0, QModelIndex());
         const QString groupName = groupIndex.data(SnippetsModel::NameRole).toString();
 
-        KConfigGroup group = config->group(QString::fromLatin1("SnippetGroup_%1").arg(i));
+        KConfigGroup group = config->group(QStringLiteral("SnippetGroup_%1").arg(i));
         group.writeEntry("Name", groupName);
 
         const int snippetCount = mModel->rowCount(groupIndex);
@@ -543,9 +543,9 @@ void SnippetsManager::Private::save()
             const QString snippetText = index.data(SnippetsModel::TextRole).toString();
             const QString snippetKeySequence = index.data(SnippetsModel::KeySequenceRole).toString();
 
-            group.writeEntry(QString::fromLatin1("snippetName_%1").arg(j), snippetName);
-            group.writeEntry(QString::fromLatin1("snippetText_%1").arg(j), snippetText);
-            group.writeEntry(QString::fromLatin1("snippetKeySequence_%1").arg(j),
+            group.writeEntry(QStringLiteral("snippetName_%1").arg(j), snippetName);
+            group.writeEntry(QStringLiteral("snippetText_%1").arg(j), snippetText);
+            group.writeEntry(QStringLiteral("snippetKeySequence_%1").arg(j),
                              snippetKeySequence);
         }
     }
@@ -560,8 +560,8 @@ void SnippetsManager::Private::save()
         QMapIterator<QString, QString> it(mSavedVariables);
         while (it.hasNext()) {
             it.next();
-            group.writeEntry(QString::fromLatin1("variableName_%1").arg(counter), it.key());
-            group.writeEntry(QString::fromLatin1("variableValue_%1").arg(counter), it.value());
+            group.writeEntry(QStringLiteral("variableName_%1").arg(counter), it.key());
+            group.writeEntry(QStringLiteral("variableValue_%1").arg(counter), it.value());
             counter++;
         }
     }

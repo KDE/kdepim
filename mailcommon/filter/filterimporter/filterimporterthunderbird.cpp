@@ -420,7 +420,7 @@ QString FilterImporterThunderbird::extractActions(const QString &line,
     } else if (line == QLatin1String("Custom")) {
     }
     if (actionName.isEmpty()) {
-        qCDebug(MAILCOMMON_LOG) << QString::fromLatin1(" missing convert method: %1").arg(line);
+        qCDebug(MAILCOMMON_LOG) << QStringLiteral(" missing convert method: %1").arg(line);
     }
     return actionName;
 }
