@@ -270,8 +270,7 @@ Element::List Decoration::createYearElements(const QDate &)
 QDate Decoration::weekDate(const QDate &date)
 {
     QDate result = date;
-    result.addDays(date.dayOfWeek() - 1);
-    return result;
+    return result.addDays(date.dayOfWeek() - 1);
 }
 
 QDate Decoration::monthDate(const QDate &date)
