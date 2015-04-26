@@ -99,6 +99,7 @@ void CompletionConfigureDialog::setLdapClientSearch(KLDAP::LdapClientSearch *lda
 void CompletionConfigureDialog::load()
 {
     mCompletionOrderWidget->loadCompletionItems();
+    mBlackListBalooWidget->load();
 }
 
 bool CompletionConfigureDialog::recentAddressWasChanged() const

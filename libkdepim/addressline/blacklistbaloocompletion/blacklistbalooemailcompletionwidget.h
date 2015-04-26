@@ -36,6 +36,7 @@ public:
     ~BlackListBalooEmailCompletionWidget();
 
     void save();
+    void load();
     void setEmailBlackList(const QStringList &list);
 private Q_SLOTS:
     void slotSelectionChanged();
@@ -47,7 +48,6 @@ private Q_SLOTS:
     void slotEmailFound(const QStringList &list);
 private:
     void hideMoreResultAndChangeLimit();
-    void load();
     QStringList mOriginalExcludeDomain;
     KLineEdit *mSearchLineEdit;
     KLineEdit *mExcludeDomainLineEdit;

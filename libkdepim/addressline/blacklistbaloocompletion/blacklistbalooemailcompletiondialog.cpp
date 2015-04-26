@@ -44,6 +44,7 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     okButton->setDefault(true);
     mBlackListWidget = new BlackListBalooEmailCompletionWidget(this);
+    mBlackListWidget->load();
     mBlackListWidget->setObjectName(QStringLiteral("blacklistwidget"));
     mainLayout->addWidget(mBlackListWidget);
 
