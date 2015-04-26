@@ -57,14 +57,14 @@ public:
         mTemplateLoader->setTemplateDirs(QStringList() << path);
         mEngine->addTemplateLoader(mTemplateLoader);
 
-        mSelfcontainedTemplate = mEngine->loadByName(QLatin1String("contactgroup.html"));
+        mSelfcontainedTemplate = mEngine->loadByName(QStringLiteral("contactgroup.html"));
         if (mSelfcontainedTemplate->error()) {
-            mErrorMessage += mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
+            mErrorMessage += mSelfcontainedTemplate->errorString() + QStringLiteral("<br>");
         }
 
-        mEmbeddableTemplate = mEngine->loadByName(QLatin1String("contactgroup_embedded.html"));
+        mEmbeddableTemplate = mEngine->loadByName(QStringLiteral("contactgroup_embedded.html"));
         if (mEmbeddableTemplate->error()) {
-            mErrorMessage += mEmbeddableTemplate->errorString() + QLatin1String("<br>");
+            mErrorMessage += mEmbeddableTemplate->errorString() + QStringLiteral("<br>");
         }
     }
 
@@ -107,18 +107,18 @@ static QVariantHash memberHash(const KContacts::ContactGroup::Data &data)
 {
     QVariantHash memberObject;
 
-    setHashField(memberObject, QLatin1String("name"), data.name());
-    setHashField(memberObject, QLatin1String("email"), data.email());
+    setHashField(memberObject, QStringLiteral("name"), data.name());
+    setHashField(memberObject, QStringLiteral("email"), data.email());
 
     KContacts::Addressee contact;
     contact.setFormattedName(data.name());
     contact.insertEmail(data.email());
 
-    const QString emailLink = QLatin1String("<a href=\"mailto:") +
+    const QString emailLink = QStringLiteral("<a href=\"mailto:") +
                               QString::fromLatin1(QUrl::toPercentEncoding(contact.fullEmail())) +
                               QString::fromLatin1("\">%1</a>").arg(contact.preferredEmail());
 
-    setHashField(memberObject, QLatin1String("emailLink"), emailLink);
+    setHashField(memberObject, QStringLiteral("emailLink"), emailLink);
 
     return memberObject;
 }
@@ -156,7 +156,7 @@ QString GrantleeContactGroupFormatter::toHtml(HtmlForm form) const
 
     QVariantHash contactGroupObject;
 
-    setHashField(contactGroupObject, QLatin1String("name"), group.name());
+    setHashField(contactGroupObject, QStringLiteral("name"), group.name());
 
     // Group members
     QVariantList members;
@@ -164,42 +164,42 @@ QString GrantleeContactGroupFormatter::toHtml(HtmlForm form) const
         members << memberHash(group.data(i));
     }
 
-    contactGroupObject.insert(QLatin1String("members"), members);
+    contactGroupObject.insert(QStringLiteral("members"), members);
 
     // Additional fields
     QVariantList fields;
     foreach (const QVariantMap &field, additionalFields()) {
         QVariantHash fieldObject;
-        setHashField(fieldObject, QLatin1String("key"),
-                     field.value(QLatin1String("key")).toString());
+        setHashField(fieldObject, QStringLiteral("key"),
+                     field.value(QStringLiteral("key")).toString());
 
-        setHashField(fieldObject, QLatin1String("title"),
-                     field.value(QLatin1String("title")).toString());
+        setHashField(fieldObject, QStringLiteral("title"),
+                     field.value(QStringLiteral("title")).toString());
 
-        setHashField(fieldObject, QLatin1String("value"),
-                     field.value(QLatin1String("value")).toString());
+        setHashField(fieldObject, QStringLiteral("value"),
+                     field.value(QStringLiteral("value")).toString());
 
         fields << fieldObject;
     }
 
-    contactGroupObject.insert(QLatin1String("additionalFields"), fields);
+    contactGroupObject.insert(QStringLiteral("additionalFields"), fields);
 
     QVariantHash colorsObject;
     colorsObject.insert(
-        QLatin1String("linkColor"),
+        QStringLiteral("linkColor"),
         KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name());
 
     colorsObject.insert(
-        QLatin1String("textColor"),
+        QStringLiteral("textColor"),
         KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name());
 
     colorsObject.insert(
-        QLatin1String("backgroundColor"),
+        QStringLiteral("backgroundColor"),
         KColorScheme(QPalette::Active, KColorScheme::View).background().color().name());
 
     QVariantHash mapping;
-    mapping.insert(QLatin1String("contactGroup"), contactGroupObject);
-    mapping.insert(QLatin1String("colors"), colorsObject);
+    mapping.insert(QStringLiteral("contactGroup"), contactGroupObject);
+    mapping.insert(QStringLiteral("colors"), colorsObject);
 
     Grantlee::Context context(mapping);
 
