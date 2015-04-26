@@ -41,6 +41,7 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     setDefaultButton( Ok );
     setModal( true );
     mBlackListWidget = new BlackListBalooEmailCompletionWidget(this);
+    mBlackListWidget->load();
     mBlackListWidget->setObjectName(QLatin1String("blacklistwidget"));
     setMainWidget(mBlackListWidget);
 
