@@ -161,10 +161,10 @@ public:
     {
     }
 
-    bool visit(Event::Ptr) Q_DECL_OVERRIDE;
-    bool visit(Todo::Ptr) Q_DECL_OVERRIDE;
-    bool visit(Journal::Ptr) Q_DECL_OVERRIDE;
-    bool visit(FreeBusy::Ptr) Q_DECL_OVERRIDE {
+    bool visit(const Event::Ptr &) Q_DECL_OVERRIDE;
+    bool visit(const Todo::Ptr &) Q_DECL_OVERRIDE;
+    bool visit(const Journal::Ptr &) Q_DECL_OVERRIDE;
+    bool visit(const FreeBusy::Ptr &) Q_DECL_OVERRIDE {
         // to inhibit hidden virtual compile warning
         return true;
     };
@@ -174,7 +174,7 @@ private:
     QDate mStartDate;
 };
 
-bool ListView::Private::ListItemVisitor::visit(Event::Ptr e)
+bool ListView::Private::ListItemVisitor::visit(const Event::Ptr &e)
 {
     QPixmap eventPxmp;
     if (e->customProperty("KABC", "ANNIVERSARY") == QLatin1String("YES")) {
@@ -214,7 +214,7 @@ bool ListView::Private::ListItemVisitor::visit(Event::Ptr e)
     return true;
 }
 
-bool ListView::Private::ListItemVisitor::visit(Todo::Ptr t)
+bool ListView::Private::ListItemVisitor::visit(const Todo::Ptr &t)
 {
     mItem->setIcon(Summary_Column, cachedSmallIcon(t->iconName()));
 
@@ -241,7 +241,7 @@ bool ListView::Private::ListItemVisitor::visit(Todo::Ptr t)
     return true;
 }
 
-bool ListView::Private::ListItemVisitor::visit(Journal::Ptr j)
+bool ListView::Private::ListItemVisitor::visit(const Journal::Ptr &j)
 {
     static const QPixmap jrnalPxmp = SmallIcon(j->iconName());
     mItem->setIcon(Summary_Column, jrnalPxmp);
