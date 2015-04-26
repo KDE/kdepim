@@ -104,7 +104,6 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mExcludeDomainLineEdit->setTrapReturnKey(true);
     mExcludeDomainLineEdit->setPlaceholderText(i18n("Separate domain with \',\'"));
     connect(mEmailList, &QListWidget::itemSelectionChanged, this, &BlackListBalooEmailCompletionWidget::slotSelectionChanged);
-    load();
     slotSelectionChanged();
 }
 
@@ -127,6 +126,7 @@ void BlackListBalooEmailCompletionWidget::load()
     mEmailList->setExcludeDomain(lst);
     mExcludeDomainLineEdit->setText(lst.join(QStringLiteral(",")));
     mOriginalExcludeDomain = lst;
+    slotSelectionChanged();
 }
 
 void BlackListBalooEmailCompletionWidget::slotUnselectEmails()
