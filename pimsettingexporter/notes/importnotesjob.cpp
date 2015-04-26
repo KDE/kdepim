@@ -146,8 +146,7 @@ void ImportNotesJob::restoreResources()
                             const KArchiveFile *file = static_cast<const KArchiveFile *>(akonadiAgentConfigEntry);
                             file->copyTo(copyToDirName);
                             resourceName = file->name();
-                            KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
-                            filename = Utils::akonadiAgentName(akonadiAgentConfig);
+                            filename = Utils::akonadiAgentName(copyToDirName + QLatin1Char('/') + resourceName);
                         }
                     }
 

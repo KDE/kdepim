@@ -93,7 +93,7 @@ QString jotPath();
 QString infoPath();
 QString notePath();
 QString prefixAkonadiConfigFile();
-QString akonadiAgentName(KSharedConfig::Ptr config);
+QString akonadiAgentName(const QString &configPath);
 
 void convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey);
 void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey);

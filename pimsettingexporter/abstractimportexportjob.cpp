@@ -376,8 +376,8 @@ QStringList AbstractImportExportJob::restoreResourceFile(const QString &resource
                             const KArchiveFile *file = static_cast<const KArchiveFile *>(akonadiAgentConfigEntry);
                             file->copyTo(copyToDirName);
                             resourceName = file->name();
-                            KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
-                            filename = Utils::akonadiAgentName(akonadiAgentConfig);
+                            const QString configPath = copyToDirName + QLatin1Char('/') + resourceName;
+                            filename = Utils::akonadiAgentName(configPath);
                         }
                     }
 
