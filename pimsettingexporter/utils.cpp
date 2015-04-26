@@ -22,6 +22,8 @@
 
 #include <akonadi/private/xdgbasedirs_p.h>
 
+
+#include <QSettings>
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KSharedConfig>
@@ -263,10 +265,10 @@ KUrl Utils::akonadiAgentConfigPath(const QString &identifier)
     return KUrl();
 }
 
-QString Utils::akonadiAgentName(KSharedConfig::Ptr config)
+QString Utils::akonadiAgentName(const QString &configPath)
 {
-    KConfigGroup group = config->group(QLatin1String("Agent"));
-    const QString name = group.readEntry(QLatin1String("Name"),QString());
+    QSettings settings(configPath, QSettings::IniFormat);
+    const QString name = settings.value(QLatin1String("Agent/Name")).toString();
     return name;
 }
 
