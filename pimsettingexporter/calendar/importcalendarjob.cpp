@@ -88,7 +88,9 @@ void ImportCalendarJob::restoreResources()
                 const KArchiveEntry *fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile *file = static_cast<const KArchiveFile *>(fileResouceEntry);
-                    file->copyTo(copyToDirName);
+                    if (!file->copyTo(copyToDirName)) {
+                        qCDebug(PIMSETTINGEXPORTER_LOG) << "file can not copy to " << copyToDirName;
+                    }
                     QString resourceName(file->name());
 
                     QString filename(file->name());
@@ -271,7 +273,9 @@ void ImportCalendarJob::restoreConfig()
         //TODO 4.12 verify if template already exists.
         const QString templatePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("korganizer/templates/");
         const KArchiveDirectory *templateDir = static_cast<const KArchiveDirectory *>(templateEntry);
-        templateDir->copyTo(templatePath);
+        if (!templateDir->copyTo(templatePath)) {
+            qCDebug(PIMSETTINGEXPORTER_LOG) << "template cannot copy to " << templatePath;
+        }
     }
 
     Q_EMIT info(i18n("Config restored."));

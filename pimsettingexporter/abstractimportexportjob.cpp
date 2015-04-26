@@ -143,11 +143,15 @@ void AbstractImportExportJob::overwriteDirectory(const QString &path, const KArc
     if (QDir(path).exists()) {
         if (overwriteDirectoryMessageBox(path)) {
             const KArchiveDirectory *dirEntry = static_cast<const KArchiveDirectory *>(entry);
-            dirEntry->copyTo(path);
+            if (!dirEntry->copyTo(path)) {
+                qDebug()<< "directory cannot overwrite to " << path;
+            }
         }
     } else {
         const KArchiveDirectory *dirEntry = static_cast<const KArchiveDirectory *>(entry);
-        dirEntry->copyTo(path);
+        if (dirEntry->copyTo(path)) {
+            qDebug()<< "directory cannot overwrite to " << path;
+        }
     }
 }
 
@@ -228,7 +232,9 @@ void AbstractImportExportJob::initializeImportJob()
 void AbstractImportExportJob::copyToDirectory(const KArchiveEntry *entry, const QString &dest)
 {
     const KArchiveDirectory *subfolderDir = static_cast<const KArchiveDirectory *>(entry);
-    subfolderDir->copyTo(dest);
+    if (!subfolderDir->copyTo(dest)) {
+        qCDebug(PIMSETTINGEXPORTER_LOG) << "directory cannot copy to " << dest;
+    }
     Q_EMIT info(i18n("\"%1\" was copied.", dest));
 }
 
@@ -241,7 +247,9 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
         qCDebug(PIMSETTINGEXPORTER_LOG) << " directory :" << prefix << " not created";
     }
 
-    archivefile->copyTo(copyToDirName);
+    if (!archivefile->copyTo(copyToDirName)) {
+        qCDebug(PIMSETTINGEXPORTER_LOG) << "file " << filename << " can not copy to " << dest;
+    }
     QFile file;
     file.setFileName(copyToDirName + QLatin1Char('/') + filename);
 
