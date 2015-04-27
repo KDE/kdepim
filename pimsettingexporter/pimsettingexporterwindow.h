@@ -46,6 +46,7 @@ private Q_SLOTS:
     void slotShowStructureInfos();
     void slotRestoreFile(const QUrl &url);
     void slotShowArchiveInformations();
+    void slotActivateRequested(const QStringList &arguments, const QString &workingDirectory);
 
 private:
     enum Action {

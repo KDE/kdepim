@@ -56,10 +56,10 @@ int main(int argc, char *argv[])
     aboutData.processCommandLine(&parser);
 
     KDBusService service(KDBusService::Unique);
-#pragma message("port QT5")
-    //QT5 TODO connect service to load file when necessary
 
     PimSettingExporterWindow *backupMailWin = new PimSettingExporterWindow();
+    QObject::connect(&service, SIGNAL(activateRequested(QStringList,QString)),
+                     backupMailWin, SLOT(slotActivateRequested(QStringList,QString)));
     backupMailWin->show();
     backupMailWin->handleCommandLine(parser);
 
