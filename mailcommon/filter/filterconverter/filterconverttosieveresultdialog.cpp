@@ -51,14 +51,10 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     setModal(true);
     connect(user1Button, &QPushButton::clicked, this, &FilterConvertToSieveResultDialog::slotSave);
 
-    QWidget *mainWidget = new QWidget(this);
-    QHBoxLayout *mainLayout = new QHBoxLayout(mainWidget);
-
     mEditor = new PimCommon::PlainTextEditorWidget;
     PimCommon::SieveSyntaxHighlighter *syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter(mEditor->editor()->document());
     syntaxHighlighter->addCapabilities(PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities());
-    mainLayout->addWidget(mEditor);
-    topLayout->addWidget(mainWidget);
+    topLayout->addWidget(mEditor);
     topLayout->addWidget(buttonBox);
 
     readConfig();
