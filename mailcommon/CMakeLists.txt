@@ -88,12 +88,6 @@ set(libmailcommon_invalidfilters
   filter/invalidfilters/invalidfilterinfowidget.cpp
 )
 
-set(libmailcommon_filter_for_mobile_SRCS
-  filter/filtermodel.cpp
-  filter/filtercontroller.cpp
-)
-
-
 set(libmailcommon_collection_SRCS
   collectionpage/collectiontypeutil.cpp
   collectionpage/attributeregistrar.cpp
@@ -186,10 +180,6 @@ set(libmailcommon_SRCS
   ${libmailcommon_folder_SRCS}   
   ${libmailcommon_filter_SRCS}
 )
-if (KDEPIM_BUILD_MOBILE)
-set(libmailcommon_SRCS ${libmailcommon_SRCS} ${libmailcommon_filter_for_mobile_SRCS})
-endif()
-
 kconfig_add_kcfg_files(libmailcommon_SRCS
     settings/mailcommonsettings_base.kcfgc
 )
