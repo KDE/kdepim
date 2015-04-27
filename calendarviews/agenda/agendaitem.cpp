@@ -836,13 +836,13 @@ void AgendaItem::paintEvent(QPaintEvent *ev)
     // Also look at #17984
 
     if (!alarmPxmp) {
-        alarmPxmp     = new QPixmap(SmallIcon(QLatin1String("task-reminder")));
-        recurPxmp     = new QPixmap(SmallIcon(QLatin1String("appointment-recurring")));
-        readonlyPxmp  = new QPixmap(SmallIcon(QLatin1String("object-locked")));
-        replyPxmp     = new QPixmap(SmallIcon(QLatin1String("mail-reply-sender")));
-        groupPxmp     = new QPixmap(SmallIcon(QLatin1String("meeting-attending")));
-        groupPxmpTent = new QPixmap(SmallIcon(QLatin1String("meeting-attending-tentative")));
-        organizerPxmp = new QPixmap(SmallIcon(QLatin1String("meeting-organizer")));
+        alarmPxmp     = new QPixmap(SmallIcon(QStringLiteral("task-reminder")));
+        recurPxmp     = new QPixmap(SmallIcon(QStringLiteral("appointment-recurring")));
+        readonlyPxmp  = new QPixmap(SmallIcon(QStringLiteral("object-locked")));
+        replyPxmp     = new QPixmap(SmallIcon(QStringLiteral("mail-reply-sender")));
+        groupPxmp     = new QPixmap(SmallIcon(QStringLiteral("meeting-attending")));
+        groupPxmpTent = new QPixmap(SmallIcon(QStringLiteral("meeting-attending-tentative")));
+        organizerPxmp = new QPixmap(SmallIcon(QStringLiteral("meeting-organizer")));
     }
 
     QColor bgColor;

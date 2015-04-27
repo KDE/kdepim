@@ -138,7 +138,7 @@ void ThemeEditorMainWindow::setupActions()
     connect(mManageTheme, &QAction::triggered, this, &ThemeEditorMainWindow::slotManageTheme);
     actionCollection()->addAction(QStringLiteral("manage_themes"), mManageTheme);
 
-    mUpdateView = new QAction(QIcon::fromTheme(QLatin1String("view-refresh")), i18n("Update view"), this);
+    mUpdateView = new QAction(QIcon::fromTheme(QStringLiteral("view-refresh")), i18n("Update view"), this);
     actionCollection()->setDefaultShortcut(mUpdateView, QKeySequence(Qt::Key_F5));
     connect(mUpdateView, &QAction::triggered, this, &ThemeEditorMainWindow::slotUpdateView);
     actionCollection()->addAction(QStringLiteral("update_view"), mUpdateView);

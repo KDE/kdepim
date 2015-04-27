@@ -135,7 +135,7 @@ public:
     explicit RingBinderStyleAppearanceForm(QWidget *parent)
         : QWidget(parent)
     {
-        setObjectName(QLatin1String("AppearancePage"));
+        setObjectName(QStringLiteral("AppearancePage"));
         setupUi(this);
     }
 };
@@ -146,7 +146,7 @@ RingBinderPrintStyle::RingBinderPrintStyle(PrintingWizard *parent)
     : PrintStyle(parent),
       mPageAppearance(new RingBinderStyleAppearanceForm(parent))
 {
-    setPreview(QLatin1String("ringbinder-style.png"));
+    setPreview(QStringLiteral("ringbinder-style.png"));
     setPreferredSortOptions(ContactFields::FamilyName, Qt::AscendingOrder);
 
     addPage(mPageAppearance, i18n("Ring Binder Printing Style - Appearance"));

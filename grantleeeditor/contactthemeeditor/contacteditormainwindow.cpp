@@ -121,7 +121,7 @@ void ContactEditorMainWindow::setupActions()
     connect(mManageTheme, &QAction::triggered, this, &ContactEditorMainWindow::slotManageTheme);
     actionCollection()->addAction(QStringLiteral("manage_themes"), mManageTheme);
 
-    mUpdateView = new QAction(QIcon::fromTheme(QLatin1String("view-refresh")), i18n("Update view"), this);
+    mUpdateView = new QAction(QIcon::fromTheme(QStringLiteral("view-refresh")), i18n("Update view"), this);
     actionCollection()->setDefaultShortcut(mUpdateView, QKeySequence(Qt::Key_F5));
     connect(mUpdateView, &QAction::triggered, this, &ContactEditorMainWindow::slotUpdateView);
     actionCollection()->addAction(QStringLiteral("update_view"), mUpdateView);

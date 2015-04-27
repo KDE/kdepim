@@ -42,7 +42,7 @@ EXPORT_KONTACT_PLUGIN(KAddressBookPlugin, kaddressbook)
 KAddressBookPlugin::KAddressBookPlugin(KontactInterface::Core *core, const QVariantList &)
     : KontactInterface::Plugin(core, core, "kaddressbook")
 {
-    setComponentName(QLatin1String("kaddressbook"), QLatin1String("kaddressbook"));
+    setComponentName(QStringLiteral("kaddressbook"), QStringLiteral("kaddressbook"));
 
     QAction *action =
         new QAction(QIcon::fromTheme(QStringLiteral("contact-new")),
