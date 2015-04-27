@@ -36,10 +36,10 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
     KContacts::Addressee *contact = 0;
     while (!stream.atEnd()) {
         QString line = stream.readLine();
-        if (line == QLatin1String("#CONTACT")) {
+        if (line == QStringLiteral("#CONTACT")) {
             appendContact(contact);
             foundContact = true;
-        } else if (line == QLatin1String("#FOLDER")) {
+        } else if (line == QStringLiteral("#FOLDER")) {
             appendContact(contact);
             foundContact = false;
             //TODO
@@ -48,26 +48,26 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
             if (!contact) {
                 contact = new KContacts::Addressee;
             }
-            if (line.startsWith(QLatin1String("ID"))) {
+            if (line.startsWith(QStringLiteral("ID"))) {
                 //Nothing
-            } else if (line.startsWith(QLatin1String("NAME"))) {
-                contact->setName(line.remove(QLatin1String("NAME=")));
-            } else if (line.startsWith(QLatin1String("URL"))) {
-                contact->setUrl(QUrl(line.remove(QLatin1String("URL="))));
-            } else if (line.startsWith(QLatin1String("DESCRIPTION"))) {
-                contact->setNote(line.remove(QLatin1String("DESCRIPTION=")));
-            } else if (line.startsWith(QLatin1String("PHONE"))) {
-                contact->insertPhoneNumber(KContacts::PhoneNumber(line.remove(QLatin1String("PHONE=")), KContacts::PhoneNumber::Home));
-            } else if (line.startsWith(QLatin1String("FAX"))) {
-                contact->insertPhoneNumber(KContacts::PhoneNumber(line.remove(QLatin1String("FAX=")), KContacts::PhoneNumber::Fax));
-            } else if (line.startsWith(QLatin1String("POSTALADDRESS"))) {
+            } else if (line.startsWith(QStringLiteral("NAME"))) {
+                contact->setName(line.remove(QStringLiteral("NAME=")));
+            } else if (line.startsWith(QStringLiteral("URL"))) {
+                contact->setUrl(QUrl(line.remove(QStringLiteral("URL="))));
+            } else if (line.startsWith(QStringLiteral("DESCRIPTION"))) {
+                contact->setNote(line.remove(QStringLiteral("DESCRIPTION=")));
+            } else if (line.startsWith(QStringLiteral("PHONE"))) {
+                contact->insertPhoneNumber(KContacts::PhoneNumber(line.remove(QStringLiteral("PHONE=")), KContacts::PhoneNumber::Home));
+            } else if (line.startsWith(QStringLiteral("FAX"))) {
+                contact->insertPhoneNumber(KContacts::PhoneNumber(line.remove(QStringLiteral("FAX=")), KContacts::PhoneNumber::Fax));
+            } else if (line.startsWith(QStringLiteral("POSTALADDRESS"))) {
                 //TODO
-            } else if (line.startsWith(QLatin1String("PICTUREURL"))) {
+            } else if (line.startsWith(QStringLiteral("PICTUREURL"))) {
                 //TODO
-            } else if (line.startsWith(QLatin1String("ICON"))) {
+            } else if (line.startsWith(QStringLiteral("ICON"))) {
                 //TODO
-            } else if (line.startsWith(QLatin1String("SHORT NAME"))) {
-                contact->setNickName(line.remove(QLatin1String("SHORT NAME=")));
+            } else if (line.startsWith(QStringLiteral("SHORT NAME"))) {
+                contact->setNickName(line.remove(QStringLiteral("SHORT NAME=")));
             }
         }
     }
@@ -82,7 +82,7 @@ OperaAddressBook::~OperaAddressBook()
 void OperaAddressBook::appendContact(KContacts::Addressee *contact)
 {
     if (contact) {
-        addImportNote(*contact, QLatin1String("Opera"));
+        addImportNote(*contact, QStringLiteral("Opera"));
         createContact(*contact);
         delete contact;
         contact = 0;

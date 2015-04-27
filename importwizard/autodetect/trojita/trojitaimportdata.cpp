@@ -46,7 +46,7 @@ bool TrojitaImportData::foundMailer() const
 
 QString TrojitaImportData::name() const
 {
-    return QLatin1String("Trojita");
+    return QStringLiteral("Trojita");
 }
 
 bool TrojitaImportData::importMails()

@@ -75,45 +75,45 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
 
     for (; !e.isNull(); e = e.nextSiblingElement()) {
         QString name;
-        if (e.hasAttribute(QLatin1String("name"))) {
-            name = e.attribute(QLatin1String("name"));
+        if (e.hasAttribute(QStringLiteral("name"))) {
+            name = e.attribute(QStringLiteral("name"));
         }
 
         const QString tag = e.tagName();
-        if (tag == QLatin1String("person")) {
+        if (tag == QStringLiteral("person")) {
             KContacts::Addressee contact;
             //uid="333304265" first-name="dd" last-name="ccc" nick-name="" cn="laurent"
             QString uidPerson;
-            if (e.hasAttribute(QLatin1String("uid"))) {
-                uidPerson = e.attribute(QLatin1String("uid"));
+            if (e.hasAttribute(QStringLiteral("uid"))) {
+                uidPerson = e.attribute(QStringLiteral("uid"));
             }
-            if (e.hasAttribute(QLatin1String("first-name"))) {
-                contact.setName(e.attribute(QLatin1String("first-name")));
+            if (e.hasAttribute(QStringLiteral("first-name"))) {
+                contact.setName(e.attribute(QStringLiteral("first-name")));
             }
-            if (e.hasAttribute(QLatin1String("last-name"))) {
-                contact.setFamilyName(e.attribute(QLatin1String("last-name")));
+            if (e.hasAttribute(QStringLiteral("last-name"))) {
+                contact.setFamilyName(e.attribute(QStringLiteral("last-name")));
 
             }
-            if (e.hasAttribute(QLatin1String("nick-name"))) {
-                contact.setNickName(e.attribute(QLatin1String("nick-name")));
+            if (e.hasAttribute(QStringLiteral("nick-name"))) {
+                contact.setNickName(e.attribute(QStringLiteral("nick-name")));
             }
-            if (e.hasAttribute(QLatin1String("cn"))) {
-                contact.setFormattedName(e.attribute(QLatin1String("cn")));
+            if (e.hasAttribute(QStringLiteral("cn"))) {
+                contact.setFormattedName(e.attribute(QStringLiteral("cn")));
             }
             QStringList uidAddress;
             for (QDomElement addressElement = e.firstChildElement(); !addressElement.isNull(); addressElement = addressElement.nextSiblingElement()) {
                 const QString addressTag = addressElement.tagName();
-                if (addressTag == QLatin1String("address-list")) {
+                if (addressTag == QStringLiteral("address-list")) {
                     QStringList emails;
                     for (QDomElement addresslist = addressElement.firstChildElement(); !addresslist.isNull(); addresslist = addresslist.nextSiblingElement()) {
                         const QString tagAddressList = addresslist.tagName();
-                        if (tagAddressList == QLatin1String("address")) {
-                            if (addresslist.hasAttribute(QLatin1String("email"))) {
-                                emails << addresslist.attribute(QLatin1String("email"));
-                            } else if (addresslist.hasAttribute(QLatin1String("alias"))) {
+                        if (tagAddressList == QStringLiteral("address")) {
+                            if (addresslist.hasAttribute(QStringLiteral("email"))) {
+                                emails << addresslist.attribute(QStringLiteral("email"));
+                            } else if (addresslist.hasAttribute(QStringLiteral("alias"))) {
                                 //TODO:
-                            } else if (addresslist.hasAttribute(QLatin1String("uid"))) {
-                                uidAddress << addresslist.attribute(QLatin1String("uid"));
+                            } else if (addresslist.hasAttribute(QStringLiteral("uid"))) {
+                                uidAddress << addresslist.attribute(QStringLiteral("uid"));
                             }
                         } else {
                             qCDebug(IMPORTWIZARD_LOG) << " tagAddressList unknown :" << tagAddressList;
@@ -123,14 +123,14 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
                         contact.setEmails(emails);
                     }
 
-                } else if (addressTag == QLatin1String("attribute-list")) {
+                } else if (addressTag == QStringLiteral("attribute-list")) {
                     for (QDomElement attributelist = addressElement.firstChildElement(); !attributelist.isNull(); attributelist = attributelist.nextSiblingElement()) {
                         const QString tagAttributeList = attributelist.tagName();
-                        if (tagAttributeList == QLatin1String("attribute")) {
-                            if (attributelist.hasAttribute(QLatin1String("name"))) {
-                                const QString name = attributelist.attribute(QLatin1String("name"));
+                        if (tagAttributeList == QStringLiteral("attribute")) {
+                            if (attributelist.hasAttribute(QStringLiteral("name"))) {
+                                const QString name = attributelist.attribute(QStringLiteral("name"));
                                 const QString value = attributelist.text();
-                                contact.insertCustom(QLatin1String("KADDRESSBOOK"), name, value);
+                                contact.insertCustom(QStringLiteral("KADDRESSBOOK"), name, value);
                             }
                         } else {
                             qCDebug(IMPORTWIZARD_LOG) << "tagAttributeList not implemented " << tagAttributeList;
@@ -146,28 +146,28 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
             } else {
                 qCDebug(IMPORTWIZARD_LOG) << " problem uidPerson already stored" << uidPerson;
             }
-            addImportNote(contact, QLatin1String("Sylpheed"));
+            addImportNote(contact, QStringLiteral("Sylpheed"));
             createContact(contact);
-        } else if (tag == QLatin1String("group")) {
+        } else if (tag == QStringLiteral("group")) {
             QString name;
-            if (e.hasAttribute(QLatin1String("name"))) {
-                name = e.attribute(QLatin1String("name"));
+            if (e.hasAttribute(QStringLiteral("name"))) {
+                name = e.attribute(QStringLiteral("name"));
             }
             KContacts::ContactGroup group(name);
             //TODO: create Group
             for (QDomElement groupElement = e.firstChildElement(); !groupElement.isNull(); groupElement = groupElement.nextSiblingElement()) {
                 const QString groupTag = groupElement.tagName();
-                if (groupTag == QLatin1String("member-list")) {
+                if (groupTag == QStringLiteral("member-list")) {
                     for (QDomElement memberlist = groupElement.firstChildElement(); !memberlist.isNull(); memberlist = memberlist.nextSiblingElement()) {
                         const QString tagMemberList = memberlist.tagName();
-                        if (tagMemberList == QLatin1String("member")) {
+                        if (tagMemberList == QStringLiteral("member")) {
                             QString pid;
                             QString eid;
-                            if (memberlist.hasAttribute(QLatin1String("pid"))) {
-                                pid = memberlist.attribute(QLatin1String("pid"));
+                            if (memberlist.hasAttribute(QStringLiteral("pid"))) {
+                                pid = memberlist.attribute(QStringLiteral("pid"));
                             }
-                            if (memberlist.hasAttribute(QLatin1String("eid"))) {
-                                eid = memberlist.attribute(QLatin1String("eid"));
+                            if (memberlist.hasAttribute(QStringLiteral("eid"))) {
+                                eid = memberlist.attribute(QStringLiteral("eid"));
                             }
                             if (!pid.isEmpty() && !eid.isEmpty()) {
                                 //TODO

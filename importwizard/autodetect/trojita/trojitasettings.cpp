@@ -47,57 +47,57 @@ void TrojitaSettings::readImapAccount()
     QMap<QString, QVariant> newSettings;
     QString name;
 
-    if (settings->contains(QLatin1String("imap.host"))) {
-        name = settings->value(QLatin1String("imap.host")).toString();
-        newSettings.insert(QLatin1String("ImapServer"), name);
+    if (settings->contains(QStringLiteral("imap.host"))) {
+        name = settings->value(QStringLiteral("imap.host")).toString();
+        newSettings.insert(QStringLiteral("ImapServer"), name);
     }
 
-    if (settings->contains(QLatin1String("imap.port"))) {
-        int port = settings->value(QLatin1String("imap.port")).toInt();
-        newSettings.insert(QLatin1String("ImapPort"), port);
+    if (settings->contains(QStringLiteral("imap.port"))) {
+        int port = settings->value(QStringLiteral("imap.port")).toInt();
+        newSettings.insert(QStringLiteral("ImapPort"), port);
     }
 
-    if (settings->contains(QLatin1String("imap.starttls"))) {
-        const bool useTLS = settings->value(QLatin1String("imap.starttls")).toBool();
+    if (settings->contains(QStringLiteral("imap.starttls"))) {
+        const bool useTLS = settings->value(QStringLiteral("imap.starttls")).toBool();
         if (useTLS) {
-            newSettings.insert(QLatin1String("Safety"), QLatin1String("STARTTLS"));
+            newSettings.insert(QStringLiteral("Safety"), QStringLiteral("STARTTLS"));
         }
     }
 
-    if (settings->contains(QLatin1String("imap.auth.user"))) {
-        const QString userName = settings->value(QLatin1String("imap.auth.user")).toString();
+    if (settings->contains(QStringLiteral("imap.auth.user"))) {
+        const QString userName = settings->value(QStringLiteral("imap.auth.user")).toString();
         if (!userName.isEmpty()) {
-            newSettings.insert(QLatin1String("Username"), userName);
+            newSettings.insert(QStringLiteral("Username"), userName);
         }
     }
 
-    if (settings->contains(QLatin1String("imap.auth.pass"))) {
-        const QString password = settings->value(QLatin1String("imap.auth.pass")).toString();
+    if (settings->contains(QStringLiteral("imap.auth.pass"))) {
+        const QString password = settings->value(QStringLiteral("imap.auth.pass")).toString();
         if (!password.isEmpty()) {
-            newSettings.insert(QLatin1String("Password"), password);
+            newSettings.insert(QStringLiteral("Password"), password);
         }
     }
 
-    if (settings->contains(QLatin1String("imap.process"))) {
+    if (settings->contains(QStringLiteral("imap.process"))) {
         //What's this ?
     }
 
-    if (settings->contains(QLatin1String("imap.offline"))) {
-        const bool offlineStatus = settings->value(QLatin1String("imap.offline")).toBool();
+    if (settings->contains(QStringLiteral("imap.offline"))) {
+        const bool offlineStatus = settings->value(QStringLiteral("imap.offline")).toBool();
         //It's not a deconnected mode as imap disconnected #317023
         //Will implement soon.
         //TODO use akonadi cache.
     }
 
-    if (settings->contains(QLatin1String("imap.enableId"))) {
+    if (settings->contains(QStringLiteral("imap.enableId"))) {
         //Not supported by Akonadi.
     }
 
-    if (settings->contains(QLatin1String("imap.ssl.pemCertificate"))) {
+    if (settings->contains(QStringLiteral("imap.ssl.pemCertificate"))) {
         //Not supported by akonadi.
     }
 
-    if (settings->contains(QLatin1String("imap.capabilities.blacklist"))) {
+    if (settings->contains(QStringLiteral("imap.capabilities.blacklist"))) {
         //Not supported by akonadi-imap-resource.
     }
 
@@ -110,40 +110,40 @@ void TrojitaSettings::readImapAccount()
 
 void TrojitaSettings::readTransport()
 {
-    settings->beginGroup(QLatin1String("General"));
-    const QString smtpMethod = settings->value(QLatin1String("msa.method")).toString();
+    settings->beginGroup(QStringLiteral("General"));
+    const QString smtpMethod = settings->value(QStringLiteral("msa.method")).toString();
     if (!smtpMethod.isEmpty()) {
         MailTransport::Transport *mt = createTransport();
-        if (smtpMethod == QLatin1String("IMAP-SENDMAIL")) {
+        if (smtpMethod == QStringLiteral("IMAP-SENDMAIL")) {
             //see http://tools.ietf.org/html/draft-kundrat-imap-submit-01
-        } else if (smtpMethod == QLatin1String("SMTP") || smtpMethod == QLatin1String("SSMTP")) {
-            if (settings->contains(QLatin1String("msa.smtp.host"))) {
-                mt->setHost(settings->value(QLatin1String("msa.smtp.host")).toString());
+        } else if (smtpMethod == QStringLiteral("SMTP") || smtpMethod == QStringLiteral("SSMTP")) {
+            if (settings->contains(QStringLiteral("msa.smtp.host"))) {
+                mt->setHost(settings->value(QStringLiteral("msa.smtp.host")).toString());
             }
-            if (settings->contains(QLatin1String("msa.smtp.port"))) {
-                mt->setPort(settings->value(QLatin1String("msa.smtp.port")).toInt());
+            if (settings->contains(QStringLiteral("msa.smtp.port"))) {
+                mt->setPort(settings->value(QStringLiteral("msa.smtp.port")).toInt());
             }
-            if (settings->contains(QLatin1String("msa.smtp.auth"))) {
-                if (settings->value(QLatin1String("msa.smtp.auth")).toBool()) {
-                    if (settings->contains(QLatin1String("msa.smtp.auth.user"))) {
-                        mt->setUserName(settings->value(QLatin1String("msa.smtp.auth.user")).toString());
+            if (settings->contains(QStringLiteral("msa.smtp.auth"))) {
+                if (settings->value(QStringLiteral("msa.smtp.auth")).toBool()) {
+                    if (settings->contains(QStringLiteral("msa.smtp.auth.user"))) {
+                        mt->setUserName(settings->value(QStringLiteral("msa.smtp.auth.user")).toString());
                     }
-                    if (settings->contains(QLatin1String("msa.smtp.auth.pass"))) {
-                        mt->setPassword(settings->value(QLatin1String("msa.smtp.auth.pass")).toString());
+                    if (settings->contains(QStringLiteral("msa.smtp.auth.pass"))) {
+                        mt->setPassword(settings->value(QStringLiteral("msa.smtp.auth.pass")).toString());
                     }
                 }
             }
 
-            if (settings->contains(QLatin1String("msa.smtp.starttls"))) {
-                if (settings->value(QLatin1String("msa.smtp.starttls")).toBool()) {
+            if (settings->contains(QStringLiteral("msa.smtp.starttls"))) {
+                if (settings->value(QStringLiteral("msa.smtp.starttls")).toBool()) {
                     mt->setEncryption(MailTransport::Transport::EnumEncryption::TLS);
                 }
             }
             mt->setType(MailTransport::Transport::EnumType::SMTP);
-        } else if (smtpMethod == QLatin1String("sendmail")) {
+        } else if (smtpMethod == QStringLiteral("sendmail")) {
             mt->setType(MailTransport::Transport::EnumType::Sendmail);
-            if (settings->contains(QLatin1String("msa.sendmail"))) {
-                mt->setHost(settings->value(QLatin1String("msa.sendmail")).toString());
+            if (settings->contains(QStringLiteral("msa.sendmail"))) {
+                mt->setHost(settings->value(QStringLiteral("msa.sendmail")).toString());
             }
         } else {
             qCWarning(IMPORTWIZARD_LOG) << " smtpMethod unknown " << smtpMethod;
@@ -155,18 +155,18 @@ void TrojitaSettings::readTransport()
 
 void TrojitaSettings::readIdentity()
 {
-    const int size = settings->beginReadArray(QLatin1String("identities"));
+    const int size = settings->beginReadArray(QStringLiteral("identities"));
     for (int i = 0; i < size; ++i) {
         settings->setArrayIndex(i);
-        QString realName = settings->value(QLatin1String("realName")).toString();
+        QString realName = settings->value(QStringLiteral("realName")).toString();
         KIdentityManagement::Identity *identity  = createIdentity(realName);
         identity->setFullName(realName);
         identity->setIdentityName(realName);
-        const QString address = settings->value(QLatin1String("address")).toString();
+        const QString address = settings->value(QStringLiteral("address")).toString();
         identity->setPrimaryEmailAddress(address);
-        const QString organisation = settings->value(QLatin1String("organisation")).toString();
+        const QString organisation = settings->value(QStringLiteral("organisation")).toString();
         identity->setOrganization(organisation);
-        QString signatureStr = settings->value(QLatin1String("signature")).toString();
+        QString signatureStr = settings->value(QStringLiteral("signature")).toString();
         if (!signatureStr.isEmpty()) {
             KIdentityManagement::Signature signature;
             signature.setType(KIdentityManagement::Signature::Inlined);

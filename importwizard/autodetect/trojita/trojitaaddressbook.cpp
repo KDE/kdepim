@@ -41,32 +41,32 @@ void TrojitaAddressBook::readAddressBook()
     Q_FOREACH (const QString &contact, contacts) {
         KContacts::Addressee contactABC;
         settings->beginGroup(contact);
-        contactABC.setEmails(QStringList() << settings->value(QLatin1String("email")).toStringList());
+        contactABC.setEmails(QStringList() << settings->value(QStringLiteral("email")).toStringList());
 
         KContacts::Address homeAddr = KContacts::Address(KContacts::Address::Home);
-        homeAddr.setLocality(settings->value(QLatin1String("city")).toString());
-        homeAddr.setRegion(settings->value(QLatin1String("state")).toString());
-        homeAddr.setPostalCode(settings->value(QLatin1String("zip")).toString());
-        homeAddr.setCountry(settings->value(QLatin1String("country")).toString());
-        homeAddr.setStreet(settings->value(QLatin1String("address")).toString());
+        homeAddr.setLocality(settings->value(QStringLiteral("city")).toString());
+        homeAddr.setRegion(settings->value(QStringLiteral("state")).toString());
+        homeAddr.setPostalCode(settings->value(QStringLiteral("zip")).toString());
+        homeAddr.setCountry(settings->value(QStringLiteral("country")).toString());
+        homeAddr.setStreet(settings->value(QStringLiteral("address")).toString());
         if (!homeAddr.isEmpty()) {
             contactABC.insertAddress(homeAddr);
         }
 
-        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QLatin1String("phone")).toString(), KContacts::PhoneNumber::Home));
-        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QLatin1String("workphone")).toString(), KContacts::PhoneNumber::Work));
-        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QLatin1String("fax")).toString(), KContacts::PhoneNumber::Fax));
-        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QLatin1String("mobile")).toString(), KContacts::PhoneNumber::Cell));
-        contactABC.setNickName(settings->value(QLatin1String("nick")).toString());
-        contactABC.setUrl(QUrl(settings->value(QLatin1String("url")).toString()));
+        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QStringLiteral("phone")).toString(), KContacts::PhoneNumber::Home));
+        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QStringLiteral("workphone")).toString(), KContacts::PhoneNumber::Work));
+        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QStringLiteral("fax")).toString(), KContacts::PhoneNumber::Fax));
+        contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QStringLiteral("mobile")).toString(), KContacts::PhoneNumber::Cell));
+        contactABC.setNickName(settings->value(QStringLiteral("nick")).toString());
+        contactABC.setUrl(QUrl(settings->value(QStringLiteral("url")).toString()));
 
-        const QDateTime birthDate(QDate::fromString(settings->value(QLatin1String("anniversary")).toString()));
+        const QDateTime birthDate(QDate::fromString(settings->value(QStringLiteral("anniversary")).toString()));
         if (birthDate.isValid()) {
             contactABC.setBirthday(birthDate);
         }
         //TODO
         //ADD(Photo, "photo");
-        addImportNote(contactABC, QLatin1String("Trojita"));
+        addImportNote(contactABC, QStringLiteral("Trojita"));
         createContact(contactABC);
         settings->endGroup();
     }
