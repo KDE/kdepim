@@ -16,6 +16,7 @@
 */
 
 #include "pimsettingexporterwindow.h"
+#include "pimsettingcommandlineoption.h"
 #include "dialog/showarchivestructuredialog.h"
 #include "widgets/logwidget.h"
 
@@ -184,6 +185,10 @@ void PimSettingExporterWindow::slotShowArchiveInformations()
 void PimSettingExporterWindow::slotActivateRequested(const QStringList &arguments, const QString &workingDirectory)
 {
     qDebug()<<" arguments"<<arguments << " workingDirectory"<<workingDirectory;
+    PimSettingCommandLineOption parser;
+    if (parser.parse(arguments)) {
+        handleCommandLine(parser);
+    }
 }
 
 void PimSettingExporterWindow::slotSaveLog()

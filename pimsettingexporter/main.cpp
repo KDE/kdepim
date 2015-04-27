@@ -16,6 +16,7 @@
 */
 
 #include "pimsettingexporterwindow.h"
+#include "pimsettingcommandlineoption.h"
 
 #include <kaboutdata.h>
 #include <KLocalizedString>
@@ -42,14 +43,8 @@ int main(int argc, char *argv[])
                          i18n("Copyright © 2012-2015 pimsettingexporter authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kontact")));
-    QCommandLineParser parser;
+    PimSettingCommandLineOption parser;
     KAboutData::setApplicationData(aboutData);
-    parser.addVersionOption();
-    parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("template"), i18n("Template file uses to define what data, settings to import or export"), QStringLiteral("file")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("import"), i18n("Import the given file")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("export"), i18n("Export the given file")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("+[url]"), i18n("File or url. The user will be asked whether to import or export.")));
 
     aboutData.setupCommandLine(&parser);
     parser.process(app);

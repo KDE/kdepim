@@ -535,17 +535,17 @@ void ExportMailJob::backupAkonadiDb()
     if (dbDriver == QLatin1String("QMYSQL")) {
         dbDumpAppName = QStringLiteral("mysqldump");
 
-        params << QLatin1String("--single-transaction")
-               << QLatin1String("--flush-logs")
-               << QLatin1String("--triggers")
-               << QLatin1String("--result-file=") + tmp.fileName()
+        params << QStringLiteral("--single-transaction")
+               << QStringLiteral("--flush-logs")
+               << QStringLiteral("--triggers")
+               << QStringLiteral("--result-file=") + tmp.fileName()
                << akonadiDataBase.options()
                << akonadiDataBase.name();
-    } else if (dbDriver == QLatin1String("QPSQL")) {
+    } else if (dbDriver == QStringLiteral("QPSQL")) {
         dbDumpAppName = QStringLiteral("pg_dump");
-        params << QLatin1String("--format=custom")
-               << QLatin1String("--blobs")
-               << QLatin1String("--file=") + tmp.fileName()
+        params << QStringLiteral("--format=custom")
+               << QStringLiteral("--blobs")
+               << QStringLiteral("--file=") + tmp.fileName()
                << akonadiDataBase.options()
                << akonadiDataBase.name();
     } else {

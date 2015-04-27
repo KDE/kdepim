@@ -80,6 +80,7 @@ set(pimsettingexporter_SRCS
   archivestorage.cpp
   synchronizeresourcejob.cpp
   pimsettingsbackuprestore.cpp
+  pimsettingcommandlineoption.cpp
 )
 
 
