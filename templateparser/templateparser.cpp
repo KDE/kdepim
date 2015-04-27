@@ -1229,7 +1229,7 @@ QString TemplateParser::getHtmlSignature() const
         const_cast<KIdentityManagement::Identity &>(identity).signature();
 
     if (!signature.isInlinedHtml()) {
-        signature.rawText().toHtmlEscaped();
+        signature = signature.rawText().toHtmlEscaped();
         return signature.rawText().replace(QRegExp(QLatin1String("\n")), QLatin1String("<br />"));
     }
     return signature.rawText();
