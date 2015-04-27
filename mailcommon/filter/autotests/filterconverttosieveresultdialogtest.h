@@ -28,6 +28,7 @@ public:
     ~FilterConvertToSieveResultDialogTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldAddCode();
 };
 
 #endif // FILTERCONVERTTOSIEVERESULTDIALOGTEST_H

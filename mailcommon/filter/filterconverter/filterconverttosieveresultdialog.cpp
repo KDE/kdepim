@@ -42,14 +42,14 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     buttonBox->setObjectName(QStringLiteral("buttonbox"));
     QVBoxLayout *topLayout = new QVBoxLayout;
     setLayout(topLayout);
-    QPushButton *user1Button = new QPushButton;
-    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterConvertToSieveResultDialog::accept);
+    QPushButton *saveButton = new QPushButton;
+    buttonBox->addButton(saveButton, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterConvertToSieveResultDialog::reject);
-    user1Button->setText(i18n("Save..."));
-    user1Button->setDefault(true);
+    saveButton->setText(i18n("Save..."));
+    saveButton->setObjectName(QStringLiteral("savebutton"));
+    saveButton->setDefault(true);
     setModal(true);
-    connect(user1Button, &QPushButton::clicked, this, &FilterConvertToSieveResultDialog::slotSave);
+    connect(saveButton, &QPushButton::clicked, this, &FilterConvertToSieveResultDialog::slotSave);
 
     mEditor = new PimCommon::PlainTextEditorWidget;
     mEditor->setObjectName(QStringLiteral("editor"));

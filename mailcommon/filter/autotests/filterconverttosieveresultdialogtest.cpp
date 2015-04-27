@@ -19,6 +19,7 @@
 #include "../filterconverter/filterconverttosieveresultdialog.h"
 #include <QDialogButtonBox>
 #include <qtest.h>
+#include <QPushButton>
 #include <texteditor/plaintexteditor/plaintexteditorwidget.h>
 FilterConvertToSieveResultDialogTest::FilterConvertToSieveResultDialogTest(QObject *parent)
     : QObject(parent)
@@ -37,9 +38,23 @@ void FilterConvertToSieveResultDialogTest::shouldHaveDefaultValue()
     QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
     QVERIFY(buttonBox);
 
+    QPushButton *saveButton = dlg.findChild<QPushButton *>(QStringLiteral("savebutton"));
+    QVERIFY(saveButton);
+
     PimCommon::PlainTextEditorWidget *editor = dlg.findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("editor"));
     QVERIFY(editor);
     QVERIFY(editor->toPlainText().isEmpty());
+}
+
+void FilterConvertToSieveResultDialogTest::shouldAddCode()
+{
+    MailCommon::FilterConvertToSieveResultDialog dlg;
+
+    PimCommon::PlainTextEditorWidget *editor = dlg.findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("editor"));
+    QVERIFY(editor->toPlainText().isEmpty());
+    const QString code = QStringLiteral("foo");
+    dlg.setCode(code);
+    QCOMPARE(editor->toPlainText(), code);
 }
 
 QTEST_MAIN(FilterConvertToSieveResultDialogTest)
