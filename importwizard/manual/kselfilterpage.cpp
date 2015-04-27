@@ -43,13 +43,10 @@
 // KDE includes
 
 #include <KLocalizedString>
-#include <kmessagebox.h>
 
 // Qt includes
 #include <QCheckBox>
 
-// Akonadi includes
-#include <AkonadiCore/control.h>
 #include <QStandardPaths>
 
 using namespace MailImporter;

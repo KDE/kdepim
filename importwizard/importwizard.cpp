@@ -51,8 +51,10 @@
 #include <mailcommon/kernel/mailkernel.h>
 #include <QPushButton>
 
-ImportWizard::ImportWizard(QWidget *parent)
-    : KAssistantDialog(parent), mSelectedPim(0)
+ImportWizard::ImportWizard(WizardMode mode, QWidget *parent)
+    : KAssistantDialog(parent),
+      mMode(mode),
+      mSelectedPim(0)
 {
     setModal(true);
     setWindowTitle(i18n("PIM Import Tool"));
@@ -62,6 +64,7 @@ ImportWizard::ImportWizard(QWidget *parent)
     CommonKernel->registerKernelIf(kernel);   //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf(kernel);   //SettingsIf is used in FolderTreeWidget
     createAutomaticModePage();
+    createManualModePage();
     initializeImportModule();
 
     // Disable the 'next button to begin with.
@@ -92,6 +95,11 @@ ImportWizard::ImportWizard(QWidget *parent)
 ImportWizard::~ImportWizard()
 {
     qDeleteAll(mlistImport);
+}
+
+void ImportWizard::createManualModePage()
+{
+    //TODO
 }
 
 void ImportWizard::createAutomaticModePage()

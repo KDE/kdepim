@@ -37,7 +37,12 @@ class ImportWizard : public KAssistantDialog
 {
     Q_OBJECT
 public:
-    explicit ImportWizard(QWidget *parent = Q_NULLPTR);
+    enum WizardMode {
+        AutoDetect = 0,
+        Manual = 1
+    };
+
+    explicit ImportWizard(WizardMode mode, QWidget *parent = Q_NULLPTR);
     ~ImportWizard();
 
     void next();
@@ -71,9 +76,11 @@ private:
     void checkModules();
     void setAppropriatePage(AbstractImporter::TypeSupportedOptions options);
     void enableAllImportButton();
+    void createManualModePage();
 
     QMap<QString, AbstractImporter *> mlistImport;
 
+    WizardMode mMode;
     AbstractImporter *mSelectedPim;
 
     KPageWidgetItem *mSelectProgramPageItem;

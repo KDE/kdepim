@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
     KDBusService service();
 
-    ImportWizard *wizard = new ImportWizard();
+    ImportWizard *wizard = new ImportWizard(ImportWizard::AutoDetect);
     wizard->show();
     const int ret = app.exec();
     delete wizard;
