@@ -54,7 +54,6 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray &vCard)
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
     mUser3Button = new QPushButton;
     buttonBox->addButton(mUser3Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &VCardViewer::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &VCardViewer::reject);
     setModal(false);
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);

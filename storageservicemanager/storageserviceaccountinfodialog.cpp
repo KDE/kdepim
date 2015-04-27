@@ -38,7 +38,6 @@ StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(const QString &
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     QGroupBox *grp = new QGroupBox(serviceName);

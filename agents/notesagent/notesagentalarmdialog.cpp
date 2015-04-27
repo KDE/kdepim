@@ -52,7 +52,6 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &NotesAgentAlarmDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &NotesAgentAlarmDialog::reject);
     setAttribute(Qt::WA_DeleteOnClose);
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);

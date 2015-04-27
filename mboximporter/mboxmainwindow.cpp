@@ -38,7 +38,6 @@ MBoxMainWindow::MBoxMainWindow(const QString &filename, QWidget *parent)
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &MBoxMainWindow::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &MBoxMainWindow::reject);
 
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);

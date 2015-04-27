@@ -41,7 +41,6 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     setLayout(mainLayout);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ShowArchiveStructureDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ShowArchiveStructureDialog::reject);
     setModal(true);
     mTreeWidget = new QTreeWidget;

@@ -41,7 +41,6 @@ NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &NotesAgentNoteDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &NotesAgentNoteDialog::reject);
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowIcon(QIcon::fromTheme(QStringLiteral("knotes")));

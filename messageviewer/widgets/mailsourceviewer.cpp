@@ -71,7 +71,6 @@ MailSourceViewer::MailSourceViewer(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mainLayout->addWidget(mainWidget);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &MailSourceViewer::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &MailSourceViewer::reject);
 
     QVBoxLayout *layout = new QVBoxLayout(mainWidget);

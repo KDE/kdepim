@@ -50,7 +50,6 @@ void StorageServicePropertiesDialog::createInformationWidget(const QMap<QString,
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &StorageServicePropertiesDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &StorageServicePropertiesDialog::reject);
 
     QWidget *parent = new QWidget;

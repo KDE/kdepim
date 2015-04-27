@@ -65,7 +65,6 @@ ArchiveDialog::ArchiveDialog(const Akonadi::ETMCalendar::Ptr &cal,
     setLayout(mainLayout);
     mUser1Button = new QPushButton;
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ArchiveDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ArchiveDialog::reject);
     mUser1Button->setDefault(true);
     setModal(false);

@@ -41,7 +41,6 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     QDialogButtonBox *buttonBox = Q_NULLPTR;
     if (defaultTemplate) {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-        connect(buttonBox, &QDialogButtonBox::accepted, this, &TemplateEditDialog::accept);
         connect(buttonBox, &QDialogButtonBox::rejected, this, &TemplateEditDialog::reject);
     } else {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);

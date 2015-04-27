@@ -79,7 +79,6 @@ KeyGenerator::KeyGenerator(QWidget *parent)
     mainLayout->addWidget(mainWidget);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &KeyGenerator::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &KeyGenerator::reject);
     user1Button->setDefault(true);
     KGuiItem::assign(user1Button, KGuiItem("Create"));

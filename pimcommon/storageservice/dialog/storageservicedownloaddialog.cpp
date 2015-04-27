@@ -75,7 +75,6 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     mUser1Button = new QPushButton;
     mCloseButton = buttonBox->button(QDialogButtonBox::Close);
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &StorageServiceDownloadDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &StorageServiceDownloadDialog::reject);
     mUser1Button->setText(i18n("Download"));
 

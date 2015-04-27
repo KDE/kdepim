@@ -139,7 +139,6 @@ RedirectDialog::RedirectDialog(SendMode mode, QWidget *parent)
     buttonBox->addButton(d->mUser1Button, QDialogButtonBox::ActionRole);
     d->mUser2Button = new QPushButton;
     buttonBox->addButton(d->mUser2Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &RedirectDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &RedirectDialog::reject);
     if (mode == SendNow) {
         d->mUser1Button->setDefault(true);

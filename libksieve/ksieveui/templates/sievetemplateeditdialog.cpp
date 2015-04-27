@@ -44,7 +44,6 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     QDialogButtonBox *buttonBox = Q_NULLPTR;
     if (defaultTemplate) {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-        connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveTemplateEditDialog::accept);
         connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveTemplateEditDialog::reject);
     } else {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);

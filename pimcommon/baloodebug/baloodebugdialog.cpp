@@ -41,7 +41,6 @@ BalooDebugDialog::BalooDebugDialog(QWidget *parent)
     connect(user1Button, &QPushButton::clicked, this, &BalooDebugDialog::slotSaveAs);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &BalooDebugDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &BalooDebugDialog::reject);
     mBalooDebugWidget = new BalooDebugWidget(this);
     mBalooDebugWidget->setObjectName(QStringLiteral("baloodebugwidget"));

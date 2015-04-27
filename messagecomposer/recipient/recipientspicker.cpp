@@ -83,7 +83,6 @@ RecipientsPicker::RecipientsPicker(QWidget *parent)
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
     mUser3Button = new QPushButton;
     buttonBox->addButton(mUser3Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &RecipientsPicker::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &RecipientsPicker::reject);
     mainLayout->addWidget(buttonBox);
     mUser3Button->setText(i18n("Add as &To"));

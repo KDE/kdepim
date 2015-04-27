@@ -68,7 +68,6 @@ FilterLogDialog::FilterLogDialog(QWidget *parent)
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
     mUser2Button = new QPushButton;
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &FilterLogDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &FilterLogDialog::reject);
     setWindowIcon(QIcon::fromTheme(QStringLiteral("view-filter")));
     setModal(false);

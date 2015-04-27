@@ -46,7 +46,6 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     setLayout(mainLayout);
     mUser1Button = new QPushButton;
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &AdBlockShowListDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AdBlockShowListDialog::reject);
     mUser1Button->setText(i18n("Delete List"));
     mUser1Button->setEnabled(false);

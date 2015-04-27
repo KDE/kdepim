@@ -97,7 +97,6 @@ StorageServiceDeleteDialog::StorageServiceDeleteDialog(DeleteType type, PimCommo
     setLayout(mainLayout);
     mUser1Button = new QPushButton;
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &StorageServiceDeleteDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &StorageServiceDeleteDialog::reject);
     mUser1Button->setText(i18n("Delete"));
 
