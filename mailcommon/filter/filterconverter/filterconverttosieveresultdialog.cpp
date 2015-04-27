@@ -26,7 +26,6 @@
 
 #include <QHBoxLayout>
 
-#include <errno.h>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
@@ -40,6 +39,7 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
 {
     setWindowTitle(i18n("Convert to sieve script"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    buttonBox->setObjectName(QStringLiteral("buttonbox"));
     QVBoxLayout *topLayout = new QVBoxLayout;
     setLayout(topLayout);
     QPushButton *user1Button = new QPushButton;
@@ -52,6 +52,7 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     connect(user1Button, &QPushButton::clicked, this, &FilterConvertToSieveResultDialog::slotSave);
 
     mEditor = new PimCommon::PlainTextEditorWidget;
+    mEditor->setObjectName(QStringLiteral("editor"));
     PimCommon::SieveSyntaxHighlighter *syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter(mEditor->editor()->document());
     syntaxHighlighter->addCapabilities(PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities());
     topLayout->addWidget(mEditor);

@@ -422,3 +422,19 @@ target_link_libraries( filteractionsettransporttest
    KF5::AkonadiCore
    KF5::AkonadiMime
 )
+
+
+set(mailcommon_filterconverttosieveresultdialogtest_SRCS filterconverttosieveresultdialogtest.cpp ../filterconverter/filterconverttosieveresultdialog.cpp)
+
+
+add_executable( filterconverttosieveresultdialogtest ${mailcommon_filterconverttosieveresultdialogtest_SRCS} )
+add_test(filterconverttosieveresultdialogtest filterconverttosieveresultdialogtest)
+ecm_mark_as_test(filterconverttosieveresultdialogtest)
+target_link_libraries( filterconverttosieveresultdialogtest
+   kdepim
+   pimcommon
+   mailcommon
+   Qt5::Test
+   Qt5::Core
+)
+
