@@ -39,7 +39,7 @@ public:
 
     virtual void clear();
     virtual void alert(const QString &message);
-    virtual QWidget *parent();
+    virtual QWidget *parent() const;
 };
 }
 

@@ -95,7 +95,7 @@ void MBoxImporterInfoGui::alert(const QString &message)
     KMessageBox::information(mParent, message);
 }
 
-QWidget *MBoxImporterInfoGui::parent()
+QWidget *MBoxImporterInfoGui::parent() const
 {
     return mParent;
 }

@@ -95,7 +95,7 @@ void ImportFilterInfoGui::alert(const QString &message)
     KMessageBox::information(m_parent, message);
 }
 
-QWidget *ImportFilterInfoGui::parent()
+QWidget *ImportFilterInfoGui::parent() const
 {
     return m_parent;
 }

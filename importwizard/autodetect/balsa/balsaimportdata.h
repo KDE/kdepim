@@ -26,14 +26,14 @@ public:
     explicit BalsaImportData(ImportWizard *parent);
     ~BalsaImportData();
 
-    TypeSupportedOptions supportedOption();
-    bool foundMailer() const;
+    TypeSupportedOptions supportedOption() Q_DECL_OVERRIDE;
+    bool foundMailer() const Q_DECL_OVERRIDE;
 
-    bool importMails();
-    bool importAddressBook();
-    bool importSettings();
-    bool importFilters();
-    QString name() const;
+    bool importMails() Q_DECL_OVERRIDE;
+    bool importAddressBook() Q_DECL_OVERRIDE;
+    bool importSettings() Q_DECL_OVERRIDE;
+    bool importFilters() Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE;
 
 };
 

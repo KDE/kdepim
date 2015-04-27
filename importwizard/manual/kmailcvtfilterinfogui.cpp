@@ -86,7 +86,7 @@ void KMailCvtFilterInfoGui::alert(const QString &message)
     KMessageBox::information(m_parent, message);
 }
 
-QWidget *KMailCvtFilterInfoGui::parent()
+QWidget *KMailCvtFilterInfoGui::parent() const
 {
     return m_parent;
 }

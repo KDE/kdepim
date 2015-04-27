@@ -26,14 +26,14 @@ public:
     explicit ThunderbirdImportData(ImportWizard *parent);
     ~ThunderbirdImportData();
 
-    TypeSupportedOptions supportedOption();
-    bool foundMailer() const;
+    TypeSupportedOptions supportedOption() Q_DECL_OVERRIDE;
+    bool foundMailer() const Q_DECL_OVERRIDE;
 
-    bool importSettings();
-    bool importMails();
-    bool importFilters();
-    bool importAddressBook();
-    QString name() const;
+    bool importSettings() Q_DECL_OVERRIDE;
+    bool importMails() Q_DECL_OVERRIDE;
+    bool importFilters() Q_DECL_OVERRIDE;
+    bool importAddressBook() Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE;
 private:
     QString defaultProfile();
 

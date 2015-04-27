@@ -26,11 +26,11 @@ public:
     explicit MailAppImportData(ImportWizard *parent);
     ~MailAppImportData();
 
-    TypeSupportedOptions supportedOption();
-    bool foundMailer() const;
+    TypeSupportedOptions supportedOption() Q_DECL_OVERRIDE;
+    bool foundMailer() const Q_DECL_OVERRIDE;
 
-    bool importMails();
-    QString name() const;
+    bool importMails() Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE;
 
 };
 

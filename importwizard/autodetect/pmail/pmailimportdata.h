@@ -26,13 +26,13 @@ public:
     explicit PMailImportData(ImportWizard *parent);
     ~PMailImportData();
 
-    TypeSupportedOptions supportedOption();
-    bool foundMailer() const;
+    TypeSupportedOptions supportedOption() Q_DECL_OVERRIDE;
+    bool foundMailer() const Q_DECL_OVERRIDE;
 
-    bool importMails();
-    bool importSettings();
+    bool importMails() Q_DECL_OVERRIDE;
+    bool importSettings() Q_DECL_OVERRIDE;
 
-    QString name() const;
+    QString name() const Q_DECL_OVERRIDE;
 
 };
 

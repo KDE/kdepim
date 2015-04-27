@@ -26,16 +26,16 @@ public:
     explicit Evolutionv3ImportData(ImportWizard *parent);
     ~Evolutionv3ImportData();
 
-    TypeSupportedOptions supportedOption();
-    bool foundMailer() const;
+    TypeSupportedOptions supportedOption() Q_DECL_OVERRIDE;
+    bool foundMailer() const Q_DECL_OVERRIDE;
 
-    bool importSettings();
-    bool importMails();
-    bool importFilters();
-    bool importAddressBook();
-    bool importCalendar();
+    bool importSettings() Q_DECL_OVERRIDE;
+    bool importMails() Q_DECL_OVERRIDE;
+    bool importFilters() Q_DECL_OVERRIDE;
+    bool importAddressBook() Q_DECL_OVERRIDE;
+    bool importCalendar() Q_DECL_OVERRIDE;
 
-    QString name() const;
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 #endif /* Evolutionv3ImportData_H */

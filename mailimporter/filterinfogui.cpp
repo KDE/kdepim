@@ -75,7 +75,7 @@ void FilterInfoGui::alert(const QString &message)
     Q_UNUSED(message);
 }
 
-QWidget *FilterInfoGui::parent()
+QWidget *FilterInfoGui::parent() const
 {
     return 0;
 }

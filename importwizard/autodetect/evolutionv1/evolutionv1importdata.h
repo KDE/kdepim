@@ -26,11 +26,11 @@ public:
     explicit Evolutionv1ImportData(ImportWizard *parent);
     ~Evolutionv1ImportData();
 
-    TypeSupportedOptions supportedOption();
-    bool foundMailer() const;
+    TypeSupportedOptions supportedOption() Q_DECL_OVERRIDE;
+    bool foundMailer() const Q_DECL_OVERRIDE;
 
-    bool importMails();
-    QString name() const;
+    bool importMails() Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 #endif /* Evolutionv1ImportData_H */

@@ -27,17 +27,17 @@ public:
     explicit KMailCvtFilterInfoGui(KImportPage *dlg, QWidget *parent);
     ~KMailCvtFilterInfoGui();
 
-    void setStatusMessage(const QString &status);
-    void setFrom(const QString &from);
-    void setTo(const QString &to);
-    void setCurrent(const QString &current);
-    void setCurrent(int percent = 0);
-    void setOverall(int percent = 0);
-    void addErrorLogEntry(const QString &log);
-    void addInfoLogEntry(const QString &log);
-    void clear();
-    void alert(const QString &message);
-    QWidget *parent();
+    void setStatusMessage(const QString &status) Q_DECL_OVERRIDE;
+    void setFrom(const QString &from) Q_DECL_OVERRIDE;
+    void setTo(const QString &to) Q_DECL_OVERRIDE;
+    void setCurrent(const QString &current) Q_DECL_OVERRIDE;
+    void setCurrent(int percent = 0) Q_DECL_OVERRIDE;
+    void setOverall(int percent = 0) Q_DECL_OVERRIDE;
+    void addErrorLogEntry(const QString &log) Q_DECL_OVERRIDE;
+    void addInfoLogEntry(const QString &log) Q_DECL_OVERRIDE;
+    void clear() Q_DECL_OVERRIDE;
+    void alert(const QString &message) Q_DECL_OVERRIDE;
+    QWidget *parent() const Q_DECL_OVERRIDE;
 
 private:
     QWidget *m_parent;
