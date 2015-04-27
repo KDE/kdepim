@@ -61,39 +61,7 @@ ImportWizard::ImportWizard(QWidget *parent)
     ImportWizardKernel *kernel = new ImportWizardKernel(this);
     CommonKernel->registerKernelIf(kernel);   //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf(kernel);   //SettingsIf is used in FolderTreeWidget
-
-    mSelectProgramPage = new SelectProgramPage(this);
-    mPage1 = new KPageWidgetItem(mSelectProgramPage, i18n("Detect program"));
-    addPage(mPage1);
-
-    mSelectComponentPage = new SelectComponentPage(this);
-    mPage2 = new KPageWidgetItem(mSelectComponentPage, i18n("Select material to import"));
-    addPage(mPage2);
-
-    mImportMailPage = new ImportMailPage(this);
-    mPage3 = new KPageWidgetItem(mImportMailPage, i18n("Import mail messages"));
-    addPage(mPage3);
-
-    mImportFilterPage = new ImportFilterPage(this);
-    mPage4 = new KPageWidgetItem(mImportFilterPage, i18n("Import mail filters"));
-    addPage(mPage4);
-
-    mImportSettingPage = new ImportSettingPage(this);
-    mPage5 = new KPageWidgetItem(mImportSettingPage, i18n("Import settings"));
-    addPage(mPage5);
-
-    mImportAddressbookPage = new ImportAddressbookPage(this);
-    mPage6 = new KPageWidgetItem(mImportAddressbookPage, i18n("Import addressbooks"));
-    addPage(mPage6);
-
-    mImportCalendarPage = new ImportCalendarPage(this);
-    mPage7 = new KPageWidgetItem(mImportCalendarPage, i18n("Import calendars"));
-    addPage(mPage7);
-
-    mImportFinishPage = new ImportFinishPage(this);
-    mPage8 = new KPageWidgetItem(mImportFinishPage, i18n("Finish"));
-    addPage(mPage8);
-
+    createAutomaticModePage();
     initializeImportModule();
 
     // Disable the 'next button to begin with.
@@ -125,6 +93,42 @@ ImportWizard::~ImportWizard()
 {
     qDeleteAll(mlistImport);
 }
+
+void ImportWizard::createAutomaticModePage()
+{
+    mSelectProgramPage = new SelectProgramPage(this);
+    mSelectProgramPageItem = new KPageWidgetItem(mSelectProgramPage, i18n("Detect program"));
+    addPage(mSelectProgramPageItem);
+
+    mSelectComponentPage = new SelectComponentPage(this);
+    mSelectComponentPageItem = new KPageWidgetItem(mSelectComponentPage, i18n("Select material to import"));
+    addPage(mSelectComponentPageItem);
+
+    mImportMailPage = new ImportMailPage(this);
+    mImportMailPageItem = new KPageWidgetItem(mImportMailPage, i18n("Import mail messages"));
+    addPage(mImportMailPageItem);
+
+    mImportFilterPage = new ImportFilterPage(this);
+    mImportFilterPageItem = new KPageWidgetItem(mImportFilterPage, i18n("Import mail filters"));
+    addPage(mImportFilterPageItem);
+
+    mImportSettingPage = new ImportSettingPage(this);
+    mImportSettingPageItem = new KPageWidgetItem(mImportSettingPage, i18n("Import settings"));
+    addPage(mImportSettingPageItem);
+
+    mImportAddressbookPage = new ImportAddressbookPage(this);
+    mImportAddressbookPageItem = new KPageWidgetItem(mImportAddressbookPage, i18n("Import addressbooks"));
+    addPage(mImportAddressbookPageItem);
+
+    mImportCalendarPage = new ImportCalendarPage(this);
+    mImportCalendarPageItem = new KPageWidgetItem(mImportCalendarPage, i18n("Import calendars"));
+    addPage(mImportCalendarPageItem);
+
+    mImportFinishPage = new ImportFinishPage(this);
+    mPage8 = new KPageWidgetItem(mImportFinishPage, i18n("Finish"));
+    addPage(mPage8);
+}
+
 
 void ImportWizard::initializeImportModule()
 {
@@ -163,7 +167,7 @@ void ImportWizard::slotImportAddressbookClicked()
     addFinishInfo(i18n("Import addressbook from %1...", mSelectedPim->name()));
     mImportAddressbookPage->setImportButtonEnabled(false);
     const bool result = mSelectedPim->importAddressBook();
-    setValid(mPage6, result);
+    setValid(mImportAddressbookPageItem, result);
 }
 
 void ImportWizard::slotImportFiltersClicked()
@@ -171,7 +175,7 @@ void ImportWizard::slotImportFiltersClicked()
     addFinishInfo(i18n("Import filters from %1...", mSelectedPim->name()));
     mImportFilterPage->setImportButtonEnabled(false);
     const bool result = mSelectedPim->importFilters();
-    setValid(mPage4, result);
+    setValid(mImportFilterPageItem, result);
 }
 
 void ImportWizard::slotImportMailsClicked()
@@ -179,7 +183,7 @@ void ImportWizard::slotImportMailsClicked()
     addFinishInfo(i18n("Import mails from %1...", mSelectedPim->name()));
     mImportMailPage->setImportButtonEnabled(false);
     const bool result = mSelectedPim->importMails();
-    setValid(mPage3, result);
+    setValid(mImportMailPageItem, result);
 }
 
 void ImportWizard::slotImportSettingsClicked()
@@ -187,7 +191,7 @@ void ImportWizard::slotImportSettingsClicked()
     addFinishInfo(i18n("Import settings from %1...", mSelectedPim->name()));
     mImportSettingPage->setImportButtonEnabled(false);
     const bool result = mSelectedPim->importSettings();
-    setValid(mPage5, result);
+    setValid(mImportSettingPageItem, result);
 }
 
 void ImportWizard::slotImportCalendarClicked()
@@ -195,7 +199,7 @@ void ImportWizard::slotImportCalendarClicked()
     addFinishInfo(i18n("Import calendar from %1...", mSelectedPim->name()));
     mImportCalendarPage->setImportButtonEnabled(false);
     const bool result = mSelectedPim->importCalendar();
-    setValid(mPage7, result);
+    setValid(mImportCalendarPageItem, result);
 }
 
 void ImportWizard::slotProgramSelected(const QString &program)
@@ -222,41 +226,41 @@ void ImportWizard::addImportModule(AbstractImporter *import)
 
 void ImportWizard::slotAtLeastOneComponentSelected(bool result)
 {
-    setValid(mPage2, result);
+    setValid(mSelectComponentPageItem, result);
 }
 
 void ImportWizard::setAppropriatePage(AbstractImporter::TypeSupportedOptions options)
 {
-    setAppropriate(mPage3, (options & AbstractImporter::Mails));
-    setAppropriate(mPage4, (options & AbstractImporter::Filters));
-    setAppropriate(mPage5, (options & AbstractImporter::Settings));
-    setAppropriate(mPage6, (options & AbstractImporter::AddressBooks));
-    setAppropriate(mPage7, (options & AbstractImporter::Calendars));
+    setAppropriate(mImportMailPageItem, (options & AbstractImporter::Mails));
+    setAppropriate(mImportFilterPageItem, (options & AbstractImporter::Filters));
+    setAppropriate(mImportSettingPageItem, (options & AbstractImporter::Settings));
+    setAppropriate(mImportAddressbookPageItem, (options & AbstractImporter::AddressBooks));
+    setAppropriate(mImportCalendarPageItem, (options & AbstractImporter::Calendars));
 }
 
 void ImportWizard::next()
 {
-    if (currentPage() == mPage1) {
+    if (currentPage() == mSelectProgramPageItem) {
         KAssistantDialog::next();
         mSelectProgramPage->disableSelectProgram();
         mSelectComponentPage->setEnabledComponent(mSelectedPim->supportedOption());
-    } else if (currentPage() == mPage2) {
+    } else if (currentPage() == mSelectComponentPageItem) {
         setAppropriatePage(mSelectComponentPage->selectedComponents());
         KAssistantDialog::next();
-        setValid(mPage3, false);
-    } else if (currentPage() == mPage3) {
+        setValid(mImportMailPageItem, false);
+    } else if (currentPage() == mImportMailPageItem) {
         KAssistantDialog::next();
-        setValid(mPage4, false);
-    } else if (currentPage() == mPage4) {
+        setValid(mImportFilterPageItem, false);
+    } else if (currentPage() == mImportFilterPageItem) {
         KAssistantDialog::next();
-        setValid(mPage5, false);
-    } else if (currentPage() == mPage5) {
+        setValid(mImportSettingPageItem, false);
+    } else if (currentPage() == mImportSettingPageItem) {
         KAssistantDialog::next();
-        setValid(mPage6, false);
-    } else if (currentPage() == mPage6) {
+        setValid(mImportAddressbookPageItem, false);
+    } else if (currentPage() == mImportAddressbookPageItem) {
         KAssistantDialog::next();
-        setValid(mPage7, false);
-    } else if (currentPage() == mPage7) {
+        setValid(mImportCalendarPageItem, false);
+    } else if (currentPage() == mImportCalendarPageItem) {
         KAssistantDialog::next();
         setValid(mPage8, true);
     } else {
@@ -275,12 +279,12 @@ void ImportWizard::enableAllImportButton()
 
 void ImportWizard::back()
 {
-    if (currentPage() == mPage1) {
+    if (currentPage() == mSelectProgramPageItem) {
         return;
-    } else if (currentPage() == mPage4 ||
-               currentPage() == mPage5 ||
-               currentPage() == mPage6 ||
-               currentPage() == mPage7 ||
+    } else if (currentPage() == mImportFilterPageItem ||
+               currentPage() == mImportSettingPageItem ||
+               currentPage() == mImportAddressbookPageItem ||
+               currentPage() == mImportCalendarPageItem ||
                currentPage() == mPage8) {
         enableAllImportButton();
     }

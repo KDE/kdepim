@@ -65,6 +65,8 @@ private Q_SLOTS:
     void slotImportCalendarClicked();
 
 private:
+    void initializeImportModule();
+    void createAutomaticModePage();
     void addImportModule(AbstractImporter *);
     void checkModules();
     void setAppropriatePage(AbstractImporter::TypeSupportedOptions options);
@@ -74,13 +76,13 @@ private:
 
     AbstractImporter *mSelectedPim;
 
-    KPageWidgetItem *mPage1;
-    KPageWidgetItem *mPage2;
-    KPageWidgetItem *mPage3;
-    KPageWidgetItem *mPage4;
-    KPageWidgetItem *mPage5;
-    KPageWidgetItem *mPage6;
-    KPageWidgetItem *mPage7;
+    KPageWidgetItem *mSelectProgramPageItem;
+    KPageWidgetItem *mSelectComponentPageItem;
+    KPageWidgetItem *mImportMailPageItem;
+    KPageWidgetItem *mImportFilterPageItem;
+    KPageWidgetItem *mImportSettingPageItem;
+    KPageWidgetItem *mImportAddressbookPageItem;
+    KPageWidgetItem *mImportCalendarPageItem;
     KPageWidgetItem *mPage8;
 
     SelectProgramPage *mSelectProgramPage;
@@ -91,7 +93,6 @@ private:
     ImportAddressbookPage *mImportAddressbookPage;
     ImportFinishPage *mImportFinishPage;
     ImportCalendarPage *mImportCalendarPage;
-    void initializeImportModule();
 };
 
 #endif /* IMPORTWIZARD_H */
