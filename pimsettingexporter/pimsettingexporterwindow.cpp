@@ -114,11 +114,11 @@ void PimSettingExporterWindow::handleCommandLine(const QCommandLineParser &parse
         templateFile = parser.value(QStringLiteral("template"));
     }
     if (parser.isSet(QStringLiteral("import"))) {
-        if (parser.positionalArguments().count() > 0) {
+        if (!parser.positionalArguments().isEmpty()) {
             loadData(parser.positionalArguments().at(0), templateFile);
         }
     } else if (parser.isSet(QStringLiteral("export"))) {
-        if (parser.positionalArguments().count() > 0) {
+        if (!parser.positionalArguments().isEmpty()) {
             backupData(parser.positionalArguments().at(0), templateFile);
         }
     }
@@ -179,6 +179,11 @@ void PimSettingExporterWindow::slotShowArchiveInformations()
     QPointer<ShowArchiveStructureDialog> dlg = new ShowArchiveStructureDialog(filename, this);
     dlg->exec();
     delete dlg;
+}
+
+void PimSettingExporterWindow::slotActivateRequested(const QStringList &arguments, const QString &workingDirectory)
+{
+    qDebug()<<" arguments"<<arguments << " workingDirectory"<<workingDirectory;
 }
 
 void PimSettingExporterWindow::slotSaveLog()
