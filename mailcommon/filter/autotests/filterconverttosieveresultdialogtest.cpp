@@ -34,10 +34,10 @@ FilterConvertToSieveResultDialogTest::~FilterConvertToSieveResultDialogTest()
 void FilterConvertToSieveResultDialogTest::shouldHaveDefaultValue()
 {
     MailCommon::FilterConvertToSieveResultDialog dlg;
-    QDialogButtonBox *buttonBox = qFindChild<QDialogButtonBox *>(&dlg, QStringLiteral("buttonbox"));
+    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
     QVERIFY(buttonBox);
 
-    PimCommon::PlainTextEditorWidget *editor = qFindChild<PimCommon::PlainTextEditorWidget *>(&dlg, QStringLiteral("editor"));
+    PimCommon::PlainTextEditorWidget *editor = dlg.findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("editor"));
     QVERIFY(editor);
     QVERIFY(editor->toPlainText().isEmpty());
 }

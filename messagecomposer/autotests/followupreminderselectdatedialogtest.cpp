@@ -101,7 +101,7 @@ void FollowupReminderSelectDateDialogTest::shouldDisableOkButtonIfDateIsNotValid
 void FollowupReminderSelectDateDialogTest::shouldDisableOkButtonIfModelIsEmpty()
 {
     MessageComposer::FollowUpReminderSelectDateDialog dlg(0, new QStandardItemModel(0));
-    KDateComboBox *datecombobox = qFindChild<KDateComboBox *>(&dlg, QLatin1String("datecombobox"));
+    KDateComboBox *datecombobox = dlg.findChild<KDateComboBox *>(QLatin1String("datecombobox"));
     QVERIFY(datecombobox);
     datecombobox->lineEdit()->setText(QLatin1String(" "));
     QPushButton *okButton = dlg.findChild<QPushButton *>(QStringLiteral("ok_button"));

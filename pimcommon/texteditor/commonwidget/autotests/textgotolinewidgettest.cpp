@@ -134,7 +134,7 @@ void TextGoToLineWidgetTest::shouldChangeMaximumValue()
     PimCommon::TextGoToLineWidget edit;
     edit.show();
     QTest::qWaitForWindowShown(&edit);
-    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+    QSpinBox *line = edit.findChild<QSpinBox *>(QLatin1String("line"));
 
     QCOMPARE(line->value(), 1);
     QCOMPARE(line->minimum(), 1);

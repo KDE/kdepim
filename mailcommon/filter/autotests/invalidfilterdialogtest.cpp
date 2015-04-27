@@ -35,10 +35,10 @@ InvalidFilterDialogTest::~InvalidFilterDialogTest()
 void InvalidFilterDialogTest::shouldHaveDefaultValue()
 {
     MailCommon::InvalidFilterDialog dlg;
-    MailCommon::InvalidFilterWidget *widget = qFindChild<MailCommon::InvalidFilterWidget *>(&dlg, QStringLiteral("invalid_filter_widget"));
+    MailCommon::InvalidFilterWidget *widget = dlg.findChild<MailCommon::InvalidFilterWidget *>(QStringLiteral("invalid_filter_widget"));
     QVERIFY(widget);
 
-    MailCommon::InvalidFilterInfoWidget *infoWidget = qFindChild<MailCommon::InvalidFilterInfoWidget *>(&dlg, QStringLiteral("invalid_filter_infowidget"));
+    MailCommon::InvalidFilterInfoWidget *infoWidget = dlg.findChild<MailCommon::InvalidFilterInfoWidget *>(QStringLiteral("invalid_filter_infowidget"));
     QVERIFY(infoWidget);
     QVERIFY(!infoWidget->isVisible());
 }
