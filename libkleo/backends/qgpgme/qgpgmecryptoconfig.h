@@ -68,8 +68,8 @@ public:
 
     virtual Kleo::CryptoConfigComponent *component(const QString &name) const;
 
-    virtual void clear();
-    virtual void sync(bool runtime);
+    void clear() Q_DECL_OVERRIDE;
+    void sync(bool runtime) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotCollectStdOut();

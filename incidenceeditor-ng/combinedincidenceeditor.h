@@ -51,16 +51,16 @@ public:
      * Returns whether or not the current values in the editor differ from the
      * initial values or if one of the combined editors is dirty.
      */
-    virtual bool isDirty() const;
-    virtual bool isValid() const;
+    bool isDirty() const Q_DECL_OVERRIDE;
+    bool isValid() const Q_DECL_OVERRIDE;
 
     /**
      * Loads all data from @param inicidence into the combined editors. Note, if
      * you reimplement the load method in a subclass, make sure to call this
      * implementation too.
      */
-    virtual void load(const KCalCore::Incidence::Ptr &incidence);
-    virtual void save(const KCalCore::Incidence::Ptr &incidence);
+    void load(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    void save(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void handleDirtyStatusChange(bool isDirty);

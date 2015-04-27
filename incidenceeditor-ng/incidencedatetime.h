@@ -49,9 +49,9 @@ public:
     explicit IncidenceDateTime(Ui::EventOrTodoDesktop *ui);
     ~IncidenceDateTime();
 
-    virtual void load(const KCalCore::Incidence::Ptr &incidence);
-    virtual void save(const KCalCore::Incidence::Ptr &incidence);
-    virtual bool isDirty() const;
+    void load(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    void save(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    bool isDirty() const Q_DECL_OVERRIDE;
 
     /**
      * Sets the active date for the editing session. This defaults to the current

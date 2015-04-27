@@ -72,7 +72,7 @@ public Q_SLOTS:
     virtual void setTitle(const QString &title);
 
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
 
 private:
     void calculateFrame();

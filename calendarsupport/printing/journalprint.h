@@ -34,37 +34,37 @@ class CALENDARSUPPORT_EXPORT CalPrintJournal : public CalPrintPluginBase
 {
 public:
     CalPrintJournal(): CalPrintPluginBase() {}
-    virtual ~CalPrintJournal() {}
+    ~CalPrintJournal() {}
 
-    virtual QString groupName()
+    QString groupName() Q_DECL_OVERRIDE
     {
         return QStringLiteral("Print journal");
     }
-    virtual QString description()
+    QString description() Q_DECL_OVERRIDE
     {
         return i18n("Print &journal");
     }
-    virtual QString info() const
+    QString info() const Q_DECL_OVERRIDE
     {
         return i18n("Prints all journals for a given date range");
     }
-    virtual QWidget *createConfigWidget(QWidget *);
-    virtual int sortID()
+    QWidget *createConfigWidget(QWidget *) Q_DECL_OVERRIDE;
+    int sortID() Q_DECL_OVERRIDE
     {
         return CalPrinterBase::Journallist;
     }
-    virtual bool enabled()
+    bool enabled() Q_DECL_OVERRIDE
     {
         return true;
     }
 
 public:
-    virtual void print(QPainter &p, int width, int height);
-    virtual void readSettingsWidget();
-    virtual void setSettingsWidget();
-    virtual void loadConfig();
-    virtual void saveConfig();
-    virtual void setDateRange(const QDate &from, const QDate &to);
+    void print(QPainter &p, int width, int height) Q_DECL_OVERRIDE;
+    void readSettingsWidget() Q_DECL_OVERRIDE;
+    void setSettingsWidget() Q_DECL_OVERRIDE;
+    void loadConfig() Q_DECL_OVERRIDE;
+    void saveConfig() Q_DECL_OVERRIDE;
+    void setDateRange(const QDate &from, const QDate &to) Q_DECL_OVERRIDE;
 
 protected:
     bool mUseDateRange;

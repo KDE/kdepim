@@ -34,37 +34,37 @@ class CALENDARSUPPORT_EXPORT  CalPrintYear : public CalPrintPluginBase
 {
 public:
     CalPrintYear(): CalPrintPluginBase() {}
-    virtual ~CalPrintYear() {}
-    virtual QString groupName()
+    ~CalPrintYear() {}
+    QString groupName() Q_DECL_OVERRIDE
     {
         return QStringLiteral("Print year");
     }
-    virtual QString description()
+    QString description() Q_DECL_OVERRIDE
     {
         return i18n("Print &year");
     }
-    virtual QString info() const
+    QString info() const Q_DECL_OVERRIDE
     {
         return i18n("Prints a calendar for an entire year");
     }
-    virtual int sortID()
+    int sortID() Q_DECL_OVERRIDE
     {
         return CalPrinterBase::Year;
     }
-    virtual bool enabled()
+    bool enabled() Q_DECL_OVERRIDE
     {
         return true;
     }
-    virtual QWidget *createConfigWidget(QWidget *);
-    virtual QPrinter::Orientation defaultOrientation();
+    QWidget *createConfigWidget(QWidget *) Q_DECL_OVERRIDE;
+    QPrinter::Orientation defaultOrientation() Q_DECL_OVERRIDE;
 
 public:
-    virtual void print(QPainter &p, int width, int height);
-    virtual void readSettingsWidget();
-    virtual void setSettingsWidget();
-    virtual void loadConfig();
-    virtual void saveConfig();
-    virtual void setDateRange(const QDate &from, const QDate &to);
+    void print(QPainter &p, int width, int height) Q_DECL_OVERRIDE;
+    void readSettingsWidget() Q_DECL_OVERRIDE;
+    void setSettingsWidget() Q_DECL_OVERRIDE;
+    void loadConfig() Q_DECL_OVERRIDE;
+    void saveConfig() Q_DECL_OVERRIDE;
+    void setDateRange(const QDate &from, const QDate &to) Q_DECL_OVERRIDE;
 
 protected:
     int mYear;
