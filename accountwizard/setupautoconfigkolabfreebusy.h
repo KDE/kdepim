@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2014 Sandro Knauß <knauss@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,39 +17,43 @@
     02110-1301, USA.
 */
 
-#ifndef RESOURCE_H
-#define RESOURCE_H
+#ifndef SETUPAUTOCONFIGKOLABFREEBUSY_H
+#define SETUPAUTOCONFIGKOLABFREEBUSY_H
 
 #include "setupobject.h"
-#include <agentinstance.h>
-#include <QtCore/QMap>
 
-class KJob;
+class Identity;
+class AutoconfigKolabFreebusy;
 
-class Resource : public SetupObject
+class SetupAutoconfigKolabFreebusy : public SetupObject
 {
     Q_OBJECT
 public:
-    explicit Resource(const QString &type, QObject *parent = Q_NULLPTR);
-    void create();
-    void destroy();
-    void edit();
+    /** Constructor */
+    explicit SetupAutoconfigKolabFreebusy(QObject *parent = Q_NULLPTR);
+    ~SetupAutoconfigKolabFreebusy();
 
-public Q_SLOTS:
-    Q_SCRIPTABLE void setName(const QString &name);
-    Q_SCRIPTABLE void setOption(const QString &key, const QVariant &value);
-    Q_SCRIPTABLE QString identifier();
-    Q_SCRIPTABLE void reconfigure();
-    Q_SCRIPTABLE void setEditMode(const bool editMode);
+    void create() Q_DECL_OVERRIDE;
+    void destroy() Q_DECL_OVERRIDE;
 
-private Q_SLOTS:
-    void instanceCreateResult(KJob *job);
+public slots:
+    Q_SCRIPTABLE void fillFreebusyServer(int i, QObject *) const;
+    Q_SCRIPTABLE int countFreebusyServers() const;
 
-private:
-    QString m_typeIdentifier, m_name;
-    QMap<QString, QVariant> m_settings;
-    Akonadi::AgentInstance m_instance;
+    Q_SCRIPTABLE void start();
 
-    bool m_editMode;
+    Q_SCRIPTABLE void setEmail(const QString &);
+    Q_SCRIPTABLE void setPassword(const QString &);
+
+signals:
+    void ispdbFinished(bool);
+
+private slots:
+    void onIspdbFinished(bool);
+
+private :
+    AutoconfigKolabFreebusy *mIspdb;
+
 };
+
 #endif

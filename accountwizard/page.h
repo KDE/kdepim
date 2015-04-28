@@ -40,6 +40,8 @@ public:
     virtual void leavePageNextRequested();
     virtual void leavePageBackRequested();
 
+    KAssistantDialog *assistantDialog() const;
+
 Q_SIGNALS:
     Q_SCRIPTABLE void pageEnteredNext();
     Q_SCRIPTABLE void pageEnteredBack();

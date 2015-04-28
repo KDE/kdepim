@@ -30,6 +30,7 @@ public:
     explicit Transport(const QString &type, QObject *parent = Q_NULLPTR);
     void create();
     void destroy();
+    void edit();
 
     int transportId() const;
 
@@ -41,6 +42,7 @@ public Q_SLOTS:
     Q_SCRIPTABLE void setPassword(const QString &password);
     Q_SCRIPTABLE void setEncryption(const QString &encryption);
     Q_SCRIPTABLE void setAuthenticationType(const QString &authType);
+    Q_SCRIPTABLE void setEditMode(const bool editMode);
 
 private:
     MailTransport::Transport::EnumEncryption stringToEncryption(const QString &encryptionString);
@@ -56,6 +58,8 @@ private:
     QString m_password;
     MailTransport::Transport::EnumEncryption::type m_encr;
     MailTransport::Transport::EnumAuthenticationType::type m_auth;
+
+    bool m_editMode;
 };
 
 #endif

@@ -42,6 +42,11 @@ void ServerTest::test(const QString server, const QString protocol)
     qCDebug(ACCOUNTWIZARD_LOG) << server << protocol;
     m_serverTest->setServer(server);
     m_serverTest->setProtocol(protocol);
+    if (protocol == QStringLiteral("submission")) {
+        m_serverTest->setProtocol(QStringLiteral("smtp"));
+        m_serverTest->setPort(MailTransport::Transport::EnumEncryption::None, 587);
+        m_serverTest->setPort(MailTransport::Transport::EnumEncryption::SSL, 0);        //No ssl port for submission
+    }
     m_serverTest->start();
 }
 
@@ -60,4 +65,3 @@ void ServerTest::testFinished(QList< int > list)
         emit testFail();
     }
 }
-
