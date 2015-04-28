@@ -21,6 +21,7 @@
 #include "filteractions/filteractiondict.h"
 #include <QInputDialog>
 #include "invalidfilters/invalidfilterinfo.h"
+#include "invalidfilters/invalidfilterdialog.h"
 #include <KLocalizedString>
 #include <klistwidgetsearchline.h>
 #include <qpushbutton.h>
@@ -31,6 +32,7 @@
 #include <KIconLoader>
 #include "mailcommon_debug.h"
 #include <QKeyEvent>
+#include <QPointer>
 
 // What's this help texts
 const char *_wt_filterlist =
