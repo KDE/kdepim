@@ -43,6 +43,12 @@ bool FilterActionUnsetStatus::isEmpty() const
     return checkIsValid(index);
 }
 
+QString FilterActionUnsetStatus::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QLatin1String("Status not defined.");
+}
+
 FilterAction::ReturnCode FilterActionUnsetStatus::process(ItemContext &context , bool) const
 {
     int index = 0;

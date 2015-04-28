@@ -33,7 +33,7 @@ public:
     void argsFromString( const QString &argsStr );
     QString argsAsString() const;
     QString displayString() const;
-
+    QString informationAboutNotValidAction() const;
     static QString realStatusString( const QString &statusStr );
 
     static Akonadi::MessageStatus stati[];

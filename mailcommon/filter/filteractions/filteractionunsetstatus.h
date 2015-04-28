@@ -34,6 +34,7 @@ public:
     QString sieveCode() const;
     QStringList sieveRequires() const;
     bool isEmpty() const;
+    QString informationAboutNotValidAction() const;
 private:
     bool checkIsValid(int &index) const;
 };

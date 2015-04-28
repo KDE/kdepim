@@ -124,4 +124,10 @@ QString FilterActionSendFakeDisposition::displayString() const
     return label() + QLatin1String( " \"" ) + mParameter + QLatin1String( "\"" );
 }
 
+QString FilterActionSendFakeDisposition::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QLatin1String("Fake type undefined.");
+}
+
 

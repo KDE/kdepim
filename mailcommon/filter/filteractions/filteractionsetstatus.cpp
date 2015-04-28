@@ -39,6 +39,12 @@ bool FilterActionSetStatus::isEmpty() const
     return ( index < 1 );
 }
 
+QString FilterActionSetStatus::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QLatin1String("Status not specified.");
+}
+
 FilterAction::ReturnCode FilterActionSetStatus::process(ItemContext &context , bool) const
 {
     const int index = mParameterList.indexOf( mParameter );

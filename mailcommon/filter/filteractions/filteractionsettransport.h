@@ -71,6 +71,7 @@ public:
      * @copydoc FilterAction::displayString
      */
     QString displayString() const;
+    QString informationAboutNotValidAction() const;
 
 protected:
     int mParameter;
