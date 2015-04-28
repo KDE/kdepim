@@ -150,3 +150,9 @@ QString FilterActionSetTransport::displayString() const
     return label() + QLatin1String(" \"") + (mTransportName.isEmpty() ? argsAsString().toHtmlEscaped() : mTransportName) + QLatin1String("\"");
 }
 
+QString FilterActionSetTransport::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QLatin1String("Mail transport not defined.");
+}
+

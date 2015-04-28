@@ -123,3 +123,8 @@ QString FilterActionSendFakeDisposition::displayString() const
     return label() + QLatin1String(" \"") + mParameter + QLatin1String("\"");
 }
 
+QString FilterActionSendFakeDisposition::informationAboutNotValidAction() const
+{
+    return i18n("Fake type undefined.");
+}
+

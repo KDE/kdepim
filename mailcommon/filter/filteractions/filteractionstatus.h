@@ -36,6 +36,7 @@ public:
     QString displayString() const Q_DECL_OVERRIDE;
 
     static QString realStatusString(const QString &statusStr);
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 
     static const Akonadi::MessageStatus stati[];
     static const int StatiCount;

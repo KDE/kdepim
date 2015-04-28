@@ -119,19 +119,25 @@ SearchRule::RequiredPart SearchPattern::requiredPart() const
     return reqPart;
 }
 
-void SearchPattern::purify()
+QString SearchPattern::purify(bool removeAction)
 {
+    //TODO
+    QString informationAboutNotValidPattern;
     QList<SearchRule::Ptr>::iterator it = end();
     while (it != begin()) {
         --it;
-        if ((*it)->isEmpty()) {
+        if ( (*it)->isEmpty() ) {
+            if (removeAction) {
 #ifndef NDEBUG
-            qCDebug(MAILCOMMON_LOG) << "Removing" << (*it)->asString();
+                qCDebug(MAILCOMMON_LOG) << "Removing" << (*it)->asString();
 #endif
-            erase(it);
-            it = end();
+                erase( it );
+                it = end();
+            }
         }
     }
+
+    return informationAboutNotValidPattern;
 }
 
 void SearchPattern::readConfig(const KConfigGroup &config)

@@ -109,3 +109,8 @@ QString FilterActionStatus::displayString() const
     return label() + QLatin1String(" \"") + mParameter + QLatin1String("\"");
 }
 
+QString FilterActionStatus::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QLatin1String("Status is missing.");
+}

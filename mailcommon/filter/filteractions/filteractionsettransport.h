@@ -72,6 +72,7 @@ public:
      * @copydoc FilterAction::displayString
      */
     QString displayString() const Q_DECL_OVERRIDE;
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 
 protected:
     int mParameter;

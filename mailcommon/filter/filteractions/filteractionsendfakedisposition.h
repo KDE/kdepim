@@ -44,6 +44,7 @@ public:
     void argsFromString(const QString &argsStr) Q_DECL_OVERRIDE;
     QString argsAsString() const Q_DECL_OVERRIDE;
     QString displayString() const Q_DECL_OVERRIDE;
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 };
 
 }

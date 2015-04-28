@@ -137,7 +137,7 @@ public:
      * method whenever the user had had control of the rules outside of
      * this class. (e.g. after editing it with SearchPatternEdit).
      */
-    void purify();
+    QString purify(bool removeAction = true);
 
     /**
      * Reads a search pattern from a KConfigGroup. If it does not find
