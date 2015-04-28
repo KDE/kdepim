@@ -56,7 +56,7 @@ set(KCALENDARCORE_LIB_VERSION "4.81.0")
 set(IDENTITYMANAGEMENT_LIB_VERSION "4.78.0")
 set(KLDAP_LIB_VERSION "4.78.0")
 set(KMAILTRANSPORT_LIB_VERSION "4.78.0")
-set(CALENDARUTILS_LIB_VERSION "4.78.0")
+set(CALENDARUTILS_LIB_VERSION "4.80.0")
 set(KHOLIDAYS_LIB_VERSION "4.78.0")
 set(KTNEF_LIB_VERSION "4.78.0")
 set(KIMAP_LIB_VERSION "4.78.0")
@@ -83,7 +83,7 @@ option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for 
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 option(KDEPIM_NO_TEXTTOSPEECH "Do not use TextToSpeech in the kdepim applications" FALSE)
 
-find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative OpenGL WebEngineWidgets)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative OpenGL)
 find_package(Qt5X11Extras NO_MODULE)
 if (NOT KDEPIM_NO_TEXTTOSPEECH)
    find_package(Qt5 QUIET OPTIONAL_COMPONENTS TextToSpeech)
@@ -175,7 +175,6 @@ set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libx
 
 find_package(KF5AkonadiSearch "5.0.1" CONFIG REQUIRED)
 set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
-
 
 find_package(ZLIB)
 set_package_properties(ZLIB PROPERTIES DESCRIPTION "The Zlib compression library" URL "http://www.zlib.net" TYPE REQUIRED)
