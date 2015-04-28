@@ -39,7 +39,7 @@ public:
     enum { Type = UserType + 43 };
 
     explicit ConstraintGraphicsItem(const Constraint &c,
-                                    QGraphicsItem *parent = Q_NULLPTR, GraphicsScene *scene = 0);
+                                    QGraphicsItem *parent = Q_NULLPTR, GraphicsScene *scene = Q_NULLPTR);
     virtual ~ConstraintGraphicsItem();
 
     /*reimp*/ int type() const;

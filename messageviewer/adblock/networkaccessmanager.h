@@ -41,7 +41,7 @@ public:
     explicit MyNetworkAccessManager(QObject *parent = Q_NULLPTR);
 
 protected:
-    QNetworkReply *createRequest(Operation op, const QNetworkRequest &req, QIODevice *outgoingData = 0) Q_DECL_OVERRIDE;
+    QNetworkReply *createRequest(Operation op, const QNetworkRequest &req, QIODevice *outgoingData = Q_NULLPTR) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotApplyHidingBlockedElements(bool ok);

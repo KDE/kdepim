@@ -81,12 +81,12 @@ public:
     void registerHandler(const Interface::BodyPartURLHandler *handler);
     void unregisterHandler(const Interface::BodyPartURLHandler *handler);
 
-    bool handleClick(const KUrl &url, ViewerPrivate *w = 0) const;
-    bool handleShiftClick(const KUrl &url, ViewerPrivate *window = 0) const;
-    bool handleContextMenuRequest(const KUrl &url, const QPoint &p, ViewerPrivate *w = 0) const;
-    bool willHandleDrag(const KUrl &url, ViewerPrivate *window = 0) const;
-    bool handleDrag(const KUrl &url, ViewerPrivate *window = 0) const;
-    QString statusBarMessage(const KUrl &url, ViewerPrivate *w = 0) const;
+    bool handleClick(const KUrl &url, ViewerPrivate *w = Q_NULLPTR) const;
+    bool handleShiftClick(const KUrl &url, ViewerPrivate *window = Q_NULLPTR) const;
+    bool handleContextMenuRequest(const KUrl &url, const QPoint &p, ViewerPrivate *w = Q_NULLPTR) const;
+    bool willHandleDrag(const KUrl &url, ViewerPrivate *window = Q_NULLPTR) const;
+    bool handleDrag(const KUrl &url, ViewerPrivate *window = Q_NULLPTR) const;
+    QString statusBarMessage(const KUrl &url, ViewerPrivate *w = Q_NULLPTR) const;
 
 private:
     typedef QVector<const URLHandler *> HandlerList;

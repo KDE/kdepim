@@ -147,7 +147,7 @@ public:
 protected Q_SLOTS:
     virtual void slotRereadKeys();
     virtual void slotSelectionChanged();
-    virtual void slotCheckSelection(QTreeWidgetItem * = 0);
+    virtual void slotCheckSelection(QTreeWidgetItem * = Q_NULLPTR);
     virtual void slotRMB(const QPoint &pos);
     virtual void slotRecheckKey();
     virtual void slotOk();
