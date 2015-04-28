@@ -71,7 +71,7 @@ void InvalidFilterDialog::writeConfig()
 void InvalidFilterDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "InvalidFilterDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(300, 350) );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(400, 500) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
     }
