@@ -51,6 +51,8 @@ public:
     static FilterAction *newAction();
 
     bool isEmpty() const Q_DECL_OVERRIDE;
+    QString informationAboutNotValidAction() const;
+
 private:
     QRegExp mRegExp;
     QString mReplacementString;

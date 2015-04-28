@@ -406,20 +406,12 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving(bool closeAfterSaving) con
     // report on invalid filters:
     if (!emptyFilters.empty()) {
         if (closeAfterSaving) {
-            // Ok clicked. Give option to continue editing
-            int response =
-                KMessageBox::warningContinueCancelList(
-                    0,
-                    i18n("The following filters are invalid (e.g. containing no actions "
-                         "or no search rules). Discard or edit invalid filters?"),
-                    emptyFilters,
-                    QString(),
-                    KGuiItem(i18n("Discard")),
-                    KStandardGuiItem::cancel(),
-                    QStringLiteral("ShowInvalidFilterWarning"));
-            if (response == KMessageBox::Cancel) {
+            QPointer<MailCommon::InvalidFilterDialog> dlg = new MailCommon::InvalidFilterDialog(Q_NULLPTR);
+            dlg->setInvalidFilters(listInvalidFilters);
+            if (!dlg->exec()) {
                 emit abortClosing();
             }
+            delete dlg;
         } else {
 #if 0
             MailCommon::InvalidFilterDialog dlg;

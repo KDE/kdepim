@@ -46,6 +46,12 @@ private Q_SLOTS:
     void testSignEncryptLateAttachments();
     void testSignEncryptLateAttachments_data();
 
+    void testEditEncryptAttachments();
+    void testEditEncryptAttachments_data();
+
+    void testEditEncryptAndLateAttachments();
+    void testEditEncryptAndLateAttachments_data();
+
     // secondary recipients
     void testBCCEncrypt();
     void testBCCEncrypt_data();
