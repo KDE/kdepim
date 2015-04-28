@@ -71,3 +71,9 @@ QStringList FilterActionMove::sieveRequires() const
     return QStringList() << QLatin1String("fileinto");
 }
 
+QString FilterActionMove::informationAboutNotValidAction() const
+{
+    //KF5 add i18n
+    return QString::fromLatin1("Folder destination was not defined.");
+}
+

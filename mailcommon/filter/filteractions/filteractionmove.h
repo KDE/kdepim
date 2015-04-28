@@ -39,6 +39,7 @@ public:
     QString sieveCode() const;
     QStringList sieveRequires() const;
 
+    QString informationAboutNotValidAction() const;
 };
 
 }

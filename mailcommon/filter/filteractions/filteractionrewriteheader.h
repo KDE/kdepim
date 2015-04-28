@@ -50,6 +50,8 @@ public:
     static FilterAction* newAction();
 
     bool isEmpty() const;
+    QString informationAboutNotValidAction() const;
+
 private:
     QRegExp mRegExp;
     QString mReplacementString;
