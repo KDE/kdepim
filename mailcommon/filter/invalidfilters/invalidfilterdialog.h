@@ -20,13 +20,13 @@
 
 #include "mailcommon_export.h"
 #include "invalidfilterinfo.h"
-#include <KDialog>
+#include <QDialog>
 
 namespace MailCommon
 {
 class InvalidFilterWidget;
 class InvalidFilterInfoWidget;
-class MAILCOMMON_EXPORT InvalidFilterDialog : public KDialog
+class MAILCOMMON_EXPORT InvalidFilterDialog : public QDialog
 {
     Q_OBJECT
 public:

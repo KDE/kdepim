@@ -22,19 +22,29 @@
 #include <KSharedConfig>
 #include <QVBoxLayout>
 #include <KLocalizedString>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace MailCommon;
 
 InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption(i18n("Invalid Filters"));
+    setWindowTitle(i18n("Invalid Filters"));
     setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
-    setButtons(Cancel | Ok);
-    setDefaultButton(Ok);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
     setModal(true);
-    setButtonText(Ok, i18n("Discard"));
+    okButton->setText(i18n("Discard"));
 
+    
     QWidget *w = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
@@ -47,7 +57,8 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
     vbox->addWidget(mInvalidFilterInfoWidget);
     connect(mInvalidFilterWidget, SIGNAL(showDetails(QString)), mInvalidFilterInfoWidget, SLOT(slotShowDetails(QString)));
     connect(mInvalidFilterWidget, SIGNAL(hideInformationWidget()), mInvalidFilterInfoWidget, SLOT(animatedHide()));
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 
