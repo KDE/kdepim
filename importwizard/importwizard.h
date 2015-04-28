@@ -32,7 +32,8 @@ class ImportAddressbookPage;
 class ImportFinishPage;
 class ImportCalendarPage;
 class AbstractImporter;
-
+class KSelFilterPage;
+class KImportPage;
 class ImportWizard : public KAssistantDialog
 {
     Q_OBJECT
@@ -100,6 +101,9 @@ private:
     ImportAddressbookPage *mImportAddressbookPage;
     ImportFinishPage *mImportFinishPage;
     ImportCalendarPage *mImportCalendarPage;
+
+    KSelFilterPage *mSelfilterpage;
+    KImportPage *mImportpage;
 };
 
 #endif /* IMPORTWIZARD_H */

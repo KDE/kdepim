@@ -50,6 +50,8 @@
 #include <AkonadiCore/control.h>
 #include <mailcommon/kernel/mailkernel.h>
 #include <QPushButton>
+#include <manual/kimportpage.h>
+#include <manual/kselfilterpage.h>
 
 ImportWizard::ImportWizard(WizardMode mode, QWidget *parent)
     : KAssistantDialog(parent),
@@ -99,7 +101,15 @@ ImportWizard::~ImportWizard()
 
 void ImportWizard::createManualModePage()
 {
-    //TODO
+    //TODO improve it.
+    mSelfilterpage = new KSelFilterPage(this);
+    KPageWidgetItem *page1 = new KPageWidgetItem( mSelfilterpage, i18n( "Step 1: Select Filter" ) );
+
+    addPage( page1);
+
+    mImportpage = new KImportPage(this);
+    KPageWidgetItem* page2 = new KPageWidgetItem( mImportpage, i18n( "Step 2: Importing..." ) );
+    addPage( page2 );
 }
 
 void ImportWizard::createAutomaticModePage()
