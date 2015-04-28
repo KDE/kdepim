@@ -391,15 +391,14 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving(bool closeAfterSaving) con
             static_cast<QListWidgetFilterItem *>(mListWidget->item(i));
         MailFilter *f = new MailFilter(*itemFilter->filter());   // deep copy
 
-        f->purify();
-        if (!f->isEmpty()) {
+        const QString information = f->purify();
+        if ( !f->isEmpty() ) {
             // the filter is valid:
             filters.append(f);
         } else {
             // the filter is invalid:
             emptyFilters << f->name();
-            //TODO add it.
-            //listInvalidFilters.append(MailCommon::InvalidFilterInfo(f->name(), QString()));
+            listInvalidFilters.append(MailCommon::InvalidFilterInfo(f->name(), information));
             delete f;
         }
     }
@@ -422,6 +421,11 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving(bool closeAfterSaving) con
                 emit abortClosing();
             }
         } else {
+#if 0
+            MailCommon::InvalidFilterDialog dlg;
+            dlg.setInvalidFilters(listInvalidFilters);
+            dlg.exec();
+#endif
             // Apply clicked. Just warn.
             KMessageBox::informationList(
                 0,

@@ -544,17 +544,19 @@ void MailFilter::writeConfig(KConfigGroup &config, bool exportFilter) const
     }
 }
 
-void MailFilter::purify(bool removeAction)
+QString MailFilter::purify(bool removeAction)
 {
+    QString informationAboutNotValidAction;
     mPattern.purify();
 
     QListIterator<FilterAction *> it(mActions);
     it.toBack();
     while (it.hasPrevious()) {
         FilterAction *action = it.previous();
-        if (action->isEmpty()) {
+        if ( action->isEmpty() ) {
+            informationAboutNotValidAction += action->informationAboutNotValidAction();
             if (removeAction) {
-                mActions.removeAll(action);
+                mActions.removeAll ( action );
             }
         }
     }
@@ -571,6 +573,7 @@ void MailFilter::purify(bool removeAction)
             }
         }
     }
+    return informationAboutNotValidAction;
 }
 
 bool MailFilter::isEmpty() const
