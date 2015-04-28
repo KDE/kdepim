@@ -18,12 +18,27 @@
 #ifndef PIMSETTINGCOMMANDLINEOPTION_H
 #define PIMSETTINGCOMMANDLINEOPTION_H
 
+#include <QObject>
 #include <QCommandLineParser>
-
-class PimSettingCommandLineOption : public QCommandLineParser
+class QApplication;
+class PimSettingExporterWindow;
+class PimSettingCommandLineOption : public QObject
 {
+    Q_OBJECT
 public:
-    PimSettingCommandLineOption();
+    explicit PimSettingCommandLineOption(QObject *parent = Q_NULLPTR);
+    ~PimSettingCommandLineOption();
+
+    void createParser(const QApplication &app);
+    void setExportWindow(PimSettingExporterWindow *exporterWindow);
+    void handleCommandLine();
+
+public Q_SLOTS:
+    void slotActivateRequested(const QStringList &arguments, const QString &workingDirectory);
+
+private:
+    QCommandLineParser mParser;
+    PimSettingExporterWindow *mExporterWindow;
 };
 
 #endif // PIMSETTINGCOMMANDLINEOPTION_H

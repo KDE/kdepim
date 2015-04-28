@@ -17,16 +17,63 @@
 
 
 #include "pimsettingcommandlineoption.h"
+#include "pimsettingexporterwindow.h"
+#include "kdepim-version.h"
 #include <KLocalizedString>
+#include <KAboutData>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
+#include <QApplication>
+#include <QDebug>
 
-PimSettingCommandLineOption::PimSettingCommandLineOption()
-    : QCommandLineParser()
+PimSettingCommandLineOption::PimSettingCommandLineOption(QObject *parent)
+    : QObject(parent),
+      mExporterWindow(Q_NULLPTR)
 {
-    addVersionOption();
-    addHelpOption();
-    addOption(QCommandLineOption(QStringList() <<  QStringLiteral("template"), i18n("Template file uses to define what data, settings to import or export"), QStringLiteral("file")));
-    addOption(QCommandLineOption(QStringList() <<  QStringLiteral("import"), i18n("Import the given file")));
-    addOption(QCommandLineOption(QStringList() <<  QStringLiteral("export"), i18n("Export the given file")));
-    addOption(QCommandLineOption(QStringList() <<  QStringLiteral("+[url]"), i18n("File or url. The user will be asked whether to import or export.")));
+}
+
+PimSettingCommandLineOption::~PimSettingCommandLineOption()
+{
+}
+
+void PimSettingCommandLineOption::slotActivateRequested(const QStringList &arguments,const QString &workingDirectory)
+{
+    if (mParser.parse(arguments)) {
+        handleCommandLine();
+    } else {
+        qDebug()<<" ";
+    }
+}
+
+void PimSettingCommandLineOption::createParser(const QApplication &app)
+{
+    KAboutData aboutData(QStringLiteral("pimsettingexporter"), i18n("PIM Setting Exporter"),
+                         QStringLiteral(KDEPIM_VERSION), i18n("PIM Setting Exporter"), KAboutLicense::GPL_V2,
+                         i18n("Copyright © 2012-2015 pimsettingexporter authors"));
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
+    mParser.addVersionOption();
+    mParser.addHelpOption();
+    mParser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("template"), i18n("Template file uses to define what data, settings to import or export"), QStringLiteral("file")));
+    mParser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("import"), i18n("Import the given file")));
+    mParser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("export"), i18n("Export the given file")));
+    mParser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("+[url]"), i18n("File or url. The user will be asked whether to import or export.")));
+
+    KAboutData::setApplicationData(aboutData);
+
+    aboutData.setupCommandLine(&mParser);
+    mParser.process(app);
+    aboutData.processCommandLine(&mParser);
+}
+
+void PimSettingCommandLineOption::setExportWindow(PimSettingExporterWindow *exporterWindow)
+{
+    mExporterWindow = exporterWindow;
+}
+
+void PimSettingCommandLineOption::handleCommandLine()
+{
+    if (mExporterWindow) {
+        mExporterWindow->handleCommandLine(mParser);
+    }
 }
 

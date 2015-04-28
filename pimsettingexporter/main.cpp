@@ -18,14 +18,12 @@
 #include "pimsettingexporterwindow.h"
 #include "pimsettingcommandlineoption.h"
 
-#include <kaboutdata.h>
 #include <KLocalizedString>
 #include <KDBusService>
 #include "pimsettingexport_debug.h"
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QApplication>
-#include "kdepim-version.h"
 #include <kdelibs4configmigrator.h>
 
 int main(int argc, char *argv[])
@@ -37,26 +35,19 @@ int main(int argc, char *argv[])
     migrate.setUiFiles(QStringList() << QStringLiteral("pimsettingexporter.rc"));
     migrate.migrate();
     KLocalizedString::setApplicationDomain("pimsettingexporter");
-
-    KAboutData aboutData(QStringLiteral("pimsettingexporter"), i18n("PIM Setting Exporter"),
-                         QStringLiteral(KDEPIM_VERSION), i18n("PIM Setting Exporter"), KAboutLicense::GPL_V2,
-                         i18n("Copyright © 2012-2015 pimsettingexporter authors"));
-    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kontact")));
-    PimSettingCommandLineOption parser;
-    KAboutData::setApplicationData(aboutData);
 
-    aboutData.setupCommandLine(&parser);
-    parser.process(app);
-    aboutData.processCommandLine(&parser);
+    PimSettingCommandLineOption parser;
+    parser.createParser(app);
 
     KDBusService service(KDBusService::Unique);
 
     PimSettingExporterWindow *backupMailWin = new PimSettingExporterWindow();
+    parser.setExportWindow(backupMailWin);
     QObject::connect(&service, SIGNAL(activateRequested(QStringList,QString)),
-                     backupMailWin, SLOT(slotActivateRequested(QStringList,QString)));
+                     &parser, SLOT(slotActivateRequested(QStringList,QString)));
     backupMailWin->show();
-    backupMailWin->handleCommandLine(parser);
+    parser.handleCommandLine();
 
     return app.exec();
 }
