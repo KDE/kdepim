@@ -36,12 +36,10 @@ public:
     CalPrintJournal(): CalPrintPluginBase() {}
     ~CalPrintJournal() {}
 
-    QString groupName() Q_DECL_OVERRIDE
-    {
+    QString groupName() Q_DECL_OVERRIDE {
         return QStringLiteral("Print journal");
     }
-    QString description() Q_DECL_OVERRIDE
-    {
+    QString description() Q_DECL_OVERRIDE {
         return i18n("Print &journal");
     }
     QString info() const Q_DECL_OVERRIDE
@@ -49,12 +47,10 @@ public:
         return i18n("Prints all journals for a given date range");
     }
     QWidget *createConfigWidget(QWidget *) Q_DECL_OVERRIDE;
-    int sortID() Q_DECL_OVERRIDE
-    {
+    int sortID() Q_DECL_OVERRIDE {
         return CalPrinterBase::Journallist;
     }
-    bool enabled() Q_DECL_OVERRIDE
-    {
+    bool enabled() Q_DECL_OVERRIDE {
         return true;
     }
 

@@ -140,7 +140,7 @@ void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &ne
     setMessage(newMsg, false);                        // Do not decrypt message by default (old behaviour)
 }
 
-void MessageComposer::ComposerViewBase::setMessage (const KMime::Message::Ptr& msg, bool allowDecryption)
+void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &msg, bool allowDecryption)
 {
     if (m_attachmentModel)  {
         foreach (MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments()) {
@@ -194,9 +194,9 @@ void MessageComposer::ComposerViewBase::setMessage (const KMime::Message::Ptr& m
         if (otp.nodeHelper()->partMetaData((*it)->parent()).isEncrypted) {                  // gpg mime has a msg.asc as subelement, that is recognized as attachment
             MessageCore::AttachmentCollector acEnc;
             acEnc.collectAttachmentsFrom(otp.nodeHelper()->decryptedNodeForContent((*it)->parent()));
-            std::vector<KMime::Content*>::const_iterator endEnc(acEnc.attachments().end());
-            for (std::vector<KMime::Content*>::const_iterator itEnc = acEnc.attachments().begin();
-                  itEnc != endEnc ; ++itEnc) {
+            std::vector<KMime::Content *>::const_iterator endEnc(acEnc.attachments().end());
+            for (std::vector<KMime::Content *>::const_iterator itEnc = acEnc.attachments().begin();
+                    itEnc != endEnc ; ++itEnc) {
                 addAttachmentPart(*itEnc);
             }
         } else {

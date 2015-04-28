@@ -22,7 +22,6 @@
 
 #include <akonadi/private/xdgbasedirs_p.h>
 
-
 #include <QSettings>
 #include <KConfigGroup>
 

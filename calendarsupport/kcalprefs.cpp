@@ -310,10 +310,10 @@ bool KCalPrefs::thatIsMe(const QString &_email)
 
 void KCalPrefs::setCategoryColor(const QString &cat, const QColor &color)
 {
-  Akonadi::Tag tag = d->mTagCache.getTagByGid(cat.toUtf8());
-  Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::AttributeEntity::AddIfMissing);
-  attr->setBackgroundColor(color);
-  new Akonadi::TagModifyJob(tag);
+    Akonadi::Tag tag = d->mTagCache.getTagByGid(cat.toUtf8());
+    Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::AttributeEntity::AddIfMissing);
+    attr->setBackgroundColor(color);
+    new Akonadi::TagModifyJob(tag);
 }
 
 QColor KCalPrefs::categoryColor(const QString &cat) const
@@ -332,7 +332,7 @@ QColor KCalPrefs::categoryColor(const QString &cat) const
 
 bool KCalPrefs::hasCategoryColor(const QString &cat) const
 {
-  return (categoryColor(cat) != d->mDefaultCategoryColor);
+    return (categoryColor(cat) != d->mDefaultCategoryColor);
 }
 
 void KCalPrefs::setDayBegins(const QDateTime &dateTime)
@@ -344,5 +344,4 @@ QDateTime KCalPrefs::dayBegins() const
 {
     return d->mDayBegins;
 }
-
 

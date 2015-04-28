@@ -65,7 +65,7 @@ private Q_SLOTS:
     void editRecentAddresses();
     void groupExpandResult(KJob *);
     void slotEditingFinished();
-    void slotGroupSearchResult( KJob* );
+    void slotGroupSearchResult(KJob *);
     void slotToggleExpandGroups();
 
 private:

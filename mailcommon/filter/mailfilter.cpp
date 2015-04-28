@@ -553,10 +553,10 @@ QString MailFilter::purify(bool removeAction)
     it.toBack();
     while (it.hasPrevious()) {
         FilterAction *action = it.previous();
-        if ( action->isEmpty() ) {
+        if (action->isEmpty()) {
             informationAboutNotValidAction += action->informationAboutNotValidAction();
             if (removeAction) {
-                mActions.removeAll ( action );
+                mActions.removeAll(action);
             }
         }
     }

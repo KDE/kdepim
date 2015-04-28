@@ -63,8 +63,8 @@ ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
     connect(this, &ComposerLineEdit::editingFinished, this, &ComposerLineEdit::slotEditingFinished);
     connect(this, &ComposerLineEdit::textCompleted, this, &ComposerLineEdit::slotEditingFinished);
 
-    KConfigGroup group( KSharedConfig::openConfig(), "AddressLineEdit" );
-    mAutoGroupExpand = group.readEntry( "AutoGroupExpand", false );
+    KConfigGroup group(KSharedConfig::openConfig(), "AddressLineEdit");
+    mAutoGroupExpand = group.readEntry("AutoGroupExpand", false);
 }
 
 //-----------------------------------------------------------------------------
@@ -216,7 +216,7 @@ void ComposerLineEdit::groupExpandResult(KJob *job)
 
 void ComposerLineEdit::slotEditingFinished()
 {
-    foreach(KJob *job, mMightBeGroupJobs) {
+    foreach (KJob *job, mMightBeGroupJobs) {
         disconnect(job);
         job->deleteLater();
     }
@@ -226,9 +226,9 @@ void ComposerLineEdit::slotEditingFinished()
 
     if (!text().isEmpty()) {
         QStringList addresses = KEmailAddress::splitAddressList(text());
-        foreach(const QString &address, addresses) {
+        foreach (const QString &address, addresses) {
             Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
-            job->setQuery( Akonadi::ContactGroupSearchJob::Name, address);
+            job->setQuery(Akonadi::ContactGroupSearchJob::Name, address);
             connect(job, &Akonadi::ContactGroupSearchJob::result, this, &ComposerLineEdit::slotGroupSearchResult);
             mMightBeGroupJobs.append(job);
         }
@@ -237,13 +237,13 @@ void ComposerLineEdit::slotEditingFinished()
 
 void ComposerLineEdit::slotGroupSearchResult(KJob *job)
 {
-    Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
+    Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob *>(job);
 
     Q_ASSERT(mMightBeGroupJobs.contains(searchJob));
     mMightBeGroupJobs.removeOne(searchJob);
 
     const KContacts::ContactGroup::List contactGroups = searchJob->contactGroups();
-    if ( contactGroups.isEmpty() ) {
+    if (contactGroups.isEmpty()) {
         return; // Nothing todo, probably a normal email address was entered
     }
 
@@ -259,8 +259,8 @@ void ComposerLineEdit::expandGroups()
 {
     QStringList addresses = KEmailAddress::splitAddressList(text());
 
-    foreach(const KContacts::ContactGroup &group, mGroups) {
-        Akonadi::ContactGroupExpandJob* expandJob = new Akonadi::ContactGroupExpandJob( group );
+    foreach (const KContacts::ContactGroup &group, mGroups) {
+        Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group);
         connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &ComposerLineEdit::groupExpandResult);
         addresses.removeAll(group.name());
         expandJob->start();
@@ -272,8 +272,8 @@ void ComposerLineEdit::expandGroups()
 void ComposerLineEdit::slotToggleExpandGroups()
 {
     mAutoGroupExpand = !mAutoGroupExpand;
-    KConfigGroup group( KSharedConfig::openConfig(), "AddressLineEdit" );
-    group.writeEntry( "AutoGroupExpand", mAutoGroupExpand );
+    KConfigGroup group(KSharedConfig::openConfig(), "AddressLineEdit");
+    group.writeEntry("AutoGroupExpand", mAutoGroupExpand);
 }
 
 #ifndef QT_NO_CONTEXTMENU
@@ -287,13 +287,13 @@ void ComposerLineEdit::contextMenuEvent(QContextMenuEvent *e)
             connect(act, &QAction::triggered, this, &ComposerLineEdit::editRecentAddresses);
         }
         popup->addSeparator();
-        QAction *act = popup->addAction( i18n( "Automatically expand groups" ));
+        QAction *act = popup->addAction(i18n("Automatically expand groups"));
         act->setCheckable(true);
         act->setChecked(mAutoGroupExpand);
         connect(act, &QAction::triggered, this, &ComposerLineEdit::slotToggleExpandGroups);
 
         if (!mGroups.isEmpty()) {
-            act = popup->addAction( i18n( "Expand Groups..." ));
+            act = popup->addAction(i18n("Expand Groups..."));
             connect(act, &QAction::triggered, this, &ComposerLineEdit::expandGroups);
         }
         popup->exec(e->globalPos());

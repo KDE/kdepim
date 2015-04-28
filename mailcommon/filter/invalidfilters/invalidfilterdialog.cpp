@@ -32,7 +32,7 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
 {
     setWindowTitle(i18n("Invalid Filters"));
     setWindowIcon(QIcon::fromTheme(QLatin1String("kmail")));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -44,7 +44,6 @@ InvalidFilterDialog::InvalidFilterDialog(QWidget *parent)
     setModal(true);
     okButton->setText(i18n("Discard"));
 
-    
     QWidget *w = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);

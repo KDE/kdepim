@@ -102,7 +102,7 @@ public:
 
 Q_SIGNALS:
     void typeModified(RecipientLineNG *);
-    void addRecipient( RecipientLineNG*, const QString &);
+    void addRecipient(RecipientLineNG *, const QString &);
     void countChanged();
 
 protected Q_SLOTS:

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "pimsettingcommandlineoption.h"
 #include "pimsettingexporterwindow.h"
 #include "kdepim-version.h"
@@ -36,12 +35,12 @@ PimSettingCommandLineOption::~PimSettingCommandLineOption()
 {
 }
 
-void PimSettingCommandLineOption::slotActivateRequested(const QStringList &arguments,const QString &workingDirectory)
+void PimSettingCommandLineOption::slotActivateRequested(const QStringList &arguments, const QString &workingDirectory)
 {
     if (mParser.parse(arguments)) {
         handleCommandLine();
     } else {
-        qDebug()<<" ";
+        qDebug() << " ";
     }
 }
 

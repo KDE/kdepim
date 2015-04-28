@@ -253,7 +253,7 @@ static QString directoryForStatus(Attendee::PartStat status)
     case Attendee::Delegated:
         dir = QStringLiteral("delegated");
         break;
-   case Attendee::NeedsAction:
+    case Attendee::NeedsAction:
         dir = QStringLiteral("request");
         break;
     default:
@@ -1390,10 +1390,10 @@ public:
     bool askForComment(Attendee::PartStat status) const
     {
         if (status != Attendee::NeedsAction && ((status != Attendee::Accepted &&
-                GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
-                GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AskForAllButAcceptance) ||
-                (GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
-                 GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AlwaysAsk))) {
+                                                GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
+                                                GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AskForAllButAcceptance) ||
+                                                (GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
+                                                        GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AlwaysAsk))) {
             return true;
         }
         return false;

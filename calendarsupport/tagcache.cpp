@@ -20,7 +20,6 @@
   without including the source code for Qt in the source distribution.
 */
 
-
 #include "tagcache.h"
 #include "calendarsupport_debug.h"
 
@@ -78,8 +77,8 @@ void TagCache::onTagsFetched(KJob *job)
         qCWarning(CALENDARSUPPORT_LOG) << "Failed to fetch tags: " << job->errorString();
         return;
     }
-    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
-    Q_FOREACH(const Akonadi::Tag &tag, fetchJob->tags()) {
+    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob *>(job);
+    Q_FOREACH (const Akonadi::Tag &tag, fetchJob->tags()) {
         onTagAdded(tag);
     }
 }

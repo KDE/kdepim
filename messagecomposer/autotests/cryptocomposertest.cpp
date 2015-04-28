@@ -174,130 +174,130 @@ void CryptoComposerTest::testEncryptSameAttachments()
 
 void CryptoComposerTest::testEditEncryptAttachments_data()
 {
-  QTest::addColumn<int>( "format" );
-  QTest::newRow( "OpenPGPMime" ) << (int) Kleo::OpenPGPMIMEFormat;
-  //TODO: SMIME should also be tested
+    QTest::addColumn<int>("format");
+    QTest::newRow("OpenPGPMime") << (int) Kleo::OpenPGPMIMEFormat;
+    //TODO: SMIME should also be tested
 }
 
 void CryptoComposerTest::testEditEncryptAttachments()
 {
-  QFETCH( int, format );
-  Composer *composer = new Composer;
-  QString data( QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ) );
-  fillComposerData( composer, data );
-  fillComposerCryptoData( composer );
+    QFETCH(int, format);
+    Composer *composer = new Composer;
+    QString data(QString::fromLatin1("All happy families are alike; each unhappy family is unhappy in its own way."));
+    fillComposerData(composer, data);
+    fillComposerCryptoData(composer);
 
-  AttachmentPart::Ptr attachment = AttachmentPart::Ptr( new AttachmentPart );
-  const QString fileName = QLatin1String( "anattachment.txt" );
-  const QByteArray fileData = "abc";
-  attachment->setData( fileData );
-  attachment->setMimeType( "x-some/x-type" );
-  attachment->setFileName( fileName );
-  attachment->setEncrypted( true );
-  attachment->setSigned( false );
-  composer->addAttachmentPart( attachment );
+    AttachmentPart::Ptr attachment = AttachmentPart::Ptr(new AttachmentPart);
+    const QString fileName = QLatin1String("anattachment.txt");
+    const QByteArray fileData = "abc";
+    attachment->setData(fileData);
+    attachment->setMimeType("x-some/x-type");
+    attachment->setFileName(fileName);
+    attachment->setEncrypted(true);
+    attachment->setSigned(false);
+    composer->addAttachmentPart(attachment);
 
-  composer->setSignAndEncrypt( false, true );
-  composer->setMessageCryptoFormat( (Kleo::CryptoMessageFormat) format );
+    composer->setSignAndEncrypt(false, true);
+    composer->setMessageCryptoFormat((Kleo::CryptoMessageFormat) format);
 
-  VERIFYEXEC( composer );
-  QCOMPARE( composer->resultMessages().size(), 1 );
+    VERIFYEXEC(composer);
+    QCOMPARE(composer->resultMessages().size(), 1);
 
-  KMime::Message::Ptr message = composer->resultMessages().first();
-  delete composer;
-  composer = 0;
+    KMime::Message::Ptr message = composer->resultMessages().first();
+    delete composer;
+    composer = 0;
 
-  // setup a viewer
-  ComposerViewBase view(this, 0);
-  AttachmentModel model(this);
-  AttachmentControllerBase controller(&model,0,0);
-  RecipientsEditor recipientEditor;
-  KMeditor editor;
-  view.setAttachmentModel(&model);
-  view.setAttachmentController(&controller);
-  view.setRecipientsEditor(&recipientEditor);
-  view.setEditor(&editor);
+    // setup a viewer
+    ComposerViewBase view(this, 0);
+    AttachmentModel model(this);
+    AttachmentControllerBase controller(&model, 0, 0);
+    RecipientsEditor recipientEditor;
+    KMeditor editor;
+    view.setAttachmentModel(&model);
+    view.setAttachmentController(&controller);
+    view.setRecipientsEditor(&recipientEditor);
+    view.setEditor(&editor);
 
-  // Let's load the email to the viewer
-  view.setMessage(message, true);
+    // Let's load the email to the viewer
+    view.setMessage(message, true);
 
-  QModelIndex index =  model.index(0,0);
-  QCOMPARE (editor.toPlainText(), data);
-  QCOMPARE(model.rowCount(), 1);
-  QCOMPARE(model.data(index, AttachmentModel::NameRole).toString(), fileName);
-  AttachmentPart::Ptr part = model.attachments()[0];
-  QCOMPARE(part->data(), fileData);
-  QCOMPARE(part->fileName(), fileName);
+    QModelIndex index =  model.index(0, 0);
+    QCOMPARE(editor.toPlainText(), data);
+    QCOMPARE(model.rowCount(), 1);
+    QCOMPARE(model.data(index, AttachmentModel::NameRole).toString(), fileName);
+    AttachmentPart::Ptr part = model.attachments()[0];
+    QCOMPARE(part->data(), fileData);
+    QCOMPARE(part->fileName(), fileName);
 }
 
 void CryptoComposerTest::testEditEncryptAndLateAttachments_data()
 {
-  QTest::addColumn<int>( "format" );
-  QTest::newRow( "OpenPGPMime" ) << (int) Kleo::OpenPGPMIMEFormat;
-  //TODO: SMIME should also be tested
+    QTest::addColumn<int>("format");
+    QTest::newRow("OpenPGPMime") << (int) Kleo::OpenPGPMIMEFormat;
+    //TODO: SMIME should also be tested
 }
 
 void CryptoComposerTest::testEditEncryptAndLateAttachments()
 {
-  QFETCH( int, format );
-  Composer *composer = new Composer;
-  QString data( QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ) );
-  fillComposerData( composer, data );
-  fillComposerCryptoData( composer );
+    QFETCH(int, format);
+    Composer *composer = new Composer;
+    QString data(QString::fromLatin1("All happy families are alike; each unhappy family is unhappy in its own way."));
+    fillComposerData(composer, data);
+    fillComposerCryptoData(composer);
 
-  AttachmentPart::Ptr attachment = AttachmentPart::Ptr( new AttachmentPart );
-  const QString fileName = QLatin1String( "anattachment.txt" );
-  const QByteArray fileData = "abc";
-  const QString fileName2 = QLatin1String( "nonencrypt.txt" );
-  const QByteArray fileData2 = "readable";
-  attachment->setData( fileData );
-  attachment->setMimeType( "x-some/x-type" );
-  attachment->setFileName( fileName );
-  attachment->setEncrypted( true );
-  attachment->setSigned( false );
-  composer->addAttachmentPart( attachment );
+    AttachmentPart::Ptr attachment = AttachmentPart::Ptr(new AttachmentPart);
+    const QString fileName = QLatin1String("anattachment.txt");
+    const QByteArray fileData = "abc";
+    const QString fileName2 = QLatin1String("nonencrypt.txt");
+    const QByteArray fileData2 = "readable";
+    attachment->setData(fileData);
+    attachment->setMimeType("x-some/x-type");
+    attachment->setFileName(fileName);
+    attachment->setEncrypted(true);
+    attachment->setSigned(false);
+    composer->addAttachmentPart(attachment);
 
-  attachment = AttachmentPart::Ptr( new AttachmentPart );
-  attachment->setData( fileData2 );
-  attachment->setMimeType( "x-some/x-type2" );
-  attachment->setFileName( fileName2 );
-  attachment->setEncrypted( false );
-  attachment->setSigned( false );
-  composer->addAttachmentPart( attachment );
+    attachment = AttachmentPart::Ptr(new AttachmentPart);
+    attachment->setData(fileData2);
+    attachment->setMimeType("x-some/x-type2");
+    attachment->setFileName(fileName2);
+    attachment->setEncrypted(false);
+    attachment->setSigned(false);
+    composer->addAttachmentPart(attachment);
 
-  composer->setSignAndEncrypt( false, true );
-  composer->setMessageCryptoFormat( (Kleo::CryptoMessageFormat) format );
+    composer->setSignAndEncrypt(false, true);
+    composer->setMessageCryptoFormat((Kleo::CryptoMessageFormat) format);
 
-  VERIFYEXEC( composer );
-  QCOMPARE( composer->resultMessages().size(), 1 );
+    VERIFYEXEC(composer);
+    QCOMPARE(composer->resultMessages().size(), 1);
 
-  KMime::Message::Ptr message = composer->resultMessages().first();
-  delete composer;
-  composer = 0;
+    KMime::Message::Ptr message = composer->resultMessages().first();
+    delete composer;
+    composer = 0;
 
-  // setup a viewer
-  ComposerViewBase view(this, 0);
-  AttachmentModel model(this);
-  AttachmentControllerBase controller(&model,0,0);
-  RecipientsEditor recipientEditor;
-  KMeditor editor;
-  view.setAttachmentModel(&model);
-  view.setAttachmentController(&controller);
-  view.setRecipientsEditor(&recipientEditor);
-  view.setEditor(&editor);
+    // setup a viewer
+    ComposerViewBase view(this, 0);
+    AttachmentModel model(this);
+    AttachmentControllerBase controller(&model, 0, 0);
+    RecipientsEditor recipientEditor;
+    KMeditor editor;
+    view.setAttachmentModel(&model);
+    view.setAttachmentController(&controller);
+    view.setRecipientsEditor(&recipientEditor);
+    view.setEditor(&editor);
 
-  // Let's load the email to the viewer
-  view.setMessage(message, true);
+    // Let's load the email to the viewer
+    view.setMessage(message, true);
 
-  QModelIndex index = model.index(0,0);
-  QCOMPARE (editor.toPlainText(), data);
-  QCOMPARE(model.rowCount(), 2);
-  AttachmentPart::Ptr part = model.attachments()[0];
-  QCOMPARE(part->fileName(), fileName);
-  QCOMPARE(part->data(), fileData);
-  part = model.attachments()[1];
-  QCOMPARE(part->fileName(), fileName2);
-  QCOMPARE(part->data(), fileData2);
+    QModelIndex index = model.index(0, 0);
+    QCOMPARE(editor.toPlainText(), data);
+    QCOMPARE(model.rowCount(), 2);
+    AttachmentPart::Ptr part = model.attachments()[0];
+    QCOMPARE(part->fileName(), fileName);
+    QCOMPARE(part->data(), fileData);
+    part = model.attachments()[1];
+    QCOMPARE(part->fileName(), fileName2);
+    QCOMPARE(part->data(), fileData2);
 }
 
 void CryptoComposerTest::testSignEncryptLateAttachments_data()

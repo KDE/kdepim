@@ -126,12 +126,12 @@ QString SearchPattern::purify(bool removeAction)
     QList<SearchRule::Ptr>::iterator it = end();
     while (it != begin()) {
         --it;
-        if ( (*it)->isEmpty() ) {
+        if ((*it)->isEmpty()) {
             if (removeAction) {
 #ifndef NDEBUG
                 qCDebug(MAILCOMMON_LOG) << "Removing" << (*it)->asString();
 #endif
-                erase( it );
+                erase(it);
                 it = end();
             }
         }

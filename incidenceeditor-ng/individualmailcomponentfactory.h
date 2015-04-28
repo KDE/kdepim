@@ -61,23 +61,23 @@ public:
     explicit IndividualMailITIPHandlerDialogDelegate(const KCalCore::Incidence::Ptr &incidence, KCalCore::iTIPMethod method, QWidget *parent);
 
     void openDialogIncidenceCreated(Recipient recipient,
-                                            const QString &question,
-                                            Action action = ActionAsk,
-                                            const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
-                                            const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send"))) Q_DECL_OVERRIDE;
+                                    const QString &question,
+                                    Action action = ActionAsk,
+                                    const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
+                                    const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send"))) Q_DECL_OVERRIDE;
 
     void openDialogIncidenceModified(bool attendeeStatusChanged,
-            Recipient recipient,
-            const QString &question,
-            Action action = ActionAsk,
-            const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
-            const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send"))) Q_DECL_OVERRIDE;
+                                     Recipient recipient,
+                                     const QString &question,
+                                     Action action = ActionAsk,
+                                     const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
+                                     const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send"))) Q_DECL_OVERRIDE;
 
     void openDialogIncidenceDeleted(Recipient recipient,
-                                            const QString &question,
-                                            Action action = ActionAsk,
-                                            const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
-                                            const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send"))) Q_DECL_OVERRIDE;
+                                    const QString &question,
+                                    Action action = ActionAsk,
+                                    const KGuiItem &buttonYes = KGuiItem(i18nc("@action:button dialog positive answer", "Send Email")),
+                                    const KGuiItem &buttonNo = KGuiItem(i18nc("@action:button dialog negative answer", "Do Not Send"))) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void setEdit(const KCalCore::Incidence::Ptr &incidence, const KCalCore::Attendee::List &edit);

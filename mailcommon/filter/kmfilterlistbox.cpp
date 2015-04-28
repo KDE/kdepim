@@ -394,7 +394,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving(bool closeAfterSaving) con
         MailFilter *f = new MailFilter(*itemFilter->filter());   // deep copy
 
         const QString information = f->purify();
-        if ( !f->isEmpty() ) {
+        if (!f->isEmpty()) {
             // the filter is valid:
             filters.append(f);
         } else {

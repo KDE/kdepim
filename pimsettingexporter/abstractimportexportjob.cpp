@@ -144,13 +144,13 @@ void AbstractImportExportJob::overwriteDirectory(const QString &path, const KArc
         if (overwriteDirectoryMessageBox(path)) {
             const KArchiveDirectory *dirEntry = static_cast<const KArchiveDirectory *>(entry);
             if (!dirEntry->copyTo(path)) {
-                qDebug()<< "directory cannot overwrite to " << path;
+                qDebug() << "directory cannot overwrite to " << path;
             }
         }
     } else {
         const KArchiveDirectory *dirEntry = static_cast<const KArchiveDirectory *>(entry);
         if (dirEntry->copyTo(path)) {
-            qDebug()<< "directory cannot overwrite to " << path;
+            qDebug() << "directory cannot overwrite to " << path;
         }
     }
 }

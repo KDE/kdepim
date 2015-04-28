@@ -24,8 +24,9 @@
 
 #include <AkonadiCore/Tag>
 
-namespace Akonadi {
-    class Monitor;
+namespace Akonadi
+{
+class Monitor;
 };
 class KJob;
 
@@ -37,7 +38,7 @@ namespace CalendarSupport
  */
 class TagCache : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
     TagCache();
     const Akonadi::Tag &getTagByGid(const QByteArray &gid) const;
@@ -46,7 +47,7 @@ private Q_SLOTS:
     void onTagAdded(const Akonadi::Tag &);
     void onTagChanged(const Akonadi::Tag &);
     void onTagRemoved(const Akonadi::Tag &);
-    void onTagsFetched(KJob*);
+    void onTagsFetched(KJob *);
 
 private:
     void retrieveTags();

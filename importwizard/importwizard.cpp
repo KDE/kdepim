@@ -103,13 +103,13 @@ void ImportWizard::createManualModePage()
 {
     //TODO improve it.
     mSelfilterpage = new KSelFilterPage(this);
-    KPageWidgetItem *page1 = new KPageWidgetItem( mSelfilterpage, i18n( "Step 1: Select Filter" ) );
+    KPageWidgetItem *page1 = new KPageWidgetItem(mSelfilterpage, i18n("Step 1: Select Filter"));
 
-    addPage( page1);
+    addPage(page1);
 
     mImportpage = new KImportPage(this);
-    KPageWidgetItem* page2 = new KPageWidgetItem( mImportpage, i18n( "Step 2: Importing..." ) );
-    addPage( page2 );
+    KPageWidgetItem *page2 = new KPageWidgetItem(mImportpage, i18n("Step 2: Importing..."));
+    addPage(page2);
 }
 
 void ImportWizard::createAutomaticModePage()
@@ -146,7 +146,6 @@ void ImportWizard::createAutomaticModePage()
     mPage8 = new KPageWidgetItem(mImportFinishPage, i18n("Finish"));
     addPage(mPage8);
 }
-
 
 void ImportWizard::initializeImportModule()
 {
