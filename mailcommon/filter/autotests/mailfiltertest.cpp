@@ -35,6 +35,14 @@ void MailFilterTest::shouldHaveDefaultValue()
     MailCommon::MailFilter mailfilter;
     QVERIFY(mailfilter.isEmpty());
     QVERIFY(mailfilter.isEnabled());
+    QVERIFY(mailfilter.applyOnInbound());
+    QVERIFY(!mailfilter.applyBeforeOutbound());
+    QVERIFY(mailfilter.applyOnExplicit());
+    QVERIFY(mailfilter.stopProcessingHere());
+    QVERIFY(!mailfilter.configureShortcut());
+    QVERIFY(!mailfilter.configureToolbar());
+    QVERIFY(mailfilter.isAutoNaming());
+    QCOMPARE(mailfilter.applicability(), MailCommon::MailFilter::All);
 }
 
 QTEST_KDEMAIN(MailFilterTest, GUI)
