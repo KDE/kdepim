@@ -83,6 +83,7 @@ public:
      * @copydoc SearchRule::addQueryTerms()
      */
     virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
+    virtual QString informationAboutNotValidRules() const;
 };
 }
 #endif // SEARCHRULESTRING_H

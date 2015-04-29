@@ -247,6 +247,12 @@ void SearchRuleString::addQueryTerms(Akonadi::SearchTerm &groupTerm , bool &empt
     }
 }
 
+QString SearchRuleString::informationAboutNotValidRules() const
+{
+    //KF5 add i18n
+    return QLatin1String("String is empty.");
+}
+
 // helper, does the actual comparing
 bool SearchRuleString::matchesInternal( const QString &msgContents ) const
 {

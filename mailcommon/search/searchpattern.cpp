@@ -133,7 +133,6 @@ SearchRule::RequiredPart SearchPattern::requiredPart() const
 
 QString SearchPattern::purify(bool removeAction)
 {
-    //TODO
     QString informationAboutNotValidPattern;
     QList<SearchRule::Ptr>::iterator it = end();
     while ( it != begin() ) {
@@ -146,6 +145,10 @@ QString SearchPattern::purify(bool removeAction)
                 erase( it );
                 it = end();
             }
+            if (!informationAboutNotValidPattern.isEmpty()) {
+                informationAboutNotValidPattern += QLatin1Char('\n');
+            }
+            informationAboutNotValidPattern += (*it)->informationAboutNotValidRules();
         }
     }
 

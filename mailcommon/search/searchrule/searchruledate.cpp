@@ -34,6 +34,13 @@ SearchRuleDate::SearchRuleDate( const QByteArray &field,
 {
 }
 
+
+QString SearchRuleDate::informationAboutNotValidRules() const
+{
+    //KF5 add i18n
+    return QLatin1String("Date is not valid.");
+}
+
 bool SearchRuleDate::isEmpty() const
 {
     return !QDate::fromString( contents(), Qt::ISODate ).isValid();

@@ -88,6 +88,13 @@ Akonadi::MessageStatus SearchRuleStatus::statusFromEnglishName( const QString &a
     return unknown;
 }
 
+QString SearchRuleStatus::informationAboutNotValidRules() const
+{
+    //KF5 add i18n
+    //TODO
+    return QLatin1String("");
+}
+
 bool SearchRuleStatus::isEmpty() const
 {
     return field().trimmed().isEmpty() || contents().isEmpty();
