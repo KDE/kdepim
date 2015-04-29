@@ -38,7 +38,7 @@
 #include <numeric>
 #include <cassert>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 //#define ENABLE_HEADERVIEW_DEBUG
 

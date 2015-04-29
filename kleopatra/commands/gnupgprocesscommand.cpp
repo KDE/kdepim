@@ -38,7 +38,7 @@
 
 #include <utils/kdlogtextwidget.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KProcess>
 #include <KLocalizedString>
 #include <KWindowSystem>
@@ -169,7 +169,7 @@ private:
         if (dialog) {
             dialog->message(msg);
         } else {
-            qDebug() << msg;
+            qCDebug(KLEOPATRA_LOG) << msg;
         }
     }
 

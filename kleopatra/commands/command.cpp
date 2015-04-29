@@ -37,7 +37,7 @@
 
 #include <view/tabwidget.h>
 
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 #include <KWindowSystem>
 
 #include <QAbstractItemView>
@@ -59,7 +59,7 @@ Command::Private::Private(Command *qq, KeyListController *controller)
 
 Command::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 Command::Command(KeyListController *p)
@@ -126,7 +126,7 @@ Command::Command(const std::vector<Key> &keys, Private *pp)
 
 Command::~Command()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void Command::setAutoDelete(bool on)
@@ -170,7 +170,7 @@ void Command::setView(QAbstractItemView *view)
     }
     const QItemSelectionModel *const sm = view->selectionModel();
     if (!sm) {
-        qWarning() << "view " << (void *)view << " has no selectionModel!";
+        qCWarning(KLEOPATRA_LOG) << "view " << (void *)view << " has no selectionModel!";
         return;
     }
     const QList<QModelIndex> selected = sm->selectedRows();
@@ -212,7 +212,7 @@ void Command::start()
 
 void Command::cancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     doCancel();
     emit canceled();
 }

@@ -36,7 +36,7 @@
 
 #ifndef QT_NO_SYSTEMTRAYICON
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <QTimer>
 #include <QPointer>
 #include <QWidget>
@@ -199,7 +199,7 @@ void SystemTrayIcon::setAttentionWanted(bool on)
     if (d->attentionWanted() == on) {
         return;
     }
-    qDebug() << d->attentionWanted() << "->" << on;
+    qCDebug(KLEOPATRA_LOG) << d->attentionWanted() << "->" << on;
     d->setAttentionWantedImpl(on);
 }
 

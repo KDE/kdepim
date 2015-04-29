@@ -51,7 +51,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QHeaderView>
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <boost/static_assert.hpp>
 
@@ -109,7 +109,7 @@ public Q_SLOTS:
         const QModelIndex mi = index(file);
         const QString canonical = filePath(mi);
         if (canonical.isEmpty()) {
-            qDebug() << "can't locate file " << file;
+            qCDebug(KLEOPATRA_LOG) << "can't locate file " << file;
             return;
         }
 
@@ -212,11 +212,11 @@ struct BaseWidget {
         if (QDirModel *fsm = qobject_cast<QDirModel *>(proxy.sourceModel())) {
             view.setRootIndex(proxy.mapFromSource(fsm->index(base)));
         } else {
-            qWarning() << "expect a QDirModel-derived class as proxy.sourceModel(), got ";
+            qCWarning(KLEOPATRA_LOG) << "expect a QDirModel-derived class as proxy.sourceModel(), got ";
             if (!proxy.sourceModel()) {
-                qWarning() << "a null pointer";
+                qCWarning(KLEOPATRA_LOG) << "a null pointer";
             } else {
-                qWarning() << proxy.sourceModel()->metaObject()->className();
+                qCWarning(KLEOPATRA_LOG) << proxy.sourceModel()->metaObject()->className();
             }
         }
     }

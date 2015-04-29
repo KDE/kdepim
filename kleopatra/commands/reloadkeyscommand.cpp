@@ -37,7 +37,7 @@
 
 #include <models/keycache.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <gpgme++/keylistresult.h>
 

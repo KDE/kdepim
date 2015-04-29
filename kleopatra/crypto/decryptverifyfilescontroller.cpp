@@ -48,7 +48,7 @@
 #include <utils/archivedefinition.h>
 
 #include <KLocalizedString>
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <QDir>
 #include <QFile>
@@ -131,7 +131,7 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
     break;
     case DecryptVerifyOperationWidget::DecryptVerifyOpaque: {
         const unsigned int classification = classify(fileName);
-        qDebug() << "classified" << fileName << "as" << printableClassification(classification);
+        qCDebug(KLEOPATRA_LOG) << "classified" << fileName << "as" << printableClassification(classification);
 
         const shared_ptr<ArchiveDefinition> ad = w->selectedArchiveDefinition();
 
@@ -147,13 +147,13 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
             /*else*/   Output::createFromFile(outDir.absoluteFilePath(outputFileName(QFileInfo(fileName).fileName())), overwritePolicy);
 
         if (mayBeCipherText(classification)) {
-            qDebug() << "creating a DecryptVerifyTask";
+            qCDebug(KLEOPATRA_LOG) << "creating a DecryptVerifyTask";
             shared_ptr<DecryptVerifyTask> t(new DecryptVerifyTask);
             t->setInput(input);
             t->setOutput(output);
             task = t;
         } else {
-            qDebug() << "creating a VerifyOpaqueTask";
+            qCDebug(KLEOPATRA_LOG) << "creating a VerifyOpaqueTask";
             shared_ptr<VerifyOpaqueTask> t(new VerifyOpaqueTask);
             t->setInput(input);
             t->setOutput(output);
@@ -205,7 +205,7 @@ void DecryptVerifyFilesController::Private::slotWizardOperationPrepared()
 
 void DecryptVerifyFilesController::Private::slotWizardCanceled()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     reportError(gpg_error(GPG_ERR_CANCELED), i18n("User canceled"));
 }
 
@@ -271,14 +271,14 @@ struct FindExtension : std::unary_function<shared_ptr<ArchiveDefinition>, bool> 
     FindExtension(const QString &ext, Protocol proto) : ext(ext), proto(proto) {}
     bool operator()(const shared_ptr<ArchiveDefinition> &ad) const
     {
-        qDebug() << "   considering" << (ad ? ad->label() : QLatin1String("<null>")) << "for" << ext;
+        qCDebug(KLEOPATRA_LOG) << "   considering" << (ad ? ad->label() : QLatin1String("<null>")) << "for" << ext;
         bool result;
         if (proto == UnknownProtocol) {
             result = ad && (ad->extensions(OpenPGP).contains(ext, Qt::CaseInsensitive) || ad->extensions(CMS).contains(ext, Qt::CaseInsensitive));
         } else {
             result = ad && ad->extensions(proto).contains(ext, Qt::CaseInsensitive);
         }
-        qDebug() << (result ? "   -> matches" : "   -> doesn't match");
+        qCDebug(KLEOPATRA_LOG) << (result ? "   -> matches" : "   -> doesn't match");
         return result;
     }
 };
@@ -442,7 +442,7 @@ DecryptVerifyFilesController::DecryptVerifyFilesController(const shared_ptr<cons
 
 DecryptVerifyFilesController::~DecryptVerifyFilesController()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void DecryptVerifyFilesController::start()
@@ -476,7 +476,7 @@ void DecryptVerifyFilesController::Private::cancelAllTasks()
 
 void DecryptVerifyFilesController::cancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     try {
         d->m_errorDetected = true;
         if (d->m_wizard) {
@@ -484,7 +484,7 @@ void DecryptVerifyFilesController::cancel()
         }
         d->cancelAllTasks();
     } catch (const std::exception &e) {
-        qDebug() << "Caught exception: " << e.what();
+        qCDebug(KLEOPATRA_LOG) << "Caught exception: " << e.what();
     }
 }
 

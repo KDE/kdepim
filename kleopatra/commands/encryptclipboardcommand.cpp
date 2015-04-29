@@ -46,7 +46,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <QApplication>
 #include <QClipboard>
@@ -112,7 +112,7 @@ EncryptClipboardCommand::Private::Private(EncryptClipboardCommand *qq, KeyListCo
 
 EncryptClipboardCommand::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 EncryptClipboardCommand::EncryptClipboardCommand(KeyListController *c)
@@ -136,7 +136,7 @@ void EncryptClipboardCommand::Private::init()
 
 EncryptClipboardCommand::~EncryptClipboardCommand()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 // static
@@ -186,7 +186,7 @@ void EncryptClipboardCommand::Private::slotRecipientsResolved()
 
 void EncryptClipboardCommand::doCancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     d->controller.cancel();
 }
 

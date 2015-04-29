@@ -46,6 +46,7 @@ set(kcm_kleopatra_PART_SRCS
   appearanceconfigpage.cpp
   appearanceconfigwidget.cpp
   gnupgsystemconfigurationpage.cpp
+  ../kleopatra_debug.cpp
   ${_kcm_kleopatra_libkleopatraclient_extra_SRCS}
 )
 

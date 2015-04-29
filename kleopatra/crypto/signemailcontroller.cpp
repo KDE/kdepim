@@ -31,7 +31,7 @@
 */
 
 #include <config-kleopatra.h>
-
+#include "kleopatra_debug.h"
 #include "signemailcontroller.h"
 
 #include "signemailtask.h"
@@ -323,7 +323,7 @@ void SignEMailController::cancel()
         }
         d->cancelAllJobs();
     } catch (const std::exception &e) {
-        qDebug() << "Caught exception: " << e.what();
+        qCDebug(KLEOPATRA_LOG) << "Caught exception: " << e.what();
     }
 }
 

@@ -284,6 +284,7 @@ set(_kleopatra_SRCS
   aboutdata.cpp
   systrayicon.cpp
   kleopatraapplication.cpp
+  kleopatra_debug.cpp
   main.cpp
 )
 

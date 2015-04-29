@@ -43,7 +43,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <QStringList>
 
@@ -108,7 +108,7 @@ ChecksumVerifyFilesCommand::Private::Private(ChecksumVerifyFilesCommand *qq, Key
 
 ChecksumVerifyFilesCommand::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 ChecksumVerifyFilesCommand::ChecksumVerifyFilesCommand(KeyListController *c)
@@ -146,7 +146,7 @@ void ChecksumVerifyFilesCommand::Private::init()
 
 ChecksumVerifyFilesCommand::~ChecksumVerifyFilesCommand()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void ChecksumVerifyFilesCommand::setFiles(const QStringList &files)
@@ -180,7 +180,7 @@ void ChecksumVerifyFilesCommand::doStart()
 
 void ChecksumVerifyFilesCommand::doCancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     d->controller.cancel();
 }
 

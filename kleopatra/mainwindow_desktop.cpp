@@ -71,9 +71,9 @@
 #include <KShortcutsDialog>
 #include <KEditToolBar>
 #include <KAboutApplicationDialog>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 #include <KLineEdit>
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KActionMenu>
 #include <KConfigGroup>
 
@@ -233,7 +233,7 @@ public:
         if (QMenu *const menu = qobject_cast<QMenu *>(q->factory()->container(QLatin1String("listview_popup"), q))) {
             menu->exec(p);
         } else {
-            qDebug() << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
+            qCDebug(KLEOPATRA_LOG) << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
         }
     }
 
@@ -444,7 +444,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
 {
     // KMainWindow::closeEvent() insists on quitting the application,
     // so do not let it touch the event...
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     if (d->controller.hasRunningCommands()) {
         if (d->controller.shutdownWarningRequired()) {
             const int ret = KMessageBox::warningContinueCancel(this, i18n("There are still some background operations ongoing. "
@@ -465,7 +465,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
             connect(&d->controller, SIGNAL(commandsExecuting(bool)), &ev, SLOT(quit()));
             ev.exec();
             if (d->controller.hasRunningCommands())
-                qWarning()
+                qCWarning(KLEOPATRA_LOG)
                         << "controller still has commands running, this may crash now...";
             setEnabled(true);
         }
@@ -536,7 +536,7 @@ static bool can_decode_local_files(const QMimeData *data)
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *e)
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 
     if (can_decode_local_files(e->mimeData())) {
         e->acceptProposedAction();
@@ -545,7 +545,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *e)
 
 void MainWindow::dropEvent(QDropEvent *e)
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 
     if (!can_decode_local_files(e->mimeData())) {
         return;
@@ -598,7 +598,7 @@ void MainWindow::dropEvent(QDropEvent *e)
 
 void MainWindow::readProperties(const KConfigGroup &cg)
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     KXmlGuiWindow::readProperties(cg);
     savedGeometry = cg.readEntry("savedGeometry", QByteArray());
     if (!savedGeometry.isEmpty()) {
@@ -612,7 +612,7 @@ void MainWindow::readProperties(const KConfigGroup &cg)
 
 void MainWindow::saveProperties(KConfigGroup &cg)
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     KXmlGuiWindow::saveProperties(cg);
     cg.writeEntry("hidden", isHidden());
     if (isHidden()) {

@@ -33,7 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "encryptemailcontroller.h"
-
+#include "kleopatra_debug.h"
 #include "encryptemailtask.h"
 #include "taskcollection.h"
 
@@ -293,7 +293,7 @@ void EncryptEMailController::cancel()
         }
         d->cancelAllTasks();
     } catch (const std::exception &e) {
-        qDebug() << "Caught exception: " << e.what();
+        qCDebug(KLEOPATRA_LOG) << "Caught exception: " << e.what();
     }
 }
 

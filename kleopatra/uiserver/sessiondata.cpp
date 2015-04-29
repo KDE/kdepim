@@ -34,7 +34,7 @@
 
 #include "sessiondata.h"
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <QMutex>
 
@@ -74,7 +74,7 @@ SessionDataHandler::SessionDataHandler()
 
 void SessionDataHandler::enterSession(unsigned int id)
 {
-    qDebug() << id;
+    qCDebug(KLEOPATRA_LOG) << id;
     const shared_ptr<SessionData> sd = sessionDataInternal(id);
     assert(sd);
     ++sd->ref;
@@ -83,7 +83,7 @@ void SessionDataHandler::enterSession(unsigned int id)
 
 void SessionDataHandler::exitSession(unsigned int id)
 {
-    qDebug() << id;
+    qCDebug(KLEOPATRA_LOG) << id;
     const shared_ptr<SessionData> sd = sessionDataInternal(id);
     assert(sd);
     if (--sd->ref <= 0) {

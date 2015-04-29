@@ -12,6 +12,7 @@ set(_kgpgconf_SRCS
   exception.cpp
   main.cpp
   mainwindow.cpp
+  kgpgconf_debug.cpp
 )
 
 ki18n_wrap_ui(_kgpgconf_SRCS mainwidget.ui)

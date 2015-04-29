@@ -37,7 +37,7 @@
 #include <kleo/job.h>
 
 #include <QUrl>
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KLocalizedString>
 
 using namespace Kleo;
@@ -58,10 +58,10 @@ QString AuditLog::formatLink(const QUrl &urlTemplate) const
     // fixed here eqally applies there:
     if (const unsigned int code = m_error.code()) {
         if (code == GPG_ERR_NOT_IMPLEMENTED) {
-            qDebug() << "not showing link (not implemented)";
+            qCDebug(KLEOPATRA_LOG) << "not showing link (not implemented)";
             return QString();
         } else if (code == GPG_ERR_NO_DATA) {
-            qDebug() << "not showing link (not available)";
+            qCDebug(KLEOPATRA_LOG) << "not showing link (not available)";
             return i18n("No Audit Log available");
         } else {
             return i18n("Error Retrieving Audit Log: %1", QString::fromLocal8Bit(m_error.asString()));

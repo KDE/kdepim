@@ -43,7 +43,7 @@
 
 #include <kleo/exception.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KLocalizedString>
 
 #include <QFile>
@@ -345,7 +345,7 @@ ProcessStdOutInput::ProcessStdOutInput(const QString &cmd, const QStringList &ar
 {
     const QIODevice::OpenMode openMode =
         stdin_.isEmpty() ? QIODevice::ReadOnly : QIODevice::ReadWrite ;
-    qDebug() << "cd" << wd.absolutePath() << endl << cmd << args << Outputter(stdin_);
+    qCDebug(KLEOPATRA_LOG) << "cd" << wd.absolutePath() << endl << cmd << args << Outputter(stdin_);
     if (cmd.isEmpty())
         throw Exception(gpg_error(GPG_ERR_INV_ARG),
                         i18n("Command not specified"));

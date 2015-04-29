@@ -43,7 +43,7 @@
 #include <kleo/stl_util.h>
 #include <kleo/keyfilter.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <QTreeView>
 #include <QHeaderView>
 #include <QItemSelectionModel>
@@ -293,11 +293,11 @@ void KeyTreeView::setHierarchicalView(bool on)
         return;
     }
     if (on && !hierarchicalModel()) {
-        qWarning() <<  "hierarchical view requested, but no hierarchical model set";
+        qCWarning(KLEOPATRA_LOG) <<  "hierarchical view requested, but no hierarchical model set";
         return;
     }
     if (!on && !flatModel()) {
-        qWarning() << "flat view requested, but no flat model set";
+        qCWarning(KLEOPATRA_LOG) << "flat view requested, but no flat model set";
         return;
     }
     const std::vector<Key> selectedKeys = m_proxy->keys(m_view->selectionModel()->selectedRows());

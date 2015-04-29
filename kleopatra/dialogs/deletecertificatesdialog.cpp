@@ -42,7 +42,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardGuiItem>
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KConfigGroup>
 #include <KSharedConfig>
 
@@ -79,7 +79,7 @@ public:
 
     void slotWhatsThisRequested()
     {
-        qDebug();
+        qCDebug(KLEOPATRA_LOG);
         if (QWidget *const widget = qobject_cast<QWidget *>(q->sender()))
             if (!widget->whatsThis().isEmpty()) {
                 QWhatsThis::showText(QCursor::pos(), widget->whatsThis());

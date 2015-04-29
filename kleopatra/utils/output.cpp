@@ -44,7 +44,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <QFileInfo>
 #include <QTemporaryFile>
@@ -228,7 +228,7 @@ public:
     }
     /* reimp */ void finalize()
     {
-        qDebug() << this;
+        qCDebug(KLEOPATRA_LOG) << this;
         if (m_isFinalized || m_isFinalizing) {
             return;
         }
@@ -248,7 +248,7 @@ public:
 
     /* reimp */ void cancel()
     {
-        qDebug() << this;
+        qCDebug(KLEOPATRA_LOG) << this;
         if (m_isFinalizing) {
             m_cancelPending = true;
         } else if (!m_canceled) {
@@ -323,7 +323,7 @@ public:
           This delay is mainly noticabe on Windows where it can
           take ~30 seconds to write out a 10MB file in the 512 byte
           chunks gpgme serves. */
-        qDebug() << "Waiting for " << m_proc->bytesToWrite()
+        qCDebug(KLEOPATRA_LOG) << "Waiting for " << m_proc->bytesToWrite()
                  << " Bytes to be written";
         while (m_proc->waitForBytesWritten(PROCESS_MAX_RUNTIME_TIMEOUT));
 
@@ -354,7 +354,7 @@ public:
     explicit FileOutput(const QString &fileName, const shared_ptr<OverwritePolicy> &policy);
     ~FileOutput()
     {
-        qDebug() << this;
+        qCDebug(KLEOPATRA_LOG) << this;
     }
 
     /* reimp */ QString label() const
@@ -368,7 +368,7 @@ public:
     /* reimp */ void doFinalize();
     /* reimp */ void doCancel()
     {
-        qDebug() << this;
+        qCDebug(KLEOPATRA_LOG) << this;
     }
 private:
     bool obtainOverwritePermission();
@@ -432,7 +432,7 @@ shared_ptr<Output> Output::createFromFile(const QString &fileName, bool forceOve
 shared_ptr<Output> Output::createFromFile(const QString &fileName, const shared_ptr<OverwritePolicy> &policy)
 {
     shared_ptr<FileOutput> fo(new FileOutput(fileName, policy));
-    qDebug() << fo.get();
+    qCDebug(KLEOPATRA_LOG) << fo.get();
     return fo;
 }
 
@@ -468,7 +468,7 @@ bool FileOutput::obtainOverwritePermission()
 
 void FileOutput::doFinalize()
 {
-    qDebug() << this;
+    qCDebug(KLEOPATRA_LOG) << this;
 
     struct Remover {
         QString file;
@@ -493,33 +493,33 @@ void FileOutput::doFinalize()
     m_tmpFile.reset(); // really close the file - needed on Windows for renaming :/
     kleo_assert(!guard);   // if this triggers, we need to audit for holder of shared_ptr<QIODevice>s.
 
-    qDebug() << this << " renaming " << tmpFileName << "->" << m_fileName ;
+    qCDebug(KLEOPATRA_LOG) << this << " renaming " << tmpFileName << "->" << m_fileName ;
 
     if (QFile::rename(tmpFileName, m_fileName)) {
-        qDebug() << this << "succeeded";
+        qCDebug(KLEOPATRA_LOG) << this << "succeeded";
         return;
     }
 
-    qDebug() << this << "failed";
+    qCDebug(KLEOPATRA_LOG) << this << "failed";
 
     if (!obtainOverwritePermission())
         throw Exception(gpg_error(GPG_ERR_CANCELED),
                         i18n("Overwriting declined"));
 
-    qDebug() << this << "going to overwrite" << m_fileName ;
+    qCDebug(KLEOPATRA_LOG) << this << "going to overwrite" << m_fileName ;
 
     if (!QFile::remove(m_fileName))
         throw Exception(errno ? gpg_error_from_errno(errno) : gpg_error(GPG_ERR_EIO),
                         i18n("Could not remove file \"%1\" for overwriting.", m_fileName));
 
-    qDebug() << this << "succeeded, renaming " << tmpFileName << "->" << m_fileName;
+    qCDebug(KLEOPATRA_LOG) << this << "succeeded, renaming " << tmpFileName << "->" << m_fileName;
 
     if (QFile::rename(tmpFileName, m_fileName)) {
-        qDebug() << this << "succeeded";
+        qCDebug(KLEOPATRA_LOG) << this << "succeeded";
         return;
     }
 
-    qDebug() << this << "failed";
+    qCDebug(KLEOPATRA_LOG) << this << "failed";
 
     throw Exception(errno ? gpg_error_from_errno(errno) : gpg_error(GPG_ERR_EIO),
                     i18n("Could not rename file \"%1\" to \"%2\"",
@@ -547,7 +547,7 @@ ProcessStdInOutput::ProcessStdInOutput(const QString &cmd, const QStringList &ar
       m_arguments(args),
       m_proc(new redirect_close<QProcess>)
 {
-    qDebug() << "cd" << wd.absolutePath() << endl << cmd << args;
+    qCDebug(KLEOPATRA_LOG) << "cd" << wd.absolutePath() << endl << cmd << args;
     if (cmd.isEmpty())
         throw Exception(gpg_error(GPG_ERR_INV_ARG),
                         i18n("Command not specified"));

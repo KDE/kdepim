@@ -52,7 +52,7 @@
 #include <kmime/kmime_header_parsing.h>
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <QPointer>
 #include <QTimer>
@@ -136,7 +136,7 @@ SignEncryptFilesController::Private::Private(SignEncryptFilesController *qq)
 
 SignEncryptFilesController::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 QString SignEncryptFilesController::Private::titleForOperation(unsigned int op)
@@ -184,7 +184,7 @@ SignEncryptFilesController::SignEncryptFilesController(const shared_ptr<const Ex
 
 SignEncryptFilesController::~SignEncryptFilesController()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     if (d->wizard && !d->wizard->isVisible()) {
         delete d->wizard;
     }
@@ -298,7 +298,7 @@ void SignEncryptFilesController::setFiles(const QStringList &files)
 
 void SignEncryptFilesController::Private::slotWizardCanceled()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     reportError(gpg_error(GPG_ERR_CANCELED), i18n("User cancel"));
 }
 
@@ -582,14 +582,14 @@ void SignEncryptFilesController::doTaskDone(const Task *task, const shared_ptr<c
 
 void SignEncryptFilesController::cancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     try {
         if (d->wizard) {
             d->wizard->close();
         }
         d->cancelAllTasks();
     } catch (const std::exception &e) {
-        qDebug() << "Caught exception: " << e.what();
+        qCDebug(KLEOPATRA_LOG) << "Caught exception: " << e.what();
     }
 }
 

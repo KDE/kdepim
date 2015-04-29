@@ -47,7 +47,7 @@
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <cassert>
 
@@ -109,7 +109,7 @@ AddUserIDCommand::Private::Private(AddUserIDCommand *qq, KeyListController *c)
 
 AddUserIDCommand::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 AddUserIDCommand::AddUserIDCommand(KeyListController *c)
@@ -137,7 +137,7 @@ void AddUserIDCommand::Private::init()
 
 AddUserIDCommand::~AddUserIDCommand()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void AddUserIDCommand::doStart()
@@ -200,7 +200,7 @@ void AddUserIDCommand::Private::slotResult(const Error &err)
 
 void AddUserIDCommand::doCancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     if (d->job) {
         d->job->slotCancel();
     }

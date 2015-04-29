@@ -31,7 +31,7 @@
 */
 
 #include <config-kleopatra.h>
-
+#include "kleopatra_debug.h"
 #include "decryptverifyemailcontroller.h"
 
 #include "emailoperationspreferences.h"
@@ -163,7 +163,7 @@ DecryptVerifyEMailController::Private::Private(DecryptVerifyEMailController *qq)
 
 void DecryptVerifyEMailController::Private::slotWizardCanceled()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     if (!m_operationCompleted) {
         reportError(gpg_error(GPG_ERR_CANCELED), i18n("User canceled"));
     }
@@ -245,7 +245,7 @@ DecryptVerifyEMailWizard *DecryptVerifyEMailController::Private::findOrCreateWiz
 
     collectGarbage(s_wizards);
 
-    qDebug() << "id = " << id;
+    qCDebug(KLEOPATRA_LOG) << "id = " << id;
 
     if (id != 0) {
 
@@ -392,7 +392,7 @@ DecryptVerifyEMailController::DecryptVerifyEMailController(const shared_ptr<cons
 
 DecryptVerifyEMailController::~DecryptVerifyEMailController()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void DecryptVerifyEMailController::start()
@@ -473,13 +473,13 @@ void DecryptVerifyEMailController::setProtocol(Protocol prot)
 
 void DecryptVerifyEMailController::setSessionId(unsigned int id)
 {
-    qDebug() << "id = " << id;
+    qCDebug(KLEOPATRA_LOG) << "id = " << id;
     d->m_sessionId = id;
 }
 
 void DecryptVerifyEMailController::cancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     try {
         if (d->m_wizard) {
             disconnect(d->m_wizard);
@@ -487,7 +487,7 @@ void DecryptVerifyEMailController::cancel()
         }
         d->cancelAllTasks();
     } catch (const std::exception &e) {
-        qDebug() << "Caught exception: " << e.what();
+        qCDebug(KLEOPATRA_LOG) << "Caught exception: " << e.what();
     }
 }
 

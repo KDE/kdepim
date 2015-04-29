@@ -76,7 +76,7 @@
 #include <KShortcutsDialog>
 #endif
 #include <KAboutApplicationDialog>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <QTreeView>
 #include <QApplication>
@@ -355,7 +355,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
     // KMainWindow::closeEvent() insists on quitting the application,
     // so do not let it touch the event...
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     if (d->controller.hasRunningCommands()) {
         if (d->controller.shutdownWarningRequired()) {
             const int ret = KMessageBox::warningContinueCancel(this, i18n("There are still some background operations ongoing. "

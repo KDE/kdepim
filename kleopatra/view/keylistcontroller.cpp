@@ -44,7 +44,7 @@
 #include <utils/action_data.h>
 
 #include "tooltippreferences.h"
-
+#include "kleopatra_debug.h"
 #include "commands/exportcertificatecommand.h"
 #include "commands/exportopenpgpcertstoservercommand.h"
 #include "commands/exportsecretkeycommand.h"
@@ -128,7 +128,7 @@ public:
 public:
     void slotDestroyed(QObject *o)
     {
-        qDebug() << (void *)o;
+        qCDebug(KLEOPATRA_LOG) << (void *)o;
         views.erase(std::remove(views.begin(), views.end(), o), views.end());
         commands.erase(std::remove(commands.begin(), commands.end(), o), commands.end());
     }
@@ -150,7 +150,7 @@ public:
     void slotCurrentViewChanged(QAbstractItemView *view)
     {
         if (view && !kdtools::binary_search(views, view)) {
-            qDebug() << "you need to register view" << view << "before trying to set it as the current view!";
+            qCDebug(KLEOPATRA_LOG) << "you need to register view" << view << "before trying to set it as the current view!";
             addView(view);
         }
         currentView = view;
@@ -553,7 +553,7 @@ void KeyListController::registerCommand(Command *cmd)
         return;
     }
     d->addCommand(cmd);
-    qDebug() << (void *)cmd;
+    qCDebug(KLEOPATRA_LOG) << (void *)cmd;
     if (d->commands.size() == 1) {
         emit commandsExecuting(true);
     }
@@ -648,7 +648,7 @@ void KeyListController::Private::slotContextMenu(const QPoint &p)
     if (view && kdtools::binary_search(views, view)) {
         emit q->contextMenuRequested(view, view->viewport()->mapToGlobal(p));
     } else {
-        qDebug() << "sender is not a QAbstractItemView*!";
+        qCDebug(KLEOPATRA_LOG) << "sender is not a QAbstractItemView*!";
     }
 }
 
@@ -658,7 +658,7 @@ void KeyListController::Private::slotCommandFinished()
     if (!cmd || !kdtools::binary_search(commands, cmd)) {
         return;
     }
-    qDebug() << (void *)cmd;
+    qCDebug(KLEOPATRA_LOG) << (void *)cmd;
     if (commands.size() == 1) {
         emit q->commandsExecuting(false);
     }
@@ -772,13 +772,13 @@ void KeyListController::Private::slotActionTriggered()
                 }
                 c->start();
             } else
-                qDebug() << "createCommand() == NULL for action(?) \""
+                qCDebug(KLEOPATRA_LOG) << "createCommand() == NULL for action(?) \""
                          << qPrintable(s->objectName()) << "\"";
         else {
-            qDebug() << "I don't know anything about action(?) \"%s\"", qPrintable(s->objectName());
+            qCDebug(KLEOPATRA_LOG) << "I don't know anything about action(?) \"%s\"", qPrintable(s->objectName());
         }
     } else {
-        qDebug() << "not called through a signal/slot connection (sender() == NULL)";
+        qCDebug(KLEOPATRA_LOG) << "not called through a signal/slot connection (sender() == NULL)";
     }
 }
 

@@ -33,7 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "newsignencryptemailcontroller.h"
-
+#include "kleopatra_debug.h"
 #include "encryptemailtask.h"
 #include "signemailtask.h"
 #include "taskcollection.h"
@@ -291,7 +291,7 @@ NewSignEncryptEMailController::NewSignEncryptEMailController(QObject *p)
 
 NewSignEncryptEMailController::~NewSignEncryptEMailController()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void NewSignEncryptEMailController::setSubject(const QString &subject)
@@ -595,7 +595,7 @@ void NewSignEncryptEMailController::cancel()
         d->dialog->close();
         d->cancelAllTasks();
     } catch (const std::exception &e) {
-        qDebug() << "Caught exception: " << e.what();
+        qCDebug(KLEOPATRA_LOG) << "Caught exception: " << e.what();
     }
 }
 

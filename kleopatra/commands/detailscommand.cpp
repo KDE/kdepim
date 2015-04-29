@@ -37,7 +37,7 @@
 
 #include <dialogs/certificatedetailsdialog.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <cassert>
 
@@ -152,7 +152,7 @@ void DetailsCommand::doStart()
     if (keys.size() == 1) {
         key = keys.front();
     } else {
-        qWarning() << "can only work with one certificate at a time";
+        qCWarning(KLEOPATRA_LOG) << "can only work with one certificate at a time";
     }
 
     if (key.isNull()) {

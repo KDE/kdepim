@@ -43,7 +43,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <QStringList>
 
@@ -108,7 +108,7 @@ SignEncryptFilesCommand::Private::Private(SignEncryptFilesCommand *qq, KeyListCo
 
 SignEncryptFilesCommand::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 SignEncryptFilesCommand::SignEncryptFilesCommand(KeyListController *c)
@@ -146,7 +146,7 @@ void SignEncryptFilesCommand::Private::init()
 
 SignEncryptFilesCommand::~SignEncryptFilesCommand()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void SignEncryptFilesCommand::setFiles(const QStringList &files)
@@ -264,7 +264,7 @@ void SignEncryptFilesCommand::doStart()
 
 void SignEncryptFilesCommand::doCancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     d->controller.cancel();
 }
 

@@ -47,7 +47,7 @@
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <QDateTime>
 
@@ -111,7 +111,7 @@ ChangeExpiryCommand::Private::Private(ChangeExpiryCommand *qq, KeyListController
 
 ChangeExpiryCommand::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 ChangeExpiryCommand::ChangeExpiryCommand(KeyListController *c)
@@ -139,7 +139,7 @@ void ChangeExpiryCommand::Private::init()
 
 ChangeExpiryCommand::~ChangeExpiryCommand()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void ChangeExpiryCommand::doStart()
@@ -172,7 +172,7 @@ void ChangeExpiryCommand::Private::slotDialogAccepted()
 
     const QDateTime expiry(dialog->dateOfExpiry(), END_OF_DAY);
 
-    qDebug() << "expiry" << expiry;
+    qCDebug(KLEOPATRA_LOG) << "expiry" << expiry;
 
     createJob();
     assert(job);
@@ -203,7 +203,7 @@ void ChangeExpiryCommand::Private::slotResult(const Error &err)
 
 void ChangeExpiryCommand::doCancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     if (d->job) {
         d->job->slotCancel();
     }

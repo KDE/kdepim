@@ -65,7 +65,7 @@
 
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <QTemporaryDir>
 #include <KMessageBox>
 #include <QIcon>
@@ -157,7 +157,7 @@ static void set_keysize(QComboBox *cb, unsigned int strength)
     }
     const int idx = cb->findData(static_cast<int>(strength));
     if (idx < 0) {
-        qWarning() << "keysize " << strength << " not allowed";
+        qCWarning(KLEOPATRA_LOG) << "keysize " << strength << " not allowed";
     }
     cb->setCurrentIndex(idx);
 }
@@ -889,7 +889,7 @@ private Q_SLOTS:
         }
         // ### better error handling?
         const QString fileName = exportCertificateCommand->openPGPFileName();
-        qDebug() << "fileName" << fileName;
+        qCDebug(KLEOPATRA_LOG) << "fileName" << fileName;
         exportCertificateCommand = 0;
         if (fileName.isEmpty()) {
             return;
@@ -912,7 +912,7 @@ private Q_SLOTS:
 
     void invokeMailer(const QString &to, const QString &subject, QString body, const QString &attachment)
     {
-        qDebug() << "to:" << to << "subject:" << subject
+        qCDebug(KLEOPATRA_LOG) << "to:" << to << "subject:" << subject
                  << "body:" << body << "attachment:" << attachment;
         // KToolInvocation::invokeMailer is broken on Windows, and openUrl works fine on Unix, too.
 
@@ -926,7 +926,7 @@ private Q_SLOTS:
         if (!attachment.isEmpty()) {
             encoded += "&attach=" + ol_quote(QUrl::toPercentEncoding(QFileInfo(attachment).absoluteFilePath()));
         }
-        qDebug() << "openUrl" << QUrl::fromEncoded(encoded);
+        qCDebug(KLEOPATRA_LOG) << "openUrl" << QUrl::fromEncoded(encoded);
         QDesktopServices::openUrl(QUrl::fromEncoded(encoded));
         KMessageBox::information(this,
                                  xi18nc("@info",
@@ -1378,7 +1378,7 @@ static bool requirementsAreMet(const QVector<Line> &list, QString &error)
             continue;
         }
         const QString key = line.attr;
-        qDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
+        qCDebug(KLEOPATRA_LOG) << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
         if (le->text().trimmed().isEmpty()) {
             if (key.endsWith(QLatin1Char('!'))) {
                 if (line.regex.isEmpty()) {
@@ -1403,7 +1403,7 @@ static bool requirementsAreMet(const QVector<Line> &list, QString &error)
                                "Local Admin rule: <icode>%2</icode>", line.label, line.regex);
             return false;
         }
-        qDebug() << "ok";
+        qCDebug(KLEOPATRA_LOG) << "ok";
     }
     return true;
 }
@@ -1613,7 +1613,7 @@ QString KeyCreationPage::createGnupgKeyParms() const
         }
     }
     s     << "</GnupgKeyParms>"                            << endl;
-    qDebug() << '\n' << result;
+    qCDebug(KLEOPATRA_LOG) << '\n' << result;
     return result;
 }
 
@@ -1674,7 +1674,7 @@ void AdvancedSettingsDialog::loadDefaultKeyType()
         setSubkeyType(GPGME_PK_ELG_E);
     } else {
         if (!keyType.isEmpty() && keyType != QLatin1String("RSA"))
-            qWarning() << "invalid value \"" << qPrintable(keyType)
+            qCWarning(KLEOPATRA_LOG) << "invalid value \"" << qPrintable(keyType)
                        << "\" for entry \"[CertificateCreationWizard]"
                        << qPrintable(entry) << "\"";
         setKeyType(GPGME_PK_RSA);

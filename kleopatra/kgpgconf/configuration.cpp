@@ -32,7 +32,7 @@
 
 #include "configuration.h"
 
-#include <QDebug>
+#include "kgpgconf_debug.h"
 #include <KLocalizedString>
 
 #include <QStringList>
@@ -62,7 +62,7 @@ static QString urlpart_encode(const QString &str)
     QString enc(str);
     enc.replace(QLatin1Char('%'), QLatin1String("%25"));   // first!
     enc.replace(QLatin1Char(':'), QLatin1String("%3a"));
-    //qDebug() <<"  urlpart_encode:" << str <<" ->" << enc;
+    //qCDebug(KGPGCONF_LOG) <<"  urlpart_encode:" << str <<" ->" << enc;
     return enc;
 }
 
@@ -88,7 +88,7 @@ static QUrl parseUrl(ConfigEntry::ArgType argType, const QString &str)
             url.setQuery(urlpart_decode(*it));
             return url;
         } else {
-            qWarning() << "parseURL: malformed LDAP server:" << str;
+            qCWarning(KGPGCONF_LOG) << "parseURL: malformed LDAP server:" << str;
         }
     }
     // other URLs : assume wellformed URL syntax.
@@ -587,7 +587,7 @@ QVariant ConfigEntry::stringToValue(const QString &str, UnescapeMode mode) const
                     if (val.startsWith(QLatin1Char('"'))) {
                         val = val.mid(1);
                     } else { // see README.gpgconf
-                        qWarning() << "String value should start with '\"' :" << val;
+                        qCWarning(KGPGCONF_LOG) << "String value should start with '\"' :" << val;
                     }
                 }
             }
@@ -603,7 +603,7 @@ QVariant ConfigEntry::stringToValue(const QString &str, UnescapeMode mode) const
                 if (val.startsWith(QLatin1Char('"'))) {
                     val = val.mid(1);
                 } else { // see README.gpgconf
-                    qWarning() << "String value should start with '\"' :" << val;
+                    qCWarning(KGPGCONF_LOG) << "String value should start with '\"' :" << val;
                 }
             }
         }
@@ -635,7 +635,7 @@ QString ConfigEntry::toString(ConfigEntry::EscapeMode mode) const
                 }
             }
             QString res = lst.join(QLatin1String(","));
-            //qDebug() <<"toString:" << res;
+            //qCDebug(KGPGCONF_LOG) <<"toString:" << res;
             return res;
         } else { // normal string
             QString res = m_value.toString();

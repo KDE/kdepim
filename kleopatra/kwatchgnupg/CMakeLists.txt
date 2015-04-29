@@ -2,6 +2,7 @@ set(kwatchgnupg_SRCS
   ../utils/kdlogtextwidget.cpp
   ../utils/gnupg-helper.cpp
   ../utils/hex.cpp
+  ../kleopatra_debug.cpp
   kwatchgnupgmainwin.cpp
   kwatchgnupgconfig.cpp
   aboutdata.cpp

@@ -63,7 +63,7 @@
 
 #include <gpg-error.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KLocalizedString>
 #include <KLocale>
 
@@ -904,7 +904,7 @@ void DecryptVerifyTask::Private::slotResult(const DecryptionResult &dr, const Ve
     {
         std::stringstream ss;
         ss << dr << '\n' << vr;
-        qDebug() << ss.str().c_str();
+        qCDebug(KLEOPATRA_LOG) << ss.str().c_str();
     }
     const AuditLog auditLog = auditLogFromSender(q->sender());
     if (dr.error().code() || vr.error().code()) {
@@ -1057,7 +1057,7 @@ void DecryptTask::Private::slotResult(const DecryptionResult &result, const QByt
     {
         std::stringstream ss;
         ss << result;
-        qDebug() << ss.str().c_str();
+        qCDebug(KLEOPATRA_LOG) << ss.str().c_str();
     }
     const AuditLog auditLog = auditLogFromSender(q->sender());
     if (result.error().code()) {
@@ -1212,7 +1212,7 @@ void VerifyOpaqueTask::Private::slotResult(const VerificationResult &result, con
     {
         std::stringstream ss;
         ss << result;
-        qDebug() << ss.str().c_str();
+        qCDebug(KLEOPATRA_LOG) << ss.str().c_str();
     }
     const AuditLog auditLog = auditLogFromSender(q->sender());
     if (result.error().code()) {
@@ -1365,7 +1365,7 @@ void VerifyDetachedTask::Private::slotResult(const VerificationResult &result)
     {
         std::stringstream ss;
         ss << result;
-        qDebug() << ss.str().c_str();
+        qCDebug(KLEOPATRA_LOG) << ss.str().c_str();
     }
     const AuditLog auditLog = auditLogFromSender(q->sender());
     try {

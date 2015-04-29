@@ -39,7 +39,7 @@
 #include <utils/gnupg-helper.h>
 #include <utils/hex.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KLocalizedString>
 
 #include <QProcess>
@@ -91,7 +91,7 @@ public:
         gpgconf.start(gpgConfPath(), QStringList() << QLatin1String("--list-dirs"), QIODevice::ReadOnly);
         gpgconf.waitForFinished();
         if (gpgconf.exitStatus() != QProcess::NormalExit || gpgconf.exitCode() != 0) {
-            qDebug() << "GpgConfCheck: \"gpgconf --list-dirs\" gives error, disabling";
+            qCDebug(KLEOPATRA_LOG) << "GpgConfCheck: \"gpgconf --list-dirs\" gives error, disabling";
             return false;
         }
         const QList<QByteArray> lines = gpgconf.readAll().split('\n');
@@ -102,7 +102,7 @@ public:
                 } catch (...) {
                     return false;
                 }
-        qDebug() << "GpgConfCheck: \"gpgconf --list-dirs\" has no sysconfdir entry";
+        qCDebug(KLEOPATRA_LOG) << "GpgConfCheck: \"gpgconf --list-dirs\" has no sysconfdir entry";
         return false;
     }
 

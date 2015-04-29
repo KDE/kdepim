@@ -43,7 +43,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <QStringList>
 
@@ -107,7 +107,7 @@ DecryptVerifyFilesCommand::Private::Private(DecryptVerifyFilesCommand *qq, KeyLi
 
 DecryptVerifyFilesCommand::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 DecryptVerifyFilesCommand::DecryptVerifyFilesCommand(KeyListController *c)
@@ -145,7 +145,7 @@ void DecryptVerifyFilesCommand::Private::init()
 
 DecryptVerifyFilesCommand::~DecryptVerifyFilesCommand()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void DecryptVerifyFilesCommand::setFiles(const QStringList &files)
@@ -190,7 +190,7 @@ void DecryptVerifyFilesCommand::doStart()
 
 void DecryptVerifyFilesCommand::doCancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     d->controller.cancel();
 }
 

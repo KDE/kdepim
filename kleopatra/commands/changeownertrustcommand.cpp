@@ -47,7 +47,7 @@
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <cassert>
 
@@ -107,7 +107,7 @@ ChangeOwnerTrustCommand::Private::Private(ChangeOwnerTrustCommand *qq, KeyListCo
 
 ChangeOwnerTrustCommand::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 ChangeOwnerTrustCommand::ChangeOwnerTrustCommand(KeyListController *c)
@@ -135,7 +135,7 @@ void ChangeOwnerTrustCommand::Private::init()
 
 ChangeOwnerTrustCommand::~ChangeOwnerTrustCommand()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void ChangeOwnerTrustCommand::doStart()
@@ -169,7 +169,7 @@ void ChangeOwnerTrustCommand::Private::slotDialogAccepted()
 
     const Key::OwnerTrust trust = dialog->ownerTrust();
 
-    qDebug() << "trust " << trust;
+    qCDebug(KLEOPATRA_LOG) << "trust " << trust;
 
     createJob();
     assert(job);
@@ -200,7 +200,7 @@ void ChangeOwnerTrustCommand::Private::slotResult(const Error &err)
 
 void ChangeOwnerTrustCommand::doCancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     if (d->job) {
         d->job->slotCancel();
     }

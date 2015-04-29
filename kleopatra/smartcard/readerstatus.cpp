@@ -48,7 +48,7 @@
 
 #include <gpg-error.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <QStringList>
 #include <QDir>
@@ -132,11 +132,11 @@ static QByteArray read_file(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.exists()) {
-        qDebug() << "read_file: file" << fileName << "does not exist";
+        qCDebug(KLEOPATRA_LOG) << "read_file: file" << fileName << "does not exist";
         return QByteArray();
     }
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "read_file: failed to open" << fileName << ':' << file.errorString();
+        qCDebug(KLEOPATRA_LOG) << "read_file: failed to open" << fileName << ':' << file.errorString();
         return QByteArray();
     }
     return file.readAll().trimmed();
@@ -170,7 +170,7 @@ std::auto_ptr<T_Target> dynamic_pointer_cast(std::auto_ptr<T_Source> &in)
 template <typename T>
 const T &_trace__impl(const T &t, const char *msg)
 {
-    qDebug() << msg << t;
+    qCDebug(KLEOPATRA_LOG) << msg << t;
     return t;
 }
 #define TRACE( x ) _trace__impl( x, #x )
@@ -198,7 +198,7 @@ BOOST_STATIC_ASSERT((sizeof app_types / sizeof * app_types == ReaderStatus::NumA
 
 static ReaderStatus::AppType parse_app_type(const std::string &s)
 {
-    qDebug() << "parse_app_type(" << s.c_str() << ")";
+    qCDebug(KLEOPATRA_LOG) << "parse_app_type(" << s.c_str() << ")";
     const char **it = std::find(begin(app_types), end(app_types), to_lower_copy(s));
     if (it == end(app_types)) {
         return TRACE(ReaderStatus::UnknownApplication);
@@ -231,7 +231,7 @@ static ReaderStatus::PinState parse_pin_state(const std::string &s)
 static std::auto_ptr<DefaultAssuanTransaction> gpgagent_transact(shared_ptr<Context> &gpgAgent, const char *command, Error &err)
 {
 #ifdef DEBUG_SCREADER
-    qDebug() << "gpgagent_transact(" << command << ")";
+    qCDebug(KLEOPATRA_LOG) << "gpgagent_transact(" << command << ")";
 #endif
     const AssuanResult res = gpgAgent->assuanTransact(command);
     err = res.error();
@@ -240,10 +240,10 @@ static std::auto_ptr<DefaultAssuanTransaction> gpgagent_transact(shared_ptr<Cont
     }
     if (err.code()) {
 #ifdef DEBUG_SCREADER
-        qDebug() << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit(err.asString());
+        qCDebug(KLEOPATRA_LOG) << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit(err.asString());
 #endif
         if (err.code() >= GPG_ERR_ASS_GENERAL && err.code() <= GPG_ERR_ASS_UNKNOWN_INQUIRE) {
-            qDebug() << "Assuan problem, killing context";
+            qCDebug(KLEOPATRA_LOG) << "Assuan problem, killing context";
             gpgAgent.reset();
         }
         return std::auto_ptr<DefaultAssuanTransaction>();
@@ -259,10 +259,10 @@ static const std::string scd_getattr_status(shared_ptr<Context> &gpgAgent, const
     cmd += what;
     const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact(gpgAgent, cmd.c_str(), err);
     if (t.get()) {
-        qDebug() << "scd_getattr_status(" << what << "): got" << t->statusLines();
+        qCDebug(KLEOPATRA_LOG) << "scd_getattr_status(" << what << "): got" << t->statusLines();
         return t->firstStatusLine(what);
     } else {
-        qDebug() << "scd_getattr_status(" << what << "): t == NULL";
+        qCDebug(KLEOPATRA_LOG) << "scd_getattr_status(" << what << "): t == NULL";
         return std::string();
     }
 }
@@ -281,15 +281,15 @@ static unsigned int get_event_counter(shared_ptr<Context> &gpgAgent)
     Error err;
     const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact(gpgAgent, "GETEVENTCOUNTER", err);
     if (err.code()) {
-        qDebug() << "get_event_counter(): got error" << err.asString();
+        qCDebug(KLEOPATRA_LOG) << "get_event_counter(): got error" << err.asString();
     }
     if (t.get()) {
 #ifdef DEBUG_SCREADER
-        qDebug() << "get_event_counter(): got" << t->statusLines();
+        qCDebug(KLEOPATRA_LOG) << "get_event_counter(): got" << t->statusLines();
 #endif
         return parse_event_counter(t->firstStatusLine("EVENTCOUNTER"));
     } else {
-        qDebug() << "scd_getattr_status(): t == NULL";
+        qCDebug(KLEOPATRA_LOG) << "scd_getattr_status(): t == NULL";
         return -1;
     }
 }
@@ -317,22 +317,22 @@ static bool parse_keypairinfo_and_lookup_key(Context *ctx, const std::string &kp
         return false;
     }
     const std::string pattern = parse_keypairinfo(kpi);
-    qDebug() << "parse_keypairinfo_and_lookup_key: pattern=" << pattern.c_str();
+    qCDebug(KLEOPATRA_LOG) << "parse_keypairinfo_and_lookup_key: pattern=" << pattern.c_str();
     if (const Error err = ctx->startKeyListing(pattern.c_str())) {
-        qDebug() << "parse_keypairinfo_and_lookup_key: startKeyListing failed:" << err.asString();
+        qCDebug(KLEOPATRA_LOG) << "parse_keypairinfo_and_lookup_key: startKeyListing failed:" << err.asString();
         return false;
     }
     Error e;
     const Key key = ctx->nextKey(e);
     ctx->endKeyListing();
-    qDebug() << "parse_keypairinfo_and_lookup_key: e=" << e.code() << "; key.isNull()" << key.isNull();
+    qCDebug(KLEOPATRA_LOG) << "parse_keypairinfo_and_lookup_key: e=" << e.code() << "; key.isNull()" << key.isNull();
     return !e && !key.isNull();
 }
 
 static CardInfo get_card_status(const QString &fileName, unsigned int idx, shared_ptr<Context> &gpg_agent)
 {
 #ifdef DEBUG_SCREADER
-    qDebug() << "get_card_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
+    qCDebug(KLEOPATRA_LOG) << "get_card_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
 #endif
     CardInfo ci(fileName, ReaderStatus::CardUsable);
     if (idx != 0 || !gpg_agent) {
@@ -353,7 +353,7 @@ static CardInfo get_card_status(const QString &fileName, unsigned int idx, share
         return ci;
     }
     if (ci.appType != ReaderStatus::NksApplication) {
-        qDebug() << "get_card_status: not a NetKey card, giving up";
+        qCDebug(KLEOPATRA_LOG) << "get_card_status: not a NetKey card, giving up";
         return ci;
     }
     ci.appVersion = parse_app_version(scd_getattr_status(gpg_agent, "NKS-VERSION", err));
@@ -361,7 +361,7 @@ static CardInfo get_card_status(const QString &fileName, unsigned int idx, share
         return ci;
     }
     if (ci.appVersion != 3) {
-        qDebug() << "get_card_status: not a NetKey v3 card, giving up";
+        qCDebug(KLEOPATRA_LOG) << "get_card_status: not a NetKey v3 card, giving up";
         return ci;
     }
 
@@ -403,7 +403,7 @@ static CardInfo get_card_status(const QString &fileName, unsigned int idx, share
     }
 
 #ifdef DEBUG_SCREADER
-    qDebug() << "get_card_status: ci.status " << prettyFlags[ci.status];
+    qCDebug(KLEOPATRA_LOG) << "get_card_status: ci.status " << prettyFlags[ci.status];
 #endif
 
     return ci;
@@ -412,16 +412,16 @@ static CardInfo get_card_status(const QString &fileName, unsigned int idx, share
 static std::vector<CardInfo> update_cardinfo(const QString &gnupgHomePath, shared_ptr<Context> &gpgAgent)
 {
 #ifdef DEBUG_SCREADER
-    qDebug() << "<update_cardinfo>";
+    qCDebug(KLEOPATRA_LOG) << "<update_cardinfo>";
 #endif
     const QDir gnupgHome(gnupgHomePath);
     if (!gnupgHome.exists()) {
-        qWarning() << "gnupg home" << gnupgHomePath << "does not exist!";
+        qCWarning(KLEOPATRA_LOG) << "gnupg home" << gnupgHomePath << "does not exist!";
     }
 
     const CardInfo ci = get_card_status(gnupgHome.absoluteFilePath(QLatin1String("reader_0.status")), 0, gpgAgent);
 #ifdef DEBUG_SCREADER
-    qDebug() << "</update_cardinfo>";
+    qCDebug(KLEOPATRA_LOG) << "</update_cardinfo>";
 #endif
     return std::vector<CardInfo>(1, ci);
 }
@@ -432,7 +432,7 @@ static bool check_event_counter_changed(shared_ptr<Context> &gpg_agent, unsigned
     counter = get_event_counter(gpg_agent);
     if (oldCounter != counter) {
 #ifdef DEBUG_SCREADER
-        qDebug() << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter ;
+        qCDebug(KLEOPATRA_LOG) << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter ;
 #endif
         return true;
     } else {
@@ -501,7 +501,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void ping()
     {
-        qDebug() << "ReaderStatusThread[GUI]::ping()";
+        qCDebug(KLEOPATRA_LOG) << "ReaderStatusThread[GUI]::ping()";
         addTransaction(updateTransaction);
     }
 
@@ -516,7 +516,7 @@ public Q_SLOTS:
     {
         const QDir gnupgHome(m_gnupgHomePath);
         if (!gnupgHome.exists()) {
-            qWarning() << "gnupg home" << m_gnupgHomePath << "does not exist!";
+            qCWarning(KLEOPATRA_LOG) << "gnupg home" << m_gnupgHomePath << "does not exist!";
             return;
         }
 
@@ -530,7 +530,7 @@ public Q_SLOTS:
             bool ok = false;
             const unsigned int idx = parseFileName(file, &ok);
             if (!ok) {
-                qDebug() << "filename" << file << ": cannot parse reader slot number";
+                qCDebug(KLEOPATRA_LOG) << "filename" << file << ": cannot parse reader slot number";
                 continue;
             }
             assert(idx >= contents.size());
@@ -590,13 +590,13 @@ private:
                 while (m_transactions.empty()) {
                     // go to sleep waiting for more work:
 #ifdef DEBUG_SCREADER
-                    qDebug() << "ReaderStatusThread[2nd]: .zZZ";
+                    qCDebug(KLEOPATRA_LOG) << "ReaderStatusThread[2nd]: .zZZ";
 #endif
                     if (!m_waitForTransactions.wait(&m_mutex, CHECK_INTERVAL)) {
                         m_transactions.push_front(checkTransaction);
                     }
 #ifdef DEBUG_SCREADER
-                    qDebug() << "ReaderStatusThread[2nd]: .oOO";
+                    qCDebug(KLEOPATRA_LOG) << "ReaderStatusThread[2nd]: .oOO";
 #endif
                 }
 
@@ -615,7 +615,7 @@ private:
             }
 
 #ifdef DEBUG_SCREADER
-            qDebug() << "ReaderStatusThread[2nd]: new iteration command=" << command << " ; nullSlot=" << nullSlot;
+            qCDebug(KLEOPATRA_LOG) << "ReaderStatusThread[2nd]: new iteration command=" << command << " ; nullSlot=" << nullSlot;
 #endif
             // now, let's see what we got:
 
@@ -650,7 +650,7 @@ private:
                 while (nit != nend && oit != oend) {
                     if (nit->status != oit->status) {
 #ifdef DEBUG_SCREADER
-                        qDebug() << "ReaderStatusThread[2nd]: slot" << idx << ":" << prettyFlags[oit->status] << "->" << prettyFlags[nit->status];
+                        qCDebug(KLEOPATRA_LOG) << "ReaderStatusThread[2nd]: slot" << idx << ":" << prettyFlags[oit->status] << "->" << prettyFlags[nit->status];
 #endif
                         emit cardStatusChanged(idx, nit->status);
                     }
@@ -695,7 +695,7 @@ private:
                 eventCounter = -1;
             }
 #ifdef DEBUG_SCREADER
-            qDebug() << "eventCounter:" << eventCounter;
+            qCDebug(KLEOPATRA_LOG) << "eventCounter:" << eventCounter;
 #endif
 
         }

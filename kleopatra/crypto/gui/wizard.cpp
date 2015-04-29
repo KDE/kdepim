@@ -48,7 +48,7 @@
 #include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <map>
 #include <set>
@@ -150,7 +150,7 @@ Wizard::Private::Private(Wizard *qq)
 
 Wizard::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 bool Wizard::Private::isLastPage(int id) const
@@ -206,7 +206,7 @@ Wizard::Wizard(QWidget *parent, Qt::WindowFlags f)
 
 Wizard::~Wizard()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void Wizard::setPage(int id, WizardPage *widget)

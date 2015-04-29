@@ -44,7 +44,7 @@
 #include <QTimer>
 #include <QEventLoop>
 #include <QDateTime>
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <qgpgme/eventloopinteractor.h>
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 {
 
     if (const GpgME::Error initError = GpgME::initializeLibrary(0)) {
-        qDebug() << "Error initializing gpgme:" << QString::fromLocal8Bit(initError.asString()) ;
+        qCDebug(KLEOPATRA_LOG) << "Error initializing gpgme:" << QString::fromLocal8Bit(initError.asString()) ;
         return 1;
     }
 
@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
     pgp->setKeyListMode(GpgME::Local);
 
     if (const GpgME::Error e = pgp->startKeyListing(pattern, secretOnly)) {
-        qDebug() << "pgp->startKeyListing() ->" << e.asString();
+        qCDebug(KLEOPATRA_LOG) << "pgp->startKeyListing() ->" << e.asString();
     }
 
     if (!disablesmime) {
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
         cms->setKeyListMode(GpgME::Local);
 
         if (const GpgME::Error e = cms->startKeyListing(pattern, secretOnly)) {
-            qDebug() << "cms" << e.asString();
+            qCDebug(KLEOPATRA_LOG) << "cms" << e.asString();
         }
 
         QEventLoop loop;
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
         cms2->setKeyListMode(GpgME::Local);
 
         if (const GpgME::Error e = cms2->startKeyListing(pattern, secretOnly)) {
-            qDebug() << "cms2" << e.asString();
+            qCDebug(KLEOPATRA_LOG) << "cms2" << e.asString();
         }
     }
 

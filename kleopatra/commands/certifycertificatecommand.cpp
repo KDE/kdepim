@@ -50,7 +50,7 @@
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <boost/bind.hpp>
 
@@ -112,7 +112,7 @@ CertifyCertificateCommand::Private::Private(CertifyCertificateCommand *qq, KeyLi
 
 CertifyCertificateCommand::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 CertifyCertificateCommand::CertifyCertificateCommand(KeyListController *c)
@@ -154,7 +154,7 @@ void CertifyCertificateCommand::Private::init()
 
 CertifyCertificateCommand::~CertifyCertificateCommand()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void CertifyCertificateCommand::setCertificationExportable(bool on)
@@ -210,7 +210,7 @@ void CertifyCertificateCommand::doStart()
 
     Q_FOREACH (const UserID &uid, d->uids)
         if (qstricmp(uid.parent().primaryFingerprint(), key.primaryFingerprint()) != 0) {
-            qWarning() << "User-ID <-> Key mismatch!";
+            qCWarning(KLEOPATRA_LOG) << "User-ID <-> Key mismatch!";
             d->finished();
             return;
         }
@@ -261,7 +261,7 @@ void CertifyCertificateCommand::Private::slotCertificationPrepared()
 
 void CertifyCertificateCommand::doCancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     if (d->job) {
         d->job->slotCancel();
     }

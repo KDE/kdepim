@@ -43,7 +43,7 @@
 #include <QAbstractTableModel>
 #include <QHeaderView>
 #include <QSortFilterProxyModel>
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -208,24 +208,24 @@ private:
                 if (const shared_ptr<SelfTest> &t = model->at(src_row)) {
                     return !t->passed() ;
                 } else {
-                    qWarning() <<  "NULL test??";
+                    qCWarning(KLEOPATRA_LOG) <<  "NULL test??";
                 }
             } else {
                 if (src_parent.isValid()) {
-                    qWarning() <<  "view asks for subitems!";
+                    qCWarning(KLEOPATRA_LOG) <<  "view asks for subitems!";
                 } else {
-                    qWarning() << "index " << src_row
+                    qCWarning(KLEOPATRA_LOG) << "index " << src_row
                                << " is out of range [" << 0
                                << "," <<  model->rowCount(src_parent)
                                << "]";
                 }
             }
         } else {
-            qWarning() << "expected a ::Model, got ";
+            qCWarning(KLEOPATRA_LOG) << "expected a ::Model, got ";
             if (!sourceModel()) {
-                qWarning() << "a null pointer";
+                qCWarning(KLEOPATRA_LOG) << "a null pointer";
             } else {
-                qWarning() <<  sourceModel()->metaObject()->className();
+                qCWarning(KLEOPATRA_LOG) <<  sourceModel()->metaObject()->className();
             }
 
         }

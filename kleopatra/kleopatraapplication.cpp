@@ -60,7 +60,7 @@
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KCmdLineOptions>
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KUrl>
 #include <KWindowSystem>
 
@@ -217,7 +217,7 @@ public:
         const QString logFileName = QDir(dir).absoluteFilePath(QStringLiteral("kleopatra.log.%1").arg(mygetpid()));
         std::auto_ptr<QFile> logFile(new QFile(logFileName));
         if (!logFile->open(QIODevice::WriteOnly | QIODevice::Append)) {
-            qDebug() << "Could not open file for logging: " << logFileName << "\nLogging disabled";
+            qCDebug(KLEOPATRA_LOG) << "Could not open file for logging: " << logFileName << "\nLogging disabled";
             return;
         }
 
@@ -279,7 +279,7 @@ struct _Funcs {
 
 int KleopatraApplication::newInstance()
 {
-    qDebug() << "ignoreNewInstance =" << d->ignoreNewInstance;
+    qCDebug(KLEOPATRA_LOG) << "ignoreNewInstance =" << d->ignoreNewInstance;
     if (d->ignoreNewInstance) {
         return 0;
     }
@@ -291,14 +291,14 @@ int KleopatraApplication::newInstance()
     const bool openpgp = args->isSet("openpgp");
     const bool cms     = args->isSet("cms");
     if (openpgp) {
-        qDebug() << "found OpenPGP";
+        qCDebug(KLEOPATRA_LOG) << "found OpenPGP";
     }
     if (cms) {
-        qDebug()     << "found CMS";
+        qCDebug(KLEOPATRA_LOG)     << "found CMS";
     }
 
     if (openpgp && cms) {
-        qDebug() << "ambigious scheme: --openpgp and --cms";
+        qCDebug(KLEOPATRA_LOG) << "ambigious scheme: --openpgp and --cms";
         return 1;
     }
 
@@ -306,7 +306,7 @@ int KleopatraApplication::newInstance()
     if (args->isSet("query")) {
         const QString fingerPrint = args->getOption("query");
         if (fingerPrint.isEmpty()) {
-            qDebug() << "no fingerprint specified: --query";
+            qCDebug(KLEOPATRA_LOG) << "no fingerprint specified: --query";
             return 1;
         }
 
@@ -365,23 +365,23 @@ int KleopatraApplication::newInstance()
         const _Funcs *it2 = std::find_if(it1 + 1, end(funcs),
                                          boost::bind(&KCmdLineArgs::isSet, args, boost::bind(&_Funcs::opt, _1)));
         if (it2 != end(funcs)) {
-            qDebug() << "ambiguous command" << it1->opt << "vs." << it2->opt;
+            qCDebug(KLEOPATRA_LOG) << "ambiguous command" << it1->opt << "vs." << it2->opt;
             return 1;
         }
         if (files.empty()) {
-            qDebug() << it1->opt << "without arguments";
+            qCDebug(KLEOPATRA_LOG) << it1->opt << "without arguments";
             return 1;
         }
-        qDebug() << "found" << it1->opt;
+        qCDebug(KLEOPATRA_LOG) << "found" << it1->opt;
         (this->*func)(files, openpgp ? GpgME::OpenPGP : cms ? GpgME::CMS : GpgME::UnknownProtocol);
     } else {
         if (files.empty()) {
             if (!(d->firstNewInstance && isSessionRestored())) {
-                qDebug() << "openOrRaiseMainWindow";
+                qCDebug(KLEOPATRA_LOG) << "openOrRaiseMainWindow";
                 openOrRaiseMainWindow();
             }
         } else {
-            qDebug() << "files without command"; // possible?
+            qCDebug(KLEOPATRA_LOG) << "files without command"; // possible?
             return 1;
         }
     }
@@ -450,16 +450,16 @@ void KleopatraApplication::toggleMainWindowVisibility()
 
 void KleopatraApplication::restoreMainWindow()
 {
-    qDebug() << "restoring main window";
+    qCDebug(KLEOPATRA_LOG) << "restoring main window";
 
     // Sanity checks
     if (!isSessionRestored()) {
-        qDebug() << "Not in session restore";
+        qCDebug(KLEOPATRA_LOG) << "Not in session restore";
         return;
     }
 
     if (mainWindow()) {
-        qDebug() << "Already have main window";
+        qCDebug(KLEOPATRA_LOG) << "Already have main window";
         return;
     }
 

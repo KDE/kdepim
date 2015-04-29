@@ -43,7 +43,7 @@
 #include <gpg-error.h>
 
 #include <KLocalizedString>
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <QFile>
 #include <QRegExp>
@@ -167,7 +167,7 @@ static bool is_version(const char *actual, int major, int minor, int patch)
 {
     QRegExp rx(QStringLiteral("(\\d+)\\.(\\d+)\\.(\\d+)(?:-svn\\d+)?.*"));
     if (!rx.exactMatch(QString::fromUtf8(actual))) {
-        qDebug() << "Can't parse version " << actual;
+        qCDebug(KLEOPATRA_LOG) << "Can't parse version " << actual;
         return false;
     }
     bool ok;
@@ -178,7 +178,7 @@ static bool is_version(const char *actual, int major, int minor, int patch)
         assert(ok);
     }
 
-    qDebug() << "Parsed" << actual << "as: "
+    qCDebug(KLEOPATRA_LOG) << "Parsed" << actual << "as: "
              << actual_version[0] << '.'
              << actual_version[1] << '.'
              << actual_version[2] << '.' ;
@@ -189,9 +189,9 @@ static bool is_version(const char *actual, int major, int minor, int patch)
     ok = !std::lexicographical_compare(begin(actual_version), end(actual_version),
                                        begin(required_version), end(required_version));
     if (ok) {
-        qDebug()  << QString::fromLatin1("%1.%2.%3").arg(major).arg(minor).arg(patch) << "<=" << actual ;
+        qCDebug(KLEOPATRA_LOG)  << QString::fromLatin1("%1.%2.%3").arg(major).arg(minor).arg(patch) << "<=" << actual ;
     } else {
-        qDebug() << QString::fromLatin1("%1.%2.%3").arg(major).arg(minor).arg(patch) << ">" << actual ;
+        qCDebug(KLEOPATRA_LOG) << QString::fromLatin1("%1.%2.%3").arg(major).arg(minor).arg(patch) << ">" << actual ;
     }
     return ok;
 }

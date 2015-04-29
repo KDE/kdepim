@@ -34,7 +34,7 @@
 
 #include "filesystemwatcher.h"
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <QFileSystemWatcher>
 #include <QString>
@@ -117,7 +117,7 @@ void FileSystemWatcher::Private::onFileChanged(const QString &path)
     if (!is_whitelisted(fi.fileName(), m_whitelist)) {
         return;
     }
-    qDebug() << path;
+    qCDebug(KLEOPATRA_LOG) << path;
     m_seenPaths.insert(path);
     m_cachedFiles.insert(path);
     handleTimer();
@@ -161,7 +161,7 @@ void FileSystemWatcher::Private::onDirectoryChanged(const QString &path)
         return;
     }
 
-    qDebug() << path;
+    qCDebug(KLEOPATRA_LOG) << path;
 
     const QStringList newFiles = find_new_files(list_dir_absolute(path, m_blacklist, m_whitelist), m_seenPaths);
 
@@ -169,7 +169,7 @@ void FileSystemWatcher::Private::onDirectoryChanged(const QString &path)
         return;
     }
 
-    qDebug() << "newFiles" << newFiles;
+    qCDebug(KLEOPATRA_LOG) << "newFiles" << newFiles;
 
     m_cachedFiles.insert(newFiles.begin(), newFiles.end());
     q->addPaths(newFiles);
@@ -308,7 +308,7 @@ void FileSystemWatcher::addPaths(const QStringList &paths)
     }
     const QStringList newPaths = paths + resolve(paths, d->m_blacklist, d->m_whitelist);
     if (!newPaths.empty()) {
-        qDebug() << "adding\n " << newPaths.join(QLatin1String("\n ")) << "\n/end";
+        qCDebug(KLEOPATRA_LOG) << "adding\n " << newPaths.join(QLatin1String("\n ")) << "\n/end";
     }
     d->m_paths += newPaths;
     d->m_seenPaths.insert(newPaths.begin(), newPaths.end());

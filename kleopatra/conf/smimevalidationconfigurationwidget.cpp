@@ -42,7 +42,7 @@
 #include <kleo/cryptobackendfactory.h>
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <QDBusConnection>
 
@@ -208,7 +208,7 @@ struct SMIMECryptoConfigEntries {
 
 void SMimeValidationConfigurationWidget::defaults()
 {
-    qDebug() << "not implemented";
+    qCDebug(KLEOPATRA_LOG) << "not implemented";
 }
 
 void SMimeValidationConfigurationWidget::load()
@@ -390,11 +390,11 @@ CryptoConfigEntry *SMIMECryptoConfigEntries::configEntry(const char *componentNa
 {
     CryptoConfigEntry *const entry = mConfig->entry(QLatin1String(componentName), QLatin1String(groupName), QLatin1String(entryName));
     if (!entry) {
-        qWarning() << QString::fromLatin1("Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3").arg(QLatin1String(componentName), QLatin1String(groupName), QLatin1String(entryName));
+        qCWarning(KLEOPATRA_LOG) << QString::fromLatin1("Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3").arg(QLatin1String(componentName), QLatin1String(groupName), QLatin1String(entryName));
         return 0;
     }
     if (entry->argType() != argType || entry->isList() != isList) {
-        qWarning() << QString::fromLatin1("Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5").arg(QLatin1String(componentName), QLatin1String(groupName), QLatin1String(entryName)).arg(entry->argType()).arg(entry->isList());
+        qCWarning(KLEOPATRA_LOG) << QString::fromLatin1("Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5").arg(QLatin1String(componentName), QLatin1String(groupName), QLatin1String(entryName)).arg(entry->argType()).arg(entry->isList());
         return 0;
     }
     return entry;

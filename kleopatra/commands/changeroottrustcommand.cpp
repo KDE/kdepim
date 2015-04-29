@@ -39,7 +39,7 @@
 
 #include <utils/gnupg-helper.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KLocalizedString>
 #include <QSaveFile>
 
@@ -188,7 +188,7 @@ void ChangeRootTrustCommand::doStart()
     if (keys.size() == 1) {
         key = keys.front();
     } else {
-        qWarning() << "can only work with one certificate at a time";
+        qCWarning(KLEOPATRA_LOG) << "can only work with one certificate at a time";
     }
 
     if (key.isNull()) {
@@ -296,7 +296,7 @@ QString change_trust_file(const QString &trustListFile, const QString &key, Key:
 
     const QString keyColon = add_colons(key);
 
-    qDebug() << qPrintable(key) << " -> " << qPrintable(keyColon);
+    qCDebug(KLEOPATRA_LOG) << qPrintable(key) << " -> " << qPrintable(keyColon);
 
     //               ( 1)    (                         2                           )    (  3  )( 4)
     QRegExp rx(QLatin1String("\\s*(!?)\\s*([a-fA-F0-9]{40}|(?:[a-fA-F0-9]{2}:){19}[a-fA-F0-9]{2})\\s*([SsPp*])(.*)"));
@@ -306,13 +306,13 @@ QString change_trust_file(const QString &trustListFile, const QString &key, Key:
 
         const QString line = QString::fromLatin1(rawLine.data(), rawLine.size());
         if (!rx.exactMatch(line)) {
-            qDebug() << "line \"" << rawLine.data() << "\" does not match";
+            qCDebug(KLEOPATRA_LOG) << "line \"" << rawLine.data() << "\" does not match";
             out.write(rawLine + '\n');
             continue;
         }
         const QString cap2 = rx.cap(2);
         if (cap2 != key && cap2 != keyColon) {
-            qDebug() << qPrintable(key) << " != "
+            qCDebug(KLEOPATRA_LOG) << qPrintable(key) << " != "
                      << qPrintable(cap2) << " != "
                      << qPrintable(keyColon);
             out.write(rawLine + '\n');
@@ -362,10 +362,10 @@ QString run_gpgconf_reload_gpg_agent(const QString &gpgConfPath)
 
     QProcess p;
     p.start(gpgConfPath, QStringList() << QLatin1String("--reload") << QLatin1String("gpg-agent"));
-    qDebug() <<  "starting " << qPrintable(gpgConfPath)
+    qCDebug(KLEOPATRA_LOG) <<  "starting " << qPrintable(gpgConfPath)
              << " --reload gpg-agent";
     p.waitForFinished(-1);
-    qDebug() << "done";
+    qCDebug(KLEOPATRA_LOG) << "done";
     if (p.error() == QProcess::UnknownError) {
         return QString();
     } else {

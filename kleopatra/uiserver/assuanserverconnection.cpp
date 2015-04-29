@@ -63,7 +63,7 @@
 
 #include <kmime/kmime_header_parsing.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KLocalizedString>
 #include <KWindowSystem>
 
@@ -242,7 +242,7 @@ static void apply_window_id(QWidget *widget, const QString &winIdStr)
     bool ok = false;
     const WId wid = wid_from_string(winIdStr, &ok);
     if (!ok) {
-        qDebug() << "window-id value" << wid << "doesn't look like a number";
+        qCDebug(KLEOPATRA_LOG) << "window-id value" << wid << "doesn't look like a number";
         return;
     }
     if (QWidget *pw = QWidget::find(wid)) {
@@ -414,7 +414,7 @@ private:
         if (!rx.cap(2).isEmpty()) {
             conn.sessionTitle = rx.cap(2);
         }
-        qDebug() << "session_handler: "
+        qCDebug(KLEOPATRA_LOG) << "session_handler: "
                  << "id=" << static_cast<unsigned long>(conn.sessionId)
                  << ", title=" << qPrintable(conn.sessionTitle);
         return assuan_process_done(ctx_, 0);
@@ -609,10 +609,10 @@ private:
             if (binOpt && !in) {
                 Output *out = reinterpret_cast <Output *>(io.get());
                 out->setBinaryOpt(true);
-                qDebug() << "Configured output for binary data";
+                qCDebug(KLEOPATRA_LOG) << "Configured output for binary data";
             }
 
-            qDebug() << "AssuanServerConnection: added" << io->label();
+            qCDebug(KLEOPATRA_LOG) << "AssuanServerConnection: added" << io->label();
 
             return assuan_process_done(conn.ctx.get(), 0);
         } catch (const GpgME::Exception &e) {
@@ -1430,7 +1430,7 @@ int AssuanCommand::inquire(const char *keyword, QObject *receiver, const char *s
 void AssuanCommand::done(const GpgME::Error &err, const QString &details)
 {
     if (d->ctx && !d->done && !details.isEmpty()) {
-        qDebug() << "Error: " << details;
+        qCDebug(KLEOPATRA_LOG) << "Error: " << details;
         d->utf8ErrorKeepAlive = details.toUtf8();
         if (!d->nohup) {
             assuan_set_error(d->ctx.get(), err.encodedError(), d->utf8ErrorKeepAlive.constData());
@@ -1442,11 +1442,11 @@ void AssuanCommand::done(const GpgME::Error &err, const QString &details)
 void AssuanCommand::done(const GpgME::Error &err)
 {
     if (!d->ctx) {
-        qDebug() << err.asString() << ": called with NULL ctx.";
+        qCDebug(KLEOPATRA_LOG) << err.asString() << ": called with NULL ctx.";
         return;
     }
     if (d->done) {
-        qDebug() << err.asString() << ": called twice!";
+        qCDebug(KLEOPATRA_LOG) << err.asString() << ": called twice!";
         return;
     }
 

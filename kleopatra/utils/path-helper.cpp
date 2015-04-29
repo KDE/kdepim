@@ -38,7 +38,7 @@
 
 #include <kleo/exception.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KLocalizedString>
 
 #include <QString>
@@ -76,7 +76,7 @@ QString Kleo::heuristicBaseDirectory(const QStringList &fileNames)
     Q_FOREACH (const QString &fileName, fileNames) {
         dirs.push_back(QFileInfo(fileName).path() + QLatin1Char('/'));
     }
-    qDebug() << "dirs" << dirs;
+    qCDebug(KLEOPATRA_LOG) << "dirs" << dirs;
     const QString candidate = longestCommonPrefix(dirs);
     const int idx = candidate.lastIndexOf(QLatin1Char('/'));
     return candidate.left(idx);

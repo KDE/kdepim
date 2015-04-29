@@ -39,7 +39,7 @@
 
 #include <kmessagebox.h>
 #include <KLocalizedString>
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <kconfig.h>
 #include <QDialog>
 #include <QSpinBox>
@@ -273,7 +273,7 @@ void DirectoryServicesConfigurationPage::load()
     mTimeoutConfigEntry = configEntry(s_timeout_componentName, s_timeout_groupName, s_timeout_entryName, Kleo::CryptoConfigEntry::ArgType_UInt, false);
     if (mTimeoutConfigEntry) {
         QTime time = QTime().addSecs(mTimeoutConfigEntry->uintValue());
-        //qDebug() <<"timeout:" << mTimeoutConfigEntry->uintValue() <<"  ->" << time;
+        //qCDebug(KLEOPATRA_LOG) <<"timeout:" << mTimeoutConfigEntry->uintValue() <<"  ->" << time;
         mTimeout->setTime(time);
     }
 

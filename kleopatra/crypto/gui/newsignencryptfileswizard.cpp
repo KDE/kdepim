@@ -58,7 +58,7 @@
 
 #include <KMessageBox>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QWizardPage>
@@ -1125,7 +1125,7 @@ NewSignEncryptFilesWizard::NewSignEncryptFilesWizard(QWidget *parent, Qt::Window
 
 NewSignEncryptFilesWizard::~NewSignEncryptFilesWizard()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void NewSignEncryptFilesWizard::setPresetProtocol(Protocol proto)

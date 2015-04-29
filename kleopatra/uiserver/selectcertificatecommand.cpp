@@ -47,7 +47,7 @@
 
 #include <gpg-error.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <KLocalizedString>
 
 #include <QByteArray>
@@ -149,19 +149,19 @@ int SelectCertificateCommand::doStart()
 
 void SelectCertificateCommand::Private::slotSelectedCertificates(int err, const QByteArray &data)
 {
-    qDebug() << err << ", " << data.constData();
+    qCDebug(KLEOPATRA_LOG) << err << ", " << data.constData();
     if (err) {
         return;
     }
     const std::vector<std::string> fprs = kdtools::transform< std::vector<std::string> >(data.split('\n'), mem_fn(&QByteArray::constData));
     const std::vector<Key> keys = KeyCache::instance()->findByKeyIDOrFingerprint(fprs);
     Q_FOREACH (const Key &key, keys) {
-        qDebug() << "found key " << key.userID(0).id();
+        qCDebug(KLEOPATRA_LOG) << "found key " << key.userID(0).id();
     }
     if (dialog) {
         dialog->selectCertificates(keys);
     } else {
-        qWarning() << "dialog == NULL in slotSelectedCertificates";
+        qCWarning(KLEOPATRA_LOG) << "dialog == NULL in slotSelectedCertificates";
     }
 }
 

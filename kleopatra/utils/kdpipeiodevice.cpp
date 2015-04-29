@@ -26,7 +26,7 @@
 #include <QtCore/QPointer>
 #include <QtCore/QThread>
 #include <QtCore/QWaitCondition>
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <cassert>
 #include <cstring>
@@ -913,27 +913,27 @@ void Writer::run()
     // too bad QThread doesn't have that itself; a signal isn't enough
     hasStarted.wakeAll();
 
-    qDebug() << this << "Writer::run: started";
+    qCDebug(KLEOPATRA_LOG) << this << "Writer::run: started";
 
     while (true) {
 
         while (!cancel && bufferEmpty()) {
-            qDebug() << this << "Writer::run: buffer is empty, wake bufferEmptyCond listeners";
+            qCDebug(KLEOPATRA_LOG) << this << "Writer::run: buffer is empty, wake bufferEmptyCond listeners";
             bufferEmptyCondition.wakeAll();
             emit bytesWritten(0);
-            qDebug() << this << "Writer::run: buffer is empty, going to sleep";
+            qCDebug(KLEOPATRA_LOG) << this << "Writer::run: buffer is empty, going to sleep";
             bufferNotEmptyCondition.wait(&mutex);
-            qDebug() << this << "Writer::run: woke up";
+            qCDebug(KLEOPATRA_LOG) << this << "Writer::run: woke up";
         }
 
         if (cancel) {
-            qDebug() << this <<  "Writer::run: detected cancel";
+            qCDebug(KLEOPATRA_LOG) << this <<  "Writer::run: detected cancel";
             goto leave;
         }
 
         assert(numBytesInBuffer > 0);
 
-        qDebug() << this << "Writer::run: Trying to write " << numBytesInBuffer << "bytes";
+        qCDebug(KLEOPATRA_LOG) << this << "Writer::run: Trying to write " << numBytesInBuffer << "bytes";
         qint64 totalWritten = 0;
         do {
             mutex.unlock();
@@ -968,16 +968,16 @@ void Writer::run()
             mutex.lock();
         } while (totalWritten < numBytesInBuffer);
 
-        qDebug() << this << "Writer::run: wrote " << totalWritten << "bytes";
+        qCDebug(KLEOPATRA_LOG) << this << "Writer::run: wrote " << totalWritten << "bytes";
         numBytesInBuffer = 0;
-        qDebug() << this << "Writer::run: buffer is empty, wake bufferEmptyCond listeners";
+        qCDebug(KLEOPATRA_LOG) << this << "Writer::run: buffer is empty, wake bufferEmptyCond listeners";
         bufferEmptyCondition.wakeAll();
         emit bytesWritten(totalWritten);
     }
 leave:
-    qDebug() << this << "Writer::run: terminating";
+    qCDebug(KLEOPATRA_LOG) << this << "Writer::run: terminating";
     numBytesInBuffer = 0;
-    qDebug() << this << "Writer::run: buffer is empty, wake bufferEmptyCond listeners";
+    qCDebug(KLEOPATRA_LOG) << this << "Writer::run: buffer is empty, wake bufferEmptyCond listeners";
     bufferEmptyCondition.wakeAll();
     emit bytesWritten(0);
 }

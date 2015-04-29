@@ -55,7 +55,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <QRegExp>
 
@@ -164,7 +164,7 @@ LookupCertificatesCommand::Private::Private(LookupCertificatesCommand *qq, KeyLi
 
 LookupCertificatesCommand::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     delete dialog;
 }
 
@@ -194,7 +194,7 @@ void LookupCertificatesCommand::Private::init()
 
 LookupCertificatesCommand::~LookupCertificatesCommand()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 void LookupCertificatesCommand::doStart()
@@ -299,7 +299,7 @@ void LookupCertificatesCommand::Private::slotKeyListResult(const KeyListResult &
     } else if (q->sender() == keyListing.openpgp) {
         keyListing.openpgp = 0;
     } else {
-        qDebug() << "unknown sender()" << q->sender();
+        qCDebug(KLEOPATRA_LOG) << "unknown sender()" << q->sender();
     }
 
     keyListing.result.mergeWith(r);
@@ -357,7 +357,7 @@ void LookupCertificatesCommand::Private::slotImportRequested(const std::vector<K
 void LookupCertificatesCommand::Private::slotSaveAsRequested(const std::vector<Key> &keys)
 {
     Q_UNUSED(keys);
-    qDebug() << "not implemented";
+    qCDebug(KLEOPATRA_LOG) << "not implemented";
 }
 
 void LookupCertificatesCommand::Private::slotDetailsRequested(const Key &key)

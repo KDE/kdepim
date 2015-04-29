@@ -36,7 +36,7 @@
 
 #include <utils/multivalidator.h>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 
 #include <QRegExp>
 #include <QUrl>
@@ -95,7 +95,7 @@ public:
             assert(encoded.endsWith(QLatin1String(".org")));
             encoded.chop(3);   // '.' was part of domain before
         }
-        qDebug() << "\n str           :" << str
+        qCDebug(KLEOPATRA_LOG) << "\n str           :" << str
                  << "\n domain        :" << domain
                  << "\n domainEncoded :" << domainEncoded
                  << "\n domainRestored:" << domainRestored

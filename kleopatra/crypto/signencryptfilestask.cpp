@@ -55,7 +55,7 @@
 
 #include <KLocalizedString>
 
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape
 
@@ -124,7 +124,7 @@ public:
           m_outputCreated(outputCreated),
           m_auditLog(auditLog)
     {
-        qDebug() << endl
+        qCDebug(KLEOPATRA_LOG) << endl
                  << "inputError :" << m_inputErrorString << endl
                  << "outputError:" << m_outputErrorString;
         assert(!m_sresult.isNull());
@@ -140,7 +140,7 @@ public:
           m_outputCreated(outputCreated),
           m_auditLog(auditLog)
     {
-        qDebug() << endl
+        qCDebug(KLEOPATRA_LOG) << endl
                  << "inputError :" << m_inputErrorString << endl
                  << "outputError:" << m_outputErrorString;
         assert(!m_eresult.isNull());
@@ -157,7 +157,7 @@ public:
           m_outputCreated(outputCreated),
           m_auditLog(auditLog)
     {
-        qDebug() << endl
+        qCDebug(KLEOPATRA_LOG) << endl
                  << "inputError :" << m_inputErrorString << endl
                  << "outputError:" << m_outputErrorString;
         assert(!m_sresult.isNull() || !m_eresult.isNull());

@@ -42,7 +42,7 @@
 #include <QPushButton>
 #include <KStandardGuiItem>
 #include <KUrl>
-#include <QDebug>
+#include "kleopatra_debug.h"
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QStringList>
@@ -195,7 +195,7 @@ void ResultItemWidget::Private::slotLinkActivated(const QString &link)
         if (split.size() == 3 || m_result->nonce() != split.value(1)) {
             emit q->linkActivated(QLatin1String("key://") + split.value(2));
         } else {
-            qWarning() << "key link invalid, or nonce not matching! link=" << link << " nonce" << m_result->nonce();
+            qCWarning(KLEOPATRA_LOG) << "key link invalid, or nonce not matching! link=" << link << " nonce" << m_result->nonce();
         }
         return;
     }
@@ -210,7 +210,7 @@ void ResultItemWidget::Private::slotLinkActivated(const QString &link)
         q->showAuditLog();
         return;
     }
-    qWarning() << "Unexpected link scheme: " << link;
+    qCWarning(KLEOPATRA_LOG) << "Unexpected link scheme: " << link;
 }
 
 void ResultItemWidget::showAuditLog()

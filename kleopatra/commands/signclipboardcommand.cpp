@@ -46,7 +46,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "kleopatra_debug.h"
 
 #include <QApplication>
 #include <QClipboard>
@@ -112,7 +112,7 @@ SignClipboardCommand::Private::Private(SignClipboardCommand *qq, KeyListControll
 
 SignClipboardCommand::Private::~Private()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 SignClipboardCommand::SignClipboardCommand(GpgME::Protocol protocol, KeyListController *c)
@@ -139,7 +139,7 @@ void SignClipboardCommand::Private::init()
 
 SignClipboardCommand::~SignClipboardCommand()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
 }
 
 // static
@@ -189,7 +189,7 @@ void SignClipboardCommand::Private::slotSignersResolved()
 
 void SignClipboardCommand::doCancel()
 {
-    qDebug();
+    qCDebug(KLEOPATRA_LOG);
     d->controller.cancel();
 }
 

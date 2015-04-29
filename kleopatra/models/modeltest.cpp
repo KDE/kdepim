@@ -301,7 +301,7 @@ void ModelTest::checkChildren(const QModelIndex &parent, int currentDepth)
         Q_ASSERT(model->hasChildren(parent) == true);
     }
 
-    //qDebug() << "parent:" << model->data(parent).toString() << "rows:" << rows
+    //qCDebug(KLEOPATRA_LOG) << "parent:" << model->data(parent).toString() << "rows:" << rows
     //         << "columns:" << columns << "parent column:" << parent.column();
 
     Q_ASSERT(model->hasIndex(rows + 1, 0, parent) == false);
@@ -338,9 +338,9 @@ void ModelTest::checkChildren(const QModelIndex &parent, int currentDepth)
             // If the next test fails here is some somewhat useful debug you play with.
             /*
             if (model->parent(index) != parent) {
-                qDebug() << r << c << currentDepth << model->data(index).toString()
+                qCDebug(KLEOPATRA_LOG) << r << c << currentDepth << model->data(index).toString()
                          << model->data(parent).toString();
-                qDebug() << index << parent << model->parent(index);
+                qCDebug(KLEOPATRA_LOG) << index << parent << model->parent(index);
                 // And a view that you can even use to show the model.
                 //QTreeView view;
                 //view.setModel(model);
@@ -352,9 +352,9 @@ void ModelTest::checkChildren(const QModelIndex &parent, int currentDepth)
 
             // recursively go down the children
             if (model->hasChildren(index) && currentDepth < 10) {
-                //qDebug() << r << c << "has children" << model->rowCount(index);
+                //qCDebug(KLEOPATRA_LOG) << r << c << "has children" << model->rowCount(index);
                 checkChildren(index, ++currentDepth);
-            }/* else { if (currentDepth >= 10) qDebug() << "checked 10 deep"; };*/
+            }/* else { if (currentDepth >= 10) qCDebug(KLEOPATRA_LOG) << "checked 10 deep"; };*/
 
             // make sure that after testing the children that the index doesn't change.
             QModelIndex newerIndex = model->index(r, c, parent);
@@ -474,10 +474,10 @@ void ModelTest::rowsInserted(const QModelIndex &parent, int start, int end)
     Q_ASSERT(c.last == model->data(model->index(start - 1, 0, c.parent)));
     /*
     if (c.next != model->data(model->index(end + 1, 0, c.parent))) {
-        qDebug() << start << end;
+        qCDebug(KLEOPATRA_LOG) << start << end;
         for (int i=0; i < model->rowCount(); ++i)
-            qDebug() << model->index(i, 0).data().toString();
-        qDebug() << c.next << model->data(model->index(end + 1, 0, c.parent));
+            qCDebug(KLEOPATRA_LOG) << model->index(i, 0).data().toString();
+        qCDebug(KLEOPATRA_LOG) << c.next << model->data(model->index(end + 1, 0, c.parent));
     }
     */
     Q_ASSERT(c.next == model->data(model->index(end + 1, 0, c.parent)));
