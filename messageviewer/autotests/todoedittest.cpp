@@ -508,6 +508,14 @@ void TodoEditTest::shouldEnabledSaveOpenEditorButton()
     noteedit->setText(QStringLiteral("test 2"));
     QCOMPARE(openEditor->isEnabled(), true);
     QCOMPARE(save->isEnabled(), true);
+
+    noteedit->setText(QLatin1String(" "));
+    QCOMPARE(openEditor->isEnabled(), false);
+    QCOMPARE(save->isEnabled(), false);
+
+    noteedit->setText(QLatin1String(" foo"));
+    QCOMPARE(openEditor->isEnabled(), true);
+    QCOMPARE(save->isEnabled(), true);
 }
 
 void TodoEditTest::shouldDisabledSaveOpenEditorButtonWhenCollectionComboBoxIsEmpty()

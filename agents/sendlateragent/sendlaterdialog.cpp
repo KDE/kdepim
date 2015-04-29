@@ -154,6 +154,7 @@ void SendLaterDialog::slotOkClicked()
 
 void SendLaterDialog::slotDelay(bool delayEnabled)
 {
+    mSendLaterWidget->mLabel->setEnabled(delayEnabled);
     mSendLaterWidget->mDateTime->setEnabled(delayEnabled);
     mSendLaterWidget->mRecurrence->setEnabled(delayEnabled);
     mSendLaterWidget->mRecurrenceValue->setEnabled(delayEnabled && mSendLaterWidget->mRecurrence->isChecked());
