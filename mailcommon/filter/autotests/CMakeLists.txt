@@ -438,3 +438,15 @@ target_link_libraries( filterconverttosieveresultdialogtest
    Qt5::Core
 )
 
+set(mailcommon_mailfiltertest_SRCS mailfiltertest.cpp )
+
+add_executable( mailfiltertest ${mailcommon_mailfiltertest_SRCS} )
+add_test(mailfiltertest mailfiltertest)
+ecm_mark_as_test(mailfiltertest)
+target_link_libraries( mailfiltertest
+   mailcommon
+   Qt5::Test
+   Qt5::Core
+      
+)
+
