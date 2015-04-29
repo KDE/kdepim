@@ -16,6 +16,7 @@
 */
 
 #include "mergecontactselectlistwidget.h"
+#include "kaddressbook_debug.h"
 #include <KContacts/Addressee>
 #include <KLocalizedString>
 #include <KGlobal>
@@ -60,7 +61,7 @@ void MergeContactSelectListWidget::updateTitle()
     QString title;
     switch (mConflictType) {
     case MergeContacts::None:
-        qWarning() << " MergeContacts::None used in updateTitle. It's a bug";
+        qCWarning(KADDRESSBOOK_LOG) << " MergeContacts::None used in updateTitle. It's a bug";
         // it's not possible.
         break;
     case MergeContacts::Birthday:
