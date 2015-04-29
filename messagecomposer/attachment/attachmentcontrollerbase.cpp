@@ -428,12 +428,12 @@ static QTemporaryFile *dumpAttachmentToTempFile(const AttachmentPart::Ptr part) 
 {
     QTemporaryFile *file = new QTemporaryFile;
     if (!file->open()) {
-        qCritical() << "Could not open tempfile" << file->fileName();
+        qCCritical(MESSAGECOMPOSER_LOG) << "Could not open tempfile" << file->fileName();
         delete file;
         return Q_NULLPTR;
     }
     if (file->write(part->data()) == -1) {
-        qCritical() << "Could not dump attachment to tempfile.";
+        qCCritical(MESSAGECOMPOSER_LOG) << "Could not dump attachment to tempfile.";
         delete file;
         return Q_NULLPTR;
     }

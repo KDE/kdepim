@@ -183,7 +183,7 @@ const Aggregation *Manager::defaultAggregation()
     KConfigGroup conf(Settings::self()->config(),
                       MessageList::Util::storageModelAggregationsGroup());
 
-    const QString aggregationId = conf.readEntry(QLatin1String("DefaultSet"), "");
+    const QString aggregationId = conf.readEntry(QStringLiteral("DefaultSet"), "");
 
     Aggregation *opt = Q_NULLPTR;
 

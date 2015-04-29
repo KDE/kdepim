@@ -21,6 +21,7 @@
 #include "archivemailmanager.h"
 #include "archivemailagentsettings.h"
 
+#include <KLocalizedString>
 #include <mailcommon/kernel/mailkernel.h>
 #include <kdbusconnectionpool.h>
 #include <Monitor>
@@ -28,7 +29,6 @@
 #include <CollectionFetchScope>
 #include <KMime/Message>
 #include <KWindowSystem>
-#include <KLocale>
 #include <QTimer>
 #include <QPointer>
 

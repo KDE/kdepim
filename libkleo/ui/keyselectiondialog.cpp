@@ -201,7 +201,7 @@ ColumnStrategy::ColumnStrategy(unsigned int keyUsage)
       mKeyUsage(keyUsage)
 {
     if (keyUsage == 0)
-        qWarning()
+        qCWarning(KLEO_UI_LOG)
                 << "KeySelectionDialog: keyUsage == 0. You want to use AllKeys instead.";
 }
 

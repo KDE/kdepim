@@ -56,7 +56,7 @@ void FilterActionAddHeaderTest::shouldAddValue_data()
     QTest::addColumn<QString>("resultvalue");
     QTest::newRow("empty") <<  QString() << QString() << QString();
     QString val = QStringLiteral("bla") + QLatin1Char('\t') + QStringLiteral("blo");
-    QTest::newRow("real value") <<  val << QString(QStringLiteral("bla")) << QString(QStringLiteral("blo"));
+    QTest::newRow("real value") <<  val << QStringLiteral("bla") << QStringLiteral("blo");
 }
 
 void FilterActionAddHeaderTest::shouldClearWidget()

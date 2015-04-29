@@ -69,11 +69,11 @@ void GrantleeThemeTest::shouldLoadTheme_data()
     QTest::addColumn<bool>("isvalid");
     QTest::addColumn<QStringList>("displayExtraVariables");
 
-    QTest::newRow("valid theme") <<  QString(QStringLiteral("valid")) << QString(QStringLiteral("filename.testdesktop")) << true << QStringList();
-    QTest::newRow("not existing theme") <<  QString(QStringLiteral("notvalid")) << QString(QStringLiteral("filename.testdesktop")) << false << QStringList();
+    QTest::newRow("valid theme") <<  QStringLiteral("valid") << QStringLiteral("filename.testdesktop") << true << QStringList();
+    QTest::newRow("not existing theme") <<  QStringLiteral("notvalid") << QStringLiteral("filename.testdesktop") << false << QStringList();
     QStringList extraVariables;
     extraVariables << QStringLiteral("foo") << QStringLiteral("bla");
-    QTest::newRow("valid with extra variable") <<  QString(QStringLiteral("valid-with-extravariables")) << QString(QStringLiteral("filename.testdesktop")) << true << extraVariables;
+    QTest::newRow("valid with extra variable") <<  QStringLiteral("valid-with-extravariables") << QStringLiteral("filename.testdesktop") << true << extraVariables;
 }
 
 void GrantleeThemeTest::shouldLoadTheme()

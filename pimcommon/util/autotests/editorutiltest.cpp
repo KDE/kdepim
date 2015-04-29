@@ -37,9 +37,9 @@ void EditorUtilTest::testUpperCase_data()
     QTest::addColumn<QString>("result");
     QTest::addColumn<int>("startcursorposition");
     QTest::addColumn<int>("endcursorposition");
-    QTest::newRow("onelinewithoutselection") <<  QString(QStringLiteral("foo")) << QString(QStringLiteral("foo")) << -1 << -1;
-    QTest::newRow("onelinewithselection") <<  QString(QStringLiteral("foo")) << QString(QStringLiteral("FOO")) << 0 << 3;
-    QTest::newRow("onelinewithselectionuppercase") <<  QString(QStringLiteral("FOO")) << QString(QStringLiteral("FOO")) << 0 << 3;
+    QTest::newRow("onelinewithoutselection") <<  QStringLiteral("foo") << QStringLiteral("foo") << -1 << -1;
+    QTest::newRow("onelinewithselection") <<  QStringLiteral("foo") << QStringLiteral("FOO") << 0 << 3;
+    QTest::newRow("onelinewithselectionuppercase") <<  QStringLiteral("FOO") << QStringLiteral("FOO") << 0 << 3;
 }
 
 void EditorUtilTest::testUpperCase()
@@ -67,9 +67,9 @@ void EditorUtilTest::testLowerCase_data()
     QTest::addColumn<QString>("result");
     QTest::addColumn<int>("startcursorposition");
     QTest::addColumn<int>("endcursorposition");
-    QTest::newRow("onelinewithoutselection") <<  QString(QStringLiteral("foo")) << QString(QStringLiteral("foo")) << -1 << -1;
-    QTest::newRow("onelinewithselection") <<  QString(QStringLiteral("foo")) << QString(QStringLiteral("foo")) << 0 << 3;
-    QTest::newRow("onelinewithselectionuppercase") <<  QString(QStringLiteral("FOO")) << QString(QStringLiteral("foo")) << 0 << 3;
+    QTest::newRow("onelinewithoutselection") <<  QStringLiteral("foo") << QStringLiteral("foo") << -1 << -1;
+    QTest::newRow("onelinewithselection") <<  QStringLiteral("foo") << QStringLiteral("foo") << 0 << 3;
+    QTest::newRow("onelinewithselectionuppercase") <<  QStringLiteral("FOO") << QStringLiteral("foo") << 0 << 3;
 }
 
 void EditorUtilTest::testLowerCase()
@@ -97,9 +97,9 @@ void EditorUtilTest::testSentenceCase_data()
     QTest::addColumn<QString>("result");
     QTest::addColumn<int>("startcursorposition");
     QTest::addColumn<int>("endcursorposition");
-    QTest::newRow("onelinewithoutselection") <<  QString(QStringLiteral("foo")) << QString(QStringLiteral("foo")) << -1 << -1;
-    QTest::newRow("onelinewithselection") <<  QString(QStringLiteral("foo")) << QString(QStringLiteral("Foo")) << 0 << 3;
-    QTest::newRow("bigline") <<  QString(QStringLiteral("foo bla foo.\nddd")) << QString(QStringLiteral("Foo bla foo.\nDdd")) << 0 << 16;
+    QTest::newRow("onelinewithoutselection") <<  QStringLiteral("foo") << QStringLiteral("foo") << -1 << -1;
+    QTest::newRow("onelinewithselection") <<  QStringLiteral("foo") << QStringLiteral("Foo") << 0 << 3;
+    QTest::newRow("bigline") <<  QStringLiteral("foo bla foo.\nddd") << QStringLiteral("Foo bla foo.\nDdd") << 0 << 16;
 }
 
 void EditorUtilTest::testSentenceCase()
@@ -127,10 +127,10 @@ void EditorUtilTest::testReverseCase_data()
     QTest::addColumn<QString>("result");
     QTest::addColumn<int>("startcursorposition");
     QTest::addColumn<int>("endcursorposition");
-    QTest::newRow("onelinewithoutselection") <<  QString(QStringLiteral("foo")) << QString(QStringLiteral("foo")) << -1 << -1;
-    QTest::newRow("onelinewithselection") <<  QString(QStringLiteral("foo")) << QString(QStringLiteral("FOO")) << 0 << 3;
-    QTest::newRow("reverseCase") <<  QString(QStringLiteral("fOo bla\tfOO")) << QString(QStringLiteral("FoO BLA\tFoo")) << 0 << 12;
-    QTest::newRow("notallineselected") <<  QString(QStringLiteral("fOo bla\tfOO")) << QString(QStringLiteral("FoO bla\tfOO")) << 0 << 3;
+    QTest::newRow("onelinewithoutselection") <<  QStringLiteral("foo") << QStringLiteral("foo") << -1 << -1;
+    QTest::newRow("onelinewithselection") <<  QStringLiteral("foo") << QStringLiteral("FOO")<< 0 << 3;
+    QTest::newRow("reverseCase") <<  QStringLiteral("fOo bla\tfOO") << QStringLiteral("FoO BLA\tFoo") << 0 << 12;
+    QTest::newRow("notallineselected") <<  QStringLiteral("fOo bla\tfOO") << QStringLiteral("FoO bla\tfOO") << 0 << 3;
 }
 
 void EditorUtilTest::testReverseCase()

@@ -304,7 +304,7 @@ int MDNAdviceHelper::requestAdviceOnMDN(const char *what)
             }
         }
     }
-    qWarning() << "didn't find data for message box \""  << what << "\"";
+    qCWarning(MAILCOMMON_LOG) << "didn't find data for message box \""  << what << "\"";
     return MessageComposer::MDNIgnore;
 }
 

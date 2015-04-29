@@ -3279,7 +3279,7 @@ static QString iconToDataUrl(const QString &iconPath)
     }
 
     const QByteArray ba = f.readAll();
-    return QString(QStringLiteral("data:image/png;base64,%1")).arg(QLatin1String(ba.toBase64().constData()));
+    return QStringLiteral("data:image/png;base64,%1").arg(QLatin1String(ba.toBase64().constData()));
 }
 
 QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)

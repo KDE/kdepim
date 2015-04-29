@@ -37,10 +37,11 @@ PimSettingCommandLineOption::~PimSettingCommandLineOption()
 
 void PimSettingCommandLineOption::slotActivateRequested(const QStringList &arguments, const QString &workingDirectory)
 {
+    Q_UNUSED(workingDirectory);
     if (mParser.parse(arguments)) {
         handleCommandLine();
     } else {
-        qDebug() << " ";
+        qDebug() << " Impossible to parse argument ";
     }
 }
 
