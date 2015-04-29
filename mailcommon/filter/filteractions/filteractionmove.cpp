@@ -75,7 +75,6 @@ QStringList FilterActionMove::sieveRequires() const
 
 QString FilterActionMove::informationAboutNotValidAction() const
 {
-    //KF5 add i18n
-    return QString::fromLatin1("Folder destination was not defined.");
+    return i18n("Folder destination was not defined.");
 }
 

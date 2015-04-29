@@ -45,8 +45,7 @@ bool FilterActionUnsetStatus::isEmpty() const
 
 QString FilterActionUnsetStatus::informationAboutNotValidAction() const
 {
-    //KF5 add i18n
-    return QLatin1String("Status not defined.");
+    return i18n("Status not defined.");
 }
 
 FilterAction::ReturnCode FilterActionUnsetStatus::process(ItemContext &context , bool) const

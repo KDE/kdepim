@@ -152,7 +152,6 @@ QString FilterActionSetTransport::displayString() const
 
 QString FilterActionSetTransport::informationAboutNotValidAction() const
 {
-    //KF5 add i18n
-    return QLatin1String("Mail transport not defined.");
+    return i18n("Mail transport not defined.");
 }
 

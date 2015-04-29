@@ -111,6 +111,5 @@ QString FilterActionStatus::displayString() const
 
 QString FilterActionStatus::informationAboutNotValidAction() const
 {
-    //KF5 add i18n
-    return QLatin1String("Status is missing.");
+    return i18n("Status is missing.");
 }

@@ -87,7 +87,6 @@ Akonadi::MessageStatus SearchRuleStatus::statusFromEnglishName(const QString &aS
 
 QString SearchRuleStatus::informationAboutNotValidRules() const
 {
-    //KF5 add i18n
     //TODO
     return QLatin1String("");
 }

@@ -57,16 +57,15 @@ bool FilterActionRewriteHeader::isEmpty() const
 
 QString FilterActionRewriteHeader::informationAboutNotValidAction() const
 {
-    //KF5 add i18n
     QString info;
     if (mParameter.isEmpty()) {
-        info = QLatin1String("Header not defined");
+        info = i18n("Header not defined");
     }
     if (mRegExp.isEmpty()) {
         if (!info.isEmpty()) {
             info += QLatin1Char('\n');
         }
-        info += QLatin1String("Search string is empty.");
+        info += i18n("Search string is empty.");
     }
     return info;
 }

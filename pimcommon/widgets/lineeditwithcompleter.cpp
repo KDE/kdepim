@@ -37,8 +37,7 @@ void LineEditWithCompleter::contextMenuEvent(QContextMenuEvent *e)
 {
     QMenu *popup = KLineEdit::createStandardContextMenu();
     popup->addSeparator();
-    //KF5 add i18n
-    popup->addAction(QLatin1String("Clear History"), this, SLOT(slotClearHistory()));
+    popup->addAction(i18n("Clear History"), this, SLOT(slotClearHistory()));
     popup->exec(e->globalPos());
     delete popup;
 }

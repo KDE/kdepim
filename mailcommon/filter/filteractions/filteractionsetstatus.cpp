@@ -41,8 +41,7 @@ bool FilterActionSetStatus::isEmpty() const
 
 QString FilterActionSetStatus::informationAboutNotValidAction() const
 {
-    //KF5 add i18n
-    return QLatin1String("Status not specified.");
+    return i18n("Status not specified.");
 }
 
 FilterAction::ReturnCode FilterActionSetStatus::process(ItemContext &context , bool) const

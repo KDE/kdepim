@@ -154,6 +154,5 @@ void SearchRuleNumerical::addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &em
 
 QString SearchRuleNumerical::informationAboutNotValidRules() const
 {
-    //KF5 add i18n
-    return QLatin1String("Content is not a number.");
+    return i18n("Content is not a number.");
 }
