@@ -25,6 +25,7 @@
 
 #include "kdepim-version.h"
 
+#include <QCommandLineParser>
 #include <stdio.h>
 
 int main(int argc, char *argv[])
@@ -35,7 +36,8 @@ int main(int argc, char *argv[])
     migrate.migrate();
 
     KLocalizedString::setApplicationDomain("importwizard");
-    //FIXME: "wizards" are "assistents" in new KDE slang
+    //FIXME: "wizards" are "assistents" in new KDE slang    
+
     KAboutData aboutData(QStringLiteral("importwizard"),
                          i18n("PIM Import Tool"),
                          QStringLiteral(KDEPIM_VERSION),
@@ -47,8 +49,14 @@ int main(int argc, char *argv[])
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kontact-import-wizard")));
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
     aboutData.setProductName(QByteArray("importwizard"));
-
     KAboutData::setApplicationData(aboutData);
+
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     KDBusService service(KDBusService::Unique);
 
