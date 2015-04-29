@@ -361,6 +361,14 @@ void EventEditTest::shouldEnabledSaveOpenEditorButton()
 
     QCOMPARE(openEditor->isEnabled(), false);
     QCOMPARE(save->isEnabled(), false);
+
+    noteedit->setText(QLatin1String(" "));
+    QCOMPARE(openEditor->isEnabled(), false);
+    QCOMPARE(save->isEnabled(), false);
+
+    noteedit->setText(QLatin1String(" foo"));
+    QCOMPARE(openEditor->isEnabled(), true);
+    QCOMPARE(save->isEnabled(), true);
 }
 
 void EventEditTest::shouldUpdateStartEndDateWhenReopenIt()
