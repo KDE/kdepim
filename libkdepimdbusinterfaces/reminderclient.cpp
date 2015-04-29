@@ -23,7 +23,7 @@
 #include "reminderclient.h"
 #include "korgacinterface.h"
 
-#include <QDebug>
+#include "kdepimdbusinterface_debug.h"
 
 #include <KToolInvocation>
 
@@ -43,11 +43,11 @@ void ReminderClient::startDaemon()
 
     const QString desktopFile = QStandardPaths::locate(QStandardPaths::ConfigLocation, QLatin1String("autostart/") + QLatin1String("org.kde.korgac.desktop"));
     if (desktopFile.isEmpty()) {
-        qWarning() << "Couldn't find autostart/korgac.desktop!";
+        qCWarning(KDEPIMDBUSINTERFACE_LOG) << "Couldn't find autostart/korgac.desktop!";
     } else {
         QString error;
         if (KToolInvocation::startServiceByDesktopPath(desktopFile, QStringList(), &error) != 0) {
-            qWarning() << "Failure starting korgac:" << error;
+            qCWarning(KDEPIMDBUSINTERFACE_LOG) << "Failure starting korgac:" << error;
             // try harder...
             const QString korgacExe = QStandardPaths::findExecutable(QLatin1String("korgac"));
             QProcess::startDetached(korgacExe);

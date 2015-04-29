@@ -31,14 +31,14 @@
 #include <kiconloader.h>
 #include <krun.h>
 #include <kshell.h>
-#include <qdebug.h>
+#include "kdepimdbusinterface_debug.h"
 #include <ktoolinvocation.h>
 #include <QUrl>
 #include <QObject>
 
 bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
 {
-    qDebug() << uri;
+    qCDebug(KDEPIMDBUSINTERFACE_LOG) << uri;
 
     if (uri.startsWith(QLatin1String("kmail:"))) {
         // make sure kmail is running or the part is shown
@@ -65,7 +65,7 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
             dlg->show();
             return true;
         } else {
-            qDebug() << "Item is not valid.";
+            qCDebug(KDEPIMDBUSINTERFACE_LOG) << "Item is not valid.";
             return false;
         }
     } else if (uri.startsWith(QLatin1String("urn:x-ical"))) {

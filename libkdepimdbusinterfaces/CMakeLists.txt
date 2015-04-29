@@ -9,6 +9,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 set(kdepimdbusinterfaces_LIB_SRCS
     urihandler.cpp
     reminderclient.cpp
+    kdepimdbusinterface_debug.cpp
 )
 
 qt5_generate_dbus_interface(${CMAKE_SOURCE_DIR}/kmail/kmkernel.h org.kde.kmail.kmail.xml OPTIONS -a)
