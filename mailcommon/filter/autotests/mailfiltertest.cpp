@@ -17,7 +17,7 @@
 
 #include "mailfiltertest.h"
 #include "../mailfilter.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 MailFilterTest::MailFilterTest(QObject *parent)
     : QObject(parent)
@@ -37,4 +37,4 @@ void MailFilterTest::shouldHaveDefaultValue()
     QVERIFY(mailfilter.isEnabled());
 }
 
-QTEST_KDEMAIN(MailFilterTest, GUI)
+QTEST_MAIN(MailFilterTest)
