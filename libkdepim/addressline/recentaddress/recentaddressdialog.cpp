@@ -57,11 +57,6 @@ void RecentAddressDialog::setAddresses( const QStringList &addrs )
     mRecentAddressWidget->setAddresses(addrs);
 }
 
-QStringList RecentAddressDialog::addresses() const
-{
-    return mRecentAddressWidget->addresses();
-}
-
 void RecentAddressDialog::storeAddresses(KConfig *config)
 {
     mRecentAddressWidget->storeAddresses(config);

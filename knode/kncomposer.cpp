@@ -84,11 +84,7 @@ void KNLineEdit::editRecentAddresses()
   dlg.setAddresses( RecentAddresses::self( knGlobals.config() )->addresses() );
   if ( dlg.exec() ) {
     RecentAddresses::self( knGlobals.config() )->clear();
-    QStringList addrList = dlg.addresses();
-    QStringList::Iterator it;
-    for ( it = addrList.begin(); it != addrList.end(); ++it )
-      RecentAddresses::self( knGlobals.config() )->add( *it );
-
+    dlg.storeAddresses(knGlobals.config());
     loadAddresses();
   }
 }

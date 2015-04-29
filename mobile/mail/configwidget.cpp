@@ -96,9 +96,7 @@ void ConfigWidget::editRecentAddresses()
   dlg.setAddresses( KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->addresses() );
   if ( dlg.exec() ) {
     KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->clear();
-    foreach ( const QString &address, dlg.addresses() ) {
-      KPIM::RecentAddresses::self( MessageComposer::MessageComposerSettings::self()->config() )->add( address );
-    }
+    dlg.storeAddresses(MessageComposer::MessageComposerSettings::self()->config());
   }
 }
 

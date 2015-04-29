@@ -38,7 +38,6 @@ public:
     ~RecentAddressWidget();
 
     void setAddresses( const QStringList &addrs );
-    QStringList addresses() const;
     void storeAddresses(KConfig *config);
     bool wasChanged() const;
 
