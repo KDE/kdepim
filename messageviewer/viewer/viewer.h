@@ -287,6 +287,7 @@ public:
     QAction *expandShortUrlAction();
     QAction *createTodoAction();
     QAction *createEventAction();
+    QAction *createNoteAction();
 
     HeaderStrategy *headerStrategy() const;
 

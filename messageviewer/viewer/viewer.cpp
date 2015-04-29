@@ -547,6 +547,7 @@ Akonadi::ItemFetchJob *Viewer::createFetchJob(const Akonadi::Item &item)
     job->fetchScope().fetchAllAttributes();
     job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
     job->fetchScope().fetchFullPayload(true);
+    job->fetchScope().setFetchRelations(true);   // needed to know if we have notes or not
     job->fetchScope().fetchAttribute<MailTransport::ErrorAttribute>();
     return job;
 }
@@ -709,6 +710,12 @@ QAction *Viewer::createEventAction()
 {
     Q_D(Viewer);
     return d->mCreateEventAction;
+}
+
+QAction *Viewer::createNoteAction()
+{
+    Q_D(Viewer);
+    return d->mCreateNoteAction;
 }
 
 void Viewer::showOpenAttachmentFolderWidget(const QUrl &url)

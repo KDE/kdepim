@@ -26,6 +26,7 @@
 
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/monitor.h>
+#include <Akonadi/Notes/NoteUtils>
 #include <kio/job.h>
 #include <kmime/kmime_message.h>
 #include <kservice.h>
@@ -68,6 +69,7 @@ namespace MessageViewer
 {
 class TodoEdit;
 class EventEdit;
+class NoteEdit;
 class HtmlWriter;
 class CSSHelper;
 class AttachmentStrategy;
@@ -523,6 +525,8 @@ private Q_SLOTS:
 
     void slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection);
 
+    void slotCreateNote(const  KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection);
+
     void slotRefreshMessage(const Akonadi::Item &item);
 public Q_SLOTS:
     /** An URL has been activate with a click. */
@@ -649,12 +653,16 @@ Q_SIGNALS:
 
     void changeDisplayMail(Viewer::DisplayFormatMessage, bool);
     void moveMessageToTrash();
+
 private:
+    void showCreateNewNoteWidget();
     QString attachmentInjectionHtml() const;
     QString recipientsQuickListLinkHtml(bool, const QString &) const;
     void initGrantleeThemeName();
 
+    Akonadi::Relation relatedNoteRelation() const;
     void addHelpTextAction(QAction *act, const QString &text);
+
 public:
     NodeHelper *mNodeHelper;
     bool mHtmlMailGlobalSetting, mHtmlLoadExternalGlobalSetting, mHtmlLoadExtOverride;
@@ -711,6 +719,7 @@ public:
     QAction *mExpandUrlAction;
     QAction *mCreateTodoAction;
     QAction *mCreateEventAction;
+    QAction *mCreateNoteAction;
     QUrl mHoveredUrl;
     QUrl mClickedUrl;
     QUrl mImageUrl;
@@ -746,6 +755,7 @@ public:
     ScamDetectionWarningWidget *mScamDetectionWarning;
     MessageViewer::TodoEdit *mCreateTodo;
     MessageViewer::EventEdit *mCreateEvent;
+    MessageViewer::NoteEdit *mCreateNote;
     MessageViewer::OpenAttachmentFolderWidget *mOpenAttachmentFolderWidget;
     // zoom Factor
     static const qreal zoomBy;
