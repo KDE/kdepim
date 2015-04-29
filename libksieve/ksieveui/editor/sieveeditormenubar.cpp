@@ -40,13 +40,13 @@ void SieveEditorMenuBar::initActions()
     mGoToLine = new QAction(i18n("Go to Line"), this);
     mGoToLine->setIcon(QIcon::fromTheme(QStringLiteral("go-jump")));
     //mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
-    connect(mGoToLine, SIGNAL(triggered(bool)), SIGNAL(gotoLine()));
+    connect(mGoToLine, &QAction::triggered, this, &SieveEditorMenuBar::gotoLine);
 
     mCommentCodeAction = new QAction(i18n("Comment"), this);
-    connect(mCommentCodeAction, SIGNAL(triggered(bool)), SIGNAL(comment()));
+    connect(mCommentCodeAction, &QAction::triggered, this, &SieveEditorMenuBar::comment);
 
     mUncommentCodeAction = new QAction(i18n("Uncomment"), this);
-    connect(mUncommentCodeAction, SIGNAL(triggered(bool)), SIGNAL(uncomment()));
+    connect(mUncommentCodeAction, &QAction::triggered, this, &SieveEditorMenuBar::uncomment);
 
     mFindAction = KStandardAction::find(this, SIGNAL(find()), this);
     mReplaceAction = KStandardAction::replace(this, SIGNAL(replace()), this);

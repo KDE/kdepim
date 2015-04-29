@@ -120,7 +120,7 @@ void SieveActionWidget::initWidget()
             if (listCapabilities.contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
                 mActionList.append(*it);
-                connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+                connect(*it, &SieveAction::valueChanged, this, &SieveActionWidget::valueChanged);
                 // add (i18n-ized) name to combo box
                 mComboBox->addItem((*it)->label(), (*it)->name());
             } else {
@@ -129,7 +129,7 @@ void SieveActionWidget::initWidget()
         } else {
             // append to the list of actions:
             mActionList.append(*it);
-            connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+            connect(*it, &SieveAction::valueChanged, this, &SieveActionWidget::valueChanged);
             // add (i18n-ized) name to combo box
             mComboBox->addItem((*it)->label(), (*it)->name());
         }

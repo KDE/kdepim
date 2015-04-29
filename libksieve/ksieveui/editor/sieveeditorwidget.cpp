@@ -94,21 +94,21 @@ SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
     SieveEditorMenuBar *menuBar = 0;
     if (useMenuBar) {
         menuBar = new SieveEditorMenuBar;
-        connect(menuBar, SIGNAL(copy()), SLOT(copy()));
-        connect(menuBar, SIGNAL(find()), SLOT(find()));
-        connect(menuBar, SIGNAL(replace()), SLOT(replace()));
-        connect(menuBar, SIGNAL(undo()), SLOT(undo()));
-        connect(menuBar, SIGNAL(redo()), SLOT(redo()));
-        connect(menuBar, SIGNAL(paste()), SLOT(paste()));
-        connect(menuBar, SIGNAL(cut()), SLOT(cut()));
-        connect(menuBar, SIGNAL(selectAll()), SLOT(selectAll()));
-        connect(menuBar, SIGNAL(gotoLine()), SLOT(goToLine()));
-        connect(menuBar, SIGNAL(comment()), SLOT(comment()));
-        connect(menuBar, SIGNAL(uncomment()), SLOT(uncomment()));
+        connect(menuBar, &SieveEditorMenuBar::copy, this, &SieveEditorWidget::copy);
+        connect(menuBar, &SieveEditorMenuBar::find, this, &SieveEditorWidget::find);
+        connect(menuBar, &SieveEditorMenuBar::replace, this, &SieveEditorWidget::replace);
+        connect(menuBar, &SieveEditorMenuBar::undo, this, &SieveEditorWidget::undo);
+        connect(menuBar, &SieveEditorMenuBar::redo, this, &SieveEditorWidget::redo);
+        connect(menuBar, &SieveEditorMenuBar::paste, this, &SieveEditorWidget::paste);
+        connect(menuBar, &SieveEditorMenuBar::cut, this, &SieveEditorWidget::cut);
+        connect(menuBar, &SieveEditorMenuBar::selectAll, this, &SieveEditorWidget::selectAll);
+        connect(menuBar, &SieveEditorMenuBar::gotoLine, this, &SieveEditorWidget::goToLine);
+        connect(menuBar, &SieveEditorMenuBar::comment, this, &SieveEditorWidget::comment);
+        connect(menuBar, &SieveEditorMenuBar::uncomment, this, &SieveEditorWidget::uncomment);
 
-        connect(this, SIGNAL(copyAvailable(bool)), menuBar, SLOT(slotCopyAvailable(bool)));
-        connect(this, SIGNAL(redoAvailable(bool)), menuBar, SLOT(slotRedoAvailable(bool)));
-        connect(this, SIGNAL(undoAvailable(bool)), menuBar, SLOT(slotUndoAvailable(bool)));
+        connect(this, &SieveEditorWidget::copyAvailable, menuBar, &SieveEditorMenuBar::slotCopyAvailable);
+        connect(this, &SieveEditorWidget::redoAvailable, menuBar, &SieveEditorMenuBar::slotRedoAvailable);
+        connect(this, &SieveEditorWidget::undoAvailable, menuBar, &SieveEditorMenuBar::slotUndoAvailable);
         menuBar->fileMenu()->addAction(mSaveAs);
         menuBar->fileMenu()->addSeparator();
         menuBar->fileMenu()->addAction(mUpload);

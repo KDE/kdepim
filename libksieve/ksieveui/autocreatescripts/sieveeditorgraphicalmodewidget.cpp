@@ -112,7 +112,7 @@ void SieveEditorGraphicalModeWidget::slotAddScriptPage(KSieveUi::SieveScriptPage
 {
     mStackWidget->addWidget(page);
     mStackWidget->setCurrentWidget(page);
-    connect(page, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(page, &SieveScriptPage::valueChanged, this, &SieveEditorGraphicalModeWidget::valueChanged);
 }
 
 void SieveEditorGraphicalModeWidget::slotRemoveScriptPage(QWidget *page)
