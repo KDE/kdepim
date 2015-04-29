@@ -272,7 +272,7 @@ target_link_libraries(pimcommon
     KF5::NewStuff
     KF5::Wallet
     kdepim
-    KF5::Imap
+    KF5::IMAP
     KF5::AkonadiWidgets
     KF5::Archive
     Qt5::WebKitWidgets
