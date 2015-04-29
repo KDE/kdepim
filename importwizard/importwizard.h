@@ -78,6 +78,7 @@ private:
     void setAppropriatePage(AbstractImporter::TypeSupportedOptions options);
     void enableAllImportButton();
     void createManualModePage();
+    void updatePagesFromMode();
 
     QMap<QString, AbstractImporter *> mlistImport;
 
@@ -104,6 +105,8 @@ private:
 
     KSelFilterPage *mSelfilterpage;
     KImportPage *mImportpage;
+    KPageWidgetItem *mSelfilterpageItem;
+    KPageWidgetItem *mImportpageItem;
 };
 
 #endif /* IMPORTWIZARD_H */

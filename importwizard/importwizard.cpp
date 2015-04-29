@@ -99,17 +99,26 @@ ImportWizard::~ImportWizard()
     qDeleteAll(mlistImport);
 }
 
+void ImportWizard::updatePagesFromMode()
+{
+    switch(mMode) {
+    case AutoDetect:
+        break;
+    case Manual:
+        break;
+    }
+}
+
 void ImportWizard::createManualModePage()
 {
-    //TODO improve it.
     mSelfilterpage = new KSelFilterPage(this);
-    KPageWidgetItem *page1 = new KPageWidgetItem(mSelfilterpage, i18n("Step 1: Select Filter"));
+    mSelfilterpageItem = new KPageWidgetItem(mSelfilterpage, i18n("Step 1: Select Filter"));
 
-    addPage(page1);
+    addPage(mSelfilterpageItem);
 
     mImportpage = new KImportPage(this);
-    KPageWidgetItem *page2 = new KPageWidgetItem(mImportpage, i18n("Step 2: Importing..."));
-    addPage(page2);
+    mImportpageItem = new KPageWidgetItem(mImportpage, i18n("Step 2: Importing..."));
+    addPage(mImportpageItem);
 }
 
 void ImportWizard::createAutomaticModePage()
