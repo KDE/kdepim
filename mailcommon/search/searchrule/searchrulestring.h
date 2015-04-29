@@ -62,17 +62,17 @@ public:
     /**
      * @copydoc SearchRule::isEmpty()
      */
-    virtual bool isEmpty() const ;
+    virtual bool isEmpty() const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc SearchRule::requiredPart()
      */
-    virtual RequiredPart requiredPart() const;
+    RequiredPart requiredPart() const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc SearchRule::matches()
      */
-    virtual bool matches(const Akonadi::Item &item) const;
+    bool matches(const Akonadi::Item &item) const Q_DECL_OVERRIDE;
 
     /**
      * A helper method for the main matches() method.
@@ -83,7 +83,8 @@ public:
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const;
+    void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const Q_DECL_OVERRIDE;
+    QString informationAboutNotValidRules() const Q_DECL_OVERRIDE;
 };
 }
 #endif // SEARCHRULESTRING_H

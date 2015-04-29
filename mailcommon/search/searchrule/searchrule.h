@@ -244,6 +244,7 @@ public:
     virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const {  }
 
     QDataStream &operator>>(QDataStream &) const;
+    virtual QString informationAboutNotValidRules() const { return QString(); }
 
 protected:
     /**

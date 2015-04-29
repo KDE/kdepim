@@ -72,6 +72,7 @@ public:
      * @copydoc SearchRule::addQueryTerms()
      */
     void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const Q_DECL_OVERRIDE;
+    QString informationAboutNotValidRules() const Q_DECL_OVERRIDE;
 
 };
 }

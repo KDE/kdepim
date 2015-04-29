@@ -151,3 +151,9 @@ void SearchRuleNumerical::addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &em
         groupTerm.addSubTerm(term);
     }
 }
+
+QString SearchRuleNumerical::informationAboutNotValidRules() const
+{
+    //KF5 add i18n
+    return QLatin1String("Content is not a number.");
+}
