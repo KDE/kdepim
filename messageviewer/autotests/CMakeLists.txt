@@ -28,6 +28,7 @@ macro(add_messageviewer_unittest _source)
     KF5::KIOCore
     KF5::Mime
     KF5::AkonadiCore
+    KF5::AkonadiNotes
     KF5::CalendarCore
   )
 endmacro ()
@@ -41,6 +42,7 @@ add_messageviewer_unittest( unencryptedmessagetest.cpp )
 kde4_handle_crypto_rpath_for_executable( unencryptedmessagetest )
 add_messageviewer_unittest( todoedittest.cpp )
 add_messageviewer_unittest( eventedittest.cpp )
+add_messageviewer_unittest( noteedittest.cpp )
 add_messageviewer_unittest( eventdatetimewidgettest.cpp )
 add_messageviewer_unittest( messagedisplayformatattributetest.cpp )
 
