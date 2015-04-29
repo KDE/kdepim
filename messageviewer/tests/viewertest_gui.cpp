@@ -69,7 +69,7 @@ int main(int argc, char **argv)
         if (file.open(QIODevice::ReadOnly)) {
             msg->setContent(file.readAll());
         } else {
-            qWarning() << "Couldn't read" << fileName;
+            qCWarning(MESSAGEVIEWER_LOG) << "Couldn't read" << fileName;
         }
     }
     msg->parse();

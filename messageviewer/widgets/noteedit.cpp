@@ -27,7 +27,7 @@
 #include <KLocalizedString>
 #include <KStandardGuiItem>
 
-#include <QDebug>
+#include "messageviewer_debug.h"
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QIcon>
@@ -204,12 +204,12 @@ void NoteEdit::slotCloseWidget()
 void NoteEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        //qDebug()<<" Message is null";
+        //qCDebug(MESSAGEVIEWER_LOG) << " Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        //qDebug()<<" Collection is not valid";
+        //qCDebug(MESSAGEVIEWER_LOG) << " Collection is not valid";
         return;
     }
 
