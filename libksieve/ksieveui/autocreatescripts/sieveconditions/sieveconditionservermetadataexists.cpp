@@ -27,7 +27,7 @@
 
 using namespace KSieveUi;
 SieveConditionServerMetaDataExists::SieveConditionServerMetaDataExists(QObject *parent)
-    : SieveCondition(QLatin1String("servermetadataexists"), i18n("Server Meta Data Exists"), parent)
+    : SieveCondition(QStringLiteral("servermetadataexists"), i18n("Server Meta Data Exists"), parent)
 {
 }
 
@@ -47,7 +47,7 @@ QWidget *SieveConditionServerMetaDataExists::createParamWidget(QWidget *parent) 
     lay->addWidget(lab);
 
     QLineEdit *value = new QLineEdit;
-    value->setObjectName(QLatin1String("value"));
+    value->setObjectName(QStringLiteral("value"));
     connect(value, &QLineEdit::textChanged, this, &SieveConditionServerMetaDataExists::valueChanged);
     lay->addWidget(value);
 
@@ -56,14 +56,14 @@ QWidget *SieveConditionServerMetaDataExists::createParamWidget(QWidget *parent) 
 
 QString SieveConditionServerMetaDataExists::code(QWidget *w) const
 {
-    const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
+    const QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
     const QString valueStr = value->text();
     return QStringLiteral("servermetadataexists \"%1\"").arg(valueStr);
 }
 
 QStringList SieveConditionServerMetaDataExists::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("servermetadata");
+    return QStringList() << QStringLiteral("servermetadata");
 }
 
 bool SieveConditionServerMetaDataExists::needCheckIfServerHasCapability() const
@@ -73,7 +73,7 @@ bool SieveConditionServerMetaDataExists::needCheckIfServerHasCapability() const
 
 QString SieveConditionServerMetaDataExists::serverNeedsCapability() const
 {
-    return QLatin1String("servermetadata");
+    return QStringLiteral("servermetadata");
 }
 
 QString SieveConditionServerMetaDataExists::help() const
@@ -88,13 +88,13 @@ bool SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("str")) {
+            if (tagName == QStringLiteral("str")) {
                 const QString tagValue = e.text();
-                QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
+                QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
                 value->setText(tagValue);
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

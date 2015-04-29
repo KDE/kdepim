@@ -43,7 +43,7 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
     mTabWidget = new SieveScriptTabWidget;
     connect(mTabWidget, &SieveScriptTabWidget::tabCloseRequested, this, &SieveScriptPage::slotCloseTab);
 
-    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("include"))) {
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("include"))) {
         mIncludeWidget = new SieveIncludeWidget;
         connect(mIncludeWidget, &SieveIncludeWidget::valueChanged, this, &SieveScriptPage::valueChanged);
         mTabWidget->addTab(mIncludeWidget, i18n("Includes"));
@@ -53,7 +53,7 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
         mTabWidget->addTab(mGlobalVariableWidget, i18n("Global Variable"));
     }
 
-    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("foreverypart"))) {
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("foreverypart"))) {
         mForEveryPartWidget = new SieveForEveryPartWidget;
         connect(mForEveryPartWidget, &SieveForEveryPartWidget::valueChanged, this, &SieveScriptPage::valueChanged);
         mTabWidget->addTab(mForEveryPartWidget, i18n("ForEveryPart"));
@@ -147,7 +147,7 @@ void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
         }
     }
     if (!foreverypartStr.isEmpty()) {
-        script += QLatin1String("\n}\n");
+        script += QStringLiteral("\n}\n");
     }
 }
 

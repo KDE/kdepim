@@ -28,7 +28,7 @@
 
 using namespace KSieveUi;
 SieveConditionMailboxExists::SieveConditionMailboxExists(QObject *parent)
-    : SieveCondition(QLatin1String("mailboxexists"), i18n("Mailbox exists"), parent)
+    : SieveCondition(QStringLiteral("mailboxexists"), i18n("Mailbox exists"), parent)
 {
 }
 
@@ -48,21 +48,21 @@ QWidget *SieveConditionMailboxExists::createParamWidget(QWidget *parent) const
     connect(edit, &QLineEdit::textChanged, this, &SieveConditionMailboxExists::valueChanged);
     edit->setClearButtonEnabled(true);
     lay->addWidget(edit);
-    edit->setObjectName(QLatin1String("edit"));
+    edit->setObjectName(QStringLiteral("edit"));
 
     return w;
 }
 
 QString SieveConditionMailboxExists::code(QWidget *w) const
 {
-    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("edit"));
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QStringLiteral("edit"));
     const QString editValue = edit->text();
     return QStringLiteral("mailboxexists \"%1\"").arg(editValue);
 }
 
 QStringList SieveConditionMailboxExists::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("mailbox");
+    return QStringList() << QStringLiteral("mailbox");
 }
 
 bool SieveConditionMailboxExists::needCheckIfServerHasCapability() const
@@ -72,7 +72,7 @@ bool SieveConditionMailboxExists::needCheckIfServerHasCapability() const
 
 QString SieveConditionMailboxExists::serverNeedsCapability() const
 {
-    return QLatin1String("mailbox");
+    return QStringLiteral("mailbox");
 }
 
 QString SieveConditionMailboxExists::help() const
@@ -87,13 +87,13 @@ bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("str")) {
+            if (tagName == QStringLiteral("str")) {
                 const QString tagValue = e.text();
-                QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("edit"));
+                QLineEdit *edit = w->findChild<QLineEdit *>(QStringLiteral("edit"));
                 edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

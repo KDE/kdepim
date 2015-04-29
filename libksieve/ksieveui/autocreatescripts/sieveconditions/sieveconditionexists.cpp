@@ -31,7 +31,7 @@
 using namespace KSieveUi;
 
 SieveConditionExists::SieveConditionExists(QObject *parent)
-    : SieveCondition(QLatin1String("exists"), i18n("Exists"), parent)
+    : SieveCondition(QStringLiteral("exists"), i18n("Exists"), parent)
 {
 }
 
@@ -48,9 +48,9 @@ QWidget *SieveConditionExists::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
 
     QComboBox *combo = new QComboBox;
-    combo->setObjectName(QLatin1String("existscheck"));
-    combo->addItem(i18n("exists"), QLatin1String("exists"));
-    combo->addItem(i18n("not exists"), QLatin1String("not exists"));
+    combo->setObjectName(QStringLiteral("existscheck"));
+    combo->addItem(i18n("exists"), QStringLiteral("exists"));
+    combo->addItem(i18n("not exists"), QStringLiteral("not exists"));
     lay->addWidget(combo);
     connect(combo, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &SieveConditionExists::valueChanged);
 
@@ -59,7 +59,7 @@ QWidget *SieveConditionExists::createParamWidget(QWidget *parent) const
 
     SelectHeaderTypeComboBox *value = new SelectHeaderTypeComboBox;
     connect(value, &SelectHeaderTypeComboBox::valueChanged, this, &SieveConditionExists::valueChanged);
-    value->setObjectName(QLatin1String("headervalue"));
+    value->setObjectName(QStringLiteral("headervalue"));
 
     lay->addWidget(value);
     return w;
@@ -67,10 +67,10 @@ QWidget *SieveConditionExists::createParamWidget(QWidget *parent) const
 
 QString SieveConditionExists::code(QWidget *w) const
 {
-    const QComboBox *combo = w->findChild<QComboBox *>(QLatin1String("existscheck"));
+    const QComboBox *combo = w->findChild<QComboBox *>(QStringLiteral("existscheck"));
     const QString comparaison = combo->itemData(combo->currentIndex()).toString();
 
-    const SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headervalue"));
+    const SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox *>(QStringLiteral("headervalue"));
     return QStringLiteral("%1 %2").arg(comparaison).arg(value->code());
 }
 
@@ -87,18 +87,18 @@ bool SieveConditionExists::setParamWidgetValue(const QDomElement &element, QWidg
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (notCondition) {
-                QComboBox *combo = w->findChild<QComboBox *>(QLatin1String("existscheck"));
+                QComboBox *combo = w->findChild<QComboBox *>(QStringLiteral("existscheck"));
                 combo->setCurrentIndex(1);
             }
-            if (tagName == QLatin1String("str")) {
-                SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headervalue"));
+            if (tagName == QStringLiteral("str")) {
+                SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox *>(QStringLiteral("headervalue"));
                 value->setCode(e.text());
-            } else if (tagName == QLatin1String("list")) {
-                SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headervalue"));
+            } else if (tagName == QStringLiteral("list")) {
+                SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QStringLiteral("headervalue"));
                 selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

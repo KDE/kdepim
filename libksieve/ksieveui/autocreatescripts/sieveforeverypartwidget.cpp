@@ -82,7 +82,7 @@ void SieveForEveryPartWidget::slotHelp()
 void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requires)
 {
     if (mForLoop->isChecked()) {
-        requires << QLatin1String("foreverypart");
+        requires << QStringLiteral("foreverypart");
         const QString loopName = mName->text();
         if (loopName.isEmpty()) {
             script += QLatin1String("foreverypart {");
@@ -98,9 +98,9 @@ void SieveForEveryPartWidget::loadScript(const QDomElement &element, QString &er
     QDomElement e = node.toElement();
     if (!e.isNull()) {
         const QString tagName = e.tagName();
-        if (tagName == QLatin1String("tag")) {
+        if (tagName == QStringLiteral("tag")) {
             const QString tagValue = e.text();
-            if (tagValue == QLatin1String("name")) {
+            if (tagValue == QStringLiteral("name")) {
                 mName->setText(AutoCreateScriptUtil::strValue(e));
             } else {
                 error += i18n("Unknown tagValue \"%1\" during loading loop \"for\"", tagValue);

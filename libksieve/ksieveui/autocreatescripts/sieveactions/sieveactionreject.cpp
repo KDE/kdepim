@@ -29,7 +29,7 @@
 
 using namespace KSieveUi;
 SieveActionReject::SieveActionReject(QObject *parent)
-    : SieveAction(QLatin1String("reject"), i18n("Reject"), parent)
+    : SieveAction(QStringLiteral("reject"), i18n("Reject"), parent)
 {
 }
 
@@ -49,7 +49,7 @@ QWidget *SieveActionReject::createParamWidget(QWidget *parent) const
 
     MultiLineEdit *edit = new MultiLineEdit;
     connect(edit, &MultiLineEdit::textChanged, this, &SieveActionReject::valueChanged);
-    edit->setObjectName(QLatin1String("rejectmessage"));
+    edit->setObjectName(QStringLiteral("rejectmessage"));
     lay->addWidget(edit);
     return w;
 }
@@ -61,13 +61,13 @@ bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget 
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("str")) {
+            if (tagName == QStringLiteral("str")) {
                 const QString tagValue = e.text();
-                MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QLatin1String("rejectmessage"));
+                MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QStringLiteral("rejectmessage"));
                 edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
@@ -81,7 +81,7 @@ bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget 
 
 QString SieveActionReject::code(QWidget *w) const
 {
-    const MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QLatin1String("rejectmessage"));
+    const MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QStringLiteral("rejectmessage"));
     const QString text = edit->toPlainText();
 
     return QStringLiteral("reject text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));
@@ -89,12 +89,12 @@ QString SieveActionReject::code(QWidget *w) const
 
 QStringList SieveActionReject::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("reject");
+    return QStringList() << QStringLiteral("reject");
 }
 
 QString SieveActionReject::serverNeedsCapability() const
 {
-    return QLatin1String("reject");
+    return QStringLiteral("reject");
 }
 
 bool SieveActionReject::needCheckIfServerHasCapability() const

@@ -29,7 +29,7 @@
 
 using namespace KSieveUi;
 SieveActionBreak::SieveActionBreak(QObject *parent)
-    : SieveAction(QLatin1String("break"), i18n("Break"), parent)
+    : SieveAction(QStringLiteral("break"), i18n("Break"), parent)
 {
 }
 
@@ -49,7 +49,7 @@ QWidget *SieveActionBreak::createParamWidget(QWidget *parent) const
     lay->addWidget(lab);
 
     QLineEdit *subject = new QLineEdit;
-    subject->setObjectName(QLatin1String("name"));
+    subject->setObjectName(QStringLiteral("name"));
     connect(subject, &QLineEdit::textChanged, this, &SieveActionBreak::valueChanged);
     lay->addWidget(subject);
     return w;
@@ -62,20 +62,20 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("tag")) {
+            if (tagName == QStringLiteral("tag")) {
                 const QString tagValue = e.text();
-                if (tagValue == QLatin1String("name")) {
-                    QLineEdit *name = w->findChild<QLineEdit *>(QLatin1String("name"));
+                if (tagValue == QStringLiteral("name")) {
+                    QLineEdit *name = w->findChild<QLineEdit *>(QStringLiteral("name"));
                     name->setText(AutoCreateScriptUtil::strValue(e));
                 } else {
                     unknowTagValue(tagValue, error);
                     qCDebug(LIBKSIEVE_LOG) << " SieveActionBreak::setParamWidgetValue unknown tagValue " << tagValue;
                 }
-            } else if (tagName == QLatin1String("str")) {
+            } else if (tagName == QStringLiteral("str")) {
                 //Nothing
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
@@ -94,12 +94,12 @@ QString SieveActionBreak::href() const
 
 QString SieveActionBreak::code(QWidget *w) const
 {
-    const QLineEdit *name = w->findChild<QLineEdit *>(QLatin1String("name"));
+    const QLineEdit *name = w->findChild<QLineEdit *>(QStringLiteral("name"));
     const QString nameStr = name->text();
     if (!nameStr.isEmpty()) {
         return QStringLiteral("break :name \"%1\";").arg(nameStr);
     }
-    return QLatin1String("break;");
+    return QStringLiteral("break;");
 }
 
 QString SieveActionBreak::help() const
@@ -109,7 +109,7 @@ QString SieveActionBreak::help() const
 
 QStringList SieveActionBreak::needRequires(QWidget */*parent*/) const
 {
-    return QStringList() << QLatin1String("foreverypart");
+    return QStringList() << QStringLiteral("foreverypart");
 }
 
 bool SieveActionBreak::needCheckIfServerHasCapability() const
@@ -119,6 +119,6 @@ bool SieveActionBreak::needCheckIfServerHasCapability() const
 
 QString SieveActionBreak::serverNeedsCapability() const
 {
-    return QLatin1String("foreverypart");
+    return QStringLiteral("foreverypart");
 }
 

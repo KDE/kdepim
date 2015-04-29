@@ -105,26 +105,26 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
 
     mBtnTop = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnTop);
-    mBtnTop->setIcon(QIcon::fromTheme(QLatin1String("go-top")));
+    mBtnTop->setIcon(QIcon::fromTheme(QStringLiteral("go-top")));
     mBtnTop->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnTop->setMinimumSize(mBtnTop->sizeHint() * 1.2);
 
     mBtnUp = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnUp);
     mBtnUp->setAutoRepeat(true);
-    mBtnUp->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
+    mBtnUp->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
     mBtnUp->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnUp->setMinimumSize(mBtnUp->sizeHint() * 1.2);
     mBtnDown = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnDown);
     mBtnDown->setAutoRepeat(true);
-    mBtnDown->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
+    mBtnDown->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
     mBtnDown->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnDown->setMinimumSize(mBtnDown->sizeHint() * 1.2);
 
     mBtnBottom = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnBottom);
-    mBtnBottom->setIcon(QIcon::fromTheme(QLatin1String("go-bottom")));
+    mBtnBottom->setIcon(QIcon::fromTheme(QStringLiteral("go-bottom")));
     mBtnBottom->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnBottom->setMinimumSize(mBtnBottom->sizeHint() * 1.2);
 
@@ -142,13 +142,13 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
 
     mBtnNew = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnNew);
-    mBtnNew->setIcon(QIcon::fromTheme(QLatin1String("document-new")));
+    mBtnNew->setIcon(QIcon::fromTheme(QStringLiteral("document-new")));
     mBtnNew->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnNew->setMinimumSize(mBtnNew->sizeHint() * 1.2);
 
     mBtnDelete = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnDelete);
-    mBtnDelete->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
+    mBtnDelete->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
     mBtnDelete->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     mBtnDelete->setMinimumSize(mBtnDelete->sizeHint() * 1.2);
 

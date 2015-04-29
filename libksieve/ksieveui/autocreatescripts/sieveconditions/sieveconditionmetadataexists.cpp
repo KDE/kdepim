@@ -28,7 +28,7 @@
 
 using namespace KSieveUi;
 SieveConditionMetaDataExists::SieveConditionMetaDataExists(QObject *parent)
-    : SieveCondition(QLatin1String("metadataexists"), i18n("Metadata exists"), parent)
+    : SieveCondition(QStringLiteral("metadataexists"), i18n("Metadata exists"), parent)
 {
 }
 
@@ -49,7 +49,7 @@ QWidget *SieveConditionMetaDataExists::createParamWidget(QWidget *parent) const
 
     QLineEdit *mailbox = new QLineEdit;
     connect(mailbox, &QLineEdit::textChanged, this, &SieveConditionMetaDataExists::valueChanged);
-    mailbox->setObjectName(QLatin1String("mailbox"));
+    mailbox->setObjectName(QStringLiteral("mailbox"));
     grid->addWidget(mailbox, 0, 1);
 
     lab = new QLabel(i18n("Annotation:"));
@@ -57,7 +57,7 @@ QWidget *SieveConditionMetaDataExists::createParamWidget(QWidget *parent) const
 
     QLineEdit *value = new QLineEdit;
     connect(value, &QLineEdit::textChanged, this, &SieveConditionMetaDataExists::valueChanged);
-    value->setObjectName(QLatin1String("value"));
+    value->setObjectName(QStringLiteral("value"));
     grid->addWidget(value, 1, 1);
 
     return w;
@@ -65,17 +65,17 @@ QWidget *SieveConditionMetaDataExists::createParamWidget(QWidget *parent) const
 
 QString SieveConditionMetaDataExists::code(QWidget *w) const
 {
-    const QLineEdit *mailbox = w->findChild<QLineEdit *>(QLatin1String("mailbox"));
+    const QLineEdit *mailbox = w->findChild<QLineEdit *>(QStringLiteral("mailbox"));
     const QString mailboxStr = mailbox->text();
 
-    const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
+    const QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
     const QString valueStr = value->text();
     return QStringLiteral("metadataexists \"%1\" \"%2\"").arg(mailboxStr).arg(valueStr);
 }
 
 QStringList SieveConditionMetaDataExists::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("mboxmetadata");
+    return QStringList() << QStringLiteral("mboxmetadata");
 }
 
 bool SieveConditionMetaDataExists::needCheckIfServerHasCapability() const
@@ -85,7 +85,7 @@ bool SieveConditionMetaDataExists::needCheckIfServerHasCapability() const
 
 QString SieveConditionMetaDataExists::serverNeedsCapability() const
 {
-    return QLatin1String("mboxmetadata");
+    return QStringLiteral("mboxmetadata");
 }
 
 QString SieveConditionMetaDataExists::help() const
@@ -101,22 +101,22 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("str")) {
+            if (tagName == QStringLiteral("str")) {
                 const QString tagValue = e.text();
                 if (index == 0) {
-                    QLineEdit *mailbox = w->findChild<QLineEdit *>(QLatin1String("mailbox"));
+                    QLineEdit *mailbox = w->findChild<QLineEdit *>(QStringLiteral("mailbox"));
                     mailbox->setText(tagValue);
                 } else if (index == 1) {
-                    QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
+                    QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
                     value->setText(AutoCreateScriptUtil::quoteStr(tagValue));
                 } else {
                     tooManyArgument(tagName, index, 2, error);
                     qCDebug(LIBKSIEVE_LOG) << " SieveConditionServerMetaDataExists::setParamWidgetValue to many attribute " << index;
                 }
                 ++index;
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

@@ -76,15 +76,15 @@ SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
 #if !defined(NDEBUG)
     if (!qgetenv("KDEPIM_SIEVEEDITOR_DEBUG").isEmpty()) {
         //Not necessary to translate it.
-        mGenerateXml = new QAction(QLatin1String("Generate xml"), this);
+        mGenerateXml = new QAction(QStringLiteral("Generate xml"), this);
         connect(mGenerateXml, &QAction::triggered, this, &SieveEditorWidget::slotGenerateXml);
         toolbar->addAction(mGenerateXml);
     }
 #endif
 
     QStringList overlays;
-    overlays << QLatin1String("list-add");
-    mUpload = new QAction(QIcon(new KIconEngine(QLatin1String("get-hot-new-stuff"), Q_NULLPTR, overlays)), i18n("Share..."), this);
+    overlays << QStringLiteral("list-add");
+    mUpload = new QAction(QIcon(new KIconEngine(QStringLiteral("get-hot-new-stuff"), Q_NULLPTR, overlays)), i18n("Share..."), this);
     connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
     connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
     //Add action to toolBar

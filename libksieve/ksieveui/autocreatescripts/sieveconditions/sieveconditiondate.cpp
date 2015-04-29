@@ -31,7 +31,7 @@
 using namespace KSieveUi;
 
 SieveConditionDate::SieveConditionDate(QObject *parent)
-    : SieveCondition(QLatin1String("date"), i18n("Date"), parent)
+    : SieveCondition(QStringLiteral("date"), i18n("Date"), parent)
 {
 }
 
@@ -48,7 +48,7 @@ QWidget *SieveConditionDate::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
 
     SelectMatchTypeComboBox *matchTypeCombo = new SelectMatchTypeComboBox;
-    matchTypeCombo->setObjectName(QLatin1String("matchtype"));
+    matchTypeCombo->setObjectName(QStringLiteral("matchtype"));
     connect(matchTypeCombo, &SelectMatchTypeComboBox::valueChanged, this, &SieveConditionDate::valueChanged);
     lay->addWidget(matchTypeCombo);
 
@@ -60,12 +60,12 @@ QWidget *SieveConditionDate::createParamWidget(QWidget *parent) const
 
     QLineEdit *header = new QLineEdit;
     connect(header, &QLineEdit::textChanged, this, &SieveConditionDate::valueChanged);
-    header->setObjectName(QLatin1String("header"));
+    header->setObjectName(QStringLiteral("header"));
     grid->addWidget(header, 0, 1);
 
     SelectDateWidget *dateWidget = new SelectDateWidget;
     connect(dateWidget, &SelectDateWidget::valueChanged, this, &SieveConditionDate::valueChanged);
-    dateWidget->setObjectName(QLatin1String("datewidget"));
+    dateWidget->setObjectName(QStringLiteral("datewidget"));
     grid->addWidget(dateWidget, 1, 0, 1, 2);
 
     return w;
@@ -73,14 +73,14 @@ QWidget *SieveConditionDate::createParamWidget(QWidget *parent) const
 
 QString SieveConditionDate::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
+    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("matchtype"));
     bool isNegative = false;
     const QString matchTypeStr = selectMatchCombobox->code(isNegative);
 
-    const QLineEdit *header = w->findChild<QLineEdit *>(QLatin1String("header"));
+    const QLineEdit *header = w->findChild<QLineEdit *>(QStringLiteral("header"));
     const QString headerStr = header->text();
 
-    const SelectDateWidget *dateWidget = w->findChild<SelectDateWidget *>(QLatin1String("datewidget"));
+    const SelectDateWidget *dateWidget = w->findChild<SelectDateWidget *>(QStringLiteral("datewidget"));
     const QString dateWidgetStr = dateWidget->code();
 
     return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("date %1 \"%2\" %3").arg(matchTypeStr).arg(headerStr).arg(dateWidgetStr);
@@ -93,12 +93,12 @@ bool SieveConditionDate::needCheckIfServerHasCapability() const
 
 QString SieveConditionDate::serverNeedsCapability() const
 {
-    return QLatin1String("date");
+    return QStringLiteral("date");
 }
 
 QStringList SieveConditionDate::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("date");
+    return QStringList() << QStringLiteral("date");
 }
 
 QString SieveConditionDate::help() const
@@ -117,7 +117,7 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("str")) {
+            if (tagName == QStringLiteral("str")) {
                 if (index == 0) {
                     headerStr   = e.text();
                 } else if (index == 1) {
@@ -129,12 +129,12 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
                     qCDebug(LIBKSIEVE_LOG) << " SieveConditionDate::setParamWidgetValue too many argument :" << index;
                 }
                 ++index;
-            } else if (tagName == QLatin1String("tag")) {
-                SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
+            } else if (tagName == QStringLiteral("tag")) {
+                SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("matchtype"));
                 selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
@@ -143,9 +143,9 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
         }
         node = node.nextSibling();
     }
-    SelectDateWidget *dateWidget = w->findChild<SelectDateWidget *>(QLatin1String("datewidget"));
+    SelectDateWidget *dateWidget = w->findChild<SelectDateWidget *>(QStringLiteral("datewidget"));
     dateWidget->setCode(type, value);
-    QLineEdit *header = w->findChild<QLineEdit *>(QLatin1String("header"));
+    QLineEdit *header = w->findChild<QLineEdit *>(QStringLiteral("header"));
     header->setText(headerStr);
     return true;
 }

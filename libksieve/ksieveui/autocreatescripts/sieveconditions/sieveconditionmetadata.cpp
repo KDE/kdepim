@@ -30,7 +30,7 @@
 
 using namespace KSieveUi;
 SieveConditionMetaData::SieveConditionMetaData(QObject *parent)
-    : SieveCondition(QLatin1String("metadata"), i18n("Meta Data"), parent)
+    : SieveCondition(QStringLiteral("metadata"), i18n("Meta Data"), parent)
 {
 }
 
@@ -47,7 +47,7 @@ QWidget *SieveConditionMetaData::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
 
     SelectMatchTypeComboBox *selectType = new SelectMatchTypeComboBox;
-    selectType->setObjectName(QLatin1String("selecttype"));
+    selectType->setObjectName(QStringLiteral("selecttype"));
     connect(selectType, &SelectMatchTypeComboBox::valueChanged, this, &SieveConditionMetaData::valueChanged);
     lay->addWidget(selectType);
 
@@ -60,7 +60,7 @@ QWidget *SieveConditionMetaData::createParamWidget(QWidget *parent) const
 
     QLineEdit *mailbox = new QLineEdit;
     connect(mailbox, &QLineEdit::textChanged, this, &SieveConditionMetaData::valueChanged);
-    mailbox->setObjectName(QLatin1String("mailbox"));
+    mailbox->setObjectName(QStringLiteral("mailbox"));
     grid->addWidget(mailbox, 0, 1);
 
     lab = new QLabel(i18n("Annotations:"));
@@ -68,7 +68,7 @@ QWidget *SieveConditionMetaData::createParamWidget(QWidget *parent) const
 
     QLineEdit *annotation = new QLineEdit;
     connect(annotation, &QLineEdit::textChanged, this, &SieveConditionMetaData::valueChanged);
-    annotation->setObjectName(QLatin1String("annotation"));
+    annotation->setObjectName(QStringLiteral("annotation"));
     grid->addWidget(annotation, 1, 1);
 
     lab = new QLabel(i18n("Value:"));
@@ -76,7 +76,7 @@ QWidget *SieveConditionMetaData::createParamWidget(QWidget *parent) const
 
     QLineEdit *value = new QLineEdit;
     connect(value, &QLineEdit::textChanged, this, &SieveConditionMetaData::valueChanged);
-    value->setObjectName(QLatin1String("value"));
+    value->setObjectName(QStringLiteral("value"));
     grid->addWidget(value, 2, 1);
 
     return w;
@@ -84,23 +84,23 @@ QWidget *SieveConditionMetaData::createParamWidget(QWidget *parent) const
 
 QString SieveConditionMetaData::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("selecttype"));
+    const SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("selecttype"));
     bool isNegative = false;
     const QString matchString = selectType->code(isNegative);
 
     QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("metadata %1 ").arg(matchString);
 
-    const QLineEdit *mailbox = w->findChild<QLineEdit *>(QLatin1String("mailbox"));
+    const QLineEdit *mailbox = w->findChild<QLineEdit *>(QStringLiteral("mailbox"));
     const QString mailboxStr = mailbox->text();
 
     result += QString::fromLatin1("\"%1\" ").arg(mailboxStr);
 
-    const QLineEdit *annotation = w->findChild<QLineEdit *>(QLatin1String("annotation"));
+    const QLineEdit *annotation = w->findChild<QLineEdit *>(QStringLiteral("annotation"));
     const QString annotationStr = annotation->text();
 
     result += QString::fromLatin1("\"%1\" ").arg(annotationStr);
 
-    const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
+    const QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
     const QString valueStr = value->text();
 
     result += QString::fromLatin1("\"%1\"").arg(valueStr);
@@ -109,7 +109,7 @@ QString SieveConditionMetaData::code(QWidget *w) const
 
 QStringList SieveConditionMetaData::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("mboxmetadata");
+    return QStringList() << QStringLiteral("mboxmetadata");
 }
 
 bool SieveConditionMetaData::needCheckIfServerHasCapability() const
@@ -119,7 +119,7 @@ bool SieveConditionMetaData::needCheckIfServerHasCapability() const
 
 QString SieveConditionMetaData::serverNeedsCapability() const
 {
-    return QLatin1String("mboxmetadata");
+    return QStringLiteral("mboxmetadata");
 }
 
 QString SieveConditionMetaData::help() const
@@ -135,21 +135,21 @@ bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("str")) {
+            if (tagName == QStringLiteral("str")) {
                 const QString tagValue = e.text();
                 switch (index) {
                 case 0: {
-                    QLineEdit *mailbox = w->findChild<QLineEdit *>(QLatin1String("mailbox"));
+                    QLineEdit *mailbox = w->findChild<QLineEdit *>(QStringLiteral("mailbox"));
                     mailbox->setText(tagValue);
                     break;
                 }
                 case 1: {
-                    QLineEdit *annotation = w->findChild<QLineEdit *>(QLatin1String("annotation"));
+                    QLineEdit *annotation = w->findChild<QLineEdit *>(QStringLiteral("annotation"));
                     annotation->setText(AutoCreateScriptUtil::quoteStr(tagValue));
                     break;
                 }
                 case 2: {
-                    QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
+                    QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
                     value->setText(AutoCreateScriptUtil::quoteStr(tagValue));
                     break;
                 }
@@ -160,12 +160,12 @@ bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
                 }
                 }
                 ++index;
-            } else if (tagName == QLatin1String("tag")) {
-                SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("selecttype"));
+            } else if (tagName == QStringLiteral("tag")) {
+                SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("selecttype"));
                 selectType->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

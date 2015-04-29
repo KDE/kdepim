@@ -40,14 +40,14 @@ using KSieve::Parser;
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("parsingscript_gui"), i18n("ParsingScriptTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("parsingscript_gui"), i18n("ParsingScriptTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for parsing script dialog"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
     parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("+[url]"), i18n("URL of a sieve script to be opened")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("+[url]"), i18n("URL of a sieve script to be opened")));
 
     aboutData.setupCommandLine(&parser);
     parser.process(app);
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
     if (parser.positionalArguments().count()) {
         fileName = parser.positionalArguments().at(0);
     } else {
-        fileName = QFileDialog::getOpenFileName(Q_NULLPTR, QString(), QString(), QLatin1String("*.siv"));
+        fileName = QFileDialog::getOpenFileName(Q_NULLPTR, QString(), QString(), QStringLiteral("*.siv"));
     }
     if (!fileName.isEmpty()) {
         QFile file(fileName);

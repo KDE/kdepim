@@ -30,7 +30,7 @@
 
 using namespace KSieveUi;
 SieveActionReplace::SieveActionReplace(QObject *parent)
-    : SieveAction(QLatin1String("replace"), i18n("Replace"), parent)
+    : SieveAction(QStringLiteral("replace"), i18n("Replace"), parent)
 {
 }
 
@@ -50,7 +50,7 @@ QWidget *SieveActionReplace::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 0, 0);
 
     QLineEdit *subject = new QLineEdit;
-    subject->setObjectName(QLatin1String("subject"));
+    subject->setObjectName(QStringLiteral("subject"));
     connect(subject, &QLineEdit::textChanged, this, &SieveActionReplace::valueChanged);
     grid->addWidget(subject, 0, 1);
 
@@ -58,7 +58,7 @@ QWidget *SieveActionReplace::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 1, 0);
 
     QLineEdit *headers = new QLineEdit;
-    headers->setObjectName(QLatin1String("from"));
+    headers->setObjectName(QStringLiteral("from"));
     connect(headers, &QLineEdit::textChanged, this, &SieveActionReplace::valueChanged);
     grid->addWidget(headers, 1, 1);
 
@@ -66,7 +66,7 @@ QWidget *SieveActionReplace::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 2, 0);
 
     MultiLineEdit *text = new MultiLineEdit;
-    text->setObjectName(QLatin1String("text"));
+    text->setObjectName(QStringLiteral("text"));
     connect(text, &MultiLineEdit::textChanged, this, &SieveActionReplace::valueChanged);
     grid->addWidget(text, 2, 1);
 
@@ -80,30 +80,30 @@ bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("str")) {
-                MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QLatin1String("text"));
+            if (tagName == QStringLiteral("str")) {
+                MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QStringLiteral("text"));
                 edit->setText(e.text());
-            } else if (tagName == QLatin1String("tag")) {
+            } else if (tagName == QStringLiteral("tag")) {
                 const QString tagValue = e.text();
-                if (tagValue == QLatin1String("subject")) {
+                if (tagValue == QStringLiteral("subject")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
-                        QLineEdit *subject = w->findChild<QLineEdit *>(QLatin1String("subject"));
+                        QLineEdit *subject = w->findChild<QLineEdit *>(QStringLiteral("subject"));
                         subject->setText(strValue);
                     }
-                } else if (tagValue == QLatin1String("from")) {
+                } else if (tagValue == QStringLiteral("from")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
-                        QLineEdit *headers = w->findChild<QLineEdit *>(QLatin1String("from"));
+                        QLineEdit *headers = w->findChild<QLineEdit *>(QStringLiteral("from"));
                         headers->setText(strValue);
                     }
                 } else {
                     unknowTagValue(tagValue, error);
                     qCDebug(LIBKSIEVE_LOG) << " SieveActionReplace::setParamWidgetValue unknown tagValue " << tagValue;
                 }
-            } else if (tagName == QLatin1String("crlf")) {
+            } else if (tagName == QStringLiteral("crlf")) {
                 //nothing
-            } else if (tagName == QLatin1String("comment")) {
+            } else if (tagName == QStringLiteral("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
@@ -117,20 +117,20 @@ bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget
 
 QString SieveActionReplace::code(QWidget *w) const
 {
-    QString result = QLatin1String("replace ");
-    const QLineEdit *subject = w->findChild<QLineEdit *>(QLatin1String("subject"));
+    QString result = QStringLiteral("replace ");
+    const QLineEdit *subject = w->findChild<QLineEdit *>(QStringLiteral("subject"));
     const QString subjectStr = subject->text();
     if (!subjectStr.isEmpty()) {
         result += QString::fromLatin1(":subject \"%1\" ").arg(subjectStr);
     }
 
-    const QLineEdit *headers = w->findChild<QLineEdit *>(QLatin1String("from"));
+    const QLineEdit *headers = w->findChild<QLineEdit *>(QStringLiteral("from"));
     const QString headersStr = headers->text();
     if (!headersStr.isEmpty()) {
         result += QString::fromLatin1(":from \"%1\" ").arg(headersStr);
     }
 
-    const MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QLatin1String("text"));
+    const MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QStringLiteral("text"));
     const QString text = edit->toPlainText();
     if (!text.isEmpty()) {
         result += QString::fromLatin1("text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));
@@ -141,7 +141,7 @@ QString SieveActionReplace::code(QWidget *w) const
 
 QStringList SieveActionReplace::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("replace");
+    return QStringList() << QStringLiteral("replace");
 }
 
 bool SieveActionReplace::needCheckIfServerHasCapability() const
@@ -151,7 +151,7 @@ bool SieveActionReplace::needCheckIfServerHasCapability() const
 
 QString SieveActionReplace::serverNeedsCapability() const
 {
-    return QLatin1String("replace");
+    return QStringLiteral("replace");
 }
 
 QString SieveActionReplace::help() const

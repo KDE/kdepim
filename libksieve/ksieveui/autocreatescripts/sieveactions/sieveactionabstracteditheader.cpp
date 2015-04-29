@@ -26,7 +26,7 @@ SieveActionAbstractEditHeader::SieveActionAbstractEditHeader(const QString &name
 
 QStringList SieveActionAbstractEditHeader::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("editheader");
+    return QStringList() << QStringLiteral("editheader");
 }
 
 bool SieveActionAbstractEditHeader::needCheckIfServerHasCapability() const
@@ -36,6 +36,6 @@ bool SieveActionAbstractEditHeader::needCheckIfServerHasCapability() const
 
 QString SieveActionAbstractEditHeader::serverNeedsCapability() const
 {
-    return QLatin1String("editheader");
+    return QStringLiteral("editheader");
 }
 
