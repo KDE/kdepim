@@ -371,3 +371,15 @@ target_link_libraries( filteractionsettransporttest
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
+
+
+set(mailcommon_mailfiltertest_SRCS mailfiltertest.cpp )
+
+kde4_add_unit_test( mailfiltertest ${mailcommon_mailfiltertest_SRCS} )
+target_link_libraries( mailfiltertest
+   mailcommon
+   ${QT_QTTEST_LIBRARY}
+   ${QT_QTCORE_LIBRARY}
+   ${KDE4_KDEUI_LIBRARY}   
+)
+
