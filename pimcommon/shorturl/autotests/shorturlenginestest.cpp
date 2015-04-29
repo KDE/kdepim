@@ -49,7 +49,7 @@ void ShortUrlEnginesTest::shouldTestEngines_data()
     QTest::addColumn<QString>("longurl");
     QTest::addColumn<QString>("shorturl");
 
-    QTest::newRow("google url") << PimCommon::ShortUrlUtils::Google << QStringLiteral("http://www.kde.org") << QStringLiteral("http://goo.gl/sMKw");
+    //QTest::newRow("google url") << PimCommon::ShortUrlUtils::Google << QStringLiteral("http://www.kde.org") << QStringLiteral("http://goo.gl/sMKw");
     QTest::newRow("tiny url") << PimCommon::ShortUrlUtils::Tinyurl << QStringLiteral("http://www.kde.org") << QStringLiteral("http://tinyurl.com/l6l0");
     //WE can't test migreme...
     //QTest::newRow("migreme url") << PimCommon::ShortUrlUtils::MigreMe << QStringLiteral("http://www.kde.org") << QStringLiteral("http://migre.me/nwh5a");

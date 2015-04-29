@@ -55,7 +55,8 @@ void ShortUrlConfigureWidget::slotChanged()
 
 void ShortUrlConfigureWidget::init()
 {
-    for (int i = 0; i < PimCommon::ShortUrlUtils::EndListEngine; ++i) {
+    //Google doesn't work now.
+    for (int i=PimCommon::ShortUrlUtils::Tinyurl; i <PimCommon::ShortUrlUtils::EndListEngine; ++i) {
         mShortUrlServer->addItem(PimCommon::ShortUrlUtils::stringFromEngineType(static_cast<PimCommon::ShortUrlUtils::EngineType>(i)), i);
     }
 }
@@ -63,7 +64,11 @@ void ShortUrlConfigureWidget::init()
 void ShortUrlConfigureWidget::loadConfig()
 {
     const int engineType = PimCommon::ShortUrlUtils::readEngineSettings();
-    mShortUrlServer->setCurrentIndex(mShortUrlServer->findData(engineType));
+    int index = mShortUrlServer->findData(engineType);
+    if (index < 0) {
+        index = 0;
+    }
+    mShortUrlServer->setCurrentIndex(index);
     mChanged = false;
 }
 
