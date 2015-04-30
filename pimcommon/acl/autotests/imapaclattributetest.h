@@ -32,6 +32,12 @@ private Q_SLOTS:
     void shouldCloneAttr();
     void shouldSerializedAttribute();
     void shouldHaveType();
+    void testMyRights();
+    void testDeserialize_data();
+    void testDeserialize();
+    void testSerializeDeserialize_data();
+    void testSerializeDeserialize();
+    void testOldRights();
 };
 
 #endif // IMAPACLATTRIBUTETEST_H

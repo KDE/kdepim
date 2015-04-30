@@ -17,6 +17,12 @@
   02110-1301, USA.
 */
 
+// THIS file should not exist and is only a copy of
+// kdepim-runtime/resources/shared/singlefileresource
+
+// Any improvements should be done at kdepim-runtime and
+// than afterwards copy the new version
+
 #include "imapaclattribute.h"
 
 #include <QByteArray>
@@ -49,6 +55,16 @@ QMap<QByteArray, KIMAP::Acl::Rights> ImapAclAttribute::oldRights() const
     return mOldRights;
 }
 
+void ImapAclAttribute::setMyRights(KIMAP::Acl::Rights rights)
+{
+    mMyRights = rights;
+}
+
+KIMAP::Acl::Rights ImapAclAttribute::myRights() const
+{
+    return mMyRights;
+}
+
 QByteArray ImapAclAttribute::type() const
 {
     static const QByteArray sType("imapacl");
@@ -57,7 +73,9 @@ QByteArray ImapAclAttribute::type() const
 
 ImapAclAttribute *ImapAclAttribute::clone() const
 {
-    return new ImapAclAttribute(mRights, mOldRights);
+    ImapAclAttribute *attr = new ImapAclAttribute(mRights, mOldRights);
+    attr->setMyRights(mMyRights);
+    return attr;
 }
 
 QByteArray ImapAclAttribute::serialized() const
@@ -65,7 +83,7 @@ QByteArray ImapAclAttribute::serialized() const
     QByteArray result = "";
 
     bool added = false;
-    foreach (const QByteArray &id, mRights.keys()) {   //krazy:exclude=foreach
+    foreach (const QByteArray &id, mRights.keys()) {
         result += id;
         result += ' ';
         result += KIMAP::Acl::rightsToString(mRights[id]);
@@ -80,7 +98,7 @@ QByteArray ImapAclAttribute::serialized() const
     result += " %% ";
 
     added = false;
-    foreach (const QByteArray &id, mOldRights.keys()) {   //krazy:exclude=foreach
+    foreach (const QByteArray &id, mOldRights.keys()) {
         result += id;
         result += ' ';
         result += KIMAP::Acl::rightsToString(mOldRights[id]);
@@ -90,6 +108,11 @@ QByteArray ImapAclAttribute::serialized() const
 
     if (added) {
         result.chop(3);
+    }
+
+    if (mMyRights) {
+        result += " %% ";
+        result += KIMAP::Acl::rightsToString(mMyRights);
     }
 
     return result;
@@ -117,18 +140,30 @@ void ImapAclAttribute::deserialize(const QByteArray &data)
 {
     mRights.clear();
     mOldRights.clear();
-    const int pos = data.indexOf(" %% ");
-    if (pos == -1) {
+    mMyRights = KIMAP::Acl::None;
+
+    QList<QByteArray> parts;
+    int lastPos = 0;
+    int pos;
+    while ((pos = data.indexOf(" %% ", lastPos)) != -1) {
+        parts << data.mid(lastPos, pos - lastPos);
+        lastPos = pos + 4;
+    }
+    parts << data.mid(lastPos);
+
+    if (parts.size() < 2) {
         return;
     }
-
-    const QByteArray leftPart = data.left(pos);
-    const QByteArray rightPart = data.mid(pos + 4);
-    fillRightsMap(leftPart.split('%'), mRights);
-    fillRightsMap(rightPart.split('%'), mOldRights);
+    fillRightsMap(parts.at(0).split('%'), mRights);
+    fillRightsMap(parts.at(1).split('%'), mOldRights);
+    if (parts.size() >= 3) {
+        mMyRights = KIMAP::Acl::rightsFromString(parts.at(2));
+    }
 }
 
-bool PimCommon::ImapAclAttribute::operator==(const PimCommon::ImapAclAttribute &other) const
+bool ImapAclAttribute::operator==(const ImapAclAttribute &other) const
 {
-    return (oldRights() == other.oldRights()) && (rights() == other.rights());
+    return (oldRights() == other.oldRights())
+        && (rights() == other.rights())
+        && (myRights() == other.myRights());
 }

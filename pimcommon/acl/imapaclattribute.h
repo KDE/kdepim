@@ -17,6 +17,12 @@
   02110-1301, USA.
 */
 
+// THIS file should not exist and is only a copy of
+// kdepim-runtime/resources/shared/singlefileresource
+
+// Any improvements should be done at kdepim-runtime and
+// than afterwards copy the new version
+
 #ifndef MAILCOMMON_IMAPACLATTRIBUTE_H
 #define MAILCOMMON_IMAPACLATTRIBUTE_H
 
@@ -40,6 +46,8 @@ public:
     void setRights(const QMap<QByteArray, KIMAP::Acl::Rights> &rights);
     QMap<QByteArray, KIMAP::Acl::Rights> rights() const;
     QMap<QByteArray, KIMAP::Acl::Rights> oldRights() const;
+    void setMyRights(KIMAP::Acl::Rights rights);
+    KIMAP::Acl::Rights myRights() const;
     QByteArray type() const Q_DECL_OVERRIDE;
     ImapAclAttribute *clone() const Q_DECL_OVERRIDE;
     QByteArray serialized() const Q_DECL_OVERRIDE;
@@ -49,6 +57,7 @@ public:
 private:
     QMap<QByteArray, KIMAP::Acl::Rights> mRights;
     QMap<QByteArray, KIMAP::Acl::Rights> mOldRights;
+    KIMAP::Acl::Rights mMyRights;
 };
 
 }
