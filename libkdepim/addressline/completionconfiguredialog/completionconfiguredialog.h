@@ -25,6 +25,7 @@
 
 #include <QDialog>
 class QTabWidget;
+class KConfig;
 namespace KLDAP {
 class LdapClientSearch;
 }
@@ -44,6 +45,7 @@ public:
     void setLdapClientSearch(KLDAP::LdapClientSearch *ldapSearch);
     void setRecentAddresses(const QStringList &lst);
     bool recentAddressWasChanged() const;
+    void storeAddresses(KConfig *config);
 private slots:
     void slotSave();
 

@@ -113,10 +113,14 @@ bool CompletionConfigureDialog::recentAddressWasChanged() const
     return mRecentaddressWidget->wasChanged();
 }
 
+void CompletionConfigureDialog::storeAddresses(KConfig *config)
+{
+    mRecentaddressWidget->storeAddresses(config);
+}
+
 void CompletionConfigureDialog::slotSave()
 {
     mBlackListBalooWidget->save();
-    //TODO save recent address
     mCompletionOrderWidget->save();
     accept();
 }
