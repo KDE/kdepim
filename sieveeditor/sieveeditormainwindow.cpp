@@ -29,6 +29,8 @@
 
 #include <KStandardGuiItem>
 #include <KSharedConfig>
+#include <KIconEngine>
+#include <KIconLoader>
 
 #include <KLocalizedString>
 #include <KConfigGroup>
@@ -171,6 +173,8 @@ void SieveEditorMainWindow::setupActions()
 
     mShareAction = ac->addAction(QStringLiteral("share_script"), mMainWidget->sieveEditorMainWidget(), SLOT(slotShare()));
     mShareAction->setText(i18n("Share..."));
+    const QStringList overlays = QStringList() << QStringLiteral("list-add");
+    mShareAction->setIcon(QIcon(new KIconEngine(QStringLiteral("get-hot-new-stuff"), KIconLoader::global(), overlays)));
     mShareAction->setEnabled(false);
 
     mSpellCheckAction = ac->addAction(QStringLiteral("check_spelling"), mMainWidget->sieveEditorMainWidget(), SLOT(slotCheckSpelling()));
