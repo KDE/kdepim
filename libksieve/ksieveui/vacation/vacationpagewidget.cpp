@@ -36,8 +36,8 @@
 using namespace KSieveUi;
 VacationPageWidget::VacationPageWidget(QWidget *parent)
     : QWidget(parent),
-      mPageScript(Script),
       mSieveJob(0),
+      mPageScript(Script),
       mWasActive(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
