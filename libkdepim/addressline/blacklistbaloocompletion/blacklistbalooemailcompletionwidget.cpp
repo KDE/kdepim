@@ -112,7 +112,7 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mExcludeDomainLineEdit->setClearButtonShown(true);
     mExcludeDomainLineEdit->setTrapReturnKey(true);
     //kf5 add i18n
-    mExcludeDomainLineEdit->setClickMessage(QLatin1String("Separate domain with \',\'"));
+    mExcludeDomainLineEdit->setClickMessage(QString::fromLatin1("Separate domain with \'%1\'").arg(QLatin1Char(',')));
     connect(mEmailList, SIGNAL(itemSelectionChanged()), this, SLOT(slotSelectionChanged()));
 }
 
