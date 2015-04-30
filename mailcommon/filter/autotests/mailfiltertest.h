@@ -28,6 +28,7 @@ public:
     ~MailFilterTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldApplySettings();
 };
 
 #endif // MAILFILTERTEST_H
