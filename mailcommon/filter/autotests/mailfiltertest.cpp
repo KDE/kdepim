@@ -44,6 +44,7 @@ void MailFilterTest::shouldHaveDefaultValue()
     QVERIFY(mailfilter.isAutoNaming());
     QCOMPARE(mailfilter.applicability(), MailCommon::MailFilter::All);
     QVERIFY(mailfilter.actions()->isEmpty());
+    QVERIFY(mailfilter.icon().isEmpty());
 
 }
 

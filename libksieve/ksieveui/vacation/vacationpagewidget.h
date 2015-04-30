@@ -52,13 +52,13 @@ private:
         ScriptNotSupported = 1
     };
 
-    PageType mPageScript;
     QString mServerName;
     QUrl mUrl;
     QStackedWidget *mStackWidget;
     VacationEditWidget *mVacationEditWidget;
     VacationWarningWidget *mVacationWarningWidget;
     KManageSieve::SieveJob *mSieveJob;
+    PageType mPageScript;
     bool mWasActive;
     bool mHasDateSupport;
 };

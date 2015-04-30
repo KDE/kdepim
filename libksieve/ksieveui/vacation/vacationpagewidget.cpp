@@ -36,8 +36,8 @@
 using namespace KSieveUi;
 VacationPageWidget::VacationPageWidget(QWidget *parent)
     : QWidget(parent),
-      mPageScript(Script),
       mSieveJob(Q_NULLPTR),
+      mPageScript(Script),
       mWasActive(false),
       mHasDateSupport(false)
 {
