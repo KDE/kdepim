@@ -137,12 +137,12 @@ private:
     QString mMessagePath;
     const HeaderStrategy *mStrategy;
     QString mVCardName;
-    bool mPrinting;
-    bool mTopLevel;
     NodeHelper *mNodeHelper;
-    bool mAllowAsync;
     QObject *mSourceObject;
     Akonadi::MessageStatus mMessageStatus;
+    bool mPrinting;
+    bool mTopLevel;
+    bool mAllowAsync;
 };
 }
 

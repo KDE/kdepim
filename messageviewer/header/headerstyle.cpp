@@ -58,11 +58,11 @@ namespace MessageViewer {
 
 HeaderStyle::HeaderStyle()
     : mStrategy( 0 ),
+      mNodeHelper( 0 ),
+      mSourceObject( 0 ),
       mPrinting( false ),
       mTopLevel( true ),
-      mNodeHelper( 0 ),
-      mAllowAsync( false ),
-      mSourceObject( 0 )
+      mAllowAsync( false )
 {
 }
 
