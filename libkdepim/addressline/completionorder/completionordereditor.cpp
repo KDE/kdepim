@@ -36,21 +36,12 @@
 #include "ldap/ldapclientsearch.h"
 #include "ldap/ldapclientsearchconfig.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/monitor.h>
-
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kldap/ldapserver.h>
 
 #include <KDE/KConfigGroup>
-#include <KDE/KHBox>
-#include <KDE/KIcon>
 #include <KDE/KLocale>
-#include <KDE/KPushButton>
-#include <KDE/KVBox>
 
 #include <QtDBus/QDBusConnection>
 #include <QToolButton>
