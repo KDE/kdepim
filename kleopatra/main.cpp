@@ -206,9 +206,9 @@ int main(int argc, char **argv)
 {
     KLocalizedString::setApplicationDomain("kleopatra");
 
-    Kdelibs4ConfigMigrator migrate(QLatin1String("kleopatra"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("kleopatrarc"));
-    migrate.setUiFiles(QStringList() << QLatin1String("kleopatra.rc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("kleopatra"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("kleopatrarc"));
+    migrate.setUiFiles(QStringList() << QStringLiteral("kleopatra.rc"));
     migrate.migrate();
 
     QTime timer;

@@ -257,7 +257,7 @@ void DumpCertificateCommand::Private::init()
     connect(&process, SIGNAL(readyReadStandardOutput()),
             q, SLOT(slotProcessReadyReadStandardOutput()));
     if (!key().isNull()) {
-        process << gpgSmPath() << QLatin1String("--dump-cert") << QLatin1String(key().primaryFingerprint());
+        process << gpgSmPath() << QStringLiteral("--dump-cert") << QLatin1String(key().primaryFingerprint());
     }
 }
 

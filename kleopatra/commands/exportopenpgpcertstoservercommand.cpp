@@ -56,7 +56,7 @@ static bool haveKeyserverConfigured()
     if (!config) {
         return false;
     }
-    const Kleo::CryptoConfigEntry *const entry = config->entry(QLatin1String("gpg"), QLatin1String("Keyserver"), QLatin1String("keyserver"));
+    const Kleo::CryptoConfigEntry *const entry = config->entry(QLatin1Literal("gpg"), QLatin1Literal("Keyserver"), QLatin1Literal("keyserver"));
     return entry && !entry->stringValue().isEmpty();
 }
 

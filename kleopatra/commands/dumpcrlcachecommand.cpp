@@ -236,7 +236,7 @@ DumpCrlCacheCommand::Private::Private(DumpCrlCacheCommand *qq, KeyListController
 {
     process.setOutputChannelMode(KProcess::SeparateChannels);
     process.setReadChannel(KProcess::StandardOutput);
-    process << gpgSmPath() << QLatin1String("--call-dirmngr") << QLatin1String("listcrls");
+    process << gpgSmPath() << QStringLiteral("--call-dirmngr") << QLatin1String("listcrls");
 }
 
 DumpCrlCacheCommand::Private::~Private()
