@@ -43,7 +43,7 @@
 #include <KLocalizedString>
 #include <kconfig.h>
 
-#include <qdebug.h>
+#include "konsolekalendar_debug.h"
 #include <KApplication>
 
 #include <KCalCore/CalFormat>
@@ -257,18 +257,18 @@ int main(int argc, char *argv[])
      */
     if (args->isSet("event")) {
         variables.setUseEvents(true);
-        qDebug() << "main | parse options | use Events";
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options | use Events";
     }
     if (args->isSet("todo")) {
         variables.setUseTodos(true);
-        qDebug() << "main | parse options | use To-dos";
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options | use To-dos";
         cout << i18n("Sorry, To-dos are not working yet.").toLocal8Bit().data()
              << endl;
         return 1;
     }
     if (args->isSet("journal")) {
         variables.setUseJournals(true);
-        qDebug() << "main | parse options | use Journals";
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options | use Journals";
         cout << i18n("Sorry, Journals are not working yet.").toLocal8Bit().data()
              << endl;
         return 1;
@@ -278,7 +278,7 @@ int main(int argc, char *argv[])
             !args->isSet("todo") &&
             !args->isSet("journal")) {
         variables.setUseEvents(true);
-        qDebug() << "main | parse options | use Events (Default)";
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options | use Events (Default)";
     }
 
     /*
@@ -289,19 +289,19 @@ int main(int argc, char *argv[])
         option = args->getOption("export-type");
 
         if (option.toUpper() == QLatin1String("HTML")) {
-            qDebug() << "main | export-type | Export to HTML";
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | export-type | Export to HTML";
             variables.setExportType(ExportTypeHTML);
         } else if (option.toUpper() == QLatin1String("HTMLMONTH")) {
-            qDebug() << "main | export-type | Export to HTML by Month";
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | export-type | Export to HTML by Month";
             variables.setExportType(ExportTypeMonthHTML);
         } else if (option.toUpper() == QLatin1String("CSV")) {
-            qDebug() << "main | export-type | Export to CSV";
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | export-type | Export to CSV";
             variables.setExportType(ExportTypeCSV);
         } else if (option.toUpper() == QLatin1String("TEXT")) {
-            qDebug() << "main | export-type | Export to TEXT (default)";
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | export-type | Export to TEXT (default)";
             variables.setExportType(ExportTypeText);
         } else if (option.toUpper() == QLatin1String("SHORT")) {
-            qDebug() << "main | export-type | Export to TEXT-SHORT";
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | export-type | Export to TEXT-SHORT";
             variables.setExportType(ExportTypeTextShort);
         } else {
             cout << i18n("Invalid Export Type Specified: %1", option).toLocal8Bit().data()
@@ -316,7 +316,7 @@ int main(int argc, char *argv[])
     if (args->isSet("export-file")) {
         option = args->getOption("export-file");
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Export File:"
                  << "(" << option << ")";
 
@@ -329,7 +329,7 @@ int main(int argc, char *argv[])
     if (args->isSet("view")) {
         view = true;
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Mode: (Print incidences)";
     }
 
@@ -340,7 +340,7 @@ int main(int argc, char *argv[])
         view = false;
         add = true;
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Mode: (Add incidence)";
     }
 
@@ -351,7 +351,7 @@ int main(int argc, char *argv[])
         view = false;
         change = true;
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Mode: (Change incidence)";
     }
 
@@ -362,7 +362,7 @@ int main(int argc, char *argv[])
         view = false;
         del = true;
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Mode: (Delete incidence)";
     }
 
@@ -373,7 +373,7 @@ int main(int argc, char *argv[])
         view = false;
         create = true;
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Calendar File: (Create)";
     }
 
@@ -383,7 +383,7 @@ int main(int argc, char *argv[])
     if (args->isSet("summary")) {
         option = args->getOption("summary");
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Summary:"
                  << "(" << option << ")";
 
@@ -396,7 +396,7 @@ int main(int argc, char *argv[])
     if (args->isSet("description")) {
         option = args->getOption("description");
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Description:"
                  << "(" << option << ")";
 
@@ -418,7 +418,7 @@ int main(int argc, char *argv[])
     if (args->isSet("location")) {
         option = args->getOption("location");
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Location:"
                  << "(" << option << ")";
 
@@ -429,7 +429,7 @@ int main(int argc, char *argv[])
      * Show next happening and exit
      */
     if (args->isSet("next")) {
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Show next incidence only";
 
         variables.setNext(true);
@@ -441,7 +441,7 @@ int main(int argc, char *argv[])
     if (args->isSet("uid")) {
         option = args->getOption("uid");
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "incidence UID:"
                  << "(" << option << ")";
 
@@ -454,7 +454,7 @@ int main(int argc, char *argv[])
     if (args->isSet("date")) {
         option = args->getOption("date");
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Start date before conversion:"
                  << "(" << option << ")";
 
@@ -465,7 +465,7 @@ int main(int argc, char *argv[])
                  << endl;
             return 1;
         }
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Start date after conversion:"
                  << "(" << startdate.toString() << ")";
     }
@@ -476,7 +476,7 @@ int main(int argc, char *argv[])
     if (args->isSet("time")) {
         option = args->getOption("time");
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Start time before conversion :"
                  << "(" << option << ")";
 
@@ -491,12 +491,12 @@ int main(int argc, char *argv[])
                      << endl;
                 return 1;
             }
-            qDebug() << "main | parse options |"
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                      << "Start time after conversion:"
                      << "(" << starttime.toString() << ")";
         } else {
             variables.setFloating(true);
-            qDebug() << "main | parse options |"
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                      << "Floating event time specified";
         }
     }
@@ -507,7 +507,7 @@ int main(int argc, char *argv[])
     if (args->isSet("end-date")) {
         option = args->getOption("end-date");
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "End date before conversion:"
                  << "(" << option << ")";
 
@@ -518,7 +518,7 @@ int main(int argc, char *argv[])
                  << endl;
             return 1;
         }
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "End date after conversion:"
                  << "(" << enddate.toString() << ")";
     }
@@ -530,7 +530,7 @@ int main(int argc, char *argv[])
         bool ok;
 
         option = args->getOption("show-next");
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Show" << option << "days ahead";
         variables.setDaysCount(option.toInt(&ok, 10));
 
@@ -542,7 +542,7 @@ int main(int argc, char *argv[])
 
         enddate = startdate;
         enddate = enddate.addDays(variables.getDaysCount());
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "End date after conversion:"
                  << "(" << enddate.toString() << ")";
     }
@@ -553,7 +553,7 @@ int main(int argc, char *argv[])
     if (args->isSet("end-time")) {
         option = args->getOption("end-time");
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "End time before conversion:"
                  << "(" << option << ")";
 
@@ -569,12 +569,12 @@ int main(int argc, char *argv[])
                 return 1;
             }
 
-            qDebug() << "main | parse options |"
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                      << "End time after conversion:"
                      << "(" << endtime.toString() << ")";
         } else {
             variables.setFloating(true);
-            qDebug() << "main | parse options |"
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                      << "Floating event time specified";
         }
     }
@@ -586,7 +586,7 @@ int main(int argc, char *argv[])
     if (args->isSet("epoch-start")) {
         option = args->getOption("epoch-start");
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Epoch start:"
                  << "(" << option << ")";
 
@@ -600,7 +600,7 @@ int main(int argc, char *argv[])
     if (args->isSet("epoch-end")) {
         option = args->getOption("epoch-end");
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "Epoch end:"
                  << "(" << option << ")";
 
@@ -619,7 +619,7 @@ int main(int argc, char *argv[])
         option = args->getOption("import");
         variables.setImportFile(option);
 
-        qDebug() << "main | parse options |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | parse options |"
                  << "importing file from:"
                  << "(" << option << ")";
     }
@@ -634,11 +634,11 @@ int main(int argc, char *argv[])
     QEventLoop loop;
     Akonadi::FetchJobCalendar::Ptr calendar = Akonadi::FetchJobCalendar::Ptr(new Akonadi::FetchJobCalendar());
     QObject::connect(calendar.data(), SIGNAL(loadFinished(bool,QString)), &loop, SLOT(quit()));
-    qDebug() << "Starting to load calendar";
+    qCDebug(KONSOLEKALENDAR_LOG) << "Starting to load calendar";
     QElapsedTimer t;
     t.start();
     loop.exec();
-    qDebug() << "Calendar loaded in" << t.elapsed() << "ms; success=" << calendar->isLoaded() << "; num incidences=" << calendar->incidences().count();
+    qCDebug(KONSOLEKALENDAR_LOG) << "Calendar loaded in" << t.elapsed() << "ms; success=" << calendar->isLoaded() << "; num incidences=" << calendar->incidences().count();
 
     if (!args->isSet("import")) {
         variables.setCalendar(calendar);
@@ -653,11 +653,11 @@ int main(int argc, char *argv[])
     if (!args->isSet("end-date") && !args->isSet("show-next") &&
             args->isSet("date")) {
         enddate = startdate;
-        qDebug() << "main | datetimestamp |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp |"
                  << "setting enddate to startdate";
     } else if (args->isSet("end-date") && !args->isSet("date")) {
         startdate = enddate;
-        qDebug() << "main | datetimestamp |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp |"
                  << "setting startdate to enddate";
     }
 
@@ -669,12 +669,12 @@ int main(int argc, char *argv[])
     if (!args->isSet("end-time") && !args->isSet("epoch-end")) {
         if (args->isSet("time")) {
             endtime = starttime.addSecs(60 * 60);    // end is 1 hour after start
-            qDebug() << "main | datetimestamp |"
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp |"
                      << "setting endtime 1 hour after starttime";
         } else if (args->isSet("epoch-start")) {
             startdatetime = epochs.epoch2QDateTime(epochstart);
             enddatetime = startdatetime.addSecs(60 * 60);
-            qDebug() << "main | datetimestamp |"
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp |"
                      << "setting endtime 1 hour after epochstart";
         }
     }
@@ -685,12 +685,12 @@ int main(int argc, char *argv[])
     if (!args->isSet("time") && !args->isSet("epoch-start")) {
         if (args->isSet("end-time")) {
             starttime = endtime.addSecs(-60 * 60);    // start is 1 hour before end
-            qDebug() << "main | datetimestamp |"
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp |"
                      << "setting starttime 1 hour before endtime";
         } else if (args->isSet("epoch-end")) {
             enddatetime = epochs.epoch2QDateTime(epochend);
             startdatetime = enddatetime.addSecs(-60 * 60);
-            qDebug() << "main | datetimestamp |"
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp |"
                      << "setting starttime 1 before after epochend";
         }
     }
@@ -701,12 +701,12 @@ int main(int argc, char *argv[])
             !args->isSet("end-time") && !args->isSet("epoch-end")) {
         // set default start date/time
         startdatetime = QDateTime(startdate, starttime);
-        qDebug() << "main | datetimestamp |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp |"
                  << "setting startdatetime from"
                  << "default startdate (today) and starttime";
         // set default end date/time
         enddatetime = QDateTime(enddate, endtime);
-        qDebug() << "main | datetimestamp |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp |"
                  << "setting enddatetime from"
                  << "default enddate (today) and endtime";
     }
@@ -714,12 +714,12 @@ int main(int argc, char *argv[])
     // Set startdatetime, enddatetime if still necessary
     if (startdatetime.isNull()) {
         startdatetime = QDateTime(startdate, starttime);
-        qDebug() << "main | datetimestamp |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp |"
                  << "setting startdatetime from startdate and starttime";
     }
     if (enddatetime.isNull()) {
         enddatetime = QDateTime(enddate, endtime);
-        qDebug() << "main | datetimestamp |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp |"
                  << "setting enddatetime from enddate and endtime";
     }
 
@@ -729,7 +729,7 @@ int main(int argc, char *argv[])
         if (!args->isSet("time")        && !args->isSet("end-time") &&
                 !args->isSet("epoch-start") && !args->isSet("epoch-end")) {
             variables.setFloating(true);
-            qDebug() << "main | floatingcheck |"
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | floatingcheck |"
                      << "turn-on floating event";
         }
     }
@@ -749,9 +749,9 @@ int main(int argc, char *argv[])
     }
 
     // Some more debug prints
-    qDebug() << "main | datetimestamp | StartDate="
+    qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp | StartDate="
              << startdatetime.toString(Qt::TextDate);
-    qDebug() << "main | datetimestamp | EndDate="
+    qCDebug(KONSOLEKALENDAR_LOG) << "main | datetimestamp | EndDate="
              << enddatetime.toString(Qt::TextDate);
 
     /***************************************************************************
@@ -804,7 +804,7 @@ int main(int argc, char *argv[])
     if (add) {
         if (!konsolekalendar->isEvent(startdatetime, enddatetime,
                                       variables.getSummary())) {
-            qDebug() << "main | modework |"
+            qCDebug(KONSOLEKALENDAR_LOG) << "main | modework |"
                      << "calling addEvent()";
             konsolekalendar->addEvent();
         } else {
@@ -815,7 +815,7 @@ int main(int argc, char *argv[])
     }
 
     if (change) {
-        qDebug() << "main | modework |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | modework |"
                  << "calling changeEvent()";
         if (!variables.isUID()) {
             cout << i18n("Missing event UID: "
@@ -828,12 +828,12 @@ int main(int argc, char *argv[])
                  << endl;
             return 1;
         }
-        qDebug() << "main | modework |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | modework |"
                  << "successful changeEvent()";
     }
 
     if (del) {
-        qDebug() << "main | modework |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | modework |"
                  << "calling deleteEvent()";
         if (!variables.isUID()) {
             cout << i18n("Missing event UID: "
@@ -846,12 +846,12 @@ int main(int argc, char *argv[])
                  << endl;
             return 1;
         }
-        qDebug() << "main | modework |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | modework |"
                  << "successful deleteEvent()";
     }
 
     if (view) {
-        qDebug() << "main | modework |"
+        qCDebug(KONSOLEKALENDAR_LOG) << "main | modework |"
                  << "calling showInstance() to view events";
         if (!konsolekalendar->showInstance()) {
             cout << i18n("Cannot open specified export file: %1",
@@ -863,7 +863,7 @@ int main(int argc, char *argv[])
 
     delete konsolekalendar;
 
-    qDebug() << "main | exiting";
+    qCDebug(KONSOLEKALENDAR_LOG) << "main | exiting";
 
     return 0;
 }

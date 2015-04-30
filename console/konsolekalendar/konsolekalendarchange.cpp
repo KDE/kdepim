@@ -32,7 +32,7 @@
  */
 #include "konsolekalendarchange.h"
 
-#include <qdebug.h>
+#include "konsolekalendar_debug.h"
 #include <KLocalizedString>
 
 #include <QEventLoop>
@@ -57,7 +57,7 @@ bool KonsoleKalendarChange::changeEvent()
 {
     bool status = false;
 
-    qDebug() << "konsolekalendarchange.cpp::changeEvent()";
+    qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendarchange.cpp::changeEvent()";
 
     /*
      * Retrieve event on the basis of the unique string ID
@@ -73,7 +73,7 @@ bool KonsoleKalendarChange::changeEvent()
                  << endl;
             printSpecs();
         } else {
-            qDebug() << "konsolekalendarchange.cpp:changeEvent() :"
+            qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendarchange.cpp:changeEvent() :"
                      << m_variables->getUID().toLocal8Bit().data();
 
             if (m_variables->isVerbose()) {
@@ -131,7 +131,7 @@ bool KonsoleKalendarChange::changeEvent()
         }
     }
 
-    qDebug() << "konsolekalendarchange.cpp::changeEvent() | Done";
+    qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendarchange.cpp::changeEvent() | Done";
     return status;
 }
 

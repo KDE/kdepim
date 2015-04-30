@@ -5,6 +5,7 @@ add_subdirectory(pics)
 ########### next target ###############
 
 set(konsolekalendar_SRCS 
+   konsolekalendar_debug.cpp
    konsolekalendarepoch.cpp 
    konsolekalendardelete.cpp 
    konsolekalendarchange.cpp 

@@ -32,7 +32,7 @@
  */
 #include "konsolekalendarexports.h"
 
-#include <qdebug.h>
+#include "konsolekalendar_debug.h"
 #include <klocale.h>
 
 #include <KCalCore/Event>

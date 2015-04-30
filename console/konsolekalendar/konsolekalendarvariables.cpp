@@ -33,7 +33,7 @@
 #include "konsolekalendarvariables.h"
 
 #include <KLocalizedString>
-#include <qdebug.h>
+#include "konsolekalendar_debug.h"
 #include <kconfig.h>
 
 #include <QtCore/QDateTime>
