@@ -29,6 +29,7 @@
 
 #include <kns3/uploaddialog.h>
 #include <KLocalizedString>
+#include <KIconLoader>
 #include <KStandardGuiItem>
 #include <QTemporaryDir>
 #include <kzip.h>
@@ -84,7 +85,7 @@ SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
 
     QStringList overlays;
     overlays << QStringLiteral("list-add");
-    mUpload = new QAction(QIcon(new KIconEngine(QStringLiteral("get-hot-new-stuff"), Q_NULLPTR, overlays)), i18n("Share..."), this);
+    mUpload = new QAction(QIcon(new KIconEngine(QStringLiteral("get-hot-new-stuff"), KIconLoader::global(), overlays)), i18n("Share..."), this);
     connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
     connect(mUpload, &QAction::triggered, this, &SieveEditorWidget::slotUploadScripts);
     //Add action to toolBar
