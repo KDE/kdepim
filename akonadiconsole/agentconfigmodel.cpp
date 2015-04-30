@@ -39,7 +39,7 @@ void AgentConfigModel::setAgentInstance(const Akonadi::AgentInstance &instance)
     reset();
 
     m_interface = new QDBusInterface(
-        QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg(instance.identifier()),
+        QStringLiteral("org.freedesktop.Akonadi.Agent.%1").arg(instance.identifier()),
         "/Settings");
     if (!m_interface->isValid()) {
         qCritical() << "Unable to obtain KConfigXT D-Bus interface of agent" << instance.identifier();
@@ -117,7 +117,7 @@ bool AgentConfigModel::setData(const QModelIndex &index, const QVariant &value, 
     if (index.column() == 1 && role == Qt::EditRole && index.row() >= 0 && index.row() < m_settings.size()) {
         const QPair<QString, QVariant> setting = m_settings.at(index.row());
         if (setting.second != value) {
-            m_interface->call(QString::fromLatin1("set%1").arg(setting.first), value);
+            m_interface->call(QStringLiteral("set%1").arg(setting.first), value);
             reload();
         }
     }

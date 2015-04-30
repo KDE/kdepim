@@ -34,15 +34,15 @@ QString JobInfo::stateAsString() const
 {
     switch (state) {
     case Initial:
-        return QLatin1String("Waiting");
+        return QStringLiteral("Waiting");
     case Running:
-        return QLatin1String("Running");
+        return QStringLiteral("Running");
     case Ended:
-        return QLatin1String("Ended");
+        return QStringLiteral("Ended");
     case Failed:
         return QStringLiteral("Failed: %1").arg(error);
     default:
-        return QLatin1String("Unknown state!");
+        return QStringLiteral("Unknown state!");
     }
 }
 

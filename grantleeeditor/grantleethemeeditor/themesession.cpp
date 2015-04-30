@@ -16,7 +16,6 @@
 */
 
 #include "themesession.h"
-
 #include <KConfig>
 #include <KConfigGroup>
 #include <QDebug>

@@ -415,7 +415,7 @@ void AttachmentControllerBase::Private::attachPublicKeyJobResult(KJob *job)
 void AttachmentControllerBase::Private::attachVcardFromAddressBook(KJob *job)
 {
     if (job->error()) {
-        qDebug() << " Error during when get vcard";
+        qCDebug(MESSAGECOMPOSER_LOG) << " Error during when get vcard";
         return;
     }
 

@@ -179,34 +179,34 @@ void BilboBlog::setApi(const ApiType api)
     d->mApi = api;
     switch (api) {
     case BLOGGER1_API:
-        d->mSupportedFeatures[QLatin1String("uploadMedia")] = false;
-        d->mSupportedFeatures[QLatin1String("category")] = false;
-        d->mSupportedFeatures[QLatin1String("tag")] = false;
+        d->mSupportedFeatures[QStringLiteral("uploadMedia")] = false;
+        d->mSupportedFeatures[QStringLiteral("category")] = false;
+        d->mSupportedFeatures[QStringLiteral("tag")] = false;
         break;
     case METAWEBLOG_API:
-        d->mSupportedFeatures[QLatin1String("uploadMedia")] = true;
-        d->mSupportedFeatures[QLatin1String("category")] = true;
-        d->mSupportedFeatures[QLatin1String("tag")] = false;
+        d->mSupportedFeatures[QStringLiteral("uploadMedia")] = true;
+        d->mSupportedFeatures[QStringLiteral("category")] = true;
+        d->mSupportedFeatures[QStringLiteral("tag")] = false;
         break;
     case MOVABLETYPE_API:
-        d->mSupportedFeatures[QLatin1String("uploadMedia")] = true;
-        d->mSupportedFeatures[QLatin1String("category")] = true;
-        d->mSupportedFeatures[QLatin1String("tag")] = true;
+        d->mSupportedFeatures[QStringLiteral("uploadMedia")] = true;
+        d->mSupportedFeatures[QStringLiteral("category")] = true;
+        d->mSupportedFeatures[QStringLiteral("tag")] = true;
         break;
     case WORDPRESSBUGGY_API:
-        d->mSupportedFeatures[QLatin1String("uploadMedia")] = true;
-        d->mSupportedFeatures[QLatin1String("category")] = true;
-        d->mSupportedFeatures[QLatin1String("tag")] = true;
+        d->mSupportedFeatures[QStringLiteral("uploadMedia")] = true;
+        d->mSupportedFeatures[QStringLiteral("category")] = true;
+        d->mSupportedFeatures[QStringLiteral("tag")] = true;
         break;
     case BLOGGER_API:
-        d->mSupportedFeatures[QLatin1String("uploadMedia")] = false;
-        d->mSupportedFeatures[QLatin1String("category")] = false;
-        d->mSupportedFeatures[QLatin1String("tag")] = true;
+        d->mSupportedFeatures[QStringLiteral("uploadMedia")] = false;
+        d->mSupportedFeatures[QStringLiteral("category")] = false;
+        d->mSupportedFeatures[QStringLiteral("tag")] = true;
         break;
     default:
-        d->mSupportedFeatures[QLatin1String("uploadMedia")] = false;
-        d->mSupportedFeatures[QLatin1String("category")] = false;
-        d->mSupportedFeatures[QLatin1String("tag")] = false;
+        d->mSupportedFeatures[QStringLiteral("uploadMedia")] = false;
+        d->mSupportedFeatures[QStringLiteral("category")] = false;
+        d->mSupportedFeatures[QStringLiteral("tag")] = false;
         break;
     }
 }

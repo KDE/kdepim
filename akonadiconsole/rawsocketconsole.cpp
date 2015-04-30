@@ -115,7 +115,7 @@ void RawSocketConsole::connectClicked()
         const QString namedPipe = conSettings.value(QLatin1String("Data/NamedPipe"), QLatin1String("Akonadi")).toString();
         mSocket->connectToServer(namedPipe);
 #else
-        const QString defaultSocketDir = XdgBaseDirs::saveDir("data", QLatin1String("akonadi"));
+        const QString defaultSocketDir = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi"));
         const QString path = conSettings.value(QLatin1String("Data/UnixPath"), QString(defaultSocketDir + QLatin1String("/akonadiserver.socket"))).toString();
         mSocket->connectToServer(path);
 #endif

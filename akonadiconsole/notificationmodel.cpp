@@ -257,24 +257,24 @@ QVariant NotificationModel::data(const QModelIndex &index, int role) const
             switch (index.column()) {
             case 0: {
                 switch (node->operation) {
-                case NotificationMessageV2::Add: return QLatin1String("Add");
-                case NotificationMessageV2::Modify: return QLatin1String("Modify");
-                case NotificationMessageV2::ModifyFlags: return QLatin1String("ModifyFlags");
-                case NotificationMessageV2::ModifyTags: return QLatin1String("ModifyTags");
-                case NotificationMessageV2::Move: return QLatin1String("Move");
-                case NotificationMessageV2::Remove: return QLatin1String("Delete");
-                case NotificationMessageV2::Link: return QLatin1String("Link");
-                case NotificationMessageV2::Unlink: return QLatin1String("Unlink");
-                case NotificationMessageV2::Subscribe: return QLatin1String("Subscribe");
-                case NotificationMessageV2::Unsubscribe: return QLatin1String("Unsubscribe");
+                case NotificationMessageV2::Add: return QStringLiteral("Add");
+                case NotificationMessageV2::Modify: return QStringLiteral("Modify");
+                case NotificationMessageV2::ModifyFlags: return QStringLiteral("ModifyFlags");
+                case NotificationMessageV2::ModifyTags: return QStringLiteral("ModifyTags");
+                case NotificationMessageV2::Move: return QStringLiteral("Move");
+                case NotificationMessageV2::Remove: return QStringLiteral("Delete");
+                case NotificationMessageV2::Link: return QStringLiteral("Link");
+                case NotificationMessageV2::Unlink: return QStringLiteral("Unlink");
+                case NotificationMessageV2::Subscribe: return QStringLiteral("Subscribe");
+                case NotificationMessageV2::Unsubscribe: return QStringLiteral("Unsubscribe");
                 default: return QString("Invalid");
                 }
             }
             case 1: {
                 switch (node->type) {
-                case NotificationMessageV2::Collections: return QLatin1String("Collections");
-                case NotificationMessageV2::Items: return QLatin1String("Items");
-                case NotificationMessageV2::Tags: return QLatin1String("Tags");
+                case NotificationMessageV2::Collections: return QStringLiteral("Collections");
+                case NotificationMessageV2::Items: return QStringLiteral("Items");
+                case NotificationMessageV2::Tags: return QStringLiteral("Tags");
                 default: return QString("Invalid");
                 }
             }
@@ -351,7 +351,7 @@ void NotificationModel::clear()
 void NotificationModel::setEnabled(bool enable)
 {
     if (enable && !m_source) {
-        const QString identifier = QString::fromLatin1("akonadiconsole_%1_notificationmodel").arg(QString::number(QCoreApplication::applicationPid()));
+        const QString identifier = QStringLiteral("akonadiconsole_%1_notificationmodel").arg(QString::number(QCoreApplication::applicationPid()));
         m_manager->subscribe(identifier);
 
         QString service = QLatin1String("org.freedesktop.Akonadi");

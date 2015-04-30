@@ -17,13 +17,14 @@
 
 #include "pimsettingcommandlineoption.h"
 #include "pimsettingexporterwindow.h"
+#include "pimsettingexport_debug.h"
 #include "kdepim-version.h"
 #include <KLocalizedString>
 #include <KAboutData>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QApplication>
-#include <QDebug>
+
 
 PimSettingCommandLineOption::PimSettingCommandLineOption(QObject *parent)
     : QObject(parent),
@@ -41,7 +42,7 @@ void PimSettingCommandLineOption::slotActivateRequested(const QStringList &argum
     if (mParser.parse(arguments)) {
         handleCommandLine();
     } else {
-        qDebug() << " Impossible to parse argument ";
+        qCDebug(PIMSETTINGEXPORTER_LOG) << " Impossible to parse argument ";
     }
 }
 

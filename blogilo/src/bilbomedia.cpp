@@ -134,7 +134,7 @@ QIcon BilboMedia::icon() const
     QPixmap iconPic;
     QString type;
     type = this->mimeType();
-    if (type.contains(QLatin1String("image")) && !this->localUrl().isEmpty()) {
+    if (type.contains(QStringLiteral("image")) && !this->localUrl().isEmpty()) {
         iconPic.load(this->localUrl().toLocalFile());
 //   iconPic.scaled(64, 64, Qt::IgnoreAspectRatio);
         iconPic.scaledToHeight(32);
