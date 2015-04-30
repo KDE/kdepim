@@ -216,7 +216,7 @@ public:
       inbound messages from the account with id (@p id), false otherwise.
       @see setApplicability
   */
-    bool applyOnAccount( const QString& id ) const;
+    bool applyOnAccount( const QString &id ) const;
 
     void setStopProcessingHere( bool aStop );
     bool stopProcessingHere() const;
