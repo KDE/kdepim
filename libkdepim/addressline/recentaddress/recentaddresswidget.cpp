@@ -165,16 +165,6 @@ void RecentAddressWidget::setAddresses(const QStringList &addrs)
     mListView->addItems(addrs);
 }
 
-QStringList RecentAddressWidget::addresses() const
-{
-    QStringList lst;
-    const int numberOfItem(mListView->count());
-    for (int i = 0; i < numberOfItem; ++i) {
-        lst << mListView->item(i)->text();
-    }
-    return lst;
-}
-
 bool RecentAddressWidget::eventFilter(QObject *o, QEvent *e)
 {
     if (o == mLineEdit && e->type() == QEvent::KeyPress) {
