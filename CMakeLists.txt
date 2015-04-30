@@ -281,6 +281,8 @@ add_subdirectory(accountwizard)
 # doc must be a subdir of kdepim or packagers will kill us
 add_subdirectory(doc)
 
+install( FILES kdepim.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
+
 feature_summary(WHAT ALL
                 INCLUDE_QUIET_PACKAGES
                 FATAL_ON_MISSING_REQUIRED_PACKAGES
