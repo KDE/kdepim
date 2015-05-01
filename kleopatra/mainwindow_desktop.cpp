@@ -121,7 +121,7 @@ static const K4AboutData *aboutGpg4WinData()
 
 static KGuiItem KStandardGuiItem_quit()
 {
-    static const QString app = KComponentData::mainComponent().aboutData()->programName();
+    static const QString app = KAboutData::applicationData().componentName();
     KGuiItem item = KStandardGuiItem::quit();
     item.setText(i18nc("Quit [ApplicationName]", "&Quit %1", app));
     return item;
@@ -168,7 +168,7 @@ public:
 
     void closeAndQuit()
     {
-        const QString app = KComponentData::mainComponent().aboutData()->programName();
+        const QString app = KAboutData::applicationData().componentName();
         const int rc = KMessageBox::questionYesNoCancel(q,
                        i18n("%1 may be used by other applications as a service.\n"
                             "You may instead want to close this window without exiting %1.", app),

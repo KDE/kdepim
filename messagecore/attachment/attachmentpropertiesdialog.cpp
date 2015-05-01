@@ -25,8 +25,7 @@
 #include "ui_attachmentpropertiesdialog.h"
 #include "ui_attachmentpropertiesdialog_readonly.h"
 
-#include <k4aboutdata.h>
-#include <KComponentData>
+#include <KAboutData>
 #include "messagecore_debug.h"
 #include <KIconLoader>
 
@@ -156,7 +155,7 @@ void AttachmentPropertiesDialog::Private::populateWhatsThis()
                                      "<p>Normally, you do not need to touch this setting, since the "
                                      "type of the file is automatically checked; but, sometimes, %1 "
                                      "may not detect the type correctly -- here is where you can fix "
-                                     "that.</p>", KComponentData::mainComponent().aboutData()->programName());
+                                     "that.</p>", KAboutData::applicationData().componentName());
 
     const QString msgSize = i18n("<p>The estimated size of the attachment:</p>"
                                  "<p>Note that, in an email message, a binary file encoded with "
@@ -182,7 +181,7 @@ void AttachmentPropertiesDialog::Private::populateWhatsThis()
                                      "binary data, but consists of pure text -- in this case, choosing "
                                      "\"quoted-printable\" over the default \"base64\" will save up "
                                      "to 25% in resulting message size.</p>",
-                                     KComponentData::mainComponent().aboutData()->programName());
+                                     KAboutData::applicationData().componentName());
 
     const QString msgAutoDisplay = i18n("<p>Check this option if you want to suggest to the "
                                         "recipient the automatic (inline) display of this part in the "
