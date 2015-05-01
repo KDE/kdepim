@@ -59,7 +59,7 @@ endif ()
 
 install(TARGETS akonadi_followupreminder_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install(FILES followupreminder.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
+install(FILES followupreminder.desktop DESTINATION "${SHARE_INSTALL_PREFIX}/akonadi/agents")
 
 add_subdirectory(tests)
 

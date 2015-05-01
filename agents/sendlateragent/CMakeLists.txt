@@ -71,6 +71,6 @@ endif ()
 
 install(TARGETS akonadi_sendlater_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install(FILES sendlateragent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
+install(FILES sendlateragent.desktop DESTINATION "${SHARE_INSTALL_PREFIX}/akonadi/agents")
 install(FILES akonadi_sendlater_agent.notifyrc DESTINATION "${DATA_INSTALL_DIR}/akonadi_sendlater_agent" )
 

@@ -105,7 +105,7 @@ if(KORGAC_AKONADI_AGENT)
   )
   install(FILES
     korgacagent.desktop
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/share/akonadi/agents
+    DESTINATION ${SHARE_INSTALL_PREFIX}/akonadi/agents
   )
 else()
   install(TARGETS

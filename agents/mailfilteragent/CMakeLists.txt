@@ -50,7 +50,7 @@ target_link_libraries(akonadi_mailfilter_agent
 )
 
 install(TARGETS akonadi_mailfilter_agent ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES mailfilteragent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
+install(FILES mailfilteragent.desktop DESTINATION "${SHARE_INSTALL_PREFIX}/akonadi/agents")
 install(FILES akonadi_mailfilter_agent.notifyrc DESTINATION "${DATA_INSTALL_DIR}/akonadi_mailfilter_agent" )
 
 add_subdirectory(autotests)
