@@ -39,8 +39,6 @@ RecentAddressWidget::RecentAddressWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setSpacing(0);
-    layout->setMargin(0);
 
     mLineEdit = new KLineEdit(this);
     mLineEdit->setObjectName(QStringLiteral("line_edit"));

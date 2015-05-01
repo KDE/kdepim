@@ -36,22 +36,14 @@
 #include "ldap/ldapclientsearch.h"
 #include "ldap/ldapclientsearchconfig.h"
 
-#include <changerecorder.h>
-#include <collectionfilterproxymodel.h>
-#include <entitytreemodel.h>
-#include <monitor.h>
-
 #include <kcontacts/addressee.h>
 #include <kcontacts/contactgroup.h>
 #include <kldap/ldapserver.h>
 
 #include <KConfigGroup>
-#include <QHBoxLayout>
-#include <QIcon>
 #include <KLocalizedString>
 #include <QPushButton>
 #include <QVBoxLayout>
-
 #include <QtDBus/QDBusConnection>
 #include <QTreeWidget>
 #include <KSharedConfig>

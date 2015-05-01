@@ -48,4 +48,15 @@ void MailFilterTest::shouldHaveDefaultValue()
 
 }
 
+void MailFilterTest::shouldApplySettings()
+{
+    MailCommon::MailFilter mailfilter;
+    bool value = true;
+    mailfilter.setApplyBeforeOutbound(value);
+    QCOMPARE(mailfilter.applyBeforeOutbound(), value);
+    value = false;
+    mailfilter.setApplyBeforeOutbound(value);
+    QCOMPARE(mailfilter.applyBeforeOutbound(), value);
+}
+
 QTEST_MAIN(MailFilterTest)
