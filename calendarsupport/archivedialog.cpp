@@ -150,6 +150,7 @@ ArchiveDialog::ArchiveDialog(const Akonadi::ETMCalendar::Ptr &cal,
               "events and to-dos have to be archived; this means you will not "
               "need to use this dialog box again, except to change the settings."));
     radioBG->addButton(mAutoArchiveRB);
+    autoArchiveHBoxHBoxLayout->addWidget(mAutoArchiveRB);
 
     mExpiryTimeNumInput = new QSpinBox(autoArchiveHBox);
     autoArchiveHBoxHBoxLayout->addWidget(mExpiryTimeNumInput);
