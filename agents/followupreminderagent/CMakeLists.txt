@@ -61,7 +61,7 @@ endif ()
 
 install(TARGETS akonadi_followupreminder_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install(FILES followupreminder.desktop DESTINATION "${SHARE_INSTALL_PREFIX}/akonadi/agents")
+install(FILES followupreminder.desktop DESTINATION "${KDE_INSTALL_DATAROOTDIR}/akonadi/agents")
 
 if (BUILD_TESTING)
    add_subdirectory(autotests)

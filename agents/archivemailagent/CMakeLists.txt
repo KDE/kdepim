@@ -53,7 +53,7 @@ endif ()
 
 install(TARGETS akonadi_archivemail_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install(FILES archivemailagent.desktop DESTINATION "${SHARE_INSTALL_PREFIX}/akonadi/agents")
+install(FILES archivemailagent.desktop DESTINATION "${KDE_INSTALL_DATAROOTDIR}/akonadi/agents")
 install(FILES akonadi_archivemail_agent.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 
 if (BUILD_TESTING)

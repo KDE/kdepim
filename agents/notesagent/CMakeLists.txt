@@ -39,7 +39,7 @@ endif ()
 
 install(TARGETS akonadi_notes_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install(FILES notesagent.desktop DESTINATION "${SHARE_INSTALL_PREFIX}/akonadi/agents")
+install(FILES notesagent.desktop DESTINATION "${KDE_INSTALL_DATAROOTDIR}/akonadi/agents")
 install(FILES akonadi_notes_agent.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 
 add_subdirectory(kconf_update)
