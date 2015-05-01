@@ -90,7 +90,7 @@ void WizardPage::setAutoAdvance(bool enabled)
         return;
     }
     d->autoAdvance = enabled;
-    emit autoAdvanceChanged();
+    Q_EMIT autoAdvanceChanged();
 }
 
 QString WizardPage::title() const
@@ -104,7 +104,7 @@ void WizardPage::setTitle(const QString &title)
         return;
     }
     d->title = title;
-    emit titleChanged();
+    Q_EMIT titleChanged();
 }
 
 QString WizardPage::subTitle() const
@@ -118,7 +118,7 @@ void WizardPage::setSubTitle(const QString &subTitle)
         return;
     }
     d->subTitle = subTitle;
-    emit subTitleChanged();
+    Q_EMIT subTitleChanged();
 }
 
 QString WizardPage::explanation() const
@@ -132,7 +132,7 @@ void WizardPage::setExplanation(const QString &explanation)
         return;
     }
     d->explanation = explanation;
-    emit explanationChanged();
+    Q_EMIT explanationChanged();
 }
 
 KGuiItem WizardPage::customNextButton() const

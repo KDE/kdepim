@@ -133,7 +133,7 @@ void ImportCertificateFromFileCommand::setFiles(const QStringList &files)
 void ImportCertificateFromFileCommand::doStart()
 {
     if (!d->ensureHaveFile()) {
-        emit canceled();
+        Q_EMIT canceled();
         d->finished();
         return;
     }

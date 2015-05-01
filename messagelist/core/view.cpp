@@ -2173,12 +2173,12 @@ void View::mousePressEvent(QMouseEvent *e)
                 }
             }
 
-            // Let QTreeView handle the selection and emit the appropriate signals (slotSelectionChanged() may be called)
+            // Let QTreeView handle the selection and Q_EMIT the appropriate signals (slotSelectionChanged() may be called)
             QTreeView::mousePressEvent(e);
 
             break;
         case Qt::RightButton:
-            // Let QTreeView handle the selection and emit the appropriate signals (slotSelectionChanged() may be called)
+            // Let QTreeView handle the selection and Q_EMIT the appropriate signals (slotSelectionChanged() may be called)
             QTreeView::mousePressEvent(e);
 
             d->mWidget->viewMessageListContextPopupRequest(selectionAsMessageItemList(), viewport()->mapToGlobal(e->pos()));

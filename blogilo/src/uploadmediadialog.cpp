@@ -145,7 +145,7 @@ void UploadMediaDialog::slotOkClicked()
         connect(b, &Backend::sigMediaError, this, &UploadMediaDialog::slotError);
         b->uploadMedia(media);
         this->hide();
-        emit sigBusy(true);
+        Q_EMIT sigBusy(true);
     } else if (type == FTP) {  ///Upload via FTP
         if (ui.kcfg_FtpPath->text().isEmpty()) {
             KMessageBox::sorry(this, i18n("Please insert FTP URL."));
@@ -175,7 +175,7 @@ void UploadMediaDialog::slotOkClicked()
 
 void UploadMediaDialog::slotMediaObjectUploaded(KJob *job)
 {
-    emit sigBusy(false);
+    Q_EMIT sigBusy(false);
     if (job->error()) {
         qCDebug(BLOGILO_LOG) << "Job error: " << job->errorString();
         slotError(job->errorString());
@@ -207,7 +207,7 @@ void UploadMediaDialog::slotMediaObjectUploaded(KJob *job)
 void UploadMediaDialog::slotMediaObjectUploaded(BilboMedia *media)
 {
     QString msg;
-    emit sigBusy(false);
+    Q_EMIT sigBusy(false);
     if (Settings::copyMediaUrl()) {
         QApplication::clipboard()->setText(media->remoteUrl().toDisplayString());
         msg = i18n("Media uploaded, and URL copied to clipboard.\nYou can find it here:\n%1",
@@ -222,7 +222,7 @@ void UploadMediaDialog::slotMediaObjectUploaded(BilboMedia *media)
 
 void UploadMediaDialog::slotError(const QString &msg)
 {
-    emit sigBusy(false);
+    Q_EMIT sigBusy(false);
     if (KMessageBox::questionYesNo(this, i18n("Media uploading failed with this result:\n%1\nTry again?", msg))
             == KMessageBox::Yes) {
         show();

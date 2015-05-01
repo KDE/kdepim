@@ -578,7 +578,7 @@ void Viewer::removeMessageLoadedHandler(AbstractMessageLoadedHandler *handler)
 void Viewer::deleteMessage()
 {
     Q_D(Viewer);
-    emit deleteMessage(d->messageItem());
+    Q_EMIT deleteMessage(d->messageItem());
 }
 
 void Viewer::selectAll()

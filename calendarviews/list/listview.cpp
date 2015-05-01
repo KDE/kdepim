@@ -373,7 +373,7 @@ void ListView::showDates(const QDate &start, const QDate &end, const QDate &pref
 
     updateView();
 
-    emit incidenceSelected(Akonadi::Item(), QDate());
+    Q_EMIT incidenceSelected(Akonadi::Item(), QDate());
 }
 
 void ListView::showAll()
@@ -455,7 +455,7 @@ void ListView::showIncidences(const Akonadi::Item::List &itemList, const QDate &
     updateView();
 
     // After new creation of list view no events are selected.
-    emit incidenceSelected(Akonadi::Item(), date);
+    Q_EMIT incidenceSelected(Akonadi::Item(), date);
 }
 
 void ListView::changeIncidenceDisplay(const Akonadi::Item &aitem, int action)
@@ -543,10 +543,10 @@ void ListView::popupMenu(const QPoint &point)
         // FIXME: For recurring incidences we don't know the date of this
         // occurrence, there's no reference to it at all!
 
-        emit showIncidencePopupSignal(aitem,
+        Q_EMIT showIncidencePopupSignal(aitem,
                                       CalendarSupport::incidence(aitem)->dtStart().date());
     } else {
-        emit showNewEventPopupSignal();
+        Q_EMIT showNewEventPopupSignal();
     }
 }
 
@@ -576,9 +576,9 @@ void ListView::processSelectionChange()
         }
 
         if (!item) {
-            emit incidenceSelected(Akonadi::Item(), QDate());
+            Q_EMIT incidenceSelected(Akonadi::Item(), QDate());
         } else {
-            emit incidenceSelected(item->mIncidence, d->mDateList.value(item->mIncidence.id()));
+            Q_EMIT incidenceSelected(item->mIncidence, d->mDateList.value(item->mIncidence.id()));
         }
     }
 }

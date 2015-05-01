@@ -366,7 +366,7 @@ void Kleo::KeyRequester::slotDialogButtonClicked()
         } else {
             setKey(dlg->selectedKey());
         }
-        emit changed();
+        Q_EMIT changed();
     }
 
     delete dlg;
@@ -375,7 +375,7 @@ void Kleo::KeyRequester::slotDialogButtonClicked()
 void Kleo::KeyRequester::slotEraseButtonClicked()
 {
     if (!mKeys.empty()) {
-        emit changed();
+        Q_EMIT changed();
     }
     mKeys.clear();
     updateKeys();

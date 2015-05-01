@@ -222,8 +222,8 @@ void CategorySelectDialog::slotApply()
 {
     QString categoriesStr;
     QStringList categories = mWidgets->selectedCategories(categoriesStr);
-    emit categoriesSelected(categories);
-    emit categoriesSelected(categoriesStr);
+    Q_EMIT categoriesSelected(categories);
+    Q_EMIT categoriesSelected(categoriesStr);
 }
 
 void CategorySelectDialog::slotOk()

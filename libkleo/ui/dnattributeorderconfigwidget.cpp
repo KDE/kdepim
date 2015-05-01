@@ -260,7 +260,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotUpButtonClicked()
     d->currentLV->clearSelection();
     item->setSelected(true);
     enableDisableButtons(item);
-    emit changed();
+    Q_EMIT changed();
 #endif
 }
 
@@ -280,7 +280,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotDoubleUpButtonClicked()
     d->currentLV->clearSelection();
     item->setSelected(true);
     enableDisableButtons(item);
-    emit changed();
+    Q_EMIT changed();
 #endif
 }
 
@@ -300,7 +300,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotDownButtonClicked()
     d->currentLV->clearSelection();
     item->setSelected(true);
     enableDisableButtons(item);
-    emit changed();
+    Q_EMIT changed();
 #endif
 }
 
@@ -320,7 +320,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotDoubleDownButtonClicked()
     d->currentLV->clearSelection();
     item->setSelected(true);
     enableDisableButtons(item);
-    emit changed();
+    Q_EMIT changed();
 #endif
 }
 
@@ -342,7 +342,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotLeftButtonClicked()
         next->setSelected(true);
     }
     enableDisableButtons(next);
-    emit changed();
+    Q_EMIT changed();
 #endif
 }
 
@@ -371,7 +371,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotRightButtonClicked()
     if (next) {
         next->setSelected(true);
     }
-    emit changed();
+    Q_EMIT changed();
 #endif
 }
 

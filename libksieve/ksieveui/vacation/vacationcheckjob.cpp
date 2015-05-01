@@ -65,5 +65,5 @@ void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool succe
         }
     }
 
-    emit scriptActive(active, mServerName);
+    Q_EMIT scriptActive(active, mServerName);
 }

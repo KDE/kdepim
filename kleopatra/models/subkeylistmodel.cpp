@@ -94,10 +94,10 @@ void SubkeyListModel::setKey(const Key &key)
     // ### diff them, and signal more fine-grained than this:
 
     if (key.numSubkeys() > 0 && oldKey.numSubkeys() == key.numSubkeys()) {
-        emit dataChanged(index(0, 0), index(key.numSubkeys() - 1, NumColumns - 1));
+        Q_EMIT dataChanged(index(0, 0), index(key.numSubkeys() - 1, NumColumns - 1));
     } else {
-        emit layoutAboutToBeChanged();
-        emit layoutChanged();
+        Q_EMIT layoutAboutToBeChanged();
+        Q_EMIT layoutChanged();
     }
 }
 

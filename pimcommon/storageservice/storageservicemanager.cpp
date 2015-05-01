@@ -110,7 +110,7 @@ void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbs
     writeConfig();
 
     // DBus signal for other IdentityManager instances
-    emit configChanged(ourIdentifier());
+    Q_EMIT configChanged(ourIdentifier());
 }
 
 void StorageServiceManager::setDefaultUploadFolder(const QString &folder)

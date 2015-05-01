@@ -49,15 +49,15 @@ void ServerTest::testFinished(QList< int > list)
 {
     qCDebug(ACCOUNTWIZARD_LOG) << "types: " << list;
     if (list.contains(MailTransport::Transport::EnumEncryption::TLS)) {
-        emit testResult(QStringLiteral("tls"));
+        Q_EMIT testResult(QStringLiteral("tls"));
     } else if (list.contains(MailTransport::Transport::EnumEncryption::SSL)) {
-        emit testResult(QStringLiteral("ssl"));
+        Q_EMIT testResult(QStringLiteral("ssl"));
     } else {
         KMessageBox::information(0, i18n("There seems to be a problem in reaching this server "
                                          "or choosing a safe way to sent the credentials to server. We advise you to "
                                          "check the settings of the account and adjust it manually if needed."),
                                  i18n("Autodetecting settings failed"));
-        emit testFail();
+        Q_EMIT testFail();
     }
 }
 

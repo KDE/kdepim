@@ -292,7 +292,7 @@ void KPrefsWidFont::selectFont()
     QFont myFont = QFontDialog::getFont(&ok, mPreview->font());
     if (ok) {
         mPreview->setFont(myFont);
-        emit changed();
+        Q_EMIT changed();
     }
 #endif
 }
@@ -877,7 +877,7 @@ void KPrefsDialog::slotApply()
 {
     writeConfig();
 
-    emit configChanged();
+    Q_EMIT configChanged();
 }
 
 void KPrefsDialog::slotOk()
@@ -903,7 +903,7 @@ KPrefsModule::KPrefsModule(KConfigSkeleton *prefs,
     : KCModule(parent, args),
       KPrefsWidManager(prefs)
 {
-    emit changed(false);
+    Q_EMIT changed(false);
 }
 
 void KPrefsModule::addWid(KPrefsWid *wid)
@@ -914,7 +914,7 @@ void KPrefsModule::addWid(KPrefsWid *wid)
 
 void KPrefsModule::slotWidChanged()
 {
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 void KPrefsModule::load()
@@ -922,7 +922,7 @@ void KPrefsModule::load()
     readWidConfig();
     usrReadConfig();
 
-    emit changed(false);
+    Q_EMIT changed(false);
 }
 
 void KPrefsModule::save()
@@ -935,5 +935,5 @@ void KPrefsModule::defaults()
 {
     setWidDefaults();
 
-    emit changed(true);
+    Q_EMIT changed(true);
 }

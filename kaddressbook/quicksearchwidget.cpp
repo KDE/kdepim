@@ -78,7 +78,7 @@ void QuickSearchWidget::resetTimer()
 void QuickSearchWidget::delayedTextChanged()
 {
     mTimer->stop();
-    emit filterStringChanged(mEdit->text());
+    Q_EMIT filterStringChanged(mEdit->text());
 }
 
 void QuickSearchWidget::keyPressEvent(QKeyEvent *event)
@@ -86,7 +86,7 @@ void QuickSearchWidget::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Down) {
         event->accept();
         delayedTextChanged();
-        emit arrowDownKeyPressed();
+        Q_EMIT arrowDownKeyPressed();
         return;
     }
 

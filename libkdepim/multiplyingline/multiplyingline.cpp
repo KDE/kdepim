@@ -34,30 +34,30 @@ MultiplyingLine::MultiplyingLine(QWidget *parent) : QWidget(parent)
 
 void MultiplyingLine::slotReturnPressed()
 {
-    emit returnPressed(this);
+    Q_EMIT returnPressed(this);
 }
 
 void MultiplyingLine::slotPropagateDeletion()
 {
-    emit deleteLine(this);
+    Q_EMIT deleteLine(this);
 }
 
 void MultiplyingLine::slotFocusUp()
 {
-    emit upPressed(this);
+    Q_EMIT upPressed(this);
 }
 
 void MultiplyingLine::slotFocusDown()
 {
-    emit downPressed(this);
+    Q_EMIT downPressed(this);
 }
 
 void MultiplyingLine::keyPressEvent(QKeyEvent *ev)
 {
     if (ev->key() == Qt::Key_Up) {
-        emit upPressed(this);
+        Q_EMIT upPressed(this);
     } else if (ev->key() == Qt::Key_Down) {
-        emit downPressed(this);
+        Q_EMIT downPressed(this);
     }
 }
 

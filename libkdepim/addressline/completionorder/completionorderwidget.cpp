@@ -259,7 +259,7 @@ void CompletionOrderWidget::save()
             item->item()->save(this);
             --w;
         }
-        emit completionOrderChanged();
+        Q_EMIT completionOrderChanged();
     }
 }
 

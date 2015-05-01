@@ -122,7 +122,7 @@ void ResultPage::Private::allDone()
             m_progressLabelByTag.value(i)->setText(i18n("All operations completed."));
         }
     }
-    emit q->completeChanged();
+    Q_EMIT q->completeChanged();
 }
 
 void ResultPage::Private::result(const shared_ptr<const Task::Result> &)
@@ -183,7 +183,7 @@ void ResultPage::setTaskCollection(const shared_ptr<TaskCollection> &coll)
         assert(i && d->labelForTag(i->tag()));
         Q_UNUSED(i);
     }
-    emit completeChanged();
+    Q_EMIT completeChanged();
 }
 
 QLabel *ResultPage::Private::labelForTag(const QString &tag)

@@ -146,7 +146,7 @@ void ProviderPage::findDesktopAndSetAssistant(const QStringList &list)
             m_newPageReady = true;
             if (m_newPageWanted) {
                 qCDebug(ACCOUNTWIZARD_LOG) << "New page was already requested, now we are done, approve it";
-                emit leavePageNextOk();
+                Q_EMIT leavePageNextOk();
             }
             break;
         }
@@ -160,8 +160,8 @@ QTreeView *ProviderPage::treeview() const
 
 void ProviderPage::leavePageBackRequested()
 {
-    emit leavePageBackOk();
-    emit ghnsNotWanted();
+    Q_EMIT leavePageBackOk();
+    Q_EMIT ghnsNotWanted();
 }
 
 void ProviderPage::leavePageNextRequested()
@@ -169,7 +169,7 @@ void ProviderPage::leavePageNextRequested()
     m_newPageWanted = true;
     if (m_newPageReady) {
         qCDebug(ACCOUNTWIZARD_LOG) << "New page requested and we are done, so ok...";
-        emit leavePageNextOk();
+        Q_EMIT leavePageNextOk();
     } else {
         qCDebug(ACCOUNTWIZARD_LOG) << "New page requested, but we are not done yet...";
     }

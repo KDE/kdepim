@@ -46,7 +46,7 @@ ProgressItem *ProgressManager::createProgressItemForAgent(ProgressItem *parent,
     ProgressItem *t = createProgressItemImpl(parent, id, label, status, cancellable, cryptoStatus);
     t->setTypeProgressItem(progressType);
     // TODO ^ emits progressItemAdded() before I'm done connecting the signals.
-    // Should I block that and emit it when I'm done?
+    // Should I block that and Q_EMIT it when I'm done?
 
     if (!itemAlreadyExists) {
         //    qCDebug(LIBKDEPIM_LOG) << "Created ProgressItem for agent" << instance.name();

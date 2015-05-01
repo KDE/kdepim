@@ -131,7 +131,7 @@ void ItemEditorPrivate::itemFetchResult(KJob *job)
         q->load(item);
         if (action != EditorItemManager::None) {
             // Finally enable ok/apply buttons, we've finished loading
-            emit q->itemSaveFinished(action);
+            Q_EMIT q->itemSaveFinished(action);
         }
     } else {
         mItemUi->reject(ItemEditorUi::ItemHasInvalidPayload);
@@ -151,12 +151,12 @@ void ItemEditorPrivate::itemMoveResult(KJob *job)
         // TODO: What is reasonable behavior at this point?
         qCritical() << "Error while moving item ";// << moveJob->items().first().id() << " to collection "
         //<< moveJob->destinationCollection() << job->errorString();
-        emit q->itemSaveFailed(EditorItemManager::Move, job->errorString());
+        Q_EMIT q->itemSaveFailed(EditorItemManager::Move, job->errorString());
     } else {
         // Fetch the item again, we want a new mItem, which has an updated parentCollection
         Akonadi::Item item(mItem.id());
         // set currentAction, so the fetchResult slot emits itemSavedFinished( Move );
-        // We could emit it here, but we should only enable ok/apply buttons after the loading
+        // We could Q_EMIT it here, but we should only enable ok/apply buttons after the loading
         // is complete
         currentAction = EditorItemManager::Move;
         q->load(item);
@@ -171,18 +171,18 @@ void ItemEditorPrivate::onModifyFinished(int, const Akonadi::Item &item,
     if (resultCode == Akonadi::IncidenceChanger::ResultCodeSuccess) {
         if (mItem.parentCollection() == mItemUi->selectedCollection()) {
             mItem = item;
-            emit q->itemSaveFinished(EditorItemManager::Modify);
+            Q_EMIT q->itemSaveFinished(EditorItemManager::Modify);
             setupMonitor();
         } else { // There's a collection move too.
             Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob(mItem, mItemUi->selectedCollection());
             q->connect(moveJob, SIGNAL(result(KJob*)), SLOT(moveJobFinished(KJob*)));
         }
     } else if (resultCode == Akonadi::IncidenceChanger::ResultCodeUserCanceled) {
-        emit q->itemSaveFailed(EditorItemManager::Modify, QString());
+        Q_EMIT q->itemSaveFailed(EditorItemManager::Modify, QString());
         q->load(Akonadi::Item(mItem.id()));
     } else {
         qCritical() << "Modify failed " << errorString;
-        emit q->itemSaveFailed(EditorItemManager::Modify, errorString);
+        Q_EMIT q->itemSaveFailed(EditorItemManager::Modify, errorString);
     }
 }
 
@@ -194,11 +194,11 @@ void ItemEditorPrivate::onCreateFinished(int,
     Q_Q(EditorItemManager);
     if (resultCode == Akonadi::IncidenceChanger::ResultCodeSuccess) {
         q->load(item);
-        emit q->itemSaveFinished(EditorItemManager::Create);
+        Q_EMIT q->itemSaveFinished(EditorItemManager::Create);
         setupMonitor();
     } else {
         qCritical() << "Creation failed " << errorString;
-        emit q->itemSaveFailed(EditorItemManager::Create, errorString);
+        Q_EMIT q->itemSaveFailed(EditorItemManager::Create, errorString);
     }
 }
 
@@ -312,14 +312,14 @@ void EditorItemManager::save()
     Q_D(ItemEditor);
 
     if (!d->mItemUi->isValid()) {
-        emit itemSaveFailed(d->mItem.isValid() ? Modify : Create, QString());
+        Q_EMIT itemSaveFailed(d->mItem.isValid() ? Modify : Create, QString());
         return;
     }
 
     if (!d->mItemUi->isDirty() &&
             d->mItemUi->selectedCollection() == d->mItem.parentCollection()) {
         // Item did not change and was not moved
-        emit itemSaveFinished(None);
+        Q_EMIT itemSaveFinished(None);
         return;
     }
 
@@ -358,7 +358,7 @@ void EditorItemManager::save()
     } else { // An invalid item. Means we're creating.
         if (d->mIsCounterProposal) {
             // We don't write back to akonadi, that will be done in ITipHandler.
-            emit itemSaveFinished(EditorItemManager::Modify);
+            Q_EMIT itemSaveFinished(EditorItemManager::Modify);
         } else {
             Q_ASSERT(d->mItemUi->selectedCollection().isValid());
             KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(d->mItem);

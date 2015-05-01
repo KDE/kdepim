@@ -360,7 +360,7 @@ bool PostEntry::uploadMediaFiles(Backend *backend)
             } else {
                 const QString err = i18n("Uploading the media file %1 failed.\n%2",
                                          media->name(), uploader->errorMessage());
-                emit postPublishingDone(true, err);
+                Q_EMIT postPublishingDone(true, err);
                 result = false;
                 break;
             }
@@ -377,7 +377,7 @@ bool PostEntry::uploadMediaFiles(Backend *backend)
 void PostEntry::slotError(const QString &errMsg)
 {
     const QString err = i18n("An error occurred in the last transaction.\n%1", errMsg);
-    emit postPublishingDone(true, err);
+    Q_EMIT postPublishingDone(true, err);
     deleteProgressBar();
     sender()->deleteLater();
 }
@@ -421,7 +421,7 @@ void PostEntry::submitPost(int blogId, const BilboPost &postData)
             d->isNewPost = false;
         }
 
-        emit showStatusMessage(statusMsg, true);
+        Q_EMIT showStatusMessage(statusMsg, true);
         Backend *b = new Backend(d->mCurrentPostBlogId, this);
         connect(b, &Backend::sigError, this, &PostEntry::slotError);
         if (uploadMediaFiles(b)) {
@@ -456,7 +456,7 @@ void PostEntry::slotPostPublished(int blog_id, BilboPost *post)
     //     KMessageBox::information( this, msg, "Successful" );
     deleteProgressBar();
     this->unsetCursor();
-    emit postPublishingDone(false, msg);
+    Q_EMIT postPublishingDone(false, msg);
     sender()->deleteLater(); //FIXME Check if this command needed or NOT -Mehrdad
 }
 
@@ -491,8 +491,8 @@ void PostEntry::saveLocally()
         return;
     }
     d->mCurrentPost.setLocalId(resId);
-    emit postSavedLocally();
-    emit showStatusMessage(i18n("Post saved locally."), false);
+    Q_EMIT postSavedLocally();
+    Q_EMIT showStatusMessage(i18n("Post saved locally."), false);
     qCDebug(BLOGILO_LOG) << "Locally saved";
 }
 
@@ -502,7 +502,7 @@ void PostEntry::saveTemporary()
         const int res = DBMan::self()->saveTempEntry(*currentPost(), d->mCurrentPostBlogId);
         if (res != -1) {
             d->mCurrentPost.setLocalId(res);
-            emit postSavedTemporary();
+            Q_EMIT postSavedTemporary();
             qCDebug(BLOGILO_LOG) << "Temporary saved";
         } else {
             qCDebug(BLOGILO_LOG) << "Saving temporary failed: " << DBMan::self()->lastErrorText();
@@ -515,7 +515,7 @@ void PostEntry::slotPostModified()
     qCDebug(BLOGILO_LOG);
     disconnect(this, &PostEntry::textChanged, this, &PostEntry::slotPostModified);
     //         disconnect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
-    //     emit postModified();
+    //     Q_EMIT postModified();
     d->isPostContentModified = true;
 }
 

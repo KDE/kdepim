@@ -149,7 +149,7 @@ void UiServer::stop()
 
     if (isStopped()) {
         SessionDataHandler::instance()->clear();
-        emit stopped();
+        Q_EMIT stopped();
     }
 
 }
@@ -202,7 +202,7 @@ void UiServer::Private::slotConnectionClosed(Kleo::AssuanServerConnection *conn)
                       connections.end());
     if (q->isStopped()) {
         SessionDataHandler::instance()->clear();
-        emit q->stopped();
+        Q_EMIT q->stopped();
     }
 }
 

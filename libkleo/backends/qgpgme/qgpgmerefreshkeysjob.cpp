@@ -195,7 +195,7 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus(GnuPGProcessBase *proc, const QStrin
             qCDebug(GPGPME_BACKEND_LOG) << "expected number for \"total\", got something else";
             return;
         }
-        emit progress(QGpgMEProgressTokenMapper::map(what, typ), cur, total);
+        Q_EMIT progress(QGpgMEProgressTokenMapper::map(what, typ), cur, total);
 
     }
 }
@@ -215,12 +215,12 @@ void Kleo::QGpgMERefreshKeysJob::slotProcessExited(int exitCode, QProcess::ExitS
         }
     }
 
-    emit done();
+    Q_EMIT done();
     if (!mError &&
             (exitStatus != QProcess::NormalExit || exitCode != 0)) {
         mError = GpgME::Error::fromCode(GPG_ERR_GENERAL, GPG_ERR_SOURCE_GPGSM);
     }
-    emit result(mError);
+    Q_EMIT result(mError);
     deleteLater();
 }
 

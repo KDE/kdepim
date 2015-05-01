@@ -81,16 +81,16 @@ private:
     }
     void slotSearchClicked()
     {
-        emit q->searchTextChanged(ui.findED->text());
+        Q_EMIT q->searchTextChanged(ui.findED->text());
     }
     void slotDetailsClicked()
     {
         assert(q->selectedCertificates().size() == 1);
-        emit q->detailsRequested(q->selectedCertificates().front());
+        Q_EMIT q->detailsRequested(q->selectedCertificates().front());
     }
     void slotSaveAsClicked()
     {
-        emit q->saveAsRequested(q->selectedCertificates());
+        Q_EMIT q->saveAsRequested(q->selectedCertificates());
     }
 
     void readConfig();
@@ -244,7 +244,7 @@ QString LookupCertificatesDialog::searchText() const
 void LookupCertificatesDialog::accept()
 {
     assert(!d->selectedIndexes().empty());
-    emit importRequested(selectedCertificates());
+    Q_EMIT importRequested(selectedCertificates());
     QDialog::accept();
 }
 

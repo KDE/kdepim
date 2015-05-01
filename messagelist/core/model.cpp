@@ -197,7 +197,7 @@ private:
 
     // If this parameter is true then this job uses a "disconnected" UI.
     // It's FAR faster since we don't need to call beginInsertRows()/endInsertRows()
-    // and we simply emit a layoutChanged() at the end. It can be done only as the first
+    // and we simply Q_EMIT a layoutChanged() at the end. It can be done only as the first
     // job though: subsequent jobs can't use layoutChanged() as it looses the expanded
     // state of items.
     bool mDisconnectUI;
@@ -716,7 +716,7 @@ void ModelPrivate::clear()
     mRootItem->killAllChildItems();
 
     q->reset();
-    //emit headerDataChanged();
+    //Q_EMIT headerDataChanged();
 
     mView->modelHasBeenReset();
     mView->selectionModel()->clearSelection();
@@ -3203,7 +3203,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
         // Do update
         mStorageModel->updateMessageItemData(message, row);
         QModelIndex idx = q->index(message, 0);
-        emit q->dataChanged(idx, idx);
+        Q_EMIT q->dataChanged(idx, idx);
 
         // Reinsert the item to the cache, if needed
         if (mAggregation->threading() == Aggregation::PerfectReferencesAndSubject) {
@@ -3697,31 +3697,31 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternal()
             case ViewItemJob::Pass1Fill:
             case ViewItemJob::Pass1Cleanup:
             case ViewItemJob::Pass1Update:
-                emit q->statusMessage(i18np("Processed 1 Message of %2",
+                Q_EMIT q->statusMessage(i18np("Processed 1 Message of %2",
                                             "Processed %1 Messages of %2",
                                             job->currentIndex() - job->startIndex(),
                                             job->endIndex() - job->startIndex() + 1));
                 break;
             case ViewItemJob::Pass2:
-                emit q->statusMessage(i18np("Threaded 1 Message of %2",
+                Q_EMIT q->statusMessage(i18np("Threaded 1 Message of %2",
                                             "Threaded %1 Messages of %2",
                                             job->currentIndex() - job->startIndex(),
                                             job->endIndex() - job->startIndex() + 1));
                 break;
             case ViewItemJob::Pass3:
-                emit q->statusMessage(i18np("Threaded 1 Message of %2",
+                Q_EMIT q->statusMessage(i18np("Threaded 1 Message of %2",
                                             "Threaded %1 Messages of %2",
                                             job->currentIndex() - job->startIndex(),
                                             job->endIndex() - job->startIndex() + 1));
                 break;
             case ViewItemJob::Pass4:
-                emit q->statusMessage(i18np("Grouped 1 Thread of %2",
+                Q_EMIT q->statusMessage(i18np("Grouped 1 Thread of %2",
                                             "Grouped %1 Threads of %2",
                                             job->currentIndex() - job->startIndex(),
                                             job->endIndex() - job->startIndex() + 1));
                 break;
             case ViewItemJob::Pass5:
-                emit q->statusMessage(i18np("Updated 1 Group of %2",
+                Q_EMIT q->statusMessage(i18np("Updated 1 Group of %2",
                                             "Updated %1 Groups of %2",
                                             job->currentIndex() - job->startIndex(),
                                             job->endIndex() - job->startIndex() + 1));
@@ -3740,7 +3740,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternal()
         break;
         case ViewItemJobCompleted:
 
-            // If this job worked with a disconnected UI, emit layoutChanged()
+            // If this job worked with a disconnected UI, Q_EMIT layoutChanged()
             // to reconnect it. We go back to normal operation now.
             if (job->disconnectUI()) {
                 mModelForItemFunctions = q;
@@ -3752,7 +3752,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternal()
                 layoutChangedTimer.start();
 #endif
                 mView->modelAboutToEmitLayoutChanged();
-                emit q->layoutChanged();
+                Q_EMIT q->layoutChanged();
                 mView->modelEmittedLayoutChanged();
 
 #ifdef KDEPIM_FOLDEROPEN_PROFILE
@@ -3815,7 +3815,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternal()
 
     // no more jobs
 
-    emit q->statusMessage(i18nc("@info:status Finished view fill", "Ready"));
+    Q_EMIT q->statusMessage(i18nc("@info:status Finished view fill", "Ready"));
 
     return ViewItemJobCompleted;
 }
@@ -4388,7 +4388,7 @@ void ModelPrivate::slotStorageModelHeaderDataChanged(Qt::Orientation, int, int)
 {
     if (mStorageModelContainsOutboundMessages != mStorageModel->containsOutboundMessages()) {
         mStorageModelContainsOutboundMessages = mStorageModel->containsOutboundMessages();
-        emit q->headerDataChanged(Qt::Horizontal, 0, q->columnCount());
+        Q_EMIT q->headerDataChanged(Qt::Horizontal, 0, q->columnCount());
     }
 }
 

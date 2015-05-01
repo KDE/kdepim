@@ -134,7 +134,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void openLink(const QUrl &);
     /**
-     * @brief textChanged emit this signal when text in view changed.
+     * @brief textChanged Q_EMIT this signal when text in view changed.
      */
     void textChanged();
 

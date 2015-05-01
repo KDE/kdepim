@@ -631,7 +631,7 @@ void IncidenceRecurrence::handleRecurrenceTypeChange(int currentIndex)
     mUi->mFrequencyLabel->setText(labelEvery);
     mUi->mRecurrenceRuleLabel->setText(labelFreq);
 
-    emit recurrenceChanged(static_cast<RecurrenceType>(currentIndex));
+    Q_EMIT recurrenceChanged(static_cast<RecurrenceType>(currentIndex));
 }
 
 void IncidenceRecurrence::removeExceptions()

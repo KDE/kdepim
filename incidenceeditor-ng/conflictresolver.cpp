@@ -419,7 +419,7 @@ void ConflictResolver::findAllFreeSlots()
         }
     }
     if (free_found) {
-        emit freeSlotsAvailable(mAvailableSlots);
+        Q_EMIT freeSlotsAvailable(mAvailableSlots);
     }
 #if 0
     //DEBUG, dump the arrays. very helpful for debugging
@@ -455,7 +455,7 @@ void ConflictResolver::calculateConflicts()
     KDateTime start = mTimeframeConstraint.start();
     KDateTime end = mTimeframeConstraint.end();
     const int count = tryDate(start, end);
-    emit conflictsDetected(count);
+    Q_EMIT conflictsDetected(count);
 
     if (!mCalculateTimer.isActive()) {
         mCalculateTimer.start(0);

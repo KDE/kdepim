@@ -314,7 +314,7 @@ void Backend::slotPostRemoved(KBlog::BlogPost *post)
     if (!DBMan::self()->removePost(d->bBlog->id(), post->postId())) {
         qCDebug(BLOGILO_LOG) << "cannot remove post from database, error: " << DBMan::self()->lastErrorText();
     }
-    emit sigPostRemoved(d->bBlog->id(), BilboPost(*post));
+    Q_EMIT sigPostRemoved(d->bBlog->id(), BilboPost(*post));
 }
 
 void Backend::fetchPost(BilboPost *post)
@@ -326,7 +326,7 @@ void Backend::fetchPost(BilboPost *post)
 
 void Backend::slotPostFetched(KBlog::BlogPost *post)
 {
-    emit sigPostFetched(new BilboPost(*post));
+    Q_EMIT sigPostFetched(new BilboPost(*post));
 //     delete post;
 }
 
@@ -348,7 +348,7 @@ void Backend::slotMediaError(KBlog::Blog::ErrorType type, const QString &errorMe
     errType += errorMessage;
     qCDebug(BLOGILO_LOG) << errType;
     qCDebug(BLOGILO_LOG) << "Emitting sigMediaError ...";
-    emit sigMediaError(errorMessage, d->mPublishMediaMap[ media ]);
+    Q_EMIT sigMediaError(errorMessage, d->mPublishMediaMap[ media ]);
     d->mPublishMediaMap.remove(media);
 }
 

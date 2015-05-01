@@ -217,7 +217,7 @@ void OptionsPage::setCertificatesWithSecretKeys(const std::vector<Key> &keys)
     } else {
         m_ui.stackedWidget->setCurrentWidget(m_ui.multipleKeysPage);
     }
-    emit completeChanged();
+    Q_EMIT completeChanged();
 }
 
 Key OptionsPage::selectedSecretKey() const
@@ -237,7 +237,7 @@ bool OptionsPage::sendToServer() const
 
 bool OptionsPage::validatePage()
 {
-    emit nextClicked();
+    Q_EMIT nextClicked();
     return true;
 }
 
@@ -308,7 +308,7 @@ void SummaryPage::setComplete(bool complete)
         return;
     }
     m_complete = complete;
-    emit completeChanged();
+    Q_EMIT completeChanged();
 }
 void SummaryPage::setResult(const Error &err)
 {

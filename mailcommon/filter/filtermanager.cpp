@@ -68,7 +68,7 @@ void FilterManager::Private::readConfig()
     clear();
     QStringList emptyFilters;
     mFilters = FilterImporterExporter::readFiltersFromConfig(config, emptyFilters);
-    emit q->filtersChanged();
+    Q_EMIT q->filtersChanged();
 }
 
 void FilterManager::Private::writeConfig(bool withSync) const
@@ -297,6 +297,6 @@ void FilterManager::endUpdate()
 {
     d->writeConfig(true);
     d->mMailFilterAgentInterface->reload();
-    emit filtersChanged();
+    Q_EMIT filtersChanged();
 }
 

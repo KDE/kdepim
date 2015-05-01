@@ -365,7 +365,7 @@ void KDPipeIODevice::Private::emitReadyRead()
     QPointer<Private> thisPointer(this);
     QDebug("KDPipeIODevice::Private::emitReadyRead %p", (void *) this);
 
-    emit q->readyRead();
+    Q_EMIT q->readyRead();
 
     if (!thisPointer) {
         return;
@@ -752,7 +752,7 @@ void KDPipeIODevice::close()
     }
 
     // tell clients we're about to close:
-    emit aboutToClose();
+    Q_EMIT aboutToClose();
     d->stopThreads();
 
 #define waitAndDelete( t ) if ( t ) { t->wait(); QThread* const t2 = t; t = 0; delete t2; }
@@ -899,8 +899,8 @@ void Reader::notifyReadyRead()
         blockedConsumerIsDoneCondition.wait(&mutex);
         return;
     }
-    QDebug("notifyReadyRead: emit signal");
-    emit readyRead();
+    QDebug("notifyReadyRead: Q_EMIT signal");
+    Q_EMIT readyRead();
     readyReadSentCondition.wait(&mutex);
     QDebug("notifyReadyRead: returning from waiting, leave");
 }
@@ -920,7 +920,7 @@ void Writer::run()
         while (!cancel && bufferEmpty()) {
             qCDebug(KLEOPATRA_LOG) << this << "Writer::run: buffer is empty, wake bufferEmptyCond listeners";
             bufferEmptyCondition.wakeAll();
-            emit bytesWritten(0);
+            Q_EMIT bytesWritten(0);
             qCDebug(KLEOPATRA_LOG) << this << "Writer::run: buffer is empty, going to sleep";
             bufferNotEmptyCondition.wait(&mutex);
             qCDebug(KLEOPATRA_LOG) << this << "Writer::run: woke up";
@@ -972,14 +972,14 @@ void Writer::run()
         numBytesInBuffer = 0;
         qCDebug(KLEOPATRA_LOG) << this << "Writer::run: buffer is empty, wake bufferEmptyCond listeners";
         bufferEmptyCondition.wakeAll();
-        emit bytesWritten(totalWritten);
+        Q_EMIT bytesWritten(totalWritten);
     }
 leave:
     qCDebug(KLEOPATRA_LOG) << this << "Writer::run: terminating";
     numBytesInBuffer = 0;
     qCDebug(KLEOPATRA_LOG) << this << "Writer::run: buffer is empty, wake bufferEmptyCond listeners";
     bufferEmptyCondition.wakeAll();
-    emit bytesWritten(0);
+    Q_EMIT bytesWritten(0);
 }
 
 // static

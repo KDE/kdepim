@@ -93,12 +93,12 @@ void Kleo::ObtainKeysJob::slotPerform(bool async)
         mError = GpgME::Error::fromCode(GPG_ERR_CANCELED);
     }
     if (int(mIndex) >= mKeyPaths.size() || mError) {
-        emit done();
-        emit SpecialJob::result(mError, QVariant(mResult));
+        Q_EMIT done();
+        Q_EMIT SpecialJob::result(mError, QVariant(mResult));
         return;
     }
 
-    emit progress(i18n("Scanning directory %1...", mKeyPaths[mIndex]),
+    Q_EMIT progress(i18n("Scanning directory %1...", mKeyPaths[mIndex]),
                   mIndex, mKeyPaths.size());
 
     const QDir dir(KShell::tildeExpand(mKeyPaths[mIndex]));

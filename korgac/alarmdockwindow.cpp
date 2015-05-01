@@ -147,12 +147,12 @@ void AlarmDockWindow::toggleAutostart(bool checked)
 
 void AlarmDockWindow::slotSuspendAll()
 {
-    emit suspendAllSignal();
+    Q_EMIT suspendAllSignal();
 }
 
 void AlarmDockWindow::slotDismissAll()
 {
-    emit dismissAllSignal();
+    Q_EMIT dismissAllSignal();
 }
 
 void AlarmDockWindow::enableAutostart(bool enable)
@@ -180,7 +180,7 @@ void AlarmDockWindow::slotQuit()
                          KStandardGuiItem::quit());
 
         if (result == KMessageBox::Continue) {
-            emit quitSignal();
+            Q_EMIT quitSignal();
         }
     } else {
         int result = KMessageBox::questionYesNoCancel(
@@ -201,7 +201,7 @@ void AlarmDockWindow::slotQuit()
         enableAutostart(autostart);
 
         if (result != KMessageBox::Cancel) {
-            emit quitSignal();
+            Q_EMIT quitSignal();
         }
     }
 }

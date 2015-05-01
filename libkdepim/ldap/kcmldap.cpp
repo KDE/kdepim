@@ -132,7 +132,7 @@ void KCMLdap::slotItemClicked(QListWidgetItem *item)
     }
 
     if ((ldapItem->checkState() == Qt::Checked) != ldapItem->isActive()) {
-        emit changed(true);
+        Q_EMIT changed(true);
         ldapItem->setIsActive(ldapItem->checkState() == Qt::Checked);
     }
 }
@@ -145,7 +145,7 @@ void KCMLdap::slotAddHost()
     if (dlg.exec() && !server.host().isEmpty()) {   //krazy:exclude=crashy
         new LDAPItem(mHostListView, server);
 
-        emit changed(true);
+        Q_EMIT changed(true);
     }
 }
 
@@ -163,7 +163,7 @@ void KCMLdap::slotEditHost()
     if (dlg.exec() && !server.host().isEmpty()) {   //krazy:exclude=crashy
         item->setServer(server);
 
-        emit changed(true);
+        Q_EMIT changed(true);
     }
 }
 
@@ -182,7 +182,7 @@ void KCMLdap::slotRemoveHost()
 
     slotSelectionChanged(mHostListView->currentItem());
 
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 static void swapItems(LDAPItem *item, LDAPItem *other)
@@ -219,7 +219,7 @@ void KCMLdap::slotMoveUp()
     mHostListView->setCurrentItem(above);
     above->setSelected(true);
 
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 void KCMLdap::slotMoveDown()
@@ -244,7 +244,7 @@ void KCMLdap::slotMoveDown()
     mHostListView->setCurrentItem(below);
     below->setSelected(true);
 
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 void KCMLdap::load()
@@ -268,7 +268,7 @@ void KCMLdap::load()
         new LDAPItem(mHostListView, server);
     }
 
-    emit changed(false);
+    Q_EMIT changed(false);
 }
 
 void KCMLdap::save()
@@ -300,7 +300,7 @@ void KCMLdap::save()
     group.writeEntry("NumHosts", unselected);
     config->sync();
 
-    emit changed(false);
+    Q_EMIT changed(false);
 }
 
 void KCMLdap::defaults()

@@ -250,7 +250,7 @@ void CategorySelectWidgetPrivate::slotCheckedItemsTimer()
         checkCombo->setToolTip(QString());
     }
 
-    emit q->filterChanged(filterTags());
+    Q_EMIT q->filterChanged(filterTags());
 }
 
 QList<Akonadi::Tag::Id> CategorySelectWidgetPrivate::filterTags() const

@@ -277,7 +277,7 @@ void KMFilterListBox::slotFilterEnabledChanged(QListWidgetItem *item)
     QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem *>(item);
     MailCommon::MailFilter *filter = itemFilter->filter();
     filter->setEnabled((item->checkState() == Qt::Checked));
-    emit filterUpdated(filter);
+    Q_EMIT filterUpdated(filter);
 }
 
 void KMFilterListBox::slotRowsMoved(const QModelIndex &,
@@ -289,7 +289,7 @@ void KMFilterListBox::slotRowsMoved(const QModelIndex &,
     Q_UNUSED(destinationRow);
     enableControls();
 
-    emit filterOrderAltered();
+    Q_EMIT filterOrderAltered();
 }
 
 void KMFilterListBox::createFilter(const QByteArray &field, const QString &value)
@@ -369,7 +369,7 @@ void KMFilterListBox::slotApplied()
 void KMFilterListBox::applyFilterChanged(bool closeAfterSaving)
 {
     if (mListWidget->currentItem()) {
-        emit applyWidgets();
+        Q_EMIT applyWidgets();
         slotSelected(mListWidget->currentRow());
     }
 
@@ -411,7 +411,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving(bool closeAfterSaving) con
             QPointer<MailCommon::InvalidFilterDialog> dlg = new MailCommon::InvalidFilterDialog(Q_NULLPTR);
             dlg->setInvalidFilters(listInvalidFilters);
             if (!dlg->exec()) {
-                emit abortClosing();
+                Q_EMIT abortClosing();
             }
             delete dlg;
         } else {
@@ -449,12 +449,12 @@ void KMFilterListBox::slotSelected(int aIdx)
         MailFilter *f = itemFilter->filter();
 
         if (f) {
-            emit filterSelected(f);
+            Q_EMIT filterSelected(f);
         } else {
-            emit resetWidgets();
+            Q_EMIT resetWidgets();
         }
     } else {
-        emit resetWidgets();
+        Q_EMIT resetWidgets();
     }
     enableControls();
 }
@@ -478,7 +478,7 @@ void KMFilterListBox::slotCopy()
     }
 
     // make sure that all changes are written to the filter before we copy it
-    emit applyWidgets();
+    Q_EMIT applyWidgets();
     QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem *>(item);
 
     MailFilter *filter = itemFilter->filter();
@@ -525,7 +525,7 @@ void KMFilterListBox::slotDelete()
     const int oIdxSelItem = mListWidget->currentRow();
     QList<MailCommon::MailFilter *>lst;
 
-    emit resetWidgets();
+    Q_EMIT resetWidgets();
 
     Q_FOREACH (QListWidgetItem *item, mListWidget->selectedItems()) {
         QListWidgetFilterItem *itemFilter = static_cast<QListWidgetFilterItem *>(item);
@@ -558,7 +558,7 @@ void KMFilterListBox::slotDelete()
     }
     enableControls();
 
-    emit filterRemoved(lst);
+    Q_EMIT filterRemoved(lst);
 }
 
 void KMFilterListBox::slotTop()
@@ -588,7 +588,7 @@ void KMFilterListBox::slotTop()
 
     if (wasMoved) {
         enableControls();
-        emit filterOrderAltered();
+        Q_EMIT filterOrderAltered();
     }
 }
 
@@ -650,7 +650,7 @@ void KMFilterListBox::slotBottom()
 
     if (wasMoved) {
         enableControls();
-        emit filterOrderAltered();
+        Q_EMIT filterOrderAltered();
     }
 }
 
@@ -678,7 +678,7 @@ void KMFilterListBox::slotUp()
     }
     if (wasMoved) {
         enableControls();
-        emit filterOrderAltered();
+        Q_EMIT filterOrderAltered();
     }
 }
 
@@ -709,7 +709,7 @@ void KMFilterListBox::slotDown()
 
     if (wasMoved) {
         enableControls();
-        emit filterOrderAltered();
+        Q_EMIT filterOrderAltered();
     }
 }
 
@@ -754,7 +754,7 @@ void KMFilterListBox::slotRename()
 
     slotUpdateFilterName();
 
-    emit filterUpdated(filter);
+    Q_EMIT filterUpdated(filter);
 }
 
 void KMFilterListBox::enableControls()
@@ -795,7 +795,7 @@ void KMFilterListBox::loadFilterList(bool createDummyFilter)
 {
     Q_ASSERT(mListWidget);
     setEnabled(false);
-    emit resetWidgets();
+    Q_EMIT resetWidgets();
     // we don't want the insertion to
     // cause flicker in the edit widgets.
     blockSignals(true);
@@ -846,8 +846,8 @@ void KMFilterListBox::insertFilter(MailFilter *aFilter)
         mListWidget->setCurrentRow(currentIndex);
     }
 
-    emit filterCreated();
-    emit filterOrderAltered();
+    Q_EMIT filterCreated();
+    Q_EMIT filterOrderAltered();
 }
 
 void KMFilterListBox::appendFilter(MailFilter *aFilter)
@@ -858,7 +858,7 @@ void KMFilterListBox::appendFilter(MailFilter *aFilter)
     item->setFilter(aFilter);
     mListWidget->addItem(item);
 
-    emit filterCreated();
+    Q_EMIT filterCreated();
 }
 
 void KMFilterListBox::swapNeighbouringFilters(int untouchedOne, int movedOne)

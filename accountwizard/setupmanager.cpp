@@ -162,7 +162,7 @@ void SetupManager::rollback()
     m_page->setStatus(i18n("Failed to set up account."));
     m_page->setValid(true);
     m_rollbackRequested = false;
-    emit rollbackComplete();
+    Q_EMIT rollbackComplete();
 }
 
 SetupObject *SetupManager::connectObject(SetupObject *obj)
@@ -236,7 +236,7 @@ void SetupManager::setPersonalDataAvailable(bool available)
 void SetupManager::requestRollback()
 {
     if (m_setupObjects.isEmpty()) {
-        emit rollbackComplete();
+        Q_EMIT rollbackComplete();
     } else {
         m_rollbackRequested = true;
         if (!m_currentSetupObject) {

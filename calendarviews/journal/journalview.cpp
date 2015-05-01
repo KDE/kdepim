@@ -133,7 +133,7 @@ void JournalView::updateView()
 
 void JournalView::flushView()
 {
-    emit flushEntries();
+    Q_EMIT flushEntries();
 }
 
 void JournalView::showDates(const QDate &start, const QDate &end, const QDate &)
@@ -181,10 +181,10 @@ void JournalView::changeIncidenceDisplay(const Akonadi::Item &incidence,
             appendJournal(incidence, journal->dtStart().date());
             break;
         case Akonadi::IncidenceChanger::ChangeTypeModify:
-            emit journalEdited(incidence);
+            Q_EMIT journalEdited(incidence);
             break;
         case Akonadi::IncidenceChanger::ChangeTypeDelete:
-            emit journalDeleted(incidence);
+            Q_EMIT journalDeleted(incidence);
             break;
         default:
             qCWarning(CALENDARVIEW_LOG) << "Illegal change type" << changeType;
@@ -195,12 +195,12 @@ void JournalView::changeIncidenceDisplay(const Akonadi::Item &incidence,
 void JournalView::setIncidenceChanger(Akonadi::IncidenceChanger *changer)
 {
     mChanger = changer;
-    emit setIncidenceChangerSignal(changer);
+    Q_EMIT setIncidenceChangerSignal(changer);
 }
 
 void JournalView::newJournal()
 {
-    emit newJournalSignal(QDate::currentDate());
+    Q_EMIT newJournalSignal(QDate::currentDate());
 }
 
 bool JournalView::eventFilter(QObject *object, QEvent *event)
@@ -208,7 +208,7 @@ bool JournalView::eventFilter(QObject *object, QEvent *event)
     Q_UNUSED(object);
     switch (event->type()) {
     case QEvent::MouseButtonDblClick:
-        emit newJournalSignal(QDate());
+        Q_EMIT newJournalSignal(QDate());
         return true;
     default:
         return false;

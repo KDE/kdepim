@@ -47,7 +47,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
     Akonadi::ContactSearchJob *searchJob = static_cast<Akonadi::ContactSearchJob *>(job);
     if (searchJob->error()) {
         qCWarning(MESSAGEVIEWER_LOG) << "Unable to fetch contact:" << searchJob->errorText();
-        emit update(Viewer::Delayed);
+        Q_EMIT update(Viewer::Delayed);
         return;
     }
 
@@ -56,7 +56,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
         searchPhoto(searchJob->contacts());
         KContacts::Addressee addressee = searchJob->contacts().first();
         processAddress(addressee);
-        emit update(Viewer::Delayed);
+        Q_EMIT update(Viewer::Delayed);
         if (contactSize > 1) {
             qCDebug(MESSAGEVIEWER_LOG) << " more than 1 contact was found we return first contact";
         }
@@ -107,7 +107,7 @@ void ContactDisplayMessageMemento::processAddress(const KContacts::Addressee &ad
             mMailAllowToRemoteContent = (value == QLatin1String("TRUE"));
         }
     }
-    emit changeDisplayMail(mForceDisplayTo, mMailAllowToRemoteContent);
+    Q_EMIT changeDisplayMail(mForceDisplayTo, mMailAllowToRemoteContent);
 }
 
 KContacts::Picture ContactDisplayMessageMemento::photo() const

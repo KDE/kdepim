@@ -135,7 +135,7 @@ void NotesNetworkReceiver::slotConnectionClosed()
         noteText = noteText.mid(pos).trimmed();
 
         if (!noteText.isEmpty()) {
-            emit sigNoteReceived(noteTitle, noteText);
+            Q_EMIT sigNoteReceived(noteTitle, noteText);
         }
     }
 

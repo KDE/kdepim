@@ -123,7 +123,7 @@ bool SieveJob::Private::handleResponse(const Response &response, const QByteArra
                 mFileExists = Yes;
             }
 
-            emit q->item(q, filename, isActive);
+            Q_EMIT q->item(q, filename, isActive);
             break;
         }
         case Put:
@@ -177,13 +177,13 @@ bool SieveJob::Private::handleResponse(const Response &response, const QByteArra
                 KMessageBox::error(Q_NULLPTR, session->errorMessage(), i18n("Sieve Error"));
             }
         }
-        emit q->errorMessage(q, false, errMsg);
-        emit q->result(q, false, mScript, (mUrl.fileName() == mActiveScriptName));
+        Q_EMIT q->errorMessage(q, false, errMsg);
+        Q_EMIT q->result(q, false, mScript, (mUrl.fileName() == mActiveScriptName));
 
         if (lastCmd == List) {
-            emit q->gotList(q, false, mAvailableScripts, mActiveScriptName);
+            Q_EMIT q->gotList(q, false, mAvailableScripts, mActiveScriptName);
         } else {
-            emit q->gotScript(q, false, mScript, (mUrl.fileName() == mActiveScriptName));
+            Q_EMIT q->gotScript(q, false, mScript, (mUrl.fileName() == mActiveScriptName));
         }
 
         q->deleteLater();
@@ -200,13 +200,13 @@ bool SieveJob::Private::handleResponse(const Response &response, const QByteArra
     }
 
     if (mCommands.empty()) {
-        emit q->errorMessage(q, true, QString());
+        Q_EMIT q->errorMessage(q, true, QString());
         // was last command; report success and delete this object:
-        emit q->result(q, true, mScript, (mUrl.fileName() == mActiveScriptName));
+        Q_EMIT q->result(q, true, mScript, (mUrl.fileName() == mActiveScriptName));
         if (lastCmd == List) {
-            emit q->gotList(q, true, mAvailableScripts, mActiveScriptName);
+            Q_EMIT q->gotList(q, true, mAvailableScripts, mActiveScriptName);
         } else {
-            emit q->gotScript(q, true, mScript, (mUrl.fileName() == mActiveScriptName));
+            Q_EMIT q->gotScript(q, true, mScript, (mUrl.fileName() == mActiveScriptName));
         }
 
         q->deleteLater();
@@ -222,11 +222,11 @@ bool SieveJob::Private::handleResponse(const Response &response, const QByteArra
 
 void SieveJob::Private::killed()
 {
-    emit q->result(q, false, mScript, (mUrl.fileName() == mActiveScriptName));
+    Q_EMIT q->result(q, false, mScript, (mUrl.fileName() == mActiveScriptName));
     if (mCommands.top() == List) {
-        emit q->gotList(q, false, mAvailableScripts, mActiveScriptName);
+        Q_EMIT q->gotList(q, false, mAvailableScripts, mActiveScriptName);
     } else {
-        emit q->gotScript(q, false, mScript, (mUrl.fileName() == mActiveScriptName));
+        Q_EMIT q->gotScript(q, false, mScript, (mUrl.fileName() == mActiveScriptName));
     }
 }
 

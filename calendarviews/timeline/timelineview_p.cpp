@@ -62,7 +62,7 @@ void TimelineView::Private::itemSelected(const QModelIndex &index)
         dynamic_cast<TimelineSubItem *>(static_cast<QStandardItemModel *>(
                                             mGantt->model())->item(index.row(), index.column()));
     if (tlitem) {
-        emit q->incidenceSelected(tlitem->incidence(), tlitem->originalStart().date());
+        Q_EMIT q->incidenceSelected(tlitem->incidence(), tlitem->originalStart().date());
     }
 }
 
@@ -72,7 +72,7 @@ void TimelineView::Private::itemDoubleClicked(const QModelIndex &index)
         dynamic_cast<TimelineSubItem *>(static_cast<QStandardItemModel *>(
                                             mGantt->model())->item(index.row(), index.column()));
     if (tlitem) {
-        emit q->editIncidenceSignal(tlitem->incidence());
+        Q_EMIT q->editIncidenceSignal(tlitem->incidence());
     }
 }
 
@@ -84,10 +84,10 @@ void TimelineView::Private::contextMenuRequested(const QPoint &point)
         dynamic_cast<TimelineSubItem *>(static_cast<QStandardItemModel *>(
                                             mGantt->model())->item(index.row(), index.column()));
     if (!tlitem) {
-        emit q->showNewEventPopupSignal();
+        Q_EMIT q->showNewEventPopupSignal();
         mSelectedItemList = Akonadi::Item::List();
     } else {
-        emit q->showIncidencePopupSignal(
+        Q_EMIT q->showIncidencePopupSignal(
             tlitem->incidence(),
             CalendarSupport::incidence(tlitem->incidence())->dtStart().date());
 
@@ -99,7 +99,7 @@ void TimelineView::Private::contextMenuRequested(const QPoint &point)
 void TimelineView::Private::newEventWithHint(const QDateTime &dt)
 {
     mHintDate = dt;
-    emit q->newEventSignal(dt);
+    Q_EMIT q->newEventSignal(dt);
 }
 
 TimelineItem *TimelineView::Private::calendarItemForIncidence(const Akonadi::Item &incidence)

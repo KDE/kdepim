@@ -138,7 +138,7 @@ void KTNEFView::startDrag(Qt::DropActions dropAction)
         ++it;
     }
     if (!list.isEmpty()) {
-        emit dragRequested(list);
+        Q_EMIT dragRequested(list);
     }
 }
 

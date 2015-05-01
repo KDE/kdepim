@@ -164,7 +164,7 @@ static bool selfCheck(SplashScreen &splash)
 #ifndef QT_NO_SPLASHSCREEN
     QObject::connect(&cmd, SIGNAL(info(QString)), &splash, SLOT(showMessage(QString)));
 #endif
-    QTimer::singleShot(0, &cmd, SLOT(start()));   // start() may emit finished()...
+    QTimer::singleShot(0, &cmd, SLOT(start()));   // start() may Q_EMIT finished()...
     loop.exec();
     if (cmd.isCanceled()) {
 #ifndef QT_NO_SPLASHSCREEN

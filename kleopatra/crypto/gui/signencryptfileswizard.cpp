@@ -194,7 +194,7 @@ void SignEncryptFilesWizard::onNext(int currentId)
     const bool encrypt = encryptionSelected();
 
     if ((encrypt && currentId == ResolveRecipientsPage) || (!encrypt && currentId == ObjectsPage)) {
-        emit operationPrepared();
+        Q_EMIT operationPrepared();
     }
 }
 

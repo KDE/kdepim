@@ -189,13 +189,13 @@ void FileSystemWatcher::Private::onTimeout()
         return;
     }
 
-    emit q->triggered();
+    Q_EMIT q->triggered();
 
     Q_FOREACH (const QString &i, dirs) {
-        emit q->directoryChanged(i);
+        Q_EMIT q->directoryChanged(i);
     }
     Q_FOREACH (const QString &i, files) {
-        emit q->fileChanged(i);
+        Q_EMIT q->fileChanged(i);
     }
 }
 

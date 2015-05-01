@@ -150,7 +150,7 @@ void ForwardingProxyModel::sourceModelReset()
 void ForwardingProxyModel::sourceLayoutAboutToBeChanged()
 {
     //qDebug() << "ForwardingProxyModel::sourceLayoutAboutToBeChanged()";
-    emit layoutAboutToBeChanged();
+    Q_EMIT layoutAboutToBeChanged();
 }
 
 /*! Called when the layout of the source model has changed.
@@ -168,7 +168,7 @@ void ForwardingProxyModel::sourceLayoutChanged()
 void ForwardingProxyModel::sourceDataChanged(const QModelIndex &from, const QModelIndex &to)
 {
     //qDebug() << "ForwardingProxyModel::sourceDataChanged("<<from<<to<<")";
-    emit dataChanged(mapFromSource(from), mapFromSource(to));
+    Q_EMIT dataChanged(mapFromSource(from), mapFromSource(to));
 }
 
 /*! Called just before columns are inserted into the source model.

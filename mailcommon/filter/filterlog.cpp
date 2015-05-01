@@ -86,7 +86,7 @@ void FilterLog::Private::checkLogSize()
             }
         }
 
-        emit q->logShrinked();
+        Q_EMIT q->logShrinked();
     }
 }
 
@@ -119,7 +119,7 @@ bool FilterLog::isLogging() const
 void FilterLog::setLogging(bool active)
 {
     d->mLogging = active;
-    emit logStateChanged();
+    Q_EMIT logStateChanged();
 }
 
 void FilterLog::setMaxLogSize(long size)
@@ -134,7 +134,7 @@ void FilterLog::setMaxLogSize(long size)
     }
 
     d->mMaxLogSize = size;
-    emit logStateChanged();
+    Q_EMIT logStateChanged();
     d->checkLogSize();
 }
 
@@ -151,7 +151,7 @@ void FilterLog::setContentTypeEnabled(ContentType contentType, bool enable)
         d->mAllowedTypes &= ~contentType;
     }
 
-    emit logStateChanged();
+    Q_EMIT logStateChanged();
 }
 
 bool FilterLog::isContentTypeEnabled(ContentType contentType) const
@@ -170,7 +170,7 @@ void FilterLog::add(const QString &logEntry, ContentType contentType)
         }
 
         d->mLogEntries.append(timedLog);
-        emit logEntryAdded(timedLog);
+        Q_EMIT logEntryAdded(timedLog);
         d->mCurrentLogSize += timedLog.length();
         d->checkLogSize();
     }

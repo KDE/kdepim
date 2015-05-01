@@ -185,7 +185,7 @@ void KWidgetLister::slotClear()
 
     //  adjustSize();
     d->enableControls();
-    emit clearWidgets();
+    Q_EMIT clearWidgets();
 }
 
 void KWidgetLister::addWidgetAtEnd(QWidget *widget)
@@ -199,8 +199,8 @@ void KWidgetLister::addWidgetAtEnd(QWidget *widget)
     widget->show();
 
     d->enableControls();
-    emit widgetAdded();
-    emit widgetAdded(widget);
+    Q_EMIT widgetAdded();
+    Q_EMIT widgetAdded(widget);
 }
 
 void KWidgetLister::removeLastWidget()
@@ -209,7 +209,7 @@ void KWidgetLister::removeLastWidget()
     // widget is removed from screen, too.
     delete d->mWidgetList.takeLast();
     d->enableControls();
-    emit widgetRemoved();
+    Q_EMIT widgetRemoved();
 }
 
 void KWidgetLister::clearWidget(QWidget *widget)
@@ -267,8 +267,8 @@ void KWidgetLister::removeWidget(QWidget *widget)
     w->deleteLater();
     w = Q_NULLPTR;
     d->enableControls();
-    emit widgetRemoved(widget);
-    emit widgetRemoved();
+    Q_EMIT widgetRemoved(widget);
+    Q_EMIT widgetRemoved();
 
 }
 
@@ -289,7 +289,7 @@ void KWidgetLister::addWidgetAfterThisWidget(QWidget *currentWidget, QWidget *wi
     widget->show();
 
     d->enableControls();
-    emit widgetAdded();
-    emit widgetAdded(widget);
+    Q_EMIT widgetAdded();
+    Q_EMIT widgetAdded(widget);
 }
 

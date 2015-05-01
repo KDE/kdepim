@@ -122,7 +122,7 @@ void KCheckComboBox::Private::updateCheckedItems(const QModelIndex &topLeft,
 
     q->lineEdit()->setText(text);
 
-    emit q->checkedItemsChanged(items);
+    Q_EMIT q->checkedItemsChanged(items);
 }
 
 void KCheckComboBox::Private::toggleCheckState()

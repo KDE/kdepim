@@ -214,7 +214,7 @@ void Command::cancel()
 {
     qCDebug(KLEOPATRA_LOG);
     doCancel();
-    emit canceled();
+    Q_EMIT canceled();
 }
 
 void Command::addTemporaryView(const QString &title, AbstractKeyListSortFilterProxyModel *proxy, const QString &tabToolTip)

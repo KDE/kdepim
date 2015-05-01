@@ -101,7 +101,7 @@ void BlogSettings::removeBlog()
         const int blog_id = item->data(0, BlogId).toInt();
         if (DBMan::self()->removeBlog(blog_id)) {
             delete blogsTable->currentItem();
-            emit blogRemoved(blog_id);
+            Q_EMIT blogRemoved(blog_id);
         } else {
             ///cannot remove
             qCritical() << "Cannot remove blog with id " << blog_id;

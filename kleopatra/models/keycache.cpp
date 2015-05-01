@@ -272,7 +272,7 @@ void KeyCache::addFileSystemWatcher(const shared_ptr<FileSystemWatcher> &watcher
 
 void KeyCache::Private::refreshJobDone(const KeyListResult &result)
 {
-    emit q->keyListingDone(result);
+    Q_EMIT q->keyListingDone(result);
     q->enableFileSystemWatcher(true);
 }
 
@@ -687,7 +687,7 @@ void KeyCache::remove(const Key &key)
         return;
     }
 
-    emit aboutToRemove(key);
+    Q_EMIT aboutToRemove(key);
 
     {
         const std::pair<std::vector<Key>::iterator, std::vector<Key>::iterator> range
@@ -903,10 +903,10 @@ void KeyCache::insert(const std::vector<Key> &keys)
     by_chainid.swap(d->by.chainid);
 
     Q_FOREACH (const Key &key, sorted) {
-        emit added(key);
+        Q_EMIT added(key);
     }
 
-    emit keysMayHaveChanged();
+    Q_EMIT keysMayHaveChanged();
 }
 
 void KeyCache::clear()
@@ -977,7 +977,7 @@ void KeyCache::RefreshKeysJob::Private::jobDone(const KeyListResult &result)
 void KeyCache::RefreshKeysJob::Private::emitDone(const KeyListResult &res)
 {
     q->deleteLater();
-    emit q->done(res);
+    Q_EMIT q->done(res);
 }
 
 KeyCache::RefreshKeysJob::RefreshKeysJob(KeyCache *cache, QObject *parent) : QObject(parent), d(new Private(cache, this))
@@ -993,7 +993,7 @@ void KeyCache::RefreshKeysJob::start()
 
 void KeyCache::RefreshKeysJob::cancel()
 {
-    emit canceled();
+    Q_EMIT canceled();
 }
 
 void KeyCache::RefreshKeysJob::Private::doStart()

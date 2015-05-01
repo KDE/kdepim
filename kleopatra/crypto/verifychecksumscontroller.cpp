@@ -625,14 +625,14 @@ void VerifyChecksumsController::Private::run()
     // Step 0: find base directories:
     //
 
-    emit baseDirectories(find_base_directiories(files));
+    Q_EMIT baseDirectories(find_base_directiories(files));
 
     //
     // Step 1: build a list of work to do (no progress):
     //
 
     const QString scanning = i18n("Scanning directories...");
-    emit progress(0, 0, scanning);
+    Q_EMIT progress(0, 0, scanning);
 
     const function<void(int)> progressCb = boost::bind(&Private::progress, this, _1, 0, scanning);
     const function<void(const QString &, VerifyChecksumsDialog::Status)>
@@ -645,7 +645,7 @@ void VerifyChecksumsController::Private::run()
 
     if (!canceled) {
 
-        emit progress(0, 0, i18n("Calculating total size..."));
+        Q_EMIT progress(0, 0, i18n("Calculating total size..."));
 
         const quint64 total
             = kdtools::accumulate_transform(sumfiles, mem_fn(&SumFile::totalSize), Q_UINT64_C(0));
@@ -663,7 +663,7 @@ void VerifyChecksumsController::Private::run()
 
             quint64 done = 0;
             Q_FOREACH (const SumFile &sumFile, sumfiles) {
-                emit progress(done / factor, total / factor,
+                Q_EMIT progress(done / factor, total / factor,
                               i18n("Verifying checksums (%2) in %1", sumFile.checksumDefinition->label(), sumFile.dir.path()));
                 bool fatal = false;
                 const QString error = process(sumFile, &fatal, env, statusCb);
@@ -675,7 +675,7 @@ void VerifyChecksumsController::Private::run()
                     break;
                 }
             }
-            emit progress(done / factor, total / factor, i18n("Done."));
+            Q_EMIT progress(done / factor, total / factor, i18n("Done."));
 
         }
     }

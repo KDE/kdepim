@@ -139,7 +139,7 @@ void NewCertificateCommand::doStart()
 
 void NewCertificateCommand::Private::slotDialogRejected()
 {
-    emit q->canceled();
+    Q_EMIT q->canceled();
     finished();
 }
 

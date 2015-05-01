@@ -86,7 +86,7 @@ Transport::Transport(const QString &type, QObject *parent) :
 
 void Transport::create()
 {
-    emit info(i18n("Setting up mail transport account..."));
+    Q_EMIT info(i18n("Setting up mail transport account..."));
     MailTransport::Transport *mt = MailTransport::TransportManager::self()->createTransport();
     mt->setName(m_name);
     mt->setHost(m_host);
@@ -107,13 +107,13 @@ void Transport::create()
     mt->save();
     MailTransport::TransportManager::self()->addTransport(mt);
     MailTransport::TransportManager::self()->setDefaultTransport(mt->id());
-    emit finished(i18n("Mail transport account set up."));
+    Q_EMIT finished(i18n("Mail transport account set up."));
 }
 
 void Transport::destroy()
 {
     MailTransport::TransportManager::self()->removeTransport(m_transportId);
-    emit info(i18n("Mail transport account deleted."));
+    Q_EMIT info(i18n("Mail transport account deleted."));
 }
 
 void Transport::setName(const QString &name)

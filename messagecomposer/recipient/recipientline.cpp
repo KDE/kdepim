@@ -39,7 +39,7 @@ RecipientComboBox::RecipientComboBox(QWidget *parent)
 void RecipientComboBox::keyPressEvent(QKeyEvent *ev)
 {
     if (ev->key() == Qt::Key_Right) {
-        emit rightPressed();
+        Q_EMIT rightPressed();
     } else {
         KComboBox::keyPressEvent(ev);
     }
@@ -55,14 +55,14 @@ void RecipientLineEdit::keyPressEvent(QKeyEvent *ev)
     //Laurent Bug:280153
     /*if ( ev->key() == Qt::Key_Backspace  &&  text().isEmpty() ) {
     ev->accept();
-    emit deleteMe();
+    Q_EMIT deleteMe();
     } else */
     if (ev->key() == Qt::Key_Left && cursorPosition() == 0 &&
             !ev->modifiers().testFlag(Qt::ShiftModifier)) {     // Shift would be pressed during selection
-        emit leftPressed();
+        Q_EMIT leftPressed();
     } else if (ev->key() == Qt::Key_Right && cursorPosition() == (int)text().length() &&
                !ev->modifiers().testFlag(Qt::ShiftModifier)) {     // Shift would be pressed during selection
-        emit rightPressed();
+        Q_EMIT rightPressed();
     } else {
         MessageComposer::ComposerLineEdit::keyPressEvent(ev);
     }
@@ -109,7 +109,7 @@ RecipientLineNG::RecipientLineNG(QWidget *parent)
 void RecipientLineNG::slotEditingFinished()
 {
     if (mEdit->text().isEmpty()) {
-        emit deleteLine(this);
+        Q_EMIT deleteLine(this);
     }
 }
 
@@ -123,7 +123,7 @@ void RecipientLineNG::slotTypeModified()
 {
     mModified = true;
 
-    emit typeModified(this);
+    Q_EMIT typeModified(this);
 }
 
 void RecipientLineNG::analyzeLine(const QString &text)
@@ -133,7 +133,7 @@ void RecipientLineNG::analyzeLine(const QString &text)
         mRecipientsCount = r.count();
     }
     mModified = true;
-    emit countChanged();
+    Q_EMIT countChanged();
 }
 
 int RecipientLineNG::recipientsCount() const

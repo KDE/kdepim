@@ -97,7 +97,7 @@ void HtmlStatusBar::setMode(Util::HtmlMode m, UpdateMode mode)
 void HtmlStatusBar::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        emit clicked();
+        Q_EMIT clicked();
     }
 }
 

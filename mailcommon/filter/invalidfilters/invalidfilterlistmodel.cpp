@@ -67,7 +67,7 @@ bool InvalidFilterListModel::setData(const QModelIndex &index, const QVariant &v
         return false;
     }
 
-    emit dataChanged(index, index);
+    Q_EMIT dataChanged(index, index);
     return true;
 }
 

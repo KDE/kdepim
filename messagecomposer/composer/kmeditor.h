@@ -214,7 +214,7 @@ Q_SIGNALS:
 protected:
 
     /**
-     * Reimplemented to start the external editor and to emit focusUp().
+     * Reimplemented to start the external editor and to Q_EMIT focusUp().
      */
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
 

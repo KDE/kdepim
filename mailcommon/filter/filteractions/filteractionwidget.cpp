@@ -84,14 +84,14 @@ void FilterActionWidget::Private::setFilterAction(QWidget *widget)
 
 void FilterActionWidget::Private::slotAddWidget()
 {
-    emit q->addWidget(q);
-    emit q->filterModified();
+    Q_EMIT q->addWidget(q);
+    Q_EMIT q->filterModified();
 }
 
 void FilterActionWidget::Private::slotRemoveWidget()
 {
-    emit q->removeWidget(q);
-    emit q->filterModified();
+    Q_EMIT q->removeWidget(q);
+    Q_EMIT q->filterModified();
 }
 
 void FilterActionWidget::Private::slotFilterTypeChanged(int index)

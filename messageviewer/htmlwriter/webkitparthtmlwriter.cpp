@@ -97,7 +97,7 @@ void WebKitPartHtmlWriter::end()
     mHtmlView->setUpdatesEnabled(true);
     mHtmlView->update();
     mState = Ended;
-    emit finished();
+    Q_EMIT finished();
 }
 
 void WebKitPartHtmlWriter::reset()

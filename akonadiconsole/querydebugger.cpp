@@ -168,7 +168,7 @@ public:
             ++(it->calls);
             it->duration += duration;
 
-            emit dataChanged(index(row, DurationColumn), index(row, AvgDurationColumn));
+            Q_EMIT dataChanged(index(row, DurationColumn), index(row, AvgDurationColumn));
         } else {
             beginInsertRows(QModelIndex(), row, row);
             QueryInfo info;
@@ -181,7 +181,7 @@ public:
 
         mSpecialRows[TOTAL].duration += duration;
         ++mSpecialRows[TOTAL].calls;
-        emit dataChanged(index(TOTAL, DurationColumn), index(TOTAL, AvgDurationColumn));
+        Q_EMIT dataChanged(index(TOTAL, DurationColumn), index(TOTAL, AvgDurationColumn));
     }
 
     void clear()

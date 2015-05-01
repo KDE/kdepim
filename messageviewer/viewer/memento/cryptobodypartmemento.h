@@ -59,7 +59,7 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void notify()
     {
-        emit update(Viewer::Force);
+        Q_EMIT update(Viewer::Force);
     }
 
 protected:

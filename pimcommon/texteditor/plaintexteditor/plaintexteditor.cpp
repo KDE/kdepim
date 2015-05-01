@@ -284,7 +284,7 @@ void PlainTextEditor::slotSpellCheckerCanceled()
 
 void PlainTextEditor::slotSpellCheckerAutoCorrect(const QString &currentWord, const QString &autoCorrectWord)
 {
-    emit spellCheckerAutoCorrect(currentWord, autoCorrectWord);
+    Q_EMIT spellCheckerAutoCorrect(currentWord, autoCorrectWord);
 }
 
 void PlainTextEditor::slotSpellCheckerMisspelling(const QString &text, int pos)

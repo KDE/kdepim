@@ -771,16 +771,16 @@ void TodoView::selectionChanged(const QItemSelection &selected,
     Q_UNUSED(deselected);
     QModelIndexList selection = selected.indexes();
     if (selection.isEmpty() || !selection[0].isValid()) {
-        emit incidenceSelected(Akonadi::Item(), QDate());
+        Q_EMIT incidenceSelected(Akonadi::Item(), QDate());
         return;
     }
 
     const Akonadi::Item todoItem = selection[0].data(TodoModel::TodoRole).value<Akonadi::Item>();
 
     if (selectedIncidenceDates().isEmpty()) {
-        emit incidenceSelected(todoItem, QDate());
+        Q_EMIT incidenceSelected(todoItem, QDate());
     } else {
-        emit incidenceSelected(todoItem, selectedIncidenceDates().first());
+        Q_EMIT incidenceSelected(todoItem, selectedIncidenceDates().first());
     }
 }
 
@@ -793,7 +793,7 @@ void TodoView::showTodo()
 
     const Akonadi::Item todoItem = selection[0].data(TodoModel::TodoRole).value<Akonadi::Item>();
 
-    emit showIncidenceSignal(todoItem);
+    Q_EMIT showIncidenceSignal(todoItem);
 }
 
 void TodoView::editTodo()
@@ -804,7 +804,7 @@ void TodoView::editTodo()
     }
 
     const Akonadi::Item todoItem = selection[0].data(TodoModel::TodoRole).value<Akonadi::Item>();
-    emit editIncidenceSignal(todoItem);
+    Q_EMIT editIncidenceSignal(todoItem);
 }
 
 void TodoView::deleteTodo()
@@ -815,14 +815,14 @@ void TodoView::deleteTodo()
             selection[0].data(TodoModel::TodoRole).value<Akonadi::Item>();
 
         if (!changer()->deletedRecently(todoItem.id())) {
-            emit deleteIncidenceSignal(todoItem);
+            Q_EMIT deleteIncidenceSignal(todoItem);
         }
     }
 }
 
 void TodoView::newTodo()
 {
-    emit newTodoSignal(QDate::currentDate().addDays(7));
+    Q_EMIT newTodoSignal(QDate::currentDate().addDays(7));
 }
 
 void TodoView::newSubTodo()
@@ -832,7 +832,7 @@ void TodoView::newSubTodo()
         const Akonadi::Item todoItem =
             selection[0].data(TodoModel::TodoRole).value<Akonadi::Item>();
 
-        emit newSubTodoSignal(todoItem);
+        Q_EMIT newSubTodoSignal(todoItem);
     } else {
         // This never happens
         qCWarning(CALENDARVIEW_LOG) << "Selection size isn't 1";
@@ -1063,7 +1063,7 @@ void TodoView::setFullView(bool fullView)
     preferences()->setFullViewTodo(fullView);
     preferences()->writeConfig();
 
-    emit fullViewChanged(fullView);
+    Q_EMIT fullViewChanged(fullView);
 }
 
 void TodoView::setFlatView(bool flatView, bool notifyOtherViews)

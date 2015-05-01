@@ -129,7 +129,7 @@ void SignatureController::insertSignatureHelper(KIdentityManagement::Signature::
 
     if (signature.isInlinedHtml() &&
             signature.type() == KIdentityManagement::Signature::Inlined) {
-        emit enableHtml();
+        Q_EMIT enableHtml();
     }
 
     KIdentityManagement::Signature::AddedText addedText = KIdentityManagement::Signature::AddNewLines;
@@ -138,7 +138,7 @@ void SignatureController::insertSignatureHelper(KIdentityManagement::Signature::
     }
     signature.insertIntoTextEdit(placement, addedText, m_editor);
     if ((placement == KIdentityManagement::Signature::Start) || (placement == KIdentityManagement::Signature::End)) {
-        emit signatureAdded();
+        Q_EMIT signatureAdded();
     }
 }
 

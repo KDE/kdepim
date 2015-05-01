@@ -101,7 +101,7 @@ void CalendarJanitor::onCollectionsFetched(bool success)
 {
     if (!success) {
         print(i18n("Error while fetching collections"));
-        emit finished(false);
+        Q_EMIT finished(false);
         qApp->exit(-1);
         return;
     }
@@ -127,7 +127,7 @@ void CalendarJanitor::onItemsFetched(bool success, const QString &errorMessage)
 {
     if (!success) {
         print(errorMessage);
-        emit finished(false);
+        Q_EMIT finished(false);
         qApp->exit(-1);
         return;
     }
@@ -179,7 +179,7 @@ void CalendarJanitor::processNextCollection()
 
     if (m_collectionsToProcess.isEmpty()) {
         print(QLatin1Char('\n') + QString().leftJustified(TEXT_WIDTH, QLatin1Char('*')));
-        emit finished(true);
+        Q_EMIT finished(true);
         qApp->exit(m_returnCode);
         return;
     }

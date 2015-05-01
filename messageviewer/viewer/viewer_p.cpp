@@ -1224,7 +1224,7 @@ void ViewerPrivate::writeConfig(bool sync)
 
     saveSplitterSizes();
     if (sync) {
-        emit requestConfigSync();
+        Q_EMIT requestConfigSync();
     }
 }
 
@@ -1452,7 +1452,7 @@ void ViewerPrivate::showHideMimeTree()
 void ViewerPrivate::atmViewMsg(KMime::Message::Ptr message)
 {
     Q_ASSERT(message);
-    emit showMessage(message, overrideEncoding());
+    Q_EMIT showMessage(message, overrideEncoding());
 }
 
 void ViewerPrivate::adjustLayout()
@@ -2165,7 +2165,7 @@ void ViewerPrivate::slotUrlOpen(const QUrl &url)
         return;
     }
 
-    emit urlClicked(mMessageItem, mClickedUrl);
+    Q_EMIT urlClicked(mMessageItem, mClickedUrl);
 }
 
 void ViewerPrivate::slotUrlOn(const QString &link, const QString &title, const QString &textContent)
@@ -2189,7 +2189,7 @@ void ViewerPrivate::slotUrlOn(const QString &link, const QString &title, const Q
 
     if (link.trimmed().isEmpty()) {
         KPIM::BroadcastStatus::instance()->reset();
-        emit showStatusBarMessage(QString());
+        Q_EMIT showStatusBarMessage(QString());
         return;
     }
 
@@ -2199,7 +2199,7 @@ void ViewerPrivate::slotUrlOn(const QString &link, const QString &title, const Q
     }
 
     KPIM::BroadcastStatus::instance()->setTransientStatusMsg(msg);
-    emit showStatusBarMessage(msg);
+    Q_EMIT showStatusBarMessage(msg);
 }
 
 void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QUrl &imageUrl, const QPoint &aPos)
@@ -2226,7 +2226,7 @@ void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QUrl &imageUrl, const Q
         mCopyURLAction->setText(i18n("Copy Link Address"));
     }
 
-    emit popupMenu(mMessageItem, aUrl, imageUrl, aPos);
+    Q_EMIT popupMenu(mMessageItem, aUrl, imageUrl, aPos);
 }
 
 void ViewerPrivate::slotLoadExternalReference()
@@ -2476,7 +2476,7 @@ void ViewerPrivate::attachmentView(KMime::Content *atmNode)
                     (qstricmp(atmNode->contentType()->subType(), "directory") == 0))) {
             setMessagePart(atmNode);
         } else {
-            emit showReader(atmNode, htmlMail(), overrideEncoding());
+            Q_EMIT showReader(atmNode, htmlMail(), overrideEncoding());
         }
     }
 }
@@ -3078,7 +3078,7 @@ void ViewerPrivate::slotItemMoved(const Akonadi::Item &item, const Akonadi::Coll
 void ViewerPrivate::slotClear()
 {
     q->clear(Viewer::Force);
-    emit itemRemoved();
+    Q_EMIT itemRemoved();
 }
 
 void ViewerPrivate::slotMessageRendered()
@@ -3164,12 +3164,12 @@ void ViewerPrivate::slotZoomReset()
 
 void ViewerPrivate::goOnline()
 {
-    emit makeResourceOnline(Viewer::AllResources);
+    Q_EMIT makeResourceOnline(Viewer::AllResources);
 }
 
 void ViewerPrivate::goResourceOnline()
 {
-    emit makeResourceOnline(Viewer::SelectedResource);
+    Q_EMIT makeResourceOnline(Viewer::SelectedResource);
 }
 
 void ViewerPrivate::slotToggleCaretBrowsing(bool toggle)

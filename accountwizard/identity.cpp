@@ -41,7 +41,7 @@ Identity::~Identity()
 
 void Identity::create()
 {
-    emit info(i18n("Setting up identity..."));
+    Q_EMIT info(i18n("Setting up identity..."));
 
     // store identity information
     // TODO now that we have the identity object around anyway we can probably get rid of most of the other members
@@ -66,7 +66,7 @@ void Identity::create()
     m_manager->setAsDefault(m_identity->uoid());
     m_manager->commit();
 
-    emit finished(i18n("Identity set up."));
+    Q_EMIT finished(i18n("Identity set up."));
 }
 
 QString Identity::identityName() const
@@ -102,7 +102,7 @@ void Identity::destroy()
     m_manager->removeIdentityForced(m_identity->identityName());
     m_manager->commit();
     m_identity = 0;
-    emit info(i18n("Identity removed."));
+    Q_EMIT info(i18n("Identity removed."));
 }
 
 void Identity::setIdentityName(const QString &name)

@@ -340,7 +340,7 @@ private:
         }
         cleanup();
         const QPointer<Private> that = this;
-        emit q->closed(q);
+        Q_EMIT q->closed(q);
         if (that) { // still there
             q->deleteLater();
         }
@@ -489,7 +489,7 @@ private:
             return assuan_process_done_msg(ctx_, gpg_error(GPG_ERR_ASS_PARAMETER), errorString);
         }
 
-        emit conn.q->startKeyManagerRequested();
+        Q_EMIT conn.q->startKeyManagerRequested();
 
         return assuan_process_done(ctx_, 0);
     }
@@ -509,7 +509,7 @@ private:
             return assuan_process_done_msg(ctx_, gpg_error(GPG_ERR_ASS_PARAMETER), errorString);
         }
 
-        emit conn.q->startConfigDialogRequested();
+        Q_EMIT conn.q->startConfigDialogRequested();
 
         return assuan_process_done(ctx_, 0);
     }
@@ -1131,7 +1131,7 @@ public:
     {
         assert(cb_data);
         InquiryHandler *this_ = static_cast<InquiryHandler *>(cb_data);
-        emit this_->signal(rc, QByteArray::fromRawData(reinterpret_cast<const char *>(buffer), buflen), this_->keyword);
+        Q_EMIT this_->signal(rc, QByteArray::fromRawData(reinterpret_cast<const char *>(buffer), buflen), this_->keyword);
         std::free(buffer);
         delete this_;
         return 0;
@@ -1141,7 +1141,7 @@ public:
     {
         assert(cb_data);
         InquiryHandler *this_ = static_cast<InquiryHandler *>(cb_data);
-        emit this_->signal(rc, QByteArray::fromRawData(reinterpret_cast<const char *>(this_->buffer), this_->buflen), this_->keyword);
+        Q_EMIT this_->signal(rc, QByteArray::fromRawData(reinterpret_cast<const char *>(this_->buffer), this_->buflen), this_->keyword);
         std::free(this_->buffer);
         delete this_;
         return 0;

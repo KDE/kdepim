@@ -564,7 +564,7 @@ void GraphicsScene::slotGridChanged()
 {
     updateItems();
     update();
-    emit gridChanged();
+    Q_EMIT gridChanged();
 }
 
 void GraphicsScene::helpEvent(QGraphicsSceneHelpEvent *helpEvent)
@@ -609,22 +609,22 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &_rect)
 
 void GraphicsScene::itemEntered(const QModelIndex &idx)
 {
-    emit entered(idx);
+    Q_EMIT entered(idx);
 }
 
 void GraphicsScene::itemPressed(const QModelIndex &idx)
 {
-    emit pressed(idx);
+    Q_EMIT pressed(idx);
 }
 
 void GraphicsScene::itemClicked(const QModelIndex &idx)
 {
-    emit clicked(idx);
+    Q_EMIT clicked(idx);
 }
 
 void GraphicsScene::itemDoubleClicked(const QModelIndex &idx)
 {
-    emit doubleClicked(idx);
+    Q_EMIT doubleClicked(idx);
 }
 
 void GraphicsScene::setDragSource(GraphicsItem *item)

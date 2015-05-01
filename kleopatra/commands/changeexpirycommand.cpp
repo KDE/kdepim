@@ -185,7 +185,7 @@ void ChangeExpiryCommand::Private::slotDialogAccepted()
 
 void ChangeExpiryCommand::Private::slotDialogRejected()
 {
-    emit q->canceled();
+    Q_EMIT q->canceled();
     finished();
 }
 

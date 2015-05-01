@@ -182,7 +182,7 @@ void ChangeOwnerTrustCommand::Private::slotDialogAccepted()
 
 void ChangeOwnerTrustCommand::Private::slotDialogRejected()
 {
-    emit q->canceled();
+    Q_EMIT q->canceled();
     finished();
 }
 

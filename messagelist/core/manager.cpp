@@ -464,7 +464,7 @@ void Manager::aggregationsConfigurationCompleted()
     saveConfiguration(); // just to be sure :)
 
     // notify all the widgets that they should reload the option set combos
-    emit aggregationsChanged();
+    Q_EMIT aggregationsChanged();
 }
 
 const SortOrder Manager::sortOrderForStorageModel(const StorageModel *storageModel, bool *storageUsesPrivateSortOrder)
@@ -903,7 +903,7 @@ void Manager::themesConfigurationCompleted()
     saveConfiguration(); // just to be sure :)
 
     // notify all the widgets that they should reload the option set combos
-    emit themesChanged();
+    Q_EMIT themesChanged();
 }
 
 void Manager::reloadAllWidgets()

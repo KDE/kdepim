@@ -138,9 +138,9 @@ void MailSenderJob::fetchJobFinished(KJob *job)
 void MailSenderJob::finishJob()
 {
     if (!mEmailAddresses.isEmpty()) {
-        emit sendMails(mEmailAddresses);
+        Q_EMIT sendMails(mEmailAddresses);
     } else {
-        emit sendMailsError(i18n("No emails found in selected contacts."));
+        Q_EMIT sendMailsError(i18n("No emails found in selected contacts."));
     }
     deleteLater();
 }

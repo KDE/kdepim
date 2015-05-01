@@ -208,7 +208,7 @@ void Kleo::GnuPGProcessBase::parseStatusOutput()
                 args.push_back(fromHexEscapedUtf8(tag));
             }
         }
-        emit status(this, cmd, args);
+        Q_EMIT status(this, cmd, args);
     }
     d->statusBuffer = d->statusBuffer.mid(lineStart);
 }

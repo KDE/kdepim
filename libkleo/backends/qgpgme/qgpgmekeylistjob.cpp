@@ -151,7 +151,7 @@ void QGpgMEKeyListJob::resultHook(const result_type &tuple)
 {
     mResult = get<0>(tuple);
     Q_FOREACH (const Key &key, get<1>(tuple)) {
-        emit nextKey(key);
+        Q_EMIT nextKey(key);
     }
 }
 

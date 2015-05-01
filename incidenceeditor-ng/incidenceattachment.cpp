@@ -158,7 +158,7 @@ void IncidenceAttachment::addAttachment()
     if (dialog.data()->exec() == QDialog::Rejected) {
         delete item;
     } else {
-        emit attachmentCountChanged(mAttachmentView->count());
+        Q_EMIT attachmentCountChanged(mAttachmentView->count());
     }
 
     if (dialog.data()) {
@@ -235,7 +235,7 @@ void IncidenceAttachment::removeSelectedAttachments()
     }
 
     mAttachmentView->update();
-    emit attachmentCountChanged(mAttachmentView->count());
+    Q_EMIT attachmentCountChanged(mAttachmentView->count());
     checkDirtyStatus();
 }
 
@@ -298,7 +298,7 @@ void IncidenceAttachment::showAttachment(QListWidgetItem *item)
 
     KCalCore::Attachment::Ptr att = attitem->attachment();
     if (att->isUri()) {
-        emit openURL(att->uri());
+        Q_EMIT openURL(att->uri());
     } else {
         KRun::runUrl(mAttachmentView->tempFileForAttachment(att), att->mimeType(), 0, true);
     }

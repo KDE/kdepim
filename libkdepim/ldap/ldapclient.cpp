@@ -207,12 +207,12 @@ void LdapClient::Private::slotDone()
     }
     int err = mJob->error();
     if (err && err != KIO::ERR_USER_CANCELED) {
-        emit q->error(mJob->errorString());
+        Q_EMIT q->error(mJob->errorString());
     }
 #ifdef KDEPIM_INPROCESS_LDAP
     QMetaObject::invokeMethod(mJob, "deleteLater", Qt::QueuedConnection);   // it's in a different thread
 #endif
-    emit q->done();
+    Q_EMIT q->done();
 }
 
 void LdapClient::Private::startParseLDIF()
@@ -275,7 +275,7 @@ void LdapClient::Private::finishCurrentObject()
             }
         }
     }
-    emit q->result(*q, mCurrentObject);
+    Q_EMIT q->result(*q, mCurrentObject);
     mCurrentObject.clear();
 }
 

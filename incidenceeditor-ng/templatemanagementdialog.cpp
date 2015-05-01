@@ -187,7 +187,7 @@ void TemplateManagementDialog::slotApplyTemplate()
     if (item) {
         const QString &cur = item->text();
         if (!cur.isEmpty() && cur != m_newTemplate) {
-            emit loadTemplate(cur);
+            Q_EMIT loadTemplate(cur);
             slotOk();
         }
     }
@@ -197,10 +197,10 @@ void TemplateManagementDialog::slotOk()
 {
     // failure is not an option *cough*
     if (!m_newTemplate.isEmpty()) {
-        emit saveTemplate(m_newTemplate);
+        Q_EMIT saveTemplate(m_newTemplate);
     }
     if (m_changed) {
-        emit templatesChanged(m_templates);
+        Q_EMIT templatesChanged(m_templates);
     }
     accept();
 }

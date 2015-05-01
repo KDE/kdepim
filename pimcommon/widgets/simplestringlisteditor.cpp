@@ -247,11 +247,11 @@ void SimpleStringListEditor::insertNewEntry(const QString &entry)
 {
     QString newEntry = entry;
     // let the user verify the string before adding
-    emit aboutToAdd(newEntry);
+    Q_EMIT aboutToAdd(newEntry);
     if (!newEntry.isEmpty() && !containsString(newEntry)) {
         mListBox->addItem(newEntry);
         slotSelectionChanged();
-        emit changed();
+        Q_EMIT changed();
     }
 }
 
@@ -270,7 +270,7 @@ void SimpleStringListEditor::slotRemove()
         delete mListBox->takeItem(mListBox->row(item));
     }
     slotSelectionChanged();
-    emit changed();
+    Q_EMIT changed();
 }
 
 QString SimpleStringListEditor::modifyEntry(const QString &text)
@@ -279,7 +279,7 @@ QString SimpleStringListEditor::modifyEntry(const QString &text)
     QString newText = QInputDialog::getText(this, i18n("Change Value"),
                                             mAddDialogLabel, QLineEdit::Normal, text,
                                             &ok);
-    emit aboutToAdd(newText);
+    Q_EMIT aboutToAdd(newText);
 
     if (!ok || newText.isEmpty() || newText == text) {
         return QString();
@@ -297,7 +297,7 @@ void SimpleStringListEditor::slotModify()
     const QString newText = modifyEntry(item->text());
     if (!newText.isEmpty()) {
         item->setText(newText);
-        emit changed();
+        Q_EMIT changed();
     }
 }
 
@@ -339,7 +339,7 @@ void SimpleStringListEditor::slotUp()
         wasMoved = true;
     }
     if (wasMoved) {
-        emit changed();
+        Q_EMIT changed();
         mListBox->setCurrentRow(currentRow - 1);
     }
 }
@@ -371,7 +371,7 @@ void SimpleStringListEditor::slotDown()
         wasMoved = true;
     }
     if (wasMoved) {
-        emit changed();
+        Q_EMIT changed();
         mListBox->setCurrentRow(currentRow + 1);
     }
 }

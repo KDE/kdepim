@@ -425,7 +425,7 @@ void ProgressDialog::slotClose()
 void ProgressDialog::setVisible(bool b)
 {
     OverlayWidget::setVisible(b);
-    emit visibilityChanged(b);
+    Q_EMIT visibilityChanged(b);
 }
 
 void ProgressDialog::slotToggleVisibility()

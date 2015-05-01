@@ -325,7 +325,7 @@ void ArchiveDialog::slotUser1()
     }
     if (KCalPrefs::instance()->mAutoArchive) {
         archiver.runAuto(mCalendar, mChanger, this, true /*with gui*/);
-        emit autoArchivingSettingsModified();
+        Q_EMIT autoArchivingSettingsModified();
         accept();
     } else {
         archiver.runOnce(mCalendar, mChanger, mDateEdit->date(), this);
@@ -335,7 +335,7 @@ void ArchiveDialog::slotUser1()
 
 void ArchiveDialog::slotEventsDeleted()
 {
-    emit eventsDeleted();
+    Q_EMIT eventsDeleted();
     if (!KCalPrefs::instance()->mAutoArchive) {
         accept();
     }

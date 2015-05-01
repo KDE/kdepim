@@ -174,7 +174,7 @@ void ResultListWidget::Private::allTasksDone()
     }
     m_progressLabel->setVisible(false);
     resizeIfStandalone();
-    emit q->completeChanged();
+    Q_EMIT q->completeChanged();
 }
 
 void ResultListWidget::Private::result(const shared_ptr<const Task::Result> &result)

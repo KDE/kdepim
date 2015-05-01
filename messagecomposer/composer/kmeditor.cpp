@@ -186,7 +186,7 @@ void KMeditorPrivate::startExternalEditor()
     if (!mExtEditorProcess->waitForStarted()) {
         canStartProcess(commandLine);
     } else {
-        emit q->externalEditorStarted();
+        Q_EMIT q->externalEditorStarted();
     }
 }
 
@@ -213,7 +213,7 @@ void KMeditorPrivate::slotEditorFinished(int codeError, QProcess::ExitStatus exi
             KMessageBox::error(q->topLevelWidget(), i18n("Error was found when we started external editor."), i18n("External Editor Closed"));
             q->setUseExternalEditor(false);
         }
-        emit q->externalEditorClosed();
+        Q_EMIT q->externalEditorClosed();
     }
 
     q->killExternalEditor();   // cleanup...
@@ -259,10 +259,10 @@ void KMeditor::keyPressEvent(QKeyEvent *e)
             textCursor().block().position() == 0 &&
             textCursor().block().layout()->lineForTextPosition(textCursor().position()).lineNumber() == 0) {
         textCursor().clearSelection();
-        emit focusUp();
+        Q_EMIT focusUp();
     } else if (e->key() == Qt::Key_Backtab && e->modifiers() == Qt::ShiftModifier) {
         textCursor().clearSelection();
-        emit focusUp();
+        Q_EMIT focusUp();
     } else {
         if (d->mAutoCorrection && d->mAutoCorrection->isEnabledAutoCorrection()) {
             if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
@@ -343,7 +343,7 @@ void KMeditorPrivate::init()
 void KMeditor::slotChangeInsertMode()
 {
     setOverwriteMode(!overwriteMode());
-    emit insertModeChanged();
+    Q_EMIT insertModeChanged();
 }
 
 void KMeditor::setUseExternalEditor(bool use)

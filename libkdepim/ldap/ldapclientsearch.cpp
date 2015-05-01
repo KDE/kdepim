@@ -294,14 +294,14 @@ void LdapClientSearch::Private::slotDataTimer()
     QStringList lst;
     LdapResult::List reslist;
 
-    emit q->searchData(mResults);
+    Q_EMIT q->searchData(mResults);
 
     makeSearchData(lst, reslist);
     if (!lst.isEmpty()) {
-        emit q->searchData(lst);
+        Q_EMIT q->searchData(lst);
     }
     if (!reslist.isEmpty()) {
-        emit q->searchData(reslist);
+        Q_EMIT q->searchData(reslist);
     }
 }
 
@@ -309,8 +309,8 @@ void LdapClientSearch::Private::finish()
 {
     mDataTimer.stop();
 
-    slotDataTimer(); // emit final bunch of data
-    emit q->searchDone();
+    slotDataTimer(); // Q_EMIT final bunch of data
+    Q_EMIT q->searchDone();
 }
 
 void LdapClientSearch::Private::makeSearchData(QStringList &ret, LdapResult::List &resList)

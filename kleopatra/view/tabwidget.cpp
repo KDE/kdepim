@@ -244,7 +244,7 @@ void Page::setKeyFilter(const shared_ptr<KeyFilter> &filter)
     KeyTreeView::setKeyFilter(filter);
     const QString newTitle = title();
     if (oldTitle != newTitle) {
-        emit titleChanged(newTitle);
+        Q_EMIT titleChanged(newTitle);
     }
 }
 
@@ -260,7 +260,7 @@ void Page::setTitle(const QString &t)
     m_title = t;
     const QString newTitle = title();
     if (oldTitle != newTitle) {
-        emit titleChanged(newTitle);
+        Q_EMIT titleChanged(newTitle);
     }
 }
 
@@ -276,7 +276,7 @@ void Page::setToolTip(const QString &tip)
     m_toolTip = tip;
     const QString newTip = toolTip();
     if (oldTip != newTip) {
-        emit titleChanged(title());
+        Q_EMIT titleChanged(title());
     }
 }
 
@@ -551,9 +551,9 @@ void TabWidget::Private::slotContextMenu(QWidget *w, const QPoint &p)
 void TabWidget::Private::currentIndexChanged(int index)
 {
     const Page *const page = this->page(index);
-    emit q->currentViewChanged(page ? page->view() : 0);
-    emit q->keyFilterChanged(page ? page->keyFilter() : shared_ptr<KeyFilter>());
-    emit q->stringFilterChanged(page ? page->stringFilter() : QString());
+    Q_EMIT q->currentViewChanged(page ? page->view() : 0);
+    Q_EMIT q->keyFilterChanged(page ? page->keyFilter() : shared_ptr<KeyFilter>());
+    Q_EMIT q->stringFilterChanged(page ? page->stringFilter() : QString());
     enableDisableCurrentPageActions();
 }
 
@@ -561,8 +561,8 @@ void TabWidget::Private::enableDisableCurrentPageActions()
 {
     const Page *const page = currentPage();
 
-    emit q->enableChangeStringFilter(page && page->canChangeStringFilter());
-    emit q->enableChangeKeyFilter(page && page->canChangeKeyFilter());
+    Q_EMIT q->enableChangeStringFilter(page && page->canChangeStringFilter());
+    Q_EMIT q->enableChangeKeyFilter(page && page->canChangeKeyFilter());
 
     enableDisablePageActions(currentPageActions, page);
 }
@@ -594,14 +594,14 @@ void TabWidget::Private::slotPageTitleChanged(const QString &)
 void TabWidget::Private::slotPageKeyFilterChanged(const shared_ptr<KeyFilter> &kf)
 {
     if (isSenderCurrentPage()) {
-        emit q->keyFilterChanged(kf);
+        Q_EMIT q->keyFilterChanged(kf);
     }
 }
 
 void TabWidget::Private::slotPageStringFilterChanged(const QString &filter)
 {
     if (isSenderCurrentPage()) {
-        emit q->stringFilterChanged(filter);
+        Q_EMIT q->stringFilterChanged(filter);
     }
 }
 
@@ -646,7 +646,7 @@ void TabWidget::Private::closePage(Page *page)
     if (!page || !page->canBeClosed() || tabWidget.count() <= 1) {
         return;
     }
-    emit q->viewAboutToBeRemoved(page->view());
+    Q_EMIT q->viewAboutToBeRemoved(page->view());
     tabWidget.removeTab(tabWidget.indexOf(page));
     enableDisableCurrentPageActions();
 }
@@ -862,7 +862,7 @@ QTreeView *TabWidget::Private::addView(Page *page, Page *columnReference)
     }
     enableDisableCurrentPageActions();
     QTreeView *view = page->view();
-    emit q->viewAdded(view);
+    Q_EMIT q->viewAdded(view);
     return view;
 }
 

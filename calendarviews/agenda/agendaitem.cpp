@@ -486,7 +486,7 @@ void AgendaItem::resetMovePrivate()
                     if (nowDel->moveInfo()) {
                         toDel = nowDel->moveInfo()->mPrevMultiItem;
                     }
-                    emit removeAgendaItem(nowDel);
+                    Q_EMIT removeAgendaItem(nowDel);
                 }
                 mMultiItemInfo->mFirstMultiItem = Q_NULLPTR;
                 mMultiItemInfo->mPrevMultiItem = Q_NULLPTR;
@@ -500,7 +500,7 @@ void AgendaItem::resetMovePrivate()
                     if (nowDel->moveInfo()) {
                         toDel = nowDel->moveInfo()->mNextMultiItem;
                     }
-                    emit removeAgendaItem(nowDel);
+                    Q_EMIT removeAgendaItem(nowDel);
                 }
                 mMultiItemInfo->mLastMultiItem = Q_NULLPTR;
                 mMultiItemInfo->mNextMultiItem = Q_NULLPTR;
@@ -515,7 +515,7 @@ void AgendaItem::resetMovePrivate()
         delete mStartMoveInfo;
         mStartMoveInfo = Q_NULLPTR;
     }
-    emit showAgendaItem(this);
+    Q_EMIT showAgendaItem(this);
     if (nextMultiItem()) {
         nextMultiItem()->resetMovePrivate();
     }
@@ -542,7 +542,7 @@ void AgendaItem::endMovePrivate()
                 if (nowDel->moveInfo()) {
                     toDel = nowDel->moveInfo()->mPrevMultiItem;
                 }
-                emit removeAgendaItem(nowDel);
+                Q_EMIT removeAgendaItem(nowDel);
             }
         }
         // if last, delete all next
@@ -554,7 +554,7 @@ void AgendaItem::endMovePrivate()
                 if (nowDel->moveInfo()) {
                     toDel = nowDel->moveInfo()->mNextMultiItem;
                 }
-                emit removeAgendaItem(nowDel);
+                Q_EMIT removeAgendaItem(nowDel);
             }
         }
         // also delete the moving info

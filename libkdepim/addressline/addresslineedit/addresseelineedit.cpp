@@ -626,7 +626,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *object, QEvent *event)
 
 void AddresseeLineEdit::emitTextCompleted()
 {
-    emit textCompleted();
+    Q_EMIT textCompleted();
 }
 
 void AddresseeLineEdit::callUserCancelled(const QString &str)

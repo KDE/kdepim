@@ -170,7 +170,7 @@ void ExportCertificateCommand::doStart()
     const bool haveBoth = !cms.empty() && !openpgp.empty();
     const GpgME::Protocol prot = haveBoth ? UnknownProtocol : (!cms.empty() ? CMS : OpenPGP);
     if (!d->requestFileNames(prot)) {
-        emit canceled();
+        Q_EMIT canceled();
         d->finished();
     } else {
         if (!openpgp.empty()) {
@@ -258,7 +258,7 @@ void ExportCertificateCommand::Private::startExportJob(GpgME::Protocol protocol,
         finished();
         return;
     }
-    emit q->info(i18n("Exporting certificates..."));
+    Q_EMIT q->info(i18n("Exporting certificates..."));
     ++jobsPending;
     const QPointer<ExportJob> exportJob(job.release());
 

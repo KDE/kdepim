@@ -90,12 +90,12 @@ public:
         {
         case UserIdRole:
             right.first = value.toByteArray();
-            emit dataChanged(index, index);
+            Q_EMIT dataChanged(index, index);
             return true;
             break;
         case PermissionsRole:
             right.second = static_cast<KIMAP::Acl::Rights>(value.toInt());
-            emit dataChanged(index, index);
+            Q_EMIT dataChanged(index, index);
             return true;
             break;
         default:
@@ -390,7 +390,7 @@ AclManager::~AclManager()
 void AclManager::setCollection(const Akonadi::Collection &collection)
 {
     d->setCollection(collection);
-    emit collectionChanged(d->mCollection);
+    Q_EMIT collectionChanged(d->mCollection);
 }
 
 Akonadi::Collection AclManager::collection() const

@@ -496,7 +496,7 @@ void IncidenceDialogPrivate::handleItemSaveFinish(EditorItemManager::SaveAction 
     }
 
     if (saveAction == EditorItemManager::Create) {
-        emit q->incidenceCreated(mItemManager->item());
+        Q_EMIT q->incidenceCreated(mItemManager->item());
     }
 }
 
@@ -524,7 +524,7 @@ bool IncidenceDialogPrivate::isValid() const
             return true;
         } else {
             qCWarning(INCIDENCEEDITOR_LOG) << "Select a collection first";
-            emit q->invalidCollection();
+            Q_EMIT q->invalidCollection();
         }
     }
 

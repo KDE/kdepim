@@ -87,7 +87,7 @@ void AttendeeComboBox::setCurrentIndex(int index)
     setIcon(mList.at(index).second);
     setToolTip(mList.at(index).first);
     if (old != index) {
-        emit itemChanged();
+        Q_EMIT itemChanged();
     }
 }
 
@@ -100,9 +100,9 @@ void AttendeeComboBox::slotActionTriggered()
 void AttendeeComboBox::keyPressEvent(QKeyEvent *ev)
 {
     if (ev->key() == Qt::Key_Left) {
-        emit leftPressed();
+        Q_EMIT leftPressed();
     } else if (ev->key() == Qt::Key_Right) {
-        emit rightPressed();
+        Q_EMIT rightPressed();
     } else {
         QToolButton::keyPressEvent(ev);
     }
@@ -117,23 +117,23 @@ void AttendeeLineEdit::keyPressEvent(QKeyEvent *ev)
 {
     if ((ev->key() == Qt::Key_Enter || ev->key() == Qt::Key_Return) &&
             !completionBox()->isVisible()) {
-        emit downPressed();
+        Q_EMIT downPressed();
         KPIM::AddresseeLineEdit::keyPressEvent(ev);
     } else if (ev->key() == Qt::Key_Backspace  &&  text().isEmpty()) {
         ev->accept();
-        emit deleteMe();
+        Q_EMIT deleteMe();
     } else if (ev->key() == Qt::Key_Left && cursorPosition() == 0 &&
                !ev->modifiers().testFlag(Qt::ShiftModifier)) {
         // Shift would be pressed during selection
-        emit leftPressed();
+        Q_EMIT leftPressed();
     } else if (ev->key() == Qt::Key_Right && cursorPosition() == (int)text().length() &&
                !ev->modifiers().testFlag(Qt::ShiftModifier)) {
         // Shift would be pressed during selection
-        emit rightPressed();
+        Q_EMIT rightPressed();
     } else if (ev->key() == Qt::Key_Down) {
-        emit downPressed();
+        Q_EMIT downPressed();
     } else if (ev->key() == Qt::Key_Up) {
-        emit upPressed();
+        Q_EMIT upPressed();
     } else {
         KPIM::AddresseeLineEdit::keyPressEvent(ev);
     }
@@ -293,7 +293,7 @@ void AttendeeLine::dataFromFields()
     if (!(oldAttendee == mData->attendee()) && !email.isEmpty()) {
         // if email is empty, we don't want to update anything
         qCDebug(INCIDENCEEDITOR_LOG) << oldAttendee->email() << mData->email();
-        emit changed(oldAttendee, mData->attendee());
+        Q_EMIT changed(oldAttendee, mData->attendee());
     }
 }
 
@@ -443,11 +443,11 @@ void AttendeeLine::setData(const KPIM::MultiplyingLineData::Ptr &data)
 void AttendeeLine::slotHandleChange()
 {
     if (mEdit->text().isEmpty()) {
-        emit deleteLine(this);
+        Q_EMIT deleteLine(this);
     } else {
         // has bad side-effects, and I have no idea what this was supposed to be doing
 //    mEdit->setCursorPosition( 0 );
-        emit editingFinished(this);
+        Q_EMIT editingFinished(this);
         dataFromFields();
     }
 }
@@ -456,7 +456,7 @@ void AttendeeLine::slotTextChanged(const QString &str)
 {
     Q_UNUSED(str);
     mModified = true;
-    emit changed(); // TODO: This doesn't seem connected to anywhere in incidenceattendee.cpp.
+    Q_EMIT changed(); // TODO: This doesn't seem connected to anywhere in incidenceattendee.cpp.
     // but the important code is run in slotHandleChange() anyway so we don't see any bug
 }
 
@@ -475,6 +475,6 @@ void AttendeeLine::aboutToBeDeleted()
         return;
     }
 
-    emit changed(mData->attendee(), KCalCore::Attendee::Ptr(new KCalCore::Attendee("", "")));
+    Q_EMIT changed(mData->attendee(), KCalCore::Attendee::Ptr(new KCalCore::Attendee("", "")));
 }
 

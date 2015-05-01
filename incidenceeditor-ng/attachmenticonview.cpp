@@ -283,7 +283,7 @@ void AttachmentIconView::keyPressEvent(QKeyEvent *event)
 {
     if ((event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) &&
             currentItem() && state() != EditingState) {
-        emit itemDoubleClicked(currentItem());   // ugly, but itemActivated() also includes single click
+        Q_EMIT itemDoubleClicked(currentItem());   // ugly, but itemActivated() also includes single click
         return;
     }
     QListWidget::keyPressEvent(event);

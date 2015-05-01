@@ -40,7 +40,7 @@ void LoadPage::enterPageNext()
     // FIXME: deletion seems to delete the exported objects as well, killing the entire wizard...
     //delete m_action;
     m_action = 0;
-    emit aboutToStart();
+    Q_EMIT aboutToStart();
 
     const KConfig f(Global::assistant());
     KConfigGroup grp(&f, "Wizard");

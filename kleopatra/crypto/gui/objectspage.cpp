@@ -100,7 +100,7 @@ void ObjectsPage::Private::add()
         return;
     }
     addFile(QFileInfo(fname));
-    emit q->completeChanged();
+    Q_EMIT q->completeChanged();
 }
 
 void ObjectsPage::Private::remove()
@@ -110,7 +110,7 @@ void ObjectsPage::Private::remove()
     Q_FOREACH (QListWidgetItem *const i, selected) {
         delete i;
     }
-    emit q->completeChanged();
+    Q_EMIT q->completeChanged();
 }
 
 void ObjectsPage::Private::listSelectionChanged()
@@ -132,7 +132,7 @@ void ObjectsPage::setFiles(const QStringList &list)
     Q_FOREACH (const QString &i, list) {
         d->addFile(QFileInfo(i));
     }
-    emit completeChanged();
+    Q_EMIT completeChanged();
 }
 
 void ObjectsPage::Private::addFile(const QFileInfo &info)

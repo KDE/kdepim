@@ -47,7 +47,7 @@ void TagWidget::onSelectionChanged(const Akonadi::Tag::List &tags)
     Q_FOREACH (const Akonadi::Tag &tag, mTagWidget->selection()) {
         mCachedTagNames << tag.name();
     }
-    emit selectionChanged(mCachedTagNames);
+    Q_EMIT selectionChanged(mCachedTagNames);
 }
 
 void TagWidget::setSelection(const QStringList &tagNames)

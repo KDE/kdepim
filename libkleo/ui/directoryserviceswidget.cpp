@@ -181,7 +181,7 @@ public:
         m_openPGPReadOnly = ro;
         for (unsigned int row = 0, end = rowCount() ; row != end ; ++row)
             if (isOpenPGPService(row)) {
-                emit dataChanged(index(row, 0), index(row, NumColumns));
+                Q_EMIT dataChanged(index(row, 0), index(row, NumColumns));
             }
     }
 
@@ -193,7 +193,7 @@ public:
         m_x509ReadOnly = ro;
         for (unsigned int row = 0, end = rowCount() ; row != end ; ++row)
             if (isX509Service(row)) {
-                emit dataChanged(index(row, 0), index(row, NumColumns));
+                Q_EMIT dataChanged(index(row, 0), index(row, NumColumns));
             }
     }
 
@@ -214,7 +214,7 @@ public:
             it->x509 |= x509;
             it->pgp  |= pgp;
             row = it - m_items.begin() ;
-            emit dataChanged(index(row, std::min(X509, OpenPGP)), index(row, std::max(X509, OpenPGP)));
+            Q_EMIT dataChanged(index(row, std::min(X509, OpenPGP)), index(row, std::max(X509, OpenPGP)));
         } else {
             // append new item
             const Item item = { url, x509, pgp };
@@ -704,7 +704,7 @@ void DirectoryServicesWidget::clear()
         return;
     }
     d->model.clear();
-    emit changed();
+    Q_EMIT changed();
 }
 
 void DirectoryServicesWidget::Private::showHideColumns()
@@ -877,7 +877,7 @@ bool Model::setData(const QModelIndex &idx, const QVariant &value, int role)
     if (!doSetData(row, idx.column(), value, role)) {
         return false;
     }
-    emit dataChanged(idx, idx);
+    Q_EMIT dataChanged(idx, idx);
     return true;
 }
 
@@ -890,7 +890,7 @@ bool Model::doSetData(unsigned int row, unsigned int column, const QVariant &val
                 // drag the port along with scheme changes
                 m_items[row].url.setPort(-1);
                 const QModelIndex changed = index(row, Port);
-                emit dataChanged(changed, changed);
+                Q_EMIT dataChanged(changed, changed);
             }
             m_items[row].url.setScheme(value.toString());
             return true;
@@ -953,7 +953,7 @@ void Model::setExclusivePgpFlag(unsigned int row)
             if (m_items[i].pgp) {
                 m_items[i].pgp = false;
                 const QModelIndex changed = index(i, OpenPGP);
-                emit dataChanged(changed, changed);
+                Q_EMIT dataChanged(changed, changed);
                 break;
             }
 }

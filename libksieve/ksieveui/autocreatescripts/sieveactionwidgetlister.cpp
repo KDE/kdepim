@@ -228,13 +228,13 @@ void SieveActionWidget::slotActionChanged(int index)
 void SieveActionWidget::slotAddWidget()
 {
     Q_EMIT valueChanged();
-    emit addWidget(this);
+    Q_EMIT addWidget(this);
 }
 
 void SieveActionWidget::slotRemoveWidget()
 {
     Q_EMIT valueChanged();
-    emit removeWidget(this);
+    Q_EMIT removeWidget(this);
 }
 
 void SieveActionWidget::updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled)

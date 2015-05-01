@@ -219,7 +219,7 @@ void CategoryEditDialog::slotApply()
     mCategoryConfig->setCustomCategories(l);
     mCategoryConfig->writeConfig();
 
-    emit categoryConfigChanged();
+    Q_EMIT categoryConfigChanged();
 }
 
 void CategoryEditDialog::slotCancel()

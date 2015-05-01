@@ -109,12 +109,12 @@ void TodoModel::Private::onDataChanged(const QModelIndex &begin, const QModelInd
     const QModelIndex proxyBegin = q->mapFromSource(begin);
     Q_ASSERT(proxyBegin.column() == 0);
     const QModelIndex proxyEnd = q->mapFromSource(end);
-    emit q->dataChanged(proxyBegin, proxyEnd.sibling(proxyEnd.row(), TodoModel::ColumnCount - 1));
+    Q_EMIT q->dataChanged(proxyBegin, proxyEnd.sibling(proxyEnd.row(), TodoModel::ColumnCount - 1));
 }
 
 void TodoModel::Private::onHeaderDataChanged(Qt::Orientation orientation, int first, int last)
 {
-    emit q->headerDataChanged(orientation, first, last);
+    Q_EMIT q->headerDataChanged(orientation, first, last);
 }
 
 void TodoModel::Private::onRowsAboutToBeInserted(const QModelIndex &parent, int begin, int end)
@@ -193,7 +193,7 @@ void TodoModel::Private::onLayoutAboutToBeChanged()
         m_layoutChangePersistentIndexes << srcPersistentIndex;
         m_columns << persistentIndex.column();
     }
-    emit q->layoutAboutToBeChanged();
+    Q_EMIT q->layoutAboutToBeChanged();
 }
 
 void TodoModel::Private::onLayoutChanged()
@@ -212,7 +212,7 @@ void TodoModel::Private::onLayoutChanged()
     m_layoutChangePersistentIndexes.clear();
     m_persistentIndexes.clear();
     m_columns.clear();
-    emit q->layoutChanged();
+    Q_EMIT q->layoutChanged();
 }
 
 TodoModel::TodoModel(const EventViews::PrefsPtr &preferences, QObject *parent)
@@ -745,7 +745,7 @@ bool TodoModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                 todo->setRelatedTo(destTodo ? destTodo->uid() : QString());
                 d->m_changer->modifyIncidence(item, oldTodo);
 
-                // again, no need to emit dataChanged, that's done by processChange
+                // again, no need to Q_EMIT dataChanged, that's done by processChange
                 return true;
             } else {
                 qCDebug(CALENDARVIEW_LOG) << "Todo's with recurring id can't have child todos yet.";

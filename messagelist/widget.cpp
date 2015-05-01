@@ -260,7 +260,7 @@ void Widget::viewMessageSelected(MessageList::Core::MessageItem *msg)
 
     if (!msg || !msg->isValid() || !storageModel()) {
         d->mLastSelectedMessage = -1;
-        emit messageSelected(Item());
+        Q_EMIT messageSelected(Item());
         return;
     }
 
@@ -268,7 +268,7 @@ void Widget::viewMessageSelected(MessageList::Core::MessageItem *msg)
 
     d->mLastSelectedMessage = row;
 
-    emit messageSelected(d->itemForRow(row));     // this MAY be null
+    Q_EMIT messageSelected(d->itemForRow(row));     // this MAY be null
 }
 
 void Widget::viewMessageActivated(MessageList::Core::MessageItem *msg)
@@ -297,14 +297,14 @@ void Widget::viewMessageActivated(MessageList::Core::MessageItem *msg)
         return;
     }
 
-    emit messageActivated(d->itemForRow(row));     // this MAY be null
+    Q_EMIT messageActivated(d->itemForRow(row));     // this MAY be null
 }
 
 void Widget::viewSelectionChanged()
 {
-    emit selectionChanged();
+    Q_EMIT selectionChanged();
     if (!currentMessageItem()) {
-        emit messageSelected(Item());
+        Q_EMIT messageSelected(Item());
     }
 }
 
@@ -340,7 +340,7 @@ void Widget::viewMessageStatusChangeRequest(MessageList::Core::MessageItem *msg,
     Item item = d->itemForRow(row);
     Q_ASSERT(item.isValid());
 
-    emit messageStatusChangeRequest(item, set, clear);
+    Q_EMIT messageStatusChangeRequest(item, set, clear);
 }
 
 void Widget::viewGroupHeaderContextPopupRequest(MessageList::Core::GroupHeaderItem *ghi, const QPoint &globalPos)

@@ -105,9 +105,9 @@ void EventView::defaultAction(const Akonadi::Item &aitem)
     qCDebug(CALENDARVIEW_LOG) << "  type:" << int(incidence->type());
 
     if (incidence->isReadOnly()) {
-        emit showIncidenceSignal(aitem);
+        Q_EMIT showIncidenceSignal(aitem);
     } else {
-        emit editIncidenceSignal(aitem);
+        Q_EMIT editIncidenceSignal(aitem);
     }
 }
 
@@ -334,7 +334,7 @@ bool EventView::processKeyEvent(QKeyEvent *ke)
             d->mReturnPressed = true;
         } else if (ke->type() == QEvent::KeyRelease) {
             if (d->mReturnPressed) {
-                emit newEventSignal();
+                Q_EMIT newEventSignal();
                 d->mReturnPressed = false;
                 return true;
             } else {
@@ -379,7 +379,7 @@ bool EventView::processKeyEvent(QKeyEvent *ke)
                               static_cast<ushort>(ke->count())));
             if (!d->mTypeAhead) {
                 d->mTypeAhead = true;
-                emit newEventSignal();
+                Q_EMIT newEventSignal();
             }
             return true;
         }

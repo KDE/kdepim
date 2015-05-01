@@ -121,10 +121,10 @@ void MonthViewPrivate::moveStartDate(int weeks, int months)
      * If we call q->setDateRange( start, end ); directly,
      * it will change the selected dates in month view,
      * but the application won't know about it.
-     * The correct way is to emit datesSelected()
+     * The correct way is to Q_EMIT datesSelected()
      * #250256
      * */
-    emit q->datesSelected(dateList);
+    Q_EMIT q->datesSelected(dateList);
 #else
     // korg-mobile doesn't use korg's date navigator.
     // Before creating a solution with no #ifndef, we must first extract the remaining views from
@@ -416,7 +416,7 @@ void MonthView::changeFullView()
     preferences()->setFullViewMonth(fullView);
     preferences()->writeConfig();
 
-    emit fullViewChanged(fullView);
+    Q_EMIT fullViewChanged(fullView);
 }
 
 void MonthView::moveBackMonth()

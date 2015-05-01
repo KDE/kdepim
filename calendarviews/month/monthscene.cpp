@@ -507,7 +507,7 @@ void MonthScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
             }
         }
     } else {
-        emit newEventSignal();
+        Q_EMIT newEventSignal();
     }
 }
 
@@ -589,7 +589,7 @@ void MonthScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         if (mouseEvent->button() == Qt::RightButton) {
             IncidenceMonthItem *tmp = qobject_cast<IncidenceMonthItem *>(mClickedItem);
             if (tmp) {
-                emit showIncidencePopupSignal(tmp->akonadiItem(), tmp->realStartDate());
+                Q_EMIT showIncidencePopupSignal(tmp->akonadiItem(), tmp->realStartDate());
             }
         }
 
@@ -628,7 +628,7 @@ void MonthScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             mSelectedCellDate = cell->date();
             update();
             if (mouseEvent->button() == Qt::RightButton) {
-                emit showNewEventPopupSignal();
+                Q_EMIT showNewEventPopupSignal();
             }
             mouseEvent->accept();
         }
@@ -715,7 +715,7 @@ void MonthScene::selectItem(MonthItem *item)
 
     if (!tmp) {
         mSelectedItem = Q_NULLPTR;
-        emit incidenceSelected(Akonadi::Item(), QDate());
+        Q_EMIT incidenceSelected(Akonadi::Item(), QDate());
         return;
     }
 
@@ -723,9 +723,9 @@ void MonthScene::selectItem(MonthItem *item)
     Q_ASSERT(CalendarSupport::hasIncidence(tmp->akonadiItem()));
 
     if (mMonthView->selectedIncidenceDates().isEmpty()) {
-        emit incidenceSelected(tmp->akonadiItem(), QDate());
+        Q_EMIT incidenceSelected(tmp->akonadiItem(), QDate());
     } else {
-        emit incidenceSelected(tmp->akonadiItem(), mMonthView->selectedIncidenceDates().first());
+        Q_EMIT incidenceSelected(tmp->akonadiItem(), mMonthView->selectedIncidenceDates().first());
     }
     update();
 }

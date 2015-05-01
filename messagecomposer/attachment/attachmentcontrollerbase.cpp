@@ -562,7 +562,7 @@ void AttachmentControllerBase::createActions()
     collection->addAction(QLatin1String("attach_vcards"), d->attachVCardsAction);
 
     setSelectedParts(AttachmentPart::List());
-    emit actionsCreated();
+    Q_EMIT actionsCreated();
 }
 
 void AttachmentControllerBase::setEncryptEnabled(bool enabled)
@@ -598,7 +598,7 @@ void AttachmentControllerBase::compressAttachment(AttachmentPart::Ptr part, bool
 
 void AttachmentControllerBase::showContextMenu()
 {
-    emit refreshSelection();
+    Q_EMIT refreshSelection();
 
     const int numberOfParts(d->selectedParts.count());
     QMenu *menu = new QMenu;
@@ -743,7 +743,7 @@ void AttachmentControllerBase::Private::slotAttachmentContentCreated(KJob *job)
     if (!job->error()) {
         const MessageComposer::AttachmentJob *const attachmentJob = dynamic_cast<MessageComposer::AttachmentJob *>(job);
         Q_ASSERT(attachmentJob);
-        emit q->showAttachment(attachmentJob->content(), QByteArray());
+        Q_EMIT q->showAttachment(attachmentJob->content(), QByteArray());
     } else {
         // TODO: show warning to the user
         qCWarning(MESSAGECOMPOSER_LOG) << "Error creating KMime::Content for attachment:" << job->errorText();
@@ -933,7 +933,7 @@ void AttachmentControllerBase::addAttachment(AttachmentPart::Ptr part)
     if (MessageComposer::MessageComposerSettings::self()->showMessagePartDialogOnAttach()) {
         attachmentProperties(part);
     }
-    emit fileAttached();
+    Q_EMIT fileAttached();
 }
 
 void AttachmentControllerBase::addAttachmentUrlSync(const QUrl &url)

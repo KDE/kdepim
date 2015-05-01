@@ -631,7 +631,7 @@ bool Pane::eventFilter(QObject *object, QEvent *event)
 
 void Pane::Private::onCurrentTabChanged()
 {
-    emit q->currentTabChanged();
+    Q_EMIT q->currentTabChanged();
 
     Widget *w = static_cast<Widget *>(q->currentWidget());
 

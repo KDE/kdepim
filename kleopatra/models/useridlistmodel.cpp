@@ -122,12 +122,12 @@ void UserIDListModel::setKey(const Key &key)
             }
         }
         if (identical) {
-            emit dataChanged(index(0, 0), index(key.numUserIDs() - 1, NumColumns - 1));
+            Q_EMIT dataChanged(index(0, 0), index(key.numUserIDs() - 1, NumColumns - 1));
             return;
         }
     }
-    emit layoutAboutToBeChanged();
-    emit layoutChanged();
+    Q_EMIT layoutAboutToBeChanged();
+    Q_EMIT layoutChanged();
 }
 
 UserID UserIDListModel::userID(const QModelIndex &idx, bool strict) const

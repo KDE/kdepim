@@ -230,12 +230,12 @@ void SearchRuleWidget::updateAddRemoveButton(bool addButtonEnabled, bool removeB
 
 void SearchRuleWidget::slotAddWidget()
 {
-    emit addWidget(this);
+    Q_EMIT addWidget(this);
 }
 
 void SearchRuleWidget::slotRemoveWidget()
 {
-    emit removeWidget(this);
+    Q_EMIT removeWidget(this);
 }
 
 void SearchRuleWidget::setRule(SearchRule::Ptr aRule)
@@ -292,7 +292,7 @@ void SearchRuleWidget::slotFunctionChanged()
     const QString prettyValue =
         RuleWidgetHandlerManager::instance()->prettyValue(ruleField, mFunctionStack, mValueStack);
 
-    emit contentsChanged(prettyValue);
+    Q_EMIT contentsChanged(prettyValue);
 }
 
 void SearchRuleWidget::slotValueChanged()
@@ -302,12 +302,12 @@ void SearchRuleWidget::slotValueChanged()
     const QString prettyValue =
         RuleWidgetHandlerManager::instance()->prettyValue(ruleField, mFunctionStack, mValueStack);
 
-    emit contentsChanged(prettyValue);
+    Q_EMIT contentsChanged(prettyValue);
 }
 
 void SearchRuleWidget::slotReturnPressed()
 {
-    emit returnPressed();
+    Q_EMIT returnPressed();
 }
 
 QByteArray SearchRuleWidget::ruleFieldToEnglish(const QString &i18nVal)
@@ -695,7 +695,7 @@ void SearchPatternEdit::setSearchPattern(SearchPattern *aPattern)
     blockSignals(false);
 
     setEnabled(true);
-    emit patternChanged();
+    Q_EMIT patternChanged();
 }
 
 void SearchPatternEdit::reset()
@@ -707,7 +707,7 @@ void SearchPatternEdit::reset()
     blockSignals(false);
 
     setEnabled(false);
-    emit patternChanged();
+    Q_EMIT patternChanged();
 }
 
 void SearchPatternEdit::slotRadioClicked(QAbstractButton *aRBtn)
@@ -721,15 +721,15 @@ void SearchPatternEdit::slotRadioClicked(QAbstractButton *aRBtn)
             mPattern->setOp(SearchPattern::OpAll);
         }
         mRuleLister->setEnabled(mPattern->op() != SearchPattern::OpAll);
-        emit patternChanged();
+        Q_EMIT patternChanged();
     }
 }
 
 void SearchPatternEdit::slotAutoNameHack()
 {
     mRuleLister->regenerateRuleListFromWidgets();
-    emit maybeNameChanged();
-    emit patternChanged();
+    Q_EMIT maybeNameChanged();
+    Q_EMIT patternChanged();
 }
 
 void SearchPatternEdit::slotRuleAdded(QWidget *newRuleWidget)
@@ -738,5 +738,5 @@ void SearchPatternEdit::slotRuleAdded(QWidget *newRuleWidget)
     connect(srw, SIGNAL(fieldChanged(QString)), this, SLOT(slotAutoNameHack()));
     connect(srw, SIGNAL(contentsChanged(QString)), this, SLOT(slotAutoNameHack()));
     connect(srw, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
-    emit patternChanged();
+    Q_EMIT patternChanged();
 }

@@ -347,7 +347,7 @@ void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
 
     // eventually reload page
     if (reloadPage) {
-        emit reloadCurrentPage();
+        Q_EMIT reloadCurrentPage();
     }
 }
 

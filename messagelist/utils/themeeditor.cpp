@@ -1558,7 +1558,7 @@ void ThemeEditor::slotNameEditTextEdited(const QString &newName)
         return;
     }
     mCurrentTheme->setName(newName);
-    emit themeNameChanged();
+    Q_EMIT themeNameChanged();
 }
 
 void ThemeEditor::slotIconSizeSpinBoxValueChanged(int val)

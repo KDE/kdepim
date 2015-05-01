@@ -163,7 +163,7 @@ void CustomTemplates::slotTextChanged()
     }
 
     if (!mBlockChangeSignal) {
-        emit changed();
+        Q_EMIT changed();
     }
 }
 
@@ -242,7 +242,7 @@ void CustomTemplates::save()
     GlobalSettings::self()->setCustomTemplates(list);
     GlobalSettings::self()->save();
 
-    emit templatesUpdated();
+    Q_EMIT templatesUpdated();
 }
 
 void CustomTemplates::slotInsertCommand(const QString &cmd, int adjustCursor)
@@ -294,7 +294,7 @@ void CustomTemplates::slotAddClicked()
         mUi->mName->clear();
         mUi->mKeySequenceWidget->setEnabled(false);
         if (!mBlockChangeSignal) {
-            emit changed();
+            Q_EMIT changed();
         }
     }
 }
@@ -352,7 +352,7 @@ void CustomTemplates::slotDuplicateClicked()
     mUi->mName->clear();
     mUi->mKeySequenceWidget->setEnabled(type != TUniversal);
 
-    emit changed();
+    Q_EMIT changed();
 }
 
 void CustomTemplates::slotRemoveClicked()
@@ -375,7 +375,7 @@ void CustomTemplates::slotRemoveClicked()
         mUi->mRemove->setEnabled(mUi->mList->topLevelItemCount() > 0);
         mUi->mDuplicate->setEnabled(mUi->mList->topLevelItemCount() > 0);
         if (!mBlockChangeSignal) {
-            emit changed();
+            Q_EMIT changed();
         }
     }
 }
@@ -431,7 +431,7 @@ void CustomTemplates::slotTypeActivated(int index)
         mUi->mKeySequenceWidget->setEnabled(customtype != TUniversal);
 
         if (!mBlockChangeSignal) {
-            emit changed();
+            Q_EMIT changed();
         }
     }
 }
@@ -446,7 +446,7 @@ void CustomTemplates::slotShortcutChanged(const QKeySequence &newSeq)
     }
 
     if (!mBlockChangeSignal) {
-        emit changed();
+        Q_EMIT changed();
     }
 }
 
@@ -466,7 +466,7 @@ void CustomTemplates::slotItemChanged(QTreeWidgetItem *item, int column)
                     mItemsToDelete.append(oldName);
                     vitem->setOldName(newName);
                     if (!mBlockChangeSignal) {
-                        emit changed();
+                        Q_EMIT changed();
                     }
                 }
             }

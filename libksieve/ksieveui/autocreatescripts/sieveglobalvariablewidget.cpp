@@ -137,13 +137,13 @@ void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element, QSt
 
 void SieveGlobalVariableActionWidget::slotAddWidget()
 {
-    emit addWidget(this);
+    Q_EMIT addWidget(this);
     Q_EMIT valueChanged();
 }
 
 void SieveGlobalVariableActionWidget::slotRemoveWidget()
 {
-    emit removeWidget(this);
+    Q_EMIT removeWidget(this);
     Q_EMIT valueChanged();
 }
 

@@ -167,8 +167,8 @@ GpgME::Error Kleo::ChiasmusJob::finished()
         showChiasmusOutput();
     }
 
-    emit done();
-    emit SpecialJob::result(mError, QVariant(mOutput));
+    Q_EMIT done();
+    Q_EMIT SpecialJob::result(mError, QVariant(mOutput));
     return mError;
 }
 

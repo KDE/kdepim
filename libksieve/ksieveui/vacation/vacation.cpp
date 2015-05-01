@@ -99,7 +99,7 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
                                            "without it, KMail cannot install out-of-"
                                            "office replies for you.\n"
                                            "Please contact your system administrator."));
-        emit result(false);
+        Q_EMIT result(false);
         return;
     }
 
@@ -143,14 +143,14 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
         mDialog->show();
     }
 
-    emit scriptActive(mWasActive, mServerName);
+    Q_EMIT scriptActive(mWasActive, mServerName);
     if (mCheckOnly && mWasActive) {
         if (KMessageBox::questionYesNo(Q_NULLPTR, i18n("There is still an active out-of-office reply configured.\n"
                                        "Do you want to edit it?"), i18n("Out-of-office reply still active"),
                                        KGuiItem(i18n("Edit"), QStringLiteral("document-properties")),
                                        KGuiItem(i18n("Ignore"), QStringLiteral("dialog-cancel")))
                 == KMessageBox::Yes) {
-            emit requestEditVacation();
+            Q_EMIT requestEditVacation();
         }
     }
 }
@@ -167,7 +167,7 @@ void Vacation::slotDialogOk()
                            mDialog->startDate(),
                            mDialog->endDate());
     const bool active = mDialog->activateVacation();
-    emit scriptActive(active, mServerName);
+    Q_EMIT scriptActive(active, mServerName);
 
     qCDebug(LIBKSIEVE_LOG) << "script:" << endl << script;
 
@@ -192,7 +192,7 @@ void Vacation::slotDialogCancel()
     mDialog->hide();
     mDialog->deleteLater();
     mDialog = Q_NULLPTR;
-    emit result(false);
+    Q_EMIT result(false);
 }
 
 void Vacation::slotPutActiveResult(KManageSieve::SieveJob *job, bool success)
@@ -216,8 +216,8 @@ void Vacation::handlePutResult(KManageSieve::SieveJob *, bool success, bool acti
 
     qCDebug(LIBKSIEVE_LOG) << "( ???," << success << ", ? )";
     mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
-    emit result(success);
-    emit scriptActive(activated, mServerName);
+    Q_EMIT result(success);
+    Q_EMIT scriptActive(activated, mServerName);
 }
 
 void Vacation::showVacationDialog()

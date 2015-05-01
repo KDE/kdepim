@@ -142,16 +142,16 @@ bool IncidenceDateTime::eventFilter(QObject *obj, QEvent *event)
     if (event->type() == QEvent::FocusIn) {
         if (obj == mUi->mStartDateEdit) {
             qCDebug(INCIDENCEEDITOR_LOG) << "emiting startDateTime: " << mUi->mStartDateEdit;
-            emit startDateFocus(obj);
+            Q_EMIT startDateFocus(obj);
         } else if (obj == mUi->mEndDateEdit) {
             qCDebug(INCIDENCEEDITOR_LOG) << "emiting endDateTime: " << mUi->mEndDateEdit;
-            emit endDateFocus(obj);
+            Q_EMIT endDateFocus(obj);
         } else if (obj == mUi->mStartTimeEdit) {
             qCDebug(INCIDENCEEDITOR_LOG) << "emiting startTimeTime: " << mUi->mStartTimeEdit;
-            emit startTimeFocus(obj);
+            Q_EMIT startTimeFocus(obj);
         } else if (obj == mUi->mEndTimeEdit) {
             qCDebug(INCIDENCEEDITOR_LOG) << "emiting endTimeTime: " << mUi->mEndTimeEdit;
-            emit endTimeFocus(obj);
+            Q_EMIT endTimeFocus(obj);
         }
 
         return true;
@@ -302,7 +302,7 @@ void IncidenceDateTime::updateStartTime(const QTime &newTime)
         mUi->mEndDateEdit->setDate(endDateTime.date());
     }
 
-    emit startTimeChanged(mCurrentStartDateTime.time());
+    Q_EMIT startTimeChanged(mCurrentStartDateTime.time());
     checkDirtyStatus();
 }
 
@@ -328,7 +328,7 @@ void IncidenceDateTime::updateStartDate(const QDate &newDate)
     checkDirtyStatus();
 
     if (dateChanged) {
-        emit startDateChanged(mCurrentStartDateTime.date());
+        Q_EMIT startDateChanged(mCurrentStartDateTime.date());
     }
 }
 
@@ -347,7 +347,7 @@ void IncidenceDateTime::updateStartSpec()
                              mCurrentStartDateTime.date().month() != prevDate.month();
 
     if (dateChanged) {
-        emit startDateChanged(mCurrentStartDateTime.date());
+        Q_EMIT startDateChanged(mCurrentStartDateTime.date());
     }
 
     if (type() == KCalCore::Incidence::TypeJournal) {
@@ -821,10 +821,10 @@ void IncidenceDateTime::setDateTimes(const KDateTime &start, const KDateTime &en
     }
 
     mCurrentStartDateTime = currentStartDateTime();
-    emit startDateChanged(start.date());
-    emit startTimeChanged(start.time());
-    emit endDateChanged(end.date());
-    emit endTimeChanged(end.time());
+    Q_EMIT startDateChanged(start.date());
+    Q_EMIT startTimeChanged(start.time());
+    Q_EMIT endDateChanged(end.date());
+    Q_EMIT endTimeChanged(end.time());
 
     updateStartToolTips();
     updateEndToolTips();

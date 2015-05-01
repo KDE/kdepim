@@ -852,12 +852,12 @@ private Q_SLOTS:
     void select()
     {
         copy_selected_from_to(m_unselectedKTV, m_selectedKTV);
-        emit completeChanged();
+        Q_EMIT completeChanged();
     }
     void unselect()
     {
         move_selected_from_to(m_selectedKTV, m_unselectedKTV);
-        emit completeChanged();
+        Q_EMIT completeChanged();
     }
 
 private:
@@ -1005,7 +1005,7 @@ private Q_SLOTS:
     void slotSignProtocolToggled()
     {
         widget.setAllowedProtocols(pgpCB.isChecked(), cmsCB.isChecked());
-        emit completeChanged();
+        Q_EMIT completeChanged();
     }
 
     void slotCommitSigningPreferences()
@@ -1074,7 +1074,7 @@ private:
     void slotCurrentIdChanged(int id)
     {
         if (id == ResultPageId) {
-            emit q->operationPrepared();
+            Q_EMIT q->operationPrepared();
         }
     }
 

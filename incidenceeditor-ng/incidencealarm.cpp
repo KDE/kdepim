@@ -265,7 +265,7 @@ void IncidenceAlarm::updateAlarmList()
 
     mUi->mAlarmList->setCurrentIndex(currentIndex);
     if (prevEnabledAlarmCount != mEnabledAlarmCount) {
-        emit alarmCountChanged(mEnabledAlarmCount);
+        Q_EMIT alarmCountChanged(mEnabledAlarmCount);
     }
 }
 

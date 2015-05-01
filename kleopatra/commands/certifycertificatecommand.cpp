@@ -225,7 +225,7 @@ void CertifyCertificateCommand::doStart()
 
 void CertifyCertificateCommand::Private::slotDialogRejected()
 {
-    emit q->canceled();
+    Q_EMIT q->canceled();
     finished();
 }
 

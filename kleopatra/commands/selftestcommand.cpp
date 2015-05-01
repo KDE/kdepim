@@ -142,21 +142,21 @@ private:
         std::vector< shared_ptr<Kleo::SelfTest> > tests;
 
 #if defined(Q_OS_WIN)
-        //emit q->info( i18n("Checking Windows Registry...") );
+        //Q_EMIT q->info( i18n("Checking Windows Registry...") );
         tests.push_back(makeGpgProgramRegistryCheckSelfTest());
 #endif
-        //emit q->info( i18n("Checking gpg installation...") );
+        //Q_EMIT q->info( i18n("Checking gpg installation...") );
         tests.push_back(makeGpgEngineCheckSelfTest());
-        //emit q->info( i18n("Checking gpgsm installation...") );
+        //Q_EMIT q->info( i18n("Checking gpgsm installation...") );
         tests.push_back(makeGpgSmEngineCheckSelfTest());
-        //emit q->info( i18n("Checking gpgconf installation...") );
+        //Q_EMIT q->info( i18n("Checking gpgconf installation...") );
         tests.push_back(makeGpgConfEngineCheckSelfTest());
         for (unsigned int i = 0 ; i < numComponents ; ++i) {
-            //emit q->info( i18n("Checking %1 configuration...", components[i]) );
+            //Q_EMIT q->info( i18n("Checking %1 configuration...", components[i]) );
             tests.push_back(makeGpgConfCheckConfigurationSelfTest(components[i]));
         }
 #if defined( HAVE_KLEOPATRACLIENT_LIBRARY )
-        //emit q->info( i18n("Checking Ui Server connectivity...") );
+        //Q_EMIT q->info( i18n("Checking Ui Server connectivity...") );
         tests.push_back(makeUiServerConnectivitySelfTest());
 #endif
 #ifndef Q_OS_WIN

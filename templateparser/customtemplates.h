@@ -83,7 +83,7 @@ private:
     QPixmap mReplyAllPix;
     QPixmap mForwardPix;
 
-    /// Whether or not to emit the changed() signal. This is useful to disable when loading
+    /// Whether or not to Q_EMIT the changed() signal. This is useful to disable when loading
     /// templates, which changes the UI without user action
     bool mBlockChangeSignal;
 

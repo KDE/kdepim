@@ -174,17 +174,17 @@ bool SnippetsModel::setData(const QModelIndex &index, const QVariant &value, int
     switch (role) {
     case NameRole:
         item->setName(value.toString());
-        emit dataChanged(index, index);
+        Q_EMIT dataChanged(index, index);
         return true;
         break;
     case TextRole:
         item->setText(value.toString());
-        emit dataChanged(index, index);
+        Q_EMIT dataChanged(index, index);
         return true;
         break;
     case KeySequenceRole:
         item->setKeySequence(value.toString());
-        emit dataChanged(index, index);
+        Q_EMIT dataChanged(index, index);
         return true;
         break;
     default:
@@ -410,7 +410,7 @@ bool SnippetsModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     setData(idx, name, SnippetsModel::NameRole);
     setData(idx, text, SnippetsModel::TextRole);
     setData(idx, keySequence, SnippetsModel::KeySequenceRole);
-    emit dndDone();
+    Q_EMIT dndDone();
     return true;
 }
 

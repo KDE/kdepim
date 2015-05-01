@@ -109,7 +109,7 @@ void GDriveJob::slotChildReferenceFetchJobFinished(KGAPI2::Job *job)
         connect(fileFetchJob, &KGAPI2::Drive::FileFetchJob::finished, this, &GDriveJob::slotFileFetchFinished);
         childRef->deleteLater();
     } else {
-        //TODO emit error
+        //TODO Q_EMIT error
         deleteLater();
     }
 }

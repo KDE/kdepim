@@ -149,7 +149,7 @@ private:
     void emitDataChangedFor(const QModelIndex &mi)
     {
         const QModelIndex p = parent(mi);
-        emit dataChanged(index(mi.row(), 0, p), index(mi.row(), columnCount(p) - 1, p));
+        Q_EMIT dataChanged(index(mi.row(), 0, p), index(mi.row(), columnCount(p) - 1, p));
     }
 
 private:

@@ -148,11 +148,11 @@ void IndividualMailITIPHandlerDialogDelegate::openDialog(const QString &question
 {
     switch (action) {
     case ActionSendMessage:
-        emit setUpdate(mIncidence, attendees);
-        emit dialogClosed(KMessageBox::Yes, mMethod, mIncidence);
+        Q_EMIT setUpdate(mIncidence, attendees);
+        Q_EMIT dialogClosed(KMessageBox::Yes, mMethod, mIncidence);
         break;
     case ActionDontSendMessage:
-        emit dialogClosed(KMessageBox::No, mMethod, mIncidence);
+        Q_EMIT dialogClosed(KMessageBox::No, mMethod, mIncidence);
         break;
     default:
         mDialog = new IndividualMailDialog(question, attendees, buttonYes, buttonNo, mParent);
@@ -206,11 +206,11 @@ void IndividualMailITIPHandlerDialogDelegate::openDialogIncidenceDeleted(Recipie
 void IndividualMailITIPHandlerDialogDelegate::onDialogClosed(int result)
 {
     if (result == KDialog::Yes) {
-        emit setEdit(mIncidence, mDialog->editAttendees());
-        emit setUpdate(mIncidence, mDialog->updateAttendees());
-        emit dialogClosed(KMessageBox::Yes, mMethod, mIncidence);
+        Q_EMIT setEdit(mIncidence, mDialog->editAttendees());
+        Q_EMIT setUpdate(mIncidence, mDialog->updateAttendees());
+        Q_EMIT dialogClosed(KMessageBox::Yes, mMethod, mIncidence);
     } else {
-        emit dialogClosed(KMessageBox::No, mMethod, mIncidence);
+        Q_EMIT dialogClosed(KMessageBox::No, mMethod, mIncidence);
     }
 }
 

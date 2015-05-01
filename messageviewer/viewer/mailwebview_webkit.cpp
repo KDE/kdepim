@@ -154,7 +154,7 @@ bool MailWebView::event(QEvent *event)
         const QWebHitTestResult hit = frame->hitTestContent(contextMenuEvent->pos());
         qCDebug(MESSAGEVIEWER_LOG) << "Right-clicked URL:" << hit.linkUrl();
 
-        emit popupMenu(hit.linkUrl(), ((hit.pixmap().isNull()) ? QUrl() : hit.imageUrl()), mapToGlobal(contextMenuEvent->pos()));
+        Q_EMIT popupMenu(hit.linkUrl(), ((hit.pixmap().isNull()) ? QUrl() : hit.imageUrl()), mapToGlobal(contextMenuEvent->pos()));
         event->accept();
         return true;
     }

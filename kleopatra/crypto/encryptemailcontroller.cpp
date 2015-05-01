@@ -170,7 +170,7 @@ void EncryptEMailController::startResolveRecipients(const std::vector<Mailbox> &
 
 void EncryptEMailController::Private::slotWizardRecipientsResolved()
 {
-    emit q->recipientsResolved();
+    Q_EMIT q->recipientsResolved();
 }
 
 void EncryptEMailController::Private::slotWizardCanceled()

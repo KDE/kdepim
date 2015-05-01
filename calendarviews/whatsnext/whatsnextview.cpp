@@ -41,9 +41,9 @@ void WhatsNextTextBrowser::setSource(const QUrl &name)
 {
     QString uri = name.toString();
     if (uri.startsWith(QLatin1String("event:"))) {
-        emit showIncidence(uri);
+        Q_EMIT showIncidence(uri);
     } else if (uri.startsWith(QLatin1String("todo:"))) {
-        emit showIncidence(uri);
+        Q_EMIT showIncidence(uri);
     } else {
         QTextBrowser::setSource(uri);
     }
@@ -342,7 +342,7 @@ void WhatsNextView::showIncidence(const QString &uid)
     }
 
     if (item.isValid()) {
-        emit showIncidenceSignal(item);
+        Q_EMIT showIncidenceSignal(item);
     }
 }
 

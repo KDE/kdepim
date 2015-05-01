@@ -404,7 +404,7 @@ void AlarmDialog::dismissCurrent()
     } else {
         update();
     }
-    emit reminderCount(activeCount());
+    Q_EMIT reminderCount(activeCount());
 }
 
 void AlarmDialog::dismissAll()
@@ -422,7 +422,7 @@ void AlarmDialog::dismissAll()
 
     setTimer();
     accept();
-    emit reminderCount(activeCount());
+    Q_EMIT reminderCount(activeCount());
 }
 
 void AlarmDialog::dismiss(ReminderList selections)
@@ -520,7 +520,7 @@ void AlarmDialog::suspend()
     } else {
         update();
     }
-    emit reminderCount(activeCount());
+    Q_EMIT reminderCount(activeCount());
 }
 
 void AlarmDialog::setTimer()
@@ -722,7 +722,7 @@ void AlarmDialog::wakeUp()
     }
     setTimer();
     showDetails(firstItem);
-    emit reminderCount(activeCount());
+    Q_EMIT reminderCount(activeCount());
 }
 
 void AlarmDialog::slotSave()

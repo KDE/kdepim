@@ -102,7 +102,7 @@ private Q_SLOTS:
     void slotCancelClicked()
     {
         cancelButton()->hide();
-        emit cancelRequested();
+        Q_EMIT cancelRequested();
     }
 
 private:

@@ -57,7 +57,7 @@ class IncidenceAttachmentModelPrivate
         q->beginResetModel();
         resetInternalData();
         q->endResetModel();
-        emit q->rowCountChanged();
+        Q_EMIT q->rowCountChanged();
     }
 
     void itemFetched(Akonadi::Item::List list)
@@ -152,7 +152,7 @@ void IncidenceAttachmentModel::setIndex(const QPersistentModelIndex &modelIndex)
     d->m_item = Akonadi::Item();
     d->resetInternalData();
     endResetModel();
-    emit rowCountChanged();
+    Q_EMIT rowCountChanged();
 }
 
 void IncidenceAttachmentModel::setItem(const Akonadi::Item &item)
@@ -177,7 +177,7 @@ void IncidenceAttachmentModelPrivate::setItem(const Akonadi::Item &item)
     createMonitor();
     resetInternalData();
     q->endResetModel();
-    emit q->rowCountChanged();
+    Q_EMIT q->rowCountChanged();
 }
 
 int IncidenceAttachmentModel::rowCount(const QModelIndex &) const

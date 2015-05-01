@@ -124,10 +124,10 @@ void FilterManager::Private::slotItemsFetchedForFilter(const Akonadi::Item::List
         if ((mTotalProgressCount > 0) && (mCurrentProgressCount != mTotalProgressCount)) {
             const QString statusMsg =
                 i18n("Filtering message %1 of %2", mCurrentProgressCount, mTotalProgressCount);
-            emit q->progressMessage(statusMsg);
-            emit q->percent(mCurrentProgressCount * 100 / mTotalProgressCount);
+            Q_EMIT q->progressMessage(statusMsg);
+            Q_EMIT q->percent(mCurrentProgressCount * 100 / mTotalProgressCount);
         } else {
-            emit q->percent(0);
+            Q_EMIT q->percent(0);
         }
 
         const bool filterResult = q->process(listMailFilters, item, needsFullPayload, filterSet);
@@ -138,7 +138,7 @@ void FilterManager::Private::slotItemsFetchedForFilter(const Akonadi::Item::List
         }
 
         if (!filterResult) {
-            emit q->filteringFailed(item);
+            Q_EMIT q->filteringFailed(item);
             // something went horribly wrong (out of space?)
             //CommonKernel->emergencyExit( i18n( "Unable to process messages: " ) + QString::fromLocal8Bit( strerror( errno ) ) );
         }
@@ -188,13 +188,13 @@ void FilterManager::Private::itemFetchJobForFilterDone(KJob *job)
         }
 
         if (!q->process(items.first(), needsFullPayload, wantedFilter)) {
-            emit q->filteringFailed(items.first());
+            Q_EMIT q->filteringFailed(items.first());
         }
     } else {
         const FilterManager::FilterSet set = static_cast<FilterManager::FilterSet>(job->property("filterSet").toInt());
 
         if (!q->process(items.first(), needsFullPayload, set, !resourceId.isEmpty(), resourceId)) {
-            emit q->filteringFailed(items.first());
+            Q_EMIT q->filteringFailed(items.first());
         }
     }
 }
@@ -347,7 +347,7 @@ void FilterManager::readConfig()
     d->mInboundFiltersExist = std::find_if(d->mFilters.constBegin(), d->mFilters.constEnd(),
                                            boost::bind(&MailCommon::MailFilter::applyOnInbound, _1)) != d->mFilters.constEnd();
 
-    emit filterListUpdated();
+    Q_EMIT filterListUpdated();
 }
 
 void FilterManager::mailCollectionRemoved(const Akonadi::Collection &collection)
@@ -576,7 +576,7 @@ void FilterManager::dump() const
 
 void FilterManager::applySpecificFilters(const QList< Akonadi::Item > &selectedMessages, SearchRule::RequiredPart requiredPart, const QStringList &listFilters)
 {
-    emit progressMessage(i18n("Filtering messages"));
+    Q_EMIT progressMessage(i18n("Filtering messages"));
     d->mTotalProgressCount = selectedMessages.size();
     d->mCurrentProgressCount = 0;
 
@@ -601,7 +601,7 @@ void FilterManager::applySpecificFilters(const QList< Akonadi::Item > &selectedM
 
 void FilterManager::applyFilters(const QList<Akonadi::Item> &selectedMessages, FilterSet filterSet)
 {
-    emit progressMessage(i18n("Filtering messages"));
+    Q_EMIT progressMessage(i18n("Filtering messages"));
     d->mTotalProgressCount = selectedMessages.size();
     d->mCurrentProgressCount = 0;
 

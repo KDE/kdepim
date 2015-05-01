@@ -665,7 +665,7 @@ void CreateChecksumsController::Private::run()
     //
 
     const QString scanning = i18n("Scanning directories...");
-    emit progress(0, 0, scanning);
+    Q_EMIT progress(0, 0, scanning);
 
     const bool haveSumFiles
         = kdtools::all(files, matches_any(get_patterns(checksumDefinitions)));
@@ -680,7 +680,7 @@ void CreateChecksumsController::Private::run()
 
     if (!canceled) {
 
-        emit progress(0, 0, i18n("Calculating total size..."));
+        Q_EMIT progress(0, 0, i18n("Calculating total size..."));
 
         const quint64 total
             = kdtools::accumulate_transform(dirs, mem_fn(&Dir::totalSize), Q_UINT64_C(0));
@@ -696,7 +696,7 @@ void CreateChecksumsController::Private::run()
 
             quint64 done = 0;
             Q_FOREACH (const Dir &dir, dirs) {
-                emit progress(done / factor, total / factor,
+                Q_EMIT progress(done / factor, total / factor,
                               i18n("Checksumming (%2) in %1", dir.checksumDefinition->label(), dir.dir.path()));
                 bool fatal = false;
                 const QString error = process(dir, &fatal);
@@ -710,7 +710,7 @@ void CreateChecksumsController::Private::run()
                     break;
                 }
             }
-            emit progress(done / factor, total / factor, i18n("Done."));
+            Q_EMIT progress(done / factor, total / factor, i18n("Done."));
 
         }
     }

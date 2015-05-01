@@ -72,14 +72,14 @@ void ComposerLineEdit::keyPressEvent(QKeyEvent *e)
 {
     if ((e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) &&
             !completionBox()->isVisible()) {
-        emit focusDown();
+        Q_EMIT focusDown();
         AddresseeLineEdit::keyPressEvent(e);
         return;
     } else if (e->key() == Qt::Key_Up) {
-        emit focusUp();
+        Q_EMIT focusUp();
         return;
     } else if (e->key() == Qt::Key_Down) {
-        emit focusDown();
+        Q_EMIT focusDown();
         return;
     }
     AddresseeLineEdit::keyPressEvent(e);
@@ -207,7 +207,7 @@ void ComposerLineEdit::groupExpandResult(KJob *job)
         if (mExpandIntern || text().isEmpty()) {
             insertEmails(QStringList() << addressee.fullEmail());
         } else {
-            emit addAddress(addressee.fullEmail());
+            Q_EMIT addAddress(addressee.fullEmail());
         }
     }
 

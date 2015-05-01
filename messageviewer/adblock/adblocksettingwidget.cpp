@@ -81,7 +81,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 
     removeSubscription->setEnabled(false);
     showList->setEnabled(false);
-    // emit changed signal
+    // Q_EMIT changed signal
     connect(checkEnableAdblock, &QCheckBox::stateChanged, this, &AdBlockSettingWidget::hasChanged);
     connect(checkHideAds, &QCheckBox::stateChanged, this, &AdBlockSettingWidget::hasChanged);
     connect(spinBox, static_cast<void (KPluralHandlingSpinBox::*)(int)>(&KPluralHandlingSpinBox::valueChanged), this, &AdBlockSettingWidget::hasChanged);
@@ -303,7 +303,7 @@ void AdBlockSettingWidget::save()
 
     // -------------------------------------------------------------------------------
     mChanged = false;
-    emit changed(false);
+    Q_EMIT changed(false);
     AdBlockManager::self()->reloadConfig();
 }
 
@@ -318,7 +318,7 @@ void AdBlockSettingWidget::hasChanged()
 {
     updateCheckBox();
     mChanged = true;
-    emit changed(true);
+    Q_EMIT changed(true);
 }
 
 bool AdBlockSettingWidget::changed() const

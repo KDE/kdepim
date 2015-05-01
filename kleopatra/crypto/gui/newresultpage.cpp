@@ -141,7 +141,7 @@ void NewResultPage::Private::allDone()
     if (QAbstractButton *cancel = q->wizard()->button(QWizard::CancelButton)) {
         cancel->setEnabled(false);
     }
-    emit q->completeChanged();
+    Q_EMIT q->completeChanged();
     if (!m_keepOpenCB->isChecked() && !errorOccurred)
         if (QWizard *wiz = q->wizard())
             if (QAbstractButton *btn = wiz->button(QWizard::FinishButton)) {
@@ -224,7 +224,7 @@ void NewResultPage::addTaskCollection(const shared_ptr<TaskCollection> &coll)
         QLabel *l = d->labelForTag(i->tag());
         assert(l); (void)l;
     }
-    emit completeChanged();
+    Q_EMIT completeChanged();
 }
 
 QLabel *NewResultPage::Private::labelForTag(const QString &tag)

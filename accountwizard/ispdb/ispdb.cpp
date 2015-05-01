@@ -105,7 +105,7 @@ void Ispdb::slotResult(KJob *job)
         }
 
         if (lookupFinished) {
-            emit finished(false);
+            Q_EMIT finished(false);
             return;
         }
         lookupInDb();
@@ -117,7 +117,7 @@ void Ispdb::slotResult(KJob *job)
     bool ok = document.setContent(mData);
     if (!ok) {
         qCDebug(ACCOUNTWIZARD_LOG) << "Could not parse xml" << mData;
-        emit finished(false);
+        Q_EMIT finished(false);
         return;
     }
 
@@ -177,7 +177,7 @@ void Ispdb::slotResult(KJob *job)
     }
     // end section.
 
-    emit finished(true);
+    Q_EMIT finished(true);
 }
 
 Server Ispdb::createServer(const QDomElement &n)

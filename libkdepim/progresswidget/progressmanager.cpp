@@ -69,7 +69,7 @@ void ProgressItem::setComplete()
         if (parent()) {
             parent()->removeChild(this);
         }
-        emit progressItemCompleted(this);
+        Q_EMIT progressItemCompleted(this);
     } else {
         mWaitingForKids = true;
     }
@@ -101,7 +101,7 @@ void ProgressItem::removeChild(ProgressItem *kiddo)
 
     // in case we were waiting for the last kid to go away, now is the time
     if (mChildren.count() == 0 && mWaitingForKids) {
-        emit progressItemCompleted(this);
+        Q_EMIT progressItemCompleted(this);
     }
 }
 
@@ -134,7 +134,7 @@ void ProgressItem::cancel()
         }
     }
     setStatus(i18n("Aborting..."));
-    emit progressItemCanceled(this);
+    Q_EMIT progressItemCanceled(this);
 }
 
 void ProgressItem::updateProgress()
@@ -146,19 +146,19 @@ void ProgressItem::setProgress(unsigned int v)
 {
     mProgress = v;
     // qCDebug(LIBKDEPIM_LOG) << label() << " :" << v;
-    emit progressItemProgress(this, mProgress);
+    Q_EMIT progressItemProgress(this, mProgress);
 }
 
 void ProgressItem::setLabel(const QString &v)
 {
     mLabel = v;
-    emit progressItemLabel(this, mLabel);
+    Q_EMIT progressItemLabel(this, mLabel);
 }
 
 void ProgressItem::setStatus(const QString &v)
 {
     mStatus = v;
-    emit progressItemStatus(this, mStatus);
+    Q_EMIT progressItemStatus(this, mStatus);
 }
 
 void ProgressItem::setCanBeCanceled(bool b)
@@ -169,13 +169,13 @@ void ProgressItem::setCanBeCanceled(bool b)
 void ProgressItem::setCryptoStatus(ProgressItem::CryptoStatus v)
 {
     mCryptoStatus = v;
-    emit progressItemCryptoStatus(this, v);
+    Q_EMIT progressItemCryptoStatus(this, v);
 }
 
 void ProgressItem::setUsesBusyIndicator(bool useBusyIndicator)
 {
     mUsesBusyIndicator = useBusyIndicator;
-    emit progressItemUsesBusyIndicator(this, useBusyIndicator);
+    Q_EMIT progressItemUsesBusyIndicator(this, useBusyIndicator);
 }
 
 // ======================================
@@ -279,7 +279,7 @@ ProgressItem *ProgressManager::createProgressItemImpl(ProgressItem *parent,
         connect(t, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)),
                 this, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)));
 
-        emit progressItemAdded(t);
+        Q_EMIT progressItemAdded(t);
     } else {
         // Hm, is this what makes the most sense?
         t = mTransactions.value(id);
@@ -301,7 +301,7 @@ ProgressItem *ProgressManager::createProgressItemImpl(const QString &parent,
 
 void ProgressManager::emitShowProgressDialogImpl()
 {
-    emit showProgressDialog();
+    Q_EMIT showProgressDialog();
 }
 
 // slots
@@ -309,7 +309,7 @@ void ProgressManager::emitShowProgressDialogImpl()
 void ProgressManager::slotTransactionCompleted(ProgressItem *item)
 {
     mTransactions.remove(item->id());
-    emit progressItemCompleted(item);
+    Q_EMIT progressItemCompleted(item);
 }
 
 void ProgressManager::slotStandardCancelHandler(ProgressItem *item)

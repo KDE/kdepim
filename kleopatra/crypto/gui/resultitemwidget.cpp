@@ -193,7 +193,7 @@ void ResultItemWidget::Private::slotLinkActivated(const QString &link)
     if (link.startsWith(QLatin1String("key:"))) {
         const QStringList split = link.split(QLatin1Char(':'));
         if (split.size() == 3 || m_result->nonce() != split.value(1)) {
-            emit q->linkActivated(QLatin1String("key://") + split.value(2));
+            Q_EMIT q->linkActivated(QLatin1String("key://") + split.value(2));
         } else {
             qCWarning(KLEOPATRA_LOG) << "key link invalid, or nonce not matching! link=" << link << " nonce" << m_result->nonce();
         }
@@ -225,7 +225,7 @@ void ResultItemWidget::showDetails(bool show)
     }
     d->m_detailsLabel->setVisible(show);
     d->updateShowDetailsLabel();
-    emit detailsToggled(show);
+    Q_EMIT detailsToggled(show);
 }
 
 #include "moc_resultitemwidget.cpp"

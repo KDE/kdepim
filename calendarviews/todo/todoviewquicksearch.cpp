@@ -144,11 +144,11 @@ void TodoViewQuickSearch::fillPriorities()
 
 void TodoViewQuickSearch::emitFilterCategoryChanged()
 {
-    emit filterCategoryChanged(mCategoryCombo->checkedItems());
+    Q_EMIT filterCategoryChanged(mCategoryCombo->checkedItems());
 }
 
 void TodoViewQuickSearch::emitFilterPriorityChanged()
 {
-    emit filterPriorityChanged(mPriorityCombo->checkedItems(Qt::UserRole));
+    Q_EMIT filterPriorityChanged(mPriorityCombo->checkedItems(Qt::UserRole));
 }
 

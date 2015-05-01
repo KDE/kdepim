@@ -91,7 +91,7 @@ void TodoViewView::toggleColumnHidden(QAction *action)
         hideColumn(action->data().toInt());
     }
 
-    emit visibleColumnCountChanged();
+    Q_EMIT visibleColumnCountChanged();
 }
 
 QModelIndex TodoViewView::moveCursor(CursorAction cursorAction,

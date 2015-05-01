@@ -327,27 +327,27 @@ void Kleo::KeyListView::slotRefreshKey(const GpgME::Key &key)
 void Kleo::KeyListView::slotEmitDoubleClicked(QTreeWidgetItem *item, int col)
 {
     if (!item || lvi_cast<KeyListViewItem>(item)) {
-        emit doubleClicked(static_cast<KeyListViewItem *>(item), col);
+        Q_EMIT doubleClicked(static_cast<KeyListViewItem *>(item), col);
     }
 }
 
 void Kleo::KeyListView::slotEmitReturnPressed(QTreeWidgetItem *item)
 {
     if (!item || lvi_cast<KeyListViewItem>(item)) {
-        emit returnPressed(static_cast<KeyListViewItem *>(item));
+        Q_EMIT returnPressed(static_cast<KeyListViewItem *>(item));
     }
 }
 
 void Kleo::KeyListView::slotEmitSelectionChanged()
 {
-    emit selectionChanged(selectedItem());
+    Q_EMIT selectionChanged(selectedItem());
 }
 
 void Kleo::KeyListView::slotEmitContextMenu(const QPoint &pos)
 {
     QTreeWidgetItem *item = itemAt(pos);
     if (!item || lvi_cast<KeyListViewItem>(item)) {
-        emit contextMenu(static_cast<KeyListViewItem *>(item), viewport()->mapToGlobal(pos));
+        Q_EMIT contextMenu(static_cast<KeyListViewItem *>(item), viewport()->mapToGlobal(pos));
     }
 }
 

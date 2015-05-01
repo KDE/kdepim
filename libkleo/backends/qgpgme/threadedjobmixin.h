@@ -210,7 +210,7 @@ protected:
         m_auditLog = boost::get < boost::tuples::length<T_result>::value - 2 > (r);
         m_auditLogError = boost::get < boost::tuples::length<T_result>::value - 1 > (r);
         resultHook(r);
-        emit this->done();
+        Q_EMIT this->done();
         doEmitResult(r);
         this->deleteLater();
     }
@@ -243,25 +243,25 @@ private:
     template <typename T1, typename T2>
     void doEmitResult(const boost::tuple<T1, T2> &tuple)
     {
-        emit this->result(boost::get<0>(tuple), boost::get<1>(tuple));
+        Q_EMIT this->result(boost::get<0>(tuple), boost::get<1>(tuple));
     }
 
     template <typename T1, typename T2, typename T3>
     void doEmitResult(const boost::tuple<T1, T2, T3> &tuple)
     {
-        emit this->result(boost::get<0>(tuple), boost::get<1>(tuple), boost::get<2>(tuple));
+        Q_EMIT this->result(boost::get<0>(tuple), boost::get<1>(tuple), boost::get<2>(tuple));
     }
 
     template <typename T1, typename T2, typename T3, typename T4>
     void doEmitResult(const boost::tuple<T1, T2, T3, T4> &tuple)
     {
-        emit this->result(boost::get<0>(tuple), boost::get<1>(tuple), boost::get<2>(tuple), boost::get<3>(tuple));
+        Q_EMIT this->result(boost::get<0>(tuple), boost::get<1>(tuple), boost::get<2>(tuple), boost::get<3>(tuple));
     }
 
     template <typename T1, typename T2, typename T3, typename T4, typename T5>
     void doEmitResult(const boost::tuple<T1, T2, T3, T4, T5> &tuple)
     {
-        emit this->result(boost::get<0>(tuple), boost::get<1>(tuple), boost::get<2>(tuple), boost::get<3>(tuple), boost::get<4>(tuple));
+        Q_EMIT this->result(boost::get<0>(tuple), boost::get<1>(tuple), boost::get<2>(tuple), boost::get<3>(tuple), boost::get<4>(tuple));
     }
 
 private:

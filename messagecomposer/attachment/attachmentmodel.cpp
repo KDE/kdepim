@@ -130,9 +130,9 @@ bool AttachmentModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
             }
         }
         if (items.isEmpty()) {
-            emit attachUrlsRequested(urls);
+            Q_EMIT attachUrlsRequested(urls);
         } else {
-            emit attachItemsRequester(items);
+            Q_EMIT attachItemsRequester(items);
         }
         return true;
     } else {
@@ -219,7 +219,7 @@ bool AttachmentModel::isEncryptEnabled() const
 void AttachmentModel::setEncryptEnabled(bool enabled)
 {
     d->encryptEnabled = enabled;
-    emit encryptEnabled(enabled);
+    Q_EMIT encryptEnabled(enabled);
 }
 
 bool AttachmentModel::isAutoDisplayEnabled() const
@@ -230,7 +230,7 @@ bool AttachmentModel::isAutoDisplayEnabled() const
 void AttachmentModel::setAutoDisplayEnabled(bool enabled)
 {
     d->autoDisplayEnabled = enabled;
-    emit autoDisplayEnabled(enabled);
+    Q_EMIT autoDisplayEnabled(enabled);
 }
 
 bool AttachmentModel::isSignEnabled() const
@@ -241,7 +241,7 @@ bool AttachmentModel::isSignEnabled() const
 void AttachmentModel::setSignEnabled(bool enabled)
 {
     d->signEnabled = enabled;
-    emit signEnabled(enabled);
+    Q_EMIT signEnabled(enabled);
 }
 
 bool AttachmentModel::isEncryptSelected() const
@@ -255,7 +255,7 @@ void AttachmentModel::setEncryptSelected(bool selected)
     foreach (AttachmentPart::Ptr part, d->parts) {
         part->setEncrypted(selected);
     }
-    emit dataChanged(index(0, EncryptColumn), index(rowCount() - 1, EncryptColumn));
+    Q_EMIT dataChanged(index(0, EncryptColumn), index(rowCount() - 1, EncryptColumn));
 }
 
 bool AttachmentModel::isSignSelected() const
@@ -269,7 +269,7 @@ void AttachmentModel::setSignSelected(bool selected)
     foreach (AttachmentPart::Ptr part, d->parts) {
         part->setSigned(selected);
     }
-    emit dataChanged(index(0, SignColumn), index(rowCount() - 1, SignColumn));
+    Q_EMIT dataChanged(index(0, SignColumn), index(rowCount() - 1, SignColumn));
 }
 
 QVariant AttachmentModel::data(const QModelIndex &index, int role) const
@@ -344,8 +344,8 @@ bool AttachmentModel::setData(const QModelIndex &index, const QVariant &value, i
         case CompressColumn: {
             bool toZip = value.toBool();
             if (toZip != part->isCompressed()) {
-                emit attachmentCompressRequested(part, toZip);
-                emitDataChanged = false; // Will emit when the part is updated.
+                Q_EMIT attachmentCompressRequested(part, toZip);
+                emitDataChanged = false; // Will Q_EMIT when the part is updated.
             }
             break;
         }
@@ -366,7 +366,7 @@ bool AttachmentModel::setData(const QModelIndex &index, const QVariant &value, i
     }
 
     if (emitDataChanged) {
-        emit dataChanged(index, index);
+        Q_EMIT dataChanged(index, index);
     }
     return true;
 }
@@ -389,7 +389,7 @@ bool AttachmentModel::updateAttachment(AttachmentPart::Ptr part)
         return false;
     }
     // Emit dataChanged() for the whole row.
-    emit dataChanged(index(idx, 0), index(idx, LastColumn - 1));
+    Q_EMIT dataChanged(index(idx, 0), index(idx, LastColumn - 1));
     return true;
 }
 
@@ -404,7 +404,7 @@ bool AttachmentModel::replaceAttachment(AttachmentPart::Ptr oldPart, AttachmentP
     }
     d->parts[ idx ] = newPart;
     // Emit dataChanged() for the whole row.
-    emit dataChanged(index(idx, 0), index(idx, LastColumn - 1));
+    Q_EMIT dataChanged(index(idx, 0), index(idx, LastColumn - 1));
     return true;
 }
 
@@ -419,7 +419,7 @@ bool AttachmentModel::removeAttachment(AttachmentPart::Ptr part)
     beginRemoveRows(QModelIndex(), idx, idx);
     d->parts.removeAt(idx);
     endRemoveRows();
-    emit attachmentRemoved(part);
+    Q_EMIT attachmentRemoved(part);
     return true;
 }
 

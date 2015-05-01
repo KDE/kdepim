@@ -173,13 +173,13 @@ void SieveConditionWidget::slotConditionChanged(int index)
 
 void SieveConditionWidget::slotAddWidget()
 {
-    emit addWidget(this);
+    Q_EMIT addWidget(this);
     Q_EMIT valueChanged();
 }
 
 void SieveConditionWidget::slotRemoveWidget()
 {
-    emit removeWidget(this);
+    Q_EMIT removeWidget(this);
     Q_EMIT valueChanged();
 }
 

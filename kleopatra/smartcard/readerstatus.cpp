@@ -652,7 +652,7 @@ private:
 #ifdef DEBUG_SCREADER
                         qCDebug(KLEOPATRA_LOG) << "ReaderStatusThread[2nd]: slot" << idx << ":" << prettyFlags[oit->status] << "->" << prettyFlags[nit->status];
 #endif
-                        emit cardStatusChanged(idx, nit->status);
+                        Q_EMIT cardStatusChanged(idx, nit->status);
                     }
                     if (nit->status == ReaderStatus::CardCanLearnKeys) {
                         anyLC = true;
@@ -668,8 +668,8 @@ private:
                     ++idx;
                 }
 
-                emit anyCardHasNullPinChanged(anyNP);
-                emit anyCardCanLearnKeysChanged(anyLC);
+                Q_EMIT anyCardHasNullPinChanged(anyNP);
+                Q_EMIT anyCardCanLearnKeysChanged(anyLC);
 
                 if (anyError) {
                     gpgAgent.reset();
@@ -683,7 +683,7 @@ private:
                 // splice 'item' into m_finishedTransactions:
                 m_finishedTransactions.splice(m_finishedTransactions.end(), item);
 
-                emit oneTransactionFinished();
+                Q_EMIT oneTransactionFinished();
 
             }
 

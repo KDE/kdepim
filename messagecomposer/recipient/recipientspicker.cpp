@@ -172,7 +172,7 @@ void RecipientsPicker::pick(Recipient::Type type)
         recipient.setType(type);
         recipient.setEmail(selection.quotedEmail());
 
-        emit pickedRecipient(recipient, tooManyAddress);
+        Q_EMIT pickedRecipient(recipient, tooManyAddress);
         if (tooManyAddress) {
             break;
         }
@@ -221,7 +221,7 @@ void RecipientsPicker::ldapSearchResult()
     const KContacts::Addressee::List contacts = mLdapSearchDialog->selectedContacts();
     foreach (const KContacts::Addressee &contact, contacts) {
         bool tooManyAddress = false;
-        emit pickedRecipient(Recipient(contact.fullEmail(), Recipient::Undefined), tooManyAddress);
+        Q_EMIT pickedRecipient(Recipient(contact.fullEmail(), Recipient::Undefined), tooManyAddress);
         if (tooManyAddress) {
             break;
         }

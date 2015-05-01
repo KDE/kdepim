@@ -119,19 +119,19 @@ void CalendarUtilsPrivate::handleChangeFinish(int,
 
             if (success) {
                 qCDebug(CALENDARSUPPORT_LOG) << "MultiChange finished";
-                emit q->actionFinished(parent);
+                Q_EMIT q->actionFinished(parent);
             } else {
                 qCDebug(CALENDARSUPPORT_LOG) << "MultiChange failed";
-                emit q->actionFailed(parent, QString());
+                Q_EMIT q->actionFailed(parent, QString());
             }
         }
     } else {
         if (success) {
             qCDebug(CALENDARSUPPORT_LOG) << "Change finished";
-            emit q->actionFinished(item);
+            Q_EMIT q->actionFinished(item);
         } else {
             qCDebug(CALENDARSUPPORT_LOG) << "Change failed";
-            emit q->actionFailed(Akonadi::Item(), errorString);
+            Q_EMIT q->actionFailed(Akonadi::Item(), errorString);
         }
     }
 }

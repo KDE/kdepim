@@ -408,13 +408,13 @@ void StorageModel::prepareForScan()
 
 void StorageModel::Private::onSourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
-    emit q->dataChanged(q->index(topLeft.row(), 0),
+    Q_EMIT q->dataChanged(q->index(topLeft.row(), 0),
                         q->index(bottomRight.row(), 0));
 }
 
 void StorageModel::Private::onSelectionChanged()
 {
-    emit q->headerDataChanged(Qt::Horizontal, 0, q->columnCount() - 1);
+    Q_EMIT q->headerDataChanged(Qt::Horizontal, 0, q->columnCount() - 1);
 }
 
 void StorageModel::Private::loadSettings()

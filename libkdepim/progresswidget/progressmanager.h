@@ -158,7 +158,7 @@ public:
     void setProgress(unsigned int v);
 
     /**
-     * Tell the item it has finished. This will emit progressItemCompleted()
+     * Tell the item it has finished. This will Q_EMIT progressItemCompleted()
      * result in the destruction of the item after all slots connected to this
      * signal have executed. This is the only way to get rid of an item and
      * needs to be called even if the item is canceled. Don't use the item

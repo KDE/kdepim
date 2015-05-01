@@ -241,7 +241,7 @@ void DecryptVerifyFilesController::Private::schedule()
     if (!m_runningTask) {
         kleo_assert(m_runnableTasks.empty());
         Q_FOREACH (const shared_ptr<const DecryptVerifyResult> &i, m_results) {
-            emit q->verificationResult(i->verificationResult());
+            Q_EMIT q->verificationResult(i->verificationResult());
         }
         q->emitDoneOrError();
     }

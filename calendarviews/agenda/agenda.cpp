@@ -529,12 +529,12 @@ bool Agenda::eventFilter(QObject *object, QEvent *event)
 
         if (object == this) {
             // so timelabels hide the mouse cursor
-            emit leaveAgenda();
+            Q_EMIT leaveAgenda();
         }
         return true;
 
     case QEvent::Enter:
-        emit enterAgenda();
+        Q_EMIT enterAgenda();
         return QWidget::eventFilter(object, event);
 
 #ifndef QT_NO_DRAGANDDROP
@@ -596,9 +596,9 @@ bool Agenda::eventFilter_drag(QObject *obj, QDropEvent *de)
 
         const QPoint gridPosition = contentsToGrid(dropPosition);
         if (!incidenceUrls.isEmpty()) {
-            emit droppedIncidences(incidenceUrls, gridPosition, d->mAllDayMode);
+            Q_EMIT droppedIncidences(incidenceUrls, gridPosition, d->mAllDayMode);
         } else {
-            emit droppedIncidences(incidences, gridPosition, d->mAllDayMode);
+            Q_EMIT droppedIncidences(incidences, gridPosition, d->mAllDayMode);
         }
         return true;
     }
@@ -624,7 +624,7 @@ bool Agenda::eventFilter_wheel(QObject *object, QWheelEvent *e)
             viewportPos = e->pos();
         }
         //qCDebug(CALENDARVIEW_LOG) << type:" << e->type() << "delta:" << e->delta();
-        emit zoomView(-e->delta(),
+        Q_EMIT zoomView(-e->delta(),
                       contentsToGrid(viewportPos), Qt::Horizontal);
         accepted = true;
     }
@@ -635,8 +635,8 @@ bool Agenda::eventFilter_wheel(QObject *object, QWheelEvent *e)
         } else {
             viewportPos = e->pos();
         }
-        emit zoomView(-e->delta(), contentsToGrid(viewportPos), Qt::Vertical);
-        emit mousePosSignal(gridToContents(contentsToGrid(viewportPos)));
+        Q_EMIT zoomView(-e->delta(), contentsToGrid(viewportPos), Qt::Vertical);
+        Q_EMIT mousePosSignal(gridToContents(contentsToGrid(viewportPos)));
         accepted = true;
     }
     if (accepted) {
@@ -667,7 +667,7 @@ bool Agenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
                 d->mClickedItem = dynamic_cast<AgendaItem *>(object);
                 if (d->mClickedItem) {
                     selectItem(d->mClickedItem);
-                    emit showIncidencePopupSignal(d->mClickedItem->incidence(),
+                    Q_EMIT showIncidencePopupSignal(d->mClickedItem->incidence(),
                                                   d->mClickedItem->occurrenceDate());
                 }
             } else {
@@ -696,8 +696,8 @@ bool Agenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
                     d->mSelectionStartCell = gpos;
                     d->mSelectionEndCell = gpos;
                     d->mHasSelection = true;
-                    emit newStartSelectSignal();
-                    emit newTimeSpanSignal(d->mSelectionStartCell, d->mSelectionEndCell);
+                    Q_EMIT newStartSelectSignal();
+                    Q_EMIT newTimeSpanSignal(d->mSelectionStartCell, d->mSelectionEndCell);
 //          updateContents();
                 }
                 showNewEventPopupSignal();
@@ -721,7 +721,7 @@ bool Agenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
         }
         // This nasty gridToContents(contentsToGrid(..)) is needed to
         // avoid an offset of a few pixels. Don't ask me why...
-        emit mousePosSignal(gridToContents(contentsToGrid(viewportPos)));
+        Q_EMIT mousePosSignal(gridToContents(contentsToGrid(viewportPos)));
         break;
 
     case QEvent::MouseMove: {
@@ -773,19 +773,19 @@ bool Agenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
                 }
             }
         }
-        emit mousePosSignal(indicatorPos);
+        Q_EMIT mousePosSignal(indicatorPos);
         break;
     }
 
     case QEvent::MouseButtonDblClick:
         if (object == this) {
             selectItem(Q_NULLPTR);
-            emit newEventSignal();
+            Q_EMIT newEventSignal();
         } else {
             AgendaItem::QPtr doubleClickedItem = dynamic_cast<AgendaItem *>(object);
             if (doubleClickedItem) {
                 selectItem(doubleClickedItem);
-                emit editIncidenceSignal(doubleClickedItem->incidence());
+                Q_EMIT editIncidenceSignal(doubleClickedItem->incidence());
             }
         }
         break;
@@ -815,7 +815,7 @@ bool Agenda::ptInSelection(const QPoint &gpos) const
 
 void Agenda::startSelectAction(const QPoint &viewportPos)
 {
-    emit newStartSelectSignal();
+    Q_EMIT newStartSelectSignal();
 
     d->mActionType = SELECT;
     d->mSelectionStartPoint = viewportPos;
@@ -871,12 +871,12 @@ void Agenda::endSelectAction(const QPoint &currentPos)
 
     d->mActionType = NOP;
 
-    emit newTimeSpanSignal(d->mSelectionStartCell, d->mSelectionEndCell);
+    Q_EMIT newTimeSpanSignal(d->mSelectionStartCell, d->mSelectionEndCell);
 
     if (d->preferences()->selectionStartsEditor()) {
         if ((d->mSelectionStartPoint - currentPos).manhattanLength() >
                 QApplication::startDragDistance()) {
-            emit newEventSignal();
+            Q_EMIT newEventSignal();
         }
     }
 }
@@ -962,7 +962,7 @@ void Agenda::performItemAction(const QPoint &pos)
             d->mScrollDownTimer.stop();
             d->mActionItem->resetMove();
             placeSubCells(d->mActionItem);
-            emit startDragSignal(d->mActionItem->incidence());
+            Q_EMIT startDragSignal(d->mActionItem->incidence());
 #ifndef QT_NO_CURSOR
             setCursor(Qt::ArrowCursor);
 #endif
@@ -1994,7 +1994,7 @@ void Agenda::resizeEvent(QResizeEvent *ev)
     calculateWorkingHours();
 
     QTimer::singleShot(0, this, SLOT(resizeAllContents()));
-    emit gridSpacingYChanged(d->mGridSpacingY * 4);
+    Q_EMIT gridSpacingYChanged(d->mGridSpacingY * 4);
 
     QWidget::resizeEvent(ev);
     updateGeometry();
@@ -2103,11 +2103,11 @@ void Agenda::checkScrollBoundaries(int v)
 
     if (yMin != d->mOldLowerScrollValue) {
         d->mOldLowerScrollValue = yMin;
-        emit lowerYChanged(yMin);
+        Q_EMIT lowerYChanged(yMin);
     }
     if (yMax != d->mOldUpperScrollValue) {
         d->mOldUpperScrollValue = yMax;
-        emit upperYChanged(yMax);
+        Q_EMIT upperYChanged(yMax);
     }
 }
 
@@ -2150,7 +2150,7 @@ void Agenda::selectItem(AgendaItem::QPtr item)
     }
     deselectItem();
     if (item == Q_NULLPTR) {
-        emit incidenceSelected(Akonadi::Item(), QDate());
+        Q_EMIT incidenceSelected(Akonadi::Item(), QDate());
         return;
     }
     d->mSelectedItem = item;
@@ -2163,7 +2163,7 @@ void Agenda::selectItem(AgendaItem::QPtr item)
             item->select();
         }
     }
-    emit incidenceSelected(d->mSelectedItem->incidence(), d->mSelectedItem->occurrenceDate());
+    Q_EMIT incidenceSelected(d->mSelectedItem->incidence(), d->mSelectedItem->occurrenceDate());
 }
 
 void Agenda::selectItemByItemId(const Akonadi::Item::Id &id)

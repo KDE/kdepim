@@ -34,7 +34,7 @@ Ldap::~Ldap()
 
 void Ldap::create()
 {
-    emit info(i18n("Setting up LDAP server..."));
+    Q_EMIT info(i18n("Setting up LDAP server..."));
 
     if (m_server.isEmpty() || m_user.isEmpty()) {
         return;
@@ -86,12 +86,12 @@ void Ldap::create()
             group.writeEntry(QStringLiteral("SelectedPwdBind%1").arg(selHosts), m_password);
         }
     }
-    emit finished(i18n("LDAP set up."));
+    Q_EMIT finished(i18n("LDAP set up."));
 }
 
 void Ldap::destroy()
 {
-    emit info(i18n("LDAP not configuring."));
+    Q_EMIT info(i18n("LDAP not configuring."));
 }
 
 void Ldap::setUser(const QString &user)

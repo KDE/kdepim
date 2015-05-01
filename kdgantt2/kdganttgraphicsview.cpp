@@ -247,24 +247,24 @@ void GraphicsView::Private::slotRowsRemoved(const QModelIndex &parent,  int star
 void GraphicsView::Private::slotItemClicked(const QModelIndex &idx)
 {
     QModelIndex sidx = idx;//scene.summaryHandlingModel()->mapToSource( idx );
-    emit q->clicked(sidx);
+    Q_EMIT q->clicked(sidx);
     if (q->style()->styleHint(QStyle::SH_ItemView_ActivateItemOnSingleClick, 0, q)) {
-        emit q->activated(sidx);
+        Q_EMIT q->activated(sidx);
     }
 }
 
 void GraphicsView::Private::slotItemDoubleClicked(const QModelIndex &idx)
 {
     QModelIndex sidx = idx;//scene.summaryHandlingModel()->mapToSource( idx );
-    emit q->doubleClicked(sidx);
+    Q_EMIT q->doubleClicked(sidx);
     if (!q->style()->styleHint(QStyle::SH_ItemView_ActivateItemOnSingleClick, 0, q)) {
-        emit q->activated(sidx);
+        Q_EMIT q->activated(sidx);
     }
 }
 
 void GraphicsView::Private::slotHeaderContextMenuRequested(const QPoint &pt)
 {
-    emit q->headerContextMenuRequested(headerwidget.mapToGlobal(pt));
+    Q_EMIT q->headerContextMenuRequested(headerwidget.mapToGlobal(pt));
 }
 
 /*!\class KDGantt::GraphicsView kdganttgraphicsview.h KDGanttGraphicsView

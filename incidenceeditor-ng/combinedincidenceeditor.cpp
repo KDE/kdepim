@@ -56,7 +56,7 @@ bool CombinedIncidenceEditor::isValid() const
             const QString reason = editor->lastErrorString();
             editor->focusInvalidField();
             if (!reason.isEmpty()) {
-                emit showMessage(reason, KMessageWidget::Warning);
+                Q_EMIT showMessage(reason, KMessageWidget::Warning);
             }
             return false;
         }
@@ -80,10 +80,10 @@ void CombinedIncidenceEditor::handleDirtyStatusChange(bool isDirty)
     Q_ASSERT(mDirtyEditorCount >= 0);
 
     if (prevDirtyCount == 0) {
-        emit dirtyStatusChanged(true);
+        Q_EMIT dirtyStatusChanged(true);
     }
     if (mDirtyEditorCount == 0) {
-        emit dirtyStatusChanged(false);
+        Q_EMIT dirtyStatusChanged(false);
     }
 }
 
@@ -110,7 +110,7 @@ void CombinedIncidenceEditor::load(const KCalCore::Incidence::Ptr &incidence)
 
     mWasDirty = false;
     mDirtyEditorCount = 0;
-    emit dirtyStatusChanged(false);
+    Q_EMIT dirtyStatusChanged(false);
 }
 
 void CombinedIncidenceEditor::save(const KCalCore::Incidence::Ptr &incidence)

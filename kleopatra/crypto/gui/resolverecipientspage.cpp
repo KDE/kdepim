@@ -93,7 +93,7 @@ void ResolveRecipientsPage::ListWidget::onSelectionChange()
         assert(items.contains(i));
         widgets[i]->setSelected(items[i]->isSelected());
     }
-    emit selectionChanged();
+    Q_EMIT selectionChanged();
 }
 
 void ResolveRecipientsPage::ListWidget::addEntry(const Mailbox &mbox)
@@ -328,7 +328,7 @@ void ResolveRecipientsPage::ItemWidget::resetCertificates()
         m_certCombo->setCurrentIndex(0);
     }
     updateVisibility();
-    emit changed();
+    Q_EMIT changed();
 }
 
 void ResolveRecipientsPage::ItemWidget::setProtocol(Protocol prot)
@@ -524,7 +524,7 @@ void ResolveRecipientsPage::Private::setSelectedProtocol(Protocol protocol)
     }
     m_selectedProtocol = protocol;
     m_listWidget->setProtocol(m_selectedProtocol);
-    emit q->selectedProtocolChanged();
+    Q_EMIT q->selectedProtocolChanged();
 }
 
 void ResolveRecipientsPage::Private::protocolSelected(int p)
@@ -600,7 +600,7 @@ void ResolveRecipientsPage::Private::addRecipient()
         const std::vector<Key> cms = key.protocol() == CMS ? std::vector<Key>(1, key) : std::vector<Key>();
         m_listWidget->setCertificates(rec, pgp, cms);
     }
-    emit q->completeChanged();
+    Q_EMIT q->completeChanged();
 }
 
 namespace
@@ -688,7 +688,7 @@ void ResolveRecipientsPage::Private::removeSelectedEntries()
     Q_FOREACH (const QString &i, m_listWidget->selectedEntries()) {
         m_listWidget->removeEntry(i);
     }
-    emit q->completeChanged();
+    Q_EMIT q->completeChanged();
 }
 
 void ResolveRecipientsPage::setRecipientsUserMutable(bool isMutable)

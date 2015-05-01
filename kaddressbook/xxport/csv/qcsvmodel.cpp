@@ -61,25 +61,25 @@ void CsvParser::field(const QString &data, uint row, uint column)
     const int tmp = qMax(mColumnCount, (int)column + 1);
     if (tmp != mColumnCount) {
         mColumnCount = tmp;
-        emit columnCountChanged(tmp);
+        Q_EMIT columnCountChanged(tmp);
     }
 
-    emit dataChanged(data, row, column);
+    Q_EMIT dataChanged(data, row, column);
 }
 
 void CsvParser::endLine()
 {
     mCacheCounter++;
     if (mCacheCounter == 50) {
-        emit rowCountChanged(mRowCount);
+        Q_EMIT rowCountChanged(mRowCount);
         mCacheCounter = 0;
     }
 }
 
 void CsvParser::end()
 {
-    emit rowCountChanged(mRowCount);
-    emit ended();
+    Q_EMIT rowCountChanged(mRowCount);
+    Q_EMIT ended();
 }
 
 void CsvParser::error(const QString &)
@@ -125,13 +125,13 @@ void QCsvModel::Private::columnCountChanged(int columns)
     mColumnCount = columns;
     mFieldIdentifiers.resize(columns);
     mFieldIdentifiers[ columns - 1 ] = QStringLiteral("0");
-    emit mParent->layoutChanged();
+    Q_EMIT mParent->layoutChanged();
 }
 
 void QCsvModel::Private::rowCountChanged(int rows)
 {
     mRowCount = rows;
-    emit mParent->layoutChanged();
+    Q_EMIT mParent->layoutChanged();
 }
 
 void QCsvModel::Private::fieldChanged(const QString &data, int row, int column)
@@ -141,7 +141,7 @@ void QCsvModel::Private::fieldChanged(const QString &data, int row, int column)
 
 void QCsvModel::Private::finishedLoading()
 {
-    emit mParent->finishedLoading();
+    Q_EMIT mParent->finishedLoading();
 }
 
 QCsvModel::QCsvModel(QObject *parent)
@@ -169,7 +169,7 @@ bool QCsvModel::load(QIODevice *device)
     d->mRowCount = 0;
     d->mColumnCount = 0;
 
-    emit layoutChanged();
+    Q_EMIT layoutChanged();
 
     d->mParser->load(device);
 
@@ -316,7 +316,7 @@ bool QCsvModel::setData(const QModelIndex &index, const QVariant &data, int role
             index.column() <= d->mFieldIdentifiers.count()) {
         d->mFieldIdentifiers[ index.column() ] = data.toString();
 
-        emit dataChanged(index, index);
+        Q_EMIT dataChanged(index, index);
         return true;
     }
 

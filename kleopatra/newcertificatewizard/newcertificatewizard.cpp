@@ -726,7 +726,7 @@ private Q_SLOTS:
         }
         setField(QLatin1String("fingerprint"), QString::fromLatin1(result.fingerprint()));
         job = 0;
-        emit completeChanged();
+        Q_EMIT completeChanged();
         QMetaObject::invokeMethod(wizard(), "next", Qt::QueuedConnection);
     }
 

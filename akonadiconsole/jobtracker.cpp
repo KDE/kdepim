@@ -323,7 +323,7 @@ void JobTracker::triggerReset()
     d->jobs.clear();
     d->infoList.clear();
 
-    emit reset();
+    Q_EMIT reset();
 }
 
 void JobTracker::setEnabled(bool on)
@@ -338,8 +338,8 @@ bool JobTracker::isEnabled() const
 
 void JobTracker::signalUpdates()
 {
-    emit added(d->unpublishedAdds);
-    emit updated(d->unpublishedUpdates);
+    Q_EMIT added(d->unpublishedAdds);
+    Q_EMIT updated(d->unpublishedUpdates);
     d->unpublishedAdds.clear();
     d->unpublishedUpdates.clear();
 }

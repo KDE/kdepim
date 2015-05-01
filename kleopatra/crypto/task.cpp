@@ -175,7 +175,7 @@ void Task::setProgress(const QString &label, int processed, int total)
     const double percent = total > 0 ? static_cast<double>(processed) / total : 0.0;
     d->m_processedPercent = percent;
     d->m_progressLabel = label;
-    emit progress(label, processedSize(), totalSize());
+    Q_EMIT progress(label, processedSize(), totalSize());
 }
 
 void Task::start()
@@ -191,7 +191,7 @@ void Task::start()
     } catch (...) {
         QMetaObject::invokeMethod(this, "emitError", Qt::QueuedConnection, Q_ARG(int, makeGnuPGError(GPG_ERR_UNEXPECTED)), Q_ARG(QString, i18n("Unknown exception in Task::start()")));
     }
-    emit started();
+    Q_EMIT started();
 }
 
 void Task::emitError(int errCode, const QString &details)
@@ -202,8 +202,8 @@ void Task::emitError(int errCode, const QString &details)
 void Task::emitResult(const shared_ptr<const Task::Result> &r)
 {
     d->m_processedPercent = 1.0;
-    emit progress(progressLabel(), processedSize(), totalSize());
-    emit result(r);
+    Q_EMIT progress(progressLabel(), processedSize(), totalSize());
+    Q_EMIT result(r);
 }
 
 shared_ptr<Task::Result> Task::makeErrorResult(int errCode, const QString &details)

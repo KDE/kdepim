@@ -153,14 +153,14 @@ void MailFilterAgent::initialCollectionFetchingDone(KJob *job)
             changeRecorder()->setCollectionMonitored(collection, true);
         }
     }
-    emit status(AgentBase::Idle, i18n("Ready"));
-    emit percent(100);
+    Q_EMIT status(AgentBase::Idle, i18n("Ready"));
+    Q_EMIT percent(100);
     QTimer::singleShot(2000, this, SLOT(clearMessage()));
 }
 
 void MailFilterAgent::clearMessage()
 {
-    emit status(AgentBase::Idle, QString());
+    Q_EMIT status(AgentBase::Idle, QString());
 }
 
 void MailFilterAgent::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
@@ -310,15 +310,15 @@ void MailFilterAgent::emitProgress(int p)
 {
     if (p == 0) {
         mProgressTimer->stop();
-        emit status(AgentBase::Idle, QString());
+        Q_EMIT status(AgentBase::Idle, QString());
     }
     mProgressCounter = p;
-    emit percent(p);
+    Q_EMIT percent(p);
 }
 
 void MailFilterAgent::emitProgressMessage(const QString &message)
 {
-    emit status(AgentBase::Running, message);
+    Q_EMIT status(AgentBase::Running, message);
 }
 
 QString MailFilterAgent::printCollectionMonitored()

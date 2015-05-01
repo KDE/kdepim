@@ -358,7 +358,7 @@ void VisualFreeBusyWidget::slotIntervalColorRectangleMoved(const KDateTime &star
 {
     mDtStart = start;
     mDtEnd = end;
-    emit dateTimesChanged(start, end);
+    Q_EMIT dateTimesChanged(start, end);
 }
 
 /*!
@@ -389,7 +389,7 @@ void VisualFreeBusyWidget::slotPickDate()
 //                 start.dateTime().toString(), end.dateTime().toString() ), QString(),
 //                 KStandardGuiItem::yes(), KStandardGuiItem::no(),
 //                 "MeetingMovedFreeBusy" ) == KMessageBox::Yes ) {
-//          emit dateTimesChanged( start, end );
+//          Q_EMIT dateTimesChanged( start, end );
 //          slotUpdateGanttView( start, end );
 //          }
 //      }

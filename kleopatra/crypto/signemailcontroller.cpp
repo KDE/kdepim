@@ -182,7 +182,7 @@ void SignEMailController::setDetachedSignature(bool detached)
 
 void SignEMailController::Private::slotWizardSignersResolved()
 {
-    emit q->signersResolved();
+    Q_EMIT q->signersResolved();
 }
 
 // ### extract to base
@@ -268,7 +268,7 @@ void SignEMailController::Private::schedule()
         kleo_assert(runnable.empty());
         QPointer<QObject> Q = q;
         Q_FOREACH (const shared_ptr<SignEMailTask> t, completed) {
-            emit q->reportMicAlg(t->micAlg());
+            Q_EMIT q->reportMicAlg(t->micAlg());
             if (!Q) {
                 return;
             }

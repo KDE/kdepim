@@ -59,7 +59,7 @@ public:
 private:
     void slotKeyFilterChanged(int idx)
     {
-        emit q->keyFilterChanged(keyFilter(idx));
+        Q_EMIT q->keyFilterChanged(keyFilter(idx));
     }
 
     shared_ptr<KeyFilter> keyFilter(int idx) const

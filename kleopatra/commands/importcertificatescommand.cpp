@@ -395,7 +395,7 @@ void ImportCertificatesCommand::Private::tryToFinish()
     if (kdtools::any(results, boost::bind(&Error::code, boost::bind(&ImportResult::error, _1)))) {
         setImportResultProxyModel(results, ids);
         if (kdtools::all(results, boost::bind(&Error::isCanceled, boost::bind(&ImportResult::error, _1)))) {
-            emit q->canceled();
+            Q_EMIT q->canceled();
         } else
             for (unsigned int i = 0, end = results.size() ; i != end ; ++i)
                 if (const Error err = results[i].error()) {

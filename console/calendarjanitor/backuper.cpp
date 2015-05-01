@@ -54,7 +54,7 @@ void Backuper::emitFinished(bool success, const QString &message)
 
     m_calendar.clear();
 
-    emit finished(success, message);
+    Q_EMIT finished(success, message);
     qApp->exit(success ? 0 : -1); // TODO: If we move this class to kdepimlibs, remove this
 }
 

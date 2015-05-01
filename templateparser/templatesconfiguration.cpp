@@ -90,7 +90,7 @@ void TemplatesConfiguration::slotHelpLinkClicked(const QString &)
 
 void TemplatesConfiguration::slotTextChanged()
 {
-    emit changed();
+    Q_EMIT changed();
 }
 
 void TemplatesConfiguration::resetToDefault()

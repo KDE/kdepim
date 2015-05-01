@@ -158,7 +158,7 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances(bool excludeMailDi
 bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
 {
     // FIXME: this function should be inside a QObject, and async,
-    //         and emit a signal when korg registered itself successfuly
+    //         and Q_EMIT a signal when korg registered itself successfuly
 
     QString error;
     bool result = true;

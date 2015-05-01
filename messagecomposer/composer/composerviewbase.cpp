@@ -217,7 +217,7 @@ void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &ms
     // Set the HTML text and collect HTML images
     if (!otp.htmlContent().isEmpty()) {
         m_editor->setHtml(otp.htmlContent());
-        emit enableHtml();
+        Q_EMIT enableHtml();
         collectImages(m_msg.get());
     } else {
         m_editor->setPlainText(otp.plainTextContent());
@@ -243,7 +243,7 @@ void MessageComposer::ComposerViewBase::updateTemplate(const KMime::Message::Ptr
     // Set the HTML text and collect HTML images
     if (!otp.htmlContent().isEmpty()) {
         m_editor->setHtml(otp.htmlContent());
-        emit enableHtml();
+        Q_EMIT enableHtml();
         collectImages(msg.get());
     } else {
         m_editor->setPlainText(otp.plainTextContent());
@@ -329,7 +329,7 @@ void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::Sen
             m_encrypt = false;
             m_sign = false;
         } else {
-            emit disableHtml(NoConfirmationNeeded);
+            Q_EMIT disableHtml(NoConfirmationNeeded);
         }
     }
 
@@ -462,7 +462,7 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved(KJob *job)
     }
 
     if (m_composers.isEmpty()) {
-        emit failed(i18n("It was not possible to create a message composer."));
+        Q_EMIT failed(i18n("It was not possible to create a message composer."));
         return;
     }
 
@@ -656,9 +656,9 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
         // TODO handle failure
         qCDebug(MESSAGECOMPOSER_LOG) << "determineWhetherToSign: failed to resolve keys! oh noes";
         if (!canceled) {
-            emit failed(i18n("Failed to resolve keys. Please report a bug."));
+            Q_EMIT failed(i18n("Failed to resolve keys. Please report a bug."));
         } else {
-            emit failed(QString());
+            Q_EMIT failed(QString());
         }
         wasCanceled = canceled;
         return QList< MessageComposer::Composer *>();
@@ -670,9 +670,9 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
         // TODO handle failure
         qCDebug(MESSAGECOMPOSER_LOG) << "determineWhetherToEncrypt: failed to resolve keys! oh noes";
         if (!canceled) {
-            emit failed(i18n("Failed to resolve keys. Please report a bug."));
+            Q_EMIT failed(i18n("Failed to resolve keys. Please report a bug."));
         } else {
-            emit failed(QString());
+            Q_EMIT failed(QString());
         }
 
         wasCanceled = canceled;
@@ -691,7 +691,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
     } else if (kpgpResult != Kpgp::Ok) {
         // TODO handle failure
         qCDebug(MESSAGECOMPOSER_LOG) << "resolveAllKeys: failed to resolve keys! oh noes";
-        emit failed(i18n("Failed to resolve keys. Please report a bug."));
+        Q_EMIT failed(i18n("Failed to resolve keys. Please report a bug."));
         return QList< MessageComposer::Composer *>();
     }
     qCDebug(MESSAGECOMPOSER_LOG) << "done resolving keys:";
@@ -875,7 +875,7 @@ void MessageComposer::ComposerViewBase::slotSendComposeResult(KJob *job)
         // The job warned the user about something, and the user chose to return
         // to the message.  Nothing to do.
         qCDebug(MESSAGECOMPOSER_LOG) << "UserCancelledError.";
-        emit failed(i18n("Job cancelled by the user"));
+        Q_EMIT failed(i18n("Job cancelled by the user"));
     } else {
         qCDebug(MESSAGECOMPOSER_LOG) << "other Error.";
         QString msg;
@@ -884,7 +884,7 @@ void MessageComposer::ComposerViewBase::slotSendComposeResult(KJob *job)
         } else {
             msg = i18n("Could not compose message: %1", job->errorString());
         }
-        emit failed(msg);
+        Q_EMIT failed(msg);
     }
 
     m_composers.removeAll(composer);
@@ -959,14 +959,14 @@ void MessageComposer::ComposerViewBase::slotQueueResult(KJob *job)
                            job->errorString());
 
         if (m_pendingQueueJobs == 0) {
-            emit failed(msg);
+            Q_EMIT failed(msg);
             return;
         }
     }
 
     if (m_pendingQueueJobs == 0) {
         addFollowupReminder(qjob->message()->messageID(false)->asUnicodeString());
-        emit sentSuccessfully();
+        Q_EMIT sentSuccessfully();
     }
 }
 
@@ -1115,7 +1115,7 @@ void MessageComposer::ComposerViewBase::setAutoSaveFileName(const QString &fileN
 {
     m_autoSaveUUID = fileName;
 
-    emit modified(true);
+    Q_EMIT modified(true);
 }
 
 void MessageComposer::ComposerViewBase::slotAutoSaveComposeResult(KJob *job)
@@ -1141,10 +1141,10 @@ void MessageComposer::ComposerViewBase::slotAutoSaveComposeResult(KJob *job)
         // The job warned the user about something, and the user chose to return
         // to the message.  Nothing to do.
         qCDebug(MESSAGECOMPOSER_LOG) << "UserCancelledError.";
-        emit failed(i18n("Job cancelled by the user"), AutoSave);
+        Q_EMIT failed(i18n("Job cancelled by the user"), AutoSave);
     } else {
         qCDebug(MESSAGECOMPOSER_LOG) << "other Error.";
-        emit failed(i18n("Could not autosave message: %1", job->errorString()), AutoSave);
+        Q_EMIT failed(i18n("Could not autosave message: %1", job->errorString()), AutoSave);
     }
 
     m_composers.removeAll(composer);
@@ -1271,7 +1271,7 @@ void MessageComposer::ComposerViewBase::slotCreateItemResult(KJob *job)
 
     if (job->error()) {
         qCWarning(MESSAGECOMPOSER_LOG) << "Failed to save a message:" << job->errorString();
-        emit failed(i18n("Failed to save the message: %1", job->errorString()));
+        Q_EMIT failed(i18n("Failed to save the message: %1", job->errorString()));
         return;
     }
 
@@ -1287,7 +1287,7 @@ void MessageComposer::ComposerViewBase::slotCreateItemResult(KJob *job)
     }
 
     if (m_pendingQueueJobs == 0) {
-        emit sentSuccessfully();
+        Q_EMIT sentSuccessfully();
     }
 }
 

@@ -217,7 +217,7 @@ void KWatchGnuPGConfig::slotChanged()
 void KWatchGnuPGConfig::slotSave()
 {
     saveConfig();
-    emit reconfigure();
+    Q_EMIT reconfigure();
     accept();
 }
 

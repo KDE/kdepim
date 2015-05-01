@@ -183,8 +183,8 @@ void EventArchiver::deleteIncidences(Akonadi::IncidenceChanger *changer,
 
     changer->deleteIncidences(items, /**parent=*/widget);
 
-    // TODO: emit only after hearing back from incidence changer
-    emit eventsDeleted();
+    // TODO: Q_EMIT only after hearing back from incidence changer
+    Q_EMIT eventsDeleted();
 }
 
 void EventArchiver::archiveIncidences(const Akonadi::ETMCalendar::Ptr &calendar,
@@ -299,10 +299,10 @@ void EventArchiver::archiveIncidences(const Akonadi::ETMCalendar::Ptr &calendar,
     Akonadi::Item::List items = calendar->itemList(incidences);
     foreach (const Akonadi::Item &item, items) {
         changer->deleteIncidence(item, widget);
-    } // TODO: emit only after hearing back from incidence changer
+    } // TODO: Q_EMIT only after hearing back from incidence changer
     changer->endAtomicOperation();
 
-    emit eventsDeleted();
+    Q_EMIT eventsDeleted();
 }
 
 bool EventArchiver::isSubTreeComplete(const Akonadi::ETMCalendar::Ptr &calendar,

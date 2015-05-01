@@ -156,7 +156,7 @@ void IncidenceTreeModel::Private::reset(bool silent)
 
 void IncidenceTreeModel::Private::onHeaderDataChanged(Qt::Orientation orientation, int first, int last)
 {
-    emit q->headerDataChanged(orientation, first, last);
+    Q_EMIT q->headerDataChanged(orientation, first, last);
 }
 
 void IncidenceTreeModel::Private::onDataChanged(const QModelIndex &begin, const QModelIndex &end)
@@ -178,8 +178,8 @@ void IncidenceTreeModel::Private::onDataChanged(const QModelIndex &begin, const 
         if (index.isValid()) {
             Q_ASSERT(index.internalPointer());
 
-            // Did we this node change parent? If no, just emit dataChanged(), if
-            // yes, we must emit rowsMoved(), so we see a visual effect in the view.
+            // Did we this node change parent? If no, just Q_EMIT dataChanged(), if
+            // yes, we must Q_EMIT rowsMoved(), so we see a visual effect in the view.
             Node *rawNode = reinterpret_cast<Node *>(index.internalPointer());
             Node::Ptr node = m_uidMap.value(rawNode->uid);   // Looks hackish but it's safe
             Q_ASSERT(node);
@@ -253,10 +253,10 @@ void IncidenceTreeModel::Private::onDataChanged(const QModelIndex &begin, const 
                 Q_ASSERT(index.isValid());
 
                 if (newParentNode) {
-                    emit q->indexChangedParent(index.parent());
+                    Q_EMIT q->indexChangedParent(index.parent());
                 }
             } else {
-                emit q->dataChanged(index, index);
+                Q_EMIT q->dataChanged(index, index);
             }
         }
     }
@@ -316,7 +316,7 @@ void IncidenceTreeModel::Private::onRowsInserted(const QModelIndex &parent, int 
 
     // view can now call KConfigViewStateSaver::restoreState(), to expand nodes.
     if (end > begin) {
-        emit q->batchInsertionFinished();
+        Q_EMIT q->batchInsertionFinished();
     }
     //qCDebug(CALENDARVIEW_LOG) << "Took " << timer.elapsed() << " to insert " << end-begin+1;
 }
@@ -406,7 +406,7 @@ void IncidenceTreeModel::Private::insertNode(const PreNode::Ptr &prenode, bool s
             if (!silent) {
                 //const bool res = q->beginMoveRows( /**fromParent*/QModelIndex(), fromRow,
                 //                                 fromRow, toParent, toRow );
-                //emit q->layoutAboutToBeChanged();
+                //Q_EMIT q->layoutAboutToBeChanged();
                 q->beginResetModel();
                 //Q_ASSERT( res );
             }
@@ -417,7 +417,7 @@ void IncidenceTreeModel::Private::insertNode(const PreNode::Ptr &prenode, bool s
             if (!silent) {
                 //q->endMoveRows();
                 q->endResetModel();
-                //emit q->layoutChanged();
+                //Q_EMIT q->layoutChanged();
             }
         }
     }
@@ -560,14 +560,14 @@ void IncidenceTreeModel::Private::onModelReset()
 void IncidenceTreeModel::Private::onLayoutAboutToBeChanged()
 {
     Q_ASSERT(q->persistentIndexList().isEmpty());
-    emit q->layoutAboutToBeChanged();
+    Q_EMIT q->layoutAboutToBeChanged();
 }
 
 void IncidenceTreeModel::Private::onLayoutChanged()
 {
     reset(/**silent=*/true);
     Q_ASSERT(q->persistentIndexList().isEmpty());
-    emit q->layoutChanged();
+    Q_EMIT q->layoutChanged();
 }
 
 void IncidenceTreeModel::Private::onRowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)

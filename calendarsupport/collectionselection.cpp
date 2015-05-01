@@ -93,11 +93,11 @@ void CollectionSelection::slotSelectionChanged(const QItemSelection &selectedInd
     const Akonadi::Collection::List selected = collectionsFromIndexes(selectedIndexes.indexes());
     const Akonadi::Collection::List deselected = collectionsFromIndexes(deselIndexes.indexes());
 
-    emit selectionChanged(selected, deselected);
+    Q_EMIT selectionChanged(selected, deselected);
     Q_FOREACH (const Akonadi::Collection &c, deselected) {
-        emit collectionDeselected(c);
+        Q_EMIT collectionDeselected(c);
     }
     Q_FOREACH (const Akonadi::Collection &c, selected) {
-        emit collectionSelected(c);
+        Q_EMIT collectionSelected(c);
     }
 }

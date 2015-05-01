@@ -946,7 +946,7 @@ void AgendaView::zoomInHorizontally(const QDate &date)
         if (ndays > 1) {
             newBegin = begin.addDays(1);
             count = ndays - 1;
-            emit zoomViewHorizontally(newBegin, count);
+            Q_EMIT zoomViewHorizontally(newBegin, count);
         }
     } else {
         if (ndays <= 2) {
@@ -956,7 +956,7 @@ void AgendaView::zoomInHorizontally(const QDate &date)
             newBegin = dateToZoom.addDays(-ndays / 2 + 1);
             count = ndays - 1 ;
         }
-        emit zoomViewHorizontally(newBegin, count);
+        Q_EMIT zoomViewHorizontally(newBegin, count);
     }
 }
 
@@ -987,7 +987,7 @@ void AgendaView::zoomOutHorizontally(const QDate &date)
         qCDebug(CALENDARVIEW_LOG) << "change to the month view?";
     } else {
         //We want to center the date
-        emit zoomViewHorizontally(newBegin, count);
+        Q_EMIT zoomViewHorizontally(newBegin, count);
     }
 }
 
@@ -1713,7 +1713,7 @@ void AgendaView::fillAgenda()
     d->mUpdateAllDayAgenda = false;
 
     if (!somethingReselected) {
-        emit incidenceSelected(Akonadi::Item(), QDate());
+        Q_EMIT incidenceSelected(Akonadi::Item(), QDate());
     }
 }
 

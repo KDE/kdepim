@@ -99,9 +99,9 @@ void Controller::setLastError(int err, const QString &msg)
 void Controller::emitDoneOrError()
 {
     if (d->lastError != 0) {
-        emit error(d->lastError, d->lastErrorString);
+        Q_EMIT error(d->lastError, d->lastErrorString);
     } else {
-        emit done();
+        Q_EMIT done();
     }
 }
 

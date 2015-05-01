@@ -135,7 +135,7 @@ void FolderRequester::setCollection(const Akonadi::Collection &collection, bool 
         mEdit->setText(i18n("Local Folders"));
     }
 
-    emit folderChanged(mCollection);
+    Q_EMIT folderChanged(mCollection);
 }
 
 void FolderRequester::slotCollectionsReceived(KJob *job)

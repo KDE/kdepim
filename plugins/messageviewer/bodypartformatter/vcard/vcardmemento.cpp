@@ -73,7 +73,7 @@ void VcardMemento::continueToCheckEmail()
 {
     if (mIndex == mVCardList.count()) {
         mFinished = true;
-        emit update(Viewer::Delayed);
+        Q_EMIT update(Viewer::Delayed);
     } else {
         checkEmail();
     }

@@ -196,7 +196,7 @@ void SigningProtocolSelectionWidget::setExclusive(bool exclusive)
         return;
     }
     m_buttonGroup->setExclusive(exclusive);
-    emit userSelectionChanged();
+    Q_EMIT userSelectionChanged();
 }
 
 QCheckBox *SigningProtocolSelectionWidget::button(Protocol p) const
@@ -410,11 +410,11 @@ void SignerResolvePage::Private::updateUi()
     signingProtocolSelectionWidget->setVisible(ismutable);
 
     q->setExplanation(validator->explanation());
-    emit q->completeChanged();
+    Q_EMIT q->completeChanged();
 
     const QString customTitle = validator->customWindowTitle();
     if (!customTitle.isEmpty()) {
-        emit q->windowTitleChanged(customTitle);
+        Q_EMIT q->windowTitleChanged(customTitle);
     }
     selectCertificatesButton->setEnabled(signingProtocolSelectionWidget->checkedProtocols().size() > 0);
 }

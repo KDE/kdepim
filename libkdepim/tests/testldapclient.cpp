@@ -189,6 +189,6 @@ void TestLDAPClient::slotLDAPError(const QString &err)
 void TestLDAPClient::slotLDAPDone()
 {
     qDebug() ;
-    emit leaveModality();
+    Q_EMIT leaveModality();
 }
 

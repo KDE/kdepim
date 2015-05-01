@@ -64,7 +64,7 @@ void BroadcastStatus::setStatusMsg(const QString &message)
 {
     mStatusMsg = message;
     if (!mTransientActive) {
-        emit statusMsg(message);
+        Q_EMIT statusMsg(message);
     }
 }
 
@@ -168,14 +168,14 @@ void BroadcastStatus::setStatusMsgTransmissionCompleted(const QString &account,
 void BroadcastStatus::setTransientStatusMsg(const QString &msg)
 {
     mTransientActive = true;
-    emit statusMsg(msg);
+    Q_EMIT statusMsg(msg);
 }
 
 void BroadcastStatus::reset()
 {
     mTransientActive = false;
     // restore
-    emit statusMsg(mStatusMsg);
+    Q_EMIT statusMsg(mStatusMsg);
 }
 
 }

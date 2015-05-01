@@ -119,7 +119,7 @@ void Toolbox::slotReloadCategoryList()
     Backend *b = new Backend(d->mCurrentBlogId);
     connect(b, &Backend::sigCategoryListFetched, this, &Toolbox::slotLoadCategoryListFromDB);
     connect(b, &Backend::sigError, this, &Toolbox::sigError);
-    emit sigBusy(true);
+    Q_EMIT sigBusy(true);
     d->statusbar->showMessage(i18n("Requesting list of categories..."));
     b->getCategoryListFromServer();
 }
@@ -148,7 +148,7 @@ void Toolbox::slotUpdateEntries(int count)
     connect(entryB, &Backend::sigError, this, &Toolbox::sigError);
     d->statusbar->showMessage(i18n("Requesting list of entries..."));
     setCursor(Qt::BusyCursor);
-    emit sigBusy(true);
+    Q_EMIT sigBusy(true);
 }
 
 void Toolbox::slotLoadEntriesFromDB(int blog_id)
@@ -172,7 +172,7 @@ void Toolbox::slotLoadEntriesFromDB(int blog_id)
     }
     d->statusbar->showMessage(i18n("List of entries received."), STATUSTIMEOUT);
     unsetCursor();
-    emit sigBusy(false);
+    Q_EMIT sigBusy(false);
 }
 
 void Toolbox::slotLoadCategoryListFromDB(int blog_id)
@@ -195,7 +195,7 @@ void Toolbox::slotLoadCategoryListFromDB(int blog_id)
     }
     d->statusbar->showMessage(i18n("List of categories received."), STATUSTIMEOUT);
     unsetCursor();
-    emit sigBusy(false);
+    Q_EMIT sigBusy(false);
 }
 
 void Toolbox::slotRemoveSelectedEntryFromServer()
@@ -447,7 +447,7 @@ void Toolbox::slotLocalEntrySelected(QTreeWidgetItem *item, int column)
     qCDebug(BLOGILO_LOG) << "Emitting sigEntrySelected...";
     Q_UNUSED(column);
     BilboPost post = DBMan::self()->localPost(item->data(0, LocalEntryID).toInt());
-    emit sigEntrySelected(post, item->data(1, LocalEntryID).toInt());
+    Q_EMIT sigEntrySelected(post, item->data(1, LocalEntryID).toInt());
 }
 
 void Toolbox::slotRemoveLocalEntry()

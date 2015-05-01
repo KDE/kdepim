@@ -56,10 +56,10 @@ void Page::leavePageNext() {}
 
 void Page::leavePageBackRequested()
 {
-    emit leavePageBackOk();
+    Q_EMIT leavePageBackOk();
 }
 void Page::leavePageNextRequested()
 {
-    emit leavePageNextOk();
+    Q_EMIT leavePageNextOk();
 }
 

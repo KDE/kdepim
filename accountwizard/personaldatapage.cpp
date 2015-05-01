@@ -98,7 +98,7 @@ void PersonalDataPage::slotCreateAccountClicked()
     } else {
         configurePop3Account();
     }
-    emit leavePageNextOk();  // go to the next page
+    Q_EMIT leavePageNextOk();  // go to the next page
     mSetupManager->execute();
 }
 
@@ -121,7 +121,7 @@ void PersonalDataPage::leavePageNext()
 
     if (ui.checkOnlineGroupBox->isChecked()) {
         // since the user can go back and forth, explicitly disable the man page
-        emit manualWanted(false);
+        Q_EMIT manualWanted(false);
         setCursor(Qt::BusyCursor);
         ui.mProgress->start();
         qCDebug(ACCOUNTWIZARD_LOG) << "Searching on internet";
@@ -133,8 +133,8 @@ void PersonalDataPage::leavePageNext()
 
         connect(mIspdb, &Ispdb::finished, this, &PersonalDataPage::ispdbSearchFinished);
     } else {
-        emit manualWanted(true);       // enable the manual page
-        emit leavePageNextOk();  // go to the next page
+        Q_EMIT manualWanted(true);       // enable the manual page
+        Q_EMIT leavePageNextOk();  // go to the next page
     }
 }
 
@@ -154,8 +154,8 @@ void PersonalDataPage::ispdbSearchFinished(bool ok)
         }
 
     } else {
-        emit manualWanted(true);       // enable the manual page
-        emit leavePageNextOk();
+        Q_EMIT manualWanted(true);       // enable the manual page
+        Q_EMIT leavePageNextOk();
     }
 }
 
@@ -264,7 +264,7 @@ void PersonalDataPage::automaticConfigureAccount()
     configureSmtpAccount();
     configureImapAccount();
     configurePop3Account();
-    emit leavePageNextOk();  // go to the next page
+    Q_EMIT leavePageNextOk();  // go to the next page
     mSetupManager->execute();
 }
 

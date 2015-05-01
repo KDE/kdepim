@@ -276,7 +276,7 @@ void FreeBusyItemModel::setFreeBusyPeriods(const QModelIndex &parent,
         parentData->appendChild(childData);
     }
     endInsertRows();
-    emit dataChanged(first, last);
+    Q_EMIT dataChanged(first, last);
 }
 
 void FreeBusyItemModel::clear()

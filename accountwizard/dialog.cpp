@@ -94,7 +94,7 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags flags) :
 
     Page *page = qobject_cast<Page *>(currentPage()->widget());
     page->enterPageNext();
-    emit page->pageEnteredNext();
+    Q_EMIT page->pageEnteredNext();
     connect(button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &Dialog::accept);
 }
 
@@ -122,11 +122,11 @@ void Dialog::next()
 void Dialog::slotNextOk()
 {
     Page *page = qobject_cast<Page *>(currentPage()->widget());
-    emit page->pageLeftNext();
+    Q_EMIT page->pageLeftNext();
     KAssistantDialog::next();
     page = qobject_cast<Page *>(currentPage()->widget());
     page->enterPageNext();
-    emit page->pageEnteredNext();
+    Q_EMIT page->pageEnteredNext();
 }
 
 void Dialog::back()
@@ -139,11 +139,11 @@ void Dialog::back()
 void Dialog::slotBackOk()
 {
     Page *page = qobject_cast<Page *>(currentPage()->widget());
-    emit page->pageLeftBack();
+    Q_EMIT page->pageLeftBack();
     KAssistantDialog::back();
     page = qobject_cast<Page *>(currentPage()->widget());
     page->enterPageBack();
-    emit page->pageEnteredBack();
+    Q_EMIT page->pageEnteredBack();
 }
 
 QObject *Dialog::addPage(const QString &uiFile, const QString &title)

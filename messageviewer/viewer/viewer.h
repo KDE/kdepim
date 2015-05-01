@@ -367,7 +367,7 @@ Q_SIGNALS:
 
     /**
     * The message viewer handles some types of urls itself, most notably http(s)
-    * and ftp(s). When it can't handle the url it will emit this signal.
+    * and ftp(s). When it can't handle the url it will Q_EMIT this signal.
     */
     void urlClicked(const Akonadi::Item &, const QUrl &);
 

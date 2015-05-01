@@ -56,7 +56,7 @@ void MemoryCalendarMemento::slotCalendarLoaded(bool success, const QString &erro
 void MemoryCalendarMemento::finalize()
 {
     mFinished = true;
-    emit update(Viewer::Delayed);
+    Q_EMIT update(Viewer::Delayed);
 }
 
 bool MemoryCalendarMemento::finished() const

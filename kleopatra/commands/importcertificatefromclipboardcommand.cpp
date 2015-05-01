@@ -117,7 +117,7 @@ void ImportCertificateFromClipboardCommand::doStart()
 {
 
     if (!d->ensureHaveClipboard()) {
-        emit canceled();
+        Q_EMIT canceled();
         d->finished();
         return;
     }

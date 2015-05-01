@@ -114,33 +114,33 @@ void KDatePickerPopup::Private::buildMenu()
 
 void KDatePickerPopup::Private::slotDateChanged(const QDate &date)
 {
-    emit q->dateChanged(date);
+    Q_EMIT q->dateChanged(date);
     q->hide();
 }
 
 void KDatePickerPopup::Private::slotToday()
 {
-    emit q->dateChanged(QDate::currentDate());
+    Q_EMIT q->dateChanged(QDate::currentDate());
 }
 
 void KDatePickerPopup::Private::slotTomorrow()
 {
-    emit q->dateChanged(QDate::currentDate().addDays(1));
+    Q_EMIT q->dateChanged(QDate::currentDate().addDays(1));
 }
 
 void KDatePickerPopup::Private::slotNoDate()
 {
-    emit q->dateChanged(QDate());
+    Q_EMIT q->dateChanged(QDate());
 }
 
 void KDatePickerPopup::Private::slotNextWeek()
 {
-    emit q->dateChanged(QDate::currentDate().addDays(7));
+    Q_EMIT q->dateChanged(QDate::currentDate().addDays(7));
 }
 
 void KDatePickerPopup::Private::slotNextMonth()
 {
-    emit q->dateChanged(QDate::currentDate().addMonths(1));
+    Q_EMIT q->dateChanged(QDate::currentDate().addMonths(1));
 }
 
 KDatePickerPopup::KDatePickerPopup(Modes modes, const QDate &date, QWidget *parent)

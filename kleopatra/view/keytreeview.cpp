@@ -252,7 +252,7 @@ void KeyTreeView::setStringFilter(const QString &filter)
     }
     m_stringFilter = filter;
     m_proxy->setFilterFixedString(filter);
-    emit stringFilterChanged(filter);
+    Q_EMIT stringFilterChanged(filter);
 }
 
 void KeyTreeView::setKeyFilter(const shared_ptr<KeyFilter> &filter)
@@ -262,7 +262,7 @@ void KeyTreeView::setKeyFilter(const shared_ptr<KeyFilter> &filter)
     }
     m_keyFilter = filter;
     m_proxy->setKeyFilter(filter);
-    emit keyFilterChanged(filter);
+    Q_EMIT keyFilterChanged(filter);
 }
 
 static QItemSelection itemSelectionFromKeys(const std::vector<Key> &keys, const KeyListSortFilterProxyModel &proxy)
@@ -316,7 +316,7 @@ void KeyTreeView::setHierarchicalView(bool on)
             m_view->scrollTo(currentIndex);
         }
     }
-    emit hierarchicalChanged(on);
+    Q_EMIT hierarchicalChanged(on);
 }
 
 void KeyTreeView::setKeys(const std::vector<Key> &keys)

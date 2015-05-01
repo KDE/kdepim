@@ -299,7 +299,7 @@ void AttachmentHandler::slotFinishSaveAs(KJob *job)
         qCWarning(CALENDARSUPPORT_LOG) << Q_FUNC_INFO << "Job error:" << job->errorString();
     }
 
-    emit saveAsFinished(info.uid, info.attachmentName, success);
+    Q_EMIT saveAsFinished(info.uid, info.attachmentName, success);
     d->mJobToReceivedInfo.remove(job);
 }
 
@@ -321,7 +321,7 @@ void AttachmentHandler::slotFinishView(KJob *job)
         qCWarning(CALENDARSUPPORT_LOG) << Q_FUNC_INFO << "Job error:" << job->errorString();
     }
 
-    emit viewFinished(info.uid, info.attachmentName, success);
+    Q_EMIT viewFinished(info.uid, info.attachmentName, success);
     d->mJobToReceivedInfo.remove(job);
 }
 

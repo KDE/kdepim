@@ -43,8 +43,8 @@ FolderJob::FolderJob() :
 //----------------------------------------------------------------------------
 FolderJob::~FolderJob()
 {
-    emit result(this);
-    emit finished();
+    Q_EMIT result(this);
+    Q_EMIT finished();
 }
 
 //----------------------------------------------------------------------------

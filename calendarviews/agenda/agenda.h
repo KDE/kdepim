@@ -170,7 +170,7 @@ public Q_SLOTS:
 
     void checkScrollBoundaries(int);
 
-    /** Deselect selected items. This function does not emit any signals. */
+    /** Deselect selected items. This function does not Q_EMIT any signals. */
     void deselectItem();
 
     void clearSelection();

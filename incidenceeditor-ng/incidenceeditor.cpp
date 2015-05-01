@@ -47,7 +47,7 @@ void IncidenceEditor::checkDirtyStatus()
     const bool dirty = isDirty();
     if (mWasDirty != dirty) {
         mWasDirty = dirty;
-        emit dirtyStatusChanged(dirty);
+        Q_EMIT dirtyStatusChanged(dirty);
     }
 }
 

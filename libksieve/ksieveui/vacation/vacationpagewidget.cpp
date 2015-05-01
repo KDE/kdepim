@@ -142,7 +142,7 @@ void VacationPageWidget::slotGetResult(KManageSieve::SieveJob *job, bool success
     mVacationEditWidget->setStartDate(mHasDateSupport ? startDate : QDate());
     mVacationEditWidget->setEndDate(mHasDateSupport ? endDate : QDate());
 
-    //emit scriptActive( mWasActive, mServerName );
+    //Q_EMIT scriptActive( mWasActive, mServerName );
 }
 
 KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()

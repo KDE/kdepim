@@ -184,7 +184,7 @@ void AggregationEditor::slotNameEditTextEdited(const QString &newName)
         return;
     }
     mCurrentAggregation->setName(newName);
-    emit aggregationNameChanged();
+    Q_EMIT aggregationNameChanged();
 }
 
 void AggregationEditor::fillGroupingCombo()

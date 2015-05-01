@@ -520,7 +520,7 @@ QList<QModelIndex> FlatKeyListModel::doAddKeys(const std::vector<Key> &keys)
         if (idx > 0 && qstrcmp(mKeysByFingerprint[idx - 1].primaryFingerprint(), it->primaryFingerprint()) == 0) {
             // key existed before - replace with new one:
             mKeysByFingerprint[idx - 1] = *it;
-            emit dataChanged(createIndex(idx - 1, 0), createIndex(idx - 1, NumColumns - 1));
+            Q_EMIT dataChanged(createIndex(idx - 1, 0), createIndex(idx - 1, NumColumns - 1));
         } else {
             // new key - insert:
             beginInsertRows(QModelIndex(), idx, idx);
@@ -697,7 +697,7 @@ void HierarchicalKeyListModel::addKeyWithParent(const char *issuer_fpr, const Ke
     if (it != subjects.end() && qstricmp(it->primaryFingerprint(), key.primaryFingerprint()) == 0) {
         // exists -> replace
         *it = key;
-        emit dataChanged(createIndex(row, 0, const_cast<char *>(issuer_fpr)), createIndex(row, NumColumns - 1, const_cast<char *>(issuer_fpr)));
+        Q_EMIT dataChanged(createIndex(row, 0, const_cast<char *>(issuer_fpr)), createIndex(row, NumColumns - 1, const_cast<char *>(issuer_fpr)));
     } else {
         // doesn't exist -> insert
         const std::vector<Key>::const_iterator pos = qBinaryFind(mKeysByFingerprint.begin(), mKeysByFingerprint.end(), issuer_fpr, _detail::ByFingerprint<std::less>());
@@ -741,7 +741,7 @@ void HierarchicalKeyListModel::addTopLevelKey(const Key &key)
     if (it != mTopLevels.end() && qstricmp(it->primaryFingerprint(), key.primaryFingerprint()) == 0) {
         // exists -> replace
         *it = key;
-        emit dataChanged(createIndex(row, 0), createIndex(row, NumColumns - 1));
+        Q_EMIT dataChanged(createIndex(row, 0), createIndex(row, NumColumns - 1));
     } else {
         // doesn't exist -> insert
         beginInsertRows(QModelIndex(), row, row);
@@ -836,7 +836,7 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys(const std::vector<Key> &k
                 lastFP = qBinaryFind(lastFP, mKeysByFingerprint.end(), k, _detail::ByFingerprint<std::less>());
                 assert(lastFP != mKeysByFingerprint.end());
 
-                emit rowAboutToBeMoved(QModelIndex(), row);
+                Q_EMIT rowAboutToBeMoved(QModelIndex(), row);
                 beginRemoveRows(QModelIndex(), row, row);
                 last = mTopLevels.erase(last);
                 lastFP = mKeysByFingerprint.erase(lastFP);
@@ -872,19 +872,19 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys(const std::vector<Key> &k
         if (!keyAlreadyExisted && !children.empty()) {
             addKeys(children);
             const QModelIndex new_parent = index(key);
-            // emit the rowMoved() signals in reversed direction, so the
+            // Q_EMIT the rowMoved() signals in reversed direction, so the
             // implementation can use a stack for mapping.
             for (int i = children.size() - 1 ; i >= 0 ; --i) {
-                emit rowMoved(new_parent, i);
+                Q_EMIT rowMoved(new_parent, i);
             }
         }
     }
-    //emit dataChanged for all parents with new children. This triggers KeyListSortFilterProxyModel to
+    //Q_EMIT dataChanged for all parents with new children. This triggers KeyListSortFilterProxyModel to
     //show a parent node if it just got children matching the proxy's filter
     Q_FOREACH (const Key &i, changedParents) {
         const QModelIndex idx = index(i);
         if (idx.isValid()) {
-            emit dataChanged(idx.sibling(idx.row(), 0), idx.sibling(idx.row(), NumColumns - 1));
+            Q_EMIT dataChanged(idx.sibling(idx.row(), 0), idx.sibling(idx.row(), NumColumns - 1));
         }
     }
     return indexes(keys);

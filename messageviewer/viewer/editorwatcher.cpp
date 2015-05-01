@@ -221,7 +221,7 @@ void EditorWatcher::checkEditDone()
                                  QStringLiteral("UnableToEditAttachment"));
     }
 
-    emit editDone(this);
+    Q_EMIT editDone(this);
     deleteLater();
 }
 }

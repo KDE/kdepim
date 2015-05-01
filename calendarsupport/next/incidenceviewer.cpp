@@ -62,7 +62,7 @@ void TextBrowser::setSource(const QUrl &name)
     }
 
     if (uri.startsWith(QLatin1String("ATTACH:"))) {
-        emit attachmentUrlClicked(uri);
+        Q_EMIT attachmentUrlClicked(uri);
     } else {
         UriHandler::process(uri);
     }

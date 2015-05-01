@@ -180,6 +180,6 @@ void Filter::setSearchString(const QString &search, QuickSearchLine::SearchOptio
             mMatchingItemIds << it.id();
         }
     }
-    emit finished();
+    Q_EMIT finished();
 }
 

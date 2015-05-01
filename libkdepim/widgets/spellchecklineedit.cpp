@@ -114,10 +114,10 @@ void SpellCheckLineEdit::keyPressEvent(QKeyEvent *e)
     if (e->key() == Qt::Key_Enter ||
             e->key() == Qt::Key_Return ||
             e->key() == Qt::Key_Down) {
-        emit focusDown();
+        Q_EMIT focusDown();
         return;
     } else if (e->key() == Qt::Key_Up) {
-        emit focusUp();
+        Q_EMIT focusUp();
         return;
     }
     KTextEdit::keyPressEvent(e);

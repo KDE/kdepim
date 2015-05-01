@@ -106,7 +106,7 @@ MultiplyingLine *MultiplyingLineView::addLine()
 
     QTimer::singleShot(0, this, SLOT(moveScrollBarToEnd()));
 
-    emit lineAdded(line);
+    Q_EMIT lineAdded(line);
     return line;
 }
 
@@ -131,7 +131,7 @@ void MultiplyingLineView::slotDownPressed(MultiplyingLine *line)
 {
     int pos = mLines.indexOf(line);
     if (pos >= (int)mLines.count() - 1) {
-        emit focusDown();
+        Q_EMIT focusDown();
     } else if (pos >= 0) {
         activateLine(mLines.at(pos + 1));
     }
@@ -143,7 +143,7 @@ void MultiplyingLineView::slotUpPressed(MultiplyingLine *line)
     if (pos > 0) {
         activateLine(mLines.at(pos - 1));
     } else {
-        emit focusUp();
+        Q_EMIT focusUp();
     }
 }
 
@@ -190,7 +190,7 @@ void MultiplyingLineView::slotDeleteLine()
     line->deleteLater();
 
     if (pos > 0) {
-        emit lineDeleted(pos);
+        Q_EMIT lineDeleted(pos);
     }
 
     resizeView();
@@ -212,7 +212,7 @@ void MultiplyingLineView::resizeView()
     }
 
     parentWidget()->layout()->activate();
-    emit sizeHintChanged();
+    Q_EMIT sizeHintChanged();
     QTimer::singleShot(0, this, SLOT(moveCompletionPopup()));
 }
 
@@ -286,7 +286,7 @@ void MultiplyingLineView::setCompletionMode(KCompletion::CompletionMode mode)
         line->setCompletionMode(mode);
         line->blockSignals(false);
     }
-    emit completionModeChanged(mode);   //report change to MultiplyingLineEditor
+    Q_EMIT completionModeChanged(mode);   //report change to MultiplyingLineEditor
 }
 
 void MultiplyingLineView::removeData(const MultiplyingLineData::Ptr &data)

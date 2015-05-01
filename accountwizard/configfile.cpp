@@ -43,7 +43,7 @@ void ConfigFile::write()
 
 void ConfigFile::create()
 {
-    emit info(i18n("Writing config file for %1...", m_name));
+    Q_EMIT info(i18n("Writing config file for %1...", m_name));
 
     foreach (const Config &c, m_configData) {
         KConfigGroup grp = m_config->group(c.group);
@@ -55,12 +55,12 @@ void ConfigFile::create()
     }
 
     m_config->sync();
-    emit finished(i18n("Config file for %1 is writing.", m_name));
+    Q_EMIT finished(i18n("Config file for %1 is writing.", m_name));
 }
 
 void ConfigFile::destroy()
 {
-    emit info(i18n("Config file for %1 was not changed.", m_name));
+    Q_EMIT info(i18n("Config file for %1 was not changed.", m_name));
 }
 
 void ConfigFile::setName(const QString &name)

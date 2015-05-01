@@ -62,9 +62,9 @@ void CollectionLoader::onCollectionsLoaded(KJob *job)
                 m_collections << collection;
             }
         }
-        emit loaded(true);
+        Q_EMIT loaded(true);
     } else {
         qCritical() << job->errorString();
-        emit loaded(false);
+        Q_EMIT loaded(false);
     }
 }

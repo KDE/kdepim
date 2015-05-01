@@ -97,7 +97,7 @@ void Kleo::HierarchicalKeyListJob::slotNextKey(const GpgME::Key &key)
     if (const char *fpr = key.primaryFingerprint())
         if (mSentSet.find(QLatin1String(fpr)) == mSentSet.end()) {
             mSentSet.insert(QLatin1String(fpr));
-            emit nextKey(key);
+            Q_EMIT nextKey(key);
         }
 }
 
@@ -122,22 +122,22 @@ void Kleo::HierarchicalKeyListJob::slotResult(const GpgME::KeyListResult &res)
                         mSentSet.begin(), mSentSet.end(),
                         std::inserter(mNextSet, mNextSet.begin()));
     if (mIntermediateResult.error() || mNextSet.empty()) {
-        emit done();
-        emit result(mIntermediateResult);
+        Q_EMIT done();
+        Q_EMIT result(mIntermediateResult);
         deleteLater();
         return;
     }
     if (const GpgME::Error error = startAJob()) {   // error starting the job for next keys
         mIntermediateResult.mergeWith(GpgME::KeyListResult(error));
-        emit done();
-        emit result(mIntermediateResult);
+        Q_EMIT done();
+        Q_EMIT result(mIntermediateResult);
         deleteLater();
         return;
     }
 #if 0 // FIXME
     const int current = mIt - mKeys.begin();
     const int total = mKeys.size();
-    emit progress(i18nc("progress info: \"%1 of %2\"", "%1/%2", current, total), current, total);
+    Q_EMIT progress(i18nc("progress info: \"%1 of %2\"", "%1/%2", current, total), current, total);
 #endif
 }
 

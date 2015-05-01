@@ -53,7 +53,7 @@ void TodoViewQuickAddLine::returnPressed()
     // Workaround bug #217592 (disappearing cursor)
     unsetCursor();
 
-    emit returnPressed(mModifiers);
+    Q_EMIT returnPressed(mModifiers);
 }
 
 void TodoViewQuickAddLine::resizeEvent(QResizeEvent *event)

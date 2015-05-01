@@ -127,7 +127,7 @@ private:
         nksState = Ongoing;
         ui.nksStatusLB->clear();
         updateWidgets();
-        emit q->nksPinRequested();
+        Q_EMIT q->nksPinRequested();
     }
 
     void slotSigGButtonClicked()
@@ -135,7 +135,7 @@ private:
         sigGState = Ongoing;
         ui.sigGStatusLB->clear();
         updateWidgets();
-        emit q->sigGPinRequested();
+        Q_EMIT q->sigGPinRequested();
     }
 
 private:

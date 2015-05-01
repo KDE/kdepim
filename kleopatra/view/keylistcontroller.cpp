@@ -141,9 +141,9 @@ public:
     void slotAboutToRemoveKey(const Key &key);
     void slotProgress(const QString &what, int current, int total)
     {
-        emit q->progress(current, total);
+        Q_EMIT q->progress(current, total);
         if (!what.isEmpty()) {
-            emit q->message(what);
+            Q_EMIT q->message(what);
         }
     }
     void slotActionTriggered();
@@ -555,7 +555,7 @@ void KeyListController::registerCommand(Command *cmd)
     d->addCommand(cmd);
     qCDebug(KLEOPATRA_LOG) << (void *)cmd;
     if (d->commands.size() == 1) {
-        emit commandsExecuting(true);
+        Q_EMIT commandsExecuting(true);
     }
 }
 
@@ -646,7 +646,7 @@ void KeyListController::Private::slotContextMenu(const QPoint &p)
 {
     QAbstractItemView *const view = qobject_cast<QAbstractItemView *>(q->sender());
     if (view && kdtools::binary_search(views, view)) {
-        emit q->contextMenuRequested(view, view->viewport()->mapToGlobal(p));
+        Q_EMIT q->contextMenuRequested(view, view->viewport()->mapToGlobal(p));
     } else {
         qCDebug(KLEOPATRA_LOG) << "sender is not a QAbstractItemView*!";
     }
@@ -660,7 +660,7 @@ void KeyListController::Private::slotCommandFinished()
     }
     qCDebug(KLEOPATRA_LOG) << (void *)cmd;
     if (commands.size() == 1) {
-        emit q->commandsExecuting(false);
+        Q_EMIT q->commandsExecuting(false);
     }
 }
 

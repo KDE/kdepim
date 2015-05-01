@@ -154,7 +154,7 @@ public:
     void reloadData()
     {
         if (!m_tests.empty()) {
-            emit dataChanged(index(0, 0), index(m_tests.size() - 1, NumColumns - 1));
+            Q_EMIT dataChanged(index(0, 0), index(m_tests.size() - 1, NumColumns - 1));
         }
     }
 
@@ -193,7 +193,7 @@ public Q_SLOTS:
         }
         m_showAll = on;
         invalidateFilter();
-        emit showAllChanged(on);
+        Q_EMIT showAllChanged(on);
     }
 
 private:

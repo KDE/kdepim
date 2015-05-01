@@ -444,7 +444,7 @@ void AppearanceConfigWidget::Private::slotDefaultClicked()
     set_default_appearance(item);
     enableDisableActions(item);
 
-    emit q->changed();
+    Q_EMIT q->changed();
 }
 
 void AppearanceConfigWidget::defaults()
@@ -460,7 +460,7 @@ void AppearanceConfigWidget::defaults()
 
     d->dnOrderWidget->defaults();
 
-    emit changed();
+    Q_EMIT changed();
 }
 
 void AppearanceConfigWidget::load()
@@ -540,7 +540,7 @@ void AppearanceConfigWidget::Private::slotIconClicked()
 
     item->setIcon(QIcon::fromTheme(iconName));
     item->setData(IconNameRole, iconName);
-    emit q->changed();
+    Q_EMIT q->changed();
 }
 
 #ifndef QT_NO_COLORDIALOG
@@ -558,7 +558,7 @@ void AppearanceConfigWidget::Private::slotForegroundClicked()
 
     if (c.isValid()) {
         item->setData(Qt::ForegroundRole, QBrush(c));
-        emit q->changed();
+        Q_EMIT q->changed();
     }
 }
 
@@ -576,7 +576,7 @@ void AppearanceConfigWidget::Private::slotBackgroundClicked()
 
     if (c.isValid()) {
         item->setData(Qt::BackgroundRole, QBrush(c));
-        emit q->changed();
+        Q_EMIT q->changed();
     }
 }
 #endif // QT_NO_COLORDIALOG
@@ -612,41 +612,41 @@ void AppearanceConfigWidget::Private::slotFontClicked()
 
     item->setData(Qt::FontRole, f != defaultFont ? f : QVariant());
     item->setData(HasFontRole, true);
-    emit q->changed();
+    Q_EMIT q->changed();
 }
 #endif // QT_NO_FONTDIALOG
 
 void AppearanceConfigWidget::Private::slotItalicToggled(bool on)
 {
     set_italic(selectedItem(), on);
-    emit q->changed();
+    Q_EMIT q->changed();
 }
 
 void AppearanceConfigWidget::Private::slotBoldToggled(bool on)
 {
     set_bold(selectedItem(), on);
-    emit q->changed();
+    Q_EMIT q->changed();
 }
 
 void AppearanceConfigWidget::Private::slotStrikeOutToggled(bool on)
 {
     set_strikeout(selectedItem(), on);
-    emit q->changed();
+    Q_EMIT q->changed();
 }
 
 void AppearanceConfigWidget::Private::slotTooltipValidityChanged(bool)
 {
-    emit q->changed();
+    Q_EMIT q->changed();
 }
 
 void AppearanceConfigWidget::Private::slotTooltipOwnerChanged(bool)
 {
-    emit q->changed();
+    Q_EMIT q->changed();
 }
 
 void AppearanceConfigWidget::Private::slotTooltipDetailsChanged(bool)
 {
-    emit q->changed();
+    Q_EMIT q->changed();
 }
 
 #include "moc_appearanceconfigwidget.cpp"

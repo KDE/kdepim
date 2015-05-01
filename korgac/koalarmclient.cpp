@@ -237,7 +237,7 @@ void KOAlarmClient::createReminder(const Akonadi::ETMCalendar::Ptr &calendar,
 
 void KOAlarmClient::slotQuit()
 {
-    emit saveAllSignal();
+    Q_EMIT saveAllSignal();
     saveLastCheckTime();
     quit();
 }
@@ -257,7 +257,7 @@ void KOAlarmClient::quit()
 
 void KOAlarmClient::slotCommitData(QSessionManager &)
 {
-    emit saveAllSignal();
+    Q_EMIT saveAllSignal();
     saveLastCheckTime();
 }
 

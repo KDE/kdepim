@@ -59,7 +59,7 @@ JournalDateView::~JournalDateView()
 void JournalDateView::setDate(const QDate &date)
 {
     mDate = date;
-    emit setDateSignal(date);
+    Q_EMIT setDateSignal(date);
 }
 
 void JournalDateView::clear()
@@ -114,12 +114,12 @@ Akonadi::Item::List JournalDateView::journals() const
 void JournalDateView::setIncidenceChanger(Akonadi::IncidenceChanger *changer)
 {
     mChanger = changer;
-    emit setIncidenceChangerSignal(changer);
+    Q_EMIT setIncidenceChangerSignal(changer);
 }
 
 void JournalDateView::emitNewJournal()
 {
-    emit newJournal(mDate);
+    Q_EMIT newJournal(mDate);
 }
 
 void JournalDateView::journalEdited(const Akonadi::Item &journal)
@@ -226,10 +226,10 @@ bool JournalFrame::eventFilter(QObject *object, QEvent *event)
 
     switch (event->type()) {
     case QEvent::MouseButtonPress:
-        emit incidenceSelected(mJournal, mDate);
+        Q_EMIT incidenceSelected(mJournal, mDate);
         break;
     case QEvent::MouseButtonDblClick:
-        emit editIncidence(mJournal);
+        Q_EMIT editIncidence(mJournal);
         break;
     default:
         break;
@@ -241,14 +241,14 @@ bool JournalFrame::eventFilter(QObject *object, QEvent *event)
 void JournalFrame::deleteItem()
 {
     if (CalendarSupport::hasJournal(mJournal)) {
-        emit deleteIncidence(mJournal);
+        Q_EMIT deleteIncidence(mJournal);
     }
 }
 
 void JournalFrame::editItem()
 {
     if (CalendarSupport::hasJournal(mJournal)) {
-        emit editIncidence(mJournal);
+        Q_EMIT editIncidence(mJournal);
     }
 }
 
@@ -282,12 +282,12 @@ void JournalFrame::setDirty()
 
 void JournalFrame::printJournal()
 {
-    emit printJournal(CalendarSupport::journal(mJournal), false);
+    Q_EMIT printJournal(CalendarSupport::journal(mJournal), false);
 }
 
 void JournalFrame::printPreviewJournal()
 {
-    emit printJournal(CalendarSupport::journal(mJournal), true);
+    Q_EMIT printJournal(CalendarSupport::journal(mJournal), true);
 }
 
 void JournalFrame::readJournal(const Akonadi::Item &j)

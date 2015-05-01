@@ -72,7 +72,7 @@ PrintingWizard::PrintingWizard(QPrinter *printer, QItemSelectionModel *selection
     registerStyles();
 
     if (mStyleFactories.count() > Settings::self()->printingStyle()) {
-        mStylePage->setPrintingStyle(Settings::self()->printingStyle());   // should emit styleChanged
+        mStylePage->setPrintingStyle(Settings::self()->printingStyle());   // should Q_EMIT styleChanged
         slotStyleSelected(Settings::self()->printingStyle());
     }
 

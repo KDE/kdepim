@@ -51,7 +51,7 @@ public:
     /**
      * Request to Fetch categories list from server.
      * and after it's fetched, categoriesListed() SLOT will insert them to database, and update list in database
-     * and emit categoriesFetched() SIGNAL.
+     * and Q_EMIT categoriesFetched() SIGNAL.
      * @param blog_id Id of blog in DB!
      */
     void getCategoryListFromServer();
@@ -110,7 +110,7 @@ protected Q_SLOTS:
     void slotPostRemoved(KBlog::BlogPost *post);
     void slotPostFetched(KBlog::BlogPost *post);
     /**
-     * This function is called after a post published fine, to insert it to DB and emit sigPostPublished.
+     * This function is called after a post published fine, to insert it to DB and Q_EMIT sigPostPublished.
      */
     void savePostInDbAndEmitResult(KBlog::BlogPost *post);
 
@@ -118,13 +118,13 @@ protected Q_SLOTS:
 
 Q_SIGNALS:
     /**
-     * emit when a categoriesListed() Done and Categories added to DB
+     * Q_EMIT when a categoriesListed() Done and Categories added to DB
      * @param blog_id id of Blog owner of categories.
      */
     void sigCategoryListFetched(int blog_id);
 
     /**
-     * emit when a entriesListed() Done and Entries added to DB
+     * Q_EMIT when a entriesListed() Done and Entries added to DB
      * @param blog_id id of Blog owner of Entries.
      */
     void sigEntriesListFetched(int blog_id);

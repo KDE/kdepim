@@ -100,9 +100,9 @@ void TaskCollection::Private::taskResult(const shared_ptr<const Task::Result> &r
     m_errorOccurred = m_errorOccurred || result->hasError();
     m_lastProgressMessage.clear();
     calculateAndEmitProgress();
-    emit q->result(result);
+    Q_EMIT q->result(result);
     if (q->allTasksCompleted()) {
-        emit q->done();
+        Q_EMIT q->done();
     }
 }
 
@@ -111,7 +111,7 @@ void TaskCollection::Private::taskStarted()
     const Task *const task = qobject_cast<Task *>(q->sender());
     assert(task);
     assert(m_tasks.find(task->id()) != m_tasks.end());
-    emit q->started(m_tasks[task->id()]);
+    Q_EMIT q->started(m_tasks[task->id()]);
     calculateAndEmitProgress(); // start Knight-Rider-Mode right away (gpgsm doesn't report _any_ progress).
 }
 
@@ -142,11 +142,11 @@ void TaskCollection::Private::calculateAndEmitProgress()
     m_totalSize = total;
     m_processedSize = processed;
     if (processed) {
-        emit q->progress(m_lastProgressMessage, processed, total);
+        Q_EMIT q->progress(m_lastProgressMessage, processed, total);
     } else
         // use knight-rider mode until we have some progress
     {
-        emit q->progress(m_lastProgressMessage, processed, 0);
+        Q_EMIT q->progress(m_lastProgressMessage, processed, 0);
     }
 }
 

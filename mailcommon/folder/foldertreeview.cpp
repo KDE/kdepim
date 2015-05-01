@@ -67,7 +67,7 @@ void FolderTreeView::setTooltipsPolicy(FolderTreeWidget::ToolTipDisplayPolicy po
     }
 
     mToolTipDisplayPolicy = policy;
-    emit changeTooltipsPolicy(mToolTipDisplayPolicy);
+    Q_EMIT changeTooltipsPolicy(mToolTipDisplayPolicy);
     writeConfig();
 }
 
@@ -128,7 +128,7 @@ void FolderTreeView::readConfig()
             myGroup.readEntry("ToolTipDisplayPolicy",
                               static_cast<int>(FolderTreeWidget::DisplayAlways)));
 
-    emit changeTooltipsPolicy(mToolTipDisplayPolicy);
+    Q_EMIT changeTooltipsPolicy(mToolTipDisplayPolicy);
 
     setSortingPolicy(
         (FolderTreeWidget::SortingPolicy)myGroup.readEntry(
@@ -241,7 +241,7 @@ void FolderTreeView::setSortingPolicy(FolderTreeWidget::SortingPolicy policy, bo
         header()->setClickable(true);
         header()->setSortIndicatorShown(true);
         setSortingEnabled(true);
-        emit manualSortingChanged(false);
+        Q_EMIT manualSortingChanged(false);
         break;
 
     case FolderTreeWidget::SortByDragAndDropKey:
@@ -261,7 +261,7 @@ void FolderTreeView::setSortingPolicy(FolderTreeWidget::SortingPolicy policy, bo
         header()->setSortIndicator(0, Qt::AscendingOrder);
 #endif
         setSortingEnabled(false);   // hack for qutie bug: this call shouldn't be here at all
-        emit manualSortingChanged(true);
+        Q_EMIT manualSortingChanged(true);
 
         break;
     default:
@@ -287,7 +287,7 @@ void FolderTreeView::slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)
     if (!ok) {
         return;
     }
-    emit changeTooltipsPolicy((FolderTreeWidget::ToolTipDisplayPolicy)id);
+    Q_EMIT changeTooltipsPolicy((FolderTreeWidget::ToolTipDisplayPolicy)id);
 }
 
 void FolderTreeView::slotHeaderContextMenuChangeHeader(bool)
@@ -598,7 +598,7 @@ Akonadi::Collection FolderTreeView::currentFolder() const
 void FolderTreeView::mousePressEvent(QMouseEvent *e)
 {
     const bool buttonPressedIsMiddle = (e->button() == Qt::MidButton);
-    emit prefereCreateNewTab(buttonPressedIsMiddle);
+    Q_EMIT prefereCreateNewTab(buttonPressedIsMiddle);
     EntityTreeView::mousePressEvent(e);
 }
 
