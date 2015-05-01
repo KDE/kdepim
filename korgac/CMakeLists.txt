@@ -84,8 +84,6 @@ install(TARGETS
     korgac ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
-########### install files ###############
-
 install(PROGRAMS
   org.kde.korgac.desktop
   DESTINATION ${KDE_INSTALL_AUTOSTARTDIR}

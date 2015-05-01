@@ -66,6 +66,6 @@ endif ()
 
 install(TARGETS akonadi_sendlater_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install(FILES sendlateragent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
+install(FILES sendlateragent.desktop DESTINATION "${SHARE_INSTALL_PREFIX}/akonadi/agents")
 install(FILES akonadi_sendlater_agent.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 
