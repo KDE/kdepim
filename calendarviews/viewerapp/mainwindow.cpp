@@ -91,7 +91,7 @@ void MainWindow::addView(const QString &viewName)
         eventView->updateConfig();
         mUi.tabWidget->addTab(eventView, viewName);
     } else {
-        qCritical() << "Cannot create view" << viewName;
+        qCCritical(CALENDARVIEW_LOG) << "Cannot create view" << viewName;
     }
 }
 

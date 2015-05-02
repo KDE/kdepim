@@ -105,7 +105,7 @@ int IncidenceTreeModel::Private::rowForNode(const Node::Ptr &node) const
 void IncidenceTreeModel::Private::assert_and_dump(bool condition, const QString &message)
 {
     if (!condition) {
-        qCritical() << "This should never happen: " << message;
+        qCCritical(CALENDARVIEW_LOG) << "This should never happen: " << message;
         dumpTree();
         Q_ASSERT(false);
     }
@@ -189,7 +189,7 @@ void IncidenceTreeModel::Private::onDataChanged(const QModelIndex &begin, const 
             KCalCore::Incidence::Ptr incidence = !item.hasPayload<KCalCore::Incidence::Ptr>() ? KCalCore::Incidence::Ptr() :
                                                  item.payload<KCalCore::Incidence::Ptr>();
             if (!incidence) {
-                qCritical() << "Incidence shouldn't be invalid." << item.hasPayload() << item.id();
+                qCCritical(CALENDARVIEW_LOG) << "Incidence shouldn't be invalid." << item.hasPayload() << item.id();
                 Q_ASSERT(false);
                 return;
             }
@@ -756,7 +756,7 @@ QModelIndex IncidenceTreeModel::mapToSource(const QModelIndex &proxyIndex) const
     QModelIndexList indexes = EntityTreeModel::modelIndexesForItem( sourceModel(), Akonadi::Item( node->id ) );
     if ( indexes.isEmpty() ) {
       Q_ASSERT( sourceModel() );
-      qCritical() << "IncidenceTreeModel::mapToSource() no indexes."
+      qCCritical(CALENDARVIEW_LOG) << "IncidenceTreeModel::mapToSource() no indexes."
                << proxyIndex << node->id << "; source.rowCount() = "
                << sourceModel()->rowCount() << "; source=" << sourceModel()
                << "rowCount()" << rowCount();
@@ -830,7 +830,7 @@ QModelIndex IncidenceTreeModel::index(int row, int column, const QModelIndex &pa
         Node *parentNode = reinterpret_cast<Node *>(parent.internalPointer());
 
         if (row >= parentNode->directChilds.count()) {
-            qCritical() << "IncidenceTreeModel::index() row=" << row << "; column=" << column;
+            qCCritical(CALENDARVIEW_LOG) << "IncidenceTreeModel::index() row=" << row << "; column=" << column;
             Q_ASSERT(false);
             return QModelIndex();
         }

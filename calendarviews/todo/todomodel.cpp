@@ -247,11 +247,11 @@ QVariant TodoModel::data(const QModelIndex &index, int role) const
     }
     const KCalCore::Todo::Ptr todo = CalendarSupport::todo(item);
     if (!todo) {
-        qCritical() << "item.hasPayload()" << item.hasPayload();
+        qCCritical(CALENDARVIEW_LOG) << "item.hasPayload()" << item.hasPayload();
         if (item.hasPayload<KCalCore::Incidence::Ptr>()) {
             KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
             if (incidence) {
-                qCritical() << "It's actually " << incidence->type();
+                qCCritical(CALENDARVIEW_LOG) << "It's actually " << incidence->type();
             }
         }
 
@@ -502,7 +502,7 @@ bool TodoModel::setData(const QModelIndex &index, const QVariant &value, int rol
     } else {
         if (!(role == Qt::CheckStateRole && index.column() == 0)) {
             //KOHelper::showSaveIncidenceErrorMsg( 0, todo ); //TODO pass parent
-            qCritical() << "Unable to modify incidence";
+            qCCritical(CALENDARVIEW_LOG) << "Unable to modify incidence";
         }
         return false;
     }
@@ -862,7 +862,7 @@ QModelIndex TodoModel::mapToSource(const QModelIndex &proxyIndex) const
     }
 
     if (proxyIndex.column() != 0) {
-        qCritical() << "Map to source called with column>0, but source model only has 1 column";
+        qCCritical(CALENDARVIEW_LOG) << "Map to source called with column>0, but source model only has 1 column";
         Q_ASSERT(false);
     }
 

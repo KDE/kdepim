@@ -249,7 +249,7 @@ void BaseConfig::setTimeZoneDefault()
 {
     KTimeZone zone = KSystemTimeZones::local();
     if (!zone.isValid()) {
-        qCritical() << "KSystemTimeZones::local() return 0";
+        qCCritical(CALENDARVIEW_LOG) << "KSystemTimeZones::local() return 0";
         return;
     }
 
@@ -319,7 +319,7 @@ void Prefs::Private::setBool(KCoreConfigSkeleton::ItemBool *baseConfigItem, bool
         if (item) {
             item->setValue(value);
         } else {
-            qCritical() << "Application config item" << appItem->name() << "is not of type Bool";
+            qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type Bool";
         }
     } else {
         baseConfigItem->setValue(value);
@@ -334,7 +334,7 @@ bool Prefs::Private::getBool(const KCoreConfigSkeleton::ItemBool *baseConfigItem
         if (item) {
             return item->value();
         }
-        qCritical() << "Application config item" << appItem->name() << "is not of type Bool";
+        qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type Bool";
     }
     return baseConfigItem->value();
 }
@@ -347,7 +347,7 @@ void Prefs::Private::setInt(KCoreConfigSkeleton::ItemInt *baseConfigItem, int va
         if (item) {
             item->setValue(value);
         } else {
-            qCritical() << "Application config item" << appItem->name() << "is not of type Int";
+            qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type Int";
         }
     } else {
         baseConfigItem->setValue(value);
@@ -362,7 +362,7 @@ int Prefs::Private::getInt(const KCoreConfigSkeleton::ItemInt *baseConfigItem) c
         if (item) {
             return item->value();
         }
-        qCritical() << "Application config item" << appItem->name() << "is not of type Int";
+        qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type Int";
     }
     return baseConfigItem->value();
 }
@@ -378,7 +378,7 @@ void Prefs::Private::setString(KCoreConfigSkeleton::ItemString *baseConfigItem,
         if (item) {
             item->setValue(value);
         } else {
-            qCritical() << "Application config item" << appItem->name() << "is not of type String";
+            qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type String";
         }
     } else {
         baseConfigItem->setValue(value);
@@ -395,7 +395,7 @@ QString Prefs::Private::getString(const KCoreConfigSkeleton::ItemString *baseCon
         if (item) {
             return item->value();
         }
-        qCritical() << "Application config item" << appItem->name() << "is not of type String";
+        qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type String";
     }
     return baseConfigItem->value();
 }
@@ -411,7 +411,7 @@ void Prefs::Private::setDateTime(KCoreConfigSkeleton::ItemDateTime *baseConfigIt
         if (item) {
             item->setValue(value);
         } else {
-            qCritical() << "Application config item" << appItem->name() << "is not of type DateTime";
+            qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type DateTime";
         }
     } else {
         baseConfigItem->setValue(value);
@@ -429,7 +429,7 @@ QDateTime Prefs::Private::getDateTime(
         if (item) {
             return item->value();
         }
-        qCritical() << "Application config item" << appItem->name() << "is not of type DateTime";
+        qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type DateTime";
     }
     return baseConfigItem->value();
 }
@@ -445,7 +445,7 @@ void Prefs::Private::setStringList(KCoreConfigSkeleton::ItemStringList *baseConf
         if (item) {
             item->setValue(value);
         } else {
-            qCritical() << "Application config item" << appItem->name() << "is not of type StringList";
+            qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type StringList";
         }
     } else {
         baseConfigItem->setValue(value);
@@ -463,7 +463,7 @@ QStringList Prefs::Private::getStringList(
         if (item) {
             return item->value();
         }
-        qCritical() << "Application config item" << appItem->name() << "is not of type StringList";
+        qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type StringList";
     }
     return baseConfigItem->value();
 }
@@ -476,7 +476,7 @@ void Prefs::Private::setColor(KConfigSkeleton::ItemColor *baseConfigItem, const 
         if (item) {
             item->setValue(value);
         } else {
-            qCritical() << "Application config item" << appItem->name() << "is not of type Color";
+            qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type Color";
         }
     } else {
         baseConfigItem->setValue(value);
@@ -491,7 +491,7 @@ QColor Prefs::Private::getColor(const KConfigSkeleton::ItemColor *baseConfigItem
         if (item) {
             return item->value();
         }
-        qCritical() << "Application config item" << appItem->name() << "is not of type Color";
+        qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type Color";
     }
     return baseConfigItem->value();
 }
@@ -504,7 +504,7 @@ void Prefs::Private::setFont(KConfigSkeleton::ItemFont *baseConfigItem, const QF
         if (item) {
             item->setValue(value);
         } else {
-            qCritical() << "Application config item" << appItem->name() << "is not of type Font";
+            qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type Font";
         }
     } else {
         baseConfigItem->setValue(value);
@@ -519,7 +519,7 @@ QFont Prefs::Private::getFont(const KConfigSkeleton::ItemFont *baseConfigItem) c
         if (item) {
             return item->value();
         }
-        qCritical() << "Application config item" << appItem->name() << "is not of type Font";
+        qCCritical(CALENDARVIEW_LOG) << "Application config item" << appItem->name() << "is not of type Font";
     }
     return baseConfigItem->value();
 }

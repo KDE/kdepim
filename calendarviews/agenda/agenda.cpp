@@ -1157,7 +1157,7 @@ void Agenda::endItemAction()
 #endif
 
     if (!d->mChanger) {
-        qCritical() << "No IncidenceChanger set";
+        qCCritical(CALENDARVIEW_LOG) << "No IncidenceChanger set";
         return;
     }
 
@@ -1745,7 +1745,7 @@ AgendaItem::QPtr Agenda::insertAllDayItem(const Akonadi::Item &incidence, const 
         int XBegin, int XEnd, bool isSelected)
 {
     if (!d->mAllDayMode) {
-        qCritical() << "using this in non all-day mode is illegal.";
+        qCCritical(CALENDARVIEW_LOG) << "using this in non all-day mode is illegal.";
         return Q_NULLPTR;
     }
 
@@ -1905,7 +1905,7 @@ void Agenda::removeIncidence(const KCalCore::Incidence::Ptr &incidence)
 void Agenda::showAgendaItem(AgendaItem::QPtr agendaItem)
 {
     if (!agendaItem) {
-        qCritical() << "Show what?";
+        qCCritical(CALENDARVIEW_LOG) << "Show what?";
         return;
     }
 

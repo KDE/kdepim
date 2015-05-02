@@ -412,7 +412,7 @@ void AgendaView::Private::calendarIncidenceAdded(const KCalCore::Incidence::Ptr 
 {
     Akonadi::Item item = q->calendar()->item(incidence);
     if (!incidence || incidence->uid().isEmpty() || !item.isValid()) {
-        qCritical() << "AgendaView::Private::calendarIncidenceAdded() Invalid incidence or item:" << incidence << item.isValid();
+        qCCritical(CALENDARVIEW_LOG) << "AgendaView::Private::calendarIncidenceAdded() Invalid incidence or item:" << incidence << item.isValid();
         Q_ASSERT(false);
         return;
     }
@@ -432,7 +432,7 @@ void AgendaView::Private::calendarIncidenceAdded(const KCalCore::Incidence::Ptr 
 void AgendaView::Private::calendarIncidenceChanged(const KCalCore::Incidence::Ptr &incidence)
 {
     if (!incidence || incidence->uid().isEmpty()) {
-        qCritical() << "AgendaView::calendarIncidenceChanged() Invalid incidence or empty UID. " << incidence;
+        qCCritical(CALENDARVIEW_LOG) << "AgendaView::calendarIncidenceChanged() Invalid incidence or empty UID. " << incidence;
         Q_ASSERT(false);
         return;
     }
@@ -1597,7 +1597,7 @@ void AgendaView::showIncidences(const Akonadi::Item::List &incidences, const QDa
     Q_UNUSED(date);
 
     if (!calendar()) {
-        qCritical() << "No Calendar set";
+        qCCritical(CALENDARVIEW_LOG) << "No Calendar set";
         return;
     }
 
@@ -1973,7 +1973,7 @@ void AgendaView::slotIncidencesDropped(const KCalCore::Incidence::List &incidenc
 void AgendaView::startDrag(const Akonadi::Item &incidence)
 {
     if (!calendar()) {
-        qCritical() << "No Calendar set";
+        qCCritical(CALENDARVIEW_LOG) << "No Calendar set";
         return;
     }
 #ifndef KORG_NODND

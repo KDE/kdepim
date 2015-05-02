@@ -491,7 +491,7 @@ void EventView::incidencesChanged( const Akonadi::Item::List & )
 
 void EventView::handleBackendError(const QString &errorString)
 {
-    qCritical() << errorString;
+    qCCritical(CALENDARVIEW_LOG) << errorString;
 }
 
 void EventView::calendarReset()

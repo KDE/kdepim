@@ -685,7 +685,7 @@ bool MultiAgendaView::hasConfigurationDialog() const
 void MultiAgendaView::doRestoreConfig(const KConfigGroup &configGroup)
 {
     if (!calendar()) {
-        qCritical() << "Calendar is not set.";
+        qCCritical(CALENDARVIEW_LOG) << "Calendar is not set.";
         Q_ASSERT(false);
         return;
     }
