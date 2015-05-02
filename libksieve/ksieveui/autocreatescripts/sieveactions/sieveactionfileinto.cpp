@@ -41,7 +41,7 @@ SieveAction *SieveActionFileInto::newAction()
 
 QString SieveActionFileInto::code(QWidget *w) const
 {
-    QString result = QString::fromLatin1("fileinto ");
+    QString result = QStringLiteral("fileinto ");
     const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("fileintolineedit"));
     const QString text = edit->text();
     if (mHasCopySupport) {

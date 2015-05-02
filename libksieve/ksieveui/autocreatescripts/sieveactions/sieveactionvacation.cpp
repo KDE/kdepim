@@ -166,7 +166,7 @@ QString SieveActionVacation::code(QWidget *w) const
 
     const QLineEdit *addresses = w->findChild<QLineEdit *>(QLatin1String("addresses"));
     const QString addressesStr = addresses->text();
-    QString result = QString::fromLatin1("vacation");
+    QString result = QStringLiteral("vacation");
     if (!dayStr.isEmpty()) {
         result += QString::fromLatin1(" %1 %2").arg(vacationTypeStr).arg(dayStr);
     }

@@ -151,24 +151,24 @@ QString KSieveUi::VacationUtils::composeScript(const QString &messageText,
         addressesArgument += sl.join(QLatin1String(", ")) + QLatin1String(" ] ");
     }
 
-    QString script = QString::fromLatin1("require \"vacation\";\n");
+    QString script = QStringLiteral("require \"vacation\";\n");
     if (startDate.isValid() && endDate.isValid()) {
-        script += QString::fromLatin1("require \"relational\";\n"
+        script += QStringLiteral("require \"relational\";\n"
                                       "require \"date\";\n\n");
     } else {
-        script += QString::fromLatin1("\n");
+        script += QStringLiteral("\n");
     }
 
     if (!sendForSpam)
-        script += QString::fromLatin1("if header :contains \"X-Spam-Flag\" \"YES\""
+        script += QStringLiteral("if header :contains \"X-Spam-Flag\" \"YES\""
                                       " { keep; stop; }\n");  // FIXME?
 
     if (!domain.isEmpty()) { // FIXME
-        script += QString::fromLatin1("if not address :domain :contains \"from\" \"%1\" { keep; stop; }\n").arg(domain);
+        script += QStringLiteral("if not address :domain :contains \"from\" \"%1\" { keep; stop; }\n").arg(domain);
     }
 
     if (startDate.isValid() && endDate.isValid()) {
-        script += QString::fromLatin1("if not allof(currentdate :value \"ge\" \"date\" \"%1\","
+        script += QStringLiteral("if not allof(currentdate :value \"ge\" \"date\" \"%1\","
                                       " currentdate :value \"le\" \"date\" \"%2\")"
                                       " { keep; stop; }\n").arg(startDate.toString(Qt::ISODate),
                                               endDate.toString(Qt::ISODate));
@@ -177,11 +177,11 @@ QString KSieveUi::VacationUtils::composeScript(const QString &messageText,
     script += QLatin1String("vacation ");
     script += addressesArgument;
     if (notificationInterval > 0) {
-        script += QString::fromLatin1(":days %1 ").arg(notificationInterval);
+        script += QStringLiteral(":days %1 ").arg(notificationInterval);
     }
-    script += QString::fromLatin1("text:\n");
+    script += QStringLiteral("text:\n");
     script += dotstuff(messageText.isEmpty() ? VacationUtils::defaultMessageText() : messageText);
-    script += QString::fromLatin1("\n.\n;\n");
+    script += QStringLiteral("\n.\n;\n");
     return script;
 }
 

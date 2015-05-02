@@ -344,7 +344,7 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
     Q_FOREACH (const QString &r, lstRequires) {
         if (!endRequires.contains(r)) {
             endRequires.append(r);
-            requires += QString::fromLatin1("require \"%1\";\n").arg(r);
+            requires += QStringLiteral("require \"%1\";\n").arg(r);
         }
     }
 
