@@ -104,7 +104,7 @@ void BlogSettings::removeBlog()
             Q_EMIT blogRemoved(blog_id);
         } else {
             ///cannot remove
-            qCritical() << "Cannot remove blog with id " << blog_id;
+            qCCritical(BLOGILO_LOG) << "Cannot remove blog with id " << blog_id;
         }
     }
 }

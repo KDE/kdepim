@@ -474,7 +474,7 @@ void MainWindow::slotActivePostChanged(int index)
         }
         toolbox->setFieldsValue(activePost->currentPost());
     } else {
-        qCritical() << "ActivePost is NULL! tabPosts Current index is: " << tabPosts->currentIndex() ;
+        qCCritical(BLOGILO_LOG) << "ActivePost is NULL! tabPosts Current index is: " << tabPosts->currentIndex() ;
     }
     previousActivePostIndex = index;
 }

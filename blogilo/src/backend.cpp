@@ -201,14 +201,14 @@ void Backend::uploadMedia(BilboMedia *media)
         QByteArray data;
         KIO::TransferJob *job = KIO::get(media->localUrl(), KIO::Reload, KIO::HideProgressInfo);
         if (!KIO::NetAccess::synchronousRun(job, Q_NULLPTR, &data)) {
-            qCritical() << "Job error: " << job->errorString();
+            qCCritical(BLOGILO_LOG) << "Job error: " << job->errorString();
             tmp = i18n("Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().toDisplayString());
             qCDebug(BLOGILO_LOG) << "Emitting sigError...";
             Q_EMIT sigMediaError(tmp, media);
         }
 
         if (data.count() == 0) {
-            qCritical() << "Cannot read the media file, please check if it exists.";
+            qCCritical(BLOGILO_LOG) << "Cannot read the media file, please check if it exists.";
             tmp = i18n("Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().toDisplayString());
             qCDebug(BLOGILO_LOG) << "Emitting sigError...";
             Q_EMIT sigMediaError(tmp, media);
@@ -222,7 +222,7 @@ void Backend::uploadMedia(BilboMedia *media)
         media->setCheckSum(qChecksum(data.data(), data.count()));
 
         if (media->checksum() == 0) {
-            qCritical() << "Media file checksum is zero";
+            qCCritical(BLOGILO_LOG) << "Media file checksum is zero";
             tmp = i18n("Uploading media failed: Media file checksum is zero, please check file path. Path: %1",
                        media->localUrl().toDisplayString());
             qCDebug(BLOGILO_LOG) << "Emitting sigError...";
@@ -232,7 +232,7 @@ void Backend::uploadMedia(BilboMedia *media)
         }
 
         if (!MWBlog) {
-            qCritical() << "MWBlog is NULL: casting has not worked, this should NEVER happen, has the gui allowed using GDATA?";
+            qCCritical(BLOGILO_LOG) << "MWBlog is NULL: casting has not worked, this should NEVER happen, has the gui allowed using GDATA?";
             tmp = i18n("INTERNAL ERROR: MWBlog is NULL: casting has not worked, this should NEVER happen.");
             qCDebug(BLOGILO_LOG) << "Emitting sigError...";
             Q_EMIT sigError(tmp);
@@ -245,7 +245,7 @@ void Backend::uploadMedia(BilboMedia *media)
         MWBlog->createMedia(m);
         return;
     }
-    qCritical() << "Api type isn't set correctly!";
+    qCCritical(BLOGILO_LOG) << "Api type isn't set correctly!";
     tmp = i18n("API type is not set correctly.");
     Q_EMIT sigError(tmp);
 }
@@ -254,18 +254,18 @@ void Backend::mediaUploaded(KBlog::BlogMedia *media)
 {
     qCDebug(BLOGILO_LOG) << "Blog Id: " << d->bBlog->id() << "Media: " << media->url();
     if (!media) {
-        qCritical() << "ERROR! Media returned from KBlog is NULL!";
+        qCCritical(BLOGILO_LOG) << "ERROR! Media returned from KBlog is NULL!";
         return;
     }
     BilboMedia *m = d->mPublishMediaMap.value(media);
     if (!m) {
-        qCritical() << "ERROR! Media returned from KBlog doesn't exist on the Map! Url is:"
+        qCCritical(BLOGILO_LOG) << "ERROR! Media returned from KBlog doesn't exist on the Map! Url is:"
                     << media->url();
         return;
     }
     d->mPublishMediaMap.remove(media);
     if (media->status() == KBlog::BlogMedia::Error) {
-        qCritical() << "Upload error! with this message: " << media->error();
+        qCCritical(BLOGILO_LOG) << "Upload error! with this message: " << media->error();
         const QString tmp(i18n("Uploading media failed: %1", media->error()));
         qCDebug(BLOGILO_LOG) << "Emitting sigMediaError ...";
         Q_EMIT sigMediaError(tmp, m);
@@ -273,7 +273,7 @@ void Backend::mediaUploaded(KBlog::BlogMedia *media)
     }
     quint16 newChecksum = qChecksum(media->data().data(), media->data().count());
     if (newChecksum != m->checksum()) {
-        qCritical() << "Check sum error: checksum of sent file: " << m->checksum() <<
+        qCCritical(BLOGILO_LOG) << "Check sum error: checksum of sent file: " << m->checksum() <<
                     " Checksum of received file: " << newChecksum << "Error: " << media->error();
         const QString tmp(i18n("Uploading media failed: Checksum error. Returned error: %1",
                                media->error()));
@@ -380,7 +380,7 @@ QString Backend::errorTypeToString(KBlog::Blog::ErrorType type)
 void Backend::savePostInDbAndEmitResult(KBlog::BlogPost *post)
 {
     if (!post) {
-        qCritical() << "ERROR: post is NULL ";
+        qCCritical(BLOGILO_LOG) << "ERROR: post is NULL ";
         Q_EMIT sigError(i18n("post is NULL"));
         return;
     }

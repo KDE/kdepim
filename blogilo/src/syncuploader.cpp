@@ -60,7 +60,7 @@ QString SyncUploader::errorMessage() const
 bool SyncUploader::uploadMedia(Backend *backend, BilboMedia *media)
 {
     if (!backend || !media) {
-        qCritical() << "Media or Backend is NULL";
+        qCCritical(BLOGILO_LOG) << "Media or Backend is NULL";
         return false;
     }
     d->loop = new QEventLoop(this);

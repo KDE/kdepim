@@ -500,7 +500,7 @@ int DBMan::addPost(const BilboPost &post, int blog_id)
         qd.addBindValue(blog_id);
         if (!qd.exec()) {
             d->mLastErrorText = qd.lastError().text();
-            qCritical() << "Cannot delete previous categories.";
+            qCCritical(BLOGILO_LOG) << "Cannot delete previous categories.";
         }
 
         int cat_count = post.categories().count();
