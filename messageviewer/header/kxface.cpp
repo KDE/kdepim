@@ -186,10 +186,10 @@ void KXFace::BigPush(Prob *p)
     BigAdd(tmp + p->p_offset);
 }
 
-int KXFace::BigPop(register const Prob *p)
+int KXFace::BigPop(const Prob *p)
 {
     static unsigned char tmp;
-    register int i;
+    int i;
 
     BigDiv(0, &tmp);
     i = 0;
@@ -205,11 +205,11 @@ int KXFace::BigPop(register const Prob *p)
 /* Divide B by a storing the result in B and the remainder in the word
  * pointer to by r
  */
-void KXFace::BigDiv(register unsigned char a, register unsigned char *r)
+void KXFace::BigDiv(unsigned char a, unsigned char *r)
 {
-    register int i;
-    register unsigned char *w;
-    register COMP c, d;
+    int i;
+    unsigned char *w;
+    COMP c, d;
 
     a &= WORDMASK;
     if ((a == 1) || (B.b_words == 0)) {
@@ -245,11 +245,11 @@ void KXFace::BigDiv(register unsigned char a, register unsigned char *r)
 
 /* Multiply a by B storing the result in B
  */
-void KXFace::BigMul(register unsigned char a)
+void KXFace::BigMul(unsigned char a)
 {
-    register int i;
-    register unsigned char *w;
-    register COMP c;
+    int i;
+    unsigned char *w;
+    COMP c;
 
     a &= WORDMASK;
     if ((a == 1) || (B.b_words == 0)) {
@@ -288,9 +288,9 @@ void KXFace::BigMul(register unsigned char a)
  */
 void KXFace::BigAdd(unsigned char a)
 {
-    register int i;
-    register unsigned char *w;
-    register COMP c;
+    int i;
+    unsigned char *w;
+    COMP c;
 
     a &= WORDMASK;
     if (a == 0) {
@@ -320,8 +320,8 @@ void KXFace::BigClear()
 
 QByteArray KXFace::WriteFace()
 {
-    register char *s;
-    register int i, j, bits, digits, words;
+    char *s;
+    int i, j, bits, digits, words;
     //int digsperword = DIGSPERWORD;
     //int wordsperline = WORDSPERLINE;
     QByteArray t("#define noname_width 48\n#define noname_height 48\nstatic char noname_bits[] = {\n ");
@@ -367,7 +367,7 @@ QByteArray KXFace::WriteFace()
 
 void KXFace::UnCompAll(char *fbuf)
 {
-    register char *p;
+    char *p;
 
     BigClear();
     BigRead(fbuf);
@@ -406,12 +406,12 @@ void KXFace::UnCompress(char *f, int wid, int hei, int lev)
     }
 }
 
-void KXFace::BigWrite(register char *fbuf)
+void KXFace::BigWrite(char *fbuf)
 {
     static unsigned char tmp;
     static char buf[DIGITS];
-    register char *s;
-    register int i;
+    char *s;
+    int i;
 
     s = buf;
     while (B.b_words > 0) {
@@ -436,9 +436,9 @@ void KXFace::BigWrite(register char *fbuf)
     *(fbuf++) = '\0';
 }
 
-void KXFace::BigRead(register char *fbuf)
+void KXFace::BigRead(char *fbuf)
 {
-    register int c;
+    int c;
 
     while (*fbuf != '\0') {
         c = *(fbuf++);
@@ -452,8 +452,8 @@ void KXFace::BigRead(register char *fbuf)
 
 void KXFace::ReadFace(char *fbuf)
 {
-    register int c, i;
-    register char *s, *t;
+    int c, i;
+    char *s, *t;
 
     t = s = fbuf;
     for (i = strlen(s); i > 0; --i) {
@@ -498,9 +498,9 @@ void KXFace::ReadFace(char *fbuf)
 void KXFace::GenFace()
 {
     static char newp[PIXELS];
-    register char *f1;
-    register char *f2;
-    register int i;
+    char *f1;
+    char *f2;
+    int i;
 
     f1 = newp;
     f2 = F;
@@ -517,9 +517,9 @@ void KXFace::UnGenFace()
 }
 
 // static
-void KXFace::Gen(register char *f)
+void KXFace::Gen(char *f)
 {
-    register int m, l, k, j, i, h;
+    int m, l, k, j, i, h;
 
     for (j = 0; j < HEIGHT;  ++j) {
         for (i = 0; i < WIDTH;  ++i) {
@@ -623,7 +623,7 @@ void KXFace::CompAll(char *fbuf)
     BigWrite(fbuf);
 }
 
-void KXFace::Compress(register char *f, register int wid, register int hei, register int lev)
+void KXFace::Compress(char *f, int wid, int hei, int lev)
 {
     if (AllWhite(f, wid, hei)) {
         RevPush(&levels[lev][WHITE]);
@@ -662,10 +662,10 @@ int KXFace::AllBlack(char *f, int wid, int hei)
     }
 }
 
-int KXFace::Same(register char *f, register int wid, register int hei)
+int KXFace::Same(char *f, int wid, int hei)
 {
-    register char val, *row;
-    register int x;
+    char val, *row;
+    int x;
 
     val = *f;
     while (hei--) {
