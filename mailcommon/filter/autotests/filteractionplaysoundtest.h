@@ -29,6 +29,7 @@ private Q_SLOTS:
     void shouldBeValid();
     void shouldHaveDefaultValue();
     void shouldHaveRequiredPart();
+    void shouldSieveRequres();
 };
 
 #endif // FILTERACTIONPLAYSOUNDTEST_H
