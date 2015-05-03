@@ -96,10 +96,10 @@ public:
             encoded.chop(3);   // '.' was part of domain before
         }
         qCDebug(KLEOPATRA_LOG) << "\n str           :" << str
-                 << "\n domain        :" << domain
-                 << "\n domainEncoded :" << domainEncoded
-                 << "\n domainRestored:" << domainRestored
-                 << "\n encoded       :" << encoded ;
+                               << "\n domain        :" << domain
+                               << "\n domainEncoded :" << domainEncoded
+                               << "\n domainRestored:" << domainRestored
+                               << "\n encoded       :" << encoded ;
         if (domain != domainRestored) {
             return Invalid;
         }

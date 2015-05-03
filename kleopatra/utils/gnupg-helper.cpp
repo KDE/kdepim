@@ -139,10 +139,10 @@ QString Kleo::gpgConfListDir(const char *which)
             }
             const QString result = QDir::fromNativeSeparators(QFile::decodeName(hexdecode(line.mid(begin, end - begin))));
             qCDebug(KLEOPATRA_LOG) << "gpgConfListDir: found " << qPrintable(result)
-                     << " for '" << which << "'entry";
+                                   << " for '" << which << "'entry";
             return result;
         }
     qCDebug(KLEOPATRA_LOG) << "gpgConfListDir(): didn't find '" << which << "'"
-             << "entry in output:" << endl << gpgConf.readAllStandardError().constData();
+                           << "entry in output:" << endl << gpgConf.readAllStandardError().constData();
     return QString();
 }

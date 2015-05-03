@@ -324,7 +324,7 @@ public:
           take ~30 seconds to write out a 10MB file in the 512 byte
           chunks gpgme serves. */
         qCDebug(KLEOPATRA_LOG) << "Waiting for " << m_proc->bytesToWrite()
-                 << " Bytes to be written";
+                               << " Bytes to be written";
         while (m_proc->waitForBytesWritten(PROCESS_MAX_RUNTIME_TIMEOUT));
 
         if (!m_proc->isClosed()) {

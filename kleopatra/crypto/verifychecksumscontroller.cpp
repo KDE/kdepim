@@ -377,13 +377,13 @@ struct sumfile_contains_file : std::unary_function<QString, bool> {
     {
         const std::vector<File> files = parse_sum_file(dir.absoluteFilePath(sumFile));
         qCDebug(KLEOPATRA_LOG) << "find_sums_by_input_files:      found " << files.size()
-                 << " files listed in " << qPrintable(dir.absoluteFilePath(sumFile));
+                               << " files listed in " << qPrintable(dir.absoluteFilePath(sumFile));
         Q_FOREACH (const File &file, files) {
             const bool isSameFileName = (QString::compare(file.name, fileName, fs_cs) == 0);
             qCDebug(KLEOPATRA_LOG) << "find_sums_by_input_files:        "
-                     << qPrintable(file.name) << " == "
-                     << qPrintable(fileName)  << " ? "
-                     << isSameFileName;
+                                   << qPrintable(file.name) << " == "
+                                   << qPrintable(fileName)  << " ? "
+                                   << isSameFileName;
             if (isSameFileName) {
                 return true;
             }
@@ -462,11 +462,11 @@ static std::vector<SumFile> find_sums_by_input_files(const QStringList &files, Q
             QDir dir(file);
             const QStringList sumfiles = filter_checksum_files(dir.entryList(QDir::Files), patterns);
             qCDebug(KLEOPATRA_LOG) << "find_sums_by_input_files:   found " << sumfiles.size()
-                     << " sum files: " << qPrintable(sumfiles.join(QLatin1String(", ")));
+                                   << " sum files: " << qPrintable(sumfiles.join(QLatin1String(", ")));
             dirs2sums[ dir ].insert(sumfiles.begin(), sumfiles.end());
             const QStringList dirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
             qCDebug(KLEOPATRA_LOG) << "find_sums_by_input_files:   found " << dirs.size()
-                     << " subdirs, prepending";
+                                   << " subdirs, prepending";
             kdtools::transform(dirs,
                                std::inserter(inputs, inputs.begin()),
                                boost::bind(&QDir::absoluteFilePath, cref(dir), _1));
@@ -478,7 +478,7 @@ static std::vector<SumFile> find_sums_by_input_files(const QStringList &files, Q
             const QDir dir = fi.dir();
             const QStringList sumfiles = filter_checksum_files(dir.entryList(QDir::Files), patterns);
             qCDebug(KLEOPATRA_LOG) << "find_sums_by_input_files:   found " << sumfiles.size()
-                     << " potential sumfiles: " << qPrintable(sumfiles.join(QLatin1String(", ")));
+                                   << " potential sumfiles: " << qPrintable(sumfiles.join(QLatin1String(", ")));
             const QStringList::const_iterator it = kdtools::find_if(sumfiles, sumfile_contains_file(dir, fileName));
             if (it == sumfiles.end()) {
                 errors.push_back(i18n("Cannot find checksums file for file %1", file));
@@ -664,7 +664,7 @@ void VerifyChecksumsController::Private::run()
             quint64 done = 0;
             Q_FOREACH (const SumFile &sumFile, sumfiles) {
                 Q_EMIT progress(done / factor, total / factor,
-                              i18n("Verifying checksums (%2) in %1", sumFile.checksumDefinition->label(), sumFile.dir.path()));
+                                i18n("Verifying checksums (%2) in %1", sumFile.checksumDefinition->label(), sumFile.dir.path()));
                 bool fatal = false;
                 const QString error = process(sumFile, &fatal, env, statusCb);
                 if (!error.isEmpty()) {

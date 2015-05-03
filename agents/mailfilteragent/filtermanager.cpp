@@ -205,7 +205,7 @@ void FilterManager::Private::moveJobResult(KJob *job)
         const Akonadi::ItemMoveJob *movejob = qobject_cast<Akonadi::ItemMoveJob *>(job);
         if (movejob) {
             qCCritical(MAILFILTERAGENT_LOG) << "Error while moving items. " << job->error() << job->errorString()
-                        << " to destinationCollection.id() :" << movejob->destinationCollection().id();
+                                            << " to destinationCollection.id() :" << movejob->destinationCollection().id();
         } else {
             qCCritical(MAILFILTERAGENT_LOG) << "Error while moving items. " << job->error() << job->errorString();
         }

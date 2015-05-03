@@ -697,7 +697,7 @@ void CreateChecksumsController::Private::run()
             quint64 done = 0;
             Q_FOREACH (const Dir &dir, dirs) {
                 Q_EMIT progress(done / factor, total / factor,
-                              i18n("Checksumming (%2) in %1", dir.checksumDefinition->label(), dir.dir.path()));
+                                i18n("Checksumming (%2) in %1", dir.checksumDefinition->label(), dir.dir.path()));
                 bool fatal = false;
                 const QString error = process(dir, &fatal);
                 if (!error.isEmpty()) {

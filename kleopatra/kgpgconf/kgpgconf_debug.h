@@ -23,5 +23,5 @@
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(KGPGCONF_LOG)
 
-#endif 
+#endif
 

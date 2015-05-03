@@ -20,4 +20,3 @@
 #include "kleopatra_debug.h"
 Q_LOGGING_CATEGORY(KLEOPATRA_LOG, "log_kleopatra")
 
-

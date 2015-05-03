@@ -101,7 +101,7 @@ ImportWizard::~ImportWizard()
 
 void ImportWizard::updatePagesFromMode()
 {
-    switch(mMode) {
+    switch (mMode) {
     case AutoDetect:
         break;
     case Manual:

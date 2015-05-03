@@ -913,7 +913,7 @@ private Q_SLOTS:
     void invokeMailer(const QString &to, const QString &subject, QString body, const QString &attachment)
     {
         qCDebug(KLEOPATRA_LOG) << "to:" << to << "subject:" << subject
-                 << "body:" << body << "attachment:" << attachment;
+                               << "body:" << body << "attachment:" << attachment;
         // KToolInvocation::invokeMailer is broken on Windows, and openUrl works fine on Unix, too.
 
         // RFC 2368 says body's linebreaks need to be encoded as
@@ -1675,8 +1675,8 @@ void AdvancedSettingsDialog::loadDefaultKeyType()
     } else {
         if (!keyType.isEmpty() && keyType != QLatin1String("RSA"))
             qCWarning(KLEOPATRA_LOG) << "invalid value \"" << qPrintable(keyType)
-                       << "\" for entry \"[CertificateCreationWizard]"
-                       << qPrintable(entry) << "\"";
+                                     << "\" for entry \"[CertificateCreationWizard]"
+                                     << qPrintable(entry) << "\"";
         setKeyType(GPGME_PK_RSA);
         setSubkeyType(0);
     }

@@ -343,8 +343,8 @@ void EditorItemManager::save()
             // ETM and the KSelectionProxyModel has a bug wrt collections moves, so this is disabled.
             // To test this, enable the collection combo-box and remove the following assert.
             qCCritical(INCIDENCEEDITOR_LOG) << "Moving between collections is disabled for now: "
-                        << d->mItemUi->selectedCollection().id()
-                        << d->mItem.parentCollection().id();
+                                            << d->mItemUi->selectedCollection().id()
+                                            << d->mItem.parentCollection().id();
             Q_ASSERT_X(false, "save()", "Moving between collections is disabled for now");
 
             if (d->mItemUi->isDirty()) {

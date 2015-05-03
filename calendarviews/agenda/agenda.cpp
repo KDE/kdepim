@@ -625,7 +625,7 @@ bool Agenda::eventFilter_wheel(QObject *object, QWheelEvent *e)
         }
         //qCDebug(CALENDARVIEW_LOG) << type:" << e->type() << "delta:" << e->delta();
         Q_EMIT zoomView(-e->delta(),
-                      contentsToGrid(viewportPos), Qt::Horizontal);
+                        contentsToGrid(viewportPos), Qt::Horizontal);
         accepted = true;
     }
 
@@ -668,7 +668,7 @@ bool Agenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
                 if (d->mClickedItem) {
                     selectItem(d->mClickedItem);
                     Q_EMIT showIncidencePopupSignal(d->mClickedItem->incidence(),
-                                                  d->mClickedItem->occurrenceDate());
+                                                    d->mClickedItem->occurrenceDate());
                 }
             } else {
                 AgendaItem::QPtr item = dynamic_cast<AgendaItem *>(object);

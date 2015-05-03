@@ -125,8 +125,8 @@ public:
           m_auditLog(auditLog)
     {
         qCDebug(KLEOPATRA_LOG) << endl
-                 << "inputError :" << m_inputErrorString << endl
-                 << "outputError:" << m_outputErrorString;
+                               << "inputError :" << m_inputErrorString << endl
+                               << "outputError:" << m_outputErrorString;
         assert(!m_sresult.isNull());
     }
     SignEncryptFilesResult(const EncryptionResult &er, const shared_ptr<Input> &input, const shared_ptr<Output> &output, bool inputRemoved, bool outputCreated, const AuditLog &auditLog)
@@ -141,8 +141,8 @@ public:
           m_auditLog(auditLog)
     {
         qCDebug(KLEOPATRA_LOG) << endl
-                 << "inputError :" << m_inputErrorString << endl
-                 << "outputError:" << m_outputErrorString;
+                               << "inputError :" << m_inputErrorString << endl
+                               << "outputError:" << m_outputErrorString;
         assert(!m_eresult.isNull());
     }
     SignEncryptFilesResult(const SigningResult &sr, const EncryptionResult &er, const shared_ptr<Input> &input, const shared_ptr<Output> &output, bool inputRemoved, bool outputCreated,  const AuditLog &auditLog)
@@ -158,8 +158,8 @@ public:
           m_auditLog(auditLog)
     {
         qCDebug(KLEOPATRA_LOG) << endl
-                 << "inputError :" << m_inputErrorString << endl
-                 << "outputError:" << m_outputErrorString;
+                               << "inputError :" << m_inputErrorString << endl
+                               << "outputError:" << m_outputErrorString;
         assert(!m_sresult.isNull() || !m_eresult.isNull());
     }
 

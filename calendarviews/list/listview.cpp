@@ -544,7 +544,7 @@ void ListView::popupMenu(const QPoint &point)
         // occurrence, there's no reference to it at all!
 
         Q_EMIT showIncidencePopupSignal(aitem,
-                                      CalendarSupport::incidence(aitem)->dtStart().date());
+                                        CalendarSupport::incidence(aitem)->dtStart().date());
     } else {
         Q_EMIT showNewEventPopupSignal();
     }

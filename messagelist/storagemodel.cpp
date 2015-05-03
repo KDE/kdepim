@@ -409,7 +409,7 @@ void StorageModel::prepareForScan()
 void StorageModel::Private::onSourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
     Q_EMIT q->dataChanged(q->index(topLeft.row(), 0),
-                        q->index(bottomRight.row(), 0));
+                          q->index(bottomRight.row(), 0));
 }
 
 void StorageModel::Private::onSelectionChanged()

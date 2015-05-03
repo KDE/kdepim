@@ -553,8 +553,9 @@ QString MailFilter::purify(bool removeAction)
     while (it.hasPrevious()) {
         FilterAction *action = it.previous();
         if (action->isEmpty()) {
-            if (!informationAboutNotValidAction.isEmpty())
+            if (!informationAboutNotValidAction.isEmpty()) {
                 informationAboutNotValidAction += QLatin1Char('\n');
+            }
             informationAboutNotValidAction += action->informationAboutNotValidAction();
             if (removeAction) {
                 mActions.removeAll(action);

@@ -34,7 +34,6 @@ SearchRuleDate::SearchRuleDate(const QByteArray &field,
 {
 }
 
-
 QString SearchRuleDate::informationAboutNotValidRules() const
 {
     return i18n("Date is not valid.");

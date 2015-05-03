@@ -415,8 +415,8 @@ private:
             conn.sessionTitle = rx.cap(2);
         }
         qCDebug(KLEOPATRA_LOG) << "session_handler: "
-                 << "id=" << static_cast<unsigned long>(conn.sessionId)
-                 << ", title=" << qPrintable(conn.sessionTitle);
+                               << "id=" << static_cast<unsigned long>(conn.sessionId)
+                               << ", title=" << qPrintable(conn.sessionTitle);
         return assuan_process_done(ctx_, 0);
     }
 

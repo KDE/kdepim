@@ -23,5 +23,5 @@
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(KLEOPATRA_LOG)
 
-#endif 
+#endif
 

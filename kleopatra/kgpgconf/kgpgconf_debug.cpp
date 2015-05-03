@@ -20,4 +20,3 @@
 #include "kgpgconf_debug.h"
 Q_LOGGING_CATEGORY(KGPGCONF_LOG, "log_kgpgconf")
 
-

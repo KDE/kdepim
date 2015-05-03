@@ -145,8 +145,8 @@ bool KonsoleKalendar::createCalendar()
              << endl;
     } else {
         qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::createCalendar() |"
-                 << "Creating calendar file: "
-                 << filename.toLocal8Bit().data();
+                                     << "Creating calendar file: "
+                                     << filename.toLocal8Bit().data();
 
         if (m_variables->isVerbose()) {
             cout << i18n("Create Calendar <Verbose>: %1", filename).toLocal8Bit().data()
@@ -174,15 +174,15 @@ bool KonsoleKalendar::showInstance()
         printSpecs();
     } else {
         qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::showInstance() |"
-                 << "open export file";
+                                     << "open export file";
 
         if (m_variables->isExportFile()) {
             f.setFileName(m_variables->getExportFile());
             if (!f.open(QIODevice::WriteOnly)) {
                 status = false;
                 qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::showInstance() |"
-                         << "unable to open export file"
-                         << m_variables->getExportFile();
+                                             << "unable to open export file"
+                                             << m_variables->getExportFile();
             }
         } else {
             f.open(stdout, QIODevice::WriteOnly);
@@ -190,7 +190,7 @@ bool KonsoleKalendar::showInstance()
 
         if (status) {
             qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::showInstance() |"
-                     << "opened successful";
+                                         << "opened successful";
 
             if (m_variables->isVerbose()) {
                 cout << i18n("View Event <Verbose>:").toLocal8Bit().data()
@@ -205,7 +205,7 @@ bool KonsoleKalendar::showInstance()
 
                 if (m_variables->getAll()) {
                     qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::showInstance() |"
-                             << "view all events sorted list";
+                                                 << "view all events sorted list";
 
                     Event::List sortedList = calendar->events(EventSortStartDate);
                     qCDebug(KONSOLEKALENDAR_LOG) << "Found" << sortedList.count() << "events";
@@ -218,7 +218,7 @@ bool KonsoleKalendar::showInstance()
                     }
                 } else if (m_variables->isUID()) {
                     qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::showInstance() |"
-                             << "view events by uid list";
+                                                 << "view events by uid list";
                     //TODO: support a list of UIDs
                     event = calendar->event(m_variables->getUID());
                     //If this UID represents a recurring Event,
@@ -227,7 +227,7 @@ bool KonsoleKalendar::showInstance()
 
                 } else if (m_variables->isNext()) {
                     qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::showInstance() |"
-                             << "Show next activity in calendar";
+                                                 << "Show next activity in calendar";
 
                     QDateTime datetime = m_variables->getStartDateTime();
                     datetime = datetime.addDays(720);
@@ -243,14 +243,14 @@ bool KonsoleKalendar::showInstance()
                         // finished here when we get the next event
                         if (!events.isEmpty()) {
                             qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::showInstance() |"
-                                     << "Got the next event";
+                                                         << "Got the next event";
                             printEvent(&ts, events.first(), dt);
                             return true;
                         }
                     }
                 } else {
                     qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::showInstance() |"
-                             << "view raw events within date range list";
+                                                 << "view raw events within date range list";
 
                     QDate dt;
                     for (dt = m_variables->getStartDateTime().date();
@@ -267,7 +267,7 @@ bool KonsoleKalendar::showInstance()
                 QDate firstdate, lastdate;
                 if (m_variables->getAll()) {
                     qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::showInstance() |"
-                             << "HTML view all events sorted list";
+                                                 << "HTML view all events sorted list";
                     // sort the events for this date by start date
                     // in order to determine the date range.
                     Event::List *events =
@@ -278,13 +278,13 @@ bool KonsoleKalendar::showInstance()
                 } else if (m_variables->isUID()) {
                     // TODO
                     qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::showInstance() |"
-                             << "HTML view events by uid list";
+                                                 << "HTML view events by uid list";
                     cout << i18n("Sorry, export to HTML by UID is not supported yet").
                          toLocal8Bit().data() << endl;
                     return false;
                 } else {
                     qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::showInstance() |"
-                             << "HTML view raw events within date range list";
+                                                 << "HTML view raw events within date range list";
                     firstdate = m_variables->getStartDateTime().date();
                     lastdate = m_variables->getEndDateTime().date();
                 }
@@ -374,13 +374,13 @@ bool KonsoleKalendar::printEvent(QTextStream *ts, const Event::Ptr &event, QDate
 
         case ExportTypeCSV:
             qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::printEvent() |"
-                     << "CSV export";
+                                         << "CSV export";
             status = exports.exportAsCSV(ts, event, dt);
             break;
 
         case ExportTypeTextShort:
             qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::printEvent() |"
-                     << "TEXT-SHORT export";
+                                         << "TEXT-SHORT export";
             if (dt.daysTo(m_saveDate)) {
                 sameDay = false;
                 m_saveDate = dt;
@@ -394,7 +394,7 @@ bool KonsoleKalendar::printEvent(QTextStream *ts, const Event::Ptr &event, QDate
 
         default:// Default export-type is ExportTypeText
             qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendar.cpp::printEvent() |"
-                     << "TEXT export";
+                                         << "TEXT export";
             status = exports.exportAsTxt(ts, event, dt);
             break;
         }
@@ -405,10 +405,10 @@ bool KonsoleKalendar::printEvent(QTextStream *ts, const Event::Ptr &event, QDate
 bool KonsoleKalendar::addEvent()
 {
     qCDebug(KONSOLEKALENDAR_LOG) << "konsolecalendar.cpp::addEvent() |"
-             << "Create Adding";
+                                 << "Create Adding";
     KonsoleKalendarAdd add(m_variables);
     qCDebug(KONSOLEKALENDAR_LOG) << "konsolecalendar.cpp::addEvent() |"
-             << "Adding Event now!";
+                                 << "Adding Event now!";
     return add.addEvent();
 }
 
@@ -416,20 +416,20 @@ bool KonsoleKalendar::changeEvent()
 {
 
     qCDebug(KONSOLEKALENDAR_LOG) << "konsolecalendar.cpp::changeEvent() |"
-             << "Create Changing";
+                                 << "Create Changing";
     KonsoleKalendarChange change(m_variables);
     qCDebug(KONSOLEKALENDAR_LOG) << "konsolecalendar.cpp::changeEvent() |"
-             << "Changing Event now!";
+                                 << "Changing Event now!";
     return change.changeEvent();
 }
 
 bool KonsoleKalendar::deleteEvent()
 {
     qCDebug(KONSOLEKALENDAR_LOG) << "konsolecalendar.cpp::deleteEvent() |"
-             << "Create Deleting";
+                                 << "Create Deleting";
     KonsoleKalendarDelete del(m_variables);
     qCDebug(KONSOLEKALENDAR_LOG) << "konsolecalendar.cpp::deleteEvent() |"
-             << "Deleting Event now!";
+                                 << "Deleting Event now!";
     return del.deleteEvent();
 }
 

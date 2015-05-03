@@ -215,9 +215,9 @@ private:
                     qCWarning(KLEOPATRA_LOG) <<  "view asks for subitems!";
                 } else {
                     qCWarning(KLEOPATRA_LOG) << "index " << src_row
-                               << " is out of range [" << 0
-                               << "," <<  model->rowCount(src_parent)
-                               << "]";
+                                             << " is out of range [" << 0
+                                             << "," <<  model->rowCount(src_parent)
+                                             << "]";
                 }
             }
         } else {

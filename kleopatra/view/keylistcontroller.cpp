@@ -773,7 +773,7 @@ void KeyListController::Private::slotActionTriggered()
                 c->start();
             } else
                 qCDebug(KLEOPATRA_LOG) << "createCommand() == NULL for action(?) \""
-                         << qPrintable(s->objectName()) << "\"";
+                                       << qPrintable(s->objectName()) << "\"";
         else {
             qCDebug(KLEOPATRA_LOG) << "I don't know anything about action(?) \"%s\"", qPrintable(s->objectName());
         }

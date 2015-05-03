@@ -56,7 +56,7 @@ void ShortUrlConfigureWidget::slotChanged()
 void ShortUrlConfigureWidget::init()
 {
     //Google doesn't work now.
-    for (int i=PimCommon::ShortUrlUtils::Tinyurl; i <PimCommon::ShortUrlUtils::EndListEngine; ++i) {
+    for (int i = PimCommon::ShortUrlUtils::Tinyurl; i < PimCommon::ShortUrlUtils::EndListEngine; ++i) {
         mShortUrlServer->addItem(PimCommon::ShortUrlUtils::stringFromEngineType(static_cast<PimCommon::ShortUrlUtils::EngineType>(i)), i);
     }
 }

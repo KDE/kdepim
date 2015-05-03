@@ -20,4 +20,3 @@
 #include "konsolekalendar_debug.h"
 Q_LOGGING_CATEGORY(KONSOLEKALENDAR_LOG, "log_konsolekalendar")
 
-

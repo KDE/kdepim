@@ -74,7 +74,7 @@ bool KonsoleKalendarChange::changeEvent()
             printSpecs();
         } else {
             qCDebug(KONSOLEKALENDAR_LOG) << "konsolekalendarchange.cpp:changeEvent() :"
-                     << m_variables->getUID().toLocal8Bit().data();
+                                         << m_variables->getUID().toLocal8Bit().data();
 
             if (m_variables->isVerbose()) {
                 cout << i18n("Change Event <Verbose>:").toLocal8Bit().data()

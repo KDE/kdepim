@@ -20,4 +20,3 @@
 #include "kdepimdbusinterface_debug.h"
 Q_LOGGING_CATEGORY(KDEPIMDBUSINTERFACE_LOG, "log_kdepimdbusinterface")
 
-

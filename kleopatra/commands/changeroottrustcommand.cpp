@@ -313,8 +313,8 @@ QString change_trust_file(const QString &trustListFile, const QString &key, Key:
         const QString cap2 = rx.cap(2);
         if (cap2 != key && cap2 != keyColon) {
             qCDebug(KLEOPATRA_LOG) << qPrintable(key) << " != "
-                     << qPrintable(cap2) << " != "
-                     << qPrintable(keyColon);
+                                   << qPrintable(cap2) << " != "
+                                   << qPrintable(keyColon);
             out.write(rawLine + '\n');
             continue;
         }
@@ -363,7 +363,7 @@ QString run_gpgconf_reload_gpg_agent(const QString &gpgConfPath)
     QProcess p;
     p.start(gpgConfPath, QStringList() << QLatin1String("--reload") << QLatin1String("gpg-agent"));
     qCDebug(KLEOPATRA_LOG) <<  "starting " << qPrintable(gpgConfPath)
-             << " --reload gpg-agent";
+                           << " --reload gpg-agent";
     p.waitForFinished(-1);
     qCDebug(KLEOPATRA_LOG) << "done";
     if (p.error() == QProcess::UnknownError) {

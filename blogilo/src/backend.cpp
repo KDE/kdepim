@@ -260,7 +260,7 @@ void Backend::mediaUploaded(KBlog::BlogMedia *media)
     BilboMedia *m = d->mPublishMediaMap.value(media);
     if (!m) {
         qCCritical(BLOGILO_LOG) << "ERROR! Media returned from KBlog doesn't exist on the Map! Url is:"
-                    << media->url();
+                                << media->url();
         return;
     }
     d->mPublishMediaMap.remove(media);
@@ -274,7 +274,7 @@ void Backend::mediaUploaded(KBlog::BlogMedia *media)
     quint16 newChecksum = qChecksum(media->data().data(), media->data().count());
     if (newChecksum != m->checksum()) {
         qCCritical(BLOGILO_LOG) << "Check sum error: checksum of sent file: " << m->checksum() <<
-                    " Checksum of received file: " << newChecksum << "Error: " << media->error();
+                                " Checksum of received file: " << newChecksum << "Error: " << media->error();
         const QString tmp(i18n("Uploading media failed: Checksum error. Returned error: %1",
                                media->error()));
         qCDebug(BLOGILO_LOG) << "Emitting sigMediaError ...";

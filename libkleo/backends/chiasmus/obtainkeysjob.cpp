@@ -99,7 +99,7 @@ void Kleo::ObtainKeysJob::slotPerform(bool async)
     }
 
     Q_EMIT progress(i18n("Scanning directory %1...", mKeyPaths[mIndex]),
-                  mIndex, mKeyPaths.size());
+                    mIndex, mKeyPaths.size());
 
     const QDir dir(KShell::tildeExpand(mKeyPaths[mIndex]));
 

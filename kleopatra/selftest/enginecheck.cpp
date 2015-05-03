@@ -179,9 +179,9 @@ static bool is_version(const char *actual, int major, int minor, int patch)
     }
 
     qCDebug(KLEOPATRA_LOG) << "Parsed" << actual << "as: "
-             << actual_version[0] << '.'
-             << actual_version[1] << '.'
-             << actual_version[2] << '.' ;
+                           << actual_version[0] << '.'
+                           << actual_version[1] << '.'
+                           << actual_version[2] << '.' ;
 
     const int required_version[] = { major, minor, patch };
 

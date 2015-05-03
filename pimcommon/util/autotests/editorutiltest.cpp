@@ -128,7 +128,7 @@ void EditorUtilTest::testReverseCase_data()
     QTest::addColumn<int>("startcursorposition");
     QTest::addColumn<int>("endcursorposition");
     QTest::newRow("onelinewithoutselection") <<  QStringLiteral("foo") << QStringLiteral("foo") << -1 << -1;
-    QTest::newRow("onelinewithselection") <<  QStringLiteral("foo") << QStringLiteral("FOO")<< 0 << 3;
+    QTest::newRow("onelinewithselection") <<  QStringLiteral("foo") << QStringLiteral("FOO") << 0 << 3;
     QTest::newRow("reverseCase") <<  QStringLiteral("fOo bla\tfOO") << QStringLiteral("FoO BLA\tFoo") << 0 << 12;
     QTest::newRow("notallineselected") <<  QStringLiteral("fOo bla\tfOO") << QStringLiteral("FoO bla\tfOO") << 0 << 3;
 }

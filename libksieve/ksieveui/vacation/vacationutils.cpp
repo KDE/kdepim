@@ -154,14 +154,14 @@ QString KSieveUi::VacationUtils::composeScript(const QString &messageText,
     QString script = QStringLiteral("require \"vacation\";\n");
     if (startDate.isValid() && endDate.isValid()) {
         script += QStringLiteral("require \"relational\";\n"
-                                      "require \"date\";\n\n");
+                                 "require \"date\";\n\n");
     } else {
         script += QStringLiteral("\n");
     }
 
     if (!sendForSpam)
         script += QStringLiteral("if header :contains \"X-Spam-Flag\" \"YES\""
-                                      " { keep; stop; }\n");  // FIXME?
+                                 " { keep; stop; }\n");  // FIXME?
 
     if (!domain.isEmpty()) { // FIXME
         script += QStringLiteral("if not address :domain :contains \"from\" \"%1\" { keep; stop; }\n").arg(domain);
@@ -169,9 +169,9 @@ QString KSieveUi::VacationUtils::composeScript(const QString &messageText,
 
     if (startDate.isValid() && endDate.isValid()) {
         script += QStringLiteral("if not allof(currentdate :value \"ge\" \"date\" \"%1\","
-                                      " currentdate :value \"le\" \"date\" \"%2\")"
-                                      " { keep; stop; }\n").arg(startDate.toString(Qt::ISODate),
-                                              endDate.toString(Qt::ISODate));
+                                 " currentdate :value \"le\" \"date\" \"%2\")"
+                                 " { keep; stop; }\n").arg(startDate.toString(Qt::ISODate),
+                                         endDate.toString(Qt::ISODate));
     }
 
     script += QLatin1String("vacation ");

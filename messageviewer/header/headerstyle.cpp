@@ -55,12 +55,12 @@ namespace MessageViewer
 //
 
 HeaderStyle::HeaderStyle()
-    : mStrategy( 0 ),
-      mNodeHelper( 0 ),
-      mSourceObject( 0 ),
-      mPrinting( false ),
-      mTopLevel( true ),
-      mAllowAsync( false )
+    : mStrategy(0),
+      mNodeHelper(0),
+      mSourceObject(0),
+      mPrinting(false),
+      mTopLevel(true),
+      mAllowAsync(false)
 {
 }
 
