@@ -52,12 +52,12 @@ void XMLPrintingScriptBuilder::numberArgument(unsigned long number, char quantif
 
 void XMLPrintingScriptBuilder::commandStart(const QString &identifier)
 {
-    if (identifier == QStringLiteral("else") ||
-            identifier == QStringLiteral("break") ||
-            identifier == QStringLiteral("require") ||
-            identifier == QStringLiteral("foreverypart") ||
-            identifier == QStringLiteral("if") ||
-            identifier == QStringLiteral("elsif")) {
+    if (identifier == QLatin1String("else") ||
+            identifier == QLatin1String("break") ||
+            identifier == QLatin1String("require") ||
+            identifier == QLatin1String("foreverypart") ||
+            identifier == QLatin1String("if") ||
+            identifier == QLatin1String("elsif")) {
         write(QStringLiteral("<control name=\"%1\">").arg(identifier));
         mIsAction = false;
     } else {

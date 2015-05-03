@@ -27,23 +27,23 @@
 
 XXPort *XXPortFactory::createXXPort(const QString &identifier, QWidget *parentWidget) const
 {
-    if (identifier == QStringLiteral("vcard21") || identifier == QStringLiteral("vcard30") || identifier == QStringLiteral("vcard40")) {
+    if (identifier == QLatin1String("vcard21") || identifier == QLatin1String("vcard30") || identifier == QLatin1String("vcard40")) {
         XXPort *xxport = new VCardXXPort(parentWidget);
-        if (identifier == QStringLiteral("vcard21")) {
+        if (identifier == QLatin1String("vcard21")) {
             xxport->setOption(QStringLiteral("version"), QStringLiteral("v21"));
-        } else if (identifier == QStringLiteral("vcard30")) {
+        } else if (identifier == QLatin1String("vcard30")) {
             xxport->setOption(QStringLiteral("version"), QStringLiteral("v30"));
-        } else if (identifier == QStringLiteral("vcard40")) {
+        } else if (identifier == QLatin1String("vcard40")) {
             xxport->setOption(QStringLiteral("version"), QStringLiteral("v40"));
         }
         return xxport;
-    } else if (identifier == QStringLiteral("csv")) {
+    } else if (identifier == QLatin1String("csv")) {
         return new CsvXXPort(parentWidget);
-    } else if (identifier == QStringLiteral("ldif")) {
+    } else if (identifier == QLatin1String("ldif")) {
         return new LDIFXXPort(parentWidget);
-    } else if (identifier == QStringLiteral("ldap")) {
+    } else if (identifier == QLatin1String("ldap")) {
         return new LDAPXXPort(parentWidget);
-    } else if (identifier == QStringLiteral("gmx")) {
+    } else if (identifier == QLatin1String("gmx")) {
         return new GMXXXPort(parentWidget);
     } else {
         return Q_NULLPTR;

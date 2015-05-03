@@ -541,7 +541,7 @@ void ExportMailJob::backupAkonadiDb()
                << QStringLiteral("--result-file=") + tmp.fileName()
                << akonadiDataBase.options()
                << akonadiDataBase.name();
-    } else if (dbDriver == QStringLiteral("QPSQL")) {
+    } else if (dbDriver == QLatin1String("QPSQL")) {
         dbDumpAppName = QStringLiteral("pg_dump");
         params << QStringLiteral("--format=custom")
                << QStringLiteral("--blobs")

@@ -52,17 +52,17 @@ Utils::StoredTypes TemplateSelection::loadStoredTypes(const QDomElement &element
         QDomElement e = n.toElement();
         if (!e.isNull())  {
             const QString tagName(e.tagName());
-            if (tagName == QStringLiteral("mailtransport")) {
+            if (tagName == QLatin1String("mailtransport")) {
                 types |= Utils::MailTransport;
-            } else if (tagName == QStringLiteral("mail")) {
+            } else if (tagName == QLatin1String("mail")) {
                 types |= Utils::Mails;
-            } else if (tagName == QStringLiteral("resources")) {
+            } else if (tagName == QLatin1String("resources")) {
                 types |= Utils::Resources;
-            } else if (tagName == QStringLiteral("identity")) {
+            } else if (tagName == QLatin1String("identity")) {
                 types |= Utils::Identity;
-            } else if (tagName == QStringLiteral("config")) {
+            } else if (tagName == QLatin1String("config")) {
                 types |= Utils::Config;
-            } else if (tagName == QStringLiteral("akonadidb")) {
+            } else if (tagName == QLatin1String("akonadidb")) {
                 types |= Utils::AkonadiDb;
             }
         }
@@ -85,19 +85,19 @@ QHash<Utils::AppsType, Utils::StoredTypes> TemplateSelection::loadTemplate(const
             const QString tagName(e.tagName());
             qCDebug(PIMSETTINGEXPORTER_LOG) << "tag :" << tagName;
             Utils::AppsType type = Utils::Unknown;
-            if (tagName == QStringLiteral("kmail")) {
+            if (tagName == QLatin1String("kmail")) {
                 type = Utils::KMail;
-            } else if (tagName == QStringLiteral("kaddressbook")) {
+            } else if (tagName == QLatin1String("kaddressbook")) {
                 type = Utils::KAddressBook;
-            } else if (tagName == QStringLiteral("kalarm")) {
+            } else if (tagName == QLatin1String("kalarm")) {
                 type = Utils::KAlarm;
-            } else if (tagName == QStringLiteral("korganizer")) {
+            } else if (tagName == QLatin1String("korganizer")) {
                 type = Utils::KOrganizer;
-            } else if (tagName == QStringLiteral("knotes")) {
+            } else if (tagName == QLatin1String("knotes")) {
                 type = Utils::KNotes;
-            } else if (tagName == QStringLiteral("akregator")) {
+            } else if (tagName == QLatin1String("akregator")) {
                 type = Utils::Akregator;
-            } else if (tagName == QStringLiteral("blogilo")) {
+            } else if (tagName == QLatin1String("blogilo")) {
                 type = Utils::Blogilo;
             }
             if (type != Utils::Unknown) {

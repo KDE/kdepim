@@ -98,9 +98,9 @@ void SieveForEveryPartWidget::loadScript(const QDomElement &element, QString &er
     QDomElement e = node.toElement();
     if (!e.isNull()) {
         const QString tagName = e.tagName();
-        if (tagName == QStringLiteral("tag")) {
+        if (tagName == QLatin1String("tag")) {
             const QString tagValue = e.text();
-            if (tagValue == QStringLiteral("name")) {
+            if (tagValue == QLatin1String("name")) {
                 mName->setText(AutoCreateScriptUtil::strValue(e));
             } else {
                 error += i18n("Unknown tagValue \"%1\" during loading loop \"for\"", tagValue);

@@ -36,10 +36,10 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
     KContacts::Addressee *contact = 0;
     while (!stream.atEnd()) {
         QString line = stream.readLine();
-        if (line == QStringLiteral("#CONTACT")) {
+        if (line == QLatin1String("#CONTACT")) {
             appendContact(contact);
             foundContact = true;
-        } else if (line == QStringLiteral("#FOLDER")) {
+        } else if (line == QLatin1String("#FOLDER")) {
             appendContact(contact);
             foundContact = false;
             //TODO

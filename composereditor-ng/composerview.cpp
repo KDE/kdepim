@@ -226,15 +226,15 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
     const bool imageSelected = !d->contextMenuResult.imageUrl().isEmpty();
 
     const QWebElement elm = d->contextMenuResult.element();
-    const bool tableCellSelected = (elm.tagName().toLower() == QStringLiteral("td"));
-    const bool tableSelected = (elm.tagName().toLower() == QStringLiteral("table") ||
+    const bool tableCellSelected = (elm.tagName().toLower() == QLatin1String("td"));
+    const bool tableSelected = (elm.tagName().toLower() == QLatin1String("table") ||
                                 tableCellSelected);
 
-    const bool listSelected = (elm.tagName().toLower() == QStringLiteral("ol") ||
-                               elm.tagName().toLower() == QStringLiteral("ul") ||
-                               elm.tagName().toLower() == QStringLiteral("li"));
+    const bool listSelected = (elm.tagName().toLower() == QLatin1String("ol") ||
+                               elm.tagName().toLower() == QLatin1String("ul") ||
+                               elm.tagName().toLower() == QLatin1String("li"));
 
-    const bool anchorSelected = (elm.tagName().toLower() == QStringLiteral("a"));
+    const bool anchorSelected = (elm.tagName().toLower() == QLatin1String("a"));
 
     qCDebug(COMPOSEREDITORNG_LOG) << " elm.tagName().toLower() " << elm.tagName().toLower();
 

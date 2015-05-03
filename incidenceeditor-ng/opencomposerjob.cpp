@@ -87,7 +87,7 @@ void OpenComposerJob::timeout()
 void OpenComposerJob::slotServiceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
 {
     Q_UNUSED(oldOwner);
-    if (name == QStringLiteral("org.kde.kmail") && !newOwner.isEmpty()) {
+    if (name == QLatin1String("org.kde.kmail") && !newOwner.isEmpty()) {
         processMail();
     }
 }

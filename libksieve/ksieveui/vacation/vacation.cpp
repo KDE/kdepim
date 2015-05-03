@@ -92,7 +92,7 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
                            << script;
     mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
 
-    if (!mCheckOnly && mUrl.scheme() == QStringLiteral("sieve") &&
+    if (!mCheckOnly && mUrl.scheme() == QLatin1String("sieve") &&
             !job->sieveCapabilities().contains(QStringLiteral("vacation"))) {
         KMessageBox::sorry(Q_NULLPTR, i18n("Your server did not list \"vacation\" in "
                                            "its list of supported Sieve extensions;\n"

@@ -114,9 +114,9 @@ void TrojitaSettings::readTransport()
     const QString smtpMethod = settings->value(QStringLiteral("msa.method")).toString();
     if (!smtpMethod.isEmpty()) {
         MailTransport::Transport *mt = createTransport();
-        if (smtpMethod == QStringLiteral("IMAP-SENDMAIL")) {
+        if (smtpMethod == QLatin1String("IMAP-SENDMAIL")) {
             //see http://tools.ietf.org/html/draft-kundrat-imap-submit-01
-        } else if (smtpMethod == QStringLiteral("SMTP") || smtpMethod == QStringLiteral("SSMTP")) {
+        } else if (smtpMethod == QLatin1String("SMTP") || smtpMethod == QLatin1String("SSMTP")) {
             if (settings->contains(QStringLiteral("msa.smtp.host"))) {
                 mt->setHost(settings->value(QStringLiteral("msa.smtp.host")).toString());
             }
@@ -140,7 +140,7 @@ void TrojitaSettings::readTransport()
                 }
             }
             mt->setType(MailTransport::Transport::EnumType::SMTP);
-        } else if (smtpMethod == QStringLiteral("sendmail")) {
+        } else if (smtpMethod == QLatin1String("sendmail")) {
             mt->setType(MailTransport::Transport::EnumType::Sendmail);
             if (settings->contains(QStringLiteral("msa.sendmail"))) {
                 mt->setHost(settings->value(QStringLiteral("msa.sendmail")).toString());

@@ -568,6 +568,6 @@ void Session::setErrorMessage(const QString &msg)
 
 bool Session::allowUnencrypted() const
 {
-    return QUrlQuery(m_url).queryItemValue(QStringLiteral("x-allow-unencrypted")) == QStringLiteral("true");
+    return QUrlQuery(m_url).queryItemValue(QStringLiteral("x-allow-unencrypted")) == QLatin1String("true");
 }
 

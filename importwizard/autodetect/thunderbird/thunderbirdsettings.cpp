@@ -159,7 +159,7 @@ void ThunderbirdSettings::readExtensionsSettings()
     const QString conversionFormatStr(QStringLiteral("extensions.AutoResizeImage.conversionFormat"));
     if (mHashConfig.contains(conversionFormatStr)) {
         QString conversionFormat = mHashConfig.value(conversionFormatStr).toString();
-        if (conversionFormat == QStringLiteral("png")) {
+        if (conversionFormat == QLatin1String("png")) {
             conversionFormat = QStringLiteral("PNG");
         } else {
             conversionFormat = QStringLiteral("JPG");
@@ -302,9 +302,9 @@ void ThunderbirdSettings::readLdapSettings()
             ldap.ldapUrl = QUrl(mHashConfig.value(ldapUri).toString());
             ldap.port = ldap.ldapUrl.port();
 
-            if (ldap.ldapUrl.scheme() == QStringLiteral("ldaps")) {
+            if (ldap.ldapUrl.scheme() == QLatin1String("ldaps")) {
                 ldap.useSSL = true;
-            } else if (ldap.ldapUrl.scheme() == QStringLiteral("ldap")) {
+            } else if (ldap.ldapUrl.scheme() == QLatin1String("ldap")) {
                 ldap.useSSL = false;
             } else {
                 qCDebug(IMPORTWIZARD_LOG) << " Security not implemented :" << ldap.ldapUrl.scheme();
@@ -499,7 +499,7 @@ void ThunderbirdSettings::readAccount()
             loginAtStartup = mHashConfig.value(loginAtStartupStr).toBool();
         }
         bool found = false;
-        if (type == QStringLiteral("imap")) {
+        if (type == QLatin1String("imap")) {
             QMap<QString, QVariant> settings;
             settings.insert(QStringLiteral("ImapServer"), host);
             settings.insert(QStringLiteral("UserName"), userName);
@@ -565,7 +565,7 @@ void ThunderbirdSettings::readAccount()
             addCheckMailOnStartup(agentIdentifyName, loginAtStartup);
             //Not find a method to disable it in thunderbird
             addToManualCheck(agentIdentifyName, true);
-        } else if (type == QStringLiteral("pop3")) {
+        } else if (type == QLatin1String("pop3")) {
             QMap<QString, QVariant> settings;
             settings.insert(QStringLiteral("Host"), host);
             settings.insert(QStringLiteral("Login"), userName);
@@ -629,17 +629,17 @@ void ThunderbirdSettings::readAccount()
             addCheckMailOnStartup(agentIdentifyName, loginAtStartup);
             //Not find a method to disable it in thunderbird
             addToManualCheck(agentIdentifyName, true);
-        } else if (type == QStringLiteral("none")) {
+        } else if (type == QLatin1String("none")) {
             //FIXME look at if we can implement it
             qCDebug(IMPORTWIZARD_LOG) << " account type none!";
-        } else if (type == QStringLiteral("movemail")) {
+        } else if (type == QLatin1String("movemail")) {
             qCDebug(IMPORTWIZARD_LOG) << " movemail accound found and not implemented in importthunderbird";
             //TODO
-        } else if (type == QStringLiteral("rss")) {
+        } else if (type == QLatin1String("rss")) {
             //TODO when akregator2 will merge in kdepim
             qCDebug(IMPORTWIZARD_LOG) << " rss resource needs to be implemented";
             continue;
-        } else if (type == QStringLiteral("nntp")) {
+        } else if (type == QLatin1String("nntp")) {
             //TODO add config directly to knode
             //TODO when knode will merge in kdepim
             qCDebug(IMPORTWIZARD_LOG) << " nntp resource need to be implemented";
@@ -884,9 +884,9 @@ void ThunderbirdSettings::insertIntoMap(const QString &line)
         //Store as String
         mHashConfig.insert(key, valueStr);
     } else {
-        if (valueStr == QStringLiteral("true")) {
+        if (valueStr == QLatin1String("true")) {
             mHashConfig.insert(key, true);
-        } else if (valueStr == QStringLiteral("false")) {
+        } else if (valueStr == QLatin1String("false")) {
             mHashConfig.insert(key, false);
         } else {
             //Store as integer

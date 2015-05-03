@@ -275,7 +275,7 @@ bool StorageServiceTreeWidget::checkName(const QString &name)
             return false;
         }
     }
-    if (name == QStringLiteral(".") || name == QStringLiteral("..")) {
+    if (name == QLatin1String(".") || name == QLatin1String("..")) {
         KMessageBox::error(this, i18n("You cannot name a folder or file . or .."), i18n("Create Folder"));
         return false;
     }
@@ -392,7 +392,7 @@ bool StorageServiceTreeWidget::uploadFileToService()
             KMessageBox::error(this, i18n("File size (%1) is larger than limit (%2)", KFormat().formatByteSize(info.size(), 1), KFormat().formatByteSize(maximumLimit, 1)));
             return false;
         }
-        if (filename == QStringLiteral(".") || filename == QStringLiteral("..")) {
+        if (filename == QLatin1String(".") || filename == QLatin1String("..")) {
             KMessageBox::error(this, i18n("You are trying to use unauthorized characters."));
             return false;
         }

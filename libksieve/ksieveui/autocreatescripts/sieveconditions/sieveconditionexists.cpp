@@ -90,15 +90,15 @@ bool SieveConditionExists::setParamWidgetValue(const QDomElement &element, QWidg
                 QComboBox *combo = w->findChild<QComboBox *>(QStringLiteral("existscheck"));
                 combo->setCurrentIndex(1);
             }
-            if (tagName == QStringLiteral("str")) {
+            if (tagName == QLatin1String("str")) {
                 SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox *>(QStringLiteral("headervalue"));
                 value->setCode(e.text());
-            } else if (tagName == QStringLiteral("list")) {
+            } else if (tagName == QLatin1String("list")) {
                 SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QStringLiteral("headervalue"));
                 selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
-            } else if (tagName == QStringLiteral("crlf")) {
+            } else if (tagName == QLatin1String("crlf")) {
                 //nothing
-            } else if (tagName == QStringLiteral("comment")) {
+            } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

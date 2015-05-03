@@ -278,7 +278,7 @@ void AddresseeLineEdit::dropEvent(QDropEvent *event)
             bool mailtoURL = false;
             // append the mailto URLs
             foreach (const QUrl &url, uriList) {
-                if (url.scheme() == QStringLiteral("mailto")) {
+                if (url.scheme() == QLatin1String("mailto")) {
                     mailtoURL = true;
                     QString address;
                     address = QUrl::fromPercentEncoding(url.path().toLatin1());

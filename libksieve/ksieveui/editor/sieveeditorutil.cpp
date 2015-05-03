@@ -124,87 +124,87 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
 
 KSieveUi::SieveEditorUtil::HelpVariableName KSieveUi::SieveEditorUtil::strToVariableName(const QString &str)
 {
-    if (str == QStringLiteral("address")) {
+    if (str == QLatin1String("address")) {
         return AddressCondition;
-    } else if (str == QStringLiteral("body")) {
+    } else if (str == QLatin1String("body")) {
         return BodyCondition;
-    } else if (str == QStringLiteral("currentdate")) {
+    } else if (str == QLatin1String("currentdate")) {
         return CurrentdateCondition;
-    } else if (str == QStringLiteral("date")) {
+    } else if (str == QLatin1String("date")) {
         return DateCondition;
-    } else if (str == QStringLiteral("envelope")) {
+    } else if (str == QLatin1String("envelope")) {
         return EnvelopeCondition;
-    } else if (str == QStringLiteral("environment")) {
+    } else if (str == QLatin1String("environment")) {
         return EnvironmentCondition;
-    } else if (str == QStringLiteral("exists")) {
+    } else if (str == QLatin1String("exists")) {
         return ExistsCondition;
-    } else if (str == QStringLiteral("false")) {
+    } else if (str == QLatin1String("false")) {
         return FalseCondition;
-    } else if (str == QStringLiteral("hasflag")) {
+    } else if (str == QLatin1String("hasflag")) {
         return HasflagCondition;
-    } else if (str == QStringLiteral("header")) {
+    } else if (str == QLatin1String("header")) {
         return HeaderCondition;
-    } else if (str == QStringLiteral("ihave")) {
+    } else if (str == QLatin1String("ihave")) {
         return IhaveCondition;
-    } else if (str == QStringLiteral("mailboxexists")) {
+    } else if (str == QLatin1String("mailboxexists")) {
         return MailboxexistsCondition;
-    } else if (str == QStringLiteral("metadata")) {
+    } else if (str == QLatin1String("metadata")) {
         return MetadataCondition;
-    } else if (str == QStringLiteral("metadataexists")) {
+    } else if (str == QLatin1String("metadataexists")) {
         return MetadataexistsCondition;
-    } else if (str == QStringLiteral("servermetadata")) {
+    } else if (str == QLatin1String("servermetadata")) {
         return ServermetadataCondition;
-    } else if (str == QStringLiteral("servermetadataexists")) {
+    } else if (str == QLatin1String("servermetadataexists")) {
         return ServermetadataexistsCondition;
-    } else if (str == QStringLiteral("size")) {
+    } else if (str == QLatin1String("size")) {
         return SizeCondition;
-    } else if (str == QStringLiteral("spamtest")) {
+    } else if (str == QLatin1String("spamtest")) {
         return SpamtestCondition;
-    } else if (str == QStringLiteral("true")) {
+    } else if (str == QLatin1String("true")) {
         return TrueCondition;
-    } else if (str == QStringLiteral("virustest")) {
+    } else if (str == QLatin1String("virustest")) {
         return VirustestCondition;
-    } else if (str == QStringLiteral("break")) {
+    } else if (str == QLatin1String("break")) {
         return BreakAction;
-    } else if (str == QStringLiteral("convert")) {
+    } else if (str == QLatin1String("convert")) {
         return ConvertAction; //TODO
-    } else if (str == QStringLiteral("discard")) {
+    } else if (str == QLatin1String("discard")) {
         return DiscardAction;
-    } else if (str == QStringLiteral("enclose")) {
+    } else if (str == QLatin1String("enclose")) {
         return EncloseAction;
-    } else if (str == QStringLiteral("extracttext")) {
+    } else if (str == QLatin1String("extracttext")) {
         return ExtracttextAction;
-    } else if (str == QStringLiteral("fileinto")) {
+    } else if (str == QLatin1String("fileinto")) {
         return FileintoAction;
-    } else if (str == QStringLiteral("keep")) {
+    } else if (str == QLatin1String("keep")) {
         return KeepAction;
-    } else if (str == QStringLiteral("notify")) {
+    } else if (str == QLatin1String("notify")) {
         return NotifyAction;
-    } else if (str == QStringLiteral("redirect")) {
+    } else if (str == QLatin1String("redirect")) {
         return RedirectAction;
-    } else if (str == QStringLiteral("reject")) {
+    } else if (str == QLatin1String("reject")) {
         return RejectAction;
-    } else if (str == QStringLiteral("replace")) {
+    } else if (str == QLatin1String("replace")) {
         return ReplaceAction;
-    } else if (str == QStringLiteral("return")) {
+    } else if (str == QLatin1String("return")) {
         return ReturnAction;
-    } else if (str == QStringLiteral("set")) {
+    } else if (str == QLatin1String("set")) {
         return SetvariableAction;
-    } else if (str == QStringLiteral("stop")) {
+    } else if (str == QLatin1String("stop")) {
         return StopAction;
-    } else if (str == QStringLiteral("vacation")) {
+    } else if (str == QLatin1String("vacation")) {
         return VacationAction;
-    } else if (str == QStringLiteral("include")) {
+    } else if (str == QLatin1String("include")) {
         return Includes;
-    } else if (str == QStringLiteral("globalvariable")) {
+    } else if (str == QLatin1String("globalvariable")) {
         return GlobalVariable;
-    } else if (str == QStringLiteral("foreverypart")) {
+    } else if (str == QLatin1String("foreverypart")) {
         return ForEveryPart;
-    } else if (str == QStringLiteral("copy")) {
+    } else if (str == QLatin1String("copy")) {
         return CopyExtension;
-    } else if (str == QStringLiteral("mboxmetadata")) {
+    } else if (str == QLatin1String("mboxmetadata")) {
         return MBoxMetaDataExtension;
-    } else if (str == QStringLiteral("subaddress")) {
+    } else if (str == QLatin1String("subaddress")) {
         return SubAddressExtension;
     }
 

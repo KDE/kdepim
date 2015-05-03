@@ -457,25 +457,25 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
                     if (description.value(QStringLiteral("key")).toString() == key) {
                         key = description.value(QStringLiteral("title")).toString();
                         const QString descriptionType = description.value(QStringLiteral("type")).toString();
-                        if (descriptionType == QStringLiteral("boolean")) {
-                            if (value == QStringLiteral("true")) {
+                        if (descriptionType == QLatin1String("boolean")) {
+                            if (value == QLatin1String("true")) {
                                 value = i18nc("Boolean value", "yes");
                             } else {
                                 value = i18nc("Boolean value", "no");
                             }
 
-                        } else if (descriptionType  == QStringLiteral("date")) {
+                        } else if (descriptionType  == QLatin1String("date")) {
                             const QDate date = QDate::fromString(value, Qt::ISODate);
                             value = QLocale().toString(date, QLocale::ShortFormat);
 
-                        } else if (descriptionType == QStringLiteral("time")) {
+                        } else if (descriptionType == QLatin1String("time")) {
                             const QTime time = QTime::fromString(value, Qt::ISODate);
                             value = KLocale::global()->formatTime(time);
 
-                        } else if (descriptionType == QStringLiteral("datetime")) {
+                        } else if (descriptionType == QLatin1String("datetime")) {
                             const QDateTime dateTime = QDateTime::fromString(value, Qt::ISODate);
                             value = QLocale().toString(dateTime, QLocale::ShortFormat);
-                        } else if (descriptionType == QStringLiteral("url")) {
+                        } else if (descriptionType == QLatin1String("url")) {
                             value = KStringHandler::tagUrls(value.toHtmlEscaped());
                             addUrl = true;
                         }

@@ -93,7 +93,7 @@ void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
     for (int i = 0; i < splitter->count(); ++i) {
         const QString objName = splitter->widget(i)->objectName();
 
-        const bool hasName = (objName == QStringLiteral("selectcontactwidget")) || (objName == QStringLiteral("mergecontactinfowidget"));
+        const bool hasName = (objName == QLatin1String("selectcontactwidget")) || (objName == QLatin1String("mergecontactinfowidget"));
         QVERIFY(hasName);
     }
 }

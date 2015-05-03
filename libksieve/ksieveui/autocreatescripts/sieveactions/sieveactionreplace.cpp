@@ -80,18 +80,18 @@ bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QStringLiteral("str")) {
+            if (tagName == QLatin1String("str")) {
                 MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QStringLiteral("text"));
                 edit->setText(e.text());
-            } else if (tagName == QStringLiteral("tag")) {
+            } else if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
-                if (tagValue == QStringLiteral("subject")) {
+                if (tagValue == QLatin1String("subject")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
                         QLineEdit *subject = w->findChild<QLineEdit *>(QStringLiteral("subject"));
                         subject->setText(strValue);
                     }
-                } else if (tagValue == QStringLiteral("from")) {
+                } else if (tagValue == QLatin1String("from")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
                         QLineEdit *headers = w->findChild<QLineEdit *>(QStringLiteral("from"));
@@ -101,9 +101,9 @@ bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget
                     unknowTagValue(tagValue, error);
                     qCDebug(LIBKSIEVE_LOG) << " SieveActionReplace::setParamWidgetValue unknown tagValue " << tagValue;
                 }
-            } else if (tagName == QStringLiteral("crlf")) {
+            } else if (tagName == QLatin1String("crlf")) {
                 //nothing
-            } else if (tagName == QStringLiteral("comment")) {
+            } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

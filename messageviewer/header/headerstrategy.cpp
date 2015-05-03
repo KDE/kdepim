@@ -89,17 +89,17 @@ HeaderStrategy *HeaderStrategy::create(Type type)
 HeaderStrategy *HeaderStrategy::create(const QString &type)
 {
     const QString lowerType = type.toLower();
-    if (lowerType == QStringLiteral("all")) {
+    if (lowerType == QLatin1String("all")) {
         return all();
-    } else if (lowerType == QStringLiteral("rich")) {
+    } else if (lowerType == QLatin1String("rich")) {
         return HeaderStrategy::rich();
     }
     //if ( lowerType == "standard" ) return standard(); // not needed, see below
-    else if (lowerType == QStringLiteral("brief")) {
+    else if (lowerType == QLatin1String("brief")) {
         return brief();
-    } else if (lowerType == QStringLiteral("custom")) {
+    } else if (lowerType == QLatin1String("custom")) {
         return custom();
-    } else if (lowerType == QStringLiteral("grantlee")) {
+    } else if (lowerType == QLatin1String("grantlee")) {
         return grantlee();
     }
     // don't kFatal here, b/c the strings are user-provided

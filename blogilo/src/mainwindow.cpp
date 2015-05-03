@@ -364,7 +364,7 @@ void MainWindow::slotDialogDestroyed(QObject *win)
 {
     const QSize size = qobject_cast<QWidget *>(win)->size();
     const QString name = win->objectName();
-    if (name == QStringLiteral("settings")) {
+    if (name == QLatin1String("settings")) {
         Settings::setConfigWindowSize(size);
     }
 }

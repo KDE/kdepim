@@ -43,11 +43,11 @@ void MergeContactsDialogTest::shouldHaveDefaultValue()
     for (int i = 0; i < stackedWidget->count(); ++i) {
         QWidget *w = stackedWidget->widget(i);
         const QString objName = w->objectName();
-        const bool hasGoodNamePage = (objName == QStringLiteral("notenoughcontactselected") ||
-                                      objName == QStringLiteral("nocontactselected") ||
-                                      objName == QStringLiteral("manualmergeresultwidget") ||
-                                      objName == QStringLiteral("selectioninformation") ||
-                                      objName == QStringLiteral("mergecontactinfowidget"));
+        const bool hasGoodNamePage = (objName == QLatin1String("notenoughcontactselected") ||
+                                      objName == QLatin1String("nocontactselected") ||
+                                      objName == QLatin1String("manualmergeresultwidget") ||
+                                      objName == QLatin1String("selectioninformation") ||
+                                      objName == QLatin1String("mergecontactinfowidget"));
         QVERIFY(hasGoodNamePage);
     }
 

@@ -87,13 +87,13 @@ bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QStringLiteral("str")) {
+            if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
                 QLineEdit *edit = w->findChild<QLineEdit *>(QStringLiteral("edit"));
                 edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
-            } else if (tagName == QStringLiteral("crlf")) {
+            } else if (tagName == QLatin1String("crlf")) {
                 //nothing
-            } else if (tagName == QStringLiteral("comment")) {
+            } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

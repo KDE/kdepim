@@ -62,20 +62,20 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QStringLiteral("tag")) {
+            if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
-                if (tagValue == QStringLiteral("name")) {
+                if (tagValue == QLatin1String("name")) {
                     QLineEdit *name = w->findChild<QLineEdit *>(QStringLiteral("name"));
                     name->setText(AutoCreateScriptUtil::strValue(e));
                 } else {
                     unknowTagValue(tagValue, error);
                     qCDebug(LIBKSIEVE_LOG) << " SieveActionBreak::setParamWidgetValue unknown tagValue " << tagValue;
                 }
-            } else if (tagName == QStringLiteral("str")) {
+            } else if (tagName == QLatin1String("str")) {
                 //Nothing
-            } else if (tagName == QStringLiteral("crlf")) {
+            } else if (tagName == QLatin1String("crlf")) {
                 //nothing
-            } else if (tagName == QStringLiteral("comment")) {
+            } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

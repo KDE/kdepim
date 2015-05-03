@@ -101,7 +101,7 @@ bool SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QStringLiteral("str")) {
+            if (tagName == QLatin1String("str")) {
                 if (index == 0) {
                     type = e.text();
                 } else if (index == 1) {
@@ -111,12 +111,12 @@ bool SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
                     qCDebug(LIBKSIEVE_LOG) << " SieveConditionCurrentDate::setParamWidgetValue too many argument :" << index;
                 }
                 ++index;
-            } else if (tagName == QStringLiteral("tag")) {
+            } else if (tagName == QLatin1String("tag")) {
                 SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("matchtype"));
                 selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
-            } else if (tagName == QStringLiteral("crlf")) {
+            } else if (tagName == QLatin1String("crlf")) {
                 //nothing
-            } else if (tagName == QStringLiteral("comment")) {
+            } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

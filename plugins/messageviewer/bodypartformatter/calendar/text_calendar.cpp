@@ -511,13 +511,13 @@ public:
             msg->subject()->fromUnicodeString(status, "utf-8");
             QString tsubject = subject;
             tsubject.remove(i18n("Answer: "));
-            if (status == QStringLiteral("cancel")) {
+            if (status == QLatin1String("cancel")) {
                 msg->subject()->fromUnicodeString(
                     i18nc("Not able to attend.", "Declined: %1", tsubject), "utf-8");
-            } else if (status == QStringLiteral("tentative")) {
+            } else if (status == QLatin1String("tentative")) {
                 msg->subject()->fromUnicodeString(
                     i18nc("Unsure if it is possible to attend.", "Tentative: %1", tsubject), "utf-8");
-            } else if (status == QStringLiteral("accepted")) {
+            } else if (status == QLatin1String("accepted")) {
                 msg->subject()->fromUnicodeString(
                     i18nc("Accepted the invitation.", "Accepted: %1", tsubject), "utf-8");
             } else {
@@ -779,56 +779,56 @@ public:
 
         if (!warnStr.isEmpty()) {
             QString queryStr;
-            if (path == QStringLiteral("accept")) {
+            if (path == QLatin1String("accept")) {
                 if (type == Incidence::TypeTodo) {
                     queryStr = i18n("Do you still want to accept the task?");
                 } else {
                     queryStr = i18n("Do you still want to accept the invitation?");
                 }
-            } else if (path == QStringLiteral("accept_conditionally")) {
+            } else if (path == QLatin1String("accept_conditionally")) {
                 if (type == Incidence::TypeTodo) {
                     queryStr =
                         i18n("Do you still want to send conditional acceptance of the invitation?");
                 } else {
                     queryStr = i18n("Do you still want to send conditional acceptance of the task?");
                 }
-            } else if (path == QStringLiteral("accept_counter")) {
+            } else if (path == QLatin1String("accept_counter")) {
                 queryStr = i18n("Do you still want to accept the counter proposal?");
-            } else if (path == QStringLiteral("counter")) {
+            } else if (path == QLatin1String("counter")) {
                 queryStr = i18n("Do you still want to send a counter proposal?");
-            } else if (path == QStringLiteral("decline")) {
+            } else if (path == QLatin1String("decline")) {
                 queryStr = i18n("Do you still want to send a decline response?");
-            } else if (path == QStringLiteral("decline_counter")) {
+            } else if (path == QLatin1String("decline_counter")) {
                 queryStr = i18n("Do you still want to decline the counter proposal?");
-            } else if (path == QStringLiteral("reply")) {
+            } else if (path == QLatin1String("reply")) {
                 queryStr = i18n("Do you still want to record this response in your calendar?");
-            } else if (path == QStringLiteral("delegate")) {
+            } else if (path == QLatin1String("delegate")) {
                 if (type == Incidence::TypeTodo) {
                     queryStr = i18n("Do you still want to delegate this task?");
                 } else {
                     queryStr = i18n("Do you still want to delegate this invitation?");
                 }
-            } else if (path == QStringLiteral("forward")) {
+            } else if (path == QLatin1String("forward")) {
                 if (type == Incidence::TypeTodo) {
                     queryStr = i18n("Do you still want to forward this task?");
                 } else {
                     queryStr = i18n("Do you still want to forward this invitation?");
                 }
-            } else if (path == QStringLiteral("cancel")) {
+            } else if (path == QLatin1String("cancel")) {
                 if (type == Incidence::TypeTodo) {
                     queryStr = i18n("Do you still want to cancel this task?");
                 } else {
                     queryStr = i18n("Do you still want to cancel this invitation?");
                 }
-            } else if (path == QStringLiteral("check_calendar")) {
+            } else if (path == QLatin1String("check_calendar")) {
                 queryStr = i18n("Do you still want to check your calendar?");
-            } else if (path == QStringLiteral("record")) {
+            } else if (path == QLatin1String("record")) {
                 if (type == Incidence::TypeTodo) {
                     queryStr = i18n("Do you still want to record this task in your calendar?");
                 } else {
                     queryStr = i18n("Do you still want to record this invitation in your calendar?");
                 }
-            } else if (path == QStringLiteral("cancel")) {
+            } else if (path == QLatin1String("cancel")) {
                 if (type == Incidence::TypeTodo) {
                     queryStr = i18n("Do you really want to cancel this task?");
                 } else {
@@ -1208,21 +1208,21 @@ public:
             return result;
         }
 
-        if (path == QStringLiteral("accept")) {
+        if (path == QLatin1String("accept")) {
             result = handleInvitation(iCal, Attendee::Accepted, part, viewerInstance);
-        } else if (path == QStringLiteral("accept_conditionally")) {
+        } else if (path == QLatin1String("accept_conditionally")) {
             result = handleInvitation(iCal, Attendee::Tentative, part, viewerInstance);
-        } else if (path == QStringLiteral("counter")) {
+        } else if (path == QLatin1String("counter")) {
             result = counterProposal(iCal, part);
-        } else if (path == QStringLiteral("ignore")) {
+        } else if (path == QLatin1String("ignore")) {
             result = handleIgnore(viewerInstance);
-        } else if (path == QStringLiteral("decline")) {
+        } else if (path == QLatin1String("decline")) {
             result = handleInvitation(iCal, Attendee::Declined, part, viewerInstance);
-        } else if (path == QStringLiteral("decline_counter")) {
+        } else if (path == QLatin1String("decline_counter")) {
             result = handleDeclineCounter(iCal, part, viewerInstance);
-        } else if (path == QStringLiteral("postpone")) {
+        } else if (path == QLatin1String("postpone")) {
             result = handleInvitation(iCal, Attendee::NeedsAction, part, viewerInstance);
-        } else if (path == QStringLiteral("delegate")) {
+        } else if (path == QLatin1String("delegate")) {
             result = handleInvitation(iCal, Attendee::Delegated, part, viewerInstance);
         }
 
@@ -1348,35 +1348,35 @@ public:
                              const QString &path) const
     {
         if (!path.isEmpty()) {
-            if (path == QStringLiteral("accept")) {
+            if (path == QLatin1String("accept")) {
                 return i18n("Accept invitation");
-            } else if (path == QStringLiteral("accept_conditionally")) {
+            } else if (path == QLatin1String("accept_conditionally")) {
                 return i18n("Accept invitation conditionally");
-            } else if (path == QStringLiteral("accept_counter")) {
+            } else if (path == QLatin1String("accept_counter")) {
                 return i18n("Accept counter proposal");
-            } else if (path == QStringLiteral("counter")) {
+            } else if (path == QLatin1String("counter")) {
                 return i18n("Create a counter proposal...");
-            } else if (path == QStringLiteral("ignore")) {
+            } else if (path == QLatin1String("ignore")) {
                 return i18n("Throw mail away");
-            } else if (path == QStringLiteral("decline")) {
+            } else if (path == QLatin1String("decline")) {
                 return i18n("Decline invitation");
-            } else if (path == QStringLiteral("postpone")) {
+            } else if (path == QLatin1String("postpone")) {
                 return i18n("Postpone");
-            } else if (path == QStringLiteral("decline_counter")) {
+            } else if (path == QLatin1String("decline_counter")) {
                 return i18n("Decline counter proposal");
-            } else if (path == QStringLiteral("check_calendar")) {
+            } else if (path == QLatin1String("check_calendar")) {
                 return i18n("Check my calendar...");
-            } else if (path == QStringLiteral("reply")) {
+            } else if (path == QLatin1String("reply")) {
                 return i18n("Record response into my calendar");
-            } else if (path == QStringLiteral("record")) {
+            } else if (path == QLatin1String("record")) {
                 return i18n("Record invitation into my calendar");
-            } else if (path == QStringLiteral("delete")) {
+            } else if (path == QLatin1String("delete")) {
                 return i18n("Move this invitation to my trash folder");
-            } else if (path == QStringLiteral("delegate")) {
+            } else if (path == QLatin1String("delegate")) {
                 return i18n("Delegate invitation");
-            } else if (path == QStringLiteral("forward")) {
+            } else if (path == QLatin1String("forward")) {
                 return i18n("Forward invitation");
-            } else if (path == QStringLiteral("cancel")) {
+            } else if (path == QLatin1String("cancel")) {
                 return i18n("Remove invitation from my calendar");
             } else if (path.startsWith(QStringLiteral("ATTACH:"))) {
                 const QString name = QString::fromUtf8(QByteArray::fromBase64(path.mid(7).toUtf8()));

@@ -31,45 +31,45 @@ void GrantleeContactUtils::insertVariableToQVariantHash(QVariantHash &contactI18
 
 QString GrantleeContactUtils::variableI18n(const QString &variable)
 {
-    if (variable == QStringLiteral("birthdayi18n")) {
+    if (variable == QLatin1String("birthdayi18n")) {
         return i18n("Birthday");
-    } else if (variable == QStringLiteral("anniversaryi18n")) {
+    } else if (variable == QLatin1String("anniversaryi18n")) {
         return i18nc("The wedding anniversary of a contact", "Anniversary");
-    } else if (variable == QStringLiteral("emailsi18n")) {
+    } else if (variable == QLatin1String("emailsi18n")) {
         return i18n("Emails");
-    } else if (variable == QStringLiteral("websitei18n")) {
+    } else if (variable == QLatin1String("websitei18n")) {
         return i18n("Website");
-    } else if (variable == QStringLiteral("blogUrli18n")) {
+    } else if (variable == QLatin1String("blogUrli18n")) {
         return i18n("Blog Feed");
-    } else if (variable == QStringLiteral("addressBookNamei18n")) {
+    } else if (variable == QLatin1String("addressBookNamei18n")) {
         return i18n("Address Book");
-    } else if (variable == QStringLiteral("notei18n")) {
+    } else if (variable == QLatin1String("notei18n")) {
         return i18n("Note");
-    } else if (variable == QStringLiteral("departmenti18n")) {
+    } else if (variable == QLatin1String("departmenti18n")) {
         return i18n("Department");
-    } else if (variable == QStringLiteral("Professioni18n")) {
+    } else if (variable == QLatin1String("Professioni18n")) {
         return i18n("Profession");
-    } else if (variable == QStringLiteral("officei18n")) {
+    } else if (variable == QLatin1String("officei18n")) {
         return i18n("Office");
-    } else if (variable == QStringLiteral("manageri18n")) {
+    } else if (variable == QLatin1String("manageri18n")) {
         return i18n("Manager's Name");
-    } else if (variable == QStringLiteral("assistanti18n")) {
+    } else if (variable == QLatin1String("assistanti18n")) {
         return i18n("Assistant's Name");
-    } else if (variable == QStringLiteral("spousei18n")) {
+    } else if (variable == QLatin1String("spousei18n")) {
         return i18n("Partner's Name");
-    } else if (variable == QStringLiteral("imAddressi18n")) {
+    } else if (variable == QLatin1String("imAddressi18n")) {
         return i18n("IM Address");
-    } else if (variable == QStringLiteral("latitudei18n")) {
+    } else if (variable == QLatin1String("latitudei18n")) {
         return i18n("Latitude");
-    } else if (variable == QStringLiteral("longitudei18n")) {
+    } else if (variable == QLatin1String("longitudei18n")) {
         return i18n("Longitude");
-    } else if (variable == QStringLiteral("organizationi18n")) {
+    } else if (variable == QLatin1String("organizationi18n")) {
         return i18n("Organization");
-    } else if (variable == QStringLiteral("namei18n")) {
+    } else if (variable == QLatin1String("namei18n")) {
         return i18n("Name");
-    } else if (variable == QStringLiteral("titlei18n")) {
+    } else if (variable == QLatin1String("titlei18n")) {
         return i18n("Title");
-    } else if (variable == QStringLiteral("nextcontacti18n")) {
+    } else if (variable == QLatin1String("nextcontacti18n")) {
         return i18n("Contact");
     } else {
         return variable;

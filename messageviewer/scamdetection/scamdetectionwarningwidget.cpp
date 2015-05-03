@@ -72,7 +72,7 @@ void ScamDetectionWarningWidget::slotMessageIsNotAScam()
 
 void ScamDetectionWarningWidget::slotShowDetails(const QString &content)
 {
-    if (content == QStringLiteral("scamdetails")) {
+    if (content == QLatin1String("scamdetails")) {
         Q_EMIT showDetails();
     }
 }

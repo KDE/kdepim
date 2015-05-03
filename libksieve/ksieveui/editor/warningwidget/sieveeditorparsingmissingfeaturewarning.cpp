@@ -71,7 +71,7 @@ QString SieveEditorParsingMissingFeatureWarning::initialScript() const
 
 void SieveEditorParsingMissingFeatureWarning::slotShowDetails(const QString &content)
 {
-    if (content == QStringLiteral("sieveerrordetails")) {
+    if (content == QLatin1String("sieveerrordetails")) {
         QPointer<SieveScriptParsingErrorDialog> dlg = new SieveScriptParsingErrorDialog(this);
         dlg->setError(mScript, mErrors);
         dlg->exec();

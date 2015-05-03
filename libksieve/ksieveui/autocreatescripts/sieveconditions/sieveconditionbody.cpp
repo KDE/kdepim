@@ -110,7 +110,7 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QStringLiteral("tag")) {
+            if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 if (index == 0) {
                     tagValueList << AutoCreateScriptUtil::tagValue(tagValue);
@@ -121,12 +121,12 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
                     qCDebug(LIBKSIEVE_LOG) << " SieveConditionBody::setParamWidgetValue too many argument " << index;
                 }
                 ++index;
-            } else if (tagName == QStringLiteral("str")) {
+            } else if (tagName == QLatin1String("str")) {
                 strValue << e.text();
                 ++indexStr;
-            } else if (tagName == QStringLiteral("crlf")) {
+            } else if (tagName == QLatin1String("crlf")) {
                 //nothing
-            } else if (tagName == QStringLiteral("comment")) {
+            } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

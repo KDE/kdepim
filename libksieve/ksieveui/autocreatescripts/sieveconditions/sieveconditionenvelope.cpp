@@ -129,7 +129,7 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QStringLiteral("tag")) {
+            if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 if (indexTag == 0) {
                     SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox *>(QStringLiteral("addresspartcombobox"));
@@ -142,7 +142,7 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                     qCDebug(LIBKSIEVE_LOG) << "SieveConditionEnvelope::setParamWidgetValue too many argument :" << indexTag;
                 }
                 ++indexTag;
-            } else if (tagName == QStringLiteral("str")) {
+            } else if (tagName == QLatin1String("str")) {
                 if (indexStr == 0) {
                     SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QStringLiteral("headertypecombobox"));
                     selectHeaderType->setCode(e.text());
@@ -154,7 +154,7 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                     qCDebug(LIBKSIEVE_LOG) << "SieveConditionEnvelope::setParamWidgetValue too many argument indexStr " << indexStr;
                 }
                 ++indexStr;
-            } else if (tagName == QStringLiteral("list")) {
+            } else if (tagName == QLatin1String("list")) {
                 if (indexStr == 0) {
                     SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QStringLiteral("headertypecombobox"));
                     selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
@@ -163,9 +163,9 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                     edit->setText(AutoCreateScriptUtil::listValueToStr(e));
                 }
                 ++indexStr;
-            } else if (tagName == QStringLiteral("crlf")) {
+            } else if (tagName == QLatin1String("crlf")) {
                 //nothing
-            } else if (tagName == QStringLiteral("comment")) {
+            } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

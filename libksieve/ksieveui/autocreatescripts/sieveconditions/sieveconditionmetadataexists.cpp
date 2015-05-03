@@ -101,7 +101,7 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QStringLiteral("str")) {
+            if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
                 if (index == 0) {
                     QLineEdit *mailbox = w->findChild<QLineEdit *>(QStringLiteral("mailbox"));
@@ -114,9 +114,9 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
                     qCDebug(LIBKSIEVE_LOG) << " SieveConditionServerMetaDataExists::setParamWidgetValue to many attribute " << index;
                 }
                 ++index;
-            } else if (tagName == QStringLiteral("crlf")) {
+            } else if (tagName == QLatin1String("crlf")) {
                 //nothing
-            } else if (tagName == QStringLiteral("comment")) {
+            } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

@@ -99,11 +99,11 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QStringLiteral("tag")) {
+            if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("matchtypecombobox"));
                 selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition), name(), error);
-            } else if (tagName == QStringLiteral("str")) {
+            } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
                     SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox *>(QStringLiteral("headertype"));
                     headerType->setCode(e.text());
@@ -115,7 +115,7 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     qCDebug(LIBKSIEVE_LOG) << " SieveConditionHeader::setParamWidgetValue too many argument " << index;
                 }
                 ++index;
-            } else if (tagName == QStringLiteral("list")) {
+            } else if (tagName == QLatin1String("list")) {
                 //Header list
                 if (index == 0) {
                     SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox *>(QStringLiteral("headertype"));
@@ -128,9 +128,9 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     qCDebug(LIBKSIEVE_LOG) << " SieveConditionHeader::setParamWidgetValue too many argument " << index;
                 }
                 ++index;
-            } else if (tagName == QStringLiteral("crlf")) {
+            } else if (tagName == QLatin1String("crlf")) {
                 //nothing
-            } else if (tagName == QStringLiteral("comment")) {
+            } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);

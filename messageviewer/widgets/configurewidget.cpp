@@ -100,7 +100,7 @@ void ConfigureWidget::readCurrentFallbackCodec()
     bool found = false;
     for (; it != end; ++it) {
         const QString encoding = NodeHelper::encodingForName(*it);
-        if (encoding == QStringLiteral("ISO-8859-15")) {
+        if (encoding == QLatin1String("ISO-8859-15")) {
             indexOfLatin9 = i;
         }
         if (encoding == currentEncoding) {

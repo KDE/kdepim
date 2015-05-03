@@ -89,10 +89,10 @@ QStringList ParseUserScriptJob::extractActiveScript(const QDomDocument &doc)
         QDomElement e = n.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QStringLiteral("action")) {
+            if (tagName == QLatin1String("action")) {
                 if (e.hasAttribute(QStringLiteral("name"))) {
                     const QString actionName = e.attribute(QStringLiteral("name"));
-                    if (actionName == QStringLiteral("include")) {
+                    if (actionName == QLatin1String("include")) {
                         //Load includes
                         const QString str = loadInclude(e);
                         if (!str.isEmpty()) {
@@ -117,7 +117,7 @@ QString ParseUserScriptJob::loadInclude(const QDomElement &element)
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QStringLiteral("str")) {
+            if (tagName == QLatin1String("str")) {
                 scriptName = e.text();
             }
         }
