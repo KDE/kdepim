@@ -280,10 +280,10 @@ void IncidenceDefaults::setAttachments(const QStringList &attachments,
                             attachment->setLabel(attachmentLabels[ i ]);
                         }
                     } else {
-                        qCritical() << "Error opening " << *it;
+                        qCCritical(INCIDENCEEDITOR_LOG) << "Error opening " << *it;
                     }
                 } else {
-                    qCritical() << "Error downloading uri " << *it
+                    qCCritical(INCIDENCEEDITOR_LOG) << "Error downloading uri " << *it
                                 << KIO::NetAccess::lastErrorString();
                 }
                 // TODO, this method needs better error reporting.

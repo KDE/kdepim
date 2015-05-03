@@ -57,7 +57,7 @@ void FollowUpReminderJob::setItem(const Akonadi::Item &item)
 void FollowUpReminderJob::slotItemFetchJobDone(KJob *job)
 {
     if (job->error()) {
-        qCritical() << "Error while fetching item. " << job->error() << job->errorString();
+        qCCritical(FOLLOWUPREMINDERAGENT_LOG) << "Error while fetching item. " << job->error() << job->errorString();
         deleteLater();
         return;
     }
@@ -66,13 +66,13 @@ void FollowUpReminderJob::slotItemFetchJobDone(KJob *job)
 
     const Akonadi::Item::List items = fetchJob->items();
     if (items.isEmpty()) {
-        qCritical() << "Error while fetching item: item not found";
+        qCCritical(FOLLOWUPREMINDERAGENT_LOG) << "Error while fetching item: item not found";
         deleteLater();
         return;
     }
     const Akonadi::Item item = items.at(0);
     if (!item.hasPayload<KMime::Message::Ptr>()) {
-        qCritical() << "Item has not payload";
+        qCCritical(FOLLOWUPREMINDERAGENT_LOG) << "Item has not payload";
         deleteLater();
         return;
     }

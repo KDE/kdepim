@@ -634,7 +634,7 @@ void IncidenceDialogPrivate::reject(RejectReason reason, const QString &errorMes
     Q_UNUSED(reason);
 
     Q_Q(IncidenceDialog);
-    qCritical() << "Rejecting:" << errorMessage;
+    qCCritical(INCIDENCEEDITOR_LOG) << "Rejecting:" << errorMessage;
     q->deleteLater();
 }
 

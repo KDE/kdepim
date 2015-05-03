@@ -148,14 +148,14 @@ void FilterManager::Private::slotItemsFetchedForFilter(const Akonadi::Item::List
 void FilterManager::Private::itemsFetchJobForFilterDone(KJob *job)
 {
     if (job->error()) {
-        qCritical() << "Error while fetching items. " << job->error() << job->errorString();
+        qCCritical(MAILFILTERAGENT_LOG) << "Error while fetching items. " << job->error() << job->errorString();
     }
 }
 
 void FilterManager::Private::itemFetchJobForFilterDone(KJob *job)
 {
     if (job->error()) {
-        qCritical() << "Error while fetching item. " << job->error() << job->errorString();
+        qCCritical(MAILFILTERAGENT_LOG) << "Error while fetching item. " << job->error() << job->errorString();
         return;
     }
 
@@ -163,7 +163,7 @@ void FilterManager::Private::itemFetchJobForFilterDone(KJob *job)
 
     const Akonadi::Item::List items = fetchJob->items();
     if (items.isEmpty()) {
-        qCritical() << "Error while fetching item: item not found";
+        qCCritical(MAILFILTERAGENT_LOG) << "Error while fetching item: item not found";
         return;
     }
 
@@ -183,7 +183,7 @@ void FilterManager::Private::itemFetchJobForFilterDone(KJob *job)
         }
 
         if (!wantedFilter) {
-            qCritical() << "Cannot find filter object with id" << filterId;
+            qCCritical(MAILFILTERAGENT_LOG) << "Cannot find filter object with id" << filterId;
             return;
         }
 
@@ -204,10 +204,10 @@ void FilterManager::Private::moveJobResult(KJob *job)
     if (job->error()) {
         const Akonadi::ItemMoveJob *movejob = qobject_cast<Akonadi::ItemMoveJob *>(job);
         if (movejob) {
-            qCritical() << "Error while moving items. " << job->error() << job->errorString()
+            qCCritical(MAILFILTERAGENT_LOG) << "Error while moving items. " << job->error() << job->errorString()
                         << " to destinationCollection.id() :" << movejob->destinationCollection().id();
         } else {
-            qCritical() << "Error while moving items. " << job->error() << job->errorString();
+            qCCritical(MAILFILTERAGENT_LOG) << "Error while moving items. " << job->error() << job->errorString();
         }
         //Laurent: not real info and when we have 200 errors it's very long to click all the time on ok.
         showNotification(i18n("Error applying mail filter move"), job->errorString());
@@ -217,7 +217,7 @@ void FilterManager::Private::moveJobResult(KJob *job)
 void FilterManager::Private::deleteJobResult(KJob *job)
 {
     if (job->error()) {
-        qCritical() << "Error while delete items. " << job->error() << job->errorString();
+        qCCritical(MAILFILTERAGENT_LOG) << "Error while delete items. " << job->error() << job->errorString();
         showNotification(i18n("Error applying mail filter delete"), job->errorString());
     }
 }
@@ -225,7 +225,7 @@ void FilterManager::Private::deleteJobResult(KJob *job)
 void FilterManager::Private::modifyJobResult(KJob *job)
 {
     if (job->error()) {
-        qCritical() << "Error while modifying items. " << job->error() << job->errorString();
+        qCCritical(MAILFILTERAGENT_LOG) << "Error while modifying items. " << job->error() << job->errorString();
         showNotification(i18n("Error applying mail filter modifications"), job->errorString());
     }
 }
@@ -407,7 +407,7 @@ bool FilterManager::process(const Akonadi::Item &item, bool needsFullPayload, co
     }
 
     if (!item.hasPayload<KMime::Message::Ptr>()) {
-        qCritical() << "Filter is null or item doesn't have correct payload.";
+        qCCritical(MAILFILTERAGENT_LOG) << "Filter is null or item doesn't have correct payload.";
         return false;
     }
 
@@ -483,7 +483,7 @@ bool FilterManager::process(const QList< MailFilter * > &mailFilters, const Akon
     }
 
     if (!item.hasPayload<KMime::Message::Ptr>()) {
-        qCritical() << "Filter is null or item doesn't have correct payload.";
+        qCCritical(MAILFILTERAGENT_LOG) << "Filter is null or item doesn't have correct payload.";
         return false;
     }
 

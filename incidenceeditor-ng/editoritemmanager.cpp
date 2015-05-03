@@ -98,7 +98,7 @@ void ItemEditorPrivate::moveJobFinished(KJob *job)
 {
     Q_Q(EditorItemManager);
     if (job->error()) {
-        qCritical() << "Error while moving and modifying " << job->errorString();
+        qCCritical(INCIDENCEEDITOR_LOG) << "Error while moving and modifying " << job->errorString();
         mItemUi->reject(ItemEditorUi::ItemMoveFailed, job->errorString());
     } else {
         Akonadi::Item item(mItem.id());
@@ -149,7 +149,7 @@ void ItemEditorPrivate::itemMoveResult(KJob *job)
         Q_UNUSED(moveJob);
         //Q_ASSERT( !moveJob->items().isEmpty() );
         // TODO: What is reasonable behavior at this point?
-        qCritical() << "Error while moving item ";// << moveJob->items().first().id() << " to collection "
+        qCCritical(INCIDENCEEDITOR_LOG) << "Error while moving item ";// << moveJob->items().first().id() << " to collection "
         //<< moveJob->destinationCollection() << job->errorString();
         Q_EMIT q->itemSaveFailed(EditorItemManager::Move, job->errorString());
     } else {
@@ -181,7 +181,7 @@ void ItemEditorPrivate::onModifyFinished(int, const Akonadi::Item &item,
         Q_EMIT q->itemSaveFailed(EditorItemManager::Modify, QString());
         q->load(Akonadi::Item(mItem.id()));
     } else {
-        qCritical() << "Modify failed " << errorString;
+        qCCritical(INCIDENCEEDITOR_LOG) << "Modify failed " << errorString;
         Q_EMIT q->itemSaveFailed(EditorItemManager::Modify, errorString);
     }
 }
@@ -197,7 +197,7 @@ void ItemEditorPrivate::onCreateFinished(int,
         Q_EMIT q->itemSaveFinished(EditorItemManager::Create);
         setupMonitor();
     } else {
-        qCritical() << "Creation failed " << errorString;
+        qCCritical(INCIDENCEEDITOR_LOG) << "Creation failed " << errorString;
         Q_EMIT q->itemSaveFailed(EditorItemManager::Create, errorString);
     }
 }
@@ -342,7 +342,7 @@ void EditorItemManager::save()
 
             // ETM and the KSelectionProxyModel has a bug wrt collections moves, so this is disabled.
             // To test this, enable the collection combo-box and remove the following assert.
-            qCritical() << "Moving between collections is disabled for now: "
+            qCCritical(INCIDENCEEDITOR_LOG) << "Moving between collections is disabled for now: "
                         << d->mItemUi->selectedCollection().id()
                         << d->mItem.parentCollection().id();
             Q_ASSERT_X(false, "save()", "Moving between collections is disabled for now");
