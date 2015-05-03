@@ -42,7 +42,7 @@ TagCache::TagCache()
     retrieveTags();
 }
 
-const Akonadi::Tag &TagCache::getTagByGid(const QByteArray &gid) const
+Akonadi::Tag TagCache::getTagByGid(const QByteArray &gid) const
 {
     return mCache.value(mGidCache.value(gid));
 }

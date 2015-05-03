@@ -41,7 +41,7 @@ class TagCache : public QObject
     Q_OBJECT
 public:
     TagCache();
-    const Akonadi::Tag &getTagByGid(const QByteArray &gid) const;
+    Akonadi::Tag getTagByGid(const QByteArray &gid) const;
 
 private Q_SLOTS:
     void onTagAdded(const Akonadi::Tag &);
