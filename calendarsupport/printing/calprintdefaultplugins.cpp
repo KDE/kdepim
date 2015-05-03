@@ -141,7 +141,7 @@ public:
     QString mDurationCaption, mDurationString;
 
 protected:
-    bool visit(KCalCore::Event::Ptr event)
+    bool visit(const KCalCore::Event::Ptr &event)
     {
         if (event->dtStart().isValid()) {
             mStartCaption =  i18n("Start date: ");
@@ -171,7 +171,7 @@ protected:
         }
         return true;
     }
-    bool visit(KCalCore::Todo::Ptr todo)
+    bool visit(const KCalCore::Todo::Ptr &todo)
     {
         if (todo->hasStartDate()) {
             mStartCaption =  i18n("Start date: ");
@@ -192,7 +192,7 @@ protected:
         }
         return true;
     }
-    bool visit(KCalCore::Journal::Ptr journal)
+    bool visit(const KCalCore::Journal::Ptr &journal)
     {
         mStartCaption = i18n("Start date: ");
         mStartString = KCalUtils::IncidenceFormatter::dateTimeToString(
@@ -201,7 +201,7 @@ protected:
         mEndString.clear();
         return true;
     }
-    bool visit(KCalCore::FreeBusy::Ptr fb)
+    bool visit(const KCalCore::FreeBusy::Ptr &fb)
     {
         Q_UNUSED(fb);
         return true;
