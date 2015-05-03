@@ -1024,10 +1024,10 @@ QString ViewerPrivate::writeMsgHeader(KMime::Message *aMsg, KMime::Content *vCar
                                       bool topLevel)
 {
     if (!headerStyle()) {
-        qCritical() << "trying to writeMsgHeader() without a header style set!";
+        qCCritical(MESSAGEVIEWER_LOG) << "trying to writeMsgHeader() without a header style set!";
     }
     if (!headerStrategy()) {
-        qCritical() << "trying to writeMsgHeader() without a header strategy set!";
+        qCCritical(MESSAGEVIEWER_LOG) << "trying to writeMsgHeader() without a header strategy set!";
     }
     QString href;
     if (vCardNode) {

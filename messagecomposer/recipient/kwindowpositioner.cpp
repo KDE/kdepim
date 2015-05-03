@@ -44,7 +44,7 @@ void KWindowPositioner::reposition()
         relativePos = QPoint(mMaster->width() - mSlave->frameGeometry().width(),
                              mMaster->height());
     } else {
-        qCritical() << "KWindowPositioner: Illegal mode";
+        qCCritical(MESSAGECOMPOSER_LOG) << "KWindowPositioner: Illegal mode";
     }
     QPoint pos = mMaster->mapToGlobal(relativePos);
 

@@ -157,7 +157,7 @@ bool MainTextJobPrivate::encodeTexts()
     Q_Q(MainTextJob);
     QTextCodec *codec = KCharsets::charsets()->codecForName(QString::fromLatin1(chosenCharset));
     if (!codec) {
-        qCritical() << "Could not get text codec for charset" << chosenCharset;
+        qCCritical(MESSAGECOMPOSER_LOG) << "Could not get text codec for charset" << chosenCharset;
         q->setError(JobBase::BugError);
         q->setErrorText(i18n("Could not get text codec for charset \"%1\".", QString::fromLatin1(chosenCharset)));
         return false;

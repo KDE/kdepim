@@ -531,7 +531,7 @@ void Composer::removeAttachmentPart(AttachmentPart::Ptr part)
     if (d->attachmentParts.contains(part)) {
         d->attachmentParts.removeAll(part);
     } else {
-        qCritical() << "Unknown attachment part" << part.get();
+        qCCritical(MESSAGECOMPOSER_LOG) << "Unknown attachment part" << part.get();
         Q_ASSERT(false);
         return;
     }

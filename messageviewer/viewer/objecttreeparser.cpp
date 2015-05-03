@@ -364,7 +364,7 @@ void ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node)
             const BodyPartFormatter *bpf
                 = BodyPartFormatter::createFor(mediaType, subType);
             if (!bpf) {
-                qCritical() << "THIS SHOULD NO LONGER HAPPEN:" << mediaType << '/' << subType;
+                qCCritical(MESSAGEVIEWER_LOG) << "THIS SHOULD NO LONGER HAPPEN:" << mediaType << '/' << subType;
             }
             writeAttachmentMarkHeader(node);
             if (bpf && !bpf->process(this, node, processResult)) {

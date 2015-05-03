@@ -52,7 +52,7 @@ GlobalPart *JobBase::globalPart()
         }
     }
 
-    qCritical() << "Job is not part of a Composer.";
+    qCCritical(MESSAGECOMPOSER_LOG) << "Job is not part of a Composer.";
     return Q_NULLPTR;
 }
 

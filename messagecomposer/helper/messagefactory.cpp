@@ -966,7 +966,7 @@ void MessageFactory::applyCharset(const KMime::Message::Ptr msg)
 
         QTextCodec *codec = KCharsets::charsets()->codecForName(QString::fromLatin1(msg->contentType()->charset()));
         if (!codec) {
-            qCritical() << "Could not get text codec for charset" << msg->contentType()->charset();
+            qCCritical(MESSAGECOMPOSER_LOG) << "Could not get text codec for charset" << msg->contentType()->charset();
         } else if (!codec->canEncode(body)) {     // charset can't encode body, fall back to preferred
             const QStringList charsets = MessageComposer::MessageComposerSettings::preferredCharsets();
 

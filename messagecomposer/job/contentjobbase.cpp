@@ -100,7 +100,7 @@ KMime::Content *ContentJobBase::extraContent() const
 bool ContentJobBase::addSubjob(KJob *job)
 {
     Q_UNUSED(job);
-    qCritical() << "Use appendJob() instead.";
+    qCCritical(MESSAGECOMPOSER_LOG) << "Use appendJob() instead.";
     Q_ASSERT(false);
     return false;
 }

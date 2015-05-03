@@ -38,6 +38,7 @@
 #include "header/plainheaderstyle.h"
 #include "header/entrepriseheaderstyle.h"
 #include "header/fancyheaderstyle.h"
+#include "messageviewer_debug.h"
 
 #include <KLocalizedString>
 
@@ -83,7 +84,7 @@ HeaderStyle *HeaderStyle::create(Type type)
     case Custom: return custom();
     case Grantlee: return grantlee();
     }
-    qCritical() << "Unknown header style ( type ==" << (int)type << ") requested!";
+    qCCritical(MESSAGEVIEWER_LOG) << "Unknown header style ( type ==" << (int)type << ") requested!";
     return 0; // make compiler happy
 }
 
