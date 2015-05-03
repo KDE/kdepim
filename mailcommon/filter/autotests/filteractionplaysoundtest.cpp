@@ -56,4 +56,11 @@ void FilterActionPlaySoundTest::shouldHaveRequiredPart()
     QCOMPARE(filter.requiredPart(), MailCommon::SearchRule::Envelope);
 }
 
+void FilterActionPlaySoundTest::shouldSieveRequres()
+{
+    MailCommon::FilterActionPlaySound w;
+    QCOMPARE(w.sieveRequires(), QStringList());
+
+}
+
 QTEST_KDEMAIN(FilterActionPlaySoundTest, GUI)
