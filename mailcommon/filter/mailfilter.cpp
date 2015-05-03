@@ -247,7 +247,7 @@ SearchRule::RequiredPart MailFilter::requiredPart(const QString& id) const
     int requiredPart = SearchRule::Envelope;
 
     if (!bEnabled || !applyOnAccount(id))
-        return SearchRule::Envelope;
+        return static_cast<SearchRule::RequiredPart>(requiredPart);
 
     if (pattern())
         requiredPart = qMax( requiredPart, (int)pattern()->requiredPart() ) ; // no pattern means always matches?
