@@ -70,12 +70,12 @@ void StorageServiceProgressManager::addProgress(PimCommon::StorageServiceAbstrac
 
         mHashList.insert(storageService->storageServiceName(), job);
         connect(progressItem, &KPIM::ProgressItem::progressItemCanceled, this, &StorageServiceProgressManager::slotProgressItemCanceled);
-        connect(storageService, SIGNAL(uploadFileDone(QString,QString)), SLOT(slotUploadFileDone(QString,QString)), Qt::UniqueConnection);
-        connect(storageService, SIGNAL(uploadFileFailed(QString,QString)), SLOT(slotUploadFileFailed(QString,QString)), Qt::UniqueConnection);
-        connect(storageService, SIGNAL(downLoadFileDone(QString,QString)), SLOT(slotDownloadFileDone(QString,QString)), Qt::UniqueConnection);
-        connect(storageService, SIGNAL(downLoadFileFailed(QString,QString)), SLOT(slotDownloadFileFailed(QString,QString)), Qt::UniqueConnection);
-        connect(storageService, SIGNAL(actionFailed(QString,QString)), SLOT(slotActionFailed(QString,QString)), Qt::UniqueConnection);
-        connect(storageService, SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), SLOT(slotDownloadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
+        connect(storageService, &StorageServiceAbstract::uploadFileDone, this, &StorageServiceProgressManager::slotUploadFileDone, Qt::UniqueConnection);
+        connect(storageService, &StorageServiceAbstract::uploadFileFailed, this, &StorageServiceProgressManager::slotUploadFileFailed, Qt::UniqueConnection);
+        connect(storageService, &StorageServiceAbstract::downLoadFileDone, this, &StorageServiceProgressManager::slotDownloadFileDone, Qt::UniqueConnection);
+        connect(storageService, &StorageServiceAbstract::downLoadFileFailed, this, &StorageServiceProgressManager::slotDownloadFileFailed, Qt::UniqueConnection);
+        connect(storageService, &StorageServiceAbstract::actionFailed, this, &StorageServiceProgressManager::slotActionFailed, Qt::UniqueConnection);
+        connect(storageService, &StorageServiceAbstract::uploadDownloadFileProgress, this, &StorageServiceProgressManager::slotDownloadFileProgress, Qt::UniqueConnection);
     }
 }
 

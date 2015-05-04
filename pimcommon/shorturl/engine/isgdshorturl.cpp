@@ -26,7 +26,7 @@ using namespace PimCommon;
 IsGdShortUrl::IsGdShortUrl(QObject *parent)
     : PimCommon::AbstractShortUrl(parent)
 {
-    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(slotSslErrors(QNetworkReply*,QList<QSslError>)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::sslErrors, this, &IsGdShortUrl::slotSslErrors);
 }
 
 IsGdShortUrl::~IsGdShortUrl()

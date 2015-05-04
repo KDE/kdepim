@@ -44,7 +44,7 @@ public:
     {
         if (!actions().contains(action)) {
             addAction(action);
-            connect(this, SIGNAL(clicked()), action, SLOT(trigger()));
+            connect(this, &QAbstractButton::clicked, action, &QAction::trigger);
         }
 
         setText(action->text());

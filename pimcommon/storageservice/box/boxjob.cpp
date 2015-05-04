@@ -32,7 +32,7 @@ using namespace PimCommon;
 BoxJob::BoxJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &BoxJob::slotSendDataFinished);
 
     mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     mClientId = PimCommon::StorageServiceJobConfig::self()->boxClientId();

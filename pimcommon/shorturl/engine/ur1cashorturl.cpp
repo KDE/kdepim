@@ -25,7 +25,7 @@ using namespace PimCommon;
 Ur1CaShortUrl::Ur1CaShortUrl(QObject *parent)
     : PimCommon::AbstractShortUrl(parent)
 {
-    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(slotSslErrors(QNetworkReply*,QList<QSslError>)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::sslErrors, this, &Ur1CaShortUrl::slotSslErrors);
 }
 
 Ur1CaShortUrl::~Ur1CaShortUrl()
