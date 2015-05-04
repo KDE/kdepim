@@ -24,7 +24,7 @@ class MailFilterTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit MailFilterTest(QObject *parent = 0);
+    explicit MailFilterTest(QObject *parent = Q_NULLPTR);
     ~MailFilterTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
