@@ -806,12 +806,12 @@ QStringList CalendarSupport::categories(const KCalCore::Incidence::List &inciden
 bool CalendarSupport::mergeCalendar(const QString &srcFilename, const KCalCore::Calendar::Ptr &destCalendar)
 {
     if (srcFilename.isEmpty()) {
-        qCritical() << "Empty filename.";
+        qCCritical(CALENDARSUPPORT_LOG) << "Empty filename.";
         return false;
     }
 
     if (!QFile::exists(srcFilename)) {
-        qCritical() << "File'" << srcFilename << "' doesn't exist.";
+        qCCritical(CALENDARSUPPORT_LOG) << "File'" << srcFilename << "' doesn't exist.";
     }
 
     bool loadedSuccesfully = true;

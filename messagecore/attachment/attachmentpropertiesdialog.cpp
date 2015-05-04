@@ -326,7 +326,7 @@ AttachmentPropertiesDialog::AttachmentPropertiesDialog(const KMime::Content *con
     AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob(content, this);
     job->exec();
     if (job->error()) {
-        qCritical() << "AttachmentFromMimeContentJob failed." << job->errorString();
+        qCCritical(MESSAGECORE_LOG) << "AttachmentFromMimeContentJob failed." << job->errorString();
     }
 
     const AttachmentPart::Ptr part = job->attachmentPart();

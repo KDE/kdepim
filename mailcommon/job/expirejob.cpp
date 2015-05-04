@@ -218,7 +218,7 @@ void ExpireJob::done()
 void ExpireJob::slotMoveDone(KJob *job)
 {
     if (job->error()) {
-        qCritical() << job->error() << job->errorString();
+        qCCritical(MAILCOMMON_LOG) << job->error() << job->errorString();
     }
     Akonadi::ItemMoveJob *itemjob = dynamic_cast<Akonadi::ItemMoveJob *>(job);
     if (itemjob) {
@@ -247,7 +247,7 @@ void ExpireJob::slotMoveDone(KJob *job)
 void ExpireJob::slotExpireDone(KJob *job)
 {
     if (job->error()) {
-        qCritical() << job->error() << job->errorString();
+        qCCritical(MAILCOMMON_LOG) << job->error() << job->errorString();
     }
 
     QString msg;

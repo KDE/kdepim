@@ -713,7 +713,7 @@ public:
         if (itipHandler->result() == Akonadi::ITIPHandler::ResultError) {
             const QString errorMessage = itipHandler->errorMessage();
             if (!errorMessage.isEmpty()) {
-                qCritical() << "Error while processing invitation: " << errorMessage;
+                qCCritical(TEXT_CALENDAR_LOG) << "Error while processing invitation: " << errorMessage;
                 KMessageBox::error(0, errorMessage);
             }
         }
