@@ -364,12 +364,13 @@ void KMFilterListBox::slotApplyFilterChanges( KDialog::ButtonCode button )
     // by now all edit widgets should have written back
     // their widget's data into our filter list.
 
-    const QList<MailFilter*> newFilters = filtersForSaving( closeAfterSaving );
-
-    MailCommon::FilterManager::instance()->setFilters( newFilters );
+    bool wasCanceled = false;
+    const QList<MailFilter*> newFilters = filtersForSaving( closeAfterSaving, wasCanceled );
+    if (!wasCanceled)
+        MailCommon::FilterManager::instance()->setFilters( newFilters );
 }
 
-QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving ) const
+QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving, bool &wasCanceled ) const
 {
     const_cast<KMFilterListBox*>( this )->applyWidgets(); // signals aren't const
     QList<MailFilter *> filters;
@@ -400,22 +401,16 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving ) c
             dlg->setInvalidFilters(listInvalidFilters);
             if (!dlg->exec()) {
                 emit abortClosing();
+                wasCanceled = true;
             }
             delete dlg;
         } else {
-#if 0
-            MailCommon::InvalidFilterDialog dlg;
-            dlg.setInvalidFilters(listInvalidFilters);
-            dlg.exec();
-#endif
-            // Apply clicked. Just warn.
-            KMessageBox::informationList(
-                        0,
-                        i18n( "The following filters have not been saved because they were invalid "
-                              "(e.g. containing no actions or no search rules)." ),
-                        emptyFilters,
-                        QString(),
-                        QLatin1String("ShowInvalidFilterWarning") );
+            QPointer<MailCommon::InvalidFilterDialog> dlg = new MailCommon::InvalidFilterDialog(0);
+            dlg->setInvalidFilters(listInvalidFilters);
+            if (!dlg->exec()) {
+                wasCanceled = true;
+            }
+            delete dlg;
         }
     }
     return filters;

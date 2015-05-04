@@ -739,7 +739,8 @@ void KMFilterDialog::importFilters( MailCommon::FilterImporterExporter::FilterTy
 void KMFilterDialog::slotExportFilters()
 {
     FilterImporterExporter exporter( this );
-    QList<MailFilter *> filters = mFilterList->filtersForSaving( false );
+    bool wasCanceled = false;
+    const QList<MailFilter *> filters = mFilterList->filtersForSaving( false, wasCanceled );
     exporter.exportFilters( filters );
 }
 
@@ -768,7 +769,8 @@ void KMFilterDialog::slotExportAsSieveScript()
         return;
     }
     KMessageBox::information(this, i18n("We cannot convert all KMail filters to sieve scripts but we can try :)"), i18n("Convert KMail filters to sieve scripts"));
-    QList<MailFilter *> filters = mFilterList->filtersForSaving( false );
+    bool wasCanceled = false;
+    const QList<MailFilter *> filters = mFilterList->filtersForSaving( false, wasCanceled );
     QPointer<FilterSelectionDialog> dlg = new FilterSelectionDialog( this );
     dlg->setFilters( filters );
     if ( dlg->exec() == QDialog::Accepted ) {
