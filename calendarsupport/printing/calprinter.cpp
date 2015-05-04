@@ -185,7 +185,6 @@ CalPrintDialog::CalPrintDialog(int initialPrintType, PrintPlugin::List plugins,
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &CalPrintDialog::slotOk);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &CalPrintDialog::reject);
-    mainLayout->addWidget(buttonBox);
     setModal(true);
     QWidget *page = new QWidget(this);
     QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);

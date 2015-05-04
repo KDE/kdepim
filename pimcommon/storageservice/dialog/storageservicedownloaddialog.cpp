@@ -79,8 +79,6 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     mUser1Button->setText(i18n("Download"));
 
     QWidget *w = new QWidget;
-    mainLayout->addWidget(w);
-    mainLayout->addWidget(buttonBox);
 
     QVBoxLayout *vbox = new QVBoxLayout;
 
@@ -102,6 +100,7 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     mProgressWidget->hide();
     w->setLayout(vbox);
     mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     mUser1Button->setEnabled(false);
     connect(mUser1Button, &QPushButton::clicked, this, &StorageServiceDownloadDialog::slotDownloadFile);
     connect(mStorage, &PimCommon::StorageServiceAbstract::listFolderDone, this, &StorageServiceDownloadDialog::slotListFolderDone);

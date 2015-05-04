@@ -38,7 +38,6 @@ SieveScriptParsingErrorDialog::SieveScriptParsingErrorDialog(QWidget *parent)
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveScriptParsingErrorDialog::reject);
-    mainLayout->addWidget(buttonBox);
     user1Button->setText(i18n("Save As..."));
 
     mTextEdit = new PimCommon::RichTextEditorWidget(this);

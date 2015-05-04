@@ -60,8 +60,6 @@ CompletionConfigureDialog::CompletionConfigureDialog(QWidget *parent)
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotSave()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     mainLayout->addWidget(buttonBox);
-
-    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 

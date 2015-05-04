@@ -116,7 +116,6 @@ DistributionListDialog::DistributionListDialog(QWidget *parent)
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &DistributionListDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &DistributionListDialog::reject);
-    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
     mainLayout->addWidget(buttonBox);
     mUser1Button->setDefault(true);
     setModal(false);

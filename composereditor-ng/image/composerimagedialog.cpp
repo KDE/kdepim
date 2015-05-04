@@ -142,7 +142,6 @@ void ComposerImageDialogPrivate::initialize()
     okButton->setText(i18n("Insert"));
 
     QWidget *w = new QWidget;
-    mainLayout->addWidget(buttonBox);
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
     lay->setSpacing(0);

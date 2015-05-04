@@ -57,7 +57,6 @@ NoteAlarmDialog::NoteAlarmDialog(const QString &caption, QWidget *parent)
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &NoteAlarmDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &NoteAlarmDialog::reject);
-    mainLayout->addWidget(buttonBox);
     QWidget *page = new QWidget(this);
     QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
     pageVBoxLayout->setMargin(0);
