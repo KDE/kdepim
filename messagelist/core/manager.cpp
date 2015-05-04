@@ -156,7 +156,7 @@ void Manager::registerWidget(Widget *pWidget)
 void Manager::unregisterWidget(Widget *pWidget)
 {
     if (!mInstance) {
-        qWarning("ERROR: MessageList::Manager::unregisterWidget() called when Manager::mInstance is 0");
+        qCWarning(MESSAGELIST_LOG) << ("ERROR: MessageList::Manager::unregisterWidget() called when Manager::mInstance is 0");
         return;
     }
 
