@@ -183,6 +183,7 @@ protected:
 #endif
 
     QStringList cleanupEmailList(const QStringList &inputList);
+    virtual void configureCompletionOrder(QMenu *menu);
 private:
     virtual bool eventFilter( QObject *, QEvent * );
 

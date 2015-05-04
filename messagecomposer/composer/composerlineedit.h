@@ -47,6 +47,7 @@ protected:
 
     virtual void keyPressEvent(QKeyEvent*);
 
+    virtual void configureCompletionOrder(QMenu *menu);
 #ifndef QT_NO_CONTEXTMENU
     virtual void contextMenuEvent( QContextMenuEvent*e );
 #endif

@@ -205,17 +205,24 @@ void ComposerLineEdit::groupDropExpandResult( KJob* job )
 void ComposerLineEdit::contextMenuEvent( QContextMenuEvent*e )
 {
     QPointer<QMenu> popup = createStandardContextMenu();
-    if ( popup ) { // can be 0 on platforms with only a touch interface
-        if (isCompletionEnabled()) {
-            popup->addSeparator();
-            QAction* act = popup->addAction( i18n( "Edit Recent Addresses..." ));
-            connect(act,SIGNAL(triggered(bool)), SLOT(editRecentAddresses()) );
-        }
+    if (popup) {
         popup->exec( e->globalPos() );
         delete popup;
     }
 }
 #endif
+
+void ComposerLineEdit::configureCompletionOrder(QMenu *menu)
+{
+    KPIM::AddresseeLineEdit::configureCompletionOrder(menu);
+    if ( menu ) { // can be 0 on platforms with only a touch interface
+        if (isCompletionEnabled()) {
+            menu->addSeparator();
+            QAction* act = menu->addAction( i18n( "Edit Recent Addresses..." ));
+            connect(act,SIGNAL(triggered(bool)), SLOT(editRecentAddresses()) );
+        }
+    }
+}
 
 void ComposerLineEdit::editRecentAddresses()
 {
