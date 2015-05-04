@@ -72,6 +72,11 @@ void BalooSyntaxHighlighter::init()
     //NickName
     testType << QLatin1String("\\bNI");
 
+    //Calendar
+    testType << QLatin1String("\\bO");
+    testType << QLatin1String("\\bPS");
+    testType << QLatin1String("\\bS");
+    testType << QLatin1String("\\bL");
 
     Q_FOREACH ( const QString &s, testType ) {
         const QRegExp regex( s, Qt::CaseSensitive );

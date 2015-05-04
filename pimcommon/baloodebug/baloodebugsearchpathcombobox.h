@@ -29,7 +29,8 @@ public:
         Contacts = 0,
         ContactCompleter,
         Emails,
-        Notes
+        Notes,
+        Calendars
     };
     explicit BalooDebugSearchPathComboBox(QWidget *parent=0);
     ~BalooDebugSearchPathComboBox();
