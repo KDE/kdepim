@@ -34,7 +34,7 @@ YouSendItJob::YouSendItJob(QObject *parent)
 {
     mApiKey = PimCommon::StorageServiceJobConfig::self()->youSendItApiKey();
     mDefaultUrl = QLatin1String("https://test2-api.yousendit.com");
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &YouSendItJob::slotSendDataFinished);
 }
 
 YouSendItJob::~YouSendItJob()

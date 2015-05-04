@@ -1024,7 +1024,7 @@ void MainWidget::slotSendVcards()
     const Akonadi::Item::List lst = collectSelectedAllContactsItem(mItemView->selectionModel());
     if (!lst.isEmpty()) {
         KABSendVCards::SendVcardsJob *sendVcards = new KABSendVCards::SendVcardsJob(lst, this);
-        connect(sendVcards, SIGNAL(sendVCardsError(QString)), this, SLOT(slotSendVcardsError(QString)));
+        connect(sendVcards, &KABSendVCards::SendVcardsJob::sendVCardsError, this, &MainWidget::slotSendVcardsError);
         sendVcards->start();
     }
 }
