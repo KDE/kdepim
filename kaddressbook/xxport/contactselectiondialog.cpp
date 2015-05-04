@@ -31,7 +31,6 @@ ContactSelectionDialog::ContactSelectionDialog(QItemSelectionModel *selectionMod
       mVCardExport(Q_NULLPTR)
 {
     setWindowTitle(i18n("Select Contacts"));
-    //PORTING SCRIPT: Move QDialogButtonBox at the end of init of widget to add it in layout.
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout;

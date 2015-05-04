@@ -66,8 +66,6 @@ public:
         connect(buttonBox, &QDialogButtonBox::accepted, this, &TextDialog::accept);
         connect(buttonBox, &QDialogButtonBox::rejected, this, &TextDialog::reject);
 
-        mainLayout->addWidget(buttonBox);
-
         mText = new KTextEdit;
         mainLayout->addWidget(mText);
         mainLayout->addWidget(buttonBox);
