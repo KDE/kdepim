@@ -264,6 +264,9 @@
      </widget>
      <widget class="QWidget" name="AudioStack">
       <layout class="QGridLayout" name="gridLayout_2">
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="mSoundFileLabel">
          <property name="text">
@@ -310,6 +313,9 @@
      </widget>
      <widget class="QWidget" name="ApplicationStack">
       <layout class="QGridLayout" name="gridLayout_3">
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="mApplicationLabel">
          <property name="text">
@@ -373,6 +379,9 @@
      </widget>
      <widget class="QWidget" name="EmailStack">
       <layout class="QGridLayout" name="gridLayout_4">
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="mEmailToLabel">
          <property name="text">
@@ -431,11 +440,6 @@ default email configured in Kmail (Settings menu/Configure Kmail/Identities).</s
    <header>libkdepim/addressline/addresslineedit/addresseelineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KUrlRequester</class>
-   <extends>QFrame</extends>
-   <header>kurlrequester.h</header>
-  </customwidget>
-  <customwidget>
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
@@ -444,6 +448,11 @@ default email configured in Kmail (Settings menu/Configure Kmail/Identities).</s
    <class>KTextEdit</class>
    <extends>QTextEdit</extends>
    <header>ktextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KUrlRequester</class>
+   <extends>QFrame</extends>
+   <header>kurlrequester.h</header>
   </customwidget>
  </customwidgets>
  <includes>

@@ -186,6 +186,7 @@ protected:
 #endif
 
     QStringList cleanupEmailList(const QStringList &inputList);
+    virtual void configureCompletionOrder(QMenu *menu);
 private:
     bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
 

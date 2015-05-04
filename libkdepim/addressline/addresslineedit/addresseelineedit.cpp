@@ -422,9 +422,16 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
         return Q_NULLPTR;
     }
 
-    if (d->useCompletion()) {
-        menu->addAction(i18n("Configure Completion Order..."),
-                        d, SLOT(slotEditCompletionOrder()));
+    configureCompletionOrder(menu);
+    return menu;
+}
+#endif
+
+void KPIM::AddresseeLineEdit::configureCompletionOrder(QMenu *menu)
+{
+    if ( d->useCompletion() ) {
+        menu->addAction( i18n( "Configure Completion Order..." ),
+                         d, SLOT(slotEditCompletionOrder()) );
 
         QAction *showOU = new QAction(i18n("Show Organization Unit for LDAP results"), menu);
         showOU->setCheckable(true);
@@ -436,10 +443,7 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
         connect(configureBalooBlackList, SIGNAL(triggered(bool)), d, SLOT(slotConfigureBalooBlackList()));
         menu->addAction(configureBalooBlackList);
     }
-
-    return menu;
 }
-#endif
 
 void KPIM::AddresseeLineEdit::removeCompletionSource(const QString &source)
 {

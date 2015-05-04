@@ -280,27 +280,34 @@ void ComposerLineEdit::slotToggleExpandGroups()
 void ComposerLineEdit::contextMenuEvent(QContextMenuEvent *e)
 {
     QPointer<QMenu> popup = createStandardContextMenu();
-    if (popup) {   // can be 0 on platforms with only a touch interface
+    if (popup) {
+        popup->exec( e->globalPos() );
+        delete popup;
+    }
+}
+#endif
+
+void ComposerLineEdit::configureCompletionOrder(QMenu *menu)
+{
+    KPIM::AddresseeLineEdit::configureCompletionOrder(menu);
+    if ( menu ) { // can be 0 on platforms with only a touch interface
         if (isCompletionEnabled()) {
-            popup->addSeparator();
-            QAction *act = popup->addAction(i18n("Edit Recent Addresses..."));
+            menu->addSeparator();
+            QAction *act = menu->addAction(i18n("Edit Recent Addresses..."));
             connect(act, &QAction::triggered, this, &ComposerLineEdit::editRecentAddresses);
         }
-        popup->addSeparator();
-        QAction *act = popup->addAction(i18n("Automatically expand groups"));
+        menu->addSeparator();
+        QAction *act = menu->addAction(i18n("Automatically expand groups"));
         act->setCheckable(true);
         act->setChecked(mAutoGroupExpand);
         connect(act, &QAction::triggered, this, &ComposerLineEdit::slotToggleExpandGroups);
 
         if (!mGroups.isEmpty()) {
-            act = popup->addAction(i18n("Expand Groups..."));
+            act = menu->addAction(i18n("Expand Groups..."));
             connect(act, &QAction::triggered, this, &ComposerLineEdit::expandGroups);
         }
-        popup->exec(e->globalPos());
-        delete popup;
     }
 }
-#endif
 
 void ComposerLineEdit::editRecentAddresses()
 {

@@ -33,7 +33,12 @@
 #include <QDir>
 #include <QStandardPaths>
 
-static const QString storeCalendar = QLatin1String("backupcalendar/");
+namespace {
+inline const QString storeCalendar()
+{
+    return QLatin1String("backupcalendar/");
+}
+}
 
 ImportCalendarJob::ImportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -74,7 +79,7 @@ void ImportCalendarJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
     QStringList listResource;
-    listResource << restoreResourceFile(QStringLiteral("akonadi_ical_resource"), Utils::calendarPath(), storeCalendar);
+    listResource << restoreResourceFile(QStringLiteral("akonadi_ical_resource"), Utils::calendarPath(), storeCalendar());
 
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
@@ -99,7 +104,7 @@ void ImportCalendarJob::restoreResources()
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeCalendar);
+                    const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeCalendar());
 
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);

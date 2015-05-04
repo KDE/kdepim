@@ -54,6 +54,7 @@ protected:
 
     void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 
+    virtual void configureCompletionOrder(QMenu *menu);
 #ifndef QT_NO_CONTEXTMENU
     void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
 #endif

@@ -30,7 +30,12 @@
 #include <QFile>
 #include <QStandardPaths>
 
-static const QString storeAlarm = QLatin1String("backupalarm/");
+namespace {
+inline const QString storeAlarm()
+{
+    return QLatin1String("backupalarm/");
+}
+}
 
 ImportAlarmJob::ImportAlarmJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -72,7 +77,7 @@ void ImportAlarmJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
     QStringList listResource;
-    listResource << restoreResourceFile(QStringLiteral("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm, false);
+    listResource << restoreResourceFile(QStringLiteral("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm(), false);
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
         dir.mkdir(Utils::alarmPath());
@@ -94,8 +99,7 @@ void ImportAlarmJob::restoreResources()
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAlarm);
-
+                    const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAlarm());
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {

@@ -28,7 +28,12 @@
 #include <QDir>
 #include <QStandardPaths>
 
-static const QString storeAddressbook = QLatin1String("backupaddressbook/");
+namespace {
+inline const QString storeAddressbook()
+{
+    return QLatin1String("backupaddressbook/");
+}
+}
 
 ImportAddressbookJob::ImportAddressbookJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
