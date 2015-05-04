@@ -22,7 +22,7 @@
 #include "composerlineedit.h"
 
 #include "addressline/recentaddress/recentaddresses.h"
-#include "addressline/recentaddress/recentaddressdialog.h"
+#include "addressline/completionconfiguredialog/completionconfiguredialog.h"
 #include "settings/messagecomposersettings.h"
 #include "messageviewer/utils/autoqpointer.h"
 
@@ -289,12 +289,11 @@ void ComposerLineEdit::contextMenuEvent(QContextMenuEvent *e)
 
 void ComposerLineEdit::configureCompletionOrder(QMenu *menu)
 {
-    KPIM::AddresseeLineEdit::configureCompletionOrder(menu);
     if ( menu ) { // can be 0 on platforms with only a touch interface
         if (isCompletionEnabled()) {
             menu->addSeparator();
-            QAction *act = menu->addAction(i18n("Edit Recent Addresses..."));
-            connect(act, &QAction::triggered, this, &ComposerLineEdit::editRecentAddresses);
+            QAction *act = menu->addAction(i18n("Configure Completion..."));
+            connect(act, &QAction::triggered, this, &ComposerLineEdit::configureCompletion);
         }
         menu->addSeparator();
         QAction *act = menu->addAction(i18n("Automatically expand groups"));
@@ -309,15 +308,20 @@ void ComposerLineEdit::configureCompletionOrder(QMenu *menu)
     }
 }
 
-void ComposerLineEdit::editRecentAddresses()
+void ComposerLineEdit::configureCompletion()
 {
-    MessageViewer::AutoQPointer<KPIM::RecentAddressDialog> dlg(new KPIM::RecentAddressDialog(this));
-    dlg->setAddresses(KPIM::RecentAddresses::self(m_recentAddressConfig)->addresses());
+    MessageViewer::AutoQPointer<KPIM::CompletionConfigureDialog> dlg(new KPIM::CompletionConfigureDialog(this));
+    dlg->setRecentAddresses(KPIM::RecentAddresses::self(m_recentAddressConfig)->addresses());
+    dlg->setLdapClientSearch(ldapSearch());
+    dlg->setEmailBlackList(balooBlackList());
+    dlg->load();
     if (dlg->exec() && dlg) {
-        if (dlg->wasChanged()) {
+        if (dlg->recentAddressWasChanged()) {
             KPIM::RecentAddresses::self(m_recentAddressConfig)->clear();
             dlg->storeAddresses(m_recentAddressConfig);
             loadContacts();
+            updateBalooBlackList();
+            updateCompletionOrder();
         }
     }
 }

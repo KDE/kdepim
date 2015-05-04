@@ -738,6 +738,12 @@ void AddresseeLineEditPrivate::slotEditCompletionOrder()
     }
 }
 
+KLDAP::LdapClientSearch *AddresseeLineEditPrivate::ldapSearch()
+{
+    init(); // for s_static->ldapSearch
+    return s_static->ldapSearch;
+}
+
 void AddresseeLineEditPrivate::slotUserCancelled(const QString &cancelText)
 {
     if (s_static->ldapSearch && s_static->ldapLineEdit == q) {
@@ -839,17 +845,32 @@ void AddresseeLineEditPrivate::slotShowOUChanged(bool checked)
     }
 }
 
+void AddresseeLineEditPrivate::updateBalooBlackList()
+{
+    loadBalooBlackList();
+    q->removeCompletionSource(i18nc("@title:group", "Contacts found in your data"));
+    s_static->balooCompletionSource = q->addCompletionSource(i18nc("@title:group", "Contacts found in your data"), -1);
+}
+
+void AddresseeLineEditPrivate::updateCompletionOrder()
+{
+    s_static->updateCompletionOrder();
+}
+
 void AddresseeLineEditPrivate::slotConfigureBalooBlackList()
 {
     QPointer<KPIM::BlackListBalooEmailCompletionDialog> dlg = new KPIM::BlackListBalooEmailCompletionDialog(q);
     dlg->setEmailBlackList(m_balooBlackList);
     if (dlg->exec()) {
-        loadBalooBlackList();
-        q->removeCompletionSource(i18nc("@title:group", "Contacts found in your data"));
-        s_static->balooCompletionSource = q->addCompletionSource(i18nc("@title:group", "Contacts found in your data"), -1);
+        updateBalooBlackList();
     }
     delete dlg;
 }
+QStringList AddresseeLineEditPrivate::balooBlackList() const
+{
+    return m_balooBlackList;
+}
+
 
 bool AddresseeLineEditPrivate::useSemicolonAsSeparator() const
 {

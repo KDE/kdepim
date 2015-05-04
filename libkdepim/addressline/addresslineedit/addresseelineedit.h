@@ -50,6 +50,9 @@ namespace KContacts
 class Addressee;
 class ContactGroup;
 }
+namespace KLDAP {
+class LdapClientSearch;
+}
 
 namespace KPIM
 {
@@ -138,6 +141,12 @@ public:
     void callSetCompletedText(const QString & /*text*/, bool /*marked*/);
     void callSetCompletedText(const QString &text);
     void callSetUserSelection(bool);
+
+    void updateBalooBlackList();
+    void updateCompletionOrder();
+    KLDAP::LdapClientSearch *ldapSearch() const;
+    QStringList balooBlackList() const;
+
 protected:
     /**
      * Reimplemented for smart insertion of email addresses.

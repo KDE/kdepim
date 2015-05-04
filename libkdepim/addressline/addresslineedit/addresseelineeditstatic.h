@@ -46,6 +46,7 @@ public:
     void updateCollectionWeights();
 
     void updateLDAPWeights();
+    void updateCompletionOrder();
 
     int addCompletionSource(const QString &source, int weight);
 

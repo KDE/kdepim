@@ -80,6 +80,12 @@ public:
     void removeCompletionSource(const QString &source);
     int addCompletionSource(const QString &source, int weight);
     void restartTime(const QString &searchString);
+    void updateBalooBlackList();
+    void updateCompletionOrder();
+
+    KLDAP::LdapClientSearch *ldapSearch();
+    QStringList balooBlackList() const;
+
 private Q_SLOTS:
     void slotCompletion();
     void slotPopupCompletion(const QString &);

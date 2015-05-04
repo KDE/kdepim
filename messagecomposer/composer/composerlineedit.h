@@ -63,12 +63,11 @@ public Q_SLOTS:
     void expandGroups();
 
 private Q_SLOTS:
-    void editRecentAddresses();
     void groupExpandResult(KJob *);
     void slotEditingFinished();
     void slotGroupSearchResult(KJob *);
     void slotToggleExpandGroups();
-
+    void configureCompletion();
 private:
 #ifndef QT_NO_DRAGANDDROP
     void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;

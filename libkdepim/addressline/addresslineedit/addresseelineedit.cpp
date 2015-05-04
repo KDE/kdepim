@@ -421,7 +421,14 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
     if (!menu) {
         return Q_NULLPTR;
     }
+    if (d->useCompletion()) {
+        QAction *showOU = new QAction(i18n("Show Organization Unit for LDAP results"), menu);
+        showOU->setCheckable(true);
 
+        showOU->setChecked(d->showOU());
+        connect(showOU, SIGNAL(triggered(bool)), d, SLOT(slotShowOUChanged(bool)));
+        menu->addAction(showOU);
+    }
     configureCompletionOrder(menu);
     return menu;
 }
@@ -433,12 +440,6 @@ void KPIM::AddresseeLineEdit::configureCompletionOrder(QMenu *menu)
         menu->addAction( i18n( "Configure Completion Order..." ),
                          d, SLOT(slotEditCompletionOrder()) );
 
-        QAction *showOU = new QAction(i18n("Show Organization Unit for LDAP results"), menu);
-        showOU->setCheckable(true);
-
-        showOU->setChecked(d->showOU());
-        connect(showOU, SIGNAL(triggered(bool)), d, SLOT(slotShowOUChanged(bool)));
-        menu->addAction(showOU);
         QAction *configureBalooBlackList = new QAction(i18n("Configure Email Blacklist"), menu);
         connect(configureBalooBlackList, SIGNAL(triggered(bool)), d, SLOT(slotConfigureBalooBlackList()));
         menu->addAction(configureBalooBlackList);
@@ -651,4 +652,24 @@ void AddresseeLineEdit::callSetCompletedText(const QString &text)
 void AddresseeLineEdit::callSetUserSelection(bool b)
 {
     setUserSelection(b);
+}
+
+void AddresseeLineEdit::updateBalooBlackList()
+{
+    d->updateBalooBlackList();
+}
+
+void AddresseeLineEdit::updateCompletionOrder()
+{
+    d->updateCompletionOrder();
+}
+
+KLDAP::LdapClientSearch *AddresseeLineEdit::ldapSearch() const
+{
+    return d->ldapSearch();
+}
+
+QStringList AddresseeLineEdit::balooBlackList() const
+{
+    return d->balooBlackList();
 }

@@ -47,9 +47,14 @@ void AddresseeLineEditStatic::slotEditCompletionOrder()
 {
     CompletionOrderEditor editor(ldapSearch, 0);
     if (editor.exec()) {
-        updateLDAPWeights();
-        updateCollectionWeights();
+        updateCompletionOrder();
     }
+}
+
+void AddresseeLineEditStatic::updateCompletionOrder()
+{
+    updateLDAPWeights();
+    updateCollectionWeights();
 }
 
 void AddresseeLineEditStatic::updateCollectionWeights()
