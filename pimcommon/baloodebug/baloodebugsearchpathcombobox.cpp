@@ -49,6 +49,7 @@ void BalooDebugSearchPathComboBox::initialize()
     addItem(QLatin1String("ContactCompleter"), ContactCompleter);
     addItem(QLatin1String("Email"), Emails);
     addItem(QLatin1String("Notes"), Notes);
+    addItem(QLatin1String("Calendars"), Calendars);
 }
 
 QString BalooDebugSearchPathComboBox::pathFromEnum(SearchType type) const
@@ -63,6 +64,8 @@ QString BalooDebugSearchPathComboBox::pathFromEnum(SearchType type) const
         return QString(xdgpath + QLatin1String("baloo/email/"));
     case Notes:
         return QString(xdgpath + QLatin1String("baloo/notes/"));
+    case Calendars:
+        return QString(xdgpath + QLatin1String("baloo/calendars/"));
     }
     return QString();
 }

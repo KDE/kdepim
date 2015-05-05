@@ -31,7 +31,8 @@ public:
         Contacts = 0,
         ContactCompleter,
         Emails,
-        Notes
+        Notes,
+        Calendars
     };
     ~BalooDebugSearchPathComboBox();
 

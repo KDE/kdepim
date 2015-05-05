@@ -108,7 +108,7 @@ public:
      * @param closeAfterSaving If true user is given option to continue editing
      * after being warned about invalid filters. Otherwise, user is just warned.
      */
-    QList<MailCommon::MailFilter *> filtersForSaving(bool closeAfterSaving) const;
+    QList<MailCommon::MailFilter *> filtersForSaving(bool closeAfterSaving , bool &wasCanceled) const;
 
     QStringList selectedFilterId(SearchRule::RequiredPart &requiredPart, const QString &resource) const;
 
