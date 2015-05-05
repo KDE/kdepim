@@ -103,7 +103,6 @@ ImportWizard::~ImportWizard()
 void ImportWizard::updatePagesFromMode()
 {
     const bool autodetectMode = (mMode == AutoDetect);
-    qDebug()<<" autodetectMode"<<autodetectMode;
     setAppropriate(mSelectProgramPageItem, autodetectMode);
     setAppropriate(mSelectComponentPageItem, autodetectMode);
     setAppropriate(mImportMailPageItem, autodetectMode);
