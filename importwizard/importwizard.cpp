@@ -115,6 +115,11 @@ void ImportWizard::updatePagesFromMode()
 
     setAppropriate(mSelfilterpageItem, !autodetectMode);
     setAppropriate(mImportpageItem, !autodetectMode);
+    if (autodetectMode) {
+        setCurrentPage(mSelectProgramPageItem);
+    } else {
+        setCurrentPage(mSelfilterpageItem);
+    }
 }
 
 void ImportWizard::createManualModePage()
