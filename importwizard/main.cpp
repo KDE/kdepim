@@ -21,6 +21,7 @@
 #include <Kdelibs4ConfigMigrator>
 #include <QApplication>
 #include <QIcon>
+#include <QDebug>
 #include "importwizard.h"
 
 #include "kdepim-version.h"
@@ -52,6 +53,7 @@ int main(int argc, char *argv[])
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("mode"), i18n("Mode")));
     parser.addVersionOption();
     parser.addHelpOption();
     aboutData.setupCommandLine(&parser);
@@ -60,7 +62,17 @@ int main(int argc, char *argv[])
 
     KDBusService service(KDBusService::Unique);
 
-    ImportWizard *wizard = new ImportWizard(ImportWizard::AutoDetect);
+    ImportWizard::WizardMode mode = ImportWizard::AutoDetect;
+    if (parser.isSet(QStringLiteral("mode"))) {
+        if (!parser.positionalArguments().isEmpty()) {
+            const QString modeStr = parser.positionalArguments().at(0);
+            if (modeStr == QLatin1String("manual")) {
+                mode = ImportWizard::Manual;
+            }
+        }
+    }
+
+    ImportWizard *wizard = new ImportWizard(mode);
     wizard->show();
     const int ret = app.exec();
     delete wizard;
