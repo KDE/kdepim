@@ -92,6 +92,7 @@ ImportWizard::ImportWizard(WizardMode mode, QWidget *parent)
     QMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     button(QDialogButtonBox::Help)->setMenu(menu);
+    updatePagesFromMode();
 }
 
 ImportWizard::~ImportWizard()
@@ -101,12 +102,18 @@ ImportWizard::~ImportWizard()
 
 void ImportWizard::updatePagesFromMode()
 {
-    switch (mMode) {
-    case AutoDetect:
-        break;
-    case Manual:
-        break;
-    }
+    const bool autodetectMode = (mMode == AutoDetect);
+    setValid(mSelectProgramPageItem, autodetectMode);
+    setValid(mSelectComponentPageItem, autodetectMode);
+    setValid(mImportMailPageItem, autodetectMode);
+    setValid(mImportFilterPageItem, autodetectMode);
+    setValid(mImportSettingPageItem, autodetectMode);
+    setValid(mImportAddressbookPageItem, autodetectMode);
+    setValid(mImportCalendarPageItem, autodetectMode);
+    setValid(mImportFinishPageItem, autodetectMode);
+
+    setValid(mSelfilterpageItem, !autodetectMode);
+    setValid(mImportpageItem, !autodetectMode);
 }
 
 void ImportWizard::createManualModePage()
@@ -152,8 +159,8 @@ void ImportWizard::createAutomaticModePage()
     addPage(mImportCalendarPageItem);
 
     mImportFinishPage = new ImportFinishPage(this);
-    mPage8 = new KPageWidgetItem(mImportFinishPage, i18n("Finish"));
-    addPage(mPage8);
+    mImportFinishPageItem = new KPageWidgetItem(mImportFinishPage, i18n("Finish"));
+    addPage(mImportFinishPageItem);
 }
 
 void ImportWizard::initializeImportModule()
@@ -288,7 +295,7 @@ void ImportWizard::next()
         setValid(mImportCalendarPageItem, false);
     } else if (currentPage() == mImportCalendarPageItem) {
         KAssistantDialog::next();
-        setValid(mPage8, true);
+        setValid(mImportFinishPageItem, true);
     } else {
         KAssistantDialog::next();
     }
@@ -311,7 +318,7 @@ void ImportWizard::back()
                currentPage() == mImportSettingPageItem ||
                currentPage() == mImportAddressbookPageItem ||
                currentPage() == mImportCalendarPageItem ||
-               currentPage() == mPage8) {
+               currentPage() == mImportFinishPageItem) {
         enableAllImportButton();
     }
     KAssistantDialog::back();

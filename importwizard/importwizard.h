@@ -92,7 +92,7 @@ private:
     KPageWidgetItem *mImportSettingPageItem;
     KPageWidgetItem *mImportAddressbookPageItem;
     KPageWidgetItem *mImportCalendarPageItem;
-    KPageWidgetItem *mPage8;
+    KPageWidgetItem *mImportFinishPageItem;
 
     SelectProgramPage *mSelectProgramPage;
     SelectComponentPage *mSelectComponentPage;
