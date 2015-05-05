@@ -41,6 +41,12 @@
 #include "autodetect/claws-mail/clawsmailimportdata.h"
 #include "autodetect/trojita/trojitaimportdata.h"
 
+#include "manual/kimportpage.h"
+#include "manual/kselfilterpage.h"
+#include "manual/kmailcvtfilterinfogui.h"
+
+#include "mailimporter/filterinfo.h"
+
 #include <QAction>
 #include <KAboutData>
 #include <KLocalizedString>
@@ -50,8 +56,6 @@
 #include <AkonadiCore/control.h>
 #include <mailcommon/kernel/mailkernel.h>
 #include <QPushButton>
-#include <manual/kimportpage.h>
-#include <manual/kselfilterpage.h>
 
 ImportWizard::ImportWizard(WizardMode mode, QWidget *parent)
     : KAssistantDialog(parent),
@@ -93,12 +97,31 @@ ImportWizard::ImportWizard(WizardMode mode, QWidget *parent)
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QStringLiteral("kmail")));
     button(QDialogButtonBox::Help)->setMenu(menu);
     updatePagesFromMode();
+    readConfig();
 }
 
 ImportWizard::~ImportWizard()
 {
     qDeleteAll(mlistImport);
+    writeConfig();
 }
+
+
+void ImportWizard::readConfig()
+{
+    KConfigGroup group( KSharedConfig::openConfig(), "FolderSelectionDialog" );
+    if ( group.hasKey( "LastSelectedFolder" ) ) {
+        mSelfilterpage->widget()->mCollectionRequestor->setCollection( CommonKernel->collectionFromId(group.readEntry("LastSelectedFolder", -1 )));
+    }
+}
+
+void ImportWizard::writeConfig()
+{
+    KConfigGroup group( KSharedConfig::openConfig(), "FolderSelectionDialog" );
+    group.writeEntry( "LastSelectedFolder", mSelfilterpage->widget()->mCollectionRequestor->collection().id() );
+    group.sync();
+}
+
 
 void ImportWizard::updatePagesFromMode()
 {
@@ -131,12 +154,34 @@ void ImportWizard::createManualModePage()
     mImportpage = new KImportPage(this);
     mImportpageItem = new KPageWidgetItem(mImportpage, i18n("Step 2: Importing..."));
     addPage(mImportpageItem);
+
+    // Disable the 'next button to begin with.
+    setValid( mSelfilterpageItem, false );
+
+    connect( mSelfilterpage->widget()->mCollectionRequestor, SIGNAL(folderChanged(Akonadi::Collection)), this, SLOT(slotCollectionChanged(Akonadi::Collection)) );
+}
+
+void ImportWizard::slotCollectionChanged( const Akonadi::Collection &selectedCollection )
+{
+    if( selectedCollection.isValid() ){
+        setValid( mSelfilterpageItem, true );
+    } else {
+        setValid( mSelfilterpageItem, false );
+    }
+}
+
+void ImportWizard::reject()
+{
+    if ( currentPage() == mImportpageItem )
+        MailImporter::FilterInfo::terminateASAP(); // ie. import in progress
+    KAssistantDialog::reject();
 }
 
 void ImportWizard::createAutomaticModePage()
 {
     mSelectProgramPage = new SelectProgramPage(this);
     mSelectProgramPageItem = new KPageWidgetItem(mSelectProgramPage, i18n("Detect program"));
+    connect(mSelectProgramPage, &SelectProgramPage::selectManualSelectionChanged, this, &ImportWizard::slotSelectManualSelectionChanged);
     addPage(mSelectProgramPageItem);
 
     mSelectComponentPage = new SelectComponentPage(this);
@@ -301,6 +346,37 @@ void ImportWizard::next()
     } else if (currentPage() == mImportCalendarPageItem) {
         KAssistantDialog::next();
         setValid(mImportFinishPageItem, true);
+    } else if (currentPage() == mSelfilterpageItem) {
+        // Save selected filter
+        MailImporter::Filter *selectedFilter = mSelfilterpage->getSelectedFilter();
+        Akonadi::Collection selectedCollection = mSelfilterpage->widget()->mCollectionRequestor->collection();
+        // without filter don't go next
+        if ( !selectedFilter )
+            return;
+        // Ensure we have a valid collection.
+        if( !selectedCollection.isValid() )
+            return;
+        // Goto next page
+        KAssistantDialog::next();
+        // Disable back & finish
+        setValid( currentPage(), false );
+        //PORT IT KF5 enableButton(KDialog::User3,false);
+        // Start import
+        MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
+        KMailCvtFilterInfoGui *infoGui = new KMailCvtFilterInfoGui(mImportpage, this);
+        info->setFilterInfoGui(infoGui);
+        info->setStatusMessage(i18n("Import in progress"));
+        info->setRemoveDupMessage( mSelfilterpage->removeDupMsg_checked() );
+        info->clear(); // Clear info from last time
+        info->setRootCollection( selectedCollection );
+        selectedFilter->setFilterInfo( info );
+        selectedFilter->import();
+        info->setStatusMessage(i18n("Import finished"));
+        // Cleanup
+        delete info;
+        // Enable finish & back buttons
+        setValid( currentPage(), true );
+        //PORT KF5 enableButton(KDialog::User3,true);
     } else {
         KAssistantDialog::next();
     }
@@ -327,11 +403,6 @@ void ImportWizard::back()
         enableAllImportButton();
     }
     KAssistantDialog::back();
-}
-
-void ImportWizard::reject()
-{
-    KAssistantDialog::reject();
 }
 
 ImportMailPage *ImportWizard::importMailPage() const
@@ -373,3 +444,8 @@ void ImportWizard::addFinishError(const QString &log)
     mImportFinishPage->addImportError(log);
 }
 
+void ImportWizard::slotSelectManualSelectionChanged(bool b)
+{
+    mMode = b ? Manual : AutoDetect;
+    updatePagesFromMode();
+}

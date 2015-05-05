@@ -21,7 +21,6 @@
 #include <Kdelibs4ConfigMigrator>
 #include <QApplication>
 #include <QIcon>
-#include <QDebug>
 #include "importwizard.h"
 
 #include "kdepim-version.h"

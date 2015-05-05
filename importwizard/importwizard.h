@@ -34,6 +34,10 @@ class ImportCalendarPage;
 class AbstractImporter;
 class KSelFilterPage;
 class KImportPage;
+
+namespace Akonadi {
+class Collection;
+}
 class ImportWizard : public KAssistantDialog
 {
     Q_OBJECT
@@ -46,9 +50,9 @@ public:
     explicit ImportWizard(WizardMode mode, QWidget *parent = Q_NULLPTR);
     ~ImportWizard();
 
-    void next();
-    void reject();
-    void back();
+    void next() Q_DECL_OVERRIDE;
+    void reject() Q_DECL_OVERRIDE;
+    void back() Q_DECL_OVERRIDE;
 
     ImportMailPage *importMailPage() const;
     ImportFilterPage *importFilterPage() const;
@@ -69,8 +73,12 @@ private Q_SLOTS:
     void slotImportSettingsClicked();
     void slotImportAddressbookClicked();
     void slotImportCalendarClicked();
+    void slotSelectManualSelectionChanged(bool b);
 
+    void slotCollectionChanged(const Akonadi::Collection &selectedCollection);
 private:
+    void readConfig();
+    void writeConfig();
     void initializeImportModule();
     void createAutomaticModePage();
     void addImportModule(AbstractImporter *);

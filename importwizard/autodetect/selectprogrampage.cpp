@@ -25,6 +25,7 @@ SelectProgramPage::SelectProgramPage(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->listProgramFound, &QListWidget::itemSelectionChanged, this, &SelectProgramPage::slotItemSelectionChanged);
     connect(ui->listProgramFound, &QListWidget::itemDoubleClicked, this, &SelectProgramPage::slotItemDoubleClicked);
+    connect(ui->manualSelectionCheckBox, &QCheckBox::clicked, this, &SelectProgramPage::slotSelectManualSelectionChanged);
 }
 
 SelectProgramPage::~SelectProgramPage()
@@ -57,3 +58,8 @@ void SelectProgramPage::disableSelectProgram()
     ui->listProgramFound->setEnabled(false);
 }
 
+void SelectProgramPage::slotSelectManualSelectionChanged(bool b)
+{
+    ui->listProgramFound->setEnabled(!b);
+    Q_EMIT selectManualSelectionChanged(b);
+}

@@ -1,8 +1,7 @@
-4.13:
------
-Allow to select specific folder.
+KF5:
+----
+- Merge KMailCVT
 
--------------------------------------
 - Test on Windows/MacOsX
 
 - Search info about how is stored config on AppleMail/Outlook etc.

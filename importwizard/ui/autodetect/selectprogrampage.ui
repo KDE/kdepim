@@ -11,12 +11,6 @@
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="spacing">
-    <number>0</number>
-   </property>
-   <property name="margin">
-    <number>0</number>
-   </property>
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
@@ -24,6 +18,12 @@
      </property>
      <widget class="QWidget" name="page">
       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
@@ -42,6 +42,12 @@
      </widget>
      <widget class="QWidget" name="page_2">
       <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
@@ -70,16 +76,23 @@
      </widget>
     </widget>
    </item>
+   <item>
+    <widget class="QCheckBox" name="manualSelectionCheckBox">
+     <property name="text">
+      <string>Manual Selection</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
- <resources/>
- <connections/>
  <customwidgets>
   <customwidget>
    <class>SelectProgramListWidget</class>
    <extends>QListWidget</extends>
-   <header location="locale">autodetect/widgets/selectprogramlistwidget.h</header>
+   <header>autodetect/widgets/selectprogramlistwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <resources/>
+ <connections/>
 </ui>
