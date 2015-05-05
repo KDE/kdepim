@@ -103,17 +103,18 @@ ImportWizard::~ImportWizard()
 void ImportWizard::updatePagesFromMode()
 {
     const bool autodetectMode = (mMode == AutoDetect);
-    setValid(mSelectProgramPageItem, autodetectMode);
-    setValid(mSelectComponentPageItem, autodetectMode);
-    setValid(mImportMailPageItem, autodetectMode);
-    setValid(mImportFilterPageItem, autodetectMode);
-    setValid(mImportSettingPageItem, autodetectMode);
-    setValid(mImportAddressbookPageItem, autodetectMode);
-    setValid(mImportCalendarPageItem, autodetectMode);
-    setValid(mImportFinishPageItem, autodetectMode);
+    qDebug()<<" autodetectMode"<<autodetectMode;
+    setAppropriate(mSelectProgramPageItem, autodetectMode);
+    setAppropriate(mSelectComponentPageItem, autodetectMode);
+    setAppropriate(mImportMailPageItem, autodetectMode);
+    setAppropriate(mImportFilterPageItem, autodetectMode);
+    setAppropriate(mImportSettingPageItem, autodetectMode);
+    setAppropriate(mImportAddressbookPageItem, autodetectMode);
+    setAppropriate(mImportCalendarPageItem, autodetectMode);
+    setAppropriate(mImportFinishPageItem, autodetectMode);
 
-    setValid(mSelfilterpageItem, !autodetectMode);
-    setValid(mImportpageItem, !autodetectMode);
+    setAppropriate(mSelfilterpageItem, !autodetectMode);
+    setAppropriate(mImportpageItem, !autodetectMode);
 }
 
 void ImportWizard::createManualModePage()
