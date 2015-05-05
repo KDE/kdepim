@@ -37,10 +37,10 @@ QTEST_MAIN(AttachmentFromMimeContentJobTest)
 void AttachmentFromMimeContentJobTest::testAttachment()
 {
     const QByteArray mimeType("x-some/x-type");
-    const QString name = QString::fromLatin1("name abcd");
-    const QString description = QString::fromLatin1("description");
+    const QString name = QStringLiteral("name abcd");
+    const QString description = QStringLiteral("description");
     const QByteArray charset("utf-8");
-    const QString fileName = QString::fromLatin1("filename abcd");
+    const QString fileName = QStringLiteral("filename abcd");
     const Headers::contentEncoding encoding = Headers::CEquPr;
     const Headers::contentDisposition disposition = Headers::CDinline;
     const QByteArray data("ocean soul");
