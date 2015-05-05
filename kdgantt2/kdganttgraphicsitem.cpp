@@ -43,7 +43,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsLineItem>
 
-#include <QDebug>
+#include "kdgantt_debug.h"
 
 /*!\class KDGantt::GraphicsItem
  * \internal
@@ -133,12 +133,12 @@ StyleOptionGanttItem GraphicsItem::getStyleOption() const
         opt.displayPosition = static_cast<StyleOptionGanttItem::Position>(tp.toInt());
     } else {
 #if 0
-        qDebug() << "Item" << m_index.model()->data(m_index, Qt::DisplayRole).toString()
+        qCDebug(KDGANTT_LOG) << "Item" << m_index.model()->data(m_index, Qt::DisplayRole).toString()
                  << ", ends=" << m_endConstraints.size() << ", starts=" << m_startConstraints.size();
 #endif
         opt.displayPosition = m_endConstraints.size() < m_startConstraints.size() ? StyleOptionGanttItem::Left : StyleOptionGanttItem::Right;
 #if 0
-        qDebug() << "choosing" << opt.displayPosition;
+        qCDebug(KDGANTT_LOG) << "choosing" << opt.displayPosition;
 #endif
     }
     QVariant da = m_index.model()->data(m_index, Qt::TextAlignmentRole);
@@ -173,9 +173,9 @@ GraphicsScene *GraphicsItem::scene() const
 void GraphicsItem::setRect(const QRectF &r)
 {
 #if 0
-    qDebug() << "GraphicsItem::setRect(" << r << "), txt=" << m_index.model()->data(m_index, Qt::DisplayRole).toString();
+    qCDebug(KDGANTT_LOG) << "GraphicsItem::setRect(" << r << "), txt=" << m_index.model()->data(m_index, Qt::DisplayRole).toString();
     if (m_index.model()->data(m_index, Qt::DisplayRole).toString() == QLatin1String("Code Freeze")) {
-        qDebug() << "gotcha";
+        qCDebug(KDGANTT_LOG) << "gotcha";
     }
 #endif
 
@@ -311,7 +311,7 @@ void GraphicsItem::updateConstraintItems()
 
 void GraphicsItem::updateItem(const Span &rowGeometry, const QPersistentModelIndex &idx)
 {
-    //qDebug() << "GraphicsItem::updateItem("<<rowGeometry<<idx<<")";
+    //qCDebug(KDGANTT_LOG) << "GraphicsItem::updateItem("<<rowGeometry<<idx<<")";
     Updater updater(&m_isupdating);
     if (!idx.isValid() || idx.data(ItemTypeRole) == TypeMulti) {
         setRect(QRectF());
@@ -324,7 +324,7 @@ void GraphicsItem::updateItem(const Span &rowGeometry, const QPersistentModelInd
     setRect(QRectF(0., 0., s.length(), rowGeometry.length()));
     setIndex(idx);
     const Span bs = scene()->itemDelegate()->itemBoundingSpan(getStyleOption(), index());
-    //qDebug() << "boundingSpan for" << getStyleOption().text << rect() << "is" << bs;
+    //qCDebug(KDGANTT_LOG) << "boundingSpan for" << getStyleOption().text << rect() << "is" << bs;
     setBoundingRect(QRectF(bs.start(), 0., bs.length(), rowGeometry.length()));
     const int maxh = scene()->rowController()->maximumItemHeight();
     if (maxh < rowGeometry.length()) {
@@ -380,7 +380,7 @@ void GraphicsItem::focusInEvent(QFocusEvent *event)
 
 void GraphicsItem::updateModel()
 {
-    //qDebug() << "GraphicsItem::updateModel()";
+    //qCDebug(KDGANTT_LOG) << "GraphicsItem::updateModel()";
     if (isEditable()) {
         QAbstractItemModel *model = const_cast<QAbstractItemModel *>(index().model());
         ConstraintModel *cmodel = scene()->constraintModel();
@@ -455,7 +455,7 @@ void GraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *)
 
 void GraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    //qDebug() << "GraphicsItem::mousePressEvent("<<event<<")";
+    //qCDebug(KDGANTT_LOG) << "GraphicsItem::mousePressEvent("<<event<<")";
     StyleOptionGanttItem opt = getStyleOption();
     m_istate = scene()->itemDelegate()->interactionStateFor(event->pos(), opt, index());
     m_presspos = event->pos();
@@ -473,7 +473,7 @@ void GraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void GraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    //qDebug() << "GraphicsItem::mouseReleaseEvent("<<event << ")";
+    //qCDebug(KDGANTT_LOG) << "GraphicsItem::mouseReleaseEvent("<<event << ")";
     if (!m_presspos.isNull()) {
         scene()->itemClicked(index());
     }
@@ -523,7 +523,7 @@ void GraphicsItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void GraphicsItem::updateItemFromMouse(const QPointF &scenepos)
 {
-    //qDebug() << "GraphicsItem::updateItemFromMouse("<<scenepos<<")";
+    //qCDebug(KDGANTT_LOG) << "GraphicsItem::updateItemFromMouse("<<scenepos<<")";
     const QPointF p = scenepos - m_presspos;
     QRectF r = rect();
     QRectF br = boundingRect();
@@ -561,7 +561,7 @@ void GraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    //qDebug() << "GraphicsItem::mouseMoveEvent("<<event<<"), m_istate="<< static_cast<ItemDelegate::InteractionState>( m_istate );
+    //qCDebug(KDGANTT_LOG) << "GraphicsItem::mouseMoveEvent("<<event<<"), m_istate="<< static_cast<ItemDelegate::InteractionState>( m_istate );
     //QPointF pos = event->pos() - m_presspos;
     switch (m_istate) {
     case ItemDelegate::State_ExtendLeft:

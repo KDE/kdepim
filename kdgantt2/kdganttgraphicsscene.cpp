@@ -40,7 +40,7 @@
 #include <QToolTip>
 #include <QSet>
 
-#include <QDebug>
+#include "kdgantt_debug.h"
 
 #include <functional>
 #include <algorithm>
@@ -97,28 +97,28 @@ void GraphicsScene::Private::createConstraintItem(const Constraint &c)
 // Delete the constraint item, and clean up pointers in the start- and end item
 void GraphicsScene::Private::deleteConstraintItem(ConstraintGraphicsItem *citem)
 {
-    //qDebug()<<"GraphicsScene::Private::deleteConstraintItem citem="<<(void*)citem;
+    //qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::deleteConstraintItem citem="<<(void*)citem;
     if (citem == 0) {
         return;
     }
     Constraint c = citem->constraint();
     GraphicsItem *item = items.value(summaryHandlingModel->mapFromSource(c.startIndex()), 0);
     if (item) {
-        //qDebug()<<"GraphicsScene::Private::deleteConstraintItem startConstraints"<<item<<(void*)citem;
+        //qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::deleteConstraintItem startConstraints"<<item<<(void*)citem;
         item->removeStartConstraint(citem);
-    } //else qDebug()<<"GraphicsScene::Private::deleteConstraintItem"<<c.startIndex()<<"start item not found";
+    } //else qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::deleteConstraintItem"<<c.startIndex()<<"start item not found";
     item = items.value(summaryHandlingModel->mapFromSource(c.endIndex()), 0);
     if (item) {
-        //qDebug()<<"GraphicsScene::Private::deleteConstraintItem endConstraints"<<item<<(void*)citem;
+        //qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::deleteConstraintItem endConstraints"<<item<<(void*)citem;
         item->removeEndConstraint(citem);
-    } //else qDebug()<<"GraphicsScene::Private::deleteConstraintItem"<<c.endIndex()<<"end item not found";
-    //qDebug()<<"GraphicsScene::Private::deleteConstraintItem"<<citem<<"deleted";
+    } //else qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::deleteConstraintItem"<<c.endIndex()<<"end item not found";
+    //qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::deleteConstraintItem"<<citem<<"deleted";
     delete citem;
 }
 
 void GraphicsScene::Private::deleteConstraintItem(const Constraint &c)
 {
-    //qDebug()<<"GraphicsScene::Private::deleteConstraintItem c="<<c;
+    //qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::deleteConstraintItem c="<<c;
     deleteConstraintItem(findConstraintItem(c));
 }
 
@@ -128,7 +128,7 @@ ConstraintGraphicsItem *GraphicsScene::Private::findConstraintItem(const Constra
     if (item) {
         QList<ConstraintGraphicsItem *> clst = item->startConstraints();
         QList<ConstraintGraphicsItem *>::iterator it = clst.begin();
-        //qDebug()<<"GraphicsScene::Private::findConstraintItem start:"<<c<<item<<clst;
+        //qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::findConstraintItem start:"<<c<<item<<clst;
         for (; it != clst.end() ; ++it)
             if ((*it)->constraint() == c) {
                 break;
@@ -141,7 +141,7 @@ ConstraintGraphicsItem *GraphicsScene::Private::findConstraintItem(const Constra
     if (item) {
         QList<ConstraintGraphicsItem *> clst = item->endConstraints();
         QList<ConstraintGraphicsItem *>::iterator it = clst.begin();
-        //qDebug()<<"GraphicsScene::Private::findConstraintItem end:"<<c<<item<<clst;
+        //qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::findConstraintItem end:"<<c<<item<<clst;
         for (; it != clst.end() ; ++it)
             if ((*it)->constraint() == c) {
                 break;
@@ -150,7 +150,7 @@ ConstraintGraphicsItem *GraphicsScene::Private::findConstraintItem(const Constra
             return *it;
         }
     }
-    //qDebug()<<"GraphicsScene::Private::findConstraintItem No item or constraintitem"<<c;
+    //qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::findConstraintItem No item or constraintitem"<<c;
     return 0;
 }
 
@@ -346,14 +346,14 @@ GraphicsItem *GraphicsScene::createItem(ItemType type) const
     default:          return 0;
     }
 #endif
-    //qDebug() << "GraphicsScene::createItem("<<type<<")";
+    //qCDebug(KDGANTT_LOG) << "GraphicsScene::createItem("<<type<<")";
     Q_UNUSED(type);
     return new GraphicsItem;
 }
 
 void GraphicsScene::Private::recursiveUpdateMultiItem(const Span &span, const QModelIndex &idx)
 {
-    //qDebug() << "recursiveUpdateMultiItem("<<span<<idx<<")";
+    //qCDebug(KDGANTT_LOG) << "recursiveUpdateMultiItem("<<span<<idx<<")";
     GraphicsItem *item = q->findItem(idx);
     const int itemtype = summaryHandlingModel->data(idx, ItemTypeRole).toInt();
     if (!item) {
@@ -372,7 +372,7 @@ void GraphicsScene::Private::recursiveUpdateMultiItem(const Span &span, const QM
 
 void GraphicsScene::updateRow(const QModelIndex &rowidx)
 {
-    //qDebug() << "GraphicsScene::updateRow("<<rowidx<<")" << rowidx.data( Qt::DisplayRole );
+    //qCDebug(KDGANTT_LOG) << "GraphicsScene::updateRow("<<rowidx<<")" << rowidx.data( Qt::DisplayRole );
     if (!rowidx.isValid()) {
         return;
     }
@@ -459,7 +459,7 @@ void GraphicsScene::insertItem(const QPersistentModelIndex &idx, GraphicsItem *i
 
 void GraphicsScene::removeItem(const QModelIndex &idx)
 {
-    //qDebug() << "GraphicsScene::removeItem("<<idx<<")";
+    //qCDebug(KDGANTT_LOG) << "GraphicsScene::removeItem("<<idx<<")";
     QHash<QPersistentModelIndex, GraphicsItem *>::iterator it = d->items.find(idx);
     if (it != d->items.end()) {
         GraphicsItem *item = *it;

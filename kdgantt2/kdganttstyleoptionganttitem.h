@@ -29,7 +29,7 @@
 
 #include <QStyleOptionViewItem>
 #include <QRectF>
-#include <QDebug>
+#include "kdgantt_debug.h"
 
 namespace KDGantt
 {

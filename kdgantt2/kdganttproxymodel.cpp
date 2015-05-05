@@ -167,8 +167,8 @@ QVariant ProxyModel::data(const QModelIndex &proxyIdx, int role) const
     }
 
 #if 0
-    qDebug() << "mapping role" << static_cast<ItemDataRole>(role) << "to" << static_cast<ItemDataRole>(srole);
-    qDebug() << "mapping column" << proxyIdx.column() << "to" << scol
+    qCDebug(KDGANTT_LOG) << "mapping role" << static_cast<ItemDataRole>(role) << "to" << static_cast<ItemDataRole>(srole);
+    qCDebug(KDGANTT_LOG) << "mapping column" << proxyIdx.column() << "to" << scol
              << "value=" << sourceModel()->data(sourceModel()->index(proxyIdx.row(), scol, mapToSource(proxyIdx.parent())), srole);
 #endif
 

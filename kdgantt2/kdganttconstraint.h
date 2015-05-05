@@ -31,7 +31,7 @@
 
 #include "kdgantt_export.h"
 #ifndef QT_NO_DEBUG_STREAM
-#include <QDebug>
+#include "kdgantt_debug.h"
 #endif
 
 namespace KDGantt

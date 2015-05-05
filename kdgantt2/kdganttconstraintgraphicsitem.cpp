@@ -29,7 +29,7 @@
 #include "kdganttsummaryhandlingproxymodel.h"
 
 #include <QPainter>
-#include <QDebug>
+#include "kdgantt_debug.h"
 
 using namespace KDGantt;
 

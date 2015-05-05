@@ -33,7 +33,7 @@
 #include <QStyle>
 #include <QStyleOptionHeader>
 #include <QWidget>
-#include <QDebug>
+#include "kdgantt_debug.h"
 
 #include <cassert>
 
@@ -231,7 +231,7 @@ QDateTime DateTimeScaleFormatter::nextRangeBegin(const QDateTime &datetime) cons
     }
     //result = result.toLocalTime();
     assert(result != datetime);
-    //qDebug() << "DateTimeScaleFormatter::nextRangeBegin("<<datetime<<")="<<d->range<<result;
+    //qCDebug(KDGANTT_LOG) << "DateTimeScaleFormatter::nextRangeBegin("<<datetime<<")="<<d->range<<result;
     return result;
 }
 
@@ -494,7 +494,7 @@ Span DateTimeGrid::mapToChart(const QModelIndex &idx) const
         if (et.isValid() && st.isValid()) {
             qreal sx = d->dateTimeToChartX(st);
             qreal ex = d->dateTimeToChartX(et) - sx;
-            //qDebug() << "DateTimeGrid::mapToChart("<<st<<et<<") => "<< Span( sx, ex );
+            //qCDebug(KDGANTT_LOG) << "DateTimeGrid::mapToChart("<<st<<et<<") => "<< Span( sx, ex );
             return Span(sx, ex);
         }
     }
@@ -513,12 +513,12 @@ Span DateTimeGrid::mapToChart(const QModelIndex &idx) const
 static void debug_print_idx(const QModelIndex &idx)
 {
     if (!idx.isValid()) {
-        qDebug() << "[Invalid]";
+        qCDebug(KDGANTT_LOG) << "[Invalid]";
         return;
     }
     QDateTime st = idx.data(StartTimeRole).toDateTime();
     QDateTime et = idx.data(StartTimeRole).toDateTime();
-    qDebug() << idx << "[" << st << et << "]";
+    qCDebug(KDGANTT_LOG) << idx << "[" << st << et << "]";
 }
 #endif
 
@@ -547,20 +547,20 @@ bool DateTimeGrid::mapFromChart(const Span &span, const QModelIndex &idx,
 
     QDateTime st = d->chartXtoDateTime(span.start());
     QDateTime et = d->chartXtoDateTime(span.start() + span.length());
-    //qDebug() << "DateTimeGrid::mapFromChart("<<span<<") => "<< st << et;
+    //qCDebug(KDGANTT_LOG) << "DateTimeGrid::mapFromChart("<<span<<") => "<< st << et;
     Q_FOREACH (const Constraint &c, constraints) {
         if (c.type() != Constraint::TypeHard || !isSatisfiedConstraint(c)) {
             continue;
         }
         if (c.startIndex() == idx) {
             QDateTime tmpst = model()->data(c.endIndex(), StartTimeRole).toDateTime();
-            //qDebug() << tmpst << "<" << et <<"?";
+            //qCDebug(KDGANTT_LOG) << tmpst << "<" << et <<"?";
             if (tmpst < et) {
                 return false;
             }
         } else if (c.endIndex() == idx) {
             QDateTime tmpet = model()->data(c.startIndex(), EndTimeRole).toDateTime();
-            //qDebug() << tmpet << ">" << st <<"?";
+            //qCDebug(KDGANTT_LOG) << tmpet << ">" << st <<"?";
             if (tmpet > st) {
                 return false;
             }
@@ -973,7 +973,7 @@ KDAB_SCOPED_UNITTEST_SIMPLE(KDGantt, DateTimeGrid, "test")
     model.setData(model.index(2, 0), dt.addDays(19), EndTimeRole);
 
     Span s = grid.mapToChart(model.index(0, 0));
-    //qDebug() << "span="<<s;
+    //qCDebug(KDGANTT_LOG) << "span="<<s;
 
     assertTrue(s.start() > 0);
     assertTrue(s.length() > 0);

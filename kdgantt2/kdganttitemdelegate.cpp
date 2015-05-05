@@ -248,8 +248,8 @@ void ItemDelegate::paintGanttItem(QPainter *painter,
     boundingRect.setY(itemRect.y());
     boundingRect.setHeight(itemRect.height());
 
-    //qDebug() << "itemRect="<<itemRect<<", boundingRect="<<boundingRect;
-    //qDebug() << painter->font() << opt.fontMetrics.height() << painter->device()->width() << painter->device()->height();
+    //qCDebug(KDGANTT_LOG) << "itemRect="<<itemRect<<", boundingRect="<<boundingRect;
+    //qCDebug(KDGANTT_LOG) << painter->font() << opt.fontMetrics.height() << painter->device()->width() << painter->device()->height();
 
     painter->save();
 
@@ -325,7 +325,7 @@ void ItemDelegate::paintGanttItem(QPainter *painter,
         }
         break;
     case TypeEvent: /* TODO */
-        //qDebug() << opt.boundingRect << opt.itemRect;
+        //qCDebug(KDGANTT_LOG) << opt.boundingRect << opt.itemRect;
         if (opt.boundingRect.isValid()) {
             const qreal pw = painter->pen().width() / 2. - 1;
             const QRectF r = QRectF(opt.itemRect).adjusted(-pw, -pw, pw, pw).translated(-opt.itemRect.height() / 2, 0);

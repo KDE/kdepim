@@ -139,7 +139,7 @@ void ForwardingProxyModel::sourceModelAboutToBeReset()
  */
 void ForwardingProxyModel::sourceModelReset()
 {
-    //qDebug() << "ForwardingProxyModel::sourceModelReset()";
+    //qCDebug(KDGANTT_LOG) << "ForwardingProxyModel::sourceModelReset()";
     reset();
 }
 
@@ -149,7 +149,7 @@ void ForwardingProxyModel::sourceModelReset()
 
 void ForwardingProxyModel::sourceLayoutAboutToBeChanged()
 {
-    //qDebug() << "ForwardingProxyModel::sourceLayoutAboutToBeChanged()";
+    //qCDebug(KDGANTT_LOG) << "ForwardingProxyModel::sourceLayoutAboutToBeChanged()";
     Q_EMIT layoutAboutToBeChanged();
 }
 
@@ -158,7 +158,7 @@ void ForwardingProxyModel::sourceLayoutAboutToBeChanged()
  */
 void ForwardingProxyModel::sourceLayoutChanged()
 {
-    //qDebug() << "ForwardingProxyModel::sourceLayoutChanged()";
+    //qCDebug(KDGANTT_LOG) << "ForwardingProxyModel::sourceLayoutChanged()";
     reset();
 }
 
@@ -167,7 +167,7 @@ void ForwardingProxyModel::sourceLayoutChanged()
  */
 void ForwardingProxyModel::sourceDataChanged(const QModelIndex &from, const QModelIndex &to)
 {
-    //qDebug() << "ForwardingProxyModel::sourceDataChanged("<<from<<to<<")";
+    //qCDebug(KDGANTT_LOG) << "ForwardingProxyModel::sourceDataChanged("<<from<<to<<")";
     Q_EMIT dataChanged(mapFromSource(from), mapFromSource(to));
 }
 
@@ -278,7 +278,7 @@ QModelIndex ForwardingProxyModel::parent(const QModelIndex &idx) const
 /*! \see QAbstractItemModel::setData */
 bool ForwardingProxyModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    //qDebug() << "ForwardingProxyModel::setData( " << index<<value<< role<<")";
+    //qCDebug(KDGANTT_LOG) << "ForwardingProxyModel::setData( " << index<<value<< role<<")";
     return sourceModel()->setData(mapToSource(index), value, role);
 }
 

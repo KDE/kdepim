@@ -26,7 +26,7 @@
 #define KDGANTTGLOBAL_H
 
 #include <QDateTime>
-#include <QDebug>
+#include "kdgantt_debug.h"
 #include <QMetaType>
 
 #include "kdgantt_export.h"

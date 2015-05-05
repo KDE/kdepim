@@ -25,7 +25,7 @@
 #include "kdganttconstraintmodel.h"
 #include "kdganttconstraintmodel_p.h"
 
-#include <QDebug>
+#include "kdgantt_debug.h"
 
 #include <cassert>
 
@@ -123,7 +123,7 @@ void ConstraintModel::addConstraint(const Constraint &c)
  */
 bool ConstraintModel::removeConstraint(const Constraint &c)
 {
-    //qDebug() << "ConstraintModel::removeConstraint("<<c<<") from "<< d->constraints;
+    //qCDebug(KDGANTT_LOG) << "ConstraintModel::removeConstraint("<<c<<") from "<< d->constraints;
     bool rc = d->constraints.removeAll(c);
     //bool rc = d->constraints.remove( c );
     if (rc) {
@@ -156,7 +156,7 @@ void ConstraintModel::cleanup()
             orphans.insert(c);
         }
     }
-    //qDebug() << "Constraint::cleanup() found" << orphans << "orphans";
+    //qCDebug(KDGANTT_LOG) << "Constraint::cleanup() found" << orphans << "orphans";
     d->constraints.subtract(orphans);
 #endif
 }

@@ -71,7 +71,7 @@ int TreeViewRowController::totalHeight() const
 
 bool TreeViewRowController::isRowVisible(const QModelIndex &_idx) const
 {
-    //qDebug() << _idx.model()<<d->proxy << d->treeview->model();
+    //qCDebug(KDGANTT_LOG) << _idx.model()<<d->proxy << d->treeview->model();
     const QModelIndex idx = d->proxy->mapToSource(_idx);
     assert(idx.isValid() ? (idx.model() == d->treeview->model()) : (true));
     return d->treeview->visualRect(idx).isValid();

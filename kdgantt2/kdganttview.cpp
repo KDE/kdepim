@@ -36,7 +36,7 @@
 #include <QScrollBar>
 #include <QPaintEvent>
 
-#include <QDebug>
+#include "kdgantt_debug.h"
 
 #include <cassert>
 
@@ -165,7 +165,7 @@ void View::Private::slotCollapsed(const QModelIndex &_idx)
     } else {
         gfxview.updateRow(pidx);
     }
-    //qDebug() << "Looking to update from " << idx;
+    //qCDebug(KDGANTT_LOG) << "Looking to update from " << idx;
     while ((idx = tw->indexBelow(idx)) != QModelIndex() &&
             gfxview.rowController()->isRowVisible(ganttProxyModel.mapFromSource(idx))) {
         const QModelIndex proxyidx(ganttProxyModel.mapFromSource(idx));
@@ -179,7 +179,7 @@ void View::Private::slotExpanded(const QModelIndex &_idx)
 {
     QModelIndex idx(ganttProxyModel.mapFromSource(_idx));
     do {
-        //qDebug() << "Updating row" << idx << idx.data( Qt::DisplayRole ).toString();
+        //qCDebug(KDGANTT_LOG) << "Updating row" << idx << idx.data( Qt::DisplayRole ).toString();
         gfxview.updateRow(idx);
     } while ((idx = gfxview.rowController()->indexBelow(idx)) != QModelIndex()
              && gfxview.rowController()->isRowVisible(idx));
@@ -189,7 +189,7 @@ void View::Private::slotExpanded(const QModelIndex &_idx)
 void View::Private::slotVerticalScrollValueChanged(int val)
 {
 #if 0
-    qDebug() << "View::Private::slotVerticalScrollValueChanged(" << val << ")="
+    qCDebug(KDGANTT_LOG) << "View::Private::slotVerticalScrollValueChanged(" << val << ")="
              << val / gfxview.verticalScrollBar()->singleStep();
 #endif
     leftWidget->verticalScrollBar()->setValue(val / gfxview.verticalScrollBar()->singleStep());
@@ -197,14 +197,14 @@ void View::Private::slotVerticalScrollValueChanged(int val)
 
 void View::Private::slotLeftWidgetVerticalRangeChanged(int min, int max)
 {
-    //qDebug() << "View::Private::slotLeftWidgetVerticalRangeChanged("<<min<<max<<")";
+    //qCDebug(KDGANTT_LOG) << "View::Private::slotLeftWidgetVerticalRangeChanged("<<min<<max<<")";
     gfxview.verticalScrollBar()->setRange(min, max);
     gfxview.updateSceneRect();
 }
 
 void View::Private::slotGfxViewVerticalRangeChanged(int min, int max)
 {
-    //qDebug() << "View::Private::slotGfxViewVerticalRangeChanged("<<min<<max<<")";
+    //qCDebug(KDGANTT_LOG) << "View::Private::slotGfxViewVerticalRangeChanged("<<min<<max<<")";
     int leftMin = leftWidget->verticalScrollBar()->minimum();
     int leftMax = leftWidget->verticalScrollBar()->maximum();
     bool blocked = gfxview.verticalScrollBar()->blockSignals(true);

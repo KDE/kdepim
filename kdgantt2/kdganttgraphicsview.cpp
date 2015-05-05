@@ -195,7 +195,7 @@ void GraphicsView::Private::slotColumnsRemoved(const QModelIndex &parent,  int s
 
 void GraphicsView::Private::slotDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
-    //qDebug() << "GraphicsView::slotDataChanged("<<topLeft<<bottomRight<<")";
+    //qCDebug(KDGANTT_LOG) << "GraphicsView::slotDataChanged("<<topLeft<<bottomRight<<")";
     const QModelIndex parent = topLeft.parent();
     for (int row = topLeft.row(); row <= bottomRight.row(); ++row) {
         scene.updateRow(scene.summaryHandlingModel()->index(row, 0, parent));
@@ -204,13 +204,13 @@ void GraphicsView::Private::slotDataChanged(const QModelIndex &topLeft, const QM
 
 void GraphicsView::Private::slotLayoutChanged()
 {
-    //qDebug() << "slotLayoutChanged()";
+    //qCDebug(KDGANTT_LOG) << "slotLayoutChanged()";
     q->updateScene();
 }
 
 void GraphicsView::Private::slotModelReset()
 {
-    //qDebug() << "slotModelReset()";
+    //qCDebug(KDGANTT_LOG) << "slotModelReset()";
     q->updateScene();
 }
 
@@ -224,10 +224,10 @@ void GraphicsView::Private::slotRowsInserted(const QModelIndex &parent,  int sta
 
 void GraphicsView::Private::slotRowsAboutToBeRemoved(const QModelIndex &parent,  int start, int end)
 {
-    //qDebug() << "GraphicsView::Private::slotRowsAboutToBeRemoved("<<parent<<start<<end<<")";
+    //qCDebug(KDGANTT_LOG) << "GraphicsView::Private::slotRowsAboutToBeRemoved("<<parent<<start<<end<<")";
     for (int row = start; row <= end; ++row) {
         for (int col = 0; col < scene.summaryHandlingModel()->columnCount(parent); ++col) {
-            //qDebug() << "removing "<<scene.summaryHandlingModel()->index( row, col, parent );
+            //qCDebug(KDGANTT_LOG) << "removing "<<scene.summaryHandlingModel()->index( row, col, parent );
             scene.removeItem(scene.summaryHandlingModel()->index(row, col, parent));
         }
     }
@@ -235,7 +235,7 @@ void GraphicsView::Private::slotRowsAboutToBeRemoved(const QModelIndex &parent, 
 
 void GraphicsView::Private::slotRowsRemoved(const QModelIndex &parent,  int start, int end)
 {
-    //qDebug() << "GraphicsView::Private::slotRowsRemoved("<<parent<<start<<end<<")";
+    //qCDebug(KDGANTT_LOG) << "GraphicsView::Private::slotRowsRemoved("<<parent<<start<<end<<")";
     // TODO
     Q_UNUSED(parent);
     Q_UNUSED(start);
@@ -658,7 +658,7 @@ void GraphicsView::updateScene()
         updateRow(idx);
     } while ((idx = rowController()->indexBelow(idx)) != QModelIndex() && rowController()->isRowVisible(idx));
     //constraintModel()->cleanup();
-    //qDebug() << constraintModel();
+    //qCDebug(KDGANTT_LOG) << constraintModel();
     updateSceneRect();
     if (scene()) {
         scene()->invalidate(QRectF(), QGraphicsScene::BackgroundLayer);
