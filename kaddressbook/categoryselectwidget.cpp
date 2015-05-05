@@ -46,7 +46,7 @@ class CategorySelectWidgetPrivate : public QObject
     Q_DECLARE_PUBLIC(CategorySelectWidget)
 
 public:
-    CategorySelectWidgetPrivate(CategorySelectWidget *parent);
+    explicit CategorySelectWidgetPrivate(CategorySelectWidget *parent);
 
     Akonadi::TagModel *tagModel;
     int rowOffset;
