@@ -350,9 +350,8 @@ void MainWidget::configure()
   dlg.exec();
 }
 
-bool MainWidget::handleCommandLine()
+void MainWidget::handleCommandLine()
 {
-  bool doneSomething = false;
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   if ( args->isSet( "import" ) ) {
       for ( int i = 0; i < args->count(); ++i ) {
@@ -360,7 +359,6 @@ bool MainWidget::handleCommandLine()
       }
   }
   args->clear();
-  return doneSomething;
 }
 
 
