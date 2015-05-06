@@ -15,17 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KMAILCVTFILTERINFOGUI_H
-#define KMAILCVTFILTERINFOGUI_H
+#ifndef IMPORTWIZARDFILTERINFOGUI_H
+#define IMPORTWIZARDFILTERINFOGUI_H
 
 #include "filterinfogui.h"
 #include "kimportpage.h"
 
-class KMailCvtFilterInfoGui : public MailImporter::FilterInfoGui
+class ImportWizardFilterInfoGui : public MailImporter::FilterInfoGui
 {
 public:
-    explicit KMailCvtFilterInfoGui(KImportPage *dlg, QWidget *parent);
-    ~KMailCvtFilterInfoGui();
+    explicit ImportWizardFilterInfoGui(KImportPage *dlg, QWidget *parent);
+    ~ImportWizardFilterInfoGui();
 
     void setStatusMessage(const QString &status) Q_DECL_OVERRIDE;
     void setFrom(const QString &from) Q_DECL_OVERRIDE;
@@ -44,5 +44,5 @@ private:
     KImportPage *m_dlg;
 };
 
-#endif /* KMAILCVTFILTERINFOGUI_H */
+#endif /* IMPORTWIZARDFILTERINFOGUI_H */
 

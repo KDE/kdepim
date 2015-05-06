@@ -17,7 +17,7 @@ main.cpp
 
 set(importwizard_manual_SRCS
 manual/kimportpage.cpp
-manual/kmailcvtfilterinfogui.cpp
+manual/importwizardfilterinfogui.cpp
 manual/kselfilterpage.cpp
 )
 

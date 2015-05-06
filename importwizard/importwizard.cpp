@@ -43,7 +43,7 @@
 
 #include "manual/kimportpage.h"
 #include "manual/kselfilterpage.h"
-#include "manual/kmailcvtfilterinfogui.h"
+#include "manual/importwizardfilterinfogui.h"
 
 #include "mailimporter/filterinfo.h"
 
@@ -363,7 +363,7 @@ void ImportWizard::next()
         //PORT IT KF5 enableButton(KDialog::User3,false);
         // Start import
         MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
-        KMailCvtFilterInfoGui *infoGui = new KMailCvtFilterInfoGui(mImportpage, this);
+        ImportWizardFilterInfoGui *infoGui = new ImportWizardFilterInfoGui(mImportpage, this);
         info->setFilterInfoGui(infoGui);
         info->setStatusMessage(i18n("Import in progress"));
         info->setRemoveDupMessage( mSelfilterpage->removeDupMsg_checked() );

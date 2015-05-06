@@ -15,78 +15,78 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "kmailcvtfilterinfogui.h"
+#include "importwizardfilterinfogui.h"
 #include <KMessageBox>
 #include <QApplication>
 
-KMailCvtFilterInfoGui::KMailCvtFilterInfoGui(KImportPage *dlg, QWidget *parent)
+ImportWizardFilterInfoGui::ImportWizardFilterInfoGui(KImportPage *dlg, QWidget *parent)
     : MailImporter::FilterInfoGui(),
       m_parent(parent),
       m_dlg(dlg)
 {
 }
 
-KMailCvtFilterInfoGui::~KMailCvtFilterInfoGui()
+ImportWizardFilterInfoGui::~ImportWizardFilterInfoGui()
 {
 }
 
-void KMailCvtFilterInfoGui::setStatusMessage(const QString &status)
+void ImportWizardFilterInfoGui::setStatusMessage(const QString &status)
 {
     m_dlg->widget()->mMailImporterWidget->setStatusMessage(status);
 }
 
-void KMailCvtFilterInfoGui::setFrom(const QString &from)
+void ImportWizardFilterInfoGui::setFrom(const QString &from)
 {
     m_dlg->widget()->mMailImporterWidget->setFrom(from);
 }
 
-void KMailCvtFilterInfoGui::setTo(const QString &to)
+void ImportWizardFilterInfoGui::setTo(const QString &to)
 {
     m_dlg->widget()->mMailImporterWidget->setTo(to);
 }
 
-void KMailCvtFilterInfoGui::setCurrent(const QString &current)
+void ImportWizardFilterInfoGui::setCurrent(const QString &current)
 {
     m_dlg->widget()->mMailImporterWidget->setCurrent(current);
     qApp->processEvents();
 }
 
-void  KMailCvtFilterInfoGui::setCurrent(int percent)
+void  ImportWizardFilterInfoGui::setCurrent(int percent)
 {
     m_dlg->widget()->mMailImporterWidget->setCurrent(percent);
     qApp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
 }
 
-void  KMailCvtFilterInfoGui::setOverall(int percent)
+void  ImportWizardFilterInfoGui::setOverall(int percent)
 {
     m_dlg->widget()->mMailImporterWidget->setOverall(percent);
 }
 
-void KMailCvtFilterInfoGui::addInfoLogEntry(const QString &log)
+void ImportWizardFilterInfoGui::addInfoLogEntry(const QString &log)
 {
     m_dlg->widget()->mMailImporterWidget->addInfoLogEntry(log);
     m_dlg->widget()->mMailImporterWidget->setLastCurrentItem();
     qApp->processEvents();
 }
 
-void KMailCvtFilterInfoGui::addErrorLogEntry(const QString &log)
+void ImportWizardFilterInfoGui::addErrorLogEntry(const QString &log)
 {
     m_dlg->widget()->mMailImporterWidget->addErrorLogEntry(log);
     m_dlg->widget()->mMailImporterWidget->setLastCurrentItem();
     qApp->processEvents();
 }
 
-void KMailCvtFilterInfoGui::clear()
+void ImportWizardFilterInfoGui::clear()
 {
     m_dlg->widget()->mMailImporterWidget->clear();
 }
 
-void KMailCvtFilterInfoGui::alert(const QString &message)
+void ImportWizardFilterInfoGui::alert(const QString &message)
 {
     KMessageBox::information(m_parent, message);
 }
 
-QWidget *KMailCvtFilterInfoGui::parent() const
+QWidget *ImportWizardFilterInfoGui::parent() const
 {
     return m_parent;
 }
