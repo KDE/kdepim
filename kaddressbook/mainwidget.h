@@ -84,7 +84,7 @@ public Q_SLOTS:
     void mergeContacts();
     void slotSearchDuplicateContacts();
 
-    bool handleCommandLine();
+    void handleCommandLine();
 
 private Q_SLOTS:
     void delayedInit();
