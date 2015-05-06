@@ -49,12 +49,14 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 
     mStopButton = new QToolButton;
     mStopButton->setObjectName(QStringLiteral("stopbutton"));
+    mPlayPauseButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-stop")));
     mStopButton->setToolTip(i18n("Stop"));
     connect(mStopButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotStop);
     hbox->addWidget(mStopButton);
 
     mPlayPauseButton = new QToolButton;
     mPlayPauseButton->setObjectName(QStringLiteral("playpausebutton"));
+    mPlayPauseButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-start")));
     connect(mPlayPauseButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotPlayPause);
     hbox->addWidget(mPlayPauseButton);
 
@@ -157,7 +159,7 @@ void TextToSpeechWidget::setState(TextToSpeechWidget::State state)
 
 void TextToSpeechWidget::updateButtonState()
 {
-    //TODO update icons.
+    mPlayPauseButton->setIcon(QIcon::fromTheme((mState == Stop) ? QStringLiteral("media-playback-start") : QStringLiteral("media-playback-stop")));
     mPlayPauseButton->setEnabled((mState != Stop));
     mPlayPauseButton->setToolTip((mState != Play) ? i18n("Pause") : i18n("Play"));
 }
