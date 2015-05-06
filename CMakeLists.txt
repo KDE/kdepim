@@ -86,7 +86,7 @@ option(KDEPIM_NO_TEXTTOSPEECH "Do not use TextToSpeech in the kdepim application
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative OpenGL WebEngineWidgets)
 find_package(Qt5X11Extras NO_MODULE)
 if (NOT KDEPIM_NO_TEXTTOSPEECH)
-   find_package(Qt5 QUIET OPTIONAL_COMPONENTS TextToSpeech)
+   find_package(Qt5 OPTIONAL_COMPONENTS TextToSpeech)
 endif()
 find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 

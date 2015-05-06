@@ -54,7 +54,7 @@ TextToSpeechConfigDialog::~TextToSpeechConfigDialog()
 void TextToSpeechConfigDialog::readConfig()
 {
     KConfigGroup group(KSharedConfig::openConfig(), "TextToSpeechConfigDialog");
-    const QSize sizeDialog = group.readEntry("Size", QSize(600, 400));
+    const QSize sizeDialog = group.readEntry("Size", QSize(300, 200));
     if (sizeDialog.isValid()) {
         resize(sizeDialog);
     }

@@ -19,6 +19,7 @@
 #include "settings/pimcommonsettings.h"
 #include "abstracttexttospeechconfiginterface.h"
 #include "texttospeechconfiginterface.h"
+#include "texttospeechlanguagecombobox.h"
 #include <KLocalizedString>
 
 #include <QFormLayout>
@@ -55,7 +56,7 @@ TextToSpeechConfigWidget::TextToSpeechConfigWidget(QWidget *parent)
     mPitch->setOrientation(Qt::Horizontal);
     layout->addRow(i18n("Pitch:"), mPitch);
 
-    mLanguage = new QComboBox;
+    mLanguage = new PimCommon::TextToSpeechLanguageComboBox;
     mLanguage->setObjectName(QStringLiteral("language"));
     layout->addRow(i18n("Language:"), mLanguage);
     connect(mLanguage, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &TextToSpeechConfigWidget::valueChanged);
@@ -79,13 +80,7 @@ void TextToSpeechConfigWidget::updateLocale()
     if (localeName.isEmpty()) {
         return;
     }
-    const int countItem(mLanguage->count());
-    for (int i = 0; i < countItem; ++i) {
-        if (mLanguage->itemData(i).value<QLocale>().name() == localeName) {
-            mLanguage->setCurrentIndex(i);
-            break;
-        }
-    }
+    mLanguage->selectLocaleName(localeName);
 }
 
 void TextToSpeechConfigWidget::readConfig()
@@ -116,12 +111,6 @@ void TextToSpeechConfigWidget::slotUpdateAvailableLocales()
     mLanguage->clear();
     const QVector<QLocale> locales = mAbstractTextToSpeechConfigInterface->availableLocales();
     QLocale current = mAbstractTextToSpeechConfigInterface->locale();
-    Q_FOREACH (const QLocale &locale, locales) {
-        QVariant localeVariant(locale);
-        mLanguage->addItem(QLocale::languageToString(locale.language()), localeVariant);
-        if (locale.name() == current.name()) {
-            mLanguage->setCurrentIndex(mLanguage->count() - 1);
-        }
-    }
+    mLanguage->updateAvailableLocales(locales, current);
     updateLocale();
 }

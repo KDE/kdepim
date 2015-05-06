@@ -35,7 +35,6 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
-    //TODO add icons
     hbox->addStretch(0);
     QLabel *volume = new QLabel(i18n("Volume:"));
     hbox->addWidget(volume);
