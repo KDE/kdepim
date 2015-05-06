@@ -134,7 +134,7 @@ void PlainTextEditor::contextMenuEvent(QContextMenuEvent *event)
             popup->addSeparator();
         }
         if (d->supportFeatures & TextToSpeech) {
-            if (/*PimCommon::TextToSpeech::self()->isReady()*/1) {
+            if (PimCommon::TextToSpeech::self()->isReady()) {
                 QAction *speakAction = popup->addAction(i18n("Speak Text"));
                 speakAction->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-text-to-speech")));
                 speakAction->setEnabled(!emptyDocument);
