@@ -49,7 +49,7 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 
     mStopButton = new QToolButton;
     mStopButton->setObjectName(QStringLiteral("stopbutton"));
-    mPlayPauseButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-stop")));
+    mStopButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-stop")));
     mStopButton->setToolTip(i18n("Stop"));
     connect(mStopButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotStop);
     hbox->addWidget(mStopButton);
