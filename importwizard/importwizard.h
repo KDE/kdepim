@@ -35,7 +35,8 @@ class AbstractImporter;
 class KSelFilterPage;
 class KImportPage;
 
-namespace Akonadi {
+namespace Akonadi
+{
 class Collection;
 }
 class ImportWizard : public KAssistantDialog

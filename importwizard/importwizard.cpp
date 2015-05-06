@@ -106,22 +106,20 @@ ImportWizard::~ImportWizard()
     writeConfig();
 }
 
-
 void ImportWizard::readConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "FolderSelectionDialog" );
-    if ( group.hasKey( "LastSelectedFolder" ) ) {
-        mSelfilterpage->widget()->mCollectionRequestor->setCollection( CommonKernel->collectionFromId(group.readEntry("LastSelectedFolder", -1 )));
+    KConfigGroup group(KSharedConfig::openConfig(), "FolderSelectionDialog");
+    if (group.hasKey("LastSelectedFolder")) {
+        mSelfilterpage->widget()->mCollectionRequestor->setCollection(CommonKernel->collectionFromId(group.readEntry("LastSelectedFolder", -1)));
     }
 }
 
 void ImportWizard::writeConfig()
 {
-    KConfigGroup group( KSharedConfig::openConfig(), "FolderSelectionDialog" );
-    group.writeEntry( "LastSelectedFolder", mSelfilterpage->widget()->mCollectionRequestor->collection().id() );
+    KConfigGroup group(KSharedConfig::openConfig(), "FolderSelectionDialog");
+    group.writeEntry("LastSelectedFolder", mSelfilterpage->widget()->mCollectionRequestor->collection().id());
     group.sync();
 }
-
 
 void ImportWizard::updatePagesFromMode()
 {
@@ -156,24 +154,25 @@ void ImportWizard::createManualModePage()
     addPage(mImportpageItem);
 
     // Disable the 'next button to begin with.
-    setValid( mSelfilterpageItem, false );
+    setValid(mSelfilterpageItem, false);
 
-    connect( mSelfilterpage->widget()->mCollectionRequestor, SIGNAL(folderChanged(Akonadi::Collection)), this, SLOT(slotCollectionChanged(Akonadi::Collection)) );
+    connect(mSelfilterpage->widget()->mCollectionRequestor, SIGNAL(folderChanged(Akonadi::Collection)), this, SLOT(slotCollectionChanged(Akonadi::Collection)));
 }
 
-void ImportWizard::slotCollectionChanged( const Akonadi::Collection &selectedCollection )
+void ImportWizard::slotCollectionChanged(const Akonadi::Collection &selectedCollection)
 {
-    if( selectedCollection.isValid() ){
-        setValid( mSelfilterpageItem, true );
+    if (selectedCollection.isValid()) {
+        setValid(mSelfilterpageItem, true);
     } else {
-        setValid( mSelfilterpageItem, false );
+        setValid(mSelfilterpageItem, false);
     }
 }
 
 void ImportWizard::reject()
 {
-    if ( currentPage() == mImportpageItem )
-        MailImporter::FilterInfo::terminateASAP(); // ie. import in progress
+    if (currentPage() == mImportpageItem) {
+        MailImporter::FilterInfo::terminateASAP();    // ie. import in progress
+    }
     KAssistantDialog::reject();
 }
 
@@ -351,31 +350,33 @@ void ImportWizard::next()
         MailImporter::Filter *selectedFilter = mSelfilterpage->getSelectedFilter();
         Akonadi::Collection selectedCollection = mSelfilterpage->widget()->mCollectionRequestor->collection();
         // without filter don't go next
-        if ( !selectedFilter )
+        if (!selectedFilter) {
             return;
+        }
         // Ensure we have a valid collection.
-        if( !selectedCollection.isValid() )
+        if (!selectedCollection.isValid()) {
             return;
+        }
         // Goto next page
         KAssistantDialog::next();
         // Disable back & finish
-        setValid( currentPage(), false );
+        setValid(currentPage(), false);
         //PORT IT KF5 enableButton(KDialog::User3,false);
         // Start import
         MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
         ImportWizardFilterInfoGui *infoGui = new ImportWizardFilterInfoGui(mImportpage, this);
         info->setFilterInfoGui(infoGui);
         info->setStatusMessage(i18n("Import in progress"));
-        info->setRemoveDupMessage( mSelfilterpage->removeDupMsg_checked() );
+        info->setRemoveDupMessage(mSelfilterpage->removeDupMsg_checked());
         info->clear(); // Clear info from last time
-        info->setRootCollection( selectedCollection );
-        selectedFilter->setFilterInfo( info );
+        info->setRootCollection(selectedCollection);
+        selectedFilter->setFilterInfo(info);
         selectedFilter->import();
         info->setStatusMessage(i18n("Import finished"));
         // Cleanup
         delete info;
         // Enable finish & back buttons
-        setValid( currentPage(), true );
+        setValid(currentPage(), true);
         //PORT KF5 enableButton(KDialog::User3,true);
     } else {
         KAssistantDialog::next();
