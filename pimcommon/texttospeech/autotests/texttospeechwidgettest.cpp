@@ -47,16 +47,19 @@ void TextToSpeechWidgetTest::shouldHaveDefaultValue()
     QToolButton *stopButton = textToSpeechWidget.findChild<QToolButton *>(QStringLiteral("stopbutton"));
     QVERIFY(stopButton);
     QVERIFY(stopButton->isEnabled());
+    QVERIFY(!stopButton->icon().isNull());
 
     QToolButton *playPauseButton = textToSpeechWidget.findChild<QToolButton *>(QStringLiteral("playpausebutton"));
     QVERIFY(playPauseButton);
     QVERIFY(!playPauseButton->isEnabled());
+    QVERIFY(!playPauseButton->icon().isNull());
 
     QSlider *volume = textToSpeechWidget.findChild<QSlider *>(QStringLiteral("volumeslider"));
     QVERIFY(volume);
 
     QToolButton *configureButton = textToSpeechWidget.findChild<QToolButton *>(QStringLiteral("configurebutton"));
     QVERIFY(configureButton);
+    QVERIFY(!configureButton->icon().isNull());
 }
 
 void TextToSpeechWidgetTest::shouldChangeButtonEnableStateWhenChangeState()
