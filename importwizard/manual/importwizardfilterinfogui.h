@@ -19,12 +19,12 @@
 #define IMPORTWIZARDFILTERINFOGUI_H
 
 #include "filterinfogui.h"
-#include "kimportpage.h"
+#include "manualimportmailpage.h"
 
 class ImportWizardFilterInfoGui : public MailImporter::FilterInfoGui
 {
 public:
-    explicit ImportWizardFilterInfoGui(KImportPage *dlg, QWidget *parent);
+    explicit ImportWizardFilterInfoGui(ManualImportMailPage *dlg, QWidget *parent);
     ~ImportWizardFilterInfoGui();
 
     void setStatusMessage(const QString &status) Q_DECL_OVERRIDE;
@@ -41,7 +41,7 @@ public:
 
 private:
     QWidget *m_parent;
-    KImportPage *m_dlg;
+    ManualImportMailPage *m_dlg;
 };
 
 #endif /* IMPORTWIZARDFILTERINFOGUI_H */

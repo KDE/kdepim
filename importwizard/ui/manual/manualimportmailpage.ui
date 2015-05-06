@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>KImportPageDlg</class>
- <widget class="QWidget" name="KImportPageDlg">
+ <class>ManualImportMailPage</class>
+ <widget class="QWidget" name="ManualImportMailPage">
   <property name="geometry">
    <rect>
     <x>0</x>

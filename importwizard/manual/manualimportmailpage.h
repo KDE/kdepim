@@ -1,8 +1,8 @@
 /***************************************************************************
-                          kimportpage.cpp  -  description
+                          kimportpage.h  -  description
                              -------------------
     begin                : Fri Jan 17 2003
-    copyright            : (C) 2003 by Laurence Anderso
+    copyright            : (C) 2003 by Laurence Anderson
     email                : l.d.anderson@warwick.ac.uk
  ***************************************************************************/
 
@@ -15,25 +15,21 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kimportpage.h"
+#ifndef ManualImportMailPage_H
+#define ManualImportMailPage_H
 
-#include <QStandardPaths>
+#include "ui_manualimportmailpage.h"
 
-KImportPage::KImportPage(QWidget *parent)
-    : QWidget(parent)
+class ManualImportMailPage : public QWidget
 {
-    mWidget = new Ui::KImportPageDlg;
-    mWidget->setupUi(this);
-    mWidget->mIntroSidebar->setPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("importwizard/pics/step1.png")));
-}
+    Q_OBJECT
+public:
+    explicit ManualImportMailPage(QWidget *parent = Q_NULLPTR);
+    ~ManualImportMailPage();
 
-KImportPage::~KImportPage()
-{
-    delete mWidget;
-}
+    Ui::ManualImportMailPage *widget() const;
+private:
+    Ui::ManualImportMailPage *mWidget;
+};
 
-Ui::KImportPageDlg *KImportPage::widget() const
-{
-    return mWidget;
-}
-
+#endif

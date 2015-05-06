@@ -32,8 +32,8 @@ class ImportAddressbookPage;
 class ImportFinishPage;
 class ImportCalendarPage;
 class AbstractImporter;
-class KSelFilterPage;
-class KImportPage;
+class ManualSelectFilterPage;
+class ManualImportMailPage;
 
 namespace Akonadi
 {
@@ -75,8 +75,8 @@ private Q_SLOTS:
     void slotImportAddressbookClicked();
     void slotImportCalendarClicked();
     void slotSelectManualSelectionChanged(bool b);
-
     void slotCollectionChanged(const Akonadi::Collection &selectedCollection);
+
 private:
     void readConfig();
     void writeConfig();
@@ -112,8 +112,8 @@ private:
     ImportFinishPage *mImportFinishPage;
     ImportCalendarPage *mImportCalendarPage;
 
-    KSelFilterPage *mSelfilterpage;
-    KImportPage *mImportpage;
+    ManualSelectFilterPage *mSelfilterpage;
+    ManualImportMailPage *mImportpage;
     KPageWidgetItem *mSelfilterpageItem;
     KPageWidgetItem *mImportpageItem;
 };

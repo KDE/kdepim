@@ -19,7 +19,7 @@
 #include <KMessageBox>
 #include <QApplication>
 
-ImportWizardFilterInfoGui::ImportWizardFilterInfoGui(KImportPage *dlg, QWidget *parent)
+ImportWizardFilterInfoGui::ImportWizardFilterInfoGui(ManualImportMailPage *dlg, QWidget *parent)
     : MailImporter::FilterInfoGui(),
       m_parent(parent),
       m_dlg(dlg)

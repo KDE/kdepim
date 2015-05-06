@@ -1,8 +1,8 @@
 /***************************************************************************
-                          kselfilterpage.h  -  description
+                          kimportpage.cpp  -  description
                              -------------------
     begin                : Fri Jan 17 2003
-    copyright            : (C) 2003 by Laurence Anderson
+    copyright            : (C) 2003 by Laurence Anderso
     email                : l.d.anderson@warwick.ac.uk
  ***************************************************************************/
 
@@ -15,36 +15,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSELFILTERPAGE_H
-#define KSELFILTERPAGE_H
+#include "manualimportmailpage.h"
 
-#include "ui_kselfilterpagedlg.h"
-#include <QList>
-namespace MailImporter
+#include <QStandardPaths>
+
+ManualImportMailPage::ManualImportMailPage(QWidget *parent)
+    : QWidget(parent)
 {
-class Filter;
+    mWidget = new Ui::ManualImportMailPage;
+    mWidget->setupUi(this);
+    mWidget->mIntroSidebar->setPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("importwizard/pics/step1.png")));
 }
 
-class KSelFilterPage : public QWidget
+ManualImportMailPage::~ManualImportMailPage()
 {
-    Q_OBJECT
-public:
-    explicit KSelFilterPage(QWidget *parent = Q_NULLPTR);
-    ~KSelFilterPage();
+    delete mWidget;
+}
 
-    void  addFilter(MailImporter::Filter *f);
-    MailImporter::Filter *getSelectedFilter();
-    bool removeDupMsg_checked() const;
+Ui::ManualImportMailPage *ManualImportMailPage::widget() const
+{
+    return mWidget;
+}
 
-    Ui::KSelFilterPageDlg *widget();
-
-private Q_SLOTS:
-    void filterSelected(int i);
-
-private:
-    Ui::KSelFilterPageDlg *mWidget;
-    QList<MailImporter::Filter *> mFilterList;
-
-};
-
-#endif

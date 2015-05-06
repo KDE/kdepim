@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kimportpage.h  -  description
+                          kselfilterpage.h  -  description
                              -------------------
     begin                : Fri Jan 17 2003
     copyright            : (C) 2003 by Laurence Anderson
@@ -15,21 +15,36 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KIMPORTPAGE_H
-#define KIMPORTPAGE_H
+#ifndef KSELFILTERPAGE_H
+#define KSELFILTERPAGE_H
 
-#include "ui_kimportpagedlg.h"
+#include "ui_manualselectfilterpage.h"
+#include <QList>
+namespace MailImporter
+{
+class Filter;
+}
 
-class KImportPage : public QWidget
+class ManualSelectFilterPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit KImportPage(QWidget *parent = Q_NULLPTR);
-    ~KImportPage();
+    explicit ManualSelectFilterPage(QWidget *parent = Q_NULLPTR);
+    ~ManualSelectFilterPage();
 
-    Ui::KImportPageDlg *widget() const;
+    void  addFilter(MailImporter::Filter *f);
+    MailImporter::Filter *getSelectedFilter();
+    bool removeDupMsg_checked() const;
+
+    Ui::ManualSelectFilterPage *widget() const;
+
+private Q_SLOTS:
+    void filterSelected(int i);
+
 private:
-    Ui::KImportPageDlg *mWidget;
+    Ui::ManualSelectFilterPage *mWidget;
+    QList<MailImporter::Filter *> mFilterList;
+
 };
 
 #endif

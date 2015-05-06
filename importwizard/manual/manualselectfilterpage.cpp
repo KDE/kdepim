@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 // Local includes
-#include "kselfilterpage.h"
+#include "manualselectfilterpage.h"
 
 // Filter includes
 #include <filter_mbox.h>
@@ -51,13 +51,13 @@
 
 using namespace MailImporter;
 
-KSelFilterPage::KSelFilterPage(QWidget *parent)
+ManualSelectFilterPage::ManualSelectFilterPage(QWidget *parent)
     : QWidget(parent)
 {
-    mWidget = new Ui::KSelFilterPageDlg;
+    mWidget = new Ui::ManualSelectFilterPage;
     mWidget->setupUi(this);
     mWidget->mIntroSidebar->setPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("importwizard/pics/step1.png")));
-    connect(mWidget->mFilterCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &KSelFilterPage::filterSelected);
+    connect(mWidget->mFilterCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &ManualSelectFilterPage::filterSelected);
 
     // Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
     // The former approach was overengineered and only worked around problems in the design
@@ -86,14 +86,14 @@ KSelFilterPage::KSelFilterPage(QWidget *parent)
     mWidget->mCollectionRequestor->setMustBeReadWrite(true);
 }
 
-KSelFilterPage::~KSelFilterPage()
+ManualSelectFilterPage::~ManualSelectFilterPage()
 {
     qDeleteAll(mFilterList);
     mFilterList.clear();
     delete mWidget;
 }
 
-void KSelFilterPage::filterSelected(int i)
+void ManualSelectFilterPage::filterSelected(int i)
 {
     QString info = mFilterList.at(i)->info();
     const QString author = mFilterList.at(i)->author();
@@ -103,7 +103,7 @@ void KSelFilterPage::filterSelected(int i)
     mWidget->mDesc->setText(info);
 }
 
-void KSelFilterPage::addFilter(Filter *f)
+void ManualSelectFilterPage::addFilter(Filter *f)
 {
     mFilterList.append(f);
     mWidget->mFilterCombo->addItem(f->name());
@@ -112,17 +112,17 @@ void KSelFilterPage::addFilter(Filter *f)
     }
 }
 
-bool KSelFilterPage::removeDupMsg_checked() const
+bool ManualSelectFilterPage::removeDupMsg_checked() const
 {
     return mWidget->remDupMsg->isChecked();
 }
 
-Filter *KSelFilterPage::getSelectedFilter()
+Filter *ManualSelectFilterPage::getSelectedFilter()
 {
     return mFilterList.at(mWidget->mFilterCombo->currentIndex());
 }
 
-Ui::KSelFilterPageDlg *KSelFilterPage::widget()
+Ui::ManualSelectFilterPage *ManualSelectFilterPage::widget() const
 {
     return mWidget;
 }

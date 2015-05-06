@@ -41,8 +41,8 @@
 #include "autodetect/claws-mail/clawsmailimportdata.h"
 #include "autodetect/trojita/trojitaimportdata.h"
 
-#include "manual/kimportpage.h"
-#include "manual/kselfilterpage.h"
+#include "manual/manualimportmailpage.h"
+#include "manual/manualselectfilterpage.h"
 #include "manual/importwizardfilterinfogui.h"
 
 #include "mailimporter/filterinfo.h"
@@ -144,12 +144,12 @@ void ImportWizard::updatePagesFromMode()
 
 void ImportWizard::createManualModePage()
 {
-    mSelfilterpage = new KSelFilterPage(this);
+    mSelfilterpage = new ManualSelectFilterPage(this);
     mSelfilterpageItem = new KPageWidgetItem(mSelfilterpage, i18n("Step 1: Select Filter"));
 
     addPage(mSelfilterpageItem);
 
-    mImportpage = new KImportPage(this);
+    mImportpage = new ManualImportMailPage(this);
     mImportpageItem = new KPageWidgetItem(mImportpage, i18n("Step 2: Importing..."));
     addPage(mImportpageItem);
 
@@ -361,8 +361,9 @@ void ImportWizard::next()
         KAssistantDialog::next();
         // Disable back & finish
         setValid(currentPage(), false);
-        //PORT IT KF5 enableButton(KDialog::User3,false);
-        // Start import
+
+        finishButton()->setEnabled(false);
+
         MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
         ImportWizardFilterInfoGui *infoGui = new ImportWizardFilterInfoGui(mImportpage, this);
         info->setFilterInfoGui(infoGui);
@@ -377,7 +378,7 @@ void ImportWizard::next()
         delete info;
         // Enable finish & back buttons
         setValid(currentPage(), true);
-        //PORT KF5 enableButton(KDialog::User3,true);
+        finishButton()->setEnabled(true);
     } else {
         KAssistantDialog::next();
     }

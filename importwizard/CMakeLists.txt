@@ -16,9 +16,9 @@ main.cpp
 )
 
 set(importwizard_manual_SRCS
-manual/kimportpage.cpp
+manual/manualimportmailpage.cpp
 manual/importwizardfilterinfogui.cpp
-manual/kselfilterpage.cpp
+manual/manualselectfilterpage.cpp
 )
 
 set(importwizard_autodetect_SRCS
@@ -83,8 +83,9 @@ ki18n_wrap_ui(importwizard_SRCS
                   ui/autodetect/selectcomponentpage.ui 
 		  ui/autodetect/importfinishpage.ui 
 		  ui/autodetect/importcalendarpage.ui
-                  ui/manual/kimportpagedlg.ui  
-                  ui/manual/kselfilterpagedlg.ui)
+                  ui/manual/manualimportmailpage.ui  
+                  ui/manual/manualselectfilterpage.ui
+)
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-kontact-import-wizard.png")
 ecm_add_app_icon(importwizard_SRCS ICONS ${ICONS_SRCS})
