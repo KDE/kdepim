@@ -132,8 +132,8 @@ int main(int argc, char **argv)
         qDebug() << "Need at least two arguments";
         return 1;
     }
-    KAboutData aboutData(QLatin1String("test_gnupgprocessbase"), i18n("GnuPGProcessBase Test"), QLatin1String("0.1"));
     QApplication app(argc, argv);
+    KAboutData aboutData(QLatin1String("test_gnupgprocessbase"), i18n("GnuPGProcessBase Test"), QLatin1String("0.1"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

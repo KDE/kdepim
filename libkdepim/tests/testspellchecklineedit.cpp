@@ -30,8 +30,8 @@
 
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData(QStringLiteral("testspellchecklineedit"), i18n("Test SpellCheckLineEdit"), QStringLiteral("0.1"));
     QApplication app(argc, argv);
+    KAboutData aboutData(QStringLiteral("testspellchecklineedit"), i18n("Test SpellCheckLineEdit"), QStringLiteral("0.1"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

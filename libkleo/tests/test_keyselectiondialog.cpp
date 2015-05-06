@@ -43,8 +43,8 @@
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("test_keyselectiondialog"), i18n("KeySelectionDialog Test"), QLatin1String("0.1"));
     QApplication app(argc, argv);
+    KAboutData aboutData(QLatin1String("test_keyselectiondialog"), i18n("KeySelectionDialog Test"), QLatin1String("0.1"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

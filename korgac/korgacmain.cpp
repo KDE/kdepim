@@ -66,12 +66,12 @@ private:
 #endif
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("korgac"));
 
     migrate.setConfigFiles(QStringList() << QStringLiteral("korgacrc"));
     migrate.migrate();
 
-    QApplication app(argc, argv);
 
     KAboutData aboutData(QStringLiteral("korgac"), i18n("KOrganizer Reminder Daemon"),
                          QStringLiteral(KDEPIM_VERSION), i18n("KOrganizer Reminder Daemon"),

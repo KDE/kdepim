@@ -24,9 +24,9 @@
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QLatin1String("customtextedit_gui"), i18n("CustomTextEditTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for customtextedit widget"));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

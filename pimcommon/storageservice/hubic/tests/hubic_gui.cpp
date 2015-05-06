@@ -34,9 +34,9 @@ HubicTestWidget::HubicTestWidget(QWidget *parent)
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("hubic_gui"), i18n("hubic_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for short hubic"));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

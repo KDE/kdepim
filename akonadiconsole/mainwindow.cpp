@@ -29,7 +29,6 @@
 #include <KMessageBox>
 #include <KStandardAction>
 
-#include <QApplication>
 #include <KSharedConfig>
 
 MainWindow::MainWindow(QWidget *parent)

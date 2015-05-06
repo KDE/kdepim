@@ -47,8 +47,8 @@ template<class T> Akonadi::Item incidenceToItem(T *incidence)
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QStringLiteral("testkabc"), i18n("TestKabc"), QStringLiteral("0.1"));
     QApplication app(argc, argv);
+    KAboutData aboutData(QStringLiteral("testkabc"), i18n("TestKabc"), QStringLiteral("0.1"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

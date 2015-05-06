@@ -67,6 +67,7 @@ QString authTypeToStr(Ispdb::authType authType)
 }
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("ispdb"),
                          i18n("ISPDB Assistant"),
                          QStringLiteral("0.1"),
@@ -76,7 +77,6 @@ int main(int argc, char **argv)
                          QStringLiteral("http://pim.kde.org/akonadi/"));
     aboutData.addAuthor(i18n("Tom Albers"),  i18n("Author"), QStringLiteral("toma@kde.org"));
 
-    QApplication app(argc, argv);
     app.setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);

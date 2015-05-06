@@ -43,7 +43,6 @@
 #include <mailcommon/util/mailutil.h>
 
 #include <QtCore/QTimer>
-#include <QApplication>
 
 // other headers
 #include <algorithm>

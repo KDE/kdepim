@@ -84,9 +84,9 @@ void ScamDetectionTestWidget::slotOpenHtml()
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QLatin1String("scamdetection_gui"), i18n("ScamDetectionTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for scamdetection widget"));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

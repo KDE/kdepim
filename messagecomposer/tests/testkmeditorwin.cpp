@@ -56,13 +56,13 @@ testKMeditorWindow::~testKMeditorWindow()
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("testkmeditorwin"),
                          i18n("KMeditorTestWin"),
                          QStringLiteral("1.0"));
 
     KAboutData::setApplicationData(aboutData);
 
-    QApplication app(argc, argv);
 
     QCommandLineParser parser;
     parser.addVersionOption();

@@ -78,9 +78,9 @@ void AdBlockBlockableItemTestDialog::slotOpenHtml()
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QLatin1String("adblockblockableitemtest_gui"), i18n("adblockblockableitemtest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for adblockblokabledialog"));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

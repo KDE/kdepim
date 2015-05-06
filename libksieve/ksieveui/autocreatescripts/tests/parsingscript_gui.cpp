@@ -40,9 +40,9 @@ using KSieve::Parser;
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("parsingscript_gui"), i18n("ParsingScriptTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for parsing script dialog"));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

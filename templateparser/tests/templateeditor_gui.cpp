@@ -39,9 +39,9 @@ TemplateEditorTestWidget::~TemplateEditorTestWidget()
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("templateeditortest_gui"), i18n("TemplateEditorTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for template editor widget"));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

@@ -28,9 +28,9 @@
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
     KLocalizedString::setApplicationDomain("mboximporter");
 
-    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("mboximporter"),
                          i18n("MBox importer tool"),
                          QStringLiteral(KDEPIM_VERSION),

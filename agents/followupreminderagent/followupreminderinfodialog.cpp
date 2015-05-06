@@ -31,7 +31,6 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QApplication>
 
 FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     : QDialog(parent)

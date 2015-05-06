@@ -42,9 +42,9 @@ TextToSpeechConfigGui::~TextToSpeechConfigGui()
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("texttospeechconfig_gui"), i18n("texttospeechconfig_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for config text to speech"));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

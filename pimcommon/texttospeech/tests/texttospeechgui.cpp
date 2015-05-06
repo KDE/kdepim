@@ -64,9 +64,9 @@ void TextToSpeechGui::slotTextToSpeech()
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("texttospeech_gui"), i18n("texttospeech_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for text to speech"));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

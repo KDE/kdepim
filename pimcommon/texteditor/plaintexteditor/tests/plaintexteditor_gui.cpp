@@ -24,9 +24,9 @@
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("plaintexteditor_gui"), i18n("PlainTextEditorTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for plaintexteditor widget"));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

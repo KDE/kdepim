@@ -35,9 +35,9 @@ DropboxTestWidget::DropboxTestWidget(QWidget *parent)
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("dropboxToken_gui"), i18n("dropboxToken_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for short dropboxtoken"));
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

@@ -141,8 +141,8 @@ void CertListView::slotStart()
 int main(int argc, char **argv)
 {
 
-    KAboutData aboutData(QStringLiteral("test_keylister"), i18n("KeyLister Test"), QStringLiteral("0.1"));
     QApplication app(argc, argv);
+    KAboutData aboutData(QStringLiteral("test_keylister"), i18n("KeyLister Test"), QStringLiteral("0.1"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
