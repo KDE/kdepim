@@ -25,6 +25,7 @@ TextToSpeechInterface::TextToSpeechInterface(TextToSpeechWidget *textToSpeechWid
     : AbstractTextToSpeechInterface(parent),
       mTextToSpeechWidget(textToSpeechWidget)
 {
+    PimCommon::TextToSpeech::self(); //init
     connect(mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::stateChanged, this, &TextToSpeechInterface::stateChanged);
     connect(PimCommon::TextToSpeech::self(), &PimCommon::TextToSpeech::stateChanged, mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::slotStateChanged);
 }
