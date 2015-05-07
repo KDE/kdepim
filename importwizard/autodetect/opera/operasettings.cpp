@@ -54,44 +54,44 @@ OperaSettings::~OperaSettings()
 
 void OperaSettings::readAccount(const KConfigGroup &grp)
 {
-    const QString incomingProtocol = grp.readEntry(QLatin1String("Incoming Protocol"));
-    const int port = grp.readEntry(QLatin1String("Incoming Port"), -1);
+    const QString incomingProtocol = grp.readEntry(QStringLiteral("Incoming Protocol"));
+    const int port = grp.readEntry(QStringLiteral("Incoming Port"), -1);
 
-    const QString serverName = grp.readEntry(QLatin1String("Incoming Servername"));
-    const QString userName = grp.readEntry(QLatin1String("Incoming Username"));
+    const QString serverName = grp.readEntry(QStringLiteral("Incoming Servername"));
+    const QString userName = grp.readEntry(QStringLiteral("Incoming Username"));
 
-    const int secure = grp.readEntry(QLatin1String("Secure Connection In"), -1);
+    const int secure = grp.readEntry(QStringLiteral("Secure Connection In"), -1);
 
-    const int pollInterval = grp.readEntry(QLatin1String("Poll Interval"), -1);
+    const int pollInterval = grp.readEntry(QStringLiteral("Poll Interval"), -1);
 
-    const int authMethod = grp.readEntry(QLatin1String("Incoming Authentication Method"), -1);
+    const int authMethod = grp.readEntry(QStringLiteral("Incoming Authentication Method"), -1);
 
-    const QString name = grp.readEntry(QLatin1String("Account Name"));
+    const QString name = grp.readEntry(QStringLiteral("Account Name"));
 
-    const bool enableManualCheck = (grp.readEntry(QLatin1String("Manual Check Enabled"), 0) == 1);
+    const bool enableManualCheck = (grp.readEntry(QStringLiteral("Manual Check Enabled"), 0) == 1);
 
     //TODO
-    const bool markAsSeen = (grp.readEntry(QLatin1String("Mark Read If Seen"), 0) == 1);
+    const bool markAsSeen = (grp.readEntry(QStringLiteral("Mark Read If Seen"), 0) == 1);
     Q_UNUSED(markAsSeen);
 
     QMap<QString, QVariant> settings;
     if (incomingProtocol == QLatin1String("IMAP")) {
-        settings.insert(QLatin1String("ImapServer"), serverName);
-        settings.insert(QLatin1String("UserName"), userName);
+        settings.insert(QStringLiteral("ImapServer"), serverName);
+        settings.insert(QStringLiteral("UserName"), userName);
         if (port != -1) {
-            settings.insert(QLatin1String("ImapPort"), port);
+            settings.insert(QStringLiteral("ImapPort"), port);
         }
         if (secure == 1) {
-            settings.insert(QLatin1String("Safety"), QLatin1String("STARTTLS"));
+            settings.insert(QStringLiteral("Safety"), QStringLiteral("STARTTLS"));
         } else if (secure == 0) {
-            settings.insert(QLatin1String("Safety"), QLatin1String("None"));
+            settings.insert(QStringLiteral("Safety"), QStringLiteral("None"));
         }
 
         if (pollInterval == 0) {
-            settings.insert(QLatin1String("IntervalCheckEnabled"), false);
+            settings.insert(QStringLiteral("IntervalCheckEnabled"), false);
         } else {
-            settings.insert(QLatin1String("IntervalCheckEnabled"), true);
-            settings.insert(QLatin1String("IntervalCheckTime"), pollInterval);
+            settings.insert(QStringLiteral("IntervalCheckEnabled"), true);
+            settings.insert(QStringLiteral("IntervalCheckTime"), pollInterval);
         }
 
         const QString agentIdentifyName = AbstractBase::createResource("akonadi_imap_resource", name, settings);
@@ -141,19 +141,19 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
 
         switch (authMethod) {
         case 0: //NONE
-            settings.insert(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::ANONYMOUS);
+            settings.insert(QStringLiteral("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::ANONYMOUS);
             break;
         case 1: //Clear Text
-            settings.insert(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::CLEAR);   //Verify
+            settings.insert(QStringLiteral("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::CLEAR);   //Verify
             break;
         case 6: //APOP
-            settings.insert(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::APOP);
+            settings.insert(QStringLiteral("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::APOP);
             break;
         case 10: //CRAM-MD5
-            settings.insert(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
+            settings.insert(QStringLiteral("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
             break;
         case 31: //Automatic
-            settings.insert(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::APOP);   //TODO: verify
+            settings.insert(QStringLiteral("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::APOP);   //TODO: verify
             break;
         default:
             qCDebug(IMPORTWIZARD_LOG) << " unknown authentication method :" << authMethod;

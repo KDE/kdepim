@@ -49,7 +49,7 @@ bool ClawsMailImportData::foundMailer() const
 
 QString ClawsMailImportData::name() const
 {
-    return QLatin1String("Claws Mails");
+    return QStringLiteral("Claws Mails");
 }
 
 bool ClawsMailImportData::importMails()

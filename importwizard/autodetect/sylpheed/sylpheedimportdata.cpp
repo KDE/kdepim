@@ -49,7 +49,7 @@ bool SylpheedImportData::foundMailer() const
 
 QString SylpheedImportData::name() const
 {
-    return QLatin1String("Sylpheed");
+    return QStringLiteral("Sylpheed");
 }
 
 bool SylpheedImportData::importSettings()

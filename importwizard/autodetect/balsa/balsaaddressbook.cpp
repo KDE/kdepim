@@ -61,18 +61,18 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
 
     if (type == QLatin1String("LibBalsaAddressBookLdap")) {
         ldapStruct ldap;
-        ldap.dn = grp.readEntry(QLatin1String("BaseDN"));
-        ldap.useTLS = (grp.readEntry(QLatin1String("EnableTLS")) == QLatin1String("true"));
-        ldap.ldapUrl = QUrl(grp.readEntry(QLatin1String("Host")));
+        ldap.dn = grp.readEntry(QStringLiteral("BaseDN"));
+        ldap.useTLS = (grp.readEntry(QStringLiteral("EnableTLS")) == QStringLiteral("true"));
+        ldap.ldapUrl = QUrl(grp.readEntry(QStringLiteral("Host")));
         ldap.port = ldap.ldapUrl.port();
         //TODO: verify
-        const QString bookDN  = grp.readEntry(QLatin1String("BookDN")); //TODO ?
+        const QString bookDN  = grp.readEntry(QStringLiteral("BookDN")); //TODO ?
         ImportWizardUtil::mergeLdap(ldap);
         addAddressBookImportInfo(i18n("Ldap created"));
     } else if (type == QLatin1String("LibBalsaAddressBookGpe")) {
         qCDebug(IMPORTWIZARD_LOG) << " Import it !";
     } else if (type == QLatin1String("LibBalsaAddressBookLdif")) {
-        const QString path = grp.readEntry(QLatin1String("Path"));
+        const QString path = grp.readEntry(QStringLiteral("Path"));
         if (!path.isEmpty()) {
             KContacts::Addressee::List contacts;
             KContacts::ContactGroup::List contactsGroup;
@@ -87,7 +87,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
 
                 KContacts::LDIFConverter::LDIFToAddressee(wholeFile, contacts, contactsGroup, dtDefault);
                 Q_FOREACH (KContacts::Addressee contact, contacts) {
-                    addImportNote(contact, QLatin1String("Balsa"));
+                    addImportNote(contact, QStringLiteral("Balsa"));
                     createContact(contact);
                 }
             }
@@ -96,9 +96,9 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
         const QString path = grp.readEntry(QLatin1String("Path"));
         if (!path.isEmpty()) {
             QMap<QString, QVariant> settings;
-            settings.insert(QLatin1String("Path"), path);
-            settings.insert(QLatin1String("DisplayName"), name);
-            addAddressBookImportInfo(i18n("New addressbook created: %1", createResource(QLatin1String("akonadi_vcard_resource") , name, settings)));
+            settings.insert(QStringLiteral("Path"), path);
+            settings.insert(QStringLiteral("DisplayName"), name);
+            addAddressBookImportInfo(i18n("New addressbook created: %1", createResource(QStringLiteral("akonadi_vcard_resource") , name, settings)));
         }
     } else {
         qCDebug(IMPORTWIZARD_LOG) << " unknown addressbook type :" << type;

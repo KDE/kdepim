@@ -29,16 +29,16 @@ void ImportWizardUtil::mergeLdap(const ldapStruct &ldap)
     KSharedConfigPtr ldapConfig = KSharedConfig::openConfig(QLatin1String("kabldaprc"));
     int numberOfLdapSelected = 0;
     KConfigGroup grp;
-    if (ldapConfig->hasGroup(QLatin1String("LDAP"))) {
-        grp = ldapConfig->group(QLatin1String("LDAP"));
-        numberOfLdapSelected = grp.readEntry(QLatin1String("NumSelectedHosts"), 0);
-        grp.writeEntry(QLatin1String("NumSelectedHosts"), (numberOfLdapSelected + 1));
+    if (ldapConfig->hasGroup(QStringLiteral("LDAP"))) {
+        grp = ldapConfig->group(QStringLiteral("LDAP"));
+        numberOfLdapSelected = grp.readEntry(QStringLiteral("NumSelectedHosts"), 0);
+        grp.writeEntry(QStringLiteral("NumSelectedHosts"), (numberOfLdapSelected + 1));
     } else {
-        grp = ldapConfig->group(QLatin1String("LDAP"));
-        grp.writeEntry(QLatin1String("NumSelectedHosts"), 1);
+        grp = ldapConfig->group(QStringLiteral("LDAP"));
+        grp.writeEntry(QStringLiteral("NumSelectedHosts"), 1);
 
-        KConfigGroup ldapSeach = ldapConfig->group(QLatin1String("LDAPSearch"));
-        ldapSeach.writeEntry(QLatin1String("SearchType"), 0);
+        KConfigGroup ldapSeach = ldapConfig->group(QStringLiteral("LDAPSearch"));
+        ldapSeach.writeEntry(QStringLiteral("SearchType"), 0);
     }
     const int port = ldap.port;
     if (port != -1) {

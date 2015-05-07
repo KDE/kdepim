@@ -82,7 +82,7 @@ void ClawsMailSettings::readSettingsColor(const KConfigGroup &group)
         if (!colorLevel1.isEmpty()) {
             const QColor col = QColor(colorLevel1);
             if (col.isValid()) {
-                addKmailConfig(QLatin1String("Reader"), QLatin1String("QuotedText1"), writeColor(col));
+                addKmailConfig(QStringLiteral("Reader"), QStringLiteral("QuotedText1"), writeColor(col));
             }
             //[Reader]  QuotedText1
         }
@@ -90,7 +90,7 @@ void ClawsMailSettings::readSettingsColor(const KConfigGroup &group)
         if (!colorLevel2.isEmpty()) {
             const QColor col = QColor(colorLevel2);
             if (col.isValid()) {
-                addKmailConfig(QLatin1String("Reader"), QLatin1String("QuotedText2"), writeColor(col));
+                addKmailConfig(QStringLiteral("Reader"), QStringLiteral("QuotedText2"), writeColor(col));
             }
             //[Reader]  QuotedText2
         }
@@ -98,7 +98,7 @@ void ClawsMailSettings::readSettingsColor(const KConfigGroup &group)
         if (!colorLevel3.isEmpty()) {
             const QColor col = QColor(colorLevel3);
             if (col.isValid()) {
-                addKmailConfig(QLatin1String("Reader"), QLatin1String("QuotedText3"), writeColor(col));
+                addKmailConfig(QStringLiteral("Reader"), QStringLiteral("QuotedText3"), writeColor(col));
             }
             //[Reader]  QuotedText3
         }
@@ -150,22 +150,22 @@ void ClawsMailSettings::readTemplateFormat(const KConfigGroup &group)
 void ClawsMailSettings::readGlobalSettings(const KConfigGroup &group)
 {
     SylpheedSettings::readGlobalSettings(group);
-    if (group.readEntry(QLatin1String("check_while_typing"), 0) == 1) {
-        addKmailConfig(QLatin1String("Spelling"), QLatin1String("backgroundCheckerEnabled"), true);
+    if (group.readEntry(QStringLiteral("check_while_typing"), 0) == 1) {
+        addKmailConfig(QStringLiteral("Spelling"), QStringLiteral("backgroundCheckerEnabled"), true);
     }
-    const int markAsRead = group.readEntry(QLatin1String("mark_as_read_delay"), -1);
+    const int markAsRead = group.readEntry(QStringLiteral("mark_as_read_delay"), -1);
     if (markAsRead != -1) {
-        addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), markAsRead);
-        addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
+        addKmailConfig(QStringLiteral("Behaviour"), QStringLiteral("DelayedMarkTime"), markAsRead);
+        addKmailConfig(QStringLiteral("Behaviour"), QStringLiteral("DelayedMarkAsRead"), true);
     }
 
-    const int warnLargeFileInserting = group.readEntry(QLatin1String("warn_large_insert"), 0);
+    const int warnLargeFileInserting = group.readEntry(QStringLiteral("warn_large_insert"), 0);
     if (warnLargeFileInserting == 0) {
-        addKmailConfig(QLatin1String("Composer"), QLatin1String("MaximumAttachmentSize"), -1);
+        addKmailConfig(QStringLiteral("Composer"), QStringLiteral("MaximumAttachmentSize"), -1);
     } else {
-        const int warnLargeFileSize = group.readEntry(QLatin1String("warn_large_insert_size"), -1);
+        const int warnLargeFileSize = group.readEntry(QStringLiteral("warn_large_insert_size"), -1);
         if (warnLargeFileSize > 0) {
-            addKmailConfig(QLatin1String("Composer"), QLatin1String("MaximumAttachmentSize"), warnLargeFileSize * 1024);
+            addKmailConfig(QStringLiteral("Composer"), QStringLiteral("MaximumAttachmentSize"), warnLargeFileSize * 1024);
         }
     }
 }
