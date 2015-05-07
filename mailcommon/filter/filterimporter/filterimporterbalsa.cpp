@@ -36,7 +36,7 @@ FilterImporterBalsa::FilterImporterBalsa( QFile *file )
     const QStringList filterList = config.groupList().filter( QRegExp( QLatin1String("filter-\\d+") ) );
     Q_FOREACH(const QString &filter, filterList) {
         KConfigGroup grp = config.group(filter);
-        addFilter(grp);
+        parseFilter(grp);
     }
 }
 
@@ -50,7 +50,7 @@ QString FilterImporterBalsa::defaultFiltersSettingsPath()
 }
 
 
-void FilterImporterBalsa::addFilter(const KConfigGroup &grp)
+void FilterImporterBalsa::parseFilter(const KConfigGroup &grp)
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
     const QString name = grp.readEntry(QLatin1String("Name"));

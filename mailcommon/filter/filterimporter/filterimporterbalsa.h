@@ -35,7 +35,7 @@ public:
     ~FilterImporterBalsa();
     static QString defaultFiltersSettingsPath();
 private:
-    void addFilter(const KConfigGroup &grp);
+    void parseFilter(const KConfigGroup &grp);
     void parseCondition(const QString& condition,MailCommon::MailFilter *filter );
     void parseAction(int actionType, const QString& action,MailCommon::MailFilter *filter);
 };
