@@ -56,6 +56,8 @@ void SieveEditorMenuBar::initActions()
     mPasteAction = KStandardAction::paste(this, SIGNAL(paste()), this);
     mCutAction = KStandardAction::cut(this, SIGNAL(cut()), this);
     mSelectAllAction = KStandardAction::selectAll(this, SIGNAL(selectAll()), this);
+    mZoomInAction = KStandardAction::zoomIn(this, SIGNAL(zoomIn()), this);
+    mZoomOutAction = KStandardAction::zoomOut(this, SIGNAL(zoomOut()), this);
     mUndoAction->setEnabled(false);
     mRedoAction->setEnabled(false);
     mCopyAction->setEnabled(false);
@@ -85,6 +87,9 @@ void SieveEditorMenuBar::initMenus()
     mEditorMenu->addAction(mReplaceAction);
     mEditorMenu->addSeparator();
     mEditorMenu->addAction(mGoToLine);
+    mEditorMenu->addSeparator();
+    mEditorMenu->addAction(mZoomInAction);
+    mEditorMenu->addAction(mZoomOutAction);
 
     mToolsMenu->addAction(mCommentCodeAction);
     mToolsMenu->addAction(mUncommentCodeAction);
@@ -93,6 +98,16 @@ void SieveEditorMenuBar::initMenus()
 QAction *SieveEditorMenuBar::uncommentCodeAction() const
 {
     return mUncommentCodeAction;
+}
+
+QAction *SieveEditorMenuBar::zoomInAction() const
+{
+    return mZoomInAction;
+}
+
+QAction *SieveEditorMenuBar::zoomOutAction() const
+{
+    return mZoomOutAction;
 }
 
 QAction *SieveEditorMenuBar::commentCodeAction() const

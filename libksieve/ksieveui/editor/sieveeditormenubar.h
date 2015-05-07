@@ -50,6 +50,9 @@ public:
 
     QAction *uncommentCodeAction() const;
 
+    QAction *zoomInAction() const;
+    QAction *zoomOutAction() const;
+
 public Q_SLOTS:
     void slotUndoAvailable(bool b);
     void slotRedoAvailable(bool b);
@@ -66,6 +69,8 @@ Q_SIGNALS:
     void selectAll();
     void comment();
     void uncomment();
+    void zoomIn();
+    void zoomOut();
 
 private:
     void initActions();
@@ -81,6 +86,8 @@ private:
     QAction *mSelectAllAction;
     QAction *mCommentCodeAction;
     QAction *mUncommentCodeAction;
+    QAction *mZoomInAction;
+    QAction *mZoomOutAction;
     QMenu *mEditorMenu;
     QMenu *mToolsMenu;
     QMenu *mFileMenu;
