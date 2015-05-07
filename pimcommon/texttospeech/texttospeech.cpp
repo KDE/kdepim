@@ -56,13 +56,20 @@ TextToSpeech::~TextToSpeech()
 
 }
 
-void TextToSpeech::init()
+void TextToSpeech::reloadSettings()
 {
 #if KDEPIM_HAVE_TEXTTOSPEECH
     mTextToSpeech->setRate(PimCommon::PimCommonSettings::self()->rate());
     mTextToSpeech->setPitch(PimCommon::PimCommonSettings::self()->pitch());
     mTextToSpeech->setVolume(PimCommon::PimCommonSettings::self()->volume());
     mTextToSpeech->setLocale(QLocale(PimCommon::PimCommonSettings::self()->localeName()));
+#endif
+}
+
+void TextToSpeech::init()
+{
+#if KDEPIM_HAVE_TEXTTOSPEECH
+    reloadSettings();
     connect(mTextToSpeech, &QTextToSpeech::stateChanged, this, &TextToSpeech::slotStateChanged);
 #endif
 }

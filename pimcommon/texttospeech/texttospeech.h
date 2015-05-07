@@ -50,6 +50,7 @@ public:
     QVector<QLocale> availableLocales() const;
     QLocale locale() const;
 
+    void reloadSettings();
 public Q_SLOTS:
     void say(const QString &text);
     void stop();

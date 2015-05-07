@@ -34,6 +34,7 @@ public:
     virtual void say(const QString &text);
     virtual int volume() const;
     virtual void setVolume(int value);
+    virtual void reloadSettings();
 };
 }
 

@@ -56,6 +56,11 @@ void TextToSpeechInterface::setVolume(int value)
     PimCommon::TextToSpeech::self()->setVolume(value);
 }
 
+void TextToSpeechInterface::reloadSettings()
+{
+    PimCommon::TextToSpeech::self()->reloadSettings();
+}
+
 void TextToSpeechInterface::stateChanged(TextToSpeechWidget::State state)
 {
     switch (state) {

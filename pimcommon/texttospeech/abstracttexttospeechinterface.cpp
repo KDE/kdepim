@@ -46,3 +46,8 @@ void AbstractTextToSpeechInterface::setVolume(int value)
 {
     Q_UNUSED(value);
 }
+
+void AbstractTextToSpeechInterface::reloadSettings()
+{
+
+}
