@@ -88,6 +88,8 @@ public:
     void lowerCase();
     void sentenceCase();
     void reverseCase();
+    void zoomIn();
+    void zoomOut();
 Q_SIGNALS:
     void enableButtonOk(bool);
     void switchToGraphicalMode();

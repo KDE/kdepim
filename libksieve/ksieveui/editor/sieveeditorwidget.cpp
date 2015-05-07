@@ -218,6 +218,20 @@ void SieveEditorWidget::copy()
     }
 }
 
+void SieveEditorWidget::zoomIn()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->zoomIn();
+    }
+}
+
+void SieveEditorWidget::zoomOut()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->zoomOut();
+    }
+}
+
 void SieveEditorWidget::selectAll()
 {
     if (mMode == TextMode) {

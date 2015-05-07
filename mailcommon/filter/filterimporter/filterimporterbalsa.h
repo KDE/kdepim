@@ -22,6 +22,7 @@
 
 class QFile;
 class KConfigGroup;
+class KConfig;
 
 namespace MailCommon
 {
@@ -32,10 +33,12 @@ class FilterImporterBalsa : public FilterImporterAbstract
 {
 public:
     explicit FilterImporterBalsa(QFile *file);
+    FilterImporterBalsa();
     ~FilterImporterBalsa();
     static QString defaultFiltersSettingsPath();
+    void readConfig(KConfig *config);
 private:
-    void addFilter(const KConfigGroup &grp);
+    void parseFilter(const KConfigGroup &grp);
     void parseCondition(const QString &condition, MailCommon::MailFilter *filter);
     void parseAction(int actionType, const QString &action, MailCommon::MailFilter *filter);
 };

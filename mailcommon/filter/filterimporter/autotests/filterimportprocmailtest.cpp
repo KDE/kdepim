@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "filterimportprocmailtest.h"
+#include "../filterimporterprocmail.h"
 #include "mailfilter.h"
 #include <AkonadiCore/qtest_akonadi.h>
 #include "filtertestkernel.h"
@@ -31,6 +32,24 @@ void FilterImportProcmailtest::initTestCase()
 
 void FilterImportProcmailtest::testImportFilters()
 {
+#if 0
+    const QString filter = QLatin1String("version=\"9\"\n"
+                                         "logging=\"no\"\n"
+                                         "name=\"Match All Messages\"\n"
+                                         "enabled=\"yes\"\n"
+                                         "type=\"17\"\n"
+                                         "action=\"Mark read\"\n"
+                                         "condition=\"ALL\"\n");
+    MailCommon::FilterImporterProcmail importer(filter, false);
+    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    QCOMPARE(lst.count(), 1);
+    MailCommon::MailFilter *f = lst.at(0);
+    QVERIFY(f->isEnabled());
+    QCOMPARE(f->name(), QLatin1String("Match All Messages"));
+    QCOMPARE(f->pattern()->op(), MailCommon::SearchPattern::OpAll);
+
+    qDeleteAll(lst);
+#endif
 }
 
 QTEST_AKONADIMAIN(FilterImportProcmailtest)

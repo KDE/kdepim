@@ -43,7 +43,7 @@ void SieveEditorWebView::contextMenuEvent(QContextMenuEvent *ev)
         menu.addAction(act);
     }
 
-    if (menu.actions().count() > 0) {
+    if (!menu.actions().isEmpty()) {
         QAction *separator = new QAction(&menu);
         separator->setSeparator(true);
         menu.addAction(separator);
@@ -54,7 +54,7 @@ void SieveEditorWebView::contextMenuEvent(QContextMenuEvent *ev)
         menu.addAction(act);
     }
 
-    if (menu.actions().count() > 0) {
+    if (!menu.actions().isEmpty()) {
         QAction *separator = new QAction(&menu);
         separator->setSeparator(true);
         menu.addAction(separator);

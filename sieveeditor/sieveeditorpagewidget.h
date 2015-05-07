@@ -73,6 +73,8 @@ public:
     void upperCase();
     void sentenceCase();
     void reverseCase();
+    void zoomIn();
+    void zoomOut();
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

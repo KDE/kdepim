@@ -196,6 +196,12 @@ void SieveEditorMainWindow::setupActions()
     mUncommentAction = ac->addAction(QStringLiteral("uncomment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotUncomment()));
     mUncommentAction->setText(i18n("Uncomment"));
 
+    mZoomInAction = ac->addAction(QStringLiteral("zoom_in"), mMainWidget->sieveEditorMainWidget(), SLOT(slotZoomIn()));
+    mZoomInAction->setText(i18n("Zoom In"));
+
+    mZoomOutAction = ac->addAction(QStringLiteral("zoom_out"), mMainWidget->sieveEditorMainWidget(), SLOT(slotZoomOut()));
+    mZoomOutAction->setText(i18n("Zoom Out"));
+
     mMenuChangeCaseAction = new PimCommon::KActionMenuChangeCase(this);
     ac->addAction(QStringLiteral("change_case_menu"), mMenuChangeCaseAction);
     mMenuChangeCaseAction->appendInActionCollection(ac);
@@ -296,6 +302,8 @@ void SieveEditorMainWindow::slotUpdateActions()
     mCommentAction->setEnabled(editActionEnabled);
     mUncommentAction->setEnabled(editActionEnabled);
     mMenuChangeCaseAction->setEnabled(editActionEnabled);
+    mZoomInAction->setEnabled(editActionEnabled);
+    mZoomOutAction->setEnabled(editActionEnabled);
 }
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)

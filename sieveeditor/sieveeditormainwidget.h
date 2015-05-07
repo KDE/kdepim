@@ -71,6 +71,9 @@ public Q_SLOTS:
     void slotSentenceCase();
     void slotLowerCase();
     void slotReverseCase();
+    void slotZoomIn();
+    void slotZoomOut();
+
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
     void updateScriptList();
