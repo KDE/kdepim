@@ -33,7 +33,7 @@ public:
     ~ManualSelectFilterPage();
 
     void  addFilter(MailImporter::Filter *f);
-    MailImporter::Filter *getSelectedFilter();
+    MailImporter::Filter *getSelectedFilter() const;
     bool removeDupMsg_checked() const;
 
     Ui::ManualSelectFilterPage *widget() const;

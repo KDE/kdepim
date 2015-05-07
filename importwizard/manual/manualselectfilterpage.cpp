@@ -117,7 +117,7 @@ bool ManualSelectFilterPage::removeDupMsg_checked() const
     return mWidget->remDupMsg->isChecked();
 }
 
-Filter *ManualSelectFilterPage::getSelectedFilter()
+Filter *ManualSelectFilterPage::getSelectedFilter() const
 {
     return mFilterList.at(mWidget->mFilterCombo->currentIndex());
 }

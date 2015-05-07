@@ -41,7 +41,7 @@ public:
 
 private:
     QWidget *m_parent;
-    ManualImportMailPage *m_dlg;
+    ManualImportMailPage *mManualImportMailPage;
 };
 
 #endif /* IMPORTWIZARDFILTERINFOGUI_H */
