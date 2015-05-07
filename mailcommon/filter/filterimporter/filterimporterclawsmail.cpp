@@ -29,6 +29,27 @@ FilterImporterClawsMails::FilterImporterClawsMails(QFile *file)
     : FilterImporterAbstract()
 {
     QTextStream stream(file);
+    readStream(stream);
+}
+
+FilterImporterClawsMails::FilterImporterClawsMails( QString string )
+    :FilterImporterAbstract()
+{
+    QTextStream stream(&string);
+    readStream(stream);
+}
+
+FilterImporterClawsMails::FilterImporterClawsMails(bool interactive)
+    :FilterImporterAbstract(interactive)
+{
+}
+
+FilterImporterClawsMails::~FilterImporterClawsMails()
+{
+}
+
+void FilterImporterClawsMails::readStream(QTextStream &stream)
+{
     MailFilter *filter = 0;
     while (!stream.atEnd()) {
         QString line = stream.readLine();
@@ -44,15 +65,6 @@ FilterImporterClawsMails::FilterImporterClawsMails(QFile *file)
         }
     }
     appendFilter(filter);
-}
-
-FilterImporterClawsMails::FilterImporterClawsMails(bool interactive)
-    : FilterImporterAbstract(interactive)
-{
-}
-
-FilterImporterClawsMails::~FilterImporterClawsMails()
-{
 }
 
 QString FilterImporterClawsMails::defaultFiltersSettingsPath()

@@ -30,6 +30,23 @@ FilterImporterProcmail::FilterImporterProcmail(QFile *file)
     : FilterImporterAbstract(), mFilterCount(0)
 {
     QTextStream stream(file);
+    readStream(stream);
+}
+
+FilterImporterProcmail::FilterImporterProcmail(QString string)
+    : FilterImporterAbstract(),
+      mFilterCount( 0 )
+{
+    QTextStream stream(&string);
+    readStream(stream);
+}
+
+FilterImporterProcmail::~FilterImporterProcmail()
+{
+}
+
+void FilterImporterProcmail::readStream(QTextStream &stream)
+{
     MailFilter *filter = 0;
     while (!stream.atEnd()) {
         QString line = stream.readLine();
@@ -38,10 +55,6 @@ FilterImporterProcmail::FilterImporterProcmail(QFile *file)
     }
 
     appendFilter(filter);
-}
-
-FilterImporterProcmail::~FilterImporterProcmail()
-{
 }
 
 QString FilterImporterProcmail::defaultFiltersSettingsPath()
