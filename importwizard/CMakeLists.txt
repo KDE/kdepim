@@ -108,6 +108,6 @@ target_link_libraries(importwizard
 )
 
 install(TARGETS importwizard  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS org.kde.importwizard.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(PROGRAMS data/org.kde.importwizard.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
 add_subdirectory(manual/pics)
