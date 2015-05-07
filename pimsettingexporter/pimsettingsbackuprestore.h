@@ -32,7 +32,7 @@ public:
     ~PimSettingsBackupRestore();
 
     void backupStart(const QString &filename);
-    void restoreStart(const QString &filename);
+    bool restoreStart(const QString &filename);
 
     void setStoredParameters(const QHash<Utils::AppsType, Utils::importExportParameters> &stored);
 
@@ -48,6 +48,11 @@ Q_SIGNALS:
     void jobFinished();
     void backupDone();
     void jobFailed();
+    void showBackupFinishDialogInformation();
+
+protected:
+    virtual bool continueToRestore();
+    QWidget *mParentWidget;
 
 private:
     enum Action {
@@ -66,7 +71,6 @@ private:
     Action mAction;
     AbstractImportExportJob *mImportExportData;
     ArchiveStorage *mArchiveStorage;
-    QWidget *mParentWidget;
 };
 
 #endif // PIMSETTINGSBACKUPRESTORE_H
