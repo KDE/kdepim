@@ -31,7 +31,7 @@ FilterKMail_maildir::FilterKMail_maildir() :
            i18n("<p><b>KMail import filter</b></p>"
                 "<p>Select the base directory of the KMail mailfolder you want to import.</p>"
                 "<p><b>Note:</b> Never select your current local KMail maildir (usually "
-                "~/Mail or ~/.kde/share/apps/kmail/mail ): in this case, KMailCVT may become stuck "
+                "~/Mail or ~/.kde/share/apps/kmail/mail ): in this case, ImportWizard may become stuck "
                 "in a continuous loop. </p>"
                 "<p>This filter does not import KMail mailfolders with mbox files.</p>"
                 "<p>Since it is possible to recreate the folder structure, the folders "
