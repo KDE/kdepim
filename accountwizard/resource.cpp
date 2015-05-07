@@ -60,9 +60,10 @@ static QVariant::Type argumentType(const QMetaObject *mo, const QString &method)
     return QVariant::nameToType(argTypes.first().constData());
 }
 
-Resource::Resource(const QString &type, QObject *parent) :
-    SetupObject(parent),
-    m_typeIdentifier(type)
+Resource::Resource(const QString &type, QObject *parent)
+    : SetupObject(parent)
+    , m_typeIdentifier(type)
+    , m_editMode(false)
 {
 }
 
@@ -90,7 +91,10 @@ void Resource::create()
         foreach (const AgentInstance &instance, AgentManager::self()->instances()) {
             qCDebug(ACCOUNTWIZARD_LOG) << instance.type().identifier() << (instance.type() == type);
             if (instance.type() == type) {
-                Q_EMIT finished(i18n("Resource '%1' is already set up.", type.name()));
+                if (m_editMode) {
+                    edit();
+                }
+                emit finished(i18n("Resource '%1' is already set up.", type.name()));
                 return;
             }
         }
@@ -143,7 +147,17 @@ void Resource::instanceCreateResult(KJob *job)
         m_instance.reconfigure();
     }
 
-    Q_EMIT finished(i18n("Resource setup completed."));
+    if (m_editMode) {
+        edit();
+    }
+    emit finished(i18n("Resource setup completed."));
+}
+
+void Resource::edit()
+{
+    if (m_instance.isValid()) {
+        m_instance.configure();
+    }
 }
 
 void Resource::destroy()
@@ -164,3 +178,7 @@ void Resource::reconfigure()
     m_instance.reconfigure();
 }
 
+void Resource::setEditMode(const bool editMode)
+{
+    m_editMode = editMode;
+}

@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2010 Omat Holding B.V. <info@omat.nl>
+    Copyright (c) 2014 Sandro Knauß <knauss@kolabsys.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -27,7 +28,9 @@
 #include <QDomDocument>
 
 Ispdb::Ispdb(QObject *parent)
-    : QObject(parent), mServerType(DataBase)
+    : QObject(parent)
+    , mServerType(DataBase)
+    , mStart(true)
 {
 }
 
@@ -42,17 +45,29 @@ void Ispdb::setEmail(const QString &address)
     mAddr = box.addrSpec();
 }
 
+void Ispdb::setPassword(const QString &password)
+{
+    mPassword = password;
+}
+
 void Ispdb::start()
 {
     qCDebug(ACCOUNTWIZARD_LOG) << mAddr.asString();
     // we should do different things in here. But lets focus in the db first.
-    lookupInDb();
+    lookupInDb(false, false);
+}
+
+void Ispdb::lookupInDb(bool auth, bool crypt)
+{
+    setServerType(mServerType);
+    startJob(lookupUrl(QStringLiteral("mail"), QStringLiteral("1.1"), auth, crypt));
 }
 
 void Ispdb::startJob(const QUrl &url)
 {
+    mData.clear();
     QMap< QString, QVariant > map;
-    map[QLatin1String("errorPage")] = false;
+    map[QStringLiteral("errorPage")] = false;
 
     KIO::TransferJob *job = KIO::get(url, KIO::NoReload, KIO::HideProgressInfo);
     job->setMetaData(map);
@@ -60,27 +75,35 @@ void Ispdb::startJob(const QUrl &url)
     connect(job, &KIO::TransferJob::data, this, &Ispdb::dataArrived);
 }
 
-void Ispdb::lookupInDb()
+QUrl Ispdb::lookupUrl(const QString &type, const QString &version, bool auth, bool crypt)
 {
     QUrl url;
+    const QString path = type + QStringLiteral("/config-v") + version + QStringLiteral(".xml");
     switch (mServerType) {
     case IspAutoConfig: {
-        url = QUrl(QLatin1String("http://autoconfig.") + mAddr.domain.toLower() + QLatin1String("/mail/config-v1.1.xml?emailaddress=") + mAddr.asString().toLower());
-        Q_EMIT searchType(i18n("Lookup configuration: Email provider"));
+        url = QUrl(QStringLiteral("http://autoconfig.") + mAddr.domain.toLower() + QLatin1Char('/') + path);
         break;
     }
     case IspWellKnow: {
-        url = QUrl(QLatin1String("http://") + mAddr.domain.toLower() + QLatin1String("/.well-known/autoconfig/mail/config-v1.1.xml"));
-        Q_EMIT searchType(i18n("Lookup configuration: Trying common server name"));
+        url = QUrl(QStringLiteral("http://") + mAddr.domain.toLower() + QStringLiteral("/.well-known/autoconfig/") + path);
         break;
     }
     case DataBase: {
-        url = QUrl(QLatin1String("https://autoconfig.thunderbird.net/v1.1/") + mAddr.domain.toLower());
-        Q_EMIT searchType(i18n("Lookup configuration: Mozilla database"));
+        url = QUrl(QStringLiteral("https://autoconfig.thunderbird.net/v1.1/") + mAddr.domain.toLower());
         break;
     }
     }
-    startJob(url);
+    if (mServerType != DataBase) {
+        if (crypt) {
+            url.setScheme(QStringLiteral("https"));
+        }
+
+        if (auth) {
+            url.setUserName(mAddr.asString());
+            url.setPassword(mPassword);
+        }
+    }
+    return url;
 }
 
 void Ispdb::slotResult(KJob *job)
@@ -108,7 +131,7 @@ void Ispdb::slotResult(KJob *job)
             Q_EMIT finished(false);
             return;
         }
-        lookupInDb();
+        lookupInDb(false, false);
         return;
     }
 
@@ -121,38 +144,59 @@ void Ispdb::slotResult(KJob *job)
         return;
     }
 
-    QDomElement docElem = document.documentElement();
-    QDomNode m = docElem.firstChild(); // emailprovider
-    QDomNode n = m.firstChild(); // emailprovider
+    parseResult(document);
+}
 
+void Ispdb::parseResult(const QDomDocument &document)
+{
+    QDomElement docElem = document.documentElement();
+    QDomNodeList l = docElem.elementsByTagName(QStringLiteral("emailProvider"));
+
+    if (l.isEmpty()) {
+        emit finished(false);
+        return;
+    }
+
+    //only handle the first emailProvider entry
+    QDomNode firstProvider = l.at(0);
+    QDomNode n = firstProvider.firstChild();
     while (!n.isNull()) {
+
         QDomElement e = n.toElement();
         if (!e.isNull()) {
-            //qCDebug(ACCOUNTWIZARD_LOG)  << qPrintable( e.tagName() );
+            //qCDebug(ACCOUNTWIZARD_LOG)  << qPrintable(e.tagName());
             const QString tagName(e.tagName());
-            if (tagName == QLatin1String("domain")) {
+            if (tagName == QStringLiteral("domain")) {
                 mDomains << e.text();
-            } else if (tagName == QLatin1String("displayName")) {
+            } else if (tagName == QStringLiteral("displayName")) {
                 mDisplayName = e.text();
-            } else if (tagName == QLatin1String("displayShortName")) {
+            } else if (tagName == QStringLiteral("displayShortName")) {
                 mDisplayShortName = e.text();
-            } else if (tagName == QLatin1String("incomingServer")
-                       && e.attribute(QLatin1String("type")) == QLatin1String("imap")) {
+            } else if (tagName == QStringLiteral("incomingServer")
+                       && e.attribute(QStringLiteral("type")) == QStringLiteral("imap")) {
                 Server s = createServer(e);
                 if (s.isValid()) {
                     mImapServers.append(s);
                 }
-            } else if (tagName == QLatin1String("incomingServer")
-                       && e.attribute(QLatin1String("type")) == QLatin1String("pop3")) {
+            } else if (tagName == QStringLiteral("incomingServer")
+                       && e.attribute(QStringLiteral("type")) == QStringLiteral("pop3")) {
                 Server s = createServer(e);
                 if (s.isValid()) {
                     mPop3Servers.append(s);
                 }
-            } else if (tagName == QLatin1String("outgoingServer")
-                       && e.attribute(QLatin1String("type")) == QLatin1String("smtp")) {
+            } else if (tagName == QStringLiteral("outgoingServer")
+                       && e.attribute(QStringLiteral("type")) == QStringLiteral("smtp")) {
                 Server s = createServer(e);
                 if (s.isValid()) {
                     mSmtpServers.append(s);
+                }
+            } else if (tagName == QStringLiteral("identity")) {
+                identity i = createIdentity(e);
+                if (i.isValid()) {
+                    mIdentities.append(i);
+                    if (i.isDefault()) {
+                        mDefaultIdentity = mIdentities.count() - 1;
+                    }
                 }
             }
         }
@@ -188,37 +232,37 @@ Server Ispdb::createServer(const QDomElement &n)
         QDomElement f = o.toElement();
         if (!f.isNull()) {
             const QString tagName(f.tagName());
-            if (tagName == QLatin1String("hostname")) {
+            if (tagName == QStringLiteral("hostname")) {
                 s.hostname = replacePlaceholders(f.text());
-            } else if (tagName == QLatin1String("port")) {
+            } else if (tagName == QStringLiteral("port")) {
                 s.port = f.text().toInt();
-            } else if (tagName == QLatin1String("socketType")) {
+            } else if (tagName == QStringLiteral("socketType")) {
                 const QString type(f.text());
-                if (type == QLatin1String("plain")) {
+                if (type == QStringLiteral("plain")) {
                     s.socketType = None;
-                } else if (type == QLatin1String("SSL")) {
+                } else if (type == QStringLiteral("SSL")) {
                     s.socketType = SSL;
                 }
-                if (type == QLatin1String("STARTTLS")) {
+                if (type == QStringLiteral("STARTTLS")) {
                     s.socketType = StartTLS;
                 }
-            } else if (tagName == QLatin1String("username")) {
+            } else if (tagName == QStringLiteral("username")) {
                 s.username = replacePlaceholders(f.text());
-            } else if (tagName == QLatin1String("authentication")) {
+            } else if (tagName == QStringLiteral("authentication")) {
                 const QString type(f.text());
-                if (type == QLatin1String("password-cleartext")
-                        || type == QLatin1String("plain")) {
+                if (type == QStringLiteral("password-cleartext")
+                        || type == QStringLiteral("plain")) {
                     s.authentication = Plain;
-                } else if (type == QLatin1String("password-encrypted")
-                           || type == QLatin1String("secure")) {
+                } else if (type == QStringLiteral("password-encrypted")
+                           || type == QStringLiteral("secure")) {
                     s.authentication = CramMD5;
-                } else if (type == QLatin1String("NTLM")) {
+                } else if (type == QStringLiteral("NTLM")) {
                     s.authentication = NTLM;
-                } else if (type == QLatin1String("GSSAPI")) {
+                } else if (type == QStringLiteral("GSSAPI")) {
                     s.authentication = GSSAPI;
-                } else if (type == QLatin1String("client-ip-based")) {
+                } else if (type == QStringLiteral("client-ip-based")) {
                     s.authentication = ClientIP;
-                } else if (type == QLatin1String("none")) {
+                } else if (type == QStringLiteral("none")) {
                     s.authentication = NoAuth;
                 }
             }
@@ -228,12 +272,51 @@ Server Ispdb::createServer(const QDomElement &n)
     return s;
 }
 
+identity Ispdb::createIdentity(const QDomElement &n)
+{
+    QDomNode o = n.firstChild();
+    identity i;
+
+    //type="kolab" version="1.0" is the only identity that is defined
+    if (n.attribute(QStringLiteral("type")) != QStringLiteral("kolab")
+            || n.attribute(QStringLiteral("version")) != QStringLiteral("1.0")) {
+        qCDebug(ACCOUNTWIZARD_LOG) << "unknown type of identity element.";
+    }
+
+    while (!o.isNull()) {
+        QDomElement f = o.toElement();
+        if (!f.isNull()) {
+            const QString tagName(f.tagName());
+            if (tagName == QStringLiteral("default")) {
+                i.mDefault = f.text().toLower() == QStringLiteral("true");
+            } else if (tagName == QStringLiteral("email")) {
+                i.email = f.text();
+            } else if (tagName == QStringLiteral("name")) {
+                i.name = f.text();
+            } else if (tagName == QStringLiteral("organization")) {
+                i.organization = f.text();
+            } else if (tagName == QStringLiteral("signature")) {
+                QTextStream stream(&i.signature);
+                f.save(stream, 0);
+                i.signature = i.signature.trimmed();
+                if (i.signature.startsWith(QStringLiteral("<signature>"))) {
+                    i.signature = i.signature.mid(11, i.signature.length() - 23);
+                    i.signature = i.signature.trimmed();
+                }
+            }
+        }
+        o = o.nextSibling();
+    }
+
+    return i;
+}
+
 QString Ispdb::replacePlaceholders(const QString &in)
 {
     QString out(in);
-    out.replace(QLatin1String("%EMAILLOCALPART%"), mAddr.localPart);
-    out.replace(QLatin1String("%EMAILADDRESS%"), mAddr.asString());
-    out.replace(QLatin1String("%EMAILDOMAIN%"), mAddr.domain);
+    out.replace(QStringLiteral("%EMAILLOCALPART%"), mAddr.localPart);
+    out.replace(QStringLiteral("%EMAILADDRESS%"), mAddr.asString());
+    out.replace(QStringLiteral("%EMAILDOMAIN%"), mAddr.domain);
     return out;
 }
 
@@ -275,3 +358,39 @@ QList< Server > Ispdb::smtpServers() const
     return mSmtpServers;
 }
 
+int Ispdb::defaultIdentity() const
+{
+    return mDefaultIdentity;
+}
+
+QList< identity > Ispdb::identities() const
+{
+    return mIdentities;
+}
+
+void Ispdb::setServerType(Ispdb::searchServerType type)
+{
+    if (type != mServerType || mStart) {
+        mServerType = type;
+        mStart  = false;
+        switch (mServerType) {
+        case IspAutoConfig: {
+            Q_EMIT searchType(i18n("Lookup configuration: Email provider"));
+            break;
+        }
+        case IspWellKnow: {
+            Q_EMIT searchType(i18n("Lookup configuration: Trying common server name"));
+            break;
+        }
+        case DataBase: {
+            Q_EMIT searchType(i18n("Lookup configuration: Mozilla database"));
+            break;
+        }
+        }
+    }
+}
+
+Ispdb::searchServerType Ispdb::serverType() const
+{
+    return mServerType;
+}

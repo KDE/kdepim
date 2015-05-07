@@ -24,9 +24,15 @@
 #include "configfile.h"
 #include "ldap.h"
 #include "identity.h"
+#include "setupispdb.h"
+#include "setupautoconfigkolabmail.h"
+#include "setupautoconfigkolabldap.h"
+#include "setupautoconfigkolabfreebusy.h"
 
 #include <kemailsettings.h>
 #include <kwallet.h>
+#include <KAssistantDialog>
+
 #include <QLocale>
 
 SetupManager::SetupManager(QWidget *parent) :
@@ -89,6 +95,7 @@ void SetupManager::execute()
 {
     m_page->setStatus(i18n("Setting up account..."));
     m_page->setValid(false);
+    m_page->assistantDialog()->backButton()->setEnabled(false);
 
     // ### FIXME this is a bad over-simplification and would need a real topological sort
     // but for current usage it is good enough
@@ -136,6 +143,7 @@ void SetupManager::setupNext()
         m_page->setStatus(i18n("Setup complete."));
         m_page->setProgress(100);
         m_page->setValid(true);
+        m_page->assistantDialog()->backButton()->setEnabled(false);
     } else {
         const int setupObjectCount = m_objectToSetup.size() + m_setupObjects.size();
         const int remainingObjectCount = setupObjectCount - m_objectToSetup.size();
@@ -231,6 +239,22 @@ bool SetupManager::personalDataAvailable()
 void SetupManager::setPersonalDataAvailable(bool available)
 {
     m_personalDataAvailable = available;
+}
+
+QObject *SetupManager::ispDB(const QString &type)
+{
+    const QString t = type.toLower();
+    if (t == QStringLiteral("autoconfigkolabmail")) {
+        return new SetupAutoconfigKolabMail(this);
+    } else if (t == QStringLiteral("autoconfigkolabldap")) {
+        return new SetupAutoconfigKolabLdap(this);
+    } else if (t == QStringLiteral("autoconfigkolabfreebusy")) {
+        return new SetupAutoconfigKolabFreebusy(this);
+    } else if (t == QStringLiteral("ispdb")) {
+        return new SetupIspdb(this);
+    } else {
+        return new SetupIspdb(this);
+    }
 }
 
 void SetupManager::requestRollback()

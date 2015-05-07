@@ -41,9 +41,16 @@ set(accountwizard_srcs
   configfile.cpp
   ldap.cpp
   identity.cpp
+  setupispdb.cpp
+  setupautoconfigkolabmail.cpp
+  setupautoconfigkolabldap.cpp
+  setupautoconfigkolabfreebusy.cpp
   servertest.cpp
   personaldatapage.cpp
   ispdb/ispdb.cpp
+  ispdb/autoconfigkolabmail.cpp
+  ispdb/autoconfigkolabldap.cpp
+  ispdb/autoconfigkolabfreebusy.cpp
 )
 
 ki18n_wrap_ui(accountwizard_srcs
@@ -56,6 +63,7 @@ ki18n_wrap_ui(accountwizard_srcs
 set(accountwizard_libs
   KF5::AkonadiCore
   KF5::MailTransport
+  KF5::KCMUtils
   KF5::KrossCore
   KF5::KIOCore
   KF5::Mime
@@ -90,4 +98,4 @@ update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})
 
 add_subdirectory(wizards)
 add_subdirectory(ispdb)
-
+add_subdirectory(autotests)

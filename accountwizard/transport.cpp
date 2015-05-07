@@ -77,6 +77,7 @@ Transport::Transport(const QString &type, QObject *parent) :
     m_port(-1),
     m_encr(MailTransport::Transport::EnumEncryption::TLS),
     m_auth(MailTransport::Transport::EnumAuthenticationType::PLAIN)
+    , m_editMode(false)
 {
     m_transportType = stringToValue(transportTypeEnums, transportTypeEnumsSize, type);
     if (m_transportType == MailTransport::Transport::EnumType::SMTP) {
@@ -107,13 +108,31 @@ void Transport::create()
     mt->save();
     MailTransport::TransportManager::self()->addTransport(mt);
     MailTransport::TransportManager::self()->setDefaultTransport(mt->id());
-    Q_EMIT finished(i18n("Mail transport account set up."));
+    if (m_editMode) {
+        edit();
+    }
+    emit finished(i18n("Mail transport account set up."));
 }
 
 void Transport::destroy()
 {
     MailTransport::TransportManager::self()->removeTransport(m_transportId);
     Q_EMIT info(i18n("Mail transport account deleted."));
+}
+
+void Transport::edit()
+{
+    MailTransport::Transport *mt = MailTransport::TransportManager::self()->transportById(m_transportId, false);
+    if (!mt) {
+        emit error(i18n("Could not load config dialog for uid=%1", m_transportId));
+    } else {
+        MailTransport::TransportManager::self()->configureTransport(mt, 0);
+    }
+}
+
+void Transport::setEditMode(const bool editMode)
+{
+    m_editMode = editMode;
 }
 
 void Transport::setName(const QString &name)
