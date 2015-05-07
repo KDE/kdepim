@@ -33,11 +33,13 @@ FilterImporterBalsa::FilterImporterBalsa( QFile *file )
     :FilterImporterAbstract()
 {
     KConfig config( file->fileName() );
-    const QStringList filterList = config.groupList().filter( QRegExp( QLatin1String("filter-\\d+") ) );
-    Q_FOREACH(const QString &filter, filterList) {
-        KConfigGroup grp = config.group(filter);
-        parseFilter(grp);
-    }
+    readConfig(&config);
+}
+
+FilterImporterBalsa::FilterImporterBalsa()
+    :FilterImporterAbstract()
+{
+
 }
 
 FilterImporterBalsa::~FilterImporterBalsa()
@@ -49,6 +51,14 @@ QString FilterImporterBalsa::defaultFiltersSettingsPath()
     return QString::fromLatin1( "%1/.balsa/config" ).arg( QDir::homePath() );
 }
 
+void FilterImporterBalsa::readConfig(KConfig *config)
+{
+    const QStringList filterList = config->groupList().filter( QRegExp( QLatin1String("filter-\\d+") ) );
+    Q_FOREACH(const QString &filter, filterList) {
+        KConfigGroup grp = config->group(filter);
+        parseFilter(grp);
+    }
+}
 
 void FilterImporterBalsa::parseFilter(const KConfigGroup &grp)
 {
