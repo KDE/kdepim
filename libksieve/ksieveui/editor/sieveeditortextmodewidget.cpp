@@ -278,6 +278,16 @@ bool SieveEditorTextModeWidget::hasSelection() const
     return mTextEdit->textCursor().hasSelection();
 }
 
+void SieveEditorTextModeWidget::zoomIn()
+{
+    mTextEdit->zoomIn();
+}
+
+void SieveEditorTextModeWidget::zoomOut()
+{
+    mTextEdit->zoomOut();
+}
+
 void SieveEditorTextModeWidget::slotFind()
 {
     if (mTextEdit->textCursor().hasSelection()) {

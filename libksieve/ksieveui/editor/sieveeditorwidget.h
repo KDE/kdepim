@@ -73,6 +73,8 @@ public:
     void upperCase();
     void sentenceCase();
     void reverseCase();
+    void zoomOut();
+    void zoomIn();
 public Q_SLOTS:
     void find();
     void replace();

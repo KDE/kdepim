@@ -446,6 +446,28 @@ void SieveEditorMainWidget::slotScriptModified(bool modified, SieveEditorPageWid
     }
 }
 
+void SieveEditorMainWidget::slotZoomIn()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->zoomIn();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotZoomOut()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->zoomOut();
+        }
+    }
+}
+
 void SieveEditorMainWidget::slotGeneralPaletteChanged()
 {
     const QPalette pal = palette();

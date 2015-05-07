@@ -292,3 +292,13 @@ void SieveEditorPageWidget::selectAll()
 {
     mSieveEditorWidget->selectAll();
 }
+
+void SieveEditorPageWidget::zoomIn()
+{
+    mSieveEditorWidget->zoomIn();
+}
+
+void SieveEditorPageWidget::zoomOut()
+{
+    mSieveEditorWidget->zoomOut();
+}

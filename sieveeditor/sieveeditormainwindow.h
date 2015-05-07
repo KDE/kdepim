@@ -86,6 +86,8 @@ private:
     QAction *mAutoGenerateScriptAction;
     QAction *mCommentAction;
     QAction *mUncommentAction;
+    QAction *mZoomInAction;
+    QAction *mZoomOutAction;
     PimCommon::KActionMenuChangeCase *mMenuChangeCaseAction;
 
     QLabel *mStatusBarInfo;
