@@ -32,10 +32,12 @@ class FilterImporterProcmail : public FilterImporterAbstract
 {
 public:
     explicit FilterImporterProcmail( QFile *file );
+    FilterImporterProcmail(QString string);
     ~FilterImporterProcmail();
     static QString defaultFiltersSettingsPath();
 
 private:
+    void readStream(QTextStream &stream);
     MailCommon::MailFilter *parseLine( QTextStream &stream, QString line, MailCommon::MailFilter *filter );
     QString createUniqFilterName();
     int mFilterCount;

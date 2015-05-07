@@ -31,6 +31,7 @@ class MAILCOMMON_EXPORT FilterImporterClawsMails : public FilterImporterAbstract
 {
 public:
     explicit FilterImporterClawsMails( QFile *file );
+    FilterImporterClawsMails(QString string);
     //Use for unittests
     FilterImporterClawsMails(bool interactive = false);
     ~FilterImporterClawsMails();
@@ -43,6 +44,7 @@ private:
     QString extractString( const QString & tmp, int & pos);
     QString extractConditions( const QString &line,MailFilter *filter);
     QString extractActions( const QString &line,MailFilter *filter);
+    void readStream(QTextStream &stream);
 };
 
 }
