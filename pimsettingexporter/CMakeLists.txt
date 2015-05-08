@@ -87,7 +87,6 @@ set(pimsettingexporter_LIB_SRCS
   ${pimsettingexporter_jot_SRCS}
   ${pimsettingexporter_akregator_SRCS}
   ${pimsettingexporter_blogilo_SRCS}
-  main.cpp
   abstractimportexportjob.cpp
   pimsettingexporterwindow.cpp
   pimsettingexporterkernel.cpp
@@ -129,7 +128,7 @@ install(TARGETS pimsettingexporterprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRAR
 
 
 set(pimsettingexporter_SRCS
-    main.cpp)
+    gui/main.cpp)
 
 kde4_add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
