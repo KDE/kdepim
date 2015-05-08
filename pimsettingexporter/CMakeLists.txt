@@ -58,7 +58,7 @@ set(pimsettingexporter_blogilo_SRCS
   blogilo/importblogilojob.cpp
 )
 
-set(pimsettingexporter_SRCS
+set(pimsettingexporter_LIB_SRCS
   ${pimsettingexporter_widget_SRCS}
   ${pimsettingexporter_xml_SRCS}
   ${pimsettingexporter_notes_SRCS}
@@ -86,6 +86,34 @@ set(pimsettingexporter_SRCS
 
 
 
+add_library(pimsettingexporterprivate ${pimsettingexporter_LIB_SRCS})
+
+
+
+target_link_libraries(pimsettingexporterprivate
+  KF5::KIOCore
+  KF5::AkonadiCore
+  KF5::AkonadiMime
+  KF5::Mime
+  KF5::MailTransport
+  KF5::AlarmCalendar
+  KF5::DBusAddons
+  mailimporter
+  mailcommon
+  pimcommon
+  kdepim
+  messagecomposer
+)
+
+set_target_properties(pimsettingexporterprivate PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
+
+install(TARGETS pimsettingexporterprivate ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+
+
+
+set(pimsettingexporter_SRCS
+    main.cpp)
+
 add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
 target_link_libraries(pimsettingexporter
@@ -101,6 +129,7 @@ target_link_libraries(pimsettingexporter
   pimcommon
   kdepim
   messagecomposer
+  pimsettingexporterprivate
 )
 
 install(TARGETS pimsettingexporter ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )

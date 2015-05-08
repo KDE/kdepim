@@ -83,7 +83,7 @@ void PimSettingsBackupRestore::backupStart(const QString &filename)
         deleteLater();
         return;
     }
-    updateActions(true);
+    Q_EMIT updateActions(true);
     mAction = Backup;
     mStoreIterator = mStored.constBegin();
     const QDateTime now = QDateTime::currentDateTime();
@@ -160,7 +160,6 @@ void PimSettingsBackupRestore::backupFinished()
     mImportExportData = Q_NULLPTR;
     Q_EMIT backupDone();
     Q_EMIT showBackupFinishDialogInformation();
-    //KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
     Q_EMIT updateActions(false);
     deleteLater();
 }
