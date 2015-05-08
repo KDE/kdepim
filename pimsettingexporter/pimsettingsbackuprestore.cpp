@@ -84,6 +84,11 @@ bool PimSettingsBackupRestore::openArchive(const QString &filename, bool readWri
 
 void PimSettingsBackupRestore::backupStart(const QString &filename)
 {
+    if (mStored.isEmpty()) {
+        Q_EMIT jobFailed();
+        deleteLater();
+        return;
+    }
     if (!openArchive(filename, true)) {
         Q_EMIT jobFailed();
         deleteLater();
@@ -255,6 +260,11 @@ bool PimSettingsBackupRestore::continueToRestore()
 
 bool PimSettingsBackupRestore::restoreStart(const QString &filename)
 {
+    if (mStored.isEmpty()) {
+        Q_EMIT jobFailed();
+        deleteLater();
+        return false;
+    }
     if (!openArchive(filename, false)) {
         Q_EMIT jobFailed();
         deleteLater();
