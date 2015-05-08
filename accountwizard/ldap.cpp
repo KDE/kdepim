@@ -27,6 +27,7 @@
 
 Ldap::Ldap(QObject *parent)
     : SetupObject(parent)
+    , m_clientSearchConfig(new KLDAP::LdapClientSearchConfig)
     , m_port(389)
     , m_security(KLDAP::LdapServer::None)
     , m_version(3)
@@ -35,7 +36,6 @@ Ldap::Ldap(QObject *parent)
     , m_sizeLimit(0)
     , m_entry(-1)
     , m_editMode(false)
-    , m_clientSearchConfig(new KLDAP::LdapClientSearchConfig)
 {
 }
 
