@@ -94,9 +94,8 @@ protected:
     void overwriteDirectory(const QString &path, const KArchiveEntry *entry);
 
 
-    KZip *archive();
+    KZip *archive() const;
 
-    QProgressDialog *progressDialog();
     void increaseProgressDialog();
     void createProgressDialog();
 

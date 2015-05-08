@@ -28,3 +28,18 @@ ImportExportProgressIndicatorBase::~ImportExportProgressIndicatorBase()
 
 }
 
+void ImportExportProgressIndicatorBase::increaseProgressDialog()
+{
+
+}
+
+void ImportExportProgressIndicatorBase::createProgressDialog()
+{
+
+}
+
+void ImportExportProgressIndicatorBase::showInfo(const QString &text)
+{
+
+}
+

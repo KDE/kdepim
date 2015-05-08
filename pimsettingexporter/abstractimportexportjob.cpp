@@ -61,11 +61,6 @@ AbstractImportExportJob::~AbstractImportExportJob()
     delete mProgressDialog;
 }
 
-QProgressDialog *AbstractImportExportJob::progressDialog()
-{
-    return mProgressDialog;
-}
-
 void AbstractImportExportJob::createProgressDialog()
 {
     if (!mProgressDialog) {
@@ -101,7 +96,7 @@ void AbstractImportExportJob::showInfo(const QString &text)
     Q_EMIT info(text);
 }
 
-KZip *AbstractImportExportJob::archive()
+KZip *AbstractImportExportJob::archive() const
 {
     return mArchiveStorage->archive();
 }

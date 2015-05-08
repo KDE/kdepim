@@ -15,22 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef IMPORTEXPORTPROGRESSINDICATORBASE_H
-#define IMPORTEXPORTPROGRESSINDICATORBASE_H
+#ifndef IMPORTEXPORTPROGRESSINDICATORGUI_H
+#define IMPORTEXPORTPROGRESSINDICATORGUI_H
 
-#include <QObject>
+#include "importexportprogressindicatorbase.h"
 
-class ImportExportProgressIndicatorBase : public QObject
+class ImportExportProgressIndicatorGui : public ImportExportProgressIndicatorBase
 {
     Q_OBJECT
 public:
-    explicit ImportExportProgressIndicatorBase(QObject *parent = 0);
-    ~ImportExportProgressIndicatorBase();
+    explicit ImportExportProgressIndicatorGui(QObject *parent = 0);
+    ~ImportExportProgressIndicatorGui();
 
-    virtual void increaseProgressDialog();
-    virtual void createProgressDialog();
+    void increaseProgressDialog();
+    void createProgressDialog();
 
-    virtual void showInfo(const QString &text);
+    void showInfo(const QString &text);
 };
 
-#endif // IMPORTEXPORTPROGRESSINDICATORBASE_H
+#endif // IMPORTEXPORTPROGRESSINDICATORGUI_H
