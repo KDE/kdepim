@@ -74,7 +74,7 @@ set(pimsettingexporter_blogilo_SRCS
   blogilo/importblogilojob.cpp
 )
 
-set(pimsettingexporter_SRCS
+set(pimsettingexporter_LIB_SRCS
   ${pimsettingexporter_widget_SRCS}
   ${pimsettingexporter_xml_SRCS}
   ${pimsettingexporter_notes_SRCS}
@@ -101,6 +101,36 @@ set(pimsettingexporter_SRCS
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+
+kde4_add_library(pimsettingexporterprivate ${LIBRARY_TYPE} ${pimsettingexporter_LIB_SRCS})
+
+
+
+target_link_libraries(pimsettingexporterprivate
+  ${KDE4_KFILE_LIBS}
+  ${KDE4_KIO_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_KPIMUTILS_LIBS}
+  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+  ${AKONADI_COMMON_LIBRARIES}
+  ${KDEPIMLIBS_KALARMCAL_LIBS}
+  ${QT_QTXML_LIBRARY}
+  mailimporter
+  mailcommon
+  pimcommon
+  kdepim
+  messagecomposer
+)
+
+set_target_properties(pimsettingexporterprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+install(TARGETS pimsettingexporterprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+
+
+set(pimsettingexporter_SRCS
+    main.cpp)
+
 kde4_add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
 target_link_libraries(pimsettingexporter
@@ -119,7 +149,9 @@ target_link_libraries(pimsettingexporter
   pimcommon
   kdepim
   messagecomposer
+  pimsettingexporterprivate
 )
+
 
 install(TARGETS pimsettingexporter ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
