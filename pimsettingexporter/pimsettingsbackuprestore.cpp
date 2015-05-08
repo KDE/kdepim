@@ -48,9 +48,9 @@
 
 PimSettingsBackupRestore::PimSettingsBackupRestore(QWidget *parentWidget, QObject *parent)
     : QObject(parent),
+      mParentWidget(parentWidget),
       mImportExportData(Q_NULLPTR),
-      mArchiveStorage(Q_NULLPTR),
-      mParentWidget(parentWidget)
+      mArchiveStorage(Q_NULLPTR)
 {
 
 }
@@ -159,6 +159,7 @@ void PimSettingsBackupRestore::backupFinished()
     delete mImportExportData;
     mImportExportData = Q_NULLPTR;
     Q_EMIT backupDone();
+    Q_EMIT showBackupFinishDialogInformation();
     //KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
     Q_EMIT updateActions(false);
     deleteLater();
@@ -218,21 +219,25 @@ void PimSettingsBackupRestore::restoreNextStep()
     }
 }
 
-void PimSettingsBackupRestore::restoreStart(const QString &filename)
+bool PimSettingsBackupRestore::continueToRestore()
+{
+    return true;
+}
+
+bool PimSettingsBackupRestore::restoreStart(const QString &filename)
 {
     if (!openArchive(filename, false)) {
         Q_EMIT jobFailed();
         deleteLater();
-        return;
+        return false;
     }
     Q_EMIT updateActions(true);
     mAction = Restore;
     mStoreIterator = mStored.constBegin();
     const int version = Utils::archiveVersion(mArchiveStorage->archive());
     if (version > Utils::currentArchiveVersion()) {
-        if (KMessageBox::No == KMessageBox::questionYesNo(mParentWidget, i18n("The archive was created by a newer version of this program. It might contain additional data which will be skipped during import. Do you want to import it?"), i18n("Not correct version"))) {
-            return;
-        }
+        if (!continueToRestore())
+            return false;
     }
     qCDebug(PIMSETTINGEXPORTER_LOG) << " version " << version;
     AbstractImportExportJob::setArchiveVersion(version);
@@ -243,6 +248,7 @@ void PimSettingsBackupRestore::restoreStart(const QString &filename)
     Q_EMIT addInfo(i18n("Start to restore data from \'%1\'", mArchiveStorage->filename()));
     Q_EMIT addEndLine();
     restoreNextStep();
+    return true;
 }
 
 void PimSettingsBackupRestore::restoreFinished()

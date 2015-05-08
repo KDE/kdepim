@@ -110,7 +110,6 @@ protected:
     Utils::StoredTypes mTypeSelected;
     ArchiveStorage *mArchiveStorage;
     KIdentityManagement::IdentityManager *mIdentityManager;
-    QWidget *mParent;
     QTemporaryDir *mTempDir;
     QProgressDialog *mProgressDialog;
     const KArchiveDirectory *mArchiveDirectory;
@@ -120,6 +119,9 @@ protected:
     QList<Utils::StoredType> mListStep;
     int mIndex;
     static int sArchiveVersion;
+
+private:
+    QWidget *mParent;
 };
 
 #endif // ABSTRACTIMPORTEXPORTJOB_H

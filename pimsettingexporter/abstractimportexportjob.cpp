@@ -44,13 +44,13 @@ AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage
       mTypeSelected(typeSelected),
       mArchiveStorage(archiveStorage),
       mIdentityManager(new KIdentityManagement::IdentityManager(false, this, "mIdentityManager")),
-      mParent(parent),
       mTempDir(Q_NULLPTR),
       mProgressDialog(Q_NULLPTR),
       mArchiveDirectory(Q_NULLPTR),
       mNumberOfStep(numberOfStep),
       mCreateResource(Q_NULLPTR),
-      mIndex(-1)
+      mIndex(-1),
+      mParent(parent)
 {
 }
 

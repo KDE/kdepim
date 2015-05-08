@@ -81,6 +81,7 @@ set(pimsettingexporter_SRCS
   synchronizeresourcejob.cpp
   pimsettingsbackuprestore.cpp
   pimsettingcommandlineoption.cpp
+  pimsettingsbackuprestoreui.cpp
 )
 
 
