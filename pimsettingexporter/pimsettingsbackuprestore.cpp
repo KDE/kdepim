@@ -89,7 +89,7 @@ void PimSettingsBackupRestore::backupStart(const QString &filename)
         deleteLater();
         return;
     }
-    updateActions(true);
+    Q_EMIT updateActions(true);
     mAction = Backup;
     mStoreIterator = mStored.constBegin();
     const QDateTime now = QDateTime::currentDateTime();
@@ -178,7 +178,6 @@ void PimSettingsBackupRestore::backupFinished()
     mImportExportData = 0;
     Q_EMIT backupDone();
     Q_EMIT showBackupFinishDialogInformation();
-    //KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
     Q_EMIT updateActions(false);
     deleteLater();
 }
@@ -268,10 +267,6 @@ bool PimSettingsBackupRestore::restoreStart(const QString &filename)
     if (version > Utils::currentArchiveVersion()) {
         if (!continueToRestore())
             return false;
-#if 0
-        if (KMessageBox::No == KMessageBox::questionYesNo(mParentWidget, i18n("The archive was created by a newer version of this program. It might contain additional data which will be skipped during import. Do you want to import it?"), i18n("Not correct version")))
-            return;
-#endif
     }
     qDebug()<<" version "<<version;
     AbstractImportExportJob::setArchiveVersion(version);
