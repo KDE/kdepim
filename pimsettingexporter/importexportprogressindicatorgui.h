@@ -32,6 +32,10 @@ public:
 
     void showInfo(const QString &text);
     bool wasCanceled() const;
+    int mergeConfigMessageBox(const QString &configName) const;
+    bool overwriteConfigMessageBox(const QString &configName) const;
+    bool overwriteDirectoryMessageBox(const QString &directory) const;
+    void showErrorMessage(const QString &message, const QString &title);
 private:
     QProgressDialog *mProgressDialog;
     QWidget *mParentWidget;
