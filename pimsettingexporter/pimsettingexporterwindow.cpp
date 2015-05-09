@@ -17,6 +17,7 @@
 
 #include "pimsettingexporterwindow.h"
 #include "dialog/showarchivestructuredialog.h"
+#include "importexportprogressindicatorgui.h"
 #include "widgets/logwidget.h"
 
 #include "mail/exportmailjob.h"
@@ -490,6 +491,7 @@ void PimSettingExporterWindow::restoreFinished()
 
 void PimSettingExporterWindow::executeJob()
 {
+    mImportExportData->setImportExportProgressIndicator(new ImportExportProgressIndicatorGui(this, this));
     connect(mImportExportData, SIGNAL(info(QString)), SLOT(slotAddInfo(QString)));
     connect(mImportExportData, SIGNAL(error(QString)), SLOT(slotAddError(QString)));
     connect(mImportExportData, SIGNAL(title(QString)), SLOT(slotAddTitle(QString)));
