@@ -70,7 +70,6 @@ set(pimsettingexporter_LIB_SRCS
   ${pimsettingexporter_jot_SRCS}
   ${pimsettingexporter_akregator_SRCS}
   ${pimsettingexporter_blogilo_SRCS}
-  main.cpp
   pimsettingexport_debug.cpp
   abstractimportexportjob.cpp
   pimsettingexporterwindow.cpp
@@ -82,6 +81,8 @@ set(pimsettingexporter_LIB_SRCS
   pimsettingsbackuprestore.cpp
   pimsettingcommandlineoption.cpp
   pimsettingsbackuprestoreui.cpp
+  importexportprogressindicatorgui.cpp
+  importexportprogressindicatorbase.cpp
 )
 
 
@@ -112,7 +113,7 @@ install(TARGETS pimsettingexporterprivate ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 set(pimsettingexporter_SRCS
-    main.cpp)
+    gui/main.cpp)
 
 add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
