@@ -17,6 +17,7 @@
 
 #include "abstractimportexportjob.h"
 #include "archivestorage.h"
+#include "importexportprogressindicatorbase.h"
 #include "synchronizeresourcejob.h"
 
 #include "mailcommon/util/mailutil.h"
@@ -44,13 +45,14 @@ AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage
       mArchiveStorage(archiveStorage),
       mIdentityManager(new KPIMIdentities::IdentityManager( false, this, "mIdentityManager" )),
       mTempDir(0),
-      mProgressDialog(0),
       mArchiveDirectory(0),
       mNumberOfStep(numberOfStep),
       mCreateResource(0),
       mIndex(-1),
+      mImportExportProgressIndicator(new ImportExportProgressIndicatorBase(this)),
       mParent(parent)
 {
+    connect(mImportExportProgressIndicator, SIGNAL(info(QString)), this, SIGNAL(info(QString)));
 }
 
 AbstractImportExportJob::~AbstractImportExportJob()
@@ -58,43 +60,35 @@ AbstractImportExportJob::~AbstractImportExportJob()
     delete mCreateResource;
     delete mIdentityManager;
     delete mTempDir;
-    delete mProgressDialog;
 }
 
 void AbstractImportExportJob::createProgressDialog()
 {
-    if (!mProgressDialog) {
-        mProgressDialog = new QProgressDialog(mParent);
-        mProgressDialog->setWindowModality(Qt::WindowModal);
-        mProgressDialog->setMinimum(0);
-        mProgressDialog->setMaximum(mNumberOfStep);
-    }
-    mProgressDialog->show();
-    mProgressDialog->setValue(0);
+    mImportExportProgressIndicator->createProgressDialog();
 }
 
 
 bool AbstractImportExportJob::wasCanceled() const
 {
-    if (mProgressDialog)
-        return mProgressDialog->wasCanceled();
-    return false;
+    return mImportExportProgressIndicator->wasCanceled();
 }
 
 void AbstractImportExportJob::increaseProgressDialog()
 {
-    if (mProgressDialog) {
-        mProgressDialog->setValue(mProgressDialog->value()+1);
-    }
+    mImportExportProgressIndicator->increaseProgressDialog();
 }
 
 void AbstractImportExportJob::showInfo(const QString &text)
 {
-    if (mProgressDialog) {
-        mProgressDialog->setLabelText(text);
-    }
-    Q_EMIT info(text);
+    mImportExportProgressIndicator->showInfo(text);
 }
+
+void AbstractImportExportJob::setImportExportProgressIndicator(ImportExportProgressIndicatorBase *importExportProgressIndicator)
+{
+    delete mImportExportProgressIndicator;
+    mImportExportProgressIndicator = importExportProgressIndicator;
+}
+
 
 KZip *AbstractImportExportJob::archive() const
 {

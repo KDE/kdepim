@@ -18,7 +18,8 @@
 #include "importexportprogressindicatorbase.h"
 
 ImportExportProgressIndicatorBase::ImportExportProgressIndicatorBase(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mNumberOfStep(0)
 {
 
 }
@@ -30,16 +31,26 @@ ImportExportProgressIndicatorBase::~ImportExportProgressIndicatorBase()
 
 void ImportExportProgressIndicatorBase::increaseProgressDialog()
 {
-
+    //Nothing
 }
 
 void ImportExportProgressIndicatorBase::createProgressDialog()
 {
-
+    //Nothing
 }
 
 void ImportExportProgressIndicatorBase::showInfo(const QString &text)
 {
+    Q_EMIT info(text);
+}
 
+bool ImportExportProgressIndicatorBase::wasCanceled() const
+{
+    return false;
+}
+
+void ImportExportProgressIndicatorBase::setNumberOfStep(int numberOfStep)
+{
+    mNumberOfStep = numberOfStep;
 }
 

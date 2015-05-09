@@ -19,18 +19,22 @@
 #define IMPORTEXPORTPROGRESSINDICATORGUI_H
 
 #include "importexportprogressindicatorbase.h"
-
+class QProgressDialog;
 class ImportExportProgressIndicatorGui : public ImportExportProgressIndicatorBase
 {
     Q_OBJECT
 public:
-    explicit ImportExportProgressIndicatorGui(QObject *parent = 0);
+    explicit ImportExportProgressIndicatorGui(QWidget *parentWidget, QObject *parent = 0);
     ~ImportExportProgressIndicatorGui();
 
     void increaseProgressDialog();
     void createProgressDialog();
 
     void showInfo(const QString &text);
+    bool wasCanceled() const;
+private:
+    QProgressDialog *mProgressDialog;
+    QWidget *mParentWidget;
 };
 
 #endif // IMPORTEXPORTPROGRESSINDICATORGUI_H

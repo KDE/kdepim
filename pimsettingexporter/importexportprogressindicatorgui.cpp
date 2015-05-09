@@ -17,30 +17,53 @@
 
 #include "importexportprogressindicatorgui.h"
 
-ImportExportProgressIndicatorGui::ImportExportProgressIndicatorGui(QObject *parent)
-    : ImportExportProgressIndicatorBase(parent)
+#include <qprogressdialog.h>
+
+ImportExportProgressIndicatorGui::ImportExportProgressIndicatorGui(QWidget *parentWidget, QObject *parent)
+    : ImportExportProgressIndicatorBase(parent),
+      mProgressDialog(0),
+      mParentWidget(parentWidget)
 {
 
 }
 
 ImportExportProgressIndicatorGui::~ImportExportProgressIndicatorGui()
 {
-
+    delete mProgressDialog;
 }
 
 void ImportExportProgressIndicatorGui::increaseProgressDialog()
 {
-
+    if (mProgressDialog) {
+        mProgressDialog->setValue(mProgressDialog->value()+1);
+    }
 }
 
 void ImportExportProgressIndicatorGui::createProgressDialog()
 {
-
+    if (!mProgressDialog) {
+        mProgressDialog = new QProgressDialog(mParentWidget);
+        mProgressDialog->setWindowModality(Qt::WindowModal);
+        mProgressDialog->setMinimum(0);
+        mProgressDialog->setMaximum(mNumberOfStep);
+    }
+    mProgressDialog->show();
+    mProgressDialog->setValue(0);
 }
 
 void ImportExportProgressIndicatorGui::showInfo(const QString &text)
 {
+    if (mProgressDialog) {
+        mProgressDialog->setLabelText(text);
+    }
+    Q_EMIT info(text);
+}
 
+bool ImportExportProgressIndicatorGui::wasCanceled() const
+{
+    if (mProgressDialog)
+        return mProgressDialog->wasCanceled();
+    return false;
 }
 
 
