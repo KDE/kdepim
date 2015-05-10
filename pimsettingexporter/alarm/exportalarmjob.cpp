@@ -31,7 +31,7 @@
 #include <QFile>
 #include <QDir>
 
-ExportAlarmJob::ExportAlarmJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+ExportAlarmJob::ExportAlarmJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }

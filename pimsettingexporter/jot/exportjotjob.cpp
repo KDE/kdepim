@@ -31,7 +31,7 @@
 #include <QFile>
 #include <QDir>
 
-ExportJotJob::ExportJotJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+ExportJotJob::ExportJotJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }

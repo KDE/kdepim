@@ -27,7 +27,7 @@ class ImportAkregatorJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ImportAkregatorJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ImportAkregatorJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportAkregatorJob();
 
     void start();

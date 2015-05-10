@@ -39,7 +39,7 @@
 
 int AbstractImportExportJob::sArchiveVersion = -1;
 
-AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, Utils::StoredTypes typeSelected, int numberOfStep)
+AbstractImportExportJob::AbstractImportExportJob(QObject *parent, ArchiveStorage *archiveStorage, Utils::StoredTypes typeSelected, int numberOfStep)
     : QObject(parent),
       mTypeSelected(typeSelected),
       mArchiveStorage(archiveStorage),
@@ -49,8 +49,7 @@ AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage
       mNumberOfStep(numberOfStep),
       mCreateResource(0),
       mIndex(-1),
-      mImportExportProgressIndicator(new ImportExportProgressIndicatorBase(this)),
-      mParent(parent)
+      mImportExportProgressIndicator(new ImportExportProgressIndicatorBase(this))
 {
     mImportExportProgressIndicator->setNumberOfStep(numberOfStep);
     connect(mImportExportProgressIndicator, SIGNAL(info(QString)), this, SIGNAL(info(QString)));

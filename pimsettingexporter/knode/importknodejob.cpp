@@ -26,7 +26,7 @@
 #include <KGlobal>
 #include <KStandardDirs>
 
-ImportKnodeJob::ImportKnodeJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
+ImportKnodeJob::ImportKnodeJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
     initializeImportJob();

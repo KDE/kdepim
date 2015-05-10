@@ -26,7 +26,7 @@
 #include <KGlobal>
 #include <KStandardDirs>
 
-ImportAkregatorJob::ImportAkregatorJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
+ImportAkregatorJob::ImportAkregatorJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
     initializeImportJob();

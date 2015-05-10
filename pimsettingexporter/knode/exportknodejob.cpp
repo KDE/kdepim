@@ -28,7 +28,7 @@
 #include <QWidget>
 #include <QDir>
 
-ExportKnodeJob::ExportKnodeJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+ExportKnodeJob::ExportKnodeJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
 }

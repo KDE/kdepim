@@ -27,7 +27,7 @@ class ImportBlogiloJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ImportBlogiloJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ImportBlogiloJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportBlogiloJob();
 
     void start();

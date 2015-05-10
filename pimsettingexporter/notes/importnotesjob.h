@@ -27,7 +27,7 @@ class ImportNotesJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ImportNotesJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ImportNotesJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportNotesJob();
 
     void start();

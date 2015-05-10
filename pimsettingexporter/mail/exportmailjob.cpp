@@ -40,7 +40,7 @@
 #include <QFile>
 #include <QDir>
 
-ExportMailJob::ExportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
+ExportMailJob::ExportMailJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep),
       mArchiveTime(QDateTime::currentDateTime().toTime_t())
 {

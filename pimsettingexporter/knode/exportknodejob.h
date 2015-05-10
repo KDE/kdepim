@@ -27,7 +27,7 @@ class ExportKnodeJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ExportKnodeJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ExportKnodeJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportKnodeJob();
 
     void start();

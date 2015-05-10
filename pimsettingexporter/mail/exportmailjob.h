@@ -29,7 +29,7 @@ class ArchiveStorage;
 class ExportMailJob : public AbstractImportExportJob
 {
 public:
-    explicit ExportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ExportMailJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportMailJob();
 
     void start();

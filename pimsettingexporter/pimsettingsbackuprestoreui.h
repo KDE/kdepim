@@ -29,6 +29,9 @@ public:
 
 protected:
     virtual bool continueToRestore();
+    virtual void addExportProgressIndicator();
+private:
+    QWidget *mParentWidget;
 };
 
 #endif // PIMSETTINGSBACKUPRESTOREUI_H

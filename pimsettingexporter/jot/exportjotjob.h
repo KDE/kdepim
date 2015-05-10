@@ -27,7 +27,7 @@ class ExportJotJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ExportJotJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ExportJotJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportJotJob();
 
     void start();

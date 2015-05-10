@@ -17,7 +17,7 @@
 
 #include "pimsettingsbackuprestore.h"
 #include "archivestorage.h"
-#include "importexportprogressindicatorgui.h"
+#include "importexportprogressindicatorbase.h"
 
 #include "mail/exportmailjob.h"
 #include "mail/importmailjob.h"
@@ -53,9 +53,8 @@
 #include <QDebug>
 #include <QDateTime>
 
-PimSettingsBackupRestore::PimSettingsBackupRestore(QWidget *parentWidget, QObject *parent)
+PimSettingsBackupRestore::PimSettingsBackupRestore(QObject *parent)
     : QObject(parent),
-      mParentWidget(parentWidget),
       mImportExportData(0),
       mArchiveStorage(0)
 {
@@ -113,55 +112,55 @@ void PimSettingsBackupRestore::backupNextStep()
         switch(mStoreIterator.key()) {
         case Utils::KMail:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportMailJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ExportMailJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KAddressBook:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportAddressbookJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ExportAddressbookJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KAlarm:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportAlarmJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ExportAlarmJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KOrganizer:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportCalendarJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ExportCalendarJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KJots:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportJotJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ExportJotJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KNotes:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportNotesJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ExportNotesJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::Akregator:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportAkregatorJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ExportAkregatorJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::Blogilo:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportBlogiloJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ExportBlogiloJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KNode:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportKnodeJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ExportKnodeJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
@@ -194,55 +193,55 @@ void PimSettingsBackupRestore::restoreNextStep()
         switch(mStoreIterator.key()) {
         case Utils::KMail:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportMailJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ImportMailJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KAddressBook:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportAddressbookJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ImportAddressbookJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KAlarm:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportAlarmJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ImportAlarmJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KOrganizer:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportCalendarJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ImportCalendarJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KJots:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportJotJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ImportJotJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KNotes:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportNotesJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ImportNotesJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::Akregator:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportAkregatorJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ImportAkregatorJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::Blogilo:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportBlogiloJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ImportBlogiloJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
         case Utils::KNode:
             if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportKnodeJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                mImportExportData = new ImportKnodeJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
@@ -306,13 +305,18 @@ void PimSettingsBackupRestore::restoreFinished()
 
 void PimSettingsBackupRestore::executeJob()
 {
-    mImportExportData->setImportExportProgressIndicator(new ImportExportProgressIndicatorGui(mParentWidget, this));
+    addExportProgressIndicator();
     connect(mImportExportData, SIGNAL(info(QString)), SIGNAL(addInfo(QString)));
     connect(mImportExportData, SIGNAL(error(QString)), SIGNAL(addError(QString)));
     connect(mImportExportData, SIGNAL(title(QString)), SIGNAL(addTitle(QString)));
     connect(mImportExportData, SIGNAL(endLine()), SIGNAL(addEndLine()));
     connect(mImportExportData, SIGNAL(jobFinished()), SIGNAL(jobFinished()));
     mImportExportData->start();
+}
+
+void PimSettingsBackupRestore::addExportProgressIndicator()
+{
+    mImportExportData->setImportExportProgressIndicator(new ImportExportProgressIndicatorBase(this));
 }
 
 void PimSettingsBackupRestore::slotJobFinished()
