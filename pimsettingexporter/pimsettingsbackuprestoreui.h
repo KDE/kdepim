@@ -24,12 +24,12 @@ class PimSettingsBackupRestoreUI : public PimSettingsBackupRestore
 {
     Q_OBJECT
 public:
-    explicit PimSettingsBackupRestoreUI(QWidget *parentWidget, QObject *parent = 0);
+    explicit PimSettingsBackupRestoreUI(QWidget *parentWidget, QObject *parent = Q_NULLPTR);
     ~PimSettingsBackupRestoreUI();
 
 protected:
-    virtual bool continueToRestore();
-    virtual void addExportProgressIndicator();
+    bool continueToRestore() Q_DECL_OVERRIDE;
+    void addExportProgressIndicator() Q_DECL_OVERRIDE;
 private:
     QWidget *mParentWidget;
 };

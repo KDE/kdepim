@@ -24,18 +24,18 @@ class ImportExportProgressIndicatorGui : public ImportExportProgressIndicatorBas
 {
     Q_OBJECT
 public:
-    explicit ImportExportProgressIndicatorGui(QWidget *parentWidget, QObject *parent = 0);
+    explicit ImportExportProgressIndicatorGui(QWidget *parentWidget, QObject *parent = Q_NULLPTR);
     ~ImportExportProgressIndicatorGui();
 
-    void increaseProgressDialog();
-    void createProgressDialog();
+    void increaseProgressDialog() Q_DECL_OVERRIDE;
+    void createProgressDialog() Q_DECL_OVERRIDE;
 
-    void showInfo(const QString &text);
-    bool wasCanceled() const;
-    int mergeConfigMessageBox(const QString &configName) const;
-    bool overwriteConfigMessageBox(const QString &configName) const;
-    bool overwriteDirectoryMessageBox(const QString &directory) const;
-    void showErrorMessage(const QString &message, const QString &title);
+    void showInfo(const QString &text) Q_DECL_OVERRIDE;
+    bool wasCanceled() const Q_DECL_OVERRIDE;
+    int mergeConfigMessageBox(const QString &configName) const Q_DECL_OVERRIDE;
+    bool overwriteConfigMessageBox(const QString &configName) const Q_DECL_OVERRIDE;
+    bool overwriteDirectoryMessageBox(const QString &directory) const Q_DECL_OVERRIDE;
+    void showErrorMessage(const QString &message, const QString &title) Q_DECL_OVERRIDE;
 private:
     QProgressDialog *mProgressDialog;
     QWidget *mParentWidget;
