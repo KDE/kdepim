@@ -20,6 +20,7 @@
 #define MESSAGELISTUTIL_H
 
 #include <messagelist/messagelist_export.h>
+#include <QObject>
 #include <QString>
 #include <QColor>
 

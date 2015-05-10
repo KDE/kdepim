@@ -21,6 +21,7 @@
 #include "snippetsmodel.h"
 
 #include <QMimeData>
+#include <QDataStream>
 #include <QStringList>
 
 using namespace MailCommon;

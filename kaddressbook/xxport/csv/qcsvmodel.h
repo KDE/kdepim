@@ -21,6 +21,7 @@
 #define QCSVMODEL_H
 
 #include <QtCore/QAbstractTableModel>
+#include <QIODevice>
 
 class QCsvModel : public QAbstractTableModel
 {

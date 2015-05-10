@@ -21,6 +21,7 @@
 #include "kernel/mailkernel.h"
 
 #include <KConfigGroup>
+#include <QDataStream>
 
 using namespace MailCommon;
 

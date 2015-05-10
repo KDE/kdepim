@@ -17,6 +17,7 @@
 #include "notedisplayattribute.h"
 
 #include <QByteArray>
+#include <QDataStream>
 #include <QFontDatabase>
 
 using namespace NoteShared;
