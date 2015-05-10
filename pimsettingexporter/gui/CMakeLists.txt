@@ -37,8 +37,6 @@ install(FILES
     DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/pimsettingexporter
 )
 
-install(FILES backup-structure.txt DESTINATION ${KDE_INSTALL_DATADIR}/pimsettingexporter)
-
 install(PROGRAMS org.kde.pimsettingexporter.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
 
