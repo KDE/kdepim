@@ -17,6 +17,7 @@
 
 #include "pimsettingexporterwindow.h"
 #include "dialog/showarchivestructuredialog.h"
+#include "importexportprogressindicatorgui.h"
 #include "widgets/logwidget.h"
 
 #include "mail/exportmailjob.h"
@@ -463,11 +464,12 @@ void PimSettingExporterWindow::restoreFinished()
 
 void PimSettingExporterWindow::executeJob()
 {
-    connect(mImportExportData, &ImportBlogiloJob::info, this, &PimSettingExporterWindow::slotAddInfo);
-    connect(mImportExportData, &ImportBlogiloJob::error, this, &PimSettingExporterWindow::slotAddError);
-    connect(mImportExportData, &ImportBlogiloJob::title, this, &PimSettingExporterWindow::slotAddTitle);
-    connect(mImportExportData, &ImportBlogiloJob::endLine, this, &PimSettingExporterWindow::slotAddEndLine);
-    connect(mImportExportData, &ImportBlogiloJob::jobFinished, this, &PimSettingExporterWindow::slotJobFinished);
+    mImportExportData->setImportExportProgressIndicator(new ImportExportProgressIndicatorGui(this, this));
+    connect(mImportExportData, &AbstractImportExportJob::info, this, &PimSettingExporterWindow::slotAddInfo);
+    connect(mImportExportData, &AbstractImportExportJob::error, this, &PimSettingExporterWindow::slotAddError);
+    connect(mImportExportData, &AbstractImportExportJob::title, this, &PimSettingExporterWindow::slotAddTitle);
+    connect(mImportExportData, &AbstractImportExportJob::endLine, this, &PimSettingExporterWindow::slotAddEndLine);
+    connect(mImportExportData, &AbstractImportExportJob::jobFinished, this, &PimSettingExporterWindow::slotJobFinished);
     mImportExportData->start();
 }
 

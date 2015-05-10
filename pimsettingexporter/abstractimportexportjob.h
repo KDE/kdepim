@@ -23,7 +23,6 @@
 #include <QStringList>
 #include <QUrl>
 class QWidget;
-class QProgressDialog;
 class ArchiveStorage;
 class KArchiveDirectory;
 class QTemporaryDir;
@@ -41,7 +40,7 @@ namespace PimCommon
 {
 class CreateResource;
 }
-
+class ImportExportProgressIndicatorBase;
 class AbstractImportExportJob : public QObject
 {
     Q_OBJECT
@@ -55,6 +54,8 @@ public:
 
     static int archiveVersion();
     static void setArchiveVersion(int version);
+
+    void setImportExportProgressIndicator(ImportExportProgressIndicatorBase *importExportProgressIndicator);
 
 Q_SIGNALS:
     void info(const QString &);
@@ -110,7 +111,6 @@ protected:
     ArchiveStorage *mArchiveStorage;
     KIdentityManagement::IdentityManager *mIdentityManager;
     QTemporaryDir *mTempDir;
-    QProgressDialog *mProgressDialog;
     const KArchiveDirectory *mArchiveDirectory;
     int mNumberOfStep;
     PimCommon::CreateResource *mCreateResource;
@@ -120,6 +120,7 @@ protected:
     static int sArchiveVersion;
 
 private:
+    ImportExportProgressIndicatorBase *mImportExportProgressIndicator;
     QWidget *mParent;
 };
 

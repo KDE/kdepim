@@ -17,6 +17,7 @@
 
 #include "abstractimportexportjob.h"
 #include "archivestorage.h"
+#include "importexportprogressindicatorbase.h"
 #include "synchronizeresourcejob.h"
 
 #include "mailcommon/util/mailutil.h"
@@ -45,13 +46,15 @@ AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage
       mArchiveStorage(archiveStorage),
       mIdentityManager(new KIdentityManagement::IdentityManager(false, this, "mIdentityManager")),
       mTempDir(Q_NULLPTR),
-      mProgressDialog(Q_NULLPTR),
       mArchiveDirectory(Q_NULLPTR),
       mNumberOfStep(numberOfStep),
       mCreateResource(Q_NULLPTR),
       mIndex(-1),
+      mImportExportProgressIndicator(new ImportExportProgressIndicatorBase(this)),
       mParent(parent)
 {
+    mImportExportProgressIndicator->setNumberOfStep(numberOfStep);
+    connect(mImportExportProgressIndicator, SIGNAL(info(QString)), this, SIGNAL(info(QString)));
 }
 
 AbstractImportExportJob::~AbstractImportExportJob()
@@ -59,43 +62,36 @@ AbstractImportExportJob::~AbstractImportExportJob()
     delete mCreateResource;
     delete mIdentityManager;
     delete mTempDir;
-    delete mProgressDialog;
 }
 
 void AbstractImportExportJob::createProgressDialog()
 {
-    if (!mProgressDialog) {
-        mProgressDialog = new QProgressDialog(mParent);
-        mProgressDialog->setWindowModality(Qt::WindowModal);
-        mProgressDialog->setMinimum(0);
-        mProgressDialog->setMaximum(mNumberOfStep);
-    }
-    mProgressDialog->show();
-    mProgressDialog->setValue(0);
+    mImportExportProgressIndicator->createProgressDialog();
 }
 
 bool AbstractImportExportJob::wasCanceled() const
 {
-    if (mProgressDialog) {
-        return mProgressDialog->wasCanceled();
-    }
-    return false;
+    return mImportExportProgressIndicator->wasCanceled();
 }
 
 void AbstractImportExportJob::increaseProgressDialog()
 {
-    if (mProgressDialog) {
-        mProgressDialog->setValue(mProgressDialog->value() + 1);
-    }
+    mImportExportProgressIndicator->increaseProgressDialog();
+
 }
 
 void AbstractImportExportJob::showInfo(const QString &text)
 {
-    if (mProgressDialog) {
-        mProgressDialog->setLabelText(text);
-    }
-    Q_EMIT info(text);
+    mImportExportProgressIndicator->showInfo(text);
 }
+
+void AbstractImportExportJob::setImportExportProgressIndicator(ImportExportProgressIndicatorBase *importExportProgressIndicator)
+{
+    delete mImportExportProgressIndicator;
+    mImportExportProgressIndicator = importExportProgressIndicator;
+    mImportExportProgressIndicator->setNumberOfStep(mNumberOfStep);
+}
+
 
 KZip *AbstractImportExportJob::archive() const
 {
@@ -125,12 +121,12 @@ void AbstractImportExportJob::backupFile(const QString &filename, const QString 
 
 int AbstractImportExportJob::mergeConfigMessageBox(const QString &configName) const
 {
-    return KMessageBox::warningYesNoCancel(mParent, i18n("\"%1\" already exists. Do you want to overwrite it or merge it?", configName), i18n("Restore"), KGuiItem(i18n("Overwrite")), KGuiItem(i18n("Merge")));
+    return mImportExportProgressIndicator->mergeConfigMessageBox(configName);
 }
 
 bool AbstractImportExportJob::overwriteConfigMessageBox(const QString &configName) const
 {
-    return (KMessageBox::warningYesNo(mParent, i18n("\"%1\" already exists. Do you want to overwrite it?", configName), i18n("Restore")) == KMessageBox::Yes);
+    return mImportExportProgressIndicator->overwriteConfigMessageBox(configName);
 }
 
 void AbstractImportExportJob::overwriteDirectory(const QString &path, const KArchiveEntry *entry)
@@ -152,7 +148,7 @@ void AbstractImportExportJob::overwriteDirectory(const QString &path, const KArc
 
 bool AbstractImportExportJob::overwriteDirectoryMessageBox(const QString &directory) const
 {
-    return (KMessageBox::warningYesNo(mParent, i18n("Directory \"%1\" already exists. Do you want to overwrite it?", directory), i18n("Restore")) == KMessageBox::Yes);
+    return mImportExportProgressIndicator->overwriteDirectoryMessageBox(directory);
 }
 
 void AbstractImportExportJob::convertRealPathToCollection(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix)
@@ -256,7 +252,7 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
         destination.remove();
     }
     if (!file.copy(dest)) {
-        KMessageBox::error(mParent, i18n("File \"%1\" cannot be copied to \"%2\".", filename, dest), i18n("Copy file"));
+        mImportExportProgressIndicator->showErrorMessage(i18n("File \"%1\" cannot be copied to \"%2\".",filename,dest), i18n("Copy file"));
     }
 }
 

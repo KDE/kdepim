@@ -31,6 +31,19 @@ public:
     virtual void createProgressDialog();
 
     virtual void showInfo(const QString &text);
+    virtual bool wasCanceled() const;
+    virtual int mergeConfigMessageBox(const QString &configName) const;
+    virtual bool overwriteConfigMessageBox(const QString &configName) const;
+    virtual bool overwriteDirectoryMessageBox(const QString &directory) const;
+    virtual void showErrorMessage(const QString &message, const QString &title);
+
+    void setNumberOfStep(int numberOfStep);
+
+Q_SIGNALS:
+    void info(const QString &text);
+
+protected:
+    int mNumberOfStep;
 };
 
 #endif // IMPORTEXPORTPROGRESSINDICATORBASE_H

@@ -17,6 +17,7 @@
 
 #include "pimsettingsbackuprestore.h"
 #include "archivestorage.h"
+#include "importexportprogressindicatorgui.h"
 
 #include "mail/exportmailjob.h"
 #include "mail/importmailjob.h"
@@ -275,6 +276,7 @@ void PimSettingsBackupRestore::restoreFinished()
 
 void PimSettingsBackupRestore::executeJob()
 {
+    mImportExportData->setImportExportProgressIndicator(new ImportExportProgressIndicatorGui(mParentWidget, this));
     connect(mImportExportData, &AbstractImportExportJob::info, this, &PimSettingsBackupRestore::addInfo);
     connect(mImportExportData, &AbstractImportExportJob::error, this, &PimSettingsBackupRestore::addError);
     connect(mImportExportData, &AbstractImportExportJob::title, this, &PimSettingsBackupRestore::addTitle);

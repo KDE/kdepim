@@ -16,9 +16,11 @@
 */
 
 #include "importexportprogressindicatorbase.h"
+#include <KMessageBox>
 
 ImportExportProgressIndicatorBase::ImportExportProgressIndicatorBase(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mNumberOfStep(0)
 {
 
 }
@@ -30,16 +32,48 @@ ImportExportProgressIndicatorBase::~ImportExportProgressIndicatorBase()
 
 void ImportExportProgressIndicatorBase::increaseProgressDialog()
 {
-
+    //Nothing
 }
 
 void ImportExportProgressIndicatorBase::createProgressDialog()
 {
-
+    //Nothing
 }
 
 void ImportExportProgressIndicatorBase::showInfo(const QString &text)
 {
-
+    Q_EMIT info(text);
 }
 
+bool ImportExportProgressIndicatorBase::wasCanceled() const
+{
+    return false;
+}
+
+void ImportExportProgressIndicatorBase::setNumberOfStep(int numberOfStep)
+{
+    mNumberOfStep = numberOfStep;
+}
+
+int ImportExportProgressIndicatorBase::mergeConfigMessageBox(const QString &configName) const
+{
+    return KMessageBox::Yes;
+}
+
+bool ImportExportProgressIndicatorBase::overwriteConfigMessageBox(const QString &configName) const
+{
+    Q_UNUSED(configName);
+    return true;
+}
+
+bool ImportExportProgressIndicatorBase::overwriteDirectoryMessageBox(const QString &directory) const
+{
+    Q_UNUSED(directory);
+    return true;
+}
+
+void ImportExportProgressIndicatorBase::showErrorMessage(const QString &message, const QString &title)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(title);
+}
