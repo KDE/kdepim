@@ -20,14 +20,13 @@
 
 #include "abstractimportexportjob.h"
 
-class QWidget;
 class ArchiveStorage;
 
 class ExportCalendarJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ExportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ExportCalendarJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportCalendarJob();
 
     void start() Q_DECL_OVERRIDE;

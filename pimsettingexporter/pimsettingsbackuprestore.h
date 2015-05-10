@@ -28,7 +28,7 @@ class PimSettingsBackupRestore : public QObject
 {
     Q_OBJECT
 public:
-    explicit PimSettingsBackupRestore(QWidget *parentWidget, QObject *parent = Q_NULLPTR);
+    explicit PimSettingsBackupRestore(QObject *parent=Q_NULLPTR);
     ~PimSettingsBackupRestore();
 
     void backupStart(const QString &filename);
@@ -52,8 +52,9 @@ Q_SIGNALS:
 
 protected:
     virtual bool continueToRestore();
-    QWidget *mParentWidget;
 
+    virtual void addExportProgressIndicator();
+    AbstractImportExportJob *mImportExportData;
 private:
     enum Action {
         Backup,
@@ -69,7 +70,6 @@ private:
     QHash<Utils::AppsType, Utils::importExportParameters> mStored;
     QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator mStoreIterator;
     Action mAction;
-    AbstractImportExportJob *mImportExportData;
     ArchiveStorage *mArchiveStorage;
 };
 

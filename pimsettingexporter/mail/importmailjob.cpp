@@ -58,8 +58,8 @@ inline const QString storeMails()
 }
 }
 
-ImportMailJob::ImportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
-    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
+ImportMailJob::ImportMailJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
+    : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep)
 {
     initializeImportJob();
 }

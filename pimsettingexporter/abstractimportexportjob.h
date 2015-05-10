@@ -18,11 +18,12 @@
 #ifndef ABSTRACTIMPORTEXPORTJOB_H
 #define ABSTRACTIMPORTEXPORTJOB_H
 
+#include <QObject>
 #include "utils.h"
 #include <AkonadiCore/Collection>
 #include <QStringList>
 #include <QUrl>
-class QWidget;
+
 class ArchiveStorage;
 class KArchiveDirectory;
 class QTemporaryDir;
@@ -45,7 +46,7 @@ class AbstractImportExportJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, Utils::StoredTypes typeSelected, int numberOfStep);
+    explicit AbstractImportExportJob(QObject *parent, ArchiveStorage *archiveStorage, Utils::StoredTypes typeSelected, int numberOfStep);
     ~AbstractImportExportJob();
 
     virtual void start() = 0;
@@ -121,7 +122,6 @@ protected:
 
 private:
     ImportExportProgressIndicatorBase *mImportExportProgressIndicator;
-    QWidget *mParent;
 };
 
 #endif // ABSTRACTIMPORTEXPORTJOB_H

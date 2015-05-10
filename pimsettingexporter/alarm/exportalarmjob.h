@@ -20,14 +20,13 @@
 
 #include "abstractimportexportjob.h"
 
-class QWidget;
 class ArchiveStorage;
 
 class ExportAlarmJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
-    explicit ExportAlarmJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
+    explicit ExportAlarmJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportAlarmJob();
 
     void start() Q_DECL_OVERRIDE;
