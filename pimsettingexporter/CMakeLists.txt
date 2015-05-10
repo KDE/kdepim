@@ -127,9 +127,9 @@ install(TARGETS pimsettingexporterprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRAR
 
 
 set(pimsettingexporter_SRCS
-    pimsettingsbackuprestoreui.cpp
-    importexportprogressindicatorgui.cpp
-    pimsettingexporterwindow.cpp
+    gui/pimsettingsbackuprestoreui.cpp
+    gui/importexportprogressindicatorgui.cpp
+    gui/pimsettingexporterwindow.cpp
     gui/main.cpp)
 
 kde4_add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
