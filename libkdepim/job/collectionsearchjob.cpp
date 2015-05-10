@@ -28,8 +28,8 @@ without including the source code for Qt in the source distribution.
 
 CollectionSearchJob::CollectionSearchJob(const QString &searchString, const QStringList &mimetypeFilter, QObject *parent)
     : KJob(parent),
-    mSearchString(searchString),
-    mMimeTypeFilter(mimetypeFilter)
+      mSearchString(searchString),
+      mMimeTypeFilter(mimetypeFilter)
 {
 }
 
@@ -68,7 +68,7 @@ void CollectionSearchJob::start()
 
 void CollectionSearchJob::onCollectionsReceived(const Akonadi::Collection::List &list)
 {
-    Q_FOREACH(const Akonadi::Collection &col, list) {
+    Q_FOREACH (const Akonadi::Collection &col, list) {
         mMatchingCollections << col;
         Akonadi::Collection ancestor = col.parentCollection();
         while (ancestor.isValid() && (ancestor != Akonadi::Collection::root())) {
@@ -120,7 +120,7 @@ void CollectionSearchJob::onAncestorsFetched(KJob *job)
         emitResult();
         return;
     }
-    Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob*>(job);
+    Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob *>(job);
     Akonadi::Collection::List matchingCollections;
     Q_FOREACH (const Akonadi::Collection &c, mMatchingCollections) {
         //We need to replace the parents with the version that contains the name, so we can display it accordingly

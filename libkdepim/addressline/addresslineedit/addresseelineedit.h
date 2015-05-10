@@ -50,7 +50,8 @@ namespace KContacts
 class Addressee;
 class ContactGroup;
 }
-namespace KLDAP {
+namespace KLDAP
+{
 class LdapClientSearch;
 }
 

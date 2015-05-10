@@ -28,8 +28,7 @@
 #include <QStringList>
 #include <AkonadiCore/Collection>
 
-struct KDEPIM_EXPORT Person
-{
+struct KDEPIM_EXPORT Person {
     Person(): rootCollection(-1), updateDisplayName(false) {};
     QString name;
     QString uid;

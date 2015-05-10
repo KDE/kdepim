@@ -65,3 +65,4 @@ void ServerTest::testFinished(QList< int > list)
         Q_EMIT testFail();
     }
 }
+

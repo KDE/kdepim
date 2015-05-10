@@ -871,7 +871,6 @@ QStringList AddresseeLineEditPrivate::balooBlackList() const
     return m_balooBlackList;
 }
 
-
 bool AddresseeLineEditPrivate::useSemicolonAsSeparator() const
 {
     return m_useSemicolonAsSeparator;

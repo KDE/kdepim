@@ -29,9 +29,9 @@
 #include <AkonadiSearch/PIM/collectionquery.h>
 #include <AkonadiCore/collectionidentificationattribute.h>
 
-PersonSearchJob::PersonSearchJob(const QString& searchString, QObject* parent)
+PersonSearchJob::PersonSearchJob(const QString &searchString, QObject *parent)
     : KJob(parent),
-    mSearchString(searchString)
+      mSearchString(searchString)
 {
     connect(&mLdapSearch, static_cast<void (KLDAP::LdapClientSearch::*)(const QList<KLDAP::LdapResultObject> &)>(&KLDAP::LdapClientSearch::searchData),
             this, &PersonSearchJob::onLDAPSearchData);
@@ -87,15 +87,15 @@ void PersonSearchJob::start()
 void PersonSearchJob::onLDAPSearchData(const QList< KLDAP::LdapResultObject > &list)
 {
     QList<Person> persons;
-    Q_FOREACH(const KLDAP::LdapResultObject &item, list) {
+    Q_FOREACH (const KLDAP::LdapResultObject &item, list) {
         Person person;
         person.name = QString::fromUtf8(item.object.value(QStringLiteral("cn")));
         person.mail = QString::fromUtf8(item.object.value(QStringLiteral("mail")));
 
         const int depth = item.object.dn().depth();
-        for ( int i = 0; i < depth; ++i ) {
+        for (int i = 0; i < depth; ++i) {
             const QString rdnStr = item.object.dn().rdnString(i);
-            if ( rdnStr.startsWith(QStringLiteral("ou="), Qt::CaseInsensitive) ) {
+            if (rdnStr.startsWith(QStringLiteral("ou="), Qt::CaseInsensitive)) {
                 person.ou = rdnStr.mid(3);
                 break;
             }
@@ -106,14 +106,14 @@ void PersonSearchJob::onLDAPSearchData(const QList< KLDAP::LdapResultObject > &l
             person.uid = uid;
             if (mMatches.contains(uid)) {
                 const Person &p = mMatches.value(uid);
-                if (p.mail != person.mail ) {
+                if (p.mail != person.mail) {
                     if (p.rootCollection > -1) {
                         person.rootCollection = p.rootCollection;
                         person.updateDisplayName = p.updateDisplayName;
                         updatePersonCollection(person);
                         mMatches.insert(uid, person);
                     } else {
-                        qCWarning(LIBKDEPIM_LOG) << "That should not happen: we found two times persons with the same uid ("<< uid << "), but differnet name:" << p.name << "vs" << person.name;
+                        qCWarning(LIBKDEPIM_LOG) << "That should not happen: we found two times persons with the same uid (" << uid << "), but differnet name:" << p.name << "vs" << person.name;
                     }
                 }
             } else {            //New person found
@@ -140,7 +140,7 @@ void PersonSearchJob::onLDAPSearchDone()
 void PersonSearchJob::onCollectionsReceived(const Akonadi::Collection::List &list)
 {
     QList<Person> persons;
-    Q_FOREACH(const Akonadi::Collection &col, list) {
+    Q_FOREACH (const Akonadi::Collection &col, list) {
         Person person;
         const QString &uid = col.name();
         const CollectionIdentificationAttribute *const attr = col.attribute<CollectionIdentificationAttribute>();
@@ -201,7 +201,7 @@ void PersonSearchJob::updatePersonCollection(const Person &person)
     identification->setMail(person.mail.toUtf8());
     identification->setOu(person.ou.toUtf8());
 
-    Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( c, this );
+    Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob(c, this);
     connect(job, &Akonadi::CollectionModifyJob::result, this, &PersonSearchJob::modifyResult);
 }
 
@@ -228,7 +228,7 @@ void PersonSearchJob::modifyResult(KJob *job)
         return;
     }
 
-    const Akonadi::CollectionModifyJob *modifyJob = static_cast<Akonadi::CollectionModifyJob*>(job);
+    const Akonadi::CollectionModifyJob *modifyJob = static_cast<Akonadi::CollectionModifyJob *>(job);
     const Akonadi::Collection &col = modifyJob->collection();
 
     const CollectionIdentificationAttribute *const attr = col.attribute<CollectionIdentificationAttribute>();

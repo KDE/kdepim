@@ -181,7 +181,7 @@ void Ldap::destroy()
         }
 
         c->deleteGroup(QStringLiteral("LDAP"));
-        group = KConfigGroup (c, QStringLiteral("LDAP"));
+        group = KConfigGroup(c, QStringLiteral("LDAP"));
 
         for (int i = 0; i < cSelHosts - 1; ++i) {
             m_clientSearchConfig->writeConfig(selHosts.at(i), group, i, true);

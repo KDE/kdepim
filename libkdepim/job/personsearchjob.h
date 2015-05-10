@@ -46,7 +46,7 @@ Q_SIGNALS:
     void personUpdate(const Person &person);
 
 public Q_SLOTS:
-    bool kill(KillVerbosity verbosity=Quietly);
+    bool kill(KillVerbosity verbosity = Quietly);
 
 private Q_SLOTS:
     void onCollectionsReceived(const Akonadi::Collection::List &);
