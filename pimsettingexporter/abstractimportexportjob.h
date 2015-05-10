@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include "utils.h"
+#include "pimsettingexporter_export.h"
 #include <Akonadi/Collection>
 #include <QStringList>
 
@@ -39,7 +40,7 @@ namespace PimCommon {
 class CreateResource;
 }
 class ImportExportProgressIndicatorBase;
-class AbstractImportExportJob : public QObject
+class PIMSETTINGEXPORT_EXPORT AbstractImportExportJob : public QObject
 {
     Q_OBJECT
 public:

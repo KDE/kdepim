@@ -19,10 +19,10 @@
 #define IMPORTKNODEJOB_H
 
 #include "abstractimportexportjob.h"
-
+#include "pimsettingexporter_export.h"
 class ArchiveStorage;
 
-class ImportKnodeJob : public AbstractImportExportJob
+class PIMSETTINGEXPORT_EXPORT ImportKnodeJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:

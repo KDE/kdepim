@@ -19,6 +19,7 @@
 #define ExportMailJob_H
 
 #include "abstractimportexportjob.h"
+#include "pimsettingexporter_export.h"
 #include <KSharedConfig>
 
 #include <time.h>
@@ -26,7 +27,7 @@
 class KUrl;
 class ArchiveStorage;
 
-class ExportMailJob : public AbstractImportExportJob
+class PIMSETTINGEXPORT_EXPORT ExportMailJob : public AbstractImportExportJob
 {
 public:
     explicit ExportMailJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);

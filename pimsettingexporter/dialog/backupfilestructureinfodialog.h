@@ -19,10 +19,11 @@
 #define BACKUPFILESTRUCTUREINFODIALOG_H
 
 #include <KDialog>
+#include "pimsettingexporter_export.h"
 namespace PimCommon {
 class PlainTextEditorWidget;
 }
-class BackupFileStructureInfoDialog : public KDialog
+class PIMSETTINGEXPORT_EXPORT BackupFileStructureInfoDialog : public KDialog
 {
     Q_OBJECT
 public:

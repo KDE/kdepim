@@ -19,6 +19,7 @@
 #define ImportMailJob_H
 
 #include "abstractimportexportjob.h"
+#include "pimsettingexporter_export.h"
 #include <Akonadi/Collection>
 #include <QStringList>
 #include <QHash>
@@ -27,7 +28,7 @@ class KArchiveDirectory;
 class KArchiveFile;
 class ArchiveStorage;
 
-class ImportMailJob : public AbstractImportExportJob
+class PIMSETTINGEXPORT_EXPORT ImportMailJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:

@@ -22,7 +22,7 @@
 
 class ArchiveStorage;
 
-class ExportKnodeJob : public AbstractImportExportJob
+class PIMSETTINGEXPORT_EXPORT ExportKnodeJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:

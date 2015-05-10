@@ -88,15 +88,12 @@ set(pimsettingexporter_LIB_SRCS
   ${pimsettingexporter_akregator_SRCS}
   ${pimsettingexporter_blogilo_SRCS}
   abstractimportexportjob.cpp
-  pimsettingexporterwindow.cpp
   pimsettingexporterkernel.cpp
   utils.cpp
   akonadidatabase.cpp
   archivestorage.cpp
   synchronizeresourcejob.cpp
   pimsettingsbackuprestore.cpp
-  pimsettingsbackuprestoreui.cpp
-  importexportprogressindicatorgui.cpp
   importexportprogressindicatorbase.cpp
 )
 
@@ -130,6 +127,9 @@ install(TARGETS pimsettingexporterprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRAR
 
 
 set(pimsettingexporter_SRCS
+    pimsettingsbackuprestoreui.cpp
+    importexportprogressindicatorgui.cpp
+    pimsettingexporterwindow.cpp
     gui/main.cpp)
 
 kde4_add_executable(pimsettingexporter ${pimsettingexporter_SRCS})

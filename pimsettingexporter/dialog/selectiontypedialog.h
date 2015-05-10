@@ -20,10 +20,10 @@
 
 #include <KDialog>
 #include "utils.h"
-
+#include "pimsettingexporter_export.h"
 class SelectionTypeTreeWidget;
 
-class SelectionTypeDialog : public KDialog
+class PIMSETTINGEXPORT_EXPORT SelectionTypeDialog : public KDialog
 {
     Q_OBJECT
 public:
