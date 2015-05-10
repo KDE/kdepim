@@ -126,47 +126,10 @@ set_target_properties(pimsettingexporterprivate PROPERTIES VERSION ${GENERIC_LIB
 install(TARGETS pimsettingexporterprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 
-set(pimsettingexporter_SRCS
-    gui/pimsettingsbackuprestoreui.cpp
-    gui/importexportprogressindicatorgui.cpp
-    gui/pimsettingexporterwindow.cpp
-    gui/main.cpp)
-
-kde4_add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
-
-target_link_libraries(pimsettingexporter
-  ${KDE4_KFILE_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-  ${AKONADI_COMMON_LIBRARIES}
-  ${KDEPIMLIBS_KALARMCAL_LIBS}
-  ${QT_QTXML_LIBRARY}
-  mailimporter
-  mailcommon
-  pimcommon
-  kdepim
-  messagecomposer
-  pimsettingexporterprivate
-)
-
-
-install(TARGETS pimsettingexporter ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
-install(FILES
-    pimsettingexporter.rc
-    DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter
-)
-
-install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter)
-
-install(PROGRAMS pimsettingexporter.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-
 
 ########### install files ###############
 
+install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter)
 kde4_install_icons( ${ICON_INSTALL_DIR} )
 add_subdirectory(tests)
+add_subdirectory(gui)
