@@ -88,6 +88,7 @@ set(pimsettingexporter_LIB_SRCS
 
 
 add_library(pimsettingexporterprivate ${pimsettingexporter_LIB_SRCS})
+generate_export_header(pimsettingexporterprivate BASE_NAME pimsettingexporter)
 
 
 

@@ -27,7 +27,7 @@ class ArchiveStorage;
 class QAction;
 class QCommandLineParser;
 
-class PIMSETTINGEXPORT_EXPORT PimSettingExporterWindow: public KXmlGuiWindow
+class PIMSETTINGEXPORTER_EXPORT PimSettingExporterWindow: public KXmlGuiWindow
 {
     Q_OBJECT
 public:

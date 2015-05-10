@@ -24,7 +24,7 @@
 
 class QApplication;
 class PimSettingExporterWindow;
-class PIMSETTINGEXPORT_EXPORT PimSettingCommandLineOption : public QObject
+class PIMSETTINGEXPORTER_EXPORT PimSettingCommandLineOption : public QObject
 {
     Q_OBJECT
 public:
