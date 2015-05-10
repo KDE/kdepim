@@ -28,7 +28,8 @@
 #include <QDir>
 #include <QStandardPaths>
 
-namespace {
+namespace
+{
 inline const QString storeAddressbook()
 {
     return QLatin1String("backupaddressbook/");

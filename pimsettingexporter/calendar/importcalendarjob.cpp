@@ -33,7 +33,8 @@
 #include <QDir>
 #include <QStandardPaths>
 
-namespace {
+namespace
+{
 inline const QString storeCalendar()
 {
     return QLatin1String("backupcalendar/");

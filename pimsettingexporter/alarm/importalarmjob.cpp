@@ -30,7 +30,8 @@
 #include <QFile>
 #include <QStandardPaths>
 
-namespace {
+namespace
+{
 inline const QString storeAlarm()
 {
     return QLatin1String("backupalarm/");

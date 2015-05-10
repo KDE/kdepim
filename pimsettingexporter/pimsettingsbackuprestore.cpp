@@ -245,8 +245,9 @@ bool PimSettingsBackupRestore::restoreStart(const QString &filename)
     mStoreIterator = mStored.constBegin();
     const int version = Utils::archiveVersion(mArchiveStorage->archive());
     if (version > Utils::currentArchiveVersion()) {
-        if (!continueToRestore())
+        if (!continueToRestore()) {
             return false;
+        }
     }
     qCDebug(PIMSETTINGEXPORTER_LOG) << " version " << version;
     AbstractImportExportJob::setArchiveVersion(version);

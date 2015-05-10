@@ -91,7 +91,6 @@ void AbstractImportExportJob::setImportExportProgressIndicator(ImportExportProgr
     mImportExportProgressIndicator->setNumberOfStep(mNumberOfStep);
 }
 
-
 KZip *AbstractImportExportJob::archive() const
 {
     return mArchiveStorage->archive();
@@ -251,7 +250,7 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
         destination.remove();
     }
     if (!file.copy(dest)) {
-        mImportExportProgressIndicator->showErrorMessage(i18n("File \"%1\" cannot be copied to \"%2\".",filename,dest), i18n("Copy file"));
+        mImportExportProgressIndicator->showErrorMessage(i18n("File \"%1\" cannot be copied to \"%2\".", filename, dest), i18n("Copy file"));
     }
 }
 

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "pimsettingsbackuprestoreui.h"
 #include "importexportprogressindicatorgui.h"
 #include "abstractimportexportjob.h"
@@ -36,8 +35,9 @@ PimSettingsBackupRestoreUI::~PimSettingsBackupRestoreUI()
 
 bool PimSettingsBackupRestoreUI::continueToRestore()
 {
-    if (KMessageBox::No == KMessageBox::questionYesNo(mParentWidget, i18n("The archive was created by a newer version of this program. It might contain additional data which will be skipped during import. Do you want to import it?"), i18n("Not correct version")))
+    if (KMessageBox::No == KMessageBox::questionYesNo(mParentWidget, i18n("The archive was created by a newer version of this program. It might contain additional data which will be skipped during import. Do you want to import it?"), i18n("Not correct version"))) {
         return false;
+    }
     return true;
 }
 
