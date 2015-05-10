@@ -45,7 +45,7 @@ KCalCore::Calendar::Ptr MultiViewCalendar::getCalendar() const
 KCalCore::Incidence::List MultiViewCalendar::incidences() const
 {
     KCalCore::Incidence::List list;
-    foreach(const ViewCalendar::Ptr &cal, mSubCalendars) {
+    foreach (const ViewCalendar::Ptr &cal, mSubCalendars) {
         if (cal->getCalendar()) {
             list += cal->getCalendar()->incidences();
         }
@@ -58,10 +58,9 @@ int MultiViewCalendar::calendars() const
     return mSubCalendars.size();
 }
 
-
 ViewCalendar::Ptr MultiViewCalendar::findCalendar(const KCalCore::Incidence::Ptr &incidence) const
 {
-    foreach(const ViewCalendar::Ptr &cal, mSubCalendars) {
+    foreach (const ViewCalendar::Ptr &cal, mSubCalendars) {
         if (cal->isValid(incidence)) {
             return cal;
         }
@@ -71,7 +70,7 @@ ViewCalendar::Ptr MultiViewCalendar::findCalendar(const KCalCore::Incidence::Ptr
 
 ViewCalendar::Ptr MultiViewCalendar::findCalendar(const QString &incidenceIdentifier) const
 {
-    foreach(const ViewCalendar::Ptr &cal, mSubCalendars) {
+    foreach (const ViewCalendar::Ptr &cal, mSubCalendars) {
         if (cal->isValid(incidenceIdentifier)) {
             return cal;
         }
@@ -126,7 +125,6 @@ bool MultiViewCalendar::isValid(const QString &incidenceIdentifier) const
     return cal;
 }
 
-
 QColor MultiViewCalendar::resourceColor(const KCalCore::Incidence::Ptr &incidence) const
 {
     ViewCalendar::Ptr cal = findCalendar(incidence);
@@ -170,7 +168,6 @@ bool AkonadiViewCalendar::isValid(const QString &incidenceIdentifier) const
     return !mCalendar->incidence(incidenceIdentifier).isNull();
 }
 
-
 Akonadi::Item AkonadiViewCalendar::item(const KCalCore::Incidence::Ptr &incidence) const
 {
     if (!mCalendar || !incidence) {
@@ -194,12 +191,12 @@ Akonadi::Item AkonadiViewCalendar::item(const KCalCore::Incidence::Ptr &incidenc
 
 QString AkonadiViewCalendar::displayName(const KCalCore::Incidence::Ptr &incidence) const
 {
-    return CalendarSupport::displayName( mCalendar.data(), item(incidence).parentCollection() );
+    return CalendarSupport::displayName(mCalendar.data(), item(incidence).parentCollection());
 }
 
 QColor AkonadiViewCalendar::resourceColor(const KCalCore::Incidence::Ptr &incidence) const
 {
-    return EventViews::resourceColor( item(incidence), mAgendaView->preferences() );
+    return EventViews::resourceColor(item(incidence), mAgendaView->preferences());
 }
 
 QString AkonadiViewCalendar::iconForIncidence(const KCalCore::Incidence::Ptr &incidence) const

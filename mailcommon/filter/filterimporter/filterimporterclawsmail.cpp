@@ -32,15 +32,15 @@ FilterImporterClawsMails::FilterImporterClawsMails(QFile *file)
     readStream(stream);
 }
 
-FilterImporterClawsMails::FilterImporterClawsMails( QString string )
-    :FilterImporterAbstract()
+FilterImporterClawsMails::FilterImporterClawsMails(QString string)
+    : FilterImporterAbstract()
 {
     QTextStream stream(&string);
     readStream(stream);
 }
 
 FilterImporterClawsMails::FilterImporterClawsMails(bool interactive)
-    :FilterImporterAbstract(interactive)
+    : FilterImporterAbstract(interactive)
 {
 }
 

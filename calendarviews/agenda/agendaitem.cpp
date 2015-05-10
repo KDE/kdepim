@@ -66,7 +66,6 @@ QPixmap *AgendaItem::eventPxmp = Q_NULLPTR;
 
 //-----------------------------------------------------------------------------
 
-
 AgendaItem::AgendaItem(EventView *eventView, const MultiViewCalendar::Ptr &calendar,
                        const KCalCore::Incidence::Ptr &item,
                        int itemPos, int itemCount,
@@ -75,17 +74,17 @@ AgendaItem::AgendaItem(EventView *eventView, const MultiViewCalendar::Ptr &calen
       mOccurrenceDateTime(qd), mValid(true), mCloned(false), mSelected(isSelected), mSpecialEvent(false)
 {
     if (!mIncidence) {
-          mValid = false;
-          return;
+        mValid = false;
+        return;
     }
 
     mIncidence = Incidence::Ptr(mIncidence->clone());
     if (mIncidence->customProperty("KABC", "BIRTHDAY") == QLatin1String("YES") ||
-        mIncidence->customProperty("KABC", "ANNIVERSARY") == QLatin1String("YES")) {
+            mIncidence->customProperty("KABC", "ANNIVERSARY") == QLatin1String("YES")) {
         const int years = EventViews::yearDiff(mIncidence->dtStart().date(), qd.toTimeSpec(mEventView->preferences()->timeSpec()).date());
         if (years > 0) {
             mIncidence->setReadOnly(false);
-            mIncidence->setSummary(i18np( "%2 (1 year)", "%2 (%1 years)", years, mIncidence->summary()));
+            mIncidence->setSummary(i18np("%2 (1 year)", "%2 (%1 years)", years, mIncidence->summary()));
             mIncidence->setReadOnly(true);
             mCloned = true;
         }
@@ -640,7 +639,7 @@ void AgendaItem::addAttendee(const QString &newAttendee)
     QString name, email;
     KEmailAddress::extractEmailAddressAndName(newAttendee, email, name);
     if (!(name.isEmpty() && email.isEmpty())) {
-        mIncidence->addAttendee( KCalCore::Attendee::Ptr(new KCalCore::Attendee(name, email)));
+        mIncidence->addAttendee(KCalCore::Attendee::Ptr(new KCalCore::Attendee(name, email)));
         KMessageBox::information(
             this,
             i18n("Attendee \"%1\" added to the calendar item \"%2\"",
@@ -764,7 +763,7 @@ void AgendaItem::paintIcons(QPainter *p, int &x, int y, int ft)
         }
     }
 
-  const bool isTodo = mIncidence && mIncidence->type() == Incidence::TypeTodo;
+    const bool isTodo = mIncidence && mIncidence->type() == Incidence::TypeTodo;
 
     if (isTodo && icons.contains(EventViews::EventView::TaskIcon)) {
         const QString iconName = mIncidence->iconName(mOccurrenceDateTime.toTimeSpec(mIncidence->dtStart().timeSpec()));
@@ -847,7 +846,7 @@ void AgendaItem::paintEvent(QPaintEvent *ev)
             todo->dtDue().toTimeSpec(CalendarSupport::KCalPrefs::instance()->timeSpec()).date();
         const QDate today =
             KDateTime::currentDateTime(CalendarSupport::KCalPrefs::instance()->timeSpec()).date();
-    const QDate occurrenceDate = this->occurrenceDate();
+        const QDate occurrenceDate = this->occurrenceDate();
         if (todo->isOverdue() && today >= occurrenceDate) {
             bgColor = mEventView->preferences()->todoOverdueColor();
         } else if (dueDate == today && dueDate == occurrenceDate) {
@@ -939,14 +938,14 @@ void AgendaItem::paintEvent(QPaintEvent *ev)
             longH = i18n("%1 - %2",
                          shortH,
                          KLocale::global()->formatTime(
-                         mIncidence->dateTime(KCalCore::Incidence::RoleEnd).toTimeSpec(
+                             mIncidence->dateTime(KCalCore::Incidence::RoleEnd).toTimeSpec(
                                  mEventView->preferences()->timeSpec()).time()));
         } else {
             longH = shortH;
         }
     } else if (!mMultiItemInfo->mFirstMultiItem) {
         shortH = KLocale::global()->formatTime(
-        mIncidence->dtStart().toTimeSpec(mEventView->preferences()->timeSpec()).time());
+                     mIncidence->dtStart().toTimeSpec(mEventView->preferences()->timeSpec()).time());
         longH = shortH;
     } else {
         shortH = KLocale::global()->formatTime(
@@ -984,7 +983,7 @@ void AgendaItem::paintEvent(QPaintEvent *ev)
     if ((2 * singleLineHeight) > (height() - 2 * margin)) {
         int x = margin, txtWidth;
 
-    if (mIncidence->allDay()) {
+        if (mIncidence->allDay()) {
             x += visRect.left();
             const int y =  qRound((height() - 16) / 2.0);
             paintIcons(&p, x, y, ft);
@@ -1210,8 +1209,8 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
     QLinearGradient gradient(QPointF(r.x(), r.y()), QPointF(r.x(), r.height()));
 
     if (r.height() > 50) {
-    if (mIncidence->allDay() &&
-         mIncidence->dtStart() == mIncidence->dateTime(KCalCore::Incidence::RoleEnd) &&
+        if (mIncidence->allDay() &&
+                mIncidence->dtStart() == mIncidence->dateTime(KCalCore::Incidence::RoleEnd) &&
                 CalendarSupport::hasEvent(mIncidence)) {
             gradient.setColorAt(0, bgColor.light(130));
             qreal t = 1.0 - (r.height() - 18.0) / r.height();
@@ -1225,8 +1224,8 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
         }
         gradient.setColorAt(1, bgColor.dark(110));
     } else {
-    if ( mIncidence->allDay() &&
-         mIncidence->dtStart() == mIncidence->dateTime(KCalCore::Incidence::RoleEnd) &&
+        if (mIncidence->allDay() &&
+                mIncidence->dtStart() == mIncidence->dateTime(KCalCore::Incidence::RoleEnd) &&
                 !CalendarSupport::hasTodo(mIncidence)) {
             gradient.setColorAt(0, bgColor.light(130));
             gradient.setColorAt(0.35, bgColor.light(115));

@@ -1181,11 +1181,11 @@ void Agenda::endItemAction()
                 mainIncidence =  cal->todo(incidence->uid());
             }
             incidence = mainIncidence;
-         }
+        }
 
-         Akonadi::Item item = d->mCalendar->item(incidence);
+        Akonadi::Item item = d->mCalendar->item(incidence);
 
-         if (incidence->recurs()) {
+        if (incidence->recurs()) {
             const int res = d->mAgendaView->showMoveRecurDialog(incidence, recurrenceId.date());
             switch (res) {
             case KCalUtils::RecurrenceActions::AllOccurrences: // All occurrences
@@ -1810,7 +1810,7 @@ AgendaItem::QPtr Agenda::insertAllDayItem(const KCalCore::Incidence::Ptr &incide
 }
 
 AgendaItem::QPtr Agenda::createAgendaItem(const KCalCore::Incidence::Ptr &incidence, int itemPos,
-                                           int itemCount, const KDateTime &recurrenceId, bool isSelected)
+        int itemCount, const KDateTime &recurrenceId, bool isSelected)
 {
     if (!incidence) {
         qCWarning(CALENDARVIEW_LOG) << "Agenda::createAgendaItem() item is invalid.";
@@ -1818,7 +1818,7 @@ AgendaItem::QPtr Agenda::createAgendaItem(const KCalCore::Incidence::Ptr &incide
     }
 
     AgendaItem::QPtr agendaItem = new AgendaItem(d->mAgendaView, d->mCalendar, incidence,
-                                                itemPos, itemCount, recurrenceId, isSelected, this);
+            itemPos, itemCount, recurrenceId, isSelected, this);
 
     connect(agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)), SLOT(removeAgendaItem(AgendaItem::QPtr)));
     connect(agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)), SLOT(showAgendaItem(AgendaItem::QPtr)));
@@ -2150,7 +2150,7 @@ void Agenda::deselectItem()
         return;
     }
 
-  const KCalCore::Incidence::Ptr selectedItem = d->mSelectedItem->incidence();
+    const KCalCore::Incidence::Ptr selectedItem = d->mSelectedItem->incidence();
 
     foreach (AgendaItem::QPtr item, d->mItems) {
         if (item) {
@@ -2180,7 +2180,7 @@ void Agenda::selectItem(AgendaItem::QPtr item)
     d->mSelectedId = d->mSelectedItem->incidence()->uid();
 
     foreach (AgendaItem::QPtr item, d->mItems) {
-    if (item && item->incidence()->uid() == d->mSelectedId) {
+        if (item && item->incidence()->uid() == d->mSelectedId) {
             item->select();
         }
     }

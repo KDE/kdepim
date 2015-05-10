@@ -42,9 +42,9 @@ public:
     MailFilter *parseLine(const QString &line);
 
 private:
-    QString extractString( const QString & tmp, int & pos);
-    QString extractConditions( const QString &line,MailFilter *filter);
-    QString extractActions( const QString &line,MailFilter *filter);
+    QString extractString(const QString &tmp, int &pos);
+    QString extractConditions(const QString &line, MailFilter *filter);
+    QString extractActions(const QString &line, MailFilter *filter);
     void readStream(QTextStream &stream);
 };
 

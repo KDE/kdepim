@@ -124,7 +124,7 @@ public:
     void setStartTime(const QTime &startHour);
 
     AgendaItem::QPtr insertItem(const KCalCore::Incidence::Ptr &incidence, const KDateTime &recurrenceId, int X, int YTop,
-                                 int YBottom, int itemPos, int itemCount, bool isSelected);
+                                int YBottom, int itemPos, int itemCount, bool isSelected);
 
     AgendaItem::QPtr insertAllDayItem(const KCalCore::Incidence::Ptr &event, const KDateTime &recurrenceId, int XBegin,
                                       int XEnd, bool isSelected);

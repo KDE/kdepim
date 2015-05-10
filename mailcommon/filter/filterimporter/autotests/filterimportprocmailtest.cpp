@@ -41,7 +41,7 @@ void FilterImportProcmailtest::testImportFilters()
                                          "action=\"Mark read\"\n"
                                          "condition=\"ALL\"\n");
     MailCommon::FilterImporterProcmail importer(filter, false);
-    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    QList<MailCommon::MailFilter *> lst = importer.importFilter();
     QCOMPARE(lst.count(), 1);
     MailCommon::MailFilter *f = lst.at(0);
     QVERIFY(f->isEnabled());

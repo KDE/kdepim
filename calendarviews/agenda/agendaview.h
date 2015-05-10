@@ -165,7 +165,6 @@ public:
     virtual KCalCore::Calendar::Ptr calendar2(const KCalCore::Incidence::Ptr &incidence) const;
     virtual KCalCore::Calendar::Ptr calendar2(const QString &incidenceIdentifier) const;
 
-
     virtual void showDates(const QDate &start, const QDate &end,
                            const QDate &preferredMonth = QDate()) Q_DECL_OVERRIDE;
 
@@ -254,8 +253,8 @@ protected Q_SLOTS:
     void alignAgendas();
 
 private slots:
-    void slotIncidenceSelected(const KCalCore::Incidence::Ptr& incidence, const QDate& date);
-    void slotShowIncidencePopup(const KCalCore::Incidence::Ptr& incidence, const QDate& date);
+    void slotIncidenceSelected(const KCalCore::Incidence::Ptr &incidence, const QDate &date);
+    void slotShowIncidencePopup(const KCalCore::Incidence::Ptr &incidence, const QDate &date);
     void slotEditIncidence(const KCalCore::Incidence::Ptr &incidence);
     void slotShowIncidence(const KCalCore::Incidence::Ptr &incidence);
     void slotDeleteIncidence(const KCalCore::Incidence::Ptr &incidence);

@@ -44,7 +44,6 @@ void ImapAclAttributeTest::shouldHaveDefaultValue()
     QVERIFY(!attr.myRights());
 }
 
-
 void ImapAclAttributeTest::shouldBuildAttribute()
 {
     QMap<QByteArray, KIMAP::Acl::Rights> right;
@@ -200,7 +199,7 @@ void ImapAclAttributeTest::testSerializeDeserialize_data()
                                  << QByteArray("testme@host l %% otheruser@host lr % user@host lr");
 
     QTest::newRow("myrights") << acl << KIMAP::Acl::rightsFromString("lrswipckxtdaen") << QByteArray("otheruser@host lr % user@host lr %%  %% lrswipckxtdaen")
-                                 << QByteArray("testme@host l %% otheruser@host lr % user@host lr %% lrswipckxtdaen");
+                              << QByteArray("testme@host l %% otheruser@host lr % user@host lr %% lrswipckxtdaen");
 }
 
 void ImapAclAttributeTest::testSerializeDeserialize()

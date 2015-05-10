@@ -967,7 +967,7 @@ QColor Prefs::resourceColorKnown(const QString &cal) const
 {
     QColor color;
     if (!cal.isEmpty()  &&
-        d->mBaseConfig.mResourceColors.contains(cal)) {
+            d->mBaseConfig.mResourceColors.contains(cal)) {
         color = d->mBaseConfig.mResourceColors.value(cal);
     }
     return color;
@@ -982,7 +982,7 @@ QColor Prefs::resourceColor(const QString &cal)
     QColor color = resourceColorKnown(cal);
 
     // assign default color if enabled
-    if ( !color.isValid() &&
+    if (!color.isValid() &&
             d->getBool(d->mBaseConfig.assignDefaultResourceColorsItem())) {
         QColor defColor(0x37, 0x7A, 0xBC);
         const int seed = d->getInt(d->mBaseConfig.defaultResourceColorSeedItem());

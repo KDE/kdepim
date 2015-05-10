@@ -35,7 +35,7 @@ FilterImporterProcmail::FilterImporterProcmail(QFile *file)
 
 FilterImporterProcmail::FilterImporterProcmail(QString string)
     : FilterImporterAbstract(),
-      mFilterCount( 0 )
+      mFilterCount(0)
 {
     QTextStream stream(&string);
     readStream(stream);

@@ -653,7 +653,7 @@ void MonthScene::helpEvent(QGraphicsSceneHelpEvent *helpEvent)
 {
     // Find the first item that does tooltips
     const QPointF pos = helpEvent->scenePos();
-    MonthGraphicsItem *toolTipItem = dynamic_cast<MonthGraphicsItem*>(itemAt(pos));
+    MonthGraphicsItem *toolTipItem = dynamic_cast<MonthGraphicsItem *>(itemAt(pos));
 
     // Show or hide the tooltip
     QString text;

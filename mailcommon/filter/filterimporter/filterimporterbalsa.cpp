@@ -30,12 +30,12 @@ using namespace MailCommon;
 FilterImporterBalsa::FilterImporterBalsa(QFile *file)
     : FilterImporterAbstract()
 {
-    KConfig config( file->fileName() );
+    KConfig config(file->fileName());
     readConfig(&config);
 }
 
 FilterImporterBalsa::FilterImporterBalsa()
-    :FilterImporterAbstract()
+    : FilterImporterAbstract()
 {
 
 }
@@ -51,8 +51,8 @@ QString FilterImporterBalsa::defaultFiltersSettingsPath()
 
 void FilterImporterBalsa::readConfig(KConfig *config)
 {
-    const QStringList filterList = config->groupList().filter( QRegExp( QLatin1String("filter-\\d+") ) );
-    Q_FOREACH(const QString &filter, filterList) {
+    const QStringList filterList = config->groupList().filter(QRegExp(QLatin1String("filter-\\d+")));
+    Q_FOREACH (const QString &filter, filterList) {
         KConfigGroup grp = config->group(filter);
         parseFilter(grp);
     }

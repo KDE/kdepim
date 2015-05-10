@@ -389,15 +389,15 @@ TodoView::TodoView(const EventViews::PrefsPtr &prefs,
     mItemPopupMenu->addSeparator();
 
     a = mItemPopupMenu->addAction(KIconLoader::global()->loadIcon(QStringLiteral("appointment-new"), KIconLoader::NoGroup, KIconLoader::SizeSmall),
-                        i18n("Create Event"),
-                        this, SLOT(createEvent()));
+                                  i18n("Create Event"),
+                                  this, SLOT(createEvent()));
     a->setObjectName(QStringLiteral("createevent"));
     mItemPopupMenuReadWriteEntries << a;
     mItemPopupMenuItemOnlyEntries << a;
 
     a = mItemPopupMenu->addAction(KIconLoader::global()->loadIcon(QStringLiteral("view-pim-notes"), KIconLoader::NoGroup, KIconLoader::SizeSmall),
-                      i18n("Create Note"),
-                      this, SLOT(createNote()));
+                                  i18n("Create Note"),
+                                  this, SLOT(createNote()));
     a->setObjectName(QStringLiteral("createnote"));
     mItemPopupMenuReadWriteEntries << a;
     mItemPopupMenuItemOnlyEntries << a;
@@ -1259,7 +1259,7 @@ void TodoView::createEvent()
         return;
     }
 
-    const Akonadi::Item todoItem = selection[0].data (TodoModel::TodoRole).value<Akonadi::Item>();
+    const Akonadi::Item todoItem = selection[0].data(TodoModel::TodoRole).value<Akonadi::Item>();
 
     emit createEvent(todoItem);
 }
@@ -1271,7 +1271,7 @@ void TodoView::createNote()
         return;
     }
 
-    const Akonadi::Item todoItem = selection[0].data (TodoModel::TodoRole).value<Akonadi::Item>();
+    const Akonadi::Item todoItem = selection[0].data(TodoModel::TodoRole).value<Akonadi::Item>();
 
     emit createNote(todoItem);
 }

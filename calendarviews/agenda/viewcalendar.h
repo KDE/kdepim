@@ -32,28 +32,30 @@
 #include <QColor>
 #include <QList>
 
-namespace EventViews {
+namespace EventViews
+{
 
 class AgendaView;
 
-class EVENTVIEWS_EXPORT ViewCalendar {
+class EVENTVIEWS_EXPORT ViewCalendar
+{
 
 public:
     typedef QSharedPointer<ViewCalendar> Ptr;
 
     virtual ~ViewCalendar();
-    virtual bool isValid(const KCalCore::Incidence::Ptr &incidence) const=0;
-    virtual bool isValid(const QString &incidenceIdentifier) const=0;
-    virtual QString displayName(const KCalCore::Incidence::Ptr &incidence) const=0;
+    virtual bool isValid(const KCalCore::Incidence::Ptr &incidence) const = 0;
+    virtual bool isValid(const QString &incidenceIdentifier) const = 0;
+    virtual QString displayName(const KCalCore::Incidence::Ptr &incidence) const = 0;
 
-    virtual QColor resourceColor(const KCalCore::Incidence::Ptr &incidence) const=0;
-    virtual QString iconForIncidence(const KCalCore::Incidence::Ptr &incidence) const=0;
+    virtual QColor resourceColor(const KCalCore::Incidence::Ptr &incidence) const = 0;
+    virtual QString iconForIncidence(const KCalCore::Incidence::Ptr &incidence) const = 0;
 
-    virtual KCalCore::Calendar::Ptr getCalendar() const=0;
+    virtual KCalCore::Calendar::Ptr getCalendar() const = 0;
 };
 
-
-class EVENTVIEWS_EXPORT AkonadiViewCalendar: public ViewCalendar {
+class EVENTVIEWS_EXPORT AkonadiViewCalendar: public ViewCalendar
+{
 public:
     typedef QSharedPointer<AkonadiViewCalendar> Ptr;
 
@@ -75,7 +77,8 @@ public:
     AgendaView *mAgendaView;
 };
 
-class EVENTVIEWS_EXPORT MultiViewCalendar : public ViewCalendar {
+class EVENTVIEWS_EXPORT MultiViewCalendar : public ViewCalendar
+{
 public:
     typedef QSharedPointer<MultiViewCalendar> Ptr;
 
@@ -101,7 +104,6 @@ public:
     AkonadiViewCalendar::Ptr mETMCalendar;
     QList<ViewCalendar::Ptr> mSubCalendars;
 };
-
 
 }
 

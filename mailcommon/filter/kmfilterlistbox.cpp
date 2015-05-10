@@ -377,12 +377,13 @@ void KMFilterListBox::applyFilterChanged(bool closeAfterSaving)
     // their widget's data into our filter list.
 
     bool wasCanceled = false;
-    const QList<MailFilter*> newFilters = filtersForSaving( closeAfterSaving, wasCanceled );
-    if (!wasCanceled)
-        MailCommon::FilterManager::instance()->setFilters( newFilters );
+    const QList<MailFilter *> newFilters = filtersForSaving(closeAfterSaving, wasCanceled);
+    if (!wasCanceled) {
+        MailCommon::FilterManager::instance()->setFilters(newFilters);
+    }
 }
 
-QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving, bool &wasCanceled ) const
+QList<MailFilter *> KMFilterListBox::filtersForSaving(bool closeAfterSaving, bool &wasCanceled) const
 {
     const_cast<KMFilterListBox *>(this)->applyWidgets();  // signals aren't const
     QList<MailFilter *> filters;

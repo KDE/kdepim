@@ -141,22 +141,24 @@ public:
     QString mDurationCaption, mDurationString;
 
 protected:
-    bool visit(const KCalCore::Event::Ptr &event) Q_DECL_OVERRIDE
-    {
-        if (event->dtStart().isValid()) {
+    bool visit(const KCalCore::Event::Ptr &event) Q_DECL_OVERRIDE {
+        if (event->dtStart().isValid())
+        {
             mStartCaption =  i18n("Start date: ");
             mStartString = KCalUtils::IncidenceFormatter::dateTimeToString(
-                               event->dtStart(), event->allDay(), false);
+                event->dtStart(), event->allDay(), false);
         } else {
             mStartCaption = i18n("No start date");
             mStartString.clear();
         }
 
-        if (event->hasEndDate()) {
+        if (event->hasEndDate())
+        {
             mEndCaption = i18n("End date: ");
             mEndString = KCalUtils::IncidenceFormatter::dateTimeToString(
-                             event->dtEnd(), event->allDay(), false);
-        } else if (event->hasDuration()) {
+                event->dtEnd(), event->allDay(), false);
+        } else if (event->hasDuration())
+        {
             mEndCaption = i18n("Duration: ");
             int mins = event->duration().asSeconds() / 60;
             if (mins >= 60) {
@@ -171,38 +173,37 @@ protected:
         }
         return true;
     }
-    bool visit(const KCalCore::Todo::Ptr &todo) Q_DECL_OVERRIDE
-    {
-        if (todo->hasStartDate()) {
+    bool visit(const KCalCore::Todo::Ptr &todo) Q_DECL_OVERRIDE {
+        if (todo->hasStartDate())
+        {
             mStartCaption =  i18n("Start date: ");
             mStartString = KCalUtils::IncidenceFormatter::dateTimeToString(
-                               todo->dtStart(), todo->allDay(), false);
+                todo->dtStart(), todo->allDay(), false);
         } else {
             mStartCaption = i18n("No start date");
             mStartString.clear();
         }
 
-        if (todo->hasDueDate()) {
+        if (todo->hasDueDate())
+        {
             mEndCaption = i18n("Due date: ");
             mEndString = KCalUtils::IncidenceFormatter::dateTimeToString(
-                             todo->dtDue(), todo->allDay(), false);
+                todo->dtDue(), todo->allDay(), false);
         } else {
             mEndCaption = i18n("No due date");
             mEndString.clear();
         }
         return true;
     }
-    bool visit(const KCalCore::Journal::Ptr &journal) Q_DECL_OVERRIDE
-    {
+    bool visit(const KCalCore::Journal::Ptr &journal) Q_DECL_OVERRIDE {
         mStartCaption = i18n("Start date: ");
         mStartString = KCalUtils::IncidenceFormatter::dateTimeToString(
-                           journal->dtStart(), journal->allDay(), false);
+            journal->dtStart(), journal->allDay(), false);
         mEndCaption.clear();
         mEndString.clear();
         return true;
     }
-    bool visit(const KCalCore::FreeBusy::Ptr &fb) Q_DECL_OVERRIDE
-    {
+    bool visit(const KCalCore::FreeBusy::Ptr &fb) Q_DECL_OVERRIDE {
         Q_UNUSED(fb);
         return true;
     }

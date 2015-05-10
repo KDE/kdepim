@@ -328,8 +328,8 @@ bool AgendaView::Private::datesEqual(const KCalCore::Incidence::Ptr &one, const 
 
 AgendaItem::List AgendaView::Private::agendaItems(const QString &uid) const
 {
-  AgendaItem::List allDayAgendaItems = mAllDayAgenda->agendaItems(uid);
-  return allDayAgendaItems.isEmpty() ? mAgenda->agendaItems(uid) : allDayAgendaItems;
+    AgendaItem::List allDayAgendaItems = mAllDayAgenda->agendaItems(uid);
+    return allDayAgendaItems.isEmpty() ? mAgenda->agendaItems(uid) : allDayAgendaItems;
 }
 
 bool AgendaView::Private::mightBeVisible(const KCalCore::Incidence::Ptr &incidence) const
@@ -402,7 +402,7 @@ QList<QDate> AgendaView::Private::generateDateList(const QDate &start, const QDa
 
 void AgendaView::Private::reevaluateIncidence(const KCalCore::Incidence::Ptr &incidence)
 {
-  if (!incidence || !mViewCalendar->isValid(incidence)) {
+    if (!incidence || !mViewCalendar->isValid(incidence)) {
         qCWarning(CALENDARVIEW_LOG) << "invalid incidence or item not found." << incidence;
         return;
     }
@@ -599,7 +599,7 @@ void AgendaView::Private::insertIncidence(const KCalCore::Incidence::Ptr &incide
                                         createSelected);
     } else if (incidence->allDay()) {
         mAllDayAgenda->insertAllDayItem(incidence, recurrenceId, beginX, endX,
-                                          createSelected);
+                                        createSelected);
     } else if (event && event->isMultiDay(timeSpec)) {
         // TODO: We need a better isMultiDay(), one that receives the occurrence.
 
@@ -619,7 +619,7 @@ void AgendaView::Private::insertIncidence(const KCalCore::Incidence::Ptr &incide
         }
         const int endY = mAgenda->timeToY(endTime) - 1;
         if ((beginX <= 0 && curCol == 0) || beginX == curCol) {
-          mAgenda->insertMultiItem(incidence, recurrenceId, beginX, endX, startY, endY,
+            mAgenda->insertMultiItem(incidence, recurrenceId, beginX, endX, startY, endY,
                                      createSelected);
         }
         if (beginX == curCol) {
@@ -833,7 +833,7 @@ void AgendaView::init(const QDate &start, const QDate &end)
 
 AgendaView::~AgendaView()
 {
-    foreach(const ViewCalendar::Ptr &cal, d->mViewCalendar->mSubCalendars) {
+    foreach (const ViewCalendar::Ptr &cal, d->mViewCalendar->mSubCalendars) {
         if (cal->getCalendar()) {
             cal->getCalendar()->unregisterObserver(d);
         }
@@ -871,14 +871,13 @@ void AgendaView::addCalendar(const ViewCalendar::Ptr &cal)
     cal->getCalendar()->registerObserver(d);
 }
 
-
 void AgendaView::connectAgenda(Agenda *agenda, Agenda *otherAgenda)
 {
     connect(agenda, SIGNAL(showNewEventPopupSignal()),
             SIGNAL(showNewEventPopupSignal()));
 
     connect(agenda, SIGNAL(showIncidencePopupSignal(KCalCore::Incidence::Ptr,QDate)),
-             SLOT(slotShowIncidencePopup(KCalCore::Incidence::Ptr,QDate)));
+            SLOT(slotShowIncidencePopup(KCalCore::Incidence::Ptr,QDate)));
 
     agenda->setCalendar(d->mViewCalendar);
 
@@ -890,11 +889,11 @@ void AgendaView::connectAgenda(Agenda *agenda, Agenda *otherAgenda)
             SIGNAL(timeSpanSelectionChanged()));
 
     connect(agenda, SIGNAL(editIncidenceSignal(KCalCore::Incidence::Ptr)),
-                     SLOT(slotEditIncidence(KCalCore::Incidence::Ptr)));
+            SLOT(slotEditIncidence(KCalCore::Incidence::Ptr)));
     connect(agenda, SIGNAL(showIncidenceSignal(KCalCore::Incidence::Ptr)),
-                    SLOT(slotShowIncidence(KCalCore::Incidence::Ptr)));
+            SLOT(slotShowIncidence(KCalCore::Incidence::Ptr)));
     connect(agenda, SIGNAL(deleteIncidenceSignal(KCalCore::Incidence::Ptr)),
-                    SLOT(slotDeleteIncidence(KCalCore::Incidence::Ptr)));
+            SLOT(slotDeleteIncidence(KCalCore::Incidence::Ptr)));
 
     // drag signals
     connect(agenda, SIGNAL(startDragSignal(KCalCore::Incidence::Ptr)),
@@ -902,9 +901,9 @@ void AgendaView::connectAgenda(Agenda *agenda, Agenda *otherAgenda)
 
     // synchronize selections
     connect(agenda, SIGNAL(incidenceSelected(KCalCore::Incidence::Ptr,QDate)),
-             otherAgenda, SLOT(deselectItem()));
+            otherAgenda, SLOT(deselectItem()));
     connect(agenda, SIGNAL(incidenceSelected(KCalCore::Incidence::Ptr,QDate)),
-             SLOT(slotIncidenceSelected(KCalCore::Incidence::Ptr,QDate)));
+            SLOT(slotIncidenceSelected(KCalCore::Incidence::Ptr,QDate)));
 
     // rescheduling of todos by d'n'd
     connect(agenda, SIGNAL(droppedIncidences(KCalCore::Incidence::List,QPoint,bool)),
@@ -1747,7 +1746,7 @@ void AgendaView::fillAgenda()
     foreach (const KCalCore::Incidence::Ptr &incidence, incidences) {
         Q_ASSERT(incidence);
         const bool wasSelected = incidence->uid() == selectedAgendaId  ||
-                               incidence->uid() == selectedAllDayAgendaId;
+                                 incidence->uid() == selectedAllDayAgendaId;
 
         if ((incidence->allDay() && d->mUpdateAllDayAgenda) ||
                 (!incidence->allDay() && d->mUpdateAgenda)) {
@@ -2034,7 +2033,6 @@ void AgendaView::startDrag(const KCalCore::Incidence::Ptr &incidence)
         startDrag(item);
     }
 }
-
 
 void AgendaView::startDrag(const Akonadi::Item &incidence)
 {
