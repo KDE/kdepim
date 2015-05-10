@@ -19,11 +19,12 @@
 #define BACKUPFILESTRUCTUREINFODIALOG_H
 
 #include <QDialog>
+#include "pimsettingexporter_export.h"
 namespace PimCommon
 {
 class PlainTextEditorWidget;
 }
-class BackupFileStructureInfoDialog : public QDialog
+class PIMSETTINGEXPORTER_EXPORT BackupFileStructureInfoDialog : public QDialog
 {
     Q_OBJECT
 public:

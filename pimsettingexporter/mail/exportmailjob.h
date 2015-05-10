@@ -19,13 +19,14 @@
 #define ExportMailJob_H
 
 #include "abstractimportexportjob.h"
+#include "pimsettingexporter_export.h"
 #include <KSharedConfig>
 #include <QDateTime>
 #include <time.h>
 class QUrl;
 class ArchiveStorage;
 
-class ExportMailJob : public AbstractImportExportJob
+class PIMSETTINGEXPORTER_EXPORT ExportMailJob : public AbstractImportExportJob
 {
 public:
     explicit ExportMailJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);

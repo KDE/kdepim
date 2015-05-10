@@ -18,9 +18,10 @@
 #ifndef ARCHIVESTORAGE_H
 #define ARCHIVESTORAGE_H
 #include <QObject>
+#include "pimsettingexporter_export.h"
 class KZip;
 
-class ArchiveStorage : public QObject
+class PIMSETTINGEXPORTER_EXPORT ArchiveStorage : public QObject
 {
     Q_OBJECT
 public:

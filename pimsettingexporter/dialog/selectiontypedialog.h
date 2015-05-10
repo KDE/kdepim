@@ -20,10 +20,10 @@
 
 #include <QDialog>
 #include "utils.h"
-
+#include "pimsettingexporter_export.h"
 class SelectionTypeTreeWidget;
 
-class SelectionTypeDialog : public QDialog
+class PIMSETTINGEXPORTER_EXPORT SelectionTypeDialog : public QDialog
 {
     Q_OBJECT
 public:

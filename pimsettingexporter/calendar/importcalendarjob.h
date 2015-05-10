@@ -23,7 +23,7 @@
 class ArchiveStorage;
 class KArchive;
 
-class ImportCalendarJob : public AbstractImportExportJob
+class PIMSETTINGEXPORTER_EXPORT ImportCalendarJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:

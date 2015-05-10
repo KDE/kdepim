@@ -19,13 +19,13 @@
 #define LOGWIDGET_H
 
 #include <QWidget>
-
+#include "pimsettingexporter_export.h"
 namespace KPIM
 {
 class CustomLogWidget;
 }
 
-class LogWidget : public QWidget
+class PIMSETTINGEXPORTER_EXPORT LogWidget : public QWidget
 {
 public:
     explicit LogWidget(QWidget *parent);

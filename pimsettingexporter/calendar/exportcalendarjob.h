@@ -22,7 +22,7 @@
 
 class ArchiveStorage;
 
-class ExportCalendarJob : public AbstractImportExportJob
+class PIMSETTINGEXPORTER_EXPORT ExportCalendarJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:

@@ -23,7 +23,7 @@
 class ArchiveStorage;
 class KArchiveFile;
 
-class ImportAddressbookJob : public AbstractImportExportJob
+class PIMSETTINGEXPORTER_EXPORT ImportAddressbookJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:

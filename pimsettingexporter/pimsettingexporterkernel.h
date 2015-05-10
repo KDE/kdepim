@@ -18,6 +18,7 @@
 #define PIMSETTINGEXPORTERKERNEL_H
 
 #include <mailcommon/interfaces/mailinterfaces.h>
+#include "pimsettingexporter_export.h"
 
 namespace Akonadi
 {
@@ -30,7 +31,7 @@ namespace MailCommon
 class FolderCollectionMonitor;
 }
 
-class PimSettingExporterKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
+class PIMSETTINGEXPORTER_EXPORT PimSettingExporterKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
 public:
     explicit PimSettingExporterKernel(QObject *parent = Q_NULLPTR);

@@ -17,6 +17,7 @@
 
 #ifndef UTILS_H
 #define UTILS_H
+#include "pimsettingexporter_export.h"
 #include <QString>
 #include <QUrl>
 #include <KSharedConfig>
@@ -106,10 +107,10 @@ QString storeResources(KZip *archive, const QString &identifier, const QString &
 QUrl akonadiAgentConfigPath(const QString &identifier);
 KZip *openZip(const QString &filename, QString &errorMsg);
 
-void addVersion(KZip *archive);
-int archiveVersion(KZip *archive);
+PIMSETTINGEXPORTER_EXPORT void addVersion(KZip *archive);
+PIMSETTINGEXPORTER_EXPORT int archiveVersion(KZip *archive);
 
-int currentArchiveVersion();
+PIMSETTINGEXPORTER_EXPORT int currentArchiveVersion();
 QString appTypeToI18n(AppsType type);
 QString storedTypeToI18n(StoredType type);
 }

@@ -1,6 +1,7 @@
 project(pimsettingexporter)
 include_directories( 
-                    ${CMAKE_SOURCE_DIR}/pimsettingexporter/ 
+                    ${CMAKE_SOURCE_DIR}/pimsettingexporter/
+                    ${CMAKE_BINARY_DIR}/pimsettingexporter/ 
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -72,16 +73,12 @@ set(pimsettingexporter_LIB_SRCS
   ${pimsettingexporter_blogilo_SRCS}
   pimsettingexport_debug.cpp
   abstractimportexportjob.cpp
-  pimsettingexporterwindow.cpp
   pimsettingexporterkernel.cpp
   utils.cpp
   akonadidatabase.cpp
   archivestorage.cpp
   synchronizeresourcejob.cpp
   pimsettingsbackuprestore.cpp
-  pimsettingcommandlineoption.cpp
-  pimsettingsbackuprestoreui.cpp
-  importexportprogressindicatorgui.cpp
   importexportprogressindicatorbase.cpp
 )
 
@@ -113,39 +110,7 @@ install(TARGETS pimsettingexporterprivate ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 
-set(pimsettingexporter_SRCS
-    gui/main.cpp)
 
-add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
-
-target_link_libraries(pimsettingexporter
-  KF5::KIOCore
-  KF5::AkonadiCore
-  KF5::AkonadiMime
-  KF5::Mime
-  KF5::MailTransport
-  KF5::AlarmCalendar
-  KF5::DBusAddons
-  mailimporter
-  mailcommon
-  pimcommon
-  kdepim
-  messagecomposer
-  pimsettingexporterprivate
-)
-
-install(TARGETS pimsettingexporter ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
-
-install(FILES
-    pimsettingexporter.rc
-    DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/pimsettingexporter
-)
-
-install(FILES backup-structure.txt DESTINATION ${KDE_INSTALL_DATADIR}/pimsettingexporter)
-
-install(PROGRAMS org.kde.pimsettingexporter.desktop DESTINATION ${KDE_INSTALL_APPDIR})
-
-
-########### install files ###############
-
+install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter)
 add_subdirectory(tests)
+add_subdirectory(gui)
