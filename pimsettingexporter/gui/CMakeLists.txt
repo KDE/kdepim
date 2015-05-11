@@ -9,7 +9,21 @@ include_directories(${AKONADI_INCLUDE_DIR}
 )
 
 
+set(pimsettingexporter_widget_SRCS
+  widgets/selectiontypetreewidget.cpp
+  widgets/logwidget.cpp
+)
+
+set(pimsettingexporter_dialog_SRCS
+  dialog/selectiontypedialog.cpp
+  dialog/backupfilestructureinfodialog.cpp
+  dialog/showarchivestructuredialog.cpp
+)
+
+
 set(pimsettingexporter_SRCS
+    ${pimsettingexporter_widget_SRCS}
+    ${pimsettingexporter_dialog_SRCS}
     pimsettingsbackuprestoreui.cpp
     importexportprogressindicatorgui.cpp
     pimsettingexporterwindow.cpp

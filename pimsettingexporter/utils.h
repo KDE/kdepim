@@ -82,38 +82,38 @@ struct importExportParameters
 
 
 KUrl resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath = QString());
-QString transportsPath();
-QString resourcesPath();
-QString identitiesPath();
-QString mailsPath();
-QString configsPath();
-QString akonadiPath();
-QString dataPath();
-QString calendarPath();
-QString addressbookPath();
-QString alarmPath();
-QString jotPath();
-QString infoPath();
-QString notePath();
-QString prefixAkonadiConfigFile();
-QString akonadiAgentName(const QString &configPath);
+PIMSETTINGEXPORT_EXPORT QString transportsPath();
+PIMSETTINGEXPORT_EXPORT QString resourcesPath();
+PIMSETTINGEXPORT_EXPORT QString identitiesPath();
+PIMSETTINGEXPORT_EXPORT QString mailsPath();
+PIMSETTINGEXPORT_EXPORT QString configsPath();
+PIMSETTINGEXPORT_EXPORT QString akonadiPath();
+PIMSETTINGEXPORT_EXPORT QString dataPath();
+PIMSETTINGEXPORT_EXPORT QString calendarPath();
+PIMSETTINGEXPORT_EXPORT QString addressbookPath();
+PIMSETTINGEXPORT_EXPORT QString alarmPath();
+PIMSETTINGEXPORT_EXPORT QString jotPath();
+PIMSETTINGEXPORT_EXPORT QString infoPath();
+PIMSETTINGEXPORT_EXPORT QString notePath();
+PIMSETTINGEXPORT_EXPORT QString prefixAkonadiConfigFile();
+PIMSETTINGEXPORT_EXPORT QString akonadiAgentName(const QString &configPath);
 
-void convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey);
-void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey);
+PIMSETTINGEXPORT_EXPORT void convertCollectionListToRealPath(KConfigGroup &group, const QString &currentKey);
+PIMSETTINGEXPORT_EXPORT void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey);
 
-void convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentKey);
+PIMSETTINGEXPORT_EXPORT void convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentKey);
 
-KUrl resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath = QString());
-KUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
-QString storeResources(KZip *archive, const QString &identifier, const QString &path);
-KUrl akonadiAgentConfigPath(const QString &identifier);
-KZip *openZip(const QString &filename, QString &errorMsg);
+PIMSETTINGEXPORT_EXPORT KUrl resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath = QString());
+PIMSETTINGEXPORT_EXPORT KUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
+PIMSETTINGEXPORT_EXPORT QString storeResources(KZip *archive, const QString &identifier, const QString &path);
+PIMSETTINGEXPORT_EXPORT KUrl akonadiAgentConfigPath(const QString &identifier);
+PIMSETTINGEXPORT_EXPORT KZip *openZip(const QString &filename, QString &errorMsg);
 
 PIMSETTINGEXPORT_EXPORT void addVersion(KZip *archive);
 PIMSETTINGEXPORT_EXPORT int archiveVersion(KZip *archive);
 
 PIMSETTINGEXPORT_EXPORT int currentArchiveVersion();
-QString appTypeToI18n(AppsType type);
-QString storedTypeToI18n(StoredType type);
+PIMSETTINGEXPORT_EXPORT QString appTypeToI18n(AppsType type);
+PIMSETTINGEXPORT_EXPORT QString storedTypeToI18n(StoredType type);
 }
 #endif // UTILS_H

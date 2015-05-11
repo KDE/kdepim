@@ -28,12 +28,9 @@
 #include <KZip>
 #include <KTempDir>
 #include <KLocalizedString>
-#include <KMessageBox>
 #include <KStandardDirs>
 #include <KTemporaryFile>
 
-#include <QWidget>
-#include <QProgressDialog>
 #include <QFile>
 #include <QDir>
 

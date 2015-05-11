@@ -44,17 +44,6 @@ set(pimsettingexporter_notes_SRCS
   notes/importnotesjob.cpp
 )
 
-set(pimsettingexporter_dialog_SRCS
-  dialog/selectiontypedialog.cpp
-  dialog/backupfilestructureinfodialog.cpp
-  dialog/showarchivestructuredialog.cpp
-)
-
-set(pimsettingexporter_widget_SRCS
-  widgets/selectiontypetreewidget.cpp
-  widgets/logwidget.cpp
-)
-
 set(pimsettingexporter_xml_SRCS
   xml/templateselection.cpp
 )
@@ -75,7 +64,6 @@ set(pimsettingexporter_blogilo_SRCS
 )
 
 set(pimsettingexporter_LIB_SRCS
-  ${pimsettingexporter_widget_SRCS}
   ${pimsettingexporter_xml_SRCS}
   ${pimsettingexporter_notes_SRCS}
   ${pimsettingexporter_alarm_SRCS}
@@ -83,7 +71,6 @@ set(pimsettingexporter_LIB_SRCS
   ${pimsettingexporter_mail_SRCS}
   ${pimsettingexporter_calendar_SRCS}
   ${pimsettingexporter_addressbook_SRCS}
-  ${pimsettingexporter_dialog_SRCS}
   ${pimsettingexporter_jot_SRCS}
   ${pimsettingexporter_akregator_SRCS}
   ${pimsettingexporter_blogilo_SRCS}
