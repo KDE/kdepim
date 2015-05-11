@@ -184,17 +184,17 @@ void KAddressBookPlugin::slotSyncContacts()
 #endif
 }
 
-void KAddressBookUniqueAppHandler::loadCommandLineOptions()
+void KAddressBookUniqueAppHandler::loadCommandLineOptions(QCommandLineParser *parser)
 {
-    KCmdLineArgs::addCmdLineOptions(kaddressbook_options());
+    kaddressbook_options(parser);
 }
 
-int KAddressBookUniqueAppHandler::newInstance()
+int KAddressBookUniqueAppHandler::newInstance(const QStringList &arguments)
 {
     // Ensure part is loaded
     (void)plugin()->part();
     org::kde::kaddressbook kaddressbook(QStringLiteral("org.kde.kaddressbook"), QStringLiteral("/KAddressBook"), QDBusConnection::sessionBus());
-    QDBusReply<bool> reply = kaddressbook.handleCommandLine();
+    QDBusReply<bool> reply = kaddressbook.handleCommandLine(arguments);
     return KontactInterface::UniqueAppHandler::newInstance();
 }
 

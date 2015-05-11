@@ -23,7 +23,8 @@
 #include "mainwidget.h"
 #include "kaddressbook_options.h"
 
-#include <KCmdLineArgs>
+#include <QCommandLineParser>
+
 #include "kaddressbook_debug.h"
 #include <kontactinterface/pimuniqueapplication.h>
 
@@ -37,20 +38,20 @@ public:
           mMainWindow(Q_NULLPTR)
     {
     }
-    int newInstance() Q_DECL_OVERRIDE;
+    int newInstance(const QStringList &arguments) Q_DECL_OVERRIDE;
 
 private:
     MainWindow *mMainWindow;
 };
 
-int KAddressBookApplication::newInstance()
+int KAddressBookApplication::newInstance(const QStringList &arguments)
 {
-    qCDebug(KADDRESSBOOK_LOG);
+    qCDebug(KADDRESSBOOK_LOG) << "Launching new instance of KAddressBook";
     if (!mMainWindow) {
         mMainWindow = new MainWindow;
         mMainWindow->show();
     }
-    mMainWindow->mainWidget()->handleCommandLine();
+    mMainWindow->mainWidget()->handleCommandLine(arguments);
     return 0;
 }
 
@@ -59,10 +60,12 @@ int main(int argc, char **argv)
     KLocalizedString::setApplicationDomain("kaddressbook");
     AboutData about;
 
-    KCmdLineArgs::init(argc, argv, &about);
+    QCommandLineParser parser;
+    about.setupCommandLine(&parser);
+    kaddressbook_options(&parser);
+    // Handle --help, --version
+    parser.process(QCoreApplication::arguments());
 
-    KCmdLineArgs::addCmdLineOptions(kaddressbook_options());   // Add KAddressBook options
-    KUniqueApplication::addCmdLineOptions();
     if (!KAddressBookApplication::start()) {
         return 0;
     }
