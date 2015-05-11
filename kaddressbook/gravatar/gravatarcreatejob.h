@@ -22,6 +22,7 @@
 #define GRAVATARCREATEJOB_H
 
 #include <QObject>
+#include <QUrl>
 
 namespace KABGravatar {
 class GravatarCreateJob : public QObject
@@ -36,6 +37,9 @@ public:
 
     QString email() const;
     void setEmail(const QString &email);
+
+Q_SIGNALS:
+    void resolvedUrl(const QUrl &url);
 
 private:
     QString mEmail;

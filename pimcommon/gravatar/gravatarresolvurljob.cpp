@@ -38,7 +38,12 @@ bool GravatarResolvUrlJob::canStart() const
 
 void GravatarResolvUrlJob::start()
 {
+    if (canStart()) {
 
+    } else {
+        //TODO return message Error.
+        deleteLater();
+    }
 }
 
 QString GravatarResolvUrlJob::email() const
