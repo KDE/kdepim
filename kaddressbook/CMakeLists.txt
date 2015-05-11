@@ -107,6 +107,11 @@ set(kaddressbook_merge_SRCS
    merge/widgets/mergecontacterrorlabel.cpp
 )
 
+set(kaddressbook_gravatar_SRCS
+   gravatar/gravatarcreatejob.cpp
+   gravatar/gravatarupdatejob.cpp
+)
+
 set(kaddressbook_LIB_SRCS
   contactlist.cpp
   startup.cpp
@@ -127,6 +132,7 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_xxport_SRCS}
   ${kaddressbook_sendmail_SRCS}
   ${kaddressbook_sendvcards_SRCS}
+  ${kaddressbook_gravatar_SRCS}
 )
 
 qt4_add_dbus_adaptor( kaddressbook_LIB_SRCS org.kde.kaddressbook.xml mainwidget.h MainWidget)
@@ -152,6 +158,7 @@ add_subdirectory(merge/tests)
 add_subdirectory(sendmail/tests)
 add_subdirectory(sendvcards/autotests)
 add_subdirectory(printing/grantlee/autotests)
+add_subdirectory(gravatar/autotests)
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
