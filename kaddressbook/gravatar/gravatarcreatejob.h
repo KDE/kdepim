@@ -31,8 +31,14 @@ public:
     explicit GravatarCreateJob(QObject *parent = 0);
     ~GravatarCreateJob();
 
+    bool canStart();
     void start();
 
+    QString email() const;
+    void setEmail(const QString &email);
+
+private:
+    QString mEmail;
 };
 }
 

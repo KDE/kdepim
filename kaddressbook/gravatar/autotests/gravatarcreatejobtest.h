@@ -30,6 +30,9 @@ class GravatarCreateJobTest : public QObject
 public:
     explicit GravatarCreateJobTest(QObject *parent = 0);
     ~GravatarCreateJobTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // GRAVATARCREATEJOBTEST_H

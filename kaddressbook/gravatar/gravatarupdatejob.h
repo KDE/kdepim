@@ -23,6 +23,7 @@
 #define GRAVATARUPDATEJOB_H
 
 #include <QObject>
+#include <Akonadi/Item>
 
 namespace KABGravatar {
 class GravatarUpdateJob : public QObject
@@ -33,6 +34,17 @@ public:
     ~GravatarUpdateJob();
 
     void start();
+    bool canStart() const;
+
+    QString email() const;
+    void setEmail(const QString &email);
+
+    Akonadi::Item item() const;
+    void setItem(const Akonadi::Item &item);
+
+private:
+    QString mEmail;
+    Akonadi::Item mItem;
 };
 }
 

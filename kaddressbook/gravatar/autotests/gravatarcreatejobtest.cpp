@@ -20,6 +20,7 @@
 
 #include "gravatarcreatejobtest.h"
 #include <qtest_kde.h>
+#include "../gravatarcreatejob.h"
 
 GravatarCreateJobTest::GravatarCreateJobTest(QObject *parent)
     : QObject(parent)
@@ -30,6 +31,12 @@ GravatarCreateJobTest::GravatarCreateJobTest(QObject *parent)
 GravatarCreateJobTest::~GravatarCreateJobTest()
 {
 
+}
+
+void GravatarCreateJobTest::shouldHaveDefaultValue()
+{
+    KABGravatar::GravatarCreateJob job;
+    QVERIFY(job.email().isEmpty());
 }
 
 QTEST_KDEMAIN(GravatarCreateJobTest, NoGUI)

@@ -19,6 +19,7 @@
 */
 
 #include "gravatarupdatejobtest.h"
+#include "../gravatarupdatejob.h"
 #include <qtest_kde.h>
 
 GravatarUpdateJobTest::GravatarUpdateJobTest(QObject *parent)
@@ -30,6 +31,13 @@ GravatarUpdateJobTest::GravatarUpdateJobTest(QObject *parent)
 GravatarUpdateJobTest::~GravatarUpdateJobTest()
 {
 
+}
+
+void GravatarUpdateJobTest::shouldHaveDefaultValue()
+{
+    KABGravatar::GravatarUpdateJob job;
+    QVERIFY(job.email().isEmpty());
+    QVERIFY(!job.item().isValid());
 }
 
 QTEST_KDEMAIN(GravatarUpdateJobTest, NoGUI)
