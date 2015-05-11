@@ -182,7 +182,6 @@ void PimSettingsBackupRestore::backupFinished()
     delete mImportExportData;
     mImportExportData = 0;
     Q_EMIT backupDone();
-    Q_EMIT showBackupFinishDialogInformation();
     Q_EMIT updateActions(false);
     deleteLater();
 }

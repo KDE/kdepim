@@ -51,6 +51,7 @@
 #include "dialog/selectiontypedialog.h"
 #include "utils.h"
 #include "archivestorage.h"
+#include "pimsettingsbackuprestoreui.h"
 
 #include "dialog/backupfilestructureinfodialog.h"
 
@@ -84,7 +85,8 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
       mRestoreAction(0),
       mSaveLogAction(0),
       mArchiveStructureInfo(0),
-      mShowArchiveInformationsAction(0)
+      mShowArchiveInformationsAction(0),
+      mPimSettingsBackupRestoreUI(0)
 {
     KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
     KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
@@ -106,6 +108,7 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
         KMessageBox::error(this,i18n("Zip program not found. Install it before to launch this application."),i18n("Zip program not found."));
     }
     statusBar()->hide();
+    initializeBackupRestoreUi();
 }
 
 PimSettingExporterWindow::~PimSettingExporterWindow()
@@ -114,6 +117,29 @@ PimSettingExporterWindow::~PimSettingExporterWindow()
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup groupConfig = config->group( QLatin1String("Recent File") );
     mRecentFilesAction->saveEntries(groupConfig);
+}
+
+void PimSettingExporterWindow::initializeBackupRestoreUi()
+{
+    mPimSettingsBackupRestoreUI = new PimSettingsBackupRestoreUI(this, this);
+    connect(mPimSettingsBackupRestoreUI, SIGNAL(addInfo(QString)), this, SLOT(slotAddInfo(QString)));
+    connect(mPimSettingsBackupRestoreUI, SIGNAL(addEndLine()), this, SLOT(slotAddEndLine()));
+    connect(mPimSettingsBackupRestoreUI, SIGNAL(addError(QString)), this, SLOT(slotAddError(QString)));
+    connect(mPimSettingsBackupRestoreUI, SIGNAL(addTitle(QString)), this, SLOT(slotAddTitle(QString)));
+    connect(mPimSettingsBackupRestoreUI, SIGNAL(updateActions(bool)), this, SLOT(slotUpdateActions(bool)));
+    connect(mPimSettingsBackupRestoreUI, SIGNAL(jobFinished()), this, SLOT(slotJobFinished()));
+    connect(mPimSettingsBackupRestoreUI, SIGNAL(backupDone()), this, SLOT(slotShowBackupFinishDialogInformation()));
+    connect(mPimSettingsBackupRestoreUI, SIGNAL(jobFailed()), this, SLOT(slotJobFailed()));
+}
+
+void PimSettingExporterWindow::slotJobFailed()
+{
+    //Nothing
+}
+
+void PimSettingExporterWindow::slotShowBackupFinishDialogInformation()
+{
+    KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
 }
 
 void PimSettingExporterWindow::handleCommandLine()
@@ -165,7 +191,7 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     mRecentFilesAction->loadEntries(groupConfig);
 }
 
-void PimSettingExporterWindow::updateActions(bool inAction)
+void PimSettingExporterWindow::slotUpdateActions(bool inAction)
 {
     mBackupAction->setEnabled(!inAction);
     mRestoreAction->setEnabled(!inAction);
@@ -243,7 +269,7 @@ void PimSettingExporterWindow::backupData(const QString &filename, const QString
 
 void PimSettingExporterWindow::backupStart()
 {
-    updateActions(true);
+    slotUpdateActions(true);
     mAction = Backup;
     mStoreIterator = mStored.constBegin();
     const QDateTime now = QDateTime::currentDateTime();
@@ -331,7 +357,7 @@ void PimSettingExporterWindow::backupFinished()
     delete mImportExportData;
     mImportExportData = 0;
     KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
-    updateActions(false);
+    slotUpdateActions(false);
 }
 
 void PimSettingExporterWindow::slotAddInfo(const QString& info)
@@ -458,7 +484,7 @@ void PimSettingExporterWindow::restoreNextStep()
 
 void PimSettingExporterWindow::restoreStart()
 {
-    updateActions(true);
+    slotUpdateActions(true);
     mAction = Restore;
     mStoreIterator = mStored.constBegin();
     const int version = Utils::archiveVersion(mArchiveStorage->archive());
@@ -486,7 +512,7 @@ void PimSettingExporterWindow::restoreFinished()
     mArchiveStorage = 0;
     delete mImportExportData;
     mImportExportData = 0;
-    updateActions(false);
+    slotUpdateActions(false);
 }
 
 void PimSettingExporterWindow::executeJob()

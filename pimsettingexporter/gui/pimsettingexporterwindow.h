@@ -27,6 +27,7 @@ class KRecentFilesAction;
 class KUrl;
 class ArchiveStorage;
 class KAction;
+class PimSettingsBackupRestoreUI;
 
 class PIMSETTINGEXPORT_EXPORT PimSettingExporterWindow: public KXmlGuiWindow
 {
@@ -48,14 +49,15 @@ private Q_SLOTS:
     void slotShowStructureInfos();
     void slotRestoreFile(const KUrl &url);
     void slotShowArchiveInformations();
-
+    void slotUpdateActions(bool inAction);
+    void slotShowBackupFinishDialogInformation();
+    void slotJobFailed();
 private:
     enum Action {
         Backup,
         Restore
     };
-
-    void updateActions(bool inAction);
+    void initializeBackupRestoreUi();
     void backupNextStep();
     void restoreNextStep();
     void backupFinished();
@@ -79,6 +81,8 @@ private:
     KAction *mSaveLogAction;
     KAction *mArchiveStructureInfo;
     KAction *mShowArchiveInformationsAction;
+
+    PimSettingsBackupRestoreUI *mPimSettingsBackupRestoreUI;
 };
 
 

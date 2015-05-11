@@ -48,7 +48,6 @@ Q_SIGNALS:
     void jobFinished();
     void backupDone();
     void jobFailed();
-    void showBackupFinishDialogInformation();
 
 protected:
     virtual bool continueToRestore();
