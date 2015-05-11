@@ -34,6 +34,6 @@ target_link_libraries(pimsettingexporterconsole
   pimsettingexporterprivate
 )
 
-
-install(TARGETS pimsettingexporterconsole ${INSTALL_TARGETS_DEFAULT_ARGS} )
+#Install when finished
+#install(TARGETS pimsettingexporterconsole ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
