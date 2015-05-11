@@ -287,6 +287,9 @@ add_subdirectory(temporaryfile/autotests)
 
 add_subdirectory(util/autotests)
 
+add_subdirectory(gravatar/autotests)
+add_subdirectory(gravatar/tests)
+
 if( LibKGAPI2_FOUND )
 add_subdirectory(storageservice/gdrive/tests/)
 add_subdirectory(storageservice/gdrive/icons/)

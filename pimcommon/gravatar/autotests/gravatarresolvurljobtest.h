@@ -15,40 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARRESOLVURLJOB_H
-#define GRAVATARRESOLVURLJOB_H
+#ifndef GRAVATARRESOLVURLJOBTEST_H
+#define GRAVATARRESOLVURLJOBTEST_H
 
-#include "pimcommon_export.h"
 #include <QObject>
-#include <KUrl>
 
-namespace PimCommon {
-class PIMCOMMON_EXPORT GravatarResolvUrlJob : public QObject
+class GravatarResolvUrlJobTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarResolvUrlJob(QObject *parent = 0);
-    ~GravatarResolvUrlJob();
+    explicit GravatarResolvUrlJobTest(QObject *parent = 0);
+    ~GravatarResolvUrlJobTest();
 
-    bool canStart() const;
-    void start();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldNotStart();
 
-    QString email() const;
-    void setEmail(const QString &email);
-
-    KUrl generateGravatarUrl();
-
-
-    bool hasGravatar() const;
-
-Q_SIGNALS:
-    void urlResolved(const KUrl &url);
-
-private:
-    KUrl createUrl();
-    QString calculateHash();
-    QString mEmail;
+    void shouldGenerateGravatarUrl_data();
+    void shouldGenerateGravatarUrl();
 };
-}
 
-#endif // GRAVATARRESOLVURLJOB_H
+#endif // GRAVATARRESOLVURLJOBTEST_H
