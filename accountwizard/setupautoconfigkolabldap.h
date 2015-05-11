@@ -36,7 +36,7 @@ public:
     void create() Q_DECL_OVERRIDE;
     void destroy() Q_DECL_OVERRIDE;
 
-public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE void fillLdapServer(int i, QObject *) const;
     Q_SCRIPTABLE int countLdapServers() const;
 
@@ -45,10 +45,10 @@ public slots:
     Q_SCRIPTABLE void setEmail(const QString &);
     Q_SCRIPTABLE void setPassword(const QString &);
 
-signals:
+Q_SIGNALS:
     void ispdbFinished(bool);
 
-private slots:
+private Q_SLOTS:
     void onIspdbFinished(bool);
 
 private :

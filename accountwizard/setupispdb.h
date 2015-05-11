@@ -37,7 +37,7 @@ public:
     void create() Q_DECL_OVERRIDE;
     void destroy() Q_DECL_OVERRIDE;
 
-public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE QStringList relevantDomains() const;
     Q_SCRIPTABLE QString name(int l) const;
 
@@ -56,10 +56,10 @@ public slots:
     Q_SCRIPTABLE void setEmail(const QString &);
     Q_SCRIPTABLE void setPassword(const QString &);
 
-signals:
+Q_SIGNALS:
     void ispdbFinished(bool);
 
-protected slots:
+protected Q_SLOTS:
     void onIspdbFinished(bool);
 
 protected :

@@ -252,7 +252,7 @@ protected Q_SLOTS:
 
     void alignAgendas();
 
-private slots:
+private Q_SLOTS:
     void slotIncidenceSelected(const KCalCore::Incidence::Ptr &incidence, const QDate &date);
     void slotShowIncidencePopup(const KCalCore::Incidence::Ptr &incidence, const QDate &date);
     void slotEditIncidence(const KCalCore::Incidence::Ptr &incidence);

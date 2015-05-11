@@ -83,7 +83,7 @@ public:
         QCOMPARE(test.sizeLimit, expected.sizeLimit);
     }
 
-private slots:
+private Q_SLOTS:
     void testLdapParsing()
     {
         AutoconfigKolabLdap *ispdb = execIspdb(QStringLiteral("ldap.xml"));

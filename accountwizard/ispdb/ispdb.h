@@ -152,7 +152,7 @@ protected:
     QString replacePlaceholders(const QString &);
 
     QByteArray mData;             /** storage of incoming data from kio */
-protected slots:
+protected Q_SLOTS:
 
     /** slot for TransferJob to dump data */
     void dataArrived(KIO::Job *, const QByteArray &data);

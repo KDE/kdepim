@@ -59,7 +59,7 @@ public:
 class LdapTest : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     void testDestroy()
     {
         TLdap l;
