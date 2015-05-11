@@ -19,7 +19,7 @@
 */
 
 #include "gravatarupdatejobtest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 GravatarUpdateJobTest::GravatarUpdateJobTest(QObject *parent)
     : QObject(parent)
@@ -32,4 +32,4 @@ GravatarUpdateJobTest::~GravatarUpdateJobTest()
 
 }
 
-QTEST_KDEMAIN(GravatarUpdateJobTest, NoGUI)
+QTEST_MAIN(GravatarUpdateJobTest)

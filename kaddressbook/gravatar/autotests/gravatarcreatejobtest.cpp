@@ -19,7 +19,7 @@
 */
 
 #include "gravatarcreatejobtest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 GravatarCreateJobTest::GravatarCreateJobTest(QObject *parent)
     : QObject(parent)
@@ -32,4 +32,4 @@ GravatarCreateJobTest::~GravatarCreateJobTest()
 
 }
 
-QTEST_KDEMAIN(GravatarCreateJobTest, NoGUI)
+QTEST_MAIN(GravatarCreateJobTest)
