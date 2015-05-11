@@ -30,6 +30,8 @@ public:
     explicit GravatarUpdateJobTest(QObject *parent = Q_NULLPTR);
     ~GravatarUpdateJobTest();
 
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // GRAVATARUPDATEJOBTEST_H

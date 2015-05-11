@@ -33,8 +33,24 @@ GravatarCreateJob::~GravatarCreateJob()
 
 }
 
+bool GravatarCreateJob::canStart()
+{
+    return !mEmail.trimmed().isEmpty();
+}
+
 void GravatarCreateJob::start()
 {
 
 }
+
+QString GravatarCreateJob::email() const
+{
+    return mEmail;
+}
+
+void GravatarCreateJob::setEmail(const QString &email)
+{
+    mEmail = email;
+}
+
 

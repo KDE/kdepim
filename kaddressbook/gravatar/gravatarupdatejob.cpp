@@ -39,3 +39,28 @@ void GravatarUpdateJob::start()
 
 }
 
+bool GravatarUpdateJob::canStart() const
+{
+    return !mEmail.trimmed().isEmpty() && mItem.isValid();
+}
+
+QString GravatarUpdateJob::email() const
+{
+    return mEmail;
+}
+
+void GravatarUpdateJob::setEmail(const QString &email)
+{
+    mEmail = email;
+}
+
+Akonadi::Item GravatarUpdateJob::item() const
+{
+    return mItem;
+}
+
+void GravatarUpdateJob::setItem(const Akonadi::Item &item)
+{
+    mItem = item;
+}
+

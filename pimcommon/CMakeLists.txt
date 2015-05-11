@@ -210,6 +210,10 @@ set(libpimcommon_temporary_SRCS
    temporaryfile/attachmenttemporaryfilesdirs.cpp
 )
 
+set(libpimcommon_gravatar_SRCS
+   gravatar/gravatarresolvurljob.cpp
+)
+
 set(libpimcommon_SRCS
   pimcommon_debug.cpp
   settings/pimcommonsettings.cpp
@@ -228,6 +232,7 @@ set(libpimcommon_SRCS
   ${libpimcommon_baloodebug_SRCS}
   ${libpimcommon_syntaxhighlighter_SRCS}
   ${libpimcommon_temporary_SRCS}
+  ${libpimcommon_gravatar_SRCS}
 )
 
 ki18n_wrap_ui(libpimcommon_SRCS
