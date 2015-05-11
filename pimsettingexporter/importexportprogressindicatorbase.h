@@ -24,7 +24,7 @@ class PIMSETTINGEXPORTER_EXPORT ImportExportProgressIndicatorBase : public QObje
 {
     Q_OBJECT
 public:
-    explicit ImportExportProgressIndicatorBase(QObject *parent = 0);
+    explicit ImportExportProgressIndicatorBase(QObject *parent = Q_NULLPTR);
     ~ImportExportProgressIndicatorBase();
 
     virtual void increaseProgressDialog();

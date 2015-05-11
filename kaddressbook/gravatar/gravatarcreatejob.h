@@ -28,7 +28,7 @@ class GravatarCreateJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarCreateJob(QObject *parent = 0);
+    explicit GravatarCreateJob(QObject *parent = Q_NULLPTR);
     ~GravatarCreateJob();
 
     void start();

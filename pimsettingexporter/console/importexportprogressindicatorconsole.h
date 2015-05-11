@@ -24,12 +24,12 @@ class ImportExportProgressIndicatorConsole : public ImportExportProgressIndicato
 {
     Q_OBJECT
 public:
-    explicit ImportExportProgressIndicatorConsole(QObject *parent = 0);
+    explicit ImportExportProgressIndicatorConsole(QObject *parent = Q_NULLPTR);
     ~ImportExportProgressIndicatorConsole();
 
 private:
-    void showInfo(const QString &text);
-    void showErrorMessage(const QString &message, const QString &title);
+    void showInfo(const QString &text) Q_DECL_OVERRIDE;
+    void showErrorMessage(const QString &message, const QString &title) Q_DECL_OVERRIDE;
 };
 
 #endif // IMPORTEXPORTPROGRESSINDICATORCONSOLE_H

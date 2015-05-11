@@ -29,7 +29,7 @@ class GravatarUpdateJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarUpdateJob(QObject *parent = 0);
+    explicit GravatarUpdateJob(QObject *parent = Q_NULLPTR);
     ~GravatarUpdateJob();
 
     void start();

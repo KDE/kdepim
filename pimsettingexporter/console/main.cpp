@@ -16,7 +16,7 @@
 */
 
 
-#include "pimsettingexporter_options.h"
+//#include "pimsettingexporter_options.h"
 
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
