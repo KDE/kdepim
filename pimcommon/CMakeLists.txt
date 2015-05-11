@@ -195,6 +195,10 @@ set(libpimcommon_temporary_SRCS
    temporaryfile/attachmenttemporaryfilesdirs.cpp
 )
 
+set(libpimcommon_gravatar_SRCS
+   gravatar/gravatarresolvurljob.cpp
+)
+
 set(libpimcommon_SRCS
   settings/pimcommonsettings.cpp
   ${libpimcommon_util_SRCS}
@@ -211,6 +215,7 @@ set(libpimcommon_SRCS
   ${libpimcommon_baloodebug_SRCS}
   ${libpimcommon_syntaxhighlighter_SRCS}
   ${libpimcommon_temporary_SRCS}
+  ${libpimcommon_gravatar_SRCS}
 )
 
 
