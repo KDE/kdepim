@@ -215,7 +215,7 @@ void PimSettingExporterWindow::backupData(const QString &filename, const QString
         mLogWidget->clear();
         mPimSettingsBackupRestoreUI->setStoredParameters(dialog->storedType());
         delete dialog;
-        if (!mPimSettingsBackupRestoreUI->backupStart(filename) ) {
+        if (!mPimSettingsBackupRestoreUI->backupStart(filename)) {
             qDebug() << " backup Start failed";
         }
     } else {
@@ -264,7 +264,7 @@ void PimSettingExporterWindow::loadData(const QString &filename, const QString &
         mPimSettingsBackupRestoreUI->setStoredParameters(dialog->storedType());
         delete dialog;
         if (!mPimSettingsBackupRestoreUI->restoreStart(filename)) {
-            qDebug()<<" PimSettingExporterWindow restore failed";
+            qDebug() << " PimSettingExporterWindow restore failed";
         }
     } else {
         delete dialog;
