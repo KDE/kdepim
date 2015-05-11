@@ -35,7 +35,7 @@ GravatarCreateJob::~GravatarCreateJob()
 
 bool GravatarCreateJob::canStart()
 {
-    return !mEmail.trimmed().isEmpty();
+    return !mEmail.trimmed().isEmpty() && (mEmail.contains(QLatin1Char('@')));
 }
 
 void GravatarCreateJob::start()
