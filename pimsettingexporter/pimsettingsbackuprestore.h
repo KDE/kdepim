@@ -31,7 +31,7 @@ public:
     explicit PimSettingsBackupRestore(QObject *parent=0);
     ~PimSettingsBackupRestore();
 
-    void backupStart(const QString &filename);
+    bool backupStart(const QString &filename);
     bool restoreStart(const QString &filename);
 
     void setStoredParameters(const QHash<Utils::AppsType, Utils::importExportParameters> &stored);

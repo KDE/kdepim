@@ -22,10 +22,8 @@
 #include "utils.h"
 #include "pimsettingexporter_export.h"
 class LogWidget;
-class AbstractImportExportJob;
 class KRecentFilesAction;
 class KUrl;
-class ArchiveStorage;
 class KAction;
 class PimSettingsBackupRestoreUI;
 
@@ -38,7 +36,6 @@ public:
     void handleCommandLine();
 
 private Q_SLOTS:
-    void slotJobFinished();
     void slotBackupData();
     void slotRestoreData();
     void slotAddInfo(const QString &info);
@@ -53,29 +50,13 @@ private Q_SLOTS:
     void slotShowBackupFinishDialogInformation();
     void slotJobFailed();
 private:
-    enum Action {
-        Backup,
-        Restore
-    };
     void initializeBackupRestoreUi();
-    void backupNextStep();
-    void restoreNextStep();
-    void backupFinished();
-    void backupStart();
-    void restoreFinished();
-    void restoreStart();
     void backupData(const QString &filename, const QString &templateFile = QString());
     void loadData(const QString &filename, const QString &templateFile = QString());
-    void executeJob();
     bool canZip() const;
     void setupActions(bool canZipFile);
-    QHash<Utils::AppsType, Utils::importExportParameters> mStored;
-    QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator mStoreIterator;
-    Action mAction;
     LogWidget *mLogWidget;
-    AbstractImportExportJob *mImportExportData;
     KRecentFilesAction *mRecentFilesAction;
-    ArchiveStorage *mArchiveStorage;
     KAction *mBackupAction;
     KAction *mRestoreAction;
     KAction *mSaveLogAction;

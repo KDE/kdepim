@@ -82,17 +82,17 @@ bool PimSettingsBackupRestore::openArchive(const QString &filename, bool readWri
     return true;
 }
 
-void PimSettingsBackupRestore::backupStart(const QString &filename)
+bool PimSettingsBackupRestore::backupStart(const QString &filename)
 {
     if (mStored.isEmpty()) {
         Q_EMIT jobFailed();
         deleteLater();
-        return;
+        return false;
     }
     if (!openArchive(filename, true)) {
         Q_EMIT jobFailed();
         deleteLater();
-        return;
+        return false;
     }
     Q_EMIT updateActions(true);
     mAction = Backup;
@@ -104,6 +104,7 @@ void PimSettingsBackupRestore::backupStart(const QString &filename)
     //Add version
     Utils::addVersion(mArchiveStorage->archive());
     backupNextStep();
+    return true;
 }
 
 void PimSettingsBackupRestore::backupNextStep()
