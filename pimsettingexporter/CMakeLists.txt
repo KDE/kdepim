@@ -133,3 +133,4 @@ install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexp
 kde4_install_icons( ${ICON_INSTALL_DIR} )
 add_subdirectory(tests)
 add_subdirectory(gui)
+add_subdirectory(console)
