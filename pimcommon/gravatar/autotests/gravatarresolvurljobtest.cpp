@@ -55,19 +55,22 @@ void GravatarResolvUrlJobTest::shouldNotStart()
 void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl_data()
 {
     QTest::addColumn<QString>("input");
+    QTest::addColumn<QString>("calculedhash");
     QTest::addColumn<KUrl>("output");
-    QTest::newRow("empty") << QString() << KUrl();
-    QTest::newRow("no domain") << QString(QLatin1String("foo")) << KUrl();
-    QTest::newRow("validemail") << QString(QLatin1String("foo@kde.org")) << KUrl("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404");
+    QTest::newRow("empty") << QString() << QString() << KUrl();
+    QTest::newRow("no domain") << QString(QLatin1String("foo")) << QString() << KUrl();
+    QTest::newRow("validemail") << QString(QLatin1String("foo@kde.org")) << QString(QLatin1String("89b4e14cf2fc6d426275c019c6dc9de6")) << KUrl("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404");
 }
 
 void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl()
 {
     QFETCH( QString, input );
+    QFETCH( QString, calculedhash);
     QFETCH( KUrl, output );
     PimCommon::GravatarResolvUrlJob job;
     job.setEmail(input);
     KUrl url = job.generateGravatarUrl();
+    QCOMPARE(calculedhash, job.calculatedHash());
     QCOMPARE(url, output);
 }
 

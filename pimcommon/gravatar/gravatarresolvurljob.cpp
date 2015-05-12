@@ -55,6 +55,7 @@ bool GravatarResolvUrlJob::hasGravatar() const
 void GravatarResolvUrlJob::start()
 {
     if (canStart()) {
+        mCalculatedHash.clear();
         const KUrl url = createUrl();
     } else {
         //TODO return message Error.
@@ -80,8 +81,15 @@ QString GravatarResolvUrlJob::calculateHash()
     return QString::fromUtf8(hash.result().toHex());
 }
 
+QString GravatarResolvUrlJob::calculatedHash() const
+{
+    return mCalculatedHash;
+}
+
+
 KUrl GravatarResolvUrlJob::createUrl()
 {
+    mCalculatedHash.clear();
     if (!canStart()) {
         return KUrl();
     }
@@ -89,7 +97,8 @@ KUrl GravatarResolvUrlJob::createUrl()
     url.setScheme(QLatin1String("http"));
     url.setHost(QLatin1String("www.gravatar.com"));
     url.setPort(80);
-    url.setPath(QLatin1String("/avatar/") + calculateHash());
+    mCalculatedHash = calculateHash();
+    url.setPath(QLatin1String("/avatar/") + mCalculatedHash);
     //Add ?d=404
     url.addQueryItem(QLatin1String("d"), QLatin1String("404"));
     return url;

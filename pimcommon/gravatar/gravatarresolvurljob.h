@@ -41,6 +41,8 @@ public:
 
     bool hasGravatar() const;
 
+    QString calculatedHash() const;
+
 Q_SIGNALS:
     void urlResolved(const KUrl &url);
 
@@ -48,6 +50,7 @@ private:
     KUrl createUrl();
     QString calculateHash();
     QString mEmail;
+    QString mCalculatedHash;
 };
 }
 
