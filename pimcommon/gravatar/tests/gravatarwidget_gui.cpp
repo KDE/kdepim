@@ -15,40 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARRESOLVURLJOB_H
-#define GRAVATARRESOLVURLJOB_H
 
-#include "pimcommon_export.h"
-#include <QObject>
-#include <KUrl>
+#include <kdebug.h>
+#include <kapplication.h>
+#include <KCmdLineArgs>
+#include <KLocalizedString>
 
-namespace PimCommon {
-class PIMCOMMON_EXPORT GravatarResolvUrlJob : public QObject
+int main (int argc, char **argv)
 {
-    Q_OBJECT
-public:
-    explicit GravatarResolvUrlJob(QObject *parent = 0);
-    ~GravatarResolvUrlJob();
+    KCmdLineArgs::init(argc, argv, "gravatar_gui", 0, ki18n("GravatarTest_Gui"),
+                       "1.0", ki18n("Test for gravatar widget"));
 
-    bool canStart() const;
-    void start();
-
-    QString email() const;
-    void setEmail(const QString &email);
-
-    KUrl generateGravatarUrl();
+    KApplication app;
 
 
-    bool hasGravatar() const;
-
-Q_SIGNALS:
-    void urlResolved(const KUrl &url);
-
-private:
-    KUrl createUrl();
-    QString calculateHash();
-    QString mEmail;
-};
+    //w->show();
+    app.exec();
+    //delete w;
+    return 0;
 }
 
-#endif // GRAVATARRESOLVURLJOB_H
