@@ -17,18 +17,20 @@
  */
 
 #include "contactdisplaymessagememento.h"
-
+#include "pimcommon/gravatar/gravatarresolvurljob.h"
+#include "settings/globalsettings.h"
 #include <Akonadi/Contact/ContactSearchJob>
 
 using namespace MessageViewer;
 
 ContactDisplayMessageMemento::ContactDisplayMessageMemento( const QString &emailAddress )
     : QObject( 0 ),
+      mForceDisplayTo( Viewer::UseGlobalSetting ),
+      mEmailAddress(emailAddress),
       mFinished( false ),
-      mMailAllowToRemoteContent( false ),
-      mForceDisplayTo( Viewer::UseGlobalSetting )
+      mMailAllowToRemoteContent( false )
 {
-    if( !emailAddress.isEmpty() ) {
+    if( !mEmailAddress.isEmpty() ) {
         Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
         searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress.toLower(), Akonadi::ContactSearchJob::ExactMatch );
         connect( searchJob, SIGNAL(result(KJob*)),
@@ -54,12 +56,23 @@ void ContactDisplayMessageMemento::slotSearchJobFinished( KJob *job )
 
     const int contactSize( searchJob->contacts().size() );
     if ( contactSize >= 1 ) {
-        searchPhoto(searchJob->contacts());
-        KABC::Addressee addressee = searchJob->contacts().first();
-        processAddress( addressee );
-        emit update( Viewer::Delayed );
         if (contactSize>1)
             kDebug()<<" more than 1 contact was found we return first contact";
+
+        const KABC::Addressee addressee = searchJob->contacts().at(0);
+        processAddress( addressee );
+        searchPhoto(searchJob->contacts());
+        emit update( Viewer::Delayed );
+    }
+    if (mPhoto.isEmpty() && mPhoto.url().isEmpty()) {
+        // No url, no photo => search gravatar
+        if (GlobalSettings::self()->gravatarSupportEnabled()) {
+            PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
+            job->setEmail(mEmailAddress);
+            // Debug job->setUseDefaultPixmap(true);
+            connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
+            job->start();
+        }
     }
 }
 
@@ -79,15 +92,23 @@ bool ContactDisplayMessageMemento::allowToRemoteContent() const
     return mMailAllowToRemoteContent;
 }
 
-void ContactDisplayMessageMemento::searchPhoto(const KABC::AddresseeList &list)
+bool ContactDisplayMessageMemento::searchPhoto(const KABC::AddresseeList &list)
 {
+    bool foundPhoto = false;
     Q_FOREACH (const KABC::Addressee &addressee, list) {
         if (!addressee.photo().isEmpty()) {
             mPhoto = addressee.photo();
+            foundPhoto = true;
             break;
         }
     }
+    return foundPhoto;
 }
+QPixmap ContactDisplayMessageMemento::gravatar() const
+{
+    return mGravatar;
+}
+
 
 void ContactDisplayMessageMemento::processAddress( const KABC::Addressee& addressee )
 {
@@ -115,4 +136,10 @@ KABC::Picture ContactDisplayMessageMemento::photo() const
     return mPhoto;
 }
 
-
+void ContactDisplayMessageMemento::slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job)
+{
+    if (job && job->hasGravatar()) {
+        mGravatar = job->pixmap();
+        emit update( Viewer::Delayed );
+    }
+}
