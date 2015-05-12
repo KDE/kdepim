@@ -7,7 +7,8 @@
     <method name="print"/>
     <method name="printPreview"/>
     <method name="configure"/>
-    <method name="handleCommandLine"/>
-    </method> 
+    <method name="handleCommandLine">
+      <arg name="arguments" type="as" direction="in" />
+    </method>
   </interface>
 </node>

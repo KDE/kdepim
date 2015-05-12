@@ -24,13 +24,15 @@
 
 static void kaddressbook_options(QCommandLineParser *parser)
 {
-    parser->addOption(QCommandLineOption(QLatin1String("import"),
-                                         i18n("Import the given file")));
-    parser->addPositionalArgument(QLatin1String("urls"),
-                                  i18n("Files or URLs. THe user will be asked whether to import."),
-                                  QLatin1String("[urls...]"));
-    parser->addHelpOption();
-    parser->addVersionOption();
+    parser->addOption(
+        QCommandLineOption(
+            QLatin1String("import"),
+            i18n("Import the given file")));
+
+    parser->addPositionalArgument(
+        QLatin1String("urls"),
+        i18n("Files or URLs. THe user will be asked whether to import."),
+        QLatin1String("[urls...]"));
 }
 
 #endif // KADDRESSBOOK_OPTIONS_H

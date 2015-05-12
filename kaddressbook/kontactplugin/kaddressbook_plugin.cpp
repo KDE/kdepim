@@ -189,13 +189,14 @@ void KAddressBookUniqueAppHandler::loadCommandLineOptions(QCommandLineParser *pa
     kaddressbook_options(parser);
 }
 
-int KAddressBookUniqueAppHandler::newInstance(const QStringList &arguments)
+int KAddressBookUniqueAppHandler::activate(const QStringList &arguments)
 {
     // Ensure part is loaded
     (void)plugin()->part();
     org::kde::kaddressbook kaddressbook(QStringLiteral("org.kde.kaddressbook"), QStringLiteral("/KAddressBook"), QDBusConnection::sessionBus());
     QDBusReply<bool> reply = kaddressbook.handleCommandLine(arguments);
-    return KontactInterface::UniqueAppHandler::newInstance();
+
+    return KontactInterface::UniqueAppHandler::activate(arguments);
 }
 
 #include "kaddressbook_plugin.moc"
