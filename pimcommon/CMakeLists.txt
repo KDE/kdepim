@@ -198,6 +198,7 @@ set(libpimcommon_temporary_SRCS
 set(libpimcommon_gravatar_SRCS
    gravatar/gravatarresolvurljob.cpp
    gravatar/widgets/gravatardownloadpixmapwidget.cpp
+   gravatar/widgets/gravatardownloadpixmapdialog.cpp 
 )
 
 set(libpimcommon_SRCS

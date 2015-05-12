@@ -13,3 +13,8 @@ kde4_add_unit_test( pimcommon_gravatardownloadpixmapwidget ${pimcommon_gravatard
 target_link_libraries( pimcommon_gravatardownloadpixmapwidget ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} pimcommon)
 
 
+set( pimcommon_gravatardownloadpixmapdialog_SRCS gravatardownloadpixmapdialogtest.cpp ../widgets/gravatardownloadpixmapdialog.cpp)
+kde4_add_unit_test( pimcommon_gravatardownloadpixmapdialog ${pimcommon_gravatardownloadpixmapdialog_SRCS})
+target_link_libraries( pimcommon_gravatardownloadpixmapdialog ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} pimcommon)
+
+

@@ -1,8 +1,6 @@
 /*
   Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
-  based on code from Sune Vuorela <sune@vuorela.dk> (Rawatar source code)
-
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
