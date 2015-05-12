@@ -8,3 +8,8 @@ set( pimcommon_gravatar_SRCS gravatarresolvurljobtest.cpp )
 kde4_add_unit_test( pimcommon_gravatartest ${pimcommon_gravatar_SRCS})
 target_link_libraries( pimcommon_gravatartest ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} pimcommon)
 
+set( pimcommon_gravatardownloadpixmapwidget_SRCS gravatardownloadpixmapwidgettest.cpp ../widgets/gravatardownloadpixmapwidget.cpp)
+kde4_add_unit_test( pimcommon_gravatardownloadpixmapwidget ${pimcommon_gravatardownloadpixmapwidget_SRCS})
+target_link_libraries( pimcommon_gravatardownloadpixmapwidget ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} pimcommon)
+
+

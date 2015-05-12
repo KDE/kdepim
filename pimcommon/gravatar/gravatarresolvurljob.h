@@ -55,7 +55,7 @@ public:
     void setUseDefaultPixmap(bool useDefaultPixmap);
 
 Q_SIGNALS:
-    void urlResolved(const KUrl &url);
+    void finished(PimCommon::GravatarResolvUrlJob *);
 
 private Q_SLOTS:
     void slotFinishLoadPixmap(QNetworkReply *reply);

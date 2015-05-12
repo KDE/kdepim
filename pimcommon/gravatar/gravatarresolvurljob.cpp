@@ -81,6 +81,7 @@ void GravatarResolvUrlJob::slotFinishLoadPixmap(QNetworkReply *reply)
         mHasGravatar = true;
     }
     reply->deleteLater();
+    Q_EMIT finished(this);
 }
 
 void GravatarResolvUrlJob::slotError(QNetworkReply::NetworkError error)

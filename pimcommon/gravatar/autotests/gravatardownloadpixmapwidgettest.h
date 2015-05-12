@@ -17,33 +17,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARDOWNLOADPIXMAPWIDGET_H
-#define GRAVATARDOWNLOADPIXMAPWIDGET_H
 
-#include <QWidget>
-#include "pimcommon_export.h"
-class QLabel;
-class QLineEdit;
-class QPushButton;
-namespace PimCommon {
-class GravatarResolvUrlJob;
-class PIMCOMMON_EXPORT GravatarDownloadPixmapWidget : public QWidget
+#ifndef GRAVATARDOWNLOADPIXMAPWIDGETTEST_H
+#define GRAVATARDOWNLOADPIXMAPWIDGETTEST_H
+
+#include <QObject>
+
+class GravatarDownloadPixmapWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarDownloadPixmapWidget(QWidget *parent = 0);
-    ~GravatarDownloadPixmapWidget();
-
+    explicit GravatarDownloadPixmapWidgetTest(QObject *parent = 0);
+    ~GravatarDownloadPixmapWidgetTest();
 private Q_SLOTS:
-    void slotSearchButton();
-
-    void slotTextChanged(const QString &text);
-    void slotResolvUrlFinish(PimCommon::GravatarResolvUrlJob *job);
-private:
-    QLabel *mResultLabel;
-    QLineEdit *mLineEdit;
-    QPushButton *mGetPixmapButton;
+    void shouldHaveDefaultValue();
+    void shouldChangeButtonEnableState();
 };
-}
 
-#endif // GRAVATARDOWNLOADPIXMAPWIDGET_H
+#endif // GRAVATARDOWNLOADPIXMAPWIDGETTEST_H
