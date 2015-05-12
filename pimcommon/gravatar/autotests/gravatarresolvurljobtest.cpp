@@ -35,6 +35,8 @@ void GravatarResolvUrlJobTest::shouldHaveDefaultValue()
     PimCommon::GravatarResolvUrlJob job;
     QVERIFY(job.email().isEmpty());
     QCOMPARE(job.size(), 80);
+    QCOMPARE(job.hasGravatar(), false);
+    QCOMPARE(job.pixmap().isNull(), true);
 }
 
 void GravatarResolvUrlJobTest::shouldChangeSize()
@@ -108,4 +110,4 @@ void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl()
 }
 
 
-QTEST_KDEMAIN(GravatarResolvUrlJobTest, NoGUI)
+QTEST_KDEMAIN(GravatarResolvUrlJobTest, GUI)
