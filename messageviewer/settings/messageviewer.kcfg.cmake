@@ -191,7 +191,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
 
     <entry name="GravatarSupportEnabled" type="Bool">
-        <default>false</default>
+        <default>true</default>
     </entry>
   </group>
 

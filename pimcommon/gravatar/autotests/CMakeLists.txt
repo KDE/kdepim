@@ -17,3 +17,8 @@ ecm_mark_as_test(pimcommon_gravatardownloadpixmapwidget)
 target_link_libraries( pimcommon_gravatardownloadpixmapwidget Qt5::Test  pimcommon)
 
 
+set( pimcommon_gravatardownloadpixmapdialog_SRCS gravatardownloadpixmapdialogtest.cpp ../widgets/gravatardownloadpixmapdialog.cpp)
+kde4_add_unit_test( pimcommon_gravatardownloadpixmapdialog ${pimcommon_gravatardownloadpixmapdialog_SRCS})
+target_link_libraries( pimcommon_gravatardownloadpixmapdialog ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} pimcommon)
+
+
