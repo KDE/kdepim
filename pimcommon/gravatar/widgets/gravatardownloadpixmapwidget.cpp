@@ -47,6 +47,10 @@ GravatarDownloadPixmapWidget::GravatarDownloadPixmapWidget(QWidget *parent)
     connect(mGetPixmapButton, SIGNAL(clicked(bool)), this, SLOT(slotSearchButton()));
     hbox->addWidget(mGetPixmapButton);
     mGetPixmapButton->setEnabled(false);
+
+    mResultLabel = new QLabel;
+    mResultLabel->setObjectName(QLatin1String("resultlabel"));
+    mainLayout->addWidget(mResultLabel);
 }
 
 GravatarDownloadPixmapWidget::~GravatarDownloadPixmapWidget()
@@ -58,14 +62,21 @@ void GravatarDownloadPixmapWidget::slotResolvUrlFinish(PimCommon::GravatarResolv
 {
     if (job) {
         qDebug() << job->hasGravatar();
+        if (job->hasGravatar()) {
+            mResultLabel->setPixmap(job->pixmap());
+        } else {
+            //KF5 add i18n
+            mResultLabel->setText(QLatin1String("No gravatar found."));
+        }
     }
-    //TODO
 }
 
 void GravatarDownloadPixmapWidget::slotSearchButton()
 {
     PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
     job->setEmail(mLineEdit->text());
+    //For testing
+    //job->setUseDefaultPixmap(true);
     if (job->canStart()) {
         connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotResolvUrlFinish(PimCommon::GravatarResolvUrlJob*)));
         job->start();

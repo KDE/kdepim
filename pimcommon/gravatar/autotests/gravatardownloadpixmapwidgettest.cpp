@@ -48,6 +48,10 @@ void GravatarDownloadPixmapWidgetTest::shouldHaveDefaultValue()
     QPushButton *getPixmapButton = qFindChild<QPushButton *>(&w, QLatin1String("searchbutton"));
     QVERIFY(getPixmapButton);
     QVERIFY(!getPixmapButton->isEnabled());
+
+
+    QLabel *resultLabel = qFindChild<QLabel *>(&w, QLatin1String("resultlabel"));
+    QVERIFY(resultLabel);
 }
 
 void GravatarDownloadPixmapWidgetTest::shouldChangeButtonEnableState()
