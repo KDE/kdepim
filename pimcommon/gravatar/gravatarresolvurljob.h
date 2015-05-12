@@ -21,7 +21,9 @@
 #include "pimcommon_export.h"
 #include <QObject>
 #include <KUrl>
-
+#include <QPixmap>
+#include <QNetworkReply>
+class QNetworkAccessManager;
 namespace PimCommon {
 class PIMCOMMON_EXPORT GravatarResolvUrlJob : public QObject
 {
@@ -46,15 +48,24 @@ public:
 
     int size() const;
 
+    QPixmap pixmap() const;
+
 Q_SIGNALS:
     void urlResolved(const KUrl &url);
 
+private Q_SLOTS:
+    void slotFinishLoadPixmap(QNetworkReply *reply);
+    void slotError(QNetworkReply::NetworkError error);
+
 private:
+    QPixmap mPixmap;
     KUrl createUrl();
     QString calculateHash();
     QString mEmail;
     QString mCalculatedHash;
+    QNetworkAccessManager *mNetworkAccessManager;
     int mSize;
+    bool mHasGravatar;
 };
 }
 

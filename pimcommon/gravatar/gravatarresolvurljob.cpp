@@ -22,12 +22,15 @@
 #include <QCryptographicHash>
 #include <QStringList>
 #include <QDebug>
+#include <QPixmap>
 
 using namespace PimCommon;
 
 GravatarResolvUrlJob::GravatarResolvUrlJob(QObject *parent)
     : QObject(parent),
-      mSize(80)
+      mNetworkAccessManager(0),
+      mSize(80),
+      mHasGravatar(false)
 {
 
 }
@@ -49,8 +52,7 @@ KUrl GravatarResolvUrlJob::generateGravatarUrl()
 
 bool GravatarResolvUrlJob::hasGravatar() const
 {
-    //TODO
-    return true;
+    return mHasGravatar;
 }
 
 void GravatarResolvUrlJob::start()
@@ -58,9 +60,32 @@ void GravatarResolvUrlJob::start()
     if (canStart()) {
         mCalculatedHash.clear();
         const KUrl url = createUrl();
+        if (!mNetworkAccessManager) {
+            mNetworkAccessManager = new QNetworkAccessManager(this);
+            connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
+        }
+        QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
+        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
     } else {
         //TODO return message Error.
         deleteLater();
+    }
+}
+
+void GravatarResolvUrlJob::slotFinishLoadPixmap(QNetworkReply *reply)
+{
+    if (reply->error() == QNetworkReply::NoError) {
+        mPixmap.loadFromData(reply->readAll());
+        qDebug()<<" pix.isnull"<<mPixmap.isNull();
+        mHasGravatar = true;
+    }
+    reply->deleteLater();
+}
+
+void GravatarResolvUrlJob::slotError(QNetworkReply::NetworkError error)
+{
+    if (error == QNetworkReply::ContentNotFoundError) {
+        mHasGravatar = false;
     }
 }
 
@@ -85,6 +110,11 @@ QString GravatarResolvUrlJob::calculateHash()
 int GravatarResolvUrlJob::size() const
 {
     return mSize;
+}
+
+QPixmap GravatarResolvUrlJob::pixmap() const
+{
+    return mPixmap;
 }
 
 void GravatarResolvUrlJob::setSize(int size)

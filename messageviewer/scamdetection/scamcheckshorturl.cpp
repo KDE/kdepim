@@ -71,8 +71,8 @@ void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
     if (!reply->property("shortUrl").isNull()) {
         shortUrl.setUrl(reply->property("shortUrl").toString());
     }
-    reply->deleteLater();
     const QString jsonData = QString::fromUtf8(reply->readAll());
+    reply->deleteLater();
 
     //qDebug() << jsonData;
 
