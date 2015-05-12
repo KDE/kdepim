@@ -88,14 +88,14 @@ PimSettingExporterWindow::~PimSettingExporterWindow()
 void PimSettingExporterWindow::initializeBackupRestoreUi()
 {
     mPimSettingsBackupRestoreUI = new PimSettingsBackupRestoreUI(this, this);
-    connect(mPimSettingsBackupRestoreUI, SIGNAL(addInfo(QString)), this, SLOT(slotAddInfo(QString)));
-    connect(mPimSettingsBackupRestoreUI, SIGNAL(addEndLine()), this, SLOT(slotAddEndLine()));
-    connect(mPimSettingsBackupRestoreUI, SIGNAL(addError(QString)), this, SLOT(slotAddError(QString)));
-    connect(mPimSettingsBackupRestoreUI, SIGNAL(addTitle(QString)), this, SLOT(slotAddTitle(QString)));
-    connect(mPimSettingsBackupRestoreUI, SIGNAL(updateActions(bool)), this, SLOT(slotUpdateActions(bool)));
+    connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::addInfo, this, &PimSettingExporterWindow::slotAddInfo);
+    connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::addEndLine, this, &PimSettingExporterWindow::slotAddEndLine);
+    connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::addError, this, &PimSettingExporterWindow::slotAddError);
+    connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::addTitle, this, &PimSettingExporterWindow::slotAddTitle);
+    connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::updateActions, this, &PimSettingExporterWindow::slotUpdateActions);
     connect(mPimSettingsBackupRestoreUI, SIGNAL(jobFinished()), this, SLOT(slotJobFinished()));
-    connect(mPimSettingsBackupRestoreUI, SIGNAL(backupDone()), this, SLOT(slotShowBackupFinishDialogInformation()));
-    connect(mPimSettingsBackupRestoreUI, SIGNAL(jobFailed()), this, SLOT(slotJobFailed()));
+    connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::backupDone, this, &PimSettingExporterWindow::slotShowBackupFinishDialogInformation);
+    connect(mPimSettingsBackupRestoreUI, &PimSettingsBackupRestore::jobFailed, this, &PimSettingExporterWindow::slotJobFailed);
 }
 
 void PimSettingExporterWindow::slotJobFailed()

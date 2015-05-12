@@ -16,39 +16,40 @@
 */
 
 
-//#include "pimsettingexporter_options.h"
-
-#include <kcmdlineargs.h>
-#include <kaboutdata.h>
 #include "kdepim-version.h"
+#include "pimsettingexporterconsole.h"
+#include <kaboutdata.h>
+#include <KLocalizedString>
+
+#include <QCommandLineParser>
+#include <QCoreApplication>
+#include <QCommandLineOption>
+
 
 int main(int argc, char *argv[])
 {
-#if 0
-    KLocale::setMainCatalog("pimsettingexporter");
+    QCoreApplication app(argc, argv);
 
-    KAboutData aboutData( "pimsettingexporter", 0, ki18n("PIM Setting Exporter"),
-                          KDEPIM_VERSION, ki18n("PIM Setting Exporter"), KAboutData::License_GPL_V2,
-                          ki18n("Copyright © 2012-2014 pimsettingexporter authors"));
-    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
-    aboutData.setProgramIconName(QLatin1String("kontact"));
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    KLocalizedString::setApplicationDomain("pimsettingexporter");
 
-    KCmdLineArgs::addCmdLineOptions( pimsettingexporter_options() ); // Add our own options.
+    QCommandLineParser parser;
+    KAboutData aboutData(QStringLiteral("pimsettingexporterconsole"), i18n("PIM Setting Exporter Console"),
+                         QStringLiteral(KDEPIM_VERSION), i18n("PIM Setting Exporter Console"), KAboutLicense::GPL_V2,
+                         i18n("Copyright © 2015 pimsettingexporter authors"));
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("template"), i18n("Template file uses to define what data, settings to import or export"), QStringLiteral("file")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("import"), i18n("Import the given file")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("export"), i18n("Export the given file")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("+[url]"), i18n("File or url. The user will be asked whether to import or export.")));
 
-    KUniqueApplication::addCmdLineOptions();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    if (!KUniqueApplication::start())
-    {
-        kDebug() << "pimsettingexporter is already running!";
-        return (0);
-    }
-    KUniqueApplication a;
-    PimSettingExporterWindow *backupMailWin = new PimSettingExporterWindow();
-    a.setTopWidget(backupMailWin);
-    backupMailWin->show();
-    backupMailWin->handleCommandLine();
-    return a.exec();
-#endif
-    return 0;
+    PimSettingExporterConsole *console = new PimSettingExporterConsole;
+    QObject::connect(console, SIGNAL(finished()), &app, SLOT(quit()));
+
+    return app.exec();
 }
