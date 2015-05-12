@@ -69,7 +69,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished( KJob *job )
         if (GlobalSettings::self()->gravatarSupportEnabled()) {
             PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
             job->setEmail(mEmailAddress);
-            // Debug job->setUseDefaultPixmap(true);
+            job->setUseDefaultPixmap(GlobalSettings::self()->gravatarUseDefaultImage());
             connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
             job->start();
         }
@@ -104,9 +104,9 @@ bool ContactDisplayMessageMemento::searchPhoto(const KABC::AddresseeList &list)
     }
     return foundPhoto;
 }
-QPixmap ContactDisplayMessageMemento::gravatar() const
+QPixmap ContactDisplayMessageMemento::gravatarPixmap() const
 {
-    return mGravatar;
+    return mGravatarPixmap;
 }
 
 
@@ -139,7 +139,7 @@ KABC::Picture ContactDisplayMessageMemento::photo() const
 void ContactDisplayMessageMemento::slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job)
 {
     if (job && job->hasGravatar()) {
-        mGravatar = job->pixmap();
+        mGravatarPixmap = job->pixmap();
         emit update( Viewer::Delayed );
     }
 }

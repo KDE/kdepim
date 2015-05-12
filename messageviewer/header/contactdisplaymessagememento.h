@@ -49,7 +49,7 @@ public:
 
     void detach();
 
-    QPixmap gravatar() const;
+    QPixmap gravatarPixmap() const;
 
 signals:
     // TODO: Factor our update and detach into base class
@@ -64,7 +64,7 @@ private:
     bool searchPhoto(const KABC::AddresseeList &list);
     Viewer::DisplayFormatMessage mForceDisplayTo;
     KABC::Picture mPhoto;
-    QPixmap mGravatar;
+    QPixmap mGravatarPixmap;
     QString mEmailAddress;
     bool mFinished;
     bool mMailAllowToRemoteContent;

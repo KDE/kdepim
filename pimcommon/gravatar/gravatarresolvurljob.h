@@ -56,6 +56,7 @@ public:
 
 Q_SIGNALS:
     void finished(PimCommon::GravatarResolvUrlJob *);
+    void resolvUrl(const KUrl &url);
 
 private Q_SLOTS:
     void slotFinishLoadPixmap(QNetworkReply *reply);

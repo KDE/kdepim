@@ -21,6 +21,8 @@
 
 #include "gravatarupdatejob.h"
 
+#include <gravatar/gravatarresolvurljob.h>
+
 using namespace KABGravatar;
 
 GravatarUpdateJob::GravatarUpdateJob(QObject *parent)
@@ -36,6 +38,15 @@ GravatarUpdateJob::~GravatarUpdateJob()
 
 void GravatarUpdateJob::start()
 {
+    if (canStart()) {
+        PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
+        job->setEmail(mEmail);
+        connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
+        connect(job, SIGNAL(resolvUrl(KUrl)), this, SIGNAL(resolvedUrl(KUrl)));
+        job->start();
+    } else {
+        deleteLater();
+    }
 
 }
 
@@ -62,5 +73,13 @@ Akonadi::Item GravatarUpdateJob::item() const
 void GravatarUpdateJob::setItem(const Akonadi::Item &item)
 {
     mItem = item;
+}
+
+void GravatarUpdateJob::slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job)
+{
+    if (job) {
+        Q_EMIT gravatarPixmap(job->pixmap());
+    }
+    deleteLater();
 }
 

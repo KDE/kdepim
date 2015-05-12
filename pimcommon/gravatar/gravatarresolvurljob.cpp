@@ -61,6 +61,7 @@ void GravatarResolvUrlJob::start()
     if (canStart()) {
         mCalculatedHash.clear();
         const KUrl url = createUrl();
+        Q_EMIT resolvUrl(url);
         if (!mNetworkAccessManager) {
             mNetworkAccessManager = new QNetworkAccessManager(this);
             connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
@@ -77,11 +78,11 @@ void GravatarResolvUrlJob::slotFinishLoadPixmap(QNetworkReply *reply)
 {
     if (reply->error() == QNetworkReply::NoError) {
         mPixmap.loadFromData(reply->readAll());
-        qDebug()<<" pix.isnull"<<mPixmap.isNull();
         mHasGravatar = true;
     }
     reply->deleteLater();
     Q_EMIT finished(this);
+    deleteLater();
 }
 
 void GravatarResolvUrlJob::slotError(QNetworkReply::NetworkError error)
