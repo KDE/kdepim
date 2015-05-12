@@ -50,6 +50,10 @@ public:
 
     QPixmap pixmap() const;
 
+
+    bool useDefaultPixmap() const;
+    void setUseDefaultPixmap(bool useDefaultPixmap);
+
 Q_SIGNALS:
     void urlResolved(const KUrl &url);
 
@@ -66,6 +70,7 @@ private:
     QNetworkAccessManager *mNetworkAccessManager;
     int mSize;
     bool mHasGravatar;
+    bool mUseDefaultPixmap;
 };
 }
 

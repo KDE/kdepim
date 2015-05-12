@@ -30,7 +30,8 @@ GravatarResolvUrlJob::GravatarResolvUrlJob(QObject *parent)
     : QObject(parent),
       mNetworkAccessManager(0),
       mSize(80),
-      mHasGravatar(false)
+      mHasGravatar(false),
+      mUseDefaultPixmap(false)
 {
 
 }
@@ -106,6 +107,16 @@ QString GravatarResolvUrlJob::calculateHash()
     hash.addData(mEmail.toLower().toUtf8());
     return QString::fromUtf8(hash.result().toHex());
 }
+bool GravatarResolvUrlJob::useDefaultPixmap() const
+{
+    return mUseDefaultPixmap;
+}
+
+void GravatarResolvUrlJob::setUseDefaultPixmap(bool useDefaultPixmap)
+{
+    mUseDefaultPixmap = useDefaultPixmap;
+}
+
 
 int GravatarResolvUrlJob::size() const
 {
@@ -145,8 +156,10 @@ KUrl GravatarResolvUrlJob::createUrl()
     url.setPort(80);
     mCalculatedHash = calculateHash();
     url.setPath(QLatin1String("/avatar/") + mCalculatedHash);
-    //Add ?d=404
-    url.addQueryItem(QLatin1String("d"), QLatin1String("404"));
+    if (!mUseDefaultPixmap) {
+        //Add ?d=404
+        url.addQueryItem(QLatin1String("d"), QLatin1String("404"));
+    }
     if (mSize != 80) {
         url.addQueryItem(QLatin1String("s"), QString::number(mSize));
     }

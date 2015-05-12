@@ -36,6 +36,8 @@ private Q_SLOTS:
     void shouldChangeSize();
 
     void shouldAddSizeInUrl();
+
+    void shouldUseDefaultPixmap();
 };
 
 #endif // GRAVATARRESOLVURLJOBTEST_H
