@@ -68,8 +68,8 @@ void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
     if (!reply->property("shortUrl").isNull()) {
         shortUrl.setUrl(reply->property("shortUrl").toString());
     }
-    reply->deleteLater();
     QJsonDocument jsonDoc = QJsonDocument::fromBinaryData(reply->readAll());
+    reply->deleteLater();
     if (!jsonDoc.isNull()) {
         const QMap<QString, QVariant> map = jsonDoc.toVariant().toMap();
         QUrl longUrl;
@@ -79,7 +79,6 @@ void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
             return;
         }
         KPIM::BroadcastStatus::instance()->setStatusMsg(i18n("Short url \'%1\' redirects to \'%2\'.", shortUrl.url(), longUrl.toDisplayString()));
-
     }
 }
 

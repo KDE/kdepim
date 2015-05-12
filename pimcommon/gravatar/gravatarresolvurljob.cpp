@@ -22,11 +22,16 @@
 #include <QCryptographicHash>
 #include <QStringList>
 #include <QDebug>
+#include <QPixmap>
 
 using namespace PimCommon;
 
 GravatarResolvUrlJob::GravatarResolvUrlJob(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mNetworkAccessManager(0),
+      mSize(80),
+      mHasGravatar(false),
+      mUseDefaultPixmap(false)
 {
 
 }
@@ -48,17 +53,41 @@ KUrl GravatarResolvUrlJob::generateGravatarUrl()
 
 bool GravatarResolvUrlJob::hasGravatar() const
 {
-    //TODO
-    return true;
+    return mHasGravatar;
 }
 
 void GravatarResolvUrlJob::start()
 {
     if (canStart()) {
+        mCalculatedHash.clear();
         const KUrl url = createUrl();
+        if (!mNetworkAccessManager) {
+            mNetworkAccessManager = new QNetworkAccessManager(this);
+            connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
+        }
+        QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
+        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
     } else {
         //TODO return message Error.
         deleteLater();
+    }
+}
+
+void GravatarResolvUrlJob::slotFinishLoadPixmap(QNetworkReply *reply)
+{
+    if (reply->error() == QNetworkReply::NoError) {
+        mPixmap.loadFromData(reply->readAll());
+        qDebug()<<" pix.isnull"<<mPixmap.isNull();
+        mHasGravatar = true;
+    }
+    reply->deleteLater();
+    Q_EMIT finished(this);
+}
+
+void GravatarResolvUrlJob::slotError(QNetworkReply::NetworkError error)
+{
+    if (error == QNetworkReply::ContentNotFoundError) {
+        mHasGravatar = false;
     }
 }
 
@@ -79,9 +108,46 @@ QString GravatarResolvUrlJob::calculateHash()
     hash.addData(mEmail.toLower().toUtf8());
     return QString::fromUtf8(hash.result().toHex());
 }
+bool GravatarResolvUrlJob::useDefaultPixmap() const
+{
+    return mUseDefaultPixmap;
+}
+
+void GravatarResolvUrlJob::setUseDefaultPixmap(bool useDefaultPixmap)
+{
+    mUseDefaultPixmap = useDefaultPixmap;
+}
+
+
+int GravatarResolvUrlJob::size() const
+{
+    return mSize;
+}
+
+QPixmap GravatarResolvUrlJob::pixmap() const
+{
+    return mPixmap;
+}
+
+void GravatarResolvUrlJob::setSize(int size)
+{
+    if (size <= 0) {
+        size = 80;
+    } else if (size > 2048) {
+        size = 2048;
+    }
+    mSize = size;
+}
+
+QString GravatarResolvUrlJob::calculatedHash() const
+{
+    return mCalculatedHash;
+}
+
 
 KUrl GravatarResolvUrlJob::createUrl()
 {
+    mCalculatedHash.clear();
     if (!canStart()) {
         return KUrl();
     }
@@ -89,8 +155,14 @@ KUrl GravatarResolvUrlJob::createUrl()
     url.setScheme(QLatin1String("http"));
     url.setHost(QLatin1String("www.gravatar.com"));
     url.setPort(80);
-    url.setPath(QLatin1String("/avatar/") + calculateHash());
-    //Add ?d=404
-    url.addQueryItem(QLatin1String("d"), QLatin1String("404"));
+    mCalculatedHash = calculateHash();
+    url.setPath(QLatin1String("/avatar/") + mCalculatedHash);
+    if (!mUseDefaultPixmap) {
+        //Add ?d=404
+        url.addQueryItem(QLatin1String("d"), QLatin1String("404"));
+    }
+    if (mSize != 80) {
+        url.addQueryItem(QLatin1String("s"), QString::number(mSize));
+    }
     return url;
 }

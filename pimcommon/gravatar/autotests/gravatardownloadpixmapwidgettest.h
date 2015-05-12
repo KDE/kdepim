@@ -1,6 +1,8 @@
 /*
   Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
+  based on code from Sune Vuorela <sune@vuorela.dk> (Rawatar source code)
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
@@ -16,23 +18,20 @@
 */
 
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
-#include <KLocalizedString>
-#include "gravatar/widgets/gravatardownloadpixmapwidget.h"
+#ifndef GRAVATARDOWNLOADPIXMAPWIDGETTEST_H
+#define GRAVATARDOWNLOADPIXMAPWIDGETTEST_H
 
-int main (int argc, char **argv)
+#include <QObject>
+
+class GravatarDownloadPixmapWidgetTest : public QObject
 {
-    KCmdLineArgs::init(argc, argv, "gravatar_gui", 0, ki18n("GravatarTest_Gui"),
-                       "1.0", ki18n("Test for gravatar widget"));
+    Q_OBJECT
+public:
+    explicit GravatarDownloadPixmapWidgetTest(QObject *parent = 0);
+    ~GravatarDownloadPixmapWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldChangeButtonEnableState();
+};
 
-    KApplication app;
-
-    PimCommon::GravatarDownloadPixmapWidget *w = new PimCommon::GravatarDownloadPixmapWidget;
-    w->show();
-    int ret = app.exec();
-    delete w;
-    return ret;
-}
-
+#endif // GRAVATARDOWNLOADPIXMAPWIDGETTEST_H
