@@ -17,7 +17,7 @@
 
 #include "gravatarresolvurljobtest.h"
 #include "gravatar/gravatarresolvurljob.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 GravatarResolvUrlJobTest::GravatarResolvUrlJobTest(QObject *parent)
     : QObject(parent)
@@ -121,4 +121,4 @@ void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl()
 }
 
 
-QTEST_KDEMAIN(GravatarResolvUrlJobTest, GUI)
+QTEST_MAIN(GravatarResolvUrlJobTest)

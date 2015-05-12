@@ -31,7 +31,7 @@ class PIMCOMMON_EXPORT GravatarDownloadPixmapWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit GravatarDownloadPixmapWidget(QWidget *parent = 0);
+    explicit GravatarDownloadPixmapWidget(QWidget *parent = Q_NULLPTR);
     ~GravatarDownloadPixmapWidget();
 
 private Q_SLOTS:

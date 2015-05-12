@@ -27,7 +27,7 @@ class GravatarDownloadPixmapWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarDownloadPixmapWidgetTest(QObject *parent = 0);
+    explicit GravatarDownloadPixmapWidgetTest(QObject *parent = Q_NULLPTR);
     ~GravatarDownloadPixmapWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

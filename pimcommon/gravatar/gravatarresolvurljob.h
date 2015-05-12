@@ -29,7 +29,7 @@ class PIMCOMMON_EXPORT GravatarResolvUrlJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarResolvUrlJob(QObject *parent = 0);
+    explicit GravatarResolvUrlJob(QObject *parent = Q_NULLPTR);
     ~GravatarResolvUrlJob();
 
     bool canStart() const;

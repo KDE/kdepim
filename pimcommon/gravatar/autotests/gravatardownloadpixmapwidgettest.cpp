@@ -23,7 +23,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 GravatarDownloadPixmapWidgetTest::GravatarDownloadPixmapWidgetTest(QObject *parent)
     : QObject(parent)
@@ -69,4 +69,4 @@ void GravatarDownloadPixmapWidgetTest::shouldChangeButtonEnableState()
     QVERIFY(!getPixmapButton->isEnabled());
 }
 
-QTEST_KDEMAIN(GravatarDownloadPixmapWidgetTest, GUI)
+QTEST_MAIN(GravatarDownloadPixmapWidgetTest)
