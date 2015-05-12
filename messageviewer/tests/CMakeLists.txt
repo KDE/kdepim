@@ -42,7 +42,7 @@ add_messageviewer_unittest( todoedittest.cpp )
 add_messageviewer_unittest( eventedittest.cpp )
 add_messageviewer_unittest( eventdatetimewidgettest.cpp )
 add_messageviewer_unittest( messagedisplayformatattributetest.cpp )
-
+add_messageviewer_unittest( gravatarconfigwidgettest.cpp )
 set( messageviewer_converthtmltoplaintext_SRCS converthtmltoplaintexttest.cpp ../viewer/converthtmltoplaintext.cpp)
 kde4_add_unit_test( messageviewer_converthtmltoplaintext ${messageviewer_converthtmltoplaintext_SRCS})
 target_link_libraries( messageviewer_converthtmltoplaintext ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${Grantlee_GUI_LIBRARIES})
