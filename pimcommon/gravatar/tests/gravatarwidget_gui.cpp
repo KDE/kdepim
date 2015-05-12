@@ -20,6 +20,7 @@
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocalizedString>
+#include "gravatar/widgets/gravatardownloadpixmapwidget.h"
 
 int main (int argc, char **argv)
 {
@@ -28,10 +29,10 @@ int main (int argc, char **argv)
 
     KApplication app;
 
-
-    //w->show();
-    app.exec();
-    //delete w;
-    return 0;
+    PimCommon::GravatarDownloadPixmapWidget *w = new PimCommon::GravatarDownloadPixmapWidget;
+    w->show();
+    int ret = app.exec();
+    delete w;
+    return ret;
 }
 

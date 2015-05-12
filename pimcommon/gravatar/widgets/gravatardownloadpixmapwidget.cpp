@@ -67,7 +67,7 @@ void GravatarDownloadPixmapWidget::slotSearchButton()
     PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
     job->setEmail(mLineEdit->text());
     if (job->canStart()) {
-        connect(job, SIGNAL(finished()), this, SLOT(slotResolvUrlFinish()));
+        connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotResolvUrlFinish(PimCommon::GravatarResolvUrlJob*)));
         job->start();
     }
 }
