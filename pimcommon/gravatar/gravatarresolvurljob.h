@@ -38,10 +38,13 @@ public:
 
     KUrl generateGravatarUrl();
 
-
     bool hasGravatar() const;
 
     QString calculatedHash() const;
+
+    void setSize(int size);
+
+    int size() const;
 
 Q_SIGNALS:
     void urlResolved(const KUrl &url);
@@ -51,6 +54,7 @@ private:
     QString calculateHash();
     QString mEmail;
     QString mCalculatedHash;
+    int mSize;
 };
 }
 

@@ -33,6 +33,9 @@ private Q_SLOTS:
 
     void shouldGenerateGravatarUrl_data();
     void shouldGenerateGravatarUrl();
+    void shouldChangeSize();
+
+    void shouldAddSizeInUrl();
 };
 
 #endif // GRAVATARRESOLVURLJOBTEST_H

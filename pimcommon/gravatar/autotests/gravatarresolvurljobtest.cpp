@@ -34,6 +34,39 @@ void GravatarResolvUrlJobTest::shouldHaveDefaultValue()
 {
     PimCommon::GravatarResolvUrlJob job;
     QVERIFY(job.email().isEmpty());
+    QCOMPARE(job.size(), 80);
+}
+
+void GravatarResolvUrlJobTest::shouldChangeSize()
+{
+    PimCommon::GravatarResolvUrlJob job;
+    int size = 50;
+    job.setSize(size);
+    QCOMPARE(job.size(), size);
+    size = 0;
+    job.setSize(size);
+    QCOMPARE(job.size(), 80);
+
+    size = 10;
+    job.setSize(size);
+    QCOMPARE(job.size(), size);
+
+    size = 2048;
+    job.setSize(size);
+    QCOMPARE(job.size(), size);
+
+    size = 4096;
+    job.setSize(size);
+    QCOMPARE(job.size(), 2048);
+}
+
+void GravatarResolvUrlJobTest::shouldAddSizeInUrl()
+{
+    PimCommon::GravatarResolvUrlJob job;
+    job.setEmail(QLatin1String("foo@kde.org"));
+    job.setSize(1024);
+    KUrl url = job.generateGravatarUrl();
+    QCOMPARE(url, KUrl("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404&s=1024"));
 }
 
 void GravatarResolvUrlJobTest::shouldNotStart()

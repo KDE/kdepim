@@ -26,7 +26,8 @@
 using namespace PimCommon;
 
 GravatarResolvUrlJob::GravatarResolvUrlJob(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mSize(80)
 {
 
 }
@@ -81,6 +82,21 @@ QString GravatarResolvUrlJob::calculateHash()
     return QString::fromUtf8(hash.result().toHex());
 }
 
+int GravatarResolvUrlJob::size() const
+{
+    return mSize;
+}
+
+void GravatarResolvUrlJob::setSize(int size)
+{
+    if (size <= 0) {
+        size = 80;
+    } else if (size > 2048) {
+        size = 2048;
+    }
+    mSize = size;
+}
+
 QString GravatarResolvUrlJob::calculatedHash() const
 {
     return mCalculatedHash;
@@ -101,5 +117,8 @@ KUrl GravatarResolvUrlJob::createUrl()
     url.setPath(QLatin1String("/avatar/") + mCalculatedHash);
     //Add ?d=404
     url.addQueryItem(QLatin1String("d"), QLatin1String("404"));
+    if (mSize != 80) {
+        url.addQueryItem(QLatin1String("s"), QString::number(mSize));
+    }
     return url;
 }
