@@ -24,7 +24,7 @@ class GravatarConfigWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarConfigWidgetTest(QObject *parent = 0);
+    explicit GravatarConfigWidgetTest(QObject *parent = Q_NULLPTR);
     ~GravatarConfigWidgetTest();
 
 private Q_SLOTS:

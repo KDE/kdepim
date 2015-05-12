@@ -26,7 +26,7 @@ class MESSAGEVIEWER_EXPORT GravatarConfigWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit GravatarConfigWidget(QWidget *parent = 0);
+    explicit GravatarConfigWidget(QWidget *parent = Q_NULLPTR);
     ~GravatarConfigWidget();
 
     void save();

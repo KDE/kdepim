@@ -25,7 +25,7 @@ class GravatarDownloadPixmapDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarDownloadPixmapDialogTest(QObject *parent = 0);
+    explicit GravatarDownloadPixmapDialogTest(QObject *parent = Q_NULLPTR);
     ~GravatarDownloadPixmapDialogTest();
 
 private Q_SLOTS:

@@ -39,33 +39,33 @@ GravatarDownloadPixmapWidgetTest::~GravatarDownloadPixmapWidgetTest()
 void GravatarDownloadPixmapWidgetTest::shouldHaveDefaultValue()
 {
     PimCommon::GravatarDownloadPixmapWidget w;
-    QLabel *lab = qFindChild<QLabel *>(&w, QLatin1String("labemail"));
+    QLabel *lab = qFindChild<QLabel *>(&w, QStringLiteral("labemail"));
     QVERIFY(lab);
 
-    QLineEdit *lineEdit = qFindChild<QLineEdit *>(&w, QLatin1String("email"));
+    QLineEdit *lineEdit = qFindChild<QLineEdit *>(&w, QStringLiteral("email"));
     QVERIFY(lineEdit);
 
-    QPushButton *getPixmapButton = qFindChild<QPushButton *>(&w, QLatin1String("searchbutton"));
+    QPushButton *getPixmapButton = qFindChild<QPushButton *>(&w, QStringLiteral("searchbutton"));
     QVERIFY(getPixmapButton);
     QVERIFY(!getPixmapButton->isEnabled());
 
 
-    QLabel *resultLabel = qFindChild<QLabel *>(&w, QLatin1String("resultlabel"));
+    QLabel *resultLabel = qFindChild<QLabel *>(&w, QStringLiteral("resultlabel"));
     QVERIFY(resultLabel);
 }
 
 void GravatarDownloadPixmapWidgetTest::shouldChangeButtonEnableState()
 {
     PimCommon::GravatarDownloadPixmapWidget w;
-    QLineEdit *lineEdit = qFindChild<QLineEdit *>(&w, QLatin1String("email"));
+    QLineEdit *lineEdit = qFindChild<QLineEdit *>(&w, QStringLiteral("email"));
 
-    QPushButton *getPixmapButton = qFindChild<QPushButton *>(&w, QLatin1String("searchbutton"));
+    QPushButton *getPixmapButton = qFindChild<QPushButton *>(&w, QStringLiteral("searchbutton"));
     QVERIFY(!getPixmapButton->isEnabled());
 
-    lineEdit->setText(QLatin1String("foo"));
+    lineEdit->setText(QStringLiteral("foo"));
     QVERIFY(getPixmapButton->isEnabled());
 
-    lineEdit->setText(QLatin1String("   "));
+    lineEdit->setText(QStringLiteral("   "));
     QVERIFY(!getPixmapButton->isEnabled());
 }
 

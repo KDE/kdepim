@@ -26,10 +26,10 @@ class GravatarDownloadPixmapDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit GravatarDownloadPixmapDialog(QWidget *parent = 0);
+    explicit GravatarDownloadPixmapDialog(QWidget *parent = Q_NULLPTR);
     ~GravatarDownloadPixmapDialog();
 
-private slots:
+private Q_SLOTS:
     void slotAccepted();
 
 private:

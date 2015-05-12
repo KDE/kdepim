@@ -29,12 +29,12 @@ GravatarDownloadPixmapDialog::GravatarDownloadPixmapDialog(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mGravatarDownloadPixmapWidget = new PimCommon::GravatarDownloadPixmapWidget(this);
-    mGravatarDownloadPixmapWidget->setObjectName(QLatin1String("gravatarwidget"));
+    mGravatarDownloadPixmapWidget->setObjectName(QStringLiteral("gravatarwidget"));
     mainLayout->addWidget(mGravatarDownloadPixmapWidget);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    buttonBox->setObjectName(QLatin1String("buttonbox"));
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotAccepted()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    buttonBox->setObjectName(QStringLiteral("buttonbox"));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &GravatarDownloadPixmapDialog::slotAccepted);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     mainLayout->addWidget(buttonBox);
 }
 

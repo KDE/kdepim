@@ -32,22 +32,22 @@ GravatarDownloadPixmapWidget::GravatarDownloadPixmapWidget(QWidget *parent)
     setLayout(mainLayout);
     QHBoxLayout *hbox = new QHBoxLayout;
     mainLayout->addLayout(hbox);
-    QLabel *lab = new QLabel(QLatin1String("Email:"));
-    lab->setObjectName(QLatin1String("labemail"));
+    QLabel *lab = new QLabel(i18n("Email:"));
+    lab->setObjectName(QStringLiteral("labemail"));
     hbox->addWidget(lab);
     mLineEdit = new QLineEdit;
-    mLineEdit->setObjectName(QLatin1String("email"));
-    connect(mLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotTextChanged(QString)));
+    mLineEdit->setObjectName(QStringLiteral("email"));
+    connect(mLineEdit, &QLineEdit::textChanged, this, &GravatarDownloadPixmapWidget::slotTextChanged);
     hbox->addWidget(mLineEdit);
 
-    mGetPixmapButton = new QPushButton(QLatin1String("searchbutton"));
-    mGetPixmapButton->setObjectName(QLatin1String("searchbutton"));
-    connect(mGetPixmapButton, SIGNAL(clicked(bool)), this, SLOT(slotSearchButton()));
+    mGetPixmapButton = new QPushButton(i18n("searchbutton"));
+    mGetPixmapButton->setObjectName(QStringLiteral("searchbutton"));
+    connect(mGetPixmapButton, &QAbstractButton::clicked, this, &GravatarDownloadPixmapWidget::slotSearchButton);
     hbox->addWidget(mGetPixmapButton);
     mGetPixmapButton->setEnabled(false);
 
     mResultLabel = new QLabel;
-    mResultLabel->setObjectName(QLatin1String("resultlabel"));
+    mResultLabel->setObjectName(QStringLiteral("resultlabel"));
     mainLayout->addWidget(mResultLabel);
 }
 
@@ -64,7 +64,7 @@ void GravatarDownloadPixmapWidget::slotResolvUrlFinish(PimCommon::GravatarResolv
             mResultLabel->setPixmap(job->pixmap());
         } else {
             //KF5 add i18n
-            mResultLabel->setText(QLatin1String("No gravatar found."));
+            mResultLabel->setText(i18n("No gravatar found."));
         }
     }
 }
@@ -76,7 +76,7 @@ void GravatarDownloadPixmapWidget::slotSearchButton()
     //For testing
     //job->setUseDefaultPixmap(true);
     if (job->canStart()) {
-        connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotResolvUrlFinish(PimCommon::GravatarResolvUrlJob*)));
+        connect(job, &GravatarResolvUrlJob::finished, this, &GravatarDownloadPixmapWidget::slotResolvUrlFinish);
         job->start();
     }
 }

@@ -18,7 +18,7 @@
 #include "gravatarconfigwidgettest.h"
 #include "../widgets/gravatarconfigwidget.h"
 #include <QCheckBox>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 GravatarConfigWidgetTest::GravatarConfigWidgetTest(QObject *parent)
     : QObject(parent)
@@ -34,8 +34,8 @@ GravatarConfigWidgetTest::~GravatarConfigWidgetTest()
 void GravatarConfigWidgetTest::shouldHaveDefaultValue()
 {
     MessageViewer::GravatarConfigWidget w;
-    QCheckBox *checkBox = qFindChild<QCheckBox *>(&w, QLatin1String("gravatarcheckbox"));
+    QCheckBox *checkBox = qFindChild<QCheckBox *>(&w, QStringLiteral("gravatarcheckbox"));
     QVERIFY(checkBox);
 }
 
-QTEST_KDEMAIN(GravatarConfigWidgetTest, GUI)
+QTEST_MAIN(GravatarConfigWidgetTest)

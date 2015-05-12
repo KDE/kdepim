@@ -19,7 +19,7 @@
 #include "../widgets/gravatardownloadpixmapdialog.h"
 
 #include <QDialogButtonBox>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include "gravatar/widgets/gravatardownloadpixmapwidget.h"
 
@@ -37,11 +37,11 @@ GravatarDownloadPixmapDialogTest::~GravatarDownloadPixmapDialogTest()
 void GravatarDownloadPixmapDialogTest::shouldHaveDefaultValue()
 {
     PimCommon::GravatarDownloadPixmapDialog dlg;
-    PimCommon::GravatarDownloadPixmapWidget *widget = qFindChild<PimCommon::GravatarDownloadPixmapWidget *>(&dlg, QLatin1String("gravatarwidget"));
+    PimCommon::GravatarDownloadPixmapWidget *widget = qFindChild<PimCommon::GravatarDownloadPixmapWidget *>(&dlg, QStringLiteral("gravatarwidget"));
     QVERIFY(widget);
 
-    QDialogButtonBox *buttonBox = qFindChild<QDialogButtonBox *>(&dlg, QLatin1String("buttonbox"));
+    QDialogButtonBox *buttonBox = qFindChild<QDialogButtonBox *>(&dlg, QStringLiteral("buttonbox"));
     QVERIFY(buttonBox);
 }
 
-QTEST_KDEMAIN(GravatarDownloadPixmapDialogTest, GUI)
+QTEST_MAIN(GravatarDownloadPixmapDialogTest)

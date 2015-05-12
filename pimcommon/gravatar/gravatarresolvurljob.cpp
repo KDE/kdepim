@@ -21,7 +21,6 @@
 #include "gravatarresolvurljob.h"
 #include <QCryptographicHash>
 #include <QStringList>
-#include <QDebug>
 #include <QPixmap>
 
 using namespace PimCommon;
@@ -77,7 +76,6 @@ void GravatarResolvUrlJob::slotFinishLoadPixmap(QNetworkReply *reply)
 {
     if (reply->error() == QNetworkReply::NoError) {
         mPixmap.loadFromData(reply->readAll());
-        qDebug()<<" pix.isnull"<<mPixmap.isNull();
         mHasGravatar = true;
     }
     reply->deleteLater();
@@ -152,17 +150,17 @@ KUrl GravatarResolvUrlJob::createUrl()
         return KUrl();
     }
     KUrl url;
-    url.setScheme(QLatin1String("http"));
-    url.setHost(QLatin1String("www.gravatar.com"));
+    url.setScheme(QStringLiteral("http"));
+    url.setHost(QStringLiteral("www.gravatar.com"));
     url.setPort(80);
     mCalculatedHash = calculateHash();
-    url.setPath(QLatin1String("/avatar/") + mCalculatedHash);
+    url.setPath(QStringLiteral("/avatar/") + mCalculatedHash);
     if (!mUseDefaultPixmap) {
         //Add ?d=404
-        url.addQueryItem(QLatin1String("d"), QLatin1String("404"));
+        url.addQueryItem(QStringLiteral("d"), QStringLiteral("404"));
     }
     if (mSize != 80) {
-        url.addQueryItem(QLatin1String("s"), QString::number(mSize));
+        url.addQueryItem(QStringLiteral("s"), QString::number(mSize));
     }
     return url;
 }

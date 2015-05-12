@@ -66,7 +66,7 @@ void GravatarResolvUrlJobTest::shouldChangeSize()
 void GravatarResolvUrlJobTest::shouldAddSizeInUrl()
 {
     PimCommon::GravatarResolvUrlJob job;
-    job.setEmail(QLatin1String("foo@kde.org"));
+    job.setEmail(QStringLiteral("foo@kde.org"));
     job.setSize(1024);
     KUrl url = job.generateGravatarUrl();
     QCOMPARE(url, KUrl("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404&s=1024"));
@@ -75,7 +75,7 @@ void GravatarResolvUrlJobTest::shouldAddSizeInUrl()
 void GravatarResolvUrlJobTest::shouldUseDefaultPixmap()
 {
     PimCommon::GravatarResolvUrlJob job;
-    job.setEmail(QLatin1String("foo@kde.org"));
+    job.setEmail(QStringLiteral("foo@kde.org"));
     job.setSize(1024);
     job.setUseDefaultPixmap(true);
     KUrl url = job.generateGravatarUrl();
@@ -87,13 +87,13 @@ void GravatarResolvUrlJobTest::shouldNotStart()
     PimCommon::GravatarResolvUrlJob job;
     QVERIFY(!job.canStart());
 
-    job.setEmail(QLatin1String("foo"));
+    job.setEmail(QStringLiteral("foo"));
     QVERIFY(!job.canStart());
 
-    job.setEmail(QLatin1String(" "));
+    job.setEmail(QStringLiteral(" "));
     QVERIFY(!job.canStart());
 
-    job.setEmail(QLatin1String("foo@kde.org"));
+    job.setEmail(QStringLiteral("foo@kde.org"));
     QVERIFY(job.canStart());
 }
 
@@ -104,8 +104,8 @@ void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl_data()
     QTest::addColumn<QString>("calculedhash");
     QTest::addColumn<KUrl>("output");
     QTest::newRow("empty") << QString() << QString() << KUrl();
-    QTest::newRow("no domain") << QString(QLatin1String("foo")) << QString() << KUrl();
-    QTest::newRow("validemail") << QString(QLatin1String("foo@kde.org")) << QString(QLatin1String("89b4e14cf2fc6d426275c019c6dc9de6")) << KUrl("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404");
+    QTest::newRow("no domain") << QString(QStringLiteral("foo")) << QString() << KUrl();
+    QTest::newRow("validemail") << QString(QStringLiteral("foo@kde.org")) << QString(QStringLiteral("89b4e14cf2fc6d426275c019c6dc9de6")) << KUrl("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404");
 }
 
 void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl()
