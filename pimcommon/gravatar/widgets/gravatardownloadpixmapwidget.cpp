@@ -63,7 +63,6 @@ void GravatarDownloadPixmapWidget::slotResolvUrlFinish(PimCommon::GravatarResolv
         if (job->hasGravatar()) {
             mResultLabel->setPixmap(job->pixmap());
         } else {
-            //KF5 add i18n
             mResultLabel->setText(i18n("No gravatar found."));
         }
     }

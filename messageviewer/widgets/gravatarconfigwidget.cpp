@@ -33,18 +33,16 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     setLayout(mainLayout);
     mainLayout->setMargin(0);
 
-    //KF5 add i18n
-    mEnableGravatarSupport = new QCheckBox(QLatin1String("Enable Gravatar Support"));
-    mEnableGravatarSupport->setObjectName(QLatin1String("gravatarcheckbox"));
+    mEnableGravatarSupport = new QCheckBox(i18n("Enable Gravatar Support"));
+    mEnableGravatarSupport->setObjectName(QStringLiteral("gravatarcheckbox"));
     mainLayout->addWidget(mEnableGravatarSupport);
 
-    //KF5 add i18n
-    mUseDefaultPixmap = new QCheckBox(QLatin1String("Use Default Image"));
-    mUseDefaultPixmap->setObjectName(QLatin1String("usedefaultimage"));
+    mUseDefaultPixmap = new QCheckBox(i18n("Use Default Image"));
+    mUseDefaultPixmap->setObjectName(QStringLiteral("usedefaultimage"));
     mainLayout->addWidget(mUseDefaultPixmap);
 
-    connect(mUseDefaultPixmap, SIGNAL(clicked(bool)), SIGNAL(configChanged(bool)));
-    connect(mEnableGravatarSupport, SIGNAL(clicked(bool)), SIGNAL(configChanged(bool)));
+    connect(mUseDefaultPixmap, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
+    connect(mEnableGravatarSupport, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
 }
 
 GravatarConfigWidget::~GravatarConfigWidget()
