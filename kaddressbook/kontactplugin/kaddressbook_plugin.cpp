@@ -26,7 +26,6 @@
 
 #include <QAction>
 #include <KActionCollection>
-#include <KCmdLineArgs>
 #include "kaddressbookplugin_debug.h"
 #include <KLocalizedString>
 
