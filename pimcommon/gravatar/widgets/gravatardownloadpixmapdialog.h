@@ -29,6 +29,8 @@ public:
     explicit GravatarDownloadPixmapDialog(QWidget *parent = 0);
     ~GravatarDownloadPixmapDialog();
 
+    QPixmap gravatarPixmap() const;
+
 private slots:
     void slotAccepted();
 
