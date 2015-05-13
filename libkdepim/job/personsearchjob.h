@@ -30,6 +30,9 @@
 #include <libkdepim/ldap/ldapclientsearch.h>
 #include "person.h"
 
+namespace KPIM
+{
+
 class KDEPIM_EXPORT PersonSearchJob : public KJob
 {
     Q_OBJECT
@@ -63,5 +66,7 @@ private:
     bool mCollectionSearchDone;
     bool mLdapSearchDone;
 };
+
+}
 
 #endif

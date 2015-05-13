@@ -29,6 +29,8 @@
 #include <AkonadiSearch/PIM/collectionquery.h>
 #include <AkonadiCore/collectionidentificationattribute.h>
 
+using namespace KPIM;
+
 PersonSearchJob::PersonSearchJob(const QString &searchString, QObject *parent)
     : KJob(parent),
       mSearchString(searchString)

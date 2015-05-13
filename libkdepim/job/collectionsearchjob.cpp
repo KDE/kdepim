@@ -26,6 +26,8 @@ without including the source code for Qt in the source distribution.
 #include <AkonadiCore/CollectionFetchScope>
 #include <AkonadiSearch/PIM/collectionquery.h>
 
+using namespace KPIM;
+
 CollectionSearchJob::CollectionSearchJob(const QString &searchString, const QStringList &mimetypeFilter, QObject *parent)
     : KJob(parent),
       mSearchString(searchString),
