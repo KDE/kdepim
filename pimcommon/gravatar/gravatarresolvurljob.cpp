@@ -23,6 +23,7 @@
 #include <QStringList>
 #include <QDebug>
 #include <QPixmap>
+#include <solid/networking.h>
 
 using namespace PimCommon;
 
@@ -43,6 +44,9 @@ GravatarResolvUrlJob::~GravatarResolvUrlJob()
 
 bool GravatarResolvUrlJob::canStart() const
 {
+    if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
+        return false;
+    }
     return !mEmail.trimmed().isEmpty() && (mEmail.contains(QLatin1Char('@')));
 }
 
@@ -62,6 +66,11 @@ void GravatarResolvUrlJob::start()
         mCalculatedHash.clear();
         const KUrl url = createUrl();
         Q_EMIT resolvUrl(url);
+        if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
+            qDebug() <<" network is not connected";
+            deleteLater();
+            return;
+        }
         if (!mNetworkAccessManager) {
             mNetworkAccessManager = new QNetworkAccessManager(this);
             connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
