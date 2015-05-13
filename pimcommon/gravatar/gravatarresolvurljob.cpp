@@ -98,7 +98,10 @@ void GravatarResolvUrlJob::slotFinishLoadPixmap(QNetworkReply *reply)
     if (reply->error() == QNetworkReply::NoError) {
         mPixmap.loadFromData(reply->readAll());
         mHasGravatar = true;
-        GravatarCache::self()->saveGravatarPixmap(mCalculatedHash, mPixmap);
+        //For the moment don't use cache other we will store a lot of pixmap
+        if (!mUseDefaultPixmap) {
+            GravatarCache::self()->saveGravatarPixmap(mCalculatedHash, mPixmap);
+        }
     }
     reply->deleteLater();
     Q_EMIT finished(this);

@@ -48,8 +48,9 @@ void GravatarCache::saveGravatarPixmap(const QString &hashStr, const QPixmap &pi
     if (!hashStr.isEmpty() && !pixmap.isNull()) {
         if (!mCachePixmap.contains(hashStr)) {
             const QString path = KGlobal::dirs()->locateLocal("data", QLatin1String("gravatar/") + hashStr + QLatin1String(".png"));
-            if (!pixmap.save(path)) {
-                qDebug() <<" saved in cache "<< hashStr;
+            qDebug() << " path " << path;
+            if (pixmap.save(path)) {
+                qDebug() <<" saved in cache "<< hashStr << path;
                 mCachePixmap.insert(hashStr, pixmap);
             }
         }
@@ -70,7 +71,7 @@ QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatar
              if (fi.exists()) {
                  QPixmap pix;
                  if (pix.load(path)) {
-                     qDebug() << " add to cache "<<hashStr;
+                     qDebug() << " add to cache "<<hashStr << path;
                      mCachePixmap.insert(hashStr, pix);
                      gravatarStored = true;
                      return pix;
