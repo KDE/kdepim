@@ -59,7 +59,7 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
     if (interface->sieveReuseConfig()) {
         // assemble Sieve url from the settings of the account:
         QUrl u;
-        u.setScheme(QLatin1String("sieve"));
+        u.setScheme(QStringLiteral("sieve"));
         QString server;
         QDBusReply<QString> reply = interface->imapServer();
         if (reply.isValid()) {

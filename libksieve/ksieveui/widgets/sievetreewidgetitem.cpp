@@ -28,7 +28,7 @@ SieveTreeWidgetProgress::SieveTreeWidgetProgress(SieveTreeWidgetItem *item, QObj
       mItem(item)
 {
     KIconLoader loader;
-    mProgressPix = loader.loadPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
+    mProgressPix = loader.loadPixmapSequence(QStringLiteral("process-working"), KIconLoader::SizeSmallMedium);
     mProgressTimer = new QTimer(this);
     connect(mProgressTimer, &QTimer::timeout, this, &SieveTreeWidgetProgress::slotTimerDone);
 }
@@ -90,6 +90,6 @@ void SieveTreeWidgetItem::setProgressAnimation(const QPixmap &pix)
 
 void SieveTreeWidgetItem::setDefaultIcon()
 {
-    setIcon(0, SmallIcon(QLatin1String("network-server")));
+    setIcon(0, SmallIcon(QStringLiteral("network-server")));
 }
 

@@ -32,9 +32,9 @@
 
 using namespace KSieveUi;
 SieveConditionHasFlag::SieveConditionHasFlag(QObject *parent)
-    : SieveCondition(QLatin1String("hasflag"), i18n("Has Flag"), parent)
+    : SieveCondition(QStringLiteral("hasflag"), i18n("Has Flag"), parent)
 {
-    hasVariableSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("variables"));
+    hasVariableSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("variables"));
 }
 
 SieveCondition *SieveConditionHasFlag::newAction()
@@ -49,7 +49,7 @@ QWidget *SieveConditionHasFlag::createParamWidget(QWidget *parent) const
     lay->setMargin(0);
     w->setLayout(lay);
     SelectMatchTypeComboBox *selecttype = new SelectMatchTypeComboBox;
-    selecttype->setObjectName(QLatin1String("matchtype"));
+    selecttype->setObjectName(QStringLiteral("matchtype"));
     connect(selecttype, &SelectMatchTypeComboBox::valueChanged, this, &SieveConditionHasFlag::valueChanged);
     lay->addWidget(selecttype);
 
@@ -63,7 +63,7 @@ QWidget *SieveConditionHasFlag::createParamWidget(QWidget *parent) const
         grid->addWidget(lab, row, 0);
 
         QLineEdit *variableName = new QLineEdit;
-        variableName->setObjectName(QLatin1String("variablename"));
+        variableName->setObjectName(QStringLiteral("variablename"));
         connect(variableName, &QLineEdit::textChanged, this, &SieveConditionHasFlag::valueChanged);
         grid->addWidget(variableName, row, 1);
         ++row;
@@ -73,7 +73,7 @@ QWidget *SieveConditionHasFlag::createParamWidget(QWidget *parent) const
 
     QLineEdit *value = new QLineEdit;
     connect(value, &QLineEdit::textChanged, this, &SieveConditionHasFlag::valueChanged);
-    value->setObjectName(QLatin1String("value"));
+    value->setObjectName(QStringLiteral("value"));
     grid->addWidget(value, row, 1);
 
     return w;

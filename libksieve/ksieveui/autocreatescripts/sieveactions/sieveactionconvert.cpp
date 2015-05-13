@@ -50,7 +50,7 @@ QWidget *SieveActionConvert::createParamWidget(QWidget *parent) const
 
     SelectMimeTypeComboBox *fromMimeType = new SelectMimeTypeComboBox;
     connect(fromMimeType, &SelectMimeTypeComboBox::valueChanged, this, &SieveActionConvert::valueChanged);
-    fromMimeType->setObjectName(QLatin1String("from"));
+    fromMimeType->setObjectName(QStringLiteral("from"));
     lay->addWidget(fromMimeType, 0, 1);
 
     lab = new QLabel(i18n("To:"));
@@ -58,7 +58,7 @@ QWidget *SieveActionConvert::createParamWidget(QWidget *parent) const
 
     SelectMimeTypeComboBox *toMimeType = new SelectMimeTypeComboBox;
     connect(toMimeType, &SelectMimeTypeComboBox::valueChanged, this, &SieveActionConvert::valueChanged);
-    toMimeType->setObjectName(QLatin1String("to"));
+    toMimeType->setObjectName(QStringLiteral("to"));
     lay->addWidget(toMimeType, 0, 3);
 
     lab = new QLabel(i18n("Parameters:"));
@@ -66,7 +66,7 @@ QWidget *SieveActionConvert::createParamWidget(QWidget *parent) const
 
     SelectConvertParameterWidget *params = new SelectConvertParameterWidget;
     connect(params, &SelectConvertParameterWidget::valueChanged, this, &SieveActionConvert::valueChanged);
-    params->setObjectName(QLatin1String("params"));
+    params->setObjectName(QStringLiteral("params"));
     lay->addWidget(params, 1, 1, 2, 3);
 
     return w;
@@ -111,16 +111,16 @@ bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
 
 QString SieveActionConvert::code(QWidget *w) const
 {
-    QString result = QLatin1String("convert ");
-    const SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("from"));
+    QString result = QStringLiteral("convert ");
+    const SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox *>(QStringLiteral("from"));
     const QString fromMimeTypeStr = fromMimeType->code();
     result += QStringLiteral("%1 ").arg(fromMimeTypeStr);
 
-    const SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("to"));
+    const SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox *>(QStringLiteral("to"));
     const QString toMimeTypeStr = toMimeType->code();
     result += QStringLiteral("%1 ").arg(toMimeTypeStr);
 
-    const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget *>(QLatin1String("params"));
+    const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget *>(QStringLiteral("params"));
     const QString paramsStr = params->code();
     if (!paramsStr.isEmpty()) {
         result += paramsStr;
