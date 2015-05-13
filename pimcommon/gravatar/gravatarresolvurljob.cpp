@@ -46,10 +46,11 @@ GravatarResolvUrlJob::~GravatarResolvUrlJob()
 
 bool GravatarResolvUrlJob::canStart() const
 {
-    if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
+    if ( Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
+        return !mEmail.trimmed().isEmpty() && (mEmail.contains(QLatin1Char('@')));
+    } else {
         return false;
     }
-    return !mEmail.trimmed().isEmpty() && (mEmail.contains(QLatin1Char('@')));
 }
 
 KUrl GravatarResolvUrlJob::generateGravatarUrl()
@@ -75,17 +76,18 @@ void GravatarResolvUrlJob::start()
             Q_EMIT finished(this);
             deleteLater();
         } else {
-            if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
+            if ( Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
+                if (!mNetworkAccessManager) {
+                    mNetworkAccessManager = new QNetworkAccessManager(this);
+                    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
+                }
+                QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
+                connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+            } else {
                 qDebug() <<" network is not connected";
                 deleteLater();
                 return;
             }
-            if (!mNetworkAccessManager) {
-                mNetworkAccessManager = new QNetworkAccessManager(this);
-                connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
-            }
-            QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
-            connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
         }
     } else {
         qDebug() << "Gravatar can not start";

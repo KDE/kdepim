@@ -51,6 +51,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job);
 
+    void slotUpdateGravatarDone(KJob *job);
 private:
     void updatePixmap(const QPixmap &pix);
     QString mEmail;

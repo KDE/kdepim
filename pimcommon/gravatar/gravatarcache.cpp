@@ -64,6 +64,7 @@ QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatar
     if (!hashStr.isEmpty()) {
         if (mCachePixmap.contains(hashStr)) {
             qDebug()<<" contains in cache "<< hashStr;
+            gravatarStored = true;
             return mCachePixmap.value(hashStr);
         } else {
              const QString path = KGlobal::dirs()->locateLocal("data", QLatin1String("gravatar/") + hashStr + QLatin1String(".png"));

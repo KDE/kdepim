@@ -23,6 +23,10 @@
 
 #include <gravatar/gravatarresolvurljob.h>
 
+#include <KABC/Addressee>
+#include <Akonadi/ItemModifyJob>
+#include <QDebug>
+
 using namespace KABGravatar;
 
 GravatarUpdateJob::GravatarUpdateJob(QObject *parent)
@@ -41,9 +45,13 @@ void GravatarUpdateJob::start()
     if (canStart()) {
         PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
         job->setEmail(mEmail);
-        connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
-        connect(job, SIGNAL(resolvUrl(KUrl)), this, SIGNAL(resolvedUrl(KUrl)));
-        job->start();
+        if (job->canStart()) {
+            connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
+            connect(job, SIGNAL(resolvUrl(KUrl)), this, SIGNAL(resolvedUrl(KUrl)));
+            job->start();
+        } else {
+            deleteLater();
+        }
     } else {
         deleteLater();
     }
@@ -90,6 +98,23 @@ void GravatarUpdateJob::slotGravatarResolvUrlFinished(PimCommon::GravatarResolvU
 
 void GravatarUpdateJob::updatePixmap(const QPixmap &pix)
 {
-    //TODO
+    if (mItem.hasPayload<KABC::Addressee>()) {
+        KABC::Addressee contact = mItem.payload<KABC::Addressee>();
+        contact.photo().setData(pix.toImage());
+        mItem.setPayload<KABC::Addressee>( contact );
+
+        // save the new item in akonadi storage
+        Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(mItem);
+        connect(modifyJob, SIGNAL(result(KJob*)), SLOT(slotUpdateGravatarDone(KJob*)));
+    } else {
+        deleteLater();
+    }
+}
+
+void GravatarUpdateJob::slotUpdateGravatarDone(KJob *job)
+{
+    if (job->error()) {
+        qDebug() << "Error during modify item :"<<job->errorString();
+    }
     deleteLater();
 }
