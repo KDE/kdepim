@@ -32,6 +32,12 @@ public:
     void saveGravatarPixmap(const QString &hashStr, const QPixmap &pixmap);
 
     bool loadGravatarPixmap(const QString &hashStr, bool &gravatarStored);
+
+    int maximumSize() const;
+    void setMaximumSize(int maximumSize);
+
+private:
+    int mMaximumSize;
 };
 }
 

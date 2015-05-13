@@ -20,7 +20,8 @@
 using namespace PimCommon;
 
 GravatarCache::GravatarCache(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mMaximumSize(0)
 {
 
 }
@@ -40,4 +41,14 @@ bool GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatarSto
     //TODO
     return false;
 }
+int GravatarCache::maximumSize() const
+{
+    return mMaximumSize;
+}
+
+void GravatarCache::setMaximumSize(int maximumSize)
+{
+    mMaximumSize = maximumSize;
+}
+
 
