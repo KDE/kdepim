@@ -24,7 +24,8 @@
 #include <QPixmap>
 #include <QNetworkReply>
 class QNetworkAccessManager;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT GravatarResolvUrlJob : public QObject
 {
     Q_OBJECT
@@ -49,7 +50,6 @@ public:
     int size() const;
 
     QPixmap pixmap() const;
-
 
     bool useDefaultPixmap() const;
     void setUseDefaultPixmap(bool useDefaultPixmap);

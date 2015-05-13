@@ -26,7 +26,7 @@ using namespace MessageViewer;
 
 ContactDisplayMessageMemento::ContactDisplayMessageMemento(const QString &emailAddress)
     : QObject(Q_NULLPTR),
-      mForceDisplayTo( Viewer::UseGlobalSetting ),
+      mForceDisplayTo(Viewer::UseGlobalSetting),
       mEmailAddress(emailAddress),
       mFinished(false),
       mMailAllowToRemoteContent(false)
@@ -54,15 +54,16 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
         return;
     }
 
-    const int contactSize( searchJob->contacts().size() );
-    if ( contactSize >= 1 ) {
-        if (contactSize>1)
-            qCDebug(MESSAGEVIEWER_LOG) <<" more than 1 contact was found we return first contact";
+    const int contactSize(searchJob->contacts().size());
+    if (contactSize >= 1) {
+        if (contactSize > 1) {
+            qCDebug(MESSAGEVIEWER_LOG) << " more than 1 contact was found we return first contact";
+        }
 
         const KContacts::Addressee addressee = searchJob->contacts().at(0);
-        processAddress( addressee );
+        processAddress(addressee);
         searchPhoto(searchJob->contacts());
-        emit update( Viewer::Delayed );
+        emit update(Viewer::Delayed);
     }
     if (mPhoto.isEmpty() && mPhoto.url().isEmpty()) {
         // No url, no photo => search gravatar
@@ -139,6 +140,6 @@ void ContactDisplayMessageMemento::slotGravatarResolvUrlFinished(PimCommon::Grav
 {
     if (job && job->hasGravatar()) {
         mGravatarPixmap = job->pixmap();
-        emit update( Viewer::Delayed );
+        emit update(Viewer::Delayed);
     }
 }

@@ -20,7 +20,8 @@
 
 #include <QDialog>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class GravatarDownloadPixmapWidget;
 class GravatarDownloadPixmapDialog : public QDialog
 {

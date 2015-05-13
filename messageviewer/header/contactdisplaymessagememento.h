@@ -28,7 +28,8 @@
 #include <QObject>
 
 class KJob;
-namespace PimCommon  {
+namespace PimCommon
+{
 class GravatarResolvUrlJob;
 }
 

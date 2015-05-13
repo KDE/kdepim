@@ -21,7 +21,8 @@
 #include <QWidget>
 #include "messageviewer_export.h"
 class QCheckBox;
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MESSAGEVIEWER_EXPORT GravatarConfigWidget : public QWidget
 {
     Q_OBJECT

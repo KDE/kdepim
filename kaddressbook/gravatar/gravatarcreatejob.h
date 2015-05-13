@@ -24,11 +24,13 @@
 #include <QObject>
 #include <KUrl>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class GravatarResolvUrlJob;
 }
 
-namespace KABGravatar {
+namespace KABGravatar
+{
 class GravatarCreateJob : public QObject
 {
     Q_OBJECT
@@ -41,7 +43,6 @@ public:
 
     QString email() const;
     void setEmail(const QString &email);
-
 
 Q_SIGNALS:
     void resolvedUrl(const KUrl &url);

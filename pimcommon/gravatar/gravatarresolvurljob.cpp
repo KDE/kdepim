@@ -17,7 +17,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "gravatarresolvurljob.h"
 #include <QCryptographicHash>
 #include <QStringList>
@@ -118,7 +117,6 @@ void GravatarResolvUrlJob::setUseDefaultPixmap(bool useDefaultPixmap)
     mUseDefaultPixmap = useDefaultPixmap;
 }
 
-
 int GravatarResolvUrlJob::size() const
 {
     return mSize;
@@ -143,7 +141,6 @@ QString GravatarResolvUrlJob::calculatedHash() const
 {
     return mCalculatedHash;
 }
-
 
 KUrl GravatarResolvUrlJob::createUrl()
 {

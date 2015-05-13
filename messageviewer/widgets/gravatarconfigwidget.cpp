@@ -66,8 +66,8 @@ void GravatarConfigWidget::doLoadFromGlobalSettings()
 
 void GravatarConfigWidget::doResetToDefaultsOther()
 {
-    const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults( true );
+    const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults(true);
     doLoadFromGlobalSettings();
-    GlobalSettings::self()->useDefaults( bUseDefaults );
+    GlobalSettings::self()->useDefaults(bUseDefaults);
 }
 

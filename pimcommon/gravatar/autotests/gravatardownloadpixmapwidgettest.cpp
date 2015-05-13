@@ -17,7 +17,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "gravatardownloadpixmapwidgettest.h"
 #include "../widgets/gravatardownloadpixmapwidget.h"
 #include <QLabel>
@@ -48,7 +47,6 @@ void GravatarDownloadPixmapWidgetTest::shouldHaveDefaultValue()
     QPushButton *getPixmapButton = qFindChild<QPushButton *>(&w, QStringLiteral("searchbutton"));
     QVERIFY(getPixmapButton);
     QVERIFY(!getPixmapButton->isEnabled());
-
 
     QLabel *resultLabel = qFindChild<QLabel *>(&w, QStringLiteral("resultlabel"));
     QVERIFY(resultLabel);

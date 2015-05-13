@@ -18,17 +18,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
 #ifndef GRAVATARUPDATEJOB_H
 #define GRAVATARUPDATEJOB_H
 
 #include <QObject>
 #include <AkonadiCore/Item>
 #include <KUrl>
-namespace PimCommon {
+namespace PimCommon
+{
 class GravatarResolvUrlJob;
 }
-namespace KABGravatar {
+namespace KABGravatar
+{
 class GravatarUpdateJob : public QObject
 {
     Q_OBJECT

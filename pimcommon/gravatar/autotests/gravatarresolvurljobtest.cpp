@@ -97,7 +97,6 @@ void GravatarResolvUrlJobTest::shouldNotStart()
     QVERIFY(job.canStart());
 }
 
-
 void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl_data()
 {
     QTest::addColumn<QString>("input");
@@ -110,15 +109,14 @@ void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl_data()
 
 void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl()
 {
-    QFETCH( QString, input );
-    QFETCH( QString, calculedhash);
-    QFETCH( KUrl, output );
+    QFETCH(QString, input);
+    QFETCH(QString, calculedhash);
+    QFETCH(KUrl, output);
     PimCommon::GravatarResolvUrlJob job;
     job.setEmail(input);
     KUrl url = job.generateGravatarUrl();
     QCOMPARE(calculedhash, job.calculatedHash());
     QCOMPARE(url, output);
 }
-
 
 QTEST_MAIN(GravatarResolvUrlJobTest)

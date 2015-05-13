@@ -15,14 +15,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocalizedString>
 #include "gravatar/widgets/gravatardownloadpixmapwidget.h"
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
     KCmdLineArgs::init(argc, argv, "gravatar_gui", 0, ki18n("GravatarTest_Gui"),
                        "1.0", ki18n("Test for gravatar widget"));

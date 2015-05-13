@@ -23,7 +23,8 @@
 class QLabel;
 class QLineEdit;
 class QPushButton;
-namespace PimCommon {
+namespace PimCommon
+{
 class GravatarResolvUrlJob;
 class PIMCOMMON_EXPORT GravatarDownloadPixmapWidget : public QWidget
 {
