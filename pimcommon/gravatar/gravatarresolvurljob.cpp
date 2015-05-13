@@ -19,6 +19,7 @@
 
 
 #include "gravatarresolvurljob.h"
+#include "gravatarcache.h"
 #include <QCryptographicHash>
 #include <QStringList>
 #include <QDebug>
@@ -67,17 +68,25 @@ void GravatarResolvUrlJob::start()
         mCalculatedHash.clear();
         const KUrl url = createUrl();
         Q_EMIT resolvUrl(url);
-        if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
-            qDebug() <<" network is not connected";
+        bool haveStoredPixmap = false;
+        const QPixmap pix = GravatarCache::self()->loadGravatarPixmap(mCalculatedHash, haveStoredPixmap);
+        if (haveStoredPixmap && !pix.isNull()) {
+            mPixmap = pix;
+            Q_EMIT finished(this);
             deleteLater();
-            return;
+        } else {
+            if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
+                qDebug() <<" network is not connected";
+                deleteLater();
+                return;
+            }
+            if (!mNetworkAccessManager) {
+                mNetworkAccessManager = new QNetworkAccessManager(this);
+                connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
+            }
+            QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
+            connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
         }
-        if (!mNetworkAccessManager) {
-            mNetworkAccessManager = new QNetworkAccessManager(this);
-            connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
-        }
-        QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
-        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
     } else {
         qDebug() << "Gravatar can not start";
         deleteLater();
@@ -89,6 +98,7 @@ void GravatarResolvUrlJob::slotFinishLoadPixmap(QNetworkReply *reply)
     if (reply->error() == QNetworkReply::NoError) {
         mPixmap.loadFromData(reply->readAll());
         mHasGravatar = true;
+        GravatarCache::self()->saveGravatarPixmap(mCalculatedHash, mPixmap);
     }
     reply->deleteLater();
     Q_EMIT finished(this);
