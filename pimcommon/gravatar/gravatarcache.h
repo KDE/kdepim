@@ -15,30 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARRESOLVURLJOBTEST_H
-#define GRAVATARRESOLVURLJOBTEST_H
+#ifndef GRAVATARCACHE_H
+#define GRAVATARCACHE_H
 
 #include <QObject>
+#include <QPixmap>
 
-class GravatarResolvUrlJobTest : public QObject
+namespace PimCommon {
+class GravatarCache : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarResolvUrlJobTest(QObject *parent = Q_NULLPTR);
-    ~GravatarResolvUrlJobTest();
+    explicit GravatarCache(QObject *parent = 0);
+    ~GravatarCache();
 
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldChangeValue();
-    void shouldNotStart();
+    void saveGravatarPixmap(const QString &hashStr, const QPixmap &pixmap);
 
-    void shouldGenerateGravatarUrl_data();
-    void shouldGenerateGravatarUrl();
-    void shouldChangeSize();
+    bool loadGravatarPixmap(const QString &hashStr, bool &gravatarStored);
 
-    void shouldAddSizeInUrl();
+    int maximumSize() const;
+    void setMaximumSize(int maximumSize);
 
-    void shouldUseDefaultPixmap();
+private:
+    int mMaximumSize;
 };
+}
 
-#endif // GRAVATARRESOLVURLJOBTEST_H
+#endif // GRAVATARCACHE_H

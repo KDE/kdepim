@@ -77,8 +77,18 @@ void GravatarUpdateJob::setItem(const Akonadi::Item &item)
 void GravatarUpdateJob::slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job)
 {
     if (job) {
-        Q_EMIT gravatarPixmap(job->pixmap());
+        const QPixmap pix = job->pixmap();
+        Q_EMIT gravatarPixmap(pix);
+        if (mItem.isValid()) {
+            updatePixmap(pix);
+            return;
+        }
     }
     deleteLater();
 }
 
+void GravatarUpdateJob::updatePixmap(const QPixmap &pix)
+{
+    //TODO
+    deleteLater();
+}

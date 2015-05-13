@@ -54,6 +54,7 @@ private Q_SLOTS:
     void slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job);
 
 private:
+    void updatePixmap(const QPixmap &pix);
     QString mEmail;
     Akonadi::Item mItem;
 };

@@ -21,6 +21,7 @@
 #include <QCryptographicHash>
 #include <QStringList>
 #include <QPixmap>
+#include <solid/networking.h>
 
 using namespace PimCommon;
 
@@ -29,7 +30,8 @@ GravatarResolvUrlJob::GravatarResolvUrlJob(QObject *parent)
       mNetworkAccessManager(0),
       mSize(80),
       mHasGravatar(false),
-      mUseDefaultPixmap(false)
+      mUseDefaultPixmap(false),
+      mUseCache(false)
 {
 
 }
@@ -41,6 +43,9 @@ GravatarResolvUrlJob::~GravatarResolvUrlJob()
 
 bool GravatarResolvUrlJob::canStart() const
 {
+    if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
+        return false;
+    }
     return !mEmail.trimmed().isEmpty() && (mEmail.contains(QLatin1Char('@')));
 }
 
@@ -60,6 +65,11 @@ void GravatarResolvUrlJob::start()
         mCalculatedHash.clear();
         const KUrl url = createUrl();
         Q_EMIT resolvUrl(url);
+        if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
+            qDebug() <<" network is not connected";
+            deleteLater();
+            return;
+        }
         if (!mNetworkAccessManager) {
             mNetworkAccessManager = new QNetworkAccessManager(this);
             connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
@@ -67,7 +77,7 @@ void GravatarResolvUrlJob::start()
         QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
     } else {
-        //TODO return message Error.
+        qDebug() << "Gravatar can not start";
         deleteLater();
     }
 }
@@ -107,6 +117,16 @@ QString GravatarResolvUrlJob::calculateHash()
     hash.addData(mEmail.toLower().toUtf8());
     return QString::fromUtf8(hash.result().toHex());
 }
+bool GravatarResolvUrlJob::useCache() const
+{
+    return mUseCache;
+}
+
+void GravatarResolvUrlJob::setUseCache(bool useCache)
+{
+    mUseCache = useCache;
+}
+
 bool GravatarResolvUrlJob::useDefaultPixmap() const
 {
     return mUseDefaultPixmap;

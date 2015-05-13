@@ -54,6 +54,9 @@ public:
     bool useDefaultPixmap() const;
     void setUseDefaultPixmap(bool useDefaultPixmap);
 
+    bool useCache() const;
+    void setUseCache(bool useCache);
+
 Q_SIGNALS:
     void finished(PimCommon::GravatarResolvUrlJob *);
     void resolvUrl(const KUrl &url);
@@ -72,6 +75,7 @@ private:
     int mSize;
     bool mHasGravatar;
     bool mUseDefaultPixmap;
+    bool mUseCache;
 };
 }
 

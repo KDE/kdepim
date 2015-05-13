@@ -56,14 +56,21 @@ GravatarDownloadPixmapWidget::~GravatarDownloadPixmapWidget()
 
 }
 
+QPixmap GravatarDownloadPixmapWidget::gravatarPixmap() const
+{
+    return mGravatarPixmap;
+}
+
 void GravatarDownloadPixmapWidget::slotResolvUrlFinish(PimCommon::GravatarResolvUrlJob *job)
 {
     if (job) {
         qDebug() << job->hasGravatar();
         if (job->hasGravatar()) {
-            mResultLabel->setPixmap(job->pixmap());
+            mGravatarPixmap = job->pixmap();
+            mResultLabel->setPixmap(mGravatarPixmap);
         } else {
             mResultLabel->setText(i18n("No gravatar found."));
+            mGravatarPixmap = QPixmap();
         }
     }
 }
