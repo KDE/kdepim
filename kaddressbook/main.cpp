@@ -33,8 +33,8 @@
 class KAddressBookApplication : public KontactInterface::PimUniqueApplication
 {
 public:
-    KAddressBookApplication(int &argc, char **argv[])
-        : KontactInterface::PimUniqueApplication(argc, argv),
+    KAddressBookApplication(int &argc, char **argv[], KAboutData &about)
+        : KontactInterface::PimUniqueApplication(argc, argv, about),
           mMainWindow(Q_NULLPTR)
     {
     }
@@ -46,7 +46,6 @@ private:
 
 int KAddressBookApplication::activate(const QStringList &arguments)
 {
-    qCDebug(KADDRESSBOOK_LOG) << "Launching new instance of KAddressBook";
     if (!mMainWindow) {
         mMainWindow = new MainWindow;
         mMainWindow->show();
@@ -59,21 +58,17 @@ int main(int argc, char **argv)
 {
     KLocalizedString::setApplicationDomain("kaddressbook");
 
-    KAddressBookApplication app(argc, &argv);
+    AboutData about;
+    KAddressBookApplication app(argc, &argv, about);
+    QCommandLineParser *cmdArgs = app.cmdArgs();
+    kaddressbook_options(cmdArgs);
 
     const QStringList args = QCoreApplication::arguments();
-
-    AboutData about;
-    AboutData::setApplicationData(about);
-
-    QCommandLineParser parser;
-    about.setupCommandLine(&parser);
-    kaddressbook_options(&parser);
-
-    parser.process(args);
-    about.processCommandLine(&parser);
+    cmdArgs->process(args);
+    about.processCommandLine(cmdArgs);
 
     if (!KAddressBookApplication::start(args)) {
+        qCWarning(KADDRESSBOOK_LOG) << "kaddressbook is already running, exiting.";
         return 0;
     }
 
