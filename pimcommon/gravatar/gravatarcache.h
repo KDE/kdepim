@@ -18,25 +18,27 @@
 #ifndef GRAVATARCACHE_H
 #define GRAVATARCACHE_H
 
-#include <QObject>
 #include <QPixmap>
-
+#include <QHash>
 namespace PimCommon {
-class GravatarCache : public QObject
+class GravatarCache
 {
-    Q_OBJECT
 public:
-    explicit GravatarCache(QObject *parent = 0);
+    static GravatarCache *self();
+
+
+    GravatarCache();
     ~GravatarCache();
 
     void saveGravatarPixmap(const QString &hashStr, const QPixmap &pixmap);
 
-    bool loadGravatarPixmap(const QString &hashStr, bool &gravatarStored);
+    QPixmap loadGravatarPixmap(const QString &hashStr, bool &gravatarStored);
 
     int maximumSize() const;
     void setMaximumSize(int maximumSize);
 
 private:
+    QHash<QString, QPixmap> mCachePixmap;
     int mMaximumSize;
 };
 }

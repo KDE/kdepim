@@ -16,12 +16,17 @@
 */
 
 #include "gravatarcache.h"
-
+#include <KGlobal>
+#include <KStandardDirs>
+#include <QDebug>
+#include <QFile>
+#include <QFileInfo>
 using namespace PimCommon;
 
-GravatarCache::GravatarCache(QObject *parent)
-    : QObject(parent),
-      mMaximumSize(0)
+K_GLOBAL_STATIC( GravatarCache, s_gravatarCache )
+
+GravatarCache::GravatarCache()
+    : mMaximumSize(0)
 {
 
 }
@@ -31,16 +36,54 @@ GravatarCache::~GravatarCache()
 
 }
 
+
+GravatarCache *GravatarCache::self()
+{
+    return s_gravatarCache;
+}
+
+
 void GravatarCache::saveGravatarPixmap(const QString &hashStr, const QPixmap &pixmap)
 {
-
+    if (!hashStr.isEmpty() && !pixmap.isNull()) {
+        if (!mCachePixmap.contains(hashStr)) {
+            const QString path = KGlobal::dirs()->locateLocal("data", QLatin1String("gravatar/") + hashStr + QLatin1String(".png"));
+            qDebug() << " path " << path;
+            if (pixmap.save(path)) {
+                qDebug() <<" saved in cache "<< hashStr << path;
+                mCachePixmap.insert(hashStr, pixmap);
+            }
+        }
+    }
 }
 
-bool GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatarStored)
+QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatarStored)
 {
-    //TODO
-    return false;
+    gravatarStored = false;
+    qDebug()<<" hashStr"<<hashStr;
+    if (!hashStr.isEmpty()) {
+        if (mCachePixmap.contains(hashStr)) {
+            qDebug()<<" contains in cache "<< hashStr;
+            return mCachePixmap.value(hashStr);
+        } else {
+             const QString path = KGlobal::dirs()->locateLocal("data", QLatin1String("gravatar/") + hashStr + QLatin1String(".png"));
+             QFileInfo fi(path);
+             if (fi.exists()) {
+                 QPixmap pix;
+                 if (pix.load(path)) {
+                     qDebug() << " add to cache "<<hashStr << path;
+                     mCachePixmap.insert(hashStr, pix);
+                     gravatarStored = true;
+                     return pix;
+                 }
+             } else {
+                 return QPixmap();
+             }
+        }
+    }
+    return QPixmap();
 }
+
 int GravatarCache::maximumSize() const
 {
     return mMaximumSize;
