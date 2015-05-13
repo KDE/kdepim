@@ -40,7 +40,7 @@ class CollectionMonitoredWidget : public QWidget
 {
     Q_OBJECT
 public:
-    CollectionMonitoredWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    CollectionMonitoredWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
 
 private Q_SLOTS:
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);

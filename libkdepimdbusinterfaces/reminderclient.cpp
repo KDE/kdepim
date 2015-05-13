@@ -35,7 +35,7 @@ using namespace KPIM;
 
 void ReminderClient::startDaemon()
 {
-    QDBusInterface iface(QLatin1String("org.kde.korgac"), QLatin1String("/"));
+    QDBusInterface iface(QStringLiteral("org.kde.korgac"), QStringLiteral("/"));
     if (iface.isValid()) {
         // Reminder daemon already runs
         return;
@@ -49,7 +49,7 @@ void ReminderClient::startDaemon()
         if (KToolInvocation::startServiceByDesktopPath(desktopFile, QStringList(), &error) != 0) {
             qCWarning(KDEPIMDBUSINTERFACE_LOG) << "Failure starting korgac:" << error;
             // try harder...
-            const QString korgacExe = QStandardPaths::findExecutable(QLatin1String("korgac"));
+            const QString korgacExe = QStandardPaths::findExecutable(QStringLiteral("korgac"));
             QProcess::startDetached(korgacExe);
         }
     }
@@ -58,20 +58,20 @@ void ReminderClient::startDaemon()
 void ReminderClient::stopDaemon()
 {
     OrgKdeKorganizerKOrgacInterface interface(
-        QLatin1String("org.kde.korgac"), QLatin1String("/ac"), QDBusConnection::sessionBus());
+        QStringLiteral("org.kde.korgac"), QStringLiteral("/ac"), QDBusConnection::sessionBus());
     interface.quit();
 }
 
 void ReminderClient::hideDaemon()
 {
     OrgKdeKorganizerKOrgacInterface interface(
-        QLatin1String("org.kde.korgac"), QLatin1String("/ac"), QDBusConnection::sessionBus());
+        QStringLiteral("org.kde.korgac"), QStringLiteral("/ac"), QDBusConnection::sessionBus());
     interface.hide();
 }
 
 void ReminderClient::showDaemon()
 {
     OrgKdeKorganizerKOrgacInterface interface(
-        QLatin1String("org.kde.korgac"), QLatin1String("/ac"), QDBusConnection::sessionBus());
+        QStringLiteral("org.kde.korgac"), QStringLiteral("/ac"), QDBusConnection::sessionBus());
     interface.show();
 }

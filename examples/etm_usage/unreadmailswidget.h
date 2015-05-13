@@ -46,7 +46,7 @@ class UnreadMailsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    UnreadMailsWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    UnreadMailsWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
 
 private:
     QTreeView *m_itemView;

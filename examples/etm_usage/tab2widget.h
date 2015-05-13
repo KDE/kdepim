@@ -35,7 +35,7 @@ class Tab2Widget : public QWidget
 {
     Q_OBJECT
 public:
-    Tab2Widget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    Tab2Widget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
 
 private Q_SLOTS:
     void setMappedRootIndex(const QModelIndex &index);

@@ -56,7 +56,7 @@ bool UnreadMailsTree::acceptRow(int sourceRow, const QModelIndex &sourceParent) 
 class UnreadMailsTreeWidget : public EntityTreeWidget
 {
 public:
-    UnreadMailsTreeWidget(QWidget *parent = 0)
+    UnreadMailsTreeWidget(QWidget *parent = Q_NULLPTR)
         : EntityTreeWidget(parent)
     {
     }

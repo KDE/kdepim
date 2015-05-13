@@ -50,7 +50,7 @@ class MainWindow : public KDeclarativeFullScreenView
     Q_OBJECT
     Q_PROPERTY(bool certificatesAvailable READ certificatesAvailable NOTIFY certificatesAvailabilityChanged)
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = Q_NULLPTR);
     ~MainWindow();
 
     bool certificatesAvailable() const;

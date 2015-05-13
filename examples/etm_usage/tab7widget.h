@@ -40,7 +40,7 @@ class Tab7Widget : public QWidget
 {
     Q_OBJECT
 public:
-    Tab7Widget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    Tab7Widget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
 
 private Q_SLOTS:
     void initModel(Akonadi::EntityTreeModel *model);

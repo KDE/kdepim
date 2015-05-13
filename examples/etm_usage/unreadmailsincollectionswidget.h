@@ -50,7 +50,7 @@ class UnreadMailsInCollectionsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    UnreadMailsInCollectionsWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    UnreadMailsInCollectionsWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     virtual ~UnreadMailsInCollectionsWidget();
 
 private Q_SLOTS:

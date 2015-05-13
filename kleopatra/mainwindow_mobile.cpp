@@ -123,7 +123,7 @@ class MainWindow::KeyTreeViewItem : public DeclarativeWidgetBase<KeyTreeView, Ma
 {
     Q_OBJECT
 public:
-    explicit KeyTreeViewItem(QGraphicsItem *parent = 0)
+    explicit KeyTreeViewItem(QGraphicsItem *parent = Q_NULLPTR)
         : DeclarativeWidgetBase<KeyTreeView, MainWindow, &MainWindow::registerKeyTreeView>(parent) {}
     ~KeyTreeViewItem() {}
 };
@@ -132,7 +132,7 @@ class MainWindow::SearchBarItem : public DeclarativeWidgetBase<SearchBar, MainWi
 {
     Q_OBJECT
 public:
-    explicit SearchBarItem(QGraphicsItem *parent = 0)
+    explicit SearchBarItem(QGraphicsItem *parent = Q_NULLPTR)
         : DeclarativeWidgetBase<SearchBar, MainWindow, &MainWindow::registerSearchBar>(parent) {}
     ~SearchBarItem() {}
 };
