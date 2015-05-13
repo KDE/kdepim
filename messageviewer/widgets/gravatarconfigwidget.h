@@ -32,8 +32,13 @@ public:
     void save();
     void doLoadFromGlobalSettings();
     void doResetToDefaultsOther();
+
+Q_SIGNALS:
+    void configChanged(bool);
+
 private:
     QCheckBox *mEnableGravatarSupport;
+    QCheckBox *mUseDefaultPixmap;
 };
 }
 

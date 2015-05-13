@@ -36,6 +36,10 @@ void GravatarConfigWidgetTest::shouldHaveDefaultValue()
     MessageViewer::GravatarConfigWidget w;
     QCheckBox *checkBox = qFindChild<QCheckBox *>(&w, QStringLiteral("gravatarcheckbox"));
     QVERIFY(checkBox);
+
+    QCheckBox *useDefaultImage = qFindChild<QCheckBox *>(&w, QLatin1String("usedefaultimage"));
+    QVERIFY(useDefaultImage);
+
 }
 
 QTEST_MAIN(GravatarConfigWidgetTest)

@@ -60,9 +60,9 @@ QVector<KMime::Types::Mailbox> resentToList(KMime::Message *message);
 
 struct xfaceSettings {
     xfaceSettings()
+        : photoWidth(60),
+          photoHeight(60)
     {
-        photoWidth = 60;
-        photoHeight = 60;
     }
 
     QString photoURL;
@@ -71,6 +71,7 @@ struct xfaceSettings {
 };
 
 xfaceSettings xface(const HeaderStyle *style, KMime::Message *message);
+void updateXFaceSettings(QImage photo, xfaceSettings &settings);
 
 }
 }

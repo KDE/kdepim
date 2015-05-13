@@ -38,6 +38,13 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     mEnableGravatarSupport->setObjectName(QLatin1String("gravatarcheckbox"));
     mainLayout->addWidget(mEnableGravatarSupport);
 
+    //KF5 add i18n
+    mUseDefaultPixmap = new QCheckBox(QLatin1String("Use Default Image"));
+    mUseDefaultPixmap->setObjectName(QLatin1String("usedefaultimage"));
+    mainLayout->addWidget(mUseDefaultPixmap);
+
+    connect(mUseDefaultPixmap, SIGNAL(clicked(bool)), SIGNAL(configChanged(bool)));
+    connect(mEnableGravatarSupport, SIGNAL(clicked(bool)), SIGNAL(configChanged(bool)));
 }
 
 GravatarConfigWidget::~GravatarConfigWidget()
@@ -48,18 +55,19 @@ GravatarConfigWidget::~GravatarConfigWidget()
 void GravatarConfigWidget::save()
 {
     saveCheckBox(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
+    saveCheckBox(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
 }
 
 void GravatarConfigWidget::doLoadFromGlobalSettings()
 {
     loadWidget(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
-
+    loadWidget(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
 }
 
 void GravatarConfigWidget::doResetToDefaultsOther()
 {
     const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults( true );
-    loadWidget(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
+    doLoadFromGlobalSettings();
     GlobalSettings::self()->useDefaults( bUseDefaults );
 }
 

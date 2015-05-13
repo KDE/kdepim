@@ -19,6 +19,7 @@
 */
 
 #include "gravatarcreatejob.h"
+#include "pimcommon/gravatar/gravatarresolvurljob.h"
 
 using namespace KABGravatar;
 
@@ -40,7 +41,15 @@ bool GravatarCreateJob::canStart()
 
 void GravatarCreateJob::start()
 {
-
+    if (canStart()) {
+        PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
+        job->setEmail(mEmail);
+        connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
+        connect(job, SIGNAL(resolvUrl(KUrl)), this, SIGNAL(resolvedUrl(KUrl)));
+        job->start();
+    } else {
+        deleteLater();
+    }
 }
 
 QString GravatarCreateJob::email() const
@@ -53,4 +62,10 @@ void GravatarCreateJob::setEmail(const QString &email)
     mEmail = email;
 }
 
-
+void GravatarCreateJob::slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job)
+{
+    if (job) {
+        Q_EMIT gravatarPixmap(job->pixmap());
+    }
+    deleteLater();
+}

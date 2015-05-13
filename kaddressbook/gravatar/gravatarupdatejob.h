@@ -24,7 +24,10 @@
 
 #include <QObject>
 #include <AkonadiCore/Item>
-
+#include <KUrl>
+namespace PimCommon {
+class GravatarResolvUrlJob;
+}
 namespace KABGravatar {
 class GravatarUpdateJob : public QObject
 {
@@ -41,6 +44,13 @@ public:
 
     Akonadi::Item item() const;
     void setItem(const Akonadi::Item &item);
+
+Q_SIGNALS:
+    void resolvedUrl(const KUrl &url);
+    void gravatarPixmap(const QPixmap &pix);
+
+private Q_SLOTS:
+    void slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job);
 
 private:
     QString mEmail;

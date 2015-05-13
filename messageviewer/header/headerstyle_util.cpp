@@ -266,6 +266,22 @@ QVector<KMime::Types::Mailbox> resentToList(KMime::Message *message)
     return resentTo;
 }
 
+void updateXFaceSettings(QImage photo, xfaceSettings &settings)
+{
+    if ( !photo.isNull() ) {
+        settings.photoWidth = photo.width();
+        settings.photoHeight = photo.height();
+        // scale below 60, otherwise it can get way too large
+        if ( settings.photoHeight > 60 ) {
+            double ratio = ( double )settings.photoHeight / ( double )settings.photoWidth;
+            settings.photoHeight = 60;
+            settings.photoWidth = (int)( 60 / ratio );
+            photo = photo.scaled( settings.photoWidth, settings.photoHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+        }
+        settings.photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( photo );
+    }
+}
+
 xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *message)
 {
 
@@ -296,36 +312,14 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
             if (photoMemento->photo().isIntern()) {
                 // get photo data and convert to data: url
                 QImage photo = photoMemento->photo().data();
-                if (!photo.isNull()) {
-                    settings.photoWidth = photo.width();
-                    settings.photoHeight = photo.height();
-                    // scale below 60, otherwise it can get way too large
-                    if (settings.photoHeight > 60) {
-                        double ratio = (double)settings.photoHeight / (double)settings.photoWidth;
-                        settings.photoHeight = 60;
-                        settings.photoWidth = (int)(60 / ratio);
-                        photo = photo.scaled(settings.photoWidth, settings.photoHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-                    }
-                    settings.photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl(photo);
-                }
+                updateXFaceSettings(photo, settings);
             } else if (!photoMemento->photo().url().isEmpty()){
                 settings.photoURL = photoMemento->photo().url();
                 if ( settings.photoURL.startsWith(QLatin1Char('/')) )
                     settings.photoURL.prepend( QLatin1String("file:") );
-            } else if (!photoMemento->gravatar().isNull()) {
-                QImage photo = photoMemento->gravatar().toImage();
-                if ( !photo.isNull() ) {
-                    settings.photoWidth = photo.width();
-                    settings.photoHeight = photo.height();
-                    // scale below 60, otherwise it can get way too large
-                    if ( settings.photoHeight > 60 ) {
-                        double ratio = ( double )settings.photoHeight / ( double )settings.photoWidth;
-                        settings.photoHeight = 60;
-                        settings.photoWidth = (int)( 60 / ratio );
-                        photo = photo.scaled( settings.photoWidth, settings.photoHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
-                    }
-                    settings.photoURL = MessageViewer::HeaderStyleUtil::imgToDataUrl( photo );
-                }
+            } else if (!photoMemento->gravatarPixmap().isNull()) {
+                QImage photo = photoMemento->gravatarPixmap().toImage();
+                updateXFaceSettings(photo, settings);
             }
         } else {
             // if the memento is not finished yet, use other photo sources instead

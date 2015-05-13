@@ -22,7 +22,11 @@
 #define GRAVATARCREATEJOB_H
 
 #include <QObject>
-#include <QUrl>
+#include <KUrl>
+
+namespace PimCommon {
+class GravatarResolvUrlJob;
+}
 
 namespace KABGravatar {
 class GravatarCreateJob : public QObject
@@ -38,8 +42,13 @@ public:
     QString email() const;
     void setEmail(const QString &email);
 
+
 Q_SIGNALS:
-    void resolvedUrl(const QUrl &url);
+    void resolvedUrl(const KUrl &url);
+    void gravatarPixmap(const QPixmap &pix);
+
+private Q_SLOTS:
+    void slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *);
 
 private:
     QString mEmail;
