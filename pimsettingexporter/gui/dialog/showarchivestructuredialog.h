@@ -19,13 +19,12 @@
 #define SHOWARCHIVESTRUCTUREDIALOG_H
 
 #include <QDialog>
-#include "pimsettingexporter_export.h"
 class QTreeWidget;
 class QTreeWidgetItem;
 class KArchiveEntry;
 class KArchiveDirectory;
 
-class PIMSETTINGEXPORTER_EXPORT ShowArchiveStructureDialog : public QDialog
+class ShowArchiveStructureDialog : public QDialog
 {
     Q_OBJECT
 public:

@@ -18,11 +18,12 @@
 #ifndef TEMPLATESELECTION_H
 #define TEMPLATESELECTION_H
 
+#include "pimsettingexporter_export.h"
 #include <QHash>
 #include <QDomDocument>
 #include "utils.h"
 
-class TemplateSelection
+class PIMSETTINGEXPORTER_EXPORT TemplateSelection
 {
 public:
     TemplateSelection(const QString &path = QString());

@@ -18,14 +18,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
 #ifndef GRAVATARUPDATEJOB_H
 #define GRAVATARUPDATEJOB_H
 
 #include <QObject>
 #include <AkonadiCore/Item>
-
-namespace KABGravatar {
+#include <KUrl>
+namespace PimCommon
+{
+class GravatarResolvUrlJob;
+}
+namespace KABGravatar
+{
 class GravatarUpdateJob : public QObject
 {
     Q_OBJECT
@@ -42,7 +46,15 @@ public:
     Akonadi::Item item() const;
     void setItem(const Akonadi::Item &item);
 
+Q_SIGNALS:
+    void resolvedUrl(const KUrl &url);
+    void gravatarPixmap(const QPixmap &pix);
+
+private Q_SLOTS:
+    void slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job);
+
 private:
+    void updatePixmap(const QPixmap &pix);
     QString mEmail;
     Akonadi::Item mItem;
 };

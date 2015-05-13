@@ -212,6 +212,9 @@ set(libpimcommon_temporary_SRCS
 
 set(libpimcommon_gravatar_SRCS
    gravatar/gravatarresolvurljob.cpp
+   gravatar/gravatarcache.cpp
+   gravatar/widgets/gravatardownloadpixmapwidget.cpp
+   gravatar/widgets/gravatardownloadpixmapdialog.cpp 
 )
 
 set(libpimcommon_SRCS
@@ -318,6 +321,9 @@ add_subdirectory(storageservice/dropbox/icons/)
 add_subdirectory(texttospeech/tests)
 
 add_subdirectory(util/autotests)
+
+add_subdirectory(gravatar/autotests)
+add_subdirectory(gravatar/tests)
 
 if( LibKGAPI2_FOUND )
   add_subdirectory(storageservice/gdrive/tests/)

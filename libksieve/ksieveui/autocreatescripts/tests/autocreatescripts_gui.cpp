@@ -16,8 +16,6 @@
 */
 
 #include <qdebug.h>
-
-#include <QDebug>
 #include <QApplication>
 #include <KAboutData>
 #include <KLocalizedString>

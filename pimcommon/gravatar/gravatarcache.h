@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,33 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef LOGWIDGET_H
-#define LOGWIDGET_H
+#ifndef GRAVATARCACHE_H
+#define GRAVATARCACHE_H
 
-#include <QWidget>
-#include "pimsettingexporter_export.h"
-namespace KPIM
-{
-class CustomLogWidget;
-}
-
-class PIMSETTINGEXPORTER_EXPORT LogWidget : public QWidget
+#include <QPixmap>
+#include <QHash>
+namespace PimCommon {
+class GravatarCache
 {
 public:
-    explicit LogWidget(QWidget *parent);
-    ~LogWidget();
+    static GravatarCache *self();
 
-    void addInfoLogEntry(const QString &log);
-    void addErrorLogEntry(const QString &log);
-    void addTitleLogEntry(const QString &log);
-    void addEndLineLogEntry();
-    void clear();
-    QString toHtml() const;
-    QString toPlainText() const;
-    bool isEmpty() const;
+
+    GravatarCache();
+    ~GravatarCache();
+
+    void saveGravatarPixmap(const QString &hashStr, const QPixmap &pixmap);
+
+    QPixmap loadGravatarPixmap(const QString &hashStr, bool &gravatarStored);
+
+    int maximumSize() const;
+    void setMaximumSize(int maximumSize);
 
 private:
-    KPIM::CustomLogWidget *mCustomLogWidget;
+    QHash<QString, QPixmap> mCachePixmap;
+    int mMaximumSize;
 };
+}
 
-#endif // LOGWIDGET_H
+#endif // GRAVATARCACHE_H

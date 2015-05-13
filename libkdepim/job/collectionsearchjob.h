@@ -29,6 +29,9 @@
 #include <AkonadiCore/Collection>
 #include <QStringList>
 
+namespace KPIM
+{
+
 class KDEPIM_EXPORT CollectionSearchJob : public KJob
 {
     Q_OBJECT
@@ -50,5 +53,7 @@ private:
     Akonadi::Collection::List mMatchingCollections;
     Akonadi::Collection::List mAncestors;
 };
+
+}
 
 #endif

@@ -20,13 +20,17 @@
 
 #include "pimcommon_export.h"
 #include <QObject>
-
-namespace PimCommon {
+#include <KUrl>
+#include <QPixmap>
+#include <QNetworkReply>
+class QNetworkAccessManager;
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT GravatarResolvUrlJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarResolvUrlJob(QObject *parent = 0);
+    explicit GravatarResolvUrlJob(QObject *parent = Q_NULLPTR);
     ~GravatarResolvUrlJob();
 
     bool canStart() const;
@@ -35,8 +39,43 @@ public:
     QString email() const;
     void setEmail(const QString &email);
 
+    KUrl generateGravatarUrl();
+
+    bool hasGravatar() const;
+
+    QString calculatedHash() const;
+
+    void setSize(int size);
+
+    int size() const;
+
+    QPixmap pixmap() const;
+
+    bool useDefaultPixmap() const;
+    void setUseDefaultPixmap(bool useDefaultPixmap);
+
+    bool useCache() const;
+    void setUseCache(bool useCache);
+
+Q_SIGNALS:
+    void finished(PimCommon::GravatarResolvUrlJob *);
+    void resolvUrl(const KUrl &url);
+
+private Q_SLOTS:
+    void slotFinishLoadPixmap(QNetworkReply *reply);
+    void slotError(QNetworkReply::NetworkError error);
+
 private:
+    QPixmap mPixmap;
+    KUrl createUrl();
+    QString calculateHash();
     QString mEmail;
+    QString mCalculatedHash;
+    QNetworkAccessManager *mNetworkAccessManager;
+    int mSize;
+    bool mHasGravatar;
+    bool mUseDefaultPixmap;
+    bool mUseCache;
 };
 }
 

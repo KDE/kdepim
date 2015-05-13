@@ -18,8 +18,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
 #include "gravatarupdatejob.h"
+
+#include <gravatar/gravatarresolvurljob.h>
 
 using namespace KABGravatar;
 
@@ -36,12 +37,21 @@ GravatarUpdateJob::~GravatarUpdateJob()
 
 void GravatarUpdateJob::start()
 {
+    if (canStart()) {
+        PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
+        job->setEmail(mEmail);
+        connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
+        connect(job, SIGNAL(resolvUrl(KUrl)), this, SIGNAL(resolvedUrl(KUrl)));
+        job->start();
+    } else {
+        deleteLater();
+    }
 
 }
 
 bool GravatarUpdateJob::canStart() const
 {
-    return !mEmail.trimmed().isEmpty() && mItem.isValid();
+    return !mEmail.trimmed().isEmpty() && (mEmail.contains(QLatin1Char('@')));
 }
 
 QString GravatarUpdateJob::email() const
@@ -64,3 +74,21 @@ void GravatarUpdateJob::setItem(const Akonadi::Item &item)
     mItem = item;
 }
 
+void GravatarUpdateJob::slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job)
+{
+    if (job) {
+        const QPixmap pix = job->pixmap();
+        Q_EMIT gravatarPixmap(pix);
+        if (mItem.isValid()) {
+            updatePixmap(pix);
+            return;
+        }
+    }
+    deleteLater();
+}
+
+void GravatarUpdateJob::updatePixmap(const QPixmap &pix)
+{
+    //TODO
+    deleteLater();
+}

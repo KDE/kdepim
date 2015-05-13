@@ -19,14 +19,13 @@
 #define PIMSETTINGEXPORTERWINDOW_H
 #include <kxmlguiwindow.h>
 #include "utils.h"
-#include "pimsettingexporter_export.h"
 class LogWidget;
 class KRecentFilesAction;
 class QAction;
 class QCommandLineParser;
 class PimSettingsBackupRestoreUI;
 
-class PIMSETTINGEXPORTER_EXPORT PimSettingExporterWindow: public KXmlGuiWindow
+class PimSettingExporterWindow: public KXmlGuiWindow
 {
     Q_OBJECT
 public:

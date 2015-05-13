@@ -28,6 +28,9 @@
 #include <QStringList>
 #include <AkonadiCore/Collection>
 
+namespace KPIM
+{
+
 struct KDEPIM_EXPORT Person {
     Person(): rootCollection(-1), updateDisplayName(false) {};
     QString name;
@@ -43,6 +46,9 @@ struct KDEPIM_EXPORT Person {
     bool updateDisplayName;
 };
 
-Q_DECLARE_METATYPE(Person);
+
+}
+
+Q_DECLARE_METATYPE(KPIM::Person);
 
 #endif

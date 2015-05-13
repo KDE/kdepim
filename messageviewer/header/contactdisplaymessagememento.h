@@ -28,6 +28,10 @@
 #include <QObject>
 
 class KJob;
+namespace PimCommon
+{
+class GravatarResolvUrlJob;
+}
 
 namespace MessageViewer
 {
@@ -46,6 +50,8 @@ public:
 
     void detach();
 
+    QPixmap gravatarPixmap() const;
+
 Q_SIGNALS:
     // TODO: Factor our update and detach into base class
     void update(MessageViewer::Viewer::UpdateMode);
@@ -54,12 +60,15 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotSearchJobFinished(KJob *job);
 
+    void slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *);
 private:
-    void searchPhoto(const KContacts::AddresseeList &list);
-    bool mFinished;
-    bool mMailAllowToRemoteContent;
+    bool searchPhoto(const KContacts::AddresseeList &list);
     Viewer::DisplayFormatMessage mForceDisplayTo;
     KContacts::Picture mPhoto;
+    QPixmap mGravatarPixmap;
+    QString mEmailAddress;
+    bool mFinished;
+    bool mMailAllowToRemoteContent;
 };
 
 }

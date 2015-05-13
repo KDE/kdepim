@@ -109,6 +109,7 @@ set(libmessageviewer_widgets_SRCS
   widgets/eventdatetimewidget.cpp
   widgets/mailsourceviewer.cpp
   widgets/mailsourceviewtextbrowserwidget.cpp
+  widgets/gravatarconfigwidget.cpp
 )
 
 set(libmessageviewer_header_SRCS

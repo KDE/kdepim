@@ -15,35 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SELECTIONTYPEDIALOG_H
-#define SELECTIONTYPEDIALOG_H
+#ifndef LOGWIDGET_H
+#define LOGWIDGET_H
 
-#include <QDialog>
-#include "utils.h"
-#include "pimsettingexporter_export.h"
-class SelectionTypeTreeWidget;
-
-class PIMSETTINGEXPORTER_EXPORT SelectionTypeDialog : public QDialog
+#include <QWidget>
+namespace KPIM
 {
-    Q_OBJECT
+class CustomLogWidget;
+}
+
+class LogWidget : public QWidget
+{
 public:
-    explicit SelectionTypeDialog(QWidget *parent = Q_NULLPTR);
-    ~SelectionTypeDialog();
+    explicit LogWidget(QWidget *parent);
+    ~LogWidget();
 
-    QHash<Utils::AppsType, Utils::importExportParameters> storedType() const;
+    void addInfoLogEntry(const QString &log);
+    void addErrorLogEntry(const QString &log);
+    void addTitleLogEntry(const QString &log);
+    void addEndLineLogEntry();
+    void clear();
+    QString toHtml() const;
+    QString toPlainText() const;
+    bool isEmpty() const;
 
-    void loadTemplate(const QString &fileName);
-
-private Q_SLOTS:
-    void slotSelectAll();
-    void slotUnselectAll();
-
-    void slotSaveAsTemplate();
-    void slotLoadTemplate();
 private:
-    void readConfig();
-    void writeConfig();
-    SelectionTypeTreeWidget *mSelectionTreeWidget;
+    KPIM::CustomLogWidget *mCustomLogWidget;
 };
 
-#endif // SELECTIONTYPEDIALOG_H
+#endif // LOGWIDGET_H
