@@ -38,6 +38,26 @@ void GravatarResolvUrlJobTest::shouldHaveDefaultValue()
     QCOMPARE(job.hasGravatar(), false);
     QCOMPARE(job.pixmap().isNull(), true);
     QCOMPARE(job.useDefaultPixmap(), false);
+    QCOMPARE(job.useCache(), false);
+}
+
+void GravatarResolvUrlJobTest::shouldChangeValue()
+{
+    PimCommon::GravatarResolvUrlJob job;
+    bool useCache = true;
+    job.setUseCache(useCache);
+    QCOMPARE(job.useCache(), useCache);
+    useCache = false;
+    job.setUseCache(useCache);
+    QCOMPARE(job.useCache(), useCache);
+
+    bool useDefaultPixmap = true;
+    job.setUseDefaultPixmap(useDefaultPixmap);
+    QCOMPARE(job.useDefaultPixmap(), useDefaultPixmap );
+
+    useDefaultPixmap = false;
+    job.setUseDefaultPixmap(useDefaultPixmap);
+    QCOMPARE(job.useDefaultPixmap(), useDefaultPixmap );
 }
 
 void GravatarResolvUrlJobTest::shouldChangeSize()

@@ -29,6 +29,7 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldChangeValue();
     void shouldNotStart();
 
     void shouldGenerateGravatarUrl_data();
