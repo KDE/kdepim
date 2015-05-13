@@ -69,7 +69,7 @@ void GravatarResolvUrlJob::start()
         QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
     } else {
-        //TODO return message Error.
+        qDebug() << "Gravatar can not start";
         deleteLater();
     }
 }
@@ -119,7 +119,6 @@ void GravatarResolvUrlJob::setUseDefaultPixmap(bool useDefaultPixmap)
     mUseDefaultPixmap = useDefaultPixmap;
 }
 
-
 int GravatarResolvUrlJob::size() const
 {
     return mSize;
@@ -144,7 +143,6 @@ QString GravatarResolvUrlJob::calculatedHash() const
 {
     return mCalculatedHash;
 }
-
 
 KUrl GravatarResolvUrlJob::createUrl()
 {

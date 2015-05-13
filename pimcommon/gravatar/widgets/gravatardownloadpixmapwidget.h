@@ -32,12 +32,15 @@ public:
     explicit GravatarDownloadPixmapWidget(QWidget *parent = 0);
     ~GravatarDownloadPixmapWidget();
 
+    QPixmap gravatarPixmap() const;
+
 private Q_SLOTS:
     void slotSearchButton();
 
     void slotTextChanged(const QString &text);
     void slotResolvUrlFinish(PimCommon::GravatarResolvUrlJob *job);
 private:
+    QPixmap mGravatarPixmap;
     QLabel *mResultLabel;
     QLineEdit *mLineEdit;
     QPushButton *mGetPixmapButton;
