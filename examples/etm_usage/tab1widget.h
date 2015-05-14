@@ -30,7 +30,7 @@ class Tab1Widget : public QWidget
 {
     Q_OBJECT
 public:
-    Tab1Widget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    Tab1Widget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
 
 };
 

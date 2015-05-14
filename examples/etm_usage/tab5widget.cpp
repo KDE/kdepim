@@ -43,7 +43,7 @@
 class Tab5TreeWidget : public EntityTreeWidget
 {
 public:
-    Tab5TreeWidget(QWidget *parent = 0)
+    Tab5TreeWidget(QWidget *parent = Q_NULLPTR)
         : EntityTreeWidget(parent)
     {
     }

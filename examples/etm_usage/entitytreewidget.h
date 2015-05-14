@@ -39,7 +39,7 @@ class EntityTreeWidget : public QWidget
 {
     Q_OBJECT
 public:
-    EntityTreeWidget(QWidget *parent = 0);
+    EntityTreeWidget(QWidget *parent = Q_NULLPTR);
     virtual ~EntityTreeWidget();
 
     QTreeView *view() const;

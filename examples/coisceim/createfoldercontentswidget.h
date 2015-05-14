@@ -34,7 +34,7 @@ class CreateFolderContentsWidget : public QStackedWidget
 {
     Q_OBJECT
 public:
-    explicit CreateFolderContentsWidget(Trip *trip, int role, const QString &type, QWidget *parent = 0);
+    explicit CreateFolderContentsWidget(Trip *trip, int role, const QString &type, QWidget *parent = Q_NULLPTR);
 
     void clear();
 

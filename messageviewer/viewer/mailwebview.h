@@ -49,7 +49,7 @@ class MESSAGEVIEWER_EXPORT MailWebView : public KWebView
     Q_OBJECT
 public:
 
-    explicit MailWebView(KActionCollection *actionCollection = 0, QWidget *parent = 0);
+    explicit MailWebView(KActionCollection *actionCollection = Q_NULLPTR, QWidget *parent = Q_NULLPTR);
     ~MailWebView();
 
     enum FindFlag {

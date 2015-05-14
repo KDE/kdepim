@@ -29,10 +29,10 @@
 
 using namespace KSieveUi;
 SieveActionKeep::SieveActionKeep(QObject *parent)
-    : SieveAction(QLatin1String("keep"), i18n("Keep"), parent)
+    : SieveAction(QStringLiteral("keep"), i18n("Keep"), parent)
 {
-    mHasImapFlag4Support = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags"));
-    mHasFlagSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imapflags")) || mHasImapFlag4Support;
+    mHasImapFlag4Support = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("imap4flags"));
+    mHasFlagSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("imapflags")) || mHasImapFlag4Support;
 }
 
 SieveAction *SieveActionKeep::newAction()
@@ -72,7 +72,7 @@ QWidget *SieveActionKeep::createParamWidget(QWidget *parent) const
 
         SelectFlagsWidget *flagsWidget = new SelectFlagsWidget;
         connect(flagsWidget, &SelectFlagsWidget::valueChanged, this, &SieveActionKeep::valueChanged);
-        flagsWidget->setObjectName(QLatin1String("flagswidget"));
+        flagsWidget->setObjectName(QStringLiteral("flagswidget"));
         lay->addWidget(flagsWidget);
         return w;
     } else {

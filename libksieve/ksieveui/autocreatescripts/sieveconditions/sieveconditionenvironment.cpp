@@ -51,20 +51,20 @@ QWidget *SieveConditionEnvironment::createParamWidget(QWidget *parent) const
 
     QLineEdit *item = new QLineEdit;
     QStringList itemList;
-    itemList << QLatin1String("domain")
-             << QLatin1String("host")
-             << QLatin1String("location")
-             << QLatin1String("name")
-             << QLatin1String("phase")
-             << QLatin1String("remote-host")
-             << QLatin1String("remote-ip")
-             << QLatin1String("version");
+    itemList << QStringLiteral("domain")
+             << QStringLiteral("host")
+             << QStringLiteral("location")
+             << QStringLiteral("name")
+             << QStringLiteral("phase")
+             << QStringLiteral("remote-host")
+             << QStringLiteral("remote-ip")
+             << QStringLiteral("version");
     QCompleter *completer = new QCompleter(itemList, w);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     item->setCompleter(completer);
     connect(item, &QLineEdit::textChanged, this, &SieveConditionEnvironment::valueChanged);
 
-    item->setObjectName(QLatin1String("item"));
+    item->setObjectName(QStringLiteral("item"));
     grid->addWidget(item, 0, 1);
 
     lab = new QLabel(i18n("Value:"));
@@ -72,7 +72,7 @@ QWidget *SieveConditionEnvironment::createParamWidget(QWidget *parent) const
 
     QLineEdit *value = new QLineEdit;
     connect(value, &QLineEdit::textChanged, this, &SieveConditionEnvironment::valueChanged);
-    value->setObjectName(QLatin1String("value"));
+    value->setObjectName(QStringLiteral("value"));
     grid->addWidget(value, 1, 1);
 
     return w;
@@ -80,10 +80,10 @@ QWidget *SieveConditionEnvironment::createParamWidget(QWidget *parent) const
 
 QString SieveConditionEnvironment::code(QWidget *w) const
 {
-    const QLineEdit *item =  w->findChild<QLineEdit *>(QLatin1String("item"));
+    const QLineEdit *item =  w->findChild<QLineEdit *>(QStringLiteral("item"));
     const QString itemStr = item->text();
 
-    const QLineEdit *value =  w->findChild<QLineEdit *>(QLatin1String("value"));
+    const QLineEdit *value =  w->findChild<QLineEdit *>(QStringLiteral("value"));
     const QString valueStr = value->text();
 
     return QStringLiteral("environment \"%1\" \"%2\"").arg(itemStr).arg(valueStr);
@@ -91,7 +91,7 @@ QString SieveConditionEnvironment::code(QWidget *w) const
 
 QStringList SieveConditionEnvironment::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("environment");
+    return QStringList() << QStringLiteral("environment");
 }
 
 bool SieveConditionEnvironment::needCheckIfServerHasCapability() const
@@ -101,7 +101,7 @@ bool SieveConditionEnvironment::needCheckIfServerHasCapability() const
 
 QString SieveConditionEnvironment::serverNeedsCapability() const
 {
-    return QLatin1String("environment");
+    return QStringLiteral("environment");
 }
 
 QString SieveConditionEnvironment::help() const
@@ -119,10 +119,10 @@ bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 if (index == 0) {
-                    QLineEdit *item =  w->findChild<QLineEdit *>(QLatin1String("item"));
+                    QLineEdit *item =  w->findChild<QLineEdit *>(QStringLiteral("item"));
                     item->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else if (index == 1) {
-                    QLineEdit *value =  w->findChild<QLineEdit *>(QLatin1String("value"));
+                    QLineEdit *value =  w->findChild<QLineEdit *>(QStringLiteral("value"));
                     value->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     tooManyArgument(tagName, index, 2, error);

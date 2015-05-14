@@ -27,7 +27,7 @@
 #include "multiagenda/multiagendaview.h"
 #include "timeline/timelineview.h"
 #include "prefs.h"
-
+#include "calendarview_debug.h"
 #include <calendarsupport/collectionselection.h>
 
 #include <Akonadi/Calendar/IncidenceChanger>

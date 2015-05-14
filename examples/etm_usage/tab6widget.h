@@ -35,7 +35,7 @@ class Tab6Widget : public QWidget
 {
     Q_OBJECT
 public:
-    Tab6Widget(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    Tab6Widget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
 
 private:
     QTreeView *m_itemView;

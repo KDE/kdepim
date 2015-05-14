@@ -31,7 +31,7 @@
 using namespace KSieveUi;
 
 SieveActionAddHeader::SieveActionAddHeader(QObject *parent)
-    : SieveActionAbstractEditHeader(QLatin1String("addheader"), i18n("Add header"), parent)
+    : SieveActionAbstractEditHeader(QStringLiteral("addheader"), i18n("Add header"), parent)
 {
 }
 
@@ -48,7 +48,7 @@ QWidget *SieveActionAddHeader::createParamWidget(QWidget *parent) const
     w->setLayout(grid);
 
     SelectAddHeaderPositionCombobox *combo = new SelectAddHeaderPositionCombobox;
-    combo->setObjectName(QLatin1String("selectposition"));
+    combo->setObjectName(QStringLiteral("selectposition"));
     connect(combo, &SelectAddHeaderPositionCombobox::valueChanged, this, &SieveActionAddHeader::valueChanged);
     grid->addWidget(combo, 0, 0);
 
@@ -57,7 +57,7 @@ QWidget *SieveActionAddHeader::createParamWidget(QWidget *parent) const
 
     QLineEdit *headerEdit = new QLineEdit;
     connect(headerEdit, &QLineEdit::textChanged, this, &SieveActionAddHeader::valueChanged);
-    headerEdit->setObjectName(QLatin1String("headeredit"));
+    headerEdit->setObjectName(QStringLiteral("headeredit"));
     grid->addWidget(headerEdit, 0, 2);
 
     lab = new QLabel(i18n("value:"));
@@ -65,7 +65,7 @@ QWidget *SieveActionAddHeader::createParamWidget(QWidget *parent) const
 
     QLineEdit *valueEdit = new QLineEdit;
     connect(valueEdit, &QLineEdit::textChanged, this, &SieveActionAddHeader::valueChanged);
-    valueEdit->setObjectName(QLatin1String("valueedit"));
+    valueEdit->setObjectName(QStringLiteral("valueedit"));
     grid->addWidget(valueEdit, 1, 2);
 
     return w;
@@ -110,13 +110,13 @@ bool SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidg
 
 QString SieveActionAddHeader::code(QWidget *w) const
 {
-    const SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox *>(QLatin1String("selectposition"));
+    const SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox *>(QStringLiteral("selectposition"));
     const QString position = combo->code();
 
-    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("headeredit"));
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QStringLiteral("headeredit"));
     const QString headerStr = edit->text();
 
-    const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("valueedit"));
+    const QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("valueedit"));
     const QString valueStr = value->text();
 
     return QStringLiteral("addheader %1 \"%2\" \"%3\";").arg(position).arg(headerStr).arg(valueStr);

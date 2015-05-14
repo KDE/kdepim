@@ -9,6 +9,7 @@ include_directories(
 set(viewerapp_SRCS
   main.cpp
   mainwindow.cpp
+  ../calendarview_debug.cpp
 )
 
 kconfig_add_kcfg_files(viewerapp_SRCS settings.kcfgc)

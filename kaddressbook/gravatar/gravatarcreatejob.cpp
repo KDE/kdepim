@@ -41,9 +41,9 @@ bool GravatarCreateJob::canStart()
 
 void GravatarCreateJob::start()
 {
-    if (canStart()) {
-        PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
-        job->setEmail(mEmail);
+    PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
+    job->setEmail(mEmail);
+    if (job->canStart()) {
         connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
         connect(job, SIGNAL(resolvUrl(KUrl)), this, SIGNAL(resolvedUrl(KUrl)));
         job->start();

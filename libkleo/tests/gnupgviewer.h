@@ -46,7 +46,7 @@ class GnuPGViewer : public QTextEdit
 {
     Q_OBJECT
 public:
-    GnuPGViewer(QWidget *parent = 0);
+    GnuPGViewer(QWidget *parent = Q_NULLPTR);
     ~GnuPGViewer();
 
     void setProcess(Kleo::GnuPGProcessBase *process);

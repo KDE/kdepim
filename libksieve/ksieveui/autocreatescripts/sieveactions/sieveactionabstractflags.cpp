@@ -51,10 +51,10 @@ bool SieveActionAbstractFlags::setParamWidgetValue(const QDomElement &element, Q
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("list")) {
-                SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
+                SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QStringLiteral("flagswidget"));
                 flagsWidget->setFlags(AutoCreateScriptUtil::listValue(e));
             } else if (tagName == QLatin1String("str")) {
-                SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
+                SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QStringLiteral("flagswidget"));
                 flagsWidget->setFlags(QStringList() << e.text());
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -80,10 +80,10 @@ QString SieveActionAbstractFlags::code(QWidget *w) const
 
 QStringList SieveActionAbstractFlags::needRequires(QWidget *) const
 {
-    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags"))) {
-        return QStringList() << QLatin1String("imap4flags");
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("imap4flags"))) {
+        return QStringList() << QStringLiteral("imap4flags");
     } else {
-        return QStringList() << QLatin1String("imapflags");
+        return QStringList() << QStringLiteral("imapflags");
     }
 }
 
@@ -94,10 +94,10 @@ bool SieveActionAbstractFlags::needCheckIfServerHasCapability() const
 
 QString SieveActionAbstractFlags::serverNeedsCapability() const
 {
-    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags"))) {
-        return QLatin1String("imap4flags");
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("imap4flags"))) {
+        return QStringLiteral("imap4flags");
     } else {
-        return QLatin1String("imapflags");
+        return QStringLiteral("imapflags");
     }
 }
 

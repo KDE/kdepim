@@ -37,10 +37,10 @@ GravatarDownloadPixmapDialogTest::~GravatarDownloadPixmapDialogTest()
 void GravatarDownloadPixmapDialogTest::shouldHaveDefaultValue()
 {
     PimCommon::GravatarDownloadPixmapDialog dlg;
-    PimCommon::GravatarDownloadPixmapWidget *widget = qFindChild<PimCommon::GravatarDownloadPixmapWidget *>(&dlg, QStringLiteral("gravatarwidget"));
+    PimCommon::GravatarDownloadPixmapWidget *widget = dlg.findChild<PimCommon::GravatarDownloadPixmapWidget *>(QStringLiteral("gravatarwidget"));
     QVERIFY(widget);
 
-    QDialogButtonBox *buttonBox = qFindChild<QDialogButtonBox *>(&dlg, QStringLiteral("buttonbox"));
+    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
     QVERIFY(buttonBox);
 }
 

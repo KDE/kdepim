@@ -30,6 +30,8 @@ public:
     explicit GravatarDownloadPixmapDialog(QWidget *parent = Q_NULLPTR);
     ~GravatarDownloadPixmapDialog();
 
+    QPixmap gravatarPixmap() const;
+
 private Q_SLOTS:
     void slotAccepted();
 

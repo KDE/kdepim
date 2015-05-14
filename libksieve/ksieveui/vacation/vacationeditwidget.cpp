@@ -69,7 +69,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     // Subject
     ++row;
     mSubject = new QLineEdit(this);
-    mSubject->setObjectName(QLatin1String("mSubject"));
+    mSubject->setObjectName(QStringLiteral("mSubject"));
     mMailAliasesEdit->setClearButtonEnabled(true);
     QLabel *tmpLabel = new QLabel(i18n("&Subject of the vacation mail:"), this);
     tmpLabel->setBuddy(mSubject);

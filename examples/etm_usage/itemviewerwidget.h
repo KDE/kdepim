@@ -45,7 +45,7 @@ class ItemViewerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    ItemViewerWidget(QItemSelectionModel *selectionModel, QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ItemViewerWidget(QItemSelectionModel *selectionModel, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
 
 private Q_SLOTS:
     void selectionChanged(const QItemSelection selected, const QItemSelection &deselected);

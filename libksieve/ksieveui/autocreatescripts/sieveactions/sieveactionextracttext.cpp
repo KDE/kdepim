@@ -29,7 +29,7 @@
 
 using namespace KSieveUi;
 SieveActionExtractText::SieveActionExtractText(QObject *parent)
-    : SieveAction(QLatin1String("extracttext"), i18n("Extract Text"), parent)
+    : SieveAction(QStringLiteral("extracttext"), i18n("Extract Text"), parent)
 {
 }
 
@@ -51,7 +51,7 @@ QWidget *SieveActionExtractText::createParamWidget(QWidget *parent) const
     QSpinBox *nbCharacters = new QSpinBox;
     nbCharacters->setMinimum(1);
     nbCharacters->setMaximum(99999);
-    nbCharacters->setObjectName(QLatin1String("numberOfCharacters"));
+    nbCharacters->setObjectName(QStringLiteral("numberOfCharacters"));
     grid->addWidget(nbCharacters, 0, 1);
     connect(nbCharacters, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &SieveActionExtractText::valueChanged);
 
@@ -60,7 +60,7 @@ QWidget *SieveActionExtractText::createParamWidget(QWidget *parent) const
 
     QLineEdit *variableName = new QLineEdit;
     connect(variableName, &QLineEdit::textChanged, this, &SieveActionExtractText::valueChanged);
-    variableName->setObjectName(QLatin1String("variablename"));
+    variableName->setObjectName(QStringLiteral("variablename"));
     grid->addWidget(variableName, 1, 1);
 
     return w;
