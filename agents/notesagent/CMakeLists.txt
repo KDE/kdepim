@@ -25,8 +25,10 @@ target_link_libraries(akonadi_notes_agent
   KF5::IdentityManagement
   KF5::Mime
   KF5::AkonadiMime
+  KF5::AkonadiAgentBase
   KF5::KIOCore
   KF5::NotifyConfig
+  KF5::DBusAddons
   noteshared
   pimcommon
 )

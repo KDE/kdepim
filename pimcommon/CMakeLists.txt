@@ -262,29 +262,33 @@ generate_export_header(pimcommon BASE_NAME pimcommon)
 
 if( KF5GAPI_FOUND )
   target_link_libraries(pimcommon
-    KF5::GAPIDrive
+    PUBLIC KF5::GAPIDrive
   )
 endif()
 
 if ( Qt5TextToSpeech_FOUND ) 
   target_link_libraries(pimcommon
-    Qt5::TextToSpeech
+    PUBLIC Qt5::TextToSpeech
   )
 endif()
 
 target_link_libraries(pimcommon
+PUBLIC
     KF5::Contacts
     KF5::AkonadiContact
     KF5::AkonadiCore
-    KF5::Codecs
-    KF5::SonnetCore
-    KF5::NewStuff
-    KF5::Wallet
     kdepim
     KF5::IMAP
     KF5::AkonadiWidgets
-    KF5::Archive
     Qt5::WebKitWidgets
+PRIVATE
+    KF5::Archive
+    KF5::Codecs
+    KF5::NewStuff
+    KF5::PimTextEdit
+    KF5::SonnetCore
+    KF5::Wallet
+    KF5::DBusAddons
 )
 
 set_target_properties(pimcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})

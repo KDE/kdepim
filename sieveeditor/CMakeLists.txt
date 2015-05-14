@@ -44,6 +44,7 @@ add_executable(sieveeditor ${sieveeditor_SRCS} )
 TARGET_LINK_LIBRARIES(sieveeditor 
                        KF5::NewStuff
                        KF5::DBusAddons 
+                       KF5::I18n
                        pimcommon 
                        ksieveui
                        kmanagesieve

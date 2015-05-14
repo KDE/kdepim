@@ -100,6 +100,7 @@ set_target_properties(akonadiconsole_bin PROPERTIES OUTPUT_NAME akonadiconsole)
 
 target_link_libraries(akonadiconsole_bin
   KF5::AkonadiCore
+  KF5::AkonadiPrivate
   KF5::AkonadiContact
   
   KF5::AkonadiMime
@@ -109,6 +110,7 @@ target_link_libraries(akonadiconsole_bin
   messageviewer
   KF5::KCMUtils
   KF5::KIOCore
+  KF5::DBusAddons
   Qt5::Sql
 )
 

@@ -16,7 +16,7 @@ kconfig_add_kcfg_files(followupreminderlib_SRCS
 
 add_library( followupreminder ${followupreminderlib_SRCS} )
 generate_export_header(followupreminder BASE_NAME followupreminder)
-target_link_libraries( followupreminder KF5::AkonadiCore )
+target_link_libraries( followupreminder KF5::AkonadiCore KF5::ConfigGui Qt5::DBus )
 
 set_target_properties( followupreminder PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
@@ -50,7 +50,9 @@ target_link_libraries(akonadi_followupreminder_agent
   KF5::AkonadiAgentBase
   KF5::Mime
   KF5::CalendarCore
+  KF5::DBusAddons
   followupreminder
+  Qt5::Widgets
 )
 
 if( APPLE )

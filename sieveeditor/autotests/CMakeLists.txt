@@ -7,7 +7,7 @@ ki18n_wrap_ui(sieveedit_serversievesettings_source
 add_executable( serversievesettingstest  ${sieveedit_serversievesettings_source})
 add_test(serversievesettingstest serversievesettingstest)
 ecm_mark_as_test(serversievesettingstest)
-target_link_libraries( serversievesettingstest Qt5::Test Qt5::Widgets KF5::MailTransport)
+target_link_libraries( serversievesettingstest Qt5::Test Qt5::Widgets KF5::MailTransport KF5::I18n KF5::ConfigGui)
 
 #REACTIVATE
 if (false)

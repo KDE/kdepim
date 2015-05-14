@@ -124,14 +124,10 @@ target_link_libraries(kdepim
   KF5::Contacts
   KF5::Codecs
   KF5::Ldap
-  KF5::IdentityManagement
   KF5::KCMUtils
-  KF5::Mime
-  KF5::PimTextEdit
   KF5::Mime
   KF5::AkonadiCore
   KF5::AkonadiContact
-  KF5::AkonadiAgentBase
   KF5::AkonadiWidgets
   KF5::SonnetCore
   KF5::KCMUtils
@@ -144,8 +140,6 @@ target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   KF5::Contacts
   KF5::Codecs
   KF5::Ldap
-  KF5::IdentityManagement
-  KF5::PimTextEdit
   KF5::AkonadiCore
   KF5::AkonadiContact
 )

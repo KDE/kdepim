@@ -29,9 +29,13 @@ include_directories (
 )
 
 target_link_libraries(kdepimdbusinterfaces
+PUBLIC
     KF5::AkonadiCore
+PRIVATE
     KF5::AkonadiContact 
-    KF5::KIOCore
+    KF5::KIOWidgets
+    KF5::IconThemes
+    Qt5::DBus
 )
 
 set_target_properties(kdepimdbusinterfaces PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_VERSION})

@@ -178,6 +178,7 @@ target_link_libraries(ksieveui
   ksieve
   pimcommon
   kdepim
+  KF5::Archive
   KF5::AkonadiCore
   KF5::Mime
   KF5::IdentityManagement
