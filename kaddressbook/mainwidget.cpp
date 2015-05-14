@@ -352,7 +352,7 @@ void MainWidget::handleCommandLine(const QStringList &arguments)
     kaddressbook_options(&parser);
     parser.process(arguments);
 
-    if (parser.isSet(QLatin1String("import"))) {
+    if (parser.isSet(QStringLiteral("import"))) {
         for (const QString &url : parser.positionalArguments()) {
           importManager()->importFile(QUrl::fromUserInput(url));
         }

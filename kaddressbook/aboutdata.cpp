@@ -25,15 +25,15 @@
 #include <KLocalizedString>
 
 AboutData::AboutData()
-    : KAboutData(QLatin1String("kaddressbook"),
+    : KAboutData(QStringLiteral("kaddressbook"),
                  i18n("KAddressBook"),
-                 QLatin1String(KDEPIM_VERSION),
+                 QStringLiteral(KDEPIM_VERSION),
                  i18n("The KDE Address Book Application"),
                  KAboutLicense::GPL_V2,
                  i18n("Copyright © 2007–2015 KAddressBook authors"))
 {
-    addAuthor(i18n("Laurent Montel"), i18n("Current maintainer"),  QLatin1String("montel@kde.org"));
-    addAuthor(i18n("Tobias Koenig"),  i18n("Previous maintainer"), QLatin1String("tokoe@kde.org"));
+    addAuthor(i18n("Laurent Montel"), i18n("Current maintainer"),  QStringLiteral("montel@kde.org"));
+    addAuthor(i18n("Tobias Koenig"),  i18n("Previous maintainer"), QStringLiteral("tokoe@kde.org"));
 }
 
 AboutData::~AboutData()
