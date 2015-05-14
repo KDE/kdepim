@@ -49,6 +49,6 @@ struct KDEPIM_EXPORT Person {
 
 }
 
-Q_DECLARE_METATYPE(KPIM::Person);
+Q_DECLARE_METATYPE(KPIM::Person)
 
 #endif
