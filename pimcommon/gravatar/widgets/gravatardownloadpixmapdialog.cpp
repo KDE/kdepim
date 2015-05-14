@@ -45,5 +45,10 @@ GravatarDownloadPixmapDialog::~GravatarDownloadPixmapDialog()
 
 void GravatarDownloadPixmapDialog::slotAccepted()
 {
+    accept();
+}
 
+QPixmap GravatarDownloadPixmapDialog::gravatarPixmap() const
+{
+    return mGravatarDownloadPixmapWidget->gravatarPixmap();
 }

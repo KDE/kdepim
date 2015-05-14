@@ -665,9 +665,7 @@ void AddresseeLineEditPrivate::slotReturnPressed(const QString &)
 
 void AddresseeLineEditPrivate::slotStartLDAPLookup()
 {
-    if (Solid::Networking::status() == Solid::Networking::Unconnected) {
-        return;
-    }
+    if ( Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
 
     const KCompletion::CompletionMode mode = q->completionMode();
 
@@ -681,9 +679,9 @@ void AddresseeLineEditPrivate::slotStartLDAPLookup()
 
     if (s_static->ldapLineEdit != q) {
         return;
-    }
-
     startLoadingLDAPEntries();
+    }
+    }
 }
 
 void AddresseeLineEditPrivate::slotLDAPSearchData(const KLDAP::LdapResult::List &results)
