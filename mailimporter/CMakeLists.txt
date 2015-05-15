@@ -40,10 +40,12 @@ ki18n_wrap_ui(libmailimporter_SRCS ui/importmailswidget.ui ui/selectthunderbirdp
 add_library(mailimporter ${libmailimporter_SRCS})
 generate_export_header(mailimporter BASE_NAME mailimporter)
 target_link_libraries(mailimporter
+PUBLIC
+  KF5::Mime
+PRIVATE
   KF5::KIOCore
   KF5::AkonadiCore
   KF5::AkonadiMime
-  KF5::Mime
   kdepim
   messagecore
 )

@@ -6,6 +6,7 @@ macro(mailimporter_unittest _source)
   ecm_mark_as_test(mailimporter-${_name})
   target_link_libraries( ${_name}
     mailimporter
+    KF5::AkonadiCore
     Qt5::Test
     Qt5::Core
     Qt5::Gui
