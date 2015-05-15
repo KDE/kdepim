@@ -16,11 +16,11 @@
 */
 
 #include "gravatarcache.h"
-#include <KGlobal>
-#include <KStandardDirs>
+
 #include <QDebug>
 #include <QFile>
 #include <QFileInfo>
+#include <QStandardPaths>
 using namespace PimCommon;
 
 Q_GLOBAL_STATIC( GravatarCache, s_gravatarCache )
@@ -45,7 +45,7 @@ void GravatarCache::saveGravatarPixmap(const QString &hashStr, const QPixmap &pi
 {
     if (!hashStr.isEmpty() && !pixmap.isNull()) {
         if (!mCachePixmap.contains(hashStr)) {
-            const QString path = KGlobal::dirs()->locateLocal("data", QLatin1String("gravatar/") + hashStr + QLatin1String(".png"));
+            const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/gravatar/") + hashStr + QLatin1String(".png");
             //qDebug() << " path " << path;
             if (pixmap.save(path)) {
                 //qDebug() <<" saved in cache "<< hashStr << path;
@@ -65,7 +65,7 @@ QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatar
             gravatarStored = true;
             return *(mCachePixmap.object(hashStr));
         } else {
-             const QString path = KGlobal::dirs()->locateLocal("data", QLatin1String("gravatar/") + hashStr + QLatin1String(".png"));
+             const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/gravatar/") + hashStr + QLatin1String(".png");
              QFileInfo fi(path);
              if (fi.exists()) {
                  QPixmap pix;

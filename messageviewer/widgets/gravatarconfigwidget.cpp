@@ -18,13 +18,14 @@
 #include "gravatarconfigwidget.h"
 #include "pimcommon/gravatar/gravatarcache.h"
 #include <QDebug>
-#include <KStandardDirs>
+
 #include <QVBoxLayout>
 #include <KLocalizedString>
 #include <QCheckBox>
 #include <QPushButton>
 #include <KGlobal>
 #include <QDir>
+#include <QStandardPaths>
 #include "settings/globalsettings.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 
@@ -84,7 +85,7 @@ void GravatarConfigWidget::doResetToDefaultsOther()
 
 void GravatarConfigWidget::slotClearGravatarCache()
 {
-    const QString path = KGlobal::dirs()->locateLocal("data", QLatin1String("gravatar/"));
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/gravatar/");
     if (!path.isEmpty()) {
         QDir dir(path);
         if (dir.exists()) {
