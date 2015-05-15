@@ -21,7 +21,6 @@
 #include "kpgpui.h"
 #include "kpgp_debug.h"
 
-#include <kde_file.h>
 #include <qdebug.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
@@ -53,6 +52,14 @@
 
 #ifdef ERROR
 #undef ERROR
+#endif
+
+#if !defined(KPATH_SEPARATOR)
+#if defined _WIN32 || defined _WIN64
+#define KPATH_SEPARATOR ';'
+#else
+#define KPATH_SEPARATOR ':'
+#endif
 #endif
 
 namespace Kpgp
