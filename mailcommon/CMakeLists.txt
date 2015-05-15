@@ -223,7 +223,6 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Codecs
-  KF5::IMAP
   KF5::MailTransport
   Phonon::phonon4qt5 
   incidenceeditorsng

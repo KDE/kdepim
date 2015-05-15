@@ -213,7 +213,6 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   KF5::KDELibs4Support
   ${_mailwebview_lib}
   Grantlee5::Templates
-  KF5::NewStuff
   pimcommon
   grantleetheme
   kaddressbookgrantlee

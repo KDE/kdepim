@@ -52,9 +52,7 @@ target_link_libraries(templateparser
   KF5::IdentityManagement
   messagecore
   kleo
-  kpgp
   pimcommon
-  KF5::QGpgme
   Qt5::WebKitWidgets
 )
 set_target_properties(templateparser PROPERTIES
