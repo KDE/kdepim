@@ -96,4 +96,8 @@ void GravatarCache::setMaximumSize(int maximumSize)
     }
 }
 
+void GravatarCache::clear()
+{
+    mCachePixmap.clear();
+}
 

@@ -18,10 +18,13 @@
 #ifndef GRAVATARCACHE_H
 #define GRAVATARCACHE_H
 
+#include "pimcommon_export.h"
+
 #include <QPixmap>
 #include <QCache>
+
 namespace PimCommon {
-class GravatarCache
+class PIMCOMMON_EXPORT GravatarCache
 {
 public:
     static GravatarCache *self();
@@ -37,6 +40,7 @@ public:
     int maximumSize() const;
     void setMaximumSize(int maximumSize);
 
+    void clear();
 private:
     QCache<QString, QPixmap> mCachePixmap;
     int mMaximumSize;
