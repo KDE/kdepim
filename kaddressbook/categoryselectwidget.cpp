@@ -186,7 +186,7 @@ void CategorySelectWidgetPrivate::slotTagsInserted(const QModelIndex &parent, in
                                         parentId, 1,
                                         Qt::MatchExactly | Qt::MatchRecursive);
             if (matchList.count() == 1) {       // found the parent tag
-                QModelIndex parentIndex = matchList.first();
+                QModelIndex parentIndex = matchList.at(0);
                 itemModel()->itemFromIndex(parentIndex)->appendRow(it);
             } else {
                 qCWarning(KADDRESSBOOK_LOG) << "Cannot find parent with ID" << parentId;

@@ -316,7 +316,7 @@ void MonthGraphicsItem::paint(QPainter *p, const QStyleOptionGraphicsItem *, QWi
         textRect.setLeft(curXPos + iconWidths);
 
         // assume that all pixmaps have the same height
-        int pixYPos = icons.isEmpty() ? 0 : (textRect.height() - icons.first().height()) / 2;
+        int pixYPos = icons.isEmpty() ? 0 : (textRect.height() - icons.at(0).height()) / 2;
         foreach (const QPixmap &icon, icons) {
             p->drawPixmap(curXPos, pixYPos, icon);
             curXPos += icon.width();

@@ -58,7 +58,7 @@ void VcardMemento::slotSearchJobFinished(KJob *job)
     if (contactSize >= 1) {
         VCard vcard = mVCardList.at(mIndex);
         vcard.found = true;
-        vcard.address = searchJob->contacts().first();
+        vcard.address = searchJob->contacts().at(0);
         mVCardList[mIndex] = vcard;
         if (contactSize > 1) {
             qCDebug(VCARD_LOG) << " more than 1 contact was found";

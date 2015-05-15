@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
     const QStringList &args = parser.positionalArguments();
     if (!args.isEmpty()) {
-        fileName = args.first();
+        fileName = args.at(0);
     } else {
         fileName = QFileDialog::getOpenFileName();
     }

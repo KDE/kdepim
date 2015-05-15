@@ -1021,7 +1021,7 @@ public:
             QMimeDatabase db;
             QStringList patterns = db.mimeTypeForName(attachment->mimeType()).globPatterns();
             if (!patterns.empty()) {
-                QString pattern = patterns.first();
+                QString pattern = patterns.at(0);
                 file = new QTemporaryFile(QDir::tempPath() + QLatin1String("/messageviewer_XXXXXX") + pattern.remove(QLatin1Char('*')));
             } else {
                 file = new QTemporaryFile();
@@ -1069,7 +1069,7 @@ public:
             QMimeDatabase db;
             QStringList patterns = db.mimeTypeForName(a->mimeType()).globPatterns();
             if (!patterns.empty()) {
-                QString pattern = patterns.first();
+                QString pattern = patterns.at(0);
                 file = new QTemporaryFile(QDir::tempPath() + QLatin1String("/messageviewer_XXXXXX") + pattern.remove(QLatin1Char('*')));
             } else {
                 file = new QTemporaryFile();

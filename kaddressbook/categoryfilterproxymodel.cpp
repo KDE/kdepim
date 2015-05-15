@@ -80,7 +80,7 @@ bool CategoryFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &pare
         return false;    // nothing accepted
     }
     // all accepted
-    if (d->filterIdList.first() == CategorySelectWidget::FilterAll) {
+    if (d->filterIdList.at(0) == CategorySelectWidget::FilterAll) {
         return true;
     }
 

@@ -347,7 +347,7 @@ void IncidenceAttendee::groupSearchResult(KJob *job)
     }
 
     // TODO: Give the user the possibility to choose a group when there is more than one?!
-    KContacts::ContactGroup group = contactGroups.first();
+    KContacts::ContactGroup group = contactGroups.at(0);
     if (line) {
         line->slotPropagateDeletion();
     }

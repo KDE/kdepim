@@ -276,7 +276,7 @@ QColor CalPrintPluginBase::categoryColor(const QStringList &categories) const
         return KCalPrefs::instance()->unsetCategoryColor();
     }
     // FIXME: Correctly treat events with multiple categories
-    const QString cat = categories.first();
+    const QString cat = categories.at(0);
     QColor bgColor;
     if (cat.isEmpty()) {
         bgColor = KCalPrefs::instance()->unsetCategoryColor();

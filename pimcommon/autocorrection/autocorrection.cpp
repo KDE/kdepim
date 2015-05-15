@@ -927,7 +927,7 @@ void AutoCorrection::replaceTypographicQuotes()
 void AutoCorrection::readAutoCorrectionXmlFile(bool forceGlobal)
 {
     KLocale *locale = KLocale::global();
-    QString kdelang = locale->languageList().first();
+    QString kdelang = locale->languageList().at(0);
     kdelang.remove(QRegExp(QLatin1String("@.*")));
 
     mUpperCaseExceptions.clear();

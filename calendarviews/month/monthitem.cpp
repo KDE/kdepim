@@ -598,7 +598,7 @@ QColor IncidenceMonthItem::catColor() const
     const QStringList categories = mIncidence->categories();
     QString cat;
     if (!categories.isEmpty()) {
-        cat = categories.first();
+        cat = categories.at(0);
     }
 
     return cat.isEmpty() ? CalendarSupport::KCalPrefs::instance()->unsetCategoryColor() :

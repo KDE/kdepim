@@ -1948,7 +1948,7 @@ Kleo::KeyResolver::ContactPreferences Kleo::KeyResolver::lookupContactPreference
     const KContacts::Addressee::List res = job->contacts();
     ContactPreferences pref;
     if (!res.isEmpty()) {
-        KContacts::Addressee addr = res.first();
+        KContacts::Addressee addr = res.at(0);
         QString encryptPref = addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF"));
         pref.encryptionPreference = Kleo::stringToEncryptionPreference(encryptPref);
         QString signPref = addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF"));

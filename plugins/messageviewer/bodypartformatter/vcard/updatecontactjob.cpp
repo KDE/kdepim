@@ -56,7 +56,7 @@ public:
             q->emitResult();
             return;
         }
-        Akonadi::Item item = searchJob->items().first();
+        Akonadi::Item item = searchJob->items().at(0);
         item.setPayload<KContacts::Addressee>(mContact);
         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item);
         q->connect(modifyJob, SIGNAL(result(KJob*)), SLOT(slotUpdateContactDone(KJob*)));

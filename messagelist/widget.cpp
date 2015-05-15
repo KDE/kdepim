@@ -451,7 +451,7 @@ void Widget::viewDropEvent(QDropEvent *e)
     }
 
     Collection::List collections = static_cast<const StorageModel *>(storageModel())->displayedCollections();
-    Collection target = collections.first();
+    Collection target = collections.at(0);
     Item::List items;
     foreach (const QUrl &url, urls) {
         items << Item::fromUrl(url);

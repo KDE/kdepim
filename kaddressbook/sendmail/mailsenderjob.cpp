@@ -124,7 +124,7 @@ void MailSenderJob::fetchJobFinished(KJob *job)
         return;
     }
 
-    const Akonadi::Item item = fetchJob->items().first();
+    const Akonadi::Item item = fetchJob->items().at(0);
     const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
 
     if (!contact.preferredEmail().isEmpty()) {

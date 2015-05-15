@@ -1244,7 +1244,7 @@ void MessageComposer::ComposerViewBase::slotSaveMessage(KJob *job)
         if (fetchJob->collections().isEmpty()) {
             target = defaultSpecialTarget();
         } else {
-            target = fetchJob->collections().first();
+            target = fetchJob->collections().at(0);
         }
     }
     Akonadi::ItemCreateJob *create = new Akonadi::ItemCreateJob(item, target, this);

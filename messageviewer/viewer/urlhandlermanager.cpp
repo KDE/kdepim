@@ -752,7 +752,7 @@ static QString searchFullEmailByUid(const QString &uid)
     job->exec();
     const KContacts::Addressee::List res = job->contacts();
     if (!res.isEmpty()) {
-        KContacts::Addressee addr = res.first();
+        KContacts::Addressee addr = res.at(0);
         fullEmail = addr.fullEmail();
     }
     return fullEmail;
