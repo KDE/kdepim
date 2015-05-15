@@ -16,10 +16,15 @@
 */
 
 #include "gravatarconfigwidget.h"
-
+#include "pimcommon/gravatar/gravatarcache.h"
+#include <QDebug>
+#include <KStandardDirs>
 #include <QVBoxLayout>
 #include <KLocalizedString>
 #include <QCheckBox>
+#include <QPushButton>
+#include <KGlobal>
+#include <QDir>
 #include "settings/globalsettings.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 
@@ -41,8 +46,16 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     mUseDefaultPixmap->setObjectName(QStringLiteral("usedefaultimage"));
     mainLayout->addWidget(mUseDefaultPixmap);
 
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    mainLayout->addLayout(buttonLayout);
+    mClearGravatarCache = new QPushButton(i18n("Clear Gravatar Cache"));
+    mClearGravatarCache->setObjectName(QLatin1String("cleargravatarcachebutton"));
+    buttonLayout->addWidget(mClearGravatarCache);
+    buttonLayout->addStretch();
+
     connect(mUseDefaultPixmap, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
     connect(mEnableGravatarSupport, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
+    connect(mClearGravatarCache, SIGNAL(clicked(bool)), this, SLOT(slotClearGravatarCache()));
 }
 
 GravatarConfigWidget::~GravatarConfigWidget()
@@ -69,3 +82,18 @@ void GravatarConfigWidget::doResetToDefaultsOther()
     GlobalSettings::self()->useDefaults(bUseDefaults);
 }
 
+void GravatarConfigWidget::slotClearGravatarCache()
+{
+    const QString path = KGlobal::dirs()->locateLocal("data", QLatin1String("gravatar/"));
+    if (!path.isEmpty()) {
+        QDir dir(path);
+        if (dir.exists()) {
+            QFileInfoList list = dir.entryInfoList();  // get list of matching files and delete all
+            QFileInfo it;
+            Q_FOREACH( it, list ) {
+                dir.remove(it.fileName());
+            }
+        }
+    }
+    PimCommon::GravatarCache::self()->clear();
+}

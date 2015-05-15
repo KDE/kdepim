@@ -26,9 +26,9 @@ using namespace PimCommon;
 Q_GLOBAL_STATIC( GravatarCache, s_gravatarCache )
 
 GravatarCache::GravatarCache()
-    : mMaximumSize(0)
+    : mMaximumSize(30)
 {
-
+    mCachePixmap.setMaxCost(mMaximumSize);
 }
 
 GravatarCache::~GravatarCache()
@@ -49,7 +49,7 @@ void GravatarCache::saveGravatarPixmap(const QString &hashStr, const QPixmap &pi
             //qDebug() << " path " << path;
             if (pixmap.save(path)) {
                 //qDebug() <<" saved in cache "<< hashStr << path;
-                mCachePixmap.insert(hashStr, pixmap);
+                mCachePixmap.insert(hashStr, new QPixmap(pixmap));
             }
         }
     }
@@ -63,7 +63,7 @@ QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatar
         if (mCachePixmap.contains(hashStr)) {
             //qDebug()<<" contains in cache "<< hashStr;
             gravatarStored = true;
-            return mCachePixmap.value(hashStr);
+            return *(mCachePixmap.object(hashStr));
         } else {
              const QString path = KGlobal::dirs()->locateLocal("data", QLatin1String("gravatar/") + hashStr + QLatin1String(".png"));
              QFileInfo fi(path);
@@ -71,7 +71,7 @@ QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatar
                  QPixmap pix;
                  if (pix.load(path)) {
                      //qDebug() << " add to cache "<<hashStr << path;
-                     mCachePixmap.insert(hashStr, pix);
+                     mCachePixmap.insert(hashStr, new QPixmap(pix));
                      gravatarStored = true;
                      return pix;
                  }
@@ -90,7 +90,14 @@ int GravatarCache::maximumSize() const
 
 void GravatarCache::setMaximumSize(int maximumSize)
 {
-    mMaximumSize = maximumSize;
+    if (mMaximumSize != maximumSize) {
+        mMaximumSize = maximumSize;
+        mCachePixmap.setMaxCost(mMaximumSize);
+    }
 }
 
+void GravatarCache::clear()
+{
+    mCachePixmap.clear();
+}
 

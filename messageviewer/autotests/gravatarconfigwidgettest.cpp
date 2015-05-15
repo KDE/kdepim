@@ -19,6 +19,7 @@
 #include "../widgets/gravatarconfigwidget.h"
 #include <QCheckBox>
 #include <qtest.h>
+#include <QPushButton>
 
 GravatarConfigWidgetTest::GravatarConfigWidgetTest(QObject *parent)
     : QObject(parent)
@@ -40,6 +41,8 @@ void GravatarConfigWidgetTest::shouldHaveDefaultValue()
     QCheckBox *useDefaultImage = w.findChild<QCheckBox *>(QLatin1String("usedefaultimage"));
     QVERIFY(useDefaultImage);
 
+    QPushButton *clearGravatarCache = qFindChild<QPushButton *>(&w, QLatin1String("cleargravatarcachebutton"));
+    QVERIFY(clearGravatarCache);
 }
 
 QTEST_MAIN(GravatarConfigWidgetTest)
