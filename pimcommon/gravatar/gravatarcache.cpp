@@ -23,7 +23,7 @@
 #include <QFileInfo>
 using namespace PimCommon;
 
-K_GLOBAL_STATIC( GravatarCache, s_gravatarCache )
+Q_GLOBAL_STATIC( GravatarCache, s_gravatarCache )
 
 GravatarCache::GravatarCache()
     : mMaximumSize(0)
