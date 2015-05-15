@@ -16,9 +16,11 @@
 */
 
 #include "pimsettingexporterconsole.h"
+#include "pimsettingsbackuprestore.h"
 
 PimSettingExporterConsole::PimSettingExporterConsole(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mPimSettingsBackupRestore(new PimSettingsBackupRestore(this))
 {
 
 }

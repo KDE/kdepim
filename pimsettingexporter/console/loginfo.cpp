@@ -15,23 +15,43 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef PIMSETTINGEXPORTERCONSOLE_H
-#define PIMSETTINGEXPORTERCONSOLE_H
+#include "loginfo.h"
+#include <QDebug>
 
-#include <QObject>
-class PimSettingsBackupRestore;
-
-class PimSettingExporterConsole : public QObject
+LogInfo::LogInfo(const QString &filename, QObject *parent)
+    : QObject(parent),
+      mFileName(filename)
 {
-    Q_OBJECT
-public:
-    explicit PimSettingExporterConsole(QObject *parent = Q_NULLPTR);
-    ~PimSettingExporterConsole();
 
-Q_SIGNALS:
-    void finished();
-private:
-    PimSettingsBackupRestore *mPimSettingsBackupRestore;
-};
+}
 
-#endif // PIMSETTINGEXPORTERCONSOLE_H
+LogInfo::~LogInfo()
+{
+
+}
+
+QString LogInfo::fileName() const
+{
+    return mFileName;
+}
+
+void LogInfo::addInfoLogEntry(const QString &log)
+{
+
+}
+
+void LogInfo::addErrorLogEntry(const QString &log)
+{
+
+}
+
+void LogInfo::addTitleLogEntry(const QString &log)
+{
+
+}
+
+void LogInfo::addEndLineLogEntry()
+{
+
+}
+
