@@ -19,7 +19,7 @@
 #define GRAVATARCACHE_H
 
 #include <QPixmap>
-#include <QHash>
+#include <QCache>
 namespace PimCommon {
 class GravatarCache
 {
@@ -38,7 +38,7 @@ public:
     void setMaximumSize(int maximumSize);
 
 private:
-    QHash<QString, QPixmap> mCachePixmap;
+    QCache<QString, QPixmap> mCachePixmap;
     int mMaximumSize;
 };
 }
