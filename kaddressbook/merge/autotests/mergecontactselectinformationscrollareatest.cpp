@@ -46,8 +46,7 @@ void MergeContactSelectInformationScrollAreaTest::shouldHaveDefaultValue()
     QStackedWidget *stackedwidget = w.findChild<QStackedWidget *>(QStringLiteral("stackwidget"));
     QVERIFY(stackedwidget);
 
-    KABMergeContacts::MergeContactSelectInformationWidget *widget =
-        qFindChild<KABMergeContacts::MergeContactSelectInformationWidget *>(&w, QStringLiteral("selectinformationwidget"));
+    KABMergeContacts::MergeContactSelectInformationWidget *widget = w.findChild<KABMergeContacts::MergeContactSelectInformationWidget *>(QStringLiteral("selectinformationwidget"));
     QVERIFY(widget);
 
     for (int i = 0; i < stackedwidget->count(); ++i) {

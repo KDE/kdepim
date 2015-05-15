@@ -133,9 +133,9 @@ public:
             formatter.setDisplayQRCode(false);
             QString htmlStr = formatter.toHtml(Akonadi::StandardContactFormatter::EmbeddableForm);
             const KContacts::Picture photo = a.photo();
-            htmlStr.replace(QLatin1String("<img src=\"map_icon\""), QStringLiteral("<img src=\"%1\"").arg(defaultMapIconPath));
+            htmlStr.replace(QStringLiteral("<img src=\"map_icon\""), QStringLiteral("<img src=\"%1\"").arg(defaultMapIconPath));
             if (photo.isEmpty()) {
-                htmlStr.replace(QLatin1String("img src=\"contact_photo\""), QStringLiteral("img src=\"%1\"").arg(defaultPixmapPath));
+                htmlStr.replace(QStringLiteral("img src=\"contact_photo\""), QStringLiteral("img src=\"%1\"").arg(defaultPixmapPath));
             } else {
                 QImage img = a.photo().data();
                 const QString dir = bodyPart->nodeHelper()->createTempDir(QLatin1String("vcard-") + a.uid());
@@ -203,11 +203,11 @@ public:
             return true;
         }
 
-        if (path.startsWith(QLatin1String("addToAddressBook"))) {
+        if (path.startsWith(QStringLiteral("addToAddressBook"))) {
 
             KPIM::AddContactJob *job = new KPIM::AddContactJob(a, 0);
             job->start();
-        } else if (path.startsWith(QLatin1String("updateToAddressBook"))) {
+        } else if (path.startsWith(QStringLiteral("updateToAddressBook"))) {
             UpdateContactJob *job = new UpdateContactJob(a.emails().first(), a, 0);
             job->start();
         }
@@ -242,9 +242,9 @@ public:
 
         QMenu *menu = new QMenu();
         QAction *open =
-            menu->addAction(QIcon::fromTheme(QLatin1String("document-open")), i18n("View Business Card"));
+            menu->addAction(QIcon::fromTheme(QStringLiteral("document-open")), i18n("View Business Card"));
         QAction *saveas =
-            menu->addAction(QIcon::fromTheme(QLatin1String("document-save-as")), i18n("Save Business Card As..."));
+            menu->addAction(QIcon::fromTheme(QStringLiteral("document-save-as")), i18n("Save Business Card As..."));
 
         QAction *action = menu->exec(point, 0);
         if (action == open) {
