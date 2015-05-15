@@ -36,21 +36,19 @@ GravatarCache::~GravatarCache()
 
 }
 
-
 GravatarCache *GravatarCache::self()
 {
     return s_gravatarCache;
 }
-
 
 void GravatarCache::saveGravatarPixmap(const QString &hashStr, const QPixmap &pixmap)
 {
     if (!hashStr.isEmpty() && !pixmap.isNull()) {
         if (!mCachePixmap.contains(hashStr)) {
             const QString path = KGlobal::dirs()->locateLocal("data", QLatin1String("gravatar/") + hashStr + QLatin1String(".png"));
-            qDebug() << " path " << path;
+            //qDebug() << " path " << path;
             if (pixmap.save(path)) {
-                qDebug() <<" saved in cache "<< hashStr << path;
+                //qDebug() <<" saved in cache "<< hashStr << path;
                 mCachePixmap.insert(hashStr, pixmap);
             }
         }
@@ -60,10 +58,10 @@ void GravatarCache::saveGravatarPixmap(const QString &hashStr, const QPixmap &pi
 QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatarStored)
 {
     gravatarStored = false;
-    qDebug()<<" hashStr"<<hashStr;
+    //qDebug()<<" hashStr"<<hashStr;
     if (!hashStr.isEmpty()) {
         if (mCachePixmap.contains(hashStr)) {
-            qDebug()<<" contains in cache "<< hashStr;
+            //qDebug()<<" contains in cache "<< hashStr;
             gravatarStored = true;
             return mCachePixmap.value(hashStr);
         } else {
@@ -72,7 +70,7 @@ QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatar
              if (fi.exists()) {
                  QPixmap pix;
                  if (pix.load(path)) {
-                     qDebug() << " add to cache "<<hashStr << path;
+                     //qDebug() << " add to cache "<<hashStr << path;
                      mCachePixmap.insert(hashStr, pix);
                      gravatarStored = true;
                      return pix;

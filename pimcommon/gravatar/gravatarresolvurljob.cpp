@@ -63,6 +63,7 @@ bool GravatarResolvUrlJob::hasGravatar() const
 
 void GravatarResolvUrlJob::start()
 {
+    mHasGravatar = false;
     if (canStart()) {
         mCalculatedHash.clear();
         const KUrl url = createUrl();
@@ -71,6 +72,7 @@ void GravatarResolvUrlJob::start()
         const QPixmap pix = GravatarCache::self()->loadGravatarPixmap(mCalculatedHash, haveStoredPixmap);
         if (haveStoredPixmap && !pix.isNull()) {
             mPixmap = pix;
+            mHasGravatar = true;
             Q_EMIT finished(this);
             deleteLater();
         } else {
