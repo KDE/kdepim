@@ -123,8 +123,8 @@ void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl_data()
     QTest::addColumn<QString>("calculedhash");
     QTest::addColumn<KUrl>("output");
     QTest::newRow("empty") << QString() << QString() << KUrl();
-    QTest::newRow("no domain") << QString(QStringLiteral("foo")) << QString() << KUrl();
-    QTest::newRow("validemail") << QString(QStringLiteral("foo@kde.org")) << QString(QStringLiteral("89b4e14cf2fc6d426275c019c6dc9de6")) << KUrl("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404");
+    QTest::newRow("no domain") << QStringLiteral("foo") << QString() << KUrl();
+    QTest::newRow("validemail") <<QStringLiteral("foo@kde.org") << QStringLiteral("89b4e14cf2fc6d426275c019c6dc9de6") << KUrl("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404");
 }
 
 void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl()
