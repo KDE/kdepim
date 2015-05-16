@@ -70,7 +70,7 @@ target_link_libraries(messagecore
   KF5::PimTextEdit
   KF5::AkonadiMime
   KF5::Archive
-  pimcommon
+  KF5::KDELibs4Support
 )
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
