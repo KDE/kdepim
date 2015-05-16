@@ -63,7 +63,10 @@ add_library(noteshared ${libnoteshared_SRCS} ${libnoteshared_kcfg_lib_SRCS} )
 generate_export_header(noteshared BASE_NAME noteshared)
 
 target_link_libraries(noteshared
-     KF5::AkonadiCore KF5::DNSSD pimcommon  KF5::Mime KF5::AkonadiNotes
+PUBLIC
+     KF5::AkonadiCore
+PRIVATE
+     KF5::DNSSD pimcommon  KF5::Mime KF5::AkonadiNotes
 )
 set_target_properties(noteshared PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS noteshared ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
