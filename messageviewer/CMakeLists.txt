@@ -201,23 +201,26 @@ ki18n_wrap_ui(libmessageviewer_SRCS
 add_library(messageviewer ${libmessageviewer_SRCS})
 generate_export_header(messageviewer BASE_NAME messageviewer)
 
-target_link_libraries(messageviewer messagecore kdepim kpgp kleo
-  KF5::Mime
-  KF5::Mbox
+target_link_libraries(messageviewer 
+PUBLIC
+  messagecore kdepim kpgp kleo
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Contacts
-  KF5::MailTransport
-  KF5::Gpgmepp
-  Qt5::WebKitWidgets
   KF5::KDELibs4Support
   ${_mailwebview_lib}
-  Grantlee5::Templates
   pimcommon
+PRIVATE
   grantleetheme
   kaddressbookgrantlee
   incidenceeditorsng
   Grantlee5::TextDocument
+  Grantlee5::Templates
+  Qt5::WebKitWidgets
+  KF5::MailTransport
+  KF5::Mime
+  KF5::Mbox
+  KF5::Gpgmepp
 )
 
 include_directories(

@@ -153,6 +153,7 @@ target_link_libraries(messagecomposer
   followupreminder
   pimcommon
   KF5::AkonadiWidgets
+  KF5::CalendarCore
 )
 
 set_target_properties( messagecomposer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
