@@ -182,8 +182,8 @@ target_link_libraries(ksieveui
   KF5::AkonadiCore
   KF5::Mime
   KF5::IdentityManagement
-  KF5::KIOCore
   KF5::MailTransport
+  KF5::KIOWidgets
   KF5::NewStuff
   Qt5::WebEngineWidgets
 )
