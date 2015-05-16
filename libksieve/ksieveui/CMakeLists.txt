@@ -174,10 +174,12 @@ add_library(ksieveui ${ksieveui_LIB_SRCS})
 generate_export_header(ksieveui BASE_NAME ksieveui)
 
 target_link_libraries(ksieveui
+PUBLIC
   kmanagesieve
   ksieve
   pimcommon
   kdepim
+PRIVATE
   KF5::Archive
   KF5::AkonadiCore
   KF5::Mime
