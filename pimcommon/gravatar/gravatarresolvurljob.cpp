@@ -22,6 +22,7 @@
 #include <QCryptographicHash>
 #include <QStringList>
 #include <QPixmap>
+#include "pimcommon_debug.h"
 #include <solid/networking.h>
 
 using namespace PimCommon;
@@ -84,13 +85,13 @@ void GravatarResolvUrlJob::start()
                 QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
                 connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
             } else {
-                qDebug() <<" network is not connected";
+                qCDebug(PIMCOMMON_LOG) <<" network is not connected";
                 deleteLater();
                 return;
             }
         }
     } else {
-        qDebug() << "Gravatar can not start";
+        qCDebug(PIMCOMMON_LOG) << "Gravatar can not start";
         deleteLater();
     }
 }
