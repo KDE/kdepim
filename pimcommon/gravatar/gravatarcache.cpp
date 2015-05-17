@@ -26,7 +26,7 @@ using namespace PimCommon;
 K_GLOBAL_STATIC( GravatarCache, s_gravatarCache )
 
 GravatarCache::GravatarCache()
-    : mMaximumSize(30)
+    : mMaximumSize(20)
 {
     mCachePixmap.setMaxCost(mMaximumSize);
 }

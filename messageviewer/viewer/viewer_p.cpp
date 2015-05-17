@@ -37,6 +37,7 @@
 #include "viewer/mimeparttree/mimeparttreeview.h"
 #include "widgets/openattachmentfolderwidget.h"
 #include "pimcommon/widgets/slidecontainer.h"
+#include "pimcommon/gravatar/gravatarcache.h"
 #include "messageviewer/job/attachmentencryptwithchiasmusjob.h"
 #include "messageviewer/job/attachmenteditjob.h"
 #include "messageviewer/job/modifymessagedisplayformatjob.h"
@@ -1143,6 +1144,7 @@ void ViewerPrivate::readConfig()
 
     mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
     setZoomTextOnly( mZoomTextOnly );
+    readGravatarConfig();
 
     if (headerStrategy() )
         headerStrategy()->readConfig();
@@ -1174,6 +1176,14 @@ void ViewerPrivate::readConfig()
     if ( mMessage )
         update();
     mColorBar->update();
+}
+
+void ViewerPrivate::readGravatarConfig()
+{
+    PimCommon::GravatarCache::self()->setMaximumSize(GlobalSettings::self()->gravatarCacheSize());
+    if (!GlobalSettings::self()->gravatarSupportEnabled()) {
+        PimCommon::GravatarCache::self()->clear();
+    }
 }
 
 void ViewerPrivate::slotGeneralFontChanged()

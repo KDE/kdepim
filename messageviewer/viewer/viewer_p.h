@@ -628,6 +628,7 @@ private:
     QString recipientsQuickListLinkHtml( bool, const QString & ) const;
     void initGrantleeThemeName();
 
+    void readGravatarConfig();
 public:
     NodeHelper* mNodeHelper;
     bool mHtmlMailGlobalSetting, mHtmlLoadExternalGlobalSetting, mHtmlLoadExtOverride;
