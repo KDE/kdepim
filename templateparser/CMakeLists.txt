@@ -44,12 +44,14 @@ ki18n_wrap_ui(templateparser_LIB_SRCS
 add_library(templateparser ${templateparser_LIB_SRCS})
 generate_export_header(templateparser BASE_NAME templateparser)
 target_link_libraries(templateparser
-  messageviewer
+PUBLIC
+  pimcommon
+PRIVATE
   KF5::Mime
   KF5::AkonadiCore
+  messageviewer
   KF5::IdentityManagement
   messagecore
-  pimcommon
   Qt5::WebKitWidgets
 )
 set_target_properties(templateparser PROPERTIES

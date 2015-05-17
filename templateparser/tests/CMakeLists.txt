@@ -25,4 +25,5 @@ target_link_libraries(templateconfigurewidget_gui
   Qt5::WebKitWidgets
   KF5::KIOCore
   templateparser
+  KF5::I18n
 )
