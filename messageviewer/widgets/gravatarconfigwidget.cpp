@@ -24,7 +24,9 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <KGlobal>
+#include <QLabel>
 #include <QDir>
+#include <KIntNumInput>
 #include "settings/globalsettings.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 
@@ -49,12 +51,28 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     mainLayout->addWidget(mUseDefaultPixmap);
 
     //KF5 add i18n
+    QHBoxLayout *cacheSizeLayout = new QHBoxLayout;
+    mainLayout->addLayout(cacheSizeLayout);
+    QLabel *lab = new QLabel(QLatin1String("Gravatar Cache Size:"));
+    lab->setObjectName(QLatin1String("gravatarcachesizelabel"));
+    cacheSizeLayout->addWidget(lab);
+
+    mGravatarCacheSize = new KIntSpinBox;
+    mGravatarCacheSize->setMinimum(1);
+    mGravatarCacheSize->setMaximum(9999);
+    mGravatarCacheSize->setObjectName(QLatin1String("gravatarcachesize"));
+    connect(mGravatarCacheSize, SIGNAL(valueChanged(int)), this, SLOT(slotGravatarCacheSizeChanged()));
+    cacheSizeLayout->addWidget(mGravatarCacheSize);
+    cacheSizeLayout->addStretch();
+
+    //KF5 add i18n
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     mainLayout->addLayout(buttonLayout);
     mClearGravatarCache = new QPushButton(QLatin1String("Clear Gravatar Cache"));
     mClearGravatarCache->setObjectName(QLatin1String("cleargravatarcachebutton"));
     buttonLayout->addWidget(mClearGravatarCache);
     buttonLayout->addStretch();
+
 
     connect(mClearGravatarCache, SIGNAL(clicked(bool)), this, SLOT(slotClearGravatarCache()));
     connect(mUseDefaultPixmap, SIGNAL(clicked(bool)), SIGNAL(configChanged(bool)));
@@ -70,12 +88,14 @@ void GravatarConfigWidget::save()
 {
     saveCheckBox(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
     saveCheckBox(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
+    saveSpinBox(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
 }
 
 void GravatarConfigWidget::doLoadFromGlobalSettings()
 {
     loadWidget(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
     loadWidget(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
+    loadWidget(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
 }
 
 void GravatarConfigWidget::doResetToDefaultsOther()
@@ -100,3 +120,9 @@ void GravatarConfigWidget::slotClearGravatarCache()
     }
     PimCommon::GravatarCache::self()->clear();
 }
+
+void GravatarConfigWidget::slotGravatarCacheSizeChanged()
+{
+    Q_EMIT configChanged(true);
+}
+

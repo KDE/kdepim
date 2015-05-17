@@ -17,7 +17,9 @@
 
 #include "gravatarconfigwidgettest.h"
 #include "../widgets/gravatarconfigwidget.h"
+#include <KIntNumInput>
 #include <QCheckBox>
+#include <QLabel>
 #include <QPushButton>
 #include <qtest_kde.h>
 
@@ -43,6 +45,13 @@ void GravatarConfigWidgetTest::shouldHaveDefaultValue()
 
     QPushButton *clearGravatarCache = qFindChild<QPushButton *>(&w, QLatin1String("cleargravatarcachebutton"));
     QVERIFY(clearGravatarCache);
+
+    QLabel *lab = qFindChild<QLabel *>(&w, QLatin1String("gravatarcachesizelabel"));
+    QVERIFY(lab);
+
+    KIntSpinBox *gravatarCacheSize = qFindChild<KIntSpinBox *>(&w, QLatin1String("gravatarcachesize"));
+    QVERIFY(gravatarCacheSize);
+
 }
 
 QTEST_KDEMAIN(GravatarConfigWidgetTest, GUI)

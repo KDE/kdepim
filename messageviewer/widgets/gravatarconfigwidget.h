@@ -22,6 +22,7 @@
 #include "messageviewer_export.h"
 class QCheckBox;
 class QPushButton;
+class KIntSpinBox;
 namespace MessageViewer {
 class MESSAGEVIEWER_EXPORT GravatarConfigWidget : public QWidget
 {
@@ -39,11 +40,13 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void slotClearGravatarCache();
+    void slotGravatarCacheSizeChanged();
 
 private:
     QCheckBox *mEnableGravatarSupport;
     QCheckBox *mUseDefaultPixmap;
     QPushButton *mClearGravatarCache;
+    KIntSpinBox *mGravatarCacheSize;
 };
 }
 
