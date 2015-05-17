@@ -45,13 +45,10 @@ add_library(templateparser ${templateparser_LIB_SRCS})
 generate_export_header(templateparser BASE_NAME templateparser)
 target_link_libraries(templateparser
   messageviewer
-  KF5::KIOCore
   KF5::Mime
   KF5::AkonadiCore
-  KF5::PimTextEdit
   KF5::IdentityManagement
   messagecore
-  kleo
   pimcommon
   Qt5::WebKitWidgets
 )
