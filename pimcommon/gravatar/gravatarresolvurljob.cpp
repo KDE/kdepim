@@ -45,7 +45,7 @@ GravatarResolvUrlJob::~GravatarResolvUrlJob()
 
 bool GravatarResolvUrlJob::canStart() const
 {
-    if ( Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
+    if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
         return !mEmail.trimmed().isEmpty() && (mEmail.contains(QLatin1Char('@')));
     } else {
         return false;
@@ -77,7 +77,7 @@ void GravatarResolvUrlJob::start()
             Q_EMIT finished(this);
             deleteLater();
         } else {
-            if ( Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
+            if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
                 if (!mNetworkAccessManager) {
                     mNetworkAccessManager = new QNetworkAccessManager(this);
                     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
@@ -85,7 +85,7 @@ void GravatarResolvUrlJob::start()
                 QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
                 connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
             } else {
-                qCDebug(PIMCOMMON_LOG) <<" network is not connected";
+                qCDebug(PIMCOMMON_LOG) << " network is not connected";
                 deleteLater();
                 return;
             }

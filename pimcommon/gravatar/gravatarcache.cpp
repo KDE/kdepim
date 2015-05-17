@@ -24,7 +24,7 @@
 #include <QStandardPaths>
 using namespace PimCommon;
 
-Q_GLOBAL_STATIC( GravatarCache, s_gravatarCache )
+Q_GLOBAL_STATIC(GravatarCache, s_gravatarCache)
 
 GravatarCache::GravatarCache()
     : mMaximumSize(20)
@@ -66,19 +66,19 @@ QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatar
             gravatarStored = true;
             return *(mCachePixmap.object(hashStr));
         } else {
-             const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/gravatar/") + hashStr + QLatin1String(".png");
-             QFileInfo fi(path);
-             if (fi.exists()) {
-                 QPixmap pix;
-                 if (pix.load(path)) {
-                     //qDebug() << " add to cache "<<hashStr << path;
-                     mCachePixmap.insert(hashStr, new QPixmap(pix));
-                     gravatarStored = true;
-                     return pix;
-                 }
-             } else {
-                 return QPixmap();
-             }
+            const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/gravatar/") + hashStr + QLatin1String(".png");
+            QFileInfo fi(path);
+            if (fi.exists()) {
+                QPixmap pix;
+                if (pix.load(path)) {
+                    //qDebug() << " add to cache "<<hashStr << path;
+                    mCachePixmap.insert(hashStr, new QPixmap(pix));
+                    gravatarStored = true;
+                    return pix;
+                }
+            } else {
+                return QPixmap();
+            }
         }
     }
     return QPixmap();
@@ -110,7 +110,7 @@ void GravatarCache::clearAllCache()
         if (dir.exists()) {
             QFileInfoList list = dir.entryInfoList();  // get list of matching files and delete all
             QFileInfo it;
-            Q_FOREACH( it, list ) {
+            Q_FOREACH (it, list) {
                 dir.remove(it.fileName());
             }
         }

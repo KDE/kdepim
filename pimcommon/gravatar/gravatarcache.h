@@ -23,12 +23,12 @@
 #include <QPixmap>
 #include <QCache>
 
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT GravatarCache
 {
 public:
     static GravatarCache *self();
-
 
     GravatarCache();
     ~GravatarCache();

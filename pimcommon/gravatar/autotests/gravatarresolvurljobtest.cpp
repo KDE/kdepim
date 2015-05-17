@@ -53,11 +53,11 @@ void GravatarResolvUrlJobTest::shouldChangeValue()
 
     bool useDefaultPixmap = true;
     job.setUseDefaultPixmap(useDefaultPixmap);
-    QCOMPARE(job.useDefaultPixmap(), useDefaultPixmap );
+    QCOMPARE(job.useDefaultPixmap(), useDefaultPixmap);
 
     useDefaultPixmap = false;
     job.setUseDefaultPixmap(useDefaultPixmap);
-    QCOMPARE(job.useDefaultPixmap(), useDefaultPixmap );
+    QCOMPARE(job.useDefaultPixmap(), useDefaultPixmap);
 }
 
 void GravatarResolvUrlJobTest::shouldChangeSize()
@@ -124,7 +124,7 @@ void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl_data()
     QTest::addColumn<KUrl>("output");
     QTest::newRow("empty") << QString() << QString() << KUrl();
     QTest::newRow("no domain") << QStringLiteral("foo") << QString() << KUrl();
-    QTest::newRow("validemail") <<QStringLiteral("foo@kde.org") << QStringLiteral("89b4e14cf2fc6d426275c019c6dc9de6") << KUrl("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404");
+    QTest::newRow("validemail") << QStringLiteral("foo@kde.org") << QStringLiteral("89b4e14cf2fc6d426275c019c6dc9de6") << KUrl("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404");
 }
 
 void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl()

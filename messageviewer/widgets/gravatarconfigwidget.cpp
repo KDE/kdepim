@@ -59,7 +59,7 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     connect(mGravatarCacheSize, SIGNAL(valueChanged(int)), this, SLOT(slotGravatarCacheSizeChanged()));
     cacheSizeLayout->addWidget(mGravatarCacheSize);
     cacheSizeLayout->addStretch();
-    
+
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     mainLayout->addLayout(buttonLayout);
     mClearGravatarCache = new QPushButton(i18n("Clear Gravatar Cache"));

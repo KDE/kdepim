@@ -23,7 +23,8 @@
 class QCheckBox;
 class QPushButton;
 class KIntSpinBox;
-namespace MessageViewer {
+namespace MessageViewer
+{
 class MESSAGEVIEWER_EXPORT GravatarConfigWidget : public QWidget
 {
     Q_OBJECT
