@@ -135,9 +135,7 @@ target_link_libraries(kaddressbookprivate
   KF5::AkonadiCore
   KF5::Contacts
   KF5::AkonadiContact
-  KF5::Ldap
   KF5::KCMUtils
-  KF5::KontactInterface
   KF5::Codecs
   grantleetheme
   kleo
