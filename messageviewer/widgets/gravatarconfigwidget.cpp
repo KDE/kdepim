@@ -18,12 +18,10 @@
 #include "gravatarconfigwidget.h"
 #include "pimcommon/gravatar/gravatarcache.h"
 #include <QDebug>
-#include <KStandardDirs>
 #include <QVBoxLayout>
 #include <KLocalizedString>
 #include <QCheckBox>
 #include <QPushButton>
-#include <KGlobal>
 #include <QLabel>
 #include <QDir>
 #include <KIntNumInput>
@@ -107,18 +105,7 @@ void GravatarConfigWidget::doResetToDefaultsOther()
 
 void GravatarConfigWidget::slotClearGravatarCache()
 {
-    const QString path = KGlobal::dirs()->locateLocal("data", QLatin1String("gravatar/"));
-    if (!path.isEmpty()) {
-        QDir dir(path);
-        if (dir.exists()) {
-            QFileInfoList list = dir.entryInfoList();  // get list of matching files and delete all
-            QFileInfo it;
-            Q_FOREACH( it, list ) {
-                dir.remove(it.fileName());
-            }
-        }
-    }
-    PimCommon::GravatarCache::self()->clear();
+    PimCommon::GravatarCache::self()->clearAllCache();
 }
 
 void GravatarConfigWidget::slotGravatarCacheSizeChanged()
