@@ -41,6 +41,7 @@ public:
     void setMaximumSize(int maximumSize);
 
     void clear();
+    void clearAllCache();
 private:
     QCache<QString, QPixmap> mCachePixmap;
     int mMaximumSize;

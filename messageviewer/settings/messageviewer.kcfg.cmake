@@ -196,6 +196,9 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="GravatarUseDefaultImage" type="Bool">
         <default>false</default>
     </entry>
+    <entry name="GravatarCacheSize" type="Int">
+      <default>20</default>
+    </entry>
   </group>
 
   <group name="TextIndex">

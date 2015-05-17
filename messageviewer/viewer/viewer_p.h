@@ -655,6 +655,7 @@ private:
     void initGrantleeThemeName();
 
     void addHelpTextAction(QAction *act, const QString &text);
+    void readGravatarConfig();
 public:
     NodeHelper *mNodeHelper;
     bool mHtmlMailGlobalSetting, mHtmlLoadExternalGlobalSetting, mHtmlLoadExtOverride;

@@ -16,6 +16,7 @@
 */
 
 #include "gravatarcache.h"
+#include <QDir>
 
 #include <QDebug>
 #include <QFile>
@@ -26,7 +27,7 @@ using namespace PimCommon;
 Q_GLOBAL_STATIC( GravatarCache, s_gravatarCache )
 
 GravatarCache::GravatarCache()
-    : mMaximumSize(30)
+    : mMaximumSize(20)
 {
     mCachePixmap.setMaxCost(mMaximumSize);
 }
@@ -101,3 +102,18 @@ void GravatarCache::clear()
     mCachePixmap.clear();
 }
 
+void GravatarCache::clearAllCache()
+{
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/gravatar/");
+    if (!path.isEmpty()) {
+        QDir dir(path);
+        if (dir.exists()) {
+            QFileInfoList list = dir.entryInfoList();  // get list of matching files and delete all
+            QFileInfo it;
+            Q_FOREACH( it, list ) {
+                dir.remove(it.fileName());
+            }
+        }
+    }
+    clear();
+}
