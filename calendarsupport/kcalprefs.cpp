@@ -46,7 +46,7 @@ Q_GLOBAL_STATIC(KCalPrefs, globalPrefs)
 class KCalPrefs::Private
 {
 public:
-    Private(KCalPrefs *qq) : mDefaultCalendarId(-1), q(qq)
+    Private() : mDefaultCalendarId(-1)
     {
         mDefaultCategoryColor = QColor(151, 235, 121);
     }
@@ -61,12 +61,9 @@ public:
     TagCache mTagCache;
     QColor mDefaultCategoryColor;
     QDateTime mDayBegins;
-
-private:
-    KCalPrefs *q;
 };
 
-KCalPrefs::KCalPrefs() : KCalPrefsBase(), d(new Private(this))
+KCalPrefs::KCalPrefs() : KCalPrefsBase(), d(new Private())
 {
 }
 
