@@ -91,8 +91,6 @@ target_link_libraries(
   calendarsupportcollectionpage
   KF5::AkonadiCore
   KF5::CalendarCore
-  KF5::CalendarUtils
-  KF5::KIOCore
   mailcommon
   pimcommon
   KF5::AkonadiCalendar

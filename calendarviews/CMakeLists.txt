@@ -94,13 +94,8 @@ add_library(eventviews ${eventviews_LIB_SRCS})
 generate_export_header(eventviews BASE_NAME eventviews)
 
 target_link_libraries(eventviews
-  KF5::Mime
-  KF5::KCMUtils
   ${ZLIB_LIBRARIES}
-  KF5::IdentityManagement
-  KF5::KIOCore
   KF5::AkonadiCore
-  KF5::Holidays
   kdepim
   kdgantt2
   calendarsupport
