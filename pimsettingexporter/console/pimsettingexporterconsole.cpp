@@ -18,10 +18,12 @@
 #include "pimsettingexporterconsole.h"
 #include "pimsettingsbackuprestore.h"
 #include "pimsettingexportconsole_debug.h"
+#include "loginfile.h"
 
 PimSettingExporterConsole::PimSettingExporterConsole(QObject *parent)
     : QObject(parent),
       mPimSettingsBackupRestore(new PimSettingsBackupRestore(this)),
+      mLogInFile(new LogInFile(this)),
       mMode(Import),
       mInProgress(false)
 {
@@ -58,7 +60,7 @@ void PimSettingExporterConsole::setLogFileName(const QString &logFileName)
         qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Already in progress. We can't change it.";
         return;
     }
-    mLogFileName = logFileName;
+    mLogInFile->setFileName(logFileName);
 }
 
 void PimSettingExporterConsole::setTemplateFileName(const QString &templateFileName)

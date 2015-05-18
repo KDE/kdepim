@@ -28,3 +28,14 @@ LogInFile::~LogInFile()
 
 }
 
+QString LogInFile::fileName() const
+{
+    return mFileName;
+}
+
+void LogInFile::setFileName(const QString &fileName)
+{
+    mFileName = fileName;
+}
+
+

@@ -20,7 +20,7 @@
 
 #include <QObject>
 class PimSettingsBackupRestore;
-
+class LogInFile;
 class PimSettingExporterConsole : public QObject
 {
     Q_OBJECT
@@ -45,9 +45,9 @@ Q_SIGNALS:
     void finished();
 
 private:
-    QString mLogFileName;
     QString mTemplateFileName;
     PimSettingsBackupRestore *mPimSettingsBackupRestore;
+    LogInFile *mLogInFile;
     Mode mMode;
     bool mInProgress;
 };
