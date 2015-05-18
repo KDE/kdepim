@@ -17,10 +17,13 @@
 
 #include "pimsettingexporterconsole.h"
 #include "pimsettingsbackuprestore.h"
+#include <QDebug>
 
 PimSettingExporterConsole::PimSettingExporterConsole(QObject *parent)
     : QObject(parent),
-      mPimSettingsBackupRestore(new PimSettingsBackupRestore(this))
+      mPimSettingsBackupRestore(new PimSettingsBackupRestore(this)),
+      mMode(Import),
+      mInProgress(false)
 {
 
 }
@@ -29,4 +32,35 @@ PimSettingExporterConsole::~PimSettingExporterConsole()
 {
 
 }
+
+PimSettingExporterConsole::Mode PimSettingExporterConsole::mode() const
+{
+    return mMode;
+}
+
+void PimSettingExporterConsole::setMode(const Mode &mode)
+{
+    if (!mInProgress) {
+        mMode = mode;
+    }
+}
+void PimSettingExporterConsole::setLogFileName(const QString &logFileName)
+{
+    if (mInProgress) {
+        qDebug() << "Already in progress. We can't change it.";
+        return;
+    }
+    mLogFileName = logFileName;
+}
+void PimSettingExporterConsole::setTemplateFileName(const QString &templateFileName)
+{
+    if (mInProgress) {
+        qDebug() << "Already in progress. We can't change it.";
+        return;
+    }
+    mTemplateFileName = templateFileName;
+}
+
+
+
 

@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
     aboutData.processCommandLine(&parser);
 
     PimSettingExporterConsole *console = new PimSettingExporterConsole;
+    //TODO addmode from arguments
     QObject::connect(console, SIGNAL(finished()), &app, SLOT(quit()));
 
     return app.exec();

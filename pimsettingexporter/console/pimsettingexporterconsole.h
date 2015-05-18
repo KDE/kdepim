@@ -25,13 +25,30 @@ class PimSettingExporterConsole : public QObject
 {
     Q_OBJECT
 public:
+    enum Mode {
+        Import = 0,
+        Export = 1
+    };
+
     explicit PimSettingExporterConsole(QObject *parent = Q_NULLPTR);
     ~PimSettingExporterConsole();
 
+    Mode mode() const;
+    void setMode(const Mode &mode);
+
+    void setLogFileName(const QString &logFileName);
+
+    void setTemplateFileName(const QString &templateFileName);
+
 Q_SIGNALS:
     void finished();
+
 private:
+    QString mLogFileName;
+    QString mTemplateFileName;
     PimSettingsBackupRestore *mPimSettingsBackupRestore;
+    Mode mMode;
+    bool mInProgress;
 };
 
 #endif // PIMSETTINGEXPORTERCONSOLE_H
