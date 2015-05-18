@@ -16,12 +16,19 @@
 */
 
 #include "gravatarcreatedialog.h"
+#include "gravatarcreatewidget.h"
+#include <QVBoxLayout>
+#include <KLocalizedString>
 
 using namespace KABGravatar;
 GravatarCreateDialog::GravatarCreateDialog(QWidget *parent)
     : QDialog(parent)
 {
-
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mCreateWidget = new GravatarCreateWidget(this);
+    mCreateWidget->setObjectName(QLatin1String("gravatarcreatewidget"));
+    mainLayout->addWidget(mCreateWidget);
 }
 
 GravatarCreateDialog::~GravatarCreateDialog()

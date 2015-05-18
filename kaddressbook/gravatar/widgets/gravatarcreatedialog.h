@@ -21,12 +21,15 @@
 #include <QDialog>
 
 namespace KABGravatar {
+class GravatarCreateWidget;
 class GravatarCreateDialog : public QDialog
 {
     Q_OBJECT
 public:
     explicit GravatarCreateDialog(QWidget *parent=0);
     ~GravatarCreateDialog();
+private:
+    GravatarCreateWidget *mCreateWidget;
 };
 }
 
