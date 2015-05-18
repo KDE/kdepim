@@ -133,8 +133,7 @@ void GravatarResolvUrlJob::setEmail(const QString &email)
 
 QString GravatarResolvUrlJob::calculateHash()
 {
-    //KF5 add support for libravatar
-    QCryptographicHash hash(QCryptographicHash::Md5);
+    QCryptographicHash hash(mUseLibravatar ? QCryptographicHash::Sha256 : QCryptographicHash::Md5);
     hash.addData(mEmail.toLower().toUtf8());
     return QString::fromUtf8(hash.result().toHex());
 }
@@ -219,10 +218,14 @@ QUrl GravatarResolvUrlJob::createUrl()
         query.addQueryItem(QStringLiteral("s"), QString::number(mSize));
     }
     url.setScheme(QStringLiteral("http"));
-    url.setHost(QStringLiteral("www.gravatar.com"));
+    if (mUseLibravatar) {
+        url.setHost(QStringLiteral("cdn.libravatar.org"));
+    } else {
+        url.setHost(QStringLiteral("www.gravatar.com"));
+    }
     url.setPort(80);
     mCalculatedHash = calculateHash();
-    url.setPath(QStringLiteral("/avatar/") +mCalculatedHash);
+    url.setPath(QStringLiteral("/avatar/") + mCalculatedHash);
     url.setQuery(query);
     return url;
 }
