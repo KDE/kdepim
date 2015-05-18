@@ -34,7 +34,9 @@ GravatarResolvUrlJob::GravatarResolvUrlJob(QObject *parent)
       mSize(80),
       mHasGravatar(false),
       mUseDefaultPixmap(false),
-      mUseCache(false)
+      mUseCache(false),
+      mUseLibravatar(false),
+      mFallbackGravatar(true)
 {
 
 }
@@ -136,6 +138,26 @@ QString GravatarResolvUrlJob::calculateHash()
     hash.addData(mEmail.toLower().toUtf8());
     return QString::fromUtf8(hash.result().toHex());
 }
+bool GravatarResolvUrlJob::fallbackGravatar() const
+{
+    return mFallbackGravatar;
+}
+
+void GravatarResolvUrlJob::setFallbackGravatar(bool fallbackGravatar)
+{
+    mFallbackGravatar = fallbackGravatar;
+}
+
+bool GravatarResolvUrlJob::useLibravatar() const
+{
+    return mUseLibravatar;
+}
+
+void GravatarResolvUrlJob::setUseLibravatar(bool useLibravatar)
+{
+    mUseLibravatar = useLibravatar;
+}
+
 bool GravatarResolvUrlJob::useCache() const
 {
     return mUseCache;

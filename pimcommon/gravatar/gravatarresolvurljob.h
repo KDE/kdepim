@@ -57,6 +57,12 @@ public:
     bool useCache() const;
     void setUseCache(bool useCache);
 
+    bool useLibravatar() const;
+    void setUseLibravatar(bool useLibravatar);
+
+    bool fallbackGravatar() const;
+    void setFallbackGravatar(bool fallbackGravatar);
+
 Q_SIGNALS:
     void finished(PimCommon::GravatarResolvUrlJob *);
     void resolvUrl(const QUrl &url);
@@ -76,6 +82,8 @@ private:
     bool mHasGravatar;
     bool mUseDefaultPixmap;
     bool mUseCache;
+    bool mUseLibravatar;
+    bool mFallbackGravatar;
 };
 }
 

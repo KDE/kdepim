@@ -39,6 +39,8 @@ void GravatarResolvUrlJobTest::shouldHaveDefaultValue()
     QCOMPARE(job.pixmap().isNull(), true);
     QCOMPARE(job.useDefaultPixmap(), false);
     QCOMPARE(job.useCache(), false);
+    QCOMPARE(job.useLibravatar(), false);
+    QCOMPARE(job.fallbackGravatar(), true);
 }
 
 void GravatarResolvUrlJobTest::shouldChangeValue()
@@ -58,6 +60,22 @@ void GravatarResolvUrlJobTest::shouldChangeValue()
     useDefaultPixmap = false;
     job.setUseDefaultPixmap(useDefaultPixmap);
     QCOMPARE(job.useDefaultPixmap(), useDefaultPixmap);
+
+    bool useLibravatar = true;
+    job.setUseLibravatar(useLibravatar);
+    QCOMPARE(job.useLibravatar(), useLibravatar);
+
+    useLibravatar = false;
+    job.setUseLibravatar(useLibravatar);
+    QCOMPARE(job.useLibravatar(), useLibravatar);
+
+
+    bool fallBackGravatar = false;
+    job.setFallbackGravatar(fallBackGravatar);
+    QCOMPARE(job.fallbackGravatar(), fallBackGravatar);
+    fallBackGravatar = true;
+    job.setFallbackGravatar(fallBackGravatar);
+    QCOMPARE(job.fallbackGravatar(), fallBackGravatar);
 }
 
 void GravatarResolvUrlJobTest::shouldChangeSize()
@@ -88,8 +106,14 @@ void GravatarResolvUrlJobTest::shouldAddSizeInUrl()
     PimCommon::GravatarResolvUrlJob job;
     job.setEmail(QStringLiteral("foo@kde.org"));
     job.setSize(1024);
+    job.setUseLibravatar(false);
     QUrl url = job.generateGravatarUrl();
     QCOMPARE(url, QUrl(QStringLiteral("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404&s=1024")));
+#if 0 //USe libravatar
+    job.setUseLibravatar(true);
+    url = job.generateGravatarUrl();
+    QCOMPARE(url, QUrl(QStringLiteral("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404&s=1024")));
+#endif
 }
 
 void GravatarResolvUrlJobTest::shouldUseDefaultPixmap()
@@ -122,9 +146,10 @@ void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl_data()
     QTest::addColumn<QString>("input");
     QTest::addColumn<QString>("calculedhash");
     QTest::addColumn<QUrl>("output");
-    QTest::newRow("empty") << QString() << QString() << QUrl();
-    QTest::newRow("no domain") << QStringLiteral("foo") << QString() << QUrl();
-    QTest::newRow("validemail") << QStringLiteral("foo@kde.org") << QStringLiteral("89b4e14cf2fc6d426275c019c6dc9de6") << QUrl(QStringLiteral("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404"));
+    QTest::addColumn<bool>("uselibravatar");
+    QTest::newRow("empty") << QString() << QString() << QUrl() << false;
+    QTest::newRow("no domain") << QStringLiteral("foo") << QString() << QUrl() << false;
+    QTest::newRow("validemail") << QStringLiteral("foo@kde.org") << QStringLiteral("89b4e14cf2fc6d426275c019c6dc9de6") << QUrl(QStringLiteral("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404")) << false;
 }
 
 void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl()
@@ -132,8 +157,10 @@ void GravatarResolvUrlJobTest::shouldGenerateGravatarUrl()
     QFETCH(QString, input);
     QFETCH(QString, calculedhash);
     QFETCH(QUrl, output);
+    QFETCH(bool, uselibravatar);
     PimCommon::GravatarResolvUrlJob job;
     job.setEmail(input);
+    job.setUseLibravatar(uselibravatar);
     QUrl url = job.generateGravatarUrl();
     QCOMPARE(calculedhash, job.calculatedHash());
     QCOMPARE(url, output);
