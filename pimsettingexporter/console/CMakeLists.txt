@@ -14,6 +14,7 @@ set(pimsettingexporterconsole_SRCS
     pimsettingexportconsole_debug.cpp
     pimsettingexporterconsole.cpp
     loginfo.cpp
+    loginfile.cpp
     main.cpp)
 
 add_executable(pimsettingexporterconsole ${pimsettingexporterconsole_SRCS})
