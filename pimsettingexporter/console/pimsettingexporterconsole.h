@@ -40,6 +40,7 @@ public:
 
     void setTemplateFileName(const QString &templateFileName);
 
+    void start();
 Q_SIGNALS:
     void finished();
 

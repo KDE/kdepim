@@ -50,6 +50,9 @@ int main(int argc, char *argv[])
 
     PimSettingExporterConsole *console = new PimSettingExporterConsole;
     //TODO addmode from arguments
+
+    //TODO start it
+    console->start();
     QObject::connect(console, SIGNAL(finished()), &app, SLOT(quit()));
 
     return app.exec();

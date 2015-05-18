@@ -33,6 +33,11 @@ PimSettingExporterConsole::~PimSettingExporterConsole()
 
 }
 
+void PimSettingExporterConsole::start()
+{
+
+}
+
 PimSettingExporterConsole::Mode PimSettingExporterConsole::mode() const
 {
     return mMode;
@@ -46,6 +51,7 @@ void PimSettingExporterConsole::setMode(const Mode &mode)
     }
     mMode = mode;
 }
+
 void PimSettingExporterConsole::setLogFileName(const QString &logFileName)
 {
     if (mInProgress) {
@@ -54,6 +60,7 @@ void PimSettingExporterConsole::setLogFileName(const QString &logFileName)
     }
     mLogFileName = logFileName;
 }
+
 void PimSettingExporterConsole::setTemplateFileName(const QString &templateFileName)
 {
     if (mInProgress) {
