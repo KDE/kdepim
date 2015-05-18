@@ -18,18 +18,21 @@
 #ifndef KADDRESSBOOK_OPTIONS_H
 #define KADDRESSBOOK_OPTIONS_H
 
-#include <kcmdlineargs.h>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 #include <KLocalizedString>
 
-static KCmdLineOptions kaddressbook_options()
+static void kaddressbook_options(QCommandLineParser *parser)
 {
-    KCmdLineOptions options;
-    options.add("import",                ki18n("Import the given file"));
-    options.add("+[urls]",
-                ki18n("files or urls. "
-                      "The user will be asked whether to import."));
+    parser->addOption(
+        QCommandLineOption(
+            QStringLiteral("import"),
+            i18n("Import the given file")));
 
-    return options;
+    parser->addPositionalArgument(
+        QStringLiteral("urls"),
+        i18n("Files or URLs. THe user will be asked whether to import."),
+        QStringLiteral("[urls...]"));
 }
 
 #endif // KADDRESSBOOK_OPTIONS_H

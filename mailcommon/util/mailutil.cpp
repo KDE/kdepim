@@ -202,14 +202,14 @@ bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
     if (result) {
         // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
         QDBusInterface iface(QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication"),
-                             QLatin1String("org.kde.KUniqueApplication"));
+                             QLatin1String("org.kde.PIMUniqueApplication"));
         if (iface.isValid()) {
             if (switchTo) {
                 iface.call(QLatin1String("newInstance"));   // activate korganizer window
             }
 #if 0 //Not exist
             QDBusInterface pimIface("org.kde.korganizer", "/korganizer_PimApplication",
-                                    "org.kde.KUniqueApplication");
+                                    "org.kde.PIMUniqueApplication");
             QDBusReply<bool> r = pimIface.call("load");
             if (!r.isValid() || !r.value()) {
                 qCWarning(MAILCOMMON_LOG) << "Loading korganizer failed: " << pimIface.lastError().message();

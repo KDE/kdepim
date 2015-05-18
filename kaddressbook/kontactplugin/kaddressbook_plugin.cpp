@@ -26,7 +26,6 @@
 
 #include <QAction>
 #include <KActionCollection>
-#include <KCmdLineArgs>
 #include "kaddressbookplugin_debug.h"
 #include <KLocalizedString>
 
@@ -184,18 +183,19 @@ void KAddressBookPlugin::slotSyncContacts()
 #endif
 }
 
-void KAddressBookUniqueAppHandler::loadCommandLineOptions()
+void KAddressBookUniqueAppHandler::loadCommandLineOptions(QCommandLineParser *parser)
 {
-    KCmdLineArgs::addCmdLineOptions(kaddressbook_options());
+    kaddressbook_options(parser);
 }
 
-int KAddressBookUniqueAppHandler::newInstance()
+int KAddressBookUniqueAppHandler::activate(const QStringList &arguments)
 {
     // Ensure part is loaded
     (void)plugin()->part();
     org::kde::kaddressbook kaddressbook(QStringLiteral("org.kde.kaddressbook"), QStringLiteral("/KAddressBook"), QDBusConnection::sessionBus());
-    QDBusReply<bool> reply = kaddressbook.handleCommandLine();
-    return KontactInterface::UniqueAppHandler::newInstance();
+    QDBusReply<bool> reply = kaddressbook.handleCommandLine(arguments);
+
+    return KontactInterface::UniqueAppHandler::activate(arguments);
 }
 
 #include "kaddressbook_plugin.moc"

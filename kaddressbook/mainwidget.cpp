@@ -32,6 +32,7 @@
 #include "kaddressbookadaptor.h"
 #include "categoryselectwidget.h"
 #include "categoryfilterproxymodel.h"
+#include "kaddressbook_options.h"
 
 #include "sendmail/mailsenderjob.h"
 #include "sendvcards/sendvcardsjob.h"
@@ -345,15 +346,17 @@ void MainWidget::configure()
     dlg.exec();
 }
 
-void MainWidget::handleCommandLine()
+void MainWidget::handleCommandLine(const QStringList &arguments)
 {
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    if (args->isSet("import")) {
-        for (int i = 0; i < args->count(); ++i) {
-            importManager()->importFile(args->url(i));
+    QCommandLineParser parser;
+    kaddressbook_options(&parser);
+    parser.process(arguments);
+
+    if (parser.isSet(QStringLiteral("import"))) {
+        for (const QString &url : parser.positionalArguments()) {
+          importManager()->importFile(QUrl::fromUserInput(url));
         }
     }
-    args->clear();
 }
 
 XXPortManager *MainWidget::importManager() const

@@ -23,9 +23,9 @@
 
 #include "kaddressbook_export.h"
 
-#include <k4aboutdata.h>
+#include <KAboutData>
 
-class KADDRESSBOOK_EXPORT AboutData : public K4AboutData
+class KADDRESSBOOK_EXPORT AboutData : public KAboutData
 {
 public:
     /**

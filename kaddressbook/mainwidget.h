@@ -84,7 +84,7 @@ public Q_SLOTS:
     void mergeContacts();
     void slotSearchDuplicateContacts();
 
-    void handleCommandLine();
+    void handleCommandLine(const QStringList &arguments);
 
 private Q_SLOTS:
     void delayedInit();

@@ -23,7 +23,8 @@
 #include "mainwidget.h"
 #include "kaddressbook_options.h"
 
-#include <KCmdLineArgs>
+#include <QCommandLineParser>
+
 #include "kaddressbook_debug.h"
 #include <kontactinterface/pimuniqueapplication.h>
 
@@ -32,42 +33,44 @@
 class KAddressBookApplication : public KontactInterface::PimUniqueApplication
 {
 public:
-    KAddressBookApplication()
-        : KontactInterface::PimUniqueApplication(),
+    KAddressBookApplication(int &argc, char **argv[], KAboutData &about)
+        : KontactInterface::PimUniqueApplication(argc, argv, about),
           mMainWindow(Q_NULLPTR)
     {
     }
-    int newInstance() Q_DECL_OVERRIDE;
+    int activate(const QStringList &arguments) Q_DECL_OVERRIDE;
 
 private:
     MainWindow *mMainWindow;
 };
 
-int KAddressBookApplication::newInstance()
+int KAddressBookApplication::activate(const QStringList &arguments)
 {
-    qCDebug(KADDRESSBOOK_LOG);
     if (!mMainWindow) {
         mMainWindow = new MainWindow;
         mMainWindow->show();
     }
-    mMainWindow->mainWidget()->handleCommandLine();
+    mMainWindow->mainWidget()->handleCommandLine(arguments);
     return 0;
 }
 
 int main(int argc, char **argv)
 {
     KLocalizedString::setApplicationDomain("kaddressbook");
+
     AboutData about;
+    KAddressBookApplication app(argc, &argv, about);
+    QCommandLineParser *cmdArgs = app.cmdArgs();
+    kaddressbook_options(cmdArgs);
 
-    KCmdLineArgs::init(argc, argv, &about);
+    const QStringList args = QCoreApplication::arguments();
+    cmdArgs->process(args);
+    about.processCommandLine(cmdArgs);
 
-    KCmdLineArgs::addCmdLineOptions(kaddressbook_options());   // Add KAddressBook options
-    KUniqueApplication::addCmdLineOptions();
-    if (!KAddressBookApplication::start()) {
+    if (!KAddressBookApplication::start(args)) {
+        qCWarning(KADDRESSBOOK_LOG) << "kaddressbook is already running, exiting.";
         return 0;
     }
-
-    KAddressBookApplication app;
 
     return app.exec();
 }
