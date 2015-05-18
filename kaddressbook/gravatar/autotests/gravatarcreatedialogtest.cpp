@@ -16,6 +16,8 @@
 */
 
 #include "gravatarcreatedialogtest.h"
+#include "../widgets/gravatarcreatedialog.h"
+#include "../widgets/gravatarcreatewidget.h"
 #include <qtest_kde.h>
 
 GravatarCreateDialogTest::GravatarCreateDialogTest(QObject *parent)
@@ -27,6 +29,13 @@ GravatarCreateDialogTest::GravatarCreateDialogTest(QObject *parent)
 GravatarCreateDialogTest::~GravatarCreateDialogTest()
 {
 
+}
+
+void GravatarCreateDialogTest::shouldHaveDefaultValue()
+{
+    KABGravatar::GravatarCreateDialog dlg;
+    KABGravatar::GravatarCreateWidget *w = dlg.findChild<KABGravatar::GravatarCreateWidget *>(QLatin1String("gravatarcreatewidget"));
+    QVERIFY(w);
 }
 
 QTEST_KDEMAIN(GravatarCreateDialogTest, GUI)
