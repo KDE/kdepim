@@ -15,29 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "gravatarcreatedialog.h"
-#include "gravatarcreatewidget.h"
+#include "gravatarupdatedialog.h"
 #include <QVBoxLayout>
 #include <KLocalizedString>
-#include <QDialogButtonBox>
-#include <QPushButton>
+
 using namespace KABGravatar;
-GravatarCreateDialog::GravatarCreateDialog(QWidget *parent)
+
+GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
     : QDialog(parent)
 {
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
-    mCreateWidget = new GravatarCreateWidget(this);
-    mCreateWidget->setObjectName(QLatin1String("gravatarcreatewidget"));
-    mainLayout->addWidget(mCreateWidget);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-    buttonBox->setObjectName(QLatin1String("buttonbox"));
-    mainLayout->addWidget(buttonBox);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
 }
 
-GravatarCreateDialog::~GravatarCreateDialog()
+GravatarUpdateDialog::~GravatarUpdateDialog()
 {
 
 }

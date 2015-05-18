@@ -112,6 +112,8 @@ set(kaddressbook_gravatar_SRCS
    gravatar/job/gravatarupdatejob.cpp
    gravatar/widgets/gravatarcreatedialog.cpp
    gravatar/widgets/gravatarcreatewidget.cpp
+   gravatar/widgets/gravatarupdatedialog.cpp
+   gravatar/widgets/gravatarcreatewidget.cpp
 )
 
 set(kaddressbook_LIB_SRCS
