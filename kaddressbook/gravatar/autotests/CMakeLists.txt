@@ -6,5 +6,5 @@ include(AkonadiMacros)
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
-add_akonadi_isolated_test_advanced( gravatarcreatejobtest.cpp "../gravatarcreatejob.cpp" "kaddressbookprivate;pimcommon")
-add_akonadi_isolated_test_advanced( gravatarupdatejobtest.cpp "../gravatarupdatejob.cpp" "kaddressbookprivate;pimcommon;kabc")
+add_akonadi_isolated_test_advanced( gravatarcreatejobtest.cpp "../job/gravatarcreatejob.cpp" "kaddressbookprivate;pimcommon")
+add_akonadi_isolated_test_advanced( gravatarupdatejobtest.cpp "../job/gravatarupdatejob.cpp" "kaddressbookprivate;pimcommon;kabc")

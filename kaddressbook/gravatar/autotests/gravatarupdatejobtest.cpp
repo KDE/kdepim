@@ -19,7 +19,7 @@
 */
 
 #include "gravatarupdatejobtest.h"
-#include "../gravatarupdatejob.h"
+#include "../job/gravatarupdatejob.h"
 #include <qtest_kde.h>
 
 GravatarUpdateJobTest::GravatarUpdateJobTest(QObject *parent)
