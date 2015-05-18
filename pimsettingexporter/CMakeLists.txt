@@ -77,17 +77,12 @@ generate_export_header(pimsettingexporterprivate BASE_NAME pimsettingexporter)
 
 
 target_link_libraries(pimsettingexporterprivate
-  KF5::KIOCore
   KF5::AkonadiCore
   KF5::AkonadiPrivate
-  KF5::AkonadiMime
   KF5::Mime
   KF5::MailTransport
   KF5::AlarmCalendar
-  mailimporter
   mailcommon
-  #pimcommon
-  #kdepim
   #messagecomposer
 )
 
