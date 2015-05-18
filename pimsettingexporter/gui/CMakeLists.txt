@@ -23,7 +23,7 @@ set(pimsettingexporter_SRCS
     importexportprogressindicatorgui.cpp
     pimsettingexporterwindow.cpp
     pimsettingcommandlineoption.cpp
-    ../pimsettingexport_debug.cpp
+    pimsettingexportgui_debug.cpp
     main.cpp)
 
 add_executable(pimsettingexporter ${pimsettingexporter_SRCS})

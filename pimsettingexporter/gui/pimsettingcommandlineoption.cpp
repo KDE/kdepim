@@ -17,7 +17,7 @@
 
 #include "pimsettingcommandlineoption.h"
 #include "pimsettingexporterwindow.h"
-#include "pimsettingexport_debug.h"
+#include "pimsettingexportgui_debug.h"
 #include "kdepim-version.h"
 #include <KLocalizedString>
 #include <KAboutData>
@@ -41,7 +41,7 @@ void PimSettingCommandLineOption::slotActivateRequested(const QStringList &argum
     if (mParser.parse(arguments)) {
         handleCommandLine();
     } else {
-        qCDebug(PIMSETTINGEXPORTER_LOG) << " Impossible to parse argument ";
+        qCDebug(PIMSETTINGEXPORTERGUI_LOG) << " Impossible to parse argument ";
     }
 }
 

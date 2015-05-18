@@ -34,7 +34,7 @@
 #include <QTemporaryFile>
 
 #include <KProcess>
-#include "pimsettingexport_debug.h"
+#include "pimsettingexportcore_debug.h"
 
 #include <QFile>
 #include <QDir>
@@ -169,7 +169,7 @@ void ExportMailJob::backupResources()
                         Q_EMIT error(errorStr);
                     }
                 } else {
-                    qCDebug(PIMSETTINGEXPORTER_LOG) << " resource \"" << identifier << "\" will not store";
+                    qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " resource \"" << identifier << "\" will not store";
                 }
             }
         }
@@ -562,7 +562,7 @@ void ExportMailJob::backupAkonadiDb()
     const int result = proc->execute();
     delete proc;
     if (result != 0) {
-        qCDebug(PIMSETTINGEXPORTER_LOG) << " Error during dump Database";
+        qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " Error during dump Database";
         return;
     }
     const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), Utils::akonadiPath() + QLatin1String("akonadidatabase.sql"));

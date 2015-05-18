@@ -11,6 +11,7 @@ include_directories(${AKONADI_INCLUDE_DIR}
 
 set(pimsettingexporterconsole_SRCS
     importexportprogressindicatorconsole.cpp
+    pimsettingexportconsole_debug.cpp
     pimsettingexporterconsole.cpp
     loginfo.cpp
     main.cpp)

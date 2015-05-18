@@ -21,7 +21,7 @@
 #include <QString>
 #include <QUrl>
 #include <KSharedConfig>
-#include "pimsettingexport_debug.h"
+#include "pimsettingexportcore_debug.h"
 class KZip;
 namespace Akonadi
 {
@@ -34,7 +34,7 @@ struct resourceFiles {
     QString akonadiAgentConfigFile;
     void debug() const
     {
-        qCDebug(PIMSETTINGEXPORTER_LOG) << " akonadiconfigfile :" << akonadiConfigFile << " akonadiResources:" << akonadiResources << " akonadiAgentConfigFile:" << akonadiAgentConfigFile;
+        qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " akonadiconfigfile :" << akonadiConfigFile << " akonadiResources:" << akonadiResources << " akonadiAgentConfigFile:" << akonadiAgentConfigFile;
     }
 };
 

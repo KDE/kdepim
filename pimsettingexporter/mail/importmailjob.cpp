@@ -39,7 +39,7 @@
 #include <KMessageBox>
 #include <KArchiveFile>
 #include <KZip>
-#include "pimsettingexport_debug.h"
+#include "pimsettingexportcore_debug.h"
 
 #include <AkonadiCore/agenttype.h>
 #include <AkonadiCore/agentmanager.h>
@@ -153,7 +153,7 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory *dir, const
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                qCDebug(PIMSETTINGEXPORTER_LOG) << " Problem in archive. number of file " << lst.count();
+                qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " Problem in archive. number of file " << lst.count();
             }
         }
     }
@@ -407,7 +407,7 @@ void ImportMailJob::restoreResources()
                         if (collection != -1) {
                             settings.insert(QLatin1String("TrashCollection"), collection);
                         } else {
-                            qCDebug(PIMSETTINGEXPORTER_LOG) << " Use default trash folder";
+                            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " Use default trash folder";
                         }
                     }
 
@@ -441,7 +441,7 @@ void ImportMailJob::restoreResources()
                         infoAboutNewResource(newResource);
                     }
                 } else {
-                    qCDebug(PIMSETTINGEXPORTER_LOG) << " problem with resource";
+                    qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " problem with resource";
                 }
             }
         }
@@ -471,7 +471,7 @@ void ImportMailJob::restoreMails()
             file->copyTo(copyToDirName);
             QString resourceName(file->name());
             QString filename(file->name());
-            //qCDebug(PIMSETTINGEXPORTER_LOG)<<" filename "<<filename<<" resourceName"<<resourceName;
+            //qCDebug(PIMSETTINGEXPORTERCORE_LOG)<<" filename "<<filename<<" resourceName"<<resourceName;
             KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
             const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails());
@@ -564,9 +564,9 @@ void ImportMailJob::restoreMails()
                 }
                 listResourceToSync << newResource;
             } else {
-                qCDebug(PIMSETTINGEXPORTER_LOG) << " resource name not supported " << resourceName;
+                qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " resource name not supported " << resourceName;
             }
-            //qCDebug(PIMSETTINGEXPORTER_LOG)<<"url "<<url;
+            //qCDebug(PIMSETTINGEXPORTERCORE_LOG)<<"url "<<url;
         }
     }
     Q_EMIT info(i18n("Mails restored."));

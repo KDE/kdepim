@@ -17,6 +17,6 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "pimsettingexport_debug.h"
-Q_LOGGING_CATEGORY(PIMSETTINGEXPORTER_LOG, "log_pimsettingexporter")
+#include "pimsettingexportgui_debug.h"
+Q_LOGGING_CATEGORY(PIMSETTINGEXPORTERGUI_LOG, "log_pimsettingexportergui")
 

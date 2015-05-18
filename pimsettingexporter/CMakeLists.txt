@@ -58,7 +58,7 @@ set(pimsettingexporter_LIB_SRCS
   ${pimsettingexporter_jot_SRCS}
   ${pimsettingexporter_akregator_SRCS}
   ${pimsettingexporter_blogilo_SRCS}
-  pimsettingexport_debug.cpp
+  pimsettingexportcore_debug.cpp
   abstractimportexportjob.cpp
   pimsettingexporterkernel.cpp
   utils.cpp

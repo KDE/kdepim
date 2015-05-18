@@ -20,7 +20,6 @@
 
 #include <KLocalizedString>
 #include <KDBusService>
-#include "pimsettingexport_debug.h"
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QApplication>

@@ -96,7 +96,7 @@ void ImportAlarmJob::restoreResources()
 
                     QString filename(file->name());
                     //TODO adapt filename otherwise it will use all the time the same filename.
-                    qCDebug(PIMSETTINGEXPORTER_LOG) << " filename :" << filename;
+                    qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " filename :" << filename;
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
@@ -124,7 +124,7 @@ void ImportAlarmJob::restoreResources()
                     const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_kalarm_dir_resource"), filename, settings, true);
                     infoAboutNewResource(newResource);
                     listResource << newResource;
-                    qCDebug(PIMSETTINGEXPORTER_LOG) << " newResource" << newResource;
+                    qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " newResource" << newResource;
                 }
             }
         }
@@ -177,7 +177,7 @@ void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, con
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                qCDebug(PIMSETTINGEXPORTER_LOG) << " Problem in archive. number of file " << lst.count();
+                qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " Problem in archive. number of file " << lst.count();
             }
         }
     }

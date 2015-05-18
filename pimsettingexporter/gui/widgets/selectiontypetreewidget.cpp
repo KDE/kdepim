@@ -25,7 +25,7 @@
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
-#include "pimsettingexport_debug.h"
+#include "gui/pimsettingexportgui_debug.h"
 #include <QPointer>
 
 SelectionTypeTreeWidget::SelectionTypeTreeWidget(QWidget *parent)
@@ -197,7 +197,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
         break;
     }
     default:
-        qCDebug(PIMSETTINGEXPORTER_LOG) << " Type not supported: " << type;
+        qCDebug(PIMSETTINGEXPORTERGUI_LOG) << " Type not supported: " << type;
         break;
     }
 }

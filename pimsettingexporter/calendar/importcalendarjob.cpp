@@ -27,7 +27,7 @@
 #include <KArchive>
 #include <KZip>
 
-#include "pimsettingexport_debug.h"
+#include "pimsettingexportcore_debug.h"
 
 #include <QFile>
 #include <QDir>
@@ -95,13 +95,13 @@ void ImportCalendarJob::restoreResources()
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile *file = static_cast<const KArchiveFile *>(fileResouceEntry);
                     if (!file->copyTo(copyToDirName)) {
-                        qCDebug(PIMSETTINGEXPORTER_LOG) << "file can not copy to " << copyToDirName;
+                        qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "file can not copy to " << copyToDirName;
                     }
                     QString resourceName(file->name());
 
                     QString filename(file->name());
                     //TODO adapt filename otherwise it will use all the time the same filename.
-                    qCDebug(PIMSETTINGEXPORTER_LOG) << " filename :" << filename;
+                    qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " filename :" << filename;
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
@@ -130,7 +130,7 @@ void ImportCalendarJob::restoreResources()
                     const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_icaldir_resource"), filename, settings, true);
                     infoAboutNewResource(newResource);
                     listResource << newResource;
-                    qCDebug(PIMSETTINGEXPORTER_LOG) << " newResource" << newResource;
+                    qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " newResource" << newResource;
                 }
             }
         }
@@ -194,7 +194,7 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                qCDebug(PIMSETTINGEXPORTER_LOG) << " Problem in archive. number of file " << lst.count();
+                qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " Problem in archive. number of file " << lst.count();
             }
         }
     }
@@ -280,7 +280,7 @@ void ImportCalendarJob::restoreConfig()
         const QString templatePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("korganizer/templates/");
         const KArchiveDirectory *templateDir = static_cast<const KArchiveDirectory *>(templateEntry);
         if (!templateDir->copyTo(templatePath)) {
-            qCDebug(PIMSETTINGEXPORTER_LOG) << "template cannot copy to " << templatePath;
+            qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "template cannot copy to " << templatePath;
         }
     }
 
