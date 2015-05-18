@@ -23,7 +23,7 @@
 
 #include <QObject>
 #include <AkonadiCore/Item>
-#include <KUrl>
+#include <QUrl>
 namespace PimCommon
 {
 class GravatarResolvUrlJob;
@@ -47,7 +47,7 @@ public:
     void setItem(const Akonadi::Item &item);
 
 Q_SIGNALS:
-    void resolvedUrl(const KUrl &url);
+    void resolvedUrl(const QUrl &url);
     void gravatarPixmap(const QPixmap &pix);
 
 private Q_SLOTS:

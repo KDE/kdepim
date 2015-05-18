@@ -45,7 +45,7 @@ void GravatarCreateJob::start()
     job->setEmail(mEmail);
     if (job->canStart()) {
         connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
-        connect(job, SIGNAL(resolvUrl(KUrl)), this, SIGNAL(resolvedUrl(KUrl)));
+        connect(job, &PimCommon::GravatarResolvUrlJob::resolvUrl, this, &GravatarCreateJob::resolvedUrl);
         job->start();
     } else {
         deleteLater();

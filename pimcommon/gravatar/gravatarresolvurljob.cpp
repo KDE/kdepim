@@ -22,6 +22,7 @@
 #include <QCryptographicHash>
 #include <QStringList>
 #include <QPixmap>
+#include <QUrlQuery>
 #include "pimcommon_debug.h"
 #include <solid/networking.h>
 
@@ -52,7 +53,7 @@ bool GravatarResolvUrlJob::canStart() const
     }
 }
 
-KUrl GravatarResolvUrlJob::generateGravatarUrl()
+QUrl GravatarResolvUrlJob::generateGravatarUrl()
 {
     return createUrl();
 }
@@ -67,7 +68,7 @@ void GravatarResolvUrlJob::start()
     mHasGravatar = false;
     if (canStart()) {
         mCalculatedHash.clear();
-        const KUrl url = createUrl();
+        const QUrl url = createUrl();
         Q_EMIT resolvUrl(url);
         bool haveStoredPixmap = false;
         const QPixmap pix = GravatarCache::self()->loadGravatarPixmap(mCalculatedHash, haveStoredPixmap);
@@ -180,24 +181,26 @@ QString GravatarResolvUrlJob::calculatedHash() const
     return mCalculatedHash;
 }
 
-KUrl GravatarResolvUrlJob::createUrl()
+QUrl GravatarResolvUrlJob::createUrl()
 {
+    QUrl url;
     mCalculatedHash.clear();
     if (!canStart()) {
-        return KUrl();
+        return url;
     }
-    KUrl url;
+    QUrlQuery query;
+    if (!mUseDefaultPixmap) {
+        //Add ?d=404
+        query.addQueryItem(QStringLiteral("d"), QStringLiteral("404"));
+    }
+    if (mSize != 80) {
+        query.addQueryItem(QStringLiteral("s"), QString::number(mSize));
+    }
     url.setScheme(QStringLiteral("http"));
     url.setHost(QStringLiteral("www.gravatar.com"));
     url.setPort(80);
     mCalculatedHash = calculateHash();
-    url.setPath(QStringLiteral("/avatar/") + mCalculatedHash);
-    if (!mUseDefaultPixmap) {
-        //Add ?d=404
-        url.addQueryItem(QStringLiteral("d"), QStringLiteral("404"));
-    }
-    if (mSize != 80) {
-        url.addQueryItem(QStringLiteral("s"), QString::number(mSize));
-    }
+    url.setPath(QStringLiteral("/avatar/") +mCalculatedHash);
+    url.setQuery(query);
     return url;
 }

@@ -20,7 +20,7 @@
 
 #include "pimcommon_export.h"
 #include <QObject>
-#include <KUrl>
+#include <QUrl>
 #include <QPixmap>
 #include <QNetworkReply>
 class QNetworkAccessManager;
@@ -39,7 +39,7 @@ public:
     QString email() const;
     void setEmail(const QString &email);
 
-    KUrl generateGravatarUrl();
+    QUrl generateGravatarUrl();
 
     bool hasGravatar() const;
 
@@ -59,7 +59,7 @@ public:
 
 Q_SIGNALS:
     void finished(PimCommon::GravatarResolvUrlJob *);
-    void resolvUrl(const KUrl &url);
+    void resolvUrl(const QUrl &url);
 
 private Q_SLOTS:
     void slotFinishLoadPixmap(QNetworkReply *reply);
@@ -67,7 +67,7 @@ private Q_SLOTS:
 
 private:
     QPixmap mPixmap;
-    KUrl createUrl();
+    QUrl createUrl();
     QString calculateHash();
     QString mEmail;
     QString mCalculatedHash;

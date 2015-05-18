@@ -22,7 +22,7 @@
 #define GRAVATARCREATEJOB_H
 
 #include <QObject>
-#include <KUrl>
+#include <QUrl>
 
 namespace PimCommon
 {
@@ -45,7 +45,7 @@ public:
     void setEmail(const QString &email);
 
 Q_SIGNALS:
-    void resolvedUrl(const KUrl &url);
+    void resolvedUrl(const QUrl &url);
     void gravatarPixmap(const QPixmap &pix);
 
 private Q_SLOTS:
