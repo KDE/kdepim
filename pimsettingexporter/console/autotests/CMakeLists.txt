@@ -4,7 +4,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon
 )
 
-set( pimsettingexporterconsole_loginfiletest_SRCS loginfiletest.cpp )
+set( pimsettingexporterconsole_loginfiletest_SRCS loginfiletest.cpp ../loginfile.cpp )
 add_executable( pimsettingexporterconsole_loginfiletest ${pimsettingexporterconsole_loginfiletest_SRCS})
 add_test( pimsettingexporterconsole_loginfiletest pimsettingexporterconsole_loginfiletest)
 ecm_mark_as_test(pimsettingexporterconsole_loginfiletest)

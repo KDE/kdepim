@@ -17,7 +17,7 @@
 
 #include "loginfiletest.h"
 #include <qtest.h>
-
+#include "../loginfile.h"
 LogInFileTest::LogInFileTest(QObject *parent)
     : QObject(parent)
 {
@@ -27,6 +27,12 @@ LogInFileTest::LogInFileTest(QObject *parent)
 LogInFileTest::~LogInFileTest()
 {
 
+}
+
+void LogInFileTest::shouldHaveDefaultValue()
+{
+    LogInFile logFile;
+    QVERIFY(logFile.fileName().isEmpty());
 }
 
 QTEST_MAIN(LogInFileTest)
