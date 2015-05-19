@@ -90,13 +90,13 @@ bool ImportLibreOfficeAutocorrection::importFile(Type type, const KArchiveDirect
     QString archiveFileName;
     switch (type) {
     case DOCUMENT:
-        archiveFileName = QLatin1String("DocumentList.xml");
+        archiveFileName = QStringLiteral("DocumentList.xml");
         break;
     case SENTENCE:
-        archiveFileName = QLatin1String("SentenceExceptList.xml");
+        archiveFileName = QStringLiteral("SentenceExceptList.xml");
         break;
     case WORD:
-        archiveFileName = QLatin1String("WordExceptList.xml");
+        archiveFileName = QStringLiteral("WordExceptList.xml");
         break;
     default:
         return false;

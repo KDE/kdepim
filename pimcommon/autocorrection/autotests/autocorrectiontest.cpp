@@ -65,32 +65,32 @@ void AutoCorrectionTest::shouldUpperCaseFirstCharOfSentence()
 
     //Uppercase here.
     QTextDocument doc;
-    QString text = QLatin1String("foo");
+    QString text = QStringLiteral("foo");
     doc.setPlainText(text);
     int position = text.length();
     autocorrection.autocorrect(false, doc, position);
-    QCOMPARE(doc.toPlainText(), QLatin1String("Foo"));
+    QCOMPARE(doc.toPlainText(), QStringLiteral("Foo"));
 
     //IT's not first char -> not uppercase
-    text = QLatin1String(" foo");
+    text = QStringLiteral(" foo");
     doc.setPlainText(text);
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), text);
 
     //It's already uppercase
-    text = QLatin1String("Foo");
+    text = QStringLiteral("Foo");
     doc.setPlainText(text);
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), text);
 
     //Word is after a ". "
-    text = QLatin1String("Foo. foo");
+    text = QStringLiteral("Foo. foo");
     doc.setPlainText(text);
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
-    QCOMPARE(doc.toPlainText(), QLatin1String("Foo. Foo"));
+    QCOMPARE(doc.toPlainText(), QStringLiteral("Foo. Foo"));
     QCOMPARE(position, text.length());
 
 }
@@ -103,43 +103,43 @@ void AutoCorrectionTest::shouldFixTwoUpperCaseChars()
 
     //Remove two uppercases
     QTextDocument doc;
-    QString text = QLatin1String("FOo");
+    QString text = QStringLiteral("FOo");
     doc.setPlainText(text);
     int position = text.length();
     autocorrection.autocorrect(false, doc, position);
-    QCOMPARE(doc.toPlainText(), QLatin1String("Foo"));
+    QCOMPARE(doc.toPlainText(), QStringLiteral("Foo"));
 
     //There is not two uppercase
-    text = QLatin1String("foo");
+    text = QStringLiteral("foo");
     doc.setPlainText(text);
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), text);
 
-    text = QLatin1String("Foo");
+    text = QStringLiteral("Foo");
     doc.setPlainText(text);
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), text);
 
     //There is a uppercase word
-    text = QLatin1String("FOO");
+    text = QStringLiteral("FOO");
     doc.setPlainText(text);
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), text);
 
     //Exclude 2 upper letter
-    text = QLatin1String("ABc");
+    text = QStringLiteral("ABc");
     doc.setPlainText(text);
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
-    QCOMPARE(doc.toPlainText(), QLatin1String("Abc"));
+    QCOMPARE(doc.toPlainText(), QStringLiteral("Abc"));
 
     QSet<QString> exception;
-    exception.insert(QLatin1String("ABc"));
+    exception.insert(QStringLiteral("ABc"));
     autocorrection.setTwoUpperLetterExceptions(exception);
-    text = QLatin1String("ABc");
+    text = QStringLiteral("ABc");
     doc.setPlainText(text);
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
@@ -158,20 +158,20 @@ void AutoCorrectionTest::shouldReplaceSingleQuote()
     autocorrection.setTypographicSingleQuotes(simpleQuote);
 
     QTextDocument doc;
-    QString text = QLatin1String("sss");
-    doc.setPlainText(QLatin1String("'") + text);
+    QString text = QStringLiteral("sss");
+    doc.setPlainText(QStringLiteral("'") + text);
     int position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), QString(simpleQuote.begin + text));
 
-    text = QLatin1String("sss");
-    doc.setPlainText(text + QLatin1String("'"));
+    text = QStringLiteral("sss");
+    doc.setPlainText(text + QStringLiteral("'"));
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), QString(text + simpleQuote.end));
 
-    text = QLatin1String("sss");
-    doc.setPlainText(QLatin1String("'") + text + QLatin1String("'"));
+    text = QStringLiteral("sss");
+    doc.setPlainText(QStringLiteral("'") + text + QStringLiteral("'"));
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), QString(simpleQuote.begin + text + simpleQuote.end));
@@ -190,21 +190,21 @@ void AutoCorrectionTest::shouldReplaceDoubleQuote()
     autocorrection.setTypographicDoubleQuotes(doubleQuote);
 
     QTextDocument doc;
-    QString text = QLatin1String("sss");
+    QString text = QStringLiteral("sss");
 
     doc.setPlainText(QLatin1Char('"') + text);
     int position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), QString(doubleQuote.begin + text));
 
-    text = QLatin1String("sss");
-    doc.setPlainText(text + QLatin1String("\""));
+    text = QStringLiteral("sss");
+    doc.setPlainText(text + QStringLiteral("\""));
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), QString(text + doubleQuote.end));
 
-    text = QLatin1String("sss");
-    doc.setPlainText(QLatin1String("\"") + text + QLatin1String("\""));
+    text = QStringLiteral("sss");
+    doc.setPlainText(QStringLiteral("\"") + text + QStringLiteral("\""));
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), QString(doubleQuote.begin + text + doubleQuote.end));
@@ -216,11 +216,11 @@ void AutoCorrectionTest::shouldNotReplaceUppercaseLetter()
     autocorrection.setEnabledAutoCorrection(true);
     autocorrection.setFixTwoUppercaseChars(true);
     QSet<QString> exceptions;
-    exceptions.insert(QLatin1String("ABc"));
+    exceptions.insert(QStringLiteral("ABc"));
     autocorrection.setTwoUpperLetterExceptions(exceptions);
 
     QTextDocument doc;
-    QString text = QLatin1String("foo ABc");
+    QString text = QStringLiteral("foo ABc");
     doc.setPlainText(text);
     int position = text.length();
     autocorrection.autocorrect(false, doc, position);
@@ -235,19 +235,19 @@ void AutoCorrectionTest::shouldReplaceToTextFormat()
 
     QTextDocument doc;
     //We don't use html => don't change it.
-    QString text = QLatin1String("*foo*");
+    QString text = QStringLiteral("*foo*");
     doc.setHtml(text);
     int position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), text);
 
-    QString result = QLatin1String("foo");
+    QString result = QStringLiteral("foo");
     doc.setHtml(text);
     position = text.length();
     autocorrection.autocorrect(true, doc, position);
     QCOMPARE(doc.toPlainText(), result);
 
-    text = QLatin1String("*foo*");
+    text = QStringLiteral("*foo*");
     doc.setHtml(text);
     position = text.length();
     autocorrection.autocorrect(true, doc, position);
@@ -259,7 +259,7 @@ void AutoCorrectionTest::shouldReplaceToTextFormat()
     QCOMPARE(charFormat.font().bold(), true);
     QCOMPARE(charFormat.font().strikeOut(), false);
 
-    text = QLatin1String("_foo_");
+    text = QStringLiteral("_foo_");
     doc.setHtml(text);
     position = text.length();
     autocorrection.autocorrect(true, doc, position);
@@ -271,7 +271,7 @@ void AutoCorrectionTest::shouldReplaceToTextFormat()
     QCOMPARE(charFormat.font().bold(), false);
     QCOMPARE(charFormat.font().strikeOut(), false);
 
-    text = QLatin1String("-foo-");
+    text = QStringLiteral("-foo-");
     doc.setHtml(text);
     position = text.length();
     autocorrection.autocorrect(true, doc, position);
@@ -284,17 +284,17 @@ void AutoCorrectionTest::shouldReplaceToTextFormat()
     QCOMPARE(charFormat.font().strikeOut(), true);
 
     //Don't convert it.
-    text = QLatin1String("-foo1");
+    text = QStringLiteral("-foo1");
     doc.setHtml(text);
     position = text.length();
     autocorrection.autocorrect(true, doc, position);
     QCOMPARE(doc.toPlainText(), text);
 
-    text = QLatin1String("*foo* blabla");
+    text = QStringLiteral("*foo* blabla");
     position = 5;
     doc.setHtml(text);
     autocorrection.autocorrect(true, doc, position);
-    result = QLatin1String("foo blabla");
+    result = QStringLiteral("foo blabla");
     QCOMPARE(doc.toPlainText(), result);
     QCOMPARE(position, 3);
 
@@ -309,15 +309,15 @@ void AutoCorrectionTest::shouldReplaceAutoFraction()
     autocorrection.setAutoFractions(true);
 
     QTextDocument doc;
-    QString text = QLatin1String("1/2");
+    QString text = QStringLiteral("1/2");
     doc.setPlainText(text);
     int position = text.length();
     autocorrection.autocorrect(false, doc, position);
 
     QCOMPARE(doc.toPlainText(), QString::fromUtf8("½"));
 
-    QString suffix = QLatin1String(" after");
-    text = QLatin1String("1/2");
+    QString suffix = QStringLiteral(" after");
+    text = QStringLiteral("1/2");
     position = 3;
     text += suffix;
     doc.setPlainText(text);
@@ -334,23 +334,23 @@ void AutoCorrectionTest::shouldNotAddSpaceWhenWeAlreadyHaveASpace()
     autocorrection.setSingleSpaces(true);
     QTextDocument doc;
     //We already a space => don't allow to add more
-    QString text = QLatin1String("FOO ");
+    QString text = QStringLiteral("FOO ");
     doc.setPlainText(text);
     int position = text.length();
     bool result = autocorrection.autocorrect(false, doc, position);
     QCOMPARE(result, false);
 
     //We can add a space
-    text = QLatin1String("FOO");
+    text = QStringLiteral("FOO");
     doc.setPlainText(text);
     position = text.length();
     result = autocorrection.autocorrect(false, doc, position);
     QCOMPARE(result, true);
 
     //We have a space => don't add it.
-    text = QLatin1String("FOO ");
+    text = QStringLiteral("FOO ");
     position = text.length();
-    QString fullText = text + QLatin1String("FOO");
+    QString fullText = text + QStringLiteral("FOO");
     doc.setPlainText(fullText);
     result = autocorrection.autocorrect(false, doc, position);
     QCOMPARE(result, false);
@@ -364,7 +364,7 @@ void AutoCorrectionTest::shouldAutocorrectWord()
 
     QTextDocument doc;
     //No changes
-    QString text = QLatin1String("FOO");
+    QString text = QStringLiteral("FOO");
     doc.setPlainText(text);
     int position = text.length();
     int oldPosition = position;
@@ -374,18 +374,18 @@ void AutoCorrectionTest::shouldAutocorrectWord()
 
     //Convert word
     QHash<QString, QString> entries;
-    const QString convertWord = QLatin1String("BLABLA");
+    const QString convertWord = QStringLiteral("BLABLA");
     entries.insert(text, convertWord);
     autocorrection.setAutocorrectEntries(entries);
-    text = QLatin1String("FOO");
+    text = QStringLiteral("FOO");
     doc.setPlainText(text);
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
     QCOMPARE(doc.toPlainText(), convertWord);
     QCOMPARE(position, convertWord.length());
 
-    QString suffix = QLatin1String(" TOTO");
-    text = QLatin1String("FOO");
+    QString suffix = QStringLiteral(" TOTO");
+    text = QStringLiteral("FOO");
     position = text.length();
     text += suffix;
     doc.setPlainText(text);
@@ -401,12 +401,12 @@ void AutoCorrectionTest::shouldNotUpperCaseFirstCharOfSentence()
     autocorrection.setEnabledAutoCorrection(true);
     autocorrection.setUppercaseFirstCharOfSentence(true);
     QSet<QString> lst;
-    lst.insert(QLatin1String("Foo."));
+    lst.insert(QStringLiteral("Foo."));
     autocorrection.setUpperCaseExceptions(lst);
 
     //Uppercase here.
     QTextDocument doc;
-    QString text = QLatin1String("foo. blabla Foo. tt");
+    QString text = QStringLiteral("foo. blabla Foo. tt");
     doc.setPlainText(text);
     int position = text.length();
     autocorrection.autocorrect(false, doc, position);
@@ -416,7 +416,7 @@ void AutoCorrectionTest::shouldNotUpperCaseFirstCharOfSentence()
     doc.setPlainText(text);
     position = text.length();
     autocorrection.autocorrect(false, doc, position);
-    QString result = QLatin1String("foo. blabla Foo. Tt");
+    QString result = QStringLiteral("foo. blabla Foo. Tt");
     QCOMPARE(doc.toPlainText(), result);
 
 }

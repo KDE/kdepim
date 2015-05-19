@@ -928,7 +928,7 @@ void AutoCorrection::readAutoCorrectionXmlFile(bool forceGlobal)
 {
     KLocale *locale = KLocale::global();
     QString kdelang = locale->languageList().at(0);
-    kdelang.remove(QRegExp(QLatin1String("@.*")));
+    kdelang.remove(QRegExp(QStringLiteral("@.*")));
 
     mUpperCaseExceptions.clear();
     mAutocorrectEntries.clear();
@@ -1023,38 +1023,38 @@ void AutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
         qCDebug(PIMCOMMON_LOG) << "We can't save in file :" << fname;
         return;
     }
-    QDomDocument root(QLatin1String("autocorrection"));
-    root.appendChild(root.createProcessingInstruction(QLatin1String("xml"), QLatin1String("version=\"1.0\" encoding=\"UTF-8\"")));
+    QDomDocument root(QStringLiteral("autocorrection"));
+    root.appendChild(root.createProcessingInstruction(QStringLiteral("xml"), QStringLiteral("version=\"1.0\" encoding=\"UTF-8\"")));
 
-    QDomElement word = root.createElement(QLatin1String("Word"));
+    QDomElement word = root.createElement(QStringLiteral("Word"));
     root.appendChild(word);
-    QDomElement items = root.createElement(QLatin1String("items"));
+    QDomElement items = root.createElement(QStringLiteral("items"));
 
     QHashIterator<QString, QString> i(mAutocorrectEntries);
     while (i.hasNext()) {
         i.next();
-        QDomElement item = root.createElement(QLatin1String("item"));
-        item.setAttribute(QLatin1String("find"), i.key());
-        item.setAttribute(QLatin1String("replace"), i.value());
+        QDomElement item = root.createElement(QStringLiteral("item"));
+        item.setAttribute(QStringLiteral("find"), i.key());
+        item.setAttribute(QStringLiteral("replace"), i.value());
         items.appendChild(item);
     }
     word.appendChild(items);
 
-    QDomElement upperCaseExceptions = root.createElement(QLatin1String("UpperCaseExceptions"));
+    QDomElement upperCaseExceptions = root.createElement(QStringLiteral("UpperCaseExceptions"));
     QSet<QString>::const_iterator upper = mUpperCaseExceptions.constBegin();
     while (upper != mUpperCaseExceptions.constEnd()) {
-        QDomElement item = root.createElement(QLatin1String("word"));
-        item.setAttribute(QLatin1String("exception"), *upper);
+        QDomElement item = root.createElement(QStringLiteral("word"));
+        item.setAttribute(QStringLiteral("exception"), *upper);
         upperCaseExceptions.appendChild(item);
         ++upper;
     }
     word.appendChild(upperCaseExceptions);
 
-    QDomElement twoUpperLetterExceptions = root.createElement(QLatin1String("TwoUpperLetterExceptions"));
+    QDomElement twoUpperLetterExceptions = root.createElement(QStringLiteral("TwoUpperLetterExceptions"));
     QSet<QString>::const_iterator twoUpper = mTwoUpperLetterExceptions.constBegin();
     while (twoUpper != mTwoUpperLetterExceptions.constEnd()) {
-        QDomElement item = root.createElement(QLatin1String("word"));
-        item.setAttribute(QLatin1String("exception"), *twoUpper);
+        QDomElement item = root.createElement(QStringLiteral("word"));
+        item.setAttribute(QStringLiteral("exception"), *twoUpper);
         twoUpperLetterExceptions.appendChild(item);
         ++twoUpper;
     }
@@ -1062,29 +1062,29 @@ void AutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
 
     //Don't save it as  discussed with Calligra dev
     /*
-    QDomElement supperscript = root.createElement(QLatin1String( "SuperScript" ));
+    QDomElement supperscript = root.createElement(QStringLiteral( "SuperScript" ));
     QHashIterator<QString, QString> j(mSuperScriptEntries);
     while (j.hasNext()) {
         j.next();
-        QDomElement item = root.createElement(QLatin1String( "superscript" ));
-        item.setAttribute(QLatin1String("find"), j.key());
-        item.setAttribute(QLatin1String("super"), j.value());
+        QDomElement item = root.createElement(QStringLiteral( "superscript" ));
+        item.setAttribute(QStringLiteral("find"), j.key());
+        item.setAttribute(QStringLiteral("super"), j.value());
         supperscript.appendChild(item);
     }
     word.appendChild(supperscript);
     */
 
-    QDomElement doubleQuote = root.createElement(QLatin1String("DoubleQuote"));
-    QDomElement item = root.createElement(QLatin1String("doublequote"));
-    item.setAttribute(QLatin1String("begin"), mTypographicDoubleQuotes.begin);
-    item.setAttribute(QLatin1String("end"), mTypographicDoubleQuotes.end);
+    QDomElement doubleQuote = root.createElement(QStringLiteral("DoubleQuote"));
+    QDomElement item = root.createElement(QStringLiteral("doublequote"));
+    item.setAttribute(QStringLiteral("begin"), mTypographicDoubleQuotes.begin);
+    item.setAttribute(QStringLiteral("end"), mTypographicDoubleQuotes.end);
     doubleQuote.appendChild(item);
     word.appendChild(doubleQuote);
 
-    QDomElement singleQuote = root.createElement(QLatin1String("SimpleQuote"));
-    item = root.createElement(QLatin1String("simplequote"));
-    item.setAttribute(QLatin1String("begin"), mTypographicSingleQuotes.begin);
-    item.setAttribute(QLatin1String("end"), mTypographicSingleQuotes.end);
+    QDomElement singleQuote = root.createElement(QStringLiteral("SimpleQuote"));
+    item = root.createElement(QStringLiteral("simplequote"));
+    item.setAttribute(QStringLiteral("begin"), mTypographicSingleQuotes.begin);
+    item.setAttribute(QStringLiteral("end"), mTypographicSingleQuotes.end);
     singleQuote.appendChild(item);
     word.appendChild(singleQuote);
 
