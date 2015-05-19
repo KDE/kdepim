@@ -22,6 +22,8 @@ add_executable(pimsettingexporterconsole ${pimsettingexporterconsole_SRCS})
 target_link_libraries(pimsettingexporterconsole
   pimsettingexporterprivate
 )
-
+if (BUILD_TESTING)
+   add_subdirectory(autotests)
+endif()
 install(TARGETS pimsettingexporterconsole ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
