@@ -31,7 +31,7 @@ static void kaddressbook_options(QCommandLineParser *parser)
 
     parser->addPositionalArgument(
         QStringLiteral("urls"),
-        i18n("Files or URLs. THe user will be asked whether to import."),
+        i18n("Files or URLs. The user will be asked whether to import."),
         QStringLiteral("[urls...]"));
 }
 
