@@ -137,6 +137,7 @@ QString GravatarResolvUrlJob::calculateHash()
     hash.addData(mEmail.toLower().toUtf8());
     return QString::fromUtf8(hash.result().toHex());
 }
+
 bool GravatarResolvUrlJob::fallbackGravatar() const
 {
     return mFallbackGravatar;
