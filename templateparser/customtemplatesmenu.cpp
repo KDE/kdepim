@@ -116,7 +116,7 @@ void CustomTemplatesMenu::update()
         switch (t.type()) {
         case CustomTemplates::TReply:
             action = new QAction(nameAction, mOwnerActionCollection);   //krazy:exclude=tipsandthis
-            action->setShortcut(t.shortcut());
+            mOwnerActionCollection->setDefaultShortcut(action, t.shortcut());
             mOwnerActionCollection->addAction(nameActionName, action);
             connect(action, SIGNAL(triggered(bool)), mCustomReplyMapper, SLOT(map()));
             mCustomReplyMapper->setMapping(action, idx);
@@ -127,7 +127,7 @@ void CustomTemplatesMenu::update()
 
         case CustomTemplates::TReplyAll:
             action = new QAction(nameAction, mOwnerActionCollection);   //krazy:exclude=tipsandthis
-            action->setShortcut(t.shortcut());
+            mOwnerActionCollection->setDefaultShortcut(action, t.shortcut());
             mOwnerActionCollection->addAction(nameActionName, action);
             connect(action, SIGNAL(triggered(bool)), mCustomReplyAllMapper, SLOT(map()));
             mCustomReplyAllMapper->setMapping(action, idx);
@@ -139,7 +139,7 @@ void CustomTemplatesMenu::update()
         case CustomTemplates::TForward:
             action = new QAction(nameAction, mOwnerActionCollection);   //krazy:exclude=tipsandthis
             mOwnerActionCollection->addAction(nameActionName, action);
-            action->setShortcut(t.shortcut());
+            mOwnerActionCollection->setDefaultShortcut(action, t.shortcut());
             connect(action, SIGNAL(triggered(bool)), mCustomForwardMapper, SLOT(map()));
             mCustomForwardMapper->setMapping(action, idx);
             mCustomForwardActionMenu->addAction(action);
