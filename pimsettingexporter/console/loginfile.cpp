@@ -40,21 +40,36 @@ void LogInFile::setFileName(const QString &fileName)
 
 void LogInFile::slotAddEndLine()
 {
-    //TODO
+    addLogLine(QString(), AddEndLine);
 }
 
 
-void LogInFile::slotAddError()
+void LogInFile::slotAddError(const QString &message)
 {
-    //TODO
+    addLogLine(message, AddError);
 }
 
-void LogInFile::slotAddInfo()
+void LogInFile::slotAddInfo(const QString &message)
 {
-    //TODO
+    addLogLine(message, AddInfo);
 }
 
-void LogInFile::slotAddTitle()
+void LogInFile::slotAddTitle(const QString &message)
+{
+    addLogLine(message, AddTitle);
+}
+
+void LogInFile::addLogLine(const QString &message, LogType type)
 {
     //TODO
+    switch(type) {
+    case AddEndLine:
+        break;
+    case AddInfo:
+        break;
+    case AddError:
+        break;
+    case AddTitle:
+        break;
+    }
 }

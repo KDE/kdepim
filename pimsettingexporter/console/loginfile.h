@@ -33,10 +33,17 @@ public:
 public Q_SLOTS:
     void slotAddEndLine();
 
-    void slotAddError();
-    void slotAddInfo();
-    void slotAddTitle();
+    void slotAddError(const QString &message);
+    void slotAddInfo(const QString &message);
+    void slotAddTitle(const QString &message);
 private:
+    enum LogType {
+        AddEndLine = 0,
+        AddInfo,
+        AddError,
+        AddTitle
+    };
+    void addLogLine(const QString &message, LogType type);
     QString mFileName;
 };
 
