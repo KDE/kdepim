@@ -24,7 +24,7 @@ class GravatarCreateDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarCreateDialogTest(QObject *parent = 0);
+    explicit GravatarCreateDialogTest(QObject *parent = Q_NULLPTR);
     ~GravatarCreateDialogTest();
 
 private Q_SLOTS:

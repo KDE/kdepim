@@ -25,7 +25,7 @@ class GravatarCreateWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarCreateWidgetTest(QObject *parent = 0);
+    explicit GravatarCreateWidgetTest(QObject *parent = Q_NULLPTR);
     ~GravatarCreateWidgetTest();
 };
 
