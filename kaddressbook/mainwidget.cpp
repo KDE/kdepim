@@ -71,7 +71,6 @@
 
 #include <KContacts/ContactGroup>
 #include "kaddressbook_debug.h"
-#include <KCmdLineArgs>
 #include <QAction>
 #include <KActionCollection>
 #include <KActionMenu>
