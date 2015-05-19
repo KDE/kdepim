@@ -20,7 +20,7 @@
 
 #include "gravatarcreatejobtest.h"
 #include <qtest.h>
-#include "../gravatarcreatejob.h"
+#include "../job/gravatarcreatejob.h"
 
 GravatarCreateJobTest::GravatarCreateJobTest(QObject *parent)
     : QObject(parent)

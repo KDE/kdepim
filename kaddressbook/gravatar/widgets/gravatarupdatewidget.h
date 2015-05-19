@@ -18,26 +18,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "gravatarupdatejobtest.h"
-#include <qtest.h>
-#include "../job/gravatarupdatejob.h"
+#ifndef GRAVATARUPDATEWIDGET_H
+#define GRAVATARUPDATEWIDGET_H
 
-GravatarUpdateJobTest::GravatarUpdateJobTest(QObject *parent)
-    : QObject(parent)
+#include <QWidget>
+namespace KABGravatar {
+class GravatarUpdateWidget : public QWidget
 {
-
+    Q_OBJECT
+public:
+    explicit GravatarUpdateWidget(QWidget *parent = 0);
+    ~GravatarUpdateWidget();
+};
 }
 
-GravatarUpdateJobTest::~GravatarUpdateJobTest()
-{
-
-}
-
-void GravatarUpdateJobTest::shouldHaveDefaultValue()
-{
-    KABGravatar::GravatarUpdateJob job;
-    QVERIFY(job.email().isEmpty());
-    QVERIFY(!job.item().isValid());
-}
-
-QTEST_MAIN(GravatarUpdateJobTest)
+#endif // GRAVATARUPDATEWIDGET_H
