@@ -38,4 +38,23 @@ void LogInFile::setFileName(const QString &fileName)
     mFileName = fileName;
 }
 
+void LogInFile::slotAddEndLine()
+{
+    //TODO
+}
 
+
+void LogInFile::slotAddError()
+{
+    //TODO
+}
+
+void LogInFile::slotAddInfo()
+{
+    //TODO
+}
+
+void LogInFile::slotAddTitle()
+{
+    //TODO
+}

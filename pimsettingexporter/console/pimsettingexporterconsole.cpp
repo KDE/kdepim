@@ -27,12 +27,20 @@ PimSettingExporterConsole::PimSettingExporterConsole(QObject *parent)
       mMode(Import),
       mInProgress(false)
 {
-
+    initializeLogInFile();
 }
 
 PimSettingExporterConsole::~PimSettingExporterConsole()
 {
 
+}
+
+void PimSettingExporterConsole::initializeLogInFile()
+{
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addEndLine, mLogInFile, &LogInFile::slotAddEndLine);
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addError, mLogInFile, &LogInFile::slotAddError);
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addInfo, mLogInFile, &LogInFile::slotAddInfo);
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addTitle, mLogInFile, &LogInFile::slotAddTitle);
 }
 
 void PimSettingExporterConsole::start()

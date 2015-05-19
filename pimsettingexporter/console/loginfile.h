@@ -30,6 +30,12 @@ public:
     QString fileName() const;
     void setFileName(const QString &fileName);
 
+public Q_SLOTS:
+    void slotAddEndLine();
+
+    void slotAddError();
+    void slotAddInfo();
+    void slotAddTitle();
 private:
     QString mFileName;
 };

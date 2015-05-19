@@ -45,6 +45,7 @@ Q_SIGNALS:
     void finished();
 
 private:
+    void initializeLogInFile();
     QString mTemplateFileName;
     PimSettingsBackupRestore *mPimSettingsBackupRestore;
     LogInFile *mLogInFile;
