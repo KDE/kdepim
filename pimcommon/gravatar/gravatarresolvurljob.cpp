@@ -226,7 +226,7 @@ QUrl GravatarResolvUrlJob::createUrl()
     }
     url.setPort(80);
     mCalculatedHash = calculateHash();
-    url.setPath(QStringLiteral("/avatar/") + mCalculatedHash);
+    url.setPath(QLatin1String("/avatar/") + mCalculatedHash);
     url.setQuery(query);
     return url;
 }
