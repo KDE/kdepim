@@ -805,10 +805,10 @@ void ViewerPrivate::displaySplashPage(const QString &info)
     const QString rtlStylesheet = QLatin1String("");
 #else
     const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kmail2/about/main.html"));  //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
-    const QString stylesheet = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kdeui/about/kde_infopage.css"));
+    const QString stylesheet = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("/kf5/infopage/kde_infopage.css"));
     QString rtlStylesheet;
     if (QApplication::isRightToLeft()) {
-        rtlStylesheet = QLatin1String("@import \"") + KStandardDirs::locate("data", QLatin1String("kdeui/about/kde_infopage_rtl.css")) +  QLatin1String("\";");
+        rtlStylesheet = QLatin1String("@import \"") + KStandardDirs::locate("data", QLatin1String("/kf5/infopage/kde_infopage_rtl.css")) +  QLatin1String("\";");
     }
 #endif
     QFile f(location);
