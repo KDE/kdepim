@@ -19,17 +19,29 @@
 */
 #include <QWidget>
 #include <QVBoxLayout>
-#include <KCmdLineArgs>
-#include <kapplication.h>
+
+
 #include <klocalizedstring.h>
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 #include "composer/composerlineedit.h"
 
 using namespace MessageComposer;
 
 int main(int argc, char **argv)
 {
-    KCmdLineArgs::init( argc, argv, "testcomposerlineedit", 0, ki18n("ComposerLineEdit"), "1.0" , ki18n("composerlineedit test app"));
-    KApplication app;
+    QApplication app(argc, argv);
+    KAboutData aboutData( QLatin1String("testcomposerlineedit"), i18n("ComposerLineEdit"), QLatin1String("1.0" ));
+    aboutData.setShortDescription(i18n("composerlineedit test app"));
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout(w);
 

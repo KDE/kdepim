@@ -72,9 +72,9 @@
 #include <KContacts/ContactGroup>
 #include "kaddressbook_debug.h"
 #include <QAction>
+#include <QApplication>
 #include <KActionCollection>
 #include <KActionMenu>
-#include <KApplication>
 #include <KCheckableProxyModel>
 #include <KDescendantsProxyModel>
 #include <KLocalizedString>
