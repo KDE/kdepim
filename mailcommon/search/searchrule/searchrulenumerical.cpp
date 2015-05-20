@@ -23,8 +23,6 @@ using MailCommon::FilterLog;
 #include <QDateTime>
 #include <KMime/KMimeMessage>
 
-#include <KGlobal>
-
 #include <QDataStream>
 #include <QRegExp>
 #include <QXmlStreamWriter>

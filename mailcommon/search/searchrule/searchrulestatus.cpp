@@ -20,7 +20,6 @@
 using MailCommon::FilterLog;
 
 #include <KMime/KMimeMessage>
-#include <KGlobal>
 
 using namespace MailCommon;
 

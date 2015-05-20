@@ -23,8 +23,7 @@
 using MailCommon::FilterLog;
 
 #include <KMime/KMimeMessage>
-#include <KGlobal>
-
+#include <KLocalizedString>
 using namespace MailCommon;
 
 SearchRuleDate::SearchRuleDate(const QByteArray &field,

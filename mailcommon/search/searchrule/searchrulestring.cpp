@@ -27,9 +27,7 @@ using MailCommon::FilterLog;
 
 #include <KEmailAddress>
 
-#include <KDebug>
-#include <KLocale>
-#include <KGlobal>
+#include <KLocalizedString>
 
 #include <QRegExp>
 
