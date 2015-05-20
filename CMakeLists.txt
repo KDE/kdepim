@@ -149,7 +149,7 @@ endif()
 
 # OS X needs another stdlib to compile kleopatra
 if (APPLE)
-    add_definitions(-stdlib=libstdc++)
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -stdlib=libc++")
 endif(APPLE)
 
 set(KDEPIM_HAVE_X11 ${X11_FOUND})
