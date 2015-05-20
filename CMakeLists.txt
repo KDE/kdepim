@@ -147,6 +147,11 @@ if (NOT APPLE)
     find_package(X11)
 endif()
 
+# OS X needs another stdlib to compile kleopatra
+if (APPLE)
+    add_definitions(-stdlib=libstdc++)
+endif(APPLE)
+
 set(KDEPIM_HAVE_X11 ${X11_FOUND})
 if (KDEPIM_NO_TEXTTOSPEECH)
   set(KDEPIM_HAVE_TEXTTOSPEECH FALSE)
