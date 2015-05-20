@@ -19,6 +19,7 @@
 #include "pimsettingsbackuprestore.h"
 #include "pimsettingexportconsole_debug.h"
 #include "loginfile.h"
+#include "xml/templateselection.h"
 
 PimSettingExporterConsole::PimSettingExporterConsole(QObject *parent)
     : QObject(parent),
@@ -45,7 +46,14 @@ void PimSettingExporterConsole::initializeLogInFile()
 
 void PimSettingExporterConsole::start()
 {
-
+#if 0
+    //Load template if necessary
+    if (!mTemplateFileName.isEmpty()) {
+        TemplateSelection selection(mTemplateFileName);
+        const QHash<Utils::AppsType, Utils::StoredTypes> templateElements = selection.loadTemplate();
+        mPimSettingsBackupRestore->setStoredParameters(templateElements);
+    }
+#endif
 }
 
 PimSettingExporterConsole::Mode PimSettingExporterConsole::mode() const
