@@ -15,18 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 #include "gravatar/widgets/gravatardownloadpixmapwidget.h"
 
 int main(int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "gravatar_gui", 0, ki18n("GravatarTest_Gui"),
-                       "1.0", ki18n("Test for gravatar widget"));
+    QApplication app(argc, argv);
+    KAboutData aboutData( QLatin1String("gravatar_gui"), i18n("GravatarTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for gravatar widget"));
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     PimCommon::GravatarDownloadPixmapWidget *w = new PimCommon::GravatarDownloadPixmapWidget;
     w->show();
