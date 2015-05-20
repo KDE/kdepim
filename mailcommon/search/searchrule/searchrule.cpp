@@ -19,6 +19,7 @@
 #include "searchrule/searchruledate.h"
 #include "searchrule/searchrulestring.h"
 #include "searchrule/searchrulestatus.h"
+#include "mailcommon_debug.h"
 
 #include <KMime/KMimeMessage>
 
@@ -565,7 +566,7 @@ Akonadi::SearchTerm::Condition SearchRule::akonadiComparator() const
         //TODO is this sufficient?
         return Akonadi::SearchTerm::CondContains;
     default:
-        kDebug() << "Unhandled function type: " << function();
+        qCDebug(MAILCOMMON_LOG) << "Unhandled function type: " << function();
     }
 
     return Akonadi::SearchTerm::CondEqual;
