@@ -66,7 +66,6 @@
 #include <KRun>
 #include <KSelectAction>
 #include <KSharedConfigPtr>
-#include <KStandardDirs>
 #include <KGlobalSettings>
 #include <KStandardGuiItem>
 #include <QTemporaryDir>
@@ -808,7 +807,7 @@ void ViewerPrivate::displaySplashPage(const QString &info)
     const QString stylesheet = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("/kf5/infopage/kde_infopage.css"));
     QString rtlStylesheet;
     if (QApplication::isRightToLeft()) {
-        rtlStylesheet = QLatin1String("@import \"") + KStandardDirs::locate("data", QLatin1String("/kf5/infopage/kde_infopage_rtl.css")) +  QLatin1String("\";");
+        rtlStylesheet = QLatin1String("@import \"") + QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("/kf5/infopage/kde_infopage_rtl.css")) +  QLatin1String("\";");
     }
 #endif
     QFile f(location);
