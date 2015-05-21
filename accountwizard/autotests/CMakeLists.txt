@@ -7,7 +7,6 @@ add_test(ldaptest ldaptest)
 ecm_mark_as_test(ldaptest)
 
 target_link_libraries(ldaptest
-    KF5::KDELibs4Support
     KF5::KIOCore
     KF5::Mime
     KF5::Ldap
