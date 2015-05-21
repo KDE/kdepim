@@ -66,7 +66,7 @@ void SearchRuleNumericalTest::shouldMatchNumericalsize()
     QFETCH(bool, match);
     MailCommon::SearchRuleNumerical searchrule("<size>", function, QString::number(value));
     KMime::Message::Ptr msgPtr = KMime::Message::Ptr(new KMime::Message());
-    msgPtr->date(true)->setDateTime(KDateTime(maildate));
+    msgPtr->date(true)->setDateTime(maildate);
     Akonadi::Item item;
     item.setPayload<KMime::Message::Ptr>(msgPtr);
     QCOMPARE(searchrule.matches(item), match);
