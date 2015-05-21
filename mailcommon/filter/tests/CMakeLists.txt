@@ -6,8 +6,6 @@ target_link_libraries(filterimporterexportergui
   Qt5::Test
   Qt5::Core
   Qt5::Gui
-  KF5::KDELibs4Support
-  
   mailcommon
 )
 
@@ -18,8 +16,6 @@ target_link_libraries(invalidfilterdialoggui
   Qt5::Test
   Qt5::Core
   Qt5::Gui
-  KF5::KDELibs4Support
-  
   mailcommon
 )
 

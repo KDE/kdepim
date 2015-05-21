@@ -4,7 +4,6 @@ add_test(searchpatterntest searchpatterntest)
 ecm_mark_as_test(searchpatterntest)
 target_link_libraries( searchpatterntest
   mailcommon
-  KF5::KDELibs4Support
   Qt5::Test
   Qt5::Gui
 )
@@ -15,7 +14,6 @@ add_test(searchruletest searchruletest)
 ecm_mark_as_test(searchruletest)
 target_link_libraries( searchruletest
   mailcommon
-  KF5::KDELibs4Support
   Qt5::Test
   Qt5::Gui
 )
@@ -26,7 +24,6 @@ add_test(searchrulestatustest searchrulestatustest)
 ecm_mark_as_test(searchrulestatustest)
 target_link_libraries( searchrulestatustest
   mailcommon
-  KF5::KDELibs4Support
   Qt5::Test
   Qt5::Gui
   KF5::Mime
@@ -40,7 +37,6 @@ add_test(searchrulenumericaltest searchrulenumericaltest)
 ecm_mark_as_test(searchrulenumericaltest)
 target_link_libraries( searchrulenumericaltest
   mailcommon
-  KF5::KDELibs4Support
   Qt5::Test
   Qt5::Gui
   KF5::Mime
@@ -53,7 +49,6 @@ add_test(searchruledatetest searchruledatetest)
 ecm_mark_as_test(searchruledatetest)
 target_link_libraries( searchruledatetest
   mailcommon
-  KF5::KDELibs4Support
   Qt5::Test
   Qt5::Gui
   KF5::Mime
@@ -66,7 +61,6 @@ add_test(searchrulestringtest searchrulestringtest)
 ecm_mark_as_test(searchrulestringtest)
 target_link_libraries( searchrulestringtest
   mailcommon
-  KF5::KDELibs4Support
   Qt5::Test
   Qt5::Gui
   KF5::AkonadiContact

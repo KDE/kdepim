@@ -3,14 +3,14 @@ set( mailcommon_collectionannotationsattributetest_source collectionannotationsa
 add_executable( collectionannotationsattributetest ${mailcommon_collectionannotationsattributetest_source})
 add_test(collectionannotationsattributetest collectionannotationsattributetest)
 ecm_mark_as_test(collectionannotationsattributetest)
-target_link_libraries( collectionannotationsattributetest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)
+target_link_libraries( collectionannotationsattributetest Qt5::Test Qt5::Gui KF5::AkonadiCore mailcommon)
 
 
 set( mailcommon_expirecollectionattributetest_source expirecollectionattributetest.cpp ../attributes/expirecollectionattribute.cpp )
 add_executable( expirecollectionattributetest ${mailcommon_expirecollectionattributetest_source})
 add_test(expirecollectionattributetest expirecollectionattributetest)
 ecm_mark_as_test(expirecollectionattributetest)
-target_link_libraries( expirecollectionattributetest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore mailcommon)
+target_link_libraries( expirecollectionattributetest Qt5::Test Qt5::Gui KF5::AkonadiCore mailcommon)
 
 set( mailcommon_incidencesforwidgettest_source incidencesforwidgettest.cpp )
 add_executable( incidencesforwidgettest ${mailcommon_incidencesforwidgettest_source})
