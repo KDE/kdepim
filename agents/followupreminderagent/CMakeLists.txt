@@ -53,6 +53,7 @@ target_link_libraries(akonadi_followupreminder_agent
   KF5::DBusAddons
   followupreminder
   Qt5::Widgets
+  KF5::KDELibs4Support
 )
 
 if( APPLE )
