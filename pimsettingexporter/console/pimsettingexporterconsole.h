@@ -41,12 +41,17 @@ public:
     void setTemplateFileName(const QString &templateFileName);
 
     void start();
+
+    QString importFileName() const;
+    void setImportFileName(const QString &importFileName);
+
 Q_SIGNALS:
     void finished();
 
 private:
     void initializeLogInFile();
     QString mTemplateFileName;
+    QString mImportFileName;
     PimSettingsBackupRestore *mPimSettingsBackupRestore;
     LogInFile *mLogInFile;
     Mode mMode;

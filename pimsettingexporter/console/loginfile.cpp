@@ -30,6 +30,10 @@ LogInFile::~LogInFile()
 
 void LogInFile::save()
 {
+    if (mFileName.isEmpty()) {
+        //TODO
+        return;
+    }
     //TODO
 }
 

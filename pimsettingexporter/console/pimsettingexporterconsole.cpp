@@ -44,6 +44,21 @@ void PimSettingExporterConsole::initializeLogInFile()
     connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addTitle, mLogInFile, &LogInFile::slotAddTitle);
 }
 
+QString PimSettingExporterConsole::importFileName() const
+{
+    return mImportFileName;
+}
+
+void PimSettingExporterConsole::setImportFileName(const QString &importFileName)
+{
+    if (mInProgress) {
+        qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Already in progress. We can't change it.";
+        return;
+    }
+    mImportFileName = importFileName;
+}
+
+
 void PimSettingExporterConsole::start()
 {
 #if 0
@@ -54,6 +69,13 @@ void PimSettingExporterConsole::start()
         mPimSettingsBackupRestore->setStoredParameters(templateElements);
     }
 #endif
+    //TODO
+    switch(mMode) {
+    case Import:
+        break;
+    case Export:
+        break;
+    }
 }
 
 PimSettingExporterConsole::Mode PimSettingExporterConsole::mode() const
@@ -87,7 +109,3 @@ void PimSettingExporterConsole::setTemplateFileName(const QString &templateFileN
     }
     mTemplateFileName = templateFileName;
 }
-
-
-
-
