@@ -28,6 +28,11 @@ LogInFile::~LogInFile()
 
 }
 
+void LogInFile::save()
+{
+    //TODO
+}
+
 QString LogInFile::fileName() const
 {
     return mFileName;
@@ -61,15 +66,20 @@ void LogInFile::slotAddTitle(const QString &message)
 
 void LogInFile::addLogLine(const QString &message, LogType type)
 {
-    //TODO
+    QString newMessage;
     switch(type) {
     case AddEndLine:
+        newMessage = QLatin1Char('\n');
         break;
     case AddInfo:
+        newMessage = QStringLiteral("INFO: %1").arg(message);
         break;
     case AddError:
+        newMessage = QStringLiteral("ERROR: %1").arg(message);
         break;
     case AddTitle:
+        newMessage = message;
         break;
     }
+    mTextStream << newMessage;
 }

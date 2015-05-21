@@ -19,6 +19,7 @@
 #define LOGINFILE_H
 
 #include <QObject>
+#include <QTextStream>
 
 class LogInFile : public QObject
 {
@@ -30,6 +31,7 @@ public:
     QString fileName() const;
     void setFileName(const QString &fileName);
 
+    void save();
 public Q_SLOTS:
     void slotAddEndLine();
 
@@ -45,6 +47,7 @@ private:
     };
     void addLogLine(const QString &message, LogType type);
     QString mFileName;
+    QTextStream mTextStream;
 };
 
 #endif // LOGINFILE_H
