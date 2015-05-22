@@ -33,5 +33,5 @@ set( mdnstateattributetest_source mdnstateattributetest.cpp ../misc/mdnstateattr
 add_executable(  mdnstateattributetest ${mdnstateattributetest_source})
 add_test(mdnstateattributetest mdnstateattributetest)
 ecm_mark_as_test(mdnstateattributetest)
-target_link_libraries( mdnstateattributetest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore)
+target_link_libraries( mdnstateattributetest Qt5::Test Qt5::Gui KF5::AkonadiCore)
 

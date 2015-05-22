@@ -10,6 +10,5 @@ target_link_libraries( editorutiltest
    Qt5::Test
    Qt5::Gui
    Qt5::Core
-   KF5::KDELibs4Support
    pimcommon
 )

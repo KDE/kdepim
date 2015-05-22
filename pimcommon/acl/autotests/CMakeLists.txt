@@ -9,5 +9,5 @@ set( pimcommon_collectionaclwidgettest_source collectionaclwidgettest.cpp ../col
 add_executable( collectionaclwidgettest ${pimcommon_collectionaclwidgettest_source})
 add_test(collectionaclwidgettest collectionaclwidgettest)
 ecm_mark_as_test(collectionaclwidgettest)
-target_link_libraries( collectionaclwidgettest Qt5::Test KF5::KDELibs4Support Qt5::Gui KF5::AkonadiCore  KF5::IMAP pimcommon)
+target_link_libraries( collectionaclwidgettest Qt5::Test Qt5::Gui KF5::AkonadiCore  KF5::IMAP pimcommon)
 
