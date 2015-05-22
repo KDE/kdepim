@@ -20,6 +20,7 @@
 #define GRAVATARCREATEWIDGET_H
 
 #include <QWidget>
+class QLabel;
 namespace KABGravatar {
 class GravatarCreateWidget : public QWidget
 {
@@ -27,6 +28,10 @@ class GravatarCreateWidget : public QWidget
 public:
     explicit GravatarCreateWidget(QWidget *parent = 0);
     ~GravatarCreateWidget();
+    void setEmail(const QString &email);
+private:
+    QString mEmail;
+    QLabel *mEmailLab;
 };
 }
 

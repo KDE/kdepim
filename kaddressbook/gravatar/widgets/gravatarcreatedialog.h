@@ -28,7 +28,12 @@ class GravatarCreateDialog : public QDialog
 public:
     explicit GravatarCreateDialog(QWidget *parent=0);
     ~GravatarCreateDialog();
+
+    void setEmail(const QString &email);
+
 private:
+    void readConfig();
+    void writeConfig();
     GravatarCreateWidget *mCreateWidget;
 };
 }

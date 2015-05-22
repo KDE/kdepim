@@ -16,6 +16,8 @@
 */
 
 #include "gravatarcreatewidgettest.h"
+#include "../widgets/gravatarcreatewidget.h"
+#include <QLabel>
 #include <qtest_kde.h>
 GravatarCreateWidgetTest::GravatarCreateWidgetTest(QObject *parent)
     : QObject(parent)
@@ -26,6 +28,17 @@ GravatarCreateWidgetTest::GravatarCreateWidgetTest(QObject *parent)
 GravatarCreateWidgetTest::~GravatarCreateWidgetTest()
 {
 
+}
+
+void GravatarCreateWidgetTest::shouldHaveDefaultValue()
+{
+    KABGravatar::GravatarCreateWidget widget;
+    QLabel *lab = widget.findChild<QLabel *>(QLatin1String("emaillabel"));
+    QVERIFY(lab);
+
+
+    QLabel *emaillabel = widget.findChild<QLabel *>(QLatin1String("email"));
+    QVERIFY(emaillabel);
 }
 
 QTEST_KDEMAIN(GravatarCreateWidgetTest, GUI)

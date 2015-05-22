@@ -18,16 +18,35 @@
 
 #include "gravatarcreatewidget.h"
 
+#include <QLabel>
+#include <QGridLayout>
 using namespace KABGravatar;
 
 GravatarCreateWidget::GravatarCreateWidget(QWidget *parent)
     : QWidget(parent)
 {
+    QGridLayout *mainLayout = new QGridLayout;
+    setLayout(mainLayout);
+    //KF5 add i18n
+    QLabel *lab = new QLabel(QLatin1String("Email:"));
+    lab->setObjectName(QLatin1String("emaillabel"));
+    mainLayout->addWidget(lab, 0, 0);
 
+    mEmailLab = new QLabel;
+    mEmailLab->setObjectName(QLatin1String("email"));
+    mainLayout->addWidget(mEmailLab, 0, 1);
 }
 
 
 GravatarCreateWidget::~GravatarCreateWidget()
 {
 
+}
+
+void GravatarCreateWidget::setEmail(const QString &email)
+{
+    if (mEmail != email) {
+        mEmail = email;
+        mEmailLab->setText(mEmail);
+    }
 }
