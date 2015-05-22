@@ -30,6 +30,7 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldEnableDisableSearchButton();
 };
 
 #endif // GRAVATARCREATEWIDGETTEST_H

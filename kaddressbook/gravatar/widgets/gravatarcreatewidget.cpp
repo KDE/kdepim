@@ -59,7 +59,7 @@ void GravatarCreateWidget::setEmail(const QString &email)
     if (mEmail != email) {
         mEmail = email;
         mEmailLab->setText(mEmail);
-        mSearchGravatar->setEnabled(!mEmail.isEmpty());
+        mSearchGravatar->setEnabled(!mEmail.trimmed().isEmpty());
     }
 }
 

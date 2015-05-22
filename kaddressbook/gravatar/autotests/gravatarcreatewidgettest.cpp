@@ -44,4 +44,23 @@ void GravatarCreateWidgetTest::shouldHaveDefaultValue()
     QVERIFY(searchGravatar);
 }
 
+void GravatarCreateWidgetTest::shouldEnableDisableSearchButton()
+{
+    KABGravatar::GravatarCreateWidget widget;
+    QPushButton *searchGravatar = widget.findChild<QPushButton *>(QLatin1String("search"));
+    QVERIFY(!searchGravatar->isEnabled());
+
+    widget.setEmail(QLatin1String("foo"));
+    QVERIFY(searchGravatar->isEnabled());
+
+    widget.setEmail(QString());
+    QVERIFY(!searchGravatar->isEnabled());
+
+    widget.setEmail(QLatin1String("s"));
+    QVERIFY(searchGravatar->isEnabled());
+
+    widget.setEmail(QLatin1String(" "));
+    QVERIFY(!searchGravatar->isEnabled());
+}
+
 QTEST_KDEMAIN(GravatarCreateWidgetTest, GUI)
