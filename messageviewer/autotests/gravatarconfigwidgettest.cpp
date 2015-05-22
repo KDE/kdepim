@@ -43,13 +43,13 @@ void GravatarConfigWidgetTest::shouldHaveDefaultValue()
     QCheckBox *useDefaultImage = w.findChild<QCheckBox *>(QLatin1String("usedefaultimage"));
     QVERIFY(useDefaultImage);
 
-    QPushButton *clearGravatarCache = qFindChild<QPushButton *>(&w, QLatin1String("cleargravatarcachebutton"));
+    QPushButton *clearGravatarCache = w.findChild<QPushButton *>(QLatin1String("cleargravatarcachebutton"));
     QVERIFY(clearGravatarCache);
 
-    QLabel *lab = qFindChild<QLabel *>(&w, QLatin1String("gravatarcachesizelabel"));
+    QLabel *lab = w.findChild<QLabel *>(QLatin1String("gravatarcachesizelabel"));
     QVERIFY(lab);
 
-    KIntSpinBox *gravatarCacheSize = qFindChild<KIntSpinBox *>(&w, QLatin1String("gravatarcachesize"));
+    KIntSpinBox *gravatarCacheSize = w.findChild<KIntSpinBox *>(QLatin1String("gravatarcachesize"));
     QVERIFY(gravatarCacheSize);
 
 }
