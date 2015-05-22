@@ -26,6 +26,8 @@ class NetworkUtilTest : public QObject
 public:
     explicit NetworkUtilTest(QObject *parent = Q_NULLPTR);
     ~NetworkUtilTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // NETWORKUTILTEST_H
