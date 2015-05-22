@@ -74,7 +74,7 @@ private Q_SLOTS:
 private:
     QPixmap mPixmap;
     QUrl createUrl();
-    QString calculateHash();
+    QString calculateHash(bool useLibravator);
     QString mEmail;
     QString mCalculatedHash;
     QNetworkAccessManager *mNetworkAccessManager;

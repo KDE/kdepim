@@ -108,6 +108,8 @@ void GravatarResolvUrlJob::slotFinishLoadPixmap(QNetworkReply *reply)
         if (!mUseDefaultPixmap) {
             GravatarCache::self()->saveGravatarPixmap(mCalculatedHash, mPixmap);
         }
+    } else if (mUseLibravatar && mFallbackGravatar) {
+        //TODO
     }
     reply->deleteLater();
     Q_EMIT finished(this);
@@ -131,9 +133,9 @@ void GravatarResolvUrlJob::setEmail(const QString &email)
     mEmail = email;
 }
 
-QString GravatarResolvUrlJob::calculateHash()
+QString GravatarResolvUrlJob::calculateHash(bool useLibravator)
 {
-    QCryptographicHash hash(mUseLibravatar ? QCryptographicHash::Sha256 : QCryptographicHash::Md5);
+    QCryptographicHash hash(useLibravator ? QCryptographicHash::Sha256 : QCryptographicHash::Md5);
     hash.addData(mEmail.toLower().toUtf8());
     return QString::fromUtf8(hash.result().toHex());
 }
@@ -225,7 +227,7 @@ QUrl GravatarResolvUrlJob::createUrl()
         url.setHost(QStringLiteral("www.gravatar.com"));
     }
     url.setPort(80);
-    mCalculatedHash = calculateHash();
+    mCalculatedHash = calculateHash(mUseLibravatar);
     url.setPath(QLatin1String("/avatar/") + mCalculatedHash);
     url.setQuery(query);
     return url;
