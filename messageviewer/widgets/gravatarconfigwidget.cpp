@@ -24,7 +24,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QDir>
-#include <KIntNumInput>
+#include <QSpinBox>
 #include "settings/globalsettings.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 
@@ -52,7 +52,7 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     lab->setObjectName(QStringLiteral("gravatarcachesizelabel"));
     cacheSizeLayout->addWidget(lab);
 
-    mGravatarCacheSize = new KIntSpinBox;
+    mGravatarCacheSize = new QSpinBox;
     mGravatarCacheSize->setMinimum(1);
     mGravatarCacheSize->setMaximum(9999);
     mGravatarCacheSize->setObjectName(QStringLiteral("gravatarcachesize"));

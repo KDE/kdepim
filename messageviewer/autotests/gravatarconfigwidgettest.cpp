@@ -17,7 +17,7 @@
 
 #include "gravatarconfigwidgettest.h"
 #include "../widgets/gravatarconfigwidget.h"
-#include <KIntNumInput>
+#include <QSpinBox>
 #include <QCheckBox>
 #include <qtest.h>
 #include <QLabel>
@@ -49,7 +49,7 @@ void GravatarConfigWidgetTest::shouldHaveDefaultValue()
     QLabel *lab = w.findChild<QLabel *>(QLatin1String("gravatarcachesizelabel"));
     QVERIFY(lab);
 
-    KIntSpinBox *gravatarCacheSize = w.findChild<KIntSpinBox *>(QLatin1String("gravatarcachesize"));
+    QSpinBox *gravatarCacheSize = w.findChild<QSpinBox *>(QLatin1String("gravatarcachesize"));
     QVERIFY(gravatarCacheSize);
 
 }
