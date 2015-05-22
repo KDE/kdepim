@@ -5,7 +5,6 @@ ecm_mark_as_test(baloodebug_dialog_gui)
 target_link_libraries(baloodebug_dialog_gui
   Qt5::Core
   Qt5::Gui
-  KF5::KDELibs4Support
   pimcommon
 )
 
