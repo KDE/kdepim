@@ -12,3 +12,15 @@ target_link_libraries( editorutiltest
    Qt5::Core
    pimcommon
 )
+
+
+set(pimcommon_util_networkutil_SRCS networkutiltest.cpp )
+add_executable( networkutiltest ${pimcommon_util_networkutil_SRCS} )
+add_test(networkutiltest networkutiltest)
+ecm_mark_as_test(networkutiltest)
+target_link_libraries( networkutiltest
+   Qt5::Test
+   Qt5::Core
+   pimcommon
+)
+
