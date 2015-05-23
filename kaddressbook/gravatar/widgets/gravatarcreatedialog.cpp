@@ -54,7 +54,7 @@ void GravatarCreateDialog::setEmail(const QString &email)
 
 void GravatarCreateDialog::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "GravatarCreateDialog");
+    KConfigGroup grp(KSharedConfig::openConfig(), "GravatarCreateDialog");
     const QSize size = grp.readEntry("Size", QSize(300, 200));
     if (size.isValid()) {
         resize(size);
@@ -63,7 +63,7 @@ void GravatarCreateDialog::readConfig()
 
 void GravatarCreateDialog::writeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "GravatarCreateDialog");
+    KConfigGroup grp(KSharedConfig::openConfig(), "GravatarCreateDialog");
     grp.writeEntry("Size", size());
     grp.sync();
 }
