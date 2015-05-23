@@ -19,6 +19,7 @@
 #include "contactdisplaymessagememento.h"
 #include "messageviewer_debug.h"
 #include "pimcommon/gravatar/gravatarresolvurljob.h"
+#include "pimcommon/util/networkutil.h"
 #include "settings/globalsettings.h"
 #include <Akonadi/Contact/ContactSearchJob>
 
@@ -65,15 +66,17 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
         searchPhoto(searchJob->contacts());
         emit update(Viewer::Delayed);
     }
-    if (mPhoto.isEmpty() && mPhoto.url().isEmpty()) {
-        // No url, no photo => search gravatar
-        if (GlobalSettings::self()->gravatarSupportEnabled()) {
-            PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
-            job->setEmail(mEmailAddress);
-            job->setUseDefaultPixmap(GlobalSettings::self()->gravatarUseDefaultImage());
-            if (job->canStart()) {
-                connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
-                job->start();
+    if (!PimCommon::NetworkUtil::self()->lowBandwidh()) {
+        if (mPhoto.isEmpty() && mPhoto.url().isEmpty()) {
+            // No url, no photo => search gravatar
+            if (GlobalSettings::self()->gravatarSupportEnabled()) {
+                PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
+                job->setEmail(mEmailAddress);
+                job->setUseDefaultPixmap(GlobalSettings::self()->gravatarUseDefaultImage());
+                if (job->canStart()) {
+                    connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
+                    job->start();
+                }
             }
         }
     }
@@ -107,6 +110,7 @@ bool ContactDisplayMessageMemento::searchPhoto(const KContacts::AddresseeList &l
     }
     return foundPhoto;
 }
+
 QPixmap ContactDisplayMessageMemento::gravatarPixmap() const
 {
     return mGravatarPixmap;
@@ -116,18 +120,18 @@ void ContactDisplayMessageMemento::processAddress(const KContacts::Addressee &ad
 {
     const QStringList customs = addressee.customs();
     Q_FOREACH (const QString &custom, customs) {
-        if (custom.contains(QLatin1String("MailPreferedFormatting"))) {
-            const QString value = addressee.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("MailPreferedFormatting"));
-            if (value == QLatin1String("TEXT")) {
+        if (custom.contains(QStringLiteral("MailPreferedFormatting"))) {
+            const QString value = addressee.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("MailPreferedFormatting"));
+            if (value == QStringLiteral("TEXT")) {
                 mForceDisplayTo = Viewer::Text;
-            } else if (value == QLatin1String("HTML")) {
+            } else if (value == QStringLiteral("HTML")) {
                 mForceDisplayTo = Viewer::Html;
             } else {
                 mForceDisplayTo = Viewer::UseGlobalSetting;
             }
-        } else if (custom.contains(QLatin1String("MailAllowToRemoteContent"))) {
-            const QString value = addressee.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("MailAllowToRemoteContent"));
-            mMailAllowToRemoteContent = (value == QLatin1String("TRUE"));
+        } else if (custom.contains(QStringLiteral("MailAllowToRemoteContent"))) {
+            const QString value = addressee.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("MailAllowToRemoteContent"));
+            mMailAllowToRemoteContent = (value == QStringLiteral("TRUE"));
         }
     }
     Q_EMIT changeDisplayMail(mForceDisplayTo, mMailAllowToRemoteContent);

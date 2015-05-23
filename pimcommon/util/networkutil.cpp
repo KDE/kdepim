@@ -32,6 +32,7 @@ NetworkUtil::NetworkUtil()
 {
 
 }
+
 bool NetworkUtil::lowBandwidh() const
 {
     return mLowBandwidh;
