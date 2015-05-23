@@ -101,6 +101,9 @@ void GravatarConfigWidget::save()
     saveCheckBox(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
     saveCheckBox(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
     saveSpinBox(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
+    if (!mEnableGravatarSupport->isChecked()) {
+        PimCommon::GravatarCache::self()->clearAllCache();
+    }
 }
 
 void GravatarConfigWidget::doLoadFromGlobalSettings()
