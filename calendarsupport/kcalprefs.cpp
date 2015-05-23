@@ -47,7 +47,7 @@ class KCalPrefs::Private
 {
 public:
     Private() : mDefaultCalendarId(-1)
-              , mDefaultCategoryColor(QColor(151, 235, 121))
+        , mDefaultCategoryColor(QColor(151, 235, 121))
     {
     }
 

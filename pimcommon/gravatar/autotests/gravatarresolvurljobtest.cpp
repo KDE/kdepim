@@ -69,7 +69,6 @@ void GravatarResolvUrlJobTest::shouldChangeValue()
     job.setUseLibravatar(useLibravatar);
     QCOMPARE(job.useLibravatar(), useLibravatar);
 
-
     bool fallBackGravatar = false;
     job.setFallbackGravatar(fallBackGravatar);
     QCOMPARE(job.fallbackGravatar(), fallBackGravatar);

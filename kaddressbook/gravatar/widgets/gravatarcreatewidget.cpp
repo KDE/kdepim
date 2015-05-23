@@ -15,14 +15,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "gravatarcreatewidget.h"
 #include "pimcommon/gravatar/gravatarresolvurljob.h"
 
 #include <QLabel>
 #include <QGridLayout>
 #include <QPushButton>
-
 
 using namespace KABGravatar;
 
@@ -47,7 +45,6 @@ GravatarCreateWidget::GravatarCreateWidget(QWidget *parent)
     mainLayout->addWidget(mSearchGravatar, 0, 2);
     connect(mSearchGravatar, SIGNAL(clicked(bool)), this, SLOT(slotSearchGravatar()));
 }
-
 
 GravatarCreateWidget::~GravatarCreateWidget()
 {

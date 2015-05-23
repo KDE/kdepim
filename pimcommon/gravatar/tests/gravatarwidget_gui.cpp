@@ -24,7 +24,7 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData( QLatin1String("gravatar_gui"), i18n("GravatarTest_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QLatin1String("gravatar_gui"), i18n("GravatarTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for gravatar widget"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
@@ -33,7 +33,6 @@ int main(int argc, char **argv)
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-
 
     PimCommon::GravatarDownloadPixmapWidget *w = new PimCommon::GravatarDownloadPixmapWidget;
     w->show();

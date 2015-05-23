@@ -190,7 +190,7 @@ void View::Private::slotVerticalScrollValueChanged(int val)
 {
 #if 0
     qCDebug(KDGANTT_LOG) << "View::Private::slotVerticalScrollValueChanged(" << val << ")="
-             << val / gfxview.verticalScrollBar()->singleStep();
+                         << val / gfxview.verticalScrollBar()->singleStep();
 #endif
     leftWidget->verticalScrollBar()->setValue(val / gfxview.verticalScrollBar()->singleStep());
 }

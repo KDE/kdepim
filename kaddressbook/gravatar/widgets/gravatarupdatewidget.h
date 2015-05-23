@@ -22,7 +22,8 @@
 #define GRAVATARUPDATEWIDGET_H
 
 #include <QWidget>
-namespace KABGravatar {
+namespace KABGravatar
+{
 class GravatarUpdateWidget : public QWidget
 {
     Q_OBJECT

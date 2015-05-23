@@ -35,6 +35,6 @@ void ImportExportProgressIndicatorConsole::showInfo(const QString &text)
 
 void ImportExportProgressIndicatorConsole::showErrorMessage(const QString &message, const QString &title)
 {
-    qDebug()<<" message "<< message << " title "<<title;
+    qDebug() << " message " << message << " title " << title;
 }
 

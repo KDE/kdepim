@@ -46,7 +46,6 @@ struct KDEPIM_EXPORT Person {
     bool updateDisplayName;
 };
 
-
 }
 
 Q_DECLARE_METATYPE(KPIM::Person)

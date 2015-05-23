@@ -35,5 +35,4 @@ void NetworkUtilTest::shouldHaveDefaultValue()
 
 }
 
-
 QTEST_MAIN(NetworkUtilTest)

@@ -19,12 +19,13 @@
 #define GRAVATARUPDATEDIALOG_H
 
 #include <QDialog>
-namespace KABGravatar {
+namespace KABGravatar
+{
 class GravatarUpdateDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit GravatarUpdateDialog(QWidget *parent=0);
+    explicit GravatarUpdateDialog(QWidget *parent = 0);
     ~GravatarUpdateDialog();
 };
 }

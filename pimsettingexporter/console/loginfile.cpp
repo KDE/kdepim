@@ -52,7 +52,6 @@ void LogInFile::slotAddEndLine()
     addLogLine(QString(), AddEndLine);
 }
 
-
 void LogInFile::slotAddError(const QString &message)
 {
     addLogLine(message, AddError);
@@ -71,7 +70,7 @@ void LogInFile::slotAddTitle(const QString &message)
 void LogInFile::addLogLine(const QString &message, LogType type)
 {
     QString newMessage;
-    switch(type) {
+    switch (type) {
     case AddEndLine:
         newMessage = QLatin1Char('\n');
         break;

@@ -15,17 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef GRAVATARCREATEWIDGET_H
 #define GRAVATARCREATEWIDGET_H
 
 #include <QWidget>
 class QLabel;
 class QPushButton;
-namespace PimCommon {
+namespace PimCommon
+{
 class GravatarResolvUrlJob;
 }
-namespace KABGravatar {
+namespace KABGravatar
+{
 class GravatarCreateWidget : public QWidget
 {
     Q_OBJECT

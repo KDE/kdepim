@@ -42,4 +42,3 @@ void NetworkUtil::setLowBandwidh(bool lowBandwidh)
     mLowBandwidh = lowBandwidh;
 }
 
-

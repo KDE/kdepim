@@ -34,7 +34,7 @@ GravatarCreateDialog::GravatarCreateDialog(QWidget *parent)
     mCreateWidget = new GravatarCreateWidget(this);
     mCreateWidget->setObjectName(QLatin1String("gravatarcreatewidget"));
     mainLayout->addWidget(mCreateWidget);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QLatin1String("buttonbox"));
     mainLayout->addWidget(buttonBox);
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
@@ -54,16 +54,16 @@ void GravatarCreateDialog::setEmail(const QString &email)
 
 void GravatarCreateDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "GravatarCreateDialog" );
-    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
-    if ( size.isValid() ) {
-        resize( size );
+    KConfigGroup grp(KGlobal::config(), "GravatarCreateDialog");
+    const QSize size = grp.readEntry("Size", QSize(300, 200));
+    if (size.isValid()) {
+        resize(size);
     }
 }
 
 void GravatarCreateDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "GravatarCreateDialog");
-    grp.writeEntry( "Size", size() );
+    KConfigGroup grp(KGlobal::config(), "GravatarCreateDialog");
+    grp.writeEntry("Size", size());
     grp.sync();
 }

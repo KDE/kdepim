@@ -665,22 +665,22 @@ void AddresseeLineEditPrivate::slotReturnPressed(const QString &)
 
 void AddresseeLineEditPrivate::slotStartLDAPLookup()
 {
-    if ( Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
+    if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
 
-    const KCompletion::CompletionMode mode = q->completionMode();
+        const KCompletion::CompletionMode mode = q->completionMode();
 
-    if (mode == KCompletion::CompletionNone) {
-        return;
-    }
+        if (mode == KCompletion::CompletionNone) {
+            return;
+        }
 
-    if (!s_static->ldapSearch->isAvailable()) {
-        return;
-    }
+        if (!s_static->ldapSearch->isAvailable()) {
+            return;
+        }
 
-    if (s_static->ldapLineEdit != q) {
-        return;
-    startLoadingLDAPEntries();
-    }
+        if (s_static->ldapLineEdit != q) {
+            return;
+            startLoadingLDAPEntries();
+        }
     }
 }
 

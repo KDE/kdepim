@@ -72,7 +72,6 @@ int main(int argc, char **argv)
     migrate.setConfigFiles(QStringList() << QStringLiteral("korgacrc"));
     migrate.migrate();
 
-
     KAboutData aboutData(QStringLiteral("korgac"), i18n("KOrganizer Reminder Daemon"),
                          QStringLiteral(KDEPIM_VERSION), i18n("KOrganizer Reminder Daemon"),
                          KAboutLicense::GPL,

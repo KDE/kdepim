@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "kdepim-version.h"
 #include "pimsettingexporterconsole.h"
 #include <kaboutdata.h>
@@ -24,7 +23,6 @@
 #include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QCommandLineOption>
-
 
 int main(int argc, char *argv[])
 {

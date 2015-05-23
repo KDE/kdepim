@@ -58,7 +58,6 @@ void PimSettingExporterConsole::setImportFileName(const QString &importFileName)
     mImportFileName = importFileName;
 }
 
-
 void PimSettingExporterConsole::start()
 {
 #if 0
@@ -70,7 +69,7 @@ void PimSettingExporterConsole::start()
     }
 #endif
     //TODO
-    switch(mMode) {
+    switch (mMode) {
     case Import:
         break;
     case Export:

@@ -281,7 +281,7 @@ void ComposerLineEdit::contextMenuEvent(QContextMenuEvent *e)
 {
     QPointer<QMenu> popup = createStandardContextMenu();
     if (popup) {
-        popup->exec( e->globalPos() );
+        popup->exec(e->globalPos());
         delete popup;
     }
 }
@@ -289,7 +289,7 @@ void ComposerLineEdit::contextMenuEvent(QContextMenuEvent *e)
 
 void ComposerLineEdit::configureCompletionOrder(QMenu *menu)
 {
-    if ( menu ) { // can be 0 on platforms with only a touch interface
+    if (menu) {   // can be 0 on platforms with only a touch interface
         if (isCompletionEnabled()) {
             menu->addSeparator();
             QAction *act = menu->addAction(i18n("Configure Completion..."));

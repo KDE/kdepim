@@ -20,13 +20,14 @@
 
 #include <QDialog>
 
-namespace KABGravatar {
+namespace KABGravatar
+{
 class GravatarCreateWidget;
 class GravatarCreateDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit GravatarCreateDialog(QWidget *parent=0);
+    explicit GravatarCreateDialog(QWidget *parent = 0);
     ~GravatarCreateDialog();
 
     void setEmail(const QString &email);

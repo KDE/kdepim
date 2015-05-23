@@ -20,7 +20,6 @@
 #include <QWidget>
 #include <QVBoxLayout>
 
-
 #include <klocalizedstring.h>
 #include <QApplication>
 #include <KAboutData>
@@ -33,7 +32,7 @@ using namespace MessageComposer;
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    KAboutData aboutData( QLatin1String("testcomposerlineedit"), i18n("ComposerLineEdit"), QLatin1String("1.0" ));
+    KAboutData aboutData(QLatin1String("testcomposerlineedit"), i18n("ComposerLineEdit"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("composerlineedit test app"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
@@ -53,9 +52,9 @@ int main(int argc, char **argv)
     vbox->addWidget(kale2);
     vbox->addStretch();
 
-    w->resize( 400, 400 );
+    w->resize(400, 400);
     w->show();
 
     return app.exec();
 }
-    
+

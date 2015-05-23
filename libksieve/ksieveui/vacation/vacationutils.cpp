@@ -38,8 +38,8 @@ static inline QString dotstuff(QString s)     // krazy:exclude=passbyvalue
 
 static inline QString stringReplace(QString s)
 {
-    s = s.replace(QRegExp(QStringLiteral("[\n\t]+")),QStringLiteral(" "));
-    return s.replace(QLatin1Char('\"'),QStringLiteral("\\\""));
+    s = s.replace(QRegExp(QStringLiteral("[\n\t]+")), QStringLiteral(" "));
+    return s.replace(QLatin1Char('\"'), QStringLiteral("\\\""));
 }
 
 QString KSieveUi::VacationUtils::defaultSubject()

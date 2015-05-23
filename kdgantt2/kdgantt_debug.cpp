@@ -20,4 +20,3 @@
 #include "kdgantt_debug.h"
 Q_LOGGING_CATEGORY(KDGANTT_LOG, "log_kdgantt")
 
-

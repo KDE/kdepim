@@ -353,7 +353,7 @@ void MainWidget::handleCommandLine(const QStringList &arguments)
 
     if (parser.isSet(QStringLiteral("import"))) {
         for (const QString &url : parser.positionalArguments()) {
-          importManager()->importFile(QUrl::fromUserInput(url));
+            importManager()->importFile(QUrl::fromUserInput(url));
         }
     }
 }

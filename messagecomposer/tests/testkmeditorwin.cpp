@@ -63,7 +63,6 @@ int main(int argc, char **argv)
 
     KAboutData::setApplicationData(aboutData);
 
-
     QCommandLineParser parser;
     parser.addVersionOption();
     parser.addHelpOption();

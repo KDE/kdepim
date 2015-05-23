@@ -134,7 +134,7 @@ StyleOptionGanttItem GraphicsItem::getStyleOption() const
     } else {
 #if 0
         qCDebug(KDGANTT_LOG) << "Item" << m_index.model()->data(m_index, Qt::DisplayRole).toString()
-                 << ", ends=" << m_endConstraints.size() << ", starts=" << m_startConstraints.size();
+                             << ", ends=" << m_endConstraints.size() << ", starts=" << m_startConstraints.size();
 #endif
         opt.displayPosition = m_endConstraints.size() < m_startConstraints.size() ? StyleOptionGanttItem::Left : StyleOptionGanttItem::Right;
 #if 0

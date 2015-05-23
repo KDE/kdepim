@@ -100,7 +100,7 @@ void GravatarUpdateJob::updatePixmap(const QPixmap &pix)
     if (mItem.hasPayload<KContacts::Addressee>()) {
         KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
         contact.photo().setData(pix.toImage());
-        mItem.setPayload<KContacts::Addressee>( contact );
+        mItem.setPayload<KContacts::Addressee>(contact);
 
         // save the new item in akonadi storage
         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(mItem);
@@ -113,7 +113,7 @@ void GravatarUpdateJob::updatePixmap(const QPixmap &pix)
 void GravatarUpdateJob::slotUpdateGravatarDone(KJob *job)
 {
     if (job->error()) {
-        qDebug() << "Error during modify item :"<<job->errorString();
+        qDebug() << "Error during modify item :" << job->errorString();
     }
     deleteLater();
 }

@@ -233,7 +233,7 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
         // TODO: we need better error handling. Currently korganizer says "Error sending invitation".
         // Using a boolean for errors isn't granular enough.
         qCCritical(KOALARMCLIENT_LOG) << "Error fetching transport; mailTransport"
-                    << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
+                                      << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
         return false;
     }
 
