@@ -68,8 +68,10 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     buttonLayout->addStretch();
 
     connect(mUseDefaultPixmap, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
-    connect(mEnableGravatarSupport, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
     connect(mClearGravatarCache, SIGNAL(clicked(bool)), this, SLOT(slotClearGravatarCache()));
+    connect(mEnableGravatarSupport, SIGNAL(clicked(bool)), this, SLOT(slotGravatarEnableChanged(bool)));
+
+    updateWidgetState(false);
 }
 
 GravatarConfigWidget::~GravatarConfigWidget()
@@ -77,11 +79,27 @@ GravatarConfigWidget::~GravatarConfigWidget()
 
 }
 
+void GravatarConfigWidget::slotGravatarEnableChanged(bool state)
+{
+    updateWidgetState(state);
+    Q_EMIT configChanged(state);
+}
+
+void GravatarConfigWidget::updateWidgetState(bool state)
+{
+    mUseDefaultPixmap->setEnabled(state);
+    mClearGravatarCache->setEnabled(state);
+    mGravatarCacheSize->setEnabled(state);
+}
+
 void GravatarConfigWidget::save()
 {
     saveCheckBox(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
     saveCheckBox(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
     saveSpinBox(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
+    if (!mEnableGravatarSupport->isChecked()) {
+        PimCommon::GravatarCache::self()->clearAllCache();
+    }
 }
 
 void GravatarConfigWidget::doLoadFromGlobalSettings()
@@ -89,6 +107,7 @@ void GravatarConfigWidget::doLoadFromGlobalSettings()
     loadWidget(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
     loadWidget(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
     loadWidget(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
+    updateWidgetState(mEnableGravatarSupport->isChecked());
 }
 
 void GravatarConfigWidget::doResetToDefaultsOther()

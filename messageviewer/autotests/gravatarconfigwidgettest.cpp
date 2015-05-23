@@ -22,6 +22,7 @@
 #include <qtest.h>
 #include <QLabel>
 #include <QPushButton>
+#include <qtestmouse.h>
 
 GravatarConfigWidgetTest::GravatarConfigWidgetTest(QObject *parent)
     : QObject(parent)
@@ -51,7 +52,36 @@ void GravatarConfigWidgetTest::shouldHaveDefaultValue()
 
     QSpinBox *gravatarCacheSize = w.findChild<QSpinBox *>(QLatin1String("gravatarcachesize"));
     QVERIFY(gravatarCacheSize);
+}
 
+void GravatarConfigWidgetTest::shouldChangeState()
+{
+    MessageViewer::GravatarConfigWidget w;
+    w.show();
+    QCheckBox *checkBox = qFindChild<QCheckBox *>(&w, QLatin1String("gravatarcheckbox"));
+    QCheckBox *useDefaultImage = qFindChild<QCheckBox *>(&w, QLatin1String("usedefaultimage"));
+    QPushButton *clearGravatarCache = qFindChild<QPushButton *>(&w, QLatin1String("cleargravatarcachebutton"));
+    QSpinBox *gravatarCacheSize = qFindChild<QSpinBox *>(&w, QLatin1String("gravatarcachesize"));
+    checkBox->setChecked(false);
+    QVERIFY(checkBox->isEnabled());
+    QVERIFY(!checkBox->isChecked());
+    QVERIFY(!useDefaultImage->isEnabled());
+    QVERIFY(!clearGravatarCache->isEnabled());
+    QVERIFY(!gravatarCacheSize->isEnabled());
+
+    QTest::mouseClick(checkBox, Qt::LeftButton);
+    QVERIFY(checkBox->isEnabled());
+    QVERIFY(checkBox->isChecked());
+    QVERIFY(useDefaultImage->isEnabled());
+    QVERIFY(clearGravatarCache->isEnabled());
+    QVERIFY(gravatarCacheSize->isEnabled());
+
+
+    QTest::mouseClick(checkBox, Qt::LeftButton);
+    QVERIFY(checkBox->isEnabled());
+    QVERIFY(!useDefaultImage->isEnabled());
+    QVERIFY(!clearGravatarCache->isEnabled());
+    QVERIFY(!gravatarCacheSize->isEnabled());
 }
 
 QTEST_MAIN(GravatarConfigWidgetTest)

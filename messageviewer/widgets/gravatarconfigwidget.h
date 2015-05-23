@@ -42,8 +42,10 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotClearGravatarCache();
     void slotGravatarCacheSizeChanged();
+    void slotGravatarEnableChanged(bool state);
 
 private:
+    void updateWidgetState(bool state);
     QCheckBox *mEnableGravatarSupport;
     QCheckBox *mUseDefaultPixmap;
     QPushButton *mClearGravatarCache;
