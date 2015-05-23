@@ -29,6 +29,7 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldChangeState();
 };
 
 #endif // GRAVATARCONFIGWIDGETTEST_H

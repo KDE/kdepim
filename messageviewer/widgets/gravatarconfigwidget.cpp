@@ -71,15 +71,29 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     buttonLayout->addWidget(mClearGravatarCache);
     buttonLayout->addStretch();
 
+    updateWidgetState(false);
 
     connect(mClearGravatarCache, SIGNAL(clicked(bool)), this, SLOT(slotClearGravatarCache()));
     connect(mUseDefaultPixmap, SIGNAL(clicked(bool)), SIGNAL(configChanged(bool)));
-    connect(mEnableGravatarSupport, SIGNAL(clicked(bool)), SIGNAL(configChanged(bool)));
+    connect(mEnableGravatarSupport, SIGNAL(clicked(bool)), this, SLOT(slotGravatarEnableChanged(bool)));
 }
 
 GravatarConfigWidget::~GravatarConfigWidget()
 {
 
+}
+
+void GravatarConfigWidget::slotGravatarEnableChanged(bool state)
+{
+    updateWidgetState(state);
+    Q_EMIT configChanged(state);
+}
+
+void GravatarConfigWidget::updateWidgetState(bool state)
+{
+    mUseDefaultPixmap->setEnabled(state);
+    mClearGravatarCache->setEnabled(state);
+    mGravatarCacheSize->setEnabled(state);
 }
 
 void GravatarConfigWidget::save()
@@ -94,6 +108,7 @@ void GravatarConfigWidget::doLoadFromGlobalSettings()
     loadWidget(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
     loadWidget(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
     loadWidget(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
+    updateWidgetState(mEnableGravatarSupport->isChecked());
 }
 
 void GravatarConfigWidget::doResetToDefaultsOther()
