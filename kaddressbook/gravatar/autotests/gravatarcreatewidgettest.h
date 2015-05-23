@@ -27,6 +27,10 @@ class GravatarCreateWidgetTest : public QObject
 public:
     explicit GravatarCreateWidgetTest(QObject *parent = Q_NULLPTR);
     ~GravatarCreateWidgetTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldEnableDisableSearchButton();
 };
 
 #endif // GRAVATARCREATEWIDGETTEST_H

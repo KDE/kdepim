@@ -21,6 +21,10 @@
 #include <KLocalizedString>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <KConfigGroup>
+#include <KGlobal>
+#include <KSharedConfig>
+
 using namespace KABGravatar;
 GravatarCreateDialog::GravatarCreateDialog(QWidget *parent)
     : QDialog(parent)
@@ -35,10 +39,31 @@ GravatarCreateDialog::GravatarCreateDialog(QWidget *parent)
     mainLayout->addWidget(buttonBox);
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    readConfig();
 }
 
 GravatarCreateDialog::~GravatarCreateDialog()
 {
-
+    writeConfig();
 }
 
+void GravatarCreateDialog::setEmail(const QString &email)
+{
+    mCreateWidget->setEmail(email);
+}
+
+void GravatarCreateDialog::readConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "GravatarCreateDialog" );
+    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void GravatarCreateDialog::writeConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "GravatarCreateDialog");
+    grp.writeEntry( "Size", size() );
+    grp.sync();
+}

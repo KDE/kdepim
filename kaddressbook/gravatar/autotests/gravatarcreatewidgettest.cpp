@@ -17,6 +17,10 @@
 
 #include "gravatarcreatewidgettest.h"
 #include <qtest.h>
+#include "../widgets/gravatarcreatewidget.h"
+#include <QLabel>
+#include <QPushButton>
+
 GravatarCreateWidgetTest::GravatarCreateWidgetTest(QObject *parent)
     : QObject(parent)
 {
@@ -26,6 +30,38 @@ GravatarCreateWidgetTest::GravatarCreateWidgetTest(QObject *parent)
 GravatarCreateWidgetTest::~GravatarCreateWidgetTest()
 {
 
+}
+
+void GravatarCreateWidgetTest::shouldHaveDefaultValue()
+{
+    KABGravatar::GravatarCreateWidget widget;
+    QLabel *lab = widget.findChild<QLabel *>(QLatin1String("emaillabel"));
+    QVERIFY(lab);
+
+    QLabel *emaillabel = widget.findChild<QLabel *>(QLatin1String("email"));
+    QVERIFY(emaillabel);
+
+    QPushButton *searchGravatar = widget.findChild<QPushButton *>(QLatin1String("search"));
+    QVERIFY(searchGravatar);
+}
+
+void GravatarCreateWidgetTest::shouldEnableDisableSearchButton()
+{
+    KABGravatar::GravatarCreateWidget widget;
+    QPushButton *searchGravatar = widget.findChild<QPushButton *>(QLatin1String("search"));
+    QVERIFY(!searchGravatar->isEnabled());
+
+    widget.setEmail(QLatin1String("foo"));
+    QVERIFY(searchGravatar->isEnabled());
+
+    widget.setEmail(QString());
+    QVERIFY(!searchGravatar->isEnabled());
+
+    widget.setEmail(QLatin1String("s"));
+    QVERIFY(searchGravatar->isEnabled());
+
+    widget.setEmail(QLatin1String(" "));
+    QVERIFY(!searchGravatar->isEnabled());
 }
 
 QTEST_MAIN(GravatarCreateWidgetTest)
