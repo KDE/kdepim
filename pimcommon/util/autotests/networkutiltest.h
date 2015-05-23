@@ -28,6 +28,7 @@ public:
     ~NetworkUtilTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldApplyChanges();
 };
 
 #endif // NETWORKUTILTEST_H
