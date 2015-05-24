@@ -18,7 +18,7 @@
 
 #include "autoconfigkolabmail.h"
 #include <QDomDocument>
-#include <QDebug>
+#include "../accountwizard_debug.h"
 
 AutoconfigKolabMail::AutoconfigKolabMail(QObject *parent)
     : Ispdb(parent)
@@ -57,7 +57,7 @@ void AutoconfigKolabMail::slotResult(KJob *job)
                 emit finished(false);
             }
         } else {
-            //qDebug() << "Fetching failed" << job->error() << job->errorString();
+            //qCDebug(ACCOUNTWIZARD_LOG) << "Fetching failed" << job->error() << job->errorString();
             emit finished(false);
         }
         return;
@@ -71,7 +71,7 @@ void AutoconfigKolabMail::slotResult(KJob *job)
         lookupInDb(true, true);
         return;
     } else if (responsecode != 200  && responsecode != 0 && responsecode != 304) {
-        //qDebug() << "Fetching failed with" << responsecode;
+        //qCDebug(ACCOUNTWIZARD_LOG) << "Fetching failed with" << responsecode;
         emit finished(false);
         return;
     }
@@ -79,7 +79,7 @@ void AutoconfigKolabMail::slotResult(KJob *job)
     QDomDocument document;
     bool ok = document.setContent(mData);
     if (!ok) {
-        //qDebug() << "Could not parse xml" << mData;
+        //qCDebug(ACCOUNTWIZARD_LOG) << "Could not parse xml" << mData;
         emit finished(false);
         return;
     }
