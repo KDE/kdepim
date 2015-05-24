@@ -25,7 +25,7 @@
 #include <KTreeWidgetSearchLine>
 #include <QMenu>
 #include <KConfigGroup>
-#include <KStandardDirs>
+#include "adblock/adblockutil.h"
 #include <QUrl>
 #include <KRun>
 
@@ -302,7 +302,7 @@ void AdBlockBlockableItemsWidget::saveFilters()
         return;
     }
 
-    const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
+    const QString localRulesFilePath = MessageViewer::AdBlockUtil::localFilterPath();
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::WriteOnly | QFile::Text)) {
