@@ -32,8 +32,8 @@ public:
     QHash<QString, freebusy> freebusyServers() const;
 
 protected:
-    virtual void lookupInDb(bool auth, bool crypt);
-    virtual void parseResult(const QDomDocument &document);
+    void lookupInDb(bool auth, bool crypt) Q_DECL_OVERRIDE;
+    void parseResult(const QDomDocument &document) Q_DECL_OVERRIDE;
 
 private:
     freebusy createFreebusyServer(const QDomElement &n);

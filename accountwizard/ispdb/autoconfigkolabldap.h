@@ -33,8 +33,8 @@ public:
     QHash<QString, ldapServer> ldapServers() const;
 
 protected:
-    virtual void lookupInDb(bool auth, bool crypt);
-    virtual void parseResult(const QDomDocument &document);
+    void lookupInDb(bool auth, bool crypt) Q_DECL_OVERRIDE;
+    void parseResult(const QDomDocument &document) Q_DECL_OVERRIDE;
 
 private:
     ldapServer createLdapServer(const QDomElement &n);
