@@ -70,7 +70,7 @@ QString ChecksumDefinition::installPath()
         if (QCoreApplication::instance()) {
             *ip = QCoreApplication::applicationDirPath();
         } else {
-            qWarning("checksumdefinition.cpp: installPath() called before QCoreApplication was constructed");
+            qWarning()<< "checksumdefinition.cpp: installPath() called before QCoreApplication was constructed";
         }
     }
     return *ip;
@@ -241,19 +241,19 @@ public:
     }
 
 private:
-    /* reimp */ QString doGetCreateCommand() const
+    /* reimp */ QString doGetCreateCommand() const Q_DECL_OVERRIDE
     {
         return m_createCommand;
     }
-    /* reimp */ QStringList doGetCreateArguments(const QStringList &files) const
+    /* reimp */ QStringList doGetCreateArguments(const QStringList &files) const Q_DECL_OVERRIDE
     {
         return m_createPrefixArguments + files + m_createPostfixArguments;
     }
-    /* reimp */ QString doGetVerifyCommand() const
+    /* reimp */ QString doGetVerifyCommand() const Q_DECL_OVERRIDE
     {
         return m_verifyCommand;
     }
-    /* reimp */ QStringList doGetVerifyArguments(const QStringList &files) const
+    /* reimp */ QStringList doGetVerifyArguments(const QStringList &files) const Q_DECL_OVERRIDE
     {
         return m_verifyPrefixArguments + files + m_verifyPostfixArguments;
     }
@@ -316,7 +316,7 @@ static bool start_command(QProcess *p, const char *functionName,
                           const QStringList &files, ChecksumDefinition::ArgumentPassingMethod method)
 {
     if (!p) {
-        qWarning("%s: process == NULL", functionName);
+        qWarning() << functionName << ": process == NULL";
         return false;
     }
 

@@ -37,7 +37,7 @@
 
 #include <boost/mem_fn.hpp>
 #include <algorithm>
-
+#include <QDebug>
 using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
@@ -275,12 +275,11 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter(const KConfigGroup &config)
                 break;
             }
         if (!found)
-            qWarning("KConfigBasedKeyFilter: found unknown match context '%s' in group '%s'",
-                     qPrintable(ctx), qPrintable(config.name()));
+            qWarning() << QStringLiteral("KConfigBasedKeyFilter: found unknown match context '%1' in group '%2'").arg(ctx).arg(config.name());
     }
     if (mMatchContexts == NoMatchContext) {
-        qWarning("KConfigBasedKeyFilter: match context in group '%s' evaluates to NoMatchContext, "
-                 "replaced by AnyMatchContext", qPrintable(config.name()));
+        qWarning() << QStringLiteral("KConfigBasedKeyFilter: match context in group '%1' evaluates to NoMatchContext, "
+                 "replaced by AnyMatchContext").arg(config.name());
         mMatchContexts = AnyMatchContext;
     }
 }

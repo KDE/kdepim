@@ -20,6 +20,7 @@
 */
 
 #include "selectcertificatecommand.h"
+#include <QDebug>
 
 using namespace KleopatraClientCopy;
 
@@ -120,7 +121,7 @@ void SelectCertificateCommand::setSelectedCertificates(const QStringList &certs)
     QByteArray data;
     Q_FOREACH (const QString &s, certs)
         if (s.isEmpty()) {
-            qWarning("SelectCertificateCommand::setSelectedCertificates: empty certificate!");
+            qWarning() << "SelectCertificateCommand::setSelectedCertificates: empty certificate!";
         } else {
             data += s.toUtf8() += '\n';
         }
