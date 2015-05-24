@@ -28,8 +28,8 @@ class Transport : public SetupObject
     Q_OBJECT
 public:
     explicit Transport(const QString &type, QObject *parent = Q_NULLPTR);
-    void create();
-    void destroy();
+    void create() Q_DECL_OVERRIDE;
+    void destroy() Q_DECL_OVERRIDE;
     void edit();
 
     int transportId() const;
