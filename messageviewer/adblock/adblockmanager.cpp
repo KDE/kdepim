@@ -34,7 +34,7 @@
 
 // KDE Includes
 #include <KIO/FileCopyJob>
-#include <KStandardDirs>
+#include <QStandardPaths>
 #include <KNotification>
 #include <KLocalizedString>
 // Qt Includes
@@ -308,7 +308,8 @@ bool AdBlockManager::subscriptionFileExists(int i)
 {
     const QString n = QString::number(i + 1);
 
-    const QString rulesFilePath = KStandardDirs::locateLocal("data" , QLatin1String("kmail2/adblockrules_") + n);
+
+    const QString rulesFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/adblockrules_") + n;
     return QFile::exists(rulesFilePath);
 }
 

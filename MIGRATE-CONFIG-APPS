@@ -32,4 +32,4 @@ TODO:
 - knotes: migrate settings for plugins
 - kaddressbook: (kaddressbook/csv-templates/*.desktop)
 - korganizer: korganizer/templates/*, korganizer/designer/*
-- kmail2/adblockrules_local
+- kmail2/adblockrules_local and ("data" , QLatin1String("kmail2/adblockrules_")
