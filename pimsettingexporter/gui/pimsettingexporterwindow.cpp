@@ -19,6 +19,7 @@
 #include "dialog/showarchivestructuredialog.h"
 #include "importexportprogressindicatorgui.h"
 #include "widgets/logwidget.h"
+#include "pimsettingexportgui_debug.h"
 
 #include "pimsettingexporterkernel.h"
 #include "dialog/selectiontypedialog.h"
@@ -216,7 +217,7 @@ void PimSettingExporterWindow::backupData(const QString &filename, const QString
         mPimSettingsBackupRestoreUI->setStoredParameters(dialog->storedType());
         delete dialog;
         if (!mPimSettingsBackupRestoreUI->backupStart(filename)) {
-            qDebug() << " backup Start failed";
+            qCDebug(PIMSETTINGEXPORTERGUI_LOG) << " backup Start failed";
         }
     } else {
         delete dialog;
@@ -264,7 +265,7 @@ void PimSettingExporterWindow::loadData(const QString &filename, const QString &
         mPimSettingsBackupRestoreUI->setStoredParameters(dialog->storedType());
         delete dialog;
         if (!mPimSettingsBackupRestoreUI->restoreStart(filename)) {
-            qDebug() << " PimSettingExporterWindow restore failed";
+            qCDebug(PIMSETTINGEXPORTERGUI_LOG) << " PimSettingExporterWindow restore failed";
         }
     } else {
         delete dialog;

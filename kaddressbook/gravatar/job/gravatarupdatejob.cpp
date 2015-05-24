@@ -24,7 +24,7 @@
 
 #include <KContacts/Addressee>
 #include <AkonadiCore/ItemModifyJob>
-#include <QDebug>
+#include "kaddressbook_debug.h"
 
 using namespace KABGravatar;
 
@@ -113,7 +113,7 @@ void GravatarUpdateJob::updatePixmap(const QPixmap &pix)
 void GravatarUpdateJob::slotUpdateGravatarDone(KJob *job)
 {
     if (job->error()) {
-        qDebug() << "Error during modify item :" << job->errorString();
+        qCDebug(KADDRESSBOOK_LOG) << "Error during modify item :" << job->errorString();
     }
     deleteLater();
 }

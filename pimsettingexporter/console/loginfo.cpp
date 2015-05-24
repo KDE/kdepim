@@ -16,7 +16,6 @@
 */
 
 #include "loginfo.h"
-#include <QDebug>
 
 LogInfo::LogInfo(const QString &filename, QObject *parent)
     : QObject(parent),
