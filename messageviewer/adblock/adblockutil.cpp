@@ -67,5 +67,5 @@ QMap<QString, QString> MessageViewer::AdBlockUtil::listSubscriptions()
 
 QString MessageViewer::AdBlockUtil::localFilterPath()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("kmail2/adblockrules_local");
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("/kmail2/adblockrules_local");
 }
