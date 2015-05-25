@@ -73,30 +73,27 @@ void QuickSearchLineTest::shouldHaveDefaultValueOnCreation()
 void QuickSearchLineTest::shouldEmitTextChanged()
 {
     QuickSearchLine searchLine;
+    searchLine.show();
+    QTest::qWaitForWindowExposed(&searchLine);
     QSignalSpy spy(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClick(searchLine.searchEdit(), 'F');
+    searchLine.searchEdit()->setText(QStringLiteral("F"));
     QCOMPARE(spy.count(), 0);
 
     searchLine.searchEdit()->clear();
-    QSignalSpy spy2(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FO"));
-    QCOMPARE(spy2.count(), 0);
+    searchLine.searchEdit()->setText(QStringLiteral("FO"));
+    QCOMPARE(spy.count(), 0);
 
     searchLine.searchEdit()->clear();
-    QSignalSpy spy3(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FOO"));
-    QCOMPARE(spy3.count(), 1);
+    searchLine.searchEdit()->setText(QStringLiteral("FOO"));
+    QCOMPARE(spy.count(), 1);
 
     searchLine.searchEdit()->clear();
-    QSignalSpy spy4(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FOOO"));
-    QCOMPARE(spy4.count(), 2);
+    searchLine.searchEdit()->setText(QStringLiteral("FOOO"));
+    QCOMPARE(spy.count(), 2);
 
     searchLine.searchEdit()->clear();
-    QSignalSpy spy5(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FOOO0"));
-    QCOMPARE(spy5.count(), 3);
-
+    searchLine.searchEdit()->setText(QStringLiteral("FOOOO"));
+    QCOMPARE(spy.count(), 3);
 }
 
 void QuickSearchLineTest::shouldShowExtraOptionWidget()
@@ -109,7 +106,7 @@ void QuickSearchLineTest::shouldShowExtraOptionWidget()
     QVERIFY(!widget->isVisible());
 
     searchLine.searchEdit()->clear();
-    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("F000"));
+    searchLine.searchEdit()->setText(QStringLiteral("FOOOO"));
     QTest::qWaitForWindowExposed(&searchLine);
     QVERIFY(widget->isVisible());
 
@@ -206,36 +203,35 @@ void QuickSearchLineTest::shouldNotEmitTextChangedWhenTextTrimmedIsEmpty()
 {
     QuickSearchLine searchLine;
     QSignalSpy spy(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("      "));
+    searchLine.searchEdit()->setText(QStringLiteral("      "));
     QCOMPARE(spy.count(), 0);
 
-    QSignalSpy spy2(&searchLine, SIGNAL(searchEditTextEdited(QString)));
-    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral(" FOO"));
-    QCOMPARE(spy2.count(), 3);
+    searchLine.searchEdit()->setText(QStringLiteral(" FOO"));
+    QCOMPARE(spy.count(), 1);
 }
 
 void QuickSearchLineTest::shouldShowExtraOptionWidgetWhenTextTrimmedIsNotEmpty()
 {
     QuickSearchLine searchLine;
     searchLine.show();
-    QTest::keyClick(searchLine.searchEdit(), ' ');
+    searchLine.searchEdit()->setText(QStringLiteral(" "));
     QTest::qWaitForWindowExposed(&searchLine);
     QWidget *widget = searchLine.findChild<QWidget *>(QStringLiteral("extraoptions"));
     QVERIFY(!widget->isVisible());
     searchLine.searchEdit()->clear();
-    QTest::keyClick(searchLine.searchEdit(), ' ');
+    searchLine.searchEdit()->setText(QStringLiteral(" "));
     QVERIFY(!widget->isVisible());
 
     searchLine.searchEdit()->clear();
-    QTest::keyClick(searchLine.searchEdit(), 'F');
+    searchLine.searchEdit()->setText(QStringLiteral(""));
     QVERIFY(!widget->isVisible());
 
     searchLine.searchEdit()->clear();
-    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral(" F000 "));
+    searchLine.searchEdit()->setText(QStringLiteral("FOO0 "));
     QVERIFY(widget->isVisible());
 
     searchLine.searchEdit()->clear();
-    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral(" F000 "));
+    searchLine.searchEdit()->setText(QStringLiteral("FOOO "));
     QVERIFY(widget->isVisible());
 
 }
@@ -379,7 +375,7 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenResetFilterWhenSetEmpty
     QuickSearchLine searchLine;
     searchLine.show();
 
-    QTest::keyClicks(searchLine.searchEdit(), QStringLiteral("FOOFOO"));
+    searchLine.searchEdit()->setText(QStringLiteral("FOOFOO"));
     QTest::qWaitForWindowExposed(&searchLine);
     QWidget *widget = searchLine.findChild<QWidget *>(QStringLiteral("extraoptions"));
 
