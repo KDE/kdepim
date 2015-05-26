@@ -20,8 +20,8 @@
 
 #include "testfreebusyganttproxymodel.h"
 #include "modeltest.h"
-#include "../freebusyitem.h"
-#include "../freebusyitemmodel.h"
+#include "freebusymodel/freebusyitem.h"
+#include "freebusymodel/freebusyitemmodel.h"
 #include "../freebusyganttproxymodel.h"
 
 #include <kdgantt2/kdganttgraphicsview.h>
@@ -35,7 +35,7 @@ using namespace IncidenceEditorNG;
 
 void FreeBusyGanttProxyModelTest::testModelValidity()
 {
-    FreeBusyItemModel *fbModel = new FreeBusyItemModel();
+    KPIM::FreeBusyItemModel *fbModel = new KPIM::FreeBusyItemModel();
     FreeBusyGanttProxyModel *ganttModel = new FreeBusyGanttProxyModel();
     ganttModel->setSourceModel(fbModel);
     ModelTest *modelTest = new ModelTest(ganttModel);
@@ -52,7 +52,7 @@ void FreeBusyGanttProxyModelTest::testModelValidity()
     fb1->addPeriod(dt1, KCalCore::Duration(60 * 60));
     fb1->addPeriod(dt2, KCalCore::Duration(60 * 60));
 
-    FreeBusyItem::Ptr item1(new FreeBusyItem(a1, 0));
+    KPIM::FreeBusyItem::Ptr item1(new KPIM::FreeBusyItem(a1, 0));
     item1->setFreeBusy(fb1);
 
     const KDateTime dt3(QDate(2010, 8, 25), QTime(7, 0, 0), KDateTime::UTC);
@@ -63,7 +63,7 @@ void FreeBusyGanttProxyModelTest::testModelValidity()
     fb2->addPeriod(dt3, KCalCore::Duration(60 * 60));
     fb2->addPeriod(dt4, KCalCore::Duration(60 * 60));
 
-    FreeBusyItem::Ptr item2(new FreeBusyItem(a2, 0));
+    KPIM::FreeBusyItem::Ptr item2(new KPIM::FreeBusyItem(a2, 0));
     item2->setFreeBusy(fb2);
 
     fbModel->addItem(item1);

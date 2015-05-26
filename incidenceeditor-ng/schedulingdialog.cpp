@@ -20,7 +20,7 @@
 
 #include "schedulingdialog.h"
 #include "conflictresolver.h"
-#include "freeperiodmodel.h"
+#include "freebusymodel/freeperiodmodel.h"
 #ifndef KDEPIM_MOBILE_UI
 #include "visualfreebusywidget.h"
 #endif
@@ -39,7 +39,7 @@ using namespace IncidenceEditorNG;
 
 SchedulingDialog::SchedulingDialog(const QDate &startDate, const QTime &startTime, int duration,
                                    ConflictResolver *resolver, QWidget *parent)
-    : QDialog(parent), mResolver(resolver), mPeriodModel(new FreePeriodModel(this))
+    : QDialog(parent), mResolver(resolver), mPeriodModel(new KPIM::FreePeriodModel(this))
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -60,7 +60,7 @@ SchedulingDialog::SchedulingDialog(const QDate &startDate, const QTime &startTim
     mDuration = duration;
 
 #ifndef KDEPIM_MOBILE_UI
-    mVisualWidget = new VisualFreeBusyWidget(resolver->model(), 8, this);
+    mVisualWidget = new VisualFreeBusyWidget(resolver->model(), 8);
     QVBoxLayout *ganttlayout = new QVBoxLayout(mGanttTab);
 
     mGanttTab->setLayout(ganttlayout);
@@ -77,7 +77,7 @@ SchedulingDialog::SchedulingDialog(const QDate &startDate, const QTime &startTim
     connect(mWeekdayCombo, &KPIM::KWeekdayCheckCombo::checkedItemsChanged, this, &SchedulingDialog::slotWeekdaysChanged);
     connect(mWeekdayCombo, &KPIM::KWeekdayCheckCombo::checkedItemsChanged, this, &SchedulingDialog::slotMandatoryRolesChanged);
 
-    connect(mResolver, &ConflictResolver::freeSlotsAvailable, mPeriodModel, &FreePeriodModel::slotNewFreePeriods);
+    connect(mResolver, &ConflictResolver::freeSlotsAvailable, mPeriodModel, &KPIM::FreePeriodModel::slotNewFreePeriods);
     connect(mMoveBeginTimeEdit, &KTimeComboBox::timeEdited, this, &SchedulingDialog::slotSetEndTimeLabel);
 
     mTableView->setModel(mPeriodModel);
@@ -199,7 +199,7 @@ void SchedulingDialog::slotRowSelectionChanged(const QModelIndex &current,
         mMoveApptGroupBox->hide();
         return;
     }
-    KCalCore::Period period = current.data(FreePeriodModel::PeriodRole).value<KCalCore::Period>();
+    KCalCore::Period period = current.data(KPIM::FreePeriodModel::PeriodRole).value<KCalCore::Period>();
     const QDate startDate = period.start().date();
 
     const KCalendarSystem *calSys = KLocale::global()->calendar();

@@ -15,7 +15,11 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   attachmenticonview.cpp
   attendeedata.cpp
   attendeeline.cpp
+  attendeecomboboxdelegate.cpp
+  attendeelineeditdelegate.cpp
+  attendeetablemodel.cpp
   attendeeeditor.cpp
+
   alarmpresets.cpp
   alarmdialog.cpp
   globalsettings.cpp
@@ -41,12 +45,10 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencewhatwhere.cpp
   incidencedatetime.cpp
   incidencerecurrence.cpp
+  incidenceresource.cpp
   incidencesecrecy.cpp
 
-  freebusyitem.cpp
-  freebusyitemmodel.cpp
   freebusyganttproxymodel.cpp
-  freeperiodmodel.cpp
   conflictresolver.cpp
   schedulingdialog.cpp
   groupwareuidelegate.cpp
@@ -64,6 +66,12 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   individualmailcomponentfactory.cpp
   individualmaildialog.cpp
   opencomposerjob.cpp
+
+  # Resourcemanagement
+  ldaputils.cpp
+  resourcemanagement.cpp
+  resourceitem.cpp
+  resourcemodel.cpp
 )
 
 kconfig_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc)
@@ -87,6 +95,7 @@ ki18n_wrap_ui(incidenceeditors_ng_desktop_LIB_SRCS
   alarmdialog.ui
   attachmenteditdialog.ui
   schedulingdialog.ui
+  resourcemanagement.ui
 )
 
 add_library(incidenceeditorsng ${incidenceeditors_ng_desktop_LIB_SRCS})
@@ -102,6 +111,7 @@ target_link_libraries(incidenceeditorsng
   kdepim
   kdepimdbusinterfaces # For UriHandler
   calendarsupport      # For KCalPrefs
+  eventviews
   kdgantt2             # For FreeBusy Editor
 )
 
@@ -143,6 +153,7 @@ install(TARGETS incidenceeditorsng ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
     calendarsupport      # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler
     kdgantt2
+    eventviews
     KF5::CalendarUtils
     KF5::CalendarCore
     KF5::MailTransport

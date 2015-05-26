@@ -22,6 +22,9 @@
 
 #include <QObject>
 
+namespace KPIM
+{
+
 class FreeBusyItemModelTest: public QObject
 {
     Q_OBJECT
@@ -30,4 +33,6 @@ private Q_SLOTS:
     void testModelValidity2();
     void testInsertFreeBusy();
 };
+
+}
 #endif

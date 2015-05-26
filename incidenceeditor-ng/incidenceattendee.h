@@ -23,6 +23,8 @@
 
 #include "incidenceeditor-ng.h"
 
+#include <KCalCore/FreeBusy>
+
 namespace Ui
 {
 class EventOrTodoDesktop;
@@ -37,6 +39,7 @@ class MultiplyingLine;
 namespace KContacts
 {
 class Addressee;
+class ContactGroup;
 }
 
 class KJob;
@@ -45,6 +48,9 @@ namespace IncidenceEditorNG
 {
 
 class AttendeeEditor;
+class AttendeeComboBoxDelegate;
+class AttendeeLineEditDelegate;
+class AttendeeTableModel;
 class ConflictResolver;
 class IncidenceDateTime;
 
@@ -64,6 +70,14 @@ public:
     virtual bool isDirty() const;
     virtual void printDebugInfo() const;
 
+    AttendeeTableModel *dataModel() const;
+    AttendeeComboBoxDelegate *stateDelegate() const;
+    AttendeeComboBoxDelegate *roleDelegate() const;
+    AttendeeComboBoxDelegate *responseDelegate() const;
+    AttendeeLineEditDelegate *attendeeDelegate() const;
+
+    int attendeeCount() const;
+
 Q_SIGNALS:
     void attendeeCountChanged(int);
 
@@ -74,20 +88,41 @@ public Q_SLOTS:
     void declineForMe();
 
 private Q_SLOTS:
-    void checkIfExpansionIsNeeded(KPIM::MultiplyingLine *);
-    void expandResult(KJob *job);
+    // cheks if row is a group,  that can/should be expanded
+    void checkIfExpansionIsNeeded(KCalCore::Attendee::Ptr attendee);
+
+    // results of the group search job
     void groupSearchResult(KJob *job);
+    void expandResult(KJob *job);
     void slotSelectAddresses();
     void slotSolveConflictPressed();
     void slotUpdateConflictLabel(int);
-    void slotAttendeeChanged(const KCalCore::Attendee::Ptr &oldAttendee,
-                             const KCalCore::Attendee::Ptr &newAttendee);
     void slotOrganizerChanged(const QString &organizer);
+    void slotGroupSubstitutionPressed();
 
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
 
+    void filterLayoutChanged();
+    void updateCount();
+
+    void slotConflictResolverAttendeeAdded(const QModelIndex &index, int first, int last);
+    void slotConflictResolverAttendeeRemoved(const QModelIndex &index, int first, int last);
+    void slotConflictResolverAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void slotConflictResolverLayoutChanged();
+    void slotFreeBusyAdded(const QModelIndex &index, int first, int last);
+    void slotFreeBusyChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void updateFBStatus();
+    void updateFBStatus(const KCalCore::Attendee::Ptr &attendee, const KCalCore::FreeBusy::Ptr &fb);
+
+    void slotGroupSubstitutionAttendeeAdded(const QModelIndex &index, int first, int last);
+    void slotGroupSubstitutionAttendeeRemoved(const QModelIndex &index, int first, int last);
+    void slotGroupSubstitutionAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void slotGroupSubstitutionLayoutChanged();
+
 private:
+    void updateGroupExpand();
+
     void changeStatusForMe(KCalCore::Attendee::PartStat);
 
     /** Returns if I was the organizer of the loaded event */
@@ -98,9 +133,11 @@ private:
      * from the addressbook and expanding distribution lists.
      * The optional Attendee parameter can be used to pass in default values
      * to be used by the new Attendee.
+     * pos =-1 means insert attendee before empty line
      */
-    void insertAttendeeFromAddressee(const KContacts::Addressee &a);
+    void insertAttendeeFromAddressee(const KContacts::Addressee &a, int pos = -1);
     void fillOrganizerCombo();
+    void setActions(KCalCore::Incidence::IncidenceType actions);
 
 #ifdef KDEPIM_MOBILE_UI
     Ui::EventOrTodoMore *mUi;
@@ -108,11 +145,21 @@ private:
     Ui::EventOrTodoDesktop *mUi;
 #endif
     QWidget *mParentWidget;
-    AttendeeEditor *mAttendeeEditor;
     ConflictResolver *mConflictResolver;
-    QMap<KJob *, QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
+
     IncidenceDateTime *mDateTime;
     QString mOrganizer;
+
+    /** used dataModel to rely on*/
+    AttendeeTableModel *mDataModel;
+    AttendeeLineEditDelegate *mAttendeeDelegate;
+    AttendeeComboBoxDelegate *mStateDelegate;
+    AttendeeComboBoxDelegate *mRoleDelegate;
+    AttendeeComboBoxDelegate *mResponseDelegate;
+
+    QMap<KCalCore::Attendee::Ptr, KContacts::ContactGroup> mGroupList;
+    QMap<KJob *, KCalCore::Attendee::Ptr> mMightBeGroupJobs;
+    QMap<KJob *, KCalCore::Attendee::Ptr> mExpandGroupJobs;
 };
 
 }

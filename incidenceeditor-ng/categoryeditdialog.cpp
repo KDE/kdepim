@@ -52,8 +52,8 @@ CategoryEditDialog::CategoryEditDialog(CategoryConfig *categoryConfig,
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &CategoryEditDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &CategoryEditDialog::reject);
     mWidgets = new Ui::CategoryEditDialog_base();
     QWidget *widget = new QWidget(this);
     widget->setObjectName("CategoryEdit");
@@ -94,20 +94,13 @@ CategoryEditDialog::CategoryEditDialog(CategoryConfig *categoryConfig,
 
     mWidgets->mCategories->setFocus();
 
-    connect(mWidgets->mCategories, SIGNAL(itemSelectionChanged()),
-            SLOT(editItem()));
-    connect(mWidgets->mCategories, SIGNAL(itemSelectionChanged()),
-            SLOT(slotSelectionChanged()));
-    connect(mWidgets->mCategories, SIGNAL(itemCollapsed(QTreeWidgetItem*)),
-            SLOT(expandIfToplevel(QTreeWidgetItem*)));
-    connect(mWidgets->mEdit, SIGNAL(textChanged(QString)),
-            this, SLOT(slotTextChanged(QString)));
-    connect(mWidgets->mButtonAdd, SIGNAL(clicked()),
-            this, SLOT(add()));
-    connect(mWidgets->mButtonAddSubcategory, SIGNAL(clicked()),
-            this, SLOT(addSubcategory()));
-    connect(mWidgets->mButtonRemove, SIGNAL(clicked()),
-            this, SLOT(remove()));
+    connect(mWidgets->mCategories, &IncidenceEditorNG::AutoCheckTreeWidget::itemSelectionChanged, this, &CategoryEditDialog::editItem);
+    connect(mWidgets->mCategories, &IncidenceEditorNG::AutoCheckTreeWidget::itemSelectionChanged, this, &CategoryEditDialog::slotSelectionChanged);
+    connect(mWidgets->mCategories, &IncidenceEditorNG::AutoCheckTreeWidget::itemCollapsed, this, &CategoryEditDialog::expandIfToplevel);
+    connect(mWidgets->mEdit, &QLineEdit::textChanged, this, &CategoryEditDialog::slotTextChanged);
+    connect(mWidgets->mButtonAdd, &QPushButton::clicked, this, &CategoryEditDialog::add);
+    connect(mWidgets->mButtonAddSubcategory, &QPushButton::clicked, this, &CategoryEditDialog::addSubcategory);
+    connect(mWidgets->mButtonRemove, &QPushButton::clicked, this, &CategoryEditDialog::remove);
     connect(okButton, &QPushButton::clicked, this, &CategoryEditDialog::slotOk);
     connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &CategoryEditDialog::slotCancel);
     //connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(slotApply()) );

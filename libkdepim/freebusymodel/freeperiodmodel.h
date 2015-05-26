@@ -21,16 +21,17 @@
 #ifndef INCIDENCEEDITOR_FREEPERIODMODEL_H
 #define INCIDENCEEDITOR_FREEPERIODMODEL_H
 
-#include "incidenceeditors_ng_export.h"
+#include "libkdepim/kdepim_export.h"
 
 #include <KCalCore/Period>
 
 #include <QAbstractTableModel>
 
-namespace IncidenceEditorNG
+
+namespace KPIM
 {
 
-class INCIDENCEEDITORS_NG_EXPORT FreePeriodModel : public QAbstractTableModel
+class KDEPIM_EXPORT FreePeriodModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
@@ -43,8 +44,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     void slotNewFreePeriods(const KCalCore::Period::List &freePeriods);
@@ -63,5 +64,4 @@ private:
 };
 
 }
-
 #endif

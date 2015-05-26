@@ -25,6 +25,7 @@
 #include "incidenceeditor-ng.h"
 
 #include <KMessageWidget>
+#include <AkonadiCore/Item>
 
 namespace IncidenceEditorNG
 {
@@ -60,7 +61,9 @@ public:
      * implementation too.
      */
     void load(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    virtual void load(const Akonadi::Item &item);
     void save(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    virtual void save(Akonadi::Item &item);
 
 private Q_SLOTS:
     void handleDirtyStatusChange(bool isDirty);

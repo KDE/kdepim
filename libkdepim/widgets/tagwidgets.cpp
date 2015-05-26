@@ -20,6 +20,8 @@
 #include <QLayout>
 
 #include <AkonadiCore/Tag>
+#include <AkonadiCore/TagFetchJob>
+#include <AkonadiCore/TagFetchScope>
 #include <AkonadiCore/TagCreateJob>
 #include <AkonadiWidgets/TagWidget>
 #include <AkonadiCore/TagModel>
@@ -48,6 +50,7 @@ void TagWidget::onSelectionChanged(const Akonadi::Tag::List &tags)
         mCachedTagNames << tag.name();
     }
     Q_EMIT selectionChanged(mCachedTagNames);
+    Q_EMIT selectionChanged(tags);
 }
 
 void TagWidget::setSelection(const QStringList &tagNames)
@@ -56,7 +59,7 @@ void TagWidget::setSelection(const QStringList &tagNames)
     mCachedTagNames = tagNames;
     foreach (const QString &name, tagNames) {
         //TODO fetch by GID instead, we don't really want to create tags here
-        Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(name), this);
+        Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag::genericTag(name), this);
         tagCreateJob->setMergeIfExisting(true);
         connect(tagCreateJob, &Akonadi::TagCreateJob::result, this, &TagWidget::onTagCreated);
     }
@@ -89,7 +92,7 @@ void TagSelectionDialog::setSelection(const QStringList &tagNames)
     mTagList.clear();
     foreach (const QString &name, tagNames) {
         //TODO fetch by GID instead, we don't really want to create tags here
-        Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(name), this);
+        Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag::genericTag(name), this);
         tagCreateJob->setMergeIfExisting(true);
         connect(tagCreateJob, &Akonadi::TagCreateJob::result, this, &TagSelectionDialog::onTagCreated);
     }
@@ -113,5 +116,10 @@ QStringList TagSelectionDialog::selection() const
         list << tag.name();
     }
     return list;
+}
+
+Akonadi::Tag::List TagSelectionDialog::tagSelection() const
+{
+    return Akonadi::TagSelectionDialog::selection();
 }
 

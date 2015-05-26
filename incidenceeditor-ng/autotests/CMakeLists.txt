@@ -22,8 +22,6 @@ ENDMACRO(IE_EXECUTABLE_TESTS)
 
 IE_UNIT_TESTS(
   conflictresolvertest
-  testfreebusyitemmodel
-  testfreeperiodmodel
   testfreebusyganttproxymodel
 )
 

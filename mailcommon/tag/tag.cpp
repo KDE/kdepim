@@ -22,6 +22,7 @@
 #include <Tag>
 #include <TagAttribute>
 
+#include <QUuid>
 using namespace MailCommon;
 
 Tag::Ptr Tag::createDefaultTag(const QString &name)
@@ -64,7 +65,15 @@ Tag::Ptr Tag::fromAkonadi(const Akonadi::Tag &akonadiTag)
 
 Akonadi::Tag Tag::saveToAkonadi(Tag::SaveFlags saveFlags) const
 {
-    Akonadi::Tag tag(tagName);
+    Akonadi::Tag tag = mTag;
+    if (tag.gid().isEmpty()) {
+        tag.setGid(QUuid::createUuid().toByteArray().mid(1, 36));
+    }
+    if (isImmutable) {
+        tag.setType(Akonadi::Tag::PLAIN);
+    } else {
+        tag.setType(Akonadi::Tag::GENERIC);
+    }
     Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::AttributeEntity::AddIfMissing);
     attr->setDisplayName(tagName);
     attr->setIconName(iconName);

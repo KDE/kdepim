@@ -38,8 +38,7 @@ IncidenceSecrecy::IncidenceSecrecy(Ui::EventOrTodoDesktop *ui)
 {
     setObjectName("IncidenceSecrecy");
     mUi->mSecrecyCombo->addItems(KCalUtils::Stringify::secrecyList());
-    connect(mUi->mSecrecyCombo, SIGNAL(currentIndexChanged(int)),
-            SLOT(checkDirtyStatus()));
+    connect(mUi->mSecrecyCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceSecrecy::checkDirtyStatus);
 }
 
 void IncidenceSecrecy::load(const KCalCore::Incidence::Ptr &incidence)

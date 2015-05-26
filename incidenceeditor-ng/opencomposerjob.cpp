@@ -52,7 +52,7 @@ void OpenComposerJob::start()
 {
     mSuccess = false;
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.kmail"))) {
-        processMail();
+        QMetaObject::invokeMethod(this, "processMail", Qt::QueuedConnection);
     }
     //Check if Kontact is already running and if not ...
     int result = KDBusServiceStarter::self()->findServiceFor(QStringLiteral("DBUS/Mailer"), QString(),

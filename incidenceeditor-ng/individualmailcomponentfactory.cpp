@@ -1,29 +1,37 @@
 /*
-  Copyright (c) 2014 Sandro Knauß <knauss@kolabsys.com>
-
-  This library is free software; you can redistribute it and/or modify it
-  under the terms of the GNU Library General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or (at your
-  option) any later version.
-
-  This library is distributed in the hope that it will be useful, but WITHOUT
-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-  License for more details.
-
-  You should have received a copy of the GNU Library General Public License
-  along with this library; see the file COPYING.LIB.  If not, write to the
-  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-  02110-1301, USA.
-*/
+ * Copyright (c) 2014 Sandro Knauß <knauss@kolabsys.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * As a special exception, permission is given to link this program
+ * with any edition of Qt, and distribute the resulting executable,
+ * without including the source code for Qt in the source distribution.
+ */
 
 #include "individualmailcomponentfactory.h"
 #include "individualmaildialog.h"
+
+#include <calendarsupport/kcalprefs.h>
+#include <KEmailAddress>
 
 #include <KMessageBox>
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#include <QDBusInterface>
+#include <QDBusReply>
 
 using namespace IncidenceEditorNG;
 
@@ -85,6 +93,7 @@ void IndividualMessageQueueJob::startQueueJob(const QStringList &to, const QStri
     msg->cc()->fromUnicodeString(cc.join(QStringLiteral(", ")), "utf-8");
     msg->assemble();
 
+    mQueueJob = new MailTransport::MessageQueueJob(this);
     mQueueJob->setMessage(msg);
     mQueueJob->transportAttribute().setTransportId(transportAttribute().transportId());
     mQueueJob->sentBehaviourAttribute().setSentBehaviour(sentBehaviourAttribute().sentBehaviour());
@@ -93,7 +102,6 @@ void IndividualMessageQueueJob::startQueueJob(const QStringList &to, const QStri
     mQueueJob->addressAttribute().setCc(cc);
     mQueueJob->addressAttribute().setBcc(addressAttribute().bcc());
 
-    mQueueJob = new MailTransport::MessageQueueJob(this);
     connect(mQueueJob, &MailTransport::MessageQueueJob::finished, this, &IndividualMessageQueueJob::handleJobFinished);
     mQueueJob->start();
 }
@@ -111,7 +119,7 @@ void IndividualMessageQueueJob::handleJobFinished(KJob *job)
         if (job == mQueueJob && mComposerJob) {
             mComposerJob->kill();
             mComposerJob = 0;
-        } else if (mComposerJob) {
+        } else if (job == mComposerJob && mQueueJob) {
             mQueueJob->kill();
             mQueueJob = 0;
         }
@@ -155,9 +163,21 @@ void IndividualMailITIPHandlerDialogDelegate::openDialog(const QString &question
         Q_EMIT dialogClosed(KMessageBox::No, mMethod, mIncidence);
         break;
     default:
-        mDialog = new IndividualMailDialog(question, attendees, buttonYes, buttonNo, mParent);
-        connect(mDialog, SIGNAL(finished(int)), SLOT(onDialogClosed(int)));
-        mDialog->show();
+        switch (CalendarSupport::KCalPrefs::instance()->sendPolicy()) {
+        case (CalendarSupport::KCalPrefs::InvitationPolicySend):
+            emit setUpdate(mIncidence, attendees);
+            emit dialogClosed(KMessageBox::Yes, mMethod, mIncidence);
+            break;
+        case (CalendarSupport::KCalPrefs::InvitationPolicyDontSend):
+            emit dialogClosed(KMessageBox::No, mMethod, mIncidence);
+            break;
+        case (CalendarSupport::KCalPrefs::InvitationPolicyAsk):
+        default:
+            mDialog = new IndividualMailDialog(question, attendees, buttonYes, buttonNo, mParent);
+            connect(mDialog, &QDialog::finished, this, &IndividualMailITIPHandlerDialogDelegate::onDialogClosed);
+            mDialog->show();
+            break;
+        }
         break;
     }
 }

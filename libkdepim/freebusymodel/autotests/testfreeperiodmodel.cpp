@@ -27,8 +27,9 @@
 
 #include <qtest.h>
 
+using namespace KPIM;
+
 QTEST_MAIN(FreePeriodModelTest)
-using namespace IncidenceEditorNG;
 
 void FreePeriodModelTest::testModelValidity()
 {
@@ -43,7 +44,7 @@ void FreePeriodModelTest::testModelValidity()
     list << KCalCore::Period(dt1, KCalCore::Duration(60 * 60));
     list << KCalCore::Period(dt2, KCalCore::Duration(60 * 60));
 
-    QVERIFY(model->rowCount() == 0);
+    QCOMPARE(model->rowCount(), 0);
     model->slotNewFreePeriods(list);
     QCOMPARE(model->rowCount(), 2);
 }
@@ -61,7 +62,7 @@ void FreePeriodModelTest::testSplitByDay()
     // This period goes from 8am on the 24th to 8am on the 25th
     list << KCalCore::Period(startDt, endDt);
 
-    QVERIFY(model->rowCount() == 0);
+    QCOMPARE(model->rowCount(), 0);
 
     // as part of adding the new periods
     // the model should split the above period into two

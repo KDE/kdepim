@@ -22,6 +22,9 @@
 
 #include <QObject>
 
+namespace KPIM
+{
+
 class FreePeriodModelTest: public QObject
 {
     Q_OBJECT
@@ -29,4 +32,6 @@ private Q_SLOTS:
     void testModelValidity();
     void testSplitByDay();
 };
+
+}
 #endif

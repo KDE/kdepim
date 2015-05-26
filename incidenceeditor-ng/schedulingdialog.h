@@ -30,10 +30,15 @@
 
 #include <QDialog>
 #include <KDateTime>
+
+namespace KPIM
+{
+class FreePeriodModel;
+}
+
 namespace IncidenceEditorNG
 {
 
-class FreePeriodModel;
 class ConflictResolver;
 class VisualFreeBusyWidget;
 
@@ -76,7 +81,7 @@ private:
     int mDuration; //!< In seconds
 
     ConflictResolver *mResolver;
-    FreePeriodModel *mPeriodModel;
+    KPIM::FreePeriodModel *mPeriodModel;
 #ifndef KDEPIM_MOBILE_UI
     VisualFreeBusyWidget *mVisualWidget;
 #endif

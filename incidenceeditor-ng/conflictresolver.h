@@ -24,16 +24,19 @@
 #define INCIDENCEEDITOR_CONFLICTRESOLVER_H
 
 #include "incidenceeditors_ng_export.h"
-#include "freebusyitem.h"
+#include "freebusymodel/freebusyitem.h"
 
 #include <QBitArray>
 #include <QSet>
 #include <QTimer>
 
+namespace KPIM
+{
+class FreeBusyItemModel;
+}
+
 namespace IncidenceEditorNG
 {
-
-class FreeBusyItemModel;
 
 /**
  * Takes a list of attendees and event info (e.g., min time start, max time end)
@@ -59,7 +62,7 @@ public:
      */
     void insertAttendee(const KCalCore::Attendee::Ptr &attendee);
 
-    void insertAttendee(const FreeBusyItem::Ptr &freebusy);
+    void insertAttendee(const KPIM::FreeBusyItem::Ptr &freebusy);
     /**
      * Removes an attendee
      * The attendee will no longer be considered when
@@ -111,9 +114,9 @@ public:
     */
     bool findFreeSlot(const KCalCore::Period &dateTimeRange);
 
-    QList<FreeBusyItem::Ptr> freeBusyItems() const;
+    QList<KPIM::FreeBusyItem::Ptr> freeBusyItems() const;
 
-    FreeBusyItemModel *model() const;
+    KPIM::FreeBusyItemModel *model() const;
 
 Q_SIGNALS:
     /**
@@ -189,7 +192,7 @@ private:
     // to prevent the process from being repeated many times
     // after a series of quick parameter changes.
 
-    FreeBusyItemModel *mFBModel;
+    KPIM::FreeBusyItemModel *mFBModel;
     QWidget *mParentWidget;
 
     QSet<KCalCore::Attendee::Role> mMandatoryRoles;

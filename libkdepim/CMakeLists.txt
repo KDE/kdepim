@@ -56,6 +56,13 @@ set(kdepim_widgets_LIB_SRCS
    widgets/tagselectioncombo.cpp
 )
 
+set(kdepim_freebusy_LIB_SRCS
+   freebusymodel/freeperiodmodel.cpp
+   freebusymodel/freebusyitem.cpp
+   freebusymodel/freebusyitemmodel.cpp
+   freebusymodel/freebusycalendar.cpp
+)
+
 set(kdepim_ldap_LIB_SRCS
    ldap/addhostdialog.cpp
    ldap/ldapclient.cpp
@@ -63,6 +70,7 @@ set(kdepim_ldap_LIB_SRCS
    ldap/ldapclientsearch.cpp
    ldap/ldapclientsearchconfig.cpp
    ldap/ldapclient_debug.cpp
+   ldap/addhostdialog.cpp
 )
 
 set(kdepim_misc_LIB_SRCS
@@ -103,6 +111,7 @@ set(kdepim_LIB_SRCS
    ${kdepim_ldap_LIB_SRCS}
    ${kdepim_misc_LIB_SRCS}
    ${kdepim_addressline_LIB_SRCS}
+   ${kdepim_freebusy_LIB_SRCS}
    libkdepim_debug.cpp
    prefs/kprefsdialog.cpp
    multiplyingline/multiplyingline.cpp
@@ -129,6 +138,7 @@ target_link_libraries(kdepim
   KF5::AkonadiCore
   KF5::AkonadiContact
   KF5::AkonadiWidgets
+  KF5::AkonadiCalendar
   KF5::SonnetCore
   KF5::KCMUtils
   KF5::Wallet
@@ -142,6 +152,7 @@ target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   KF5::Ldap
   KF5::AkonadiCore
   KF5::AkonadiContact
+  KF5::AkonadiCalendar
 )
 
 if(MINGW)
@@ -203,4 +214,5 @@ install(FILES interfaces/org.kde.addressbook.service.xml interfaces/org.kde.mail
 if (BUILD_TESTING)
 add_subdirectory(addressline/blacklistbaloocompletion/autotests)
 add_subdirectory(addressline/autotests/)
+add_subdirectory(freebusymodel/autotests)
 endif()
