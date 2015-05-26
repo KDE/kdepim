@@ -214,4 +214,3 @@ int IncidenceResource::resourceCount() const
     return 0;
 }
 
-#include "incidenceresource.moc"
