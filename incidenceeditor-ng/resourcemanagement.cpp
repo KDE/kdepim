@@ -43,7 +43,6 @@
 #include <akonadi/calendar/freebusymanager.h>
 #include <kldap/ldapobject.h>
 
-#include <qjson/parser.h>
 
 #include <KLocalizedString>
 
