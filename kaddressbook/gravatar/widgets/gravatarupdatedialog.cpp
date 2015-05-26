@@ -19,7 +19,6 @@
 #include <QVBoxLayout>
 #include <KLocalizedString>
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KSharedConfig>
 
 using namespace KABGravatar;
@@ -37,7 +36,7 @@ GravatarUpdateDialog::~GravatarUpdateDialog()
 
 void GravatarUpdateDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "GravatarUpdateDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "GravatarUpdateDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -46,7 +45,7 @@ void GravatarUpdateDialog::readConfig()
 
 void GravatarUpdateDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "GravatarUpdateDialog");
+    KConfigGroup grp( KSharedConfig::openConfig(), "GravatarUpdateDialog");
     grp.writeEntry( "Size", size() );
     grp.sync();
 }
