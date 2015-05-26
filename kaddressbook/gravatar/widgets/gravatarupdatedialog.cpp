@@ -18,17 +18,35 @@
 #include "gravatarupdatedialog.h"
 #include <QVBoxLayout>
 #include <KLocalizedString>
+#include <KConfigGroup>
+#include <KGlobal>
+#include <KSharedConfig>
 
 using namespace KABGravatar;
 
 GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
     : QDialog(parent)
 {
-
+    readConfig();
 }
 
 GravatarUpdateDialog::~GravatarUpdateDialog()
 {
-
+    writeConfig();
 }
 
+void GravatarUpdateDialog::readConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "GravatarUpdateDialog" );
+    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void GravatarUpdateDialog::writeConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "GravatarUpdateDialog");
+    grp.writeEntry( "Size", size() );
+    grp.sync();
+}
