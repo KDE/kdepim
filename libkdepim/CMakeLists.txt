@@ -102,6 +102,12 @@ set(kdepim_addressline_blacklist_baloo_LIB_SRCS
    addressline/blacklistbaloocompletion/blacklistbalooemailcompletionwidget.cpp
 ) 
 
+set(kdepim_multiplyingline_LIB_SRCS
+   multiplyingline/multiplyingline.cpp
+   multiplyingline/multiplyinglineeditor.cpp
+   multiplyingline/multiplyinglineview_p.cpp
+)
+
 set(kdepim_LIB_SRCS
    ${kdepim_proxy_LIB_SRCS}
    ${kdepim_addressline_blacklist_baloo_LIB_SRCS}
@@ -112,11 +118,9 @@ set(kdepim_LIB_SRCS
    ${kdepim_misc_LIB_SRCS}
    ${kdepim_addressline_LIB_SRCS}
    ${kdepim_freebusy_LIB_SRCS}
+   ${kdepim_multiplyingline_LIB_SRCS}
    libkdepim_debug.cpp
    prefs/kprefsdialog.cpp
-   multiplyingline/multiplyingline.cpp
-   multiplyingline/multiplyinglineeditor.cpp
-   multiplyingline/multiplyinglineview_p.cpp
 )
 
 if (KDEPIM_INPROCESS_LDAP)
