@@ -15,58 +15,38 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "migrateinfo.h"
+#ifndef MIGRATEINFO_H
+#define MIGRATEINFO_H
 
-MigrateInfo::MigrateInfo()
-    : mVersion(-1),
-      mFolder(false)
+#include <QString>
+#include "pimcommon_export.h"
+namespace PimCommon
 {
+class PIMCOMMON_EXPORT MigrateFileInfo
+{
+public:
+    MigrateFileInfo();
 
+    QString type() const;
+    void setType(const QString &type);
+
+    QString path() const;
+    void setPath(const QString &path);
+
+    bool folder() const;
+    void setFolder(bool folder);
+
+    bool isValid() const;
+
+    int version() const;
+    void setVersion(int version);
+
+private:
+    QString mType;
+    QString mPath;
+    int mVersion;
+    bool mFolder;
+};
 }
 
-bool MigrateInfo::isValid() const
-{
-    return !mType.isEmpty() && !mPath.isEmpty();
-}
-
-int MigrateInfo::version() const
-{
-    return mVersion;
-}
-
-void MigrateInfo::setVersion(int version)
-{
-    mVersion = version;
-}
-
-
-QString MigrateInfo::type() const
-{
-    return mType;
-}
-
-void MigrateInfo::setType(const QString &type)
-{
-    mType = type;
-}
-
-QString MigrateInfo::path() const
-{
-    return mPath;
-}
-
-void MigrateInfo::setPath(const QString &path)
-{
-    mPath = path;
-}
-
-bool MigrateInfo::folder() const
-{
-    return mFolder;
-}
-
-void MigrateInfo::setFolder(bool folder)
-{
-    mFolder = folder;
-}
-
+#endif // MIGRATEINFO_H

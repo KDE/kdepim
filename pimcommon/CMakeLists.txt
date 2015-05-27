@@ -218,9 +218,15 @@ set(libpimcommon_gravatar_SRCS
    gravatar/widgets/gravatardownloadpixmapdialog.cpp 
 )
 
+set(libpimcommon_migrate_SRCS
+   migration/migrateapplicationfiles.cpp  
+   migration/migratefileinfo.cpp
+)
+
 set(libpimcommon_SRCS
   pimcommon_debug.cpp
   settings/pimcommonsettings.cpp
+  ${libpimcommon_migrate_SRCS}
   ${libpimcommon_util_SRCS}
   ${libpimcommon_texteditor_SRCS}
   ${libpimcommon_shorturl_SRCS}
@@ -311,6 +317,7 @@ if (BUILD_TESTING)
    add_subdirectory(shorturl/autotests)
    add_subdirectory(acl/autotests)
    add_subdirectory(temporaryfile/autotests)
+   add_subdirectory(migration/autotests)
 endif()
 add_subdirectory(widgets/tests)
 add_subdirectory(shorturl/tests)

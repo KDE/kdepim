@@ -15,33 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "kmmigratekmail4configtest.h"
-#include "../kmmigratekmail4config.h"
+#include "migrateapplicationfilestest.h"
+#include "../migrateapplicationfiles.h"
 #include <qtest.h>
-
-KMMigrateKMail4ConfigTest::KMMigrateKMail4ConfigTest(QObject *parent)
+using namespace PimCommon;
+MigrateApplicationFilesTest::MigrateApplicationFilesTest(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-KMMigrateKMail4ConfigTest::~KMMigrateKMail4ConfigTest()
+MigrateApplicationFilesTest::~MigrateApplicationFilesTest()
 {
 
 }
 
-void KMMigrateKMail4ConfigTest::shouldHaveDefaultValue()
+void MigrateApplicationFilesTest::shouldHaveDefaultValue()
 {
-    KMMigrateKMail4Config migrate;
+    MigrateApplicationFiles migrate;
     QVERIFY(!migrate.start());
     QVERIFY(migrate.configFileName().isEmpty());
 }
 
-void KMMigrateKMail4ConfigTest::shouldVerifyIfCheckIsNecessary()
+void MigrateApplicationFilesTest::shouldVerifyIfCheckIsNecessary()
 {
-    KMMigrateKMail4Config migrate;
+    MigrateApplicationFiles migrate;
     //Invalid before config file is not set.
     QVERIFY(!migrate.checkIfNecessary());
 }
 
-QTEST_MAIN(KMMigrateKMail4ConfigTest)
+QTEST_MAIN(MigrateApplicationFilesTest)

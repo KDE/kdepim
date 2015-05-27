@@ -15,33 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "migrateinfotest.h"
-#include "../migrateinfo.h"
+#include "migratefileinfotest.h"
+#include "../migratefileinfo.h"
 #include <qtest.h>
-
-MigrateInfoTest::MigrateInfoTest(QObject *parent)
+using namespace PimCommon;
+MigrateFileInfoTest::MigrateFileInfoTest(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-MigrateInfoTest::~MigrateInfoTest()
+MigrateFileInfoTest::~MigrateFileInfoTest()
 {
 
 }
 
-void MigrateInfoTest::shouldHaveDefaultValue()
+void MigrateFileInfoTest::shouldHaveDefaultValue()
 {
-    MigrateInfo info;
+    MigrateFileInfo info;
     QVERIFY(!info.folder());
     QVERIFY(info.path().isEmpty());
     QVERIFY(info.type().isEmpty());
     QCOMPARE(info.version(), -1);
 }
 
-void MigrateInfoTest::shouldAssignValue()
+void MigrateFileInfoTest::shouldAssignValue()
 {
-    MigrateInfo info;
+    MigrateFileInfo info;
     bool isFolder = false;
     info.setFolder(isFolder);
     QCOMPARE(info.folder(), isFolder);
@@ -80,9 +80,9 @@ void MigrateInfoTest::shouldAssignValue()
     QCOMPARE(info.version(), version);
 }
 
-void MigrateInfoTest::shouldBeEmpty()
+void MigrateFileInfoTest::shouldBeEmpty()
 {
-    MigrateInfo info;
+    MigrateFileInfo info;
     QVERIFY(!info.isValid());
     info.setFolder(true);
     QVERIFY(!info.isValid());
@@ -100,4 +100,4 @@ void MigrateInfoTest::shouldBeEmpty()
     QVERIFY(!info.isValid());
 }
 
-QTEST_MAIN(MigrateInfoTest)
+QTEST_MAIN(MigrateFileInfoTest)

@@ -15,21 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KMMIGRATEKMAIL4CONFIGTEST_H
-#define KMMIGRATEKMAIL4CONFIGTEST_H
+#ifndef MIGRATEINFOTEST_H
+#define MIGRATEINFOTEST_H
 
 #include <QObject>
 
-class KMMigrateKMail4ConfigTest : public QObject
+class MigrateFileInfoTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit KMMigrateKMail4ConfigTest(QObject *parent = Q_NULLPTR);
-    ~KMMigrateKMail4ConfigTest();
+    explicit MigrateFileInfoTest(QObject *parent = Q_NULLPTR);
+    ~MigrateFileInfoTest();
+
 private Q_SLOTS:
     void shouldHaveDefaultValue();
-    void shouldVerifyIfCheckIsNecessary();
-
+    void shouldAssignValue();
+    void shouldBeEmpty();
 };
 
-#endif // KMMIGRATEKMAIL4CONFIGTEST_H
+#endif // MIGRATEFilEINFOTEST_H

@@ -20,18 +20,20 @@
 
 #include <QObject>
 #include <QVector>
-#include "migrateinfo.h"
-
-class KMMigrateKMail4Config : public QObject
+#include "migratefileinfo.h"
+#include "pimcommon_export.h"
+namespace PimCommon
+{
+class PIMCOMMON_EXPORT MigrateApplicationFiles : public QObject
 {
     Q_OBJECT
 public:
-    explicit KMMigrateKMail4Config(QObject *parent = Q_NULLPTR);
-    ~KMMigrateKMail4Config();
+    explicit MigrateApplicationFiles(QObject *parent = Q_NULLPTR);
+    ~MigrateApplicationFiles();
 
     bool start();
     bool checkIfNecessary();
-    void insertMigrateInfo(const MigrateInfo &info);
+    void insertMigrateInfo(const MigrateFileInfo &info);
 
     int version() const;
     void setVersion(int version);
@@ -47,13 +49,13 @@ Q_SIGNALS:
 
 private:
     void writeConfig();
-    void migrateFolder(const MigrateInfo &info);
-    void migrateFile(const MigrateInfo &info);
+    void migrateFolder(const MigrateFileInfo &info);
+    void migrateFile(const MigrateFileInfo &info);
     bool migrateConfig();
-    QVector<MigrateInfo> mMigrateInfoList;
+    QVector<MigrateFileInfo> mMigrateInfoList;
     QString mConfigFileName;
     int mMigrateApplicationVersion;
     int mCurrentConfigVersion;
 };
-
+}
 #endif // KMMIGRATEKMAIL4CONFIG_H
