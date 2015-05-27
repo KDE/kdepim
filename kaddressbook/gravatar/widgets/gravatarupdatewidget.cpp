@@ -19,7 +19,7 @@
 
 using namespace KABGravatar;
 GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
-     : QWidget(parent)
+    : QWidget(parent)
 {
 
 }

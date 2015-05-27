@@ -460,7 +460,6 @@ public:
     */
     QLabel *label() const;
 
-
 private:
     KConfigSkeleton::ItemEnum *mItem;
     KComboBox *mCombo;

@@ -70,7 +70,7 @@ QString ChecksumDefinition::installPath()
         if (QCoreApplication::instance()) {
             *ip = QCoreApplication::applicationDirPath();
         } else {
-            qWarning()<< "checksumdefinition.cpp: installPath() called before QCoreApplication was constructed";
+            qWarning() << "checksumdefinition.cpp: installPath() called before QCoreApplication was constructed";
         }
     }
     return *ip;

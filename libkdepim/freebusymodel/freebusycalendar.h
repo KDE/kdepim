@@ -32,7 +32,8 @@
 namespace KPIM
 {
 
-class KDEPIM_EXPORT FreeBusyCalendar : QObject {
+class KDEPIM_EXPORT FreeBusyCalendar : QObject
+{
     Q_OBJECT
 public:
     explicit FreeBusyCalendar(QObject *parent = Q_NULLPTR);
@@ -54,7 +55,7 @@ private:
 
     FreeBusyItemModel *mModel;
     KCalCore::Calendar::Ptr mCalendar;
-    QMap<QModelIndex,KCalCore::Event::Ptr> mFbEvent;
+    QMap<QModelIndex, KCalCore::Event::Ptr> mFbEvent;
 };
 
 }

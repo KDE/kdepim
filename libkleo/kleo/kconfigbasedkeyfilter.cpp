@@ -274,12 +274,13 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter(const KConfigGroup &config)
                 found = true;
                 break;
             }
-        if (!found)
+        if (!found) {
             qWarning() << QStringLiteral("KConfigBasedKeyFilter: found unknown match context '%1' in group '%2'").arg(ctx).arg(config.name());
+        }
     }
     if (mMatchContexts == NoMatchContext) {
         qWarning() << QStringLiteral("KConfigBasedKeyFilter: match context in group '%1' evaluates to NoMatchContext, "
-                 "replaced by AnyMatchContext").arg(config.name());
+                                     "replaced by AnyMatchContext").arg(config.name());
         mMatchContexts = AnyMatchContext;
     }
 }
