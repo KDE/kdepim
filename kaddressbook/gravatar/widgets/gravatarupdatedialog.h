@@ -27,6 +27,9 @@ class GravatarUpdateDialog : public QDialog
 public:
     explicit GravatarUpdateDialog(QWidget *parent=0);
     ~GravatarUpdateDialog();
+
+    void setEmail(const QString &email);
+
 private:
     void readConfig();
     void writeConfig();

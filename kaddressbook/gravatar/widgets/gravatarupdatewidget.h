@@ -26,6 +26,11 @@ class GravatarUpdateWidget : public QWidget
 public:
     explicit GravatarUpdateWidget(QWidget *parent=0);
     ~GravatarUpdateWidget();
+
+    void setEmail(const QString &email);
+
+private:
+    QString mEmail;
 };
 }
 

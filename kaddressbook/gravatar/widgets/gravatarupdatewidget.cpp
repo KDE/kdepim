@@ -28,3 +28,9 @@ GravatarUpdateWidget::~GravatarUpdateWidget()
 {
 }
 
+void GravatarUpdateWidget::setEmail(const QString &email)
+{
+    mEmail = email;
+}
+
+
