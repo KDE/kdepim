@@ -43,6 +43,11 @@ GravatarCreateWidget::GravatarCreateWidget(QWidget *parent)
     mSearchGravatar->setObjectName(QLatin1String("search"));
     mainLayout->addWidget(mSearchGravatar, 0, 2);
     connect(mSearchGravatar, SIGNAL(clicked(bool)), this, SLOT(slotSearchGravatar()));
+
+
+    mResultGravatar = new QLabel;
+    mResultGravatar->setObjectName(QLatin1String("result"));
+    mainLayout->addWidget(mSearchGravatar, 1, 0);
 }
 
 GravatarCreateWidget::~GravatarCreateWidget()
@@ -74,8 +79,10 @@ void GravatarCreateWidget::slotSearchGravatarFinished(PimCommon::GravatarResolvU
 {
     if (job) {
         if (job->hasGravatar()) {
-            //TODO show gravatar result!
+            mResultGravatar->setPixmap(job->pixmap());
+        } else {
+            //KF5 add i18n
+            mResultGravatar->setText(QLatin1String("No Gravatar Found."));
         }
     }
-    //TODO
 }

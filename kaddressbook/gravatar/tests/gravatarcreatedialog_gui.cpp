@@ -15,35 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARCREATEWIDGET_H
-#define GRAVATARCREATEWIDGET_H
+#include "../widgets/gravatarcreatedialog.h"
 
-#include <QWidget>
-class QLabel;
-class QPushButton;
-namespace PimCommon
-{
-class GravatarResolvUrlJob;
-}
-namespace KABGravatar
-{
-class GravatarCreateWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit GravatarCreateWidget(QWidget *parent = Q_NULLPTR);
-    ~GravatarCreateWidget();
-    void setEmail(const QString &email);
+#include <KLocalizedString>
+#include <QApplication>
 
-private Q_SLOTS:
-    void slotSearchGravatar();
-    void slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *);
-private:
-    QString mEmail;
-    QLabel *mEmailLab;
-    QPushButton *mSearchGravatar;
-    QLabel *mResultGravatar;
-};
+int main (int argc, char **argv)
+{
+    QApplication app(argc, argv);
+
+    KABGravatar::GravatarCreateDialog *w = new KABGravatar::GravatarCreateDialog;
+
+    w->show();
+    app.exec();
+    delete w;
+    return 0;
 }
 
-#endif // GRAVATARCREATEWIDGET_H

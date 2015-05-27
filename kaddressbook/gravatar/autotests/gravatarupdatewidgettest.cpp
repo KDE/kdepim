@@ -15,35 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARCREATEWIDGET_H
-#define GRAVATARCREATEWIDGET_H
+#include "gravatarupdatewidgettest.h"
+#include <qtest_kde.h>
+GravatarUpdateWidgetTest::GravatarUpdateWidgetTest(QObject *parent)
+    : QObject(parent)
+{
 
-#include <QWidget>
-class QLabel;
-class QPushButton;
-namespace PimCommon
-{
-class GravatarResolvUrlJob;
-}
-namespace KABGravatar
-{
-class GravatarCreateWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit GravatarCreateWidget(QWidget *parent = Q_NULLPTR);
-    ~GravatarCreateWidget();
-    void setEmail(const QString &email);
-
-private Q_SLOTS:
-    void slotSearchGravatar();
-    void slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *);
-private:
-    QString mEmail;
-    QLabel *mEmailLab;
-    QPushButton *mSearchGravatar;
-    QLabel *mResultGravatar;
-};
 }
 
-#endif // GRAVATARCREATEWIDGET_H
+GravatarUpdateWidgetTest::~GravatarUpdateWidgetTest()
+{
+
+}
+
+QTEST_KDEMAIN(GravatarUpdateWidgetTest, GUI)

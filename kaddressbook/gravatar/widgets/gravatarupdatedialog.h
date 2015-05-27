@@ -21,6 +21,7 @@
 #include <QDialog>
 namespace KABGravatar
 {
+class GravatarUpdateWidget;
 class GravatarUpdateDialog : public QDialog
 {
     Q_OBJECT
@@ -30,6 +31,7 @@ public:
 private:
     void readConfig();
     void writeConfig();
+    GravatarUpdateWidget *mGravatarUpdateWidget;
 };
 }
 #endif // GRAVATARUPDATEDIALOG_H

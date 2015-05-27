@@ -16,16 +16,26 @@
 */
 
 #include "gravatarupdatedialog.h"
+#include "gravatarupdatewidget.h"
 #include <QVBoxLayout>
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
 
 using namespace KABGravatar;
 
 GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
     : QDialog(parent)
 {
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mGravatarUpdateWidget = new GravatarUpdateWidget(this);
+    mGravatarUpdateWidget->setObjectName(QLatin1String("gravatarupdatewidget"));
+    mainLayout->addWidget(mGravatarUpdateWidget);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    buttonBox->setObjectName(QLatin1String("buttonbox"));
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 

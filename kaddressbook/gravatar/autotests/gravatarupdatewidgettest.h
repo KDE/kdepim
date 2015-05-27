@@ -14,36 +14,16 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef GRAVATARUPDATEWIDGETTEST_H
+#define GRAVATARUPDATEWIDGETTEST_H
+#include <QObject>
 
-#ifndef GRAVATARCREATEWIDGET_H
-#define GRAVATARCREATEWIDGET_H
-
-#include <QWidget>
-class QLabel;
-class QPushButton;
-namespace PimCommon
-{
-class GravatarResolvUrlJob;
-}
-namespace KABGravatar
-{
-class GravatarCreateWidget : public QWidget
+class GravatarUpdateWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarCreateWidget(QWidget *parent = Q_NULLPTR);
-    ~GravatarCreateWidget();
-    void setEmail(const QString &email);
-
-private Q_SLOTS:
-    void slotSearchGravatar();
-    void slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *);
-private:
-    QString mEmail;
-    QLabel *mEmailLab;
-    QPushButton *mSearchGravatar;
-    QLabel *mResultGravatar;
+    explicit GravatarUpdateWidgetTest(QObject *parent = 0);
+    ~GravatarUpdateWidgetTest();
 };
-}
 
-#endif // GRAVATARCREATEWIDGET_H
+#endif // GRAVATARUPDATEWIDGETTEST_H
