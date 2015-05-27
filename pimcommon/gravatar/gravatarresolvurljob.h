@@ -39,7 +39,7 @@ public:
     QString email() const;
     void setEmail(const QString &email);
 
-    QUrl generateGravatarUrl();
+    QUrl generateGravatarUrl(bool useLibravatar);
 
     bool hasGravatar() const;
 
@@ -72,9 +72,10 @@ private Q_SLOTS:
     void slotError(QNetworkReply::NetworkError error);
 
 private:
-    QPixmap mPixmap;
-    QUrl createUrl();
+    void startNetworkManager(const QUrl &url);
+    QUrl createUrl(bool useLibravatar);
     QString calculateHash(bool useLibravator);
+    QPixmap mPixmap;
     QString mEmail;
     QString mCalculatedHash;
     QNetworkAccessManager *mNetworkAccessManager;
@@ -84,6 +85,7 @@ private:
     bool mUseCache;
     bool mUseLibravatar;
     bool mFallbackGravatar;
+    bool mFallbackDone;
 };
 }
 

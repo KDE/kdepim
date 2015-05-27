@@ -23,6 +23,7 @@
 class QLabel;
 class QLineEdit;
 class QPushButton;
+class QCheckBox;
 namespace PimCommon
 {
 class GravatarResolvUrlJob;
@@ -45,6 +46,8 @@ private:
     QLabel *mResultLabel;
     QLineEdit *mLineEdit;
     QPushButton *mGetPixmapButton;
+    QCheckBox *mUseLibravatar;
+    QCheckBox *mFallbackGravatar;
 };
 }
 
