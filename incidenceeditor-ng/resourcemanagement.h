@@ -39,7 +39,6 @@
 
 class  Ui_resourceManagement;
 
-class QTreeModel;
 class QItemSelectionModel;
 
 namespace EventViews
