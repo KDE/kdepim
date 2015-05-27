@@ -10,4 +10,5 @@ add_akonadi_isolated_test_advanced( gravatarcreatejobtest.cpp "../job/gravatarcr
 add_akonadi_isolated_test_advanced( gravatarupdatejobtest.cpp "../job/gravatarupdatejob.cpp" "kaddressbookprivate;pimcommon;kabc")
 add_akonadi_isolated_test_advanced( gravatarcreatewidgettest.cpp "../widgets/gravatarcreatewidget.cpp" "kaddressbookprivate;pimcommon")
 add_akonadi_isolated_test_advanced( gravatarcreatedialogtest.cpp "../widgets/gravatarcreatedialog.cpp;../widgets/gravatarcreatewidget.cpp" "kaddressbookprivate;pimcommon")
-
+add_akonadi_isolated_test_advanced( gravatarupdatedialogtest.cpp "../widgets/gravatarupdatedialog.cpp;../widgets/gravatarupdatewidget.cpp" "kaddressbookprivate;pimcommon")
+add_akonadi_isolated_test_advanced( gravatarupdatewidgettest.cpp "../widgets/gravatarupdatewidget.cpp" "kaddressbookprivate;pimcommon")

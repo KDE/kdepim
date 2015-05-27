@@ -164,6 +164,7 @@ add_subdirectory(sendmail/tests)
 add_subdirectory(sendvcards/autotests)
 add_subdirectory(printing/grantlee/autotests)
 add_subdirectory(gravatar/autotests)
+add_subdirectory(gravatar/tests)
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})

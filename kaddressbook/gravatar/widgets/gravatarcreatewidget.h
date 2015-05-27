@@ -41,6 +41,7 @@ private:
     QString mEmail;
     QLabel *mEmailLab;
     QPushButton *mSearchGravatar;
+    QLabel *mResultGravatar;
 };
 }
 

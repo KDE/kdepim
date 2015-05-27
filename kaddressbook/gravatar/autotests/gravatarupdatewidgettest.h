@@ -14,23 +14,16 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef GRAVATARUPDATEWIDGETTEST_H
+#define GRAVATARUPDATEWIDGETTEST_H
+#include <QObject>
 
-#ifndef GRAVATARUPDATEDIALOG_H
-#define GRAVATARUPDATEDIALOG_H
-
-#include <QDialog>
-namespace KABGravatar {
-class GravatarUpdateWidget;
-class GravatarUpdateDialog : public QDialog
+class GravatarUpdateWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarUpdateDialog(QWidget *parent=0);
-    ~GravatarUpdateDialog();
-private:
-    void readConfig();
-    void writeConfig();
-    GravatarUpdateWidget *mGravatarUpdateWidget;
+    explicit GravatarUpdateWidgetTest(QObject *parent = 0);
+    ~GravatarUpdateWidgetTest();
 };
-}
-#endif // GRAVATARUPDATEDIALOG_H
+
+#endif // GRAVATARUPDATEWIDGETTEST_H

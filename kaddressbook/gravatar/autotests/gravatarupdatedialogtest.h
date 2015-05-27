@@ -15,22 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARUPDATEDIALOG_H
-#define GRAVATARUPDATEDIALOG_H
+#ifndef GRAVATARUPDATEDIALOGTEST_H
+#define GRAVATARUPDATEDIALOGTEST_H
 
-#include <QDialog>
-namespace KABGravatar {
-class GravatarUpdateWidget;
-class GravatarUpdateDialog : public QDialog
+#include <QObject>
+
+class GravatarUpdateDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarUpdateDialog(QWidget *parent=0);
-    ~GravatarUpdateDialog();
-private:
-    void readConfig();
-    void writeConfig();
-    GravatarUpdateWidget *mGravatarUpdateWidget;
+    explicit GravatarUpdateDialogTest(QObject *parent = 0);
+    ~GravatarUpdateDialogTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
-}
-#endif // GRAVATARUPDATEDIALOG_H
+
+#endif // GRAVATARUPDATEDIALOGTEST_H
