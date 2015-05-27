@@ -37,7 +37,7 @@
 
 #include <QMutexLocker>
 #include <QFile>
-#include <QDebug>
+#include "libkleopatraclientcore_debug.h"
 #include <QDir>
 #include <QProcess>
 
@@ -197,7 +197,7 @@ void Command::start()
 
 void Command::cancel()
 {
-    qDebug("Sorry, not implemented: KleopatraClient::Command::Cancel");
+    qCDebug(LIBKLEOPATRACLIENTCORE_LOG) << "Sorry, not implemented: KleopatraClient::Command::Cancel";
 }
 
 void Command::setOptionValue(const char *name, const QVariant &value, bool critical)
@@ -647,11 +647,11 @@ void Command::Private::run()
         goto leave;
     }
 
-    qDebug() << "Server PID =" << out.serverPid;
+    qCDebug(LIBKLEOPATRACLIENTCORE_LOG) << "Server PID =" << out.serverPid;
 
 #if defined(Q_OS_WIN)
     if (!AllowSetForegroundWindow((pid_t)out.serverPid)) {
-        qDebug() << "AllowSetForegroundWindow(" << out.serverPid << ") failed: " << GetLastError();
+        qCDebug(LIBKLEOPATRACLIENTCORE_LOG) << "AllowSetForegroundWindow(" << out.serverPid << ") failed: " << GetLastError();
     }
 #endif
 
@@ -677,7 +677,7 @@ void Command::Private::run()
                                   .arg(QString::fromLatin1(it->first.c_str()), to_error_string(err));
                 goto leave;
             } else {
-                qDebug() << "Failed to send non-critical option" << it->first.c_str() << ":" << to_error_string(err);
+                qCDebug(LIBKLEOPATRACLIENTCORE_LOG) << "Failed to send non-critical option" << it->first.c_str() << ":" << to_error_string(err);
             }
         }
 
