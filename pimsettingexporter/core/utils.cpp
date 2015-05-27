@@ -328,6 +328,8 @@ QString Utils::appTypeToI18n(AppsType type)
         return i18n("Akregator");
     case Blogilo:
         return i18n("Blogilo");
+    case Unknown:
+        break;
     }
     qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " type unknown " << type;
     return QString();
