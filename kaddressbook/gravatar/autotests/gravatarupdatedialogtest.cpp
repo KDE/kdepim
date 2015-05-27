@@ -19,7 +19,7 @@
 #include "../widgets/gravatarupdatedialog.h"
 #include "../widgets/gravatarupdatewidget.h"
 #include <QDialogButtonBox>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 GravatarUpdateDialogTest::GravatarUpdateDialogTest(QObject *parent)
     : QObject(parent)
@@ -42,4 +42,4 @@ void GravatarUpdateDialogTest::shouldHaveDefaultValue()
     QVERIFY(buttonBox);
 }
 
-QTEST_KDEMAIN(GravatarUpdateDialogTest, GUI)
+QTEST_MAIN(GravatarUpdateDialogTest)
