@@ -17,18 +17,20 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QFile>
 #include "viewer/viewer.h"
 #include "header/headerstyle.h"
 #include "header/headerstrategy.h"
 
-#include <qdebug.h>
-
-#include <QApplication>
 #include <KAboutData>
 #include <KLocalizedString>
+
+#include <QApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include <QDebug>
+#include <QFile>
+
+#include "messageviewer_debug.h"
 
 using namespace MessageViewer;
 
@@ -69,7 +71,7 @@ int main(int argc, char **argv)
         if (file.open(QIODevice::ReadOnly)) {
             msg->setContent(file.readAll());
         } else {
-            qWarning() << "Couldn't read" << fileName;
+            qCWarning(MESSAGEVIEWER_LOG) << "Couldn't read" << fileName;
         }
     }
     msg->parse();

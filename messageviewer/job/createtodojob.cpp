@@ -21,6 +21,7 @@
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
 #include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/RelationCreateJob>
 
 #include <KMime/Message>
 
@@ -53,7 +54,6 @@ void CreateTodoJob::start()
 
 void CreateTodoJob::slotFetchDone(KJob *job)
 {
-    qCDebug(MESSAGEVIEWER_LOG) << " void CreateTodoJob::slotFetchDone(KJob *job)";
     Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob *>(job);
     if (fetchJob->items().count() == 1) {
         mItem = fetchJob->items().first();
@@ -72,24 +72,30 @@ void CreateTodoJob::createTodo()
         Q_EMIT emitResult();
         return;
     }
-    KMime::Message::Ptr msg =  mItem.payload<KMime::Message::Ptr>();
-
-    KCalCore::Attachment::Ptr attachmentPtr(new KCalCore::Attachment(msg->encodedContent().toBase64(), KMime::Message::mimeType()));
-    const KMime::Headers::Subject *const subject = msg->subject(false);
-    if (subject) {
-        attachmentPtr->setLabel(subject->asUnicodeString());
-    }
-    mTodoPtr->addAttachment(attachmentPtr);
 
     Akonadi::Item newTodoItem;
     newTodoItem.setMimeType(KCalCore::Todo::todoMimeType());
     newTodoItem.setPayload<KCalCore::Todo::Ptr>(mTodoPtr);
 
     Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob(newTodoItem, mCollection);
-    connect(createJob, &Akonadi::ItemCreateJob::result, this, &CreateTodoJob::slotCreateNewTodo);
+    connect(createJob, &Akonadi::ItemCreateJob::result, this, &CreateTodoJob::todoCreated);
 }
 
-void CreateTodoJob::slotCreateNewTodo(KJob *job)
+void CreateTodoJob::todoCreated(KJob *job)
+{
+    if (job->error()) {
+        qCDebug(MESSAGEVIEWER_LOG) << "Error during create new Todo " << job->errorString();
+        setError(job->error());
+        setErrorText(job->errorText());
+        Q_EMIT emitResult();
+    } else {
+        Akonadi::ItemCreateJob *createJob = static_cast<Akonadi::ItemCreateJob *>(job);
+        Akonadi::Relation relation(Akonadi::Relation::GENERIC, mItem, createJob->item());
+        Akonadi::RelationCreateJob *job = new Akonadi::RelationCreateJob(relation);
+    }
+}
+
+void CreateTodoJob::relationCreated(KJob *job)
 {
     if (job->error()) {
         qCDebug(MESSAGEVIEWER_LOG) << "Error during create new Todo " << job->errorString();

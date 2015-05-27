@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Sandro Knauß <knauss@kolabsys.com>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,35 +15,39 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CREATETODOJOB_H
-#define CREATETODOJOB_H
+#ifndef CREATENOTEJOB_H
+#define CREATENOTEJOB_H
+
 #include <KJob>
 #include <AkonadiCore/Item>
 #include <AkonadiCore/Collection>
-#include <KCalCore/Todo>
+#include <Akonadi/Notes/NoteUtils>
+
+#include <kmime/kmime_message.h>
 
 #include <QObject>
+
 namespace MessageViewer
 {
-class CreateTodoJob : public KJob
+class CreateNoteJob : public KJob
 {
     Q_OBJECT
 public:
-    explicit CreateTodoJob(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection, const Akonadi::Item &item, QObject *parent = Q_NULLPTR);
-    ~CreateTodoJob();
+    explicit CreateNoteJob(const KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection, const Akonadi::Item &item, QObject *parent = Q_NULLPTR);
+    ~CreateNoteJob();
 
     void start() Q_DECL_OVERRIDE;
 
-private Q_SLOTS:
-    void slotFetchDone(KJob *job);
-    void todoCreated(KJob *job);
+private slots:
+    void noteCreated(KJob *job);
+    void noteUpdated(KJob *job);
     void relationCreated(KJob *job);
 
 private:
-    void createTodo();
+    void createNote();
     Akonadi::Item mItem;
     Akonadi::Collection mCollection;
-    KCalCore::Todo::Ptr mTodoPtr;
+    Akonadi::NoteUtils::NoteMessageWrapper mNote;
 };
 }
 

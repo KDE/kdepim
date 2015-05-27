@@ -65,7 +65,7 @@ EventEdit::EventEdit(QWidget *parent)
 
     mEventEdit = new QLineEdit;
     mEventEdit->setClearButtonEnabled(true);
-    mEventEdit->setObjectName(QStringLiteral("noteedit"));
+    mEventEdit->setObjectName(QStringLiteral("eventedit"));
     mEventEdit->setFocus();
     connect(mEventEdit, &QLineEdit::returnPressed, this, &EventEdit::slotReturnPressed);
     connect(mEventEdit, &QLineEdit::textChanged, this, &EventEdit::slotUpdateButtons);

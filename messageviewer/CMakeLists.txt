@@ -105,6 +105,7 @@ set(libmessageviewer_widgets_SRCS
   widgets/invitationsettings.cpp
   widgets/todoedit.cpp
   widgets/eventedit.cpp
+  widgets/noteedit.cpp
   widgets/openattachmentfolderwidget.cpp
   widgets/eventdatetimewidget.cpp
   widgets/mailsourceviewer.cpp
@@ -164,6 +165,7 @@ set(libmessageviewer_antispam_SRCS
 set(libmessageviewer_job_SRCS
   job/createtodojob.cpp
   job/createeventjob.cpp
+  job/createnotejob.cpp
   job/attachmentencryptwithchiasmusjob.cpp
   job/attachmenteditjob.cpp
   job/modifymessagedisplayformatjob.cpp
@@ -206,6 +208,7 @@ PUBLIC
   messagecore kdepim kpgp kleo
   KF5::AkonadiCore
   KF5::AkonadiMime
+  KF5::AkonadiNotes
   KF5::Contacts
   KF5::KDELibs4Support
   ${_mailwebview_lib}

@@ -71,11 +71,11 @@ void EventEditTest::shouldHaveDefaultValuesOnCreation()
 {
     MessageViewer::EventEdit edit;
     //We can't test it. Collection value is stored in settings here, and not in jenkins so disable it
-    //QVERIFY(edit.collection().isValid());
+    QVERIFY(edit.collection().isValid());
     QVERIFY(!edit.message());
-    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("noteedit"));
-    QVERIFY(noteedit);
-    QCOMPARE(noteedit->text(), QString());
+    QLineEdit *eventedit = edit.findChild<QLineEdit *>(QStringLiteral("eventedit"));
+    QVERIFY(eventedit);
+    QCOMPARE(eventedit->text(), QString());
 
     QPushButton *openEditor = edit.findChild<QPushButton *>(QStringLiteral("open-editor-button"));
     QPushButton *save = edit.findChild<QPushButton *>(QStringLiteral("save-button"));
@@ -143,10 +143,10 @@ void EventEditTest::shouldEmitEventWhenPressEnter()
     QString subject = QStringLiteral("Test Note");
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
-    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("noteedit"));
-    noteedit->setFocus();
+    QLineEdit *eventedit = edit.findChild<QLineEdit *>(QStringLiteral("eventedit"));
+    eventedit->setFocus();
     QSignalSpy spy(&edit, SIGNAL(createEvent(KCalCore::Event::Ptr,Akonadi::Collection)));
-    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QTest::keyClick(eventedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
 }
 
@@ -161,8 +161,8 @@ void EventEditTest::shouldHideWidgetWhenPressEnter()
     QString subject = QStringLiteral("Test Note");
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
-    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("noteedit"));
-    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QLineEdit *eventedit = edit.findChild<QLineEdit *>(QStringLiteral("eventedit"));
+    QTest::keyClick(eventedit, Qt::Key_Enter);
     QCOMPARE(edit.isVisible(), false);
 }
 
@@ -171,9 +171,9 @@ void EventEditTest::shouldHideWidgetWhenPressEscape()
     MessageViewer::EventEdit edit;
     edit.show();
     QTest::qWaitForWindowExposed(&edit);
-    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("noteedit"));
-    noteedit->setFocus();
-    QVERIFY(noteedit->hasFocus());
+    QLineEdit *eventedit = edit.findChild<QLineEdit *>(QStringLiteral("eventedit"));
+    eventedit->setFocus();
+    QVERIFY(eventedit->hasFocus());
     QTest::keyPress(&edit, Qt::Key_Escape);
     QCOMPARE(edit.isVisible(), false);
 }
@@ -241,9 +241,9 @@ void EventEditTest::shouldNotEmitCreateEventWhenDateIsInvalid()
     QString subject = QStringLiteral("Test Note");
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
-    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("noteedit"));
+    QLineEdit *eventedit = edit.findChild<QLineEdit *>(QStringLiteral("eventedit"));
     QSignalSpy spy(&edit, SIGNAL(createEvent(KCalCore::Event::Ptr,Akonadi::Collection)));
-    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QTest::keyClick(eventedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 0);
 }
 

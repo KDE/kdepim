@@ -34,6 +34,7 @@
 #include "adblock/adblockmanager.h"
 #include "widgets/todoedit.h"
 #include "widgets/eventedit.h"
+#include "widgets/noteedit.h"
 #include "viewer/mimeparttree/mimeparttreeview.h"
 #include "widgets/openattachmentfolderwidget.h"
 #include "pimcommon/widgets/slidecontainer.h"
@@ -137,6 +138,7 @@
 #include "pimcommon/translator/translatorwidget.h"
 #include "job/createtodojob.h"
 #include "job/createeventjob.h"
+#include "job/createnotejob.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -200,6 +202,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mZoomResetAction(0),
       mToggleMimePartTreeAction(0),
       mSpeakTextAction(0),
+      mCreateNoteAction(0),
       mCanStartDrag(false),
       mHtmlWriter(0),
       mSavedRelativePosition(0),
@@ -1356,6 +1359,18 @@ void ViewerPrivate::resetStateForNewMessage()
 void ViewerPrivate::setMessageInternal(const KMime::Message::Ptr message,
                                        Viewer::UpdateMode updateMode)
 {
+    if (mCreateNoteAction) {
+        QString createNoteText;
+        if (relatedNoteRelation().isValid()) {
+            createNoteText = i18nc("edit a note on this message", "Edit Note");
+        } else {
+            createNoteText = i18nc("create a new note out of this message", "Create Note");
+        }
+
+        mCreateNoteAction->setText(createNoteText);
+        mCreateNoteAction->setIconText(createNoteText);
+    }
+
     mMessage = message;
     if (message) {
         mNodeHelper->setOverrideCodec(mMessage.get(), overrideCodec());
@@ -1575,6 +1590,12 @@ void ViewerPrivate::createWidgets()
     connect(mCreateEvent, &EventEdit::createEvent, this, &ViewerPrivate::slotCreateEvent);
     mCreateEvent->setObjectName(QLatin1String("createeventwidget"));
     mCreateEvent->hide();
+
+    mCreateNote = new MessageViewer::NoteEdit(readerBox);
+    readerBoxVBoxLayout->addWidget(mCreateNote);
+    connect(mCreateNote, &NoteEdit::createNote, this, &ViewerPrivate::slotCreateNote);
+    mCreateNote->setObjectName(QStringLiteral("createnotewidget"));
+    mCreateNote->hide();
 
     mSliderContainer = new PimCommon::SlideContainer(readerBox);
     readerBoxVBoxLayout->addWidget(mSliderContainer);
@@ -1887,14 +1908,21 @@ void ViewerPrivate::createActions()
     mCreateTodoAction->setWhatsThis(i18n("This option starts the KOrganizer to-do editor with initial values taken from the currently selected message. Then you can edit the to-do to your liking before saving it to your calendar."));
     ac->addAction(QLatin1String("create_todo"), mCreateTodoAction);
     ac->setDefaultShortcut(mCreateTodoAction, QKeySequence(Qt::CTRL + Qt::Key_T));
-    connect(mCreateTodoAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateTodoWidget()));
+    connect(mCreateTodoAction, &QAction::triggered, this, &ViewerPrivate::slotShowCreateTodoWidget);
+
+    mCreateNoteAction = new QAction(QIcon::fromTheme(QStringLiteral("view-pim-notes")), i18nc("create a new note out of this message", "Create Note"), this);
+    mCreateNoteAction->setIconText(i18nc("create a new note out of this message", "Create Note"));
+    addHelpTextAction(mCreateNoteAction, i18n("Allows you to create a note from this message"));
+    mCreateNoteAction->setWhatsThis(i18n("This option starts an editor to create a note. Then you can edit the note to your liking before saving it."));
+    ac->addAction(QStringLiteral("create_note"), mCreateNoteAction);
+    connect(mCreateNoteAction, &QAction::triggered, this, &ViewerPrivate::slotShowCreateNoteWidget);
 
     mCreateEventAction = new QAction(QIcon::fromTheme(QLatin1String("appointment-new")), i18n("Create Event"), this);
     mCreateEventAction->setIconText(i18n("Create Event"));
     addHelpTextAction(mCreateEventAction, i18n("Allows you to create a calendar Event"));
     ac->addAction(QLatin1String("create_event"), mCreateEventAction);
     ac->setDefaultShortcut(mCreateEventAction, QKeySequence(Qt::CTRL + Qt::Key_E));
-    connect(mCreateEventAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateEventWidget()));
+    connect(mCreateEventAction, &QAction::triggered, this, &ViewerPrivate::slotShowCreateEventWidget);
 }
 
 void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
@@ -3328,6 +3356,68 @@ void ViewerPrivate::slotShowCreateTodoWidget()
 void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection)
 {
     CreateTodoJob *createJob = new CreateTodoJob(todoPtr, collection, mMessageItem, this);
+    createJob->start();
+}
+
+Akonadi::Relation ViewerPrivate::relatedNoteRelation() const
+{
+    Akonadi::Relation relation;
+    foreach(const Akonadi::Relation &r, mMessageItem.relations()) {
+        // assuming that GENERIC relations to emails are notes is a pretty horirific hack imo - aseigo
+        if (r.type() == Akonadi::Relation::GENERIC && r.right().mimeType() == Akonadi::NoteUtils::noteMimeType()) {
+            relation = r;
+            break;
+        }
+    }
+    return relation;
+}
+
+void ViewerPrivate::slotShowCreateNoteWidget()
+{
+    if (!mMessageItem.relations().isEmpty())  {
+        Akonadi::Relation relation = relatedNoteRelation();
+        if (relation.isValid()) {
+            Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(relation.right());
+            job->fetchScope().fetchFullPayload(true);
+            connect(job, &Akonadi::ItemFetchJob::result, this, &ViewerPrivate::slotNoteItemFetched);
+            return;
+        }
+    }
+
+    showCreateNewNoteWidget();
+}
+
+void ViewerPrivate::showCreateNewNoteWidget()
+{
+    if (mMessage) {
+        mCreateNote->setMessage(mMessage);
+        mCreateNote->showNoteEdit();
+    } else {
+        qCDebug(MESSAGEVIEWER_LOG) << "There is not valid message";
+    }
+}
+
+void ViewerPrivate::slotNoteItemFetched(KJob *job)
+{
+    if (job->error()) {
+        qCDebug(MESSAGEVIEWER_LOG) << "There is not valid note:" << job->errorString();
+        showCreateNewNoteWidget();
+    } else {
+        Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob *>(job);
+        Q_ASSERT(fetch);
+        if (fetch->items().isEmpty() || !fetch->items().first().hasPayload<KMime::Message::Ptr>()) {
+            showCreateNewNoteWidget();
+        } else {
+            Akonadi::NoteUtils::NoteMessageWrapper note(fetch->items().first().payload<KMime::Message::Ptr>());
+            mCreateNote->setMessage(note.message());
+            mCreateNote->showNoteEdit();
+        }
+    }
+}
+
+void ViewerPrivate::slotCreateNote(const KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection)
+{
+    CreateNoteJob *createJob = new CreateNoteJob(notePtr, collection, mMessageItem, this);
     createJob->start();
 }
 

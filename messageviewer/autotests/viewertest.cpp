@@ -57,6 +57,7 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(viewer.expandShortUrlAction());
     QVERIFY(viewer.createTodoAction());
     QVERIFY(viewer.createEventAction());
+    QVERIFY(viewer.createNoteAction());
     QVERIFY(viewer.urlClicked().isEmpty());
     QVERIFY(viewer.imageUrlClicked().isEmpty());
     QCOMPARE(viewer.isFixedFont(), false);
@@ -99,6 +100,25 @@ void ViewerTest::shouldShowCreateEventWidgetWhenActivateItAndWeHaveAMessage()
 
     viewer.createEventAction()->trigger();
     QCOMPARE(createeventwidget->isVisible(), true);
+}
+
+void ViewerTest::shouldShowCreateNoteWidgetWhenActivateItAndWeHaveAMessage()
+{
+    MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
+    viewer.show();
+    QTest::qWaitForWindowExposed(&viewer);
+    QWidget *createnotewidget = viewer.findChild<QWidget *>(QStringLiteral("createnotewidget"));
+    QVERIFY(viewer.createNoteAction());
+
+    viewer.createNoteAction()->trigger();
+    //No message => we can show it.
+    QCOMPARE(createnotewidget->isVisible(), false);
+
+    KMime::Message::Ptr msg(new KMime::Message);
+    viewer.setMessage(msg);
+
+    viewer.createNoteAction()->trigger();
+    QCOMPARE(createnotewidget->isVisible(), true);
 }
 
 QTEST_MAIN(ViewerTest)
