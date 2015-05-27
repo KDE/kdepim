@@ -308,7 +308,6 @@ bool AdBlockManager::subscriptionFileExists(int i)
 {
     const QString n = QString::number(i + 1);
 
-
     const QString rulesFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/adblockrules_") + n;
     return QFile::exists(rulesFilePath);
 }

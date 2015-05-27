@@ -46,9 +46,9 @@ void ConflictResolverTest::addAttendee(const QString &email, const KCalCore::Fre
 {
     QString name = QString("attendee %1").arg(attendees.count());
     KPIM::FreeBusyItem::Ptr item(new KPIM::FreeBusyItem(KCalCore::Attendee::Ptr(
-            new KCalCore::Attendee(name, email, false,
-                                   KCalCore::Attendee::Accepted,
-                                   role)), 0));
+                                     new KCalCore::Attendee(name, email, false,
+                                             KCalCore::Attendee::Accepted,
+                                             role)), 0));
     item->setFreeBusy(KCalCore::FreeBusy::Ptr(new KCalCore::FreeBusy(*fb.data())));
     attendees << item;
 }

@@ -15,19 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARUPDATEWIDGET_H
-#define GRAVATARUPDATEWIDGET_H
+#include "../widgets/gravatarcreatedialog.h"
 
-#include <QWidget>
-namespace KABGravatar
+#include <KLocalizedString>
+#include <QApplication>
+
+int main (int argc, char **argv)
 {
-class GravatarUpdateWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit GravatarUpdateWidget(QWidget *parent = Q_NULLPTR);
-    ~GravatarUpdateWidget();
-};
+    QApplication app(argc, argv);
+
+    KABGravatar::GravatarCreateDialog *w = new KABGravatar::GravatarCreateDialog;
+
+    w->show();
+    app.exec();
+    delete w;
+    return 0;
 }
 
-#endif // GRAVATARUPDATEWIDGET_H

@@ -15,33 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "kmmigratekmail4configtest.h"
-#include "../kmmigratekmail4config.h"
-#include <qtest.h>
+#include "gravatarupdatedialogtest.h"
+#include "../widgets/gravatarupdatedialog.h"
+#include "../widgets/gravatarupdatewidget.h"
+#include <QDialogButtonBox>
+#include <qtest_kde.h>
 
-KMMigrateKMail4ConfigTest::KMMigrateKMail4ConfigTest(QObject *parent)
+GravatarUpdateDialogTest::GravatarUpdateDialogTest(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-KMMigrateKMail4ConfigTest::~KMMigrateKMail4ConfigTest()
+GravatarUpdateDialogTest::~GravatarUpdateDialogTest()
 {
 
 }
 
-void KMMigrateKMail4ConfigTest::shouldHaveDefaultValue()
+void GravatarUpdateDialogTest::shouldHaveDefaultValue()
 {
-    KMMigrateKMail4Config migrate;
-    QVERIFY(!migrate.start());
-    QVERIFY(migrate.configFileName().isEmpty());
+    KABGravatar::GravatarUpdateDialog dlg;
+    KABGravatar::GravatarUpdateWidget *w = dlg.findChild<KABGravatar::GravatarUpdateWidget *>(QLatin1String("gravatarupdatewidget"));
+    QVERIFY(w);
+
+    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QLatin1String("buttonbox"));
+    QVERIFY(buttonBox);
 }
 
-void KMMigrateKMail4ConfigTest::shouldVerifyIfCheckIsNecessary()
-{
-    KMMigrateKMail4Config migrate;
-    //Invalid before config file is not set.
-    QVERIFY(!migrate.checkIfNecessary());
-}
-
-QTEST_MAIN(KMMigrateKMail4ConfigTest)
+QTEST_KDEMAIN(GravatarUpdateDialogTest, GUI)

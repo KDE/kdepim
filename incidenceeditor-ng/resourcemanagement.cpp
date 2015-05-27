@@ -43,8 +43,6 @@
 #include <akonadi/calendar/freebusymanager.h>
 #include <kldap/ldapobject.h>
 
-#include <qjson/parser.h>
-
 #include <KLocalizedString>
 
 #include <QDialogButtonBox>
@@ -135,7 +133,6 @@ ResourceManagement::ResourceManagement(QWidget *parent)
     mainLayout->addWidget(w);
 
     mainLayout->addWidget(buttonBox);
-
 
     QVariantList list;
     mModel = new KPIM::FreeBusyItemModel(this);

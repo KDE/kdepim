@@ -27,7 +27,6 @@
 
 #include <QAbstractTableModel>
 
-
 namespace KPIM
 {
 
@@ -45,7 +44,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     void slotNewFreePeriods(const KCalCore::Period::List &freePeriods);

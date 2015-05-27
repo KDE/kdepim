@@ -25,6 +25,7 @@ add_library(kleopatraclientcore
   selectcertificatecommand.cpp
   signencryptfilescommand.cpp
   decryptverifyfilescommand.cpp
+  libkleopatraclientcore_debug.cpp
   "${CMAKE_CURRENT_BINARY_DIR}/moc_command_p.cpp"
   "${CMAKE_CURRENT_BINARY_DIR}/moc_command.cpp"
 )

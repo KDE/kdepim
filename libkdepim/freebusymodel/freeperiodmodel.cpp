@@ -196,15 +196,15 @@ QString FreePeriodModel::tooltipify(int index) const
     KCalCore::Period period = mPeriodList.at(index);
     unsigned long duration = period.duration().asSeconds() * 1000; // we want milliseconds
     QString toolTip = QLatin1String("<qt>");
-    toolTip += QLatin1String("<b>") + i18nc( "@info:tooltip", "Free Period" ) + QLatin1String("</b>");
+    toolTip += QLatin1String("<b>") + i18nc("@info:tooltip", "Free Period") + QLatin1String("</b>");
     toolTip += QLatin1String("<hr>");
-    toolTip += QLatin1String("<i>") + i18nc( "@info:tooltip period start time", "Start:" ) + QLatin1String("</i>&nbsp;");
+    toolTip += QLatin1String("<i>") + i18nc("@info:tooltip period start time", "Start:") + QLatin1String("</i>&nbsp;");
     toolTip += KLocale::global()->formatDateTime(period.start().toTimeSpec(timeSpec).dateTime());
     toolTip += QLatin1String("<br>");
-    toolTip += QLatin1String("<i>") + i18nc( "@info:tooltip period end time", "End:" ) + QLatin1String("</i>&nbsp;");
+    toolTip += QLatin1String("<i>") + i18nc("@info:tooltip period end time", "End:") + QLatin1String("</i>&nbsp;");
     toolTip += KLocale::global()->formatDateTime(period.end().toTimeSpec(timeSpec).dateTime());
     toolTip += QLatin1String("<br>");
-    toolTip += QLatin1String("<i>") + i18nc( "@info:tooltip period duration", "Duration:" ) + QLatin1String("</i>&nbsp;");
+    toolTip += QLatin1String("<i>") + i18nc("@info:tooltip period duration", "Duration:") + QLatin1String("</i>&nbsp;");
     toolTip += KFormat().formatSpelloutDuration(duration);
     toolTip += QLatin1String("</qt>");
     return toolTip;

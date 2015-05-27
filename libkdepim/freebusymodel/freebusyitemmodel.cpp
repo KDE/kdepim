@@ -137,7 +137,7 @@ QVariant FreeBusyItemModel::data(const QModelIndex &index, int role) const
     KCalCore::FreeBusyPeriod period = fbitem->freeBusy()->fullBusyPeriods().at(index.row());
     switch (role) {
     case Qt::DisplayRole: // return something to make modeltest happy
-    return QStringLiteral( "%1 - %2" ).
+        return QStringLiteral("%1 - %2").
                arg(KLocale::global()->formatDateTime(period.start())).
                arg(KLocale::global()->formatDateTime(period.end()));
     case FreeBusyItemModel::FreeBusyPeriodRole:
@@ -240,31 +240,31 @@ void FreeBusyItemModel::setFreeBusyPeriods(const QModelIndex &parent,
     int fb_count = list.size();
     int childCount = parentData->childCount();
     QModelIndex first = index(0, 0, parent);
-    QModelIndex last = index( childCount-1, 0, parent );
+    QModelIndex last = index(childCount - 1, 0, parent);
 
-    if ( childCount > 0 && fb_count < childCount ) {
-        beginRemoveRows( parent, fb_count-1<0 ? 0 : fb_count-1 , childCount - 1 );
-        for ( int i = childCount - 1; i > fb_count; --i ) {
+    if (childCount > 0 && fb_count < childCount) {
+        beginRemoveRows(parent, fb_count - 1 < 0 ? 0 : fb_count - 1 , childCount - 1);
+        for (int i = childCount - 1; i > fb_count; --i) {
             delete parentData->removeChild(i);
         }
         endRemoveRows();
         if (fb_count > 0) {
-            last = index(fb_count-1, 0, parent);
+            last = index(fb_count - 1, 0, parent);
             emit dataChanged(first, last);
         }
     } else if (fb_count > childCount) {
-        beginInsertRows( parent, childCount, fb_count - 1 );
-        for ( int i=childCount; i < fb_count; ++i ) {
-            ItemPrivateData *childData= new ItemPrivateData( parentData );
-            parentData->appendChild( childData );
+        beginInsertRows(parent, childCount, fb_count - 1);
+        for (int i = childCount; i < fb_count; ++i) {
+            ItemPrivateData *childData = new ItemPrivateData(parentData);
+            parentData->appendChild(childData);
         }
         endInsertRows();
         if (childCount > 0) {
-            last = index(childCount-1, 0, parent);
+            last = index(childCount - 1, 0, parent);
             emit dataChanged(first, last);
         }
     } else if (fb_count == childCount && fb_count > 0) {
-        emit dataChanged( first, last );
+        emit dataChanged(first, last);
     }
 }
 

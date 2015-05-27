@@ -76,7 +76,6 @@ void GravatarConfigWidgetTest::shouldChangeState()
     QVERIFY(clearGravatarCache->isEnabled());
     QVERIFY(gravatarCacheSize->isEnabled());
 
-
     QTest::mouseClick(checkBox, Qt::LeftButton);
     QVERIFY(checkBox->isEnabled());
     QVERIFY(!useDefaultImage->isEnabled());

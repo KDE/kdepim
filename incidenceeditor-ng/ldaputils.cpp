@@ -22,7 +22,6 @@
 #include "ldaputils.h"
 #include <KLocalizedString>
 
-
 QString IncidenceEditorNG::translateLDAPAttributeForDisplay(const QString &attribute)
 {
     QString ret = attribute;

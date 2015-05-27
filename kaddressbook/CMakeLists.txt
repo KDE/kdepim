@@ -152,6 +152,8 @@ if (BUILD_TESTING)
    add_subdirectory(gravatar/autotests)
 endif()
 
+add_subdirectory(gravatar/tests)
+
 if(KF5Gpgmepp_FOUND)
    target_link_libraries(kaddressbookprivate KF5::QGpgme)
 endif()

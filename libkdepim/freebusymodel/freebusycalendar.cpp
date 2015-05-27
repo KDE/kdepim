@@ -47,7 +47,6 @@ FreeBusyCalendar::~FreeBusyCalendar()
     qCDebug(LIBKDEPIM_LOG) << "deleting" << this;
 }
 
-
 KCalCore::Calendar::Ptr FreeBusyCalendar::calendar() const
 {
     return mCalendar;
@@ -78,7 +77,7 @@ void FreeBusyCalendar::setModel(FreeBusyItemModel *model)
 
 void FreeBusyCalendar::deleteAllEvents()
 {
-    foreach(const KCalCore::Event::Ptr &event, mCalendar->events()) {
+    foreach (const KCalCore::Event::Ptr &event, mCalendar->events()) {
         mCalendar->deleteEvent(event);
     }
 }
@@ -88,9 +87,9 @@ void FreeBusyCalendar::onLayoutChanged()
     if (!mFbEvent.isEmpty()) {
         deleteAllEvents();
         mFbEvent.clear();
-        for (int i = mModel->rowCount()-1; i>=0; --i) {
+        for (int i = mModel->rowCount() - 1; i >= 0; --i) {
             QModelIndex parent = mModel->index(i, 0);
-            onRowsInserted(parent, 0, mModel->rowCount(parent)-1);
+            onRowsInserted(parent, 0, mModel->rowCount(parent) - 1);
         }
     }
 }
@@ -100,7 +99,7 @@ void FreeBusyCalendar::onRowsInserted(const QModelIndex &parent, int first, int 
     if (!parent.isValid()) {
         return;
     }
-    for(int i=first; i<=last; ++i) {
+    for (int i = first; i <= last; ++i) {
         QModelIndex index = mModel->index(i, 0, parent);
 
         const KCalCore::FreeBusyPeriod &period = mModel->data(index, FreeBusyItemModel::FreeBusyPeriodRole).value<KCalCore::FreeBusyPeriod>();
@@ -142,12 +141,12 @@ void FreeBusyCalendar::onRowsInserted(const QModelIndex &parent, int first, int 
 void FreeBusyCalendar::onRowsRemoved(const QModelIndex &parent, int first, int last)
 {
     if (!parent.isValid()) {
-        for (int i = first; i<=last; --i) {
+        for (int i = first; i <= last; --i) {
             QModelIndex index = mModel->index(i, 0);
-            onRowsRemoved(index, 0, mModel->rowCount(index)-1);
+            onRowsRemoved(index, 0, mModel->rowCount(index) - 1);
         }
     } else {
-        for(int i=first; i<=last; ++i) {
+        for (int i = first; i <= last; ++i) {
             QModelIndex index = mModel->index(i, 0, parent);
             KCalCore::Event::Ptr inc = mFbEvent.take(index);
             mCalendar->deleteEvent(inc);

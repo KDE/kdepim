@@ -15,19 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARUPDATEWIDGET_H
-#define GRAVATARUPDATEWIDGET_H
+#ifndef GRAVATARUPDATEDIALOGTEST_H
+#define GRAVATARUPDATEDIALOGTEST_H
 
-#include <QWidget>
-namespace KABGravatar
-{
-class GravatarUpdateWidget : public QWidget
+#include <QObject>
+
+class GravatarUpdateDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarUpdateWidget(QWidget *parent = Q_NULLPTR);
-    ~GravatarUpdateWidget();
+    explicit GravatarUpdateDialogTest(QObject *parent = 0);
+    ~GravatarUpdateDialogTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
-}
 
-#endif // GRAVATARUPDATEWIDGET_H
+#endif // GRAVATARUPDATEDIALOGTEST_H

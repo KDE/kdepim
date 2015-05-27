@@ -78,7 +78,7 @@ void BlackListBalooEmailCompletionWidgetTest::shouldHaveDefaultValue()
     QVERIFY(excludeDomainLineEdit->trapReturnKey());
     QVERIFY(excludeDomainLineEdit->text().isEmpty());
     QVERIFY(excludeDomainLineEdit->isClearButtonShown());
-    QVERIFY(!excludeDomainLineEdit->clickMessage().isEmpty());
+    QVERIFY(!excludeDomainLineEdit->placeholderText().isEmpty());
 }
 
 void BlackListBalooEmailCompletionWidgetTest::shouldEnablePushButtonWhenTestSizeSupperiorToTwo()

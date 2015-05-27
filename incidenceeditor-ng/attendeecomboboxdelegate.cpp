@@ -75,7 +75,7 @@ QWidget *AttendeeComboBoxDelegate::createEditor(QWidget *parent, const QStyleOpt
     AttendeeComboBox *editor = new AttendeeComboBox(parent);
     QPair<QIcon, QString> pair;
 
-    foreach(pair, mEntries) {
+    foreach (pair, mEntries) {
         editor->addItem(pair.first, pair.second);
     }
 

@@ -15,19 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARUPDATEWIDGET_H
-#define GRAVATARUPDATEWIDGET_H
+#include "gravatarupdatewidgettest.h"
+#include <qtest_kde.h>
+GravatarUpdateWidgetTest::GravatarUpdateWidgetTest(QObject *parent)
+    : QObject(parent)
+{
 
-#include <QWidget>
-namespace KABGravatar
-{
-class GravatarUpdateWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit GravatarUpdateWidget(QWidget *parent = Q_NULLPTR);
-    ~GravatarUpdateWidget();
-};
 }
 
-#endif // GRAVATARUPDATEWIDGET_H
+GravatarUpdateWidgetTest::~GravatarUpdateWidgetTest()
+{
+
+}
+
+QTEST_KDEMAIN(GravatarUpdateWidgetTest, GUI)

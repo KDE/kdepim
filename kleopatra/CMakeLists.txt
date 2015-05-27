@@ -93,6 +93,7 @@ if(USABLE_ASSUAN_FOUND)
     uiserver/verifychecksumscommand.cpp
 
     libkleopatraclient/core/command.cpp
+    libkleopatraclient/core/libkleopatraclientcore_debug.cpp
     selftest/uiservercheck.cpp
   )
   set_source_files_properties(libkleopatraclient/core/command.cpp PROPERTIES SKIP_AUTOMOC TRUE)

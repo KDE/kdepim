@@ -14,20 +14,16 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef GRAVATARUPDATEWIDGETTEST_H
+#define GRAVATARUPDATEWIDGETTEST_H
+#include <QObject>
 
-#ifndef GRAVATARUPDATEWIDGET_H
-#define GRAVATARUPDATEWIDGET_H
-
-#include <QWidget>
-namespace KABGravatar
-{
-class GravatarUpdateWidget : public QWidget
+class GravatarUpdateWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarUpdateWidget(QWidget *parent = Q_NULLPTR);
-    ~GravatarUpdateWidget();
+    explicit GravatarUpdateWidgetTest(QObject *parent = 0);
+    ~GravatarUpdateWidgetTest();
 };
-}
 
-#endif // GRAVATARUPDATEWIDGET_H
+#endif // GRAVATARUPDATEWIDGETTEST_H
