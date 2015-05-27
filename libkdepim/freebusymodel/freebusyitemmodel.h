@@ -92,7 +92,7 @@ public Q_SLOTS:
     void slotInsertFreeBusy(const KCalCore::FreeBusy::Ptr &fb, const QString &email);
 
 protected:
-    void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent *) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     // Force the download of FB information

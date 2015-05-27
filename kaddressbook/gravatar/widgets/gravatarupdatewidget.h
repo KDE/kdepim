@@ -25,7 +25,7 @@ class GravatarUpdateWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit GravatarUpdateWidget(QWidget *parent = 0);
+    explicit GravatarUpdateWidget(QWidget *parent = Q_NULLPTR);
     ~GravatarUpdateWidget();
 };
 }

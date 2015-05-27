@@ -25,7 +25,7 @@ class GravatarUpdateDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit GravatarUpdateDialog(QWidget *parent = 0);
+    explicit GravatarUpdateDialog(QWidget *parent = Q_NULLPTR);
     ~GravatarUpdateDialog();
 private:
     void readConfig();

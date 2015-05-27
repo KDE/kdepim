@@ -27,7 +27,7 @@ class GravatarCreateDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit GravatarCreateDialog(QWidget *parent = 0);
+    explicit GravatarCreateDialog(QWidget *parent = Q_NULLPTR);
     ~GravatarCreateDialog();
 
     void setEmail(const QString &email);
