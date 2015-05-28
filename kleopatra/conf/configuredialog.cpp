@@ -46,7 +46,7 @@
 
 #ifdef KLEO_STATIC_KCMODULES
 # include <KDesktopFile>
-# define KCM_IMPORT_PLUGIN( x ) extern "C" KCModule * create_##x( QWidget * parent=0, const QVariantList & args=QVariantList() );
+# define KCM_IMPORT_PLUGIN( x ) extern "C" KCModule * create_##x( QWidget * parent = Q_NULLPTR, const QVariantList & args=QVariantList() );
 # define addMyModule( x ) addModule( KCModuleInfo( KDesktopFile( "services", QLatin1String(#x) + QLatin1String(".desktop") ) ), create_##x() )
 #else // KLEO_STATIC_KCMODULES
 # define KCM_IMPORT_PLUGIN( x )
