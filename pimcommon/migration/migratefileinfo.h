@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MIGRATEINFO_H
-#define MIGRATEINFO_H
+#ifndef MIGRATEFILEINFO_H
+#define MIGRATEFILEINFO_H
 
 #include <QString>
 #include "pimcommon_export.h"
@@ -49,4 +49,4 @@ private:
 };
 }
 
-#endif // MIGRATEINFO_H
+#endif // MIGRATEFILEINFO_H
