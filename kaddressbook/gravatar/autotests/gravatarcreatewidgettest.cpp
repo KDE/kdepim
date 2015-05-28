@@ -43,6 +43,9 @@ void GravatarCreateWidgetTest::shouldHaveDefaultValue()
 
     QPushButton *searchGravatar = widget.findChild<QPushButton *>(QLatin1String("search"));
     QVERIFY(searchGravatar);
+
+    QLabel *resultGravatar = widget.findChild<QLabel *>(QLatin1String("result"));
+    QVERIFY(resultGravatar);
 }
 
 void GravatarCreateWidgetTest::shouldEnableDisableSearchButton()

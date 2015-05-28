@@ -19,7 +19,9 @@
 #define GRAVATARUPDATEWIDGET_H
 
 #include <QWidget>
-namespace KABGravatar
+class QLabel;
+class QPushButton;
+namespace KABGravatar 
 {
 class GravatarUpdateWidget : public QWidget
 {
@@ -30,8 +32,15 @@ public:
 
     void setEmail(const QString &email);
 
+private Q_SLOTS:
+    void slotSearchGravatar();
+
 private:
+    void updateActualGravatar();
     QString mEmail;
+    QLabel *mEmailLab;
+    QPushButton *mSearchGravatar;
+    QLabel *mResultGravatar;
 };
 }
 

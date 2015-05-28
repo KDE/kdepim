@@ -24,6 +24,9 @@ class GravatarUpdateWidgetTest : public QObject
 public:
     explicit GravatarUpdateWidgetTest(QObject *parent = Q_NULLPTR);
     ~GravatarUpdateWidgetTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // GRAVATARUPDATEWIDGETTEST_H
