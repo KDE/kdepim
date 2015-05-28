@@ -305,14 +305,14 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
             useOtherPhotoSources = true;
             if ( photoMemento->photo().isIntern() ) {
                 // get photo data and convert to data: url
-                QImage photo = photoMemento->photo().data();
+                const QImage photo = photoMemento->photo().data();
                 updateXFaceSettings(photo, settings);
             } else if (!photoMemento->photo().url().isEmpty()){
                 settings.photoURL = photoMemento->photo().url();
                 if ( settings.photoURL.startsWith(QLatin1Char('/')) )
                     settings.photoURL.prepend( QLatin1String("file:") );
             } else if (!photoMemento->gravatarPixmap().isNull()) {
-                QImage photo = photoMemento->gravatarPixmap().toImage();
+                const QImage photo = photoMemento->gravatarPixmap().toImage();
                 updateXFaceSettings(photo, settings);
             }
         } else {
