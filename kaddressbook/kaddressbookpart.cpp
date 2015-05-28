@@ -20,6 +20,7 @@
 
 #include "kaddressbookpart.h"
 #include "mainwidget.h"
+#include "kaddressbookmigrateapplication.h"
 
 #include "kaddressbook_debug.h"
 #include <KIconLoader>
@@ -39,6 +40,8 @@ KAddressBookPart::KAddressBookPart(QWidget *parentWidget, QObject *parent,
     : KParts::ReadOnlyPart(parent)
 {
     setComponentName(QStringLiteral("kaddressbook"), QStringLiteral("kaddressbook"));
+    KAddressBookMigrateApplication migrate;
+    migrate.migrate();
 
     KIconLoader::global()->addAppDir(QStringLiteral("kaddressbook"));
     // create a canvas to insert our widget

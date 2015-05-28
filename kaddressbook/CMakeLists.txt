@@ -120,6 +120,7 @@ set(kaddressbook_LIB_SRCS
   modelcolumnmanager.cpp
   quicksearchwidget.cpp
   utils.cpp
+  kaddressbookmigrateapplication.cpp
   ${kaddressbook_merge_SRCS}
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}

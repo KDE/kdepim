@@ -22,6 +22,7 @@
 #include "mainwindow.h"
 #include "mainwidget.h"
 #include "kaddressbook_options.h"
+#include "kaddressbookmigrateapplication.h"
 
 #include <QCommandLineParser>
 
@@ -71,6 +72,8 @@ int main(int argc, char **argv)
         qCWarning(KADDRESSBOOK_LOG) << "kaddressbook is already running, exiting.";
         return 0;
     }
+    KAddressBookMigrateApplication migrate;
+    migrate.migrate();
 
     return app.exec();
 }
