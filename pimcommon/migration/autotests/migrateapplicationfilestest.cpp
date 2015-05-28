@@ -21,6 +21,7 @@
 #include <QStandardPaths>
 #include <QDebug>
 #include <QDir>
+#include <QTemporaryDir>
 
 using namespace PimCommon;
 MigrateApplicationFilesTest::MigrateApplicationFilesTest(QObject *parent)
@@ -36,6 +37,7 @@ MigrateApplicationFilesTest::~MigrateApplicationFilesTest()
 
 void MigrateApplicationFilesTest::initTestCase()
 {
+    qDebug() << " QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)" <<QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
     QStandardPaths::setTestModeEnabled(true);
     const QString applicationHome = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
     qDebug() << "application data" << applicationHome;
@@ -55,6 +57,9 @@ void MigrateApplicationFilesTest::shouldVerifyIfCheckIsNecessary()
     MigrateApplicationFiles migrate;
     //Invalid before config file is not set.
     QVERIFY(!migrate.checkIfNecessary());
+    migrate.setConfigFileName(QStringLiteral("foorc"));
+    // If config file doesn't exist we need to check migrate
+    QVERIFY(migrate.checkIfNecessary());
 }
 
 void MigrateApplicationFilesTest::shouldNotMigrateIfKdehomeDoNotExist()
@@ -65,5 +70,27 @@ void MigrateApplicationFilesTest::shouldNotMigrateIfKdehomeDoNotExist()
 
     QCOMPARE(migrate.start(), false);
 }
+
+void MigrateApplicationFilesTest::shouldMigrateIfKde4HomeDirExist()
+{
+    QTemporaryDir kdehomeDir;
+    QVERIFY(kdehomeDir.isValid());
+    const QString kdehome = kdehomeDir.path();
+    qputenv("KDEHOME", QFile::encodeName(kdehome));
+    MigrateApplicationFiles migrate;
+    QCOMPARE(migrate.start(), false);
+
+    migrate.setConfigFileName(QStringLiteral("foorc"));
+
+    MigrateFileInfo info;
+    info.setPath(QStringLiteral("foo/foo"));
+    info.setType(QStringLiteral("apps"));
+
+    migrate.insertMigrateInfo(info);
+    QCOMPARE(migrate.start(), true);
+
+}
+
+
 
 QTEST_MAIN(MigrateApplicationFilesTest)

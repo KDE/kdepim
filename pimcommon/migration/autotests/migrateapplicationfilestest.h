@@ -31,6 +31,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldVerifyIfCheckIsNecessary();
     void shouldNotMigrateIfKdehomeDoNotExist();
+    void shouldMigrateIfKde4HomeDirExist();
 };
 
 #endif // KMMIGRATEKMAIL4CONFIGTEST_H
