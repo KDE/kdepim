@@ -15,58 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "migrateinfo.h"
+#ifndef MIGRATEINFOTEST_H
+#define MIGRATEINFOTEST_H
 
-MigrateInfo::MigrateInfo()
-    : mVersion(-1),
-      mFolder(false)
+#include <QObject>
+
+class MigrateFileInfoTest : public QObject
 {
+    Q_OBJECT
+public:
+    explicit MigrateFileInfoTest(QObject *parent = Q_NULLPTR);
+    ~MigrateFileInfoTest();
 
-}
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldAssignValue();
+    void shouldBeEmpty();
+};
 
-bool MigrateInfo::isValid() const
-{
-    return !mType.isEmpty() && !mPath.isEmpty();
-}
-
-int MigrateInfo::version() const
-{
-    return mVersion;
-}
-
-void MigrateInfo::setVersion(int version)
-{
-    mVersion = version;
-}
-
-
-QString MigrateInfo::type() const
-{
-    return mType;
-}
-
-void MigrateInfo::setType(const QString &type)
-{
-    mType = type;
-}
-
-QString MigrateInfo::path() const
-{
-    return mPath;
-}
-
-void MigrateInfo::setPath(const QString &path)
-{
-    mPath = path;
-}
-
-bool MigrateInfo::folder() const
-{
-    return mFolder;
-}
-
-void MigrateInfo::setFolder(bool folder)
-{
-    mFolder = folder;
-}
-
+#endif // MIGRATEFilEINFOTEST_H

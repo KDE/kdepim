@@ -34,6 +34,8 @@ GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
     mGravatarUpdateWidget->setObjectName(QLatin1String("gravatarupdatewidget"));
     mainLayout->addWidget(mGravatarUpdateWidget);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     buttonBox->setObjectName(QLatin1String("buttonbox"));
     mainLayout->addWidget(buttonBox);
     readConfig();
@@ -42,6 +44,11 @@ GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
 GravatarUpdateDialog::~GravatarUpdateDialog()
 {
     writeConfig();
+}
+
+void GravatarUpdateDialog::setEmail(const QString &email)
+{
+    mGravatarUpdateWidget->setEmail(email);
 }
 
 void GravatarUpdateDialog::readConfig()

@@ -22,7 +22,7 @@ class GravatarUpdateWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarUpdateWidgetTest(QObject *parent = 0);
+    explicit GravatarUpdateWidgetTest(QObject *parent = Q_NULLPTR);
     ~GravatarUpdateWidgetTest();
 };
 

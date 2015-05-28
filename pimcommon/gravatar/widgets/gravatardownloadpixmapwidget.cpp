@@ -23,6 +23,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QDebug>
+#include <QCheckBox>
 
 using namespace PimCommon;
 GravatarDownloadPixmapWidget::GravatarDownloadPixmapWidget(QWidget *parent)
@@ -39,6 +40,14 @@ GravatarDownloadPixmapWidget::GravatarDownloadPixmapWidget(QWidget *parent)
     mLineEdit->setObjectName(QStringLiteral("email"));
     connect(mLineEdit, &QLineEdit::textChanged, this, &GravatarDownloadPixmapWidget::slotTextChanged);
     hbox->addWidget(mLineEdit);
+
+    mUseLibravatar = new QCheckBox(i18n("Use Libravatar"));
+    mUseLibravatar->setObjectName(QStringLiteral("uselibravatar"));
+    mainLayout->addWidget(mUseLibravatar);
+
+    mFallbackGravatar = new QCheckBox(i18n("Fallback to Gravatar"));
+    mFallbackGravatar->setObjectName(QStringLiteral("fallbackgravatar"));
+    mainLayout->addWidget(mFallbackGravatar);
 
     mGetPixmapButton = new QPushButton(i18n("searchbutton"));
     mGetPixmapButton->setObjectName(QStringLiteral("searchbutton"));
@@ -77,10 +86,13 @@ void GravatarDownloadPixmapWidget::slotResolvUrlFinish(PimCommon::GravatarResolv
 
 void GravatarDownloadPixmapWidget::slotSearchButton()
 {
+    mResultLabel->clear();
     PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
     job->setEmail(mLineEdit->text());
     //For testing
     //job->setUseDefaultPixmap(true);
+    job->setUseLibravatar(mUseLibravatar->isChecked());
+    job->setFallbackGravatar(mFallbackGravatar->isChecked());
     if (job->canStart()) {
         connect(job, &GravatarResolvUrlJob::finished, this, &GravatarDownloadPixmapWidget::slotResolvUrlFinish);
         job->start();

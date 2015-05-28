@@ -15,13 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "kmmigratekmail4config.h"
+#include "migrateapplicationfiles.h"
 #include <kdelibs4migration.h>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <QDebug>
 
-KMMigrateKMail4Config::KMMigrateKMail4Config(QObject *parent)
+using namespace PimCommon;
+
+MigrateApplicationFiles::MigrateApplicationFiles(QObject *parent)
     : QObject(parent),
       mMigrateApplicationVersion(1),
       mCurrentConfigVersion(0)
@@ -29,13 +31,23 @@ KMMigrateKMail4Config::KMMigrateKMail4Config(QObject *parent)
 
 }
 
-KMMigrateKMail4Config::~KMMigrateKMail4Config()
+MigrateApplicationFiles::~MigrateApplicationFiles()
 {
 
 }
 
-bool KMMigrateKMail4Config::start()
+bool MigrateApplicationFiles::start()
 {
+    if (mApplicationName.isEmpty()) {
+        qDebug() << "Missing application name";
+    }
+    // Testing for kdehome
+    Kdelibs4Migration migration;
+    if (!migration.kdeHomeFound()) {
+        Q_EMIT migrateDone();
+        return false;
+    }
+
     if (mMigrateInfoList.isEmpty()) {
         Q_EMIT migrateDone();
         return false;
@@ -46,50 +58,56 @@ bool KMMigrateKMail4Config::start()
         Q_EMIT migrateDone();
         return false;
     }
-    // Testing for kdehome
-    Kdelibs4Migration migration;
-    if (!migration.kdeHomeFound()) {
-        Q_EMIT migrateDone();
-        return false;
-    }
     return migrateConfig();
 }
 
-bool KMMigrateKMail4Config::migrateConfig()
+bool MigrateApplicationFiles::migrateConfig()
 {
-    Q_FOREACH(const MigrateInfo &info, mMigrateInfoList) {
-        if (info.folder()) {
-            migrateFolder(info);
-        } else {
-            migrateFile(info);
+    Q_FOREACH(const MigrateFileInfo &info, mMigrateInfoList) {
+        if (info.version() > mCurrentConfigVersion) {
+            if (info.folder()) {
+                migrateFolder(info);
+            } else {
+                migrateFile(info);
+            }
         }
     }
     Q_EMIT migrateDone();
     return true;
 }
 
-int KMMigrateKMail4Config::currentConfigVersion() const
+QString MigrateApplicationFiles::applicationName() const
+{
+    return mApplicationName;
+}
+
+void MigrateApplicationFiles::setApplicationName(const QString &applicationName)
+{
+    mApplicationName = applicationName;
+}
+
+int MigrateApplicationFiles::currentConfigVersion() const
 {
     return mCurrentConfigVersion;
 }
 
-void KMMigrateKMail4Config::setCurrentConfigVersion(int currentConfigVersion)
+void MigrateApplicationFiles::setCurrentConfigVersion(int currentConfigVersion)
 {
     mCurrentConfigVersion = currentConfigVersion;
 }
 
 
-QString KMMigrateKMail4Config::configFileName() const
+QString MigrateApplicationFiles::configFileName() const
 {
     return mConfigFileName;
 }
 
-void KMMigrateKMail4Config::setConfigFileName(const QString &configFileName)
+void MigrateApplicationFiles::setConfigFileName(const QString &configFileName)
 {
     mConfigFileName = configFileName;
 }
 
-void KMMigrateKMail4Config::writeConfig()
+void MigrateApplicationFiles::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig(mConfigFileName, KConfig::SimpleConfig);
     KConfigGroup grp = config->group(QStringLiteral("Migrate"));
@@ -97,27 +115,25 @@ void KMMigrateKMail4Config::writeConfig()
     grp.sync();
 }
 
-void KMMigrateKMail4Config::migrateFolder(const MigrateInfo &info)
+void MigrateApplicationFiles::migrateFolder(const MigrateFileInfo &info)
 {
-    //TODO
 }
 
-void KMMigrateKMail4Config::migrateFile(const MigrateInfo &info)
+void MigrateApplicationFiles::migrateFile(const MigrateFileInfo &info)
 {
-    //TODO
 }
 
-int KMMigrateKMail4Config::version() const
+int MigrateApplicationFiles::version() const
 {
     return mMigrateApplicationVersion;
 }
 
-void KMMigrateKMail4Config::setVersion(int version)
+void MigrateApplicationFiles::setVersion(int version)
 {
     mMigrateApplicationVersion = version;
 }
 
-bool KMMigrateKMail4Config::checkIfNecessary()
+bool MigrateApplicationFiles::checkIfNecessary()
 {
     if (mConfigFileName.isEmpty()) {
         qDebug() << " config file name not defined.";
@@ -136,7 +152,7 @@ bool KMMigrateKMail4Config::checkIfNecessary()
     return true;
 }
 
-void KMMigrateKMail4Config::insertMigrateInfo(const MigrateInfo &info)
+void MigrateApplicationFiles::insertMigrateInfo(const MigrateFileInfo &info)
 {
     if (info.isValid()) {
         mMigrateInfoList.append(info);

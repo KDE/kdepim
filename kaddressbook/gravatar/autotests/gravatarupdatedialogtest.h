@@ -24,7 +24,7 @@ class GravatarUpdateDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GravatarUpdateDialogTest(QObject *parent = 0);
+    explicit GravatarUpdateDialogTest(QObject *parent = Q_NULLPTR);
     ~GravatarUpdateDialogTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

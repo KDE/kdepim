@@ -36,7 +36,8 @@ GravatarResolvUrlJob::GravatarResolvUrlJob(QObject *parent)
       mUseDefaultPixmap(false),
       mUseCache(false),
       mUseLibravatar(false),
-      mFallbackGravatar(true)
+      mFallbackGravatar(true),
+      mFallbackDone(false)
 {
 
 }
@@ -55,9 +56,9 @@ bool GravatarResolvUrlJob::canStart() const
     }
 }
 
-QUrl GravatarResolvUrlJob::generateGravatarUrl()
+QUrl GravatarResolvUrlJob::generateGravatarUrl(bool useLibravatar)
 {
-    return createUrl();
+    return createUrl(useLibravatar);
 }
 
 bool GravatarResolvUrlJob::hasGravatar() const
@@ -65,12 +66,29 @@ bool GravatarResolvUrlJob::hasGravatar() const
     return mHasGravatar;
 }
 
+void GravatarResolvUrlJob::startNetworkManager(const QUrl &url)
+{
+    if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
+        if (!mNetworkAccessManager) {
+            mNetworkAccessManager = new QNetworkAccessManager(this);
+            connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
+        }
+        QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
+        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    } else {
+        qCDebug(PIMCOMMON_LOG) << " network is not connected";
+        deleteLater();
+        return;
+    }
+}
+
 void GravatarResolvUrlJob::start()
 {
     mHasGravatar = false;
+    mFallbackDone = false;
     if (canStart()) {
         mCalculatedHash.clear();
-        const QUrl url = createUrl();
+        const QUrl url = createUrl(mUseLibravatar);
         Q_EMIT resolvUrl(url);
         bool haveStoredPixmap = false;
         const QPixmap pix = GravatarCache::self()->loadGravatarPixmap(mCalculatedHash, haveStoredPixmap);
@@ -80,18 +98,7 @@ void GravatarResolvUrlJob::start()
             Q_EMIT finished(this);
             deleteLater();
         } else {
-            if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
-                if (!mNetworkAccessManager) {
-                    mNetworkAccessManager = new QNetworkAccessManager(this);
-                    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
-                }
-                QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
-                connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-            } else {
-                qCDebug(PIMCOMMON_LOG) << " network is not connected";
-                deleteLater();
-                return;
-            }
+            startNetworkManager(url);
         }
     } else {
         qCDebug(PIMCOMMON_LOG) << "Gravatar can not start";
@@ -108,8 +115,13 @@ void GravatarResolvUrlJob::slotFinishLoadPixmap(QNetworkReply *reply)
         if (!mUseDefaultPixmap) {
             GravatarCache::self()->saveGravatarPixmap(mCalculatedHash, mPixmap);
         }
-    } else if (mUseLibravatar && mFallbackGravatar) {
-        //TODO
+    } else if (mUseLibravatar && mFallbackGravatar && !mFallbackDone) {
+        mFallbackDone = true;
+        mCalculatedHash.clear();
+        const QUrl url = createUrl(false);
+        Q_EMIT resolvUrl(url);
+        startNetworkManager(url);
+        return;
     }
     reply->deleteLater();
     Q_EMIT finished(this);
@@ -205,7 +217,7 @@ QString GravatarResolvUrlJob::calculatedHash() const
     return mCalculatedHash;
 }
 
-QUrl GravatarResolvUrlJob::createUrl()
+QUrl GravatarResolvUrlJob::createUrl(bool useLibravatar)
 {
     QUrl url;
     mCalculatedHash.clear();
@@ -221,13 +233,13 @@ QUrl GravatarResolvUrlJob::createUrl()
         query.addQueryItem(QStringLiteral("s"), QString::number(mSize));
     }
     url.setScheme(QStringLiteral("http"));
-    if (mUseLibravatar) {
+    if (useLibravatar) {
         url.setHost(QStringLiteral("cdn.libravatar.org"));
     } else {
         url.setHost(QStringLiteral("www.gravatar.com"));
     }
     url.setPort(80);
-    mCalculatedHash = calculateHash(mUseLibravatar);
+    mCalculatedHash = calculateHash(useLibravatar);
     url.setPath(QLatin1String("/avatar/") + mCalculatedHash);
     url.setQuery(query);
     return url;

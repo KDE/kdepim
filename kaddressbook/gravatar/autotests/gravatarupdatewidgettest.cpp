@@ -16,7 +16,7 @@
 */
 
 #include "gravatarupdatewidgettest.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 GravatarUpdateWidgetTest::GravatarUpdateWidgetTest(QObject *parent)
     : QObject(parent)
 {
@@ -28,4 +28,4 @@ GravatarUpdateWidgetTest::~GravatarUpdateWidgetTest()
 
 }
 
-QTEST_KDEMAIN(GravatarUpdateWidgetTest, GUI)
+QTEST_MAIN(GravatarUpdateWidgetTest)

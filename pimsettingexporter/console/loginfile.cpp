@@ -16,6 +16,9 @@
 */
 
 #include "loginfile.h"
+#include "pimsettingexportconsole_debug.h"
+
+#include <QFile>
 
 LogInFile::LogInFile(QObject *parent)
     : QObject(parent)
@@ -28,15 +31,6 @@ LogInFile::~LogInFile()
 
 }
 
-void LogInFile::save()
-{
-    if (mFileName.isEmpty()) {
-        //TODO
-        return;
-    }
-    //TODO
-}
-
 QString LogInFile::fileName() const
 {
     return mFileName;
@@ -45,6 +39,8 @@ QString LogInFile::fileName() const
 void LogInFile::setFileName(const QString &fileName)
 {
     mFileName = fileName;
+    QFile file(mFileName);
+    mTextStream.setDevice(&file);
 }
 
 void LogInFile::slotAddEndLine()

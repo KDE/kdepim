@@ -15,35 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MIGRATEINFO_H
-#define MIGRATEINFO_H
+#ifndef KMMIGRATEKMAIL4CONFIGTEST_H
+#define KMMIGRATEKMAIL4CONFIGTEST_H
 
-#include <QString>
+#include <QObject>
 
-class MigrateInfo
+class MigrateApplicationFilesTest : public QObject
 {
+    Q_OBJECT
 public:
-    MigrateInfo();
-
-    QString type() const;
-    void setType(const QString &type);
-
-    QString path() const;
-    void setPath(const QString &path);
-
-    bool folder() const;
-    void setFolder(bool folder);
-
-    bool isValid() const;
-
-    int version() const;
-    void setVersion(int version);
-
-private:
-    QString mType;
-    QString mPath;
-    int mVersion;
-    bool mFolder;
+    explicit MigrateApplicationFilesTest(QObject *parent = Q_NULLPTR);
+    ~MigrateApplicationFilesTest();
+private Q_SLOTS:
+    void initTestCase();
+    void shouldHaveDefaultValue();
+    void shouldVerifyIfCheckIsNecessary();
+    void shouldNotMigrateIfKdehomeDoNotExist();
+    void shouldMigrateIfKde4HomeDirExist();
+    void shouldMigrateFolders();
+    void shouldMigrateFiles();
 };
 
-#endif // MIGRATEINFO_H
+#endif // KMMIGRATEKMAIL4CONFIGTEST_H

@@ -15,33 +15,38 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "kmmigratekmail4configtest.h"
-#include "../kmmigratekmail4config.h"
-#include <qtest.h>
+#ifndef MIGRATEFILEINFO_H
+#define MIGRATEFILEINFO_H
 
-KMMigrateKMail4ConfigTest::KMMigrateKMail4ConfigTest(QObject *parent)
-    : QObject(parent)
+#include <QString>
+#include "pimcommon_export.h"
+namespace PimCommon
 {
+class PIMCOMMON_EXPORT MigrateFileInfo
+{
+public:
+    MigrateFileInfo();
 
+    QString type() const;
+    void setType(const QString &type);
+
+    QString path() const;
+    void setPath(const QString &path);
+
+    bool folder() const;
+    void setFolder(bool folder);
+
+    bool isValid() const;
+
+    int version() const;
+    void setVersion(int version);
+
+private:
+    QString mType;
+    QString mPath;
+    int mVersion;
+    bool mFolder;
+};
 }
 
-KMMigrateKMail4ConfigTest::~KMMigrateKMail4ConfigTest()
-{
-
-}
-
-void KMMigrateKMail4ConfigTest::shouldHaveDefaultValue()
-{
-    KMMigrateKMail4Config migrate;
-    QVERIFY(!migrate.start());
-    QVERIFY(migrate.configFileName().isEmpty());
-}
-
-void KMMigrateKMail4ConfigTest::shouldVerifyIfCheckIsNecessary()
-{
-    KMMigrateKMail4Config migrate;
-    //Invalid before config file is not set.
-    QVERIFY(!migrate.checkIfNecessary());
-}
-
-QTEST_MAIN(KMMigrateKMail4ConfigTest)
+#endif // MIGRATEFILEINFO_H

@@ -19,6 +19,7 @@
 
 #include "gravatardownloadpixmapwidgettest.h"
 #include "../widgets/gravatardownloadpixmapwidget.h"
+#include <QCheckBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -50,6 +51,14 @@ void GravatarDownloadPixmapWidgetTest::shouldHaveDefaultValue()
 
     QLabel *resultLabel = w.findChild<QLabel *>(QStringLiteral("resultlabel"));
     QVERIFY(resultLabel);
+
+    QCheckBox *useLibravatar = w.findChild<QCheckBox *>(QStringLiteral("uselibravatar"));
+    QVERIFY(useLibravatar);
+    QVERIFY(!useLibravatar->isChecked());
+
+    QCheckBox *fallBackGravatar = w.findChild<QCheckBox *>(QStringLiteral("fallbackgravatar"));
+    QVERIFY(fallBackGravatar);
+    QVERIFY(!fallBackGravatar->isChecked());
 }
 
 void GravatarDownloadPixmapWidgetTest::shouldChangeButtonEnableState()

@@ -31,7 +31,6 @@ public:
     QString fileName() const;
     void setFileName(const QString &fileName);
 
-    void save();
 public Q_SLOTS:
     void slotAddEndLine();
 

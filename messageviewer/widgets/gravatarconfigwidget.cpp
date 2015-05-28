@@ -42,6 +42,14 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     mEnableGravatarSupport->setObjectName(QStringLiteral("gravatarcheckbox"));
     mainLayout->addWidget(mEnableGravatarSupport);
 
+    mUseLibravatar = new QCheckBox(i18n("Use Libravatar"));
+    mUseLibravatar->setObjectName(QStringLiteral("uselibravatarcheckbox"));
+    mainLayout->addWidget(mUseLibravatar);
+
+    mFallbackGravatar = new QCheckBox(i18n("Fallback to gravatar"));
+    mFallbackGravatar->setObjectName(QStringLiteral("fallbackgravatar"));
+    mainLayout->addWidget(mFallbackGravatar);
+
     mUseDefaultPixmap = new QCheckBox(i18n("Use Default Image"));
     mUseDefaultPixmap->setObjectName(QStringLiteral("usedefaultimage"));
     mainLayout->addWidget(mUseDefaultPixmap);
@@ -63,13 +71,15 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     mainLayout->addLayout(buttonLayout);
     mClearGravatarCache = new QPushButton(i18n("Clear Gravatar Cache"));
-    mClearGravatarCache->setObjectName(QLatin1String("cleargravatarcachebutton"));
+    mClearGravatarCache->setObjectName(QStringLiteral("cleargravatarcachebutton"));
     buttonLayout->addWidget(mClearGravatarCache);
     buttonLayout->addStretch();
 
     connect(mUseDefaultPixmap, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
-    connect(mClearGravatarCache, SIGNAL(clicked(bool)), this, SLOT(slotClearGravatarCache()));
-    connect(mEnableGravatarSupport, SIGNAL(clicked(bool)), this, SLOT(slotGravatarEnableChanged(bool)));
+    connect(mClearGravatarCache, &QAbstractButton::clicked, this, &GravatarConfigWidget::slotClearGravatarCache);
+    connect(mEnableGravatarSupport, &QAbstractButton::clicked, this, &GravatarConfigWidget::slotGravatarEnableChanged);
+    connect(mUseLibravatar, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
+    connect(mFallbackGravatar, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
 
     updateWidgetState(false);
 }
@@ -90,6 +100,8 @@ void GravatarConfigWidget::updateWidgetState(bool state)
     mUseDefaultPixmap->setEnabled(state);
     mClearGravatarCache->setEnabled(state);
     mGravatarCacheSize->setEnabled(state);
+    mFallbackGravatar->setEnabled(state);
+    mUseLibravatar->setEnabled(state);
 }
 
 void GravatarConfigWidget::save()
@@ -97,6 +109,8 @@ void GravatarConfigWidget::save()
     saveCheckBox(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
     saveCheckBox(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
     saveSpinBox(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
+    saveCheckBox(mFallbackGravatar, MessageViewer::GlobalSettings::self()->fallbackToGravatarItem());
+    saveCheckBox(mUseLibravatar, MessageViewer::GlobalSettings::self()->libravatarSupportEnabledItem());
     if (!mEnableGravatarSupport->isChecked()) {
         PimCommon::GravatarCache::self()->clearAllCache();
     }
@@ -107,6 +121,8 @@ void GravatarConfigWidget::doLoadFromGlobalSettings()
     loadWidget(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
     loadWidget(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
     loadWidget(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
+    loadWidget(mFallbackGravatar, MessageViewer::GlobalSettings::self()->fallbackToGravatarItem());
+    loadWidget(mUseLibravatar, MessageViewer::GlobalSettings::self()->libravatarSupportEnabledItem());
     updateWidgetState(mEnableGravatarSupport->isChecked());
 }
 

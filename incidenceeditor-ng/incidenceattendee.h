@@ -31,11 +31,6 @@ class EventOrTodoDesktop;
 class EventOrTodoMore;
 }
 
-namespace KPIM
-{
-class MultiplyingLine;
-}
-
 namespace KContacts
 {
 class Addressee;
@@ -47,7 +42,6 @@ class KJob;
 namespace IncidenceEditorNG
 {
 
-class AttendeeEditor;
 class AttendeeComboBoxDelegate;
 class AttendeeLineEditDelegate;
 class AttendeeTableModel;
