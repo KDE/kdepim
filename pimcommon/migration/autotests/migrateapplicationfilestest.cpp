@@ -88,9 +88,36 @@ void MigrateApplicationFilesTest::shouldMigrateIfKde4HomeDirExist()
 
     migrate.insertMigrateInfo(info);
     QCOMPARE(migrate.start(), true);
-
 }
 
+void MigrateApplicationFilesTest::shouldMigrateFolders()
+{
+    QTemporaryDir kdehomeDir;
+    QVERIFY(kdehomeDir.isValid());
+    const QString kdehome = kdehomeDir.path();
+    qputenv("KDEHOME", QFile::encodeName(kdehome));
 
+    //Generate kde4 apps dir
+    const QString appsPath = kdehome + QLatin1Char('/') + QLatin1String("share/apps/foo/");
+    QDir().mkpath(appsPath);
+    QVERIFY(QDir(appsPath).exists());
+
+    //TODO
+}
+
+void MigrateApplicationFilesTest::shouldMigrateFiles()
+{
+    QTemporaryDir kdehomeDir;
+    QVERIFY(kdehomeDir.isValid());
+    const QString kdehome = kdehomeDir.path();
+    qputenv("KDEHOME", QFile::encodeName(kdehome));
+
+    //Generate kde4 apps dir
+    const QString appsPath = kdehome + QLatin1Char('/') + QLatin1String("share/apps/foo/");
+    QDir().mkpath(appsPath);
+    QVERIFY(QDir(appsPath).exists());
+
+    //TODO
+}
 
 QTEST_MAIN(MigrateApplicationFilesTest)
