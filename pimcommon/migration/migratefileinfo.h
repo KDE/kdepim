@@ -41,9 +41,13 @@ public:
     int version() const;
     void setVersion(int version);
 
+    QString filePattern() const;
+    void setFilePattern(const QString &filePattern);
+
 private:
     QString mType;
     QString mPath;
+    QString mFilePattern;
     int mVersion;
     bool mFolder;
 };

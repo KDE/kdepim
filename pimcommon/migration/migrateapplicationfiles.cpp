@@ -16,6 +16,7 @@
 */
 
 #include "migrateapplicationfiles.h"
+#include "pimcommon_debug.h"
 #include <kdelibs4migration.h>
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -45,7 +46,7 @@ void MigrateApplicationFiles::finished()
 bool MigrateApplicationFiles::start()
 {
     if (mApplicationName.isEmpty()) {
-        qDebug() << "Missing application name";
+        qCDebug(PIMCOMMON_LOG) << "Missing application name";
     }
     // Testing for kdehome
     Kdelibs4Migration migration;
@@ -60,7 +61,7 @@ bool MigrateApplicationFiles::start()
     }
 
     if (mConfigFileName.isEmpty()) {
-        qDebug() << " config file name not defined.";
+        qCDebug(PIMCOMMON_LOG) << " config file name not defined.";
         finished();
         return false;
     }
@@ -116,7 +117,7 @@ void MigrateApplicationFiles::setConfigFileName(const QString &configFileName)
 void MigrateApplicationFiles::writeConfig()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig(mConfigFileName, KConfig::SimpleConfig);
-    KConfigGroup grp = config->group(QStringLiteral("Migrate"));
+    KConfigGroup grp = config->group(QStringLiteral("Migratekde4"));
     grp.writeEntry(QStringLiteral("Version"), mMigrateApplicationVersion);
     grp.sync();
 }
@@ -127,6 +128,11 @@ void MigrateApplicationFiles::migrateFolder(const MigrateFileInfo &info)
 
 void MigrateApplicationFiles::migrateFile(const MigrateFileInfo &info)
 {
+    if (info.filePattern().isEmpty()) {
+        //TODO
+    } else {
+
+    }
 }
 
 int MigrateApplicationFiles::version() const
@@ -142,12 +148,12 @@ void MigrateApplicationFiles::setVersion(int version)
 bool MigrateApplicationFiles::checkIfNecessary()
 {
     if (mConfigFileName.isEmpty()) {
-        qDebug() << " config file name not defined.";
+        qCDebug(PIMCOMMON_LOG) << " config file name not defined.";
         return false;
     }
     KSharedConfig::Ptr config = KSharedConfig::openConfig(mConfigFileName, KConfig::SimpleConfig);
-    if (config->hasGroup(QStringLiteral("Migrate"))) {
-        KConfigGroup grp = config->group(QStringLiteral("Migrate"));
+    if (config->hasGroup(QStringLiteral("Migratekde4"))) {
+        KConfigGroup grp = config->group(QStringLiteral("Migratekde4"));
         mCurrentConfigVersion = grp.readEntry(QStringLiteral("Version"), 0);
         if (mCurrentConfigVersion < mMigrateApplicationVersion) {
             return true;

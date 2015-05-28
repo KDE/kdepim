@@ -40,7 +40,6 @@ void MigrateFileInfo::setVersion(int version)
     mVersion = version;
 }
 
-
 QString MigrateFileInfo::type() const
 {
     return mType;
@@ -71,3 +70,12 @@ void MigrateFileInfo::setFolder(bool folder)
     mFolder = folder;
 }
 
+QString MigrateFileInfo::filePattern() const
+{
+    return mFilePattern;
+}
+
+void MigrateFileInfo::setFilePattern(const QString &filePattern)
+{
+    mFilePattern = filePattern;
+}

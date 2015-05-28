@@ -36,6 +36,7 @@ void MigrateFileInfoTest::shouldHaveDefaultValue()
     QVERIFY(!info.folder());
     QVERIFY(info.path().isEmpty());
     QVERIFY(info.type().isEmpty());
+    QVERIFY(info.filePattern().isEmpty());
     QCOMPARE(info.version(), -1);
 }
 
@@ -78,6 +79,16 @@ void MigrateFileInfoTest::shouldAssignValue()
     version = 6;
     info.setVersion(version);
     QCOMPARE(info.version(), version);
+
+    QString pattern;
+    info.setFilePattern(pattern);
+    QCOMPARE(info.filePattern(), pattern);
+    pattern = QStringLiteral("foo");
+    info.setFilePattern(pattern);
+    QCOMPARE(info.filePattern(), pattern);
+    pattern.clear();
+    info.setFilePattern(pattern);
+    QCOMPARE(info.filePattern(), pattern);
 }
 
 void MigrateFileInfoTest::shouldBeEmpty()
