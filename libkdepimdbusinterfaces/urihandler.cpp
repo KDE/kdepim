@@ -28,7 +28,6 @@
 #include <korganizerinterface.h>
 #include <Akonadi/Contact/ContactEditorDialog>
 
-#include <kiconloader.h>
 #include <krun.h>
 #include <kshell.h>
 #include "kdepimdbusinterface_debug.h"

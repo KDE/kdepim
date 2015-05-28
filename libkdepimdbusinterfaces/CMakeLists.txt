@@ -34,7 +34,6 @@ PUBLIC
 PRIVATE
     KF5::AkonadiContact 
     KF5::KIOWidgets
-    KF5::IconThemes
     Qt5::DBus
 )
 

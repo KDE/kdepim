@@ -71,7 +71,6 @@ target_link_libraries(
   KF5::Holidays
   KF5::AkonadiCalendar
   KF5::AkonadiWidgets
-  KF5::MailTransport
 )
 
 set_target_properties(calendarsupport

@@ -51,7 +51,6 @@
 #include <KCalUtils/ICalDrag>
 #include <KCalUtils/VCalDrag>
 
-#include <MailTransport/TransportManager>
 
 #include <QUrl>
 #include <KIconLoader>
