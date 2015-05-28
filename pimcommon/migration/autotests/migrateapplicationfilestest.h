@@ -27,9 +27,10 @@ public:
     explicit MigrateApplicationFilesTest(QObject *parent = Q_NULLPTR);
     ~MigrateApplicationFilesTest();
 private Q_SLOTS:
+    void initTestCase();
     void shouldHaveDefaultValue();
     void shouldVerifyIfCheckIsNecessary();
-
+    void shouldNotMigrateIfKdehomeDoNotExist();
 };
 
 #endif // KMMIGRATEKMAIL4CONFIGTEST_H

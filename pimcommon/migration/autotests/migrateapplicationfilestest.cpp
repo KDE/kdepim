@@ -18,6 +18,10 @@
 #include "migrateapplicationfilestest.h"
 #include "../migrateapplicationfiles.h"
 #include <qtest.h>
+#include <QStandardPaths>
+#include <QDebug>
+#include <QDir>
+
 using namespace PimCommon;
 MigrateApplicationFilesTest::MigrateApplicationFilesTest(QObject *parent)
     : QObject(parent)
@@ -30,11 +34,20 @@ MigrateApplicationFilesTest::~MigrateApplicationFilesTest()
 
 }
 
+void MigrateApplicationFilesTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
+    const QString applicationHome = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
+    qDebug() << "application data" << applicationHome;
+    QDir(applicationHome).removeRecursively();
+}
+
 void MigrateApplicationFilesTest::shouldHaveDefaultValue()
 {
     MigrateApplicationFiles migrate;
     QVERIFY(!migrate.start());
     QVERIFY(migrate.configFileName().isEmpty());
+    QVERIFY(migrate.applicationName().isEmpty());
 }
 
 void MigrateApplicationFilesTest::shouldVerifyIfCheckIsNecessary()
@@ -42,6 +55,15 @@ void MigrateApplicationFilesTest::shouldVerifyIfCheckIsNecessary()
     MigrateApplicationFiles migrate;
     //Invalid before config file is not set.
     QVERIFY(!migrate.checkIfNecessary());
+}
+
+void MigrateApplicationFilesTest::shouldNotMigrateIfKdehomeDoNotExist()
+{
+    qputenv("KDEHOME", "");
+    MigrateApplicationFiles migrate;
+    migrate.setConfigFileName(QStringLiteral("foorc"));
+
+    QCOMPARE(migrate.start(), false);
 }
 
 QTEST_MAIN(MigrateApplicationFilesTest)

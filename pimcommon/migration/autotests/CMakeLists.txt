@@ -1,6 +1,8 @@
 include_directories(${CMAKE_SOURCE_DIR}/pimcommon/ ${CMAKE_BINARY_DIR}/pimcommon/
 )
 
+add_definitions( -DMIGRATION_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data" )
+
 set( pimcommon_migrateapplicationfilestest_source migrateapplicationfilestest.cpp ../migrateapplicationfiles.cpp ../migratefileinfo.cpp)
 add_executable(migrateapplicationfilestest ${pimcommon_migrateapplicationfilestest_source})
 ecm_mark_as_test(pimcommon-migrateapplicationfilestest)

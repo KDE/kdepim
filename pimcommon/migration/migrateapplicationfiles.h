@@ -44,6 +44,9 @@ public:
     int currentConfigVersion() const;
     void setCurrentConfigVersion(int currentConfigVersion);
 
+    QString applicationName() const;
+    void setApplicationName(const QString &applicationName);
+
 Q_SIGNALS:
     void migrateDone();
 
@@ -54,6 +57,7 @@ private:
     bool migrateConfig();
     QVector<MigrateFileInfo> mMigrateInfoList;
     QString mConfigFileName;
+    QString mApplicationName;
     int mMigrateApplicationVersion;
     int mCurrentConfigVersion;
 };

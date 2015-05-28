@@ -38,6 +38,16 @@ MigrateApplicationFiles::~MigrateApplicationFiles()
 
 bool MigrateApplicationFiles::start()
 {
+    if (mApplicationName.isEmpty()) {
+        qDebug() << "Missing application name";
+    }
+    // Testing for kdehome
+    Kdelibs4Migration migration;
+    if (!migration.kdeHomeFound()) {
+        Q_EMIT migrateDone();
+        return false;
+    }
+
     if (mMigrateInfoList.isEmpty()) {
         Q_EMIT migrateDone();
         return false;
@@ -45,12 +55,6 @@ bool MigrateApplicationFiles::start()
 
     if (mConfigFileName.isEmpty()) {
         qDebug() << " config file name not defined.";
-        Q_EMIT migrateDone();
-        return false;
-    }
-    // Testing for kdehome
-    Kdelibs4Migration migration;
-    if (!migration.kdeHomeFound()) {
         Q_EMIT migrateDone();
         return false;
     }
@@ -70,6 +74,16 @@ bool MigrateApplicationFiles::migrateConfig()
     }
     Q_EMIT migrateDone();
     return true;
+}
+
+QString MigrateApplicationFiles::applicationName() const
+{
+    return mApplicationName;
+}
+
+void MigrateApplicationFiles::setApplicationName(const QString &applicationName)
+{
+    mApplicationName = applicationName;
 }
 
 int MigrateApplicationFiles::currentConfigVersion() const
