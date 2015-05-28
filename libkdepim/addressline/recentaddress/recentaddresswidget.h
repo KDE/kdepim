@@ -49,7 +49,7 @@ private Q_SLOTS:
 
 protected:
     void updateButtonState();
-    bool eventFilter(QObject *o, QEvent *e);
+    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
 
 private:
     QPushButton *mNewButton, *mRemoveButton;
