@@ -45,6 +45,28 @@ void KAddressBookMigrateApplication::initializeMigrator()
     mMigrator.setApplicationName(QStringLiteral("kaddressbook"));
     mMigrator.setConfigFileName(QStringLiteral("kaddressbookrc"));
     mMigrator.setCurrentConfigVersion(1);
+
+    // printing
+    PimCommon::MigrateFileInfo migrateInfoPrinting;
+    migrateInfoPrinting.setFolder(true);
+    migrateInfoPrinting.setType(QStringLiteral("apps"));
+    migrateInfoPrinting.setPath(QStringLiteral("kaddressbook/printing"));
+    mMigrator.insertMigrateInfo(migrateInfoPrinting);
+
+    // viewertemplates
+    PimCommon::MigrateFileInfo migrateInfoViewerTemplates;
+    migrateInfoViewerTemplates.setFolder(true);
+    migrateInfoViewerTemplates.setType(QStringLiteral("apps"));
+    migrateInfoViewerTemplates.setPath(QStringLiteral("kaddressbook/viewertemplates"));
+    mMigrator.insertMigrateInfo(migrateInfoViewerTemplates);
+
+    // viewertemplates
+    PimCommon::MigrateFileInfo migrateInfoCsvTemplates;
+    migrateInfoCsvTemplates.setFolder(true);
+    migrateInfoCsvTemplates.setType(QStringLiteral("apps"));
+    migrateInfoCsvTemplates.setPath(QStringLiteral("kaddressbook/csv-templates"));
+    mMigrator.insertMigrateInfo(migrateInfoCsvTemplates);
+
     //TODO add folder to migrate
 }
 
