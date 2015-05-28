@@ -24,7 +24,7 @@ Migrate configrc done:
 - korgac (korgacrc)
 - libkdepim (kpimbalooblacklist, kpimcompletionorder)
 - kontact (kontactrc, kontactui.rc)
-
+- kaddressbook kaddressbookrc, kaddressbookui.rc
 
 TODO:
 - migrate theme for kmail/kaddressbook/messageviewer
