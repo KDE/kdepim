@@ -115,6 +115,9 @@ EventEdit::EventEdit(QWidget *parent)
 #ifndef QT_NO_ACCESSIBILITY
     mEndDateTimeEdit->setAccessibleDescription( i18n("Select end time for event.") );
 #endif
+    connect(mEndDateTimeEdit, SIGNAL(dateTimeChanged(KDateTime)),
+            this, SLOT(slotEndDateTimeChanged(KDateTime)));
+
     hbox->addWidget(mEndDateTimeEdit);
 
     hbox->addStretch(1);
@@ -301,6 +304,19 @@ bool EventEdit::eventFilter(QObject *object, QEvent *e)
         }
     }
     return QWidget::eventFilter(object,e);
+}
+
+void EventEdit::slotEndDateTimeChanged(const KDateTime &newDateTime)
+{
+    if (!newDateTime.isValid()) {
+      return;
+    }
+    KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
+    if (newDateTime.date() > currentDateTime.date()) {
+        KDateTime newDateDate = newDateTime;
+        newDateDate.setTime(QTime(0, 0, 0));
+        mEndDateTimeEdit->setMinimumDateTime(newDateDate);
+    }
 }
 
 void EventEdit::slotStartDateTimeChanged(const KDateTime &newDateTime)
