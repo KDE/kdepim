@@ -48,6 +48,8 @@ private:
     void updateWidgetState(bool state);
     QCheckBox *mEnableGravatarSupport;
     QCheckBox *mUseDefaultPixmap;
+    QCheckBox *mUseLibravatar;
+    QCheckBox *mFallbackGravatar;
     QPushButton *mClearGravatarCache;
     QSpinBox *mGravatarCacheSize;
 };

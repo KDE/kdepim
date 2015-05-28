@@ -199,6 +199,13 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="GravatarCacheSize" type="Int">
       <default>20</default>
     </entry>
+    <entry name="FallbackToGravatar" type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="LibravatarSupportEnabled" type="Bool">
+        <default>false</default>
+    </entry>
+
   </group>
 
   <group name="TextIndex">
