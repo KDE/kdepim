@@ -71,13 +71,15 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     mainLayout->addLayout(buttonLayout);
     mClearGravatarCache = new QPushButton(i18n("Clear Gravatar Cache"));
-    mClearGravatarCache->setObjectName(QLatin1String("cleargravatarcachebutton"));
+    mClearGravatarCache->setObjectName(QStringLiteral("cleargravatarcachebutton"));
     buttonLayout->addWidget(mClearGravatarCache);
     buttonLayout->addStretch();
 
     connect(mUseDefaultPixmap, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
-    connect(mClearGravatarCache, SIGNAL(clicked(bool)), this, SLOT(slotClearGravatarCache()));
-    connect(mEnableGravatarSupport, SIGNAL(clicked(bool)), this, SLOT(slotGravatarEnableChanged(bool)));
+    connect(mClearGravatarCache, &QAbstractButton::clicked, this, &GravatarConfigWidget::slotClearGravatarCache);
+    connect(mEnableGravatarSupport, &QAbstractButton::clicked, this, &GravatarConfigWidget::slotGravatarEnableChanged);
+    connect(mUseLibravatar, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
+    connect(mFallbackGravatar, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
 
     updateWidgetState(false);
 }
