@@ -81,7 +81,6 @@ void GravatarConfigWidgetTest::shouldChangeState()
     QVERIFY(!fallbackGravatar->isEnabled());
     QVERIFY(!useLibravatar->isEnabled());
 
-
     QTest::mouseClick(checkBox, Qt::LeftButton);
     QVERIFY(checkBox->isEnabled());
     QVERIFY(checkBox->isChecked());

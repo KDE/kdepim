@@ -47,7 +47,7 @@ void CreateNoteJob::start()
     mNote.setLastModifiedDate(QDateTime::currentDateTimeUtc());
     if (!mItem.relations().isEmpty())  {
         Akonadi::Relation relation;
-        foreach(const Akonadi::Relation & r, mItem.relations()) {
+        foreach (const Akonadi::Relation &r, mItem.relations()) {
             // assuming that GENERIC relations to emails are notes is a pretty horirific hack imo - aseigo
             if (r.type() == Akonadi::Relation::GENERIC && r.right().mimeType() == Akonadi::NoteUtils::noteMimeType()) {
                 relation = r;

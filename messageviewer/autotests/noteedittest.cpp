@@ -33,7 +33,6 @@
 #include <QSignalSpy>
 #include <QTest>
 
-
 namespace MessageViewer
 {
 extern MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_noteEditStubModel;

@@ -3362,7 +3362,7 @@ void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &todoPtr, const Ako
 Akonadi::Relation ViewerPrivate::relatedNoteRelation() const
 {
     Akonadi::Relation relation;
-    foreach(const Akonadi::Relation &r, mMessageItem.relations()) {
+    foreach (const Akonadi::Relation &r, mMessageItem.relations()) {
         // assuming that GENERIC relations to emails are notes is a pretty horirific hack imo - aseigo
         if (r.type() == Akonadi::Relation::GENERIC && r.right().mimeType() == Akonadi::NoteUtils::noteMimeType()) {
             relation = r;

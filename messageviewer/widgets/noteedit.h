@@ -64,7 +64,7 @@ Q_SIGNALS:
     void messageChanged(const KMime::Message::Ptr &msg);
 
 protected:
-    bool eventFilter(QObject *object, QEvent *e);
+    bool eventFilter(QObject *object, QEvent *e) Q_DECL_OVERRIDE;
 private:
     void readConfig();
     Akonadi::Collection mCollection;
