@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,13 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KORGSTARTUP_H
-#define KORGSTARTUP_H
-#include "korganizerprivate_export.h"
+#ifndef KMMIGRATEAPPLICATION_H
+#define KMMIGRATEAPPLICATION_H
 
-namespace KOrgStartup
+#include "pimcommon/migration/migrateapplicationfiles.h"
+#include "kmail_export.h"
+class KMAIL_EXPORT KMMigrateApplication
 {
-KORGANIZERPRIVATE_EXPORT void migrateConfig();
+public:
+    KMMigrateApplication();
+
+    void migrate();
+private:
+    void initializeMigrator();
+    PimCommon::MigrateApplicationFiles mMigrator;
 };
 
-#endif // KORGSTARTUP_H
+#endif // KMMIGRATEAPPLICATION_H

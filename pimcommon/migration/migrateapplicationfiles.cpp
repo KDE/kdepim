@@ -36,6 +36,12 @@ MigrateApplicationFiles::~MigrateApplicationFiles()
 
 }
 
+void MigrateApplicationFiles::finished()
+{
+    writeConfig();
+    Q_EMIT migrateDone();
+}
+
 bool MigrateApplicationFiles::start()
 {
     if (mApplicationName.isEmpty()) {
@@ -44,18 +50,18 @@ bool MigrateApplicationFiles::start()
     // Testing for kdehome
     Kdelibs4Migration migration;
     if (!migration.kdeHomeFound()) {
-        Q_EMIT migrateDone();
+        finished();
         return false;
     }
 
     if (mMigrateInfoList.isEmpty()) {
-        Q_EMIT migrateDone();
+        finished();
         return false;
     }
 
     if (mConfigFileName.isEmpty()) {
         qDebug() << " config file name not defined.";
-        Q_EMIT migrateDone();
+        finished();
         return false;
     }
     return migrateConfig();
@@ -72,7 +78,7 @@ bool MigrateApplicationFiles::migrateConfig()
             }
         }
     }
-    Q_EMIT migrateDone();
+    finished();
     return true;
 }
 

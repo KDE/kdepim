@@ -346,13 +346,12 @@ endif()
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-kleopatra.png")
 ecm_add_app_icon(_kleopatra_mainwindow_SRCS ICONS ${ICONS_SRCS})
 
-# OS X needs another stdlib to compile kleopatra
-if (APPLE)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
-endif(APPLE)
-
 add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS})
 set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
+# OS X needs another stdlib to compile kleopatra
+if (APPLE)
+  set_target_properties(kleopatra_bin PROPERTIES COMPILE_FLAGS "-stdlib=libc++")
+endif (APPLE)
 
 target_link_libraries(kleopatra_bin
   ${_kleopatra_extra_libs}
