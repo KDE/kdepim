@@ -57,7 +57,7 @@ void EventDateTimeWidget::setMinimumDateTime(const KDateTime &dtime)
 {
     if (dateTime() != dtime) {
         mDateEdit->setMinimumDate(dtime.date());
-        mTimeEdit->setMaximumTime(dtime.time());
+        mTimeEdit->setMinimumTime(dtime.time());
     }
 }
 
