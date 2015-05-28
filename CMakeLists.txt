@@ -147,11 +147,6 @@ if (NOT APPLE)
     find_package(X11)
 endif()
 
-# OS X needs another stdlib to compile kleopatra
-if (APPLE)
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -stdlib=libc++")
-endif(APPLE)
-
 set(KDEPIM_HAVE_X11 ${X11_FOUND})
 if (KDEPIM_NO_TEXTTOSPEECH)
   set(KDEPIM_HAVE_TEXTTOSPEECH FALSE)
