@@ -350,7 +350,10 @@ add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${
 set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
 # OS X needs another stdlib to compile kleopatra
 if (APPLE)
-  set_target_properties(kleopatra_bin PROPERTIES COMPILE_FLAGS "-stdlib=libc++")
+  set_target_properties(kleopatra_bin PROPERTIES
+    COMPILE_FLAGS "-stdlib=libc++"
+    LINK_FLAGS "-stdlib=libc++"
+  )
 endif (APPLE)
 
 target_link_libraries(kleopatra_bin
