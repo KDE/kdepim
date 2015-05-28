@@ -51,6 +51,7 @@ Q_SIGNALS:
     void migrateDone();
 
 private:
+    void finished();
     void writeConfig();
     void migrateFolder(const MigrateFileInfo &info);
     void migrateFile(const MigrateFileInfo &info);
