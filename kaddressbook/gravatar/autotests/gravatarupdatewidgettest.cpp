@@ -16,7 +16,10 @@
 */
 
 #include "gravatarupdatewidgettest.h"
+#include <QLabel>
+#include <QPushButton>
 #include <qtest_kde.h>
+#include <kaddressbook/gravatar/widgets/gravatarupdatewidget.h>
 GravatarUpdateWidgetTest::GravatarUpdateWidgetTest(QObject *parent)
     : QObject(parent)
 {
@@ -27,5 +30,22 @@ GravatarUpdateWidgetTest::~GravatarUpdateWidgetTest()
 {
 
 }
+
+void GravatarUpdateWidgetTest::shouldHaveDefaultValue()
+{
+    KABGravatar::GravatarUpdateWidget widget;
+    QLabel *lab = widget.findChild<QLabel *>(QLatin1String("emaillabel"));
+    QVERIFY(lab);
+
+    QLabel *emaillabel = widget.findChild<QLabel *>(QLatin1String("email"));
+    QVERIFY(emaillabel);
+
+    QPushButton *searchGravatar = widget.findChild<QPushButton *>(QLatin1String("search"));
+    QVERIFY(searchGravatar);
+
+    QLabel *resultGravatar = widget.findChild<QLabel *>(QLatin1String("result"));
+    QVERIFY(resultGravatar);
+}
+
 
 QTEST_KDEMAIN(GravatarUpdateWidgetTest, GUI)

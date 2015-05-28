@@ -50,7 +50,7 @@ GravatarCreateWidget::GravatarCreateWidget(QWidget *parent)
 
     mResultGravatar = new QLabel;
     mResultGravatar->setObjectName(QLatin1String("result"));
-    mainLayout->addWidget(mSearchGravatar, 1, 0);
+    mainLayout->addWidget(mResultGravatar, 1, 0);
 }
 
 

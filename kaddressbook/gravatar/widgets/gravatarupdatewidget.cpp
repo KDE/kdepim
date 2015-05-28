@@ -17,11 +17,39 @@
 
 #include "gravatarupdatewidget.h"
 
+#include <QGridLayout>
+#include <KLocalizedString>
+#include <QLabel>
+#include <QPushButton>
+
 using namespace KABGravatar;
 GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
      : QWidget(parent)
 {
+    QGridLayout *mainLayout = new QGridLayout;
+    setLayout(mainLayout);
 
+    //KF5 add i18n
+    QLabel *lab = new QLabel(QLatin1String("Email:"));
+    lab->setObjectName(QLatin1String("emaillabel"));
+    mainLayout->addWidget(lab, 0, 0);
+
+    mEmailLab = new QLabel;
+    mEmailLab->setObjectName(QLatin1String("email"));
+    mainLayout->addWidget(mEmailLab, 0, 1);
+
+    //KF5 add i18n
+    mSearchGravatar = new QPushButton(QLatin1String("Search"));
+    mSearchGravatar->setEnabled(false);
+    mSearchGravatar->setObjectName(QLatin1String("search"));
+    mainLayout->addWidget(mSearchGravatar, 0, 2);
+    connect(mSearchGravatar, SIGNAL(clicked(bool)), this, SLOT(slotSearchGravatar()));
+
+
+    mResultGravatar = new QLabel;
+    mResultGravatar->setObjectName(QLatin1String("result"));
+    mainLayout->addWidget(mResultGravatar, 1, 0);
+    updateActualGravatar();
 }
 
 GravatarUpdateWidget::~GravatarUpdateWidget()
@@ -31,6 +59,16 @@ GravatarUpdateWidget::~GravatarUpdateWidget()
 void GravatarUpdateWidget::setEmail(const QString &email)
 {
     mEmail = email;
+}
+
+void GravatarUpdateWidget::updateActualGravatar()
+{
+    //TODO
+}
+
+void GravatarUpdateWidget::slotSearchGravatar()
+{
+    //TODO
 }
 
 
