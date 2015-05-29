@@ -28,7 +28,7 @@ Migrate configrc done:
 - kaddressbook: (kaddressbook/csv-templates/*.desktop)
 - korganizer: korganizer/templates/*, korganizer/designer/*
 - /gravatar/*
-- 
+- sievetemplaterc 
 
 TODO:
 - migrate theme for kmail/kaddressbook/messageviewer

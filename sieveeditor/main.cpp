@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("sieveeditor"));
-    migrate.setConfigFiles(QStringList() << QStringLiteral("sieveeditorrc"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("sieveeditorrc") << QStringLiteral("sievetemplaterc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("sieveeditorui.rc"));
     migrate.migrate();
 
