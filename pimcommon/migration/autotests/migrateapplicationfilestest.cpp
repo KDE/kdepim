@@ -58,6 +58,7 @@ void MigrateApplicationFilesTest::shouldVerifyIfCheckIsNecessary()
     //Invalid before config file is not set.
     QVERIFY(!migrate.checkIfNecessary());
     migrate.setConfigFileName(QStringLiteral("foorc"));
+    qDebug()<<" sssssssssssssssssss";
     // If config file doesn't exist we need to check migrate
     QVERIFY(migrate.checkIfNecessary());
 }
@@ -117,6 +118,35 @@ void MigrateApplicationFilesTest::shouldMigrateFiles()
     QDir().mkpath(appsPath);
     QVERIFY(QDir(appsPath).exists());
 
+    const QString xdgDatahome = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/foo/");
+
+    QStringList files;
+    files << QStringLiteral("file1") << QStringLiteral("file2");
+    Q_FOREACH (const QString &file, files) {
+        QFile fooFile(QLatin1String(MIGRATION_DATA_DIR) + QLatin1Char('/') + file);
+        QVERIFY(fooFile.exists());
+        const QString storedConfigFilePath = appsPath + QLatin1Char('/') + file;
+        QVERIFY(QFile::copy(fooFile.fileName(), storedConfigFilePath));
+
+        const QString xdgFile = xdgDatahome + file;
+        QVERIFY(!QFile::exists(xdgFile));
+    }
+
+
+    //TODO
+}
+
+void MigrateApplicationFilesTest::shouldMigrateFilesWithPattern()
+{
+    QTemporaryDir kdehomeDir;
+    QVERIFY(kdehomeDir.isValid());
+    const QString kdehome = kdehomeDir.path();
+    qputenv("KDEHOME", QFile::encodeName(kdehome));
+
+    //Generate kde4 apps dir
+    const QString appsPath = kdehome + QLatin1Char('/') + QLatin1String("share/apps/foo/");
+    QDir().mkpath(appsPath);
+    QVERIFY(QDir(appsPath).exists());
     //TODO
 }
 

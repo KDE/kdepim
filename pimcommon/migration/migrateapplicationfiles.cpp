@@ -147,6 +147,7 @@ void MigrateApplicationFiles::setVersion(int version)
 
 bool MigrateApplicationFiles::checkIfNecessary()
 {
+    qDebug()<<"mConfigFileName"<<mConfigFileName;
     if (mConfigFileName.isEmpty()) {
         qCDebug(PIMCOMMON_LOG) << " config file name not defined.";
         return false;
