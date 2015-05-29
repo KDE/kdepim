@@ -29,7 +29,7 @@
 #include <QCommandLineOption>
 #include <QDebug>
 #include <QFile>
-
+#include <QStandardPaths>
 #include "messageviewer_debug.h"
 
 using namespace MessageViewer;
@@ -37,6 +37,8 @@ using namespace MessageViewer;
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
+
     KAboutData aboutData(QStringLiteral("viewertest_gui"), i18n("Viewertest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for MessageViewer"));
     QCommandLineParser parser;
