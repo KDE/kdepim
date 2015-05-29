@@ -30,6 +30,9 @@ GravatarCache::GravatarCache()
     : mMaximumSize(20)
 {
     mCachePixmap.setMaxCost(mMaximumSize);
+    //Make sure that this folder is created. Otherwise we can't store gravatar
+    const QString gravatarPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/gravatar/");
+    QDir().mkpath(gravatarPath);
 }
 
 GravatarCache::~GravatarCache()
