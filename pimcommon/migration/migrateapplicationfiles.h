@@ -52,6 +52,7 @@ Q_SIGNALS:
     void migrateDone();
 
 private:
+    bool copyRecursively(const QString &srcFilePath, const QString &tgtFilePath);
     void finished();
     void writeConfig();
     void migrateFolder(const MigrateFileInfo &info);

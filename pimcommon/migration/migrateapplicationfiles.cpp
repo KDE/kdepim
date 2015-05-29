@@ -126,30 +126,79 @@ void MigrateApplicationFiles::writeConfig()
 
 void MigrateApplicationFiles::migrateFolder(const MigrateFileInfo &info)
 {
+    //TODO improve it.
+    QString originalPath;
+    QString newPath;
+    if (info.type() == QStringLiteral("data")) {
+        originalPath = mMigration.locateLocal("data", info.path());
+        newPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + info.path();
+        QFileInfo fileInfo(newPath);
+        QDir().mkpath(fileInfo.absolutePath());
+    } else {
+        qCDebug(PIMCOMMON_LOG) << "Type not supported: " << info.type();
+    }
+    if (!originalPath.isEmpty()) {
+        copyRecursively(originalPath, newPath);
+    }
 }
 
-void MigrateApplicationFiles::migrateFile(const MigrateFileInfo &info)
+bool MigrateApplicationFiles::copyRecursively(const QString &srcFilePath, const QString &tgtFilePath)
 {
-    if (info.filePattern().isEmpty()) {
-        QString originalPath;
-        QString newPath;
-        if (info.type() == QStringLiteral("data")) {
-            originalPath = mMigration.locateLocal("data", info.path());
-            newPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + info.path();
-            QFileInfo fileInfo(newPath);
-            QDir().mkpath(fileInfo.absolutePath());
-        } else {
-            qCDebug(PIMCOMMON_LOG) << "Type not supported: " << info.type();
+    QFileInfo srcFileInfo(srcFilePath);
+    if (srcFileInfo.isDir()) {
+        QDir targetDir(tgtFilePath);
+        targetDir.cdUp();
+        if (!targetDir.mkpath(QFileInfo(tgtFilePath).path())) {
+            return false;
         }
-        if (!originalPath.isEmpty()) {
-            QFile newFile(newPath);
-            if (!newFile.exists()) {
-                QFile copyFile(originalPath);
-                copyFile.copy(newPath);
+        QDir sourceDir(srcFilePath);
+        QStringList fileNames = sourceDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+        Q_FOREACH (const QString &fileName, fileNames) {
+            const QString newSrcFilePath = srcFilePath + QLatin1Char('/') + fileName;
+            const QString newTgtFilePath = tgtFilePath + QLatin1Char('/') + fileName;
+            if (!copyRecursively(newSrcFilePath, newTgtFilePath)) {
+                return false;
             }
         }
     } else {
+        if (!QDir().mkpath(QFileInfo(tgtFilePath).absolutePath())) {
+            qDebug() << "Can not create path "<< srcFileInfo.absolutePath();
+            return false;
+        }
+        if (!QFile::copy(srcFilePath, tgtFilePath)) {
+            qDebug() << " can't copy"<< srcFilePath<<" tgtFilePath"<<tgtFilePath;
+            return false;
+        }
+    }
+    return true;
+}
 
+
+void MigrateApplicationFiles::migrateFile(const MigrateFileInfo &info)
+{
+    QString originalPath;
+    QString newPath;
+    if (info.type() == QStringLiteral("data")) {
+        originalPath = mMigration.locateLocal("data", info.path());
+        newPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + info.path();
+        QFileInfo fileInfo(newPath);
+        QDir().mkpath(fileInfo.absolutePath());
+    } else {
+        qCDebug(PIMCOMMON_LOG) << "Type not supported: " << info.type();
+    }
+
+    if (!originalPath.isEmpty()) {
+        if (info.filePattern().isEmpty()) {
+            QFile newFile(newPath);
+            if (!newFile.exists()) {
+                QFile copyFile(originalPath);
+                if (!copyFile.copy(newPath)) {
+                    qCDebug(PIMCOMMON_LOG) << "impossible to copy " << originalPath << " to " << newPath;
+                }
+            }
+        } else {
+            //Search all files with specific pattern and migrate them.
+        }
     }
 }
 

@@ -33,9 +33,13 @@ private Q_SLOTS:
     void shouldNotMigrateIfKdehomeDoNotExist();
     void shouldMigrateIfKde4HomeDirExist();
     void shouldMigrateFolders();
+    void shouldNotMigrateFoldersIfAlreadyDone();
+    void shouldMigrateFoldersWithSubFolders();
+
     void shouldMigrateFiles();
     void shouldMigrateFilesWithPattern();
     void cleanup();
+    void shouldNotMigrateIfAlreadyDone();
 };
 
 #endif // KMMIGRATEKMAIL4CONFIGTEST_H
