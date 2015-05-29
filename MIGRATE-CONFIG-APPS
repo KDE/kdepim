@@ -30,9 +30,12 @@ Migrate configrc done:
 - /gravatar/*
 - sievetemplaterc, foldermailarchiverc
 - kontact_summaryrc
-
-TODO:
 - migrate theme for kmail/kaddressbook/messageviewer
 - Blogilo: migrate database
+- akregator Archive/data
+- migrate theme messageviewer
+- migrate kaddressbook/printing theme
+
+TODO:
 - knotes: migrate settings for plugins
 - kmail2/adblockrules_local and ("data" , QLatin1String("kmail2/adblockrules_")

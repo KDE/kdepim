@@ -39,11 +39,21 @@ void BlogiloMigrateApplication::migrate()
 
 void BlogiloMigrateApplication::initializeMigrator()
 {
-    const int currentVersion = 1;
+    const int currentVersion = 2;
     mMigrator.setApplicationName(QStringLiteral("blogilo"));
     mMigrator.setConfigFileName(QStringLiteral("blogilorc"));
     mMigrator.setCurrentConfigVersion(currentVersion);
 
-    //TODO migrate database.
+    // To migrate we need a version < currentVersion
+    const int initialVersion = currentVersion - 1;
+
+    // Database
+    PimCommon::MigrateFileInfo migrateInfoDatabase;
+    migrateInfoDatabase.setFolder(false);
+    migrateInfoDatabase.setType(QStringLiteral("apps"));
+    migrateInfoDatabase.setPath(QStringLiteral("blogilo/blogilo.db"));
+    migrateInfoDatabase.setVersion(initialVersion);
+    mMigrator.insertMigrateInfo(migrateInfoDatabase);
+
 }
 
