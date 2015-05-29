@@ -21,6 +21,9 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <QDebug>
+#include <QFile>
+#include <QFileInfo>
+#include <QDir>
 
 using namespace PimCommon;
 
@@ -49,8 +52,7 @@ bool MigrateApplicationFiles::start()
         qCDebug(PIMCOMMON_LOG) << "Missing application name";
     }
     // Testing for kdehome
-    Kdelibs4Migration migration;
-    if (!migration.kdeHomeFound()) {
+    if (!mMigration.kdeHomeFound()) {
         finished();
         return false;
     }
@@ -71,7 +73,7 @@ bool MigrateApplicationFiles::start()
 bool MigrateApplicationFiles::migrateConfig()
 {
     Q_FOREACH(const MigrateFileInfo &info, mMigrateInfoList) {
-        if (info.version() > mCurrentConfigVersion) {
+        if ((info.version() == -1) || (info.version() > mCurrentConfigVersion)) {
             if (info.folder()) {
                 migrateFolder(info);
             } else {
@@ -129,7 +131,23 @@ void MigrateApplicationFiles::migrateFolder(const MigrateFileInfo &info)
 void MigrateApplicationFiles::migrateFile(const MigrateFileInfo &info)
 {
     if (info.filePattern().isEmpty()) {
-        //TODO
+        QString originalPath;
+        QString newPath;
+        if (info.type() == QStringLiteral("data")) {
+            originalPath = mMigration.locateLocal("data", info.path());
+            newPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + info.path();
+            QFileInfo fileInfo(newPath);
+            QDir().mkpath(fileInfo.absolutePath());
+        } else {
+            qCDebug(PIMCOMMON_LOG) << "Type not supported: " << info.type();
+        }
+        if (!originalPath.isEmpty()) {
+            QFile newFile(newPath);
+            if (!newFile.exists()) {
+                QFile copyFile(originalPath);
+                copyFile.copy(newPath);
+            }
+        }
     } else {
 
     }
@@ -147,7 +165,6 @@ void MigrateApplicationFiles::setVersion(int version)
 
 bool MigrateApplicationFiles::checkIfNecessary()
 {
-    qDebug()<<"mConfigFileName"<<mConfigFileName;
     if (mConfigFileName.isEmpty()) {
         qCDebug(PIMCOMMON_LOG) << " config file name not defined.";
         return false;

@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QVector>
+#include <kdelibs4migration.h>
 #include "migratefileinfo.h"
 #include "pimcommon_export.h"
 namespace PimCommon
@@ -59,6 +60,7 @@ private:
     QVector<MigrateFileInfo> mMigrateInfoList;
     QString mConfigFileName;
     QString mApplicationName;
+    Kdelibs4Migration mMigration;
     int mMigrateApplicationVersion;
     int mCurrentConfigVersion;
 };

@@ -37,10 +37,10 @@ MigrateApplicationFilesTest::~MigrateApplicationFilesTest()
 
 void MigrateApplicationFilesTest::initTestCase()
 {
-    qDebug() << " QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)" <<QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
+    //qDebug() << " QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)" <<QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
     QStandardPaths::setTestModeEnabled(true);
     const QString applicationHome = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
-    qDebug() << "application data" << applicationHome;
+    //qDebug() << "application data" << applicationHome;
     QDir(applicationHome).removeRecursively();
 }
 
@@ -58,7 +58,6 @@ void MigrateApplicationFilesTest::shouldVerifyIfCheckIsNecessary()
     //Invalid before config file is not set.
     QVERIFY(!migrate.checkIfNecessary());
     migrate.setConfigFileName(QStringLiteral("foorc"));
-    qDebug()<<" sssssssssssssssssss";
     // If config file doesn't exist we need to check migrate
     QVERIFY(migrate.checkIfNecessary());
 }
@@ -85,7 +84,7 @@ void MigrateApplicationFilesTest::shouldMigrateIfKde4HomeDirExist()
 
     MigrateFileInfo info;
     info.setPath(QStringLiteral("foo/foo"));
-    info.setType(QStringLiteral("apps"));
+    info.setType(QStringLiteral("data"));
 
     migrate.insertMigrateInfo(info);
     QCOMPARE(migrate.start(), true);
@@ -126,12 +125,31 @@ void MigrateApplicationFilesTest::shouldMigrateFiles()
         QFile fooFile(QLatin1String(MIGRATION_DATA_DIR) + QLatin1Char('/') + file);
         QVERIFY(fooFile.exists());
         const QString storedConfigFilePath = appsPath + QLatin1Char('/') + file;
+        //qDebug()<<" storedConfigFilePath"<<storedConfigFilePath;
         QVERIFY(QFile::copy(fooFile.fileName(), storedConfigFilePath));
 
         const QString xdgFile = xdgDatahome + file;
         QVERIFY(!QFile::exists(xdgFile));
     }
+    MigrateApplicationFiles migrate;
+    migrate.setConfigFileName(QStringLiteral("foorc"));
 
+    MigrateFileInfo info;
+    info.setPath(QStringLiteral("foo/file1"));
+    info.setType(QStringLiteral("data"));
+    migrate.insertMigrateInfo(info);
+
+    MigrateFileInfo info2;
+    info2.setPath(QStringLiteral("foo/file2"));
+    info2.setType(QStringLiteral("data"));
+    migrate.insertMigrateInfo(info2);
+
+    QVERIFY(migrate.checkIfNecessary());
+    QVERIFY(migrate.start());
+    Q_FOREACH (const QString &file, files) {
+        qDebug()<<" "<<QFile(xdgDatahome + file).fileName();
+        QVERIFY(QFile(xdgDatahome + file).exists());
+    }
 
     //TODO
 }
