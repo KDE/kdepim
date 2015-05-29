@@ -35,6 +35,7 @@ private Q_SLOTS:
     void shouldMigrateFolders();
     void shouldMigrateFiles();
     void shouldMigrateFilesWithPattern();
+    void cleanup();
 };
 
 #endif // KMMIGRATEKMAIL4CONFIGTEST_H

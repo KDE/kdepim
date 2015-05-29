@@ -150,4 +150,15 @@ void MigrateApplicationFilesTest::shouldMigrateFilesWithPattern()
     //TODO
 }
 
+void MigrateApplicationFilesTest::cleanup()
+{
+    QStandardPaths::setTestModeEnabled(true);
+    const QString applicationHome = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
+    QDir applicationDir(applicationHome);
+    applicationDir.removeRecursively();
+    const QString configHome = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
+    QDir configDir(configHome);
+    configDir.removeRecursively();
+}
+
 QTEST_MAIN(MigrateApplicationFilesTest)
