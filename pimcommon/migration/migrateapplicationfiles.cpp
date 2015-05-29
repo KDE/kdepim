@@ -126,7 +126,6 @@ void MigrateApplicationFiles::writeConfig()
 
 void MigrateApplicationFiles::migrateFolder(const MigrateFileInfo &info)
 {
-    //TODO improve it.
     QString originalPath;
     QString newPath;
     if (info.type() == QStringLiteral("data")) {
@@ -152,7 +151,7 @@ bool MigrateApplicationFiles::copyRecursively(const QString &srcFilePath, const 
             return false;
         }
         QDir sourceDir(srcFilePath);
-        QStringList fileNames = sourceDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+        const QStringList fileNames = sourceDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
         Q_FOREACH (const QString &fileName, fileNames) {
             const QString newSrcFilePath = srcFilePath + QLatin1Char('/') + fileName;
             const QString newTgtFilePath = tgtFilePath + QLatin1Char('/') + fileName;
@@ -165,7 +164,7 @@ bool MigrateApplicationFiles::copyRecursively(const QString &srcFilePath, const 
             qDebug() << "Can not create path "<< srcFileInfo.absolutePath();
             return false;
         }
-        if (!QFile::copy(srcFilePath, tgtFilePath)) {
+        if (!QFile(tgtFilePath).exists() && !QFile::copy(srcFilePath, tgtFilePath)) {
             qDebug() << " can't copy"<< srcFilePath<<" tgtFilePath"<<tgtFilePath;
             return false;
         }
