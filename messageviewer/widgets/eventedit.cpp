@@ -114,8 +114,8 @@ EventEdit::EventEdit(QWidget *parent)
 #ifndef QT_NO_ACCESSIBILITY
     mEndDateTimeEdit->setAccessibleDescription(i18n("Select end time for event."));
 #endif
-    connect(mEndDateTimeEdit, SIGNAL(dateTimeChanged(KDateTime)),
-            this, SLOT(slotEndDateTimeChanged(KDateTime)));
+    connect(mEndDateTimeEdit, &EventDateTimeWidget::dateTimeChanged,
+            this, &EventEdit::slotEndDateTimeChanged);
 
     hbox->addWidget(mEndDateTimeEdit);
 
