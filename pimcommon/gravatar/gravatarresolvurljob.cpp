@@ -37,7 +37,8 @@ GravatarResolvUrlJob::GravatarResolvUrlJob(QObject *parent)
       mUseCache(false),
       mUseLibravatar(false),
       mFallbackGravatar(true),
-      mFallbackDone(false)
+      mFallbackDone(false),
+      mUseHttps(false)
 {
 
 }
@@ -152,6 +153,16 @@ QString GravatarResolvUrlJob::calculateHash(bool useLibravator)
     return QString::fromUtf8(hash.result().toHex());
 }
 
+bool GravatarResolvUrlJob::useHttps() const
+{
+    return mUseHttps;
+}
+
+void GravatarResolvUrlJob::setUseHttps(bool useHttps)
+{
+    mUseHttps = useHttps;
+}
+
 bool GravatarResolvUrlJob::fallbackGravatar() const
 {
     return mFallbackGravatar;
@@ -232,13 +243,13 @@ QUrl GravatarResolvUrlJob::createUrl(bool useLibravatar)
     if (mSize != 80) {
         query.addQueryItem(QStringLiteral("s"), QString::number(mSize));
     }
-    url.setScheme(QStringLiteral("http"));
+    url.setScheme(mUseHttps ? QStringLiteral("https") : QStringLiteral("http"));
     if (useLibravatar) {
-        url.setHost(QStringLiteral("cdn.libravatar.org"));
+        url.setHost(mUseHttps ? QStringLiteral("seccdn.libravatar.org") : QStringLiteral("cdn.libravatar.org"));
     } else {
         url.setHost(QStringLiteral("www.gravatar.com"));
     }
-    url.setPort(80);
+    url.setPort(mUseHttps ? 443 : 80);
     mCalculatedHash = calculateHash(useLibravatar);
     url.setPath(QLatin1String("/avatar/") + mCalculatedHash);
     url.setQuery(query);

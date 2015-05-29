@@ -24,3 +24,9 @@ ecm_mark_as_test(pimcommon_gravatardownloadpixmapdialog)
 target_link_libraries( pimcommon_gravatardownloadpixmapdialog Qt5::Test  pimcommon)
 
 
+set( pimcommon_gravatarcache_SRCS gravatarcachetest.cpp )
+add_executable( pimcommon_gravatarcache ${pimcommon_gravatarcache_SRCS})
+add_test(pimcommon_gravatarcache pimcommon_gravatarcache)
+ecm_mark_as_test(pimcommon_gravatarcache)
+target_link_libraries( pimcommon_gravatarcache Qt5::Test  pimcommon)
+

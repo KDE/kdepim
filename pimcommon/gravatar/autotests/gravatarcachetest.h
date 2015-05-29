@@ -15,39 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARCACHE_H
-#define GRAVATARCACHE_H
+#ifndef GRAVATARCACHETEST_H
+#define GRAVATARCACHETEST_H
 
-#include "pimcommon_export.h"
+#include <QObject>
 
-#include <QPixmap>
-#include <QCache>
-
-namespace PimCommon
-{
-class PIMCOMMON_EXPORT GravatarCache : public QObject
+class GravatarCacheTest : public QObject
 {
     Q_OBJECT
 public:
-    static GravatarCache *self();
-
-    GravatarCache();
-    ~GravatarCache();
-
-    void saveGravatarPixmap(const QString &hashStr, const QPixmap &pixmap);
-
-    QPixmap loadGravatarPixmap(const QString &hashStr, bool &gravatarStored);
-
-    int maximumSize() const;
-    void setMaximumSize(int maximumSize);
-
-    void clear();
-    void clearAllCache();
-
-private:
-    QCache<QString, QPixmap> mCachePixmap;
-    int mMaximumSize;
+    explicit GravatarCacheTest(QObject *parent = Q_NULLPTR);
+    ~GravatarCacheTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
-}
 
-#endif // GRAVATARCACHE_H
+#endif // GRAVATARCACHETEST_H

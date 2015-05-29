@@ -15,39 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARCACHE_H
-#define GRAVATARCACHE_H
+#include "gravatarcachetest.h"
+#include "../gravatarcache.h"
 
-#include "pimcommon_export.h"
+#include <qtest.h>
 
-#include <QPixmap>
-#include <QCache>
-
-namespace PimCommon
+GravatarCacheTest::GravatarCacheTest(QObject *parent)
+    : QObject(parent)
 {
-class PIMCOMMON_EXPORT GravatarCache : public QObject
-{
-    Q_OBJECT
-public:
-    static GravatarCache *self();
 
-    GravatarCache();
-    ~GravatarCache();
-
-    void saveGravatarPixmap(const QString &hashStr, const QPixmap &pixmap);
-
-    QPixmap loadGravatarPixmap(const QString &hashStr, bool &gravatarStored);
-
-    int maximumSize() const;
-    void setMaximumSize(int maximumSize);
-
-    void clear();
-    void clearAllCache();
-
-private:
-    QCache<QString, QPixmap> mCachePixmap;
-    int mMaximumSize;
-};
 }
 
-#endif // GRAVATARCACHE_H
+GravatarCacheTest::~GravatarCacheTest()
+{
+
+}
+
+void GravatarCacheTest::shouldHaveDefaultValue()
+{
+    PimCommon::GravatarCache gravatarCache;
+    QCOMPARE(gravatarCache.maximumSize(), 20);
+}
+
+QTEST_MAIN(GravatarCacheTest)

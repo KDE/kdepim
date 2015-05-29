@@ -119,3 +119,4 @@ void GravatarCache::clearAllCache()
     }
     clear();
 }
+

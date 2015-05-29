@@ -41,6 +41,7 @@ void GravatarResolvUrlJobTest::shouldHaveDefaultValue()
     QCOMPARE(job.useCache(), false);
     QCOMPARE(job.useLibravatar(), false);
     QCOMPARE(job.fallbackGravatar(), true);
+    QVERIFY(!job.useHttps());
 }
 
 void GravatarResolvUrlJobTest::shouldChangeValue()
@@ -75,6 +76,14 @@ void GravatarResolvUrlJobTest::shouldChangeValue()
     fallBackGravatar = true;
     job.setFallbackGravatar(fallBackGravatar);
     QCOMPARE(job.fallbackGravatar(), fallBackGravatar);
+
+
+    bool useHttps = false;
+    job.setUseHttps(useHttps);
+    QCOMPARE(job.useHttps(), useHttps);
+    useHttps = true;
+    job.setUseHttps(useHttps);
+    QCOMPARE(job.useHttps(), useHttps);
 }
 
 void GravatarResolvUrlJobTest::shouldChangeSize()

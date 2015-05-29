@@ -63,6 +63,9 @@ public:
     bool fallbackGravatar() const;
     void setFallbackGravatar(bool fallbackGravatar);
 
+    bool useHttps() const;
+    void setUseHttps(bool useHttps);
+
 Q_SIGNALS:
     void finished(PimCommon::GravatarResolvUrlJob *);
     void resolvUrl(const QUrl &url);
@@ -86,6 +89,7 @@ private:
     bool mUseLibravatar;
     bool mFallbackGravatar;
     bool mFallbackDone;
+    bool mUseHttps;
 };
 }
 
