@@ -20,7 +20,6 @@
 #include <kdelibs4migration.h>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
@@ -72,6 +71,7 @@ bool MigrateApplicationFiles::start()
 
 bool MigrateApplicationFiles::migrateConfig()
 {
+    qCDebug(PIMCOMMON_LOG) << "Start migration...";
     Q_FOREACH(const MigrateFileInfo &info, mMigrateInfoList) {
         if ((info.version() == -1) || (info.version() > mCurrentConfigVersion)) {
             if (info.folder()) {
@@ -81,6 +81,7 @@ bool MigrateApplicationFiles::migrateConfig()
             }
         }
     }
+    qCDebug(PIMCOMMON_LOG) << "Migration finished.";
     finished();
     return true;
 }
@@ -161,11 +162,11 @@ bool MigrateApplicationFiles::copyRecursively(const QString &srcFilePath, const 
         }
     } else {
         if (!QDir().mkpath(QFileInfo(tgtFilePath).absolutePath())) {
-            qDebug() << "Can not create path "<< srcFileInfo.absolutePath();
+            qCDebug(PIMCOMMON_LOG) << "Can not create path "<< srcFileInfo.absolutePath();
             return false;
         }
         if (!QFile(tgtFilePath).exists() && !QFile::copy(srcFilePath, tgtFilePath)) {
-            qDebug() << " can't copy"<< srcFilePath<<" tgtFilePath"<<tgtFilePath;
+            qCDebug(PIMCOMMON_LOG) << " can't copy"<< srcFilePath<<" tgtFilePath"<<tgtFilePath;
             return false;
         }
     }
