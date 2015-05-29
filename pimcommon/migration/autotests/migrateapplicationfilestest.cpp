@@ -220,7 +220,6 @@ void MigrateApplicationFilesTest::shouldMigrateFoldersWithSubFolders()
         QVERIFY(!QFile::exists(xdgFile));
     }
 
-
     MigrateApplicationFiles migrate;
     migrate.setConfigFileName(QStringLiteral("foorc"));
 
@@ -275,7 +274,6 @@ void MigrateApplicationFilesTest::shouldNotMigrateIfAlreadyDone()
     info.setType(QStringLiteral("data"));
     info.setVersion(1);
     migrate.insertMigrateInfo(info);
-
 
     MigrateFileInfo info2;
     info2.setPath(folderName + QStringLiteral("file2"));

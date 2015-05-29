@@ -309,7 +309,7 @@ bool EventEdit::eventFilter(QObject *object, QEvent *e)
 void EventEdit::slotEndDateTimeChanged(const QDateTime &newDateTime)
 {
     if (!newDateTime.isValid()) {
-      return;
+        return;
     }
     QDateTime currentDateTime = QDateTime::currentDateTime();
     if (newDateTime.date() > currentDateTime.date()) {
