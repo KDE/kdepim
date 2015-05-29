@@ -61,6 +61,7 @@ private Q_SLOTS:
     void slotStartDateTimeChanged(const QDateTime &newDateTime);
     void slotUpdateButtons(const QString &subject);
 
+    void slotEndDateTimeChanged(const QDateTime &newDateTime);
 Q_SIGNALS:
     void createEvent(const KCalCore::Event::Ptr &event, const Akonadi::Collection &collection);
     void collectionChanged(const Akonadi::Collection &col);
