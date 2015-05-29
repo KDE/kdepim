@@ -348,13 +348,6 @@ ecm_add_app_icon(_kleopatra_mainwindow_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS})
 set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
-# OS X needs another stdlib to compile kleopatra
-if (APPLE)
-  set_target_properties(kleopatra_bin PROPERTIES
-    COMPILE_FLAGS "-stdlib=libc++"
-    LINK_FLAGS "-stdlib=libc++"
-  )
-endif (APPLE)
 
 target_link_libraries(kleopatra_bin
   ${_kleopatra_extra_libs}

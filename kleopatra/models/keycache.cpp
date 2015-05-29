@@ -287,6 +287,11 @@ const Key &KeyCache::findByFingerprint(const char *fpr) const
     }
 }
 
+const Key &KeyCache::findByFingerprint(const std::string &fpr) const
+{
+    return findByFingerprint(fpr.c_str());
+}
+
 std::vector<Key> KeyCache::findByFingerprint(const std::vector<std::string> &fprs) const
 {
     std::vector<std::string> sorted;
@@ -333,6 +338,11 @@ const Key &KeyCache::findByShortKeyID(const char *id) const
     return null;
 }
 
+const Key &KeyCache::findByShortKeyID(const std::string &id) const
+{
+    return findByShortKeyID(id.c_str());
+}
+
 const Key &KeyCache::findByKeyIDOrFingerprint(const char *id) const
 {
     {
@@ -350,6 +360,11 @@ const Key &KeyCache::findByKeyIDOrFingerprint(const char *id) const
     }
     static const Key null;
     return null;
+}
+
+const Key &KeyCache::findByKeyIDOrFingerprint(const std::string &id) const
+{
+    return findByKeyIDOrFingerprint(id.c_str());
 }
 
 std::vector<Key> KeyCache::findByKeyIDOrFingerprint(const std::vector<std::string> &ids) const

@@ -93,10 +93,7 @@ public:
     std::vector<GpgME::Key> secretKeys() const;
 
     const GpgME::Key &findByFingerprint(const char *fpr) const;
-    const GpgME::Key &findByFingerprint(const std::string &fpr) const
-    {
-        return findByFingerprint(fpr.c_str());
-    }
+    const GpgME::Key &findByFingerprint(const std::string &fpr) const;
 
     std::vector<GpgME::Key> findByFingerprint(const std::vector<std::string> &fprs) const;
 
@@ -104,16 +101,11 @@ public:
     std::vector<GpgME::Key> findByEMailAddress(const std::string &email) const;
 
     const GpgME::Key &findByShortKeyID(const char *id) const;
-    const GpgME::Key &findByShortKeyID(const std::string &id) const
-    {
-        return findByShortKeyID(id.c_str());
-    }
+    const GpgME::Key &findByShortKeyID(const std::string &id) const;
 
     const GpgME::Key &findByKeyIDOrFingerprint(const char *id) const;
-    const GpgME::Key &findByKeyIDOrFingerprint(const std::string &id) const
-    {
-        return findByKeyIDOrFingerprint(id.c_str());
-    }
+    const GpgME::Key &findByKeyIDOrFingerprint(const std::string &id) const;
+
     std::vector<GpgME::Key> findByKeyIDOrFingerprint(const std::vector<std::string> &ids) const;
 
     std::vector<GpgME::Subkey> findSubkeysByKeyID(const std::vector<std::string> &ids) const;
