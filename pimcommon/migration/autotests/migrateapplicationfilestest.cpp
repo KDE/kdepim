@@ -232,6 +232,7 @@ void MigrateApplicationFilesTest::shouldMigrateFoldersWithSubFolders()
     migrate.insertMigrateInfo(info);
 
     QVERIFY(migrate.checkIfNecessary());
+    migrate.setCurrentConfigVersion(0);
 
     QVERIFY(migrate.start());
     Q_FOREACH (const QString &file, files) {

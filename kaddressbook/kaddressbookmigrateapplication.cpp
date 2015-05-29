@@ -42,30 +42,36 @@ void KAddressBookMigrateApplication::migrate()
 
 void KAddressBookMigrateApplication::initializeMigrator()
 {
-    const int currentVersion = 1;
+    const int currentVersion = 2;
     mMigrator.setApplicationName(QStringLiteral("kaddressbook"));
     mMigrator.setConfigFileName(QStringLiteral("kaddressbookrc"));
     mMigrator.setCurrentConfigVersion(currentVersion);
 
+    // To migrate we need a version < currentVersion
+    const int initialVersion = currentVersion - 1;
+
     // printing
     PimCommon::MigrateFileInfo migrateInfoPrinting;
     migrateInfoPrinting.setFolder(true);
-    migrateInfoPrinting.setType(QStringLiteral("apps"));
+    migrateInfoPrinting.setType(QStringLiteral("data"));
     migrateInfoPrinting.setPath(QStringLiteral("kaddressbook/printing"));
+    migrateInfoPrinting.setVersion(initialVersion);
     mMigrator.insertMigrateInfo(migrateInfoPrinting);
 
     // viewertemplates
     PimCommon::MigrateFileInfo migrateInfoViewerTemplates;
     migrateInfoViewerTemplates.setFolder(true);
-    migrateInfoViewerTemplates.setType(QStringLiteral("apps"));
+    migrateInfoViewerTemplates.setType(QStringLiteral("data"));
     migrateInfoViewerTemplates.setPath(QStringLiteral("kaddressbook/viewertemplates"));
+    migrateInfoViewerTemplates.setVersion(initialVersion);
     mMigrator.insertMigrateInfo(migrateInfoViewerTemplates);
 
     // viewertemplates
     PimCommon::MigrateFileInfo migrateInfoCsvTemplates;
     migrateInfoCsvTemplates.setFolder(true);
-    migrateInfoCsvTemplates.setType(QStringLiteral("apps"));
+    migrateInfoCsvTemplates.setType(QStringLiteral("data"));
     migrateInfoCsvTemplates.setPath(QStringLiteral("kaddressbook/csv-templates"));
+    migrateInfoCsvTemplates.setVersion(initialVersion);
     mMigrator.insertMigrateInfo(migrateInfoCsvTemplates);
 
     //TODO add folder to migrate
