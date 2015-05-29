@@ -42,9 +42,10 @@ void KAddressBookMigrateApplication::migrate()
 
 void KAddressBookMigrateApplication::initializeMigrator()
 {
+    const int currentVersion = 1;
     mMigrator.setApplicationName(QStringLiteral("kaddressbook"));
     mMigrator.setConfigFileName(QStringLiteral("kaddressbookrc"));
-    mMigrator.setCurrentConfigVersion(1);
+    mMigrator.setCurrentConfigVersion(currentVersion);
 
     // printing
     PimCommon::MigrateFileInfo migrateInfoPrinting;

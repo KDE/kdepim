@@ -39,9 +39,10 @@ void BlogiloMigrateApplication::migrate()
 
 void BlogiloMigrateApplication::initializeMigrator()
 {
+    const int currentVersion = 1;
     mMigrator.setApplicationName(QStringLiteral("blogilo"));
     mMigrator.setConfigFileName(QStringLiteral("blogilorc"));
-    mMigrator.setCurrentConfigVersion(1);
+    mMigrator.setCurrentConfigVersion(currentVersion);
 
     //TODO migrate database.
 }
