@@ -17,6 +17,8 @@
 
 #include "blogilomigrateapplication.h"
 
+#include <Kdelibs4ConfigMigrator>
+
 BlogiloMigrateApplication::BlogiloMigrateApplication()
 {
     initializeMigrator();
@@ -24,11 +26,23 @@ BlogiloMigrateApplication::BlogiloMigrateApplication()
 
 void BlogiloMigrateApplication::migrate()
 {
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("blogilo"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("blogilorc"));
+    migrate.setUiFiles(QStringList() << QStringLiteral("blogiloui.rc"));
+    migrate.migrate();
+    // Migrate folders and files.
+    if (mMigrator.checkIfNecessary()) {
+        mMigrator.start();
+    }
 
 }
 
 void BlogiloMigrateApplication::initializeMigrator()
 {
+    mMigrator.setApplicationName(QStringLiteral("blogilo"));
+    mMigrator.setConfigFileName(QStringLiteral("blogilorc"));
+    mMigrator.setCurrentConfigVersion(1);
 
+    //TODO migrate database.
 }
 

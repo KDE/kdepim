@@ -24,6 +24,7 @@
 #include "mainwindow.h"
 #include "global.h"
 #include "constants.h"
+#include "blogilomigrateapplication.h"
 
 #include <QApplication>
 #include <KLocalizedString>
@@ -35,11 +36,9 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    Kdelibs4ConfigMigrator migrate(QStringLiteral("blogilo"));
-    migrate.setConfigFiles(QStringList() << QStringLiteral("blogilorc"));
-    migrate.setUiFiles(QStringList() << QStringLiteral("blogiloui.rc"));
+    BlogiloMigrateApplication migrate;
     migrate.migrate();
-    //QT5 TODO migrate database!
+
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("blogilo")));
     KLocalizedString::setApplicationDomain("blogilo");
     KAboutData about(QStringLiteral("blogilo"), i18n("Blogilo"), VERSION, i18n("A KDE Blogging Client"),
