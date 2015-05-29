@@ -160,17 +160,18 @@ void MigrateApplicationFilesTest::shouldNotMigrateFoldersIfAlreadyDone()
     }
     MigrateApplicationFiles migrate;
     migrate.setConfigFileName(QStringLiteral("foorc"));
+    QVERIFY(migrate.checkIfNecessary());
+
+    //We have a current version == 2 => don't migrate old info. Put after checkIfNecessary to override value
+    migrate.setCurrentConfigVersion(3);
 
     MigrateFileInfo info;
     info.setFolder(true);
     info.setPath(folderName);
     info.setType(QStringLiteral("data"));
-    info.setVersion(1);
+    info.setVersion(2);
     migrate.insertMigrateInfo(info);
 
-    QVERIFY(migrate.checkIfNecessary());
-    //We have a current version == 2 => don't migrate old info. Put after checkIfNecessary to override value
-    migrate.setCurrentConfigVersion(2);
 
     QVERIFY(migrate.start());
     Q_FOREACH (const QString &file, files) {
@@ -227,11 +228,11 @@ void MigrateApplicationFilesTest::shouldMigrateFoldersWithSubFolders()
     info.setFolder(true);
     info.setPath(folderName);
     info.setType(QStringLiteral("data"));
-    info.setVersion(1);
+    info.setVersion(2);
     migrate.insertMigrateInfo(info);
 
     QVERIFY(migrate.checkIfNecessary());
-    migrate.setCurrentConfigVersion(0);
+    migrate.setCurrentConfigVersion(1);
 
     QVERIFY(migrate.start());
     Q_FOREACH (const QString &file, files) {
@@ -272,18 +273,18 @@ void MigrateApplicationFilesTest::shouldNotMigrateIfAlreadyDone()
     MigrateFileInfo info;
     info.setPath(folderName + QStringLiteral("file1"));
     info.setType(QStringLiteral("data"));
-    info.setVersion(1);
+    info.setVersion(2);
     migrate.insertMigrateInfo(info);
 
     MigrateFileInfo info2;
     info2.setPath(folderName + QStringLiteral("file2"));
     info2.setType(QStringLiteral("data"));
-    info2.setVersion(1);
+    info2.setVersion(2);
     migrate.insertMigrateInfo(info2);
 
     QVERIFY(migrate.checkIfNecessary());
-    //We have a current version == 2 => don't migrate old info.
-    migrate.setCurrentConfigVersion(2);
+    //We have a current version == 3 => don't migrate old info.
+    migrate.setCurrentConfigVersion(3);
     QVERIFY(migrate.start());
     Q_FOREACH (const QString &file, files) {
         QVERIFY(!QFile(xdgDatahome + file).exists());
