@@ -24,6 +24,7 @@
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
+#include <QStandardPaths>
 
 TemplateEditorTestWidget::TemplateEditorTestWidget(QWidget *parent)
     : QWidget(parent)
@@ -40,6 +41,8 @@ TemplateEditorTestWidget::~TemplateEditorTestWidget()
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
+
     KAboutData aboutData(QStringLiteral("templateeditortest_gui"), i18n("TemplateEditorTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for template editor widget"));
     QCommandLineParser parser;

@@ -22,7 +22,7 @@
 #include <KLocalizedString>
 
 #include <QUrl>
-
+#include <QStandardPaths>
 #include <QPointer>
 #include <QVBoxLayout>
 #include <QWebView>
@@ -85,6 +85,8 @@ void ScamDetectionTestWidget::slotOpenHtml()
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
+
     KAboutData aboutData(QLatin1String("scamdetection_gui"), i18n("ScamDetectionTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for scamdetection widget"));
     QCommandLineParser parser;

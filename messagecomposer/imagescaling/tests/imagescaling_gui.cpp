@@ -24,6 +24,7 @@
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
+#include <QStandardPaths>
 
 ImageScalingTestWidget::ImageScalingTestWidget(QWidget *parent)
     : QWidget(parent)
@@ -40,6 +41,7 @@ ImageScalingTestWidget::~ImageScalingTestWidget()
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QStringLiteral("imagescaling_gui"), i18n("ImageScalingTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for imagescaling widget"));
     QCommandLineParser parser;

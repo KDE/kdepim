@@ -19,11 +19,13 @@
 
 #include <KLocalizedString>
 #include <QApplication>
+#include <QStandardPaths>
 
 int main (int argc, char **argv)
 {
     QApplication app(argc, argv);
 
+    QStandardPaths::setTestModeEnabled(true);
     KABGravatar::GravatarCreateDialog *w = new KABGravatar::GravatarCreateDialog;
 
     w->show();

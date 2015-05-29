@@ -21,10 +21,12 @@
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
+#include <QStandardPaths>
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QStringLiteral("texttospeechwidget_gui"), i18n("texttospeechwidget_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for text to speech widget"));
     QCommandLineParser parser;
