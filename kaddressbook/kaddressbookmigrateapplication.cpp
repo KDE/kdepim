@@ -20,6 +20,7 @@
 #include "kaddressbookmigrateapplication.h"
 
 #include <Kdelibs4ConfigMigrator>
+#include <QDebug>
 
 KAddressBookMigrateApplication::KAddressBookMigrateApplication()
 {
@@ -45,10 +46,9 @@ void KAddressBookMigrateApplication::initializeMigrator()
     const int currentVersion = 2;
     mMigrator.setApplicationName(QStringLiteral("kaddressbook"));
     mMigrator.setConfigFileName(QStringLiteral("kaddressbookrc"));
-    mMigrator.setCurrentConfigVersion(currentVersion);
 
-    // To migrate we need a version < currentVersion
-    const int initialVersion = currentVersion - 1;
+    // To migrate we need a version > currentVersion
+    const int initialVersion = currentVersion + 1;
 
     // printing
     PimCommon::MigrateFileInfo migrateInfoPrinting;
@@ -73,6 +73,8 @@ void KAddressBookMigrateApplication::initializeMigrator()
     migrateInfoCsvTemplates.setPath(QStringLiteral("kaddressbook/csv-templates"));
     migrateInfoCsvTemplates.setVersion(initialVersion);
     mMigrator.insertMigrateInfo(migrateInfoCsvTemplates);
+
+    mMigrator.setCurrentConfigVersion(currentVersion);
 
     //TODO add folder to migrate
 }

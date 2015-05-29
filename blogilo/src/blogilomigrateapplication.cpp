@@ -45,7 +45,7 @@ void BlogiloMigrateApplication::initializeMigrator()
     mMigrator.setCurrentConfigVersion(currentVersion);
 
     // To migrate we need a version < currentVersion
-    const int initialVersion = currentVersion - 1;
+    const int initialVersion = currentVersion + 1;
 
     // Database
     PimCommon::MigrateFileInfo migrateInfoDatabase;
