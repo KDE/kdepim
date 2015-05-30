@@ -39,16 +39,11 @@
     </widget>
    </item>
    <item row="1" column="2">
-    <widget class="KComboBox" name="mRecurrenceComboBox"/>
+    <widget class="QComboBox" name="mRecurrenceComboBox"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
   <customwidget>
    <class>SendLater::SendLaterTimeDateWidget</class>
    <extends>QWidget</extends>
