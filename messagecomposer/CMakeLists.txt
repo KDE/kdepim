@@ -136,7 +136,7 @@ kconfig_add_kcfg_files(messagecomposer_src
 add_library( messagecomposer ${messagecomposer_src} )
 generate_export_header(messagecomposer BASE_NAME messagecomposer)
 target_link_libraries(messagecomposer
-  KF5::KIOCore
+PUBLIC
   KF5::Mime
   KF5::AkonadiMime
   KF5::AkonadiCore
@@ -148,12 +148,14 @@ target_link_libraries(messagecomposer
   templateparser
   kleo
   kdepim
-  Grantlee5::TextDocument
-  sendlater
-  followupreminder
   pimcommon
   KF5::AkonadiWidgets
   KF5::CalendarCore
+PRIVATE
+  KF5::KIOCore
+  Grantlee5::TextDocument
+  sendlater
+  followupreminder
 )
 
 set_target_properties( messagecomposer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
