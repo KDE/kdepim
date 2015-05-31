@@ -94,16 +94,18 @@ add_library(eventviews ${eventviews_LIB_SRCS})
 generate_export_header(eventviews BASE_NAME eventviews)
 
 target_link_libraries(eventviews
-  ${ZLIB_LIBRARIES}
+PUBLIC
   KF5::AkonadiCore
   kdepim
-  kdgantt2
   calendarsupport
   
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::AkonadiCalendar
+PRIVATE
   KF5::Codecs
+  kdgantt2
+  ${ZLIB_LIBRARIES}
 )
 
 set_target_properties(eventviews PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
