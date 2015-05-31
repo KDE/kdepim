@@ -172,18 +172,12 @@ public:
 
     void clearSelection() Q_DECL_OVERRIDE;
 
-    void startDrag(const KCalCore::Incidence::Ptr &);
     void startDrag(const Akonadi::Item &);
 
     void readSettings();
     void readSettings(const KConfig *);
     void writeSettings(KConfig *);
 
-    /** reschedule the todo  to the given x- and y- coordinates.
-        Third parameter determines all-day (no time specified) */
-    void slotIncidencesDropped(const KCalCore::Incidence::List &incidences,
-                               const QPoint &, bool);
-    void slotIncidencesDropped(const QList<QUrl> &incidences, const QPoint &, bool);
 
     void enableAgendaUpdate(bool enable);
     void setIncidenceChanger(Akonadi::IncidenceChanger *changer) Q_DECL_OVERRIDE;
@@ -233,6 +227,12 @@ protected:
 public Q_SLOTS:
     void updateView() Q_DECL_OVERRIDE;
     void updateConfig() Q_DECL_OVERRIDE;
+    /** reschedule the todo  to the given x- and y- coordinates.
+        Third parameter determines all-day (no time specified) */
+    void slotIncidencesDropped(const KCalCore::Incidence::List &incidences,
+                               const QPoint &, bool);
+    void slotIncidencesDropped(const QList<QUrl> &incidences, const QPoint &, bool);
+    void startDrag(const KCalCore::Incidence::Ptr &);
 
 protected Q_SLOTS:
     void updateEventIndicatorTop(int newY);
