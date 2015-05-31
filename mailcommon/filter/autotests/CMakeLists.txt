@@ -214,6 +214,7 @@ target_link_libraries( filteractionplaysoundtest
    KF5::AkonadiCore
    KF5::AkonadiMime
    KF5::MailTransport
+   Phonon::phonon4qt5
 )
 
 set( mailcommon_invalidfilterdialog_source invalidfilterdialogtest.cpp  )

@@ -214,15 +214,21 @@ qt5_add_dbus_interfaces(libmailcommon_SRCS
 add_library(mailcommon ${libmailcommon_SRCS})
 generate_export_header(mailcommon BASE_NAME mailcommon)
 
-target_link_libraries(mailcommon messageviewer messagecore messagecomposer mailimporter
-  templateparser
+target_link_libraries(mailcommon 
+PUBLIC
+  messageviewer 
+  messagecomposer 
   kdepim
   
   pimcommon
   KF5::Mime
   KF5::AkonadiCore
   KF5::AkonadiMime
+PRIVATE
+  mailimporter
   KF5::Codecs
+  messagecore
+  templateparser
   KF5::MailTransport
   Phonon::phonon4qt5 
 )
