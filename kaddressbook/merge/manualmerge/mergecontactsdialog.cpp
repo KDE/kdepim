@@ -53,6 +53,7 @@ MergeContactsDialog::MergeContactsDialog(QWidget *parent)
     mStackedWidget = new QStackedWidget(this);
     mStackedWidget->setObjectName(QStringLiteral("stackedwidget"));
     mainLayout->addWidget(mStackedWidget);
+    mainLayout->addWidget(mButtonBox);
 
     mNoEnoughContactSelected = new KABMergeContacts::MergeContactErrorLabel(KABMergeContacts::MergeContactErrorLabel::NotEnoughContactsSelected);
     mNoEnoughContactSelected->setObjectName(QStringLiteral("notenoughcontactselected"));
@@ -77,6 +78,7 @@ MergeContactsDialog::MergeContactsDialog(QWidget *parent)
     mStackedWidget->addWidget(mMergeContactInfo);
 
     mStackedWidget->setCurrentWidget(mNoContactSelected);
+
 
 }
 
