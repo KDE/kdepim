@@ -21,7 +21,7 @@
 #include <QStackedWidget>
 #include <qtest.h>
 
-#include <QtGui/QDialogButtonBox>
+#include <QDialogButtonBox>
 
 MergeContactsDialogTest::MergeContactsDialogTest(QObject *parent)
     : QObject(parent)
