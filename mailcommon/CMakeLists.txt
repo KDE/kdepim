@@ -216,15 +216,14 @@ generate_export_header(mailcommon BASE_NAME mailcommon)
 
 target_link_libraries(mailcommon 
 PUBLIC
-  messageviewer 
   messagecomposer 
   kdepim
-  
   pimcommon
-  KF5::Mime
   KF5::AkonadiCore
   KF5::AkonadiMime
 PRIVATE
+  messageviewer
+  KF5::Mime
   mailimporter
   KF5::Codecs
   messagecore
