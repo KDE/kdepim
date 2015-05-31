@@ -82,21 +82,21 @@ public:
     ErrorResult(bool sign, bool encrypt, const Error &err, const QString &errStr, const QString &input, const QString &output, const AuditLog &auditLog)
         : Task::Result(), m_sign(sign), m_encrypt(encrypt), m_error(err), m_errString(errStr), m_inputLabel(input), m_outputLabel(output), m_auditLog(auditLog) {}
 
-    /* reimp */ QString overview() const Q_DECL_OVERRIDE;
-    /* reimp */ QString details() const Q_DECL_OVERRIDE;
-    /* reimp */ int errorCode() const Q_DECL_OVERRIDE
+    QString overview() const Q_DECL_OVERRIDE;
+    QString details() const Q_DECL_OVERRIDE;
+    int errorCode() const Q_DECL_OVERRIDE
     {
         return m_error.encodedError();
     }
-    /* reimp */ QString errorString() const Q_DECL_OVERRIDE
+    QString errorString() const Q_DECL_OVERRIDE
     {
         return m_errString;
     }
-    /* reimp */ VisualCode code() const Q_DECL_OVERRIDE
+    VisualCode code() const Q_DECL_OVERRIDE
     {
         return NeutralError;
     }
-    /* reimp */ AuditLog auditLog() const Q_DECL_OVERRIDE
+    AuditLog auditLog() const Q_DECL_OVERRIDE
     {
         return m_auditLog;
     }

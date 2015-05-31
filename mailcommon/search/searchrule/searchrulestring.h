@@ -62,7 +62,7 @@ public:
     /**
      * @copydoc SearchRule::isEmpty()
      */
-    virtual bool isEmpty() const Q_DECL_OVERRIDE;
+    bool isEmpty() const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc SearchRule::requiredPart()

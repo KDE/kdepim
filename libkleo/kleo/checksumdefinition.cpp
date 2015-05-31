@@ -241,19 +241,19 @@ public:
     }
 
 private:
-    /* reimp */ QString doGetCreateCommand() const Q_DECL_OVERRIDE
+    QString doGetCreateCommand() const Q_DECL_OVERRIDE
     {
         return m_createCommand;
     }
-    /* reimp */ QStringList doGetCreateArguments(const QStringList &files) const Q_DECL_OVERRIDE
+    QStringList doGetCreateArguments(const QStringList &files) const Q_DECL_OVERRIDE
     {
         return m_createPrefixArguments + files + m_createPostfixArguments;
     }
-    /* reimp */ QString doGetVerifyCommand() const Q_DECL_OVERRIDE
+    QString doGetVerifyCommand() const Q_DECL_OVERRIDE
     {
         return m_verifyCommand;
     }
-    /* reimp */ QStringList doGetVerifyArguments(const QStringList &files) const Q_DECL_OVERRIDE
+    QStringList doGetVerifyArguments(const QStringList &files) const Q_DECL_OVERRIDE
     {
         return m_verifyPrefixArguments + files + m_verifyPostfixArguments;
     }

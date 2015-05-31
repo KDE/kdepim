@@ -115,18 +115,18 @@ public:
     void setProtocol(GpgME::Protocol prot);
     void autodetectProtocolFromInput();
 
-    /* reimp */ QString label() const Q_DECL_OVERRIDE;
+    QString label() const Q_DECL_OVERRIDE;
 
-    /* reimp */ GpgME::Protocol protocol() const Q_DECL_OVERRIDE;
+    GpgME::Protocol protocol() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
-    /* reimp */ void cancel() Q_DECL_OVERRIDE;
+    void cancel() Q_DECL_OVERRIDE;
 
 private:
-    /* reimp */ void doStart() Q_DECL_OVERRIDE;
-    /* reimp */ QString inputLabel() const Q_DECL_OVERRIDE;
-    /* reimp */ QString outputLabel() const Q_DECL_OVERRIDE;
-    /* reimp */ unsigned long long inputSize() const Q_DECL_OVERRIDE;
+    void doStart() Q_DECL_OVERRIDE;
+    QString inputLabel() const Q_DECL_OVERRIDE;
+    QString outputLabel() const Q_DECL_OVERRIDE;
+    unsigned long long inputSize() const Q_DECL_OVERRIDE;
 
 private:
     class Private;
@@ -147,18 +147,18 @@ public:
     void setProtocol(GpgME::Protocol prot);
     void autodetectProtocolFromInput() Q_DECL_OVERRIDE;
 
-    /* reimp */ QString label() const Q_DECL_OVERRIDE;
+    QString label() const Q_DECL_OVERRIDE;
 
-    /* reimp */ GpgME::Protocol protocol() const Q_DECL_OVERRIDE;
+    GpgME::Protocol protocol() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
-    /* reimp */ void cancel() Q_DECL_OVERRIDE;
+    void cancel() Q_DECL_OVERRIDE;
 
 private:
-    /* reimp */ void doStart() Q_DECL_OVERRIDE;
-    /* reimp */ QString inputLabel() const Q_DECL_OVERRIDE;
-    /* reimp */ QString outputLabel() const Q_DECL_OVERRIDE;
-    /* reimp */ unsigned long long inputSize() const Q_DECL_OVERRIDE;
+    void doStart() Q_DECL_OVERRIDE;
+    QString inputLabel() const Q_DECL_OVERRIDE;
+    QString outputLabel() const Q_DECL_OVERRIDE;
+    unsigned long long inputSize() const Q_DECL_OVERRIDE;
 
 private:
     class Private;
