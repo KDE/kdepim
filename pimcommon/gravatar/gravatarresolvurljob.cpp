@@ -247,7 +247,7 @@ QUrl GravatarResolvUrlJob::createUrl(bool useLibravatar)
     if (useLibravatar) {
         url.setHost(mUseHttps ? QStringLiteral("seccdn.libravatar.org") : QStringLiteral("cdn.libravatar.org"));
     } else {
-        url.setHost(QStringLiteral("www.gravatar.com"));
+        url.setHost(mUseHttps ? QStringLiteral("secure.gravatar.com") : QStringLiteral("www.gravatar.com"));
     }
     url.setPort(mUseHttps ? 443 : 80);
     mCalculatedHash = calculateHash(useLibravatar);

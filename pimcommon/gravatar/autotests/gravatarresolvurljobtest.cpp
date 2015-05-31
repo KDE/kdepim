@@ -132,6 +132,20 @@ void GravatarResolvUrlJobTest::shouldUseDefaultPixmap()
     QCOMPARE(url, QUrl(QStringLiteral("http://www.gravatar.com:80/avatar/89b4e14cf2fc6d426275c019c6dc9de6?s=1024")));
 }
 
+void GravatarResolvUrlJobTest::shouldUseHttps()
+{
+    PimCommon::GravatarResolvUrlJob job;
+    job.setEmail(QStringLiteral("foo@kde.org"));
+    job.setSize(1024);
+    job.setUseLibravatar(false);
+    job.setUseHttps(true);
+    QUrl url = job.generateGravatarUrl(job.useLibravatar());
+    QCOMPARE(url, QUrl(QStringLiteral("https://secure.gravatar.com:443/avatar/89b4e14cf2fc6d426275c019c6dc9de6?d=404&s=1024")));
+    job.setUseLibravatar(true);
+    url = job.generateGravatarUrl(job.useLibravatar());
+    QCOMPARE(url, QUrl(QStringLiteral("https://seccdn.libravatar.org:443/avatar/2726400c3a33ce56c0ff632cbc0474f766d3b36e68819c601fb02954c1681d85?d=404&s=1024")));
+}
+
 void GravatarResolvUrlJobTest::shouldNotStart()
 {
     PimCommon::GravatarResolvUrlJob job;
