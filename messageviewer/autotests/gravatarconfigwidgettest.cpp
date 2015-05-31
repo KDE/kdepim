@@ -24,6 +24,8 @@
 #include <QPushButton>
 #include <qtestmouse.h>
 #include <QSignalSpy>
+#include <QGroupBox>
+#include <QStyleOption>
 
 GravatarConfigWidgetTest::GravatarConfigWidgetTest(QObject *parent)
     : QObject(parent)
@@ -39,8 +41,8 @@ GravatarConfigWidgetTest::~GravatarConfigWidgetTest()
 void GravatarConfigWidgetTest::shouldHaveDefaultValue()
 {
     MessageViewer::GravatarConfigWidget w;
-    QCheckBox *checkBox = w.findChild<QCheckBox *>(QStringLiteral("gravatarcheckbox"));
-    QVERIFY(checkBox);
+    QGroupBox *groupBox = w.findChild<QGroupBox *>(QStringLiteral("gravatarcheckbox"));
+    QVERIFY(groupBox);
 
     QCheckBox *useDefaultImage = w.findChild<QCheckBox *>(QLatin1String("usedefaultimage"));
     QVERIFY(useDefaultImage);
@@ -65,33 +67,40 @@ void GravatarConfigWidgetTest::shouldChangeState()
 {
     MessageViewer::GravatarConfigWidget w;
     w.show();
-    QCheckBox *checkBox = qFindChild<QCheckBox *>(&w, QLatin1String("gravatarcheckbox"));
+    QGroupBox *groupBox = w.findChild<QGroupBox *>(QStringLiteral("gravatarcheckbox"));
     QCheckBox *useDefaultImage = qFindChild<QCheckBox *>(&w, QLatin1String("usedefaultimage"));
     QPushButton *clearGravatarCache = qFindChild<QPushButton *>(&w, QLatin1String("cleargravatarcachebutton"));
     QSpinBox *gravatarCacheSize = qFindChild<QSpinBox *>(&w, QLatin1String("gravatarcachesize"));
     QCheckBox *useLibravatar = w.findChild<QCheckBox *>(QStringLiteral("uselibravatarcheckbox"));
     QCheckBox *fallbackGravatar = w.findChild<QCheckBox *>(QStringLiteral("fallbackgravatar"));
 
-    checkBox->setChecked(false);
-    QVERIFY(checkBox->isEnabled());
-    QVERIFY(!checkBox->isChecked());
+    groupBox->setChecked(false);
+    QVERIFY(groupBox->isEnabled());
+    QVERIFY(!groupBox->isChecked());
     QVERIFY(!useDefaultImage->isEnabled());
     QVERIFY(!clearGravatarCache->isEnabled());
     QVERIFY(!gravatarCacheSize->isEnabled());
     QVERIFY(!fallbackGravatar->isEnabled());
     QVERIFY(!useLibravatar->isEnabled());
 
-    QTest::mouseClick(checkBox, Qt::LeftButton);
-    QVERIFY(checkBox->isEnabled());
-    QVERIFY(checkBox->isChecked());
+    QStyleOptionGroupBox option;
+    option.initFrom(groupBox);
+    option.subControls = QStyle::SubControls(QStyle::SC_All);
+    QRect rect = groupBox->style()->subControlRect(QStyle::CC_GroupBox, &option,
+                                                  QStyle::SC_GroupBoxCheckBox, groupBox);
+
+    QTest::mouseClick(groupBox, Qt::LeftButton, 0, rect.center());
+
+    QVERIFY(groupBox->isEnabled());
+    QVERIFY(groupBox->isChecked());
     QVERIFY(useDefaultImage->isEnabled());
     QVERIFY(clearGravatarCache->isEnabled());
     QVERIFY(gravatarCacheSize->isEnabled());
     QVERIFY(fallbackGravatar->isEnabled());
     QVERIFY(useLibravatar->isEnabled());
 
-    QTest::mouseClick(checkBox, Qt::LeftButton);
-    QVERIFY(checkBox->isEnabled());
+    QTest::mouseClick(groupBox, Qt::LeftButton, 0, rect.center());
+    QVERIFY(groupBox->isEnabled());
     QVERIFY(!useDefaultImage->isEnabled());
     QVERIFY(!clearGravatarCache->isEnabled());
     QVERIFY(!gravatarCacheSize->isEnabled());
@@ -104,13 +113,19 @@ void GravatarConfigWidgetTest::shoulEmitConfigChangedSignal()
 {
     MessageViewer::GravatarConfigWidget w;
     w.show();
-    QCheckBox *checkBox = qFindChild<QCheckBox *>(&w, QLatin1String("gravatarcheckbox"));
+    QGroupBox *groupBox = w.findChild<QGroupBox *>(QStringLiteral("gravatarcheckbox"));
     QCheckBox *useDefaultImage = qFindChild<QCheckBox *>(&w, QLatin1String("usedefaultimage"));
-    QSpinBox *gravatarCacheSize = qFindChild<QSpinBox *>(&w, QLatin1String("gravatarcachesize"));
+    // TODO QSpinBox *gravatarCacheSize = qFindChild<QSpinBox *>(&w, QLatin1String("gravatarcachesize"));
     QCheckBox *useLibravatar = w.findChild<QCheckBox *>(QStringLiteral("uselibravatarcheckbox"));
     QCheckBox *fallbackGravatar = w.findChild<QCheckBox *>(QStringLiteral("fallbackgravatar"));
     QSignalSpy spy(&w, SIGNAL(configChanged(bool)));
-    QTest::mouseClick(checkBox, Qt::LeftButton);
+    QStyleOptionGroupBox option;
+    option.initFrom(groupBox);
+    option.subControls = QStyle::SubControls(QStyle::SC_All);
+    QRect rect = groupBox->style()->subControlRect(QStyle::CC_GroupBox, &option,
+                                                  QStyle::SC_GroupBoxCheckBox, groupBox);
+
+    QTest::mouseClick(groupBox, Qt::LeftButton, 0, rect.center());
     QCOMPARE(spy.count(), 1);
     QTest::mouseClick(useDefaultImage, Qt::LeftButton);
     QCOMPARE(spy.count(), 2);
@@ -124,7 +139,7 @@ void GravatarConfigWidgetTest::shoulEmitConfigChangedSignal()
     QCOMPARE(spy.count(), 5);
 
     // Disable other action => not signal emitted
-    QTest::mouseClick(checkBox, Qt::LeftButton);
+    QTest::mouseClick(groupBox, Qt::LeftButton, 0, rect.center());
     QCOMPARE(spy.count(), 6);
 
     QTest::mouseClick(fallbackGravatar, Qt::LeftButton);

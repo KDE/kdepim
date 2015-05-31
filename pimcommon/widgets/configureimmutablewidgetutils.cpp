@@ -133,6 +133,14 @@ void ConfigureImmutableWidgetUtils::saveUrlRequester(KUrlRequester *b, KCoreConf
     e->setValue(b->text());
 }
 
+void ConfigureImmutableWidgetUtils::saveGroupBox(QGroupBox *b, KCoreConfigSkeleton::ItemBool *e)
+{
+    if (b->isCheckable()) {
+        e->setValue(b->isChecked());
+    }
+}
+
+
 void ConfigureImmutableWidgetUtils::loadWidget(KUrlRequester *b, const KCoreConfigSkeleton::ItemString *e)
 {
     checkLockDown(b, e);
@@ -151,6 +159,15 @@ void ConfigureImmutableWidgetUtils::saveSimpleStringListEditor(PimCommon::Simple
 {
     e->setValue(b->stringList());
 }
+
+void ConfigureImmutableWidgetUtils::loadWidget(QGroupBox *b, const KCoreConfigSkeleton::ItemBool *e)
+{
+    checkLockDown(b, e);
+    if (b->isCheckable()) {
+        b->setChecked(e->value());
+    }
+}
+
 
 void ConfigureImmutableWidgetUtils::loadWidget(QComboBox *b, const KCoreConfigSkeleton::ItemEnum *e)
 {

@@ -23,6 +23,7 @@
 class QCheckBox;
 class QPushButton;
 class QSpinBox;
+class QGroupBox;
 namespace MessageViewer
 {
 class MESSAGEVIEWER_EXPORT GravatarConfigWidget : public QWidget
@@ -46,7 +47,7 @@ private Q_SLOTS:
 
 private:
     void updateWidgetState(bool state);
-    QCheckBox *mEnableGravatarSupport;
+    QGroupBox *mEnableGravatarSupport;
     QCheckBox *mUseDefaultPixmap;
     QCheckBox *mUseLibravatar;
     QCheckBox *mFallbackGravatar;

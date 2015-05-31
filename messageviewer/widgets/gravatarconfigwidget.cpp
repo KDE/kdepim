@@ -25,6 +25,7 @@
 #include <QLabel>
 #include <QDir>
 #include <QSpinBox>
+#include <QGroupBox>
 #include "settings/globalsettings.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 
@@ -38,24 +39,29 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     setLayout(mainLayout);
     mainLayout->setMargin(0);
 
-    mEnableGravatarSupport = new QCheckBox(i18n("Enable Gravatar Support"));
+    mEnableGravatarSupport = new QGroupBox(i18n("Enable Gravatar Support"));
     mEnableGravatarSupport->setObjectName(QStringLiteral("gravatarcheckbox"));
+    mEnableGravatarSupport->setCheckable(true);
+    mEnableGravatarSupport->setChecked(false);
+
+    QVBoxLayout *groupboxLayout = new QVBoxLayout;
+    mEnableGravatarSupport->setLayout(groupboxLayout);
     mainLayout->addWidget(mEnableGravatarSupport);
 
     mUseLibravatar = new QCheckBox(i18n("Use Libravatar"));
     mUseLibravatar->setObjectName(QStringLiteral("uselibravatarcheckbox"));
-    mainLayout->addWidget(mUseLibravatar);
+    groupboxLayout->addWidget(mUseLibravatar);
 
     mFallbackGravatar = new QCheckBox(i18n("Fallback to gravatar"));
     mFallbackGravatar->setObjectName(QStringLiteral("fallbackgravatar"));
-    mainLayout->addWidget(mFallbackGravatar);
+    groupboxLayout->addWidget(mFallbackGravatar);
 
     mUseDefaultPixmap = new QCheckBox(i18n("Use Default Image"));
     mUseDefaultPixmap->setObjectName(QStringLiteral("usedefaultimage"));
-    mainLayout->addWidget(mUseDefaultPixmap);
+    groupboxLayout->addWidget(mUseDefaultPixmap);
 
     QHBoxLayout *cacheSizeLayout = new QHBoxLayout;
-    mainLayout->addLayout(cacheSizeLayout);
+    groupboxLayout->addLayout(cacheSizeLayout);
     QLabel *lab = new QLabel(i18n("Gravatar Cache Size:"));
     lab->setObjectName(QStringLiteral("gravatarcachesizelabel"));
     cacheSizeLayout->addWidget(lab);
@@ -69,15 +75,17 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     cacheSizeLayout->addStretch();
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
-    mainLayout->addLayout(buttonLayout);
+    groupboxLayout->addLayout(buttonLayout);
     mClearGravatarCache = new QPushButton(i18n("Clear Gravatar Cache"));
     mClearGravatarCache->setObjectName(QStringLiteral("cleargravatarcachebutton"));
     buttonLayout->addWidget(mClearGravatarCache);
     buttonLayout->addStretch();
 
+    connect(mEnableGravatarSupport, &QGroupBox::clicked, this, &GravatarConfigWidget::slotGravatarEnableChanged);
+
     connect(mUseDefaultPixmap, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
     connect(mClearGravatarCache, &QAbstractButton::clicked, this, &GravatarConfigWidget::slotClearGravatarCache);
-    connect(mEnableGravatarSupport, &QAbstractButton::clicked, this, &GravatarConfigWidget::slotGravatarEnableChanged);
+
     connect(mUseLibravatar, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
     connect(mFallbackGravatar, &QAbstractButton::clicked, this, &GravatarConfigWidget::configChanged);
 
@@ -106,7 +114,7 @@ void GravatarConfigWidget::updateWidgetState(bool state)
 
 void GravatarConfigWidget::save()
 {
-    saveCheckBox(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
+    saveGroupBox(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
     saveCheckBox(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
     saveSpinBox(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
     saveCheckBox(mFallbackGravatar, MessageViewer::GlobalSettings::self()->fallbackToGravatarItem());

@@ -49,6 +49,7 @@ PIMCOMMON_EXPORT void loadWidget(QSpinBox *b, const KCoreConfigSkeleton::ItemInt
 PIMCOMMON_EXPORT void loadWidget(PimCommon::SimpleStringListEditor *b, const KCoreConfigSkeleton::ItemStringList *e);
 PIMCOMMON_EXPORT void loadWidget(QSpinBox *b, const KCoreConfigSkeleton::ItemUInt *e);
 PIMCOMMON_EXPORT void loadWidget(QComboBox *b, const KCoreConfigSkeleton::ItemEnum *e);
+PIMCOMMON_EXPORT void loadWidget(QGroupBox *b, const KCoreConfigSkeleton::ItemBool *e);
 
 PIMCOMMON_EXPORT void saveComboBox(QComboBox *b, KCoreConfigSkeleton::ItemEnum *e);
 PIMCOMMON_EXPORT void saveSpinBox(QSpinBox *b, KCoreConfigSkeleton::ItemUInt *e);
@@ -57,6 +58,7 @@ PIMCOMMON_EXPORT void saveCheckBox(QCheckBox *b, KCoreConfigSkeleton::ItemBool *
 PIMCOMMON_EXPORT void saveLineEdit(QLineEdit *b, KCoreConfigSkeleton::ItemString *e);
 PIMCOMMON_EXPORT void saveUrlRequester(KUrlRequester *b, KCoreConfigSkeleton::ItemString *e);
 PIMCOMMON_EXPORT void saveSimpleStringListEditor(PimCommon::SimpleStringListEditor *b, KCoreConfigSkeleton::ItemStringList *e);
+PIMCOMMON_EXPORT void saveGroupBox(QGroupBox *b, KCoreConfigSkeleton::ItemBool *e);
 
 PIMCOMMON_EXPORT void saveButtonGroup(QButtonGroup *group, KCoreConfigSkeleton::ItemEnum *e);
 }
