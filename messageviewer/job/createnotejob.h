@@ -38,7 +38,7 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
     void noteCreated(KJob *job);
     void noteUpdated(KJob *job);
     void relationCreated(KJob *job);
