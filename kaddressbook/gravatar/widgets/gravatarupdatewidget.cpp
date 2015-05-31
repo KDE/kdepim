@@ -29,8 +29,7 @@ GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     QGridLayout *mainLayout = new QGridLayout;
     setLayout(mainLayout);
 
-    //KF5 add i18n
-    QLabel *lab = new QLabel(QLatin1String("Email:"));
+    QLabel *lab = new QLabel(i18n("Email:"));
     lab->setObjectName(QLatin1String("emaillabel"));
     mainLayout->addWidget(lab, 0, 0);
 
@@ -38,8 +37,7 @@ GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     mEmailLab->setObjectName(QLatin1String("email"));
     mainLayout->addWidget(mEmailLab, 0, 1);
 
-    //KF5 add i18n
-    mSearchGravatar = new QPushButton(QLatin1String("Search"));
+    mSearchGravatar = new QPushButton(i18n("Search"));
     mSearchGravatar->setEnabled(false);
     mSearchGravatar->setObjectName(QLatin1String("search"));
     mainLayout->addWidget(mSearchGravatar, 0, 2);

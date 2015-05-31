@@ -81,8 +81,7 @@ void GravatarCreateWidget::slotSearchGravatarFinished(PimCommon::GravatarResolvU
         if (job->hasGravatar()) {
             mResultGravatar->setPixmap(job->pixmap());
         } else {
-            //KF5 add i18n
-            mResultGravatar->setText(QLatin1String("No Gravatar Found."));
+            mResultGravatar->setText(i18n("No Gravatar Found."));
         }
     }
 }
