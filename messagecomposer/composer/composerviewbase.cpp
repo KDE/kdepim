@@ -49,6 +49,7 @@
 #endif
 
 #include <sonnet/dictionarycombobox.h>
+#include <KIdentityManagement/Identity>
 
 #include <messagecore/helpers/messagehelpers.h>
 #include <messagecore/utils/stringutil.h>
