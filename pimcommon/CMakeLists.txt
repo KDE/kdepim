@@ -301,9 +301,6 @@ PRIVATE
 set_target_properties(pimcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS pimcommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_subdirectory(translator/tests)
-add_subdirectory(texteditor/plaintexteditor/tests)
-add_subdirectory(texteditor/richtexteditor/tests)
 if (BUILD_TESTING)
    add_subdirectory(translator/autotests)
    add_subdirectory(texteditor/plaintexteditor/autotests)
@@ -318,7 +315,14 @@ if (BUILD_TESTING)
    add_subdirectory(acl/autotests)
    add_subdirectory(temporaryfile/autotests)
    add_subdirectory(migration/autotests)
+   add_subdirectory(util/autotests)
+   add_subdirectory(gravatar/autotests)
 endif()
+
+
+add_subdirectory(translator/tests)
+add_subdirectory(texteditor/plaintexteditor/tests)
+add_subdirectory(texteditor/richtexteditor/tests)
 add_subdirectory(widgets/tests)
 add_subdirectory(shorturl/tests)
 add_subdirectory(autocorrection/tests)
@@ -331,10 +335,6 @@ add_subdirectory(storageservice/yousendit/tests)
 add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/dropbox/icons/)
 add_subdirectory(texttospeech/tests)
-
-add_subdirectory(util/autotests)
-
-add_subdirectory(gravatar/autotests)
 add_subdirectory(gravatar/tests)
 
 if( LibKGAPI2_FOUND )
