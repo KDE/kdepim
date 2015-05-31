@@ -45,6 +45,7 @@ MergeContactsDialog::MergeContactsDialog(QWidget *parent)
 {
     setWindowTitle(i18n("Select Contacts to merge"));
     mButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    mButtonBox->setObjectName(QStringLiteral("buttonbox"));
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     connect(mButtonBox, &QDialogButtonBox::rejected, this, &MergeContactsDialog::reject);

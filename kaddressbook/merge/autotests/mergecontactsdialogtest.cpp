@@ -21,6 +21,8 @@
 #include <QStackedWidget>
 #include <qtest.h>
 
+#include <QtGui/QDialogButtonBox>
+
 MergeContactsDialogTest::MergeContactsDialogTest(QObject *parent)
     : QObject(parent)
 {
@@ -36,6 +38,10 @@ void MergeContactsDialogTest::shouldHaveDefaultValue()
 {
     KABMergeContacts::MergeContactsDialog dlg;
     dlg.show();
+
+    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
+    QVERIFY(buttonBox);
+
     QStackedWidget *stackedWidget = dlg.findChild<QStackedWidget *>(QStringLiteral("stackedwidget"));
     QVERIFY(stackedWidget);
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QStringLiteral("nocontactselected"));
