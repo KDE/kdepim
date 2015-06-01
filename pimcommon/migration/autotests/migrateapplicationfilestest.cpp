@@ -351,6 +351,31 @@ void MigrateApplicationFilesTest::shouldMigrateFilesWithPattern()
     const QString appsPath = kdehome + QLatin1Char('/') + QLatin1String("share/apps/") + folderName;
     QDir().mkpath(appsPath);
     QVERIFY(QDir(appsPath).exists());
+    const QString xdgDatahome = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + folderName;
+
+    //Copy files.
+    QStringList files;
+    files << QStringLiteral("file1") << QStringLiteral("file2") << QStringLiteral("text2.txt") << QStringLiteral("text.txt");
+    Q_FOREACH (const QString &file, files) {
+        QFile fooFile(QLatin1String(MIGRATION_DATA_DIR) + QLatin1Char('/') + file);
+        QVERIFY(fooFile.exists());
+        const QString storedConfigFilePath = appsPath + QLatin1Char('/') + file;
+        //qDebug()<<" storedConfigFilePath"<<storedConfigFilePath;
+        QVERIFY(QFile::copy(fooFile.fileName(), storedConfigFilePath));
+
+        const QString xdgFile = xdgDatahome + file;
+        QVERIFY(!QFile::exists(xdgFile));
+    }
+
+    MigrateApplicationFiles migrate;
+    migrate.setConfigFileName(QStringLiteral("foorc"));
+
+    MigrateFileInfo info;
+    info.setPath(folderName);
+    info.setType(QStringLiteral("data"));
+    info.setFolder(false);
+    info.setFilePattern(QStringLiteral("*.txt"));
+    migrate.insertMigrateInfo(info);
     //TODO
 }
 
