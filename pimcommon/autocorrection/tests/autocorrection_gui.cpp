@@ -151,6 +151,7 @@ void AutocorrectionTestWidget::slotConfigure()
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QStringLiteral("autocorrectiontest_gui"), i18n("AutoCorrectionTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for autocorrection widget"));
     QCommandLineParser parser;

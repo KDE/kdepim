@@ -19,12 +19,14 @@
 #include <KAboutData>
 #include <KLocalizedString>
 #include <QCommandLineParser>
+#include <QStandardPaths>
 
 #include "messageviewer/adblock/adblocksettingwidget.h"
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QStringLiteral("adblocksettings_gui"), i18n("adblocksettingstest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for adblocksettings"));
     QCommandLineParser parser;

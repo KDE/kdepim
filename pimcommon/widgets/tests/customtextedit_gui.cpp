@@ -21,10 +21,12 @@
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
+#include <QStandardPaths>
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QLatin1String("customtextedit_gui"), i18n("CustomTextEditTest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for customtextedit widget"));
     QCommandLineParser parser;

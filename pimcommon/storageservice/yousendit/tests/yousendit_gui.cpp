@@ -18,6 +18,7 @@
 #include "yousendit_gui.h"
 #include "pimcommon/storageservice/yousendit/yousenditstorageservice.h"
 #include <QWidget>
+#include <QStandardPaths>
 
 #include "pimcommon_debug.h"
 
@@ -35,6 +36,7 @@ YouSendItTestWidget::YouSendItTestWidget(QWidget *parent)
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QStringLiteral("yousendit_gui"), i18n("yousendit_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for short yousendit"));
     QCommandLineParser parser;

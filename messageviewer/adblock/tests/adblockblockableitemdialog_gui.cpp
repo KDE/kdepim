@@ -18,7 +18,7 @@
 #include "adblockblockableitemdialog_gui.h"
 #include "adblock/adblockblockableitemswidget.h"
 #include "libkdepim/widgets/progressindicatorlabel.h"
-
+#include <QStandardPaths>
 #include <KLocalizedString>
 #include <QUrl>
 
@@ -79,6 +79,7 @@ void AdBlockBlockableItemTestDialog::slotOpenHtml()
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QLatin1String("adblockblockableitemtest_gui"), i18n("adblockblockableitemtest_Gui"), QLatin1String("1.0"));
     aboutData.setShortDescription(i18n("Test for adblockblokabledialog"));
     QCommandLineParser parser;

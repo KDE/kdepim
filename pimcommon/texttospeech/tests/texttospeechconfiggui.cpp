@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QCommandLineParser>
 #include <QMainWindow>
+#include <QStandardPaths>
 
 TextToSpeechConfigGui::TextToSpeechConfigGui(QWidget *parent)
     : QWidget(parent)
@@ -43,6 +44,7 @@ TextToSpeechConfigGui::~TextToSpeechConfigGui()
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QStringLiteral("texttospeechconfig_gui"), i18n("texttospeechconfig_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for config text to speech"));
     QCommandLineParser parser;

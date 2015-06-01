@@ -28,6 +28,7 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QDebug>
+#include <QStandardPaths>
 
 TextToSpeechGui::TextToSpeechGui(QWidget *parent)
     : QMainWindow(parent)
@@ -65,6 +66,7 @@ void TextToSpeechGui::slotTextToSpeech()
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QStringLiteral("texttospeech_gui"), i18n("texttospeech_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for text to speech"));
     QCommandLineParser parser;

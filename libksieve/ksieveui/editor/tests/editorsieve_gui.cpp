@@ -25,10 +25,12 @@
 #include <QCommandLineParser>
 #include <kaboutdata.h>
 #include <KLocalizedString>
+#include <QStandardPaths>
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QStringLiteral("editorsieve_gui"),
                          i18n("EditorSievetest_Gui"),
                          QStringLiteral("1.0"));

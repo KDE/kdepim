@@ -18,6 +18,7 @@
 #include "hubic_gui.h"
 #include "pimcommon/storageservice/hubic/hubicstorageservice.h"
 #include <QWidget>
+#include <QStandardPaths>
 
 #include "pimcommon_debug.h"
 
@@ -35,6 +36,7 @@ HubicTestWidget::HubicTestWidget(QWidget *parent)
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QStringLiteral("hubic_gui"), i18n("hubic_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for short hubic"));
     QCommandLineParser parser;
