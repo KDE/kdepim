@@ -381,18 +381,15 @@ void MigrateApplicationFilesTest::shouldMigrateFilesWithPattern()
     info.setFolder(false);
     info.setFilePatterns(QStringList() << QStringLiteral("*.txt"));
     migrate.insertMigrateInfo(info);
-    //TODO
 
     QVERIFY(migrate.checkIfNecessary());
     QVERIFY(migrate.start());
-#if 0 //FIXME
     Q_FOREACH (const QString &file, filesMustBeMigrated) {
         QVERIFY(QFile(xdgDatahome + file).exists());
     }
     Q_FOREACH (const QString &file, filesMustNotBeMigrated) {
         QVERIFY(!QFile(xdgDatahome + file).exists());
     }
-#endif
 }
 
 void MigrateApplicationFilesTest::cleanup()
