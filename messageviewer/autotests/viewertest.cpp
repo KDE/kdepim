@@ -38,6 +38,39 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(createtodowidget);
     QCOMPARE(createtodowidget->isVisible(), false);
 
+    QWidget *sliderContainer = viewer.findChild<QWidget *>(QStringLiteral("slidercontainer"));
+    QVERIFY(sliderContainer);
+    QVERIFY(sliderContainer->isVisible());
+
+
+    QWidget *translaterwidget = viewer.findChild<QWidget *>(QStringLiteral("translatorwidget"));
+    QVERIFY(translaterwidget);
+    QVERIFY(!translaterwidget->isVisible());
+
+    QWidget *colorBar = viewer.findChild<QWidget *>(QStringLiteral("mColorBar"));
+    QVERIFY(colorBar);
+
+    QWidget *scandetectionWidget = viewer.findChild<QWidget *>(QStringLiteral("scandetectionwarning"));
+    QVERIFY(scandetectionWidget);
+    QVERIFY(!scandetectionWidget->isVisible());
+
+    QWidget *openattachementfolderwidget = viewer.findChild<QWidget *>(QStringLiteral("openattachementfolderwidget"));
+    QVERIFY(openattachementfolderwidget);
+    QVERIFY(!openattachementfolderwidget->isVisible());
+
+    QWidget *createeventwidget = viewer.findChild<QWidget *>(QStringLiteral("createeventwidget"));
+    QVERIFY(createeventwidget);
+    QCOMPARE(createeventwidget->isVisible(), false);
+
+    QWidget *createnotewidget = viewer.findChild<QWidget *>(QStringLiteral("createnotewidget"));
+    QVERIFY(createnotewidget);
+    QCOMPARE(createnotewidget->isVisible(), false);
+
+    QWidget *mViewer = viewer.findChild<QWidget *>(QStringLiteral("mViewer"));
+    QVERIFY(mViewer);
+    QCOMPARE(mViewer->isVisible(), true);
+
+
     QVERIFY(viewer.toggleFixFontAction());
     QVERIFY(viewer.toggleMimePartTreeAction());
     QVERIFY(viewer.selectAllAction());

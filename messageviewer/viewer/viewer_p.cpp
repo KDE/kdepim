@@ -1570,9 +1570,11 @@ void ViewerPrivate::createWidgets()
     mColorBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     mScamDetectionWarning = new ScamDetectionWarningWidget(readerBox);
+    mScamDetectionWarning->setObjectName(QStringLiteral("scandetectionwarning"));
     readerBoxVBoxLayout->addWidget(mScamDetectionWarning);
 
     mOpenAttachmentFolderWidget = new OpenAttachmentFolderWidget(readerBox);
+    mOpenAttachmentFolderWidget->setObjectName(QStringLiteral("openattachementfolderwidget"));
     readerBoxVBoxLayout->addWidget(mOpenAttachmentFolderWidget);
 
     mViewer = new MailWebView(mActionCollection, readerBox);
@@ -1598,12 +1600,15 @@ void ViewerPrivate::createWidgets()
     mCreateNote->hide();
 
     mSliderContainer = new PimCommon::SlideContainer(readerBox);
+    mSliderContainer->setObjectName(QStringLiteral("slidercontainer"));
     readerBoxVBoxLayout->addWidget(mSliderContainer);
     mFindBar = new FindBarMailWebView(mViewer, q);
     connect(mFindBar, &FindBarBase::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
     mSliderContainer->setContent(mFindBar);
 
     mTranslatorWidget = new PimCommon::TranslatorWidget(readerBox);
+    mTranslatorWidget->setObjectName(QStringLiteral("translatorwidget"));
+    readerBoxVBoxLayout->addWidget(mTranslatorWidget);
 #ifndef QT_NO_TREEVIEW
     mSplitter->setStretchFactor(mSplitter->indexOf(mMimePartTree), 0);
 #endif
