@@ -54,6 +54,9 @@ public:
     explicit ManageSieveScriptsDialog(QWidget *parent = Q_NULLPTR);
     ~ManageSieveScriptsDialog();
 
+Q_SIGNALS:
+    void finished();
+
 private Q_SLOTS:
     void slotGetResult(KManageSieve::SieveJob *, bool, const QString &, bool);
     void slotPutResult(KManageSieve::SieveJob *, bool);
@@ -65,6 +68,9 @@ private Q_SLOTS:
     void slotUpdateButtons(QTreeWidgetItem *item);
     void slotEditScript(const QUrl &u, const QStringList &capabilities);
     void slotNewScript(const QUrl &u, const QStringList &capabilities);
+
+protected:
+    void hideEvent(QHideEvent *) Q_DECL_OVERRIDE;
 
 private:
     void changeActiveScript(QTreeWidgetItem *, bool activate = true);

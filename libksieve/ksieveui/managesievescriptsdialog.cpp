@@ -153,6 +153,13 @@ ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
     group.writeEntry("Size", size());
 }
 
+void ManageSieveScriptsDialog::hideEvent(QHideEvent *event)
+{
+    if (!event->spontaneous()) {
+        emit finished();
+    }
+}
+
 void ManageSieveScriptsDialog::slotUpdateButtons(QTreeWidgetItem *item)
 {
     Q_UNUSED(item);
