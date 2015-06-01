@@ -2180,8 +2180,9 @@ void View::mousePressEvent(QMouseEvent *e)
         case Qt::RightButton:
             // Let QTreeView handle the selection and Q_EMIT the appropriate signals (slotSelectionChanged() may be called)
             QTreeView::mousePressEvent(e);
-
+            e->accept();
             d->mWidget->viewMessageListContextPopupRequest(selectionAsMessageItemList(), viewport()->mapToGlobal(e->pos()));
+
             break;
         default:
             // make gcc happy
@@ -2271,6 +2272,7 @@ void View::contextMenuEvent(QContextMenuEvent *e)
                 d->mWidget->viewGroupHeaderContextPopupRequest(static_cast< GroupHeaderItem * >(item), viewport()->mapToGlobal(pos));
             } else if (!selectionEmpty()) {
                 d->mWidget->viewMessageListContextPopupRequest(selectionAsMessageItemList(), viewport()->mapToGlobal(pos));
+                e->accept();
             }
         }
     }

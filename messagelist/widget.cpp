@@ -318,7 +318,7 @@ void Widget::viewMessageListContextPopupRequest(const QList< MessageList::Core::
     }
 
     QMenu *popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(
-                                            QLatin1String("akonadi_messagelist_contextmenu"),
+                                            QStringLiteral("akonadi_messagelist_contextmenu"),
                                             d->mXmlGuiClient));
     if (popup) {
         popup->exec(globalPos);
