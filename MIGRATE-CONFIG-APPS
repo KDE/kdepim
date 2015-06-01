@@ -35,7 +35,10 @@ Migrate configrc done:
 - akregator Archive/data
 - migrate theme messageviewer
 - migrate kaddressbook/printing theme
+- kmail2/adblockrules_local and ("data" , QLatin1String("kmail2/adblockrules_")
+- knotes/print/theme/
+- kmail2/ vcard identity
+
 
 TODO:
 - knotes: migrate settings for plugins
-- kmail2/adblockrules_local and ("data" , QLatin1String("kmail2/adblockrules_")
