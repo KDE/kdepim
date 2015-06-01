@@ -34,7 +34,7 @@
 #include <KCalCore/Event>
 
 #include <AkonadiCore/Collection>
-#include <AkonadiCore/Control>
+#include <AkonadiWidgets/ControlGui>
 
 #include <KCheckableProxyModel>
 
@@ -54,7 +54,7 @@ MainWindow::MainWindow(const QStringList &viewNames)
 
     connect(mUi.addViewMenu, &QMenu::triggered, this, &MainWindow::addViewTriggered);
 
-    Akonadi::Control::widgetNeedsAkonadi(this);
+    Akonadi::ControlGui::widgetNeedsAkonadi(this);
 
     setGeometry(0, 0, 800, 600);
     QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);

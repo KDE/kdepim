@@ -20,7 +20,7 @@
 #include "notificationmonitor.h"
 #include "notificationmodel.h"
 
-#include <AkonadiCore/Control>
+#include <AkonadiWidgets/ControlGui>
 
 #include <KLocalizedString>
 #include <QUrl>
@@ -63,7 +63,7 @@ NotificationMonitor::NotificationMonitor(QWidget *parent) :
     layout2->addStretch(1);
     layout->addLayout(layout2);
 
-    Akonadi::Control::widgetNeedsAkonadi(this);
+    Akonadi::ControlGui::widgetNeedsAkonadi(this);
 }
 
 void NotificationMonitor::contextMenu(const QPoint & /*pos*/)

@@ -20,7 +20,7 @@
 #include "dialog.h"
 #include "global.h"
 
-#include <control.h>
+#include <controlgui.h>
 
 #include <kaboutdata.h>
 #include <qapplication.h>
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
     KDBusService service(KDBusService::Unique);
 
-    Akonadi::Control::start(0);
+    Akonadi::ControlGui::start(0);
 
     if (!parser.value(QStringLiteral("package")).isEmpty()) {
         Global::setAssistant(Global::unpackAssistant(QUrl::fromLocalFile(parser.value(QStringLiteral("package")))));

@@ -35,7 +35,7 @@
 
 #include <AkonadiWidgets/agentinstancewidget.h>
 #include <AkonadiCore/agentfilterproxymodel.h>
-#include <AkonadiCore/control.h>
+#include <AkonadiWidgets/controlgui.h>
 #include <AkonadiCore/searchcreatejob.h>
 #include <AkonadiCore/servermanager.h>
 
@@ -141,7 +141,7 @@ void MainWidget::stopServer()
 
 void MainWidget::restartServer()
 {
-    Akonadi::Control::restart(this);
+    Akonadi::ControlGui::restart(this);
 }
 
 void MainWidget::configureServer()

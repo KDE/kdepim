@@ -24,7 +24,7 @@
 #include "tracernotificationinterface.h"
 #include "connectionpage.h"
 
-#include <AkonadiCore/control.h>
+#include <AkonadiWidgets/controlgui.h>
 
 #include <KLocalizedString>
 #include <QTabWidget>
@@ -103,7 +103,7 @@ DebugWidget::DebugWidget(QWidget *parent)
     connect(closeAllTabsButton, &QPushButton::clicked, this, &DebugWidget::closeAllTabs);
     connect(saveRichtextButton, &QPushButton::clicked, this, &DebugWidget::saveRichText);
 
-    Akonadi::Control::widgetNeedsAkonadi(this);
+    Akonadi::ControlGui::widgetNeedsAkonadi(this);
 }
 
 void DebugWidget::connectionStarted(const QString &identifier, const QString &msg)

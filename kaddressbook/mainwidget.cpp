@@ -50,7 +50,7 @@
 #include <AkonadiWidgets/ETMViewStateSaver>
 #include <AkonadiCore/CollectionFilterProxyModel>
 #include <AkonadiCore/CollectionModel>
-#include <AkonadiCore/Control>
+#include <AkonadiWidgets/ControlGui>
 #include <AkonadiCore/EntityMimeTypeFilterModel>
 #include <AkonadiWidgets/EntityTreeView>
 #include <AkonadiWidgets/ItemView>
@@ -326,7 +326,7 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
 
     mContactSwitcher->setView(mItemView);
 
-    Akonadi::Control::widgetNeedsAkonadi(this);
+    Akonadi::ControlGui::widgetNeedsAkonadi(this);
 
     mModelColumnManager = new ModelColumnManager(GlobalContactModel::instance()->model(), this);
     mModelColumnManager->setWidget(mItemView->header());

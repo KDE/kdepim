@@ -24,7 +24,7 @@
 
 #include "jobtrackermodel.h"
 
-#include <AkonadiCore/control.h>
+#include <AkonadiWidgets/controlgui.h>
 
 #include <KLocalizedString>
 #include <QUrl>
@@ -76,7 +76,7 @@ JobTrackerWidget::JobTrackerWidget(const char *name, QWidget *parent, const QStr
     layout2->addStretch(1);
     layout->addLayout(layout2);
 
-    Akonadi::Control::widgetNeedsAkonadi(this);
+    Akonadi::ControlGui::widgetNeedsAkonadi(this);
 }
 
 JobTrackerWidget::~JobTrackerWidget()

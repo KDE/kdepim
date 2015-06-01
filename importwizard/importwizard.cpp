@@ -53,7 +53,7 @@
 #include "importwizard_debug.h"
 #include <KMessageBox>
 #include <KHelpMenu>
-#include <AkonadiCore/control.h>
+#include <AkonadiWidgets/controlgui.h>
 #include <mailcommon/kernel/mailkernel.h>
 #include <QPushButton>
 
@@ -87,7 +87,7 @@ ImportWizard::ImportWizard(WizardMode mode, QWidget *parent)
     connect(mSelectComponentPage, &SelectComponentPage::atLeastOneComponentSelected, this, &ImportWizard::slotAtLeastOneComponentSelected);
 
     resize(640, 480);
-    Akonadi::Control::widgetNeedsAkonadi(this);
+    Akonadi::ControlGui::widgetNeedsAkonadi(this);
 
     checkModules();
     KMessageBox::information(this, i18n("Close KMail before importing data. Some plugins will modify KMail config file."));

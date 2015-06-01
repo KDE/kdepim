@@ -23,7 +23,7 @@
 #include <QVBoxLayout>
 #include <qheaderview.h>
 
-#include <AkonadiCore/control.h>
+#include <AkonadiWidgets/controlgui.h>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -40,7 +40,7 @@ MonitorsWidget::MonitorsWidget(QWidget *parent):
     mTreeView->setAlternatingRowColors(true);
     layout->addWidget(mTreeView);
 
-    Akonadi::Control::widgetNeedsAkonadi(this);
+    Akonadi::ControlGui::widgetNeedsAkonadi(this);
 
     KConfigGroup config(KSharedConfig::openConfig(), "MonitorsWidget");
 

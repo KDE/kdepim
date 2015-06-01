@@ -33,7 +33,7 @@
 
 #include "pimcommon/util/pimutil.h"
 
-#include <AkonadiCore/Control>
+#include <AkonadiWidgets/ControlGui>
 
 #include <KStandardAction>
 #include <KConfigGroup>
@@ -71,7 +71,7 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
 
     setCentralWidget(mLogWidget);
     resize(800, 600);
-    Akonadi::Control::widgetNeedsAkonadi(this);
+    Akonadi::ControlGui::widgetNeedsAkonadi(this);
     if (!canZipFile) {
         KMessageBox::error(this, i18n("Zip program not found. Install it before to launch this application."), i18n("Zip program not found."));
     }

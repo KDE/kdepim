@@ -36,7 +36,7 @@
 #include <QtCore/QDateTime>
 
 #include <AkonadiCore/servermanager.h>
-#include <AkonadiCore/control.h>
+#include <AkonadiWidgets/controlgui.h>
 
 #include <KTextEdit>
 #include <KLocalizedString>
@@ -258,7 +258,7 @@ QueryDebugger::QueryDebugger(QWidget *parent):
     mView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     layout->addWidget(mView);
 
-    Akonadi::Control::widgetNeedsAkonadi(this);
+    Akonadi::ControlGui::widgetNeedsAkonadi(this);
 }
 
 QueryDebugger::~QueryDebugger()

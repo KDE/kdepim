@@ -27,7 +27,7 @@
 #include <AkonadiCore/agentmanager.h>
 #include <AkonadiCore/AgentFilterProxyModel>
 #include <AkonadiCore/agentinstancecreatejob.h>
-#include <AkonadiCore/control.h>
+#include <AkonadiWidgets/controlgui.h>
 #include <akonadi/private/notificationmessage_p.h>
 
 #include <KLocalizedString>
@@ -128,7 +128,7 @@ AgentWidget::AgentWidget(QWidget *parent)
 
     ui.mFilterAccount->setProxy(ui.instanceWidget->agentFilterProxyModel());
     ui.mFilterAccount->installEventFilter(this);
-    Control::widgetNeedsAkonadi(this);
+    ControlGui::widgetNeedsAkonadi(this);
 }
 
 bool AgentWidget::eventFilter(QObject *obj, QEvent *event)

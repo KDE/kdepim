@@ -28,7 +28,7 @@
 
 #include <AkonadiCore/attributefactory.h>
 #include <AkonadiCore/changerecorder.h>
-#include <AkonadiCore/control.h>
+#include <AkonadiWidgets/controlgui.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/itemfetchjob.h>
@@ -217,7 +217,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget *parent) :
     CollectionPropertiesDialog::registerPage(new CollectionAttributePageFactory());
     CollectionPropertiesDialog::registerPage(new CollectionInternalsPageFactory());
 
-    Control::widgetNeedsAkonadi(this);
+    ControlGui::widgetNeedsAkonadi(this);
 
     mStdActionManager = new StandardActionManager(xmlGuiWindow->actionCollection(), xmlGuiWindow);
     mStdActionManager->setCollectionSelectionModel(mCollectionView->selectionModel());
