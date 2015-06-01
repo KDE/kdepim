@@ -101,9 +101,9 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
     QPushButton *user3Button = new QPushButton;
     buttonBox->addButton(user3Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    connect(buttonBox->button(QDialogButtonBox::Help), SIGNAL(clicked()), this, SLOT(slotHelp()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &KMFilterDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(buttonBox->button(QDialogButtonBox::Help), &QAbstractButton::clicked, this, &KMFilterDialog::slotHelp);
     setModal(false);
     okButton->setFocus();
     KWindowSystem::setIcons(winId(),

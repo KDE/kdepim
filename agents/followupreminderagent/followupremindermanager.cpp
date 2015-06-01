@@ -75,7 +75,7 @@ void FollowUpReminderManager::load(bool forceReloadConfig)
         mInitialize = true;
         if (!mNoAnswerDialog.data()) {
             mNoAnswerDialog = new FollowUpReminderNoAnswerDialog;
-            connect(mNoAnswerDialog, SIGNAL(needToReparseConfiguration()), this, SLOT(slotReparseConfiguration()));
+            connect(mNoAnswerDialog.data(), &FollowUpReminderNoAnswerDialog::needToReparseConfiguration, this, &FollowUpReminderManager::slotReparseConfiguration);
         }
         mNoAnswerDialog->setInfo(noAnswerList);
         mNoAnswerDialog->show();

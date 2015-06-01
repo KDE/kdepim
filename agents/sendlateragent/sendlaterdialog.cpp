@@ -81,7 +81,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     unitsList << i18n("Months");
     unitsList << i18n("Years");
     mSendLaterWidget->mRecurrenceComboBox->addItems(unitsList);
-    connect(mSendLaterWidget->mDateTime, SIGNAL(dateChanged(QString)), this, SLOT(slotDateChanged(QString)));
+    connect(mSendLaterWidget->mDateTime, &SendLaterTimeDateWidget::dateChanged, this, &SendLaterDialog::slotDateChanged);
 
     lay->addWidget(new KSeparator);
 

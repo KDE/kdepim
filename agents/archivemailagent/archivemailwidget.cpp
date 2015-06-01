@@ -74,16 +74,16 @@ ArchiveMailWidget::ArchiveMailWidget(QWidget *parent)
     mWidget->treeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mWidget->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(customContextMenuRequested(QPoint)));
+    connect(mWidget->treeWidget, &QWidget::customContextMenuRequested,
+            this, &ArchiveMailWidget::customContextMenuRequested);
 
     load();
-    connect(mWidget->removeItem, SIGNAL(clicked(bool)), SLOT(slotRemoveItem()));
-    connect(mWidget->modifyItem, SIGNAL(clicked(bool)), SLOT(slotModifyItem()));
-    connect(mWidget->addItem, SIGNAL(clicked(bool)), SLOT(slotAddItem()));
-    connect(mWidget->treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(slotItemChanged(QTreeWidgetItem*,int)));
-    connect(mWidget->treeWidget, SIGNAL(itemSelectionChanged()), SLOT(updateButtons()));
-    connect(mWidget->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(slotModifyItem()));
+    connect(mWidget->removeItem, &QAbstractButton::clicked, this, &ArchiveMailWidget::slotRemoveItem);
+    connect(mWidget->modifyItem, &QAbstractButton::clicked, this, &ArchiveMailWidget::slotModifyItem);
+    connect(mWidget->addItem, &QAbstractButton::clicked, this, &ArchiveMailWidget::slotAddItem);
+    connect(mWidget->treeWidget, &QTreeWidget::itemChanged, this, &ArchiveMailWidget::slotItemChanged);
+    connect(mWidget->treeWidget, &QTreeWidget::itemSelectionChanged, this, &ArchiveMailWidget::updateButtons);
+    connect(mWidget->treeWidget, &QTreeWidget::itemDoubleClicked, this, &ArchiveMailWidget::slotModifyItem);
     updateButtons();
 }
 
