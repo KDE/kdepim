@@ -186,7 +186,7 @@ void MigrateApplicationFiles::migrateFile(const MigrateFileInfo &info)
     }
 
     if (!originalPath.isEmpty()) {
-        if (info.filePattern().isEmpty()) {
+        if (info.filePatterns().isEmpty()) {
             QFile newFile(newPath);
             if (!newFile.exists()) {
                 QFile copyFile(originalPath);
@@ -196,7 +196,7 @@ void MigrateApplicationFiles::migrateFile(const MigrateFileInfo &info)
             }
         } else {        
             QDir sourceDir(originalPath);
-            const QStringList fileNames = sourceDir.entryList(QStringList() << info.filePattern(), QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+            const QStringList fileNames = sourceDir.entryList(QStringList() << info.filePatterns(), QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
             Q_FOREACH(const QString &file, fileNames) {
                 QFile copyFile(originalPath + QLatin1Char('/') + file);
                 if (!copyFile.copy(newPath)) {

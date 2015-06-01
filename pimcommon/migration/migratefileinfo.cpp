@@ -70,12 +70,12 @@ void MigrateFileInfo::setFolder(bool folder)
     mFolder = folder;
 }
 
-QString MigrateFileInfo::filePattern() const
+QStringList MigrateFileInfo::filePatterns() const
 {
     return mFilePattern;
 }
 
-void MigrateFileInfo::setFilePattern(const QString &filePattern)
+void MigrateFileInfo::setFilePatterns(const QStringList &filePattern)
 {
     mFilePattern = filePattern;
 }

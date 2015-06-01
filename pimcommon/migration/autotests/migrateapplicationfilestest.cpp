@@ -374,7 +374,7 @@ void MigrateApplicationFilesTest::shouldMigrateFilesWithPattern()
     info.setPath(folderName);
     info.setType(QStringLiteral("data"));
     info.setFolder(false);
-    info.setFilePattern(QStringLiteral("*.txt"));
+    info.setFilePatterns(QStringList() << QStringLiteral("*.txt"));
     migrate.insertMigrateInfo(info);
     //TODO
 }

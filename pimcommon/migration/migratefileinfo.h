@@ -19,6 +19,8 @@
 #define MIGRATEFILEINFO_H
 
 #include <QString>
+#include <QStringList>
+
 #include "pimcommon_export.h"
 namespace PimCommon
 {
@@ -41,13 +43,13 @@ public:
     int version() const;
     void setVersion(int version);
 
-    QString filePattern() const;
-    void setFilePattern(const QString &filePattern);
+    QStringList filePatterns() const;
+    void setFilePatterns(const QStringList &filePatterns);
 
 private:
+    QStringList mFilePattern;
     QString mType;
     QString mPath;
-    QString mFilePattern;
     int mVersion;
     bool mFolder;
 };
