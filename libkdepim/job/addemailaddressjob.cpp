@@ -82,7 +82,7 @@ public:
             const QString text =
                 xi18nc("@info",
                        "A contact with the email address <email>%1</email> "
-                       "is already in your address book.", mCompleteAddress.toHtmlEscaped());
+                       "is already in your address book.", mCompleteAddress);
 
             KMessageBox::information(
                 mParentWidget,
@@ -223,7 +223,7 @@ public:
                    "<para>A contact for <email>%1</email> was successfully added "
                    "to your address book.</para>"
                    "<para>Do you want to edit this new contact now?</para>",
-                   mCompleteAddress.toHtmlEscaped());
+                   mCompleteAddress);
 
         if (KMessageBox::questionYesNo(
                     mParentWidget,
