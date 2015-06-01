@@ -26,6 +26,7 @@ using KSieve::Parser;
 #include <ksieve/scriptbuilder.h>
 
 #include <QDebug>
+#include <QStandardPaths>
 #include <QFileDialog>
 #include <QApplication>
 #include <KAboutData>
@@ -37,6 +38,7 @@ int main(int argc, char **argv)
 {
     KAboutData aboutData(QStringLiteral("scriptsieveparsing"), i18n("ScriptSieveParsingTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for script sieve parsing"));
+    QStandardPaths::setTestModeEnabled(true);
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);

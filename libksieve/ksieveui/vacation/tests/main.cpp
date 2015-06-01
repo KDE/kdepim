@@ -19,12 +19,14 @@
 #include <qapplication.h>
 #include <QCommandLineParser>
 #include <kaboutdata.h>
+#include <QStandardPaths>
 
 #include "vacation/multiimapvacationdialog.h"
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData aboutData(QStringLiteral("vacationmultiscripttest"),
                          i18n("VacationMultiScriptTest_Gui"),
                          QStringLiteral("1.0"));
