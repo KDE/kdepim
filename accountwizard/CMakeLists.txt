@@ -98,4 +98,6 @@ update_xdg_mimetypes(${KDE_INSTALL_MIMEDIR})
 
 add_subdirectory(wizards)
 add_subdirectory(ispdb)
-add_subdirectory(autotests)
+if (BUILD_TESTING)
+   add_subdirectory(autotests)
+endif()

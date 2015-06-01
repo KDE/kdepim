@@ -87,7 +87,7 @@ void Resource::create()
 
     // check if unique instance already exists
     qCDebug(ACCOUNTWIZARD_LOG) << type.capabilities();
-    if (type.capabilities().contains(QLatin1String("Unique"))) {
+    if (type.capabilities().contains(QStringLiteral("Unique"))) {
         foreach (const AgentInstance &instance, AgentManager::self()->instances()) {
             qCDebug(ACCOUNTWIZARD_LOG) << instance.type().identifier() << (instance.type() == type);
             if (instance.type() == type) {
@@ -117,7 +117,7 @@ void Resource::instanceCreateResult(KJob *job)
 
     if (!m_settings.isEmpty()) {
         Q_EMIT info(i18n("Configuring resource instance..."));
-        QDBusInterface iface(QLatin1String("org.freedesktop.Akonadi.Resource.") + m_instance.identifier(), QLatin1String("/Settings"));
+        QDBusInterface iface(QStringLiteral("org.freedesktop.Akonadi.Resource.") + m_instance.identifier(), QStringLiteral("/Settings"));
         if (!iface.isValid()) {
             Q_EMIT error(i18n("Unable to configure resource instance."));
             return;
