@@ -355,7 +355,12 @@ void MigrateApplicationFilesTest::shouldMigrateFilesWithPattern()
 
     //Copy files.
     QStringList files;
-    files << QStringLiteral("file1") << QStringLiteral("file2") << QStringLiteral("text2.txt") << QStringLiteral("text.txt");
+    QStringList filesMustBeMigrated;
+    filesMustBeMigrated << QStringLiteral("text2.txt") << QStringLiteral("text.txt");
+    QStringList filesMustNotBeMigrated;
+    filesMustNotBeMigrated << QStringLiteral("file1") << QStringLiteral("file2");
+
+    files << filesMustBeMigrated << filesMustNotBeMigrated;
     Q_FOREACH (const QString &file, files) {
         QFile fooFile(QLatin1String(MIGRATION_DATA_DIR) + QLatin1Char('/') + file);
         QVERIFY(fooFile.exists());
@@ -377,6 +382,17 @@ void MigrateApplicationFilesTest::shouldMigrateFilesWithPattern()
     info.setFilePatterns(QStringList() << QStringLiteral("*.txt"));
     migrate.insertMigrateInfo(info);
     //TODO
+
+    QVERIFY(migrate.checkIfNecessary());
+    QVERIFY(migrate.start());
+#if 0 //FIXME
+    Q_FOREACH (const QString &file, filesMustBeMigrated) {
+        QVERIFY(QFile(xdgDatahome + file).exists());
+    }
+    Q_FOREACH (const QString &file, filesMustNotBeMigrated) {
+        QVERIFY(!QFile(xdgDatahome + file).exists());
+    }
+#endif
 }
 
 void MigrateApplicationFilesTest::cleanup()
