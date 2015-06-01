@@ -35,10 +35,10 @@ GravatarCreateDialogTest::~GravatarCreateDialogTest()
 void GravatarCreateDialogTest::shouldHaveDefaultValue()
 {
     KABGravatar::GravatarCreateDialog dlg;
-    KABGravatar::GravatarCreateWidget *w = dlg.findChild<KABGravatar::GravatarCreateWidget *>(QLatin1String("gravatarcreatewidget"));
+    KABGravatar::GravatarCreateWidget *w = dlg.findChild<KABGravatar::GravatarCreateWidget *>(QStringLiteral("gravatarcreatewidget"));
     QVERIFY(w);
 
-    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QLatin1String("buttonbox"));
+    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
     QVERIFY(buttonBox);
 
 }

@@ -32,13 +32,13 @@ GravatarCreateDialog::GravatarCreateDialog(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mCreateWidget = new GravatarCreateWidget(this);
-    mCreateWidget->setObjectName(QLatin1String("gravatarcreatewidget"));
+    mCreateWidget->setObjectName(QStringLiteral("gravatarcreatewidget"));
     mainLayout->addWidget(mCreateWidget);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    buttonBox->setObjectName(QLatin1String("buttonbox"));
+    buttonBox->setObjectName(QStringLiteral("buttonbox"));
     mainLayout->addWidget(buttonBox);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     readConfig();
 }
 

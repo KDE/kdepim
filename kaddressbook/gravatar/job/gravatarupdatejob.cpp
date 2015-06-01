@@ -104,7 +104,7 @@ void GravatarUpdateJob::updatePixmap(const QPixmap &pix)
 
         // save the new item in akonadi storage
         Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(mItem);
-        connect(modifyJob, SIGNAL(result(KJob*)), SLOT(slotUpdateGravatarDone(KJob*)));
+        connect(modifyJob, &KJob::result, this, &GravatarUpdateJob::slotUpdateGravatarDone);
     } else {
         deleteLater();
     }

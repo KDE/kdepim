@@ -30,22 +30,22 @@ GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     setLayout(mainLayout);
 
     QLabel *lab = new QLabel(i18n("Email:"));
-    lab->setObjectName(QLatin1String("emaillabel"));
+    lab->setObjectName(QStringLiteral("emaillabel"));
     mainLayout->addWidget(lab, 0, 0);
 
     mEmailLab = new QLabel;
-    mEmailLab->setObjectName(QLatin1String("email"));
+    mEmailLab->setObjectName(QStringLiteral("email"));
     mainLayout->addWidget(mEmailLab, 0, 1);
 
     mSearchGravatar = new QPushButton(i18n("Search"));
     mSearchGravatar->setEnabled(false);
-    mSearchGravatar->setObjectName(QLatin1String("search"));
+    mSearchGravatar->setObjectName(QStringLiteral("search"));
     mainLayout->addWidget(mSearchGravatar, 0, 2);
     connect(mSearchGravatar, SIGNAL(clicked(bool)), this, SLOT(slotSearchGravatar()));
 
 
     mResultGravatar = new QLabel;
-    mResultGravatar->setObjectName(QLatin1String("result"));
+    mResultGravatar->setObjectName(QStringLiteral("result"));
     mainLayout->addWidget(mResultGravatar, 1, 0);
     updateActualGravatar();
 }

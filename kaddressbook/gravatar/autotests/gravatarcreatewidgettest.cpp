@@ -35,35 +35,35 @@ GravatarCreateWidgetTest::~GravatarCreateWidgetTest()
 void GravatarCreateWidgetTest::shouldHaveDefaultValue()
 {
     KABGravatar::GravatarCreateWidget widget;
-    QLabel *lab = widget.findChild<QLabel *>(QLatin1String("emaillabel"));
+    QLabel *lab = widget.findChild<QLabel *>(QStringLiteral("emaillabel"));
     QVERIFY(lab);
 
-    QLabel *emaillabel = widget.findChild<QLabel *>(QLatin1String("email"));
+    QLabel *emaillabel = widget.findChild<QLabel *>(QStringLiteral("email"));
     QVERIFY(emaillabel);
 
-    QPushButton *searchGravatar = widget.findChild<QPushButton *>(QLatin1String("search"));
+    QPushButton *searchGravatar = widget.findChild<QPushButton *>(QStringLiteral("search"));
     QVERIFY(searchGravatar);
 
-    QLabel *resultGravatar = widget.findChild<QLabel *>(QLatin1String("result"));
+    QLabel *resultGravatar = widget.findChild<QLabel *>(QStringLiteral("result"));
     QVERIFY(resultGravatar);
 }
 
 void GravatarCreateWidgetTest::shouldEnableDisableSearchButton()
 {
     KABGravatar::GravatarCreateWidget widget;
-    QPushButton *searchGravatar = widget.findChild<QPushButton *>(QLatin1String("search"));
+    QPushButton *searchGravatar = widget.findChild<QPushButton *>(QStringLiteral("search"));
     QVERIFY(!searchGravatar->isEnabled());
 
-    widget.setEmail(QLatin1String("foo"));
+    widget.setEmail(QStringLiteral("foo"));
     QVERIFY(searchGravatar->isEnabled());
 
     widget.setEmail(QString());
     QVERIFY(!searchGravatar->isEnabled());
 
-    widget.setEmail(QLatin1String("s"));
+    widget.setEmail(QStringLiteral("s"));
     QVERIFY(searchGravatar->isEnabled());
 
-    widget.setEmail(QLatin1String(" "));
+    widget.setEmail(QStringLiteral(" "));
     QVERIFY(!searchGravatar->isEnabled());
 }
 
