@@ -244,7 +244,7 @@ CategoryDialog::CategoryDialog(CategoryConfig *cc, QWidget *parent)
     //       button.
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
 #else
-    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Help | QDialogButtonBox::Apply);
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel /*| QDialogButtonBox::Help*/ | QDialogButtonBox::Apply);
 #endif
 
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
