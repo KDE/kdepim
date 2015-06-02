@@ -218,7 +218,7 @@ void StorageServiceManager::slotShareFile()
             if (service->hasUploadOrDownloadInProgress()) {
                 KMessageBox::information(Q_NULLPTR, i18n("There is still an upload in progress."));
             } else {
-                const QString fileName = QFileDialog::getOpenFileName(Q_NULLPTR, i18n("File to upload") ,  QString(), QString());
+                const QString fileName = QFileDialog::getOpenFileName(Q_NULLPTR, i18n("File to upload"));
                 if (!fileName.isEmpty()) {
                     QFileInfo info(fileName);
                     const QRegExp disallowedSymbols = service->disallowedSymbols();

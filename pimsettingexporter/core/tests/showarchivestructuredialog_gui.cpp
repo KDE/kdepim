@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     if (parser.positionalArguments().count()) {
         fileName = parser.positionalArguments().at(0);
     } else {
-        fileName = QFileDialog::getOpenFileName(Q_NULLPTR, QString(), QString(), QLatin1String("*.zip"));
+        fileName = QFileDialog::getOpenFileName(Q_NULLPTR, QString(), QString(), i18n("Zip file (*.zip)"));
     }
     if (fileName.isEmpty()) {
         return 0;

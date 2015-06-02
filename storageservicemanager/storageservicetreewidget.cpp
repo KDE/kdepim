@@ -382,7 +382,7 @@ void StorageServiceTreeWidget::slotDownloadFile()
 
 bool StorageServiceTreeWidget::uploadFileToService()
 {
-    const QString filename = QFileDialog::getOpenFileName(this, QString(), QString(), QStringLiteral("*"));
+    const QString filename = QFileDialog::getOpenFileName(this);
     if (!filename.isEmpty()) {
         const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
         const qlonglong maximumLimit =  mStorageService->maximumUploadFileSize();

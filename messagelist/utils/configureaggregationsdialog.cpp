@@ -418,7 +418,7 @@ void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
 
 void ConfigureAggregationsDialog::Private::importAggregationButtonClicked()
 {
-    const QString filename = QFileDialog::getOpenFileName(q, i18n("Import Aggregation"), QString(), QString::fromLatin1("*"));
+    const QString filename = QFileDialog::getOpenFileName(q, i18n("Import Aggregation"));
     if (!filename.isEmpty()) {
         KConfig config(filename);
 

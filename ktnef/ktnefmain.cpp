@@ -220,7 +220,7 @@ void KTNEFMain::loadFile(const QString &filename)
 
 void KTNEFMain::openFile()
 {
-    QString filename = QFileDialog::getOpenFileName(this, i18nc("@title:window", "Open TNEF File"),  QString(), QString());
+    QString filename = QFileDialog::getOpenFileName(this, i18nc("@title:window", "Open TNEF File"));
     if (!filename.isEmpty()) {
         loadFile(filename);
     }

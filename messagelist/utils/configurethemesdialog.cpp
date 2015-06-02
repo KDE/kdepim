@@ -428,7 +428,7 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
 
 void ConfigureThemesDialog::Private::importThemeButtonClicked()
 {
-    const QString filename = QFileDialog::getOpenFileName(q, i18n("Import Theme"), QString(), QStringLiteral("*"));
+    const QString filename = QFileDialog::getOpenFileName(q, i18n("Import Theme"));
     if (!filename.isEmpty()) {
         KConfig config(filename);
 

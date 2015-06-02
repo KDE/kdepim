@@ -538,11 +538,11 @@ void AutoCorrectionWidget::slotImportAutoCorrection(QAction *act)
         switch (type) {
         case AutoCorrectionWidget::LibreOffice:
             title = i18n("Import LibreOffice Autocorrection");
-            filter = QStringLiteral("*.dat");
+            filter = i18n("LibreOffice Autocorrection File (*.data)");
             break;
         case AutoCorrectionWidget::KMail:
             title = i18n("Import KMail Autocorrection");
-            filter = QStringLiteral("*.xml");
+            filter = i18n("KMail Autocorrection File (*.xml)");
             break;
         }
         const QString fileName = QFileDialog::getOpenFileName(this, title ,  QString(), filter);

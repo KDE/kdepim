@@ -188,7 +188,7 @@ void ServiceTestWidget::slotListFolder()
 
 void ServiceTestWidget::slotUploadFile()
 {
-    const QString filename = QFileDialog::getOpenFileName(this, QString(), QString());
+    const QString filename = QFileDialog::getOpenFileName(this);
     if (!filename.isEmpty()) {
         mStorageService->uploadFile(filename, QString(), QString()); //TODO
     }

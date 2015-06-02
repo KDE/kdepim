@@ -146,7 +146,7 @@ void ThemeEditorPage::insertFile()
     }
     GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
     if (page) {
-        const QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), QLatin1String("*"));
+        const QString fileName = QFileDialog::getOpenFileName(this);
         if (!fileName.isEmpty()) {
             page->insertFile(fileName);
         }

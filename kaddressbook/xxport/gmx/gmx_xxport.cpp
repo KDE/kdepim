@@ -93,7 +93,7 @@
 #include <QtCore/QList>
 #include <QtCore/QTextStream>
 
-#define GMX_FILESELECTION_STRING QLatin1String("*.gmxa|") + i18n( "GMX address book file (*.gmxa)" )
+#define GMX_FILESELECTION_STRING i18n( "GMX address book file (*.gmxa)" )
 
 const int typeHome  = 0;
 const int typeWork  = 1;

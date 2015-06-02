@@ -42,7 +42,7 @@ FilterMBox::~FilterMBox()
 
 void FilterMBox::import()
 {
-    const QStringList filenames = QFileDialog::getOpenFileNames(filterInfo()->parent(), QString(), QDir::homePath(), "*|" + i18n("mbox Files (*)"));
+    const QStringList filenames = QFileDialog::getOpenFileNames(filterInfo()->parent(), QString(), QDir::homePath(), i18n("mbox Files (*.mbox)"));
     if (filenames.isEmpty()) {
         filterInfo()->alert(i18n("No files selected."));
         return;
