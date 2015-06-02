@@ -88,6 +88,7 @@ add_library(calendarsupportcollectionpage ${calendarsupportcollectionpage_LIB_SR
 generate_export_header(calendarsupportcollectionpage BASE_NAME calendarsupportcollectionpage)
 target_link_libraries(
   calendarsupportcollectionpage
+PRIVATE
   KF5::AkonadiCore
   KF5::CalendarCore
   mailcommon
