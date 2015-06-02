@@ -47,5 +47,4 @@ void GravatarUpdateWidgetTest::shouldHaveDefaultValue()
     QVERIFY(resultGravatar);
 }
 
-
 QTEST_MAIN(GravatarUpdateWidgetTest)

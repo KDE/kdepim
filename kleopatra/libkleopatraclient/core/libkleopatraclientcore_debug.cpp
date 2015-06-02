@@ -20,4 +20,3 @@
 #include "libkleopatraclientcore_debug.h"
 Q_LOGGING_CATEGORY(LIBKLEOPATRACLIENTCORE_LOG, "log_libkleopatraclientcore")
 
-

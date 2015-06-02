@@ -21,7 +21,7 @@
 #include <QWidget>
 class QLabel;
 class QPushButton;
-namespace KABGravatar 
+namespace KABGravatar
 {
 class GravatarUpdateWidget : public QWidget
 {

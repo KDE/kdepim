@@ -133,9 +133,9 @@ public:
     }
 
 protected:
-    void timerEvent(QTimerEvent *ev) Q_DECL_OVERRIDE
-    {
-        if (ev->timerId() == m_timer.timerId()) {
+    void timerEvent(QTimerEvent *ev) Q_DECL_OVERRIDE {
+        if (ev->timerId() == m_timer.timerId())
+        {
             m_timer.stop();
             hide();
         } else {

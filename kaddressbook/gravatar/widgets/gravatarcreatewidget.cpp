@@ -44,7 +44,6 @@ GravatarCreateWidget::GravatarCreateWidget(QWidget *parent)
     mainLayout->addWidget(mSearchGravatar, 0, 2);
     connect(mSearchGravatar, SIGNAL(clicked(bool)), this, SLOT(slotSearchGravatar()));
 
-
     mResultGravatar = new QLabel;
     mResultGravatar->setObjectName(QStringLiteral("result"));
     mainLayout->addWidget(mResultGravatar, 1, 0);
