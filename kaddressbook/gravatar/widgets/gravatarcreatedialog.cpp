@@ -22,7 +22,6 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KSharedConfig>
 
 using namespace KABGravatar;
