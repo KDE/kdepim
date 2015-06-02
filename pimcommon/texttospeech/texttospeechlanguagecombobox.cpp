@@ -21,7 +21,7 @@ using namespace PimCommon;
 TextToSpeechLanguageComboBox::TextToSpeechLanguageComboBox(QWidget *parent)
     : QComboBox(parent)
 {
-
+    setSizeAdjustPolicy(QComboBox::AdjustToContents);
 }
 
 TextToSpeechLanguageComboBox::~TextToSpeechLanguageComboBox()
@@ -50,9 +50,4 @@ void TextToSpeechLanguageComboBox::updateAvailableLocales(const QVector<QLocale>
             setCurrentIndex(count() - 1);
         }
     }
-}
-
-QSize TextToSpeechLanguageComboBox::minimumSizeHint() const
-{
-    return QSize(90, QComboBox::minimumSizeHint().height());
 }

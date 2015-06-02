@@ -30,9 +30,6 @@ public:
     ~TextToSpeechLanguageComboBox();
     void selectLocaleName(const QString &localeName);
     void updateAvailableLocales(const QVector<QLocale> &locales, const QLocale &current);
-
-protected:
-    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
 };
 }
 #endif // TEXTTOSPEECHLANGUAGECOMBOBOX_H
