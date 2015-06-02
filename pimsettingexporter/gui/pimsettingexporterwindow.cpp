@@ -200,7 +200,7 @@ void PimSettingExporterWindow::slotBackupData()
         return;
     }
 
-    const QString filename = QFileDialog::getSaveFileName(this, i18n("Create backup"), QLatin1String("kfiledialog:///pimsettingexporter"), QLatin1String("*.zip"));
+    const QString filename = QFileDialog::getSaveFileName(this, i18n("Create backup"), QLatin1String("kfiledialog:///pimsettingexporter"), i18n("Zip file (*.zip)"));
     if (filename.isEmpty()) {
         return;
     }

@@ -26,8 +26,8 @@
 #include <QUrl>
 
 #include <KTextEdit>
-#include <KFileDialog>
 #include <KStandardGuiItem>
+#include <QFileDialog>
 
 #include <QTextStream>
 #include <QDialogButtonBox>
@@ -68,18 +68,16 @@ ScamDetectionDetailsDialog::~ScamDetectionDetailsDialog()
 void ScamDetectionDetailsDialog::slotSaveAs()
 {
     QUrl url;
-    MessageViewer::AutoQPointer<KFileDialog> fdlg(new KFileDialog(url, QString(), this));
-
-    fdlg->setMode(KFile::File);
-    fdlg->setSelection(QLatin1String("scam-detection.html"));
-    fdlg->setOperationMode(KFileDialog::Saving);
-    fdlg->setConfirmOverwrite(true);
+    MessageViewer::AutoQPointer<QFileDialog> fdlg(new QFileDialog(this, QString(), url.path()));
+    fdlg->setAcceptMode(QFileDialog::AcceptSave);
+    fdlg->setFileMode(QFileDialog::AnyFile);
+    fdlg->selectFile(QStringLiteral("scam-detection.html"));
     if (fdlg->exec() == QDialog::Accepted) {
-        const QString fileName = fdlg->selectedFile();
-        if (!fileName.isEmpty()) {
-            QFile file(fileName);
+        const QStringList fileNames = fdlg->selectedFiles();
+        if (!fileNames.isEmpty()) {
+            QFile file(fileNames.at(0));
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                qCDebug(MESSAGEVIEWER_LOG) << "We can't save in file :" << fileName;
+                qCDebug(MESSAGEVIEWER_LOG) << "We can't save in file :" << fileNames.at(0);
                 return;
             }
             QTextStream ts(&file);
