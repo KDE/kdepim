@@ -32,6 +32,9 @@ public:
 
     void setEmail(const QString &email);
 
+private Q_SLOTS:
+    void slotAccepted();
+
 private:
     void readConfig();
     void writeConfig();

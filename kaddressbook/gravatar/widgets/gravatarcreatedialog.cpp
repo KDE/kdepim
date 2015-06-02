@@ -37,7 +37,7 @@ GravatarCreateDialog::GravatarCreateDialog(QWidget *parent)
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QStringLiteral("buttonbox"));
     mainLayout->addWidget(buttonBox);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &GravatarCreateDialog::slotAccepted);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     readConfig();
 }
@@ -66,4 +66,10 @@ void GravatarCreateDialog::writeConfig()
     KConfigGroup grp(KSharedConfig::openConfig(), "GravatarCreateDialog");
     grp.writeEntry("Size", size());
     grp.sync();
+}
+
+void GravatarCreateDialog::slotAccepted()
+{
+    //TODO
+    accept();
 }

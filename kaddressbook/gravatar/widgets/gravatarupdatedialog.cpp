@@ -34,9 +34,9 @@ GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
     mGravatarUpdateWidget->setObjectName(QStringLiteral("gravatarupdatewidget"));
     mainLayout->addWidget(mGravatarUpdateWidget);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     buttonBox->setObjectName(QStringLiteral("buttonbox"));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &GravatarUpdateDialog::slotAccepted);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     mainLayout->addWidget(buttonBox);
     readConfig();
 }
@@ -65,4 +65,9 @@ void GravatarUpdateDialog::writeConfig()
     KConfigGroup grp(KSharedConfig::openConfig(), "GravatarUpdateDialog");
     grp.writeEntry("Size", size());
     grp.sync();
+}
+
+void GravatarUpdateDialog::slotAccepted()
+{
+    accept();
 }
