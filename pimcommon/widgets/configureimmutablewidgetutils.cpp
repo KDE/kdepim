@@ -140,7 +140,6 @@ void ConfigureImmutableWidgetUtils::saveGroupBox(QGroupBox *b, KCoreConfigSkelet
     }
 }
 
-
 void ConfigureImmutableWidgetUtils::loadWidget(KUrlRequester *b, const KCoreConfigSkeleton::ItemString *e)
 {
     checkLockDown(b, e);
@@ -167,7 +166,6 @@ void ConfigureImmutableWidgetUtils::loadWidget(QGroupBox *b, const KCoreConfigSk
         b->setChecked(e->value());
     }
 }
-
 
 void ConfigureImmutableWidgetUtils::loadWidget(QComboBox *b, const KCoreConfigSkeleton::ItemEnum *e)
 {

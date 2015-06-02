@@ -77,7 +77,6 @@ void GravatarResolvUrlJobTest::shouldChangeValue()
     job.setFallbackGravatar(fallBackGravatar);
     QCOMPARE(job.fallbackGravatar(), fallBackGravatar);
 
-
     bool useHttps = false;
     job.setUseHttps(useHttps);
     QCOMPARE(job.useHttps(), useHttps);

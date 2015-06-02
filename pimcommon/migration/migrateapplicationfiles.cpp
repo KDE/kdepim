@@ -194,10 +194,10 @@ void MigrateApplicationFiles::migrateFile(const MigrateFileInfo &info)
                     qCDebug(PIMCOMMON_LOG) << "impossible to copy " << originalPath << " to " << newPath;
                 }
             }
-        } else {        
+        } else {
             QDir sourceDir(originalPath);
-            const QStringList fileNames = sourceDir.entryList( info.filePatterns(), QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
-            Q_FOREACH(const QString &file, fileNames) {
+            const QStringList fileNames = sourceDir.entryList(info.filePatterns(), QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+            Q_FOREACH (const QString &file, fileNames) {
                 QFile copyFile(originalPath + QLatin1Char('/') + file);
                 if (!copyFile.copy(newPath + QLatin1Char('/') + file)) {
                     qCDebug(PIMCOMMON_LOG) << "impossible to copy " << copyFile.fileName() << " to " << newPath;

@@ -172,7 +172,6 @@ void MigrateApplicationFilesTest::shouldNotMigrateFoldersIfAlreadyDone()
     info.setVersion(2);
     migrate.insertMigrateInfo(info);
 
-
     QVERIFY(migrate.start());
     Q_FOREACH (const QString &file, files) {
         QVERIFY(!QFile(xdgDatahome + file).exists());
