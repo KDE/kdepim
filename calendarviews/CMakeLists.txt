@@ -103,6 +103,7 @@ PUBLIC
   KF5::CalendarUtils
   KF5::AkonadiCalendar
 PRIVATE
+  KF5::Holidays
   KF5::Codecs
   kdgantt2
   ${ZLIB_LIBRARIES}

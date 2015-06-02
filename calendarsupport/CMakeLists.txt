@@ -61,16 +61,18 @@ generate_export_header(calendarsupport BASE_NAME calendarsupport)
 
 target_link_libraries(
   calendarsupport
-  kdepimdbusinterfaces
+PUBLIC
+  KF5::Mime
+  KF5::IdentityManagement
+  KF5::AkonadiCalendar
+PRIVATE
+  KF5::AkonadiWidgets
+  KF5::Holidays
+  KF5::Codecs
   KF5::AkonadiCore
   KF5::CalendarCore
   KF5::CalendarUtils
-  KF5::Mime
-  KF5::IdentityManagement
-  KF5::Codecs
-  KF5::Holidays
-  KF5::AkonadiCalendar
-  KF5::AkonadiWidgets
+  kdepimdbusinterfaces
 )
 
 set_target_properties(calendarsupport

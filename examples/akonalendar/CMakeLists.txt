@@ -10,6 +10,6 @@ set(calendar_bin_SRCS
 add_executable(akonalendar_bin ${calendar_bin_SRCS})
 set_target_properties(akonalendar_bin PROPERTIES OUTPUT_NAME akonalendar)
 
-target_link_libraries(akonalendar_bin KF5::AkonadiCore  KF5::KCMUtils calendarsupport)
+target_link_libraries(akonalendar_bin KF5::AkonadiCore  KF5::KCMUtils calendarsupport KF5::AkonadiWidgets)
 
 #install(TARGETS akonalendar_bin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
