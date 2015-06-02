@@ -37,7 +37,7 @@ ServerTest::~ServerTest()
     delete m_serverTest;
 }
 
-void ServerTest::test(const QString server, const QString protocol)
+void ServerTest::test(const QString &server, const QString &protocol)
 {
     qCDebug(ACCOUNTWIZARD_LOG) << server << protocol;
     m_serverTest->setServer(server);
@@ -50,7 +50,7 @@ void ServerTest::test(const QString server, const QString protocol)
     m_serverTest->start();
 }
 
-void ServerTest::testFinished(QList< int > list)
+void ServerTest::testFinished(const QList< int > &list)
 {
     qCDebug(ACCOUNTWIZARD_LOG) << "types: " << list;
     if (list.contains(MailTransport::Transport::EnumEncryption::TLS)) {

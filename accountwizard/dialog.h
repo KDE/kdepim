@@ -41,7 +41,7 @@ public:
 public Q_SLOTS:
     Q_SCRIPTABLE QObject *addPage(const QString &uiFile, const QString &title);
 
-    void reject();
+    void reject() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotNextPage();

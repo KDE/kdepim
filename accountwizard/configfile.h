@@ -37,8 +37,8 @@ class ConfigFile : public SetupObject
 public:
     explicit ConfigFile(const QString &configName, QObject *parent = Q_NULLPTR);
     ~ConfigFile();
-    void create();
-    void destroy();
+    void create() Q_DECL_OVERRIDE;
+    void destroy() Q_DECL_OVERRIDE;
     void edit();
 public Q_SLOTS:
     Q_SCRIPTABLE void write();
