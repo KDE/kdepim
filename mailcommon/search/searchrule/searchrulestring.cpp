@@ -322,13 +322,16 @@ bool SearchRuleString::matchesInternal( const QString &msgContents ) const
         const QStringList addressList = KPIMUtils::splitAddressList( msgContents.toLower() );
         QStringList::ConstIterator end( addressList.constEnd() );
         for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != end ); ++it ) {
-            Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-            job->setLimit( 1 );
-            job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ).toLower() );
-            job->exec();
+            const QString email(KPIMUtils::extractEmailAddress( *it ).toLower());
+            if (!email.isEmpty()) {
+                Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
+                job->setLimit( 1 );
+                job->setQuery( Akonadi::ContactSearchJob::Email, email );
+                job->exec();
 
-            if ( !job->contacts().isEmpty() ) {
-                return true;
+                if ( !job->contacts().isEmpty() ) {
+                    return true;
+                }
             }
         }
         return false;
@@ -340,13 +343,16 @@ bool SearchRuleString::matchesInternal( const QString &msgContents ) const
         QStringList::ConstIterator end( addressList.constEnd() );
 
         for ( QStringList::ConstIterator it = addressList.constBegin(); ( it != end ); ++it ) {
-            Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-            job->setLimit( 1 );
-            job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ).toLower() );
-            job->exec();
+            const QString email(KPIMUtils::extractEmailAddress( *it ).toLower());
+            if (!email.isEmpty()) {
+                Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
+                job->setLimit( 1 );
+                job->setQuery( Akonadi::ContactSearchJob::Email, email );
+                job->exec();
 
-            if ( job->contacts().isEmpty() ) {
-                return true;
+                if ( job->contacts().isEmpty() ) {
+                    return true;
+                }
             }
         }
         return false;
@@ -359,15 +365,18 @@ bool SearchRuleString::matchesInternal( const QString &msgContents ) const
 
         QStringList::ConstIterator end( addressList.constEnd() );
         for ( QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it ) {
-            Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-            job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ).toLower() );
-            job->exec();
+            const QString email(KPIMUtils::extractEmailAddress( *it ).toLower());
+            if (!email.isEmpty()) {
+                Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
+                job->setQuery( Akonadi::ContactSearchJob::Email, email );
+                job->exec();
 
-            const KABC::Addressee::List contacts = job->contacts();
+                const KABC::Addressee::List contacts = job->contacts();
 
-            foreach ( const KABC::Addressee &contact, contacts ) {
-                if ( contact.hasCategory( category ) ) {
-                    return true;
+                foreach ( const KABC::Addressee &contact, contacts ) {
+                    if ( contact.hasCategory( category ) ) {
+                        return true;
+                    }
                 }
             }
         }
@@ -381,15 +390,18 @@ bool SearchRuleString::matchesInternal( const QString &msgContents ) const
 
         QStringList::ConstIterator end( addressList.constEnd() );
         for ( QStringList::ConstIterator it = addressList.constBegin(); it != end; ++it ) {
-            Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-            job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::extractEmailAddress( *it ).toLower() );
-            job->exec();
+            const QString email(KPIMUtils::extractEmailAddress( *it ).toLower());
+            if (!email.isEmpty()) {
+                Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
+                job->setQuery( Akonadi::ContactSearchJob::Email, email );
+                job->exec();
 
-            const KABC::Addressee::List contacts = job->contacts();
+                const KABC::Addressee::List contacts = job->contacts();
 
-            foreach ( const KABC::Addressee &contact, contacts ) {
-                if ( contact.hasCategory( category ) ) {
-                    return false;
+                foreach ( const KABC::Addressee &contact, contacts ) {
+                    if ( contact.hasCategory( category ) ) {
+                        return false;
+                    }
                 }
             }
 
