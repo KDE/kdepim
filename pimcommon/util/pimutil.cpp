@@ -63,7 +63,7 @@ void PimCommon::Util::saveTextAs(const QString &text, const QString &filter, QWi
     if (!caption.isEmpty()) {
         fdlg->setWindowTitle(caption);
     }
-    fdlg->setAcceptDrops(QFileDialog::AcceptSave);
+    fdlg->setAcceptMode(QFileDialog::AcceptSave);
     if (fdlg->exec() == QDialog::Accepted && fdlg) {
         const QString fileName = fdlg->selectedFiles().at(0);
         if (!saveToFile(fileName, text)) {
