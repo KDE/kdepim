@@ -79,20 +79,18 @@ int AttachmentDialog::exec()
     }
 
     bool again = false;
-    const int ret = 0;
-    KMessageBox::createKMessageBox(dialog, mButtonBox, QMessageBox::Question, text, QStringList(),
+    const QDialogButtonBox::StandardButton ret = KMessageBox::createKMessageBox(dialog, mButtonBox, QMessageBox::Question, text, QStringList(),
                                    i18n("Do not ask again"), &again, 0);
 
-    if (ret == QDialog::Rejected) {
+    if (ret == QDialogButtonBox::Cancel) {
         return Cancel;
     } else {
         if (again) {
             KConfigGroup::WriteConfigFlags flags = KConfig::Persistent;
             KConfigGroup cg(KSharedConfig::openConfig().data(), "Notification Messages");
-            cg.writeEntry(dontAskName, ret, flags);
+            cg.writeEntry(dontAskName, static_cast<int>(ret), flags);
             cg.sync();
         }
-
         return ret;
     }
 }
