@@ -143,10 +143,10 @@ target_link_libraries(kdepim
   KF5::AkonadiContact
   KF5::AkonadiWidgets
   KF5::AkonadiCalendar
-  KF5::SonnetCore
   KF5::KCMUtils
-  KF5::Wallet
   KF5::AkonadiSearchPIM
+  KF5::SonnetCore
+  KF5::Wallet
 )
 
 
