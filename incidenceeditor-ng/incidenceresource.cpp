@@ -164,13 +164,15 @@ void IncidenceResource::findResources()
 void IncidenceResource::dialogOkPressed()
 {
     ResourceItem::Ptr item = resourceDialog->selectedItem();
-    const QString name = item->ldapObject().value(QStringLiteral("cn"));
-    const QString email = item->ldapObject().value(QStringLiteral("mail"));
+    if (item) {
+        const QString name = item->ldapObject().value(QStringLiteral("cn"));
+        const QString email = item->ldapObject().value(QStringLiteral("mail"));
 #ifndef KDEPIM_MOBILE_UI
-    KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(name, email));
-    attendee->setCuType(KCalCore::Attendee::Resource);
-    dataModel->insertAttendee(dataModel->rowCount(), attendee);
+        KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(name, email));
+        attendee->setCuType(KCalCore::Attendee::Resource);
+        dataModel->insertAttendee(dataModel->rowCount(), attendee);
 #endif
+    }
 }
 
 void IncidenceResource::layoutChanged()
