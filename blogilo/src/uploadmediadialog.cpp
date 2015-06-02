@@ -67,7 +67,7 @@ UploadMediaDialog::UploadMediaDialog(QWidget *parent)
     ui.kcfg_FtpPath->setText(Settings::ftpServerPath());
     ui.kcfg_httpUrl->setText(Settings::httpUrl());
     setWindowModality(Qt::ApplicationModal);
-    ui.kcfg_urlBrowser->setIcon(QIcon::fromTheme(QLatin1String("document-open")));
+    ui.kcfg_urlBrowser->setIcon(QIcon::fromTheme(QStringLiteral("document-open")));
     connect(ui.kcfg_urlBrowser, &QPushButton::clicked, this, &UploadMediaDialog::selectNewFile);
     connect(ui.kcfg_uploadType, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &UploadMediaDialog::slotUploadTypeChanged);
     connect(ui.kcfg_urlLineEdit, &QLineEdit::textChanged, this, &UploadMediaDialog::currentMediaChanged);
@@ -99,7 +99,7 @@ void UploadMediaDialog::init(const BilboBlog *currentBlog)
 
 void UploadMediaDialog::currentMediaChanged(const QString &newPath)
 {
-    ui.kcfg_previewer->showPreview(KUrl(newPath));
+    ui.kcfg_previewer->showPreview(QUrl::fromLocalFile(newPath));
 }
 
 bool UploadMediaDialog::selectNewFile()
