@@ -122,8 +122,8 @@ void AttachmentPropertiesDialog::Private::polishUi()
         okButton->setDefault(true);
         okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
 
-        q->connect(buttonBox->button(QDialogButtonBox::Help), SIGNAL(clicked()), q, SLOT(slotHelp()));
     }
+    q->connect(buttonBox->button(QDialogButtonBox::Help), SIGNAL(clicked()), q, SLOT(slotHelp()));
     q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
     q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
     mainLayout->addWidget(buttonBox);
@@ -385,7 +385,7 @@ void AttachmentPropertiesDialog::accept()
 
 void AttachmentPropertiesDialog::slotHelp()
 {
-    KHelpClient::invokeHelp(QString::fromLatin1("attachments"), QLatin1String("kmail"));
+    KHelpClient::invokeHelp(QStringLiteral("attachments"), QStringLiteral("kmail"));
 }
 
 #include "moc_attachmentpropertiesdialog.cpp"
