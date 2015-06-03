@@ -52,6 +52,7 @@ struct tagStruct {
     QString name;
     QColor color;
 };
+Q_DECLARE_TYPEINFO(tagStruct, Q_MOVABLE_TYPE);
 
 namespace ImportWizardUtil
 {
@@ -62,7 +63,7 @@ enum ResourceType {
 };
 
 void mergeLdap(const ldapStruct &ldap);
-void addAkonadiTag(const QList<tagStruct> &tagList);
+void addAkonadiTag(const QVector<tagStruct> &tagList);
 void storeInKWallet(const QString &name, ImportWizardUtil::ResourceType type, const QString &password);
 }
 

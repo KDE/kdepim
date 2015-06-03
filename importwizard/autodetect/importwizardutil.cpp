@@ -78,7 +78,7 @@ void ImportWizardUtil::mergeLdap(const ldapStruct &ldap)
     grp.sync();
 }
 
-void ImportWizardUtil::addAkonadiTag(const QList<tagStruct> &tagList)
+void ImportWizardUtil::addAkonadiTag(const QVector<tagStruct> &tagList)
 {
     for (int i = 0; i < tagList.size(); ++i) {
         Akonadi::Tag tag(tagList.at(i).name);
