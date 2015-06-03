@@ -158,7 +158,7 @@ void Toolbox::slotLoadEntriesFromDB(int blog_id)
         return;
     }
     lstEntriesList->clear();
-    const QList<QVariantMap> listEntries = DBMan::self()->listPostsInfo(blog_id);
+    const QVector<QVariantMap> listEntries = DBMan::self()->listPostsInfo(blog_id);
     const int count = listEntries.count();
     for (int i = 0; i < count; ++i) {
         QListWidgetItem *lstItem = new QListWidgetItem(listEntries[i].value(QStringLiteral("title")).toString());

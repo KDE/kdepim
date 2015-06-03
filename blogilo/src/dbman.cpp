@@ -1212,9 +1212,9 @@ QMap< int, QString > DBMan::listPostsTitle(int blog_id)
     return list;
 }
 
-QList<QVariantMap> DBMan::listPostsInfo(int blog_id)
+QVector<QVariantMap> DBMan::listPostsInfo(int blog_id)
 {
-    QList<QVariantMap> list;
+    QVector<QVariantMap> list;
     QSqlQuery q;
     q.prepare(QLatin1String("SELECT title, id, c_time, is_private FROM post WHERE blog_id = ? ORDER BY c_time DESC"));
     q.addBindValue(blog_id);

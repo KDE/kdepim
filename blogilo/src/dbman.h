@@ -72,7 +72,7 @@ public:
 
     QList<BilboPost *> listPosts(int blog_id);
     QMap< int, QString > listPostsTitle(int blog_id);  ///QString as Title, and int as post_id
-    QList<QVariantMap> listPostsInfo(int blog_id);
+    QVector<QVariantMap> listPostsInfo(int blog_id);
     BilboPost getPostInfo(int post_id);
 
     QMap<QString, int> listCategoriesName(int blog_id);
