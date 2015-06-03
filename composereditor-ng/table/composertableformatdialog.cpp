@@ -98,10 +98,10 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     q->connect(buttonBox, &QDialogButtonBox::accepted, q, &ComposerTableFormatDialog::accept);
     q->connect(buttonBox, &QDialogButtonBox::rejected, q, &ComposerTableFormatDialog::reject);
-    mainLayout->addWidget(buttonBox);
     okButton->setText(i18n("Edit"));
     QWidget *page = new QWidget(q);
     mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
 
     QVBoxLayout *lay = new QVBoxLayout(page);
     insertTableWidget = new KPIMTextEdit::InsertTableWidget(q);

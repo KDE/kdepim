@@ -75,7 +75,7 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    q->connect(buttonBox, &QDialogButtonBox::accepted, q, &ComposerLinkDialog::accept);
+    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(_k_slotOkClicked()));
     q->connect(buttonBox, &QDialogButtonBox::rejected, q, &ComposerLinkDialog::reject);
     mainLayout->addWidget(buttonBox);
     webElement = element;
@@ -116,8 +116,6 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
     }
 
     vbox->addWidget(new KSeparator);
-
-    q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotOkClicked()));
 }
 
 void ComposerLinkDialogPrivate::fillTarget()

@@ -82,7 +82,6 @@ void ComposerTableDialogPrivate::initialize()
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     q->connect(buttonBox, &QDialogButtonBox::accepted, q, &ComposerTableDialog::accept);
     q->connect(buttonBox, &QDialogButtonBox::rejected, q, &ComposerTableDialog::reject);
-    mainLayout->addWidget(buttonBox);
     okButton->setText(i18n("Insert"));
 
     QWidget *page = new QWidget;
@@ -96,6 +95,7 @@ void ComposerTableDialogPrivate::initialize()
     lay->addWidget(sep);
 
     mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
     q->connect(q, SIGNAL(clicked()), q, SLOT(_k_slotOkClicked()));
 }
 
