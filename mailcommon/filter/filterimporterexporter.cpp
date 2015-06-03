@@ -209,7 +209,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
                 break;
             }
 
-            fileName = QFileDialog::getOpenFileName(d->mParent, title,  defaultPath, QString());
+            fileName = QFileDialog::getOpenFileName(d->mParent, title,  defaultPath);
             if (fileName.isEmpty()) {
                 canceled = true;
                 return QList<MailFilter *>(); // cancel
