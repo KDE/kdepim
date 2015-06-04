@@ -17,6 +17,7 @@
 
 #include "richtexteditor.h"
 #include "texteditor/commonwidget/textmessageindicator.h"
+#include "texteditor/richtexteditor/richtextdecorator.h"
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -50,8 +51,8 @@ class RichTextEditor::RichTextEditorPrivate
 public:
     RichTextEditorPrivate(RichTextEditor *qq)
         : q(qq),
-          mTextIndicator(new PimCommon::TextMessageIndicator(q)),
-          highLighter(Q_NULLPTR),
+          textIndicator(new PimCommon::TextMessageIndicator(q)),
+          richTextDecorator(Q_NULLPTR),
           speller(Q_NULLPTR),
           customPalette(false)
     {
@@ -64,16 +65,16 @@ public:
     }
     ~RichTextEditorPrivate()
     {
-        delete highLighter;
+        delete richTextDecorator;
         delete speller;
     }
 
     RichTextEditor *q;
-    PimCommon::TextMessageIndicator *mTextIndicator;
+    PimCommon::TextMessageIndicator *textIndicator;
     QString spellCheckingConfigFileName;
     QString spellCheckingLanguage;
     QTextDocumentFragment originalDoc;
-    Sonnet::Highlighter *highLighter;
+    Sonnet::SpellCheckDecorator *richTextDecorator;
     Sonnet::Speller *speller;
     RichTextEditor::SupportFeatures supportFeatures;
     bool customPalette;
@@ -95,10 +96,28 @@ RichTextEditor::~RichTextEditor()
 
 void RichTextEditor::slotDisplayMessageIndicator(const QString &message)
 {
-    d->mTextIndicator->display(message);
+    d->textIndicator->display(message);
 }
 
-void RichTextEditor::defaultPopupMenu(const QPoint &pos)
+Sonnet::Highlighter *RichTextEditor::highlighter() const
+{
+    if (d->richTextDecorator) {
+        return d->richTextDecorator->highlighter();
+    } else {
+        return 0;
+    }
+}
+
+void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu *popup = mousePopupMenu(event->pos());
+    if (popup) {
+        popup->exec(event->globalPos());
+        delete popup;
+    }
+}
+
+QMenu *RichTextEditor::mousePopupMenu(const QPoint &pos)
 {
     QMenu *popup = createStandardContextMenu();
     if (popup) {
@@ -183,10 +202,9 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
             connect(speakAction, &QAction::triggered, this, &RichTextEditor::slotSpeakText);
         }
         addExtraMenuEntry(popup, pos);
-        popup->exec(pos);
-
-        delete popup;
+        return popup;
     }
+    return Q_NULLPTR;
 }
 
 void RichTextEditor::slotSpeakText()
@@ -260,7 +278,7 @@ void RichTextEditor::slotUndoableClear()
 
 void RichTextEditor::setReadOnly(bool readOnly)
 {
-    if (!readOnly && hasFocus() && d->checkSpellingEnabled && !d->highLighter) {
+    if (!readOnly && hasFocus() && d->checkSpellingEnabled && !d->richTextDecorator) {
         createHighlighter();
     }
 
@@ -269,8 +287,8 @@ void RichTextEditor::setReadOnly(bool readOnly)
     }
 
     if (readOnly) {
-        delete d->highLighter;
-        d->highLighter = Q_NULLPTR;
+        delete d->richTextDecorator;
+        d->richTextDecorator = Q_NULLPTR;
 
         d->customPalette = testAttribute(Qt::WA_SetPalette);
         QPalette p = palette();
@@ -352,8 +370,8 @@ void RichTextEditor::slotSpellCheckerFinished()
     QTextCursor cursor(document());
     cursor.clearSelection();
     setTextCursor(cursor);
-    if (d->highLighter) {
-        d->highLighter->rehighlight();
+    if (highlighter()) {
+        highlighter()->rehighlight();
     }
 }
 
@@ -371,15 +389,25 @@ void RichTextEditor::createHighlighter()
     setHighlighter(new Sonnet::Highlighter(this, d->spellCheckingConfigFileName));
 }
 
+Sonnet::SpellCheckDecorator *RichTextEditor::createSpellCheckDecorator()
+{
+    return new RichTextDecorator(this);
+}
+
 void RichTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
 {
-    delete d->highLighter;
-    d->highLighter = _highLighter;
+    Sonnet::SpellCheckDecorator *decorator = createSpellCheckDecorator();
+    decorator->setHighlighter(_highLighter);
+
+    //KTextEdit used to take ownership of the highlighter, Sonnet::SpellCheckDecorator does not.
+    //so we reparent the highlighter so it will be deleted when the decorator is destroyed
+    _highLighter->setParent(decorator);
+    d->richTextDecorator = decorator;
 }
 
 void RichTextEditor::focusInEvent(QFocusEvent *event)
 {
-    if (d->checkSpellingEnabled && !isReadOnly() && !d->highLighter && spellCheckingSupport()) {
+    if (d->checkSpellingEnabled && !isReadOnly() && !d->richTextDecorator && spellCheckingSupport()) {
         createHighlighter();
     }
 
@@ -415,8 +443,8 @@ void RichTextEditor::setCheckSpellingEnabled(bool check)
             }
         }
     } else {
-        delete d->highLighter;
-        d->highLighter = Q_NULLPTR;
+        delete d->richTextDecorator;
+        d->richTextDecorator = Q_NULLPTR;
     }
 }
 
@@ -427,9 +455,9 @@ const QString &RichTextEditor::spellCheckingLanguage() const
 
 void RichTextEditor::setSpellCheckingLanguage(const QString &_language)
 {
-    if (d->highLighter) {
-        d->highLighter->setCurrentLanguage(_language);
-        d->highLighter->rehighlight();
+    if (highlighter()) {
+        highlighter()->setCurrentLanguage(_language);
+        highlighter()->rehighlight();
     }
 
     if (_language != d->spellCheckingLanguage) {
@@ -448,113 +476,6 @@ void RichTextEditor::slotLanguageSelected()
     QAction *languageAction = static_cast<QAction *>(QObject::sender());
     setSpellCheckingLanguage(languageAction->data().toString());
 }
-
-void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
-{
-    // Obtain the cursor at the mouse position and the current cursor
-    QTextCursor cursorAtMouse = cursorForPosition(event->pos());
-    const int mousePos = cursorAtMouse.position();
-    QTextCursor cursor = textCursor();
-
-    // Check if the user clicked a selected word
-    const bool selectedWordClicked = cursor.hasSelection() &&
-                                     mousePos >= cursor.selectionStart() &&
-                                     mousePos <= cursor.selectionEnd();
-
-    // Get the word under the (mouse-)cursor and see if it is misspelled.
-    // Don't include apostrophes at the start/end of the word in the selection.
-    QTextCursor wordSelectCursor(cursorAtMouse);
-    wordSelectCursor.clearSelection();
-    wordSelectCursor.select(QTextCursor::WordUnderCursor);
-    QString selectedWord = wordSelectCursor.selectedText();
-
-    bool isMouseCursorInsideWord = true;
-    if ((mousePos < wordSelectCursor.selectionStart() ||
-            mousePos >= wordSelectCursor.selectionEnd())
-            && (selectedWord.length() > 1)) {
-        isMouseCursorInsideWord = false;
-    }
-
-    // Clear the selection again, we re-select it below (without the apostrophes).
-    wordSelectCursor.setPosition(wordSelectCursor.position() - selectedWord.size());
-    if (selectedWord.startsWith(QLatin1Char('\'')) || selectedWord.startsWith(QLatin1Char('\"'))) {
-        selectedWord = selectedWord.right(selectedWord.size() - 1);
-        wordSelectCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::MoveAnchor);
-    }
-    if (selectedWord.endsWith(QLatin1Char('\'')) || selectedWord.endsWith(QLatin1Char('\"'))) {
-        selectedWord.chop(1);
-    }
-
-    wordSelectCursor.movePosition(QTextCursor::NextCharacter,
-                                  QTextCursor::KeepAnchor, selectedWord.size());
-
-    const bool wordIsMisspelled = isMouseCursorInsideWord &&
-                                  checkSpellingEnabled() &&
-                                  !selectedWord.isEmpty() &&
-                                  d->highLighter &&
-                                  d->highLighter->isWordMisspelled(selectedWord);
-
-    // If the user clicked a selected word, do nothing.
-    // If the user clicked somewhere else, move the cursor there.
-    // If the user clicked on a misspelled word, select that word.
-    // Same behavior as in OpenOffice Writer.
-    if (!selectedWordClicked) {
-        if (wordIsMisspelled) {
-            setTextCursor(wordSelectCursor);
-        } else {
-            setTextCursor(cursorAtMouse);
-        }
-        cursor = textCursor();
-    }
-
-    // Use standard context menu for already selected words, correctly spelled
-    // words and words inside quotes.
-    if (!wordIsMisspelled || selectedWordClicked) {
-        defaultPopupMenu(event->globalPos());
-    } else {
-        QMenu menu;
-
-        //Add the suggestions to the menu
-        const QStringList reps = d->highLighter->suggestionsForWord(selectedWord);
-        if (reps.isEmpty()) {
-            QAction *suggestionsAction = menu.addAction(i18n("No suggestions for %1", selectedWord));
-            suggestionsAction->setEnabled(false);
-        } else {
-            QStringList::const_iterator end(reps.constEnd());
-            for (QStringList::const_iterator it = reps.constBegin(); it != end; ++it) {
-                menu.addAction(*it);
-            }
-        }
-
-        menu.addSeparator();
-
-        QAction *ignoreAction = menu.addAction(i18n("Ignore"));
-        QAction *addToDictAction = menu.addAction(i18n("Add to Dictionary"));
-        //Execute the popup inline
-        const QAction *selectedAction = menu.exec(event->globalPos());
-
-        if (selectedAction) {
-            Q_ASSERT(cursor.selectedText() == selectedWord);
-
-            if (selectedAction == ignoreAction) {
-                d->highLighter->ignoreWord(selectedWord);
-                d->highLighter->rehighlight();
-            } else if (selectedAction == addToDictAction) {
-                d->highLighter->addWordToDictionary(selectedWord);
-                d->highLighter->rehighlight();
-            }
-
-            // Other actions can only be one of the suggested words
-            else {
-                const QString replacement = selectedAction->text();
-                Q_ASSERT(reps.contains(replacement));
-                cursor.insertText(replacement);
-                setTextCursor(cursor);
-            }
-        }
-    }
-}
-
 static void deleteWord(QTextCursor cursor, QTextCursor::MoveOperation op)
 {
     cursor.clearSelection();

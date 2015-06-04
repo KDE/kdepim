@@ -26,6 +26,7 @@ class QMenu;
 namespace Sonnet
 {
 class Highlighter;
+class SpellCheckDecorator;
 }
 namespace PimCommon
 {
@@ -65,6 +66,8 @@ public:
 
     bool textToSpeechSupport() const;
     void setTextToSpeechSupport(bool b);
+    Sonnet::Highlighter *highlighter() const;
+
 Q_SIGNALS:
     void say(const QString &text);
 
@@ -90,6 +93,8 @@ protected:
     bool event(QEvent *ev) Q_DECL_OVERRIDE;
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
+    QMenu *mousePopupMenu(const QPoint &pos);
+    virtual Sonnet::SpellCheckDecorator *createSpellCheckDecorator();
 Q_SIGNALS:
     void findText();
     void replaceText();
