@@ -76,7 +76,7 @@ StatusbarProgressWidget::StatusbarProgressWidget(ProgressDialog *progressDialog,
     m_pButton = new QPushButton(this);
     m_pButton->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,
                                          QSizePolicy::Minimum));
-    QPixmap smallIcon = SmallIcon(QLatin1String("go-up"));
+    QPixmap smallIcon = SmallIcon(QStringLiteral("go-up"));
     m_pButton->setIcon(smallIcon);
     box->addWidget(m_pButton);
     stack = new QStackedWidget(this);
@@ -105,8 +105,8 @@ StatusbarProgressWidget::StatusbarProgressWidget(ProgressDialog *progressDialog,
     mode = None;
     setMode();
 
-    connect(m_pButton, SIGNAL(clicked()),
-            progressDialog, SLOT(slotToggleVisibility()));
+    connect(m_pButton, &QAbstractButton::clicked,
+            progressDialog, &ProgressDialog::slotToggleVisibility);
 
     connect(ProgressManager::instance(), SIGNAL(progressItemAdded(KPIM::ProgressItem*)),
             this, SLOT(slotProgressItemAdded(KPIM::ProgressItem*)));
@@ -120,13 +120,13 @@ StatusbarProgressWidget::StatusbarProgressWidget(ProgressDialog *progressDialog,
 
     mDelayTimer = new QTimer(this);
     mDelayTimer->setSingleShot(true);
-    connect(mDelayTimer, SIGNAL(timeout()),
-            this, SLOT(slotShowItemDelayed()));
+    connect(mDelayTimer, &QTimer::timeout,
+            this, &StatusbarProgressWidget::slotShowItemDelayed);
 
     mCleanTimer = new QTimer(this);
     mCleanTimer->setSingleShot(true);
-    connect(mCleanTimer, SIGNAL(timeout()),
-            this, SLOT(slotClean()));
+    connect(mCleanTimer, &QTimer::timeout,
+            this, &StatusbarProgressWidget::slotClean);
 }
 
 void StatusbarProgressWidget::setShowTypeProgressItem(unsigned int type)

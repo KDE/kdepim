@@ -231,12 +231,12 @@ CompletionOrderWidget::CompletionOrderWidget(QWidget *parent)
     upDownBoxVBoxLayout->addWidget(spacer);
     upDownBoxVBoxLayout->setStretchFactor(spacer, 100);
 
-    connect(mListView, SIGNAL(itemSelectionChanged()),
-            SLOT(slotSelectionChanged()));
-    connect(mListView, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-            SLOT(slotSelectionChanged()));
-    connect(mUpButton, SIGNAL(clicked()), this, SLOT(slotMoveUp()));
-    connect(mDownButton, SIGNAL(clicked()), this, SLOT(slotMoveDown()));
+    connect(mListView, &QTreeWidget::itemSelectionChanged,
+            this, &CompletionOrderWidget::slotSelectionChanged);
+    connect(mListView, &QTreeWidget::currentItemChanged,
+            this, &CompletionOrderWidget::slotSelectionChanged);
+    connect(mUpButton, &QAbstractButton::clicked, this, &CompletionOrderWidget::slotMoveUp);
+    connect(mDownButton, &QAbstractButton::clicked, this, &CompletionOrderWidget::slotMoveDown);
 
 }
 

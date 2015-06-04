@@ -85,13 +85,13 @@ void RecentAddressWidgetTest::shouldInformThatItWasChanged()
 void RecentAddressWidgetTest::shouldNotAddMultiEmptyLine()
 {
     KPIM::RecentAddressWidget w;
-    KLineEdit *lineedit = w.findChild<KLineEdit *>(QLatin1String("line_edit"));
+    KLineEdit *lineedit = w.findChild<KLineEdit *>(QStringLiteral("line_edit"));
     QVERIFY(lineedit);
 
-    QPushButton *newButton = w.findChild<QPushButton *>(QLatin1String("new_button"));
+    QPushButton *newButton = w.findChild<QPushButton *>(QStringLiteral("new_button"));
     QVERIFY(newButton);
 
-    QListWidget *listview = w.findChild<QListWidget *>(QLatin1String("list_view"));
+    QListWidget *listview = w.findChild<QListWidget *>(QStringLiteral("list_view"));
     QCOMPARE(listview->count(), 0);
 
     QTest::mouseClick(newButton, Qt::LeftButton);

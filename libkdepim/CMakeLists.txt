@@ -42,7 +42,6 @@ set(kdepim_job_LIB_SRCS
 
 set(kdepim_widgets_LIB_SRCS
    widgets/customlogwidget.cpp
-   widgets/spellchecklineedit.cpp
    widgets/selectedcollectiondialog.cpp
    widgets/kdatepickerpopup.cpp
    widgets/kcheckcombobox.cpp

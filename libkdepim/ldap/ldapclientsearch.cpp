@@ -94,19 +94,19 @@ public:
 LdapClientSearch::LdapClientSearch(QObject *parent)
     : QObject(parent), d(new Private(this))
 {
-    Kdelibs4ConfigMigrator migrate(QLatin1String("ldapsettings"));
-    migrate.setConfigFiles(QStringList() << QLatin1String("kabldaprc"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("ldapsettings"));
+    migrate.setConfigFiles(QStringList() << QStringLiteral("kabldaprc"));
     migrate.migrate();
 
-    if (!KProtocolInfo::isKnownProtocol(QUrl(QLatin1String("ldap://localhost")))) {
+    if (!KProtocolInfo::isKnownProtocol(QUrl(QStringLiteral("ldap://localhost")))) {
         d->mNoLDAPLookup = true;
         return;
     }
 
-    d->mAttributes << QLatin1String("cn")
-                   << QLatin1String("mail")
-                   << QLatin1String("givenname")
-                   << QLatin1String("sn");
+    d->mAttributes << QStringLiteral("cn")
+                   << QStringLiteral("mail")
+                   << QStringLiteral("givenname")
+                   << QStringLiteral("sn");
 
     // Set the filter, to make sure old usage (before 4.14) of this object still works.
     d->mFilter = QString::fromLatin1("&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
@@ -206,7 +206,7 @@ void LdapClientSearch::Private::readConfig()
 
         q->connect(&mDataTimer, SIGNAL(timeout()), SLOT(slotDataTimer()));
     }
-    mConfigFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1String("/kabldaprc") ;
+    mConfigFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QStringLiteral("/kabldaprc") ;
     KDirWatch::self()->addFile(mConfigFile);
 }
 
@@ -337,43 +337,43 @@ void LdapClientSearch::Private::makeSearchData(QStringList &ret, LdapResult::Lis
             }
             const QString tmp = QString::fromUtf8(val, len);
             //qCDebug(LDAPCLIENT_LOG) <<"      key: \"" << it2.key() <<"\" value: \"" << tmp <<"\"";
-            if (it2.key() == QLatin1String("cn")) {
+            if (it2.key() == QStringLiteral("cn")) {
                 name = tmp;
                 if (mail.isEmpty()) {
                     mail = tmp;
                 } else {
                     if (wasCN) {
-                        mail.prepend(QLatin1String("."));
+                        mail.prepend(QStringLiteral("."));
                     } else {
-                        mail.prepend(QLatin1String("@"));
+                        mail.prepend(QStringLiteral("@"));
                     }
                     mail.prepend(tmp);
                 }
                 wasCN = true;
-            } else if (it2.key() == QLatin1String("dc")) {
+            } else if (it2.key() == QStringLiteral("dc")) {
                 if (mail.isEmpty()) {
                     mail = tmp;
                 } else {
                     if (wasDC) {
-                        mail.append(QLatin1String("."));
+                        mail.append(QStringLiteral("."));
                     } else {
-                        mail.append(QLatin1String("@"));
+                        mail.append(QStringLiteral("@"));
                     }
                     mail.append(tmp);
                 }
                 wasDC = true;
-            } else if (it2.key() == QLatin1String("mail")) {
+            } else if (it2.key() == QStringLiteral("mail")) {
                 mail = tmp;
                 KLDAP::LdapAttrValue::ConstIterator it3 = it2.value().constBegin();
                 for (; it3 != it2.value().constEnd(); ++it3) {
                     mails.append(QString::fromUtf8((*it3).data(), (*it3).size()));
                 }
-            } else if (it2.key() == QLatin1String("givenName")) {
+            } else if (it2.key() == QStringLiteral("givenName")) {
                 givenname = tmp;
-            } else if (it2.key() == QLatin1String("sn")) {
+            } else if (it2.key() == QStringLiteral("sn")) {
                 sn = tmp;
-            } else if (it2.key() == QLatin1String("objectClass") &&
-                       (tmp == QLatin1String("groupOfNames") || tmp == QLatin1String("kolabGroupOfNames"))) {
+            } else if (it2.key() == QStringLiteral("objectClass") &&
+                       (tmp == QStringLiteral("groupOfNames") || tmp == QStringLiteral("kolabGroupOfNames"))) {
                 isDistributionList = true;
             }
         }
