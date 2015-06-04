@@ -20,12 +20,12 @@
 
 #include "pimcommon_export.h"
 
-#include "libkdepim/widgets/spellchecklineedit.h"
+#include "pimcommon/widgets/spellchecklineedit.h"
 
 namespace PimCommon
 {
 class AutoCorrection;
-class PIMCOMMON_EXPORT LineEditWithAutoCorrection : public KPIM::SpellCheckLineEdit
+class PIMCOMMON_EXPORT LineEditWithAutoCorrection : public PimCommon::SpellCheckLineEdit
 {
     Q_OBJECT
 public:

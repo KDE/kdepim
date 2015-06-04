@@ -119,6 +119,7 @@ set(libpimcommon_texteditor_SRCS
   texteditor/richtexteditor/richtexteditor.cpp
   texteditor/richtexteditor/richtexteditfindbar.cpp
   texteditor/richtexteditor/richtexteditorwidget.cpp
+  texteditor/richtexteditor/richtextdecorator.cpp
 )
 
 set(libpimcommon_translator_SRCS
@@ -171,6 +172,7 @@ set(libpimcommon_widgets_SRCS
   widgets/manageaccountwidget.cpp
   widgets/kactionmenuchangecase.cpp
   widgets/lineeditwithcompleter.cpp
+  widgets/spellchecklineedit.cpp
 )
 
 set(libtexttospeech_SRCS
@@ -324,6 +326,7 @@ add_subdirectory(translator/tests)
 add_subdirectory(texteditor/plaintexteditor/tests)
 add_subdirectory(texteditor/richtexteditor/tests)
 add_subdirectory(widgets/tests)
+add_subdirectory(tests/)
 add_subdirectory(shorturl/tests)
 add_subdirectory(autocorrection/tests)
 add_subdirectory(folderdialog/tests/)

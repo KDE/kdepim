@@ -38,7 +38,7 @@
 #include "composer/htmleditor.h"
 #include "composer/blogilocomposerwidget.h"
 
-#include <libkdepim/widgets/spellchecklineedit.h>
+#include <pimcommon/widgets/spellchecklineedit.h>
 
 #include "blogilo_debug.h"
 #include <klocalizedstring.h>
@@ -64,7 +64,7 @@ public:
     QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *labelTitle;
-    KPIM::SpellCheckLineEdit *txtTitle;
+    PimCommon::SpellCheckLineEdit *txtTitle;
     QTimer *mTimer;
     BilboPost mCurrentPost;
     int mCurrentPostBlogId;
@@ -162,11 +162,11 @@ void PostEntry::createUi()
     d->labelTitle->setText(i18nc("noun, the post title", "Title:"));
     d->horizontalLayout->addWidget(d->labelTitle);
 
-    d->txtTitle = new KPIM::SpellCheckLineEdit(this, QLatin1String("blogilorc"));
+    d->txtTitle = new PimCommon::SpellCheckLineEdit(this, QLatin1String("blogilorc"));
     d->horizontalLayout->addWidget(d->txtTitle);
     d->labelTitle->setBuddy(d->txtTitle);
-    connect(d->txtTitle, &KPIM::SpellCheckLineEdit::textChanged, this, &PostEntry::slotTitleChanged);
-    connect(d->txtTitle, &KPIM::SpellCheckLineEdit::focusDown, this, &PostEntry::slotFocusEditor);
+    connect(d->txtTitle, &PimCommon::SpellCheckLineEdit::textChanged, this, &PostEntry::slotTitleChanged);
+    connect(d->txtTitle, &PimCommon::SpellCheckLineEdit::focusDown, this, &PostEntry::slotFocusEditor);
 
     d->gridLayout->addLayout(d->horizontalLayout, 0, 0, 1, 1);
 }

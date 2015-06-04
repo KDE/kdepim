@@ -23,7 +23,7 @@
 using namespace PimCommon;
 
 LineEditWithAutoCorrection::LineEditWithAutoCorrection(QWidget *parent, const QString &configFile)
-    : KPIM::SpellCheckLineEdit(parent, configFile),
+    : PimCommon::SpellCheckLineEdit(parent, configFile),
       mAutoCorrection(new PimCommon::AutoCorrection()),
       mNeedToDeleteAutoCorrection(true)
 {
@@ -65,7 +65,7 @@ void LineEditWithAutoCorrection::keyPressEvent(QKeyEvent *e)
                 cur.setPosition(position);
                 if (e->key() == Qt::Key_Space) {
                     if (addSpace) {
-                        cur.insertText(QLatin1String(" "));
+                        cur.insertText(QStringLiteral(" "));
                         setTextCursor(cur);
                     }
                     return;
@@ -73,6 +73,6 @@ void LineEditWithAutoCorrection::keyPressEvent(QKeyEvent *e)
             }
         }
     }
-    KPIM::SpellCheckLineEdit::keyPressEvent(e);
+    PimCommon::SpellCheckLineEdit::keyPressEvent(e);
 }
 
