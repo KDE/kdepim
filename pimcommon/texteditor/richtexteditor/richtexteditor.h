@@ -36,6 +36,7 @@ class PIMCOMMON_EXPORT RichTextEditor : public QTextEdit
     Q_PROPERTY(bool searchSupport READ searchSupport WRITE setSearchSupport)
     Q_PROPERTY(bool spellCheckingSupport READ spellCheckingSupport WRITE setSpellCheckingSupport)
     Q_PROPERTY(bool textToSpeechSupport READ textToSpeechSupport WRITE setTextToSpeechSupport)
+    Q_PROPERTY(bool activateLanguageMenu READ activateLanguageMenu WRITE setActivateLanguageMenu)
 public:
     explicit RichTextEditor(QWidget *parent = Q_NULLPTR);
     ~RichTextEditor();
@@ -68,6 +69,8 @@ public:
     void setTextToSpeechSupport(bool b);
     Sonnet::Highlighter *highlighter() const;
 
+    bool activateLanguageMenu() const;
+    void setActivateLanguageMenu(bool activate);
 Q_SIGNALS:
     void say(const QString &text);
 

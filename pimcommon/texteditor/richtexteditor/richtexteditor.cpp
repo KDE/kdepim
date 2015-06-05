@@ -54,7 +54,8 @@ public:
           textIndicator(new PimCommon::TextMessageIndicator(q)),
           richTextDecorator(Q_NULLPTR),
           speller(Q_NULLPTR),
-          customPalette(false)
+          customPalette(false),
+          activateLanguageMenu(true)
     {
         KConfig sonnetKConfig(QStringLiteral("sonnetrc"));
         KConfigGroup group(&sonnetKConfig, "Spelling");
@@ -79,6 +80,7 @@ public:
     RichTextEditor::SupportFeatures supportFeatures;
     bool customPalette;
     bool checkSpellingEnabled;
+    bool activateLanguageMenu;
 };
 
 RichTextEditor::RichTextEditor(QWidget *parent)
@@ -106,6 +108,16 @@ Sonnet::Highlighter *RichTextEditor::highlighter() const
     } else {
         return 0;
     }
+}
+
+bool RichTextEditor::activateLanguageMenu() const
+{
+    return d->activateLanguageMenu;
+}
+
+void RichTextEditor::setActivateLanguageMenu(bool activate)
+{
+    d->activateLanguageMenu = activate;
 }
 
 void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
@@ -170,7 +182,7 @@ QMenu *RichTextEditor::mousePopupMenu(const QPoint &pos)
             autoSpellCheckAction->setChecked(checkSpellingEnabled());
             popup->addAction(autoSpellCheckAction);
 
-            if (checkSpellingEnabled()) {
+            if (checkSpellingEnabled() &&  d->activateLanguageMenu) {
                 QMenu *languagesMenu = new QMenu(i18n("Spell Checking Language"), popup);
                 QActionGroup *languagesGroup = new QActionGroup(languagesMenu);
                 languagesGroup->setExclusive(true);
