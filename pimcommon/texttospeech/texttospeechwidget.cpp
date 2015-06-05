@@ -38,6 +38,9 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 
     QToolButton *close = new QToolButton(this);
     close->setObjectName(QStringLiteral("close-button"));
+    close->setIcon(QIcon::fromTheme(QStringLiteral("dialog-close")));
+    close->setToolTip(i18n("Close"));
+    connect(close, &QToolButton::clicked, this, &TextToSpeechWidget::hide);
     hbox->addWidget(close);
     hbox->addStretch(0);
 
