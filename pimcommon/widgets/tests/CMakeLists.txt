@@ -21,3 +21,10 @@ target_link_libraries(slidecontainer_gui
   pimcommon
 )
 
+set(testspellchecklineedit_SRCS testspellchecklineedit.cpp)
+
+add_executable(testspellchecklineedit ${testspellchecklineedit_SRCS})
+ecm_mark_as_test(testspellchecklineedit)
+
+target_link_libraries(testspellchecklineedit pimcommon )
+
