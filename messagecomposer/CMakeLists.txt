@@ -101,6 +101,8 @@ set(messagecomposer_followupreminder_SRCS
 
 set(messagecomposer_composerng_SRCS
      composer-ng/richtextcomposer.cpp
+     composer-ng/richtextcomposercontroler.cpp
+     composer-ng/richtextcomposeractions.cpp
 )
 
 

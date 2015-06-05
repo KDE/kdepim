@@ -66,7 +66,12 @@ public:
     void forcePlainTextMarkup(bool force);
 
 public Q_SLOTS:
-    void insertPlainTextImplementation();
+    void insertPlainTextImplementation();    
+    void slotChangeInsertMode();
+    void slotPasteAsQuotation();
+    void slotPasteWithoutFormatting();
+Q_SIGNALS:
+    void insertModeChanged();
 
 private:
     class RichTextComposerPrivate;

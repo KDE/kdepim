@@ -17,8 +17,12 @@
 
 
 #include "richtextcomposer.h"
+#include "richtextcomposercontroler.h"
+#include <KLocalizedString>
 #include <QTextBlock>
 #include <QTextLayout>
+#include <QApplication>
+#include <QClipboard>
 
 #include <autocorrection/autocorrection.h>
 
@@ -29,19 +33,23 @@ using namespace MessageComposer;
 class RichTextComposer::RichTextComposerPrivate
 {
 public:
-    RichTextComposerPrivate()
+    RichTextComposerPrivate(RichTextComposer *qq)
         : autoCorrection(Q_NULLPTR),
+          q(qq),
           forcePlainTextMarkup(false)
     {
-
+        composerControler = new RichTextComposerControler(q, q);
     }
     PimCommon::AutoCorrection *autoCorrection;
+    RichTextComposerControler *composerControler;
+    RichTextComposer *q;
     bool forcePlainTextMarkup;
+
 };
 
 RichTextComposer::RichTextComposer(QWidget *parent)
     : PimCommon::RichTextEditor(parent),
-      d(new RichTextComposerPrivate())
+      d(new RichTextComposerPrivate(this))
 {
 
 }
@@ -158,3 +166,32 @@ void RichTextComposer::insertPlainTextImplementation()
     }
 }
 
+void RichTextComposer::slotChangeInsertMode()
+{
+    setOverwriteMode(!overwriteMode());
+    Q_EMIT insertModeChanged();
+}
+
+void RichTextComposer::slotPasteAsQuotation()
+{
+#ifndef QT_NO_CLIPBOARD
+    if (hasFocus()) {
+        const QString s = QApplication::clipboard()->text();
+        if (!s.isEmpty()) {
+            // FIXME insertPlainText(d->addQuotesToText(s));
+        }
+    }
+#endif
+}
+
+void RichTextComposer::slotPasteWithoutFormatting()
+{
+#ifndef QT_NO_CLIPBOARD
+    if (hasFocus()) {
+        const QString s = QApplication::clipboard()->text();
+        if (!s.isEmpty()) {
+            insertPlainText(s);
+        }
+    }
+#endif
+}

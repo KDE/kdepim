@@ -6,3 +6,16 @@ add_test(pimcommon_composerngtest pimcommon_composerngtest)
 ecm_mark_as_test(pimcommon_composerngtest)
 target_link_libraries( pimcommon_composerngtest Qt5::Test pimcommon messagecomposer)
 
+set( pimcommon_richtextcomposercontrolertest_SRCS richtextcomposercontrolertest.cpp )
+add_executable( pimcommon_richtextcomposercontrolertest ${pimcommon_richtextcomposercontrolertest_SRCS})
+add_test(pimcommon_richtextcomposercontrolertest pimcommon_richtextcomposercontrolertest)
+ecm_mark_as_test(pimcommon_richtextcomposercontrolertest)
+target_link_libraries( pimcommon_richtextcomposercontrolertest Qt5::Test pimcommon messagecomposer)
+
+
+set( pimcommon_richtextcomposeractionstest_SRCS richtextcomposeractionstest.cpp )
+add_executable( pimcommon_richtextcomposeractionstest ${pimcommon_richtextcomposeractionstest_SRCS})
+add_test(pimcommon_richtextcomposeractionstest pimcommon_richtextcomposeractionstest)
+ecm_mark_as_test(pimcommon_richtextcomposeractionstest)
+target_link_libraries( pimcommon_richtextcomposeractionstest Qt5::Test pimcommon messagecomposer)
+
