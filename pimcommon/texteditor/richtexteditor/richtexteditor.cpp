@@ -63,6 +63,7 @@ public:
         supportFeatures |= RichTextEditor::Search;
         supportFeatures |= RichTextEditor::SpellChecking;
         supportFeatures |= RichTextEditor::TextToSpeech;
+        supportFeatures |= RichTextEditor::AllowTab;
     }
     ~RichTextEditorPrivate()
     {
@@ -207,6 +208,14 @@ QMenu *RichTextEditor::mousePopupMenu(const QPoint &pos)
             }
             popup->addSeparator();
         }
+
+        if (allowTabSupport()) {
+            QAction *allowTabAction = popup->addAction(i18n("Allow Tabulations"));
+            allowTabAction->setCheckable(true);
+            allowTabAction->setChecked(!tabChangesFocus());
+            connect(allowTabAction, &QAction::triggered, this, &RichTextEditor::slotAllowTab);
+        }
+
         if (PimCommon::TextToSpeech::self()->isReady()) {
             QAction *speakAction = popup->addAction(i18n("Speak Text"));
             speakAction->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-text-to-speech")));
@@ -244,6 +253,21 @@ bool RichTextEditor::searchSupport() const
     return (d->supportFeatures & Search);
 }
 
+void RichTextEditor::setAllowTabSupport(bool b)
+{
+    if (b) {
+        d->supportFeatures |= AllowTab;
+    } else {
+        d->supportFeatures = (d->supportFeatures & ~ AllowTab);
+    }
+}
+
+bool RichTextEditor::allowTabSupport() const
+{
+    return (d->supportFeatures & AllowTab);
+}
+
+
 bool RichTextEditor::spellCheckingSupport() const
 {
     return (d->supportFeatures & SpellChecking);
@@ -270,6 +294,11 @@ void RichTextEditor::setTextToSpeechSupport(bool b)
 bool RichTextEditor::textToSpeechSupport() const
 {
     return (d->supportFeatures & TextToSpeech);
+}
+
+void RichTextEditor::slotAllowTab()
+{
+    setTabChangesFocus(!tabChangesFocus());
 }
 
 void RichTextEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)

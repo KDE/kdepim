@@ -28,7 +28,6 @@
 
 #include "spellchecklineedit.h"
 
-#include <sonnet/speller.h>
 
 #include <QKeyEvent>
 #include <QStyle>
@@ -45,28 +44,21 @@ class SpellCheckLineEdit::Private
 {
 public:
     Private()
-        : activateLanguageMenu(true),
-          speller(Q_NULLPTR)
     {
     }
     ~Private()
     {
-        delete speller;
     }
 
-    QString configFile;
-    bool activateLanguageMenu;
-    Sonnet::Speller *speller;
 };
 
 SpellCheckLineEdit::SpellCheckLineEdit(QWidget *parent, const QString &configFile)
-    : KTextEdit(parent),
+    : PimCommon::RichTextEditor(parent),
       d(new Private)
 {
-    d->configFile = configFile;
-
-    enableFindReplace(false);
-    showTabAction(false);
+    setSpellCheckingConfigFileName(configFile);
+    setSearchSupport(false);
+    setAllowTabSupport(false);
     setAcceptRichText(false);
     setTabChangesFocus(true);
     // widget may not be resized vertically
@@ -78,35 +70,11 @@ SpellCheckLineEdit::SpellCheckLineEdit(QWidget *parent, const QString &configFil
     document()->adjustSize();
 
     document()->setDocumentMargin(2);
-
-    connect(this, &SpellCheckLineEdit::aboutToShowContextMenu, this, &SpellCheckLineEdit::insertLanguageMenu);
 }
 
 SpellCheckLineEdit::~SpellCheckLineEdit()
 {
     delete d;
-}
-
-bool SpellCheckLineEdit::activateLanguageMenu() const
-{
-    return d->activateLanguageMenu;
-}
-
-void SpellCheckLineEdit::setActivateLanguageMenu(bool activate)
-{
-    d->activateLanguageMenu = activate;
-}
-
-void SpellCheckLineEdit::createHighlighter()
-{
-    Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this, d->configFile);
-    highlighter->setAutomatic(false);
-
-    KTextEdit::setHighlighter(highlighter);
-
-    if (!spellCheckingLanguage().isEmpty()) {
-        setSpellCheckingLanguage(spellCheckingLanguage());
-    }
 }
 
 void SpellCheckLineEdit::keyPressEvent(QKeyEvent *e)
@@ -120,7 +88,7 @@ void SpellCheckLineEdit::keyPressEvent(QKeyEvent *e)
         Q_EMIT focusUp();
         return;
     }
-    KTextEdit::keyPressEvent(e);
+    RichTextEditor::keyPressEvent(e);
 }
 
 QSize SpellCheckLineEdit::sizeHint() const
@@ -185,65 +153,6 @@ void SpellCheckLineEdit::insertFromMimeData(const QMimeData *source)
         ensureCursorVisible();
         return;
     } else {
-        KTextEdit::insertFromMimeData(source);
+        RichTextEditor::insertFromMimeData(source);
     }
 }
-
-static inline QString i18n_kdelibs4(const char *str)
-{
-    return ki18n(str).toString(("kdelibs4"));
-}
-
-void SpellCheckLineEdit::insertLanguageMenu(QMenu *contextMenu)
-{
-    if (!checkSpellingEnabled()) {
-        return;
-    }
-
-    if (!d->activateLanguageMenu) {
-        return;
-    }
-
-    QAction *spellCheckAction = Q_NULLPTR;
-
-    foreach (QAction *action, contextMenu->actions()) {
-        if (action->text() == i18n_kdelibs4("Auto Spell Check")) {
-            spellCheckAction = action;
-            break;
-        }
-    }
-
-    if (spellCheckAction) {
-        QMenu *languagesMenu = new QMenu(i18n("Spell Checking Language"), contextMenu);
-        QActionGroup *languagesGroup = new QActionGroup(languagesMenu);
-        languagesGroup->setExclusive(true);
-
-        if (!d->speller) {
-            d->speller = new Sonnet::Speller();
-        }
-
-        QMapIterator<QString, QString> i(d->speller->availableDictionaries());
-        QAction *languageAction = Q_NULLPTR;
-
-        while (i.hasNext()) {
-            i.next();
-
-            languageAction = languagesMenu->addAction(i.key());
-            languageAction->setCheckable(true);
-            languageAction->setChecked(spellCheckingLanguage() == i.value() || (spellCheckingLanguage().isEmpty()
-                                       && d->speller->defaultLanguage() == i.value()));
-            languageAction->setData(i.value());
-            languageAction->setActionGroup(languagesGroup);
-            connect(languageAction, &QAction::triggered, this, &SpellCheckLineEdit::languageSelected);
-        }
-
-        contextMenu->insertMenu(spellCheckAction, languagesMenu);
-    }
-}
-
-void SpellCheckLineEdit::languageSelected()
-{
-    QAction *languageAction = static_cast<QAction *>(QObject::sender());
-    setSpellCheckingLanguage(languageAction->data().toString());
-}
-

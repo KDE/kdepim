@@ -29,14 +29,13 @@
 #ifndef SpellCheckLineEdit_H
 #define SpellCheckLineEdit_H
 #include "pimcommon_export.h"
-
-#include <KTextEdit>
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 class QMimeData;
 namespace PimCommon
 {
 
-class PIMCOMMON_EXPORT SpellCheckLineEdit : public KTextEdit
+class PIMCOMMON_EXPORT SpellCheckLineEdit : public PimCommon::RichTextEditor
 {
     Q_OBJECT
 
@@ -52,19 +51,11 @@ public:
     */
     ~SpellCheckLineEdit();
 
-    bool activateLanguageMenu() const;
-    void setActivateLanguageMenu(bool activate);
 protected:
-    void createHighlighter() Q_DECL_OVERRIDE;
-
     QSize sizeHint() const Q_DECL_OVERRIDE;
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;
     void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
     void insertFromMimeData(const QMimeData *source) Q_DECL_OVERRIDE;
-
-protected Q_SLOTS:
-    void insertLanguageMenu(QMenu *contextMenu);
-    void languageSelected();
 
 Q_SIGNALS:
     /**

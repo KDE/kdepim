@@ -44,7 +44,8 @@ public:
         None = 0,
         Search = 1,
         SpellChecking = 2,
-        TextToSpeech = 4
+        TextToSpeech = 4,
+        AllowTab = 8
     };
     Q_DECLARE_FLAGS(SupportFeatures, SupportFeature)
 
@@ -71,6 +72,10 @@ public:
 
     bool activateLanguageMenu() const;
     void setActivateLanguageMenu(bool activate);
+
+    void setAllowTabSupport(bool b);
+    bool allowTabSupport() const;
+
 Q_SIGNALS:
     void say(const QString &text);
 
@@ -88,6 +93,7 @@ private Q_SLOTS:
     void slotSpellCheckerFinished();
     void slotToggleAutoSpellCheck();
     void slotLanguageSelected();
+    void slotAllowTab();
 
 protected:
     virtual void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
