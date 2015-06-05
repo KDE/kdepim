@@ -22,17 +22,21 @@
 
 #include <autocorrection/autocorrection.h>
 
+#include <grantlee/plaintextmarkupbuilder.h>
+
 using namespace MessageComposer;
 
 class RichTextComposer::RichTextComposerPrivate
 {
 public:
     RichTextComposerPrivate()
-        : autoCorrection(Q_NULLPTR)
+        : autoCorrection(Q_NULLPTR),
+          forcePlainTextMarkup(false)
     {
 
     }
     PimCommon::AutoCorrection *autoCorrection;
+    bool forcePlainTextMarkup;
 };
 
 RichTextComposer::RichTextComposer(QWidget *parent)
@@ -131,5 +135,26 @@ int RichTextComposer::columnNumber() const
 {
     const QTextCursor cursor = textCursor();
     return cursor.columnNumber();
+}
+
+void RichTextComposer::forcePlainTextMarkup(bool force)
+{
+    d->forcePlainTextMarkup = force;
+}
+
+void RichTextComposer::insertPlainTextImplementation()
+{
+    if (d->forcePlainTextMarkup) {
+        Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
+
+        Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector(pb);
+        pmd->processDocument(document());
+        const QString plainText = pb->getResult();
+        document()->setPlainText(plainText);
+        delete pmd;
+        delete pb;
+    } else {
+        document()->setPlainText(document()->toPlainText());
+    }
 }
 

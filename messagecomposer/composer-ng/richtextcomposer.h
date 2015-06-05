@@ -63,6 +63,11 @@ public:
      */
     int columnNumber() const;
 
+    void forcePlainTextMarkup(bool force);
+
+public Q_SLOTS:
+    void insertPlainTextImplementation();
+
 private:
     class RichTextComposerPrivate;
     RichTextComposerPrivate *const d;
