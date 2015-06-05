@@ -89,8 +89,8 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
 
     shortcut = new QShortcut(this);
     shortcut->setKey(Qt::Key_R + Qt::CTRL);
-    connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
-    connect( mTextEdit, SIGNAL(replaceText()), SLOT(slotReplace()) );
+    connect(shortcut, &QShortcut::activated, this, &SieveTemplateEditDialog::slotReplace);
+    connect(mTextEdit, &SieveTextEdit::replaceText, this, &SieveTemplateEditDialog::slotReplace);
 
     w->setLayout(vbox);
     mainLayout->addWidget(w);
