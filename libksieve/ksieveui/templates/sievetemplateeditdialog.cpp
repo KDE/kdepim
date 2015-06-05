@@ -78,7 +78,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     mSliderContainer = new PimCommon::SlideContainer(this);
     mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, this);
     mFindBar->setHideWhenClose(false);
-    connect(mFindBar, SIGNAL(hideFindBar()), mSliderContainer, SLOT(slideOut()));
+    connect(mFindBar, &PimCommon::TextEditFindBarBase::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
     mSliderContainer->setContent(mFindBar);
     vbox->addWidget(mSliderContainer);
 
