@@ -98,6 +98,10 @@ set(messagecomposer_followupreminder_SRCS
      followupreminder/followupremindercreatejob.cpp
 )
 
+set(messagecomposer_composerng_SRCS
+     composer-ng/richtextcomposer.cpp
+)
+
 
 set( messagecomposer_src
      ${messagecomposer_part_src}
@@ -109,6 +113,7 @@ set( messagecomposer_src
      ${messagecomposer_helper_src}
      ${messagecomposer_sender_src}
      ${messagecomposer_followupreminder_SRCS}
+     ${messagecomposer_composerng_SRCS}
      utils/util.cpp
      messagecomposer_debug.cpp
      settings/messagecomposersettings.cpp
@@ -163,4 +168,4 @@ set_target_properties( messagecomposer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} 
 install( TARGETS messagecomposer ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 add_subdirectory(imagescaling/tests)
-
+add_subdirectory(composer-ng/tests)
