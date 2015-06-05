@@ -1015,7 +1015,7 @@ void TodoView::setNewPercentage(QAction *action)
 
 void TodoView::setNewPriority(QAction *action)
 {
-    QModelIndexList selection = mView->selectionModel()->selectedRows();
+    const QModelIndexList selection = mView->selectionModel()->selectedRows();
     if (selection.size() != 1) {
         return;
     }
@@ -1031,7 +1031,7 @@ void TodoView::setNewPriority(QAction *action)
 
 void TodoView::changedCategories(QAction *action)
 {
-    QModelIndexList selection = mView->selectionModel()->selectedRows();
+    const QModelIndexList selection = mView->selectionModel()->selectedRows();
     if (selection.size() != 1) {
         return;
     }
@@ -1178,7 +1178,7 @@ void TodoView::resizeColumns()
 
     // Calculate size of non-stretchable columns:
     int size = 0;
-    for (int i = 0; i < TodoModel::ColumnCount; i++) {
+    for (int i = 0; i < TodoModel::ColumnCount; ++i) {
         if (!mView->isColumnHidden(i) && i != TodoModel::SummaryColumn && i != TodoModel::DescriptionColumn && i != TodoModel::CategoriesColumn) {
             size += mView->columnWidth(i);
         }
@@ -1254,7 +1254,7 @@ void TodoView::resizeEvent(QResizeEvent *event)
 
 void TodoView::createEvent()
 {
-    QModelIndexList selection = mView->selectionModel()->selectedRows();
+    const QModelIndexList selection = mView->selectionModel()->selectedRows();
     if (selection.size() != 1) {
         return;
     }
@@ -1266,7 +1266,7 @@ void TodoView::createEvent()
 
 void TodoView::createNote()
 {
-    QModelIndexList selection = mView->selectionModel()->selectedRows();
+    const QModelIndexList selection = mView->selectionModel()->selectedRows();
     if (selection.size() != 1) {
         return;
     }

@@ -324,7 +324,7 @@ void ModelTest::checkChildren(const QModelIndex &parent, int currentDepth)
     int rows = model->rowCount(parent);
     int columns = model->columnCount(parent);
 
-    qDebug() << "checkChildren" << "parent=" << model->data(parent).value<QString>()
+    qDebug() << "checkChildren" << "parent=" << model->data(parent).toString()
              << "current count of parent=" << rows << "columns=" << columns;
 
     if (rows > 0) {

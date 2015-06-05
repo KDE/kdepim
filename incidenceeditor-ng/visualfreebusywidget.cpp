@@ -403,7 +403,7 @@ void VisualFreeBusyWidget::slotScaleChanged(int newScale)
     const QVariant var = mScaleCombo->itemData(newScale);
     Q_ASSERT(var.isValid());
 
-    int value = var.value<int>();
+    int value = var.toInt();
 
     mGanttGrid->setScale((KDGantt::DateTimeGrid::Scale)value);
 }
