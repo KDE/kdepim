@@ -20,6 +20,11 @@
 
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 #include "messagecomposer_export.h"
+namespace PimCommon
+{
+class AutoCorrection;
+}
+
 namespace MessageComposer
 {
 class MESSAGECOMPOSER_EXPORT RichTextComposer : public PimCommon::RichTextEditor
@@ -28,6 +33,36 @@ class MESSAGECOMPOSER_EXPORT RichTextComposer : public PimCommon::RichTextEditor
 public:
     explicit RichTextComposer(QWidget *parent = Q_NULLPTR);
     ~RichTextComposer();
+
+    PimCommon::AutoCorrection *autocorrection() const;
+    void setAutocorrection(PimCommon::AutoCorrection *autocorrect);
+    void setAutocorrectionLanguage(const QString &lang);
+
+    /**
+     * Enables word wrap. Words will be wrapped at the specified column.
+     *
+     * @param wrapColumn the column where words will be wrapped
+     */
+    void enableWordWrap(int wrapColumn);
+
+    /**
+     * Disables word wrap.
+     * Note that words are still wrapped at the end of the editor; no scrollbar
+     * will appear.
+     */
+    void disableWordWrap();
+
+    /**
+     * @return the line number where the cursor is. This takes word-wrapping
+     *         into account. Line numbers start at 0.
+     */
+    int linePosition() const;
+
+    /**
+     * @return the column numbe where the cursor is.
+     */
+    int columnNumber() const;
+
 private:
     class RichTextComposerPrivate;
     RichTextComposerPrivate *const d;

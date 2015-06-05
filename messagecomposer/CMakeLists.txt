@@ -22,6 +22,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_subdirectory( tests )
 if (BUILD_TESTING)
    add_subdirectory( autotests )
+   add_subdirectory( composer-ng/autotests )
 endif()
 
 
