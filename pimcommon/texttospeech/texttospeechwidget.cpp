@@ -35,11 +35,11 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
-    hbox->addStretch(0);
 
     QToolButton *close = new QToolButton(this);
     close->setObjectName(QStringLiteral("close-button"));
     hbox->addWidget(close);
+    hbox->addStretch(0);
 
     QLabel *volume = new QLabel(i18n("Volume:"));
     hbox->addWidget(volume);
