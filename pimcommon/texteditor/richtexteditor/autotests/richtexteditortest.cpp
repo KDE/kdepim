@@ -36,6 +36,7 @@ void RichTextEditorTest::shouldHaveDefaultValue()
     QCOMPARE(editor.textToSpeechSupport(), true);
     QCOMPARE(editor.searchSupport(), true);
     QCOMPARE(editor.activateLanguageMenu(), true);
+    QCOMPARE(editor.showAutoCorrectButton(), false);
 }
 
 void RichTextEditorTest::shouldChangeSpellCheckValue()

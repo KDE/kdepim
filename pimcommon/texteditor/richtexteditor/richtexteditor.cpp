@@ -54,8 +54,10 @@ public:
           textIndicator(new PimCommon::TextMessageIndicator(q)),
           richTextDecorator(Q_NULLPTR),
           speller(Q_NULLPTR),
+          mode(RichTextEditor::Rich),
           customPalette(false),
-          activateLanguageMenu(true)
+          activateLanguageMenu(true),
+          showAutoCorrectionButton(false)
     {
         KConfig sonnetKConfig(QStringLiteral("sonnetrc"));
         KConfigGroup group(&sonnetKConfig, "Spelling");
@@ -79,9 +81,11 @@ public:
     Sonnet::SpellCheckDecorator *richTextDecorator;
     Sonnet::Speller *speller;
     RichTextEditor::SupportFeatures supportFeatures;
+    RichTextEditor::Mode mode;
     bool customPalette;
     bool checkSpellingEnabled;
     bool activateLanguageMenu;
+    bool showAutoCorrectionButton;
 };
 
 RichTextEditor::RichTextEditor(QWidget *parent)
@@ -95,6 +99,11 @@ RichTextEditor::RichTextEditor(QWidget *parent)
 RichTextEditor::~RichTextEditor()
 {
     delete d;
+}
+
+RichTextEditor::Mode RichTextEditor::textMode() const
+{
+    return d->mode;
 }
 
 void RichTextEditor::slotDisplayMessageIndicator(const QString &message)
@@ -267,6 +276,16 @@ bool RichTextEditor::allowTabSupport() const
     return (d->supportFeatures & AllowTab);
 }
 
+void RichTextEditor::setShowAutoCorrectButton(bool b)
+{
+    d->showAutoCorrectionButton = b;
+}
+
+bool RichTextEditor::showAutoCorrectButton() const
+{
+    return d->showAutoCorrectionButton;
+}
+
 
 bool RichTextEditor::spellCheckingSupport() const
 {
@@ -365,6 +384,7 @@ void RichTextEditor::slotCheckSpelling()
     Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, Q_NULLPTR);
     backgroundSpellCheck->setParent(spellDialog);
     spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    spellDialog->activeAutoCorrect(d->showAutoCorrectionButton);
     connect(spellDialog, &Sonnet::Dialog::replace, this, &RichTextEditor::slotSpellCheckerCorrected);
     connect(spellDialog, &Sonnet::Dialog::misspelling, this, &RichTextEditor::slotSpellCheckerMisspelling);
     connect(spellDialog, &Sonnet::Dialog::autoCorrect, this, &RichTextEditor::slotSpellCheckerAutoCorrect);
