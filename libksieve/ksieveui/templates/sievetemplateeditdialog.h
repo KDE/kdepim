@@ -47,6 +47,7 @@ public:
 private Q_SLOTS:
     void slotTemplateChanged();
     void slotFind();
+    void slotReplace();
 
 private:
     void readConfig();
