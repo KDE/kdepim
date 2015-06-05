@@ -87,6 +87,11 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     connect(shortcut, &QShortcut::activated, this, &SieveTemplateEditDialog::slotFind);
     connect(mTextEdit, &SieveTextEdit::findText, this, &SieveTemplateEditDialog::slotFind);
 
+    shortcut = new QShortcut(this);
+    shortcut->setKey(Qt::Key_R + Qt::CTRL);
+    connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
+    connect( mTextEdit, SIGNAL(replaceText()), SLOT(slotReplace()) );
+
     w->setLayout(vbox);
     mainLayout->addWidget(w);
     if (!defaultTemplate) {
@@ -107,13 +112,20 @@ SieveTemplateEditDialog::~SieveTemplateEditDialog()
     writeConfig();
 }
 
+void SieveTemplateEditDialog::slotReplace()
+{
+    mFindBar->showReplace();
+    mSliderContainer->slideIn();
+    mFindBar->focusAndSetCursor();
+}
+
 void SieveTemplateEditDialog::slotFind()
 {
     if (mTextEdit->textCursor().hasSelection()) {
         mFindBar->setText(mTextEdit->textCursor().selectedText());
     }
     mTextEdit->moveCursor(QTextCursor::Start);
-    mFindBar->show();
+    mFindBar->showFind();
     mSliderContainer->slideIn();
     mFindBar->focusAndSetCursor();
 }
