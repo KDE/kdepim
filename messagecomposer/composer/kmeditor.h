@@ -58,11 +58,6 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
 public:
 
     /**
-     * Constructs a KMeditor object
-     */
-    explicit KMeditor(const QString &text, QWidget *parent = Q_NULLPTR);
-
-    /**
      * Constructs a KMeditor object.
      */
     explicit KMeditor(QWidget *parent = Q_NULLPTR);

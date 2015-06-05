@@ -308,12 +308,6 @@ void KMeditor::keyPressEvent(QKeyEvent *e)
     }
 }
 
-KMeditor::KMeditor(const QString &text, QWidget *parent)
-    : TextEdit(text, parent), d(new KMeditorPrivate(this))
-{
-    d->init();
-}
-
 KMeditor::KMeditor(QWidget *parent)
     : TextEdit(parent), d(new KMeditorPrivate(this))
 {
