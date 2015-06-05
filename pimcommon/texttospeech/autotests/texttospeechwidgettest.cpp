@@ -44,6 +44,9 @@ void TextToSpeechWidgetTest::shouldHaveDefaultValue()
     addInterface(&textToSpeechWidget);
     QCOMPARE(textToSpeechWidget.state(), PimCommon::TextToSpeechWidget::Stop);
 
+    QToolButton *closeButton = textToSpeechWidget.findChild<QToolButton *>(QStringLiteral("close-button"));
+    QVERIFY(closeButton);
+
     QToolButton *stopButton = textToSpeechWidget.findChild<QToolButton *>(QStringLiteral("stopbutton"));
     QVERIFY(stopButton);
     QVERIFY(stopButton->isEnabled());
