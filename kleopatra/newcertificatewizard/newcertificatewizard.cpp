@@ -310,13 +310,30 @@ namespace {
                 0 ;
         }
 
-        void setSubkeyType( unsigned int algo ) { ui.elgCB->setChecked( is_elg( algo ) ); }
-        unsigned int subkeyType() const { return ui.elgCB->isChecked() ? GPGME_PK_ELG_E : 0 ; }
+        void setSubkeyType( unsigned int algo ) {
+            ui.elgCB->setChecked( is_elg( algo ) );
+            ui.rsaSubCB->setChecked( is_rsa( algo ) );
+        }
+        unsigned int subkeyType() const {
+            if ( ui.elgCB->isChecked() ) {
+                return GPGME_PK_ELG_E;
+            } else if ( ui.rsaSubCB->isChecked() ) {
+                return GPGME_PK_RSA;
+            }
+            return 0;
+        }
 
         void setSubkeyStrength( unsigned int strength ) {
-            set_keysize( ui.elgKeyStrengthCB, strength );
+            if ( subkeyType() == GPGME_PK_RSA ) {
+                set_keysize( ui.rsaKeyStrengthSubCB, strength );
+            } else {
+                set_keysize( ui.elgKeyStrengthCB, strength );
+            }
         }
         unsigned int subkeyStrength() const {
+            if ( subkeyType() == GPGME_PK_RSA ) {
+                return get_keysize( ui.rsaKeyStrengthSubCB );
+            }
             return get_keysize( ui.elgKeyStrengthCB );
         }
 
@@ -354,6 +371,12 @@ namespace {
                     ui.signingCB->setEnabled( true );
                     ui.signingCB->setChecked( true );
                     ui.authenticationCB->setEnabled( true );
+                    if ( is_rsa( sk_algo ) ) {
+                        ui.encryptionCB->setEnabled( false );
+                        ui.encryptionCB->setChecked( true );
+                    } else {
+                        ui.encryptionCB->setEnabled( true );
+                    }
                 } else if ( is_dsa( algo ) ) {
                     ui.encryptionCB->setEnabled( false );
                     if ( is_elg( sk_algo ) )
@@ -1227,7 +1250,7 @@ QStringList KeyCreationPage::keyUsages() const {
     QStringList usages;
     if ( signingAllowed() )
         usages << QLatin1String("sign");
-    if ( encryptionAllowed() && !is_dsa( keyType() ) )
+    if ( encryptionAllowed() && !is_dsa( keyType() ) && !is_rsa( subkeyType() ) )
         usages << QLatin1String("encrypt");
     if ( 0 ) // not needed in pgp (implied) and not supported in cms
     if ( certificationAllowed() )
@@ -1241,7 +1264,7 @@ QStringList OverviewPage::i18nKeyUsages() const {
     QStringList usages;
     if ( signingAllowed() )
         usages << i18n("Sign");
-    if ( encryptionAllowed() && !is_dsa( keyType() ) )
+    if ( encryptionAllowed() && !is_dsa( keyType() ) && !is_rsa( subkeyType() ) )
         usages << i18n("Encrypt");
     if ( 0 ) // not needed in pgp (implied) and not supported in cms
     if ( certificationAllowed() )
@@ -1253,9 +1276,8 @@ QStringList OverviewPage::i18nKeyUsages() const {
 
 QStringList KeyCreationPage::subkeyUsages() const {
     QStringList usages;
-    if ( encryptionAllowed() && is_dsa( keyType() ) ) {
+    if ( encryptionAllowed() && ( is_dsa( keyType() ) || is_rsa ( subkeyType() ) ) ) {
         assert( subkeyType() );
-        assert( is_elg( subkeyType() ) );
         usages << QLatin1String("encrypt");
     }
     return usages;
@@ -1263,9 +1285,8 @@ QStringList KeyCreationPage::subkeyUsages() const {
 
 QStringList OverviewPage::i18nSubkeyUsages() const {
     QStringList usages;
-    if ( encryptionAllowed() && is_dsa( keyType() ) ) {
+    if ( encryptionAllowed() && ( is_dsa( keyType() ) || is_rsa ( subkeyType() ) ) ) {
         assert( subkeyType() );
-        assert( is_elg( subkeyType() ) );
         usages << i18n("Encrypt");
     }
     return usages;
@@ -1411,6 +1432,7 @@ void AdvancedSettingsDialog::fillKeySizeComboBoxen() {
     const QStringList elgKeySizeLabels = config.readEntry( ELG_KEYSIZE_LABELS_ENTRY, QStringList() );
 
     fill_combobox( *ui.rsaKeyStrengthCB, rsaKeySizes, rsaKeySizeLabels );
+    fill_combobox( *ui.rsaKeyStrengthSubCB, rsaKeySizes, rsaKeySizeLabels );
     fill_combobox( *ui.dsaKeyStrengthCB, dsaKeySizes, dsaKeySizeLabels );
     fill_combobox( *ui.elgKeyStrengthCB, elgKeySizes, elgKeySizeLabels );
 
@@ -1438,7 +1460,7 @@ void AdvancedSettingsDialog::loadDefaultKeyType() {
                        << "\" for entry \"[CertificateCreationWizard]"
                        << qPrintable( entry ) << "\"";
         setKeyType( GPGME_PK_RSA );
-        setSubkeyType( 0 );
+        setSubkeyType( GPGME_PK_RSA );
     }
 
     keyTypeImmutable = config.isEntryImmutable( entry );
@@ -1463,10 +1485,12 @@ void AdvancedSettingsDialog::updateWidgetVisibility() {
     // Technical Details Page
     if ( keyTypeImmutable ) {
         ui.rsaRB->setEnabled( false );
+        ui.rsaSubCB->setEnabled( false );
         ui.dsaRB->setEnabled( false );
         ui.elgCB->setEnabled( false );
     } else {
         ui.rsaRB->setEnabled( true );
+        ui.rsaSubCB->setEnabled( protocol == OpenPGP );
         ui.dsaRB->setEnabled( protocol == OpenPGP );
         ui.elgCB->setEnabled( protocol == OpenPGP );
     }
