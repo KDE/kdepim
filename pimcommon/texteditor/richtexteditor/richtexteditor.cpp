@@ -279,7 +279,6 @@ bool RichTextEditor::showAutoCorrectButton() const
     return d->showAutoCorrectionButton;
 }
 
-
 bool RichTextEditor::spellCheckingSupport() const
 {
     return (d->supportFeatures & SpellChecking);

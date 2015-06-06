@@ -28,7 +28,6 @@
 
 #include "spellchecklineedit.h"
 
-
 #include <QKeyEvent>
 #include <QStyle>
 #include <QApplication>

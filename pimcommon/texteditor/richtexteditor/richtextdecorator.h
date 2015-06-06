@@ -20,7 +20,8 @@
 
 #include <sonnet/spellcheckdecorator.h>
 
-namespace PimCommon {
+namespace PimCommon
+{
 
 class RichTextDecorator : public Sonnet::SpellCheckDecorator
 {

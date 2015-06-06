@@ -82,6 +82,7 @@ public Q_SLOTS:
     void slotChangeInsertMode();
     void slotPasteAsQuotation();
     void slotPasteWithoutFormatting();
+
 Q_SIGNALS:
     void insertModeChanged();
     /**
