@@ -49,16 +49,6 @@ public:
     };
     Q_DECLARE_FLAGS(SupportFeatures, SupportFeature)
 
-    enum Mode {
-        Plain,    ///< Plain text mode
-        Rich      ///< Rich text mode
-    };
-
-    /**
-     * @return The current text mode
-     */
-    Mode textMode() const;
-
     void setSearchSupport(bool b);
     bool searchSupport() const;
 

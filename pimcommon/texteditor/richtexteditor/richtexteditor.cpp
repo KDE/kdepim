@@ -54,7 +54,6 @@ public:
           textIndicator(new PimCommon::TextMessageIndicator(q)),
           richTextDecorator(Q_NULLPTR),
           speller(Q_NULLPTR),
-          mode(RichTextEditor::Rich),
           customPalette(false),
           activateLanguageMenu(true),
           showAutoCorrectionButton(false)
@@ -81,7 +80,6 @@ public:
     Sonnet::SpellCheckDecorator *richTextDecorator;
     Sonnet::Speller *speller;
     RichTextEditor::SupportFeatures supportFeatures;
-    RichTextEditor::Mode mode;
     bool customPalette;
     bool checkSpellingEnabled;
     bool activateLanguageMenu;
@@ -99,11 +97,6 @@ RichTextEditor::RichTextEditor(QWidget *parent)
 RichTextEditor::~RichTextEditor()
 {
     delete d;
-}
-
-RichTextEditor::Mode RichTextEditor::textMode() const
-{
-    return d->mode;
 }
 
 void RichTextEditor::slotDisplayMessageIndicator(const QString &message)

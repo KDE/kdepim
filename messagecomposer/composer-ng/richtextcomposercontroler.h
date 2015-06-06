@@ -31,6 +31,25 @@ public:
     explicit RichTextComposerControler(RichTextComposer *richtextComposer, QObject *parent = Q_NULLPTR);
     ~RichTextComposerControler();
 
+public Q_SLOTS:
+    void insertHorizontalRule();
+    void alignLeft();
+    void alignCenter();
+    void alignRight();
+    void alignJustify();
+    void makeRightToLeft();
+    void makeLeftToRight();
+    void setTextBold(bool bold);
+    void setTextItalic(bool italic);
+    void setTextUnderline(bool underline);
+    void setTextStrikeOut(bool strikeOut);
+    void setTextForegroundColor(const QColor &color);
+    void setTextBackgroundColor(const QColor &color);
+    void setFontFamily(const QString &fontFamily);
+    void setFontSize(int size);
+    void setFont(const QFont &font);
+    void setTextSuperScript(bool superscript);
+    void setTextSubScript(bool subscript);
 private:
     class RichTextComposerControlerPrivate;
     RichTextComposerControlerPrivate *const d;

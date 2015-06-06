@@ -34,6 +34,16 @@ public:
     explicit RichTextComposer(QWidget *parent = Q_NULLPTR);
     ~RichTextComposer();
 
+    enum Mode {
+        Plain,    ///< Plain text mode
+        Rich      ///< Rich text mode
+    };
+
+    /**
+     * @return The current text mode
+     */
+    Mode textMode() const;
+
     PimCommon::AutoCorrection *autocorrection() const;
     void setAutocorrection(PimCommon::AutoCorrection *autocorrect);
     void setAutocorrectionLanguage(const QString &lang);
@@ -65,6 +75,8 @@ public:
 
     void forcePlainTextMarkup(bool force);
 
+    void activateRichText();
+
 public Q_SLOTS:
     void insertPlainTextImplementation();    
     void slotChangeInsertMode();
@@ -72,6 +84,12 @@ public Q_SLOTS:
     void slotPasteWithoutFormatting();
 Q_SIGNALS:
     void insertModeChanged();
+    /**
+     * Emitted whenever the text mode is changed.
+     *
+     * @param mode The new text mode
+     */
+    void textModeChanged(RichTextComposer::Mode mode);
 
 private:
     class RichTextComposerPrivate;

@@ -36,7 +36,8 @@ public:
     RichTextComposerPrivate(RichTextComposer *qq)
         : autoCorrection(Q_NULLPTR),
           q(qq),
-          forcePlainTextMarkup(false)
+          forcePlainTextMarkup(false),
+          mode(RichTextComposer::Plain)
     {
         composerControler = new RichTextComposerControler(q, q);
     }
@@ -44,19 +45,24 @@ public:
     RichTextComposerControler *composerControler;
     RichTextComposer *q;
     bool forcePlainTextMarkup;
-
+    RichTextComposer::Mode mode;
 };
 
 RichTextComposer::RichTextComposer(QWidget *parent)
     : PimCommon::RichTextEditor(parent),
       d(new RichTextComposerPrivate(this))
 {
-
+    setAcceptRichText(false);
 }
 
 RichTextComposer::~RichTextComposer()
 {
     delete d;
+}
+
+RichTextComposer::Mode RichTextComposer::textMode() const
+{
+    return d->mode;
 }
 
 PimCommon::AutoCorrection *RichTextComposer::autocorrection() const
@@ -194,4 +200,13 @@ void RichTextComposer::slotPasteWithoutFormatting()
         }
     }
 #endif
+}
+
+void RichTextComposer::activateRichText()
+{
+    if (d->mode == RichTextComposer::Plain) {
+        setAcceptRichText(true);
+        d->mode = RichTextComposer::Rich;
+        Q_EMIT textModeChanged(d->mode);
+    }
 }
