@@ -27,6 +27,10 @@ class RichTextComposerActions : public QObject
 public:
     explicit RichTextComposerActions(QObject *parent = Q_NULLPTR);
     ~RichTextComposerActions();
+
+private:
+    class RichTextComposerActionsPrivate;
+    RichTextComposerActionsPrivate *const d;
 };
 }
 

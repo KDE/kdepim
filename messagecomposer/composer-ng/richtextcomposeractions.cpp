@@ -19,14 +19,24 @@
 
 using namespace MessageComposer;
 
+class RichTextComposerActions::RichTextComposerActionsPrivate
+{
+public:
+    RichTextComposerActionsPrivate()
+    {
+    }
+};
+
+
 RichTextComposerActions::RichTextComposerActions(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      d(new RichTextComposerActions::RichTextComposerActionsPrivate())
 {
 
 }
 
 RichTextComposerActions::~RichTextComposerActions()
 {
-
+    delete d;
 }
 
