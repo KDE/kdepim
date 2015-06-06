@@ -18,11 +18,12 @@
 #include "richtextcomposertest.h"
 #include "../richtextcomposer.h"
 #include <qtest.h>
-
+#include <qsignalspy.h>
+Q_DECLARE_METATYPE(MessageComposer::RichTextComposer::Mode)
 RichTextComposerTest::RichTextComposerTest(QObject *parent)
     : QObject(parent)
 {
-
+    qRegisterMetaType<MessageComposer::RichTextComposer::Mode>();
 }
 
 RichTextComposerTest::~RichTextComposerTest()
@@ -36,6 +37,18 @@ void RichTextComposerTest::shouldHaveDefaultValue()
     QVERIFY(!composer.autocorrection());
     QCOMPARE(composer.linePosition(), 0);
     QCOMPARE(composer.columnNumber(), 0);
+    QCOMPARE(composer.textMode(), MessageComposer::RichTextComposer::Plain);
+    QVERIFY(!composer.acceptRichText());
+}
+
+void RichTextComposerTest::shouldChangeMode()
+{
+    MessageComposer::RichTextComposer composer;
+    QSignalSpy spy(&composer, SIGNAL(textModeChanged(MessageComposer::RichTextComposer::Mode)));
+    composer.activateRichText();
+    QCOMPARE(composer.textMode(), MessageComposer::RichTextComposer::Rich);
+    QVERIFY(composer.acceptRichText());
+    QCOMPARE(spy.count(), 1);
 }
 
 QTEST_MAIN(RichTextComposerTest)

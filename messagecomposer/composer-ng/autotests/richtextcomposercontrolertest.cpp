@@ -16,6 +16,8 @@
 */
 
 #include "richtextcomposercontrolertest.h"
+#include "../richtextcomposercontroler.h"
+#include "../richtextcomposer.h"
 #include <qtest.h>
 
 RichTextComposerControlerTest::RichTextComposerControlerTest(QObject *parent)
@@ -25,6 +27,11 @@ RichTextComposerControlerTest::RichTextComposerControlerTest(QObject *parent)
 }
 
 RichTextComposerControlerTest::~RichTextComposerControlerTest()
+{
+
+}
+
+void RichTextComposerControlerTest::shouldHaveDefaultValue()
 {
 
 }

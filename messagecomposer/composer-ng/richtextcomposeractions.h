@@ -21,13 +21,15 @@
 #include <QObject>
 
 namespace MessageComposer {
+class RichTextComposerControler;
 class RichTextComposerActions : public QObject
 {
     Q_OBJECT
 public:
-    explicit RichTextComposerActions(QObject *parent = Q_NULLPTR);
+    explicit RichTextComposerActions(MessageComposer::RichTextComposerControler *controler, QObject *parent = Q_NULLPTR);
     ~RichTextComposerActions();
 
+    void createActions();
 private:
     class RichTextComposerActionsPrivate;
     RichTextComposerActionsPrivate *const d;

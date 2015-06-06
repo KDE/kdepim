@@ -89,7 +89,7 @@ Q_SIGNALS:
      *
      * @param mode The new text mode
      */
-    void textModeChanged(RichTextComposer::Mode mode);
+    void textModeChanged(MessageComposer::RichTextComposer::Mode mode);
 
 private:
     class RichTextComposerPrivate;

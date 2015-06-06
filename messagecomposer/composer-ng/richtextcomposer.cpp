@@ -18,6 +18,7 @@
 
 #include "richtextcomposer.h"
 #include "richtextcomposercontroler.h"
+#include "richtextcomposeractions.h"
 #include <KLocalizedString>
 #include <QTextBlock>
 #include <QTextLayout>
@@ -40,9 +41,11 @@ public:
           mode(RichTextComposer::Plain)
     {
         composerControler = new RichTextComposerControler(q, q);
+        richTextComposerActions = new RichTextComposerActions(composerControler, q);
     }
     PimCommon::AutoCorrection *autoCorrection;
     RichTextComposerControler *composerControler;
+    RichTextComposerActions *richTextComposerActions;
     RichTextComposer *q;
     bool forcePlainTextMarkup;
     RichTextComposer::Mode mode;
