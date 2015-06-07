@@ -25,7 +25,8 @@ class RichTextComposerActionsTest : public QObject
 public:
     explicit RichTextComposerActionsTest(QObject *parent = Q_NULLPTR);
     ~RichTextComposerActionsTest();
-
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // RICHTEXTCOMPOSERACTIONSTEST_H

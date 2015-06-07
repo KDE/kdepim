@@ -20,6 +20,7 @@
 
 #include <KToggleAction>
 #include <KLocalizedString>
+#include <KActionCollection>
 
 using namespace MessageComposer;
 
@@ -68,7 +69,7 @@ RichTextComposerActions::~RichTextComposerActions()
     delete d;
 }
 
-void RichTextComposerActions::createActions()
+void RichTextComposerActions::createActions(KActionCollection *ac)
 {
     //Alignment
     d->action_align_left = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-justify-left")),
@@ -76,36 +77,81 @@ void RichTextComposerActions::createActions()
     d->action_align_left->setIconText(i18nc("@label left justify", "Left"));
     d->richTextActionList.append((d->action_align_left));
     d->action_align_left->setObjectName(QStringLiteral("format_align_left"));
-    connect(d->action_align_left, SIGNAL(triggered()),
-            d->composerControler, SLOT(alignLeft()));
+    connect(d->action_align_left, &KToggleAction::triggered,
+            d->composerControler, &RichTextComposerControler::alignLeft);
+    ac->addAction(QStringLiteral("format_align_left"), d->action_align_left);
 
     d->action_align_center = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-justify-center")),
             i18nc("@action", "Align &Center"), this);
     d->action_align_center->setIconText(i18nc("@label center justify", "Center"));
     d->richTextActionList.append((d->action_align_center));
     d->action_align_center->setObjectName(QStringLiteral("format_align_center"));
-    connect(d->action_align_center, SIGNAL(triggered()),
-            this, SLOT(alignCenter()));
+    connect(d->action_align_center, &KToggleAction::triggered,
+            d->composerControler, &RichTextComposerControler::alignCenter);
+    ac->addAction(QStringLiteral("format_align_center"), d->action_align_center);
 
     d->action_align_right = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-justify-right")),
             i18nc("@action", "Align &Right"), this);
     d->action_align_right->setIconText(i18nc("@label right justify", "Right"));
     d->richTextActionList.append((d->action_align_right));
     d->action_align_right->setObjectName(QStringLiteral("format_align_right"));
-    connect(d->action_align_right, SIGNAL(triggered()),
-            this, SLOT(alignRight()));
+    connect(d->action_align_right, &KToggleAction::triggered,
+            d->composerControler, &RichTextComposerControler::alignRight);
+    ac->addAction(QStringLiteral("format_align_right"), d->action_align_right);
 
     d->action_align_justify = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-justify-fill")),
             i18nc("@action", "&Justify"), this);
     d->action_align_justify->setIconText(i18nc("@label justify fill", "Justify"));
     d->richTextActionList.append((d->action_align_justify));
     d->action_align_justify->setObjectName(QStringLiteral("format_align_justify"));
-    connect(d->action_align_justify, SIGNAL(triggered()),
-            this, SLOT(alignJustify()));
+    connect(d->action_align_justify, &KToggleAction::triggered,
+            d->composerControler, &RichTextComposerControler::alignJustify);
+    ac->addAction(QStringLiteral("format_align_justify"), d->action_align_justify);
 
     QActionGroup *alignmentGroup = new QActionGroup(this);
     alignmentGroup->addAction(d->action_align_left);
     alignmentGroup->addAction(d->action_align_center);
     alignmentGroup->addAction(d->action_align_right);
     alignmentGroup->addAction(d->action_align_justify);
+
+
+    //Align text
+    d->action_direction_ltr = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-direction-ltr")),
+            i18nc("@action", "Left-to-Right"), this);
+    d->action_direction_ltr->setIconText(i18nc("@label left-to-right", "Left-to-Right"));
+    d->richTextActionList.append(d->action_direction_ltr);
+    d->action_direction_ltr->setObjectName(QStringLiteral("direction_ltr"));
+    connect(d->action_direction_ltr, &KToggleAction::triggered,
+            d->composerControler, &RichTextComposerControler::makeLeftToRight);
+    ac->addAction(QStringLiteral("direction_ltr"), d->action_direction_ltr);
+
+    d->action_direction_rtl = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-direction-rtl")),
+            i18nc("@action", "Right-to-Left"), this);
+    d->action_direction_rtl->setIconText(i18nc("@label right-to-left", "Right-to-Left"));
+    d->richTextActionList.append(d->action_direction_rtl);
+    d->action_direction_rtl->setObjectName(QStringLiteral("direction_rtl"));
+    connect(d->action_direction_rtl, &KToggleAction::triggered,
+            d->composerControler, &RichTextComposerControler::makeRightToLeft);
+    ac->addAction(QStringLiteral("direction_rtl"), d->action_direction_rtl);
+
+    QActionGroup *directionGroup = new QActionGroup(this);
+    directionGroup->addAction(d->action_direction_ltr);
+    directionGroup->addAction(d->action_direction_rtl);
+
+    // Sub/Super script
+    d->action_text_subscript = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-subscript")),
+            i18nc("@action", "Subscript"), this);
+    d->richTextActionList.append((d->action_text_subscript));
+    d->action_text_subscript->setObjectName(QStringLiteral("format_text_subscript"));
+    connect(d->action_text_subscript, &KToggleAction::triggered,
+            d->composerControler, &RichTextComposerControler::setTextSubScript);
+    ac->addAction(QStringLiteral("format_text_subscript"), d->action_text_subscript);
+
+    d->action_text_superscript = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-superscript")),
+            i18nc("@action", "Superscript"), this);
+    d->richTextActionList.append((d->action_text_superscript));
+    d->action_text_superscript->setObjectName(QStringLiteral("format_text_superscript"));
+    connect(d->action_text_superscript, &KToggleAction::triggered,
+            d->composerControler, &RichTextComposerControler::setTextSuperScript);
+    ac->addAction(QStringLiteral("format_text_superscript"), d->action_text_superscript);
 }

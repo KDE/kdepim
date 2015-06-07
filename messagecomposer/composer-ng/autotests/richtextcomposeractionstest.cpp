@@ -16,6 +16,10 @@
 */
 
 #include "richtextcomposeractionstest.h"
+#include "../richtextcomposercontroler.h"
+#include "../richtextcomposeractions.h"
+#include "../richtextcomposer.h"
+#include <KActionCollection>
 #include <qtest.h>
 
 RichTextComposerActionsTest::RichTextComposerActionsTest(QObject *parent)
@@ -27,6 +31,20 @@ RichTextComposerActionsTest::RichTextComposerActionsTest(QObject *parent)
 RichTextComposerActionsTest::~RichTextComposerActionsTest()
 {
 
+}
+
+void RichTextComposerActionsTest::shouldHaveDefaultValue()
+{
+    MessageComposer::RichTextComposer composer;
+    MessageComposer::RichTextComposerControler controler(&composer);
+    MessageComposer::RichTextComposerActions composerActions(&controler);
+
+    KActionCollection *actionCollection = new KActionCollection(&composerActions);
+    QVERIFY(actionCollection->actions().isEmpty());
+
+    composerActions.createActions(actionCollection);
+
+    QVERIFY(!actionCollection->actions().isEmpty());
 }
 
 QTEST_MAIN(RichTextComposerActionsTest)

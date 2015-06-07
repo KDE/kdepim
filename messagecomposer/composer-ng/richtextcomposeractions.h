@@ -19,17 +19,18 @@
 #define RICHTEXTCOMPOSERACTIONS_H
 
 #include <QObject>
-
+#include "messagecomposer_export.h"
+class KActionCollection;
 namespace MessageComposer {
 class RichTextComposerControler;
-class RichTextComposerActions : public QObject
+class MESSAGECOMPOSER_EXPORT RichTextComposerActions : public QObject
 {
     Q_OBJECT
 public:
     explicit RichTextComposerActions(MessageComposer::RichTextComposerControler *controler, QObject *parent = Q_NULLPTR);
     ~RichTextComposerActions();
 
-    void createActions();
+    void createActions(KActionCollection *ac);
 private:
     class RichTextComposerActionsPrivate;
     RichTextComposerActionsPrivate *const d;
