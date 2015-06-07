@@ -54,6 +54,11 @@ public:
 
     KToggleAction *action_text_superscript;
     KToggleAction *action_text_subscript;
+
+    KToggleAction *action_text_bold;
+    KToggleAction *action_text_italic;
+    KToggleAction *action_text_underline;
+    KToggleAction *action_text_strikeout;
 };
 
 
@@ -67,6 +72,11 @@ RichTextComposerActions::RichTextComposerActions(MessageComposer::RichTextCompos
 RichTextComposerActions::~RichTextComposerActions()
 {
     delete d;
+}
+
+int RichTextComposerActions::numberOfActions() const
+{
+    return d->richTextActionList.count();
 }
 
 void RichTextComposerActions::createActions(KActionCollection *ac)
@@ -154,4 +164,49 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     connect(d->action_text_superscript, &KToggleAction::triggered,
             d->composerControler, &RichTextComposerControler::setTextSuperScript);
     ac->addAction(QStringLiteral("format_text_superscript"), d->action_text_superscript);
+
+
+    d->action_text_bold = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-bold")),
+                                            i18nc("@action boldify selected text", "&Bold"), this);
+    QFont bold;
+    bold.setBold(true);
+    d->action_text_bold->setFont(bold);
+    d->richTextActionList.append((d->action_text_bold));
+    d->action_text_bold->setObjectName(QStringLiteral("format_text_bold"));
+    ac->addAction(QStringLiteral("format_text_bold"), d->action_text_bold);
+    ac->setDefaultShortcut(d->action_text_bold, Qt::CTRL + Qt::Key_B);
+    connect(d->action_text_bold, &KToggleAction::triggered, d->composerControler, &RichTextComposerControler::setTextBold);
+
+    d->action_text_italic = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-italic")),
+                                              i18nc("@action italicize selected text", "&Italic"), this);
+    QFont italic;
+    italic.setItalic(true);
+    d->action_text_italic->setFont(italic);
+    d->richTextActionList.append((d->action_text_italic));
+    d->action_text_italic->setObjectName(QStringLiteral("format_text_italic"));
+    ac->addAction(QStringLiteral("format_text_italic"), d->action_text_italic);
+    ac->setDefaultShortcut(d->action_text_italic, Qt::CTRL + Qt::Key_I);
+    connect(d->action_text_italic, &KToggleAction::triggered, d->composerControler, &RichTextComposerControler::setTextItalic);
+
+    d->action_text_underline = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-underline")),
+                                                 i18nc("@action underline selected text", "&Underline"), this);
+    QFont underline;
+    underline.setUnderline(true);
+    d->action_text_underline->setFont(underline);
+    d->richTextActionList.append((d->action_text_underline));
+    d->action_text_underline->setObjectName(QStringLiteral("format_text_underline"));
+    ac->addAction(QStringLiteral("format_text_underline"), d->action_text_underline);
+    ac->setDefaultShortcut(d->action_text_underline, Qt::CTRL + Qt::Key_U);
+    connect(d->action_text_underline, &KToggleAction::triggered, d->composerControler, &RichTextComposerControler::setTextUnderline);
+
+    d->action_text_strikeout = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-strikethrough")),
+                                                 i18nc("@action", "&Strike Out"), this);
+    QFont strikeout;
+    strikeout.setStrikeOut(true);
+    d->action_text_strikeout->setFont(strikeout);
+    d->richTextActionList.append((d->action_text_strikeout));
+    ac->addAction(QStringLiteral("format_text_strikeout"), d->action_text_strikeout);
+    d->action_text_strikeout->setObjectName(QStringLiteral("format_text_strikeout"));
+    ac->setDefaultShortcut(d->action_text_strikeout, Qt::CTRL + Qt::Key_L);
+    connect(d->action_text_strikeout, &KToggleAction::triggered, d->composerControler, &RichTextComposerControler::setTextStrikeOut);
 }

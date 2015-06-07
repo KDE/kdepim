@@ -45,6 +45,7 @@ void RichTextComposerActionsTest::shouldHaveDefaultValue()
     composerActions.createActions(actionCollection);
 
     QVERIFY(!actionCollection->actions().isEmpty());
+    QCOMPARE(composerActions.numberOfActions(), actionCollection->actions().count());
 }
 
 QTEST_MAIN(RichTextComposerActionsTest)
