@@ -31,9 +31,11 @@ RichTextComposerControlerTest::~RichTextComposerControlerTest()
 
 }
 
-void RichTextComposerControlerTest::shouldHaveDefaultValue()
+void RichTextComposerControlerTest::shouldAlignLeft()
 {
-
+    MessageComposer::RichTextComposer composer;
+    MessageComposer::RichTextComposerControler controler(&composer);
 }
+
 
 QTEST_MAIN(RichTextComposerControlerTest)
