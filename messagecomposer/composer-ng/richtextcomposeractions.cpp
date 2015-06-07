@@ -38,7 +38,8 @@ public:
           action_direction_rtl(Q_NULLPTR),
 
           action_text_superscript(Q_NULLPTR),
-          action_text_subscript(Q_NULLPTR)
+          action_text_subscript(Q_NULLPTR),
+          richTextEnabled(false)
     {
     }
     QList<QAction *> richTextActionList;
@@ -59,6 +60,7 @@ public:
     KToggleAction *action_text_italic;
     KToggleAction *action_text_underline;
     KToggleAction *action_text_strikeout;
+    bool richTextEnabled;
 };
 
 
@@ -209,4 +211,12 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     d->action_text_strikeout->setObjectName(QStringLiteral("format_text_strikeout"));
     ac->setDefaultShortcut(d->action_text_strikeout, Qt::CTRL + Qt::Key_L);
     connect(d->action_text_strikeout, &KToggleAction::triggered, d->composerControler, &RichTextComposerControler::setTextStrikeOut);
+}
+
+void RichTextComposerActions::setActionsEnabled(bool enabled)
+{
+    Q_FOREACH (QAction *action, d->richTextActionList) {
+        action->setEnabled(enabled);
+    }
+    d->richTextEnabled = enabled;
 }

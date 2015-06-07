@@ -32,6 +32,7 @@ public:
 
     void createActions(KActionCollection *ac);
     int numberOfActions() const;
+    void setActionsEnabled(bool enabled);
 private:
     class RichTextComposerActionsPrivate;
     RichTextComposerActionsPrivate *const d;
