@@ -3052,7 +3052,7 @@ void ViewerPrivate::toggleFullAddressList()
 
 QString ViewerPrivate::recipientsQuickListLinkHtml(bool doShow, const QString &field) const
 {
-    QString imgpath(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/")));
+    QString imgpath(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("libmessageviewer/pics/"), QStandardPaths::LocateDirectory));
     QString urlHandle;
     QString imgSrc;
     QString altText;
