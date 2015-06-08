@@ -70,7 +70,10 @@ void RichTextComposerActionsTest::shouldHaveActions()
         << QStringLiteral("format_text_bold")
         << QStringLiteral("format_text_italic")
         << QStringLiteral("format_text_underline")
-        << QStringLiteral("format_text_strikeout");
+        << QStringLiteral("format_text_strikeout")
+        << QStringLiteral("format_font_family")
+        << QStringLiteral("format_font_size")
+        << QStringLiteral("insert_horizontal_rule");
     QCOMPARE(lst.count(), composerActions.numberOfActions());
     Q_FOREACH (QAction *act, actionCollection->actions()) {
         QVERIFY(lst.contains(act->objectName()));

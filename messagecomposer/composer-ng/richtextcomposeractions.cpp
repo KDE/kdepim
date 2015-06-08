@@ -21,6 +21,9 @@
 #include <KToggleAction>
 #include <KLocalizedString>
 #include <KActionCollection>
+#include <KFontAction>
+#include <KFontSizeAction>
+#include <QTextCharFormat>
 
 using namespace MessageComposer;
 
@@ -33,12 +36,17 @@ public:
           action_align_right(Q_NULLPTR),
           action_align_center(Q_NULLPTR),
           action_align_justify(Q_NULLPTR),
-
           action_direction_ltr(Q_NULLPTR),
           action_direction_rtl(Q_NULLPTR),
-
           action_text_superscript(Q_NULLPTR),
           action_text_subscript(Q_NULLPTR),
+          action_text_bold(Q_NULLPTR),
+          action_text_italic(Q_NULLPTR),
+          action_text_underline(Q_NULLPTR),
+          action_text_strikeout(Q_NULLPTR),
+          action_font_family(Q_NULLPTR),
+          action_font_size(Q_NULLPTR),
+          action_insert_horizontal_rule(Q_NULLPTR),
           richTextEnabled(false)
     {
     }
@@ -60,6 +68,12 @@ public:
     KToggleAction *action_text_italic;
     KToggleAction *action_text_underline;
     KToggleAction *action_text_strikeout;
+
+    KFontAction *action_font_family;
+    KFontSizeAction *action_font_size;
+
+    QAction *action_insert_horizontal_rule;
+
     bool richTextEnabled;
 };
 
@@ -211,6 +225,31 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     d->action_text_strikeout->setObjectName(QStringLiteral("format_text_strikeout"));
     ac->setDefaultShortcut(d->action_text_strikeout, Qt::CTRL + Qt::Key_L);
     connect(d->action_text_strikeout, &KToggleAction::triggered, d->composerControler, &RichTextComposerControler::setTextStrikeOut);
+
+
+    //Font Family
+    d->action_font_family = new KFontAction(i18nc("@action", "&Font"), this);
+    d->richTextActionList.append((d->action_font_family));
+    d->action_font_family->setObjectName(QStringLiteral("format_font_family"));
+    ac->addAction(QStringLiteral("format_font_family"), d->action_font_family);
+    connect(d->action_font_family, SIGNAL(triggered(QString)), d->composerControler, SLOT(setFontFamily(QString)));
+
+    //Font Size
+    d->action_font_size = new KFontSizeAction(i18nc("@action", "Font &Size"), this);
+    d->richTextActionList.append((d->action_font_size));
+    d->action_font_size->setObjectName(QStringLiteral("format_font_size"));
+    ac->addAction(QStringLiteral("format_font_size"), d->action_font_size);
+    connect(d->action_font_size, SIGNAL(fontSizeChanged(int)), d->composerControler, SLOT(setFontSize(int)));
+
+
+    d->action_insert_horizontal_rule = new QAction(QIcon::fromTheme(QStringLiteral("insert-horizontal-rule")),
+            i18nc("@action", "Insert Rule Line"), this);
+    d->richTextActionList.append((d->action_insert_horizontal_rule));
+    d->action_insert_horizontal_rule->setObjectName(QStringLiteral("insert_horizontal_rule"));
+    ac->addAction(QStringLiteral("insert_horizontal_rule"), d->action_insert_horizontal_rule);
+    connect(d->action_insert_horizontal_rule, &QAction::triggered,
+            d->composerControler, &RichTextComposerControler::insertHorizontalRule);
+
 }
 
 void RichTextComposerActions::setActionsEnabled(bool enabled)
@@ -219,4 +258,56 @@ void RichTextComposerActions::setActionsEnabled(bool enabled)
         action->setEnabled(enabled);
     }
     d->richTextEnabled = enabled;
+}
+
+
+void RichTextComposerActions::slotUpdateCharFormatActions(const QTextCharFormat &format)
+{
+    QFont f = format.font();
+
+    d->action_font_family->setFont(f.family());
+    if (f.pointSize() > 0) {
+        d->action_font_size->setFontSize((int)f.pointSize());
+    }
+    d->action_text_bold->setChecked(f.bold());
+    d->action_text_italic->setChecked(f.italic());
+    d->action_text_underline->setChecked(f.underline());
+    d->action_text_strikeout->setChecked(f.strikeOut());
+    const QTextCharFormat::VerticalAlignment vAlign = format.verticalAlignment();
+    d->action_text_superscript->setChecked(vAlign == QTextCharFormat::AlignSuperScript);
+    d->action_text_subscript->setChecked(vAlign == QTextCharFormat::AlignSubScript);
+}
+
+void RichTextComposerActions::slotUpdateMiscActions()
+{
+#if 0 //PORT ME
+    Qt::Alignment a = d->ri->alignment();
+    if (a & Qt::AlignLeft) {
+        d->action_align_left->setChecked(true);
+    } else if (a & Qt::AlignHCenter) {
+        d->action_align_center->setChecked(true);
+    } else if (a & Qt::AlignRight) {
+        d->action_align_right->setChecked(true);
+    } else if (a & Qt::AlignJustify) {
+        d->action_align_justify->setChecked(true);
+    }
+    if (q->textCursor().currentList()) {
+        d->action_list_style->setCurrentItem(-q->textCursor().currentList()->format().style());
+    } else {
+        d->action_list_style->setCurrentItem(0);
+    }
+    if (richTextEnabled) {
+        d->action_list_indent->setEnabled(q->canIndentList());
+    } else {
+        d->action_list_indent->setEnabled(false);
+    }
+    if (richTextEnabled) {
+        d->action_list_dedent->setEnabled(q->canDedentList());
+    } else {
+        d->action_list_dedent->setEnabled(false);
+    }
+    const Qt::LayoutDirection direction = q->textCursor().blockFormat().layoutDirection();
+    d->action_direction_ltr->setChecked(direction == Qt::LeftToRight);
+    d->action_direction_rtl->setChecked(direction == Qt::RightToLeft);
+#endif
 }

@@ -21,6 +21,7 @@
 #include <QObject>
 #include "messagecomposer_export.h"
 class KActionCollection;
+class QTextCharFormat;
 namespace MessageComposer {
 class RichTextComposerControler;
 class MESSAGECOMPOSER_EXPORT RichTextComposerActions : public QObject
@@ -35,6 +36,10 @@ public:
 
 public Q_SLOTS:
     void setActionsEnabled(bool enabled);
+
+private Q_SLOTS:
+    void slotUpdateCharFormatActions(const QTextCharFormat &format);
+    void slotUpdateMiscActions();
 
 private:
     class RichTextComposerActionsPrivate;
