@@ -22,6 +22,8 @@
 #include <QLabel>
 #include <QPushButton>
 
+#include <gravatar/gravatarresolvurljob.h>
+
 using namespace KABGravatar;
 GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     : QWidget(parent)
@@ -41,7 +43,7 @@ GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     mSearchGravatar->setEnabled(false);
     mSearchGravatar->setObjectName(QStringLiteral("search"));
     mainLayout->addWidget(mSearchGravatar, 0, 2);
-    connect(mSearchGravatar, SIGNAL(clicked(bool)), this, SLOT(slotSearchGravatar()));
+    connect(mSearchGravatar, &QAbstractButton::clicked, this, &GravatarUpdateWidget::slotSearchGravatar);
 
     mResultGravatar = new QLabel;
     mResultGravatar->setObjectName(QStringLiteral("result"));
@@ -65,6 +67,23 @@ void GravatarUpdateWidget::updateActualGravatar()
 
 void GravatarUpdateWidget::slotSearchGravatar()
 {
-    //TODO
+    if (!mEmail.isEmpty()) {
+        PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
+        job->setEmail(mEmail);
+        job->setUseDefaultPixmap(false);
+        connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
+        job->start();
+    }
+}
+
+void GravatarUpdateWidget::slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *job)
+{
+    if (job) {
+        if (job->hasGravatar()) {
+            mResultGravatar->setPixmap(job->pixmap());
+        } else {
+            mResultGravatar->setText(i18n("No Gravatar Found."));
+        }
+    }
 }
 

@@ -21,6 +21,10 @@
 #include <QWidget>
 class QLabel;
 class QPushButton;
+namespace PimCommon
+{
+class GravatarResolvUrlJob;
+}
 namespace KABGravatar
 {
 class GravatarUpdateWidget : public QWidget
@@ -35,6 +39,7 @@ public:
 private Q_SLOTS:
     void slotSearchGravatar();
 
+    void slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *job);
 private:
     void updateActualGravatar();
     QString mEmail;

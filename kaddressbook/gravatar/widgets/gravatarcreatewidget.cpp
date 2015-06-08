@@ -69,7 +69,7 @@ void GravatarCreateWidget::slotSearchGravatar()
         PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
         job->setEmail(mEmail);
         job->setUseDefaultPixmap(false);
-        connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob*)));
+        connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarCreateWidget::slotSearchGravatarFinished);
         job->start();
     }
 }
