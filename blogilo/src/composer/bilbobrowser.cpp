@@ -98,6 +98,7 @@ void BilboBrowser::createUi(QWidget *parent)
 
 void BilboBrowser::setHtml(const QString &title, const QString &content)
 {
+    qDebug()<<" void BilboBrowser::setHtml(const QString &title, const QString &content)**************"<<title<<" content"<<content;
     currentTitle = title;
     currentContent = content;
 
@@ -106,8 +107,7 @@ void BilboBrowser::setHtml(const QString &title, const QString &content)
     }
     browserProgress->reset();
     browserStatus->showMessage(i18n("loading page items..."));
-
-    if (viewInBlogStyle->isChecked()) {
+    if (__currentBlogId > -1 && viewInBlogStyle->isChecked()) {
         mWebView->setHtml(StyleGetter::styledHtml(__currentBlogId, title, content),
                           DBMan::self()->blog(__currentBlogId)->url());
     } else {
