@@ -17,9 +17,13 @@
 
 #include "richtextcomposer.h"
 #include "richtextcomposercontroler.h"
+#include "klinkdialog_p.h"
+#include "nestedlisthelper_p.h"
 
 #include <KColorScheme>
 #include <QColorDialog>
+#include <QTextBlock>
+
 using namespace MessageComposer;
 
 class RichTextComposerControler::RichTextComposerControlerPrivate
@@ -28,9 +32,15 @@ public:
     RichTextComposerControlerPrivate(RichTextComposer *composer)
         : richtextComposer(composer)
     {
-
+        nestedListHelper = new NestedListHelper(composer);
     }
+    ~RichTextComposerControlerPrivate()
+    {
+        delete nestedListHelper;
+    }
+
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
+    NestedListHelper *nestedListHelper;
     RichTextComposer *richtextComposer;
 };
 
@@ -64,6 +74,10 @@ RichTextComposerControler::~RichTextComposerControler()
     delete d;
 }
 
+NestedListHelper *RichTextComposerControler::nestedListHelper() const
+{
+    return d->nestedListHelper;
+}
 
 RichTextComposer *RichTextComposerControler::richTextComposer() const
 {
@@ -265,4 +279,214 @@ void RichTextComposerControler::setChangeTextBackgroundColor()
 QString RichTextComposerControler::currentLinkUrl() const
 {
     return d->richtextComposer->textCursor().charFormat().anchorHref();
+}
+
+QString RichTextComposerControler::currentLinkText() const
+{
+    QTextCursor cursor = d->richtextComposer->textCursor();
+    selectLinkText(&cursor);
+    return cursor.selectedText();
+}
+
+void RichTextComposerControler::selectLinkText() const
+{
+    QTextCursor cursor = d->richtextComposer->textCursor();
+    selectLinkText(&cursor);
+    d->richtextComposer->setTextCursor(cursor);
+}
+
+void RichTextComposerControler::selectLinkText(QTextCursor *cursor) const
+{
+    // If the cursor is on a link, select the text of the link.
+    if (cursor->charFormat().isAnchor()) {
+        QString aHref = cursor->charFormat().anchorHref();
+
+        // Move cursor to start of link
+        while (cursor->charFormat().anchorHref() == aHref) {
+            if (cursor->atStart()) {
+                break;
+            }
+            cursor->setPosition(cursor->position() - 1);
+        }
+        if (cursor->charFormat().anchorHref() != aHref) {
+            cursor->setPosition(cursor->position() + 1, QTextCursor::KeepAnchor);
+        }
+
+        // Move selection to the end of the link
+        while (cursor->charFormat().anchorHref() == aHref) {
+            if (cursor->atEnd()) {
+                break;
+            }
+            cursor->setPosition(cursor->position() + 1, QTextCursor::KeepAnchor);
+        }
+        if (cursor->charFormat().anchorHref() != aHref) {
+            cursor->setPosition(cursor->position() - 1, QTextCursor::KeepAnchor);
+        }
+    } else if (cursor->hasSelection()) {
+        // Nothing to to. Using the currently selected text as the link text.
+    } else {
+
+        // Select current word
+        cursor->movePosition(QTextCursor::StartOfWord);
+        cursor->movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+    }
+}
+
+void RichTextComposerControler::manageLink()
+{
+    selectLinkText();
+    KLinkDialog *linkDialog = new KLinkDialog(d->richtextComposer);
+    linkDialog->setLinkText(currentLinkText());
+    linkDialog->setLinkUrl(currentLinkUrl());
+
+    if (linkDialog->exec()) {
+        updateLink(linkDialog->linkUrl(), linkDialog->linkText());
+    }
+
+    delete linkDialog;
+
+}
+
+void RichTextComposerControler::updateLink(const QString &linkUrl, const QString &linkText)
+{
+    selectLinkText();
+
+    QTextCursor cursor = d->richtextComposer->textCursor();
+    cursor.beginEditBlock();
+
+    if (!cursor.hasSelection()) {
+        cursor.select(QTextCursor::WordUnderCursor);
+    }
+
+    QTextCharFormat format = cursor.charFormat();
+    // Save original format to create an extra space with the existing char
+    // format for the block
+    const QTextCharFormat originalFormat = format;
+    if (!linkUrl.isEmpty()) {
+        // Add link details
+        format.setAnchor(true);
+        format.setAnchorHref(linkUrl);
+        // Workaround for QTBUG-1814:
+        // Link formatting does not get applied immediately when setAnchor(true)
+        // is called.  So the formatting needs to be applied manually.
+        format.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+        format.setUnderlineColor(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
+        format.setForeground(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
+        d->richtextComposer->activateRichText();
+    } else {
+        // Remove link details
+        format.setAnchor(false);
+        format.setAnchorHref(QString());
+        // Workaround for QTBUG-1814:
+        // Link formatting does not get removed immediately when setAnchor(false)
+        // is called. So the formatting needs to be applied manually.
+        QTextDocument defaultTextDocument;
+        QTextCharFormat defaultCharFormat = defaultTextDocument.begin().charFormat();
+
+        format.setUnderlineStyle(defaultCharFormat.underlineStyle());
+        format.setUnderlineColor(defaultCharFormat.underlineColor());
+        format.setForeground(defaultCharFormat.foreground());
+    }
+
+    // Insert link text specified in dialog, otherwise write out url.
+    QString _linkText;
+    if (!linkText.isEmpty()) {
+        _linkText = linkText;
+    } else {
+        _linkText = linkUrl;
+    }
+    cursor.insertText(_linkText, format);
+
+    // Insert a space after the link if at the end of the block so that
+    // typing some text after the link does not carry link formatting
+    if (!linkUrl.isEmpty() && cursor.atBlockEnd()) {
+        cursor.setPosition(cursor.selectionEnd());
+        cursor.setCharFormat(originalFormat);
+        cursor.insertText(QStringLiteral(" "));
+    }
+
+    cursor.endEditBlock();
+}
+
+QString RichTextComposerControler::toCleanHtml() const
+{
+    QString result = d->richtextComposer->toHtml();
+
+    static const QString EMPTYLINEHTML = QLatin1String(
+            "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+            "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; \">&nbsp;</p>");
+
+    // Qt inserts various style properties based on the current mode of the editor (underline,
+    // bold, etc), but only empty paragraphs *also* have qt-paragraph-type set to 'empty'.
+    static const QString EMPTYLINEREGEX = QLatin1String(
+            "<p style=\"-qt-paragraph-type:empty;(.*)</p>");
+
+    static const QString OLLISTPATTERNQT = QLatin1String(
+            "<ol style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px;");
+
+    static const QString ULLISTPATTERNQT = QLatin1String(
+            "<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px;");
+
+    static const QString ORDEREDLISTHTML = QLatin1String(
+            "<ol style=\"margin-top: 0px; margin-bottom: 0px;");
+
+    static const QString UNORDEREDLISTHTML = QLatin1String(
+                "<ul style=\"margin-top: 0px; margin-bottom: 0px;");
+
+    // fix 1 - empty lines should show as empty lines - MS Outlook treats margin-top:0px; as
+    // a non-existing line.
+    // Although we can simply remove the margin-top style property, we still get unwanted results
+    // if you have three or more empty lines. It's best to replace empty <p> elements with <p>&nbsp;</p>.
+
+    QRegExp emptyLineFinder(EMPTYLINEREGEX);
+    emptyLineFinder.setMinimal(true);
+
+    // find the first occurrence
+    int offset = emptyLineFinder.indexIn(result, 0);
+    while (offset != -1) {
+        // replace all the matching text with the new line text
+        result.replace(offset, emptyLineFinder.matchedLength(), EMPTYLINEHTML);
+        // advance the search offset to just beyond the last replace
+        offset += EMPTYLINEHTML.length();
+        // find the next occurrence
+        offset = emptyLineFinder.indexIn(result, offset);
+    }
+
+    // fix 2a - ordered lists - MS Outlook treats margin-left:0px; as
+    // a non-existing number; e.g: "1. First item" turns into "First Item"
+    result.replace(OLLISTPATTERNQT, ORDEREDLISTHTML);
+
+    // fix 2b - unordered lists - MS Outlook treats margin-left:0px; as
+    // a non-existing bullet; e.g: "* First bullet" turns into "First Bullet"
+    result.replace(ULLISTPATTERNQT, UNORDEREDLISTHTML);
+
+    return result;
+}
+
+bool RichTextComposerControler::canIndentList() const
+{
+    return d->nestedListHelper->canIndent();
+}
+
+bool RichTextComposerControler::canDedentList() const
+{
+    return d->nestedListHelper->canDedent();
+}
+
+void RichTextComposerControler::indentListMore()
+{
+    d->nestedListHelper->handleOnIndentMore();
+    d->richtextComposer->activateRichText();
+}
+
+void RichTextComposerControler::indentListLess()
+{
+    d->nestedListHelper->handleOnIndentLess();
+}
+
+void RichTextComposerControler::setListStyle(int _styleIndex)
+{
+    d->nestedListHelper->handleOnBulletType(-_styleIndex);
+    d->richtextComposer->setFocus();
+    d->richtextComposer->activateRichText();
 }

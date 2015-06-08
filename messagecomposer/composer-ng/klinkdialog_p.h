@@ -26,9 +26,8 @@
 
 #include <QDialog>
 
-class KLinkDialogPrivate;
 class QString;
-
+namespace MessageComposer {
 /**
     @short Dialog to allow user to configure a hyperlink.
     @author Stephen Kelly
@@ -85,10 +84,11 @@ private Q_SLOTS:
 
 private:
     //@cond PRIVATE
+    class KLinkDialogPrivate;
     KLinkDialogPrivate *const d;
     //@endcond
 };
-
+}
 //@endcond
 
 #endif

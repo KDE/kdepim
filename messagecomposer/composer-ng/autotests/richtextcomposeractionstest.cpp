@@ -75,7 +75,11 @@ void RichTextComposerActionsTest::shouldHaveActions()
         << QStringLiteral("format_font_size")
         << QStringLiteral("insert_horizontal_rule")
         << QStringLiteral("format_text_foreground_color")
-        << QStringLiteral("format_text_background_color");
+        << QStringLiteral("format_text_background_color")
+        << QStringLiteral("manage_link")
+        << QStringLiteral("format_list_indent_less")
+        << QStringLiteral("format_list_indent_more")
+        << QStringLiteral("format_list_style");
     QCOMPARE(lst.count(), composerActions.numberOfActions());
     Q_FOREACH (QAction *act, actionCollection->actions()) {
         QVERIFY(lst.contains(act->objectName()));

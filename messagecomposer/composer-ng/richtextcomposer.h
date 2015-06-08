@@ -77,6 +77,9 @@ public:
 
     void activateRichText();
 
+    void setTextOrHtml(const QString &text);
+    QString textOrHtml() const;
+
 public Q_SLOTS:
     void insertPlainTextImplementation();    
     void slotChangeInsertMode();
@@ -91,6 +94,9 @@ Q_SIGNALS:
      * @param mode The new text mode
      */
     void textModeChanged(MessageComposer::RichTextComposer::Mode mode);
+
+protected:
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
     class RichTextComposerPrivate;

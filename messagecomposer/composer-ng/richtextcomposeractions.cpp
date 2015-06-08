@@ -25,6 +25,7 @@
 #include <KFontAction>
 #include <KFontSizeAction>
 #include <QTextCharFormat>
+#include <QTextList>
 
 using namespace MessageComposer;
 
@@ -50,6 +51,9 @@ public:
           action_insert_horizontal_rule(Q_NULLPTR),
           action_text_foreground_color(Q_NULLPTR),
           action_text_background_color(Q_NULLPTR),
+          action_list_indent(Q_NULLPTR),
+          action_list_dedent(Q_NULLPTR),
+          action_list_style(Q_NULLPTR),
           richTextEnabled(false)
     {
     }
@@ -78,6 +82,13 @@ public:
     QAction *action_insert_horizontal_rule;
     QAction *action_text_foreground_color;
     QAction *action_text_background_color;
+    QAction *action_manage_link;
+
+    QAction *action_list_indent;
+    QAction *action_list_dedent;
+
+    KSelectAction *action_list_style;
+
 
     bool richTextEnabled;
 };
@@ -270,6 +281,68 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     ac->addAction(QStringLiteral("format_text_background_color"), d->action_text_background_color);
     d->action_text_background_color->setObjectName(QStringLiteral("format_text_background_color"));
     connect(d->action_text_background_color, &QAction::triggered, d->composerControler, &RichTextComposerControler::setChangeTextBackgroundColor);
+
+
+    d->action_manage_link = new QAction(QIcon::fromTheme(QStringLiteral("insert-link")),
+                                        i18nc("@action", "Link"), this);
+    d->richTextActionList.append((d->action_manage_link));
+    d->action_manage_link->setObjectName(QStringLiteral("manage_link"));
+    ac->addAction(QStringLiteral("manage_link"), d->action_manage_link);
+    connect(d->action_manage_link, &QAction::triggered,
+            d->composerControler, &RichTextComposerControler::manageLink);
+
+
+    d->action_list_indent = new QAction(QIcon::fromTheme(QStringLiteral("format-indent-more")),
+                                        i18nc("@action", "Increase Indent"), this);
+    d->richTextActionList.append((d->action_list_indent));
+    d->action_list_indent->setObjectName(QStringLiteral("format_list_indent_more"));
+    ac->addAction(QStringLiteral("format_list_indent_more"), d->action_list_indent);
+    connect(d->action_list_indent, &QAction::triggered,
+            d->composerControler, &RichTextComposerControler::indentListMore);
+    connect(d->action_list_indent, &QAction::triggered,
+            this, &RichTextComposerActions::slotUpdateMiscActions);
+    d->action_list_dedent = new QAction(QIcon::fromTheme(QStringLiteral("format-indent-less")),
+                                        i18nc("@action", "Decrease Indent"), this);
+    d->richTextActionList.append((d->action_list_dedent));
+    d->action_list_dedent->setObjectName(QStringLiteral("format_list_indent_less"));
+    ac->addAction(QStringLiteral("format_list_indent_less"), d->action_list_dedent);
+    connect(d->action_list_dedent, &QAction::triggered,
+            d->composerControler, &RichTextComposerControler::indentListLess);
+    connect(d->action_list_dedent, &QAction::triggered,
+            this, &RichTextComposerActions::slotUpdateMiscActions);
+
+    d->action_list_style = new KSelectAction(QIcon::fromTheme(QStringLiteral("format-list-unordered")),
+            i18nc("@title:menu", "List Style"), this);
+    QStringList listStyles;
+    listStyles      << i18nc("@item:inmenu no list style", "None")
+                    << i18nc("@item:inmenu disc list style", "Disc")
+                    << i18nc("@item:inmenu circle list style", "Circle")
+                    << i18nc("@item:inmenu square list style", "Square")
+                    << i18nc("@item:inmenu numbered lists", "123")
+                    << i18nc("@item:inmenu lowercase abc lists", "abc")
+                    << i18nc("@item:inmenu uppercase abc lists", "ABC")
+                    << i18nc("@item:inmenu lower case roman numerals", "i ii iii")
+                    << i18nc("@item:inmenu upper case roman numerals", "I II III");
+
+    d->action_list_style->setItems(listStyles);
+    d->action_list_style->setCurrentItem(0);
+    d->richTextActionList.append((d->action_list_style));
+    d->action_list_style->setObjectName(QStringLiteral("format_list_style"));
+    ac->addAction(QStringLiteral("format_list_style"), d->action_list_style);
+    connect(d->action_list_style, SIGNAL(triggered(int)),
+            this, SLOT(setListStyle(int)));
+    connect(d->action_list_style, SIGNAL(triggered()),
+            this, SLOT(slotUpdateMiscActions()));
+
+    slotUpdateMiscActions();
+    slotUpdateCharFormatActions(d->composerControler->richTextComposer()->currentCharFormat());
+}
+
+void RichTextComposerActions::setListStyle(int _styleindex)
+{
+    d->composerControler->setListStyle(_styleindex);
+    //Needed ?
+    slotUpdateMiscActions();
 }
 
 void RichTextComposerActions::setActionsEnabled(bool enabled)
@@ -310,23 +383,22 @@ void RichTextComposerActions::slotUpdateMiscActions()
     } else if (a & Qt::AlignJustify) {
         d->action_align_justify->setChecked(true);
     }
-#if 0
-    if (q->textCursor().currentList()) {
-        d->action_list_style->setCurrentItem(-q->textCursor().currentList()->format().style());
+    if (d->composerControler->richTextComposer()->textCursor().currentList()) {
+        d->action_list_style->setCurrentItem(-d->composerControler->richTextComposer()->textCursor().currentList()->format().style());
     } else {
         d->action_list_style->setCurrentItem(0);
     }
-    if (richTextEnabled) {
-        d->action_list_indent->setEnabled(q->canIndentList());
+    if (d->richTextEnabled) {
+        d->action_list_indent->setEnabled(d->composerControler->canIndentList());
     } else {
         d->action_list_indent->setEnabled(false);
     }
-    if (richTextEnabled) {
-        d->action_list_dedent->setEnabled(q->canDedentList());
+    if (d->richTextEnabled) {
+        d->action_list_dedent->setEnabled(d->composerControler->canDedentList());
     } else {
         d->action_list_dedent->setEnabled(false);
     }
-#endif
+
     const Qt::LayoutDirection direction = d->composerControler->richTextComposer()->textCursor().blockFormat().layoutDirection();
     d->action_direction_ltr->setChecked(direction == Qt::LeftToRight);
     d->action_direction_rtl->setChecked(direction == Qt::RightToLeft);

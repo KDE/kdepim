@@ -41,6 +41,7 @@ private Q_SLOTS:
     void slotUpdateCharFormatActions(const QTextCharFormat &format);
     void slotUpdateMiscActions();
 
+    void setListStyle(int _styleindex);
 private:
     class RichTextComposerActionsPrivate;
     RichTextComposerActionsPrivate *const d;

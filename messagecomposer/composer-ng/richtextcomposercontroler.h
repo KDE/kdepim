@@ -20,10 +20,11 @@
 
 #include <QObject>
 #include "messagecomposer_export.h"
-
+class QTextCursor;
 namespace MessageComposer
 {
 class RichTextComposer;
+class NestedListHelper;
 class MESSAGECOMPOSER_EXPORT RichTextComposerControler : public QObject
 {
     Q_OBJECT
@@ -35,6 +36,15 @@ public:
 
     QString currentLinkUrl() const;
 
+    QString currentLinkText() const;
+    void selectLinkText() const;
+    void selectLinkText(QTextCursor *cursor) const;
+    QString toCleanHtml() const;
+
+    bool canIndentList() const;
+    bool canDedentList() const;
+
+    NestedListHelper *nestedListHelper() const;
 public Q_SLOTS:
     void insertHorizontalRule();
     void alignLeft();
@@ -56,7 +66,12 @@ public Q_SLOTS:
     void setTextSubScript(bool subscript);
     void setChangeTextForegroundColor();
     void setChangeTextBackgroundColor();
+    void manageLink();
+    void indentListMore();
+    void indentListLess();
+    void setListStyle(int _styleIndex);
 private:
+    void updateLink(const QString &linkUrl, const QString &linkText);
     class RichTextComposerControlerPrivate;
     RichTextComposerControlerPrivate *const d;
 };

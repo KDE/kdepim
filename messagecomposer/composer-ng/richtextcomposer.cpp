@@ -19,6 +19,7 @@
 #include "richtextcomposer.h"
 #include "richtextcomposercontroler.h"
 #include "richtextcomposeractions.h"
+#include "nestedlisthelper_p.h"
 #include <KLocalizedString>
 #include <QTextBlock>
 #include <QTextLayout>
@@ -212,4 +213,45 @@ void RichTextComposer::activateRichText()
         d->mode = RichTextComposer::Rich;
         Q_EMIT textModeChanged(d->mode);
     }
+}
+
+QString RichTextComposer::textOrHtml() const
+{
+    if (textMode() == Rich) {
+        return d->composerControler->toCleanHtml();
+    } else {
+        return toPlainText();
+    }
+}
+
+void RichTextComposer::setTextOrHtml(const QString &text)
+{
+    // might be rich text
+    if (Qt::mightBeRichText(text)) {
+        if (d->mode == RichTextComposer::Plain) {
+            activateRichText();
+        }
+        setHtml(text);
+    } else {
+        setPlainText(text);
+    }
+}
+
+void RichTextComposer::keyPressEvent(QKeyEvent *event)
+{
+    bool handled = false;
+    if (textCursor().currentList()) {
+        // handled is False if the key press event was not handled or not completely
+        // handled by the Helper class.
+        handled = d->composerControler->nestedListHelper()->handleBeforeKeyPressEvent(event);
+    }
+
+    if (!handled) {
+        PimCommon::RichTextEditor::keyPressEvent(event);
+    }
+
+    if (textCursor().currentList()) {
+        d->composerControler->nestedListHelper()->handleAfterKeyPressEvent(event);
+    }
+    Q_EMIT cursorPositionChanged();
 }
