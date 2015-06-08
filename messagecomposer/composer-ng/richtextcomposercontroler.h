@@ -31,6 +31,8 @@ public:
     explicit RichTextComposerControler(RichTextComposer *richtextComposer, QObject *parent = Q_NULLPTR);
     ~RichTextComposerControler();
 
+    RichTextComposer *richTextComposer() const;
+
 public Q_SLOTS:
     void insertHorizontalRule();
     void alignLeft();
@@ -50,6 +52,8 @@ public Q_SLOTS:
     void setFont(const QFont &font);
     void setTextSuperScript(bool superscript);
     void setTextSubScript(bool subscript);
+    void setChangeTextForegroundColor();
+    void setChangeTextBackgroundColor();
 private:
     class RichTextComposerControlerPrivate;
     RichTextComposerControlerPrivate *const d;

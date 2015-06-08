@@ -17,6 +17,7 @@
 
 #include "richtextcomposeractions.h"
 #include "richtextcomposercontroler.h"
+#include "richtextcomposer.h"
 
 #include <KToggleAction>
 #include <KLocalizedString>
@@ -47,6 +48,8 @@ public:
           action_font_family(Q_NULLPTR),
           action_font_size(Q_NULLPTR),
           action_insert_horizontal_rule(Q_NULLPTR),
+          action_text_foreground_color(Q_NULLPTR),
+          action_text_background_color(Q_NULLPTR),
           richTextEnabled(false)
     {
     }
@@ -73,6 +76,8 @@ public:
     KFontSizeAction *action_font_size;
 
     QAction *action_insert_horizontal_rule;
+    QAction *action_text_foreground_color;
+    QAction *action_text_background_color;
 
     bool richTextEnabled;
 };
@@ -250,6 +255,21 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     connect(d->action_insert_horizontal_rule, &QAction::triggered,
             d->composerControler, &RichTextComposerControler::insertHorizontalRule);
 
+    //Foreground Color
+    d->action_text_foreground_color = new QAction(QIcon::fromTheme(QStringLiteral("format-stroke-color")),
+                                                  i18nc("@action", "Text &Color..."), this);
+    d->action_text_foreground_color->setIconText(i18nc("@label stroke color", "Color"));
+    d->richTextActionList.append((d->action_text_foreground_color));
+    d->action_text_foreground_color->setObjectName(QStringLiteral("format_text_foreground_color"));
+    ac->addAction(QStringLiteral("format_text_foreground_color"), d->action_text_foreground_color);
+    connect(d->action_text_foreground_color, &QAction::triggered, d->composerControler, &RichTextComposerControler::setChangeTextForegroundColor);
+    //Background Color
+    d->action_text_background_color = new QAction(QIcon::fromTheme(QStringLiteral("format-fill-color")),
+                                                  i18nc("@action", "Text &Highlight..."), this);
+    d->richTextActionList.append((d->action_text_background_color));
+    ac->addAction(QStringLiteral("format_text_background_color"), d->action_text_background_color);
+    d->action_text_background_color->setObjectName(QStringLiteral("format_text_background_color"));
+    connect(d->action_text_background_color, &QAction::triggered, d->composerControler, &RichTextComposerControler::setChangeTextBackgroundColor);
 }
 
 void RichTextComposerActions::setActionsEnabled(bool enabled)
@@ -280,8 +300,7 @@ void RichTextComposerActions::slotUpdateCharFormatActions(const QTextCharFormat 
 
 void RichTextComposerActions::slotUpdateMiscActions()
 {
-#if 0 //PORT ME
-    Qt::Alignment a = d->ri->alignment();
+    const Qt::Alignment a = d->composerControler->richTextComposer()->alignment();
     if (a & Qt::AlignLeft) {
         d->action_align_left->setChecked(true);
     } else if (a & Qt::AlignHCenter) {
@@ -291,6 +310,7 @@ void RichTextComposerActions::slotUpdateMiscActions()
     } else if (a & Qt::AlignJustify) {
         d->action_align_justify->setChecked(true);
     }
+#if 0
     if (q->textCursor().currentList()) {
         d->action_list_style->setCurrentItem(-q->textCursor().currentList()->format().style());
     } else {
@@ -306,8 +326,8 @@ void RichTextComposerActions::slotUpdateMiscActions()
     } else {
         d->action_list_dedent->setEnabled(false);
     }
-    const Qt::LayoutDirection direction = q->textCursor().blockFormat().layoutDirection();
+#endif
+    const Qt::LayoutDirection direction = d->composerControler->richTextComposer()->textCursor().blockFormat().layoutDirection();
     d->action_direction_ltr->setChecked(direction == Qt::LeftToRight);
     d->action_direction_rtl->setChecked(direction == Qt::RightToLeft);
-#endif
 }

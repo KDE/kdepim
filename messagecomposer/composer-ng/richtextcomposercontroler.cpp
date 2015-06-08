@@ -18,6 +18,8 @@
 #include "richtextcomposer.h"
 #include "richtextcomposercontroler.h"
 
+#include <KColorScheme>
+#include <QColorDialog>
 using namespace MessageComposer;
 
 class RichTextComposerControler::RichTextComposerControlerPrivate
@@ -60,6 +62,12 @@ RichTextComposerControler::RichTextComposerControler(RichTextComposer *richtextC
 RichTextComposerControler::~RichTextComposerControler()
 {
     delete d;
+}
+
+
+RichTextComposer *RichTextComposerControler::richTextComposer() const
+{
+    return d->richtextComposer;
 }
 
 void RichTextComposerControler::insertHorizontalRule()
@@ -223,4 +231,33 @@ void RichTextComposerControler::setTextSubScript(bool subscript)
     d->mergeFormatOnWordOrSelection(fmt);
     d->richtextComposer->setFocus();
     d->richtextComposer->activateRichText();
+}
+
+void RichTextComposerControler::setChangeTextForegroundColor()
+{
+    const QColor currentColor = d->richtextComposer->textColor();
+    const QColor defaultColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground().color();
+
+    const QColor selectedColor = QColorDialog::getColor(currentColor.isValid() ? currentColor : defaultColor, d->richtextComposer);
+
+    if (!selectedColor.isValid() && !currentColor.isValid()) {
+        setTextForegroundColor(defaultColor);
+    } else if (selectedColor.isValid()) {
+        setTextForegroundColor(selectedColor);
+    }
+}
+
+void RichTextComposerControler::setChangeTextBackgroundColor()
+{
+    QTextCharFormat fmt = d->richtextComposer->textCursor().charFormat();
+    const QColor currentColor = fmt.background().color();
+    const QColor defaultColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground().color();
+
+    const QColor selectedColor = QColorDialog::getColor(currentColor.isValid() ? currentColor : defaultColor, d->richtextComposer);
+
+    if (!selectedColor.isValid() && !currentColor.isValid()) {
+        setTextBackgroundColor(defaultColor);
+    } else if (selectedColor.isValid()) {
+        setTextBackgroundColor(selectedColor);
+    }
 }
