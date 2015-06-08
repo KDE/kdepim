@@ -658,14 +658,15 @@ Q_SIGNALS:
 
 private:
     void showCreateNewNoteWidget();
-    QString attachmentInjectionHtml() const;
-    QString recipientsQuickListLinkHtml(bool, const QString &) const;
+    QString attachmentInjectionHtml();
+    QString recipientsQuickListLinkHtml(bool, const QString &);
     void initGrantleeThemeName();
 
     Akonadi::Relation relatedNoteRelation() const;
     void addHelpTextAction(QAction *act, const QString &text);
     void readGravatarConfig();
 
+    QString picsPath();
 public:
     NodeHelper *mNodeHelper;
     bool mHtmlMailGlobalSetting, mHtmlLoadExternalGlobalSetting, mHtmlLoadExtOverride;
@@ -690,6 +691,7 @@ public:
     QTimer mResizeTimer;
     QString mOverrideEncoding;
     QString mOldGlobalOverrideEncoding; // used to detect changes of the global override character encoding
+    QString mPicsPath;
 
     /// This is true if the viewer currently is displaying a message. Can be false, for example when
     /// the splash/busy page is displayed.

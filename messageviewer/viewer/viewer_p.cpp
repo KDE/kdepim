@@ -2566,9 +2566,17 @@ void ViewerPrivate::slotSetEncoding()
     update(Viewer::Force);
 }
 
-QString ViewerPrivate::attachmentInjectionHtml() const
+QString ViewerPrivate::picsPath()
 {
-    QString imgpath(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/libmessageviewer/pics/"), QStandardPaths::LocateDirectory));
+    if (mPicsPath.isEmpty()) {
+        mPicsPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/libmessageviewer/pics/"), QStandardPaths::LocateDirectory);
+    }
+    return mPicsPath;
+}
+
+QString ViewerPrivate::attachmentInjectionHtml()
+{
+    QString imgpath(picsPath());
     QString urlHandle;
     QString imgSrc;
     if (!mShowAttachmentQuicklist) {
@@ -3050,9 +3058,9 @@ void ViewerPrivate::toggleFullAddressList()
     toggleFullAddressList(QLatin1String("Cc"));
 }
 
-QString ViewerPrivate::recipientsQuickListLinkHtml(bool doShow, const QString &field) const
+QString ViewerPrivate::recipientsQuickListLinkHtml(bool doShow, const QString &field)
 {
-    QString imgpath(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("libmessageviewer/pics/"), QStandardPaths::LocateDirectory));
+    QString imgpath(picsPath());
     QString urlHandle;
     QString imgSrc;
     QString altText;
