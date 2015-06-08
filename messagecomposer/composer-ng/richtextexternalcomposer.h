@@ -20,6 +20,7 @@
 
 #include "messagecomposer_export.h"
 #include <QObject>
+#include <QProcess>
 
 namespace MessageComposer
 {
@@ -28,10 +29,19 @@ class MESSAGECOMPOSER_EXPORT RichTextExternalComposer : public QObject
 public:
     explicit RichTextExternalComposer(QObject *parent = Q_NULLPTR);
     ~RichTextExternalComposer();
+
     bool useExtEditor() const;
     void setUseExtEditor(bool value);
 
+    void startExternalEditor();
+
+    void setExternalEditorPath(const QString &path);
+    QString externalEditorPath() const;
+    bool checkExternalEditorFinished();
+    void killExternalEditor();
 private:
+    void slotEditorFinished(int codeError, QProcess::ExitStatus exitStatus);
+    void cannotStartProcess(const QString &commandLine);
     class RichTextExternalComposerPrivate;
     RichTextExternalComposerPrivate *const d;
 };

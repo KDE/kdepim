@@ -34,6 +34,7 @@ void RichTextExternalComposerTest::shouldHaveDefaultValue()
 {
     MessageComposer::RichTextExternalComposer richTextExternal;
     QVERIFY(!richTextExternal.useExtEditor());
+    QVERIFY(richTextExternal.externalEditorPath().isEmpty());
 }
 
 QTEST_MAIN(RichTextExternalComposerTest)

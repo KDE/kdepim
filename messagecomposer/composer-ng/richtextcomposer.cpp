@@ -20,6 +20,7 @@
 #include "richtextcomposercontroler.h"
 #include "richtextcomposeractions.h"
 #include "nestedlisthelper_p.h"
+#include "richtextexternalcomposer.h"
 #include <KLocalizedString>
 #include <QTextBlock>
 #include <QTextLayout>
@@ -43,10 +44,12 @@ public:
     {
         composerControler = new RichTextComposerControler(q, q);
         richTextComposerActions = new RichTextComposerActions(composerControler, q);
+        externalComposer = new MessageComposer::RichTextExternalComposer(q);
     }
     PimCommon::AutoCorrection *autoCorrection;
     RichTextComposerControler *composerControler;
     RichTextComposerActions *richTextComposerActions;
+    MessageComposer::RichTextExternalComposer *externalComposer;
     RichTextComposer *q;
     bool forcePlainTextMarkup;
     RichTextComposer::Mode mode;
