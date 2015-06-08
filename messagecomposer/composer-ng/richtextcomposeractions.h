@@ -32,7 +32,10 @@ public:
 
     void createActions(KActionCollection *ac);
     int numberOfActions() const;
+
+public Q_SLOTS:
     void setActionsEnabled(bool enabled);
+
 private:
     class RichTextComposerActionsPrivate;
     RichTextComposerActionsPrivate *const d;

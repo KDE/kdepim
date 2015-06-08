@@ -20,6 +20,7 @@
 #include "../richtextcomposeractions.h"
 #include "../richtextcomposer.h"
 #include <KActionCollection>
+#include <QAction>
 #include <qtest.h>
 
 RichTextComposerActionsTest::RichTextComposerActionsTest(QObject *parent)
@@ -46,6 +47,34 @@ void RichTextComposerActionsTest::shouldHaveDefaultValue()
 
     QVERIFY(!actionCollection->actions().isEmpty());
     QCOMPARE(composerActions.numberOfActions(), actionCollection->actions().count());
+}
+
+void RichTextComposerActionsTest::shouldHaveActions()
+{
+    MessageComposer::RichTextComposer composer;
+    MessageComposer::RichTextComposerControler controler(&composer);
+    MessageComposer::RichTextComposerActions composerActions(&controler);
+
+    KActionCollection *actionCollection = new KActionCollection(&composerActions);
+    composerActions.createActions(actionCollection);
+
+    QStringList lst;
+    lst << QStringLiteral("format_align_left")
+        << QStringLiteral("format_align_center")
+        << QStringLiteral("format_align_right")
+        << QStringLiteral("format_align_justify")
+        << QStringLiteral("direction_ltr")
+        << QStringLiteral("direction_rtl")
+        << QStringLiteral("format_text_subscript")
+        << QStringLiteral("format_text_superscript")
+        << QStringLiteral("format_text_bold")
+        << QStringLiteral("format_text_italic")
+        << QStringLiteral("format_text_underline")
+        << QStringLiteral("format_text_strikeout");
+    QCOMPARE(lst.count(), composerActions.numberOfActions());
+    Q_FOREACH (QAction *act, actionCollection->actions()) {
+        QVERIFY(lst.contains(act->objectName()));
+    }
 }
 
 QTEST_MAIN(RichTextComposerActionsTest)

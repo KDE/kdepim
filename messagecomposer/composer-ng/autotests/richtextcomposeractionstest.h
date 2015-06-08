@@ -27,6 +27,7 @@ public:
     ~RichTextComposerActionsTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldHaveActions();
 };
 
 #endif // RICHTEXTCOMPOSERACTIONSTEST_H
