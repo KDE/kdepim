@@ -261,3 +261,8 @@ void RichTextComposerControler::setChangeTextBackgroundColor()
         setTextBackgroundColor(selectedColor);
     }
 }
+
+QString RichTextComposerControler::currentLinkUrl() const
+{
+    return d->richtextComposer->textCursor().charFormat().anchorHref();
+}

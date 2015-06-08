@@ -33,6 +33,8 @@ public:
 
     RichTextComposer *richTextComposer() const;
 
+    QString currentLinkUrl() const;
+
 public Q_SLOTS:
     void insertHorizontalRule();
     void alignLeft();

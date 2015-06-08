@@ -103,6 +103,7 @@ set(messagecomposer_composerng_SRCS
      composer-ng/richtextcomposer.cpp
      composer-ng/richtextcomposercontroler.cpp
      composer-ng/richtextcomposeractions.cpp
+     composer-ng/klinkdialog.cpp
 )
 
 
