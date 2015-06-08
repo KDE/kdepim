@@ -15,10 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "richtextcomposer.h"
 #include "richtextexternalcomposer.h"
 
 #include <KProcess>
+#include <KMacroExpander>
+#include <KShell>
 #include <KLocalizedString>
+#include <KMessageBox>
 #include <QTemporaryFile>
 
 using namespace MessageComposer;
@@ -26,21 +30,23 @@ using namespace MessageComposer;
 class RichTextExternalComposer::RichTextExternalComposerPrivate
 {
 public:
-    RichTextExternalComposerPrivate()
-        : mExtEditorProcess(Q_NULLPTR),
-          mExtEditorTempFile(Q_NULLPTR),
+    RichTextExternalComposerPrivate(RichTextComposer *composer)
+        : externalEditorProcess(Q_NULLPTR),
+          extEditorTempFile(Q_NULLPTR),
+          richTextComposer(composer),
           useExtEditor(false)
     {
 
     }
     QString extEditorPath;
-    KProcess *mExtEditorProcess;
-    QTemporaryFile *mExtEditorTempFile;
+    KProcess *externalEditorProcess;
+    QTemporaryFile *extEditorTempFile;
+    RichTextComposer *richTextComposer;
     bool useExtEditor;
 };
 
-RichTextExternalComposer::RichTextExternalComposer(QObject *parent)
-    : QObject(parent), d(new RichTextExternalComposerPrivate())
+RichTextExternalComposer::RichTextExternalComposer(RichTextComposer *composer, QObject *parent)
+    : QObject(parent), d(new RichTextExternalComposerPrivate(composer))
 {
 
 }
@@ -50,12 +56,12 @@ RichTextExternalComposer::~RichTextExternalComposer()
     delete d;
 }
 
-bool RichTextExternalComposer::useExtEditor() const
+bool RichTextExternalComposer::useExternalEditor() const
 {
     return d->useExtEditor;
 }
 
-void RichTextExternalComposer::setUseExtEditor(bool value)
+void RichTextExternalComposer::setUseExternalEditor(bool value)
 {
     d->useExtEditor = value;
 }
@@ -72,34 +78,32 @@ QString RichTextExternalComposer::externalEditorPath() const
 
 void RichTextExternalComposer::startExternalEditor()
 {
+    if (d->useExtEditor && !d->externalEditorProcess) {
 
-#if 0
-    if (d->useExtEditor && !d->mExtEditorProcess) {
-
-        const QString commandLine = extEditorPath.trimmed();
-        if (extEditorPath.isEmpty()) {
-            q->setUseExternalEditor(false);
-            KMessageBox::error(q, i18n("Command line is empty. Please verify settings."), i18n("Empty command line"));
+        const QString commandLine = d->extEditorPath.trimmed();
+        if (d->extEditorPath.isEmpty()) {
+            setUseExternalEditor(false);
+            KMessageBox::error(d->richTextComposer, i18n("Command line is empty. Please verify settings."), i18n("Empty command line"));
             return;
         }
 
-        mExtEditorTempFile = new QTemporaryFile();
-        if (!mExtEditorTempFile->open()) {
-            delete mExtEditorTempFile;
-            mExtEditorTempFile = Q_NULLPTR;
-            q->setUseExternalEditor(false);
+        d->extEditorTempFile = new QTemporaryFile();
+        if (!d->extEditorTempFile->open()) {
+            delete d->extEditorTempFile;
+            d->extEditorTempFile = Q_NULLPTR;
+            setUseExternalEditor(false);
             return;
         }
 
-        mExtEditorTempFile->write(q->textOrHtml().toUtf8());
-        mExtEditorTempFile->close();
+        d->extEditorTempFile->write(d->richTextComposer->textOrHtml().toUtf8());
+        d->extEditorTempFile->close();
 
-        mExtEditorProcess = new KProcess();
+        d->externalEditorProcess = new KProcess();
         // construct command line...
         QHash<QChar, QString> map;
-        map.insert(QLatin1Char('l'), QString::number(q->textCursor().blockNumber() + 1));
-        map.insert(QLatin1Char('w'), QString::number((qulonglong)q->winId()));
-        map.insert(QLatin1Char('f'), mExtEditorTempFile->fileName());
+        map.insert(QLatin1Char('l'), QString::number(d->richTextComposer->textCursor().blockNumber() + 1));
+        map.insert(QLatin1Char('w'), QString::number((qulonglong)d->richTextComposer->winId()));
+        map.insert(QLatin1Char('f'), d->extEditorTempFile->fileName());
         const QString cmd = KMacroExpander::expandMacrosShellQuote(commandLine, map);
         const QStringList arg = KShell::splitArgs(cmd);
         bool filenameAdded = false;
@@ -115,66 +119,59 @@ void RichTextExternalComposer::startExternalEditor()
             return;
         }
 
-        (*mExtEditorProcess) << command;
+        (*d->externalEditorProcess) << command;
         if (!filenameAdded) {   // no %f in the editor command
-            (*mExtEditorProcess) << mExtEditorTempFile->fileName();
+            (*d->externalEditorProcess) << d->extEditorTempFile->fileName();
         }
 
-        QObject::connect(mExtEditorProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-                         q, SLOT(slotEditorFinished(int,QProcess::ExitStatus)));
-        mExtEditorProcess->start();
-        if (!mExtEditorProcess->waitForStarted()) {
+        connect(d->externalEditorProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+                         this, SLOT(slotEditorFinished(int,QProcess::ExitStatus)));
+        d->externalEditorProcess->start();
+        if (!d->externalEditorProcess->waitForStarted()) {
             cannotStartProcess(commandLine);
         } else {
-            Q_EMIT q->externalEditorStarted();
+            Q_EMIT externalEditorStarted();
         }
     }
-#endif
 }
 
 void RichTextExternalComposer::cannotStartProcess(const QString &commandLine)
 {
-#if 0
-    KMessageBox::error(q->topLevelWidget(), i18n("External editor cannot be started. Please verify command \"%1\"", commandLine));
-    q->killExternalEditor();
-    q->setUseExternalEditor(false);
-#endif
+    KMessageBox::error(d->richTextComposer, i18n("External editor cannot be started. Please verify command \"%1\"", commandLine));
+    killExternalEditor();
+    setUseExternalEditor(false);
 }
 
 void RichTextExternalComposer::slotEditorFinished(int codeError, QProcess::ExitStatus exitStatus)
 {
-#if 0
     if (exitStatus == QProcess::NormalExit) {
         // the external editor could have renamed the original file and recreated a new file
         // with the given filename, so we need to reopen the file after the editor exited
-        QFile localFile(mExtEditorTempFile->fileName());
+        QFile localFile(d->extEditorTempFile->fileName());
         if (localFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QByteArray f = localFile.readAll();
-            q->setTextOrHtml(QString::fromUtf8(f.data(), f.size()));
-            q->document()->setModified(true);
+            d->richTextComposer->setTextOrHtml(QString::fromUtf8(f.data(), f.size()));
+            d->richTextComposer->document()->setModified(true);
             localFile.close();
         }
         if (codeError > 0) {
-            KMessageBox::error(q->topLevelWidget(), i18n("Error was found when we started external editor."), i18n("External Editor Closed"));
-            q->setUseExternalEditor(false);
+            KMessageBox::error(d->richTextComposer, i18n("Error was found when we started external editor."), i18n("External Editor Closed"));
+            setUseExternalEditor(false);
         }
-        Q_EMIT q->externalEditorClosed();
+        Q_EMIT externalEditorClosed();
     }
 
-    q->killExternalEditor();   // cleanup...
-#endif
-
+    killExternalEditor();   // cleanup...
 }
 
 bool RichTextExternalComposer::checkExternalEditorFinished()
 {
-#if 0
-    if (!d->mExtEditorProcess) {
+    if (!d->externalEditorProcess) {
         return true;
     }
 
     int ret = KMessageBox::warningYesNoCancel(
-                  topLevelWidget(),
+                  d->richTextComposer,
                   xi18nc("@info",
                          "The external editor is still running.<nl/>"
                          "Do you want to stop the editor or keep it running?<nl/>"
@@ -194,19 +191,19 @@ bool RichTextExternalComposer::checkExternalEditorFinished()
         return false;
 
     }
-#else
-    return false;
-#endif
 }
 
 void RichTextExternalComposer::killExternalEditor()
 {
-#if 0
-    if (d->mExtEditorProcess) {
-        d->mExtEditorProcess->deleteLater();
+    if (d->externalEditorProcess) {
+        d->externalEditorProcess->deleteLater();
     }
-    d->mExtEditorProcess = Q_NULLPTR;
-    delete d->mExtEditorTempFile;
-    d->mExtEditorTempFile = Q_NULLPTR;
-#endif
+    d->externalEditorProcess = Q_NULLPTR;
+    delete d->extEditorTempFile;
+    d->extEditorTempFile = Q_NULLPTR;
+}
+
+bool RichTextExternalComposer::isInProgress() const
+{
+    return d->externalEditorProcess;
 }

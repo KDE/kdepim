@@ -45,6 +45,8 @@ public:
     bool canDedentList() const;
 
     NestedListHelper *nestedListHelper() const;
+    void insertShareLink(const QString &url);
+    void insertLink(const QString &url);
 public Q_SLOTS:
     void insertHorizontalRule();
     void alignLeft();

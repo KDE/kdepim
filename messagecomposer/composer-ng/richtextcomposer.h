@@ -25,6 +25,10 @@ namespace PimCommon
 class AutoCorrection;
 }
 
+namespace KPIMTextEdit {
+class EMailQuoteHighlighter;
+}
+
 namespace MessageComposer
 {
 class MESSAGECOMPOSER_EXPORT RichTextComposer : public PimCommon::RichTextEditor
@@ -80,6 +84,20 @@ public:
     void setTextOrHtml(const QString &text);
     QString textOrHtml() const;
 
+    virtual void setHighlighterColors(KPIMTextEdit::EMailQuoteHighlighter *highlighter);
+
+
+    void setUseExternalEditor(bool use);
+    void setExternalEditorPath(const QString &path);
+    bool checkExternalEditorFinished();
+    void killExternalEditor();
+
+    //Redefine it for each apps
+    virtual QString smartQuote(const QString &msg);    //need by kmail
+
+    void setQuotePrefixName(const QString &quotePrefix);
+    QString quotePrefixName() const;
+
 public Q_SLOTS:
     void insertPlainTextImplementation();    
     void slotChangeInsertMode();
@@ -94,11 +112,21 @@ Q_SIGNALS:
      * @param mode The new text mode
      */
     void textModeChanged(MessageComposer::RichTextComposer::Mode mode);
+    /**
+     * Emitted when the user uses the up arrow in the first line. The application
+     * should then put the focus on the widget above the text edit.
+     */
+    void focusUp();
+
+    void externalEditorStarted();
+    void externalEditorClosed();
 
 protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    void evaluateReturnKeySupport(QKeyEvent *event);
+    void evaluateListSupport(QKeyEvent *event);
     class RichTextComposerPrivate;
     RichTextComposerPrivate *const d;
 };

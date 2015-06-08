@@ -45,7 +45,10 @@ public:
         composerControler = new RichTextComposerControler(q, q);
         richTextComposerActions = new RichTextComposerActions(composerControler, q);
         externalComposer = new MessageComposer::RichTextExternalComposer(q);
+        q->connect(externalComposer, &RichTextExternalComposer::externalEditorClosed, qq, &RichTextComposer::externalEditorClosed);
+        q->connect(externalComposer, &RichTextExternalComposer::externalEditorStarted, qq, &RichTextComposer::externalEditorStarted);
     }
+    QString quotePrefix;
     PimCommon::AutoCorrection *autoCorrection;
     RichTextComposerControler *composerControler;
     RichTextComposerActions *richTextComposerActions;
@@ -65,6 +68,31 @@ RichTextComposer::RichTextComposer(QWidget *parent)
 RichTextComposer::~RichTextComposer()
 {
     delete d;
+}
+
+void RichTextComposer::setHighlighterColors(KPIMTextEdit::EMailQuoteHighlighter *highlighter)
+{
+    Q_UNUSED(highlighter);
+}
+
+void RichTextComposer::setUseExternalEditor(bool use)
+{
+    d->externalComposer->setUseExternalEditor(use);
+}
+
+void RichTextComposer::setExternalEditorPath(const QString &path)
+{
+    d->externalComposer->setExternalEditorPath(path);
+}
+
+bool RichTextComposer::checkExternalEditorFinished()
+{
+    return d->externalComposer->checkExternalEditorFinished();
+}
+
+void RichTextComposer::killExternalEditor()
+{
+    d->externalComposer->killExternalEditor();
 }
 
 RichTextComposer::Mode RichTextComposer::textMode() const
@@ -240,7 +268,68 @@ void RichTextComposer::setTextOrHtml(const QString &text)
     }
 }
 
-void RichTextComposer::keyPressEvent(QKeyEvent *event)
+void RichTextComposer::evaluateReturnKeySupport(QKeyEvent *event)
+{
+    if (event->key() ==  Qt::Key_Return) {
+        QTextCursor cursor = textCursor();
+        int oldPos = cursor.position();
+        int blockPos = cursor.block().position();
+
+        //selection all the line.
+        cursor.movePosition(QTextCursor::StartOfBlock);
+        cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+        QString lineText = cursor.selectedText();
+        if (((oldPos - blockPos)  > 0) &&
+                ((oldPos - blockPos) < int(lineText.length()))) {
+            bool isQuotedLine = false;
+            int bot = 0; // bot = begin of text after quote indicators
+            while (bot < lineText.length()) {
+                if ((lineText[bot] == QChar::fromLatin1('>')) ||
+                        (lineText[bot] == QChar::fromLatin1('|'))) {
+                    isQuotedLine = true;
+                    ++bot;
+                } else if (lineText[bot].isSpace()) {
+                    ++bot;
+                } else {
+                    break;
+                }
+            }
+            evaluateListSupport(event);
+            // duplicate quote indicators of the previous line before the new
+            // line if the line actually contained text (apart from the quote
+            // indicators) and the cursor is behind the quote indicators
+            if (isQuotedLine &&
+                    (bot != lineText.length()) &&
+                    ((oldPos - blockPos) >= int(bot))) {
+                // The cursor position might have changed unpredictably if there was selected
+                // text which got replaced by a new line, so we query it again:
+                cursor.movePosition(QTextCursor::StartOfBlock);
+                cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+                QString newLine = cursor.selectedText();
+
+                // remove leading white space from the new line and instead
+                // add the quote indicators of the previous line
+                int leadingWhiteSpaceCount = 0;
+                while ((leadingWhiteSpaceCount < newLine.length()) &&
+                       newLine[leadingWhiteSpaceCount].isSpace()) {
+                    ++leadingWhiteSpaceCount;
+                }
+                newLine = newLine.replace(0, leadingWhiteSpaceCount, lineText.left(bot));
+                cursor.insertText(newLine);
+                //cursor.setPosition( cursor.position() + 2 );
+                cursor.movePosition(QTextCursor::StartOfBlock);
+                setTextCursor(cursor);
+            }
+        } else {
+            evaluateListSupport(event);
+        }
+    } else {
+        evaluateListSupport(event);
+    }
+}
+
+
+void RichTextComposer::evaluateListSupport(QKeyEvent *event)
 {
     bool handled = false;
     if (textCursor().currentList()) {
@@ -258,3 +347,101 @@ void RichTextComposer::keyPressEvent(QKeyEvent *event)
     }
     Q_EMIT cursorPositionChanged();
 }
+
+static bool isSpecial(const QTextCharFormat &charFormat)
+{
+    return charFormat.isFrameFormat() || charFormat.isImageFormat() ||
+           charFormat.isListFormat() || charFormat.isTableFormat() || charFormat.isTableCellFormat();
+}
+
+void RichTextComposer::keyPressEvent(QKeyEvent *e)
+{
+    if (d->externalComposer->useExternalEditor() &&
+            (e->key() != Qt::Key_Shift) &&
+            (e->key() != Qt::Key_Control) &&
+            (e->key() != Qt::Key_Meta) &&
+            (e->key() != Qt::Key_CapsLock) &&
+            (e->key() != Qt::Key_NumLock) &&
+            (e->key() != Qt::Key_ScrollLock) &&
+            (e->key() != Qt::Key_Alt) &&
+            (e->key() != Qt::Key_AltGr)) {
+        if (!d->externalComposer->isInProgress()) {
+            d->externalComposer->startExternalEditor();
+        }
+        return;
+    }
+
+    if (e->key() == Qt::Key_Up && e->modifiers() != Qt::ShiftModifier &&
+            textCursor().block().position() == 0 &&
+            textCursor().block().layout()->lineForTextPosition(textCursor().position()).lineNumber() == 0) {
+        textCursor().clearSelection();
+        Q_EMIT focusUp();
+    } else if (e->key() == Qt::Key_Backtab && e->modifiers() == Qt::ShiftModifier) {
+        textCursor().clearSelection();
+        Q_EMIT focusUp();
+    } else {
+#if 0 //FIXME
+        if (d->autoCorrection && d->autoCorrection->isEnabledAutoCorrection()) {
+            if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
+                if (!isLineQuoted(textCursor().block().text()) && !textCursor().hasSelection()) {
+                    const QTextCharFormat initialTextFormat = textCursor().charFormat();
+                    const bool richText = (textMode() == RichTextComposer::Rich);
+                    int position = textCursor().position();
+                    const bool addSpace = d->autoCorrection->autocorrect(richText, *document(), position);
+                    QTextCursor cur = textCursor();
+                    cur.setPosition(position);
+                    if (overwriteMode() && e->key() == Qt::Key_Space) {
+                        if (addSpace) {
+                            const QChar insertChar = QLatin1Char(' ');
+                            if (!cur.atBlockEnd()) {
+                                cur.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, 1);
+                            }
+                            if (richText && !isSpecial(initialTextFormat)) {
+                                cur.insertText(insertChar, initialTextFormat);
+                            } else {
+                                cur.insertText(insertChar);
+                            }
+                            setTextCursor(cur);
+                        }
+                    } else {
+                        const bool spacePressed = (e->key() == Qt::Key_Space);
+                        const QChar insertChar = spacePressed ? QLatin1Char(' ') : QLatin1Char('\n');
+                        if (richText && !isSpecial(initialTextFormat)) {
+                            if ((spacePressed && addSpace) || !spacePressed) {
+                                cur.insertText(insertChar, initialTextFormat);
+                            }
+                        } else {
+                            if ((spacePressed && addSpace) || !spacePressed) {
+                                cur.insertText(insertChar);
+                            }
+                        }
+                        setTextCursor(cur);
+                    }
+                    return;
+                }
+            }
+        }
+#endif
+        evaluateReturnKeySupport(e);
+    }
+}
+
+QString RichTextComposer::smartQuote(const QString &msg)
+{
+    return msg;
+}
+
+void RichTextComposer::setQuotePrefixName(const QString &quotePrefix)
+{
+    d->quotePrefix = quotePrefix;
+}
+
+QString RichTextComposer::quotePrefixName() const
+{
+    if (!d->quotePrefix.simplified().isEmpty()) {
+        return d->quotePrefix;
+    } else {
+        return QStringLiteral(">");
+    }
+}
+

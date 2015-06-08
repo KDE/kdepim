@@ -26,3 +26,9 @@ add_test(pimcommon_richtextexternalcomposertest pimcommon_richtextexternalcompos
 ecm_mark_as_test(pimcommon_richtextexternalcomposertest)
 target_link_libraries( pimcommon_richtextexternalcomposertest Qt5::Test pimcommon messagecomposer)
 
+set( pimcommon_richtextcomposerimagestest_SRCS richtextcomposerimagestest.cpp )
+add_executable( pimcommon_richtextcomposerimagestest ${pimcommon_richtextcomposerimagestest_SRCS})
+add_test(pimcommon_richtextcomposerimagestest pimcommon_richtextcomposerimagestest)
+ecm_mark_as_test(pimcommon_richtextcomposerimagestest)
+target_link_libraries( pimcommon_richtextcomposerimagestest Qt5::Test pimcommon messagecomposer)
+

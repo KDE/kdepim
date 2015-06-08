@@ -15,28 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "richtextexternalcomposertest.h"
-#include "../richtextexternalcomposer.h"
-#include "../richtextcomposer.h"
-#include <qtest.h>
+#ifndef RICHTEXTCOMPOSERIMAGES_H
+#define RICHTEXTCOMPOSERIMAGES_H
 
-RichTextExternalComposerTest::RichTextExternalComposerTest(QObject *parent)
-    : QObject(parent)
+#include <QObject>
+#include "messagecomposer_export.h"
+namespace MessageComposer {
+
+class MESSAGECOMPOSER_EXPORT RichTextComposerImages : public QObject
 {
-
+    Q_OBJECT
+public:
+    explicit RichTextComposerImages(QObject *parent = Q_NULLPTR);
+    ~RichTextComposerImages();
+};
 }
 
-RichTextExternalComposerTest::~RichTextExternalComposerTest()
-{
-
-}
-
-void RichTextExternalComposerTest::shouldHaveDefaultValue()
-{
-    MessageComposer::RichTextComposer composer;
-    MessageComposer::RichTextExternalComposer richTextExternal(&composer);
-    QVERIFY(!richTextExternal.useExternalEditor());
-    QVERIFY(richTextExternal.externalEditorPath().isEmpty());
-}
-
-QTEST_MAIN(RichTextExternalComposerTest)
+#endif // RICHTEXTCOMPOSERIMAGES_H

@@ -24,21 +24,30 @@
 
 namespace MessageComposer
 {
+class RichTextComposer;
 class MESSAGECOMPOSER_EXPORT RichTextExternalComposer : public QObject
 {
+    Q_OBJECT
 public:
-    explicit RichTextExternalComposer(QObject *parent = Q_NULLPTR);
+    explicit RichTextExternalComposer(RichTextComposer *composer, QObject *parent = Q_NULLPTR);
     ~RichTextExternalComposer();
 
-    bool useExtEditor() const;
-    void setUseExtEditor(bool value);
+    bool useExternalEditor() const;
+    void setUseExternalEditor(bool value);
 
     void startExternalEditor();
 
     void setExternalEditorPath(const QString &path);
     QString externalEditorPath() const;
     bool checkExternalEditorFinished();
-    void killExternalEditor();
+    void killExternalEditor();    
+
+    bool isInProgress() const;
+
+Q_SIGNALS:
+    void externalEditorClosed();
+    void externalEditorStarted();
+
 private:
     void slotEditorFinished(int codeError, QProcess::ExitStatus exitStatus);
     void cannotStartProcess(const QString &commandLine);

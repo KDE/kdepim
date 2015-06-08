@@ -39,6 +39,7 @@ void RichTextComposerTest::shouldHaveDefaultValue()
     QCOMPARE(composer.columnNumber(), 0);
     QCOMPARE(composer.textMode(), MessageComposer::RichTextComposer::Plain);
     QVERIFY(!composer.acceptRichText());
+    QVERIFY(!composer.quotePrefixName().isEmpty());
 }
 
 void RichTextComposerTest::shouldChangeMode()

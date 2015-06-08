@@ -106,6 +106,7 @@ set(messagecomposer_composerng_SRCS
      composer-ng/klinkdialog.cpp
      composer-ng/nestedlisthelper.cpp
      composer-ng/richtextexternalcomposer.cpp
+     composer-ng/richtextcomposerimages.cpp
 )
 
 

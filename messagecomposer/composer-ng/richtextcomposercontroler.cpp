@@ -21,6 +21,7 @@
 #include "nestedlisthelper_p.h"
 
 #include <KColorScheme>
+#include <KLocalizedString>
 #include <QColorDialog>
 #include <QTextBlock>
 
@@ -489,4 +490,75 @@ void RichTextComposerControler::setListStyle(int _styleIndex)
     d->nestedListHelper->handleOnBulletType(-_styleIndex);
     d->richtextComposer->setFocus();
     d->richtextComposer->activateRichText();
+}
+
+void RichTextComposerControler::insertLink(const QString &url)
+{
+    if (url.isEmpty()) {
+        return;
+    }
+    if (d->richtextComposer->textMode() == RichTextComposer::Rich) {
+        QTextCursor cursor = d->richtextComposer->textCursor();
+        cursor.beginEditBlock();
+
+        QTextCharFormat format = cursor.charFormat();
+        // Save original format to create an extra space with the existing char
+        // format for the block
+        const QTextCharFormat originalFormat = format;
+        // Add link details
+        format.setAnchor(true);
+        format.setAnchorHref(url);
+        // Workaround for QTBUG-1814:
+        // Link formatting does not get applied immediately when setAnchor(true)
+        // is called.  So the formatting needs to be applied manually.
+        format.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+        format.setUnderlineColor(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
+        format.setForeground(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
+        // Insert link text specified in dialog, otherwise write out url.
+        cursor.insertText(url, format);
+
+        cursor.setPosition(cursor.selectionEnd());
+        cursor.setCharFormat(originalFormat);
+        cursor.insertText(QLatin1String(" \n"));
+        cursor.endEditBlock();
+    } else {
+        d->richtextComposer->textCursor().insertText(url + QLatin1Char('\n'));
+    }
+}
+
+void RichTextComposerControler::insertShareLink(const QString &url)
+{
+    if (url.isEmpty()) {
+        return;
+    }
+    const QString msg = i18n("I've linked 1 file to this email:");
+    if (d->richtextComposer->textMode() == RichTextComposer::Rich) {
+        QTextCursor cursor = d->richtextComposer->textCursor();
+
+        cursor.beginEditBlock();
+        cursor.insertText(QLatin1Char('\n') + msg + QLatin1Char('\n'));
+
+        QTextCharFormat format = cursor.charFormat();
+        // Save original format to create an extra space with the existing char
+        // format for the block
+        const QTextCharFormat originalFormat = format;
+        // Add link details
+        format.setAnchor(true);
+        format.setAnchorHref(url);
+        // Workaround for QTBUG-1814:
+        // Link formatting does not get applied immediately when setAnchor(true)
+        // is called.  So the formatting needs to be applied manually.
+        format.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+        format.setUnderlineColor(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
+        format.setForeground(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
+        // Insert link text specified in dialog, otherwise write out url.
+        cursor.insertText(url, format);
+
+        cursor.setPosition(cursor.selectionEnd());
+        cursor.setCharFormat(originalFormat);
+        cursor.insertText(QLatin1String(" \n"));
+        cursor.endEditBlock();
+    } else {
+        d->richtextComposer->textCursor().insertText(QLatin1Char('\n') + msg + QLatin1Char('\n') + url + QLatin1Char('\n'));
+    }
 }
