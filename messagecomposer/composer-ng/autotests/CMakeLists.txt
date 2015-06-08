@@ -19,3 +19,10 @@ add_test(pimcommon_richtextcomposeractionstest pimcommon_richtextcomposeractions
 ecm_mark_as_test(pimcommon_richtextcomposeractionstest)
 target_link_libraries( pimcommon_richtextcomposeractionstest Qt5::Test pimcommon messagecomposer)
 
+
+set( pimcommon_richtextexternalcomposertest_SRCS richtextexternalcomposertest.cpp )
+add_executable( pimcommon_richtextexternalcomposertest ${pimcommon_richtextexternalcomposertest_SRCS})
+add_test(pimcommon_richtextexternalcomposertest pimcommon_richtextexternalcomposertest)
+ecm_mark_as_test(pimcommon_richtextexternalcomposertest)
+target_link_libraries( pimcommon_richtextexternalcomposertest Qt5::Test pimcommon messagecomposer)
+
