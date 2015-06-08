@@ -50,7 +50,7 @@ bool PMailImportData::foundMailer() const
 
 QString PMailImportData::name() const
 {
-    return QLatin1String("Pegasus Mail");
+    return QStringLiteral("Pegasus Mail");
 }
 
 bool PMailImportData::importMails()

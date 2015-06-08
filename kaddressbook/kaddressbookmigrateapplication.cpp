@@ -30,7 +30,7 @@ KAddressBookMigrateApplication::KAddressBookMigrateApplication()
 void KAddressBookMigrateApplication::migrate()
 {
     // Migrate to xdg.
-    Kdelibs4ConfigMigrator migrate(QLatin1String("kaddressbook"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("kaddressbook"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("kaddressbookrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("kaddressbookui.rc"));
     migrate.migrate();

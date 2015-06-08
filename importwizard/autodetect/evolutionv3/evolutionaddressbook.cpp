@@ -51,7 +51,7 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
     }
     if (found) {
         QStringList arguments;
-        arguments << QLatin1String("-l");
+        arguments << QStringLiteral("-l");
         QProcess proc;
         proc.start(evolutionFile.fileName(), arguments);
         if (!proc.waitForFinished()) {

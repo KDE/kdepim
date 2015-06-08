@@ -51,7 +51,7 @@ bool Evolutionv3ImportData::foundMailer() const
 
 QString Evolutionv3ImportData::name() const
 {
-    return QLatin1String("Evolution 3.x");
+    return QStringLiteral("Evolution 3.x");
 }
 
 bool Evolutionv3ImportData::importSettings()

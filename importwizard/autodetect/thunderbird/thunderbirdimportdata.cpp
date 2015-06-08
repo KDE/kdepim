@@ -65,7 +65,7 @@ bool ThunderbirdImportData::importAddressBook()
 
 QString ThunderbirdImportData::name() const
 {
-    return QLatin1String("Thunderbird");
+    return QStringLiteral("Thunderbird");
 }
 
 bool ThunderbirdImportData::importSettings()

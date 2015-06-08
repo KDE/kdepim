@@ -35,10 +35,10 @@ BalsaSettings::BalsaSettings(const QString &filename, ImportWizard *parent)
 
     bool autoCheck = false;
     int autoCheckDelay = -1;
-    if (config.hasGroup(QLatin1String("MailboxChecking"))) {
-        KConfigGroup grp = config.group(QLatin1String("MailboxChecking"));
-        autoCheck = grp.readEntry(QLatin1String("Auto"), false);
-        autoCheckDelay = grp.readEntry(QLatin1String("AutoDelay"), -1);
+    if (config.hasGroup(QStringLiteral("MailboxChecking"))) {
+        KConfigGroup grp = config.group(QStringLiteral("MailboxChecking"));
+        autoCheck = grp.readEntry(QStringLiteral("Auto"), false);
+        autoCheckDelay = grp.readEntry(QStringLiteral("AutoDelay"), -1);
     }
 
     const QStringList mailBoxList = config.groupList().filter(QRegExp("mailbox-\\+d"));

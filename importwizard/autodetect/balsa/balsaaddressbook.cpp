@@ -52,12 +52,12 @@ BalsaAddressBook::~BalsaAddressBook()
 
 void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
 {
-    const QString type = grp.readEntry(QLatin1String("Type"));
+    const QString type = grp.readEntry(QStringLiteral("Type"));
     if (type.isEmpty()) {
         addAddressBookImportInfo(i18n("No addressbook found"));
         return;
     }
-    const QString name = grp.readEntry(QLatin1String("Name"));
+    const QString name = grp.readEntry(QStringLiteral("Name"));
 
     if (type == QLatin1String("LibBalsaAddressBookLdap")) {
         ldapStruct ldap;

@@ -34,7 +34,7 @@ OperaSettings::OperaSettings(const QString &filename, ImportWizard *parent)
 {
     if (QFile(filename).exists()) {
         KConfig config(filename);
-        KConfigGroup grp = config.group(QLatin1String("Accounts"));
+        KConfigGroup grp = config.group(QStringLiteral("Accounts"));
         readGlobalAccount(grp);
         const QStringList accountList = config.groupList().filter(QRegExp("Account\\d+"));
         const QStringList::const_iterator end(accountList.constEnd());
