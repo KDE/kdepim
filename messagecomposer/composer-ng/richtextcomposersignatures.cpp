@@ -68,14 +68,12 @@ void RichTextComposerSignatures::RichTextComposerSignaturesPrivate::cleanWhitesp
         cursor.setPosition(currentMatch);
         cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor,
         regExp.matchedLength());
-#if 0 //FIXME
         // Skip quoted text
         if (richTextComposer->isLineQuoted(cursor.block().text()))
         {
             currentSearchPosition += regExp.matchedLength();
             continue;
         }
-#endif
         // Skip text inside signatures
         bool insideSignature = false;
         QList< QPair<int, int> > sigPositions = signaturePositions(sig);
@@ -190,14 +188,12 @@ bool RichTextComposerSignatures::replaceSignature(const KIdentityManagement::Sig
         }
         cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor,
         oldSigText.length() + additionalMove);
-#if 0 //FIXME
         // Skip quoted signatures
-        if (isLineQuoted(cursor.block().text()))
+        if (d->richTextComposer->isLineQuoted(cursor.block().text()))
         {
             currentSearchPosition += oldSig.toPlainText().length();
             continue;
         }
-#endif
         // Remove the old and insert the new signature
         cursor.removeSelectedText();
         d->richTextComposer->setTextCursor(cursor);

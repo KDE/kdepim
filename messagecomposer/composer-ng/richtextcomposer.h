@@ -20,6 +20,7 @@
 
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 #include "messagecomposer_export.h"
+class KActionCollection;
 namespace PimCommon
 {
 class AutoCorrection;
@@ -81,6 +82,7 @@ public:
     void forcePlainTextMarkup(bool force);
 
     void activateRichText();
+    void switchToPlainText();
 
     void setTextOrHtml(const QString &text);
     QString textOrHtml() const;
@@ -99,11 +101,15 @@ public:
     QString quotePrefixName() const;
 
     void setCursorPositionFromStart(unsigned int pos);
+    int quoteLength(const QString &line) const;
+    bool isLineQuoted(const QString &line) const;
+    const QString defaultQuoteSign() const;
+    void createActions(KActionCollection *ac);
+
+    QList<QAction *> richTextActionList() const;
 public Q_SLOTS:
     void insertPlainTextImplementation();
     void slotChangeInsertMode();
-    void slotPasteAsQuotation();
-    void slotPasteWithoutFormatting();
 
 Q_SIGNALS:
     void insertModeChanged();

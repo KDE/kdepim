@@ -29,6 +29,9 @@ class MESSAGECOMPOSER_EXPORT RichTextComposerImages : public QObject
 public:
     explicit RichTextComposerImages(QObject *parent = Q_NULLPTR);
     ~RichTextComposerImages();
+private:
+    class RichTextComposerImagesPrivate;
+    RichTextComposerImagesPrivate *const d;
 };
 }
 

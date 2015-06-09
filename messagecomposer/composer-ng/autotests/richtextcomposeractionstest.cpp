@@ -87,7 +87,7 @@ void RichTextComposerActionsTest::shouldHaveActions()
         << QStringLiteral("add_image")
         << QStringLiteral("add_emoticon")
         << QStringLiteral("insert_html")
-        // FIXME << QStringLiteral("insert_table")
+        << QStringLiteral("insert_table")
         << QStringLiteral("delete_line")
         << QStringLiteral("format_reset");
 

@@ -17,6 +17,7 @@
 
 #include "richtextcomposer.h"
 #include "richtextcomposercontroler.h"
+#include "richtextcomposerimages.h"
 #include "klinkdialog_p.h"
 #include "nestedlisthelper_p.h"
 #include "settings/messagecomposersettings.h"
@@ -28,8 +29,10 @@
 #include <QCoreApplication>
 #include <QTimer>
 #include <QPointer>
+#include <QClipboard>
 #include <kpimtextedit/inserthtmldialog.h>
 #include <kpimtextedit/textutils.h>
+#include <kpimtextedit/insertimagedialog.h>
 #include <grantlee/plaintextmarkupbuilder.h>
 
 #include <part/textpart.h>
@@ -39,10 +42,13 @@ using namespace MessageComposer;
 class RichTextComposerControler::RichTextComposerControlerPrivate
 {
 public:
-    RichTextComposerControlerPrivate(RichTextComposer *composer)
-        : richtextComposer(composer)
+    RichTextComposerControlerPrivate(RichTextComposer *composer, RichTextComposerControler *qq)
+        : richtextComposer(composer),
+          q(qq)
     {
+        q->connect(composer, SIGNAL(textModeChanged(MessageComposer::RichTextComposer::Mode)), q, SLOT(slotTextModeChanged(MessageComposer::RichTextComposer::Mode)));
         nestedListHelper = new NestedListHelper(composer);
+        richTextImages = new RichTextComposerImages(q);
     }
     ~RichTextComposerControlerPrivate()
     {
@@ -50,8 +56,12 @@ public:
     }
     void fixupTextEditString(QString &text) const;
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
+    QString addQuotesToText(const QString &inputText);
+    QFont saveFont;
     NestedListHelper *nestedListHelper;
     RichTextComposer *richtextComposer;
+    RichTextComposerImages *richTextImages;
+    RichTextComposerControler *q;
 };
 
 void RichTextComposerControler::RichTextComposerControlerPrivate::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
@@ -73,7 +83,7 @@ void RichTextComposerControler::RichTextComposerControlerPrivate::mergeFormatOnW
 }
 
 RichTextComposerControler::RichTextComposerControler(RichTextComposer *richtextComposer, QObject *parent)
-    : QObject(parent), d(new RichTextComposerControlerPrivate(richtextComposer))
+    : QObject(parent), d(new RichTextComposerControlerPrivate(richtextComposer, this))
 {
 
 }
@@ -741,12 +751,28 @@ void RichTextComposerControler::slotInsertHtml()
     }
 }
 
+void RichTextComposerControler::slotAddImage()
+{
+    QPointer<KPIMTextEdit::InsertImageDialog> dlg = new KPIMTextEdit::InsertImageDialog(d->richtextComposer);
+    if (dlg->exec() == QDialog::Accepted && dlg) {
+        const QUrl url = dlg->imageUrl();
+        int imageWidth = -1;
+        int imageHeight = -1;
+        if (!dlg->keepOriginalSize()) {
+            imageWidth = dlg->imageWidth();
+            imageHeight = dlg->imageHeight();
+        }
+        //FIXME q->addImage(url, imageWidth, imageHeight);
+    }
+    delete dlg;
+}
+
+
 void RichTextComposerControler::slotFormatReset()
 {
     setTextBackgroundColor(d->richtextComposer->palette().highlightedText().color());
     setTextForegroundColor(d->richtextComposer->palette().text().color());
-    //FIXME d->richtextComposer->setFont(saveFont);
-
+    d->richtextComposer->setFont(d->saveFont);
 }
 
 void RichTextComposerControler::slotDeleteLine()
@@ -792,4 +818,87 @@ void RichTextComposerControler::slotDeleteLine()
             }
         }
     }
+}
+
+void RichTextComposerControler::slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode)
+{
+    if (mode == MessageComposer::RichTextComposer::Rich) {
+        d->saveFont = d->richtextComposer->currentFont();
+    }
+}
+
+void RichTextComposerControler::slotPasteAsQuotation()
+{
+#ifndef QT_NO_CLIPBOARD
+    if (d->richtextComposer->hasFocus()) {
+        const QString s = QApplication::clipboard()->text();
+        if (!s.isEmpty()) {
+            d->richtextComposer->insertPlainText(d->addQuotesToText(s));
+        }
+    }
+#endif
+}
+
+void RichTextComposerControler::slotPasteWithoutFormatting()
+{
+#ifndef QT_NO_CLIPBOARD
+    if (d->richtextComposer->hasFocus()) {
+        const QString s = QApplication::clipboard()->text();
+        if (!s.isEmpty()) {
+            d->richtextComposer->insertPlainText(s);
+        }
+    }
+#endif
+}
+
+void RichTextComposerControler::slotRemoveQuotes()
+{
+    QTextCursor cursor = d->richtextComposer->textCursor();
+    cursor.beginEditBlock();
+    if (!cursor.hasSelection()) {
+        cursor.select(QTextCursor::Document);
+    }
+
+    QTextBlock block = d->richtextComposer->document()->findBlock(cursor.selectionStart());
+    int selectionEnd = cursor.selectionEnd();
+    while (block.isValid() && block.position() <= selectionEnd) {
+        cursor.setPosition(block.position());
+        if (d->richtextComposer->isLineQuoted(block.text())) {
+            int length = d->richtextComposer->quoteLength(block.text());
+            cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, length);
+            cursor.removeSelectedText();
+            selectionEnd -= length;
+        }
+        block = block.next();
+    }
+    cursor.clearSelection();
+    cursor.endEditBlock();
+}
+
+void RichTextComposerControler::slotAddQuotes()
+{
+    QTextCursor cursor = d->richtextComposer->textCursor();
+    cursor.beginEditBlock();
+    QString selectedText;
+    if (!cursor.hasSelection()) {
+        cursor.select(QTextCursor::Document);
+        selectedText = cursor.selectedText();
+        cursor.removeSelectedText();
+    } else {
+        selectedText = cursor.selectedText();
+    }
+    d->richtextComposer->insertPlainText(d->addQuotesToText(selectedText));
+    cursor.endEditBlock();
+}
+
+QString RichTextComposerControler::RichTextComposerControlerPrivate::addQuotesToText(const QString &inputText)
+{
+    QString answer = inputText;
+    const QString indentStr = richtextComposer->defaultQuoteSign();
+    answer.replace(QLatin1Char('\n'), QLatin1Char('\n') + indentStr);
+    //cursor.selectText() as QChar::ParagraphSeparator as paragraph separator.
+    answer.replace(QChar::ParagraphSeparator, QLatin1Char('\n') + indentStr);
+    answer.prepend(indentStr);
+    answer += QLatin1Char('\n');
+    return richtextComposer->smartQuote(answer);
 }

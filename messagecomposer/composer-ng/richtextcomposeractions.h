@@ -22,6 +22,7 @@
 #include "messagecomposer_export.h"
 class KActionCollection;
 class QTextCharFormat;
+class QAction;
 namespace MessageComposer
 {
 class RichTextComposerControler;
@@ -34,6 +35,8 @@ public:
 
     void createActions(KActionCollection *ac);
     int numberOfActions() const;
+
+    QList<QAction *> richTextActionList() const;
 
 public Q_SLOTS:
     void setActionsEnabled(bool enabled);

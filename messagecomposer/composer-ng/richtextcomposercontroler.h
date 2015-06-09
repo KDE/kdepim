@@ -19,6 +19,7 @@
 #define RICHTEXTCOMPOSERCONTROLER_H
 
 #include <QObject>
+#include "richtextcomposer.h"
 #include "messagecomposer_export.h"
 class QTextCursor;
 class QTextDocument;
@@ -52,6 +53,7 @@ public:
     void setCursorPositionFromStart(unsigned int pos);
     void ensureCursorVisible();
     void fillComposerTextPart(MessageComposer::TextPart *textPart);
+
 public Q_SLOTS:
     void insertHorizontalRule();
     void alignLeft();
@@ -81,6 +83,14 @@ public Q_SLOTS:
     void slotInsertHtml();
     void slotFormatReset();
     void slotDeleteLine();
+    void slotPasteWithoutFormatting();
+    void slotPasteAsQuotation();
+    void slotRemoveQuotes();
+    void slotAddQuotes();
+    void slotAddImage();
+private slots:
+    void slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode);
+
 private:
     bool isFormattingUsed() const;
     QString toWrappedPlainText() const;

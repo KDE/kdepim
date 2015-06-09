@@ -108,7 +108,7 @@ public:
     QAction *action_add_image;
     QAction *action_add_emoticon;
     QAction *action_insert_html;
-    QAction *action_add_table;
+    KPIMTextEdit::TableActionMenu *action_add_table;
     QAction *action_delete_line;
     QAction *action_format_reset;
 
@@ -125,6 +125,11 @@ RichTextComposerActions::RichTextComposerActions(MessageComposer::RichTextCompos
 RichTextComposerActions::~RichTextComposerActions()
 {
     delete d;
+}
+
+QList<QAction *> RichTextComposerActions::richTextActionList() const
+{
+    return d->richTextActionList;
 }
 
 int RichTextComposerActions::numberOfActions() const
@@ -353,18 +358,18 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     d->action_paste_quotation->setObjectName(QStringLiteral("paste_quoted"));
     ac->addAction(QStringLiteral("paste_quoted"), d->action_paste_quotation);
     ac->setDefaultShortcut(d->action_paste_quotation, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O));
-    //FIXME connect(d->action_paste_quotation, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotPasteAsQuotation);
+    connect(d->action_paste_quotation, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotPasteAsQuotation);
     d->richTextActionList.append(d->action_paste_quotation);
 
     d->action_add_quote_chars = new QAction(i18n("Add &Quote Characters"), this);
     d->action_add_quote_chars->setObjectName(QStringLiteral("tools_quote"));
     ac->addAction(QStringLiteral("tools_quote"), d->action_add_quote_chars);
-    //FIXME connect(d->action_add_quote_chars, &QAction::triggered, d->composerControler, &KMComposerEditor::slotAddQuotes);
+    connect(d->action_add_quote_chars, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotAddQuotes);
     d->richTextActionList.append(d->action_add_quote_chars);
 
     d->action_remove_quote_chars = new QAction(i18n("Re&move Quote Characters"), this);
     d->action_remove_quote_chars->setObjectName(QStringLiteral("tools_unquote"));
-    //FIXME connect(action_remove_quote_chars, &QAction::triggered, d->composerControler, &KMComposerEditor::slotRemoveQuotes);
+    connect(d->action_remove_quote_chars, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotRemoveQuotes);
     d->richTextActionList.append(d->action_remove_quote_chars);
     ac->addAction(QStringLiteral("tools_unquote"), d->action_remove_quote_chars);
 
@@ -373,7 +378,7 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     d->richTextActionList.append(d->action_paste_without_formatting);
     ac->addAction(QStringLiteral("paste_without_formatting"), d->action_paste_without_formatting);
     ac->setDefaultShortcut(d->action_paste_without_formatting, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_V));
-    //FIXME connect(d->action_paste_without_formatting, &QAction::triggered, d->composerControler, &KMComposerEditor::slotPasteWithoutFormatting);
+    connect(d->action_paste_without_formatting, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotPasteWithoutFormatting);
 
 
 
@@ -381,7 +386,7 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
                                       i18n("Add Image"), this);
     d->action_add_image->setObjectName(QStringLiteral("add_image"));
     ac->addAction(QStringLiteral("add_image"), d->action_add_image);
-    connect(d->action_add_image, SIGNAL(triggered(bool)), SLOT(_k_slotAddImage()));
+    connect(d->action_add_image, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotAddImage);
     d->richTextActionList.append(d->action_add_image);
 
     d->action_add_emoticon = new KPIMTextEdit::EmoticonTextEditAction(this);
@@ -395,15 +400,14 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     ac->addAction(QStringLiteral("insert_html"), d->action_insert_html);
     connect(d->action_insert_html, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotInsertHtml);
     d->richTextActionList.append(d->action_insert_html);
-#if 0 //FIXME
-    d->action_add_table = new KPIMTextEdit::TableActionMenu(this);
+
+    d->action_add_table = new KPIMTextEdit::TableActionMenu(d->composerControler->richTextComposer());
     d->action_add_table->setIcon(QIcon::fromTheme(QStringLiteral("insert-table")));
     d->action_add_table->setText(i18n("Table"));
     d->action_add_table->setDelayed(false);
     d->action_add_table->setObjectName(QStringLiteral("insert_table"));
     d->richTextActionList.append(d->action_add_table);
     ac->addAction(QStringLiteral("insert_table"), d->action_add_table);
-#endif
 
     d->action_delete_line = new QAction(i18n("Delete Line"), this);
     ac->setDefaultShortcut(d->action_delete_line, QKeySequence(Qt::CTRL + Qt::Key_K));

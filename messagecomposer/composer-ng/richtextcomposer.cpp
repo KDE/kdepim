@@ -31,6 +31,8 @@
 
 #include <grantlee/plaintextmarkupbuilder.h>
 
+#include <KActionCollection>
+
 using namespace MessageComposer;
 
 class RichTextComposer::RichTextComposerPrivate
@@ -70,6 +72,16 @@ RichTextComposer::RichTextComposer(QWidget *parent)
 RichTextComposer::~RichTextComposer()
 {
     delete d;
+}
+
+QList<QAction *> RichTextComposer::richTextActionList() const
+{
+    return d->richTextComposerActions->richTextActionList();
+}
+
+void RichTextComposer::createActions(KActionCollection *ac)
+{
+    d->richTextComposerActions->createActions(ac);
 }
 
 void RichTextComposer::setHighlighterColors(KPIMTextEdit::EMailQuoteHighlighter *highlighter)
@@ -215,35 +227,22 @@ void RichTextComposer::slotChangeInsertMode()
     Q_EMIT insertModeChanged();
 }
 
-void RichTextComposer::slotPasteAsQuotation()
-{
-#ifndef QT_NO_CLIPBOARD
-    if (hasFocus()) {
-        const QString s = QApplication::clipboard()->text();
-        if (!s.isEmpty()) {
-            // FIXME insertPlainText(d->addQuotesToText(s));
-        }
-    }
-#endif
-}
-
-void RichTextComposer::slotPasteWithoutFormatting()
-{
-#ifndef QT_NO_CLIPBOARD
-    if (hasFocus()) {
-        const QString s = QApplication::clipboard()->text();
-        if (!s.isEmpty()) {
-            insertPlainText(s);
-        }
-    }
-#endif
-}
-
 void RichTextComposer::activateRichText()
 {
     if (d->mode == RichTextComposer::Plain) {
         setAcceptRichText(true);
         d->mode = RichTextComposer::Rich;
+        Q_EMIT textModeChanged(d->mode);
+    }
+}
+
+void RichTextComposer::switchToPlainText()
+{
+    if (d->mode == RichTextComposer::Rich) {
+        d->mode = RichTextComposer::Plain;
+        // TODO: Warn the user about this?
+        insertPlainTextImplementation();
+        setAcceptRichText(false);
         Q_EMIT textModeChanged(d->mode);
     }
 }
@@ -381,7 +380,6 @@ void RichTextComposer::keyPressEvent(QKeyEvent *e)
         textCursor().clearSelection();
         Q_EMIT focusUp();
     } else {
-#if 0 //FIXME
         if (d->autoCorrection && d->autoCorrection->isEnabledAutoCorrection()) {
             if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
                 if (!isLineQuoted(textCursor().block().text()) && !textCursor().hasSelection()) {
@@ -422,7 +420,6 @@ void RichTextComposer::keyPressEvent(QKeyEvent *e)
                 }
             }
         }
-#endif
         evaluateReturnKeySupport(e);
     }
 }
@@ -446,7 +443,54 @@ QString RichTextComposer::quotePrefixName() const
     }
 }
 
+int RichTextComposer::quoteLength(const QString &line) const
+{
+    if (!d->quotePrefix.simplified().isEmpty()) {
+        if (line.startsWith(d->quotePrefix)) {
+            return d->quotePrefix.length();
+        } else {
+            return 0;
+        }
+    } else {
+        bool quoteFound = false;
+        int startOfText = -1;
+        const int lineLength(line.length());
+        for (int i = 0; i < lineLength; ++i) {
+            if (line[i] == QLatin1Char('>') || line[i] == QLatin1Char('|')) {
+                quoteFound = true;
+            } else if (line[i] != QLatin1Char(' ')) {
+                startOfText = i;
+                break;
+            }
+        }
+        if (quoteFound) {
+            if (startOfText == -1) {
+                startOfText = line.length() - 1;
+            }
+            return startOfText;
+        } else {
+            return 0;
+        }
+    }
+}
+
 void RichTextComposer::setCursorPositionFromStart(unsigned int pos)
 {
     d->composerControler->setCursorPositionFromStart(pos);
 }
+
+bool RichTextComposer::isLineQuoted(const QString &line) const
+{
+    return quoteLength(line) > 0;
+}
+
+const QString RichTextComposer::defaultQuoteSign() const
+{
+    if (!d->quotePrefix.simplified().isEmpty()) {
+        return d->quotePrefix;
+    } else {
+        return QStringLiteral("> ");
+    }
+}
+
+

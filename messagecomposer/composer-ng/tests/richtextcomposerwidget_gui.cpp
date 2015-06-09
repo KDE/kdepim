@@ -23,6 +23,8 @@
 #include <KAboutData>
 #include <QCommandLineParser>
 #include <QStandardPaths>
+#include <QToolBar>
+#include <KActionCollection>
 
 int main(int argc, char **argv)
 {
@@ -39,11 +41,22 @@ int main(int argc, char **argv)
     parser.process(app);
     aboutData.processCommandLine(&parser);
     MessageComposer::RichTextComposer *richtextcomposerwidget = new MessageComposer::RichTextComposer;
-    PimCommon::RichTextEditorWidget *w = new PimCommon::RichTextEditorWidget(richtextcomposerwidget);
-    w->resize(800, 600);
-    w->show();
+    KActionCollection *ac = new KActionCollection(richtextcomposerwidget);
+    richtextcomposerwidget->createActions(ac);
+    PimCommon::RichTextEditorWidget *editor = new PimCommon::RichTextEditorWidget(richtextcomposerwidget);
+    editor->resize(800, 600);
+    editor->show();
+
+    QToolBar bar;
+    foreach (QAction *action, richtextcomposerwidget->richTextActionList()) {
+        bar.addAction(action);
+    }
+    bar.show();
+    richtextcomposerwidget->switchToPlainText();
+    richtextcomposerwidget->activateRichText();
+
     app.exec();
-    delete w;
+    delete editor;
     return 0;
 }
 

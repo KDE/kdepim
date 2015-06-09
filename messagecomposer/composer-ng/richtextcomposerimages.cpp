@@ -19,14 +19,22 @@
 
 using namespace MessageComposer;
 
+class RichTextComposerImages::RichTextComposerImagesPrivate
+{
+public:
+    RichTextComposerImagesPrivate() {
+
+    }
+};
+
 RichTextComposerImages::RichTextComposerImages(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), d(new RichTextComposerImages::RichTextComposerImagesPrivate())
 {
 
 }
 
 RichTextComposerImages::~RichTextComposerImages()
 {
-
+    delete d;
 }
 
