@@ -27,6 +27,7 @@
 #include <QApplication>
 #include <QClipboard>
 
+#include "richtextcomposeremailquotedecorator.h"
 #include <autocorrection/autocorrection.h>
 
 #include <grantlee/plaintextmarkupbuilder.h>
@@ -422,6 +423,11 @@ void RichTextComposer::keyPressEvent(QKeyEvent *e)
         }
         evaluateReturnKeySupport(e);
     }
+}
+
+Sonnet::SpellCheckDecorator *RichTextComposer::createSpellCheckDecorator()
+{
+    return new MessageComposer::RichTextComposerEmailQuoteDecorator(this);
 }
 
 QString RichTextComposer::smartQuote(const QString &msg)
