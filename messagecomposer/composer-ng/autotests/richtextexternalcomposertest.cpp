@@ -37,6 +37,17 @@ void RichTextExternalComposerTest::shouldHaveDefaultValue()
     MessageComposer::RichTextExternalComposer richTextExternal(&composer);
     QVERIFY(!richTextExternal.useExternalEditor());
     QVERIFY(richTextExternal.externalEditorPath().isEmpty());
+    QVERIFY(!richTextExternal.isInProgress());
+}
+
+void RichTextExternalComposerTest::shouldChangeUseExternalComposer()
+{
+    MessageComposer::RichTextComposer composer;
+    MessageComposer::RichTextExternalComposer richTextExternal(&composer);
+    richTextExternal.setUseExternalEditor(true);
+    QVERIFY(richTextExternal.useExternalEditor());
+    richTextExternal.setUseExternalEditor(false);
+    QVERIFY(!richTextExternal.useExternalEditor());
 }
 
 QTEST_MAIN(RichTextExternalComposerTest)

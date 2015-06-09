@@ -28,6 +28,7 @@ public:
     ~RichTextComposerControlerTest();
 private Q_SLOTS:
     void shouldAlignLeft();
+    void shouldHaveDefaultValue();
 };
 
 #endif // RICHTEXTCOMPOSERCONTROLERTEST_H

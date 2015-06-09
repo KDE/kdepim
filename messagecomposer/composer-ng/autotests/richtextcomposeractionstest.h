@@ -28,6 +28,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldHaveActions();
+    void shouldChangeEnableState();
 };
 
 #endif // RICHTEXTCOMPOSERACTIONSTEST_H

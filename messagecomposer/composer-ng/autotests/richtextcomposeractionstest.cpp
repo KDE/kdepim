@@ -89,11 +89,31 @@ void RichTextComposerActionsTest::shouldHaveActions()
         << QStringLiteral("insert_html")
         << QStringLiteral("insert_table")
         << QStringLiteral("delete_line")
-        << QStringLiteral("format_reset");
+        << QStringLiteral("format_reset")
+        << QStringLiteral("format_painter");
 
     QCOMPARE(lst.count(), composerActions.numberOfActions());
     Q_FOREACH (QAction *act, actionCollection->actions()) {
         QVERIFY(lst.contains(act->objectName()));
+    }
+}
+
+void RichTextComposerActionsTest::shouldChangeEnableState()
+{
+    MessageComposer::RichTextComposer composer;
+    MessageComposer::RichTextComposerControler controler(&composer);
+    MessageComposer::RichTextComposerActions composerActions(&controler);
+
+    KActionCollection *actionCollection = new KActionCollection(&composerActions);
+    composerActions.createActions(actionCollection);
+
+    composerActions.setActionsEnabled(false);
+    Q_FOREACH (QAction *act, actionCollection->actions()) {
+        QVERIFY(!act->isEnabled());
+    }
+    composerActions.setActionsEnabled(true);
+    Q_FOREACH (QAction *act, actionCollection->actions()) {
+        QVERIFY(act->isEnabled());
     }
 }
 

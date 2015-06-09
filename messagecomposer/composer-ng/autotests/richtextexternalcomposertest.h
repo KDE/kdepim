@@ -27,6 +27,7 @@ public:
     ~RichTextExternalComposerTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldChangeUseExternalComposer();
 };
 
 #endif // RICHTEXTEXTERNALCOMPOSERTEST_H

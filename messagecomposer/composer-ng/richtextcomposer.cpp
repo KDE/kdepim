@@ -18,6 +18,7 @@
 #include "richtextcomposer.h"
 #include "richtextcomposercontroler.h"
 #include "richtextcomposeractions.h"
+#include "richtextcomposerimages.h"
 #include "nestedlisthelper_p.h"
 #include "richtextexternalcomposer.h"
 #include "richtextcomposersignatures.h"
@@ -505,9 +506,9 @@ void RichTextComposer::insertFromMimeData(const QMimeData *source)
 {
     // Add an image if that is on the clipboard
     if (textMode() == RichTextComposer::Rich && source->hasImage()) {
-        QImage image = qvariant_cast<QImage>(source->imageData());
+        const QImage image = qvariant_cast<QImage>(source->imageData());
         QFileInfo fi;
-        //FIXME insertImage(image, fi);
+        d->composerControler->composerImages()->insertImage(image, fi);
         return;
     }
 
@@ -540,4 +541,132 @@ bool RichTextComposer::canInsertFromMimeData(const QMimeData *source) const
     return PimCommon::RichTextEditor::canInsertFromMimeData(source);
 }
 
+static bool isCursorAtEndOfLine(const QTextCursor &cursor)
+{
+    QTextCursor testCursor = cursor;
+    testCursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+    return !testCursor.hasSelection();
+}
 
+static void insertSignatureHelper(const QString &signature,
+                                  RichTextComposer *textEdit,
+                                  KIdentityManagement::Signature::Placement placement,
+                                  bool isHtml,
+                                  bool addNewlines)
+{
+    if (!signature.isEmpty()) {
+
+        // Save the modified state of the document, as inserting a signature
+        // shouldn't change this. Restore it at the end of this function.
+        bool isModified = textEdit->document()->isModified();
+
+        // Move to the desired position, where the signature should be inserted
+        QTextCursor cursor = textEdit->textCursor();
+        QTextCursor oldCursor = cursor;
+        cursor.beginEditBlock();
+
+        if (placement == KIdentityManagement::Signature::End) {
+            cursor.movePosition(QTextCursor::End);
+        } else if (placement == KIdentityManagement::Signature::Start) {
+            cursor.movePosition(QTextCursor::Start);
+        } else if (placement == KIdentityManagement::Signature::AtCursor) {
+            cursor.movePosition(QTextCursor::StartOfLine);
+        }
+        textEdit->setTextCursor(cursor);
+
+        QString lineSep;
+        if (addNewlines) {
+            if (isHtml) {
+                lineSep = QLatin1String("<br>");
+            } else {
+                lineSep = QLatin1Char('\n');
+            }
+        }
+
+        // Insert the signature and newlines depending on where it was inserted.
+        int newCursorPos = -1;
+        QString headSep;
+        QString tailSep;
+
+        if (placement == KIdentityManagement::Signature::End) {
+            // There is one special case when re-setting the old cursor: The cursor
+            // was at the end. In this case, QTextEdit has no way to know
+            // if the signature was added before or after the cursor, and just
+            // decides that it was added before (and the cursor moves to the end,
+            // but it should not when appending a signature). See bug 167961
+            if (oldCursor.position() == textEdit->toPlainText().length()) {
+                newCursorPos = oldCursor.position();
+            }
+            headSep = lineSep;
+        } else if (placement == KIdentityManagement::Signature::Start) {
+            // When prepending signatures, add a couple of new lines before
+            // the signature, and move the cursor to the beginning of the QTextEdit.
+            // People tends to insert new text there.
+            newCursorPos = 0;
+            headSep = lineSep + lineSep;
+            if (!isCursorAtEndOfLine(cursor)) {
+                tailSep = lineSep;
+            }
+        } else if (placement == KIdentityManagement::Signature::AtCursor) {
+            if (!isCursorAtEndOfLine(cursor)) {
+                tailSep = lineSep;
+            }
+        }
+
+        const QString full_signature = headSep + signature + tailSep;
+        if (isHtml) {
+            textEdit->insertHtml(full_signature);
+        } else {
+            textEdit->insertPlainText(full_signature);
+        }
+
+        cursor.endEditBlock();
+        if (newCursorPos != -1) {
+            oldCursor.setPosition(newCursorPos);
+        }
+
+        textEdit->setTextCursor(oldCursor);
+        textEdit->ensureCursorVisible();
+
+        textEdit->document()->setModified(isModified);
+
+        if (isHtml) {
+            textEdit->activateRichText();
+        }
+    }
+}
+
+void RichTextComposer::insertSignature(const KIdentityManagement::Signature &signature, KIdentityManagement::Signature::Placement placement, KIdentityManagement::Signature::AddedText addedText)
+{
+    if (signature.isEnabledSignature()) {
+        QString signatureStr;
+        if (placement & KIdentityManagement::Signature::AddSeparator) {
+            signatureStr = signature.withSeparator();
+        } else {
+            signatureStr = signature.rawText();
+        }
+
+        insertSignatureHelper(signatureStr, this, placement,
+                              (signature.isInlinedHtml() &&
+                               signature.type() == KIdentityManagement::Signature::Inlined),
+                              (addedText & KIdentityManagement::Signature::AddNewLines));
+
+        // We added the text of the signature above, now it is time to add the images as well.
+        if (signature.isInlinedHtml()) {
+            foreach (const KIdentityManagement::Signature::EmbeddedImagePtr &image, signature.embeddedImages()) {
+                d->composerControler->composerImages()->loadImage(image->image, image->name, image->name);
+            }
+        }
+
+    }
+}
+
+
+void RichTextComposer::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (d->composerControler->painterActive()) {
+        d->composerControler->disablePainter();
+        d->richTextComposerActions->uncheckActionFormatPainter();
+    }
+    PimCommon::RichTextEditor::mouseReleaseEvent(event);
+}

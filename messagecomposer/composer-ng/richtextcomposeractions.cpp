@@ -65,6 +65,7 @@ public:
           action_add_table(Q_NULLPTR),
           action_delete_line(Q_NULLPTR),
           action_format_reset(Q_NULLPTR),
+          action_format_painter(Q_NULLPTR),
           richTextEnabled(false)
     {
     }
@@ -111,6 +112,8 @@ public:
     KPIMTextEdit::TableActionMenu *action_add_table;
     QAction *action_delete_line;
     QAction *action_format_reset;
+
+    KToggleAction *action_format_painter;
 
     bool richTextEnabled;
 };
@@ -425,6 +428,14 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     d->richTextActionList.append(d->action_format_reset);
 
 
+    d->action_format_painter = new KToggleAction(QIcon::fromTheme(QStringLiteral("draw-brush")),
+            i18nc("@action", "Format Painter"), this);
+    d->richTextActionList.append(d->action_format_painter);
+    d->action_format_painter->setObjectName(QStringLiteral("format_painter"));
+    ac->addAction(QStringLiteral("format_reset"), d->action_format_painter);
+    connect(d->action_format_painter, SIGNAL(toggled(bool)),
+            this, SLOT(_k_formatPainter(bool)));
+
     slotUpdateMiscActions();
     slotUpdateCharFormatActions(d->composerControler->richTextComposer()->currentCharFormat());
 }
@@ -492,4 +503,9 @@ void RichTextComposerActions::slotUpdateMiscActions()
     const Qt::LayoutDirection direction = d->composerControler->richTextComposer()->textCursor().blockFormat().layoutDirection();
     d->action_direction_ltr->setChecked(direction == Qt::LeftToRight);
     d->action_direction_rtl->setChecked(direction == Qt::RightToLeft);
+}
+
+void RichTextComposerActions::uncheckActionFormatPainter()
+{
+    d->action_format_painter->setChecked(false);
 }

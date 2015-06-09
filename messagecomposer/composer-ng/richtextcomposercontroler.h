@@ -28,6 +28,7 @@ namespace MessageComposer
 class RichTextComposer;
 class NestedListHelper;
 class TextPart;
+class RichTextComposerImages;
 class MESSAGECOMPOSER_EXPORT RichTextComposerControler : public QObject
 {
     Q_OBJECT
@@ -54,6 +55,9 @@ public:
     void ensureCursorVisible();
     void fillComposerTextPart(MessageComposer::TextPart *textPart);
 
+    RichTextComposerImages *composerImages() const;
+    bool painterActive() const;
+    void disablePainter();
 public Q_SLOTS:
     void insertHorizontalRule();
     void alignLeft();
@@ -88,13 +92,12 @@ public Q_SLOTS:
     void slotRemoveQuotes();
     void slotAddQuotes();
     void slotAddImage();
+    void slotFormatPainter(bool active);
 private slots:
     void slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode);
 
 private:
     bool isFormattingUsed() const;
-    QString toWrappedPlainText() const;
-    QString toWrappedPlainText(QTextDocument *doc) const;
     QString toCleanPlainText(const QString &plainText = QString()) const;
     void fixHtmlFontSize(QString &cleanHtml);
     void updateLink(const QString &linkUrl, const QString &linkText);

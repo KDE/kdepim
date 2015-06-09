@@ -30,6 +30,7 @@
 #include <QTimer>
 #include <QPointer>
 #include <QClipboard>
+#include <QIcon>
 #include <kpimtextedit/inserthtmldialog.h>
 #include <kpimtextedit/textutils.h>
 #include <kpimtextedit/insertimagedialog.h>
@@ -43,12 +44,13 @@ class RichTextComposerControler::RichTextComposerControlerPrivate
 {
 public:
     RichTextComposerControlerPrivate(RichTextComposer *composer, RichTextComposerControler *qq)
-        : richtextComposer(composer),
+        : painterActive(false),
+          richtextComposer(composer),
           q(qq)
     {
         q->connect(composer, SIGNAL(textModeChanged(MessageComposer::RichTextComposer::Mode)), q, SLOT(slotTextModeChanged(MessageComposer::RichTextComposer::Mode)));
         nestedListHelper = new NestedListHelper(composer);
-        richTextImages = new RichTextComposerImages(q);
+        richTextImages = new RichTextComposerImages(richtextComposer, q);
     }
     ~RichTextComposerControlerPrivate()
     {
@@ -56,8 +58,12 @@ public:
     }
     void fixupTextEditString(QString &text) const;
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
+    QString toWrappedPlainText() const;
+    QString toWrappedPlainText(QTextDocument *doc) const;
     QString addQuotesToText(const QString &inputText);
     QFont saveFont;
+    QTextCharFormat painterFormat;
+    bool painterActive;
     NestedListHelper *nestedListHelper;
     RichTextComposer *richtextComposer;
     RichTextComposerImages *richTextImages;
@@ -91,6 +97,26 @@ RichTextComposerControler::RichTextComposerControler(RichTextComposer *richtextC
 RichTextComposerControler::~RichTextComposerControler()
 {
     delete d;
+}
+
+bool RichTextComposerControler::painterActive() const
+{
+    return d->painterActive;
+}
+
+void RichTextComposerControler::disablePainter()
+{
+    // If the painter is active, paint the selection with the
+    // correct format.
+    if (d->richtextComposer->textCursor().hasSelection()) {
+        d->richtextComposer->textCursor().setCharFormat(d->painterFormat);
+    }
+    d->painterActive = false;
+}
+
+RichTextComposerImages *RichTextComposerControler::composerImages() const
+{
+    return d->richTextImages;
 }
 
 NestedListHelper *RichTextComposerControler::nestedListHelper() const
@@ -639,20 +665,20 @@ void RichTextComposerControler::fillComposerTextPart(MessageComposer::TextPart *
         QTextDocument *doc = new QTextDocument(plainText);
         doc->adjustSize();
 
-        textPart->setWrappedPlainText(toWrappedPlainText(doc));
+        textPart->setWrappedPlainText(d->toWrappedPlainText(doc));
         delete doc;
         delete pmd;
         delete pb;
     } else {
         textPart->setCleanPlainText(toCleanPlainText());
-        textPart->setWrappedPlainText(toWrappedPlainText());
+        textPart->setWrappedPlainText(d->toWrappedPlainText());
     }
     textPart->setWordWrappingEnabled(d->richtextComposer->lineWrapMode() == QTextEdit::FixedColumnWidth);
     if (isFormattingUsed()) {
         QString cleanHtml = toCleanHtml();
         fixHtmlFontSize(cleanHtml);
         textPart->setCleanHtml(cleanHtml);
-        //FIXME textPart->setEmbeddedImages(embeddedImages());
+        //FIXME WHEN MERGE textPart->setEmbeddedImages(d->richTextImages->embeddedImages());
     }
 }
 
@@ -680,13 +706,13 @@ void RichTextComposerControler::fixHtmlFontSize(QString &cleanHtml)
     }
 }
 
-QString RichTextComposerControler::toWrappedPlainText() const
+QString RichTextComposerControler::RichTextComposerControlerPrivate::toWrappedPlainText() const
 {
-    QTextDocument *doc = d->richtextComposer->document();
+    QTextDocument *doc = richtextComposer->document();
     return toWrappedPlainText(doc);
 }
 
-QString RichTextComposerControler::toWrappedPlainText(QTextDocument *doc) const
+QString RichTextComposerControler::RichTextComposerControlerPrivate::toWrappedPlainText(QTextDocument *doc) const
 {
     QString temp;
     QRegExp rx(QStringLiteral("(http|ftp|ldap)s?\\S+-$"));
@@ -717,7 +743,7 @@ QString RichTextComposerControler::toWrappedPlainText(QTextDocument *doc) const
         temp.chop(1);
     }
 
-    d->fixupTextEditString(temp);
+    fixupTextEditString(temp);
     return temp;
 }
 
@@ -762,7 +788,7 @@ void RichTextComposerControler::slotAddImage()
             imageWidth = dlg->imageWidth();
             imageHeight = dlg->imageHeight();
         }
-        //FIXME q->addImage(url, imageWidth, imageHeight);
+        d->richTextImages->addImage(url, imageWidth, imageHeight);
     }
     delete dlg;
 }
@@ -901,4 +927,17 @@ QString RichTextComposerControler::RichTextComposerControlerPrivate::addQuotesTo
     answer.prepend(indentStr);
     answer += QLatin1Char('\n');
     return richtextComposer->smartQuote(answer);
+}
+
+void RichTextComposerControler::slotFormatPainter(bool active)
+{
+    if (active) {
+        d->painterFormat = d->richtextComposer->currentCharFormat();
+        d->painterActive = true;
+        d->richtextComposer->viewport()->setCursor(QCursor(QIcon::fromTheme(QStringLiteral("draw-brush")).pixmap(32, 32), 0, 32));
+    } else {
+        d->painterFormat = QTextCharFormat();
+        d->painterActive = false;
+        d->richtextComposer->viewport()->setCursor(Qt::IBeamCursor);
+    }
 }

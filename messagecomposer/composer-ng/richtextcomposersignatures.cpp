@@ -197,7 +197,8 @@ bool RichTextComposerSignatures::replaceSignature(const KIdentityManagement::Sig
         // Remove the old and insert the new signature
         cursor.removeSelectedText();
         d->richTextComposer->setTextCursor(cursor);
-        //FIXME newSig.insertIntoTextEdit(KIdentityManagement::Signature::AtCursor, KIdentityManagement::Signature::AddNothing, this);
+        d->richTextComposer->insertSignature(newSig, KIdentityManagement::Signature::AtCursor, KIdentityManagement::Signature::AddNothing);
+        //newSig.insertIntoTextEdit(KIdentityManagement::Signature::AtCursor, KIdentityManagement::Signature::AddNothing, this);
         found = true;
 
         currentSearchPosition += newSig.toPlainText().length();

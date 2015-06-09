@@ -20,6 +20,7 @@
 
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 #include "messagecomposer_export.h"
+#include <KIdentityManagement/Signature>
 class KActionCollection;
 namespace PimCommon
 {
@@ -107,6 +108,8 @@ public:
     void createActions(KActionCollection *ac);
 
     QList<QAction *> richTextActionList() const;
+    void insertSignature(const KIdentityManagement::Signature &signature, KIdentityManagement::Signature::Placement placement, KIdentityManagement::Signature::AddedText addedText);
+
 public Q_SLOTS:
     void insertPlainTextImplementation();
     void slotChangeInsertMode();
@@ -133,6 +136,7 @@ protected:
     Sonnet::SpellCheckDecorator *createSpellCheckDecorator() Q_DECL_OVERRIDE;
     void insertFromMimeData(const QMimeData *source) Q_DECL_OVERRIDE;
     bool canInsertFromMimeData(const QMimeData *source) const Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 private:
     void evaluateReturnKeySupport(QKeyEvent *event);
     void evaluateListSupport(QKeyEvent *event);

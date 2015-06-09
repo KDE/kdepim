@@ -38,6 +38,7 @@ public:
 
     QList<QAction *> richTextActionList() const;
 
+    void uncheckActionFormatPainter();
 public Q_SLOTS:
     void setActionsEnabled(bool enabled);
 
