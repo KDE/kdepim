@@ -69,5 +69,6 @@ void GravatarUpdateDialog::writeConfig()
 
 void GravatarUpdateDialog::slotAccepted()
 {
+    //TODO save ?
     accept();
 }
