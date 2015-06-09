@@ -46,6 +46,7 @@ public:
 
 private:
     QCache<QString, QPixmap> mCachePixmap;
+    QString mGravatarPath;
     int mMaximumSize;
 };
 }
