@@ -33,6 +33,8 @@
 #include <grantlee/plaintextmarkupbuilder.h>
 
 #include <KActionCollection>
+#include <QFileInfo>
+#include <QMimeData>
 
 using namespace MessageComposer;
 
@@ -497,6 +499,45 @@ const QString RichTextComposer::defaultQuoteSign() const
     } else {
         return QStringLiteral("> ");
     }
+}
+
+void RichTextComposer::insertFromMimeData(const QMimeData *source)
+{
+    // Add an image if that is on the clipboard
+    if (textMode() == RichTextComposer::Rich && source->hasImage()) {
+        QImage image = qvariant_cast<QImage>(source->imageData());
+        QFileInfo fi;
+        //FIXME insertImage(image, fi);
+        return;
+    }
+
+    // Attempt to paste HTML contents into the text edit in plain text mode,
+    // prevent this and prevent plain text instead.
+    if (textMode() == RichTextComposer::Plain && source->hasHtml()) {
+        if (source->hasText()) {
+            insertPlainText(source->text());
+            return;
+        }
+    }
+
+    PimCommon::RichTextEditor::insertFromMimeData(source);
+}
+
+bool RichTextComposer::canInsertFromMimeData(const QMimeData *source) const
+{
+    if (source->hasHtml() && textMode() == RichTextComposer::Rich) {
+        return true;
+    }
+
+    if (source->hasText()) {
+        return true;
+    }
+
+    if (textMode() == RichTextComposer::Rich && source->hasImage()) {
+        return true;
+    }
+
+    return PimCommon::RichTextEditor::canInsertFromMimeData(source);
 }
 
 

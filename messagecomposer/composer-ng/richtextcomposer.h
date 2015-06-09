@@ -131,6 +131,8 @@ Q_SIGNALS:
 protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     Sonnet::SpellCheckDecorator *createSpellCheckDecorator() Q_DECL_OVERRIDE;
+    void insertFromMimeData(const QMimeData *source) Q_DECL_OVERRIDE;
+    bool canInsertFromMimeData(const QMimeData *source) const Q_DECL_OVERRIDE;
 private:
     void evaluateReturnKeySupport(QKeyEvent *event);
     void evaluateListSupport(QKeyEvent *event);
