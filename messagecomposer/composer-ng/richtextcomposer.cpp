@@ -20,6 +20,7 @@
 #include "richtextcomposeractions.h"
 #include "nestedlisthelper_p.h"
 #include "richtextexternalcomposer.h"
+#include "richtextcomposersignatures.h"
 #include <KLocalizedString>
 #include <QTextBlock>
 #include <QTextLayout>
@@ -44,6 +45,7 @@ public:
         composerControler = new RichTextComposerControler(q, q);
         richTextComposerActions = new RichTextComposerActions(composerControler, q);
         externalComposer = new MessageComposer::RichTextExternalComposer(q);
+        richTextComposerSignatures = new MessageComposer::RichTextComposerSignatures(q, q);
         q->connect(externalComposer, &RichTextExternalComposer::externalEditorClosed, qq, &RichTextComposer::externalEditorClosed);
         q->connect(externalComposer, &RichTextExternalComposer::externalEditorStarted, qq, &RichTextComposer::externalEditorStarted);
     }
@@ -52,6 +54,7 @@ public:
     RichTextComposerControler *composerControler;
     RichTextComposerActions *richTextComposerActions;
     MessageComposer::RichTextExternalComposer *externalComposer;
+    MessageComposer::RichTextComposerSignatures *richTextComposerSignatures;
     RichTextComposer *q;
     bool forcePlainTextMarkup;
     RichTextComposer::Mode mode;
