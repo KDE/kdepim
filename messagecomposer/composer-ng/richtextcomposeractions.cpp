@@ -18,7 +18,8 @@
 #include "richtextcomposeractions.h"
 #include "richtextcomposercontroler.h"
 #include "richtextcomposer.h"
-
+#include <kpimtextedit/emoticontexteditaction.h>
+#include <kpimtextedit/tableactionmenu.h>
 #include <KToggleAction>
 #include <KLocalizedString>
 #include <KActionCollection>
@@ -58,6 +59,12 @@ public:
           action_add_quote_chars(Q_NULLPTR),
           action_remove_quote_chars(Q_NULLPTR),
           action_paste_without_formatting(Q_NULLPTR),
+          action_add_image(Q_NULLPTR),
+          action_add_emoticon(Q_NULLPTR),
+          action_insert_html(Q_NULLPTR),
+          action_add_table(Q_NULLPTR),
+          action_delete_line(Q_NULLPTR),
+          action_format_reset(Q_NULLPTR),
           richTextEnabled(false)
     {
     }
@@ -97,6 +104,13 @@ public:
     QAction *action_add_quote_chars;
     QAction *action_remove_quote_chars;
     QAction *action_paste_without_formatting;
+
+    QAction *action_add_image;
+    QAction *action_add_emoticon;
+    QAction *action_insert_html;
+    QAction *action_add_table;
+    QAction *action_delete_line;
+    QAction *action_format_reset;
 
     bool richTextEnabled;
 };
@@ -360,6 +374,53 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     ac->addAction(QStringLiteral("paste_without_formatting"), d->action_paste_without_formatting);
     ac->setDefaultShortcut(d->action_paste_without_formatting, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_V));
     //FIXME connect(d->action_paste_without_formatting, &QAction::triggered, d->composerControler, &KMComposerEditor::slotPasteWithoutFormatting);
+
+
+
+    d->action_add_image = new QAction(QIcon::fromTheme(QLatin1String("insert-image")),
+                                      i18n("Add Image"), this);
+    d->action_add_image->setObjectName(QStringLiteral("add_image"));
+    ac->addAction(QStringLiteral("add_image"), d->action_add_image);
+    connect(d->action_add_image, SIGNAL(triggered(bool)), SLOT(_k_slotAddImage()));
+    d->richTextActionList.append(d->action_add_image);
+
+    d->action_add_emoticon = new KPIMTextEdit::EmoticonTextEditAction(this);
+    d->action_add_emoticon->setObjectName(QStringLiteral("add_emoticon"));
+    ac->addAction(QStringLiteral("add_emoticon"), d->action_add_emoticon);
+    connect(d->action_add_emoticon, SIGNAL(emoticonActivated(QString)),
+            SLOT(_k_slotAddEmoticon(QString)));
+    d->richTextActionList.append(d->action_add_emoticon);
+
+    d->action_insert_html = new QAction(i18n("Insert HTML"), this);
+    d->action_insert_html->setObjectName(QStringLiteral("insert_html"));
+    ac->addAction(QStringLiteral("insert_html"), d->action_insert_html);
+    connect(d->action_insert_html, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()));
+    d->richTextActionList.append(d->action_insert_html);
+#if 0 //FIXME
+    d->action_add_table = new KPIMTextEdit::TableActionMenu(this);
+    d->action_add_table->setIcon(QIcon::fromTheme(QLatin1String("insert-table")));
+    d->action_add_table->setText(i18n("Table"));
+    d->action_add_table->setDelayed(false);
+    d->action_add_table->setObjectName(QLatin1String("insert_table"));
+    d->richTextActionList.append(d->action_add_table);
+    ac->addAction(QStringLiteral("insert_table"), d->action_add_table);
+#endif
+
+    d->action_delete_line = new QAction(i18n("Delete Line"), this);
+    ac->setDefaultShortcut(d->action_delete_line, QKeySequence(Qt::CTRL + Qt::Key_K));
+    d->action_delete_line->setObjectName(QLatin1String("delete_line"));
+    ac->addAction(QStringLiteral("delete_line"), d->action_delete_line);
+    connect(d->action_delete_line, SIGNAL(triggered(bool)), SLOT(_k_slotDeleteLine()));
+    d->richTextActionList.append(d->action_delete_line);
+
+    d->action_format_reset =
+        new QAction(QIcon::fromTheme(QLatin1String("draw-eraser")), i18n("Reset Font Settings"), this);
+    d->action_format_reset->setIconText(i18n("Reset Font"));
+    d->action_format_reset->setObjectName(QLatin1String("format_reset"));
+    connect(d->action_format_reset, SIGNAL(triggered(bool)), SLOT(_k_slotFormatReset()));
+    ac->addAction(QStringLiteral("format_reset"), d->action_format_reset);
+    d->richTextActionList.append(d->action_format_reset);
+
 
     slotUpdateMiscActions();
     slotUpdateCharFormatActions(d->composerControler->richTextComposer()->currentCharFormat());

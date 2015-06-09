@@ -83,7 +83,13 @@ void RichTextComposerActionsTest::shouldHaveActions()
         << QStringLiteral("paste_quoted")
         << QStringLiteral("tools_quote")
         << QStringLiteral("tools_unquote")
-        << QStringLiteral("paste_without_formatting");
+        << QStringLiteral("paste_without_formatting")
+        << QStringLiteral("add_image")
+        << QStringLiteral("add_emoticon")
+        << QStringLiteral("insert_html")
+        // FIXME << QStringLiteral("insert_table")
+        << QStringLiteral("delete_line")
+        << QStringLiteral("format_reset");
 
     QCOMPARE(lst.count(), composerActions.numberOfActions());
     Q_FOREACH (QAction *act, actionCollection->actions()) {
