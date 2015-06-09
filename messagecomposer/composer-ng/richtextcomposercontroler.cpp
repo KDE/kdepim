@@ -19,11 +19,18 @@
 #include "richtextcomposercontroler.h"
 #include "klinkdialog_p.h"
 #include "nestedlisthelper_p.h"
+#include "settings/messagecomposersettings.h"
 
 #include <KColorScheme>
 #include <KLocalizedString>
 #include <QColorDialog>
 #include <QTextBlock>
+#include <QCoreApplication>
+#include <QTimer>
+#include <kpimtextedit/textutils.h>
+#include <grantlee/plaintextmarkupbuilder.h>
+
+#include <part/textpart.h>
 
 using namespace MessageComposer;
 
@@ -39,7 +46,7 @@ public:
     {
         delete nestedListHelper;
     }
-
+    void fixupTextEditString(QString &text) const;
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
     NestedListHelper *nestedListHelper;
     RichTextComposer *richtextComposer;
@@ -560,4 +567,153 @@ void RichTextComposerControler::insertShareLink(const QString &url)
     } else {
         d->richtextComposer->textCursor().insertText(QLatin1Char('\n') + msg + QLatin1Char('\n') + url + QLatin1Char('\n'));
     }
+}
+
+void RichTextComposerControler::setCursorPositionFromStart(unsigned int pos)
+{
+    if (pos > 0) {
+        QTextCursor cursor = d->richtextComposer->textCursor();
+        //Fix html pos cursor
+        cursor.setPosition(qMin(pos, (unsigned int)cursor.document()->characterCount() - 1));
+        d->richtextComposer->setTextCursor(cursor);
+        ensureCursorVisible();
+    }
+}
+
+void RichTextComposerControler::ensureCursorVisible()
+{
+    QCoreApplication::processEvents();
+
+    // Hack: In KMail, the layout of the composer changes again after
+    //       creating the editor (the toolbar/menubar creation is delayed), so
+    //       the size of the editor changes as well, possibly hiding the cursor
+    //       even though we called ensureCursorVisible() before the layout phase.
+    //
+    //       Delay the actual call to ensureCursorVisible() a bit to work around
+    //       the problem.
+    QTimer::singleShot(500, d->richtextComposer, SLOT(ensureCursorVisibleDelayed()));
+}
+
+
+void RichTextComposerControler::RichTextComposerControlerPrivate::fixupTextEditString(QString &text) const
+{
+    // Remove line separators. Normal \n chars are still there, so no linebreaks get lost here
+    text.remove(QChar::LineSeparator);
+
+    // Get rid of embedded images, see QTextImageFormat documentation:
+    // "Inline images are represented by an object replacement character (0xFFFC in Unicode) "
+    text.remove(0xFFFC);
+
+    // In plaintext mode, each space is non-breaking.
+    text.replace(QChar::Nbsp, QChar::fromLatin1(' '));
+}
+
+QString RichTextComposerControler::toCleanPlainText(const QString &plainText) const
+{
+    QString temp = plainText.isEmpty() ? d->richtextComposer->toPlainText() : plainText;
+    d->fixupTextEditString(temp);
+    return temp;
+}
+
+void RichTextComposerControler::fillComposerTextPart(MessageComposer::TextPart *textPart)
+{
+    if (isFormattingUsed() && MessageComposer::MessageComposerSettings::self()->improvePlainTextOfHtmlMessage()) {
+        Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
+
+        Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector(pb);
+        pmd->processDocument(d->richtextComposer->document());
+        const QString plainText = pb->getResult();
+        textPart->setCleanPlainText(toCleanPlainText(plainText));
+        QTextDocument *doc = new QTextDocument(plainText);
+        doc->adjustSize();
+
+        textPart->setWrappedPlainText(toWrappedPlainText(doc));
+        delete doc;
+        delete pmd;
+        delete pb;
+    } else {
+        textPart->setCleanPlainText(toCleanPlainText());
+        textPart->setWrappedPlainText(toWrappedPlainText());
+    }
+    textPart->setWordWrappingEnabled(d->richtextComposer->lineWrapMode() == QTextEdit::FixedColumnWidth);
+    if (isFormattingUsed()) {
+        QString cleanHtml = toCleanHtml();
+        fixHtmlFontSize(cleanHtml);
+        textPart->setCleanHtml(cleanHtml);
+        //FIXME textPart->setEmbeddedImages(embeddedImages());
+    }
+}
+
+void RichTextComposerControler::fixHtmlFontSize(QString &cleanHtml)
+{
+    static const QString FONTSTYLEREGEX = QStringLiteral("<span style=\".*font-size:(.*)pt;.*</span>");
+    QRegExp styleRegex(FONTSTYLEREGEX);
+    styleRegex.setMinimal(true);
+
+    int offset = styleRegex.indexIn(cleanHtml, 0);
+    while (offset != -1) {
+        // replace all the matching text with the new line text
+        bool ok = false;
+        const QString fontSizeStr = styleRegex.cap(1);
+        const int ptValue = fontSizeStr.toInt(&ok);
+        if (ok) {
+            double emValue = (double)ptValue / 12;
+            const QString emValueStr = QString::number(emValue, 'g', 2);
+            cleanHtml.replace(styleRegex.pos(1), QString(fontSizeStr + QLatin1String("px")).length(), emValueStr + QLatin1String("em"));
+        }
+        // advance the search offset to just beyond the last replace
+        offset += styleRegex.matchedLength();
+        // find the next occurrence
+        offset = styleRegex.indexIn(cleanHtml, offset);
+    }
+}
+
+QString RichTextComposerControler::toWrappedPlainText() const
+{
+    QTextDocument *doc = d->richtextComposer->document();
+    return toWrappedPlainText(doc);
+}
+
+QString RichTextComposerControler::toWrappedPlainText(QTextDocument *doc) const
+{
+    QString temp;
+    QRegExp rx(QStringLiteral("(http|ftp|ldap)s?\\S+-$"));
+    QTextBlock block = doc->begin();
+    while (block.isValid()) {
+        QTextLayout *layout = block.layout();
+        const int numberOfLine(layout->lineCount());
+        bool urlStart = false;
+        for (int i = 0; i < numberOfLine; ++i) {
+            QTextLine line = layout->lineAt(i);
+            QString lineText = block.text().mid(line.textStart(), line.textLength());
+
+            if (lineText.contains(rx) ||
+                    (urlStart && !lineText.contains(QLatin1Char(' ')) &&
+                     lineText.endsWith(QLatin1Char('-')))) {
+                // don't insert line break in URL
+                temp += lineText;
+                urlStart = true;
+            } else {
+                temp += lineText + QLatin1Char('\n');
+            }
+        }
+        block = block.next();
+    }
+
+    // Remove the last superfluous newline added above
+    if (temp.endsWith(QLatin1Char('\n'))) {
+        temp.chop(1);
+    }
+
+    d->fixupTextEditString(temp);
+    return temp;
+}
+
+bool RichTextComposerControler::isFormattingUsed() const
+{
+    if (d->richtextComposer->textMode() == RichTextComposer::Plain) {
+        return false;
+    }
+
+    return KPIMTextEdit::TextUtils::containsFormatting(d->richtextComposer->document());
 }

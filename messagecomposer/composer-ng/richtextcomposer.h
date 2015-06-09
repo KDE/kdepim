@@ -98,6 +98,7 @@ public:
     void setQuotePrefixName(const QString &quotePrefix);
     QString quotePrefixName() const;
 
+    void setCursorPositionFromStart(unsigned int pos);
 public Q_SLOTS:
     void insertPlainTextImplementation();
     void slotChangeInsertMode();

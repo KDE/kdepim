@@ -446,3 +446,7 @@ QString RichTextComposer::quotePrefixName() const
     }
 }
 
+void RichTextComposer::setCursorPositionFromStart(unsigned int pos)
+{
+    d->composerControler->setCursorPositionFromStart(pos);
+}
