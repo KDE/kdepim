@@ -104,7 +104,7 @@ void UploadMediaDialog::currentMediaChanged(const QString &newPath)
 
 bool UploadMediaDialog::selectNewFile()
 {
-    const QString mediaPath = KFileDialog::getOpenFileName(QUrl(QLatin1String("kfiledialog:///image?global")),
+    const QString mediaPath = KFileDialog::getOpenFileName(QUrl(QStringLiteral("kfiledialog:///image?global")),
                               QString(), this,
                               i18n("Select Media to Upload"));
     if (mediaPath.isEmpty()) {

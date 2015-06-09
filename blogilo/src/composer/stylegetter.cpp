@@ -110,8 +110,8 @@ QString StyleGetter::styledHtml(const int blogid,
     QString url = QStringLiteral("blogilo/%1/").arg(blogid);
     url = KStandardDirs::locateLocal("data", url , true);
     KUrl dest(url);
-    dest.addPath(QLatin1String("style.html"));
-    dest.setScheme(QLatin1String("file"));
+    dest.addPath(QStringLiteral("style.html"));
+    dest.setScheme(QStringLiteral("file"));
 
     if (!dest.isValid()) {
         return QLatin1String("<html><body><h2 align='center'>") + title + QLatin1String("</h2><br>") + content + QLatin1String("</html>");

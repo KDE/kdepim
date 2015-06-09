@@ -146,10 +146,10 @@ QList<BlogPost> BloggerPrivate::KGAPIPostsToKBlogPosts(const KGAPI2::ObjectsList
 KBlogInfo BloggerPrivate::KGAPIBlogToKBlogBlog(const KGAPI2::Blogger::BlogPtr &blogPtr)
 {
     KBlogInfo kblogInfo;
-    kblogInfo[QLatin1String("id")] = blogPtr->id();
-    kblogInfo[QLatin1String("title")] = blogPtr->name();
-    kblogInfo[QLatin1String("url")] = blogPtr->url().toString();
-    kblogInfo[QLatin1String("summay")] = blogPtr->description();
+    kblogInfo[QStringLiteral("id")] = blogPtr->id();
+    kblogInfo[QStringLiteral("title")] = blogPtr->name();
+    kblogInfo[QStringLiteral("url")] = blogPtr->url().toString();
+    kblogInfo[QStringLiteral("summay")] = blogPtr->description();
     return kblogInfo;
 }
 

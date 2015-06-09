@@ -32,7 +32,7 @@ Constants.
  @author Golnaz Nilieh <g382nilieh@gmail.com>
  */
 
-static const QString VERSION = QStringLiteral("1.1");
+static const QString VERSION = QStringLiteral("1.2");
 static const char APPNAME[] = "Blogilo";
 #define DATA_DIR KStandardDirs::locateLocal("data", QLatin1String("blogilo/"))
 #define CONF_DB DATA_DIR+QLatin1String("/blogilo.db")

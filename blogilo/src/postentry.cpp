@@ -162,7 +162,7 @@ void PostEntry::createUi()
     d->labelTitle->setText(i18nc("noun, the post title", "Title:"));
     d->horizontalLayout->addWidget(d->labelTitle);
 
-    d->txtTitle = new PimCommon::SpellCheckLineEdit(this, QLatin1String("blogilorc"));
+    d->txtTitle = new PimCommon::SpellCheckLineEdit(this, QStringLiteral("blogilorc"));
     d->horizontalLayout->addWidget(d->txtTitle);
     d->labelTitle->setBuddy(d->txtTitle);
     connect(d->txtTitle, &PimCommon::SpellCheckLineEdit::textChanged, this, &PostEntry::slotTitleChanged);

@@ -257,17 +257,17 @@ void BilboBlog::setBlogUrl(const QString &blogUrl)
 
 bool BilboBlog::supportUploadMedia() const
 {
-    return d->mSupportedFeatures[QLatin1String("uploadMedia")];
+    return d->mSupportedFeatures[QStringLiteral("uploadMedia")];
 }
 
 bool BilboBlog::supportCategory() const
 {
-    return d->mSupportedFeatures[QLatin1String("category")];
+    return d->mSupportedFeatures[QStringLiteral("category")];
 }
 
 bool BilboBlog::supportTag() const
 {
-    return d->mSupportedFeatures[QLatin1String("tag")];
+    return d->mSupportedFeatures[QStringLiteral("tag")];
 }
 
 void BilboBlog::setAuthData(const QMap<QString, QString> &authData)

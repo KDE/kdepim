@@ -141,31 +141,31 @@ void AddEditBlog::autoConfigure()
     showWaitWidget(i18n("Trying to guess blog and API type..."));
     QString textUrl;
     ///Guess API with Url:
-    if (d->ui.txtUrl->text().contains(QLatin1String("xmlrpc.php"), Qt::CaseInsensitive)) {
+    if (d->ui.txtUrl->text().contains(QStringLiteral("xmlrpc.php"), Qt::CaseInsensitive)) {
         d->ui.comboApi->setCurrentIndex(3);
         fetchBlogId();
         return;
     }
-    if (d->ui.txtUrl->text().contains(QLatin1String("blogspot"), Qt::CaseInsensitive)) {
+    if (d->ui.txtUrl->text().contains(QStringLiteral("blogspot"), Qt::CaseInsensitive)) {
         d->ui.comboApi->setCurrentIndex(4);
         fetchBlogId();
         return;
     }
-    if (d->ui.txtUrl->text().contains(QLatin1String("wordpress"), Qt::CaseInsensitive)) {
+    if (d->ui.txtUrl->text().contains(QStringLiteral("wordpress"), Qt::CaseInsensitive)) {
         d->ui.comboApi->setCurrentIndex(3);
 
         textUrl = d->ui.txtUrl->text();
         while (textUrl.endsWith(QLatin1Char('/'))) {
             textUrl.remove(textUrl.length() - 1, 1);
         }
-        d->ui.txtUrl->setText(textUrl + QLatin1String("/xmlrpc.php"));
+        d->ui.txtUrl->setText(textUrl + QStringLiteral("/xmlrpc.php"));
         fetchBlogId();
         return;
     }
-    if (d->ui.txtUrl->text().contains(QLatin1String("livejournal"), Qt::CaseInsensitive)) {
+    if (d->ui.txtUrl->text().contains(QStringLiteral("livejournal"), Qt::CaseInsensitive)) {
         d->ui.comboApi->setCurrentIndex(0);
         d->tmpBlogUrl = d->ui.txtUrl->text();
-        d->ui.txtUrl->setText(QLatin1String("http://www.livejournal.com/interface/blogger/"));
+        d->ui.txtUrl->setText(QStringLiteral("http://www.livejournal.com/interface/blogger/"));
         d->ui.txtId->setText(d->ui.txtUser->text());
         d->ui.txtTitle->setText(d->ui.txtUser->text());
         hideWaitWidget();

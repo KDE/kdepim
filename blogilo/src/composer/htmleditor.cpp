@@ -63,7 +63,7 @@ HtmlEditor::~HtmlEditor()
 KTextEditor::View *HtmlEditor::createView(QWidget *parent)
 {
     KTextEditor::Document *document = mEditor->createDocument(parent);
-    bool result = document->setHighlightingMode(QLatin1String("html"));
+    bool result = document->setHighlightingMode(QStringLiteral("html"));
     if (result) {
         qCDebug(BLOGILO_LOG) << "Syntax highlighting enabled";
     }
@@ -88,7 +88,7 @@ KTextEditor::View *HtmlEditor::createView(QWidget *parent)
         menu->addSeparator();
         menu->addMenu(options);
 
-        interface->setConfigValue(QLatin1String("dynamic-word-wrap"), true);
+        interface->setConfigValue(QStringLiteral("dynamic-word-wrap"), true);
         actWordWrap->setChecked(true);
     }
     view->setContextMenu(menu);
@@ -109,15 +109,15 @@ void HtmlEditor::toggleWordWrap()
 {
     KTextEditor::View *view = qobject_cast< KTextEditor::View * >(sender()->parent());
     KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface * >(view);
-    const bool result = interface->configValue(QLatin1String("dynamic-word-wrap")).toBool();
-    interface->setConfigValue(QLatin1String("dynamic-word-wrap"), !(result));
+    const bool result = interface->configValue(QStringLiteral("dynamic-word-wrap")).toBool();
+    interface->setConfigValue(QStringLiteral("dynamic-word-wrap"), !(result));
 }
 
 void HtmlEditor::toggleLineNumber()
 {
     KTextEditor::View *view = qobject_cast< KTextEditor::View * >(sender()->parent());
     KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface * >(view);
-    const bool result = interface->configValue(QLatin1String("line-numbers")).toBool();
-    interface->setConfigValue(QLatin1String("line-numbers"), !(result));
+    const bool result = interface->configValue(QStringLiteral("line-numbers")).toBool();
+    interface->setConfigValue(QStringLiteral("line-numbers"), !(result));
 }
 
