@@ -377,7 +377,7 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
 
 
 
-    d->action_add_image = new QAction(QIcon::fromTheme(QLatin1String("insert-image")),
+    d->action_add_image = new QAction(QIcon::fromTheme(QStringLiteral("insert-image")),
                                       i18n("Add Image"), this);
     d->action_add_image->setObjectName(QStringLiteral("add_image"));
     ac->addAction(QStringLiteral("add_image"), d->action_add_image);
@@ -387,37 +387,36 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     d->action_add_emoticon = new KPIMTextEdit::EmoticonTextEditAction(this);
     d->action_add_emoticon->setObjectName(QStringLiteral("add_emoticon"));
     ac->addAction(QStringLiteral("add_emoticon"), d->action_add_emoticon);
-    connect(d->action_add_emoticon, SIGNAL(emoticonActivated(QString)),
-            SLOT(_k_slotAddEmoticon(QString)));
+    connect(d->action_add_emoticon, SIGNAL(emoticonActivated(QString)), d->composerControler, SLOT(slotAddEmoticon(QString)));
     d->richTextActionList.append(d->action_add_emoticon);
 
     d->action_insert_html = new QAction(i18n("Insert HTML"), this);
     d->action_insert_html->setObjectName(QStringLiteral("insert_html"));
     ac->addAction(QStringLiteral("insert_html"), d->action_insert_html);
-    connect(d->action_insert_html, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()));
+    connect(d->action_insert_html, SIGNAL(triggered(bool)), d->composerControler, SLOT(slotInsertHtml()));
     d->richTextActionList.append(d->action_insert_html);
 #if 0 //FIXME
     d->action_add_table = new KPIMTextEdit::TableActionMenu(this);
-    d->action_add_table->setIcon(QIcon::fromTheme(QLatin1String("insert-table")));
+    d->action_add_table->setIcon(QIcon::fromTheme(QStringLiteral("insert-table")));
     d->action_add_table->setText(i18n("Table"));
     d->action_add_table->setDelayed(false);
-    d->action_add_table->setObjectName(QLatin1String("insert_table"));
+    d->action_add_table->setObjectName(QStringLiteral("insert_table"));
     d->richTextActionList.append(d->action_add_table);
     ac->addAction(QStringLiteral("insert_table"), d->action_add_table);
 #endif
 
     d->action_delete_line = new QAction(i18n("Delete Line"), this);
     ac->setDefaultShortcut(d->action_delete_line, QKeySequence(Qt::CTRL + Qt::Key_K));
-    d->action_delete_line->setObjectName(QLatin1String("delete_line"));
+    d->action_delete_line->setObjectName(QStringLiteral("delete_line"));
     ac->addAction(QStringLiteral("delete_line"), d->action_delete_line);
     connect(d->action_delete_line, SIGNAL(triggered(bool)), SLOT(_k_slotDeleteLine()));
     d->richTextActionList.append(d->action_delete_line);
 
     d->action_format_reset =
-        new QAction(QIcon::fromTheme(QLatin1String("draw-eraser")), i18n("Reset Font Settings"), this);
+        new QAction(QIcon::fromTheme(QStringLiteral("draw-eraser")), i18n("Reset Font Settings"), this);
     d->action_format_reset->setIconText(i18n("Reset Font"));
-    d->action_format_reset->setObjectName(QLatin1String("format_reset"));
-    connect(d->action_format_reset, SIGNAL(triggered(bool)), SLOT(_k_slotFormatReset()));
+    d->action_format_reset->setObjectName(QStringLiteral("format_reset"));
+    connect(d->action_format_reset, SIGNAL(triggered(bool)), d->composerControler, SLOT(slotFormatReset()));
     ac->addAction(QStringLiteral("format_reset"), d->action_format_reset);
     d->richTextActionList.append(d->action_format_reset);
 

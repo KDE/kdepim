@@ -27,6 +27,8 @@
 #include <QTextBlock>
 #include <QCoreApplication>
 #include <QTimer>
+#include <QPointer>
+#include <kpimtextedit/inserthtmldialog.h>
 #include <kpimtextedit/textutils.h>
 #include <grantlee/plaintextmarkupbuilder.h>
 
@@ -716,4 +718,33 @@ bool RichTextComposerControler::isFormattingUsed() const
     }
 
     return KPIMTextEdit::TextUtils::containsFormatting(d->richtextComposer->document());
+}
+
+void RichTextComposerControler::slotAddEmoticon(const QString &text)
+{
+    QTextCursor cursor = d->richtextComposer->textCursor();
+    cursor.insertText(text);
+}
+
+void RichTextComposerControler::slotInsertHtml()
+{
+    if (d->richtextComposer->textMode() == RichTextComposer::Rich) {
+        QPointer<KPIMTextEdit::InsertHtmlDialog> dialog = new KPIMTextEdit::InsertHtmlDialog(d->richtextComposer);
+        if (dialog->exec()) {
+            const QString str = dialog->html();
+            if (!str.isEmpty()) {
+                QTextCursor cursor = d->richtextComposer->textCursor();
+                cursor.insertHtml(str);
+            }
+        }
+        delete dialog;
+    }
+}
+
+void RichTextComposerControler::slotFormatReset()
+{
+    d->richtextComposer->setTextBackgroundColor(d->richtextComposer->palette().highlightedText().color());
+    //FIXME d->richtextComposer->setTextForegroundColor(d->richtextComposer->palette().text().color());
+    //FIXME d->richtextComposer->setFont(saveFont);
+
 }

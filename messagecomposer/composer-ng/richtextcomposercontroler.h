@@ -77,6 +77,9 @@ public Q_SLOTS:
     void indentListMore();
     void indentListLess();
     void setListStyle(int _styleIndex);
+    void slotAddEmoticon(const QString &text);
+    void slotInsertHtml();
+    void slotFormatReset();
 private:
     bool isFormattingUsed() const;
     QString toWrappedPlainText() const;
