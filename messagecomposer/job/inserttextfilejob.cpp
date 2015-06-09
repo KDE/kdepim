@@ -18,7 +18,7 @@
  */
 #include "inserttextfilejob.h"
 
-#include "composer/kmeditor.h"
+#include <QTextEdit>
 
 #include <KCharsets>
 #include "messagecomposer_debug.h"
