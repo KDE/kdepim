@@ -393,7 +393,7 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     d->action_insert_html = new QAction(i18n("Insert HTML"), this);
     d->action_insert_html->setObjectName(QStringLiteral("insert_html"));
     ac->addAction(QStringLiteral("insert_html"), d->action_insert_html);
-    connect(d->action_insert_html, SIGNAL(triggered(bool)), d->composerControler, SLOT(slotInsertHtml()));
+    connect(d->action_insert_html, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotInsertHtml);
     d->richTextActionList.append(d->action_insert_html);
 #if 0 //FIXME
     d->action_add_table = new KPIMTextEdit::TableActionMenu(this);
@@ -409,14 +409,14 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     ac->setDefaultShortcut(d->action_delete_line, QKeySequence(Qt::CTRL + Qt::Key_K));
     d->action_delete_line->setObjectName(QStringLiteral("delete_line"));
     ac->addAction(QStringLiteral("delete_line"), d->action_delete_line);
-    connect(d->action_delete_line, SIGNAL(triggered(bool)), SLOT(_k_slotDeleteLine()));
+    connect(d->action_delete_line, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotDeleteLine);
     d->richTextActionList.append(d->action_delete_line);
 
     d->action_format_reset =
         new QAction(QIcon::fromTheme(QStringLiteral("draw-eraser")), i18n("Reset Font Settings"), this);
     d->action_format_reset->setIconText(i18n("Reset Font"));
     d->action_format_reset->setObjectName(QStringLiteral("format_reset"));
-    connect(d->action_format_reset, SIGNAL(triggered(bool)), d->composerControler, SLOT(slotFormatReset()));
+    connect(d->action_format_reset, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotFormatReset);
     ac->addAction(QStringLiteral("format_reset"), d->action_format_reset);
     d->richTextActionList.append(d->action_format_reset);
 

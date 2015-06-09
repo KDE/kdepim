@@ -80,6 +80,7 @@ public Q_SLOTS:
     void slotAddEmoticon(const QString &text);
     void slotInsertHtml();
     void slotFormatReset();
+    void slotDeleteLine();
 private:
     bool isFormattingUsed() const;
     QString toWrappedPlainText() const;

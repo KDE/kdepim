@@ -743,8 +743,53 @@ void RichTextComposerControler::slotInsertHtml()
 
 void RichTextComposerControler::slotFormatReset()
 {
-    d->richtextComposer->setTextBackgroundColor(d->richtextComposer->palette().highlightedText().color());
-    //FIXME d->richtextComposer->setTextForegroundColor(d->richtextComposer->palette().text().color());
+    setTextBackgroundColor(d->richtextComposer->palette().highlightedText().color());
+    setTextForegroundColor(d->richtextComposer->palette().text().color());
     //FIXME d->richtextComposer->setFont(saveFont);
 
+}
+
+void RichTextComposerControler::slotDeleteLine()
+{
+    if (d->richtextComposer->hasFocus()) {
+        QTextCursor cursor = d->richtextComposer->textCursor();
+        QTextBlock block = cursor.block();
+        const QTextLayout *layout = block.layout();
+
+        // The current text block can have several lines due to word wrapping.
+        // Search the line the cursor is in, and then delete it.
+        for (int lineNumber = 0; lineNumber < layout->lineCount(); ++lineNumber) {
+            QTextLine line = layout->lineAt(lineNumber);
+            const bool lastLineInBlock = (line.textStart() + line.textLength() == block.length() - 1);
+            const bool oneLineBlock = (layout->lineCount() == 1);
+            const int startOfLine = block.position() + line.textStart();
+            int endOfLine = block.position() + line.textStart() + line.textLength();
+            if (!lastLineInBlock) {
+                endOfLine -= 1;
+            }
+
+            // Found the line where the cursor is in
+            if (cursor.position() >= startOfLine && cursor.position() <= endOfLine) {
+                int deleteStart = startOfLine;
+                int deleteLength = line.textLength();
+                if (oneLineBlock) {
+                    deleteLength++; // The trailing newline
+                }
+
+                // When deleting the last line in the document,
+                // remove the newline of the line before the last line instead
+                if (deleteStart + deleteLength >= d->richtextComposer->document()->characterCount() &&
+                        deleteStart > 0) {
+                    deleteStart--;
+                }
+
+                cursor.beginEditBlock();
+                cursor.setPosition(deleteStart);
+                cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, deleteLength);
+                cursor.removeSelectedText();
+                cursor.endEditBlock();
+                return;
+            }
+        }
+    }
 }
