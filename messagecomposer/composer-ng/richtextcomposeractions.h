@@ -22,7 +22,8 @@
 #include "messagecomposer_export.h"
 class KActionCollection;
 class QTextCharFormat;
-namespace MessageComposer {
+namespace MessageComposer
+{
 class RichTextComposerControler;
 class MESSAGECOMPOSER_EXPORT RichTextComposerActions : public QObject
 {

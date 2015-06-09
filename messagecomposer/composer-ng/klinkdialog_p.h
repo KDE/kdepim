@@ -27,7 +27,8 @@
 #include <QDialog>
 
 class QString;
-namespace MessageComposer {
+namespace MessageComposer
+{
 /**
     @short Dialog to allow user to configure a hyperlink.
     @author Stephen Kelly

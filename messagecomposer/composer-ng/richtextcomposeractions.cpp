@@ -98,11 +98,8 @@ public:
     QAction *action_remove_quote_chars;
     QAction *action_paste_without_formatting;
 
-
-
     bool richTextEnabled;
 };
-
 
 RichTextComposerActions::RichTextComposerActions(MessageComposer::RichTextComposerControler *controler, QObject *parent)
     : QObject(parent),
@@ -166,7 +163,6 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     alignmentGroup->addAction(d->action_align_right);
     alignmentGroup->addAction(d->action_align_justify);
 
-
     //Align text
     d->action_direction_ltr = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-direction-ltr")),
             i18nc("@action", "Left-to-Right"), this);
@@ -207,7 +203,6 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
             d->composerControler, &RichTextComposerControler::setTextSuperScript);
     ac->addAction(QStringLiteral("format_text_superscript"), d->action_text_superscript);
 
-
     d->action_text_bold = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-bold")),
                                             i18nc("@action boldify selected text", "&Bold"), this);
     QFont bold;
@@ -220,7 +215,7 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     connect(d->action_text_bold, &KToggleAction::triggered, d->composerControler, &RichTextComposerControler::setTextBold);
 
     d->action_text_italic = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-italic")),
-                                              i18nc("@action italicize selected text", "&Italic"), this);
+            i18nc("@action italicize selected text", "&Italic"), this);
     QFont italic;
     italic.setItalic(true);
     d->action_text_italic->setFont(italic);
@@ -231,7 +226,7 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     connect(d->action_text_italic, &KToggleAction::triggered, d->composerControler, &RichTextComposerControler::setTextItalic);
 
     d->action_text_underline = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-underline")),
-                                                 i18nc("@action underline selected text", "&Underline"), this);
+            i18nc("@action underline selected text", "&Underline"), this);
     QFont underline;
     underline.setUnderline(true);
     d->action_text_underline->setFont(underline);
@@ -242,7 +237,7 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     connect(d->action_text_underline, &KToggleAction::triggered, d->composerControler, &RichTextComposerControler::setTextUnderline);
 
     d->action_text_strikeout = new KToggleAction(QIcon::fromTheme(QStringLiteral("format-text-strikethrough")),
-                                                 i18nc("@action", "&Strike Out"), this);
+            i18nc("@action", "&Strike Out"), this);
     QFont strikeout;
     strikeout.setStrikeOut(true);
     d->action_text_strikeout->setFont(strikeout);
@@ -251,7 +246,6 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     d->action_text_strikeout->setObjectName(QStringLiteral("format_text_strikeout"));
     ac->setDefaultShortcut(d->action_text_strikeout, Qt::CTRL + Qt::Key_L);
     connect(d->action_text_strikeout, &KToggleAction::triggered, d->composerControler, &RichTextComposerControler::setTextStrikeOut);
-
 
     //Font Family
     d->action_font_family = new KFontAction(i18nc("@action", "&Font"), this);
@@ -267,7 +261,6 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     ac->addAction(QStringLiteral("format_font_size"), d->action_font_size);
     connect(d->action_font_size, SIGNAL(fontSizeChanged(int)), d->composerControler, SLOT(setFontSize(int)));
 
-
     d->action_insert_horizontal_rule = new QAction(QIcon::fromTheme(QStringLiteral("insert-horizontal-rule")),
             i18nc("@action", "Insert Rule Line"), this);
     d->richTextActionList.append((d->action_insert_horizontal_rule));
@@ -278,7 +271,7 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
 
     //Foreground Color
     d->action_text_foreground_color = new QAction(QIcon::fromTheme(QStringLiteral("format-stroke-color")),
-                                                  i18nc("@action", "Text &Color..."), this);
+            i18nc("@action", "Text &Color..."), this);
     d->action_text_foreground_color->setIconText(i18nc("@label stroke color", "Color"));
     d->richTextActionList.append((d->action_text_foreground_color));
     d->action_text_foreground_color->setObjectName(QStringLiteral("format_text_foreground_color"));
@@ -286,12 +279,11 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     connect(d->action_text_foreground_color, &QAction::triggered, d->composerControler, &RichTextComposerControler::setChangeTextForegroundColor);
     //Background Color
     d->action_text_background_color = new QAction(QIcon::fromTheme(QStringLiteral("format-fill-color")),
-                                                  i18nc("@action", "Text &Highlight..."), this);
+            i18nc("@action", "Text &Highlight..."), this);
     d->richTextActionList.append((d->action_text_background_color));
     ac->addAction(QStringLiteral("format_text_background_color"), d->action_text_background_color);
     d->action_text_background_color->setObjectName(QStringLiteral("format_text_background_color"));
     connect(d->action_text_background_color, &QAction::triggered, d->composerControler, &RichTextComposerControler::setChangeTextBackgroundColor);
-
 
     d->action_manage_link = new QAction(QIcon::fromTheme(QStringLiteral("insert-link")),
                                         i18nc("@action", "Link"), this);
@@ -300,7 +292,6 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     ac->addAction(QStringLiteral("manage_link"), d->action_manage_link);
     connect(d->action_manage_link, &QAction::triggered,
             d->composerControler, &RichTextComposerControler::manageLink);
-
 
     d->action_list_indent = new QAction(QIcon::fromTheme(QStringLiteral("format-indent-more")),
                                         i18nc("@action", "Increase Indent"), this);
@@ -370,7 +361,6 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     ac->setDefaultShortcut(d->action_paste_without_formatting, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_V));
     //FIXME connect(d->action_paste_without_formatting, &QAction::triggered, d->composerControler, &KMComposerEditor::slotPasteWithoutFormatting);
 
-
     slotUpdateMiscActions();
     slotUpdateCharFormatActions(d->composerControler->richTextComposer()->currentCharFormat());
 }
@@ -389,7 +379,6 @@ void RichTextComposerActions::setActionsEnabled(bool enabled)
     }
     d->richTextEnabled = enabled;
 }
-
 
 void RichTextComposerActions::slotUpdateCharFormatActions(const QTextCharFormat &format)
 {

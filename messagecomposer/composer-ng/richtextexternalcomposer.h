@@ -40,7 +40,7 @@ public:
     void setExternalEditorPath(const QString &path);
     QString externalEditorPath() const;
     bool checkExternalEditorFinished();
-    void killExternalEditor();    
+    void killExternalEditor();
 
     bool isInProgress() const;
 

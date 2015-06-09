@@ -63,7 +63,6 @@ void RichTextComposerControler::RichTextComposerControlerPrivate::mergeFormatOnW
     cursor.endEditBlock();
 }
 
-
 RichTextComposerControler::RichTextComposerControler(RichTextComposer *richtextComposer, QObject *parent)
     : QObject(parent), d(new RichTextComposerControlerPrivate(richtextComposer))
 {

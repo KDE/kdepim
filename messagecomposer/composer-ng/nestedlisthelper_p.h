@@ -31,7 +31,8 @@ class QDropEvent;
 class QTextCursor;
 class QTextList;
 class QTextBlock;
-namespace MessageComposer {
+namespace MessageComposer
+{
 /**
  *
  * @short Helper class for automatic handling of nested lists in a text edit

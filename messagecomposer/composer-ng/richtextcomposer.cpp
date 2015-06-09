@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "richtextcomposer.h"
 #include "richtextcomposercontroler.h"
 #include "richtextcomposeractions.h"
@@ -311,7 +310,7 @@ void RichTextComposer::evaluateReturnKeySupport(QKeyEvent *event)
                 // add the quote indicators of the previous line
                 int leadingWhiteSpaceCount = 0;
                 while ((leadingWhiteSpaceCount < newLine.length()) &&
-                       newLine[leadingWhiteSpaceCount].isSpace()) {
+                        newLine[leadingWhiteSpaceCount].isSpace()) {
                     ++leadingWhiteSpaceCount;
                 }
                 newLine = newLine.replace(0, leadingWhiteSpaceCount, lineText.left(bot));
@@ -327,7 +326,6 @@ void RichTextComposer::evaluateReturnKeySupport(QKeyEvent *event)
         evaluateListSupport(event);
     }
 }
-
 
 void RichTextComposer::evaluateListSupport(QKeyEvent *event)
 {

@@ -85,7 +85,6 @@ void RichTextComposerActionsTest::shouldHaveActions()
         << QStringLiteral("tools_unquote")
         << QStringLiteral("paste_without_formatting");
 
-
     QCOMPARE(lst.count(), composerActions.numberOfActions());
     Q_FOREACH (QAction *act, actionCollection->actions()) {
         QVERIFY(lst.contains(act->objectName()));

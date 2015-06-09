@@ -20,7 +20,8 @@
 
 #include <QObject>
 #include "messagecomposer_export.h"
-namespace MessageComposer {
+namespace MessageComposer
+{
 
 class MESSAGECOMPOSER_EXPORT RichTextComposerImages : public QObject
 {

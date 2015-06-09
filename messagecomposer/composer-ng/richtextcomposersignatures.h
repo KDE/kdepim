@@ -15,13 +15,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef RICHTEXTCOMPOSERSIGNATURES_H
 #define RICHTEXTCOMPOSERSIGNATURES_H
 
 #include <QObject>
 #include "messagecomposer_export.h"
-namespace MessageComposer {
+namespace MessageComposer
+{
 class MESSAGECOMPOSER_EXPORT RichTextComposerSignatures : public QObject
 {
     Q_OBJECT

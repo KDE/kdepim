@@ -39,5 +39,4 @@ void RichTextComposerControlerTest::shouldAlignLeft()
     //TODO verify if text is align to left.
 }
 
-
 QTEST_MAIN(RichTextComposerControlerTest)

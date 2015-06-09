@@ -25,7 +25,8 @@ namespace PimCommon
 class AutoCorrection;
 }
 
-namespace KPIMTextEdit {
+namespace KPIMTextEdit
+{
 class EMailQuoteHighlighter;
 }
 
@@ -86,7 +87,6 @@ public:
 
     virtual void setHighlighterColors(KPIMTextEdit::EMailQuoteHighlighter *highlighter);
 
-
     void setUseExternalEditor(bool use);
     void setExternalEditorPath(const QString &path);
     bool checkExternalEditorFinished();
@@ -99,7 +99,7 @@ public:
     QString quotePrefixName() const;
 
 public Q_SLOTS:
-    void insertPlainTextImplementation();    
+    void insertPlainTextImplementation();
     void slotChangeInsertMode();
     void slotPasteAsQuotation();
     void slotPasteWithoutFormatting();

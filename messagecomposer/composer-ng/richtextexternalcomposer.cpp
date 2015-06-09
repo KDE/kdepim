@@ -125,7 +125,7 @@ void RichTextExternalComposer::startExternalEditor()
         }
 
         connect(d->externalEditorProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-                         this, SLOT(slotEditorFinished(int,QProcess::ExitStatus)));
+                this, SLOT(slotEditorFinished(int,QProcess::ExitStatus)));
         d->externalEditorProcess->start();
         if (!d->externalEditorProcess->waitForStarted()) {
             cannotStartProcess(commandLine);
