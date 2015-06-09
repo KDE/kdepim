@@ -27,5 +27,6 @@ RichTextDecorator::RichTextDecorator(QTextEdit *editor)
 
 bool RichTextDecorator::isSpellCheckingEnabledForBlock(const QString &textBlock) const
 {
+    Q_UNUSED(textBlock);
     return true;
 }
