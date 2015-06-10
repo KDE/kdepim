@@ -126,6 +126,15 @@
  * show a warning. */
 #define MAX_RFC822_EMBEDD_DEPTH 10 /* Should be enough for most cases. */
 
+/* For old PGP2 keys that used MD5 as the algorithm for UserID ceritifations
+ * some versions ( at least 2.0.26 - 2.0.28 ) of GnuPG return a KeyID of zero.
+ * This can lead kmail to show invalid signature information. As gnupg
+ * returns any PGP2 key when keyinformation about those keys is requested.
+ * This is a workaround for those broken GnuPG versions.
+ * GnuPG 2.1 will ignore those keys.
+ * See https://bugs.g10code.com/gnupg/issue2000 */
+#define GNUPG_BAD_DIGEST_KEYID "0000000000000000"
+
 namespace KMail {
 
   // A small class that eases temporary CryptPlugWrapper changes:
@@ -2481,6 +2490,19 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                                                block.sigSummary,
                                                frameColor,
                                                showKeyInfos );
+
+        // See the comment on the GNUPG_BAD_DIGEST_KEYID for more info
+        // why this is neccessary.
+        if ( block.keyId == GNUPG_BAD_DIGEST_KEYID ) {
+            kdDebug() << "Invalid keyid reported by ." << endl;
+            block.isGoodSignature = false;
+            // In this case the signer may be wrong
+            block.signer = QString();
+            block.keyId = QCString();
+            statusStr = i18n( "Message was signed with a key that uses an insecure digest algorithm." );
+            block.status = statusStr;
+        }
+
         // if needed fallback to english status text
         // that was reported by the plugin
         if( statusStr.isEmpty() )
