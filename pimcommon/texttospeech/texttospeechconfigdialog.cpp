@@ -30,7 +30,7 @@ using namespace PimCommon;
 TextToSpeechConfigDialog::TextToSpeechConfigDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle(i18n("Configure Test To Speech"));
+    setWindowTitle(i18n("Configure Text-To-Speech"));
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     mTextToSpeechConfigWidget = new TextToSpeechConfigWidget(parent);

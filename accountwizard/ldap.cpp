@@ -55,7 +55,7 @@ void Ldap::create()
     Q_EMIT info(i18n("Setting up LDAP server..."));
 
     if (m_server.isEmpty()) {
-        Q_EMIT error(i18n("Needed parameters are missing for ldap config server='%1'", m_server));
+        Q_EMIT error(i18n("Needed parameters are missing for LDAP config: server '%1'", m_server));
         if (m_editMode) {
             edit();
         }
