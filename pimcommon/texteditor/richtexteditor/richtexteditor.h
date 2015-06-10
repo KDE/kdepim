@@ -80,6 +80,7 @@ public:
     bool showAutoCorrectButton() const;
 
     void forceSpellChecking();
+    QString spellCheckingConfigFileName() const;
 Q_SIGNALS:
     void say(const QString &text);
 
@@ -108,6 +109,8 @@ protected:
 
     QMenu *mousePopupMenu(const QPoint &pos);
     virtual Sonnet::SpellCheckDecorator *createSpellCheckDecorator();
+    void setHighlighter(Sonnet::Highlighter *_highLighter);
+
 Q_SIGNALS:
     void findText();
     void replaceText();
@@ -124,7 +127,6 @@ private:
     void deleteWordBack();
     void deleteWordForward();
     void defaultPopupMenu(const QPoint &pos);
-    void setHighlighter(Sonnet::Highlighter *_highLighter);
     void highlightWord(int length, int pos);
     void checkSpelling(bool force);
     class RichTextEditorPrivate;

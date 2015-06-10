@@ -20,13 +20,13 @@
 #include "texteditor/richtexteditor/richtextdecorator.h"
 
 #include <KLocalizedString>
-#include <KMessageBox>
 #include <KStandardAction>
 #include <KCursor>
 #include <KConfigGroup>
 #include <QIcon>
 #include <KIconTheme>
 #include <KConfig>
+#include <KStandardGuiItem>
 
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
@@ -366,7 +366,7 @@ void RichTextEditor::setReadOnly(bool readOnly)
 void RichTextEditor::checkSpelling(bool force)
 {
     if (document()->isEmpty()) {
-        KMessageBox::information(this, i18n("Nothing to spell check."));
+        slotDisplayMessageIndicator(i18n("Nothing to spell check."));
         if (force) {
             emit spellCheckingFinished();
         }
@@ -489,6 +489,11 @@ void RichTextEditor::focusInEvent(QFocusEvent *event)
 void RichTextEditor::setSpellCheckingConfigFileName(const QString &_fileName)
 {
     d->spellCheckingConfigFileName = _fileName;
+}
+
+QString RichTextEditor::spellCheckingConfigFileName() const
+{
+    return d->spellCheckingConfigFileName;
 }
 
 bool RichTextEditor::checkSpellingEnabled() const
