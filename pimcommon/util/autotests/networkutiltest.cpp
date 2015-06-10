@@ -33,19 +33,19 @@ NetworkUtilTest::~NetworkUtilTest()
 void NetworkUtilTest::shouldHaveDefaultValue()
 {
     PimCommon::NetworkUtil util;
-    QVERIFY(!util.lowBandwidh());
+    QVERIFY(!util.lowBandwidth());
 }
 
 void NetworkUtilTest::shouldApplyChanges()
 {
     PimCommon::NetworkUtil util;
     bool lowBandwith = false;
-    util.setLowBandwidh(lowBandwith);
-    QCOMPARE(util.lowBandwidh(), lowBandwith);
+    util.setLowBandwidth(lowBandwith);
+    QCOMPARE(util.lowBandwidth(), lowBandwith);
 
     lowBandwith = true;
-    util.setLowBandwidh(lowBandwith);
-    QCOMPARE(util.lowBandwidh(), lowBandwith);
+    util.setLowBandwidth(lowBandwith);
+    QCOMPARE(util.lowBandwidth(), lowBandwith);
 }
 
 QTEST_MAIN(NetworkUtilTest)

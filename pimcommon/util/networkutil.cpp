@@ -28,18 +28,18 @@ NetworkUtil *NetworkUtil::self()
 }
 
 NetworkUtil::NetworkUtil()
-    : mLowBandwidh(false)
+    : mLowBandwidth(false)
 {
 
 }
 
-bool NetworkUtil::lowBandwidh() const
+bool NetworkUtil::lowBandwidth() const
 {
-    return mLowBandwidh;
+    return mLowBandwidth;
 }
 
-void NetworkUtil::setLowBandwidh(bool lowBandwidh)
+void NetworkUtil::setLowBandwidth(bool lowBandwidh)
 {
-    mLowBandwidh = lowBandwidh;
+    mLowBandwidth = lowBandwidh;
 }
 

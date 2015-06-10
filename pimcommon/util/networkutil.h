@@ -27,11 +27,11 @@ public:
 
     NetworkUtil();
 
-    bool lowBandwidh() const;
-    void setLowBandwidh(bool lowBandwidh);
+    bool lowBandwidth() const;
+    void setLowBandwidth(bool lowBandwidth);
 
 private:
-    bool mLowBandwidh;
+    bool mLowBandwidth;
 };
 }
 
