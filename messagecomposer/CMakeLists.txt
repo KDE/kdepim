@@ -49,7 +49,7 @@ set( messagecomposer_job_src
 
 set( messagecomposer_composer_src
      composer/composer.cpp
-     composer/kmeditor.cpp
+     #composer/kmeditor.cpp
      composer/signaturecontroller.cpp
      composer/composerlineedit.cpp
      composer/composerviewbase.cpp

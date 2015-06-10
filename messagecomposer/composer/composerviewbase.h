@@ -72,7 +72,7 @@ class KeyResolver;
 namespace MessageComposer
 {
 class RecipientsEditor;
-class KMeditor;
+class RichTextComposer;
 class InfoPart;
 class GlobalPart;
 class Composer;
@@ -154,8 +154,8 @@ public:
     void setIdentityManager(KIdentityManagement::IdentityManager *identMan);
     KIdentityManagement::IdentityManager *identityManager();
 
-    void setEditor(MessageComposer::KMeditor *editor);
-    MessageComposer::KMeditor *editor();
+    void setEditor(MessageComposer::RichTextComposer *editor);
+    MessageComposer::RichTextComposer *editor();
 
     void setTransportCombo(MailTransport::TransportComboBox *transpCombo);
     MailTransport::TransportComboBox *transportComboBox();
@@ -329,7 +329,7 @@ private:
     MessageComposer::RecipientsEditor *m_recipientsEditor;
     KIdentityManagement::IdentityCombo *m_identityCombo;
     KIdentityManagement::IdentityManager *m_identMan;
-    MessageComposer::KMeditor *m_editor;
+    MessageComposer::RichTextComposer *m_editor;
     MailTransport::TransportComboBox *m_transport;
     Sonnet::DictionaryComboBox *m_dictionary;
     Akonadi::CollectionComboBox *m_fccCombo;

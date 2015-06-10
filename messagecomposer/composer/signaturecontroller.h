@@ -36,7 +36,7 @@ class IdentityCombo;
 
 namespace MessageComposer
 {
-class KMeditor;
+class RichTextComposer;
 
 /** Controls signature (the footer thing, not the crypto thing) operations
  *  happening on a KMEditor triggerd by identity selection or menu actions.
@@ -48,7 +48,7 @@ class MESSAGECOMPOSER_EXPORT SignatureController : public QObject
 public:
     explicit SignatureController(QObject *parent = Q_NULLPTR);
 
-    void setEditor(MessageComposer::KMeditor *editor);
+    void setEditor(MessageComposer::RichTextComposer *editor);
     void setIdentityCombo(KIdentityManagement::IdentityCombo *combo);
 
     /** Temporarily disable identity tracking, useful for initial loading for example. */
@@ -100,7 +100,7 @@ private Q_SLOTS:
     void identityChanged(uint id);
 
 private:
-    MessageComposer::KMeditor *m_editor;
+    MessageComposer::RichTextComposer *m_editor;
     KIdentityManagement::IdentityCombo *m_identityCombo;
     uint m_currentIdentityId;
 };

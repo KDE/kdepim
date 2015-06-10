@@ -10,21 +10,6 @@ include_directories (
     ${CMAKE_SOURCE_DIR}/templateparser
 )
 
-set(testkmeditor_SRCS testkmeditor.cpp )
-
-add_executable(testkmeditor ${testkmeditor_SRCS})
-
-target_link_libraries(testkmeditor messagecomposer  KF5::PimTextEdit )
-
-########### next target ###############
-
-set(testkmeditorwin_SRCS testkmeditorwin.cpp )
-
-add_executable(testkmeditorwin ${testkmeditorwin_SRCS})
-
-target_link_libraries(testkmeditorwin messagecomposer  KF5::PimTextEdit )
-
-
 ########### recipientseditor test ###############
 
 set(recipienteditortest_SRCS recipientseditortest.cpp)

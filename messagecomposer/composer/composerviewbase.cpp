@@ -23,7 +23,10 @@
 #include "attachment/attachmentcontrollerbase.h"
 #include "attachment/attachmentmodel.h"
 #include "composer/signaturecontroller.h"
-#include "composer/kmeditor.h"
+#include "composer-ng/richtextcomposer.h"
+#include "composer-ng/richtextcomposercontroler.h"
+#include "composer-ng/richtextcomposerimages.h"
+#include "composer-ng/richtextcomposersignatures.h"
 #include "emailaddressresolvejob.h"
 #include "keyresolver.h"
 #include "part/globalpart.h"
@@ -273,7 +276,7 @@ void MessageComposer::ComposerViewBase::saveMailSettings()
         m_msg->setHeader(new KMime::Headers::Generic("X-KMail-QuotePrefix", m_msg.get(), m_editor->quotePrefixName(), "utf-8"));
     }
 
-    if (m_editor->isFormattingUsed()) {
+    if (m_editor->composerControler()->isFormattingUsed()) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Html mode";
         m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Markup", m_msg.get(), QLatin1String("true"), "utf-8"));
     } else {
@@ -308,7 +311,7 @@ void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::Sen
     }
     saveMailSettings();
 
-    if (m_editor->isFormattingUsed() && inlineSigningEncryptionSelected()) {
+    if (m_editor->composerControler()->isFormattingUsed() && inlineSigningEncryptionSelected()) {
         const QString keepBtnText = m_encrypt ?
                                     m_sign ? i18n("&Keep markup, do not sign/encrypt")
                                     : i18n("&Keep markup, do not encrypt")
@@ -487,7 +490,7 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved(KJob *job)
     // Compose each message and prepare it for queueing, sending, or storing
     foreach (MessageComposer::Composer *composer, m_composers) {
         fillGlobalPart(composer->globalPart());
-        m_editor->fillComposerTextPart(composer->textPart());
+        m_editor->composerControler()->fillComposerTextPart(composer->textPart());
         fillInfoPart(composer->infoPart(), UseExpandedRecipients);
 
         if (m_attachmentModel) {
@@ -1355,7 +1358,7 @@ MessageComposer::Composer *MessageComposer::ComposerViewBase::createSimpleCompos
 {
     MessageComposer::Composer *composer = new MessageComposer::Composer;
     fillGlobalPart(composer->globalPart());
-    m_editor->fillComposerTextPart(composer->textPart());
+    m_editor->composerControler()->fillComposerTextPart(composer->textPart());
     fillInfoPart(composer->infoPart(), UseUnExpandedRecipients);
     if (m_attachmentModel)  {
         composer->addAttachmentParts(m_attachmentModel->attachments());
@@ -1492,7 +1495,7 @@ void MessageComposer::ComposerViewBase::identityChanged(const KIdentityManagemen
     KIdentityManagement::Signature newSig = const_cast<KIdentityManagement::Identity &>
                                             (ident).signature();
     //replace existing signatures
-    const bool replaced = editor()->replaceSignature(oldSig, newSig);
+    const bool replaced = editor()->composerSignature()->replaceSignature(oldSig, newSig);
     // Just append the signature if there was no old signature
     if (!replaced && (msgCleared || oldSig.rawText().isEmpty())) {
         signatureController()->applySignature(newSig);
@@ -1505,26 +1508,13 @@ void MessageComposer::ComposerViewBase::identityChanged(const KIdentityManagemen
 
 }
 
-void MessageComposer::ComposerViewBase::setEditor(MessageComposer::KMeditor *editor)
+void MessageComposer::ComposerViewBase::setEditor(MessageComposer::RichTextComposer *editor)
 {
     m_editor = editor;
-
-    m_editor->setRichTextSupport(KRichTextWidget::FullTextFormattingSupport |
-                                 KRichTextWidget::FullListSupport |
-                                 KRichTextWidget::SupportDirection |
-                                 KRichTextWidget::SupportAlignment |
-                                 KRichTextWidget::SupportRuleLine |
-                                 KRichTextWidget::SupportHyperlinks);
-    m_editor->enableImageActions();
-    m_editor->enableEmoticonActions();
-    m_editor->enableInsertHtmlActions();
-    m_editor->enableInsertTableActions();
-
     m_editor->document()->setModified(false);
-
 }
 
-MessageComposer::KMeditor *MessageComposer::ComposerViewBase::editor()
+MessageComposer::RichTextComposer *MessageComposer::ComposerViewBase::editor()
 {
     return m_editor;
 }
@@ -1659,7 +1649,7 @@ void MessageComposer::ComposerViewBase::collectImages(KMime::Content *root)
                     qCDebug(MESSAGECOMPOSER_LOG) << "found image in multipart/related : " << node->contentType()->name();
                     QImage img;
                     img.loadFromData(node->decodedContent());
-                    m_editor->loadImage(img, QString::fromLatin1(QByteArray(QByteArray("cid:") + node->contentID()->identifier())),
+                    m_editor->composerControler()->composerImages()->loadImage(img, QString::fromLatin1(QByteArray(QByteArray("cid:") + node->contentID()->identifier())),
                                         node->contentType()->name());
                 }
                 node = MessageCore::NodeHelper::nextSibling(node);

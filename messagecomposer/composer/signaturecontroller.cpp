@@ -23,7 +23,9 @@
  */
 
 #include "signaturecontroller.h"
-#include "composer/kmeditor.h"
+#include "composer-ng/richtextcomposer.h"
+#include "composer-ng/richtextcomposersignatures.h"
+#include "composer-ng/richtextcomposercontroler.h"
 #include "settings/messagecomposersettings.h"
 
 #include <KIdentityManagement/kidentitymanagement/identity.h>
@@ -40,7 +42,7 @@ SignatureController::SignatureController(QObject *parent) :
 {
 }
 
-void SignatureController::setEditor(MessageComposer::KMeditor *editor)
+void SignatureController::setEditor(MessageComposer::RichTextComposer *editor)
 {
     m_editor = editor;
 }
@@ -65,7 +67,7 @@ void SignatureController::identityChanged(uint id)
     const KIdentityManagement::Signature oldSig = const_cast<KIdentityManagement::Identity &>(oldIdentity).signature();
     const KIdentityManagement::Signature newSig = const_cast<KIdentityManagement::Identity &>(newIdentity).signature();
 
-    const bool replaced = m_editor->replaceSignature(oldSig, newSig);
+    const bool replaced = m_editor->composerSignature()->replaceSignature(oldSig, newSig);
 
     // Just append the signature if there was no old signature
     if (!replaced && oldSig.rawText().isEmpty()) {
@@ -111,7 +113,7 @@ void SignatureController::cleanSpace()
     }
     const KIdentityManagement::Identity &ident = m_identityCombo->identityManager()->identityForUoidOrDefault(m_identityCombo->currentIdentity());
     const KIdentityManagement::Signature signature = const_cast<KIdentityManagement::Identity &>(ident).signature();
-    m_editor->cleanWhitespace(signature);
+    m_editor->composerSignature()->cleanWhitespace(signature);
 }
 
 void SignatureController::insertSignatureHelper(KIdentityManagement::Signature::Placement placement)
@@ -136,7 +138,9 @@ void SignatureController::insertSignatureHelper(KIdentityManagement::Signature::
     if (MessageComposer::MessageComposerSettings::self()->dashDashSignature()) {
         addedText |= KIdentityManagement::Signature::AddSeparator;
     }
-    signature.insertIntoTextEdit(placement, addedText, m_editor);
+    m_editor->insertSignature(signature, placement, addedText);
+    //m_editor->insertSignature(signature, KIdentityManagement::Signature::AtCursor, KIdentityManagement::Signature::AddNothing);
+    //signature.insertIntoTextEdit(placement, addedText, m_editor);
     if ((placement == KIdentityManagement::Signature::Start) || (placement == KIdentityManagement::Signature::End)) {
         Q_EMIT signatureAdded();
     }
@@ -154,11 +158,13 @@ void SignatureController::applySignature(const KIdentityManagement::Signature &s
             addedText |= KIdentityManagement::Signature::AddSeparator;
         }
         if (MessageComposer::MessageComposerSettings::self()->prependSignature())
-            signature.insertIntoTextEdit(KIdentityManagement::Signature::Start,
-                                         addedText, m_editor);
+            m_editor->insertSignature(signature, KIdentityManagement::Signature::Start, addedText);
+            //signature.insertIntoTextEdit(KIdentityManagement::Signature::Start,
+            //                             addedText, m_editor);
         else
-            signature.insertIntoTextEdit(KIdentityManagement::Signature::End,
-                                         addedText, m_editor);
+            m_editor->insertSignature(signature, KIdentityManagement::Signature::End, addedText);
+            //signature.insertIntoTextEdit(KIdentityManagement::Signature::End,
+            //                             addedText, m_editor);
     }
 }
 
