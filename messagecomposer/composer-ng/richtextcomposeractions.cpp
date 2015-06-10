@@ -433,12 +433,18 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     d->richTextActionList.append(d->action_format_painter);
     d->action_format_painter->setObjectName(QStringLiteral("format_painter"));
     ac->addAction(QStringLiteral("format_reset"), d->action_format_painter);
-    connect(d->action_format_painter, SIGNAL(toggled(bool)),
-            this, SLOT(_k_formatPainter(bool)));
+    connect(d->action_format_painter, &QAction::toggled,
+            d->composerControler, &RichTextComposerControler::slotFormatPainter);
 
+    updateActionStates();
+}
+
+void RichTextComposerActions::updateActionStates()
+{
     slotUpdateMiscActions();
     slotUpdateCharFormatActions(d->composerControler->richTextComposer()->currentCharFormat());
 }
+
 
 void RichTextComposerActions::setListStyle(int _styleindex)
 {
