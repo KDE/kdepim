@@ -104,6 +104,16 @@ bool RichTextComposerControler::painterActive() const
     return d->painterActive;
 }
 
+void RichTextComposerControler::setFontForWholeText(const QFont &font)
+{
+    QTextCharFormat fmt;
+    fmt.setFont(font);
+    QTextCursor cursor(d->richtextComposer->document());
+    cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+    cursor.mergeCharFormat(fmt);
+    d->richtextComposer->document()->setDefaultFont(font);
+}
+
 void RichTextComposerControler::disablePainter()
 {
     // If the painter is active, paint the selection with the

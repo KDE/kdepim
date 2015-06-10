@@ -60,6 +60,7 @@ public:
     void disablePainter();
     bool isFormattingUsed() const;
 
+    void setFontForWholeText(const QFont &font);
 public Q_SLOTS:
     void insertHorizontalRule();
     void alignLeft();
