@@ -35,7 +35,6 @@
 
 #include <kmime/kmime_content.h>
 
-
 using namespace MessageComposer;
 
 class MessageComposer::MainTextJobPrivate : public ContentJobBasePrivate
@@ -185,7 +184,7 @@ SinglepartJob *MainTextJobPrivate::createHtmlJob()
     cjob->contentType()->setMimeType("text/html");
     cjob->contentType()->setCharset(chosenCharset);
     const QByteArray data = MessageComposer::RichTextComposerImages::imageNamesToContentIds(encodedHtml,
-                      textPart->embeddedImages());
+                            textPart->embeddedImages());
     cjob->setData(data);
     // TODO standard recommends Content-ID.
     return cjob;

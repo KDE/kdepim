@@ -18,7 +18,6 @@
 #ifndef RICHTEXTCOMPOSEREMAILQUOTEDECORATOR_H
 #define RICHTEXTCOMPOSEREMAILQUOTEDECORATOR_H
 
-
 #include <sonnet/spellcheckdecorator.h>
 #include "messagecomposer_export.h"
 

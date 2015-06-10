@@ -383,8 +383,6 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     ac->setDefaultShortcut(d->action_paste_without_formatting, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_V));
     connect(d->action_paste_without_formatting, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotPasteWithoutFormatting);
 
-
-
     d->action_add_image = new QAction(QIcon::fromTheme(QStringLiteral("insert-image")),
                                       i18n("Add Image"), this);
     d->action_add_image->setObjectName(QStringLiteral("add_image"));
@@ -427,7 +425,6 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     ac->addAction(QStringLiteral("format_reset"), d->action_format_reset);
     d->richTextActionList.append(d->action_format_reset);
 
-
     d->action_format_painter = new KToggleAction(QIcon::fromTheme(QStringLiteral("draw-brush")),
             i18nc("@action", "Format Painter"), this);
     d->richTextActionList.append(d->action_format_painter);
@@ -444,7 +441,6 @@ void RichTextComposerActions::updateActionStates()
     slotUpdateMiscActions();
     slotUpdateCharFormatActions(d->composerControler->richTextComposer()->currentCharFormat());
 }
-
 
 void RichTextComposerActions::setListStyle(int _styleindex)
 {

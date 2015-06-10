@@ -83,7 +83,7 @@ void RichTextComposerImages::addImageHelper(const QUrl &url, int width, int heig
 }
 
 void RichTextComposerImages::loadImage(const QImage &image, const QString &matchName,
-                         const QString &resourceName)
+                                       const QString &resourceName)
 {
     QSet<int> cursorPositionsToSkip;
     QTextBlock currentBlock = d->composer->document()->begin();
@@ -101,7 +101,7 @@ void RichTextComposerImages::loadImage(const QImage &image, const QString &match
                         cursor.setPosition(pos + 1, QTextCursor::KeepAnchor);
                         cursor.removeSelectedText();
                         d->composer->document()->addResource(QTextDocument::ImageResource,
-                                                QUrl(resourceName), QVariant(image));
+                                                             QUrl(resourceName), QVariant(image));
                         QTextImageFormat format;
                         format.setName(resourceName);
                         if ((imageFormat.width() != 0) && (imageFormat.height() != 0)) {
@@ -124,7 +124,7 @@ void RichTextComposerImages::loadImage(const QImage &image, const QString &match
 }
 
 void RichTextComposerImages::addImageHelper(const QString &imageName, const QImage &image,
-                                     int width, int height)
+        int width, int height)
 {
     QString imageNameToAdd = imageName;
     QTextDocument *document = d->composer->document();

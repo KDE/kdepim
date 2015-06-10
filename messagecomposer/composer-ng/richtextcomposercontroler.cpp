@@ -645,7 +645,6 @@ void RichTextComposerControler::ensureCursorVisible()
     QTimer::singleShot(500, richTextComposer(), SLOT(ensureCursorVisibleDelayed()));
 }
 
-
 void RichTextComposerControler::RichTextComposerControlerPrivate::fixupTextEditString(QString &text) const
 {
     // Remove line separators. Normal \n chars are still there, so no linebreaks get lost here
@@ -805,7 +804,6 @@ void RichTextComposerControler::slotAddImage()
     }
     delete dlg;
 }
-
 
 void RichTextComposerControler::slotFormatReset()
 {

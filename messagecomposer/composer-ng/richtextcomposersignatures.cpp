@@ -150,7 +150,7 @@ RichTextComposerSignatures::RichTextComposerSignaturesPrivate::signaturePosition
 }
 
 bool RichTextComposerSignatures::replaceSignature(const KIdentityManagement::Signature &oldSig,
-                                const KIdentityManagement::Signature &newSig)
+        const KIdentityManagement::Signature &newSig)
 {
     bool found = false;
     QString oldSigText = oldSig.toPlainText();

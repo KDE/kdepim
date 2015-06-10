@@ -157,14 +157,16 @@ void SignatureController::applySignature(const KIdentityManagement::Signature &s
         if (MessageComposer::MessageComposerSettings::self()->dashDashSignature()) {
             addedText |= KIdentityManagement::Signature::AddSeparator;
         }
-        if (MessageComposer::MessageComposerSettings::self()->prependSignature())
+        if (MessageComposer::MessageComposerSettings::self()->prependSignature()) {
             m_editor->insertSignature(signature, KIdentityManagement::Signature::Start, addedText);
-            //signature.insertIntoTextEdit(KIdentityManagement::Signature::Start,
-            //                             addedText, m_editor);
-        else
+        }
+        //signature.insertIntoTextEdit(KIdentityManagement::Signature::Start,
+        //                             addedText, m_editor);
+        else {
             m_editor->insertSignature(signature, KIdentityManagement::Signature::End, addedText);
-            //signature.insertIntoTextEdit(KIdentityManagement::Signature::End,
-            //                             addedText, m_editor);
+        }
+        //signature.insertIntoTextEdit(KIdentityManagement::Signature::End,
+        //                             addedText, m_editor);
     }
 }
 

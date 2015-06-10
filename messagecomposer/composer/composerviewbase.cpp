@@ -1650,7 +1650,7 @@ void MessageComposer::ComposerViewBase::collectImages(KMime::Content *root)
                     QImage img;
                     img.loadFromData(node->decodedContent());
                     m_editor->composerControler()->composerImages()->loadImage(img, QString::fromLatin1(QByteArray(QByteArray("cid:") + node->contentID()->identifier())),
-                                        node->contentType()->name());
+                            node->contentType()->name());
                 }
                 node = MessageCore::NodeHelper::nextSibling(node);
             }

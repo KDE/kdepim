@@ -681,7 +681,6 @@ void RichTextComposer::insertSignature(const KIdentityManagement::Signature &sig
     }
 }
 
-
 void RichTextComposer::mouseReleaseEvent(QMouseEvent *event)
 {
     if (d->composerControler->painterActive()) {
