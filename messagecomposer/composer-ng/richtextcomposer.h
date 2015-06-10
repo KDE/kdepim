@@ -34,6 +34,8 @@ class EMailQuoteHighlighter;
 
 namespace MessageComposer
 {
+class RichTextComposerSignatures;
+class RichTextComposerControler;
 class MESSAGECOMPOSER_EXPORT RichTextComposer : public PimCommon::RichTextEditor
 {
     Q_OBJECT
@@ -110,6 +112,8 @@ public:
     QList<QAction *> richTextActionList() const;
     void insertSignature(const KIdentityManagement::Signature &signature, KIdentityManagement::Signature::Placement placement, KIdentityManagement::Signature::AddedText addedText);
 
+    MessageComposer::RichTextComposerSignatures *composerSignature() const;
+    MessageComposer::RichTextComposerControler *composerControler() const;
 public Q_SLOTS:
     void insertPlainTextImplementation();
     void slotChangeInsertMode();

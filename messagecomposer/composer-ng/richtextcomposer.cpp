@@ -78,6 +78,16 @@ RichTextComposer::~RichTextComposer()
     delete d;
 }
 
+MessageComposer::RichTextComposerSignatures *RichTextComposer::composerSignature() const
+{
+    return d->richTextComposerSignatures;
+}
+
+MessageComposer::RichTextComposerControler *RichTextComposer::composerControler() const
+{
+    return d->composerControler;
+}
+
 QList<QAction *> RichTextComposer::richTextActionList() const
 {
     return d->richTextComposerActions->richTextActionList();
