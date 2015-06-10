@@ -109,6 +109,7 @@ set(messagecomposer_composerng_SRCS
      composer-ng/richtextcomposerimages.cpp
      composer-ng/richtextcomposersignatures.cpp
      composer-ng/richtextcomposeremailquotedecorator.cpp
+     composer-ng/richtextcomposeremailquotehighlighter.cpp
 )
 
 

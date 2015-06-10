@@ -511,3 +511,8 @@ void RichTextComposerActions::uncheckActionFormatPainter()
 {
     d->action_format_painter->setChecked(false);
 }
+
+void RichTextComposerActions::textModeChanged(MessageComposer::RichTextComposer::Mode mode)
+{
+    d->action_add_table->setRichTextMode(mode == MessageComposer::RichTextComposer::Rich);
+}

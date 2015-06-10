@@ -61,6 +61,7 @@ public:
     bool isFormattingUsed() const;
 
     void setFontForWholeText(const QFont &font);
+    void textModeChanged(MessageComposer::RichTextComposer::Mode mode);
 public Q_SLOTS:
     void insertHorizontalRule();
     void alignLeft();
@@ -96,8 +97,6 @@ public Q_SLOTS:
     void slotAddQuotes();
     void slotAddImage();
     void slotFormatPainter(bool active);
-private slots:
-    void slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode);
 
 private:
     class RichTextComposerControlerPrivate;

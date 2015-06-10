@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include "messagecomposer_export.h"
+#include "messagecomposer/composer-ng/richtextcomposer.h"
 class KActionCollection;
 class QTextCharFormat;
 class QAction;
@@ -40,6 +41,8 @@ public:
 
     void uncheckActionFormatPainter();
     void updateActionStates();
+    void textModeChanged(MessageComposer::RichTextComposer::Mode mode);
+
 public Q_SLOTS:
     void setActionsEnabled(bool enabled);
 

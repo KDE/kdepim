@@ -48,7 +48,6 @@ public:
           richtextComposer(composer),
           q(qq)
     {
-        q->connect(composer, SIGNAL(textModeChanged(MessageComposer::RichTextComposer::Mode)), q, SLOT(slotTextModeChanged(MessageComposer::RichTextComposer::Mode)));
         nestedListHelper = new NestedListHelper(composer);
         richTextImages = new RichTextComposerImages(richtextComposer, q);
     }
@@ -857,13 +856,6 @@ void RichTextComposerControler::slotDeleteLine()
     }
 }
 
-void RichTextComposerControler::slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode)
-{
-    if (mode == MessageComposer::RichTextComposer::Rich) {
-        d->saveFont = richTextComposer()->currentFont();
-    }
-}
-
 void RichTextComposerControler::slotPasteAsQuotation()
 {
 #ifndef QT_NO_CLIPBOARD
@@ -950,5 +942,12 @@ void RichTextComposerControler::slotFormatPainter(bool active)
         d->painterFormat = QTextCharFormat();
         d->painterActive = false;
         richTextComposer()->viewport()->setCursor(Qt::IBeamCursor);
+    }
+}
+
+void RichTextComposerControler::textModeChanged(MessageComposer::RichTextComposer::Mode mode)
+{
+    if (mode == MessageComposer::RichTextComposer::Rich) {
+        d->saveFont = richTextComposer()->currentFont();
     }
 }

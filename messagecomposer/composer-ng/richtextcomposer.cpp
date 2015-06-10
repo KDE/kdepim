@@ -19,6 +19,7 @@
 #include "richtextcomposercontroler.h"
 #include "richtextcomposeractions.h"
 #include "richtextcomposerimages.h"
+#include "richtextcomposeremailquotehighlighter.h"
 #include "nestedlisthelper_p.h"
 #include "richtextexternalcomposer.h"
 #include "richtextcomposersignatures.h"
@@ -37,6 +38,8 @@
 #include <QFileInfo>
 #include <QMimeData>
 
+#include <KPIMTextEdit/EMailQuoteHighlighter>
+
 using namespace MessageComposer;
 
 class RichTextComposer::RichTextComposerPrivate
@@ -54,6 +57,8 @@ public:
         richTextComposerSignatures = new MessageComposer::RichTextComposerSignatures(q, q);
         q->connect(externalComposer, &RichTextExternalComposer::externalEditorClosed, qq, &RichTextComposer::externalEditorClosed);
         q->connect(externalComposer, &RichTextExternalComposer::externalEditorStarted, qq, &RichTextComposer::externalEditorStarted);
+        q->connect(q, SIGNAL(textModeChanged(MessageComposer::RichTextComposer::Mode)), q, SLOT(slotTextModeChanged(MessageComposer::RichTextComposer::Mode)));
+
     }
     QString quotePrefix;
     PimCommon::AutoCorrection *autoCorrection;
@@ -108,7 +113,14 @@ void RichTextComposer::createActions(KActionCollection *ac)
     d->richTextComposerActions->createActions(ac);
 }
 
-void RichTextComposer::setHighlighterColors(KPIMTextEdit::EMailQuoteHighlighter *highlighter)
+void RichTextComposer::createHighlighter()
+{
+    MessageComposer::RichTextComposerEmailQuoteHighlighter *highlighter = new MessageComposer::RichTextComposerEmailQuoteHighlighter(this);
+    setHighlighterColors(highlighter);
+    setHighlighter(highlighter);
+}
+
+void RichTextComposer::setHighlighterColors(MessageComposer::RichTextComposerEmailQuoteHighlighter *highlighter)
 {
     Q_UNUSED(highlighter);
 }
@@ -688,4 +700,10 @@ void RichTextComposer::mouseReleaseEvent(QMouseEvent *event)
         d->richTextComposerActions->uncheckActionFormatPainter();
     }
     PimCommon::RichTextEditor::mouseReleaseEvent(event);
+}
+
+void RichTextComposer::slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode)
+{
+    d->composerControler->textModeChanged(mode);
+    d->richTextComposerActions->textModeChanged(mode);
 }

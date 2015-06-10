@@ -38,6 +38,7 @@ class RichTextComposerSignatures;
 class RichTextComposerControler;
 class RichTextComposerActions;
 class RichTextExternalComposer;
+class RichTextComposerEmailQuoteHighlighter;
 class MESSAGECOMPOSER_EXPORT RichTextComposer : public PimCommon::RichTextEditor
 {
     Q_OBJECT
@@ -92,7 +93,7 @@ public:
     void setTextOrHtml(const QString &text);
     QString textOrHtml() const;
 
-    virtual void setHighlighterColors(KPIMTextEdit::EMailQuoteHighlighter *highlighter);
+    virtual void setHighlighterColors(MessageComposer::RichTextComposerEmailQuoteHighlighter *highlighter);
 
     void setUseExternalEditor(bool use);
     void setExternalEditorPath(const QString &path);
@@ -118,6 +119,7 @@ public:
     MessageComposer::RichTextComposerControler *composerControler() const;
     MessageComposer::RichTextExternalComposer *externalComposer() const;
     MessageComposer::RichTextComposerActions *composerActions() const;
+    void createHighlighter() Q_DECL_OVERRIDE;
 public Q_SLOTS:
     void insertPlainTextImplementation();
     void slotChangeInsertMode();
@@ -145,6 +147,9 @@ protected:
     void insertFromMimeData(const QMimeData *source) Q_DECL_OVERRIDE;
     bool canInsertFromMimeData(const QMimeData *source) const Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+private Q_SLOTS:
+    void slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode);
+
 private:
     void evaluateReturnKeySupport(QKeyEvent *event);
     void evaluateListSupport(QKeyEvent *event);
