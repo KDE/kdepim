@@ -79,6 +79,7 @@ public:
     void setShowAutoCorrectButton(bool b);
     bool showAutoCorrectButton() const;
 
+    void forceSpellChecking();
 Q_SIGNALS:
     void say(const QString &text);
 
@@ -114,6 +115,8 @@ Q_SIGNALS:
     void checkSpellingChanged(bool);
     void languageChanged(const QString &);
     void spellCheckStatus(const QString &);
+    void spellCheckingFinished();
+    void spellCheckingCanceled();
 
 private:
     bool handleShortcut(const QKeyEvent *event);
@@ -123,6 +126,7 @@ private:
     void defaultPopupMenu(const QPoint &pos);
     void setHighlighter(Sonnet::Highlighter *_highLighter);
     void highlightWord(int length, int pos);
+    void checkSpelling(bool force);
     class RichTextEditorPrivate;
     RichTextEditorPrivate *const d;
 };

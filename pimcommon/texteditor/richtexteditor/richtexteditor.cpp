@@ -363,17 +363,20 @@ void RichTextEditor::setReadOnly(bool readOnly)
     QTextEdit::setReadOnly(readOnly);
 }
 
-void RichTextEditor::slotCheckSpelling()
+void RichTextEditor::checkSpelling(bool force)
 {
     if (document()->isEmpty()) {
         KMessageBox::information(this, i18n("Nothing to spell check."));
+        if (force) {
+            emit spellCheckingFinished();
+        }
         return;
     }
     Sonnet::BackgroundChecker *backgroundSpellCheck = new Sonnet::BackgroundChecker;
     if (!d->spellCheckingLanguage.isEmpty()) {
         backgroundSpellCheck->changeLanguage(d->spellCheckingLanguage);
     }
-    Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, Q_NULLPTR);
+    Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, force ? this : Q_NULLPTR);
     backgroundSpellCheck->setParent(spellDialog);
     spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
     spellDialog->activeAutoCorrect(d->showAutoCorrectionButton);
@@ -384,9 +387,25 @@ void RichTextEditor::slotCheckSpelling()
     connect(spellDialog, &Sonnet::Dialog::cancel, this, &RichTextEditor::slotSpellCheckerCanceled);
     connect(spellDialog, &Sonnet::Dialog::spellCheckStatus, this, &RichTextEditor::spellCheckStatus);
     connect(spellDialog, &Sonnet::Dialog::languageChanged, this, &RichTextEditor::languageChanged);
+    if (force) {
+        connect(spellDialog, SIGNAL(done(QString)), this, SIGNAL(spellCheckingFinished()));
+        //connect(spellDialog, &Sonnet::Dialog::done, this, &RichTextEditor::spellCheckingFinished);
+        connect(spellDialog, &Sonnet::Dialog::cancel, this, &RichTextEditor::spellCheckingCanceled);
+    }
     d->originalDoc = QTextDocumentFragment(document());
     spellDialog->setBuffer(toPlainText());
     spellDialog->show();
+
+}
+
+void RichTextEditor::slotCheckSpelling()
+{
+    checkSpelling(false);
+}
+
+void RichTextEditor::forceSpellChecking()
+{
+    checkSpelling(true);
 }
 
 void RichTextEditor::slotSpellCheckerCanceled()
