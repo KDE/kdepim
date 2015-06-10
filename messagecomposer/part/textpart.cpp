@@ -19,7 +19,6 @@
 
 #include "textpart.h"
 
-using namespace KPIMTextEdit;
 using namespace MessageComposer;
 
 class TextPart::Private
@@ -116,7 +115,7 @@ ImageList TextPart::embeddedImages() const
     return d->embeddedImages;
 }
 
-void TextPart::setEmbeddedImages(const ImageList &images)
+void TextPart::setEmbeddedImages(const MessageComposer::ImageList &images)
 {
     d->embeddedImages = images;
 }

@@ -90,6 +90,26 @@ public:
     QList<QTextImageFormat> embeddedImageFormats() const;
     void addImageHelper(const QUrl &url, int width = -1, int height = -1);
     void insertImage(const QImage &image, const QFileInfo &fileInfo);
+
+    /**
+     * For all given embedded images, this function replace the image name
+     * in the <img> tag of the HTML body with cid:content-id, so that the
+     * HTML references the image body parts, see RFC 2557.
+     *
+     * This is useful when building a MIME message with inline images.
+     *
+     * Note that this function works on encoded content already.
+     *
+     * @param htmlBody the HTML code in which the <img> tag will be modified.
+     *                 The HTML code here could come from toHtml(), for example.
+     *
+     * @param imageList the list of images of which the <img> tag will be modified.
+     *                  You can get such a list from the embeddedImages() function.
+     *
+     * @return a modified HTML code, where the <img> tags got replaced
+     */
+    static QByteArray imageNamesToContentIds(const QByteArray &htmlBody, const ImageList &imageList);
+
 private:
     class RichTextComposerImagesPrivate;
     RichTextComposerImagesPrivate *const d;

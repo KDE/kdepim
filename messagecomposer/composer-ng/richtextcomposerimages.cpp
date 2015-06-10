@@ -235,3 +235,18 @@ void RichTextComposerImages::insertImage(const QImage &image, const QFileInfo &f
                         fileInfo.baseName();
     addImageHelper(imageName, image);
 }
+
+QByteArray RichTextComposerImages::imageNamesToContentIds(
+    const QByteArray &htmlBody, const MessageComposer::ImageList &imageList)
+{
+    QByteArray result = htmlBody;
+    if (!imageList.isEmpty()) {
+        foreach (const QSharedPointer<EmbeddedImage> &image, imageList) {
+            const QString newImageName = QLatin1String("cid:") + image->contentID;
+            QByteArray quote("\"");
+            result.replace(QByteArray(quote + image->imageName.toLocal8Bit() + quote),
+                           QByteArray(quote + newImageName.toLocal8Bit() + quote));
+        }
+    }
+    return result;
+}

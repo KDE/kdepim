@@ -25,6 +25,7 @@
 #include "messagecomposer_export.h"
 #include "messagepart.h"
 
+#include "composer-ng/richtextcomposerimages.h"
 #include <kpimtextedit/textedit.h>
 
 namespace MessageComposer
@@ -55,8 +56,8 @@ public:
     void setCleanHtml(const QString &text);
 
     bool hasEmbeddedImages() const;
-    KPIMTextEdit::ImageList embeddedImages() const;
-    void setEmbeddedImages(const KPIMTextEdit::ImageList &images);
+    MessageComposer::ImageList embeddedImages() const;
+    void setEmbeddedImages(const MessageComposer::ImageList &images);
 
 private:
     class Private;

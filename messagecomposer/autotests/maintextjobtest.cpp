@@ -32,9 +32,10 @@ using namespace KMime;
 #include <messagecomposer/part/globalpart.h>
 #include <messagecomposer/job/maintextjob.h>
 #include <messagecomposer/part/textpart.h>
+#include <messagecomposer/composer-ng/richtextcomposer.h>
+#include <messagecomposer/composer-ng/richtextcomposerimages.h>
+#include <messagecomposer/composer-ng/richtextcomposercontroler.h>
 using namespace MessageComposer;
-
-#include <kpimtextedit/textedit.h>
 
 QTEST_MAIN(MainTextJobTest)
 
@@ -205,6 +206,9 @@ void MainTextJobTest::testHtml()
 
 void MainTextJobTest::testHtmlWithImages()
 {
+    MessageComposer::RichTextComposer richTextcomposer;
+    MessageComposer::RichTextComposerControler controler(&richTextcomposer);
+
     KPIMTextEdit::TextEdit editor;
     QString image1 = KIconLoader::global()->iconPath(QLatin1String("folder-new"), KIconLoader::Small, false);
     QString image2 = KIconLoader::global()->iconPath(QLatin1String("message"), KIconLoader::Small, false);
@@ -212,7 +216,7 @@ void MainTextJobTest::testHtmlWithImages()
     editor.setTextOrHtml(data);
     editor.addImage(image1);
     editor.addImage(image2);
-    KPIMTextEdit::ImageList images = editor.embeddedImages();
+    MessageComposer::ImageList images = controler.composerImages()->embeddedImages();
     QCOMPARE(images.count(), 2);
     QString cid1 = images[0]->contentID;
     QString cid2 = images[1]->contentID;
@@ -226,7 +230,7 @@ void MainTextJobTest::testHtmlWithImages()
     textPart->setWordWrappingEnabled(false);
     textPart->setCleanPlainText(editor.toCleanPlainText());
     textPart->setCleanHtml(editor.toCleanHtml());
-    textPart->setEmbeddedImages(editor.embeddedImages());
+    textPart->setEmbeddedImages(controler.composerImages()->embeddedImages());
     MainTextJob *mjob = new MainTextJob(textPart, composer);
     QVERIFY(mjob->exec());
     Content *result = mjob->content();

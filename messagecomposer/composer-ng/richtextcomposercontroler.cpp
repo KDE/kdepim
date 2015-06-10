@@ -691,7 +691,7 @@ void RichTextComposerControler::fillComposerTextPart(MessageComposer::TextPart *
         QString cleanHtml = toCleanHtml();
         d->fixHtmlFontSize(cleanHtml);
         textPart->setCleanHtml(cleanHtml);
-        //FIXME WHEN MERGE textPart->setEmbeddedImages(d->richTextImages->embeddedImages());
+        textPart->setEmbeddedImages(d->richTextImages->embeddedImages());
     }
 }
 
