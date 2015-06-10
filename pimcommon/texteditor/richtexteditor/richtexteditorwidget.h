@@ -53,6 +53,8 @@ public:
     void setAcceptRichText(bool b);
     bool acceptRichText() const;
 
+public Q_SLOTS:
+    void slotFindNext();
 private Q_SLOTS:
     void slotFind();
     void slotReplace();

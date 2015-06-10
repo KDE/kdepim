@@ -141,6 +141,16 @@ void RichTextEditorWidget::slotReplace()
     }
 }
 
+
+void RichTextEditorWidget::slotFindNext()
+{
+    if (mEditor->searchSupport()) {
+        if (mFindBar->isVisible()) {
+            mFindBar->findNext();
+        }
+    }
+}
+
 void RichTextEditorWidget::slotFind()
 {
     if (mEditor->searchSupport()) {
