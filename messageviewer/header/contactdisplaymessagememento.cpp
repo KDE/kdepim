@@ -66,7 +66,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
         searchPhoto(searchJob->contacts());
         emit update(Viewer::Delayed);
     }
-    if (!PimCommon::NetworkUtil::self()->lowBandwidh()) {
+    if (!PimCommon::NetworkUtil::self()->lowBandwidth()) {
         if (mPhoto.isEmpty() && mPhoto.url().isEmpty()) {
             // No url, no photo => search gravatar
             if (GlobalSettings::self()->gravatarSupportEnabled()) {
