@@ -36,6 +36,7 @@ namespace MessageComposer
 {
 class RichTextComposerSignatures;
 class RichTextComposerControler;
+class RichTextExternalComposer;
 class MESSAGECOMPOSER_EXPORT RichTextComposer : public PimCommon::RichTextEditor
 {
     Q_OBJECT
@@ -114,6 +115,7 @@ public:
 
     MessageComposer::RichTextComposerSignatures *composerSignature() const;
     MessageComposer::RichTextComposerControler *composerControler() const;
+    MessageComposer::RichTextExternalComposer *externalComposer() const;
 public Q_SLOTS:
     void insertPlainTextImplementation();
     void slotChangeInsertMode();

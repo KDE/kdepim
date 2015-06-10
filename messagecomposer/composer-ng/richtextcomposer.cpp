@@ -78,6 +78,11 @@ RichTextComposer::~RichTextComposer()
     delete d;
 }
 
+MessageComposer::RichTextExternalComposer *RichTextComposer::externalComposer() const
+{
+    return d->externalComposer;
+}
+
 MessageComposer::RichTextComposerSignatures *RichTextComposer::composerSignature() const
 {
     return d->richTextComposerSignatures;

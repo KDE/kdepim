@@ -58,6 +58,8 @@ public:
     RichTextComposerImages *composerImages() const;
     bool painterActive() const;
     void disablePainter();
+    bool isFormattingUsed() const;
+
 public Q_SLOTS:
     void insertHorizontalRule();
     void alignLeft();
@@ -97,7 +99,6 @@ private slots:
     void slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode);
 
 private:
-    bool isFormattingUsed() const;
     QString toCleanPlainText(const QString &plainText = QString()) const;
     void fixHtmlFontSize(QString &cleanHtml);
     void updateLink(const QString &linkUrl, const QString &linkText);
