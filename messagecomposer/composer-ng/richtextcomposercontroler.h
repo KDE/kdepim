@@ -100,9 +100,6 @@ private slots:
     void slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode);
 
 private:
-    QString toCleanPlainText(const QString &plainText = QString()) const;
-    void fixHtmlFontSize(QString &cleanHtml);
-    void updateLink(const QString &linkUrl, const QString &linkText);
     class RichTextComposerControlerPrivate;
     RichTextComposerControlerPrivate *const d;
 };

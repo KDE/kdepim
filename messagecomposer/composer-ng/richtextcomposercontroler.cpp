@@ -61,6 +61,9 @@ public:
     QString toWrappedPlainText() const;
     QString toWrappedPlainText(QTextDocument *doc) const;
     QString addQuotesToText(const QString &inputText);
+    QString toCleanPlainText(const QString &plainText = QString()) const;
+    void fixHtmlFontSize(QString &cleanHtml);
+    void updateLink(const QString &linkUrl, const QString &linkText);
     QFont saveFont;
     QTextCharFormat painterFormat;
     bool painterActive;
@@ -108,18 +111,18 @@ void RichTextComposerControler::setFontForWholeText(const QFont &font)
 {
     QTextCharFormat fmt;
     fmt.setFont(font);
-    QTextCursor cursor(d->richtextComposer->document());
+    QTextCursor cursor(richTextComposer()->document());
     cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
     cursor.mergeCharFormat(fmt);
-    d->richtextComposer->document()->setDefaultFont(font);
+    richTextComposer()->document()->setDefaultFont(font);
 }
 
 void RichTextComposerControler::disablePainter()
 {
     // If the painter is active, paint the selection with the
     // correct format.
-    if (d->richtextComposer->textCursor().hasSelection()) {
-        d->richtextComposer->textCursor().setCharFormat(d->painterFormat);
+    if (richTextComposer()->textCursor().hasSelection()) {
+        richTextComposer()->textCursor().setCharFormat(d->painterFormat);
     }
     d->painterActive = false;
 }
@@ -141,66 +144,66 @@ RichTextComposer *RichTextComposerControler::richTextComposer() const
 
 void RichTextComposerControler::insertHorizontalRule()
 {
-    QTextCursor cursor = d->richtextComposer->textCursor();
+    QTextCursor cursor = richTextComposer()->textCursor();
     QTextBlockFormat bf = cursor.blockFormat();
     QTextCharFormat cf = cursor.charFormat();
 
     cursor.beginEditBlock();
     cursor.insertHtml(QStringLiteral("<hr>"));
     cursor.insertBlock(bf, cf);
-    d->richtextComposer->setTextCursor(cursor);
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setTextCursor(cursor);
+    richTextComposer()->activateRichText();
     cursor.endEditBlock();
 }
 
 void RichTextComposerControler::alignLeft()
 {
-    d->richtextComposer->setAlignment(Qt::AlignLeft);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setAlignment(Qt::AlignLeft);
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::alignCenter()
 {
-    d->richtextComposer->setAlignment(Qt::AlignHCenter);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setAlignment(Qt::AlignHCenter);
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::alignRight()
 {
-    d->richtextComposer->setAlignment(Qt::AlignRight);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setAlignment(Qt::AlignRight);
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::alignJustify()
 {
-    d->richtextComposer->setAlignment(Qt::AlignJustify);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setAlignment(Qt::AlignJustify);
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::makeRightToLeft()
 {
     QTextBlockFormat format;
     format.setLayoutDirection(Qt::RightToLeft);
-    QTextCursor cursor = d->richtextComposer->textCursor();
+    QTextCursor cursor = richTextComposer()->textCursor();
     cursor.mergeBlockFormat(format);
-    d->richtextComposer->setTextCursor(cursor);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setTextCursor(cursor);
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::makeLeftToRight()
 {
     QTextBlockFormat format;
     format.setLayoutDirection(Qt::LeftToRight);
-    QTextCursor cursor = d->richtextComposer->textCursor();
+    QTextCursor cursor = richTextComposer()->textCursor();
     cursor.mergeBlockFormat(format);
-    d->richtextComposer->setTextCursor(cursor);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setTextCursor(cursor);
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setTextBold(bool bold)
@@ -208,8 +211,8 @@ void RichTextComposerControler::setTextBold(bool bold)
     QTextCharFormat fmt;
     fmt.setFontWeight(bold ? QFont::Bold : QFont::Normal);
     d->mergeFormatOnWordOrSelection(fmt);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setTextItalic(bool italic)
@@ -217,8 +220,8 @@ void RichTextComposerControler::setTextItalic(bool italic)
     QTextCharFormat fmt;
     fmt.setFontItalic(italic);
     d->mergeFormatOnWordOrSelection(fmt);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setTextUnderline(bool underline)
@@ -226,8 +229,8 @@ void RichTextComposerControler::setTextUnderline(bool underline)
     QTextCharFormat fmt;
     fmt.setFontUnderline(underline);
     d->mergeFormatOnWordOrSelection(fmt);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setTextStrikeOut(bool strikeOut)
@@ -235,8 +238,8 @@ void RichTextComposerControler::setTextStrikeOut(bool strikeOut)
     QTextCharFormat fmt;
     fmt.setFontStrikeOut(strikeOut);
     d->mergeFormatOnWordOrSelection(fmt);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setTextForegroundColor(const QColor &color)
@@ -244,8 +247,8 @@ void RichTextComposerControler::setTextForegroundColor(const QColor &color)
     QTextCharFormat fmt;
     fmt.setForeground(color);
     d->mergeFormatOnWordOrSelection(fmt);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setTextBackgroundColor(const QColor &color)
@@ -253,8 +256,8 @@ void RichTextComposerControler::setTextBackgroundColor(const QColor &color)
     QTextCharFormat fmt;
     fmt.setBackground(color);
     d->mergeFormatOnWordOrSelection(fmt);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setFontFamily(const QString &fontFamily)
@@ -262,8 +265,8 @@ void RichTextComposerControler::setFontFamily(const QString &fontFamily)
     QTextCharFormat fmt;
     fmt.setFontFamily(fontFamily);
     d->mergeFormatOnWordOrSelection(fmt);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setFontSize(int size)
@@ -271,8 +274,8 @@ void RichTextComposerControler::setFontSize(int size)
     QTextCharFormat fmt;
     fmt.setFontPointSize(size);
     d->mergeFormatOnWordOrSelection(fmt);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setFont(const QFont &font)
@@ -280,8 +283,8 @@ void RichTextComposerControler::setFont(const QFont &font)
     QTextCharFormat fmt;
     fmt.setFont(font);
     d->mergeFormatOnWordOrSelection(fmt);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setTextSuperScript(bool superscript)
@@ -289,8 +292,8 @@ void RichTextComposerControler::setTextSuperScript(bool superscript)
     QTextCharFormat fmt;
     fmt.setVerticalAlignment(superscript ? QTextCharFormat::AlignSuperScript : QTextCharFormat::AlignNormal);
     d->mergeFormatOnWordOrSelection(fmt);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setTextSubScript(bool subscript)
@@ -298,16 +301,16 @@ void RichTextComposerControler::setTextSubScript(bool subscript)
     QTextCharFormat fmt;
     fmt.setVerticalAlignment(subscript ? QTextCharFormat::AlignSubScript : QTextCharFormat::AlignNormal);
     d->mergeFormatOnWordOrSelection(fmt);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::setChangeTextForegroundColor()
 {
-    const QColor currentColor = d->richtextComposer->textColor();
+    const QColor currentColor = richTextComposer()->textColor();
     const QColor defaultColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground().color();
 
-    const QColor selectedColor = QColorDialog::getColor(currentColor.isValid() ? currentColor : defaultColor, d->richtextComposer);
+    const QColor selectedColor = QColorDialog::getColor(currentColor.isValid() ? currentColor : defaultColor, richTextComposer());
 
     if (!selectedColor.isValid() && !currentColor.isValid()) {
         setTextForegroundColor(defaultColor);
@@ -318,11 +321,11 @@ void RichTextComposerControler::setChangeTextForegroundColor()
 
 void RichTextComposerControler::setChangeTextBackgroundColor()
 {
-    QTextCharFormat fmt = d->richtextComposer->textCursor().charFormat();
+    QTextCharFormat fmt = richTextComposer()->textCursor().charFormat();
     const QColor currentColor = fmt.background().color();
     const QColor defaultColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground().color();
 
-    const QColor selectedColor = QColorDialog::getColor(currentColor.isValid() ? currentColor : defaultColor, d->richtextComposer);
+    const QColor selectedColor = QColorDialog::getColor(currentColor.isValid() ? currentColor : defaultColor, richTextComposer());
 
     if (!selectedColor.isValid() && !currentColor.isValid()) {
         setTextBackgroundColor(defaultColor);
@@ -333,21 +336,21 @@ void RichTextComposerControler::setChangeTextBackgroundColor()
 
 QString RichTextComposerControler::currentLinkUrl() const
 {
-    return d->richtextComposer->textCursor().charFormat().anchorHref();
+    return richTextComposer()->textCursor().charFormat().anchorHref();
 }
 
 QString RichTextComposerControler::currentLinkText() const
 {
-    QTextCursor cursor = d->richtextComposer->textCursor();
+    QTextCursor cursor = richTextComposer()->textCursor();
     selectLinkText(&cursor);
     return cursor.selectedText();
 }
 
 void RichTextComposerControler::selectLinkText() const
 {
-    QTextCursor cursor = d->richtextComposer->textCursor();
+    QTextCursor cursor = richTextComposer()->textCursor();
     selectLinkText(&cursor);
-    d->richtextComposer->setTextCursor(cursor);
+    richTextComposer()->setTextCursor(cursor);
 }
 
 void RichTextComposerControler::selectLinkText(QTextCursor *cursor) const
@@ -390,23 +393,23 @@ void RichTextComposerControler::selectLinkText(QTextCursor *cursor) const
 void RichTextComposerControler::manageLink()
 {
     selectLinkText();
-    KLinkDialog *linkDialog = new KLinkDialog(d->richtextComposer);
+    KLinkDialog *linkDialog = new KLinkDialog(richTextComposer());
     linkDialog->setLinkText(currentLinkText());
     linkDialog->setLinkUrl(currentLinkUrl());
 
     if (linkDialog->exec()) {
-        updateLink(linkDialog->linkUrl(), linkDialog->linkText());
+        d->updateLink(linkDialog->linkUrl(), linkDialog->linkText());
     }
 
     delete linkDialog;
 
 }
 
-void RichTextComposerControler::updateLink(const QString &linkUrl, const QString &linkText)
+void RichTextComposerControler::RichTextComposerControlerPrivate::updateLink(const QString &linkUrl, const QString &linkText)
 {
-    selectLinkText();
+    q->selectLinkText();
 
-    QTextCursor cursor = d->richtextComposer->textCursor();
+    QTextCursor cursor = richtextComposer->textCursor();
     cursor.beginEditBlock();
 
     if (!cursor.hasSelection()) {
@@ -427,7 +430,7 @@ void RichTextComposerControler::updateLink(const QString &linkUrl, const QString
         format.setUnderlineStyle(QTextCharFormat::SingleUnderline);
         format.setUnderlineColor(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
         format.setForeground(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
-        d->richtextComposer->activateRichText();
+        richtextComposer->activateRichText();
     } else {
         // Remove link details
         format.setAnchor(false);
@@ -465,7 +468,7 @@ void RichTextComposerControler::updateLink(const QString &linkUrl, const QString
 
 QString RichTextComposerControler::toCleanHtml() const
 {
-    QString result = d->richtextComposer->toHtml();
+    QString result = richTextComposer()->toHtml();
 
     static const QString EMPTYLINEHTML = QLatin1String(
             "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
@@ -531,7 +534,7 @@ bool RichTextComposerControler::canDedentList() const
 void RichTextComposerControler::indentListMore()
 {
     d->nestedListHelper->handleOnIndentMore();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::indentListLess()
@@ -542,8 +545,8 @@ void RichTextComposerControler::indentListLess()
 void RichTextComposerControler::setListStyle(int _styleIndex)
 {
     d->nestedListHelper->handleOnBulletType(-_styleIndex);
-    d->richtextComposer->setFocus();
-    d->richtextComposer->activateRichText();
+    richTextComposer()->setFocus();
+    richTextComposer()->activateRichText();
 }
 
 void RichTextComposerControler::insertLink(const QString &url)
@@ -551,8 +554,8 @@ void RichTextComposerControler::insertLink(const QString &url)
     if (url.isEmpty()) {
         return;
     }
-    if (d->richtextComposer->textMode() == RichTextComposer::Rich) {
-        QTextCursor cursor = d->richtextComposer->textCursor();
+    if (richTextComposer()->textMode() == RichTextComposer::Rich) {
+        QTextCursor cursor = richTextComposer()->textCursor();
         cursor.beginEditBlock();
 
         QTextCharFormat format = cursor.charFormat();
@@ -576,7 +579,7 @@ void RichTextComposerControler::insertLink(const QString &url)
         cursor.insertText(QLatin1String(" \n"));
         cursor.endEditBlock();
     } else {
-        d->richtextComposer->textCursor().insertText(url + QLatin1Char('\n'));
+        richTextComposer()->textCursor().insertText(url + QLatin1Char('\n'));
     }
 }
 
@@ -586,8 +589,8 @@ void RichTextComposerControler::insertShareLink(const QString &url)
         return;
     }
     const QString msg = i18n("I've linked 1 file to this email:");
-    if (d->richtextComposer->textMode() == RichTextComposer::Rich) {
-        QTextCursor cursor = d->richtextComposer->textCursor();
+    if (richTextComposer()->textMode() == RichTextComposer::Rich) {
+        QTextCursor cursor = richTextComposer()->textCursor();
 
         cursor.beginEditBlock();
         cursor.insertText(QLatin1Char('\n') + msg + QLatin1Char('\n'));
@@ -613,17 +616,17 @@ void RichTextComposerControler::insertShareLink(const QString &url)
         cursor.insertText(QLatin1String(" \n"));
         cursor.endEditBlock();
     } else {
-        d->richtextComposer->textCursor().insertText(QLatin1Char('\n') + msg + QLatin1Char('\n') + url + QLatin1Char('\n'));
+        richTextComposer()->textCursor().insertText(QLatin1Char('\n') + msg + QLatin1Char('\n') + url + QLatin1Char('\n'));
     }
 }
 
 void RichTextComposerControler::setCursorPositionFromStart(unsigned int pos)
 {
     if (pos > 0) {
-        QTextCursor cursor = d->richtextComposer->textCursor();
+        QTextCursor cursor = richTextComposer()->textCursor();
         //Fix html pos cursor
         cursor.setPosition(qMin(pos, (unsigned int)cursor.document()->characterCount() - 1));
-        d->richtextComposer->setTextCursor(cursor);
+        richTextComposer()->setTextCursor(cursor);
         ensureCursorVisible();
     }
 }
@@ -639,7 +642,7 @@ void RichTextComposerControler::ensureCursorVisible()
     //
     //       Delay the actual call to ensureCursorVisible() a bit to work around
     //       the problem.
-    QTimer::singleShot(500, d->richtextComposer, SLOT(ensureCursorVisibleDelayed()));
+    QTimer::singleShot(500, richTextComposer(), SLOT(ensureCursorVisibleDelayed()));
 }
 
 
@@ -656,10 +659,10 @@ void RichTextComposerControler::RichTextComposerControlerPrivate::fixupTextEditS
     text.replace(QChar::Nbsp, QChar::fromLatin1(' '));
 }
 
-QString RichTextComposerControler::toCleanPlainText(const QString &plainText) const
+QString RichTextComposerControler::RichTextComposerControlerPrivate::toCleanPlainText(const QString &plainText) const
 {
-    QString temp = plainText.isEmpty() ? d->richtextComposer->toPlainText() : plainText;
-    d->fixupTextEditString(temp);
+    QString temp = plainText.isEmpty() ? richtextComposer->toPlainText() : plainText;
+    fixupTextEditString(temp);
     return temp;
 }
 
@@ -669,9 +672,9 @@ void RichTextComposerControler::fillComposerTextPart(MessageComposer::TextPart *
         Grantlee::PlainTextMarkupBuilder *pb = new Grantlee::PlainTextMarkupBuilder();
 
         Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector(pb);
-        pmd->processDocument(d->richtextComposer->document());
+        pmd->processDocument(richTextComposer()->document());
         const QString plainText = pb->getResult();
-        textPart->setCleanPlainText(toCleanPlainText(plainText));
+        textPart->setCleanPlainText(d->toCleanPlainText(plainText));
         QTextDocument *doc = new QTextDocument(plainText);
         doc->adjustSize();
 
@@ -680,19 +683,19 @@ void RichTextComposerControler::fillComposerTextPart(MessageComposer::TextPart *
         delete pmd;
         delete pb;
     } else {
-        textPart->setCleanPlainText(toCleanPlainText());
+        textPart->setCleanPlainText(d->toCleanPlainText());
         textPart->setWrappedPlainText(d->toWrappedPlainText());
     }
-    textPart->setWordWrappingEnabled(d->richtextComposer->lineWrapMode() == QTextEdit::FixedColumnWidth);
+    textPart->setWordWrappingEnabled(richTextComposer()->lineWrapMode() == QTextEdit::FixedColumnWidth);
     if (isFormattingUsed()) {
         QString cleanHtml = toCleanHtml();
-        fixHtmlFontSize(cleanHtml);
+        d->fixHtmlFontSize(cleanHtml);
         textPart->setCleanHtml(cleanHtml);
         //FIXME WHEN MERGE textPart->setEmbeddedImages(d->richTextImages->embeddedImages());
     }
 }
 
-void RichTextComposerControler::fixHtmlFontSize(QString &cleanHtml)
+void RichTextComposerControler::RichTextComposerControlerPrivate::fixHtmlFontSize(QString &cleanHtml)
 {
     static const QString FONTSTYLEREGEX = QStringLiteral("<span style=\".*font-size:(.*)pt;.*</span>");
     QRegExp styleRegex(FONTSTYLEREGEX);
@@ -759,27 +762,27 @@ QString RichTextComposerControler::RichTextComposerControlerPrivate::toWrappedPl
 
 bool RichTextComposerControler::isFormattingUsed() const
 {
-    if (d->richtextComposer->textMode() == RichTextComposer::Plain) {
+    if (richTextComposer()->textMode() == RichTextComposer::Plain) {
         return false;
     }
 
-    return KPIMTextEdit::TextUtils::containsFormatting(d->richtextComposer->document());
+    return KPIMTextEdit::TextUtils::containsFormatting(richTextComposer()->document());
 }
 
 void RichTextComposerControler::slotAddEmoticon(const QString &text)
 {
-    QTextCursor cursor = d->richtextComposer->textCursor();
+    QTextCursor cursor = richTextComposer()->textCursor();
     cursor.insertText(text);
 }
 
 void RichTextComposerControler::slotInsertHtml()
 {
-    if (d->richtextComposer->textMode() == RichTextComposer::Rich) {
-        QPointer<KPIMTextEdit::InsertHtmlDialog> dialog = new KPIMTextEdit::InsertHtmlDialog(d->richtextComposer);
+    if (richTextComposer()->textMode() == RichTextComposer::Rich) {
+        QPointer<KPIMTextEdit::InsertHtmlDialog> dialog = new KPIMTextEdit::InsertHtmlDialog(richTextComposer());
         if (dialog->exec()) {
             const QString str = dialog->html();
             if (!str.isEmpty()) {
-                QTextCursor cursor = d->richtextComposer->textCursor();
+                QTextCursor cursor = richTextComposer()->textCursor();
                 cursor.insertHtml(str);
             }
         }
@@ -789,7 +792,7 @@ void RichTextComposerControler::slotInsertHtml()
 
 void RichTextComposerControler::slotAddImage()
 {
-    QPointer<KPIMTextEdit::InsertImageDialog> dlg = new KPIMTextEdit::InsertImageDialog(d->richtextComposer);
+    QPointer<KPIMTextEdit::InsertImageDialog> dlg = new KPIMTextEdit::InsertImageDialog(richTextComposer());
     if (dlg->exec() == QDialog::Accepted && dlg) {
         const QUrl url = dlg->imageUrl();
         int imageWidth = -1;
@@ -806,15 +809,15 @@ void RichTextComposerControler::slotAddImage()
 
 void RichTextComposerControler::slotFormatReset()
 {
-    setTextBackgroundColor(d->richtextComposer->palette().highlightedText().color());
-    setTextForegroundColor(d->richtextComposer->palette().text().color());
-    d->richtextComposer->setFont(d->saveFont);
+    setTextBackgroundColor(richTextComposer()->palette().highlightedText().color());
+    setTextForegroundColor(richTextComposer()->palette().text().color());
+    richTextComposer()->setFont(d->saveFont);
 }
 
 void RichTextComposerControler::slotDeleteLine()
 {
-    if (d->richtextComposer->hasFocus()) {
-        QTextCursor cursor = d->richtextComposer->textCursor();
+    if (richTextComposer()->hasFocus()) {
+        QTextCursor cursor = richTextComposer()->textCursor();
         QTextBlock block = cursor.block();
         const QTextLayout *layout = block.layout();
 
@@ -840,7 +843,7 @@ void RichTextComposerControler::slotDeleteLine()
 
                 // When deleting the last line in the document,
                 // remove the newline of the line before the last line instead
-                if (deleteStart + deleteLength >= d->richtextComposer->document()->characterCount() &&
+                if (deleteStart + deleteLength >= richTextComposer()->document()->characterCount() &&
                         deleteStart > 0) {
                     deleteStart--;
                 }
@@ -859,17 +862,17 @@ void RichTextComposerControler::slotDeleteLine()
 void RichTextComposerControler::slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode)
 {
     if (mode == MessageComposer::RichTextComposer::Rich) {
-        d->saveFont = d->richtextComposer->currentFont();
+        d->saveFont = richTextComposer()->currentFont();
     }
 }
 
 void RichTextComposerControler::slotPasteAsQuotation()
 {
 #ifndef QT_NO_CLIPBOARD
-    if (d->richtextComposer->hasFocus()) {
+    if (richTextComposer()->hasFocus()) {
         const QString s = QApplication::clipboard()->text();
         if (!s.isEmpty()) {
-            d->richtextComposer->insertPlainText(d->addQuotesToText(s));
+            richTextComposer()->insertPlainText(d->addQuotesToText(s));
         }
     }
 #endif
@@ -878,10 +881,10 @@ void RichTextComposerControler::slotPasteAsQuotation()
 void RichTextComposerControler::slotPasteWithoutFormatting()
 {
 #ifndef QT_NO_CLIPBOARD
-    if (d->richtextComposer->hasFocus()) {
+    if (richTextComposer()->hasFocus()) {
         const QString s = QApplication::clipboard()->text();
         if (!s.isEmpty()) {
-            d->richtextComposer->insertPlainText(s);
+            richTextComposer()->insertPlainText(s);
         }
     }
 #endif
@@ -889,18 +892,18 @@ void RichTextComposerControler::slotPasteWithoutFormatting()
 
 void RichTextComposerControler::slotRemoveQuotes()
 {
-    QTextCursor cursor = d->richtextComposer->textCursor();
+    QTextCursor cursor = richTextComposer()->textCursor();
     cursor.beginEditBlock();
     if (!cursor.hasSelection()) {
         cursor.select(QTextCursor::Document);
     }
 
-    QTextBlock block = d->richtextComposer->document()->findBlock(cursor.selectionStart());
+    QTextBlock block = richTextComposer()->document()->findBlock(cursor.selectionStart());
     int selectionEnd = cursor.selectionEnd();
     while (block.isValid() && block.position() <= selectionEnd) {
         cursor.setPosition(block.position());
-        if (d->richtextComposer->isLineQuoted(block.text())) {
-            int length = d->richtextComposer->quoteLength(block.text());
+        if (richTextComposer()->isLineQuoted(block.text())) {
+            int length = richTextComposer()->quoteLength(block.text());
             cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, length);
             cursor.removeSelectedText();
             selectionEnd -= length;
@@ -913,7 +916,7 @@ void RichTextComposerControler::slotRemoveQuotes()
 
 void RichTextComposerControler::slotAddQuotes()
 {
-    QTextCursor cursor = d->richtextComposer->textCursor();
+    QTextCursor cursor = richTextComposer()->textCursor();
     cursor.beginEditBlock();
     QString selectedText;
     if (!cursor.hasSelection()) {
@@ -923,7 +926,7 @@ void RichTextComposerControler::slotAddQuotes()
     } else {
         selectedText = cursor.selectedText();
     }
-    d->richtextComposer->insertPlainText(d->addQuotesToText(selectedText));
+    richTextComposer()->insertPlainText(d->addQuotesToText(selectedText));
     cursor.endEditBlock();
 }
 
@@ -942,12 +945,12 @@ QString RichTextComposerControler::RichTextComposerControlerPrivate::addQuotesTo
 void RichTextComposerControler::slotFormatPainter(bool active)
 {
     if (active) {
-        d->painterFormat = d->richtextComposer->currentCharFormat();
+        d->painterFormat = richTextComposer()->currentCharFormat();
         d->painterActive = true;
-        d->richtextComposer->viewport()->setCursor(QCursor(QIcon::fromTheme(QStringLiteral("draw-brush")).pixmap(32, 32), 0, 32));
+        richTextComposer()->viewport()->setCursor(QCursor(QIcon::fromTheme(QStringLiteral("draw-brush")).pixmap(32, 32), 0, 32));
     } else {
         d->painterFormat = QTextCharFormat();
         d->painterActive = false;
-        d->richtextComposer->viewport()->setCursor(Qt::IBeamCursor);
+        richTextComposer()->viewport()->setCursor(Qt::IBeamCursor);
     }
 }
