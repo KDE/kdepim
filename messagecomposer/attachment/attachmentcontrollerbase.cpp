@@ -609,7 +609,11 @@ void AttachmentControllerBase::showContextMenu()
     if (numberOfParts > 0) {
         if (numberOfParts == 1) {
             const QString mimetype = QString::fromLatin1(d->selectedParts.first()->mimeType());
-            const QStringList parentMimeType = KMimeType::mimeType(mimetype)->allParentMimeTypes();
+            KMimeType::Ptr mime = KMimeType::mimeType(mimetype);
+            QStringList parentMimeType;
+            if (mime) {
+                parentMimeType = mime->allParentMimeTypes();
+            }
             if ((mimetype == QLatin1String("text/plain")) ||
                     (mimetype == QLatin1String("image/png")) ||
                     (mimetype == QLatin1String("image/jpeg")) ||
