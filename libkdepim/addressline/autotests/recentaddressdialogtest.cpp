@@ -23,7 +23,7 @@
 #include "../recentaddress/recentaddresswidget.h"
 #include <QDialogButtonBox>
 #include <qtest.h>
-
+#include <QStandardPaths>
 RecentAddressDialogTest::RecentAddressDialogTest(QObject *parent)
     : QObject(parent)
 {
@@ -33,6 +33,11 @@ RecentAddressDialogTest::RecentAddressDialogTest(QObject *parent)
 RecentAddressDialogTest::~RecentAddressDialogTest()
 {
 
+}
+
+void RecentAddressDialogTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 void RecentAddressDialogTest::shouldHaveDefaultValue()

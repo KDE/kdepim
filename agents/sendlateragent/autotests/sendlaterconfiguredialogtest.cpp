@@ -20,7 +20,7 @@
 #include "../sendlaterconfigurewidget.h"
 
 #include <QTreeWidget>
-
+#include <QStandardPaths>
 #include <qtest.h>
 
 SendLaterConfigureDialogTest::SendLaterConfigureDialogTest(QObject *parent)
@@ -33,6 +33,13 @@ SendLaterConfigureDialogTest::~SendLaterConfigureDialogTest()
 {
 
 }
+
+void SendLaterConfigureDialogTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
+}
+
+
 
 void SendLaterConfigureDialogTest::shouldHaveDefaultValue()
 {

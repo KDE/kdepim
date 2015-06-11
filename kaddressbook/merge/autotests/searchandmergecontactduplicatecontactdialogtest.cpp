@@ -20,12 +20,19 @@
 #include "../searchduplicate/searchandmergecontactduplicatecontactdialog.h"
 
 #include <qtest.h>
+#include <QStandardPaths>
 
 #include <QStackedWidget>
 using namespace KABMergeContacts;
 
-SearchAndMergeContactDuplicateContactDialogTest::SearchAndMergeContactDuplicateContactDialogTest()
+SearchAndMergeContactDuplicateContactDialogTest::SearchAndMergeContactDuplicateContactDialogTest(QObject *parent)
+    : QObject(parent)
 {
+}
+
+void SearchAndMergeContactDuplicateContactDialogTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 void SearchAndMergeContactDuplicateContactDialogTest::shouldHaveDefaultValueOnCreation()

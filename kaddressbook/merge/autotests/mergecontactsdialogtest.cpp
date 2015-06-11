@@ -22,6 +22,7 @@
 #include <qtest.h>
 
 #include <QDialogButtonBox>
+#include <QStandardPaths>
 
 MergeContactsDialogTest::MergeContactsDialogTest(QObject *parent)
     : QObject(parent)
@@ -32,6 +33,11 @@ MergeContactsDialogTest::MergeContactsDialogTest(QObject *parent)
 MergeContactsDialogTest::~MergeContactsDialogTest()
 {
 
+}
+
+void MergeContactsDialogTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 void MergeContactsDialogTest::shouldHaveDefaultValue()

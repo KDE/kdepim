@@ -24,12 +24,13 @@ class SearchAndMergeContactDuplicateContactDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    SearchAndMergeContactDuplicateContactDialogTest();
+    SearchAndMergeContactDuplicateContactDialogTest(QObject *parent = Q_NULLPTR);
 
 private Q_SLOTS:
     void shouldHaveDefaultValueOnCreation();
     void shouldShowNoEnoughPageWhenSelectOneContact();
     void shouldShowNoContactWhenListIsEmpty();
+    void initTestCase();
 };
 
 #endif // MERGECONTACTDUPLICATECONTACTDIALOGTEST_H

@@ -20,6 +20,7 @@
 #include "../followupreminderinfowidget.h"
 #include "../followupreminderinfo.h"
 #include <qtest.h>
+#include <QStandardPaths>
 
 FollowupReminderInfoDialogTest::FollowupReminderInfoDialogTest(QObject *parent)
     : QObject(parent)
@@ -31,6 +32,12 @@ FollowupReminderInfoDialogTest::~FollowupReminderInfoDialogTest()
 {
 
 }
+
+void FollowupReminderInfoDialogTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
+}
+
 
 void FollowupReminderInfoDialogTest::shouldHaveDefaultValues()
 {

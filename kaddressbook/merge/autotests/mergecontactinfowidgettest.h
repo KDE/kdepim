@@ -29,6 +29,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValueOnCreation();
     void shouldHaveActivateDisplayWidgetWhenSelectOneContact();
     void shouldHaveActivateNoWidgetWhenSelectNoContact();
+    void initTestCase();
 };
 
 #endif // MERGECONTACTINFOWIDGETTEST_H

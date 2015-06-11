@@ -22,6 +22,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <qtest.h>
+#include <QStandardPaths>
 SendLaterDialogTest::SendLaterDialogTest(QObject *parent)
     : QObject(parent)
 {
@@ -31,6 +32,11 @@ SendLaterDialogTest::SendLaterDialogTest(QObject *parent)
 SendLaterDialogTest::~SendLaterDialogTest()
 {
 
+}
+
+void SendLaterDialogTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 void SendLaterDialogTest::shouldHaveDefaultValue()

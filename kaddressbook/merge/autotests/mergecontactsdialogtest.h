@@ -29,6 +29,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldSwithStackedWidget();
+    void initTestCase();
 };
 
 #endif // MERGECONTACTSDIALOGTEST_H

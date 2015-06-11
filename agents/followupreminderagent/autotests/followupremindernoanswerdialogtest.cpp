@@ -21,6 +21,7 @@
 #include "../followupreminderinfo.h"
 #include <QTreeWidget>
 #include <qtest.h>
+#include <QStandardPaths>
 
 FollowupReminderNoAnswerDialogTest::FollowupReminderNoAnswerDialogTest(QObject *parent)
     : QObject(parent)
@@ -31,6 +32,11 @@ FollowupReminderNoAnswerDialogTest::FollowupReminderNoAnswerDialogTest(QObject *
 FollowupReminderNoAnswerDialogTest::~FollowupReminderNoAnswerDialogTest()
 {
 
+}
+
+void FollowupReminderNoAnswerDialogTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 void FollowupReminderNoAnswerDialogTest::shouldHaveDefaultValues()

@@ -20,10 +20,16 @@
 #include <qtest.h>
 #include "merge/widgets/mergecontactinfowidget.h"
 #include <QStackedWidget>
+#include <QStandardPaths>
 using namespace KABMergeContacts;
 
 MergeContactInfoWidgetTest::MergeContactInfoWidgetTest()
 {
+}
+
+void MergeContactInfoWidgetTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 void MergeContactInfoWidgetTest::shouldHaveDefaultValueOnCreation()

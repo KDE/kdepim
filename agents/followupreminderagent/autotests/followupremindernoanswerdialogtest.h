@@ -30,6 +30,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValues();
     void shouldAddItemInTreeList();
     void shouldItemHaveInfo();
+    void initTestCase();
 };
 
 #endif // FOLLOWUPREMINDERNOANSWERDIALOGTEST_H

@@ -28,6 +28,7 @@ public:
     ~SendLaterConfigureDialogTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void initTestCase();
 };
 
 #endif // SENDLATERCONFIGUREDIALOGTEST_H

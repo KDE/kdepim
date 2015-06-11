@@ -28,6 +28,7 @@ public:
     ~SendLaterDialogTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void initTestCase();
 };
 
 #endif // SENDLATERDIALOGTEST_H

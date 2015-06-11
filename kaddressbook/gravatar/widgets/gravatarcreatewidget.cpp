@@ -42,7 +42,7 @@ GravatarCreateWidget::GravatarCreateWidget(QWidget *parent)
     mSearchGravatar->setEnabled(false);
     mSearchGravatar->setObjectName(QStringLiteral("search"));
     mainLayout->addWidget(mSearchGravatar, 0, 2);
-    connect(mSearchGravatar, SIGNAL(clicked(bool)), this, SLOT(slotSearchGravatar()));
+    connect(mSearchGravatar, &QAbstractButton::clicked, this, &GravatarCreateWidget::slotSearchGravatar);
 
     mResultGravatar = new QLabel;
     mResultGravatar->setObjectName(QStringLiteral("result"));
