@@ -251,7 +251,7 @@ ArchiveDialog::ArchiveDialog(const Akonadi::ETMCalendar::Ptr &cal,
     topLayout->addWidget(mDeleteCb);
     connect(mDeleteCb, &QCheckBox::toggled, mArchiveFile, &KUrlRequester::setDisabled);
     connect(mDeleteCb, &QCheckBox::toggled, this, &ArchiveDialog::slotEnableUser1);
-    connect(mArchiveFile->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(slotEnableUser1()));
+    connect(mArchiveFile->lineEdit(), &QLineEdit::textChanged, this, &ArchiveDialog::slotEnableUser1);
 
     // Load settings from KCalPrefs
     mExpiryTimeNumInput->setValue(KCalPrefs::instance()->mExpiryTime);
