@@ -43,11 +43,10 @@ target_link_libraries(mailimporter
 PUBLIC
   KF5::Mime
 PRIVATE
-  KF5::KIOCore
   KF5::AkonadiCore
   KF5::AkonadiMime
   kdepim
-  messagecore
+  KF5::Archive
 )
 
 set_target_properties(mailimporter PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})

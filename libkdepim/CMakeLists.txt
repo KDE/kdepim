@@ -144,7 +144,6 @@ target_link_libraries(kdepim
   KF5::AkonadiCalendar
   KF5::KCMUtils
   KF5::AkonadiSearchPIM
-  KF5::SonnetCore
   KF5::Wallet
 )
 
