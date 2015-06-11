@@ -116,6 +116,7 @@ void RichTextComposer::createActions(KActionCollection *ac)
 void RichTextComposer::createHighlighter()
 {
     MessageComposer::RichTextComposerEmailQuoteHighlighter *highlighter = new MessageComposer::RichTextComposerEmailQuoteHighlighter(this);
+    highlighter->toggleSpellHighlighting(checkSpellingEnabled());
     setHighlighterColors(highlighter);
     setHighlighter(highlighter);
 }
