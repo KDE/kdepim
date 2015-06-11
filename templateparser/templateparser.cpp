@@ -947,8 +947,8 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: DATEEN";
                 i += strlen("DATEEN");
                 const QDateTime date = QDateTime::currentDateTime();
-                KLocale locale(QLatin1String("C"));
-                const QString str = locale.formatDate(date.date(), KLocale::LongDate);
+                QLocale locale(QLocale::C);
+                const QString str = locale.toString(date.date(), QLocale::LongFormat);
                 plainBody.append(str);
                 const QString body = plainToHtml(str);
                 htmlBody.append(body);
@@ -985,8 +985,8 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: TIMELONGEN";
                 i += strlen("TIMELONGEN");
                 const QDateTime date = QDateTime::currentDateTime();
-                KLocale locale(QLatin1String("C"));
-                const QString str = locale.formatTime(date.time(), true);
+                QLocale locale(QLocale::C);
+                const QString str = locale.toString(date.time(), QLocale::LongFormat);
                 plainBody.append(str);
                 const QString body = plainToHtml(str);
                 htmlBody.append(body);
@@ -1060,8 +1060,8 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 i += strlen("OTIMELONGEN");
                 if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    KLocale locale(QLatin1String("C"));
-                    const QString str = locale.formatTime(date.time(), true);
+                    QLocale locale(QLocale::C);
+                    const QString str = locale.toString(date.time(), QLocale::LongFormat);
                     plainBody.append(str);
                     const QString body = plainToHtml(str);
                     htmlBody.append(body);
