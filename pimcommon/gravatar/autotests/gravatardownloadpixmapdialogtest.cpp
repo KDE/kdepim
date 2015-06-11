@@ -20,7 +20,7 @@
 
 #include <QDialogButtonBox>
 #include <qtest.h>
-
+#include <QStandardPaths>
 #include "gravatar/widgets/gravatardownloadpixmapwidget.h"
 
 GravatarDownloadPixmapDialogTest::GravatarDownloadPixmapDialogTest(QObject *parent)
@@ -32,6 +32,11 @@ GravatarDownloadPixmapDialogTest::GravatarDownloadPixmapDialogTest(QObject *pare
 GravatarDownloadPixmapDialogTest::~GravatarDownloadPixmapDialogTest()
 {
 
+}
+
+void GravatarDownloadPixmapDialogTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 void GravatarDownloadPixmapDialogTest::shouldHaveDefaultValue()

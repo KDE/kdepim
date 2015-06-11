@@ -19,7 +19,7 @@
 #include "../baloodebugdialog.h"
 #include "../baloodebugwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
-
+#include <QStandardPaths>
 #include <KLineEdit>
 #include <qtest.h>
 
@@ -32,6 +32,11 @@ BalooDebugDialogTest::BalooDebugDialogTest(QObject *parent)
 BalooDebugDialogTest::~BalooDebugDialogTest()
 {
 
+}
+
+void BalooDebugDialogTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 void BalooDebugDialogTest::shouldHaveDefaultValue()

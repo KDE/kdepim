@@ -28,6 +28,7 @@ public:
     ~GravatarCacheTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldChangeCacheValue();
 };
 
 #endif // GRAVATARCACHETEST_H

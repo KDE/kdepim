@@ -23,6 +23,7 @@
 #include <QTabWidget>
 #include <qdialogbuttonbox.h>
 #include <qtest.h>
+#include <QStandardPaths>
 
 CompletionConfigureDialogTest::CompletionConfigureDialogTest(QObject *parent)
     : QObject(parent)
@@ -33,6 +34,11 @@ CompletionConfigureDialogTest::CompletionConfigureDialogTest(QObject *parent)
 CompletionConfigureDialogTest::~CompletionConfigureDialogTest()
 {
 
+}
+
+void CompletionConfigureDialogTest::initTestCase()
+{
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 void CompletionConfigureDialogTest::shouldHaveDefaultValue()

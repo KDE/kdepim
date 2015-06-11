@@ -37,4 +37,17 @@ void GravatarCacheTest::shouldHaveDefaultValue()
     QCOMPARE(gravatarCache.maximumSize(), 20);
 }
 
+void GravatarCacheTest::shouldChangeCacheValue()
+{
+    PimCommon::GravatarCache gravatarCache;
+    int val = 30;
+    gravatarCache.setMaximumSize(val);
+
+    QCOMPARE(gravatarCache.maximumSize(), val);
+    val = 50;
+    gravatarCache.setMaximumSize(val);
+
+    QCOMPARE(gravatarCache.maximumSize(), val);
+}
+
 QTEST_MAIN(GravatarCacheTest)

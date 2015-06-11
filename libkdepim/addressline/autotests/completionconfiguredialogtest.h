@@ -31,6 +31,7 @@ public:
     ~CompletionConfigureDialogTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void initTestCase();
 };
 
 #endif // COMPLETIONCONFIGUREDIALOGTEST_H
