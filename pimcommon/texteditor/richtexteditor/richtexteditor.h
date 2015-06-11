@@ -111,6 +111,8 @@ protected:
     virtual Sonnet::SpellCheckDecorator *createSpellCheckDecorator();
     void setHighlighter(Sonnet::Highlighter *_highLighter);
 
+    virtual void updateHighLighter();
+    virtual void clearDecorator();
 Q_SIGNALS:
     void findText();
     void replaceText();

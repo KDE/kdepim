@@ -113,6 +113,21 @@ void RichTextComposer::createActions(KActionCollection *ac)
     d->richTextComposerActions->createActions(ac);
 }
 
+void RichTextComposer::updateHighLighter()
+{
+    MessageComposer::RichTextComposerEmailQuoteHighlighter *hlighter = dynamic_cast<MessageComposer::RichTextComposerEmailQuoteHighlighter *>(highlighter());
+    if (hlighter) {
+        hlighter->toggleSpellHighlighting(checkSpellingEnabled());
+    }
+
+}
+
+void RichTextComposer::clearDecorator()
+{
+    //Nothing
+}
+
+
 void RichTextComposer::createHighlighter()
 {
     MessageComposer::RichTextComposerEmailQuoteHighlighter *highlighter = new MessageComposer::RichTextComposerEmailQuoteHighlighter(this);

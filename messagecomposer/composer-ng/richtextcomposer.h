@@ -147,6 +147,8 @@ protected:
     void insertFromMimeData(const QMimeData *source) Q_DECL_OVERRIDE;
     bool canInsertFromMimeData(const QMimeData *source) const Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void clearDecorator() Q_DECL_OVERRIDE;
+    void updateHighLighter() Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode);
 

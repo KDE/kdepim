@@ -521,9 +521,20 @@ void RichTextEditor::setCheckSpellingEnabled(bool check)
             }
         }
     } else {
-        delete d->richTextDecorator;
-        d->richTextDecorator = Q_NULLPTR;
+        clearDecorator();
     }
+    updateHighLighter();
+}
+
+void RichTextEditor::updateHighLighter()
+{
+
+}
+
+void RichTextEditor::clearDecorator()
+{
+    delete d->richTextDecorator;
+    d->richTextDecorator = Q_NULLPTR;
 }
 
 const QString &RichTextEditor::spellCheckingLanguage() const
