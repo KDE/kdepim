@@ -141,7 +141,6 @@ void RichTextEditorWidget::slotReplace()
     }
 }
 
-
 void RichTextEditorWidget::slotFindNext()
 {
     if (mEditor->searchSupport()) {

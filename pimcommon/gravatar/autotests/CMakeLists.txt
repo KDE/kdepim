@@ -10,21 +10,21 @@ add_test(pimcommon_gravatartest pimcommon_gravatartest)
 ecm_mark_as_test(pimcommon_gravatartest)
 target_link_libraries( pimcommon_gravatartest Qt5::Test  pimcommon)
 
-set( pimcommon_gravatardownloadpixmapwidget_SRCS gravatardownloadpixmapwidgettest.cpp ../widgets/gravatardownloadpixmapwidget.cpp)
+set( pimcommon_gravatardownloadpixmapwidget_SRCS gravatardownloadpixmapwidgettest.cpp ../widgets/gravatardownloadpixmapwidget.cpp ../../pimcommon_debug.cpp )
 add_executable( pimcommon_gravatardownloadpixmapwidget ${pimcommon_gravatardownloadpixmapwidget_SRCS})
 add_test(pimcommon_gravatardownloadpixmapwidget pimcommon_gravatardownloadpixmapwidget)
 ecm_mark_as_test(pimcommon_gravatardownloadpixmapwidget)
 target_link_libraries( pimcommon_gravatardownloadpixmapwidget Qt5::Test  pimcommon)
 
 
-set( pimcommon_gravatardownloadpixmapdialog_SRCS gravatardownloadpixmapdialogtest.cpp ../widgets/gravatardownloadpixmapdialog.cpp)
+set( pimcommon_gravatardownloadpixmapdialog_SRCS gravatardownloadpixmapdialogtest.cpp ../widgets/gravatardownloadpixmapdialog.cpp ../../pimcommon_debug.cpp)
 add_executable( pimcommon_gravatardownloadpixmapdialog ${pimcommon_gravatardownloadpixmapdialog_SRCS})
 add_test(pimcommon_gravatardownloadpixmapdialog pimcommon_gravatardownloadpixmapdialog)
 ecm_mark_as_test(pimcommon_gravatardownloadpixmapdialog)
 target_link_libraries( pimcommon_gravatardownloadpixmapdialog Qt5::Test  pimcommon)
 
 
-set( pimcommon_gravatarcache_SRCS gravatarcachetest.cpp )
+set( pimcommon_gravatarcache_SRCS gravatarcachetest.cpp ../../pimcommon_debug.cpp)
 add_executable( pimcommon_gravatarcache ${pimcommon_gravatarcache_SRCS})
 add_test(pimcommon_gravatarcache pimcommon_gravatarcache)
 ecm_mark_as_test(pimcommon_gravatarcache)

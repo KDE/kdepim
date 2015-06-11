@@ -17,12 +17,12 @@
 
 #include "gravatardownloadpixmapwidget.h"
 #include "gravatar/gravatarresolvurljob.h"
+#include "pimcommon_debug.h"
 #include <QLabel>
 #include <KLocalizedString>
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QDebug>
 #include <QCheckBox>
 
 using namespace PimCommon;
@@ -73,7 +73,7 @@ QPixmap GravatarDownloadPixmapWidget::gravatarPixmap() const
 void GravatarDownloadPixmapWidget::slotResolvUrlFinish(PimCommon::GravatarResolvUrlJob *job)
 {
     if (job) {
-        qDebug() << job->hasGravatar();
+        qCDebug(PIMCOMMON_LOG) << job->hasGravatar();
         if (job->hasGravatar()) {
             mGravatarPixmap = job->pixmap();
             mResultLabel->setPixmap(mGravatarPixmap);

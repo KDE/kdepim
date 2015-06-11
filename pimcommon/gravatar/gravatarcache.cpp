@@ -16,6 +16,7 @@
 */
 
 #include "gravatarcache.h"
+#include "pimcommon_debug.h"
 #include <QDir>
 
 #include <QDebug>
@@ -50,9 +51,9 @@ void GravatarCache::saveGravatarPixmap(const QString &hashStr, const QPixmap &pi
     if (!hashStr.isEmpty() && !pixmap.isNull()) {
         if (!mCachePixmap.contains(hashStr)) {
             const QString path = mGravatarPath + hashStr + QLatin1String(".png");
-            //qDebug() << " path " << path;
+            //qCDebug(PIMCOMMON_LOG) << " path " << path;
             if (pixmap.save(path)) {
-                //qDebug() <<" saved in cache "<< hashStr << path;
+                //qCDebug(PIMCOMMON_LOG) <<" saved in cache "<< hashStr << path;
                 mCachePixmap.insert(hashStr, new QPixmap(pixmap));
             }
         }
@@ -62,10 +63,10 @@ void GravatarCache::saveGravatarPixmap(const QString &hashStr, const QPixmap &pi
 QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatarStored)
 {
     gravatarStored = false;
-    //qDebug()<<" hashStr"<<hashStr;
+    //qCDebug(PIMCOMMON_LOG) <<" hashStr"<<hashStr;
     if (!hashStr.isEmpty()) {
         if (mCachePixmap.contains(hashStr)) {
-            //qDebug()<<" contains in cache "<< hashStr;
+            //qCDebug(PIMCOMMON_LOG) <<" contains in cache "<< hashStr;
             gravatarStored = true;
             return *(mCachePixmap.object(hashStr));
         } else {

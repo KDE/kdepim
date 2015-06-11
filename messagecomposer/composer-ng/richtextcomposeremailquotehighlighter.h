@@ -20,7 +20,8 @@
 
 #include <sonnet/highlighter.h>
 #include "messagecomposer_export.h"
-namespace MessageComposer {
+namespace MessageComposer
+{
 class RichTextComposer;
 class MESSAGECOMPOSER_EXPORT RichTextComposerEmailQuoteHighlighter : public Sonnet::Highlighter
 {
@@ -31,11 +32,11 @@ public:
      * FIXME: Default colors don't obey color scheme
      */
     explicit RichTextComposerEmailQuoteHighlighter(RichTextComposer *textEdit,
-                                   const QColor &normalColor = Qt::black,
-                                   const QColor &quoteDepth1 = QColor(0x00, 0x80, 0x00),
-                                   const QColor &quoteDepth2 = QColor(0x00, 0x80, 0x00),
-                                   const QColor &quoteDepth3 = QColor(0x00, 0x80, 0x00),
-                                   const QColor &misspelledColor = Qt::red);
+            const QColor &normalColor = Qt::black,
+            const QColor &quoteDepth1 = QColor(0x00, 0x80, 0x00),
+            const QColor &quoteDepth2 = QColor(0x00, 0x80, 0x00),
+            const QColor &quoteDepth3 = QColor(0x00, 0x80, 0x00),
+            const QColor &misspelledColor = Qt::red);
 
     ~RichTextComposerEmailQuoteHighlighter();
 

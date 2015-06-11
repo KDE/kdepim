@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "richtextcomposeremailquotehighlighter.h"
 #include "messagecomposer/composer-ng/richtextcomposer.h"
 using namespace MessageComposer;
@@ -31,10 +30,9 @@ public:
     RichTextComposer *parent;
 };
 
-
 RichTextComposerEmailQuoteHighlighter::RichTextComposerEmailQuoteHighlighter(RichTextComposer *textEdit, const QColor &normalColor,
-                                                                             const QColor &quoteDepth1, const QColor &quoteDepth2,
-                                                                             const QColor &quoteDepth3, const QColor &misspelledColor)
+        const QColor &quoteDepth1, const QColor &quoteDepth2,
+        const QColor &quoteDepth3, const QColor &misspelledColor)
     : Sonnet::Highlighter(textEdit, textEdit->spellCheckingConfigFileName()),
       d(new MessageComposer::RichTextComposerEmailQuoteHighlighter::RichTextComposerEmailQuoteHighlighterPrivate())
 {
