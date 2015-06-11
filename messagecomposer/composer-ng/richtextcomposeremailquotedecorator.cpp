@@ -44,5 +44,5 @@ RichTextComposerEmailQuoteDecorator::~RichTextComposerEmailQuoteDecorator()
 
 bool RichTextComposerEmailQuoteDecorator::isSpellCheckingEnabledForBlock(const QString &blockText) const
 {
-    return !d->composerEditor->isLineQuoted(blockText);
+    return !d->composerEditor->isLineQuoted(blockText) && d->composerEditor->checkSpellingEnabled();
 }
