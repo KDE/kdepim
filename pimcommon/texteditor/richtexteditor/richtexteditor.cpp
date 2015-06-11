@@ -469,6 +469,7 @@ Sonnet::SpellCheckDecorator *RichTextEditor::createSpellCheckDecorator()
 void RichTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
 {
     Sonnet::SpellCheckDecorator *decorator = createSpellCheckDecorator();
+    delete decorator->highlighter();
     decorator->setHighlighter(_highLighter);
 
     //KTextEdit used to take ownership of the highlighter, Sonnet::SpellCheckDecorator does not.
