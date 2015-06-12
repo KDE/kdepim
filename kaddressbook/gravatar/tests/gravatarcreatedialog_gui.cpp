@@ -27,6 +27,7 @@ int main(int argc, char **argv)
 
     QStandardPaths::setTestModeEnabled(true);
     KABGravatar::GravatarCreateDialog *w = new KABGravatar::GravatarCreateDialog;
+    w->setEmail(QStringLiteral("faure@kde.org"));
 
     w->show();
     app.exec();
