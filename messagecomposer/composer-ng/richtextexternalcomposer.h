@@ -52,7 +52,6 @@ Q_SIGNALS:
     void externalEditorStarted();
 
 private:
-    void cannotStartProcess(const QString &commandLine);
     class RichTextExternalComposerPrivate;
     RichTextExternalComposerPrivate *const d;
 };

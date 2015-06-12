@@ -38,6 +38,7 @@ public:
     {
 
     }
+    void cannotStartProcess(const QString &commandLine);
     QString extEditorPath;
     KProcess *externalEditorProcess;
     QTemporaryFile *extEditorTempFile;
@@ -115,7 +116,7 @@ void RichTextExternalComposer::startExternalEditor()
             command << arg;
         }
         if (command.isEmpty()) {
-            cannotStartProcess(commandLine);
+            d->cannotStartProcess(commandLine);
             return;
         }
 
@@ -128,18 +129,18 @@ void RichTextExternalComposer::startExternalEditor()
                 this, SLOT(slotEditorFinished(int,QProcess::ExitStatus)));
         d->externalEditorProcess->start();
         if (!d->externalEditorProcess->waitForStarted()) {
-            cannotStartProcess(commandLine);
+            d->cannotStartProcess(commandLine);
         } else {
             Q_EMIT externalEditorStarted();
         }
     }
 }
 
-void RichTextExternalComposer::cannotStartProcess(const QString &commandLine)
+void RichTextExternalComposer::RichTextExternalComposerPrivate::cannotStartProcess(const QString &commandLine)
 {
-    KMessageBox::error(d->richTextComposer, i18n("External editor cannot be started. Please verify command \"%1\"", commandLine));
-    killExternalEditor();
-    setUseExternalEditor(false);
+    KMessageBox::error(richTextComposer, i18n("External editor cannot be started. Please verify command \"%1\"", commandLine));
+    richTextComposer->killExternalEditor();
+    richTextComposer->setUseExternalEditor(false);
 }
 
 void RichTextExternalComposer::slotEditorFinished(int codeError, QProcess::ExitStatus exitStatus)
