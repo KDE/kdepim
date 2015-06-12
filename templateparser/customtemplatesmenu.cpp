@@ -108,7 +108,7 @@ void CustomTemplatesMenu::update()
         CTemplates t(*it);
         mCustomTemplates.append(*it);
         QString nameAction(*it);
-        nameAction.replace(QLatin1Char('&'), QLatin1String("&&"));
+        nameAction.replace(QLatin1Char('&'), QStringLiteral("&&"));
 
         const QString nameActionName = nameAction.replace(QLatin1Char(' '), QLatin1Char('_'));
 

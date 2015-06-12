@@ -40,10 +40,10 @@ CustomTemplates::CustomTemplates(const QList<KActionCollection *> &actionCollect
     mUi = new Ui_CustomTemplatesBase;
     mUi->setupUi(this);
 
-    mUi->mAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mUi->mAdd->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
     mUi->mAdd->setEnabled(false);
-    mUi->mRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
-    mUi->mDuplicate->setIcon(QIcon::fromTheme(QLatin1String("edit-copy")));
+    mUi->mRemove->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
+    mUi->mDuplicate->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy")));
 
     mUi->mList->setColumnWidth(0, 100);
     mUi->mList->header()->setStretchLastSection(true);
@@ -74,9 +74,9 @@ CustomTemplates::CustomTemplates(const QList<KActionCollection *> &actionCollect
 
     mUi->mKeySequenceWidget->setCheckActionCollections(actionCollection);
 
-    mReplyPix = KIconLoader().loadIcon(QLatin1String("mail-reply-sender"), KIconLoader::Small);
-    mReplyAllPix = KIconLoader().loadIcon(QLatin1String("mail-reply-all"), KIconLoader::Small);
-    mForwardPix = KIconLoader().loadIcon(QLatin1String("mail-forward"), KIconLoader::Small);
+    mReplyPix = KIconLoader().loadIcon(QStringLiteral("mail-reply-sender"), KIconLoader::Small);
+    mReplyAllPix = KIconLoader().loadIcon(QStringLiteral("mail-reply-all"), KIconLoader::Small);
+    mForwardPix = KIconLoader().loadIcon(QStringLiteral("mail-forward"), KIconLoader::Small);
 
     mUi->mType->clear();
     mUi->mType->addItem(QPixmap(), i18nc("Message->", "Universal"));
@@ -85,8 +85,8 @@ CustomTemplates::CustomTemplates(const QList<KActionCollection *> &actionCollect
     mUi->mType->addItem(mForwardPix, i18nc("Message->", "Forward"));
 
     mUi->mHelp->setText(i18n("<a href=\"whatsthis\">How does this work?</a>"));
-    connect(mUi->mHelp, SIGNAL(linkActivated(QString)),
-            SLOT(slotHelpLinkClicked(QString)));
+    connect(mUi->mHelp, &QLabel::linkActivated,
+            this, &CustomTemplates::slotHelpLinkClicked);
     mUi->mHelp->setContextMenuPolicy(Qt::NoContextMenu);
 
     slotNameChanged(mUi->mName->text());
