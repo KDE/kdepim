@@ -282,9 +282,9 @@ QDrag *CalendarSupport::createDrag(const Akonadi::Item::List &items,
 
     const QByteArray common = findMostCommonType(items);
     if (common == "Event") {
-        drag->setPixmap(BarIcon(QLatin1String("view-calendar-day")));
+        drag->setPixmap(BarIcon(QStringLiteral("view-calendar-day")));
     } else if (common == "Todo") {
-        drag->setPixmap(BarIcon(QLatin1String("view-calendar-tasks")));
+        drag->setPixmap(BarIcon(QStringLiteral("view-calendar-tasks")));
     }
 
     return drag.release();

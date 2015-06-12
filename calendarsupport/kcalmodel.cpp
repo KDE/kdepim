@@ -145,13 +145,13 @@ QVariant KCalModel::data(const QModelIndex &index, int role) const
     case Qt::DecorationRole:
         if (index.column() == 0) {
             if (incidence->type() == KCalCore::Incidence::TypeTodo) {
-                return SmallIcon(QLatin1String("view-pim-tasks"));
+                return SmallIcon(QStringLiteral("view-pim-tasks"));
             } else if (incidence->type() == KCalCore::Incidence::TypeJournal) {
-                return SmallIcon(QLatin1String("view-pim-journal"));
+                return SmallIcon(QStringLiteral("view-pim-journal"));
             } else if (incidence->type() == KCalCore::Incidence::TypeEvent) {
-                return SmallIcon(QLatin1String("view-calendar"));
+                return SmallIcon(QStringLiteral("view-calendar"));
             } else {
-                return SmallIcon(QLatin1String("network-wired"));
+                return SmallIcon(QStringLiteral("network-wired"));
             }
         }
         break;
