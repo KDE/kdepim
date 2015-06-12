@@ -34,7 +34,7 @@ WebDavTestWidget::WebDavTestWidget(QWidget *parent)
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("webdav_gui"), i18n("webdav_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("webdav_gui"), i18n("webdav_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for webdav"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

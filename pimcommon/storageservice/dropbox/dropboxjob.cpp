@@ -70,12 +70,12 @@ void DropBoxJob::requestTokenAccess()
 
     QUrl postData;
 
-    postData.addQueryItem(QLatin1String("oauth_consumer_key"), mOauthconsumerKey);
-    postData.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
-    postData.addQueryItem(QLatin1String("oauth_signature"), mOauthSignature);
-    postData.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
-    postData.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
-    postData.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
+    postData.addQueryItem(QStringLiteral("oauth_consumer_key"), mOauthconsumerKey);
+    postData.addQueryItem(QStringLiteral("oauth_nonce"), mNonce);
+    postData.addQueryItem(QStringLiteral("oauth_signature"), mOauthSignature);
+    postData.addQueryItem(QStringLiteral("oauth_signature_method"), mOauthSignatureMethod);
+    postData.addQueryItem(QStringLiteral("oauth_timestamp"), mTimestamp);
+    postData.addQueryItem(QStringLiteral("oauth_version"), mOauthVersion);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &DropBoxJob::slotError);

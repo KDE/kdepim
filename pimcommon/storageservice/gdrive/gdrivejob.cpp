@@ -80,7 +80,7 @@ QString GDriveJob::lastPathComponent(const QUrl &url) const
 {
     QString path = url.toString(QUrl::StripTrailingSlash);
     if (path.indexOf(QLatin1Char('/')) == -1) {
-        return QLatin1String("root");
+        return QStringLiteral("root");
     } else {
         return path.mid(path.lastIndexOf(QLatin1Char('/')) + 1);
     }
@@ -90,7 +90,7 @@ void GDriveJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolderAction;
     mError = false;
-    const QString folderId = folder.isEmpty() ? QLatin1String("root") : folder;
+    const QString folderId = folder.isEmpty() ? QStringLiteral("root") : folder;
     KGAPI2::Drive::ChildReferenceFetchJob *fetchJob = new KGAPI2::Drive::ChildReferenceFetchJob(folderId, mAccount);
     connect(fetchJob, &KGAPI2::Drive::ChildReferenceFetchJob::finished, this, &GDriveJob::slotChildReferenceFetchJobFinished);
 }
@@ -353,7 +353,7 @@ void GDriveJob::copyFile(const QString &source, const QString &destination)
     mActionType = PimCommon::StorageServiceAbstract::CopyFileAction;
     mError = false;
     KGAPI2::Drive::FilePtr file(new KGAPI2::Drive::File());
-    file->setTitle(QLatin1String("copy"));
+    file->setTitle(QStringLiteral("copy"));
     file->setMimeType(KGAPI2::Drive::File::folderMimeType());
 
     KGAPI2::Drive::ParentReferencePtr parent(new KGAPI2::Drive::ParentReference(destination));
@@ -379,7 +379,7 @@ void GDriveJob::copyFolder(const QString &source, const QString &destination)
     mActionType = PimCommon::StorageServiceAbstract::CopyFolderAction;
     mError = false;
     KGAPI2::Drive::FilePtr file(new KGAPI2::Drive::File());
-    file->setTitle(QLatin1String("copy"));
+    file->setTitle(QStringLiteral("copy"));
     file->setMimeType(KGAPI2::Drive::File::folderMimeType());
 
     KGAPI2::Drive::ParentReferencePtr parent(new KGAPI2::Drive::ParentReference(destination));
@@ -406,7 +406,7 @@ void GDriveJob::renameFolder(const QString &source, const QString &destination)
     qCDebug(PIMCOMMON_LOG) << " source " << source << " destination " << destination;
     mError = false;
     qCDebug(PIMCOMMON_LOG) << " not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     //TODO
     deleteLater();
 }
@@ -417,7 +417,7 @@ void GDriveJob::renameFile(const QString &oldName, const QString &newName)
     qCDebug(PIMCOMMON_LOG) << " oldName " << oldName << " newName " << newName;
     mError = false;
     qCDebug(PIMCOMMON_LOG) << " not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     //TODO
     deleteLater();
 }
@@ -429,7 +429,7 @@ void GDriveJob::moveFolder(const QString &source, const QString &destination)
     mActionType = PimCommon::StorageServiceAbstract::MoveFolderAction;
     mError = false;
     qCDebug(PIMCOMMON_LOG) << " not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     //TODO
     deleteLater();
 }
@@ -439,7 +439,7 @@ void GDriveJob::moveFile(const QString &source, const QString &destination)
     mActionType = PimCommon::StorageServiceAbstract::MoveFileAction;
     mError = false;
     qCDebug(PIMCOMMON_LOG) << " not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     //TODO
     deleteLater();
 }
@@ -452,7 +452,7 @@ void GDriveJob::shareLink(const QString &root, const QString &path)
     QString fileId; //TODO
     url.setUrl(mApiUrl + mFileInfoPath + fileId);
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &GDriveJob::slotError);

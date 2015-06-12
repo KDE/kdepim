@@ -58,24 +58,24 @@ CategoryWidget::CategoryWidget(CategoryConfig *cc, QWidget *parent)
     mWidgets->mButtonRemove->setIcon(QIcon::fromTheme("list-remove"));
     mWidgets->mLineEdit->setPlaceholderText(i18n("Click to add a new category"));
 
-    connect(mWidgets->mLineEdit, SIGNAL(textChanged(QString)),
-            SLOT(handleTextChanged(QString)));
+    connect(mWidgets->mLineEdit, &QLineEdit::textChanged,
+            this, &CategoryWidget::handleTextChanged);
 
     mWidgets->mButtonAdd->setEnabled(false);
     mWidgets->mButtonRemove->setEnabled(false);
     mWidgets->mColorCombo->setEnabled(false);
 
-    connect(mWidgets->mCategories, SIGNAL(itemSelectionChanged()),
-            SLOT(handleSelectionChanged()));
+    connect(mWidgets->mCategories, &QTreeWidget::itemSelectionChanged,
+            this, &CategoryWidget::handleSelectionChanged);
 
-    connect(mWidgets->mButtonAdd, SIGNAL(clicked()),
-            SLOT(addCategory()));
+    connect(mWidgets->mButtonAdd, &QAbstractButton::clicked,
+            this, &CategoryWidget::addCategory);
 
-    connect(mWidgets->mButtonRemove, SIGNAL(clicked()),
-            SLOT(removeCategory()));
+    connect(mWidgets->mButtonRemove, &QAbstractButton::clicked,
+            this, &CategoryWidget::removeCategory);
 
-    connect(mWidgets->mColorCombo, SIGNAL(activated(QColor)),
-            SLOT(handleColorChanged(QColor)));
+    connect(mWidgets->mColorCombo, &KColorCombo::activated,
+            this, &CategoryWidget::handleColorChanged);
 
 }
 

@@ -954,7 +954,7 @@ void AutoCorrection::readAutoCorrectionXmlFile(bool forceGlobal)
     //Load Global directly
     if (!mAutoCorrectLang.isEmpty()) {
         if (mAutoCorrectLang == QLatin1String("en_US")) {
-            fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("autocorrect/autocorrect.xml"));
+            fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("autocorrect/autocorrect.xml"));
         } else {
             fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("autocorrect/") + mAutoCorrectLang + QLatin1String(".xml"));
         }
@@ -968,7 +968,7 @@ void AutoCorrection::readAutoCorrectionXmlFile(bool forceGlobal)
         }
     }
     if (fname.isEmpty()) {
-        fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("autocorrect/autocorrect.xml"));
+        fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("autocorrect/autocorrect.xml"));
     }
 
     if (mAutoCorrectLang.isEmpty()) {

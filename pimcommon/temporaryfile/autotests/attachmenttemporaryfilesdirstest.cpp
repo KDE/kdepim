@@ -47,44 +47,44 @@ void AttachmentTemporaryFilesDirsTest::shouldHaveDefaultValue()
 void AttachmentTemporaryFilesDirsTest::shouldAddTemporaryFiles()
 {
     AttachmentTemporaryFilesDirs attachmentDir;
-    attachmentDir.addTempFile(QLatin1String("foo"));
+    attachmentDir.addTempFile(QStringLiteral("foo"));
     QCOMPARE(attachmentDir.temporaryFiles().count(), 1);
-    attachmentDir.addTempFile(QLatin1String("foo1"));
+    attachmentDir.addTempFile(QStringLiteral("foo1"));
     QCOMPARE(attachmentDir.temporaryFiles().count(), 2);
 }
 
 void AttachmentTemporaryFilesDirsTest::shouldAddTemporaryDirs()
 {
     AttachmentTemporaryFilesDirs attachmentDir;
-    attachmentDir.addTempDir(QLatin1String("foo"));
+    attachmentDir.addTempDir(QStringLiteral("foo"));
     QCOMPARE(attachmentDir.temporaryDirs().count(), 1);
-    attachmentDir.addTempDir(QLatin1String("foo1"));
+    attachmentDir.addTempDir(QStringLiteral("foo1"));
     QCOMPARE(attachmentDir.temporaryDirs().count(), 2);
 }
 
 void AttachmentTemporaryFilesDirsTest::shouldNotAddSameFiles()
 {
     AttachmentTemporaryFilesDirs attachmentDir;
-    attachmentDir.addTempFile(QLatin1String("foo"));
+    attachmentDir.addTempFile(QStringLiteral("foo"));
     QCOMPARE(attachmentDir.temporaryFiles().count(), 1);
-    attachmentDir.addTempFile(QLatin1String("foo"));
+    attachmentDir.addTempFile(QStringLiteral("foo"));
     QCOMPARE(attachmentDir.temporaryFiles().count(), 1);
 }
 
 void AttachmentTemporaryFilesDirsTest::shouldNotAddSameDirs()
 {
     AttachmentTemporaryFilesDirs attachmentDir;
-    attachmentDir.addTempDir(QLatin1String("foo"));
+    attachmentDir.addTempDir(QStringLiteral("foo"));
     QCOMPARE(attachmentDir.temporaryDirs().count(), 1);
-    attachmentDir.addTempDir(QLatin1String("foo"));
+    attachmentDir.addTempDir(QStringLiteral("foo"));
     QCOMPARE(attachmentDir.temporaryDirs().count(), 1);
 }
 
 void AttachmentTemporaryFilesDirsTest::shouldForceRemoveTemporaryDirs()
 {
     AttachmentTemporaryFilesDirs attachmentDir;
-    attachmentDir.addTempDir(QLatin1String("foo"));
-    attachmentDir.addTempDir(QLatin1String("foo1"));
+    attachmentDir.addTempDir(QStringLiteral("foo"));
+    attachmentDir.addTempDir(QStringLiteral("foo1"));
     QCOMPARE(attachmentDir.temporaryDirs().count(), 2);
     attachmentDir.forceCleanTempFiles();
     QCOMPARE(attachmentDir.temporaryDirs().count(), 0);
@@ -94,8 +94,8 @@ void AttachmentTemporaryFilesDirsTest::shouldForceRemoveTemporaryDirs()
 void AttachmentTemporaryFilesDirsTest::shouldForceRemoveTemporaryFiles()
 {
     AttachmentTemporaryFilesDirs attachmentDir;
-    attachmentDir.addTempFile(QLatin1String("foo"));
-    attachmentDir.addTempFile(QLatin1String("foo2"));
+    attachmentDir.addTempFile(QStringLiteral("foo"));
+    attachmentDir.addTempFile(QStringLiteral("foo2"));
     QCOMPARE(attachmentDir.temporaryFiles().count(), 2);
     attachmentDir.forceCleanTempFiles();
     QCOMPARE(attachmentDir.temporaryFiles().count(), 0);
@@ -106,7 +106,7 @@ void AttachmentTemporaryFilesDirsTest::shouldCreateDeleteTemporaryFiles()
 {
     QTemporaryDir tmpDir;
     QVERIFY(tmpDir.isValid());
-    QFile file(tmpDir.path() + QLatin1String("/foo"));
+    QFile file(tmpDir.path() + QStringLiteral("/foo"));
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qDebug() << "Can open file";
         return;
@@ -130,7 +130,7 @@ void AttachmentTemporaryFilesDirsTest::shouldRemoveTemporaryFilesAfterTime()
 {
     QTemporaryDir tmpDir;
     QVERIFY(tmpDir.isValid());
-    QFile file(tmpDir.path() + QLatin1String("/foo"));
+    QFile file(tmpDir.path() + QStringLiteral("/foo"));
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qDebug() << "Can open file";
         return;

@@ -24,7 +24,7 @@
 
 AutoCorrectionTest::AutoCorrectionTest()
 {
-    mConfig = KSharedConfig::openConfig(QLatin1String("autocorrectiontestrc"));
+    mConfig = KSharedConfig::openConfig(QStringLiteral("autocorrectiontestrc"));
     PimCommon::PimCommonSettings::self()->setSharedConfig(mConfig);
     PimCommon::PimCommonSettings::self()->load();
 }

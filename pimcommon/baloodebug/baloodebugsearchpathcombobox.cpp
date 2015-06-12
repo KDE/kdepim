@@ -45,11 +45,11 @@ QString BalooDebugSearchPathComboBox::searchPath() const
 
 void BalooDebugSearchPathComboBox::initialize()
 {
-    addItem(QLatin1String("Contacts"), Contacts);
-    addItem(QLatin1String("ContactCompleter"), ContactCompleter);
-    addItem(QLatin1String("Email"), Emails);
-    addItem(QLatin1String("Notes"), Notes);
-    addItem(QLatin1String("Calendars"), Calendars);
+    addItem(QStringLiteral("Contacts"), Contacts);
+    addItem(QStringLiteral("ContactCompleter"), ContactCompleter);
+    addItem(QStringLiteral("Email"), Emails);
+    addItem(QStringLiteral("Notes"), Notes);
+    addItem(QStringLiteral("Calendars"), Calendars);
 }
 
 QString BalooDebugSearchPathComboBox::pathFromEnum(SearchType type) const

@@ -40,8 +40,8 @@ void CombinedIncidenceEditor::combine(IncidenceEditor *other)
 {
     Q_ASSERT(other);
     mCombinedEditors.append(other);
-    connect(other, SIGNAL(dirtyStatusChanged(bool)),
-            SLOT(handleDirtyStatusChange(bool)));
+    connect(other, &IncidenceEditor::dirtyStatusChanged,
+            this, &CombinedIncidenceEditor::handleDirtyStatusChange);
 }
 
 bool CombinedIncidenceEditor::isDirty() const

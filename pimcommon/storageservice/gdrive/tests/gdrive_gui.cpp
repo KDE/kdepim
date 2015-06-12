@@ -34,7 +34,7 @@ GdriveTestWidget::GdriveTestWidget(QWidget *parent)
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QLatin1String("gdrive_gui"), i18n("gdrive_Gui"), QLatin1String("1.0"));
+    KAboutData aboutData(QStringLiteral("gdrive_gui"), i18n("gdrive_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for gdrive"));
     QApplication app(argc, argv);
     QCommandLineParser parser;

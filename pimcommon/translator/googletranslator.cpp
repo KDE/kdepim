@@ -130,14 +130,14 @@ void GoogleTranslator::translate()
 
     mResult.clear();
 
-    QNetworkRequest request(QUrl(QLatin1String("http://www.google.com/translate_a/t")));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QNetworkRequest request(QUrl(QStringLiteral("http://www.google.com/translate_a/t")));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
 
     QUrl postData;
-    postData.addQueryItem(QLatin1String("client"), QLatin1String("t"));
-    postData.addQueryItem(QLatin1String("sl"), mFrom);
-    postData.addQueryItem(QLatin1String("tl"), mTo);
-    postData.addQueryItem(QLatin1String("text"), mInputText);
+    postData.addQueryItem(QStringLiteral("client"), QStringLiteral("t"));
+    postData.addQueryItem(QStringLiteral("sl"), mFrom);
+    postData.addQueryItem(QStringLiteral("tl"), mTo);
+    postData.addQueryItem(QStringLiteral("text"), mInputText);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &GoogleTranslator::slotError);
@@ -154,8 +154,8 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
     reply->deleteLater();
     //  jsonData contains arrays like this: ["foo",,"bar"]
     //  but this is not valid JSON for QJSON, it expects empty strings: ["foo","","bar"]
-    mJsonData = mJsonData.replace(QRegExp(QLatin1String(",{3,3}")), QLatin1String(",\"\",\"\","));
-    mJsonData = mJsonData.replace(QRegExp(QLatin1String(",{2,2}")), QLatin1String(",\"\","));
+    mJsonData = mJsonData.replace(QRegExp(QStringLiteral(",{3,3}")), QStringLiteral(",\"\",\"\","));
+    mJsonData = mJsonData.replace(QRegExp(QStringLiteral(",{2,2}")), QStringLiteral(",\"\","));
     //qCDebug(PIMCOMMON_LOG) << mJsonData;
 
     QJsonParseError parsingError;

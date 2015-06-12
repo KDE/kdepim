@@ -31,16 +31,16 @@ private Q_SLOTS:
     void testDialog()
     {
         KCalCore::Attendee::List attendees;
-        KGuiItem buttonYes = KGuiItem(QLatin1String("Send Email"));
-        KGuiItem buttonNo = KGuiItem(QLatin1String("Do not send"));
+        KGuiItem buttonYes = KGuiItem(QStringLiteral("Send Email"));
+        KGuiItem buttonNo = KGuiItem(QStringLiteral("Do not send"));
 
-        KCalCore::Attendee::Ptr attendee1(new KCalCore::Attendee(QLatin1String("test1"), QLatin1String("test1@example.com")));
-        KCalCore::Attendee::Ptr attendee2(new KCalCore::Attendee(QLatin1String("test2"), QLatin1String("test2@example.com")));
-        KCalCore::Attendee::Ptr attendee3(new KCalCore::Attendee(QLatin1String("test3"), QLatin1String("test3@example.com")));
+        KCalCore::Attendee::Ptr attendee1(new KCalCore::Attendee(QStringLiteral("test1"), QStringLiteral("test1@example.com")));
+        KCalCore::Attendee::Ptr attendee2(new KCalCore::Attendee(QStringLiteral("test2"), QStringLiteral("test2@example.com")));
+        KCalCore::Attendee::Ptr attendee3(new KCalCore::Attendee(QStringLiteral("test3"), QStringLiteral("test3@example.com")));
 
         attendees << attendee1 << attendee2 << attendee3;
 
-        IndividualMailDialog dialog(QLatin1String("title"), attendees, buttonYes, buttonNo, 0);
+        IndividualMailDialog dialog(QStringLiteral("title"), attendees, buttonYes, buttonNo, 0);
 
         QCOMPARE(dialog.editAttendees().count(), 0);
         QCOMPARE(dialog.updateAttendees().count(), 3);

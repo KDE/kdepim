@@ -58,10 +58,10 @@ CategorySelectWidget::CategorySelectWidget(CategoryConfig *cc, QWidget *parent)
     topL->setMargin(0);
     mWidgets = new CategorySelectWidgetBase(this);
     topL->addWidget(mWidgets);
-    connect(mWidgets->mButtonEdit, SIGNAL(clicked()),
-            SIGNAL(editCategories()));
-    connect(mWidgets->mButtonClear, SIGNAL(clicked()),
-            SLOT(clear()));
+    connect(mWidgets->mButtonEdit, &QAbstractButton::clicked,
+            this, &CategorySelectWidget::editCategories);
+    connect(mWidgets->mButtonClear, &QAbstractButton::clicked,
+            this, &CategorySelectWidget::clear);
 }
 
 CategorySelectWidget::~CategorySelectWidget()

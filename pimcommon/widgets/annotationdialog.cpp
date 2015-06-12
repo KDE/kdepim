@@ -79,7 +79,7 @@ AnnotationEditDialog::AnnotationEditDialog(const Akonadi::Item &item, QWidget *p
         QPushButton *user1Button = new QPushButton;
         buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
         user1Button->setText(i18n("Delete Note"));
-        user1Button->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
+        user1Button->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
         connect(user1Button, &QPushButton::clicked, this, &AnnotationEditDialog::slotDeleteNote);
     } else {
         setWindowTitle(i18n("Add Note"));
@@ -107,10 +107,10 @@ AnnotationEditDialog::AnnotationEditDialog(const Akonadi::Item &item, QWidget *p
     vbox->addLayout(hbox);
     if (d->mHasAnnotation && item.attribute<Akonadi::EntityAnnotationsAttribute>()) {
         if (item.attribute<Akonadi::EntityAnnotationsAttribute>()->contains("/private/comment")) {
-            d->mNoteType->setCurrentIndex(d->mNoteType->findData(QLatin1String("/private/comment")));
+            d->mNoteType->setCurrentIndex(d->mNoteType->findData(QStringLiteral("/private/comment")));
             d->mTextEdit->setPlainText(item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/private/comment"));
         } else {
-            d->mNoteType->setCurrentIndex(d->mNoteType->findData(QLatin1String("/shared/comment")));
+            d->mNoteType->setCurrentIndex(d->mNoteType->findData(QStringLiteral("/shared/comment")));
             d->mTextEdit->setPlainText(item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/shared/comment"));
         }
     }
@@ -145,7 +145,7 @@ void AnnotationEditDialog::slotDeleteNote()
 {
     const int answer = KMessageBox::warningContinueCancel(this,
                        i18n("Do you really want to delete this note?"),
-                       i18n("Delete Note?"), KGuiItem(i18n("Delete"), QLatin1String("edit-delete")));
+                       i18n("Delete Note?"), KGuiItem(i18n("Delete"), QStringLiteral("edit-delete")));
     if (answer == KMessageBox::Continue) {
         d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
         new Akonadi::ItemModifyJob(d->mItem);
