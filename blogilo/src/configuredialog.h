@@ -39,7 +39,7 @@ Q_SIGNALS:
     void blogAdded(const BilboBlog &);
     void blogEdited(const BilboBlog &);
     void dialogDestroyed(QObject *);
-    void settingsChanged();
+    void configurationChanged();
 
 protected:
     bool hasChanged() Q_DECL_OVERRIDE;
