@@ -172,9 +172,19 @@ void KNCollectionView::removeGroup( KNGroup::Ptr g )
   if (!g->listItem())
     return;
 
-  g->listItem()->setHidden( true ); // work around bug 248256
-  delete g->listItem();
+  KNCollectionViewItem *item = g->listItem();
+  item->setDisabled(true);
+  item->setHidden( true ); // work around bug 248256
   g->setListItem(0);
+  updateGroup(g);
+  // after deactivating, hiding the item, removing it from the group and updating the group,
+  // we let Qt process any events that may be pending because of those actions or because
+  // the context menu was used to unsubscribe from this group. We do it here rather than
+  // leaving them for later in KNMainWidget::secureProcessEvents(), when events concerning
+  // the group item would be sent to it after it was deleted. Occurs on Mac OS X.
+  qApp->processEvents();
+  // now it should be safe to delete item.
+  delete item;
 }
 
 
