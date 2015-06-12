@@ -429,7 +429,7 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
             i18nc("@action", "Format Painter"), this);
     d->richTextActionList.append(d->action_format_painter);
     d->action_format_painter->setObjectName(QStringLiteral("format_painter"));
-    ac->addAction(QStringLiteral("format_reset"), d->action_format_painter);
+    ac->addAction(QStringLiteral("format_painter"), d->action_format_painter);
     connect(d->action_format_painter, &QAction::toggled,
             d->composerControler, &RichTextComposerControler::slotFormatPainter);
 
