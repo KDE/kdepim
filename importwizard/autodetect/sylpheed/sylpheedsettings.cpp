@@ -110,47 +110,47 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
 void SylpheedSettings::readGlobalSettings(const KConfigGroup &group)
 {
     const bool showTrayIcon = (group.readEntry("show_trayicon", 0) == 1);
-    addKmailConfig(QLatin1String("General"), QLatin1String("SystemTrayEnabled"), showTrayIcon);
+    addKmailConfig(QStringLiteral("General"), QStringLiteral("SystemTrayEnabled"), showTrayIcon);
 
     const bool cleanTrashOnExit = (group.readEntry("clean_trash_on_exit", 0) == 1);
-    addKmailConfig(QLatin1String("General"), QLatin1String("empty-trash-on-exit"), cleanTrashOnExit);
+    addKmailConfig(QStringLiteral("General"), QStringLiteral("empty-trash-on-exit"), cleanTrashOnExit);
 
     const bool alwaysMarkReadOnShowMsg = (group.readEntry("always_mark_read_on_show_msg", 0) == 1);
     if (alwaysMarkReadOnShowMsg) {
-        addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkAsRead"), true);
-        addKmailConfig(QLatin1String("Behaviour"), QLatin1String("DelayedMarkTime"), 0);
+        addKmailConfig(QStringLiteral("Behaviour"), QStringLiteral("DelayedMarkAsRead"), true);
+        addKmailConfig(QStringLiteral("Behaviour"), QStringLiteral("DelayedMarkTime"), 0);
     }
 
     if (group.readEntry("enable_autosave", 0) == 1) {
         const int autosaveInterval = group.readEntry("autosave_interval", 5);
-        addKmailConfig(QLatin1String("Composer"), QLatin1String("autosave"), autosaveInterval);
+        addKmailConfig(QStringLiteral("Composer"), QStringLiteral("autosave"), autosaveInterval);
     }
     const bool checkAttach = (group.readEntry("check_attach", 0) == 1);
-    addKmailConfig(QLatin1String("Composer"), QLatin1String("showForgottenAttachmentWarning"), checkAttach);
+    addKmailConfig(QStringLiteral("Composer"), QStringLiteral("showForgottenAttachmentWarning"), checkAttach);
 
     const QString attachStr = group.readEntry("check_attach_str");
     if (!attachStr.isEmpty()) {
-        addKmailConfig(QLatin1String("Composer"), QLatin1String("attachment-keywords"), attachStr);
+        addKmailConfig(QStringLiteral("Composer"), QStringLiteral("attachment-keywords"), attachStr);
     }
 
     const int lineWrap = group.readEntry("linewrap_length", 80);
-    addKmailConfig(QLatin1String("Composer"), QLatin1String("break-at"), lineWrap);
-    addKmailConfig(QLatin1String("Composer"), QLatin1String("word-wrap"), true);
+    addKmailConfig(QStringLiteral("Composer"), QStringLiteral("break-at"), lineWrap);
+    addKmailConfig(QStringLiteral("Composer"), QStringLiteral("word-wrap"), true);
 
-    if (group.readEntry(QLatin1String("recycle_quote_colors"), 0) == 1) {
-        addKmailConfig(QLatin1String("Reader"), QLatin1String("RecycleQuoteColors"), true);
+    if (group.readEntry(QStringLiteral("recycle_quote_colors"), 0) == 1) {
+        addKmailConfig(QStringLiteral("Reader"), QStringLiteral("RecycleQuoteColors"), true);
     }
 
-    if (group.readEntry(QLatin1String("auto_signature")) == 0) {
-        addKmailConfig(QLatin1String("Composer"), QLatin1String("signature"), QLatin1String("manual"));
+    if (group.readEntry(QStringLiteral("auto_signature")) == 0) {
+        addKmailConfig(QStringLiteral("Composer"), QStringLiteral("signature"), QStringLiteral("manual"));
     }
 
-    if (group.readEntry(QLatin1String("auto_ext_editor"), -1) == 1) {
-        addKmailConfig(QLatin1String("General"), QLatin1String("use-external-editor"), true);
+    if (group.readEntry(QStringLiteral("auto_ext_editor"), -1) == 1) {
+        addKmailConfig(QStringLiteral("General"), QStringLiteral("use-external-editor"), true);
 
-        const QString externalEditor = group.readEntry(QLatin1String("mime_open_command"));
+        const QString externalEditor = group.readEntry(QStringLiteral("mime_open_command"));
         if (!externalEditor.isEmpty()) {
-            addKmailConfig(QLatin1String("General"), QLatin1String("external-editor"), externalEditor);
+            addKmailConfig(QStringLiteral("General"), QStringLiteral("external-editor"), externalEditor);
         }
     }
 

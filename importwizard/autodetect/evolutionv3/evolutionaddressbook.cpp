@@ -86,7 +86,7 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
                 case 2:
                     if (!displayname.isEmpty() && !name.isEmpty()) {
                         arguments.clear();
-                        arguments << QLatin1String("--format=vcard") << name << QStringLiteral("--output=%1/%2.vcard").arg(directory).arg(displayname);
+                        arguments << QStringLiteral("--format=vcard") << name << QStringLiteral("--output=%1/%2.vcard").arg(directory).arg(displayname);
                         proc.start(evolutionFile.fileName(), arguments);
                         if (proc.waitForFinished()) {
                             addAddressBookImportInfo(i18n("Address book \"%1\" exported.", displayname));

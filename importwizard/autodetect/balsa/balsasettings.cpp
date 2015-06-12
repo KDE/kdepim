@@ -93,21 +93,21 @@ void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int aut
 
 void BalsaSettings::readIdentity(const KConfigGroup &grp)
 {
-    QString name = grp.readEntry(QLatin1String("FullName"));
+    QString name = grp.readEntry(QStringLiteral("FullName"));
     KIdentityManagement::Identity *newIdentity = createIdentity(name);
     newIdentity->setFullName(name);
-    newIdentity->setPrimaryEmailAddress(grp.readEntry(QLatin1String("Address")));
-    newIdentity->setReplyToAddr(grp.readEntry(QLatin1String("ReplyTo")));
-    newIdentity->setBcc(grp.readEntry(QLatin1String("Bcc")));
-    const QString smtp = grp.readEntry(QLatin1String("SmtpServer"));
+    newIdentity->setPrimaryEmailAddress(grp.readEntry(QStringLiteral("Address")));
+    newIdentity->setReplyToAddr(grp.readEntry(QStringLiteral("ReplyTo")));
+    newIdentity->setBcc(grp.readEntry(QStringLiteral("Bcc")));
+    const QString smtp = grp.readEntry(QStringLiteral("SmtpServer"));
     if (!smtp.isEmpty() && mHashSmtp.contains(smtp)) {
         newIdentity->setTransport(mHashSmtp.value(smtp));
     }
 
-    const QString signaturePath = grp.readEntry(QLatin1String("SignaturePath"));
+    const QString signaturePath = grp.readEntry(QStringLiteral("SignaturePath"));
     if (!signaturePath.isEmpty()) {
         KIdentityManagement::Signature signature;
-        if (grp.readEntry(QLatin1String("SigExecutable"), false)) {
+        if (grp.readEntry(QStringLiteral("SigExecutable"), false)) {
             signature.setUrl(signaturePath, true);
             signature.setType(KIdentityManagement::Signature::FromCommand);
         } else {
@@ -116,32 +116,13 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
         newIdentity->setSignature(signature);
     }
 
-    const QString xfacePathStr = grp.readEntry(QLatin1String("XFacePath"));
+    const QString xfacePathStr = grp.readEntry(QStringLiteral("XFacePath"));
     if (!xfacePathStr.isEmpty()) {
         newIdentity->setXFaceEnabled(true);
         MessageViewer::KXFace xf;
         newIdentity->setXFace(xf.fromImage(QImage(xfacePathStr)));
     }
-#if 0
-    Domain =
-    ReplyString = Re :
-                  ForwardString = Fwd :
-                                      SendMultipartAlternative = false
-                                              SigSending = true
-                                                      SigForward = true
-                                                              SigReply = true
-                                                                      SigSeparator = true
-                                                                              SigPrepend = false
-                                                                                      RequestMDN = false
-                                                                                              GpgSign = false
-                                                                                                      GpgEncrypt = false
-                                                                                                              GpgTrustAlways = false
-                                                                                                                      GpgWarnSendPlain = true
-                                                                                                                              CryptProtocol = 8
-                                                                                                                                      ForceKeyID =
-#endif
-
-                                                                                                                                              storeIdentity(newIdentity);
+    storeIdentity(newIdentity);
 }
 
 void BalsaSettings::readTransport(const KConfigGroup &grp)
@@ -193,65 +174,65 @@ void BalsaSettings::readTransport(const KConfigGroup &grp)
 
 void BalsaSettings::readGlobalSettings(const KConfig &config)
 {
-    if (config.hasGroup(QLatin1String("Compose"))) {
-        KConfigGroup compose = config.group(QLatin1String("Compose"));
-        if (compose.hasKey(QLatin1String("QuoteString"))) {
-            const QString quote = compose.readEntry(QLatin1String("QuoteString"));
+    if (config.hasGroup(QStringLiteral("Compose"))) {
+        KConfigGroup compose = config.group(QStringLiteral("Compose"));
+        if (compose.hasKey(QStringLiteral("QuoteString"))) {
+            const QString quote = compose.readEntry(QStringLiteral("QuoteString"));
             if (!quote.isEmpty()) {
-                addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("QuoteString"), quote);
+                addKmailConfig(QStringLiteral("TemplateParser"), QStringLiteral("QuoteString"), quote);
             }
         }
     }
-    if (config.hasGroup(QLatin1String("MessageDisplay"))) {
-        KConfigGroup messageDisplay = config.group(QLatin1String("MessageDisplay"));
-        if (messageDisplay.hasKey(QLatin1String("WordWrap"))) {
-            bool wordWrap = messageDisplay.readEntry(QLatin1String("WordWrap"), false);
+    if (config.hasGroup(QStringLiteral("MessageDisplay"))) {
+        KConfigGroup messageDisplay = config.group(QStringLiteral("MessageDisplay"));
+        if (messageDisplay.hasKey(QStringLiteral("WordWrap"))) {
+            bool wordWrap = messageDisplay.readEntry(QStringLiteral("WordWrap"), false);
             Q_UNUSED(wordWrap);
             //TODO not implemented in kmail.
         }
-        if (messageDisplay.hasKey(QLatin1String("WordWrapLength"))) {
-            const int wordWrapLength = messageDisplay.readEntry(QLatin1String("WordWrapLength"), -1);
+        if (messageDisplay.hasKey(QStringLiteral("WordWrapLength"))) {
+            const int wordWrapLength = messageDisplay.readEntry(QStringLiteral("WordWrapLength"), -1);
             Q_UNUSED(wordWrapLength);
             //TODO not implemented in kmail
         }
-        if (messageDisplay.hasKey(QLatin1String("DateFormat"))) {
-            const QString dateFormat = messageDisplay.readEntry(QLatin1String("DateFormat"));
+        if (messageDisplay.hasKey(QStringLiteral("DateFormat"))) {
+            const QString dateFormat = messageDisplay.readEntry(QStringLiteral("DateFormat"));
             if (!dateFormat.isEmpty()) {
-                addKmailConfig(QLatin1String("General"), QLatin1String("customDateFormat"), dateFormat);
+                addKmailConfig(QStringLiteral("General"), QStringLiteral("customDateFormat"), dateFormat);
             }
         }
     }
 
-    if (config.hasGroup(QLatin1String("Sending"))) {
-        KConfigGroup sending = config.group(QLatin1String("Sending"));
-        if (sending.hasKey(QLatin1String("WordWrap"))) {
-            const bool wordWrap = sending.readEntry(QLatin1String("WordWrap"), false);
-            addKmailConfig(QLatin1String("Composer"), QLatin1String("word-wrap"), wordWrap);
+    if (config.hasGroup(QStringLiteral("Sending"))) {
+        KConfigGroup sending = config.group(QStringLiteral("Sending"));
+        if (sending.hasKey(QStringLiteral("WordWrap"))) {
+            const bool wordWrap = sending.readEntry(QStringLiteral("WordWrap"), false);
+            addKmailConfig(QStringLiteral("Composer"), QStringLiteral("word-wrap"), wordWrap);
         }
-        if (sending.hasKey(QLatin1String("break-at"))) {
-            const int wordWrapLength = sending.readEntry(QLatin1String("break-at"), -1);
+        if (sending.hasKey(QStringLiteral("break-at"))) {
+            const int wordWrapLength = sending.readEntry(QStringLiteral("break-at"), -1);
             if (wordWrapLength != -1) {
-                addKmailConfig(QLatin1String("Composer"), QLatin1String("break-at"), wordWrapLength);
+                addKmailConfig(QStringLiteral("Composer"), QStringLiteral("break-at"), wordWrapLength);
             }
         }
     }
-    if (config.hasGroup(QLatin1String("Global"))) {
-        KConfigGroup global = config.group(QLatin1String("Global"));
-        if (global.hasKey(QLatin1String("EmptyTrash"))) {
-            const bool emptyTrash = global.readEntry(QLatin1String("EmptyTrash"), false);
-            addKmailConfig(QLatin1String("General"), QLatin1String("empty-trash-on-exit"), emptyTrash);
+    if (config.hasGroup(QStringLiteral("Global"))) {
+        KConfigGroup global = config.group(QStringLiteral("Global"));
+        if (global.hasKey(QStringLiteral("EmptyTrash"))) {
+            const bool emptyTrash = global.readEntry(QStringLiteral("EmptyTrash"), false);
+            addKmailConfig(QStringLiteral("General"), QStringLiteral("empty-trash-on-exit"), emptyTrash);
         }
     }
-    if (config.hasGroup(QLatin1String("Spelling"))) {
-        KConfigGroup spellChecking = config.group(QLatin1String("Spelling"));
-        if (spellChecking.hasKey(QLatin1String("SpellCheckActive"))) {
-            const bool active = spellChecking.readEntry(QLatin1String("SpellCheckActive"), false);
-            addKmailConfig(QLatin1String("Spelling"), QLatin1String("backgroundCheckerEnabled"), active);
-            addKmailConfig(QLatin1String("Spelling"), QLatin1String("checkerEnabledByDefault"), active);
+    if (config.hasGroup(QStringLiteral("Spelling"))) {
+        KConfigGroup spellChecking = config.group(QStringLiteral("Spelling"));
+        if (spellChecking.hasKey(QStringLiteral("SpellCheckActive"))) {
+            const bool active = spellChecking.readEntry(QStringLiteral("SpellCheckActive"), false);
+            addKmailConfig(QStringLiteral("Spelling"), QStringLiteral("backgroundCheckerEnabled"), active);
+            addKmailConfig(QStringLiteral("Spelling"), QStringLiteral("checkerEnabledByDefault"), active);
         }
-        if (spellChecking.hasKey(QLatin1String("SpellCheckLanguage"))) {
-            const QString spellCheck = spellChecking.readEntry(QLatin1String("defaultLanguage"));
-            addKmailConfig(QLatin1String("Spelling"), QLatin1String("defaultLanguage"), spellCheck);
+        if (spellChecking.hasKey(QStringLiteral("SpellCheckLanguage"))) {
+            const QString spellCheck = spellChecking.readEntry(QStringLiteral("defaultLanguage"));
+            addKmailConfig(QStringLiteral("Spelling"), QStringLiteral("defaultLanguage"), spellCheck);
         }
     }
 }

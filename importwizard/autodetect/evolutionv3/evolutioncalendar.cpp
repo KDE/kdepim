@@ -114,7 +114,7 @@ void EvolutionCalendar::extractCalendarInfo(const QString &info)
                     settings.insert(QLatin1String("Path"), path);
                 }
                 if (e.hasAttribute(QLatin1String("color_spec"))) {
-                    const QString color = e.attribute(QLatin1String("color_spec"));
+                    //const QString color = e.attribute(QLatin1String("color_spec"));
                     //Need id.
                     //TODO: Need to get id for collection to add color.
                 }

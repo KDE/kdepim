@@ -129,14 +129,14 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
         Q_UNUSED(delay);
 
         if (pollInterval == 0) {
-            settings.insert(QLatin1String("IntervalCheckEnabled"), false);
+            settings.insert(QStringLiteral("IntervalCheckEnabled"), false);
         } else {
-            settings.insert(QLatin1String("IntervalCheckEnabled"), true);
-            settings.insert(QLatin1String("IntervalCheckInterval"), pollInterval);
+            settings.insert(QStringLiteral("IntervalCheckEnabled"), true);
+            settings.insert(QStringLiteral("IntervalCheckInterval"), pollInterval);
         }
 
         if (secure == 1) {
-            settings.insert(QLatin1String("UseTLS"), true);
+            settings.insert(QStringLiteral("UseTLS"), true);
         }
 
         switch (authMethod) {
