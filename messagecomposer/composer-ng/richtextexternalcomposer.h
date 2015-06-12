@@ -44,12 +44,14 @@ public:
 
     bool isInProgress() const;
 
+private Q_SLOTS:
+    void slotEditorFinished(int codeError, QProcess::ExitStatus exitStatus);
+
 Q_SIGNALS:
     void externalEditorClosed();
     void externalEditorStarted();
 
 private:
-    void slotEditorFinished(int codeError, QProcess::ExitStatus exitStatus);
     void cannotStartProcess(const QString &commandLine);
     class RichTextExternalComposerPrivate;
     RichTextExternalComposerPrivate *const d;
