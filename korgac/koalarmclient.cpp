@@ -38,10 +38,10 @@
 
 #include <KCalCore/Calendar>
 
-#include <KApplication>
 #include <KCheckableProxyModel>
 #include <KConfig>
 #include <KConfigGroup>
+#include <QApplication>
 
 #ifdef Q_OS_MAEMO_5
 #include <KSharedConfig>
@@ -252,7 +252,7 @@ void KOAlarmClient::saveLastCheckTime()
 void KOAlarmClient::quit()
 {
     qCDebug(KOALARMCLIENT_LOG);
-    kapp->quit();
+    qApp->quit();
 }
 
 void KOAlarmClient::slotCommitData(QSessionManager &)

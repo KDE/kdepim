@@ -38,32 +38,6 @@
 Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
 #endif
 
-#if 0
-class ReminderDaemonApp : public KUniqueApplication
-{
-public:
-    ReminderDaemonApp() : mClient(0)
-    {
-        // ensure the Quit dialog's Cancel response does not close the app
-        setQuitOnLastWindowClosed(false);
-    }
-
-    int newInstance()
-    {
-        // Check if we already have a running alarm daemon widget
-        if (mClient) {
-            return 0;
-        }
-
-        mClient = new KOAlarmClient;
-
-        return 0;
-    }
-
-private:
-    KOAlarmClient *mClient;
-};
-#endif
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
