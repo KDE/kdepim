@@ -490,45 +490,45 @@ void KeyListController::createActions(KActionCollection *coll)
     }
 
     // ### somehow make this better...
-    registerActionForCommand<NewCertificateCommand>(coll->action(QLatin1String("file_new_certificate")));
+    registerActionForCommand<NewCertificateCommand>(coll->action(QStringLiteral("file_new_certificate")));
     //---
-    registerActionForCommand<LookupCertificatesCommand>(coll->action(QLatin1String("file_lookup_certificates")));
-    registerActionForCommand<ImportCertificateFromFileCommand>(coll->action(QLatin1String("file_import_certificates")));
+    registerActionForCommand<LookupCertificatesCommand>(coll->action(QStringLiteral("file_lookup_certificates")));
+    registerActionForCommand<ImportCertificateFromFileCommand>(coll->action(QStringLiteral("file_import_certificates")));
     //---
-    registerActionForCommand<ExportCertificateCommand>(coll->action(QLatin1String("file_export_certificates")));
-    registerActionForCommand<ExportSecretKeyCommand>(coll->action(QLatin1String("file_export_secret_keys")));
-    registerActionForCommand<ExportOpenPGPCertsToServerCommand>(coll->action(QLatin1String("file_export_certificates_to_server")));
+    registerActionForCommand<ExportCertificateCommand>(coll->action(QStringLiteral("file_export_certificates")));
+    registerActionForCommand<ExportSecretKeyCommand>(coll->action(QStringLiteral("file_export_secret_keys")));
+    registerActionForCommand<ExportOpenPGPCertsToServerCommand>(coll->action(QStringLiteral("file_export_certificates_to_server")));
     //---
-    registerActionForCommand<DecryptVerifyFilesCommand>(coll->action(QLatin1String("file_decrypt_verify_files")));
-    registerActionForCommand<SignEncryptFilesCommand>(coll->action(QLatin1String("file_sign_encrypt_files")));
+    registerActionForCommand<DecryptVerifyFilesCommand>(coll->action(QStringLiteral("file_decrypt_verify_files")));
+    registerActionForCommand<SignEncryptFilesCommand>(coll->action(QStringLiteral("file_sign_encrypt_files")));
     //---
-    registerActionForCommand<ChecksumCreateFilesCommand>(coll->action(QLatin1String("file_checksum_create_files")));
-    registerActionForCommand<ChecksumVerifyFilesCommand>(coll->action(QLatin1String("file_checksum_verify_files")));
+    registerActionForCommand<ChecksumCreateFilesCommand>(coll->action(QStringLiteral("file_checksum_create_files")));
+    registerActionForCommand<ChecksumVerifyFilesCommand>(coll->action(QStringLiteral("file_checksum_verify_files")));
 
-    registerActionForCommand<ReloadKeysCommand>(coll->action(QLatin1String("view_redisplay")));
+    registerActionForCommand<ReloadKeysCommand>(coll->action(QStringLiteral("view_redisplay")));
     //coll->action( "view_stop_operations" ) <-- already dealt with in make_actions_from_data()
-    registerActionForCommand<DetailsCommand>(coll->action(QLatin1String("view_certificate_details")));
+    registerActionForCommand<DetailsCommand>(coll->action(QStringLiteral("view_certificate_details")));
 
-    registerActionForCommand<ChangeOwnerTrustCommand>(coll->action(QLatin1String("certificates_change_owner_trust")));
-    registerActionForCommand<TrustRootCommand>(coll->action(QLatin1String("certificates_trust_root")));
-    registerActionForCommand<DistrustRootCommand>(coll->action(QLatin1String("certificates_distrust_root")));
+    registerActionForCommand<ChangeOwnerTrustCommand>(coll->action(QStringLiteral("certificates_change_owner_trust")));
+    registerActionForCommand<TrustRootCommand>(coll->action(QStringLiteral("certificates_trust_root")));
+    registerActionForCommand<DistrustRootCommand>(coll->action(QStringLiteral("certificates_distrust_root")));
     //---
-    registerActionForCommand<CertifyCertificateCommand>(coll->action(QLatin1String("certificates_certify_certificate")));
-    registerActionForCommand<ChangeExpiryCommand>(coll->action(QLatin1String("certificates_change_expiry")));
-    registerActionForCommand<ChangePassphraseCommand>(coll->action(QLatin1String("certificates_change_passphrase")));
-    registerActionForCommand<AddUserIDCommand>(coll->action(QLatin1String("certificates_add_userid")));
+    registerActionForCommand<CertifyCertificateCommand>(coll->action(QStringLiteral("certificates_certify_certificate")));
+    registerActionForCommand<ChangeExpiryCommand>(coll->action(QStringLiteral("certificates_change_expiry")));
+    registerActionForCommand<ChangePassphraseCommand>(coll->action(QStringLiteral("certificates_change_passphrase")));
+    registerActionForCommand<AddUserIDCommand>(coll->action(QStringLiteral("certificates_add_userid")));
     //---
-    registerActionForCommand<DeleteCertificatesCommand>(coll->action(QLatin1String("certificates_delete")));
+    registerActionForCommand<DeleteCertificatesCommand>(coll->action(QStringLiteral("certificates_delete")));
     //---
-    registerActionForCommand<DumpCertificateCommand>(coll->action(QLatin1String("certificates_dump_certificate")));
+    registerActionForCommand<DumpCertificateCommand>(coll->action(QStringLiteral("certificates_dump_certificate")));
 
-    registerActionForCommand<RefreshX509CertsCommand>(coll->action(QLatin1String("tools_refresh_x509_certificates")));
-    registerActionForCommand<RefreshOpenPGPCertsCommand>(coll->action(QLatin1String("tools_refresh_openpgp_certificates")));
+    registerActionForCommand<RefreshX509CertsCommand>(coll->action(QStringLiteral("tools_refresh_x509_certificates")));
+    registerActionForCommand<RefreshOpenPGPCertsCommand>(coll->action(QStringLiteral("tools_refresh_openpgp_certificates")));
     //---
-    registerActionForCommand<ImportCrlCommand>(coll->action(QLatin1String("crl_import_crl")));
+    registerActionForCommand<ImportCrlCommand>(coll->action(QStringLiteral("crl_import_crl")));
     //---
-    registerActionForCommand<ClearCrlCacheCommand>(coll->action(QLatin1String("crl_clear_crl_cache")));
-    registerActionForCommand<DumpCrlCacheCommand>(coll->action(QLatin1String("crl_dump_crl_cache")));
+    registerActionForCommand<ClearCrlCacheCommand>(coll->action(QStringLiteral("crl_clear_crl_cache")));
+    registerActionForCommand<DumpCrlCacheCommand>(coll->action(QStringLiteral("crl_dump_crl_cache")));
 
     enableDisableActions(0);
 }
