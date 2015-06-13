@@ -152,7 +152,6 @@ void SieveTextEdit::initCompleter()
     mTextEditorCompleter->setCompleterStringList(listWord);
 }
 
-
 bool SieveTextEdit::event(QEvent *ev)
 {
     if (ev->type() == QEvent::ShortcutOverride) {
