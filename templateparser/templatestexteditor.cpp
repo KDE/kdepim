@@ -18,6 +18,7 @@
 #include "templatestexteditor.h"
 #include "templatessyntaxhighlighter.h"
 #include "templatesutil.h"
+#include <KPIMTextEdit/TextEditorCompleter>
 
 #include <QCompleter>
 #include <QKeyEvent>
@@ -51,30 +52,13 @@ void TemplatesTextEditor::initCompleter()
     listWord << Util::keywords();
     listWord << Util::keywordsWithArgs();
 
-    m_completer = new QCompleter(this);
-    m_completer->setModel(new QStringListModel(listWord, m_completer));
-    m_completer->setModelSorting(QCompleter::CaseSensitivelySortedModel);
-    m_completer->setCaseSensitivity(Qt::CaseInsensitive);
-
-    m_completer->setWidget(this);
-    m_completer->setCompletionMode(QCompleter::PopupCompletion);
-
-    connect(m_completer, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &TemplatesTextEditor::slotInsertCompletion);
-}
-
-void TemplatesTextEditor::slotInsertCompletion(const QString &completion)
-{
-    QTextCursor tc = textCursor();
-    tc.movePosition(QTextCursor::StartOfWord);
-    tc.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
-    tc.removeSelectedText();
-    tc.insertText(completion.right(completion.length() - 1));
-    setTextCursor(tc);
+    mTextEditorCompleter = new KPIMTextEdit::TextEditorCompleter(this, this);
+    mTextEditorCompleter->setCompleterStringList(listWord);
 }
 
 void TemplatesTextEditor::keyPressEvent(QKeyEvent *e)
 {
-    if (m_completer->popup()->isVisible()) {
+    if (mTextEditorCompleter->completer()->popup()->isVisible()) {
         switch (e->key()) {
         case Qt::Key_Enter:
         case Qt::Key_Return:
@@ -88,39 +72,5 @@ void TemplatesTextEditor::keyPressEvent(QKeyEvent *e)
         }
     }
     PimCommon::RichTextEditor::keyPressEvent(e);
-    const QString text = wordUnderCursor();
-    if (text.length() < 2) {
-        // min 2 char for completion
-        return;
-    }
-
-    m_completer->setCompletionPrefix(text);
-
-    QRect cr = cursorRect();
-    cr.setWidth(m_completer->popup()->sizeHintForColumn(0) +
-                m_completer->popup()->verticalScrollBar()->sizeHint().width());
-    m_completer->complete(cr);
+    mTextEditorCompleter->completeText();
 }
-
-QString TemplatesTextEditor::wordUnderCursor()
-{
-    static QString eow =
-        QStringLiteral("~!@#$^&*()+{}|\"<>,./;'[]\\-= ");   // everything without ':', '?' and '_'
-    QTextCursor tc = textCursor();
-
-    tc.anchor();
-    while (1) {
-        // vHanda: I don't understand why the cursor seems to give a pos 1 past
-        // the last char instead of just the last char.
-        int pos = tc.position() - 1;
-        if (pos < 0 ||
-                eow.contains(document()->characterAt(pos)) ||
-                document()->characterAt(pos) == QChar(QChar::LineSeparator) ||
-                document()->characterAt(pos) == QChar(QChar::ParagraphSeparator)) {
-            break;
-        }
-        tc.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
-    }
-    return tc.selectedText();
-}
-
