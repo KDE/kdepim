@@ -23,8 +23,12 @@
 
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-class QCompleter;
 class QMenu;
+namespace KPIMTextEdit
+{
+class TextEditorCompleter;
+}
+
 namespace PimCommon
 {
 class SieveSyntaxHighlighter;
@@ -57,13 +61,11 @@ public:
     void sentenceCase();
     void reverseCase();
 private Q_SLOTS:
-    void slotInsertCompletion(const QString &);
     void slotUpdateLineNumberAreaWidth(int newBlockCount);
     void slotUpdateLineNumberArea(const QRect &, int);
     void slotHelp();
 
 protected:
-    QString wordUnderCursor() const;
     void initCompleter();
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
@@ -80,9 +82,9 @@ private:
     void setCompleterList(const QStringList &list);
     QString selectedWord(const QPoint &pos = QPoint()) const;
 
-    QCompleter *m_completer;
     SieveLineNumberArea *m_sieveLineNumberArea;
     PimCommon::SieveSyntaxHighlighter *m_syntaxHighlighter;
+    KPIMTextEdit::TextEditorCompleter *mTextEditorCompleter;
     bool mShowHelpMenu;
 };
 

@@ -35,6 +35,8 @@
 #include <QMenu>
 #include <QFontDatabase>
 
+#include <KPIMTextEdit/TextEditorCompleter>
+
 using namespace KSieveUi;
 
 SieveTextEdit::SieveTextEdit(QWidget *parent)
@@ -139,42 +141,17 @@ QStringList SieveTextEdit::completerList() const
 
 void SieveTextEdit::setCompleterList(const QStringList &list)
 {
-    m_completer->setModel(new QStringListModel(list, m_completer));
+    mTextEditorCompleter->setCompleterStringList(list);
 }
 
 void SieveTextEdit::initCompleter()
 {
-    QStringList listWord = completerList();
+    const QStringList listWord = completerList();
 
-    m_completer = new QCompleter(this);
-    m_completer->setModel(new QStringListModel(listWord, m_completer));
-    m_completer->setModelSorting(QCompleter::CaseSensitivelySortedModel);
-    m_completer->setCaseSensitivity(Qt::CaseInsensitive);
-
-    m_completer->setWidget(this);
-    m_completer->setCompletionMode(QCompleter::PopupCompletion);
-
-    connect(m_completer, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &SieveTextEdit::slotInsertCompletion);
+    mTextEditorCompleter = new KPIMTextEdit::TextEditorCompleter(this, this);
+    mTextEditorCompleter->setCompleterStringList(listWord);
 }
 
-void SieveTextEdit::slotInsertCompletion(const QString &completion)
-{
-    QTextCursor tc = textCursor();
-    const int extra = completion.length() - m_completer->completionPrefix().length();
-    tc.movePosition(QTextCursor::Left);
-    tc.movePosition(QTextCursor::EndOfWord);
-    tc.insertText(completion.right(extra));
-    setTextCursor(tc);
-}
-
-QString SieveTextEdit::selectedWord(const QPoint &pos) const
-{
-    QTextCursor wordSelectCursor(pos.isNull() ? textCursor() : cursorForPosition(pos));
-    wordSelectCursor.clearSelection();
-    wordSelectCursor.select(QTextCursor::WordUnderCursor);
-    const QString word = wordSelectCursor.selectedText();
-    return word;
-}
 
 bool SieveTextEdit::event(QEvent *ev)
 {
@@ -215,7 +192,7 @@ bool SieveTextEdit::openVariableHelp()
 
 void SieveTextEdit::keyPressEvent(QKeyEvent *e)
 {
-    if (m_completer->popup()->isVisible()) {
+    if (mTextEditorCompleter->completer()->popup()->isVisible()) {
         switch (e->key()) {
         case Qt::Key_Enter:
         case Qt::Key_Return:
@@ -242,38 +219,7 @@ void SieveTextEdit::keyPressEvent(QKeyEvent *e)
         }
         return;
     }
-    const QString text = wordUnderCursor();
-
-    if (text.length() < 2) { // min 2 char for completion
-        return;
-    }
-
-    m_completer->setCompletionPrefix(text);
-
-    QRect cr = cursorRect();
-    cr.setWidth(m_completer->popup()->sizeHintForColumn(0)
-                + m_completer->popup()->verticalScrollBar()->sizeHint().width());
-    m_completer->complete(cr);
-}
-
-QString SieveTextEdit::wordUnderCursor() const
-{
-    static const QString eow = QStringLiteral("~!@#$%^&*()+{}|\"<>,./;'[]\\-= ");   // everything without ':', '?' and '_'
-    QTextCursor tc = textCursor();
-
-    tc.anchor();
-    while (1) {
-        // vHanda: I don't understand why the cursor seems to give a pos 1 past the last char instead
-        // of just the last char.
-        int pos = tc.position() - 1;
-        if (pos < 0 || eow.contains(document()->characterAt(pos))
-                || document()->characterAt(pos) == QChar(QChar::LineSeparator)
-                || document()->characterAt(pos) == QChar(QChar::ParagraphSeparator)) {
-            break;
-        }
-        tc.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
-    }
-    return tc.selectedText();
+    mTextEditorCompleter->completeText();
 }
 
 void SieveTextEdit::setSieveCapabilities(const QStringList &capabilities)
@@ -309,6 +255,15 @@ void SieveTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
             menu->insertAction(menu->actions().at(0), searchAction);
         }
     }
+}
+
+QString SieveTextEdit::selectedWord(const QPoint &pos) const
+{
+    QTextCursor wordSelectCursor(pos.isNull() ? textCursor() : cursorForPosition(pos));
+    wordSelectCursor.clearSelection();
+    wordSelectCursor.select(QTextCursor::WordUnderCursor);
+    const QString word = wordSelectCursor.selectedText();
+    return word;
 }
 
 void SieveTextEdit::slotHelp()

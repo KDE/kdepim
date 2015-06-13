@@ -20,7 +20,10 @@
 
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-class QCompleter;
+namespace KPIMTextEdit
+{
+class TextEditorCompleter;
+}
 namespace KPIMTextEdit
 {
 class HtmlHighlighter;
@@ -36,18 +39,13 @@ public:
 
     void createCompleterList(const QStringList &extraCompletion);
 
-private Q_SLOTS:
-    void slotInsertCompletion(const QString &completion);
-
 protected:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
 
 protected:
-    QCompleter *mCompleter;
-
+    KPIMTextEdit::TextEditorCompleter *mTextEditorCompleter;
 private:
     void initCompleter();
-    QString wordUnderCursor() const;
     KPIMTextEdit::HtmlHighlighter *mHtmlHighlighter;
 };
 }

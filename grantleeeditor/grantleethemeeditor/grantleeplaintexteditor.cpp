@@ -24,6 +24,8 @@
 #include <QScrollBar>
 #include <QAbstractItemView>
 
+#include <KPIMTextEdit/TextEditorCompleter>
+
 using namespace GrantleeThemeEditor;
 
 GrantleePlainTextEditor::GrantleePlainTextEditor(QWidget *parent)
@@ -41,36 +43,20 @@ GrantleePlainTextEditor::~GrantleePlainTextEditor()
 
 void GrantleePlainTextEditor::initCompleter()
 {
-    mCompleter = new QCompleter(this);
-    mCompleter->setModelSorting(QCompleter::CaseSensitivelySortedModel);
-    mCompleter->setCaseSensitivity(Qt::CaseInsensitive);
-
-    mCompleter->setWidget(this);
-    mCompleter->setCompletionMode(QCompleter::PopupCompletion);
-
-    connect(mCompleter, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &GrantleePlainTextEditor::slotInsertCompletion);
+    mTextEditorCompleter = new KPIMTextEdit::TextEditorCompleter(this, this);
 }
 
 void GrantleePlainTextEditor::createCompleterList(const QStringList &extraCompletion)
 {
     QStringList listWord;
     listWord << extraCompletion;
-    mCompleter->setModel(new QStringListModel(listWord, mCompleter));
+    mTextEditorCompleter->setCompleterStringList(extraCompletion);
 }
 
-void GrantleePlainTextEditor::slotInsertCompletion(const QString &completion)
-{
-    QTextCursor tc = textCursor();
-    const int extra = completion.length() - mCompleter->completionPrefix().length();
-    tc.movePosition(QTextCursor::Left);
-    tc.movePosition(QTextCursor::EndOfWord);
-    tc.insertText(completion.right(extra));
-    setTextCursor(tc);
-}
 
 void GrantleePlainTextEditor::keyPressEvent(QKeyEvent *e)
 {
-    if (mCompleter->popup()->isVisible()) {
+    if (mTextEditorCompleter->completer()->popup()->isVisible()) {
         switch (e->key()) {
         case Qt::Key_Enter:
         case Qt::Key_Return:
@@ -84,36 +70,7 @@ void GrantleePlainTextEditor::keyPressEvent(QKeyEvent *e)
         }
     }
     PimCommon::PlainTextEditor::keyPressEvent(e);
-    const QString text = wordUnderCursor();
-    if (text.length() < 2) { // min 2 char for completion
-        return;
-    }
-
-    mCompleter->setCompletionPrefix(text);
-
-    QRect cr = cursorRect();
-    cr.setWidth(mCompleter->popup()->sizeHintForColumn(0)
-                + mCompleter->popup()->verticalScrollBar()->sizeHint().width());
-    mCompleter->complete(cr);
+    mTextEditorCompleter->completeText();
 }
 
-QString GrantleePlainTextEditor::wordUnderCursor() const
-{
-    static QString eow = QStringLiteral("~!@#$%^&*()+{}|\"<>,./;'[]\\-= ");   // everything without ':', '?' and '_'
-    QTextCursor tc = textCursor();
-
-    tc.anchor();
-    while (1) {
-        // vHanda: I don't understand why the cursor seems to give a pos 1 past the last char instead
-        // of just the last char.
-        int pos = tc.position() - 1;
-        if (pos < 0 || eow.contains(document()->characterAt(pos))
-                || document()->characterAt(pos) == QChar(QChar::LineSeparator)
-                || document()->characterAt(pos) == QChar(QChar::ParagraphSeparator)) {
-            break;
-        }
-        tc.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
-    }
-    return tc.selectedText();
-}
 
