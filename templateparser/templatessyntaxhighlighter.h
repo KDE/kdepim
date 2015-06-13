@@ -20,12 +20,12 @@
 #define TEMPLATEPARSER_TEMPLATESSYNTAXHIGHLIGHTER_H
 
 #include "templateparser_export.h"
-#include "pimcommon/syntaxhighlighter/syntaxhighlighterbase.h"
+#include <KPIMTextEdit/SyntaxHighlighterBase>
 
 namespace TemplateParser
 {
 
-class TEMPLATEPARSER_EXPORT TemplatesSyntaxHighlighter : public PimCommon::SyntaxHighlighterBase
+class TEMPLATEPARSER_EXPORT TemplatesSyntaxHighlighter : public KPIMTextEdit::SyntaxHighlighterBase
 {
     Q_OBJECT
 public:

@@ -18,11 +18,11 @@
 #ifndef BALOOSYNTAXHIGHLIGHTER_H
 #define BALOOSYNTAXHIGHLIGHTER_H
 
-#include "pimcommon/syntaxhighlighter/syntaxhighlighterbase.h"
+#include <KPIMTextEdit/SyntaxHighlighterBase>
 
 namespace PimCommon
 {
-class BalooSyntaxHighlighter : public SyntaxHighlighterBase
+class BalooSyntaxHighlighter : public KPIMTextEdit::SyntaxHighlighterBase
 {
     Q_OBJECT
 public:

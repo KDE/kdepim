@@ -23,7 +23,7 @@
 using namespace TemplateParser;
 
 TemplatesSyntaxHighlighter::TemplatesSyntaxHighlighter(QTextDocument *doc)
-    : PimCommon::SyntaxHighlighterBase(doc)
+    : KPIMTextEdit::SyntaxHighlighterBase(doc)
 {
     init();
 }
@@ -42,7 +42,7 @@ void TemplatesSyntaxHighlighter::init()
 
     Q_FOREACH (const QString &s, keywords) {
         const QRegExp regex(s, Qt::CaseInsensitive);
-        m_rules.append(PimCommon::Rule(regex, keywordFormat));
+        m_rules.append(KPIMTextEdit::Rule(regex, keywordFormat));
     }
 
     QTextCharFormat keywordWithArgsFormat;
@@ -51,7 +51,7 @@ void TemplatesSyntaxHighlighter::init()
 
     Q_FOREACH (const QString &s, keywordsWithArgs) {
         const QRegExp regex(s, Qt::CaseInsensitive);
-        m_rules.append(PimCommon::Rule(regex, keywordWithArgsFormat));
+        m_rules.append(KPIMTextEdit::Rule(regex, keywordWithArgsFormat));
     }
 }
 

@@ -18,13 +18,13 @@
 #ifndef XMLPRINTINGSYNTAXHIGHLIGHTER_H
 #define XMLPRINTINGSYNTAXHIGHLIGHTER_H
 
-#include "pimcommon/syntaxhighlighter/syntaxhighlighterbase.h"
+#include <KPIMTextEdit/SyntaxHighlighterBase>
 #include <QList>
 #include <QRegExp>
 
 class QTextDocument;
 
-class XMLPrintingSyntaxHighLighter : public PimCommon::SyntaxHighlighterBase
+class XMLPrintingSyntaxHighLighter : public KPIMTextEdit::SyntaxHighlighterBase
 {
     Q_OBJECT
 public:

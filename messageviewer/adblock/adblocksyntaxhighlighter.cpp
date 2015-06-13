@@ -20,7 +20,7 @@
 using namespace MessageViewer;
 
 AdBlockSyntaxHighlighter::AdBlockSyntaxHighlighter(QTextDocument *doc)
-    : PimCommon::SyntaxHighlighterBase(doc)
+    : KPIMTextEdit::SyntaxHighlighterBase(doc)
 {
     init();
 }
@@ -34,21 +34,21 @@ void AdBlockSyntaxHighlighter::init()
     QTextCharFormat commentFormat;
     commentFormat.setForeground(Qt::darkYellow);
     QRegExp commentRegex(QStringLiteral("^!.*"));
-    m_rules.append(PimCommon::Rule(commentRegex, commentFormat));
+    m_rules.append(KPIMTextEdit::Rule(commentRegex, commentFormat));
 
     QTextCharFormat exceptionFormat;
     exceptionFormat.setForeground(Qt::magenta);
     QRegExp exceptionRegex(QStringLiteral("^@@.*"));
-    m_rules.append(PimCommon::Rule(exceptionRegex, exceptionFormat));
+    m_rules.append(KPIMTextEdit::Rule(exceptionRegex, exceptionFormat));
 
     QTextCharFormat headerFormat;
     headerFormat.setForeground(Qt::red);
     QRegExp headerRegex(QStringLiteral("^\\[.*"));
-    m_rules.append(PimCommon::Rule(headerRegex, headerFormat));
+    m_rules.append(KPIMTextEdit::Rule(headerRegex, headerFormat));
 
     QTextCharFormat elementFormat;
     elementFormat.setForeground(Qt::blue);
     QRegExp elementRegex(QStringLiteral(".*##.*"));
-    m_rules.append(PimCommon::Rule(elementRegex, elementFormat));
+    m_rules.append(KPIMTextEdit::Rule(elementRegex, elementFormat));
 }
 

@@ -40,7 +40,7 @@ void SieveSyntaxHighlighter::addCapabilities(const QStringList &capabilities)
     keywords << capabilities;
     Q_FOREACH (const QString &s, keywords) {
         const QRegExp regex(QStringLiteral("\"%1\"").arg(s), Qt::CaseSensitive);
-        m_rules.append(Rule(regex, keywordFormat));
+        m_rules.append(KPIMTextEdit::Rule(regex, keywordFormat));
     }
 }
 
@@ -50,10 +50,10 @@ void SieveSyntaxHighlighter::init()
     QTextCharFormat commentFormat;
     commentFormat.setForeground(Qt::darkYellow);
     QRegExp commentRegex(QStringLiteral("#.*$"));
-    m_rules.append(Rule(commentRegex, commentFormat));
+    m_rules.append(KPIMTextEdit::Rule(commentRegex, commentFormat));
 
     commentRegex = QRegExp(QStringLiteral("/*.*$*/"));
-    m_rules.append(Rule(commentRegex, commentFormat));
+    m_rules.append(KPIMTextEdit::Rule(commentRegex, commentFormat));
 
     // Keywords
     QTextCharFormat keywordFormat;
@@ -66,7 +66,7 @@ void SieveSyntaxHighlighter::init()
     keywords << QStringLiteral("\\bforeverypart\\b");
     Q_FOREACH (const QString &s, keywords) {
         const QRegExp regex(s, Qt::CaseSensitive);
-        m_rules.append(Rule(regex, keywordFormat));
+        m_rules.append(KPIMTextEdit::Rule(regex, keywordFormat));
     }
 
     // Text keyword
@@ -76,7 +76,7 @@ void SieveSyntaxHighlighter::init()
     textKeywords << QStringLiteral("\\btext:");
     Q_FOREACH (const QString &s, textKeywords) {
         const QRegExp regex(s, Qt::CaseSensitive);
-        m_rules.append(Rule(regex, textKeywordFormat));
+        m_rules.append(KPIMTextEdit::Rule(regex, textKeywordFormat));
     }
 
     // Match Type
@@ -133,7 +133,7 @@ void SieveSyntaxHighlighter::init()
               << QStringLiteral("\\s:comparator\\b");
     Q_FOREACH (const QString &s, matchType) {
         const QRegExp regex(s, Qt::CaseSensitive);
-        m_rules.append(Rule(regex, matchFormat));
+        m_rules.append(KPIMTextEdit::Rule(regex, matchFormat));
     }
 
     // Control structure
@@ -144,7 +144,7 @@ void SieveSyntaxHighlighter::init()
     controlType << QStringLiteral("\\bif\\b") << QStringLiteral("\\belsif\\b") << QStringLiteral("\\belse\\b");
     Q_FOREACH (const QString &s, controlType) {
         const QRegExp regex(s, Qt::CaseSensitive);
-        m_rules.append(Rule(regex, controlFormat));
+        m_rules.append(KPIMTextEdit::Rule(regex, controlFormat));
     }
 
     //Action commands:
@@ -173,7 +173,7 @@ void SieveSyntaxHighlighter::init()
                << QStringLiteral("\\bextracttext\\b");
     Q_FOREACH (const QString &s, actionType) {
         const QRegExp regex(s, Qt::CaseSensitive);
-        m_rules.append(Rule(regex, actionFormat));
+        m_rules.append(KPIMTextEdit::Rule(regex, actionFormat));
     }
 
     //Test commands:
@@ -205,13 +205,13 @@ void SieveSyntaxHighlighter::init()
              << QStringLiteral("\\bservermetadataexists\\b");
     Q_FOREACH (const QString &s, testType) {
         const QRegExp regex(s, Qt::CaseSensitive);
-        m_rules.append(Rule(regex, testFormat));
+        m_rules.append(KPIMTextEdit::Rule(regex, testFormat));
     }
 
     // Literals
     QTextCharFormat literalFormat;
     literalFormat.setForeground(Qt::darkRed);
     QRegExp literalRegex(QStringLiteral("(\"[^\"]*\")"));
-    m_rules.append(Rule(literalRegex, literalFormat));
+    m_rules.append(KPIMTextEdit::Rule(literalRegex, literalFormat));
 }
 

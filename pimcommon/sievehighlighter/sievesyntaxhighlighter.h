@@ -20,7 +20,7 @@
 #define KSIEVE_KSIEVEUI_SIEVESYNTAXHIGHLIGHTER_H
 
 #include "pimcommon_export.h"
-#include "pimcommon/syntaxhighlighter/syntaxhighlighterbase.h"
+#include <KPIMTextEdit/SyntaxHighlighterBase>
 
 #include <QList>
 #include <QRegExp>
@@ -30,7 +30,7 @@ class QTextDocument;
 namespace PimCommon
 {
 
-class PIMCOMMON_EXPORT SieveSyntaxHighlighter : public SyntaxHighlighterBase
+class PIMCOMMON_EXPORT SieveSyntaxHighlighter : public KPIMTextEdit::SyntaxHighlighterBase
 {
     Q_OBJECT
 

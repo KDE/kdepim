@@ -25,6 +25,11 @@ set(libpimcommon_shorturl_SRCS
   shorturl/engine/isgdshorturl.cpp
 )
 
+set(libpimcommon_sieve_SRCS
+  sievehighlighter/sievesyntaxhighlighter.cpp
+  sievehighlighter/sievesyntaxhighlighterutil.cpp
+)
+
 if( KF5GAPI_FOUND )
   set(libpimcommon_storageservice_gdrive 
     storageservice/gdrive/gdrivestorageservice.cpp
@@ -153,10 +158,6 @@ set(libpimcommon_acl_SRCS
   acl/collectionaclwidget.cpp
 )
 
-set(libpimcommon_sieve_SRCS
-  sievehighlighter/sievesyntaxhighlighter.cpp
-  sievehighlighter/sievesyntaxhighlighterutil.cpp
-)
 
 set(libpimcommon_widgets_SRCS
   widgets/minimumcombobox.cpp
@@ -193,10 +194,6 @@ set(libpimcommon_baloodebug_SRCS
   baloodebug/job/baloodebugsearchjob.cpp
   baloodebug/baloodebugsearchpathcombobox.cpp
   baloodebug/baloosyntaxhighlighter.cpp
-)
-
-set(libpimcommon_syntaxhighlighter_SRCS
-  syntaxhighlighter/syntaxhighlighterbase.cpp
 )
 
 set(libpimcommon_util_SRCS
@@ -242,7 +239,6 @@ set(libpimcommon_SRCS
   ${libpimcommon_widgets_SRCS}
   ${libtexttospeech_SRCS}
   ${libpimcommon_baloodebug_SRCS}
-  ${libpimcommon_syntaxhighlighter_SRCS}
   ${libpimcommon_temporary_SRCS}
   ${libpimcommon_gravatar_SRCS}
 )

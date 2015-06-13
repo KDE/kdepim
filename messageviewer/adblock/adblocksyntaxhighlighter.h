@@ -18,13 +18,13 @@
 #ifndef ADBLOCKSYNTAXHIGHLIGHTER_H
 #define ADBLOCKSYNTAXHIGHLIGHTER_H
 
-#include "pimcommon/syntaxhighlighter/syntaxhighlighterbase.h"
+#include <KPIMTextEdit/SyntaxHighlighterBase>
 #include <QList>
 #include <QRegExp>
 
 namespace MessageViewer
 {
-class AdBlockSyntaxHighlighter : public PimCommon::SyntaxHighlighterBase
+class AdBlockSyntaxHighlighter : public KPIMTextEdit::SyntaxHighlighterBase
 {
     Q_OBJECT
 public:

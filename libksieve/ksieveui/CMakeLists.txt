@@ -188,6 +188,7 @@ PRIVATE
   KF5::KIOWidgets
   KF5::NewStuff
   Qt5::WebEngineWidgets
+  KF5::PimTextEdit 
 )
 
 set_target_properties(
