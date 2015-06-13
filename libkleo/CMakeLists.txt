@@ -17,7 +17,9 @@ set(CMAKE_CXX_FLAGS "${FOO}")
 
 add_subdirectory( pics )
 add_subdirectory( backends )
-add_subdirectory( tests )
+if (BUILD_TESTING)
+   add_subdirectory( tests )
+endif()
 
 ########### next target ###############
 set(libkleo_backend_qgpgme_SRCS
