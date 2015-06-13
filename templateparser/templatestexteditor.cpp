@@ -54,6 +54,7 @@ void TemplatesTextEditor::initCompleter()
 
     mTextEditorCompleter = new KPIMTextEdit::TextEditorCompleter(this, this);
     mTextEditorCompleter->setCompleterStringList(listWord);
+    mTextEditorCompleter->setExcludeOfCharacters(QStringLiteral("~!@#$^&*()+{}|\"<>,./;'[]\\-= "));
 }
 
 void TemplatesTextEditor::keyPressEvent(QKeyEvent *e)
