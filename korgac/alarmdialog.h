@@ -56,7 +56,6 @@ class QDateTime;
 class QTreeWidget;
 class QTreeWidgetItem;
 class QSpinBox;
-class QVBoxLayout;
 
 class AlarmDialog : public QDialog
 {
