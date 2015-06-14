@@ -664,14 +664,14 @@ bool Agenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
     case QEvent::MouseButtonPress:
         if (object != this) {
             if (me->button() == Qt::RightButton) {
-                d->mClickedItem = dynamic_cast<AgendaItem *>(object);
+                d->mClickedItem = qobject_cast<AgendaItem *>(object);
                 if (d->mClickedItem) {
                     selectItem(d->mClickedItem);
                     Q_EMIT showIncidencePopupSignal(d->mClickedItem->incidence(),
                                                     d->mClickedItem->occurrenceDate());
                 }
             } else {
-                AgendaItem::QPtr item = dynamic_cast<AgendaItem *>(object);
+                AgendaItem::QPtr item = qobject_cast<AgendaItem *>(object);
                 if (item) {
                     KCalCore::Incidence::Ptr incidence = item->incidence();
                     if (incidence->isReadOnly()) {
@@ -732,7 +732,7 @@ bool Agenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
         // avoid an offset of a few pixels. Don't ask me why...
         QPoint indicatorPos = gridToContents(contentsToGrid(viewportPos));
         if (object != this) {
-            AgendaItem::QPtr moveItem = dynamic_cast<AgendaItem *>(object);
+            AgendaItem::QPtr moveItem = qobject_cast<AgendaItem *>(object);
             KCalCore::Incidence::Ptr incidence =  moveItem ? moveItem->incidence() : KCalCore::Incidence::Ptr();
             if (incidence && !incidence->isReadOnly()) {
                 if (!d->mActionItem) {
@@ -780,7 +780,7 @@ bool Agenda::eventFilter_mouse(QObject *object, QMouseEvent *me)
             selectItem(Q_NULLPTR);
             Q_EMIT newEventSignal();
         } else {
-            AgendaItem::QPtr doubleClickedItem = dynamic_cast<AgendaItem *>(object);
+            AgendaItem::QPtr doubleClickedItem = qobject_cast<AgendaItem *>(object);
             if (doubleClickedItem) {
                 selectItem(doubleClickedItem);
                 Q_EMIT editIncidenceSignal(doubleClickedItem->incidence());
