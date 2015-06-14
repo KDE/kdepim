@@ -108,7 +108,7 @@ public:
         if (!job->error()) {
             Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);
             if (!fetchJob->collections().isEmpty()) {
-                mParentCollection = fetchJob->collections().first();
+                mParentCollection = fetchJob->collections().at(0);
             }
         }
 

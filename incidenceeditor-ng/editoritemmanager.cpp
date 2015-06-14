@@ -129,7 +129,7 @@ void ItemEditorPrivate::itemFetchResult(KJob *job)
         return;
     }
 
-    Akonadi::Item item = fetchJob->items().first();
+    Akonadi::Item item = fetchJob->items().at(0);
     if (mItemUi->hasSupportedPayload(item)) {
         setItem(item);
         if (action != EditorItemManager::None) {
