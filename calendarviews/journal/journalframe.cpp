@@ -105,6 +105,7 @@ void JournalDateView::addJournal(const Akonadi::Item &j)
 Akonadi::Item::List JournalDateView::journals() const
 {
     Akonadi::Item::List l;
+    l.reserve(mEntries.count());
     Q_FOREACH (const JournalFrame *const i, mEntries) {
         l.push_back(i->journal());
     }

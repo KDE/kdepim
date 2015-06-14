@@ -229,7 +229,9 @@ void IncidenceAttendee::load(const KCalCore::Incidence::Ptr &incidence)
     }
 
     KCalCore::Attendee::List attendees;
-    foreach (const KCalCore::Attendee::Ptr &a, incidence->attendees()) {
+    const KCalCore::Attendee::List incidenceAttendees = incidence->attendees();
+    attendees.reserve(incidenceAttendees.count());
+    foreach (const KCalCore::Attendee::Ptr &a, incidenceAttendees) {
         attendees << KCalCore::Attendee::Ptr(new KCalCore::Attendee(*a));
     }
 

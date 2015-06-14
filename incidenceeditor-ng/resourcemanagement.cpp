@@ -215,7 +215,9 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj, const KLDAP::
             continue;
         }
         QStringList list;
-        foreach (const QByteArray &value, obj.attributes().value(key)) {
+        const QList<QByteArray> values = obj.attributes().value(key);
+        list.reserve(values.count());
+        foreach (const QByteArray &value, values) {
             list << QString::fromUtf8(value);
         }
         mUi->formDetails->addRow(translateLDAPAttributeForDisplay(key), new QLabel(list.join("\n")));
@@ -231,7 +233,8 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj, const KLDAP::
 
 void ResourceManagement::slotLayoutChanged()
 {
-    for (int i = 1; i < mUi->treeResults->model()->columnCount(QModelIndex()); ++i) {
+    const int columnCount = mUi->treeResults->model()->columnCount(QModelIndex());
+    for (int i = 1; i < columnCount; ++i) {
         mUi->treeResults->setColumnHidden(i, true);
     }
 }
@@ -255,7 +258,9 @@ void ResourceManagement::slotOwnerSearchFinished()
             continue;
         }
         QStringList list;
-        foreach (const QByteArray &value, obj.attributes().value(key)) {
+        const QList<QByteArray> values = obj.attributes().value(key);
+        list.reserve(values.count());
+        foreach (const QByteArray &value, values) {
             list << QString::fromUtf8(value);
         }
         mUi->formOwner->addRow(translateLDAPAttributeForDisplay(key), new QLabel(list.join(QStringLiteral("\n"))));

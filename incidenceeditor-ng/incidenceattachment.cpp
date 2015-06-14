@@ -405,6 +405,8 @@ void IncidenceAttachment::handlePasteOrDrop(const QMimeData *mimeData)
     if (KContacts::VCardDrag::canDecode(mimeData)) {
         KContacts::Addressee::List addressees;
         KContacts::VCardDrag::fromMimeData(mimeData, addressees);
+        urls.reserve(addressees.count());
+        labels.reserve(addressees.count());
         for (KContacts::Addressee::List::ConstIterator it = addressees.constBegin();
                 it != addressees.constEnd(); ++it) {
             urls.append(QString(QLatin1String("uid:") + (*it).uid()));
@@ -425,6 +427,7 @@ void IncidenceAttachment::handlePasteOrDrop(const QMimeData *mimeData)
     } else if (mimeData->hasText()) {
         QString text = mimeData->text();
         QStringList lst = text.split('\n', QString::SkipEmptyParts);
+        urls.reserve(lst.count());
         for (QStringList::ConstIterator it = lst.constBegin(); it != lst.constEnd(); ++it) {
             urls.append(*it);
         }

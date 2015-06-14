@@ -138,6 +138,7 @@ void AlarmDialog::load(const KCalCore::Alarm::Ptr &alarm)
         mUi->mTypeCombo->setCurrentIndex(3);
         KCalCore::Person::List addresses = alarm->mailAddresses();
         QStringList add;
+        add.reserve(addresses.count());
         for (KCalCore::Person::List::ConstIterator it = addresses.constBegin();
                 it != addresses.constEnd(); ++it) {
             add << (*it)->fullName();
@@ -214,6 +215,7 @@ void AlarmDialog::save(const KCalCore::Alarm::Ptr &alarm) const
     } else if (mUi->mTypeCombo->currentIndex() == 3) {   // Email
         QStringList addresses = KEmailAddress::splitAddressList(mUi->mEmailAddress->text());
         KCalCore::Person::List add;
+        add.reserve(addresses.count());
         for (QStringList::Iterator it = addresses.begin(); it != addresses.end(); ++it) {
             add << KCalCore::Person::fromFullName(*it);
         }

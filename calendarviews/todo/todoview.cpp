@@ -512,6 +512,7 @@ Akonadi::Item::List TodoView::selectedIncidences() const
 {
     Akonadi::Item::List ret;
     const QModelIndexList selection = mView->selectionModel()->selectedRows();
+    ret.reserve(selection.count());
     Q_FOREACH (const QModelIndex &mi, selection) {
         ret << mi.data(TodoModel::TodoRole).value<Akonadi::Item>();
     }
@@ -535,7 +536,11 @@ void TodoView::saveLayout(KConfig *config, const QString &group) const
     QVariantList columnVisibility;
     QVariantList columnOrder;
     QVariantList columnWidths;
-    for (int i = 0; i < header->count(); ++i) {
+    const int headerCount = header->count();
+    columnVisibility.reserve(headerCount);
+    columnWidths.reserve(headerCount);
+    columnOrder.reserve(headerCount);
+    for (int i = 0; i < headerCount; ++i) {
         columnVisibility << QVariant(!mView->isColumnHidden(i));
         columnWidths << QVariant(header->sectionSize(i));
         columnOrder << QVariant(header->visualIndex(i));

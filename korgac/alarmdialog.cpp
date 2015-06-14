@@ -428,6 +428,7 @@ void AlarmDialog::dismissAll()
 void AlarmDialog::dismiss(ReminderList selections)
 {
     QList<Akonadi::Item::Id> ids;
+    ids.reserve(selections.count());
     for (ReminderList::Iterator it = selections.begin(); it != selections.end(); ++it) {
         qCDebug(KOALARMCLIENT_LOG) << "removing " << CalendarSupport::incidence((*it)->mIncidence)->summary();
         if (mIncidenceTree->itemBelow(*it)) {
@@ -651,6 +652,7 @@ void AlarmDialog::eventNotification()
                 } else {
                     const Person::List addresses = alarm->mailAddresses();
                     QStringList add;
+                    add.reserve(addresses.count());
                     for (Person::List::ConstIterator it = addresses.constBegin();
                             it != addresses.constEnd(); ++it) {
                         add << (*it)->fullName();
@@ -873,7 +875,7 @@ KDateTime AlarmDialog::triggerDateForIncidence(const Incidence::Ptr &incidence,
         return result;
     }
 
-    Alarm::Ptr alarm = incidence->alarms().first();
+    Alarm::Ptr alarm = incidence->alarms().at(0);
 
     if (incidence->recurs()) {
         result = incidence->recurrence()->getNextDateTime(

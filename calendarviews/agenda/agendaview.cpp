@@ -389,6 +389,7 @@ QList<QDate> AgendaView::Private::generateDateList(const QDate &start, const QDa
     if (start.isValid() && end.isValid() && end >= start &&
             start.daysTo(end) < AgendaView::MAX_DAY_COUNT) {
         QDate date = start;
+        list.reserve(start.daysTo(end) + 1);
         while (date <= end) {
             list.append(date);
             date = date.addDays(1);

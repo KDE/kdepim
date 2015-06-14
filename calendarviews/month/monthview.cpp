@@ -112,7 +112,9 @@ void MonthViewPrivate::moveStartDate(int weeks, int months)
 #ifndef KDEPIM_MOBILE_UI
     KCalCore::DateList dateList;
     QDate d = start.date();
-    while (d <= end.date()) {
+    const QDate e = end.date();
+    dateList.reserve(d.daysTo(e) + 1);
+    while (d <= e) {
         dateList.append(d);
         d = d.addDays(1);
     }

@@ -401,7 +401,9 @@ KCalCore::Todo::List CalendarSupport::todos(const QMimeData *mimeData,
 #ifndef QT_NO_DRAGANDDROP
     KCalCore::Calendar::Ptr cal(KCalUtils::DndFactory::createDropCalendar(mimeData, spec));
     if (cal) {
-        Q_FOREACH (const KCalCore::Todo::Ptr &i, cal->todos()) {
+        const KCalCore::Todo::List calTodos = cal->todos();
+        todos.reserve(calTodos.count());
+        Q_FOREACH (const KCalCore::Todo::Ptr &i, calTodos) {
             todos.push_back(KCalCore::Todo::Ptr(i->clone()));
         }
     }
@@ -419,6 +421,7 @@ KCalCore::Incidence::List CalendarSupport::incidences(const QMimeData *mimeData,
     KCalCore::Calendar::Ptr cal(KCalUtils::DndFactory::createDropCalendar(mimeData, spec));
     if (cal) {
         KCalCore::Incidence::List calIncidences = cal->incidences();
+        incidences.reserve(calIncidences.count());
         Q_FOREACH (const KCalCore::Incidence::Ptr &i, calIncidences) {
             incidences.push_back(KCalCore::Incidence::Ptr(i->clone()));
         }
@@ -527,6 +530,7 @@ Akonadi::Collection::Id CalendarSupport::collectionIdFromIndex(const QModelIndex
 Akonadi::Collection::List CalendarSupport::collectionsFromIndexes(const QModelIndexList &indexes)
 {
     Akonadi::Collection::List l;
+    l.reserve(indexes.count());
     Q_FOREACH (const QModelIndex &idx, indexes) {
         l.push_back(collectionFromIndex(idx));
     }
@@ -714,7 +718,8 @@ QStringList CalendarSupport::holiday(const QDate &date)
 
     const HolidayRegion holidays(KCalPrefs::instance()->mHolidays);
     const Holiday::List list = holidays.holidays(date);
-    const int listCount(list.count());
+    const int listCount = list.count();
+    hdays.reserve(listCount);
     for (int i = 0; i < listCount; ++i) {
         hdays.append(list.at(i).text());
     }

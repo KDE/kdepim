@@ -979,6 +979,7 @@ void CalPrintPluginBase::drawAgendaDayBox(QPainter &p, const KCalCore::Event::Li
             continue;
         }
         QList<KDateTime> times = event->startDateTimesForDate(qd);
+        cells.reserve(times.count());
         for (QList<KDateTime>::ConstIterator it = times.constBegin();
                 it != times.constEnd(); ++it) {
             cells.append(new PrintCellItem(event, (*it), event->endDateForStart(*it)));
@@ -2080,6 +2081,7 @@ void CalPrintPluginBase::drawTodo(int &count, const KCalCore::Todo::Ptr &todo, Q
     KCalCore::Todo::List sl = mCalendar->sortTodos(&t, sortField, sortDir);
 #else
     KCalCore::Todo::List tl;
+    tl.reserve(t.count());
     foreach (const KCalCore::Todo::Ptr &todo, t) {
         tl.append(todo);
     }

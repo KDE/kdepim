@@ -97,6 +97,7 @@ void IncidenceCategories::save(Akonadi::Item &item)
 QStringList IncidenceCategories::categories() const
 {
     QStringList list;
+    list.reserve(mSelectedTags.count());
     Q_FOREACH (const Akonadi::Tag &tag, mSelectedTags) {
         list << tag.name();
     }

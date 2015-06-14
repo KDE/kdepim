@@ -241,13 +241,16 @@ QStringList KCalPrefs::allEmails()
 QStringList KCalPrefs::fullEmails()
 {
     QStringList fullEmails;
+
+    // Grab emails from the email identities
+    KIdentityManagement::IdentityManager *idmanager = CalendarSupport::identityManager();
+    QStringList lst = idmanager->identities();
+
+    fullEmails.reserve(1 + mAdditionalMails.count() + lst.count());
     // The user name and email from the config dialog:
     fullEmails << QString::fromUtf8("%1 <%2>").arg(fullName()).arg(email());
 
     QStringList::Iterator it;
-    // Grab emails from the email identities
-    KIdentityManagement::IdentityManager *idmanager = CalendarSupport::identityManager();
-    QStringList lst = idmanager->identities();
     KIdentityManagement::IdentityManager::ConstIterator it1;
     for (it1 = idmanager->begin(); it1 != idmanager->end(); ++it1) {
         fullEmails << (*it1).fullEmailAddr();

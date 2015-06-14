@@ -344,6 +344,7 @@ void CalPrintIncidence::print(QPainter &p, int width, int height)
 
                 QStringList alarmStrings;
                 KCalCore::Alarm::List::ConstIterator it;
+                alarmStrings.reserve(alarms.count());
                 for (it = alarms.constBegin(); it != alarms.constEnd(); ++it) {
                     KCalCore::Alarm::Ptr alarm = *it;
 

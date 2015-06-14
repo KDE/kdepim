@@ -282,16 +282,17 @@ QStringList KOAlarmClient::dumpAlarms()
     const KDateTime end = start.addDays(1).addSecs(-1);
 
     QStringList lst;
+    const Alarm::List alarms = mCalendar->alarms(start, end);
+    lst.reserve(1 + (alarms.isEmpty() ? 1 : alarms.count()));
     // Don't translate, this is for debugging purposes.
     lst << QLatin1String("AlarmDeamon::dumpAlarms() from ") + start.toString() + QLatin1String(" to ") +
         end.toString();
 
-    Alarm::List alarms = mCalendar->alarms(start, end);
     if (alarms.isEmpty()) {
         lst << QLatin1String("No alarm found.");
     } else {
 
-        foreach (Alarm::Ptr a, alarms) {
+        foreach (const Alarm::Ptr &a, alarms) {
             const Incidence::Ptr parentIncidence = mCalendar->incidence(a->parentUid());
             lst << QLatin1String("  ") + parentIncidence->summary() + QLatin1String(" (") + a->time().toString() + QLatin1Char(')');
         }

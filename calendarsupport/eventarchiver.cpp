@@ -164,6 +164,7 @@ void EventArchiver::deleteIncidences(Akonadi::IncidenceChanger *changer,
     QStringList incidenceStrs;
     Akonadi::Item::List::ConstIterator it;
     Akonadi::Item::List::ConstIterator end(items.constEnd());
+    incidenceStrs.reserve(items.count());
     for (it = items.constBegin(); it != end; ++it) {
         incidenceStrs.append(CalendarSupport::incidence(*it)->summary());
     }
@@ -232,6 +233,7 @@ void EventArchiver::archiveIncidences(const Akonadi::ETMCalendar::Ptr &calendar,
     // remain. This is not really efficient, but there is no other easy way.
     QStringList uids;
     Incidence::List allIncidences = archiveCalendar->rawIncidences();
+    uids.reserve(incidences.count());
     foreach (const KCalCore::Incidence::Ptr &incidence, incidences) {
         uids.append(incidence->uid());
     }

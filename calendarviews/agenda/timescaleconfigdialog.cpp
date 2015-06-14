@@ -202,7 +202,9 @@ void TimeScaleConfigDialog::down()
 QStringList TimeScaleConfigDialog::zones()
 {
     QStringList list;
-    for (int i = 0; i < listWidget->count(); ++i) {
+    const int count = listWidget->count();
+    list.reserve(count);
+    for (int i = 0; i < count; ++i) {
         list << listWidget->item(i)->data(TimeZoneNameRole).toString();
     }
     return list;

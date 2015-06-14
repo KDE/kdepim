@@ -72,7 +72,9 @@ bool CollectionSelection::contains(const Akonadi::Collection::Id &id) const
 Akonadi::Collection::List CollectionSelection::selectedCollections() const
 {
     Akonadi::Collection::List selected;
-    Q_FOREACH (const QModelIndex &idx, d->model->selectedIndexes()) {
+    const QModelIndexList selectedIndexes = d->model->selectedIndexes();
+    selected.reserve(selectedIndexes.count());
+    Q_FOREACH (const QModelIndex &idx, selectedIndexes) {
         selected.append(collectionFromIndex(idx));
     }
     return selected;
@@ -81,7 +83,9 @@ Akonadi::Collection::List CollectionSelection::selectedCollections() const
 QList<Akonadi::Collection::Id> CollectionSelection::selectedCollectionIds() const
 {
     QList<Akonadi::Collection::Id> selected;
-    Q_FOREACH (const QModelIndex &idx, d->model->selectedIndexes()) {
+    const QModelIndexList selectedIndexes = d->model->selectedIndexes();
+    selected.reserve(selectedIndexes.count());
+    Q_FOREACH (const QModelIndex &idx, selectedIndexes) {
         selected.append(collectionIdFromIndex(idx));
     }
     return selected;
