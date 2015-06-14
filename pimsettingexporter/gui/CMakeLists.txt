@@ -29,18 +29,10 @@ set(pimsettingexporter_SRCS
 add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
 target_link_libraries(pimsettingexporter
-  KF5::KIOCore
-  KF5::AkonadiCore
-  KF5::AkonadiMime
-  KF5::Mime
-  KF5::MailTransport
-  KF5::AlarmCalendar
   KF5::DBusAddons
-  mailimporter
   mailcommon
   pimcommon
   kdepim
-  messagecomposer
   pimsettingexporterprivate
 )
 

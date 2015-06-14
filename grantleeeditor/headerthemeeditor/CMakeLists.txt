@@ -27,7 +27,7 @@ set(headerthemeeditor_SRCS
 
 
 add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )
-TARGET_LINK_LIBRARIES(headerthemeeditor KF5::Mime  KF5::PimTextEdit KF5::KIOCore KF5::NewStuff pimcommon messageviewer grantleethemeeditor KF5::DBusAddons grantleetheme)
+TARGET_LINK_LIBRARIES(headerthemeeditor KF5::Mime  KF5::NewStuff pimcommon messageviewer grantleethemeeditor KF5::DBusAddons grantleetheme)
 
 install(TARGETS headerthemeeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
