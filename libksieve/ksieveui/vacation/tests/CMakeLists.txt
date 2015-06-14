@@ -8,5 +8,5 @@ set(vacation_multi_server_SRCS
 )
 
 add_executable(vacationmultiservertest ${vacation_multi_server_SRCS} )
-TARGET_LINK_LIBRARIES(vacationmultiservertest  ksieveui ksieve)
+target_link_libraries(vacationmultiservertest  ksieveui ksieve)
 

@@ -28,7 +28,7 @@ set(contactprintthemeeditor_SRCS
 
 
 add_executable(contactprintthemeeditor ${contactprintthemeeditor_SRCS} )
-TARGET_LINK_LIBRARIES(contactprintthemeeditor 
+target_link_libraries(contactprintthemeeditor 
                        KF5::DBusAddons                        
                        KF5::NewStuff 
                        KF5::AkonadiContact

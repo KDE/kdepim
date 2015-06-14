@@ -9,7 +9,7 @@ set(composerhtmlSources
 )
 
 add_executable(composerhtmleditor ${composerhtmlSources} )
-TARGET_LINK_LIBRARIES(composerhtmleditor Qt5::WebKitWidgets  KF5::KIOCore composereditorng )
+target_link_libraries(composerhtmleditor Qt5::WebKitWidgets  KF5::KIOCore composereditorng )
 
 install(TARGETS composerhtmleditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES

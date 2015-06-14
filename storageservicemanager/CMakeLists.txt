@@ -32,7 +32,7 @@ set(storageservicemanager_SRCS
 )
 
 add_executable(storageservicemanager ${storageservicemanager_SRCS} )
-TARGET_LINK_LIBRARIES(storageservicemanager 
+target_link_libraries(storageservicemanager 
                        KF5::NotifyConfig
                        pimcommon
                        kdepim

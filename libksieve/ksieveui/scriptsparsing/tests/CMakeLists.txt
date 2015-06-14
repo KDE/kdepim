@@ -11,5 +11,5 @@ set(xmlsieveparsing_SRCS
 )
 
 add_executable(xmlsieveparsing ${xmlsieveparsing_SRCS} )
-TARGET_LINK_LIBRARIES(xmlsieveparsing   ksieveui ksieve)
+target_link_libraries(xmlsieveparsing   ksieveui ksieve)
 
