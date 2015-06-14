@@ -23,7 +23,6 @@ add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
 target_link_libraries(kwatchgnupg
   KF5::DBusAddons  
   kleo
-  KF5::QGpgme
 )
 
 install(TARGETS kwatchgnupg ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

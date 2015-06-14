@@ -20,7 +20,6 @@ include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter ${CMAK
 add_executable(mboximporter ${mboximporter_SRCS})
 
 target_link_libraries(mboximporter
-  KF5::KIOCore
   KF5::AkonadiCore
   KF5::IdentityManagement
   mailimporter

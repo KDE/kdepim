@@ -179,13 +179,8 @@ ecm_add_app_icon(kaddressbook_SRCS ICONS ${ICONS_SRCS})
 add_executable(kaddressbook ${kaddressbook_SRCS})
 
 target_link_libraries(kaddressbook
-  KF5::AkonadiCore
-  KF5::Syndication
-  KF5::KCMUtils
-  KF5::KIOCore
   KF5::KontactInterface
   kaddressbookprivate
-  grantleetheme
 )
 
 if(KF5Gpgmepp_FOUND)

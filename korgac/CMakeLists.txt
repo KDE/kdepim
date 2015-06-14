@@ -65,8 +65,6 @@ target_link_libraries(korgac
   KF5::AkonadiMime
   calendarsupport
   incidenceeditorsng
-  kdepim
-  kdepimdbusinterfaces
   KF5::AkonadiCore
   KF5::CalendarCore
   KF5::CalendarUtils

@@ -93,10 +93,7 @@ ecm_add_app_icon(importwizard_SRCS ICONS ${ICONS_SRCS})
 add_executable(importwizard ${importwizard_SRCS} ${importwizard_autodetect_SRCS} ${importwizard_manual_SRCS})
 
 target_link_libraries(importwizard
-  KF5::KIOCore
   KF5::AkonadiCore
-  KF5::AkonadiMime
-  KF5::Mime
   KF5::MailTransport
   KF5::DBusAddons
   mailimporter
