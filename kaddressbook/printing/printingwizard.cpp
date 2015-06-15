@@ -198,7 +198,7 @@ void PrintingWizard::slotStyleSelected(int index)
     mStylePage->setSortOrder(mStyle->preferredSortOrder());
 }
 
-QPrinter *PrintingWizard::printer()
+QPrinter *PrintingWizard::printer() const
 {
     return mPrinter;
 }

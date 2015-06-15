@@ -93,7 +93,7 @@ public:
     /**
      * Returns the printer to use for printing.
      */
-    QPrinter *printer();
+    QPrinter *printer() const;
 
     /**
      * Returns the index of the selected style
