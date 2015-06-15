@@ -36,8 +36,8 @@ void NoteEditorUtilsTest::testAddCheckmark_data()
 {
     QTest::addColumn<QString>("input");
     QTest::addColumn<int>("position");
-    QTest::newRow("standard") <<  QString(QLatin1String("foo")) << 0;
-    QTest::newRow("emptyline") <<  QString(QLatin1String("")) << 0;
+    QTest::newRow("standard") <<  QStringLiteral("foo") << 0;
+    QTest::newRow("emptyline") <<  QStringLiteral("") << 0;
 }
 
 void NoteEditorUtilsTest::testAddCheckmark()

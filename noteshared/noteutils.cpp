@@ -83,7 +83,7 @@ void NoteUtils::sendToNetwork(QWidget *parent, const QString &title, const QStri
 
         // Send the note
         NoteShared::NotesNetworkSender *sender = new NoteShared::NotesNetworkSender(
-            KSocketFactory::connectToHost(QLatin1String("notes"), host, port));
+            KSocketFactory::connectToHost(QStringLiteral("notes"), host, port));
         sender->setSenderId(NoteShared::NoteSharedGlobalConfig::senderID());
         sender->setNote(title, message);   // FIXME: plainText ??
     }

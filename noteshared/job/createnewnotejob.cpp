@@ -141,9 +141,9 @@ void CreateNewNoteJob::slotFetchCollection(KJob *job)
         if (mTitle.isEmpty()) {
             const QDateTime currentDateTime = QDateTime::currentDateTime();
             title = NoteShared::NoteSharedGlobalConfig::self()->defaultTitle();
-            title.replace(QLatin1String("%t"), KLocale::global()->formatTime(currentDateTime.time()));
-            title.replace(QLatin1String("%d"), KLocale::global()->formatDate(currentDateTime.date(), KLocale::ShortDate));
-            title.replace(QLatin1String("%l"), KLocale::global()->formatDate(currentDateTime.date(), KLocale::LongDate));
+            title.replace(QStringLiteral("%t"), KLocale::global()->formatTime(currentDateTime.time()));
+            title.replace(QStringLiteral("%d"), KLocale::global()->formatDate(currentDateTime.date(), KLocale::ShortDate));
+            title.replace(QStringLiteral("%l"), KLocale::global()->formatDate(currentDateTime.date(), KLocale::LongDate));
         } else {
             title = mTitle;
         }

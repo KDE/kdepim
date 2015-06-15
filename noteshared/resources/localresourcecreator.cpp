@@ -41,7 +41,7 @@ LocalResourceCreator::LocalResourceCreator(QObject *parent)
 
 QString LocalResourceCreator::akonadiNotesInstanceName()
 {
-    return QLatin1String("akonadi_akonotes_resource");
+    return QStringLiteral("akonadi_akonotes_resource");
 }
 
 void LocalResourceCreator::createIfMissing()
