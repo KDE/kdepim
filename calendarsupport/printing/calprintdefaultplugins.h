@@ -216,12 +216,12 @@ public:
     }
 
 public:
-    void print(QPainter &p, int width, int height);
-    virtual void readSettingsWidget();
-    virtual void setSettingsWidget();
-    virtual void loadConfig();
-    virtual void saveConfig();
-    virtual void setDateRange(const QDate &from, const QDate &to);
+    void print(QPainter &p, int width, int height) Q_DECL_OVERRIDE;
+    void readSettingsWidget() Q_DECL_OVERRIDE;
+    void setSettingsWidget() Q_DECL_OVERRIDE;
+    void loadConfig() Q_DECL_OVERRIDE;
+    void saveConfig() Q_DECL_OVERRIDE;
+    void setDateRange(const QDate &from, const QDate &to) Q_DECL_OVERRIDE;
 
 protected:
     bool mWeekNumbers;
