@@ -26,6 +26,8 @@ class TextToSpeechActionsTest : public QObject
 public:
     explicit TextToSpeechActionsTest(QObject *parent = Q_NULLPTR);
     ~TextToSpeechActionsTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // TEXTTOSPEECHACTIONSTEST_H

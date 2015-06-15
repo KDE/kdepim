@@ -16,6 +16,7 @@
 */
 
 #include "texttospeechactionstest.h"
+#include "../texttospeechactions.h"
 #include <qtest.h>
 
 TextToSpeechActionsTest::TextToSpeechActionsTest(QObject *parent)
@@ -27,6 +28,13 @@ TextToSpeechActionsTest::TextToSpeechActionsTest(QObject *parent)
 TextToSpeechActionsTest::~TextToSpeechActionsTest()
 {
 
+}
+
+void TextToSpeechActionsTest::shouldHaveDefaultValue()
+{
+    PimCommon::TextToSpeechActions act;
+    QVERIFY(act.stopAction());
+    QVERIFY(act.playPauseAction());
 }
 
 QTEST_MAIN(TextToSpeechActionsTest)

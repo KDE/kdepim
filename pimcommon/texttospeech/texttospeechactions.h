@@ -38,7 +38,15 @@ public:
     TextToSpeechWidget::State state() const;
     void setState(const TextToSpeechWidget::State &state);
 
+Q_SIGNALS:
+    void stateChanged(PimCommon::TextToSpeechWidget::State state);
+
+private Q_SLOTS:
+    void slotStop();
+    void slotPlayPause();
+
 private:
+    void updateButtonState();
     TextToSpeechWidget::State mState;
     QAction *mStopAction;
     QAction *mPlayPauseAction;
