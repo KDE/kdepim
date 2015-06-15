@@ -434,7 +434,7 @@ void AdBlockSettingWidget::addManualFilter(const QString &text)
 
 void AdBlockSettingWidget::slotExportFilters()
 {
-    const QString filter = i18n("all files (*)");
+    const QString filter = i18n("All Files (*)");
     QString exportFilters;
     const int numberOfElement(manualFiltersListWidget->count());
     for (int i = 0; i < numberOfElement; ++i) {

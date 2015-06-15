@@ -190,7 +190,7 @@ void PimSettingExporterWindow::slotSaveLog()
         return;
     }
     const QString log = mLogWidget->toHtml();
-    const QString filter(i18n("Html File (*.html)"));
+    const QString filter(i18n("Html Files (*.html)"));
     PimCommon::Util::saveTextAs(log, filter, this);
 }
 
