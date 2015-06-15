@@ -282,8 +282,8 @@ void CSVImportDialog::initGUI()
     QPushButton *mUser2Button = new QPushButton;
     connect(mUser2Button, SIGNAL(clicked()), this, SLOT(slotSaveTemplate()));
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &CSVImportDialog::slotOk);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     mainLayout->addWidget(buttonBox);
     mOkButton->setDefault(true);
 
