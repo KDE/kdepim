@@ -54,7 +54,6 @@
 #include <KMime/Message>
 
 #include <kcharsets.h>
-#include <KFileDialog>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kio/netaccess.h>
@@ -64,6 +63,8 @@
 #include <QAction>
 #include <QIcon>
 
+#include <KFileDialog>
+#include <QFileDialog>
 #include <QTextCodec>
 #include <QWidget>
 #include <QDBusInterface>
@@ -475,21 +476,21 @@ bool Util::saveMessageInMbox(const QList<Akonadi::Item> &retrievedMsgs, QWidget 
     }
 
     const QString filter = i18n("email messages (*.mbox);;all files (*)");
-    QPointer<KFileDialog> dlg = new KFileDialog(QUrl::fromLocalFile(fileName), filter, parent);
-    dlg->setWindowTitle(i18np("Save Message", "Save Messages", retrievedMsgs.count()));
-    dlg->setMode(KFile::File | KFile::LocalOnly);
-    dlg->setOperationMode(KFileDialog::Saving);
-    if (!appendMessages) {
-        dlg->setConfirmOverwrite(true);
+    QPointer<QFileDialog> dlg = new QFileDialog(parent, i18np("Save Message", "Save Messages", retrievedMsgs.count()), fileName, filter);
+    dlg->setFileMode(QFileDialog::AnyFile);
+    dlg->setAcceptMode(QFileDialog::AcceptSave);
+
+    if (appendMessages) {
+        dlg->setOption(QFileDialog::DontConfirmOverwrite);
     }
     if (dlg->exec()) {
-        QUrl url = dlg->selectedUrl();
+        QList<QUrl> url = dlg->selectedUrls();
         if (url.isEmpty()) {
             delete dlg;
             return true;
         }
 
-        const QString localFileName = url.toLocalFile();
+        const QString localFileName = url.at(0).toLocalFile();
         if (localFileName.isEmpty()) {
             delete dlg;
             return true;
