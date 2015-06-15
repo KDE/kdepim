@@ -63,7 +63,7 @@ ShowArchiveStructureDialog::~ShowArchiveStructureDialog()
 
 void ShowArchiveStructureDialog::slotExportAsLogFile()
 {
-    PimCommon::Util::saveTextAs(mLogFile, QStringLiteral("*.txt"), this, QUrl(), i18n("Export Log File"));
+    PimCommon::Util::saveTextAs(mLogFile, QStringLiteral("Text Files (*.txt)"), this, QUrl(), i18n("Export Log File"));
 }
 
 bool ShowArchiveStructureDialog::fillTree()

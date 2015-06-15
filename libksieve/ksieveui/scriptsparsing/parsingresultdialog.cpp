@@ -80,7 +80,7 @@ void ParsingResultDialog::writeConfig()
 
 void ParsingResultDialog::slotSaveAs()
 {
-    const QString filter = i18n("*.xml|xml files (*.xml)\n*|all files (*)");
+    const QString filter = i18n("*.xml;;xml files (*.xml);;all files (*)");
     PimCommon::Util::saveTextAs(mTextEdit->toPlainText(), filter, this);
 }
 

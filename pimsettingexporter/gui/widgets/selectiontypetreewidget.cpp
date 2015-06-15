@@ -23,6 +23,8 @@
 
 #include <QFileDialog>
 
+#include <KLocalizedString>
+
 #include <QTreeWidgetItem>
 #include <QHeaderView>
 #include "gui/pimsettingexportgui_debug.h"
@@ -288,7 +290,7 @@ void SelectionTypeTreeWidget::saveAsTemplate()
     TemplateSelection templateSelection;
     templateSelection.createTemplate(storedType());
     const QString templateStr = templateSelection.document().toString(2);
-    const QString filter(QStringLiteral("*.xml"));
+    const QString filter(i18n("Template File (*.xml)"));
     PimCommon::Util::saveTextAs(templateStr, filter, this);
 }
 

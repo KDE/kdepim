@@ -86,7 +86,7 @@ void BalooDebugDialog::doSearch()
 
 void BalooDebugDialog::slotSaveAs()
 {
-    const QString filter = QStringLiteral("*.txt|all files (*)");
+    const QString filter = QStringLiteral("Text File (*.txt);;all files (*)");
     PimCommon::Util::saveTextAs(mBalooDebugWidget->plainText(), filter, this);
 }
 
