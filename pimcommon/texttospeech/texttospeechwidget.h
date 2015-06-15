@@ -28,6 +28,7 @@ namespace PimCommon
 {
 class AbstractTextToSpeechInterface;
 class TextToSpeechConfigDialog;
+class TextToSpeechActions;
 class PIMCOMMON_EXPORT TextToSpeechWidget : public QWidget
 {
     Q_OBJECT
@@ -58,10 +59,7 @@ Q_SIGNALS:
     void stateChanged(PimCommon::TextToSpeechWidget::State state);
 
 private Q_SLOTS:
-    void slotStop();
-    void slotPlayPause();
     void slotVolumeChanged(int value);
-    void updateButtonState();
     void slotConfigure();
 
 private:
@@ -72,6 +70,7 @@ private:
     QToolButton *mPlayPauseButton;
     QToolButton *mConfigureButton;
     AbstractTextToSpeechInterface *mTextToSpeechInterface;
+    TextToSpeechActions *mTextToSpeechActions;
     QSlider *mVolume;
 };
 }

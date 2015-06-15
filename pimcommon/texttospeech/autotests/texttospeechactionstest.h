@@ -28,6 +28,10 @@ public:
     ~TextToSpeechActionsTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldChangeButtonEnableStateWhenChangeState();
+    void shouldChangeStateWhenClickOnPlayPause();
+    void shouldChangeStateWhenClickOnStop();
+    void shouldEmitStateChanged();
 };
 
 #endif // TEXTTOSPEECHACTIONSTEST_H

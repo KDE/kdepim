@@ -16,6 +16,7 @@
 */
 
 #include "texttospeechwidget.h"
+#include "texttospeechactions.h"
 #include "texttospeechinterface.h"
 #include "texttospeechconfigdialog.h"
 #include <KLocalizedString>
@@ -35,6 +36,9 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
+
+    mTextToSpeechActions = new TextToSpeechActions(this);
+    connect(mTextToSpeechActions, &TextToSpeechActions::stateChanged, this, &TextToSpeechWidget::stateChanged);
 
     QToolButton *close = new QToolButton(this);
     close->setObjectName(QStringLiteral("close-button"));
@@ -56,15 +60,12 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 
     mStopButton = new QToolButton;
     mStopButton->setObjectName(QStringLiteral("stopbutton"));
-    mStopButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-stop")));
-    mStopButton->setToolTip(i18n("Stop"));
-    connect(mStopButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotStop);
+    mStopButton->setDefaultAction(mTextToSpeechActions->stopAction());
     hbox->addWidget(mStopButton);
 
     mPlayPauseButton = new QToolButton;
     mPlayPauseButton->setObjectName(QStringLiteral("playpausebutton"));
-    mPlayPauseButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-start")));
-    connect(mPlayPauseButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotPlayPause);
+    mPlayPauseButton->setDefaultAction(mTextToSpeechActions->playPauseAction());
     hbox->addWidget(mPlayPauseButton);
 
     mConfigureButton = new QToolButton;
@@ -74,7 +75,6 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     connect(mConfigureButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotConfigure);
     hbox->addWidget(mConfigureButton);
 
-    updateButtonState();
     mTextToSpeechInterface = new TextToSpeechInterface(this, this);
     hide();
 }
@@ -116,33 +116,10 @@ void TextToSpeechWidget::say(const QString &text)
     }
 }
 
-void TextToSpeechWidget::slotPlayPause()
-{
-    if (mState == Pause) {
-        mState = Play;
-    } else if (mState == Play) {
-        mState = Pause;
-    } else if (mState == Stop) {
-        mState = Play;
-    } else {
-        return;
-    }
-    updateButtonState();
-    Q_EMIT stateChanged(mState);
-}
-
-void TextToSpeechWidget::slotStop()
-{
-    if (mState != Stop) {
-        mState = Stop;
-        updateButtonState();
-        Q_EMIT stateChanged(mState);
-    }
-}
 
 TextToSpeechWidget::State TextToSpeechWidget::state() const
 {
-    return mState;
+    return mTextToSpeechActions->state();
 }
 
 void TextToSpeechWidget::slotStateChanged(PimCommon::TextToSpeech::State state)
@@ -158,17 +135,7 @@ void TextToSpeechWidget::slotStateChanged(PimCommon::TextToSpeech::State state)
 
 void TextToSpeechWidget::setState(TextToSpeechWidget::State state)
 {
-    if (mState != state) {
-        mState = state;
-        updateButtonState();
-    }
-}
-
-void TextToSpeechWidget::updateButtonState()
-{
-    mPlayPauseButton->setIcon(QIcon::fromTheme((mState == Stop) ? QStringLiteral("media-playback-start") : QStringLiteral("media-playback-stop")));
-    mPlayPauseButton->setEnabled((mState != Stop));
-    mPlayPauseButton->setToolTip((mState != Play) ? i18n("Pause") : i18n("Play"));
+    mTextToSpeechActions->setState(state);
 }
 
 void TextToSpeechWidget::setTextToSpeechInterface(AbstractTextToSpeechInterface *interface)
