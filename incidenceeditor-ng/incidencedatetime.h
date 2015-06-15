@@ -75,8 +75,8 @@ public:
     bool startDateTimeEnabled() const;
     bool endDateTimeEnabled() const;
 
-    /**reimp*/ bool isValid() const;
-    /**reimp*/ void printDebugInfo() const;
+    bool isValid() const Q_DECL_OVERRIDE;
+    void printDebugInfo() const Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     // used to indicate that the widgets were activated

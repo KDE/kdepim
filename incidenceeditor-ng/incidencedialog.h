@@ -93,7 +93,7 @@ protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
-    virtual void slotButtonClicked(int button);
+    void slotButtonClicked(int button) Q_DECL_OVERRIDE;
     void handleSelectedCollectionChange(const Akonadi::Collection &collection);
 
 private:

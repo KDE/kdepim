@@ -61,9 +61,9 @@ public:
      * implementation too.
      */
     void load(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
-    virtual void load(const Akonadi::Item &item);
+    void load(const Akonadi::Item &item) Q_DECL_OVERRIDE;
     void save(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
-    virtual void save(Akonadi::Item &item);
+    void save(Akonadi::Item &item) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void handleDirtyStatusChange(bool isDirty);
