@@ -37,7 +37,7 @@
 *******************************************************************************/
 
 #include "utils/util.h"
-
+#include "pimcommon/texttospeech/texttospeech.h"
 #include "utils/iconnamecache.h"
 #include "viewer/nodehelper.h"
 #include "messageviewer_debug.h"
@@ -526,25 +526,12 @@ bool Util::saveMessageInMbox(const QList<Akonadi::Item> &retrievedMsgs, QWidget 
     return true;
 }
 
-bool Util::speakSelectedText(const QString &text, QWidget *parent)
+void Util::speakSelectedText(const QString &text)
 {
     if (text.isEmpty()) {
-        return false;
+        return;
     }
-#if 0
-    //QT5 : Port to QtSpeech
-    // If KTTSD not running, start it.
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
-        QString error;
-        if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error)) {
-            KMessageBox::error(parent, i18n("Starting Jovie Text-to-Speech Service Failed"), error);
-            return false;
-        }
-    }
-    QDBusInterface ktts(QLatin1String("org.kde.kttsd"), QLatin1String("/KSpeech"), QLatin1String("org.kde.KSpeech"));
-    ktts.asyncCall(QLatin1String("say"), text, 0);
-#endif
-    return true;
+    PimCommon::TextToSpeech::self()->say(text);
 }
 
 QAction *Util::createAppAction(const KService::Ptr &service, bool singleOffer, QActionGroup *actionGroup, QObject *parent)

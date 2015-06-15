@@ -2851,7 +2851,8 @@ void ViewerPrivate::slotHandleAttachment(int choice)
 void ViewerPrivate::slotSpeakText()
 {
     const QString text = mViewer->selectedText();
-    MessageViewer::Util::speakSelectedText(text, mMainWindow);
+    //TODO add texttospeech widget ?
+    MessageViewer::Util::speakSelectedText(text);
 }
 
 void ViewerPrivate::slotCopyImageLocation()
