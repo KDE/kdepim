@@ -186,6 +186,7 @@ set(libtexttospeech_SRCS
   texttospeech/texttospeechconfiginterface.cpp
   texttospeech/texttospeechconfigdialog.cpp
   texttospeech/texttospeechlanguagecombobox.cpp
+  texttospeech/texttospeechactions.cpp
 )
 
 set(libpimcommon_baloodebug_SRCS
