@@ -63,7 +63,6 @@ private Q_SLOTS:
     void slotConfigure();
 
 private:
-    State mState;
     bool mNeedToHide;
     QPointer<PimCommon::TextToSpeechConfigDialog> mConfigDialog;
     QToolButton *mStopButton;

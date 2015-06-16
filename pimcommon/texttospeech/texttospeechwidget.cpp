@@ -31,7 +31,6 @@ using namespace PimCommon;
 
 TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     : QWidget(parent),
-      mState(Stop),
       mNeedToHide(false)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -123,12 +122,21 @@ TextToSpeechWidget::State TextToSpeechWidget::state() const
 
 void TextToSpeechWidget::slotStateChanged(PimCommon::TextToSpeech::State state)
 {
-    if (state == PimCommon::TextToSpeech::Ready) {
-        if (mConfigDialog) {
-            mNeedToHide = true;
-        } else {
-            hide();
+    switch(state) {
+    case PimCommon::TextToSpeech::Ready: {
+        if (state == PimCommon::TextToSpeech::Ready) {
+            mTextToSpeechActions->setState(TextToSpeechWidget::Stop);
+            if (mConfigDialog) {
+                mNeedToHide = true;
+            } else {
+                hide();
+            }
         }
+        break;
+    }
+    default:
+        //TODO
+        break;
     }
 }
 
