@@ -68,6 +68,7 @@ QList< MessageItem * > MessageItemSetManager::messageItems(MessageItemSetReferen
     }
 
     QHash< MessageItem *, MessageItem * >::ConstIterator end(set->constEnd());
+    ret.reserve(set->count());
     for (QHash< MessageItem *, MessageItem * >::ConstIterator it = set->constBegin(); it != end; ++it) {
         ret.append(*it);
     }

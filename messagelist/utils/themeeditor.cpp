@@ -335,6 +335,7 @@ void ThemePreviewWidget::applyThemeColumnWidths()
     idx = 0;
 
     QList< int > realWidths;
+    realWidths.reserve(columns.count());
     int totalVisibleWidth = 0;
 
     end = columns.constEnd();
@@ -421,6 +422,7 @@ void ThemePreviewWidget::setTheme(Theme *theme)
     setColumnCount(columns.count());
 
     QStringList headerLabels;
+    headerLabels.reserve(columns.count());
     QList< Theme::Column * >::ConstIterator end(columns.constEnd());
     for (QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != end; ++it) {
         QString label = (*it)->label();

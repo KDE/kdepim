@@ -453,6 +453,7 @@ void Widget::viewDropEvent(QDropEvent *e)
     Collection::List collections = static_cast<const StorageModel *>(storageModel())->displayedCollections();
     Collection target = collections.at(0);
     Item::List items;
+    items.reserve(urls.count());
     foreach (const QUrl &url, urls) {
         items << Item::fromUrl(url);
     }
@@ -489,6 +490,7 @@ void Widget::viewStartDragRequest()
     }
 
     QList<QUrl> urls;
+    urls.reserve(selection.count());
     Q_FOREACH (Core::MessageItem *mi, selection) {
         const Item i = d->itemForRow(mi->currentModelIndexRow());
         QUrl url = i.url(Item::Item::Item::UrlWithMimeType);
@@ -527,6 +529,7 @@ Item::List Widget::Private::selectionAsItems() const
 {
     Item::List res;
     QList<Core::MessageItem *> selection = q->view()->selectionAsMessageItemList();
+    res.reserve(selection.count());
 
     foreach (Core::MessageItem *mi, selection) {
         Item i = itemForRow(mi->currentModelIndexRow());
@@ -576,6 +579,7 @@ QList<KMime::Message::Ptr > Widget::selectionAsMessageList(bool includeCollapsed
     if (lstMi.isEmpty()) {
         return lstMiPtr;
     }
+    lstMiPtr.reserve(lstMi.count());
     foreach (Core::MessageItem *it, lstMi) {
         lstMiPtr.append(d->messageForRow(it->currentModelIndexRow()));
     }
@@ -589,6 +593,7 @@ QList<Akonadi::Item> Widget::selectionAsMessageItemList(bool includeCollapsedChi
     if (lstMi.isEmpty()) {
         return lstMiPtr;
     }
+    lstMiPtr.reserve(lstMi.count());
     foreach (Core::MessageItem *it, lstMi) {
         lstMiPtr.append(d->itemForRow(it->currentModelIndexRow()));
     }
@@ -602,6 +607,7 @@ QVector<qlonglong> Widget::selectionAsMessageItemListId(bool includeCollapsedChi
     if (lstMi.isEmpty()) {
         return lstMiPtr;
     }
+    lstMiPtr.reserve(lstMi.count());
     foreach (Core::MessageItem *it, lstMi) {
         lstMiPtr.append(d->itemForRow(it->currentModelIndexRow()).id());
     }
@@ -615,6 +621,7 @@ QList<Akonadi::Item::Id> Widget::selectionAsListMessageId(bool includeCollapsedC
     if (lstMi.isEmpty()) {
         return lstMiPtr;
     }
+    lstMiPtr.reserve(lstMi.count());
     foreach (Core::MessageItem *it, lstMi) {
         lstMiPtr.append(d->itemForRow(it->currentModelIndexRow()).id());
     }
@@ -628,6 +635,7 @@ QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
     if (lstMi.isEmpty()) {
         return lstMiPtr;
     }
+    lstMiPtr.reserve(lstMi.count());
     foreach (Core::MessageItem *it, lstMi) {
         lstMiPtr.append(d->itemForRow(it->currentModelIndexRow()));
     }
@@ -713,6 +721,7 @@ QList<Akonadi::Item> Widget::itemListFromPersistentSet(MessageList::Core::Messag
     QList<Akonadi::Item> lstItem;
     QList< Core::MessageItem * > refList = view()->persistentSetCurrentMessageItemList(ref);
     if (!refList.isEmpty()) {
+        lstItem.reserve(refList.count());
         foreach (Core::MessageItem *it, refList) {
             lstItem.append(d->itemForRow(it->currentModelIndexRow()));
         }

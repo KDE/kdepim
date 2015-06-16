@@ -410,6 +410,7 @@ void View::applyThemeColumns()
     idx = 0;
 
     QList< int > lColumnWidths;
+    lColumnWidths.reserve(columns.count());
     int totalVisibleWidth = 0;
     end = columns.constEnd();
     for (it = columns.constBegin(); it != end; ++it) {

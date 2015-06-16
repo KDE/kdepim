@@ -592,11 +592,15 @@ QString MessageItem::accessibleTextForField(Theme::ContentItem::Type field)
 QString MessageItem::accessibleText(const Theme *theme, int columnIndex)
 {
     QStringList rowsTexts;
+    const QList<Theme::Row *> rows = theme->column(columnIndex)->messageRows();
+    rowsTexts.reserve(rows.count());
 
-    Q_FOREACH (Theme::Row *row, theme->column(columnIndex)->messageRows()) {
+    Q_FOREACH (Theme::Row *row, rows) {
         QStringList leftStrings;
         QStringList rightStrings;
-        Q_FOREACH (Theme::ContentItem *contentItem, row->leftItems()) {
+        const QList<Theme::ContentItem *> leftItems = row->leftItems();
+        leftStrings.reserve(leftItems.count());
+        Q_FOREACH (Theme::ContentItem *contentItem, leftItems) {
             leftStrings.append(accessibleTextForField(contentItem->type()));
         }
 

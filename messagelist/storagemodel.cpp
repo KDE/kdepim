@@ -391,6 +391,7 @@ QMimeData *StorageModel::mimeData(const QList< MessageList::Core::MessageItem * 
 {
     QMimeData *data = new QMimeData();
     QList<QUrl> urls;
+    urls.reserve(items.count());
     foreach (MessageList::Core::MessageItem *mi, items) {
         Akonadi::Item item = itemForRow(mi->currentModelIndexRow());
         urls << item.url(Item::UrlWithMimeType);
