@@ -126,11 +126,11 @@ QString ImageScaling::generateNewName()
     const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
     if (mName.endsWith(QLatin1String(".png"))) {
         if (type != QLatin1String("PNG")) {
-            mName.replace(QLatin1String(".png"), QLatin1String(".jpg"));
+            mName.replace(QStringLiteral(".png"), QStringLiteral(".jpg"));
         }
     } else if (mName.endsWith(QLatin1String(".jpg"))) {
         if (type != QLatin1String("JPG")) {
-            mName.replace(QLatin1String(".jpg"), QLatin1String(".png"));
+            mName.replace(QStringLiteral(".jpg"), QStringLiteral(".png"));
         }
     } else {
         if (type == QLatin1String("PNG")) {

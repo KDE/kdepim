@@ -439,9 +439,9 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
                this, SLOT(slotUpdateMiscActions()));
 
     connect(d->composerControler->richTextComposer(), SIGNAL(currentCharFormatChanged(QTextCharFormat)),
-               this, SLOT(slotUpdateCharFormatActions(QTextCharFormat)));
+            this, SLOT(slotUpdateCharFormatActions(QTextCharFormat)));
     connect(d->composerControler->richTextComposer(), SIGNAL(cursorPositionChanged()),
-               this, SLOT(slotUpdateMiscActions()));
+            this, SLOT(slotUpdateMiscActions()));
 
     updateActionStates();
 }

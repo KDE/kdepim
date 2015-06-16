@@ -127,7 +127,6 @@ void RichTextComposer::clearDecorator()
     //Nothing
 }
 
-
 void RichTextComposer::createHighlighter()
 {
     MessageComposer::RichTextComposerEmailQuoteHighlighter *highlighter = new MessageComposer::RichTextComposerEmailQuoteHighlighter(this);
