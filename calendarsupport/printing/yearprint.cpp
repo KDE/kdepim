@@ -101,7 +101,7 @@ void CalPrintYear::saveConfig()
     }
 }
 
-QPrinter::Orientation CalPrintYear::defaultOrientation()
+QPrinter::Orientation CalPrintYear::defaultOrientation() const
 {
     return (mPages == 1) ? QPrinter::Landscape : QPrinter::Portrait;
 }

@@ -35,24 +35,24 @@ class CALENDARSUPPORT_EXPORT  CalPrintYear : public CalPrintPluginBase
 public:
     CalPrintYear(): CalPrintPluginBase() {}
     ~CalPrintYear() {}
-    QString groupName() Q_DECL_OVERRIDE {
+    QString groupName() const Q_DECL_OVERRIDE {
         return QStringLiteral("Print year");
     }
-    QString description() Q_DECL_OVERRIDE {
+    QString description() const Q_DECL_OVERRIDE {
         return i18n("Print &year");
     }
     QString info() const Q_DECL_OVERRIDE
     {
         return i18n("Prints a calendar for an entire year");
     }
-    int sortID() Q_DECL_OVERRIDE {
+    int sortID() const Q_DECL_OVERRIDE {
         return CalPrinterBase::Year;
     }
-    bool enabled() Q_DECL_OVERRIDE {
+    bool enabled() const Q_DECL_OVERRIDE {
         return true;
     }
     QWidget *createConfigWidget(QWidget *) Q_DECL_OVERRIDE;
-    QPrinter::Orientation defaultOrientation() Q_DECL_OVERRIDE;
+    QPrinter::Orientation defaultOrientation() const Q_DECL_OVERRIDE;
 
 public:
     void print(QPainter &p, int width, int height) Q_DECL_OVERRIDE;

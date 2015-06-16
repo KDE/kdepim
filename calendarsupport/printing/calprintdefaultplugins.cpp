@@ -1067,7 +1067,7 @@ void CalPrintWeek::saveConfig()
     }
 }
 
-QPrinter::Orientation CalPrintWeek::defaultOrientation()
+QPrinter::Orientation CalPrintWeek::defaultOrientation() const
 {
     if (mWeekPrintType == Filofax) {
         return QPrinter::Portrait;

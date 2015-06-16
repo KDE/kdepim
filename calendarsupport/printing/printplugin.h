@@ -92,11 +92,11 @@ public:
     /**
      Returns KConfig group name where store settings
     */
-    virtual QString groupName() = 0;
+    virtual QString groupName() const = 0;
     /**
       Returns short description of print format.
     */
-    virtual QString description() = 0;
+    virtual QString description() const = 0;
     /**
       Returns long description of print format.
     */
@@ -110,7 +110,7 @@ public:
       (negative) ID will be automatically generated and thus the position of
       the plugin in the selection list is undefined.
     */
-    virtual int sortID()
+    virtual int sortID() const
     {
         return -1;
     }
@@ -118,7 +118,7 @@ public:
     /**
       Returns true if the plugin should be enabled; false otherwise.
     */
-    virtual bool enabled()
+    virtual bool enabled() const
     {
         return false;
     }
@@ -146,7 +146,7 @@ public:
       config settings), implement this function in your subclass and
       return the desired orientation.
     */
-    virtual QPrinter::Orientation defaultOrientation()
+    virtual QPrinter::Orientation defaultOrientation() const
     {
         return QPrinter::Portrait;
     }
