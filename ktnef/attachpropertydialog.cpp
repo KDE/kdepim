@@ -138,8 +138,9 @@ void AttachPropertyDialog::formatProperties(const QMap<int, KTNEFProperty *> &pr
                              newItem->text(0) +
                              QLatin1String(" [") + QString::number(value.toList().count()) + QLatin1Char(']'));
             int i = 0;
+            QList<QVariant>::ConstIterator litEnd = value.toList().constEnd();
             for (QList<QVariant>::ConstIterator lit = value.toList().constBegin();
-                    lit != value.toList().constEnd(); ++lit, ++i) {
+                    lit != litEnd; ++lit, ++i) {
                 new QTreeWidgetItem(newItem,
                                     QStringList()
                                     << QLatin1Char('[')  + QString::number(i) + QLatin1Char(']')
