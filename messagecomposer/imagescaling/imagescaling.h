@@ -53,9 +53,13 @@ public:
      */
     QByteArray mimetype() const;
 
+    void setName(const QString &name);
+
+    QString generateNewName();
 private:
     QImage mImage;
     QBuffer mBuffer;
+    QString mName;
 };
 }
 
