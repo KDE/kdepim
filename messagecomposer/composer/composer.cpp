@@ -507,8 +507,8 @@ void Composer::addAttachmentPart(AttachmentPart::Ptr part, bool autoresizeImage)
             MessageComposer::ImageScaling autoResizeJob;
             autoResizeJob.setName(part->name());
             autoResizeJob.setMimetype(part->mimeType());
-            if(autoResizeJob.loadImageFromData(part->data())) {
-                if(autoResizeJob.resizeImage()) {
+            if (autoResizeJob.loadImageFromData(part->data())) {
+                if (autoResizeJob.resizeImage()) {
                     part->setData(autoResizeJob.imageArray());
                     part->setMimeType(autoResizeJob.mimetype());
                     part->setName(autoResizeJob.generateNewName());

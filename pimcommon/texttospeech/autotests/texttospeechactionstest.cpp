@@ -96,7 +96,6 @@ void TextToSpeechActionsTest::shouldEmitStateChanged()
     act.setState(PimCommon::TextToSpeechWidget::Play);
     QCOMPARE(spy.count(), 0);
 
-
     act.playPauseAction()->trigger();
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).value<PimCommon::TextToSpeechWidget::State>(), PimCommon::TextToSpeechWidget::Pause);
@@ -110,6 +109,5 @@ void TextToSpeechActionsTest::shouldEmitStateChanged()
     QCOMPARE(spy.count(), 4);
     QCOMPARE(spy.at(3).at(0).value<PimCommon::TextToSpeechWidget::State>(), PimCommon::TextToSpeechWidget::Stop);
 }
-
 
 QTEST_MAIN(TextToSpeechActionsTest)

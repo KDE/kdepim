@@ -88,7 +88,7 @@ bool ImageScaling::resizeImage()
     }
     if ((newHeight != height) || (newWidth != width)) {
         mBuffer.open(QIODevice::WriteOnly);
-        mImage = mImage.scaled(newWidth,newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
+        mImage = mImage.scaled(newWidth, newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
 
         QByteArray format;
         if (mMimeType == "image/jpeg") {

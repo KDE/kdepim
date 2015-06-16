@@ -116,7 +116,6 @@ void TextToSpeechWidget::say(const QString &text)
     }
 }
 
-
 TextToSpeechWidget::State TextToSpeechWidget::state() const
 {
     return mTextToSpeechActions->state();
