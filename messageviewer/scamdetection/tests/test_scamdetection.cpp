@@ -92,8 +92,10 @@ void ScamDetectionTest::testHref()
 
 void ScamDetectionTest::testRedirectUrl()
 {
-    const QString content = QLatin1String("<html><body><a href=\"http://www.google.fr/url?q=http://www.yahoo.com\">test</a></body></html>");
+    QString content = QLatin1String("<html><body><a href=\"http://www.google.fr/url?q=http://www.yahoo.com\">test</a></body></html>");
     QCOMPARE(testHtml(content), true);
+    content = QLatin1String("<html><body><a href=\"kmail:showAuditLog?log=http://www.foo.com%3http://www.bla.com\">test</a></body></html>");
+    QCOMPARE(testHtml(content), false);
 }
 
 void ScamDetectionTest::testUrlWithNumericValue()

@@ -120,8 +120,10 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
                 foundScam = true;
             } else if ((url.toString().count(QLatin1String("http://")) > 1) ||
                        (url.toString().count(QLatin1String("https://")) > 1)) { //5) more that 1 http in url.
-                details += QLatin1String("<li>") + i18n("This email contains a link (%1) which contains multiple http://. This is often the case in scam emails.", addWarningColor(url.toString())) + QLatin1String("</li>");
-                foundScam = true;
+                if (!url.toString().contains(QLatin1String("kmail:showAuditLog"))) {
+                    details += QLatin1String("<li>") + i18n("This email contains a link (%1) which contains multiple http://. This is often the case in scam emails.", addWarningColor(url.toString())) + QLatin1String("</li>");
+                    foundScam = true;
+                }
             }
         }
         //Check shortUrl
