@@ -53,6 +53,7 @@ public:
      * @return new image mimetype after saving.
      */
     QByteArray mimetype() const;
+    void setMimetype(const QByteArray &mimetype);
 
     void setName(const QString &name);
 
@@ -61,6 +62,7 @@ private:
     QImage mImage;
     QBuffer mBuffer;
     QString mName;
+    QByteArray mMimeType;
 };
 }
 

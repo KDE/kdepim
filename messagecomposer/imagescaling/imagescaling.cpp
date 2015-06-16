@@ -88,8 +88,17 @@ bool ImageScaling::resizeImage()
     }
     if ((newHeight != height) || (newWidth != width)) {
         mBuffer.open(QIODevice::WriteOnly);
-        mImage = mImage.scaled(newWidth, newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
-        const bool result = mImage.save(&mBuffer, MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit());
+        mImage = mImage.scaled(newWidth,newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
+
+        QByteArray format;
+        if (mMimeType == "image/jpeg") {
+            format = "JPG";
+        } else if (mMimeType == "image/png") {
+            format = "PNG";
+        } else {
+            format = MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit();
+        }
+        const bool result = mImage.save(&mBuffer, format);
         mBuffer.close();
         return result;
     } else {
@@ -101,14 +110,23 @@ bool ImageScaling::resizeImage()
 
 QByteArray ImageScaling::mimetype() const
 {
-    //Add more mimetype if a day we add more saving format.
-    const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
-    if (type == QLatin1String("JPG")) {
-        return "image/jpeg";
-    } else if (type == QLatin1String("PNG")) {
-        return "image/png";
+    if ((mMimeType == "image/jpeg") || (mMimeType == "image/png")) {
+        return mMimeType;
+    } else {
+        //Add more mimetype if a day we add more saving format.
+        const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
+        if (type == QLatin1String("JPG")) {
+            return "image/jpeg";
+        } else if (type == QLatin1String("PNG")) {
+            return "image/png";
+        }
     }
     return QByteArray();
+}
+
+void ImageScaling::setMimetype(const QByteArray &mimetype)
+{
+    mMimeType = mimetype;
 }
 
 void ImageScaling::setName(const QString &name)
@@ -123,6 +141,10 @@ QByteArray ImageScaling::imageArray() const
 
 QString ImageScaling::generateNewName()
 {
+    // Don't rename it.
+    if ((mMimeType == "image/jpeg") || (mMimeType == "image/png")) {
+        return mName;
+    }
     const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
     if (mName.endsWith(QLatin1String(".png"))) {
         if (type != QLatin1String("PNG")) {
