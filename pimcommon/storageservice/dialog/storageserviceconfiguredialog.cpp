@@ -35,9 +35,12 @@ StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(i18n("Configure"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QVBoxLayout *topLayout = new QVBoxLayout;
+    setLayout(topLayout);
     mMainLayout = new QVBoxLayout;
-    setLayout(mMainLayout);
+
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
@@ -47,7 +50,9 @@ StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
 
     connect(mStorageServiceConfigureWidget, &PimCommon::StorageServiceConfigureWidget::serviceRemoved, this, &StorageServiceConfigureDialog::serviceRemoved);
     mMainLayout->addWidget(mStorageServiceConfigureWidget);
-    mMainLayout->addWidget(buttonBox);
+
+    topLayout->addLayout(mMainLayout);
+    topLayout->addWidget(buttonBox);
     readConfig();
 }
 
