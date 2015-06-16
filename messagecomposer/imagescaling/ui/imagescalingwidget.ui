@@ -47,7 +47,7 @@
          <item>
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>Write to format</string>
+            <string>Fallback to format:</string>
            </property>
           </widget>
          </item>
