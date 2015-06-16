@@ -141,6 +141,10 @@ QByteArray ImageScaling::imageArray() const
 
 QString ImageScaling::generateNewName()
 {
+    if (mName.isEmpty()) {
+        return QString();
+    }
+
     // Don't rename it.
     if ((mMimeType == "image/jpeg") || (mMimeType == "image/png")) {
         return mName;

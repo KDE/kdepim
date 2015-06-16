@@ -17,13 +17,14 @@
 #ifndef IMAGESCALING_H
 #define IMAGESCALING_H
 
+#include "messagecomposer_export.h"
 #include <QByteArray>
 #include <QImage>
 #include <QBuffer>
 
 namespace MessageComposer
 {
-class ImageScaling
+class MESSAGECOMPOSER_EXPORT ImageScaling
 {
 public:
     ImageScaling();

@@ -16,6 +16,7 @@
 */
 
 #include "imagescalingtest.h"
+#include "../imagescaling.h"
 #include <qtest.h>
 
 ImageScalingTest::ImageScalingTest(QObject *parent)
@@ -27,6 +28,14 @@ ImageScalingTest::ImageScalingTest(QObject *parent)
 ImageScalingTest::~ImageScalingTest()
 {
 
+}
+
+void ImageScalingTest::shouldHaveDefaultValue()
+{
+    MessageComposer::ImageScaling scaling;
+    //Image is empty
+    QVERIFY(!scaling.resizeImage());
+    QVERIFY(scaling.generateNewName().isEmpty());
 }
 
 QTEST_MAIN(ImageScalingTest)

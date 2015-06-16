@@ -26,6 +26,8 @@ class ImageScalingTest : public QObject
 public:
     explicit ImageScalingTest(QObject *parent = Q_NULLPTR);
     ~ImageScalingTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // IMAGESCALINGTEST_H
