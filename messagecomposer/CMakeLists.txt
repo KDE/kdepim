@@ -23,6 +23,7 @@ add_subdirectory( tests )
 if (BUILD_TESTING)
    add_subdirectory( autotests )
    add_subdirectory( composer-ng/autotests )
+   add_subdirectory( imagescaling/autotests )
 endif()
 
 
