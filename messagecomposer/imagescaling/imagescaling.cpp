@@ -68,7 +68,6 @@ bool ImageScaling::resizeImage()
         newHeight = height;
         newWidth = width;
     }
-
     if (MessageComposer::MessageComposerSettings::self()->enlargeImageToMinimum()) {
 
         int minimumWidth = MessageComposer::MessageComposerSettings::self()->minimumWidth();
@@ -112,8 +111,33 @@ QByteArray ImageScaling::mimetype() const
     return QByteArray();
 }
 
+void ImageScaling::setName(const QString &name)
+{
+    mName = name;
+}
+
 QByteArray ImageScaling::imageArray() const
 {
     return mBuffer.data();
 }
 
+QString ImageScaling::generateNewName()
+{
+    const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
+    if (mName.endsWith(QLatin1String(".png"))) {
+        if (type != QLatin1String("PNG")) {
+            mName.replace(QLatin1String(".png"), QLatin1String(".jpg"));
+        }
+    } else if (mName.endsWith(QLatin1String(".jpg"))) {
+        if (type != QLatin1String("JPG")) {
+            mName.replace(QLatin1String(".jpg"), QLatin1String(".png"));
+        }
+    } else {
+        if (type == QLatin1String("PNG")) {
+            mName += QLatin1String(".png");
+        } else {
+            mName += QLatin1String(".jpg");
+        }
+    }
+    return mName;
+}
