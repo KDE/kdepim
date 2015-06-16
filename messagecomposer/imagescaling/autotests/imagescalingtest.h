@@ -30,6 +30,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldHaveRenameFile_data();
     void shouldHaveRenameFile();
+    void initTestCase();
 };
 
 #endif // IMAGESCALINGTEST_H
