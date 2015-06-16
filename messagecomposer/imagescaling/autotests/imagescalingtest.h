@@ -28,6 +28,8 @@ public:
     ~ImageScalingTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldHaveRenameFile_data();
+    void shouldHaveRenameFile();
 };
 
 #endif // IMAGESCALINGTEST_H

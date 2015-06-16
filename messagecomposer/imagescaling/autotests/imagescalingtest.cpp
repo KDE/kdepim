@@ -38,4 +38,24 @@ void ImageScalingTest::shouldHaveDefaultValue()
     QVERIFY(scaling.generateNewName().isEmpty());
 }
 
+void ImageScalingTest::shouldHaveRenameFile_data()
+{
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<QString>("output");
+    QTest::addColumn<QByteArray>("format");
+    QTest::newRow("no rename") <<  QString() << QString() << QByteArray("PNG");
+}
+
+void ImageScalingTest::shouldHaveRenameFile()
+{
+    QFETCH(QString, input);
+    QFETCH(QString, output);
+    QFETCH(QByteArray, format);
+
+    MessageComposer::ImageScaling scaling;
+    scaling.setName(input);
+    scaling.setMimetype(format);
+    QCOMPARE(scaling.generateNewName(), output);
+}
+
 QTEST_MAIN(ImageScalingTest)
