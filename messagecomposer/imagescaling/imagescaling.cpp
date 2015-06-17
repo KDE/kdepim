@@ -97,6 +97,9 @@ bool ImageScaling::resizeImage()
             format = "PNG";
         } else {
             format = MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit();
+            if (format.isEmpty()) {
+                format = "PNG";
+            }
         }
         const bool result = mImage.save(&mBuffer, format);
         mBuffer.close();
@@ -121,6 +124,8 @@ QByteArray ImageScaling::mimetype() const
         if (type == QLatin1String("JPG")) {
             return "image/jpeg";
         } else if (type == QLatin1String("PNG")) {
+            return "image/png";
+        } else {
             return "image/png";
         }
     }
@@ -152,7 +157,10 @@ QString ImageScaling::generateNewName()
     if ((mMimeType == "image/jpeg") || (mMimeType == "image/png")) {
         return mName;
     }
-    const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
+    QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
+    if (type.isEmpty()) {
+        type = QStringLiteral("PNG");
+    }
     if (mName.endsWith(QLatin1String(".png"))) {
         if (type != QLatin1String("PNG")) {
             mName.replace(QStringLiteral(".png"), QStringLiteral(".jpg"));

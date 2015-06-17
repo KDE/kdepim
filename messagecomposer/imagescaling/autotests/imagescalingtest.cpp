@@ -92,6 +92,11 @@ void ImageScalingTest::shouldHaveChangeMimetype_data()
 
     QTest::newRow("change mimetype when png") <<  QByteArray("image/mng") << QByteArray("image/png") << QStringLiteral("PNG");
     QTest::newRow("change mimetype when jpeg") <<  QByteArray("image/mng") << QByteArray("image/jpeg") << QStringLiteral("JPG");
+
+    QTest::newRow("When format is not defined but png") <<  QByteArray("image/png") << QByteArray("image/png") << QString();
+    QTest::newRow("When format is not defined but jpeg") <<  QByteArray("image/jpeg") << QByteArray("image/jpeg") << QString();
+
+    QTest::newRow("When format is not defined but other mimetype (return png)") <<  QByteArray("image/mng") << QByteArray("image/png") << QString();
 }
 
 void ImageScalingTest::shouldHaveChangeMimetype()
@@ -104,6 +109,8 @@ void ImageScalingTest::shouldHaveChangeMimetype()
     MessageComposer::MessageComposerSettings::self()->save();
     MessageComposer::ImageScaling scaling;
     scaling.setMimetype(initialmimetype);
+    qDebug()<<" scaling.mimetype()"<<scaling.mimetype();
+    qDebug()<<" scaling.mimetype()"<<newmimetype;
     QCOMPARE(scaling.mimetype(), newmimetype);
 }
 
