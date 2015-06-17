@@ -29,11 +29,13 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include <QStandardPaths>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("testaddresseelineedit"), i18n("Test AddresseeLineEdit"), QStringLiteral("0.1"));
+    QStandardPaths::setTestModeEnabled(true);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

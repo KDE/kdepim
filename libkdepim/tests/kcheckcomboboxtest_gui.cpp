@@ -26,6 +26,7 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include <QStandardPaths>
 
 #include "../widgets/kcheckcombobox.h"
 
@@ -34,6 +35,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("testcheckcombo"), i18n("Test KCheckComboBox"), QStringLiteral("0.1"));
     QCommandLineParser parser;
+    QStandardPaths::setTestModeEnabled(true);
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
     parser.addHelpOption();
