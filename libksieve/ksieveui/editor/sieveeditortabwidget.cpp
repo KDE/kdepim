@@ -57,7 +57,8 @@ void SieveEditorTabWidget::slotAddHelpPage(const QString &variableName, const QS
     connect(htmlPage, &SieveEditorHelpHtmlWidget::progressIndicatorPixmapChanged, this, &SieveEditorTabWidget::slotProgressIndicatorPixmapChanged);
     connect(htmlPage, &SieveEditorHelpHtmlWidget::loadFinished, this, &SieveEditorTabWidget::slotLoadFinished);
     htmlPage->setHelp(variableName, url);
-    addTab(htmlPage, i18n("Help"));
+    const int index = addTab(htmlPage, i18n("Help"));
+    setCurrentIndex(index);
 }
 
 void SieveEditorTabWidget::slotLoadFinished(KSieveUi::SieveEditorHelpHtmlWidget *widget, bool success)
