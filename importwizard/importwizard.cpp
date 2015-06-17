@@ -156,7 +156,7 @@ void ImportWizard::createManualModePage()
     // Disable the 'next button to begin with.
     setValid(mSelfilterpageItem, false);
 
-    connect(mSelfilterpage->widget()->mCollectionRequestor, SIGNAL(folderChanged(Akonadi::Collection)), this, SLOT(slotCollectionChanged(Akonadi::Collection)));
+    connect(mSelfilterpage->widget()->mCollectionRequestor, &MailCommon::FolderRequester::folderChanged, this, &ImportWizard::slotCollectionChanged);
 }
 
 void ImportWizard::slotCollectionChanged(const Akonadi::Collection &selectedCollection)

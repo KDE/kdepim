@@ -63,15 +63,15 @@ BalsaSettings::~BalsaSettings()
 void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay)
 {
     Q_UNUSED(autoDelay);
-    const QString type = grp.readEntry(QLatin1String("Type"));
-    bool check = grp.readEntry(QLatin1String("Check"), false);
+    const QString type = grp.readEntry(QStringLiteral("Type"));
+    bool check = grp.readEntry(QStringLiteral("Check"), false);
     if (type == QLatin1String("LibBalsaMailboxPOP3")) {
         QMap<QString, QVariant> settings;
-        const QString server = grp.readEntry(QLatin1String("Server"));
-        settings.insert(QLatin1String("Host"), server);
-        const QString name = grp.readEntry(QLatin1String("Name"));
+        const QString server = grp.readEntry(QStringLiteral("Server"));
+        settings.insert(QStringLiteral("Host"), server);
+        const QString name = grp.readEntry(QStringLiteral("Name"));
 
-        const bool apop = grp.readEntry(QLatin1String("DisableApop"), false);
+        const bool apop = grp.readEntry(QStringLiteral("DisableApop"), false);
         Q_UNUSED(apop);
         const QString agentIdentifyName = AbstractBase::createResource("akonadi_pop3_resource", name, settings);
 
@@ -80,9 +80,9 @@ void BalsaSettings::readAccount(const KConfigGroup &grp, bool autoCheck, int aut
 
     } else if (type == QLatin1String("LibBalsaMailboxImap")) {
         QMap<QString, QVariant> settings;
-        const QString server = grp.readEntry(QLatin1String("Server"));
-        settings.insert(QLatin1String("ImapServer"), server);
-        const QString name = grp.readEntry(QLatin1String("Name"));
+        const QString server = grp.readEntry(QStringLiteral("Server"));
+        settings.insert(QStringLiteral("ImapServer"), server);
+        const QString name = grp.readEntry(QStringLiteral("Name"));
         const QString agentIdentifyName = AbstractBase::createResource("akonadi_imap_resource", name, settings);
         addCheckMailOnStartup(agentIdentifyName, autoCheck);
         addToManualCheck(agentIdentifyName, check);
@@ -128,11 +128,11 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
 void BalsaSettings::readTransport(const KConfigGroup &grp)
 {
     MailTransport::Transport *mt = createTransport();
-    const QString smtp = grp.name().remove(QLatin1String("smtp-server-"));
-    const QString server = grp.readEntry(QLatin1String("Server"));
+    const QString smtp = grp.name().remove(QStringLiteral("smtp-server-"));
+    const QString server = grp.readEntry(QStringLiteral("Server"));
     mt->setHost(server);
 
-    const int tlsMode = grp.readEntry(QLatin1String("TLSMode"), -1);
+    const int tlsMode = grp.readEntry(QStringLiteral("TLSMode"), -1);
     //TODO
     switch (tlsMode) {
     case 0:

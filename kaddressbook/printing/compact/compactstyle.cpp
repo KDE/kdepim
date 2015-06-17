@@ -109,7 +109,7 @@ QString CompactStyle::contactsToHtml(const KContacts::Addressee::List &contacts)
         }
 
         content += QLatin1String("   <tr>\n");
-        QString style = QLatin1String("background-color:");
+        QString style = QStringLiteral("background-color:");
         if (this->withAlternating) {
             style += (odd) ? this->firstColor.name() : this->secondColor.name();
         } else {
@@ -131,7 +131,7 @@ CompactStyle::CompactStyle(PrintingWizard *parent)
     : PrintStyle(parent),
       mPageSettings(new CompactStyleForm(parent))
 {
-    setPreview(QLatin1String("compact-style.png"));
+    setPreview(QStringLiteral("compact-style.png"));
     setPreferredSortOptions(ContactFields::FormattedName, Qt::AscendingOrder);
 
     addPage(mPageSettings, i18n("Compact Style"));

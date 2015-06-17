@@ -44,8 +44,8 @@ MultiplyingLineEditor::MultiplyingLineEditor(MultiplyingLineFactory *factory, QW
             SIGNAL(completionModeChanged(KCompletion::CompletionMode)));
     connect(mView, &MultiplyingLineView::lineDeleted, this, &MultiplyingLineEditor::lineDeleted);
     connect(mView, &MultiplyingLineView::lineAdded, this, &MultiplyingLineEditor::lineAdded);
-    connect(mView, SIGNAL(sizeHintChanged()),
-            SIGNAL(sizeHintChanged()));
+    connect(mView, &MultiplyingLineView::sizeHintChanged,
+            this, &MultiplyingLineEditor::sizeHintChanged);
 }
 
 MultiplyingLineEditor::~MultiplyingLineEditor()

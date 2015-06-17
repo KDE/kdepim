@@ -197,7 +197,7 @@ QList< QSharedPointer<EmbeddedImage> > RichTextComposerImages::embeddedImages() 
         retImages.append(embeddedImage);
         embeddedImage->image = KCodecs::Codec::codecForName("base64")->encode(buffer.buffer());
         embeddedImage->imageName = normalImage->name;
-        embeddedImage->contentID = QString(QLatin1String("%1@KDE")).arg(qrand());
+        embeddedImage->contentID = QStringLiteral("%1@KDE").arg(qrand());
     }
     return retImages;
 }
@@ -217,7 +217,7 @@ QList<QTextImageFormat> RichTextComposerImages::embeddedImageFormats() const
                 if (imageFormat.isValid()) {
                     //TODO: Replace with a way to see if an image is an embedded image or a remote
                     QUrl url(imageFormat.name());
-                    if (!url.isValid() || !url.scheme().startsWith(QLatin1String("http"))) {
+                    if (!url.isValid() || !url.scheme().startsWith(QStringLiteral("http"))) {
                         retList.append(imageFormat);
                     }
                 }

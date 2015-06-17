@@ -301,7 +301,7 @@ void CSVImportDialog::initGUI()
 
     mUrlRequester = new KUrlRequester(page);
     mainLayout->addWidget(mUrlRequester);
-    mUrlRequester->setFilter(QLatin1String("*.csv"));
+    mUrlRequester->setFilter(QStringLiteral("*.csv"));
     mUrlRequester->lineEdit()->setTrapReturnKey(true);
     mUrlRequester->setToolTip(
         i18nc("@info:tooltip", "Select a csv file to import"));

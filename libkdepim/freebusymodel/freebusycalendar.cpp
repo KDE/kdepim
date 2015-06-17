@@ -36,7 +36,7 @@ using namespace KPIM;
 
 FreeBusyCalendar::FreeBusyCalendar(QObject *parent)
     : QObject(parent)
-    , mModel(0)
+    , mModel(Q_NULLPTR)
 {
     mCalendar = KCalCore::Calendar::Ptr(new KCalCore::MemoryCalendar(KSystemTimeZones::local()));
     qCDebug(LIBKDEPIM_LOG) << "creating" << this;

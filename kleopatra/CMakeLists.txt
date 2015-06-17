@@ -352,7 +352,6 @@ set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
 target_link_libraries(kleopatra_bin
   ${_kleopatra_extra_libs}
   kleo
-  KF5::QGpgme
   KF5::Mime
   KF5::KCMUtils
   ${_kleopatra_uiserver_extra_libs}

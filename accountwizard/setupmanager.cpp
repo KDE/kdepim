@@ -37,9 +37,9 @@
 
 SetupManager::SetupManager(QWidget *parent) :
     QObject(parent),
-    m_currentSetupObject(0),
-    m_page(0),
-    m_wallet(0),
+    m_currentSetupObject(Q_NULLPTR),
+    m_page(Q_NULLPTR),
+    m_wallet(Q_NULLPTR),
     m_personalDataAvailable(false),
     m_rollbackRequested(false)
 {

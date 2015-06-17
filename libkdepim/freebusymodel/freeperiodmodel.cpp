@@ -30,7 +30,8 @@
 
 using namespace KPIM;
 
-FreePeriodModel::FreePeriodModel(QObject *parent): QAbstractTableModel(parent)
+FreePeriodModel::FreePeriodModel(QObject *parent)
+    : QAbstractTableModel(parent)
 {
 }
 
@@ -130,6 +131,7 @@ KCalCore::Period::List FreePeriodModel::splitPeriodsByDay(
 
     // Perform some jiggery pokery to remove duplicates
     QList<KCalCore::Period> tmpList = splitList.toList();
+#pragma message("port to QT5")
 #if 0 //QT5 FIX ME
     QSet<KCalCore::Period>set = tmpList.toSet();
     tmpList = QList<KCalCore::Period>::fromSet(set);
