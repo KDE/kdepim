@@ -27,10 +27,13 @@ public:
     explicit ImageScalingTest(QObject *parent = Q_NULLPTR);
     ~ImageScalingTest();
 private Q_SLOTS:
+    void initTestCase();
     void shouldHaveDefaultValue();
     void shouldHaveRenameFile_data();
     void shouldHaveRenameFile();
-    void initTestCase();
+
+    void shouldHaveChangeMimetype_data();
+    void shouldHaveChangeMimetype();
 };
 
 #endif // IMAGESCALINGTEST_H

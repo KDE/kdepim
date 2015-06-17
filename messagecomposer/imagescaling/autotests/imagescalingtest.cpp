@@ -75,4 +75,36 @@ void ImageScalingTest::shouldHaveRenameFile()
     QCOMPARE(scaling.generateNewName(), output);
 }
 
+void ImageScalingTest::shouldHaveChangeMimetype_data()
+{
+    QTest::addColumn<QByteArray>("initialmimetype");
+    QTest::addColumn<QByteArray>("newmimetype");
+    QTest::addColumn<QString>("format");
+
+    QTest::newRow("no change mimetype when empty") <<  QByteArray() << QByteArray() << QStringLiteral("PNG");
+    QTest::newRow("no change mimetype when empty jpeg") <<  QByteArray() << QByteArray() << QStringLiteral("JPG");
+    QTest::newRow("no change mimetype when jpeg (same)") <<  QByteArray("image/jpeg") << QByteArray("image/jpeg") << QStringLiteral("JPG");
+    QTest::newRow("no change mimetype when jpeg") <<  QByteArray("image/jpeg") << QByteArray("image/jpeg") << QStringLiteral("PNG");
+
+    QTest::newRow("no change mimetype when png (same)") <<  QByteArray("image/png") << QByteArray("image/png") << QStringLiteral("JPG");
+    QTest::newRow("no change mimetype when png") <<  QByteArray("image/png") << QByteArray("image/png") << QStringLiteral("PNG");
+
+
+    QTest::newRow("change mimetype when png") <<  QByteArray("image/mng") << QByteArray("image/png") << QStringLiteral("PNG");
+    QTest::newRow("change mimetype when jpeg") <<  QByteArray("image/mng") << QByteArray("image/jpeg") << QStringLiteral("JPG");
+}
+
+void ImageScalingTest::shouldHaveChangeMimetype()
+{
+    QFETCH(QByteArray, initialmimetype);
+    QFETCH(QByteArray, newmimetype);
+    QFETCH(QString, format);
+
+    MessageComposer::MessageComposerSettings::self()->setWriteFormat(format);
+    MessageComposer::MessageComposerSettings::self()->save();
+    MessageComposer::ImageScaling scaling;
+    scaling.setMimetype(initialmimetype);
+    QCOMPARE(scaling.mimetype(), newmimetype);
+}
+
 QTEST_MAIN(ImageScalingTest)

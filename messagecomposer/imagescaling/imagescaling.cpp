@@ -110,6 +110,9 @@ bool ImageScaling::resizeImage()
 
 QByteArray ImageScaling::mimetype() const
 {
+    if (mMimeType.isEmpty()) {
+        return QByteArray();
+    }
     if ((mMimeType == "image/jpeg") || (mMimeType == "image/png")) {
         return mMimeType;
     } else {
