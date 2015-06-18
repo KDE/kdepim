@@ -595,6 +595,13 @@ void SieveEditorWidget::sentenceCase()
     }
 }
 
+void SieveEditorWidget::openBookmarkUrl(const QUrl &url, const QString &description)
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->openBookmarkUrl(url, description);
+    }
+}
+
 QString SieveEditorWidget::currentHelpTitle() const
 {
     if (mMode == TextMode) {

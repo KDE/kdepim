@@ -50,7 +50,6 @@ void SieveEditorHelpHtmlWidget::slotLoadFinished(bool success)
 QUrl SieveEditorHelpHtmlWidget::url() const
 {
     return mUrl;
-
 }
 
 void SieveEditorHelpHtmlWidget::slotPixmapChanged(const QPixmap &pixmap)

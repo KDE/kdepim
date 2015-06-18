@@ -517,6 +517,17 @@ KSieveUi::SieveEditorWidget::EditorMode SieveEditorMainWidget::pageMode() const
     return KSieveUi::SieveEditorWidget::Unknown;
 }
 
+void SieveEditorMainWidget::openBookmarkUrl(const QUrl &url, const QString &description)
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->openBookmarkUrl(url, description);
+        }
+    }
+}
+
 QString SieveEditorMainWidget::currentHelpTitle() const
 {
     QWidget *w = mTabWidget->currentWidget();

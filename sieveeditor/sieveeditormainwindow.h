@@ -62,7 +62,7 @@ private Q_SLOTS:
     void slotUndoAvailable(bool);
     void slotRedoAvailable(bool);
     void slotCopyAvailable(bool b);
-    void slotOpenBookmarkUrl(const QUrl &url);
+    void slotOpenBookmarkUrl(const QUrl &url, const QString &description);
 private:
     void initStatusBar();
     void readConfig();

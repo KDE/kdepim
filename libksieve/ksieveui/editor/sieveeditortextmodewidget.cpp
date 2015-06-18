@@ -422,3 +422,8 @@ QUrl SieveEditorTextModeWidget::currentHelpUrl() const
 {
     return mTabWidget->currentHelpUrl();
 }
+
+void SieveEditorTextModeWidget::openBookmarkUrl(const QUrl &url, const QString &description)
+{
+    mTabWidget->slotAddHelpPage(description, url.toString());
+}

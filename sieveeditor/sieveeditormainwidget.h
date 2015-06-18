@@ -53,6 +53,7 @@ public:
     bool hasSelection() const;
     QString currentHelpTitle() const;
     QUrl currentHelpUrl() const;
+    void openBookmarkUrl(const QUrl &url, const QString &description);
 public Q_SLOTS:
     void slotGoToLine();
 

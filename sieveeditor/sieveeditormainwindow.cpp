@@ -309,7 +309,7 @@ void SieveEditorMainWindow::slotUpdateActions()
     mZoomInAction->setEnabled(editActionEnabled);
     mZoomOutAction->setEnabled(editActionEnabled);
 
-    mBookmarkMenu->setEnabled(hasPage);
+    mBookmarkMenu->setEnabled(editActionEnabled);
 }
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)
@@ -334,9 +334,9 @@ void SieveEditorMainWindow::slotCopyAvailable(bool b)
     mCutAction->setEnabled(editActionEnabled && b);
 }
 
-void SieveEditorMainWindow::slotOpenBookmarkUrl(const QUrl &url)
+void SieveEditorMainWindow::slotOpenBookmarkUrl(const QUrl &url, const QString &description)
 {
-    //TODO
+    mMainWidget->sieveEditorMainWidget()->openBookmarkUrl(url, description);
 }
 
 QString SieveEditorMainWindow::currentHelpTitle() const
