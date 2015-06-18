@@ -22,7 +22,6 @@
 
 #include "setupobject.h"
 
-class Identity;
 class AutoconfigKolabLdap;
 
 class SetupAutoconfigKolabLdap : public SetupObject

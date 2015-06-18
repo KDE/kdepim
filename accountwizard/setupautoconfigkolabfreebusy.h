@@ -22,7 +22,6 @@
 
 #include "setupobject.h"
 
-class Identity;
 class AutoconfigKolabFreebusy;
 
 class SetupAutoconfigKolabFreebusy : public SetupObject

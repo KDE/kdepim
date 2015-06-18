@@ -22,7 +22,6 @@
 
 #include "setupispdb.h"
 
-class Identity;
 
 class SetupAutoconfigKolabMail : public SetupIspdb
 {
