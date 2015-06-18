@@ -39,7 +39,6 @@ StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
     setLayout(topLayout);
     mMainLayout = new QVBoxLayout;
 
-
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);

@@ -122,7 +122,7 @@ TextToSpeechWidget::State TextToSpeechWidget::state() const
 
 void TextToSpeechWidget::slotStateChanged(PimCommon::TextToSpeech::State state)
 {
-    switch(state) {
+    switch (state) {
     case PimCommon::TextToSpeech::Ready: {
         if (state == PimCommon::TextToSpeech::Ready) {
             mTextToSpeechActions->setState(TextToSpeechWidget::Stop);

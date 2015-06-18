@@ -87,7 +87,7 @@ void GravatarConfigWidgetTest::shouldChangeState()
     option.initFrom(groupBox);
     option.subControls = QStyle::SubControls(QStyle::SC_All);
     QRect rect = groupBox->style()->subControlRect(QStyle::CC_GroupBox, &option,
-                                                  QStyle::SC_GroupBoxCheckBox, groupBox);
+                 QStyle::SC_GroupBoxCheckBox, groupBox);
 
     QTest::mouseClick(groupBox, Qt::LeftButton, 0, rect.center());
 
@@ -123,7 +123,7 @@ void GravatarConfigWidgetTest::shoulEmitConfigChangedSignal()
     option.initFrom(groupBox);
     option.subControls = QStyle::SubControls(QStyle::SC_All);
     QRect rect = groupBox->style()->subControlRect(QStyle::CC_GroupBox, &option,
-                                                  QStyle::SC_GroupBoxCheckBox, groupBox);
+                 QStyle::SC_GroupBoxCheckBox, groupBox);
 
     QTest::mouseClick(groupBox, Qt::LeftButton, 0, rect.center());
     QCOMPARE(spy.count(), 1);

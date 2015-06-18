@@ -42,7 +42,6 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(sliderContainer);
     QVERIFY(sliderContainer->isVisible());
 
-
     QWidget *translaterwidget = viewer.findChild<QWidget *>(QStringLiteral("translatorwidget"));
     QVERIFY(translaterwidget);
     QVERIFY(!translaterwidget->isVisible());
@@ -69,7 +68,6 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QWidget *mViewer = viewer.findChild<QWidget *>(QStringLiteral("mViewer"));
     QVERIFY(mViewer);
     QCOMPARE(mViewer->isVisible(), true);
-
 
     QVERIFY(viewer.toggleFixFontAction());
     QVERIFY(viewer.toggleMimePartTreeAction());
