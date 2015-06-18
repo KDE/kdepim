@@ -147,8 +147,10 @@ bool IncidenceResource::isDirty() const
 void IncidenceResource::bookResource()
 {
 #ifndef KDEPIM_MOBILE_UI
+    if (mUi->mNewResource->text().isEmpty()) {
+        return;
+    }
     QString name, email;
-
     KEmailAddress::extractEmailAddressAndName(mUi->mNewResource->text(), email, name);
     KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(name, email));
     attendee->setCuType(KCalCore::Attendee::Resource);
@@ -165,9 +167,9 @@ void IncidenceResource::dialogOkPressed()
 {
     ResourceItem::Ptr item = resourceDialog->selectedItem();
     if (item) {
+#ifndef KDEPIM_MOBILE_UI
         const QString name = item->ldapObject().value(QStringLiteral("cn"));
         const QString email = item->ldapObject().value(QStringLiteral("mail"));
-#ifndef KDEPIM_MOBILE_UI
         KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(name, email));
         attendee->setCuType(KCalCore::Attendee::Resource);
         dataModel->insertAttendee(dataModel->rowCount(), attendee);
@@ -204,7 +206,8 @@ int IncidenceResource::resourceCount() const
     if (!model) {
         return 0;
     }
-    for (int i = 0; i < model->rowCount(QModelIndex()); ++i) {
+    const int nbRow = model->rowCount(QModelIndex());
+    for (int i = 0; i < nbRow; ++i) {
         index = model->index(i, AttendeeTableModel::FullName);
         if (!model->data(index).toString().isEmpty()) {
             ++c;
