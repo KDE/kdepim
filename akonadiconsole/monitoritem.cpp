@@ -35,7 +35,7 @@ MonitorItem::MonitorItem(const QString &identifier_, MonitorsModel *model):
 
     QString service = QStringLiteral("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-        service += "." + Akonadi::ServerManager::instanceIdentifier();
+        service += QLatin1String(".") + Akonadi::ServerManager::instanceIdentifier();
     }
 
     mInterface = new org::freedesktop::Akonadi::NotificationSource(
@@ -122,9 +122,9 @@ void MonitorItem::monitoredResourcesChanged()
     monitoredResources.clear();
     for (int i = 0; i < list.size(); i++) {
         if (i > 0) {
-            monitoredResources += QLatin1String(", ");
+            monitoredResources += QStringLiteral(", ");
         }
-        monitoredResources += list[i];
+        monitoredResources += QString::fromLatin1(list[i]);
     }
 
     Q_EMIT changed(MonitorsModel::MonitoredResourcesColumn);
@@ -138,7 +138,7 @@ void MonitorItem::ignoredSessionsChanged()
         if (i > 0) {
             ignoredSessions += QLatin1String(", ");
         }
-        ignoredSessions += list[i];
+        ignoredSessions += QString::fromLatin1(list[i]);
     }
 
     Q_EMIT changed(MonitorsModel::IgnoredSessionsColumn);

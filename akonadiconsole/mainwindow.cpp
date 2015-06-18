@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     KStandardAction::quit(qApp, SLOT(quit()), actionCollection());
 
-    setupGUI(Keys /*| ToolBar | StatusBar*/ | Save | Create, "akonadiconsoleui.rc");
+    setupGUI(Keys /*| ToolBar | StatusBar*/ | Save | Create, QStringLiteral("akonadiconsoleui.rc"));
 
     KPIM::UiStateSaver::restoreState(this, KConfigGroup(KSharedConfig::openConfig(), "UiState"));
 

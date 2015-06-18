@@ -56,18 +56,18 @@ int main(int argc, char **argv)
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("remote"), i18n("Connect to an Akonadi remote debugging server"), "server"));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("remote"), i18n("Connect to an Akonadi remote debugging server"), QStringLiteral("server")));
 
     KDBusService service;
 
-    if (parser.isSet("remote")) {
-        const QString akonadiAddr = QStringLiteral("tcp:host=%1,port=31415").arg(parser.value("remote"));
-        const QString dbusAddr = QStringLiteral("tcp:host=%1,port=31416").arg(parser.value("remote"));
+    if (parser.isSet(QStringLiteral("remote"))) {
+        const QString akonadiAddr = QStringLiteral("tcp:host=%1,port=31415").arg(parser.value(QStringLiteral("remote")));
+        const QString dbusAddr = QStringLiteral("tcp:host=%1,port=31416").arg(parser.value(QStringLiteral("remote")));
         setenv("AKONADI_SERVER_ADDRESS", akonadiAddr.toLatin1(), 1);
         setenv("DBUS_SESSION_BUS_ADDRESS", dbusAddr.toLatin1(), 1);
     }
 
-    InstanceSelector instanceSelector(parser.isSet("remote") ? parser.value("remote") : QString());
+    InstanceSelector instanceSelector(parser.isSet(QStringLiteral("remote")) ? parser.value(QStringLiteral("remote")) : QString());
 
     return app.exec();
 }

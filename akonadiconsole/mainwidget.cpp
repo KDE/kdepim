@@ -54,50 +54,50 @@ MainWidget::MainWidget(KXmlGuiWindow *parent)
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     QTabWidget *tabWidget = new QTabWidget(this);
-    tabWidget->setObjectName("mainTab");
+    tabWidget->setObjectName(QStringLiteral("mainTab"));
     layout->addWidget(tabWidget);
 
-    tabWidget->addTab(new AgentWidget(tabWidget), "Agents");
+    tabWidget->addTab(new AgentWidget(tabWidget),QStringLiteral( "Agents"));
     mBrowser = new BrowserWidget(parent, tabWidget);
-    tabWidget->addTab(mBrowser, "Browser");
-    tabWidget->addTab(new DebugWidget(tabWidget), "Debugger");
-    tabWidget->addTab(new RawSocketConsole(tabWidget), "Raw Socket");
-    tabWidget->addTab(new DbBrowser(tabWidget), "DB Browser");
-    tabWidget->addTab(new DbConsole(tabWidget), "DB Console");
-    tabWidget->addTab(new QueryDebugger(tabWidget), "Query Debugger");
-    tabWidget->addTab(new JobTrackerWidget("jobtracker", tabWidget, "Enable job tracker"), "Job Tracker");
-    tabWidget->addTab(new JobTrackerWidget("resourcesJobtracker", tabWidget, "Enable tracking of Resource Schedulers"), "Resources Schedulers");
-    tabWidget->addTab(new NotificationMonitor(tabWidget), "Notification Monitor");
-    tabWidget->addTab(new SearchWidget(tabWidget), "Item Search");
-    tabWidget->addTab(new MonitorsWidget(tabWidget), "Monitors");
+    tabWidget->addTab(mBrowser, QStringLiteral("Browser"));
+    tabWidget->addTab(new DebugWidget(tabWidget), QStringLiteral("Debugger"));
+    tabWidget->addTab(new RawSocketConsole(tabWidget), QStringLiteral("Raw Socket"));
+    tabWidget->addTab(new DbBrowser(tabWidget), QStringLiteral("DB Browser"));
+    tabWidget->addTab(new DbConsole(tabWidget), QStringLiteral("DB Console"));
+    tabWidget->addTab(new QueryDebugger(tabWidget), QStringLiteral("Query Debugger"));
+    tabWidget->addTab(new JobTrackerWidget("jobtracker", tabWidget, QStringLiteral("Enable job tracker")), QStringLiteral("Job Tracker"));
+    tabWidget->addTab(new JobTrackerWidget("resourcesJobtracker", tabWidget, QStringLiteral("Enable tracking of Resource Schedulers")), QStringLiteral("Resources Schedulers"));
+    tabWidget->addTab(new NotificationMonitor(tabWidget), QStringLiteral("Notification Monitor"));
+    tabWidget->addTab(new SearchWidget(tabWidget), QStringLiteral("Item Search"));
+    tabWidget->addTab(new MonitorsWidget(tabWidget), QStringLiteral("Monitors"));
 
-    QAction *action = parent->actionCollection()->addAction("akonadiconsole_search");
-    action->setText("Create Search...");
+    QAction *action = parent->actionCollection()->addAction(QStringLiteral("akonadiconsole_search"));
+    action->setText(QStringLiteral("Create Search..."));
     connect(action, &QAction::triggered, this, &MainWidget::createSearch);
 
-    action = parent->actionCollection()->addAction("akonadiconsole_akonadi2xml");
-    action->setText("Dump to XML...");
+    action = parent->actionCollection()->addAction(QStringLiteral("akonadiconsole_akonadi2xml"));
+    action->setText(QStringLiteral("Dump to XML..."));
     connect(action, &QAction::triggered, mBrowser, &BrowserWidget::dumpToXml);
 
-    action = parent->actionCollection()->addAction("akonadiconsole_clearcache");
-    action->setText("Clear Akonadi Cache");
+    action = parent->actionCollection()->addAction(QStringLiteral("akonadiconsole_clearcache"));
+    action->setText(QStringLiteral("Clear Akonadi Cache"));
     connect(action, &QAction::triggered, mBrowser, &BrowserWidget::clearCache);
 
-    action = parent->actionCollection()->addAction("akonadiserver_start");
-    action->setText("Start Server");
+    action = parent->actionCollection()->addAction(QStringLiteral("akonadiserver_start"));
+    action->setText(QStringLiteral("Start Server"));
     connect(action, &QAction::triggered, this, &MainWidget::startServer);
 
-    action = parent->actionCollection()->addAction("akonadiserver_stop");
-    action->setText("Stop Server");
+    action = parent->actionCollection()->addAction(QStringLiteral("akonadiserver_stop"));
+    action->setText(QStringLiteral("Stop Server"));
     connect(action, &QAction::triggered, this, &MainWidget::stopServer);
 
-    action = parent->actionCollection()->addAction("akonadiserver_restart");
-    action->setText("Restart Server");
+    action = parent->actionCollection()->addAction(QStringLiteral("akonadiserver_restart"));
+    action->setText(QStringLiteral("Restart Server"));
     connect(action, &QAction::triggered, this, &MainWidget::restartServer);
 
-    action = parent->actionCollection()->addAction("akonadiserver_configure");
-    action->setText("Configure Server...");
-    action->setIcon(QIcon::fromTheme("configure"));
+    action = parent->actionCollection()->addAction(QStringLiteral("akonadiserver_configure"));
+    action->setText(QStringLiteral("Configure Server..."));
+    action->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
     connect(action, &QAction::triggered, this, &MainWidget::configureServer);
 }
 

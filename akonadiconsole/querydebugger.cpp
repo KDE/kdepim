@@ -68,7 +68,7 @@ public:
     QueryDebuggerModel(QObject *parent)
         : QAbstractListModel(parent)
     {
-        mSpecialRows[TOTAL].query = "TOTAL";
+        mSpecialRows[TOTAL].query = QStringLiteral("TOTAL");
         mSpecialRows[TOTAL].duration = 0;
         mSpecialRows[TOTAL].calls = 0;
     }
@@ -92,13 +92,13 @@ public:
         }
 
         if (section == QueryColumn) {
-            return "Query";
+            return QStringLiteral("Query");
         } else if (section == DurationColumn) {
-            return "Duration [ms]";
+            return QStringLiteral("Duration [ms]");
         } else if (section == CallsColumn) {
-            return "Calls";
+            return QStringLiteral("Calls");
         } else if (section == AvgDurationColumn) {
-            return "Avg. Duration [ms]";
+            return QStringLiteral("Avg. Duration [ms]");
         }
 
         return QVariant();
@@ -205,7 +205,7 @@ QueryDebugger::QueryDebugger(QWidget *parent):
 
     QString service = QLatin1String("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-        service += "." + Akonadi::ServerManager::instanceIdentifier();
+        service += QLatin1String(".") + Akonadi::ServerManager::instanceIdentifier();
     }
     mDebugger = new org::freedesktop::Akonadi::StorageDebugger(service,
             QLatin1String("/storageDebug"), QDBusConnection::sessionBus(), this);
@@ -218,7 +218,7 @@ QueryDebugger::QueryDebugger(QWidget *parent):
     QHBoxLayout *checkBoxLayout = new QHBoxLayout;
 
     QCheckBox *enableCB = new QCheckBox(this);
-    enableCB->setText("Enable query debugger (slows down server!)");
+    enableCB->setText(QStringLiteral("Enable query debugger (slows down server!)"));
     enableCB->setChecked(mDebugger->isSQLDebuggingEnabled());
     connect(enableCB, SIGNAL(toggled(bool)), mDebugger, SLOT(enableSQLDebugging(bool)));
     checkBoxLayout->addWidget(enableCB);
@@ -229,7 +229,7 @@ QueryDebugger::QueryDebugger(QWidget *parent):
     checkBoxLayout->addWidget(mOnlyAggregate);
 
     QToolButton *clearButton = new QToolButton;
-    clearButton->setText("clear");
+    clearButton->setText(QStringLiteral("clear"));
     clearButton->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-list")));
     clearButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     connect(clearButton, &QAbstractButton::clicked, this, &QueryDebugger::clear);

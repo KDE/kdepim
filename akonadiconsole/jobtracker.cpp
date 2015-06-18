@@ -88,7 +88,7 @@ JobTracker::JobTracker(const char *name, QObject *parent)
 {
     new JobTrackerAdaptor(this);
     QDBusConnection::sessionBus().registerService(QLatin1String("org.kde.akonadiconsole"));
-    QDBusConnection::sessionBus().registerObject('/' + QLatin1String(name),
+    QDBusConnection::sessionBus().registerObject(QLatin1Char('/') + QLatin1String(name),
             this, QDBusConnection::ExportAdaptors);
 
 #if 0
@@ -136,7 +136,7 @@ void JobTracker::jobCreated(const QString &session, const QString &job, const QS
 
     if (!parent.isEmpty() && !d->jobs.contains(parent)) {
         qCWarning(AKONADICONSOLE_LOG) << "JobTracker: Job arrived before its parent! Fix the library!";
-        jobCreated(session, parent, QString(), "dummy job type", QString());
+        jobCreated(session, parent, QString(), QStringLiteral("dummy job type"), QString());
     }
     // check if it's a new session, if so, add it
     if (d->sessions.isEmpty() || !d->sessions.contains(session)) {

@@ -95,14 +95,14 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget *parent) :
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
-    splitter->setObjectName("collectionSplitter");
+    splitter->setObjectName(QStringLiteral("collectionSplitter"));
     layout->addWidget(splitter);
 
     QSplitter *splitter2 = new QSplitter(Qt::Vertical, this);
-    splitter2->setObjectName("ffvSplitter");
+    splitter2->setObjectName(QStringLiteral("ffvSplitter"));
 
     mCollectionView = new Akonadi::EntityTreeView(xmlGuiWindow, this);
-    mCollectionView->setObjectName("CollectionView");
+    mCollectionView->setObjectName(QStringLiteral("CollectionView"));
     mCollectionView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     splitter2->addWidget(mCollectionView);
 
@@ -124,7 +124,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget *parent) :
     connect(mTagView, &QTreeView::customContextMenuRequested, this, &BrowserWidget::tagViewContextMenuRequested);
     connect(mTagView, &QTreeView::doubleClicked, this, &BrowserWidget::tagViewDoubleClicked);
 
-    Session *session = new Session("AkonadiConsole Browser Widget", this);
+    Session *session = new Session(("AkonadiConsole Browser Widget"), this);
 
     // monitor collection changes
     mBrowserMonitor = new ChangeRecorder(this);
@@ -178,17 +178,17 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget *parent) :
     favoritesView->setModel(favoritesModel);
 
     QSplitter *splitter3 = new QSplitter(Qt::Vertical, this);
-    splitter3->setObjectName("itemSplitter");
+    splitter3->setObjectName(QStringLiteral("itemSplitter"));
     splitter->addWidget(splitter3);
 
     QWidget *itemViewParent = new QWidget(this);
     itemUi.setupUi(itemViewParent);
 
-    itemUi.modelBox->addItem("Generic");
-    itemUi.modelBox->addItem("Mail");
-    itemUi.modelBox->addItem("Contacts");
-    itemUi.modelBox->addItem("Calendar");
-    itemUi.modelBox->addItem("Calendar/Tasks");
+    itemUi.modelBox->addItem(QStringLiteral("Generic"));
+    itemUi.modelBox->addItem(QStringLiteral("Mail"));
+    itemUi.modelBox->addItem(QStringLiteral("Contacts"));
+    itemUi.modelBox->addItem(QStringLiteral("Calendar"));
+    itemUi.modelBox->addItem(QStringLiteral("Calendar/Tasks"));
     connect(itemUi.modelBox, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &BrowserWidget::modelChanged);
     QTimer::singleShot(0, this, SLOT(modelChanged()));
 
@@ -228,7 +228,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget *parent) :
 
     mCacheOnlyAction = new KToggleAction(i18n("Cache only retrieval"), xmlGuiWindow);
     mCacheOnlyAction->setChecked(true);
-    xmlGuiWindow->actionCollection()->addAction("akonadiconsole_cacheonly", mCacheOnlyAction);
+    xmlGuiWindow->actionCollection()->addAction(QStringLiteral("akonadiconsole_cacheonly"), mCacheOnlyAction);
     connect(mCacheOnlyAction, &KToggleAction::toggled, this, &BrowserWidget::updateItemFetchScope);
 
     m_stateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>(KSharedConfig::openConfig()->group("CollectionViewState"), this);
@@ -316,14 +316,14 @@ void BrowserWidget::setItem(const Akonadi::Item &item)
     contentUi.saveButton->setEnabled(false);
 
     QByteArray data = item.payloadData();
-    contentUi.dataView->setPlainText(data);
+    contentUi.dataView->setPlainText(QString::fromLatin1(data));
 
     contentUi.id->setText(QString::number(item.id()));
     contentUi.remoteId->setText(item.remoteId());
     contentUi.mimeType->setText(item.mimeType());
     contentUi.revision->setText(QString::number(item.revision()));
     contentUi.size->setText(QString::number(item.size()));
-    contentUi.modificationtime->setText(item.modificationTime().toString() + (" UTC"));
+    contentUi.modificationtime->setText(item.modificationTime().toString() + QStringLiteral(" UTC"));
     QStringList flags;
     foreach (const Item::Flag &f, item.flags()) {
         flags << QString::fromUtf8(f);
@@ -465,7 +465,7 @@ void BrowserWidget::dumpToXml()
     if (!root.isValid()) {
         return;
     }
-    const QString fileName = QFileDialog::getSaveFileName(this, i18n("Select XML file") , QString(), "*.xml");
+    const QString fileName = QFileDialog::getSaveFileName(this, i18n("Select XML file") , QString(), QStringLiteral("*.xml"));
     if (fileName.isEmpty()) {
         return;
     }
@@ -488,7 +488,7 @@ void BrowserWidget::clearCache()
     if (!coll.isValid()) {
         return;
     }
-    QString str = QString("DELETE FROM PimItemTable WHERE collectionId=%1").arg(coll.id());
+    QString str = QStringLiteral("DELETE FROM PimItemTable WHERE collectionId=%1").arg(coll.id());
     qCDebug(AKONADICONSOLE_LOG) << str;
     QSqlQuery query(str, DbAccess::database());
     if (query.exec()) {

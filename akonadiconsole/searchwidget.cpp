@@ -47,25 +47,25 @@ SearchWidget::SearchWidget(QWidget *parent)
     mQueryWidget = new KTextEdit;
     mResultView = new QListView;
     mItemView = new QTextBrowser;
-    QPushButton *button = new QPushButton("Search");
+    QPushButton *button = new QPushButton(QStringLiteral("Search"));
 
-    layout->addWidget(new QLabel("Query:"), 0, 0);
+    layout->addWidget(new QLabel(QStringLiteral("Query:")), 0, 0);
     layout->addWidget(mQueryCombo, 0, 1, Qt::AlignRight);
 
     layout->addWidget(mQueryWidget, 1, 0, 1, 2);
 
-    layout->addWidget(new QLabel("Matching Item UIDs:"), 2, 0);
-    layout->addWidget(new QLabel("View:"), 2, 1);
+    layout->addWidget(new QLabel(QStringLiteral("Matching Item UIDs:")), 2, 0);
+    layout->addWidget(new QLabel(QStringLiteral("View:")), 2, 1);
 
     layout->addWidget(mResultView, 3, 0, 1, 1);
     layout->addWidget(mItemView, 3, 1, 1, 1);
 
     layout->addWidget(button, 4, 1, Qt::AlignRight);
 
-    mQueryCombo->addItem("Empty");
-    mQueryCombo->addItem("Contacts by email address");
-    mQueryCombo->addItem("Contacts by name");
-    mQueryCombo->addItem("Email by From/Full Name");
+    mQueryCombo->addItem(QStringLiteral("Empty"));
+    mQueryCombo->addItem(QStringLiteral("Contacts by email address"));
+    mQueryCombo->addItem(QStringLiteral("Contacts by name"));
+    mQueryCombo->addItem(QStringLiteral("Email by From/Full Name"));
 
     connect(button, &QPushButton::clicked, this, &SearchWidget::search);
     connect(mQueryCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::activated), this, &SearchWidget::querySelected);
@@ -110,24 +110,24 @@ void SearchWidget::querySelected(int index)
     if (index == 0) {
         mQueryWidget->clear();
     } else if (index == 1) {
-        mQueryWidget->setPlainText("SELECT ?person WHERE {\n"
+        mQueryWidget->setPlainText(QStringLiteral("SELECT ?person WHERE {\n"
                                    "  ?person <http://www.semanticdesktop.org/ontologies/2007/03/22/nco#hasEmailAddress> ?email .\n"
                                    "  ?email <http://www.semanticdesktop.org/ontologies/2007/03/22/nco#emailAddress> \"tokoe@kde.org\"^^<http://www.w3.org/2001/XMLSchema#string> .\n"
                                    " }\n"
-                                  );
+                                  ));
     } else if (index == 2) {
-        mQueryWidget->setPlainText("prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>\n"
+        mQueryWidget->setPlainText(QStringLiteral("prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>\n"
                                    "SELECT ?r WHERE {\n"
                                    "  ?r nco:fullname \"Tobias Koenig\"^^<http://www.w3.org/2001/XMLSchema#string>.\n"
                                    "}\n"
-                                  );
+                                  ));
     } else if (index == 3) {
-        mQueryWidget->setPlainText("SELECT ?mail WHERE {\n"
+        mQueryWidget->setPlainText(QStringLiteral("SELECT ?mail WHERE {\n"
                                    " ?mail <http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#from> ?person .\n"
                                    " ?person <http://www.semanticdesktop.org/ontologies/2007/03/22/nco#fullname> "
                                    "'Martin Koller'^^<http://www.w3.org/2001/XMLSchema#string> .\n"
                                    "}\n"
-                                  );
+                                  ));
     }
 }
 
@@ -148,7 +148,7 @@ void SearchWidget::itemFetched(KJob *job)
     mItemView->clear();
 
     if (job->error()) {
-        KMessageBox::error(this, "Error on fetching item");
+        KMessageBox::error(this, QStringLiteral("Error on fetching item"));
         return;
     }
 

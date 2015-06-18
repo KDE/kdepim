@@ -40,7 +40,7 @@ void AgentConfigModel::setAgentInstance(const Akonadi::AgentInstance &instance)
 
     m_interface = new QDBusInterface(
         QStringLiteral("org.freedesktop.Akonadi.Agent.%1").arg(instance.identifier()),
-        "/Settings");
+        QStringLiteral("/Settings"));
     if (!m_interface->isValid()) {
         qCritical() << "Unable to obtain KConfigXT D-Bus interface of agent" << instance.identifier();
         delete m_interface;
@@ -107,7 +107,7 @@ QVariant AgentConfigModel::data(const QModelIndex &index, int role) const
         } else if (index.column() == 1) {
             return setting.second;
         } else if (index.column() == 2) {
-            return setting.second.typeName();
+            return QString::fromLatin1(setting.second.typeName());
         }
     }
     return QVariant();

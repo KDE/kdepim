@@ -56,20 +56,20 @@ RawSocketConsole::RawSocketConsole(QWidget *parent) :
 
 void RawSocketConsole::execClicked()
 {
-    const QString command = ui.commandEdit->text().trimmed() + '\n';
+    const QString command = ui.commandEdit->text().trimmed() + QLatin1Char('\n');
     if (command.isEmpty()) {
         return;
     }
     mSocket->write(command.toUtf8());
     ui.commandEdit->clear();
-    ui.protocolView->append("<font color=\"red\">" + command + "</font>");
+    ui.protocolView->append(QLatin1String("<font color=\"red\">") + command + QLatin1String("</font>"));
 }
 
 void RawSocketConsole::dataReceived()
 {
     while (mSocket->canReadLine()) {
         const QString line = QString::fromUtf8(mSocket->readLine());
-        ui.protocolView->append("<font color=\"blue\">" + line + "</font>");
+        ui.protocolView->append(QLatin1String("<font color=\"blue\">") + line + QLatin1String("</font>"));
     }
 }
 

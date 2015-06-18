@@ -55,7 +55,7 @@ InstanceSelector::InstanceSelector(const QString &remoteHost, QWidget *parent, Q
     connect(buttonBox, &QDialogButtonBox::accepted, this, &InstanceSelector::slotAccept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &InstanceSelector::slotReject);
     mainLayout->addWidget(buttonBox);
-    okButton->setIcon(QIcon::fromTheme("network-connect"));
+    okButton->setIcon(QIcon::fromTheme(QStringLiteral("network-connect")));
     okButton->setText(i18n("Connect"));
 
     const QStringList insts = instances();

@@ -39,7 +39,7 @@ ConnectionPage::ConnectionPage(const QString &identifier, QWidget *parent)
 
     layout->addWidget(mDataView);
 
-    org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification(QString(), "/tracing/notifications", QDBusConnection::sessionBus(), this);
+    org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification(QString(), QStringLiteral("/tracing/notifications"), QDBusConnection::sessionBus(), this);
 
     connect(iface, SIGNAL(connectionDataInput(QString,QString)),
             this, SLOT(connectionDataInput(QString,QString)));
@@ -51,7 +51,7 @@ void ConnectionPage::connectionDataInput(const QString &identifier, const QStrin
 {
     QString str;
     if (mShowAllConnections) {
-        str += identifier + ' ';
+        str += identifier + QLatin1Char(' ');
     }
     if (mShowAllConnections || identifier == mIdentifier) {
         str += QStringLiteral("<font color=\"red\">%1</font>").arg(msg.toHtmlEscaped());
@@ -63,7 +63,7 @@ void ConnectionPage::connectionDataOutput(const QString &identifier, const QStri
 {
     QString str;
     if (mShowAllConnections) {
-        str += identifier + ' ';
+        str += identifier + QLatin1Char(' ');
     }
     if (mShowAllConnections || identifier == mIdentifier) {
         str += QStringLiteral("<font color=\"blue\">%1</font>").arg(msg.toHtmlEscaped());

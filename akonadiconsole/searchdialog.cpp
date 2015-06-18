@@ -34,7 +34,7 @@
 SearchDialog::SearchDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle("Create Search");
+    setWindowTitle(QStringLiteral("Create Search"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
@@ -48,12 +48,12 @@ SearchDialog::SearchDialog(QWidget *parent)
     mainLayout->addLayout(layout);
     mainLayout->addWidget(buttonBox);
     mName = new QLineEdit;
-    mName->setText("My Search");
+    mName->setText(QStringLiteral("My Search"));
     mEdit = new KTextEdit;
     mEdit->setAcceptRichText(false);
-    mEdit->setWhatsThis("Enter a SparQL query here");
+    mEdit->setWhatsThis(QStringLiteral("Enter a SparQL query here"));
 
-    layout->addWidget(new QLabel("Search query name:"), 0, 0);
+    layout->addWidget(new QLabel(QStringLiteral("Search query name:")), 0, 0);
     layout->addWidget(mName, 0, 1);
     layout->addWidget(mEdit, 1, 0, 1, 2);
 }

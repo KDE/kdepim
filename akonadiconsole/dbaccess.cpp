@@ -45,14 +45,14 @@ public:
         const QString serverConfigFile = saveDir("config") + QLatin1String("/akonadiserverrc");
         QSettings settings(serverConfigFile, QSettings::IniFormat);
 
-        const QString driver = settings.value("General/Driver", "QMYSQL").toString();
+        const QString driver = settings.value(QStringLiteral("General/Driver"), QStringLiteral("QMYSQL")).toString();
         database = QSqlDatabase::addDatabase(driver);
         settings.beginGroup(driver);
-        database.setHostName(settings.value("Host", QString()).toString());
-        database.setDatabaseName(settings.value("Name", "akonadi").toString());
-        database.setUserName(settings.value("User", QString()).toString());
-        database.setPassword(settings.value("Password", QString()).toString());
-        database.setConnectOptions(settings.value("Options", QString()).toString());
+        database.setHostName(settings.value(QStringLiteral("Host"), QString()).toString());
+        database.setDatabaseName(settings.value(QStringLiteral("Name"), QStringLiteral("akonadi")).toString());
+        database.setUserName(settings.value(QStringLiteral("User"), QString()).toString());
+        database.setPassword(settings.value(QStringLiteral("Password"), QString()).toString());
+        database.setConnectOptions(settings.value(QStringLiteral("Options"), QString()).toString());
         if (!database.open()) {
             KMessageBox::error(Q_NULLPTR, i18n("Failed to connect to database: %1", database.lastError().text()));
         }

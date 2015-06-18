@@ -43,7 +43,7 @@ void MonitorsModel::init()
 
     QString service = QStringLiteral("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-        service += "." + Akonadi::ServerManager::instanceIdentifier();
+        service += QStringLiteral(".") + Akonadi::ServerManager::instanceIdentifier();
     }
 
     mManager = new org::freedesktop::Akonadi::NotificationManager(service,

@@ -141,7 +141,7 @@ NotificationModel::NotificationModel(QObject *parent) :
 
     QString service = QLatin1String("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-        service += "." + Akonadi::ServerManager::instanceIdentifier();
+        service += QLatin1String(".") + Akonadi::ServerManager::instanceIdentifier();
     }
     m_manager = new org::freedesktop::Akonadi::NotificationManager(service,
             QLatin1String("/notifications"),
@@ -267,7 +267,7 @@ QVariant NotificationModel::data(const QModelIndex &index, int role) const
                 case NotificationMessageV2::Unlink: return QStringLiteral("Unlink");
                 case NotificationMessageV2::Subscribe: return QStringLiteral("Subscribe");
                 case NotificationMessageV2::Unsubscribe: return QStringLiteral("Unsubscribe");
-                default: return QString("Invalid");
+                default: return QStringLiteral("Invalid");
                 }
             }
             case 1: {
@@ -275,7 +275,7 @@ QVariant NotificationModel::data(const QModelIndex &index, int role) const
                 case NotificationMessageV2::Collections: return QStringLiteral("Collections");
                 case NotificationMessageV2::Items: return QStringLiteral("Items");
                 case NotificationMessageV2::Tags: return QStringLiteral("Tags");
-                default: return QString("Invalid");
+                default: return QStringLiteral("Invalid");
                 }
             }
             case 2:
@@ -319,16 +319,16 @@ QVariant NotificationModel::headerData(int section, Qt::Orientation orientation,
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
-        case 0: return QString("Operation / ID");
-        case 1: return QString("Type / RID");
-        case 2: return QString("Session / REV");
-        case 3: return QString("Resource / MimeType");
-        case 4: return QString("Destination Resource");
-        case 5: return QString("Parent");
-        case 6: return QString("Destination");
-        case 7: return QString("Parts");
-        case 8: return QString("Added Flags");
-        case 9: return QString("Removed Flags");
+        case 0: return QStringLiteral("Operation / ID");
+        case 1: return QStringLiteral("Type / RID");
+        case 2: return QStringLiteral("Session / REV");
+        case 3: return QStringLiteral("Resource / MimeType");
+        case 4: return QStringLiteral("Destination Resource");
+        case 5: return QStringLiteral("Parent");
+        case 6: return QStringLiteral("Destination");
+        case 7: return QStringLiteral("Parts");
+        case 8: return QStringLiteral("Added Flags");
+        case 9: return QStringLiteral("Removed Flags");
         }
     }
     return QAbstractItemModel::headerData(section, orientation, role);
@@ -356,7 +356,7 @@ void NotificationModel::setEnabled(bool enable)
 
         QString service = QLatin1String("org.freedesktop.Akonadi");
         if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-            service += "." + Akonadi::ServerManager::instanceIdentifier();
+            service += QStringLiteral(".") + Akonadi::ServerManager::instanceIdentifier();
         }
         m_source = new org::freedesktop::Akonadi::NotificationSource(service,
                 QLatin1String("/subscriber/") + identifier,

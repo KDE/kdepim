@@ -46,9 +46,9 @@ DebugWidget::DebugWidget(QWidget *parent)
 
     QString service = QStringLiteral("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-        service += "." + Akonadi::ServerManager::instanceIdentifier();
+        service += QLatin1String(".") + Akonadi::ServerManager::instanceIdentifier();
     }
-    mDebugInterface = new DebugInterface(service, "/debug", QDBusConnection::sessionBus(), this);
+    mDebugInterface = new DebugInterface(service, QStringLiteral("/debug"), QDBusConnection::sessionBus(), this);
     QCheckBox *cb = new QCheckBox(i18n("Enable debugger"), this);
     cb->setChecked(mDebugInterface->isValid() && mDebugInterface->tracer().value() == QLatin1String("dbus"));
     connect(cb, &QCheckBox::toggled, this, &DebugWidget::enableDebugger);
@@ -64,13 +64,13 @@ DebugWidget::DebugWidget(QWidget *parent)
     mGeneralView = new KTextEdit(splitter);
     mGeneralView->setReadOnly(true);
 
-    ConnectionPage *page = new ConnectionPage("All");
+    ConnectionPage *page = new ConnectionPage(QStringLiteral("All"));
     page->showAllConnections(true);
-    mConnectionPages->addTab(page, "All");
+    mConnectionPages->addTab(page, QStringLiteral("All"));
 
     connect(mConnectionPages, &QTabWidget::tabCloseRequested, this, &DebugWidget::tabCloseRequested);
 
-    org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification(QString(), "/tracing/notifications", QDBusConnection::sessionBus(), this);
+    org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification(QString(), QStringLiteral("/tracing/notifications"), QDBusConnection::sessionBus(), this);
 
     connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionStarted, this, &DebugWidget::connectionStarted);
     connect(iface, &org::freedesktop::Akonadi::TracerNotification::connectionEnded, this, &DebugWidget::connectionEnded);
