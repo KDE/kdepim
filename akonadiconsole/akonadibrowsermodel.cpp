@@ -48,8 +48,8 @@ class GenericState : public AkonadiBrowserModel::State
 public:
     GenericState()
     {
-        m_collectionHeaders << "Collection";
-        m_itemHeaders << "Id" << "Remote Id" << "MimeType";
+        m_collectionHeaders << QStringLiteral("Collection");
+        m_itemHeaders << QStringLiteral("Id") << QStringLiteral("Remote Id") << QStringLiteral("MimeType");
     }
     virtual ~GenericState()
     {
@@ -79,8 +79,8 @@ class MailState : public AkonadiBrowserModel::State
 public:
     MailState()
     {
-        m_collectionHeaders << "Collection";
-        m_itemHeaders << "Subject" << "Sender" << "Date";
+        m_collectionHeaders << QStringLiteral("Collection");
+        m_itemHeaders <<QStringLiteral( "Subject") << QStringLiteral("Sender") << QStringLiteral("Date");
     }
     virtual ~MailState() {}
 
@@ -114,8 +114,8 @@ class ContactsState : public AkonadiBrowserModel::State
 public:
     ContactsState()
     {
-        m_collectionHeaders << "Collection";
-        m_itemHeaders << "Given Name" << "Family Name" << "Email";
+        m_collectionHeaders << QStringLiteral("Collection");
+        m_itemHeaders << QStringLiteral("Given Name") << QStringLiteral("Family Name") << QStringLiteral("Email");
     }
     virtual ~ContactsState() {}
 
@@ -160,8 +160,8 @@ class CalendarState : public AkonadiBrowserModel::State
 public:
     CalendarState()
     {
-        m_collectionHeaders << "Collection";
-        m_itemHeaders << "Summary" << "DateTime start" << "DateTime End" << "Type";
+        m_collectionHeaders << QStringLiteral("Collection");
+        m_itemHeaders << QStringLiteral("Summary") << QStringLiteral("DateTime start") << QStringLiteral("DateTime End") << QStringLiteral("Type");
     }
     virtual ~CalendarState() {}
 

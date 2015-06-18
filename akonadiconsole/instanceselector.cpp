@@ -74,7 +74,7 @@ InstanceSelector::InstanceSelector(const QString &remoteHost, QWidget *parent, Q
             item->setData(inst, Qt::UserRole);
             model->appendRow(item);
         }
-        connect(ui->listView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(accept()));
+        connect(ui->listView, &QAbstractItemView::doubleClicked, this, &QDialog::accept);
         ui->listView->setModel(model);
         show();
     }

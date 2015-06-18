@@ -70,8 +70,8 @@ JobTrackerWidget::JobTrackerWidget(const char *name, QWidget *parent, const QStr
 
     QHBoxLayout *layout2 = new QHBoxLayout;
     QPushButton *button = new QPushButton(QStringLiteral("Save to file..."), this);
-    connect(button, SIGNAL(clicked(bool)),
-            this, SLOT(slotSaveToFile()));
+    connect(button, &QAbstractButton::clicked,
+            this, &JobTrackerWidget::slotSaveToFile);
     layout2->addWidget(button);
     layout2->addStretch(1);
     layout->addLayout(layout2);

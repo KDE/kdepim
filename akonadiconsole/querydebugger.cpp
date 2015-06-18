@@ -224,15 +224,15 @@ QueryDebugger::QueryDebugger(QWidget *parent):
     checkBoxLayout->addWidget(enableCB);
 
     mOnlyAggregate = new QCheckBox(this);
-    mOnlyAggregate->setText("Only Aggregate data");
+    mOnlyAggregate->setText(QStringLiteral("Only Aggregate data"));
     mOnlyAggregate->setChecked(true);
     checkBoxLayout->addWidget(mOnlyAggregate);
 
     QToolButton *clearButton = new QToolButton;
     clearButton->setText("clear");
-    clearButton->setIcon(QIcon::fromTheme("edit-clear-list"));
+    clearButton->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-list")));
     clearButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    connect(clearButton, SIGNAL(clicked()), SLOT(clear()));
+    connect(clearButton, &QAbstractButton::clicked, this, &QueryDebugger::clear);
     checkBoxLayout->addWidget(clearButton);
 
     layout->addLayout(checkBoxLayout);

@@ -39,7 +39,7 @@ RawSocketConsole::RawSocketConsole(QWidget *parent) :
     mSocket(new QLocalSocket(this))
 {
     ui.setupUi(this);
-    ui.execButton->setIcon(QIcon::fromTheme("application-x-executable"));
+    ui.execButton->setIcon(QIcon::fromTheme(QStringLiteral("application-x-executable")));
     connect(ui.execButton, &QPushButton::clicked, this, &RawSocketConsole::execClicked);
     connect(ui.commandEdit, &QLineEdit::returnPressed, this, &RawSocketConsole::execClicked);
     connect(ui.connectButton, &QPushButton::clicked, this, &RawSocketConsole::connectClicked);

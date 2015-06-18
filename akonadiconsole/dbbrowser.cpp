@@ -39,7 +39,7 @@ DbBrowser::DbBrowser(QWidget *parent) :
         ui.tableBox->addItems(QStringList() << userTables << systemTables);
     }
 
-    ui.refreshButton->setIcon(QIcon::fromTheme("view-refresh"));
+    ui.refreshButton->setIcon(QIcon::fromTheme(QStringLiteral("view-refresh")));
     connect(ui.refreshButton, &QPushButton::clicked, this, &DbBrowser::refreshClicked);
 }
 
@@ -55,8 +55,8 @@ void DbBrowser::refreshClicked()
     mTableModel->setEditStrategy(QSqlTableModel::OnRowChange);
     mTableModel->select();
     ui.tableView->setModel(mTableModel);
-    connect(ui.tableView->horizontalHeader(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),
-            this, SLOT(onSortIndicatorChanged(int,Qt::SortOrder)));
+    connect(ui.tableView->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
+            this, &DbBrowser::onSortIndicatorChanged);
 }
 
 void DbBrowser::onSortIndicatorChanged(int column, Qt::SortOrder order)

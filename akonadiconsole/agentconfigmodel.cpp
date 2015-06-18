@@ -58,6 +58,7 @@ void AgentConfigModel::reload()
         if (QByteArray(method.typeName()).isEmpty()) {   // returns void
             continue;
         }
+#pragma message("Port to QT5")
 #if 0 //QT5
         const QByteArray signature(method.signature());
         if (signature.isEmpty()) {
@@ -148,6 +149,6 @@ Qt::ItemFlags AgentConfigModel::flags(const QModelIndex &index) const
 
 void AgentConfigModel::writeConfig()
 {
-    m_interface->call("writeConfig");
+    m_interface->call(QStringLiteral("writeConfig"));
 }
 

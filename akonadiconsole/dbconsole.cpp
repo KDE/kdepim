@@ -42,7 +42,7 @@ DbConsole::DbConsole(QWidget *parent) :
     QAction *copyAction = KStandardAction::copy(this, SLOT(copyCell()), this);
     ui.resultView->addAction(copyAction);
 
-    ui.execButton->setIcon(QIcon::fromTheme("application-x-executable"));
+    ui.execButton->setIcon(QIcon::fromTheme(QStringLiteral("application-x-executable")));
     ui.execButton->setShortcut(Qt::CTRL + Qt::Key_Return);
     connect(ui.execButton, &QPushButton::clicked, this, &DbConsole::execClicked);
 

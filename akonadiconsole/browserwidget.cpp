@@ -302,8 +302,8 @@ void BrowserWidget::setItem(const Akonadi::Item &item)
     } else if (item.hasPayload<KCalCore::Incidence::Ptr>()) {
         contentUi.incidenceView->setItem(item);
         contentUi.stack->setCurrentWidget(contentUi.incidenceViewPage);
-    } else if (item.mimeType() == "message/rfc822"
-               || item.mimeType() == "message/news") {
+    } else if (item.mimeType() == QLatin1String("message/rfc822")
+               || item.mimeType() == QLatin1String("message/news")) {
         contentUi.mailView->setMessageItem(item, MessageViewer::Viewer::Force);
         contentUi.stack->setCurrentWidget(contentUi.mailViewPage);
     } else if (item.hasPayload<QPixmap>()) {

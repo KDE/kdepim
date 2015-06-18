@@ -44,7 +44,7 @@ DebugWidget::DebugWidget(QWidget *parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    QString service = "org.freedesktop.Akonadi";
+    QString service = QStringLiteral("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
         service += "." + Akonadi::ServerManager::instanceIdentifier();
     }
@@ -55,7 +55,7 @@ DebugWidget::DebugWidget(QWidget *parent)
     layout->addWidget(cb);
 
     QSplitter *splitter = new QSplitter(Qt::Vertical, this);
-    splitter->setObjectName("debugSplitter");
+    splitter->setObjectName(QStringLiteral("debugSplitter"));
     layout->addWidget(splitter);
 
     mConnectionPages = new QTabWidget(splitter);
@@ -85,11 +85,11 @@ DebugWidget::DebugWidget(QWidget *parent)
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     layout->addLayout(buttonLayout);
 
-    QPushButton *clearAllButton = new QPushButton("Clear All Tabs", this);
-    QPushButton *clearCurrentButton = new QPushButton("Clear Current Tab", this);
-    QPushButton *clearGeneralButton = new QPushButton("Clear Information View", this);
-    QPushButton *closeAllTabsButton = new QPushButton("Close All Tabs", this);
-    QPushButton *saveRichtextButton = new QPushButton("Save as RichText...", this);
+    QPushButton *clearAllButton = new QPushButton(QStringLiteral("Clear All Tabs"), this);
+    QPushButton *clearCurrentButton = new QPushButton(QStringLiteral("Clear Current Tab"), this);
+    QPushButton *clearGeneralButton = new QPushButton(QStringLiteral("Clear Information View"), this);
+    QPushButton *closeAllTabsButton = new QPushButton(QStringLiteral("Close All Tabs"), this);
+    QPushButton *saveRichtextButton = new QPushButton(QStringLiteral("Save as RichText..."), this);
 
     buttonLayout->addWidget(clearAllButton);
     buttonLayout->addWidget(clearCurrentButton);
@@ -190,17 +190,17 @@ void DebugWidget::closeAllTabs()
 
 void DebugWidget::signalEmitted(const QString &signalName, const QString &msg)
 {
-    mGeneralView->append(QString("<font color=\"green\">%1 ( %2 )</font>").arg(signalName, msg));
+    mGeneralView->append(QStringLiteral("<font color=\"green\">%1 ( %2 )</font>").arg(signalName, msg));
 }
 
 void DebugWidget::warningEmitted(const QString &componentName, const QString &msg)
 {
-    mGeneralView->append(QString("<font color=\"blue\">%1: %2</font>").arg(componentName, msg));
+    mGeneralView->append(QStringLiteral("<font color=\"blue\">%1: %2</font>").arg(componentName, msg));
 }
 
 void DebugWidget::errorEmitted(const QString &componentName, const QString &msg)
 {
-    mGeneralView->append(QString("<font color=\"red\">%1: %2</font>").arg(componentName, msg));
+    mGeneralView->append(QStringLiteral("<font color=\"red\">%1: %2</font>").arg(componentName, msg));
 }
 
 void DebugWidget::enableDebugger(bool enable)

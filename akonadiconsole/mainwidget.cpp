@@ -109,6 +109,7 @@ MainWidget::~MainWidget()
 void MainWidget::createSearch()
 {
 //QT5 TODO need to reimplement it
+#pragma message("port to QT5")
 #if 0
     SearchDialog dlg;
     if (!dlg.exec()) {
@@ -147,7 +148,7 @@ void MainWidget::restartServer()
 void MainWidget::configureServer()
 {
     KCMultiDialog dlg;
-    dlg.addModule("kcm_akonadi_server");
+    dlg.addModule(QStringLiteral("kcm_akonadi_server"));
     dlg.exec();
 }
 

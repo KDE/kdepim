@@ -33,7 +33,7 @@ MonitorItem::MonitorItem(const QString &identifier_, MonitorsModel *model):
     allMonitored(false)
 {
 
-    QString service = QLatin1String("org.freedesktop.Akonadi");
+    QString service = QStringLiteral("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
         service += "." + Akonadi::ServerManager::instanceIdentifier();
     }

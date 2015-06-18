@@ -54,7 +54,7 @@ void ConnectionPage::connectionDataInput(const QString &identifier, const QStrin
         str += identifier + ' ';
     }
     if (mShowAllConnections || identifier == mIdentifier) {
-        str += QString("<font color=\"red\">%1</font>").arg(msg.toHtmlEscaped());
+        str += QStringLiteral("<font color=\"red\">%1</font>").arg(msg.toHtmlEscaped());
         mDataView->append(str);
     }
 }
@@ -66,7 +66,7 @@ void ConnectionPage::connectionDataOutput(const QString &identifier, const QStri
         str += identifier + ' ';
     }
     if (mShowAllConnections || identifier == mIdentifier) {
-        str += QString("<font color=\"blue\">%1</font>").arg(msg.toHtmlEscaped());
+        str += QStringLiteral("<font color=\"blue\">%1</font>").arg(msg.toHtmlEscaped());
         mDataView->append(str);
     }
 }

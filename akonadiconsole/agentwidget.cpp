@@ -93,9 +93,9 @@ AgentWidget::AgentWidget(QWidget *parent)
     connect(ui.instanceWidget, &Akonadi::AgentInstanceWidget::currentChanged, this, &AgentWidget::currentChanged);
     connect(ui.instanceWidget, &Akonadi::AgentInstanceWidget::customContextMenuRequested, this, &AgentWidget::showContextMenu);
 
-    connect(ui.instanceWidget->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()));
-    connect(ui.instanceWidget->view()->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(selectionChanged()));
-    connect(ui.instanceWidget->view()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(slotDataChanged(QModelIndex,QModelIndex)));
+    connect(ui.instanceWidget->view()->selectionModel(), &QItemSelectionModel::selectionChanged, this, &AgentWidget::selectionChanged);
+    connect(ui.instanceWidget->view()->selectionModel(), &QItemSelectionModel::currentChanged, this, &AgentWidget::selectionChanged);
+    connect(ui.instanceWidget->view()->model(), &QAbstractItemModel::dataChanged, this, &AgentWidget::slotDataChanged);
 
     currentChanged();
 
