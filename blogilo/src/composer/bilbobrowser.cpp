@@ -98,7 +98,6 @@ void BilboBrowser::createUi(QWidget *parent)
 
 void BilboBrowser::setHtml(const QString &title, const QString &content)
 {
-    qDebug()<<" void BilboBrowser::setHtml(const QString &title, const QString &content)**************"<<title<<" content"<<content;
     currentTitle = title;
     currentContent = content;
 
