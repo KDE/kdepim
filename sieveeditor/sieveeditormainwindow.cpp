@@ -209,10 +209,10 @@ void SieveEditorMainWindow::setupActions()
     connect(mMenuChangeCaseAction, &PimCommon::KActionMenuChangeCase::sentenceCase, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotSentenceCase);
     connect(mMenuChangeCaseAction, &PimCommon::KActionMenuChangeCase::reverseCase, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotReverseCase);
 
-    KActionMenu* bookmarkMenu = new KActionMenu(i18nc("@title:menu", "&Bookmarks"), ac);
-    mSieveEditorBookmarks = new SieveEditorBookmarks(ac, bookmarkMenu->menu(), this);
-    ac->addAction(QStringLiteral("bookmark"), bookmarkMenu);
-    //connect(mSieveEditorBookmarks, &SieveEditorBookmarks::openUrls, this, &SieveEditorMainWindow::openUrls);
+    mBookmarkMenu = new KActionMenu(i18nc("@title:menu", "&Bookmarks"), ac);
+    mSieveEditorBookmarks = new SieveEditorBookmarks(this, ac, mBookmarkMenu->menu(), this);
+    ac->addAction(QStringLiteral("bookmark"), mBookmarkMenu);
+    connect(mSieveEditorBookmarks, &SieveEditorBookmarks::openUrl, this, &SieveEditorMainWindow::slotOpenBookmarkUrl);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
@@ -308,6 +308,8 @@ void SieveEditorMainWindow::slotUpdateActions()
     mMenuChangeCaseAction->setEnabled(editActionEnabled);
     mZoomInAction->setEnabled(editActionEnabled);
     mZoomOutAction->setEnabled(editActionEnabled);
+
+    mBookmarkMenu->setEnabled(hasPage);
 }
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)
@@ -330,4 +332,19 @@ void SieveEditorMainWindow::slotCopyAvailable(bool b)
     const bool editActionEnabled = (hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
     mCopyAction->setEnabled(editActionEnabled && b);
     mCutAction->setEnabled(editActionEnabled && b);
+}
+
+void SieveEditorMainWindow::slotOpenBookmarkUrl(const QUrl &url)
+{
+    //TODO
+}
+
+QString SieveEditorMainWindow::currentHelpTitle() const
+{
+    return mMainWidget->sieveEditorMainWidget()->currentHelpTitle();
+}
+
+QUrl SieveEditorMainWindow::currentHelpUrl() const
+{
+    return mMainWidget->sieveEditorMainWidget()->currentHelpUrl();
 }

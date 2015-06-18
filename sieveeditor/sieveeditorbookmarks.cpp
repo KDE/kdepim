@@ -19,16 +19,18 @@
 */
 
 #include "sieveeditorbookmarks.h"
+#include "sieveeditormainwindow.h"
 #include <QStandardPaths>
 #include <kbookmarkmanager.h>
 #include <KBookmarkMenu>
 #include <QDir>
 
-SieveEditorBookmarks::SieveEditorBookmarks(KActionCollection *collection, QMenu *menu, QObject *parent)
+SieveEditorBookmarks::SieveEditorBookmarks(SieveEditorMainWindow *mainWindow, KActionCollection *collection, QMenu *menu, QObject *parent)
     : QObject(parent),
       KBookmarkOwner(),
       mBookmarkMenu(Q_NULLPTR),
-      mMenu(menu)
+      mMenu(menu),
+      mMainWindow(mainWindow)
 {
     QString bookmarkFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("sieveeditor/bookmarks.xml"));
 
@@ -42,7 +44,6 @@ SieveEditorBookmarks::SieveEditorBookmarks(KActionCollection *collection, QMenu 
     manager->setUpdate(true);
 
     mBookmarkMenu = new KBookmarkMenu(manager, this, mMenu, collection);
-
 }
 
 SieveEditorBookmarks::~SieveEditorBookmarks()
@@ -57,6 +58,18 @@ QMenu *SieveEditorBookmarks::menu() const
 
 void SieveEditorBookmarks::openBookmark(const KBookmark &bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km)
 {
+    Q_UNUSED(mb);
+    Q_UNUSED(km);
+    Q_EMIT openUrl(bm.url());
+}
 
+QString SieveEditorBookmarks::currentTitle() const
+{
+    return mMainWindow->currentHelpTitle();
+}
+
+QUrl SieveEditorBookmarks::currentUrl() const
+{
+    return mMainWindow->currentHelpUrl();
 }
 

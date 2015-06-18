@@ -31,9 +31,10 @@ macro(add_sieveserver_unittest _source _additionalSource)
     Qt5::Core
     Qt5::Widgets 
     KF5::I18n 
-    KF5::Bookmarks 
+    KF5::Bookmarks
+    KF5::XmlGui
   )
 endmacro ()
 
 add_sieveserver_unittest( sieveeditorconfigureserverpagetest.cpp "../sieveeditorconfigureserverpage.cpp")
-add_sieveserver_unittest( sieveeditorbookmarkstest.cpp "../sieveeditorbookmarks.cpp")
+#add_sieveserver_unittest( sieveeditorbookmarkstest.cpp "../sieveeditorbookmarks.cpp")

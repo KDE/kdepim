@@ -37,7 +37,7 @@ SieveEditorBookmarksTest::~SieveEditorBookmarksTest()
 void SieveEditorBookmarksTest::shouldHaveDefaultValue()
 {
     QMenu menu;
-    SieveEditorBookmarks bookmark(0, &menu, 0);
+    SieveEditorBookmarks bookmark(0, 0, &menu, 0);
     QVERIFY(bookmark.menu());
 }
 

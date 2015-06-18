@@ -516,3 +516,15 @@ KSieveUi::SieveEditorWidget::EditorMode SieveEditorMainWidget::pageMode() const
     }
     return KSieveUi::SieveEditorWidget::Unknown;
 }
+
+QString SieveEditorMainWidget::currentHelpTitle() const
+{
+    //TODO
+    return QString();
+}
+
+QUrl SieveEditorMainWidget::currentHelpUrl() const
+{
+    //TODO
+    return QUrl();
+}

@@ -28,6 +28,7 @@ class SieveEditorCentralWidget;
 class QLabel;
 class QNetworkConfigurationManager;
 class SieveEditorBookmarks;
+class KActionMenu;
 namespace PimCommon
 {
 class KActionMenuChangeCase;
@@ -39,6 +40,9 @@ class SieveEditorMainWindow : public KXmlGuiWindow
 public:
     explicit SieveEditorMainWindow();
     ~SieveEditorMainWindow();
+
+    QString currentHelpTitle() const;
+    QUrl currentHelpUrl() const;
 
 protected:
     void closeEvent(QCloseEvent *e) Q_DECL_OVERRIDE;
@@ -58,7 +62,7 @@ private Q_SLOTS:
     void slotUndoAvailable(bool);
     void slotRedoAvailable(bool);
     void slotCopyAvailable(bool b);
-
+    void slotOpenBookmarkUrl(const QUrl &url);
 private:
     void initStatusBar();
     void readConfig();
@@ -94,6 +98,7 @@ private:
     QLabel *mStatusBarInfo;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
     SieveEditorBookmarks *mSieveEditorBookmarks;
+    KActionMenu* mBookmarkMenu;
     bool mNetworkIsDown;
 };
 

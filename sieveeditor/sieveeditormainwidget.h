@@ -51,6 +51,8 @@ public:
     bool isRedoAvailable() const;
 
     bool hasSelection() const;
+    QString currentHelpTitle() const;
+    QUrl currentHelpUrl() const;
 public Q_SLOTS:
     void slotGoToLine();
 

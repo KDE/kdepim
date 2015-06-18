@@ -27,21 +27,28 @@
 class KBookmarkMenu;
 class QMenu;
 class KActionCollection;
+class SieveEditorMainWindow;
 class SieveEditorBookmarks : public QObject, public KBookmarkOwner
 {
     Q_OBJECT
 public:
-    explicit SieveEditorBookmarks(KActionCollection *collection, QMenu *menu, QObject *parent = Q_NULLPTR);
+    explicit SieveEditorBookmarks(SieveEditorMainWindow *mainWindow, KActionCollection *collection, QMenu *menu, QObject *parent = Q_NULLPTR);
     ~SieveEditorBookmarks();
 
     QMenu *menu() const;
 
     void openBookmark(const KBookmark &bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km) Q_DECL_OVERRIDE;
 
+    QString currentTitle() const Q_DECL_OVERRIDE;
+    QUrl currentUrl() const Q_DECL_OVERRIDE;
+
+Q_SIGNALS:
+    void openUrl(const QUrl& url);
+
 private:
     KBookmarkMenu *mBookmarkMenu;
     QMenu *mMenu;
-
+    SieveEditorMainWindow *mMainWindow;
 };
 
 #endif // SIEVEEDITORBOOKMARKS_H
