@@ -25,6 +25,7 @@
 #include "sieveserversettings.h"
 #include "sieveeditorcentralwidget.h"
 #include "sieveeditorglobalconfig.h"
+#include "sieveeditorbookmarks.h"
 #include "pimcommon/widgets/kactionmenuchangecase.h"
 
 #include <KStandardGuiItem>
@@ -207,6 +208,11 @@ void SieveEditorMainWindow::setupActions()
     connect(mMenuChangeCaseAction, &PimCommon::KActionMenuChangeCase::lowerCase, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotLowerCase);
     connect(mMenuChangeCaseAction, &PimCommon::KActionMenuChangeCase::sentenceCase, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotSentenceCase);
     connect(mMenuChangeCaseAction, &PimCommon::KActionMenuChangeCase::reverseCase, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotReverseCase);
+
+    KActionMenu* bookmarkMenu = new KActionMenu(i18nc("@title:menu", "&Bookmarks"), ac);
+    mSieveEditorBookmarks = new SieveEditorBookmarks(ac, bookmarkMenu->menu(), this);
+    ac->addAction(QStringLiteral("bookmark"), bookmarkMenu);
+    //connect(mSieveEditorBookmarks, &SieveEditorBookmarks::openUrls, this, &SieveEditorMainWindow::openUrls);
 }
 
 void SieveEditorMainWindow::slotRefreshList()

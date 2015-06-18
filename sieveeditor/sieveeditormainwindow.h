@@ -27,6 +27,7 @@ class QAction;
 class SieveEditorCentralWidget;
 class QLabel;
 class QNetworkConfigurationManager;
+class SieveEditorBookmarks;
 namespace PimCommon
 {
 class KActionMenuChangeCase;
@@ -92,6 +93,7 @@ private:
 
     QLabel *mStatusBarInfo;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
+    SieveEditorBookmarks *mSieveEditorBookmarks;
     bool mNetworkIsDown;
 };
 
