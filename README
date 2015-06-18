@@ -21,16 +21,13 @@ What it is
 * blogilo: The KDE blogging client
 * kaddressbook: The KDE addressbook application.
 * kalarm: gui for setting up personal alarm messages, emails and commands
-* kjots: manager for several "books" with a subject and notes
 * kmail: the KDE mail client
 * importwizard: tool for importing mail/filter/settings/bookmarks from other programs
-* kmailcvt: tool for importing mail related data from other programs
 * knotes: popup notes application
 * konsolekalendar: Command line tool for accessing calendar files.
 * kontact: Integrated PIM application
 * korgac: a daemon for handling calendar reminders.
 * korganizer: a calendar-of-events, todo-list manager, journal 
-* ksendemail: commandline email tool.
 * ktnef: Viewer for mail attachments using TNEF format
 * pimsettingexporter: Application to import/export pim config/data
 * headerthemeeditor: Application to generate grantlee header mail
