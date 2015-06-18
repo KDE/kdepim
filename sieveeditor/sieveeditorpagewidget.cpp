@@ -302,3 +302,13 @@ void SieveEditorPageWidget::zoomOut()
 {
     mSieveEditorWidget->zoomOut();
 }
+
+QString SieveEditorPageWidget::currentHelpTitle() const
+{
+    return mSieveEditorWidget->currentHelpTitle();
+}
+
+QUrl SieveEditorPageWidget::currentHelpUrl() const
+{
+    return mSieveEditorWidget->currentHelpUrl();
+}

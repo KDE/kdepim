@@ -412,3 +412,15 @@ void SieveEditorTextModeWidget::reverseCase()
 {
     mTextEdit->reverseCase();
 }
+
+QString SieveEditorTextModeWidget::currentHelpTitle() const
+{
+    //TODO
+    return QString();
+}
+
+QUrl SieveEditorTextModeWidget::currentHelpUrl() const
+{
+    //TODO
+    return QUrl();
+}

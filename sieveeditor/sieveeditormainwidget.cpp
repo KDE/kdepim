@@ -519,12 +519,24 @@ KSieveUi::SieveEditorWidget::EditorMode SieveEditorMainWidget::pageMode() const
 
 QString SieveEditorMainWidget::currentHelpTitle() const
 {
-    //TODO
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            return page->currentHelpTitle();
+        }
+    }
     return QString();
 }
 
 QUrl SieveEditorMainWidget::currentHelpUrl() const
 {
-    //TODO
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            return page->currentHelpUrl();
+        }
+    }
     return QUrl();
 }

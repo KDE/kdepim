@@ -75,6 +75,8 @@ public:
     void reverseCase();
     void zoomOut();
     void zoomIn();
+    QString currentHelpTitle() const;
+    QUrl currentHelpUrl() const;
 public Q_SLOTS:
     void find();
     void replace();

@@ -75,6 +75,8 @@ public:
     void reverseCase();
     void zoomIn();
     void zoomOut();
+    QString currentHelpTitle() const;
+    QUrl currentHelpUrl() const;
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

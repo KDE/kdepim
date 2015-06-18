@@ -594,3 +594,19 @@ void SieveEditorWidget::sentenceCase()
         mTextModeWidget->sentenceCase();
     }
 }
+
+QString SieveEditorWidget::currentHelpTitle() const
+{
+    if (mMode == TextMode) {
+        return mTextModeWidget->currentHelpTitle();
+    }
+    return QString();
+}
+
+QUrl SieveEditorWidget::currentHelpUrl() const
+{
+    if (mMode == TextMode) {
+        return mTextModeWidget->currentHelpUrl();
+    }
+    return QUrl();
+}
