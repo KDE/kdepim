@@ -19,6 +19,7 @@
 #define SIEVEEDITORHELPHTMLWIDGET_H
 
 #include <QWidget>
+#include <QUrl>
 
 namespace KSieveUi
 {
@@ -34,7 +35,7 @@ public:
     void setHelp(const QString &variableName, const QString &url);
     QString variableName() const;
 
-    QString url() const;
+    QUrl url() const;
 
 Q_SIGNALS:
     void titleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
@@ -49,7 +50,7 @@ private Q_SLOTS:
     void slotLoadFinished(bool success);
 private:
     QString mVariableName;
-    QString mUrl;
+    QUrl mUrl;
     SieveEditorWebView *mWebView;
     SieveEditorLoadProgressIndicator *mProgressIndicator;
 };

@@ -415,12 +415,10 @@ void SieveEditorTextModeWidget::reverseCase()
 
 QString SieveEditorTextModeWidget::currentHelpTitle() const
 {
-    //TODO
-    return QString();
+    return mTabWidget->currentHelpTitle();
 }
 
 QUrl SieveEditorTextModeWidget::currentHelpUrl() const
 {
-    //TODO
-    return QUrl();
+    return mTabWidget->currentHelpUrl();
 }

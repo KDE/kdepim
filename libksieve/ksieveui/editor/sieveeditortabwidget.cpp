@@ -21,6 +21,7 @@
 #include <KLocalizedString>
 
 #include <QTabBar>
+#include <QUrl>
 
 using namespace KSieveUi;
 SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)
@@ -41,6 +42,24 @@ void SieveEditorTabWidget::slotTabCloseRequested(int index)
     if (index > 0) {
         removeTab(index);
     }
+}
+
+QUrl SieveEditorTabWidget::currentHelpUrl() const
+{
+    SieveEditorHelpHtmlWidget *page = qobject_cast<SieveEditorHelpHtmlWidget *>(currentWidget());
+    if (page) {
+        return page->url();
+    }
+    return QUrl();
+}
+
+QString SieveEditorTabWidget::currentHelpTitle() const
+{
+    SieveEditorHelpHtmlWidget *page = qobject_cast<SieveEditorHelpHtmlWidget *>(currentWidget());
+    if (page) {
+        return page->variableName();
+    }
+    return QString();
 }
 
 void SieveEditorTabWidget::slotAddHelpPage(const QString &variableName, const QString &url)

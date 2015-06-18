@@ -47,9 +47,10 @@ void SieveEditorHelpHtmlWidget::slotLoadFinished(bool success)
     Q_EMIT loadFinished(this, success);
 }
 
-QString SieveEditorHelpHtmlWidget::url() const
+QUrl SieveEditorHelpHtmlWidget::url() const
 {
     return mUrl;
+
 }
 
 void SieveEditorHelpHtmlWidget::slotPixmapChanged(const QPixmap &pixmap)
@@ -75,8 +76,8 @@ void SieveEditorHelpHtmlWidget::slotTitleChanged(const QString &)
 void SieveEditorHelpHtmlWidget::setHelp(const QString &variableName, const QString &url)
 {
     mVariableName = variableName;
-    mUrl = url;
     mWebView->setUrl(url);
+    mUrl = mWebView->url();
 }
 
 QString SieveEditorHelpHtmlWidget::variableName() const

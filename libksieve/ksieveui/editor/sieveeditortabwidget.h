@@ -30,6 +30,8 @@ public:
     explicit SieveEditorTabWidget(QWidget *parent = Q_NULLPTR);
     ~SieveEditorTabWidget();
 
+    QUrl currentHelpUrl() const;
+    QString currentHelpTitle() const;
 public Q_SLOTS:
     void slotAddHelpPage(const QString &variableName, const QString &url);
 
