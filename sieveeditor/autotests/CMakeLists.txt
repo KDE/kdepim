@@ -30,7 +30,8 @@ macro(add_sieveserver_unittest _source _additionalSource)
     Qt5::Test
     Qt5::Core
     Qt5::Widgets 
-    KF5::I18n  
+    KF5::I18n 
+    KF5::Bookmarks 
   )
 endmacro ()
 

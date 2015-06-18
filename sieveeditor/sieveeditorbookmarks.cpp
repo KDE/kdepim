@@ -19,14 +19,43 @@
 */
 
 #include "sieveeditorbookmarks.h"
+#include <QStandardPaths>
+#include <kbookmarkmanager.h>
+#include <KBookmarkMenu>
+#include <QDir>
 
-SieveEditorBookmarks::SieveEditorBookmarks(QObject *parent)
-    : QObject(parent)
+SieveEditorBookmarks::SieveEditorBookmarks(KActionCollection *collection, QMenu *menu, QObject *parent)
+    : QObject(parent),
+      KBookmarkOwner(),
+      mBookmarkMenu(Q_NULLPTR),
+      mMenu(menu)
 {
+    QString bookmarkFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("sieveeditor/bookmarks.xml"));
+
+    if (bookmarkFile.isEmpty()) {
+        bookmarkFile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("/sieveeditor");
+        QDir().mkpath(bookmarkFile);
+        bookmarkFile += QStringLiteral("/bookmarks.xml");
+    }
+
+    KBookmarkManager* manager = KBookmarkManager::managerForFile(bookmarkFile, QStringLiteral("sieveeditor"));
+    manager->setUpdate(true);
+
+    mBookmarkMenu = new KBookmarkMenu(manager, this, mMenu, collection);
 
 }
 
 SieveEditorBookmarks::~SieveEditorBookmarks()
+{
+    delete mBookmarkMenu;
+}
+
+QMenu *SieveEditorBookmarks::menu() const
+{
+    return mMenu;
+}
+
+void SieveEditorBookmarks::openBookmark(const KBookmark &bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km)
 {
 
 }

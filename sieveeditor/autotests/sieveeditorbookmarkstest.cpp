@@ -19,6 +19,8 @@
 */
 
 #include "sieveeditorbookmarkstest.h"
+#include "../sieveeditorbookmarks.h"
+#include <QMenu>
 #include <qtest.h>
 
 SieveEditorBookmarksTest::SieveEditorBookmarksTest(QObject *parent)
@@ -30,6 +32,13 @@ SieveEditorBookmarksTest::SieveEditorBookmarksTest(QObject *parent)
 SieveEditorBookmarksTest::~SieveEditorBookmarksTest()
 {
 
+}
+
+void SieveEditorBookmarksTest::shouldHaveDefaultValue()
+{
+    QMenu menu;
+    SieveEditorBookmarks bookmark(0, &menu, 0);
+    QVERIFY(bookmark.menu());
 }
 
 QTEST_MAIN(SieveEditorBookmarksTest)

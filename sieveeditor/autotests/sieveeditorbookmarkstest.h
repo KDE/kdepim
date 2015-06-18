@@ -29,6 +29,9 @@ class SieveEditorBookmarksTest : public QObject
 public:
     explicit SieveEditorBookmarksTest(QObject *parent = Q_NULLPTR);
     ~SieveEditorBookmarksTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // SIEVEEDITORBOOKMARKSTEST_H

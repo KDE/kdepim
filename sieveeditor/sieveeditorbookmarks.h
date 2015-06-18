@@ -23,13 +23,25 @@
 #define SIEVEEDITORBOOKMARKS_H
 
 #include <QObject>
-
-class SieveEditorBookmarks : public QObject
+#include <kbookmarkowner.h>
+class KBookmarkMenu;
+class QMenu;
+class KActionCollection;
+class SieveEditorBookmarks : public QObject, public KBookmarkOwner
 {
     Q_OBJECT
 public:
-    explicit SieveEditorBookmarks(QObject *parent = Q_NULLPTR);
+    explicit SieveEditorBookmarks(KActionCollection *collection, QMenu *menu, QObject *parent = Q_NULLPTR);
     ~SieveEditorBookmarks();
+
+    QMenu *menu() const;
+
+    void openBookmark(const KBookmark &bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km) Q_DECL_OVERRIDE;
+
+private:
+    KBookmarkMenu *mBookmarkMenu;
+    QMenu *mMenu;
+
 };
 
 #endif // SIEVEEDITORBOOKMARKS_H
