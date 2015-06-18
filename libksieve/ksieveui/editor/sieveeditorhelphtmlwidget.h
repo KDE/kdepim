@@ -34,6 +34,8 @@ public:
     void setHelp(const QString &variableName, const QString &url);
     QString variableName() const;
 
+    QString url() const;
+
 Q_SIGNALS:
     void titleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
     void progressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QPixmap &);
@@ -47,6 +49,7 @@ private Q_SLOTS:
     void slotLoadFinished(bool success);
 private:
     QString mVariableName;
+    QString mUrl;
     SieveEditorWebView *mWebView;
     SieveEditorLoadProgressIndicator *mProgressIndicator;
 };

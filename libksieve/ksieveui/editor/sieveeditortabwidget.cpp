@@ -46,8 +46,8 @@ void SieveEditorTabWidget::slotTabCloseRequested(int index)
 void SieveEditorTabWidget::slotAddHelpPage(const QString &variableName, const QString &url)
 {
     for (int i = 0; i < count(); ++i) {
-        SieveEditorHelpHtmlWidget *page = static_cast<SieveEditorHelpHtmlWidget *>(widget(i));
-        if (page->variableName() == variableName) {
+        SieveEditorHelpHtmlWidget *page = qobject_cast<SieveEditorHelpHtmlWidget *>(widget(i));
+        if (page && page->variableName() == variableName) {
             setCurrentIndex(i);
             return;
         }
