@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     }
     MBoxMainWindow *w = new MBoxMainWindow(fileName);
     w->show();
-    int ret = app.exec();
+    const int ret = app.exec();
     delete w;
     return ret;
 }

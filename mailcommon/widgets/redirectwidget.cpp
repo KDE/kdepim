@@ -51,8 +51,8 @@ RedirectWidget::RedirectWidget(QWidget *parent)
     mEdit->setClearButtonShown(true);
     hbox->addWidget(mEdit);
 
-    QPushButton *BtnTo = new QPushButton(QString());
-    BtnTo->setIcon(QIcon::fromTheme(QLatin1String("help-contents")));
+    QPushButton *BtnTo = new QPushButton();
+    BtnTo->setIcon(QIcon::fromTheme(QStringLiteral("help-contents")));
     BtnTo->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     BtnTo->setMinimumSize(BtnTo->sizeHint() * 1.2);
     BtnTo->setToolTip(i18n("Use the Address-Selection Dialog"));
@@ -62,7 +62,7 @@ RedirectWidget::RedirectWidget(QWidget *parent)
     hbox->addWidget(BtnTo);
     connect(BtnTo, SIGNAL(clicked()), SLOT(slotAddressSelection()));
 
-    connect(mEdit, SIGNAL(textChanged(QString)), SIGNAL(addressChanged(QString)));
+    connect(mEdit, &QLineEdit::textChanged, this, &RedirectWidget::addressChanged);
 }
 
 RedirectWidget::~RedirectWidget()
