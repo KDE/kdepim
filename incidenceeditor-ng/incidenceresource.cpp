@@ -147,7 +147,7 @@ bool IncidenceResource::isDirty() const
 void IncidenceResource::bookResource()
 {
 #ifndef KDEPIM_MOBILE_UI
-    if (mUi->mNewResource->text().isEmpty()) {
+    if (mUi->mNewResource->text().trimmed().isEmpty()) {
         return;
     }
     QString name, email;
