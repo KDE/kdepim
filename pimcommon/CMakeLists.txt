@@ -223,9 +223,14 @@ set(libpimcommon_migrate_SRCS
    migration/migratefileinfo.cpp
 )
 
+set(libpimcommon_shareserviceurl_SRCS
+   shareserviceurl/shareserviceurlmanager.cpp
+)
+
 set(libpimcommon_SRCS
   pimcommon_debug.cpp
   settings/pimcommonsettings.cpp
+  ${libpimcommon_shareserviceurl_SRCS}
   ${libpimcommon_migrate_SRCS}
   ${libpimcommon_util_SRCS}
   ${libpimcommon_texteditor_SRCS}
@@ -316,6 +321,7 @@ if (BUILD_TESTING)
    add_subdirectory(migration/autotests)
    add_subdirectory(util/autotests)
    add_subdirectory(gravatar/autotests)
+   add_subdirectory(shareserviceurl/autotests)
 endif()
 
 
