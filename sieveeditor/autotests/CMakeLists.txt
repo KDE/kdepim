@@ -9,15 +9,11 @@ add_test(serversievesettingstest serversievesettingstest)
 ecm_mark_as_test(serversievesettingstest)
 target_link_libraries( serversievesettingstest Qt5::Test Qt5::Widgets KF5::MailTransport KF5::I18n KF5::ConfigGui)
 
-#REACTIVATE
-MESSAGE(STATUS "reactivate autotest from sieveeditor")
-if (false)
 set( sieveeditorutiltest_source sieveeditorutiltest.cpp ../sieveeditorutil.cpp ../sieveserversettings.cpp)
 add_executable( sieveeditorutiltest ${sieveeditorutiltest_source})
 add_test(sieveeditorutiltest sieveeditorutiltest)
 ecm_mark_as_test(sieveeditorutiltest)
-target_link_libraries( sieveeditorutiltest Qt5::Test )
-endif()
+target_link_libraries( sieveeditorutiltest Qt5::Test KF5::MailTransport KF5::I18n KF5::ConfigGui)
 
 # convenience macro to add qtest unit tests
 macro(add_sieveserver_unittest _source _additionalSource)
