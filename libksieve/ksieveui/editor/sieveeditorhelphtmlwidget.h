@@ -32,7 +32,7 @@ public:
     explicit SieveEditorHelpHtmlWidget(QWidget *parent = Q_NULLPTR);
     ~SieveEditorHelpHtmlWidget();
 
-    void setHelp(const QString &variableName, const QString &currentUrl);
+    void openUrl(const QUrl &currentUrl);
     QString variableName() const;
 
     QUrl currentUrl() const;
@@ -43,13 +43,13 @@ Q_SIGNALS:
     void loadFinished(KSieveUi::SieveEditorHelpHtmlWidget *widget, bool success);
 
 private Q_SLOTS:
-    void slotTitleChanged(const QString &);
+    void slotTitleChanged(const QString &title);
     void slotFinished(bool b);
     void slotLoadStarted();
     void slotPixmapChanged(const QPixmap &pixmap);
     void slotLoadFinished(bool success);
 private:
-    QString mVariableName;
+    QString mTitle;
     SieveEditorWebView *mWebView;
     SieveEditorLoadProgressIndicator *mProgressIndicator;
 };

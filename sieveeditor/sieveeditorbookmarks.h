@@ -42,7 +42,7 @@ public:
     QUrl currentUrl() const Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
-    void openUrl(const QUrl &url, const QString &description);
+    void openUrl(const QUrl &url);
 
 private:
     KBookmarkMenu *mBookmarkMenu;

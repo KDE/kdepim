@@ -92,7 +92,7 @@ public:
     void zoomOut();
     QString currentHelpTitle() const;
     QUrl currentHelpUrl() const;
-    void openBookmarkUrl(const QUrl &url, const QString &description);
+    void openBookmarkUrl(const QUrl &url);
 Q_SIGNALS:
     void enableButtonOk(bool);
     void switchToGraphicalMode();

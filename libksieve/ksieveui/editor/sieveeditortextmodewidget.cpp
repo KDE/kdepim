@@ -423,7 +423,7 @@ QUrl SieveEditorTextModeWidget::currentHelpUrl() const
     return mTabWidget->currentHelpUrl();
 }
 
-void SieveEditorTextModeWidget::openBookmarkUrl(const QUrl &url, const QString &description)
+void SieveEditorTextModeWidget::openBookmarkUrl(const QUrl &url)
 {
-    mTabWidget->slotAddHelpPage(description, url.toString());
+    mTabWidget->slotAddHelpPage(url);
 }

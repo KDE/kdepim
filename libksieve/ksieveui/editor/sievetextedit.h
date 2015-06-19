@@ -73,7 +73,7 @@ protected:
     bool event(QEvent *ev) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
-    void openHelp(const QString &variableName, const QString &url);
+    void openHelp(const QString &url);
 
 private:
     bool openVariableHelp();

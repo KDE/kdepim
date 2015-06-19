@@ -595,10 +595,10 @@ void SieveEditorWidget::sentenceCase()
     }
 }
 
-void SieveEditorWidget::openBookmarkUrl(const QUrl &url, const QString &description)
+void SieveEditorWidget::openBookmarkUrl(const QUrl &url)
 {
     if (mMode == TextMode) {
-        mTextModeWidget->openBookmarkUrl(url, description);
+        mTextModeWidget->openBookmarkUrl(url);
     }
 }
 

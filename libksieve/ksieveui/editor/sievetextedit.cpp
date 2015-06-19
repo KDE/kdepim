@@ -213,7 +213,7 @@ void SieveTextEdit::keyPressEvent(QKeyEvent *e)
         if (type != KSieveUi::SieveEditorUtil::UnknownHelp) {
             const QString url = KSieveUi::SieveEditorUtil::helpUrl(type);
             if (!url.isEmpty()) {
-                Q_EMIT openHelp(word, url);
+                Q_EMIT openHelp(url);
             }
         }
         return;
@@ -270,10 +270,10 @@ void SieveTextEdit::slotHelp()
     QAction *act = qobject_cast<QAction *>(sender());
     if (act) {
         const QString word = act->data().toString();
-        const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(act->data().toString());
+        const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(word);
         const QString url = KSieveUi::SieveEditorUtil::helpUrl(type);
         if (!url.isEmpty()) {
-            Q_EMIT openHelp(word, url);
+            Q_EMIT openHelp(url);
         }
     }
 }

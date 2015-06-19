@@ -62,11 +62,11 @@ QString SieveEditorTabWidget::currentHelpTitle() const
     return QString();
 }
 
-void SieveEditorTabWidget::slotAddHelpPage(const QString &variableName, const QString &url)
+void SieveEditorTabWidget::slotAddHelpPage(const QUrl &url)
 {
     for (int i = 0; i < count(); ++i) {
         SieveEditorHelpHtmlWidget *page = qobject_cast<SieveEditorHelpHtmlWidget *>(widget(i));
-        if (page && page->variableName() == variableName) {
+        if (page && page->currentUrl() == url) {
             setCurrentIndex(i);
             return;
         }
@@ -75,7 +75,7 @@ void SieveEditorTabWidget::slotAddHelpPage(const QString &variableName, const QS
     connect(htmlPage, &SieveEditorHelpHtmlWidget::titleChanged, this, &SieveEditorTabWidget::slotTitleChanged);
     connect(htmlPage, &SieveEditorHelpHtmlWidget::progressIndicatorPixmapChanged, this, &SieveEditorTabWidget::slotProgressIndicatorPixmapChanged);
     connect(htmlPage, &SieveEditorHelpHtmlWidget::loadFinished, this, &SieveEditorTabWidget::slotLoadFinished);
-    htmlPage->setHelp(variableName, url);
+    htmlPage->openUrl(url);
     const int index = addTab(htmlPage, i18n("Help"));
     setCurrentIndex(index);
 }

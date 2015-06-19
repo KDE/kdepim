@@ -334,9 +334,9 @@ void SieveEditorMainWindow::slotCopyAvailable(bool b)
     mCutAction->setEnabled(editActionEnabled && b);
 }
 
-void SieveEditorMainWindow::slotOpenBookmarkUrl(const QUrl &url, const QString &description)
+void SieveEditorMainWindow::slotOpenBookmarkUrl(const QUrl &url)
 {
-    mMainWidget->sieveEditorMainWidget()->openBookmarkUrl(url, description);
+    mMainWidget->sieveEditorMainWidget()->openBookmarkUrl(url);
 }
 
 QString SieveEditorMainWindow::currentHelpTitle() const

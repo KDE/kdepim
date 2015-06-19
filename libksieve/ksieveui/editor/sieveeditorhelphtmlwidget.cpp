@@ -42,6 +42,11 @@ SieveEditorHelpHtmlWidget::~SieveEditorHelpHtmlWidget()
 
 }
 
+QString SieveEditorHelpHtmlWidget::variableName() const
+{
+    return mTitle;
+}
+
 void SieveEditorHelpHtmlWidget::slotLoadFinished(bool success)
 {
     Q_EMIT loadFinished(this, success);
@@ -67,18 +72,14 @@ void SieveEditorHelpHtmlWidget::slotLoadStarted()
     mProgressIndicator->startAnimation();
 }
 
-void SieveEditorHelpHtmlWidget::slotTitleChanged(const QString &text)
+void SieveEditorHelpHtmlWidget::slotTitleChanged(const QString &title)
 {
-    Q_EMIT titleChanged(this, /*mVariableName*/text);
+    mTitle = title;
+    Q_EMIT titleChanged(this, title);
 }
 
-void SieveEditorHelpHtmlWidget::setHelp(const QString &variableName, const QString &url)
+void SieveEditorHelpHtmlWidget::openUrl(const QUrl &url)
 {
-    mVariableName = variableName;
     mWebView->setUrl(url);
 }
 
-QString SieveEditorHelpHtmlWidget::variableName() const
-{
-    return mVariableName;
-}

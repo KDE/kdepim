@@ -77,7 +77,7 @@ public:
     void zoomIn();
     QString currentHelpTitle() const;
     QUrl currentHelpUrl() const;
-    void openBookmarkUrl(const QUrl &url, const QString &description);
+    void openBookmarkUrl(const QUrl &url);
 public Q_SLOTS:
     void find();
     void replace();

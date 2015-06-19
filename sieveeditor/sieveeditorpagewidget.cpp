@@ -303,9 +303,9 @@ void SieveEditorPageWidget::zoomOut()
     mSieveEditorWidget->zoomOut();
 }
 
-void SieveEditorPageWidget::openBookmarkUrl(const QUrl &url, const QString &description)
+void SieveEditorPageWidget::openBookmarkUrl(const QUrl &url)
 {
-    mSieveEditorWidget->openBookmarkUrl(url, description);
+    mSieveEditorWidget->openBookmarkUrl(url);
 }
 
 QString SieveEditorPageWidget::currentHelpTitle() const

@@ -33,7 +33,7 @@ public:
     QUrl currentHelpUrl() const;
     QString currentHelpTitle() const;
 public Q_SLOTS:
-    void slotAddHelpPage(const QString &variableName, const QString &url);
+    void slotAddHelpPage(const QUrl &url);
 
 protected:
     void tabRemoved(int index) Q_DECL_OVERRIDE;

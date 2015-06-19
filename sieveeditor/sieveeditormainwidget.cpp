@@ -517,13 +517,13 @@ KSieveUi::SieveEditorWidget::EditorMode SieveEditorMainWidget::pageMode() const
     return KSieveUi::SieveEditorWidget::Unknown;
 }
 
-void SieveEditorMainWidget::openBookmarkUrl(const QUrl &url, const QString &description)
+void SieveEditorMainWidget::openBookmarkUrl(const QUrl &url)
 {
     QWidget *w = mTabWidget->currentWidget();
     if (w) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
         if (page) {
-            page->openBookmarkUrl(url, description);
+            page->openBookmarkUrl(url);
         }
     }
 }
