@@ -19,12 +19,14 @@
 #include "pimsettingsbackuprestore.h"
 #include "pimsettingexportconsole_debug.h"
 #include "loginfile.h"
+#include "loginfo.h"
 #include "xml/templateselection.h"
 
 PimSettingExporterConsole::PimSettingExporterConsole(QObject *parent)
     : QObject(parent),
       mPimSettingsBackupRestore(new PimSettingsBackupRestore(this)),
       mLogInFile(new LogInFile(this)),
+      mLogInfo(new LogInfo(this)),
       mMode(Import),
       mInProgress(false)
 {
@@ -38,10 +40,35 @@ PimSettingExporterConsole::~PimSettingExporterConsole()
 
 void PimSettingExporterConsole::initializeLogInFile()
 {
-    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addEndLine, mLogInFile, &LogInFile::slotAddEndLine);
-    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addError, mLogInFile, &LogInFile::slotAddError);
-    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addInfo, mLogInFile, &LogInFile::slotAddInfo);
-    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addTitle, mLogInFile, &LogInFile::slotAddTitle);
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addEndLine, this, &PimSettingExporterConsole::slotAddEndLine);
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addError, this, &PimSettingExporterConsole::slotAddError);
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addInfo, this, &PimSettingExporterConsole::slotAddInfo);
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addTitle, this, &PimSettingExporterConsole::slotAddTitle);
+}
+
+
+void PimSettingExporterConsole::slotAddEndLine()
+{
+    mLogInFile->addEndLine();
+    mLogInfo->addEndLineLogEntry();
+}
+
+void PimSettingExporterConsole::slotAddError(const QString &message)
+{
+    mLogInFile->addError(message);
+    mLogInfo->addErrorLogEntry(message);
+}
+
+void PimSettingExporterConsole::slotAddInfo(const QString &message)
+{
+    mLogInFile->addInfo(message);
+    mLogInfo->addInfoLogEntry(message);
+}
+
+void PimSettingExporterConsole::slotAddTitle(const QString &message)
+{
+    mLogInFile->addTitle(message);
+    mLogInfo->addTitleLogEntry(message);
 }
 
 QString PimSettingExporterConsole::importFileName() const

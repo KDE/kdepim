@@ -17,9 +17,8 @@
 
 #include "loginfo.h"
 
-LogInfo::LogInfo(const QString &filename, QObject *parent)
-    : QObject(parent),
-      mFileName(filename)
+LogInfo::LogInfo(QObject *parent)
+    : QObject(parent)
 {
 
 }
@@ -27,11 +26,6 @@ LogInfo::LogInfo(const QString &filename, QObject *parent)
 LogInfo::~LogInfo()
 {
 
-}
-
-QString LogInfo::fileName() const
-{
-    return mFileName;
 }
 
 void LogInfo::addInfoLogEntry(const QString &log)

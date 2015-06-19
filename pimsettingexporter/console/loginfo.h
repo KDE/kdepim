@@ -24,19 +24,13 @@ class LogInfo : public QObject
 {
     Q_OBJECT
 public:
-    explicit LogInfo(const QString &filename, QObject *parent = Q_NULLPTR);
+    explicit LogInfo(QObject *parent = Q_NULLPTR);
     ~LogInfo();
 
-    QString fileName() const;
-
-public Q_SLOTS:
     void addInfoLogEntry(const QString &log);
     void addErrorLogEntry(const QString &log);
     void addTitleLogEntry(const QString &log);
     void addEndLineLogEntry();
-
-private:
-    QString mFileName;
 };
 
 #endif // LOGINFO_H

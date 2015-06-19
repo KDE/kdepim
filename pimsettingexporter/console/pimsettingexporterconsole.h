@@ -21,6 +21,7 @@
 #include <QObject>
 class PimSettingsBackupRestore;
 class LogInFile;
+class LogInfo;
 class PimSettingExporterConsole : public QObject
 {
     Q_OBJECT
@@ -48,12 +49,19 @@ public:
 Q_SIGNALS:
     void finished();
 
+private Q_SLOTS:
+    void slotAddEndLine();
+    void slotAddError(const QString &message);
+    void slotAddInfo(const QString &message);
+    void slotAddTitle(const QString &message);
+
 private:
     void initializeLogInFile();
     QString mTemplateFileName;
     QString mImportFileName;
     PimSettingsBackupRestore *mPimSettingsBackupRestore;
     LogInFile *mLogInFile;
+    LogInfo *mLogInfo;
     Mode mMode;
     bool mInProgress;
 };

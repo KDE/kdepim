@@ -32,11 +32,11 @@ public:
     void setFileName(const QString &fileName);
 
 public Q_SLOTS:
-    void slotAddEndLine();
+    void addEndLine();
 
-    void slotAddError(const QString &message);
-    void slotAddInfo(const QString &message);
-    void slotAddTitle(const QString &message);
+    void addError(const QString &message);
+    void addInfo(const QString &message);
+    void addTitle(const QString &message);
 private:
     enum LogType {
         AddEndLine = 0,

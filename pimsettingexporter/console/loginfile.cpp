@@ -43,22 +43,22 @@ void LogInFile::setFileName(const QString &fileName)
     mTextStream.setDevice(&file);
 }
 
-void LogInFile::slotAddEndLine()
+void LogInFile::addEndLine()
 {
     addLogLine(QString(), AddEndLine);
 }
 
-void LogInFile::slotAddError(const QString &message)
+void LogInFile::addError(const QString &message)
 {
     addLogLine(message, AddError);
 }
 
-void LogInFile::slotAddInfo(const QString &message)
+void LogInFile::addInfo(const QString &message)
 {
     addLogLine(message, AddInfo);
 }
 
-void LogInFile::slotAddTitle(const QString &message)
+void LogInFile::addTitle(const QString &message)
 {
     addLogLine(message, AddTitle);
 }
