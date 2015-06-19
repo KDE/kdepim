@@ -508,20 +508,17 @@ void MailWebView::showAccessKeys()
         Q_FOREACH (QAction *act, mActionCollection->actions()) {
             QAction *a = qobject_cast<QAction *>(act);
             if (a) {
-#if 0 //QT5
-                const KShortcut shortCut = a->shortcut();
+                const QKeySequence shortCut = a->shortcut();
                 if (!shortCut.isEmpty()) {
                     Q_FOREACH (const QChar &c, unusedKeys) {
-                        if (shortCut.conflictsWith(QKeySequence(c))) {
+                        if (shortCut.matches(QKeySequence(c)) != QKeySequence::NoMatch) {
                             unusedKeys.removeOne(c);
                         }
                     }
                 }
-#endif
             }
         }
     }
-
     QList<QWebElement> unLabeledElements;
     QRect viewport = QRect(page()->mainFrame()->scrollPosition(), page()->viewportSize());
     const QString selectorQuery(QLatin1String("a[href],"
