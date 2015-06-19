@@ -19,6 +19,7 @@
 #include "shareserviceurlmanager.h"
 
 #include <KActionMenu>
+#include <KLocalizedString>
 
 using namespace PimCommon;
 
@@ -26,7 +27,7 @@ ShareServiceUrlManager::ShareServiceUrlManager(QObject *parent)
     : QObject(parent),
       mMenu(Q_NULLPTR)
 {
-
+    initializeMenu();
 }
 
 ShareServiceUrlManager::~ShareServiceUrlManager()
@@ -39,3 +40,10 @@ KActionMenu *ShareServiceUrlManager::menu() const
     return mMenu;
 }
 
+void ShareServiceUrlManager::initializeMenu()
+{
+    mMenu = new KActionMenu(i18n("Share on..."), this);
+    for (int i = 0; i < ServiceEndType; ++i) {
+        //TODO
+    }
+}

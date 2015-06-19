@@ -33,7 +33,7 @@ ShareServiceUrlManagerTest::~ShareServiceUrlManagerTest()
 void ShareServiceUrlManagerTest::shouldHaveDefaultValue()
 {
     PimCommon::ShareServiceUrlManager manager;
-    QVERIFY(!manager.menu());
+    QVERIFY(manager.menu());
 }
 
 QTEST_MAIN(ShareServiceUrlManagerTest)

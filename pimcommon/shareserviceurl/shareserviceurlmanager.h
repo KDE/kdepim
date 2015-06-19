@@ -33,9 +33,17 @@ public:
     ~ShareServiceUrlManager();
 
     KActionMenu *menu() const;
-private:
-    KActionMenu *mMenu;
 
+private:
+    enum ServiceType {
+        Fbook = 0,
+        Twitter,
+        GooglePlus,
+        ServiceEndType
+    };
+
+    void initializeMenu();
+    KActionMenu *mMenu;
 };
 }
 
