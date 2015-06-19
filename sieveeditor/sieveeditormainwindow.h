@@ -98,7 +98,7 @@ private:
     QLabel *mStatusBarInfo;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
     SieveEditorBookmarks *mSieveEditorBookmarks;
-    KActionMenu* mBookmarkMenu;
+    KActionMenu *mBookmarkMenu;
     bool mNetworkIsDown;
 };
 

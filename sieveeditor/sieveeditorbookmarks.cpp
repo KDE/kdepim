@@ -40,7 +40,7 @@ SieveEditorBookmarks::SieveEditorBookmarks(SieveEditorMainWindow *mainWindow, KA
         bookmarkFile += QStringLiteral("/bookmarks.xml");
     }
 
-    KBookmarkManager* manager = KBookmarkManager::managerForFile(bookmarkFile, QStringLiteral("sieveeditor"));
+    KBookmarkManager *manager = KBookmarkManager::managerForFile(bookmarkFile, QStringLiteral("sieveeditor"));
     manager->setUpdate(true);
 
     mBookmarkMenu = new KBookmarkMenu(manager, this, mMenu, collection);
