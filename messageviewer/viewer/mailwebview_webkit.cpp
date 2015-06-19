@@ -498,6 +498,7 @@ void MailWebView::hideAccessKeys()
 void MailWebView::showAccessKeys()
 {
     QList<QChar> unusedKeys;
+    unusedKeys.reserve(10 + ('Z' - 'A' + 1));
     for (char c = 'A'; c <= 'Z'; ++c) {
         unusedKeys << QLatin1Char(c);
     }

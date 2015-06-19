@@ -73,6 +73,7 @@ void AdBlockElementHiding::apply(QWebElement &document, const QString &domain) c
     //check for whitelisted rules
     QStringList whiteListedRules;
     const QStringList subdomainList = generateSubdomainList(domain);
+    whiteListedRules.reserve(subdomainList.count());
 
     Q_FOREACH (const QString &d, subdomainList) {
         whiteListedRules.append(m_DomainSpecificRulesWhitelist.values(d));

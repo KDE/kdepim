@@ -273,7 +273,9 @@ QList<ContentJobBase *> ComposerPrivate::createEncryptJobs(ContentJobBase *conte
         return jobs;
     }
 
-    for (int i = 0; i < encData.size(); ++i) {
+    const int encDataSize = encData.size();
+    jobs.reserve(encDataSize);
+    for (int i = 0; i < encDataSize; ++i) {
         QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
         qCDebug(MESSAGECOMPOSER_LOG) << "got first list of recipients:" << recipients.first;
         ContentJobBase *subJob = Q_NULLPTR;

@@ -436,6 +436,7 @@ QPair< KMime::Message::Ptr, QList< KMime::Content * > > MessageFactory::createAt
         MessageCore::Util::addLinkInformation(msg, m_id, Akonadi::MessageStatus::statusForwarded());
     } else {
         // iterate through all the messages to be forwarded
+        attachments.reserve(items.count());
         foreach (const Akonadi::Item &item, items) {
             attachments << createForwardAttachmentMessage(MessageCore::Util::message(item));
             MessageCore::Util::addLinkInformation(msg, item.id(), Akonadi::MessageStatus::statusForwarded());
@@ -971,6 +972,7 @@ void MessageFactory::applyCharset(const KMime::Message::Ptr msg)
             const QStringList charsets = MessageComposer::MessageComposerSettings::preferredCharsets();
 
             QList<QByteArray> chars;
+            chars.reserve(charsets.count());
             foreach (const QString &charset, charsets) {
                 chars << charset.toLatin1();
             }

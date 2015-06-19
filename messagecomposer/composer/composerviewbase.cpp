@@ -90,6 +90,7 @@
 static QStringList encodeIdn(const QStringList &emails)
 {
     QStringList encoded;
+    encoded.reserve(emails.count());
     foreach (const QString &email, emails) {
         encoded << KEmailAddress::normalizeAddressesAndEncodeIdn(email);
     }
@@ -721,6 +722,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
                 std::vector<Kleo::KeyResolver::SplitInfo>::iterator it;
                 std::vector<Kleo::KeyResolver::SplitInfo>::iterator end(encData.end());
                 QList<QPair<QStringList, std::vector<GpgME::Key> > > data;
+                data.reserve(encData.size());
                 for (it = encData.begin(); it != end; ++it) {
                     QPair<QStringList, std::vector<GpgME::Key> > p(it->recipients, it->keys);
                     data.append(p);
@@ -1624,6 +1626,7 @@ void MessageComposer::ComposerViewBase::setUrgent(bool urgent)
 QStringList MessageComposer::ComposerViewBase::cleanEmailList(const QStringList &emails)
 {
     QStringList clean;
+    clean.reserve(emails.count());
     foreach (const QString &email, emails) {
         clean << KEmailAddress::extractEmailAddress(email);
     }

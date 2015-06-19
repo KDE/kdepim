@@ -330,6 +330,7 @@ void AdBlockSettingWidget::slotAddFilter()
 {
     QStringList excludeList;
     const int numberItem(automaticFiltersListWidget->count());
+    excludeList.reserve(numberItem);
     for (int i = 0; i < numberItem; ++i) {
         excludeList << automaticFiltersListWidget->item(i)->text();
     }
@@ -408,8 +409,9 @@ void AdBlockSettingWidget::slotImportFilters()
     }
     const QStringList listFilter = result.split(QLatin1Char('\n'));
     QStringList excludeFilter;
-    const int numberOfElement(manualFiltersListWidget->count());
-    for (int i = 0; i < numberOfElement; ++i) {
+    const int numberOfElements(manualFiltersListWidget->count());
+    excludeFilter.reserve(numberOfElements);
+    for (int i = 0; i < numberOfElements; ++i) {
         QListWidgetItem *subItem = manualFiltersListWidget->item(i);
         excludeFilter.append(subItem->text());
     }

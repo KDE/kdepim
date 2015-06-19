@@ -320,6 +320,7 @@ static GpgME::UserID findBestMatchUID(const GpgME::Key &key, const QString &addr
 static QStringList keysAsStrings(const std::vector<GpgME::Key> &keys)
 {
     QStringList strings;
+    strings.reserve(keys.size());
     for (std::vector<GpgME::Key>::const_iterator it = keys.begin() ; it != keys.end() ; ++it) {
         assert(!(*it).userID(0).isNull());
         QString keyLabel = QString::fromUtf8((*it).userID(0).email());
