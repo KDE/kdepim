@@ -20,9 +20,10 @@
 
 #include <QObject>
 #include "pimcommon_export.h"
+#include <QUrl>
 
 class KActionMenu;
-
+class QAction;
 namespace PimCommon
 {
 class PIMCOMMON_EXPORT ShareServiceUrlManager : public QObject
@@ -31,10 +32,6 @@ class PIMCOMMON_EXPORT ShareServiceUrlManager : public QObject
 public:
     explicit ShareServiceUrlManager(QObject *parent = Q_NULLPTR);
     ~ShareServiceUrlManager();
-
-    KActionMenu *menu() const;
-
-private:
     enum ServiceType {
         Fbook = 0,
         Twitter,
@@ -42,9 +39,21 @@ private:
         ServiceEndType
     };
 
+    KActionMenu *menu() const;
+
+    QUrl generateServiceUrl(const QString &link, const QString &title, ServiceType type);
+
+private Q_SLOTS:
+    void slotSelectServiceUrl(QAction *act);
+
+Q_SIGNALS:
+    void serviceUrlSelected(PimCommon::ShareServiceUrlManager::ServiceType type);
+
+private:
+    QString typeToI18n(ServiceType type);
     void initializeMenu();
     KActionMenu *mMenu;
 };
 }
-
+Q_DECLARE_METATYPE(PimCommon::ShareServiceUrlManager::ServiceType)
 #endif // SHARESERVICEURLMANAGER_H

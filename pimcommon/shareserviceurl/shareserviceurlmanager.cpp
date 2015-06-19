@@ -20,6 +20,7 @@
 
 #include <KActionMenu>
 #include <KLocalizedString>
+#include <QMenu>
 
 using namespace PimCommon;
 
@@ -40,10 +41,61 @@ KActionMenu *ShareServiceUrlManager::menu() const
     return mMenu;
 }
 
+QString ShareServiceUrlManager::typeToI18n(ServiceType type)
+{
+    QString str;
+    switch (type) {
+    case Fbook:
+        str = i18n("Facebook");
+        break;
+    case Twitter:
+        str = i18n("Twitter");
+        break;
+    case GooglePlus:
+        str = i18n("Google Plus");
+        break;
+    case ServiceEndType:
+        break;
+    }
+    return str;
+}
+
 void ShareServiceUrlManager::initializeMenu()
 {
     mMenu = new KActionMenu(i18n("Share on..."), this);
     for (int i = 0; i < ServiceEndType; ++i) {
-        //TODO
+        const ServiceType type = static_cast<ServiceType>(i);
+        QAction *action = new QAction(typeToI18n(type), this);
+        action->setData(type);
+        mMenu->addAction(action);
     }
+    connect(mMenu->menu(), &QMenu::triggered, this, &ShareServiceUrlManager::slotSelectServiceUrl);
+}
+
+void ShareServiceUrlManager::slotSelectServiceUrl(QAction *act)
+{
+    if (act) {
+        const ServiceType type = act->data().value<ServiceType>();
+        Q_EMIT serviceUrlSelected(type);
+    }
+}
+
+QUrl ShareServiceUrlManager::generateServiceUrl(const QString &link, const QString &title, ServiceType type)
+{
+    QUrl url;
+    if (link.isEmpty() && title.isEmpty()) {
+        return url;
+    }
+    switch (type) {
+    case Fbook:
+        break;
+    case Twitter:
+        break;
+    case GooglePlus:
+        break;
+    case ServiceEndType:
+        break;
+    }
+    //TODO
+    return QUrl();
 }

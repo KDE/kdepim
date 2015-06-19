@@ -18,6 +18,8 @@
 #include "shareserviceurlmanagertest.h"
 #include "../shareserviceurlmanager.h"
 #include <qtest.h>
+#include <kactionmenu.h>
+#include <QMenu>
 
 ShareServiceUrlManagerTest::ShareServiceUrlManagerTest(QObject *parent)
     : QObject(parent)
@@ -34,6 +36,31 @@ void ShareServiceUrlManagerTest::shouldHaveDefaultValue()
 {
     PimCommon::ShareServiceUrlManager manager;
     QVERIFY(manager.menu());
+    QVERIFY(!manager.menu()->menu()->actions().isEmpty());
+}
+
+void ShareServiceUrlManagerTest::shouldGenerateServiceUrl_data()
+{
+    QTest::addColumn<QString>("title");
+    QTest::addColumn<QString>("link");
+    QTest::addColumn<PimCommon::ShareServiceUrlManager::ServiceType>("serviceType");
+    QTest::addColumn<QUrl>("output");
+    QTest::addColumn<bool>("valid");
+    QTest::newRow("no title no link") << QString() << QString() << PimCommon::ShareServiceUrlManager::Fbook << QUrl() << false;
+}
+
+void ShareServiceUrlManagerTest::shouldGenerateServiceUrl()
+{
+    QFETCH(QString, title);
+    QFETCH(QString, link);
+    QFETCH(PimCommon::ShareServiceUrlManager::ServiceType, serviceType);
+    QFETCH(QUrl, output);
+    QFETCH(bool, valid);
+
+    PimCommon::ShareServiceUrlManager manager;
+    const QUrl urlGenerated = manager.generateServiceUrl(link, title, serviceType);
+    QCOMPARE(urlGenerated, output);
+    QCOMPARE(urlGenerated.isValid(), valid);
 }
 
 QTEST_MAIN(ShareServiceUrlManagerTest)

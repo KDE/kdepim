@@ -29,6 +29,10 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+
+    void shouldGenerateServiceUrl_data();
+    void shouldGenerateServiceUrl();
+
 };
 
 #endif // SHARESERVICEURLMANAGERTEST_H
