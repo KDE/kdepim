@@ -269,7 +269,12 @@ int ThunderbirdSettings::adaptAutoResizeResolution(int index, const QString &con
 
 void ThunderbirdSettings::readTagSettings()
 {
-    ImportWizardUtil::addAkonadiTag(mHashTag.values().toVector());
+    QVector<tagStruct> v;
+    v.reserve(mHashTag.size());
+    foreach (const tagStruct &tag, mHashTag)
+        v.push_back(tag);
+
+    ImportWizardUtil::addAkonadiTag(v);
 }
 
 void ThunderbirdSettings::readLdapSettings()
