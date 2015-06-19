@@ -89,8 +89,10 @@ ImportWizard::ImportWizard(WizardMode mode, QWidget *parent)
     resize(640, 480);
     Akonadi::ControlGui::widgetNeedsAkonadi(this);
 
-    checkModules();
-    KMessageBox::information(this, i18n("Close KMail before importing data. Some plugins will modify KMail config file."));
+    if (mode == AutoDetect) {
+        checkModules();
+        KMessageBox::information(this, i18n("Close KMail before importing data. Some plugins will modify KMail config file."));
+    }
     KHelpMenu *helpMenu = new KHelpMenu(this, KAboutData::applicationData(), true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
