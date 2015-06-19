@@ -114,11 +114,5 @@ private:
     KContacts::Addressee mAddress;
 };
 }
-//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintObject*)
-//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintAddressObject*)
-//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintPhoneObject*)
-//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintImObject*)
-//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintGeoObject*)
-//Q_DECLARE_METATYPE(KAddressBookGrantlee::ContactGrantleePrintCryptoObject*)
 Q_DECLARE_METATYPE(QList<QObject *>)
 #endif // CONTACTGRANTLEEPRINTOBJECT_H
