@@ -96,6 +96,8 @@ void GravatarDownloadPixmapWidget::slotSearchButton()
     if (job->canStart()) {
         connect(job, &GravatarResolvUrlJob::finished, this, &GravatarDownloadPixmapWidget::slotResolvUrlFinish);
         job->start();
+    } else {
+        job->deleteLater();
     }
 }
 

@@ -76,6 +76,8 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
                 if (job->canStart()) {
                     connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
                     job->start();
+                } else {
+                    job->deleteLater();
                 }
             }
         }
