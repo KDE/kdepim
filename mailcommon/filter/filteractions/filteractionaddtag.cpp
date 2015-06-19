@@ -145,7 +145,7 @@ void FilterActionAddTag::argsFromString(const QString &argsStr)
         return;
     }
     if (!mList.isEmpty()) {
-        mParameter = mList.values().at(0);
+        mParameter = mList.cbegin().value();
     }
 }
 
