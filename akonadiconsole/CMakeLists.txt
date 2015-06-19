@@ -105,13 +105,11 @@ target_link_libraries(akonadiconsole_bin
   KF5::AkonadiPrivate
   KF5::AkonadiContact
   
-  KF5::AkonadiMime
   calendarsupport
   KF5::CalendarCore
   kdepim
   messageviewer
   KF5::KCMUtils
-  KF5::KIOCore
   KF5::DBusAddons
   Qt5::Sql
 )
