@@ -57,7 +57,7 @@ QString SieveEditorTabWidget::currentHelpTitle() const
 {
     SieveEditorHelpHtmlWidget *page = qobject_cast<SieveEditorHelpHtmlWidget *>(currentWidget());
     if (page) {
-        return page->variableName();
+        return page->title();
     }
     return QString();
 }
@@ -87,7 +87,7 @@ void SieveEditorTabWidget::slotLoadFinished(KSieveUi::SieveEditorHelpHtmlWidget 
         setTabIcon(index, QIcon());
     }
     if (!success) {
-        setTabText(index, i18n("Error during load page about %1", widget->variableName()));
+        setTabText(index, i18n("Error during load page about %1", widget->title()));
     }
 }
 

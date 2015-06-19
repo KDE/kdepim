@@ -33,7 +33,7 @@ public:
     ~SieveEditorHelpHtmlWidget();
 
     void openUrl(const QUrl &currentUrl);
-    QString variableName() const;
+    QString title() const;
 
     QUrl currentUrl() const;
 

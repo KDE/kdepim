@@ -42,7 +42,7 @@ SieveEditorHelpHtmlWidget::~SieveEditorHelpHtmlWidget()
 
 }
 
-QString SieveEditorHelpHtmlWidget::variableName() const
+QString SieveEditorHelpHtmlWidget::title() const
 {
     return mTitle;
 }
