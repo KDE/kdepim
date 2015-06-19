@@ -141,7 +141,7 @@ void SylpheedSettings::readGlobalSettings(const KConfigGroup &group)
         addKmailConfig(QStringLiteral("Reader"), QStringLiteral("RecycleQuoteColors"), true);
     }
 
-    if (group.readEntry(QStringLiteral("auto_signature")) == 0) {
+    if (group.readEntry(QStringLiteral("auto_signature"), 0) == 0) {
         addKmailConfig(QStringLiteral("Composer"), QStringLiteral("signature"), QStringLiteral("manual"));
     }
 
@@ -350,7 +350,7 @@ void SylpheedSettings::readPop3Account(const KConfigGroup &accountConfig, bool c
         settings.insert(QLatin1String("IntervalCheckInterval"), intervalCheckMail);
     }
 
-    const QString agentIdentifyName = AbstractBase::createResource("akonadi_pop3_resource", name, settings);
+    const QString agentIdentifyName = AbstractBase::createResource(QStringLiteral("akonadi_pop3_resource"), name, settings);
     addCheckMailOnStartup(agentIdentifyName, checkMailOnStartup);
     const bool enableManualCheck = (accountConfig.readEntry(QLatin1String("receive_at_get_all"), 0) == 1);
     addToManualCheck(agentIdentifyName, enableManualCheck);
@@ -418,7 +418,7 @@ void SylpheedSettings::readImapAccount(const KConfigGroup &accountConfig, bool c
     const QString password = accountConfig.readEntry(QLatin1String("password"));
     settings.insert(QLatin1String("Password"), password);
 
-    const QString agentIdentifyName = AbstractBase::createResource("akonadi_imap_resource", name, settings);
+    const QString agentIdentifyName = AbstractBase::createResource(QStringLiteral("akonadi_imap_resource"), name, settings);
     addCheckMailOnStartup(agentIdentifyName, checkMailOnStartup);
 
     const bool enableManualCheck = (accountConfig.readEntry(QLatin1String("receive_at_get_all"), 0) == 1);

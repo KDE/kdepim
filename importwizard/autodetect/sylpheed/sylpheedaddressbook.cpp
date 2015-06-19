@@ -28,7 +28,7 @@
 SylpheedAddressBook::SylpheedAddressBook(const QDir &dir, ImportWizard *parent)
     : AbstractAddressBook(parent)
 {
-    const QStringList files = dir.entryList(QStringList("addrbook-[0-9]*.xml"), QDir::Files, QDir::Name);
+    const QStringList files = dir.entryList(QStringList(QStringLiteral("addrbook-[0-9]*.xml")), QDir::Files, QDir::Name);
     if (files.isEmpty()) {
         addAddressBookImportInfo(i18n("No addressbook found"));
     }

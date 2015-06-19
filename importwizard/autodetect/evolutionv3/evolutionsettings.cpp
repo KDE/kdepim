@@ -286,7 +286,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                     newIdentity->setOrganization(identity.text());
                 } else if (identityTag == QLatin1String("signature")) {
                     if (identity.hasAttribute("uid")) {
-                        newIdentity->setSignature(mMapSignature.value(identity.attribute("uid")));
+                        newIdentity->setSignature(mMapSignature.value(identity.attribute(QStringLiteral("uid"))));
                     }
                 } else if (identityTag == QLatin1String("reply-to")) {
                     newIdentity->setReplyToAddr(identity.text());
@@ -295,7 +295,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                 }
             }
         } else if (tag == QLatin1String("source")) {
-            if (e.hasAttribute(QLatin1String("save-passwd")) && e.attribute("save-passwd") == QLatin1String("true")) {
+            if (e.hasAttribute(QLatin1String("save-passwd")) && e.attribute(QStringLiteral("save-passwd")) == QLatin1String("true")) {
                 //TODO
             }
             int interval = -1;
@@ -350,7 +350,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                         }
 
                         addAuth(settings, QLatin1String("Authentication"), userName);
-                        const QString agentIdentifyName = AbstractBase::createResource("akonadi_imap_resource", name, settings);
+                        const QString agentIdentifyName = AbstractBase::createResource(QStringLiteral("akonadi_imap_resource"), name, settings);
                         //By default
                         addCheckMailOnStartup(agentIdentifyName, enableManualCheck);
                         addToManualCheck(agentIdentifyName, enableManualCheck);
@@ -382,7 +382,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                             settings.insert(QLatin1String("LeaveOnServer"), true);
                         }
                         addAuth(settings, QLatin1String("AuthenticationMethod"), userName);
-                        const QString agentIdentifyName = AbstractBase::createResource("akonadi_pop3_resource", name, settings);
+                        const QString agentIdentifyName = AbstractBase::createResource(QStringLiteral("akonadi_pop3_resource"), name, settings);
                         //By default
                         addCheckMailOnStartup(agentIdentifyName, enableManualCheck);
                         addToManualCheck(agentIdentifyName, enableManualCheck);
@@ -390,11 +390,11 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                         //mbox file
                         settings.insert(QLatin1String("Path"), path);
                         settings.insert(QLatin1String("DisplayName"), name);
-                        AbstractBase::createResource("akonadi_mbox_resource", name, settings);
+                        AbstractBase::createResource(QStringLiteral("akonadi_mbox_resource"), name, settings);
 
                     } else if (scheme == QLatin1String("maildir") || scheme == QLatin1String("spooldir")) {
                         settings.insert(QLatin1String("Path"), path);
-                        AbstractBase::createResource("akonadi_maildir_resource", name, settings);
+                        AbstractBase::createResource(QStringLiteral("akonadi_maildir_resource"), name, settings);
                     } else if (scheme == QLatin1String("nntp")) {
                         //FIXME in the future
                         qCDebug(IMPORTWIZARD_LOG) << " For the moment we can't import nntp resource";
@@ -406,7 +406,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                 }
             }
         } else if (tag == QLatin1String("transport")) {
-            if (e.hasAttribute("save-passwd") && e.attribute("save-passwd") == QLatin1String("true")) {
+            if (e.hasAttribute(QStringLiteral("save-passwd")) && e.attribute(QStringLiteral("save-passwd")) == QLatin1String("true")) {
                 //TODO save to kwallet ?
             }
 
@@ -482,7 +482,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
             const QString selectedFolder = MailCommon::Util::convertFolderPathToCollectionStr(e.text().remove(QLatin1String("folder://")));
             newIdentity->setFcc(selectedFolder);
         } else if (tag == QLatin1String("auto-cc")) {
-            if (e.hasAttribute("always") && (e.attribute("always") == QLatin1String("true"))) {
+            if (e.hasAttribute(QStringLiteral("always")) && (e.attribute(QStringLiteral("always")) == QLatin1String("true"))) {
                 QDomElement recipient = e.firstChildElement();
                 const QString text = recipient.text();
                 newIdentity->setCc(text);
@@ -490,7 +490,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
         } else if (tag == QLatin1String("reply-to")) {
             newIdentity->setReplyToAddr(e.text());
         } else if (tag == QLatin1String("auto-bcc")) {
-            if (e.hasAttribute("always") && (e.attribute("always") == QLatin1String("true"))) {
+            if (e.hasAttribute(QStringLiteral("always")) && (e.attribute(QStringLiteral("always")) == QLatin1String("true"))) {
                 QDomElement recipient = e.firstChildElement();
                 const QString text = recipient.text();
                 newIdentity->setBcc(text);
