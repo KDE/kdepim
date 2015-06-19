@@ -130,14 +130,15 @@ KCalCore::Period::List FreePeriodModel::splitPeriodsByDay(
     }
 
     // Perform some jiggery pokery to remove duplicates
-    QList<KCalCore::Period> tmpList = splitList.toList();
+
 #pragma message("port to QT5")
 #if 0 //QT5 FIX ME
+    QList<KCalCore::Period> tmpList = splitList.toList();
     QSet<KCalCore::Period>set = tmpList.toSet();
     tmpList = QList<KCalCore::Period>::fromSet(set);
     return KCalCore::Period::List::fromList(tmpList);
 #else
-    return KCalCore::Period::List();
+    return splitList;
 #endif
 }
 
