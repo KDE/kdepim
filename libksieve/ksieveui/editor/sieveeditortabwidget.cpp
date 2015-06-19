@@ -48,7 +48,7 @@ QUrl SieveEditorTabWidget::currentHelpUrl() const
 {
     SieveEditorHelpHtmlWidget *page = qobject_cast<SieveEditorHelpHtmlWidget *>(currentWidget());
     if (page) {
-        return page->url();
+        return page->currentUrl();
     }
     return QUrl();
 }
