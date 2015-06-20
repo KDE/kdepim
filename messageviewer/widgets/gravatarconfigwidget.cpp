@@ -52,7 +52,7 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     mUseLibravatar->setObjectName(QStringLiteral("uselibravatarcheckbox"));
     groupboxLayout->addWidget(mUseLibravatar);
 
-    mFallbackGravatar = new QCheckBox(i18n("Fallback to gravatar"));
+    mFallbackGravatar = new QCheckBox(i18n("Fallback to Gravatar"));
     mFallbackGravatar->setObjectName(QStringLiteral("fallbackgravatar"));
     groupboxLayout->addWidget(mFallbackGravatar);
 

@@ -78,7 +78,7 @@ void GravatarDownloadPixmapWidget::slotResolvUrlFinish(PimCommon::GravatarResolv
             mGravatarPixmap = job->pixmap();
             mResultLabel->setPixmap(mGravatarPixmap);
         } else {
-            mResultLabel->setText(i18n("No gravatar found."));
+            mResultLabel->setText(i18n("No Gravatar found."));
             mGravatarPixmap = QPixmap();
         }
     }

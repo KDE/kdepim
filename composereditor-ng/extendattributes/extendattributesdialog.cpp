@@ -96,8 +96,8 @@ public:
         javascriptAttributes = new ExtendAttributesWidget(element, ExtendAttributesDialog::JavascriptEvents, extendType, q);
         inlineStyleAttributes = new ExtendAttributesWidget(element, ExtendAttributesDialog::InlineStyle, extendType, q);
 
-        tab->addTab(htmlAttributes, i18n("Html Attributes"));
-        tab->addTab(javascriptAttributes, i18n("Javascript"));
+        tab->addTab(htmlAttributes, i18n("HTML Attributes"));
+        tab->addTab(javascriptAttributes, i18n("JavaScript"));
         tab->addTab(inlineStyleAttributes, i18n("Inline Style"));
 
         lay->addWidget(tab);

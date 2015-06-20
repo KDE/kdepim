@@ -103,7 +103,7 @@ int main(int argc, char **argv)
     if (parser.positionalArguments().count()) {
         fileName = parser.positionalArguments().at(0);
     } else {
-        fileName = QFileDialog::getOpenFileName(0, QString(), QString(), i18n("Html File (*.html)"));
+        fileName = QFileDialog::getOpenFileName(0, QString(), QString(), i18n("HTML File (*.html)"));
     }
     if (fileName.isEmpty()) {
         return 0;

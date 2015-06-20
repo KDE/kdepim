@@ -278,7 +278,7 @@ void MessageComposer::ComposerViewBase::saveMailSettings()
     }
 
     if (m_editor->composerControler()->isFormattingUsed()) {
-        qCDebug(MESSAGECOMPOSER_LOG) << "Html mode";
+        qCDebug(MESSAGECOMPOSER_LOG) << "HTML mode";
         m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Markup", m_msg.get(), QLatin1String("true"), "utf-8"));
     } else {
         m_msg->removeHeader("X-KMail-Markup");

@@ -128,7 +128,7 @@ void PostEntry::createUi()
     d->tabHtml = new QWidget(d->tabWidget);
     d->tabPreview = new QWidget(d->tabWidget);
     d->tabWidget->addTab(d->tabVisual, i18nc("Software", "Visual Editor"));
-    d->tabWidget->addTab(d->tabHtml, i18nc("Software", "Html Editor"));
+    d->tabWidget->addTab(d->tabHtml, i18nc("Software", "HTML Editor"));
     d->tabWidget->addTab(d->tabPreview, i18nc("preview of the edited post", "Post Preview"));
     connect(d->tabWidget, &QTabWidget::currentChanged, this, &PostEntry::slotSyncEditors);
     d->prev_index = 0;
