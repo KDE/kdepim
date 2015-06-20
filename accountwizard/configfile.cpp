@@ -109,7 +109,7 @@ void ConfigFile::edit()
         return;
     }
 
-    Q_EMIT error(i18n("Unknown configurationname '%1'", m_editName));
+    Q_EMIT error(i18n("Unknown configuration name '%1'", m_editName));
 }
 
 void ConfigFile::setEditName(const QString &name)
