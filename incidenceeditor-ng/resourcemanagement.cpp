@@ -199,23 +199,23 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj, const KLDAP::
     mUi->groupOwner->setHidden(true);
 
     // Fill formDetails with data
-    foreach (const QString &key, obj.attributes().keys()) {
-        if (key ==  QStringLiteral("objectClass")
-                || key == QStringLiteral("email")) {
+    for (auto it = obj.attributes().cbegin(), end = obj.attributes().cbegin(); it != end; ++it) {
+        const QString &key = it.key();
+        if (key ==  QStringLiteral("objectClass") || key == QStringLiteral("email")) {
             continue;
         } else if (key ==  QStringLiteral("owner")) {
             QStringList attrs;
             attrs << QStringLiteral("cn") << QStringLiteral("mail")
                   << QStringLiteral("mobile") <<  QStringLiteral("telephoneNumber")
                   << QStringLiteral("kolabDescAttribute") << QStringLiteral("description");
-            mOwnerItem = ResourceItem::Ptr(new ResourceItem(KLDAP::LdapDN(QString::fromUtf8(obj.attributes().value(key).at(0))),
+            mOwnerItem = ResourceItem::Ptr(new ResourceItem(KLDAP::LdapDN(QString::fromUtf8(it.value().at(0))),
                                            attrs,  client));
             connect(mOwnerItem.data(),  SIGNAL(searchFinished()), SLOT(slotOwnerSearchFinished()));
             mOwnerItem->startSearch();
             continue;
         }
         QStringList list;
-        const QList<QByteArray> values = obj.attributes().value(key);
+        const QList<QByteArray> values = it.value();
         list.reserve(values.count());
         foreach (const QByteArray &value, values) {
             list << QString::fromUtf8(value);

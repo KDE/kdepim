@@ -430,7 +430,8 @@ void IncidenceAttendee::updateGroupExpand()
 
 void IncidenceAttendee::slotGroupSubstitutionPressed()
 {
-    foreach (KCalCore::Attendee::Ptr attendee, mGroupList.keys()) {
+    for (auto it = mGroupList.cbegin(), end = mGroupList.cend(); it != end; ++it) {
+        const KCalCore::Attendee::Ptr attendee = it.key();
         Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(mGroupList.value(attendee), this);
         connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &IncidenceAttendee::expandResult);
         mExpandGroupJobs.insert(expandJob, attendee);
@@ -717,11 +718,14 @@ void IncidenceAttendee::slotGroupSubstitutionAttendeeRemoved(const QModelIndex &
 
 void IncidenceAttendee::slotGroupSubstitutionLayoutChanged()
 {
-    foreach (KJob *job, mMightBeGroupJobs.keys()) {
+    for (auto it = mMightBeGroupJobs.cbegin(), end = mMightBeGroupJobs.cend(); it != end; ++it) {
+        KJob *job = it.key();
         disconnect(job);
         job->deleteLater();
     }
-    foreach (KJob *job, mExpandGroupJobs.keys()) {
+
+    for (auto it = mExpandGroupJobs.cbegin(), end = mExpandGroupJobs.cend(); it != end; ++it) {
+        KJob *job = it.key();
         disconnect(job);
         job->deleteLater();
     }
