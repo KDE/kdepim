@@ -250,7 +250,9 @@ void ResourceManagement::slotOwnerSearchFinished()
     mUi->groupOwner->setHidden(false);
 
     const KLDAP::LdapObject &obj = mOwnerItem->ldapObject();
-    foreach (const QString &key, obj.attributes().keys()) {
+    const KLDAP::LdapAttrMap &ldapAttrMap = obj.attributes();
+    for (auto it = ldapAttrMap.cbegin(), end = ldapAttrMap.cend(); it != end; ++it) {
+        const QString &key = it.key();
         if (key ==  QStringLiteral("objectClass")
                 || key ==  QStringLiteral("owner")
                 || key ==  QStringLiteral("givenname")
@@ -258,7 +260,7 @@ void ResourceManagement::slotOwnerSearchFinished()
             continue;
         }
         QStringList list;
-        const QList<QByteArray> values = obj.attributes().value(key);
+        const QList<QByteArray> values = it.value();
         list.reserve(values.count());
         foreach (const QByteArray &value, values) {
             list << QString::fromUtf8(value);

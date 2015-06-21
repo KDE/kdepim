@@ -80,13 +80,13 @@ ImapAclAttribute *ImapAclAttribute::clone() const
 
 QByteArray ImapAclAttribute::serialized() const
 {
-    QByteArray result = "";
+    QByteArray result;
 
     bool added = false;
-    foreach (const QByteArray &id, mRights.keys()) {
-        result += id;
+    for (auto it = mRights.cbegin(), end = mRights.cend(); it != end; ++it) {
+        result += it.key();
         result += ' ';
-        result += KIMAP::Acl::rightsToString(mRights[id]);
+        result += KIMAP::Acl::rightsToString(it.value());
         result += " % "; // We use this separator as '%' is not allowed in keys or values
         added = true;
     }
@@ -98,10 +98,10 @@ QByteArray ImapAclAttribute::serialized() const
     result += " %% ";
 
     added = false;
-    foreach (const QByteArray &id, mOldRights.keys()) {
-        result += id;
+    for (auto it = mOldRights.cbegin(), end = mOldRights.cend(); it != end; ++it) {
+        result += it.key();
         result += ' ';
-        result += KIMAP::Acl::rightsToString(mOldRights[id]);
+        result += KIMAP::Acl::rightsToString(it.value());
         result += " % "; // We use this separator as '%' is not allowed in keys or values
         added = true;
     }

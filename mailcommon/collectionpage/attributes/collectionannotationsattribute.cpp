@@ -57,12 +57,11 @@ CollectionAnnotationsAttribute *CollectionAnnotationsAttribute::clone() const
 
 QByteArray CollectionAnnotationsAttribute::serialized() const
 {
-    QByteArray result = "";
-
-    foreach (const QByteArray &key, mAnnotations.keys()) {
-        result += key;
+    QByteArray result;
+    for (auto it = mAnnotations.cbegin(), end = mAnnotations.cend(); it != end; ++it) {
+        result += it.key();
         result += ' ';
-        result += mAnnotations[key];
+        result += it.value();
         result += " % "; // We use this separator as '%' is not allowed in keys or values
     }
     result.chop(3);
