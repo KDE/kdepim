@@ -57,6 +57,7 @@ Q_SIGNALS:
     void serviceUrlSelected(PimCommon::ShareServiceUrlManager::ServiceType type);
 
 private:
+    QIcon typeToIcon(ServiceType type);
     QString typeToI18n(ServiceType type);
     void initializeMenu();
     KActionMenu *mMenu;

@@ -41,6 +41,37 @@ KActionMenu *ShareServiceUrlManager::menu() const
     return mMenu;
 }
 
+QIcon ShareServiceUrlManager::typeToIcon(ServiceType type)
+{
+    QIcon icon;
+    switch (type) {
+    case Fbook:
+        icon = QIcon::fromTheme(QStringLiteral("im-facebook"));
+        break;
+    case Twitter:
+        icon = QIcon::fromTheme(QStringLiteral("im-twitter"));
+        break;
+    case GooglePlus:
+        icon = QIcon::fromTheme(QStringLiteral("im-google"));
+        break;
+    case MailTo:
+        icon = QIcon::fromTheme(QStringLiteral("kmail"));
+        break;
+    case LinkedIn:
+        break;
+    case Evernote:
+        break;
+    case Pocket:
+        break;
+    case LiveJournal:
+        break;
+    case ServiceEndType:
+        break;
+    }
+
+    return icon;
+}
+
 QString ShareServiceUrlManager::typeToI18n(ServiceType type)
 {
     QString str;
@@ -77,11 +108,15 @@ QString ShareServiceUrlManager::typeToI18n(ServiceType type)
 
 void ShareServiceUrlManager::initializeMenu()
 {
-    mMenu = new KActionMenu(i18n("Share On..."), this);
+    mMenu = new KActionMenu(QIcon::fromTheme(QStringLiteral("document-share")), i18n("Share On..."), this);
     for (int i = 0; i < ServiceEndType; ++i) {
         const ServiceType type = static_cast<ServiceType>(i);
         QAction *action = new QAction(typeToI18n(type), this);
         action->setData(QVariant::fromValue(type));
+        const QIcon icon = typeToIcon(type);
+        if (!icon.isNull()) {
+            action->setIcon(icon);
+        }
         mMenu->addAction(action);
     }
     connect(mMenu->menu(), &QMenu::triggered, this, &ShareServiceUrlManager::slotSelectServiceUrl);
