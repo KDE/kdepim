@@ -220,7 +220,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mScamDetectionWarning(0),
       mOpenAttachmentFolderWidget(0),
       mZoomFactor(100),
-      mSliderContainer(0)
+      mSliderContainer(0),
+      mShareServiceManager(Q_NULLPTR)
 {
     mMimePartTree = 0;
     if (!mainWindow) {
@@ -230,6 +231,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
         Akonadi::AttributeFactory::registerAttribute<MessageViewer::MessageDisplayFormatAttribute>();
         Akonadi::AttributeFactory::registerAttribute<MessageViewer::ScamAttribute>();
     }
+    mShareServiceManager = new PimCommon::ShareServiceUrlManager(this);
 
     mThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Mail, QString::fromLatin1("header.desktop"), mActionCollection, QLatin1String("messageviewer/themes/"));
     mThemeManager->setDownloadNewStuffConfigFile(QLatin1String("messageviewer_header_themes.knsrc"));
@@ -1928,6 +1930,10 @@ void ViewerPrivate::createActions()
     ac->addAction(QStringLiteral("create_event"), mCreateEventAction);
     ac->setDefaultShortcut(mCreateEventAction, QKeySequence(Qt::CTRL + Qt::Key_E));
     connect(mCreateEventAction, &QAction::triggered, this, &ViewerPrivate::slotShowCreateEventWidget);
+
+    mShareServiceUrlMenu = mShareServiceManager->menu();
+    ac->addAction(QStringLiteral("shareservice_menu"), mShareServiceUrlMenu);
+    connect(mShareServiceManager, &PimCommon::ShareServiceUrlManager::serviceUrlSelected, this, &ViewerPrivate::slotServiceUrlSelected);
 }
 
 void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
@@ -3465,4 +3471,10 @@ void ViewerPrivate::slotRefreshMessage(const Akonadi::Item &item)
     if (item.id() == mMessageItem.id()) {
         setMessageItem(item, MessageViewer::Viewer::Force);
     }
+}
+
+void ViewerPrivate::slotServiceUrlSelected(PimCommon::ShareServiceUrlManager::ServiceType serviceType)
+{
+    const QUrl url = mShareServiceManager->generateServiceUrl(mClickedUrl.toString(), QString(), serviceType);
+    mShareServiceManager->openUrl(url);
 }

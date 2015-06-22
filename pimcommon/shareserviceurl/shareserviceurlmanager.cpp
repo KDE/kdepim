@@ -137,7 +137,6 @@ QUrl ShareServiceUrlManager::generateServiceUrl(const QString &link, const QStri
     case ServiceEndType:
         break;
     }
-    //TODO
     return url;
 }
 

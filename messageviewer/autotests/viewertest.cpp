@@ -92,7 +92,7 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(viewer.urlClicked().isEmpty());
     QVERIFY(viewer.imageUrlClicked().isEmpty());
     QCOMPARE(viewer.isFixedFont(), false);
-
+    QVERIFY(viewer.shareServiceUrlMenu());
 }
 
 void ViewerTest::shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage()

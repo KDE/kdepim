@@ -718,6 +718,12 @@ QAction *Viewer::createNoteAction()
     return d->mCreateNoteAction;
 }
 
+KActionMenu *Viewer::shareServiceUrlMenu()
+{
+    Q_D(Viewer);
+    return d->mShareServiceUrlMenu;
+}
+
 void Viewer::showOpenAttachmentFolderWidget(const QUrl &url)
 {
     Q_D(Viewer);

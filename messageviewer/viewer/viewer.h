@@ -38,11 +38,13 @@ class KActionCollection;
 class QAction;
 class KToggleAction;
 class KUrl;
+class KActionMenu;
 
 class QAbstractItemModel;
 class QCloseEvent;
 class QEvent;
 class QResizeEvent;
+
 
 namespace MessageViewer
 {
@@ -288,6 +290,7 @@ public:
     QAction *createTodoAction();
     QAction *createEventAction();
     QAction *createNoteAction();
+    KActionMenu *shareServiceUrlMenu();
 
     HeaderStrategy *headerStrategy() const;
 

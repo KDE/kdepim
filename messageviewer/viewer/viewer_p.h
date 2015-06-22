@@ -23,6 +23,7 @@
 
 #include "viewer/nodehelper.h"
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
+#include "pimcommon/shareserviceurl/shareserviceurlmanager.h"
 
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/monitor.h>
@@ -49,6 +50,7 @@ class KActionCollection;
 class KSelectAction;
 class KToggleAction;
 class QMenu;
+class KActionMenu;
 
 class QPoint;
 class QSplitter;
@@ -63,6 +65,7 @@ namespace PimCommon
 {
 class TranslatorWidget;
 class SlideContainer;
+class ShareServiceUrlManager;
 }
 
 namespace MessageViewer
@@ -528,6 +531,7 @@ private Q_SLOTS:
     void slotCreateNote(const  KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection);
 
     void slotRefreshMessage(const Akonadi::Item &item);
+    void slotServiceUrlSelected(PimCommon::ShareServiceUrlManager::ServiceType serviceType);
 public Q_SLOTS:
     /** An URL has been activate with a click. */
     void slotUrlOpen(const QUrl &url = QUrl());
@@ -767,6 +771,8 @@ public:
     qreal mZoomFactor;
     Viewer::DisplayFormatMessage mDisplayFormatMessageOverwrite;
     PimCommon::SlideContainer *mSliderContainer;
+    PimCommon::ShareServiceUrlManager *mShareServiceManager;
+    KActionMenu *mShareServiceUrlMenu;
 };
 
 }
