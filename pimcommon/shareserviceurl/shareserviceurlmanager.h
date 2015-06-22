@@ -39,6 +39,8 @@ public:
         MailTo,
         LinkedIn,
         Evernote,
+        Pocket,
+        LiveJournal,
         ServiceEndType
     };
 

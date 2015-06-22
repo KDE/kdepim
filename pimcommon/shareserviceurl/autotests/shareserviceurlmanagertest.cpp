@@ -39,7 +39,7 @@ void ShareServiceUrlManagerTest::shouldHaveDefaultValue()
     QVERIFY(!manager.menu()->menu()->actions().isEmpty());
 
     //Based on 0 => we need to look at PimCommon::ShareServiceUrlManager::ServiceEndType
-    QCOMPARE(manager.menu()->menu()->actions().count(), (static_cast<int>(PimCommon::ShareServiceUrlManager::ServiceEndType)) );
+    QCOMPARE(manager.menu()->menu()->actions().count(), (static_cast<int>(PimCommon::ShareServiceUrlManager::ServiceEndType)));
 }
 
 void ShareServiceUrlManagerTest::shouldGenerateServiceUrl_data()
@@ -68,6 +68,12 @@ void ShareServiceUrlManagerTest::shouldGenerateServiceUrl_data()
 
     QTest::newRow("no title but valid link (evernote)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::Evernote << QUrl(QStringLiteral("https://www.evernote.com/clip.action?url=http://www.kde.org&title")) << true;
     QTest::newRow("title and valid link (evernote)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::Evernote << QUrl(QStringLiteral("https://www.evernote.com/clip.action?url=http://www.kde.org&title=kde")) << true;
+
+    QTest::newRow("no title but valid link (pocket)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::Pocket << QUrl(QStringLiteral("https://getpocket.com/save?url=http://www.kde.org&title")) << true;
+    QTest::newRow("title and valid link (pocket)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::Pocket << QUrl(QStringLiteral("https://getpocket.com/save?url=http://www.kde.org&title=kde")) << true;
+
+    QTest::newRow("no title but valid link (livejournal)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::LiveJournal << QUrl(QStringLiteral("http://www.livejournal.com/update.bml?event=http://www.kde.org&subject")) << true;
+    QTest::newRow("title and valid link (livejournal)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::LiveJournal << QUrl(QStringLiteral("http://www.livejournal.com/update.bml?event=http://www.kde.org&subject=kde")) << true;
 }
 
 void ShareServiceUrlManagerTest::shouldGenerateServiceUrl()

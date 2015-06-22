@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "shareserviceurlmanager.h"
 
 #include <KActionMenu>
@@ -63,6 +62,12 @@ QString ShareServiceUrlManager::typeToI18n(ServiceType type)
         break;
     case Evernote:
         str = i18n("Evernote");
+        break;
+    case Pocket:
+        str = i18n("Pocket");
+        break;
+    case LiveJournal:
+        str = i18n("LiveJournal");
         break;
     case ServiceEndType:
         break;
@@ -142,6 +147,22 @@ QUrl ShareServiceUrlManager::generateServiceUrl(const QString &link, const QStri
         QUrlQuery urlQuery;
         urlQuery.addQueryItem(QStringLiteral("url"), link);
         urlQuery.addQueryItem(QStringLiteral("title"), title);
+        url.setQuery(urlQuery);
+        break;
+    }
+    case Pocket: {
+        url.setUrl(QStringLiteral("https://getpocket.com/save"));
+        QUrlQuery urlQuery;
+        urlQuery.addQueryItem(QStringLiteral("url"), link);
+        urlQuery.addQueryItem(QStringLiteral("title"), title);
+        url.setQuery(urlQuery);
+        break;
+    }
+    case LiveJournal: {
+        url.setUrl(QStringLiteral("http://www.livejournal.com/update.bml"));
+        QUrlQuery urlQuery;
+        urlQuery.addQueryItem(QStringLiteral("event"), link);
+        urlQuery.addQueryItem(QStringLiteral("subject"), title);
         url.setQuery(urlQuery);
         break;
     }
