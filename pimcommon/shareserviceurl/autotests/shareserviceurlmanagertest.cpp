@@ -37,6 +37,7 @@ void ShareServiceUrlManagerTest::shouldHaveDefaultValue()
     PimCommon::ShareServiceUrlManager manager;
     QVERIFY(manager.menu());
     QVERIFY(!manager.menu()->menu()->actions().isEmpty());
+    QCOMPARE(manager.menu()->menu()->actions().count(), (static_cast<int>(PimCommon::ShareServiceUrlManager::ServiceEndType)) );
 }
 
 void ShareServiceUrlManagerTest::shouldGenerateServiceUrl_data()
@@ -56,6 +57,9 @@ void ShareServiceUrlManagerTest::shouldGenerateServiceUrl_data()
 
     QTest::newRow("no title but valid link (googleplus)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::GooglePlus << QUrl(QStringLiteral("https://plus.google.com/share?url=http://www.kde.org")) << true;
     QTest::newRow("title and valid link (googleplus)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::GooglePlus << QUrl(QStringLiteral("https://plus.google.com/share?url=http://www.kde.org")) << true;
+
+    QTest::newRow("no title but valid link (mailto)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::MailTo << QUrl(QStringLiteral("mailto:?subject&body=http://www.kde.org")) << true;
+    QTest::newRow("title and valid link (mailto)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::MailTo << QUrl(QStringLiteral("mailto:?subject=kde&body=http://www.kde.org")) << true;
 }
 
 void ShareServiceUrlManagerTest::shouldGenerateServiceUrl()

@@ -36,6 +36,7 @@ public:
         Fbook = 0,
         Twitter,
         GooglePlus,
+        MailTo,
         ServiceEndType
     };
 

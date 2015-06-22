@@ -55,6 +55,9 @@ QString ShareServiceUrlManager::typeToI18n(ServiceType type)
     case GooglePlus:
         str = i18n("Google Plus");
         break;
+    case MailTo:
+        str = i18n("Mail");
+        break;
     case ServiceEndType:
         break;
     }
@@ -63,7 +66,7 @@ QString ShareServiceUrlManager::typeToI18n(ServiceType type)
 
 void ShareServiceUrlManager::initializeMenu()
 {
-    mMenu = new KActionMenu(i18n("Share on..."), this);
+    mMenu = new KActionMenu(i18n("Share On..."), this);
     for (int i = 0; i < ServiceEndType; ++i) {
         const ServiceType type = static_cast<ServiceType>(i);
         QAction *action = new QAction(typeToI18n(type), this);
@@ -110,6 +113,13 @@ QUrl ShareServiceUrlManager::generateServiceUrl(const QString &link, const QStri
         urlQuery.addQueryItem(QStringLiteral("url"), link);
         url.setQuery(urlQuery);
         break;
+    }
+    case MailTo: {
+        url.setUrl(QStringLiteral("mailto:"));
+        QUrlQuery urlQuery;
+        urlQuery.addQueryItem(QStringLiteral("subject"), title);
+        urlQuery.addQueryItem(QStringLiteral("body"), link);
+        url.setQuery(urlQuery);
     }
     case ServiceEndType:
         break;
