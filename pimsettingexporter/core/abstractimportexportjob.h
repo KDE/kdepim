@@ -106,7 +106,7 @@ protected:
     void showInfo(const QString &text);
 
     QHash<QString, Akonadi::Collection::Id> mHashConvertPathCollectionId;
-    QList<resourceFiles> mListResourceFile;
+    QVector<resourceFiles> mListResourceFile;
 
     QString mTempDirName;
     Utils::StoredTypes mTypeSelected;

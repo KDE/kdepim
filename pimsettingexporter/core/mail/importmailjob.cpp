@@ -460,7 +460,8 @@ void ImportMailJob::restoreMails()
     QDir dir(mTempDirName);
     dir.mkdir(Utils::mailsPath());
     const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::mailsPath());
-    for (int i = 0; i < mListResourceFile.size(); ++i) {
+    const int numberOfResourceFile = mListResourceFile.size();
+    for (int i = 0; i < numberOfResourceFile; ++i) {
 
         resourceFiles value = mListResourceFile.at(i);
         value.debug();

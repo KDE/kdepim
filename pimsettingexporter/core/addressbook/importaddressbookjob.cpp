@@ -83,7 +83,8 @@ void ImportAddressbookJob::restoreResources()
         dir.mkdir(Utils::addressbookPath());
         const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::addressbookPath());
 
-        for (int i = 0; i < mListResourceFile.size(); ++i) {
+        const int numberOfResourceFile = mListResourceFile.size();
+        for (int i = 0; i < numberOfResourceFile; ++i) {
             resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
             if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcarddir_resource_")) ||
