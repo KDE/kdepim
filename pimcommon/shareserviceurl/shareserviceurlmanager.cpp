@@ -126,8 +126,9 @@ QUrl ShareServiceUrlManager::generateServiceUrl(const QString &link, const QStri
         break;
     }
     case LinkedIn: {
-        url.setUrl(QStringLiteral("http://www.linkedin.com/shareArticle?mini=true"));
+        url.setUrl(QStringLiteral("http://www.linkedin.com/shareArticle"));
         QUrlQuery urlQuery;
+        urlQuery.addQueryItem(QStringLiteral("mini"), QStringLiteral("true"));
         urlQuery.addQueryItem(QStringLiteral("url"), link);
         urlQuery.addQueryItem(QStringLiteral("title"), title);
         url.setQuery(urlQuery);
