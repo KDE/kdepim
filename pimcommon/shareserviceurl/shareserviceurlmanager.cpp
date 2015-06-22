@@ -73,7 +73,7 @@ void ShareServiceUrlManager::initializeMenu()
     for (int i = 0; i < ServiceEndType; ++i) {
         const ServiceType type = static_cast<ServiceType>(i);
         QAction *action = new QAction(typeToI18n(type), this);
-        action->setData(type);
+        action->setData(QVariant::fromValue(type));
         mMenu->addAction(action);
     }
     connect(mMenu->menu(), &QMenu::triggered, this, &ShareServiceUrlManager::slotSelectServiceUrl);
@@ -82,7 +82,7 @@ void ShareServiceUrlManager::initializeMenu()
 void ShareServiceUrlManager::slotSelectServiceUrl(QAction *act)
 {
     if (act) {
-        const ServiceType type = act->data().value<ServiceType>();
+        const ServiceType type = act->data().value<PimCommon::ShareServiceUrlManager::ServiceType>();
         Q_EMIT serviceUrlSelected(type);
     }
 }
