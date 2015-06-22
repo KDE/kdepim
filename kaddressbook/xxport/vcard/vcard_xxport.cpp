@@ -121,7 +121,7 @@ bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelecti
             break;
         }
         case KMessageBox::Yes: {
-            url = KFileDialog::getSaveUrl(QUrl(QLatin1String("addressbook.vcf")));
+            url = QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(QStringLiteral("addressbook.vcf")));
             if (url.isEmpty()) {
                 return true; // user canceled export
             }

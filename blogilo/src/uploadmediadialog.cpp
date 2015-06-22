@@ -31,7 +31,7 @@
 #include <KApplication>
 #include "blogilo_debug.h"
 #include <KMessageBox>
-#include <KFileDialog>
+#include <QFileDialog>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
 #include <KLocalizedString>
@@ -104,9 +104,7 @@ void UploadMediaDialog::currentMediaChanged(const QString &newPath)
 
 bool UploadMediaDialog::selectNewFile()
 {
-    const QString mediaPath = KFileDialog::getOpenFileName(QUrl(QStringLiteral("kfiledialog:///image?global")),
-                              QString(), this,
-                              i18n("Select Media to Upload"));
+    const QString mediaPath = QFileDialog::getOpenFileName(this, i18n("Select Media to Upload"));
     if (mediaPath.isEmpty()) {
         return false;
     }
