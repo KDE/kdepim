@@ -21,6 +21,7 @@
 #include <KActionMenu>
 #include <KLocalizedString>
 #include <QMenu>
+#include <QDesktopServices>
 
 using namespace PimCommon;
 
@@ -98,4 +99,9 @@ QUrl ShareServiceUrlManager::generateServiceUrl(const QString &link, const QStri
     }
     //TODO
     return QUrl();
+}
+
+void ShareServiceUrlManager::openUrl(const QUrl &url)
+{
+    QDesktopServices::openUrl(url);
 }

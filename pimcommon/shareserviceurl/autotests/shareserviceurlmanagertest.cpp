@@ -45,6 +45,7 @@ void ShareServiceUrlManagerTest::shouldGenerateServiceUrl_data()
     QTest::addColumn<QString>("link");
     QTest::addColumn<PimCommon::ShareServiceUrlManager::ServiceType>("serviceType");
     QTest::addColumn<QUrl>("output");
+    //Url is valid ?
     QTest::addColumn<bool>("valid");
     QTest::newRow("no title no link") << QString() << QString() << PimCommon::ShareServiceUrlManager::Fbook << QUrl() << false;
 }

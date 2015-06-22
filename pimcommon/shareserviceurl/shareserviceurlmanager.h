@@ -43,6 +43,8 @@ public:
 
     QUrl generateServiceUrl(const QString &link, const QString &title, ServiceType type);
 
+    void openUrl(const QUrl &url);
+
 private Q_SLOTS:
     void slotSelectServiceUrl(QAction *act);
 
