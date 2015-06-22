@@ -516,9 +516,9 @@ QString IncidenceMonthItem::toolTipText(const QDate &date) const
                date, true, CalendarSupport::KCalPrefs::instance()->timeSpec());
 }
 
-QList<QPixmap> IncidenceMonthItem::icons() const
+QVector<QPixmap> IncidenceMonthItem::icons() const
 {
-    QList<QPixmap> ret;
+    QVector<QPixmap> ret;
 
     if (!mIncidence) {
         return ret;
@@ -754,9 +754,9 @@ void HolidayMonthItem::finalizeResize(const QDate &newStartDate,
     Q_ASSERT(false);
 }
 
-QList<QPixmap> HolidayMonthItem::icons() const
+QVector<QPixmap> HolidayMonthItem::icons() const
 {
-    QList<QPixmap> ret;
+    QVector<QPixmap> ret;
     ret << monthScene()->holidayPixmap();
 
     return ret;
