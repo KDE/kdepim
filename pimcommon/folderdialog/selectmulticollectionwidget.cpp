@@ -86,9 +86,9 @@ void SelectMultiCollectionWidget::slotCollectionsTreeFetched()
     mCheckedCollectionWidget->folderTreeView()->expandAll();
 }
 
-QList<Akonadi::Collection> SelectMultiCollectionWidget::selectedCollection(const QModelIndex &parent) const
+QVector<Akonadi::Collection> SelectMultiCollectionWidget::selectedCollection(const QModelIndex &parent) const
 {
-    QList<Akonadi::Collection> lst;
+    QVector<Akonadi::Collection> lst;
 
     const int nbCol = mCheckedCollectionWidget->checkableProxy()->rowCount(parent);
     for (int i = 0; i < nbCol; ++i) {

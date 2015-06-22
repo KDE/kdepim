@@ -33,7 +33,7 @@ public:
     explicit SelectMultiCollectionDialog(const QString &mimetype, QWidget *parent = Q_NULLPTR);
     ~SelectMultiCollectionDialog();
 
-    QList<Akonadi::Collection> selectedCollection() const;
+    QVector<Akonadi::Collection> selectedCollection() const;
 
 private:
     void initialize(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection = QList<Akonadi::Collection::Id>());

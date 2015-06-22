@@ -77,7 +77,7 @@ void SelectMultiCollectionDialog::writeConfig()
     group.writeEntry("Size", size());
 }
 
-QList<Akonadi::Collection> SelectMultiCollectionDialog::selectedCollection() const
+QVector<Akonadi::Collection> SelectMultiCollectionDialog::selectedCollection() const
 {
     return mSelectMultiCollection->selectedCollection();
 }
