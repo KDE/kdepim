@@ -38,6 +38,7 @@ public:
         GooglePlus,
         MailTo,
         LinkedIn,
+        Evernote,
         ServiceEndType
     };
 

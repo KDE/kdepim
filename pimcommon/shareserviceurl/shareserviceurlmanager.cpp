@@ -61,6 +61,9 @@ QString ShareServiceUrlManager::typeToI18n(ServiceType type)
     case LinkedIn:
         str = i18n("LinkedIn");
         break;
+    case Evernote:
+        str = i18n("Evernote");
+        break;
     case ServiceEndType:
         break;
     }
@@ -129,6 +132,14 @@ QUrl ShareServiceUrlManager::generateServiceUrl(const QString &link, const QStri
         url.setUrl(QStringLiteral("http://www.linkedin.com/shareArticle"));
         QUrlQuery urlQuery;
         urlQuery.addQueryItem(QStringLiteral("mini"), QStringLiteral("true"));
+        urlQuery.addQueryItem(QStringLiteral("url"), link);
+        urlQuery.addQueryItem(QStringLiteral("title"), title);
+        url.setQuery(urlQuery);
+        break;
+    }
+    case Evernote: {
+        url.setUrl(QStringLiteral("https://www.evernote.com/clip.action"));
+        QUrlQuery urlQuery;
         urlQuery.addQueryItem(QStringLiteral("url"), link);
         urlQuery.addQueryItem(QStringLiteral("title"), title);
         url.setQuery(urlQuery);

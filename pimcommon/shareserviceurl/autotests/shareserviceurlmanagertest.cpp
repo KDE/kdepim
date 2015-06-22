@@ -65,6 +65,9 @@ void ShareServiceUrlManagerTest::shouldGenerateServiceUrl_data()
 
     QTest::newRow("no title but valid link (linkedin)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::LinkedIn << QUrl(QStringLiteral("http://www.linkedin.com/shareArticle?mini=true&url=http://www.kde.org&title")) << true;
     QTest::newRow("title and valid link (linkedin)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::LinkedIn << QUrl(QStringLiteral("http://www.linkedin.com/shareArticle?mini=true&url=http://www.kde.org&title=kde")) << true;
+
+    QTest::newRow("no title but valid link (evernote)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::Evernote << QUrl(QStringLiteral("https://www.evernote.com/clip.action?url=http://www.kde.org&title")) << true;
+    QTest::newRow("title and valid link (evernote)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::Evernote << QUrl(QStringLiteral("https://www.evernote.com/clip.action?url=http://www.kde.org&title=kde")) << true;
 }
 
 void ShareServiceUrlManagerTest::shouldGenerateServiceUrl()
