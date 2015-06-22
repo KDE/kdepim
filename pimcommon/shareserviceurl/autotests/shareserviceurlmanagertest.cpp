@@ -37,6 +37,8 @@ void ShareServiceUrlManagerTest::shouldHaveDefaultValue()
     PimCommon::ShareServiceUrlManager manager;
     QVERIFY(manager.menu());
     QVERIFY(!manager.menu()->menu()->actions().isEmpty());
+
+    //Based on 0 => we need to look at PimCommon::ShareServiceUrlManager::ServiceEndType
     QCOMPARE(manager.menu()->menu()->actions().count(), (static_cast<int>(PimCommon::ShareServiceUrlManager::ServiceEndType)) );
 }
 
@@ -60,6 +62,9 @@ void ShareServiceUrlManagerTest::shouldGenerateServiceUrl_data()
 
     QTest::newRow("no title but valid link (mailto)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::MailTo << QUrl(QStringLiteral("mailto:?subject&body=http://www.kde.org")) << true;
     QTest::newRow("title and valid link (mailto)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::MailTo << QUrl(QStringLiteral("mailto:?subject=kde&body=http://www.kde.org")) << true;
+
+    QTest::newRow("no title but valid link (linkedin)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::LinkedIn << QUrl(QStringLiteral("http://www.linkedin.com/shareArticle?url=http://www.kde.org&title")) << true;
+    QTest::newRow("title and valid link (linkedin)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::LinkedIn << QUrl(QStringLiteral("http://www.linkedin.com/shareArticle?url=http://www.kde.org&title=kde")) << true;
 }
 
 void ShareServiceUrlManagerTest::shouldGenerateServiceUrl()

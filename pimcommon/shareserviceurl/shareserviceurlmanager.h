@@ -37,6 +37,7 @@ public:
         Twitter,
         GooglePlus,
         MailTo,
+        LinkedIn,
         ServiceEndType
     };
 

@@ -58,6 +58,9 @@ QString ShareServiceUrlManager::typeToI18n(ServiceType type)
     case MailTo:
         str = i18n("Mail");
         break;
+    case LinkedIn:
+        str = i18n("LinkedIn");
+        break;
     case ServiceEndType:
         break;
     }
@@ -120,6 +123,15 @@ QUrl ShareServiceUrlManager::generateServiceUrl(const QString &link, const QStri
         urlQuery.addQueryItem(QStringLiteral("subject"), title);
         urlQuery.addQueryItem(QStringLiteral("body"), link);
         url.setQuery(urlQuery);
+        break;
+    }
+    case LinkedIn: {
+        url.setUrl(QStringLiteral("http://www.linkedin.com/shareArticle?mini=true"));
+        QUrlQuery urlQuery;
+        urlQuery.addQueryItem(QStringLiteral("url"), link);
+        urlQuery.addQueryItem(QStringLiteral("title"), title);
+        url.setQuery(urlQuery);
+        break;
     }
     case ServiceEndType:
         break;
