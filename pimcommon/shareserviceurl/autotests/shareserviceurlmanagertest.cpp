@@ -48,6 +48,14 @@ void ShareServiceUrlManagerTest::shouldGenerateServiceUrl_data()
     //Url is valid ?
     QTest::addColumn<bool>("valid");
     QTest::newRow("no title no link") << QString() << QString() << PimCommon::ShareServiceUrlManager::Fbook << QUrl() << false;
+    QTest::newRow("no title but valid link (facebook)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::Fbook << QUrl(QStringLiteral("https://www.facebook.com/sharer.php?u=http://www.kde.org&t")) << true;
+    QTest::newRow("title and valid link (facebook)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::Fbook << QUrl(QStringLiteral("https://www.facebook.com/sharer.php?u=http://www.kde.org&t=kde")) << true;
+
+    QTest::newRow("no title but valid link (twitter)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::Twitter << QUrl(QStringLiteral("https://twitter.com/share?url=http://www.kde.org&text")) << true;
+    QTest::newRow("title and valid link (twitter)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::Twitter << QUrl(QStringLiteral("https://twitter.com/share?url=http://www.kde.org&text=kde")) << true;
+
+    QTest::newRow("no title but valid link (googleplus)") << QString() << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::GooglePlus << QUrl(QStringLiteral("https://plus.google.com/share?url=http://www.kde.org")) << true;
+    QTest::newRow("title and valid link (googleplus)") << QStringLiteral("kde") << QStringLiteral("http://www.kde.org") << PimCommon::ShareServiceUrlManager::GooglePlus << QUrl(QStringLiteral("https://plus.google.com/share?url=http://www.kde.org")) << true;
 }
 
 void ShareServiceUrlManagerTest::shouldGenerateServiceUrl()

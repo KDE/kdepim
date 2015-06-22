@@ -84,24 +84,43 @@ void ShareServiceUrlManager::slotSelectServiceUrl(QAction *act)
 QUrl ShareServiceUrlManager::generateServiceUrl(const QString &link, const QString &title, ServiceType type)
 {
     QUrl url;
-    if (link.isEmpty() && title.isEmpty()) {
+    if (link.isEmpty()) {
         return url;
     }
     switch (type) {
-    case Fbook:
+    case Fbook: {
+        url.setUrl(QStringLiteral("https://www.facebook.com/sharer.php"));
+        QUrlQuery urlQuery;
+        urlQuery.addQueryItem(QStringLiteral("u"), link);
+        urlQuery.addQueryItem(QStringLiteral("t"), title);
+        url.setQuery(urlQuery);
         break;
-    case Twitter:
+    }
+    case Twitter: {
+        url.setUrl(QStringLiteral("https://twitter.com/share"));
+        QUrlQuery urlQuery;
+        urlQuery.addQueryItem(QStringLiteral("url"), link);
+        urlQuery.addQueryItem(QStringLiteral("text"), title);
+        url.setQuery(urlQuery);
         break;
-    case GooglePlus:
+    }
+    case GooglePlus: {
+        url.setUrl(QStringLiteral("https://plus.google.com/share"));
+        QUrlQuery urlQuery;
+        urlQuery.addQueryItem(QStringLiteral("url"), link);
+        url.setQuery(urlQuery);
         break;
+    }
     case ServiceEndType:
         break;
     }
     //TODO
-    return QUrl();
+    return url;
 }
 
 void ShareServiceUrlManager::openUrl(const QUrl &url)
 {
-    QDesktopServices::openUrl(url);
+    if (url.isValid()) {
+        QDesktopServices::openUrl(url);
+    }
 }
