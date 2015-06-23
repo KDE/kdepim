@@ -227,9 +227,14 @@ set(libpimcommon_shareserviceurl_SRCS
    shareserviceurl/shareserviceurlmanager.cpp
 )
 
+set(libpimcommon_webshortcut_SRCS
+   webshortcut/webshortcutmenumanager.cpp
+)
+
 set(libpimcommon_SRCS
   pimcommon_debug.cpp
   settings/pimcommonsettings.cpp
+  ${libpimcommon_webshortcut_SRCS}
   ${libpimcommon_shareserviceurl_SRCS}
   ${libpimcommon_migrate_SRCS}
   ${libpimcommon_util_SRCS}
@@ -322,6 +327,7 @@ if (BUILD_TESTING)
    add_subdirectory(util/autotests)
    add_subdirectory(gravatar/autotests)
    add_subdirectory(shareserviceurl/autotests)
+   add_subdirectory(webshortcut/autotests)
 endif()
 
 
