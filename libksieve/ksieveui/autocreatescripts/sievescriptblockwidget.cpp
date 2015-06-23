@@ -85,7 +85,7 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     mNewBlockType->addItem(i18n("\"else\" block"));
 
     mAddBlockType = new QPushButton;
-    mAddBlockType->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mAddBlockType->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
     mAddBlockType->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     newBlockLayout->addWidget(mAddBlockType);
     connect(mAddBlockType, &QPushButton::clicked, this, &SieveScriptBlockWidget::slotAddBlock);

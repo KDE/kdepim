@@ -397,7 +397,7 @@ void MainWindow::Private::setupActions()
     connect(focusToClickSearchAction, SIGNAL(triggered(bool)), q, SLOT(slotFocusQuickSearch()));
     clipboadMenu = new ClipboardMenu(q);
     clipboadMenu->setMainWindow(q);
-    clipboadMenu->clipboardMenu()->setIcon(QIcon::fromTheme(QLatin1String("edit-paste")));
+    clipboadMenu->clipboardMenu()->setIcon(QIcon::fromTheme(QStringLiteral("edit-paste")));
     clipboadMenu->clipboardMenu()->setDelayed(false);
     coll->addAction(QLatin1String("clipboard_menu"), clipboadMenu->clipboardMenu());
 

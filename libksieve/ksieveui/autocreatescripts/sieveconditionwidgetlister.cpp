@@ -128,11 +128,11 @@ void SieveConditionWidget::initWidget()
     mComboBox->adjustSize();
 
     mAdd = new QPushButton(this);
-    mAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mAdd->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
     mAdd->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     mRemove = new QPushButton(this);
-    mRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    mRemove->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
     mRemove->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     mLayout->addWidget(mAdd, 1, 3);

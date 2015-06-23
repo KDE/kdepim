@@ -84,7 +84,7 @@ EmailAddressRequester::EmailAddressRequester(QWidget *parent)
     layout->addWidget(d->mLineEdit, 1);
 
     QPushButton *button = new QPushButton(this);
-    button->setIcon(QIcon::fromTheme(QLatin1String("help-contents")));
+    button->setIcon(QIcon::fromTheme(QStringLiteral("help-contents")));
     button->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
     button->setFixedHeight(d->mLineEdit->sizeHint().height());
     button->setToolTip(i18n("Open Address Book"));

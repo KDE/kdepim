@@ -66,7 +66,7 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
 
     mAddNewHeader = new QPushButton;
     mAddNewHeader->setEnabled(false);
-    mAddNewHeader->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mAddNewHeader->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
     mAddNewHeader->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     connect(mAddNewHeader, &QPushButton::clicked, this, &SelectHeadersDialog::slotAddNewHeader);
     connect(mNewHeader, &KLineEdit::textChanged, this, &SelectHeadersDialog::slotNewHeaderTextChanged);

@@ -97,7 +97,7 @@ NoteEdit::NoteEdit(QWidget *parent)
 
     hbox->addStretch(1);
 
-    mSaveButton = new QPushButton(QIcon::fromTheme(QLatin1String("view-pim-notes")), i18n("&Save"));
+    mSaveButton = new QPushButton(QIcon::fromTheme(QStringLiteral("view-pim-notes")), i18n("&Save"));
     mSaveButton->setObjectName(QLatin1String("save-button"));
     mSaveButton->setEnabled(false);
 #ifndef QT_NO_ACCESSIBILITY

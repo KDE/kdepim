@@ -33,7 +33,7 @@ FilterActionWithUrlHelpButton::FilterActionWithUrlHelpButton(QWidget *parent)
     : QToolButton(parent)
 {
     setToolTip(i18n("Help"));
-    setIcon(QIcon::fromTheme(QLatin1String("help-hint")));
+    setIcon(QIcon::fromTheme(QStringLiteral("help-hint")));
 }
 
 FilterActionWithUrlHelpButton::~FilterActionWithUrlHelpButton()

@@ -473,19 +473,19 @@ void AttachmentControllerBase::createActions()
     d->attachMyPublicKeyAction = new QAction(i18n("Attach &My Public Key"), this);
     connect(d->attachMyPublicKeyAction, &QAction::triggered, this, &AttachmentControllerBase::attachMyPublicKey);
 
-    d->attachmentMenu = new KActionMenu(QIcon::fromTheme(QLatin1String("mail-attachment")), i18n("Attach"), this);
+    d->attachmentMenu = new KActionMenu(QIcon::fromTheme(QStringLiteral("mail-attachment")), i18n("Attach"), this);
     connect(d->attachmentMenu, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentFileDialog);
 
     d->attachmentMenu->setDelayed(true);
 
-    d->addAttachmentFileAction = new QAction(QIcon::fromTheme(QLatin1String("mail-attachment")), i18n("&Attach File..."), this);
+    d->addAttachmentFileAction = new QAction(QIcon::fromTheme(QStringLiteral("mail-attachment")), i18n("&Attach File..."), this);
     d->addAttachmentFileAction->setIconText(i18n("Attach"));
-    d->addContextAction = new QAction(QIcon::fromTheme(QLatin1String("mail-attachment")),
+    d->addContextAction = new QAction(QIcon::fromTheme(QStringLiteral("mail-attachment")),
                                       i18n("Add Attachment..."), this);
     connect(d->addAttachmentFileAction, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentFileDialog);
     connect(d->addContextAction, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentFileDialog);
 
-    d->addAttachmentDirectoryAction = new QAction(QIcon::fromTheme(QLatin1String("mail-attachment")), i18n("&Attach Directory..."), this);
+    d->addAttachmentDirectoryAction = new QAction(QIcon::fromTheme(QStringLiteral("mail-attachment")), i18n("&Attach Directory..."), this);
     d->addAttachmentDirectoryAction->setIconText(i18n("Attach"));
     connect(d->addAttachmentDirectoryAction, &QAction::triggered, this, &AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog);
 
@@ -494,7 +494,7 @@ void AttachmentControllerBase::createActions()
     d->addOwnVcardAction->setCheckable(true);
     connect(d->addOwnVcardAction, &QAction::triggered, this, &AttachmentControllerBase::addOwnVcard);
 
-    d->attachVCardsAction = new QAction(QIcon::fromTheme(QLatin1String("mail-attachment")), i18n("&Attach vCards..."), this);
+    d->attachVCardsAction = new QAction(QIcon::fromTheme(QStringLiteral("mail-attachment")), i18n("&Attach vCards..."), this);
     d->attachVCardsAction->setIconText(i18n("Attach"));
     connect(d->attachVCardsAction, &QAction::triggered, this, &AttachmentControllerBase::showAttachVcard);
 
@@ -505,8 +505,8 @@ void AttachmentControllerBase::createActions()
     d->attachmentMenu->addSeparator();
     d->attachmentMenu->addAction(d->attachVCardsAction);
 
-    d->removeAction = new QAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("&Remove Attachment"), this);
-    d->removeContextAction = new QAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Remove"), this);     // FIXME need two texts. is there a better way?
+    d->removeAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("&Remove Attachment"), this);
+    d->removeContextAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Remove"), this);     // FIXME need two texts. is there a better way?
     connect(d->removeAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()));
     connect(d->removeContextAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()));
 
@@ -522,9 +522,9 @@ void AttachmentControllerBase::createActions()
     d->editWithContextAction = new QAction(i18n("Edit With..."), this);
     connect(d->editWithContextAction, SIGNAL(triggered(bool)), this, SLOT(editSelectedAttachmentWith()));
 
-    d->saveAsAction = new QAction(QIcon::fromTheme(QLatin1String("document-save-as")),
+    d->saveAsAction = new QAction(QIcon::fromTheme(QStringLiteral("document-save-as")),
                                   i18n("&Save Attachment As..."), this);
-    d->saveAsContextAction = new QAction(QIcon::fromTheme(QLatin1String("document-save-as")),
+    d->saveAsContextAction = new QAction(QIcon::fromTheme(QStringLiteral("document-save-as")),
                                          i18n("Save As..."), this);
     connect(d->saveAsAction, SIGNAL(triggered(bool)),
             this, SLOT(saveSelectedAttachmentAs()));
@@ -542,7 +542,7 @@ void AttachmentControllerBase::createActions()
     connect(d->selectAllAction, &QAction::triggered,
             this, &AttachmentControllerBase::selectedAllAttachment);
 
-    d->reloadAttachmentAction = new QAction(QIcon::fromTheme(QLatin1String("view-refresh")), i18n("Reload"), this);
+    d->reloadAttachmentAction = new QAction(QIcon::fromTheme(QStringLiteral("view-refresh")), i18n("Reload"), this);
     connect(d->reloadAttachmentAction, SIGNAL(triggered(bool)),
             this, SLOT(reloadAttachment()));
 

@@ -69,10 +69,10 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 
     searchLine->setListWidget(manualFiltersListWidget);
 
-    insertButton->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    insertButton->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
     connect(insertButton, &QToolButton::clicked, this, &AdBlockSettingWidget::insertRule);
 
-    removeButton->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    removeButton->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
     connect(removeButton, &QPushButton::clicked, this, &AdBlockSettingWidget::removeRule);
     connect(removeSubscription, &QPushButton::clicked, this, &AdBlockSettingWidget::slotRemoveSubscription);
     connect(manualFiltersListWidget, &QListWidget::currentItemChanged, this, &AdBlockSettingWidget::slotUpdateManualButtons);

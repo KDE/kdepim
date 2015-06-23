@@ -144,7 +144,7 @@ void SieveActionWidget::initWidget()
     mCommentButton->setToolTip(i18n("Add comment"));
     mCommentButton->setEnabled(false);
     mLayout->addWidget(mCommentButton, 1, 1);
-    mCommentButton->setIcon(QIcon::fromTheme(QLatin1String("view-pim-notes")));
+    mCommentButton->setIcon(QIcon::fromTheme(QStringLiteral("view-pim-notes")));
     connect(mCommentButton, &QToolButton::clicked, this, &SieveActionWidget::slotAddComment);
 
     mComboBox->addItem(QLatin1String(""));
@@ -161,11 +161,11 @@ void SieveActionWidget::initWidget()
     connect(mComboBox, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::activated), this, &SieveActionWidget::slotActionChanged);
 
     mAdd = new QPushButton(this);
-    mAdd->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
+    mAdd->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
     mAdd->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     mRemove = new QPushButton(this);
-    mRemove->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
+    mRemove->setIcon(QIcon::fromTheme(QStringLiteral("list-remove")));
     mRemove->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     mLayout->addWidget(mAdd, 1, 4);
     mLayout->addWidget(mRemove, 1, 5);

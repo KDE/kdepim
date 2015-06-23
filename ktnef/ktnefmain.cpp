@@ -111,7 +111,7 @@ void KTNEFMain::setupActions()
     // Action menu
     QAction *openAction = actionCollection()->addAction(QLatin1String("view_file"));
     openAction->setText(i18nc("@action:inmenu", "View"));
-    openAction->setIcon(QIcon::fromTheme(QLatin1String("document-open")));
+    openAction->setIcon(QIcon::fromTheme(QStringLiteral("document-open")));
     connect(openAction, &QAction::triggered, this, &KTNEFMain::viewFile);
 
     QAction *openAsAction = actionCollection()->addAction(QLatin1String("view_file_as"));
@@ -124,17 +124,17 @@ void KTNEFMain::setupActions()
 
     QAction *extractToAction = actionCollection()->addAction(QLatin1String("extract_file_to"));
     extractToAction->setText(i18nc("@action:inmenu", "Extract To..."));
-    extractToAction->setIcon(QIcon::fromTheme(QLatin1String("archive-extract")));
+    extractToAction->setIcon(QIcon::fromTheme(QStringLiteral("archive-extract")));
     connect(extractToAction, &QAction::triggered, this, &KTNEFMain::extractFileTo);
 
     QAction *extractAllToAction = actionCollection()->addAction(QLatin1String("extract_all_files"));
     extractAllToAction->setText(i18nc("@action:inmenu", "Extract All To..."));
-    extractAllToAction->setIcon(QIcon::fromTheme(QLatin1String("archive-extract")));
+    extractAllToAction->setIcon(QIcon::fromTheme(QStringLiteral("archive-extract")));
     connect(extractAllToAction, &QAction::triggered, this, &KTNEFMain::extractAllFiles);
 
     QAction *filePropsAction = actionCollection()->addAction(QLatin1String("properties_file"));
     filePropsAction->setText(i18nc("@action:inmenu", "Properties"));
-    filePropsAction->setIcon(QIcon::fromTheme(QLatin1String("document-properties")));
+    filePropsAction->setIcon(QIcon::fromTheme(QStringLiteral("document-properties")));
     connect(filePropsAction, &QAction::triggered, this, &KTNEFMain::propertiesFile);
 
     QAction *messPropsAction = actionCollection()->addAction(QLatin1String("msg_properties"));
@@ -143,12 +143,12 @@ void KTNEFMain::setupActions()
 
     QAction *messShowAction = actionCollection()->addAction(QLatin1String("msg_text"));
     messShowAction->setText(i18nc("@action:inmenu", "Show Message Text"));
-    messShowAction->setIcon(QIcon::fromTheme(QLatin1String("document-preview-archive")));
+    messShowAction->setIcon(QIcon::fromTheme(QStringLiteral("document-preview-archive")));
     connect(messShowAction, &QAction::triggered, this, &KTNEFMain::slotShowMessageText);
 
     QAction *messSaveAction = actionCollection()->addAction(QLatin1String("msg_save"));
     messSaveAction->setText(i18nc("@action:inmenu", "Save Message Text As..."));
-    messSaveAction->setIcon(QIcon::fromTheme(QLatin1String("document-save")));
+    messSaveAction->setIcon(QIcon::fromTheme(QStringLiteral("document-save")));
     connect(messSaveAction, &QAction::triggered, this, &KTNEFMain::slotSaveMessageText);
 
     actionCollection()->action(QLatin1String("view_file"))->setEnabled(false);
@@ -161,7 +161,7 @@ void KTNEFMain::setupActions()
     // Options menu
     QAction *defFolderAction = actionCollection()->addAction(QLatin1String("options_default_dir"));
     defFolderAction->setText(i18nc("@action:inmenu", "Default Folder..."));
-    defFolderAction->setIcon(QIcon::fromTheme(QLatin1String("folder-open")));
+    defFolderAction->setIcon(QIcon::fromTheme(QStringLiteral("folder-open")));
     connect(defFolderAction, &QAction::triggered, this, &KTNEFMain::optionDefaultDir);
 
 }
@@ -429,11 +429,11 @@ void KTNEFMain::contextMenuEvent(QContextMenuEvent *event)
         menu->addSeparator();
     }
     QAction *extract = menu->addAction(i18nc("@action:inmenu", "Extract"));
-    QAction *extractTo = menu->addAction(QIcon::fromTheme(QLatin1String("archive-extract")),
+    QAction *extractTo = menu->addAction(QIcon::fromTheme(QStringLiteral("archive-extract")),
                                          i18nc("@action:inmenu", "Extract To..."));
     if (list.count() == 1) {
         menu->addSeparator();
-        prop = menu->addAction(QIcon::fromTheme(QLatin1String("document-properties")),
+        prop = menu->addAction(QIcon::fromTheme(QStringLiteral("document-properties")),
                                i18nc("@action:inmenu", "Properties"));
     }
 

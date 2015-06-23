@@ -46,7 +46,7 @@ TextEditFindBarBase::TextEditFindBarBase(QWidget *parent)
     topLayout->addLayout(lay);
 
     QToolButton *closeBtn = new QToolButton(this);
-    closeBtn->setIcon(QIcon::fromTheme(QLatin1String("dialog-close")));
+    closeBtn->setIcon(QIcon::fromTheme(QStringLiteral("dialog-close")));
     closeBtn->setIconSize(QSize(16, 16));
     closeBtn->setToolTip(i18n("Close"));
 

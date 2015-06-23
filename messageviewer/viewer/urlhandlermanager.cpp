@@ -783,10 +783,10 @@ bool ContactUidURLHandler::handleContextMenuRequest(const KUrl &url, const QPoin
 
     QMenu *menu = new QMenu();
     QAction *open =
-        menu->addAction(QIcon::fromTheme(QLatin1String("view-pim-contacts")), i18n("&Open in Address Book"));
+        menu->addAction(QIcon::fromTheme(QStringLiteral("view-pim-contacts")), i18n("&Open in Address Book"));
 #ifndef QT_NO_CLIPBOARD
     QAction *copy =
-        menu->addAction(QIcon::fromTheme(QLatin1String("edit-copy")), i18n("&Copy Email Address"));
+        menu->addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("&Copy Email Address"));
 #endif
 
     QAction *a = menu->exec(p);

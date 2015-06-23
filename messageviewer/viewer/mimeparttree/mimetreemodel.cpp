@@ -112,7 +112,7 @@ public:
                 return QIcon();
             }
             if (mimeType->name().startsWith(QLatin1String("multipart/"))) {
-                return QIcon::fromTheme(QLatin1String("folder"));
+                return QIcon::fromTheme(QStringLiteral("folder"));
             }
             return QIcon::fromTheme(mimeType->iconName());
         } else {

@@ -143,7 +143,7 @@ Pane::Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *
     } // Proxy stack done
 
     d->mNewTabButton = new QToolButton(this);
-    d->mNewTabButton->setIcon(QIcon::fromTheme(QLatin1String("tab-new")));
+    d->mNewTabButton->setIcon(QIcon::fromTheme(QStringLiteral("tab-new")));
     d->mNewTabButton->adjustSize();
     d->mNewTabButton->setToolTip(i18nc("@info:tooltip", "Open a new tab"));
 #ifndef QT_NO_ACCESSIBILITY
@@ -154,7 +154,7 @@ Pane::Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *
             SLOT(onNewTabClicked()));
 
     d->mCloseTabButton = new QToolButton(this);
-    d->mCloseTabButton->setIcon(QIcon::fromTheme(QLatin1String("tab-close")));
+    d->mCloseTabButton->setIcon(QIcon::fromTheme(QStringLiteral("tab-close")));
     d->mCloseTabButton->adjustSize();
     d->mCloseTabButton->setToolTip(i18nc("@info:tooltip", "Close the current tab"));
 #ifndef QT_NO_ACCESSIBILITY
@@ -487,7 +487,7 @@ void Pane::Private::onSelectionChanged(const QItemSelection &selected, const QIt
             idx = idx.parent();
         }
     } else {
-        icon = QIcon::fromTheme(QLatin1String("folder"));
+        icon = QIcon::fromTheme(QStringLiteral("folder"));
     }
 
     const int index = q->indexOf(w);
@@ -667,10 +667,10 @@ void Pane::Private::onTabContextMenuRequest(const QPoint &pos)
     QMenu menu(q);
 
     QAction *closeTabAction = menu.addAction(i18nc("@action:inmenu", "Close Tab"));
-    closeTabAction->setIcon(QIcon::fromTheme(QLatin1String("tab-close")));
+    closeTabAction->setIcon(QIcon::fromTheme(QStringLiteral("tab-close")));
 
     QAction *allOther = menu.addAction(i18nc("@action:inmenu", "Close All Other Tabs"));
-    allOther->setIcon(QIcon::fromTheme(QLatin1String("tab-close-other")));
+    allOther->setIcon(QIcon::fromTheme(QStringLiteral("tab-close-other")));
 
     QAction *action = menu.exec(q->mapToGlobal(pos));
 

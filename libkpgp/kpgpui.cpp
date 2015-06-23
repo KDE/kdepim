@@ -1166,7 +1166,7 @@ KeyRequester::KeyRequester(QWidget *parent, bool multipleKeys,
     mEraseButton->setAutoDefault(false);
     mEraseButton->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,
                                             QSizePolicy::Minimum));
-    mEraseButton->setIcon(QIcon::fromTheme(QLatin1String("edit-clear-locationbar-rtl")));
+    mEraseButton->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-locationbar-rtl")));
     mEraseButton->setToolTip(i18n("Clear"));
 
     // the button to call the KeySelectionDialog:

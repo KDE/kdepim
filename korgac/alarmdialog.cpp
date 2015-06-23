@@ -151,7 +151,7 @@ AlarmDialog::AlarmDialog(const Akonadi::ETMCalendar::Ptr &calendar, QWidget *par
         topBox->move(mPos);
     }
     setWindowTitle(i18nc("@title:window", "Reminders"));
-    setWindowIcon(QIcon::fromTheme(QLatin1String("korgac")));
+    setWindowIcon(QIcon::fromTheme(QStringLiteral("korgac")));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);

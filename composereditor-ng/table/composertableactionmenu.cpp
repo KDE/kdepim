@@ -227,25 +227,25 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement &element, QOb
     KActionMenu *insertMenu = new KActionMenu(i18n("Insert"), this);
     addAction(insertMenu);
 
-    d->action_insert_table = new QAction(QIcon::fromTheme(QLatin1String("insert-table")), i18nc("@item:inmenu Insert", "Table..."), this);
+    d->action_insert_table = new QAction(QIcon::fromTheme(QStringLiteral("insert-table")), i18nc("@item:inmenu Insert", "Table..."), this);
     insertMenu->addAction(d->action_insert_table);
     connect(d->action_insert_table, &QAction::triggered, this, &ComposerTableActionMenu::insertNewTable);
 
     insertMenu->addSeparator();
-    d->action_insert_row_below = new QAction(QIcon::fromTheme(QLatin1String("edit-table-insert-row-below")), i18nc("@item:inmenu Insert", "Row Below"), this);
+    d->action_insert_row_below = new QAction(QIcon::fromTheme(QStringLiteral("edit-table-insert-row-below")), i18nc("@item:inmenu Insert", "Row Below"), this);
     insertMenu->addAction(d->action_insert_row_below);
     connect(d->action_insert_row_below, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowBelow()));
 
-    d->action_insert_row_above = new QAction(QIcon::fromTheme(QLatin1String("edit-table-insert-row-above")), i18nc("@item:inmenu Insert", "Row Above"), this);
+    d->action_insert_row_above = new QAction(QIcon::fromTheme(QStringLiteral("edit-table-insert-row-above")), i18nc("@item:inmenu Insert", "Row Above"), this);
     insertMenu->addAction(d->action_insert_row_above);
     connect(d->action_insert_row_above, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowAbove()));
 
     insertMenu->addSeparator();
-    d->action_insert_column_before = new QAction(QIcon::fromTheme(QLatin1String("edit-table-insert-column-left")), i18nc("@item:inmenu Insert", "Column Before"), this);
+    d->action_insert_column_before = new QAction(QIcon::fromTheme(QStringLiteral("edit-table-insert-column-left")), i18nc("@item:inmenu Insert", "Column Before"), this);
     insertMenu->addAction(d->action_insert_column_before);
     connect(d->action_insert_column_before, SIGNAL(triggered(bool)), SLOT(_k_slotInsertColumnBefore()));
 
-    d->action_insert_column_after = new QAction(QIcon::fromTheme(QLatin1String("edit-table-insert-column-right")), i18nc("@item:inmenu Insert", "Column After"), this);
+    d->action_insert_column_after = new QAction(QIcon::fromTheme(QStringLiteral("edit-table-insert-column-right")), i18nc("@item:inmenu Insert", "Column After"), this);
     insertMenu->addAction(d->action_insert_column_after);
     connect(d->action_insert_column_after, SIGNAL(triggered(bool)), SLOT(_k_slotInsertColumnAfter()));
 
@@ -283,11 +283,11 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement &element, QOb
 
     addSeparator();
 
-    d->action_merge_cell = new QAction(QIcon::fromTheme(QLatin1String("edit-table-cell-merge")), i18n("Join With Cell to the Right"), this);
+    d->action_merge_cell = new QAction(QIcon::fromTheme(QStringLiteral("edit-table-cell-merge")), i18n("Join With Cell to the Right"), this);
     connect(d->action_merge_cell, SIGNAL(triggered(bool)), SLOT(_k_slotMergeCellToTheRight()));
     addAction(d->action_merge_cell);
 
-    d->action_split_cell = new QAction(QIcon::fromTheme(QLatin1String("edit-table-cell-split")), i18n("Split cells"), this);
+    d->action_split_cell = new QAction(QIcon::fromTheme(QStringLiteral("edit-table-cell-split")), i18n("Split cells"), this);
     connect(d->action_split_cell, SIGNAL(triggered(bool)), SLOT(_k_slotSplitCell()));
     addAction(d->action_split_cell);
 

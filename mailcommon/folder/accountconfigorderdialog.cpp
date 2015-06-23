@@ -80,7 +80,7 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     upDownBoxVBoxLayout->setMargin(0);
     mUpButton = new QPushButton(upDownBox);
     upDownBoxVBoxLayout->addWidget(mUpButton);
-    mUpButton->setIcon(QIcon::fromTheme(QLatin1String("go-up")));
+    mUpButton->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
     mUpButton->setToolTip(i18nc("Move selected account up.", "Up"));
     mUpButton->setEnabled(false);   // b/c no item is selected yet
     mUpButton->setFocusPolicy(Qt::StrongFocus);
@@ -88,7 +88,7 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
 
     mDownButton = new QPushButton(upDownBox);
     upDownBoxVBoxLayout->addWidget(mDownButton);
-    mDownButton->setIcon(QIcon::fromTheme(QLatin1String("go-down")));
+    mDownButton->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
     mDownButton->setToolTip(i18nc("Move selected account down.", "Down"));
     mDownButton->setEnabled(false);   // b/c no item is selected yet
     mDownButton->setFocusPolicy(Qt::StrongFocus);
