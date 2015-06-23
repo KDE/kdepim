@@ -19,6 +19,7 @@
 #include "ksieveui/editor/sieveeditorhelphtmlwidget.h"
 
 #include <KLocalizedString>
+#include <KStringHandler>
 
 #include <QTabBar>
 #include <QUrl>
@@ -103,10 +104,7 @@ void SieveEditorTabWidget::slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget 
 {
     const int index = indexOf(widget);
     if (index != -1) {
-        QString troncateTitle = title;
-        if (troncateTitle.length() > 30) {
-            troncateTitle = QLatin1String("...") + title.right(27);
-        }
+        const QString troncateTitle = KStringHandler::lsqueeze(title, 30);
         setTabText(index, i18n("Help about: %1", troncateTitle));
         setTabToolTip(index, title);
     }
