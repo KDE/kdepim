@@ -74,6 +74,9 @@ void SetupIspdb::fillIdentitiy(int i, QObject *o) const
 
 void SetupIspdb::fillImapServer(int i, QObject *o) const
 {
+    if (mIspdb->imapServers().isEmpty()) {
+        return;
+    }
     Server isp = mIspdb->imapServers()[i];
     Resource *imapRes = qobject_cast<Resource *>(o);
 
@@ -172,8 +175,8 @@ void SetupIspdb::onIspdbFinished(bool status)
 {
     emit ispdbFinished(status);
     if (status) {
-        emit info(i18n("Autoconfiguration found."));
+        Q_EMIT info(i18n("Autoconfiguration found."));
     } else {
-        emit info(i18n("Autoconfiguration failed."));
+        Q_EMIT info(i18n("Autoconfiguration failed."));
     }
 }
