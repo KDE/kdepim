@@ -11,3 +11,4 @@ ItemAccessors=true
 SetUserTexts=true
 NameSpace=CalendarSupport
 TranslationDomain=calendarsupport
+TranslationSystem=kde
