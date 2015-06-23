@@ -54,10 +54,7 @@ struct ldapServer {
         , sizeLimit(-1)
     {
     }
-    bool isValid() const
-    {
-        return (port != -1);
-    }
+    bool isValid() const;
     QString hostname;
     QString bindDn;
     QString password;

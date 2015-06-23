@@ -111,7 +111,7 @@ TypePage::TypePage(KAssistantDialog *parent) :
         m_model->appendRow(item);
     }
 
-    connect(ui.listView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()));
+    connect(ui.listView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &TypePage::selectionChanged);
     connect(ui.ghnsButton, &QPushButton::clicked, this, &TypePage::ghnsWanted);
 }
 

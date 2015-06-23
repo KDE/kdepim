@@ -21,7 +21,7 @@
 #define CONFIGFILE_H
 
 #include "setupobject.h"
-
+#include <QVector>
 class KConfig;
 
 struct Config {
@@ -48,7 +48,7 @@ public Q_SLOTS:
     Q_SCRIPTABLE void setEditMode(const bool editMode);
     Q_SCRIPTABLE void setEditName(const QString &name);
 private:
-    QList<Config> m_configData;
+    QVector<Config> m_configData;
     QString m_name;
     KConfig *m_config;
     QString m_editName;

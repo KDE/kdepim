@@ -129,3 +129,8 @@ QHash< QString, ldapServer > AutoconfigKolabLdap::ldapServers() const
 {
     return mLdapServers;
 }
+
+bool ldapServer::isValid() const
+{
+    return (port != -1);
+}
