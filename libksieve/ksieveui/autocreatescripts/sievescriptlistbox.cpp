@@ -248,7 +248,7 @@ void SieveScriptListBox::slotRename()
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
         const QString newName = QInputDialog::getText(this, i18n("Rename"), i18n("Add new name:"), QLineEdit::Normal, item->text());
-        if (!newName.isEmpty()) {
+        if (!newName.trimmed().isEmpty()) {
             item->setText(newName);
             Q_EMIT valueChanged();
         }
