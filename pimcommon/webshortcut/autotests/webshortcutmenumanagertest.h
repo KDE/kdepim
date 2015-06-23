@@ -28,6 +28,7 @@ public:
     ~WebShortcutMenuManagerTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldAssignSelectedText();
 };
 
 #endif // WEBSHORTCUTMENUMANAGERTEST_H

@@ -31,7 +31,6 @@ WebShortcutMenuManager::WebShortcutMenuManager(QObject *parent)
 
 }
 
-
 WebShortcutMenuManager::~WebShortcutMenuManager()
 {
 

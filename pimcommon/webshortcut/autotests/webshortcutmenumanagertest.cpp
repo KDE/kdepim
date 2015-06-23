@@ -36,4 +36,12 @@ void WebShortcutMenuManagerTest::shouldHaveDefaultValue()
     QVERIFY(shortcutManager.selectedText().isEmpty());
 }
 
+void WebShortcutMenuManagerTest::shouldAssignSelectedText()
+{
+    PimCommon::WebShortcutMenuManager shortcutManager;
+    const QString selectText = QStringLiteral("foo");
+    shortcutManager.setSelectedText(selectText);
+    QCOMPARE(shortcutManager.selectedText(), selectText);
+}
+
 QTEST_MAIN(WebShortcutMenuManagerTest)
