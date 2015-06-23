@@ -90,7 +90,7 @@ KLinkDialog::~KLinkDialog()
 
 void KLinkDialog::slotTextChanged(const QString &text)
 {
-    d->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!text.isEmpty());
+    d->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!text.trimmed().isEmpty());
 }
 
 void KLinkDialog::setLinkText(const QString &linkText)
