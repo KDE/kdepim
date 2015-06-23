@@ -46,7 +46,7 @@ const char *ContactHeaderForeColor = "ContactHeaderForeColor";
 const char *ContactHeaderBGColor = "ContactHeaderBGColor";
 
 struct ContactBlock {
-    typedef QList<ContactBlock> List;
+    typedef QVector<ContactBlock> List;
 
     QString header;
     QStringList entries;
