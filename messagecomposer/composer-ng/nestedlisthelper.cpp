@@ -217,7 +217,7 @@ void NestedListHelper::reformatList(QTextBlock block)
 
 void NestedListHelper::reformatList()
 {
-    QTextCursor cursor = textEdit->textCursor();
+    const QTextCursor cursor = textEdit->textCursor();
     reformatList(cursor.block());
 }
 
