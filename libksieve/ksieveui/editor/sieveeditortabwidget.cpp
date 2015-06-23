@@ -103,7 +103,12 @@ void SieveEditorTabWidget::slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget 
 {
     const int index = indexOf(widget);
     if (index != -1) {
-        setTabText(index, i18n("Help about: %1", title));
+        QString troncateTitle = title;
+        if (troncateTitle.length() > 30) {
+            troncateTitle = QLatin1String("...") + title.right(27);
+        }
+        setTabText(index, i18n("Help about: %1", troncateTitle));
+        setTabToolTip(index, title);
     }
 }
 
