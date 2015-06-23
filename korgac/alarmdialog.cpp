@@ -1008,7 +1008,7 @@ void AlarmDialog::removeFromConfig(const QList<Akonadi::Item::Id> &ids)
 
     const int oldNumReminders = genGroup.readEntry("Reminders", 0);
 
-    QList<ConfItem> newReminders;
+    QVector<ConfItem> newReminders;
     // Delete everything
     for (int i = 1; i <= oldNumReminders; ++i) {
         const QString group(QStringLiteral("Incidence-%1").arg(i));
@@ -1027,15 +1027,17 @@ void AlarmDialog::removeFromConfig(const QList<Akonadi::Item::Id> &ids)
         config->deleteGroup(group);
     }
 
-    genGroup.writeEntry("Reminders", newReminders.count());
+    const int newRemindersCount(newReminders.count());
+    genGroup.writeEntry("Reminders", newRemindersCount);
 
     //Write everything except those which have an uid we don't want
-    for (int i = 0; i < newReminders.count(); ++i) {
+    for (int i = 0; i < newRemindersCount; ++i) {
         const QString group(QStringLiteral("Incidence-%1").arg(i + 1));
         KConfigGroup incGroup(config, group);
-        incGroup.writeEntry("UID", newReminders[i].uid);
-        incGroup.writeEntry("RemindAt", newReminders[i].remindAt);
-        incGroup.writeEntry("AkonadiUrl", newReminders[i].akonadiUrl);
+        const ConfItem conf = newReminders.at(i);
+        incGroup.writeEntry("UID", conf.uid);
+        incGroup.writeEntry("RemindAt", conf.remindAt);
+        incGroup.writeEntry("AkonadiUrl", conf.akonadiUrl);
         incGroup.sync();
     }
     genGroup.sync();
