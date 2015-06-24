@@ -391,6 +391,7 @@ void AclManager::setCollection(const Akonadi::Collection &collection)
 {
     d->setCollection(collection);
     Q_EMIT collectionChanged(d->mCollection);
+    Q_EMIT collectionCanBeAdministrated(d->mUserRights & KIMAP::Acl::Admin);
 }
 
 Akonadi::Collection AclManager::collection() const

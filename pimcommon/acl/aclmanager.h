@@ -106,6 +106,8 @@ Q_SIGNALS:
      */
     void collectionChanged(const Akonadi::Collection &collection);
 
+    void collectionCanBeAdministrated(bool canAdmin);
+
 private:
     //@cond PRIVATE
     class Private;

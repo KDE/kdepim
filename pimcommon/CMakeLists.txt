@@ -156,6 +156,7 @@ set(libpimcommon_acl_SRCS
   acl/collectionaclpage.cpp
   acl/imapaclattribute.cpp
   acl/collectionaclwidget.cpp
+  acl/acllistview.cpp
 )
 
 

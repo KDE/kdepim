@@ -17,6 +17,7 @@
 
 #include "aclmanager.h"
 #include "collectionaclwidget.h"
+#include "acllistview.h"
 
 #include <KLocalizedString>
 #include <QVBoxLayout>
@@ -81,7 +82,7 @@ CollectionAclWidget::CollectionAclWidget(QWidget *parent)
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
 
-    QListView *view = new QListView;
+    AclListView *view = new AclListView;
     view->setObjectName(QStringLiteral("list_view"));
     layout->addWidget(view);
 
@@ -113,6 +114,7 @@ CollectionAclWidget::CollectionAclWidget(QWidget *parent)
     buttonBoxVBoxLayout->addWidget(spacer);
     spacer->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
     connect(view, SIGNAL(doubleClicked(QModelIndex)), mAclManager->editAction(), SIGNAL(triggered()));
+    connect(mAclManager, &AclManager::collectionCanBeAdministrated, view, &AclListView::slotCollectionCanBeAdministrated);
 }
 
 CollectionAclWidget::~CollectionAclWidget()

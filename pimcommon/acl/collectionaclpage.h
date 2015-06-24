@@ -1,4 +1,3 @@
-//
 /**
  * folderdialogacltab.h
  *
