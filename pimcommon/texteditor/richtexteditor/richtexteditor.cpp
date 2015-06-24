@@ -33,6 +33,7 @@
 #include <Sonnet/Highlighter>
 #include <sonnet/speller.h>
 #include <pimcommon/texttospeech/texttospeech.h>
+#include <SonnetCore/sonnet/backgroundchecker.h>
 
 #include <QMenu>
 #include <QContextMenuEvent>
@@ -74,6 +75,7 @@ public:
         delete speller;
     }
 
+    QStringList ignoreSpellCheckingWords;
     RichTextEditor *q;
     PimCommon::TextMessageIndicator *textIndicator;
     QString spellCheckingConfigFileName;
@@ -264,6 +266,12 @@ bool RichTextEditor::webShortcutSupport() const
     return (d->supportFeatures & AllowWebShortcut);
 }
 
+void RichTextEditor::addIgnoreWords(const QStringList &lst)
+{
+    d->ignoreSpellCheckingWords = lst;
+    addIgnoreWordsToHighLighter();
+}
+
 void RichTextEditor::setSearchSupport(bool b)
 {
     if (b) {
@@ -399,6 +407,11 @@ void RichTextEditor::checkSpelling(bool force)
     if (!d->spellCheckingLanguage.isEmpty()) {
         backgroundSpellCheck->changeLanguage(d->spellCheckingLanguage);
     }
+    if (!d->ignoreSpellCheckingWords.isEmpty()) {
+        Q_FOREACH(const QString &word, d->ignoreSpellCheckingWords) {
+            backgroundSpellCheck->speller().addToSession(word);
+        }
+    }
     Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, force ? this : Q_NULLPTR);
     backgroundSpellCheck->setParent(spellDialog);
     spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
@@ -489,10 +502,21 @@ Sonnet::SpellCheckDecorator *RichTextEditor::createSpellCheckDecorator()
     return new RichTextDecorator(this);
 }
 
+void RichTextEditor::addIgnoreWordsToHighLighter()
+{
+    if (d->ignoreSpellCheckingWords.isEmpty())
+        return;
+    if (d->richTextDecorator) {
+        Sonnet::Highlighter * _highlighter = d->richTextDecorator->highlighter();
+        Q_FOREACH(const QString &word, d->ignoreSpellCheckingWords) {
+            _highlighter->ignoreWord(word);
+        }
+    }
+}
+
 void RichTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
 {
     Sonnet::SpellCheckDecorator *decorator = createSpellCheckDecorator();
-    addIgnoreWords(_highLighter);
     delete decorator->highlighter();
     decorator->setHighlighter(_highLighter);
 
@@ -500,11 +524,7 @@ void RichTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
     //so we reparent the highlighter so it will be deleted when the decorator is destroyed
     _highLighter->setParent(decorator);
     d->richTextDecorator = decorator;
-}
-
-void RichTextEditor::addIgnoreWords(Sonnet::Highlighter *_highLighter)
-{
-    Q_UNUSED(_highLighter);
+    addIgnoreWordsToHighLighter();
 }
 
 void RichTextEditor::focusInEvent(QFocusEvent *event)

@@ -88,6 +88,8 @@ public:
     void setWebShortcutSupport(bool b);
     bool webShortcutSupport() const;
 
+    void addIgnoreWords(const QStringList &lst);
+
 Q_SIGNALS:
     void say(const QString &text);
 
@@ -117,7 +119,6 @@ protected:
     QMenu *mousePopupMenu(const QPoint &pos);
     virtual Sonnet::SpellCheckDecorator *createSpellCheckDecorator();
     void setHighlighter(Sonnet::Highlighter *_highLighter);
-    virtual void addIgnoreWords(Sonnet::Highlighter *_highLighter);
 
     virtual void updateHighLighter();
     virtual void clearDecorator();
@@ -132,6 +133,7 @@ Q_SIGNALS:
     void spellCheckingCanceled();
 
 private:
+    void addIgnoreWordsToHighLighter();
     bool handleShortcut(const QKeyEvent *event);
     bool overrideShortcut(const QKeyEvent *event);
     void deleteWordBack();
