@@ -83,7 +83,7 @@ public:
 
     bool isBinary() const;
 
-    static QPixmap icon(QMimeType mimeType, const QString &uri, bool binary = false);
+    static QPixmap icon(const QMimeType &mimeType, const QString &uri, bool binary = false);
     QPixmap icon() const;
 
     void readAttachment();

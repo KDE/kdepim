@@ -134,7 +134,7 @@ QPixmap AttachmentIconItem::icon() const
                 mAttachment->uri(), mAttachment->isBinary());
 }
 
-QPixmap AttachmentIconItem::icon(QMimeType mimeType,
+QPixmap AttachmentIconItem::icon(const QMimeType &mimeType,
                                  const QString &uri,
                                  bool binary)
 {
@@ -145,7 +145,6 @@ QPixmap AttachmentIconItem::icon(QMimeType mimeType,
     if (!uri.isEmpty() && !binary) {
         overlays << "emblem-link";
     }
-
     return KIconLoader::global()->loadIcon(iconStr, KIconLoader::Desktop, 0,
                                            KIconLoader::DefaultState,
                                            overlays);
