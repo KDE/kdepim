@@ -114,20 +114,20 @@ void SearchWidget::querySelected(int index)
                                    "  ?person <http://www.semanticdesktop.org/ontologies/2007/03/22/nco#hasEmailAddress> ?email .\n"
                                    "  ?email <http://www.semanticdesktop.org/ontologies/2007/03/22/nco#emailAddress> \"tokoe@kde.org\"^^<http://www.w3.org/2001/XMLSchema#string> .\n"
                                    " }\n"
-                                  ));
+                                                 ));
     } else if (index == 2) {
         mQueryWidget->setPlainText(QStringLiteral("prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>\n"
                                    "SELECT ?r WHERE {\n"
                                    "  ?r nco:fullname \"Tobias Koenig\"^^<http://www.w3.org/2001/XMLSchema#string>.\n"
                                    "}\n"
-                                  ));
+                                                 ));
     } else if (index == 3) {
         mQueryWidget->setPlainText(QStringLiteral("SELECT ?mail WHERE {\n"
                                    " ?mail <http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#from> ?person .\n"
                                    " ?person <http://www.semanticdesktop.org/ontologies/2007/03/22/nco#fullname> "
                                    "'Martin Koller'^^<http://www.w3.org/2001/XMLSchema#string> .\n"
                                    "}\n"
-                                  ));
+                                                 ));
     }
 }
 

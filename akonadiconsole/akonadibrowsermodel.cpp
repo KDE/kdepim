@@ -80,7 +80,7 @@ public:
     MailState()
     {
         m_collectionHeaders << QStringLiteral("Collection");
-        m_itemHeaders <<QStringLiteral( "Subject") << QStringLiteral("Sender") << QStringLiteral("Date");
+        m_itemHeaders << QStringLiteral("Subject") << QStringLiteral("Sender") << QStringLiteral("Date");
     }
     virtual ~MailState() {}
 

@@ -57,7 +57,7 @@ MainWidget::MainWidget(KXmlGuiWindow *parent)
     tabWidget->setObjectName(QStringLiteral("mainTab"));
     layout->addWidget(tabWidget);
 
-    tabWidget->addTab(new AgentWidget(tabWidget),QStringLiteral( "Agents"));
+    tabWidget->addTab(new AgentWidget(tabWidget), QStringLiteral("Agents"));
     mBrowser = new BrowserWidget(parent, tabWidget);
     tabWidget->addTab(mBrowser, QStringLiteral("Browser"));
     tabWidget->addTab(new DebugWidget(tabWidget), QStringLiteral("Debugger"));
