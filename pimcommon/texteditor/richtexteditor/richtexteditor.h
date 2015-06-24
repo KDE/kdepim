@@ -45,7 +45,8 @@ public:
         Search = 1,
         SpellChecking = 2,
         TextToSpeech = 4,
-        AllowTab = 8
+        AllowTab = 8,
+        AllowWebShortcut = 16
     };
     Q_DECLARE_FLAGS(SupportFeatures, SupportFeature)
 
@@ -81,6 +82,10 @@ public:
 
     void forceSpellChecking();
     QString spellCheckingConfigFileName() const;
+
+    void setWebShortcutSupport(bool b);
+    bool webShortcutSupport() const;
+
 Q_SIGNALS:
     void say(const QString &text);
 

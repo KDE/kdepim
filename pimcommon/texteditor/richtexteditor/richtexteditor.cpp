@@ -66,6 +66,7 @@ public:
         supportFeatures |= RichTextEditor::SpellChecking;
         supportFeatures |= RichTextEditor::TextToSpeech;
         supportFeatures |= RichTextEditor::AllowTab;
+        supportFeatures |= RichTextEditor::AllowWebShortcut;
     }
     ~RichTextEditorPrivate()
     {
@@ -226,7 +227,7 @@ QMenu *RichTextEditor::mousePopupMenu(const QPoint &pos)
             speakAction->setEnabled(!emptyDocument);
             connect(speakAction, &QAction::triggered, this, &RichTextEditor::slotSpeakText);
         }
-        if (textCursor().hasSelection()) {
+        if (webShortcutSupport() && textCursor().hasSelection()) {
             popup->addSeparator();
             const QString selectedText = textCursor().selectedText();
             d->webshortcutMenuManager->setSelectedText(selectedText);
@@ -247,6 +248,20 @@ void RichTextEditor::slotSpeakText()
         text = toPlainText();
     }
     Q_EMIT say(text);
+}
+
+void RichTextEditor::setWebShortcutSupport(bool b)
+{
+    if (b) {
+        d->supportFeatures |= AllowWebShortcut;
+    } else {
+        d->supportFeatures = (d->supportFeatures & ~ AllowWebShortcut);
+    }
+}
+
+bool RichTextEditor::webShortcutSupport() const
+{
+    return (d->supportFeatures & AllowWebShortcut);
 }
 
 void RichTextEditor::setSearchSupport(bool b)
