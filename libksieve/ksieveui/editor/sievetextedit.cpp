@@ -21,7 +21,7 @@
 #include "editor/sieveeditorutil.h"
 #include "sievesyntaxhighlighter.h"
 #include "util/editorutil.h"
-
+#include "editor/sievetexteditorspellcheckdecorator.h"
 #include <KLocalizedString>
 #include <QAction>
 #include <QIcon>
@@ -162,6 +162,11 @@ bool SieveTextEdit::event(QEvent *ev)
         }
     }
     return PimCommon::PlainTextEditor::event(ev);
+}
+
+Sonnet::SpellCheckDecorator *SieveTextEdit::createSpellCheckDecorator()
+{
+    return new SieveTextEditorSpellCheckDecorator(this);
 }
 
 bool SieveTextEdit::overrideShortcut(QKeyEvent *event)

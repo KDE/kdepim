@@ -53,6 +53,7 @@ set(ksieveui_editor_LIB_SRCS
   editor/sieveeditorloadprogressindicator.cpp
   editor/sieveeditorwebview.cpp
   editor/sieveeditormenubar.cpp
+  editor/sievetexteditorspellcheckdecorator.cpp
 )
 
 set(ksieveui_autocreatescripts_LIB_SRCS

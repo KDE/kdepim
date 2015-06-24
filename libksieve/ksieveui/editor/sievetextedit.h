@@ -71,6 +71,7 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void addExtraMenuEntry(QMenu *menu, const QPoint &pos) Q_DECL_OVERRIDE;
     bool event(QEvent *ev) Q_DECL_OVERRIDE;
+    Sonnet::SpellCheckDecorator *createSpellCheckDecorator() Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void openHelp(const QString &url);
