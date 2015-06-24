@@ -117,6 +117,7 @@ protected:
     QMenu *mousePopupMenu(const QPoint &pos);
     virtual Sonnet::SpellCheckDecorator *createSpellCheckDecorator();
     void setHighlighter(Sonnet::Highlighter *_highLighter);
+    virtual void addIgnoreWords(Sonnet::Highlighter *_highLighter);
 
     virtual void updateHighLighter();
     virtual void clearDecorator();

@@ -492,6 +492,7 @@ Sonnet::SpellCheckDecorator *RichTextEditor::createSpellCheckDecorator()
 void RichTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
 {
     Sonnet::SpellCheckDecorator *decorator = createSpellCheckDecorator();
+    addIgnoreWords(_highLighter);
     delete decorator->highlighter();
     decorator->setHighlighter(_highLighter);
 
@@ -499,6 +500,11 @@ void RichTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
     //so we reparent the highlighter so it will be deleted when the decorator is destroyed
     _highLighter->setParent(decorator);
     d->richTextDecorator = decorator;
+}
+
+void RichTextEditor::addIgnoreWords(Sonnet::Highlighter *_highLighter)
+{
+    Q_UNUSED(_highLighter);
 }
 
 void RichTextEditor::focusInEvent(QFocusEvent *event)
