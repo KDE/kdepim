@@ -49,10 +49,7 @@ ConnectionPage::ConnectionPage(const QString &identifier, QWidget *parent)
 
 void ConnectionPage::connectionDataInput(const QString &identifier, const QString &msg)
 {
-    QString str;
-    if (mShowAllConnections) {
-        str += identifier + QLatin1Char(' ');
-    }
+    QString str = QStringLiteral("<font color=\"green\">%2</font>").arg(identifier) + QLatin1Char(' ');
     if (mShowAllConnections || identifier == mIdentifier) {
         str += QStringLiteral("<font color=\"red\">%1</font>").arg(msg.toHtmlEscaped());
         mDataView->append(str);
@@ -61,12 +58,9 @@ void ConnectionPage::connectionDataInput(const QString &identifier, const QStrin
 
 void ConnectionPage::connectionDataOutput(const QString &identifier, const QString &msg)
 {
-    QString str;
-    if (mShowAllConnections) {
-        str += identifier + QLatin1Char(' ');
-    }
+    QString str = QStringLiteral("<font color=\"green\">%2</font>").arg(identifier) + QLatin1Char(' ');
     if (mShowAllConnections || identifier == mIdentifier) {
-        str += QStringLiteral("<font color=\"blue\">%1</font>").arg(msg.toHtmlEscaped());
+        str += msg.toHtmlEscaped();
         mDataView->append(str);
     }
 }
