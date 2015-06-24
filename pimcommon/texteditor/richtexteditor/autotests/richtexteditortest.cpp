@@ -37,6 +37,8 @@ void RichTextEditorTest::shouldHaveDefaultValue()
     QCOMPARE(editor.searchSupport(), true);
     QCOMPARE(editor.activateLanguageMenu(), true);
     QCOMPARE(editor.showAutoCorrectButton(), false);
+    QCOMPARE(editor.allowTabSupport(), true);
+    QCOMPARE(editor.webShortcutSupport(), true);
 }
 
 void RichTextEditorTest::shouldChangeSpellCheckValue()
@@ -51,6 +53,12 @@ void RichTextEditorTest::shouldChangeSpellCheckValue()
     editor.setSearchSupport(false);
     QCOMPARE(editor.searchSupport(), false);
 
+    editor.setAllowTabSupport(false);
+    QCOMPARE(editor.allowTabSupport(), false);
+
+    editor.setWebShortcutSupport(false);
+    QCOMPARE(editor.webShortcutSupport(), false);
+
     editor.setSpellCheckingSupport(true);
     QCOMPARE(editor.spellCheckingSupport(), true);
 
@@ -59,6 +67,12 @@ void RichTextEditorTest::shouldChangeSpellCheckValue()
 
     editor.setSearchSupport(true);
     QCOMPARE(editor.searchSupport(), true);
+
+    editor.setAllowTabSupport(true);
+    QCOMPARE(editor.allowTabSupport(), true);
+
+    editor.setWebShortcutSupport(true);
+    QCOMPARE(editor.webShortcutSupport(), true);
 }
 
 QTEST_MAIN(RichTextEditorTest)

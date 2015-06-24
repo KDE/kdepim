@@ -37,6 +37,8 @@ class PIMCOMMON_EXPORT RichTextEditor : public QTextEdit
     Q_PROPERTY(bool spellCheckingSupport READ spellCheckingSupport WRITE setSpellCheckingSupport)
     Q_PROPERTY(bool textToSpeechSupport READ textToSpeechSupport WRITE setTextToSpeechSupport)
     Q_PROPERTY(bool activateLanguageMenu READ activateLanguageMenu WRITE setActivateLanguageMenu)
+    Q_PROPERTY(bool tabSupport READ allowTabSupport WRITE setAllowTabSupport)
+    Q_PROPERTY(bool webShortcutSupport READ webShortcutSupport WRITE setWebShortcutSupport)
 public:
     explicit RichTextEditor(QWidget *parent = Q_NULLPTR);
     ~RichTextEditor();
