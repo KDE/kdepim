@@ -124,8 +124,8 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
             //const QString name = e.attribute( QLatin1String( "name" ) ); We don't use it in kmail
 
             ldapStruct ldap;
-            const QString relative_uri = e.attribute(QLatin1String("relative_uri"));
-            const QString uri = e.attribute(QLatin1String("uri"));
+            const QString relative_uri = e.attribute(QStringLiteral("relative_uri"));
+            const QString uri = e.attribute(QStringLiteral("uri"));
             QUrl url(uri);
             ldap.port = url.port();
             ldap.ldapUrl = url;
@@ -207,10 +207,10 @@ void EvolutionSettings::extractSignatureInfo(const QString &info)
         KIdentityManagement::Signature signature;
 
         const QString tag = e.tagName();
-        const QString uid = e.attribute(QLatin1String("uid"));
-        const QString signatureName = e.attribute(QLatin1String("name"));     //Use it ?
-        const QString format = e.attribute(QLatin1String("text"));
-        const bool automatic = (e.attribute(QLatin1String("auto")) == QLatin1String("true"));
+        const QString uid = e.attribute(QStringLiteral("uid"));
+        const QString signatureName = e.attribute(QStringLiteral("name"));     //Use it ?
+        const QString format = e.attribute(QStringLiteral("text"));
+        const bool automatic = (e.attribute(QStringLiteral("auto")) == QLatin1String("true"));
         if (automatic) {
             //TODO:
         } else {
@@ -221,7 +221,7 @@ void EvolutionSettings::extractSignatureInfo(const QString &info)
             }
 
             if (tag == QLatin1String("filename")) {
-                if (e.hasAttribute(QLatin1String("script")) && e.attribute(QLatin1String("script")) == QLatin1String("true")) {
+                if (e.hasAttribute(QStringLiteral("script")) && e.attribute(QStringLiteral("script")) == QLatin1String("true")) {
                     signature.setUrl(e.text(), true);
                     signature.setType(KIdentityManagement::Signature::FromCommand);
                 } else {
@@ -295,16 +295,16 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                 }
             }
         } else if (tag == QLatin1String("source")) {
-            if (e.hasAttribute(QLatin1String("save-passwd")) && e.attribute(QStringLiteral("save-passwd")) == QLatin1String("true")) {
+            if (e.hasAttribute(QStringLiteral("save-passwd")) && e.attribute(QStringLiteral("save-passwd")) == QLatin1String("true")) {
                 //TODO
             }
             int interval = -1;
             bool intervalCheck = false;
-            if (e.hasAttribute(QLatin1String("auto-check"))) {
-                intervalCheck = (e.attribute(QLatin1String("auto-check")) == QLatin1String("true"));
+            if (e.hasAttribute(QStringLiteral("auto-check"))) {
+                intervalCheck = (e.attribute(QStringLiteral("auto-check")) == QLatin1String("true"));
             }
-            if (e.hasAttribute(QLatin1String("auto-check-timeout"))) {
-                interval = e.attribute(QLatin1String("auto-check-timeout")).toInt();
+            if (e.hasAttribute(QStringLiteral("auto-check-timeout"))) {
+                interval = e.attribute(QStringLiteral("auto-check-timeout")).toInt();
             }
             for (QDomElement server = e.firstChildElement(); !server.isNull(); server = server.nextSiblingElement()) {
                 const QString serverTag = server.tagName();
@@ -378,7 +378,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                         if (interval > -1) {
                             settings.insert(QLatin1String("IntervalCheckInterval"), interval);
                         }
-                        if (e.hasAttribute(QLatin1String("keep-on-server")) && e.attribute(QLatin1String("keep-on-server")) == QLatin1String("true")) {
+                        if (e.hasAttribute(QStringLiteral("keep-on-server")) && e.attribute(QStringLiteral("keep-on-server")) == QLatin1String("true")) {
                             settings.insert(QLatin1String("LeaveOnServer"), true);
                         }
                         addAuth(settings, QLatin1String("AuthenticationMethod"), userName);
@@ -496,38 +496,38 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                 newIdentity->setBcc(text);
             }
         } else if (tag == QLatin1String("receipt-policy")) {
-            if (e.hasAttribute(QLatin1String("policy"))) {
-                const QString policy = e.attribute(QLatin1String("policy"));
+            if (e.hasAttribute(QStringLiteral("policy"))) {
+                const QString policy = e.attribute(QStringLiteral("policy"));
                 //TODO
             }
         } else if (tag == QLatin1String("pgp")) {
-            if (e.hasAttribute(QLatin1String("encrypt-to-self")) &&
-                    (e.attribute(QLatin1String("encrypt-to-self")) == QLatin1String("true"))) {
+            if (e.hasAttribute(QStringLiteral("encrypt-to-self")) &&
+                    (e.attribute(QStringLiteral("encrypt-to-self")) == QLatin1String("true"))) {
                 //TODO
             }
-            if (e.hasAttribute(QLatin1String("always-trust")) &&
-                    (e.attribute(QLatin1String("always-trust")) == QLatin1String("true"))) {
+            if (e.hasAttribute(QStringLiteral("always-trust")) &&
+                    (e.attribute(QStringLiteral("always-trust")) == QLatin1String("true"))) {
                 //TODO
             }
-            if (e.hasAttribute(QLatin1String("always-sign")) &&
-                    (e.attribute(QLatin1String("always-sign")) == QLatin1String("true"))) {
+            if (e.hasAttribute(QStringLiteral("always-sign")) &&
+                    (e.attribute(QStringLiteral("always-sign")) == QLatin1String("true"))) {
                 //TODO
             }
-            if (e.hasAttribute(QLatin1String("no-imip-sign")) &&
-                    (e.attribute(QLatin1String("no-imip-sign")) == QLatin1String("true"))) {
+            if (e.hasAttribute(QStringLiteral("no-imip-sign")) &&
+                    (e.attribute(QStringLiteral("no-imip-sign")) == QLatin1String("true"))) {
                 //TODO
             }
         } else if (tag == QLatin1String("smime")) {
-            if (e.hasAttribute(QLatin1String("sign-default")) &&
-                    (e.attribute(QLatin1String("sign-default")) == QLatin1String("true"))) {
+            if (e.hasAttribute(QStringLiteral("sign-default")) &&
+                    (e.attribute(QStringLiteral("sign-default")) == QLatin1String("true"))) {
                 //TODO
             }
-            if (e.hasAttribute(QLatin1String("encrypt-default")) &&
-                    (e.attribute(QLatin1String("encrypt-default")) == QLatin1String("true"))) {
+            if (e.hasAttribute(QStringLiteral("encrypt-default")) &&
+                    (e.attribute(QStringLiteral("encrypt-default")) == QLatin1String("true"))) {
                 //TODO
             }
-            if (e.hasAttribute(QLatin1String("encrypt-to-self")) &&
-                    (e.attribute(QLatin1String("encrypt-to-self")) == QLatin1String("true"))) {
+            if (e.hasAttribute(QStringLiteral("encrypt-to-self")) &&
+                    (e.attribute(QStringLiteral("encrypt-to-self")) == QLatin1String("true"))) {
                 //TODO
             }
             //TODO

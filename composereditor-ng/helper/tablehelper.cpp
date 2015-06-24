@@ -199,8 +199,8 @@ int TableHelper::currentCellColSpan(const QWebElement &element)
 {
     QWebElement e = element;
     if (e.tagName().toLower() == tdStr()) {
-        if (e.hasAttribute(QLatin1String("colspan"))) {
-            return e.attribute(QLatin1String("colspan")).toInt();
+        if (e.hasAttribute(QStringLiteral("colspan"))) {
+            return e.attribute(QStringLiteral("colspan")).toInt();
         }
     }
     return -1;
@@ -210,8 +210,8 @@ int TableHelper::currentCellRowSpan(const QWebElement &element)
 {
     QWebElement e = element;
     if (e.tagName().toLower() == tdStr()) {
-        if (e.hasAttribute(QLatin1String("rowspan"))) {
-            return e.attribute(QLatin1String("rowspan")).toInt();
+        if (e.hasAttribute(QStringLiteral("rowspan"))) {
+            return e.attribute(QStringLiteral("rowspan")).toInt();
         }
     }
     return -1;

@@ -385,8 +385,8 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                 if (typeBlock == TypeBlockAction) {
                     currentPage = Q_NULLPTR;
                 }
-                if (e.hasAttribute(QLatin1String("name"))) {
-                    const QString controlType = e.attribute(QLatin1String("name"));
+                if (e.hasAttribute(QStringLiteral("name"))) {
+                    const QString controlType = e.attribute(QStringLiteral("name"));
                     //qCDebug(LIBKSIEVE_LOG)<<" controlType"<<controlType;
                     if (controlType == QLatin1String("if")) {
                         typeBlock = TypeBlockIf;
@@ -449,8 +449,8 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                     comment += e.text();
                 }
             } else if (tagName == QLatin1String("action")) {
-                if (e.hasAttribute(QLatin1String("name"))) {
-                    const QString actionName = e.attribute(QLatin1String("name"));
+                if (e.hasAttribute(QStringLiteral("name"))) {
+                    const QString actionName = e.attribute(QStringLiteral("name"));
                     if (actionName == QLatin1String("include")) {
                         if (!currentPage || (typeBlock == TypeBlockIf) || (typeBlock == TypeBlockElse) || (typeBlock == TypeBlockElsif)) {
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);

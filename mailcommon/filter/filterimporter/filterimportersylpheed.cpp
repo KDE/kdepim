@@ -60,8 +60,8 @@ QString FilterImporterSylpheed::defaultFiltersSettingsPath()
 
 void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::MailFilter *filter)
 {
-    if (e.hasAttribute(QLatin1String("bool"))) {
-        const QString attr = e.attribute(QLatin1String("bool"));
+    if (e.hasAttribute(QStringLiteral("bool"))) {
+        const QString attr = e.attribute(QStringLiteral("bool"));
         if (attr == QLatin1String("and")) {
             filter->pattern()->setOp(SearchPattern::OpAnd);
         } else if (attr == QLatin1String("or")) {
@@ -225,21 +225,21 @@ void FilterImporterSylpheed::parseActions(const QDomElement &e,
 void FilterImporterSylpheed::parseFilters(const QDomElement &e)
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
-    if (e.hasAttribute(QLatin1String("enabled"))) {
-        const QString attr = e.attribute(QLatin1String("enabled"));
+    if (e.hasAttribute(QStringLiteral("enabled"))) {
+        const QString attr = e.attribute(QStringLiteral("enabled"));
         if (attr == QLatin1String("false")) {
             filter->setEnabled(false);
         }
     }
 
-    if (e.hasAttribute(QLatin1String("name"))) {
-        const QString attr = e.attribute(QLatin1String("name"));
+    if (e.hasAttribute(QStringLiteral("name"))) {
+        const QString attr = e.attribute(QStringLiteral("name"));
         filter->pattern()->setName(attr);
         filter->setToolbarName(attr);
     }
 
-    if (e.hasAttribute(QLatin1String("timing"))) {
-        const QString attr = e.attribute(QLatin1String("timing"));
+    if (e.hasAttribute(QStringLiteral("timing"))) {
+        const QString attr = e.attribute(QStringLiteral("timing"));
         if (attr == QLatin1String("any")) {
             filter->setApplyOnInbound(true);
             filter->setApplyOnExplicit(true);

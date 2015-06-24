@@ -322,15 +322,15 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
 void FilterImporterEvolution::parseFilters(const QDomElement &e)
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
-    if (e.hasAttribute(QLatin1String("enabled"))) {
-        const QString attr = e.attribute(QLatin1String("enabled"));
+    if (e.hasAttribute(QStringLiteral("enabled"))) {
+        const QString attr = e.attribute(QStringLiteral("enabled"));
         if (attr == QLatin1String("false")) {
             filter->setEnabled(false);
         }
     }
 
-    if (e.hasAttribute(QLatin1String("grouping"))) {
-        const QString attr = e.attribute(QLatin1String("grouping"));
+    if (e.hasAttribute(QStringLiteral("grouping"))) {
+        const QString attr = e.attribute(QStringLiteral("grouping"));
         if (attr == QLatin1String("all")) {
             filter->pattern()->setOp(SearchPattern::OpAnd);
         } else if (attr == QLatin1String("any")) {
@@ -341,8 +341,8 @@ void FilterImporterEvolution::parseFilters(const QDomElement &e)
 
     }
 
-    if (e.hasAttribute(QLatin1String("source"))) {
-        const QString attr = e.attribute(QLatin1String("source"));
+    if (e.hasAttribute(QStringLiteral("source"))) {
+        const QString attr = e.attribute(QStringLiteral("source"));
         if (attr == QLatin1String("incoming")) {
             filter->setApplyOnInbound(true);
         } else if (attr == QLatin1String("outgoing")) {

@@ -68,7 +68,7 @@ static const int GPGCONF_FLAG_NO_CHANGE = 128; // readonly
 QString QGpgMECryptoConfig::gpgConfPath()
 {
     const GpgME::EngineInfo info = GpgME::engineInfo(GpgME::GpgConfEngine);
-    return info.fileName() ? QFile::decodeName(info.fileName()) : QStandardPaths::findExecutable(QLatin1String("gpgconf"));
+    return info.fileName() ? QFile::decodeName(info.fileName()) : QStandardPaths::findExecutable(QStringLiteral("gpgconf"));
 }
 
 QGpgMECryptoConfig::QGpgMECryptoConfig()

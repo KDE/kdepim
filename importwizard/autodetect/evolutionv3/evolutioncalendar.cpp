@@ -103,18 +103,18 @@ void EvolutionCalendar::extractCalendarInfo(const QString &info)
             if (tag == QLatin1String("source")) {
                 QString name;
                 QMap<QString, QVariant> settings;
-                if (e.hasAttribute(QLatin1String("uid"))) {
+                if (e.hasAttribute(QStringLiteral("uid"))) {
                 }
-                if (e.hasAttribute(QLatin1String("name"))) {
-                    name = e.attribute(QLatin1String("name"));
+                if (e.hasAttribute(QStringLiteral("name"))) {
+                    name = e.attribute(QStringLiteral("name"));
                     settings.insert(QLatin1String("DisplayName"), name);
                 }
-                if (e.hasAttribute(QLatin1String("relative_uri"))) {
-                    const QString path = mCalendarPath + e.attribute(QLatin1String("relative_uri")) + QLatin1String("/calendar.ics");
+                if (e.hasAttribute(QStringLiteral("relative_uri"))) {
+                    const QString path = mCalendarPath + e.attribute(QStringLiteral("relative_uri")) + QLatin1String("/calendar.ics");
                     settings.insert(QLatin1String("Path"), path);
                 }
-                if (e.hasAttribute(QLatin1String("color_spec"))) {
-                    //const QString color = e.attribute(QLatin1String("color_spec"));
+                if (e.hasAttribute(QStringLiteral("color_spec"))) {
+                    //const QString color = e.attribute(QStringLiteral("color_spec"));
                     //Need id.
                     //TODO: Need to get id for collection to add color.
                 }

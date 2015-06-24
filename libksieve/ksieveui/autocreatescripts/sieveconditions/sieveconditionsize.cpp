@@ -90,8 +90,8 @@ bool SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
             } else if (tagName == QLatin1String("num")) {
                 const qlonglong tagValue = e.text().toLongLong();
                 QString numIdentifier;
-                if (e.hasAttribute(QLatin1String("quantifier"))) {
-                    numIdentifier = e.attribute(QLatin1String("quantifier"));
+                if (e.hasAttribute(QStringLiteral("quantifier"))) {
+                    numIdentifier = e.attribute(QStringLiteral("quantifier"));
                 }
                 SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget *>(QLatin1String("sizewidget"));
                 sizeWidget->setCode(tagValue, numIdentifier, name(), error);

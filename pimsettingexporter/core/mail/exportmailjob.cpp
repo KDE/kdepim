@@ -52,7 +52,7 @@ ExportMailJob::~ExportMailJob()
 
 bool ExportMailJob::checkProgram()
 {
-    if (QStandardPaths::findExecutable(QLatin1String("mysqldump")).isEmpty()) {
+    if (QStandardPaths::findExecutable(QStringLiteral("mysqldump")).isEmpty()) {
         Q_EMIT error(i18n("mysqldump not found. Export data aborted"));
         return false;
     }

@@ -274,7 +274,7 @@ void PimSettingExporterWindow::loadData(const QString &filename, const QString &
 
 bool PimSettingExporterWindow::canZip() const
 {
-    const QString zip = QStandardPaths::findExecutable(QLatin1String("zip"));
+    const QString zip = QStandardPaths::findExecutable(QStringLiteral("zip"));
     if (zip.isEmpty()) {
         return false;
     }

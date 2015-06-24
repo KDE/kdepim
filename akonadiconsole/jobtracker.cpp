@@ -87,7 +87,7 @@ JobTracker::JobTracker(const char *name, QObject *parent)
     : QObject(parent), d(new Private(this))
 {
     new JobTrackerAdaptor(this);
-    QDBusConnection::sessionBus().registerService(QLatin1String("org.kde.akonadiconsole"));
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.akonadiconsole"));
     QDBusConnection::sessionBus().registerObject(QLatin1Char('/') + QLatin1String(name),
             this, QDBusConnection::ExportAdaptors);
 

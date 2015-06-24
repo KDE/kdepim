@@ -117,19 +117,19 @@ bool ImportLibreOfficeAutocorrection::importFile(Type type, const KArchiveDirect
                     if (tag == QLatin1String("block-list:block")) {
                         switch (type) {
                         case DOCUMENT:
-                            if (e.hasAttribute(QLatin1String("block-list:abbreviated-name")) && e.hasAttribute(QLatin1String("block-list:name"))) {
-                                mAutocorrectEntries.insert(e.attribute(QLatin1String("block-list:abbreviated-name")), e.attribute(QLatin1String("block-list:name")));
+                            if (e.hasAttribute(QStringLiteral("block-list:abbreviated-name")) && e.hasAttribute(QStringLiteral("block-list:name"))) {
+                                mAutocorrectEntries.insert(e.attribute(QStringLiteral("block-list:abbreviated-name")), e.attribute(QStringLiteral("block-list:name")));
                             }
                             break;
                         case SENTENCE:
-                            if (e.hasAttribute(QLatin1String("block-list:abbreviated-name"))) {
-                                mTwoUpperLetterExceptions.insert(e.attribute(QLatin1String("block-list:abbreviated-name")));
+                            if (e.hasAttribute(QStringLiteral("block-list:abbreviated-name"))) {
+                                mTwoUpperLetterExceptions.insert(e.attribute(QStringLiteral("block-list:abbreviated-name")));
                             }
 
                             break;
                         case WORD:
-                            if (e.hasAttribute(QLatin1String("block-list:abbreviated-name"))) {
-                                mUpperCaseExceptions.insert(e.attribute(QLatin1String("block-list:abbreviated-name")));
+                            if (e.hasAttribute(QStringLiteral("block-list:abbreviated-name"))) {
+                                mUpperCaseExceptions.insert(e.attribute(QStringLiteral("block-list:abbreviated-name")));
                             }
                             break;
 
