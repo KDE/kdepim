@@ -883,7 +883,7 @@ QDebug operator<<(QDebug s, const Node::Ptr &node)
     static int level = 0;
     ++level;
     QString padding = QString(level - 1, QLatin1Char(' '));
-    s << padding + QLatin1String("node") << node.data() << QLatin1String(";uid=") << node->uid << QLatin1String(";id=") << node->id << QLatin1String(";parentUid=") << node->parentUid << QLatin1String(";parentNode=") << (void *)(node->parentNode.data()) << '\n';
+    s << padding + QLatin1String("node") << node.data() << QStringLiteral(";uid=") << node->uid << QStringLiteral(";id=") << node->id << QStringLiteral(";parentUid=") << node->parentUid << QStringLiteral(";parentNode=") << (void *)(node->parentNode.data()) << '\n';
 
     foreach (const Node::Ptr &child, node->directChilds) {
         s << child;

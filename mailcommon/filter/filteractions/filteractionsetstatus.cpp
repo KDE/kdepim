@@ -95,6 +95,6 @@ QString FilterActionSetStatus::sieveCode() const
 
 QStringList FilterActionSetStatus::sieveRequires() const
 {
-    return QStringList() << QLatin1String("imap4flags");
+    return QStringList() << QStringLiteral("imap4flags");
 }
 

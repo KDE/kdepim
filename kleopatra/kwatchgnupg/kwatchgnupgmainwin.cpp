@@ -101,7 +101,7 @@ void KWatchGnuPGMainWindow::slotClear()
 
 void KWatchGnuPGMainWindow::createActions()
 {
-    QAction *action = actionCollection()->addAction(QLatin1String("clear_log"));
+    QAction *action = actionCollection()->addAction(QStringLiteral("clear_log"));
     action->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-history")));
     action->setText(i18n("C&lear History"));
     connect(action, &QAction::triggered, this, &KWatchGnuPGMainWindow::slotClear);
@@ -141,7 +141,7 @@ void KWatchGnuPGMainWindow::startWatcher()
     {
         const KConfigGroup config(KSharedConfig::openConfig(), "WatchGnuPG");
         *mWatcher << config.readEntry("Executable", WATCHGNUPGBINARY);
-        *mWatcher << QLatin1String("--force");
+        *mWatcher << QStringLiteral("--force");
         *mWatcher << config.readEntry("Socket", WATCHGNUPGSOCKET);
     }
 

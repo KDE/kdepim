@@ -393,13 +393,13 @@ void MainWindow::Private::setupActions()
 
     focusToClickSearchAction = new QAction(i18n("Set Focus to Quick Search"), q);
     focusToClickSearchAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_Q));
-    coll->addAction(QLatin1String("focus_to_quickseach"), focusToClickSearchAction);
+    coll->addAction(QStringLiteral("focus_to_quickseach"), focusToClickSearchAction);
     connect(focusToClickSearchAction, SIGNAL(triggered(bool)), q, SLOT(slotFocusQuickSearch()));
     clipboadMenu = new ClipboardMenu(q);
     clipboadMenu->setMainWindow(q);
     clipboadMenu->clipboardMenu()->setIcon(QIcon::fromTheme(QStringLiteral("edit-paste")));
     clipboadMenu->clipboardMenu()->setDelayed(false);
-    coll->addAction(QLatin1String("clipboard_menu"), clipboadMenu->clipboardMenu());
+    coll->addAction(QStringLiteral("clipboard_menu"), clipboadMenu->clipboardMenu());
 
     q->createStandardStatusBarAction();
     q->setStandardToolBarMenuEnabled(true);

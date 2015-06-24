@@ -284,7 +284,7 @@ void SieveIncludeWidgetLister::updateAddRemoveButton()
 
 void SieveIncludeWidgetLister::generatedScript(QString &script, QStringList &requires)
 {
-    requires << QLatin1String("include");
+    requires << QStringLiteral("include");
     const QList<QWidget *> widgetList = widgets();
     QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();

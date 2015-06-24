@@ -548,18 +548,18 @@ void AttachmentControllerBase::createActions()
 
     // Insert the actions into the composer window's menu.
     KActionCollection *collection = d->mActionCollection;
-    collection->addAction(QLatin1String("attach_public_key"), d->attachPublicKeyAction);
-    collection->addAction(QLatin1String("attach_my_public_key"), d->attachMyPublicKeyAction);
-    collection->addAction(QLatin1String("attach"), d->addAttachmentFileAction);
-    collection->addAction(QLatin1String("attach_directory"), d->addAttachmentDirectoryAction);
+    collection->addAction(QStringLiteral("attach_public_key"), d->attachPublicKeyAction);
+    collection->addAction(QStringLiteral("attach_my_public_key"), d->attachMyPublicKeyAction);
+    collection->addAction(QStringLiteral("attach"), d->addAttachmentFileAction);
+    collection->addAction(QStringLiteral("attach_directory"), d->addAttachmentDirectoryAction);
 
-    collection->addAction(QLatin1String("remove"), d->removeAction);
-    collection->addAction(QLatin1String("attach_save"), d->saveAsAction);
-    collection->addAction(QLatin1String("attach_properties"), d->propertiesAction);
-    collection->addAction(QLatin1String("select_all_attachment"), d->selectAllAction);
-    collection->addAction(QLatin1String("attach_menu"), d->attachmentMenu);
-    collection->addAction(QLatin1String("attach_own_vcard"), d->addOwnVcardAction);
-    collection->addAction(QLatin1String("attach_vcards"), d->attachVCardsAction);
+    collection->addAction(QStringLiteral("remove"), d->removeAction);
+    collection->addAction(QStringLiteral("attach_save"), d->saveAsAction);
+    collection->addAction(QStringLiteral("attach_properties"), d->propertiesAction);
+    collection->addAction(QStringLiteral("select_all_attachment"), d->selectAllAction);
+    collection->addAction(QStringLiteral("attach_menu"), d->attachmentMenu);
+    collection->addAction(QStringLiteral("attach_own_vcard"), d->addOwnVcardAction);
+    collection->addAction(QStringLiteral("attach_vcards"), d->attachVCardsAction);
 
     setSelectedParts(AttachmentPart::List());
     Q_EMIT actionsCreated();

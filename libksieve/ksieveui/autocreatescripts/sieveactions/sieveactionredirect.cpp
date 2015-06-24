@@ -142,13 +142,13 @@ QStringList SieveActionRedirect::needRequires(QWidget *parent) const
     if (mHasCopySupport) {
         const QCheckBox *copy = parent->findChild<QCheckBox *>(QLatin1String("copy"));
         if (copy->isChecked()) {
-            lst << QLatin1String("copy");
+            lst << QStringLiteral("copy");
         }
     }
     if (mHasListSupport) {
         const QCheckBox *list = parent->findChild<QCheckBox *>(QLatin1String("list"));
         if (list->isChecked()) {
-            lst << QLatin1String("extlists");
+            lst << QStringLiteral("extlists");
         }
     }
     return lst;

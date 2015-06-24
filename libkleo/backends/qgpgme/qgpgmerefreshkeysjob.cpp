@@ -90,8 +90,8 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess()
     mProcess->setObjectName(QLatin1String("gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks"));
 
     // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
-    *mProcess << QLatin1String("gpgsm") << QLatin1String("-k") << QLatin1String("--with-validation") << QLatin1String("--force-crl-refresh")
-              << QLatin1String("--enable-crl-checks");
+    *mProcess << QStringLiteral("gpgsm") << QStringLiteral("-k") << QStringLiteral("--with-validation") << QStringLiteral("--force-crl-refresh")
+              << QStringLiteral("--enable-crl-checks");
     unsigned int commandLineLength = MAX_CMD_LENGTH;
     commandLineLength -=
         strlen("gpgsm") + 1 + strlen("-k") + 1 +

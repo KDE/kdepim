@@ -135,17 +135,17 @@ QWidget *SieveActionFileInto::createParamWidget(QWidget *parent) const
 QStringList SieveActionFileInto::needRequires(QWidget *parent) const
 {
     QStringList lst;
-    lst << QLatin1String("fileinto");
+    lst << QStringLiteral("fileinto");
     if (mHasCopySupport) {
         const QCheckBox *copy = parent->findChild<QCheckBox *>(QLatin1String("copy"));
         if (copy->isChecked()) {
-            lst << QLatin1String("copy");
+            lst << QStringLiteral("copy");
         }
     }
     if (mHasMailBoxSupport) {
         const QCheckBox *create = parent->findChild<QCheckBox *>(QLatin1String("create"));
         if (create->isChecked()) {
-            lst << QLatin1String("mailbox");
+            lst << QStringLiteral("mailbox");
         }
     }
     return lst;

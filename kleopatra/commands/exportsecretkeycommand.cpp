@@ -106,25 +106,25 @@ QStringList ExportSecretKeyCommand::arguments() const
     QStringList result;
 
     if (key.protocol() == OpenPGP) {
-        result << gpgPath() << QLatin1String("--batch");
+        result << gpgPath() << QStringLiteral("--batch");
     } else {
         result << gpgSmPath();
     }
 
-    result << QLatin1String("--output") << m_filename;
+    result << QStringLiteral("--output") << m_filename;
 
     if (m_armor) {
-        result << QLatin1String("--armor");
+        result << QStringLiteral("--armor");
     }
 
     if (key.protocol() == CMS && !m_charset.isEmpty()) {
-        result << QLatin1String("--p12-charset") << QLatin1String(m_charset);
+        result << QStringLiteral("--p12-charset") << QLatin1String(m_charset);
     }
 
     if (key.protocol() == OpenPGP) {
-        result << QLatin1String("--export-secret-key");
+        result << QStringLiteral("--export-secret-key");
     } else {
-        result << QLatin1String("--export-secret-key-p12");
+        result << QStringLiteral("--export-secret-key-p12");
     }
 
     result << QLatin1String(key.primaryFingerprint());

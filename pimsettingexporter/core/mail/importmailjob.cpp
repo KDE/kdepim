@@ -772,14 +772,14 @@ void ImportMailJob::restoreConfig()
     restoreConfigFile(QLatin1String("kpimbalooblacklist"));
     //Restore notify file
     QStringList lstNotify;
-    lstNotify << QLatin1String("akonadi_mailfilter_agent.notifyrc")
-              << QLatin1String("akonadi_sendlater_agent.notifyrc")
-              << QLatin1String("akonadi_archivemail_agent.notifyrc")
-              << QLatin1String("kmail2.notifyrc")
-              << QLatin1String("akonadi_newmailnotifier_agent.notifyrc")
-              << QLatin1String("akonadi_maildispatcher_agent.notifyrc")
-              << QLatin1String("akonadi_followupreminder_agent.notifyrc")
-              << QLatin1String("messageviewer.notifyrc");
+    lstNotify << QStringLiteral("akonadi_mailfilter_agent.notifyrc")
+              << QStringLiteral("akonadi_sendlater_agent.notifyrc")
+              << QStringLiteral("akonadi_archivemail_agent.notifyrc")
+              << QStringLiteral("kmail2.notifyrc")
+              << QStringLiteral("akonadi_newmailnotifier_agent.notifyrc")
+              << QStringLiteral("akonadi_maildispatcher_agent.notifyrc")
+              << QStringLiteral("akonadi_followupreminder_agent.notifyrc")
+              << QStringLiteral("messageviewer.notifyrc");
 
     //We can't merge it.
     Q_FOREACH (const QString &filename, lstNotify) {
@@ -962,16 +962,16 @@ void ImportMailJob::restoreAkonadiDb()
             if (dbDriver == QLatin1String("QPSQL")) {
                 dbRestoreAppName = QLatin1String("pg_restore");
                 params << akonadiDataBase.options()
-                       << QLatin1String("--dbname=") + akonadiDataBase.name()
-                       << QLatin1String("--format=custom")
-                       << QLatin1String("--clean")
-                       << QLatin1String("--no-owner")
-                       << QLatin1String("--no-privileges")
+                       << QStringLiteral("--dbname=") + akonadiDataBase.name()
+                       << QStringLiteral("--format=custom")
+                       << QStringLiteral("--clean")
+                       << QStringLiteral("--no-owner")
+                       << QStringLiteral("--no-privileges")
                        << tmp.fileName();
             } else if (dbDriver == QLatin1String("QMYSQL")) {
                 dbRestoreAppName = QLatin1String("mysql");
                 params << akonadiDataBase.options()
-                       << QLatin1String("--database=") + akonadiDataBase.name();
+                       << QStringLiteral("--database=") + akonadiDataBase.name();
             } else {
                 Q_EMIT error(i18n("Database driver \"%1\" not supported.", dbDriver));
                 nextStep();

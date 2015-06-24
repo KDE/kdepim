@@ -304,7 +304,7 @@ bool MailWebView::removeAttachmentMarking(const QString &id)
     if (attachmentDiv.isNull()) {
         return false;
     }
-    attachmentDiv.removeAttribute(QLatin1String("style"));
+    attachmentDiv.removeAttribute(QStringLiteral("style"));
     return true;
 }
 
@@ -313,7 +313,7 @@ void MailWebView::markAttachment(const QString &id, const QString &style)
     QWebElement doc = page()->mainFrame()->documentElement();
     QWebElement attachmentDiv = doc.findFirst(QLatin1String("*#") + id);
     if (!attachmentDiv.isNull()) {
-        attachmentDiv.setAttribute(QLatin1String("style"), style);
+        attachmentDiv.setAttribute(QStringLiteral("style"), style);
     }
 }
 
@@ -373,7 +373,7 @@ void MailWebView::setElementByIdVisible(const QString &id, bool visible)
     Q_ASSERT(!e.isNull());
 
     if (visible) {
-        e.removeAttribute(QLatin1String("display"));
+        e.removeAttribute(QStringLiteral("display"));
     } else {
         e.setStyleProperty(QLatin1String("display"), QLatin1String("none"));
     }

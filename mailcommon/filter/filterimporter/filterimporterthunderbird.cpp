@@ -85,7 +85,7 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine(QTextStream &stream
                 //change priority
                 if (actionName == QLatin1String("Change priority")) {
                     QStringList lstValue;
-                    lstValue << QLatin1String("X-Priority");
+                    lstValue << QStringLiteral("X-Priority");
                     if (value == QLatin1String("Highest")) {
                         value = QLatin1String("1 (Highest)");
                     } else if (value == QLatin1String("High")) {

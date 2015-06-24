@@ -70,9 +70,9 @@ public:
     QStringList arguments() const
     {
         if (m_component.isEmpty()) {
-            return QStringList() << QLatin1String("--check-config");
+            return QStringList() << QStringLiteral("--check-config");
         } else {
-            return QStringList() << QLatin1String("--check-options") << m_component ;
+            return QStringList() << QStringLiteral("--check-options") << m_component ;
         }
     }
 
@@ -88,7 +88,7 @@ public:
 
         QProcess gpgconf;
         gpgconf.setReadChannel(QProcess::StandardOutput);
-        gpgconf.start(gpgConfPath(), QStringList() << QLatin1String("--list-dirs"), QIODevice::ReadOnly);
+        gpgconf.start(gpgConfPath(), QStringList() << QStringLiteral("--list-dirs"), QIODevice::ReadOnly);
         gpgconf.waitForFinished();
         if (gpgconf.exitStatus() != QProcess::NormalExit || gpgconf.exitCode() != 0) {
             qCDebug(KLEOPATRA_LOG) << "GpgConfCheck: \"gpgconf --list-dirs\" gives error, disabling";

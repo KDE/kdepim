@@ -131,7 +131,7 @@ QString SieveActionConvert::code(QWidget *w) const
 
 QStringList SieveActionConvert::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("convert");
+    return QStringList() << QStringLiteral("convert");
 }
 
 bool SieveActionConvert::needCheckIfServerHasCapability() const

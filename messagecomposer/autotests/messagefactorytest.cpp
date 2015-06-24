@@ -398,7 +398,7 @@ KMime::Message::Ptr MessageFactoryTest::createPlainTestMessage()
     KMime::Message::Ptr message = KMime::Message::Ptr(composer->resultMessages().first());
     delete composer;
 
-    MessageComposerSettings::self()->setPreferredCharsets(QStringList() << QLatin1String("us-ascii") << QLatin1String("iso-8859-1") << QLatin1String("utf-8"));
+    MessageComposerSettings::self()->setPreferredCharsets(QStringList() << QStringLiteral("us-ascii") << QStringLiteral("iso-8859-1") << QStringLiteral("utf-8"));
 
     return message;
 }

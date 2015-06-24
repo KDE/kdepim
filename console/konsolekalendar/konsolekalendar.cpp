@@ -82,7 +82,7 @@ bool KonsoleKalendar::printCalendarList()
 {
     Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(Akonadi::Collection::root(),
             Akonadi::CollectionFetchJob::Recursive);
-    QStringList mimeTypes = QStringList() << QLatin1String("text/calendar")
+    QStringList mimeTypes = QStringList() << QStringLiteral("text/calendar")
                             << KCalCore::Event::eventMimeType()
                             << KCalCore::Todo::todoMimeType()
                             << KCalCore::Journal::journalMimeType();

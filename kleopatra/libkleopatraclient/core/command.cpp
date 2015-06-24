@@ -472,7 +472,7 @@ static QString uiserver_executable()
 
 static QString start_uiserver()
 {
-    if (!QProcess::startDetached(uiserver_executable(), QStringList() << QLatin1String("--daemon"))) {
+    if (!QProcess::startDetached(uiserver_executable(), QStringList() << QStringLiteral("--daemon"))) {
         return Command::tr("Failed to start uiserver %1").arg(uiserver_executable());
     } else {
         return QString();

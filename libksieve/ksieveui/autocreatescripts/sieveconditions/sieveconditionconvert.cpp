@@ -92,7 +92,7 @@ QString SieveConditionConvert::code(QWidget *w) const
 
 QStringList SieveConditionConvert::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("convert");
+    return QStringList() << QStringLiteral("convert");
 }
 
 bool SieveConditionConvert::needCheckIfServerHasCapability() const

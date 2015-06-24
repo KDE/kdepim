@@ -529,7 +529,7 @@ public:
     }
     QStringList groupList() const
     {
-        return QStringList() << QLatin1String("General");
+        return QStringList() << QStringLiteral("General");
     }
     Kleo::CryptoConfigGroup *group(const QString &name) const
     {
@@ -557,7 +557,7 @@ public:
 
     QStringList componentList() const
     {
-        return QStringList() << QLatin1String("Chiasmus") ;
+        return QStringList() << QStringLiteral("Chiasmus") ;
     }
     ChiasmusComponent *component(const QString &name) const
     {

@@ -117,9 +117,9 @@ QStringList SieveActionKeep::needRequires(QWidget *) const
 {
     QStringList requiresLst;
     if (mHasImapFlag4Support) {
-        requiresLst << QLatin1String("imap4flags");
+        requiresLst << QStringLiteral("imap4flags");
     } else if (mHasFlagSupport) {
-        requiresLst << QLatin1String("imapflags");
+        requiresLst << QStringLiteral("imapflags");
     }
     return requiresLst;
 }

@@ -195,32 +195,32 @@ void ComposerTableCellFormatDialogPrivate::applyChanges()
         if (useBackgroundColor->isChecked()) {
             const QColor col = backgroundColor->color();
             if (col.isValid()) {
-                webElement.setAttribute(QLatin1String("bgcolor"), col.name());
+                webElement.setAttribute(QStringLiteral("bgcolor"), col.name());
             }
         } else {
-            webElement.removeAttribute(QLatin1String("bgcolor"));
+            webElement.removeAttribute(QStringLiteral("bgcolor"));
         }
         if (useVerticalAlignment->isChecked()) {
-            webElement.setAttribute(QLatin1String("valign"), verticalAlignment->itemData(verticalAlignment->currentIndex()).toString());
+            webElement.setAttribute(QStringLiteral("valign"), verticalAlignment->itemData(verticalAlignment->currentIndex()).toString());
         } else {
-            webElement.removeAttribute(QLatin1String("valign"));
+            webElement.removeAttribute(QStringLiteral("valign"));
         }
         if (useHorizontalAlignment->isChecked()) {
-            webElement.setAttribute(QLatin1String("align"), horizontalAlignment->itemData(horizontalAlignment->currentIndex()).toString());
+            webElement.setAttribute(QStringLiteral("align"), horizontalAlignment->itemData(horizontalAlignment->currentIndex()).toString());
         } else {
-            webElement.removeAttribute(QLatin1String("align"));
+            webElement.removeAttribute(QStringLiteral("align"));
         }
         const QString widthStr = width->value();
         if (widthStr.isEmpty()) {
-            webElement.removeAttribute(QLatin1String("width"));
+            webElement.removeAttribute(QStringLiteral("width"));
         } else {
-            webElement.setAttribute(QLatin1String("width"), widthStr);
+            webElement.setAttribute(QStringLiteral("width"), widthStr);
         }
         const QString heightStr = height->value();
         if (heightStr.isEmpty()) {
-            webElement.removeAttribute(QLatin1String("height"));
+            webElement.removeAttribute(QStringLiteral("height"));
         } else {
-            webElement.setAttribute(QLatin1String("height"), heightStr);
+            webElement.setAttribute(QStringLiteral("height"), heightStr);
         }
     }
 }

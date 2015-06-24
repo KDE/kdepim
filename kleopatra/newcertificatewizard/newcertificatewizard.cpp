@@ -1252,9 +1252,9 @@ void EnterDetailsPage::updateForm()
     QStringList attrOrder = config.readEntry(pgp() ? "OpenPGPAttributeOrder" : "DNAttributeOrder", QStringList());
     if (attrOrder.empty()) {
         if (pgp()) {
-            attrOrder << QLatin1String("NAME!") << QLatin1String("EMAIL!") << QLatin1String("COMMENT");
+            attrOrder << QStringLiteral("NAME!") << QStringLiteral("EMAIL!") << QStringLiteral("COMMENT");
         } else {
-            attrOrder << QLatin1String("CN!") << QLatin1String("L") << QLatin1String("OU") << QLatin1String("O!") << QLatin1String("C!") << QLatin1String("EMAIL!");
+            attrOrder << QStringLiteral("CN!") << QStringLiteral("L") << QStringLiteral("OU") << QStringLiteral("O!") << QStringLiteral("C!") << QStringLiteral("EMAIL!");
         }
     }
 
@@ -1425,17 +1425,17 @@ QStringList KeyCreationPage::keyUsages() const
 {
     QStringList usages;
     if (signingAllowed()) {
-        usages << QLatin1String("sign");
+        usages << QStringLiteral("sign");
     }
     if (encryptionAllowed() && !is_dsa(keyType())) {
-        usages << QLatin1String("encrypt");
+        usages << QStringLiteral("encrypt");
     }
     if (0)   // not needed in pgp (implied) and not supported in cms
         if (certificationAllowed()) {
-            usages << QLatin1String("certify");
+            usages << QStringLiteral("certify");
         }
     if (authenticationAllowed()) {
-        usages << QLatin1String("auth");
+        usages << QStringLiteral("auth");
     }
     return usages;
 }
@@ -1465,7 +1465,7 @@ QStringList KeyCreationPage::subkeyUsages() const
     if (encryptionAllowed() && is_dsa(keyType())) {
         assert(subkeyType());
         assert(is_elg(subkeyType()));
-        usages << QLatin1String("encrypt");
+        usages << QStringLiteral("encrypt");
     }
     return usages;
 }

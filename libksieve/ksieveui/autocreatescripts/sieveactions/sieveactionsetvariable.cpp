@@ -163,7 +163,7 @@ QString SieveActionSetVariable::code(QWidget *w) const
 
 QStringList SieveActionSetVariable::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("variables");
+    return QStringList() << QStringLiteral("variables");
 }
 
 bool SieveActionSetVariable::needCheckIfServerHasCapability() const

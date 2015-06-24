@@ -162,7 +162,7 @@ void ConfigReader::Private::readEntriesForComponent(ConfigComponent *component) 
 {
     assert(component);
     QStringList args;
-    args << QLatin1String("--list-options") << component->name();
+    args << QStringLiteral("--list-options") << component->name();
     GpgConfResult res = runGpgConf(args);
 
     std::auto_ptr<ConfigGroup> currentGroup;

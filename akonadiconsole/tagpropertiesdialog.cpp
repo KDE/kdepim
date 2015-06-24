@@ -286,7 +286,7 @@ void TagPropertiesDialog::slotAccept()
                                          "WHERE ");
         QStringList conds;
         for (int i = 0; i < mRemovedRIDs.count(); ++i) {
-            conds << QLatin1String("name = ?");
+            conds << QStringLiteral("name = ?");
         }
         queryStr += conds.join(QLatin1String(" OR ")) + QLatin1String(")");
         query.prepare(queryStr);
@@ -308,7 +308,7 @@ void TagPropertiesDialog::slotAccept()
             QString queryStr = QLatin1String("SELECT id, name FROM ResourceTable WHERE ");
             QStringList conds;
             for (int i = 0; i < mChangedRIDs.count(); ++i) {
-                conds << QLatin1String("name = ?");
+                conds << QStringLiteral("name = ?");
             }
             queryStr += conds.join(QLatin1String(" OR "));
             query.prepare(queryStr);

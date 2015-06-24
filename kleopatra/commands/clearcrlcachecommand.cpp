@@ -55,7 +55,7 @@ ClearCrlCacheCommand::~ClearCrlCacheCommand() {}
 
 QStringList ClearCrlCacheCommand::arguments() const
 {
-    return QStringList() << QLatin1String("dirmngr") << QLatin1String("--flush");
+    return QStringList() << QStringLiteral("dirmngr") << QStringLiteral("--flush");
     //return QStringList() << "gpgsm" << "--call-dirmngr" << "flush";
 }
 

@@ -194,7 +194,7 @@ private:
 
             const KConfigGroup config(KSharedConfig::openConfig(), "CertificateCreationWizard");
             const QStringList attrOrder = config.readEntry("OpenPGPAttributeOrder",
-                                          QStringList() << QLatin1String("NAME!") << QLatin1String("EMAIL!") << QLatin1String("COMMENT"));
+                                          QStringList() << QStringLiteral("NAME!") << QStringLiteral("EMAIL!") << QStringLiteral("COMMENT"));
 
             QMap<int, Line> lines;
 

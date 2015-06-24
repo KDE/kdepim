@@ -108,9 +108,9 @@ QStringList RefreshOpenPGPCertsCommand::arguments() const
     QStringList result;
     result << gpgPath();
     if (!haveKeyserverConfigured()) {
-        result << QLatin1String("--keyserver") << QLatin1String("keys.gnupg.net");
+        result << QStringLiteral("--keyserver") << QStringLiteral("keys.gnupg.net");
     }
-    result << QLatin1String("--refresh-keys");
+    result << QStringLiteral("--refresh-keys");
     return result;
 }
 

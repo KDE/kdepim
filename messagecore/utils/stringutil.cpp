@@ -1047,12 +1047,12 @@ QString cleanFileName(const QString &name)
 
 QString stripOffPrefixes(const QString &subject)
 {
-    static QStringList defaultReplyPrefixes = QStringList() << QLatin1String("Re\\s*:")
-            << QLatin1String("Re\\[\\d+\\]:")
-            << QLatin1String("Re\\d+:");
+    static QStringList defaultReplyPrefixes = QStringList() << QStringLiteral("Re\\s*:")
+            << QStringLiteral("Re\\[\\d+\\]:")
+            << QStringLiteral("Re\\d+:");
 
-    static QStringList defaultForwardPrefixes = QStringList() << QLatin1String("Fwd:")
-            << QLatin1String("FW:");
+    static QStringList defaultForwardPrefixes = QStringList() << QStringLiteral("Fwd:")
+            << QStringLiteral("FW:");
 
     QStringList replyPrefixes = GlobalSettings::self()->replyPrefixes();
     if (replyPrefixes.isEmpty()) {

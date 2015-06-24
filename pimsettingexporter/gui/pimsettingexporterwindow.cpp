@@ -130,21 +130,21 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
 {
     KActionCollection *ac = actionCollection();
 
-    mBackupAction = ac->addAction(QLatin1String("backup"), this, SLOT(slotBackupData()));
+    mBackupAction = ac->addAction(QStringLiteral("backup"), this, SLOT(slotBackupData()));
     mBackupAction->setText(i18n("Back Up Data..."));
     mBackupAction->setEnabled(canZipFile);
 
-    mRestoreAction = ac->addAction(QLatin1String("restore"), this, SLOT(slotRestoreData()));
+    mRestoreAction = ac->addAction(QStringLiteral("restore"), this, SLOT(slotRestoreData()));
     mRestoreAction->setText(i18n("Restore Data..."));
     mRestoreAction->setEnabled(canZipFile);
 
-    mSaveLogAction = ac->addAction(QLatin1String("save_log"), this, SLOT(slotSaveLog()));
+    mSaveLogAction = ac->addAction(QStringLiteral("save_log"), this, SLOT(slotSaveLog()));
     mSaveLogAction->setText(i18n("Save log..."));
 
-    mArchiveStructureInfo = ac->addAction(QLatin1String("show_structure_info"), this, SLOT(slotShowStructureInfos()));
+    mArchiveStructureInfo = ac->addAction(QStringLiteral("show_structure_info"), this, SLOT(slotShowStructureInfos()));
     mArchiveStructureInfo->setText(i18n("Show Archive Structure Information..."));
 
-    mShowArchiveInformationsAction = ac->addAction(QLatin1String("show_archive_info"), this, SLOT(slotShowArchiveInformations()));
+    mShowArchiveInformationsAction = ac->addAction(QStringLiteral("show_archive_info"), this, SLOT(slotShowArchiveInformations()));
     mShowArchiveInformationsAction->setText(i18n("Show Archive Information..."));
 
     KStandardAction::quit(this, SLOT(close()), ac);

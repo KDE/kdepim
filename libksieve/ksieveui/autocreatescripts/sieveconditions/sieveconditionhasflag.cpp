@@ -105,12 +105,12 @@ QStringList SieveConditionHasFlag::needRequires(QWidget *) const
 {
     QStringList lst;
     if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags"))) {
-        lst << QLatin1String("imap4flags");
+        lst << QStringLiteral("imap4flags");
     } else {
-        lst << QLatin1String("imapflags");
+        lst << QStringLiteral("imapflags");
     }
     if (hasVariableSupport) {
-        lst << QLatin1String("variables");
+        lst << QStringLiteral("variables");
     }
     return lst;
 }

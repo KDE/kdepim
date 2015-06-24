@@ -95,10 +95,10 @@ private Q_SLOTS:
         // validate xml and pretty-print for comparisson
         // TODO add proper cmake check for xmllint and diff
         QStringList args = QStringList()
-                           << QLatin1String("--format")
-                           << QLatin1String("--encode")
-                           << QLatin1String("UTF8")
-                           << QLatin1String("--output")
+                           << QStringLiteral("--format")
+                           << QStringLiteral("--encode")
+                           << QStringLiteral("UTF8")
+                           << QStringLiteral("--output")
                            << htmlFileName
                            << outFileName;
         QCOMPARE(QProcess::execute(QLatin1String("xmllint"), args),  0);
@@ -117,7 +117,7 @@ private Q_SLOTS:
 
         // compare to reference file
         args = QStringList()
-               << QLatin1String("-u")
+               << QStringLiteral("-u")
                << referenceFileName
                << htmlFileName;
         QProcess proc;

@@ -86,7 +86,7 @@ int main(int argc, char **argv)
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
     parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("+[url]"), i18n("URL of an html file to be opened")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("+[url]"), i18n("URL of an html file to be opened")));
 
     aboutData.setupCommandLine(&parser);
     parser.process(app);

@@ -87,7 +87,7 @@ void QGpgMECryptoConfig::runGpgConf(bool showErrors)
     KProcess process;
 
     process << gpgConfPath();
-    process << QLatin1String("--list-components");
+    process << QStringLiteral("--list-components");
 
     connect(&process, &KProcess::readyReadStandardOutput, this, &QGpgMECryptoConfig::slotCollectStdOut);
 
@@ -223,7 +223,7 @@ void QGpgMECryptoConfigComponent::runGpgConf()
     // Run gpgconf --list-options <component>, and create all groups and entries for that component
     KProcess proc;
     proc << gpgconf;
-    proc << QLatin1String("--list-options");
+    proc << QStringLiteral("--list-options");
     proc << mName;
 
     //qCDebug(GPGPME_BACKEND_LOG) <<"Running gpgconf --list-options" << mName;

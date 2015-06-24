@@ -46,10 +46,10 @@ Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase(const QString &class_, cons
     : KProcess(parent),
       mOperation(mode), mOptions(options)
 {
-    *this << QLatin1String("symcryptrun")
-          << QLatin1String("--class") << class_
-          << QLatin1String("--program") << program
-          << QLatin1String("--keyfile") << keyFile
+    *this << QStringLiteral("symcryptrun")
+          << QStringLiteral("--class") << class_
+          << QStringLiteral("--program") << program
+          << QStringLiteral("--keyfile") << keyFile
           << (mode == Encrypt ? QLatin1String("--encrypt") : QLatin1String("--decrypt"));
 }
 
@@ -67,7 +67,7 @@ bool Kleo::SymCryptRunProcessBase::launch(const QByteArray &input, bool block)
             return false;
         }
         tempfile.flush();
-        *this << QLatin1String("--input") << tempfile.fileName();
+        *this << QStringLiteral("--input") << tempfile.fileName();
         addOptions();
         if (KProcess::execute() == -2) {
             return false;
@@ -90,7 +90,7 @@ void Kleo::SymCryptRunProcessBase::addOptions()
 {
     if (!mOptions.isEmpty()) {
         const QStringList args = KShell::splitArgs(mOptions);
-        *this << QLatin1String("--") << args;
+        *this << QStringLiteral("--") << args;
     }
 }
 

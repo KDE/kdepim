@@ -73,10 +73,10 @@ void BalooSyntaxHighlighter::init()
     testType << QStringLiteral("\\bNI");
 
     //Calendar
-    testType << QLatin1String("\\bO");
-    testType << QLatin1String("\\bPS");
-    testType << QLatin1String("\\bS");
-    testType << QLatin1String("\\bL");
+    testType << QStringLiteral("\\bO");
+    testType << QStringLiteral("\\bPS");
+    testType << QStringLiteral("\\bS");
+    testType << QStringLiteral("\\bL");
     Q_FOREACH (const QString &s, testType) {
         const QRegExp regex(s, Qt::CaseSensitive);
         m_rules.append(KPIMTextEdit::Rule(regex, testFormat));

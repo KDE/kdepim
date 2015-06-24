@@ -150,7 +150,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
             EmbeddedPartMap::const_iterator cit = mEmbeddedPartMap.constFind(url.path());
             if (cit != mEmbeddedPartMap.constEnd()) {
                 qCDebug(MESSAGEVIEWER_LOG) << "Replacing" << url.toDisplayString() << "by" << cit.value();
-                (*it).setAttribute(QLatin1String("src"), cit.value());
+                (*it).setAttribute(QStringLiteral("src"), cit.value());
             }
         }
     }

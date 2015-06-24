@@ -110,9 +110,9 @@ QStringList SieveConditionSpamTest::needRequires(QWidget *w) const
 {
     const SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox *>(QLatin1String("comparator"));
     QStringList lst;
-    lst << QLatin1String("spamtest") << QLatin1String("relational") << comparator->require();
+    lst << QStringLiteral("spamtest") << QStringLiteral("relational") << comparator->require();
     if (mHasSpamTestPlusSupport) {
-        lst << QLatin1String("spamtestplus");
+        lst << QStringLiteral("spamtestplus");
     }
     return lst;
 }

@@ -89,7 +89,7 @@ QStringList KCalModel::mimeTypes() const
 {
     return
         QStringList()
-        << QLatin1String("text/uri-list")
+        << QStringLiteral("text/uri-list")
         << d->allMimeTypes();
 }
 

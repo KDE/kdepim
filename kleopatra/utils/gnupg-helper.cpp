@@ -95,15 +95,15 @@ QString Kleo::gpgPath()
 QStringList Kleo::gnupgFileBlacklist()
 {
     return QStringList()
-           << QLatin1String("dirmngr-cache.d")
-           << QLatin1String("S.uiserver")
-           << QLatin1String("S.gpg-agent")
-           << QLatin1String("random_seed")
-           << QLatin1String("*~")
-           << QLatin1String("*.bak")
-           << QLatin1String("*.lock")
-           << QLatin1String("*.tmp")
-           << QLatin1String("reader_*.status")
+           << QStringLiteral("dirmngr-cache.d")
+           << QStringLiteral("S.uiserver")
+           << QStringLiteral("S.gpg-agent")
+           << QStringLiteral("random_seed")
+           << QStringLiteral("*~")
+           << QStringLiteral("*.bak")
+           << QStringLiteral("*.lock")
+           << QStringLiteral("*.tmp")
+           << QStringLiteral("reader_*.status")
            ;
 }
 
@@ -123,7 +123,7 @@ QString Kleo::gpgConfListDir(const char *which)
     }
     QProcess gpgConf;
     qCDebug(KLEOPATRA_LOG) << "gpgConfListDir: starting " << qPrintable(gpgConfPath) << " --list-dirs";
-    gpgConf.start(gpgConfPath, QStringList() << QLatin1String("--list-dirs"));
+    gpgConf.start(gpgConfPath, QStringList() << QStringLiteral("--list-dirs"));
     if (!gpgConf.waitForFinished()) {
         qCDebug(KLEOPATRA_LOG) << "gpgConfListDir(): failed to execute gpgconf: " << qPrintable(gpgConf.errorString());
         qCDebug(KLEOPATRA_LOG) << "output was:" << endl << gpgConf.readAllStandardError().constData();

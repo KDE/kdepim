@@ -624,7 +624,7 @@ void Kleo::KeySelectionDialog::slotStartCertificateManager(const QString &query)
 #if 0
     // ### port to libkleopatra
     if (!query.isEmpty()) {
-        args << QLatin1String("--external") << QLatin1String("--query") << KUrl::decode_string(query);
+        args << QStringLiteral("--external") << QStringLiteral("--query") << KUrl::decode_string(query);
     }
 #endif
     Q_UNUSED(query);

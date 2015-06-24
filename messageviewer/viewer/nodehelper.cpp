@@ -55,8 +55,8 @@
 namespace MessageViewer
 {
 
-QStringList replySubjPrefixes(QStringList() << QLatin1String("Re\\s*:") << QLatin1String("Re\\[\\d+\\]:") << QLatin1String("Re\\d+:"));
-QStringList forwardSubjPrefixes(QStringList() << QLatin1String("Fwd:") << QLatin1String("FW:"));
+QStringList replySubjPrefixes(QStringList() << QStringLiteral("Re\\s*:") << QStringLiteral("Re\\[\\d+\\]:") << QStringLiteral("Re\\d+:"));
+QStringList forwardSubjPrefixes(QStringList() << QStringLiteral("Fwd:") << QStringLiteral("FW:"));
 
 NodeHelper::NodeHelper() :
     mAttachmentFilesDir(new PimCommon::AttachmentTemporaryFilesDirs())

@@ -198,9 +198,9 @@ QStringList SieveActionVacation::needRequires(QWidget *) const
 {
     QStringList lst;
     if (mHasVacationSecondsSupport) {
-        lst << QLatin1String("vacation-seconds");
+        lst << QStringLiteral("vacation-seconds");
     }
-    lst << QLatin1String("vacation");
+    lst << QStringLiteral("vacation");
     return lst;
 }
 

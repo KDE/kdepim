@@ -153,7 +153,7 @@ QString SieveActionNotify::help() const
 QStringList SieveActionNotify::needRequires(QWidget *) const
 {
     QStringList lst;
-    lst << QLatin1String("enotify");
+    lst << QStringLiteral("enotify");
     return lst;
 }
 

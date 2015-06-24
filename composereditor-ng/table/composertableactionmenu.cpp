@@ -98,19 +98,19 @@ public:
 void ComposerTableActionMenuPrivate::_k_slotSplitCell()
 {
     if (webElement.hasAttribute(QLatin1String("colspan"))) {
-        webElement.removeAttribute(QLatin1String("colspan"));
+        webElement.removeAttribute(QStringLiteral("colspan"));
     }
     if (webElement.hasAttribute(QLatin1String("rowspan"))) {
-        webElement.removeAttribute(QLatin1String("rowspan"));
+        webElement.removeAttribute(QStringLiteral("rowspan"));
     }
 }
 
 void ComposerTableActionMenuPrivate::_k_slotMergeCellToTheRight()
 {
     if (webElement.hasAttribute(QLatin1String("colspan"))) {
-        webElement.setAttribute(QLatin1String("colspan"), QString::number(webElement.attribute(QLatin1String("colspan")).toInt() + 1));
+        webElement.setAttribute(QStringLiteral("colspan"), QString::number(webElement.attribute(QLatin1String("colspan")).toInt() + 1));
     } else {
-        webElement.setAttribute(QLatin1String("colspan"), QString::number(2));
+        webElement.setAttribute(QStringLiteral("colspan"), QString::number(2));
     }
 }
 

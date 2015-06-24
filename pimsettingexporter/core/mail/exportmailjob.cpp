@@ -290,7 +290,7 @@ void ExportMailJob::backupConfig()
 
     const QDir autocorrectDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/autocorrect/")) ;
     if (autocorrectDirectory.exists()) {
-        const QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList() << QLatin1String("*.xml"), QDir::Files);
+        const QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList() << QStringLiteral("*.xml"), QDir::Files);
         const int listSize(listFileInfo.size());
         for (int i = 0; i < listSize; ++i) {
             backupFile(listFileInfo.at(i).absoluteFilePath(), Utils::dataPath() + QLatin1String("autocorrect/") , listFileInfo.at(i).fileName());

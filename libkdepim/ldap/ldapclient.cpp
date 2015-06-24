@@ -121,7 +121,7 @@ const KLDAP::LdapServer LdapClient::server() const
 void LdapClient::setAttributes(const QStringList &attrs)
 {
     d->mAttrs = attrs;
-    d->mAttrs << QLatin1String("objectClass"); // via objectClass we detect distribution lists
+    d->mAttrs << QStringLiteral("objectClass"); // via objectClass we detect distribution lists
 }
 
 QStringList LdapClient::attributes() const

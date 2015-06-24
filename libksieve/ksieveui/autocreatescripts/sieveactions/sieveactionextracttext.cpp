@@ -109,7 +109,7 @@ QString SieveActionExtractText::code(QWidget *w) const
 
 QStringList SieveActionExtractText::needRequires(QWidget *parent) const
 {
-    return QStringList() << QLatin1String("extracttext");
+    return QStringList() << QStringLiteral("extracttext");
 }
 
 bool SieveActionExtractText::needCheckIfServerHasCapability() const

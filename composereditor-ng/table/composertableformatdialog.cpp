@@ -71,16 +71,16 @@ void ComposerTableFormatDialogPrivate::_k_slotWebElementChanged()
 void ComposerTableFormatDialogPrivate::applyChanges()
 {
     if (!webElement.isNull()) {
-        webElement.setAttribute(QLatin1String("border"), QString::number(insertTableWidget->border()));
+        webElement.setAttribute(QStringLiteral("border"), QString::number(insertTableWidget->border()));
         const QString width = QStringLiteral("%1%2").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
-        webElement.setAttribute(QLatin1String("width"), width);
+        webElement.setAttribute(QStringLiteral("width"), width);
         if (useBackgroundColor->isChecked()) {
             const QColor col = backgroundColor->color();
             if (col.isValid()) {
-                webElement.setAttribute(QLatin1String("bgcolor"), backgroundColor->color().name());
+                webElement.setAttribute(QStringLiteral("bgcolor"), backgroundColor->color().name());
             }
         } else {
-            webElement.removeAttribute(QLatin1String("bgcolor"));
+            webElement.removeAttribute(QStringLiteral("bgcolor"));
         }
         //TODO update column/row
     }

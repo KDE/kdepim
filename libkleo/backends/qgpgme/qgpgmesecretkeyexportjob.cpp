@@ -77,12 +77,12 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start(const QStringList &patterns)
     mProcess->setObjectName(QLatin1String("gpgsm --export-secret-key-p12"));
 
     // FIXME: obtain the path to gpgsm from gpgme, so we use the same instance.
-    *mProcess << QLatin1String("gpgsm") << QLatin1String("--export-secret-key-p12");
+    *mProcess << QStringLiteral("gpgsm") << QStringLiteral("--export-secret-key-p12");
     if (mArmour) {
-        *mProcess << QLatin1String("--armor");
+        *mProcess << QStringLiteral("--armor");
     }
     if (!mCharset.isEmpty()) {
-        *mProcess << QLatin1String("--p12-charset") << mCharset;
+        *mProcess << QStringLiteral("--p12-charset") << mCharset;
     }
     *mProcess << QLatin1String(patterns.front().toUtf8());
 

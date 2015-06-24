@@ -93,7 +93,7 @@ QString SieveConditionVirusTest::serverNeedsCapability() const
 QStringList SieveConditionVirusTest::needRequires(QWidget *w) const
 {
     const SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox *>(QLatin1String("comparator"));
-    return QStringList() << QLatin1String("spamtest") << QLatin1String("relational") << comparator->require();
+    return QStringList() << QStringLiteral("spamtest") << QStringLiteral("relational") << comparator->require();
 }
 
 QString SieveConditionVirusTest::help() const

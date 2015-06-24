@@ -101,32 +101,32 @@ void ComposerImageDialogPrivate::updateImageHtml()
         imageHeight = imageWidget->imageHeight();
     }
     if (imageWidth == -1) {
-        webElement.removeAttribute(QLatin1String("width"));
+        webElement.removeAttribute(QStringLiteral("width"));
     } else {
-        webElement.setAttribute(QLatin1String("width"), QString::number(imageWidth));
+        webElement.setAttribute(QStringLiteral("width"), QString::number(imageWidth));
     }
 
     if (imageHeight == -1) {
-        webElement.removeAttribute(QLatin1String("height"));
+        webElement.removeAttribute(QStringLiteral("height"));
     } else {
-        webElement.setAttribute(QLatin1String("height"), QString::number(imageHeight));
+        webElement.setAttribute(QStringLiteral("height"), QString::number(imageHeight));
     }
 
     QString str(title->text());
     if (str.isEmpty()) {
-        webElement.removeAttribute(QLatin1String("title"));
+        webElement.removeAttribute(QStringLiteral("title"));
     } else {
-        webElement.setAttribute(QLatin1String("title"), str);
+        webElement.setAttribute(QStringLiteral("title"), str);
     }
 
     str = alternateTitle->text();
     if (str.isEmpty()) {
-        webElement.removeAttribute(QLatin1String("alt"));
+        webElement.removeAttribute(QStringLiteral("alt"));
     } else {
-        webElement.setAttribute(QLatin1String("alt"), str);
+        webElement.setAttribute(QStringLiteral("alt"), str);
     }
 
-    webElement.setAttribute(QLatin1String("src"), imageWidget->imageUrl().url());
+    webElement.setAttribute(QStringLiteral("src"), imageWidget->imageUrl().url());
 }
 
 void ComposerImageDialogPrivate::initialize()

@@ -335,8 +335,8 @@ bool SnippetsModel::removeRows(int row, int count, const QModelIndex &parent)
 QStringList SnippetsModel::mimeTypes() const
 {
     return
-        QStringList() << QLatin1String("text/x-kmail-textsnippet")
-        << QLatin1String("text/plain");
+        QStringList() << QStringLiteral("text/x-kmail-textsnippet")
+        << QStringLiteral("text/plain");
 }
 
 QMimeData *SnippetsModel::mimeData(const QModelIndexList &indexes) const

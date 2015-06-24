@@ -361,7 +361,7 @@ QString run_gpgconf_reload_gpg_agent(const QString &gpgConfPath)
     }
 
     QProcess p;
-    p.start(gpgConfPath, QStringList() << QLatin1String("--reload") << QLatin1String("gpg-agent"));
+    p.start(gpgConfPath, QStringList() << QStringLiteral("--reload") << QStringLiteral("gpg-agent"));
     qCDebug(KLEOPATRA_LOG) <<  "starting " << qPrintable(gpgConfPath)
                            << " --reload gpg-agent";
     p.waitForFinished(-1);

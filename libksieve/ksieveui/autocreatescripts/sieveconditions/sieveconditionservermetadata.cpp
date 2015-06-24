@@ -110,7 +110,7 @@ QString SieveConditionServerMetaData::code(QWidget *w) const
 
 QStringList SieveConditionServerMetaData::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("servermetadata");
+    return QStringList() << QStringLiteral("servermetadata");
 }
 
 bool SieveConditionServerMetaData::needCheckIfServerHasCapability() const
