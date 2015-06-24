@@ -21,7 +21,8 @@
 #include <QObject>
 #include "pimcommon_export.h"
 class QMenu;
-namespace PimCommon {
+namespace PimCommon
+{
 class PIMCOMMON_EXPORT WebShortcutMenuManager : public QObject
 {
     Q_OBJECT
