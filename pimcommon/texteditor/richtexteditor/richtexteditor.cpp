@@ -18,7 +18,7 @@
 #include "richtexteditor.h"
 #include "texteditor/commonwidget/textmessageindicator.h"
 #include "texteditor/richtexteditor/richtextdecorator.h"
-
+#include "pimcommon/webshortcut/webshortcutmenumanager.h"
 #include <KLocalizedString>
 #include <KStandardAction>
 #include <KCursor>
@@ -54,6 +54,7 @@ public:
           textIndicator(new PimCommon::TextMessageIndicator(q)),
           richTextDecorator(Q_NULLPTR),
           speller(Q_NULLPTR),
+          webshortcutMenuManager(new PimCommon::WebShortcutMenuManager(q)),
           customPalette(false),
           activateLanguageMenu(true),
           showAutoCorrectionButton(false)
@@ -79,6 +80,7 @@ public:
     QTextDocumentFragment originalDoc;
     Sonnet::SpellCheckDecorator *richTextDecorator;
     Sonnet::Speller *speller;
+    WebShortcutMenuManager *webshortcutMenuManager;
     RichTextEditor::SupportFeatures supportFeatures;
     bool customPalette;
     bool checkSpellingEnabled;
@@ -223,6 +225,12 @@ QMenu *RichTextEditor::mousePopupMenu(const QPoint &pos)
             speakAction->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-text-to-speech")));
             speakAction->setEnabled(!emptyDocument);
             connect(speakAction, &QAction::triggered, this, &RichTextEditor::slotSpeakText);
+        }
+        if (textCursor().hasSelection()) {
+            popup->addSeparator();
+            const QString selectedText = textCursor().selectedText();
+            d->webshortcutMenuManager->setSelectedText(selectedText);
+            d->webshortcutMenuManager->addWebShortcutsMenu(popup);
         }
         addExtraMenuEntry(popup, pos);
         return popup;
