@@ -30,6 +30,7 @@ class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
     Q_PROPERTY(bool searchSupport READ searchSupport WRITE setSearchSupport)
     Q_PROPERTY(bool spellCheckingSupport READ spellCheckingSupport WRITE setSpellCheckingSupport)
     Q_PROPERTY(bool textToSpeechSupport READ textToSpeechSupport WRITE setTextToSpeechSupport)
+    Q_PROPERTY(bool webShortcutSupport READ webShortcutSupport WRITE setWebShortcutSupport)
 public:
     explicit PlainTextEditor(QWidget *parent = Q_NULLPTR);
     ~PlainTextEditor();
@@ -38,7 +39,8 @@ public:
         None = 0,
         Search = 1,
         SpellChecking = 2,
-        TextToSpeech = 4
+        TextToSpeech = 4,
+        AllowWebShortcut = 8
     };
     Q_DECLARE_FLAGS(SupportFeatures, SupportFeature)
 
@@ -52,6 +54,10 @@ public:
 
     void setTextToSpeechSupport(bool b);
     bool textToSpeechSupport() const;
+
+    void setWebShortcutSupport(bool b);
+    bool webShortcutSupport() const;
+
 
 public Q_SLOTS:
     void slotDisplayMessageIndicator(const QString &message);

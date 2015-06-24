@@ -17,6 +17,7 @@
 
 #include "plaintexteditor.h"
 #include "texteditor/commonwidget/textmessageindicator.h"
+#include "pimcommon/webshortcut/webshortcutmenumanager.h"
 
 #include <KLocalizedString>
 #include <KIconTheme>
@@ -49,11 +50,13 @@ public:
     PlainTextEditorPrivate(PlainTextEditor *qq)
         : q(qq),
           mTextIndicator(new PimCommon::TextMessageIndicator(q)),
+          webshortcutMenuManager(new PimCommon::WebShortcutMenuManager(q)),
           customPalette(false)
     {
         supportFeatures |= PlainTextEditor::Search;
         supportFeatures |= PlainTextEditor::SpellChecking;
         supportFeatures |= PlainTextEditor::TextToSpeech;
+        supportFeatures |= PlainTextEditor::AllowWebShortcut;
     }
     ~PlainTextEditorPrivate()
     {
@@ -61,6 +64,7 @@ public:
 
     PlainTextEditor *q;
     PimCommon::TextMessageIndicator *mTextIndicator;
+    PimCommon::WebShortcutMenuManager *webshortcutMenuManager;
     QString spellCheckingLanguage;
     QTextDocumentFragment originalDoc;
     PlainTextEditor::SupportFeatures supportFeatures;
@@ -141,6 +145,12 @@ void PlainTextEditor::contextMenuEvent(QContextMenuEvent *event)
                 connect(speakAction, &QAction::triggered, this, &PlainTextEditor::slotSpeakText);
             }
         }
+        if (webShortcutSupport() && textCursor().hasSelection()) {
+            popup->addSeparator();
+            const QString selectedText = textCursor().selectedText();
+            d->webshortcutMenuManager->setSelectedText(selectedText);
+            d->webshortcutMenuManager->addWebShortcutsMenu(popup);
+        }
         addExtraMenuEntry(popup, event->pos());
         popup->exec(event->globalPos());
 
@@ -216,6 +226,20 @@ void PlainTextEditor::setSpellCheckingSupport(bool check)
     } else {
         d->supportFeatures = (d->supportFeatures & ~ SpellChecking);
     }
+}
+
+void PlainTextEditor::setWebShortcutSupport(bool b)
+{
+    if (b) {
+        d->supportFeatures |= AllowWebShortcut;
+    } else {
+        d->supportFeatures = (d->supportFeatures & ~ AllowWebShortcut);
+    }
+}
+
+bool PlainTextEditor::webShortcutSupport() const
+{
+    return (d->supportFeatures & AllowWebShortcut);
 }
 
 void PlainTextEditor::setReadOnly(bool readOnly)

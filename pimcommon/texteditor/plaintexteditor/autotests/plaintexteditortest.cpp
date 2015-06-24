@@ -35,6 +35,7 @@ void PlainTextEditorTest::shouldHaveDefaultValue()
     QCOMPARE(editor.spellCheckingSupport(), true);
     QCOMPARE(editor.textToSpeechSupport(), true);
     QCOMPARE(editor.searchSupport(), true);
+    QCOMPARE(editor.webShortcutSupport(), true);
 }
 
 void PlainTextEditorTest::shouldChangeSpellCheckValue()
@@ -49,6 +50,9 @@ void PlainTextEditorTest::shouldChangeSpellCheckValue()
     editor.setSearchSupport(false);
     QCOMPARE(editor.searchSupport(), false);
 
+    editor.setWebShortcutSupport(false);
+    QCOMPARE(editor.webShortcutSupport(), false);
+
     editor.setSpellCheckingSupport(true);
     QCOMPARE(editor.spellCheckingSupport(), true);
 
@@ -57,6 +61,9 @@ void PlainTextEditorTest::shouldChangeSpellCheckValue()
 
     editor.setSearchSupport(true);
     QCOMPARE(editor.searchSupport(), true);
+
+    editor.setWebShortcutSupport(true);
+    QCOMPARE(editor.webShortcutSupport(), true);
 }
 
 QTEST_MAIN(PlainTextEditorTest)
