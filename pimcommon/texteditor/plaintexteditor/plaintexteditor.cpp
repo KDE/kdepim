@@ -26,6 +26,8 @@
 #include <KStandardAction>
 #include <KCursor>
 #include <QIcon>
+#include <KConfigGroup>
+#include <KConfig>
 
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
@@ -42,6 +44,12 @@
 #include <QClipboard>
 #include "pimcommon_debug.h"
 
+#include <sonnet/spellcheckdecorator.h>
+
+#include <SonnetCore/sonnet/speller.h>
+
+#include <Sonnet/Highlighter>
+
 using namespace PimCommon;
 
 class PlainTextEditor::PlainTextEditorPrivate
@@ -51,8 +59,14 @@ public:
         : q(qq),
           mTextIndicator(new PimCommon::TextMessageIndicator(q)),
           webshortcutMenuManager(new PimCommon::WebShortcutMenuManager(q)),
-          customPalette(false)
+          richTextDecorator(Q_NULLPTR),
+          speller(Q_NULLPTR),
+          customPalette(false),
+          activateLanguageMenu(true)
     {
+        KConfig sonnetKConfig(QStringLiteral("sonnetrc"));
+        KConfigGroup group(&sonnetKConfig, "Spelling");
+        checkSpellingEnabled = group.readEntry("checkerEnabledByDefault", false);
         supportFeatures |= PlainTextEditor::Search;
         supportFeatures |= PlainTextEditor::SpellChecking;
         supportFeatures |= PlainTextEditor::TextToSpeech;
@@ -60,15 +74,24 @@ public:
     }
     ~PlainTextEditorPrivate()
     {
+        delete richTextDecorator;
+        delete speller;
     }
 
+    QStringList ignoreSpellCheckingWords;
     PlainTextEditor *q;
     PimCommon::TextMessageIndicator *mTextIndicator;
     PimCommon::WebShortcutMenuManager *webshortcutMenuManager;
+    Sonnet::SpellCheckDecorator *richTextDecorator;
+    Sonnet::Speller *speller;
+
+    QString spellCheckingConfigFileName;
     QString spellCheckingLanguage;
     QTextDocumentFragment originalDoc;
     PlainTextEditor::SupportFeatures supportFeatures;
     bool customPalette;
+    bool activateLanguageMenu;
+    bool checkSpellingEnabled;
 };
 
 PlainTextEditor::PlainTextEditor(QWidget *parent)
@@ -81,6 +104,12 @@ PlainTextEditor::PlainTextEditor(QWidget *parent)
 PlainTextEditor::~PlainTextEditor()
 {
     delete d;
+}
+
+void PlainTextEditor::addIgnoreWords(const QStringList &lst)
+{
+    d->ignoreSpellCheckingWords = lst;
+    //addIgnoreWordsToHighLighter();
 }
 
 void PlainTextEditor::slotDisplayMessageIndicator(const QString &message)
@@ -130,10 +159,39 @@ void PlainTextEditor::contextMenuEvent(QContextMenuEvent *event)
             popup->addSeparator();
         }
 
-        if (!isReadOnly() && (d->supportFeatures & SpellChecking)) {
+        if (!isReadOnly() && spellCheckingSupport()) {
             QAction *spellCheckAction = popup->addAction(QIcon::fromTheme(QStringLiteral("tools-check-spelling")), i18n("Check Spelling..."), this, SLOT(slotCheckSpelling()));
             if (emptyDocument) {
                 spellCheckAction->setEnabled(false);
+            }
+            popup->addSeparator();
+            QAction *autoSpellCheckAction = popup->addAction(i18n("Auto Spell Check"), this, SLOT(slotToggleAutoSpellCheck()));
+            autoSpellCheckAction->setCheckable(true);
+            autoSpellCheckAction->setChecked(checkSpellingEnabled());
+            popup->addAction(autoSpellCheckAction);
+
+            if (checkSpellingEnabled() &&  d->activateLanguageMenu) {
+                QMenu *languagesMenu = new QMenu(i18n("Spell Checking Language"), popup);
+                QActionGroup *languagesGroup = new QActionGroup(languagesMenu);
+                languagesGroup->setExclusive(true);
+                if (!d->speller) {
+                    d->speller = new Sonnet::Speller();
+                }
+
+                QMapIterator<QString, QString> i(d->speller->availableDictionaries());
+
+                while (i.hasNext()) {
+                    i.next();
+
+                    QAction *languageAction = languagesMenu->addAction(i.key());
+                    languageAction->setCheckable(true);
+                    languageAction->setChecked(spellCheckingLanguage() == i.value() || (spellCheckingLanguage().isEmpty()
+                                               && d->speller->defaultLanguage() == i.value()));
+                    languageAction->setData(i.value());
+                    languageAction->setActionGroup(languagesGroup);
+                    connect(languageAction, &QAction::triggered, this, &PlainTextEditor::slotLanguageSelected);
+                }
+                popup->addMenu(languagesMenu);
             }
             popup->addSeparator();
         }
@@ -244,11 +302,18 @@ bool PlainTextEditor::webShortcutSupport() const
 
 void PlainTextEditor::setReadOnly(bool readOnly)
 {
+    if (!readOnly && hasFocus() && d->checkSpellingEnabled && !d->richTextDecorator) {
+        createHighlighter();
+    }
+
     if (readOnly == isReadOnly()) {
         return;
     }
 
     if (readOnly) {
+        delete d->richTextDecorator;
+        d->richTextDecorator = Q_NULLPTR;
+
         d->customPalette = testAttribute(Qt::WA_SetPalette);
         QPalette p = palette();
         QColor color = p.color(QPalette::Disabled, QPalette::Background);
@@ -279,6 +344,11 @@ void PlainTextEditor::slotCheckSpelling()
     Sonnet::BackgroundChecker *backgroundSpellCheck = new Sonnet::BackgroundChecker;
     if (!d->spellCheckingLanguage.isEmpty()) {
         backgroundSpellCheck->changeLanguage(d->spellCheckingLanguage);
+    }
+    if (!d->ignoreSpellCheckingWords.isEmpty()) {
+        Q_FOREACH(const QString &word, d->ignoreSpellCheckingWords) {
+            backgroundSpellCheck->speller().addToSession(word);
+        }
     }
     Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, Q_NULLPTR);
     backgroundSpellCheck->setParent(spellDialog);
@@ -544,3 +614,144 @@ void PlainTextEditor::keyPressEvent(QKeyEvent *event)
     }
 }
 
+bool PlainTextEditor::activateLanguageMenu() const
+{
+    return d->activateLanguageMenu;
+}
+
+void PlainTextEditor::setActivateLanguageMenu(bool activate)
+{
+    d->activateLanguageMenu = activate;
+}
+
+Sonnet::Highlighter *PlainTextEditor::highlighter() const
+{
+    if (d->richTextDecorator) {
+        return d->richTextDecorator->highlighter();
+    } else {
+        return 0;
+    }
+}
+
+Sonnet::SpellCheckDecorator *PlainTextEditor::createSpellCheckDecorator()
+{
+    return new Sonnet::SpellCheckDecorator(this);
+}
+
+void PlainTextEditor::addIgnoreWordsToHighLighter()
+{
+    if (d->ignoreSpellCheckingWords.isEmpty())
+        return;
+    if (d->richTextDecorator) {
+        Sonnet::Highlighter * _highlighter = d->richTextDecorator->highlighter();
+        Q_FOREACH(const QString &word, d->ignoreSpellCheckingWords) {
+            _highlighter->ignoreWord(word);
+        }
+    }
+}
+
+void PlainTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
+{
+    Sonnet::SpellCheckDecorator *decorator = createSpellCheckDecorator();
+    delete decorator->highlighter();
+    decorator->setHighlighter(_highLighter);
+
+    //KTextEdit used to take ownership of the highlighter, Sonnet::SpellCheckDecorator does not.
+    //so we reparent the highlighter so it will be deleted when the decorator is destroyed
+    _highLighter->setParent(decorator);
+    d->richTextDecorator = decorator;
+    addIgnoreWordsToHighLighter();
+}
+
+void PlainTextEditor::focusInEvent(QFocusEvent *event)
+{
+    if (d->checkSpellingEnabled && !isReadOnly() && !d->richTextDecorator && spellCheckingSupport()) {
+        createHighlighter();
+    }
+
+    QPlainTextEdit::focusInEvent(event);
+}
+
+bool PlainTextEditor::checkSpellingEnabled() const
+{
+    return d->checkSpellingEnabled;
+}
+
+void PlainTextEditor::setCheckSpellingEnabled(bool check)
+{
+    if (check == d->checkSpellingEnabled) {
+        return;
+    }
+    d->checkSpellingEnabled = check;
+    Q_EMIT checkSpellingChanged(check);
+    // From the above statment we know know that if we're turning checking
+    // on that we need to create a new highlighter and if we're turning it
+    // off we should remove the old one.
+
+    if (check) {
+        if (hasFocus()) {
+            createHighlighter();
+            if (!d->spellCheckingLanguage.isEmpty()) {
+                setSpellCheckingLanguage(spellCheckingLanguage());
+            }
+        }
+    } else {
+        clearDecorator();
+    }
+    updateHighLighter();
+}
+
+void PlainTextEditor::updateHighLighter()
+{
+
+}
+
+void PlainTextEditor::clearDecorator()
+{
+    delete d->richTextDecorator;
+    d->richTextDecorator = Q_NULLPTR;
+}
+
+void PlainTextEditor::createHighlighter()
+{
+    setHighlighter(new Sonnet::Highlighter(this, d->spellCheckingConfigFileName));
+}
+
+void PlainTextEditor::setSpellCheckingConfigFileName(const QString &_fileName)
+{
+    d->spellCheckingConfigFileName = _fileName;
+}
+
+QString PlainTextEditor::spellCheckingConfigFileName() const
+{
+    return d->spellCheckingConfigFileName;
+}
+
+void PlainTextEditor::slotLanguageSelected()
+{
+    QAction *languageAction = static_cast<QAction *>(QObject::sender());
+    setSpellCheckingLanguage(languageAction->data().toString());
+}
+
+const QString &PlainTextEditor::spellCheckingLanguage() const
+{
+    return d->spellCheckingLanguage;
+}
+
+void PlainTextEditor::setSpellCheckingLanguage(const QString &_language)
+{
+    if (highlighter()) {
+        highlighter()->setCurrentLanguage(_language);
+        highlighter()->rehighlight();
+    }
+
+    if (_language != d->spellCheckingLanguage) {
+        d->spellCheckingLanguage = _language;
+        Q_EMIT languageChanged(_language);
+    }
+}
+
+void PlainTextEditor::slotToggleAutoSpellCheck()
+{
+    setCheckSpellingEnabled(!checkSpellingEnabled());
+}

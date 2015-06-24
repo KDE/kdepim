@@ -22,6 +22,11 @@
 
 #include <QPlainTextEdit>
 
+namespace Sonnet
+{
+class Highlighter;
+class SpellCheckDecorator;
+}
 namespace PimCommon
 {
 class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
@@ -58,7 +63,18 @@ public:
     void setWebShortcutSupport(bool b);
     bool webShortcutSupport() const;
 
+    virtual void createHighlighter();
 
+    void addIgnoreWords(const QStringList &lst);
+    bool activateLanguageMenu() const;
+    void setActivateLanguageMenu(bool activate);
+    Sonnet::Highlighter *highlighter() const;
+    bool checkSpellingEnabled() const;
+    void setCheckSpellingEnabled(bool check);
+    void setSpellCheckingConfigFileName(const QString &_fileName);
+    QString spellCheckingConfigFileName() const;
+    const QString &spellCheckingLanguage() const;
+    void setSpellCheckingLanguage(const QString &_language);
 public Q_SLOTS:
     void slotDisplayMessageIndicator(const QString &message);
     void slotCheckSpelling();
@@ -72,6 +88,8 @@ private Q_SLOTS:
     void slotSpellCheckerCanceled();
     void slotSpellCheckerFinished();
 
+    void slotLanguageSelected();
+    void slotToggleAutoSpellCheck();
 protected:
     virtual void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
 
@@ -81,6 +99,12 @@ protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     bool overrideShortcut(const QKeyEvent *event);
     bool handleShortcut(const QKeyEvent *event);
+
+    virtual Sonnet::SpellCheckDecorator *createSpellCheckDecorator();
+    void setHighlighter(Sonnet::Highlighter *_highLighter);
+    void focusInEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
+    virtual void updateHighLighter();
+    virtual void clearDecorator();
 
 Q_SIGNALS:
     void findText();
@@ -92,6 +116,7 @@ Q_SIGNALS:
     void say(const QString &text);
 
 private:
+    void addIgnoreWordsToHighLighter();
     void deleteWordBack();
     void deleteWordForward();
     void highlightWord(int length, int pos);
