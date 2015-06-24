@@ -35,7 +35,11 @@ TemplatesTextEditor::TemplatesTextEditor(QWidget *parent)
     setFocus();
     const QFont f = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     setFont(f);
-
+    QStringList excludeKeyWord;
+    Q_FOREACH(QString str, TemplateParser::Util::keywords()) {
+        excludeKeyWord << str.remove(QLatin1Char('%'));
+    }
+    addIgnoreWords(excludeKeyWord);
     setWordWrapMode(QTextOption::NoWrap);
     (void) new TemplatesSyntaxHighlighter(document());
     initCompleter();
