@@ -110,6 +110,9 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
 SieveTemplateEditDialog::~SieveTemplateEditDialog()
 {
     writeConfig();
+    disconnect(mTemplateNameEdit, &QLineEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
+    disconnect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
+
 }
 
 void SieveTemplateEditDialog::slotReplace()
