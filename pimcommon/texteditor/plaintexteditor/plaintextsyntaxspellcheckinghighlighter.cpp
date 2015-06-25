@@ -75,9 +75,15 @@ void PlainTextSyntaxSpellCheckingHighlighter::highlightBlock(const QString &text
             index = expression.indexIn(text, index + length);
         }
     }
-    if (d->spellCheckingEnabled) {
+    if (d->spellCheckingEnabled && spellCheckBlock(text)) {
         Highlighter::highlightBlock(text);
     }
+}
+
+bool PlainTextSyntaxSpellCheckingHighlighter::spellCheckBlock(const QString &text)
+{
+    Q_UNUSED(text);
+    return true;
 }
 
 void PlainTextSyntaxSpellCheckingHighlighter::unsetMisspelled(int start, int count)

@@ -59,6 +59,7 @@ protected:
      */
     void setMisspelled(int start, int count) Q_DECL_OVERRIDE;
 
+    virtual bool spellCheckBlock(const QString &text);
 private:
     class PlainTextSyntaxSpellCheckingHighlighterPrivate;
     PlainTextSyntaxSpellCheckingHighlighterPrivate *const d;
