@@ -109,7 +109,7 @@ PlainTextEditor::~PlainTextEditor()
 void PlainTextEditor::addIgnoreWords(const QStringList &lst)
 {
     d->ignoreSpellCheckingWords = lst;
-    //addIgnoreWordsToHighLighter();
+    addIgnoreWordsToHighLighter();
 }
 
 void PlainTextEditor::slotDisplayMessageIndicator(const QString &message)
@@ -311,8 +311,7 @@ void PlainTextEditor::setReadOnly(bool readOnly)
     }
 
     if (readOnly) {
-        delete d->richTextDecorator;
-        d->richTextDecorator = Q_NULLPTR;
+        clearDecorator();
 
         d->customPalette = testAttribute(Qt::WA_SetPalette);
         QPalette p = palette();
@@ -690,7 +689,9 @@ void PlainTextEditor::setCheckSpellingEnabled(bool check)
 
     if (check) {
         if (hasFocus()) {
-            createHighlighter();
+            if (!d->richTextDecorator) {
+                createHighlighter();
+            }
             if (!d->spellCheckingLanguage.isEmpty()) {
                 setSpellCheckingLanguage(spellCheckingLanguage());
             }
