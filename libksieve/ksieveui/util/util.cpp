@@ -71,6 +71,7 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
         u.setHost(server);
         u.setUserName(interface->userName());
 
+
         QDBusInterface resourceSettings(QLatin1String("org.freedesktop.Akonadi.Resource.") + identifier, QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.Imap.Wallet"));
 
         QString pwd;
@@ -111,7 +112,7 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
             u.addQueryItem(QLatin1String("x-allow-unencrypted"), QLatin1String("true"));
         }
         u = u.adjusted(QUrl::RemoveFilename);
-        u.setPath(u.path() + QString(interface->sieveVacationFilename()));
+        u.setPath(u.path() + QLatin1Char('/') + QString(interface->sieveVacationFilename()));
         return u;
     } else {
         QUrl u(interface->sieveAlternateUrl());
@@ -141,7 +142,7 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
             u.setUserName(interface->sieveCustomUsername());
         }
         u = u.adjusted(QUrl::RemoveFilename);
-        u.setPath(u.path() + QString(interface->sieveVacationFilename()));
+        u.setPath(u.path() + QLatin1Char('/') + QString(interface->sieveVacationFilename()));
         return u;
     }
 }

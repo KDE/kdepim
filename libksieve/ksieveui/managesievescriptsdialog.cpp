@@ -35,6 +35,7 @@
 #include <QApplication>
 #include <QTreeWidget>
 #include <QVBoxLayout>
+#include <QDebug>
 
 #include <errno.h>
 #include <KSharedConfig>

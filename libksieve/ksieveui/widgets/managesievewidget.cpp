@@ -198,7 +198,7 @@ void ManageSieveWidget::slotNewScript()
     }
 
     u = u.adjusted(QUrl::RemoveFilename);
-    u.setPath(u.path() +  name);
+    u.setPath(u.path() + QLatin1Char('/') + name);
 
     QTreeWidgetItem *parentItem = currentItem;
     if (parentItem) {
@@ -240,7 +240,7 @@ void ManageSieveWidget::slotEditScript()
         return;
     }
     url = url.adjusted(QUrl::RemoveFilename);
-    url.setPath(url.path() +  currentItem->text(0));
+    url.setPath(url.path() +  QLatin1Char('/') + currentItem->text(0));
     const QStringList currentCapabilities = parent->data(0, SIEVE_SERVER_CAPABILITIES).toStringList();
     Q_EMIT editScript(url, currentCapabilities);
 }
@@ -278,7 +278,7 @@ void ManageSieveWidget::changeActiveScript(QTreeWidgetItem *item, bool activate)
         return;
     }
     u = u.adjusted(QUrl::RemoveFilename);
-    u.setPath(u.path() +  selected->text(0));
+    u.setPath(u.path() +  QLatin1Char('/') + selected->text(0));
 
     KManageSieve::SieveJob *job;
     if (activate) {
@@ -334,7 +334,7 @@ void ManageSieveWidget::slotDeleteScript()
     }
 
     u = u.adjusted(QUrl::RemoveFilename);
-    u.setPath(u.path() +  currentItem->text(0));
+    u.setPath(u.path() +  QLatin1Char('/') + currentItem->text(0));
 
     if (KMessageBox::warningContinueCancel(this, i18n("Really delete script \"%1\" from the server?", u.fileName()),
                                            i18n("Delete Sieve Script Confirmation"),
