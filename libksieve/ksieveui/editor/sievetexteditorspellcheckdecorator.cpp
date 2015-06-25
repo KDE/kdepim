@@ -21,7 +21,6 @@ using namespace KSieveUi;
 SieveTextEditorSpellCheckDecorator::SieveTextEditorSpellCheckDecorator(QPlainTextEdit *plainTextEdit)
     : Sonnet::SpellCheckDecorator(plainTextEdit)
 {
-
 }
 
 bool SieveTextEditorSpellCheckDecorator::isSpellCheckingEnabledForBlock(const QString &textBlock) const

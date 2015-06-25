@@ -34,6 +34,7 @@
 #include <QScrollBar>
 #include <QMenu>
 #include <QFontDatabase>
+#include <QDebug>
 
 #include <KPIMTextEdit/SyntaxHighlighterBase>
 #include <KPIMTextEdit/TextEditorCompleter>
@@ -54,6 +55,7 @@ SieveTextEdit::SieveTextEdit(QWidget *parent)
     slotUpdateLineNumberAreaWidth(0);
 
     initCompleter();
+    createHighlighter();
 }
 
 SieveTextEdit::~SieveTextEdit()

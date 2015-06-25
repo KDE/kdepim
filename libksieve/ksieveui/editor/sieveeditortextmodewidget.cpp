@@ -136,6 +136,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mMainSplitter->addWidget(mTemplateSplitter);
     mMainSplitter->addWidget(mDebugTextEdit);
     mMainSplitter->setChildrenCollapsible(false);
+
     connect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveEditorTextModeWidget::slotTextChanged);
     connect(mTextEdit, &SieveTextEdit::undoAvailable, this, &SieveEditorTextModeWidget::undoAvailable);
     connect(mTextEdit, &SieveTextEdit::redoAvailable, this, &SieveEditorTextModeWidget::redoAvailable);
@@ -147,6 +148,8 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
 
 SieveEditorTextModeWidget::~SieveEditorTextModeWidget()
 {
+    disconnect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveEditorTextModeWidget::slotTextChanged);
+    disconnect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveEditorTextModeWidget::valueChanged);
     writeConfig();
 }
 
