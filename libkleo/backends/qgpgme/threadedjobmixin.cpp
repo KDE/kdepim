@@ -56,7 +56,7 @@ QString _detail::audit_log_as_html( Context * ctx, GpgME::Error & err ) {
   QGpgME::QByteArrayDataProvider dp;
   Data data( &dp );
   assert( !data.isNull() );
-  if ( ( err = ctx->getAuditLog( data, GetAuditLogFlags ) ) )
+  if ( ( err = ctx->lastError() ) || ( err = ctx->getAuditLog( data, GetAuditLogFlags ) ) )
     return QString::fromLocal8Bit( err.asString() );
   const QByteArray ba = dp.data();
   return QString::fromUtf8( ba.data(), ba.size() );
