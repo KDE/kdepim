@@ -29,11 +29,6 @@ namespace KPIMTextEdit
 class TextEditorCompleter;
 }
 
-namespace PimCommon
-{
-class SieveSyntaxHighlighter;
-}
-
 namespace KSieveUi
 {
 
@@ -73,6 +68,9 @@ protected:
     bool event(QEvent *ev) Q_DECL_OVERRIDE;
     Sonnet::SpellCheckDecorator *createSpellCheckDecorator() Q_DECL_OVERRIDE;
 
+    void updateHighLighter() Q_DECL_OVERRIDE;
+    void clearDecorator() Q_DECL_OVERRIDE;
+    void createHighlighter() Q_DECL_OVERRIDE;
 Q_SIGNALS:
     void openHelp(const QString &url);
 
@@ -84,7 +82,7 @@ private:
     QString selectedWord(const QPoint &pos = QPoint()) const;
 
     SieveLineNumberArea *m_sieveLineNumberArea;
-    PimCommon::SieveSyntaxHighlighter *m_syntaxHighlighter;
+    //PimCommon::SieveSyntaxHighlighter *m_syntaxHighlighter;
     KPIMTextEdit::TextEditorCompleter *mTextEditorCompleter;
     bool mShowHelpMenu;
 };

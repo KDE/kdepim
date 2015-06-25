@@ -19,9 +19,9 @@
 #include "sievetextedit.h"
 #include "editor/sievelinenumberarea.h"
 #include "editor/sieveeditorutil.h"
-#include "sievesyntaxhighlighter.h"
 #include "util/editorutil.h"
 #include "editor/sievetexteditorspellcheckdecorator.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintextsyntaxspellcheckinghighlighter.h"
 #include <KLocalizedString>
 #include <QAction>
 #include <QIcon>
@@ -45,7 +45,7 @@ SieveTextEdit::SieveTextEdit(QWidget *parent)
 {
     setWordWrapMode(QTextOption::NoWrap);
     setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-    m_syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter(document());
+    //m_syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter(document());
     m_sieveLineNumberArea = new SieveLineNumberArea(this);
 
     connect(this, &SieveTextEdit::blockCountChanged, this, &SieveTextEdit::slotUpdateLineNumberAreaWidth);
@@ -59,6 +59,27 @@ SieveTextEdit::SieveTextEdit(QWidget *parent)
 SieveTextEdit::~SieveTextEdit()
 {
 }
+
+void SieveTextEdit::updateHighLighter()
+{
+    PimCommon::PlainTextSyntaxSpellCheckingHighlighter *hlighter = dynamic_cast<PimCommon::PlainTextSyntaxSpellCheckingHighlighter *>(highlighter());
+    if (hlighter) {
+        hlighter->toggleSpellHighlighting(checkSpellingEnabled());
+    }
+}
+
+void SieveTextEdit::clearDecorator()
+{
+    //Nothing
+}
+
+void SieveTextEdit::createHighlighter()
+{
+    PimCommon::PlainTextSyntaxSpellCheckingHighlighter *highlighter = new PimCommon::PlainTextSyntaxSpellCheckingHighlighter(this);
+    highlighter->toggleSpellHighlighting(checkSpellingEnabled());
+    setHighlighter(highlighter);
+}
+
 
 void SieveTextEdit::resizeEvent(QResizeEvent *e)
 {
@@ -228,7 +249,7 @@ void SieveTextEdit::keyPressEvent(QKeyEvent *e)
 
 void SieveTextEdit::setSieveCapabilities(const QStringList &capabilities)
 {
-    m_syntaxHighlighter->addCapabilities(capabilities);
+    //m_syntaxHighlighter->addCapabilities(capabilities);
     setCompleterList(completerList() + capabilities);
 }
 
