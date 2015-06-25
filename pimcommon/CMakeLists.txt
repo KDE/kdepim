@@ -27,6 +27,7 @@ set(libpimcommon_shorturl_SRCS
 
 set(libpimcommon_sieve_SRCS
   sievehighlighter/sievesyntaxhighlighter.cpp
+  sievehighlighter/sievesyntaxhighlighterrules.cpp
   sievehighlighter/sievesyntaxhighlighterutil.cpp
 )
 
