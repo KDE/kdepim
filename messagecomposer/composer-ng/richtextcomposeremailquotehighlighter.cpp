@@ -53,6 +53,7 @@ RichTextComposerEmailQuoteHighlighter::RichTextComposerEmailQuoteHighlighter(Ric
 
 RichTextComposerEmailQuoteHighlighter::~RichTextComposerEmailQuoteHighlighter()
 {
+    delete d;
 }
 
 QString RichTextComposerEmailQuoteHighlighter::highlightText(const QString &text,
