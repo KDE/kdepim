@@ -39,7 +39,7 @@
 #define PIMCOMMON_MAILUTIL_H
 
 #include "pimcommon_export.h"
-
+#include <AkonadiCore/collection.h>
 #include <QUrl>
 class OrgKdeAkonadiImapSettingsInterface;
 class QWidget;
@@ -64,6 +64,7 @@ PIMCOMMON_EXPORT void saveTextAs(const QString &text, const QString &filter, QWi
 PIMCOMMON_EXPORT bool saveToFile(const QString &filename, const QString &text);
 PIMCOMMON_EXPORT QString loadToFile(const QString &filter, QWidget *parent, const QUrl &url = QUrl(), const QString &caption = QString());
 PIMCOMMON_EXPORT bool isImapResource(const QString &identifier);
+PIMCOMMON_EXPORT bool isImapFolder(const Akonadi::Collection &col, bool &isOnline);
 }
 
 }
