@@ -117,6 +117,7 @@ set(libpimcommon_texteditor_SRCS
   texteditor/plaintexteditor/plaintexteditfindbar.cpp
   texteditor/plaintexteditor/plaintexteditor.cpp
   texteditor/plaintexteditor/plaintexteditorwidget.cpp
+  texteditor/plaintexteditor/plaintextsyntaxspellcheckinghighlighter.cpp
   texteditor/commonwidget/textfindreplacewidget.cpp
   texteditor/commonwidget/texteditfindbarbase.cpp
   texteditor/commonwidget/textgotolinewidget.cpp
