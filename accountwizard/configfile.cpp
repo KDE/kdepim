@@ -98,7 +98,7 @@ void ConfigFile::setPassword(const QString &group, const QString &key, const QSt
 void ConfigFile::edit()
 {
     if (m_editName.isEmpty()) {
-        Q_EMIT error(i18n("No given name for the configuration"));
+        Q_EMIT error(i18n("No given name for the configuration."));
         return;
     }
 
