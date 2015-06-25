@@ -23,17 +23,22 @@
 
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
+#include "pimcommon/sievehighlighter/sievesyntaxhighlighterrules.h"
+
 class QMenu;
 namespace KPIMTextEdit
 {
 class TextEditorCompleter;
 }
+namespace PimCommon
+{
+class SieveSyntaxHighlighterRules;
 
+}
 namespace KSieveUi
 {
 
 class SieveLineNumberArea;
-
 class KSIEVEUI_EXPORT SieveTextEdit : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
@@ -81,8 +86,8 @@ private:
     void setCompleterList(const QStringList &list);
     QString selectedWord(const QPoint &pos = QPoint()) const;
 
+    PimCommon::SieveSyntaxHighlighterRules mSieveHighliterRules;
     SieveLineNumberArea *m_sieveLineNumberArea;
-    //PimCommon::SieveSyntaxHighlighter *m_syntaxHighlighter;
     KPIMTextEdit::TextEditorCompleter *mTextEditorCompleter;
     bool mShowHelpMenu;
 };
