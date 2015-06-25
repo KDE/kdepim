@@ -63,7 +63,7 @@ void AclListView::paintEvent(QPaintEvent *event)
         }
         p.setPen(mTextColor);
 
-        p.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, i18n("Folder can not be administrate."));
+        p.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, i18n("Folder cannot be administrated."));
     } else {
         QListView::paintEvent(event);
     }
