@@ -20,14 +20,16 @@
 
 #include <sonnet/spellcheckdecorator.h>
 
-class QPlainTextEdit;
 namespace KSieveUi
 {
+class SieveTextEdit;
 class SieveTextEditorSpellCheckDecorator : public Sonnet::SpellCheckDecorator
 {
 public:
-    explicit SieveTextEditorSpellCheckDecorator(QPlainTextEdit *plainTextEdit);
+    explicit SieveTextEditorSpellCheckDecorator(SieveTextEdit *plainTextEdit);
     bool isSpellCheckingEnabledForBlock(const QString &textBlock) const Q_DECL_OVERRIDE;
+private:
+    SieveTextEdit *mPlainTextEdit;
 };
 }
 #endif // SIEVETEXTEDITORSPELLCHECKDECORATOR_H

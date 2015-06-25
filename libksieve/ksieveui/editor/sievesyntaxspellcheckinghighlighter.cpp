@@ -15,18 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "sievesyntaxspellcheckinghighlighter.h"
 #include "sievetextedit.h"
-#include "sievetexteditorspellcheckdecorator.h"
 using namespace KSieveUi;
 
-SieveTextEditorSpellCheckDecorator::SieveTextEditorSpellCheckDecorator(SieveTextEdit *plainTextEdit)
-    : Sonnet::SpellCheckDecorator(plainTextEdit),
-      mPlainTextEdit(plainTextEdit)
+SieveSyntaxSpellCheckingHighlighter::SieveSyntaxSpellCheckingHighlighter(SieveTextEdit *plainText, const QColor &misspelledColor)
+    : PimCommon::PlainTextSyntaxSpellCheckingHighlighter(plainText, misspelledColor)
 {
+
 }
 
-bool SieveTextEditorSpellCheckDecorator::isSpellCheckingEnabledForBlock(const QString &textBlock) const
+SieveSyntaxSpellCheckingHighlighter::~SieveSyntaxSpellCheckingHighlighter()
 {
-    // allow to spell check comment
-    return mPlainTextEdit->checkSpellingEnabled() && textBlock.startsWith(QLatin1Char('#'));
+
+}
+
+bool SieveSyntaxSpellCheckingHighlighter::spellCheckBlock(const QString &text)
+{
+    return text.startsWith(QLatin1Char('#'));
 }

@@ -16,6 +16,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "sievesyntaxspellcheckinghighlighter.h"
 #include "sievetextedit.h"
 #include "editor/sievelinenumberarea.h"
 #include "editor/sieveeditorutil.h"
@@ -64,7 +65,7 @@ SieveTextEdit::~SieveTextEdit()
 
 void SieveTextEdit::updateHighLighter()
 {
-    PimCommon::PlainTextSyntaxSpellCheckingHighlighter *hlighter = dynamic_cast<PimCommon::PlainTextSyntaxSpellCheckingHighlighter *>(highlighter());
+    KSieveUi::SieveSyntaxSpellCheckingHighlighter *hlighter = dynamic_cast<KSieveUi::SieveSyntaxSpellCheckingHighlighter *>(highlighter());
     if (hlighter) {
         hlighter->toggleSpellHighlighting(checkSpellingEnabled());
     }
@@ -77,7 +78,7 @@ void SieveTextEdit::clearDecorator()
 
 void SieveTextEdit::createHighlighter()
 {
-    PimCommon::PlainTextSyntaxSpellCheckingHighlighter *highlighter = new PimCommon::PlainTextSyntaxSpellCheckingHighlighter(this);
+    KSieveUi::SieveSyntaxSpellCheckingHighlighter *highlighter = new KSieveUi::SieveSyntaxSpellCheckingHighlighter(this);
     highlighter->toggleSpellHighlighting(checkSpellingEnabled());
     highlighter->setSyntaxHighlighterRules(mSieveHighliterRules.rules());
     setHighlighter(highlighter);
