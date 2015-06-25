@@ -234,9 +234,14 @@ set(libpimcommon_webshortcut_SRCS
    webshortcut/webshortcutmenumanager.cpp
 )
 
+set(libpimcommon_manageserversidesubscription_SRCS
+   manageserversidesubscription/manageserversidesubscriptionjob.cpp
+)
+
 set(libpimcommon_SRCS
   pimcommon_debug.cpp
   settings/pimcommonsettings.cpp
+  ${libpimcommon_manageserversidesubscription_SRCS}
   ${libpimcommon_webshortcut_SRCS}
   ${libpimcommon_shareserviceurl_SRCS}
   ${libpimcommon_migrate_SRCS}
