@@ -34,10 +34,11 @@ SieveSyntaxHighlighter::~SieveSyntaxHighlighter()
 void SieveSyntaxHighlighter::addCapabilities(const QStringList &capabilities)
 {
     mRules.addCapabilities(capabilities);
+    m_rules = mRules.rules();
 }
 
 void SieveSyntaxHighlighter::init()
 {
-    //Nothing
+    m_rules = mRules.rules();
 }
 
