@@ -55,7 +55,7 @@ RichTextComposerEmailQuoteHighlighter::~RichTextComposerEmailQuoteHighlighter()
 {
     delete d;
 }
-
+#if 0
 QString RichTextComposerEmailQuoteHighlighter::highlightText(const QString &text,
         const QColor &quoteDepth1,
         const QColor &quoteDepth2,
@@ -98,7 +98,7 @@ QString RichTextComposerEmailQuoteHighlighter::highlightParagraph(const QString 
 
     return text;
 }
-
+#endif
 void RichTextComposerEmailQuoteHighlighter::setQuoteColor(const QColor &normalColor,
         const QColor &quoteDepth1,
         const QColor &quoteDepth2,

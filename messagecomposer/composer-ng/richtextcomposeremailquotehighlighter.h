@@ -67,7 +67,7 @@ public:
      * Reimplemented to highlight quote blocks.
      */
     void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
-
+#if 0
     /**
      * Use this static method to get a text consisting of multiple lines
      * highligted.
@@ -86,7 +86,7 @@ public:
                                       const QColor &quoteDepth1 = QColor(0x00, 0x80, 0x00),
                                       const QColor &quoteDepth2 = QColor(0x00, 0x80, 0x00),
                                       const QColor &quoteDepth3 = QColor(0x00, 0x80, 0x00));
-
+#endif
 protected:
 
     /**
