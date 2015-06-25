@@ -559,23 +559,23 @@ QString CalendarSupport::displayName(Akonadi::ETMCalendar *calendar, const Akona
             while (p != Akonadi::Collection::root()) {
                 Akonadi::Collection tCol = calendar->collection(p.id());
                 const QString tName = tCol.name();
-                if (tName.toLower().startsWith(QLatin1String("shared.cal"))) {
+                if (tName.toLower().startsWith(QStringLiteral("shared.cal"))) {
                     ownerStr = QLatin1String("Shared");
                     nameStr = cName;
                     typeStr = QLatin1String("Calendar");
                     break;
-                } else if (tName.toLower().startsWith(QLatin1String("shared.tasks")) ||
-                           tName.toLower().startsWith(QLatin1String("shared.todo"))) {
+                } else if (tName.toLower().startsWith(QStringLiteral("shared.tasks")) ||
+                           tName.toLower().startsWith(QStringLiteral("shared.todo"))) {
                     ownerStr = QLatin1String("Shared");
                     nameStr = cName;
                     typeStr = QLatin1String("Tasks");
                     break;
-                } else if (tName.toLower().startsWith(QLatin1String("shared.journal"))) {
+                } else if (tName.toLower().startsWith(QStringLiteral("shared.journal"))) {
                     ownerStr = QLatin1String("Shared");
                     nameStr = cName;
                     typeStr = QLatin1String("Journal");
                     break;
-                } else if (tName.toLower().startsWith(QLatin1String("shared.notes"))) {
+                } else if (tName.toLower().startsWith(QStringLiteral("shared.notes"))) {
                     ownerStr = QLatin1String("Shared");
                     nameStr = cName;
                     typeStr = QLatin1String("Notes");
@@ -666,7 +666,7 @@ QString CalendarSupport::displayName(Akonadi::ETMCalendar *calendar, const Akona
     const QString dName = fullCollection.displayName();
 
     if (!dName.isEmpty()) {
-        return fullCollection.name().startsWith(QLatin1String("akonadi_")) ? i18n("My %1", dName) : dName;
+        return fullCollection.name().startsWith(QStringLiteral("akonadi_")) ? i18n("My %1", dName) : dName;
     } else if (!fullCollection.name().isEmpty()) {
         return fullCollection.name();
     } else {

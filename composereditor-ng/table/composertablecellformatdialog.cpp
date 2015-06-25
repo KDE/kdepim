@@ -157,27 +157,27 @@ void ComposerTableCellFormatDialogPrivate::_k_slotWebElementChanged()
 void ComposerTableCellFormatDialogPrivate::updateSettings()
 {
     if (!webElement.isNull()) {
-        if (webElement.hasAttribute(QLatin1String("bgcolor"))) {
+        if (webElement.hasAttribute(QStringLiteral("bgcolor"))) {
             useBackgroundColor->setChecked(true);
-            const QColor color = QColor(webElement.attribute(QLatin1String("bgcolor")));
+            const QColor color = QColor(webElement.attribute(QStringLiteral("bgcolor")));
             backgroundColor->setColor(color);
         }
-        if (webElement.hasAttribute(QLatin1String("valign"))) {
+        if (webElement.hasAttribute(QStringLiteral("valign"))) {
             useVerticalAlignment->setChecked(true);
-            const QString valign = webElement.attribute(QLatin1String("valign"));
+            const QString valign = webElement.attribute(QStringLiteral("valign"));
             verticalAlignment->setCurrentIndex(verticalAlignment->findData(valign));
         }
-        if (webElement.hasAttribute(QLatin1String("align"))) {
+        if (webElement.hasAttribute(QStringLiteral("align"))) {
             useHorizontalAlignment->setChecked(true);
-            const QString align = webElement.attribute(QLatin1String("align"));
+            const QString align = webElement.attribute(QStringLiteral("align"));
             horizontalAlignment->setCurrentIndex(horizontalAlignment->findData(align));
         }
-        if (webElement.hasAttribute(QLatin1String("width"))) {
-            const QString widthVal = webElement.attribute(QLatin1String("width"));
+        if (webElement.hasAttribute(QStringLiteral("width"))) {
+            const QString widthVal = webElement.attribute(QStringLiteral("width"));
             width->setValue(widthVal);
         }
-        if (webElement.hasAttribute(QLatin1String("height"))) {
-            const QString heightVal = webElement.attribute(QLatin1String("height"));
+        if (webElement.hasAttribute(QStringLiteral("height"))) {
+            const QString heightVal = webElement.attribute(QStringLiteral("height"));
             height->setValue(heightVal);
         }
     }

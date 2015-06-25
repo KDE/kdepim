@@ -120,7 +120,7 @@ static void hideBlockedElements(const QUrl &url, QWebElementCollection &collecti
 {
     for (QWebElementCollection::iterator it = collection.begin(); it != collection.end(); ++it) {
         const QUrl baseUrl((*it).webFrame()->baseUrl());
-        QString src = (*it).attribute(QLatin1String("src"));
+        QString src = (*it).attribute(QStringLiteral("src"));
         if (src.isEmpty()) {
             src = (*it).evaluateJavaScript(QLatin1String("this.src")).toString();
         }

@@ -68,19 +68,19 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine(QTextStream &stream
         QString line,
         MailCommon::MailFilter *filter)
 {
-    if (line.startsWith(QLatin1String("name="))) {
+    if (line.startsWith(QStringLiteral("name="))) {
         appendFilter(filter);
         filter = new MailFilter();
         line = cleanArgument(line, QLatin1String("name="));
         filter->pattern()->setName(line);
         filter->setToolbarName(line);
-    } else if (line.startsWith(QLatin1String("action="))) {
+    } else if (line.startsWith(QStringLiteral("action="))) {
         line = cleanArgument(line, QLatin1String("action="));
         QString value;
         QString actionName = extractActions(line, filter, value);
         if (!stream.atEnd()) {
             line = stream.readLine();
-            if (line.startsWith(QLatin1String("actionValue="))) {
+            if (line.startsWith(QStringLiteral("actionValue="))) {
                 value = cleanArgument(line, QLatin1String("actionValue="));
                 //change priority
                 if (actionName == QLatin1String("Change priority")) {
@@ -118,23 +118,23 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine(QTextStream &stream
         } else {
             createFilterAction(filter, actionName, value);
         }
-    } else if (line.startsWith(QLatin1String("enabled="))) {
+    } else if (line.startsWith(QStringLiteral("enabled="))) {
         line = cleanArgument(line, QLatin1String("enabled="));
         if (line == QLatin1String("no")) {
             filter->setEnabled(false);
         }
-    } else if (line.startsWith(QLatin1String("condition="))) {
+    } else if (line.startsWith(QStringLiteral("condition="))) {
         line = cleanArgument(line, QLatin1String("condition="));
         extractConditions(line, filter);
-    } else if (line.startsWith(QLatin1String("type="))) {
+    } else if (line.startsWith(QStringLiteral("type="))) {
         line = cleanArgument(line, QLatin1String("type="));
         extractType(line, filter);
-    } else if (line.startsWith(QLatin1String("version="))) {
+    } else if (line.startsWith(QStringLiteral("version="))) {
         line = cleanArgument(line, QLatin1String("version="));
         if (line.toInt() != 9) {
             qCDebug(MAILCOMMON_LOG) << " thunderbird filter version different of 9 need to look at if it changed";
         }
-    } else if (line.startsWith(QLatin1String("logging="))) {
+    } else if (line.startsWith(QStringLiteral("logging="))) {
         line = cleanArgument(line, QLatin1String("logging="));
         if (line == QLatin1String("no")) {
             //TODO
@@ -152,7 +152,7 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine(QTextStream &stream
 void FilterImporterThunderbird::extractConditions(const QString &line,
         MailCommon::MailFilter *filter)
 {
-    if (line.startsWith(QLatin1String("AND"))) {
+    if (line.startsWith(QStringLiteral("AND"))) {
         filter->pattern()->setOp(SearchPattern::OpAnd);
         const QStringList conditionsList = line.split(QLatin1String("AND "));
         const int numberOfCond(conditionsList.count());
@@ -161,7 +161,7 @@ void FilterImporterThunderbird::extractConditions(const QString &line,
                 splitConditions(conditionsList.at(i), filter);
             }
         }
-    } else if (line.startsWith(QLatin1String("OR"))) {
+    } else if (line.startsWith(QStringLiteral("OR"))) {
         filter->pattern()->setOp(SearchPattern::OpOr);
         const QStringList conditionsList = line.split(QLatin1String("OR "));
         const int numberOfCond(conditionsList.count());
@@ -170,7 +170,7 @@ void FilterImporterThunderbird::extractConditions(const QString &line,
                 splitConditions(conditionsList.at(i), filter);
             }
         }
-    } else if (line.startsWith(QLatin1String("ALL"))) {
+    } else if (line.startsWith(QStringLiteral("ALL"))) {
         filter->pattern()->setOp(SearchPattern::OpAll);
     } else {
         qCDebug(MAILCOMMON_LOG) << " missing extract condition" << line;

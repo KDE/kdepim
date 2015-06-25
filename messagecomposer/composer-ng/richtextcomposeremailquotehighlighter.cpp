@@ -83,16 +83,16 @@ QString RichTextComposerEmailQuoteHighlighter::highlightParagraph(const QString 
                  replace(QLatin1Char('|'), QLatin1Char('>')).
                  replace(QLatin1String("&gt;"), QLatin1String(">"));
 
-    while (simplified.startsWith(QLatin1String(">>>>"))) {
+    while (simplified.startsWith(QStringLiteral(">>>>"))) {
         simplified = simplified.mid(3);
     }
 
     QString result(QLatin1String("<font color=\"%1\">%2</font>"));
-    if (simplified.startsWith(QLatin1String(">>>"))) {
+    if (simplified.startsWith(QStringLiteral(">>>"))) {
         return result.arg(quoteDepth3.name(), text);
-    } else if (simplified.startsWith(QLatin1String(">>"))) {
+    } else if (simplified.startsWith(QStringLiteral(">>"))) {
         return result.arg(quoteDepth2.name(), text);
-    } else if (simplified.startsWith(QLatin1String(">"))) {
+    } else if (simplified.startsWith(QStringLiteral(">"))) {
         return result.arg(quoteDepth1.name(), text);
     }
 
@@ -126,15 +126,15 @@ void RichTextComposerEmailQuoteHighlighter::highlightBlock(const QString &text)
     simplified = simplified.remove(QRegExp(QLatin1String("\\s"))).
                  replace(QLatin1Char('|'), QLatin1Char('>'));
 
-    while (simplified.startsWith(QLatin1String(">>>>"))) {
+    while (simplified.startsWith(QStringLiteral(">>>>"))) {
         simplified = simplified.mid(3);
     }
 
-    if (simplified.startsWith(QLatin1String(">>>"))) {
+    if (simplified.startsWith(QStringLiteral(">>>"))) {
         setFormat(0, text.length(), d->col3);
-    } else if (simplified.startsWith(QLatin1String(">>"))) {
+    } else if (simplified.startsWith(QStringLiteral(">>"))) {
         setFormat(0, text.length(), d->col2);
-    } else if (simplified.startsWith(QLatin1String(">"))) {
+    } else if (simplified.startsWith(QStringLiteral(">"))) {
         setFormat(0, text.length(), d->col1);
     } else if (d->parent->isLineQuoted(text)) {
         setFormat(0, text.length(), d->col1);   // FIXME: custom quote prefix

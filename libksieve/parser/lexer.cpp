@@ -182,7 +182,7 @@ static QString removeCRLF(const QString &s)
 
 static QString removeDotStuff(const QString &s)
 {
-    return s.startsWith(QLatin1String("..")) ? s.mid(1) : s ;
+    return s.startsWith(QStringLiteral("..")) ? s.mid(1) : s ;
 }
 
 namespace KSieve

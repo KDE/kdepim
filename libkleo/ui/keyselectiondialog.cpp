@@ -910,7 +910,7 @@ void Kleo::KeySelectionDialog::slotFilter()
     // OK, so we need to filter:
     QRegExp keyIdRegExp(QLatin1String("(?:0x)?[A-F0-9]{1,8}"), Qt::CaseInsensitive);
     if (keyIdRegExp.exactMatch(mSearchText)) {
-        if (mSearchText.startsWith(QLatin1String("0X")))
+        if (mSearchText.startsWith(QStringLiteral("0X")))
             // search for keyID only:
         {
             filterByKeyID(mSearchText.mid(2));

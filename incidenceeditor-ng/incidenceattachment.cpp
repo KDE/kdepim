@@ -598,13 +598,13 @@ void IncidenceAttachment::addUriAttachment(const QString &uri,
         item->setUri(uri);
         item->setLabel(label);
         if (mimeType.isEmpty()) {
-            if (uri.startsWith(QLatin1String("uid:"))) {
+            if (uri.startsWith(QStringLiteral("uid:"))) {
                 item->setMimeType("text/directory");
-            } else if (uri.startsWith(QLatin1String("kmail:"))) {
+            } else if (uri.startsWith(QStringLiteral("kmail:"))) {
                 item->setMimeType("message/rfc822");
-            } else if (uri.startsWith(QLatin1String("urn:x-ical"))) {
+            } else if (uri.startsWith(QStringLiteral("urn:x-ical"))) {
                 item->setMimeType("text/calendar");
-            } else if (uri.startsWith(QLatin1String("news:"))) {
+            } else if (uri.startsWith(QStringLiteral("news:"))) {
                 item->setMimeType("message/news");
             } else {
                 QMimeDatabase db;

@@ -119,7 +119,7 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
         return;
     }
     //Ldap server
-    if (domElement.attribute(QLatin1String("base_uri")) == QLatin1String("ldap://")) {
+    if (domElement.attribute(QStringLiteral("base_uri")) == QLatin1String("ldap://")) {
         for (QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement()) {
             //const QString name = e.attribute( QLatin1String( "name" ) ); We don't use it in kmail
 
@@ -136,12 +136,12 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
                 for (QDomElement property = propertiesElement.firstChildElement(); !property.isNull(); property = property.nextSiblingElement()) {
                     const QString propertyTag = property.tagName();
                     if (propertyTag == QLatin1String("property")) {
-                        if (property.hasAttribute(QLatin1String("name"))) {
-                            const QString propertyName = property.attribute(QLatin1String("name"));
+                        if (property.hasAttribute(QStringLiteral("name"))) {
+                            const QString propertyName = property.attribute(QStringLiteral("name"));
                             if (propertyName == QLatin1String("timeout")) {
-                                ldap.timeout = property.attribute(QLatin1String("value")).toInt();
+                                ldap.timeout = property.attribute(QStringLiteral("value")).toInt();
                             } else if (propertyName == QLatin1String("ssl")) {
-                                const QString value = property.attribute(QLatin1String("value"));
+                                const QString value = property.attribute(QStringLiteral("value"));
                                 if (value == QLatin1String("always")) {
                                     ldap.useSSL = true;
                                 } else if (value == QLatin1String("whenever_possible")) {
@@ -150,11 +150,11 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
                                     qCDebug(IMPORTWIZARD_LOG) << " ssl attribute unknown" << value;
                                 }
                             } else if (propertyName == QLatin1String("limit")) {
-                                ldap.limit = property.attribute(QLatin1String("value")).toInt();
+                                ldap.limit = property.attribute(QStringLiteral("value")).toInt();
                             } else if (propertyName == QLatin1String("binddn")) {
-                                ldap.dn = property.attribute(QLatin1String("value"));
+                                ldap.dn = property.attribute(QStringLiteral("value"));
                             } else if (propertyName == QLatin1String("auth")) {
-                                const QString value = property.attribute(QLatin1String("value"));
+                                const QString value = property.attribute(QStringLiteral("value"));
                                 if (value == QLatin1String("ldap/simple-email")) {
                                     //TODO:
                                 } else if (value == QLatin1String("none")) {
@@ -263,13 +263,13 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
     }
 
     QString name;
-    if (domElement.hasAttribute(QLatin1String("name"))) {
-        name = domElement.attribute(QLatin1String("name"));
+    if (domElement.hasAttribute(QStringLiteral("name"))) {
+        name = domElement.attribute(QStringLiteral("name"));
     }
 
     KIdentityManagement::Identity *newIdentity = createIdentity(name);
 
-    const bool enableManualCheck = (domElement.attribute(QLatin1String("enabled")) == QLatin1String("true"));
+    const bool enableManualCheck = (domElement.attribute(QStringLiteral("enabled")) == QLatin1String("true"));
 
     for (QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement()) {
         const QString tag = e.tagName();

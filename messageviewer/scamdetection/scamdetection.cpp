@@ -82,14 +82,14 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
     const QWebElementCollection allAnchor = rootElement.findAll(QLatin1String("a"));
     Q_FOREACH (const QWebElement &anchorElement, allAnchor) {
         //1) detect if title has a url and title != href
-        const QString href = anchorElement.attribute(QLatin1String("href"));
-        const QString title = anchorElement.attribute(QLatin1String("title"));
+        const QString href = anchorElement.attribute(QStringLiteral("href"));
+        const QString title = anchorElement.attribute(QStringLiteral("title"));
         const QUrl url(href);
         if (!title.isEmpty()) {
-            if (title.startsWith(QLatin1String("http:"))
-                    || title.startsWith(QLatin1String("https:"))
-                    || title.startsWith(QLatin1String("www."))) {
-                if (title.startsWith(QLatin1String("www."))) {
+            if (title.startsWith(QStringLiteral("http:"))
+                    || title.startsWith(QStringLiteral("https:"))
+                    || title.startsWith(QStringLiteral("www."))) {
+                if (title.startsWith(QStringLiteral("www."))) {
                     const QString completUrl =  url.scheme() + QLatin1String("://") + title;
                     if (completUrl != href &&
                             href != (completUrl + QLatin1Char('/'))) {

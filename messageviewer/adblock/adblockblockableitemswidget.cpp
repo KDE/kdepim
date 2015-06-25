@@ -160,9 +160,9 @@ QString AdBlockBlockableItemsWidget::elementType(AdBlockBlockableItemsWidget::Ty
 
 void AdBlockBlockableItemsWidget::adaptSrc(QString &src, const QString &hostName)
 {
-    if (src.startsWith(QLatin1String("http://")) || src.startsWith(QLatin1String("https://"))) {
+    if (src.startsWith(QStringLiteral("http://")) || src.startsWith(QStringLiteral("https://"))) {
         //Nothing
-    } else if (src.startsWith(QLatin1String("//"))) {
+    } else if (src.startsWith(QStringLiteral("//"))) {
         src = QLatin1String("https:") + src;
     } else if (src.startsWith(QLatin1Char('/'))) {
         src = QLatin1String("https://") + hostName + src;
@@ -177,8 +177,8 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
     const QString host = url.host();
     const QWebElementCollection images = frame->findAllElements(QLatin1String("img"));
     Q_FOREACH (const QWebElement &img, images) {
-        if (img.hasAttribute(QLatin1String("src"))) {
-            QString src = img.attribute(QLatin1String("src"));
+        if (img.hasAttribute(QStringLiteral("src"))) {
+            QString src = img.attribute(QStringLiteral("src"));
             if (src.isEmpty()) {
                 continue;
             }
@@ -195,7 +195,7 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
     }
     const QWebElementCollection scripts = frame->findAllElements(QLatin1String("script"));
     Q_FOREACH (const QWebElement &script, scripts) {
-        QString src = script.attribute(QLatin1String("src"));
+        QString src = script.attribute(QStringLiteral("src"));
         if (src.isEmpty()) {
             continue;
         }

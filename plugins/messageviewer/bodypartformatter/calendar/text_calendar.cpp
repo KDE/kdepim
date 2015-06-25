@@ -1291,7 +1291,7 @@ public:
             result = true;
         }
 
-        if (path.startsWith(QLatin1String("ATTACH:"))) {
+        if (path.startsWith(QStringLiteral("ATTACH:"))) {
             const QString name = QString::fromUtf8(QByteArray::fromBase64(path.mid(7).toUtf8()));
             result = openAttachment(name, iCal);
         }
@@ -1314,7 +1314,7 @@ public:
                                   const QPoint &point) const
     {
         QString name = path;
-        if (path.startsWith(QLatin1String("ATTACH:"))) {
+        if (path.startsWith(QStringLiteral("ATTACH:"))) {
             name = QString::fromUtf8(QByteArray::fromBase64(path.mid(7).toUtf8()));
         } else {
             return false; //because it isn't an attachment inviation

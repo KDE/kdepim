@@ -349,8 +349,8 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
         if (!element.isNull()) {
             const QString tagName = element.tagName();
             if (tagName == QLatin1String("action")) {
-                if (element.hasAttribute(QLatin1String("name"))) {
-                    const QString actionName = element.attribute(QLatin1String("name"));
+                if (element.hasAttribute(QStringLiteral("name"))) {
+                    const QString actionName = element.attribute(QStringLiteral("name"));
                     SieveActionWidget *w = qobject_cast<SieveActionWidget *>(widgets().last());
                     if (w->isConfigurated()) {
                         addWidgetAfterThisWidget(widgets().last());

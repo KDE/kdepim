@@ -259,7 +259,7 @@ public:
     QString statusBarMessage(BodyPart *part, const QString &path) const
     {
         KContacts::Addressee a = findAddressee(part, path);
-        const bool addToAddressBook = path.startsWith(QLatin1String("addToAddressBook"));
+        const bool addToAddressBook = path.startsWith(QStringLiteral("addToAddressBook"));
         if (a.realName().isEmpty()) {
             return addToAddressBook ? i18n("Add this contact to the address book.") : i18n("Update this contact to the address book.");
         } else {

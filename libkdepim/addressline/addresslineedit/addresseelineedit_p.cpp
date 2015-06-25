@@ -700,7 +700,7 @@ void AddresseeLineEditPrivate::slotLDAPSearchData(const KLDAP::LdapResult::List 
             const int depth = result.dn.depth();
             for (int i = 0; i < depth; ++i) {
                 const QString rdnStr = result.dn.rdnString(i);
-                if (rdnStr.startsWith(QLatin1String("ou="), Qt::CaseInsensitive)) {
+                if (rdnStr.startsWith(QStringLiteral("ou="), Qt::CaseInsensitive)) {
                     ou = rdnStr.mid(3);
                     break;
                 }

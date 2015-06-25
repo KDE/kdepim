@@ -95,17 +95,17 @@ public:
             const QString line((*it).toHtmlEscaped());
             QString style;
             if (!line.isEmpty()) {
-                if (line.startsWith(QLatin1String("+++"))) {
+                if (line.startsWith(QStringLiteral("+++"))) {
                     style = fileAddStyle;
-                } else if (line.startsWith(QLatin1String("---"))) {
+                } else if (line.startsWith(QStringLiteral("---"))) {
                     style = fileRemoveStyle;
                 } else if (line.startsWith(QLatin1Char('+')) || line.startsWith(QLatin1Char('>'))) {
                     style = addedLineStyle;
                 } else if (line.startsWith(QLatin1Char('-')) || line.startsWith(QLatin1Char('<'))) {
                     style = removedLineStyle;
-                } else if (line.startsWith(QLatin1String("=="))) {
+                } else if (line.startsWith(QStringLiteral("=="))) {
                     style = sepStyle;
-                } else if (line.startsWith(QLatin1String("@@"))) {
+                } else if (line.startsWith(QStringLiteral("@@"))) {
                     style = chunkStyle;
                 }
             }

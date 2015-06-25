@@ -97,18 +97,18 @@ public:
 
 void ComposerTableActionMenuPrivate::_k_slotSplitCell()
 {
-    if (webElement.hasAttribute(QLatin1String("colspan"))) {
+    if (webElement.hasAttribute(QStringLiteral("colspan"))) {
         webElement.removeAttribute(QStringLiteral("colspan"));
     }
-    if (webElement.hasAttribute(QLatin1String("rowspan"))) {
+    if (webElement.hasAttribute(QStringLiteral("rowspan"))) {
         webElement.removeAttribute(QStringLiteral("rowspan"));
     }
 }
 
 void ComposerTableActionMenuPrivate::_k_slotMergeCellToTheRight()
 {
-    if (webElement.hasAttribute(QLatin1String("colspan"))) {
-        webElement.setAttribute(QStringLiteral("colspan"), QString::number(webElement.attribute(QLatin1String("colspan")).toInt() + 1));
+    if (webElement.hasAttribute(QStringLiteral("colspan"))) {
+        webElement.setAttribute(QStringLiteral("colspan"), QString::number(webElement.attribute(QStringLiteral("colspan")).toInt() + 1));
     } else {
         webElement.setAttribute(QStringLiteral("colspan"), QString::number(2));
     }
@@ -203,7 +203,7 @@ void ComposerTableActionMenuPrivate::updateActions()
     action_insert_cell_before->setEnabled(isACell);
     action_remove_column->setEnabled(isACell);
 
-    const bool cellIsMerged = (webElement.hasAttribute(QLatin1String("colspan")) || webElement.hasAttribute(QLatin1String("rowspan")));
+    const bool cellIsMerged = (webElement.hasAttribute(QStringLiteral("colspan")) || webElement.hasAttribute(QStringLiteral("rowspan")));
     action_split_cell->setEnabled(cellIsMerged);
 }
 

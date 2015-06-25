@@ -94,8 +94,8 @@ void EvolutionCalendar::extractCalendarInfo(const QString &info)
         return;
     }
     QString base_uri;
-    if (domElement.hasAttribute(QLatin1String("base_uri"))) {
-        base_uri = domElement.attribute(QLatin1String("base_uri"));
+    if (domElement.hasAttribute(QStringLiteral("base_uri"))) {
+        base_uri = domElement.attribute(QStringLiteral("base_uri"));
     }
     if (base_uri == QLatin1String("local:")) {
         for (QDomElement e = domElement.firstChildElement(); !e.isNull(); e = e.nextSiblingElement()) {
@@ -123,11 +123,11 @@ void EvolutionCalendar::extractCalendarInfo(const QString &info)
                     for (QDomElement property = propertiesElement.firstChildElement(); !property.isNull(); property = property.nextSiblingElement()) {
                         const QString propertyTag = property.tagName();
                         if (propertyTag == QLatin1String("property")) {
-                            if (property.hasAttribute(QLatin1String("name"))) {
-                                const QString propertyName = property.attribute(QLatin1String("name"));
+                            if (property.hasAttribute(QStringLiteral("name"))) {
+                                const QString propertyName = property.attribute(QStringLiteral("name"));
                                 if (propertyName == QLatin1String("custom-file-readonly")) {
-                                    if (property.hasAttribute(QLatin1String("value"))) {
-                                        if (property.attribute(QLatin1String("value")) == QLatin1String("1")) {
+                                    if (property.hasAttribute(QStringLiteral("value"))) {
+                                        if (property.attribute(QStringLiteral("value")) == QLatin1String("1")) {
                                             settings.insert(QLatin1String("ReadOnly"), true);
                                         }
                                     }

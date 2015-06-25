@@ -145,7 +145,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
     QWebElementCollection images = root.findAll(QLatin1String("img"));
     QWebElementCollection::iterator end(images.end());
     for (QWebElementCollection::iterator it = images.begin(); it != end; ++it) {
-        QUrl url((*it).attribute(QLatin1String("src")));
+        QUrl url((*it).attribute(QStringLiteral("src")));
         if (url.scheme() == QLatin1String("cid")) {
             EmbeddedPartMap::const_iterator cit = mEmbeddedPartMap.constFind(url.path());
             if (cit != mEmbeddedPartMap.constEnd()) {

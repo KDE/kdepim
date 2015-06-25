@@ -111,7 +111,7 @@ public:
             if (!mimeType || mimeType->iconName().isEmpty()) {
                 return QIcon();
             }
-            if (mimeType->name().startsWith(QLatin1String("multipart/"))) {
+            if (mimeType->name().startsWith(QStringLiteral("multipart/"))) {
                 return QIcon::fromTheme(QStringLiteral("folder"));
             }
             return QIcon::fromTheme(mimeType->iconName());

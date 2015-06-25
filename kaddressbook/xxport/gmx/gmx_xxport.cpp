@@ -144,8 +144,8 @@ ContactList GMXXXPort::importContacts() const
     QString line, line2;
     line  = gmxStream.readLine();
     line2 = gmxStream.readLine();
-    if (!line.startsWith(QLatin1String("AB_ADDRESSES:")) ||
-            !line2.startsWith(QLatin1String("Address_id"))) {
+    if (!line.startsWith(QStringLiteral("AB_ADDRESSES:")) ||
+            !line2.startsWith(QStringLiteral("Address_id"))) {
         KMessageBox::error(
             parentWidget(),
             i18n("%1 is not a GMX address book file.", fileName));
@@ -195,7 +195,7 @@ ContactList GMXXXPort::importContacts() const
 
     // now read the address records
     line  = gmxStream.readLine();
-    if (!line.startsWith(QLatin1String("AB_ADDRESS_RECORDS:"))) {
+    if (!line.startsWith(QStringLiteral("AB_ADDRESS_RECORDS:"))) {
         qCWarning(KADDRESSBOOK_LOG) << "Could not find address records!";
         return contactList;
     }
@@ -205,7 +205,7 @@ ContactList GMXXXPort::importContacts() const
     line = gmxStream.readLine();
     line = gmxStream.readLine();
 
-    while (!line.startsWith(QLatin1String("####")) && !gmxStream.atEnd()) {
+    while (!line.startsWith(QStringLiteral("####")) && !gmxStream.atEnd()) {
         // an address entry may spread over several lines in the file
         while (1) {
             itemList = line.split(QLatin1Char('#'), QString::KeepEmptyParts);
@@ -293,11 +293,11 @@ ContactList GMXXXPort::importContacts() const
     QStringList usedCategoryList;
     line = gmxStream.readLine();
     line2 = gmxStream.readLine();
-    if (!line.startsWith(QLatin1String("AB_CATEGORIES:")) ||
-            !line2.startsWith(QLatin1String("Category_id"))) {
+    if (!line.startsWith(QStringLiteral("AB_CATEGORIES:")) ||
+            !line2.startsWith(QStringLiteral("Category_id"))) {
         qCWarning(KADDRESSBOOK_LOG) << "Could not find category records!";
     } else {
-        while (!line.startsWith(QLatin1String("####")) &&
+        while (!line.startsWith(QStringLiteral("####")) &&
                 !gmxStream.atEnd()) {
             // a category should not spread over multiple lines, but just in case
             while (1) {

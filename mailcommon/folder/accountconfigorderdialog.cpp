@@ -181,11 +181,11 @@ void AccountConfigOrderDialog::init()
                     instanceStruct.name = instance.name();
                     if (PimCommon::Util::isImapResource(identifier)) {
                         instanceStruct.name += QLatin1String(" (IMAP)");
-                    } else if (identifier.startsWith(QLatin1String("akonadi_maildir_resource"))) {
+                    } else if (identifier.startsWith(QStringLiteral("akonadi_maildir_resource"))) {
                         instanceStruct.name += QLatin1String(" (Maildir)");
-                    } else if (identifier.startsWith(QLatin1String("akonadi_mailbox_resource"))) {
+                    } else if (identifier.startsWith(QStringLiteral("akonadi_mailbox_resource"))) {
                         instanceStruct.name += QLatin1String(" (Mailbox)");
-                    } else if (identifier.startsWith(QLatin1String("akonadi_mixedmaildir_resource"))) {
+                    } else if (identifier.startsWith(QStringLiteral("akonadi_mixedmaildir_resource"))) {
                         instanceStruct.name += QLatin1String(" (Mixedmaildir)");
                     } else {
                         qCDebug(MAILCOMMON_LOG) << " Unknown resource type " << identifier;

@@ -39,7 +39,7 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
 {
     qCDebug(KDEPIMDBUSINTERFACE_LOG) << uri;
 
-    if (uri.startsWith(QLatin1String("kmail:"))) {
+    if (uri.startsWith(QStringLiteral("kmail:"))) {
         // make sure kmail is running or the part is shown
         KToolInvocation::startServiceByDesktopPath(QLatin1String("kmail"));
 
@@ -53,10 +53,10 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
             QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QDBusConnection::sessionBus());
         kmail.showMail(serialNumberStr.toLongLong());
         return true;
-    } else if (uri.startsWith(QLatin1String("mailto:"))) {
+    } else if (uri.startsWith(QStringLiteral("mailto:"))) {
         KToolInvocation::invokeMailer(uri.mid(7), QString());
         return true;
-    } else if (uri.startsWith(QLatin1String("uid:"))) {
+    } else if (uri.startsWith(QStringLiteral("uid:"))) {
 
         Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog(Akonadi::ContactEditorDialog::EditMode, (QWidget *)0);
         if (item.isValid()) {
@@ -67,7 +67,7 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
             qCDebug(KDEPIMDBUSINTERFACE_LOG) << "Item is not valid.";
             return false;
         }
-    } else if (uri.startsWith(QLatin1String("urn:x-ical"))) {
+    } else if (uri.startsWith(QStringLiteral("urn:x-ical"))) {
         // make sure korganizer is running or the part is shown
         KToolInvocation::startServiceByDesktopPath(QLatin1String("korganizer"));
 
@@ -77,7 +77,7 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
             QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus());
 
         return korganizerIface.showIncidence(uid);
-    } else if (uri.startsWith(QLatin1String("akonadi:"))) {
+    } else if (uri.startsWith(QStringLiteral("akonadi:"))) {
         const QUrl url(uri);
         const QString mimeType = QUrlQuery(url).queryItemValue(QLatin1String("type"));
         if (mimeType.toLower() == QLatin1String("message/rfc822")) {

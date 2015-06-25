@@ -309,8 +309,8 @@ void SieveConditionWidgetLister::loadTest(const QDomElement &element, bool notCo
             testElement = node.toElement();
         }
     }
-    if (testElement.hasAttribute(QLatin1String("name"))) {
-        const QString conditionName = testElement.attribute(QLatin1String("name"));
+    if (testElement.hasAttribute(QStringLiteral("name"))) {
+        const QString conditionName = testElement.attribute(QStringLiteral("name"));
         SieveConditionWidget *w = qobject_cast<SieveConditionWidget *>(widgets().last());
         w->setCondition(conditionName, testElement, notCondition, error);
     }
@@ -341,8 +341,8 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
                         if (!testElement.isNull()) {
                             const QString testTagName = testElement.tagName();
                             if (testTagName == QLatin1String("test")) {
-                                if (testElement.hasAttribute(QLatin1String("name"))) {
-                                    QString conditionName = testElement.attribute(QLatin1String("name"));
+                                if (testElement.hasAttribute(QStringLiteral("name"))) {
+                                    QString conditionName = testElement.attribute(QStringLiteral("name"));
                                     if (firstCondition) {
                                         firstCondition = false;
                                     } else {
@@ -353,8 +353,8 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
                                         notCondition = true;
                                         QDomNode notNode = testElement.firstChild();
                                         QDomElement notElement = notNode.toElement();
-                                        if (notElement.hasAttribute(QLatin1String("name"))) {
-                                            conditionName = notElement.attribute(QLatin1String("name"));
+                                        if (notElement.hasAttribute(QStringLiteral("name"))) {
+                                            conditionName = notElement.attribute(QStringLiteral("name"));
                                         }
                                         w->setCondition(conditionName, notElement, notCondition, error);
                                     } else {

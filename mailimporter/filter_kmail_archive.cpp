@@ -55,7 +55,7 @@ FilterKMailArchive::~FilterKMailArchive()
 // Can also return an empty string if this is no valid dir name
 static QString folderNameForDirectoryName(const QString &dirName)
 {
-    Q_ASSERT(dirName.startsWith(QLatin1String(".")));
+    Q_ASSERT(dirName.startsWith(QStringLiteral(".")));
     const QString end = ".directory";
     const int expectedIndex = dirName.length() - end.length();
     if (dirName.toLower().indexOf(end) != expectedIndex) {
@@ -150,7 +150,7 @@ bool FilterKMailArchive::importDirectory(const KArchiveDirectory *directory, con
 
             const KArchiveDirectory *dir = static_cast<const KArchiveDirectory *>(entry);
 
-            if (!dir->name().startsWith(QLatin1String("."))) {
+            if (!dir->name().startsWith(QStringLiteral("."))) {
                 if (!importFolder(dir, folderPath + QLatin1Char('/') + dir->name())) {
                     return false;
                 }

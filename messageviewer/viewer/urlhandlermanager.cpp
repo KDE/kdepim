@@ -303,7 +303,7 @@ static KMime::Content *partNodeFromXKMailUrl(const KUrl &url, ViewerPrivate *w, 
     // urlPath format is: /bodypart/<random number>/<part id>/<path>
 
     qCDebug(MESSAGEVIEWER_LOG) << "BodyPartURLHandler: urlPath ==" << urlPath;
-    if (!urlPath.startsWith(QLatin1String("/bodypart/"))) {
+    if (!urlPath.startsWith(QStringLiteral("/bodypart/"))) {
         return 0;
     }
 
@@ -1004,7 +1004,7 @@ bool InternalImageURLHandler::handleDrag(const KUrl &url, ViewerPrivate *window)
 bool InternalImageURLHandler::willHandleDrag(const KUrl &url, ViewerPrivate *window) const
 {
     Q_UNUSED(window);
-    if (url.scheme() == QLatin1String("data") && url.path().startsWith(QLatin1String("image"))) {
+    if (url.scheme() == QLatin1String("data") && url.path().startsWith(QStringLiteral("image"))) {
         return true;
     }
 

@@ -79,8 +79,8 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
 
         const QString nexttag = ruleFilter.tagName();
         if (nexttag == QLatin1String("match-header")) {
-            if (ruleFilter.hasAttribute(QLatin1String("name"))) {
-                const QString attr = ruleFilter.attribute(QLatin1String("name"));
+            if (ruleFilter.hasAttribute(QStringLiteral("name"))) {
+                const QString attr = ruleFilter.attribute(QStringLiteral("name"));
                 if (attr == QLatin1String("From")) {
                     fieldName = "from";
                 } else if (attr == QLatin1String("Cc")) {
@@ -139,8 +139,8 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
             qCDebug(MAILCOMMON_LOG) << " field not implemented " << nexttag;
         }
 
-        if (ruleFilter.hasAttribute(QLatin1String("type"))) {
-            const QString attr = ruleFilter.attribute(QLatin1String("type"));
+        if (ruleFilter.hasAttribute(QStringLiteral("type"))) {
+            const QString attr = ruleFilter.attribute(QStringLiteral("type"));
             if (attr == QLatin1String("not-contain")) {
                 functionName = SearchRule::FuncContainsNot;
             } else if (attr == QLatin1String("contains")) {

@@ -40,9 +40,9 @@ using namespace EventViews;
 void WhatsNextTextBrowser::setSource(const QUrl &name)
 {
     QString uri = name.toString();
-    if (uri.startsWith(QLatin1String("event:"))) {
+    if (uri.startsWith(QStringLiteral("event:"))) {
         Q_EMIT showIncidence(uri);
-    } else if (uri.startsWith(QLatin1String("todo:"))) {
+    } else if (uri.startsWith(QStringLiteral("todo:"))) {
         Q_EMIT showIncidence(uri);
     } else {
         QTextBrowser::setSource(uri);
@@ -335,9 +335,9 @@ void WhatsNextView::showIncidence(const QString &uid)
         return;
     }
 
-    if (uid.startsWith(QLatin1String("event:"))) {
+    if (uid.startsWith(QStringLiteral("event:"))) {
         item = cal->item(uid.mid(6));
-    } else if (uid.startsWith(QLatin1String("todo:"))) {
+    } else if (uid.startsWith(QStringLiteral("todo:"))) {
         item = cal->item(uid.mid(5));
     }
 

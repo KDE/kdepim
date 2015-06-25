@@ -172,7 +172,7 @@ void AdBlockManager::loadRuleString(const QString &stringRule)
     }
 
     // white rules
-    if (stringRule.startsWith(QLatin1String("@@"))) {
+    if (stringRule.startsWith(QStringLiteral("@@"))) {
         if (_hostWhiteList.tryAddFilter(stringRule)) {
             return;
         }

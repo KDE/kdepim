@@ -67,8 +67,8 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
             partFilter = partFilter.nextSiblingElement()) {
         const QString nexttag = partFilter.tagName();
         if (nexttag == QLatin1String("part")) {
-            if (partFilter.hasAttribute(QLatin1String("name"))) {
-                const QString name = partFilter.attribute(QLatin1String("name"));
+            if (partFilter.hasAttribute(QStringLiteral("name"))) {
+                const QString name = partFilter.attribute(QStringLiteral("name"));
                 qCDebug(MAILCOMMON_LOG) << " parsePartAction name attribute :" << name;
                 if (type == FilterImporterEvolution::PartType) {
                     QByteArray fieldName;
@@ -140,11 +140,11 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
 
                         if (valueTag == QLatin1String("value")) {
 
-                            if (valueFilter.hasAttribute(QLatin1String("name"))) {
-                                const QString name = valueFilter.attribute(QLatin1String("name"));
+                            if (valueFilter.hasAttribute(QStringLiteral("name"))) {
+                                const QString name = valueFilter.attribute(QStringLiteral("name"));
                                 if (name == QLatin1String("flag")) {
 
-                                    const QString flag = valueFilter.attribute(QLatin1String("value"));
+                                    const QString flag = valueFilter.attribute(QStringLiteral("value"));
                                     qCDebug(MAILCOMMON_LOG) << " flag :" << flag;
                                     if (flag == QLatin1String("Seen")) {
                                         contents = QLatin1String("Read");
@@ -162,8 +162,8 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                 }
                                 qCDebug(MAILCOMMON_LOG) << " value filter name :" << name;
                             }
-                            if (valueFilter.hasAttribute(QLatin1String("type"))) {
-                                const QString name = valueFilter.attribute(QLatin1String("type"));
+                            if (valueFilter.hasAttribute(QStringLiteral("type"))) {
+                                const QString name = valueFilter.attribute(QStringLiteral("type"));
                                 if (name == QLatin1String("option")) {
                                     //Nothing we will look at value
                                 } else if (name == QLatin1String("string")) {
@@ -171,8 +171,8 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                     contents = string.text();
                                 } else if (name == QLatin1String("folder")) {
                                     QDomElement folder = valueFilter.firstChildElement();
-                                    if (folder.hasAttribute(QLatin1String("uri"))) {
-                                        contents = folder.attribute(QLatin1String("uri"));
+                                    if (folder.hasAttribute(QStringLiteral("uri"))) {
+                                        contents = folder.attribute(QStringLiteral("uri"));
                                         if (!contents.isEmpty()) {
                                             contents.remove(QLatin1String("folder://"));
                                         }
@@ -181,8 +181,8 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                     QDomElement address = valueFilter.firstChildElement();
                                     contents = address.text();
                                 } else if (name == QLatin1String("integer")) {
-                                    if (valueFilter.hasAttribute(QLatin1String("integer"))) {
-                                        contents = valueFilter.attribute(QLatin1String("integer"));
+                                    if (valueFilter.hasAttribute(QStringLiteral("integer"))) {
+                                        contents = valueFilter.attribute(QStringLiteral("integer"));
                                         int val = contents.toInt();
                                         val = val * 1024; //store in Ko
                                         contents = QString::number(val);
@@ -192,8 +192,8 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                 }
 
                             }
-                            if (valueFilter.hasAttribute(QLatin1String("value"))) {
-                                const QString value = valueFilter.attribute(QLatin1String("value"));
+                            if (valueFilter.hasAttribute(QStringLiteral("value"))) {
+                                const QString value = valueFilter.attribute(QStringLiteral("value"));
                                 qCDebug(MAILCOMMON_LOG) << " value filter value :" << name;
                                 if (value == QLatin1String("contains")) {
                                     functionName = SearchRule::FuncContains;
@@ -277,12 +277,12 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                             valueFilter = valueFilter.nextSiblingElement()) {
                         const QString valueTag = valueFilter.tagName();
                         if (valueTag == QLatin1String("value")) {
-                            if (valueFilter.hasAttribute(QLatin1String("name"))) {
-                                const QString name = valueFilter.attribute(QLatin1String("name"));
+                            if (valueFilter.hasAttribute(QStringLiteral("name"))) {
+                                const QString name = valueFilter.attribute(QStringLiteral("name"));
                                 qCDebug(MAILCOMMON_LOG) << " value filter name :" << name;
                             }
-                            if (valueFilter.hasAttribute(QLatin1String("type"))) {
-                                const QString name = valueFilter.attribute(QLatin1String("type"));
+                            if (valueFilter.hasAttribute(QStringLiteral("type"))) {
+                                const QString name = valueFilter.attribute(QStringLiteral("type"));
                                 qCDebug(MAILCOMMON_LOG) << " value filter type :" << name;
                                 if (name == QLatin1String("option")) {
                                     //Nothing we will look at value
@@ -291,8 +291,8 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                 } else if (name == QLatin1String("folder")) {
                                     QDomElement folder = valueFilter.firstChildElement();
 
-                                    if (folder.hasAttribute(QLatin1String("uri"))) {
-                                        value = folder.attribute(QLatin1String("uri"));
+                                    if (folder.hasAttribute(QStringLiteral("uri"))) {
+                                        value = folder.attribute(QStringLiteral("uri"));
                                         if (!value.isEmpty()) {
                                             value.remove(QLatin1String("folder://"));
                                         }
@@ -303,8 +303,8 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                 }
 
                             }
-                            if (valueFilter.hasAttribute(QLatin1String("value"))) {
-                                const QString name = valueFilter.attribute(QLatin1String("value"));
+                            if (valueFilter.hasAttribute(QStringLiteral("value"))) {
+                                const QString name = valueFilter.attribute(QStringLiteral("value"));
                                 qCDebug(MAILCOMMON_LOG) << " value filter value :" << name;
                                 if (value == QLatin1String("contains")) {
                                     //TODO

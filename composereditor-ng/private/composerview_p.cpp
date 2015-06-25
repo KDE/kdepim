@@ -655,7 +655,7 @@ void ComposerViewPrivate::_k_slotEditLink()
 
 void ComposerViewPrivate::_k_slotOpenLink()
 {
-    const QString href = contextMenuResult.linkElement().attribute(QLatin1String("href"));
+    const QString href = contextMenuResult.linkElement().attribute(QStringLiteral("href"));
     if (!href.isEmpty()) {
         new KRun(QUrl(href), 0);
     }
@@ -948,8 +948,8 @@ QMap<QString, QString> ComposerViewPrivate::localImages() const
     QMap<QString, QString> lst;
     QWebElementCollection images = q->page()->mainFrame()->findAllElements(QLatin1String("img"));
     Q_FOREACH (const QWebElement &elm, images) {
-        if (elm.attribute(QLatin1String("src")).startsWith(QLatin1String("file://"))) {
-            QUrl url(elm.attribute(QLatin1String("src")));
+        if (elm.attribute(QStringLiteral("src")).startsWith(QStringLiteral("file://"))) {
+            QUrl url(elm.attribute(QStringLiteral("src")));
             lst.insert(url.fileName(), url.path());
         }
     }

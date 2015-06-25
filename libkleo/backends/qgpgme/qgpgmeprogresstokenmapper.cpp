@@ -102,7 +102,7 @@ QString Kleo::QGpgMEProgressTokenMapper::map(const char *tokenUtf8, int subtoken
 
 QString Kleo::QGpgMEProgressTokenMapper::map(const QString &token, int subtoken)
 {
-    if (token.startsWith(QLatin1String("file:"))) {
+    if (token.startsWith(QStringLiteral("file:"))) {
         return QString();    // gpgme's job
     }
 

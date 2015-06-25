@@ -192,13 +192,13 @@ void ComposerImageDialogPrivate::initialize()
 
 void ComposerImageDialogPrivate::updateSettings()
 {
-    imageWidget->setImageUrl(webElement.attribute(QLatin1String("src")));
-    if (webElement.hasAttribute(QLatin1String("height")) && webElement.hasAttribute(QLatin1String("width"))) {
-        imageWidget->setImageWidth(webElement.attribute(QLatin1String("width")).toInt());
-        imageWidget->setImageHeight(webElement.attribute(QLatin1String("height")).toInt());
+    imageWidget->setImageUrl(webElement.attribute(QStringLiteral("src")));
+    if (webElement.hasAttribute(QStringLiteral("height")) && webElement.hasAttribute(QStringLiteral("width"))) {
+        imageWidget->setImageWidth(webElement.attribute(QStringLiteral("width")).toInt());
+        imageWidget->setImageHeight(webElement.attribute(QStringLiteral("height")).toInt());
     }
-    alternateTitle->setText(webElement.attribute(QLatin1String("alt")));
-    title->setText(webElement.attribute(QLatin1String("title")));
+    alternateTitle->setText(webElement.attribute(QStringLiteral("alt")));
+    title->setText(webElement.attribute(QStringLiteral("title")));
 }
 
 QString ComposerImageDialogPrivate::html() const

@@ -35,10 +35,10 @@ AbstractShortUrl::~AbstractShortUrl()
 void AbstractShortUrl::shortUrl(const QString &url)
 {
     mErrorFound = false;
-    if (!url.trimmed().startsWith(QLatin1String("http://")) &&
-            !url.trimmed().startsWith(QLatin1String("https://")) &&
-            !url.trimmed().startsWith(QLatin1String("ftp://")) &&
-            !url.trimmed().startsWith(QLatin1String("ftps://"))) {
+    if (!url.trimmed().startsWith(QStringLiteral("http://")) &&
+            !url.trimmed().startsWith(QStringLiteral("https://")) &&
+            !url.trimmed().startsWith(QStringLiteral("ftp://")) &&
+            !url.trimmed().startsWith(QStringLiteral("ftps://"))) {
         mOriginalUrl = QLatin1String("http://") + url;
     } else {
         mOriginalUrl = url;

@@ -138,11 +138,11 @@ void ComposerTableFormatDialogPrivate::initialize(const QWebElement &element)
 void ComposerTableFormatDialogPrivate::updateSettings()
 {
     if (!webElement.isNull()) {
-        if (webElement.hasAttribute(QLatin1String("border"))) {
-            insertTableWidget->setBorder(webElement.attribute(QLatin1String("border")).toInt());
+        if (webElement.hasAttribute(QStringLiteral("border"))) {
+            insertTableWidget->setBorder(webElement.attribute(QStringLiteral("border")).toInt());
         }
-        if (webElement.hasAttribute(QLatin1String("width"))) {
-            QString width = webElement.attribute(QLatin1String("width"));
+        if (webElement.hasAttribute(QStringLiteral("width"))) {
+            QString width = webElement.attribute(QStringLiteral("width"));
             if (width.endsWith(QLatin1Char('%'))) {
                 insertTableWidget->setTypeOfLength(QTextLength::PercentageLength);
                 width.chop(1);
@@ -152,9 +152,9 @@ void ComposerTableFormatDialogPrivate::updateSettings()
                 insertTableWidget->setLength(width.toInt());
             }
         }
-        if (webElement.hasAttribute(QLatin1String("bgcolor"))) {
+        if (webElement.hasAttribute(QStringLiteral("bgcolor"))) {
             useBackgroundColor->setChecked(true);
-            const QColor color = QColor(webElement.attribute(QLatin1String("bgcolor")));
+            const QColor color = QColor(webElement.attribute(QStringLiteral("bgcolor")));
             backgroundColor->setColor(color);
         } else {
             useBackgroundColor->setChecked(false);

@@ -46,12 +46,12 @@ using namespace MessageViewer;
 
 static QString linkElementKey(const QWebElement &element)
 {
-    if (element.hasAttribute(QLatin1String("href"))) {
-        const QUrl url = element.webFrame()->baseUrl().resolved(element.attribute(QLatin1String("href")));
+    if (element.hasAttribute(QStringLiteral("href"))) {
+        const QUrl url = element.webFrame()->baseUrl().resolved(element.attribute(QStringLiteral("href")));
         QString linkKey(url.toString());
-        if (element.hasAttribute(QLatin1String("target"))) {
+        if (element.hasAttribute(QStringLiteral("target"))) {
             linkKey += QLatin1Char('+');
-            linkKey += element.attribute(QLatin1String("target"));
+            linkKey += element.attribute(QStringLiteral("target"));
         }
         return linkKey;
     }
@@ -61,12 +61,12 @@ static QString linkElementKey(const QWebElement &element)
 static bool isHiddenElement(const QWebElement &element)
 {
     // width property set to less than zero
-    if (element.hasAttribute(QLatin1String("width")) && element.attribute(QLatin1String("width")).toInt() < 1) {
+    if (element.hasAttribute(QStringLiteral("width")) && element.attribute(QStringLiteral("width")).toInt() < 1) {
         return true;
     }
 
     // height property set to less than zero
-    if (element.hasAttribute(QLatin1String("height")) && element.attribute(QLatin1String("height")).toInt() < 1) {
+    if (element.hasAttribute(QStringLiteral("height")) && element.attribute(QStringLiteral("height")).toInt() < 1) {
         return true;
     }
 
@@ -92,7 +92,7 @@ static bool isEditableElement(QWebPage *page)
         if (tagName.compare(QLatin1String("textarea"), Qt::CaseInsensitive) == 0) {
             return true;
         }
-        const QString type(element.attribute(QLatin1String("type")).toLower());
+        const QString type(element.attribute(QStringLiteral("type")).toLower());
         if (tagName.compare(QLatin1String("input"), Qt::CaseInsensitive) == 0
                 && (type.isEmpty() || type == QLatin1String("text") || type == QLatin1String("password"))) {
             return true;
@@ -258,7 +258,7 @@ static bool has_parent_div_with_id(const QWebElement &start, const QString &id)
     }
 
     if (start.tagName().toLower() == QLatin1String("div")) {
-        if (start.attribute(QLatin1String("id"), QString()) == id) {
+        if (start.attribute(QStringLiteral("id"), QString()) == id) {
             return true;
         }
     }
@@ -541,7 +541,7 @@ void MailWebView::showAccessKeys()
         if (isHiddenElement(element)) {
             continue;    // Do not show access key for hidden elements...
         }
-        const QString accessKeyAttribute(element.attribute(QLatin1String("accesskey")).toUpper());
+        const QString accessKeyAttribute(element.attribute(QStringLiteral("accesskey")).toUpper());
         if (accessKeyAttribute.isEmpty()) {
             unLabeledElements.append(element);
             continue;

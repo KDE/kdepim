@@ -117,7 +117,7 @@ QStringList InstanceSelector::instances()
     const QStringList allServices = QDBusConnection::sessionBus().interface()->registeredServiceNames();
     QStringList insts;
     foreach (const QString &service, allServices) {
-        if (!service.startsWith(QLatin1String(AKONADI_DBUS_CONTROL_SERVICE_LOCK))) {
+        if (!service.startsWith(QStringLiteral(AKONADI_DBUS_CONTROL_SERVICE_LOCK))) {
             continue;
         }
         insts.push_back(service.mid(qstrlen(AKONADI_DBUS_CONTROL_SERVICE_LOCK) + 1));

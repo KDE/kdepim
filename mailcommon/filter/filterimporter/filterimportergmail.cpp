@@ -76,14 +76,14 @@ void FilterImporterGmail::parseFilters(const QDomElement &e)
             ruleFilter = ruleFilter.nextSiblingElement()) {
         const QString tagName = ruleFilter.tagName();
         if (tagName == QLatin1String("category")) {
-            if (ruleFilter.hasAttribute(QLatin1String("term"))) {
-                if (ruleFilter.attribute(QLatin1String("term")) != QLatin1String("filter")) {
+            if (ruleFilter.hasAttribute(QStringLiteral("term"))) {
+                if (ruleFilter.attribute(QStringLiteral("term")) != QLatin1String("filter")) {
                     continue;
                 }
             }
         } else if (tagName == QLatin1String("apps:property")) {
-            if (ruleFilter.hasAttribute(QLatin1String("name"))) {
-                const QString criteriaProperty = ruleFilter.attribute(QLatin1String("name"));
+            if (ruleFilter.hasAttribute(QStringLiteral("name"))) {
+                const QString criteriaProperty = ruleFilter.attribute(QStringLiteral("name"));
                 qCDebug(MAILCOMMON_LOG) << " ruleFilter.attribute" << criteriaProperty;
                 // Criterial
                 if (criteriaProperty == QLatin1String("from")) {

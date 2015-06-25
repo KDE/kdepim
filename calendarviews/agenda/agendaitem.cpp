@@ -663,7 +663,7 @@ void AgendaItem::dropEvent(QDropEvent *e)
 
     bool decoded = md->hasText();
     QString text = md->text();
-    if (decoded && text.startsWith(QLatin1String("file:"))) {
+    if (decoded && text.startsWith(QStringLiteral("file:"))) {
         mIncidence->addAttachment(KCalCore::Attachment::Ptr(new KCalCore::Attachment(text)));
         return;
     }
@@ -1196,7 +1196,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
         QPixmap separator;
         QString key(QLatin1String("ko_hsep"));
         if (!QPixmapCache::find(key, separator)) {
-            separator = QPixmap(QLatin1String(":/headerSeparator.png"));
+            separator = QPixmap(QStringLiteral(":/headerSeparator.png"));
             QPixmapCache::insert(key, separator);
         }
         p->fillRect(QRect(r.x() + 3, r.y() + r.height() - 2, r.x() + r.width() - 4, 2),
@@ -1247,7 +1247,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
         QPixmap topLines;
         QString key(QLatin1String("ko_t"));
         if (!QPixmapCache::find(key, topLines)) {
-            topLines = QPixmap(QLatin1String(":/topLines.png"));
+            topLines = QPixmap(QStringLiteral(":/topLines.png"));
             QPixmapCache::insert(key, topLines);
         }
         p->setBrushOrigin(r.x() + 8, r.y());
@@ -1257,7 +1257,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
         QPixmap bottomLines;
         key = QLatin1String("ko_b");
         if (!QPixmapCache::find(key, bottomLines)) {
-            bottomLines = QPixmap(QLatin1String(":/bottomLines.png"));
+            bottomLines = QPixmap(QStringLiteral(":/bottomLines.png"));
             QPixmapCache::insert(key, bottomLines);
         }
         p->setBrushOrigin(r.x() + 8, r.y() + r.height() - 6);
@@ -1271,7 +1271,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
         QPixmap leftLines;
         QString key(QLatin1String("ko_l"));
         if (!QPixmapCache::find(key, leftLines)) {
-            leftLines = QPixmap(QLatin1String(":/leftLines.png"));
+            leftLines = QPixmap(QStringLiteral(":/leftLines.png"));
             QPixmapCache::insert(key, leftLines);
         }
         p->setBrushOrigin(r.x(), r.y() + 8);
@@ -1281,7 +1281,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
         QPixmap rightLines;
         key = QLatin1String("ko_r");
         if (!QPixmapCache::find(key, rightLines)) {
-            rightLines = QPixmap(QLatin1String(":/rightLines.png"));
+            rightLines = QPixmap(QStringLiteral(":/rightLines.png"));
             QPixmapCache::insert(key, rightLines);
         }
         p->setBrushOrigin(r.x() + r.width() - 5, r.y() + 8);
@@ -1304,7 +1304,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
     QPixmap topLeft;
     QString key = roundTop ? QLatin1String("ko_tl") : QLatin1String("ko_rtl");
     if (!QPixmapCache::find(key, topLeft)) {
-        topLeft = roundTop ? QPixmap(QLatin1String(":/roundTopLeft.png")) : QPixmap(QLatin1String(":/rectangularTopLeft.png"));
+        topLeft = roundTop ? QPixmap(QStringLiteral(":/roundTopLeft.png")) : QPixmap(QStringLiteral(":/rectangularTopLeft.png"));
         QPixmapCache::insert(key, topLeft);
     }
     p->drawPixmap(r.x(), r.y(), topLeft, 0, 0, lw, th);
@@ -1312,7 +1312,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
     QPixmap topRight;
     key = roundTop ? QLatin1String("ko_tr") : QLatin1String("ko_rtr");
     if (!QPixmapCache::find(key, topRight)) {
-        topRight = roundTop ? QPixmap(QLatin1String(":/roundTopRight.png")) : QPixmap(QLatin1String(":/rectangularTopRight.png"));
+        topRight = roundTop ? QPixmap(QStringLiteral(":/roundTopRight.png")) : QPixmap(QStringLiteral(":/rectangularTopRight.png"));
         QPixmapCache::insert(key, topRight);
     }
     p->drawPixmap(r.x() + r.width() - rw, r.y(), topRight, 8 - rw, 0, rw, th);
@@ -1320,8 +1320,8 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
     QPixmap bottomLeft;
     key = roundBottom ? QLatin1String("ko_bl") : QLatin1String("ko_rbl");
     if (!QPixmapCache::find(key, bottomLeft)) {
-        bottomLeft = roundBottom ? QPixmap(QLatin1String(":/roundBottomLeft.png")) :
-                     QPixmap(QLatin1String(":/rectangularBottomLeft.png"));
+        bottomLeft = roundBottom ? QPixmap(QStringLiteral(":/roundBottomLeft.png")) :
+                     QPixmap(QStringLiteral(":/rectangularBottomLeft.png"));
         QPixmapCache::insert(key, bottomLeft);
     }
     p->drawPixmap(r.x(), r.y() + r.height() - bh, bottomLeft, 0, 8 - bh, lw, bh);
@@ -1329,8 +1329,8 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
     QPixmap bottomRight;
     key = roundBottom ? QLatin1String("ko_br") : QLatin1String("ko_rbr");
     if (!QPixmapCache::find(key, bottomRight)) {
-        bottomRight = roundBottom ? QPixmap(QLatin1String(":/roundBottomRight.png")) :
-                      QPixmap(QLatin1String(":/rectangularBottomRight.png"));
+        bottomRight = roundBottom ? QPixmap(QStringLiteral(":/roundBottomRight.png")) :
+                      QPixmap(QStringLiteral(":/rectangularBottomRight.png"));
         QPixmapCache::insert(key, bottomRight);
     }
     p->drawPixmap(r.x() + r.width() - rw, r.y() + r.height() - bh, bottomRight,

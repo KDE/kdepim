@@ -190,7 +190,7 @@ bool ResultItemWidget::hasErrorResult() const
 void ResultItemWidget::Private::slotLinkActivated(const QString &link)
 {
     assert(m_result);
-    if (link.startsWith(QLatin1String("key:"))) {
+    if (link.startsWith(QStringLiteral("key:"))) {
         const QStringList split = link.split(QLatin1Char(':'));
         if (split.size() == 3 || m_result->nonce() != split.value(1)) {
             Q_EMIT q->linkActivated(QLatin1String("key://") + split.value(2));
