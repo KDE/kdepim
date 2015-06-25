@@ -21,6 +21,10 @@
 #include "pimcommon_export.h"
 
 #include <Sonnet/Highlighter>
+namespace KPIMTextEdit
+{
+class Rule;
+}
 
 namespace PimCommon
 {
@@ -38,6 +42,7 @@ public:
      */
     void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
 
+    void setSyntaxHighlighterRules(const QVector<KPIMTextEdit::Rule> &rule);
 protected:
     /**
      * Reimplemented, the base version sets the text color to black, which

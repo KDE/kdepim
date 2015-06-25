@@ -18,6 +18,8 @@
 #include "plaintexteditor.h"
 #include "plaintextsyntaxspellcheckinghighlighter.h"
 
+#include <KPIMTextEdit/SyntaxHighlighterBase>
+
 using namespace PimCommon;
 
 class PimCommon::PlainTextSyntaxSpellCheckingHighlighter::PlainTextSyntaxSpellCheckingHighlighterPrivate
@@ -29,6 +31,7 @@ public:
     {
 
     }
+    QVector<KPIMTextEdit::Rule> rules;
     PlainTextEditor *editor;
     QColor misspelledColor;
     bool spellCheckingEnabled;
@@ -56,9 +59,25 @@ void PlainTextSyntaxSpellCheckingHighlighter::toggleSpellHighlighting(bool on)
     }
 }
 
+void PlainTextSyntaxSpellCheckingHighlighter::setSyntaxHighlighterRules(const QVector<KPIMTextEdit::Rule> &rule)
+{
+    d->rules = rule;
+}
+
 void PlainTextSyntaxSpellCheckingHighlighter::highlightBlock(const QString &text)
 {
-
+    Q_FOREACH (const KPIMTextEdit::Rule &rule, d->rules) {
+        const QRegExp expression(rule.pattern);
+        int index = expression.indexIn(text);
+        int length = 0;
+        while (index >= 0 && (length = expression.matchedLength()) > 0) {
+            setFormat(index, length, rule.format);
+            index = expression.indexIn(text, index + length);
+        }
+    }
+    if (d->spellCheckingEnabled) {
+        Highlighter::highlightBlock(text);
+    }
 }
 
 void PlainTextSyntaxSpellCheckingHighlighter::unsetMisspelled(int start, int count)
