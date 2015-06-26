@@ -74,9 +74,9 @@ CustomTemplates::CustomTemplates(const QList<KActionCollection *> &actionCollect
 
     mUi->mKeySequenceWidget->setCheckActionCollections(actionCollection);
 
-    mReplyPix = KIconLoader().loadIcon(QStringLiteral("mail-reply-sender"), KIconLoader::Small);
-    mReplyAllPix = KIconLoader().loadIcon(QStringLiteral("mail-reply-all"), KIconLoader::Small);
-    mForwardPix = KIconLoader().loadIcon(QStringLiteral("mail-forward"), KIconLoader::Small);
+    mReplyPix = KIconLoader::global()->loadIcon(QStringLiteral("mail-reply-sender"), KIconLoader::Small);
+    mReplyAllPix = KIconLoader::global()->loadIcon(QStringLiteral("mail-reply-all"), KIconLoader::Small);
+    mForwardPix = KIconLoader::global()->loadIcon(QStringLiteral("mail-forward"), KIconLoader::Small);
 
     mUi->mType->clear();
     mUi->mType->addItem(QPixmap(), i18nc("Message->", "Universal"));
