@@ -83,7 +83,7 @@ OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterfac
 {
     return
         new OrgKdeAkonadiPOP3SettingsInterface(
-            QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QLatin1String("/Settings"), QDBusConnection::sessionBus());
+            QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QStringLiteral("/Settings"), QDBusConnection::sessionBus());
 }
 
 bool MailCommon::Util::isVirtualCollection(const Akonadi::Collection &collection)
@@ -166,7 +166,7 @@ bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
 
 #if defined(Q_OS_WIN32)
     //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
-    QDBusInterface *interface = new QDBusInterface(QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication"));
+    QDBusInterface *interface = new QDBusInterface(QLatin1String("org.kde.korganizer"), QStringLiteral("/MainApplication"));
     if (!interface->isValid()) {
         qCDebug(MAILCOMMON_LOG) << "Starting korganizer...";
 
@@ -201,7 +201,7 @@ bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
 #endif
     if (result) {
         // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
-        QDBusInterface iface(QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication"),
+        QDBusInterface iface(QLatin1String("org.kde.korganizer"), QStringLiteral("/MainApplication"),
                              QLatin1String("org.kde.PIMUniqueApplication"));
         if (iface.isValid()) {
             if (switchTo) {
@@ -371,7 +371,7 @@ QString MailCommon::Util::realFolderPath(const QString &path)
 {
     QString realPath(path);
     realPath.remove(QLatin1String(".directory"));
-    realPath.replace(QLatin1String("/."), QLatin1String("/"));
+    realPath.replace(QLatin1String("/."), QStringLiteral("/"));
     if (!realPath.isEmpty() && (realPath.at(0) == QLatin1Char('.'))) {
         realPath.remove(0, 1);   //remove first "."
     }

@@ -138,11 +138,11 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
                                 } else if (column == QLatin1String("SecondEmail")) {
                                     qCDebug(IMPORTWIZARD_LOG) << " column " << column << " found but not imported. Need to look at how to import it";
                                 } else if (column == QLatin1String("PreferMailFormat")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("MailPreferedFormatting"), value);
+                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("MailPreferedFormatting"), value);
                                 } else if (column == QLatin1String("PopularityIndex")) {
                                     qCDebug(IMPORTWIZARD_LOG) << " column " << column << " found but not imported. Need to look at how to import it";
                                 } else if (column == QLatin1String("AllowRemoteContent")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("MailAllowToRemoteContent"), value);
+                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("MailAllowToRemoteContent"), value);
                                 } else if (column == QLatin1String("WorkPhone")) {
                                     contact.insertPhoneNumber(KContacts::PhoneNumber(value, KContacts::PhoneNumber::Work));
                                 } else if (column == QLatin1String("HomePhone")) {
@@ -216,13 +216,13 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
                                 } else if (column == QLatin1String("BirthDay")) {
                                     birthday = value.toInt();
                                 } else if (column == QLatin1String("Custom1")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("Custom1"), value);
+                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("Custom1"), value);
                                 } else if (column == QLatin1String("Custom2")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("Custom2"), value);
+                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("Custom2"), value);
                                 } else if (column == QLatin1String("Custom3")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("Custom3"), value);
+                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("Custom3"), value);
                                 } else if (column == QLatin1String("Custom4")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("Custom4"), value);
+                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("Custom4"), value);
                                 } else if (column == QLatin1String("Notes")) {
                                     contact.setNote(value);
                                 } else {
@@ -242,7 +242,7 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
                             if (birthDate.isValid()) {
                                 contact.setBirthday(birthDate);
                             }
-                            addImportNote(contact, QLatin1String("Thunderbird"));
+                            addImportNote(contact, QStringLiteral("Thunderbird"));
                             createContact(contact);
                             qCDebug(IMPORTWIZARD_LOG) << "-----------------------";
                         }

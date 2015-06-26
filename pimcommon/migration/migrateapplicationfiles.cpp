@@ -128,7 +128,7 @@ void MigrateApplicationFiles::migrateFolder(const MigrateFileInfo &info)
 {
     QString originalPath;
     QString newPath;
-    if (info.type() == QStringLiteral("data")) {
+    if (info.type() == QLatin1String("data")) {
         originalPath = mMigration.locateLocal("data", info.path());
         newPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + info.path();
         QFileInfo fileInfo(newPath);
@@ -176,7 +176,7 @@ void MigrateApplicationFiles::migrateFile(const MigrateFileInfo &info)
 {
     QString originalPath;
     QString newPath;
-    if (info.type() == QStringLiteral("data")) {
+    if (info.type() == QLatin1String("data")) {
         originalPath = mMigration.locateLocal("data", info.path());
         newPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + info.path();
         QFileInfo fileInfo(newPath);

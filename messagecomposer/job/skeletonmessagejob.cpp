@@ -187,8 +187,8 @@ void SkeletonMessageJobPrivate::doStart()
 
     // Urgent header
     if (infoPart->urgent()) {
-        KMime::Headers::Generic *urg1 = new KMime::Headers::Generic("X-PRIORITY", message, QLatin1String("2 (High)"), "utf-8");
-        KMime::Headers::Generic *urg2 = new KMime::Headers::Generic("Priority", message, QLatin1String("urgent"), "utf-8");
+        KMime::Headers::Generic *urg1 = new KMime::Headers::Generic("X-PRIORITY", message, QStringLiteral("2 (High)"), "utf-8");
+        KMime::Headers::Generic *urg2 = new KMime::Headers::Generic("Priority", message, QStringLiteral("urgent"), "utf-8");
         message->setHeader(urg1);
         message->setHeader(urg2);
     }

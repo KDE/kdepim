@@ -81,7 +81,7 @@ QString RichTextComposerEmailQuoteHighlighter::highlightParagraph(const QString 
     QString simplified = text;
     simplified = simplified.remove(QRegExp(QLatin1String("\\s"))).
                  replace(QLatin1Char('|'), QLatin1Char('>')).
-                 replace(QLatin1String("&gt;"), QLatin1String(">"));
+                 replace(QLatin1String("&gt;"), QStringLiteral(">"));
 
     while (simplified.startsWith(QStringLiteral(">>>>"))) {
         simplified = simplified.mid(3);

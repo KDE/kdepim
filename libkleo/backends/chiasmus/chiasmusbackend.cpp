@@ -738,7 +738,7 @@ Kleo::CryptoBackend::Protocol *Kleo::ChiasmusBackend::protocol(const char *name)
 bool Kleo::ChiasmusBackend::checkForOpenPGP(QString *reason) const
 {
     if (reason) {
-        *reason = i18n("Unsupported protocol \"%1\"", QLatin1String("OpenPGP"));
+        *reason = i18n("Unsupported protocol \"%1\"", QStringLiteral("OpenPGP"));
     }
     return false;
 }
@@ -746,7 +746,7 @@ bool Kleo::ChiasmusBackend::checkForOpenPGP(QString *reason) const
 bool Kleo::ChiasmusBackend::checkForSMIME(QString *reason) const
 {
     if (reason) {
-        *reason = i18n("Unsupported protocol \"%1\"", QLatin1String("SMIME"));
+        *reason = i18n("Unsupported protocol \"%1\"", QStringLiteral("SMIME"));
     }
     return false;
 }
@@ -758,7 +758,7 @@ bool Kleo::ChiasmusBackend::checkForChiasmus(QString *reason) const
     std::auto_ptr<Protocol> tmp(mProtocol);
     mProtocol = 0;
 
-    const CryptoConfigEntry *path = config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("path"));
+    const CryptoConfigEntry *path = config()->entry(QLatin1String("Chiasmus"), QStringLiteral("General"), QStringLiteral("path"));
     assert(path); assert(path->argType() == CryptoConfigEntry::ArgType_Path);
     const QString chiasmus = path->urlValue().path();
     const QFileInfo fi(KShell::tildeExpand(chiasmus));

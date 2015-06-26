@@ -67,7 +67,7 @@ void GrantleePrint::changeGrantleePath(const QString &path)
 
 void GrantleePrint::setContent(const QString &content)
 {
-    mSelfcontainedTemplate = mEngine->newTemplate(content, QLatin1String("content"));
+    mSelfcontainedTemplate = mEngine->newTemplate(content, QStringLiteral("content"));
     if (mSelfcontainedTemplate->error()) {
         mErrorMessage = mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
     }

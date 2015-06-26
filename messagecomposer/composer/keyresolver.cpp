@@ -1950,14 +1950,14 @@ Kleo::KeyResolver::ContactPreferences Kleo::KeyResolver::lookupContactPreference
     ContactPreferences pref;
     if (!res.isEmpty()) {
         KContacts::Addressee addr = res.at(0);
-        QString encryptPref = addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF"));
+        QString encryptPref = addr.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("CRYPTOENCRYPTPREF"));
         pref.encryptionPreference = Kleo::stringToEncryptionPreference(encryptPref);
-        QString signPref = addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF"));
+        QString signPref = addr.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("CRYPTOSIGNPREF"));
         pref.signingPreference = Kleo::stringToSigningPreference(signPref);
-        QString cryptoFormats = addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOPROTOPREF"));
+        QString cryptoFormats = addr.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("CRYPTOPROTOPREF"));
         pref.cryptoMessageFormat = Kleo::stringToCryptoMessageFormat(cryptoFormats);
-        pref.pgpKeyFingerprints = addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("OPENPGPFP")).split(QLatin1Char(','), QString::SkipEmptyParts);
-        pref.smimeCertFingerprints = addr.custom(QLatin1String("KADDRESSBOOK"), QLatin1String("SMIMEFP")).split(QLatin1Char(','), QString::SkipEmptyParts);
+        pref.pgpKeyFingerprints = addr.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("OPENPGPFP")).split(QLatin1Char(','), QString::SkipEmptyParts);
+        pref.smimeCertFingerprints = addr.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("SMIMEFP")).split(QLatin1Char(','), QString::SkipEmptyParts);
     }
     // insert into map and grab resulting iterator
     d->mContactPreferencesMap.insert(std::make_pair(address, pref));

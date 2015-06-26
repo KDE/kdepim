@@ -51,7 +51,7 @@ void ImapResourceCapabilitiesManager::searchCapabilities(const QString &identifi
     mImapResource.insert(identifier, true);
     QDBusInterface iface(
         QLatin1String("org.freedesktop.Akonadi.Resource.") + identifier,
-        QLatin1String("/"), QLatin1String("org.kde.Akonadi.ImapResourceBase"),
+        QLatin1String("/"), QStringLiteral("org.kde.Akonadi.ImapResourceBase"),
         KDBusConnectionPool::threadConnection(), this);
 
     if (iface.isValid()) {

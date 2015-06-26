@@ -1018,7 +1018,7 @@ QString cleanFileName(const QString &name)
     // We also look at the special case of ": ", since converting that to "_ "
     // would look strange, simply "_" looks better.
     // https://issues.kolab.org/issue3805
-    fileName.replace(QLatin1String(": "), QLatin1String("_"));
+    fileName.replace(QLatin1String(": "), QStringLiteral("_"));
     // replace all ':' with '_' because ':' isn't allowed on FAT volumes
     fileName.replace(QLatin1Char(':'), QLatin1Char('_'));
     // better not use a dir-delimiter in a filename

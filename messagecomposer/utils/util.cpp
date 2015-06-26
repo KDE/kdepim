@@ -283,7 +283,7 @@ bool MessageComposer::Util::sendMailDispatcherIsOnline(QWidget *parent)
     Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance(QLatin1String("akonadi_maildispatcher_agent"));
     if (!instance.isValid()) {
         const int rc = KMessageBox::warningYesNo(parent, i18n("The mail dispatcher is not set up, so mails cannot be sent. Do you want to create a mail dispatcher?"),
-                       i18n("No mail dispatcher."), KStandardGuiItem::yes(), KStandardGuiItem::no(), QLatin1String("no_maildispatcher"));
+                       i18n("No mail dispatcher."), KStandardGuiItem::yes(), KStandardGuiItem::no(), QStringLiteral("no_maildispatcher"));
         if (rc == KMessageBox::Yes) {
             const Akonadi::AgentType type = Akonadi::AgentManager::self()->type(QLatin1String("akonadi_maildispatcher_agent"));
             Q_ASSERT(type.isValid());
@@ -296,7 +296,7 @@ bool MessageComposer::Util::sendMailDispatcherIsOnline(QWidget *parent)
         return true;
     } else {
         const int rc = KMessageBox::warningYesNo(parent, i18n("The mail dispatcher is offline, so mails cannot be sent. Do you want to make it online?"),
-                       i18n("Mail dispatcher offline."), KStandardGuiItem::yes(), KStandardGuiItem::no(), QLatin1String("maildispatcher_put_online"));
+                       i18n("Mail dispatcher offline."), KStandardGuiItem::yes(), KStandardGuiItem::no(), QStringLiteral("maildispatcher_put_online"));
         if (rc == KMessageBox::Yes) {
             instance.setIsOnline(true);
             return true;
@@ -332,7 +332,7 @@ void MessageComposer::Util::addTextBox(QTextEdit *edit)
     if (cursor.hasSelection()) {
         QString s = cursor.selectedText();
         s.prepend(QLatin1String(",----[  ]\n| "));
-        s.replace(QChar::ParagraphSeparator, QLatin1String("\n| "));
+        s.replace(QChar::ParagraphSeparator, QStringLiteral("\n| "));
         s.append(QLatin1String("\n`----"));
         edit->insertPlainText(s);
     } else {

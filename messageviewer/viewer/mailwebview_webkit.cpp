@@ -271,7 +271,7 @@ bool MailWebView::isAttachmentInjectionPoint(const QPoint &global) const
     // for QTextBrowser, can be implemented as 'return false'
     const QPoint local = page()->view()->mapFromGlobal(global);
     const QWebHitTestResult hit = page()->currentFrame()->hitTestContent(local);
-    return has_parent_div_with_id(hit.enclosingBlockElement(), QLatin1String("attachmentInjectionPoint"));
+    return has_parent_div_with_id(hit.enclosingBlockElement(), QStringLiteral("attachmentInjectionPoint"));
 }
 
 void MailWebView::injectAttachments(const function<QString()> &delayedHtml)
@@ -375,7 +375,7 @@ void MailWebView::setElementByIdVisible(const QString &id, bool visible)
     if (visible) {
         e.removeAttribute(QStringLiteral("display"));
     } else {
-        e.setStyleProperty(QLatin1String("display"), QLatin1String("none"));
+        e.setStyleProperty(QLatin1String("display"), QStringLiteral("none"));
     }
 }
 

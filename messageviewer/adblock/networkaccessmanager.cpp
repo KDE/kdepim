@@ -46,7 +46,7 @@ public:
         setRequest(req);
         setUrl(req.url());
         setHeader(QNetworkRequest::ContentLengthHeader, 0);
-        setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("text/plain"));
+        setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("text/plain"));
         setError(QNetworkReply::ContentAccessDenied, i18n("Blocked by ad filter"));
         setAttribute(QNetworkRequest::User, QNetworkReply::ContentAccessDenied);
         QTimer::singleShot(0, this, SIGNAL(finished()));

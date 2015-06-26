@@ -44,7 +44,7 @@ bool AttachmentEditJob::addAttachment(KMime::Content *node, bool showWarning)
 {
     if (showWarning && KMessageBox::warningContinueCancel(mMainWindow,
             i18n("Modifying an attachment might invalidate any digital signature on this message."),
-            i18n("Edit Attachment"), KGuiItem(i18n("Edit"), QLatin1String("document-properties")), KStandardGuiItem::cancel(),
+            i18n("Edit Attachment"), KGuiItem(i18n("Edit"), QStringLiteral("document-properties")), KStandardGuiItem::cancel(),
             QLatin1String("EditAttachmentSignatureWarning"))
             != KMessageBox::Continue) {
         return false;

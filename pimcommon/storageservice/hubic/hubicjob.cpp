@@ -71,7 +71,7 @@ void HubicJob::requestTokenAccess()
     mError = false;
     mActionType = PimCommon::StorageServiceAbstract::RequestTokenAction;
     QUrl url(mServiceUrl + mAuthorizePath);
-    url.addQueryItem(QLatin1String("response_type"), QLatin1String("code"));
+    url.addQueryItem(QLatin1String("response_type"), QStringLiteral("code"));
     url.addQueryItem(QLatin1String("client_id"), mClientId);
     url.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
     if (!mScope.isEmpty()) {
@@ -133,11 +133,11 @@ void HubicJob::getTokenAccess(const QString &authorizeCode)
     mActionType = PimCommon::StorageServiceAbstract::AccessTokenAction;
     mError = false;
     QNetworkRequest request(QUrl(mServiceUrl + mPathToken));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QUrl postData;
     postData.addQueryItem(QLatin1String("code"), authorizeCode);
     postData.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
-    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("authorization_code"));
+    postData.addQueryItem(QLatin1String("grant_type"), QStringLiteral("authorization_code"));
     postData.addQueryItem(QLatin1String("client_id"), mClientId);
     postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
@@ -292,10 +292,10 @@ void HubicJob::refreshToken()
 {
     mActionType = PimCommon::StorageServiceAbstract::AccessTokenAction;
     QNetworkRequest request(QUrl(QLatin1String("https://api.hubic.com/oauth/token/")));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QUrl postData;
     postData.addQueryItem(QLatin1String("refresh_token"), mRefreshToken);
-    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("refresh_token"));
+    postData.addQueryItem(QLatin1String("grant_type"), QStringLiteral("refresh_token"));
     postData.addQueryItem(QLatin1String("client_id"), mClientId);
     postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
     qCDebug(PIMCOMMON_LOG) << "refreshToken postData: " << postData;
@@ -363,7 +363,7 @@ QNetworkReply *HubicJob::uploadFile(const QString &filename, const QString &uplo
             QUrl url;
             url.setUrl(QLatin1String("https://upload.box.com/api/2.0/files/content"));
             QNetworkRequest request(url);
-            request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+            request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
             request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
             QUrl postData;
             postData.addQueryItem(QLatin1String("parent_id"), destination);
@@ -398,7 +398,7 @@ void HubicJob::listFolder(const QString &folder)
     QUrl url;
     url.setUrl(mApiUrl + mFolderInfoPath + (folder.isEmpty() ? QLatin1String("0") : folder) + QLatin1String("/items?fields=name,created_at,size,modified_at,id"));
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
@@ -412,7 +412,7 @@ void HubicJob::accountInfo()
     QUrl url;
     url.setUrl(mApiUrl + mCurrentAccountInfoPath);
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &HubicJob::slotError);
@@ -590,7 +590,7 @@ QNetworkReply *HubicJob::downloadFile(const QString &name, const QString &fileId
         url.setUrl(mApiUrl + mFileInfoPath + fileId + QLatin1String("/content"));
         qCDebug(PIMCOMMON_LOG) << "url!" << url;
         QNetworkRequest request(url);
-        request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+        request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
         request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
         QNetworkReply *reply = mNetworkAccessManager->get(request);
         mDownloadFile->setParent(reply);

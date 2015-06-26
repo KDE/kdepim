@@ -50,7 +50,7 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
         serialNumberStr = serialNumberStr.left(serialNumberStr.indexOf(QLatin1Char('/')));
 
         org::kde::kmail::kmail kmail(
-            QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QDBusConnection::sessionBus());
+            QLatin1String("org.kde.kmail"), QStringLiteral("/KMail"), QDBusConnection::sessionBus());
         kmail.showMail(serialNumberStr.toLongLong());
         return true;
     } else if (uri.startsWith(QStringLiteral("mailto:"))) {
@@ -74,7 +74,7 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
         // we must work around QUrl breakage (it doesn't know about URNs)
         const QString uid = QUrl::fromPercentEncoding(uri.toLatin1()).mid(11);
         OrgKdeKorganizerKorganizerInterface korganizerIface(
-            QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus());
+            QLatin1String("org.kde.korganizer"), QStringLiteral("/Korganizer"), QDBusConnection::sessionBus());
 
         return korganizerIface.showIncidence(uid);
     } else if (uri.startsWith(QStringLiteral("akonadi:"))) {
@@ -85,7 +85,7 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
             KToolInvocation::startServiceByDesktopPath(QLatin1String("kmail"));
 
             org::kde::kmail::kmail kmail(
-                QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QDBusConnection::sessionBus());
+                QLatin1String("org.kde.kmail"), QStringLiteral("/KMail"), QDBusConnection::sessionBus());
             kmail.viewMessage(uri);
             return true;
         }

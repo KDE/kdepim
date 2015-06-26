@@ -159,7 +159,7 @@ static void parse_command(QString cmdline, const QString &id, const QString &whi
         throw ArchiveDefinitionError(id, i18n("Cannot use both %f and | in '%1'", whichCommand));
     }
     cmdline.replace(FILE_PLACEHOLDER,        QLatin1String("__files_go_here__"))
-    .replace(INSTALLPATH_PLACEHOLDER, QLatin1String("__path_goes_here__"));
+    .replace(INSTALLPATH_PLACEHOLDER, QStringLiteral("__path_goes_here__"));
     l = KShell::splitArgs(cmdline, KShell::AbortOnMeta | KShell::TildeExpand, &errors);
     l = l.replaceInStrings(QLatin1String("__files_go_here__"), FILE_PLACEHOLDER);
     if (l.indexOf(QRegExp(QLatin1String(".*__path_goes_here__.*"))) >= 0) {

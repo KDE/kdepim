@@ -107,7 +107,7 @@ void CsvXXPort::exportToFile(QFile *file, const KContacts::Addressee::List &cont
 
         // add quoting as defined in RFC 4180
         QString label = ContactFields::label(fields.at(i));
-        label.replace(QLatin1Char('"'), QLatin1String("\"\""));
+        label.replace(QLatin1Char('"'), QStringLiteral("\"\""));
 
         stream << "\"" << label << "\"";
         first = false;
@@ -134,11 +134,11 @@ void CsvXXPort::exportToFile(QFile *file, const KContacts::Addressee::List &cont
                     content = dateTime.date().toString(Qt::ISODate);
                 }
             } else {
-                content = ContactFields::value(fields.at(j), contact).replace(QLatin1Char('\n'), QLatin1String("\\n"));
+                content = ContactFields::value(fields.at(j), contact).replace(QLatin1Char('\n'), QStringLiteral("\\n"));
             }
 
             // add quoting as defined in RFC 4180
-            content.replace(QLatin1Char('"'), QLatin1String("\"\""));
+            content.replace(QLatin1Char('"'), QStringLiteral("\"\""));
 
             stream << '\"' << content << '\"';
             first = false;

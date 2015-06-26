@@ -366,15 +366,15 @@ void KeyListController::createActions(KActionCollection *coll)
         // File menu
         {
             "file_new_certificate", i18n("New Certificate..."), QString(),
-            "view-certificate-add", 0, 0, QLatin1String("Ctrl+N"), false, true
+            "view-certificate-add", 0, 0, QStringLiteral("Ctrl+N"), false, true
         },
         {
             "file_export_certificates", i18n("Export Certificates..."), QString(),
-            "view-certificate-export", 0, 0, QLatin1String("Ctrl+E"), false, true
+            "view-certificate-export", 0, 0, QStringLiteral("Ctrl+E"), false, true
         },
         {
             "file_export_certificates_to_server", i18n("Export Certificates to Server..."), QString(),
-            "view-certificate-export-server", 0, 0, QLatin1String("Ctrl+Shift+E"), false, true
+            "view-certificate-export-server", 0, 0, QStringLiteral("Ctrl+Shift+E"), false, true
         },
         {
             "file_export_secret_keys", i18n("Export Secret Keys..."), QString(),
@@ -382,11 +382,11 @@ void KeyListController::createActions(KActionCollection *coll)
         },
         {
             "file_lookup_certificates", i18n("Lookup Certificates on Server..."), QString(),
-            "edit-find", 0, 0, QLatin1String("Shift+Ctrl+I"), false, true
+            "edit-find", 0, 0, QStringLiteral("Shift+Ctrl+I"), false, true
         },
         {
             "file_import_certificates", i18n("Import Certificates..."), QString(),
-            "view-certificate-import", 0, 0, QLatin1String("Ctrl+I"), false, true
+            "view-certificate-import", 0, 0, QStringLiteral("Ctrl+I"), false, true
         },
         {
             "file_decrypt_verify_files", i18n("Decrypt/Verify Files..."), QString(),
@@ -407,11 +407,11 @@ void KeyListController::createActions(KActionCollection *coll)
         // View menu
         {
             "view_redisplay", i18n("Redisplay"), QString(),
-            "view-refresh", 0, 0, QLatin1String("F5"), false, true
+            "view-refresh", 0, 0, QStringLiteral("F5"), false, true
         },
         {
             "view_stop_operations", i18n("Stop Operation"), QString(),
-            "process-stop", this, SLOT(cancelCommands()), QLatin1String("Escape"), false, false
+            "process-stop", this, SLOT(cancelCommands()), QStringLiteral("Escape"), false, false
         },
         {
             "view_certificate_details", i18n("Certificate Details"), QString(),
@@ -420,7 +420,7 @@ void KeyListController::createActions(KActionCollection *coll)
         // Certificate menu
         {
             "certificates_delete", i18n("Delete"), QString()/*i18n("Delete selected certificates")*/,
-            "edit-delete", 0, 0, QLatin1String("Delete"), false, true
+            "edit-delete", 0, 0, QStringLiteral("Delete"), false, true
         },
         {
             "certificates_certify_certificate", i18n("Certify Certificate..."), QString(),

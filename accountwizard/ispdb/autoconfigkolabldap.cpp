@@ -65,55 +65,55 @@ ldapServer AutoconfigKolabLdap::createLdapServer(const QDomElement &n)
         QDomElement f = o.toElement();
         if (!f.isNull()) {
             const QString tagName(f.tagName());
-            if (tagName == QStringLiteral("hostname")) {
+            if (tagName == QLatin1String("hostname")) {
                 s.hostname = replacePlaceholders(f.text());
-            } else if (tagName == QStringLiteral("port")) {
+            } else if (tagName == QLatin1String("port")) {
                 s.port = f.text().toInt();
-            } else if (tagName == QStringLiteral("socketType")) {
+            } else if (tagName == QLatin1String("socketType")) {
                 const QString type(f.text());
-                if (type == QStringLiteral("plain")) {
+                if (type == QLatin1String("plain")) {
                     s.socketType = KLDAP::LdapServer::None;
-                } else if (type == QStringLiteral("SSL")) {
+                } else if (type == QLatin1String("SSL")) {
                     s.socketType =  KLDAP::LdapServer::SSL;
-                } else if (type == QStringLiteral("TLS")) {
+                } else if (type == QLatin1String("TLS")) {
                     s.socketType = KLDAP::LdapServer::TLS;
                 }
-            } else if (tagName == QStringLiteral("authentication")) {
+            } else if (tagName == QLatin1String("authentication")) {
                 const QString type(f.text());
-                if (type == QStringLiteral("anonyoum")) {
+                if (type == QLatin1String("anonyoum")) {
                     s.authentication = KLDAP::LdapServer::Anonymous;
-                } else if (type == QStringLiteral("simple")) {
+                } else if (type == QLatin1String("simple")) {
                     s.authentication = KLDAP::LdapServer::Simple;
-                } else if (type == QStringLiteral("sasl")) {
+                } else if (type == QLatin1String("sasl")) {
                     s.authentication = KLDAP::LdapServer::SASL;
                 }
-            } else if (tagName == QStringLiteral("bindDn")) {
+            } else if (tagName == QLatin1String("bindDn")) {
                 s.bindDn = f.text();
-            } else if (tagName == QStringLiteral("sasl-mech")) {
+            } else if (tagName == QLatin1String("sasl-mech")) {
                 s.saslMech = f.text();
-            } else if (tagName == QStringLiteral("username")) {
+            } else if (tagName == QLatin1String("username")) {
                 s.username = f.text();
-            } else if (tagName == QStringLiteral("password")) {
+            } else if (tagName == QLatin1String("password")) {
                 s.password = f.text();
-            } else if (tagName == QStringLiteral("realm")) {
+            } else if (tagName == QLatin1String("realm")) {
                 s.realm = f.text();
-            } else if (tagName == QStringLiteral("dn")) {
+            } else if (tagName == QLatin1String("dn")) {
                 s.dn = f.text();
-            } else if (tagName == QStringLiteral("ldapVersion")) {
+            } else if (tagName == QLatin1String("ldapVersion")) {
                 s.ldapVersion = f.text().toInt();
-            } else if (tagName == QStringLiteral("filter")) {
+            } else if (tagName == QLatin1String("filter")) {
                 s.filter = f.text();
-            } else if (tagName == QStringLiteral("pagesize")) {
+            } else if (tagName == QLatin1String("pagesize")) {
                 s.pageSize = f.text().toInt();
                 if (s.pageSize < 1 || s.pageSize > 9999999) {
                     s.pageSize = -1;
                 }
-            } else if (tagName == QStringLiteral("timelimit")) {
+            } else if (tagName == QLatin1String("timelimit")) {
                 s.timeLimit = f.text().toInt();
                 if (s.timeLimit < 1 || s.timeLimit > 9999999) {
                     s.timeLimit = -1;
                 }
-            } else if (tagName == QStringLiteral("sizelimit")) {
+            } else if (tagName == QLatin1String("sizelimit")) {
                 s.sizeLimit = f.text().toInt();
                 if (s.sizeLimit < 1 || s.sizeLimit > 9999999) {
                     s.sizeLimit = -1;

@@ -92,12 +92,12 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
         }
     }
     if (!header.isEmpty()) {
-        const int oldValue = readKmailSettings(QLatin1String("General"), QLatin1String("mime-header-count"));
+        const int oldValue = readKmailSettings(QLatin1String("General"), QStringLiteral("mime-header-count"));
         int newValue = header.count();
         if (oldValue != -1) {
             newValue += oldValue;
         }
-        addKmailConfig(QLatin1String("General"), QLatin1String("mime-header-count"), newValue);
+        addKmailConfig(QLatin1String("General"), QStringLiteral("mime-header-count"), newValue);
         int currentHeader = (oldValue > 0) ? oldValue : 0;
         for (QMapIterator<QString, QString> it(header);  it.hasNext();) {
             it.next();
@@ -164,7 +164,7 @@ void SylpheedSettings::readTemplateFormat(const KConfigGroup &group)
 {
     const QString replyQuote = group.readEntry(QLatin1String("reply_quote_mark"));
     if (!replyQuote.isEmpty()) {
-        addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("QuoteString"), replyQuote);
+        addKmailConfig(QLatin1String("TemplateParser"), QStringLiteral("QuoteString"), replyQuote);
     }
     const QString forwardQuote = group.readEntry(QLatin1String("forward_quote_mark"));
     if (!forwardQuote.isEmpty()) {
@@ -172,11 +172,11 @@ void SylpheedSettings::readTemplateFormat(const KConfigGroup &group)
     }
     const QString replyQuoteFormat = group.readEntry(QLatin1String("reply_quote_format"));
     if (!replyQuoteFormat.isEmpty()) {
-        addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("TemplateReply"), convertToKmailTemplate(replyQuoteFormat));
+        addKmailConfig(QLatin1String("TemplateParser"), QStringLiteral("TemplateReply"), convertToKmailTemplate(replyQuoteFormat));
     }
     const QString forwardQuoteFormat = group.readEntry(QLatin1String("forward_quote_format"));
     if (!forwardQuoteFormat.isEmpty()) {
-        addKmailConfig(QLatin1String("TemplateParser"), QLatin1String("TemplateForward"), convertToKmailTemplate(forwardQuoteFormat));
+        addKmailConfig(QLatin1String("TemplateParser"), QStringLiteral("TemplateForward"), convertToKmailTemplate(forwardQuoteFormat));
     }
 }
 
@@ -184,7 +184,7 @@ void SylpheedSettings::readDateFormat(const KConfigGroup &group)
 {
     const QString dateFormat = group.readEntry(QLatin1String("date_format"));
     if (!dateFormat.isEmpty()) {
-        addKmailConfig(QLatin1String("General"), QLatin1String("customDateFormat"), dateFormat);
+        addKmailConfig(QLatin1String("General"), QStringLiteral("customDateFormat"), dateFormat);
     }
 }
 
@@ -367,15 +367,15 @@ void SylpheedSettings::readImapAccount(const KConfigGroup &accountConfig, bool c
     switch (sslimap) {
     case 0:
         //None
-        settings.insert(QLatin1String("Safety"), QLatin1String("NONE"));
+        settings.insert(QLatin1String("Safety"), QStringLiteral("NONE"));
         break;
     case 1:
         //SSL
-        settings.insert(QLatin1String("Safety"), QLatin1String("SSL"));
+        settings.insert(QLatin1String("Safety"), QStringLiteral("SSL"));
         break;
     case 2:
         //TLS
-        settings.insert(QLatin1String("Safety"), QLatin1String("STARTTLS"));
+        settings.insert(QLatin1String("Safety"), QStringLiteral("STARTTLS"));
         break;
     default:
         qCDebug(IMPORTWIZARD_LOG) << " sslimap unknown " << sslimap;

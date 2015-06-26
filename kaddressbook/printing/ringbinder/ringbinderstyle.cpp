@@ -94,7 +94,7 @@ static QString contactsToHtml(const KContacts::Addressee::List &contacts, int fi
         }
         if (fields & Note) {
             if (!contact.note().isEmpty()) {
-                const QString note = QLatin1String("Note: ") + contact.note().replace(QLatin1Char('\n'), QLatin1String("<br/>"));
+                const QString note = QLatin1String("Note: ") + contact.note().replace(QLatin1Char('\n'), QStringLiteral("<br/>"));
 
                 rightBlock.append(note);
             }
@@ -103,7 +103,7 @@ static QString contactsToHtml(const KContacts::Addressee::List &contacts, int fi
             const KContacts::Address::List addresses = contact.addresses();
             foreach (const KContacts::Address &address, addresses) {
                 const QString data =
-                    address.formattedAddress().replace(QLatin1String("\n\n"), QLatin1String("\n")).replace(QLatin1Char('\n'), QLatin1String("<br/>"));
+                    address.formattedAddress().replace(QLatin1String("\n\n"), QStringLiteral("\n")).replace(QLatin1Char('\n'), QStringLiteral("<br/>"));
                 const QString subBlock = QLatin1String("<p style=\"margin-top: 0px; margin-left: 20px\">") + data + QLatin1String("</p>");
 
                 leftBlock.append(subBlock);

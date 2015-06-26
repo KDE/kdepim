@@ -71,17 +71,17 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine(QTextStream &stream
     if (line.startsWith(QStringLiteral("name="))) {
         appendFilter(filter);
         filter = new MailFilter();
-        line = cleanArgument(line, QLatin1String("name="));
+        line = cleanArgument(line, QStringLiteral("name="));
         filter->pattern()->setName(line);
         filter->setToolbarName(line);
     } else if (line.startsWith(QStringLiteral("action="))) {
-        line = cleanArgument(line, QLatin1String("action="));
+        line = cleanArgument(line, QStringLiteral("action="));
         QString value;
         QString actionName = extractActions(line, filter, value);
         if (!stream.atEnd()) {
             line = stream.readLine();
             if (line.startsWith(QStringLiteral("actionValue="))) {
-                value = cleanArgument(line, QLatin1String("actionValue="));
+                value = cleanArgument(line, QStringLiteral("actionValue="));
                 //change priority
                 if (actionName == QLatin1String("Change priority")) {
                     QStringList lstValue;
@@ -119,23 +119,23 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine(QTextStream &stream
             createFilterAction(filter, actionName, value);
         }
     } else if (line.startsWith(QStringLiteral("enabled="))) {
-        line = cleanArgument(line, QLatin1String("enabled="));
+        line = cleanArgument(line, QStringLiteral("enabled="));
         if (line == QLatin1String("no")) {
             filter->setEnabled(false);
         }
     } else if (line.startsWith(QStringLiteral("condition="))) {
-        line = cleanArgument(line, QLatin1String("condition="));
+        line = cleanArgument(line, QStringLiteral("condition="));
         extractConditions(line, filter);
     } else if (line.startsWith(QStringLiteral("type="))) {
-        line = cleanArgument(line, QLatin1String("type="));
+        line = cleanArgument(line, QStringLiteral("type="));
         extractType(line, filter);
     } else if (line.startsWith(QStringLiteral("version="))) {
-        line = cleanArgument(line, QLatin1String("version="));
+        line = cleanArgument(line, QStringLiteral("version="));
         if (line.toInt() != 9) {
             qCDebug(MAILCOMMON_LOG) << " thunderbird filter version different of 9 need to look at if it changed";
         }
     } else if (line.startsWith(QStringLiteral("logging="))) {
-        line = cleanArgument(line, QLatin1String("logging="));
+        line = cleanArgument(line, QStringLiteral("logging="));
         if (line == QLatin1String("no")) {
             //TODO
         } else if (line == QLatin1String("yes")) {

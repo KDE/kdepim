@@ -356,8 +356,8 @@ void TemplatesConfiguration::slotInsertCommand(const QString &cmd, int adjustCur
 
     // qCDebug(TEMPLATEPARSER_LOG) << "Insert command:" << cmd;
     const QString editText(edit->toPlainText());
-    if ((editText.contains(QStringLiteral("%FORCEDPLAIN")) && (cmd == QStringLiteral("%FORCEDHTML"))) ||
-            (editText.contains(QStringLiteral("%FORCEDHTML")) && (cmd == QStringLiteral("%FORCEDPLAIN")))) {
+    if ((editText.contains(QStringLiteral("%FORCEDPLAIN")) && (cmd == QLatin1String("%FORCEDHTML"))) ||
+            (editText.contains(QStringLiteral("%FORCEDHTML")) && (cmd == QLatin1String("%FORCEDPLAIN")))) {
         KMessageBox::error(
             this,
             i18n("Use of \"Reply using plain text\" and \"Reply using HTML text\" in pairs"

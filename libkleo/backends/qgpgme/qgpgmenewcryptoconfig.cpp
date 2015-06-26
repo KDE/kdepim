@@ -292,8 +292,8 @@ static QString gpgconf_escape(const QString &str)
 static QString urlpart_encode(const QString &str)
 {
     QString enc(str);
-    enc.replace(QLatin1Char('%'), QLatin1String("%25"));   // first!
-    enc.replace(QLatin1Char(':'), QLatin1String("%3a"));
+    enc.replace(QLatin1Char('%'), QStringLiteral("%25"));   // first!
+    enc.replace(QLatin1Char(':'), QStringLiteral("%3a"));
     //qCDebug(GPGPME_BACKEND_LOG) <<"  urlpart_encode:" << str <<" ->" << enc;
     return enc;
 }

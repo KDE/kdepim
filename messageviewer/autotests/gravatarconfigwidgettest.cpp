@@ -68,9 +68,9 @@ void GravatarConfigWidgetTest::shouldChangeState()
     MessageViewer::GravatarConfigWidget w;
     w.show();
     QGroupBox *groupBox = w.findChild<QGroupBox *>(QStringLiteral("gravatarcheckbox"));
-    QCheckBox *useDefaultImage = qFindChild<QCheckBox *>(&w, QLatin1String("usedefaultimage"));
-    QPushButton *clearGravatarCache = qFindChild<QPushButton *>(&w, QLatin1String("cleargravatarcachebutton"));
-    QSpinBox *gravatarCacheSize = qFindChild<QSpinBox *>(&w, QLatin1String("gravatarcachesize"));
+    QCheckBox *useDefaultImage = qFindChild<QCheckBox *>(&w, QStringLiteral("usedefaultimage"));
+    QPushButton *clearGravatarCache = qFindChild<QPushButton *>(&w, QStringLiteral("cleargravatarcachebutton"));
+    QSpinBox *gravatarCacheSize = qFindChild<QSpinBox *>(&w, QStringLiteral("gravatarcachesize"));
     QCheckBox *useLibravatar = w.findChild<QCheckBox *>(QStringLiteral("uselibravatarcheckbox"));
     QCheckBox *fallbackGravatar = w.findChild<QCheckBox *>(QStringLiteral("fallbackgravatar"));
 
@@ -114,8 +114,8 @@ void GravatarConfigWidgetTest::shoulEmitConfigChangedSignal()
     MessageViewer::GravatarConfigWidget w;
     w.show();
     QGroupBox *groupBox = w.findChild<QGroupBox *>(QStringLiteral("gravatarcheckbox"));
-    QCheckBox *useDefaultImage = qFindChild<QCheckBox *>(&w, QLatin1String("usedefaultimage"));
-    // TODO QSpinBox *gravatarCacheSize = qFindChild<QSpinBox *>(&w, QLatin1String("gravatarcachesize"));
+    QCheckBox *useDefaultImage = qFindChild<QCheckBox *>(&w, QStringLiteral("usedefaultimage"));
+    // TODO QSpinBox *gravatarCacheSize = qFindChild<QSpinBox *>(&w, QStringLiteral("gravatarcachesize"));
     QCheckBox *useLibravatar = w.findChild<QCheckBox *>(QStringLiteral("uselibravatarcheckbox"));
     QCheckBox *fallbackGravatar = w.findChild<QCheckBox *>(QStringLiteral("fallbackgravatar"));
     QSignalSpy spy(&w, SIGNAL(configChanged(bool)));

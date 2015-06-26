@@ -79,7 +79,7 @@ void TemplateManager::loadTemplates(bool init)
         QDirIterator dirIt(directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot);
         while (dirIt.hasNext()) {
             dirIt.next();
-            TemplateInfo info = loadTemplate(dirIt.filePath(), QLatin1String("template.desktop"));
+            TemplateInfo info = loadTemplate(dirIt.filePath(), QStringLiteral("template.desktop"));
             if (info.isValid()) {
                 mTemplateListWidget->addDefaultTemplate(info.name, info.script);
             }
@@ -94,7 +94,7 @@ TemplateInfo TemplateManager::loadTemplate(const QString &themePath, const QStri
     TemplateInfo info;
     const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
     KConfig config(themeInfoFile);
-    KConfigGroup group(&config, QLatin1String("Desktop Entry"));
+    KConfigGroup group(&config, QStringLiteral("Desktop Entry"));
 
     info.name = group.readEntry("Name", QString());
     const QString filename = group.readEntry("FileName" , QString());

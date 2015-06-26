@@ -244,13 +244,13 @@ void SetupManager::setPersonalDataAvailable(bool available)
 QObject *SetupManager::ispDB(const QString &type)
 {
     const QString t = type.toLower();
-    if (t == QStringLiteral("autoconfigkolabmail")) {
+    if (t == QLatin1String("autoconfigkolabmail")) {
         return new SetupAutoconfigKolabMail(this);
-    } else if (t == QStringLiteral("autoconfigkolabldap")) {
+    } else if (t == QLatin1String("autoconfigkolabldap")) {
         return new SetupAutoconfigKolabLdap(this);
-    } else if (t == QStringLiteral("autoconfigkolabfreebusy")) {
+    } else if (t == QLatin1String("autoconfigkolabfreebusy")) {
         return new SetupAutoconfigKolabFreebusy(this);
-    } else if (t == QStringLiteral("ispdb")) {
+    } else if (t == QLatin1String("ispdb")) {
         return new SetupIspdb(this);
     } else {
         return new SetupIspdb(this);

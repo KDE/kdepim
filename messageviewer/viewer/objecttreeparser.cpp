@@ -1296,7 +1296,7 @@ bool ObjectTreeParser::processTextHtmlSubtype(KMime::Content *curNode, ProcessRe
             ConvertHtmlToPlainText convert;
             convert.setHtmlString(QString::fromUtf8(partBody));
             QString result = convert.generatePlainText();
-            result.replace(QLatin1String("\n"), QLatin1String("<br>"));
+            result.replace(QLatin1String("\n"), QStringLiteral("<br>"));
             htmlWriter()->queue(result);
         }
         htmlWriter()->queue(QLatin1String("</div>\n"));
@@ -1469,7 +1469,7 @@ bool ObjectTreeParser::processTextPlainSubtype(KMime::Content *curNode, ProcessR
         QString htmlStr = QLatin1String("<table cellspacing=\"1\" class=\"textAtm\">"
                                         "<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">");
         if (!fileName.isEmpty())
-            htmlStr += QLatin1String("<a href=\"") + mNodeHelper->asHREF(curNode, QLatin1String("body")) + QLatin1String("\">")
+            htmlStr += QLatin1String("<a href=\"") + mNodeHelper->asHREF(curNode, QStringLiteral("body")) + QLatin1String("\">")
                        + label + QLatin1String("</a>");
         else {
             htmlStr += label;
@@ -2274,7 +2274,7 @@ void ObjectTreeParser::writePartIcon(KMime::Content *msgPart, bool inlineImage)
         comment.clear();
     }
 
-    QString href = mNodeHelper->asHREF(msgPart, QLatin1String("body"));
+    QString href = mNodeHelper->asHREF(msgPart, QStringLiteral("body"));
 
     if (inlineImage) {
         const QString fileName = mNodeHelper->writeNodeToTempFile(msgPart);
@@ -2581,7 +2581,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
         htmlStr += QLatin1String("<table cellspacing=\"1\" ") + cellPadding + QLatin1String(" class=\"rfc822\">"
                    "<tr class=\"rfc822H\"><td dir=\"") + dir + QLatin1String("\">");
         if (node) {
-            htmlStr += QLatin1String("<a href=\"") + mNodeHelper->asHREF(node, QLatin1String("body")) + QLatin1String("\">")
+            htmlStr += QLatin1String("<a href=\"") + mNodeHelper->asHREF(node, QStringLiteral("body")) + QLatin1String("\">")
                        + i18n("Encapsulated message") + QLatin1String("</a>");
         } else {
             htmlStr += i18n("Encapsulated message");

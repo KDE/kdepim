@@ -225,7 +225,7 @@ bool ListView::Private::ListItemVisitor::visit(const Todo::Ptr &t)
                            t->dtStart(), t->allDay(), true,
                            CalendarSupport::KCalPrefs::instance()->timeSpec()));
     } else {
-        mItem->setText(StartDateTime_Column, QLatin1String("---"));
+        mItem->setText(StartDateTime_Column, QStringLiteral("---"));
     }
 
     if (t->hasDueDate()) {
@@ -234,7 +234,7 @@ bool ListView::Private::ListItemVisitor::visit(const Todo::Ptr &t)
                            CalendarSupport::KCalPrefs::instance()->timeSpec()));
 
     } else {
-        mItem->setText(EndDateTime_Column, QLatin1String("---"));
+        mItem->setText(EndDateTime_Column, QStringLiteral("---"));
     }
     mItem->setText(Categories_Column, t->categoriesStr());
 

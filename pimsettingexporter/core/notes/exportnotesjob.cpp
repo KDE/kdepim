@@ -125,7 +125,7 @@ void ExportNotesJob::backupData()
             const QString archivePath = Utils::notePath() + identifier + QDir::separator();
             QUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
-                const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("notes.zip"));
+                const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("notes.zip"));
                 if (fileAdded) {
                     const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                     if (!errorStr.isEmpty()) {

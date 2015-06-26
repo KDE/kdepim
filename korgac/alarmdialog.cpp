@@ -947,7 +947,7 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer(const Incidence::Ptr &inc
         }
     }
     org::kde::korganizer::Korganizer korganizer(
-        QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus());
+        QLatin1String("org.kde.korganizer"), QStringLiteral("/Korganizer"), QDBusConnection::sessionBus());
 
     qCDebug(KOALARMCLIENT_LOG) << "editing incidence " << incidence->summary();
     if (!korganizer.editIncidence(incidence->uid())) {

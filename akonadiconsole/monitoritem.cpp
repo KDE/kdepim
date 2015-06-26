@@ -39,7 +39,7 @@ MonitorItem::MonitorItem(const QString &identifier_, MonitorsModel *model):
     }
 
     mInterface = new org::freedesktop::Akonadi::NotificationSource(
-        service, QLatin1String("/subscriber/") + identifier,
+        service, QStringLiteral("/subscriber/") + identifier,
         QDBusConnection::sessionBus(), this);
     if (!mInterface) {
         qCWarning(AKONADICONSOLE_LOG) << "Failed to connect to org.freedesktop.Akonadi.NotificationSource of subscriber" << identifier_;

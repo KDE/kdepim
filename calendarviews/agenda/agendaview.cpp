@@ -1400,7 +1400,7 @@ void AgendaView::createTimeBarHeaders()
 
     foreach (QScrollArea *area, d->mTimeLabelsZone->timeLabels()) {
         TimeLabels *timeLabel = static_cast<TimeLabels *>(area->widget());
-        QLabel *label = new QLabel(timeLabel->header().replace(QLatin1Char('/'), QLatin1String("/ ")),
+        QLabel *label = new QLabel(timeLabel->header().replace(QLatin1Char('/'), QStringLiteral("/ ")),
                                    d->mTimeBarHeaderFrame);
         label->setFont(labelFont);
         label->setAlignment(Qt::AlignBottom | Qt::AlignRight);

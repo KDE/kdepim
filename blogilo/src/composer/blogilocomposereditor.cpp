@@ -136,7 +136,7 @@ void BlogiloComposerEditor::replaceImageSrc(const QString &src, const QString &d
 
 void BlogiloComposerEditor::slotAddPostSplitter()
 {
-    execCommand(QLatin1String("insertHTML"), QLatin1String("<hr/><!--split-->"));
+    execCommand(QLatin1String("insertHTML"), QStringLiteral("<hr/><!--split-->"));
 }
 
 void BlogiloComposerEditor::slotToggleCode(bool)

@@ -124,16 +124,16 @@ void ContactDisplayMessageMemento::processAddress(const KContacts::Addressee &ad
     Q_FOREACH (const QString &custom, customs) {
         if (custom.contains(QStringLiteral("MailPreferedFormatting"))) {
             const QString value = addressee.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("MailPreferedFormatting"));
-            if (value == QStringLiteral("TEXT")) {
+            if (value == QLatin1String("TEXT")) {
                 mForceDisplayTo = Viewer::Text;
-            } else if (value == QStringLiteral("HTML")) {
+            } else if (value == QLatin1String("HTML")) {
                 mForceDisplayTo = Viewer::Html;
             } else {
                 mForceDisplayTo = Viewer::UseGlobalSetting;
             }
         } else if (custom.contains(QStringLiteral("MailAllowToRemoteContent"))) {
             const QString value = addressee.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("MailAllowToRemoteContent"));
-            mMailAllowToRemoteContent = (value == QStringLiteral("TRUE"));
+            mMailAllowToRemoteContent = (value == QLatin1String("TRUE"));
         }
     }
     Q_EMIT changeDisplayMail(mForceDisplayTo, mMailAllowToRemoteContent);

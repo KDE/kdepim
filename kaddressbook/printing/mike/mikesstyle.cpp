@@ -82,13 +82,13 @@ static QString contactsToHtml(const KContacts::Addressee::List &contacts)
 
             if (i < leftFields.count()) {
                 leftTitle = ContactFields::label(leftFields.at(i)) + QLatin1Char(':');
-                leftTitle = leftTitle.replace(QLatin1Char(' '), QLatin1String("&nbsp;"));
+                leftTitle = leftTitle.replace(QLatin1Char(' '), QStringLiteral("&nbsp;"));
                 leftValue = ContactFields::value(leftFields.at(i), contact);
             }
 
             if (i < rightFields.count()) {
                 rightTitle = ContactFields::label(rightFields.at(i)) + QLatin1Char(':');
-                rightTitle = rightTitle.replace(QLatin1Char(' '), QLatin1String("&nbsp;"));
+                rightTitle = rightTitle.replace(QLatin1Char(' '), QStringLiteral("&nbsp;"));
                 rightValue = ContactFields::value(rightFields.at(i), contact);
             }
 

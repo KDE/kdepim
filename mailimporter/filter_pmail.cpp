@@ -230,8 +230,8 @@ void FilterPMail::importUnixMailFolder(const QString &file)
     int n = 0, l = 0;
 
     /** Get the folder name */
-    s.replace(QRegExp(QLatin1String("mbx$")), QLatin1String("pmg"));
-    s.replace(QRegExp(QLatin1String("MBX$")), QLatin1String("PMG"));
+    s.replace(QRegExp(QLatin1String("mbx$")), QStringLiteral("pmg"));
+    s.replace(QRegExp(QLatin1String("MBX$")), QStringLiteral("PMG"));
     f.setFileName(s);
     if (! f.open(QIODevice::ReadOnly)) {
         filterInfo()->alert(i18n("Unable to open %1, skipping", s));
@@ -255,7 +255,7 @@ void FilterPMail::importUnixMailFolder(const QString &file)
     if (! f.open(QIODevice::ReadOnly)) {
         filterInfo()->alert(i18n("Unable to open %1, skipping", s));
     } else {
-        filterInfo()->addInfoLogEntry(i18n("Importing %1", QLatin1String("../") + QString::fromLatin1(pmg_head.folder)));
+        filterInfo()->addInfoLogEntry(i18n("Importing %1", QStringLiteral("../") + QString::fromLatin1(pmg_head.folder)));
         l = f.readLine(line.data(), MAX_LINE); // read the first line which is unneeded
         while (! f.atEnd()) {
             QTemporaryFile tempfile;

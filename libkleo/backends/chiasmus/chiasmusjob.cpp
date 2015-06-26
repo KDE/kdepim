@@ -72,11 +72,11 @@ GpgME::Error Kleo::ChiasmusJob::setup()
     }
 
     const Kleo::CryptoConfigEntry *class_
-        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("symcryptrun-class"));
+        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QStringLiteral("General"), QStringLiteral("symcryptrun-class"));
     const Kleo::CryptoConfigEntry *chiasmus
-        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("path"));
+        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QStringLiteral("General"), QStringLiteral("path"));
     const Kleo::CryptoConfigEntry *timeoutEntry
-        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("timeout"));
+        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QStringLiteral("General"), QStringLiteral("timeout"));
     if (!class_ || !chiasmus || !timeoutEntry) {
         return mError = Error::fromCode(GPG_ERR_INTERNAL);
     }
@@ -162,7 +162,7 @@ GpgME::Error Kleo::ChiasmusJob::finished()
         }
 
     const Kleo::CryptoConfigEntry *showOutput
-        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("show-output"));
+        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QStringLiteral("General"), QStringLiteral("show-output"));
     if (showOutput && showOutput->boolValue()) {
         showChiasmusOutput();
     }

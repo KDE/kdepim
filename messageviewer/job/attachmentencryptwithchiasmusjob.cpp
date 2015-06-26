@@ -198,7 +198,7 @@ void AttachmentEncryptWithChiasmusJob::slotAtmDecryptWithChiasmusResult(const Gp
         return;
     }
 
-    const QUrl url = QFileDialog::getSaveFileUrl(mMainWindow, QString(), QUrl::fromLocalFile(chomp(mCurrentFileName, QLatin1String(".xia"), false)));
+    const QUrl url = QFileDialog::getSaveFileUrl(mMainWindow, QString(), QUrl::fromLocalFile(chomp(mCurrentFileName, QStringLiteral(".xia"), false)));
     if (url.isEmpty()) {
         deleteLater();
         return;

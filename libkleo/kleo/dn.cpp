@@ -418,12 +418,12 @@ QString Kleo::DN::prettyDN() const
     if (d->reorderedAttributes.empty()) {
         d->reorderedAttributes = reorder_dn(d->attributes);
     }
-    return serialise(d->reorderedAttributes, QLatin1String(","));
+    return serialise(d->reorderedAttributes, QStringLiteral(","));
 }
 
 QString Kleo::DN::dn() const
 {
-    return d ? serialise(d->attributes, QLatin1String(",")) : QString() ;
+    return d ? serialise(d->attributes, QStringLiteral(",")) : QString() ;
 }
 
 QString Kleo::DN::dn(const QString &sep) const

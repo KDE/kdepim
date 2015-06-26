@@ -338,18 +338,18 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                         const QString securityMethod = getSecurityMethod(listArgument, found);
                         if (found) {
                             if (securityMethod == QLatin1String("none")) {
-                                settings.insert(QLatin1String("Safety"), QLatin1String("None"));
+                                settings.insert(QLatin1String("Safety"), QStringLiteral("None"));
                                 //Nothing
                             } else if (securityMethod == QLatin1String("ssl-on-alternate-port")) {
-                                settings.insert(QLatin1String("Safety"), QLatin1String("SSL"));
+                                settings.insert(QLatin1String("Safety"), QStringLiteral("SSL"));
                             } else {
                                 qCDebug(IMPORTWIZARD_LOG) << " security method unknown : " << path;
                             }
                         } else {
-                            settings.insert(QLatin1String("Safety"), QLatin1String("STARTTLS"));
+                            settings.insert(QLatin1String("Safety"), QStringLiteral("STARTTLS"));
                         }
 
-                        addAuth(settings, QLatin1String("Authentication"), userName);
+                        addAuth(settings, QStringLiteral("Authentication"), userName);
                         const QString agentIdentifyName = AbstractBase::createResource(QStringLiteral("akonadi_imap_resource"), name, settings);
                         //By default
                         addCheckMailOnStartup(agentIdentifyName, enableManualCheck);
@@ -381,7 +381,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                         if (e.hasAttribute(QStringLiteral("keep-on-server")) && e.attribute(QStringLiteral("keep-on-server")) == QLatin1String("true")) {
                             settings.insert(QLatin1String("LeaveOnServer"), true);
                         }
-                        addAuth(settings, QLatin1String("AuthenticationMethod"), userName);
+                        addAuth(settings, QStringLiteral("AuthenticationMethod"), userName);
                         const QString agentIdentifyName = AbstractBase::createResource(QStringLiteral("akonadi_pop3_resource"), name, settings);
                         //By default
                         addCheckMailOnStartup(agentIdentifyName, enableManualCheck);

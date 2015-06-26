@@ -409,7 +409,7 @@ static bool haveOpenPGPKeyserverConfigured()
     if (!config) {
         return false;
     }
-    const Kleo::CryptoConfigEntry *const entry = config->entry(QLatin1String("gpg"), QLatin1String("Keyserver"), QLatin1String("keyserver"));
+    const Kleo::CryptoConfigEntry *const entry = config->entry(QLatin1String("gpg"), QStringLiteral("Keyserver"), QStringLiteral("keyserver"));
     return entry && !entry->stringValue().isEmpty();
 }
 
@@ -419,9 +419,9 @@ static bool haveX509DirectoryServerConfigured()
     if (!config) {
         return false;
     }
-    const Kleo::CryptoConfigEntry *entry = config->entry(QLatin1String("dirmngr"), QLatin1String("LDAP"), QLatin1String("LDAP Server"));
+    const Kleo::CryptoConfigEntry *entry = config->entry(QLatin1String("dirmngr"), QStringLiteral("LDAP"), QStringLiteral("LDAP Server"));
     bool entriesExist = entry && !entry->urlValueList().empty();
-    entry = config->entry(QLatin1String("gpgsm"), QLatin1String("Configuration"), QLatin1String("keyserver"));
+    entry = config->entry(QLatin1String("gpgsm"), QStringLiteral("Configuration"), QStringLiteral("keyserver"));
     entriesExist |= entry && !entry->stringValueList().empty();
     return entriesExist;
 }

@@ -232,7 +232,7 @@ void MessageFactoryTest::testCreateForward()
     fwdMsg = fwdMsg.arg(datetime).arg(fw->date()->asUnicodeString()).arg(fw->userAgent()->asUnicodeString());
 
 //   qDebug() << "got:" << fw->encodedContent() << "against" << fwdMsg.toLatin1();
-    QCOMPARE(fw->subject()->asUnicodeString(), QLatin1String("Fwd: Test Email Subject"));
+    QCOMPARE(fw->subject()->asUnicodeString(), QStringLiteral("Fwd: Test Email Subject"));
     QCOMPARE_OR_DIFF(fw->encodedContent(), fwdMsg.toLatin1());
 }
 
@@ -290,7 +290,7 @@ void MessageFactoryTest::testCreateRedirect()
 //   qDebug() << "instead:" << rdir->encodedContent();
 
 //   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
-    QCOMPARE(rdir->subject()->asUnicodeString(), QLatin1String("Test Email Subject"));
+    QCOMPARE(rdir->subject()->asUnicodeString(), QStringLiteral("Test Email Subject"));
     QCOMPARE_OR_DIFF(rdir->encodedContent(), baseline.toLatin1());
 }
 
@@ -342,7 +342,7 @@ void MessageFactoryTest::testCreateResend()
     qDebug() << "instead:" << rdir->encodedContent();
 
 //   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
-    QCOMPARE(rdir->subject()->asUnicodeString(), QLatin1String("Test Email Subject"));
+    QCOMPARE(rdir->subject()->asUnicodeString(), QStringLiteral("Test Email Subject"));
     QCOMPARE_OR_DIFF(rdir->encodedContent(), baseline.toLatin1());
 }
 

@@ -937,7 +937,7 @@ private Q_SLOTS:
 
         // RFC 2368 says body's linebreaks need to be encoded as
         // "%0D%0A", so normalize body to CRLF:
-        body.replace(QLatin1Char('\n'), QLatin1String("\r\n")).remove(QLatin1String("\r\r"));
+        body.replace(QLatin1Char('\n'), QStringLiteral("\r\n")).remove(QLatin1String("\r\r"));
 
         QByteArray encoded = "mailto:?to=" + QUrl::toPercentEncoding(to)
                              + "&subject=" + QUrl::toPercentEncoding(subject)
@@ -1444,17 +1444,17 @@ QStringList KeyCreationPage::keyUsages() const
 {
     QStringList usages;
     if (signingAllowed()) {
-        usages << QLatin1String("sign");
+        usages << QStringLiteral("sign");
     }
     if (encryptionAllowed() && !is_dsa(keyType()) && !is_rsa(subkeyType())) {
-        usages << QLatin1String("encrypt");
+        usages << QStringLiteral("encrypt");
     }
     if (0)   // not needed in pgp (implied) and not supported in cms
         if (certificationAllowed()) {
-            usages << QLatin1String("certify");
+            usages << QStringLiteral("certify");
         }
     if (authenticationAllowed()) {
-        usages << QLatin1String("auth");
+        usages << QStringLiteral("auth");
     }
     return usages;
 }
@@ -1483,7 +1483,7 @@ QStringList KeyCreationPage::subkeyUsages() const
     QStringList usages;
     if (encryptionAllowed() && (is_dsa(keyType()) || is_rsa(subkeyType()))) {
         assert(subkeyType());
-        usages << QLatin1String("encrypt");
+        usages << QStringLiteral("encrypt");
     }
     return usages;
 }

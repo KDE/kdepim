@@ -433,7 +433,7 @@ void ConfigureThemesDialog::Private::importThemeButtonClicked()
         KConfig config(filename);
 
         if (config.hasGroup(QLatin1String("MessageListView::Themes"))) {
-            KConfigGroup grp(&config, QLatin1String("MessageListView::Themes"));
+            KConfigGroup grp(&config, QStringLiteral("MessageListView::Themes"));
             const int cnt = grp.readEntry("Count", 0);
             int idx = 0;
             while (idx < cnt) {
@@ -466,7 +466,7 @@ void ConfigureThemesDialog::Private::exportThemeButtonClicked()
     if (!filename.isEmpty()) {
         KConfig config(filename);
 
-        KConfigGroup grp(&config, QLatin1String("MessageListView::Themes"));
+        KConfigGroup grp(&config, QStringLiteral("MessageListView::Themes"));
         grp.writeEntry("Count", list.count());
 
         int idx = 0;

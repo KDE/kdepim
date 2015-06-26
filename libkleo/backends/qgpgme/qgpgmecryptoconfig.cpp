@@ -286,7 +286,7 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut()
             } else {
                 // normal entry
                 if (!mCurrentGroup) {    // first toplevel entry -> create toplevel group
-                    mCurrentGroup = new QGpgMECryptoConfigGroup(this, QLatin1String("<nogroup>"), QString(), 0);
+                    mCurrentGroup = new QGpgMECryptoConfigGroup(this, QStringLiteral("<nogroup>"), QString(), 0);
                     mCurrentGroupName = QLatin1String("<nogroup>");
                 }
                 const QString &name = lst[0];
@@ -437,15 +437,15 @@ static QString gpgconf_escape(const QString &str)
     // Escape special chars (including ':' and '%')
     QString enc = QLatin1String(QUrl::toPercentEncoding(str));   // and convert to utf8 first (to get %12%34 for one special char)
     // Also encode commas, for lists.
-    enc.replace(QLatin1Char(','), QLatin1String("%2c"));
+    enc.replace(QLatin1Char(','), QStringLiteral("%2c"));
     return enc;
 }
 
 static QString urlpart_encode(const QString &str)
 {
     QString enc(str);
-    enc.replace(QLatin1Char('%'), QLatin1String("%25"));   // first!
-    enc.replace(QLatin1Char(':'), QLatin1String("%3a"));
+    enc.replace(QLatin1Char('%'), QStringLiteral("%25"));   // first!
+    enc.replace(QLatin1Char(':'), QStringLiteral("%3a"));
     //qCDebug(GPGPME_BACKEND_LOG) <<"  urlpart_encode:" << str <<" ->" << enc;
     return enc;
 }

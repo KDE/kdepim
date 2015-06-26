@@ -55,8 +55,8 @@ AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
     connect(mUi->matchCase, &QCheckBox::toggled, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
     connect(mUi->applyListElement, &QListWidget::itemChanged, this, &AdBlockCreateFilterDialog::slotUpdateFilter);
     mUi->collapseBlocked->addItem(i18n("Use default"), QString());
-    mUi->collapseBlocked->addItem(i18n("Yes"), QLatin1String("collapse"));
-    mUi->collapseBlocked->addItem(i18n("Not"), QLatin1String("~collapse"));
+    mUi->collapseBlocked->addItem(i18n("Yes"), QStringLiteral("collapse"));
+    mUi->collapseBlocked->addItem(i18n("Not"), QStringLiteral("~collapse"));
     connect(mUi->collapseBlocked, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &AdBlockCreateFilterDialog::slotUpdateFilter);
     readConfig();
 }

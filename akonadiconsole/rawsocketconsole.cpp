@@ -96,7 +96,7 @@ void RawSocketConsole::connectClicked()
     } else {
         QString connectionConfigFile;
         if (Akonadi::ServerManager::self()->hasInstanceIdentifier()) {
-            const QString akonadiPath = XdgBaseDirs::findResourceDir("config", QLatin1String("akonadi"));
+            const QString akonadiPath = XdgBaseDirs::findResourceDir("config", QStringLiteral("akonadi"));
             connectionConfigFile = akonadiPath + QLatin1String("/instance/")
                                    + Akonadi::ServerManager::self()->instanceIdentifier()
                                    + QLatin1String("/akonadiconnectionrc");
@@ -112,7 +112,7 @@ void RawSocketConsole::connectClicked()
         }
         QSettings conSettings(connectionConfigFile, QSettings::IniFormat);
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
-        const QString namedPipe = conSettings.value(QLatin1String("Data/NamedPipe"), QLatin1String("Akonadi")).toString();
+        const QString namedPipe = conSettings.value(QLatin1String("Data/NamedPipe"), QStringLiteral("Akonadi")).toString();
         mSocket->connectToServer(namedPipe);
 #else
         const QString defaultSocketDir = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi"));

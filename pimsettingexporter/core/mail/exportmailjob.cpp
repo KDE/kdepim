@@ -298,7 +298,7 @@ void ExportMailJob::backupConfig()
     }
     const QString adblockFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/adblockrules_local") ;
     if (!adblockFilePath.isEmpty()) {
-        backupFile(adblockFilePath, Utils::dataPath() + QLatin1String("kmail2/") , QLatin1String("adblockrules_local"));
+        backupFile(adblockFilePath, Utils::dataPath() + QLatin1String("kmail2/") , QStringLiteral("adblockrules_local"));
     }
 
     const QString kmailStr(QLatin1String("kmail2rc"));
@@ -476,7 +476,7 @@ void ExportMailJob::backupMails()
                     //Store akonadi agent config
                     QUrl url = Utils::resourcePath(agent);
 
-                    const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("mail.zip"));
+                    const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("mail.zip"));
                     if (fileAdded) {
                         const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                         if (!errorStr.isEmpty()) {

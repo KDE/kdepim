@@ -25,23 +25,23 @@
 QString IncidenceEditorNG::translateLDAPAttributeForDisplay(const QString &attribute)
 {
     QString ret = attribute;
-    if (attribute == QStringLiteral("cn")) {
+    if (attribute == QLatin1String("cn")) {
         ret = i18nc("ldap attribute cn", "Common name");
-    } else if (attribute == QStringLiteral("mail")) {
+    } else if (attribute == QLatin1String("mail")) {
         ret = i18nc("ldap attribute mail", "Email");
-    } else if (attribute == QStringLiteral("givenname")) {
+    } else if (attribute == QLatin1String("givenname")) {
         ret = i18nc("ldap attribute givenname", "Given name");
-    } else if (attribute == QStringLiteral("sn")) {
+    } else if (attribute == QLatin1String("sn")) {
         ret = i18nc("ldap attribute sn", "Surname");
-    } else if (attribute == QStringLiteral("ou")) {
+    } else if (attribute == QLatin1String("ou")) {
         ret = i18nc("ldap attribute ou", "Organization");
-    } else if (attribute == QStringLiteral("objectClass")) {
+    } else if (attribute == QLatin1String("objectClass")) {
         ret = i18nc("ldap attribute objectClass", "Object class");
-    } else if (attribute == QStringLiteral("description")) {
+    } else if (attribute == QLatin1String("description")) {
         ret = i18nc("ldap attribute description", "Description");
-    } else if (attribute == QStringLiteral("telephoneNumber")) {
+    } else if (attribute == QLatin1String("telephoneNumber")) {
         ret = i18nc("ldap attribute telephoneNumber",  "Telephone");
-    } else if (attribute == QStringLiteral("mobile")) {
+    } else if (attribute == QLatin1String("mobile")) {
         ret = i18nc("ldap attribute mobile",  "Mobile");
     }
     return ret;
@@ -50,11 +50,11 @@ QString IncidenceEditorNG::translateLDAPAttributeForDisplay(const QString &attri
 QString IncidenceEditorNG::translateKolabLDAPAttributeForDisplay(const QString &attribute)
 {
     QString ret = attribute;
-    if (attribute == QStringLiteral("numseats")) {
+    if (attribute == QLatin1String("numseats")) {
         ret = i18nc("kolabldap", "Number of seats");
-    } else if (attribute == QStringLiteral("beamer_present")) {
+    } else if (attribute == QLatin1String("beamer_present")) {
         ret = i18nc("kolabldap", "Beamer");
-    } else if (attribute == QStringLiteral("conf_phone_present")) {
+    } else if (attribute == QLatin1String("conf_phone_present")) {
         ret = i18nc("kolabldap", "Conference phone");
     }
     return ret;

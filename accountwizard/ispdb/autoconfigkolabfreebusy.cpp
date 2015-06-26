@@ -64,33 +64,33 @@ freebusy AutoconfigKolabFreebusy::createFreebusyServer(const QDomElement &n)
         QDomElement f = o.toElement();
         if (!f.isNull()) {
             const QString tagName(f.tagName());
-            if (tagName == QStringLiteral("hostname")) {
+            if (tagName == QLatin1String("hostname")) {
                 s.hostname = replacePlaceholders(f.text());
-            } else if (tagName == QStringLiteral("port")) {
+            } else if (tagName == QLatin1String("port")) {
                 s.port = f.text().toInt();
-            } else if (tagName == QStringLiteral("socketType")) {
+            } else if (tagName == QLatin1String("socketType")) {
                 const QString type(f.text());
-                if (type == QStringLiteral("plain")) {
+                if (type == QLatin1String("plain")) {
                     s.socketType = None;
-                } else if (type == QStringLiteral("SSL")) {
+                } else if (type == QLatin1String("SSL")) {
                     s.socketType = SSL;
                 }
-                if (type == QStringLiteral("TLS")) {
+                if (type == QLatin1String("TLS")) {
                     s.socketType = StartTLS;
                 }
-            } else if (tagName == QStringLiteral("username")) {
+            } else if (tagName == QLatin1String("username")) {
                 s.username = replacePlaceholders(f.text());
-            } else if (tagName == QStringLiteral("password")) {
+            } else if (tagName == QLatin1String("password")) {
                 s.password = f.text();
-            } else if (tagName == QStringLiteral("authentication")) {
+            } else if (tagName == QLatin1String("authentication")) {
                 const QString type(f.text());
-                if (type == QStringLiteral("none")
-                        || type == QStringLiteral("plain")) {
+                if (type == QLatin1String("none")
+                        || type == QLatin1String("plain")) {
                     s.authentication = Plain;
-                } else if (type == QStringLiteral("basic")) {
+                } else if (type == QLatin1String("basic")) {
                     s.authentication = Basic;
                 }
-            } else if (tagName == QStringLiteral("path")) {
+            } else if (tagName == QLatin1String("path")) {
                 s.path = f.text();
             }
         }

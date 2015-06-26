@@ -777,6 +777,6 @@ void KMFilterDialog::slotExportAsSieveScript()
 
 void KMFilterDialog::slotHelp()
 {
-    KHelpClient::invokeHelp(QLatin1String("filters"), QLatin1String("kmail"));
+    KHelpClient::invokeHelp(QLatin1String("filters"), QStringLiteral("kmail"));
 }
 

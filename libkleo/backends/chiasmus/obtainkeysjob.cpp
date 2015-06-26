@@ -58,7 +58,7 @@ Kleo::ObtainKeysJob::ObtainKeysJob(QObject *p)
     assert(ChiasmusBackend::instance());
     assert(ChiasmusBackend::instance()->config());
     const CryptoConfigEntry *keypaths =
-        ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("keydir"));
+        ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QStringLiteral("General"), QStringLiteral("keydir"));
     assert(keypaths);
     mKeyPaths = QStringList(keypaths->urlValue().path());
 }

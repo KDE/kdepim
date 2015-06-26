@@ -812,10 +812,10 @@ void ImportMailJob::restoreConfig()
         const QString adblockPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("kmail2/adblockrules_local") ;
         if (QFile(adblockPath).exists()) {
             if (overwriteConfigMessageBox(QLatin1String("adblockrules_local"))) {
-                copyToFile(entry, QString(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/") + QLatin1String("kmail2/adblockrules_local")), QLatin1String("adblockrules_local"), Utils::dataPath() + QLatin1String("kmail2/"));
+                copyToFile(entry, QString(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/") + QLatin1String("kmail2/adblockrules_local")), QStringLiteral("adblockrules_local"), Utils::dataPath() + QLatin1String("kmail2/"));
             }
         } else {
-            copyToFile(entry, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("kmail2/adblockrules_local"), QLatin1String("adblockrules_local"), Utils::dataPath() + QLatin1String("kmail2/"));
+            copyToFile(entry, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("kmail2/adblockrules_local"), QStringLiteral("adblockrules_local"), Utils::dataPath() + QLatin1String("kmail2/"));
         }
     }
 

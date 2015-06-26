@@ -63,7 +63,7 @@ KTNEFMain::KTNEFMain(QWidget *parent)
     setupTNEF();
 
     KConfigGroup config(KSharedConfig::openConfig(), "Settings");
-    mDefaultDir = config.readPathEntry("defaultdir", QLatin1String("/tmp/"));
+    mDefaultDir = config.readPathEntry("defaultdir", QStringLiteral("/tmp/"));
 
     config = KConfigGroup(KSharedConfig::openConfig(), "Recent Files");
     mOpenRecentFileAction->loadEntries(config);
@@ -79,7 +79,7 @@ KTNEFMain::KTNEFMain(QWidget *parent)
 
     createStandardStatusBarAction();
 
-    setupGUI(Keys | Save | Create, QLatin1String("ktnefui.rc"));
+    setupGUI(Keys | Save | Create, QStringLiteral("ktnefui.rc"));
 
     setAutoSaveSettings();
 }
@@ -511,7 +511,7 @@ void KTNEFMain::slotShowMessageText()
         tmpFile->write(rtf.toLocal8Bit());
         tmpFile->close();
 
-        KRun::runUrl(QUrl::fromLocalFile(tmpFile->fileName()), QLatin1String("text/rtf"), this, true);
+        KRun::runUrl(QUrl::fromLocalFile(tmpFile->fileName()), QStringLiteral("text/rtf"), this, true);
         delete tmpFile;
     } else {
         KMessageBox::error(
@@ -561,7 +561,7 @@ void KTNEFMain::openWith(KService::Ptr offer)
 
 QAction *KTNEFMain::createAppAction(const KService::Ptr &service, bool singleOffer, QActionGroup *actionGroup, QObject *parent)
 {
-    QString actionName(service->name().replace(QLatin1Char('&'), QLatin1String("&&")));
+    QString actionName(service->name().replace(QLatin1Char('&'), QStringLiteral("&&")));
     if (singleOffer) {
         actionName = i18n("Open &with %1", actionName);
     } else {

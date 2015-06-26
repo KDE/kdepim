@@ -66,7 +66,7 @@ QString EnterpriseHeaderStyle::format(KMime::Message *message) const
         linkColor = QLatin1String("class =\"black\"");
     }
 
-    QString imgpath(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/")));
+    QString imgpath(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("libmessageviewer/pics/")));
     imgpath.prepend(QLatin1String("file:///"));
     imgpath.append(QLatin1String("enterprise_"));
     const QString borderSettings(QLatin1String(" padding-top: 0px; padding-bottom: 0px; border-width: 0px "));

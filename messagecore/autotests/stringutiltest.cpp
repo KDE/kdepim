@@ -336,17 +336,17 @@ void StringUtilTest::test_signatureStripping()
 
 void StringUtilTest::test_isCryptoPart()
 {
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("pgp-encrypted"), QString()));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("pgp-signature"), QString()));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("pkcs7-mime"), QString()));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("pkcs7-signature"), QString()));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("x-pkcs7-signature"), QString()));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("octet-stream"), QLatin1String("msg.asc")));
-    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("octet-stream"), QLatin1String("encrypted.asc")));
-    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("octet-stream"), QLatin1String("bla.foo")));
-    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("foo"), QString()));
-    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("foo"), QLatin1String("msg.asc")));
-    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QLatin1String("foo"), QLatin1String("encrypted.asc")));
+    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("pgp-encrypted"), QString()));
+    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("pgp-signature"), QString()));
+    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("pkcs7-mime"), QString()));
+    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("pkcs7-signature"), QString()));
+    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("x-pkcs7-signature"), QString()));
+    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("octet-stream"), QStringLiteral("msg.asc")));
+    QVERIFY(StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("octet-stream"), QStringLiteral("encrypted.asc")));
+    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("octet-stream"), QStringLiteral("bla.foo")));
+    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("foo"), QString()));
+    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("foo"), QStringLiteral("msg.asc")));
+    QVERIFY(!StringUtil::isCryptoPart(QLatin1String("application"), QStringLiteral("foo"), QStringLiteral("encrypted.asc")));
 }
 
 void StringUtilTest::test_stripOffMessagePrefixBenchmark()

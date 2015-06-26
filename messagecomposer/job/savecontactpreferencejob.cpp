@@ -104,11 +104,11 @@ void SaveContactPreferenceJob::slotSearchContact(KJob *job)
 
 void SaveContactPreferenceJob::writeCustomContactProperties(KContacts::Addressee &contact, const Kleo::KeyResolver::ContactPreferences &pref) const
 {
-    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF"), QLatin1String(Kleo::encryptionPreferenceToString(pref.encryptionPreference)));
-    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF"), QLatin1String(Kleo::signingPreferenceToString(pref.signingPreference)));
-    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOPROTOPREF"), QLatin1String(cryptoMessageFormatToString(pref.cryptoMessageFormat)));
-    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("OPENPGPFP"), pref.pgpKeyFingerprints.join(QLatin1String(",")));
-    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("SMIMEFP"), pref.smimeCertFingerprints.join(QLatin1String(",")));
+    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("CRYPTOENCRYPTPREF"), QLatin1String(Kleo::encryptionPreferenceToString(pref.encryptionPreference)));
+    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("CRYPTOSIGNPREF"), QLatin1String(Kleo::signingPreferenceToString(pref.signingPreference)));
+    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("CRYPTOPROTOPREF"), QLatin1String(cryptoMessageFormatToString(pref.cryptoMessageFormat)));
+    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("OPENPGPFP"), pref.pgpKeyFingerprints.join(QLatin1String(",")));
+    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("SMIMEFP"), pref.smimeCertFingerprints.join(QLatin1String(",")));
 }
 
 void SaveContactPreferenceJob::slotModifyCreateItem(KJob *job)

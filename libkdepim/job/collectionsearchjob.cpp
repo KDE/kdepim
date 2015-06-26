@@ -38,7 +38,7 @@ CollectionSearchJob::CollectionSearchJob(const QString &searchString, const QStr
 void CollectionSearchJob::start()
 {
     Akonadi::Search::PIM::CollectionQuery query;
-    if (mSearchString == QStringLiteral("*")) {
+    if (mSearchString == QLatin1String("*")) {
         query.setNamespace(QStringList() << QStringLiteral(""));
     } else {
         //We exclude the other users namespace

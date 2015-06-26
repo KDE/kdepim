@@ -30,9 +30,9 @@ using KMime::Types::AddrSpecList;
 static inline QString dotstuff(QString s)     // krazy:exclude=passbyvalue
 {
     if (s.startsWith(QLatin1Char('.'))) {
-        return QLatin1Char('.') + s.replace(QLatin1String("\n."), QLatin1String("\n.."));
+        return QLatin1Char('.') + s.replace(QLatin1String("\n."), QStringLiteral("\n.."));
     } else {
-        return s.replace(QLatin1String("\n."), QLatin1String("\n.."));
+        return s.replace(QLatin1String("\n."), QStringLiteral("\n.."));
     }
 }
 
@@ -162,7 +162,7 @@ QString KSieveUi::VacationUtils::composeScript(const QString &messageText,
         QStringList sl;
         AddrSpecList::const_iterator end = addrSpecs.constEnd();
         for (AddrSpecList::const_iterator it = addrSpecs.begin() ; it != end; ++it) {
-            sl.push_back(QLatin1Char('"') + (*it).asString().replace(QLatin1Char('\\'), QLatin1String("\\\\")).replace(QLatin1Char('"'), QLatin1String("\\\"")) + QLatin1Char('"'));
+            sl.push_back(QLatin1Char('"') + (*it).asString().replace(QLatin1Char('\\'), QStringLiteral("\\\\")).replace(QLatin1Char('"'), QStringLiteral("\\\"")) + QLatin1Char('"'));
             aliases.push_back((*it).asString());
         }
         addressesArgument += sl.join(QLatin1String(", ")) + QLatin1String(" ] ");

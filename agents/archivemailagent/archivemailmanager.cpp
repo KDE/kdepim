@@ -62,7 +62,7 @@ void ArchiveMailManager::load()
     qDeleteAll(mListArchiveInfo);
     mListArchiveInfo.clear();
 
-    const QStringList collectionList = mConfig->groupList().filter(QRegExp(QLatin1String("ArchiveMailCollection \\d+")));
+    const QStringList collectionList = mConfig->groupList().filter(QRegExp(QStringLiteral("ArchiveMailCollection \\d+")));
     const int numberOfCollection = collectionList.count();
     for (int i = 0 ; i < numberOfCollection; ++i) {
         KConfigGroup group = mConfig->group(collectionList.at(i));

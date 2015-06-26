@@ -149,7 +149,7 @@ void KOAlarmClient::deferredInit()
 
 bool KOAlarmClient::dockerEnabled()
 {
-    KConfig korgConfig(QStandardPaths::locate(QStandardPaths::ConfigLocation, QLatin1String("korganizerrc")));
+    KConfig korgConfig(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("korganizerrc")));
     KConfigGroup generalGroup(&korgConfig, "System Tray");
     return generalGroup.readEntry("ShowReminderDaemon", true);
 }

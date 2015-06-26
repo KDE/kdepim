@@ -232,7 +232,7 @@ private:
             return QLatin1String("<p>") + i18n("No files selected.") + QLatin1String("</p>");
         }
         QString html = QLatin1String("<p>") + i18np("Selected file:", "Selected files:", m_files.size()) + QLatin1String("</p>")
-                       + QLatin1String("<ul><li>") + join_max(m_files, MaxLinesShownInline, QLatin1String("</li><li>")) + QLatin1String("</li></ul>") ;
+                       + QLatin1String("<ul><li>") + join_max(m_files, MaxLinesShownInline, QStringLiteral("</li><li>")) + QLatin1String("</li></ul>") ;
         if (m_files.size() > MaxLinesShownInline) {
             html += QLatin1String("<p><a href=\"link:/\">") + i18nc("@action", "More...") + QLatin1String("</a></p>");
         }

@@ -350,7 +350,7 @@ const QStringList KPIM::AddresseeLineEditPrivate::adjustedCompletionItems(bool f
 
             (*it) = (*it).prepend(s_completionItemIndentString);
             // remove preferred email sort <blank> added in  addContact()
-            (*it).replace(QLatin1String("  <"), QLatin1String(" <"));
+            (*it).replace(QLatin1String("  <"), QStringLiteral(" <"));
         }
         sections[ index ].append(*it);
 

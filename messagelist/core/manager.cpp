@@ -72,8 +72,8 @@ Manager::Manager()
     mPixmapMessageSent = new QPixmap(SmallIcon(QLatin1String("mail-sent")));
     mPixmapMessageForwarded = new QPixmap(SmallIcon(QLatin1String("mail-forwarded")));
     mPixmapMessageImportant = new QPixmap(SmallIcon(QLatin1String("emblem-important")));       // "flag"
-    mPixmapMessageWatched = new QPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messagelist/pics/mail-thread-watch.png")));
-    mPixmapMessageIgnored = new QPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messagelist/pics/mail-thread-ignored.png")));
+    mPixmapMessageWatched = new QPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("messagelist/pics/mail-thread-watch.png")));
+    mPixmapMessageIgnored = new QPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("messagelist/pics/mail-thread-ignored.png")));
     mPixmapMessageSpam = new QPixmap(SmallIcon(QLatin1String("mail-mark-junk")));
     mPixmapMessageHam = new QPixmap(SmallIcon(QLatin1String("mail-mark-notjunk")));
     mPixmapMessageFullySigned = new QPixmap(SmallIcon(QLatin1String("mail-signed-verified")));
@@ -93,8 +93,8 @@ Manager::Manager()
         mPixmapShowMore = new QPixmap(SmallIcon(QLatin1String("arrow-right")));
     }
     mPixmapShowLess = new QPixmap(SmallIcon(QLatin1String("arrow-down")));
-    mPixmapVerticalLine = new QPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messagelist/pics/mail-vertical-separator-line.png")));
-    mPixmapHorizontalSpacer = new QPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messagelist/pics/mail-horizontal-space.png")));
+    mPixmapVerticalLine = new QPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("messagelist/pics/mail-vertical-separator-line.png")));
+    mPixmapHorizontalSpacer = new QPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("messagelist/pics/mail-horizontal-space.png")));
 
     mCachedLocalizedUnknownText = i18nc("Unknown date", "Unknown") ;
 
@@ -737,16 +737,16 @@ void Manager::createDefaultThemes()
     add_theme_simple_text_column(s, i18nc("Date of a message", "Date"), Theme::ContentItem::Date, true, SortOrder::SortMessagesByDateTime, false, false);
     add_theme_simple_text_column(s, i18n("Most Recent Date"), Theme::ContentItem::MostRecentDate, false, SortOrder::SortMessagesByDateTimeOfMostRecent, false, true);
     add_theme_simple_text_column(s, i18nc("Size of a message", "Size"), Theme::ContentItem::Size, false, SortOrder::SortMessagesBySize, false, false);
-    add_theme_simple_icon_column(s, i18nc("Attachement indication", "Attachment"), QLatin1String("mail-attachment"), Theme::ContentItem::AttachmentStateIcon, false, SortOrder::SortMessagesByAttachmentStatus);
-    add_theme_simple_icon_column(s, i18n("Read/Unread"), QLatin1String("mail-unread-new"), Theme::ContentItem::ReadStateIcon, false, SortOrder::SortMessagesByUnreadStatus);
-    add_theme_simple_icon_column(s, i18n("Replied"), QLatin1String("mail-replied"), Theme::ContentItem::RepliedStateIcon, false, SortOrder::NoMessageSorting);
-    add_theme_simple_icon_column(s, i18nc("Message importance indication", "Important"), QLatin1String("emblem-important"), Theme::ContentItem::ImportantStateIcon, false, SortOrder::SortMessagesByImportantStatus);
-    add_theme_simple_icon_column(s, i18n("Action Item"), QLatin1String("mail-task"), Theme::ContentItem::ActionItemStateIcon, false, SortOrder::SortMessagesByActionItemStatus);
-    add_theme_simple_icon_column(s, i18n("Spam/Ham"), QLatin1String("mail-mark-junk"), Theme::ContentItem::SpamHamStateIcon, false, SortOrder::NoMessageSorting);
-    add_theme_simple_icon_column(s, i18n("Watched/Ignored"), QLatin1String("mail-thread-watch"), Theme::ContentItem::WatchedIgnoredStateIcon, false, SortOrder::NoMessageSorting);
-    add_theme_simple_icon_column(s, i18n("Encryption"), QLatin1String("mail-encrypted-full"), Theme::ContentItem::EncryptionStateIcon, false, SortOrder::NoMessageSorting);
-    add_theme_simple_icon_column(s, i18n("Signature"), QLatin1String("mail-signed-verified"), Theme::ContentItem::SignatureStateIcon, false, SortOrder::NoMessageSorting);
-    add_theme_simple_icon_column(s, i18n("Tag List"), QLatin1String("feed-subscribe"), Theme::ContentItem::TagList, false, SortOrder::NoMessageSorting);
+    add_theme_simple_icon_column(s, i18nc("Attachement indication", "Attachment"), QStringLiteral("mail-attachment"), Theme::ContentItem::AttachmentStateIcon, false, SortOrder::SortMessagesByAttachmentStatus);
+    add_theme_simple_icon_column(s, i18n("Read/Unread"), QStringLiteral("mail-unread-new"), Theme::ContentItem::ReadStateIcon, false, SortOrder::SortMessagesByUnreadStatus);
+    add_theme_simple_icon_column(s, i18n("Replied"), QStringLiteral("mail-replied"), Theme::ContentItem::RepliedStateIcon, false, SortOrder::NoMessageSorting);
+    add_theme_simple_icon_column(s, i18nc("Message importance indication", "Important"), QStringLiteral("emblem-important"), Theme::ContentItem::ImportantStateIcon, false, SortOrder::SortMessagesByImportantStatus);
+    add_theme_simple_icon_column(s, i18n("Action Item"), QStringLiteral("mail-task"), Theme::ContentItem::ActionItemStateIcon, false, SortOrder::SortMessagesByActionItemStatus);
+    add_theme_simple_icon_column(s, i18n("Spam/Ham"), QStringLiteral("mail-mark-junk"), Theme::ContentItem::SpamHamStateIcon, false, SortOrder::NoMessageSorting);
+    add_theme_simple_icon_column(s, i18n("Watched/Ignored"), QStringLiteral("mail-thread-watch"), Theme::ContentItem::WatchedIgnoredStateIcon, false, SortOrder::NoMessageSorting);
+    add_theme_simple_icon_column(s, i18n("Encryption"), QStringLiteral("mail-encrypted-full"), Theme::ContentItem::EncryptionStateIcon, false, SortOrder::NoMessageSorting);
+    add_theme_simple_icon_column(s, i18n("Signature"), QStringLiteral("mail-signed-verified"), Theme::ContentItem::SignatureStateIcon, false, SortOrder::NoMessageSorting);
+    add_theme_simple_icon_column(s, i18n("Tag List"), QStringLiteral("feed-subscribe"), Theme::ContentItem::TagList, false, SortOrder::NoMessageSorting);
 
     s->resetColumnState(); // so it's initially set from defaults
 

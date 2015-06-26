@@ -52,8 +52,8 @@ SieveIncludeLocation::~SieveIncludeLocation()
 
 void SieveIncludeLocation::initialize()
 {
-    addItem(i18n("personal"), QLatin1String(":personal"));
-    addItem(i18n("global"), QLatin1String(":global"));
+    addItem(i18n("personal"), QStringLiteral(":personal"));
+    addItem(i18n("global"), QStringLiteral(":global"));
 }
 
 QString SieveIncludeLocation::code() const

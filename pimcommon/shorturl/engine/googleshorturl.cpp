@@ -37,7 +37,7 @@ GoogleShortUrl::~GoogleShortUrl()
 void GoogleShortUrl::start()
 {
     QNetworkRequest request(QUrl(QLatin1String("https://www.googleapis.com/urlshortener/v1/url")));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/json"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
 
     const QString data = QStringLiteral("{\"longUrl\": \"%1/\"}").arg(mOriginalUrl);
 

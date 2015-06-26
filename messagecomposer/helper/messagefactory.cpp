@@ -329,7 +329,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
 
     if (m_origMsg->hasHeader("X-KMail-EncryptActionEnabled") &&
             m_origMsg->headerByType("X-KMail-EncryptActionEnabled")->as7BitString().contains("true")) {
-        msg->setHeader(new KMime::Headers::Generic("X-KMail-EncryptActionEnabled", msg.get(), QLatin1String("true"), "utf-8"));
+        msg->setHeader(new KMime::Headers::Generic("X-KMail-EncryptActionEnabled", msg.get(), QStringLiteral("true"), "utf-8"));
     }
     msg->assemble();
 
@@ -583,7 +583,7 @@ KMime::Message::Ptr MessageFactory::createRedirect(const QString &toStr, const Q
 
     const bool fccIsDisabled = ident.disabledFcc();
     if (fccIsDisabled) {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-FccDisabled", msg.get(), QLatin1String("true"), "utf-8");
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-FccDisabled", msg.get(), QStringLiteral("true"), "utf-8");
         msg->setHeader(header);
     } else {
         msg->removeHeader("X-KMail-FccDisabled");

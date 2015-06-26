@@ -241,7 +241,7 @@ KContacts::AddresseeList CSVImportDialog::contacts() const
                     value = dateParser.parse(value).toString(Qt::ISODate);
                 }
 
-                value.replace(QLatin1String("\\n"), QLatin1String("\n"));
+                value.replace(QLatin1String("\\n"), QStringLiteral("\n"));
 
                 ContactFields::setValue(field, value, contact);
             }

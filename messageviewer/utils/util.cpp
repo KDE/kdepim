@@ -255,7 +255,7 @@ bool Util::saveContents(QWidget *parent, const QList<KMime::Content *> &contents
                 file = origFile;
                 int num = renameNumbering[file] + 1;
                 int dotIdx = file.lastIndexOf(QLatin1Char('.'));
-                file = file.insert((dotIdx >= 0) ? dotIdx : file.length(), QLatin1String("_") + QString::number(num));
+                file = file.insert((dotIdx >= 0) ? dotIdx : file.length(), QStringLiteral("_") + QString::number(num));
             }
             curUrl.setFileName(file);
 
@@ -536,7 +536,7 @@ void Util::speakSelectedText(const QString &text)
 
 QAction *Util::createAppAction(const KService::Ptr &service, bool singleOffer, QActionGroup *actionGroup, QObject *parent)
 {
-    QString actionName(service->name().replace(QLatin1Char('&'), QLatin1String("&&")));
+    QString actionName(service->name().replace(QLatin1Char('&'), QStringLiteral("&&")));
     if (singleOffer) {
         actionName = i18n("Open &with %1", actionName);
     } else {

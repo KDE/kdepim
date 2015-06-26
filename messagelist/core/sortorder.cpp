@@ -238,7 +238,7 @@ void SortOrder::readConfig(KConfigGroup &conf, const QString &storageId,
                            bool *storageUsesPrivateSortOrder)
 {
     SortOrder privateSortOrder, globalSortOrder;
-    globalSortOrder.readConfigHelper(conf, QLatin1String("GlobalSortOrder"));
+    globalSortOrder.readConfigHelper(conf, QStringLiteral("GlobalSortOrder"));
     *storageUsesPrivateSortOrder = privateSortOrder.readConfigHelper(conf, storageId);
     if (*storageUsesPrivateSortOrder) {
         *this = privateSortOrder;

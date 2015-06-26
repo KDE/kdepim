@@ -67,7 +67,7 @@ void SetupAutoconfigKolabFreebusy::fillFreebusyServer(int i, QObject *o) const
 
     url += path.path();
 
-    bool fullDomainRetrieval = (path.baseName() == QStringLiteral("$EMAIL$"));
+    bool fullDomainRetrieval = (path.baseName() == QLatin1String("$EMAIL$"));
 
     QString group(QStringLiteral("FreeBusy Retrieve"));
 

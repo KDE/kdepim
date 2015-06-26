@@ -260,7 +260,7 @@ void BackupJob::processMessage(const Akonadi::Item &item)
 
     // PORT ME: user and group!
     qCDebug(MAILCOMMON_LOG) << "AKONDI PORT: disabled code here!";
-    if (!mArchive->writeFile(fileName, QLatin1String("user"), QLatin1String("group"), messageData, messageSize, archivePerms, mArchiveTime, mArchiveTime, mArchiveTime)) {
+    if (!mArchive->writeFile(fileName, QStringLiteral("user"), QStringLiteral("group"), messageData, messageSize, archivePerms, mArchiveTime, mArchiveTime, mArchiveTime)) {
         abort(i18n("Failed to write a message into the archive folder '%1'.",
                    mCurrentFolder.name()));
         return;
@@ -299,7 +299,7 @@ bool BackupJob::writeDirHelper(const QString &directoryPath)
 {
     // PORT ME: Correct user/group
     qCDebug(MAILCOMMON_LOG) << "AKONDI PORT: Disabled code here!";
-    return mArchive->writeDir(directoryPath, QLatin1String("user"), QLatin1String("group"), 040755, mArchiveTime, mArchiveTime, mArchiveTime);
+    return mArchive->writeDir(directoryPath, QStringLiteral("user"), QStringLiteral("group"), 040755, mArchiveTime, mArchiveTime, mArchiveTime);
 }
 
 QString BackupJob::collectionName(const Akonadi::Collection &collection) const
@@ -417,15 +417,15 @@ void BackupJob::start()
         break;
     }
     case Tar: {
-        mArchive = new KTar(mMailArchivePath.path(), QLatin1String("application/x-tar"));
+        mArchive = new KTar(mMailArchivePath.path(), QStringLiteral("application/x-tar"));
         break;
     }
     case TarGz: {
-        mArchive = new KTar(mMailArchivePath.path(), QLatin1String("application/x-gzip"));
+        mArchive = new KTar(mMailArchivePath.path(), QStringLiteral("application/x-gzip"));
         break;
     }
     case TarBz2: {
-        mArchive = new KTar(mMailArchivePath.path(), QLatin1String("application/x-bzip2"));
+        mArchive = new KTar(mMailArchivePath.path(), QStringLiteral("application/x-bzip2"));
         break;
     }
     }

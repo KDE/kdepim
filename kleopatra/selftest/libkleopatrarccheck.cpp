@@ -78,7 +78,7 @@ public:
         m_explaination
             = xi18nc("@info",
                      "<para>Kleopatra detected the following errors in the libkleopatrarc configuration:</para>"
-                     "%1", QLatin1String("<ol><li>") + errors.join(QLatin1String("</li><li>")) + QLatin1String("</li></ol>"));
+                     "%1", QStringLiteral("<ol><li>") + errors.join(QLatin1String("</li><li>")) + QLatin1String("</li></ol>"));
     }
 
     ///* reimp */ bool canFixAutomatically() const { return false; }

@@ -556,7 +556,7 @@ void ComposerViewPrivate::_k_setFormatType(QAction *act)
 
 void ComposerViewPrivate::_k_slotToggleBlockQuote()
 {
-    execCommand(QLatin1String("formatBlock"), QLatin1String("BLOCKQUOTE"));
+    execCommand(QLatin1String("formatBlock"), QStringLiteral("BLOCKQUOTE"));
 }
 
 void ComposerViewPrivate::_k_slotAddEmoticon(const QString &emoticon)
@@ -631,7 +631,7 @@ void ComposerViewPrivate::_k_slotInsertTable()
 
 void ComposerViewPrivate::_k_slotInsertHorizontalRule()
 {
-    execCommand(QLatin1String("insertHTML"), QLatin1String("<hr>"));
+    execCommand(QLatin1String("insertHTML"), QStringLiteral("<hr>"));
 }
 
 void ComposerViewPrivate::_k_insertLink()
@@ -673,10 +673,10 @@ void ComposerViewPrivate::_k_setFontFamily(const QString &family)
 
 void ComposerViewPrivate::_k_slotSpellCheck()
 {
-    QString text(execJScript(contextMenuResult.element(), QLatin1String("this.value")).toString());
+    QString text(execJScript(contextMenuResult.element(), QStringLiteral("this.value")).toString());
     if (contextMenuResult.isContentSelected()) {
-        spellTextSelectionStart = qMax(0, execJScript(contextMenuResult.element(), QLatin1String("this.selectionStart")).toInt());
-        spellTextSelectionEnd = qMax(0, execJScript(contextMenuResult.element(), QLatin1String("this.selectionEnd")).toInt());
+        spellTextSelectionStart = qMax(0, execJScript(contextMenuResult.element(), QStringLiteral("this.selectionStart")).toInt());
+        spellTextSelectionEnd = qMax(0, execJScript(contextMenuResult.element(), QStringLiteral("this.selectionEnd")).toInt());
         text = text.mid(spellTextSelectionStart, (spellTextSelectionEnd - spellTextSelectionStart));
     } else {
         spellTextSelectionStart = 0;
@@ -713,7 +713,7 @@ void ComposerViewPrivate::_k_spellCheckerCorrected(const QString &original, int 
     script += QString::number(index);
     script += QLatin1String(") + \"");
     QString w(replacement);
-    script +=  w.replace(QLatin1Char('\''), QLatin1String("\\\'")); // Escape any Quote marks in replacement word
+    script +=  w.replace(QLatin1Char('\''), QStringLiteral("\\\'")); // Escape any Quote marks in replacement word
     script += QLatin1String("\" + this.value.substring(");
     script += QString::number(index + original.length());
     script += QLatin1String(")");
@@ -917,7 +917,7 @@ void ComposerViewPrivate::_k_slotPasteWithoutFormatting()
     if (q->hasFocus()) {
         QString s = QApplication::clipboard()->text();
         if (!s.isEmpty()) {
-            s.replace(QLatin1String("\n"), QLatin1String("<BR>"));
+            s.replace(QLatin1String("\n"), QStringLiteral("<BR>"));
             execCommand(QLatin1String("insertHTML"), s);
         }
     }

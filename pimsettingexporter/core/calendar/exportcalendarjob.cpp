@@ -83,7 +83,7 @@ void ExportCalendarJob::backupResources()
             if (!mAgentPaths.contains(url.path())) {
                 if (!url.isEmpty()) {
                     mAgentPaths << url.path();
-                    const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("calendar.zip"));
+                    const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("calendar.zip"));
                     if (fileAdded) {
                         const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                         if (!errorStr.isEmpty()) {

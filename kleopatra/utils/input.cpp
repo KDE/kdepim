@@ -239,7 +239,7 @@ PipeInput::PipeInput(assuan_fd_t fd)
         throw Exception(errno ? gpg_error_from_errno(errno) : gpg_error(GPG_ERR_EIO),
                         i18n("Could not open FD %1 for reading",
                              _detail::assuanFD2int(fd)));
-    m_io = Log::instance()->createIOLogger(kdp, QLatin1String("pipe-input"), Log::Read);
+    m_io = Log::instance()->createIOLogger(kdp, QStringLiteral("pipe-input"), Log::Read);
 }
 
 unsigned int PipeInput::classification() const
@@ -268,7 +268,7 @@ FileInput::FileInput(const QString &fileName)
     if (!file->open(QIODevice::ReadOnly))
         throw Exception(errno ? gpg_error_from_errno(errno) : gpg_error(GPG_ERR_EIO),
                         i18n("Could not open file \"%1\" for reading", fileName));
-    m_io = Log::instance()->createIOLogger(file, QLatin1String("file-in"), Log::Read);
+    m_io = Log::instance()->createIOLogger(file, QStringLiteral("file-in"), Log::Read);
 
 }
 
@@ -284,7 +284,7 @@ FileInput::FileInput(const shared_ptr<QFile> &file)
     if (!file->isOpen() && !file->open(QIODevice::ReadOnly))
         throw Exception(errno ? gpg_error_from_errno(errno) : gpg_error(GPG_ERR_EIO),
                         i18n("Could not open file \"%1\" for reading", m_fileName));
-    m_io = Log::instance()->createIOLogger(file, QLatin1String("file-in"), Log::Read);
+    m_io = Log::instance()->createIOLogger(file, QStringLiteral("file-in"), Log::Read);
 }
 
 unsigned int FileInput::classification() const

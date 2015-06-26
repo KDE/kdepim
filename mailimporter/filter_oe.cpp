@@ -141,7 +141,7 @@ void FilterOE::importMailBox(const QString &fileName)
     mailbox >> sig_block1 >> sig_block2;
     if (sig_block1 == OE4_SIG_1 && sig_block2 == OE4_SIG_2) {
         folderName = QLatin1String("OE-Import/") + mailfileinfo.completeBaseName();
-        filterInfo()->addInfoLogEntry(i18n("Importing OE4 Mailbox %1", QLatin1String("../") + _nameOfFile));
+        filterInfo()->addInfoLogEntry(i18n("Importing OE4 Mailbox %1", QStringLiteral("../") + _nameOfFile));
         filterInfo()->setTo(folderName);
         mbxImport(mailbox);
         return;
@@ -157,13 +157,13 @@ void FilterOE::importMailBox(const QString &fileName)
                         folderName = QLatin1String("OE-Import/") + _tmpFolder;
                     }
                 }
-                filterInfo()->addInfoLogEntry(i18n("Importing OE5+ Mailbox %1", QLatin1String("../") + _nameOfFile));
+                filterInfo()->addInfoLogEntry(i18n("Importing OE5+ Mailbox %1", QStringLiteral("../") + _nameOfFile));
                 filterInfo()->setTo(folderName);
                 dbxImport(mailbox);
                 return;
             } else if (sig_block2 == OE5_FOLDER_SIG_2) {
                 if (!parsedFolder) {
-                    filterInfo()->addInfoLogEntry(i18n("Importing OE5+ Folder file %1", QLatin1String("../") + _nameOfFile));
+                    filterInfo()->addInfoLogEntry(i18n("Importing OE5+ Folder file %1", QStringLiteral("../") + _nameOfFile));
                     currentIsFolderFile = true;
                     dbxImport(mailbox);
                     currentIsFolderFile = false;

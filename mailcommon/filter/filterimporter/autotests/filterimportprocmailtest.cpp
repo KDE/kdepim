@@ -45,7 +45,7 @@ void FilterImportProcmailtest::testImportFilters()
     QCOMPARE(lst.count(), 1);
     MailCommon::MailFilter *f = lst.at(0);
     QVERIFY(f->isEnabled());
-    QCOMPARE(f->name(), QLatin1String("Match All Messages"));
+    QCOMPARE(f->name(), QStringLiteral("Match All Messages"));
     QCOMPARE(f->pattern()->op(), MailCommon::SearchPattern::OpAll);
 
     qDeleteAll(lst);

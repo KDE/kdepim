@@ -97,7 +97,7 @@ QString CreateResource::createResource(const QString &resources, const QString &
 
         if (!settings.isEmpty()) {
             Q_EMIT createResourceInfo(i18n("Configuring resource instance..."));
-            QDBusInterface iface(QLatin1String("org.freedesktop.Akonadi.Resource.") + instance.identifier(), QLatin1String("/Settings"));
+            QDBusInterface iface(QLatin1String("org.freedesktop.Akonadi.Resource.") + instance.identifier(), QStringLiteral("/Settings"));
             if (!iface.isValid()) {
                 Q_EMIT createResourceError(i18n("Unable to configure resource instance."));
                 return QString();

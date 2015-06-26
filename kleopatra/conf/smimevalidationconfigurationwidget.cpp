@@ -59,7 +59,7 @@ public:
           customHTTPProxyWritable(false),
           ui(q)
     {
-        QDBusConnection::sessionBus().connect(QString(), QString(), QLatin1String("org.kde.kleo.CryptoConfig"), QLatin1String("changed"), q, SLOT(load()));
+        QDBusConnection::sessionBus().connect(QString(), QString(), QStringLiteral("org.kde.kleo.CryptoConfig"), QStringLiteral("changed"), q, SLOT(load()));
     }
 
     bool customHTTPProxyWritable;

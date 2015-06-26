@@ -233,7 +233,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     }
     mShareServiceManager = new PimCommon::ShareServiceUrlManager(this);
 
-    mThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Mail, QString::fromLatin1("header.desktop"), mActionCollection, QLatin1String("messageviewer/themes/"));
+    mThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Mail, QString::fromLatin1("header.desktop"), mActionCollection, QStringLiteral("messageviewer/themes/"));
     mThemeManager->setDownloadNewStuffConfigFile(QLatin1String("messageviewer_header_themes.knsrc"));
     connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
     connect(mThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
@@ -346,7 +346,7 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
         if (node->contentType()->mimeType() == "message/external-body") {
             if (node->contentType()->hasParameter(QLatin1String("url"))) {
                 const QString url = node->contentType()->parameter(QLatin1String("url"));
-                KRun::runUrl(KUrl(url), QLatin1String("text/html"), q);
+                KRun::runUrl(KUrl(url), QStringLiteral("text/html"), q);
                 return;
             }
         }
@@ -385,7 +385,7 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
         mimetype = Util::mimetype(name);
     }
     KService::Ptr offer =
-        KMimeTypeTrader::self()->preferredService(mimetype->name(), QLatin1String("Application"));
+        KMimeTypeTrader::self()->preferredService(mimetype->name(), QStringLiteral("Application"));
 
     const QString filenameText = NodeHelper::fileName(node);
 
@@ -728,7 +728,7 @@ KService::Ptr ViewerPrivate::getServiceOffer(KMime::Content *content)
         /*TODO(Andris) port when on-demand loading is done   && msgPart.isComplete() */
         mimetype = MessageViewer::Util::mimetype(fileName);
     }
-    return KMimeTypeTrader::self()->preferredService(mimetype->name(), QLatin1String("Application"));
+    return KMimeTypeTrader::self()->preferredService(mimetype->name(), QStringLiteral("Application"));
 }
 
 KMime::Content::List ViewerPrivate::selectedContents()
@@ -804,15 +804,15 @@ void ViewerPrivate::displaySplashPage(const QString &info)
     adjustLayout();
 
 #ifdef KDEPIM_MOBILE_UI
-    const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messageviewer/about/main_mobile.html"));
+    const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("messageviewer/about/main_mobile.html"));
     const QString stylesheet = QLatin1String("");
     const QString rtlStylesheet = QLatin1String("");
 #else
-    const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kmail2/about/main.html"));  //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
-    const QString stylesheet = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("/kf5/infopage/kde_infopage.css"));
+    const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kmail2/about/main.html"));  //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
+    const QString stylesheet = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/kf5/infopage/kde_infopage.css"));
     QString rtlStylesheet;
     if (QApplication::isRightToLeft()) {
-        rtlStylesheet = QLatin1String("@import \"") + QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("/kf5/infopage/kde_infopage_rtl.css")) +  QLatin1String("\";");
+        rtlStylesheet = QLatin1String("@import \"") + QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/kf5/infopage/kde_infopage_rtl.css")) +  QLatin1String("\";");
     }
 #endif
     QFile f(location);
@@ -1036,7 +1036,7 @@ QString ViewerPrivate::writeMsgHeader(KMime::Message *aMsg, KMime::Content *vCar
     }
     QString href;
     if (vCardNode) {
-        href = mNodeHelper->asHREF(vCardNode, QLatin1String("body"));
+        href = mNodeHelper->asHREF(vCardNode, QStringLiteral("body"));
     }
 
     headerStyle()->setHeaderStrategy(headerStrategy());
@@ -2128,7 +2128,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
             html += QLatin1String("<div style=\"float:left;\">");
             html += QString::fromLatin1("<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">").arg(bgColor.name());
             mNodeHelper->writeNodeToTempFile(node);
-            const QString href = mNodeHelper->asHREF(node, QLatin1String("header"));
+            const QString href = mNodeHelper->asHREF(node, QStringLiteral("header"));
             html += QString::fromLatin1("<a href=\"") + href +
                     QString::fromLatin1("\">");
             QString imageMaxSize;

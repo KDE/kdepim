@@ -77,8 +77,8 @@ static QUrl defaultOpenPGPService()
 static bool is_ldap_scheme(const QUrl &url)
 {
     const QString scheme = url.scheme();
-    return QString::compare(scheme, QLatin1String("ldap"),  Qt::CaseInsensitive) == 0
-           || QString::compare(scheme, QLatin1String("ldaps"), Qt::CaseInsensitive) == 0;
+    return QString::compare(scheme, QStringLiteral("ldap"),  Qt::CaseInsensitive) == 0
+           || QString::compare(scheme, QStringLiteral("ldaps"), Qt::CaseInsensitive) == 0;
 }
 
 static const struct {

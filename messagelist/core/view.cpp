@@ -2431,18 +2431,18 @@ bool View::event(QEvent *e)
 
         if (mi->hasAnnotation()) {
             if (textIsLeftToRight) {
-                tip += htmlCodeForStandardRow.arg(i18n("Note")).arg(mi->annotation().replace(QLatin1Char('\n'), QLatin1String("<br>")));
+                tip += htmlCodeForStandardRow.arg(i18n("Note")).arg(mi->annotation().replace(QLatin1Char('\n'), QStringLiteral("<br>")));
             } else {
-                tip += htmlCodeForStandardRow.arg(mi->annotation().replace(QLatin1Char('\n'), QLatin1String("<br>"))).arg(i18n("Note"));
+                tip += htmlCodeForStandardRow.arg(mi->annotation().replace(QLatin1Char('\n'), QStringLiteral("<br>"))).arg(i18n("Note"));
             }
         }
 
         QString content = MessageList::Util::contentSummary(mi->akonadiItem());
         if (!content.trimmed().isEmpty()) {
             if (textIsLeftToRight) {
-                tip += htmlCodeForStandardRow.arg(i18n("Preview")).arg(content.replace(QLatin1Char('\n'), QLatin1String("<br>")));
+                tip += htmlCodeForStandardRow.arg(i18n("Preview")).arg(content.replace(QLatin1Char('\n'), QStringLiteral("<br>")));
             } else {
-                tip += htmlCodeForStandardRow.arg(content.replace(QLatin1Char('\n'), QLatin1String("<br>"))).arg(i18n("Preview"));
+                tip += htmlCodeForStandardRow.arg(content.replace(QLatin1Char('\n'), QStringLiteral("<br>"))).arg(i18n("Preview"));
             }
         }
 

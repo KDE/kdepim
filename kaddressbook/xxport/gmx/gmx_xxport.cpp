@@ -275,7 +275,7 @@ ContactList GMXXXPort::importContacts() const
                 addressee->setOrganization(itemList[16]);   // Company
             }
             if (!itemList[17].isEmpty()) {
-                addressee->insertCustom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Department"), itemList[17]);   // Department
+                addressee->insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("X-Department"), itemList[17]);   // Department
             }
             if (checkDateTime(itemList[18], dt)) {
                 addressee->setRevision(dt);   // Change_date
@@ -625,7 +625,7 @@ void GMXXXPort::doExport(QFile *fp, const KContacts::AddresseeList &list) const
                       QString()) << DELIM  // Position
 
                   << ((recId == typeHome) ?
-                      addressee->custom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-SpousesName")) :
+                      addressee->custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("X-SpousesName")) :
                       QString()) << DELIM  // Comments
 
                   << recId << DELIM                   // Record_type_id (0,1,2)
@@ -637,7 +637,7 @@ void GMXXXPort::doExport(QFile *fp, const KContacts::AddresseeList &list) const
                       QString()) << DELIM  // Company
 
                   << ((recId == typeWork) ?
-                      addressee->custom(QLatin1String("KADDRESSBOOK"), QLatin1String("X-Department")) :
+                      addressee->custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("X-Department")) :
                       QString()) << DELIM  // Department
 
                   << dateString(addressee->revision()) << DELIM   // Change_date

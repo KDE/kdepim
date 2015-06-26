@@ -87,7 +87,7 @@ public:
 inline QIcon loadIcon(const QString &s)
 {
     QString ss = s;
-    return QIcon::fromTheme(ss.replace(QRegExp(QLatin1String("[^a-zA-Z0-9_]")), QLatin1String("-")));
+    return QIcon::fromTheme(ss.replace(QRegExp(QLatin1String("[^a-zA-Z0-9_]")), QStringLiteral("-")));
 }
 
 static unsigned int num_components_with_options(const Kleo::CryptoConfig *config)

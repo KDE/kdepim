@@ -114,7 +114,7 @@ Q_SIGNALS:
     void selectedProtocolChanged();
 
 private:
-    /*reimpl*/ void onNext() Q_DECL_OVERRIDE;
+    void onNext() Q_DECL_OVERRIDE;
 
 private:
     class Private;

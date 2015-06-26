@@ -67,14 +67,14 @@ namespace
 #ifndef QT_NO_FILEDIALOG
 static KGuiItem KGuiItem_save()
 {
-    return KGuiItem(i18n("&Save to Disk..."), QLatin1String("document-save-as"));
+    return KGuiItem(i18n("&Save to Disk..."), QStringLiteral("document-save-as"));
 }
 #endif
 
 #ifndef QT_NO_CLIPBOARD
 static KGuiItem KGuiItem_copy()
 {
-    return KGuiItem(i18n("&Copy to Clipboard"), QLatin1String("edit-copy"), i18n("Copy Audit Log to Clipboard"));
+    return KGuiItem(i18n("&Copy to Clipboard"), QStringLiteral("edit-copy"), i18n("Copy Audit Log to Clipboard"));
 }
 #endif
 

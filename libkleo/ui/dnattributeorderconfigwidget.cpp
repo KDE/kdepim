@@ -110,7 +110,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget(DNAttributeMapp
     connect(d->currentLV, &QTreeWidget::itemClicked, this, &DNAttributeOrderConfigWidget::slotCurrentOrderSelectionChanged);
 
     d->placeHolderItem = new QTreeWidgetItem(d->availableLV);
-    d->placeHolderItem->setText(0, QLatin1String("_X_"));
+    d->placeHolderItem->setText(0, QStringLiteral("_X_"));
     d->placeHolderItem->setText(1, i18n("All others"));
 #endif
 

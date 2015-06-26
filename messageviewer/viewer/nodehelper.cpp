@@ -727,7 +727,7 @@ QString NodeHelper::fixEncoding(const QString &encoding)
     // preferred in MIME headers
     if (returnEncoding.toUpper().contains(QLatin1String("ISO "))) {
         returnEncoding = returnEncoding.toUpper();
-        returnEncoding.replace(QLatin1String("ISO "), QLatin1String("ISO-"));
+        returnEncoding.replace(QLatin1String("ISO "), QStringLiteral("ISO-"));
     }
     return returnEncoding;
 }

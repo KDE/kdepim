@@ -240,7 +240,7 @@ static QString makeResultOverview(const SigningResult &sr, const EncryptionResul
 static QString escape(QString s)
 {
     s = s.toHtmlEscaped();
-    s.replace(QLatin1Char('\n'), QLatin1String("<br>"));
+    s.replace(QLatin1Char('\n'), QStringLiteral("<br>"));
     return s;
 }
 

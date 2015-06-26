@@ -515,7 +515,7 @@ static QString formatVerificationResultDetails(const VerificationResult &res, co
         details += formatSignature(sig, DecryptVerifyResult::keyForSignature(sig, signers), info) + QLatin1Char('\n');
     }
     details = details.trimmed();
-    details.replace(QLatin1Char('\n'), QLatin1String("<br/>"));
+    details.replace(QLatin1Char('\n'), QStringLiteral("<br/>"));
     if (info.conflicts()) {
         details += i18n("<p>The sender's address %1 is not stored in the certificate. Stored: %2</p>", info.informativeSender.prettyAddress(), format(info.signerMailboxes()).join(i18nc("separator for a list of e-mail addresses", ", ")));
     }

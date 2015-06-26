@@ -74,11 +74,11 @@ void ExportAddressbookJob::backupResources()
         if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_")) || identifier.contains(QLatin1String("akonadi_contacts_resource_"))) {
             const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
-            QUrl url = Utils::resourcePath(agent, QLatin1String("$HOME/.local/share/contacts/"));
+            QUrl url = Utils::resourcePath(agent, QStringLiteral("$HOME/.local/share/contacts/"));
             if (!mAgentPaths.contains(url.path())) {
                 mAgentPaths << url.path();
                 if (!url.isEmpty()) {
-                    const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("addressbook.zip"));
+                    const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("addressbook.zip"));
                     if (fileAdded) {
                         const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                         if (!errorStr.isEmpty()) {

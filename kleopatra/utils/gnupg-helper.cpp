@@ -79,17 +79,17 @@ static QString findGpgExe(GpgME::Engine engine, const QString &exe)
 
 QString Kleo::gpgConfPath()
 {
-    return findGpgExe(GpgME::GpgConfEngine, QLatin1String("gpgconf"));
+    return findGpgExe(GpgME::GpgConfEngine, QStringLiteral("gpgconf"));
 }
 
 QString Kleo::gpgSmPath()
 {
-    return findGpgExe(GpgME::GpgSMEngine, QLatin1String("gpgsm"));
+    return findGpgExe(GpgME::GpgSMEngine, QStringLiteral("gpgsm"));
 }
 
 QString Kleo::gpgPath()
 {
-    return findGpgExe(GpgME::GpgEngine, QLatin1String("gpg"));
+    return findGpgExe(GpgME::GpgEngine, QStringLiteral("gpg"));
 }
 
 QStringList Kleo::gnupgFileBlacklist()

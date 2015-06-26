@@ -78,12 +78,12 @@ void SearchRuleStringTest::shouldBeEmpty()
 {
     MailCommon::SearchRuleString searchrule;
     QVERIFY(searchrule.isEmpty());
-    searchrule = MailCommon::SearchRuleString(QByteArray(), MailCommon::SearchRule::FuncContains, QLatin1String("foo"));
+    searchrule = MailCommon::SearchRuleString(QByteArray(), MailCommon::SearchRule::FuncContains, QStringLiteral("foo"));
     QVERIFY(searchrule.isEmpty());
     searchrule = MailCommon::SearchRuleString(QByteArray("<tag>"), MailCommon::SearchRule::FuncContains, QString());
     QVERIFY(searchrule.isEmpty());
 
-    searchrule = MailCommon::SearchRuleString(QByteArray("<tag>"), MailCommon::SearchRule::FuncContains, QLatin1String("foo"));
+    searchrule = MailCommon::SearchRuleString(QByteArray("<tag>"), MailCommon::SearchRule::FuncContains, QStringLiteral("foo"));
     QVERIFY(!searchrule.isEmpty());
 }
 

@@ -69,7 +69,7 @@ void VacationDataExtractor::taggedArgument(const QString &tag)
         mContext = Days;
     } else if (tag == QLatin1String("addresses")) {
         mContext = Addresses;
-    } else if (tag == QStringLiteral("subject")) {
+    } else if (tag == QLatin1String("subject")) {
         mContext = Subject;
     }
 }

@@ -166,31 +166,31 @@ void Ispdb::parseResult(const QDomDocument &document)
         if (!e.isNull()) {
             //qCDebug(ACCOUNTWIZARD_LOG)  << qPrintable(e.tagName());
             const QString tagName(e.tagName());
-            if (tagName == QStringLiteral("domain")) {
+            if (tagName == QLatin1String("domain")) {
                 mDomains << e.text();
-            } else if (tagName == QStringLiteral("displayName")) {
+            } else if (tagName == QLatin1String("displayName")) {
                 mDisplayName = e.text();
-            } else if (tagName == QStringLiteral("displayShortName")) {
+            } else if (tagName == QLatin1String("displayShortName")) {
                 mDisplayShortName = e.text();
-            } else if (tagName == QStringLiteral("incomingServer")
-                       && e.attribute(QStringLiteral("type")) == QStringLiteral("imap")) {
+            } else if (tagName == QLatin1String("incomingServer")
+                       && e.attribute(QStringLiteral("type")) == QLatin1String("imap")) {
                 Server s = createServer(e);
                 if (s.isValid()) {
                     mImapServers.append(s);
                 }
-            } else if (tagName == QStringLiteral("incomingServer")
-                       && e.attribute(QStringLiteral("type")) == QStringLiteral("pop3")) {
+            } else if (tagName == QLatin1String("incomingServer")
+                       && e.attribute(QStringLiteral("type")) == QLatin1String("pop3")) {
                 Server s = createServer(e);
                 if (s.isValid()) {
                     mPop3Servers.append(s);
                 }
-            } else if (tagName == QStringLiteral("outgoingServer")
-                       && e.attribute(QStringLiteral("type")) == QStringLiteral("smtp")) {
+            } else if (tagName == QLatin1String("outgoingServer")
+                       && e.attribute(QStringLiteral("type")) == QLatin1String("smtp")) {
                 Server s = createServer(e);
                 if (s.isValid()) {
                     mSmtpServers.append(s);
                 }
-            } else if (tagName == QStringLiteral("identity")) {
+            } else if (tagName == QLatin1String("identity")) {
                 identity i = createIdentity(e);
                 if (i.isValid()) {
                     mIdentities.append(i);
@@ -232,37 +232,37 @@ Server Ispdb::createServer(const QDomElement &n)
         QDomElement f = o.toElement();
         if (!f.isNull()) {
             const QString tagName(f.tagName());
-            if (tagName == QStringLiteral("hostname")) {
+            if (tagName == QLatin1String("hostname")) {
                 s.hostname = replacePlaceholders(f.text());
-            } else if (tagName == QStringLiteral("port")) {
+            } else if (tagName == QLatin1String("port")) {
                 s.port = f.text().toInt();
-            } else if (tagName == QStringLiteral("socketType")) {
+            } else if (tagName == QLatin1String("socketType")) {
                 const QString type(f.text());
-                if (type == QStringLiteral("plain")) {
+                if (type == QLatin1String("plain")) {
                     s.socketType = None;
-                } else if (type == QStringLiteral("SSL")) {
+                } else if (type == QLatin1String("SSL")) {
                     s.socketType = SSL;
                 }
-                if (type == QStringLiteral("STARTTLS")) {
+                if (type == QLatin1String("STARTTLS")) {
                     s.socketType = StartTLS;
                 }
-            } else if (tagName == QStringLiteral("username")) {
+            } else if (tagName == QLatin1String("username")) {
                 s.username = replacePlaceholders(f.text());
-            } else if (tagName == QStringLiteral("authentication")) {
+            } else if (tagName == QLatin1String("authentication")) {
                 const QString type(f.text());
-                if (type == QStringLiteral("password-cleartext")
-                        || type == QStringLiteral("plain")) {
+                if (type == QLatin1String("password-cleartext")
+                        || type == QLatin1String("plain")) {
                     s.authentication = Plain;
-                } else if (type == QStringLiteral("password-encrypted")
-                           || type == QStringLiteral("secure")) {
+                } else if (type == QLatin1String("password-encrypted")
+                           || type == QLatin1String("secure")) {
                     s.authentication = CramMD5;
-                } else if (type == QStringLiteral("NTLM")) {
+                } else if (type == QLatin1String("NTLM")) {
                     s.authentication = NTLM;
-                } else if (type == QStringLiteral("GSSAPI")) {
+                } else if (type == QLatin1String("GSSAPI")) {
                     s.authentication = GSSAPI;
-                } else if (type == QStringLiteral("client-ip-based")) {
+                } else if (type == QLatin1String("client-ip-based")) {
                     s.authentication = ClientIP;
-                } else if (type == QStringLiteral("none")) {
+                } else if (type == QLatin1String("none")) {
                     s.authentication = NoAuth;
                 }
             }
@@ -287,15 +287,15 @@ identity Ispdb::createIdentity(const QDomElement &n)
         QDomElement f = o.toElement();
         if (!f.isNull()) {
             const QString tagName(f.tagName());
-            if (tagName == QStringLiteral("default")) {
-                i.mDefault = f.text().toLower() == QStringLiteral("true");
-            } else if (tagName == QStringLiteral("email")) {
+            if (tagName == QLatin1String("default")) {
+                i.mDefault = f.text().toLower() == QLatin1String("true");
+            } else if (tagName == QLatin1String("email")) {
                 i.email = f.text();
-            } else if (tagName == QStringLiteral("name")) {
+            } else if (tagName == QLatin1String("name")) {
                 i.name = f.text();
-            } else if (tagName == QStringLiteral("organization")) {
+            } else if (tagName == QLatin1String("organization")) {
                 i.organization = f.text();
-            } else if (tagName == QStringLiteral("signature")) {
+            } else if (tagName == QLatin1String("signature")) {
                 QTextStream stream(&i.signature);
                 f.save(stream, 0);
                 i.signature = i.signature.trimmed();

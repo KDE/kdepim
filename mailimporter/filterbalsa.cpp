@@ -178,7 +178,7 @@ void FilterBalsa::importFiles(const QString &dirName)
                         }
                         //Evolution store inbox as "."
                         if (_cat.startsWith(QLatin1Char('.'))) {
-                            _cat = _cat.replace(0, 1, QLatin1String("Inbox/"));
+                            _cat = _cat.replace(0, 1, QStringLiteral("Inbox/"));
                         }
 
                         _path += QLatin1Char('/') + _cat;

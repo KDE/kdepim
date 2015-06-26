@@ -1091,15 +1091,15 @@ public:
     {
         if (MailCommon::Util::ensureKorganizerRunning(true)) {
             QDBusInterface *kontact =
-                new QDBusInterface(QLatin1String("org.kde.kontact"), QLatin1String("/KontactInterface"),
+                new QDBusInterface(QLatin1String("org.kde.kontact"), QStringLiteral("/KontactInterface"),
                                    QLatin1String("org.kde.kontact.KontactInterface"), QDBusConnection::sessionBus());
             if (kontact->isValid()) {
-                kontact->call(QLatin1String("selectPlugin"), QLatin1String("kontact_korganizerplugin"));
+                kontact->call(QLatin1String("selectPlugin"), QStringLiteral("kontact_korganizerplugin"));
             }
             delete kontact;
 
             OrgKdeKorganizerCalendarInterface *iface =
-                new OrgKdeKorganizerCalendarInterface(QLatin1String("org.kde.korganizer"), QLatin1String("/Calendar"),
+                new OrgKdeKorganizerCalendarInterface(QLatin1String("org.kde.korganizer"), QStringLiteral("/Calendar"),
                         QDBusConnection::sessionBus(), 0);
             if (!iface->isValid()) {
                 qCDebug(TEXT_CALENDAR_LOG) << "Calendar interface is not valid! " << iface->lastError().message();
@@ -1149,7 +1149,7 @@ public:
                 }
             }
         }
-        return mail(viewerInstance, incidence, QLatin1String("declinecounter"), KCalCore::iTIPDeclineCounter,
+        return mail(viewerInstance, incidence, QStringLiteral("declinecounter"), KCalCore::iTIPDeclineCounter,
                     receiver, QString(), DeclineCounter);
     }
 
@@ -1162,7 +1162,7 @@ public:
 
         // Don't delete the invitation here in any case, if the counter proposal
         // is declined you might need it again.
-        return saveFile(receiver, iCal, QLatin1String("counter"));
+        return saveFile(receiver, iCal, QStringLiteral("counter"));
     }
 
     bool handleClick(Viewer *viewerInstance,
@@ -1236,7 +1236,7 @@ public:
                 return true;
             }
             const QString receiver = findReceiver(part->content());
-            result = mail(viewerInstance, incidence, QLatin1String("forward"), iTIPRequest, receiver, fwdTo, Forward);
+            result = mail(viewerInstance, incidence, QStringLiteral("forward"), iTIPRequest, receiver, fwdTo, Forward);
         } else if (path == QLatin1String("check_calendar")) {
             incidence = stringToIncidence(iCal);
             showCalendar(incidence->dtStart().date());
@@ -1277,7 +1277,7 @@ public:
                 KToolInvocation::invokeMailer(incidence->organizer()->email(), summary);
             //fall through
             case KMessageBox::Yes: // means "do not send"
-                if (saveFile(QLatin1String("Receiver Not Searched"), iCal, QLatin1String("reply"))) {
+                if (saveFile(QLatin1String("Receiver Not Searched"), iCal, QStringLiteral("reply"))) {
                     if (GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
                         viewerInstance->deleteMessage();
                         result = true;

@@ -644,7 +644,7 @@ void AgendaItem::addAttendee(const QString &newAttendee)
             this,
             i18n("Attendee \"%1\" added to the calendar item \"%2\"",
                  KEmailAddress::normalizedAddress(name, email, QString()), text()),
-            i18n("Attendee added"), QLatin1String("AttendeeDroppedAdded"));
+            i18n("Attendee added"), QStringLiteral("AttendeeDroppedAdded"));
     }
 }
 
