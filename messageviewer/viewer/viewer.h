@@ -37,7 +37,6 @@ class ItemFetchJob;
 class KActionCollection;
 class QAction;
 class KToggleAction;
-class KUrl;
 class KActionMenu;
 
 class QAbstractItemModel;

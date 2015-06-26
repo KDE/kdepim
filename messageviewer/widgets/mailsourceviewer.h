@@ -37,10 +37,6 @@
 #include <QDialog>
 #include <KConfigGroup>
 class QTabWidget;
-namespace PimCommon
-{
-class SlideContainer;
-}
 namespace MessageViewer
 {
 class FindBarSourceView;
