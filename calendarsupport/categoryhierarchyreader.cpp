@@ -48,22 +48,19 @@ QStringList CategoryHierarchyReader::path(QString string)
     return unquote(_path);
 }
 
-void CategoryHierarchyReader::read(QStringList categories)
+void CategoryHierarchyReader::read(const QStringList &categories)
 {
     clear();
-    QStringList::Iterator it;
 
     // case insensitive sort
-    QMap<QString, QString> map;
+    QMap<QString, QString> sortedCategories;
     foreach (const QString &str, categories) {
-        map.insert(str.toLower(), str);
+        sortedCategories.insert(str.toLower(), str);
     }
 
-    categories = map.values();
-
     QStringList last_path;
-    for (it = categories.begin(); it != categories.end(); ++it) {
-        QStringList _path = path(*it);
+    foreach (const QString &category, sortedCategories) {
+        QStringList _path = path(category);
 
         // we need to figure out where last item and the new one differ
         QStringList::Iterator jt, kt;
@@ -97,7 +94,7 @@ void CategoryHierarchyReader::read(QStringList categories)
 
         // make the node and any non-existent ancestors
         while (!_path.isEmpty()) {
-            addChild(_path.first(), QVariant(*it));
+            addChild(_path.first(), QVariant(category));
             _path.pop_front();
         }
     }

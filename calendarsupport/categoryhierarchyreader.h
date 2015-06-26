@@ -34,7 +34,7 @@ namespace CalendarSupport
 class CALENDARSUPPORT_EXPORT CategoryHierarchyReader
 {
 public:
-    void read(QStringList categories);
+    void read(const QStringList &categories);
     virtual ~CategoryHierarchyReader() {}
     static QStringList path(QString string);
 
