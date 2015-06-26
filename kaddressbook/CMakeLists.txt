@@ -159,7 +159,7 @@ if(KF5Gpgmepp_FOUND)
    target_link_libraries(kaddressbookprivate KF5::QGpgme)
 endif()
 if(KF5Prison_FOUND)
-  target_link_libraries(kaddressbookprivate KF5::Prison)
+   target_link_libraries(kaddressbookprivate KF5::Prison)
 endif()
 
 set_target_properties(kaddressbookprivate PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
