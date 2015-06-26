@@ -75,7 +75,7 @@ private:
     static MDNAdviceHelper *s_instance;
 };
 
-class MDNAdviceDialog : public QDialog
+class MAILCOMMON_EXPORT MDNAdviceDialog : public QDialog
 {
     Q_OBJECT
 

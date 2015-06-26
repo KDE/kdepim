@@ -19,3 +19,13 @@ target_link_libraries(invalidfilterdialoggui
   mailcommon
 )
 
+set(mndadvicedialoggui_SRCS mndadvicedialoggui.cpp)
+add_executable(mndadvicedialoggui ${mndadvicedialoggui_SRCS})
+ecm_mark_as_test(mndadvicedialoggui)
+target_link_libraries(mndadvicedialoggui
+  Qt5::Test
+  Qt5::Core
+  Qt5::Gui
+  mailcommon
+)
+

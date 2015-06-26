@@ -15,7 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef INVALIDFILTERDIALOGGUI_H
-#define INVALIDFILTERDIALOGGUI_H
+#include "mdnadvicedialog.h"
+#include <QApplication>
 
-#endif // INVALIDFILTERDIALOGGUI_H
+int main(int argc, char **argv)
+{
+    QApplication app(argc, argv);
+
+    MailCommon::MDNAdviceDialog *w = new MailCommon::MDNAdviceDialog(QStringLiteral("test mnda"), false);
+    w->exec();
+    app.exec();
+    delete w;
+    return 0;
+}
