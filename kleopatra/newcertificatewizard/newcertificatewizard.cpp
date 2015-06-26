@@ -365,23 +365,32 @@ public:
             0 ;
     }
 
-    void setSubkeyType(unsigned int algo)
-    {
-        ui.elgCB->setChecked(is_elg(algo));
-    }
-    unsigned int subkeyType() const
-    {
-        return ui.elgCB->isChecked() ? GPGME_PK_ELG_E : 0 ;
-    }
+        void setSubkeyType( unsigned int algo ) {
+            ui.elgCB->setChecked( is_elg( algo ) );
+            ui.rsaSubCB->setChecked( is_rsa( algo ) );
+        }
+        unsigned int subkeyType() const {
+            if ( ui.elgCB->isChecked() ) {
+                return GPGME_PK_ELG_E;
+            } else if ( ui.rsaSubCB->isChecked() ) {
+                return GPGME_PK_RSA;
+            }
+            return 0;
+        }
 
-    void setSubkeyStrength(unsigned int strength)
-    {
-        set_keysize(ui.elgKeyStrengthCB, strength);
-    }
-    unsigned int subkeyStrength() const
-    {
-        return get_keysize(ui.elgKeyStrengthCB);
-    }
+        void setSubkeyStrength( unsigned int strength ) {
+            if ( subkeyType() == GPGME_PK_RSA ) {
+                set_keysize( ui.rsaKeyStrengthSubCB, strength );
+            } else {
+                set_keysize( ui.elgKeyStrengthCB, strength );
+            }
+        }
+        unsigned int subkeyStrength() const {
+            if ( subkeyType() == GPGME_PK_RSA ) {
+                return get_keysize( ui.rsaKeyStrengthSubCB );
+            }
+            return get_keysize( ui.elgKeyStrengthCB );
+        }
 
     void setSigningAllowed(bool on)
     {
@@ -446,19 +455,24 @@ private Q_SLOTS:
                 if (sender() == ui.dsaRB || sender() == ui.rsaRB) {
                     ui.elgCB->setChecked(is_dsa(algo));
                 }
-            }
-            if (is_rsa(algo)) {
-                ui.encryptionCB->setEnabled(true);
-                ui.encryptionCB->setChecked(true);
-                ui.signingCB->setEnabled(true);
-                ui.signingCB->setChecked(true);
-                ui.authenticationCB->setEnabled(true);
-            } else if (is_dsa(algo)) {
-                ui.encryptionCB->setEnabled(false);
-                if (is_elg(sk_algo)) {
-                    ui.encryptionCB->setChecked(true);
-                } else {
-                    ui.encryptionCB->setChecked(false);
+                if ( is_rsa( algo ) ) {
+                    ui.encryptionCB->setEnabled( true );
+                    ui.encryptionCB->setChecked( true );
+                    ui.signingCB->setEnabled( true );
+                    ui.signingCB->setChecked( true );
+                    ui.authenticationCB->setEnabled( true );
+                    if ( is_rsa( sk_algo ) ) {
+                        ui.encryptionCB->setEnabled( false );
+                        ui.encryptionCB->setChecked( true );
+                    } else {
+                        ui.encryptionCB->setEnabled( true );
+                    }
+                } else if ( is_dsa( algo ) ) {
+                    ui.encryptionCB->setEnabled( false );
+                    if ( is_elg( sk_algo ) )
+                        ui.encryptionCB->setChecked( true );
+                    else
+                        ui.encryptionCB->setChecked( false );
                 }
             }
         } else {
@@ -1424,19 +1438,15 @@ void EnterDetailsPage::slotAdvancedSettingsClicked()
 QStringList KeyCreationPage::keyUsages() const
 {
     QStringList usages;
-    if (signingAllowed()) {
-        usages << QStringLiteral("sign");
-    }
-    if (encryptionAllowed() && !is_dsa(keyType())) {
-        usages << QStringLiteral("encrypt");
-    }
-    if (0)   // not needed in pgp (implied) and not supported in cms
-        if (certificationAllowed()) {
-            usages << QStringLiteral("certify");
-        }
-    if (authenticationAllowed()) {
-        usages << QStringLiteral("auth");
-    }
+    if ( signingAllowed() )
+        usages << QLatin1String("sign");
+    if ( encryptionAllowed() && !is_dsa( keyType() ) && !is_rsa( subkeyType() ) )
+        usages << QLatin1String("encrypt");
+    if ( 0 ) // not needed in pgp (implied) and not supported in cms
+    if ( certificationAllowed() )
+        usages << QLatin1String("certify");
+    if ( authenticationAllowed() )
+        usages << QLatin1String("auth");
     return usages;
 }
 
@@ -1446,7 +1456,7 @@ QStringList OverviewPage::i18nKeyUsages() const
     if (signingAllowed()) {
         usages << i18n("Sign");
     }
-    if (encryptionAllowed() && !is_dsa(keyType())) {
+    if ( encryptionAllowed() && !is_dsa( keyType() ) && !is_rsa( subkeyType() ) ) {
         usages << i18n("Encrypt");
     }
     if (0)   // not needed in pgp (implied) and not supported in cms
@@ -1462,10 +1472,9 @@ QStringList OverviewPage::i18nKeyUsages() const
 QStringList KeyCreationPage::subkeyUsages() const
 {
     QStringList usages;
-    if (encryptionAllowed() && is_dsa(keyType())) {
-        assert(subkeyType());
-        assert(is_elg(subkeyType()));
-        usages << QStringLiteral("encrypt");
+    if ( encryptionAllowed() && ( is_dsa( keyType() ) || is_rsa ( subkeyType() ) ) ) {
+        assert( subkeyType() );
+        usages << QLatin1String("encrypt");
     }
     return usages;
 }
@@ -1473,9 +1482,8 @@ QStringList KeyCreationPage::subkeyUsages() const
 QStringList OverviewPage::i18nSubkeyUsages() const
 {
     QStringList usages;
-    if (encryptionAllowed() && is_dsa(keyType())) {
-        assert(subkeyType());
-        assert(is_elg(subkeyType()));
+    if ( encryptionAllowed() && ( is_dsa( keyType() ) || is_rsa ( subkeyType() ) ) ) {
+        assert( subkeyType() );
         usages << i18n("Encrypt");
     }
     return usages;
@@ -1648,9 +1656,10 @@ void AdvancedSettingsDialog::fillKeySizeComboBoxen()
     const QStringList dsaKeySizeLabels = config.readEntry(DSA_KEYSIZE_LABELS_ENTRY, QStringList());
     const QStringList elgKeySizeLabels = config.readEntry(ELG_KEYSIZE_LABELS_ENTRY, QStringList());
 
-    fill_combobox(*ui.rsaKeyStrengthCB, rsaKeySizes, rsaKeySizeLabels);
-    fill_combobox(*ui.dsaKeyStrengthCB, dsaKeySizes, dsaKeySizeLabels);
-    fill_combobox(*ui.elgKeyStrengthCB, elgKeySizes, elgKeySizeLabels);
+    fill_combobox( *ui.rsaKeyStrengthCB, rsaKeySizes, rsaKeySizeLabels );
+    fill_combobox( *ui.rsaKeyStrengthSubCB, rsaKeySizes, rsaKeySizeLabels );
+    fill_combobox( *ui.dsaKeyStrengthCB, dsaKeySizes, dsaKeySizeLabels );
+    fill_combobox( *ui.elgKeyStrengthCB, elgKeySizes, elgKeySizeLabels );
 
 }
 
@@ -1673,12 +1682,12 @@ void AdvancedSettingsDialog::loadDefaultKeyType()
         setKeyType(GPGME_PK_DSA);
         setSubkeyType(GPGME_PK_ELG_E);
     } else {
-        if (!keyType.isEmpty() && keyType != QLatin1String("RSA"))
-            qCWarning(KLEOPATRA_LOG) << "invalid value \"" << qPrintable(keyType)
-                                     << "\" for entry \"[CertificateCreationWizard]"
-                                     << qPrintable(entry) << "\"";
-        setKeyType(GPGME_PK_RSA);
-        setSubkeyType(0);
+        if ( !keyType.isEmpty() && keyType != QLatin1String("RSA") )
+            qCWarning(KLEOPATRA_LOG) << "invalid value \"" << qPrintable( keyType )
+                       << "\" for entry \"[CertificateCreationWizard]"
+                       << qPrintable( entry ) << "\"";
+        setKeyType( GPGME_PK_RSA );
+        setSubkeyType( GPGME_PK_RSA );
     }
 
     keyTypeImmutable = config.isEntryImmutable(entry);
@@ -1704,14 +1713,16 @@ void AdvancedSettingsDialog::updateWidgetVisibility()
     ui.dnsGB->setVisible(protocol == CMS);
     ui.uriGB->setVisible(protocol == CMS);
     // Technical Details Page
-    if (keyTypeImmutable) {
-        ui.rsaRB->setEnabled(false);
-        ui.dsaRB->setEnabled(false);
-        ui.elgCB->setEnabled(false);
+    if ( keyTypeImmutable ) {
+        ui.rsaRB->setEnabled( false );
+        ui.rsaSubCB->setEnabled( false );
+        ui.dsaRB->setEnabled( false );
+        ui.elgCB->setEnabled( false );
     } else {
-        ui.rsaRB->setEnabled(true);
-        ui.dsaRB->setEnabled(protocol == OpenPGP);
-        ui.elgCB->setEnabled(protocol == OpenPGP);
+        ui.rsaRB->setEnabled( true );
+        ui.rsaSubCB->setEnabled( protocol == OpenPGP );
+        ui.dsaRB->setEnabled( protocol == OpenPGP );
+        ui.elgCB->setEnabled( protocol == OpenPGP );
     }
     ui.certificationCB->setVisible(protocol == OpenPGP);   // gpgsm limitation?
     ui.authenticationCB->setVisible(protocol == OpenPGP);

@@ -27,17 +27,20 @@
           <string>Key Material</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0" colspan="3">
+          <item row="0" column="0" colspan="2">
            <widget class="QRadioButton" name="rsaRB">
             <property name="text">
              <string>RSA</string>
             </property>
             <property name="checked">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="5">
+          <item row="0" column="2">
+           <widget class="QComboBox" name="rsaKeyStrengthCB"/>
+          </item>
+          <item row="0" column="3">
            <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -50,41 +53,34 @@
             </property>
            </spacer>
           </item>
-          <item row="1" column="0" colspan="3">
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="rsaSubCB">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>+ RSA</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QComboBox" name="rsaKeyStrengthSubCB"/>
+          </item>
+          <item row="2" column="0" colspan="2">
            <widget class="QRadioButton" name="dsaRB">
             <property name="text">
              <string>DSA</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1" colspan="2">
-           <widget class="QCheckBox" name="elgCB">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>+ Elgamal</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3" colspan="2">
-           <widget class="QComboBox" name="elgKeyStrengthCB">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3" colspan="2">
-           <widget class="QComboBox" name="rsaKeyStrengthCB"/>
-          </item>
-          <item row="1" column="3" colspan="2">
+          <item row="2" column="2">
            <widget class="QComboBox" name="dsaKeyStrengthCB">
             <property name="enabled">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="3" column="0">
            <spacer name="horizontalSpacer_2">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -94,11 +90,28 @@
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>10</width>
-              <height>1</height>
+              <width>13</width>
+              <height>13</height>
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="3" column="1">
+           <widget class="QCheckBox" name="elgCB">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>+ Elgamal</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QComboBox" name="elgKeyStrengthCB">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -256,11 +269,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KDateComboBox</class>
-   <extends>KComboBox</extends>
-   <header>kdatecombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
@@ -273,6 +281,11 @@
    <slots>
     <signal>itemsChanged()</signal>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>KDateComboBox</class>
+   <extends>KComboBox</extends>
+   <header>kdatecombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -342,6 +355,22 @@
    </hints>
   </connection>
   <connection>
+   <sender>rsaSubCB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>rsaKeyStrengthSubCB</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>147</x>
+     <y>185</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>291</x>
+     <y>185</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>expiryCB</sender>
    <signal>toggled(bool)</signal>
    <receiver>expiryDE</receiver>
@@ -375,6 +404,22 @@
   </connection>
   <connection>
    <sender>rsaRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Kleo::NewCertificateUi::AdvancedSettingsDialog</receiver>
+   <slot>slotKeyMaterialSelectionChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>39</x>
+     <y>95</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>5</x>
+     <y>93</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rsaSubCB</sender>
    <signal>toggled(bool)</signal>
    <receiver>Kleo::NewCertificateUi::AdvancedSettingsDialog</receiver>
    <slot>slotKeyMaterialSelectionChanged()</slot>
