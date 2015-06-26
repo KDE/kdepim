@@ -49,17 +49,19 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-static const unsigned int GetAuditLogFlags = Context::AuditLogWithHelp|Context::HtmlAuditLog;
+static const unsigned int GetAuditLogFlags = Context::AuditLogWithHelp | Context::HtmlAuditLog;
 
-QString _detail::audit_log_as_html( Context * ctx, GpgME::Error & err ) {
-  assert( ctx );
-  QGpgME::QByteArrayDataProvider dp;
-  Data data( &dp );
-  assert( !data.isNull() );
-  if ( ( err = ctx->lastError() ) || ( err = ctx->getAuditLog( data, GetAuditLogFlags ) ) )
-    return QString::fromLocal8Bit( err.asString() );
-  const QByteArray ba = dp.data();
-  return QString::fromUtf8( ba.data(), ba.size() );
+QString _detail::audit_log_as_html(Context *ctx, GpgME::Error &err)
+{
+    assert(ctx);
+    QGpgME::QByteArrayDataProvider dp;
+    Data data(&dp);
+    assert(!data.isNull());
+    if ((err = ctx->lastError()) || (err = ctx->getAuditLog(data, GetAuditLogFlags))) {
+        return QString::fromLocal8Bit(err.asString());
+    }
+    const QByteArray ba = dp.data();
+    return QString::fromUtf8(ba.data(), ba.size());
 }
 
 static QList<QByteArray> from_sl(const QStringList &sl)
