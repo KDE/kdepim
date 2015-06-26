@@ -226,10 +226,10 @@ void ManageSieveScriptsDialog::slotSieveEditorCheckSyntaxClicked()
 
 void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
 {
+    disableManagerScriptsDialog(false);
     if (!mSieveEditor) {
         return;
     }
-    disableManagerScriptsDialog(false);
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditor->script(), mWasActive, mWasActive);
     connect(job, &KManageSieve::SieveJob::result, this, &ManageSieveScriptsDialog::slotPutResult);
 }
