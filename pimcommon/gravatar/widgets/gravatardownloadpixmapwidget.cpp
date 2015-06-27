@@ -41,6 +41,10 @@ GravatarDownloadPixmapWidget::GravatarDownloadPixmapWidget(QWidget *parent)
     connect(mLineEdit, &QLineEdit::textChanged, this, &GravatarDownloadPixmapWidget::slotTextChanged);
     hbox->addWidget(mLineEdit);
 
+    mUseHttps = new QCheckBox(i18n("Use Https Protocol"));
+    mUseHttps->setObjectName(QStringLiteral("usehttps"));
+    mainLayout->addWidget(mUseHttps);
+
     mUseLibravatar = new QCheckBox(i18n("Use Libravatar"));
     mUseLibravatar->setObjectName(QStringLiteral("uselibravatar"));
     mainLayout->addWidget(mUseLibravatar);
@@ -93,6 +97,7 @@ void GravatarDownloadPixmapWidget::slotSearchButton()
     //job->setUseDefaultPixmap(true);
     job->setUseLibravatar(mUseLibravatar->isChecked());
     job->setFallbackGravatar(mFallbackGravatar->isChecked());
+    job->setUseHttps(mUseHttps->isChecked());
     if (job->canStart()) {
         connect(job, &GravatarResolvUrlJob::finished, this, &GravatarDownloadPixmapWidget::slotResolvUrlFinish);
         job->start();

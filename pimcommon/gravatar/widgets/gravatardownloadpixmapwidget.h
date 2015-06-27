@@ -48,6 +48,7 @@ private:
     QPushButton *mGetPixmapButton;
     QCheckBox *mUseLibravatar;
     QCheckBox *mFallbackGravatar;
+    QCheckBox *mUseHttps;
 };
 }
 

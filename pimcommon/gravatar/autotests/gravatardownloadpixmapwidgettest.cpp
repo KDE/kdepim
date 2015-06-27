@@ -59,6 +59,10 @@ void GravatarDownloadPixmapWidgetTest::shouldHaveDefaultValue()
     QCheckBox *fallBackGravatar = w.findChild<QCheckBox *>(QStringLiteral("fallbackgravatar"));
     QVERIFY(fallBackGravatar);
     QVERIFY(!fallBackGravatar->isChecked());
+
+    QCheckBox *useHttps = w.findChild<QCheckBox *>(QStringLiteral("usehttps"));
+    QVERIFY(useHttps);
+    QVERIFY(!useHttps->isChecked());
 }
 
 void GravatarDownloadPixmapWidgetTest::shouldChangeButtonEnableState()
