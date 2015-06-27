@@ -493,7 +493,7 @@ void RichTextEditor::highlightWord(int length, int pos)
 
 void RichTextEditor::createHighlighter()
 {
-    setHighlighter(new Sonnet::Highlighter(this, d->spellCheckingConfigFileName));
+    setHighlighter(new Sonnet::Highlighter(this));
 }
 
 Sonnet::SpellCheckDecorator *RichTextEditor::createSpellCheckDecorator()

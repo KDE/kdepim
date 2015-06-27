@@ -49,6 +49,7 @@ SieveTextEdit::SieveTextEdit(QWidget *parent)
     setWordWrapMode(QTextOption::NoWrap);
     setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     m_sieveLineNumberArea = new SieveLineNumberArea(this);
+    setSpellCheckingConfigFileName(QStringLiteral("sieveeditorrc"));
 
     connect(this, &SieveTextEdit::blockCountChanged, this, &SieveTextEdit::slotUpdateLineNumberAreaWidth);
     connect(this, &SieveTextEdit::updateRequest, this, &SieveTextEdit::slotUpdateLineNumberArea);

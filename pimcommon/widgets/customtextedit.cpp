@@ -71,7 +71,7 @@ QString CustomTextEdit::configName() const
 
 void CustomTextEdit::createHighlighter()
 {
-    Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this, d->configFile);
+    Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this);
     highlighter->setAutomatic(false);
 
     KTextEdit::setHighlighter(highlighter);
