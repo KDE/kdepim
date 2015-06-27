@@ -664,7 +664,7 @@ void PlainTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
 
 void PlainTextEditor::focusInEvent(QFocusEvent *event)
 {
-    if (d->checkSpellingEnabled && !isReadOnly() && !d->richTextDecorator && spellCheckingSupport()) {
+    if (checkSpellingEnabled() && !isReadOnly() && !d->richTextDecorator && spellCheckingSupport()) {
         createHighlighter();
     }
 
@@ -686,7 +686,6 @@ void PlainTextEditor::setCheckSpellingEnabled(bool check)
     // From the above statment we know know that if we're turning checking
     // on that we need to create a new highlighter and if we're turning it
     // off we should remove the old one.
-
     if (check) {
         if (hasFocus()) {
             if (!d->richTextDecorator) {
@@ -721,6 +720,19 @@ void PlainTextEditor::createHighlighter()
 void PlainTextEditor::setSpellCheckingConfigFileName(const QString &_fileName)
 {
     d->spellCheckingConfigFileName = _fileName;
+    if (!d->spellCheckingConfigFileName.isEmpty()) {
+        KConfig sonnetKConfig(d->spellCheckingConfigFileName);
+        KConfigGroup group(&sonnetKConfig, "Spelling");
+        d->checkSpellingEnabled = group.readEntry("checkerEnabledByDefault", false);
+        d->spellCheckingLanguage = group.readEntry("Language", QString());
+        setCheckSpellingEnabled(checkSpellingEnabled());
+
+        if (!d->spellCheckingLanguage.isEmpty() && highlighter()) {
+            highlighter()->setCurrentLanguage(d->spellCheckingLanguage);
+            highlighter()->rehighlight();
+        }
+    }
+
 }
 
 QString PlainTextEditor::spellCheckingConfigFileName() const
@@ -748,6 +760,13 @@ void PlainTextEditor::setSpellCheckingLanguage(const QString &_language)
 
     if (_language != d->spellCheckingLanguage) {
         d->spellCheckingLanguage = _language;
+        if (!d->spellCheckingConfigFileName.isEmpty()) {
+            KConfig sonnetKConfig(d->spellCheckingConfigFileName);
+            KConfigGroup group(&sonnetKConfig, "Spelling");
+            group.writeEntry("Language", d->spellCheckingLanguage);
+        }
+        setCheckSpellingEnabled(checkSpellingEnabled());
+
         Q_EMIT languageChanged(_language);
     }
 }
@@ -755,4 +774,9 @@ void PlainTextEditor::setSpellCheckingLanguage(const QString &_language)
 void PlainTextEditor::slotToggleAutoSpellCheck()
 {
     setCheckSpellingEnabled(!checkSpellingEnabled());
+    if (!d->spellCheckingConfigFileName.isEmpty()) {
+        KConfig sonnetKConfig(d->spellCheckingConfigFileName);
+        KConfigGroup group(&sonnetKConfig, "Spelling");
+        group.writeEntry("checkerEnabledByDefault", d->checkSpellingEnabled);
+    }
 }

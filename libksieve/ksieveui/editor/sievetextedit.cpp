@@ -46,10 +46,10 @@ SieveTextEdit::SieveTextEdit(QWidget *parent)
     : PimCommon::PlainTextEditor(parent),
       mShowHelpMenu(true)
 {
+    setSpellCheckingConfigFileName(QStringLiteral("sieveeditorrc"));
     setWordWrapMode(QTextOption::NoWrap);
     setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     m_sieveLineNumberArea = new SieveLineNumberArea(this);
-    setSpellCheckingConfigFileName(QStringLiteral("sieveeditorrc"));
 
     connect(this, &SieveTextEdit::blockCountChanged, this, &SieveTextEdit::slotUpdateLineNumberAreaWidth);
     connect(this, &SieveTextEdit::updateRequest, this, &SieveTextEdit::slotUpdateLineNumberArea);
@@ -81,6 +81,7 @@ void SieveTextEdit::createHighlighter()
 {
     KSieveUi::SieveSyntaxSpellCheckingHighlighter *highlighter = new KSieveUi::SieveSyntaxSpellCheckingHighlighter(this);
     highlighter->toggleSpellHighlighting(checkSpellingEnabled());
+    highlighter->setCurrentLanguage(spellCheckingLanguage());
     highlighter->setSyntaxHighlighterRules(mSieveHighliterRules.rules());
     setHighlighter(highlighter);
 }
