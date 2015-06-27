@@ -60,6 +60,16 @@ void GravatarUpdateWidget::setEmail(const QString &email)
     mEmail = email;
 }
 
+QPixmap GravatarUpdateWidget::pixmap() const
+{
+    return QPixmap();
+}
+
+void GravatarUpdateWidget::setOriginalPixmap(const QPixmap &pix)
+{
+    //TODO
+}
+
 void GravatarUpdateWidget::updateActualGravatar()
 {
     //TODO

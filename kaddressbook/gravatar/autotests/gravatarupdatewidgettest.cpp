@@ -45,6 +45,8 @@ void GravatarUpdateWidgetTest::shouldHaveDefaultValue()
 
     QLabel *resultGravatar = widget.findChild<QLabel *>(QStringLiteral("result"));
     QVERIFY(resultGravatar);
+
+    QVERIFY(widget.pixmap().isNull());
 }
 
 QTEST_MAIN(GravatarUpdateWidgetTest)

@@ -51,6 +51,16 @@ void GravatarUpdateDialog::setEmail(const QString &email)
     mGravatarUpdateWidget->setEmail(email);
 }
 
+QPixmap GravatarUpdateDialog::pixmap() const
+{
+    return mGravatarUpdateWidget->pixmap();
+}
+
+void GravatarUpdateDialog::setOriginalPixmap(const QPixmap &pix)
+{
+    mGravatarUpdateWidget->setOriginalPixmap(pix);
+}
+
 void GravatarUpdateDialog::readConfig()
 {
     KConfigGroup grp(KSharedConfig::openConfig(), "GravatarUpdateDialog");

@@ -35,6 +35,8 @@ public:
     ~GravatarUpdateWidget();
 
     void setEmail(const QString &email);
+    QPixmap pixmap() const;
+    void setOriginalPixmap(const QPixmap &pix);
 
 private Q_SLOTS:
     void slotSearchGravatar();
