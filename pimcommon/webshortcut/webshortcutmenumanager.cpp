@@ -81,7 +81,7 @@ void WebShortcutMenuManager::addWebShortcutsMenu(QMenu *menu)
             QAction *action = Q_NULLPTR;
 
             Q_FOREACH (const QString &searchProvider, searchProviders) {
-                action = new QAction(searchProvider, webShortcutsMenu);
+                action = new QAction(i18nc("@action:inmenu Search for <text> with", "%1", searchProvider), webShortcutsMenu);
                 action->setIcon(QIcon::fromTheme(filterData.iconNameForPreferredSearchProvider(searchProvider)));
                 action->setData(filterData.queryForPreferredSearchProvider(searchProvider));
                 connect(action, &QAction::triggered, this, &WebShortcutMenuManager::slotHandleWebShortcutAction);
