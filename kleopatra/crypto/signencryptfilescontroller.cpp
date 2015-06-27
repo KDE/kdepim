@@ -500,7 +500,7 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared()
 
         runnable.swap(tasks);
 
-        Q_FOREACH (const shared_ptr<Task> task, runnable) {
+        Q_FOREACH (const shared_ptr<Task> &task, runnable) {
             q->connectTask(task);
         }
 
