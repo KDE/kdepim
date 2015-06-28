@@ -130,13 +130,14 @@ QString SearchPattern::purify(bool removeAction)
 #ifndef NDEBUG
                 qCDebug(MAILCOMMON_LOG) << "Removing" << (*it)->asString();
 #endif
-                erase(it);
+                if (!informationAboutNotValidPattern.isEmpty()) {
+                      informationAboutNotValidPattern += QLatin1Char('\n');
+                }
+                informationAboutNotValidPattern += (*it)->informationAboutNotValidRules();
+
+                erase( it );
                 it = end();
             }
-            if (!informationAboutNotValidPattern.isEmpty()) {
-                informationAboutNotValidPattern += QLatin1Char('\n');
-            }
-            informationAboutNotValidPattern += (*it)->informationAboutNotValidRules();
         }
     }
 
