@@ -225,8 +225,8 @@ void ComposerLineEdit::slotEditingFinished()
     mGroups.clear();
 
     if (!text().isEmpty()) {
-        QStringList addresses = KEmailAddress::splitAddressList(text());
-        foreach (const QString &address, addresses) {
+        const QStringList addresses = KEmailAddress::splitAddressList(text());
+        Q_FOREACH (const QString &address, addresses) {
             Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
             job->setQuery(Akonadi::ContactGroupSearchJob::Name, address);
             connect(job, &Akonadi::ContactGroupSearchJob::result, this, &ComposerLineEdit::slotGroupSearchResult);
