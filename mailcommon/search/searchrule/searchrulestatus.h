@@ -107,7 +107,7 @@ public:
 
     static Akonadi::MessageStatus statusFromEnglishName(const QString &);
 
-    virtual QString informationAboutNotValidRules() const;
+    QString informationAboutNotValidRules() const Q_DECL_OVERRIDE;
 
 private:
     Akonadi::MessageStatus mStatus;
