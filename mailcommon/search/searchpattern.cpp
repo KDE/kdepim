@@ -142,13 +142,14 @@ QString SearchPattern::purify(bool removeAction)
 #ifndef NDEBUG
                 kDebug() << "Removing" << (*it)->asString();
 #endif
+                if (!informationAboutNotValidPattern.isEmpty()) {
+                      informationAboutNotValidPattern += QLatin1Char('\n');
+                }
+                informationAboutNotValidPattern += (*it)->informationAboutNotValidRules();
+
                 erase( it );
                 it = end();
             }
-            if (!informationAboutNotValidPattern.isEmpty()) {
-                informationAboutNotValidPattern += QLatin1Char('\n');
-            }
-            informationAboutNotValidPattern += (*it)->informationAboutNotValidRules();
         }
     }
 
