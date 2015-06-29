@@ -493,7 +493,9 @@ void RichTextEditor::highlightWord(int length, int pos)
 
 void RichTextEditor::createHighlighter()
 {
-    setHighlighter(new Sonnet::Highlighter(this));
+    Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this);
+    highlighter->setCurrentLanguage(spellCheckingLanguage());
+    setHighlighter(highlighter);
 }
 
 Sonnet::SpellCheckDecorator *RichTextEditor::createSpellCheckDecorator()
