@@ -83,9 +83,10 @@ int main(int argc, char **argv)
     parser.addVersionOption();
     parser.addHelpOption();
     aboutData.setupCommandLine(&parser);
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("email"), i18n("Tries to fetch the settings for that email address"), QStringLiteral("emailaddress")));
+
     parser.process(app);
     aboutData.processCommandLine(&parser);
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("email"), i18n("Tries to fetch the settings for that email address"), QStringLiteral("emailaddress")));
 
     QString email(QStringLiteral("blablabla@gmail.com"));
     if (!parser.value(QStringLiteral("email")).isEmpty()) {
