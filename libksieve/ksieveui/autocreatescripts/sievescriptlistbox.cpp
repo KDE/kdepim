@@ -222,7 +222,7 @@ SieveScriptPage *SieveScriptListBox::createNewScript(const QString &newName, con
 void SieveScriptListBox::slotNew()
 {
     const QString newName = QInputDialog::getText(this, i18n("New Script"), i18n("Add new name:"));
-    if (!newName.isEmpty()) {
+    if (!newName.trimmed().isEmpty()) {
         createNewScript(newName);
         Q_EMIT valueChanged();
     }
