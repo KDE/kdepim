@@ -48,7 +48,6 @@ GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     mResultGravatar = new QLabel;
     mResultGravatar->setObjectName(QStringLiteral("result"));
     mainLayout->addWidget(mResultGravatar, 1, 0);
-    updateActualGravatar();
 }
 
 GravatarUpdateWidget::~GravatarUpdateWidget()
@@ -67,11 +66,9 @@ QPixmap GravatarUpdateWidget::pixmap() const
 
 void GravatarUpdateWidget::setOriginalPixmap(const QPixmap &pix)
 {
-    //TODO
-}
-
-void GravatarUpdateWidget::updateActualGravatar()
-{
+    if (!pix.isNull()) {
+        mResultGravatar->setPixmap(pix);
+    }
     //TODO
 }
 
@@ -80,9 +77,14 @@ void GravatarUpdateWidget::slotSearchGravatar()
     if (!mEmail.isEmpty()) {
         PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
         job->setEmail(mEmail);
-        job->setUseDefaultPixmap(false);
-        connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
-        job->start();
+        if (job->canStart()) {
+            job->setUseDefaultPixmap(false);
+            connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
+            job->start();
+        } else {
+            mResultGravatar->setText(i18n("Search is impossible."));
+            job->deleteLater();
+        }
     }
 }
 

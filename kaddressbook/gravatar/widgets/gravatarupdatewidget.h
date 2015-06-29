@@ -43,7 +43,6 @@ private Q_SLOTS:
 
     void slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *job);
 private:
-    void updateActualGravatar();
     QString mEmail;
     QLabel *mEmailLab;
     QPushButton *mSearchGravatar;
