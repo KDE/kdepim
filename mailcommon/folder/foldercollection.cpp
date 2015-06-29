@@ -228,7 +228,7 @@ void FolderCollection::writeConfig() const
             OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
                 PimCommon::Util::createImapSettingsInterface(mCollection.resource());
 
-            if (imapSettingsInterface->isValid()) {
+            if (imapSettingsInterface && imapSettingsInterface->isValid()) {
                 QDBusReply<int> reply = imapSettingsInterface->accountIdentity();
                 if (reply.isValid()) {
                     defaultIdentityId = static_cast<uint>(reply);
@@ -288,30 +288,36 @@ void FolderCollection::setIdentity(uint identity)
     }
 }
 
+uint FolderCollection::fallBackIdentity() const
+{
+    int identityId = -1;
+    OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
+        PimCommon::Util::createImapSettingsInterface(mCollection.resource());
+
+    if (imapSettingsInterface && imapSettingsInterface->isValid()) {
+        QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
+        if (useDefault.isValid() && useDefault.value()) {
+            delete imapSettingsInterface;
+            return mIdentity;
+        }
+
+        QDBusReply<int> remoteAccountIdent = imapSettingsInterface->accountIdentity();
+        if (remoteAccountIdent.isValid() && remoteAccountIdent.value() > 0) {
+            identityId = remoteAccountIdent;
+        }
+    }
+    delete imapSettingsInterface;
+    if (identityId != -1 &&
+            !KernelIf->identityManager()->identityForUoid(identityId).isNull()) {
+        return identityId;
+    }
+    return identityId;
+}
+
 uint FolderCollection::identity() const
 {
     if (mUseDefaultIdentity) {
-        int identityId = -1;
-        OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
-            PimCommon::Util::createImapSettingsInterface(mCollection.resource());
-
-        if (imapSettingsInterface->isValid()) {
-            QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
-            if (useDefault.isValid() && useDefault.value()) {
-                delete imapSettingsInterface;
-                return mIdentity;
-            }
-
-            QDBusReply<int> remoteAccountIdent = imapSettingsInterface->accountIdentity();
-            if (remoteAccountIdent.isValid() && remoteAccountIdent.value() > 0) {
-                identityId = remoteAccountIdent;
-            }
-        }
-        delete imapSettingsInterface;
-        if (identityId != -1 &&
-                !KernelIf->identityManager()->identityForUoid(identityId).isNull()) {
-            return identityId;
-        }
+        return fallBackIdentity();
     }
     return mIdentity;
 }

@@ -137,6 +137,7 @@ public:
 
     QString mailingListPostAddress() const;
 
+    uint fallBackIdentity() const;
 protected Q_SLOTS:
     void slotIdentitiesChanged();
 

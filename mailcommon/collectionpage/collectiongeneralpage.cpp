@@ -350,6 +350,9 @@ void CollectionGeneralPage::save(Collection &collection)
 void CollectionGeneralPage::slotIdentityCheckboxChanged()
 {
     mIdentityComboBox->setEnabled(!mUseDefaultIdentityCheckBox->isChecked());
+    if (mFolderCollection && mUseDefaultIdentityCheckBox->isChecked()) {
+        mIdentityComboBox->setCurrentIdentity(mFolderCollection->fallBackIdentity());
+    }
 }
 
 void CollectionGeneralPage::slotFolderContentsSelectionChanged(int)
