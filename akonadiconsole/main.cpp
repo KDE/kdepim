@@ -54,9 +54,10 @@ int main(int argc, char **argv)
     parser.addVersionOption();
     parser.addHelpOption();
     aboutData.setupCommandLine(&parser);
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("remote"), i18n("Connect to an Akonadi remote debugging server"), QStringLiteral("server")));
+
     parser.process(app);
     aboutData.processCommandLine(&parser);
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("remote"), i18n("Connect to an Akonadi remote debugging server"), QStringLiteral("server")));
 
     KDBusService service;
 
