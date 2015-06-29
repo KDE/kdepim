@@ -398,7 +398,7 @@ void RichTextEditor::checkSpelling(bool force)
     if (document()->isEmpty()) {
         slotDisplayMessageIndicator(i18n("Nothing to spell check."));
         if (force) {
-            emit spellCheckingFinished();
+            Q_EMIT spellCheckingFinished();
         }
         return;
     }
