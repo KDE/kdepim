@@ -47,7 +47,7 @@ GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
 
     mResultGravatar = new QLabel;
     mResultGravatar->setObjectName(QStringLiteral("result"));
-    mainLayout->addWidget(mResultGravatar, 1, 0);
+    mainLayout->addWidget(mResultGravatar, 1, 0, 1, 3, Qt::AlignCenter);
 }
 
 GravatarUpdateWidget::~GravatarUpdateWidget()
@@ -57,6 +57,8 @@ GravatarUpdateWidget::~GravatarUpdateWidget()
 void GravatarUpdateWidget::setEmail(const QString &email)
 {
     mEmail = email;
+    mEmailLab->setText(mEmail);
+    mSearchGravatar->setEnabled(!mEmail.trimmed().isEmpty());
 }
 
 QPixmap GravatarUpdateWidget::pixmap() const

@@ -33,13 +33,19 @@ int main(int argc, char **argv)
     parser.addVersionOption();
     parser.addHelpOption();
     aboutData.setupCommandLine(&parser);
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("email"), i18n("Email address"), QStringLiteral("emailaddress")));
+
     parser.process(app);
     aboutData.processCommandLine(&parser);
+    QString email;
+    if (!parser.value(QStringLiteral("email")).isEmpty()) {
+        email = parser.value(QStringLiteral("email"));
+    }
 
-    //PimCommon::PlainTextEditorWidget *w = new PimCommon::PlainTextEditorWidget();
-    //w->resize(800, 600);
-    //w->show();
+    KABGravatar::GravatarUpdateDialog dlg;
+    dlg.setEmail(email);
+    dlg.show();
+
     app.exec();
-    //delete w;
     return 0;
 }
