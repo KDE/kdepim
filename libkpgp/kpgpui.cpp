@@ -387,7 +387,7 @@ KeySelectionDialog::KeySelectionDialog(const KeyList &keyList,
         lvi = mListView->currentItem();
         slotCheckSelection();
     } else {
-        if (mListView->selectedItems().size() > 0) {
+        if (!mListView->selectedItems().isEmpty()) {
             lvi = mListView->selectedItems().first();
         }
         slotCheckSelection(lvi);
@@ -846,7 +846,7 @@ void KeySelectionDialog::slotSelectionChanged()
         // is slow).
         mCheckSelectionTimer->start(sCheckSelectionDelay);
     } else {
-        if (mListView->selectedItems().size() > 0) {
+        if (!mListView->selectedItems().isEmpty()) {
             slotCheckSelection(mListView->selectedItems().first());
         }
     }

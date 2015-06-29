@@ -248,7 +248,7 @@ void Kleo::DNAttributeOrderConfigWidget::enableDisableButtons(QTreeWidgetItem *i
 void Kleo::DNAttributeOrderConfigWidget::slotUpButtonClicked()
 {
 #ifndef QT_NO_TREEWIDGET
-    if (d->currentLV->selectedItems().size() <= 0) {
+    if (d->currentLV->selectedItems().isEmpty()) {
         return;
     }
     QTreeWidgetItem *item = d->currentLV->selectedItems().first();
@@ -268,7 +268,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotUpButtonClicked()
 void Kleo::DNAttributeOrderConfigWidget::slotDoubleUpButtonClicked()
 {
 #ifndef QT_NO_TREEWIDGET
-    if (d->currentLV->selectedItems().size() <= 0) {
+    if (d->currentLV->selectedItems().isEmpty()) {
         return;
     }
     QTreeWidgetItem *item = d->currentLV->selectedItems().first();
@@ -288,7 +288,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotDoubleUpButtonClicked()
 void Kleo::DNAttributeOrderConfigWidget::slotDownButtonClicked()
 {
 #ifndef QT_NO_TREEWIDGET
-    if (d->currentLV->selectedItems().size() <= 0) {
+    if (d->currentLV->selectedItems().isEmpty()) {
         return;
     }
     QTreeWidgetItem *item = d->currentLV->selectedItems().first();
@@ -308,7 +308,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotDownButtonClicked()
 void Kleo::DNAttributeOrderConfigWidget::slotDoubleDownButtonClicked()
 {
 #ifndef QT_NO_TREEWIDGET
-    if (d->currentLV->selectedItems().size() <= 0) {
+    if (d->currentLV->selectedItems().isEmpty()) {
         return;
     }
     QTreeWidgetItem *item = d->currentLV->selectedItems().first();
@@ -328,7 +328,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotDoubleDownButtonClicked()
 void Kleo::DNAttributeOrderConfigWidget::slotLeftButtonClicked()
 {
 #ifndef QT_NO_TREEWIDGET
-    if (d->currentLV->selectedItems().size() <= 0) {
+    if (d->currentLV->selectedItems().isEmpty()) {
         return;
     }
     QTreeWidgetItem *right = d->currentLV->selectedItems().first();
@@ -350,7 +350,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotLeftButtonClicked()
 void Kleo::DNAttributeOrderConfigWidget::slotRightButtonClicked()
 {
 #ifndef QT_NO_TREEWIDGET
-    if (d->availableLV->selectedItems().size() <= 0) {
+    if (d->availableLV->selectedItems().isEmpty()) {
         return;
     }
     QTreeWidgetItem *left = d->availableLV->selectedItems().first();
@@ -360,7 +360,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotRightButtonClicked()
     }
     d->availableLV->takeTopLevelItem(d->availableLV->indexOfTopLevelItem(left));
     int newRightIndex = d->currentLV->topLevelItemCount();
-    if (d->currentLV->selectedItems().size() > 0) {
+    if (!d->currentLV->selectedItems().isEmpty()) {
         QTreeWidgetItem *right = d->currentLV->selectedItems().first();
         newRightIndex = d->currentLV->indexOfTopLevelItem(right);
         right->setSelected(false);
