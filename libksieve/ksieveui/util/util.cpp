@@ -52,6 +52,10 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
 {
     QScopedPointer<OrgKdeAkonadiImapSettingsInterface> interface(PimCommon::Util::createImapSettingsInterface(identifier));
 
+    if (!interface) {
+        return QUrl();
+    }
+
     if (!interface->sieveSupport()) {
         return QUrl();
     }

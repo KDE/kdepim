@@ -54,9 +54,13 @@
 
 OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface(const QString &ident)
 {
-    return
-        new OrgKdeAkonadiImapSettingsInterface(
-            QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QStringLiteral("/Settings"), QDBusConnection::sessionBus());
+    if (isImapResource(ident)) {
+        return
+                new OrgKdeAkonadiImapSettingsInterface(
+                    QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QStringLiteral("/Settings"), QDBusConnection::sessionBus());
+    } else {
+        return Q_NULLPTR;
+    }
 }
 
 void PimCommon::Util::saveTextAs(const QString &text, const QString &filter, QWidget *parent, const QUrl &url, const QString &caption)

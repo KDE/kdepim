@@ -335,7 +335,7 @@ public:
 
         QString loginName;
         QString serverName;
-        if (imapSettingsInterface->isValid()) {
+        if (imapSettingsInterface && imapSettingsInterface->isValid()) {
             QDBusReply<QString> reply = imapSettingsInterface->userName();
             if (reply.isValid()) {
                 loginName = reply;
