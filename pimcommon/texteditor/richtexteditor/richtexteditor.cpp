@@ -361,7 +361,7 @@ void RichTextEditor::slotUndoableClear()
 
 void RichTextEditor::setReadOnly(bool readOnly)
 {
-    if (!readOnly && hasFocus() && d->checkSpellingEnabled && !d->richTextDecorator) {
+    if (!readOnly && hasFocus() && checkSpellingEnabled() && !d->richTextDecorator) {
         createHighlighter();
     }
 
