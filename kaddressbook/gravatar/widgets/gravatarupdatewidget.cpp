@@ -69,7 +69,6 @@ void GravatarUpdateWidget::setOriginalPixmap(const QPixmap &pix)
     if (!pix.isNull()) {
         mResultGravatar->setPixmap(pix);
     }
-    //TODO
 }
 
 void GravatarUpdateWidget::slotSearchGravatar()
