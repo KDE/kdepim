@@ -76,7 +76,7 @@ class ScrollArea : public QScrollArea
 {
 public:
     explicit ScrollArea(QWidget *p) : QScrollArea(p) {}
-    /* reimp */ QSize sizeHint() const
+    QSize sizeHint() const Q_DECL_OVERRIDE
     {
         const QSize wsz = widget() ? widget()->sizeHint() : QSize();
         return QSize(wsz.width() + style()->pixelMetric(QStyle::PM_ScrollBarExtent), QScrollArea::sizeHint().height());

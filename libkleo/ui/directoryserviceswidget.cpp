@@ -307,11 +307,11 @@ public:
         return m_items.size();
     }
 
-    /* reimp */ QVariant data(const QModelIndex &idx, int role) const;
-    /* reimp */ QVariant headerData(int section, Qt::Orientation o, int role) const;
+    QVariant data(const QModelIndex &idx, int role) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation o, int role) const Q_DECL_OVERRIDE;
 
-    /* reimp */ Qt::ItemFlags flags(const QModelIndex &idx) const;
-    /* reimp */ bool setData(const QModelIndex &idx, const QVariant &value, int role);
+    Qt::ItemFlags flags(const QModelIndex &idx) const Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &idx, const QVariant &value, int role) Q_DECL_OVERRIDE;
 
 private:
     bool doSetData(unsigned int row, unsigned int column, const QVariant &value, int role);

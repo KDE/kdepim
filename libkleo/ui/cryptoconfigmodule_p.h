@@ -181,8 +181,8 @@ public:
                               QGridLayout *layout,
                               QWidget *parent = Q_NULLPTR);
 
-    /* reimp */ void doSave();
-    /* reimp */ void doLoad();
+    void doSave() Q_DECL_OVERRIDE;
+    void doLoad() Q_DECL_OVERRIDE;
 private:
     KLineEdit *mLineEdit;
 };
@@ -197,8 +197,8 @@ public:
     CryptoConfigEntryDebugLevel(CryptoConfigModule *module, Kleo::CryptoConfigEntry *entry,
                                 const QString &entryName, QGridLayout *layout, QWidget *parent = Q_NULLPTR);
 
-    /* reimp */ void doSave();
-    /* reimp */ void doLoad();
+    void doSave() Q_DECL_OVERRIDE;
+    void doLoad() Q_DECL_OVERRIDE;
 private:
     QComboBox *mComboBox;
 };
@@ -217,8 +217,8 @@ public:
                           QGridLayout *layout,
                           QWidget *parent = Q_NULLPTR);
 
-    /* reimp */ void doSave();
-    /* reimp */ void doLoad();
+    void doSave() Q_DECL_OVERRIDE;
+    void doLoad() Q_DECL_OVERRIDE;
 private:
     KUrlRequester *mUrlRequester;
     Kleo::FileNameRequester *mFileNameRequester;
@@ -238,8 +238,8 @@ public:
                              QGridLayout *layout,
                              QWidget *parent = Q_NULLPTR);
 
-    /* reimp */ void doSave();
-    /* reimp */ void doLoad();
+    void doSave() Q_DECL_OVERRIDE;
+    void doLoad() Q_DECL_OVERRIDE;
 private:
     KUrlRequester *mUrlRequester;
     Kleo::FileNameRequester *mFileNameRequester;
@@ -259,8 +259,8 @@ public:
                          QGridLayout *layout,
                          QWidget *parent = Q_NULLPTR);
 
-    /* reimp */ void doSave();
-    /* reimp */ void doLoad();
+    void doSave() Q_DECL_OVERRIDE;
+    void doLoad() Q_DECL_OVERRIDE;
 
 private:
     QLineEdit *mLineEdit;
@@ -280,8 +280,8 @@ public:
                              const QString &entryName,
                              QGridLayout *layout,
                              QWidget *parent = Q_NULLPTR);
-    /* reimp */ void doSave();
-    /* reimp */ void doLoad();
+    void doSave() Q_DECL_OVERRIDE;
+    void doLoad() Q_DECL_OVERRIDE;
 private:
     enum { Int, UInt, ListOfNone } mKind;
     QSpinBox *mNumInput;
@@ -300,8 +300,8 @@ public:
                               const QString &entryName,
                               QGridLayout *layout,
                               QWidget *parent = Q_NULLPTR);
-    /* reimp */ void doSave();
-    /* reimp */ void doLoad();
+    void doSave() Q_DECL_OVERRIDE;
+    void doLoad() Q_DECL_OVERRIDE;
 private:
     QCheckBox *mCheckBox;
 };
@@ -319,8 +319,8 @@ public:
                              const QString &entryName,
                              QGridLayout *layout,
                              QWidget *parent = Q_NULLPTR);
-    /* reimp */ void doSave();
-    /* reimp */ void doLoad();
+    void doSave() Q_DECL_OVERRIDE;
+    void doLoad() Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void slotOpenDialog();
 private:
@@ -343,8 +343,8 @@ public:
                                const QString &entryName,
                                QGridLayout *layout,
                                QWidget *parent = Q_NULLPTR);
-    /* reimp */ void doSave();
-    /* reimp */ void doLoad();
+    void doSave() Q_DECL_OVERRIDE;
+    void doLoad() Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void slotOpenDialog();
 private:

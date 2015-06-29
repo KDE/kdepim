@@ -110,7 +110,7 @@ public:
     }
 
 private:
-    /* reimp */ void run()
+    void run() Q_DECL_OVERRIDE
     {
         const QMutexLocker locker(&m_mutex);
         m_result = m_function();
@@ -214,21 +214,21 @@ protected:
         doEmitResult(r);
         this->deleteLater();
     }
-    /* reimp */ void slotCancel()
+    void slotCancel()
     {
         if (m_ctx) {
             m_ctx->cancelPendingOperation();
         }
     }
-    /* reimp */ QString auditLogAsHtml() const
+    QString auditLogAsHtml() const
     {
         return m_auditLog;
     }
-    /* reimp */ GpgME::Error auditLogError() const
+    GpgME::Error auditLogError() const
     {
         return m_auditLogError;
     }
-    /* reimp */ void showProgress(const char *what, int type, int current, int total)
+    void showProgress(const char *what, int type, int current, int total) Q_DECL_OVERRIDE
     {
         // will be called from the thread exec'ing the operation, so
         // just bounce everything to the owning thread:

@@ -60,38 +60,38 @@ public:
     QGpgMENewCryptoConfigEntry(const boost::shared_ptr<QGpgMENewCryptoConfigGroup> &group, const GpgME::Configuration::Option &option);
     ~QGpgMENewCryptoConfigEntry();
 
-    /* reimp */ QString name() const;
-    /* reimp */ QString description() const;
-    /* reimp */ QString path() const;
-    /* reimp */ bool isOptional() const;
-    /* reimp */ bool isReadOnly() const;
-    /* reimp */ bool isList() const;
-    /* reimp */ bool isRuntime() const;
-    /* reimp */ Level level() const;
-    /* reimp */ ArgType argType() const;
-    /* reimp */ bool isSet() const;
-    /* reimp */ bool boolValue() const;
-    /* reimp */ QString stringValue() const;
-    /* reimp */ int intValue() const;
-    /* reimp */ unsigned int uintValue() const;
-    /* reimp */ KUrl urlValue() const;
-    /* reimp */ unsigned int numberOfTimesSet() const;
-    /* reimp */ QStringList stringValueList() const;
-    /* reimp */ std::vector<int> intValueList() const;
-    /* reimp */ std::vector<unsigned int> uintValueList() const;
-    /* reimp */ KUrl::List urlValueList() const;
-    /* reimp */ void resetToDefault();
-    /* reimp */ void setBoolValue(bool);
-    /* reimp */ void setStringValue(const QString &);
-    /* reimp */ void setIntValue(int);
-    /* reimp */ void setUIntValue(unsigned int);
-    /* reimp */ void setURLValue(const KUrl &);
-    /* reimp */ void setNumberOfTimesSet(unsigned int);
-    /* reimp */ void setStringValueList(const QStringList &);
-    /* reimp */ void setIntValueList(const std::vector<int> &);
-    /* reimp */ void setUIntValueList(const std::vector<unsigned int> &);
-    /* reimp */ void setURLValueList(const KUrl::List &);
-    /* reimp */ bool isDirty() const;
+    QString name() const Q_DECL_OVERRIDE;
+    QString description() const Q_DECL_OVERRIDE;
+    QString path() const Q_DECL_OVERRIDE;
+    bool isOptional() const Q_DECL_OVERRIDE;
+    bool isReadOnly() const Q_DECL_OVERRIDE;
+    bool isList() const Q_DECL_OVERRIDE;
+    bool isRuntime() const Q_DECL_OVERRIDE;
+    Level level() const Q_DECL_OVERRIDE;
+    ArgType argType() const Q_DECL_OVERRIDE;
+    bool isSet() const Q_DECL_OVERRIDE;
+    bool boolValue() const Q_DECL_OVERRIDE;
+    QString stringValue() const Q_DECL_OVERRIDE;
+    int intValue() const Q_DECL_OVERRIDE;
+    unsigned int uintValue() const Q_DECL_OVERRIDE;
+    KUrl urlValue() const Q_DECL_OVERRIDE;
+    unsigned int numberOfTimesSet() const Q_DECL_OVERRIDE;
+    QStringList stringValueList() const Q_DECL_OVERRIDE;
+    std::vector<int> intValueList() const Q_DECL_OVERRIDE;
+    std::vector<unsigned int> uintValueList() const Q_DECL_OVERRIDE;
+    KUrl::List urlValueList() const Q_DECL_OVERRIDE;
+    void resetToDefault() Q_DECL_OVERRIDE;
+    void setBoolValue(bool) Q_DECL_OVERRIDE;
+    void setStringValue(const QString &) Q_DECL_OVERRIDE;
+    void setIntValue(int) Q_DECL_OVERRIDE;
+    void setUIntValue(unsigned int) Q_DECL_OVERRIDE;
+    void setURLValue(const KUrl &) Q_DECL_OVERRIDE;
+    void setNumberOfTimesSet(unsigned int) Q_DECL_OVERRIDE;
+    void setStringValueList(const QStringList &) Q_DECL_OVERRIDE;
+    void setIntValueList(const std::vector<int> &) Q_DECL_OVERRIDE;
+    void setUIntValueList(const std::vector<unsigned int> &) Q_DECL_OVERRIDE;
+    void setURLValueList(const KUrl::List &) Q_DECL_OVERRIDE;
+    bool isDirty() const Q_DECL_OVERRIDE;
 
 #if 0
     void setDirty(bool b);
@@ -113,16 +113,16 @@ public:
     QGpgMENewCryptoConfigGroup(const boost::shared_ptr<QGpgMENewCryptoConfigComponent> &parent, const GpgME::Configuration::Option &option);
     ~QGpgMENewCryptoConfigGroup();
 
-    /* reimp */ QString name() const;
-    /* reimp */ QString iconName() const
+    QString name() const Q_DECL_OVERRIDE;
+    QString iconName() const Q_DECL_OVERRIDE
     {
         return QString();
     }
-    /* reimp */ QString description() const;
-    /* reimp */ QString path() const;
-    /* reimp */ Kleo::CryptoConfigEntry::Level level() const;
-    /* reimp */ QStringList entryList() const;
-    /* reimp */ QGpgMENewCryptoConfigEntry *entry(const QString &name) const;
+    QString description() const Q_DECL_OVERRIDE;
+    QString path() const Q_DECL_OVERRIDE;
+    Kleo::CryptoConfigEntry::Level level() const Q_DECL_OVERRIDE;
+    QStringList entryList() const Q_DECL_OVERRIDE;
+    QGpgMENewCryptoConfigEntry *entry(const QString &name) const Q_DECL_OVERRIDE;
 
 private:
     friend class QGpgMENewCryptoConfigComponent; // it adds the entries
@@ -141,16 +141,16 @@ public:
 
     void setComponent(const GpgME::Configuration::Component &component);
 
-    /* reimp */ QString name() const;
-    /* reimp */ QString iconName() const
+    QString name() const Q_DECL_OVERRIDE;
+    QString iconName() const Q_DECL_OVERRIDE
     {
         return name();
     }
-    /* reimp */ QString description() const;
-    /* reimp */ QStringList groupList() const;
-    /* reimp */ QGpgMENewCryptoConfigGroup *group(const QString &name) const;
+    QString description() const Q_DECL_OVERRIDE;
+    QStringList groupList() const Q_DECL_OVERRIDE;
+    QGpgMENewCryptoConfigGroup *group(const QString &name) const Q_DECL_OVERRIDE;
 
-    /* reimp */ void sync(bool runtime);
+    void sync(bool runtime);
 
 private:
     GpgME::Configuration::Component m_component;
@@ -170,12 +170,12 @@ public:
     QGpgMENewCryptoConfig();
     ~QGpgMENewCryptoConfig();
 
-    /* reimp */ QStringList componentList() const;
+    QStringList componentList() const Q_DECL_OVERRIDE;
 
-    /* reimp */ QGpgMENewCryptoConfigComponent *component(const QString &name) const;
+    QGpgMENewCryptoConfigComponent *component(const QString &name) const Q_DECL_OVERRIDE;
 
-    /* reimp */ void clear();
-    /* reimp */ void sync(bool runtime);
+    void clear() Q_DECL_OVERRIDE;
+    void sync(bool runtime) Q_DECL_OVERRIDE;
 
 private:
     /// @param showErrors if true, a messagebox will be shown if e.g. gpgconf wasn't found
