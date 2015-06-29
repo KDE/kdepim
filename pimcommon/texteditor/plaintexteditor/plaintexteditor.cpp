@@ -714,7 +714,9 @@ void PlainTextEditor::clearDecorator()
 
 void PlainTextEditor::createHighlighter()
 {
-    setHighlighter(new Sonnet::Highlighter(this));
+    Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this);
+    highlighter->setCurrentLanguage(spellCheckingLanguage());
+    setHighlighter(highlighter);
 }
 
 void PlainTextEditor::setSpellCheckingConfigFileName(const QString &_fileName)
