@@ -253,7 +253,7 @@ void LookupCertificatesCommand::Private::slotSearchTextChanged(const QString &st
         dialog->setCertificates(std::vector<Key>());
     }
 
-    const QRegExp rx(QLatin1String("(?:0x|0X)?[0-9a-fA-F]{6,}"));
+    const QRegExp rx(QStringLiteral("(?:0x|0X)?[0-9a-fA-F]{6,}"));
     if (rx.exactMatch(str))
         information(str.startsWith(QStringLiteral("0x"), Qt::CaseInsensitive)
                     ? i18n("<p>You seem to be searching for a fingerPrint or a key-id.</p>"
@@ -265,7 +265,7 @@ void LookupCertificatesCommand::Private::slotSearchTextChanged(const QString &st
                            "Some require a \"0x\" prefix, while others require there be no such prefix.</p>"
                            "<p>If your search does not yield any results, try adding the 0x prefix to your search.</p>"),
                     i18n("Hex-String Search"),
-                    QLatin1String("lookup-certificates-warn-0x-prefix"));
+                    QStringLiteral("lookup-certificates-warn-0x-prefix"));
 
     startKeyListJob(CMS,     str);
     startKeyListJob(OpenPGP, str);

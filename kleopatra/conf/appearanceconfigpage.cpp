@@ -51,9 +51,7 @@ AppearanceConfigurationPage::AppearanceConfigurationPage(QWidget *parent, const 
     lay->addWidget(mWidget);
     connect(mWidget, SIGNAL(changed()), this, SLOT(changed()));
 
-#ifndef HAVE_UNBROKEN_KCMULTIDIALOG
     load();
-#endif
 }
 
 void AppearanceConfigurationPage::load()

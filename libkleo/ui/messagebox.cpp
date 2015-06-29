@@ -109,7 +109,7 @@ AuditLogViewer::AuditLogViewer(const QString &log, QWidget *parent, Qt::WindowFl
     showButtonSeparator(false);
     setModal(false);
     setMainWidget(m_textEdit);
-    m_textEdit->setObjectName(QLatin1String("m_textEdit"));
+    m_textEdit->setObjectName(QStringLiteral("m_textEdit"));
     m_textEdit->setReadOnly(true);
     setAuditLog(log);
 
@@ -234,7 +234,7 @@ void MessageBox::auditLog(QWidget *parent, const QString &log, const QString &ca
 {
     AuditLogViewer *const alv = new AuditLogViewer(log, parent);
     alv->setAttribute(Qt::WA_DeleteOnClose);
-    alv->setObjectName(QLatin1String("alv"));
+    alv->setObjectName(QStringLiteral("alv"));
     alv->setCaption(caption);
     alv->show();
 }
@@ -392,7 +392,7 @@ void MessageBox::make(QWidget *parent, QMessageBox::Icon icon, const QString &te
     QPushButton *yesButton = box->button(QDialogButtonBox::Yes);
     yesButton->setDefault(true);
     //dialog->setEscapeButton(KDialog::Yes);
-    dialog->setObjectName(QLatin1String("error"));
+    dialog->setObjectName(QStringLiteral("error"));
     dialog->setModal(true);
     KGuiItem::assign(yesButton, KStandardGuiItem::ok());
     if (GpgME::hasFeature(GpgME::AuditLogFeature)) {

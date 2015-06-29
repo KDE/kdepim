@@ -118,7 +118,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget(DNAttributeMapp
 
     QGridLayout *xlay = new QGridLayout();
     xlay->setSpacing(0);
-    xlay->setObjectName(QLatin1String("xlay"));
+    xlay->setObjectName(QStringLiteral("xlay"));
     xlay->setAlignment(Qt::AlignCenter);
 
     static const struct {
@@ -183,7 +183,8 @@ void Kleo::DNAttributeOrderConfigWidget::load()
     // fill the LHS listview with what's left:
 
     const QStringList all = Kleo::DNAttributeMapper::instance()->names();
-    for (QStringList::const_iterator it = all.begin() ; it != all.end() ; ++it) {
+    const QStringList::const_iterator end(all.end());
+    for (QStringList::const_iterator it = all.begin() ; it != end ; ++it) {
         if (!order.contains(*it)) {
             QTreeWidgetItem *item = new QTreeWidgetItem(d->availableLV);
             item->setText(0, *it);

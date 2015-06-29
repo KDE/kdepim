@@ -88,7 +88,7 @@ GpgME::Error Kleo::ChiasmusJob::setup()
             ? SymCryptRunProcessBase::Encrypt
             : SymCryptRunProcessBase::Decrypt,
             this);
-    mSymCryptRun->setObjectName(QLatin1String("symcryptrun"));
+    mSymCryptRun->setObjectName(QStringLiteral("symcryptrun"));
     QTimer::singleShot(timeoutEntry->uintValue() * 1000, this,
                        SLOT(slotTimeout()));
     return GpgME::Error();

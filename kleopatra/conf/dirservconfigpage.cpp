@@ -171,7 +171,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage(QWidget *
     ++row;
     QLabel *label = new QLabel(i18n("LDAP &timeout (minutes:seconds):"), this);
     mTimeout = new QTimeEdit(this);
-    mTimeout->setDisplayFormat(QLatin1String("mm:ss"));
+    mTimeout->setDisplayFormat(QStringLiteral("mm:ss"));
     connect(mTimeout, SIGNAL(timeChanged(QTime)), this, SLOT(changed()));
     label->setBuddy(mTimeout);
     glay->addWidget(label, row, 0);
@@ -197,9 +197,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage(QWidget *
     glay->setRowStretch(++row, 1);
     glay->setColumnStretch(2, 1);
 
-#ifndef HAVE_UNBROKEN_KCMULTIDIALOG
     load();
-#endif
 }
 
 static KUrl::List string2urls(const QString &str)

@@ -62,15 +62,15 @@ namespace
 static QUrl defaultX509Service()
 {
     QUrl url;
-    url.setScheme(QLatin1String("ldap"));
+    url.setScheme(QStringLiteral("ldap"));
     url.setHost(i18nc("default server name, keep it a valid domain name, ie. no spaces", "server"));
     return url;
 }
 static QUrl defaultOpenPGPService()
 {
     QUrl url;
-    url.setScheme(QLatin1String("hkp"));
-    url.setHost(QLatin1String("keys.gnupg.net"));
+    url.setScheme(QStringLiteral("hkp"));
+    url.setHost(QStringLiteral("keys.gnupg.net"));
     return url;
 }
 
@@ -593,9 +593,9 @@ private:
               newOpenPGPAction(i18nc("New OpenPGP Directory Server", "OpenPGP"), q),
               newMenu(q)
         {
-            newX509Action.setObjectName(QLatin1String("newX509Action"));
-            newOpenPGPAction.setObjectName(QLatin1String("newOpenPGPAction"));
-            newMenu.setObjectName(QLatin1String("newMenu"));
+            newX509Action.setObjectName(QStringLiteral("newX509Action"));
+            newOpenPGPAction.setObjectName(QStringLiteral("newOpenPGPAction"));
+            newMenu.setObjectName(QStringLiteral("newMenu"));
 
             setupUi(q);
 

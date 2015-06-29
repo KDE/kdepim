@@ -78,8 +78,8 @@ public:
     QString name() const
     {
         switch (mProtocol) {
-        case GpgME::OpenPGP: return QLatin1String("OpenPGP");
-        case GpgME::CMS:     return QLatin1String("SMIME");
+        case GpgME::OpenPGP: return QStringLiteral("OpenPGP");
+        case GpgME::CMS:     return QStringLiteral("SMIME");
         default:             return QString();
         }
     }
@@ -87,8 +87,8 @@ public:
     QString displayName() const
     {
         switch (mProtocol) {
-        case GpgME::OpenPGP: return QLatin1String("gpg");
-        case GpgME::CMS:     return QLatin1String("gpgsm");
+        case GpgME::OpenPGP: return QStringLiteral("gpg");
+        case GpgME::CMS:     return QStringLiteral("gpgsm");
         default:             return i18n("unknown");
         }
     }

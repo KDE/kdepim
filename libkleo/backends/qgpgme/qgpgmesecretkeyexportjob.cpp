@@ -74,7 +74,7 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start(const QStringList &patterns)
 
     // create and start gpgsm process:
     mProcess = new GnuPGProcessBase(this);
-    mProcess->setObjectName(QLatin1String("gpgsm --export-secret-key-p12"));
+    mProcess->setObjectName(QStringLiteral("gpgsm --export-secret-key-p12"));
 
     // FIXME: obtain the path to gpgsm from gpgme, so we use the same instance.
     *mProcess << QStringLiteral("gpgsm") << QStringLiteral("--export-secret-key-p12");

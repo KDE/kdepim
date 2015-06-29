@@ -41,7 +41,6 @@
 #include <KLocalizedString>
 #include <QPushButton>
 #include <KStandardGuiItem>
-#include <KUrl>
 #include "kleopatra_debug.h"
 #include <QHBoxLayout>
 #include <QLabel>

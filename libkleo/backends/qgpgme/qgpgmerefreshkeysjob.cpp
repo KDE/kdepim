@@ -87,7 +87,7 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess()
     }
     // create and start gpgsm process:
     mProcess = new GnuPGProcessBase(this);
-    mProcess->setObjectName(QLatin1String("gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks"));
+    mProcess->setObjectName(QStringLiteral("gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks"));
 
     // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
     *mProcess << QStringLiteral("gpgsm") << QStringLiteral("-k") << QStringLiteral("--with-validation") << QStringLiteral("--force-crl-refresh")

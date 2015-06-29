@@ -61,8 +61,8 @@
 #include <KLocalizedString>
 #include <KCmdLineOptions>
 #include "kleopatra_debug.h"
-#include <KUrl>
 #include <KWindowSystem>
+#include <QUrl>
 
 #include <QFile>
 #include <QDir>
@@ -82,9 +82,9 @@ using namespace boost;
 
 static void add_resources()
 {
-    KIconLoader::global()->addAppDir(QLatin1String("libkleopatra"));
-    KIconLoader::global()->addAppDir(QLatin1String("kwatchgnupg"));
-    KIconLoader::global()->addAppDir(QLatin1String("kdepim"));
+    KIconLoader::global()->addAppDir(QStringLiteral("libkleopatra"));
+    KIconLoader::global()->addAppDir(QStringLiteral("kwatchgnupg"));
+    KIconLoader::global()->addAppDir(QStringLiteral("kdepim"));
 }
 
 static const struct {

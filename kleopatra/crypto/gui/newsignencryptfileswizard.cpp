@@ -456,26 +456,26 @@ public:
             m_archive.addItem(ad->label(), qVariantFromValue(ad));
         }
 
-        registerField(QLatin1String("files"), this, "files");
+        registerField(QStringLiteral("files"), this, "files");
 
-        registerField(QLatin1String("signing-preset"), this, "signingPreset");
-        registerField(QLatin1String("encryption-preset"), this, "encryptionPreset");
+        registerField(QStringLiteral("signing-preset"), this, "signingPreset");
+        registerField(QStringLiteral("encryption-preset"), this, "encryptionPreset");
 
-        registerField(QLatin1String("signencrypt"), &m_signencrypt);
-        registerField(QLatin1String("encrypt"), &m_encrypt);
-        registerField(QLatin1String("sign"), &m_sign);
+        registerField(QStringLiteral("signencrypt"), &m_signencrypt);
+        registerField(QStringLiteral("encrypt"), &m_encrypt);
+        registerField(QStringLiteral("sign"), &m_sign);
 
-        registerField(QLatin1String("armor"), &m_armor);
-        registerField(QLatin1String("remove"), &m_removeSource);
+        registerField(QStringLiteral("armor"), &m_armor);
+        registerField(QStringLiteral("remove"), &m_removeSource);
 
-        registerField(QLatin1String("archive"), &m_archiveCB);
-        registerField(QLatin1String("archive-id"), &m_archive);
-        registerField(QLatin1String("archive-name-pgp"), &m_archiveNamePgp, "fileName");
-        registerField(QLatin1String("archive-name-cms"), &m_archiveNameCms, "fileName");
+        registerField(QStringLiteral("archive"), &m_archiveCB);
+        registerField(QStringLiteral("archive-id"), &m_archive);
+        registerField(QStringLiteral("archive-name-pgp"), &m_archiveNamePgp, "fileName");
+        registerField(QStringLiteral("archive-name-cms"), &m_archiveNameCms, "fileName");
 
-        registerField(QLatin1String("signing-user-mutable"), this, "signingUserMutable");
-        registerField(QLatin1String("encryption-user-mutable"), this, "encryptionUserMutable");
-        registerField(QLatin1String("archive-user-mutable"), this, "archiveUserMutable");
+        registerField(QStringLiteral("signing-user-mutable"), this, "signingUserMutable");
+        registerField(QStringLiteral("encryption-user-mutable"), this, "encryptionUserMutable");
+        registerField(QStringLiteral("archive-user-mutable"), this, "archiveUserMutable");
 
         connect(&m_archive, SIGNAL(currentIndexChanged(int)),
                 this, SLOT(slotArchiveDefinitionChanged()));

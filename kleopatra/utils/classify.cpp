@@ -235,39 +235,39 @@ QString Kleo::printableClassification(unsigned int classification)
 {
     QStringList parts;
     if (classification & CMS) {
-        parts.push_back(QLatin1String("CMS"));
+        parts.push_back(QStringLiteral("CMS"));
     }
     if (classification & OpenPGP) {
-        parts.push_back(QLatin1String("OpenPGP"));
+        parts.push_back(QStringLiteral("OpenPGP"));
     }
     if (classification & Binary) {
-        parts.push_back(QLatin1String("Binary"));
+        parts.push_back(QStringLiteral("Binary"));
     }
     if (classification & Ascii) {
-        parts.push_back(QLatin1String("Ascii"));
+        parts.push_back(QStringLiteral("Ascii"));
     }
     if (classification & DetachedSignature) {
-        parts.push_back(QLatin1String("DetachedSignature"));
+        parts.push_back(QStringLiteral("DetachedSignature"));
     }
     if (classification & OpaqueSignature) {
-        parts.push_back(QLatin1String("OpaqueSignature"));
+        parts.push_back(QStringLiteral("OpaqueSignature"));
     }
     if (classification & ClearsignedMessage) {
-        parts.push_back(QLatin1String("ClearsignedMessage"));
+        parts.push_back(QStringLiteral("ClearsignedMessage"));
     }
     if (classification & CipherText) {
-        parts.push_back(QLatin1String("CipherText"));
+        parts.push_back(QStringLiteral("CipherText"));
     }
     if (classification & Certificate) {
-        parts.push_back(QLatin1String("Certificate"));
+        parts.push_back(QStringLiteral("Certificate"));
     }
     if (classification & ExportedPSM) {
-        parts.push_back(QLatin1String("ExportedPSM"));
+        parts.push_back(QStringLiteral("ExportedPSM"));
     }
     if (classification & CertificateRequest) {
-        parts.push_back(QLatin1String("CertificateRequest"));
+        parts.push_back(QStringLiteral("CertificateRequest"));
     }
-    return parts.join(QLatin1String(", "));
+    return parts.join(QStringLiteral(", "));
 }
 
 static QString chopped(QString s, unsigned int n)

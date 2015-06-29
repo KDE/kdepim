@@ -49,9 +49,7 @@ CryptoOperationsConfigurationPage::CryptoOperationsConfigurationPage(QWidget *pa
     lay->addWidget(mWidget);
     connect(mWidget, SIGNAL(changed()), this, SLOT(changed()));
 
-#ifndef HAVE_UNBROKEN_KCMULTIDIALOG
     load();
-#endif
 }
 
 void CryptoOperationsConfigurationPage::load()

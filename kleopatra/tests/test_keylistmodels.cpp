@@ -105,19 +105,19 @@ int main(int argc, char *argv[])
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
     parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("flat"), i18n("Perform flat certificate listing")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("hierarchical"), i18n("Perform hierarchical certificate listing")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("disable-smime"), i18n("Do not list SMIME certificates")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("secret"), i18n("List secret keys only")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("flat"), i18n("Perform flat certificate listing")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("hierarchical"), i18n("Perform hierarchical certificate listing")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("disable-smime"), i18n("Do not list SMIME certificates")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("secret"), i18n("List secret keys only")));
 
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-    const bool showFlat = parser.isSet(QLatin1String("flat")) || !parser.isSet(QLatin1String("hierarchical"));
-    const bool showHier = parser.isSet(QLatin1String("hierarchical")) || !parser.isSet(QLatin1String("flat"));
-    const bool disablesmime = parser.isSet(QLatin1String("disable-smime"));
-    const bool secretOnly = parser.isSet(QLatin1String("secret"));
+    const bool showFlat = parser.isSet(QStringLiteral("flat")) || !parser.isSet(QStringLiteral("hierarchical"));
+    const bool showHier = parser.isSet(QStringLiteral("hierarchical")) || !parser.isSet(QStringLiteral("flat"));
+    const bool disablesmime = parser.isSet(QStringLiteral("disable-smime"));
+    const bool secretOnly = parser.isSet(QStringLiteral("secret"));
 
     qsrand(QDateTime::currentDateTime().toTime_t());
 

@@ -485,7 +485,7 @@ void KeyListController::createActions(KActionCollection *coll)
 
     make_actions_from_data(action_data, coll);
 
-    if (QAction *action = coll->action(QLatin1String("view_stop_operations"))) {
+    if (QAction *action = coll->action(QStringLiteral("view_stop_operations"))) {
         connect(this, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)));
     }
 

@@ -94,7 +94,7 @@ bool ExportOpenPGPCertsToServerCommand::preStartHook(QWidget *parent) const
                                                        "as the server to export to?</para>"),
                                                i18nc("@title:window", "OpenPGP Certificate Export"),
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                                               QLatin1String("warn-export-openpgp-missing-keyserver"))
+                                               QStringLiteral("warn-export-openpgp-missing-keyserver"))
                 != KMessageBox::Continue) {
             return false;
         }
@@ -107,7 +107,7 @@ bool ExportOpenPGPCertsToServerCommand::preStartHook(QWidget *parent) const
                    "<para>Are you sure you want to continue?</para>"),
             i18nc("@title:window", "OpenPGP Certificate Export"),
             KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-            QLatin1String("warn-export-openpgp-nonrevocable"))
+            QStringLiteral("warn-export-openpgp-nonrevocable"))
            == KMessageBox::Continue;
 }
 

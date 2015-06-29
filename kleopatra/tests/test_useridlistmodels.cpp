@@ -172,30 +172,30 @@ static void start(const QString &str, Protocol proto)
 int main(int argc, char *argv[])
 {
 
-    KAboutData aboutData(QLatin1String("test_useridlistmodels"), i18n("UserIDListModel Test"), QLatin1String("0.1"));
+    KAboutData aboutData(QStringLiteral("test_useridlistmodels"), i18n("UserIDListModel Test"), QStringLiteral("0.1"));
     QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
     parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("p"), i18n("OpenPGP certificate to look up"), QLatin1String("pattern")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QLatin1String("x"), i18n("X.509 certificate to look up"), QLatin1String("pattern")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("p"), i18n("OpenPGP certificate to look up"), QStringLiteral("pattern")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("x"), i18n("X.509 certificate to look up"), QStringLiteral("pattern")));
 
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-    if (parser.values(QLatin1String("p")).empty() && parser.values(QLatin1String("x")).empty()) {
+    if (parser.values(QStringLiteral("p")).empty() && parser.values(QStringLiteral("x")).empty()) {
         return 1;
     }
 
     try {
 
-        Q_FOREACH (const QString &arg, parser.values(QLatin1String("p"))) {
+        Q_FOREACH (const QString &arg, parser.values(QStringLiteral("p"))) {
             start(arg, OpenPGP);
         }
 
-        Q_FOREACH (const QString &arg, parser.values(QLatin1String("x"))) {
+        Q_FOREACH (const QString &arg, parser.values(QStringLiteral("x"))) {
             start(arg, CMS);
         }
 

@@ -194,10 +194,10 @@ private:
 
 ColumnStrategy::ColumnStrategy(unsigned int keyUsage)
     : Kleo::KeyListView::ColumnStrategy(),
-      mKeyGoodPix(QLatin1String("key_ok")),
-      mKeyBadPix(QLatin1String("key_bad")),
-      mKeyUnknownPix(QLatin1String("key_unknown")),
-      mKeyValidPix(QLatin1String("key")),
+      mKeyGoodPix(QStringLiteral("key_ok")),
+      mKeyBadPix(QStringLiteral("key_bad")),
+      mKeyUnknownPix(QStringLiteral("key_unknown")),
+      mKeyValidPix(QStringLiteral("key")),
       mKeyUsage(keyUsage)
 {
     if (keyUsage == 0)
@@ -456,7 +456,7 @@ void Kleo::KeySelectionDialog::init(bool rememberChoice, bool extendedSelection,
     connect(mStartSearchTimer, &QTimer::timeout, this, &KeySelectionDialog::slotFilter);
 
     mKeyListView = new KeyListView(new ColumnStrategy(mKeyUsage), 0, page);
-    mKeyListView->setObjectName(QLatin1String("mKeyListView"));
+    mKeyListView->setObjectName(QStringLiteral("mKeyListView"));
     mKeyListView->header()->stretchLastSection();
     mKeyListView->setRootIsDecorated(true);
     mKeyListView->setSortingEnabled(true);

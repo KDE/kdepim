@@ -36,7 +36,6 @@
 
 #ifdef QT_NO_FILEDIALOG
 #include <KFileDialog>
-#include <KUrl>
 #include <QTextStream>
 #endif
 #include <QFileDialog>

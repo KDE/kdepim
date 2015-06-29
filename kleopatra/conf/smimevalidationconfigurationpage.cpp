@@ -51,9 +51,7 @@ SMimeValidationConfigurationPage::SMimeValidationConfigurationPage(QWidget *pare
 
     connect(mWidget, SIGNAL(changed()), this, SLOT(changed()));
 
-#ifndef HAVE_UNBROKEN_KCMULTIDIALOG
     load();
-#endif
 }
 
 void SMimeValidationConfigurationPage::load()

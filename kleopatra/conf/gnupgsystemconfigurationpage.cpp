@@ -61,9 +61,7 @@ GnuPGSystemConfigurationPage::GnuPGSystemConfigurationPage(QWidget *parent, cons
 
     connect(mWidget, SIGNAL(changed()), this, SLOT(changed()));
 
-#ifndef HAVE_UNBROKEN_KCMULTIDIALOG
     load();
-#endif
 }
 
 GnuPGSystemConfigurationPage::~GnuPGSystemConfigurationPage()
