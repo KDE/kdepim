@@ -24,7 +24,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include <kstandarddirs.h>
+#include <QStandardPaths>
 
 /**
 Constants.
@@ -34,7 +34,7 @@ Constants.
 
 static const QString VERSION = QStringLiteral("1.2");
 static const char APPNAME[] = "Blogilo";
-#define DATA_DIR KStandardDirs::locateLocal("data", QLatin1String("blogilo/"))
+#define DATA_DIR QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/blogilo/")
 #define CONF_DB DATA_DIR+QLatin1String("/blogilo.db")
 static const int STATUSTIMEOUT = 5000;
 

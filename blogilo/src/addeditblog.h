@@ -24,7 +24,7 @@
 #ifndef ADDEDITBLOG_H
 #define ADDEDITBLOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 #include "ui_addeditblogbase.h"
 #include "bilboblog.h"
@@ -39,7 +39,7 @@ class WaitWidget;
  @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
  @author Golnaz Nilieh <g382nilieh@gmail.com>
  */
-class AddEditBlog: public KDialog
+class AddEditBlog: public QDialog
 {
     Q_OBJECT
 public:
@@ -52,7 +52,6 @@ public:
     ~AddEditBlog();
 
 protected Q_SLOTS:
-    void slotButtonClicked(int button) Q_DECL_OVERRIDE;
     void enableAutoConfBtn();
     void enableOkButton(const QString &);
     void autoConfigure();
@@ -76,6 +75,8 @@ Q_SIGNALS:
     void sigBlogAdded(const BilboBlog &);
     void sigBlogEdited(const BilboBlog &);
 
+private Q_SLOTS:
+    void slotAccepted();
 private:
     void showWaitWidget(QString text);
     void hideWaitWidget();

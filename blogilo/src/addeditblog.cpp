@@ -39,6 +39,7 @@
 
 #include <QTableWidget>
 #include <QTimer>
+#include <KConfigGroup>
 static const int TIMEOUT = 45000;
 
 class AddEditBlog::Private
@@ -64,15 +65,27 @@ public:
     QTimer *mFetchAPITimer;
     WaitWidget *wait;
     QString tmpBlogUrl;
+    QPushButton *okButton;
 };
 
 AddEditBlog::AddEditBlog(int blog_id, QWidget *parent, Qt::WindowFlags flags)
-    : KDialog(parent, flags), d(new Private)
+    : QDialog(parent, flags), d(new Private)
 {
     qCDebug(BLOGILO_LOG);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
     d->mainW = new QTabWidget(this);
     d->ui.setupUi(d->mainW);
-    setMainWidget(d->mainW);
+    mainLayout->addWidget(d->mainW);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    mainLayout->addWidget(buttonBox);
+
+    d->okButton = buttonBox->button(QDialogButtonBox::Ok);
+    d->okButton->setDefault(true);
+    d->okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &AddEditBlog::slotAccepted);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AddEditBlog::reject);
+
 
     d->isNewBlog = true;
     d->mFetchAPITimer = d->mFetchBlogIdTimer = d->mFetchProfileIdTimer = Q_NULLPTR;
@@ -91,7 +104,7 @@ AddEditBlog::AddEditBlog(int blog_id, QWidget *parent, Qt::WindowFlags flags)
 
     if (blog_id > -1) {
         setWindowTitle(i18n("Edit blog settings"));
-        enableButtonOk(true);
+        d->okButton->setEnabled(true);
         d->ui.btnFetch->setEnabled(true);
         d->ui.btnAutoConf->setEnabled(true);
         d->isNewBlog = false;
@@ -110,7 +123,7 @@ AddEditBlog::AddEditBlog(int blog_id, QWidget *parent, Qt::WindowFlags flags)
         setWindowTitle(i18n("Add a new blog"));
         d->bBlog = new BilboBlog(this);
         d->bBlog->setBlogId(QString());
-        enableButtonOk(false);
+        d->okButton->setEnabled(false);
         d->ui.txtTitle->setEnabled(false);
     }
 
@@ -359,7 +372,7 @@ void AddEditBlog::fetchedBlogId(const QList< QMap < QString , QString > > &list)
     const int listCount(list.count());
     if (listCount > 1) {
         qCDebug(BLOGILO_LOG) << "User has more than ONE blog!";
-        KDialog *blogsDialog = new KDialog(this);
+        QDialog *blogsDialog = new QDialog(this);
         QTableWidget *blogsList = new QTableWidget(blogsDialog);
         blogsList->setSelectionBehavior(QAbstractItemView::SelectRows);
         QList< QMap<QString, QString> >::const_iterator it = list.constBegin();
@@ -381,7 +394,9 @@ void AddEditBlog::fetchedBlogId(const QList< QMap < QString , QString > > &list)
             blogsList->setCellWidget(i, 3, new QLabel(it->value(QLatin1String("apiUrl"))));
             ++i;
         }
-        blogsDialog->setMainWidget(blogsList);
+        QVBoxLayout *mainLayout = new QVBoxLayout;
+        blogsDialog->setLayout(mainLayout);
+        mainLayout->addWidget(blogsList);
         blogsDialog->setWindowTitle(i18n("Which blog?"));
         if (blogsDialog->exec()) {
             int row = blogsList->currentRow();
@@ -438,15 +453,15 @@ void AddEditBlog::fetchedBlogId(const QList< QMap < QString , QString > > &list)
 void AddEditBlog::enableOkButton(const QString &txt)
 {
     const bool check = !txt.isEmpty();
-    enableButtonOk(check);
+    d->okButton->setEnabled(check);
     d->ui.txtTitle->setEnabled(check);
 }
 
 void AddEditBlog::slotReturnPressed()
 {
     ///FIXME This function commented temporarilly! check its functionality! and uncomment it!
-    if (isButtonEnabled(KDialog::Ok)) {
-        setButtonFocus(KDialog::Ok);
+    if (d->okButton->isEnabled()) {
+        d->okButton->setFocus();
     } else {
         if (d->mainW->currentIndex() == 0) {
             if (d->ui.btnAutoConf->isEnabled()) {
@@ -546,49 +561,44 @@ void AddEditBlog::slotComboApiChanged(int index)
     setSupportedFeatures((BilboBlog::ApiType) index);
 }
 
-void AddEditBlog::slotButtonClicked(int button)
+void AddEditBlog::slotAccepted()
 {
-    qCDebug(BLOGILO_LOG);
-    if (button == KDialog::Ok) {
-        if (d->bBlog->blogid().isEmpty() && d->ui.txtId->text().isEmpty()) {
-            KMessageBox::sorry(this, i18n("Blog ID has not yet been retrieved.\n"
-                                          "You can fetch the blog ID by clicking on \"Auto Configure\" or the \"Fetch ID\" button; otherwise, you have "
-                                          "to insert your blog ID manually.")
-                              );
-            return;
-        }
-        d->bBlog->setApi((BilboBlog::ApiType)d->ui.comboApi->currentIndex());
-        d->bBlog->setDirection((Qt::LayoutDirection)d->ui.comboDir->currentIndex());
-        d->bBlog->setTitle(d->ui.txtTitle->text());
-        d->bBlog->setPassword(d->ui.txtPass->text());
-        d->bBlog->setUsername(d->ui.txtUser->text());
-        d->bBlog->setBlogId(d->ui.txtId->text());
-        d->bBlog->setUrl(QUrl(d->ui.txtUrl->text()));
-        if (d->bBlog->blogUrl().isEmpty()) {
-            d->bBlog->setBlogUrl(d->ui.txtUrl->text());
-        }
-
-        if (d->isNewBlog) {
-            int blog_id = DBMan::self()->addBlog(*d->bBlog);
-            d->bBlog->setId(blog_id);
-            if (blog_id != -1) {
-                qCDebug(BLOGILO_LOG) << "Emitting sigBlogAdded() ...";
-                Q_EMIT sigBlogAdded(*d->bBlog);
-            } else {
-                qCDebug(BLOGILO_LOG) << "Cannot add blog";
-            }
-        } else {
-            if (DBMan::self()->editBlog(*d->bBlog)) {
-                qCDebug(BLOGILO_LOG) << "Emitting sigBlogEdited() ...";
-                Q_EMIT sigBlogEdited(*d->bBlog);
-            } else {
-                qCDebug(BLOGILO_LOG) << "Cannot edit blog with id " << d->bBlog->id();
-            }
-        }
-        accept();
-    } else {
-        KDialog::slotButtonClicked(button);
+    if (d->bBlog->blogid().isEmpty() && d->ui.txtId->text().isEmpty()) {
+        KMessageBox::sorry(this, i18n("Blog ID has not yet been retrieved.\n"
+                                      "You can fetch the blog ID by clicking on \"Auto Configure\" or the \"Fetch ID\" button; otherwise, you have "
+                                      "to insert your blog ID manually.")
+                          );
+        return;
     }
+    d->bBlog->setApi((BilboBlog::ApiType)d->ui.comboApi->currentIndex());
+    d->bBlog->setDirection((Qt::LayoutDirection)d->ui.comboDir->currentIndex());
+    d->bBlog->setTitle(d->ui.txtTitle->text());
+    d->bBlog->setPassword(d->ui.txtPass->text());
+    d->bBlog->setUsername(d->ui.txtUser->text());
+    d->bBlog->setBlogId(d->ui.txtId->text());
+    d->bBlog->setUrl(QUrl(d->ui.txtUrl->text()));
+    if (d->bBlog->blogUrl().isEmpty()) {
+        d->bBlog->setBlogUrl(d->ui.txtUrl->text());
+    }
+
+    if (d->isNewBlog) {
+        int blog_id = DBMan::self()->addBlog(*d->bBlog);
+        d->bBlog->setId(blog_id);
+        if (blog_id != -1) {
+            qCDebug(BLOGILO_LOG) << "Emitting sigBlogAdded() ...";
+            Q_EMIT sigBlogAdded(*d->bBlog);
+        } else {
+            qCDebug(BLOGILO_LOG) << "Cannot add blog";
+        }
+    } else {
+        if (DBMan::self()->editBlog(*d->bBlog)) {
+            qCDebug(BLOGILO_LOG) << "Emitting sigBlogEdited() ...";
+            Q_EMIT sigBlogEdited(*d->bBlog);
+        } else {
+            qCDebug(BLOGILO_LOG) << "Cannot edit blog with id " << d->bBlog->id();
+        }
+    }
+    accept();
 }
 
 void AddEditBlog::showWaitWidget(QString text)

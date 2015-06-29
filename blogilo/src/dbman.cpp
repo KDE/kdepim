@@ -39,6 +39,7 @@
 #include <QFile>
 #include <QSqlDatabase>
 #include <QDateTime>
+#include <QStandardPaths>
 
 class DBMan::Private
 {
@@ -457,7 +458,7 @@ bool DBMan::removeBlog(int blog_id)
         qCDebug(BLOGILO_LOG) << q.lastError().text();
         return res;
     }
-    const QString path = KStandardDirs::locateLocal("data", QString::fromLatin1("blogilo/%1/").arg(blog_id) , false);
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("blogilo/%1/").arg(blog_id);
     KIO::del(QUrl::fromLocalFile(path), KIO::HideProgressInfo);
     reloadBlogList();
     return res;
