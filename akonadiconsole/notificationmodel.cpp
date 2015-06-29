@@ -18,10 +18,11 @@
 */
 
 #include "notificationmodel.h"
-#include "notificationmanagerinterface.h"
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QBuffer>
 #include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusPendingCall>
 
 #include <KLocale>
 
@@ -29,8 +30,8 @@
 #include <AkonadiCore/ServerManager>
 
 #include <akonadi/private/imapparser_p.h>
-#include <boost/concept_check.hpp>
-#include <akonadi/private/notificationmessagev3_p.h>
+#include <akonadi/private/protocol_p.h>
+#include <QMetaMethod>
 
 using namespace Akonadi;
 
@@ -46,7 +47,7 @@ public:
 class NotificationModel::NotificationBlock: public NotificationModel::Item
 {
 public:
-    NotificationBlock(const Akonadi::NotificationMessageV3::List &msgs);
+    NotificationBlock(const Akonadi::Protocol::ChangeNotification::List &msgs);
     ~NotificationBlock();
 
     QList<NotificationNode *> nodes;
@@ -56,16 +57,16 @@ public:
 class NotificationModel::NotificationNode: public NotificationModel::Item
 {
 public:
-    NotificationNode(const NotificationMessageV3 &msg_, NotificationBlock *parent_);
+    NotificationNode(const Protocol::ChangeNotification &msg_, NotificationBlock *parent_);
     ~NotificationNode();
 
     QByteArray sessionId;
-    NotificationMessageV2::Type type;
-    NotificationMessageV2::Operation operation;
+    Protocol::ChangeNotification::Type type;
+    Protocol::ChangeNotification::Operation operation;
     QByteArray resource;
     QByteArray destResource;
-    NotificationMessageV2::Id parentCollection;
-    NotificationMessageV2::Id destCollection;
+    Protocol::ChangeNotification::Id parentCollection;
+    Protocol::ChangeNotification::Id destCollection;
     QSet<QByteArray> parts;
     QSet<QByteArray> addedFlags;
     QSet<QByteArray> removedFlags;
@@ -76,20 +77,20 @@ public:
 class NotificationModel::NotificationEntity: public NotificationModel::Item
 {
 public:
-    NotificationEntity(const NotificationMessageV2::Entity &entity, NotificationNode *parent_);
+    NotificationEntity(const Protocol::ChangeNotification::Entity &entity, NotificationNode *parent_);
 
-    NotificationMessageV2::Id id;
+    Protocol::ChangeNotification::Id id;
     QString remoteId;
     QString remoteRevision;
     QString mimeType;
     NotificationNode *parent;
 };
 
-NotificationModel::NotificationBlock::NotificationBlock(const NotificationMessageV3::List &msgs) :
+NotificationModel::NotificationBlock::NotificationBlock(const Protocol::ChangeNotification::List &msgs) :
     Item(0)
 {
     timestamp = QDateTime::currentDateTime();
-    Q_FOREACH (const NotificationMessageV3 &msg, msgs) {
+    Q_FOREACH (const Protocol::ChangeNotification &msg, msgs) {
         nodes << new NotificationNode(msg, this);
     }
 }
@@ -99,7 +100,7 @@ NotificationModel::NotificationBlock::~NotificationBlock()
     qDeleteAll(nodes);
 }
 
-NotificationModel::NotificationNode::NotificationNode(const NotificationMessageV3 &msg, NotificationModel::NotificationBlock *parent_):
+NotificationModel::NotificationNode::NotificationNode(const Protocol::ChangeNotification &msg, NotificationModel::NotificationBlock *parent_):
     Item(1),
     sessionId(msg.sessionId()),
     type(msg.type()),
@@ -113,7 +114,7 @@ NotificationModel::NotificationNode::NotificationNode(const NotificationMessageV
     removedFlags(msg.removedFlags()),
     parent(parent_)
 {
-    Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities()) {
+    Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, msg.entities()) {
         entities << new NotificationEntity(entity, this);
     }
 }
@@ -123,7 +124,7 @@ NotificationModel::NotificationNode::~NotificationNode()
     qDeleteAll(entities);
 }
 
-NotificationModel::NotificationEntity::NotificationEntity(const NotificationMessageV2::Entity &entity, NotificationModel::NotificationNode *parent_):
+NotificationModel::NotificationEntity::NotificationEntity(const Protocol::ChangeNotification::Entity &entity, NotificationModel::NotificationNode *parent_):
     Item(2),
     id(entity.id),
     remoteId(entity.remoteId),
@@ -134,29 +135,29 @@ NotificationModel::NotificationEntity::NotificationEntity(const NotificationMess
 }
 
 NotificationModel::NotificationModel(QObject *parent) :
-    QAbstractItemModel(parent),
-    m_source(Q_NULLPTR)
+    QAbstractItemModel(parent)
 {
-    NotificationMessageV2::registerDBusTypes();
-
     QString service = QLatin1String("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
         service += QLatin1String(".") + Akonadi::ServerManager::instanceIdentifier();
     }
-    m_manager = new org::freedesktop::Akonadi::NotificationManager(service,
-            QLatin1String("/notifications"),
-            QDBusConnection::sessionBus(), this);
-    if (!m_manager) {
+    m_manager = new QDBusInterface(service, QStringLiteral("/notifications/debug"),
+                                   QStringLiteral("org.freedesktop.Akonadi.NotificationManager"),
+                                   QDBusConnection::sessionBus(),
+                                   this);
+    if (!m_manager->isValid()) {
         qCWarning(AKONADICONSOLE_LOG) << "Unable to connect to notification manager";
-        return;
+        delete m_manager;
+        m_manager = 0;
+    } else {
+        connect(m_manager, SIGNAL(debugNotify(QVector<QByteArray>)),
+                this, SLOT(slotNotify(QVector<QByteArray>)));
     }
 }
 
 NotificationModel::~NotificationModel()
 {
-    if (m_source) {
-        m_source->unsubscribe();
-    }
+    setEnabled(false);
 }
 
 int NotificationModel::columnCount(const QModelIndex &parent) const
@@ -257,24 +258,24 @@ QVariant NotificationModel::data(const QModelIndex &index, int role) const
             switch (index.column()) {
             case 0: {
                 switch (node->operation) {
-                case NotificationMessageV2::Add: return QStringLiteral("Add");
-                case NotificationMessageV2::Modify: return QStringLiteral("Modify");
-                case NotificationMessageV2::ModifyFlags: return QStringLiteral("ModifyFlags");
-                case NotificationMessageV2::ModifyTags: return QStringLiteral("ModifyTags");
-                case NotificationMessageV2::Move: return QStringLiteral("Move");
-                case NotificationMessageV2::Remove: return QStringLiteral("Delete");
-                case NotificationMessageV2::Link: return QStringLiteral("Link");
-                case NotificationMessageV2::Unlink: return QStringLiteral("Unlink");
-                case NotificationMessageV2::Subscribe: return QStringLiteral("Subscribe");
-                case NotificationMessageV2::Unsubscribe: return QStringLiteral("Unsubscribe");
+                case Protocol::ChangeNotification::Add: return QStringLiteral("Add");
+                case Protocol::ChangeNotification::Modify: return QStringLiteral("Modify");
+                case Protocol::ChangeNotification::ModifyFlags: return QStringLiteral("ModifyFlags");
+                case Protocol::ChangeNotification::ModifyTags: return QStringLiteral("ModifyTags");
+                case Protocol::ChangeNotification::Move: return QStringLiteral("Move");
+                case Protocol::ChangeNotification::Remove: return QStringLiteral("Delete");
+                case Protocol::ChangeNotification::Link: return QStringLiteral("Link");
+                case Protocol::ChangeNotification::Unlink: return QStringLiteral("Unlink");
+                case Protocol::ChangeNotification::Subscribe: return QStringLiteral("Subscribe");
+                case Protocol::ChangeNotification::Unsubscribe: return QStringLiteral("Unsubscribe");
                 default: return QStringLiteral("Invalid");
                 }
             }
             case 1: {
                 switch (node->type) {
-                case NotificationMessageV2::Collections: return QStringLiteral("Collections");
-                case NotificationMessageV2::Items: return QStringLiteral("Items");
-                case NotificationMessageV2::Tags: return QStringLiteral("Tags");
+                case Protocol::ChangeNotification::Collections: return QStringLiteral("Collections");
+                case Protocol::ChangeNotification::Items: return QStringLiteral("Items");
+                case Protocol::ChangeNotification::Tags: return QStringLiteral("Tags");
                 default: return QStringLiteral("Invalid");
                 }
             }
@@ -334,10 +335,18 @@ QVariant NotificationModel::headerData(int section, Qt::Orientation orientation,
     return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-void NotificationModel::slotNotify(const Akonadi::NotificationMessageV3::List &msgs)
+void NotificationModel::slotNotify(const QVector<QByteArray> &data)
 {
+    Protocol::ChangeNotification::List ntfs;
+    ntfs.reserve(data.size());
+    Q_FOREACH (const QByteArray &d, data) {
+        QBuffer buffer(const_cast<QByteArray*>(&d));
+        buffer.open(QIODevice::ReadOnly);
+        ntfs << Protocol::deserialize(&buffer);
+    }
+
     beginInsertRows(QModelIndex(), m_data.size(), m_data.size());
-    m_data.append(new NotificationBlock(msgs));
+    m_data.append(new NotificationBlock(ntfs));
     endInsertRows();
 }
 
@@ -350,31 +359,8 @@ void NotificationModel::clear()
 
 void NotificationModel::setEnabled(bool enable)
 {
-    if (enable && !m_source) {
-        const QString identifier = QStringLiteral("akonadiconsole_%1_notificationmodel").arg(QString::number(QCoreApplication::applicationPid()));
-        m_manager->subscribe(identifier);
-
-        QString service = QLatin1String("org.freedesktop.Akonadi");
-        if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-            service += QStringLiteral(".") + Akonadi::ServerManager::instanceIdentifier();
-        }
-        m_source = new org::freedesktop::Akonadi::NotificationSource(service,
-                QLatin1String("/subscriber/") + identifier,
-                QDBusConnection::sessionBus(), this);
-        if (!m_source) {
-            qCWarning(AKONADICONSOLE_LOG) << "Unable to connect to notification source";
-            return;
-        }
-
-        connect(m_source, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)),
-                this, SLOT(slotNotify(Akonadi::NotificationMessageV3::List)));
-
-    } else if (!enable && m_source) {
-
-        disconnect(m_source, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)));
-        m_source->unsubscribe();
-        m_source->deleteLater();
-        m_source = Q_NULLPTR;
+    if (m_manager) {
+        m_manager->asyncCall(QStringLiteral("enableDebug"), enable);
     }
 }
 

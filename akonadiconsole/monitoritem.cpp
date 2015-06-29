@@ -27,7 +27,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QVector>
 
-MonitorItem::MonitorItem(const QString &identifier_, MonitorsModel *model):
+MonitorItem::MonitorItem(const QDBusObjectPath &identifier_, MonitorsModel *model):
     QObject(model),
     identifier(identifier_),
     allMonitored(false)
@@ -39,10 +39,10 @@ MonitorItem::MonitorItem(const QString &identifier_, MonitorsModel *model):
     }
 
     mInterface = new org::freedesktop::Akonadi::NotificationSource(
-        service, QStringLiteral("/subscriber/") + identifier,
+        service, identifier.path(),
         QDBusConnection::sessionBus(), this);
     if (!mInterface) {
-        qCWarning(AKONADICONSOLE_LOG) << "Failed to connect to org.freedesktop.Akonadi.NotificationSource of subscriber" << identifier_;
+        qCWarning(AKONADICONSOLE_LOG) << "Failed to connect to org.freedesktop.Akonadi.NotificationSource of subscriber" << identifier_.path();
         return;
     }
 

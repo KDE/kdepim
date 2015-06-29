@@ -30,6 +30,8 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
+#include <QtDBus/QDBusMetaType>
+
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
@@ -60,6 +62,10 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     KDBusService service;
+
+    qRegisterMetaType<QVector<QByteArray>>();
+    qDBusRegisterMetaType<QVector<qint64>>();
+    qDBusRegisterMetaType<QVector<QByteArray>>();
 
     if (parser.isSet(QStringLiteral("remote"))) {
         const QString akonadiAddr = QStringLiteral("tcp:host=%1,port=31415").arg(parser.value(QStringLiteral("remote")));

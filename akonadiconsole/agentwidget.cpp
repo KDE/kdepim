@@ -28,7 +28,6 @@
 #include <AkonadiCore/AgentFilterProxyModel>
 #include <AkonadiCore/agentinstancecreatejob.h>
 #include <AkonadiWidgets/controlgui.h>
-#include <akonadi/private/notificationmessage_p.h>
 
 #include <KLocalizedString>
 #include <KMessageBox>

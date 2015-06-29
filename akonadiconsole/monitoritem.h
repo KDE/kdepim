@@ -30,10 +30,10 @@ class MonitorItem : public QObject
     Q_OBJECT
 
 public:
-    explicit MonitorItem(const QString &identifier_, MonitorsModel *model);
+    explicit MonitorItem(const QDBusObjectPath &identifier_, MonitorsModel *model);
     virtual ~MonitorItem();
 
-    QString identifier;
+    QDBusObjectPath identifier;
     bool allMonitored;
     QString monitoredCollections;
     QString monitoredItems;

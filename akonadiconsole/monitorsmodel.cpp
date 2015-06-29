@@ -53,8 +53,8 @@ void MonitorsModel::init()
         return;
     }
 
-    const QStringList subscribers = mManager->subscribers();
-    Q_FOREACH (const QString &subscriber, subscribers) {
+    const QList<QDBusObjectPath> subscribers = mManager->subscribers();
+    Q_FOREACH (const QDBusObjectPath &subscriber, subscribers) {
         slotSubscriberSubscribed(subscriber);
     }
 
@@ -62,7 +62,7 @@ void MonitorsModel::init()
     connect(mManager, &org::freedesktop::Akonadi::NotificationManager::unsubscribed, this, &MonitorsModel::slotSubscriberUnsubscribed);
 }
 
-void MonitorsModel::slotSubscriberSubscribed(const QString &identifier)
+void MonitorsModel::slotSubscriberSubscribed(const QDBusObjectPath &identifier)
 {
     // Avoid akonadiconsole's Monitors being duplicated on startup
     if (mData.contains(identifier)) {
@@ -76,7 +76,7 @@ void MonitorsModel::slotSubscriberSubscribed(const QString &identifier)
     endInsertRows();
 }
 
-void MonitorsModel::slotSubscriberUnsubscribed(const QString &identifier)
+void MonitorsModel::slotSubscriberUnsubscribed(const QDBusObjectPath &identifier)
 {
     if (!mData.contains(identifier)) {
         return;
@@ -122,7 +122,7 @@ QVariant MonitorsModel::data(const QModelIndex &index, int role) const
 
     MonitorItem *item = static_cast<MonitorItem *>(index.internalPointer());
     switch (index.column()) {
-    case IdentifierColumn: return item->identifier;
+    case IdentifierColumn: return item->identifier.path();
     case IsAllMonitoredColumn: return item->allMonitored;
     case MonitoredCollectionsColumn: return item->monitoredCollections;
     case MonitoredItemsColumn: return item->monitoredItems;
@@ -161,7 +161,10 @@ QModelIndex MonitorsModel::index(int row, int column, const QModelIndex &parent)
         return QModelIndex();
     }
 
-    const QString key = mData.uniqueKeys().at(row);
-    return createIndex(row, column, mData.value(key));
+    auto iter = mData.cbegin() + row;
+    if (iter == mData.cend()) {
+        return QModelIndex();
+    }
+    return createIndex(row, column, iter.value());
 }
 

@@ -20,13 +20,11 @@
 #ifndef AKONADICONSOLE_NOTIFICATIONMODEL_H
 #define AKONADICONSOLE_NOTIFICATIONMODEL_H
 
-#include <akonadi/private/notificationmessagev3_p.h>
-
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QDateTime>
+#include <QDBusInterface>
 
-#include "notificationsourceinterface.h"
-#include "notificationmanagerinterface.h"
+class QDBusInterface;
 
 class NotificationModel : public QAbstractItemModel
 {
@@ -44,7 +42,15 @@ public:
 
     bool isEnabled() const
     {
-        return m_source != Q_NULLPTR;
+        if (!m_manager) {
+            return false;
+        }
+        QDBusMessage reply = m_manager->call(QStringLiteral("debugEnabled"));
+        if (reply.arguments().size() == 1) {
+            return reply.arguments().at(0).toBool();
+        } else {
+            return false;
+        }
     }
 
 public Q_SLOTS:
@@ -52,7 +58,7 @@ public Q_SLOTS:
     void setEnabled(bool enable);
 
 private Q_SLOTS:
-    void slotNotify(const Akonadi::NotificationMessageV3::List &msgs);
+    void slotNotify(const QVector<QByteArray> &msgs);
 
 private:
     class Item;
@@ -62,8 +68,7 @@ private:
 
     QList<NotificationBlock *> m_data;
 
-    org::freedesktop::Akonadi::NotificationManager *m_manager;
-    org::freedesktop::Akonadi::NotificationSource *m_source;
+    QDBusInterface *m_manager;
 };
 
 #endif
