@@ -111,6 +111,8 @@ private Q_SLOTS:
     void slotDebugBaloo();
     void slotSendVcards();
     void slotSendVcardsError(const QString &error);
+    void slotServerSideSubscription();
+    void slotCurrentCollectionChanged(const Akonadi::Collection &col);
 private:
     const Akonadi::Item::List collectSelectedAllContactsItem(QItemSelectionModel *model);
     void initGrantleeThemeName();
@@ -163,6 +165,7 @@ private:
     GrantleeTheme::GrantleeThemeManager *mGrantleeThemeManager;
     Akonadi::EntityTreeModel *entityTreeModel() const;
     QAction *mQuickSearchAction;
+    QAction *mServerSideSubscription;
 };
 
 #endif

@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="29" translationDomain="kaddressbook">
+<kpartgui name="kaddressbook" version="30" translationDomain="kaddressbook">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -84,6 +84,8 @@
     <Separator/>
     <Action name="akonadi_collection_properties"/>
     <Action name="akonadi_resource_properties"/>
+    <Separator/>
+    <Action name="serverside_subscription"/>
   </Menu>
 
   <Menu name="akonadi_itemview_contextmenu">

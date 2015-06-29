@@ -60,6 +60,8 @@
 #include <pimcommon/baloodebug/baloodebugdialog.h>
 #include <KContacts/Addressee>
 #include <QtCore/QPointer>
+#include "pimcommon/manageserversidesubscription/manageserversidesubscriptionjob.h"
+#include "pimcommon/util/pimutil.h"
 
 #include <Akonadi/Contact/ContactDefaultActions>
 #include <Akonadi/Contact/ContactGroupEditorDialog>
@@ -228,7 +230,7 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
             this, &MainWidget::slotCheckNewCalendar);
 
     connect(mCollectionView, SIGNAL(currentChanged(Akonadi::Collection)),
-            mXXPortManager, SLOT(setDefaultAddressBook(Akonadi::Collection)));
+            this, SLOT(slotCurrentCollectionChanged(Akonadi::Collection)));
 
     KSelectionProxyModel *selectionProxyModel =
         new KSelectionProxyModel(mCollectionSelectionModel, this);
@@ -721,6 +723,10 @@ void MainWidget::setupActions(KActionCollection *collection)
         action->setText(QStringLiteral("Debug baloo..."));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(slotDebugBaloo()));
     }
+
+    mServerSideSubscription = new QAction(QIcon::fromTheme(QStringLiteral("folder-bookmarks")), i18n("Serverside Subscription..."), this);
+    collection->addAction(QStringLiteral("serverside_subscription"), mServerSideSubscription);
+    connect(mServerSideSubscription, &QAction::triggered, this, &MainWidget::slotServerSideSubscription);
 }
 
 void MainWidget::printPreview()
@@ -1094,4 +1100,22 @@ const Akonadi::Item::List MainWidget::collectSelectedAllContactsItem(QItemSelect
         }
     }
     return lst;
+}
+
+void MainWidget::slotServerSideSubscription()
+{
+    Akonadi::Collection collection = currentAddressBook();
+    if (collection.isValid()) {
+        PimCommon::ManageServerSideSubscriptionJob *job = new PimCommon::ManageServerSideSubscriptionJob(this);
+        job->setCurrentCollection(collection);
+        job->setParentWidget(this);
+        job->start();
+    }
+}
+
+void MainWidget::slotCurrentCollectionChanged(const Akonadi::Collection &col)
+{
+    mXXPortManager->setDefaultAddressBook(col);
+    bool isOnline;
+    mServerSideSubscription->setEnabled(PimCommon::Util::isImapFolder(col, isOnline));
 }
