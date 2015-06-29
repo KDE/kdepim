@@ -54,11 +54,11 @@ void AutoconfigKolabMail::slotResult(KJob *job)
                 setServerType(IspWellKnow);
                 lookupInDb(false, false);
             } else {
-                emit finished(false);
+                Q_EMIT finished(false);
             }
         } else {
             //qCDebug(ACCOUNTWIZARD_LOG) << "Fetching failed" << job->error() << job->errorString();
-            emit finished(false);
+            Q_EMIT finished(false);
         }
         return;
     }
@@ -72,7 +72,7 @@ void AutoconfigKolabMail::slotResult(KJob *job)
         return;
     } else if (responsecode != 200  && responsecode != 0 && responsecode != 304) {
         //qCDebug(ACCOUNTWIZARD_LOG) << "Fetching failed with" << responsecode;
-        emit finished(false);
+        Q_EMIT finished(false);
         return;
     }
 
@@ -80,7 +80,7 @@ void AutoconfigKolabMail::slotResult(KJob *job)
     bool ok = document.setContent(mData);
     if (!ok) {
         //qCDebug(ACCOUNTWIZARD_LOG) << "Could not parse xml" << mData;
-        emit finished(false);
+        Q_EMIT finished(false);
         return;
     }
     parseResult(document);

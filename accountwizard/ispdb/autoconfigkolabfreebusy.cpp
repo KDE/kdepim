@@ -41,7 +41,7 @@ void AutoconfigKolabFreebusy::parseResult(const QDomDocument &document)
     const QDomNodeList l = docElem.elementsByTagName(QStringLiteral("freebusyProvider"));
 
     if (l.isEmpty()) {
-        emit finished(false);
+        Q_EMIT finished(false);
         return;
     }
 
@@ -53,7 +53,7 @@ void AutoconfigKolabFreebusy::parseResult(const QDomDocument &document)
         }
     }
 
-    emit finished(true);
+    Q_EMIT finished(true);
 }
 
 freebusy AutoconfigKolabFreebusy::createFreebusyServer(const QDomElement &n)
