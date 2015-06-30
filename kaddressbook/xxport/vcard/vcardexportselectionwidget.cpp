@@ -28,10 +28,12 @@
 VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
     : QWidget(parent)
 {
-    QGridLayout *layout = new QGridLayout(this);
-
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
     QGroupBox *gbox = new QGroupBox(
         i18nc("@title:group", "Fields to be exported"), this);
+    mainLayout->addWidget(gbox);
+    QGridLayout *layout = new QGridLayout;
+    gbox->setLayout(layout);
     gbox->setFlat(true);
     layout->addWidget(gbox, 0, 0, 1, 2);
 
@@ -83,7 +85,9 @@ VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
     gbox = new QGroupBox(
         i18nc("@title:group", "Export options"), this);
     gbox->setFlat(true);
-    layout->addWidget(gbox, 4, 0, 1, 2);
+    mainLayout->addWidget(gbox);
+    QHBoxLayout *gbLayout = new QHBoxLayout;
+    gbox->setLayout(gbLayout);
 
     mDisplayNameBox = new QCheckBox(i18nc("@option:check", "Display name as full name"), this);
     mDisplayNameBox->setToolTip(
@@ -93,7 +97,7 @@ VCardExportSelectionWidget::VCardExportSelectionWidget(QWidget *parent)
               "Check this box if you want to export the contact's display name "
               "in the vCard's full name field.  This may be required to get the "
               "name shown correctly in GMail or Android."));
-    layout->addWidget(mDisplayNameBox, 5, 0, 1, 2);
+    gbLayout->addWidget(mDisplayNameBox);
 
     readSettings();
 }
