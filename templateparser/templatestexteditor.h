@@ -17,7 +17,7 @@
 
 #ifndef TEMPLATESTEXTEDITOR_H
 #define TEMPLATESTEXTEDITOR_H
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 class QCompleter;
 class QKeyEvent;
 namespace KPIMTextEdit
@@ -26,7 +26,7 @@ class TextEditorCompleter;
 }
 namespace TemplateParser
 {
-class TemplatesTextEditor : public PimCommon::RichTextEditor
+class TemplatesTextEditor : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
 public:
@@ -37,6 +37,10 @@ protected:
     void initCompleter();
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
 
+    void updateHighLighter() Q_DECL_OVERRIDE;
+
+    void clearDecorator() Q_DECL_OVERRIDE;
+    void createHighlighter() Q_DECL_OVERRIDE;
 private:
     KPIMTextEdit::TextEditorCompleter *mTextEditorCompleter;
 };

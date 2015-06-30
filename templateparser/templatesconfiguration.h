@@ -21,7 +21,7 @@
 
 #include "templateparser_export.h"
 #include "ui_templatesconfiguration_base.h"
-class QTextEdit;
+class QPlainTextEdit;
 namespace TemplateParser
 {
 
@@ -56,7 +56,7 @@ Q_SIGNALS:
     void changed();
 
 private:
-    QTextEdit *currentTextEdit() const;
+    QPlainTextEdit *currentTextEdit() const;
     QString strOrBlank(const QString &str);
     QString mHelpString;
 

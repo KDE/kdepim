@@ -17,8 +17,7 @@
  */
 
 #include "templatessyntaxhighlighter.h"
-#include "templatesutil.h"
-#include <QPalette>
+#include "templatessyntaxhighlighterrules.h"
 
 using namespace TemplateParser;
 
@@ -34,24 +33,6 @@ TemplatesSyntaxHighlighter::~TemplatesSyntaxHighlighter()
 
 void TemplatesSyntaxHighlighter::init()
 {
-    QTextCharFormat keywordFormat;
-    QPalette palette;
-    keywordFormat.setForeground(palette.link());
-
-    const QStringList keywords = QStringList() << Util::keywords();
-
-    Q_FOREACH (const QString &s, keywords) {
-        const QRegExp regex(s, Qt::CaseInsensitive);
-        m_rules.append(KPIMTextEdit::Rule(regex, keywordFormat));
-    }
-
-    QTextCharFormat keywordWithArgsFormat;
-    keywordWithArgsFormat.setForeground(palette.link());
-    const QStringList keywordsWithArgs = QStringList() << Util::keywordsWithArgsForCompleter();
-
-    Q_FOREACH (const QString &s, keywordsWithArgs) {
-        const QRegExp regex(s, Qt::CaseInsensitive);
-        m_rules.append(KPIMTextEdit::Rule(regex, keywordWithArgsFormat));
-    }
+    m_rules = mRules.rules();
 }
 

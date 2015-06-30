@@ -218,9 +218,6 @@
          <property name="whatsThis">
           <string comment="@info:whatsthis">This area contains the associated custom template.</string>
          </property>
-         <property name="acceptRichText">
-          <bool>false</bool>
-         </property>
         </widget>
        </item>
        <item>
@@ -321,7 +318,7 @@
   </customwidget>
   <customwidget>
    <class>TemplateParser::TemplatesTextEdit</class>
-   <extends>QTextEdit</extends>
+   <extends>QPlainTextEdit</extends>
    <header>templatestextedit.h</header>
   </customwidget>
   <customwidget>

@@ -20,11 +20,11 @@
 #define TEMPLATEPARSER_TEMPLATESSYNTAXHIGHLIGHTER_H
 
 #include "templateparser_export.h"
+#include "templatessyntaxhighlighterrules.h"
 #include <KPIMTextEdit/SyntaxHighlighterBase>
 
 namespace TemplateParser
 {
-
 class TEMPLATEPARSER_EXPORT TemplatesSyntaxHighlighter : public KPIMTextEdit::SyntaxHighlighterBase
 {
     Q_OBJECT
@@ -34,6 +34,7 @@ public:
 
 private:
     void init() Q_DECL_OVERRIDE;
+    TemplatesSyntaxHighlighterRules mRules;
 };
 
 }

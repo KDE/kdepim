@@ -20,7 +20,7 @@
 #include "templatesconfiguration.h"
 #include "globalsettings_base.h"
 #include "templatesconfiguration_kfg.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 #include <KMessageBox>
 #include <KLocalizedString>
@@ -327,9 +327,9 @@ void TemplatesConfiguration::saveToFolder(const QString &id)
     t.save();
 }
 
-QTextEdit *TemplatesConfiguration::currentTextEdit() const
+QPlainTextEdit *TemplatesConfiguration::currentTextEdit() const
 {
-    QTextEdit *edit;
+    QPlainTextEdit *edit;
 
     const int toolboxCurrentIndex(toolBox1->currentIndex());
     if (toolBox1->widget(toolboxCurrentIndex) == page_new) {
@@ -349,7 +349,7 @@ QTextEdit *TemplatesConfiguration::currentTextEdit() const
 
 void TemplatesConfiguration::slotInsertCommand(const QString &cmd, int adjustCursor)
 {
-    QTextEdit *edit = currentTextEdit();
+    QPlainTextEdit *edit = currentTextEdit();
     if (!edit) {
         return;
     }
