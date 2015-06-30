@@ -113,6 +113,7 @@ private Q_SLOTS:
     void slotSendVcardsError(const QString &error);
     void slotServerSideSubscription();
     void slotCurrentCollectionChanged(const Akonadi::Collection &col);
+    void slotCheckGravatar();
 private:
     const Akonadi::Item::List collectSelectedAllContactsItem(QItemSelectionModel *model);
     void initGrantleeThemeName();

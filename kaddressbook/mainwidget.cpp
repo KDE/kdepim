@@ -36,6 +36,7 @@
 
 #include "sendmail/mailsenderjob.h"
 #include "sendvcards/sendvcardsjob.h"
+#include "gravatar/widgets/gravatarupdatedialog.h"
 
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
 #include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
@@ -727,6 +728,10 @@ void MainWidget::setupActions(KActionCollection *collection)
     mServerSideSubscription = new QAction(QIcon::fromTheme(QStringLiteral("folder-bookmarks")), i18n("Serverside Subscription..."), this);
     collection->addAction(QStringLiteral("serverside_subscription"), mServerSideSubscription);
     connect(mServerSideSubscription, &QAction::triggered, this, &MainWidget::slotServerSideSubscription);
+
+    action = collection->addAction(QStringLiteral("gravatar"));
+    action->setText(i18n("Check gravatar..."));
+    connect(action, &QAction::triggered, this, &MainWidget::slotCheckGravatar);
 }
 
 void MainWidget::printPreview()
@@ -1118,4 +1123,16 @@ void MainWidget::slotCurrentCollectionChanged(const Akonadi::Collection &col)
     mXXPortManager->setDefaultAddressBook(col);
     bool isOnline;
     mServerSideSubscription->setEnabled(PimCommon::Util::isImapFolder(col, isOnline));
+}
+
+void MainWidget::slotCheckGravatar()
+{
+    const Akonadi::Item::List lst = collectSelectedAllContactsItem(mItemView->selectionModel());
+    if (lst.count() == 1) {
+        QPointer<KABGravatar::GravatarUpdateDialog> dlg = new KABGravatar::GravatarUpdateDialog(this);
+        if (dlg->exec()) {
+    //extract emails.
+        }
+        delete dlg;
+    }
 }
