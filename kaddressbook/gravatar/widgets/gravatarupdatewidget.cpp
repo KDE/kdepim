@@ -58,6 +58,7 @@ void GravatarUpdateWidget::setEmail(const QString &email)
 {
     mEmail = email;
     mEmailLab->setText(mEmail);
+    mResultGravatar->clear();
     mSearchGravatar->setEnabled(!mEmail.trimmed().isEmpty());
 }
 
@@ -73,20 +74,32 @@ void GravatarUpdateWidget::setOriginalPixmap(const QPixmap &pix)
     }
 }
 
+QUrl GravatarUpdateWidget::resolvedUrl() const
+{
+    return mCurrentUrl;
+}
+
 void GravatarUpdateWidget::slotSearchGravatar()
 {
+    mCurrentUrl.clear();
     if (!mEmail.isEmpty()) {
         PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
         job->setEmail(mEmail);
         if (job->canStart()) {
             job->setUseDefaultPixmap(false);
             connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
+            connect(job, &PimCommon::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateWidget::slotResolvUrl);
             job->start();
         } else {
             mResultGravatar->setText(i18n("Search is impossible."));
             job->deleteLater();
         }
     }
+}
+
+void GravatarUpdateWidget::slotResolvUrl(const QUrl &url)
+{
+    mCurrentUrl = url;
 }
 
 void GravatarUpdateWidget::slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *job)

@@ -19,6 +19,7 @@
 #define GRAVATARUPDATEWIDGET_H
 
 #include <QWidget>
+#include <QUrl>
 class QLabel;
 class QPushButton;
 namespace PimCommon
@@ -37,13 +38,16 @@ public:
     void setEmail(const QString &email);
     QPixmap pixmap() const;
     void setOriginalPixmap(const QPixmap &pix);
+    QUrl resolvedUrl() const;
 
 private Q_SLOTS:
     void slotSearchGravatar();
 
     void slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *job);
+    void slotResolvUrl(const QUrl &url);
 private:
     QString mEmail;
+    QUrl mCurrentUrl;
     QLabel *mEmailLab;
     QPushButton *mSearchGravatar;
     QLabel *mResultGravatar;

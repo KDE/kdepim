@@ -27,6 +27,7 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldAffectEmail();
 };
 
 #endif // GRAVATARUPDATEWIDGETTEST_H
