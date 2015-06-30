@@ -61,24 +61,24 @@ void FilterImporterBalsa::readConfig(KConfig *config)
 void FilterImporterBalsa::parseFilter(const KConfigGroup &grp)
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
-    const QString name = grp.readEntry(QLatin1String("Name"));
+    const QString name = grp.readEntry(QStringLiteral("Name"));
     filter->pattern()->setName(name);
     filter->setToolbarName(name);
 
     //TODO not implemented in kmail.
-    const QString popupText = grp.readEntry(QLatin1String("Popup-text"));
+    const QString popupText = grp.readEntry(QStringLiteral("Popup-text"));
 
-    const QString sound = grp.readEntry(QLatin1String("Sound"));
+    const QString sound = grp.readEntry(QStringLiteral("Sound"));
     if (!sound.isEmpty()) {
         const QString actionName = QLatin1String("play sound");
         createFilterAction(filter, actionName, sound);
     }
 
-    const int actionType = grp.readEntry(QLatin1String("Action-type"), -1);
-    const QString actionStr = grp.readEntry(QLatin1String("Action-string"));
+    const int actionType = grp.readEntry(QStringLiteral("Action-type"), -1);
+    const QString actionStr = grp.readEntry(QStringLiteral("Action-string"));
     parseAction(actionType, actionStr, filter);
 
-    const QString condition = grp.readEntry(QLatin1String("Condition"));
+    const QString condition = grp.readEntry(QStringLiteral("Condition"));
     parseCondition(condition, filter);
 
     appendFilter(filter);

@@ -1088,7 +1088,7 @@ void Pane::readConfig(bool restoreSession)
 {
     if (MessageList::Core::Settings::self()->config()->hasGroup(QLatin1String("MessageListPane"))) {
         KConfigGroup conf(MessageList::Core::Settings::self()->config(), "MessageListPane");
-        const int numberOfTab = conf.readEntry(QLatin1String("tabNumber"), 0);
+        const int numberOfTab = conf.readEntry(QStringLiteral("tabNumber"), 0);
         if (numberOfTab == 0) {
             createNewTab();
         } else {
@@ -1097,7 +1097,7 @@ void Pane::readConfig(bool restoreSession)
                 restoreHeaderSettings(i);
                 if (restoreSession) {
 #if 0 //TODO fix me
-                    Akonadi::Collection::Id id = grp.readEntry(QLatin1String("collectionId"), -1);
+                    Akonadi::Collection::Id id = grp.readEntry(QStringLiteral("collectionId"), -1);
                     ETMViewStateSaver *saver = new ETMViewStateSaver;
                     saver->setSelectionModel(selectionModel);
 
@@ -1111,7 +1111,7 @@ void Pane::readConfig(bool restoreSession)
 #endif
                 }
             }
-            setCurrentIndex(conf.readEntry(QLatin1String("currentIndex"), 0));
+            setCurrentIndex(conf.readEntry(QStringLiteral("currentIndex"), 0));
         }
     } else {
         createNewTab();
@@ -1124,7 +1124,7 @@ void Pane::restoreHeaderSettings(int index)
     KConfigGroup grp(MessageList::Core::Settings::self()->config(), QString::fromLatin1("MessageListTab%1").arg(index));
     if (grp.exists()) {
         Widget *w = qobject_cast<Widget *>(widget(index));
-        w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"), QByteArray()));
+        w->view()->header()->restoreState(grp.readEntry(QStringLiteral("HeaderState"), QByteArray()));
     }
 }
 

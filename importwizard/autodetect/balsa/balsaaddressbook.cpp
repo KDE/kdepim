@@ -93,7 +93,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
             }
         }
     } else if (type == QLatin1String("LibBalsaAddressBookVcard")) {
-        const QString path = grp.readEntry(QLatin1String("Path"));
+        const QString path = grp.readEntry(QStringLiteral("Path"));
         if (!path.isEmpty()) {
             QMap<QString, QVariant> settings;
             settings.insert(QStringLiteral("Path"), path);

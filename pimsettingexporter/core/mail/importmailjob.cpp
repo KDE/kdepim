@@ -177,15 +177,15 @@ void ImportMailJob::restoreTransports()
             int defaultTransport = -1;
             if (transportConfig->hasGroup(QLatin1String("General"))) {
                 KConfigGroup group = transportConfig->group(QLatin1String("General"));
-                defaultTransport = group.readEntry(QLatin1String("default-transport"), -1);
+                defaultTransport = group.readEntry(QStringLiteral("default-transport"), -1);
             }
 
             const QStringList transportList = transportConfig->groupList().filter(QRegExp(QLatin1String("Transport \\d+")));
             Q_FOREACH (const QString &transport, transportList) {
                 KConfigGroup group = transportConfig->group(transport);
-                const int transportId = group.readEntry(QLatin1String("id"), -1);
+                const int transportId = group.readEntry(QStringLiteral("id"), -1);
                 MailTransport::Transport *mt = MailTransport::TransportManager::self()->createTransport();
-                mt->setName(group.readEntry(QLatin1String("name")));
+                mt->setName(group.readEntry(QStringLiteral("name")));
                 const QString hostStr(QLatin1String("host"));
                 if (group.hasKey(hostStr)) {
                     mt->setHost(group.readEntry(hostStr));
@@ -500,31 +500,31 @@ void ImportMailJob::restoreMails()
 
                 KConfigGroup general = resourceConfig->group(QLatin1String("General"));
                 if (general.hasKey(QLatin1String("DisplayName"))) {
-                    settings.insert(QLatin1String("DisplayName"), general.readEntry(QLatin1String("DisplayName")));
+                    settings.insert(QLatin1String("DisplayName"), general.readEntry(QStringLiteral("DisplayName")));
                 }
                 if (general.hasKey(QLatin1String("ReadOnly"))) {
-                    settings.insert(QLatin1String("ReadOnly"), general.readEntry(QLatin1String("ReadOnly"), false));
+                    settings.insert(QLatin1String("ReadOnly"), general.readEntry(QStringLiteral("ReadOnly"), false));
                 }
                 if (general.hasKey(QLatin1String("MonitorFile"))) {
-                    settings.insert(QLatin1String("MonitorFile"), general.readEntry(QLatin1String("MonitorFile"), false));
+                    settings.insert(QLatin1String("MonitorFile"), general.readEntry(QStringLiteral("MonitorFile"), false));
                 }
                 if (resourceConfig->hasGroup(QLatin1String("Locking"))) {
                     KConfigGroup locking = resourceConfig->group(QLatin1String("Locking"));
                     if (locking.hasKey(QLatin1String("Lockfile"))) {
-                        settings.insert(QLatin1String("Lockfile"), locking.readEntry(QLatin1String("Lockfile")));
+                        settings.insert(QLatin1String("Lockfile"), locking.readEntry(QStringLiteral("Lockfile")));
                     }
                     //TODO verify
                     if (locking.hasKey(QLatin1String("LockfileMethod"))) {
-                        settings.insert(QLatin1String("LockfileMethod"), locking.readEntry(QLatin1String("LockfileMethod"), 4));
+                        settings.insert(QLatin1String("LockfileMethod"), locking.readEntry(QStringLiteral("LockfileMethod"), 4));
                     }
                 }
                 if (resourceConfig->hasGroup(QLatin1String("Compacting"))) {
                     KConfigGroup compacting = resourceConfig->group(QLatin1String("Compacting"));
                     if (compacting.hasKey(QLatin1String("CompactFrequency"))) {
-                        settings.insert(QLatin1String("CompactFrequency"), compacting.readEntry(QLatin1String("CompactFrequency"), 1));
+                        settings.insert(QLatin1String("CompactFrequency"), compacting.readEntry(QStringLiteral("CompactFrequency"), 1));
                     }
                     if (compacting.hasKey(QLatin1String("MessageCount"))) {
-                        settings.insert(QLatin1String("MessageCount"), compacting.readEntry(QLatin1String("MessageCount"), 50));
+                        settings.insert(QLatin1String("MessageCount"), compacting.readEntry(QStringLiteral("MessageCount"), 50));
                     }
                 }
                 const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_mbox_resource"), filename, settings);
@@ -538,13 +538,13 @@ void ImportMailJob::restoreMails()
                 settings.insert(QLatin1String("Path"), newUrl.path());
                 KConfigGroup general = resourceConfig->group(QLatin1String("General"));
                 if (general.hasKey(QLatin1String("TopLevelIsContainer"))) {
-                    settings.insert(QLatin1String("TopLevelIsContainer"), general.readEntry(QLatin1String("TopLevelIsContainer"), false));
+                    settings.insert(QLatin1String("TopLevelIsContainer"), general.readEntry(QStringLiteral("TopLevelIsContainer"), false));
                 }
                 if (general.hasKey(QLatin1String("ReadOnly"))) {
-                    settings.insert(QLatin1String("ReadOnly"), general.readEntry(QLatin1String("ReadOnly"), false));
+                    settings.insert(QLatin1String("ReadOnly"), general.readEntry(QStringLiteral("ReadOnly"), false));
                 }
                 if (general.hasKey(QLatin1String("MonitorFilesystem"))) {
-                    settings.insert(QLatin1String("MonitorFilesystem"), general.readEntry(QLatin1String("MonitorFilesystem"), true));
+                    settings.insert(QLatin1String("MonitorFilesystem"), general.readEntry(QStringLiteral("MonitorFilesystem"), true));
                 }
 
                 const QString newResource = mCreateResource->createResource(resourceName.contains(QLatin1String("akonadi_mixedmaildir_resource_")) ?
@@ -856,7 +856,7 @@ void ImportMailJob::restoreIdentity()
             fileIdentity->copyTo(mTempDirName);
             KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(mTempDirName + QLatin1Char('/') + QLatin1String("emailidentities"));
             KConfigGroup general = identityConfig->group(QLatin1String("General"));
-            const int defaultIdentity = general.readEntry(QLatin1String("Default Identity"), -1);
+            const int defaultIdentity = general.readEntry(QStringLiteral("Default Identity"), -1);
 
             const QStringList identityList = identityConfig->groupList().filter(QRegExp(QLatin1String("Identity #\\d+")));
             Q_FOREACH (const QString &identityStr, identityList) {
@@ -899,7 +899,7 @@ void ImportMailJob::restoreIdentity()
                         }
                     }
                 }
-                QString name =  group.readEntry(QLatin1String("Name"));
+                QString name =  group.readEntry(QStringLiteral("Name"));
 
                 KIdentityManagement::Identity *identity = &mIdentityManager->newFromScratch(uniqueIdentityName(name));
                 group.writeEntry(QLatin1String("Name"), name);
@@ -1019,7 +1019,7 @@ void ImportMailJob::importFolderArchiveConfig(const KArchiveFile *archiveconfigu
 
     Q_FOREACH (const QString &str, archiveList) {
         KConfigGroup oldGroup = archiveConfig->group(str);
-        const Akonadi::Collection::Id id = convertPathToId(oldGroup.readEntry(QLatin1String("topLevelCollectionId")));
+        const Akonadi::Collection::Id id = convertPathToId(oldGroup.readEntry(QStringLiteral("topLevelCollectionId")));
         if (id != -1) {
             oldGroup.writeEntry(QLatin1String("topLevelCollectionId"), id);
         }
@@ -1120,7 +1120,7 @@ void ImportMailJob::importKmailConfig(const KArchiveFile *kmailsnippet, const QS
     const QString accountOrder(QLatin1String("AccountOrder"));
     if (kmailConfig->hasGroup(accountOrder)) {
         KConfigGroup group = kmailConfig->group(accountOrder);
-        QStringList orderList = group.readEntry(QLatin1String("order"), QStringList());
+        QStringList orderList = group.readEntry(QStringLiteral("order"), QStringList());
         QStringList newOrderList;
         if (!orderList.isEmpty()) {
             Q_FOREACH (const QString &account, orderList) {
@@ -1202,13 +1202,13 @@ void ImportMailJob::mergeLdapConfig(const KArchiveFile *archivefile, const QStri
 
     KSharedConfig::Ptr existingConfig = KSharedConfig::openConfig(filename);
     KConfigGroup grpExisting = existingConfig->group(QLatin1String("LDAP"));
-    int existingNumberHosts = grpExisting.readEntry(QLatin1String("NumHosts"), 0);
-    int existingNumberSelectedHosts = grpExisting.readEntry(QLatin1String("NumSelectedHosts"), 0);
+    int existingNumberHosts = grpExisting.readEntry(QStringLiteral("NumHosts"), 0);
+    int existingNumberSelectedHosts = grpExisting.readEntry(QStringLiteral("NumSelectedHosts"), 0);
 
     KSharedConfig::Ptr importingLdapConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + filename);
     KConfigGroup grpImporting = importingLdapConfig->group(QLatin1String("LDAP"));
-    int importingNumberHosts = grpImporting.readEntry(QLatin1String("NumHosts"), 0);
-    int importingNumberSelectedHosts = grpImporting.readEntry(QLatin1String("NumSelectedHosts"), 0);
+    int importingNumberHosts = grpImporting.readEntry(QStringLiteral("NumHosts"), 0);
+    int importingNumberSelectedHosts = grpImporting.readEntry(QStringLiteral("NumSelectedHosts"), 0);
 
     grpExisting.writeEntry(QLatin1String("NumHosts"), (existingNumberHosts + importingNumberHosts));
     grpExisting.writeEntry(QLatin1String("NumSelectedHosts"), (existingNumberSelectedHosts + importingNumberSelectedHosts));
@@ -1294,17 +1294,17 @@ void ImportMailJob::mergeSieveTemplate(const KArchiveFile *archivefile, const QS
     KSharedConfig::Ptr importingSieveTemplateConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + filename);
 
     KConfigGroup grpExisting = existingConfig->group(QLatin1String("template"));
-    int numberOfExistingTemplate = grpExisting.readEntry(QLatin1String("templateCount"), 0);
+    int numberOfExistingTemplate = grpExisting.readEntry(QStringLiteral("templateCount"), 0);
 
     KConfigGroup grpImportExisting = importingSieveTemplateConfig->group(QLatin1String("template"));
-    const int numberOfImportingTemplate = grpImportExisting.readEntry(QLatin1String("templateCount"), 0);
+    const int numberOfImportingTemplate = grpImportExisting.readEntry(QStringLiteral("templateCount"), 0);
 
     for (int i = 0; i < numberOfImportingTemplate; ++i) {
         KConfigGroup templateDefine = importingSieveTemplateConfig->group(QString::fromLatin1("templateDefine_%1").arg(i));
 
         KConfigGroup newTemplateDefineGrp = existingConfig->group(QString::fromLatin1("templateDefine_%1").arg(numberOfExistingTemplate));
-        newTemplateDefineGrp.writeEntry(QLatin1String("Name"), templateDefine.readEntry(QLatin1String("Name")));
-        newTemplateDefineGrp.writeEntry(QLatin1String("Text"), templateDefine.readEntry(QLatin1String("Text")));
+        newTemplateDefineGrp.writeEntry(QLatin1String("Name"), templateDefine.readEntry(QStringLiteral("Name")));
+        newTemplateDefineGrp.writeEntry(QLatin1String("Text"), templateDefine.readEntry(QStringLiteral("Text")));
         ++numberOfExistingTemplate;
         newTemplateDefineGrp.sync();
     }

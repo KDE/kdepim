@@ -205,11 +205,11 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     const QStringList itemList = config.groupList().filter(QRegExp(QLatin1String("FilterList \\d+")));
     Q_FOREACH (const QString &item, itemList) {
         KConfigGroup filtersGroup(&config, item);
-        const bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled"), false);
-        const QString url = filtersGroup.readEntry(QLatin1String("url"));
-        const QString path = filtersGroup.readEntry(QLatin1String("path"));
-        const QString name = filtersGroup.readEntry(QLatin1String("name"));
-        const QDateTime lastUpdate = filtersGroup.readEntry(QLatin1String("lastUpdate"), QDateTime());
+        const bool isFilterEnabled = filtersGroup.readEntry(QStringLiteral("FilterEnabled"), false);
+        const QString url = filtersGroup.readEntry(QStringLiteral("url"));
+        const QString path = filtersGroup.readEntry(QStringLiteral("path"));
+        const QString name = filtersGroup.readEntry(QStringLiteral("name"));
+        const QDateTime lastUpdate = filtersGroup.readEntry(QStringLiteral("lastUpdate"), QDateTime());
         if (url.isEmpty() || path.isEmpty() || name.isEmpty()) {
             continue;
         }

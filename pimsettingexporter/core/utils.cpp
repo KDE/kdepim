@@ -139,7 +139,7 @@ QUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &st
 QUrl Utils::resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath)
 {
     KConfigGroup group = resourceConfig->group(QLatin1String("General"));
-    QString url = group.readEntry(QLatin1String("Path"), defaultPath);
+    QString url = group.readEntry(QStringLiteral("Path"), defaultPath);
     if (!url.isEmpty()) {
         url.replace(QLatin1String("$HOME"), QDir::homePath());
     }

@@ -112,20 +112,20 @@ void AdBlockManager::loadSettings()
     const QStringList itemList = config.groupList().filter(QRegExp(QLatin1String("FilterList \\d+")));
     Q_FOREACH (const QString &item, itemList) {
         KConfigGroup filtersGroup(&config, item);
-        const bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled"), false);
+        const bool isFilterEnabled = filtersGroup.readEntry(QStringLiteral("FilterEnabled"), false);
         if (!isFilterEnabled) {
             continue;
         }
-        const QString url = filtersGroup.readEntry(QLatin1String("url"));
+        const QString url = filtersGroup.readEntry(QStringLiteral("url"));
         if (url.isEmpty()) {
             continue;
         }
-        const QString path = filtersGroup.readEntry(QLatin1String("path"));
+        const QString path = filtersGroup.readEntry(QStringLiteral("path"));
         if (path.isEmpty()) {
             continue;
         }
 
-        const QDateTime lastDateTime = filtersGroup.readEntry(QLatin1String("lastUpdate"), QDateTime());
+        const QDateTime lastDateTime = filtersGroup.readEntry(QStringLiteral("lastUpdate"), QDateTime());
         if (!lastDateTime.isValid() || today > lastDateTime.addDays(days) || !QFile(path).exists()) {
             updateSubscription(path, url, item);
         } else {

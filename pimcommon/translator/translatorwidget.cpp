@@ -195,8 +195,8 @@ void TranslatorWidget::writeConfig()
 void TranslatorWidget::readConfig()
 {
     KConfigGroup myGroup(KSharedConfig::openConfig(), "TranslatorWidget");
-    const QString from = myGroup.readEntry(QLatin1String("FromLanguage"));
-    const QString to = myGroup.readEntry(QLatin1String("ToLanguage"));
+    const QString from = myGroup.readEntry(QStringLiteral("FromLanguage"));
+    const QString to = myGroup.readEntry(QStringLiteral("ToLanguage"));
     if (from.isEmpty()) {
         return;
     }

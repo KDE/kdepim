@@ -430,7 +430,7 @@ void ExportMailJob::backupIdentity()
             if (group.hasKey(vcard)) {
                 const QString vcardFileName = group.readEntry(vcard);
                 if (!vcardFileName.isEmpty()) {
-                    const int uoid = group.readEntry(QLatin1String("uoid"), -1);
+                    const int uoid = group.readEntry(QStringLiteral("uoid"), -1);
                     QFile file(vcardFileName);
                     if (file.exists()) {
                         const bool fileAdded  = archive()->addLocalFile(vcardFileName, Utils::identitiesPath() + QString::number(uoid) + QDir::separator() + file.fileName());

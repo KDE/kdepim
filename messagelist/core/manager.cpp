@@ -504,7 +504,7 @@ const Theme *Manager::defaultTheme()
 {
     KConfigGroup conf(Settings::self()->config(), MessageList::Util::storageModelThemesGroup());
 
-    const QString themeId = conf.readEntry(QLatin1String("DefaultSet"), "");
+    const QString themeId = conf.readEntry(QStringLiteral("DefaultSet"), "");
 
     Theme *opt = Q_NULLPTR;
 

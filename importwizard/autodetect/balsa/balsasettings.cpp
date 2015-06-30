@@ -146,7 +146,7 @@ void BalsaSettings::readTransport(const KConfigGroup &grp)
         break;
     }
 
-    const QString ssl = grp.readEntry(QLatin1String("SSL"));
+    const QString ssl = grp.readEntry(QStringLiteral("SSL"));
     if (ssl == QLatin1String("true")) {
         mt->setEncryption(MailTransport::Transport::EnumEncryption::SSL);
     } else if (ssl == QLatin1String("false")) {
@@ -155,7 +155,7 @@ void BalsaSettings::readTransport(const KConfigGroup &grp)
         qCDebug(IMPORTWIZARD_LOG) << " unknown ssl value :" << ssl;
     }
 
-    const QString anonymous = grp.readEntry(QLatin1String("Anonymous"));
+    const QString anonymous = grp.readEntry(QStringLiteral("Anonymous"));
 
     //TODO
     storeTransport(mt, /*( smtp == defaultSmtp )*/true);   //FIXME

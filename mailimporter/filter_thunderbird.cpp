@@ -82,7 +82,7 @@ QMap<QString, QString> FilterThunderbird::listProfile(QString &currentProfile, c
         if (uniqProfile) {
             KConfigGroup group = config.group(profileList.at(0));
             const QString path = group.readEntry("Path");
-            const QString name = group.readEntry(QLatin1String("Name"));
+            const QString name = group.readEntry(QStringLiteral("Name"));
             currentProfile = path;
             lstProfile.insert(name, path);
             return lstProfile;
@@ -90,7 +90,7 @@ QMap<QString, QString> FilterThunderbird::listProfile(QString &currentProfile, c
             Q_FOREACH (const QString &profileName, profileList) {
                 KConfigGroup group = config.group(profileName);
                 const QString path = group.readEntry("Path");
-                const QString name = group.readEntry(QLatin1String("Name"));
+                const QString name = group.readEntry(QStringLiteral("Name"));
                 if (group.hasKey("Default") && (group.readEntry("Default", 0) == 1)) {
                     currentProfile = path;
                 }

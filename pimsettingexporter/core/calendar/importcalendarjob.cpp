@@ -145,13 +145,13 @@ void ImportCalendarJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceC
     if (resourceName == QLatin1String("akonadi_ical_resource")) {
         KConfigGroup general = resourceConfig->group(QLatin1String("General"));
         if (general.hasKey(QLatin1String("DisplayName"))) {
-            settings.insert(QLatin1String("DisplayName"), general.readEntry(QLatin1String("DisplayName")));
+            settings.insert(QLatin1String("DisplayName"), general.readEntry(QStringLiteral("DisplayName")));
         }
         if (general.hasKey(QLatin1String("ReadOnly"))) {
-            settings.insert(QLatin1String("ReadOnly"), general.readEntry(QLatin1String("ReadOnly"), false));
+            settings.insert(QLatin1String("ReadOnly"), general.readEntry(QStringLiteral("ReadOnly"), false));
         }
         if (general.hasKey(QLatin1String("MonitorFile"))) {
-            settings.insert(QLatin1String("MonitorFile"), general.readEntry(QLatin1String("MonitorFile"), true));
+            settings.insert(QLatin1String("MonitorFile"), general.readEntry(QStringLiteral("MonitorFile"), true));
         }
     }
 }

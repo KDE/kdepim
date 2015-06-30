@@ -102,7 +102,7 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
         settings.insert(QLatin1String("Host"), serverName);
         settings.insert(QLatin1String("Login"), userName);
 
-        const int leaveOnServer = grp.readEntry(QLatin1String("Leave On Server"), -1);
+        const int leaveOnServer = grp.readEntry(QStringLiteral("Leave On Server"), -1);
         if (leaveOnServer == 1) {
             settings.insert(QLatin1String("LeaveOnServer"), true);
         } else if (leaveOnServer == 0) {
@@ -111,9 +111,9 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
             qCDebug(IMPORTWIZARD_LOG) << " leave on server option unknown : " << leaveOnServer;
         }
 
-        const int removeMailFromSever = grp.readEntry(QLatin1String("Remove From Server Delay Enabled"), -1);
+        const int removeMailFromSever = grp.readEntry(QStringLiteral("Remove From Server Delay Enabled"), -1);
         if (removeMailFromSever == 1) {
-            int removeDelay = grp.readEntry(QLatin1String("Remove From Server Delay"), -1);
+            int removeDelay = grp.readEntry(QStringLiteral("Remove From Server Delay"), -1);
             if (removeDelay != -1) {
                 //Opera store delay as second !!! :)
                 removeDelay = removeDelay / (24 * 60 * 60);
@@ -125,7 +125,7 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
             settings.insert(QLatin1String("Port"), port);
         }
         //TODO:
-        const int delay = grp.readEntry(QLatin1String("Initial Poll Delay"), -1);
+        const int delay = grp.readEntry(QStringLiteral("Initial Poll Delay"), -1);
         Q_UNUSED(delay);
 
         if (pollInterval == 0) {
@@ -171,12 +171,12 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
 
 void OperaSettings::readTransport(const KConfigGroup &grp)
 {
-    const QString outgoingProtocol = grp.readEntry(QLatin1String("Outgoing Protocol"));
+    const QString outgoingProtocol = grp.readEntry(QStringLiteral("Outgoing Protocol"));
     if (outgoingProtocol == QLatin1String("SMTP")) {
-        const int authMethod = grp.readEntry(QLatin1String("Outgoing Authentication Method"), -1);
+        const int authMethod = grp.readEntry(QStringLiteral("Outgoing Authentication Method"), -1);
         MailTransport::Transport *mt = createTransport();
-        const int port = grp.readEntry(QLatin1String("Outgoing Port"), -1);
-        const int secure = grp.readEntry(QLatin1String("Secure Connection Out"), -1);
+        const int port = grp.readEntry(QStringLiteral("Outgoing Port"), -1);
+        const int secure = grp.readEntry(QStringLiteral("Secure Connection Out"), -1);
         if (secure == 1) {
             mt->setEncryption(MailTransport::Transport::EnumEncryption::TLS);
         }
@@ -184,15 +184,15 @@ void OperaSettings::readTransport(const KConfigGroup &grp)
             mt->setPort(port);
         }
 
-        const QString hostName = grp.readEntry(QLatin1String("Outgoing Servername"));
+        const QString hostName = grp.readEntry(QStringLiteral("Outgoing Servername"));
         mt->setHost(hostName);
 
-        const QString userName = grp.readEntry(QLatin1String("Outgoing Username"));
+        const QString userName = grp.readEntry(QStringLiteral("Outgoing Username"));
         if (!userName.isEmpty()) {
             mt->setUserName(userName);
         }
 
-        const int outgoingTimeOut = grp.readEntry(QLatin1String("Outgoing Timeout"), -1); //TODO ?
+        const int outgoingTimeOut = grp.readEntry(QStringLiteral("Outgoing Timeout"), -1); //TODO ?
         Q_UNUSED(outgoingTimeOut);
 
         switch (authMethod) {
@@ -221,15 +221,15 @@ void OperaSettings::readTransport(const KConfigGroup &grp)
 
 void OperaSettings::readIdentity(const KConfigGroup &grp)
 {
-    QString realName = grp.readEntry(QLatin1String("Real Name"));
+    QString realName = grp.readEntry(QStringLiteral("Real Name"));
     KIdentityManagement::Identity *newIdentity = createIdentity(realName);
-    const QString cc = grp.readEntry(QLatin1String("Auto CC"));
+    const QString cc = grp.readEntry(QStringLiteral("Auto CC"));
     newIdentity->setCc(cc);
 
-    const QString bcc = grp.readEntry(QLatin1String("Auto BCC"));
+    const QString bcc = grp.readEntry(QStringLiteral("Auto BCC"));
     newIdentity->setBcc(bcc);
 
-    const QString replyTo = grp.readEntry(QLatin1String("Replyto"));
+    const QString replyTo = grp.readEntry(QStringLiteral("Replyto"));
     if (!replyTo.isEmpty()) {
         newIdentity->setReplyToAddr(replyTo);
     }
@@ -237,18 +237,18 @@ void OperaSettings::readIdentity(const KConfigGroup &grp)
     newIdentity->setFullName(realName);
     newIdentity->setIdentityName(realName);
 
-    const QString email = grp.readEntry(QLatin1String("Email"));
+    const QString email = grp.readEntry(QStringLiteral("Email"));
     newIdentity->setPrimaryEmailAddress(email);
 
-    const QString organization = grp.readEntry(QLatin1String("Organization"));
+    const QString organization = grp.readEntry(QStringLiteral("Organization"));
     if (!organization.isEmpty()) {
         newIdentity->setOrganization(organization);
     }
 
-    QString signatureFile = grp.readEntry(QLatin1String("Signature File"));
+    QString signatureFile = grp.readEntry(QStringLiteral("Signature File"));
     if (!signatureFile.isEmpty()) {
         KIdentityManagement::Signature signature;
-        const int signatureHtml = grp.readEntry(QLatin1String("Signature is HTML"), -1);
+        const int signatureHtml = grp.readEntry(QStringLiteral("Signature is HTML"), -1);
         if (signatureFile.contains(QLatin1String("{Preferences}"))) {
             signatureFile.replace(QLatin1String("{Preferences}"), MailImporter::FilterOpera::defaultSettingsPath() + QLatin1String("/"));
         }

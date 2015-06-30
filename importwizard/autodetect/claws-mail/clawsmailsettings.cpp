@@ -49,8 +49,8 @@ void ClawsMailSettings::importSettings(const QString &filename, const QString &p
         if (configCommon.hasGroup("Common")) {
             KConfigGroup common = configCommon.group("Common");
             checkMailOnStartup = (common.readEntry("check_on_startup", 1) == 1);
-            if (common.readEntry(QLatin1String("autochk_newmail"), 1) == 1) {
-                intervalCheckMail = common.readEntry(QLatin1String("autochk_interval"), -1);
+            if (common.readEntry(QStringLiteral("autochk_newmail"), 1) == 1) {
+                intervalCheckMail = common.readEntry(QStringLiteral("autochk_interval"), -1);
             }
             readGlobalSettings(common);
         }
@@ -102,21 +102,21 @@ void ClawsMailSettings::readSettingsColor(const KConfigGroup &group)
             }
             //[Reader]  QuotedText3
         }
-        const QString misspellColor = group.readEntry(QLatin1String("misspelled_color"));
+        const QString misspellColor = group.readEntry(QStringLiteral("misspelled_color"));
         if (!misspellColor.isEmpty()) {
             const QColor col = QColor(misspellColor);
             if (col.isValid()) {
                 addKmailConfig(QLatin1String("Reader"), QStringLiteral("MisspelledColor"), writeColor(col));
             }
         }
-        const QString uriColor = group.readEntry(QLatin1String("uri_color"));
+        const QString uriColor = group.readEntry(QStringLiteral("uri_color"));
         if (!uriColor.isEmpty()) {
             const QColor col(uriColor);
             if (col.isValid()) {
                 addKmailConfig(QLatin1String("Reader"), QStringLiteral("LinkColor"), writeColor(col));
             }
         }
-        const QString newColor = group.readEntry(QLatin1String("color_new"));
+        const QString newColor = group.readEntry(QStringLiteral("color_new"));
         if (!newColor.isEmpty()) {
             const QColor col(newColor);
             if (col.isValid()) {
@@ -141,7 +141,7 @@ QString ClawsMailSettings::writeColor(const QColor &col)
 void ClawsMailSettings::readTemplateFormat(const KConfigGroup &group)
 {
     SylpheedSettings::readTemplateFormat(group);
-    const QString composerNewMessage = group.readEntry(QLatin1String("compose_body_format"));
+    const QString composerNewMessage = group.readEntry(QStringLiteral("compose_body_format"));
     if (!composerNewMessage.isEmpty()) {
         addKmailConfig(QLatin1String("TemplateParser"), QStringLiteral("TemplateNewMessage"), convertToKmailTemplate(composerNewMessage));
     }
