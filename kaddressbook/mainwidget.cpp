@@ -1129,10 +1129,13 @@ void MainWidget::slotCheckGravatar()
 {
     const Akonadi::Item::List lst = collectSelectedAllContactsItem(mItemView->selectionModel());
     if (lst.count() == 1) {
-        QPointer<KABGravatar::GravatarUpdateDialog> dlg = new KABGravatar::GravatarUpdateDialog(this);
-        if (dlg->exec()) {
-    //extract emails.
+        Akonadi::Item item = lst.first();
+        if (item.hasPayload<KContacts::Addressee>()) {
+            QPointer<KABGravatar::GravatarUpdateDialog> dlg = new KABGravatar::GravatarUpdateDialog(this);
+            if (dlg->exec()) {
+                //extract emails.
+            }
+            delete dlg;
         }
-        delete dlg;
     }
 }
