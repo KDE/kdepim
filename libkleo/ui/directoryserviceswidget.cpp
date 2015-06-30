@@ -108,7 +108,7 @@ static unsigned short default_port(const QString &scheme)
 static QString display_scheme(const QUrl &url)
 {
     if (url.scheme().isEmpty()) {
-        return QLatin1String("hkp");
+        return QStringLiteral("hkp");
     } else {
         return url.scheme();
     }
@@ -897,7 +897,7 @@ bool Model::doSetData(unsigned int row, unsigned int column, const QVariant &val
         case Host:
             if (display_host(m_items[row].url) != m_items[row].url.host()) {
                 m_items[row].url.setScheme(display_scheme(m_items[row].url));
-                m_items[row].url.setPath(QLatin1String("/"));
+                m_items[row].url.setPath(QStringLiteral("/"));
             }
             m_items[row].url.setHost(value.toString());
             return true;
@@ -913,7 +913,7 @@ bool Model::doSetData(unsigned int row, unsigned int column, const QVariant &val
                 m_items[row].url.setPath(QString());
                 m_items[row].url.setQuery(QString());
             } else {
-                m_items[row].url.setPath(QLatin1String("/"));   // workaround KUrl parsing bug
+                m_items[row].url.setPath(QStringLiteral("/"));   // workaround KUrl parsing bug
                 m_items[row].url.setQuery(value.toString());
             }
             return true;
