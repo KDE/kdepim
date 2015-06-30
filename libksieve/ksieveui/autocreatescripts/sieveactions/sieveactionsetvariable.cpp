@@ -173,7 +173,7 @@ bool SieveActionSetVariable::needCheckIfServerHasCapability() const
 
 QString SieveActionSetVariable::serverNeedsCapability() const
 {
-    return QLatin1String("variables");
+    return QStringLiteral("variables");
 }
 
 QString SieveActionSetVariable::help() const

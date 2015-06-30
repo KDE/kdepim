@@ -141,7 +141,7 @@ bool SieveActionConvert::needCheckIfServerHasCapability() const
 
 QString SieveActionConvert::serverNeedsCapability() const
 {
-    return QLatin1String("convert");
+    return QStringLiteral("convert");
 }
 
 QString SieveActionConvert::help() const
@@ -151,6 +151,6 @@ QString SieveActionConvert::help() const
 
 QString SieveActionConvert::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/draft-ietf-sieve-convert-06");
+    return QStringLiteral("http://tools.ietf.org/html/draft-ietf-sieve-convert-06");
 }
 

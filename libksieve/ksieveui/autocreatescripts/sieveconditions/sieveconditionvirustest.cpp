@@ -87,7 +87,7 @@ bool SieveConditionVirusTest::needCheckIfServerHasCapability() const
 
 QString SieveConditionVirusTest::serverNeedsCapability() const
 {
-    return QLatin1String("virustest");
+    return QStringLiteral("virustest");
 }
 
 QStringList SieveConditionVirusTest::needRequires(QWidget *w) const

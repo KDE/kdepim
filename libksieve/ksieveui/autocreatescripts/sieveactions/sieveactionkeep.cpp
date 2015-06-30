@@ -46,12 +46,12 @@ QString SieveActionKeep::code(QWidget *w) const
         const SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
         const QString flagCode = flagsWidget->code();
         if (flagCode.isEmpty()) {
-            return QLatin1String("keep;");
+            return QStringLiteral("keep;");
         } else {
             return QLatin1String("keep :flags") + QLatin1Char(' ') + flagCode;
         }
     } else {
-        return QLatin1String("keep;");
+        return QStringLiteral("keep;");
     }
 }
 

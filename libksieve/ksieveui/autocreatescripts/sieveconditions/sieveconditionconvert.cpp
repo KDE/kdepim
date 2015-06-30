@@ -102,7 +102,7 @@ bool SieveConditionConvert::needCheckIfServerHasCapability() const
 
 QString SieveConditionConvert::serverNeedsCapability() const
 {
-    return QLatin1String("convert");
+    return QStringLiteral("convert");
 }
 
 QString SieveConditionConvert::help() const

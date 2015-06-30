@@ -120,7 +120,7 @@ bool SieveConditionServerMetaData::needCheckIfServerHasCapability() const
 
 QString SieveConditionServerMetaData::serverNeedsCapability() const
 {
-    return QLatin1String("servermetadata");
+    return QStringLiteral("servermetadata");
 }
 
 QString SieveConditionServerMetaData::help() const

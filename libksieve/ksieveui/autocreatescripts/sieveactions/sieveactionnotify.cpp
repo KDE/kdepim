@@ -137,7 +137,7 @@ QString SieveActionNotify::code(QWidget *w) const
 
 QString SieveActionNotify::serverNeedsCapability() const
 {
-    return QLatin1String("enotify");
+    return QStringLiteral("enotify");
 }
 
 bool SieveActionNotify::needCheckIfServerHasCapability() const

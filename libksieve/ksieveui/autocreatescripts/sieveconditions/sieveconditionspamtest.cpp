@@ -103,7 +103,7 @@ bool SieveConditionSpamTest::needCheckIfServerHasCapability() const
 
 QString SieveConditionSpamTest::serverNeedsCapability() const
 {
-    return QLatin1String("spamtest");
+    return QStringLiteral("spamtest");
 }
 
 QStringList SieveConditionSpamTest::needRequires(QWidget *w) const

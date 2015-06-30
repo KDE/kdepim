@@ -45,7 +45,7 @@ namespace
 {
 inline const QString indentation()
 {
-    return QLatin1String("    ");
+    return QStringLiteral("    ");
 }
 }
 

@@ -119,7 +119,7 @@ bool SieveActionExtractText::needCheckIfServerHasCapability() const
 
 QString SieveActionExtractText::serverNeedsCapability() const
 {
-    return QLatin1String("extracttext");
+    return QStringLiteral("extracttext");
 }
 
 QString SieveActionExtractText::help() const

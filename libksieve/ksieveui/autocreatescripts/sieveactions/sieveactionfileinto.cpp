@@ -158,7 +158,7 @@ bool SieveActionFileInto::needCheckIfServerHasCapability() const
 
 QString SieveActionFileInto::serverNeedsCapability() const
 {
-    return QLatin1String("fileinto");
+    return QStringLiteral("fileinto");
 }
 
 QString SieveActionFileInto::help() const

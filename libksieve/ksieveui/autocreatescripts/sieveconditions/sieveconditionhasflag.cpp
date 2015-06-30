@@ -123,9 +123,9 @@ bool SieveConditionHasFlag::needCheckIfServerHasCapability() const
 QString SieveConditionHasFlag::serverNeedsCapability() const
 {
     if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags"))) {
-        return QLatin1String("imap4flags");
+        return QStringLiteral("imap4flags");
     } else {
-        return QLatin1String("imapflags");
+        return QStringLiteral("imapflags");
     }
 }
 

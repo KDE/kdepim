@@ -186,7 +186,7 @@ QString SieveActionVacation::code(QWidget *w) const
 
 QString SieveActionVacation::serverNeedsCapability() const
 {
-    return QLatin1String("vacation");
+    return QStringLiteral("vacation");
 }
 
 bool SieveActionVacation::needCheckIfServerHasCapability() const

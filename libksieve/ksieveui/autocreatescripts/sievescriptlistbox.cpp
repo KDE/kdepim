@@ -39,7 +39,7 @@ namespace
 {
 inline const QString defaultScriptName()
 {
-    return QLatin1String("SCRIPTNAME: ");
+    return QStringLiteral("SCRIPTNAME: ");
 }
 }
 
