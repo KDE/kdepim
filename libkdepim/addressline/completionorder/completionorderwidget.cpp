@@ -111,29 +111,29 @@ public:
         mIcon = icon;
     }
 
-    virtual QString label() const
+    QString label() const Q_DECL_OVERRIDE
     {
         return mLabel;
     }
 
-    virtual QIcon icon() const
+    QIcon icon() const Q_DECL_OVERRIDE
     {
         return mIcon;
     }
 
-    virtual int completionWeight() const
+    int completionWeight() const Q_DECL_OVERRIDE
     {
         return mWeight;
     }
 
-    virtual void save(CompletionOrderWidget *editor)
+    void save(CompletionOrderWidget *editor) Q_DECL_OVERRIDE
     {
         KConfigGroup group(editor->configFile(), "CompletionWeights");
         group.writeEntry(mIdentifier, mWeight);
     }
 
 protected:
-    virtual void setCompletionWeight(int weight)
+    void setCompletionWeight(int weight) Q_DECL_OVERRIDE
     {
         mWeight = weight;
     }
