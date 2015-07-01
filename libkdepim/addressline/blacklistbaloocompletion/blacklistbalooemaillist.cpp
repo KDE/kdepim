@@ -31,6 +31,7 @@ BlackListBalooEmailList::BlackListBalooEmailList(QWidget *parent)
       mFirstResult(false)
 {
     setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setSortingEnabled(true);
 }
 
 BlackListBalooEmailList::~BlackListBalooEmailList()
