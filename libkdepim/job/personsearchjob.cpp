@@ -250,5 +250,5 @@ void PersonSearchJob::modifyResult(KJob *job)
     qCDebug(LIBKDEPIM_LOG) << "modified person to" << person.uid << person.name << person.rootCollection;
 
     mMatches.insert(person.uid, person);
-    emit personUpdate(person);
+    Q_EMIT personUpdate(person);
 }
