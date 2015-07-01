@@ -45,7 +45,6 @@ PlainTextSyntaxSpellCheckingHighlighter::PlainTextSyntaxSpellCheckingHighlighter
     setAutomatic(false);
 }
 
-
 PlainTextSyntaxSpellCheckingHighlighter::~PlainTextSyntaxSpellCheckingHighlighter()
 {
     delete d;

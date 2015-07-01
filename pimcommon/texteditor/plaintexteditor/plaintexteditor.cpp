@@ -345,7 +345,7 @@ void PlainTextEditor::slotCheckSpelling()
         backgroundSpellCheck->changeLanguage(d->spellCheckingLanguage);
     }
     if (!d->ignoreSpellCheckingWords.isEmpty()) {
-        Q_FOREACH(const QString &word, d->ignoreSpellCheckingWords) {
+        Q_FOREACH (const QString &word, d->ignoreSpellCheckingWords) {
             backgroundSpellCheck->speller().addToSession(word);
         }
     }
@@ -639,11 +639,12 @@ Sonnet::SpellCheckDecorator *PlainTextEditor::createSpellCheckDecorator()
 
 void PlainTextEditor::addIgnoreWordsToHighLighter()
 {
-    if (d->ignoreSpellCheckingWords.isEmpty())
+    if (d->ignoreSpellCheckingWords.isEmpty()) {
         return;
+    }
     if (d->richTextDecorator) {
-        Sonnet::Highlighter * _highlighter = d->richTextDecorator->highlighter();
-        Q_FOREACH(const QString &word, d->ignoreSpellCheckingWords) {
+        Sonnet::Highlighter *_highlighter = d->richTextDecorator->highlighter();
+        Q_FOREACH (const QString &word, d->ignoreSpellCheckingWords) {
             _highlighter->ignoreWord(word);
         }
     }

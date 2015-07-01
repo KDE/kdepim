@@ -24,7 +24,8 @@ namespace KPIMTextEdit
 class Rule;
 }
 
-namespace TemplateParser {
+namespace TemplateParser
+{
 class TemplatesSyntaxHighlighterRules
 {
 public:

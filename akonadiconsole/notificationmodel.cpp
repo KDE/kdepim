@@ -340,7 +340,7 @@ void NotificationModel::slotNotify(const QVector<QByteArray> &data)
     Protocol::ChangeNotification::List ntfs;
     ntfs.reserve(data.size());
     Q_FOREACH (const QByteArray &d, data) {
-        QBuffer buffer(const_cast<QByteArray*>(&d));
+        QBuffer buffer(const_cast<QByteArray *>(&d));
         buffer.open(QIODevice::ReadOnly);
         ntfs << Protocol::deserialize(&buffer);
     }
