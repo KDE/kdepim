@@ -9,3 +9,5 @@ GlobalEnums=true
 ItemAccessors=true
 SetUserTexts=true
 Visibility=
+TranslationDomain=libincidenceeditors
+TranslationSystem=kde

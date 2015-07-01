@@ -10,3 +10,5 @@ SetUserTexts=true
 NameSpace=EventViews
 CategoryLoggingName=CALENDARVIEW_LOG
 IncludeFiles=calendarview_debug.h
+TranslationDomain=libeventviews
+TranslationSystem=kde
