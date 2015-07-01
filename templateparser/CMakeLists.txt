@@ -15,7 +15,6 @@ set(templateparser_LIB_SRCS
   customtemplatesmenu.cpp
   templatesconfiguration.cpp
   templatesinsertcommand.cpp
-  templatessyntaxhighlighter.cpp
   templatestextedit.cpp
   templatestexteditor.cpp
   templateparser_debug.cpp

@@ -16,9 +16,10 @@
 */
 
 #include "templatestexteditor.h"
-#include "templatessyntaxhighlighter.h"
 #include "templatesutil.h"
+#include "templatessyntaxhighlighterrules.h"
 #include <KPIMTextEdit/TextEditorCompleter>
+#include <KPIMTextEdit/SyntaxHighlighterBase>
 
 #include <QCompleter>
 #include <QKeyEvent>
@@ -43,7 +44,6 @@ TemplatesTextEditor::TemplatesTextEditor(QWidget *parent)
     }
     addIgnoreWords(excludeKeyWord);
     setWordWrapMode(QTextOption::NoWrap);
-    (void) new TemplatesSyntaxHighlighter(document());
     initCompleter();
 }
 
