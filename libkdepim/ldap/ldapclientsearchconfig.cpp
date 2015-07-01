@@ -213,13 +213,13 @@ void LdapClientSearchConfig::writeConfig(const KLDAP::LdapServer &server, KConfi
     config.writeEntry(prefix + QString::fromLatin1("Security%1").arg(j), tmp);
     switch (server.auth()) {
     case KLDAP::LdapServer::Simple:
-        tmp = QLatin1String("Simple");
+        tmp = QStringLiteral("Simple");
         break;
     case KLDAP::LdapServer::SSL:
-        tmp = QLatin1String("SASL");
+        tmp = QStringLiteral("SASL");
         break;
     default:
-        tmp = QLatin1String("Anonymous");
+        tmp = QStringLiteral("Anonymous");
     }
     config.writeEntry(prefix + QString::fromLatin1("Auth%1").arg(j), tmp);
     config.writeEntry(prefix + QString::fromLatin1("Mech%1").arg(j), server.mech());

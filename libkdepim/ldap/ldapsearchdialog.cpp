@@ -124,7 +124,7 @@ static QMap<QString, QString> &adrbookattr2ldap()
     return keys;
 }
 
-static QString makeFilter(const QString &query, const QString &attr, bool startsWith)
+static QString makeFilter(const QString &query, LdapSearchDialog::FilterType attr, bool startsWith)
 {
     /* The reasoning behind this filter is:
     * If it's a person, or a distlist, show it, even if it doesn't have an email address.
@@ -138,16 +138,16 @@ static QString makeFilter(const QString &query, const QString &attr, bool starts
         return result + QStringLiteral("|(cn=*)(sn=*)") + QLatin1Char(')');
     }
 
-    if (attr == i18nc("Search attribute: Name of contact", "Name")) {
+    if (attr == LdapSearchDialog::Name) {
         result += startsWith ? QStringLiteral("|(cn=%1*)(sn=%2*)") : QStringLiteral("|(cn=*%1*)(sn=*%2*)");
         result = result.arg(query).arg(query);
     } else {
         result += startsWith ? QStringLiteral("%1=%2*") : QStringLiteral("%1=*%2*");
-        if (attr == i18nc("Search attribute: Email of the contact", "Email")) {
+        if (attr == LdapSearchDialog::Email) {
             result = result.arg(QStringLiteral("mail")).arg(query);
-        } else if (attr == i18n("Home Number")) {
+        } else if (attr == LdapSearchDialog::HomeNumber) {
             result = result.arg(QStringLiteral("homePhone")).arg(query);
-        } else if (attr == i18n("Work Number")) {
+        } else if (attr == LdapSearchDialog::WorkNumber) {
             result = result.arg(QStringLiteral("telephoneNumber")).arg(query);
         } else {
             // Error?
@@ -563,10 +563,10 @@ LdapSearchDialog::LdapSearchDialog(QWidget *parent)
     boxLayout->addWidget(label, 0, 2);
 
     d->mFilterCombo = new KComboBox(groupBox);
-    d->mFilterCombo->addItem(i18nc("@item:inlistbox Name of the contact", "Name"));
-    d->mFilterCombo->addItem(i18nc("@item:inlistbox email address of the contact", "Email"));
-    d->mFilterCombo->addItem(i18nc("@item:inlistbox", "Home Number"));
-    d->mFilterCombo->addItem(i18nc("@item:inlistbox", "Work Number"));
+    d->mFilterCombo->addItem(i18nc("@item:inlistbox Name of the contact", "Name"), QVariant::fromValue(Name));
+    d->mFilterCombo->addItem(i18nc("@item:inlistbox email address of the contact", "Email"), QVariant::fromValue(Email));
+    d->mFilterCombo->addItem(i18nc("@item:inlistbox", "Home Number"), QVariant::fromValue(HomeNumber));
+    d->mFilterCombo->addItem(i18nc("@item:inlistbox", "Work Number"), QVariant::fromValue(WorkNumber));
     boxLayout->addWidget(d->mFilterCombo, 0, 3);
     d->startSearchGuiItem = KGuiItem(i18nc("@action:button Start searching", "&Search"), QStringLiteral("edit-find"));
     d->stopSearchGuiItem = KStandardGuiItem::stop();
@@ -815,7 +815,7 @@ void LdapSearchDialog::Private::slotStartSearch()
     const bool startsWith = (mSearchType->currentIndex() == 1);
 
     const QString filter = makeFilter(mSearchEdit->text().trimmed(),
-                                      mFilterCombo->currentText(), startsWith);
+                                      mFilterCombo->currentData().value<FilterType>(), startsWith);
 
     // loop in the list and run the KLDAP::LdapClients
     mModel->clear();
