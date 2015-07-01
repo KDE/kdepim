@@ -151,12 +151,12 @@ void KTNEFMain::setupActions()
     messSaveAction->setIcon(QIcon::fromTheme(QStringLiteral("document-save")));
     connect(messSaveAction, &QAction::triggered, this, &KTNEFMain::slotSaveMessageText);
 
-    actionCollection()->action(QLatin1String("view_file"))->setEnabled(false);
-    actionCollection()->action(QLatin1String("view_file_as"))->setEnabled(false);
-    actionCollection()->action(QLatin1String("extract_file"))->setEnabled(false);
-    actionCollection()->action(QLatin1String("extract_file_to"))->setEnabled(false);
-    actionCollection()->action(QLatin1String("extract_all_files"))->setEnabled(false);
-    actionCollection()->action(QLatin1String("properties_file"))->setEnabled(false);
+    actionCollection()->action(QStringLiteral("view_file"))->setEnabled(false);
+    actionCollection()->action(QStringLiteral("view_file_as"))->setEnabled(false);
+    actionCollection()->action(QStringLiteral("extract_file"))->setEnabled(false);
+    actionCollection()->action(QStringLiteral("extract_file_to"))->setEnabled(false);
+    actionCollection()->action(QStringLiteral("extract_all_files"))->setEnabled(false);
+    actionCollection()->action(QStringLiteral("properties_file"))->setEnabled(false);
 
     // Options menu
     QAction *defFolderAction = actionCollection()->addAction(QStringLiteral("options_default_dir"));
@@ -357,12 +357,12 @@ void KTNEFMain::viewSelectionChanged()
     const bool on1 = (nbItem == 1);
     const bool on2 = (nbItem > 0);
 
-    actionCollection()->action(QLatin1String("view_file"))->setEnabled(on1);
-    actionCollection()->action(QLatin1String("view_file_as"))->setEnabled(on1);
-    actionCollection()->action(QLatin1String("properties_file"))->setEnabled(on1);
+    actionCollection()->action(QStringLiteral("view_file"))->setEnabled(on1);
+    actionCollection()->action(QStringLiteral("view_file_as"))->setEnabled(on1);
+    actionCollection()->action(QStringLiteral("properties_file"))->setEnabled(on1);
 
-    actionCollection()->action(QLatin1String("extract_file"))->setEnabled(on2);
-    actionCollection()->action(QLatin1String("extract_file_to"))->setEnabled(on2);
+    actionCollection()->action(QStringLiteral("extract_file"))->setEnabled(on2);
+    actionCollection()->action(QStringLiteral("extract_file_to"))->setEnabled(on2);
 }
 
 void KTNEFMain::enableExtractAll(bool on)
@@ -371,16 +371,16 @@ void KTNEFMain::enableExtractAll(bool on)
         enableSingleAction(false);
     }
 
-    actionCollection()->action(QLatin1String("extract_all_files"))->setEnabled(on);
+    actionCollection()->action(QStringLiteral("extract_all_files"))->setEnabled(on);
 }
 
 void KTNEFMain::enableSingleAction(bool on)
 {
-    actionCollection()->action(QLatin1String("extract_file"))->setEnabled(on);
-    actionCollection()->action(QLatin1String("extract_file_to"))->setEnabled(on);
-    actionCollection()->action(QLatin1String("view_file"))->setEnabled(on);
-    actionCollection()->action(QLatin1String("view_file_as"))->setEnabled(on);
-    actionCollection()->action(QLatin1String("properties_file"))->setEnabled(on);
+    actionCollection()->action(QStringLiteral("extract_file"))->setEnabled(on);
+    actionCollection()->action(QStringLiteral("extract_file_to"))->setEnabled(on);
+    actionCollection()->action(QStringLiteral("view_file"))->setEnabled(on);
+    actionCollection()->action(QStringLiteral("view_file_as"))->setEnabled(on);
+    actionCollection()->action(QStringLiteral("properties_file"))->setEnabled(on);
 }
 
 void KTNEFMain::cleanup()

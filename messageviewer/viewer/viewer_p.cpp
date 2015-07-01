@@ -2879,7 +2879,7 @@ void ViewerPrivate::slotCopySelectedText()
 
 void ViewerPrivate::viewerSelectionChanged()
 {
-    mActionCollection->action(QLatin1String("kmail_copy"))->setEnabled(!mViewer->selectedText().isEmpty());
+    mActionCollection->action(QStringLiteral("kmail_copy"))->setEnabled(!mViewer->selectedText().isEmpty());
 }
 
 void ViewerPrivate::selectAll()

@@ -381,7 +381,7 @@ void MainWindow::Private::setupActions()
 
     make_actions_from_data(action_data, /*sizeof action_data / sizeof *action_data,*/ coll);
 
-    if (QAction *action = coll->action(QLatin1String("configure_backend"))) {
+    if (QAction *action = coll->action(QStringLiteral("configure_backend"))) {
         action->setMenuRole(QAction::NoRole);    //prevent Qt OS X heuristics for config* actions
     }
 
