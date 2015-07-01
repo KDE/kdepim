@@ -54,10 +54,25 @@ KAssistantDialog *Page::assistantDialog() const
     return m_parent;
 }
 
-void Page::enterPageBack() {}
-void Page::enterPageNext() {}
-void Page::leavePageBack() {}
-void Page::leavePageNext() {}
+void Page::enterPageBack()
+{
+
+}
+
+void Page::enterPageNext()
+{
+
+}
+
+void Page::leavePageBack()
+{
+
+}
+
+void Page::leavePageNext()
+{
+
+}
 
 void Page::leavePageBackRequested()
 {
