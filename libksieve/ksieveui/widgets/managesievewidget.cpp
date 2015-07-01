@@ -188,7 +188,7 @@ void ManageSieveWidget::slotNewScript()
     const QString name = QInputDialog::getText(this, i18n("New Sieve Script"),
                          i18n("Please enter a name for the new Sieve script:"), QLineEdit::Normal,
                          i18n("unnamed"), &ok);
-    if (!ok || name.isEmpty()) {
+    if (!ok || name.trimmed().isEmpty()) {
         return;
     }
 
