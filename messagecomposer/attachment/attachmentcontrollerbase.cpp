@@ -617,9 +617,9 @@ void AttachmentControllerBase::showContextMenu()
             if ((mimetype == QLatin1String("text/plain")) ||
                     (mimetype == QLatin1String("image/png")) ||
                     (mimetype == QLatin1String("image/jpeg")) ||
-                    parentMimeType.contains(QLatin1String("text/plain")) ||
-                    parentMimeType.contains(QLatin1String("image/png")) ||
-                    parentMimeType.contains(QLatin1String("image/jpeg"))
+                    parentMimeType.contains(QStringLiteral("text/plain")) ||
+                    parentMimeType.contains(QStringLiteral("image/png")) ||
+                    parentMimeType.contains(QStringLiteral("image/jpeg"))
                ) {
                 menu->addAction(d->viewContextAction);
             }

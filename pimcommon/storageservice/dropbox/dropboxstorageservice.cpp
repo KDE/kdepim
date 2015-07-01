@@ -80,13 +80,13 @@ void DropBoxStorageService::readConfig()
             if (lst.contains(storageServiceName())) {
                 QMap<QString, QString> map;
                 wallet->readMap(storageServiceName(), map);
-                if (map.contains(QLatin1String("Access Token"))) {
+                if (map.contains(QStringLiteral("Access Token"))) {
                     mAccessToken = map.value(QLatin1String("Access Token"));
                 }
-                if (map.contains(QLatin1String("Access Token Secret"))) {
+                if (map.contains(QStringLiteral("Access Token Secret"))) {
                     mAccessTokenSecret = map.value(QLatin1String("Access Token Secret"));
                 }
-                if (map.contains(QLatin1String("Access Oauth Signature"))) {
+                if (map.contains(QStringLiteral("Access Oauth Signature"))) {
                     mAccessOauthSignature = map.value(QLatin1String("Access Oauth Signature"));
                 }
             }
@@ -428,7 +428,7 @@ void DropBoxStorageService::storageServiceCopyFolder(const QString &source, cons
 
 QString DropBoxStorageService::fileIdentifier(const QVariantMap &variantMap)
 {
-    if (variantMap.contains(QLatin1String("path"))) {
+    if (variantMap.contains(QStringLiteral("path"))) {
         return variantMap.value(QLatin1String("path")).toString();
     }
     return QString();
@@ -436,7 +436,7 @@ QString DropBoxStorageService::fileIdentifier(const QVariantMap &variantMap)
 
 QString DropBoxStorageService::fileShareRoot(const QVariantMap &variantMap)
 {
-    if (variantMap.contains(QLatin1String("root"))) {
+    if (variantMap.contains(QStringLiteral("root"))) {
         return variantMap.value(QLatin1String("root")).toString();
     }
     return QString();
@@ -459,7 +459,7 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
     }
     const QMap<QString, QVariant> info = json.toVariant().toMap();
     listWidget->createMoveUpItem();
-    if (info.contains(QLatin1String("path"))) {
+    if (info.contains(QStringLiteral("path"))) {
         const QString path = info.value(QLatin1String("path")).toString();
         if (parentFolder.isEmpty()) {
             if (!path.isEmpty()) {
@@ -476,12 +476,12 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
             }
         }
     }
-    if (info.contains(QLatin1String("contents"))) {
+    if (info.contains(QStringLiteral("contents"))) {
         const QVariantList lst = info.value(QLatin1String("contents")).toList();
         Q_FOREACH (const QVariant &variant, lst) {
             const QVariantMap qwer = variant.toMap();
             //qCDebug(PIMCOMMON_LOG)<<" qwer "<<qwer;
-            if (qwer.contains(QLatin1String("is_dir"))) {
+            if (qwer.contains(QStringLiteral("is_dir"))) {
                 const bool isDir = qwer.value(QLatin1String("is_dir")).toBool();
                 const QString name = qwer.value(QLatin1String("path")).toString();
 
@@ -492,19 +492,19 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
                     item = listWidget->addFolder(itemName, name);
                 } else {
                     QString mimetype;
-                    if (qwer.contains(QLatin1String("mime_type"))) {
+                    if (qwer.contains(QStringLiteral("mime_type"))) {
                         mimetype = qwer.value(QLatin1String("mime_type")).toString();
                     }
                     item = listWidget->addFile(itemName, name, mimetype);
-                    if (qwer.contains(QLatin1String("bytes"))) {
+                    if (qwer.contains(QStringLiteral("bytes"))) {
                         item->setSize(qwer.value(QLatin1String("bytes")).toULongLong());
                     }
                 }
-                if (qwer.contains(QLatin1String("client_mtime"))) {
+                if (qwer.contains(QStringLiteral("client_mtime"))) {
                     QString tmp = qwer.value(QLatin1String("client_mtime")).toString();
                     item->setDateCreated(PimCommon::DropBoxUtil::convertToDateTime(tmp));
                 }
-                if (qwer.contains(QLatin1String("modified"))) {
+                if (qwer.contains(QStringLiteral("modified"))) {
                     QString tmp = qwer.value(QLatin1String("modified")).toString();
                     item->setLastModification(PimCommon::DropBoxUtil::convertToDateTime(tmp));
                 }
@@ -526,21 +526,21 @@ QMap<QString, QString> DropBoxStorageService::itemInformation(const QVariantMap 
     information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), isDir ? i18n("Folder") : i18n("File"));
     information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), itemName);
 
-    if (variantMap.contains(QLatin1String("bytes"))) {
+    if (variantMap.contains(QStringLiteral("bytes"))) {
         const qulonglong size = variantMap.value(QLatin1String("bytes")).toULongLong();
         if (!(isDir && size == 0)) {
             information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(size));
         }
     }
-    if (variantMap.contains(QLatin1String("client_mtime"))) {
+    if (variantMap.contains(QStringLiteral("client_mtime"))) {
         const QString tmp = variantMap.value(QLatin1String("client_mtime")).toString();
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((PimCommon::DropBoxUtil::convertToDateTime(tmp)), QLocale::ShortFormat));
     }
-    if (variantMap.contains(QLatin1String("modified"))) {
+    if (variantMap.contains(QStringLiteral("modified"))) {
         const QString tmp = variantMap.value(QLatin1String("modified")).toString();
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((PimCommon::DropBoxUtil::convertToDateTime(tmp)), QLocale::ShortFormat));
     }
-    if (variantMap.contains(QLatin1String("root"))) {
+    if (variantMap.contains(QStringLiteral("root"))) {
         information.insert(i18n("Storage path:"), variantMap.value(QLatin1String("root")).toString());
     }
     return information;

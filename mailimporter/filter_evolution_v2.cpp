@@ -206,7 +206,7 @@ void FilterEvolution_v2::importMBox(const QString &mboxName, const QString &root
             filterInfo()->setFrom(mboxName);
         }
 
-        if (targetDir.contains(QLatin1String(".sbd"))) {
+        if (targetDir.contains(QStringLiteral(".sbd"))) {
             QString tmp_info = targetDir;
             tmp_info.remove(QLatin1String(".sbd"));
             filterInfo()->setTo(tmp_info);
@@ -245,13 +245,13 @@ void FilterEvolution_v2::importMBox(const QString &mboxName, const QString &root
             QString destFolder;
             QString _targetDir = targetDir;
             if (!targetDir.isNull()) {
-                if (_targetDir.contains(QLatin1String(".sbd"))) {
+                if (_targetDir.contains(QStringLiteral(".sbd"))) {
                     _targetDir.remove(QLatin1String(".sbd"));
                 }
                 destFolder += "Evolution-Import/" + _targetDir + QLatin1Char('/') + filenameInfo.completeBaseName(); // mboxName;
             } else {
                 destFolder = "Evolution-Import/" + rootDir;
-                if (destFolder.contains(QLatin1String(".sbd"))) {
+                if (destFolder.contains(QStringLiteral(".sbd"))) {
                     destFolder.remove(QLatin1String(".sbd"));
                 }
             }

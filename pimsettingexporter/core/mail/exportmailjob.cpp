@@ -157,13 +157,13 @@ void ExportMailJob::backupResources()
     foreach (const Akonadi::AgentInstance &agent, list) {
         const QStringList capabilities(agent.type().capabilities());
         if (agent.type().mimeTypes().contains(KMime::Message::mimeType())) {
-            if (capabilities.contains(QLatin1String("Resource")) &&
-                    !capabilities.contains(QLatin1String("Virtual")) &&
-                    !capabilities.contains(QLatin1String("MailTransport"))) {
+            if (capabilities.contains(QStringLiteral("Resource")) &&
+                    !capabilities.contains(QStringLiteral("Virtual")) &&
+                    !capabilities.contains(QStringLiteral("MailTransport"))) {
                 const QString identifier = agent.identifier();
                 //Store just pop3/imap/kolab/gmail account. Store other config when we copy data.
-                if (identifier.contains(QLatin1String("pop3")) || identifier.contains(QLatin1String("imap"))
-                        || identifier.contains(QLatin1String("_kolab_")) || identifier.contains(QLatin1String("_gmail_"))) {
+                if (identifier.contains(QStringLiteral("pop3")) || identifier.contains(QStringLiteral("imap"))
+                        || identifier.contains(QStringLiteral("_kolab_")) || identifier.contains(QStringLiteral("_gmail_"))) {
                     const QString errorStr = Utils::storeResources(archive(), identifier, Utils::resourcesPath());
                     if (!errorStr.isEmpty()) {
                         Q_EMIT error(errorStr);
@@ -464,15 +464,15 @@ void ExportMailJob::backupMails()
     foreach (const Akonadi::AgentInstance &agent, list) {
         const QStringList capabilities(agent.type().capabilities());
         if (agent.type().mimeTypes().contains(KMime::Message::mimeType())) {
-            if (capabilities.contains(QLatin1String("Resource")) &&
-                    !capabilities.contains(QLatin1String("Virtual")) &&
-                    !capabilities.contains(QLatin1String("MailTransport"))) {
+            if (capabilities.contains(QStringLiteral("Resource")) &&
+                    !capabilities.contains(QStringLiteral("Virtual")) &&
+                    !capabilities.contains(QStringLiteral("MailTransport"))) {
                 const QString identifier = agent.identifier();
                 const QString archivePath = Utils::mailsPath() + identifier + QDir::separator();
-                if (identifier.contains(QLatin1String("akonadi_mbox_resource_"))) {
+                if (identifier.contains(QStringLiteral("akonadi_mbox_resource_"))) {
                     backupResourceFile(agent, Utils::mailsPath());
-                } else if (identifier.contains(QLatin1String("akonadi_maildir_resource_")) ||
-                           identifier.contains(QLatin1String("akonadi_mixedmaildir_resource_"))) {
+                } else if (identifier.contains(QStringLiteral("akonadi_maildir_resource_")) ||
+                           identifier.contains(QStringLiteral("akonadi_mixedmaildir_resource_"))) {
                     //Store akonadi agent config
                     QUrl url = Utils::resourcePath(agent);
 

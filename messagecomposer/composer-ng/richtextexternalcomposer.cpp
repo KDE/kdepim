@@ -108,7 +108,7 @@ void RichTextExternalComposer::startExternalEditor()
         const QString cmd = KMacroExpander::expandMacrosShellQuote(commandLine, map);
         const QStringList arg = KShell::splitArgs(cmd);
         bool filenameAdded = false;
-        if (commandLine.contains(QLatin1String("%f"))) {
+        if (commandLine.contains(QStringLiteral("%f"))) {
             filenameAdded = true;
         }
         QStringList command;

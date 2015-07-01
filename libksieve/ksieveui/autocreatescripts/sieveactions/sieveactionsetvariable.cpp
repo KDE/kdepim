@@ -34,7 +34,7 @@ using namespace KSieveUi;
 SieveActionSetVariable::SieveActionSetVariable(QObject *parent)
     : SieveAction(QLatin1String("set"), i18n("Variable"), parent)
 {
-    mHasRegexCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("regex"));
+    mHasRegexCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("regex"));
 }
 
 SieveAction *SieveActionSetVariable::newAction()

@@ -75,13 +75,13 @@ void YouSendItStorageService::readConfig()
             if (lst.contains(storageServiceName())) {
                 QMap<QString, QString> map;
                 wallet->readMap(storageServiceName(), map);
-                if (map.contains(QLatin1String("Username"))) {
+                if (map.contains(QStringLiteral("Username"))) {
                     mUsername = map.value(QLatin1String("Username"));
                 }
-                if (map.contains(QLatin1String("Token"))) {
+                if (map.contains(QStringLiteral("Token"))) {
                     mToken = map.value(QLatin1String("Token"));
                 }
-                if (map.contains(QLatin1String("Password"))) {
+                if (map.contains(QStringLiteral("Password"))) {
                     mPassword = map.value(QLatin1String("Password"));
                 }
             }
@@ -424,27 +424,27 @@ QMap<QString, QString> YouSendItStorageService::itemInformation(const QVariantMa
     QMap<QString, QString> information;
     qCDebug(PIMCOMMON_LOG) << " variantMap " << variantMap;
     bool folder = false;
-    if (variantMap.contains(QLatin1String("name"))) {
+    if (variantMap.contains(QStringLiteral("name"))) {
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QLatin1String("name")).toString());
     }
-    if (variantMap.contains(QLatin1String("updatedOn"))) {
+    if (variantMap.contains(QStringLiteral("updatedOn"))) {
         const QString t = variantMap.value(QLatin1String("updatedOn")).toString();
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString(YouSendItUtil::convertToDateTime(t, true)));
         folder = true;
     }
     information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), folder ? i18n("Directory") : i18n("File"));
-    if (variantMap.contains(QLatin1String("createdOn"))) {
+    if (variantMap.contains(QStringLiteral("createdOn"))) {
         const QString t = variantMap.value(QLatin1String("createdOn")).toString();
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString(YouSendItUtil::convertToDateTime(t, folder ? true : false)));
     }
-    if (variantMap.contains(QLatin1String("lastUpdatedOn"))) {
+    if (variantMap.contains(QStringLiteral("lastUpdatedOn"))) {
         const QString t = variantMap.value(QLatin1String("lastUpdatedOn")).toString();
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((YouSendItUtil::convertToDateTime(t)), QLocale::ShortFormat));
     }
-    if (!folder && variantMap.contains(QLatin1String("size"))) {
+    if (!folder && variantMap.contains(QStringLiteral("size"))) {
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
     }
-    if (variantMap.contains(QLatin1String("writeable"))) {
+    if (variantMap.contains(QStringLiteral("writeable"))) {
         information.insert(i18n("writable:"), (variantMap.value(QLatin1String("writeable")).toString() == QLatin1String("true")) ? i18n("Yes") : i18n("No"));
     }
     return information;
@@ -476,21 +476,21 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toString().toUtf8(), &ok).toMap();
     //qCDebug(PIMCOMMON_LOG)<<" INFO "<<info;
-    if (info.contains(QLatin1String("folders"))) {
+    if (info.contains(QStringLiteral("folders"))) {
         const QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
         const QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
         Q_FOREACH (const QVariant &v, folders) {
             const QVariantMap map = v.toMap();
             //qCDebug(PIMCOMMON_LOG)<<" folder map"<<map;
-            if (map.contains(QLatin1String("name"))) {
+            if (map.contains(QStringLiteral("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
                 const QString folderId = map.value(QLatin1String("id")).toString();
                 StorageServiceTreeWidgetItem *item = listWidget->addFolder(name, folderId);
-                if (map.contains(QLatin1String("createdOn"))) {
+                if (map.contains(QStringLiteral("createdOn"))) {
                     const QString t = map.value(QLatin1String("createdOn")).toString();
                     item->setDateCreated(YouSendItUtil::convertToDateTime(t, true));
                 }
-                if (map.contains(QLatin1String("updatedOn"))) {
+                if (map.contains(QStringLiteral("updatedOn"))) {
                     const QString t = map.value(QLatin1String("updatedOn")).toString();
                     item->setLastModification(YouSendItUtil::convertToDateTime(t, true));
                 }
@@ -502,21 +502,21 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
         Q_FOREACH (const QVariant &v, files) {
             const QVariantMap map = v.toMap();
             //qCDebug(PIMCOMMON_LOG)<<" file map !"<<map;
-            if (map.contains(QLatin1String("name"))) {
+            if (map.contains(QStringLiteral("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
                 qCDebug(PIMCOMMON_LOG) << " name !" << name;
                 const QString fileId = map.value(QLatin1String("id")).toString();
                 StorageServiceTreeWidgetItem *item = listWidget->addFile(name, fileId);
-                if (map.contains(QLatin1String("size"))) {
+                if (map.contains(QStringLiteral("size"))) {
                     //qCDebug(PIMCOMMON_LOG)<<" size "<<map.value(QLatin1String("size"));
                     const qulonglong size = map.value(QLatin1String("size")).toULongLong();
                     item->setSize(size);
                 }
-                if (map.contains(QLatin1String("createdOn"))) {
+                if (map.contains(QStringLiteral("createdOn"))) {
                     const QString t = map.value(QLatin1String("createdOn")).toString();
                     item->setDateCreated(YouSendItUtil::convertToDateTime(t));
                 }
-                if (map.contains(QLatin1String("lastUpdatedOn"))) {
+                if (map.contains(QStringLiteral("lastUpdatedOn"))) {
                     const QString t = map.value(QLatin1String("lastUpdatedOn")).toString();
                     item->setLastModification(YouSendItUtil::convertToDateTime(t));
                 }

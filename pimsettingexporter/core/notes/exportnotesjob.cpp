@@ -121,7 +121,7 @@ void ExportNotesJob::backupData()
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach (const Akonadi::AgentInstance &agent, list) {
         const QString identifier = agent.identifier();
-        if (identifier.contains(QLatin1String("akonadi_akonotes_resource_"))) {
+        if (identifier.contains(QStringLiteral("akonadi_akonotes_resource_"))) {
             const QString archivePath = Utils::notePath() + identifier + QDir::separator();
             QUrl url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {

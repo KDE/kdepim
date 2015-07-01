@@ -171,9 +171,9 @@ void AccountConfigOrderDialog::init()
     foreach (const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances()) {
         const QStringList capabilities(instance.type().capabilities());
         if (instance.type().mimeTypes().contains(KMime::Message::mimeType())) {
-            if (capabilities.contains(QLatin1String("Resource")) &&
-                    !capabilities.contains(QLatin1String("Virtual")) &&
-                    !capabilities.contains(QLatin1String("MailTransport"))) {
+            if (capabilities.contains(QStringLiteral("Resource")) &&
+                    !capabilities.contains(QStringLiteral("Virtual")) &&
+                    !capabilities.contains(QStringLiteral("MailTransport"))) {
                 const QString identifier = instance.identifier();
                 if (!identifier.contains(POP3_RESOURCE_IDENTIFIER)) {
                     instanceList << instance.identifier();

@@ -114,7 +114,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
             return;
         }
         const QMap<QString, QVariant> error = jsonDoc.toVariant().toMap();
-        if (error.contains(QLatin1String("error"))) {
+        if (error.contains(QStringLiteral("error"))) {
             const QString errorStr = error.value(QLatin1String("error")).toString();
             switch (mActionType) {
             case PimCommon::StorageServiceAbstract::NoneAction:
@@ -219,7 +219,7 @@ QString DropBoxJob::extractPathFromData(const QString &data)
         return name;
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
-    if (info.contains(QLatin1String("path"))) {
+    if (info.contains(QStringLiteral("path"))) {
         name = info.value(QLatin1String("path")).toString();
     }
     return name;
@@ -299,18 +299,18 @@ void DropBoxJob::parseAccountInfo(const QString &data)
     const QMap<QString, QVariant> info = json.toVariant().toMap();
 
     PimCommon::AccountInfo accountInfo;
-    if (info.contains(QLatin1String("display_name"))) {
+    if (info.contains(QStringLiteral("display_name"))) {
         accountInfo.displayName = info.value(QLatin1String("display_name")).toString();
     }
-    if (info.contains(QLatin1String("quota_info"))) {
+    if (info.contains(QStringLiteral("quota_info"))) {
         QMap<QString, QVariant> quotaInfo = info.value(QLatin1String("quota_info")).toMap();
-        if (quotaInfo.contains(QLatin1String("quota"))) {
+        if (quotaInfo.contains(QStringLiteral("quota"))) {
             accountInfo.quota = quotaInfo.value(QLatin1String("quota")).toLongLong();
         }
-        if (quotaInfo.contains(QLatin1String("normal"))) {
+        if (quotaInfo.contains(QStringLiteral("normal"))) {
             accountInfo.accountSize = quotaInfo.value(QLatin1String("normal")).toLongLong();
         }
-        if (quotaInfo.contains(QLatin1String("shared"))) {
+        if (quotaInfo.contains(QStringLiteral("shared"))) {
             accountInfo.shared = quotaInfo.value(QLatin1String("shared")).toLongLong();
         }
     }
@@ -321,7 +321,7 @@ void DropBoxJob::parseAccountInfo(const QString &data)
 
 void DropBoxJob::parseResponseAccessToken(const QString &data)
 {
-    if (data.contains(QLatin1String("error"))) {
+    if (data.contains(QStringLiteral("error"))) {
         Q_EMIT authorizationFailed(data);
     } else {
         QStringList split           = data.split(QLatin1Char('&'));
@@ -454,10 +454,10 @@ void DropBoxJob::parseUploadFile(const QString &data)
     const QMap<QString, QVariant> info = json.toVariant().toMap();
     QString root;
     QString path;
-    if (info.contains(QLatin1String("root"))) {
+    if (info.contains(QStringLiteral("root"))) {
         root = info.value(QLatin1String("root")).toString();
     }
-    if (info.contains(QLatin1String("path"))) {
+    if (info.contains(QStringLiteral("path"))) {
         path = info.value(QLatin1String("path")).toString();
     }
     QString itemName;
@@ -685,7 +685,7 @@ void DropBoxJob::parseShareLink(const QString &data)
     }
     const QMap<QString, QVariant> info = json.toVariant().toMap();
     QString url;
-    if (info.contains(QLatin1String("url"))) {
+    if (info.contains(QStringLiteral("url"))) {
         url = info.value(QLatin1String("url")).toString();
     }
     Q_EMIT shareLinkDone(url);

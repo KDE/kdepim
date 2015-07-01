@@ -91,7 +91,7 @@ void ImportCalendarJob::restoreResources()
         for (int i = 0; i < numberOfResourceFile; ++i) {
             resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
-            if (value.akonadiConfigFile.contains(QLatin1String("akonadi_icaldir_resource_"))) {
+            if (value.akonadiConfigFile.contains(QStringLiteral("akonadi_icaldir_resource_"))) {
                 const KArchiveEntry *fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile *file = static_cast<const KArchiveFile *>(fileResouceEntry);
@@ -183,8 +183,8 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 resourceFiles files;
                 Q_FOREACH (const QString &name, lst) {
-                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_ical_resource_"))
-                            || name.contains(QLatin1String("akonadi_icaldir_resource_")))) {
+                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_ical_resource_"))
+                            || name.contains(QStringLiteral("akonadi_icaldir_resource_")))) {
                         files.akonadiConfigFile = archPath + name;
                     } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
                         files.akonadiAgentConfigFile = archPath + name;

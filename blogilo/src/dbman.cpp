@@ -309,7 +309,7 @@ bool DBMan::updateDB()
     uint dbVersion = 0;
 
     /// Check whether schema_version exists
-    if (!d->db.tables(QSql::Tables).contains(QLatin1String("schema_version"))) {
+    if (!d->db.tables(QSql::Tables).contains(QStringLiteral("schema_version"))) {
         QSqlQuery q;
         if (!q.exec(QLatin1String("CREATE TABLE schema_version (version INT);"))) {
             d->mLastErrorText = q.lastError().text();

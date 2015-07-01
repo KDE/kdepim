@@ -108,7 +108,7 @@ void VacationPageWidget::slotGetResult(KManageSieve::SieveJob *job, bool success
     mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
 
     if (mUrl.scheme() == QLatin1String("sieve") &&
-            !job->sieveCapabilities().contains(QLatin1String("vacation"))) {
+            !job->sieveCapabilities().contains(QStringLiteral("vacation"))) {
         mStackWidget->setCurrentIndex(ScriptNotSupported);
         return;
     }
@@ -139,7 +139,7 @@ void VacationPageWidget::slotGetResult(KManageSieve::SieveJob *job, bool success
     mVacationEditWidget->setSendForSpam(sendForSpam);
     mVacationEditWidget->setDomainName(domainName);
     mVacationEditWidget->enableDomainAndSendForSpam(!VacationSettings::allowOutOfOfficeUploadButNoSettings());
-    mHasDateSupport = job->sieveCapabilities().contains(QLatin1String("date"));
+    mHasDateSupport = job->sieveCapabilities().contains(QStringLiteral("date"));
     mVacationEditWidget->enableDates(mHasDateSupport);
     mVacationEditWidget->setStartDate(mHasDateSupport ? startDate : QDate());
     mVacationEditWidget->setEndDate(mHasDateSupport ? endDate : QDate());

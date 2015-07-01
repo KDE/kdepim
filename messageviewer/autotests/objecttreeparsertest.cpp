@@ -174,7 +174,7 @@ void ObjectTreeParserTester::test_HTML()
     otp.parseObjectTree(msg.get());
 
     QCOMPARE(otp.plainTextContent().toLatin1().data(), "Some HTML text");
-    QVERIFY(otp.htmlContent().contains(QLatin1String("Some <span style=\" font-weight:600;\">HTML</span> text")));
+    QVERIFY(otp.htmlContent().contains(QStringLiteral("Some <span style=\" font-weight:600;\">HTML</span> text")));
     QCOMPARE(otp.htmlContentCharset().data(), "windows-1252");
 }
 
@@ -191,7 +191,7 @@ void ObjectTreeParserTester::test_HTMLOnly()
     otp.parseObjectTree(msg.get());
 
     QVERIFY(otp.plainTextContent().isEmpty());
-    QVERIFY(otp.htmlContent().contains(QLatin1String("<b>SOME</b> HTML text.")));
+    QVERIFY(otp.htmlContent().contains(QStringLiteral("<b>SOME</b> HTML text.")));
     QCOMPARE(otp.convertedTextContent().toLatin1().data(), "SOME HTML text.\n");
 }
 

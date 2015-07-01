@@ -285,9 +285,9 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         }
         const QMap<QString, QVariant> error = jsonDoc.toVariant().toMap();
         QString errorStr;
-        if (error.contains(QLatin1String("errorStatus"))) {
+        if (error.contains(QStringLiteral("errorStatus"))) {
             const QVariantMap storageMap = error.value(QLatin1String("errorStatus")).toMap();
-            if (storageMap.contains(QLatin1String("message"))) {
+            if (storageMap.contains(QStringLiteral("message"))) {
                 errorStr = storageMap.value(QLatin1String("message")).toString();
             }
         } else {
@@ -470,9 +470,9 @@ void YouSendItJob::parseMoveFile(const QString &data)
 bool YouSendItJob::parseError(const QMap<QString, QVariant> &info)
 {
     qCDebug(PIMCOMMON_LOG) << " info" << info;
-    if (info.contains(QLatin1String("errorStatus"))) {
+    if (info.contains(QStringLiteral("errorStatus"))) {
         const QVariantMap map = info.value(QLatin1String("errorStatus")).toMap();
-        if (map.contains(QLatin1String("message"))) {
+        if (map.contains(QStringLiteral("message"))) {
             Q_EMIT actionFailed(map.value(QLatin1String("message")).toString());
             return true;
         }
@@ -555,14 +555,14 @@ void YouSendItJob::parseRequestToken(const QString &data)
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     qCDebug(PIMCOMMON_LOG) << " info" << info;
-    if (info.contains(QLatin1String("authToken"))) {
+    if (info.contains(QStringLiteral("authToken"))) {
         const QString authToken = info.value(QLatin1String("authToken")).toString();
         Q_EMIT authorizationDone(mPassword, mUsername, authToken);
     } else {
         QString error;
-        if (info.contains(QLatin1String("errorStatus"))) {
+        if (info.contains(QStringLiteral("errorStatus"))) {
             QVariantMap map = info.value(QLatin1String("errorStatus")).toMap();
-            if (map.contains(QLatin1String("message"))) {
+            if (map.contains(QStringLiteral("message"))) {
                 error = i18n("Authentication failed. Server returns this error:\n%1", map.value(QLatin1String("message")).toString());
             }
         }
@@ -580,13 +580,13 @@ void YouSendItJob::parseAccountInfo(const QString &data)
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     qCDebug(PIMCOMMON_LOG) << " info" << info;
-    if (info.contains(QLatin1String("storage"))) {
+    if (info.contains(QStringLiteral("storage"))) {
         PimCommon::AccountInfo accountInfo;
         const QVariantMap storageMap = info.value(QLatin1String("storage")).toMap();
-        if (storageMap.contains(QLatin1String("currentUsage"))) {
+        if (storageMap.contains(QStringLiteral("currentUsage"))) {
             accountInfo.shared = storageMap.value(QLatin1String("currentUsage")).toLongLong();
         }
-        if (storageMap.contains(QLatin1String("storageQuota"))) {
+        if (storageMap.contains(QStringLiteral("storageQuota"))) {
             accountInfo.quota = storageMap.value(QLatin1String("storageQuota")).toLongLong();
         }
         Q_EMIT accountInfoDone(accountInfo);
@@ -603,7 +603,7 @@ void YouSendItJob::parseCreateFolder(const QString &data)
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     QString newFolderName;
-    if (info.contains(QLatin1String("name"))) {
+    if (info.contains(QStringLiteral("name"))) {
         newFolderName = info.value(QLatin1String("name")).toString();
     }
     Q_EMIT createFolderDone(newFolderName);
@@ -621,7 +621,7 @@ void YouSendItJob::parseUploadFile(const QString &data)
     qCDebug(PIMCOMMON_LOG) << " data " << data;
     qCDebug(PIMCOMMON_LOG) << " info" << info;
     QString fileId;
-    if (info.contains(QLatin1String("fileId"))) {
+    if (info.contains(QStringLiteral("fileId"))) {
         qCDebug(PIMCOMMON_LOG) << " fileId " << info.value(QLatin1String("fileId")).toString();
         fileId = info.value(QLatin1String("fileId")).toString();
     }

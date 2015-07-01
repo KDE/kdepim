@@ -962,7 +962,7 @@ void AutoCorrection::readAutoCorrectionXmlFile(bool forceGlobal)
         if (fname.isEmpty() && !kdelang.isEmpty()) {
             fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("autocorrect/") + kdelang + QLatin1String(".xml"));
         }
-        if (fname.isEmpty() && kdelang.contains(QLatin1String("_"))) {
+        if (fname.isEmpty() && kdelang.contains(QStringLiteral("_"))) {
             kdelang.remove(QRegExp(QLatin1String("_.*")));
             fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("autocorrect/") + kdelang + QLatin1String(".xml"));
         }

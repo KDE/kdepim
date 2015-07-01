@@ -80,7 +80,7 @@ QString CreateResource::createResource(const QString &resources, const QString &
 
     // check if unique instance already exists
     qCDebug(PIMCOMMON_LOG) << type.capabilities();
-    if (type.capabilities().contains(QLatin1String("Unique"))) {
+    if (type.capabilities().contains(QStringLiteral("Unique"))) {
         Q_FOREACH (const AgentInstance &instance, AgentManager::self()->instances()) {
             qCDebug(PIMCOMMON_LOG) << instance.type().identifier() << (instance.type() == type);
             if (instance.type() == type) {

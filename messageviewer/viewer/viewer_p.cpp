@@ -622,9 +622,9 @@ void ViewerPrivate::showAttachmentPopup(KMime::Content *node, const QString &nam
         if ((contentTypeStr == QLatin1String("text/plain")) ||
                 (contentTypeStr == QLatin1String("image/png")) ||
                 (contentTypeStr == QLatin1String("image/jpeg")) ||
-                parentMimeType.contains(QLatin1String("text/plain")) ||
-                parentMimeType.contains(QLatin1String("image/png")) ||
-                parentMimeType.contains(QLatin1String("image/jpeg"))
+                parentMimeType.contains(QStringLiteral("text/plain")) ||
+                parentMimeType.contains(QStringLiteral("image/png")) ||
+                parentMimeType.contains(QStringLiteral("image/jpeg"))
            ) {
             action = menu->addAction(i18nc("to view something", "View"));
             action->setEnabled(!deletedAttachment);

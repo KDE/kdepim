@@ -98,9 +98,9 @@ bool MailCommon::Util::isVirtualCollection(const QString &resource)
 
 bool MailCommon::Util::isLocalCollection(const QString &resource)
 {
-    return resource.contains(QLatin1String("akonadi_mbox_resource")) ||
-           resource.contains(QLatin1String("akonadi_maildir_resource")) ||
-           resource.contains(QLatin1String("akonadi_mixedmaildir_resource"));
+    return resource.contains(QStringLiteral("akonadi_mbox_resource")) ||
+           resource.contains(QStringLiteral("akonadi_maildir_resource")) ||
+           resource.contains(QStringLiteral("akonadi_mixedmaildir_resource"));
 }
 
 QString MailCommon::Util::fullCollectionPath(const Akonadi::Collection &collection)
@@ -141,9 +141,9 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances(bool excludeMailDi
     foreach (const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances()) {
         const QStringList capabilities(instance.type().capabilities());
         if (instance.type().mimeTypes().contains(KMime::Message::mimeType())) {
-            if (capabilities.contains(QLatin1String("Resource")) &&
-                    !capabilities.contains(QLatin1String("Virtual")) &&
-                    !capabilities.contains(QLatin1String("MailTransport"))) {
+            if (capabilities.contains(QStringLiteral("Resource")) &&
+                    !capabilities.contains(QStringLiteral("Virtual")) &&
+                    !capabilities.contains(QStringLiteral("MailTransport"))) {
                 relevantInstances << instance;
             } else if (!excludeMailDispacher &&
                        instance.identifier() == QLatin1String("akonadi_maildispatcher_agent")) {

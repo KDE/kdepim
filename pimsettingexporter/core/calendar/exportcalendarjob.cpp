@@ -76,7 +76,7 @@ void ExportCalendarJob::backupResources()
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach (const Akonadi::AgentInstance &agent, list) {
         const QString identifier = agent.identifier();
-        if (identifier.contains(QLatin1String("akonadi_icaldir_resource_"))) {
+        if (identifier.contains(QStringLiteral("akonadi_icaldir_resource_"))) {
             const QString archivePath = Utils::calendarPath() + identifier + QDir::separator();
 
             QUrl url = Utils::resourcePath(agent);
@@ -102,7 +102,7 @@ void ExportCalendarJob::backupResources()
                     }
                 }
             }
-        } else if (identifier.contains(QLatin1String("akonadi_ical_resource_"))) {
+        } else if (identifier.contains(QStringLiteral("akonadi_ical_resource_"))) {
             backupResourceFile(agent, Utils::calendarPath());
         }
     }

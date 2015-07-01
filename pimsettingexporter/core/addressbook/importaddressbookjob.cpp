@@ -87,8 +87,8 @@ void ImportAddressbookJob::restoreResources()
         for (int i = 0; i < numberOfResourceFile; ++i) {
             resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
-            if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcarddir_resource_")) ||
-                    value.akonadiConfigFile.contains(QLatin1String("akonadi_contacts_resource_"))) {
+            if (value.akonadiConfigFile.contains(QStringLiteral("akonadi_vcarddir_resource_")) ||
+                    value.akonadiConfigFile.contains(QStringLiteral("akonadi_contacts_resource_"))) {
                 const KArchiveEntry *fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile *file = static_cast<const KArchiveFile *>(fileResouceEntry);
@@ -121,9 +121,9 @@ void ImportAddressbookJob::restoreResources()
                         }
                     }
                     QString instanceType;
-                    if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
+                    if (value.akonadiConfigFile.contains(QStringLiteral("akonadi_vcarddir_resource_"))) {
                         instanceType = QLatin1String("akonadi_vcarddir_resource");
-                    } else if (value.akonadiConfigFile.contains(QLatin1String("akonadi_contacts_resource_"))) {
+                    } else if (value.akonadiConfigFile.contains(QStringLiteral("akonadi_contacts_resource_"))) {
                         instanceType = QLatin1String("akonadi_contacts_resource");
                     } else {
                         qCDebug(PIMSETTINGEXPORTERCORE_LOG) << " not supported" << value.akonadiConfigFile;
@@ -186,9 +186,9 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 resourceFiles files;
                 Q_FOREACH (const QString &name, lst) {
-                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_vcarddir_resource_")) ||
-                            name.contains(QLatin1String("akonadi_vcard_resource_")) ||
-                            name.contains(QLatin1String("akonadi_contacts_resource_")))) {
+                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QStringLiteral("akonadi_vcarddir_resource_")) ||
+                            name.contains(QStringLiteral("akonadi_vcard_resource_")) ||
+                            name.contains(QStringLiteral("akonadi_contacts_resource_")))) {
                         files.akonadiConfigFile = archPath + name;
                     } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
                         files.akonadiAgentConfigFile = archPath + name;

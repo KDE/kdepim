@@ -156,8 +156,8 @@ Akonadi::AgentInstance::List KSieveUi::Util::imapAgentInstances()
     Akonadi::AgentInstance::List relevantInstances;
     foreach (const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances()) {
         if (instance.type().mimeTypes().contains(KMime::Message::mimeType()) &&
-                instance.type().capabilities().contains(QLatin1String("Resource")) &&
-                !instance.type().capabilities().contains(QLatin1String("Virtual"))) {
+                instance.type().capabilities().contains(QStringLiteral("Resource")) &&
+                !instance.type().capabilities().contains(QStringLiteral("Virtual"))) {
 
             if (PimCommon::Util::isImapResource(instance.identifier())) {
                 relevantInstances << instance;

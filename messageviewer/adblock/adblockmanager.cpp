@@ -188,7 +188,7 @@ void AdBlockManager::loadRuleString(const QString &stringRule)
     }
 
     // hide (CSS) rules
-    if (stringRule.contains(QLatin1String("##"))) {
+    if (stringRule.contains(QStringLiteral("##"))) {
         _elementHiding.addRule(stringRule);
         return;
     }

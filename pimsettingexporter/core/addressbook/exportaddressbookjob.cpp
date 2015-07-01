@@ -71,7 +71,7 @@ void ExportAddressbookJob::backupResources()
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach (const Akonadi::AgentInstance &agent, list) {
         const QString identifier = agent.identifier();
-        if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_")) || identifier.contains(QLatin1String("akonadi_contacts_resource_"))) {
+        if (identifier.contains(QStringLiteral("akonadi_vcarddir_resource_")) || identifier.contains(QStringLiteral("akonadi_contacts_resource_"))) {
             const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
             QUrl url = Utils::resourcePath(agent, QStringLiteral("$HOME/.local/share/contacts/"));
@@ -97,7 +97,7 @@ void ExportAddressbookJob::backupResources()
                     }
                 }
             }
-        } else if (identifier.contains(QLatin1String("akonadi_vcard_resource_"))) {
+        } else if (identifier.contains(QStringLiteral("akonadi_vcard_resource_"))) {
             backupResourceFile(agent, Utils::addressbookPath());
         }
     }

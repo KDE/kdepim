@@ -110,7 +110,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
     msg->contentType()->setCharset("utf-8");
 
     if (m_origMsg->headerByType("List-Post") &&
-            m_origMsg->headerByType("List-Post")->asUnicodeString().contains(QLatin1String("mailto:"), Qt::CaseInsensitive)) {
+            m_origMsg->headerByType("List-Post")->asUnicodeString().contains(QStringLiteral("mailto:"), Qt::CaseInsensitive)) {
 
         const QString listPost = m_origMsg->headerByType("List-Post")->asUnicodeString();
         QRegExp rx(QLatin1String("<mailto:([^@>]+)@([^>]+)>"), Qt::CaseInsensitive);

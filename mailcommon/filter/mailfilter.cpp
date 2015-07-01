@@ -385,10 +385,10 @@ bool MailFilter::readConfig(const KConfigGroup &config, bool interactive)
         bApplyOnExplicit = true;
         mApplicability = ButImap;
     } else {
-        bApplyBeforeOutbound = bool(sets.contains(QLatin1String("before-send-mail")));
-        bApplyOnInbound = bool(sets.contains(QLatin1String("check-mail")));
-        bApplyOnOutbound = bool(sets.contains(QLatin1String("send-mail")));
-        bApplyOnExplicit = bool(sets.contains(QLatin1String("manual-filtering")));
+        bApplyBeforeOutbound = bool(sets.contains(QStringLiteral("before-send-mail")));
+        bApplyOnInbound = bool(sets.contains(QStringLiteral("check-mail")));
+        bApplyOnOutbound = bool(sets.contains(QStringLiteral("send-mail")));
+        bApplyOnExplicit = bool(sets.contains(QStringLiteral("manual-filtering")));
         mApplicability = (AccountType) config.readEntry(
                              "Applicability", (int)ButImap);
     }

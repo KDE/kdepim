@@ -68,7 +68,7 @@ void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
         }
         const QMap<QString, QVariant> map = json.toVariant().toMap();
 
-        if (map.contains(QLatin1String("id")) && map.contains(QLatin1String("kind"))) {
+        if (map.contains(QStringLiteral("id")) && map.contains(QStringLiteral("kind"))) {
             Q_EMIT shortUrlDone(map.value(QLatin1String("id")).toString());
         }
     }

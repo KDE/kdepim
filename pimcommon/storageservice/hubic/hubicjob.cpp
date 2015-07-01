@@ -158,7 +158,7 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
         }
         const QMap<QString, QVariant> error = jsonDoc.toVariant().toMap();
         qCDebug(PIMCOMMON_LOG) << " error " << error;
-        if (error.contains(QLatin1String("message"))) {
+        if (error.contains(QStringLiteral("message"))) {
             const QString errorStr = error.value(QLatin1String("message")).toString();
             switch (mActionType) {
             case PimCommon::StorageServiceAbstract::NoneAction:
@@ -278,10 +278,10 @@ void HubicJob::parseAccountInfo(const QString &data)
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     //qCDebug(PIMCOMMON_LOG)<<" info"<<info;
     PimCommon::AccountInfo accountInfo;
-    if (info.contains(QLatin1String("used"))) {
+    if (info.contains(QStringLiteral("used"))) {
         accountInfo.shared = info.value(QLatin1String("used")).toLongLong();
     }
-    if (info.contains(QLatin1String("quota"))) {
+    if (info.contains(QStringLiteral("quota"))) {
         accountInfo.quota = info.value(QLatin1String("quota")).toLongLong();
     }
     Q_EMIT accountInfoDone(accountInfo);
@@ -542,7 +542,7 @@ QString HubicJob::parseNameInfo(const QString &data)
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
 
-    if (info.contains(QLatin1String("name"))) {
+    if (info.contains(QStringLiteral("name"))) {
         filename = info.value(QLatin1String("name")).toString();
     }
     return filename;
@@ -558,9 +558,9 @@ void HubicJob::parseShareLink(const QString &data)
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     QString url;
-    if (info.contains(QLatin1String("shared_link"))) {
+    if (info.contains(QStringLiteral("shared_link"))) {
         const QVariantMap map = info.value(QLatin1String("shared_link")).toMap();
-        if (map.contains(QLatin1String("url"))) {
+        if (map.contains(QStringLiteral("url"))) {
             url = map.value(QLatin1String("url")).toString();
         }
     }
@@ -615,14 +615,14 @@ void HubicJob::parseAccessToken(const QString &data)
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     qCDebug(PIMCOMMON_LOG) << " info" << info;
-    if (info.contains(QLatin1String("refresh_token"))) {
+    if (info.contains(QStringLiteral("refresh_token"))) {
         mRefreshToken = info.value(QLatin1String("refresh_token")).toString();
     }
-    if (info.contains(QLatin1String("access_token"))) {
+    if (info.contains(QStringLiteral("access_token"))) {
         mToken = info.value(QLatin1String("access_token")).toString();
     }
     qint64 expireInTime = 0;
-    if (info.contains(QLatin1String("expires_in"))) {
+    if (info.contains(QStringLiteral("expires_in"))) {
         expireInTime = info.value(QLatin1String("expires_in")).toLongLong();
     }
     qCDebug(PIMCOMMON_LOG) << " parseAccessToken";

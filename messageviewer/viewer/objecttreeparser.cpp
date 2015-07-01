@@ -1053,9 +1053,9 @@ bool ObjectTreeParser::okDecryptMIME(KMime::Content &data,
         QByteArray ciphertext = data.decodedContent();
 #ifdef MARCS_DEBUG
         QString cipherStr = QString::fromLatin1(ciphertext);
-        bool cipherIsBinary = (!cipherStr.contains(QLatin1String("BEGIN ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
-                              (!cipherStr.contains(QLatin1String("BEGIN PGP ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
-                              (!cipherStr.contains(QLatin1String("BEGIN PGP MESSAGE"), Qt::CaseInsensitive));
+        bool cipherIsBinary = (!cipherStr.contains(QStringLiteral("BEGIN ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
+                              (!cipherStr.contains(QStringLiteral("BEGIN PGP ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
+                              (!cipherStr.contains(QStringLiteral("BEGIN PGP MESSAGE"), Qt::CaseInsensitive));
 
         dumpToFile("dat_04_reader.encrypted", ciphertext.data(), ciphertext.size());
 
@@ -1166,9 +1166,9 @@ bool ObjectTreeParser::okDecryptMIME(KMime::Content &data,
         // ### while pinentry-qt appears)
         QByteArray ciphertext(data.decodedContent());
         QString cipherStr = QString::fromLatin1(ciphertext);
-        bool cipherIsBinary = (!cipherStr.contains(QLatin1String("BEGIN ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
-                              (!cipherStr.contains(QLatin1String("BEGIN PGP ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
-                              (!cipherStr.contains(QLatin1String("BEGIN PGP MESSAGE"), Qt::CaseInsensitive));
+        bool cipherIsBinary = (!cipherStr.contains(QStringLiteral("BEGIN ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
+                              (!cipherStr.contains(QStringLiteral("BEGIN PGP ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
+                              (!cipherStr.contains(QStringLiteral("BEGIN PGP MESSAGE"), Qt::CaseInsensitive));
         if (!cipherIsBinary) {
             decryptedData = ciphertext;
         } else {
@@ -1187,14 +1187,14 @@ bool ObjectTreeParser::okDecryptMIME(KMime::Content &data,
 //static
 bool ObjectTreeParser::containsExternalReferences(const QString &str, const QString &extraHead)
 {
-    const bool hasBaseInHeader = extraHead.contains(QLatin1String("<base href=\""), Qt::CaseInsensitive);
-    if (hasBaseInHeader && (str.contains(QLatin1String("href=\"/"), Qt::CaseInsensitive) ||
-                            str.contains(QLatin1String("<img src=\"/"), Qt::CaseInsensitive))) {
+    const bool hasBaseInHeader = extraHead.contains(QStringLiteral("<base href=\""), Qt::CaseInsensitive);
+    if (hasBaseInHeader && (str.contains(QStringLiteral("href=\"/"), Qt::CaseInsensitive) ||
+                            str.contains(QStringLiteral("<img src=\"/"), Qt::CaseInsensitive))) {
         return true;
     }
     /*
     //Laurent: workaround for local ref cid
-    if(str.contains(QLatin1String("<img src=\"cid:"),Qt::CaseInsensitive)) {
+    if(str.contains(QStringLiteral("<img src=\"cid:"),Qt::CaseInsensitive)) {
     return true;
     }
     */
@@ -1316,7 +1316,7 @@ bool ObjectTreeParser::isMailmanMessage(KMime::Content *curNode)
     }
     if (curNode->hasHeader("X-Mailer")) {
         KMime::Headers::Base *header = curNode->headerByType("X-Mailer");
-        if (header->asUnicodeString().contains(QLatin1String("MAILMAN"), Qt::CaseInsensitive)) {
+        if (header->asUnicodeString().contains(QStringLiteral("MAILMAN"), Qt::CaseInsensitive)) {
             return true;
         }
     }

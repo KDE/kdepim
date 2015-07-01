@@ -35,7 +35,7 @@ using namespace KSieveUi;
 SieveConditionSpamTest::SieveConditionSpamTest(QObject *parent)
     : SieveCondition(QLatin1String("spamtest"), i18n("Spam Test"), parent)
 {
-    mHasSpamTestPlusSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("spamtestplus"));
+    mHasSpamTestPlusSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("spamtestplus"));
 }
 
 SieveCondition *SieveConditionSpamTest::newAction()
