@@ -219,7 +219,7 @@ void SieveEditorTextModeWidget::autoGenerateScripts()
         const QString script = dlg->script(requires);
         QString newPlainText = mTextEdit->toPlainText() + script;
         if (!requires.isEmpty()) {
-            newPlainText.prepend(requires);
+            newPlainText.prepend(requires + QLatin1Char('\n'));
         }
         mTextEdit->setPlainText(newPlainText);
     }

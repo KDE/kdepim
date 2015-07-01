@@ -130,7 +130,7 @@ QString SieveEditorGraphicalModeWidget::currentscript()
     QString requires;
     QString script = mSieveScript->generatedScript(requires);
     if (!requires.isEmpty()) {
-        script.prepend(requires);
+        script.prepend(requires + QLatin1Char('\n'));
     }
     return script;
 }
