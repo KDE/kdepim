@@ -165,8 +165,8 @@ void Ldap::destroy()
         KConfigGroup group = c->group(QStringLiteral("LDAP"));
         int cSelHosts = group.readEntry(QStringLiteral("NumSelectedHosts"), 0);
         int cHosts = group.readEntry(QStringLiteral("NumHosts"), 0);
-        QList<KLDAP::LdapServer> selHosts;
-        QList<KLDAP::LdapServer> hosts;
+        QVector<KLDAP::LdapServer> selHosts;
+        QVector<KLDAP::LdapServer> hosts;
         for (int i = 0; i < cSelHosts; ++i) {
             if (i != m_entry) {
                 KLDAP::LdapServer server;

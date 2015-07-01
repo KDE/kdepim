@@ -129,7 +129,7 @@ void TypePage::leavePageNext()
     if (!ui.listView->selectionModel()->hasSelection()) {
         return;
     }
-    const QModelIndex index = ui.listView->selectionModel()->selectedIndexes().first();
+    const QModelIndex index = ui.listView->selectionModel()->selectedIndexes().at(0);
     Global::setAssistant(index.data(Qt::UserRole).toString());
 }
 

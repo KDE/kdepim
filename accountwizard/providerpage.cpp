@@ -96,7 +96,7 @@ void ProviderPage::leavePageNext()
     if (!ui.listView->selectionModel()->hasSelection()) {
         return;
     }
-    const QModelIndex index = ui.listView->selectionModel()->selectedIndexes().first();
+    const QModelIndex index = ui.listView->selectionModel()->selectedIndexes().at(0);
     if (!index.isValid()) {
         return;
     }
