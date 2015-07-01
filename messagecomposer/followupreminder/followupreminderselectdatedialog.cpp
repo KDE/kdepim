@@ -79,6 +79,7 @@ FollowUpReminderSelectDateDialog::FollowUpReminderSelectDateDialog(QWidget *pare
 
     connect(mDateComboBox->lineEdit(), &QLineEdit::textChanged, this, &FollowUpReminderSelectDateDialog::slotDateChanged);
     connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(updateOkButton()));
+    updateOkButton();
 }
 
 FollowUpReminderSelectDateDialog::~FollowUpReminderSelectDateDialog()
