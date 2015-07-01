@@ -28,4 +28,8 @@ set(testcompletionconfiguredialog_SRCS completionconfiguredialog_gui.cpp)
 add_executable(completionconfiguredialog_gui ${testcompletionconfiguredialog_SRCS})
 target_link_libraries(completionconfiguredialog_gui kdepim )
 
+########### next target ###############
+set(testldapsearchdialog_SRCS ldapsearchdialog_gui.cpp)
 
+add_executable(ldapsearchdialog_gui ${testldapsearchdialog_SRCS})
+target_link_libraries(ldapsearchdialog_gui kdepim )
