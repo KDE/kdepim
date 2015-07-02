@@ -7,3 +7,5 @@ MemberVariables=private
 GlobalEnums=true
 ItemAccessors=true
 SetUserTexts=true
+TranslationDomain=kaddressbook
+TranslationSystem=kde
