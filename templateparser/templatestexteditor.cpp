@@ -45,6 +45,7 @@ TemplatesTextEditor::TemplatesTextEditor(QWidget *parent)
     addIgnoreWords(excludeKeyWord);
     setWordWrapMode(QTextOption::NoWrap);
     initCompleter();
+    createHighlighter();
 }
 
 TemplatesTextEditor::~TemplatesTextEditor()
