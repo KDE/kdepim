@@ -22,7 +22,7 @@
 #include "pimcommon_export.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 #include <kio/job.h>
-#include <KTextEdit>
+#include <texteditor/plaintexteditor/plaintexteditorwidget.h>
 class KToggleAction;
 namespace PimCommon
 {
@@ -42,7 +42,7 @@ private:
     bool mResultFailed;
 };
 
-class PIMCOMMON_EXPORT TranslatorTextEdit : public KTextEdit
+class PIMCOMMON_EXPORT TranslatorTextEdit : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
 public:

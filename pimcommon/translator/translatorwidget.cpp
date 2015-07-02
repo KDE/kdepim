@@ -23,7 +23,6 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "libkdepim/widgets/progressindicatorwidget.h"
 
-#include <KTextEdit>
 #include <QPushButton>
 #include <KLocalizedString>
 #include <kio/job.h>
@@ -139,7 +138,7 @@ void TranslatorResultTextEdit::paintEvent(QPaintEvent *event)
 }
 
 TranslatorTextEdit::TranslatorTextEdit(QWidget *parent)
-    : KTextEdit(parent)
+    : PimCommon::PlainTextEditor(parent)
 {
 }
 
@@ -157,7 +156,7 @@ void TranslatorTextEdit::dropEvent(QDropEvent *event)
             return;
         }
     }
-    QTextEdit::dropEvent(event);
+    PimCommon::PlainTextEditor::dropEvent(event);
 }
 
 TranslatorWidget::TranslatorWidget(QWidget *parent)
@@ -293,15 +292,14 @@ void TranslatorWidget::init()
 
     d->splitter = new QSplitter;
     d->splitter->setChildrenCollapsible(false);
-    d->inputText = new TranslatorTextEdit;
-    d->inputText->setObjectName(QLatin1String("inputtext"));
-    d->inputText->enableFindReplace(false);
-    d->inputText->setAcceptRichText(false);
+    d->inputText = new TranslatorTextEdit(this);
+    PimCommon::PlainTextEditorWidget *editorWidget = new PimCommon::PlainTextEditorWidget(d->inputText);
+    d->inputText->setObjectName(QStringLiteral("inputtext"));
     d->inputText->setPlaceholderText(i18n("Drag text that you want to translate."));
     connect(d->inputText, &TranslatorTextEdit::textChanged, this, &TranslatorWidget::slotTextChanged);
     connect(d->inputText, &TranslatorTextEdit::translateText, this, &TranslatorWidget::slotTranslate);
 
-    d->splitter->addWidget(d->inputText);
+    d->splitter->addWidget(editorWidget);
     d->translatorResultTextEdit = new TranslatorResultTextEdit;
     d->translatedText = new PimCommon::PlainTextEditorWidget(d->translatorResultTextEdit, this);
     d->translatedText->setObjectName(QLatin1String("translatedtext"));

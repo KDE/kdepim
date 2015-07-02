@@ -37,6 +37,7 @@ void TranslatorTest::shouldHaveDefaultValuesOnCreation()
     PimCommon::TranslatorWidget edit;
     QComboBox *from = edit.findChild<QComboBox *>(QStringLiteral("from"));
     QComboBox *to = edit.findChild<QComboBox *>(QStringLiteral("to"));
+
     PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QStringLiteral("inputtext"));
     PimCommon::PlainTextEditorWidget *translatedText = edit.findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("translatedtext"));
     QPushButton *translate = edit.findChild<QPushButton *>(QStringLiteral("translate-button"));
@@ -60,6 +61,7 @@ void TranslatorTest::shouldHaveDefaultValuesOnCreation()
 void TranslatorTest::shouldEnableTranslateButtonWhenTextToTranslateIsNotEmpty()
 {
     PimCommon::TranslatorWidget edit;
+
     PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QStringLiteral("inputtext"));
     QPushButton *translate = edit.findChild<QPushButton *>(QStringLiteral("translate-button"));
     inputtext->setPlainText(QStringLiteral("Foo"));
