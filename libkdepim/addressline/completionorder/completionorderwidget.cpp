@@ -190,8 +190,8 @@ private:
 class CompletionViewItem : public QTreeWidgetItem
 {
 public:
-    CompletionViewItem(QTreeWidget *parent, CompletionItem *item, QTreeWidgetItem *preceding)
-        : QTreeWidgetItem(parent, preceding)
+    CompletionViewItem(QTreeWidget *parent, CompletionItem *item)
+        : QTreeWidgetItem(parent)
     {
         setItem(item);
     }
@@ -316,7 +316,7 @@ void CompletionOrderWidget::addRecentAddressItem()
     //Be default it's the first.
     SimpleCompletionItem *item = new SimpleCompletionItem(this, i18n("Recent Addresses"), QStringLiteral("Recent Addresses"), 10);
     item->setIcon(QIcon::fromTheme(QStringLiteral("kmail")));
-    new CompletionViewItem(mListView, item, 0);
+    new CompletionViewItem(mListView, item);
 }
 
 void CompletionOrderWidget::addCompletionItemForCollection(const QModelIndex &index)
@@ -329,7 +329,7 @@ void CompletionOrderWidget::addCompletionItemForCollection(const QModelIndex &in
     SimpleCompletionItem *item = new SimpleCompletionItem(this, index.data().toString(), QString::number(collection.id()), 60);
     item->setIcon(index.data(Qt::DecorationRole).value<QIcon>());
 
-    new CompletionViewItem(mListView, item, 0);
+    new CompletionViewItem(mListView, item);
 }
 
 void CompletionOrderWidget::loadCompletionItems()
@@ -337,7 +337,7 @@ void CompletionOrderWidget::loadCompletionItems()
     if (mLdapSearch) {
         // The first step is to gather all the data, creating CompletionItem objects
         foreach (KLDAP::LdapClient *client, mLdapSearch->clients()) {
-            new CompletionViewItem(mListView, new LDAPCompletionItem(client), 0);
+            new CompletionViewItem(mListView, new LDAPCompletionItem(client));
         }
     }
 
