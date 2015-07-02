@@ -140,7 +140,6 @@ void AddresseeLineEditPrivate::init()
         s_static->balooCompletionSource = q->addCompletionSource(i18nc("@title:group", "Contacts found in your data"), -1);
 
         s_static->updateLDAPWeights();
-
         if (!m_completionInitialized) {
             q->setCompletionObject(s_static->completion, false);
             connect(q, SIGNAL(completion(QString)),
@@ -153,7 +152,6 @@ void AddresseeLineEditPrivate::init()
                     this, SLOT(slotPopupCompletion(QString)));
             connect(box, SIGNAL(userCancelled(QString)),
                     this, SLOT(slotUserCancelled(QString)));
-
             connect(s_static->ldapTimer, SIGNAL(timeout()), SLOT(slotStartLDAPLookup()));
             connect(s_static->ldapSearch, SIGNAL(searchData(KLDAP::LdapResult::List)),
                     SLOT(slotLDAPSearchData(KLDAP::LdapResult::List)));
@@ -668,19 +666,16 @@ void AddresseeLineEditPrivate::slotStartLDAPLookup()
     if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
 
         const KCompletion::CompletionMode mode = q->completionMode();
-
         if (mode == KCompletion::CompletionNone) {
             return;
         }
-
         if (!s_static->ldapSearch->isAvailable()) {
             return;
         }
-
         if (s_static->ldapLineEdit != q) {
             return;
-            startLoadingLDAPEntries();
         }
+        startLoadingLDAPEntries();
     }
 }
 
