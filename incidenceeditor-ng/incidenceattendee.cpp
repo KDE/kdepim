@@ -248,7 +248,7 @@ void IncidenceAttendee::save(const KCalCore::Incidence::Ptr &incidence)
     incidence->clearAttendees();
     KCalCore::Attendee::List attendees = mDataModel->attendees();
 
-    foreach (KCalCore::Attendee::Ptr attendee, attendees) {
+    foreach (const KCalCore::Attendee::Ptr &attendee, attendees) {
         Q_ASSERT(attendee);
 
         bool skip = false;
@@ -562,7 +562,7 @@ void IncidenceAttendee::slotConflictResolverLayoutChanged()
 {
     KCalCore::Attendee::List attendees = mDataModel->attendees();
     mConflictResolver->clearAttendees();
-    foreach (KCalCore::Attendee::Ptr attendee, attendees) {
+    foreach (const KCalCore::Attendee::Ptr &attendee, attendees) {
         if (!attendee->email().isEmpty()) {
             mConflictResolver->insertAttendee(attendee);
         }

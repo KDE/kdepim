@@ -184,7 +184,7 @@ bool Utils::hasImage(const QByteArray &mimetype)
 
 bool Utils::containsImage(const MessageCore::AttachmentPart::List &parts)
 {
-    foreach (MessageCore::AttachmentPart::Ptr part, parts) {
+    foreach (const MessageCore::AttachmentPart::Ptr &part, parts) {
         if (hasImage(part->mimeType())) {
             return true;
         }

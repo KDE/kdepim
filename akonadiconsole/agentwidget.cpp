@@ -307,7 +307,7 @@ void AgentWidget::abortAgent()
 {
     QList<AgentInstance> list = ui.instanceWidget->selectedAgentInstances();
     if (!list.isEmpty())
-        foreach (AgentInstance agent, list) {
+        foreach (const AgentInstance &agent, list) {
             agent.abortCurrentTask();
         }
 }

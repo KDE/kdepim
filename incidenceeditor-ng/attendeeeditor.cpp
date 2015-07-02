@@ -71,7 +71,7 @@ AttendeeData::List AttendeeEditor::attendees() const
     QList<KPIM::MultiplyingLineData::Ptr> dataList = allData();
     AttendeeData::List attList;
     //qCDebug(INCIDENCEEDITOR_LOG) << "num attendees:" << dataList.size();
-    foreach (KPIM::MultiplyingLineData::Ptr datum, dataList) {
+    foreach (const KPIM::MultiplyingLineData::Ptr &datum, dataList) {
         AttendeeData::Ptr att = qSharedPointerDynamicCast<AttendeeData>(datum);
         if (!att) {
             continue;

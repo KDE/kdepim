@@ -225,7 +225,7 @@ void ResourceModel::slotLDAPSearchData(const QList<KLDAP::LdapResultObject> &res
             parents << rootItem;
         }
 
-        foreach (ResourceItem::Ptr parent, parents) {
+        foreach (const ResourceItem::Ptr &parent, parents) {
             ResourceItem::Ptr item(new ResourceItem(result.object.dn(), headers, *result.client, parent));
             item->setLdapObject(result.object);
 

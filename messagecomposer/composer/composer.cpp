@@ -379,7 +379,7 @@ void ComposerPrivate::composeWithLateAttachments(KMime::Message *headers, KMime:
     qCDebug(MESSAGECOMPOSER_LOG) << "attachment encr key size:" << keys.size() << recipients;
 
     // operate correctly on each attachment that has a different crypto policy than body.
-    foreach (AttachmentPart::Ptr attachment, parts) {
+    foreach (const AttachmentPart::Ptr &attachment, parts) {
         AttachmentJob *attachJob = new AttachmentJob(attachment, q);
 
         qCDebug(MESSAGECOMPOSER_LOG) << "got a late attachment";
@@ -524,7 +524,7 @@ void Composer::addAttachmentPart(AttachmentPart::Ptr part, bool autoresizeImage)
 
 void Composer::addAttachmentParts(const AttachmentPart::List &parts , bool autoresizeImage)
 {
-    foreach (AttachmentPart::Ptr part, parts) {
+    foreach (const AttachmentPart::Ptr &part, parts) {
         addAttachmentPart(part, autoresizeImage);
     }
 }

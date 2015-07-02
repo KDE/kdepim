@@ -463,7 +463,7 @@ void AddresseeLineEditPrivate::akonadiPerformSearch()
     qCDebug(LIBKDEPIM_LOG) << "searching akonadi with:" << m_searchString;
 
     // first, kill all job still in flight, they are no longer current
-    Q_FOREACH (QWeakPointer<Akonadi::Job> job, s_static->akonadiJobsInFlight) {
+    Q_FOREACH (const QWeakPointer<Akonadi::Job> &job, s_static->akonadiJobsInFlight) {
         if (!job.isNull()) {
             job.data()->kill();
         }

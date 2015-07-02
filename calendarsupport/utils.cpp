@@ -774,7 +774,7 @@ void CalendarSupport::saveAttachments(const Akonadi::Item &item, QWidget *parent
         targetDir = QFileInfo(targetFile).absolutePath() + QLatin1Char('/');
     }
 
-    Q_FOREACH (Attachment::Ptr attachment, attachments) {
+    Q_FOREACH (const Attachment::Ptr &attachment, attachments) {
         targetFile = targetDir + attachment->label();
         QUrl sourceUrl;
         if (attachment->isUri()) {

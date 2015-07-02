@@ -119,7 +119,7 @@ Recipient::List RecipientsEditor::recipients() const
 {
     QList<MultiplyingLineData::Ptr> dataList = allData();
     Recipient::List recList;
-    foreach (MultiplyingLineData::Ptr datum, dataList) {
+    foreach (const MultiplyingLineData::Ptr &datum, dataList) {
         Recipient::Ptr rec = qSharedPointerDynamicCast<Recipient>(datum);
         if (!rec) {
             continue;
