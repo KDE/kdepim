@@ -38,11 +38,10 @@
 static const int busyTimerTickInterval = 100;
 static const int busyTimerTickIncrement = 5;
 
-Kleo::ProgressBar::ProgressBar(QWidget *parent, Qt::WindowFlags f)
-    : QProgressBar(parent/*, f*/),
+Kleo::ProgressBar::ProgressBar(QWidget *parent)
+    : QProgressBar(parent),
       mRealProgress(-1)
 {
-    Q_UNUSED(f)
     mBusyTimer = new QTimer(this);
     connect(mBusyTimer, &QTimer::timeout, this, &ProgressBar::slotBusyTimerTick);
     fixup(true);

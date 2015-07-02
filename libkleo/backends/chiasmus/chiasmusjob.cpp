@@ -72,11 +72,11 @@ GpgME::Error Kleo::ChiasmusJob::setup()
     }
 
     const Kleo::CryptoConfigEntry *class_
-        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QStringLiteral("General"), QStringLiteral("symcryptrun-class"));
+        = ChiasmusBackend::instance()->config()->entry(QStringLiteral("Chiasmus"), QStringLiteral("General"), QStringLiteral("symcryptrun-class"));
     const Kleo::CryptoConfigEntry *chiasmus
-        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QStringLiteral("General"), QStringLiteral("path"));
+        = ChiasmusBackend::instance()->config()->entry(QStringLiteral("Chiasmus"), QStringLiteral("General"), QStringLiteral("path"));
     const Kleo::CryptoConfigEntry *timeoutEntry
-        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QStringLiteral("General"), QStringLiteral("timeout"));
+        = ChiasmusBackend::instance()->config()->entry(QStringLiteral("Chiasmus"), QStringLiteral("General"), QStringLiteral("timeout"));
     if (!class_ || !chiasmus || !timeoutEntry) {
         return mError = Error::fromCode(GPG_ERR_INTERNAL);
     }
