@@ -30,6 +30,7 @@
 #include <QLabel>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <KListWidgetSearchLine>
 #include "libkdepim_debug.h"
 
 using namespace KPIM;
@@ -65,6 +66,17 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mEmailList = new BlackListBalooEmailList;
     mEmailList->setObjectName(QStringLiteral("email_list"));
     mainLayout->addWidget(mEmailList);
+
+
+    QHBoxLayout *searchLineLayout = new QHBoxLayout;
+    mainLayout->addLayout(searchLineLayout);
+    mSearchInResultLineEdit = new KListWidgetSearchLine(this, mEmailList);
+    mSearchInResultLineEdit->setObjectName(QStringLiteral("searchinresultlineedit"));
+    mSearchInResultLineEdit->setClearButtonEnabled(true);
+    mSearchInResultLineEdit->setPlaceholderText(i18n("Search in result..."));
+    searchLineLayout->addStretch(0);
+
+    searchLineLayout->addWidget(mSearchInResultLineEdit);
 
     QHBoxLayout *selectElementLayout = new QHBoxLayout;
     mainLayout->addLayout(selectElementLayout);
@@ -159,6 +171,7 @@ void BlackListBalooEmailCompletionWidget::slotSearch()
 {
     const QString searchEmail = mSearchLineEdit->text().trimmed();
     if (searchEmail.length() > 2) {
+        mSearchInResultLineEdit->clear();
         KPIM::BlackListBalooEmailSearchJob *job = new KPIM::BlackListBalooEmailSearchJob(this);
         job->setSearchEmail(searchEmail);
         job->setLimit(mLimit);

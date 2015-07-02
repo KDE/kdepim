@@ -21,6 +21,7 @@
 #include "blacklistbalooemailcompletionwidgettest.h"
 #include "../blacklistbalooemailcompletionwidget.h"
 #include "../blacklistbalooemaillist.h"
+#include <KListWidgetSearchLine>
 #include <QLabel>
 #include <klineedit.h>
 #include <qpushbutton.h>
@@ -79,6 +80,12 @@ void BlackListBalooEmailCompletionWidgetTest::shouldHaveDefaultValue()
     QVERIFY(excludeDomainLineEdit->text().isEmpty());
     QVERIFY(excludeDomainLineEdit->isClearButtonShown());
     QVERIFY(!excludeDomainLineEdit->placeholderText().isEmpty());
+
+    KListWidgetSearchLine *searchInResult = widget.findChild<KListWidgetSearchLine *>(QStringLiteral("searchinresultlineedit"));
+    QVERIFY(searchInResult);
+    QVERIFY(!searchInResult->placeholderText().isEmpty());
+    QVERIFY(searchInResult->text().isEmpty());
+    QVERIFY(searchInResult->isClearButtonEnabled());
 }
 
 void BlackListBalooEmailCompletionWidgetTest::shouldEnablePushButtonWhenTestSizeSupperiorToTwo()

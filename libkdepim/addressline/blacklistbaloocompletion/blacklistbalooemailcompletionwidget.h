@@ -25,6 +25,7 @@
 class QPushButton;
 class KLineEdit;
 class QLabel;
+class KListWidgetSearchLine;
 namespace KPIM
 {
 class BlackListBalooEmailList;
@@ -56,6 +57,7 @@ private:
     QPushButton *mSelectButton;
     QPushButton *mUnselectButton;
     QLabel *mMoreResult;
+    KListWidgetSearchLine *mSearchInResultLineEdit;
     int mLimit;
 };
 }
