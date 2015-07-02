@@ -25,7 +25,6 @@
 
 #include <QUrl>
 
-#include <KTextEdit>
 #include <KStandardGuiItem>
 #include <QFileDialog>
 

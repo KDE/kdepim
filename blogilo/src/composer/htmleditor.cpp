@@ -24,7 +24,6 @@
 #include "htmleditor.h"
 
 #include <ktexteditor/editor.h>
-//#include <ktexteditor/editorchooser.h>
 #include <ktexteditor/view.h>
 #include <ktexteditor/configpage.h>
 #include <ktexteditor/configinterface.h>

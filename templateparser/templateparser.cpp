@@ -1709,11 +1709,11 @@ void TemplateParser::makeValidHtml(QString &body)
     regEx.setPattern(QLatin1String("<html.*>"));
 
     if (!body.isEmpty() && !body.contains(regEx)) {
-        regEx.setPattern(QLatin1String("<body.*>"));
+        regEx.setPattern(QStringLiteral("<body.*>"));
         if (!body.contains(regEx)) {
             body = QLatin1String("<body>") + body + QLatin1String("<br/></body>");
         }
-        regEx.setPattern(QLatin1String("<head.*>"));
+        regEx.setPattern(QStringLiteral("<head.*>"));
         if (!body.contains(regEx)) {
             body = QLatin1String("<head>") + mHeadElement + QLatin1String("</head>") + body;
         }
