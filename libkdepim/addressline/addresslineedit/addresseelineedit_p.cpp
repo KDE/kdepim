@@ -807,14 +807,16 @@ void AddresseeLineEditPrivate::slotAkonadiCollectionsReceived(
     const Akonadi::Collection::List &collections)
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kpimcompletionorder"));
-    KConfigGroup group(config, "CompletionWeights");
+    KConfigGroup groupCompletionWeights(config, "CompletionWeights");
+    KConfigGroup groupCompletionEnabled(config, "CompletionEnabled");
     foreach (const Akonadi::Collection &collection, collections) {
         if (collection.isValid()) {
             const QString sourceString = collection.displayName();
-            const int weight = group.readEntry(QString::number(collection.id()), 1);
+            const int weight = groupCompletionWeights.readEntry(QString::number(collection.id()), 1);
             const int index = q->addCompletionSource(sourceString, weight);
             AddresseeLineEditStatic::collectionInfo info;
             info.index = index;
+            info.enabled = groupCompletionEnabled.readEntry(QString::number(collection.id()), true);
             qCDebug(LIBKDEPIM_LOG) << "\treceived: " << sourceString << "index: " << index;
             s_static->akonadiCollectionToCompletionSourceMap.insert(collection.id(), info);
         }

@@ -61,6 +61,9 @@ public:
     virtual int completionWeight() const = 0;
     virtual void setCompletionWeight(int weight) = 0;
     virtual void save(CompletionOrderWidget *) = 0;
+    virtual bool hasEnableSupport() const = 0;
+    virtual bool isEnabled() const = 0;
+    virtual void setIsEnabled(bool b) = 0;
 };
 
 class KDEPIM_EXPORT CompletionOrderWidget : public QWidget

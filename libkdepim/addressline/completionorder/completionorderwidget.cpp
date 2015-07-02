@@ -61,22 +61,22 @@ public:
         mWeight = mLdapClient->completionWeight();
     }
 
-    virtual QString label() const
+    QString label() const Q_DECL_OVERRIDE
     {
         return i18n("LDAP server %1", mLdapClient->server().host());
     }
 
-    virtual QIcon icon() const
+    QIcon icon() const Q_DECL_OVERRIDE
     {
         return QIcon::fromTheme(QStringLiteral("view-ldap-resource"));
     }
 
-    virtual int completionWeight() const
+    int completionWeight() const Q_DECL_OVERRIDE
     {
         return mWeight;
     }
 
-    virtual void save(CompletionOrderWidget *)
+    void save(CompletionOrderWidget *) Q_DECL_OVERRIDE
     {
         KConfig *config = KLDAP::LdapClientSearchConfig::config();
         KConfigGroup group(config, "LDAP");
@@ -85,8 +85,23 @@ public:
         group.sync();
     }
 
+    bool hasEnableSupport() const Q_DECL_OVERRIDE
+    {
+        return false;
+    }
+
+    bool isEnabled() const Q_DECL_OVERRIDE
+    {
+        return true;
+    }
+
+    void setIsEnabled(bool b) Q_DECL_OVERRIDE
+    {
+        Q_UNUSED(b);
+    }
+
 protected:
-    virtual void setCompletionWeight(int weight)
+    void setCompletionWeight(int weight) Q_DECL_OVERRIDE
     {
         mWeight = weight;
     }
@@ -99,11 +114,25 @@ private:
 class SimpleCompletionItem : public CompletionItem
 {
 public:
-    SimpleCompletionItem(CompletionOrderWidget *editor, const QString &label, const QString &identifier, int weight)
-        : mLabel(label), mIdentifier(identifier)
+    SimpleCompletionItem(CompletionOrderWidget *editor, const QString &label, const QString &identifier, int weight, bool enableSupport = false)
+        : mLabel(label), mIdentifier(identifier), mHasEnableSupport(enableSupport), mEnabled(true)
     {
-        KConfigGroup group(editor->configFile(), "CompletionWeights");
-        mWeight = group.readEntry(mIdentifier, weight);
+        KConfigGroup groupCompletionWeights(editor->configFile(), "CompletionWeights");
+        mWeight = groupCompletionWeights.readEntry(mIdentifier, weight);
+        if (mHasEnableSupport) {
+            KConfigGroup groupEnabled(editor->configFile(), "CompletionEnabled");
+            mEnabled = groupEnabled.readEntry(mIdentifier, true);
+        }
+    }
+
+    bool isEnabled() const  Q_DECL_OVERRIDE
+    {
+        return mEnabled;
+    }
+
+    bool hasEnableSupport() const Q_DECL_OVERRIDE
+    {
+        return mHasEnableSupport;
     }
 
     void setIcon(const QIcon &icon)
@@ -126,10 +155,19 @@ public:
         return mWeight;
     }
 
+    void setIsEnabled(bool b) Q_DECL_OVERRIDE
+    {
+        mEnabled = b;
+    }
+
     void save(CompletionOrderWidget *editor) Q_DECL_OVERRIDE
     {
         KConfigGroup group(editor->configFile(), "CompletionWeights");
         group.writeEntry(mIdentifier, mWeight);
+        if (mHasEnableSupport) {
+            KConfigGroup groupEnabled(editor->configFile(), "CompletionEnabled");
+            //groupEnabled.writeEntry(mIdentifier, );
+        }
     }
 
 protected:
@@ -143,6 +181,8 @@ private:
     QString mIdentifier;
     int mWeight;
     QIcon mIcon;
+    bool mHasEnableSupport;
+    bool mEnabled;
 };
 
 /////////
@@ -161,6 +201,13 @@ public:
         mItem = item;
         setText(0, mItem->label());
         setIcon(0, mItem->icon());
+        if (mItem->hasEnableSupport()) {
+            setFlags(flags() | Qt::ItemIsUserCheckable);
+            setCheckState(0, mItem->isEnabled() ? Qt::Checked : Qt::Unchecked);
+        } else {
+            setFlags(flags() &~ Qt::ItemIsUserCheckable);
+        }
+
     }
 
     CompletionItem *item() const
@@ -256,6 +303,7 @@ void CompletionOrderWidget::save()
             CompletionViewItem *item =
                 static_cast<CompletionViewItem *>(mListView->topLevelItem(itemIndex));
             item->item()->setCompletionWeight(w);
+            item->item()->setIsEnabled(item->checkState(0) == Qt::Checked);
             item->item()->save(this);
             --w;
         }
