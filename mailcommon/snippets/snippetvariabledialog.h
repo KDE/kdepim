@@ -23,9 +23,10 @@
 
 #include <QDialog>
 
-class KTextEdit;
 class QCheckBox;
-
+namespace PimCommon {
+class PlainTextEditorWidget;
+}
 namespace MailCommon
 {
 
@@ -47,7 +48,7 @@ private Q_SLOTS:
 private:
     QString mVariableName;
     QMap<QString, QString> *mVariables;
-    KTextEdit *mVariableValueText;
+    PimCommon::PlainTextEditorWidget *mVariableValueText;
     QCheckBox *mSaveVariable;
 };
 

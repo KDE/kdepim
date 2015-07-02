@@ -21,7 +21,6 @@
 #include "snippetvariabledialog.h"
 
 #include <KLocalizedString>
-#include <KTextEdit>
 
 #include <QCheckBox>
 #include <QLabel>
@@ -29,6 +28,8 @@
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>
+
+#include <texteditor/plaintexteditor/plaintexteditorwidget.h>
 
 using namespace MailCommon;
 
@@ -56,8 +57,7 @@ SnippetVariableDialog::SnippetVariableDialog(const QString &variableName,
     label->setText(i18n("Enter the replacement values for '%1':", variableName));
     layout->addWidget(label);
 
-    mVariableValueText = new KTextEdit;
-    mVariableValueText->setAcceptRichText(false);
+    mVariableValueText = new PimCommon::PlainTextEditorWidget;
     layout->addWidget(mVariableValueText);
 
     mSaveVariable = new QCheckBox;
@@ -76,7 +76,7 @@ SnippetVariableDialog::SnippetVariableDialog(const QString &variableName,
 
     if (mVariables->contains(variableName)) {
         mSaveVariable->setChecked(true);
-        mVariableValueText->setText(mVariables->value(variableName));
+        mVariableValueText->setPlainText(mVariables->value(variableName));
     }
 
     mVariableValueText->setFocus();
