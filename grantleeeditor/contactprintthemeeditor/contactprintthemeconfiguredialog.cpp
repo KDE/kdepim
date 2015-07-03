@@ -17,7 +17,7 @@
 
 #include "contactprintthemeconfiguredialog.h"
 #include "contactprintthemeeditorutil.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include "configurewidget.h"
 
@@ -59,8 +59,7 @@ ContactPrintThemeConfigureDialog::ContactPrintThemeConfigureDialog(QWidget *pare
 
     tab->addTab(w, i18n("General"));
 
-    mDefaultTemplate = new PimCommon::RichTextEditorWidget;
-    mDefaultTemplate->setAcceptRichText(false);
+    mDefaultTemplate = new PimCommon::PlainTextEditorWidget;
     tab->addTab(mDefaultTemplate, i18n("Default Template"));
 
     QVBoxLayout *mainLayout = new QVBoxLayout;

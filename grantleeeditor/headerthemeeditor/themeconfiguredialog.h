@@ -22,7 +22,7 @@
 
 namespace PimCommon
 {
-class RichTextEditorWidget;
+class PlainTextEditorWidget;
 }
 namespace GrantleeThemeEditor
 {
@@ -45,8 +45,8 @@ private Q_SLOTS:
 
 private:
     GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    PimCommon::RichTextEditorWidget *mDefaultTemplate;
-    PimCommon::RichTextEditorWidget *mDefaultEmail;
+    PimCommon::PlainTextEditorWidget *mDefaultTemplate;
+    PimCommon::PlainTextEditorWidget *mDefaultEmail;
 };
 
 #endif // THEMECONFIGUREDIALOG_H

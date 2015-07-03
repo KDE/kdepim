@@ -17,8 +17,7 @@
 
 #include "themeconfiguredialog.h"
 #include "themeeditorutil.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include "configurewidget.h"
 
@@ -51,13 +50,11 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Default email:"));
     lay->addWidget(lab);
 
-    mDefaultEmail = new PimCommon::RichTextEditorWidget;
-    mDefaultEmail->setAcceptRichText(false);
+    mDefaultEmail = new PimCommon::PlainTextEditorWidget;
     lay->addWidget(mDefaultEmail);
     tab->addTab(w, i18n("General"));
 
-    mDefaultTemplate = new PimCommon::RichTextEditorWidget;
-    mDefaultTemplate->setAcceptRichText(false);
+    mDefaultTemplate = new PimCommon::PlainTextEditorWidget;
     tab->addTab(mDefaultTemplate, i18n("Default Template"));
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -91,7 +88,7 @@ void ThemeConfigureDialog::slotDefaultClicked()
     mConfigureWidget->setDefault();
     ThemeEditorUtil themeutil;
     mDefaultEmail->setPlainText(themeutil.defaultMail());
-    mDefaultTemplate->editor()->clear();
+    mDefaultTemplate->clear();
 }
 
 void ThemeConfigureDialog::slotOkClicked()

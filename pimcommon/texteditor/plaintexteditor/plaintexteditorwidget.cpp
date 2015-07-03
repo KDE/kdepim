@@ -49,6 +49,12 @@ PlainTextEditor *PlainTextEditorWidget::editor() const
     return mEditor;
 }
 
+
+void PlainTextEditorWidget::clear()
+{
+    mEditor->clear();
+}
+
 void PlainTextEditorWidget::setPlainText(const QString &text)
 {
     mEditor->setPlainText(text);

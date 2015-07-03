@@ -32,7 +32,7 @@ class ContactEditor;
 
 namespace PimCommon
 {
-class RichTextEditorWidget;
+class PlainTextEditorWidget;
 }
 class ContactPrintThemeConfigureDialog : public QDialog
 {
@@ -50,7 +50,7 @@ private Q_SLOTS:
 
 private:
     GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    PimCommon::RichTextEditorWidget *mDefaultTemplate;
+    PimCommon::PlainTextEditorWidget *mDefaultTemplate;
     Akonadi::ContactEditor *mDefaultContact;
 };
 
