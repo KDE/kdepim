@@ -74,7 +74,8 @@ enum HelpVariableName {
     ForEveryPart,
     CopyExtension,
     MBoxMetaDataExtension,
-    SubAddressExtension
+    SubAddressExtension,
+    ERejectAction
 };
 KSieveUi::SieveEditorUtil::HelpVariableName strToVariableName(const QString &str);
 

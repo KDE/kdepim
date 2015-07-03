@@ -90,6 +90,8 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
         return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-20");
     case RejectAction:
         return QStringLiteral("http://tools.ietf.org/html/rfc3028#page-20");
+    case ERejectAction:
+        return QStringLiteral("https://tools.ietf.org/html/rfc5429#section-2.1");
     case RemoveflagsAction:
         return QStringLiteral("http://tools.ietf.org/html/rfc5232#page-5");
     case ReplaceAction:
@@ -184,6 +186,8 @@ KSieveUi::SieveEditorUtil::HelpVariableName KSieveUi::SieveEditorUtil::strToVari
         return RedirectAction;
     } else if (str == QLatin1String("reject")) {
         return RejectAction;
+    } else if (str == QLatin1String("ereject")) {
+        return ERejectAction;
     } else if (str == QLatin1String("replace")) {
         return ReplaceAction;
     } else if (str == QLatin1String("return")) {

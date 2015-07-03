@@ -15,17 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVEACTIONREJECT_H
-#define SIEVEACTIONREJECT_H
+#ifndef SieveActionEReject_H
+#define SieveActionEReject_H
 
 #include "sieveaction.h"
 namespace KSieveUi
 {
-class SieveActionReject : public SieveAction
+class SieveActionEReject : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionReject(QObject *parent = Q_NULLPTR);
+    SieveActionEReject(QObject *parent = Q_NULLPTR);
 
     static SieveAction *newAction();
 
@@ -42,4 +42,4 @@ public:
 };
 }
 
-#endif // SIEVEACTIONREJECT_H
+#endif // SieveActionEReject_H

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveactionreject.h"
+#include "sieveactionereject.h"
 #include "editor/sieveeditorutil.h"
 #include "widgets/multilineedit.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
@@ -28,17 +28,17 @@
 #include "libksieve_debug.h"
 
 using namespace KSieveUi;
-SieveActionReject::SieveActionReject(QObject *parent)
-    : SieveAction(QStringLiteral("reject"), i18n("Reject"), parent)
+SieveActionEReject::SieveActionEReject(QObject *parent)
+    : SieveAction(QStringLiteral("ereject"), i18n("E-Reject"), parent)
 {
 }
 
-SieveAction *SieveActionReject::newAction()
+SieveAction *SieveActionEReject::newAction()
 {
-    return new SieveActionReject;
+    return new SieveActionEReject;
 }
 
-QWidget *SieveActionReject::createParamWidget(QWidget *parent) const
+QWidget *SieveActionEReject::createParamWidget(QWidget *parent) const
 {
     QWidget *w = new QWidget(parent);
     QHBoxLayout *lay = new QHBoxLayout;
@@ -48,13 +48,13 @@ QWidget *SieveActionReject::createParamWidget(QWidget *parent) const
     lay->addWidget(lab);
 
     MultiLineEdit *edit = new MultiLineEdit;
-    connect(edit, &MultiLineEdit::textChanged, this, &SieveActionReject::valueChanged);
+    connect(edit, &MultiLineEdit::textChanged, this, &SieveActionEReject::valueChanged);
     edit->setObjectName(QStringLiteral("rejectmessage"));
     lay->addWidget(edit);
     return w;
 }
 
-bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+bool SieveActionEReject::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -71,7 +71,7 @@ bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget 
                 //implement in the future ?
             } else {
                 unknownTag(tagName, error);
-                qCDebug(LIBKSIEVE_LOG) << " SieveActionReject::setParamWidgetValue unknown tagName " << tagName;
+                qCDebug(LIBKSIEVE_LOG) << " SieveActionEReject::setParamWidgetValue unknown tagName " << tagName;
             }
         }
         node = node.nextSibling();
@@ -79,35 +79,35 @@ bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget 
     return true;
 }
 
-QString SieveActionReject::code(QWidget *w) const
+QString SieveActionEReject::code(QWidget *w) const
 {
     const MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QStringLiteral("rejectmessage"));
     const QString text = edit->toPlainText();
 
-    return QStringLiteral("reject text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));
+    return QStringLiteral("ereject text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));
 }
 
-QStringList SieveActionReject::needRequires(QWidget *) const
+QStringList SieveActionEReject::needRequires(QWidget *) const
 {
-    return QStringList() << QStringLiteral("reject");
+    return QStringList() << QStringLiteral("ereject");
 }
 
-QString SieveActionReject::serverNeedsCapability() const
+QString SieveActionEReject::serverNeedsCapability() const
 {
-    return QStringLiteral("reject");
+    return QStringLiteral("ereject");
 }
 
-bool SieveActionReject::needCheckIfServerHasCapability() const
+bool SieveActionEReject::needCheckIfServerHasCapability() const
 {
     return true;
 }
 
-QString SieveActionReject::help() const
+QString SieveActionEReject::help() const
 {
-    return i18n(" The \"reject\" action cancels the implicit keep and refuses delivery of a message.");
+    return i18n(" The \"ereject\" action cancels the implicit keep and refuses delivery of a message.");
 }
 
-QString SieveActionReject::href() const
+QString SieveActionEReject::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
