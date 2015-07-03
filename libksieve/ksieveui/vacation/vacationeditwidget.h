@@ -29,7 +29,7 @@ class QDate;
 
 namespace PimCommon
 {
-class RichTextEditorWidget;
+class PlainTextEditorWidget;
 }
 
 class QCheckBox;
@@ -96,7 +96,7 @@ protected:
     QCheckBox *mActiveCheck;
     QSpinBox *mIntervalSpin;
     QLineEdit *mMailAliasesEdit;
-    PimCommon::RichTextEditorWidget *mTextEdit;
+    PimCommon::PlainTextEditorWidget *mTextEdit;
     QCheckBox *mSpamCheck;
     QCheckBox *mDomainCheck;
     QLineEdit *mDomainEdit;

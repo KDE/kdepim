@@ -22,7 +22,7 @@
 
 namespace PimCommon
 {
-class RichTextEditorWidget;
+class PlainTextEditorWidget;
 }
 namespace KSieveUi
 {
@@ -41,7 +41,7 @@ private:
     void writeConfig();
 
 private:
-    PimCommon::RichTextEditorWidget *mEdit;
+    PimCommon::PlainTextEditorWidget *mEdit;
 };
 }
 

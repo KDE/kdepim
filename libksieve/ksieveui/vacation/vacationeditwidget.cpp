@@ -23,7 +23,7 @@
 #include <QSpinBox>
 #include <QLineEdit>
 
-#include <pimcommon/texteditor/richtexteditor/richtexteditorwidget.h>
+#include <pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h>
 
 #include <kmime/kmime_header_parsing.h>
 
@@ -61,9 +61,8 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     // Message text edit:
     ++row;
     glay->setRowStretch(row, 1);
-    mTextEdit = new PimCommon::RichTextEditorWidget(this);
+    mTextEdit = new PimCommon::PlainTextEditorWidget(this);
     mTextEdit->setObjectName(QStringLiteral("mTextEdit"));
-    mTextEdit->setAcceptRichText(false);
     glay->addWidget(mTextEdit, row, 0, 1, 2);
 
     // Subject

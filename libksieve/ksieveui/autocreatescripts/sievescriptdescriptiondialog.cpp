@@ -16,7 +16,7 @@
 */
 
 #include "sievescriptdescriptiondialog.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -39,8 +39,7 @@ SieveScriptDescriptionDialog::SieveScriptDescriptionDialog(QWidget *parent)
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveScriptDescriptionDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveScriptDescriptionDialog::reject);
-    mEdit = new PimCommon::RichTextEditorWidget;
-    mEdit->setAcceptRichText(false);
+    mEdit = new PimCommon::PlainTextEditorWidget;
     mainLayout->addWidget(mEdit);
     mainLayout->addWidget(buttonBox);
 
