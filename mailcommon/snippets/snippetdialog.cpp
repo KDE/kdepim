@@ -77,7 +77,7 @@ QString SnippetDialog::name() const
 
 void SnippetDialog::setText(const QString &text)
 {
-    mUi->snippetText->setText(text);
+    mUi->snippetText->setPlainText(text);
 }
 
 QString SnippetDialog::text() const
