@@ -27,6 +27,7 @@
 #include <KIconTheme>
 #include <KConfig>
 #include <KStandardGuiItem>
+#include <KSharedConfig>
 
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
@@ -97,6 +98,7 @@ RichTextEditor::RichTextEditor(QWidget *parent)
 {
     setAcceptRichText(true);
     KCursor::setAutoHideCursor(this, true, false);
+    setSpellCheckingConfigFileName(QString());
 }
 
 RichTextEditor::~RichTextEditor()
@@ -541,17 +543,17 @@ void RichTextEditor::focusInEvent(QFocusEvent *event)
 void RichTextEditor::setSpellCheckingConfigFileName(const QString &_fileName)
 {
     d->spellCheckingConfigFileName = _fileName;
-    if (!d->spellCheckingConfigFileName.isEmpty()) {
-        KConfig sonnetKConfig(d->spellCheckingConfigFileName);
-        KConfigGroup group(&sonnetKConfig, "Spelling");
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(d->spellCheckingConfigFileName);
+    if (config->hasGroup("Spelling")) {
+        KConfigGroup group(config, "Spelling");
         d->checkSpellingEnabled = group.readEntry("checkerEnabledByDefault", false);
         d->spellCheckingLanguage = group.readEntry("Language", QString());
-        setCheckSpellingEnabled(checkSpellingEnabled());
+    }
+    setCheckSpellingEnabled(checkSpellingEnabled());
 
-        if (!d->spellCheckingLanguage.isEmpty() && highlighter()) {
-            highlighter()->setCurrentLanguage(d->spellCheckingLanguage);
-            highlighter()->rehighlight();
-        }
+    if (!d->spellCheckingLanguage.isEmpty() && highlighter()) {
+        highlighter()->setCurrentLanguage(d->spellCheckingLanguage);
+        highlighter()->rehighlight();
     }
 }
 
@@ -616,11 +618,9 @@ void RichTextEditor::setSpellCheckingLanguage(const QString &_language)
 
     if (_language != d->spellCheckingLanguage) {
         d->spellCheckingLanguage = _language;
-        if (!d->spellCheckingConfigFileName.isEmpty()) {
-            KConfig sonnetKConfig(d->spellCheckingConfigFileName);
-            KConfigGroup group(&sonnetKConfig, "Spelling");
-            group.writeEntry("Language", d->spellCheckingLanguage);
-        }
+        KSharedConfig::Ptr config = KSharedConfig::openConfig(d->spellCheckingConfigFileName);
+        KConfigGroup group(config, "Spelling");
+        group.writeEntry("Language", d->spellCheckingLanguage);
 
         Q_EMIT languageChanged(_language);
     }
@@ -629,11 +629,9 @@ void RichTextEditor::setSpellCheckingLanguage(const QString &_language)
 void RichTextEditor::slotToggleAutoSpellCheck()
 {
     setCheckSpellingEnabled(!checkSpellingEnabled());
-    if (!d->spellCheckingConfigFileName.isEmpty()) {
-        KConfig sonnetKConfig(d->spellCheckingConfigFileName);
-        KConfigGroup group(&sonnetKConfig, "Spelling");
-        group.writeEntry("checkerEnabledByDefault", d->checkSpellingEnabled);
-    }
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(d->spellCheckingConfigFileName);
+    KConfigGroup group(config, "Spelling");
+    group.writeEntry("checkerEnabledByDefault", d->checkSpellingEnabled);
 }
 
 void RichTextEditor::slotLanguageSelected()
