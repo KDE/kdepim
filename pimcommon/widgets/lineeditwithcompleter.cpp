@@ -37,7 +37,7 @@ void LineEditWithCompleter::contextMenuEvent(QContextMenuEvent *e)
 {
     QMenu *popup = KLineEdit::createStandardContextMenu();
     popup->addSeparator();
-    popup->addAction(i18n("Clear History"), this, SLOT(slotClearHistory()));
+    popup->addAction(QIcon::fromTheme(QStringLiteral("edit-clear-locationbar-rtl")), i18n("Clear History"), this, SLOT(slotClearHistory()));
     popup->exec(e->globalPos());
     delete popup;
 }
