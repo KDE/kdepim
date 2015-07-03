@@ -19,8 +19,6 @@
 #include "globalsettings_base.h"
 
 #include "pimcommon/widgets/simplestringlisteditor.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <QLineEdit>
 #include <KLocalizedString>
@@ -32,6 +30,9 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QDir>
+
+#include <texteditor/plaintexteditor/plaintexteditorwidget.h>
+#include <texteditor/plaintexteditor/plaintexteditor.h>
 
 using namespace GrantleeThemeEditor;
 
@@ -64,8 +65,8 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
 
     ++row;
     lab = new QLabel(i18n("Description:"));
-    mDescription = new PimCommon::RichTextEditorWidget;
-    mDescription->setAcceptRichText(false);
+    mDescription = new PimCommon::PlainTextEditorWidget;
+    mDescription->editor()->setSearchSupport(false);
     lay->addWidget(lab, row , 0);
     lay->addWidget(mDescription, row, 1);
 
