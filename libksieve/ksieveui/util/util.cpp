@@ -89,22 +89,22 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
         switch (interface->authentication()) {
         case MailTransport::Transport::EnumAuthenticationType::CLEAR:
         case MailTransport::Transport::EnumAuthenticationType::PLAIN:
-            authStr = QLatin1String("PLAIN");
+            authStr = QStringLiteral("PLAIN");
             break;
         case MailTransport::Transport::EnumAuthenticationType::LOGIN:
-            authStr = QLatin1String("LOGIN");
+            authStr = QStringLiteral("LOGIN");
             break;
         case MailTransport::Transport::EnumAuthenticationType::CRAM_MD5:
-            authStr = QLatin1String("CRAM-MD5");
+            authStr = QStringLiteral("CRAM-MD5");
             break;
         case MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5:
-            authStr = QLatin1String("DIGEST-MD5");
+            authStr = QStringLiteral("DIGEST-MD5");
             break;
         case MailTransport::Transport::EnumAuthenticationType::GSSAPI:
-            authStr = QLatin1String("GSSAPI");
+            authStr = QStringLiteral("GSSAPI");
             break;
         case MailTransport::Transport::EnumAuthenticationType::ANONYMOUS:
-            authStr = QLatin1String("ANONYMOUS");
+            authStr = QStringLiteral("ANONYMOUS");
             break;
         default:
             authStr = QLatin1String("PLAIN");
@@ -119,9 +119,38 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
         u.setPath(u.path() + QLatin1Char('/') + QString(interface->sieveVacationFilename()));
         return u;
     } else {
-        QUrl u(interface->sieveAlternateUrl());
+        QUrl u;
+        u.setHost(interface->sieveAlternateUrl());
+        u.setScheme(QStringLiteral("sieve"));
+        u.setPort(interface->sievePort());
+        QString authStr;
         const QString resultSafety = interface->safety();
-        if (u.scheme().toLower() == QLatin1String("sieve") && (resultSafety ==  QLatin1String("None")) && QUrlQuery(u).queryItemValue(QLatin1String("x-allow-unencrypted")).isEmpty()) {
+        switch (interface->alternateAuthentication()) {
+        case MailTransport::Transport::EnumAuthenticationType::CLEAR:
+        case MailTransport::Transport::EnumAuthenticationType::PLAIN:
+            authStr = QStringLiteral("PLAIN");
+            break;
+        case MailTransport::Transport::EnumAuthenticationType::LOGIN:
+            authStr = QStringLiteral("LOGIN");
+            break;
+        case MailTransport::Transport::EnumAuthenticationType::CRAM_MD5:
+            authStr = QStringLiteral("CRAM-MD5");
+            break;
+        case MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5:
+            authStr = QStringLiteral("DIGEST-MD5");
+            break;
+        case MailTransport::Transport::EnumAuthenticationType::GSSAPI:
+            authStr = QStringLiteral("GSSAPI");
+            break;
+        case MailTransport::Transport::EnumAuthenticationType::ANONYMOUS:
+            authStr = QStringLiteral("ANONYMOUS");
+            break;
+        default:
+            authStr = QStringLiteral("PLAIN");
+            break;
+        }
+        u.addQueryItem(QStringLiteral("x-mech"), authStr);
+        if (resultSafety == QLatin1String("None")) {
             u.addQueryItem(QLatin1String("x-allow-unencrypted"), QStringLiteral("true"));
         }
 

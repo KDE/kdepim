@@ -20,6 +20,9 @@
       <label>Defines the encryption type to use</label>
       <default>SSL</default>
     </entry>
+    <entry name="OverrideEncryption" type="String">
+      <label>Override configured encryption mode</label>
+    </entry>
     <entry name="Authentication" type="Int">
       <label>Defines the authentication type to use</label>
       <default>1</default>
@@ -94,6 +97,10 @@
     </entry>
     <entry name="SieveAlternateUrl" type="String">
       <label>Define alternate URL</label>
+    </entry>
+    <entry name="AlternateAuthentication" type="Int">
+      <label>Defines the authentication type to use for alternate server</label>
+      <default>1</default>
     </entry>
     <entry name="SieveVacationFilename" type="String">
       <label>Define default sieve vacation filename</label>
