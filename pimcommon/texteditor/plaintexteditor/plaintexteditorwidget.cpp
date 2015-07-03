@@ -55,6 +55,11 @@ void PlainTextEditorWidget::clear()
     mEditor->clear();
 }
 
+void PlainTextEditorWidget::setSpellCheckingConfigFileName(const QString &_fileName)
+{
+    mEditor->setSpellCheckingConfigFileName(_fileName);
+}
+
 void PlainTextEditorWidget::setPlainText(const QString &text)
 {
     mEditor->setPlainText(text);

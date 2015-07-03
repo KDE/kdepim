@@ -53,6 +53,7 @@ public:
     void setAcceptRichText(bool b);
     bool acceptRichText() const;
 
+    void setSpellCheckingConfigFileName(const QString &_fileName);
 public Q_SLOTS:
     void slotFindNext();
 private Q_SLOTS:

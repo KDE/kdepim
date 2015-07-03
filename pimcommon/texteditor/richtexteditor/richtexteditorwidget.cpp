@@ -65,6 +65,11 @@ bool RichTextEditorWidget::acceptRichText() const
     return mEditor->acceptRichText();
 }
 
+void RichTextEditorWidget::setSpellCheckingConfigFileName(const QString &_fileName)
+{
+    mEditor->setSpellCheckingConfigFileName(_fileName);
+}
+
 void RichTextEditorWidget::setHtml(const QString &html)
 {
     mEditor->setHtml(html);

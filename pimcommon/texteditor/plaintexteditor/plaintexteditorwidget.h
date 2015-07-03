@@ -45,6 +45,7 @@ public:
     QString toPlainText() const;
 
     void clear();
+    void setSpellCheckingConfigFileName(const QString &_fileName);
 private Q_SLOTS:
     void slotFind();
     void slotReplace();
