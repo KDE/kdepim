@@ -23,7 +23,7 @@
 class KLineEdit;
 namespace PimCommon
 {
-class RichTextEditorWidget;
+class PlainTextEditorWidget;
 class TemplateEditDialog : public QDialog
 {
     Q_OBJECT
@@ -43,7 +43,7 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    PimCommon::RichTextEditorWidget *mTextEdit;
+    PimCommon::PlainTextEditorWidget *mTextEdit;
     KLineEdit *mTemplateNameEdit;
     QPushButton *mOkButton;
 };

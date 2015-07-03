@@ -16,8 +16,8 @@
 */
 
 #include "templateeditdialog.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -69,8 +69,7 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
 
     vbox->addLayout(hbox);
 
-    mTextEdit = new PimCommon::RichTextEditorWidget;
-    mTextEdit->setAcceptRichText(false);
+    mTextEdit = new PimCommon::PlainTextEditorWidget;
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 
@@ -80,7 +79,7 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
             mOkButton->setEnabled(false);
         }
         connect(mTemplateNameEdit, &QLineEdit::textChanged, this, &TemplateEditDialog::slotTemplateChanged);
-        connect(mTextEdit->editor(), &QTextEdit::textChanged, this, &TemplateEditDialog::slotTemplateChanged);
+        connect(mTextEdit->editor(), &QPlainTextEdit::textChanged, this, &TemplateEditDialog::slotTemplateChanged);
         mTemplateNameEdit->setFocus();
     }
     readConfig();
