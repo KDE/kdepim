@@ -239,7 +239,12 @@ void ComposerLineEdit::slotGroupSearchResult(KJob *job)
 {
     Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob *>(job);
 
-    Q_ASSERT(mMightBeGroupJobs.contains(searchJob));
+    // Laurent I don't understand why Akonadi::ContactGroupSearchJob send two "result(...)" signal. For the moment
+    // avoid to go in this method twice, until I understand it.
+    if (!mMightBeGroupJobs.contains(searchJob)) {
+        return;
+    }
+    //Q_ASSERT(mMightBeGroupJobs.contains(searchJob));
     mMightBeGroupJobs.removeOne(searchJob);
 
     const KContacts::ContactGroup::List contactGroups = searchJob->contactGroups();
