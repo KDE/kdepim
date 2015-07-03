@@ -136,6 +136,11 @@ NestedListHelper *RichTextComposerControler::nestedListHelper() const
     return d->nestedListHelper;
 }
 
+void RichTextComposerControler::ensureCursorVisibleDelayed()
+{
+    d->richtextComposer->ensureCursorVisible();
+}
+
 RichTextComposer *RichTextComposerControler::richTextComposer() const
 {
     return d->richtextComposer;

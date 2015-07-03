@@ -96,8 +96,8 @@ public Q_SLOTS:
     void slotRemoveQuotes();
     void slotAddQuotes();
     void slotAddImage();
-    void slotFormatPainter(bool active);
-
+    void slotFormatPainter(bool active);    
+    void ensureCursorVisibleDelayed();
 private:
     class RichTextComposerControlerPrivate;
     RichTextComposerControlerPrivate *const d;
