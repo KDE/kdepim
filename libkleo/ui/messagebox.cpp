@@ -40,8 +40,6 @@
 #include <gpgme++/signingresult.h>
 #include <gpgme++/encryptionresult.h>
 
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
-
 #include <QFileDialog>
 
 #include <QPushButton>
