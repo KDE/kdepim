@@ -129,7 +129,7 @@ bool SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
                 day->setValue(e.text().toInt());
             } else if (tagName == QLatin1String("str")) {
                 MultiLineEdit *text = w->findChild<MultiLineEdit *>(QLatin1String("text"));
-                text->setText(e.text());
+                text->setPlainText(e.text());
             } else if (tagName == QLatin1String("list")) {
                 QLineEdit *addresses = w->findChild<QLineEdit *>(QLatin1String("addresses"));
                 addresses->setText(AutoCreateScriptUtil::listValueToStr(e));

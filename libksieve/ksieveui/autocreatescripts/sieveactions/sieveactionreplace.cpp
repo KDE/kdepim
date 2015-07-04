@@ -82,7 +82,7 @@ bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QStringLiteral("text"));
-                edit->setText(e.text());
+                edit->setPlainText(e.text());
             } else if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 if (tagValue == QLatin1String("subject")) {
