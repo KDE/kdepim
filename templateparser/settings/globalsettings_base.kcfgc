@@ -7,3 +7,5 @@ Singleton=true
 ItemAccessors=true
 SetUserTexts=true
 IncludeFiles=templateparser_export.h,defaulttemplates.h
+TranslationDomain=libtemplateparser
+TranslationSystem=kde

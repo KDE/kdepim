@@ -7,3 +7,6 @@ SetUserTexts=true
 NameSpace=MailCommon
 Visibility=MAILCOMMON_EXPORT
 IncludeFiles=mailcommon_export.h
+TranslationDomain=libmailcommon
+TranslationSystem=kde
+

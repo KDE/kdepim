@@ -5,6 +5,5 @@ Visibility=COMPOSEREDITORNG_EXPORT
 Mutators=true
 Singleton=true
 ItemAccessors=true
-SetUserTexts=true
 IncludeFiles=qapplication.h,composereditorng_export.h
 

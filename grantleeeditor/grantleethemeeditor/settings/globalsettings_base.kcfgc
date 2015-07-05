@@ -7,3 +7,6 @@ Singleton=true
 ItemAccessors=true
 SetUserTexts=true
 IncludeFiles=grantleethemeeditor_export.h
+TranslationDomain=libgrantleethemeeditor
+TranslationSystem=kde
+
