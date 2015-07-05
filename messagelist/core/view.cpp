@@ -2249,6 +2249,7 @@ void View::mouseMoveEvent(QMouseEvent *e)
     d->mWidget->viewStartDragRequest();
 }
 
+#if 0
 void View::contextMenuEvent(QContextMenuEvent *e)
 {
     Q_UNUSED(e);
@@ -2278,6 +2279,7 @@ void View::contextMenuEvent(QContextMenuEvent *e)
         }
     }
 }
+#endif
 
 void View::dragEnterEvent(QDragEnterEvent *e)
 {

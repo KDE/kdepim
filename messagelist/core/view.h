@@ -413,7 +413,7 @@ protected:
     /**
     * Reimplemented in order to handle context menu request via keyboard
     */
-    void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
+    //void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
 
     /**
     * Reimplemented in order to handle message DnD
