@@ -218,7 +218,7 @@ QMenu *RichTextEditor::mousePopupMenu(const QPoint &pos)
             popup->addSeparator();
         }
 
-        if (allowTabSupport()) {
+        if (allowTabSupport() && !isReadOnly()) {
             QAction *allowTabAction = popup->addAction(i18n("Allow Tabulations"));
             allowTabAction->setCheckable(true);
             allowTabAction->setChecked(!tabChangesFocus());
