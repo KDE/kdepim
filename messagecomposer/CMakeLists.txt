@@ -111,6 +111,7 @@ set(messagecomposer_composerng_SRCS
      composer-ng/richtextcomposersignatures.cpp
      composer-ng/richtextcomposeremailquotedecorator.cpp
      composer-ng/richtextcomposeremailquotehighlighter.cpp
+     composer-ng/inserthtmldialog.cpp
 )
 
 

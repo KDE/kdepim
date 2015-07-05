@@ -20,6 +20,7 @@
 #include "richtextcomposerimages.h"
 #include "klinkdialog_p.h"
 #include "nestedlisthelper_p.h"
+#include "inserthtmldialog.h"
 #include "settings/messagecomposersettings.h"
 
 #include <KColorScheme>
@@ -31,7 +32,6 @@
 #include <QPointer>
 #include <QClipboard>
 #include <QIcon>
-#include <kpimtextedit/inserthtmldialog.h>
 #include <kpimtextedit/textutils.h>
 #include <kpimtextedit/insertimagedialog.h>
 #include <grantlee/plaintextmarkupbuilder.h>
@@ -781,7 +781,7 @@ void RichTextComposerControler::slotAddEmoticon(const QString &text)
 void RichTextComposerControler::slotInsertHtml()
 {
     if (richTextComposer()->textMode() == RichTextComposer::Rich) {
-        QPointer<KPIMTextEdit::InsertHtmlDialog> dialog = new KPIMTextEdit::InsertHtmlDialog(richTextComposer());
+        QPointer<MessageComposer::InsertHtmlDialog> dialog = new MessageComposer::InsertHtmlDialog(richTextComposer());
         if (dialog->exec()) {
             const QString str = dialog->html();
             if (!str.isEmpty()) {
