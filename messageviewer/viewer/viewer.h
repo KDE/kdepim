@@ -44,7 +44,6 @@ class QCloseEvent;
 class QEvent;
 class QResizeEvent;
 
-
 namespace MessageViewer
 {
 

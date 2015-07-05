@@ -24,7 +24,8 @@
 #include <QDialog>
 
 class QCheckBox;
-namespace PimCommon {
+namespace PimCommon
+{
 class PlainTextEditorWidget;
 }
 namespace MailCommon

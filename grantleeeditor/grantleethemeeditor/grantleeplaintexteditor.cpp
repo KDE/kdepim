@@ -53,7 +53,6 @@ void GrantleePlainTextEditor::createCompleterList(const QStringList &extraComple
     mTextEditorCompleter->setCompleterStringList(extraCompletion);
 }
 
-
 void GrantleePlainTextEditor::keyPressEvent(QKeyEvent *e)
 {
     if (mTextEditorCompleter->completer()->popup()->isVisible()) {
@@ -72,5 +71,4 @@ void GrantleePlainTextEditor::keyPressEvent(QKeyEvent *e)
     PimCommon::PlainTextEditor::keyPressEvent(e);
     mTextEditorCompleter->completeText();
 }
-
 

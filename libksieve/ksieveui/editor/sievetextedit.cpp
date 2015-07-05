@@ -86,7 +86,6 @@ void SieveTextEdit::createHighlighter()
     setHighlighter(highlighter);
 }
 
-
 void SieveTextEdit::resizeEvent(QResizeEvent *e)
 {
     QPlainTextEdit::resizeEvent(e);

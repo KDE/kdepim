@@ -22,7 +22,6 @@
 
 #include "setupispdb.h"
 
-
 class SetupAutoconfigKolabMail : public SetupIspdb
 {
     Q_OBJECT

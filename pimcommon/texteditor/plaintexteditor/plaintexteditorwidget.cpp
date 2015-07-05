@@ -49,7 +49,6 @@ PlainTextEditor *PlainTextEditorWidget::editor() const
     return mEditor;
 }
 
-
 void PlainTextEditorWidget::clear()
 {
     mEditor->clear();

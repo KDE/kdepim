@@ -75,7 +75,6 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
         u.setHost(server);
         u.setUserName(interface->userName());
 
-
         QDBusInterface resourceSettings(QLatin1String("org.freedesktop.Akonadi.Resource.") + identifier, QStringLiteral("/Settings"), QStringLiteral("org.kde.Akonadi.Imap.Wallet"));
 
         QString pwd;

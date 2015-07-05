@@ -131,11 +131,11 @@ QString SearchPattern::purify(bool removeAction)
                 qCDebug(MAILCOMMON_LOG) << "Removing" << (*it)->asString();
 #endif
                 if (!informationAboutNotValidPattern.isEmpty()) {
-                      informationAboutNotValidPattern += QLatin1Char('\n');
+                    informationAboutNotValidPattern += QLatin1Char('\n');
                 }
                 informationAboutNotValidPattern += (*it)->informationAboutNotValidRules();
 
-                erase( it );
+                erase(it);
                 it = end();
             }
         }
