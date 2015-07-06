@@ -242,7 +242,7 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
                             if (birthDate.isValid()) {
                                 contact.setBirthday(birthDate);
                             }
-                            addImportNote(contact, QStringLiteral("Thunderbird"));
+                            addImportContactNote(contact, QStringLiteral("Thunderbird"));
                             createContact(contact);
                             qCDebug(IMPORTWIZARD_LOG) << "-----------------------";
                         }

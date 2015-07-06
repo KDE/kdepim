@@ -66,7 +66,7 @@ void TrojitaAddressBook::readAddressBook()
         }
         //TODO
         //ADD(Photo, "photo");
-        addImportNote(contactABC, QStringLiteral("Trojita"));
+        addImportContactNote(contactABC, QStringLiteral("Trojita"));
         createContact(contactABC);
         settings->endGroup();
     }

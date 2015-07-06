@@ -146,7 +146,7 @@ void SylpheedAddressBook::readAddressBook(const QString &filename)
             } else {
                 qCDebug(IMPORTWIZARD_LOG) << " problem uidPerson already stored" << uidPerson;
             }
-            addImportNote(contact, QStringLiteral("Sylpheed"));
+            addImportContactNote(contact, QStringLiteral("Sylpheed"));
             createContact(contact);
         } else if (tag == QLatin1String("group")) {
             QString name;

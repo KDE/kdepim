@@ -73,7 +73,7 @@ void AbstractAddressBook::createGroup(const KContacts::ContactGroup &group)
     }
 }
 
-void AbstractAddressBook::addImportNote(KContacts::Addressee &address, const QString &applicationName)
+void AbstractAddressBook::addImportContactNote(KContacts::Addressee &address, const QString &applicationName)
 {
     QString currentNote = address.note();
     if (!currentNote.isEmpty()) {
