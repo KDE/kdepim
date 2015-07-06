@@ -129,9 +129,6 @@ void ManageSieveWidget::slotContextMenuRequested(const QPoint &p)
     if (!item) {
         return;
     }
-    if (!item->parent() && !mUrls.count(item)) {
-        return;
-    }
     QMenu menu;
     if (isFileNameItem(item)) {
         // script items:
@@ -149,6 +146,8 @@ void ManageSieveWidget::slotContextMenuRequested(const QPoint &p)
             menu.addAction(KStandardGuiItem::cancel().text(), this, SLOT(slotCancelFetch()));
         }
     }
+    if ( !menu.actions().isEmpty() )
+        menu.exec( mTreeView->viewport()->mapToGlobal(p) );
 }
 
 void ManageSieveWidget::slotCancelFetch()
