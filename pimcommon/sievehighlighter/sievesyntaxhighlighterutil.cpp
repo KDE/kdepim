@@ -56,6 +56,8 @@ QStringList SieveSyntaxHighlighterUtil::fullCapabilities()
             << QStringLiteral("servermetadata")
             << QStringLiteral("regex")
             << QStringLiteral("relational")
-            << QStringLiteral("comparator-i;ascii-numeric");
+            << QStringLiteral("comparator-i;ascii-numeric")
+            << QStringLiteral("comparator-i;unicode-casemap")
+            << QStringLiteral("encoded-character");
 }
 }
