@@ -138,9 +138,10 @@ void MailSourceViewTextBrowser::contextMenuEvent(QContextMenuEvent *event)
         KIconTheme::assignIconsToContextMenu(isReadOnly() ? KIconTheme::ReadOnlyText
                                              : KIconTheme::TextEditor,
                                              popup->actions());
-        popup->addSeparator();
-        popup->addAction(QIcon::fromTheme(QStringLiteral("preferences-desktop-text-to-speech")), i18n("Speak Text"), this, SLOT(slotSpeakText()));
-
+        if (mTextToSpeechInterface->isReady()) {
+            popup->addSeparator();
+            popup->addAction(QIcon::fromTheme(QStringLiteral("preferences-desktop-text-to-speech")), i18n("Speak Text"), this, SLOT(slotSpeakText()));
+        }
         popup->addSeparator();
         popup->addAction(KStandardAction::saveAs(this, SLOT(slotSaveAs()), this));
 
