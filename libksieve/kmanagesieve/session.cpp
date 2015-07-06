@@ -315,13 +315,13 @@ bool Session::requestCapabilitiesAfterStartTls() const
     // Cyrus didn't send CAPABILITIES after STARTTLS until 2.3.11, which is
     // not standard conform, but we need to support that anyway.
     // m_implementation looks like this 'Cyrus timsieved v2.2.12' for Cyrus btw.
-    QRegExp regExp("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)", Qt::CaseInsensitive);
+    QRegExp regExp(QStringLiteral("Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)"), Qt::CaseInsensitive);
     if (regExp.indexIn(m_implementation) >= 0) {
         const int major = regExp.cap(1).toInt();
         const int minor = regExp.cap(2).toInt();
         const int patch = regExp.cap(3).toInt();
         const QString vendor = regExp.cap(4);
-        if (major < 2 || (major == 2 && (minor < 3 || (minor == 3 && patch < 11))) || (vendor == "-kolab-nocaps")) {
+        if (major < 2 || (major == 2 && (minor < 3 || (minor == 3 && patch < 11))) || (vendor == QLatin1String("-kolab-nocaps"))) {
             qCDebug(KMANAGERSIEVE_LOG) << "Enabling compat mode for Cyrus < 2.3.11 or Cyrus marked as \"kolab-nocaps\"";
             return true;
         }
@@ -458,7 +458,7 @@ bool Session::saslInteract(void *in)
 
     //some mechanisms do not require username && pass, so it doesn't need a popup
     //window for getting this info
-    for (; interact->id != SASL_CB_LIST_END; interact++) {
+    for (; interact->id != SASL_CB_LIST_END; ++interact) {
         if (interact->id == SASL_CB_AUTHNAME || interact->id == SASL_CB_PASS) {
             if (ai.username.isEmpty() || ai.password.isEmpty()) {
 
