@@ -538,12 +538,12 @@ QUrl GDriveStorageService::serviceUrl()
 
 QString GDriveStorageService::serviceName()
 {
-    return QLatin1String("googledrive");
+    return QStringLiteral("googledrive");
 }
 
 QString GDriveStorageService::iconName()
 {
-    return QLatin1String("kdepim-googledrive");
+    return QStringLiteral("kdepim-googledrive");
 }
 
 StorageServiceAbstract::Capabilities GDriveStorageService::serviceCapabilities()

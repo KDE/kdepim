@@ -41,72 +41,72 @@ int Utils::currentArchiveVersion()
 
 QString Utils::transportsPath()
 {
-    return QLatin1String("transports/");
+    return QStringLiteral("transports/");
 }
 
 QString Utils::resourcesPath()
 {
-    return QLatin1String("resources/");
+    return QStringLiteral("resources/");
 }
 
 QString Utils::identitiesPath()
 {
-    return QLatin1String("identities/");
+    return QStringLiteral("identities/");
 }
 
 QString Utils::mailsPath()
 {
-    return QLatin1String("mails/");
+    return QStringLiteral("mails/");
 }
 
 QString Utils::configsPath()
 {
-    return QLatin1String("configs/");
+    return QStringLiteral("configs/");
 }
 
 QString Utils::akonadiPath()
 {
-    return QLatin1String("akonadi/");
+    return QStringLiteral("akonadi/");
 }
 
 QString Utils::dataPath()
 {
-    return QLatin1String("data/");
+    return QStringLiteral("data/");
 }
 
 QString Utils::calendarPath()
 {
-    return QLatin1String("calendar/");
+    return QStringLiteral("calendar/");
 }
 
 QString Utils::addressbookPath()
 {
-    return QLatin1String("addressbook/");
+    return QStringLiteral("addressbook/");
 }
 
 QString Utils::alarmPath()
 {
-    return QLatin1String("alarm/");
+    return QStringLiteral("alarm/");
 }
 
 QString Utils::jotPath()
 {
-    return QLatin1String("jot/");
+    return QStringLiteral("jot/");
 }
 
 QString Utils::notePath()
 {
-    return QLatin1String("note/");
+    return QStringLiteral("note/");
 }
 
 QString Utils::prefixAkonadiConfigFile()
 {
-    return QLatin1String("agent_config_");
+    return QStringLiteral("agent_config_");
 }
 
 QString Utils::infoPath()
 {
-    return QLatin1String("information/");
+    return QStringLiteral("information/");
 }
 
 QUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)

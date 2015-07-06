@@ -429,11 +429,11 @@ public:
     }
     QString name() const
     {
-        return QLatin1String("General");
+        return QStringLiteral("General");
     }
     QString iconName() const
     {
-        return QLatin1String("chiasmus_chi");
+        return QStringLiteral("chiasmus_chi");
     }
     QString path() const
     {
@@ -517,11 +517,11 @@ public:
 
     QString name() const
     {
-        return QLatin1String("Chiasmus");
+        return QStringLiteral("Chiasmus");
     }
     QString iconName() const
     {
-        return QLatin1String("chiasmus_chi");
+        return QStringLiteral("chiasmus_chi");
     }
     QString description() const
     {
@@ -595,7 +595,7 @@ public:
 
     QString name() const
     {
-        return QLatin1String("Chiasmus");
+        return QStringLiteral("Chiasmus");
     }
     QString displayName() const
     {
@@ -707,7 +707,7 @@ Kleo::ChiasmusBackend::~ChiasmusBackend()
 
 QString Kleo::ChiasmusBackend::name() const
 {
-    return QLatin1String("Chiasmus");
+    return QStringLiteral("Chiasmus");
 }
 
 QString Kleo::ChiasmusBackend::displayName() const

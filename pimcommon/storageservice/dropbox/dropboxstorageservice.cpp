@@ -253,12 +253,12 @@ QUrl DropBoxStorageService::serviceUrl()
 
 QString DropBoxStorageService::serviceName()
 {
-    return QLatin1String("dropbox");
+    return QStringLiteral("dropbox");
 }
 
 QString DropBoxStorageService::iconName()
 {
-    return QLatin1String("kdepim-dropbox");
+    return QStringLiteral("kdepim-dropbox");
 }
 
 StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities()

@@ -66,7 +66,7 @@ bool IcedoveImportData::importAddressBook()
 
 QString IcedoveImportData::name() const
 {
-    return QLatin1String("Icedove");
+    return QStringLiteral("Icedove");
 }
 
 bool IcedoveImportData::importSettings()

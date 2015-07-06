@@ -48,7 +48,7 @@ bool OperaImportData::foundMailer() const
 
 QString OperaImportData::name() const
 {
-    return QLatin1String("Opera");
+    return QStringLiteral("Opera");
 }
 
 bool OperaImportData::importMails()

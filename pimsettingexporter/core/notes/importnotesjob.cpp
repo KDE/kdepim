@@ -34,7 +34,7 @@ namespace
 {
 inline const QString backupnote()
 {
-    return QLatin1String("backupnote/");
+    return QStringLiteral("backupnote/");
 }
 }
 

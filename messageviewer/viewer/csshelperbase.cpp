@@ -211,7 +211,7 @@ QString CSSHelperBase::quoteFontTag(int level) const
 
 QString CSSHelperBase::nonQuotedFontTag() const
 {
-    return QLatin1String("<div class=\"noquote\">");
+    return QStringLiteral("<div class=\"noquote\">");
 }
 
 QFont CSSHelperBase::bodyFont(bool fixed, bool print) const

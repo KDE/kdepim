@@ -54,7 +54,7 @@ namespace
 {
 inline const QString storeMails()
 {
-    return QLatin1String("backupmail/");
+    return QStringLiteral("backupmail/");
 }
 }
 

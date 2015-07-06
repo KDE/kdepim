@@ -242,7 +242,7 @@ Blogger::~Blogger()
 
 QString Blogger::interfaceName() const
 {
-    return QLatin1String("Blogger 3.0");
+    return QStringLiteral("Blogger 3.0");
 }
 
 void Blogger::setApiKey(const QString &apiKey)

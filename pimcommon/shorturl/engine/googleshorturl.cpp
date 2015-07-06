@@ -47,7 +47,7 @@ void GoogleShortUrl::start()
 
 QString GoogleShortUrl::shortUrlName() const
 {
-    return QLatin1String("Google");
+    return QStringLiteral("Google");
 }
 
 void GoogleShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)

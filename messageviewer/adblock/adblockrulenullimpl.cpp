@@ -143,5 +143,5 @@ QString AdBlockRuleNullImpl::ruleString() const
 
 QString AdBlockRuleNullImpl::ruleType() const
 {
-    return QLatin1String("AdBlockRuleNullImpl");
+    return QStringLiteral("AdBlockRuleNullImpl");
 }

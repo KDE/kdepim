@@ -87,7 +87,7 @@ Akonadi::MessageStatus SearchRuleStatus::statusFromEnglishName(const QString &aS
 QString SearchRuleStatus::informationAboutNotValidRules() const
 {
     //TODO
-    return QLatin1String("");
+    return QStringLiteral("");
 }
 
 bool SearchRuleStatus::isEmpty() const

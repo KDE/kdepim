@@ -462,7 +462,7 @@ QUrl BoxStorageService::serviceUrl()
 
 QString BoxStorageService::serviceName()
 {
-    return QLatin1String("box");
+    return QStringLiteral("box");
 }
 
 QString BoxStorageService::iconName()
@@ -617,6 +617,6 @@ QRegExp BoxStorageService::disallowedSymbols() const
 
 QString BoxStorageService::disallowedSymbolsStr() const
 {
-    return QLatin1String("\\ / : ? * < > |");
+    return QStringLiteral("\\ / : ? * < > |");
 }
 

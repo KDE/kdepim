@@ -48,7 +48,7 @@ QString SieveActionKeep::code(QWidget *w) const
         if (flagCode.isEmpty()) {
             return QStringLiteral("keep;");
         } else {
-            return QLatin1String("keep :flags") + QLatin1Char(' ') + flagCode;
+            return QStringLiteral("keep :flags") + QLatin1Char(' ') + flagCode;
         }
     } else {
         return QStringLiteral("keep;");

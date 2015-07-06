@@ -34,7 +34,7 @@ namespace
 {
 inline const QString storeAlarm()
 {
-    return QLatin1String("backupalarm/");
+    return QStringLiteral("backupalarm/");
 }
 }
 

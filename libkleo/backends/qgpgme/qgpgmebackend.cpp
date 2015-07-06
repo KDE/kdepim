@@ -387,7 +387,7 @@ Kleo::QGpgMEBackend::~QGpgMEBackend()
 
 QString Kleo::QGpgMEBackend::name() const
 {
-    return QLatin1String("gpgme");
+    return QStringLiteral("gpgme");
 }
 
 QString Kleo::QGpgMEBackend::displayName() const

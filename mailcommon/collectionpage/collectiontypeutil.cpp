@@ -77,11 +77,11 @@ QString CollectionTypeUtil::incidencesForToString(CollectionTypeUtil::Incidences
 {
     switch (type) {
     case CollectionTypeUtil::IncForNobody:
-        return QLatin1String("nobody");
+        return QStringLiteral("nobody");
     case CollectionTypeUtil::IncForAdmins:
-        return QLatin1String("admins");
+        return QStringLiteral("admins");
     case CollectionTypeUtil::IncForReaders:
-        return QLatin1String("readers");
+        return QStringLiteral("readers");
     }
 
     return QString(); // can't happen

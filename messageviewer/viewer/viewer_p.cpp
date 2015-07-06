@@ -3081,7 +3081,7 @@ QString ViewerPrivate::recipientsQuickListLinkHtml(bool doShow, const QString &f
         altText = i18n("Show full address list");
     }
 
-    return QLatin1String("<span style=\"text-align: right;\"><a href=\"") + urlHandle + QLatin1String("\"><img src=\"file:///") + imgpath + imgSrc + QLatin1String("\""
+    return QStringLiteral("<span style=\"text-align: right;\"><a href=\"") + urlHandle + QLatin1String("\"><img src=\"file:///") + imgpath + imgSrc + QLatin1String("\""
             "alt=\"") + altText + QLatin1String("\" /></a></span>");
 }
 

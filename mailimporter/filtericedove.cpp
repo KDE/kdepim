@@ -51,5 +51,5 @@ QString FilterIcedove::defaultSettingsPath()
 
 QString FilterIcedove::defaultInstallFolder() const
 {
-    return QLatin1String("Icedove-Import/");
+    return QStringLiteral("Icedove-Import/");
 }

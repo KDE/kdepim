@@ -188,5 +188,5 @@ QString AdBlockRuleFallbackImpl::ruleString() const
 
 QString AdBlockRuleFallbackImpl::ruleType() const
 {
-    return QLatin1String("AdBlockRuleFallbackImpl");
+    return QStringLiteral("AdBlockRuleFallbackImpl");
 }

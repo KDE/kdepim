@@ -467,7 +467,7 @@ static QString default_socket_name()
 
 static QString uiserver_executable()
 {
-    return QLatin1String("kleopatra");
+    return QStringLiteral("kleopatra");
 }
 
 static QString start_uiserver()

@@ -24,22 +24,22 @@ namespace ComposerEditorNG
 {
 inline const QString tbodyStr()
 {
-    return QLatin1String("tbodyStr()");
+    return QStringLiteral("tbodyStr()");
 }
 
 inline const QString tableStr()
 {
-    return QLatin1String("table");
+    return QStringLiteral("table");
 }
 
 inline const QString trStr()
 {
-    return QLatin1String("tr");
+    return QStringLiteral("tr");
 }
 
 inline const QString tdStr()
 {
-    return QLatin1String("td");
+    return QStringLiteral("td");
 }
 
 QWebElement TableHelper::tableBodyWebElement(const QWebElement &element)

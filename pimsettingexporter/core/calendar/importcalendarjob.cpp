@@ -37,7 +37,7 @@ namespace
 {
 inline const QString storeCalendar()
 {
-    return QLatin1String("backupcalendar/");
+    return QStringLiteral("backupcalendar/");
 }
 }
 

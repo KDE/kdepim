@@ -32,7 +32,7 @@ namespace
 {
 inline const QString storeAddressbook()
 {
-    return QLatin1String("backupaddressbook/");
+    return QStringLiteral("backupaddressbook/");
 }
 }
 

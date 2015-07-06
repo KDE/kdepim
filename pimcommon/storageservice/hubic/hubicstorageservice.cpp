@@ -250,7 +250,7 @@ QUrl HubicStorageService::serviceUrl()
 
 QString HubicStorageService::serviceName()
 {
-    return QLatin1String("hubic");
+    return QStringLiteral("hubic");
 }
 
 QString HubicStorageService::iconName()

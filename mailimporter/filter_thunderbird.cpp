@@ -104,7 +104,7 @@ QMap<QString, QString> FilterThunderbird::listProfile(QString &currentProfile, c
 
 QString FilterThunderbird::defaultInstallFolder() const
 {
-    return QLatin1String("Thunderbird-Import/");
+    return QStringLiteral("Thunderbird-Import/");
 }
 
 QString FilterThunderbird::settingsPath()

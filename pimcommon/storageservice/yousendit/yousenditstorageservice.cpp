@@ -219,7 +219,7 @@ QUrl YouSendItStorageService::serviceUrl()
 
 QString YouSendItStorageService::serviceName()
 {
-    return QLatin1String("yousendit");
+    return QStringLiteral("yousendit");
 }
 
 QString YouSendItStorageService::iconName()
