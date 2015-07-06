@@ -378,8 +378,8 @@ void StringUtilTest::test_parseMailtoUrl()
     QFETCH(int, numberOfTo);
 
     KUrl url(mailToUrl);
-    QCOMPARE(!StringUtil::parseMailtoUrl(url).value(QLatin1String("to")).isEmpty(), toIsNotEmpty);
-    QCOMPARE(StringUtil::parseMailtoUrl(url).value(QLatin1String("to")).split(QLatin1String(", "), QString::SkipEmptyParts).count(), numberOfTo);
+    QCOMPARE(!StringUtil::parseMailtoUrl(url).value(QStringLiteral("to")).isEmpty(), toIsNotEmpty);
+    QCOMPARE(StringUtil::parseMailtoUrl(url).value(QStringLiteral("to")).split(QLatin1String(", "), QString::SkipEmptyParts).count(), numberOfTo);
 
 }
 

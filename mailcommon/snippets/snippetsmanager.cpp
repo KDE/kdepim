@@ -462,7 +462,7 @@ void SnippetsManager::Private::createSnippet(const QModelIndex &groupIndex,
 void SnippetsManager::Private::load()
 {
     const KSharedConfig::Ptr config =
-        KSharedConfig::openConfig(QLatin1String("kmailsnippetrc"), KConfig::NoGlobals);
+        KSharedConfig::openConfig(QStringLiteral("kmailsnippetrc"), KConfig::NoGlobals);
 
     const KConfigGroup snippetPartGroup = config->group("SnippetPart");
 
@@ -513,7 +513,7 @@ void SnippetsManager::Private::save()
         return;
     }
 
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kmailsnippetrc"), KConfig::NoGlobals);
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kmailsnippetrc"), KConfig::NoGlobals);
 
     // clear everything
     foreach (const QString &group, config->groupList()) {

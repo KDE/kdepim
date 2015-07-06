@@ -32,13 +32,13 @@ QStringList PimCommon::DropBoxUtil::getListFolder(const QString &data)
     const QMap<QString, QVariant> info = json.toVariant().toMap();
 
     if (info.contains(QStringLiteral("contents"))) {
-        const QVariantList lst = info.value(QLatin1String("contents")).toList();
+        const QVariantList lst = info.value(QStringLiteral("contents")).toList();
         Q_FOREACH (const QVariant &variant, lst) {
             const QVariantMap qwer = variant.toMap();
             if (qwer.contains(QStringLiteral("is_dir"))) {
-                const bool value = qwer.value(QLatin1String("is_dir")).toBool();
+                const bool value = qwer.value(QStringLiteral("is_dir")).toBool();
                 if (value) {
-                    const QString name = qwer.value(QLatin1String("path")).toString();
+                    const QString name = qwer.value(QStringLiteral("path")).toString();
                     listFolder.append(name);
                 }
             }

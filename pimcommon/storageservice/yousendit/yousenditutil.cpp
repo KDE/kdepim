@@ -32,12 +32,12 @@ QStringList PimCommon::YouSendItUtil::getListFolder(const QString &data)
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
 
     if (info.contains(QStringLiteral("folders"))) {
-        QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
-        QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
+        QVariantMap mapFolder = info.value(QStringLiteral("folders")).toMap();
+        QVariantList folders = mapFolder.value(QStringLiteral("folder")).toList();
         Q_FOREACH (const QVariant &v, folders) {
             QVariantMap map = v.toMap();
             if (map.contains(QStringLiteral("name"))) {
-                listFolder.append(map.value(QLatin1String("name")).toString());
+                listFolder.append(map.value(QStringLiteral("name")).toString());
             }
         }
     }

@@ -150,22 +150,22 @@ void EmailAddressResolveJob::setBcc(const QStringList &bcc)
 
 QString EmailAddressResolveJob::expandedFrom() const
 {
-    return mResultMap.value(QLatin1String("infoPartFrom")).toString();
+    return mResultMap.value(QStringLiteral("infoPartFrom")).toString();
 }
 
 QStringList EmailAddressResolveJob::expandedTo() const
 {
-    return KEmailAddress::splitAddressList(mResultMap.value(QLatin1String("infoPartTo")).toString());
+    return KEmailAddress::splitAddressList(mResultMap.value(QStringLiteral("infoPartTo")).toString());
 }
 
 QStringList EmailAddressResolveJob::expandedCc() const
 {
-    return KEmailAddress::splitAddressList(mResultMap.value(QLatin1String("infoPartCc")).toString());
+    return KEmailAddress::splitAddressList(mResultMap.value(QStringLiteral("infoPartCc")).toString());
 
 }
 
 QStringList EmailAddressResolveJob::expandedBcc() const
 {
-    return KEmailAddress::splitAddressList(mResultMap.value(QLatin1String("infoPartBcc")).toString());
+    return KEmailAddress::splitAddressList(mResultMap.value(QStringLiteral("infoPartBcc")).toString());
 }
 

@@ -79,13 +79,13 @@ void HubicStorageService::readConfig()
                 QMap<QString, QString> map;
                 wallet->readMap(storageServiceName(), map);
                 if (map.contains(QStringLiteral("Refresh Token"))) {
-                    mRefreshToken = map.value(QLatin1String("Refresh Token"));
+                    mRefreshToken = map.value(QStringLiteral("Refresh Token"));
                 }
                 if (map.contains(QStringLiteral("Token"))) {
-                    mToken = map.value(QLatin1String("Token"));
+                    mToken = map.value(QStringLiteral("Token"));
                 }
                 if (map.contains(QStringLiteral("Expire Time"))) {
-                    mExpireDateTime = QDateTime::fromString(map.value(QLatin1String("Expire Time")));
+                    mExpireDateTime = QDateTime::fromString(map.value(QStringLiteral("Expire Time")));
                 }
             }
             mNeedToReadConfigFirst = false;

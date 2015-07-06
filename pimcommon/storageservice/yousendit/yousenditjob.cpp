@@ -286,9 +286,9 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         const QMap<QString, QVariant> error = jsonDoc.toVariant().toMap();
         QString errorStr;
         if (error.contains(QStringLiteral("errorStatus"))) {
-            const QVariantMap storageMap = error.value(QLatin1String("errorStatus")).toMap();
+            const QVariantMap storageMap = error.value(QStringLiteral("errorStatus")).toMap();
             if (storageMap.contains(QStringLiteral("message"))) {
-                errorStr = storageMap.value(QLatin1String("message")).toString();
+                errorStr = storageMap.value(QStringLiteral("message")).toString();
             }
         } else {
             errorStr = i18n("Unknown Error \"%1\"", data);
@@ -471,9 +471,9 @@ bool YouSendItJob::parseError(const QMap<QString, QVariant> &info)
 {
     qCDebug(PIMCOMMON_LOG) << " info" << info;
     if (info.contains(QStringLiteral("errorStatus"))) {
-        const QVariantMap map = info.value(QLatin1String("errorStatus")).toMap();
+        const QVariantMap map = info.value(QStringLiteral("errorStatus")).toMap();
         if (map.contains(QStringLiteral("message"))) {
-            Q_EMIT actionFailed(map.value(QLatin1String("message")).toString());
+            Q_EMIT actionFailed(map.value(QStringLiteral("message")).toString());
             return true;
         }
     }
@@ -556,14 +556,14 @@ void YouSendItJob::parseRequestToken(const QString &data)
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     qCDebug(PIMCOMMON_LOG) << " info" << info;
     if (info.contains(QStringLiteral("authToken"))) {
-        const QString authToken = info.value(QLatin1String("authToken")).toString();
+        const QString authToken = info.value(QStringLiteral("authToken")).toString();
         Q_EMIT authorizationDone(mPassword, mUsername, authToken);
     } else {
         QString error;
         if (info.contains(QStringLiteral("errorStatus"))) {
-            QVariantMap map = info.value(QLatin1String("errorStatus")).toMap();
+            QVariantMap map = info.value(QStringLiteral("errorStatus")).toMap();
             if (map.contains(QStringLiteral("message"))) {
-                error = i18n("Authentication failed. Server returns this error:\n%1", map.value(QLatin1String("message")).toString());
+                error = i18n("Authentication failed. Server returns this error:\n%1", map.value(QStringLiteral("message")).toString());
             }
         }
         Q_EMIT authorizationFailed(error);
@@ -582,12 +582,12 @@ void YouSendItJob::parseAccountInfo(const QString &data)
     qCDebug(PIMCOMMON_LOG) << " info" << info;
     if (info.contains(QStringLiteral("storage"))) {
         PimCommon::AccountInfo accountInfo;
-        const QVariantMap storageMap = info.value(QLatin1String("storage")).toMap();
+        const QVariantMap storageMap = info.value(QStringLiteral("storage")).toMap();
         if (storageMap.contains(QStringLiteral("currentUsage"))) {
-            accountInfo.shared = storageMap.value(QLatin1String("currentUsage")).toLongLong();
+            accountInfo.shared = storageMap.value(QStringLiteral("currentUsage")).toLongLong();
         }
         if (storageMap.contains(QStringLiteral("storageQuota"))) {
-            accountInfo.quota = storageMap.value(QLatin1String("storageQuota")).toLongLong();
+            accountInfo.quota = storageMap.value(QStringLiteral("storageQuota")).toLongLong();
         }
         Q_EMIT accountInfoDone(accountInfo);
     }
@@ -604,7 +604,7 @@ void YouSendItJob::parseCreateFolder(const QString &data)
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     QString newFolderName;
     if (info.contains(QStringLiteral("name"))) {
-        newFolderName = info.value(QLatin1String("name")).toString();
+        newFolderName = info.value(QStringLiteral("name")).toString();
     }
     Q_EMIT createFolderDone(newFolderName);
     deleteLater();
@@ -622,8 +622,8 @@ void YouSendItJob::parseUploadFile(const QString &data)
     qCDebug(PIMCOMMON_LOG) << " info" << info;
     QString fileId;
     if (info.contains(QStringLiteral("fileId"))) {
-        qCDebug(PIMCOMMON_LOG) << " fileId " << info.value(QLatin1String("fileId")).toString();
-        fileId = info.value(QLatin1String("fileId")).toString();
+        qCDebug(PIMCOMMON_LOG) << " fileId " << info.value(QStringLiteral("fileId")).toString();
+        fileId = info.value(QStringLiteral("fileId")).toString();
     }
     startUploadFile(fileId);
 }

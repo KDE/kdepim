@@ -73,13 +73,13 @@ void BoxStorageService::readConfig()
                 QMap<QString, QString> map;
                 wallet->readMap(storageServiceName(), map);
                 if (map.contains(QStringLiteral("Refresh Token"))) {
-                    mRefreshToken = map.value(QLatin1String("Refresh Token"));
+                    mRefreshToken = map.value(QStringLiteral("Refresh Token"));
                 }
                 if (map.contains(QStringLiteral("Token"))) {
-                    mToken = map.value(QLatin1String("Token"));
+                    mToken = map.value(QStringLiteral("Token"));
                 }
                 if (map.contains(QStringLiteral("Expire Time"))) {
-                    mExpireDateTime = QDateTime::fromString(map.value(QLatin1String("Expire Time")));
+                    mExpireDateTime = QDateTime::fromString(map.value(QStringLiteral("Expire Time")));
                 }
             }
         }
@@ -539,13 +539,13 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
     const QMap<QString, QVariant> info = json.toVariant().toMap();
 
     if (info.contains(QStringLiteral("entries"))) {
-        const QVariantList entries = info.value(QLatin1String("entries")).toList();
+        const QVariantList entries = info.value(QStringLiteral("entries")).toList();
         Q_FOREACH (const QVariant &v, entries) {
             QVariantMap mapEntries = v.toMap();
             if (mapEntries.contains(QStringLiteral("type"))) {
-                const QString type = mapEntries.value(QLatin1String("type")).toString();
-                const QString name = mapEntries.value(QLatin1String("name")).toString();
-                const QString id = mapEntries.value(QLatin1String("id")).toString();
+                const QString type = mapEntries.value(QStringLiteral("type")).toString();
+                const QString name = mapEntries.value(QStringLiteral("name")).toString();
+                const QString id = mapEntries.value(QStringLiteral("id")).toString();
                 StorageServiceTreeWidgetItem *item = Q_NULLPTR;
                 if (type == QLatin1String("folder")) {
                     item = listWidget->addFolder(name, id);
@@ -554,13 +554,13 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
                 }
                 if (item) {
                     if (mapEntries.contains(QStringLiteral("size"))) {
-                        item->setSize(mapEntries.value(QLatin1String("size")).toULongLong());
+                        item->setSize(mapEntries.value(QStringLiteral("size")).toULongLong());
                     }
                     if (mapEntries.contains(QStringLiteral("created_at"))) {
-                        item->setDateCreated(PimCommon::BoxUtil::convertToDateTime(mapEntries.value(QLatin1String("created_at")).toString()));
+                        item->setDateCreated(PimCommon::BoxUtil::convertToDateTime(mapEntries.value(QStringLiteral("created_at")).toString()));
                     }
                     if (mapEntries.contains(QStringLiteral("modified_at"))) {
-                        item->setLastModification(PimCommon::BoxUtil::convertToDateTime(mapEntries.value(QLatin1String("modified_at")).toString()));
+                        item->setLastModification(PimCommon::BoxUtil::convertToDateTime(mapEntries.value(QStringLiteral("modified_at")).toString()));
                     }
                     item->setStoreInfo(mapEntries);
                 }
@@ -576,21 +576,21 @@ QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &var
     qCDebug(PIMCOMMON_LOG) << " variantMap" << variantMap;
     QMap<QString, QString> information;
     if (variantMap.contains(QStringLiteral("type"))) {
-        const QString type = variantMap.value(QLatin1String("type")).toString();
+        const QString type = variantMap.value(QStringLiteral("type")).toString();
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), type == QLatin1String("folder") ? i18n("Folder") : i18n("File"));
     }
     if (variantMap.contains(QStringLiteral("name"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QLatin1String("name")).toString());
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QStringLiteral("name")).toString());
     }
     if (variantMap.contains(QStringLiteral("size"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(variantMap.value(QStringLiteral("size")).toULongLong()));
     }
     if (variantMap.contains(QStringLiteral("created_at"))) {
-        const QString tmp = variantMap.value(QLatin1String("created_at")).toString();
+        const QString tmp = variantMap.value(QStringLiteral("created_at")).toString();
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((PimCommon::BoxUtil::convertToDateTime(tmp)), QLocale::ShortFormat));
     }
     if (variantMap.contains(QStringLiteral("modified_at"))) {
-        const QString tmp = variantMap.value(QLatin1String("modified_at")).toString();
+        const QString tmp = variantMap.value(QStringLiteral("modified_at")).toString();
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((PimCommon::BoxUtil::convertToDateTime(tmp)), QLocale::ShortFormat));
     }
     return information;
@@ -599,7 +599,7 @@ QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &var
 QString BoxStorageService::fileIdentifier(const QVariantMap &variantMap)
 {
     if (variantMap.contains(QStringLiteral("id"))) {
-        return variantMap.value(QLatin1String("id")).toString();
+        return variantMap.value(QStringLiteral("id")).toString();
     }
     return QString();
 }

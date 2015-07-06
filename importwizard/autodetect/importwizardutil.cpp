@@ -26,7 +26,7 @@
 
 void ImportWizardUtil::mergeLdap(const ldapStruct &ldap)
 {
-    KSharedConfigPtr ldapConfig = KSharedConfig::openConfig(QLatin1String("kabldaprc"));
+    KSharedConfigPtr ldapConfig = KSharedConfig::openConfig(QStringLiteral("kabldaprc"));
     int numberOfLdapSelected = 0;
     KConfigGroup grp;
     if (ldapConfig->hasGroup(QStringLiteral("LDAP"))) {

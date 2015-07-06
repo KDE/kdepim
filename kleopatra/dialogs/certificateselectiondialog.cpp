@@ -187,7 +187,7 @@ CertificateSelectionDialog::Private::Private(CertificateSelectionDialog *qq)
 CertificateSelectionDialog::CertificateSelectionDialog(QWidget *parent)
     : QDialog(parent), d(new Private(this))
 {
-    const KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kleopatracertificateselectiondialogrc"));
+    const KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kleopatracertificateselectiondialogrc"));
     d->ui.tabWidget.loadViews(config.data());
     const KConfigGroup geometry(config, "Geometry");
     resize(geometry.readEntry("size", size()));
@@ -280,7 +280,7 @@ Key CertificateSelectionDialog::selectedCertificate() const
 
 void CertificateSelectionDialog::hideEvent(QHideEvent *e)
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kleopatracertificateselectiondialogrc"));
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kleopatracertificateselectiondialogrc"));
     d->ui.tabWidget.saveViews(config.data());
     KConfigGroup geometry(config, "Geometry");
     geometry.writeEntry("size", size());

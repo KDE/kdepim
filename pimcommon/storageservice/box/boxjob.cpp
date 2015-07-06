@@ -163,9 +163,9 @@ void BoxJob::slotSendDataFinished(QNetworkReply *reply)
         if (error.contains(QStringLiteral("message")) || error.contains(QStringLiteral("error_description"))) {
             QString errorStr;
             if (error.contains(QStringLiteral("message"))) {
-                errorStr = error.value(QLatin1String("message")).toString();
+                errorStr = error.value(QStringLiteral("message")).toString();
             } else {
-                errorStr = error.value(QLatin1String("error_description")).toString();
+                errorStr = error.value(QStringLiteral("error_description")).toString();
             }
             switch (mActionType) {
             case PimCommon::StorageServiceAbstract::NoneAction:
@@ -288,10 +288,10 @@ void BoxJob::parseAccountInfo(const QString &data)
 
     PimCommon::AccountInfo accountInfo;
     if (info.contains(QStringLiteral("space_used"))) {
-        accountInfo.shared = info.value(QLatin1String("space_used")).toLongLong();
+        accountInfo.shared = info.value(QStringLiteral("space_used")).toLongLong();
     }
     if (info.contains(QStringLiteral("space_amount"))) {
-        accountInfo.quota = info.value(QLatin1String("space_amount")).toLongLong();
+        accountInfo.quota = info.value(QStringLiteral("space_amount")).toLongLong();
     }
     Q_EMIT accountInfoDone(accountInfo);
     deleteLater();
@@ -631,7 +631,7 @@ QString BoxJob::parseNameInfo(const QString &data)
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
 
     if (info.contains(QStringLiteral("name"))) {
-        filename = info.value(QLatin1String("name")).toString();
+        filename = info.value(QStringLiteral("name")).toString();
     }
     return filename;
 }
@@ -647,9 +647,9 @@ void BoxJob::parseShareLink(const QString &data)
     }
     const QMap<QString, QVariant> info = jsonDoc.toVariant().toMap();
     if (info.contains(QStringLiteral("shared_link"))) {
-        const QVariantMap map = info.value(QLatin1String("shared_link")).toMap();
+        const QVariantMap map = info.value(QStringLiteral("shared_link")).toMap();
         if (map.contains(QStringLiteral("url"))) {
-            url = map.value(QLatin1String("url")).toString();
+            url = map.value(QStringLiteral("url")).toString();
         }
     }
     Q_EMIT shareLinkDone(url);
@@ -704,14 +704,14 @@ void BoxJob::parseAccessToken(const QString &data)
 
     //qCDebug(PIMCOMMON_LOG)<<" info"<<info;
     if (info.contains(QStringLiteral("refresh_token"))) {
-        mRefreshToken = info.value(QLatin1String("refresh_token")).toString();
+        mRefreshToken = info.value(QStringLiteral("refresh_token")).toString();
     }
     if (info.contains(QStringLiteral("access_token"))) {
-        mToken = info.value(QLatin1String("access_token")).toString();
+        mToken = info.value(QStringLiteral("access_token")).toString();
     }
     qint64 expireInTime = 0;
     if (info.contains(QStringLiteral("expires_in"))) {
-        expireInTime = info.value(QLatin1String("expires_in")).toLongLong();
+        expireInTime = info.value(QStringLiteral("expires_in")).toLongLong();
     }
     //qCDebug(PIMCOMMON_LOG)<<" parseAccessToken";
     Q_EMIT authorizationDone(mRefreshToken, mToken, expireInTime);

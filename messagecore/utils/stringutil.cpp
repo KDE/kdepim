@@ -180,7 +180,7 @@ QMap<QString, QString> parseMailtoUrl(const KUrl &url)
     QStringList to;
     to << KEmailAddress::decodeMailtoUrl(url);
 
-    const QString toStr = values.value(QLatin1String("to"));
+    const QString toStr = values.value(QStringLiteral("to"));
     if (!toStr.isEmpty()) {
         to << toStr;
     }

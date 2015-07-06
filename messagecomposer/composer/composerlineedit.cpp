@@ -341,7 +341,7 @@ void ComposerLineEdit::loadContacts()
         QStringList::ConstIterator it = recent.constBegin();
         QString name, email;
 
-        KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kpimcompletionorder"));
+        KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kpimcompletionorder"));
         KConfigGroup group(config, "CompletionWeights");
         const int weight = group.readEntry("Recent Addresses", 10);
         removeCompletionSource(recentAddressGroupName);

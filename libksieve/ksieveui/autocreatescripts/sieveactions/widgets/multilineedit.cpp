@@ -38,7 +38,7 @@ QSize MultiLineEdit::sizeHint() const
 {
     QFontMetrics fm(font());
 
-    const int h = document()->size().toSize().height() - fm.descent() + 2 * frameWidth();
+    const int h = qMax(document()->size().toSize().height() - fm.descent() + 2 * frameWidth(), 50);
 
     QStyleOptionFrameV2 opt;
     opt.initFrom(this);

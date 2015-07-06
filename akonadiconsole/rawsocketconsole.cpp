@@ -112,11 +112,11 @@ void RawSocketConsole::connectClicked()
         }
         QSettings conSettings(connectionConfigFile, QSettings::IniFormat);
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
-        const QString namedPipe = conSettings.value(QLatin1String("Data/NamedPipe"), QStringLiteral("Akonadi")).toString();
+        const QString namedPipe = conSettings.value(QStringLiteral("Data/NamedPipe"), QStringLiteral("Akonadi")).toString();
         mSocket->connectToServer(namedPipe);
 #else
         const QString defaultSocketDir = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi"));
-        const QString path = conSettings.value(QLatin1String("Data/UnixPath"), QString(defaultSocketDir + QLatin1String("/akonadiserver.socket"))).toString();
+        const QString path = conSettings.value(QStringLiteral("Data/UnixPath"), QString(defaultSocketDir + QLatin1String("/akonadiserver.socket"))).toString();
         mSocket->connectToServer(path);
 #endif
     }

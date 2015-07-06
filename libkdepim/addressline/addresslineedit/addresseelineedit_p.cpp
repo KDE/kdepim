@@ -806,7 +806,7 @@ void AddresseeLineEditPrivate::slotAkonadiSearchResult(KJob *job)
 void AddresseeLineEditPrivate::slotAkonadiCollectionsReceived(
     const Akonadi::Collection::List &collections)
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kpimcompletionorder"));
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kpimcompletionorder"));
     KConfigGroup groupCompletionWeights(config, "CompletionWeights");
     KConfigGroup groupCompletionEnabled(config, "CompletionEnabled");
     foreach (const Akonadi::Collection &collection, collections) {
@@ -948,7 +948,7 @@ void AddresseeLineEditPrivate::setShowOU(bool showOU)
 
 void AddresseeLineEditPrivate::loadBalooBlackList()
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QLatin1String("kpimbalooblacklist"));
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kpimbalooblacklist"));
     KConfigGroup group(config, "AddressLineEdit");
     m_balooBlackList = group.readEntry("BalooBackList", QStringList());
     m_domainExcludeList = group.readEntry("ExcludeDomain", QStringList());

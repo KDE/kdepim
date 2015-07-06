@@ -74,7 +74,7 @@ void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
         const QMap<QString, QVariant> map = jsonDoc.toVariant().toMap();
         QUrl longUrl;
         if (map.contains(QStringLiteral("long-url"))) {
-            longUrl.setUrl(map.value(QLatin1String("long-url")).toString());
+            longUrl.setUrl(map.value(QStringLiteral("long-url")).toString());
         } else {
             return;
         }

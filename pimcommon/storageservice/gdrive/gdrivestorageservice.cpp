@@ -82,16 +82,16 @@ void GDriveStorageService::readConfig()
                 QMap<QString, QString> map;
                 wallet->readMap(storageServiceName(), map);
                 if (map.contains(QStringLiteral("Account Name"))) {
-                    accountName = map.value(QLatin1String("Account Name"));
+                    accountName = map.value(QStringLiteral("Account Name"));
                 }
                 if (map.contains(QStringLiteral("Refresh Token"))) {
-                    refreshTokenStr = map.value(QLatin1String("Refresh Token"));
+                    refreshTokenStr = map.value(QStringLiteral("Refresh Token"));
                 }
                 if (map.contains(QStringLiteral("Token"))) {
-                    accessTokenStr = map.value(QLatin1String("Token"));
+                    accessTokenStr = map.value(QStringLiteral("Token"));
                 }
                 if (map.contains(QStringLiteral("Expire Time"))) {
-                    mExpireDateTime = QDateTime::fromString(map.value(QLatin1String("Expire Time")));
+                    mExpireDateTime = QDateTime::fromString(map.value(QStringLiteral("Expire Time")));
                 }
             }
             mNeedToReadConfigFirst = false;

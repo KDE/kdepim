@@ -270,7 +270,7 @@ QUrl Utils::akonadiAgentConfigPath(const QString &identifier)
 QString Utils::akonadiAgentName(const QString &configPath)
 {
     QSettings settings(configPath, QSettings::IniFormat);
-    const QString name = settings.value(QLatin1String("Agent/Name")).toString();
+    const QString name = settings.value(QStringLiteral("Agent/Name")).toString();
     return name;
 }
 

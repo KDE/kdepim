@@ -385,12 +385,12 @@ void AddEditBlog::fetchedBlogId(const QList< QMap < QString , QString > > &list)
         blogsList->setColumnHidden(2, true);
         blogsList->setColumnHidden(3, true);
         for (; it != endIt; ++it) {
-            qCDebug(BLOGILO_LOG) << it->value(QLatin1String("title"));
+            qCDebug(BLOGILO_LOG) << it->value(QStringLiteral("title"));
             blogsList->insertRow(i);
-            blogsList->setCellWidget(i, 0, new QLabel(it->value(QLatin1String("title"))));
-            blogsList->setCellWidget(i, 1, new QLabel(it->value(QLatin1String("url"))));
-            blogsList->setCellWidget(i, 2, new QLabel(it->value(QLatin1String("id"))));
-            blogsList->setCellWidget(i, 3, new QLabel(it->value(QLatin1String("apiUrl"))));
+            blogsList->setCellWidget(i, 0, new QLabel(it->value(QStringLiteral("title"))));
+            blogsList->setCellWidget(i, 1, new QLabel(it->value(QStringLiteral("url"))));
+            blogsList->setCellWidget(i, 2, new QLabel(it->value(QStringLiteral("id"))));
+            blogsList->setCellWidget(i, 3, new QLabel(it->value(QStringLiteral("apiUrl"))));
             ++i;
         }
         QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -413,10 +413,10 @@ void AddEditBlog::fetchedBlogId(const QList< QMap < QString , QString > > &list)
         }
         delete blogsDialog;
     } else if (listCount > 0) {
-        blogId = list.constBegin()->value(QLatin1String("id"));
-        blogName = list.constBegin()->value(QLatin1String("title"));
-        blogUrl = list.constBegin()->value(QLatin1String("url"));
-        apiUrl = list.constBegin()->value(QLatin1String("apiUrl"));
+        blogId = list.constBegin()->value(QStringLiteral("id"));
+        blogName = list.constBegin()->value(QStringLiteral("title"));
+        blogUrl = list.constBegin()->value(QStringLiteral("url"));
+        apiUrl = list.constBegin()->value(QStringLiteral("apiUrl"));
     } else {
         KMessageBox::sorry(this, i18n("Sorry, No blog found with the specified account info."));
         return;
