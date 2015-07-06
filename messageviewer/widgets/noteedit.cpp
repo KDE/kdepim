@@ -130,7 +130,7 @@ void NoteEdit::writeConfig()
 {
     if (mCollectionCombobox->currentCollection().id() != MessageViewer::GlobalSettingsBase::self()->lastNoteSelectedFolder()) {
         MessageViewer::GlobalSettingsBase::self()->setLastNoteSelectedFolder(mCollectionCombobox->currentCollection().id());
-        MessageViewer::GlobalSettingsBase::self()->writeConfig();
+        MessageViewer::GlobalSettingsBase::self()->save();
     }
 }
 
