@@ -46,7 +46,6 @@ void PimSettingExporterConsole::initializeLogInFile()
     connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addTitle, this, &PimSettingExporterConsole::slotAddTitle);
 }
 
-
 void PimSettingExporterConsole::slotAddEndLine()
 {
     mLogInFile->addEndLine();

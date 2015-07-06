@@ -39,8 +39,6 @@ void SendLaterConfigureDialogTest::initTestCase()
     QStandardPaths::setTestModeEnabled(true);
 }
 
-
-
 void SendLaterConfigureDialogTest::shouldHaveDefaultValue()
 {
     SendLaterConfigureDialog dlg;

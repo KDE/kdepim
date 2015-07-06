@@ -271,8 +271,9 @@ void ThunderbirdSettings::readTagSettings()
 {
     QVector<tagStruct> v;
     v.reserve(mHashTag.size());
-    foreach (const tagStruct &tag, mHashTag)
+    foreach (const tagStruct &tag, mHashTag) {
         v.push_back(tag);
+    }
 
     ImportWizardUtil::addAkonadiTag(v);
 }

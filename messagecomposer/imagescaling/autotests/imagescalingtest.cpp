@@ -37,7 +37,6 @@ void ImageScalingTest::initTestCase()
     QStandardPaths::setTestModeEnabled(true);
 }
 
-
 void ImageScalingTest::shouldHaveDefaultValue()
 {
     MessageComposer::ImageScaling scaling;
@@ -89,7 +88,6 @@ void ImageScalingTest::shouldHaveChangeMimetype_data()
     QTest::newRow("no change mimetype when png (same)") <<  QByteArray("image/png") << QByteArray("image/png") << QStringLiteral("JPG");
     QTest::newRow("no change mimetype when png") <<  QByteArray("image/png") << QByteArray("image/png") << QStringLiteral("PNG");
 
-
     QTest::newRow("change mimetype when png") <<  QByteArray("image/mng") << QByteArray("image/png") << QStringLiteral("PNG");
     QTest::newRow("change mimetype when jpeg") <<  QByteArray("image/mng") << QByteArray("image/jpeg") << QStringLiteral("JPG");
 
@@ -109,8 +107,8 @@ void ImageScalingTest::shouldHaveChangeMimetype()
     MessageComposer::MessageComposerSettings::self()->save();
     MessageComposer::ImageScaling scaling;
     scaling.setMimetype(initialmimetype);
-    qDebug()<<" scaling.mimetype()"<<scaling.mimetype();
-    qDebug()<<" scaling.mimetype()"<<newmimetype;
+    qDebug() << " scaling.mimetype()" << scaling.mimetype();
+    qDebug() << " scaling.mimetype()" << newmimetype;
     QCOMPARE(scaling.mimetype(), newmimetype);
 }
 

@@ -347,10 +347,10 @@ void MainWindow::optionsPreferences()
     connect(dialog, &ConfigureDialog::blogAdded, this, &MainWindow::slotBlogAdded);
     connect(dialog, &ConfigureDialog::blogEdited, this, &MainWindow::slotBlogEdited);
     connect(dialog, &ConfigureDialog::blogRemoved, this, &MainWindow::slotBlogRemoved);
-    connect( dialog, &KConfigDialog::settingsChanged, this, &MainWindow::settingsChanged );
-    connect( dialog, &KConfigDialog::settingsChanged, this, &MainWindow::slotSettingsChanged );
-    connect( dialog, &ConfigureDialog::dialogDestroyed, this, &MainWindow::slotDialogDestroyed);
-    connect( dialog, &ConfigureDialog::configurationChanged, this, &MainWindow::slotSettingsChanged);
+    connect(dialog, &KConfigDialog::settingsChanged, this, &MainWindow::settingsChanged);
+    connect(dialog, &KConfigDialog::settingsChanged, this, &MainWindow::slotSettingsChanged);
+    connect(dialog, &ConfigureDialog::dialogDestroyed, this, &MainWindow::slotDialogDestroyed);
+    connect(dialog, &ConfigureDialog::configurationChanged, this, &MainWindow::slotSettingsChanged);
     dialog->show();
 }
 

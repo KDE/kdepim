@@ -110,8 +110,7 @@ public:
     }
 
 private:
-    void run() Q_DECL_OVERRIDE
-    {
+    void run() Q_DECL_OVERRIDE {
         const QMutexLocker locker(&m_mutex);
         m_result = m_function();
     }
@@ -228,16 +227,15 @@ protected:
     {
         return m_auditLogError;
     }
-    void showProgress(const char *what, int type, int current, int total) Q_DECL_OVERRIDE
-    {
+    void showProgress(const char *what, int type, int current, int total) Q_DECL_OVERRIDE {
         // will be called from the thread exec'ing the operation, so
         // just bounce everything to the owning thread:
         // ### hope this is thread-safe (meta obj is const, and
         // ### portEvent is thread-safe, so should be ok)
         QMetaObject::invokeMethod(this, "progress", Qt::QueuedConnection,
-                                  Q_ARG(QString, QGpgMEProgressTokenMapper::map(what, type)),
-                                  Q_ARG(int, current),
-                                  Q_ARG(int, total));
+        Q_ARG(QString, QGpgMEProgressTokenMapper::map(what, type)),
+        Q_ARG(int, current),
+        Q_ARG(int, total));
     }
 private:
     template <typename T1, typename T2>

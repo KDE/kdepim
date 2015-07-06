@@ -32,7 +32,6 @@
 
 #include <time.h>
 
-
 namespace KPIM
 {
 

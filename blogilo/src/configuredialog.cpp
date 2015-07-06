@@ -63,7 +63,7 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
     addPage(advancedSettingsDlg, i18nc("Configure Page", "Advanced"), QStringLiteral("applications-utilities"));
     addPage(mConfigStorageService, i18nc("Configure Page", "Storage Service"), QStringLiteral("applications-utilities"));
 
-    connect( this, &KConfigDialog::settingsChanged, this, &ConfigureDialog::configurationChanged );
+    connect(this, &KConfigDialog::settingsChanged, this, &ConfigureDialog::configurationChanged);
     connect(this, &ConfigureDialog::destroyed, this, &ConfigureDialog::dialogDestroyed);
     connect(button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ConfigureDialog::slotApplySettingsClicked);
     connect(button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &ConfigureDialog::slotDefaultClicked);

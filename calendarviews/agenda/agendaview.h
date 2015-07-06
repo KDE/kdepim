@@ -178,7 +178,6 @@ public:
     void readSettings(const KConfig *);
     void writeSettings(KConfig *);
 
-
     void enableAgendaUpdate(bool enable);
     void setIncidenceChanger(Akonadi::IncidenceChanger *changer) Q_DECL_OVERRIDE;
 

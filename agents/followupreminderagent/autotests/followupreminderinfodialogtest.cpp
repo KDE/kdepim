@@ -38,7 +38,6 @@ void FollowupReminderInfoDialogTest::initTestCase()
     QStandardPaths::setTestModeEnabled(true);
 }
 
-
 void FollowupReminderInfoDialogTest::shouldHaveDefaultValues()
 {
     FollowUpReminderInfoDialog dlg;

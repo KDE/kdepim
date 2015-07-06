@@ -76,12 +76,11 @@ public:
         return mWeight;
     }
 
-    void save(CompletionOrderWidget *) Q_DECL_OVERRIDE
-    {
+    void save(CompletionOrderWidget *) Q_DECL_OVERRIDE {
         KConfig *config = KLDAP::LdapClientSearchConfig::config();
         KConfigGroup group(config, "LDAP");
         group.writeEntry(QString::fromLatin1("SelectedCompletionWeight%1").arg(mLdapClient->clientNumber()),
-                         mWeight);
+        mWeight);
         group.sync();
     }
 
@@ -95,14 +94,12 @@ public:
         return true;
     }
 
-    void setIsEnabled(bool b) Q_DECL_OVERRIDE
-    {
+    void setIsEnabled(bool b) Q_DECL_OVERRIDE {
         Q_UNUSED(b);
     }
 
 protected:
-    void setCompletionWeight(int weight) Q_DECL_OVERRIDE
-    {
+    void setCompletionWeight(int weight) Q_DECL_OVERRIDE {
         mWeight = weight;
     }
 
@@ -155,24 +152,22 @@ public:
         return mWeight;
     }
 
-    void setIsEnabled(bool b) Q_DECL_OVERRIDE
-    {
+    void setIsEnabled(bool b) Q_DECL_OVERRIDE {
         mEnabled = b;
     }
 
-    void save(CompletionOrderWidget *editor) Q_DECL_OVERRIDE
-    {
+    void save(CompletionOrderWidget *editor) Q_DECL_OVERRIDE {
         KConfigGroup group(editor->configFile(), "CompletionWeights");
         group.writeEntry(mIdentifier, mWeight);
-        if (mHasEnableSupport) {
+        if (mHasEnableSupport)
+        {
             KConfigGroup groupEnabled(editor->configFile(), "CompletionEnabled");
             //groupEnabled.writeEntry(mIdentifier, );
         }
     }
 
 protected:
-    void setCompletionWeight(int weight) Q_DECL_OVERRIDE
-    {
+    void setCompletionWeight(int weight) Q_DECL_OVERRIDE {
         mWeight = weight;
     }
 
@@ -205,7 +200,7 @@ public:
             setFlags(flags() | Qt::ItemIsUserCheckable);
             setCheckState(0, mItem->isEnabled() ? Qt::Checked : Qt::Unchecked);
         } else {
-            setFlags(flags() &~ Qt::ItemIsUserCheckable);
+            setFlags(flags() & ~ Qt::ItemIsUserCheckable);
         }
 
     }

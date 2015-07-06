@@ -56,7 +56,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
 
     QModelIndex index(int row, int column,
-                                 const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
     QModelIndex mapToSource(const QModelIndex &proxyIndex) const Q_DECL_OVERRIDE;

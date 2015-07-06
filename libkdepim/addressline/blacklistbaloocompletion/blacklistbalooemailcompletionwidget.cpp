@@ -67,7 +67,6 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mEmailList->setObjectName(QStringLiteral("email_list"));
     mainLayout->addWidget(mEmailList);
 
-
     QHBoxLayout *searchLineLayout = new QHBoxLayout;
     mainLayout->addLayout(searchLineLayout);
     mSearchInResultLineEdit = new KListWidgetSearchLine(this, mEmailList);

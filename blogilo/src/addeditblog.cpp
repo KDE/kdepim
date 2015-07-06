@@ -86,7 +86,6 @@ AddEditBlog::AddEditBlog(int blog_id, QWidget *parent, Qt::WindowFlags flags)
     connect(buttonBox, &QDialogButtonBox::accepted, this, &AddEditBlog::slotAccepted);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AddEditBlog::reject);
 
-
     d->isNewBlog = true;
     d->mFetchAPITimer = d->mFetchBlogIdTimer = d->mFetchProfileIdTimer = Q_NULLPTR;
 
