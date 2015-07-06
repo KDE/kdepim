@@ -18,6 +18,7 @@
 #include "thunderbirdaddressbook.h"
 #include "addressbook/MorkParser.h"
 
+#include <KLocalizedString>
 #include <KContacts/Addressee>
 #include <QUrl>
 #include "importwizard_debug.h"
@@ -26,7 +27,6 @@ ThunderBirdAddressBook::ThunderBirdAddressBook(const QDir &dir, ImportWizard *pa
     : AbstractAddressBook(parent)
 {
     readAddressBook(dir.path() + QLatin1String("/impab.mab"));
-
     const QStringList filesimportab = dir.entryList(QStringList(QLatin1String("impab-[0-9]*.map")), QDir::Files, QDir::Name);
     Q_FOREACH (const QString &file, filesimportab) {
         readAddressBook(dir.path() + QLatin1Char('/') + file);
@@ -51,6 +51,9 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
 {
     MorkParser mork;
     if (!mork.open(filename)) {
+        if (mork.error() == FailedToOpen) {
+            addAddressBookImportError(i18n("Contact filename '%1' not found", filename));
+        }
         qCDebug(IMPORTWIZARD_LOG) << " error during read file " << filename << " Error type " << mork.error();
         return;
     }
