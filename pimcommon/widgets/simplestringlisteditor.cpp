@@ -235,10 +235,10 @@ void SimpleStringListEditor::setButtonText(ButtonCode button, const QString &tex
 void SimpleStringListEditor::addNewEntry()
 {
     bool ok = false;
-    QString newEntry = QInputDialog::getText(this, i18n("New Value"),
+    const QString newEntry = QInputDialog::getText(this, i18n("New Value"),
                        mAddDialogLabel, QLineEdit::Normal, QString(),
                        &ok);
-    if (ok) {
+    if (ok && !newEntry.trimmed().isEmpty()) {
         insertNewEntry(newEntry);
     }
 }
@@ -281,7 +281,7 @@ QString SimpleStringListEditor::modifyEntry(const QString &text)
                                             &ok);
     Q_EMIT aboutToAdd(newText);
 
-    if (!ok || newText.isEmpty() || newText == text) {
+    if (!ok || newText.trimmed().isEmpty() || newText == text) {
         return QString();
     }
 
