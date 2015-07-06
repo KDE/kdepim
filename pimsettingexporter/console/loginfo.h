@@ -31,6 +31,14 @@ public:
     void addErrorLogEntry(const QString &log);
     void addTitleLogEntry(const QString &log);
     void addEndLineLogEntry();
+private:
+    enum LogType {
+        AddEndLine = 0,
+        AddInfo,
+        AddError,
+        AddTitle
+    };
+    void addLogLine(const QString &message, LogType type);
 };
 
 #endif // LOGINFO_H

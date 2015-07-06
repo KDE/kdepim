@@ -30,21 +30,40 @@ LogInfo::~LogInfo()
 
 void LogInfo::addInfoLogEntry(const QString &log)
 {
-
+    addLogLine(log, AddEndLine);
 }
 
 void LogInfo::addErrorLogEntry(const QString &log)
 {
-
+    addLogLine(log, AddError);
 }
 
 void LogInfo::addTitleLogEntry(const QString &log)
 {
-
+    addLogLine(log, AddTitle);
 }
 
 void LogInfo::addEndLineLogEntry()
 {
-
+    addLogLine(QString(), AddEndLine);
 }
 
+void LogInfo::addLogLine(const QString &message, LogType type)
+{
+    QString newMessage;
+    switch (type) {
+    case AddEndLine:
+        newMessage = QLatin1Char('\n');
+        break;
+    case AddInfo:
+        newMessage = QStringLiteral("INFO: %1").arg(message);
+        break;
+    case AddError:
+        newMessage = QStringLiteral("ERROR: %1").arg(message);
+        break;
+    case AddTitle:
+        newMessage = message;
+        break;
+    }
+    //TODO cout << ... ?
+}
