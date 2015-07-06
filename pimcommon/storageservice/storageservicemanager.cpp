@@ -380,7 +380,8 @@ QString StorageServiceManager::description(ServiceType type)
     case Hubic:
         return PimCommon::HubicStorageService::description();
     case WebDav:
-    //return PimCommon::WebDavStorageService::description();
+        return QString();
+        //return PimCommon::WebDavStorageService::description();
     case Box:
         return PimCommon::BoxStorageService::description();
     case YouSendIt:
@@ -406,6 +407,7 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceUrl();
     case WebDav:
+        return QUrl();
     //return PimCommon::WebDavStorageService::serviceUrl();
     case Box:
         return PimCommon::BoxStorageService::serviceUrl();
@@ -430,6 +432,7 @@ QString StorageServiceManager::serviceName(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceName();
     case WebDav:
+        return QString();
     //return PimCommon::WebDavStorageService::serviceName();
     case Box:
         return PimCommon::BoxStorageService::serviceName();
@@ -454,6 +457,7 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::name();
     case WebDav:
+        return QString();
     //return PimCommon::WebDavStorageService::name();
     case Box:
         return PimCommon::BoxStorageService::name();
@@ -478,6 +482,7 @@ QString StorageServiceManager::icon(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::iconName();
     case WebDav:
+        return QString();
     //return PimCommon::WebDavStorageService::iconName();
     case Box:
         return PimCommon::BoxStorageService::iconName();
@@ -502,7 +507,8 @@ StorageServiceAbstract::Capabilities StorageServiceManager::capabilities(Service
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceCapabilities();
     case WebDav:
-    ///return PimCommon::WebDavStorageService::serviceCapabilities();
+        return StorageServiceAbstract::NoCapability;
+    //return PimCommon::WebDavStorageService::serviceCapabilities();
     case Box:
         return PimCommon::BoxStorageService::serviceCapabilities();
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
