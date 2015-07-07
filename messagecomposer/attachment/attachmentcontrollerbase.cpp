@@ -387,7 +387,6 @@ void AttachmentControllerBase::exportPublicKey(const QString &fingerprint)
 {
     if (fingerprint.isEmpty() || !Kleo::CryptoBackendFactory::instance()->openpgp()) {
         qCWarning(MESSAGECOMPOSER_LOG) << "Tried to export key with empty fingerprint, or no OpenPGP.";
-        Q_ASSERT(false);   // Can this happen?
         return;
     }
 
@@ -853,25 +852,24 @@ void AttachmentControllerBase::attachmentProperties(AttachmentPart::Ptr part)
     delete dialog;
 }
 
-void AttachmentControllerBase::attachFileDirectory(const QList<QUrl> &urls, const QString &encoding)
+void AttachmentControllerBase::attachDirectory(const QUrl &url)
 {
-//QT5
-#if 0
+    const int rc = KMessageBox::warningYesNo(d->wParent, i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile()), i18n("Attach directory"));
+    if (rc == KMessageBox::Yes) {
+        addAttachment(url);
+    }
+}
+
+#include <KUrl>
+void AttachmentControllerBase::attachFiles(const QList<QUrl> &urls, const QString &encoding)
+{
     const int numberOfFiles(urls.count());
     for (int i = 0; i < numberOfFiles; ++i) {
         const KUrl url = urls.at(i);
         KUrl urlWithEncoding = url;
         urlWithEncoding.setFileEncoding(encoding);
-        if (KMimeType::findByUrl(urlWithEncoding)->name() == QLatin1String("inode/directory")) {
-            const int rc = KMessageBox::warningYesNo(d->wParent, i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile()), i18n("Attach directory"));
-            if (rc == KMessageBox::Yes) {
-                addAttachment(urlWithEncoding);
-            }
-        } else {
-            addAttachment(urlWithEncoding);
-        }
+        addAttachment(urlWithEncoding);
     }
-#endif
 }
 
 void AttachmentControllerBase::showAttachVcard()
@@ -891,14 +889,9 @@ void AttachmentControllerBase::showAttachVcard()
 
 void AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog()
 {
-    KEncodingFileDialog::Result result = KEncodingFileDialog::getOpenUrlAndEncoding(QString(),
-                                         QUrl(),
-                                         QString(),
-                                         d->wParent,
-                                         i18n("Attach Directory"));
-    if (!result.URLs.isEmpty()) {
-        const QString encoding = MessageViewer::NodeHelper::fixEncoding(result.encoding);
-        attachFileDirectory(result.URLs, encoding);
+    const QUrl url = QFileDialog::getExistingDirectoryUrl(d->wParent, i18n("Attach Directory"));
+    if (url.isValid()) {
+        attachDirectory(url);
     }
 }
 
