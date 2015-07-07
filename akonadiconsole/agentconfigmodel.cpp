@@ -58,9 +58,7 @@ void AgentConfigModel::reload()
         if (QByteArray(method.typeName()).isEmpty()) {   // returns void
             continue;
         }
-#pragma message("Port to QT5")
-#if 0 //QT5
-        const QByteArray signature(method.signature());
+        const QByteArray signature(method.methodSignature());
         if (signature.isEmpty()) {
             continue;
         }
@@ -78,7 +76,6 @@ void AgentConfigModel::reload()
         }
         const QString settingName = methodName.at(0).toUpper() + methodName.mid(1);
         m_settings.append(qMakePair(settingName, reply.arguments().at(0)));
-#endif
     }
     reset();
 }
