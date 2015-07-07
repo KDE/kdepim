@@ -37,7 +37,6 @@
 #include <KServiceTypeTrader>
 
 #include <QHBoxLayout>
-#include <QString>
 #include <QPushButton>
 
 namespace MailCommon
@@ -75,9 +74,9 @@ void RegExpLineEdit::initWidget(const QString &str)
     connect(mLineEdit, &KLineEdit::textChanged, this, &RegExpLineEdit::textChanged);
     connect(mLineEdit, &KLineEdit::returnPressed, this, &RegExpLineEdit::returnPressed);
 
-    if (!KServiceTypeTrader::self()->query(QLatin1String("KRegExpEditor/KRegExpEditor")).isEmpty()) {
+    if (!KServiceTypeTrader::self()->query(QStringLiteral("KRegExpEditor/KRegExpEditor")).isEmpty()) {
         mRegExpEditButton = new QPushButton(i18n("Edit..."), this);
-        mRegExpEditButton->setObjectName(QLatin1String("mRegExpEditButton"));
+        mRegExpEditButton->setObjectName(QStringLiteral("mRegExpEditButton"));
         mRegExpEditButton->setSizePolicy(QSizePolicy::Minimum,
                                          QSizePolicy::Fixed);
         hlay->addWidget(mRegExpEditButton);
@@ -119,7 +118,7 @@ void RegExpLineEdit::slotEditRegExp()
     if (!mRegExpEditDialog) {
         mRegExpEditDialog =
             KServiceTypeTrader::createInstanceFromQuery<QDialog>(
-                QLatin1String("KRegExpEditor/KRegExpEditor"), QString(), this);
+                QStringLiteral("KRegExpEditor/KRegExpEditor"), QString(), this);
     }
 
     KRegExpEditorInterface *iface = qobject_cast<KRegExpEditorInterface *>(mRegExpEditDialog);
