@@ -63,7 +63,7 @@ void WebDavJob::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *auth
 {
     if ((mNbAuthCheck > 2) || (mUserName.isEmpty() || mPassword.isEmpty())) {
         QPointer<LoginDialog> dlg = new LoginDialog;
-        dlg->setCaption(i18n("WebDav"));
+        dlg->setWindowTitle(i18n("WebDav"));
         dlg->setUserName(auth->user());
         dlg->setPassword(auth->password());
         if (dlg->exec()) {

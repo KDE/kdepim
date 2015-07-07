@@ -71,10 +71,10 @@ set(libpimcommon_storageservice_SRCS
   storageservice/yousendit/yousenditstorageservice.cpp
   storageservice/yousendit/yousenditutil.cpp
 
-  #storageservice/webdav/webdavstorageservice.cpp
-  #storageservice/webdav/webdavjob.cpp
-  #storageservice/webdav/webdavsettingsdialog.cpp
-  #storageservice/webdav/protocol/webdav_url_info.cpp
+  storageservice/webdav/webdavstorageservice.cpp
+  storageservice/webdav/webdavjob.cpp
+  storageservice/webdav/webdavsettingsdialog.cpp
+  storageservice/webdav/protocol/webdav_url_info.cpp
 
   storageservice/utils/storageserviceutils.cpp
 

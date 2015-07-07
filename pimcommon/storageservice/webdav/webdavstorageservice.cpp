@@ -30,6 +30,7 @@
 
 #include <KLocalizedString>
 #include <QDateTime>
+#include <QDir>
 
 #include "pimcommon_debug.h"
 #include <QFileInfo>

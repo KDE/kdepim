@@ -43,6 +43,8 @@
 using namespace PimCommon;
 
 QWebdavUrlInfo::QWebdavUrlInfo()
+    : mIsDir(false),
+      mIsFile(false)
 {
     setSize(-1);
 }
@@ -65,17 +67,9 @@ QWebdavUrlInfo::QWebdavUrlInfo(const QDomElement &dom)
     }
 }
 
-QWebdavUrlInfo::QWebdavUrlInfo(const QWebdavUrlInfo &wui)
-    : QUrlInfo(wui),
-      mProperties(wui.mProperties),
-      mCreatedAt(wui.mCreatedAt),
-      mDisplayName(wui.mDisplayName),
-      mSource(wui.mSource),
-      mContentLanguage(wui.mContentLanguage),
-      mEntityTag(wui.mEntityTag),
-      mMimeType(wui.mMimeType)
+bool QWebdavUrlInfo::isValid() const
 {
-    mNode = wui.mNode.cloneNode();
+    return !mName.isEmpty();
 }
 
 int QWebdavUrlInfo::codeFromResponse(const QString &response)
@@ -206,22 +200,72 @@ void QWebdavUrlInfo::davParsePropstats(const QString &path, const QDomNodeList &
         mProperties = map;
     }
 
-    setDir(isDirectory);
-    setFile(!isDirectory);
+    setIsDir(isDirectory);
+    setIsFile(!isDirectory);
 
     if (isDirectory && !name().endsWith(QLatin1String("/"))) {
         setName(name() + QLatin1String("/"));
     }
-
+#if 0
     if (foundExecutable || isDirectory) {
         setPermissions(0700);
     } else {
         setPermissions(0600);
     }
-
+#endif
     if (!isDirectory && !mimeType.isEmpty()) {
         setMimeType(mimeType);
     }
+}
+
+bool QWebdavUrlInfo::isFile() const
+{
+    return mIsFile;
+}
+
+void QWebdavUrlInfo::setIsFile(bool isFile)
+{
+    mIsFile = isFile;
+}
+
+qlonglong QWebdavUrlInfo::size() const
+{
+    return mSize;
+}
+
+void QWebdavUrlInfo::setSize(const qlonglong &size)
+{
+    mSize = size;
+}
+
+QDateTime QWebdavUrlInfo::lastModified() const
+{
+    return mLastModified;
+}
+
+void QWebdavUrlInfo::setLastModified(const QDateTime &lastModified)
+{
+    mLastModified = lastModified;
+}
+
+bool QWebdavUrlInfo::isDir() const
+{
+    return mIsDir;
+}
+
+void QWebdavUrlInfo::setIsDir(bool isDir)
+{
+    mIsDir = isDir;
+}
+
+QString QWebdavUrlInfo::name() const
+{
+    return mName;
+}
+
+void QWebdavUrlInfo::setName(const QString &name)
+{
+    mName = name;
 }
 
 void QWebdavUrlInfo::setCreatedAt(const QDateTime &date)
