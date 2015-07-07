@@ -1568,7 +1568,7 @@ void Kleo::KeyResolver::dump() const
                 qCDebug(MESSAGECOMPOSER_LOG) << "  " << kit->shortKeyID();
             }
             qCDebug(MESSAGECOMPOSER_LOG) << "  SplitInfo #" << i << " recipients: "
-                                         << qPrintable(sit->recipients.join(QLatin1String(", ")));
+                                         << qPrintable(sit->recipients.join(QStringLiteral(", ")));
         }
     }
 #endif

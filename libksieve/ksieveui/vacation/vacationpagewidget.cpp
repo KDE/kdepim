@@ -135,7 +135,7 @@ void VacationPageWidget::slotGetResult(KManageSieve::SieveJob *job, bool success
     mVacationEditWidget->setMessageText(messageText);
     mVacationEditWidget->setSubject(subject);
     mVacationEditWidget->setNotificationInterval(notificationInterval);
-    mVacationEditWidget->setMailAliases(aliases.join(QLatin1String(", ")));
+    mVacationEditWidget->setMailAliases(aliases.join(QStringLiteral(", ")));
     mVacationEditWidget->setSendForSpam(sendForSpam);
     mVacationEditWidget->setDomainName(domainName);
     mVacationEditWidget->enableDomainAndSendForSpam(!VacationSettings::allowOutOfOfficeUploadButNoSettings());

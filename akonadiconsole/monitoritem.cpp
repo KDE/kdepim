@@ -112,7 +112,7 @@ void MonitorItem::monitoredItemsChanged()
 void MonitorItem::monitoredMimeTypesChanged()
 {
     const QStringList mimeTypes = mInterface->monitoredMimeTypes();
-    monitoredMimeTypes = mimeTypes.join(QLatin1String(", "));
+    monitoredMimeTypes = mimeTypes.join(QStringLiteral(", "));
     Q_EMIT changed(MonitorsModel::MonitoredMimeTypesColumn);
 }
 

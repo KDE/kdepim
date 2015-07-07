@@ -441,9 +441,9 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved(KJob *job)
                 unExpandedBcc << exp;
             }
         }
-        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-To", m_msg.get(), unExpandedTo.join(QLatin1String(", ")).toLatin1()));
-        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-CC", m_msg.get(), unExpandedCc.join(QLatin1String(", ")).toLatin1()));
-        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-BCC", m_msg.get(), unExpandedBcc.join(QLatin1String(", ")).toLatin1()));
+        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-To", m_msg.get(), unExpandedTo.join(QStringLiteral(", ")).toLatin1()));
+        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-CC", m_msg.get(), unExpandedCc.join(QStringLiteral(", ")).toLatin1()));
+        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-BCC", m_msg.get(), unExpandedBcc.join(QStringLiteral(", ")).toLatin1()));
         autoresizeImage = false;
     }
 

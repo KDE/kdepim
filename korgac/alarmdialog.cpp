@@ -657,7 +657,7 @@ void AlarmDialog::eventNotification()
                             it != addresses.constEnd(); ++it) {
                         add << (*it)->fullName();
                     }
-                    to = add.join(QLatin1String(", "));
+                    to = add.join(QStringLiteral(", "));
                 }
 
                 QString subject;

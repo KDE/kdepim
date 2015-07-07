@@ -81,7 +81,7 @@ QString contactsToHtml(const KContacts::Addressee::List &contacts, const ColorSe
             if (!contact.role().isEmpty()) {
                 content << contact.role();
             }
-            name += QStringLiteral(" (%1)").arg(content.join(QLatin1String(", ")));
+            name += QStringLiteral(" (%1)").arg(content.join(QStringLiteral(", ")));
         }
 
         const QString birthday = QLocale().toString(contact.birthday().date(), QLocale::ShortFormat);

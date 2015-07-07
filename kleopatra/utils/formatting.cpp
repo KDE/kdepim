@@ -272,7 +272,7 @@ QString format_keyusage(const Key &key)
     if (key.canAuthenticate()) {
         capabilities.push_back(i18n("Authenticate against Servers"));
     }
-    return capabilities.join(QLatin1String(", "));
+    return capabilities.join(QStringLiteral(", "));
 }
 
 static QString time_t2string(time_t t)

@@ -1205,7 +1205,7 @@ void KeyRequester::setKeyIDs(const KeyIDList &keyIDs)
         setMultipleKeysEnabled(true);
     }
 
-    QString s = mKeys.toStringList().join(QLatin1String(", "));
+    QString s = mKeys.toStringList().join(QStringLiteral(", "));
 
     mLabel->setText(s);
     mLabel->setToolTip(s);

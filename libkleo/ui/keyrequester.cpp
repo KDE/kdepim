@@ -234,7 +234,7 @@ void Kleo::KeyRequester::updateKeys()
         toolTipText += QLatin1Char('\n');
     }
 
-    mLabel->setText(labelTexts.join(QLatin1String(", ")));
+    mLabel->setText(labelTexts.join(QStringLiteral(", ")));
     mLabel->setToolTip(toolTipText);
 }
 
