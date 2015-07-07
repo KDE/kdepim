@@ -313,6 +313,9 @@
               <property name="showClearButton" stdset="0">
                <bool>true</bool>
               </property>
+         <property name="trapReturnKey">
+           <bool>true</bool>
+         </property>
              </widget>
             </item>
            </layout>
@@ -363,6 +366,9 @@
             <property name="showClearButton" stdset="0">
              <bool>true</bool>
             </property>
+         <property name="trapReturnKey">
+           <bool>true</bool>
+         </property>
            </widget>
           </item>
           <item row="0" column="0">
@@ -421,6 +427,9 @@
          <property name="showClearButton" stdset="0">
           <bool>true</bool>
          </property>
+         <property name="trapReturnKey">
+           <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>
@@ -444,6 +453,9 @@
          </property>
          <property name="showClearButton" stdset="0">
           <bool>true</bool>
+         </property>
+         <property name="trapReturnKey">
+           <bool>true</bool>
          </property>
         </widget>
        </item>
