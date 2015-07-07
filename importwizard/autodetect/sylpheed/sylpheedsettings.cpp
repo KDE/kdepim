@@ -97,7 +97,7 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
         if (oldValue != -1) {
             newValue += oldValue;
         }
-        addKmailConfig(QLatin1String("General"), QStringLiteral("mime-header-count"), newValue);
+        addKmailConfig(QStringLiteral("General"), QStringLiteral("mime-header-count"), newValue);
         int currentHeader = (oldValue > 0) ? oldValue : 0;
         for (QMapIterator<QString, QString> it(header);  it.hasNext();) {
             it.next();
@@ -164,7 +164,7 @@ void SylpheedSettings::readTemplateFormat(const KConfigGroup &group)
 {
     const QString replyQuote = group.readEntry(QStringLiteral("reply_quote_mark"));
     if (!replyQuote.isEmpty()) {
-        addKmailConfig(QLatin1String("TemplateParser"), QStringLiteral("QuoteString"), replyQuote);
+        addKmailConfig(QStringLiteral("TemplateParser"), QStringLiteral("QuoteString"), replyQuote);
     }
     const QString forwardQuote = group.readEntry(QStringLiteral("forward_quote_mark"));
     if (!forwardQuote.isEmpty()) {
@@ -172,11 +172,11 @@ void SylpheedSettings::readTemplateFormat(const KConfigGroup &group)
     }
     const QString replyQuoteFormat = group.readEntry(QStringLiteral("reply_quote_format"));
     if (!replyQuoteFormat.isEmpty()) {
-        addKmailConfig(QLatin1String("TemplateParser"), QStringLiteral("TemplateReply"), convertToKmailTemplate(replyQuoteFormat));
+        addKmailConfig(QStringLiteral("TemplateParser"), QStringLiteral("TemplateReply"), convertToKmailTemplate(replyQuoteFormat));
     }
     const QString forwardQuoteFormat = group.readEntry(QStringLiteral("forward_quote_format"));
     if (!forwardQuoteFormat.isEmpty()) {
-        addKmailConfig(QLatin1String("TemplateParser"), QStringLiteral("TemplateForward"), convertToKmailTemplate(forwardQuoteFormat));
+        addKmailConfig(QStringLiteral("TemplateParser"), QStringLiteral("TemplateForward"), convertToKmailTemplate(forwardQuoteFormat));
     }
 }
 
@@ -184,7 +184,7 @@ void SylpheedSettings::readDateFormat(const KConfigGroup &group)
 {
     const QString dateFormat = group.readEntry(QStringLiteral("date_format"));
     if (!dateFormat.isEmpty()) {
-        addKmailConfig(QLatin1String("General"), QStringLiteral("customDateFormat"), dateFormat);
+        addKmailConfig(QStringLiteral("General"), QStringLiteral("customDateFormat"), dateFormat);
     }
 }
 

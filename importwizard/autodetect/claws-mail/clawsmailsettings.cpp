@@ -106,14 +106,14 @@ void ClawsMailSettings::readSettingsColor(const KConfigGroup &group)
         if (!misspellColor.isEmpty()) {
             const QColor col = QColor(misspellColor);
             if (col.isValid()) {
-                addKmailConfig(QLatin1String("Reader"), QStringLiteral("MisspelledColor"), writeColor(col));
+                addKmailConfig(QStringLiteral("Reader"), QStringLiteral("MisspelledColor"), writeColor(col));
             }
         }
         const QString uriColor = group.readEntry(QStringLiteral("uri_color"));
         if (!uriColor.isEmpty()) {
             const QColor col(uriColor);
             if (col.isValid()) {
-                addKmailConfig(QLatin1String("Reader"), QStringLiteral("LinkColor"), writeColor(col));
+                addKmailConfig(QStringLiteral("Reader"), QStringLiteral("LinkColor"), writeColor(col));
             }
         }
         const QString newColor = group.readEntry(QStringLiteral("color_new"));
@@ -143,7 +143,7 @@ void ClawsMailSettings::readTemplateFormat(const KConfigGroup &group)
     SylpheedSettings::readTemplateFormat(group);
     const QString composerNewMessage = group.readEntry(QStringLiteral("compose_body_format"));
     if (!composerNewMessage.isEmpty()) {
-        addKmailConfig(QLatin1String("TemplateParser"), QStringLiteral("TemplateNewMessage"), convertToKmailTemplate(composerNewMessage));
+        addKmailConfig(QStringLiteral("TemplateParser"), QStringLiteral("TemplateNewMessage"), convertToKmailTemplate(composerNewMessage));
     }
 }
 
