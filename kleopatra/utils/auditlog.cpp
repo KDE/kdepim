@@ -71,7 +71,7 @@ QString AuditLog::formatLink(const QUrl &urlTemplate) const
     if (!m_text.isEmpty()) {
         QUrl url = urlTemplate;
         QUrlQuery urlQuery(url);
-        urlQuery.addQueryItem(QLatin1String("log"), m_text);
+        urlQuery.addQueryItem(QStringLiteral("log"), m_text);
         url.setQuery(urlQuery);
         return QLatin1String("<a href=\"") + url.url() + QLatin1String("\">") + i18nc("The Audit Log is a detailed error log from the gnupg backend", "Show Audit Log") + QLatin1String("</a>");
     }

@@ -72,11 +72,11 @@ void BoxJob::requestTokenAccess()
     mError = false;
     mActionType = PimCommon::StorageServiceAbstract::RequestTokenAction;
     QUrl url(mServiceUrl + mAuthorizePath);
-    url.addQueryItem(QLatin1String("response_type"), QStringLiteral("code"));
-    url.addQueryItem(QLatin1String("client_id"), mClientId);
-    url.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
+    url.addQueryItem(QStringLiteral("response_type"), QStringLiteral("code"));
+    url.addQueryItem(QStringLiteral("client_id"), mClientId);
+    url.addQueryItem(QStringLiteral("redirect_uri"), mRedirectUri);
     if (!mScope.isEmpty()) {
-        url.addQueryItem(QLatin1String("scope"), mScope);
+        url.addQueryItem(QStringLiteral("scope"), mScope);
     }
     mAuthUrl = url;
     //qCDebug(PIMCOMMON_LOG)<<" url"<<url;
@@ -137,11 +137,11 @@ void BoxJob::getTokenAccess(const QString &authorizeCode)
     QNetworkRequest request(QUrl(mServiceUrl + mPathToken));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QUrl postData;
-    postData.addQueryItem(QLatin1String("code"), authorizeCode);
-    postData.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
-    postData.addQueryItem(QLatin1String("grant_type"), QStringLiteral("authorization_code"));
-    postData.addQueryItem(QLatin1String("client_id"), mClientId);
-    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    postData.addQueryItem(QStringLiteral("code"), authorizeCode);
+    postData.addQueryItem(QStringLiteral("redirect_uri"), mRedirectUri);
+    postData.addQueryItem(QStringLiteral("grant_type"), QStringLiteral("authorization_code"));
+    postData.addQueryItem(QStringLiteral("client_id"), mClientId);
+    postData.addQueryItem(QStringLiteral("client_secret"), mClientSecret);
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
@@ -303,10 +303,10 @@ void BoxJob::refreshToken()
     QNetworkRequest request(QUrl(QLatin1String("https://www.box.com/api/oauth2/token")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QUrl postData;
-    postData.addQueryItem(QLatin1String("refresh_token"), mRefreshToken);
-    postData.addQueryItem(QLatin1String("grant_type"), QStringLiteral("refresh_token"));
-    postData.addQueryItem(QLatin1String("client_id"), mClientId);
-    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    postData.addQueryItem(QStringLiteral("refresh_token"), mRefreshToken);
+    postData.addQueryItem(QStringLiteral("grant_type"), QStringLiteral("refresh_token"));
+    postData.addQueryItem(QStringLiteral("client_id"), mClientId);
+    postData.addQueryItem(QStringLiteral("client_secret"), mClientSecret);
     //qCDebug(PIMCOMMON_LOG)<<"refreshToken postData: "<<postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
@@ -332,7 +332,7 @@ void BoxJob::deleteFolder(const QString &foldername)
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFolderInfoPath + foldername);
-    url.addQueryItem(QLatin1String("recursive"), QStringLiteral("true"));
+    url.addQueryItem(QStringLiteral("recursive"), QStringLiteral("true"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
@@ -446,8 +446,8 @@ QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &upload
             request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
             request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
             QUrl postData;
-            postData.addQueryItem(QLatin1String("parent_id"), destination);
-            postData.addQueryItem(QLatin1String("filename"), uploadAsName);
+            postData.addQueryItem(QStringLiteral("parent_id"), destination);
+            postData.addQueryItem(QStringLiteral("filename"), uploadAsName);
             QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
             file->setParent(reply);
             connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);

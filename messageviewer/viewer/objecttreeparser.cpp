@@ -2544,7 +2544,7 @@ static QString makeShowAuditLogLink(const GpgME::Error &err, const QString &audi
         url.setScheme(QLatin1String("kmail"));
         url.setPath(QLatin1String("showAuditLog"));
         QUrlQuery urlquery(url);
-        urlquery.addQueryItem(QLatin1String("log"), auditLog);
+        urlquery.addQueryItem(QStringLiteral("log"), auditLog);
         url.setQuery(urlquery);
         return QLatin1String("<a href=\"") + url.toDisplayString() + QLatin1String("\">") + i18nc("The Audit Log is a detailed error log from the gnupg backend", "Show Audit Log") + QLatin1String("</a>");
     }

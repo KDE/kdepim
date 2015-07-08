@@ -494,7 +494,7 @@ void Widget::viewStartDragRequest()
     Q_FOREACH (Core::MessageItem *mi, selection) {
         const Item i = d->itemForRow(mi->currentModelIndexRow());
         QUrl url = i.url(Item::Item::Item::UrlWithMimeType);
-        url.addQueryItem(QLatin1String("parent"), QString::number(mi->parentCollectionId()));
+        url.addQueryItem(QStringLiteral("parent"), QString::number(mi->parentCollectionId()));
         urls << url;
     }
 

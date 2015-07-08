@@ -121,7 +121,7 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
     QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QUrl postData;
-    postData.addQueryItem(QLatin1String("name"), destination);
+    postData.addQueryItem(QStringLiteral("name"), destination);
 
     QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
@@ -137,7 +137,7 @@ void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
 
     QUrl postData;
-    postData.addQueryItem(QLatin1String("name"), newName);
+    postData.addQueryItem(QStringLiteral("name"), newName);
     QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
@@ -151,7 +151,7 @@ void YouSendItJob::moveFolder(const QString &source, const QString &destination)
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
 
     QUrl postData;
-    postData.addQueryItem(QLatin1String("parentId"), destination);
+    postData.addQueryItem(QStringLiteral("parentId"), destination);
     QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
@@ -165,7 +165,7 @@ void YouSendItJob::moveFile(const QString &source, const QString &destination)
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
 
     QUrl postData;
-    postData.addQueryItem(QLatin1String("parentId"), destination);
+    postData.addQueryItem(QStringLiteral("parentId"), destination);
     QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
 }
@@ -196,8 +196,8 @@ void YouSendItJob::requestTokenAccess()
 
     QUrl postData;
 
-    postData.addQueryItem(QLatin1String("email"), mUsername);
-    postData.addQueryItem(QLatin1String("password"), mPassword);
+    postData.addQueryItem(QStringLiteral("email"), mUsername);
+    postData.addQueryItem(QStringLiteral("password"), mPassword);
     //qCDebug(PIMCOMMON_LOG)<<" postData"<<postData;
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
@@ -229,8 +229,8 @@ void YouSendItJob::listFolder(const QString &folder)
     } else {
         url.setUrl(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1").arg(folder));
     }
-    url.addQueryItem(QLatin1String("email"), mUsername);
-    url.addQueryItem(QLatin1String("X-Auth-Token"), mToken);
+    url.addQueryItem(QStringLiteral("email"), mUsername);
+    url.addQueryItem(QStringLiteral("X-Auth-Token"), mToken);
     QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
@@ -242,8 +242,8 @@ void YouSendItJob::accountInfo()
     mActionType = PimCommon::StorageServiceAbstract::AccountInfoAction;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v2/user"));
-    url.addQueryItem(QLatin1String("email"), mUsername);
-    url.addQueryItem(QLatin1String("X-Auth-Token"), mToken);
+    url.addQueryItem(QStringLiteral("email"), mUsername);
+    url.addQueryItem(QStringLiteral("X-Auth-Token"), mToken);
     QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
@@ -262,9 +262,9 @@ void YouSendItJob::createFolderJob(const QString &foldername, const QString &des
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder"));
     QNetworkRequest request = setDefaultHeader(url);
     QUrl postData;
-    postData.addQueryItem(QLatin1String("name"), foldername);
+    postData.addQueryItem(QStringLiteral("name"), foldername);
     if (!destination.isEmpty()) {
-        postData.addQueryItem(QLatin1String("parentId"), destination);
+        postData.addQueryItem(QStringLiteral("parentId"), destination);
     }
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
@@ -639,7 +639,7 @@ void YouSendItJob::startUploadFile(const QString &fileId)
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
     QUrl postData;
-    postData.addQueryItem(QLatin1String("fileId"), fileId);
+    postData.addQueryItem(QStringLiteral("fileId"), fileId);
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());

@@ -1165,7 +1165,7 @@ QString mailboxListToUnicodeString(const KMime::Types::Mailbox::List &addresses)
 
 void setEncodingFile(QUrl &url, const QString &encoding)
 {
-    url.addQueryItem(QLatin1String("charset"), encoding);
+    url.addQueryItem(QStringLiteral("charset"), encoding);
 }
 
 }
