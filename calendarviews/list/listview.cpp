@@ -178,9 +178,9 @@ bool ListView::Private::ListItemVisitor::visit(const Event::Ptr &e)
 {
     QPixmap eventPxmp;
     if (e->customProperty("KABC", "ANNIVERSARY") == QLatin1String("YES")) {
-        eventPxmp = cachedSmallIcon(QLatin1String("view-calendar-wedding-anniversary"));
+        eventPxmp = cachedSmallIcon(QStringLiteral("view-calendar-wedding-anniversary"));
     } else if (e->customProperty("KABC", "BIRTHDAY") == QLatin1String("YES")) {
-        eventPxmp = cachedSmallIcon(QLatin1String("view-calendar-birthday"));
+        eventPxmp = cachedSmallIcon(QStringLiteral("view-calendar-birthday"));
     } else {
         eventPxmp = cachedSmallIcon(e->iconName());
     }
