@@ -75,7 +75,7 @@ QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatar
             if (fi.exists()) {
                 QPixmap pix;
                 if (pix.load(path)) {
-                    //qDebug() << " add to cache "<<hashStr << path;
+                    //qCDebug(PIMCOMMON_LOG) << " add to cache "<<hashStr << path;
                     mCachePixmap.insert(hashStr, new QPixmap(pix));
                     gravatarStored = true;
                     return pix;
