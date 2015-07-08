@@ -98,7 +98,7 @@ protected:
     void enableAttachPublicKey(bool enable);
     void enableAttachMyPublicKey(bool enable);
     void byteArrayToRemoteFile(const QByteArray &aData, const QUrl &aURL, bool overwrite = false);
-    void openWith(KService::Ptr offer = KService::Ptr());
+    void openWith(const KService::Ptr &offer = KService::Ptr());
 
 private:
     void attachFiles(const QList<QUrl> &urls, const QString &encoding);

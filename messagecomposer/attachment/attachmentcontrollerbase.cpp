@@ -669,7 +669,7 @@ void AttachmentControllerBase::slotOpenWithAction(QAction *act)
     openWith(app);
 }
 
-void AttachmentControllerBase::openWith(KService::Ptr offer)
+void AttachmentControllerBase::openWith(const KService::Ptr &offer)
 {
     QTemporaryFile *tempFile = dumpAttachmentToTempFile(d->selectedParts.first());
     if (!tempFile) {

@@ -138,7 +138,7 @@ void AttachmentPropertiesDialog::Private::mimeTypeChanged(const QString &type)
     if (mimeType.isValid()) {
         pix = KIconLoader::global()->loadMimeTypeIcon(mimeType.iconName(), KIconLoader::Desktop);
     } else {
-        pix = DesktopIcon(QLatin1String("unknown"));
+        pix = DesktopIcon(QStringLiteral("unknown"));
     }
     if (mReadOnly) {
         uiReadOnly->mimeIcon->setPixmap(pix);

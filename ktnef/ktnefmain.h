@@ -88,7 +88,7 @@ private:
     void extractTo(const QString &dirname);
     QString extractTemp(KTNEFAttach *att);
 
-    void openWith(KService::Ptr offer);
+    void openWith(const KService::Ptr &offer);
     void createOpenWithMenu(QMenu *topMenu);
     QAction *createAppAction(const KService::Ptr &service, bool singleOffer, QActionGroup *actionGroup, QObject *parent);
 

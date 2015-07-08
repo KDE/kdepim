@@ -543,7 +543,7 @@ void KTNEFMain::slotSaveMessageText()
     }
 }
 
-void KTNEFMain::openWith(KService::Ptr offer)
+void KTNEFMain::openWith(const KService::Ptr &offer)
 {
     if (!mView->getSelection().isEmpty()) {
         KTNEFAttach *attach = mView->getSelection().first();

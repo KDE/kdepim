@@ -740,7 +740,7 @@ KMime::Content::List ViewerPrivate::selectedContents()
     return contents;
 }
 
-void ViewerPrivate::attachmentOpenWith(KMime::Content *node, KService::Ptr offer)
+void ViewerPrivate::attachmentOpenWith(KMime::Content *node, const KService::Ptr &offer)
 {
     QString name = mNodeHelper->writeNodeToTempFile(node);
     QString linkName = createAtmFileLink(name);

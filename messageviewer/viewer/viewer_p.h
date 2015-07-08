@@ -236,7 +236,7 @@ public:
     QString createAtmFileLink(const QString &atmFileName) const;
     KService::Ptr getServiceOffer(KMime::Content *content);
     KMime::Content::List selectedContents();
-    void attachmentOpenWith(KMime::Content *node, KService::Ptr offer = KService::Ptr());
+    void attachmentOpenWith(KMime::Content *node, const KService::Ptr &offer = KService::Ptr());
     void attachmentOpen(KMime::Content *node);
 
     /** Return the HtmlWriter connected to the MailWebView we use */
