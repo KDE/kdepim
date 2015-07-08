@@ -18,6 +18,7 @@ set(libgrantleethemeeditor_SRCS
     previewwidget.cpp
     configurewidget.cpp
     grantleeplaintexteditor.cpp
+    grantleethemeeditor_debug.cpp
 )
 
 kconfig_add_kcfg_files(libgrantleethemeeditor_SRCS

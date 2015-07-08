@@ -18,7 +18,7 @@
 #include "themesession.h"
 #include <KConfig>
 #include <KConfigGroup>
-#include <QDebug>
+#include "grantleethemeeditor_debug.h"
 #include <KMessageBox>
 #include <KLocalizedString>
 
@@ -79,7 +79,7 @@ bool ThemeSession::loadSession(const QString &session)
         mExtraPage = global.readEntry(QStringLiteral("extraPagesName"), QStringList());
         return true;
     } else {
-        qDebug() << QStringLiteral("\"%1\" is not a session file").arg(session);
+        qCDebug(GRANTLEETHEMEEDITOR_LOG) << QStringLiteral("\"%1\" is not a session file").arg(session);
         return false;
     }
 }
