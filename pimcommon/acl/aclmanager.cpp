@@ -277,6 +277,14 @@ public:
                         i18n("Remove"))) {
                 return;
             }
+        } else {
+            if (KMessageBox::Cancel == KMessageBox::warningContinueCancel(
+                        Q_NULLPTR,
+                        i18n("Do you really want to remove theses permissions for this folder? "
+                             "You will not be able to access it afterwards."),
+                        i18n("Remove"))) {
+                return;
+            }
         }
 
         mModel->removeRow(index.row(), QModelIndex());
