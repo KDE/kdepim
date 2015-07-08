@@ -76,7 +76,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     mainLayout->addWidget(mFolderRequester, row, 1);
     ++row;
 
-    QLabel *formatLabel = new QLabel(i18n("F&ormat:"), mainWidget);
+    QLabel *formatLabel = new QLabel(i18n("Format:"), mainWidget);
     formatLabel->setObjectName(QStringLiteral("label_format"));
     mainLayout->addWidget(formatLabel, row, 0);
 
@@ -94,6 +94,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info, QWidget *paren
     mainLayout->addWidget(pathLabel, row, 0);
     pathLabel->setObjectName(QStringLiteral("path_label"));
     mPath = new KUrlRequester(mainWidget);
+    mPath->lineEdit()->setTrapReturnKey(true);
     connect(mPath, &KUrlRequester::textChanged, this, &AddArchiveMailDialog::slotUpdateOkButton);
     mPath->setMode(KFile::Directory);
     mainLayout->addWidget(mPath);
