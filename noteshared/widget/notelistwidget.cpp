@@ -81,7 +81,7 @@ void NoteListWidget::createItem(const Akonadi::Item &note)
     item->setData(AkonadiId, note.id());
 }
 
-Akonadi::Item::List NoteListWidget::selectedNotes()
+Akonadi::Item::List NoteListWidget::selectedNotes() const
 {
     Akonadi::Item::List lst;
     Q_FOREACH (QListWidgetItem *item, selectedItems()) {

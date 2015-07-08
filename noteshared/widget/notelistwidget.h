@@ -38,7 +38,7 @@ public:
 
     Akonadi::Item::Id currentItemId() const;
 
-    Akonadi::Item::List selectedNotes();
+    Akonadi::Item::List selectedNotes() const;
 
 private:
     enum listViewData {
