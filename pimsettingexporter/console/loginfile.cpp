@@ -38,9 +38,11 @@ QString LogInFile::fileName() const
 
 void LogInFile::setFileName(const QString &fileName)
 {
-    mFileName = fileName;
-    QFile file(mFileName);
-    mTextStream.setDevice(&file);
+    if (mFileName.isEmpty()) {
+        mFileName = fileName;
+        QFile file(mFileName);
+        mTextStream.setDevice(&file);
+    }
 }
 
 void LogInFile::addEndLine()

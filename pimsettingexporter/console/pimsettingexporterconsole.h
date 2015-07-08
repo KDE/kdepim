@@ -43,8 +43,8 @@ public:
 
     void start();
 
-    QString importFileName() const;
-    void setImportFileName(const QString &importFileName);
+    QString importExportFileName() const;
+    void setImportExportFileName(const QString &importFileName);
 
 Q_SIGNALS:
     void finished();
@@ -58,7 +58,7 @@ private Q_SLOTS:
 private:
     void initializeLogInFile();
     QString mTemplateFileName;
-    QString mImportFileName;
+    QString mImportExportFileName;
     PimSettingsBackupRestore *mPimSettingsBackupRestore;
     LogInFile *mLogInFile;
     LogInfo *mLogInfo;

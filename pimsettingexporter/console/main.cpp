@@ -23,6 +23,7 @@
 #include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QCommandLineOption>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -37,19 +38,48 @@ int main(int argc, char *argv[])
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     parser.addVersionOption();
     parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("template"), i18n("Template file uses to define what data, settings to import or export"), QStringLiteral("file")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("import"), i18n("Import the given file")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("export"), i18n("Export the given file")));
-    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("+[url]"), i18n("File or url. The user will be asked whether to import or export.")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("logfile"), i18n("File uses to log information."), QStringLiteral("file")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("template"), i18n("Template file uses to define what data, settings to import or export."), QStringLiteral("file")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("import"), i18n("Import the given file."), QStringLiteral("file")));
+    parser.addOption(QCommandLineOption(QStringList() <<  QStringLiteral("export"), i18n("Export the given file."), QStringLiteral("file")));
 
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-    PimSettingExporterConsole *console = new PimSettingExporterConsole;
-    //TODO addmode from arguments
+    QString importFile;
+    QString exportFile;
+    if (parser.isSet(QStringLiteral("import"))) {
+        importFile = parser.value(QStringLiteral("import"));
+    } else if (parser.isSet(QStringLiteral("export"))) {
+        exportFile = parser.value(QStringLiteral("export"));
+    }
+    if (importFile.isEmpty() && exportFile.isEmpty()) {
+        return -1;
+    }
+    QString logFile;
+    QString templateFile;
+    if (parser.isSet(QStringLiteral("template"))) {
+        templateFile = parser.value(QStringLiteral("template"));
+    }
+    if (parser.isSet(QStringLiteral("logfile"))) {
+        logFile = parser.value(QStringLiteral("logfile"));
+    }
 
-    //TODO start it
+    PimSettingExporterConsole *console = new PimSettingExporterConsole;
+    if (!importFile.isEmpty()) {
+        console->setMode(PimSettingExporterConsole::Import);
+        console->setImportExportFileName(importFile);
+    } else if (!exportFile.isEmpty()) {
+        console->setMode(PimSettingExporterConsole::Export);
+        console->setImportExportFileName(exportFile);
+    }
+    if (!logFile.isEmpty()) {
+        console->setLogFileName(logFile);
+    }
+    if (!templateFile.isEmpty()) {
+        console->setTemplateFileName(templateFile);
+    }
     console->start();
     QObject::connect(console, SIGNAL(finished()), &app, SLOT(quit()));
 

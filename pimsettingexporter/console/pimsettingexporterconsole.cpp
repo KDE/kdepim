@@ -70,18 +70,18 @@ void PimSettingExporterConsole::slotAddTitle(const QString &message)
     mLogInfo->addTitleLogEntry(message);
 }
 
-QString PimSettingExporterConsole::importFileName() const
+QString PimSettingExporterConsole::importExportFileName() const
 {
-    return mImportFileName;
+    return mImportExportFileName;
 }
 
-void PimSettingExporterConsole::setImportFileName(const QString &importFileName)
+void PimSettingExporterConsole::setImportExportFileName(const QString &filename)
 {
     if (mInProgress) {
         qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Already in progress. We can't change it.";
         return;
     }
-    mImportFileName = importFileName;
+    mImportExportFileName = filename;
 }
 
 void PimSettingExporterConsole::start()

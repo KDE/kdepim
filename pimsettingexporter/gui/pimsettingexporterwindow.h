@@ -47,6 +47,7 @@ private Q_SLOTS:
     void slotUpdateActions(bool inAction);
     void slotShowBackupFinishDialogInformation();
     void slotJobFailed();
+    void slotJobFinished();
 private:
     void initializeBackupRestoreUi();
     void backupData(const QString &filename, const QString &templateFile = QString());
