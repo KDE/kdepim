@@ -252,7 +252,7 @@ void ComposerLineEdit::slotGroupSearchResult(KJob *job)
         return; // Nothing todo, probably a normal email address was entered
     }
 
-    mGroups.append(contactGroups);
+    mGroups << contactGroups;
     searchJob->deleteLater();
 
     if (mAutoGroupExpand) {
