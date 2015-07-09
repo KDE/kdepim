@@ -25,7 +25,7 @@
 PimSettingExporterConsole::PimSettingExporterConsole(QObject *parent)
     : QObject(parent),
       mPimSettingsBackupRestore(new PimSettingsBackupRestore(this)),
-      mLogInFile(new LogInFile(this)),
+      mLogInFile(Q_NULLPTR),
       mLogInfo(new LogInfo(this)),
       mMode(Import),
       mInProgress(false)
@@ -44,29 +44,51 @@ void PimSettingExporterConsole::initializeLogInFile()
     connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addError, this, &PimSettingExporterConsole::slotAddError);
     connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addInfo, this, &PimSettingExporterConsole::slotAddInfo);
     connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::addTitle, this, &PimSettingExporterConsole::slotAddTitle);
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::jobFinished, this, &PimSettingExporterConsole::slotJobFinished);
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::backupDone, this, &PimSettingExporterConsole::slotBackupDone);
+    connect(mPimSettingsBackupRestore, &PimSettingsBackupRestore::jobFailed, this, &PimSettingExporterConsole::slotJobFailed);
+}
+
+void PimSettingExporterConsole::slotJobFailed()
+{
+
+}
+
+void PimSettingExporterConsole::slotBackupDone()
+{
+
+}
+
+void PimSettingExporterConsole::slotJobFinished()
+{
+
 }
 
 void PimSettingExporterConsole::slotAddEndLine()
 {
-    mLogInFile->addEndLine();
+    if (mLogInFile)
+        mLogInFile->addEndLine();
     mLogInfo->addEndLineLogEntry();
 }
 
 void PimSettingExporterConsole::slotAddError(const QString &message)
 {
-    mLogInFile->addError(message);
+    if (mLogInFile)
+        mLogInFile->addError(message);
     mLogInfo->addErrorLogEntry(message);
 }
 
 void PimSettingExporterConsole::slotAddInfo(const QString &message)
 {
-    mLogInFile->addInfo(message);
+    if (mLogInFile)
+        mLogInFile->addInfo(message);
     mLogInfo->addInfoLogEntry(message);
 }
 
 void PimSettingExporterConsole::slotAddTitle(const QString &message)
 {
-    mLogInFile->addTitle(message);
+    if (mLogInFile)
+        mLogInFile->addTitle(message);
     mLogInfo->addTitleLogEntry(message);
 }
 
@@ -97,8 +119,10 @@ void PimSettingExporterConsole::start()
     //TODO
     switch (mMode) {
     case Import:
+        mPimSettingsBackupRestore->restoreStart(mImportExportFileName);
         break;
     case Export:
+        mPimSettingsBackupRestore->backupStart(mImportExportFileName);
         break;
     }
 }
@@ -122,6 +146,9 @@ void PimSettingExporterConsole::setLogFileName(const QString &logFileName)
     if (mInProgress) {
         qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Already in progress. We can't change it.";
         return;
+    }
+    if (!mLogInFile) {
+        mLogInFile = new LogInFile(this);
     }
     mLogInFile->setFileName(logFileName);
 }

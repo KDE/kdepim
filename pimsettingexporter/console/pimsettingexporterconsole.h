@@ -53,8 +53,10 @@ private Q_SLOTS:
     void slotAddEndLine();
     void slotAddError(const QString &message);
     void slotAddInfo(const QString &message);
-    void slotAddTitle(const QString &message);
-
+    void slotAddTitle(const QString &message);    
+    void slotJobFailed();
+    void slotBackupDone();
+    void slotJobFinished();
 private:
     void initializeLogInFile();
     QString mTemplateFileName;
