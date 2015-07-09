@@ -458,7 +458,7 @@ public:
     }
 
 private:
-    QList<KLDAP::LdapAttrMap> mContactList;
+    QVector<KLDAP::LdapAttrMap> mContactList;
     QStringList mServerList;
 };
 
