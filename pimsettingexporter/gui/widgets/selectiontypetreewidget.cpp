@@ -266,7 +266,7 @@ void SelectionTypeTreeWidget::loadFileName(const QString &fileName)
 {
     unSelectAllItems();
     TemplateSelection templateSelection(fileName);
-    const QHash<Utils::AppsType, Utils::StoredTypes> params = templateSelection.loadTemplate();
+    const QHash<Utils::AppsType, Utils::importExportParameters> params = templateSelection.loadTemplate();
     setParameters(params);
 }
 
@@ -306,37 +306,37 @@ void SelectionTypeTreeWidget::initializeSubItem(QTreeWidgetItem *item, Utils::St
     }
 }
 
-void SelectionTypeTreeWidget::setParameters(const QHash<Utils::AppsType, Utils::StoredTypes> &params)
+void SelectionTypeTreeWidget::setParameters(const QHash<Utils::AppsType, Utils::importExportParameters> &params)
 {
-    QHash<Utils::AppsType, Utils::StoredTypes>::const_iterator i = params.constBegin();
+    QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = params.constBegin();
     while (i != params.constEnd())  {
         switch (i.key()) {
         case Utils::KMail: {
-            initializeSubItem(mKmailItem, i.value());
+            initializeSubItem(mKmailItem, i.value().types);
             break;
         }
         case Utils::KAddressBook: {
-            initializeSubItem(mKaddressbookItem, i.value());
+            initializeSubItem(mKaddressbookItem, i.value().types);
             break;
         }
         case Utils::KAlarm: {
-            initializeSubItem(mKalarmItem, i.value());
+            initializeSubItem(mKalarmItem, i.value().types);
             break;
         }
         case Utils::KOrganizer: {
-            initializeSubItem(mKorganizerItem, i.value());
+            initializeSubItem(mKorganizerItem, i.value().types);
             break;
         }
         case Utils::KNotes: {
-            initializeSubItem(mKNotesItem, i.value());
+            initializeSubItem(mKNotesItem, i.value().types);
             break;
         }
         case Utils::Akregator: {
-            initializeSubItem(mAkregatorItem, i.value());
+            initializeSubItem(mAkregatorItem, i.value().types);
             break;
         }
         case Utils::Blogilo: {
-            initializeSubItem(mBlogiloItem, i.value());
+            initializeSubItem(mBlogiloItem, i.value().types);
             break;
         }
         case Utils::Unknown: {

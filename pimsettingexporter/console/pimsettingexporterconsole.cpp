@@ -112,15 +112,12 @@ void PimSettingExporterConsole::setImportExportFileName(const QString &filename)
 
 void PimSettingExporterConsole::start()
 {
-#if 0
     //Load template if necessary
     if (!mTemplateFileName.isEmpty()) {
         TemplateSelection selection(mTemplateFileName);
-        const QHash<Utils::AppsType, Utils::StoredTypes> templateElements = selection.loadTemplate();
+        const QHash<Utils::AppsType, Utils::importExportParameters> templateElements = selection.loadTemplate();
         mPimSettingsBackupRestore->setStoredParameters(templateElements);
     }
-#endif
-    //TODO
     switch (mMode) {
     case Import:
         mPimSettingsBackupRestore->restoreStart(mImportExportFileName);

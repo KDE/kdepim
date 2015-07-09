@@ -44,7 +44,7 @@ TemplateSelection::~TemplateSelection()
 
 }
 
-Utils::StoredTypes TemplateSelection::loadStoredTypes(const QDomElement &element)
+Utils::StoredTypes TemplateSelection::loadStoredTypes(const QDomElement &element, int &numberOfStep)
 {
     Utils::StoredTypes types = Utils::None;
     QDomNode n = element.firstChild();
@@ -54,16 +54,22 @@ Utils::StoredTypes TemplateSelection::loadStoredTypes(const QDomElement &element
             const QString tagName(e.tagName());
             if (tagName == QLatin1String("mailtransport")) {
                 types |= Utils::MailTransport;
+                numberOfStep++;
             } else if (tagName == QLatin1String("mail")) {
                 types |= Utils::Mails;
+                numberOfStep++;
             } else if (tagName == QLatin1String("resources")) {
                 types |= Utils::Resources;
+                numberOfStep++;
             } else if (tagName == QLatin1String("identity")) {
                 types |= Utils::Identity;
+                numberOfStep++;
             } else if (tagName == QLatin1String("config")) {
                 types |= Utils::Config;
+                numberOfStep++;
             } else if (tagName == QLatin1String("akonadidb")) {
                 types |= Utils::AkonadiDb;
+                numberOfStep++;
             }
         }
         n = n.nextSibling();
@@ -71,9 +77,9 @@ Utils::StoredTypes TemplateSelection::loadStoredTypes(const QDomElement &element
     return types;
 }
 
-QHash<Utils::AppsType, Utils::StoredTypes> TemplateSelection::loadTemplate(const QDomDocument &doc)
+QHash<Utils::AppsType, Utils::importExportParameters> TemplateSelection::loadTemplate(const QDomDocument &doc)
 {
-    QHash<Utils::AppsType, Utils::StoredTypes> value;
+    QHash<Utils::AppsType, Utils::importExportParameters> value;
     if (!doc.isNull()) {
         mDocument = doc;
     }
@@ -101,9 +107,13 @@ QHash<Utils::AppsType, Utils::StoredTypes> TemplateSelection::loadTemplate(const
                 type = Utils::Blogilo;
             }
             if (type != Utils::Unknown) {
-                Utils::StoredTypes storedType = loadStoredTypes(e);
+                int numberOfSteps = 0;
+                Utils::StoredTypes storedType = loadStoredTypes(e, numberOfSteps);
                 if (storedType != Utils::None) {
-                    value.insert(type, storedType);
+                    Utils::importExportParameters utils;
+                    utils.types = storedType;
+                    utils.numberSteps = numberOfSteps;
+                    value.insert(type, utils);
                 }
             }
         }

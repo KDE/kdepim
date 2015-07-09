@@ -51,7 +51,7 @@ private:
     void setSelectItems(bool b);
     void changeState(QTreeWidgetItem *item, bool b);
     void createSubItem(QTreeWidgetItem *parent, Utils::StoredType type);
-    void setParameters(const QHash<Utils::AppsType, Utils::StoredTypes> &params);
+    void setParameters(const QHash<Utils::AppsType, Utils::importExportParameters> &params);
 
     Utils::importExportParameters typeChecked(QTreeWidgetItem *parent) const;
     void initializeSubItem(QTreeWidgetItem *item, Utils::StoredTypes types);
