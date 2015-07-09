@@ -27,7 +27,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    Kdelibs4ConfigMigrator migrate(QLatin1String("ktnef"));
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("ktnef"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("ktnefrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("ktnefui.rc"));
     migrate.migrate();
@@ -44,12 +44,12 @@ int main(int argc, char *argv[])
     aboutData.addAuthor(
         i18n("Michael Goffioul"),
         i18n("Author"),
-        QLatin1String("kdeprint@swing.be"));
+        QStringLiteral("kdeprint@swing.be"));
 
     aboutData.addAuthor(
         i18n("Allen Winter"),
         i18n("Author, Ported to Qt4/KDE4"),
-        QLatin1String("winter@kde.org"));
+        QStringLiteral("winter@kde.org"));
 
     KAboutData::setApplicationData(aboutData);
 

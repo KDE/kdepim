@@ -45,9 +45,7 @@ class WmfCmd
 public:
     ~WmfCmd()
     {
-        if (next) {
-            delete next;
-        }
+        delete next;
     }
     WmfCmd *next;
     unsigned short funcIndex;
@@ -130,9 +128,7 @@ QWinMetaFile::QWinMetaFile()
 //-----------------------------------------------------------------------------
 QWinMetaFile::~QWinMetaFile()
 {
-    if (mFirstCmd) {
-        delete mFirstCmd;
-    }
+    delete mFirstCmd;
     if (mObjHandleTab) {
         delete[] mObjHandleTab;
     }
