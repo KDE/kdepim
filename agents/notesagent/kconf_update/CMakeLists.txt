@@ -1,1 +1,1 @@
-install( FILES noteglobalsettings.upd DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
+#install( FILES noteglobalsettings.upd DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})

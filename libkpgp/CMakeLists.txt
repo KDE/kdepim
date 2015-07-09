@@ -46,8 +46,3 @@ install(TARGETS kpgp ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory( tests )
 
-########### install files ###############
-
-install(FILES kconf_update/kpgp.upd  DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
-install(PROGRAMS kconf_update/kpgp-3.1-upgrade-address-data.pl DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
-
