@@ -72,13 +72,13 @@ bool SendVcardsJob::start()
             vcardUtil.adaptVcard(data);
             createTemporaryDir();
             const QString contactRealName(contact.realName());
-            const QString attachmentName = (contactRealName.isEmpty() ? QLatin1String("vcard") : contactRealName) + QLatin1String(".vcf");
+            const QString attachmentName = (contactRealName.isEmpty() ? QStringLiteral("vcard") : contactRealName) + QLatin1String(".vcf");
             createTemporaryFile(data, attachmentName);
         } else if (item.hasPayload<KContacts::ContactGroup>()) {
             ++mExpandGroupJobCount;
             const KContacts::ContactGroup group = item.payload<KContacts::ContactGroup>();
             const QString groupName(group.name());
-            const QString attachmentName = (groupName.isEmpty() ? QLatin1String("vcard") : groupName) + QLatin1String(".vcf");
+            const QString attachmentName = (groupName.isEmpty() ? QStringLiteral("vcard") : groupName) + QLatin1String(".vcf");
             Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group, this);
             expandJob->setProperty("groupName", attachmentName);
             connect(expandJob, &KJob::result, this, &SendVcardsJob::slotExpandGroupResult);
