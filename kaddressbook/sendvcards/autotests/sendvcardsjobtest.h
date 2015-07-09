@@ -31,6 +31,8 @@ public:
     ~SendVcardsJobTest();
 private Q_SLOTS:
     void shouldNotStartWhenListAddressIsEmpty();
+    void shouldHasDefaultValue();
+    void shouldChangeExportVersion();
 };
 
 #endif // SENDVCARDSJOBTEST_H

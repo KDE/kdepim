@@ -36,8 +36,23 @@ SendVcardsJobTest::~SendVcardsJobTest()
 void SendVcardsJobTest::shouldNotStartWhenListAddressIsEmpty()
 {
     Akonadi::Item::List lst;
-    KABSendVCards::SendVcardsJob *job = new KABSendVCards::SendVcardsJob(lst);
-    QVERIFY(!job->start());
+    KABSendVCards::SendVcardsJob job(lst);
+    QVERIFY(!job.start());
+}
+
+void SendVcardsJobTest::shouldHasDefaultValue()
+{
+    Akonadi::Item::List lst;
+    KABSendVCards::SendVcardsJob job(lst);
+    QCOMPARE(job.version(), KContacts::VCardConverter::v3_0);
+}
+
+void SendVcardsJobTest::shouldChangeExportVersion()
+{
+    Akonadi::Item::List lst;
+    KABSendVCards::SendVcardsJob job(lst);
+    job.setVersion(KContacts::VCardConverter::v4_0);
+    QCOMPARE(job.version(), KContacts::VCardConverter::v4_0);
 }
 
 QTEST_MAIN(SendVcardsJobTest)

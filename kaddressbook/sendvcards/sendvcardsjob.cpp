@@ -24,7 +24,6 @@
 #include <AkonadiCore/Item>
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
-#include <KContacts/VCardConverter>
 #include <util/vcardutil.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"
@@ -39,6 +38,7 @@ SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *paren
     : QObject(parent),
       mListItem(listItem),
       mTempDir(Q_NULLPTR),
+      mVersion(KContacts::VCardConverter::v3_0),
       mExpandGroupJobCount(0)
 {
     //Don't delete it.
@@ -113,6 +113,16 @@ void SendVcardsJob::jobFinished()
     deleteLater();
 }
 
+KContacts::VCardConverter::Version SendVcardsJob::version() const
+{
+    return mVersion;
+}
+
+void SendVcardsJob::setVersion(const KContacts::VCardConverter::Version &version)
+{
+    mVersion = version;
+}
+
 void SendVcardsJob::slotExpandGroupResult(KJob *job)
 {
     Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
@@ -120,7 +130,7 @@ void SendVcardsJob::slotExpandGroupResult(KJob *job)
 
     const QString attachmentName = expandJob->property("groupName").toString();
     KContacts::VCardConverter converter;
-    const QByteArray groupData = converter.exportVCards(expandJob->contacts(), KContacts::VCardConverter::v3_0);
+    const QByteArray groupData = converter.exportVCards(expandJob->contacts(), mVersion);
     createTemporaryDir();
     createTemporaryFile(groupData, attachmentName);
 

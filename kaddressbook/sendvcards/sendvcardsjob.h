@@ -23,6 +23,8 @@
 #include <QObject>
 #include <AkonadiCore/Item>
 #include <QStringList>
+#include <KContacts/VCardConverter>
+
 class QTemporaryDir;
 namespace PimCommon
 {
@@ -39,6 +41,9 @@ public:
 
     bool start();
 
+    KContacts::VCardConverter::Version version() const;
+    void setVersion(const KContacts::VCardConverter::Version &version);
+
 Q_SIGNALS:
     void sendVCardsError(const QString &error);
 
@@ -52,6 +57,7 @@ private:
     Akonadi::Item::List mListItem;
     PimCommon::AttachmentTemporaryFilesDirs *mAttachmentTemporary;
     QTemporaryDir *mTempDir;
+    KContacts::VCardConverter::Version mVersion;
     int mExpandGroupJobCount;
 };
 }
