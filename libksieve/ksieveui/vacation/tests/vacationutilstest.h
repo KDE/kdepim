@@ -32,6 +32,7 @@ private Q_SLOTS:
     void testParseScript_data();
     void testParseScript();
     void testParseScriptComplex();
+    void testParseScriptComplexTime();
     void testWriteScript();
     void testWriteSimpleScript();
     void testUpdateVacationBlock();

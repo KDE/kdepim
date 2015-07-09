@@ -143,7 +143,9 @@ void VacationPageWidget::slotGetResult(const QString &serverName, const QStringL
     mVacationEditWidget->enableDates( supportsSieveDate );
     if ( supportsSieveDate ) {
         mVacationEditWidget->setStartDate( vacation.startDate );
+        mVacationEditWidget->setStartTime(vacation.startTime);
         mVacationEditWidget->setEndDate( vacation.endDate );
+        mVacationEditWidget->setEndTime(vacation.endTime);
     }
 
     //emit scriptActive( mWasActive, mServerName );
@@ -168,7 +170,9 @@ KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
         vacation.sendForSpam = mVacationEditWidget->sendForSpam();
         vacation.excludeDomain =  mVacationEditWidget->domainName();
         vacation.startDate = mVacationEditWidget->startDate();
+        vacation.startTime = mVacationEditWidget->startTime();
         vacation.endDate = mVacationEditWidget->endDate();
+        vacation.endTime = mVacationEditWidget->endTime();
         const QString script = VacationUtils::composeScript(vacation);
         createJob->setStatus(active, mWasActive);
         //Q_EMIT scriptActive( active, mServerName);

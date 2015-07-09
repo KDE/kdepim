@@ -121,6 +121,8 @@ void VacationUtilsTest::testParseScript()
     QCOMPARE(vacationD.excludeDomain, vacationA.excludeDomain);
     QCOMPARE(vacationD.startDate, vacationA.startDate);
     QCOMPARE(vacationD.endDate, vacationA.endDate);
+    QCOMPARE(vacationD.startTime, QTime());
+    QCOMPARE(vacationD.endTime, QTime());
 }
 
 void VacationUtilsTest::testParseScriptComplex()
@@ -139,6 +141,33 @@ void VacationUtilsTest::testParseScriptComplex()
     QCOMPARE(vacation.excludeDomain, QString());
     QCOMPARE(vacation.startDate, QDate(2015, 01, 02));
     QCOMPARE(vacation.endDate, QDate(2015, 03, 04));
+    QCOMPARE(vacation.startTime, QTime());
+    QCOMPARE(vacation.endTime, QTime());
+}
+
+void VacationUtilsTest::testParseScriptComplexTime()
+{
+    QFile file(QLatin1String(VACATIONTESTDATADIR "vacation-complex-time.siv"));
+    QVERIFY(file.open(QIODevice::ReadOnly));
+    QString script = QString::fromUtf8(file.readAll());
+
+    VacationUtils::Vacation vacation = VacationUtils::parseScript(script);
+    QCOMPARE(vacation.active, true);
+    QCOMPARE(vacation.messageText, QLatin1String("dsfgsdfgsdfg"));
+    QCOMPARE(vacation.subject, QLatin1String("XXX"));
+    QCOMPARE(vacation.notificationInterval, 7);
+    testAliases(vacation.aliases, QStringList() << QLatin1String("test@test.de"));
+    QCOMPARE(vacation.sendForSpam, false);
+    QCOMPARE(vacation.excludeDomain, QString());
+    QCOMPARE(vacation.startDate, QDate(2015, 01, 02));
+    QCOMPARE(vacation.endDate, QDate(2015, 03, 04));
+    QCOMPARE(vacation.startTime, QTime(2,0));
+    QCOMPARE(vacation.endTime, QTime());
+
+    QString composedScript = VacationUtils::composeScript(vacation);
+    vacation = VacationUtils::parseScript(composedScript);
+    QCOMPARE(vacation.startTime, QTime(2,0));
+    QCOMPARE(vacation.endTime, QTime());
 }
 
 void VacationUtilsTest::testWriteScript()
@@ -175,6 +204,8 @@ void VacationUtilsTest::testWriteScript()
     QCOMPARE(vacationA.excludeDomain, vacation.excludeDomain);
     QCOMPARE(vacationA.startDate, vacation.startDate);
     QCOMPARE(vacationA.endDate, vacation.endDate);
+    QCOMPARE(vacationA.startTime, QTime());
+    QCOMPARE(vacationA.endTime, QTime());
 
     vacation.active = false;
     script = VacationUtils::composeScript(vacation);
@@ -189,6 +220,8 @@ void VacationUtilsTest::testWriteScript()
     QCOMPARE(vacationA.excludeDomain, vacation.excludeDomain);
     QCOMPARE(vacationA.startDate, vacation.startDate);
     QCOMPARE(vacationA.endDate, vacation.endDate);
+    QCOMPARE(vacationA.startTime, QTime());
+    QCOMPARE(vacationA.endTime, QTime());
 }
 
 

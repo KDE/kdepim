@@ -189,6 +189,16 @@ void VacationDialog::setEndDate( const QDate &endDate )
     mVacationEditWidget->setEndDate( endDate );
 }
 
+QTime VacationDialog::endTime() const
+{
+    return mVacationEditWidget->endTime();
+}
+
+void VacationDialog::setEndTime(const QTime &endTime)
+{
+  mVacationEditWidget->setEndTime(endTime);
+}
+
 QDate VacationDialog::startDate() const
 {
     return mVacationEditWidget->startDate();
@@ -197,4 +207,14 @@ QDate VacationDialog::startDate() const
 void VacationDialog::setStartDate( const QDate &startDate )
 {
     mVacationEditWidget->setStartDate( startDate );
+}
+
+QTime VacationDialog::startTime() const
+{
+    return mVacationEditWidget->startTime();
+}
+
+void VacationDialog::setStartTime(const QTime &startTime)
+{
+  mVacationEditWidget->setStartTime(startTime);
 }

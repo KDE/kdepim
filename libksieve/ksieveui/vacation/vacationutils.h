@@ -46,7 +46,9 @@ struct Vacation {
     bool sendForSpam;
     QString excludeDomain;
     QDate startDate;
+    QTime startTime;
     QDate endDate;
+    QTime endTime;
 };
 
 QString composeScript(const Vacation &vacation);

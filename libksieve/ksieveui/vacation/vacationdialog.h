@@ -70,9 +70,14 @@ public:
     QDate startDate() const;
     void setStartDate( const QDate &startDate );
 
+    QTime startTime() const;
+    void setStartTime( const QTime &startTime );
+
     QDate endDate() const;
     void setEndDate( const QDate &endDate );
 
+    QTime endTime() const;
+    void setEndTime( const QTime &endTime );
 
 private slots:
     void slotDialogDefaults();

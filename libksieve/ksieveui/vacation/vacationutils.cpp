@@ -24,7 +24,7 @@
 #include <KLocalizedString>
 #include <KLocale>
 #include <KGlobal>
-#include <QDate>
+#include <KDateTime>
 
 using KMime::Types::AddrSpecList;
 
@@ -168,7 +168,9 @@ KSieveUi::VacationUtils::Vacation KSieveUi::VacationUtils::parseScript(const QSt
     vacation.sendForSpam = !sdx.found();
     vacation.excludeDomain = drdx.domainName();
     vacation.startDate = dx.startDate();
+    vacation.startTime = dx.startTime();
     vacation.endDate = dx.endDate();
+    vacation.endTime = dx.endTime();
     return vacation;
 }
 
@@ -232,13 +234,25 @@ QString KSieveUi::VacationUtils::composeScript(const Vacation &vacation)
     QStringList condition;
 
     if (vacation.startDate.isValid()) {
-        condition.append(QString::fromLatin1("currentdate :value \"ge\" \"date\" \"%1\"")
-            .arg(vacation.startDate.toString(Qt::ISODate)));
+        if (vacation.startTime.isValid()) {
+            KDateTime start(vacation.startDate, vacation.startTime);
+            condition.append(QString::fromLatin1("currentdate :value \"ge\" \"iso8601\" \"%1\"")
+                .arg(start.toString(KDateTime::ISODate)));
+        } else {
+            condition.append(QString::fromLatin1("currentdate :value \"ge\" \"date\" \"%1\"")
+                .arg(vacation.startDate.toString(Qt::ISODate)));
+        }
     }
 
     if (vacation.endDate.isValid()) {
-        condition.append(QString::fromLatin1("currentdate :value \"le\" \"date\" \"%1\"")
-            .arg(vacation.endDate.toString(Qt::ISODate)));
+         if (vacation.endTime.isValid()) {
+            KDateTime end(vacation.endDate, vacation.endTime);
+            condition.append(QString::fromLatin1("currentdate :value \"le\" \"iso8601\" \"%1\"")
+                .arg(end.toString(KDateTime::ISODate)));
+        } else {
+            condition.append(QString::fromLatin1("currentdate :value \"le\" \"date\" \"%1\"")
+                .arg(vacation.endDate.toString(Qt::ISODate)));
+        }
     }
 
     if (!vacation.sendForSpam) {

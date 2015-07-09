@@ -22,8 +22,10 @@
 class KIntSpinBox;
 class KLineEdit;
 class KDateComboBox;
+class KTimeComboBox;
 
 class QDate;
+class QTime;
 
 namespace PimCommon {
 class RichTextEditorWidget;
@@ -79,8 +81,14 @@ public:
     QDate startDate() const;
     void setStartDate( const QDate &startDate );
 
-    QDate endDate();
+    QTime startTime() const;
+    void setStartTime( const QTime &startTime );
+
+    QDate endDate() const;
     void setEndDate( const QDate &endDate );
+
+    QTime endTime() const;
+    void setEndTime( const QTime &endTime );
 
     void setDefault();
 
@@ -97,7 +105,11 @@ protected:
     KLineEdit *mDomainEdit;
     KLineEdit *mSubject;
     KDateComboBox *mStartDate;
+    KTimeComboBox *mStartTime;
+    QCheckBox *mStartTimeActive;
     KDateComboBox *mEndDate;
+    KTimeComboBox *mEndTime;
+    QCheckBox *mEndTimeActive;
 };
 }
 

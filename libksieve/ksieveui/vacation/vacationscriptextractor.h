@@ -325,40 +325,48 @@ static const GenericInformationExtractor::StateNode datesNodes[] = {
 
     // handle startDate and endDate in arbitrary order
     { 0,       GIE::TestListStart, 0, 3, 0, 0 },                 // 2
-    { 0,         GIE::TestStart, "currentdate", 4, 3, 0 },         // 3
-    { 0,           GIE::TaggedArgument, "value", 5, 4, 0 },          // 4
-    { 0,           GIE::StringArgument, "ge", 6, 8, 0 },             // 5
-    { 0,           GIE::StringArgument, "date", 7, 0, 0 },           // 6
-    { 0,           GIE::StringArgument, 0, 11, 0, "startDate" },      // 7
-    { 0,           GIE::StringArgument, "le", 9, 0, 0 },             // 8
-    { 0,           GIE::StringArgument, "date", 10, 0, 0 },          // 9
-    { 0,           GIE::StringArgument, 0, 11, 0, "endDate" },       // 10
-    { 0,         GIE::TestEnd, 0, 12, 0, 0 },                      // 11
+    { 0,         GIE::TestStart, "currentdate", 4, 3, 0 },          // 3
+    { 0,           GIE::TaggedArgument, "value", 5, 4, 0 },         // 4
+    { 0,           GIE::StringArgument, "ge", 6, 10, 0 },           // 5
+    { 0,           GIE::StringArgument, "date", 7, 8, 0 },          // 6
+    { 0,           GIE::StringArgument, 0, 15, 0, "startDate" },    // 7
+    { 0,           GIE::StringArgument, "iso8601", 9, 0, 0 },       // 8
+    { 0,           GIE::StringArgument, 0, 15, 0, "startDateTime" },// 9
+    { 0,           GIE::StringArgument, "le", 11, 0, 0 },           // 10
+    { 0,           GIE::StringArgument, "date", 12, 13, 0 },        // 11
+    { 0,           GIE::StringArgument, 0, 15, 0, "endDate" },      // 12
+    { 0,           GIE::StringArgument, "iso8601", 14, 0, 0 },      // 13
+    { 0,           GIE::StringArgument, 0, 15, 0, "endDateTime" },  // 14
+    { 0,         GIE::TestEnd, 0, 16, 0, 0 },                    // 15
 
-    { 0,         GIE::TestStart, "currentdate", 13, 12, 0 },        // 12
-    { 0,           GIE::TaggedArgument, "value", 14, 13, 0 },         // 13
-    { 0,           GIE::StringArgument, "le", 15, 17, 0 },           // 14
-    { 0,           GIE::StringArgument, "date", 16, 0, 0 },          // 15
-    { 0,           GIE::StringArgument, 0, 20, 0, "endDate" },       // 16
-    { 0,           GIE::StringArgument, "ge", 18, 0, 0 },            // 17
-    { 0,           GIE::StringArgument, "date", 19, 0, 0 },          // 18
-    { 0,           GIE::StringArgument, 0, 20, 0, "startDate" },     // 19
-    { 0,         GIE::TestEnd, 0, 24, 0, 0 },                      // 20
-    { 0,         GIE::TestStart, 0, 23, 22, 0 },        // 21
-    { -1,          GIE::Any, 0, 24, 0, 0 },                      // 22
-    { 0,         GIE::TestEnd, 0, 24, 22, 0 },        // 23
-    { 0,      GIE::TestListEnd, 0, 25, 21, 0 },                   // 24
+    { 0,         GIE::TestStart, "currentdate", 17, 16, 0 },        // 16
+    { 0,           GIE::TaggedArgument, "value", 18, 17, 0 },         // 17
+    { 0,           GIE::StringArgument, "le", 19, 23, 0 },            // 18
+    { 0,           GIE::StringArgument, "date", 20, 21, 0 },          // 19
+    { 0,           GIE::StringArgument, 0, 28, 0, "endDate" },        // 20
+    { 0,           GIE::StringArgument, "iso8601", 22, 0, 0 },        // 21
+    { 0,           GIE::StringArgument, 0, 28, 0, "endDateTime" },    // 22
+    { 0,           GIE::StringArgument, "ge", 24, 0, 0 },             // 23
+    { 0,           GIE::StringArgument, "date", 25, 26, 0 },          // 24
+    { 0,           GIE::StringArgument, 0, 28, 0, "startDate" },      // 25
+    { 0,           GIE::StringArgument, "iso8601", 27, 0, 0 },        // 26
+    { 0,           GIE::StringArgument, 0, 28, 0, "startDateTime" },  // 27
+    { 0,         GIE::TestEnd, 0, 32, 0, 0 },                      // 28
+    { 0,         GIE::TestStart, 0, 31, 30, 0 },        // 29
+    { -1,          GIE::Any, 0, 32, 0, 0 },                      // 30
+    { 0,         GIE::TestEnd, 0, 32, 30, 0 },        // 31
+    { 0,      GIE::TestListEnd, 0, 33, 29, 0 },                   // 32
 
-    { 0,   GIE::TestEnd, 0, 26, 0, 0 },                 // 25
+    { 0,   GIE::TestEnd, 0, 34, 0, 0 },                 // 33
 
     // block of commands, find "stop", take nested if's into account:
-    { 0,   GIE::BlockStart, 0, 28, 25, 0 },                 // 26
-    { -1,    GIE::Any, 0, 28, 0, 0 },                      // 27
-    { 1,     GIE::CommandStart, "vacation", 30, 27, "vacation" },  // 28
-    { -1,    GIE::Any, 0, 30, 0, 0 },                      // 29
-    { 0,   GIE::BlockEnd, 0, 31, 29, 0 },                   // 30
+    { 0,   GIE::BlockStart, 0, 36, 33, 0 },                 // 34
+    { -1,    GIE::Any, 0, 36, 0, 0 },                      // 35
+    { 1,     GIE::CommandStart, "vacation", 38, 35, "vacation" },  // 36
+    { -1,    GIE::Any, 0, 38, 0, 0 },                      // 37
+    { 0,   GIE::BlockEnd, 0, 39, 37, 0 },                   // 38
 
-    { -1, GIE::Any, 0, 31, 31, 0 }                      // 31 end state
+    { -1, GIE::Any, 0, 39, 39, 0 }                      // 39 end state
 };
 
 static const unsigned int numDatesNodes = sizeof datesNodes / sizeof *datesNodes;
@@ -372,12 +380,30 @@ public:
 
   QDate endDate()
   {
-      return date( QLatin1String( "endDate" ) );
+      if (mResults.count(QLatin1String("endDateTime")) == 1) {
+          return datetime(QLatin1String("endDateTime")).date();
+      } else {
+          return date(QLatin1String("endDate"));
+      }
   }
 
   QDate startDate()
   {
-      return date( QLatin1String( "startDate" ) );
+      if (mResults.count(QLatin1String("startDateTime")) == 1) {
+          return datetime(QLatin1String("startDateTime")).date();
+      } else {
+          return date(QLatin1String("startDate"));
+      }
+  }
+
+  QTime endTime()
+  {
+      return datetime(QLatin1String("endDateTime")).time();
+  }
+
+  QTime startTime()
+  {
+      return datetime(QLatin1String("startDateTime")).time();
   }
 
 private:
@@ -386,6 +412,14 @@ private:
           return QDate();
       } else {
           return QDate::fromString( mResults[name], Qt::ISODate );
+      }
+  }
+
+  QDateTime datetime(const QString &name ) {
+      if (mResults.count(name) == 0) {
+          return QDateTime();
+      } else {
+          return QDateTime::fromString( mResults[name], Qt::ISODate );
       }
   }
 };

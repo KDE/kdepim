@@ -33,7 +33,9 @@
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QVBoxLayout>
 #include <KDateComboBox>
+#include <KTimeComboBox>
 #include <kdialog.h>
 
 using KMime::Types::AddrSpecList;
@@ -83,26 +85,57 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     glay->addWidget(mSubject, row, 1);
 
     // From date
-    ++row;
+
+    QHBoxLayout *timeLayout = new QHBoxLayout(this);
+
     mStartDate = new KDateComboBox( this );
     mStartDate->setObjectName( QLatin1String( "mStartDate" ) );
     mStartDate->setOptions( KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords | KDateComboBox::WarnOnInvalid );
     mStartDate->setEnabled( false ); // Disable by default - we need an extension to support this
+
+    mStartTime = new KTimeComboBox( this );
+    mStartTime->setObjectName( QLatin1String( "mStartTime" ) );
+    mStartTime->setOptions( KTimeComboBox::EditTime | KTimeComboBox::SelectTime | KTimeComboBox::EditTime | KTimeComboBox::WarnOnInvalid );
+    mStartTime->setEnabled( false ); // Disable by default - we need an extension to support this
+
+    mStartTimeActive = new QCheckBox(this);
+    connect(mStartTimeActive,SIGNAL(toggled(bool)), mStartTime, SLOT(setEnabled(bool)));
+
+    timeLayout->addWidget(mStartDate);
+    timeLayout->addWidget(mStartTimeActive);
+    timeLayout->addWidget(mStartTime);
+
+    ++row;
     QLabel *label = new QLabel( i18n("&Start:"), this );
     label->setBuddy( mStartDate );
     glay->addWidget( label, row, 0 );
-    glay->addWidget( mStartDate, row, 1 );
+    glay->addLayout(timeLayout, row, 1);
 
     // End date
-    ++row;
+    timeLayout = new QHBoxLayout(this);
+
     mEndDate = new KDateComboBox( this );
     mEndDate->setObjectName( QLatin1String( "mEndDate" ) );
     mEndDate->setOptions( KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords | KDateComboBox::WarnOnInvalid );
     mEndDate->setEnabled( false ); // Disable by default - we need an extension to support this
+
+    mEndTime = new KTimeComboBox( this );
+    mEndTime->setObjectName( QLatin1String( "mEndTime" ) );
+    mEndTime->setOptions( KTimeComboBox::EditTime | KTimeComboBox::SelectTime | KTimeComboBox::EditTime | KTimeComboBox::WarnOnInvalid );
+    mEndTime->setEnabled( false ); // Disable by default - we need an extension to support this
+
+    mEndTimeActive = new QCheckBox(this);
+    connect(mEndTimeActive,SIGNAL(toggled(bool)), mEndTime, SLOT(setEnabled(bool)));
+
+    timeLayout->addWidget(mEndDate);
+    timeLayout->addWidget(mEndTimeActive);
+    timeLayout->addWidget(mEndTime);
+
+    ++row;
     label = new QLabel( i18n("&End:"), this );
     label->setBuddy( mEndDate );
     glay->addWidget( label, row, 0 );
-    glay->addWidget( mEndDate, row, 1 );
+    glay->addLayout(timeLayout, row, 1);
 
     // "Resent only after" spinbox and label:
     ++row;
@@ -255,7 +288,7 @@ void VacationEditWidget::setSendForSpam( bool enable )
     mSpamCheck->setChecked( !enable );
 }
 
-QDate VacationEditWidget::endDate()
+QDate VacationEditWidget::endDate() const
 {
     if ( mEndDate->isEnabled() ) {
         return mEndDate->date();
@@ -267,6 +300,22 @@ QDate VacationEditWidget::endDate()
 void VacationEditWidget::setEndDate( const QDate &endDate )
 {
     mEndDate->setDate( endDate );
+}
+
+QTime VacationEditWidget::endTime() const
+{
+    if ( mEndTime->isEnabled() ) {
+        return mEndTime->time();
+    } else {
+        return QTime();
+    }
+}
+
+void VacationEditWidget::setEndTime( const QTime &endTime )
+{
+    mEndTimeActive->setChecked(endTime.isValid());
+    mEndTime->setEnabled(endTime.isValid());
+    mEndTime->setTime( endTime );
 }
 
 QDate VacationEditWidget::startDate() const
@@ -281,6 +330,22 @@ QDate VacationEditWidget::startDate() const
 void VacationEditWidget::setStartDate( const QDate &startDate )
 {
     mStartDate->setDate( startDate );
+}
+
+QTime VacationEditWidget::startTime() const
+{
+    if ( mStartTime->isEnabled() ) {
+        return mStartTime->time();
+    } else {
+        return QTime();
+    }
+}
+
+void VacationEditWidget::setStartTime( const QTime &startTime )
+{
+    mStartTimeActive->setChecked(startTime.isValid());
+    mStartTime->setEnabled(startTime.isValid());
+    mStartTime->setTime( startTime );
 }
 
 void VacationEditWidget::setSubject(const QString &subject)

@@ -134,7 +134,9 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
         if (supportsDate) {
             mDialog->enableDates( supportsDate );
             mDialog->setStartDate( vacation.startDate );
+            mDialog->setEndTime(vacation.endTime);
             mDialog->setEndDate( vacation.endDate );
+            mDialog->setEndTime(vacation.endTime);
         }
 
         connect( mDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()) );
@@ -168,7 +170,9 @@ void Vacation::slotDialogOk() {
     vacation.sendForSpam = mDialog->sendForSpam();
     vacation.excludeDomain =  mDialog->domainName();
     vacation.startDate = mDialog->startDate();
+    vacation.startTime = mDialog->startTime();
     vacation.endDate = mDialog->endDate();
+    vacation.endTime = mDialog->endTime();
     const QString script = VacationUtils::composeScript(vacation);
     emit scriptActive( active, mServerName);
 
