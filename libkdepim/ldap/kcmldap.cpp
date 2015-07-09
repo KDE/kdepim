@@ -200,7 +200,7 @@ static void swapItems(LDAPItem *item, LDAPItem *other)
 void KCMLdap::slotMoveUp()
 {
     const QList<QListWidgetItem *> selectedItems = mHostListView->selectedItems();
-    if (selectedItems.count() == 0) {
+    if (selectedItems.isEmpty()) {
         return;
     }
 
@@ -225,7 +225,7 @@ void KCMLdap::slotMoveUp()
 void KCMLdap::slotMoveDown()
 {
     const QList<QListWidgetItem *> selectedItems = mHostListView->selectedItems();
-    if (selectedItems.count() == 0) {
+    if (selectedItems.isEmpty()) {
         return;
     }
 
