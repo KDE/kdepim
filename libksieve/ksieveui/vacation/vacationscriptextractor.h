@@ -168,43 +168,42 @@ private:
         if ( const char * str = expected.string )
             if ( string.toLower() != QString::fromUtf8( str ).toLower() )
                 found = false;
-        kDebug() << ( found ?"found:" :"not found:" )
+        /*kDebug() << ( found ?"found:" :"not found:" )
                  << mState << "->"
-                 << ( found ? expected.if_found : expected.if_not_found );
+                 << ( found ? expected.if_found : expected.if_not_found );*/
         mState = found ? expected.if_found : expected.if_not_found ;
         assert( mState < mNodes.size() );
         if ( found )
             if ( const char * save_tag = expected.save_tag ) {
-                kDebug() << "stored tag" << save_tag << ":" << string;
                 mResults[QString::fromLatin1(save_tag)] = string;
             }
         if ( !found && !mRecursionGuard.count( mState ) ) {
             doProcess( method, string );
         }
     }
-    void commandStart( const QString & identifier, int lineNumber ) { kDebug() << identifier ; process( CommandStart, identifier ); }
-    void commandEnd(int lineNumber) { kDebug() ; process( CommandEnd ); }
-    void testStart( const QString & identifier ) { kDebug() << identifier ; process( TestStart, identifier ); }
-    void testEnd() { kDebug() ; process( TestEnd ); }
-    void testListStart() { kDebug() ; process( TestListStart ); }
-    void testListEnd() { kDebug() ; process( TestListEnd ); }
-    void blockStart(int lineNumber) { kDebug() ; process( BlockStart ); ++mNestingDepth; }
-    void blockEnd(int lineNumber) { kDebug() ; --mNestingDepth; process( BlockEnd ); }
-    void hashComment( const QString & ) { kDebug() ; }
-    void bracketComment( const QString & ) { kDebug() ; }
-    void lineFeed() { kDebug() << ++mLineNumber; }
+    void commandStart( const QString & identifier, int lineNumber ) { process( CommandStart, identifier ); }
+    void commandEnd(int lineNumber) { process( CommandEnd ); }
+    void testStart( const QString & identifier ) { process( TestStart, identifier ); }
+    void testEnd() { process( TestEnd ); }
+    void testListStart() { process( TestListStart ); }
+    void testListEnd() { process( TestListEnd ); }
+    void blockStart(int lineNumber) { process( BlockStart ); ++mNestingDepth; }
+    void blockEnd(int lineNumber) {  --mNestingDepth; process( BlockEnd ); }
+    void hashComment( const QString & ) { }
+    void bracketComment( const QString & ) { }
+    void lineFeed() { ++mLineNumber; }
     void error( const KSieve::Error & ) {
         kDebug() ;
         mState = 0;
     }
-    void finished() { kDebug() ; }
+    void finished() { }
 
-    void taggedArgument( const QString & tag ) { kDebug() ; process( TaggedArgument, tag ); }
-    void stringArgument( const QString & string, bool, const QString & ) { kDebug() ; process( StringArgument, string ); }
-    void numberArgument( unsigned long number, char ) { kDebug(); process( NumberArgument, QString::number( number ) ); }
-    void stringListArgumentStart() { kDebug() ; process( StringListArgumentStart ); }
-    void stringListEntry( const QString & string, bool, const QString & ) { kDebug() ; process( StringListEntry, string ); }
-    void stringListArgumentEnd() { kDebug() ; process( StringListArgumentEnd ); }
+    void taggedArgument( const QString & tag ) { process( TaggedArgument, tag ); }
+    void stringArgument( const QString & string, bool, const QString & ) { process( StringArgument, string ); }
+    void numberArgument( unsigned long number, char ) { process( NumberArgument, QString::number( number ) ); }
+    void stringListArgumentStart() { process( StringListArgumentStart ); }
+    void stringListEntry( const QString & string, bool, const QString & ) { process( StringListEntry, string ); }
+    void stringListArgumentEnd() { process( StringListArgumentEnd ); }
 };
 
 typedef GenericInformationExtractor GIE;
