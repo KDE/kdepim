@@ -66,29 +66,33 @@ void PimSettingExporterConsole::slotJobFinished()
 
 void PimSettingExporterConsole::slotAddEndLine()
 {
-    if (mLogInFile)
+    if (mLogInFile) {
         mLogInFile->addEndLine();
+    }
     mLogInfo->addEndLineLogEntry();
 }
 
 void PimSettingExporterConsole::slotAddError(const QString &message)
 {
-    if (mLogInFile)
+    if (mLogInFile) {
         mLogInFile->addError(message);
+    }
     mLogInfo->addErrorLogEntry(message);
 }
 
 void PimSettingExporterConsole::slotAddInfo(const QString &message)
 {
-    if (mLogInFile)
+    if (mLogInFile) {
         mLogInFile->addInfo(message);
+    }
     mLogInfo->addInfoLogEntry(message);
 }
 
 void PimSettingExporterConsole::slotAddTitle(const QString &message)
 {
-    if (mLogInFile)
+    if (mLogInFile) {
         mLogInFile->addTitle(message);
+    }
     mLogInfo->addTitleLogEntry(message);
 }
 
