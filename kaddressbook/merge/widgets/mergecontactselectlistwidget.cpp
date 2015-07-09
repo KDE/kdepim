@@ -19,8 +19,7 @@
 #include "kaddressbook_debug.h"
 #include <KContacts/Addressee>
 #include <KLocalizedString>
-#include <KGlobal>
-#include <KLocale>
+#include <QLocale>
 #include <QLabel>
 #include <QListWidget>
 #include <QVBoxLayout>
@@ -159,7 +158,7 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
             const QDate birdthDt = addr.birthday().date();
             QString birdth;
             if (birdthDt.isValid()) {
-                birdth = KLocale::global()->formatDate(birdthDt);
+                birdth = QLocale().toString(birdthDt);
             }
             addItem(birdth);
             break;
@@ -183,7 +182,7 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
             QString anniversary;
             const QDate anniversaryDt = QDate::fromString(addr.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Anniversary")), Qt::ISODate);
             if (anniversaryDt.isValid()) {
-                anniversary = KLocale::global()->formatDate(anniversaryDt);
+                anniversary = QLocale().toString(anniversaryDt);
             }
             addItem(anniversary);
             break;

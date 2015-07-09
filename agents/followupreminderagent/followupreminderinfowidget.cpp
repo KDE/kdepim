@@ -24,7 +24,7 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 
-#include <KLocale>
+#include <QLocale>
 #include <QIcon>
 #include <QMenu>
 #include <KLocalizedString>
@@ -136,7 +136,7 @@ void FollowUpReminderInfoWidget::createOrUpdateItem(FollowUpReminder::FollowUpRe
     item->setInfo(info);
     item->setText(To, info->to());
     item->setText(Subject, info->subject());
-    const QString date = KLocale::global()->formatDate(info->followUpReminderDate(), KLocale::LongDate);
+    const QString date = QLocale().toString(info->followUpReminderDate());
     item->setText(DeadLine, date);
     const bool answerWasReceived = info->answerWasReceived();
     item->setText(AnswerWasReceived, answerWasReceived ? i18n("Received") : i18n("On hold"));

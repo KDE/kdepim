@@ -17,7 +17,7 @@
 
 #include "noteeditorutils.h"
 
-#include <KLocale>
+#include <QLocale>
 
 #include <QChar>
 #include <QTextCursor>
@@ -43,5 +43,5 @@ void NoteEditorUtils::addCheckmark(QTextCursor &cursor)
 
 void NoteEditorUtils::insertDate(QTextEdit *editor)
 {
-    editor->insertPlainText(KLocale::global()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + QLatin1Char(' '));
+    editor->insertPlainText(QLocale().toString(QDateTime::currentDateTime(), QLocale::ShortFormat) + QLatin1Char(' '));
 }

@@ -273,7 +273,7 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
                                             QStringLiteral("X-Anniversary")), Qt::ISODate);
     if (anniversary.isValid()) {
         contactObject.insert(QStringLiteral("anniversary"),
-                             KLocale::global()->formatDate(anniversary));
+                             QLocale().toString(anniversary));
         grantleeContactUtil.insertVariableToQVariantHash(contactObject, QStringLiteral("anniversaryi18n"));
     }
 

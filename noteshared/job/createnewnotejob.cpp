@@ -32,7 +32,7 @@
 #include <KMime/KMimeMessage>
 
 #include <KMessageBox>
-#include <KLocale>
+#include <QLocale>
 #include <KLocalizedString>
 
 #include <QPointer>
@@ -141,9 +141,9 @@ void CreateNewNoteJob::slotFetchCollection(KJob *job)
         if (mTitle.isEmpty()) {
             const QDateTime currentDateTime = QDateTime::currentDateTime();
             title = NoteShared::NoteSharedGlobalConfig::self()->defaultTitle();
-            title.replace(QStringLiteral("%t"), KLocale::global()->formatTime(currentDateTime.time()));
-            title.replace(QStringLiteral("%d"), KLocale::global()->formatDate(currentDateTime.date(), KLocale::ShortDate));
-            title.replace(QStringLiteral("%l"), KLocale::global()->formatDate(currentDateTime.date(), KLocale::LongDate));
+            title.replace(QStringLiteral("%t"), QLocale().toString(currentDateTime.time()));
+            title.replace(QStringLiteral("%d"), QLocale().toString(currentDateTime.date(), QLocale::ShortFormat));
+            title.replace(QStringLiteral("%l"), QLocale().toString(currentDateTime.date(), QLocale::LongFormat));
         } else {
             title = mTitle;
         }

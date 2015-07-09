@@ -55,7 +55,8 @@
 #include <qlineedit.h>
 #include <kmessagebox.h>
 
-#include <KLocale>
+#include <QLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <KGuiItem>
@@ -894,7 +895,7 @@ void LdapSearchDialog::slotUser1()
             // set a comment where the contact came from
             contact.setNote(i18nc("arguments are host name, datetime",
                                   "Imported from LDAP directory %1 on %2",
-                                  items.at(i).second, KLocale::global()->formatDateTime(now)));
+                                  items.at(i).second, QLocale().toString(now,QLocale::ShortFormat)));
 
             d->mSelectedContacts.append(contact);
         }

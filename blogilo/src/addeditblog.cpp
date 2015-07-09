@@ -304,8 +304,8 @@ void AddEditBlog::fetchBlogId()
         d->mBlog = blog;
         blog->setUsername(d->ui.txtUser->text());
         blog->setPassword(d->ui.txtPass->text());
-        blog->setApiKey(QLatin1String("500754804903-g6n1rfjjcmhct64p3qgj6ma3oo8l8s6a.apps.googleusercontent.com"));
-        blog->setSecretKey(QLatin1String("jzSzkrD7ert2z0v5VEq6CcSs"));
+        blog->setApiKey(QStringLiteral("500754804903-g6n1rfjjcmhct64p3qgj6ma3oo8l8s6a.apps.googleusercontent.com"));
+        blog->setSecretKey(QStringLiteral("jzSzkrD7ert2z0v5VEq6CcSs"));
         connect(blog, &KBlog::Blogger::authenticated, this, &AddEditBlog::bloggerAuthenticated);
         blog->authenticate();
         break;
@@ -330,7 +330,7 @@ void AddEditBlog::handleFetchIDTimeout()
     if (d->mFetchProfileIdTimer) {
         d->mFetchProfileIdTimer->stop();
     }
-    d->ui.txtId->setText(QString());
+    d->ui.txtId->clear();
     d->ui.txtId->setEnabled(true);
     hideWaitWidget();
     KMessageBox::error(this, i18n("Fetching the blog id timed out. Check your Internet connection,"
@@ -345,7 +345,7 @@ void AddEditBlog::handleFetchAPITimeout()
     d->mFetchAPITimer = Q_NULLPTR;
     hideWaitWidget();
     d->ui.txtId->setEnabled(true);
-    d->ui.txtId->setText(QString());
+    d->ui.txtId->clear();
     KMessageBox::sorry(this, i18n("The API guess function has failed, "
                                   "please check your Internet connection. Otherwise, you have to set the API type manually on the Advanced tab."),
                        i18n("Auto Configuration Failed"));
@@ -355,7 +355,7 @@ void AddEditBlog::handleFetchError(KBlog::Blog::ErrorType type, const QString &e
 {
     qCDebug(BLOGILO_LOG) << " ErrorType: " << type;
     d->ui.txtId->setEnabled(true);
-    d->ui.txtId->setText(QString());
+    d->ui.txtId->clear();
     hideWaitWidget();
     KMessageBox::detailedError(this, i18n("Fetching BlogID Failed.\nPlease check your Internet connection."), errorMsg);
 }
