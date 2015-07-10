@@ -28,6 +28,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QHBoxLayout>
+#include <KLocalizedString>
 
 #include <memory>
 
@@ -103,7 +104,7 @@ private:
 
         explicit Ui(CertificateRequester *qq)
             : lineEdit(qq),
-              button(tr("Change..."), qq),
+              button(i18n("Change..."), qq),
               hlay(qq)
         {
             lineEdit.setObjectName(QStringLiteral("lineEdit"));
@@ -252,8 +253,8 @@ void CertificateRequester::Private::slotCommandFinished()
         /* do nothing */;
     else if (command->error())
         QMessageBox::information(q,
-                                 tr("Kleopatra Error"),
-                                 tr("There was an error while connecting to Kleopatra: %1")
+                                 i18n("Kleopatra Error"),
+                                 i18n("There was an error while connecting to Kleopatra: %1")
                                  .arg(command->errorString()));
     else {
         q->setSelectedCertificates(command->selectedCertificates());
