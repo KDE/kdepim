@@ -16,6 +16,7 @@
 */
 
 #include "loginfo.h"
+#include <QDebug>
 
 LogInfo::LogInfo(QObject *parent)
     : QObject(parent)
@@ -65,5 +66,7 @@ void LogInfo::addLogLine(const QString &message, LogType type)
         newMessage = message;
         break;
     }
+    //Laurent: Don't use qCDebug here.
+    qDebug() << newMessage;
     //TODO cout << ... ?
 }
