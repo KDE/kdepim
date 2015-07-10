@@ -63,7 +63,7 @@
 #include <boost/bind.hpp>
 #include <KMessageBox>
 #include <KIdentityManagement/IdentityManager>
-#include <KFileDialog>
+#include <QFileDialog>
 #include <KIO/NetAccess>
 #include "calendarsupport_debug.h"
 
@@ -745,9 +745,7 @@ void CalendarSupport::saveAttachments(const Akonadi::Item &item, QWidget *parent
     QString targetFile, targetDir;
     if (attachments.count() > 1) {
         // get the dir
-        targetDir = KFileDialog::getExistingDirectory(QUrl(QLatin1String("kfiledialog:///saveAttachment")),
-                    parentWidget,
-                    i18n("Save Attachments To"));
+        targetDir = QFileDialog::getExistingDirectory(parentWidget, i18n("Save Attachments To"));
         if (targetDir.isEmpty()) {
             return;
         }
@@ -762,10 +760,7 @@ void CalendarSupport::saveAttachments(const Akonadi::Item &item, QWidget *parent
         if (fileName.isEmpty()) {
             fileName = i18nc("filename for an unnamed attachment", "attachment.1");
         }
-        targetFile = KFileDialog::getSaveFileName(QUrl(QLatin1String("kfiledialog:///saveAttachment/") + fileName),
-                     QString(),
-                     parentWidget,
-                     i18n("Save Attachment"));
+        targetFile = QFileDialog::getSaveFileName(parentWidget, i18n("Save Attachment"), fileName);
         if (targetFile.isEmpty()) {
             return;
         }
