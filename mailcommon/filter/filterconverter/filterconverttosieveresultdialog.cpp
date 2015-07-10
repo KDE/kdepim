@@ -52,6 +52,7 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     connect(saveButton, &QPushButton::clicked, this, &FilterConvertToSieveResultDialog::slotSave);
 
     mEditor = new PimCommon::PlainTextEditorWidget;
+    mEditor->editor()->setSpellCheckingSupport(false);
     mEditor->setObjectName(QStringLiteral("editor"));
     PimCommon::SieveSyntaxHighlighter *syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter(mEditor->editor()->document());
     syntaxHighlighter->addCapabilities(PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities());
