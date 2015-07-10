@@ -51,17 +51,17 @@ void PimSettingExporterConsole::initializeLogInFile()
 
 void PimSettingExporterConsole::slotJobFailed()
 {
-
+    qCWarning(PIMSETTINGEXPORTERCONSOLE_LOG) << "job failed";
 }
 
 void PimSettingExporterConsole::slotBackupDone()
 {
-
+    qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "Backup Done";
 }
 
 void PimSettingExporterConsole::slotJobFinished()
 {
-
+    qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "job finished";
 }
 
 void PimSettingExporterConsole::slotAddEndLine()
