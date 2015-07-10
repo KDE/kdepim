@@ -188,7 +188,7 @@ void AgentWidget::slotDataChanged(const QModelIndex &topLeft, const QModelIndex 
 
 void AgentWidget::removeAgent()
 {
-    QList<AgentInstance> list = ui.instanceWidget->selectedAgentInstances();
+    AgentInstance::List list = ui.instanceWidget->selectedAgentInstances();
     if (!list.isEmpty()) {
         if (KMessageBox::questionYesNo(this,
                                        i18np("Do you really want to delete the selected agent instance?",
@@ -228,7 +228,7 @@ void AgentWidget::configureAgentRemote()
 
 void AgentWidget::synchronizeAgent()
 {
-    QList<AgentInstance> list = ui.instanceWidget->selectedAgentInstances();
+    AgentInstance::List list = ui.instanceWidget->selectedAgentInstances();
     if (!list.isEmpty())
         foreach (AgentInstance agent, list) {
             agent.synchronize();
@@ -296,7 +296,7 @@ void AgentWidget::showChangeNotifications()
 
 void AgentWidget::synchronizeTree()
 {
-    QList<AgentInstance> list = ui.instanceWidget->selectedAgentInstances();
+    AgentInstance::List list = ui.instanceWidget->selectedAgentInstances();
     if (!list.isEmpty())
         foreach (AgentInstance agent, list) {
             agent.synchronizeCollectionTree();
@@ -305,7 +305,7 @@ void AgentWidget::synchronizeTree()
 
 void AgentWidget::abortAgent()
 {
-    QList<AgentInstance> list = ui.instanceWidget->selectedAgentInstances();
+    AgentInstance::List list = ui.instanceWidget->selectedAgentInstances();
     if (!list.isEmpty())
         foreach (const AgentInstance &agent, list) {
             agent.abortCurrentTask();
