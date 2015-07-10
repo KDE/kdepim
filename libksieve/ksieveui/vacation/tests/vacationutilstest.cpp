@@ -198,7 +198,6 @@ void VacationUtilsTest::testWriteScript()
     QCOMPARE(vacationA.messageText, vacation.messageText);
     QCOMPARE(vacationA.subject, vacation.subject);
     QCOMPARE(vacationA.notificationInterval, vacation.notificationInterval);
-    kDebug() << "huih";
     testAliases(vacationA.aliases, vacation.aliases);
     QCOMPARE(vacationA.sendForSpam, vacation.sendForSpam);
     QCOMPARE(vacationA.excludeDomain, vacation.excludeDomain);
