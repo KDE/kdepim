@@ -19,7 +19,7 @@
 #include "filter_kmail_archive.h"
 
 #include <KLocalizedString>
-#include <KFileDialog>
+#include <QFileDialog>
 #include <KZip>
 #include <KTar>
 #include <QUrl>
@@ -193,16 +193,11 @@ void FilterKMailArchive::import()
 {
     Q_ASSERT(filterInfo()->rootCollection().isValid());
 
-    KFileDialog fileDialog(QUrl(), QString(), filterInfo()->parent());
-    fileDialog.setMode(KFile::File | KFile::LocalOnly);
-    fileDialog.setWindowTitle(i18n("Select KMail Archive File to Import"));
-    fileDialog.setFilter("*.tar.bz2 *.tar.gz *.tar *.zip|" +
-                         i18n("KMail Archive Files (*.tar, *.tar.gz, *.tar.bz2, *.zip)"));
-    if (!fileDialog.exec()) {
+    const QString archiveFile = QFileDialog::getOpenFileName(filterInfo()->parent(), i18n("Select KMail Archive File to Import"), QString(), i18n("KMail Archive Files (*.tar *.tar.gz *.tar.bz2 *.zip)"));
+    if (archiveFile.isEmpty()) {
         filterInfo()->alert(i18n("Please select an archive file that should be imported."));
         return;
     }
-    const QString archiveFile = fileDialog.selectedFile();
     importMails(archiveFile);
 }
 
