@@ -227,7 +227,7 @@ void CustomTemplates::save()
         CTemplates t(name);
         QString content = it->content();
         if (content.trimmed().isEmpty()) {
-            content = QLatin1String("%BLANK");
+            content = QStringLiteral("%BLANK");
         }
 
         t.setContent(content);
