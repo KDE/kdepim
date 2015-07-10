@@ -40,6 +40,7 @@
 #include "libkleopatraclientcore_debug.h"
 #include <QDir>
 #include <QProcess>
+#include <KLocalizedString>
 
 #include <assuan.h>
 #include <gpg-error.h>
@@ -473,7 +474,7 @@ static QString uiserver_executable()
 static QString start_uiserver()
 {
     if (!QProcess::startDetached(uiserver_executable(), QStringList() << QStringLiteral("--daemon"))) {
-        return Command::tr("Failed to start uiserver %1").arg(uiserver_executable());
+        return i18n("Failed to start uiserver %1", uiserver_executable());
     } else {
         return QString();
     }
@@ -587,7 +588,7 @@ void Command::Private::run()
 
     const QString socketName = out.serverLocation;
     if (socketName.isEmpty()) {
-        out.errorString = tr("Invalid socket name!");
+        out.errorString = i18n("Invalid socket name!");
         goto leave;
     }
 
@@ -598,8 +599,8 @@ void Command::Private::run()
         assuan_context_t naked_ctx = 0;
         err = assuan_new(&naked_ctx);
         if (err) {
-            out.errorString = tr("Could not allocate resources to connect to Kleopatra UI server at %1: %2")
-                              .arg(socketName, to_error_string(err));
+            out.errorString = i18n("Could not allocate resources to connect to Kleopatra UI server at %1: %2"
+                              ,socketName, to_error_string(err));
             goto leave;
         }
 
@@ -629,8 +630,8 @@ void Command::Private::run()
     }
 
     if (err) {
-        out.errorString = tr("Could not connect to Kleopatra UI server at %1: %2")
-                          .arg(socketName, to_error_string(err));
+        out.errorString = i18n("Could not connect to Kleopatra UI server at %1: %2",
+                          socketName, to_error_string(err));
         goto leave;
     }
 
@@ -642,8 +643,7 @@ void Command::Private::run()
     out.serverPid = -1;
     err = my_assuan_transact(ctx, "GETINFO pid", &getinfo_pid_cb, &out.serverPid);
     if (err || out.serverPid <= 0) {
-        out.errorString = tr("Could not get the process-id of the Kleopatra UI server at %1: %2")
-                          .arg(socketName, to_error_string(err));
+        out.errorString = i18n("Could not get the process-id of the Kleopatra UI server at %1: %2", socketName, to_error_string(err));
         goto leave;
     }
 
@@ -673,8 +673,7 @@ void Command::Private::run()
     for (std::map<std::string, Option>::const_iterator it = in.options.begin(), end = in.options.end() ; it != end ; ++it)
         if ((err = send_option(ctx, it->first.c_str(), it->second.hasValue ? it->second.value.toString() : QVariant()))) {
             if (it->second.isCritical) {
-                out.errorString = tr("Failed to send critical option %1: %2")
-                                  .arg(QString::fromLatin1(it->first.c_str()), to_error_string(err));
+                out.errorString = i18n("Failed to send critical option %1: %2", QString::fromLatin1(it->first.c_str()), to_error_string(err));
                 goto leave;
             } else {
                 qCDebug(LIBKLEOPATRACLIENTCORE_LOG) << "Failed to send non-critical option" << it->first.c_str() << ":" << to_error_string(err);
@@ -683,22 +682,20 @@ void Command::Private::run()
 
     Q_FOREACH (const QString &filePath, in.filePaths)
         if ((err = send_file(ctx, filePath))) {
-            out.errorString = tr("Failed to send file path %1: %2")
-                              .arg(filePath, to_error_string(err));
+            out.errorString = i18n("Failed to send file path %1: %2", filePath, to_error_string(err));
             goto leave;
         }
 
     Q_FOREACH (const QString &sender, in.senders)
         if ((err = send_sender(ctx, sender, in.areSendersInformative))) {
-            out.errorString = tr("Failed to send sender %1: %2")
+            out.errorString = i18n("Failed to send sender %1: %2")
                               .arg(sender, to_error_string(err));
             goto leave;
         }
 
     Q_FOREACH (const QString &recipient, in.recipients)
         if ((err = send_recipient(ctx, recipient, in.areRecipientsInformative))) {
-            out.errorString = tr("Failed to send recipient %1: %2")
-                              .arg(recipient, to_error_string(err));
+            out.errorString = i18n("Failed to send recipient %1: %2", recipient, to_error_string(err));
             goto leave;
         }
 
@@ -711,8 +708,7 @@ void Command::Private::run()
         if (gpg_err_code(err) == GPG_ERR_CANCELED) {
             out.canceled = true;
         } else
-            out.errorString = tr("Command (%1) failed: %2")
-                              .arg(QString::fromLatin1(in.command.constData())).arg(to_error_string(err));
+            out.errorString = i18n("Command (%1) failed: %2", QString::fromLatin1(in.command.constData()), to_error_string(err));
         goto leave;
     }
 
