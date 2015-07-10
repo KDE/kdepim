@@ -250,7 +250,6 @@ CategoryDialog::CategoryDialog(CategoryConfig *cc, QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &CategoryDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &CategoryDialog::reject);
 
     QWidget *page = new QWidget;

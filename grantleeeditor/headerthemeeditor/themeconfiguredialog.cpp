@@ -65,7 +65,6 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ThemeConfigureDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ThemeConfigureDialog::reject);
     mainLayout->addWidget(buttonBox);
     buttonBox->button(QDialogButtonBox::Ok)->setFocus();
@@ -94,6 +93,7 @@ void ThemeConfigureDialog::slotDefaultClicked()
 void ThemeConfigureDialog::slotOkClicked()
 {
     writeConfig();
+    accept();
 }
 
 void ThemeConfigureDialog::readConfig()

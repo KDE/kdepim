@@ -69,7 +69,6 @@ ContactPrintThemeConfigureDialog::ContactPrintThemeConfigureDialog(QWidget *pare
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ContactPrintThemeConfigureDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ContactPrintThemeConfigureDialog::reject);
     mainLayout->addWidget(buttonBox);
     okButton->setFocus();
@@ -105,6 +104,7 @@ void ContactPrintThemeConfigureDialog::slotDefaultClicked()
 void ContactPrintThemeConfigureDialog::slotOkClicked()
 {
     writeConfig();
+    accept();
 }
 
 void ContactPrintThemeConfigureDialog::readConfig()

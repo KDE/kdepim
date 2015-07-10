@@ -53,7 +53,6 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &AccountConfigOrderDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AccountConfigOrderDialog::reject);
     okButton->setDefault(true);
 

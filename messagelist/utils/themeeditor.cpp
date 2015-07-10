@@ -76,7 +76,6 @@ ThemeColumnPropertiesDialog::ThemeColumnPropertiesDialog(QWidget *parent, Theme:
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ThemeColumnPropertiesDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ThemeColumnPropertiesDialog::reject);
     setWindowTitle(title);
 

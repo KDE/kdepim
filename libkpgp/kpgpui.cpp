@@ -403,7 +403,7 @@ KeySelectionDialog::KeySelectionDialog(const KeyList &keyList,
     } else {
         connect(mListView, &QTreeWidget::itemSelectionChanged, this, &KeySelectionDialog::slotSelectionChanged);
     }
-    connect(mListView, &QTreeWidget::itemDoubleClicked, this, &KeySelectionDialog::accept);
+    connect(mListView, &QTreeWidget::itemDoubleClicked, this, &KeySelectionDialog::slotOk);
 
     mListView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(mListView, &QTreeWidget::customContextMenuRequested, this, &KeySelectionDialog::slotRMB);

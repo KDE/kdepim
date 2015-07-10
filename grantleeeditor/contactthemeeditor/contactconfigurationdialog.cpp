@@ -69,7 +69,6 @@ ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ContactConfigureDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ContactConfigureDialog::reject);
     mainLayout->addWidget(buttonBox);
     okButton->setFocus();
@@ -105,6 +104,7 @@ void ContactConfigureDialog::slotDefaultClicked()
 void ContactConfigureDialog::slotOkClicked()
 {
     writeConfig();
+    accept();
 }
 
 void ContactConfigureDialog::readConfig()

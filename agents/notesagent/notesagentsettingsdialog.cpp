@@ -47,7 +47,6 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &NotesAgentSettingsDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &NotesAgentSettingsDialog::reject);
     okButton->setDefault(true);
     connect(okButton, &QPushButton::clicked, this, &NotesAgentSettingsDialog::slotOkClicked);
@@ -120,4 +119,5 @@ void NotesAgentSettingsDialog::slotOkClicked()
 {
     mNotify->save();
     mNetworkConfig->save();
+    accept();
 }
