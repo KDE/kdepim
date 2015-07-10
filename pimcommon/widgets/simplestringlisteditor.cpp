@@ -236,8 +236,8 @@ void SimpleStringListEditor::addNewEntry()
 {
     bool ok = false;
     const QString newEntry = QInputDialog::getText(this, i18n("New Value"),
-                       mAddDialogLabel, QLineEdit::Normal, QString(),
-                       &ok);
+                             mAddDialogLabel, QLineEdit::Normal, QString(),
+                             &ok);
     if (ok && !newEntry.trimmed().isEmpty()) {
         insertNewEntry(newEntry);
     }
