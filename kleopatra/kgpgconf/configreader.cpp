@@ -218,7 +218,7 @@ void ConfigReader::Private::readEntriesForComponent(ConfigComponent *component) 
 
 void ConfigReader::Private::readConfConf(Config *cfg) const
 {
-    GpgConfResult res = runGpgConf(QLatin1String("--list-config"));
+    GpgConfResult res = runGpgConf(QStringLiteral("--list-config"));
     QBuffer buf(&(res.stdOut));
     buf.open(QIODevice::ReadOnly | QIODevice::Text);
     while (buf.canReadLine()) {
@@ -267,7 +267,7 @@ void ConfigReader::Private::readConfConf(Config *cfg) const
 
 QMap<QString, QString> ConfigReader::Private::readComponentInfo() const
 {
-    GpgConfResult res = runGpgConf(QLatin1String("--list-components"));
+    GpgConfResult res = runGpgConf(QStringLiteral("--list-components"));
     QBuffer buf(&(res.stdOut));
     buf.open(QIODevice::ReadOnly);
     QMap<QString, QString> components;

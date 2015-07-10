@@ -79,10 +79,10 @@ static QUrl parseUrl(ConfigEntry::ArgType argType, const QString &str)
         if (items.count() == 5) {
             QStringList::const_iterator it = items.constBegin();
             QUrl url;
-            url.setScheme(QLatin1String("ldap"));
+            url.setScheme(QStringLiteral("ldap"));
             url.setHost(urlpart_decode(*it++));
             url.setPort((*it++).toInt());
-            url.setPath(QLatin1String("/"));   // workaround QUrl parsing bug
+            url.setPath(QStringLiteral("/"));   // workaround QUrl parsing bug
             url.setUserName(urlpart_decode(*it++));
             url.setPassword(urlpart_decode(*it++));
             url.setQuery(urlpart_decode(*it));
@@ -428,7 +428,8 @@ QList<int> ConfigEntry::intValueList() const
     assert(isList());
     QList<int> ret;
     QList<QVariant> lst = m_value.toList();
-    for (QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it) {
+    QList<QVariant>::const_iterator end = lst.constEnd();
+    for (QList<QVariant>::const_iterator it = lst.constBegin(); it != end; ++it) {
         ret.append((*it).toInt());
     }
     return ret;
@@ -440,7 +441,8 @@ QList<unsigned int> ConfigEntry::uintValueList() const
     assert(isList());
     QList<unsigned int> ret;
     QList<QVariant> lst = m_value.toList();
-    for (QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it) {
+    QList<QVariant>::const_iterator end = lst.constEnd();
+    for (QList<QVariant>::const_iterator it = lst.constBegin(); it != end; ++it) {
         ret.append((*it).toUInt());
     }
     return ret;
@@ -538,7 +540,8 @@ void ConfigEntry::setStringValueList(const QStringList &lst)
 void ConfigEntry::setIntValueList(const QList<int> &lst)
 {
     QList<QVariant> ret;
-    for (QList<int>::const_iterator it = lst.begin(); it != lst.end(); ++it) {
+    QList<int>::const_iterator end = lst.constEnd();
+    for (QList<int>::const_iterator it = lst.begin(); it != end; ++it) {
         ret << QVariant(*it);
     }
     m_value = ret;
@@ -548,7 +551,8 @@ void ConfigEntry::setIntValueList(const QList<int> &lst)
 void ConfigEntry::setUIntValueList(const QList<unsigned int> &lst)
 {
     QList<QVariant> ret;
-    for (QList<unsigned int>::const_iterator it = lst.begin(); it != lst.end(); ++it) {
+    QList<unsigned int>::const_iterator end(lst.end());
+    for (QList<unsigned int>::const_iterator it = lst.begin(); it != end; ++it) {
         ret << QVariant(*it);
     }
     m_value = ret;
