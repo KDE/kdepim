@@ -33,7 +33,7 @@ set(libmailimporter_SRCS
   mailimporter_debug.cpp
 )
 
-include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim)
+include_directories(${Boost_INCLUDE_DIR})
 
 ki18n_wrap_ui(libmailimporter_SRCS ui/importmailswidget.ui ui/selectthunderbirdprofilewidget.ui)
 
