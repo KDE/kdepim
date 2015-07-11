@@ -87,10 +87,10 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
                 combo->setCode(AutoCreateScriptUtil::tagValue(e.text()), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
-                    QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("headeredit"));
+                    QLineEdit *edit = w->findChild<QLineEdit *>(QStringLiteral("headeredit"));
                     edit->setText(e.text());
                 } else if (index == 1) {
-                    QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("valueedit"));
+                    QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("valueedit"));
                     value->setText(e.text());
                 } else {
                     tooManyArgument(tagName, index, 2, error);

@@ -31,14 +31,14 @@ inline QString &quote(QString &string)
     Q_ASSERT(CategoryConfig::categorySeparator != QLatin1String("@"));
     return string.replace(QLatin1Char('@'), QStringLiteral("@0")).replace(QLatin1Char('\\') +
             CategoryConfig::categorySeparator,
-            QLatin1String("@1"));
+            QStringLiteral("@1"));
 }
 
 inline QStringList &unquote(QStringList &strings)
 {
     return
-        strings.replaceInStrings(QLatin1String("@1"), CategoryConfig::categorySeparator).
-        replaceInStrings(QLatin1String("@0"), QStringLiteral("@"));
+        strings.replaceInStrings(QStringLiteral("@1"), CategoryConfig::categorySeparator).
+        replaceInStrings(QStringLiteral("@0"), QStringLiteral("@"));
 }
 
 QStringList CategoryHierarchyReader::path(QString string)

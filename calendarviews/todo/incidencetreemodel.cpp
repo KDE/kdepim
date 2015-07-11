@@ -579,14 +579,14 @@ void IncidenceTreeModel::Private::onRowsMoved(const QModelIndex &, int, int, con
 IncidenceTreeModel::IncidenceTreeModel(QObject *parent) : QAbstractProxyModel(parent)
     , d(new Private(this, QStringList()))
 {
-    setObjectName(QLatin1String("IncidenceTreeModel"));
+    setObjectName(QStringLiteral("IncidenceTreeModel"));
 }
 
 IncidenceTreeModel::IncidenceTreeModel(const QStringList &mimeTypes,
                                        QObject *parent) : QAbstractProxyModel(parent)
     , d(new Private(this, mimeTypes))
 {
-    setObjectName(QLatin1String("IncidenceTreeModel"));
+    setObjectName(QStringLiteral("IncidenceTreeModel"));
 }
 
 IncidenceTreeModel::~IncidenceTreeModel()

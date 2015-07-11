@@ -33,7 +33,7 @@
 using namespace KSieveUi;
 
 SieveConditionAddress::SieveConditionAddress(QObject *parent)
-    : SieveCondition(QLatin1String("address"), i18n("Address"), parent)
+    : SieveCondition(QStringLiteral("address"), i18n("Address"), parent)
 {
 }
 
@@ -51,7 +51,7 @@ QWidget *SieveConditionAddress::createParamWidget(QWidget *parent) const
 
     SelectAddressPartComboBox *selectAddressPart = new SelectAddressPartComboBox;
     connect(selectAddressPart, &SelectAddressPartComboBox::valueChanged, this, &SieveConditionAddress::valueChanged);
-    selectAddressPart->setObjectName(QLatin1String("addresspartcombobox"));
+    selectAddressPart->setObjectName(QStringLiteral("addresspartcombobox"));
     lay->addWidget(selectAddressPart);
 
     QGridLayout *grid = new QGridLayout;
@@ -59,12 +59,12 @@ QWidget *SieveConditionAddress::createParamWidget(QWidget *parent) const
     lay->addLayout(grid);
     SelectMatchTypeComboBox *selectMatchCombobox = new SelectMatchTypeComboBox;
     connect(selectMatchCombobox, &SelectMatchTypeComboBox::valueChanged, this, &SieveConditionAddress::valueChanged);
-    selectMatchCombobox->setObjectName(QLatin1String("matchtypecombobox"));
+    selectMatchCombobox->setObjectName(QStringLiteral("matchtypecombobox"));
     grid->addWidget(selectMatchCombobox, 0, 0);
 
     SelectHeaderTypeComboBox *selectHeaderType = new SelectHeaderTypeComboBox;
     connect(selectHeaderType, &SelectHeaderTypeComboBox::valueChanged, this, &SieveConditionAddress::valueChanged);
-    selectHeaderType->setObjectName(QLatin1String("headertypecombobox"));
+    selectHeaderType->setObjectName(QStringLiteral("headertypecombobox"));
     grid->addWidget(selectHeaderType, 0, 1);
 
     QLabel *lab = new QLabel(i18n("address:"));
@@ -75,23 +75,23 @@ QWidget *SieveConditionAddress::createParamWidget(QWidget *parent) const
     edit->setClearButtonEnabled(true);
     edit->setPlaceholderText(i18n("Use ; to separate emails"));
     grid->addWidget(edit, 1, 1);
-    edit->setObjectName(QLatin1String("editaddress"));
+    edit->setObjectName(QStringLiteral("editaddress"));
     return w;
 }
 
 QString SieveConditionAddress::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtypecombobox"));
+    const SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("matchtypecombobox"));
     bool isNegative = false;
     const QString matchTypeStr = selectMatchCombobox->code(isNegative);
 
-    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox *>(QLatin1String("addresspartcombobox"));
+    const SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox *>(QStringLiteral("addresspartcombobox"));
     const QString selectAddressPartStr = selectAddressPart->code();
 
-    const SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QLatin1String("headertypecombobox"));
+    const SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox *>(QStringLiteral("headertypecombobox"));
     const QString selectHeaderTypeStr = selectHeaderType->code();
 
-    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("editaddress"));
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QStringLiteral("editaddress"));
     const QString addressStr = AutoCreateScriptUtil::createAddressList(edit->text().trimmed(), false);
     return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("address %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }

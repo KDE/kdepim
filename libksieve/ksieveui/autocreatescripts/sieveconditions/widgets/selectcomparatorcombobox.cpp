@@ -33,8 +33,8 @@ SelectComparatorComboBox::~SelectComparatorComboBox()
 void SelectComparatorComboBox::initialize()
 {
     //Default in spec
-    addItem(QLatin1String("i;octet"), QStringLiteral("comparator-i;octet"));
-    addItem(QLatin1String("i;ascii-casemap"), QStringLiteral("comparator-i;ascii-casemap"));
+    addItem(QStringLiteral("i;octet"), QStringLiteral("comparator-i;octet"));
+    addItem(QStringLiteral("i;ascii-casemap"), QStringLiteral("comparator-i;ascii-casemap"));
 
     Q_FOREACH (const QString &capability, KSieveUi::SieveEditorGraphicalModeWidget::sieveCapabilities()) {
         if (capability.startsWith(QStringLiteral("comparator-"))) {

@@ -524,53 +524,53 @@ void ComposerViewPrivate::_k_setFormatType(QAction *act)
     QString command;
     switch (act->data().value<ComposerEditorNG::ComposerViewPrivate::FormatType>()) {
     case Paragraph:
-        command = QLatin1String("p");
+        command = QStringLiteral("p");
         break;
     case Header1:
-        command = QLatin1String("h1");
+        command = QStringLiteral("h1");
         break;
     case Header2:
-        command = QLatin1String("h2");
+        command = QStringLiteral("h2");
         break;
     case Header3:
-        command = QLatin1String("h3");
+        command = QStringLiteral("h3");
         break;
     case Header4:
-        command = QLatin1String("h4");
+        command = QStringLiteral("h4");
         break;
     case Header5:
-        command = QLatin1String("h5");
+        command = QStringLiteral("h5");
         break;
     case Header6:
-        command = QLatin1String("h6");
+        command = QStringLiteral("h6");
         break;
     case Pre:
-        command = QLatin1String("pre");
+        command = QStringLiteral("pre");
         break;
     case Address:
-        command = QLatin1String("address");
+        command = QStringLiteral("address");
         break;
     }
-    execCommand(QLatin1String("formatBlock"), command);
+    execCommand(QStringLiteral("formatBlock"), command);
 }
 
 void ComposerViewPrivate::_k_slotToggleBlockQuote()
 {
-    execCommand(QLatin1String("formatBlock"), QStringLiteral("BLOCKQUOTE"));
+    execCommand(QStringLiteral("formatBlock"), QStringLiteral("BLOCKQUOTE"));
 }
 
 void ComposerViewPrivate::_k_slotAddEmoticon(const QString &emoticon)
 {
-    execCommand(QLatin1String("insertHTML"), emoticon);
+    execCommand(QStringLiteral("insertHTML"), emoticon);
 }
 
 void ComposerViewPrivate::_k_slotInsertHtml()
 {
     QPointer<KPIMTextEdit::InsertHtmlDialog> dialog = new KPIMTextEdit::InsertHtmlDialog(q);
     if (dialog->exec()) {
-        const QString str = dialog->html().remove(QLatin1String("\n"));
+        const QString str = dialog->html().remove(QStringLiteral("\n"));
         if (!str.isEmpty()) {
-            execCommand(QLatin1String("insertHTML"), str);
+            execCommand(QStringLiteral("insertHTML"), str);
         }
     }
     delete dialog;
@@ -578,10 +578,10 @@ void ComposerViewPrivate::_k_slotInsertHtml()
 
 void ComposerViewPrivate::_k_setTextBackgroundColor()
 {
-    QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextBackgroundColor()")).toString());
+    QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QStringLiteral("getTextBackgroundColor()")).toString());
     newColor = QColorDialog::getColor(newColor, q);
     if (newColor.isValid()) {
-        execCommand(QLatin1String("hiliteColor"), newColor.name());
+        execCommand(QStringLiteral("hiliteColor"), newColor.name());
     }
 }
 
@@ -592,15 +592,15 @@ QVariant ComposerViewPrivate::evaluateJavascript(const QString &command)
 
 void ComposerViewPrivate::_k_slotDeleteText()
 {
-    evaluateJavascript(QLatin1String("setDeleteSelectedText()"));
+    evaluateJavascript(QStringLiteral("setDeleteSelectedText()"));
 }
 
 void ComposerViewPrivate::_k_setTextForegroundColor()
 {
-    QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextForegroundColor()")).toString());
+    QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QStringLiteral("getTextForegroundColor()")).toString());
     newColor = QColorDialog::getColor(newColor, q);
     if (newColor.isValid()) {
-        execCommand(QLatin1String("foreColor"), newColor.name());
+        execCommand(QStringLiteral("foreColor"), newColor.name());
     }
 }
 
@@ -608,7 +608,7 @@ void ComposerViewPrivate::_k_slotAddImage()
 {
     QPointer<ComposerImageDialog> dlg = new ComposerImageDialog(q);
     if (dlg->exec() == QDialog::Accepted) {
-        execCommand(QLatin1String("insertHTML"), dlg->html());
+        execCommand(QStringLiteral("insertHTML"), dlg->html());
     }
     delete dlg;
 }
@@ -624,14 +624,14 @@ void ComposerViewPrivate::_k_slotInsertTable()
 {
     QPointer<ComposerTableDialog> dlg = new ComposerTableDialog(q);
     if (dlg->exec() == QDialog::Accepted) {
-        execCommand(QLatin1String("insertHTML"), dlg->html());
+        execCommand(QStringLiteral("insertHTML"), dlg->html());
     }
     delete dlg;
 }
 
 void ComposerViewPrivate::_k_slotInsertHorizontalRule()
 {
-    execCommand(QLatin1String("insertHTML"), QStringLiteral("<hr>"));
+    execCommand(QStringLiteral("insertHTML"), QStringLiteral("<hr>"));
 }
 
 void ComposerViewPrivate::_k_insertLink()
@@ -641,7 +641,7 @@ void ComposerViewPrivate::_k_insertLink()
     if (dlg->exec() == QDialog::Accepted) {
         const QString html(dlg->html());
         if (!html.isEmpty()) {
-            execCommand(QLatin1String("insertHTML"), html);
+            execCommand(QStringLiteral("insertHTML"), html);
         }
     }
     delete dlg;
@@ -663,12 +663,12 @@ void ComposerViewPrivate::_k_slotOpenLink()
 
 void ComposerViewPrivate::_k_setFontSize(int fontSize)
 {
-    execCommand(QLatin1String("fontSize"), QString::number(fontSize + 1)); //Verify
+    execCommand(QStringLiteral("fontSize"), QString::number(fontSize + 1)); //Verify
 }
 
 void ComposerViewPrivate::_k_setFontFamily(const QString &family)
 {
-    execCommand(QLatin1String("fontName"), family);
+    execCommand(QStringLiteral("fontName"), family);
 }
 
 void ComposerViewPrivate::_k_slotSpellCheck()
@@ -709,14 +709,14 @@ void ComposerViewPrivate::_k_spellCheckerCorrected(const QString &original, int 
     }
 
     const int index = pos + spellTextSelectionStart;
-    QString script(QLatin1String("this.value=this.value.substring(0,"));
+    QString script(QStringLiteral("this.value=this.value.substring(0,"));
     script += QString::number(index);
-    script += QLatin1String(") + \"");
+    script += QStringLiteral(") + \"");
     QString w(replacement);
     script +=  w.replace(QLatin1Char('\''), QStringLiteral("\\\'")); // Escape any Quote marks in replacement word
-    script += QLatin1String("\" + this.value.substring(");
+    script += QStringLiteral("\" + this.value.substring(");
     script += QString::number(index + original.length());
-    script += QLatin1String(")");
+    script += QStringLiteral(")");
 
     //qCDebug(COMPOSEREDITORNG_LOG) << "**** script:" << script;
     execJScript(contextMenuResult.element(), script);
@@ -725,7 +725,7 @@ void ComposerViewPrivate::_k_spellCheckerCorrected(const QString &original, int 
 void ComposerViewPrivate::_k_spellCheckerMisspelling(const QString &text, int pos)
 {
     // qCDebug(COMPOSEREDITORNG_LOG) << text << pos;
-    QString selectionScript(QLatin1String("this.setSelectionRange("));
+    QString selectionScript(QStringLiteral("this.setSelectionRange("));
     selectionScript += QString::number(pos + spellTextSelectionStart);
     selectionScript += QLatin1Char(',');
     selectionScript += QString::number(pos + text.length() + spellTextSelectionStart);
@@ -738,7 +738,7 @@ void ComposerViewPrivate::_k_slotSpellCheckDone(const QString &)
     // Restore the text selection if one was present before we started the
     // spell check.
     if (spellTextSelectionStart > 0 || spellTextSelectionEnd > 0) {
-        QString script(QLatin1String("; this.setSelectionRange("));
+        QString script(QStringLiteral("; this.setSelectionRange("));
         script += QString::number(spellTextSelectionStart);
         script += QLatin1Char(',');
         script += QString::number(spellTextSelectionEnd);
@@ -764,9 +764,9 @@ void ComposerViewPrivate::_k_slotSaveAs()
         KMessageBox::error(q, i18n("Not file selected."), i18n("Save as"));
         return;
     }
-    if (!(fn.endsWith(QLatin1String(".htm"), Qt::CaseInsensitive) ||
-            fn.endsWith(QLatin1String(".html"), Qt::CaseInsensitive))) {
-        fn += QLatin1String(".htm");
+    if (!(fn.endsWith(QStringLiteral(".htm"), Qt::CaseInsensitive) ||
+            fn.endsWith(QStringLiteral(".html"), Qt::CaseInsensitive))) {
+        fn += QStringLiteral(".htm");
     }
     QFile file(fn);
     bool success = file.open(QIODevice::WriteOnly);
@@ -800,7 +800,7 @@ void ComposerViewPrivate::_k_slotPrintPreview()
 
 void ComposerViewPrivate::_k_slotChangePageColorAndBackground()
 {
-    const QWebElement element = q->page()->mainFrame()->findFirstElement(QLatin1String("body"));
+    const QWebElement element = q->page()->mainFrame()->findFirstElement(QStringLiteral("body"));
     if (!element.isNull()) {
         QPointer<PageColorBackgroundDialog> dlg = new PageColorBackgroundDialog(element, q);
         dlg->exec();
@@ -853,27 +853,27 @@ void ComposerViewPrivate::_k_slotAdjustActions()
         FOLLOW_CHECK(action_direction_rtl, QWebPage::SetTextDirectionRightToLeft);
     }
 
-    const QString alignment = evaluateJavascript(QLatin1String("getAlignment()")).toString();
-    if (alignment == QLatin1String("left")) {
+    const QString alignment = evaluateJavascript(QStringLiteral("getAlignment()")).toString();
+    if (alignment == QStringLiteral("left")) {
         if (action_align_left) {
             action_align_left->setChecked(true);
         }
-    } else if (alignment == QLatin1String("right")) {
+    } else if (alignment == QStringLiteral("right")) {
         if (action_align_right) {
             action_align_right->setChecked(true);
         }
-    } else if (alignment == QLatin1String("center")) {
+    } else if (alignment == QStringLiteral("center")) {
         if (action_align_center) {
             action_align_center->setChecked(true);
         }
-    } else if (alignment == QLatin1String("-webkit-auto")) {
+    } else if (alignment == QStringLiteral("-webkit-auto")) {
         if (action_align_justify) {
             action_align_justify->setChecked(true);
         }
     }
 
     if (action_font_family) {
-        const QString font = evaluateJavascript(QLatin1String("getFontFamily()")).toString();
+        const QString font = evaluateJavascript(QStringLiteral("getFontFamily()")).toString();
         if (!font.isEmpty()) {
             action_font_family->setFont(font);
         }
@@ -899,7 +899,7 @@ bool ComposerViewPrivate::queryCommandState(const QString &cmd)
     QWebFrame *frame = q->page()->mainFrame();
     QString js = QStringLiteral("document.queryCommandState(\"%1\", false, null)").arg(cmd);
     const QVariant result = frame->evaluateJavaScript(js);
-    return result.toString().simplified().toLower() == QLatin1String("true");
+    return result.toString().simplified().toLower() == QStringLiteral("true");
 }
 
 void ComposerViewPrivate::_k_slotSpeakText()
@@ -917,8 +917,8 @@ void ComposerViewPrivate::_k_slotPasteWithoutFormatting()
     if (q->hasFocus()) {
         QString s = QApplication::clipboard()->text();
         if (!s.isEmpty()) {
-            s.replace(QLatin1String("\n"), QStringLiteral("<BR>"));
-            execCommand(QLatin1String("insertHTML"), s);
+            s.replace(QStringLiteral("\n"), QStringLiteral("<BR>"));
+            execCommand(QStringLiteral("insertHTML"), s);
         }
     }
 #endif
@@ -930,7 +930,7 @@ void ComposerViewPrivate::_k_slotInsertSpecialChar()
     dlg.showSelectButton(false);
     dlg.autoInsertChar();
     if (dlg.exec()) {
-        execCommand(QLatin1String("insertHTML"), dlg.currentChar());
+        execCommand(QStringLiteral("insertHTML"), dlg.currentChar());
     }
 }
 
@@ -938,7 +938,7 @@ void ComposerViewPrivate::_k_slotInsertAnchor()
 {
     QPointer<ComposerAnchorDialog> dlg = new ComposerAnchorDialog(q);
     if (dlg->exec() == QDialog::Accepted) {
-        execCommand(QLatin1String("insertHTML"), dlg->html());
+        execCommand(QStringLiteral("insertHTML"), dlg->html());
     }
     delete dlg;
 }
@@ -946,7 +946,7 @@ void ComposerViewPrivate::_k_slotInsertAnchor()
 QMap<QString, QString> ComposerViewPrivate::localImages() const
 {
     QMap<QString, QString> lst;
-    QWebElementCollection images = q->page()->mainFrame()->findAllElements(QLatin1String("img"));
+    QWebElementCollection images = q->page()->mainFrame()->findAllElements(QStringLiteral("img"));
     Q_FOREACH (const QWebElement &elm, images) {
         if (elm.attribute(QStringLiteral("src")).startsWith(QStringLiteral("file://"))) {
             QUrl url(elm.attribute(QStringLiteral("src")));

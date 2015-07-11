@@ -559,25 +559,25 @@ QString CalendarSupport::displayName(Akonadi::ETMCalendar *calendar, const Akona
                 Akonadi::Collection tCol = calendar->collection(p.id());
                 const QString tName = tCol.name();
                 if (tName.toLower().startsWith(QStringLiteral("shared.cal"))) {
-                    ownerStr = QLatin1String("Shared");
+                    ownerStr = QStringLiteral("Shared");
                     nameStr = cName;
-                    typeStr = QLatin1String("Calendar");
+                    typeStr = QStringLiteral("Calendar");
                     break;
                 } else if (tName.toLower().startsWith(QStringLiteral("shared.tasks")) ||
                            tName.toLower().startsWith(QStringLiteral("shared.todo"))) {
-                    ownerStr = QLatin1String("Shared");
+                    ownerStr = QStringLiteral("Shared");
                     nameStr = cName;
-                    typeStr = QLatin1String("Tasks");
+                    typeStr = QStringLiteral("Tasks");
                     break;
                 } else if (tName.toLower().startsWith(QStringLiteral("shared.journal"))) {
-                    ownerStr = QLatin1String("Shared");
+                    ownerStr = QStringLiteral("Shared");
                     nameStr = cName;
-                    typeStr = QLatin1String("Journal");
+                    typeStr = QStringLiteral("Journal");
                     break;
                 } else if (tName.toLower().startsWith(QStringLiteral("shared.notes"))) {
-                    ownerStr = QLatin1String("Shared");
+                    ownerStr = QStringLiteral("Shared");
                     nameStr = cName;
-                    typeStr = QLatin1String("Notes");
+                    typeStr = QStringLiteral("Notes");
                     break;
                 } else if (tName != i18n("Calendar") &&
                            tName != i18n("Tasks") &&

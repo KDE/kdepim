@@ -202,13 +202,13 @@ void LdapClientSearchConfig::writeConfig(const KLDAP::LdapServer &server, KConfi
     QString tmp;
     switch (server.security()) {
     case KLDAP::LdapServer::TLS:
-        tmp = QLatin1String("TLS");
+        tmp = QStringLiteral("TLS");
         break;
     case KLDAP::LdapServer::SSL:
-        tmp = QLatin1String("SSL");
+        tmp = QStringLiteral("SSL");
         break;
     default:
-        tmp = QLatin1String("None");
+        tmp = QStringLiteral("None");
     }
     config.writeEntry(prefix + QString::fromLatin1("Security%1").arg(j), tmp);
     switch (server.auth()) {

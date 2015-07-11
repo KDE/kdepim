@@ -159,9 +159,9 @@ void ComposerTableFormatDialogPrivate::updateSettings()
         } else {
             useBackgroundColor->setChecked(false);
         }
-        QWebElementCollection allRows = webElement.findAll(QLatin1String("tr"));
+        QWebElementCollection allRows = webElement.findAll(QStringLiteral("tr"));
         insertTableWidget->setRows(allRows.count());
-        QWebElementCollection allCol = webElement.findAll(QLatin1String("td"));
+        QWebElementCollection allCol = webElement.findAll(QStringLiteral("td"));
         insertTableWidget->setColumns(allCol.count() / allRows.count());
     }
 }

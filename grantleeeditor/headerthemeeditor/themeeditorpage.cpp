@@ -56,8 +56,8 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     opt |= GrantleeThemeEditor::DesktopFilePage::ExtraDisplayVariables;
     opt |= GrantleeThemeEditor::DesktopFilePage::SpecifyFileName;
 
-    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("header.html"), opt);
-    mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
+    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QStringLiteral("header.html"), opt);
+    mDesktopPage->setDefaultDesktopName(QStringLiteral("header.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
@@ -236,7 +236,7 @@ void ThemeEditorPage::addExtraPage()
 {
     QString filename = QInputDialog::getText(this, i18n("Filename of extra page"), i18n("Filename:"));
     if (!filename.isEmpty()) {
-        if (!filename.endsWith(QLatin1String(".html")) && !filename.endsWith(QLatin1String(".css")) && !filename.endsWith(QLatin1String(".js"))) {
+        if (!filename.endsWith(QStringLiteral(".html")) && !filename.endsWith(QStringLiteral(".css")) && !filename.endsWith(QStringLiteral(".js"))) {
             filename += QLatin1String(".html");
         }
         createExtraPage(filename);

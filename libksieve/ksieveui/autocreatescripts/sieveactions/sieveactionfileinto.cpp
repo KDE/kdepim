@@ -42,16 +42,16 @@ SieveAction *SieveActionFileInto::newAction()
 QString SieveActionFileInto::code(QWidget *w) const
 {
     QString result = QStringLiteral("fileinto ");
-    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("fileintolineedit"));
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QStringLiteral("fileintolineedit"));
     const QString text = edit->text();
     if (mHasCopySupport) {
-        const QCheckBox *copy = w->findChild<QCheckBox *>(QLatin1String("copy"));
+        const QCheckBox *copy = w->findChild<QCheckBox *>(QStringLiteral("copy"));
         if (copy->isChecked()) {
             result += QLatin1String(":copy ");
         }
     }
     if (mHasMailBoxSupport) {
-        const QCheckBox *create = w->findChild<QCheckBox *>(QLatin1String("create"));
+        const QCheckBox *create = w->findChild<QCheckBox *>(QStringLiteral("create"));
         if (create->isChecked()) {
             result += QLatin1String(":create ");
         }

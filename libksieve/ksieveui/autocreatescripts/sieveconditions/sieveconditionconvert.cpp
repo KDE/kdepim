@@ -29,7 +29,7 @@
 
 using namespace KSieveUi;
 SieveConditionConvert::SieveConditionConvert(QObject *parent)
-    : SieveCondition(QLatin1String("convert"), i18n("Convert"), parent)
+    : SieveCondition(QStringLiteral("convert"), i18n("Convert"), parent)
 {
 }
 
@@ -49,7 +49,7 @@ QWidget *SieveConditionConvert::createParamWidget(QWidget *parent) const
     lay->addWidget(lab, 0, 0);
 
     SelectMimeTypeComboBox *fromMimeType = new SelectMimeTypeComboBox;
-    fromMimeType->setObjectName(QLatin1String("from"));
+    fromMimeType->setObjectName(QStringLiteral("from"));
     connect(fromMimeType, &SelectMimeTypeComboBox::valueChanged, this, &SieveConditionConvert::valueChanged);
     lay->addWidget(fromMimeType, 0, 1);
 
@@ -58,7 +58,7 @@ QWidget *SieveConditionConvert::createParamWidget(QWidget *parent) const
 
     SelectMimeTypeComboBox *toMimeType = new SelectMimeTypeComboBox;
     connect(toMimeType, &SelectMimeTypeComboBox::valueChanged, this, &SieveConditionConvert::valueChanged);
-    toMimeType->setObjectName(QLatin1String("to"));
+    toMimeType->setObjectName(QStringLiteral("to"));
     lay->addWidget(toMimeType, 0, 3);
 
     lab = new QLabel(i18n("Parameters:"));
@@ -66,15 +66,15 @@ QWidget *SieveConditionConvert::createParamWidget(QWidget *parent) const
 
     SelectConvertParameterWidget *params = new SelectConvertParameterWidget;
     connect(params, &SelectConvertParameterWidget::valueChanged, this, &SieveConditionConvert::valueChanged);
-    params->setObjectName(QLatin1String("params"));
+    params->setObjectName(QStringLiteral("params"));
     lay->addWidget(params, 1, 1, 2, 3);
     return w;
 }
 
 QString SieveConditionConvert::code(QWidget *w) const
 {
-    QString result = QLatin1String("convert ");
-    const SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("from"));
+    QString result = QStringLiteral("convert ");
+    const SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox *>(QStringLiteral("from"));
     const QString fromMimeTypeStr = fromMimeType->code();
     result += QString::fromLatin1("%1 ").arg(fromMimeTypeStr);
 

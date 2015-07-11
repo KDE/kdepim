@@ -32,7 +32,7 @@
 using namespace KSieveUi;
 
 SieveActionRedirect::SieveActionRedirect(QObject *parent)
-    : SieveAction(QLatin1String("redirect"), i18n("Redirect"), parent)
+    : SieveAction(QStringLiteral("redirect"), i18n("Redirect"), parent)
 {
     mHasCopySupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("copy"));
     mHasListSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("extlists"));
@@ -51,18 +51,18 @@ QWidget *SieveActionRedirect::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
     if (mHasCopySupport) {
         QCheckBox *copy = new QCheckBox(i18n("Keep a copy"));
-        copy->setObjectName(QLatin1String("copy"));
+        copy->setObjectName(QStringLiteral("copy"));
         connect(copy, &QCheckBox::clicked, this, &SieveActionRedirect::valueChanged);
         lay->addWidget(copy);
     }
     if (mHasListSupport) {
         QCheckBox *list = new QCheckBox(i18n("Use list"));
-        list->setObjectName(QLatin1String("list"));
+        list->setObjectName(QStringLiteral("list"));
         connect(list, &QCheckBox::clicked, this, &SieveActionRedirect::valueChanged);
         lay->addWidget(list);
     }
     AddressLineEdit *edit = new AddressLineEdit;
-    edit->setObjectName(QLatin1String("RedirectEdit"));
+    edit->setObjectName(QStringLiteral("RedirectEdit"));
     connect(edit, &AddressLineEdit::valueChanged, this, &SieveActionRedirect::valueChanged);
     lay->addWidget(edit);
     return w;

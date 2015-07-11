@@ -360,22 +360,22 @@ void SylpheedSettings::readImapAccount(const KConfigGroup &accountConfig, bool c
 {
     QMap<QString, QVariant> settings;
     const QString host = accountConfig.readEntry("receive_server");
-    settings.insert(QLatin1String("ImapServer"), host);
+    settings.insert(QStringLiteral("ImapServer"), host);
 
     const QString name = accountConfig.readEntry(QStringLiteral("name"));
     const int sslimap = accountConfig.readEntry(QStringLiteral("ssl_imap"), 0);
     switch (sslimap) {
     case 0:
         //None
-        settings.insert(QLatin1String("Safety"), QStringLiteral("NONE"));
+        settings.insert(QStringLiteral("Safety"), QStringLiteral("NONE"));
         break;
     case 1:
         //SSL
-        settings.insert(QLatin1String("Safety"), QStringLiteral("SSL"));
+        settings.insert(QStringLiteral("Safety"), QStringLiteral("SSL"));
         break;
     case 2:
         //TLS
-        settings.insert(QLatin1String("Safety"), QStringLiteral("STARTTLS"));
+        settings.insert(QStringLiteral("Safety"), QStringLiteral("STARTTLS"));
         break;
     default:
         qCDebug(IMPORTWIZARD_LOG) << " sslimap unknown " << sslimap;
@@ -383,13 +383,13 @@ void SylpheedSettings::readImapAccount(const KConfigGroup &accountConfig, bool c
     }
 
     int port = 0;
-    if (SylpheedSettingsUtils::readConfig(QLatin1String("imap_port"), accountConfig, port, true)) {
-        settings.insert(QLatin1String("ImapPort"), port);
+    if (SylpheedSettingsUtils::readConfig(QStringLiteral("imap_port"), accountConfig, port, true)) {
+        settings.insert(QStringLiteral("ImapPort"), port);
     }
 
     QString trashFolder;
-    if (SylpheedSettingsUtils::readConfig(QLatin1String("trash_folder"), accountConfig, trashFolder, false)) {
-        settings.insert(QLatin1String("TrashCollection"), MailCommon::Util::convertFolderPathToCollectionId(trashFolder));
+    if (SylpheedSettingsUtils::readConfig(QStringLiteral("trash_folder"), accountConfig, trashFolder, false)) {
+        settings.insert(QStringLiteral("TrashCollection"), MailCommon::Util::convertFolderPathToCollectionId(trashFolder));
     }
 
     const int auth = accountConfig.readEntry(QStringLiteral("imap_auth_method"), 0);
@@ -397,13 +397,13 @@ void SylpheedSettings::readImapAccount(const KConfigGroup &accountConfig, bool c
     case 0:
         break;
     case 1: //Login
-        settings.insert(QLatin1String("Authentication"), MailTransport::Transport::EnumAuthenticationType::LOGIN);
+        settings.insert(QStringLiteral("Authentication"), MailTransport::Transport::EnumAuthenticationType::LOGIN);
         break;
     case 2: //Cram-md5
-        settings.insert(QLatin1String("Authentication"), MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
+        settings.insert(QStringLiteral("Authentication"), MailTransport::Transport::EnumAuthenticationType::CRAM_MD5);
         break;
     case 4: //Plain
-        settings.insert(QLatin1String("Authentication"), MailTransport::Transport::EnumAuthenticationType::PLAIN);
+        settings.insert(QStringLiteral("Authentication"), MailTransport::Transport::EnumAuthenticationType::PLAIN);
         break;
     default:
         qCDebug(IMPORTWIZARD_LOG) << " imap auth unknown " << auth;
@@ -411,12 +411,12 @@ void SylpheedSettings::readImapAccount(const KConfigGroup &accountConfig, bool c
     }
 
     if (intervalCheckMail != -1) {
-        settings.insert(QLatin1String("IntervalCheckEnabled"), true);
-        settings.insert(QLatin1String("IntervalCheckTime"), intervalCheckMail);
+        settings.insert(QStringLiteral("IntervalCheckEnabled"), true);
+        settings.insert(QStringLiteral("IntervalCheckTime"), intervalCheckMail);
     }
 
     const QString password = accountConfig.readEntry(QStringLiteral("password"));
-    settings.insert(QLatin1String("Password"), password);
+    settings.insert(QStringLiteral("Password"), password);
 
     const QString agentIdentifyName = AbstractBase::createResource(QStringLiteral("akonadi_imap_resource"), name, settings);
     addCheckMailOnStartup(agentIdentifyName, checkMailOnStartup);

@@ -172,7 +172,7 @@ static inline bool is8Bit(signed char ch)
 }
 static QString removeCRLF(const QString &s)
 {
-    const bool CRLF = s.endsWith(QLatin1String("\r\n"));
+    const bool CRLF = s.endsWith(QStringLiteral("\r\n"));
     const bool LF = !CRLF && s.endsWith('\n');
 
     const int e = CRLF ? 2 : LF ? 1 : 0 ;  // what to chop off at the end

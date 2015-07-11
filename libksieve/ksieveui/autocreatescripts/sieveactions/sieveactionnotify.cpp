@@ -48,7 +48,7 @@ QWidget *SieveActionNotify::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
 
     SelectImportanceCombobox *importanceCombobox = new SelectImportanceCombobox;
-    importanceCombobox->setObjectName(QLatin1String("importancecombo"));
+    importanceCombobox->setObjectName(QStringLiteral("importancecombo"));
     connect(importanceCombobox, &SelectImportanceCombobox::valueChanged, this, &SieveActionNotify::valueChanged);
     lay->addWidget(importanceCombobox);
 
@@ -56,7 +56,7 @@ QWidget *SieveActionNotify::createParamWidget(QWidget *parent) const
     lay->addWidget(lab);
 
     QLineEdit *message = new QLineEdit;
-    message->setObjectName(QLatin1String("message"));
+    message->setObjectName(QStringLiteral("message"));
     connect(message, &QLineEdit::textChanged, this, &SieveActionNotify::valueChanged);
     lay->addWidget(message);
 
@@ -64,7 +64,7 @@ QWidget *SieveActionNotify::createParamWidget(QWidget *parent) const
     lay->addWidget(lab);
 
     QLineEdit *method = new QLineEdit;
-    method->setObjectName(QLatin1String("method"));
+    method->setObjectName(QStringLiteral("method"));
     lay->addWidget(method);
     connect(method, &QLineEdit::textChanged, this, &SieveActionNotify::valueChanged);
 

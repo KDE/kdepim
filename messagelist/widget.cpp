@@ -235,7 +235,7 @@ void Widget::slotTagsFetched(KJob *job)
     foreach (const Akonadi::Tag &akonadiTag, fetchJob->tags()) {
         if (tagSelectedLst.contains(akonadiTag.url().url())) {
             tagFound.append(akonadiTag.url().url());
-            QString iconName = QLatin1String("mail-tagged");
+            QString iconName = QStringLiteral("mail-tagged");
             const QString label = akonadiTag.name();
             const QString id = akonadiTag.url().url();
             Akonadi::TagAttribute *attr = akonadiTag.attribute<Akonadi::TagAttribute>();
@@ -507,9 +507,9 @@ void Widget::viewStartDragRequest()
     // Set pixmap
     QPixmap pixmap;
     if (selection.size() == 1) {
-        pixmap = QPixmap(DesktopIcon(QLatin1String("mail-message"), KIconLoader::SizeSmall));
+        pixmap = QPixmap(DesktopIcon(QStringLiteral("mail-message"), KIconLoader::SizeSmall));
     } else {
-        pixmap = QPixmap(DesktopIcon(QLatin1String("document-multiple"), KIconLoader::SizeSmall));
+        pixmap = QPixmap(DesktopIcon(QStringLiteral("document-multiple"), KIconLoader::SizeSmall));
     }
 
     // Calculate hotspot (as in Konqueror)

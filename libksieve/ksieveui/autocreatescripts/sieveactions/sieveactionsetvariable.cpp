@@ -50,14 +50,14 @@ QWidget *SieveActionSetVariable::createParamWidget(QWidget *parent) const
     w->setLayout(grid);
 
     SelectVariableModifierComboBox *modifier = new SelectVariableModifierComboBox;
-    modifier->setObjectName(QLatin1String("modifier"));
+    modifier->setObjectName(QStringLiteral("modifier"));
     connect(modifier, &SelectVariableModifierComboBox::valueChanged, this, &SieveActionSetVariable::valueChanged);
     grid->addWidget(modifier, 0, 0);
 
     if (mHasRegexCapability) {
         QCheckBox *protectAgainstUseRegexp = new QCheckBox(i18n("Protect special character"));
         connect(protectAgainstUseRegexp, &QCheckBox::clicked, this, &SieveActionSetVariable::valueChanged);
-        protectAgainstUseRegexp->setObjectName(QLatin1String("regexprotect"));
+        protectAgainstUseRegexp->setObjectName(QStringLiteral("regexprotect"));
         grid->addWidget(protectAgainstUseRegexp, 0, 1);
     }
 
@@ -65,7 +65,7 @@ QWidget *SieveActionSetVariable::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 1, 0);
 
     QLineEdit *value = new QLineEdit;
-    value->setObjectName(QLatin1String("value"));
+    value->setObjectName(QStringLiteral("value"));
     connect(value, &QLineEdit::textChanged, this, &SieveActionSetVariable::valueChanged);
     grid->addWidget(value, 1, 1);
 
@@ -73,7 +73,7 @@ QWidget *SieveActionSetVariable::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 2, 0);
 
     QLineEdit *variable = new QLineEdit;
-    variable->setObjectName(QLatin1String("variable"));
+    variable->setObjectName(QStringLiteral("variable"));
     connect(variable, &QLineEdit::textChanged, this, &SieveActionSetVariable::valueChanged);
     grid->addWidget(variable, 2, 1);
 

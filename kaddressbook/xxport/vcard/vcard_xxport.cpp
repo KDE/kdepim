@@ -151,11 +151,11 @@ ContactList VCardXXPort::importContacts() const
     KContacts::Addressee::List addrList;
     QList<QUrl> urls;
 
-    if (!option(QLatin1String("importData")).isEmpty()) {
-        addrList = parseVCard(option(QLatin1String("importData")).toUtf8());
+    if (!option(QStringLiteral("importData")).isEmpty()) {
+        addrList = parseVCard(option(QStringLiteral("importData")).toUtf8());
     } else {
-        if (!option(QLatin1String("importUrl")).isEmpty()) {
-            urls.append(QUrl::fromLocalFile(option(QLatin1String("importUrl"))));
+        if (!option(QStringLiteral("importUrl")).isEmpty()) {
+            urls.append(QUrl::fromLocalFile(option(QStringLiteral("importUrl"))));
         } else {
             const QString filter = i18n("*.vcf|vCard (*.vcf)\n*|all files (*)");
             urls =
@@ -291,7 +291,7 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
                 addr.setPrefix(QString());
                 addr.setGivenName(splitNames.takeFirst());
                 addr.setFamilyName(splitNames.takeLast());
-                addr.setAdditionalName(splitNames.join(QLatin1String(" ")));
+                addr.setAdditionalName(splitNames.join(QStringLiteral(" ")));
                 addr.setSuffix(QString());
                 addrDone = true;
             }
