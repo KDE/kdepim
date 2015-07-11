@@ -253,7 +253,7 @@ QString MailFilterAgent::createUniqueName(const QString &nameTemplate)
 
 void MailFilterAgent::filterItems(const QList< qint64 > &itemIds, int filterSet)
 {
-    QList<Akonadi::Item> items;
+    Akonadi::Item::List items;
     foreach (qint64 id, itemIds) {
         items << Akonadi::Item(id);
     }
@@ -263,7 +263,7 @@ void MailFilterAgent::filterItems(const QList< qint64 > &itemIds, int filterSet)
 
 void MailFilterAgent::applySpecificFilters(const QList< qint64 > &itemIds, int requires, const QStringList &listFilters)
 {
-    QList<Akonadi::Item> items;
+    Akonadi::Item::List items;
     foreach (qint64 id, itemIds) {
         items << Akonadi::Item(id);
     }

@@ -456,7 +456,7 @@ bool Util::saveAttachments(const KMime::Content::List &contents, QWidget *parent
     return Util::saveContents(parent, contents, currentFolder);
 }
 
-bool Util::saveMessageInMbox(const QList<Akonadi::Item> &retrievedMsgs, QWidget *parent, bool appendMessages)
+bool Util::saveMessageInMbox(const Akonadi::Item::List &retrievedMsgs, QWidget *parent, bool appendMessages)
 {
 
     QString fileName;

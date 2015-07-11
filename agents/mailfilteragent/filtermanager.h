@@ -113,12 +113,12 @@ public:
     void filter(const Akonadi::Item &item, FilterManager::FilterSet set, const QString &resourceId);
     void filter(const Akonadi::Item &item, const QString &filterId, const QString &resourceId);
 
-    void applySpecificFilters(const QList<Akonadi::Item> &selectedMessages, MailCommon::SearchRule::RequiredPart requiredPart, const QStringList &listFilters);
+    void applySpecificFilters(const Akonadi::Item::List &selectedMessages, MailCommon::SearchRule::RequiredPart requiredPart, const QStringList &listFilters);
 
     /**
      * Applies the filters on the given @p messages.
      */
-    void applyFilters(const QList<Akonadi::Item> &messages, FilterSet set = Explicit);
+    void applyFilters(const Akonadi::Item::List &messages, FilterSet set = Explicit);
 
     /**
      * Returns whether the configured filters need the full mail content.

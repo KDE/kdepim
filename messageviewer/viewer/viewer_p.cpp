@@ -2920,7 +2920,7 @@ void ViewerPrivate::slotSaveMessage()
         return;
     }
 
-    Util::saveMessageInMbox(QList<Akonadi::Item>() << mMessageItem, mMainWindow);
+    Util::saveMessageInMbox(Akonadi::Item::List() << mMessageItem, mMainWindow);
 }
 
 void ViewerPrivate::saveRelativePosition()

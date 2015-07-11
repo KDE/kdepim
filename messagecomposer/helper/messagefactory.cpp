@@ -407,7 +407,7 @@ KMime::Message::Ptr MessageFactory::createForward()
     return msg;
 }
 
-QPair< KMime::Message::Ptr, QList< KMime::Content * > > MessageFactory::createAttachedForward(const QList< Akonadi::Item > &items)
+QPair< KMime::Message::Ptr, QList< KMime::Content * > > MessageFactory::createAttachedForward(const Akonadi::Item::List &items)
 {
 
     // create forwarded message with original message as attachment
@@ -718,7 +718,7 @@ KMime::Message::Ptr MessageFactory::createMDN(KMime::MDN::ActionMode a,
     return receipt;
 }
 
-QPair< KMime::Message::Ptr, KMime::Content * > MessageFactory::createForwardDigestMIME(const QList< Akonadi::Item > &items)
+QPair< KMime::Message::Ptr, KMime::Content * > MessageFactory::createForwardDigestMIME(const Akonadi::Item::List &items)
 {
     KMime::Message::Ptr msg(new KMime::Message);
     KMime::Content *digest = new KMime::Content(msg.get());

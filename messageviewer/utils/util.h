@@ -43,7 +43,7 @@
 #include <KMimeType>
 #include <QString>
 #include <KService>
-
+#include <AkonadiCore/Item>
 class KUrl;
 class QUrl;
 class QWidget;
@@ -54,11 +54,6 @@ namespace KMime
 {
 class Content;
 class Message;
-}
-
-namespace Akonadi
-{
-class Item;
 }
 
 namespace MessageViewer
@@ -125,7 +120,7 @@ bool MESSAGEVIEWER_EXPORT saveContent(QWidget *parent, KMime::Content *content,
 QString MESSAGEVIEWER_EXPORT fileNameForMimetype(const QString &mimeType, int iconSize,
         const QString &fallbackFileName1 = QString(),
         const QString &fallbackFileName2 = QString());
-bool MESSAGEVIEWER_EXPORT saveMessageInMbox(const QList<Akonadi::Item> &retrievedMsgs, QWidget *parent, bool appendMessages = false);
+bool MESSAGEVIEWER_EXPORT saveMessageInMbox(const Akonadi::Item::List &retrievedMsgs, QWidget *parent, bool appendMessages = false);
 
 bool MESSAGEVIEWER_EXPORT saveAttachments(const KMime::Content::List &contents, QWidget *parent, KUrl &currentFolder);
 

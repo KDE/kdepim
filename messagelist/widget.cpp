@@ -586,9 +586,9 @@ QList<KMime::Message::Ptr > Widget::selectionAsMessageList(bool includeCollapsed
     return lstMiPtr;
 }
 
-QList<Akonadi::Item> Widget::selectionAsMessageItemList(bool includeCollapsedChildren) const
+Akonadi::Item::List Widget::selectionAsMessageItemList(bool includeCollapsedChildren) const
 {
-    QList<Item> lstMiPtr;
+    Akonadi::Item::List lstMiPtr;
     QList<Core::MessageItem *> lstMi = view()->selectionAsMessageItemList(includeCollapsedChildren);
     if (lstMi.isEmpty()) {
         return lstMiPtr;
@@ -628,9 +628,9 @@ QList<Akonadi::Item::Id> Widget::selectionAsListMessageId(bool includeCollapsedC
     return lstMiPtr;
 }
 
-QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
+Akonadi::Item::List Widget::currentThreadAsMessageList() const
 {
-    QList<Item> lstMiPtr;
+    Akonadi::Item::List lstMiPtr;
     QList<Core::MessageItem *> lstMi = view()->currentThreadAsMessageItemList();
     if (lstMi.isEmpty()) {
         return lstMiPtr;
@@ -716,9 +716,9 @@ void Widget::markMessageItemsAsAboutToBeRemoved(MessageList::Core::MessageItemSe
     }
 }
 
-QList<Akonadi::Item> Widget::itemListFromPersistentSet(MessageList::Core::MessageItemSetReference ref)
+Akonadi::Item::List Widget::itemListFromPersistentSet(MessageList::Core::MessageItemSetReference ref)
 {
-    QList<Akonadi::Item> lstItem;
+    Akonadi::Item::List lstItem;
     QList< Core::MessageItem * > refList = view()->persistentSetCurrentMessageItemList(ref);
     if (!refList.isEmpty()) {
         lstItem.reserve(refList.count());

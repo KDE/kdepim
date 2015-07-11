@@ -60,7 +60,7 @@ private:
     void done();
 
 private:
-    QList<Akonadi::Item> mRemovedMsgs;
+    Akonadi::Item::List mRemovedMsgs;
     int mMaxUnreadTime;
     int mMaxReadTime;
     Akonadi::Collection mMoveToFolder;

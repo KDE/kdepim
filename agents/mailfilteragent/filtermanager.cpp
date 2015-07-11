@@ -573,7 +573,7 @@ void FilterManager::dump() const
 }
 #endif
 
-void FilterManager::applySpecificFilters(const QList< Akonadi::Item > &selectedMessages, SearchRule::RequiredPart requiredPart, const QStringList &listFilters)
+void FilterManager::applySpecificFilters(const Akonadi::Item::List &selectedMessages, SearchRule::RequiredPart requiredPart, const QStringList &listFilters)
 {
     Q_EMIT progressMessage(i18n("Filtering messages"));
     d->mTotalProgressCount = selectedMessages.size();
@@ -598,7 +598,7 @@ void FilterManager::applySpecificFilters(const QList< Akonadi::Item > &selectedM
             SLOT(itemsFetchJobForFilterDone(KJob*)));
 }
 
-void FilterManager::applyFilters(const QList<Akonadi::Item> &selectedMessages, FilterSet filterSet)
+void FilterManager::applyFilters(const Akonadi::Item::List &selectedMessages, FilterSet filterSet)
 {
     Q_EMIT progressMessage(i18n("Filtering messages"));
     d->mTotalProgressCount = selectedMessages.size();

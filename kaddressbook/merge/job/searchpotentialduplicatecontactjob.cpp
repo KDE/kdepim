@@ -50,8 +50,8 @@ QList<Akonadi::Item::List > SearchPotentialDuplicateContactJob::potentialDuplica
 
 Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi::Item::List &lstItem)
 {
-    QList<Akonadi::Item> notDuplicate;
-    QList<Akonadi::Item> lst;
+    Akonadi::Item::List notDuplicate;
+    Akonadi::Item::List lst;
     if (!lstItem.isEmpty()) {
         Akonadi::Item firstItem = lstItem.at(0);
         const int numberOfItems(lstItem.count());

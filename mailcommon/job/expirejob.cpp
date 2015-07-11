@@ -222,9 +222,9 @@ void ExpireJob::slotMoveDone(KJob *job)
     }
     Akonadi::ItemMoveJob *itemjob = dynamic_cast<Akonadi::ItemMoveJob *>(job);
     if (itemjob) {
-        QList<Akonadi::Item> lst = itemjob->items();
+        Akonadi::Item::List lst = itemjob->items();
         if (!lst.isEmpty()) {
-            QList<Akonadi::Item> newLst;
+            Akonadi::Item::List newLst;
             Q_FOREACH (Akonadi::Item item, lst) {
                 if (!item.hasFlag(Akonadi::MessageFlags::Seen)) {
                     item.setFlag(Akonadi::MessageFlags::Seen);

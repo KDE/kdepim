@@ -863,11 +863,11 @@ QList<KMime::Message::Ptr > Pane::selectionAsMessageList(bool includeCollapsedCh
     return w->selectionAsMessageList(includeCollapsedChildren);
 }
 
-QList<Akonadi::Item> Pane::selectionAsMessageItemList(bool includeCollapsedChildren) const
+Akonadi::Item::List Pane::selectionAsMessageItemList(bool includeCollapsedChildren) const
 {
     Widget *w = static_cast<Widget *>(currentWidget());
     if (w == Q_NULLPTR) {
-        return QList<Akonadi::Item>();
+        return Akonadi::Item::List();
     }
     return w->selectionAsMessageItemList(includeCollapsedChildren);
 }
@@ -890,22 +890,22 @@ QVector<qlonglong> Pane::selectionAsMessageItemListId(bool includeCollapsedChild
     return w->selectionAsMessageItemListId(includeCollapsedChildren);
 }
 
-QList<Akonadi::Item> Pane::currentThreadAsMessageList() const
+Akonadi::Item::List Pane::currentThreadAsMessageList() const
 {
     Widget *w = static_cast<Widget *>(currentWidget());
     if (w == Q_NULLPTR) {
-        return QList<Akonadi::Item>();
+        return Akonadi::Item::List();
     }
     return w->currentThreadAsMessageList();
 }
 
-QList<Akonadi::Item> Pane::itemListFromPersistentSet(MessageList::Core::MessageItemSetReference ref)
+Akonadi::Item::List Pane::itemListFromPersistentSet(MessageList::Core::MessageItemSetReference ref)
 {
     Widget *w = static_cast<Widget *>(currentWidget());
     if (w) {
         return w->itemListFromPersistentSet(ref);
     }
-    return QList<Akonadi::Item>();
+    return Akonadi::Item::List();
 }
 
 void Pane::deletePersistentSet(MessageList::Core::MessageItemSetReference ref)

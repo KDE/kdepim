@@ -94,7 +94,7 @@ public:
     * If no list is passed, use the original message passed in the MessageFactory
     *  constructor.
     */
-    QPair< KMime::Message::Ptr, QList< KMime::Content * > > createAttachedForward(const QList<Akonadi::Item> &items = QList<Akonadi::Item>());
+    QPair< KMime::Message::Ptr, QList< KMime::Content * > > createAttachedForward(const Akonadi::Item::List &items = Akonadi::Item::List());
 
     /** Create a new message that is a redirect to this message, filling all
     required header fields with the proper values. The returned message
@@ -140,7 +140,7 @@ public:
     *
     * @param msgs List of messages to be composed into a digest
     */
-    QPair< KMime::Message::Ptr, KMime::Content * > createForwardDigestMIME(const QList< Akonadi::Item > &items);
+    QPair< KMime::Message::Ptr, KMime::Content * > createForwardDigestMIME(const Akonadi::Item::List &items);
 
     /**
     * Set the identity manager to be used when creating messages.

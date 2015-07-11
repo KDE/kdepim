@@ -123,7 +123,7 @@ public:
     * to the main even loop. Don't store it for any longer. If you need to reference
     * this set of messages at a later stage then take a look at createPersistentSet().
     */
-    QList<Akonadi::Item> selectionAsMessageItemList(bool includeCollapsedChildren = true) const;
+    Akonadi::Item::List selectionAsMessageItemList(bool includeCollapsedChildren = true) const;
 
     /**
     * Returns the currently selected Items id(bound to current StorageModel).
@@ -150,7 +150,7 @@ public:
     * to the main even loop. Don't store it for any longer. If you need to reference
     * this set of messages at a later stage then take a look at createPersistentSet().
     */
-    QList<Akonadi::Item> currentThreadAsMessageList() const;
+    Akonadi::Item::List currentThreadAsMessageList() const;
 
     /**
     * Selects the next message item in the view.
@@ -321,7 +321,7 @@ public:
     /**
     * Return Akonadi::Item from messageItemReference
     */
-    QList<Akonadi::Item> itemListFromPersistentSet(MessageList::Core::MessageItemSetReference ref);
+    Akonadi::Item::List itemListFromPersistentSet(MessageList::Core::MessageItemSetReference ref);
 
     /**
     * Return a persistent set from current selection
