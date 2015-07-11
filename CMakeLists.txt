@@ -49,7 +49,7 @@ set(KDEPIM_VERSION_NUMBER "4.80")
 set(KDEPIM_VERSION "${KDEPIM_VERSION_NUMBER}${KDEPIM_DEV_VERSION}")
 
 
-set(KDEPIMLIBS_LIB_VERSION "4.86.0")
+set(KDEPIMLIBS_LIB_VERSION "4.87.0")
 set(KCONTACTS_LIB_VERSION "4.89.0")
 set(KCALENDARCORE_LIB_VERSION "4.81.0")
 set(IDENTITYMANAGEMENT_LIB_VERSION "4.80.0")
@@ -174,7 +174,7 @@ find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 find_package(Xsltproc)
 set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces for all Akonadi resources.")
 
-find_package(KF5AkonadiSearch "5.0.3" CONFIG REQUIRED)
+find_package(KF5AkonadiSearch "5.0.4" CONFIG REQUIRED)
 set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
 
 find_package(ZLIB)
