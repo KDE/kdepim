@@ -52,7 +52,7 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
     MorkParser mork;
     if (!mork.open(filename)) {
         if (mork.error() == FailedToOpen) {
-            addAddressBookImportError(i18n("Contact filename '%1' not found", filename));
+            addAddressBookImportError(i18n("Contacts file '%1' not found", filename));
         }
         qCDebug(IMPORTWIZARD_LOG) << " error during read file " << filename << " Error type " << mork.error();
         return;

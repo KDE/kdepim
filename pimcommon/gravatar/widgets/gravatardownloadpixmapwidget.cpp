@@ -41,7 +41,7 @@ GravatarDownloadPixmapWidget::GravatarDownloadPixmapWidget(QWidget *parent)
     connect(mLineEdit, &QLineEdit::textChanged, this, &GravatarDownloadPixmapWidget::slotTextChanged);
     hbox->addWidget(mLineEdit);
 
-    mUseHttps = new QCheckBox(i18n("Use Https Protocol"));
+    mUseHttps = new QCheckBox(i18n("Use HTTPS Protocol"));
     mUseHttps->setObjectName(QStringLiteral("usehttps"));
     mainLayout->addWidget(mUseHttps);
 
