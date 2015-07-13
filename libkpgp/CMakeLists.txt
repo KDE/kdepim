@@ -44,5 +44,6 @@ target_link_libraries(kpgp
 set_target_properties(kpgp PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS kpgp ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_subdirectory( tests )
-
+if(BUILD_TESTING)
+    add_subdirectory( tests )
+endif()

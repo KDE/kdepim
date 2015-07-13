@@ -19,7 +19,7 @@ endif()
 
 add_subdirectory(icons)
 add_subdirectory(printing)
-if (BUILD_TESTING)
+if(BUILD_TESTING)
    add_subdirectory(autotests)
 endif()
 
@@ -147,9 +147,8 @@ if (BUILD_TESTING)
    add_subdirectory(sendmail/autotests)
    add_subdirectory(sendvcards/autotests)
    add_subdirectory(gravatar/autotests)
+   add_subdirectory(gravatar/tests)
 endif()
-
-add_subdirectory(gravatar/tests)
 
 if(KF5Gpgmepp_FOUND)
    target_link_libraries(kaddressbookprivate KF5::QGpgme)

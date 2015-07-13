@@ -15,9 +15,9 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
         ${CMAKE_SOURCE_DIR}/libksieve/ksieveui
 	)
 
-add_subdirectory(tests)
-add_subdirectory(editor/tests)
-if (BUILD_TESTING)
+if(BUILD_TESTING)
+   add_subdirectory(tests)
+   add_subdirectory(editor/tests)
    add_subdirectory(managescriptsjob/autotests)
    add_subdirectory(editor/autotests)
 endif()
@@ -204,7 +204,8 @@ install(TARGETS ksieveui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES data/ksieve_script.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
 install(DIRECTORY data/scripts/ DESTINATION ${KDE_INSTALL_DATADIR}/sieve/scripts/ )
 
-add_subdirectory(autocreatescripts/tests)
-add_subdirectory(scriptsparsing/tests)
-add_subdirectory(vacation/tests)
-
+if (BUILD_TESTING)
+    add_subdirectory(autocreatescripts/tests)
+    add_subdirectory(scriptsparsing/tests)
+    add_subdirectory(vacation/tests)
+endif ()

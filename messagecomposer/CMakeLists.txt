@@ -19,8 +19,8 @@ include_directories(
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-add_subdirectory( tests )
-if (BUILD_TESTING)
+if(BUILD_TESTING)
+   add_subdirectory( tests )
    add_subdirectory( autotests )
    add_subdirectory( composer-ng/autotests )
    add_subdirectory( imagescaling/autotests )
@@ -179,5 +179,7 @@ set_target_properties( messagecomposer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} 
 
 install( TARGETS messagecomposer ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
-add_subdirectory(imagescaling/tests)
-add_subdirectory(composer-ng/tests)
+if(BUILD_TESTING)
+    add_subdirectory(imagescaling/tests)
+    add_subdirectory(composer-ng/tests)
+endif()

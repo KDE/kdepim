@@ -15,7 +15,10 @@ add_definitions(-DTRANSLATION_DOMAIN=\"libksieve\")
 add_subdirectory(ksieve)
 add_subdirectory(kmanagesieve)
 add_subdirectory(ksieveui)
-add_subdirectory(autotests)
+
+if(BUILD_TESTING)
+    add_subdirectory(autotests)
+endif()
 
 ########### next target ###############
 

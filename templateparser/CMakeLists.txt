@@ -67,7 +67,7 @@ install(FILES
   DESTINATION ${KDE_INSTALL_KCFGDIR}
 )
 
-add_subdirectory(tests)
-if (BUILD_TESTING)
+if(BUILD_TESTING)
+  add_subdirectory(tests)
   add_subdirectory(autotests)
 endif()

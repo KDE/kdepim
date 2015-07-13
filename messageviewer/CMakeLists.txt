@@ -28,12 +28,12 @@ check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
 macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
 configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messageviewer.h)
 
-if (BUILD_TESTING)
+if(BUILD_TESTING)
    add_subdirectory(autotests)
    add_subdirectory(scamdetection/autotests)
    add_subdirectory(findbar/autotests)
+   add_subdirectory(tests)
 endif()
-add_subdirectory(tests)
 add_subdirectory(pics)
 
 if(DEBUG_SIGNATURE)
@@ -248,7 +248,11 @@ install(DIRECTORY themes DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )
 install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
 
 add_subdirectory(grantleefilters)
-add_subdirectory(scamdetection/tests)
-add_subdirectory(adblock/tests/)
+
+if(BUILD_TESTING)
+    add_subdirectory(scamdetection/tests)
+    add_subdirectory(adblock/tests/)
+endif()
+
 install(FILES notify/messageviewer.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 install(FILES scamdetection/data/longurlServices.json DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )

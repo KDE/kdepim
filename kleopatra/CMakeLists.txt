@@ -63,7 +63,10 @@ endif()
 
 add_subdirectory(kgpgconf)
 add_subdirectory(kwatchgnupg)
-add_subdirectory(tests)
+
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
 
 if(WIN32)
   set(_kleopatra_extra_uiserver_SRCS uiserver/uiserver_win.cpp)
