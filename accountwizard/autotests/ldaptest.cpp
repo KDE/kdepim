@@ -73,13 +73,16 @@ private Q_SLOTS:
         int cHosts = group.readEntry("NumHosts", 0);
         QCOMPARE(cSelHosts, 3);
         QCOMPARE(cHosts, 1);
-        QList<KLDAP::LdapServer> selHosts;
-        QList<KLDAP::LdapServer> hosts;
+        QVector<KLDAP::LdapServer> selHosts;
+        selHosts.reserve(cSelHosts);
+
         for (int i = 0; i < cSelHosts; ++i) {
             KLDAP::LdapServer server;
             csc.readConfig(server, group, i, true);
             selHosts.append(server);
         }
+        QVector<KLDAP::LdapServer> hosts;
+        hosts.reserve(cHosts);
         for (int i = 0; i < cHosts; ++i) {
             KLDAP::LdapServer server;
             csc.readConfig(server, group, i, false);
