@@ -47,7 +47,7 @@ class KADDRESSBOOK_EXPORT SearchDuplicateResultWidget : public QWidget
 public:
     explicit SearchDuplicateResultWidget(QWidget *parent = Q_NULLPTR);
     ~SearchDuplicateResultWidget();
-    void setContacts(const QList<Akonadi::Item::List> &lstItem);
+    void setContacts(const QVector<Akonadi::Item::List> &lstItem);
 
 Q_SIGNALS:
     void contactMerged(const Akonadi::Item &item);
@@ -64,7 +64,7 @@ private Q_SLOTS:
 private:
     void mergeContact();
     QVector<MergeConflictResult> mResultConflictList;
-    QList<Akonadi::Item::List> mListContactToMerge;
+    QVector<Akonadi::Item::List> mListContactToMerge;
     ResultDuplicateTreeWidget *mResult;
     KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
     QPushButton *mMergeContact;

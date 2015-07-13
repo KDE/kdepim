@@ -27,18 +27,18 @@
 using namespace KABMergeContacts;
 SearchPotentialDuplicateContactJobTest::SearchPotentialDuplicateContactJobTest()
 {
-    qRegisterMetaType<QList<Akonadi::Item> >();
-    qRegisterMetaType<QList<Akonadi::Item::List> >();
+    qRegisterMetaType<QVector<Akonadi::Item> >();
+    qRegisterMetaType<QVector<Akonadi::Item::List> >();
 }
 
 void SearchPotentialDuplicateContactJobTest::shouldReturnEmptyListWhenNoItem()
 {
     Akonadi::Item::List lst;
     SearchPotentialDuplicateContactJob job(lst);
-    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
+    QSignalSpy spy(&job, SIGNAL(finished(QVector<Akonadi::Item::List>)));
     job.start();
     QCOMPARE(spy.count(), 1);
-    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QVector<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QVector<Akonadi::Item::List> >();
     QCOMPARE(lstResult.count(), 0);
 }
 
@@ -47,10 +47,10 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnEmptyListWhenOneItem()
     Akonadi::Item::List lst;
     lst << Akonadi::Item(42);
     SearchPotentialDuplicateContactJob job(lst);
-    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
+    QSignalSpy spy(&job, SIGNAL(finished(QVector<Akonadi::Item::List>)));
     job.start();
     QCOMPARE(spy.count(), 1);
-    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QVector<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QVector<Akonadi::Item::List> >();
     QCOMPARE(lstResult.count(), 0);
 }
 
@@ -66,10 +66,10 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnListWhenTwoItemsAreDupl
     lst << itemA << itemA;
 
     SearchPotentialDuplicateContactJob job(lst);
-    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
+    QSignalSpy spy(&job, SIGNAL(finished(QVector<Akonadi::Item::List>)));
     job.start();
     QCOMPARE(spy.count(), 1);
-    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QVector<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QVector<Akonadi::Item::List> >();
     QCOMPARE(lstResult.count(), 1);
 }
 
@@ -85,10 +85,10 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnListWhenThreeItemsAreDu
     lst << itemA << itemA << itemA;
 
     SearchPotentialDuplicateContactJob job(lst);
-    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
+    QSignalSpy spy(&job, SIGNAL(finished(QVector<Akonadi::Item::List>)));
     job.start();
     QCOMPARE(spy.count(), 1);
-    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QVector<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QVector<Akonadi::Item::List> >();
     QCOMPARE(lstResult.count(), 1);
 }
 
@@ -111,10 +111,10 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnTwoList()
     lst << item << item << item;
 
     SearchPotentialDuplicateContactJob job(lst);
-    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
+    QSignalSpy spy(&job, SIGNAL(finished(QVector<Akonadi::Item::List>)));
     job.start();
     QCOMPARE(spy.count(), 1);
-    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QVector<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QVector<Akonadi::Item::List> >();
     QCOMPARE(lstResult.count(), 2);
 }
 
@@ -179,10 +179,10 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnList()
     QFETCH(int, numberOfList);
 
     SearchPotentialDuplicateContactJob job(listItem);
-    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
+    QSignalSpy spy(&job, SIGNAL(finished(QVector<Akonadi::Item::List>)));
     job.start();
     QCOMPARE(spy.count(), 1);
-    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QVector<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QVector<Akonadi::Item::List> >();
     QCOMPARE(lstResult.count(), numberOfList);
 
 }

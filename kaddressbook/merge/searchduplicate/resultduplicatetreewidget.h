@@ -49,9 +49,9 @@ class KADDRESSBOOK_EXPORT ResultDuplicateTreeWidget : public QTreeWidget
 public:
     explicit ResultDuplicateTreeWidget(QWidget *parent = Q_NULLPTR);
     ~ResultDuplicateTreeWidget();
-    void setContacts(const QList<Akonadi::Item::List> &lstItem);
+    void setContacts(const QVector<Akonadi::Item::List> &lstItem);
 
-    QList<Akonadi::Item::List> selectedContactsToMerge() const;
+    QVector<Akonadi::Item::List> selectedContactsToMerge() const;
 
 Q_SIGNALS:
     void showContactPreview(const Akonadi::Item &item);

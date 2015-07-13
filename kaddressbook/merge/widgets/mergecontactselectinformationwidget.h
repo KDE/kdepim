@@ -39,7 +39,7 @@ public:
 private:
     void addInformationWidget(MergeContacts::ConflictInformation conflictType);
     KContacts::Addressee::List mAddressList;
-    QList<MergeContactSelectListWidget *> mListMergeSelectInformation;
+    QVector<MergeContactSelectListWidget *> mListMergeSelectInformation;
 };
 }
 

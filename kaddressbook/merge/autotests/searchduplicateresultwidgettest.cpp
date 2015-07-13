@@ -96,7 +96,7 @@ void SearchDuplicateResultWidgetTest::shouldHaveMergeButtonEnabled()
     lst << Akonadi::Item(42);
     lst << Akonadi::Item(43);
     lst << Akonadi::Item(44);
-    QList<Akonadi::Item::List> itemLst;
+    QVector<Akonadi::Item::List> itemLst;
 #if 0 //FIXME
     tree->setContacts(itemLst);
     QVERIFY(tree->topLevelItemCount() > 0);

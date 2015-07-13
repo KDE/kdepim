@@ -32,16 +32,16 @@ public:
 
     void start();
 
-    QList<Akonadi::Item::List> potentialDuplicateContacts() const;
+    QVector<Akonadi::Item::List> potentialDuplicateContacts() const;
 
 Q_SIGNALS:
-    void finished(const QList<Akonadi::Item::List> &);
+    void finished(const QVector<Akonadi::Item::List> &);
 
 private:
     Akonadi::Item::List checkList(const Akonadi::Item::List &lstItem);
     bool isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB);
     Akonadi::Item::List mListItem;
-    QList<Akonadi::Item::List > mListDuplicate;
+    QVector<Akonadi::Item::List > mListDuplicate;
 };
 }
 

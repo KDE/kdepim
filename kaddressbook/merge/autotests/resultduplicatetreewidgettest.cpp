@@ -50,7 +50,7 @@ void ResultDuplicateTreeWidgetTest::shouldFillList()
         item.setPayload<Addressee>(address);
         lst << item;
     }
-    QList<Akonadi::Item::List> itemLst;
+    QVector<Akonadi::Item::List> itemLst;
     itemLst << lst;
     w.setContacts(itemLst);
     QCOMPARE(w.topLevelItemCount(), 1);
@@ -67,7 +67,7 @@ void ResultDuplicateTreeWidgetTest::shouldClearList()
         item.setPayload<Addressee>(address);
         lst << item;
     }
-    QList<Akonadi::Item::List> itemLst;
+    QVector<Akonadi::Item::List> itemLst;
     itemLst << lst;
     w.setContacts(itemLst);
 
@@ -93,7 +93,7 @@ void ResultDuplicateTreeWidgetTest::shouldEmptyListIfNotContactSelected()
         item.setPayload<Addressee>(address);
         lst << item;
     }
-    QList<Akonadi::Item::List> itemLst;
+    QVector<Akonadi::Item::List> itemLst;
     Akonadi::Item item(45);
     Addressee address;
     address.setName(QStringLiteral("foo1"));
@@ -115,7 +115,7 @@ void ResultDuplicateTreeWidgetTest::shouldReturnNotEmptyContactList()
         item.setPayload<Addressee>(address);
         lst << item;
     }
-    QList<Akonadi::Item::List> itemLst;
+    QVector<Akonadi::Item::List> itemLst;
     itemLst << lst;
     w.setContacts(itemLst);
 
@@ -143,7 +143,7 @@ void ResultDuplicateTreeWidgetTest::shouldNotReturnListWhenJustOneChildSelected(
         item.setPayload<Addressee>(address);
         lst << item;
     }
-    QList<Akonadi::Item::List> itemLst;
+    QVector<Akonadi::Item::List> itemLst;
     itemLst << lst;
     w.setContacts(itemLst);
 
@@ -172,7 +172,7 @@ void ResultDuplicateTreeWidgetTest::shouldReturnTwoLists()
         item.setPayload<Addressee>(address);
         lst << item;
     }
-    QList<Akonadi::Item::List> itemLst;
+    QVector<Akonadi::Item::List> itemLst;
     itemLst << lst;
     itemLst << lst;
     w.setContacts(itemLst);
@@ -202,7 +202,7 @@ void ResultDuplicateTreeWidgetTest::shouldReturnJustOnList()
         item.setPayload<Addressee>(address);
         lst << item;
     }
-    QList<Akonadi::Item::List> itemLst;
+    QVector<Akonadi::Item::List> itemLst;
     itemLst << lst;
     itemLst << lst;
     w.setContacts(itemLst);

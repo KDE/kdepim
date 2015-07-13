@@ -90,7 +90,7 @@ SearchDuplicateResultWidget::~SearchDuplicateResultWidget()
 
 }
 
-void SearchDuplicateResultWidget::setContacts(const QList<Akonadi::Item::List> &lstItem)
+void SearchDuplicateResultWidget::setContacts(const QVector<Akonadi::Item::List> &lstItem)
 {
     mResult->setContacts(lstItem);
 }
