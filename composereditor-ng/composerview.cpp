@@ -279,10 +279,12 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
         connect(editListAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditList()));
     }
     menu->addSeparator();
+#if 0 //Laurent. Never implemented
     if (!emptyDocument && d->action_spell_check) {
         menu->addAction(d->action_spell_check);
         menu->addSeparator();
     }
+#endif
     if (PimCommon::TextToSpeech::self()->isReady()) {
         //Don't use "Auto Spell Check" it will confict with search menu entry in spellchecklineedit.
         QAction *autoSpellCheckingAction = menu->addAction(i18n("Enable Spell Checking"));
