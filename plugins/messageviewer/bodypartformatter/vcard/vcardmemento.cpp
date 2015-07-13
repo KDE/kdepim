@@ -25,6 +25,7 @@ VcardMemento::VcardMemento(const QStringList &emails)
       mIndex(0),
       mFinished(false)
 {
+    mVCardList.reserve(emails.count());
     Q_FOREACH (const QString &str, emails) {
         VCard vcard(str, false);
         mVCardList.append(vcard);

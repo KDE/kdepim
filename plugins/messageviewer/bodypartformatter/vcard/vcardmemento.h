@@ -32,6 +32,11 @@ namespace MessageViewer
 {
 
 struct VCard {
+    VCard()
+    {
+
+    }
+
     VCard(const QString &str, bool b)
         : email(str), found(b)
     {
@@ -66,7 +71,7 @@ Q_SIGNALS:
 private:
     void checkEmail();
     void continueToCheckEmail();
-    QList<VCard> mVCardList;
+    QVector<VCard> mVCardList;
     int mIndex;
     bool mFinished;
 };
