@@ -65,7 +65,6 @@ CompletionOrderEditor::CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch
     connect(buttonBox, &QDialogButtonBox::accepted, this, &CompletionOrderEditor::slotOk);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &CompletionOrderEditor::reject);
     okButton->setDefault(true);
-    setModal(true);
 
     QWidget *page = new QWidget(this);
     QHBoxLayout *pageHBoxLayout = new QHBoxLayout(page);

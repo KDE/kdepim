@@ -45,10 +45,11 @@ AddresseeLineEditStatic::~AddresseeLineEditStatic()
 
 void AddresseeLineEditStatic::slotEditCompletionOrder()
 {
-    CompletionOrderEditor editor(ldapSearch, 0);
-    if (editor.exec()) {
+    QPointer<CompletionOrderEditor> dlg = new CompletionOrderEditor(ldapSearch, 0);
+    if (dlg->exec()) {
         updateCompletionOrder();
     }
+    delete dlg;
 }
 
 void AddresseeLineEditStatic::updateCompletionOrder()
