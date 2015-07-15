@@ -75,7 +75,7 @@ Q_SIGNALS:
     void linkActivated(const QString &link);
 
 private:
-    /* reimpl */ void onNext(int id) Q_DECL_OVERRIDE;
+    void onNext(int id) Q_DECL_OVERRIDE;
 
 private:
     class Private;

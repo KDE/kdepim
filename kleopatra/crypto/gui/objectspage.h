@@ -53,7 +53,7 @@ public:
     explicit ObjectsPage(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~ObjectsPage();
 
-    bool isComplete() const;
+    bool isComplete() const Q_DECL_OVERRIDE;
     void setFiles(const QStringList &files);
     QStringList files() const;
 

@@ -51,7 +51,7 @@ public:
     explicit SignEncryptFilesWizard(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0);
     ~SignEncryptFilesWizard();
 
-    /*reimp*/ void onNext(int currentId);
+    void onNext(int currentId) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void operationPrepared();

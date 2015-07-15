@@ -84,7 +84,7 @@ public:
     void setDetachedSignature(bool detached);
 
     void setOverwritePolicy(const boost::shared_ptr<OverwritePolicy> &policy);
-    GpgME::Protocol protocol() const;
+    GpgME::Protocol protocol() const Q_DECL_OVERRIDE;
 
     void cancel() Q_DECL_OVERRIDE;
     QString label() const Q_DECL_OVERRIDE;

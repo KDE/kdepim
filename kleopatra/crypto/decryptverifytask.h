@@ -236,13 +236,13 @@ class DecryptVerifyResult : public Task::Result
 public:
     class SenderInfo;
 
-    /* reimp */ QString overview() const;
-    /* reimp */ QString details() const;
-    /* reimp */ bool hasError() const;
-    /* reimp */ int errorCode() const;
-    /* reimp */ QString errorString() const;
-    /* reimp */ VisualCode code() const;
-    /* reimp */ AuditLog auditLog() const;
+    QString overview() const Q_DECL_OVERRIDE;
+    QString details() const Q_DECL_OVERRIDE;
+    bool hasError() const;
+    int errorCode() const Q_DECL_OVERRIDE;
+    QString errorString() const Q_DECL_OVERRIDE;
+    VisualCode code() const Q_DECL_OVERRIDE;
+    AuditLog auditLog() const Q_DECL_OVERRIDE;
 
     GpgME::VerificationResult verificationResult() const;
 

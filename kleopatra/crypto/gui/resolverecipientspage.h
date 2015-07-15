@@ -73,7 +73,7 @@ public:
     explicit ResolveRecipientsPage(QWidget *parent = Q_NULLPTR);
     ~ResolveRecipientsPage();
 
-    bool isComplete() const;
+    bool isComplete() const Q_DECL_OVERRIDE;
 
     /**
      * The protocol selected by the user (which is chosen by
