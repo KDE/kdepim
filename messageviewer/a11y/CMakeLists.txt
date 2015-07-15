@@ -19,4 +19,6 @@ target_link_libraries(messagevieweraccessiblewidgetfactory
 
 install(TARGETS messagevieweraccessiblewidgetfactory DESTINATION ${KDE_INSTALL_PLUGINDIR}/plugins/accessible)
 
-add_subdirectory(autotests)
+if(BUILD_TESTING)
+   add_subdirectory(autotests)
+endif()
