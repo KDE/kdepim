@@ -41,7 +41,7 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
 
     if (uri.startsWith(QStringLiteral("kmail:"))) {
         // make sure kmail is running or the part is shown
-        KToolInvocation::startServiceByDesktopPath(QLatin1String("kmail"));
+        KToolInvocation::startServiceByDesktopPath(QStringLiteral("kmail"));
 
         // parse string, show
         int colon = uri.indexOf(QLatin1Char(':'));
