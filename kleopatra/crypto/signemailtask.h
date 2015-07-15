@@ -73,7 +73,7 @@ public:
     void setDetachedSignature(bool detached);
     void setClearsign(bool clear);
 
-    GpgME::Protocol protocol() const;
+    GpgME::Protocol protocol() const Q_DECL_OVERRIDE;
 
     void cancel() Q_DECL_OVERRIDE;
     QString label() const Q_DECL_OVERRIDE;

@@ -70,7 +70,7 @@ public:
     void setOutput(const boost::shared_ptr<Output> &output);
     void setRecipients(const std::vector<GpgME::Key> &recipients);
 
-    GpgME::Protocol protocol() const;
+    GpgME::Protocol protocol() const Q_DECL_OVERRIDE;
 
     void cancel() Q_DECL_OVERRIDE;
     QString label() const Q_DECL_OVERRIDE;

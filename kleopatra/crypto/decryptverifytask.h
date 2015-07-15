@@ -113,7 +113,7 @@ public:
     void setOutput(const boost::shared_ptr<Output> &output);
 
     void setProtocol(GpgME::Protocol prot);
-    void autodetectProtocolFromInput();
+    void autodetectProtocolFromInput() Q_DECL_OVERRIDE;
 
     QString label() const Q_DECL_OVERRIDE;
 
@@ -177,20 +177,19 @@ public:
     void setOutput(const boost::shared_ptr<Output> &output);
 
     void setProtocol(GpgME::Protocol prot);
-    void autodetectProtocolFromInput();
+    void autodetectProtocolFromInput()Q_DECL_OVERRIDE;
 
-    /* reimp */ QString label() const;
-
-    /* reimp */ GpgME::Protocol protocol() const;
+    QString label() const Q_DECL_OVERRIDE;
+    GpgME::Protocol protocol() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
-    /* reimp */ void cancel();
+    void cancel() Q_DECL_OVERRIDE;
 
 private:
-    /* reimp */ void doStart();
-    /* reimp */ QString inputLabel() const;
-    /* reimp */ QString outputLabel() const;
-    /* reimp */ unsigned long long inputSize() const;
+    void doStart() Q_DECL_OVERRIDE;
+    QString inputLabel() const Q_DECL_OVERRIDE;
+    QString outputLabel() const Q_DECL_OVERRIDE;
+    unsigned long long inputSize() const Q_DECL_OVERRIDE;
 
 private:
     class Private;
@@ -210,20 +209,20 @@ public:
     void setOutput(const boost::shared_ptr<Output> &output);
 
     void setProtocol(GpgME::Protocol prot);
-    void autodetectProtocolFromInput();
+    void autodetectProtocolFromInput() Q_DECL_OVERRIDE;
 
-    /* reimp */ QString label() const;
+    QString label() const Q_DECL_OVERRIDE;
 
-    /* reimp */ GpgME::Protocol protocol() const;
+    GpgME::Protocol protocol() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
-    /* reimp */ void cancel();
+    void cancel() Q_DECL_OVERRIDE;
 
 private:
-    /* reimp */ void doStart();
-    /* reimp */ QString inputLabel() const;
-    /* reimp */ QString outputLabel() const;
-    /* reimp */ unsigned long long inputSize() const;
+    void doStart() Q_DECL_OVERRIDE;
+    QString inputLabel() const Q_DECL_OVERRIDE;
+    QString outputLabel() const Q_DECL_OVERRIDE;
+    unsigned long long inputSize() const Q_DECL_OVERRIDE;
 
 private:
     class Private;
