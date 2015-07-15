@@ -116,7 +116,7 @@ void TagPropertiesDialog::setupUi()
             // resource than in the current context. Since Akonadi Console has
             // not resource context at all, we need to retrieve the IDs the hard way
             QSqlQuery query(DbAccess::database());
-            query.prepare(QLatin1String("SELECT ResourceTable.name, TagRemoteIdResourceRelationTable.remoteId "
+            query.prepare(QStringLiteral("SELECT ResourceTable.name, TagRemoteIdResourceRelationTable.remoteId "
                                         "FROM TagRemoteIdResourceRelationTable "
                                         "LEFT JOIN ResourceTable ON ResourceTable.id = TagRemoteIdResourceRelationTable.resourceId "
                                         "WHERE TagRemoteIdResourceRelationTable.tagid = ?"));
@@ -353,12 +353,12 @@ void TagPropertiesDialog::slotAccept()
             QSqlQuery query(DbAccess::database());
             const qlonglong resourceId = resourceNameToIdMap[resIndex.data().toString()];
             if (existingResourceRecords.contains(resourceId)) {
-                query.prepare(QLatin1String("UPDATE TagRemoteIdResourceRelationTable SET remoteId = ? WHERE tagId = ? AND resourceId = ?"));
+                query.prepare(QStringLiteral("UPDATE TagRemoteIdResourceRelationTable SET remoteId = ? WHERE tagId = ? AND resourceId = ?"));
                 query.addBindValue(valueIndex.data().toString());
                 query.addBindValue(mTag.id());
                 query.addBindValue(resourceId);
             } else {
-                query.prepare(QLatin1String("INSERT INTO TagRemoteIdResourceRelationTable (tagId, resourceId, remoteId) VALUES (?, ?, ?)"));
+                query.prepare(QStringLiteral("INSERT INTO TagRemoteIdResourceRelationTable (tagId, resourceId, remoteId) VALUES (?, ?, ?)"));
                 query.addBindValue(mTag.id());
                 query.addBindValue(resourceId);
                 query.addBindValue(valueIndex.data().toString());

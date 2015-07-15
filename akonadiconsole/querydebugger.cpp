@@ -203,12 +203,12 @@ QueryDebugger::QueryDebugger(QWidget *parent):
 {
     qDBusRegisterMetaType< QList< QList<QVariant> > >();
 
-    QString service = QLatin1String("org.freedesktop.Akonadi");
+    QString service = QStringLiteral("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
         service += QLatin1String(".") + Akonadi::ServerManager::instanceIdentifier();
     }
     mDebugger = new org::freedesktop::Akonadi::StorageDebugger(service,
-            QLatin1String("/storageDebug"), QDBusConnection::sessionBus(), this);
+            QStringLiteral("/storageDebug"), QDBusConnection::sessionBus(), this);
 
     connect(mDebugger, SIGNAL(queryExecuted(double,uint,QString,QMap<QString,QVariant>,int,QList<QList<QVariant> >,QString)),
             this, SLOT(addQuery(double,uint,QString,QMap<QString,QVariant>,int,QList<QList<QVariant> >,QString)));
