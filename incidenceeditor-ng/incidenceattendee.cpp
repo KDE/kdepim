@@ -446,7 +446,6 @@ void IncidenceAttendee::expandResult(KJob *job)
     Q_ASSERT(expandJob);
     Q_ASSERT(mExpandGroupJobs.contains(job));
     KCalCore::Attendee::Ptr attendee = mExpandGroupJobs.take(job);
-
     int row = dataModel()->attendees().indexOf(attendee);
 
     dataModel()->removeRow(row);
@@ -479,6 +478,22 @@ void IncidenceAttendee::slotSelectAddresses()
                         new Akonadi::ContactGroupExpandJob(
                         selection.item().payload<KContacts::ContactGroup>(), this);
                     connect(job, &Akonadi::ContactGroupExpandJob::result, this, &IncidenceAttendee::expandResult);
+                    KCalCore::Attendee::PartStat partStat = KCalCore::Attendee::NeedsAction;
+                    bool rsvp = true;
+
+                    int pos = 0;
+                    KCalCore::Attendee::Ptr newAt(new KCalCore::Attendee(selection.name(), selection.email(),
+                                                  rsvp,
+                                                  partStat,
+                                                  KCalCore::Attendee::ReqParticipant
+                                                  ));
+                    if (pos < 0) {
+                        pos = dataModel()->rowCount() - 1;
+                    }
+
+                    dataModel()->insertAttendee(pos, newAt);
+
+                    mExpandGroupJobs.insert(job, newAt);
                     job->start();
                 } else {
                     KContacts::Addressee contact;
