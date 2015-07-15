@@ -91,18 +91,6 @@ private:
 };
 
 /**
-  Object for the drag object to call-back for message fulltext.
-*/
-class KDEPIM_EXPORT MailTextSource
-{
-public:
-    MailTextSource() {}
-    virtual ~MailTextSource() {}
-
-    virtual QByteArray text(quint32 serialNumber) const = 0;
-};
-
-/**
    List of mail summaries.
 */
 class KDEPIM_EXPORT MailList : public QList<MailSummary>
