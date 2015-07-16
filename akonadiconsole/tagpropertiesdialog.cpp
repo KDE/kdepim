@@ -117,9 +117,9 @@ void TagPropertiesDialog::setupUi()
             // not resource context at all, we need to retrieve the IDs the hard way
             QSqlQuery query(DbAccess::database());
             query.prepare(QStringLiteral("SELECT ResourceTable.name, TagRemoteIdResourceRelationTable.remoteId "
-                                        "FROM TagRemoteIdResourceRelationTable "
-                                        "LEFT JOIN ResourceTable ON ResourceTable.id = TagRemoteIdResourceRelationTable.resourceId "
-                                        "WHERE TagRemoteIdResourceRelationTable.tagid = ?"));
+                                         "FROM TagRemoteIdResourceRelationTable "
+                                         "LEFT JOIN ResourceTable ON ResourceTable.id = TagRemoteIdResourceRelationTable.resourceId "
+                                         "WHERE TagRemoteIdResourceRelationTable.tagid = ?"));
             query.addBindValue(mTag.id());
             if (query.exec()) {
                 while (query.next()) {

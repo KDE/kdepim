@@ -146,8 +146,9 @@ void ManageSieveWidget::slotContextMenuRequested(const QPoint &p)
             menu.addAction(KStandardGuiItem::cancel().text(), this, SLOT(slotCancelFetch()));
         }
     }
-    if ( !menu.actions().isEmpty() )
-        menu.exec( mTreeView->viewport()->mapToGlobal(p) );
+    if (!menu.actions().isEmpty()) {
+        menu.exec(mTreeView->viewport()->mapToGlobal(p));
+    }
 }
 
 void ManageSieveWidget::slotCancelFetch()

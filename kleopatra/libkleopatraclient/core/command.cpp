@@ -600,7 +600,7 @@ void Command::Private::run()
         err = assuan_new(&naked_ctx);
         if (err) {
             out.errorString = i18n("Could not allocate resources to connect to Kleopatra UI server at %1: %2"
-                              ,socketName, to_error_string(err));
+                                   , socketName, to_error_string(err));
             goto leave;
         }
 
@@ -631,7 +631,7 @@ void Command::Private::run()
 
     if (err) {
         out.errorString = i18n("Could not connect to Kleopatra UI server at %1: %2",
-                          socketName, to_error_string(err));
+                               socketName, to_error_string(err));
         goto leave;
     }
 
@@ -707,8 +707,9 @@ void Command::Private::run()
     if (err) {
         if (gpg_err_code(err) == GPG_ERR_CANCELED) {
             out.canceled = true;
-        } else
+        } else {
             out.errorString = i18n("Command (%1) failed: %2", QString::fromLatin1(in.command.constData()), to_error_string(err));
+        }
         goto leave;
     }
 

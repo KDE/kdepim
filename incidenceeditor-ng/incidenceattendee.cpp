@@ -486,7 +486,7 @@ void IncidenceAttendee::slotSelectAddresses()
                                                   rsvp,
                                                   partStat,
                                                   KCalCore::Attendee::ReqParticipant
-                                                  ));
+                                                                        ));
                     if (pos < 0) {
                         pos = dataModel()->rowCount() - 1;
                     }

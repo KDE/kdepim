@@ -20,4 +20,3 @@
 #include "grantleethemeeditor_debug.h"
 Q_LOGGING_CATEGORY(GRANTLEETHEMEEDITOR_LOG, "log_grantleethemeeditor")
 
-
