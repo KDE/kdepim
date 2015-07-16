@@ -34,7 +34,7 @@
 #include <QPrinter>
 #include <QTextDocument>
 #include <KSharedConfig>
-#include <KLocale>
+#include <QLocale>
 
 using namespace KABPrinting;
 
@@ -74,8 +74,7 @@ static QString contactsToHtml(const KContacts::Addressee::List &contacts, int fi
 
         if (fields & Birthday) {
             if (contact.birthday().isValid()) {
-                nameString += QLatin1String(" *") + KLocale::global()->formatDate(contact.birthday().date(),
-                              KLocale::ShortDate);
+                nameString += QLatin1String(" *") + QLocale().toString(contact.birthday().date(), QLocale::ShortFormat);
             }
         }
 
