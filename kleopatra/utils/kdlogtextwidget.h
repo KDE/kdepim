@@ -62,8 +62,8 @@ public:
     void setAlternatingRowColors(bool on);
     bool alternatingRowColors() const;
 
-    /*! \reimp */ QSize minimumSizeHint() const;
-    /*! \reimp */ QSize sizeHint() const;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     void clear();
