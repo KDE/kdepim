@@ -64,7 +64,6 @@
 #include <KLocalizedString>
 #include <KSelectAction>
 #include <kimagefilepreview.h>
-#include <KToolInvocation>
 #include <QMenu>
 #include <QUrl>
 
@@ -72,6 +71,7 @@
 #include <QProgressBar>
 #include <QTimer>
 #include <QKeyEvent>
+#include <QDesktopServices>
 
 #define TIMEOUT 5000
 
@@ -697,7 +697,7 @@ void MainWindow::slotOpenCurrentBlogInBrowser()
     if (mCurrentBlogId > -1) {
         QUrl url(DBMan::self()->blog(mCurrentBlogId)->blogUrl());
         if (url.isValid()) {
-            KToolInvocation::invokeBrowser(url.url());
+            QDesktopServices::openUrl(url);
         } else {
             KMessageBox::sorry(this, i18n("Cannot find current blog URL."));
         }

@@ -16,6 +16,7 @@
 */
 
 #include "webshortcutmenumanager.h"
+#include <QDesktopServices>
 #include <KToolInvocation>
 #include <KUriFilterData>
 #include <KStringHandler>
@@ -107,7 +108,7 @@ void WebShortcutMenuManager::slotHandleWebShortcutAction()
     if (action) {
         KUriFilterData filterData(action->data().toString());
         if (KUriFilter::self()->filterSearchUri(filterData, KUriFilter::WebShortcutFilter)) {
-            KToolInvocation::invokeBrowser(filterData.uri().url());
+            QDesktopServices::openUrl(filterData.uri());
         }
     }
 }
