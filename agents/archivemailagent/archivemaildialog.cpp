@@ -63,7 +63,6 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ArchiveMailDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ArchiveMailDialog::reject);
     connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ArchiveMailDialog::slotSave);
 
@@ -129,5 +128,6 @@ void ArchiveMailDialog::writeConfig()
 void ArchiveMailDialog::slotSave()
 {
     mWidget->save();
+    accept();
 }
 

@@ -41,7 +41,6 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &SendLaterConfigureDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SendLaterConfigureDialog::reject);
 
     mWidget = new SendLaterWidget(this);
@@ -88,6 +87,7 @@ QList<Akonadi::Item::Id> SendLaterConfigureDialog::messagesToRemove() const
 void SendLaterConfigureDialog::slotSave()
 {
     mWidget->save();
+    accept();
 }
 
 void SendLaterConfigureDialog::slotNeedToReloadConfig()
