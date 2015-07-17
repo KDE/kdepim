@@ -196,25 +196,25 @@ protected:
       Register the given elements for the given date. They will be deleted when
       this object is destroyed.
     */
-    Element::List registerDayElements(Element::List e, const QDate &d);
+    Element::List registerDayElements(const Element::List &e, const QDate &d);
 
     /**
       Register the given elements for the week the given date belongs to. They
       will be deleted when this object is destroyed.
     */
-    Element::List registerWeekElements(Element::List e, const QDate &d);
+    Element::List registerWeekElements(const Element::List &e, const QDate &d);
 
     /**
       Register the given elements for the month the given date belongs to. They
       will be deleted when this object is destroyed.
     */
-    Element::List registerMonthElements(Element::List e, const QDate &d);
+    Element::List registerMonthElements(const Element::List &e, const QDate &d);
 
     /**
       Register the given elements for the year the given date belongs to. They
       will be deleted when this object is destroyed.
     */
-    Element::List registerYearElements(Element::List e, const QDate &d);
+    Element::List registerYearElements(const Element::List &e, const QDate &d);
 
     /**
       Create day elements for given date.

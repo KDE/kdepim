@@ -223,25 +223,25 @@ Element::List Decoration::yearElements(const QDate &d)
     }
 }
 
-Element::List Decoration::registerDayElements(Element::List e, const QDate &d)
+Element::List Decoration::registerDayElements(const Element::List &e, const QDate &d)
 {
     mDayElements.insert(d, e);
     return e;
 }
 
-Element::List Decoration::registerWeekElements(Element::List e, const QDate &d)
+Element::List Decoration::registerWeekElements(const Element::List &e, const QDate &d)
 {
     mWeekElements.insert(weekDate(d), e);
     return e;
 }
 
-Element::List Decoration::registerMonthElements(Element::List e, const QDate &d)
+Element::List Decoration::registerMonthElements(const Element::List &e, const QDate &d)
 {
     mMonthElements.insert(monthDate(d), e);
     return e;
 }
 
-Element::List Decoration::registerYearElements(Element::List e, const QDate &d)
+Element::List Decoration::registerYearElements(const Element::List &e, const QDate &d)
 {
     mYearElements.insert(yearDate(d), e);
     return e;
