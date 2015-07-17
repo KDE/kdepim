@@ -43,6 +43,7 @@
 #include <QMenu>
 #include <QClipboard>
 
+#include <KLineEdit>
 #include <collection.h>
 #include <itemcreatejob.h>
 #include <kcombobox.h>
@@ -517,7 +518,7 @@ public:
     ContactListModel *mModel;
     KPIM::ProgressIndicatorLabel *progressIndication;
     QSortFilterProxyModel *sortproxy;
-    QLineEdit *searchLine;
+    KLineEdit *searchLine;
     QPushButton *user1Button;
 };
 
@@ -598,7 +599,8 @@ LdapSearchDialog::LdapSearchDialog(QWidget *parent)
 
     QHBoxLayout *quickSearchLineLayout = new QHBoxLayout;
     quickSearchLineLayout->addStretch();
-    d->searchLine = new QLineEdit;
+    d->searchLine = new KLineEdit;
+    d->searchLine->setTrapReturnKey(true);
     d->searchLine->setClearButtonEnabled(true);
     d->searchLine->setPlaceholderText(i18n("Search in result"));
     quickSearchLineLayout->addWidget(d->searchLine);
