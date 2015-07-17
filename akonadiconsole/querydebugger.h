@@ -25,8 +25,11 @@
 #include <QtCore/QVariant>
 
 #include "storagedebuggerinterface.h"
+namespace PimCommon
+{
+class RichTextEditorWidget;
+}
 
-class KTextEdit;
 class QCheckBox;
 class QueryDebuggerModel;
 
@@ -49,7 +52,7 @@ private:
 
     org::freedesktop::Akonadi::StorageDebugger *mDebugger;
 
-    KTextEdit *mView;
+    PimCommon::RichTextEditorWidget *mView;
     QueryDebuggerModel *mModel;
     QCheckBox *mOnlyAggregate;
 };

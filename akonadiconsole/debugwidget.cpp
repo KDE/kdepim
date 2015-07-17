@@ -49,7 +49,7 @@ DebugWidget::DebugWidget(QWidget *parent)
         service += QLatin1String(".") + Akonadi::ServerManager::instanceIdentifier();
     }
     mDebugInterface = new DebugInterface(service, QStringLiteral("/debug"), QDBusConnection::sessionBus(), this);
-    QCheckBox *cb = new QCheckBox(i18n("Enable debugger"), this);
+    QCheckBox *cb = new QCheckBox(QStringLiteral("Enable debugger"), this);
     cb->setChecked(mDebugInterface->isValid() && mDebugInterface->tracer().value() == QLatin1String("dbus"));
     connect(cb, &QCheckBox::toggled, this, &DebugWidget::enableDebugger);
     layout->addWidget(cb);

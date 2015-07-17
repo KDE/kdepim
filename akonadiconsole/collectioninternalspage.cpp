@@ -27,7 +27,7 @@ using namespace Akonadi;
 CollectionInternalsPage::CollectionInternalsPage(QWidget *parent) :
     CollectionPropertiesPage(parent)
 {
-    setPageTitle(i18n("Internals"));
+    setPageTitle(QStringLiteral("Internals"));
     ui.setupUi(this);
 }
 

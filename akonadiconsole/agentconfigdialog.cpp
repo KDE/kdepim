@@ -46,11 +46,11 @@ AgentConfigDialog::AgentConfigDialog(QWidget *parent) :
     connect(buttonBox, &QDialogButtonBox::accepted, this, &AgentConfigDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AgentConfigDialog::reject);
     mainLayout->addWidget(buttonBox);
-    KGuiItem::assign(user1Button, KGuiItem(i18n("Save Configuration")));
-    KGuiItem::assign(user2Button, KGuiItem(i18n("Refresh")));
-    buttonBox->button(QDialogButtonBox::Apply)->setText(i18n("Apply Configuration"));
+    KGuiItem::assign(user1Button, KGuiItem(QStringLiteral("Save Configuration")));
+    KGuiItem::assign(user2Button, KGuiItem(QStringLiteral("Refresh")));
+    buttonBox->button(QDialogButtonBox::Apply)->setText(QStringLiteral("Apply Configuration"));
 
-    setWindowTitle(i18n("Agent Configuration"));
+    setWindowTitle(QStringLiteral("Agent Configuration"));
 
     connect(buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &AgentConfigDialog::reconfigure);
     connect(user1Button, &QPushButton::clicked, m_model, &AgentConfigModel::writeConfig);

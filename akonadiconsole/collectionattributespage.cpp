@@ -32,7 +32,7 @@ CollectionAttributePage::CollectionAttributePage(QWidget *parent) :
     CollectionPropertiesPage(parent),
     mModel(Q_NULLPTR)
 {
-    setPageTitle(i18n("Attributes"));
+    setPageTitle(QStringLiteral("Attributes"));
     ui.setupUi(this);
 
     connect(ui.addButton, &QPushButton::clicked, this, &CollectionAttributePage::addAttribute);
@@ -44,7 +44,7 @@ void CollectionAttributePage::load(const Collection &col)
     Attribute::List list = col.attributes();
     mModel = new QStandardItemModel(list.count(), 2);
     QStringList labels;
-    labels << i18n("Attribute") << i18n("Value");
+    labels << QStringLiteral("Attribute") << QStringLiteral("Value");
     mModel->setHorizontalHeaderLabels(labels);
 
     for (int i = 0; i < list.count(); ++i) {

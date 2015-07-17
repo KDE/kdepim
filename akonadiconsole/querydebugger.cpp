@@ -38,6 +38,8 @@
 #include <AkonadiCore/servermanager.h>
 #include <AkonadiWidgets/controlgui.h>
 
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 #include <KTextEdit>
 #include <KLocalizedString>
 #include <QFontDatabase>
@@ -253,7 +255,7 @@ QueryDebugger::QueryDebugger(QWidget *parent):
 
     layout->addWidget(queryList);
 
-    mView = new KTextEdit(this);
+    mView = new PimCommon::RichTextEditorWidget(this);
     mView->setReadOnly(true);
     mView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     layout->addWidget(mView);
@@ -293,18 +295,18 @@ void QueryDebugger::addQuery(double sequence, uint duration, const QString &quer
         q.replace(pos, 1, variantToString(val));
     }
 
-    mView->append(QStringLiteral("%1: <font color=\"blue\">%2</font>") .arg(sequence).arg(q));
+    mView->editor()->append(QStringLiteral("%1: <font color=\"blue\">%2</font>") .arg(sequence).arg(q));
 
     if (!error.isEmpty()) {
-        mView->append(QStringLiteral("<font color=\"red\">Error: %1</font>\n").arg(error));
+        mView->editor()->append(QStringLiteral("<font color=\"red\">Error: %1</font>\n").arg(error));
         return;
     }
 
-    mView->append(QStringLiteral("<font color=\"green\">Success</font>: Query took %1 msecs ").arg(duration));
+    mView->editor()->append(QStringLiteral("<font color=\"green\">Success</font>: Query took %1 msecs ").arg(duration));
     if (query.startsWith(QStringLiteral("SELECT"))) {
-        mView->append(QStringLiteral("Fetched %1 results").arg(resultsCount));
+        mView->editor()->append(QStringLiteral("Fetched %1 results").arg(resultsCount));
     } else {
-        mView->append(QStringLiteral("Affected %1 rows").arg(resultsCount));
+        mView->editor()->append(QStringLiteral("Affected %1 rows").arg(resultsCount));
     }
 
     if (!result.isEmpty()) {
@@ -316,10 +318,10 @@ void QueryDebugger::addQuery(double sequence, uint duration, const QString &quer
             }
             header += headerRow.at(i).toString();
         }
-        mView->append(header);
+        mView->editor()->append(header);
 
         QString sep;
-        mView->append(sep.fill(QLatin1Char('-'), header.length()));
+        mView->editor()->append(sep.fill(QLatin1Char('-'), header.length()));
 
         for (int row = 1; row < result.count(); ++row) {
             const QVariantList columns = result.at(row);
@@ -330,11 +332,11 @@ void QueryDebugger::addQuery(double sequence, uint duration, const QString &quer
                 }
                 rowStr += variantToString(columns.at(column));
             }
-            mView->append(rowStr);
+            mView->editor()->append(rowStr);
         }
     }
 
-    mView->append(QLatin1String("\n"));
+    mView->editor()->append(QLatin1String("\n"));
 }
 
 QString QueryDebugger::variantToString(const QVariant &val)

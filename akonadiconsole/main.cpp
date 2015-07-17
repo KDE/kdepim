@@ -41,22 +41,22 @@ int main(int argc, char **argv)
     migrate.migrate();
 
     KAboutData aboutData(QStringLiteral("akonadiconsole"),
-                         i18n("Akonadi Console"),
+                         QStringLiteral("Akonadi Console"),
                          QStringLiteral("0.99"),
-                         i18n("The Management and Debugging Console for Akonadi"),
+                         QStringLiteral("The Management and Debugging Console for Akonadi"),
                          KAboutLicense::GPL,
-                         i18n("(c) 2006-2015 the Akonadi developer"),
+                         QStringLiteral("(c) 2006-2015 the Akonadi developer"),
                          QStringLiteral("https://community.kde.org/KDE_PIM/akonadi"));
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
-    aboutData.addAuthor(i18n("Tobias König"), i18n("Author"), QStringLiteral("tokoe@kde.org"));
-    aboutData.addAuthor(i18n("Volker Krause"),  i18n("Author"), QStringLiteral("vkrause@kde.org"));
+    aboutData.addAuthor(QStringLiteral("Tobias König"), QStringLiteral("Author"), QStringLiteral("tokoe@kde.org"));
+    aboutData.addAuthor(QStringLiteral("Volker Krause"),  QStringLiteral("Author"), QStringLiteral("vkrause@kde.org"));
     KAboutData::setApplicationData(aboutData);
 
     QCommandLineParser parser;
     parser.addVersionOption();
     parser.addHelpOption();
     aboutData.setupCommandLine(&parser);
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("remote"), i18n("Connect to an Akonadi remote debugging server"), QStringLiteral("server")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("remote"), QStringLiteral("Connect to an Akonadi remote debugging server"), QStringLiteral("server")));
 
     parser.process(app);
     aboutData.processCommandLine(&parser);

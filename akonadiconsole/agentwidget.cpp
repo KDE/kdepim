@@ -105,17 +105,17 @@ AgentWidget::AgentWidget(QWidget *parent)
     KGuiItem::assign(ui.removeButton, KStandardGuiItem::remove());
     connect(ui.removeButton, &QPushButton::clicked, this, &AgentWidget::removeAgent);
 
-    mConfigMenu = new QMenu(i18n("Configure"), this);
-    mConfigMenu->addAction(i18n("Configure Natively..."), this, SLOT(configureAgent()));
-    mConfigMenu->addAction(i18n("Configure Remotely..."), this, SLOT(configureAgentRemote()));
+    mConfigMenu = new QMenu(QStringLiteral("Configure"), this);
+    mConfigMenu->addAction(QStringLiteral("Configure Natively..."), this, SLOT(configureAgent()));
+    mConfigMenu->addAction(QStringLiteral("Configure Remotely..."), this, SLOT(configureAgentRemote()));
     mConfigMenu->setIcon(KStandardGuiItem::configure().icon());
     KGuiItem::assign(ui.configButton, KStandardGuiItem::configure());
     ui.configButton->setMenu(mConfigMenu);
     connect(ui.configButton, &QPushButton::clicked, this, &AgentWidget::configureAgent);
 
-    mSyncMenu = new QMenu(i18n("Synchronize"), this);
-    mSyncMenu->addAction(i18n("Synchronize All"), this, SLOT(synchronizeAgent()));
-    mSyncMenu->addAction(i18n("Synchronize Collection Tree"), this, SLOT(synchronizeTree()));
+    mSyncMenu = new QMenu(QStringLiteral("Synchronize"), this);
+    mSyncMenu->addAction(QStringLiteral("Synchronize All"), this, SLOT(synchronizeAgent()));
+    mSyncMenu->addAction(QStringLiteral("Synchronize Collection Tree"), this, SLOT(synchronizeTree()));
     mSyncMenu->setIcon(QIcon::fromTheme(QStringLiteral("view-refresh")));
     ui.syncButton->setMenu(mSyncMenu);
     ui.syncButton->setIcon(QIcon::fromTheme(QStringLiteral("view-refresh")));
@@ -195,7 +195,7 @@ void AgentWidget::removeAgent()
                                        i18np("Do you really want to delete the selected agent instance?",
                                              "Do you really want to delete these %1 agent instances?",
                                              list.size()),
-                                       list.size() == 1 ? i18n("Agent Deletion") : i18n("Multiple Agent Deletion"),
+                                       list.size() == 1 ? QStringLiteral("Agent Deletion") : QStringLiteral("Multiple Agent Deletion"),
                                        KStandardGuiItem::del(),
                                        KStandardGuiItem::cancel(),
                                        QString(),
@@ -340,7 +340,7 @@ void AgentWidget::cloneAgent()
 void AgentWidget::cloneAgent(KJob *job)
 {
     if (job->error()) {
-        KMessageBox::error(this, i18n("Cloning agent failed: %1.", job->errorText()));
+        KMessageBox::error(this, QStringLiteral("Cloning agent failed: %1.").arg(job->errorText()));
         return;
     }
 
@@ -405,7 +405,7 @@ void AgentWidget::currentChanged()
     if (instance.isValid()) {
         ui.identifierLabel->setText(instance.identifier());
         ui.typeLabel->setText(instance.type().name());
-        QString onlineStatus = (instance.isOnline() ? i18n("Online") : i18n("Offline"));
+        QString onlineStatus = (instance.isOnline() ? QStringLiteral("Online") : QStringLiteral("Offline"));
         QString agentStatus;
         switch (instance.status()) {
         case AgentInstance::Idle: agentStatus =
@@ -439,17 +439,17 @@ void AgentWidget::currentChanged()
 void AgentWidget::showContextMenu(const QPoint &pos)
 {
     QMenu menu(this);
-    menu.addAction(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add Agent..."), this, SLOT(addAgent()));
-    menu.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Clone Agent"), this, SLOT(cloneAgent()));
+    menu.addAction(QIcon::fromTheme(QStringLiteral("list-add")), QStringLiteral("Add Agent..."), this, SLOT(addAgent()));
+    menu.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), QStringLiteral("Clone Agent"), this, SLOT(cloneAgent()));
     menu.addSeparator();
     menu.addMenu(mSyncMenu);
-    menu.addAction(QIcon::fromTheme(QStringLiteral("dialog-cancel")), i18n("Abort Activity"), this, SLOT(abortAgent()));
-    menu.addAction(QIcon::fromTheme(QStringLiteral("system-reboot")), i18n("Restart Agent"), this, SLOT(restartAgent()));    //FIXME: Is using system-reboot icon here a good idea?
-    menu.addAction(QIcon::fromTheme(QStringLiteral("network-disconnect")), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()));
-    menu.addAction(i18n("Show task list"), this, SLOT(showTaskList()));
-    menu.addAction(i18n("Show change-notification log"), this, SLOT(showChangeNotifications()));
+    menu.addAction(QIcon::fromTheme(QStringLiteral("dialog-cancel")), QStringLiteral("Abort Activity"), this, SLOT(abortAgent()));
+    menu.addAction(QIcon::fromTheme(QStringLiteral("system-reboot")), QStringLiteral("Restart Agent"), this, SLOT(restartAgent()));    //FIXME: Is using system-reboot icon here a good idea?
+    menu.addAction(QIcon::fromTheme(QStringLiteral("network-disconnect")), QStringLiteral("Toggle Online/Offline"), this, SLOT(toggleOnline()));
+    menu.addAction(QStringLiteral("Show task list"), this, SLOT(showTaskList()));
+    menu.addAction(QStringLiteral("Show change-notification log"), this, SLOT(showChangeNotifications()));
     menu.addMenu(mConfigMenu);
-    menu.addAction(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("Remove Agent"), this, SLOT(removeAgent()));
+    menu.addAction(QIcon::fromTheme(QStringLiteral("list-remove")), QStringLiteral("Remove Agent"), this, SLOT(removeAgent()));
     menu.exec(ui.instanceWidget->mapToGlobal(pos));
 }
 

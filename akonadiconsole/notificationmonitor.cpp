@@ -42,7 +42,7 @@ NotificationMonitor::NotificationMonitor(QWidget *parent) :
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     QCheckBox *enableCB = new QCheckBox(this);
-    enableCB->setText(i18n("Enable notification monitor"));
+    enableCB->setText(QStringLiteral("Enable notification monitor"));
     enableCB->setChecked(m_model->isEnabled());
     connect(enableCB, &QCheckBox::toggled, m_model, &NotificationModel::setEnabled);
     layout->addWidget(enableCB);
@@ -69,7 +69,7 @@ NotificationMonitor::NotificationMonitor(QWidget *parent) :
 void NotificationMonitor::contextMenu(const QPoint & /*pos*/)
 {
     QMenu menu;
-    menu.addAction(i18n("Clear View"), m_model, SLOT(clear()));
+    menu.addAction(QStringLiteral("Clear View"), m_model, SLOT(clear()));
     menu.exec(QCursor::pos());
 }
 

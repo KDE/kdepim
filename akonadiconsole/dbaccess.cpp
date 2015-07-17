@@ -54,7 +54,7 @@ public:
         database.setPassword(settings.value(QStringLiteral("Password"), QString()).toString());
         database.setConnectOptions(settings.value(QStringLiteral("Options"), QString()).toString());
         if (!database.open()) {
-            KMessageBox::error(Q_NULLPTR, i18n("Failed to connect to database: %1", database.lastError().text()));
+            KMessageBox::error(Q_NULLPTR, QStringLiteral("Failed to connect to database: %1").arg(database.lastError().text()));
         }
     }
 
@@ -79,7 +79,7 @@ QSqlDatabase DbAccess::database()
     // hack to detect database gone away error
     QSqlQuery query(sInstance->database);
     // prepare or exec of "SELECT 1" will only fail when we are not connected to database
-    if (!query.prepare(QLatin1String("SELECT 1")) || !query.exec()) {
+    if (!query.prepare(QStringLiteral("SELECT 1")) || !query.exec()) {
         sInstance->database.close();
         QSqlDatabase::removeDatabase(sInstance->database.connectionName());
         sInstance->init();

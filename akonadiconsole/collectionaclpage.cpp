@@ -28,7 +28,7 @@ using namespace Akonadi;
 CollectionAclPage::CollectionAclPage(QWidget *parent) :
     CollectionPropertiesPage(parent)
 {
-    setPageTitle(i18n("ACL"));
+    setPageTitle(QStringLiteral("ACL"));
     ui.setupUi(this);
 }
 

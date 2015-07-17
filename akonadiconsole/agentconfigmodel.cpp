@@ -126,11 +126,11 @@ QVariant AgentConfigModel::headerData(int section, Qt::Orientation orientation, 
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         if (section == 0) {
-            return i18n("Setting");
+            return QStringLiteral("Setting");
         } else if (section == 1) {
-            return i18n("Value");
+            return QStringLiteral("Value");
         } else if (section == 2) {
-            return i18n("Type");
+            return QStringLiteral("Type");
         }
     }
     return QAbstractItemModel::headerData(section, orientation, role);

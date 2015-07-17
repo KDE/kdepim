@@ -83,14 +83,14 @@ void TagPropertiesDialog::setupUi()
     mAttributesModel = new QStandardItemModel(attributes.size(), 2, this);
     connect(mAttributesModel, &QStandardItemModel::itemChanged, this, &TagPropertiesDialog::attributeChanged);
     QStringList labels;
-    labels << i18n("Attribute") << i18n("Value");
+    labels << QStringLiteral("Attribute") << QStringLiteral("Value");
     mAttributesModel->setHorizontalHeaderLabels(labels);
 
     mRemoteIdsModel = new QStandardItemModel(this);
     connect(mRemoteIdsModel, &QStandardItemModel::itemChanged, this, &TagPropertiesDialog::remoteIdChanged);
     mRemoteIdsModel->setColumnCount(2);
     labels.clear();
-    labels << i18n("Resource") << i18n("Remote ID");
+    labels << QStringLiteral("Resource") << QStringLiteral("Remote ID");
     mRemoteIdsModel->setHorizontalHeaderLabels(labels);
     ui.ridsView->setModel(mRemoteIdsModel);
 

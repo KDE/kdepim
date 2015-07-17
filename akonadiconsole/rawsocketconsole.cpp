@@ -76,7 +76,7 @@ void RawSocketConsole::dataReceived()
 void RawSocketConsole::connected()
 {
     ui.connectButton->setChecked(true);
-    ui.connectButton->setText(i18n("Disconnect"));
+    ui.connectButton->setText(QStringLiteral("Disconnect"));
     ui.execButton->setEnabled(true);
     ui.commandEdit->setEnabled(true);
 }
@@ -84,7 +84,7 @@ void RawSocketConsole::connected()
 void RawSocketConsole::disconnected()
 {
     ui.connectButton->setChecked(false);
-    ui.connectButton->setText(i18n("Connect"));
+    ui.connectButton->setText(QStringLiteral("Connect"));
     ui.execButton->setEnabled(false);
     ui.commandEdit->setEnabled(false);
 }
