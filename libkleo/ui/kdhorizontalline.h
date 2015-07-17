@@ -62,8 +62,8 @@ public:
     /*! \reimp to hard-code the frame shape */
     void setFrameStyle(int style);
 
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
     QSizePolicy sizePolicy() const;
 
     static int indentHint();
