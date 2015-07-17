@@ -161,11 +161,11 @@ QString ImageScaling::generateNewName()
     if (type.isEmpty()) {
         type = QStringLiteral("PNG");
     }
-    if (mName.endsWith(QLatin1String(".png"))) {
+    if (mName.endsWith(QStringLiteral(".png"))) {
         if (type != QLatin1String("PNG")) {
             mName.replace(QStringLiteral(".png"), QStringLiteral(".jpg"));
         }
-    } else if (mName.endsWith(QLatin1String(".jpg"))) {
+    } else if (mName.endsWith(QStringLiteral(".jpg"))) {
         if (type != QLatin1String("JPG")) {
             mName.replace(QStringLiteral(".jpg"), QStringLiteral(".png"));
         }
