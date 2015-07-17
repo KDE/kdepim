@@ -23,7 +23,7 @@
 */
 #include "decorationlabel.h"
 
-#include <KToolInvocation>
+#include <QDesktopServices>
 
 #include <QMouseEvent>
 #include <QResizeEvent>
@@ -79,7 +79,7 @@ void DecorationLabel::mouseReleaseEvent(QMouseEvent *event)
     switch (event->button()) {
     case Qt::LeftButton:
         if (! mUrl.isEmpty()) {
-            KToolInvocation::invokeBrowser(mUrl.url());
+            QDesktopServices::openUrl(mUrl);
             setForegroundRole(QPalette::LinkVisited);
         }
         break;
