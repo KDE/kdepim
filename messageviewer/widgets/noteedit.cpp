@@ -77,7 +77,7 @@ NoteEdit::NoteEdit(QWidget *parent)
 #ifndef QT_NO_ACCESSIBILITY
     mCollectionCombobox->setAccessibleDescription(i18n("Calendar where the new event will be stored."));
 #endif
-    mCollectionCombobox->setToolTip(i18n("Calendar where the new event will be stored."));
+    mCollectionCombobox->setToolTip(i18n("Calendar where the new event will be stored"));
 
     connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::currentIndexChanged), this, &NoteEdit::slotCollectionChanged);
     connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::activated), this, &NoteEdit::slotCollectionChanged);

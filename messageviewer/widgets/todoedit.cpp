@@ -85,7 +85,7 @@ TodoEdit::TodoEdit(QWidget *parent)
 #ifndef QT_NO_ACCESSIBILITY
     mCollectionCombobox->setAccessibleDescription(i18n("Todo list where the new task will be stored."));
 #endif
-    mCollectionCombobox->setToolTip(i18n("Todo list where the new task will be stored."));
+    mCollectionCombobox->setToolTip(i18n("Todo list where the new task will be stored"));
     connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::currentIndexChanged), this, &TodoEdit::slotCollectionChanged);
     connect(mCollectionCombobox, static_cast<void (Akonadi::CollectionComboBox::*)(int)>(&Akonadi::CollectionComboBox::activated), this, &TodoEdit::slotCollectionChanged);
     hbox->addWidget(mCollectionCombobox);
