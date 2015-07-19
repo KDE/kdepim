@@ -119,7 +119,7 @@ protected:
     IncidenceEditor(QObject *parent = Q_NULLPTR);
 
     template <typename IncidenceT>
-    QSharedPointer<IncidenceT> incidence(KCalCore::Incidence::Ptr inc)
+    QSharedPointer<IncidenceT> incidence(const KCalCore::Incidence::Ptr &inc)
     {
         return inc.dynamicCast<IncidenceT>();
     }

@@ -58,7 +58,7 @@ IncidenceDialog *IncidenceDialogFactory::createTodoEditor(const QString &summary
         const QStringList &attachmentMimetypes,
         const QStringList &attachmentLabels,
         bool inlineAttachment,
-        Akonadi::Collection defaultCollection,
+        const Akonadi::Collection &defaultCollection,
         bool cleanupAttachmentTempFiles,
         QWidget *parent, Qt::WindowFlags flags)
 {
@@ -95,7 +95,7 @@ IncidenceDialog *IncidenceDialogFactory::createEventEditor(const QString &summar
         const QStringList &attachmentMimetypes,
         const QStringList &attachmentLabels,
         bool inlineAttachment,
-        Akonadi::Collection defaultCollection,
+        const Akonadi::Collection &defaultCollection,
         bool cleanupAttachmentTempFiles,
         QWidget *parent, Qt::WindowFlags flags)
 {

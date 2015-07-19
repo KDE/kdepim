@@ -373,7 +373,7 @@ void IncidenceAttendee::fillOrganizerCombo()
     mUi->mOrganizerCombo->addItems(uniqueList);
 }
 
-void IncidenceAttendee::checkIfExpansionIsNeeded(const KCalCore::Attendee::Ptr attendee)
+void IncidenceAttendee::checkIfExpansionIsNeeded(const KCalCore::Attendee::Ptr &attendee)
 {
     QString fullname = attendee->fullName();
 

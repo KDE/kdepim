@@ -83,7 +83,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     // cheks if row is a group,  that can/should be expanded
-    void checkIfExpansionIsNeeded(KCalCore::Attendee::Ptr attendee);
+    void checkIfExpansionIsNeeded(const KCalCore::Attendee::Ptr &attendee);
 
     // results of the group search job
     void groupSearchResult(KJob *job);

@@ -24,7 +24,7 @@
 
 using namespace IncidenceEditorNG;
 
-ResourceItem::ResourceItem(const KLDAP::LdapDN &dn, const QStringList &attrs, const KLDAP::LdapClient &ldapClient, ResourceItem::Ptr parent)
+ResourceItem::ResourceItem(const KLDAP::LdapDN &dn, const QStringList &attrs, const KLDAP::LdapClient &ldapClient, const ResourceItem::Ptr &parent)
     : dn(dn)
     , mAttrs(attrs)
     , mLdapClient(0, this)
@@ -95,7 +95,7 @@ QVariant ResourceItem::data(const QString &column) const
     return QVariant();
 }
 
-bool ResourceItem::insertChild(int position, ResourceItem::Ptr item)
+bool ResourceItem::insertChild(int position, const ResourceItem::Ptr &item)
 {
     if (position < 0 || position > childItems.size()) {
         return false;

@@ -66,7 +66,7 @@ INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createTodoEditor(
     const QStringList &attachmentMimetypes,
     const QStringList &attachmentLabels,
     bool inlineAttachment,
-    Akonadi::Collection defaultCollection,
+    const Akonadi::Collection &defaultCollection,
     bool cleanupAttachmentTemp,
     QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = 0);
 
@@ -78,7 +78,7 @@ INCIDENCEEDITORS_NG_EXPORT IncidenceDialog *createEventEditor(
     const QStringList &attachmentMimetypes,
     const QStringList &attachmentLabels,
     bool inlineAttachment,
-    Akonadi::Collection defaultCollection,
+    const Akonadi::Collection &defaultCollection,
     bool cleanupAttachmentTempFiles,
     QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = 0);
 

@@ -49,7 +49,8 @@ public:
     */
     typedef QSharedPointer<ResourceItem> Ptr;
 
-    ResourceItem(const KLDAP::LdapDN &dn, const QStringList &attrs, const KLDAP::LdapClient &ldapClient, ResourceItem::Ptr parent = ResourceItem::Ptr());
+    ResourceItem(const KLDAP::LdapDN &dn, const QStringList &attrs, const KLDAP::LdapClient &ldapClient,
+                 const ResourceItem::Ptr &parent = ResourceItem::Ptr());
     ~ResourceItem();
 
     ResourceItem::Ptr child(int number);
@@ -57,7 +58,7 @@ public:
     int columnCount() const;
     QVariant data(int column) const;
     QVariant data(const QString &column) const;
-    bool insertChild(int position, ResourceItem::Ptr item);
+    bool insertChild(int position, const ResourceItem::Ptr &item);
     ResourceItem::Ptr parent();
     bool removeChildren(int position, int count);
     int childNumber() const;

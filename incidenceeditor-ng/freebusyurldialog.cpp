@@ -38,7 +38,7 @@
 
 using namespace IncidenceEditorNG;
 
-FreeBusyUrlDialog::FreeBusyUrlDialog(AttendeeData::Ptr attendee, QWidget *parent)
+FreeBusyUrlDialog::FreeBusyUrlDialog(const AttendeeData::Ptr &attendee, QWidget *parent)
     : QDialog(parent)
 {
     QFrame *topFrame = new QFrame(this);
@@ -71,7 +71,7 @@ void FreeBusyUrlDialog::slotOk()
     accept();
 }
 
-FreeBusyUrlWidget::FreeBusyUrlWidget(AttendeeData::Ptr attendee, QWidget *parent)
+FreeBusyUrlWidget::FreeBusyUrlWidget(const AttendeeData::Ptr &attendee, QWidget *parent)
     : QWidget(parent), mAttendee(attendee)
 {
     QBoxLayout *topLayout = new QVBoxLayout(this);
