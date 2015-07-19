@@ -57,7 +57,7 @@ static void print(const QString &message)
 static void printCollectionsUsage()
 {
     print(i18n("Error while parsing %1", QStringLiteral("--collections")));
-    print(i18n("Example usage %1", QStringLiteral(": --collections 90,23,40")));
+    print(i18n("Example usage: %1", QStringLiteral("--collections 90,23,40")));
 }
 
 static void silenceStderr()
