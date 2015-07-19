@@ -290,7 +290,7 @@ void SelectionTypeTreeWidget::saveAsTemplate()
     TemplateSelection templateSelection;
     templateSelection.createTemplate(storedType());
     const QString templateStr = templateSelection.document().toString(2);
-    const QString filter(i18n("Template File (*.xml)"));
+    const QString filter(i18n("Template Files (*.xml)"));
     PimCommon::Util::saveTextAs(templateStr, filter, this);
 }
 
