@@ -140,7 +140,7 @@ void SieveEditorMainWindow::setupActions()
     mNewScript->setEnabled(false);
 
     mEditScript = ac->addAction(QStringLiteral("edit_script"), this, SLOT(slotEditScript()));
-    mEditScript->setText(i18n("Edit Script"));
+    mEditScript->setText(i18n("Edit Script..."));
     mEditScript->setEnabled(false);
 
     mDesactivateScript = ac->addAction(QStringLiteral("desactivate_script"), this, SLOT(slotDesactivateScript()));
@@ -153,7 +153,7 @@ void SieveEditorMainWindow::setupActions()
     ac->setDefaultShortcut(mRefreshList, QKeySequence(Qt::Key_F5));
 
     mGoToLine = ac->addAction(QStringLiteral("gotoline"), mMainWidget->sieveEditorMainWidget(), SLOT(slotGoToLine()));
-    mGoToLine->setText(i18n("Go to Line"));
+    mGoToLine->setText(i18n("Go to Line..."));
     mGoToLine->setIcon(QIcon::fromTheme(QStringLiteral("go-jump")));
     ac->setDefaultShortcut(mGoToLine, QKeySequence(Qt::CTRL + Qt::Key_G));
     mGoToLine->setEnabled(false);
