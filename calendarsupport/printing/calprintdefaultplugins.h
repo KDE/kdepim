@@ -81,7 +81,7 @@ public:
 
 protected:
     int printCaptionAndText(QPainter &p, const QRect &box, const QString &caption,
-                            const QString &text, QFont captionFont, QFont textFont);
+                            const QString &text, const QFont &captionFont, const QFont &textFont);
 
     bool mShowOptions;
     bool mShowSubitemsNotes;

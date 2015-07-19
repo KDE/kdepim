@@ -83,7 +83,7 @@ private Q_SLOTS:
 
 public:
     void print(int type, const QDate &fd, const QDate &td,
-               KCalCore::Incidence::List selectedIncidences = KCalCore::Incidence::List(),
+               const KCalCore::Incidence::List &selectedIncidences = KCalCore::Incidence::List(),
                bool preview = false);
     Akonadi::ETMCalendar::Ptr calendar() const;
     KConfig *config() const;
@@ -102,7 +102,7 @@ class CalPrintDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit CalPrintDialog(int initialPrintType, PrintPlugin::List plugins,
+    explicit CalPrintDialog(int initialPrintType, const PrintPlugin::List &plugins,
                             QWidget *parent = Q_NULLPTR, bool mUniqItem = false);
 
     virtual ~CalPrintDialog();

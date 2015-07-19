@@ -212,7 +212,7 @@ protected:
 int CalPrintIncidence::printCaptionAndText(QPainter &p, const QRect &box,
         const QString &caption,
         const QString &text,
-        QFont captionFont, QFont textFont)
+        const QFont &captionFont, const QFont &textFont)
 {
     QFontMetrics captionFM(captionFont);
     int textWd = captionFM.width(caption);

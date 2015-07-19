@@ -35,7 +35,7 @@ class IncidenceAttachmentModelPrivate
 {
     IncidenceAttachmentModelPrivate(IncidenceAttachmentModel *qq,
                                     const QPersistentModelIndex &modelIndex,
-                                    Akonadi::Item item = Akonadi::Item())
+                                    const Akonadi::Item &item = Akonadi::Item())
         : q_ptr(qq), m_modelIndex(modelIndex), m_item(item), m_monitor(0)
     {
         if (modelIndex.isValid()) {

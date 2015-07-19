@@ -79,7 +79,7 @@ public:
         mCalendar = cal;
     }
 
-    virtual void setSelectedIncidences(KCalCore::Incidence::List inc)
+    virtual void setSelectedIncidences(const KCalCore::Incidence::List &inc)
     {
         mSelectedIncidences = inc;
     }
