@@ -165,21 +165,21 @@ QVariant AttendeeTableModel::headerData(int section, Qt::Orientation orientation
     if (orientation == Qt::Horizontal) {
         switch (section) {
         case Role:
-            return i18nc("vcard attendee role", "Role");
+            return i18nc("vCard attendee role", "Role");
         case FullName:
-            return i18nc("attendees  (name+emailaddress)",  "Fullname");
+            return i18nc("Attendees  (name+emailaddress)",  "Name");
         case Available:
-            return i18nc("is attendee available for incidence", "Available");
+            return i18nc("Is attendee available for incidence", "Available");
         case Status:
             return i18nc("Status of attendee in an incidence (accepted, declined, delegated, ...)", "Status");
         case CuType:
-            return i18nc("Type of resource (vCard attribute)", "cuType");
+            return i18nc("Type of calendar user (vCard attribute)", "User Type");
         case Response:
-            return i18nc("has attendee to respond to the invitation", "Response");
+            return i18nc("Has attendee to respond to the invitation", "Response");
         case Name:
-            return i18nc("attendee name", "name");
+            return i18nc("Attendee name", "Name");
         case Email:
-            return i18nc("attendee email",  "email");
+            return i18nc("Attendee email",  "Email");
         }
     }
 
