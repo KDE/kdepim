@@ -1924,7 +1924,7 @@ void ViewerPrivate::createActions()
     ac->addAction(QStringLiteral("create_note"), mCreateNoteAction);
     connect(mCreateNoteAction, &QAction::triggered, this, &ViewerPrivate::slotShowCreateNoteWidget);
 
-    mCreateEventAction = new QAction(QIcon::fromTheme(QStringLiteral("appointment-new")), i18n("Create Event"), this);
+    mCreateEventAction = new QAction(QIcon::fromTheme(QStringLiteral("appointment-new")), i18n("Create Event..."), this);
     mCreateEventAction->setIconText(i18n("Create Event"));
     addHelpTextAction(mCreateEventAction, i18n("Allows you to create a calendar Event"));
     ac->addAction(QStringLiteral("create_event"), mCreateEventAction);
