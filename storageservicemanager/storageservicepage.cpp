@@ -352,9 +352,9 @@ void StorageServicePage::slotDownloadFileDone(const QString &serviceName, const 
         updateList(serviceName);
         QString msg;
         if (filename.isEmpty()) {
-            msg = i18n("File was correctly downloaded");
+            msg = i18n("File was correctly downloaded.");
         } else {
-            msg = i18n("%1 was correctly downloaded", filename);
+            msg = i18n("%1 was correctly downloaded.", filename);
         }
         KMessageBox::information(this, msg, i18nc("@title:window", "Download File"));
     }
