@@ -761,7 +761,7 @@ void ComposerViewPrivate::_k_slotSaveAs()
 {
     QString fn = QFileDialog::getSaveFileName(q, i18n("Save as..."), QString(), i18n("HTML Files (*.htm *.html);;All Files (*)"));
     if (fn.isEmpty()) {
-        KMessageBox::error(q, i18n("Not file selected."), i18n("Save as"));
+        KMessageBox::error(q, i18n("No file selected."), i18n("Save as"));
         return;
     }
     if (!(fn.endsWith(QStringLiteral(".htm"), Qt::CaseInsensitive) ||
