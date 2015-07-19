@@ -51,7 +51,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     mEditorPage->setPageFileName(QStringLiteral("theme.html"));
     connect(mEditorPage, &EditorPage::needUpdateViewer, this, &ThemeEditorPage::slotUpdateViewer);
     connect(mEditorPage, &EditorPage::changed, this, &ThemeEditorPage::slotChanged);
-    mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (theme.html)"));
+    mTabWidget->addTab(mEditorPage, i18n("Editor (%1)", QStringLiteral("theme.html")));
 
     GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
     mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QStringLiteral("theme.html"), opt);

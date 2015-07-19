@@ -50,7 +50,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     connect(mEditorPage, &EditorPage::needUpdateViewer, this, &ThemeEditorPage::slotUpdateViewer);
     connect(mEditorPage, &EditorPage::changed, this, &ThemeEditorPage::slotChanged);
-    mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (header.html)"));
+    mTabWidget->addTab(mEditorPage, i18n("Editor (%1)", QStringLiteral("header.html")));
 
     GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
     opt |= GrantleeThemeEditor::DesktopFilePage::ExtraDisplayVariables;
