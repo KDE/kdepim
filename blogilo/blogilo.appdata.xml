@@ -23,6 +23,7 @@
   <name xml:lang="pl">Blogilo</name>
   <name xml:lang="pt">Blogilo</name>
   <name xml:lang="pt-BR">Blogilo</name>
+  <name xml:lang="ru">Blogilo</name>
   <name xml:lang="sk">Blogilo</name>
   <name xml:lang="sl">Blogilo</name>
   <name xml:lang="sr">Блогило</name>
@@ -54,6 +55,7 @@
   <summary xml:lang="pl">Klient bloga KDE</summary>
   <summary xml:lang="pt">Um Cliente de Blogs para o KDE</summary>
   <summary xml:lang="pt-BR">Um cliente de blog do KDE</summary>
+  <summary xml:lang="ru">Приложение KDE для ведения блогов</summary>
   <summary xml:lang="sk">KDE blogovací klient</summary>
   <summary xml:lang="sl">KDE-jev odjemalec za bloganje</summary>
   <summary xml:lang="sr">КДЕ клијент за блоговање</summary>
@@ -83,6 +85,7 @@
     <p xml:lang="pl">Blogilo jest klientem blogowania dla KDE, który obsługuje różne API blogowania.</p>
     <p xml:lang="pt">O Blogilo é um cliente de 'blogs' para o KDE, o qual suporta várias API's de 'blogs'.</p>
     <p xml:lang="pt-BR">Blogilo é um cliente de blogs para o KDE, que tem suporte as APIs de vários blogs.</p>
+    <p xml:lang="ru">Blogilo — программа от KDE для ведения блогов, которая поддерживает API множества интернет-площадок.</p>
     <p xml:lang="sk">Blogilo je blogovací klient pre KDE, ktorý podporuje rôzne blogovanie API.</p>
     <p xml:lang="sl">Blogilo je KDE-jev odjemalec za bloganje, ki podpira številne API-je za bloganje.</p>
     <p xml:lang="sr">Блогило је клијент за блоговање за КДЕ, који подржава разноврсне АПИ‑је.</p>
@@ -114,6 +117,7 @@
     <p xml:lang="pl">Możliwości:</p>
     <p xml:lang="pt">Funcionalidades:</p>
     <p xml:lang="pt-BR">Funcionalidades:</p>
+    <p xml:lang="ru">Возможности:</p>
     <p xml:lang="sk">Funkcie:</p>
     <p xml:lang="sl">Zmožnosti:</p>
     <p xml:lang="sr">Могућности:</p>
@@ -144,6 +148,7 @@
       <li xml:lang="pl">W pełni funkcjonalny edytor WYSIWYG + edytor HTML</li>
       <li xml:lang="pt">Um editor WYSIWYG completo + um editor de HTML</li>
       <li xml:lang="pt-BR">Um editor WYSIWYG completo + um editor de HTML</li>
+      <li xml:lang="ru">Полноценный визуальный редактор и редактор кода HTML;</li>
       <li xml:lang="sk">Plne funkčný WYSIWYG editor + HTML editor</li>
       <li xml:lang="sl">Polno zmogljiv urejevalnik WYSIWYG (videz objave vidite med pisanjem) in urejevalnik HTML</li>
       <li xml:lang="sr">Свеобухватни графички уређивач и ХТМЛ уређивач.</li>
@@ -172,6 +177,7 @@
       <li xml:lang="pl">Podgląd własnych postów z własnym wyglądem bloga</li>
       <li xml:lang="pt">Antever a sua publicação com o estilo do seu 'blog'</li>
       <li xml:lang="pt-BR">Visualização da publicação com o estilo do seu blog</li>
+      <li xml:lang="ru">Предварительный просмотр новой записи в стиле вашего блога;</li>
       <li xml:lang="sk">Náhľad vašich príspevkov s vašim štýlom blogu</li>
       <li xml:lang="sl">Predogled vaše objave v slogu vašega bloga</li>
       <li xml:lang="sr">Преглед уписа са задатим стилом блога.</li>
@@ -199,6 +205,7 @@
       <li xml:lang="pl">Obsługa Blogger1.0, MetaWeblog, MovableType (Wordpress obsługuje je wszystkie!) oraz Google GData (używany na blogach Blogspot.com blogs)</li>
       <li xml:lang="pt">Suporte para as API's do Blogger1.0, MetaWeblog, MovableType (o Wordpress suporta todos estes!) e o Google GData (usado no 'blogs' do Blogspot.com)</li>
       <li xml:lang="pt-BR">Suporte às APIs do Blogger1.0, MetaWeblog, MovableType (o Wordpress suporta todos esses!) e o Google GData (usado em blogs do Blogspot.com)</li>
+      <li xml:lang="ru">Поддержка следующих протоколов (API): Blogger1.0, MetaWeblog, MovableType (Wordpress поддерживает все перечисленные) и Google GData (используется на Blogspot.com);</li>
       <li xml:lang="sk">Podpora pre Blogger1.0, MetaWeblog, MovableType (Wordpress podporuje všetky tieto!) a GoogleGData (používa sa na blogoch Blogspot.com) API</li>
       <li xml:lang="sl">Podpora API-jem Blogger1.0, MetaWeblog, MovableType (vse te podpira Wordpress) in Google GData (uporabljeno na blogih Blogspot.com)</li>
       <li xml:lang="sr">Подршка за АПИ‑је Блогера 1.0, Метавеблога, Мувабл тајпа (Вордпрес подржава све њих!) и Гугловог Г‑дејте (блогови на Блогспоту).</li>
@@ -227,6 +234,7 @@
       <li xml:lang="pl">Możliwość tworzenia/zmieniania/usuwania postów.</li>
       <li xml:lang="pt">Suporte para criar/modificar/apagar publicações.</li>
       <li xml:lang="pt-BR">Suporte para criar/modificar/excluir publicações.</li>
+      <li xml:lang="ru">Создание, редактирование и удаление записей в блоге;</li>
       <li xml:lang="sk">Podpora pre vytváranie/úpravu/mazanie príspevkov.</li>
       <li xml:lang="sl">Podpora ustvarjanju/spreminjanju/brisanju objav.</li>
       <li xml:lang="sr">Писање, мењање и брисање уписа.</li>
@@ -255,6 +263,7 @@
       <li xml:lang="pl">Możliwość tworzenia szkiców i planowanych postów</li>
       <li xml:lang="pt">Suporte para a criação de rascunhos e publicações agendadas</li>
       <li xml:lang="pt-BR">Suporte para a criação de rascunhos e publicações agendadas</li>
+      <li xml:lang="ru">Создание черновиков и публикация по расписанию;</li>
       <li xml:lang="sk">Podpora pre vytváranie konceptov a plánovaných príspevkov</li>
       <li xml:lang="sl">Podpora ustvarjanju osnutkov in razporejenih objav.</li>
       <li xml:lang="sr">Стварање нацрта и заказаних уписа.</li>
@@ -282,6 +291,7 @@
       <li xml:lang="pl">Możliwość wysyłania plików multimedialnych na swojego bloga (Tylko na obsługiwanych API np. MetaWeblog i MovableType)</li>
       <li xml:lang="pt">Suporte para o envio de ficheiros multimédia para o seu 'blog' (apenas nas API's suportadas, p.ex., MetaWeblog e MovableType)</li>
       <li xml:lang="pt-BR">Suporte para envio de arquivos multimídia para o seu blog (apenas nas APIs em que há suporte, p.ex., MetaWeblog e MovableType)</li>
+      <li xml:lang="ru">Загрузка в блог мультимедийных файлов (только для протоколов, которые это поддерживают, например: MetaWeblog и MovableType);</li>
       <li xml:lang="sk">Podpora pre nahrávanie mediálnych súborov na váš blog (iba na podporovaných API, napr. MetaWeblog a MovableType)</li>
       <li xml:lang="sl">Podpora pošiljanju predstavnostnih datotek na vaš blog (samo na podprtih API-jih, npr. MetaWeblog in MovableType)</li>
       <li xml:lang="sr">Отпремање медијских фајлова на блог (само за подржане АПИ‑је, нпр. Метавеблог и Мувабл тајп).</li>
@@ -310,6 +320,7 @@
       <li xml:lang="pl">Możliwość pobierania ostatnich wpisów na blogu.</li>
       <li xml:lang="pt">Suporte para obter os seus itens recentes dos 'blogs'.</li>
       <li xml:lang="pt-BR">Suporte para obter os itens recentes do seu blog.</li>
+      <li xml:lang="ru">Загрузка недавних записей из вашего блога;</li>
       <li xml:lang="sk">Podpora pre sťahovanie vašich nedávnych položiek blogu.</li>
       <li xml:lang="sl">Podpora pridobivanju nedavnih vnosov z bloga.</li>
       <li xml:lang="sr">Добављање својих недавних уписа на блогу.</li>
@@ -337,6 +348,7 @@
       <li xml:lang="pl">Możliwość dodawania obrazów do postów ze swojego systemu. Program wyśle je przy umieszczaniu posta na blogu (Tylko na obsługiwanych API np. MetaWeblog i MovableType)</li>
       <li xml:lang="pt">Suporte para adicionar imagens a publicar a partir do seu sistema. A aplicação enviá-las-á ao enviar a publicação para o 'blog' (apenas nas API's suportadas, p.ex. MetaWeblog e MovableType)</li>
       <li xml:lang="pt-BR">Suporte para adicionar imagens a serem publicadas a partir do seu sistema. Ele irá enviá-las ao blog em conjunto com o envio da publicação (apenas nas APIs com suporte, p.ex., MetaWeblog e MovableType)</li>
+      <li xml:lang="ru">Добавление изображений с вашего компьютера в запись для блога, изображения загружаются на сервер в момент отправки записи (только для протоколов, которые это поддерживают, например: MetaWeblog и MovableType);</li>
       <li xml:lang="sk">Podpora pre pridávanie obrázkov k príspevkom z vášho systému. Nahrá ich na Odoslanie príspevku na blog (iba na podporovaných API, napr. MetaWeblog a MovableType)</li>
       <li xml:lang="sl">Podpora dodajanju krajevnih slik k vaši objavi. Ob objavi bodo poslane na vaš blog (samo na podprtih API-jih, npr. MetaWeblog in MovableType)</li>
       <li xml:lang="sr">Додавање слика уписима са локалног система. Отпремају се при предаји уписа на блог (само за подржане АПИ‑је, нпр. Метавеблог и Мувабл тајп).</li>
@@ -365,6 +377,7 @@
       <li xml:lang="pl">Możliwość zapisywania lokalnych wpisów przed opublikowaniem.</li>
       <li xml:lang="pt">Suporte para gravar os itens locais antes da publicação.</li>
       <li xml:lang="pt-BR">Suporte para salvar os itens locais antes da publicação.</li>
+      <li xml:lang="ru">Сохранение записей на компьютере до публикации;</li>
       <li xml:lang="sk">Podpora pre ukladanie miestnych položiek pred publikovaním.</li>
       <li xml:lang="sl">Podpora shranjevanju krajevnih vnosov pred objavo.</li>
       <li xml:lang="sr">Уписивање локалних уписа пре објављивања.</li>
@@ -393,6 +406,7 @@
       <li xml:lang="pl">Zapisywanie kopii roboczych w ustalonych odstępach czasu, aby zapobiec utracie danych.</li>
       <li xml:lang="pt">Gravar a sua cópia de trabalho para evitar a perda de dados, com intervalos configuráveis.</li>
       <li xml:lang="pt-BR">Gravar a sua cópia de trabalho para evitar a perda de dados, com intervalos configuráveis.</li>
+      <li xml:lang="ru">Автоматическое сохранение записи, которую вы редактируете, во избежание потери данных;</li>
       <li xml:lang="sk">Ukladanie vašej napísanej kópie na zabránenie straty dát, v nastaviteľných intervaloch.</li>
       <li xml:lang="sl">Nastavljivo samodejno shranjevanje vašega zapisa za preprečevanje izgube podatkov.</li>
       <li xml:lang="sr">Уписивање радне копије ради спречавања губитка података, на подесив период.</li>
@@ -421,6 +435,7 @@
       <li xml:lang="pl">Wewnętrzne sprawdzanie pisowni. (używany jest sprawdzanie pisowni KDE, więc obsługiwanych jest większość języków)</li>
       <li xml:lang="pt">Correcção ortográfica automática. (é usado a verificação ortográfica do KDE, pelo que a maioria das línguas são suportadas)</li>
       <li xml:lang="pt-BR">Autocorreção interna. (Verificador ortográfico do KDE, usado pela maioria dos idiomas)</li>
+      <li xml:lang="ru">Встроенная проверка орфографии (используется соответствующий модуль от KDE, который поддерживает большинство распространённых языков).</li>
       <li xml:lang="sk">Vnútorná kontrola pravopisu (používa sa KDE kontrola pravopisu, teda podporovaná je väčšina jazykov).</li>
       <li xml:lang="sl">Vgrajeno samodejno preverjanje črkovanja. Uporabljeno je preverjanje črkovanja za KDE, zato je podprta večina jezikov.</li>
       <li xml:lang="sr">Унутрашња аутоматска провера правописа. (Користи се КДЕ правописар, тако да је подржана већина језика.)</li>
