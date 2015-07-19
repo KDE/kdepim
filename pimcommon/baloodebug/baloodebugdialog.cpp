@@ -19,6 +19,7 @@
 #include "baloodebugwidget.h"
 #include "pimcommon/util/pimutil.h"
 
+#include <KLocalizedString>
 #include <QVBoxLayout>
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -86,7 +87,7 @@ void BalooDebugDialog::doSearch()
 
 void BalooDebugDialog::slotSaveAs()
 {
-    const QString filter = QStringLiteral("Text File (*.txt);;all files (*)");
+    const QString filter = i18n("Text Files (*.txt);;All Files (*)");
     PimCommon::Util::saveTextAs(mBalooDebugWidget->plainText(), filter, this);
 }
 
