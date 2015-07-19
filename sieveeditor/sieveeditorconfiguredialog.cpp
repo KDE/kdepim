@@ -46,7 +46,7 @@ SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveEditorConfigureDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveEditorConfigureDialog::reject);
-    QGroupBox *w = new QGroupBox(i18n("Server Sieve"));
+    QGroupBox *w = new QGroupBox(i18n("Sieve Server"));
 
     QVBoxLayout *layout = new QVBoxLayout;
     w->setLayout(layout);

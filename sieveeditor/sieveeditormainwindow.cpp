@@ -127,7 +127,7 @@ void SieveEditorMainWindow::setupActions()
     mUploadScript->setEnabled(false);
 
     QAction *act = ac->addAction(QStringLiteral("add_server_sieve"), this, SLOT(slotAddServerSieve()));
-    act->setText(i18n("Add Server Sieve..."));
+    act->setText(i18n("Add Sieve Server..."));
 
     mDeleteScript = ac->addAction(QStringLiteral("delete_script"), this, SLOT(slotDeleteScript()));
     mDeleteScript->setText(i18n("Delete Script"));
