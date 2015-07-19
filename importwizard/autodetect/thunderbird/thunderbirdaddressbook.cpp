@@ -209,7 +209,9 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
                                 } else if (column == QLatin1String("FamilyName")) {
                                     qCDebug(IMPORTWIZARD_LOG) << " column " << column << " found but not imported. Need to look at how to import it";
                                 } else if (column == QLatin1String("WebPage1")) {
-                                    contact.setUrl(QUrl(value));
+                                    KContacts::ResourceLocatorUrl url;
+                                    url.setUrl(QUrl(value));
+                                    contact.setUrl(url);
                                 } else if (column == QLatin1String("WebPage2")) {
                                     qCDebug(IMPORTWIZARD_LOG) << " column " << column << " found but not imported. Need to look at how to import it";
                                 } else if (column == QLatin1String("BirthYear")) {

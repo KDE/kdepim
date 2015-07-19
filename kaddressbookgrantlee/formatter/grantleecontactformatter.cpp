@@ -318,8 +318,8 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
     contactObject.insert(QStringLiteral("imAddresses"), imAddresses);
 
     // Homepage
-    if (rawContact.url().isValid()) {
-        QString url = rawContact.url().url();
+    if (rawContact.url().url().isValid()) {
+        QString url = rawContact.url().url().url();
         if (!url.startsWith(QStringLiteral("http://")) &&
                 !url.startsWith(QStringLiteral("https://"))) {
             url = QStringLiteral("http://") + url;

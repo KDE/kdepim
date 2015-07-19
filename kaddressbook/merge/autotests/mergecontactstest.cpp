@@ -816,19 +816,23 @@ void MergeContactsTest::checkNeedManualSelectionWithHomePage()
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
-    addressA.setUrl(nameItemA);
+    KContacts::ResourceLocatorUrl url;
+    url.setUrl(nameItemA);
+    addressA.setUrl(url);
     itemA.setPayload<Addressee>(addressA);
     lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
-    addressB.setUrl(nameItemB);
+    url.setUrl(nameItemB);
+    addressB.setUrl(url);
     itemB.setPayload<Addressee>(addressB);
     lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
-    addressC.setUrl(nameItemC);
+    url.setUrl(nameItemC);
+    addressC.setUrl(url);
     itemC.setPayload<Addressee>(addressC);
     lst << itemC;
 
@@ -1076,26 +1080,31 @@ void MergeContactsTest::shouldMergeHomePage()
     Akonadi::Item::List lst;
     Addressee addressA;
     Akonadi::Item itemA;
-    addressA.setUrl(nameItemA);
+    KContacts::ResourceLocatorUrl url;
+    url.setUrl(nameItemA);
+    addressA.setUrl(url);
     itemA.setPayload<KContacts::Addressee>(addressA);
     lst << itemA;
 
     Addressee addressB;
     Akonadi::Item itemB;
-    addressB.setUrl(nameItemB);
+
+    url.setUrl(nameItemB);
+    addressB.setUrl(url);
     itemB.setPayload<KContacts::Addressee>(addressB);
     lst << itemB;
 
     Addressee addressC;
     Akonadi::Item itemC;
-    addressC.setUrl(nameItemC);
+    url.setUrl(nameItemC);
+    addressC.setUrl(url);
     itemC.setPayload<KContacts::Addressee>(addressC);
     lst << itemC;
 
     MergeContacts contacts(lst);
     Addressee resultAddr = contacts.mergedContact();
     QCOMPARE(resultAddr.isEmpty(), isEmpty);
-    QCOMPARE(resultAddr.url(), result);
+    QCOMPARE(resultAddr.url().url(), result);
 }
 
 void MergeContactsTest::checkNeedManualSelectionWithBirthday_data()

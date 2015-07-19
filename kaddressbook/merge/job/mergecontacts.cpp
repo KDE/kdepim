@@ -138,7 +138,7 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
             newContact.setFamilyName(fromContact.familyName());
         }
         // Merge HomePage
-        if (newContact.url().isEmpty() && !fromContact.url().isEmpty()) {
+        if (newContact.url().url().isEmpty() && !fromContact.url().url().isEmpty()) {
             newContact.setUrl(fromContact.url());
         }
         // Merge geo
@@ -293,10 +293,10 @@ MergeContacts::ConflictInformations MergeContacts::requiresManualSelectionOfInfo
                 }
             }
             // Test HomePage
-            const QUrl url = address.url();
+            const QUrl url = address.url().url();
             if (url.isValid() && !url.isEmpty()) {
-                if (newContact.url().isValid() && !newContact.url().isEmpty()) {
-                    if (newContact.url() != url) {
+                if (newContact.url().url().isValid() && !newContact.url().url().isEmpty()) {
+                    if (newContact.url().url() != url) {
                         result |= HomePage;
                     }
                 } else {

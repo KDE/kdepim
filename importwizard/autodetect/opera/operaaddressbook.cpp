@@ -53,7 +53,9 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
             } else if (line.startsWith(QStringLiteral("NAME"))) {
                 contact->setName(line.remove(QStringLiteral("NAME=")));
             } else if (line.startsWith(QStringLiteral("URL"))) {
-                contact->setUrl(QUrl(line.remove(QStringLiteral("URL="))));
+                KContacts::ResourceLocatorUrl url;
+                url.setUrl(QUrl(line.remove(QStringLiteral("URL="))));
+                contact->setUrl(url);
             } else if (line.startsWith(QStringLiteral("DESCRIPTION"))) {
                 contact->setNote(line.remove(QStringLiteral("DESCRIPTION=")));
             } else if (line.startsWith(QStringLiteral("PHONE"))) {

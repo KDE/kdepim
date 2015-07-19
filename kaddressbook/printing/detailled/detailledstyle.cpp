@@ -125,7 +125,7 @@ QString contactsToHtml(const KContacts::Addressee::List &contacts, const ColorSe
         if (contact.url().isValid()) {
             ContactBlock block;
             block.header = i18n("Web page:");
-            block.entries.append(contact.url().toDisplayString());
+            block.entries.append(contact.url().url().toDisplayString());
 
             blocks.append(block);
         }

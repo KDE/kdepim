@@ -151,7 +151,7 @@ QString ContactGrantleePrintObject::note() const
 
 QString ContactGrantleePrintObject::webPage() const
 {
-    return mAddress.url().toDisplayString();
+    return mAddress.url().url().toDisplayString();
 }
 
 QString ContactGrantleePrintObject::webSite() const

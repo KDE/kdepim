@@ -263,7 +263,9 @@ ContactList GMXXXPort::importContacts() const
             }
             addressee->insertEmail(itemList[10], preferred);
             if (!itemList[11].isEmpty()) {
-                addressee->setUrl(itemList[11]);
+                KContacts::ResourceLocatorUrl url;
+                url.setUrl(itemList[11]);
+                addressee->setUrl(url);
             }
             if (!itemList[12].isEmpty()) {
                 addressee->setRole(itemList[12]);
@@ -617,7 +619,7 @@ void GMXXXPort::doExport(QFile *fp, const KContacts::AddresseeList &list) const
                   << email << DELIM                   // Email
 
                   << ((recId == typeWork) ?
-                      addressee->url().url() :
+                      addressee->url().url().url() :
                       QString()) << DELIM  // Homepage
 
                   << ((recId == typeWork) ?

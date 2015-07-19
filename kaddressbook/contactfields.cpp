@@ -238,8 +238,11 @@ void ContactFields::setValue(Field field, const QString &value, KContacts::Addre
     case ContactFields::Mailer:
         contact.setMailer(value);
         break;
-    case ContactFields::Homepage:
-        contact.setUrl(QUrl(value));
+    case ContactFields::Homepage: {
+        KContacts::ResourceLocatorUrl url;
+        url.setUrl(QUrl(value));
+        contact.setUrl(url);
+    }
         break;
     case ContactFields::Organization:
         contact.setOrganization(value);
@@ -594,7 +597,7 @@ QString ContactFields::value(Field field, const KContacts::Addressee &contact)
         return contact.note();
         break;
     case Homepage:
-        return contact.url().url();
+        return contact.url().url().url();
         break;
     case BlogFeed:
         return contact.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("BlogFeed"));

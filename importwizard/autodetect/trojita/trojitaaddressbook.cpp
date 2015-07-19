@@ -58,7 +58,9 @@ void TrojitaAddressBook::readAddressBook()
         contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QStringLiteral("fax")).toString(), KContacts::PhoneNumber::Fax));
         contactABC.insertPhoneNumber(KContacts::PhoneNumber(settings->value(QStringLiteral("mobile")).toString(), KContacts::PhoneNumber::Cell));
         contactABC.setNickName(settings->value(QStringLiteral("nick")).toString());
-        contactABC.setUrl(QUrl(settings->value(QStringLiteral("url")).toString()));
+        KContacts::ResourceLocatorUrl url;
+        url.setUrl(QUrl(settings->value(QStringLiteral("url")).toString()));
+        contactABC.setUrl(url);
 
         const QDateTime birthDate(QDate::fromString(settings->value(QStringLiteral("anniversary")).toString()));
         if (birthDate.isValid()) {
