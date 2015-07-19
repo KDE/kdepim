@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     KAboutData aboutData(QStringLiteral("mboximporter"),
                          i18n("MBox importer tool"),
                          QStringLiteral(KDEPIM_VERSION),
-                         i18n("Messageviewer Header Theme Editor"),
+                         i18n("MBox Import Tool"),
                          KAboutLicense::GPL_V2,
                          i18n("Copyright © 2013-2015 MBoxImporter authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
