@@ -403,7 +403,7 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
         return;
     }
     if (KMessageBox::Yes == KMessageBox::questionYesNo(q, list.count() > 1 ? i18n("Do you want to delete selected themes?")
-            : i18n("Do you want to delete \"%1\"?", list.first()->text()), i18n("Delete Theme"))) {
+            : i18n("Do you want to delete \"%1\"?", list.first()->text()), i18nc("@title:window", "Delete Theme"))) {
         mEditor->editTheme(Q_NULLPTR);   // forget it
         Q_FOREACH (QListWidgetItem *it, list) {
             ThemeListWidgetItem *item = dynamic_cast< ThemeListWidgetItem * >(it);
