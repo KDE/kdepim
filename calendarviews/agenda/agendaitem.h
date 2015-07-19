@@ -177,14 +177,14 @@ public:
         return mStartMoveInfo;
     }
 
-    void setMultiItem(AgendaItem::QPtr first, AgendaItem::QPtr prev,
-                      AgendaItem::QPtr next, AgendaItem::QPtr last);
+    void setMultiItem(const AgendaItem::QPtr & first, const AgendaItem::QPtr &prev,
+                      const AgendaItem::QPtr &next, const AgendaItem::QPtr &last);
 
-    AgendaItem::QPtr prependMoveItem(AgendaItem::QPtr);
+    AgendaItem::QPtr prependMoveItem(const AgendaItem::QPtr &);
 
-    AgendaItem::QPtr appendMoveItem(AgendaItem::QPtr);
+    AgendaItem::QPtr appendMoveItem(const AgendaItem::QPtr &);
 
-    AgendaItem::QPtr removeMoveItem(AgendaItem::QPtr);
+    AgendaItem::QPtr removeMoveItem(const AgendaItem::QPtr &);
 
     AgendaItem::QPtr firstMultiItem() const
     {
@@ -236,8 +236,8 @@ public:
     }
 
     QList<AgendaItem::QPtr> &conflictItems();
-    void setConflictItems(QList<AgendaItem::QPtr>);
-    void addConflictItem(AgendaItem::QPtr ci);
+    void setConflictItems(const QList<AgendaItem::QPtr> &);
+    void addConflictItem(const AgendaItem::QPtr & ci);
 
     QString label() const Q_DECL_OVERRIDE;
 
@@ -255,8 +255,8 @@ public:
     }
 
 Q_SIGNALS:
-    void removeAgendaItem(AgendaItem::QPtr);
-    void showAgendaItem(AgendaItem::QPtr);
+    void removeAgendaItem(const AgendaItem::QPtr &);
+    void showAgendaItem(const AgendaItem::QPtr &);
 
 public Q_SLOTS:
     void updateIcons();

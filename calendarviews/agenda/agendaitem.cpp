@@ -266,8 +266,8 @@ void AgendaItem::setCellY(int YTop, int YBottom)
     mCellYBottom = YBottom;
 }
 
-void AgendaItem::setMultiItem(AgendaItem::QPtr first, AgendaItem::QPtr prev,
-                              AgendaItem::QPtr next, AgendaItem::QPtr last)
+void AgendaItem::setMultiItem(const AgendaItem::QPtr &first, const AgendaItem::QPtr &prev,
+                              const AgendaItem::QPtr &next, const AgendaItem::QPtr &last)
 {
     if (!mMultiItemInfo) {
         mMultiItemInfo = new MultiItemInfo;
@@ -283,7 +283,7 @@ bool AgendaItem::isMultiItem() const
     return mMultiItemInfo;
 }
 
-AgendaItem::QPtr AgendaItem::prependMoveItem(AgendaItem::QPtr e)
+AgendaItem::QPtr AgendaItem::prependMoveItem(const AgendaItem::QPtr &e)
 {
     if (!e) {
         return Q_NULLPTR;
@@ -324,7 +324,7 @@ AgendaItem::QPtr AgendaItem::prependMoveItem(AgendaItem::QPtr e)
     return e;
 }
 
-AgendaItem::QPtr AgendaItem::appendMoveItem(AgendaItem::QPtr e)
+AgendaItem::QPtr AgendaItem::appendMoveItem(const AgendaItem::QPtr &e)
 {
     if (!e) {
         return Q_NULLPTR;
@@ -364,7 +364,7 @@ AgendaItem::QPtr AgendaItem::appendMoveItem(AgendaItem::QPtr e)
     return e;
 }
 
-AgendaItem::QPtr AgendaItem::removeMoveItem(AgendaItem::QPtr e)
+AgendaItem::QPtr AgendaItem::removeMoveItem(const AgendaItem::QPtr &e)
 {
     if (isMultiItem()) {
         AgendaItem::QPtr first = mMultiItemInfo->mFirstMultiItem;
@@ -689,7 +689,7 @@ QList<AgendaItem::QPtr> &AgendaItem::conflictItems()
     return mConflictItems;
 }
 
-void AgendaItem::setConflictItems(QList<AgendaItem::QPtr> ci)
+void AgendaItem::setConflictItems(const QList<AgendaItem::QPtr> &ci)
 {
     mConflictItems = ci;
     QList<AgendaItem::QPtr>::iterator it;
@@ -698,7 +698,7 @@ void AgendaItem::setConflictItems(QList<AgendaItem::QPtr> ci)
     }
 }
 
-void AgendaItem::addConflictItem(AgendaItem::QPtr ci)
+void AgendaItem::addConflictItem(const AgendaItem::QPtr &ci)
 {
     if (!mConflictItems.contains(ci)) {
         mConflictItems.append(ci);

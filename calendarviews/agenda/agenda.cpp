@@ -881,7 +881,7 @@ void Agenda::endSelectAction(const QPoint &currentPos)
 
 Agenda::MouseActionType Agenda::isInResizeArea(bool horizontal,
         const QPoint &pos,
-        AgendaItem::QPtr item)
+        const AgendaItem::QPtr &item)
 {
     if (!item) {
         return NOP;
@@ -1324,7 +1324,7 @@ void Agenda::setActionCursor(int actionType, bool acting)
 #endif
 }
 
-void Agenda::setNoActionCursor(AgendaItem::QPtr moveItem, const QPoint &pos)
+void Agenda::setNoActionCursor(const AgendaItem::QPtr &moveItem, const QPoint &pos)
 {
     const KCalCore::Incidence::Ptr item = moveItem ? moveItem->incidence() : KCalCore::Incidence::Ptr();
 
@@ -1339,7 +1339,7 @@ void Agenda::setNoActionCursor(AgendaItem::QPtr moveItem, const QPoint &pos)
 
 /** calculate the width of the column subcells of the given item
 */
-double Agenda::calcSubCellWidth(AgendaItem::QPtr item)
+double Agenda::calcSubCellWidth(const AgendaItem::QPtr &item)
 {
     QPoint pt, pt1;
     pt = gridToContents(QPoint(item->cellXLeft(), item->cellYTop()));
@@ -1355,7 +1355,7 @@ double Agenda::calcSubCellWidth(AgendaItem::QPtr item)
     return newSubCellWidth;
 }
 
-void Agenda::adjustItemPosition(AgendaItem::QPtr item)
+void Agenda::adjustItemPosition(const AgendaItem::QPtr &item)
 {
     if (!item) {
         return;
@@ -1370,7 +1370,7 @@ void Agenda::adjustItemPosition(AgendaItem::QPtr item)
     item->move(cpos.x(), cpos.y());
 }
 
-void Agenda::placeAgendaItem(AgendaItem::QPtr item, double subCellWidth)
+void Agenda::placeAgendaItem(const AgendaItem::QPtr &item, double subCellWidth)
 {
     // "left" upper corner, no subcells yet, RTL layouts have right/left
     // switched, widths are negative then
@@ -1421,7 +1421,7 @@ void Agenda::placeAgendaItem(AgendaItem::QPtr item, double subCellWidth)
   cell, where other items are, which do not overlap in Y with the item to
   place, the display gets corrupted, although the corruption looks quite nice.
 */
-void Agenda::placeSubCells(AgendaItem::QPtr placeItem)
+void Agenda::placeSubCells(const AgendaItem::QPtr &placeItem)
 {
 #if 0
     qCDebug(CALENDARVIEW_LOG);
@@ -1923,7 +1923,7 @@ void Agenda::removeIncidence(const KCalCore::Incidence::Ptr &incidence)
     }
 }
 
-void Agenda::showAgendaItem(AgendaItem::QPtr agendaItem)
+void Agenda::showAgendaItem(const AgendaItem::QPtr &agendaItem)
 {
     if (!agendaItem) {
         qCCritical(CALENDARVIEW_LOG) << "Show what?";
@@ -1942,7 +1942,7 @@ void Agenda::showAgendaItem(AgendaItem::QPtr agendaItem)
     agendaItem->show();
 }
 
-bool Agenda::removeAgendaItem(AgendaItem::QPtr agendaItem)
+bool Agenda::removeAgendaItem(const AgendaItem::QPtr &agendaItem)
 {
     Q_ASSERT(agendaItem);
     // we found the item. Let's remove it and update the conflicts
@@ -2164,7 +2164,7 @@ void Agenda::deselectItem()
     d->mSelectedItem = Q_NULLPTR;
 }
 
-void Agenda::selectItem(AgendaItem::QPtr item)
+void Agenda::selectItem(const AgendaItem::QPtr &item)
 {
     if ((AgendaItem::QPtr)d->mSelectedItem == item) {
         return;
