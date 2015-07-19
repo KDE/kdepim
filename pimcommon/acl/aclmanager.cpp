@@ -280,8 +280,7 @@ public:
         } else {
             if (KMessageBox::Cancel == KMessageBox::warningContinueCancel(
                         Q_NULLPTR,
-                        i18n("Do you really want to remove these permissions for this folder? "
-                             "You will not be able to access it afterwards."),
+                        i18n("Do you really want to remove these permissions for this folder?"),
                         i18n("Remove"))) {
                 return;
             }
