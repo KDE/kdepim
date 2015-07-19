@@ -45,7 +45,7 @@ void ThemeEditorTabWidget::slotMainFileNameChanged(const QString &fileName)
     if (count() < 1) {
         return;
     }
-    bar->setTabText(0, i18n("Editor") + QString::fromLatin1(" (%1)").arg(fileName));
+    bar->setTabText(0, i18n("Editor (%1)", fileName));
 }
 
 void ThemeEditorTabWidget::slotTabContextMenuRequest(const QPoint &pos)
