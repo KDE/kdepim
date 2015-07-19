@@ -139,7 +139,8 @@ void DesktopFilePage::createZip(const QString &themeName, KZip *zip)
     saveAsFilename(tmp.fileName());
     const bool fileAdded  = zip->addLocalFile(tmp.fileName(), themeName + QLatin1Char('/') + mDefaultDesktopName);
     if (!fileAdded) {
-        KMessageBox::error(this, i18n("We cannot add file in zip file"), i18n("Failed to add file."));
+        KMessageBox::error(this, i18n("Failed to add file into ZIP archive."),
+                           i18nc("@title:window", "Failed to add file"));
     }
 }
 
