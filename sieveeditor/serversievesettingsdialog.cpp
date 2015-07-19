@@ -29,7 +29,7 @@
 ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle(i18n("Add Sieve Server"));
+    setWindowTitle(i18nc("@title:window", "Add Sieve Server"));
 
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
