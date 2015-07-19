@@ -104,7 +104,7 @@ void EditorPage::saveAsFilename(const QString &filename)
         out << mEditor->toPlainText();
         file.close();
     } else {
-        KMessageBox::error(this, i18n("Impossible to open file \"%1\"", filename));
+        KMessageBox::error(this, i18n("Failed to open file \"%1\".", filename));
     }
 }
 
