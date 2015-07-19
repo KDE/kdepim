@@ -82,6 +82,7 @@ void SieveScriptParsingErrorDialog::writeConfig()
 void SieveScriptParsingErrorDialog::slotSaveAs()
 {
     const QString filter = i18n("all files (*)");
-    PimCommon::Util::saveTextAs(mTextEdit->toPlainText(), filter, this, QUrl(), i18n("Save Log To File"));
+    PimCommon::Util::saveTextAs(mTextEdit->toPlainText(), filter, this, QUrl(),
+                                i18nc("@title:window", "Save Log To File"));
 }
 
