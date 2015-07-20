@@ -35,8 +35,8 @@
 
 #include "kleo_export.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
+#include <QObject>
+#include <QString>
 
 #include <gpgme++/error.h>
 

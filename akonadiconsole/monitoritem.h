@@ -20,7 +20,7 @@
 #ifndef MONITORITEM_H
 #define MONITORITEM_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "monitorsmodel.h"
 #include "notificationsourceinterface.h"

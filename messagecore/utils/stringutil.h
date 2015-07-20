@@ -23,7 +23,7 @@
 #include "kmime/kmime_message.h"
 #include "kmime/kmime_header_parsing.h"
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 class KUrl;
 

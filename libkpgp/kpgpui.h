@@ -23,8 +23,8 @@
 #include "kpgp.h"
 #include "kpgpkey.h"
 
-#include <QtCore/QString>     // is a member in KeyRequester
-#include <QtCore/QVector>     // used in KeyApprovalDialog
+#include <QString>     // is a member in KeyRequester
+#include <QVector>     // used in KeyApprovalDialog
 #include <QWidget>      // base class of Config
 #include <QCheckBox>    // used in inlined methods
 #include <QPixmap>

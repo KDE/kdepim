@@ -43,8 +43,8 @@
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <AkonadiCore/Collection>
 
-#include <QtCore/QDateTime>
-#include <QtCore/QObject>
+#include <QDateTime>
+#include <QObject>
 #include <QEventLoop>
 #include <QElapsedTimer>
 

@@ -37,7 +37,7 @@
 
 #include <gpgme++/key.h>
 
-#include <QtCore/QByteArray>
+#include <QByteArray>
 #include <QTreeWidget>
 #include <QHeaderView>
 #include <QIcon>

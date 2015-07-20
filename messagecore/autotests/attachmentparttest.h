@@ -20,7 +20,7 @@
 #ifndef ATTACHMENTPARTTEST_H
 #define ATTACHMENTPARTTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class AttachmentPartTest : public QObject
 {

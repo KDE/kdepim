@@ -23,7 +23,7 @@
 #include "editorconfig.h"
 #include "korganizereditorconfig.h"
 
-#include <QtCore/QCoreApplication>
+#include <QCoreApplication>
 
 using namespace IncidenceEditorNG;
 

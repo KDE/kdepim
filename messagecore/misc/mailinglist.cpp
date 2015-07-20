@@ -6,8 +6,8 @@
 #include <QUrl>
 #include "messagecore_debug.h"
 
-#include <QtCore/QSharedData>
-#include <QtCore/QStringList>
+#include <QSharedData>
+#include <QStringList>
 
 #include <boost/shared_ptr.hpp>
 

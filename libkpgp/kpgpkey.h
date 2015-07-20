@@ -19,8 +19,8 @@
 #ifndef KPGPKEY_H
 #define KPGPKEY_H
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QString>
+#include <QStringList>
 
 #include <time.h>
 

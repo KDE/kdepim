@@ -21,7 +21,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 
 using namespace MessageCore;
 

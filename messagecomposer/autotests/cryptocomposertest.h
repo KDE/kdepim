@@ -21,7 +21,7 @@
 #ifndef CRYPTOCOMPOSERTEST_H
 #define CRYPTOCOMPOSERTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace MessageComposer
 {

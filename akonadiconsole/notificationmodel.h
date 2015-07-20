@@ -20,8 +20,8 @@
 #ifndef AKONADICONSOLE_NOTIFICATIONMODEL_H
 #define AKONADICONSOLE_NOTIFICATIONMODEL_H
 
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QDateTime>
+#include <QAbstractItemModel>
+#include <QDateTime>
 #include <QDBusInterface>
 
 class QDBusInterface;

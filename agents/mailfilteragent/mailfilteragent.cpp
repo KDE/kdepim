@@ -47,8 +47,8 @@
 #include <AttributeFactory>
 #include <KConfigGroup>
 
-#include <QtCore/QVector>
-#include <QtCore/QTimer>
+#include <QVector>
+#include <QTimer>
 #include <KSharedConfig>
 
 #include <kdelibs4configmigrator.h>

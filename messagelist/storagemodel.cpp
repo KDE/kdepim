@@ -39,12 +39,12 @@
 #include "messagelistutil.h"
 #include <QUrl>
 
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QAtomicInt>
-#include <QtCore/QScopedPointer>
+#include <QAbstractItemModel>
+#include <QAtomicInt>
+#include <QScopedPointer>
 #include <QItemSelectionModel>
-#include <QtCore/QMimeData>
-#include <QtCore/QCryptographicHash>
+#include <QMimeData>
+#include <QCryptographicHash>
 #include <QFontDatabase>
 
 namespace MessageList

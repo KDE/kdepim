@@ -20,7 +20,7 @@
 #ifndef ATTACHMENTFROMMIMECONTENTJOBTEST_H
 #define ATTACHMENTFROMMIMECONTENTJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 // 33-byte class names say I suck?
 class AttachmentFromMimeContentJobTest : public QObject

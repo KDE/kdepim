@@ -22,7 +22,7 @@
 
 #include "messagecomposer_export.h"
 
-#include <QtCore/QAbstractItemModel>
+#include <QAbstractItemModel>
 
 #include <QUrl>
 

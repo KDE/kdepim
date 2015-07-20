@@ -21,7 +21,7 @@
 #ifndef SIGNENCRYPTJOBJOBTEST_H
 #define SIGNENCRYPTJOBJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class SignEncryptTest : public QObject
 {

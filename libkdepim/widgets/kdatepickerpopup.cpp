@@ -24,7 +24,7 @@
 #include <KDatePicker>
 #include <KLocalizedString>
 
-#include <QtCore/QDateTime>
+#include <QDateTime>
 #include <QWidgetAction>
 
 using namespace KPIM;

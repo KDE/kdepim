@@ -21,7 +21,7 @@
 #ifndef COMPOSERTEST_H
 #define COMPOSERTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace MessageComposer
 {

@@ -20,8 +20,8 @@
 #ifndef DATEPARSER_H
 #define DATEPARSER_H
 
-#include <QtCore/QDateTime>
-#include <QtCore/QString>
+#include <QDateTime>
+#include <QString>
 
 /**
   This class parses the datetime out of a given string with the

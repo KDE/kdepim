@@ -25,8 +25,8 @@
 #include "sasl-common.h"
 
 #include <QUrl>
-#include <QtCore/QObject>
-#include <QtCore/QQueue>
+#include <QObject>
+#include <QQueue>
 #include <QStringList>
 
 class QTimer;

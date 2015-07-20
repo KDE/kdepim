@@ -28,8 +28,8 @@
 
 #include <KContacts/Addressee>
 
-#include <QtCore/QHash>
-#include <QtCore/QStringList>
+#include <QHash>
+#include <QStringList>
 #include <QPixmap>
 #include <QWidget>
 

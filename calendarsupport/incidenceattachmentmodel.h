@@ -28,7 +28,7 @@
 
 #include <KCalCore/Incidence>
 
-#include <QtCore/QAbstractListModel>
+#include <QAbstractListModel>
 
 namespace Akonadi
 {

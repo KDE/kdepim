@@ -27,7 +27,7 @@
 #include <QAction>
 #include <KToggleAction>
 
-#include <QtCore/QAbstractItemModel>
+#include <QAbstractItemModel>
 #include <QAbstractProxyModel>
 #include <QItemSelectionModel>
 #include <QTabBar>

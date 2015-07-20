@@ -26,7 +26,7 @@
 
 #include <QDialog>
 
-#include <QtCore/QList>
+#include <QList>
 
 class KComboBox;
 class QLineEdit;

@@ -20,9 +20,9 @@
 #include "dialog.h"
 #include "global.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QtPlugin>
-#include <QtCore/QStringList>
+#include <QObject>
+#include <QtPlugin>
+#include <QStringList>
 
 class AccountWizard : public QObject
 {

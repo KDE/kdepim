@@ -7,9 +7,9 @@
 #include <kmime/kmime_message.h>
 #include <QUrl>
 
-#include <QtCore/QByteArray>
-#include <QtCore/QSharedDataPointer>
-#include <QtCore/QString>
+#include <QByteArray>
+#include <QSharedDataPointer>
+#include <QString>
 
 class KConfigGroup;
 

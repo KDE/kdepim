@@ -3,7 +3,7 @@
 
 #include <qtest.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class ContactFieldsTest : public QObject
 {

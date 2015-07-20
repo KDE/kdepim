@@ -23,7 +23,7 @@
 
 #include <Akonadi/Contact/ContactsTreeModel>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class QWidget;
 

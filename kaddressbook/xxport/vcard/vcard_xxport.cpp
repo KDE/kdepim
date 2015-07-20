@@ -47,8 +47,8 @@
 #include <KIO/NetAccess>
 #include <KSharedConfig>
 
-#include <QtCore/QFile>
-#include <QtCore/QPointer>
+#include <QFile>
+#include <QPointer>
 
 VCardXXPort::VCardXXPort(QWidget *parent)
     : XXPort(parent)

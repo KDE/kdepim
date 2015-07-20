@@ -19,9 +19,9 @@
 
 #include "opencomposerjob.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QtDBus/QtDBus>
-#include <QtCore/QProcess>
+#include <QProcess>
 
 #include <klocalizedstring.h>
 #include <kdbusservicestarter.h>

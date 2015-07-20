@@ -22,7 +22,7 @@
 #include <kmanagesieve/sievejob.h>
 #include <ksieveui/util/util.h>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 #include <KSharedConfig>
 #include <QDialogButtonBox>
 #include <KConfigGroup>

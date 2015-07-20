@@ -23,10 +23,10 @@
 #ifndef AKONADICONSOLE_JOBTRACKER_H
 #define AKONADICONSOLE_JOBTRACKER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QDateTime>
-#include <QtCore/QList>
-#include <QtCore/QPair>
+#include <QObject>
+#include <QDateTime>
+#include <QList>
+#include <QPair>
 
 class JobInfo
 {

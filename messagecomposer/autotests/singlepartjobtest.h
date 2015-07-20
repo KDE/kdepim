@@ -21,7 +21,7 @@
 #ifndef SINGLEPARTJOBTEST_H
 #define SINGLEPARTJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class SinglepartJobTest : public QObject
 {

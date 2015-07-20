@@ -20,8 +20,8 @@
 #include "global.h"
 
 #include "accountwizard_debug.h"
-#include <QtCore/qfileinfo.h>
-#include <QtCore/QDir>
+#include <qfileinfo.h>
+#include <QDir>
 #include <kio/copyjob.h>
 #include <kio/netaccess.h>
 #include <QDir>

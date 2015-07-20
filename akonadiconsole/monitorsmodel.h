@@ -20,7 +20,7 @@
 #ifndef MONITORSMODEL_H
 #define MONITORSMODEL_H
 
-#include <QtCore/QAbstractItemModel>
+#include <QAbstractItemModel>
 #include <QtDBus/QDBusObjectPath>
 
 #include "notificationmanagerinterface.h"

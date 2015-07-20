@@ -60,7 +60,7 @@
 #include <AkonadiWidgets/CollectionPropertiesDialog>
 #include <pimcommon/baloodebug/baloodebugdialog.h>
 #include <KContacts/Addressee>
-#include <QtCore/QPointer>
+#include <QPointer>
 #include "pimcommon/manageserversidesubscription/manageserversidesubscriptionjob.h"
 #include "pimcommon/util/pimutil.h"
 

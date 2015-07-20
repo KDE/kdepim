@@ -36,9 +36,9 @@
 #include "konsolekalendar_debug.h"
 #include <kconfig.h>
 
-#include <QtCore/QDateTime>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QDateTime>
+#include <QString>
+#include <QStringList>
 
 #include <stdlib.h>
 #include <iostream>

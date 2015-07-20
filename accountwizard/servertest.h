@@ -20,7 +20,7 @@
 #ifndef SERVERTEST_H
 #define SERVERTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace MailTransport
 {

@@ -20,7 +20,7 @@
 #include <QUrl>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <QtCore/QPointer>
+#include <QPointer>
 
 using namespace KManageSieve;
 

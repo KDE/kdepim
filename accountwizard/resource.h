@@ -22,7 +22,7 @@
 
 #include "setupobject.h"
 #include <agentinstance.h>
-#include <QtCore/QMap>
+#include <QMap>
 
 class KJob;
 

@@ -21,7 +21,7 @@
 #ifndef SIGNJOBJOBTEST_H
 #define SIGNJOBJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>

@@ -31,8 +31,8 @@
 #include <KMessageBox>
 #include <QProgressDialog>
 
-#include <QtCore/QPointer>
-#include <QtCore/QSignalMapper>
+#include <QPointer>
+#include <QSignalMapper>
 #include <QAction>
 #include <QItemSelectionModel>
 #include <QWidget>

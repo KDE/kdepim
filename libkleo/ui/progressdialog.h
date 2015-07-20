@@ -38,7 +38,7 @@
 
 #ifndef QT_NO_PROGRESSDIALOG
 
-#include <QtCore/QString>
+#include <QString>
 namespace Kleo
 {
 

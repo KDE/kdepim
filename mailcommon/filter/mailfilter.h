@@ -30,7 +30,7 @@
 
 #include <kmime/kmime_message.h>
 
-#include <QtCore/QDataStream>
+#include <QDataStream>
 
 class KConfigGroup;
 

@@ -34,7 +34,7 @@
 #include "libkdepim_debug.h"
 #include <kio/job.h>
 
-#include <QtCore/QPointer>
+#include <QPointer>
 
 using namespace KLDAP;
 

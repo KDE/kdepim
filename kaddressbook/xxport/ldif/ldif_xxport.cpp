@@ -44,8 +44,8 @@
 #include <QTemporaryFile>
 #include <KIO/NetAccess>
 
-#include <QtCore/QFile>
-#include <QtCore/QTextStream>
+#include <QFile>
+#include <QTextStream>
 #include <QFileDialog>
 
 void doExport(QFile *file, const ContactList &list)

@@ -34,10 +34,10 @@
 #include <KLineEdit>
 
 #include <QApplication>
-#include <QtCore/QPointer>
-#include <QtCore/QTextCodec>
-#include <QtCore/QThread>
-#include <QtCore/QUuid>
+#include <QPointer>
+#include <QTextCodec>
+#include <QThread>
+#include <QUuid>
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QGridLayout>

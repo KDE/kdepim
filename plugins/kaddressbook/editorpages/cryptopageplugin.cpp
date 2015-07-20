@@ -23,7 +23,7 @@
 
 #include "cryptopageplugin.h"
 
-#include <QtCore/qplugin.h>
+#include <qplugin.h>
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QGroupBox>

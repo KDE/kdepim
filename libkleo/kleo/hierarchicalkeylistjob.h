@@ -39,7 +39,7 @@
 
 #include <gpgme++/keylistresult.h>
 
-#include <QtCore/QPointer>
+#include <QPointer>
 
 #include <set>
 

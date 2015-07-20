@@ -23,9 +23,9 @@
 #include "akonadiconsole_debug.h"
 #include <AkonadiCore/servermanager.h>
 
-#include <QtCore/QStringList>
-#include <QtCore/QTimer>
-#include <QtCore/QVector>
+#include <QStringList>
+#include <QTimer>
+#include <QVector>
 
 MonitorItem::MonitorItem(const QDBusObjectPath &identifier_, MonitorsModel *model):
     QObject(model),

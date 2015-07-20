@@ -83,7 +83,7 @@
 #include <QDir>
 #include <QTimer>
 #include <QUuid>
-#include <QtCore/QTextCodec>
+#include <QTextCodec>
 #include <QStandardPaths>
 #include <followupreminder/followupremindercreatejob.h>
 

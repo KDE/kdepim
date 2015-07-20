@@ -37,7 +37,7 @@
 
 #include <KCalCore/Event>
 
-#include <QtCore/QDateTime>
+#include <QDateTime>
 
 #include <stdlib.h>
 #include <iostream>

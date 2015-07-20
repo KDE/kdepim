@@ -23,7 +23,7 @@
 #ifndef KMAIL_ATTACHMENTCONTROLLERBASE_H
 #define KMAIL_ATTACHMENTCONTROLLERBASE_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <QUrl>
 

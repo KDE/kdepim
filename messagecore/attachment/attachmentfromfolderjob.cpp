@@ -21,9 +21,9 @@
 #include "messagecore_debug.h"
 #include <KLocalizedString>
 
-#include <QtCore/QBuffer>
-#include <QtCore/QDir>
-#include <QtCore/QScopedPointer>
+#include <QBuffer>
+#include <QDir>
+#include <QScopedPointer>
 
 static const mode_t archivePerms = S_IFREG | 0644;
 

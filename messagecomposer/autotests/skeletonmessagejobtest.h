@@ -20,7 +20,7 @@
 #ifndef SKELETONMESSAGEJOBTEST_H
 #define SKELETONMESSAGEJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class SkeletonMessageJobTest : public QObject
 {

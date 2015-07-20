@@ -34,7 +34,7 @@
 
 #include "kleo_export.h"
 #include <kpagedialog.h>
-#include <QtCore/QList>
+#include <QList>
 
 namespace Kleo
 {

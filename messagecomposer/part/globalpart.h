@@ -22,8 +22,8 @@
 
 #include "messagepart.h"
 
-#include <QtCore/QByteArray>
-#include <QtCore/QList>
+#include <QByteArray>
+#include <QList>
 
 namespace MessageComposer
 {

@@ -47,7 +47,7 @@
 #include <QIcon>
 #include <KIconTheme>
 
-#include <QtCore/QRegExp>
+#include <QRegExp>
 #include <QApplication>
 #include <QShortcut>
 #include <QVBoxLayout>

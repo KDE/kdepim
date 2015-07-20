@@ -25,7 +25,7 @@
 #include "kaddressbook_export.h"
 #include <AkonadiCore/Collection>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class KJob;
 class QProgressDialog;

@@ -19,9 +19,9 @@
 
 #include "qcsvreader.h"
 
-#include <QtCore/QStringList>
-#include <QtCore/QTextCodec>
-#include <QtCore/QTextStream>
+#include <QStringList>
+#include <QTextCodec>
+#include <QTextStream>
 
 #include <KLocalizedString>
 

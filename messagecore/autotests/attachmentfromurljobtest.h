@@ -20,7 +20,7 @@
 #ifndef ATTACHMENTFROMURLJOBTEST_H
 #define ATTACHMENTFROMURLJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class AttachmentFromUrlJobTest : public QObject
 {

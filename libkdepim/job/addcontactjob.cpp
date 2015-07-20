@@ -28,7 +28,7 @@
 #include <KLocalizedString>
 #include <kmessagebox.h>
 
-#include <QtCore/QPointer>
+#include <QPointer>
 
 using namespace KPIM;
 

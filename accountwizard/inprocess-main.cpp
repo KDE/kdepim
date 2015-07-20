@@ -21,9 +21,9 @@
 #include "inprocess-main.h"
 #include "global.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QtPlugin>
-#include <QtCore/QStringList>
+#include <QObject>
+#include <QtPlugin>
+#include <QStringList>
 
 AccountWizard::AccountWizard(QObject *parent)
     : QObject(parent)

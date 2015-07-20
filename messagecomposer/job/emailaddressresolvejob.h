@@ -28,8 +28,8 @@
 
 #include <kjob.h>
 
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
+#include <QStringList>
+#include <QVariant>
 
 namespace MessageComposer
 {

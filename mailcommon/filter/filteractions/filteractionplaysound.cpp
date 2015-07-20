@@ -25,7 +25,7 @@
 
 #include <KLocalizedString>
 
-#include <QtCore/QFile>
+#include <QFile>
 #include <QPointer>
 
 using namespace MailCommon;

@@ -27,7 +27,7 @@
 #include <KLocalizedString>
 #include <KMimeType>
 
-#include <QtCore/QFileInfo>
+#include <QFileInfo>
 
 #include <boost/shared_ptr.hpp>
 #include <KFormat>

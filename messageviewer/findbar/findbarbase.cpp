@@ -26,7 +26,7 @@
 #include <KColorScheme>
 
 #include <QPushButton>
-#include <QtCore/QTimer>
+#include <QTimer>
 #include <QLabel>
 #include <QLayout>
 #include <QMenu>

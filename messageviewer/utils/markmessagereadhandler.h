@@ -26,7 +26,7 @@
 
 #include "viewer/viewer.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace MessageViewer
 {

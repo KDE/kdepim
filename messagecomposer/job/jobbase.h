@@ -22,7 +22,7 @@
 
 #include "messagecomposer_export.h"
 
-#include <QtCore/QList>
+#include <QList>
 
 #include <KCompositeJob>
 

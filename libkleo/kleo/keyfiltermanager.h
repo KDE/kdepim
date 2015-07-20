@@ -34,7 +34,7 @@
 #define __KLEO_KEYFILTERMANAGER_H__
 
 #include "kleo_export.h"
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <boost/shared_ptr.hpp>
 

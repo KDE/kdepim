@@ -21,7 +21,7 @@
 
 #include <messagelist/core/enums.h>
 #include <messagelist/core/view.h>
-#include <QtCore/QHash>
+#include <QHash>
 #include <QTabWidget>
 
 #include <kmime/kmime_message.h>

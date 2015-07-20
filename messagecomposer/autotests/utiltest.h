@@ -20,7 +20,7 @@
 #ifndef UTILTEST_H
 #define UTILTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class UtilTest : public QObject
 {

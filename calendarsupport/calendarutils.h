@@ -27,7 +27,7 @@
 #include <Collection>
 #include <Akonadi/Calendar/ETMCalendar>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace Akonadi
 {

@@ -45,8 +45,8 @@
 
 #include <kio/job.h>
 
-#include <QtCore/QPointer>
-#include <QtCore/QTimer>
+#include <QPointer>
+#include <QTimer>
 #include <QStandardPaths>
 
 using namespace KLDAP;

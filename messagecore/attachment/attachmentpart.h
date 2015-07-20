@@ -24,8 +24,8 @@
 
 #include <kmime/kmime_headers.h>
 
-#include <QtCore/QList>
-#include <QtCore/QMetaType>
+#include <QList>
+#include <QMetaType>
 
 #include <boost/shared_ptr.hpp>
 class QUrl;

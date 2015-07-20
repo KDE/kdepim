@@ -20,7 +20,7 @@
 #ifndef ATTACHMENTCOMPRESSJOBTEST_H
 #define ATTACHMENTCOMPRESSJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class AttachmentCompressJobTest : public QObject
 {

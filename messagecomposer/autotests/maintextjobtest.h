@@ -20,7 +20,7 @@
 #ifndef MAINTEXTJOBTEST_H
 #define MAINTEXTJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class MainTextJobTest : public QObject
 {

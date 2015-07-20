@@ -22,8 +22,8 @@
 #include "libkpgp_export.h"
 #include "kpgp.h"
 
-#include <QtCore/QStringList>
-#include <QtCore/QString>
+#include <QStringList>
+#include <QString>
 
 namespace Kpgp
 {

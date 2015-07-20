@@ -22,7 +22,7 @@
 
 #include "messagepart.h"
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_headers.h>

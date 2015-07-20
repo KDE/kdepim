@@ -21,7 +21,7 @@
 #ifndef ENCRYPTJOBJOBTEST_H
 #define ENCRYPTJOBJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>

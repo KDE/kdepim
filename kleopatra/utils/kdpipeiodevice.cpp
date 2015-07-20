@@ -21,11 +21,11 @@
 
 #include "kdpipeiodevice.h"
 
-#include <QtCore/QDebug>
-#include <QtCore/QMutex>
-#include <QtCore/QPointer>
-#include <QtCore/QThread>
-#include <QtCore/QWaitCondition>
+#include <QDebug>
+#include <QMutex>
+#include <QPointer>
+#include <QThread>
+#include <QWaitCondition>
 #include "kleopatra_debug.h"
 
 #include <cassert>

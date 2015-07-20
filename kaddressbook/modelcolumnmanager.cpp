@@ -25,8 +25,8 @@
 
 #include <KLocalizedString>
 
-#include <QtCore/QEvent>
-#include <QtCore/QTimer>
+#include <QEvent>
+#include <QTimer>
 #include <QContextMenuEvent>
 #include <QHeaderView>
 #include <QMenu>

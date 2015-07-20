@@ -23,7 +23,7 @@
 #include <gpgme++/importresult.h>
 #include <gpgme++/verificationresult.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <utility>
 

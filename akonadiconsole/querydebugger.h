@@ -21,8 +21,8 @@
 #define QUERYDEBUGGER_H
 
 #include <QWidget>
-#include <QtCore/QMap>
-#include <QtCore/QVariant>
+#include <QMap>
+#include <QVariant>
 
 #include "storagedebuggerinterface.h"
 namespace PimCommon

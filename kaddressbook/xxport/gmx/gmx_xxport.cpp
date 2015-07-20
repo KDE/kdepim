@@ -88,10 +88,10 @@
 #include <QTemporaryFile>
 #include <QUrl>
 
-#include <QtCore/QFile>
-#include <QtCore/QMap>
-#include <QtCore/QList>
-#include <QtCore/QTextStream>
+#include <QFile>
+#include <QMap>
+#include <QList>
+#include <QTextStream>
 
 #define GMX_FILESELECTION_STRING i18n( "GMX address book file (*.gmxa)" )
 

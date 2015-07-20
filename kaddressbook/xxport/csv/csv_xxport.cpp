@@ -30,9 +30,9 @@
 #include <QUrl>
 #include <KIO/NetAccess>
 
-#include <QtCore/QPointer>
-#include <QtCore/QTextCodec>
-#include <QtCore/QTextStream>
+#include <QPointer>
+#include <QTextCodec>
+#include <QTextStream>
 
 CsvXXPort::CsvXXPort(QWidget *parent)
     : XXPort(parent)

@@ -22,8 +22,8 @@
 #include "libkpgp_export.h"
 #include "kpgpkey.h"
 
-#include <QtCore/QByteArray>
-#include <QtCore/QString>
+#include <QByteArray>
+#include <QString>
 #include <QWidget>
 #include <QComboBox>
 #include <QLayout>

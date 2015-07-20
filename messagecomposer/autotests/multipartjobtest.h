@@ -20,7 +20,7 @@
 #ifndef MULTIPARTJOBTEST_H
 #define MULTIPARTJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class MultipartJobTest : public QObject
 {

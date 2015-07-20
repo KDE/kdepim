@@ -38,7 +38,7 @@
 
 #include <gpgme++/global.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <vector>
 #include <map>

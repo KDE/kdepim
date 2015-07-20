@@ -19,8 +19,8 @@
 
 #include "notificationmodel.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QBuffer>
+#include <QCoreApplication>
+#include <QBuffer>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusPendingCall>
 

@@ -48,7 +48,7 @@
 #include <qtest.h>
 #include <QDateTime>
 #include <KCharsets>
-#include <QtCore/QDir>
+#include <QDir>
 #include <KLocale>
 #include "templateparser/globalsettings_base.h"
 #include "templateparser/templateparser_export.h"

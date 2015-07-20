@@ -28,7 +28,7 @@
 #include "core/view.h"
 #include <core/settings.h>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 #include <QAction>
 #include <QApplication>
 #include <QDrag>

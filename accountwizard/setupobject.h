@@ -20,7 +20,7 @@
 #ifndef SETUPOBJECT_H
 #define SETUPOBJECT_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class SetupObject : public QObject
 {

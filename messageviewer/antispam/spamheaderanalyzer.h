@@ -36,8 +36,8 @@
 
 #include <KMime/Message>
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
+#include <QString>
+#include <QVector>
 
 namespace MessageViewer
 {

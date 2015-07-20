@@ -26,7 +26,7 @@
 #define MESSAGECOMPSER_SIGNATURECONTROLLER_H
 
 #include "messagecomposer_export.h"
-#include <QtCore/QObject>
+#include <QObject>
 #include <KIdentityManagement/kidentitymanagement/signature.h>
 
 namespace KIdentityManagement

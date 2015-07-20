@@ -35,8 +35,8 @@
 
 #include "kleo_export.h"
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QString>
+#include <QStringList>
 
 #include <vector>
 

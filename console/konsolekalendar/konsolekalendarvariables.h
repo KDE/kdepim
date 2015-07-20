@@ -32,8 +32,8 @@
 #include <Akonadi/Calendar/FetchJobCalendar>
 #include <AkonadiCore/Collection>
 
-#include <QtCore/QString>
-#include <QtCore/QDateTime>
+#include <QString>
+#include <QDateTime>
 
 /**
  * @file konsolekalendarvariables.h

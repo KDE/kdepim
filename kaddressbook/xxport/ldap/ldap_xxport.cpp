@@ -27,7 +27,7 @@
 
 #include <libkdepim/ldap/ldapsearchdialog.h>
 
-#include <QtCore/QPointer>
+#include <QPointer>
 
 LDAPXXPort::LDAPXXPort(QWidget *parentWidget)
     : XXPort(parentWidget)

@@ -22,7 +22,7 @@
 
 #include "mailcommon_export.h"
 
-#include <QtCore/QMultiHash>
+#include <QMultiHash>
 #include <QString>
 
 namespace MailCommon

@@ -41,7 +41,7 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/key.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 Q_DECLARE_METATYPE(GpgME::VerificationResult)
 

@@ -30,7 +30,7 @@
 #include <KContacts/Addressee>
 #include <KAssistantDialog>
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 class ContactSelectionWidget;
 class StylePage;

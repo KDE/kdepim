@@ -42,7 +42,7 @@
 #include <mailcommon/filter/mailfilter.h>
 #include <mailcommon/util/mailutil.h>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 
 // other headers
 #include <algorithm>

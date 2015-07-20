@@ -22,8 +22,8 @@
 
 #include <AkonadiCore/AgentInstance>
 
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QVector>
+#include <QAbstractItemModel>
+#include <QVector>
 
 class QDBusInterface;
 

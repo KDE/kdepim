@@ -25,8 +25,8 @@
 #include <KLocalizedString>
 #include <KZip>
 
-#include <QtCore/QBuffer>
-#include <QtCore/QTimer>
+#include <QBuffer>
+#include <QTimer>
 #include <QDateTime>
 
 #include <boost/shared_ptr.hpp>

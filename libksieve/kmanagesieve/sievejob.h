@@ -16,9 +16,9 @@
 
 #include "kmanagesieve_export.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QStack>
-#include <QtCore/QStringList>
+#include <QObject>
+#include <QStack>
+#include <QStringList>
 
 #include <QUrl>
 #include <kio/global.h>

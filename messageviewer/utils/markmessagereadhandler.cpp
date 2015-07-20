@@ -26,7 +26,7 @@
 #include <AkonadiCore/itemmodifyjob.h>
 #include <Akonadi/KMime/MessageFlags>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 using namespace MessageViewer;
 Q_GLOBAL_STATIC(Akonadi::Item::List, sListItem)
 

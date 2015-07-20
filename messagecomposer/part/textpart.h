@@ -20,7 +20,7 @@
 #ifndef MESSAGECOMPOSER_TEXTPART_H
 #define MESSAGECOMPOSER_TEXTPART_H
 
-#include <QtCore/QString>
+#include <QString>
 
 #include "messagecomposer_export.h"
 #include "messagepart.h"

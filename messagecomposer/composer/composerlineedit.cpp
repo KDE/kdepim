@@ -47,7 +47,7 @@
 #include <kcontacts/contactgrouptool.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
-#include <QtCore/QBuffer>
+#include <QBuffer>
 
 using namespace MessageComposer;
 

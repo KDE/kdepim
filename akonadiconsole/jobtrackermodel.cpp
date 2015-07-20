@@ -24,9 +24,9 @@
 #include "jobtracker.h"
 
 #include <KLocale>
-#include <QtCore/QStringList>
-#include <QtCore/QModelIndex>
-#include <QtCore/QDateTime>
+#include <QStringList>
+#include <QModelIndex>
+#include <QDateTime>
 #include <QFont>
 #include <QPair>
 #include <QColor>

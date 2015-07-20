@@ -21,9 +21,9 @@
 #ifndef __MESSAGELIST_CORE_FILTER_H__
 #define __MESSAGELIST_CORE_FILTER_H__
 
-#include <QtCore/QObject>
-#include <QtCore/QSet>
-#include <QtCore/QString>
+#include <QObject>
+#include <QSet>
+#include <QString>
 
 #include <Akonadi/KMime/MessageStatus>
 #include <Collection>

@@ -21,7 +21,7 @@
 
 #include "kcolumnfilterproxymodel.h"
 
-#include <QtCore/QVector>
+#include <QVector>
 
 using namespace KPIM;
 

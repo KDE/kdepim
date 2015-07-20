@@ -20,7 +20,7 @@
 #ifndef FILTERACTIONPIPETHROUGH_TEST_H
 #define FILTERACTIONPIPETHROUGH_TEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace MailCommon
 {

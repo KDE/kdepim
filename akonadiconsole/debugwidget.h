@@ -24,7 +24,7 @@
 
 #include "debuginterface.h"
 
-#include <QtCore/QHash>
+#include <QHash>
 #include <QWidget>
 
 class QTabWidget;

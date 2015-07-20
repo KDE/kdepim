@@ -24,7 +24,7 @@
 
 #include <attributefactory.h>
 
-#include <QtCore/QByteArray>
+#include <QByteArray>
 
 using namespace MessageCore;
 

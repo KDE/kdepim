@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include <QtCore/QDateTime>
+#include <QDateTime>
 using namespace std;
 
 KonsoleKalendarEpoch::KonsoleKalendarEpoch()

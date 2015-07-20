@@ -20,7 +20,7 @@
 #ifndef SETUPMANAGER_H
 #define SETUPMANAGER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace KWallet
 {

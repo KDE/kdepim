@@ -28,9 +28,9 @@
 #include <QDir>
 
 #include <QPushButton>
-#include <QtCore/QAbstractTableModel>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
+#include <QAbstractTableModel>
+#include <QFile>
+#include <QFileInfo>
 #include <QLabel>
 #include <QListView>
 #include <QMouseEvent>

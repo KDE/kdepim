@@ -33,7 +33,7 @@
 #ifndef __KLEO_CRYPTOBACKEND_H__
 #define __KLEO_CRYPTOBACKEND_H__
 
-#include <QtCore/QString>
+#include <QString>
 
 namespace Kleo
 {

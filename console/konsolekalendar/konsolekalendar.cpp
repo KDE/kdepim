@@ -49,9 +49,9 @@
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/CollectionFetchScope>
 
-#include <QtCore/QDateTime>
-#include <QtCore/QFile>
-#include <QtCore/QTextStream>
+#include <QDateTime>
+#include <QFile>
+#include <QTextStream>
 #include <QEventLoop>
 
 #include <stdio.h>

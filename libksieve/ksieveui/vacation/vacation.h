@@ -18,7 +18,7 @@
 
 #include <QUrl>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class QString;
 template <typename T> class QList;

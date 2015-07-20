@@ -20,7 +20,7 @@
 #ifndef ATTACHMENTPROPERTIESDIALOGTEST_H
 #define ATTACHMENTPROPERTIESDIALOGTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class AttachmentPropertiesDialogTest : public QObject
 {

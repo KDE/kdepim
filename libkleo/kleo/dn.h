@@ -35,8 +35,8 @@
 
 #include "kleo_export.h"
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
+#include <QString>
+#include <QVector>
 
 class QStringList;
 class QWidget;

@@ -24,7 +24,7 @@
 #include <KContacts/ContactGroup>
 #include "xxport/vcard/vcardexportselectionwidget.h"
 #include "contactlist.h"
-#include <QtCore/QHash>
+#include <QHash>
 
 /**
  * @short The base class for all import/export modules.

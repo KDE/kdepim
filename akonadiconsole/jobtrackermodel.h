@@ -22,7 +22,7 @@
 #ifndef AKONADICONSOLE_JOBTRACKERMODEL_H
 #define AKONADICONSOLE_JOBTRACKERMODEL_H
 
-#include <QtCore/QAbstractItemModel>
+#include <QAbstractItemModel>
 
 class JobTrackerModel : public QAbstractItemModel
 {

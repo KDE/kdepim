@@ -31,8 +31,8 @@
 #include <KMime/MDN>
 #include <KMime/KMimeMessage>
 
-#include <QtCore/QList>
-#include <QtCore/QObject>
+#include <QList>
+#include <QObject>
 
 class QWidget;
 

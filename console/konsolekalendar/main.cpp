@@ -48,10 +48,10 @@
 
 #include <KCalCore/CalFormat>
 
-#include <QtCore/QDateTime>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
-#include <QtCore/QEventLoop>
+#include <QDateTime>
+#include <QFile>
+#include <QFileInfo>
+#include <QEventLoop>
 #include <QElapsedTimer>
 
 #include <stdlib.h>

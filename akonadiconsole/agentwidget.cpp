@@ -37,8 +37,8 @@
 #include <QLineEdit>
 #include <QIcon>
 
-#include <QtCore/QFile>
-#include <QtCore/QPointer>
+#include <QFile>
+#include <QPointer>
 #include <QMenu>
 #include <QPushButton>
 #include <QDBusInterface>

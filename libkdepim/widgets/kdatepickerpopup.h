@@ -23,7 +23,7 @@
 
 #include "kdepim_export.h"
 
-#include <QtCore/QDate>
+#include <QDate>
 #include <QMenu>
 
 class KDatePicker;

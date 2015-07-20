@@ -23,10 +23,10 @@
 #include "jobtracker.h"
 #include "jobtrackeradaptor.h"
 #include "akonadiconsole_debug.h"
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QPair>
-#include <QtCore/QList>
+#include <QString>
+#include <QStringList>
+#include <QPair>
+#include <QList>
 
 #include <cassert>
 

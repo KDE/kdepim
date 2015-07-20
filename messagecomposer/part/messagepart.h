@@ -22,7 +22,7 @@
 
 #include "messagecomposer_export.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <kmime/kmime_headers.h>
 

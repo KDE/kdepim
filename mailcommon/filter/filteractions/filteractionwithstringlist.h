@@ -22,7 +22,7 @@
 
 #include "filteractionwithstring.h"
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 namespace MailCommon
 {

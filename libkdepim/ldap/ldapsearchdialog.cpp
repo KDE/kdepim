@@ -27,7 +27,7 @@
 #include "ldapclientsearchconfig.h"
 #include "widgets/progressindicatorlabel.h"
 
-#include <QtCore/QPair>
+#include <QPair>
 #include <QApplication>
 #include <QCheckBox>
 #include <QCloseEvent>

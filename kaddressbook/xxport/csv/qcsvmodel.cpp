@@ -21,10 +21,10 @@
 #include "qcsvmodel_p.h"
 #include "qcsvreader.h"
 
-#include <QtCore/QMap>
-#include <QtCore/QPair>
-#include <QtCore/QStringList>
-#include <QtCore/QVector>
+#include <QMap>
+#include <QPair>
+#include <QStringList>
+#include <QVector>
 
 CsvParser::CsvParser(QObject *parent)
     : QThread(parent), mDevice(Q_NULLPTR), mRowCount(0), mColumnCount(0), mCacheCounter(0)

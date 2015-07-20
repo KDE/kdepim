@@ -20,7 +20,7 @@
 #ifndef QCSVMODEL_H
 #define QCSVMODEL_H
 
-#include <QtCore/QAbstractTableModel>
+#include <QAbstractTableModel>
 #include <QIODevice>
 
 class QCsvModel : public QAbstractTableModel

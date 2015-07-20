@@ -27,8 +27,8 @@
 
 #include <kjob.h>
 
-#include <QtCore/QMap>
-#include <QtCore/QStringList>
+#include <QMap>
+#include <QStringList>
 
 namespace MessageComposer
 {

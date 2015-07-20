@@ -24,7 +24,7 @@
 #include <QLineEdit>
 #include <KLocalizedString>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 #include <QKeyEvent>
 #include <QVBoxLayout>
 
