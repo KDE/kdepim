@@ -36,7 +36,7 @@ Ur1CaShortUrl::~Ur1CaShortUrl()
 void Ur1CaShortUrl::start()
 {
     QNetworkRequest request(QUrl(QStringLiteral("http://ur1.ca/")));
-    const QString data = QStringLiteral("longurl=%1").arg(mOriginalUrl);
+    const QString data = QStringLiteral("longurl=\"%1\"").arg(mOriginalUrl);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toUtf8());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &Ur1CaShortUrl::slotErrorFound);
@@ -54,8 +54,8 @@ void Ur1CaShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &
 
 void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
-    reply->deleteLater();
     if (mErrorFound) {
+        reply->deleteLater();
         return;
     }
 
@@ -70,5 +70,9 @@ void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     qCDebug(PIMCOMMON_LOG) << "Short url is: " << output;
     if (!output.isEmpty()) {
         Q_EMIT shortUrlDone(output);
+    } else {
+        //TODO
+        Q_EMIT shortUrlFailed(QString());
     }
+    reply->deleteLater();
 }
