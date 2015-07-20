@@ -305,7 +305,7 @@ void TagPropertiesDialog::slotAccept()
         QVector<qint64> existingResourceRecords;
         {
             QSqlQuery query(DbAccess::database());
-            QString queryStr = QLatin1String("SELECT id, name FROM ResourceTable WHERE ");
+            QString queryStr = QStringLiteral("SELECT id, name FROM ResourceTable WHERE ");
             QStringList conds;
             for (int i = 0; i < mChangedRIDs.count(); ++i) {
                 conds << QStringLiteral("name = ?");

@@ -755,11 +755,11 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
 //     qCDebug(BLOGILO_LOG)<<"postId: "<<post.postId();
     QString postTable, postCatTable;
     if (state == Local) {
-        postTable = QLatin1String("local_post");
-        postCatTable = QLatin1String("local_post_cat");
+        postTable = QStringLiteral("local_post");
+        postCatTable = QStringLiteral("local_post_cat");
     } else {
-        postTable = QLatin1String("temp_post");
-        postCatTable = QLatin1String("temp_post_cat");
+        postTable = QStringLiteral("temp_post");
+        postCatTable = QStringLiteral("temp_post_cat");
     }
     int localId = post.localId();
 //    if(post.status() == KBlog::BlogPost::New) {///Post is new!

@@ -172,7 +172,7 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
     QTest::addColumn<bool>("hasDictionary");
 
     QDir dir(QLatin1String(MAIL_DATA_DIR));
-    const QString file = QLatin1String("plain-message.mbox");
+    const QString file = QStringLiteral("plain-message.mbox");
     const QString fileName = QString(dir.path() + QLatin1Char('/') +  file);
     QTest::newRow(file.toLatin1()) << "%OTIME" << fileName << "11:30" << false;
     QTest::newRow(file.toLatin1()) << "%OTIMELONG" << fileName << "11:30:27" << false;

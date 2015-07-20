@@ -125,31 +125,31 @@ QString AdBlockBlockableItemsWidget::elementType(AdBlockBlockableItemsWidget::Ty
     QString result;
     switch (type) {
     case AdBlockBlockableItemsWidget::Image:
-        result = QLatin1String("image");
+        result = QStringLiteral("image");
         break;
     case AdBlockBlockableItemsWidget::Script:
-        result = QLatin1String("script");
+        result = QStringLiteral("script");
         break;
     case AdBlockBlockableItemsWidget::StyleSheet:
-        result = QLatin1String("stylesheet");
+        result = QStringLiteral("stylesheet");
         break;
     case AdBlockBlockableItemsWidget::Font:
-        result = QLatin1String("font");
+        result = QStringLiteral("font");
         break;
     case AdBlockBlockableItemsWidget::Frame:
-        result = QLatin1String("frame");
+        result = QStringLiteral("frame");
         break;
     case AdBlockBlockableItemsWidget::XmlRequest:
-        result = QLatin1String("xmlhttprequest");
+        result = QStringLiteral("xmlhttprequest");
         break;
     case AdBlockBlockableItemsWidget::Object:
-        result = QLatin1String("other");
+        result = QStringLiteral("other");
         break;
     case AdBlockBlockableItemsWidget::Media:
-        result = QLatin1String("media");
+        result = QStringLiteral("media");
         break;
     case AdBlockBlockableItemsWidget::Popup:
-        result = QLatin1String("popup");
+        result = QStringLiteral("popup");
         break;
     case AdBlockBlockableItemsWidget::None:
     default:

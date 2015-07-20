@@ -166,14 +166,14 @@ void BlogiloComposerEditor::startEditing()
 void BlogiloComposerEditor::execCommand(const QString &cmd)
 {
     QWebFrame *frame = view()->page()->mainFrame();
-    const QString js = QString::fromLatin1("document.execCommand(\"%1\", false, null)").arg(cmd);
+    const QString js = QStringLiteral("document.execCommand(\"%1\", false, null)").arg(cmd);
     frame->evaluateJavaScript(js);
 }
 
 void BlogiloComposerEditor::execCommand(const QString &cmd, const QString &arg)
 {
     QWebFrame *frame = view()->page()->mainFrame();
-    const QString js = QString::fromLatin1("document.execCommand(\"%1\", false, \"%2\")").arg(cmd).arg(arg);
+    const QString js = QStringLiteral("document.execCommand(\"%1\", false, \"%2\")").arg(cmd).arg(arg);
     frame->evaluateJavaScript(js);
 }
 

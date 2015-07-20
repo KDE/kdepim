@@ -480,9 +480,9 @@ AddEditBlog::~AddEditBlog()
 
 void AddEditBlog::setSupportedFeatures(BilboBlog::ApiType api)
 {
-    const QString yesStyle = QLatin1String("QLabel{color: green;}");
+    const QString yesStyle = QStringLiteral("QLabel{color: green;}");
     const QString yesText = i18nc("Supported feature or Not", "Yes");
-    const QString noStyle = QLatin1String("QLabel{color: red;}");
+    const QString noStyle = QStringLiteral("QLabel{color: red;}");
     const QString noText = i18nc("Supported feature or Not", "No, API does not support it");
     const QString notYetText = i18nc("Supported feature or Not", "No, Blogilo does not yet support it");
 

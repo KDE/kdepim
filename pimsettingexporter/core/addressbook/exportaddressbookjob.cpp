@@ -132,10 +132,10 @@ void ExportAddressbookJob::backupConfig()
             QString currentKey(QLatin1String("Current"));
             Utils::convertCollectionToRealPath(group, currentKey);
 
-            currentKey = QLatin1String("Expansion");
+            currentKey = QStringLiteral("Expansion");
             Utils::convertCollectionToRealPath(group, currentKey);
 
-            currentKey = QLatin1String("Selection");
+            currentKey = QStringLiteral("Selection");
             Utils::convertCollectionToRealPath(group, currentKey);
         }
         kaddressBookConfig->sync();

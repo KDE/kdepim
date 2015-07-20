@@ -188,7 +188,7 @@ void CryptoComposerTest::testEditEncryptAttachments()
     fillComposerCryptoData(composer);
 
     AttachmentPart::Ptr attachment = AttachmentPart::Ptr(new AttachmentPart);
-    const QString fileName = QLatin1String("anattachment.txt");
+    const QString fileName = QStringLiteral("anattachment.txt");
     const QByteArray fileData = "abc";
     attachment->setData(fileData);
     attachment->setMimeType("x-some/x-type");

@@ -72,7 +72,7 @@ void LdapClientSearchConfig::readConfig(KLDAP::LdapServer &server, KConfigGroup 
 {
     QString prefix;
     if (active) {
-        prefix = QLatin1String("Selected");
+        prefix = QStringLiteral("Selected");
     }
 
     const QString host =  config.readEntry(prefix + QString::fromLatin1("Host%1").arg(j),

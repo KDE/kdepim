@@ -1255,7 +1255,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
                     QBrush(topLines));
 
         QPixmap bottomLines;
-        key = QLatin1String("ko_b");
+        key = QStringLiteral("ko_b");
         if (!QPixmapCache::find(key, bottomLines)) {
             bottomLines = QPixmap(QStringLiteral(":/bottomLines.png"));
             QPixmapCache::insert(key, bottomLines);

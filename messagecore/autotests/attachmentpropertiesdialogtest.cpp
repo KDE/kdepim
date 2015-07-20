@@ -41,10 +41,10 @@ QTEST_MAIN(AttachmentPropertiesDialogTest)
 void AttachmentPropertiesDialogTest::testAttachmentPartReadWrite()
 {
     // Sample data.
-    const QString name = QString::fromLatin1("old name");
-    const QString newName = QString::fromLatin1("new name");
-    const QString description = QString::fromLatin1("old description");
-    const QString newDescription = QString::fromLatin1("new description");
+    const QString name = QStringLiteral("old name");
+    const QString newName = QStringLiteral("new name");
+    const QString description = QStringLiteral("old description");
+    const QString newDescription = QStringLiteral("new description");
     const QByteArray data("12345");
     const QByteArray mimeType("text/plain");
     const QByteArray newMimeType("x-weird/x-type");
@@ -116,8 +116,8 @@ void AttachmentPropertiesDialogTest::testAttachmentPartReadWrite()
 void AttachmentPropertiesDialogTest::testAttachmentPartReadOnly()
 {
     // Sample data.
-    const QString name = QString::fromLatin1("old name");
-    const QString newName = QString::fromLatin1("new name");
+    const QString name = QStringLiteral("old name");
+    const QString newName = QStringLiteral("new name");
 
     // Create the part.
     AttachmentPart::Ptr part = AttachmentPart::Ptr(new AttachmentPart);
@@ -135,8 +135,8 @@ void AttachmentPropertiesDialogTest::testAttachmentPartReadOnly()
 void AttachmentPropertiesDialogTest::testAttachmentPartCancel()
 {
     // Sample data.
-    const QString name = QString::fromLatin1("old name");
-    const QString newName = QString::fromLatin1("new name");
+    const QString name = QStringLiteral("old name");
+    const QString newName = QStringLiteral("new name");
 
     // Create the part.
     AttachmentPart::Ptr part = AttachmentPart::Ptr(new AttachmentPart);
@@ -158,8 +158,8 @@ void AttachmentPropertiesDialogTest::testAttachmentPartCancel()
 void AttachmentPropertiesDialogTest::testMimeContentReadOnly()
 {
     // Sample data.
-    const QString name = QString::fromLatin1("old name");
-    const QString newName = QString::fromLatin1("new name");
+    const QString name = QStringLiteral("old name");
+    const QString newName = QStringLiteral("new name");
     const QByteArray charset("us-ascii");
 
     // Create the MIME Content.

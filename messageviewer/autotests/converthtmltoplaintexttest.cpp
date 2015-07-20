@@ -49,7 +49,7 @@ void ConvertHtmlToPlainTextTest::shouldReturnEmptyStringIfInputTextIsEmpty()
 void ConvertHtmlToPlainTextTest::shouldReturnNotEmptyStringIfInputTextIsNotEmpty()
 {
     MessageViewer::ConvertHtmlToPlainText convert;
-    const QString str = QLatin1String("foo bla");
+    const QString str = QStringLiteral("foo bla");
     convert.setHtmlString(str);
     const QString result = convert.generatePlainText();
     QVERIFY(!result.isEmpty());

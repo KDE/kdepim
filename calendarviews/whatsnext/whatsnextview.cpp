@@ -87,7 +87,7 @@ void WhatsNextView::updateView()
     kil.loadIcon(QLatin1String("office-calendar"), KIconLoader::NoGroup, 32,
                  KIconLoader::DefaultState, QStringList(), &ipath);
 
-    mText = QLatin1String("<table width=\"100%\">\n");
+    mText = QStringLiteral("<table width=\"100%\">\n");
     mText += QLatin1String("<tr bgcolor=\"#3679AD\"><td><h1>");
     mText += QLatin1String("<img src=\"");
     mText += ipath;

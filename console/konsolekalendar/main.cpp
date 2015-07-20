@@ -783,7 +783,7 @@ int main(int argc, char *argv[])
      * Set our application name for use in unique IDs and error messages,
      * and product ID for incidence PRODID property
      */
-    QString prodId = QLatin1String("-//K Desktop Environment//NONSGML %1 %2//EN");
+    QString prodId = QStringLiteral("-//K Desktop Environment//NONSGML %1 %2//EN");
     CalFormat::setApplication(QLatin1String(progDisplay),
                               prodId.arg(QLatin1String(progDisplay)).arg(QLatin1String(progVersion)));
 

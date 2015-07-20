@@ -56,9 +56,9 @@ struct GpgConfConfEntry {
     {
         QString changeStr;
         if (changeFlag == ConfigEntry::Change) {
-            changeStr = QLatin1String("[change]");
+            changeStr = QStringLiteral("[change]");
         } else if (changeFlag == ConfigEntry::NoChange) {
-            changeStr = QLatin1String("[no-change]");
+            changeStr = QStringLiteral("[no-change]");
         }
 
         QString str;

@@ -588,7 +588,7 @@ QString CSSHelperBase::commonCssDefinitions() const
                                .arg(pointsToPixel(this->mPaintDevice, mBodyFont.pointSize()));
 
     return
-        QString::fromLatin1("div.header {\n"
+        QStringLiteral("div.header {\n"
                             "  margin-bottom: 10pt ! important;\n"
                             "}\n\n"
 
