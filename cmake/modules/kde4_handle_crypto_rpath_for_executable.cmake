@@ -24,13 +24,13 @@ macro (KDE4_HANDLE_CRYPTO_RPATH_FOR_EXECUTABLE _target_NAME)
       else (APPLE)
          set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/:${LIB_INSTALL_DIR}:${KDE4_LIB_DIR}:${QT_LIBRARY_DIR}")
       endif (APPLE)
-      get_target_property(_executable ${_target_NAME} LOCATION )
+      set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_target_NAME})
 
       # use add_custom_target() to have the sh-wrapper generated during build time instead of cmake time
       if (CMAKE_VERSION VERSION_GREATER 2.8.4)
          add_custom_command(TARGET ${_target_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND}
-            -D_filename=${_executable}.shell -D_library_path_variable=${_library_path_variable}
+            -D_filename=$<TARGET_FILE:${_target_NAME}>.shell -D_library_path_variable=${_library_path_variable}
             -D_ld_library_path="${_ld_library_path}" -D_executable=$<TARGET_FILE:${_target_NAME}>
             -D_gnupghome="${GNUPGHOME}"
             -P ${CMAKE_SOURCE_DIR}/cmake/modules/kde4_crypto_exec_via_sh.cmake
@@ -38,8 +38,8 @@ macro (KDE4_HANDLE_CRYPTO_RPATH_FOR_EXECUTABLE _target_NAME)
       else ()
          add_custom_command(TARGET ${_target_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND}
-            -D_filename=${_executable}.shell -D_library_path_variable=${_library_path_variable}
-            -D_ld_library_path="${_ld_library_path}" -D_executable=${_executable}
+            -D_filename=$<TARGET_FILE:${_target_NAME}>.shell -D_library_path_variable=${_library_path_variable}
+            -D_ld_library_path="${_ld_library_path}" -D_executable=$<TARGET_FILE:${_target_NAME}>
             -D_gnupghome="${GNUPGHOME}"
             -P ${CMAKE_SOURCE_DIR}/cmake/modules/kde4_crypto_exec_via_sh.cmake
             )
@@ -53,17 +53,17 @@ macro (KDE4_HANDLE_CRYPTO_RPATH_FOR_EXECUTABLE _target_NAME)
    else (UNIX)
       # under windows, set the property WRAPPER_SCRIPT just to the name of the executable
       # maybe later this will change to a generated batch file (for setting the PATH so that the Qt libs are found)
-      get_target_property(_executable ${_target_NAME} LOCATION )
+      set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_target_NAME})
       set_target_properties(${_target_NAME} PROPERTIES WRAPPER_SCRIPT ${_executable})
 
       set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}\;${LIB_INSTALL_DIR}\;${KDE4_LIB_DIR}\;${QT_LIBRARY_DIR}")
-      get_target_property(_executable ${_target_NAME} LOCATION )
+      set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_target_NAME})
 
       # use add_custom_target() to have the batch-file-wrapper generated during build time instead of cmake time
       add_custom_command(TARGET ${_target_NAME} POST_BUILD
          COMMAND ${CMAKE_COMMAND}
-         -D_filename="${_executable}.bat"
-         -D_ld_library_path="${_ld_library_path}" -D_executable="${_executable}"
+         -D_filename="$<TARGET_FILE:${_target_NAME}>.bat"
+         -D_ld_library_path="${_ld_library_path}" -D_executable="$<TARGET_FILE:${_target_NAME}>"
          -D_gnupghome="${GNUPGHOME}"
          -P ${CMAKE_SOURCE_DIR}/cmake/modules/kde4_crypto_exec_via_sh.cmake
          )
