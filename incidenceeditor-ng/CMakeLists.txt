@@ -89,7 +89,7 @@ kde4_add_ui_files(incidenceeditors_ng_desktop_LIB_SRCS
 kde4_add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
 
 target_link_libraries(incidenceeditorsng
-  akonadi-calendar
+  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${KDE4_KDEUI_LIBS}
@@ -132,7 +132,7 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
   kde4_add_library(incidenceeditorsngmobile ${LIBRARY_TYPE} ${incidenceeditors_ng_mobile_LIB_SRCS})
 
   target_link_libraries(incidenceeditorsngmobile
-    akonadi-calendar
+    ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
@@ -160,7 +160,7 @@ set(testincidenceeditor_SRCS main.cpp)
 kde4_add_executable(kincidenceeditor ${testincidenceeditor_SRCS})
 
 target_link_libraries(kincidenceeditor
-  akonadi-calendar
+  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}

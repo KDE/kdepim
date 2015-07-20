@@ -73,8 +73,8 @@ else()
 endif()
 
 target_link_libraries(korgac
-  akonadi-calendar
-  akonadi-kmime
+  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
+  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   calendarsupport
   incidenceeditorsng
   kdepim

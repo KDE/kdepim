@@ -71,7 +71,7 @@ target_link_libraries(
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_KUTILS_LIBS}
-  akonadi-calendar
+  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
 )
 
 set_target_properties(calendarsupport
@@ -97,7 +97,7 @@ target_link_libraries(
   ${KDE4_KUTILS_LIBS}
   mailcommon
   pimcommon
-  akonadi-calendar
+  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
 )
 
 set_target_properties(calendarsupportcollectionpage

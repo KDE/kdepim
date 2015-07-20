@@ -16,23 +16,23 @@ include(AkonadiMacros)
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
-add_akonadi_isolated_test_advanced(mergecontactwidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;kaddressbookgrantlee;akonadi-contact;kabc")
+add_akonadi_isolated_test_advanced(mergecontactwidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;kaddressbookgrantlee;${KDEPIMLIBS_AKONADI_CONTACT_LIBRARY};${KDEPIMLIBS_KABC_LIBRARY}")
 
 
-add_akonadi_isolated_test_advanced( mergecontactinfowidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "akonadi-contact;kaddressbookgrantlee")
+add_akonadi_isolated_test_advanced( mergecontactinfowidgettest.cpp "../widgets/mergecontactinfowidget.cpp" "${KDEPIMLIBS_AKONADI_CONTACT_LIBRARY};kaddressbookgrantlee")
 add_akonadi_isolated_test_advanced( searchandmergecontactduplicatecontactdialogtest.cpp "" "kaddressbookprivate")
-add_akonadi_isolated_test_advanced( searchduplicateresultwidgettest.cpp "" "kaddressbookprivate;kaddressbookgrantlee;kabc")
-add_akonadi_isolated_test_advanced( resultduplicatetreewidgettest.cpp "" "kaddressbookprivate;kabc")
-add_akonadi_isolated_test_advanced( searchpotentialduplicatecontactjobtest.cpp "../job/searchpotentialduplicatecontactjob.cpp" "kabc")
-add_akonadi_isolated_test_advanced( mergecontactselectinformationwidgettest.cpp "" "kaddressbookprivate;kabc")
-add_akonadi_isolated_test_advanced( mergecontactselectlistwidgettest.cpp "" "kaddressbookprivate;kabc")
+add_akonadi_isolated_test_advanced( searchduplicateresultwidgettest.cpp "" "kaddressbookprivate;kaddressbookgrantlee;${KDEPIMLIBS_KABC_LIBRARY}")
+add_akonadi_isolated_test_advanced( resultduplicatetreewidgettest.cpp "" "kaddressbookprivate;${KDEPIMLIBS_KABC_LIBRARY}")
+add_akonadi_isolated_test_advanced( searchpotentialduplicatecontactjobtest.cpp "../job/searchpotentialduplicatecontactjob.cpp" "${KDEPIMLIBS_KABC_LIBRARY}")
+add_akonadi_isolated_test_advanced( mergecontactselectinformationwidgettest.cpp "" "kaddressbookprivate;${KDEPIMLIBS_KABC_LIBRARY}")
+add_akonadi_isolated_test_advanced( mergecontactselectlistwidgettest.cpp "" "kaddressbookprivate;${KDEPIMLIBS_KABC_LIBRARY}")
 
-add_akonadi_isolated_test_advanced( mergecontactselectinformationscrollareatest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;kabc;akonadi-contact;kaddressbookgrantlee")
+add_akonadi_isolated_test_advanced( mergecontactselectinformationscrollareatest.cpp "../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;${KDEPIMLIBS_KABC_LIBRARY};${KDEPIMLIBS_AKONADI_CONTACT_LIBRARY};kaddressbookgrantlee")
 
-add_akonadi_isolated_test_advanced( mergecontactselectinformationtabwidgettest.cpp "" "kaddressbookprivate;kabc")
+add_akonadi_isolated_test_advanced( mergecontactselectinformationtabwidgettest.cpp "" "kaddressbookprivate;${KDEPIMLIBS_KABC_LIBRARY}")
 
-add_akonadi_isolated_test_advanced(mergecontactsdialogtest.cpp "../manualmerge/mergecontactsdialog.cpp;../widgets/mergecontacterrorlabel.cpp;../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;kabc;akonadi-contact;kaddressbookgrantlee")
-add_akonadi_isolated_test_advanced(mergecontactwidgetlisttest.cpp "../manualmerge/mergecontactwidgetlist.cpp;" "kaddressbookprivate;kabc;akonadi-contact")
+add_akonadi_isolated_test_advanced(mergecontactsdialogtest.cpp "../manualmerge/mergecontactsdialog.cpp;../widgets/mergecontacterrorlabel.cpp;../widgets/mergecontactinfowidget.cpp" "kaddressbookprivate;${KDEPIMLIBS_KABC_LIBRARY};${KDEPIMLIBS_AKONADI_CONTACT_LIBRARY};kaddressbookgrantlee")
+add_akonadi_isolated_test_advanced(mergecontactwidgetlisttest.cpp "../manualmerge/mergecontactwidgetlist.cpp;" "kaddressbookprivate;${KDEPIMLIBS_KABC_LIBRARY};${KDEPIMLIBS_AKONADI_CONTACT_LIBRARY}")
 
 set( kaddressbook_merge_mergecontactloseinformationwarning_source mergecontactloseinformationwarningtest.cpp ../widgets/mergecontactloseinformationwarning.cpp )
 kde4_add_unit_test( mergecontactloseinformationwarningtest ${kaddressbook_merge_mergecontactloseinformationwarning_source})

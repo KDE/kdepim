@@ -7,7 +7,7 @@ set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
 add_akonadi_isolated_test_advanced( gravatarcreatejobtest.cpp "../job/gravatarcreatejob.cpp" "kaddressbookprivate;pimcommon")
-add_akonadi_isolated_test_advanced( gravatarupdatejobtest.cpp "../job/gravatarupdatejob.cpp" "kaddressbookprivate;pimcommon;kabc")
+add_akonadi_isolated_test_advanced( gravatarupdatejobtest.cpp "../job/gravatarupdatejob.cpp" "kaddressbookprivate;pimcommon;${KDEPIMLIBS_KABC_LIBRARY}")
 add_akonadi_isolated_test_advanced( gravatarcreatewidgettest.cpp "../widgets/gravatarcreatewidget.cpp" "kaddressbookprivate;pimcommon")
 add_akonadi_isolated_test_advanced( gravatarcreatedialogtest.cpp "../widgets/gravatarcreatedialog.cpp;../widgets/gravatarcreatewidget.cpp" "kaddressbookprivate;pimcommon")
 add_akonadi_isolated_test_advanced( gravatarupdatedialogtest.cpp "../widgets/gravatarupdatedialog.cpp;../widgets/gravatarupdatewidget.cpp" "kaddressbookprivate;pimcommon")

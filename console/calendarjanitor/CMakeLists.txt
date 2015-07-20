@@ -34,6 +34,6 @@ target_link_libraries(calendarjanitor
                       ${KDEPIMLIBS_KCALCORE_LIBS}
                       kdepim
                       calendarsupport
-                      akonadi-calendar)
+                      ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS})
 
 install(TARGETS calendarjanitor  ${INSTALL_TARGETS_DEFAULT_ARGS})

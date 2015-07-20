@@ -16,7 +16,7 @@ if(BUILD_korganizer)
 endif()
 
 target_link_libraries(kontact_specialdatesplugin
-  akonadi-calendar
+  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
