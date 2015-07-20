@@ -425,7 +425,8 @@ void StorageServiceTreeWidget::canDownloadFile()
     if (itemTypeSelected() == StorageServiceTreeWidget::File) {
         Q_EMIT downloadFile();
     } else {
-        KMessageBox::error(this, i18n("Please select a file to download."), i18n("Download File"));
+        KMessageBox::error(this, i18n("Please select a file to download."),
+                           i18nc("@title:window", "Download File"));
     }
 }
 
@@ -479,7 +480,8 @@ void StorageServiceTreeWidget::slotCopyFolder()
 void StorageServiceTreeWidget::slotFileDoubleClicked()
 {
     if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability) {
-        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to download this file?"), i18n("Download File"))) {
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to download this file?"),
+                                                           i18nc("@title:window", "Download File"))) {
             Q_EMIT downloadFile();
         }
     }
