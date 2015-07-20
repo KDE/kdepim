@@ -17,6 +17,7 @@
 
 #include "isgdshorturl.h"
 
+#include <QJsonDocument>
 #include <QNetworkRequest>
 #include <QUrl>
 #include <qregexp.h>
@@ -36,7 +37,7 @@ IsGdShortUrl::~IsGdShortUrl()
 
 void IsGdShortUrl::start()
 {
-    const QString requestUrl = QStringLiteral("http://is.gd/create.php?url=%1").arg(mOriginalUrl);
+    const QString requestUrl = QStringLiteral("http://is.gd/create.php?%1&url=%2").arg(QStringLiteral("format=json")).arg(mOriginalUrl);
     QNetworkRequest request(requestUrl);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
@@ -60,10 +61,18 @@ void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply)
         return;
     }
 
-    QString output = QString::fromLatin1(reply->readAll());
-    qCDebug(PIMCOMMON_LOG) << "void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << output;
-    //TODO
-    if (!output.isEmpty()) {
-        Q_EMIT shortUrlDone(output);
+    const QByteArray data = reply->readAll();
+    QJsonParseError error;
+    const QJsonDocument json = QJsonDocument::fromJson(data, &error);
+    //qCDebug(PIMCOMMON_LOG) << "void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << data;
+
+    if (error.error != QJsonParseError::NoError || json.isNull()) {
+        qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
+        return;
+    }
+    const QMap<QString, QVariant> map = json.toVariant().toMap();
+
+    if (map.contains(QStringLiteral("shorturl"))) {
+        Q_EMIT shortUrlDone(map.value(QStringLiteral("shorturl")).toString());
     }
 }
