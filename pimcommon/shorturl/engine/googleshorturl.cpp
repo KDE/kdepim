@@ -61,9 +61,11 @@ void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
         const QByteArray data = reply->readAll();
         qCDebug(PIMCOMMON_LOG) << "void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply) " <<  data;
         QJsonParseError error;
+        reply->deleteLater();
         const QJsonDocument json = QJsonDocument::fromJson(data, &error);
         if (error.error != QJsonParseError::NoError || json.isNull()) {
             qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
+            Q_EMIT shortUrlFailed(error.errorString());
             return;
         }
         const QMap<QString, QVariant> map = json.toVariant().toMap();
@@ -72,6 +74,5 @@ void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
             Q_EMIT shortUrlDone(map.value(QStringLiteral("id")).toString());
         }
     }
-    reply->deleteLater();
 }
 

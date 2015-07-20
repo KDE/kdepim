@@ -56,7 +56,6 @@ void IsGdShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &e
 
 void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
-    reply->deleteLater();
     if (mErrorFound) {
         return;
     }
@@ -66,8 +65,11 @@ void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     const QJsonDocument json = QJsonDocument::fromJson(data, &error);
     //qCDebug(PIMCOMMON_LOG) << "void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << data;
 
+    reply->deleteLater();
+
     if (error.error != QJsonParseError::NoError || json.isNull()) {
         qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
+        Q_EMIT shortUrlFailed(error.errorString());
         return;
     }
     const QMap<QString, QVariant> map = json.toVariant().toMap();
