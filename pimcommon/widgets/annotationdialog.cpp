@@ -78,7 +78,7 @@ AnnotationEditDialog::AnnotationEditDialog(const Akonadi::Item &item, QWidget *p
         setWindowTitle(i18nc("@title:window", "Edit Note"));
         QPushButton *user1Button = new QPushButton;
         buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-        user1Button->setText(i18n("Delete Note"));
+        user1Button->setText(i18nc("@action:button", "Delete Note"));
         user1Button->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
         connect(user1Button, &QPushButton::clicked, this, &AnnotationEditDialog::slotDeleteNote);
     } else {
@@ -96,12 +96,12 @@ AnnotationEditDialog::AnnotationEditDialog(const Akonadi::Item &item, QWidget *p
 
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addStretch();
-    label = new QLabel(i18n("Note type:"));
+    label = new QLabel(i18nc("@label:listbox", "Note type:"));
     hbox->addWidget(label);
     d->mNoteType = new KComboBox;
     hbox->addWidget(d->mNoteType);
-    d->mNoteType->addItem(i18n("Private note"), QByteArray("/private/comment"));
-    d->mNoteType->addItem(i18n("Shared note"), QByteArray("/shared/comment"));
+    d->mNoteType->addItem(i18nc("@item:inlistbox", "Private note"), QByteArray("/private/comment"));
+    d->mNoteType->addItem(i18nc("@item:inlistbox", "Shared note"), QByteArray("/shared/comment"));
 
     vbox->addLayout(hbox);
     if (d->mHasAnnotation && item.attribute<Akonadi::EntityAnnotationsAttribute>()) {
@@ -145,7 +145,7 @@ void AnnotationEditDialog::slotDeleteNote()
     const int answer = KMessageBox::warningContinueCancel(this,
                        i18n("Do you really want to delete this note?"),
                        i18nc("@title:window", "Delete Note?"),
-                       KGuiItem(i18n("Delete"), QStringLiteral("edit-delete")));
+                       KGuiItem(i18nc("@action:button", "Delete"), QStringLiteral("edit-delete")));
     if (answer == KMessageBox::Continue) {
         d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
         new Akonadi::ItemModifyJob(d->mItem);

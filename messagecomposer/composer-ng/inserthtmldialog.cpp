@@ -60,7 +60,7 @@ public:
         QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
         okButton = buttonBox->button(QDialogButtonBox::Ok);
         okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-        okButton->setText(i18n("Insert"));
+        okButton->setText(i18nc("@action:button", "Insert"));
 
         q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
         q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
