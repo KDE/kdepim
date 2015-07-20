@@ -58,7 +58,7 @@ QString PimCommon::StorageServiceUtils::propertyNameToI18n(PropertyName type)
         result = i18n("Type:");
         break;
     case Name:
-        result = i18n("Name:");
+        result = i18nc("Name of file or folder", "Name:");
         break;
     case LastModified:
         result = i18n("Last Modified:");
