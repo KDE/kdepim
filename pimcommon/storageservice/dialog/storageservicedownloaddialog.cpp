@@ -211,7 +211,8 @@ void StorageServiceDownloadDialog::slotDownfileDone(const QString &serviceName, 
 {
     Q_UNUSED(serviceName);
     Q_UNUSED(filename);
-    KMessageBox::information(this, i18n("File was correctly downloaded."), i18n("Download file"));
+    KMessageBox::information(this, i18n("File was correctly downloaded."),
+                             i18nc("@title:window", "Download file"));
     reenableDialog();
 }
 
@@ -219,7 +220,8 @@ void StorageServiceDownloadDialog::slotDownfileFailed(const QString &serviceName
 {
     Q_UNUSED(serviceName);
     Q_UNUSED(filename);
-    KMessageBox::information(this, i18n("Error during download file."), i18n("Download file"));
+    KMessageBox::information(this, i18n("Error during download file."),
+                             i18nc("@title:window", "Download file"));
     reenableDialog();
 }
 
@@ -246,7 +248,8 @@ void StorageServiceDownloadDialog::downloadItem(StorageServiceTreeWidgetItem *it
         }
         QFileInfo fileInfo(destination + QLatin1Char('/') + filename);
         if (fileInfo.exists()) {
-            if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("Filename already exists. Do you want to overwrite it?"), i18n("Overwrite file"))) {
+            if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("Filename already exists. Do you want to overwrite it?"),
+                                                              i18nc("@title:window", "Overwrite file"))) {
                 return;
             }
         }

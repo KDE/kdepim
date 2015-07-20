@@ -43,7 +43,7 @@ public:
     InsertHtmlDialogPrivate(InsertHtmlDialog *qq)
         : q(qq)
     {
-        q->setWindowTitle(i18n("Insert HTML"));
+        q->setWindowTitle(i18nc("@title:window", "Insert HTML"));
         QVBoxLayout *lay = new QVBoxLayout;
         q->setLayout(lay);
         QLabel *label = new QLabel(i18n("Insert HTML tags and texts:"));

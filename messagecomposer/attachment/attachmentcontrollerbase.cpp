@@ -854,7 +854,8 @@ void AttachmentControllerBase::attachmentProperties(AttachmentPart::Ptr part)
 
 void AttachmentControllerBase::attachDirectory(const QUrl &url)
 {
-    const int rc = KMessageBox::warningYesNo(d->wParent, i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile()), i18n("Attach directory"));
+    const int rc = KMessageBox::warningYesNo(d->wParent, i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile()),
+                                             i18nc("@title:window", "Attach directory"));
     if (rc == KMessageBox::Yes) {
         addAttachment(url);
     }
@@ -889,7 +890,7 @@ void AttachmentControllerBase::showAttachVcard()
 
 void AttachmentControllerBase::showAddAttachmentCompressedDirectoryDialog()
 {
-    const QUrl url = QFileDialog::getExistingDirectoryUrl(d->wParent, i18n("Attach Directory"));
+    const QUrl url = QFileDialog::getExistingDirectoryUrl(d->wParent, i18nc("@title:window", "Attach Directory"));
     if (url.isValid()) {
         attachDirectory(url);
     }
@@ -901,7 +902,7 @@ void AttachmentControllerBase::showAddAttachmentFileDialog()
                                          QUrl(),
                                          QString(),
                                          d->wParent,
-                                         i18n("Attach File"));
+                                         i18nc("@title:window", "Attach File"));
     if (!result.URLs.isEmpty()) {
         const QString encoding = MessageViewer::NodeHelper::fixEncoding(result.encoding);
         const int numberOfFiles(result.URLs.count());
@@ -910,7 +911,8 @@ void AttachmentControllerBase::showAddAttachmentFileDialog()
             QUrl urlWithEncoding = url;
             MessageCore::StringUtil::setEncodingFile(urlWithEncoding, encoding);
             if (KMimeType::findByUrl(urlWithEncoding)->name() == QLatin1String("inode/directory")) {
-                const int rc = KMessageBox::warningYesNo(d->wParent, i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile()), i18n("Attach directory"));
+                const int rc = KMessageBox::warningYesNo(d->wParent, i18n("Do you really want to attach this directory \"%1\" ?", url.toLocalFile()),
+                                                         i18nc("@title:window", "Attach directory"));
                 if (rc == KMessageBox::Yes) {
                     addAttachment(urlWithEncoding);
                 }
@@ -941,7 +943,7 @@ void AttachmentControllerBase::addAttachmentUrlSync(const QUrl &url)
         addAttachment(part);
     } else {
         if (ajob->error()) {
-            KMessageBox::sorry(d->wParent, ajob->errorString(), i18n("Failed to attach file"));
+            KMessageBox::sorry(d->wParent, ajob->errorString(), i18nc("@title:window", "Failed to attach file"));
         }
     }
 }

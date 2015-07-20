@@ -34,7 +34,7 @@ using namespace PimCommon;
 StorageServicePropertiesDialog::StorageServicePropertiesDialog(const QMap<QString, QString> &information, QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle(i18n("Properties"));
+    setWindowTitle(i18nc("@title:window", "Properties"));
 
     createInformationWidget(information);
     readConfig();

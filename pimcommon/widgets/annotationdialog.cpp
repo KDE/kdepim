@@ -75,14 +75,14 @@ AnnotationEditDialog::AnnotationEditDialog(const Akonadi::Item &item, QWidget *p
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AnnotationEditDialog::reject);
 
     if (d->mHasAnnotation) {
-        setWindowTitle(i18n("Edit Note"));
+        setWindowTitle(i18nc("@title:window", "Edit Note"));
         QPushButton *user1Button = new QPushButton;
         buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
         user1Button->setText(i18n("Delete Note"));
         user1Button->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
         connect(user1Button, &QPushButton::clicked, this, &AnnotationEditDialog::slotDeleteNote);
     } else {
-        setWindowTitle(i18n("Add Note"));
+        setWindowTitle(i18nc("@title:window", "Add Note"));
     }
 
     buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
@@ -144,7 +144,8 @@ void AnnotationEditDialog::slotDeleteNote()
 {
     const int answer = KMessageBox::warningContinueCancel(this,
                        i18n("Do you really want to delete this note?"),
-                       i18n("Delete Note?"), KGuiItem(i18n("Delete"), QStringLiteral("edit-delete")));
+                       i18nc("@title:window", "Delete Note?"),
+                       KGuiItem(i18n("Delete"), QStringLiteral("edit-delete")));
     if (answer == KMessageBox::Continue) {
         d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
         new Akonadi::ItemModifyJob(d->mItem);
