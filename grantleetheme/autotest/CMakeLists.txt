@@ -1,4 +1,4 @@
-add_definitions( -DGRANTLEETHEME_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/data\\"" )
+add_definitions( -DGRANTLEETHEME_DATA_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\" )
 
 
 set( grantlee_theme_source grantleethemetest.cpp ../grantleetheme.cpp)

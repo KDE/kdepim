@@ -4,7 +4,7 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 set( GNUPGHOME ${CMAKE_BINARY_DIR}/messagecore/tests/gnupg_home )
-add_definitions( -DGNUPGHOME="\\"${GNUPGHOME}\\"" )
+add_definitions( -DGNUPGHOME=\"${GNUPGHOME}\" )
 
 macro (KDE4_HANDLE_CRYPTO_RPATH_FOR_EXECUTABLE _target_NAME)
    if (UNIX)
