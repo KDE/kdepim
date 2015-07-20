@@ -17,6 +17,7 @@
 
 #include "shareserviceurlmanager.h"
 
+#include "pimcommon_debug.h"
 #include <KActionMenu>
 #include <KLocalizedString>
 #include <QMenu>
@@ -66,6 +67,7 @@ QIcon ShareServiceUrlManager::typeToIcon(ServiceType type)
     case LiveJournal:
         break;
     case ServiceEndType:
+        qCWarning(PIMCOMMON_LOG) <<"icon for unknow type requested. It's a bug.";
         break;
     }
 
