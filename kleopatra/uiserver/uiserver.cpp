@@ -206,7 +206,7 @@ void UiServer::Private::slotConnectionClosed(Kleo::AssuanServerConnection *conn)
     }
 }
 
-void UiServer::Private::incomingConnection(int fd)
+void UiServer::Private::incomingConnection(qintptr fd)
 {
     try {
         qCDebug(KLEOPATRA_LOG) << "UiServer: client connect on fd " << fd;
