@@ -190,8 +190,8 @@ PRIVATE
   KF5::MailTransport
   KF5::KIOWidgets
   KF5::NewStuff
-  Qt5::WebEngineWidgets
-  KF5::PimTextEdit 
+  Qt5::WebKitWidgets
+  KF5::PimTextEdit
 )
 
 set_target_properties(

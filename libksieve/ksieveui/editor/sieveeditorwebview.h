@@ -18,11 +18,11 @@
 #ifndef SIEVEEDITORWEBVIEW_H
 #define SIEVEEDITORWEBVIEW_H
 
-#include <QWebEngineView>
+#include <QWebView>
 
 namespace KSieveUi
 {
-class SieveEditorWebView : public QWebEngineView
+class SieveEditorWebView : public QWebView
 {
     Q_OBJECT
 public:
