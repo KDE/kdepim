@@ -26,6 +26,9 @@ class GravatarConfigureSettingsDialogTest : public QObject
 public:
     explicit GravatarConfigureSettingsDialogTest(QObject *parent = Q_NULLPTR);
     ~GravatarConfigureSettingsDialogTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // GRAVATARCONFIGURESETTINGSDIALOGTEST_H

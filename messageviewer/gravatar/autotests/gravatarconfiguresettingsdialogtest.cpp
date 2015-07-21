@@ -16,6 +16,11 @@
 */
 
 #include "gravatarconfiguresettingsdialogtest.h"
+#include "../gravatarconfiguresettingsdialog.h"
+#include <QCheckBox>
+#include <QLabel>
+#include <QPushButton>
+#include <QSpinBox>
 #include <QTest>
 
 
@@ -29,6 +34,28 @@ GravatarConfigureSettingsDialogTest::GravatarConfigureSettingsDialogTest(QObject
 GravatarConfigureSettingsDialogTest::~GravatarConfigureSettingsDialogTest()
 {
 
+}
+
+void GravatarConfigureSettingsDialogTest::shouldHaveDefaultValue()
+{
+    MessageViewer::GravatarConfigureSettingsDialog dlg;
+    QCheckBox *useDefaultImage = dlg.findChild<QCheckBox *>(QStringLiteral("usedefaultimage"));
+    QVERIFY(useDefaultImage);
+
+    QPushButton *clearGravatarCache = dlg.findChild<QPushButton *>(QStringLiteral("cleargravatarcachebutton"));
+    QVERIFY(clearGravatarCache);
+
+    QLabel *lab = dlg.findChild<QLabel *>(QStringLiteral("gravatarcachesizelabel"));
+    QVERIFY(lab);
+
+    QSpinBox *gravatarCacheSize = dlg.findChild<QSpinBox *>(QStringLiteral("gravatarcachesize"));
+    QVERIFY(gravatarCacheSize);
+
+    QCheckBox *useLibravatar = dlg.findChild<QCheckBox *>(QStringLiteral("uselibravatarcheckbox"));
+    QVERIFY(useLibravatar);
+
+    QCheckBox *fallbackGravatar = dlg.findChild<QCheckBox *>(QStringLiteral("fallbackgravatar"));
+    QVERIFY(fallbackGravatar);
 }
 
 QTEST_MAIN(GravatarConfigureSettingsDialogTest)

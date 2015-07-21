@@ -44,23 +44,20 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     connect(buttonBox, &QDialogButtonBox::rejected, this, &GravatarConfigureSettingsDialog::reject);
     okButton->setDefault(true);
 
-    QVBoxLayout *groupboxLayout = new QVBoxLayout;
-    setLayout(groupboxLayout);
-
     mUseLibravatar = new QCheckBox(i18n("Use Libravatar"));
     mUseLibravatar->setObjectName(QStringLiteral("uselibravatarcheckbox"));
-    groupboxLayout->addWidget(mUseLibravatar);
+    topLayout->addWidget(mUseLibravatar);
 
     mFallbackGravatar = new QCheckBox(i18n("Fallback to Gravatar"));
     mFallbackGravatar->setObjectName(QStringLiteral("fallbackgravatar"));
-    groupboxLayout->addWidget(mFallbackGravatar);
+    topLayout->addWidget(mFallbackGravatar);
 
     mUseDefaultPixmap = new QCheckBox(i18n("Use Default Image"));
     mUseDefaultPixmap->setObjectName(QStringLiteral("usedefaultimage"));
-    groupboxLayout->addWidget(mUseDefaultPixmap);
+    topLayout->addWidget(mUseDefaultPixmap);
 
     QHBoxLayout *cacheSizeLayout = new QHBoxLayout;
-    groupboxLayout->addLayout(cacheSizeLayout);
+    topLayout->addLayout(cacheSizeLayout);
     QLabel *lab = new QLabel(i18n("Gravatar Cache Size:"));
     lab->setObjectName(QStringLiteral("gravatarcachesizelabel"));
     cacheSizeLayout->addWidget(lab);
@@ -69,19 +66,18 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     mGravatarCacheSize->setMinimum(1);
     mGravatarCacheSize->setMaximum(9999);
     mGravatarCacheSize->setObjectName(QStringLiteral("gravatarcachesize"));
-    connect(mGravatarCacheSize, SIGNAL(valueChanged(int)), this, SLOT(slotGravatarCacheSizeChanged()));
     cacheSizeLayout->addWidget(mGravatarCacheSize);
     cacheSizeLayout->addStretch();
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
-    groupboxLayout->addLayout(buttonLayout);
+    topLayout->addLayout(buttonLayout);
     mClearGravatarCache = new QPushButton(i18n("Clear Gravatar Cache"));
     mClearGravatarCache->setObjectName(QStringLiteral("cleargravatarcachebutton"));
     buttonLayout->addWidget(mClearGravatarCache);
     buttonLayout->addStretch();
 
     connect(mClearGravatarCache, &QAbstractButton::clicked, this, &GravatarConfigureSettingsDialog::slotClearGravatarCache);
-    groupboxLayout->addWidget(buttonBox);
+    topLayout->addWidget(buttonBox);
 }
 
 GravatarConfigureSettingsDialog::~GravatarConfigureSettingsDialog()
