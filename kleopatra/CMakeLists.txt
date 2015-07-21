@@ -32,7 +32,6 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/
   ${CMAKE_SOURCE_DIR}/libkleo
   ${CMAKE_SOURCE_DIR}/libkdepim
-  ${CMAKE_SOURCE_DIR}/mobile/lib
   ${Boost_INCLUDE_DIR}
 )
 
