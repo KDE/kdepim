@@ -192,8 +192,8 @@ public Q_SLOTS:
     void selectIncidenceByUid(const QString &id);
     void selectItem(const Akonadi::Item &item);
 
-    bool removeAgendaItem(const AgendaItem::QPtr & item);
-    void showAgendaItem(const AgendaItem::QPtr & item);
+    bool removeAgendaItem(const AgendaItem::QPtr &item);
+    void showAgendaItem(const AgendaItem::QPtr &item);
 
 Q_SIGNALS:
     void newEventSignal();
@@ -295,7 +295,7 @@ protected:
     void endItemAction();
 
     /** Set cursor, when no item action is in progress */
-    void setNoActionCursor(const AgendaItem::QPtr & moveItem, const QPoint &viewportPos);
+    void setNoActionCursor(const AgendaItem::QPtr &moveItem, const QPoint &viewportPos);
     /** Sets the cursor according to the given action type.
         @param actionType The type of action for which the cursor should be set.
         @param acting If true, the corresponding action is running (e.g. the
@@ -305,13 +305,13 @@ protected:
     void setActionCursor(int actionType, bool acting = false);
 
     /** calculate the width of the column subcells of the given item */
-    double calcSubCellWidth(const AgendaItem::QPtr & item);
+    double calcSubCellWidth(const AgendaItem::QPtr &item);
     /** Move and resize the given item to the correct position */
-    void placeAgendaItem(const AgendaItem::QPtr & item, double subCellWidth);
+    void placeAgendaItem(const AgendaItem::QPtr &item, double subCellWidth);
     /** Place agenda item in agenda and adjust other cells if necessary */
-    void placeSubCells(const AgendaItem::QPtr & placeItem);
+    void placeSubCells(const AgendaItem::QPtr &placeItem);
     /** Place the agenda item at the correct position (ignoring conflicting items) */
-    void adjustItemPosition(const AgendaItem::QPtr & item);
+    void adjustItemPosition(const AgendaItem::QPtr &item);
 
     /** Process the keyevent, including the ignored keyevents of eventwidgets.
      * Implements pgup/pgdn and cursor key navigation in the view.

@@ -39,7 +39,7 @@ Q_SIGNALS:
     void configChanged(bool);
 
 private Q_SLOTS:
-    void slotGravatarEnableChanged(bool state);    
+    void slotGravatarEnableChanged(bool state);
     void slotConfigureSettings();
 
 private:

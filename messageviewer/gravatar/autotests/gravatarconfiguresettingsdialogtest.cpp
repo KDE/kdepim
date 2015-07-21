@@ -23,8 +23,6 @@
 #include <QSpinBox>
 #include <QTest>
 
-
-
 GravatarConfigureSettingsDialogTest::GravatarConfigureSettingsDialogTest(QObject *parent)
     : QObject(parent)
 {

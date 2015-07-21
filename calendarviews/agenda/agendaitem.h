@@ -177,7 +177,7 @@ public:
         return mStartMoveInfo;
     }
 
-    void setMultiItem(const AgendaItem::QPtr & first, const AgendaItem::QPtr &prev,
+    void setMultiItem(const AgendaItem::QPtr &first, const AgendaItem::QPtr &prev,
                       const AgendaItem::QPtr &next, const AgendaItem::QPtr &last);
 
     AgendaItem::QPtr prependMoveItem(const AgendaItem::QPtr &);
@@ -237,7 +237,7 @@ public:
 
     QList<AgendaItem::QPtr> &conflictItems();
     void setConflictItems(const QList<AgendaItem::QPtr> &);
-    void addConflictItem(const AgendaItem::QPtr & ci);
+    void addConflictItem(const AgendaItem::QPtr &ci);
 
     QString label() const Q_DECL_OVERRIDE;
 
