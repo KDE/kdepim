@@ -38,6 +38,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
 {
     Q_OBJECT
 public:
+    using IncidenceEditorNG::IncidenceEditor::load;  // So we don't trigger -Woverloaded-virtual
+    using IncidenceEditorNG::IncidenceEditor::save;  // So we don't trigger -Woverloaded-virtual
 #ifdef KDEPIM_MOBILE_UI
     IncidenceAlarm(IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui);
 #else

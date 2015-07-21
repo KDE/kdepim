@@ -42,6 +42,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceWhatWhere : public IncidenceEditor
 {
     Q_OBJECT
 public:
+    using IncidenceEditorNG::IncidenceEditor::save; // So we don't trigger -Woverloaded-virtual
+    using IncidenceEditorNG::IncidenceEditor::load; // So we don't trigger -Woverloaded-virtual    
+
     explicit IncidenceWhatWhere(Ui::EventOrTodoDesktop *ui);
 
     virtual void load(const KCalCore::Incidence::Ptr &incidence);

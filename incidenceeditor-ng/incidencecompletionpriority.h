@@ -35,6 +35,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCompletionPriority : public IncidenceE
 {
     Q_OBJECT
 public:
+    using IncidenceEditorNG::IncidenceEditor::save; // So we don't trigger -Woverloaded-virtual
+    using IncidenceEditorNG::IncidenceEditor::load; // So we don't trigger -Woverloaded-virtual    
+
     explicit IncidenceCompletionPriority(Ui::EventOrTodoDesktop *ui);
     ~IncidenceCompletionPriority();
 
