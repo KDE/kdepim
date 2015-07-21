@@ -17,6 +17,8 @@
 
 #include "gravatarconfiguresettingsdialog.h"
 #include "pimcommon/gravatar/gravatarcache.h"
+#include "settings/globalsettings.h"
+#include "pimcommon/widgets/configureimmutablewidgetutils.h"
 
 #include <KLocalizedString>
 #include <QBoxLayout>
@@ -27,10 +29,21 @@
 #include <QSpinBox>
 
 using namespace MessageViewer;
+using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
 GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent)
     : QDialog(parent)
 {
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QVBoxLayout *topLayout = new QVBoxLayout;
+    setLayout(topLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &GravatarConfigureSettingsDialog::save);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &GravatarConfigureSettingsDialog::reject);
+    okButton->setDefault(true);
+
     QVBoxLayout *groupboxLayout = new QVBoxLayout;
     setLayout(groupboxLayout);
 
@@ -68,7 +81,7 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     buttonLayout->addStretch();
 
     connect(mClearGravatarCache, &QAbstractButton::clicked, this, &GravatarConfigureSettingsDialog::slotClearGravatarCache);
-
+    groupboxLayout->addWidget(buttonBox);
 }
 
 GravatarConfigureSettingsDialog::~GravatarConfigureSettingsDialog()
@@ -78,12 +91,19 @@ GravatarConfigureSettingsDialog::~GravatarConfigureSettingsDialog()
 
 void GravatarConfigureSettingsDialog::save()
 {
-
+    saveCheckBox(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
+    saveSpinBox(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
+    saveCheckBox(mFallbackGravatar, MessageViewer::GlobalSettings::self()->fallbackToGravatarItem());
+    saveCheckBox(mUseLibravatar, MessageViewer::GlobalSettings::self()->libravatarSupportEnabledItem());
+    accept();
 }
 
 void GravatarConfigureSettingsDialog::load()
 {
-
+    loadWidget(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
+    loadWidget(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
+    loadWidget(mFallbackGravatar, MessageViewer::GlobalSettings::self()->fallbackToGravatarItem());
+    loadWidget(mUseLibravatar, MessageViewer::GlobalSettings::self()->libravatarSupportEnabledItem());
 }
 
 void GravatarConfigureSettingsDialog::slotClearGravatarCache()

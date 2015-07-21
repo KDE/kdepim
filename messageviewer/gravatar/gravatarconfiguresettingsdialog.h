@@ -34,9 +34,9 @@ public:
 
 private Q_SLOTS:
     void slotClearGravatarCache();
+    void save();
 
 private:
-    void save();
     void load();
     QCheckBox *mUseDefaultPixmap;
     QCheckBox *mUseLibravatar;
