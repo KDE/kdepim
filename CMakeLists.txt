@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 2.8.9)
 project(kdepim)
 
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
