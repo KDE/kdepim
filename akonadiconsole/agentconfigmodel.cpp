@@ -70,7 +70,7 @@ void AgentConfigModel::reload()
         }
         const QString methodName = QString::fromLatin1(signature.left(signature.indexOf('(')));
         const QDBusMessage reply = m_interface->call(methodName);
-        if (!reply.arguments().count() == 1) {
+        if (reply.arguments().count() != 1) {
             qCCritical(AKONADICONSOLE_LOG) << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
             continue;
         }
