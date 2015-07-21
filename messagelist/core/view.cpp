@@ -2233,7 +2233,7 @@ void View::mousePressEvent(QMouseEvent *e)
 
 void View::mouseMoveEvent(QMouseEvent *e)
 {
-    if (!e->buttons() & Qt::LeftButton) {
+    if (!(e->buttons() & Qt::LeftButton)) {
         QTreeView::mouseMoveEvent(e);
         return;
     }
