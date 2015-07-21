@@ -16,7 +16,7 @@
 */
 
 #include "gravatarconfigwidgettest.h"
-#include "../widgets/gravatarconfigwidget.h"
+#include "../../gravatar/gravatarconfigwidget.h"
 #include <QSpinBox>
 #include <QCheckBox>
 #include <qtest.h>

@@ -112,7 +112,11 @@ set(libmessageviewer_widgets_SRCS
   widgets/eventdatetimewidget.cpp
   widgets/mailsourceviewer.cpp
   widgets/mailsourceviewtextbrowserwidget.cpp
-  widgets/gravatarconfigwidget.cpp
+)
+
+set(libmessageviewer_gravatar_SRCS
+  gravatar/gravatarconfigwidget.cpp
+  gravatar/gravatarconfiguresettingsdialog.cpp
 )
 
 set(libmessageviewer_header_SRCS
@@ -187,6 +191,7 @@ set(libmessageviewer_SRCS
   settings/globalsettings.cpp
   messageviewer_debug.cpp
   ${_mailwebview_cpp}
+  ${libmessageviewer_gravatar_SRCS}
 )
 
 kconfig_add_kcfg_files(libmessageviewer_SRCS
@@ -252,6 +257,7 @@ add_subdirectory(grantleefilters)
 if(BUILD_TESTING)
     add_subdirectory(scamdetection/tests)
     add_subdirectory(adblock/tests/)
+    add_subdirectory(gravatar/autotests/)
 endif()
 
 install(FILES notify/messageviewer.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
