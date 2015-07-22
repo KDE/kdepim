@@ -27,10 +27,9 @@ SieveInfoWidget::SieveInfoWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
-    mInfo = new KTextEdit;
+    mInfo = new QTextEdit;
     mInfo->setReadOnly(true);
     mInfo->setAcceptRichText(true);
-    mInfo->enableFindReplace(false);
     lay->addWidget(mInfo);
     setLayout(lay);
 }

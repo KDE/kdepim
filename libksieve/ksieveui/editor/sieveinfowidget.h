@@ -20,7 +20,7 @@
 
 #include <QWidget>
 
-class KTextEdit;
+class QTextEdit;
 
 namespace KSieveUi
 {
@@ -34,7 +34,7 @@ public:
     void setServerInfo(QStringList info);
 
 private:
-    KTextEdit *mInfo;
+    QTextEdit *mInfo;
 };
 }
 
