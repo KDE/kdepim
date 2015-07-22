@@ -16,8 +16,13 @@
 */
 
 #include "sievescriptdebuggerwidget.h"
+#include "sievescriptdebuggerfontendwidget.h"
+
+#include <KLocalizedString>
+
 #include <QStackedWidget>
 #include <QHBoxLayout>
+#include <QLabel>
 
 using namespace KSieveUi;
 SieveScriptDebuggerWidget::SieveScriptDebuggerWidget(QWidget *parent)
@@ -26,7 +31,17 @@ SieveScriptDebuggerWidget::SieveScriptDebuggerWidget(QWidget *parent)
     QHBoxLayout *mainLayout = new QHBoxLayout;
     setLayout(mainLayout);
     mStackedWidget = new QStackedWidget(this);
+    mStackedWidget->setObjectName(QStringLiteral("stackedwidget"));
     mainLayout->addWidget(mStackedWidget);
+
+    mSieveScriptFrontEnd = new SieveScriptDebuggerFontEndWidget;
+    mSieveScriptFrontEnd->setObjectName(QStringLiteral("sievescriptfrontend"));
+    mStackedWidget->addWidget(mSieveScriptFrontEnd);
+
+    // kf5.1 add i18n
+    mSieveNoExistingFrontEnd = new QLabel(QStringLiteral("sieve-test was not found on system. Please install it."));
+    mSieveNoExistingFrontEnd->setObjectName(QStringLiteral("sievenoexistingfrontend"));
+    mStackedWidget->addWidget(mSieveNoExistingFrontEnd);
 }
 
 SieveScriptDebuggerWidget::~SieveScriptDebuggerWidget()

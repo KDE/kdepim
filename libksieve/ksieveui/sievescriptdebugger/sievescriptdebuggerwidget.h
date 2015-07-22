@@ -21,8 +21,10 @@
 #include <QWidget>
 #include "ksieveui_export.h"
 class QStackedWidget;
+class QLabel;
 namespace KSieveUi
 {
+class SieveScriptDebuggerFontEndWidget;
 class KSIEVEUI_EXPORT SieveScriptDebuggerWidget : public QWidget
 {
     Q_OBJECT
@@ -31,6 +33,8 @@ public:
     ~SieveScriptDebuggerWidget();
 private:
     QStackedWidget *mStackedWidget;
+    SieveScriptDebuggerFontEndWidget *mSieveScriptFrontEnd;
+    QLabel *mSieveNoExistingFrontEnd;
 };
 }
 #endif // SIEVESCRIPTDEBUGGERWIDGET_H

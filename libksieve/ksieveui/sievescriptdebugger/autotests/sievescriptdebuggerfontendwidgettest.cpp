@@ -15,21 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVESCRIPTDEBUGGERWIDGETTEST_H
-#define SIEVESCRIPTDEBUGGERWIDGETTEST_H
+#include "sievescriptdebuggerfontendwidgettest.h"
+#include <QTest>
 
-#include <QObject>
-
-class SieveScriptDebuggerWidgetTest : public QObject
+SieveScriptDebuggerFontEndWidgetTest::SieveScriptDebuggerFontEndWidgetTest(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit SieveScriptDebuggerWidgetTest(QObject *parent = Q_NULLPTR);
-    ~SieveScriptDebuggerWidgetTest();
 
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
+}
 
-};
+SieveScriptDebuggerFontEndWidgetTest::~SieveScriptDebuggerFontEndWidgetTest()
+{
 
-#endif // SIEVESCRIPTDEBUGGERWIDGETTEST_H
+}
+
+QTEST_MAIN(SieveScriptDebuggerFontEndWidgetTest)

@@ -12,4 +12,4 @@ endmacro()
 
 add_sievescriptdebugger_test( sievescriptdebuggerdialogtest.cpp )
 add_sievescriptdebugger_test( sievescriptdebuggerwidgettest.cpp )
-
+add_sievescriptdebugger_test( sievescriptdebuggerfontendwidgettest.cpp )

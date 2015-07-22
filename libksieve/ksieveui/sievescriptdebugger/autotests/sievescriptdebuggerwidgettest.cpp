@@ -16,7 +16,9 @@
 */
 
 #include "sievescriptdebuggerwidgettest.h"
+#include "../sievescriptdebuggerwidget.h"
 #include <QTest>
+#include <QStackedWidget>
 
 SieveScriptDebuggerWidgetTest::SieveScriptDebuggerWidgetTest(QObject *parent)
     : QObject(parent)
@@ -27,6 +29,19 @@ SieveScriptDebuggerWidgetTest::SieveScriptDebuggerWidgetTest(QObject *parent)
 SieveScriptDebuggerWidgetTest::~SieveScriptDebuggerWidgetTest()
 {
 
+}
+
+void SieveScriptDebuggerWidgetTest::shouldHaveDefaultValue()
+{
+    KSieveUi::SieveScriptDebuggerWidget w;
+    QStackedWidget *stackedwidget = w.findChild<QStackedWidget *>(QStringLiteral("stackedwidget"));
+    QVERIFY(stackedwidget);
+
+    QCOMPARE(stackedwidget->count(), 2);
+    for (int i = 0; i < stackedwidget->count(); ++i) {
+        QWidget *w = stackedwidget->widget(i);
+        QVERIFY((w->objectName() == QStringLiteral("sievescriptfrontend")) || (w->objectName() == QStringLiteral("sievenoexistingfrontend")));
+    }
 }
 
 QTEST_MAIN(SieveScriptDebuggerWidgetTest)
