@@ -67,13 +67,6 @@ static void update(const QString &fname, const QString &id)
     }
 }
 
-QString FileDialog::getExistingDirectory(QWidget *parent, const QString &caption, const QString &dirID)
-{
-    const QString fname = QFileDialog::getExistingDirectory(parent, caption, dir(dirID));
-    update(fname, dirID);
-    return fname;
-}
-
 QString FileDialog::getOpenFileName(QWidget *parent, const QString &caption, const QString &dirID, const QString &filter)
 {
     const QString fname = QFileDialog::getOpenFileName(parent, caption, dir(dirID), filter);

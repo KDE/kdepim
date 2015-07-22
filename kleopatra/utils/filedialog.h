@@ -41,7 +41,6 @@ namespace Kleo
 namespace FileDialog
 {
 
-QString getExistingDirectory(QWidget *parent = Q_NULLPTR, const QString &caption = QString(), const QString &dirID = QString());
 QString getOpenFileName(QWidget *parent = Q_NULLPTR, const QString &caption = QString(), const QString &dirID = QString(), const QString &filter = QString());
 QStringList getOpenFileNames(QWidget *parent = Q_NULLPTR, const QString &caption = QString(), const QString &dirID = QString(), const QString &filter = QString());
 QString getSaveFileName(QWidget *parent = Q_NULLPTR, const QString &caption = QString(), const QString &dirID = QString(), const QString &filter = QString());
