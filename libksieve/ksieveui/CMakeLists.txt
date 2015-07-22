@@ -151,6 +151,11 @@ set(ksieveui_scriptsparsing_LIB_SRCS
   scriptsparsing/parsingutil.cpp
 )
 
+set(ksieveui_sievescriptdebugger_LIB_SRCS
+  sievescriptdebugger/sievescriptdebuggerdialog.cpp
+  sievescriptdebugger/sievescriptdebuggerwidget.cpp
+)
+
 set(ksieveui_LIB_SRCS
   managesievescriptsdialog.cpp
   libksieve_debug.cpp
@@ -168,6 +173,7 @@ set(ksieveui_LIB_SRCS
   ${ksieveui_vacation_LIB_SRCS}
   ${ksieveui_editor_LIB_SRCS}
   ${ksieveui_autocreatescripts_LIB_SRCS}
+  ${ksieveui_sievescriptdebugger_LIB_SRCS}
 )
 
 
@@ -208,4 +214,6 @@ if (BUILD_TESTING)
     add_subdirectory(autocreatescripts/tests)
     add_subdirectory(scriptsparsing/tests)
     add_subdirectory(vacation/tests)
+    add_subdirectory(sievescriptdebugger/autotests)
+    #add_subdirectory(sievescriptdebugger/tests)
 endif ()
