@@ -179,7 +179,7 @@ void SieveDebugDialog::slotGetScriptList(KManageSieve::SieveJob *job, bool succe
         for (QStringList::const_iterator it = caps.constBegin(); it != end; ++it) {
             mEdit->editor()->appendPlainText(QLatin1String("* ") + *it + QLatin1Char('\n'));
         }
-        mEdit->editor()->appendPlainText(QLatin1String("\n"));
+        mEdit->editor()->appendPlainText(QStringLiteral("\n"));
     }
 
     mEdit->editor()->appendPlainText(i18n("Available Sieve scripts:\n"));
