@@ -258,6 +258,11 @@ void SieveEditorPageWidget::lowerCase()
     mSieveEditorWidget->lowerCase();
 }
 
+void SieveEditorPageWidget::debugSieveScript()
+{
+    mSieveEditorWidget->debugSieveScript();
+}
+
 void SieveEditorPageWidget::upperCase()
 {
     mSieveEditorWidget->upperCase();

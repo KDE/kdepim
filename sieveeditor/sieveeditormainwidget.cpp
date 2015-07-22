@@ -402,6 +402,17 @@ void SieveEditorMainWidget::slotReverseCase()
     }
 }
 
+void SieveEditorMainWidget::slotDebugSieveScript()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->debugSieveScript();
+        }
+    }
+}
+
 void SieveEditorMainWidget::slotUpperCase()
 {
     QWidget *w = mTabWidget->currentWidget();

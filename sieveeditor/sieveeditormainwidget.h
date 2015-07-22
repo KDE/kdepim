@@ -55,6 +55,7 @@ public:
     QUrl currentHelpUrl() const;
     void openBookmarkUrl(const QUrl &url);
 public Q_SLOTS:
+    void slotDebugSieveScript();
     void slotGoToLine();
 
     void slotReplace();

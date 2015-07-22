@@ -583,6 +583,14 @@ void SieveEditorWidget::lowerCase()
     }
 }
 
+void SieveEditorWidget::debugSieveScript()
+{
+    if (mMode == TextMode) {
+        //TODO
+        //mTextModeWidget->debugSieveScript();
+    }
+}
+
 void SieveEditorWidget::upperCase()
 {
     if (mMode == TextMode) {

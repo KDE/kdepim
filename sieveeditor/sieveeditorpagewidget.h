@@ -78,6 +78,7 @@ public:
     QString currentHelpTitle() const;
     QUrl currentHelpUrl() const;
     void openBookmarkUrl(const QUrl &url);
+    void debugSieveScript();
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

@@ -78,6 +78,7 @@ public:
     QString currentHelpTitle() const;
     QUrl currentHelpUrl() const;
     void openBookmarkUrl(const QUrl &url);
+    void debugSieveScript();
 public Q_SLOTS:
     void find();
     void replace();
