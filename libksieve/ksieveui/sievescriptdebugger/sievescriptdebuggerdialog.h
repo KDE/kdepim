@@ -23,6 +23,7 @@
 
 namespace KSieveUi
 {
+class SieveScriptDebuggerWidget;
 class KSIEVEUI_EXPORT SieveScriptDebuggerDialog : public QDialog
 {
     Q_OBJECT
@@ -32,6 +33,7 @@ public:
 private:
     void writeConfig();
     void readConfig();
+    SieveScriptDebuggerWidget *mSieveScriptDebuggerWidget;
 };
 }
 

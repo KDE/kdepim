@@ -27,6 +27,8 @@ public:
     explicit SieveScriptDebuggerDialogTest(QObject *parent = Q_NULLPTR);
     ~SieveScriptDebuggerDialogTest();
 
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // SIEVESCRIPTDEBUGGERDIALOGTEST_H

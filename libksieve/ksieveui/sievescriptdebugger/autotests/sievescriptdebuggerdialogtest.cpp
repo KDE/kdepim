@@ -16,6 +16,9 @@
 */
 
 #include "sievescriptdebuggerdialogtest.h"
+#include "../sievescriptdebuggerdialog.h"
+#include "../sievescriptdebuggerwidget.h"
+#include <QDialogButtonBox>
 #include <QTest>
 
 SieveScriptDebuggerDialogTest::SieveScriptDebuggerDialogTest(QObject *parent)
@@ -27,6 +30,16 @@ SieveScriptDebuggerDialogTest::SieveScriptDebuggerDialogTest(QObject *parent)
 SieveScriptDebuggerDialogTest::~SieveScriptDebuggerDialogTest()
 {
 
+}
+
+void SieveScriptDebuggerDialogTest::shouldHaveDefaultValue()
+{
+    KSieveUi::SieveScriptDebuggerDialog dlg;
+    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
+    QVERIFY(buttonBox);
+
+    KSieveUi::SieveScriptDebuggerWidget *widget = dlg.findChild<KSieveUi::SieveScriptDebuggerWidget *>(QStringLiteral("sievescriptdebuggerwidget"));
+    QVERIFY(widget);
 }
 
 QTEST_MAIN(SieveScriptDebuggerDialogTest)

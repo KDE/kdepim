@@ -19,9 +19,10 @@
 #define SIEVESCRIPTDEBUGGERWIDGET_H
 
 #include <QWidget>
+#include "ksieveui_export.h"
 namespace KSieveUi
 {
-class SieveScriptDebuggerWidget : public QWidget
+class KSIEVEUI_EXPORT SieveScriptDebuggerWidget : public QWidget
 {
     Q_OBJECT
 public:

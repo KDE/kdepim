@@ -16,12 +16,14 @@
 */
 
 #include "sievescriptdebuggerdialog.h"
+#include "sievescriptdebuggerwidget.h"
 
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
 
 #include <QDialogButtonBox>
+#include <QPushButton>
 #include <QVBoxLayout>
 
 using namespace KSieveUi;
@@ -31,6 +33,20 @@ SieveScriptDebuggerDialog::SieveScriptDebuggerDialog(QWidget *parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
+
+    mSieveScriptDebuggerWidget = new SieveScriptDebuggerWidget(this);
+    mSieveScriptDebuggerWidget->setObjectName(QStringLiteral("sievescriptdebuggerwidget"));
+    mainLayout->addWidget(mSieveScriptDebuggerWidget);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    mainLayout->addWidget(buttonBox);
+    buttonBox->setObjectName(QStringLiteral("buttonbox"));
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveScriptDebuggerDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveScriptDebuggerDialog::reject);
+
     readConfig();
 }
 
