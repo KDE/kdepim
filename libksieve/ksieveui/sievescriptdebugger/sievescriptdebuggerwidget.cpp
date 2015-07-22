@@ -16,12 +16,17 @@
 */
 
 #include "sievescriptdebuggerwidget.h"
+#include <QStackedWidget>
+#include <QHBoxLayout>
 
 using namespace KSieveUi;
 SieveScriptDebuggerWidget::SieveScriptDebuggerWidget(QWidget *parent)
     : QWidget(parent)
 {
-
+    QHBoxLayout *mainLayout = new QHBoxLayout;
+    setLayout(mainLayout);
+    mStackedWidget = new QStackedWidget(this);
+    mainLayout->addWidget(mStackedWidget);
 }
 
 SieveScriptDebuggerWidget::~SieveScriptDebuggerWidget()

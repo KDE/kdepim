@@ -20,6 +20,7 @@
 
 #include <QWidget>
 #include "ksieveui_export.h"
+class QStackedWidget;
 namespace KSieveUi
 {
 class KSIEVEUI_EXPORT SieveScriptDebuggerWidget : public QWidget
@@ -28,7 +29,8 @@ class KSIEVEUI_EXPORT SieveScriptDebuggerWidget : public QWidget
 public:
     explicit SieveScriptDebuggerWidget(QWidget *parent = Q_NULLPTR);
     ~SieveScriptDebuggerWidget();
-
+private:
+    QStackedWidget *mStackedWidget;
 };
 }
 #endif // SIEVESCRIPTDEBUGGERWIDGET_H
