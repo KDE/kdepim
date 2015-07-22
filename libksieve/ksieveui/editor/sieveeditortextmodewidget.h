@@ -93,6 +93,7 @@ public:
     QString currentHelpTitle() const;
     QUrl currentHelpUrl() const;
     void openBookmarkUrl(const QUrl &url);
+    void debugSieveScript();
 Q_SIGNALS:
     void enableButtonOk(bool);
     void switchToGraphicalMode();

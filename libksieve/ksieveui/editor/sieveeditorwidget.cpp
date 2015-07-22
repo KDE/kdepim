@@ -586,8 +586,7 @@ void SieveEditorWidget::lowerCase()
 void SieveEditorWidget::debugSieveScript()
 {
     if (mMode == TextMode) {
-        //TODO
-        //mTextModeWidget->debugSieveScript();
+        mTextModeWidget->debugSieveScript();
     }
 }
 

@@ -430,3 +430,8 @@ void SieveEditorTextModeWidget::openBookmarkUrl(const QUrl &url)
 {
     mTabWidget->slotAddHelpPage(url);
 }
+
+void SieveEditorTextModeWidget::debugSieveScript()
+{
+    //TODO
+}
