@@ -592,7 +592,7 @@ void KTNEFMain::createOpenWithMenu(QMenu *topMenu)
 
         if (offers.count() > 1) { // submenu 'open with'
             menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
-            menu->menuAction()->setObjectName(QLatin1String("openWith_submenu")); // for the unittest
+            menu->menuAction()->setObjectName(QStringLiteral("openWith_submenu")); // for the unittest
             topMenu->addMenu(menu);
         }
 

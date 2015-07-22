@@ -112,13 +112,13 @@ QWidget *SieveActionFileInto::createParamWidget(QWidget *parent) const
 
     if (mHasCopySupport) {
         QCheckBox *copy = new QCheckBox(i18n("Keep a copy"));
-        copy->setObjectName(QLatin1String("copy"));
+        copy->setObjectName(QStringLiteral("copy"));
         lay->addWidget(copy);
         connect(copy, &QCheckBox::clicked, this, &SieveActionFileInto::valueChanged);
     }
     if (mHasMailBoxSupport) {
         QCheckBox *create = new QCheckBox(i18n("Create folder"));
-        create->setObjectName(QLatin1String("create"));
+        create->setObjectName(QStringLiteral("create"));
         connect(create, &QCheckBox::clicked, this, &SieveActionFileInto::valueChanged);
         lay->addWidget(create);
     }
@@ -128,7 +128,7 @@ QWidget *SieveActionFileInto::createParamWidget(QWidget *parent) const
     QLineEdit *edit = new QLineEdit;
     connect(edit, &QLineEdit::textChanged, this, &SieveActionFileInto::valueChanged);
     lay->addWidget(edit);
-    edit->setObjectName(QLatin1String("fileintolineedit"));
+    edit->setObjectName(QStringLiteral("fileintolineedit"));
     return w;
 }
 

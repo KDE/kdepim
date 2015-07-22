@@ -246,8 +246,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
 
     mZoomTextOnly = false;
 
-    mUpdateReaderWinTimer.setObjectName(QLatin1String("mUpdateReaderWinTimer"));
-    mResizeTimer.setObjectName(QLatin1String("mResizeTimer"));
+    mUpdateReaderWinTimer.setObjectName(QStringLiteral("mUpdateReaderWinTimer"));
+    mResizeTimer.setObjectName(QStringLiteral("mResizeTimer"));
 
     mExternalWindow  = false;
     mPrinting = false;
@@ -517,7 +517,7 @@ void ViewerPrivate::createOpenWithMenu(QMenu *topMenu, const QString &contentTyp
 
         if (offers.count() > 1) { // submenu 'open with'
             menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
-            menu->menuAction()->setObjectName(QLatin1String("openWith_submenu")); // for the unittest
+            menu->menuAction()->setObjectName(QStringLiteral("openWith_submenu")); // for the unittest
             topMenu->addMenu(menu);
         }
         qCDebug(MESSAGEVIEWER_LOG) << offers.count() << "offers" << topMenu << menu;

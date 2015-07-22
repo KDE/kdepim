@@ -276,7 +276,7 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
         gl->addWidget(keyButtonLabel, 8, 2, 1, 1);
 
         mKeySeqWidget = new KKeySequenceWidget(mAdvOptsGroup);
-        mKeySeqWidget->setObjectName(QLatin1String("FilterShortcutSelector"));
+        mKeySeqWidget->setObjectName(QStringLiteral("FilterShortcutSelector"));
         gl->addWidget(mKeySeqWidget, 8, 3, 1, 1);
         mKeySeqWidget->setEnabled(false);
         mKeySeqWidget->setModifierlessAllowed(true);

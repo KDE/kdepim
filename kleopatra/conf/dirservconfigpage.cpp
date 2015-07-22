@@ -384,7 +384,7 @@ extern "C"
     {
         DirectoryServicesConfigurationPage *page =
             new DirectoryServicesConfigurationPage(parent, args);
-        page->setObjectName(QLatin1String("kleopatra_config_dirserv"));
+        page->setObjectName(QStringLiteral("kleopatra_config_dirserv"));
         return page;
     }
 }

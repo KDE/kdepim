@@ -118,7 +118,7 @@ ResultItemWidget::ResultItemWidget(const shared_ptr<const Task::Result> &result,
     topLayout->setMargin(0);
     topLayout->setSpacing(0);
     QFrame *frame = new QFrame;
-    frame->setObjectName(QLatin1String("resultFrame"));
+    frame->setObjectName(QStringLiteral("resultFrame"));
     topLayout->addWidget(frame);
     QVBoxLayout *layout = new QVBoxLayout(frame);
     layout->setMargin(0);

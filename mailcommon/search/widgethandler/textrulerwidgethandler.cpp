@@ -61,7 +61,7 @@ QWidget *TextRuleWidgetHandler::createFunctionWidget(
     }
 
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox(functionStack);
-    funcCombo->setObjectName(QLatin1String("textRuleFuncCombo"));
+    funcCombo->setObjectName(QStringLiteral("textRuleFuncCombo"));
     for (int i = 0; i < TextFunctionCount; ++i) {
         funcCombo->addItem(i18n(TextFunctions[i].displayName));
     }
@@ -79,7 +79,7 @@ QWidget *TextRuleWidgetHandler::createValueWidget(int number,
 {
     if (number == 0) {
         RegExpLineEdit *lineEdit = new RegExpLineEdit(valueStack);
-        lineEdit->setObjectName(QLatin1String("regExpLineEdit"));
+        lineEdit->setObjectName(QStringLiteral("regExpLineEdit"));
         QObject::connect(lineEdit, SIGNAL(textChanged(QString)),
                          receiver, SLOT(slotValueChanged()));
         QObject::connect(lineEdit, SIGNAL(returnPressed()),
@@ -90,7 +90,7 @@ QWidget *TextRuleWidgetHandler::createValueWidget(int number,
     // blank QLabel to hide value widget for in-address-book rule
     if (number == 1) {
         QLabel *label = new QLabel(valueStack);
-        label->setObjectName(QLatin1String("textRuleValueHider"));
+        label->setObjectName(QStringLiteral("textRuleValueHider"));
         label->setBuddy(valueStack);
         return label;
     }

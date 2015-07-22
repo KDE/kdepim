@@ -337,7 +337,7 @@ public:
 
         QWidget *w = new QWidget;
         dnOrderWidget = Kleo::DNAttributeMapper::instance()->configWidget(w);
-        dnOrderWidget->setObjectName(QLatin1String("dnOrderWidget"));
+        dnOrderWidget->setObjectName(QStringLiteral("dnOrderWidget"));
         (new QVBoxLayout(w))->addWidget(dnOrderWidget);
 
         tabWidget->addTab(w, i18n("DN-Attribute Order"));

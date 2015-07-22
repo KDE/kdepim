@@ -45,7 +45,7 @@ QWidget *StatusRuleWidgetHandler::createFunctionWidget(
     }
 
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox(functionStack);
-    funcCombo->setObjectName(QLatin1String("statusRuleFuncCombo"));
+    funcCombo->setObjectName(QStringLiteral("statusRuleFuncCombo"));
     for (int i = 0; i < StatusFunctionCount; ++i) {
         funcCombo->addItem(i18n(StatusFunctions[i].displayName));
     }
@@ -66,7 +66,7 @@ QWidget *StatusRuleWidgetHandler::createValueWidget(int number,
     }
 
     PimCommon::MinimumComboBox *statusCombo = new PimCommon::MinimumComboBox(valueStack);
-    statusCombo->setObjectName(QLatin1String("statusRuleValueCombo"));
+    statusCombo->setObjectName(QStringLiteral("statusRuleValueCombo"));
     for (int i = 0; i < MailCommon::StatusValueCountWithoutHidden; ++i) {
         if (MailCommon::StatusValues[ i ].icon != 0) {
             statusCombo->addItem(

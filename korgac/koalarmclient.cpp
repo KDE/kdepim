@@ -67,7 +67,7 @@ KOAlarmClient::KOAlarmClient(QObject *parent)
     QStringList mimeTypes;
     mimeTypes << Event::eventMimeType() << Todo::todoMimeType();
     mCalendar = Akonadi::ETMCalendar::Ptr(new Akonadi::ETMCalendar(mimeTypes));
-    mCalendar->setObjectName(QLatin1String("KOrgac's calendar"));
+    mCalendar->setObjectName(QStringLiteral("KOrgac's calendar"));
     mETM = mCalendar->entityTreeModel();
 
     connect(&mCheckTimer, &QTimer::timeout, this, &KOAlarmClient::checkAlarms);

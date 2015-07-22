@@ -43,7 +43,7 @@ QWidget *FilterActionWithTest::createParamWidget(QWidget *parent) const
 {
     SoundTestWidget *soundWidget = new SoundTestWidget(parent);
     soundWidget->setUrl(mParameter);
-    soundWidget->setObjectName(QLatin1String("soundwidget"));
+    soundWidget->setObjectName(QStringLiteral("soundwidget"));
 
     connect(soundWidget, &SoundTestWidget::textChanged, this, &FilterActionWithTest::filterActionModified);
 

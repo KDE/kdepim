@@ -222,7 +222,7 @@ void TranslatorWidget::init()
     layout->setMargin(2);
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     QToolButton *closeBtn = new QToolButton(this);
-    closeBtn->setObjectName(QLatin1String("close-button"));
+    closeBtn->setObjectName(QStringLiteral("close-button"));
     closeBtn->setIcon(QIcon::fromTheme(QStringLiteral("dialog-close")));
     closeBtn->setIconSize(QSize(16, 16));
     closeBtn->setToolTip(i18n("Close"));
@@ -237,13 +237,13 @@ void TranslatorWidget::init()
     QLabel *label = new QLabel(i18nc("Translate from language", "From:"));
     hboxLayout->addWidget(label);
     d->from = new MinimumComboBox;
-    d->from->setObjectName(QLatin1String("from"));
+    d->from->setObjectName(QStringLiteral("from"));
     hboxLayout->addWidget(d->from);
 
     label = new QLabel(i18nc("Translate to language", "To:"));
     hboxLayout->addWidget(label);
     d->to = new MinimumComboBox;
-    d->to->setObjectName(QLatin1String("to"));
+    d->to->setObjectName(QStringLiteral("to"));
     connect(d->to, static_cast<void (MinimumComboBox::*)(int)>(&MinimumComboBox::currentIndexChanged), this, &TranslatorWidget::slotTranslate);
     connect(d->to, static_cast<void (MinimumComboBox::*)(int)>(&MinimumComboBox::currentIndexChanged), this, &TranslatorWidget::slotConfigChanged);
     hboxLayout->addWidget(d->to);
@@ -254,12 +254,12 @@ void TranslatorWidget::init()
 
     d->invert = new QPushButton(
         i18nc("Invert language choices so that from becomes to and to becomes from", "Invert"), this);
-    d->invert->setObjectName(QLatin1String("invert-button"));
+    d->invert->setObjectName(QStringLiteral("invert-button"));
     connect(d->invert, &QPushButton::clicked, this, &TranslatorWidget::slotInvertLanguage);
     hboxLayout->addWidget(d->invert);
 
     QPushButton *clear = new QPushButton(i18n("Clear"), this);
-    clear->setObjectName(QLatin1String("clear-button"));
+    clear->setObjectName(QStringLiteral("clear-button"));
 #ifndef QT_NO_ACCESSIBILITY
     clear->setAccessibleName(i18n("Clear"));
 #endif
@@ -267,7 +267,7 @@ void TranslatorWidget::init()
     hboxLayout->addWidget(clear);
 
     d->translate = new QPushButton(i18n("Translate"));
-    d->translate->setObjectName(QLatin1String("translate-button"));
+    d->translate->setObjectName(QStringLiteral("translate-button"));
 #ifndef QT_NO_ACCESSIBILITY
     d->translate->setAccessibleName(i18n("Translate"));
 #endif
@@ -302,7 +302,7 @@ void TranslatorWidget::init()
     d->splitter->addWidget(editorWidget);
     d->translatorResultTextEdit = new TranslatorResultTextEdit;
     d->translatedText = new PimCommon::PlainTextEditorWidget(d->translatorResultTextEdit, this);
-    d->translatedText->setObjectName(QLatin1String("translatedtext"));
+    d->translatedText->setObjectName(QStringLiteral("translatedtext"));
     d->translatedText->setReadOnly(true);
     d->splitter->addWidget(d->translatedText);
 

@@ -54,7 +54,7 @@ QWidget *SieveActionVacation::createParamWidget(QWidget *parent) const
     QLabel *lab = Q_NULLPTR;
     if (mHasVacationSecondsSupport) {
         SelectVacationComboBox *vacation = new SelectVacationComboBox;
-        vacation->setObjectName(QLatin1String("vacationcombobox"));
+        vacation->setObjectName(QStringLiteral("vacationcombobox"));
         connect(vacation, &SelectVacationComboBox::valueChanged, this, &SieveActionVacation::valueChanged);
         grid->addWidget(vacation, 0 , 0);
     } else {
@@ -65,7 +65,7 @@ QWidget *SieveActionVacation::createParamWidget(QWidget *parent) const
     QSpinBox *day = new QSpinBox;
     day->setMinimum(1);
     day->setMaximum(999);
-    day->setObjectName(QLatin1String("day"));
+    day->setObjectName(QStringLiteral("day"));
     connect(day, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &SieveActionVacation::valueChanged);
     grid->addWidget(day, 0 , 1);
 
@@ -73,7 +73,7 @@ QWidget *SieveActionVacation::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 1 , 0);
 
     QLineEdit *subject = new QLineEdit;
-    subject->setObjectName(QLatin1String("subject"));
+    subject->setObjectName(QStringLiteral("subject"));
     connect(subject, &QLineEdit::textChanged, this, &SieveActionVacation::valueChanged);
     grid->addWidget(subject, 1 , 1);
 
@@ -81,7 +81,7 @@ QWidget *SieveActionVacation::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 2 , 0);
 
     QLineEdit *addresses = new QLineEdit;
-    addresses->setObjectName(QLatin1String("addresses"));
+    addresses->setObjectName(QStringLiteral("addresses"));
     connect(addresses, &QLineEdit::textChanged, this, &SieveActionVacation::valueChanged);
     grid->addWidget(addresses, 2 , 1);
 
@@ -90,7 +90,7 @@ QWidget *SieveActionVacation::createParamWidget(QWidget *parent) const
 
     MultiLineEdit *text = new MultiLineEdit;
     connect(text, &MultiLineEdit::valueChanged, this, &SieveActionVacation::valueChanged);
-    text->setObjectName(QLatin1String("text"));
+    text->setObjectName(QStringLiteral("text"));
     grid->addWidget(text, 3 , 1);
 
     return w;

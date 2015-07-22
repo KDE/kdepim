@@ -64,10 +64,10 @@ QWidget *FilterActionWithUrl::createParamWidget(QWidget *parent) const
     widget->setLayout(layout);
     KUrlRequester *requester = new KUrlRequester(parent);
     requester->setUrl(QUrl::fromLocalFile(mParameter));
-    requester->setObjectName(QLatin1String("requester"));
+    requester->setObjectName(QStringLiteral("requester"));
     layout->addWidget(requester);
     mHelpButton = new FilterActionWithUrlHelpButton(parent);
-    mHelpButton->setObjectName(QLatin1String("helpbutton"));
+    mHelpButton->setObjectName(QStringLiteral("helpbutton"));
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
     layout->addWidget(mHelpButton);
 

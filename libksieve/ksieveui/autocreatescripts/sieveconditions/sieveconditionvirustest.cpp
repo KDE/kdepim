@@ -49,18 +49,18 @@ QWidget *SieveConditionVirusTest::createParamWidget(QWidget *parent) const
 
     SelectRelationalMatchType *relation = new SelectRelationalMatchType;
     connect(relation, &SelectRelationalMatchType::valueChanged, this, &SieveConditionVirusTest::valueChanged);
-    relation->setObjectName(QLatin1String("relation"));
+    relation->setObjectName(QStringLiteral("relation"));
     lay->addWidget(relation);
 
     SelectComparatorComboBox *comparator = new SelectComparatorComboBox;
     connect(comparator, &SelectComparatorComboBox::valueChanged, this, &SieveConditionVirusTest::valueChanged);
-    comparator->setObjectName(QLatin1String("comparator"));
+    comparator->setObjectName(QStringLiteral("comparator"));
     lay->addWidget(comparator);
 
     QSpinBox *spinbox = new QSpinBox;
     spinbox->setMaximum(5);
     spinbox->setMinimum(0);
-    spinbox->setObjectName(QLatin1String("value"));
+    spinbox->setObjectName(QStringLiteral("value"));
     connect(spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &SieveConditionVirusTest::valueChanged);
     lay->addWidget(spinbox);
     return w;

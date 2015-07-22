@@ -38,7 +38,7 @@ QWidget *SieveActionAbstractFlags::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
     SelectFlagsWidget *flagsWidget = new SelectFlagsWidget;
     connect(flagsWidget, &SelectFlagsWidget::valueChanged, this, &SieveActionAbstractFlags::valueChanged);
-    flagsWidget->setObjectName(QLatin1String("flagswidget"));
+    flagsWidget->setObjectName(QStringLiteral("flagswidget"));
     lay->addWidget(flagsWidget);
     return w;
 }

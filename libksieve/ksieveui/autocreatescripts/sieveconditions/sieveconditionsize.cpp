@@ -46,7 +46,7 @@ QWidget *SieveConditionSize::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
 
     QComboBox *combo = new QComboBox;
-    combo->setObjectName(QLatin1String("combosize"));
+    combo->setObjectName(QStringLiteral("combosize"));
     combo->addItem(i18n("under"), QStringLiteral(":under"));
     combo->addItem(i18n("over"), QStringLiteral(":over"));
     lay->addWidget(combo);
@@ -54,7 +54,7 @@ QWidget *SieveConditionSize::createParamWidget(QWidget *parent) const
 
     SelectSizeWidget *sizeWidget = new SelectSizeWidget;
     connect(sizeWidget, &SelectSizeWidget::valueChanged, this, &SieveConditionSize::valueChanged);
-    sizeWidget->setObjectName(QLatin1String("sizewidget"));
+    sizeWidget->setObjectName(QStringLiteral("sizewidget"));
     lay->addWidget(sizeWidget);
 
     return w;

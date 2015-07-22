@@ -58,7 +58,7 @@ CollectionGeneralPage::CollectionGeneralPage(QWidget *parent)
       mNameEdit(0),
       mFolderCollection(0)
 {
-    setObjectName(QLatin1String("MailCommon::CollectionGeneralPage"));
+    setObjectName(QStringLiteral("MailCommon::CollectionGeneralPage"));
     setPageTitle(i18nc("@title:tab General settings for a folder.", "General"));
 }
 

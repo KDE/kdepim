@@ -48,7 +48,7 @@ QWidget *SieveConditionServerMetaData::createParamWidget(QWidget *parent) const
     w->setLayout(lay);
 
     SelectMatchTypeComboBox *selectType = new SelectMatchTypeComboBox;
-    selectType->setObjectName(QLatin1String("selecttype"));
+    selectType->setObjectName(QStringLiteral("selecttype"));
     connect(selectType, &SelectMatchTypeComboBox::valueChanged, this, &SieveConditionServerMetaData::valueChanged);
     lay->addWidget(selectType);
 
@@ -60,7 +60,7 @@ QWidget *SieveConditionServerMetaData::createParamWidget(QWidget *parent) const
     grid->addWidget(lab, 0, 0);
 
     QLineEdit *mailbox = new QLineEdit;
-    mailbox->setObjectName(QLatin1String("mailbox"));
+    mailbox->setObjectName(QStringLiteral("mailbox"));
     connect(mailbox, &QLineEdit::textChanged, this, &SieveConditionServerMetaData::valueChanged);
     grid->addWidget(mailbox, 0, 1);
 
@@ -69,7 +69,7 @@ QWidget *SieveConditionServerMetaData::createParamWidget(QWidget *parent) const
 
     QLineEdit *annotation = new QLineEdit;
     connect(annotation, &QLineEdit::textChanged, this, &SieveConditionServerMetaData::valueChanged);
-    annotation->setObjectName(QLatin1String("annotation"));
+    annotation->setObjectName(QStringLiteral("annotation"));
     grid->addWidget(annotation, 1, 1);
 
     lab = new QLabel(i18n("Value:"));
@@ -77,7 +77,7 @@ QWidget *SieveConditionServerMetaData::createParamWidget(QWidget *parent) const
 
     QLineEdit *value = new QLineEdit;
     connect(value, &QLineEdit::textChanged, this, &SieveConditionServerMetaData::valueChanged);
-    value->setObjectName(QLatin1String("value"));
+    value->setObjectName(QStringLiteral("value"));
     grid->addWidget(value, 2, 1);
 
     return w;
