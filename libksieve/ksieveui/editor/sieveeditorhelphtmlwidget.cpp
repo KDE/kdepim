@@ -74,8 +74,10 @@ void SieveEditorHelpHtmlWidget::slotLoadStarted()
 
 void SieveEditorHelpHtmlWidget::slotTitleChanged(const QString &title)
 {
-    mTitle = title;
-    Q_EMIT titleChanged(this, title);
+    if (mTitle != title) {
+        mTitle = title;
+        Q_EMIT titleChanged(this, title);
+    }
 }
 
 void SieveEditorHelpHtmlWidget::openUrl(const QUrl &url)
