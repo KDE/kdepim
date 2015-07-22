@@ -78,6 +78,7 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
 
     connect(mClearGravatarCache, &QAbstractButton::clicked, this, &GravatarConfigureSettingsDialog::slotClearGravatarCache);
     topLayout->addWidget(buttonBox);
+    load();
 }
 
 GravatarConfigureSettingsDialog::~GravatarConfigureSettingsDialog()
