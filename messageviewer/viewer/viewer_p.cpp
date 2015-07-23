@@ -346,7 +346,7 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
         if (node->contentType()->mimeType() == "message/external-body") {
             if (node->contentType()->hasParameter(QLatin1String("url"))) {
                 const QString url = node->contentType()->parameter(QLatin1String("url"));
-                KRun::runUrl(KUrl(url), QStringLiteral("text/html"), q);
+                KRun::runUrl(QUrl(url), QStringLiteral("text/html"), q);
                 return;
             }
         }
@@ -759,7 +759,7 @@ void ViewerPrivate::attachmentOpenWith(KMime::Content *node, const KService::Ptr
     url.setPath(linkName);
     lst.append(url);
     if (offer) {
-        if ((!KRun::run(*offer, lst, 0, autoDelete)) && autoDelete) {
+        if ((!KRun::runService(*offer, lst, 0, autoDelete)) && autoDelete) {
             QFile::remove(url.toLocalFile());
         }
     } else {

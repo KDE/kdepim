@@ -684,7 +684,7 @@ void AttachmentControllerBase::openWith(const KService::Ptr &offer)
     tempFile->setPermissions(QFile::ReadUser);
     bool result = false;
     if (offer) {
-        result = KRun::run(*offer, lst, d->wParent, false);
+        result = KRun::runService(*offer, lst, d->wParent, false);
     } else {
         result = KRun::displayOpenWithDialog(lst, d->wParent, false);
     }
