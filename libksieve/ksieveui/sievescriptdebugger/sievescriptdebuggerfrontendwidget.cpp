@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sievescriptdebuggerfontendwidget.h"
+#include "sievescriptdebuggerfrontendwidget.h"
 
 #include <QVBoxLayout>
 #include <QSplitter>
@@ -24,7 +24,7 @@
 
 using namespace KSieveUi;
 
-SieveScriptDebuggerFontEndWidget::SieveScriptDebuggerFontEndWidget(QWidget *parent)
+SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -39,17 +39,17 @@ SieveScriptDebuggerFontEndWidget::SieveScriptDebuggerFontEndWidget(QWidget *pare
 
 }
 
-SieveScriptDebuggerFontEndWidget::~SieveScriptDebuggerFontEndWidget()
+SieveScriptDebuggerFrontEndWidget::~SieveScriptDebuggerFrontEndWidget()
 {
 
 }
 
-QString SieveScriptDebuggerFontEndWidget::script() const
+QString SieveScriptDebuggerFrontEndWidget::script() const
 {
     return mSieveTextEditWidget->textEdit()->toPlainText();
 }
 
-void SieveScriptDebuggerFontEndWidget::setScript(const QString &script)
+void SieveScriptDebuggerFrontEndWidget::setScript(const QString &script)
 {
     mSieveTextEditWidget->textEdit()->setPlainText(script);
 }

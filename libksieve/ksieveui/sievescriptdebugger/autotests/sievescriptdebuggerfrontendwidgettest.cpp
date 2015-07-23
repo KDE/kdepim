@@ -15,25 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sievescriptdebuggerfontendwidgettest.h"
-#include "../sievescriptdebuggerfontendwidget.h"
+#include "sievescriptdebuggerfrontendwidgettest.h"
+#include "../sievescriptdebuggerfrontendwidget.h"
 #include <QTest>
 
-SieveScriptDebuggerFontEndWidgetTest::SieveScriptDebuggerFontEndWidgetTest(QObject *parent)
+SieveScriptDebuggerFrontEndWidgetTest::SieveScriptDebuggerFrontEndWidgetTest(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-SieveScriptDebuggerFontEndWidgetTest::~SieveScriptDebuggerFontEndWidgetTest()
+SieveScriptDebuggerFrontEndWidgetTest::~SieveScriptDebuggerFrontEndWidgetTest()
 {
 
 }
 
-void SieveScriptDebuggerFontEndWidgetTest::shouldHaveDefaultValue()
+void SieveScriptDebuggerFrontEndWidgetTest::shouldHaveDefaultValue()
 {
-    KSieveUi::SieveScriptDebuggerFontEndWidget w;
+    KSieveUi::SieveScriptDebuggerFrontEndWidget w;
     QVERIFY(w.script().isEmpty());
 }
 
-QTEST_MAIN(SieveScriptDebuggerFontEndWidgetTest)
+QTEST_MAIN(SieveScriptDebuggerFrontEndWidgetTest)

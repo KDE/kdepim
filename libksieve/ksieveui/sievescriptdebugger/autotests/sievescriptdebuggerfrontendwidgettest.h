@@ -15,26 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVESCRIPTDEBUGGERFONTENDWIDGET_H
-#define SIEVESCRIPTDEBUGGERFONTENDWIDGET_H
 
-#include <QWidget>
-#include "ksieveui_export.h"
-namespace KSieveUi
-{
-class SieveTextEditWidget;
-class KSIEVEUI_EXPORT SieveScriptDebuggerFontEndWidget : public QWidget
+#ifndef SIEVESCRIPTDEBUGGERFRONTENDWIDGETTEST_H
+#define SIEVESCRIPTDEBUGGERFRONTENDWIDGETTEST_H
+
+#include <QObject>
+
+class SieveScriptDebuggerFrontEndWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SieveScriptDebuggerFontEndWidget(QWidget *parent = Q_NULLPTR);
-    ~SieveScriptDebuggerFontEndWidget();
-
-    QString script() const;
-    void setScript(const QString &script);
-
-private:
-    KSieveUi::SieveTextEditWidget *mSieveTextEditWidget;
+    explicit SieveScriptDebuggerFrontEndWidgetTest(QObject *parent = Q_NULLPTR);
+    ~SieveScriptDebuggerFrontEndWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
-}
-#endif // SIEVESCRIPTDEBUGGERFONTENDWIDGET_H
+
+#endif // SIEVESCRIPTDEBUGGERFRONTENDWIDGETTEST_H

@@ -16,7 +16,7 @@
 */
 
 #include "sievescriptdebuggerwidget.h"
-#include "sievescriptdebuggerfontendwidget.h"
+#include "sievescriptdebuggerfrontendwidget.h"
 
 #include <KLocalizedString>
 
@@ -35,7 +35,7 @@ SieveScriptDebuggerWidget::SieveScriptDebuggerWidget(QWidget *parent)
     mStackedWidget->setObjectName(QStringLiteral("stackedwidget"));
     mainLayout->addWidget(mStackedWidget);
 
-    mSieveScriptFrontEnd = new SieveScriptDebuggerFontEndWidget;
+    mSieveScriptFrontEnd = new SieveScriptDebuggerFrontEndWidget;
     mSieveScriptFrontEnd->setObjectName(QStringLiteral("sievescriptfrontend"));
     mStackedWidget->addWidget(mSieveScriptFrontEnd);
 

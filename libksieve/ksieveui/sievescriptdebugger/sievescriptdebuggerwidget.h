@@ -24,7 +24,7 @@ class QStackedWidget;
 class QLabel;
 namespace KSieveUi
 {
-class SieveScriptDebuggerFontEndWidget;
+class SieveScriptDebuggerFrontEndWidget;
 class KSIEVEUI_EXPORT SieveScriptDebuggerWidget : public QWidget
 {
     Q_OBJECT
@@ -38,7 +38,7 @@ public:
 private:
     void checkSieveTestApplication();
     QStackedWidget *mStackedWidget;
-    SieveScriptDebuggerFontEndWidget *mSieveScriptFrontEnd;
+    SieveScriptDebuggerFrontEndWidget *mSieveScriptFrontEnd;
     QLabel *mSieveNoExistingFrontEnd;
 };
 }
