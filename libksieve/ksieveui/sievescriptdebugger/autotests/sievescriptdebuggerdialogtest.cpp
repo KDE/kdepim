@@ -40,6 +40,8 @@ void SieveScriptDebuggerDialogTest::shouldHaveDefaultValue()
 
     KSieveUi::SieveScriptDebuggerWidget *widget = dlg.findChild<KSieveUi::SieveScriptDebuggerWidget *>(QStringLiteral("sievescriptdebuggerwidget"));
     QVERIFY(widget);
+
+    QVERIFY(dlg.script().isEmpty());
 }
 
 QTEST_MAIN(SieveScriptDebuggerDialogTest)

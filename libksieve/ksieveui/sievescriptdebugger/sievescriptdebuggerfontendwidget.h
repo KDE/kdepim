@@ -19,14 +19,18 @@
 #define SIEVESCRIPTDEBUGGERFONTENDWIDGET_H
 
 #include <QWidget>
+#include "ksieveui_export.h"
 namespace KSieveUi
 {
-class SieveScriptDebuggerFontEndWidget : public QWidget
+class KSIEVEUI_EXPORT SieveScriptDebuggerFontEndWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit SieveScriptDebuggerFontEndWidget(QWidget *parent = Q_NULLPTR);
     ~SieveScriptDebuggerFontEndWidget();
+
+    QString script() const;
+    void setScript(const QString &script);
 };
 }
 #endif // SIEVESCRIPTDEBUGGERFONTENDWIDGET_H

@@ -27,6 +27,8 @@ class SieveScriptDebuggerFontEndWidgetTest : public QObject
 public:
     explicit SieveScriptDebuggerFontEndWidgetTest(QObject *parent = Q_NULLPTR);
     ~SieveScriptDebuggerFontEndWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // SIEVESCRIPTDEBUGGERFONTENDWIDGETTEST_H

@@ -16,6 +16,7 @@
 */
 
 #include "sievescriptdebuggerfontendwidgettest.h"
+#include "../sievescriptdebuggerfontendwidget.h"
 #include <QTest>
 
 SieveScriptDebuggerFontEndWidgetTest::SieveScriptDebuggerFontEndWidgetTest(QObject *parent)
@@ -27,6 +28,12 @@ SieveScriptDebuggerFontEndWidgetTest::SieveScriptDebuggerFontEndWidgetTest(QObje
 SieveScriptDebuggerFontEndWidgetTest::~SieveScriptDebuggerFontEndWidgetTest()
 {
 
+}
+
+void SieveScriptDebuggerFontEndWidgetTest::shouldHaveDefaultValue()
+{
+    KSieveUi::SieveScriptDebuggerFontEndWidget w;
+    QVERIFY(w.script().isEmpty());
 }
 
 QTEST_MAIN(SieveScriptDebuggerFontEndWidgetTest)

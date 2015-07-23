@@ -23,6 +23,7 @@
 #include <QStackedWidget>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QStandardPaths>
 
 using namespace KSieveUi;
 SieveScriptDebuggerWidget::SieveScriptDebuggerWidget(QWidget *parent)
@@ -53,15 +54,25 @@ SieveScriptDebuggerWidget::~SieveScriptDebuggerWidget()
 
 void SieveScriptDebuggerWidget::setScript(const QString &script)
 {
-    //TODO
+    if (mStackedWidget->currentWidget() == mSieveScriptFrontEnd) {
+        mSieveScriptFrontEnd->setScript(script);
+    }
 }
 
 QString SieveScriptDebuggerWidget::script() const
 {
-    return QString();
+    if (mStackedWidget->currentWidget() == mSieveScriptFrontEnd) {
+        return mSieveScriptFrontEnd->script();
+    } else {
+        return QString();
+    }
 }
 
 void SieveScriptDebuggerWidget::checkSieveTestApplication()
 {
-
+    if (QStandardPaths::findExecutable(QStringLiteral("sieve-test")).isEmpty()) {
+        mStackedWidget->setCurrentWidget(mSieveNoExistingFrontEnd);
+    } else {
+        mStackedWidget->setCurrentWidget(mSieveScriptFrontEnd);
+    }
 }

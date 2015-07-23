@@ -33,3 +33,13 @@ SieveScriptDebuggerFontEndWidget::~SieveScriptDebuggerFontEndWidget()
 
 }
 
+QString SieveScriptDebuggerFontEndWidget::script() const
+{
+    return QString();
+}
+
+void SieveScriptDebuggerFontEndWidget::setScript(const QString &script)
+{
+    //TODO
+}
+
