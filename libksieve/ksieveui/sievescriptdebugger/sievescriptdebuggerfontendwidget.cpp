@@ -18,7 +18,7 @@
 #include "sievescriptdebuggerfontendwidget.h"
 
 #include <QVBoxLayout>
-
+#include <QSplitter>
 using namespace KSieveUi;
 
 SieveScriptDebuggerFontEndWidget::SieveScriptDebuggerFontEndWidget(QWidget *parent)
@@ -26,6 +26,9 @@ SieveScriptDebuggerFontEndWidget::SieveScriptDebuggerFontEndWidget(QWidget *pare
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
+    QSplitter *splitter = new QSplitter;
+    splitter->setObjectName(QStringLiteral("splitter"));
+    mainLayout->addWidget(splitter);
 }
 
 SieveScriptDebuggerFontEndWidget::~SieveScriptDebuggerFontEndWidget()
