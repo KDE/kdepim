@@ -59,9 +59,9 @@ class EMailValidator : public QValidator
 public:
     explicit EMailValidator(QObject *parent = Q_NULLPTR) : QValidator(parent), rx(QRegExp(email_rx)) {}
 
-    /* reimp */ void fixup(QString &) const {}
+    void fixup(QString &) const Q_DECL_OVERRIDE {}
 
-    /* reimp */ State validate(QString &str, int &pos) const
+    State validate(QString &str, int &pos) const Q_DECL_OVERRIDE
     {
         const int atIdx = str.lastIndexOf(QLatin1Char('@'));
         if (atIdx < 0 || str.endsWith(QLatin1Char('@'))) {

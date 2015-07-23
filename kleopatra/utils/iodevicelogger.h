@@ -52,24 +52,24 @@ public:
     void setWriteLogDevice(const boost::shared_ptr<QIODevice> &dev);
     void setReadLogDevice(const boost::shared_ptr<QIODevice> &dev);
 
-    /* reimp */ bool atEnd() const;
-    /* reimp */ qint64 bytesAvailable() const;
-    /* reimp */ qint64 bytesToWrite() const;
-    /* reimp */ bool canReadLine() const;
-    /* reimp */ void close();
-    /* reimp */ bool isSequential() const;
-    /* reimp */ bool open(OpenMode mode);
-    /* reimp */ qint64 pos() const;
-    /* reimp */ bool reset();
-    /* reimp */ bool seek(qint64 pos);
-    /* reimp */ qint64 size() const;
-    /* reimp */ bool waitForBytesWritten(int msecs);
-    /* reimp */ bool waitForReadyRead(int msecs);
+    bool atEnd() const Q_DECL_OVERRIDE;
+    qint64 bytesAvailable() const Q_DECL_OVERRIDE;
+    qint64 bytesToWrite() const Q_DECL_OVERRIDE;
+    bool canReadLine() const Q_DECL_OVERRIDE;
+    void close() Q_DECL_OVERRIDE;
+    bool isSequential() const Q_DECL_OVERRIDE;
+    bool open(OpenMode mode) Q_DECL_OVERRIDE;
+    qint64 pos() const Q_DECL_OVERRIDE;
+    bool reset() Q_DECL_OVERRIDE;
+    bool seek(qint64 pos) Q_DECL_OVERRIDE;
+    qint64 size() const Q_DECL_OVERRIDE;
+    bool waitForBytesWritten(int msecs) Q_DECL_OVERRIDE;
+    bool waitForReadyRead(int msecs) Q_DECL_OVERRIDE;
 
 protected:
-    qint64 readData(char *data, qint64 maxSize);
-    qint64 writeData(const char *data, qint64 maxSize);
-    /* reimp */ qint64 readLineData(char *data, qint64 maxSize);
+    qint64 readData(char *data, qint64 maxSize) Q_DECL_OVERRIDE;
+    qint64 writeData(const char *data, qint64 maxSize) Q_DECL_OVERRIDE;
+    qint64 readLineData(char *data, qint64 maxSize) Q_DECL_OVERRIDE;
 
 private:
     class Private;

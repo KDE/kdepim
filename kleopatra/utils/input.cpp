@@ -69,7 +69,7 @@ class Process : public QProcess
 public:
     explicit Process(QObject *parent = Q_NULLPTR)
         : QProcess(parent) {}
-    /* reimp */ void close()
+    void close() Q_DECL_OVERRIDE
     {
         closeReadChannel(StandardOutput);
     }
@@ -84,7 +84,7 @@ class InputImplBase : public Input
 public:
     InputImplBase() : Input(), m_customLabel(), m_defaultLabel() {}
 
-    /* reimp */ QString label() const
+    QString label() const Q_DECL_OVERRIDE
     {
         return m_customLabel.isEmpty() ? m_defaultLabel : m_customLabel;
     }
@@ -92,11 +92,11 @@ public:
     {
         m_defaultLabel = l;
     }
-    /* reimp */ void setLabel(const QString &l)
+    void setLabel(const QString &l) Q_DECL_OVERRIDE
     {
         m_customLabel = l;
     }
-    /* reimp */ QString errorString() const
+    QString errorString() const Q_DECL_OVERRIDE
     {
         if (m_errorString.dirty()) {
             m_errorString = doErrorString();
@@ -125,12 +125,12 @@ class PipeInput : public InputImplBase
 public:
     explicit PipeInput(assuan_fd_t fd);
 
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_io;
     }
-    /* reimp */ unsigned int classification() const;
-    /* reimp */ unsigned long long size() const
+    unsigned int classification() const Q_DECL_OVERRIDE;
+    unsigned long long size() const Q_DECL_OVERRIDE
     {
         return 0;
     }
@@ -144,22 +144,22 @@ class ProcessStdOutInput : public InputImplBase
 public:
     explicit ProcessStdOutInput(const QString &cmd, const QStringList &args, const QDir &wd, const QByteArray &stdin_ = QByteArray());
 
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_proc;
     }
-    /* reimp */ unsigned int classification() const
+    unsigned int classification() const Q_DECL_OVERRIDE
     {
         return 0U;    // plain text
     }
-    /* reimp */ unsigned long long size() const
+    unsigned long long size() const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    /* reimp */ QString label() const;
+    QString label() const Q_DECL_OVERRIDE;
 
 private:
-    /* reimp */ QString doErrorString() const;
+    QString doErrorString() const Q_DECL_OVERRIDE;
 
 private:
     const QString m_command;
@@ -173,16 +173,16 @@ public:
     explicit FileInput(const QString &fileName);
     explicit FileInput(const shared_ptr<QFile> &file);
 
-    /* reimp */ QString label() const
+    QString label() const Q_DECL_OVERRIDE
     {
         return m_io ? QFileInfo(m_fileName).fileName() : InputImplBase::label();
     }
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_io;
     }
-    /* reimp */ unsigned int classification() const;
-    /* reimp */ unsigned long long size() const
+    unsigned int classification() const Q_DECL_OVERRIDE;
+    unsigned long long size() const Q_DECL_OVERRIDE
     {
         return QFileInfo(m_fileName).size();
     }
@@ -198,18 +198,18 @@ class ClipboardInput : public Input
 public:
     explicit ClipboardInput(QClipboard::Mode mode);
 
-    /* reimp */ void setLabel(const QString &label);
-    /* reimp */ QString label() const;
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    void setLabel(const QString &label) Q_DECL_OVERRIDE;
+    QString label() const Q_DECL_OVERRIDE;
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_buffer;
     }
-    /* reimp */ unsigned int classification() const;
-    /* reimp */ unsigned long long size() const
+    unsigned int classification() const Q_DECL_OVERRIDE;
+    unsigned long long size() const Q_DECL_OVERRIDE
     {
         return m_buffer ? m_buffer->buffer().size() : 0;
     }
-    /* reimp */ QString errorString() const
+    QString errorString() const Q_DECL_OVERRIDE
     {
         return QString();
     }

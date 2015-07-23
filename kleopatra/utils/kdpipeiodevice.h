@@ -55,19 +55,19 @@ public:
     bool readWouldBlock() const;
     bool writeWouldBlock() const;
 
-    /* reimp */ qint64 bytesAvailable() const;
-    /* reimp */ qint64 bytesToWrite() const;
-    /* reimp */ bool canReadLine() const;
-    /* reimp */ void close();
-    /* reimp */ bool isSequential() const;
-    /* reimp */ bool atEnd() const;
+    qint64 bytesAvailable() const Q_DECL_OVERRIDE;
+    qint64 bytesToWrite() const Q_DECL_OVERRIDE;
+    bool canReadLine() const Q_DECL_OVERRIDE;
+    void close() Q_DECL_OVERRIDE;
+    bool isSequential() const Q_DECL_OVERRIDE;
+    bool atEnd() const Q_DECL_OVERRIDE;
 
-    /* reimp */ bool waitForBytesWritten(int msecs);
-    /* reimp */ bool waitForReadyRead(int msecs);
+    bool waitForBytesWritten(int msecs) Q_DECL_OVERRIDE;
+    bool waitForReadyRead(int msecs) Q_DECL_OVERRIDE;
 
 protected:
-    /* reimp */ qint64 readData(char *data, qint64 maxSize);
-    /* reimp */ qint64 writeData(const char *data, qint64 maxSize);
+    qint64 readData(char *data, qint64 maxSize) Q_DECL_OVERRIDE;
+    qint64 writeData(const char *data, qint64 maxSize) Q_DECL_OVERRIDE;
 
 private:
     using QIODevice::open;
