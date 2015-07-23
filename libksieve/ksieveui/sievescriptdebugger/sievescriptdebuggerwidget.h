@@ -31,7 +31,12 @@ class KSIEVEUI_EXPORT SieveScriptDebuggerWidget : public QWidget
 public:
     explicit SieveScriptDebuggerWidget(QWidget *parent = Q_NULLPTR);
     ~SieveScriptDebuggerWidget();
+
+    void setScript(const QString &script);
+    QString script() const;
+
 private:
+    void checkSieveTestApplication();
     QStackedWidget *mStackedWidget;
     SieveScriptDebuggerFontEndWidget *mSieveScriptFrontEnd;
     QLabel *mSieveNoExistingFrontEnd;

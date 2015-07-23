@@ -42,6 +42,8 @@ SieveScriptDebuggerWidget::SieveScriptDebuggerWidget(QWidget *parent)
     mSieveNoExistingFrontEnd = new QLabel(QStringLiteral("sieve-test was not found on system. Please install it."));
     mSieveNoExistingFrontEnd->setObjectName(QStringLiteral("sievenoexistingfrontend"));
     mStackedWidget->addWidget(mSieveNoExistingFrontEnd);
+
+    checkSieveTestApplication();
 }
 
 SieveScriptDebuggerWidget::~SieveScriptDebuggerWidget()
@@ -49,3 +51,17 @@ SieveScriptDebuggerWidget::~SieveScriptDebuggerWidget()
 
 }
 
+void SieveScriptDebuggerWidget::setScript(const QString &script)
+{
+    //TODO
+}
+
+QString SieveScriptDebuggerWidget::script() const
+{
+    return QString();
+}
+
+void SieveScriptDebuggerWidget::checkSieveTestApplication()
+{
+
+}

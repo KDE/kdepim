@@ -55,6 +55,16 @@ SieveScriptDebuggerDialog::~SieveScriptDebuggerDialog()
     writeConfig();
 }
 
+void SieveScriptDebuggerDialog::setScript(const QString &script)
+{
+     mSieveScriptDebuggerWidget->setScript(script);
+}
+
+QString SieveScriptDebuggerDialog::script() const
+{
+    return mSieveScriptDebuggerWidget->script();
+}
+
 void SieveScriptDebuggerDialog::writeConfig()
 {
     KConfigGroup group(KSharedConfig::openConfig(), "SieveScriptDebuggerDialog");

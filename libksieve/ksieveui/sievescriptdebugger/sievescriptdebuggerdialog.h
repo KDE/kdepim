@@ -30,6 +30,10 @@ class KSIEVEUI_EXPORT SieveScriptDebuggerDialog : public QDialog
 public:
     explicit SieveScriptDebuggerDialog(QWidget *parent = Q_NULLPTR);
     ~SieveScriptDebuggerDialog();
+
+    void setScript(const QString &script);
+    QString script() const;
+
 private:
     void writeConfig();
     void readConfig();
