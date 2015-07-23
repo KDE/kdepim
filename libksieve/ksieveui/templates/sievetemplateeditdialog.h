@@ -23,15 +23,9 @@
 class KLineEdit;
 class QPushButton;
 
-namespace PimCommon
-{
-class PlainTextEditFindBar;
-class SlideContainer;
-}
-
 namespace KSieveUi
 {
-class SieveTextEdit;
+class SieveTextEditWidget;
 class SieveTemplateEditDialog : public QDialog
 {
     Q_OBJECT
@@ -48,17 +42,13 @@ public:
 
 private Q_SLOTS:
     void slotTemplateChanged();
-    void slotFind();
-    void slotReplace();
 
 private:
     void readConfig();
     void writeConfig();
-    SieveTextEdit *mTextEdit;
-    PimCommon::PlainTextEditFindBar *mFindBar;
+    SieveTextEditWidget *mTextEditWidget;
     KLineEdit *mTemplateNameEdit;
     QPushButton *mOkButton;
-    PimCommon::SlideContainer *mSliderContainer;
 };
 }
 

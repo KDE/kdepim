@@ -12,3 +12,9 @@ add_test(sievetextedittest sievetextedittest)
 ecm_mark_as_test(sievetextedittest)
 target_link_libraries( sievetextedittest Qt5::Test  Qt5::Gui ksieveui pimcommon)
 
+
+set( libksieveui_sievetexteditwidgettest_source sievetexteditwidgettest.cpp )
+add_executable( sievetexteditwidgettest ${libksieveui_sievetexteditwidgettest_source})
+add_test(sievetexteditwidgettest sievetexteditwidgettest)
+ecm_mark_as_test(sievetexteditwidgettest)
+target_link_libraries( sievetexteditwidgettest Qt5::Test  Qt5::Gui ksieveui pimcommon)

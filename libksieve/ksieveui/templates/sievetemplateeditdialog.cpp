@@ -33,6 +33,8 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
+#include <editor/sievetexteditwidget.h>
+
 using namespace KSieveUi;
 
 SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTemplate)
@@ -70,27 +72,18 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
 
     vbox->addLayout(hbox);
 
-    mTextEdit = new KSieveUi::SieveTextEdit;
-    mTextEdit->setShowHelpMenu(false);
-    mTextEdit->setReadOnly(defaultTemplate);
-    vbox->addWidget(mTextEdit);
-
-    mSliderContainer = new PimCommon::SlideContainer(this);
-    mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, this);
-    mFindBar->setHideWhenClose(false);
-    connect(mFindBar, &PimCommon::TextEditFindBarBase::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
-    mSliderContainer->setContent(mFindBar);
-    vbox->addWidget(mSliderContainer);
+    mTextEditWidget = new KSieveUi::SieveTextEditWidget;
+    mTextEditWidget->textEdit()->setShowHelpMenu(false);
+    mTextEditWidget->setReadOnly(defaultTemplate);
+    vbox->addWidget(mTextEditWidget);
 
     QShortcut *shortcut = new QShortcut(this);
     shortcut->setKey(Qt::Key_F + Qt::CTRL);
-    connect(shortcut, &QShortcut::activated, this, &SieveTemplateEditDialog::slotFind);
-    connect(mTextEdit, &SieveTextEdit::findText, this, &SieveTemplateEditDialog::slotFind);
+    connect(shortcut, &QShortcut::activated, mTextEditWidget, &SieveTextEditWidget::slotFind);
 
     shortcut = new QShortcut(this);
     shortcut->setKey(Qt::Key_R + Qt::CTRL);
-    connect(shortcut, &QShortcut::activated, this, &SieveTemplateEditDialog::slotReplace);
-    connect(mTextEdit, &SieveTextEdit::replaceText, this, &SieveTemplateEditDialog::slotReplace);
+    connect(shortcut, &QShortcut::activated, mTextEditWidget, &SieveTextEditWidget::slotReplace);
 
     w->setLayout(vbox);
     mainLayout->addWidget(w);
@@ -99,7 +92,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
             mOkButton->setEnabled(false);
         }
         connect(mTemplateNameEdit, &QLineEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
-        connect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
+        connect(mTextEditWidget->textEdit(), &SieveTextEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
         mTemplateNameEdit->setFocus();
     }
     mainLayout->addWidget(buttonBox);
@@ -111,26 +104,8 @@ SieveTemplateEditDialog::~SieveTemplateEditDialog()
 {
     writeConfig();
     disconnect(mTemplateNameEdit, &QLineEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
-    disconnect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
+    disconnect(mTextEditWidget->textEdit(), &SieveTextEdit::textChanged, this, &SieveTemplateEditDialog::slotTemplateChanged);
 
-}
-
-void SieveTemplateEditDialog::slotReplace()
-{
-    mFindBar->showReplace();
-    mSliderContainer->slideIn();
-    mFindBar->focusAndSetCursor();
-}
-
-void SieveTemplateEditDialog::slotFind()
-{
-    if (mTextEdit->textCursor().hasSelection()) {
-        mFindBar->setText(mTextEdit->textCursor().selectedText());
-    }
-    mTextEdit->moveCursor(QTextCursor::Start);
-    mFindBar->showFind();
-    mSliderContainer->slideIn();
-    mFindBar->focusAndSetCursor();
 }
 
 void SieveTemplateEditDialog::writeConfig()
@@ -150,22 +125,22 @@ void SieveTemplateEditDialog::readConfig()
 
 void SieveTemplateEditDialog::slotTemplateChanged()
 {
-    mOkButton->setEnabled(!mTemplateNameEdit->text().trimmed().isEmpty() && !mTextEdit->toPlainText().trimmed().isEmpty());
+    mOkButton->setEnabled(!mTemplateNameEdit->text().trimmed().isEmpty() && !mTextEditWidget->textEdit()->toPlainText().trimmed().isEmpty());
 }
 
 void SieveTemplateEditDialog::setScript(const QString &text)
 {
-    mTextEdit->setPlainText(text);
+    mTextEditWidget->textEdit()->setPlainText(text);
 }
 
 QString SieveTemplateEditDialog::script() const
 {
-    return mTextEdit->toPlainText();
+    return mTextEditWidget->textEdit()->toPlainText();
 }
 
 void SieveTemplateEditDialog::setSieveCapabilities(const QStringList &capabilities)
 {
-    mTextEdit->setSieveCapabilities(capabilities);
+    mTextEditWidget->textEdit()->setSieveCapabilities(capabilities);
 }
 
 void SieveTemplateEditDialog::setTemplateName(const QString &name)

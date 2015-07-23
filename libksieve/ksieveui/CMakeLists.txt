@@ -55,6 +55,7 @@ set(ksieveui_editor_LIB_SRCS
   editor/sieveeditormenubar.cpp
   editor/sievetexteditorspellcheckdecorator.cpp
   editor/sievesyntaxspellcheckinghighlighter.cpp
+  editor/sievetexteditwidget.cpp
 )
 
 set(ksieveui_autocreatescripts_LIB_SRCS
