@@ -34,8 +34,8 @@
 class KAddressBookApplication : public KontactInterface::PimUniqueApplication
 {
 public:
-    KAddressBookApplication(int &argc, char **argv[], KAboutData &about)
-        : KontactInterface::PimUniqueApplication(argc, argv, about),
+    KAddressBookApplication(int &argc, char **argv[])
+        : KontactInterface::PimUniqueApplication(argc, argv),
           mMainWindow(Q_NULLPTR)
     {
     }
@@ -57,10 +57,11 @@ int KAddressBookApplication::activate(const QStringList &arguments)
 
 int main(int argc, char **argv)
 {
+    KAddressBookApplication app(argc, &argv);
     KLocalizedString::setApplicationDomain("kaddressbook");
 
     AboutData about;
-    KAddressBookApplication app(argc, &argv, about);
+    app.setAboutData(about);
     QCommandLineParser *cmdArgs = app.cmdArgs();
     kaddressbook_options(cmdArgs);
 
