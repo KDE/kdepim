@@ -155,6 +155,7 @@ set(ksieveui_sievescriptdebugger_LIB_SRCS
   sievescriptdebugger/sievescriptdebuggerdialog.cpp
   sievescriptdebugger/sievescriptdebuggerwidget.cpp
   sievescriptdebugger/sievescriptdebuggerfontendwidget.cpp
+  sievescriptdebugger/sievescriptdebuggerwarning.cpp
 )
 
 set(ksieveui_LIB_SRCS
