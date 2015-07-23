@@ -70,10 +70,8 @@ ConfigureDialog::ConfigureDialog(QWidget *parent)
 {
     setFaceType(KPageDialog::List);
     setWindowTitle(i18n("Configure"));
-#ifdef Q_OS_UNIX
     KWindowSystem::setIcons(winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop), IconSize(KIconLoader::Desktop)),
                             qApp->windowIcon().pixmap(IconSize(KIconLoader::Small), IconSize(KIconLoader::Small)));
-#endif
     //QT5 showButton( User1, true );
 
     addMyModule(kleopatra_config_dirserv);
