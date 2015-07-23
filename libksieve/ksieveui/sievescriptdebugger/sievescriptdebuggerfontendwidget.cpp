@@ -19,6 +19,9 @@
 
 #include <QVBoxLayout>
 #include <QSplitter>
+#include "editor/sievetexteditwidget.h"
+#include "editor/sievetextedit.h"
+
 using namespace KSieveUi;
 
 SieveScriptDebuggerFontEndWidget::SieveScriptDebuggerFontEndWidget(QWidget *parent)
@@ -29,6 +32,11 @@ SieveScriptDebuggerFontEndWidget::SieveScriptDebuggerFontEndWidget(QWidget *pare
     QSplitter *splitter = new QSplitter;
     splitter->setObjectName(QStringLiteral("splitter"));
     mainLayout->addWidget(splitter);
+
+    mSieveTextEditWidget = new KSieveUi::SieveTextEditWidget(this);
+    mSieveTextEditWidget->setObjectName(QStringLiteral("sievetexteditwidget"));
+    splitter->addWidget(mSieveTextEditWidget);
+
 }
 
 SieveScriptDebuggerFontEndWidget::~SieveScriptDebuggerFontEndWidget()
@@ -38,11 +46,11 @@ SieveScriptDebuggerFontEndWidget::~SieveScriptDebuggerFontEndWidget()
 
 QString SieveScriptDebuggerFontEndWidget::script() const
 {
-    return QString();
+    return mSieveTextEditWidget->textEdit()->toPlainText();
 }
 
 void SieveScriptDebuggerFontEndWidget::setScript(const QString &script)
 {
-    //TODO
+    mSieveTextEditWidget->textEdit()->setPlainText(script);
 }
 

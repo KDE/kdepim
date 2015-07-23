@@ -22,6 +22,7 @@
 #include "ksieveui_export.h"
 namespace KSieveUi
 {
+class SieveTextEditWidget;
 class KSIEVEUI_EXPORT SieveScriptDebuggerFontEndWidget : public QWidget
 {
     Q_OBJECT
@@ -31,6 +32,9 @@ public:
 
     QString script() const;
     void setScript(const QString &script);
+
+private:
+    KSieveUi::SieveTextEditWidget *mSieveTextEditWidget;
 };
 }
 #endif // SIEVESCRIPTDEBUGGERFONTENDWIDGET_H
