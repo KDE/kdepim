@@ -17,7 +17,11 @@
 
 #include "sievescriptdebuggerfrontendwidgettest.h"
 #include "../sievescriptdebuggerfrontendwidget.h"
+#include <KUrlRequester>
+#include <QLabel>
+#include <QSplitter>
 #include <QTest>
+#include <sievescriptdebugger/sievescriptdebuggerwarning.h>
 
 SieveScriptDebuggerFrontEndWidgetTest::SieveScriptDebuggerFrontEndWidgetTest(QObject *parent)
     : QObject(parent)
@@ -34,6 +38,19 @@ void SieveScriptDebuggerFrontEndWidgetTest::shouldHaveDefaultValue()
 {
     KSieveUi::SieveScriptDebuggerFrontEndWidget w;
     QVERIFY(w.script().isEmpty());
+
+    QSplitter *splitter = w.findChild<QSplitter *>(QStringLiteral("splitter"));
+    QVERIFY(splitter);
+    QCOMPARE(splitter->count(), 2);
+
+    KSieveUi::SieveScriptDebuggerWarning *warning = w.findChild<KSieveUi::SieveScriptDebuggerWarning *>(QStringLiteral("sievescriptdebuggerwarning"));
+    QVERIFY(warning);
+
+    QLabel *emailLab = w.findChild<QLabel *>(QStringLiteral("emaillab"));
+    QVERIFY(emailLab);
+
+    KUrlRequester *emailPath = w.findChild<KUrlRequester *>(QStringLiteral("emailpath"));
+    QVERIFY(emailPath);
 }
 
 QTEST_MAIN(SieveScriptDebuggerFrontEndWidgetTest)

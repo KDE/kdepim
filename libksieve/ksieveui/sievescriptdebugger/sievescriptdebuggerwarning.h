@@ -20,9 +20,10 @@
 #define SIEVESCRIPTDEBUGGERWARNING_H
 
 #include <KMessageWidget>
+#include "ksieveui_export.h"
 namespace KSieveUi
 {
-class SieveScriptDebuggerWarning : public KMessageWidget
+class KSIEVEUI_EXPORT SieveScriptDebuggerWarning : public KMessageWidget
 {
     Q_OBJECT
 public:

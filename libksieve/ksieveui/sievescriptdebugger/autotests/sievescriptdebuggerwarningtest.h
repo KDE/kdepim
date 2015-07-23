@@ -27,6 +27,8 @@ public:
     explicit SieveScriptDebuggerWarningTest(QObject *parent = Q_NULLPTR);
     ~SieveScriptDebuggerWarningTest();
 
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // SIEVESCRIPTDEBUGGERWARNINGTEST_H

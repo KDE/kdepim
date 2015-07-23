@@ -24,7 +24,8 @@ using namespace KSieveUi;
 SieveScriptDebuggerWarning::SieveScriptDebuggerWarning(QWidget *parent)
     : KMessageWidget(parent)
 {
-
+    setCloseButtonVisible(true);
+    hide();
 }
 
 SieveScriptDebuggerWarning::~SieveScriptDebuggerWarning()

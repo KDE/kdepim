@@ -20,9 +20,16 @@
 
 #include <QWidget>
 #include "ksieveui_export.h"
+
+namespace PimCommon
+{
+class PlainTextEditorWidget;
+}
+class KUrlRequester;
 namespace KSieveUi
 {
 class SieveTextEditWidget;
+class SieveScriptDebuggerWarning;
 class KSIEVEUI_EXPORT SieveScriptDebuggerFrontEndWidget : public QWidget
 {
     Q_OBJECT
@@ -35,6 +42,9 @@ public:
 
 private:
     KSieveUi::SieveTextEditWidget *mSieveTextEditWidget;
+    KSieveUi::SieveScriptDebuggerWarning *mSieveScriptDebuggerWarning;
+    PimCommon::PlainTextEditorWidget *mSieveTestResult;
+    KUrlRequester *mEmailPath;
 };
 }
 #endif // SIEVESCRIPTDEBUGGERFONTENDWIDGET_H

@@ -16,6 +16,7 @@
 */
 
 #include "sievescriptdebuggerwarningtest.h"
+#include "../sievescriptdebuggerwarning.h"
 #include <QTest>
 
 SieveScriptDebuggerWarningTest::SieveScriptDebuggerWarningTest(QObject *parent)
@@ -27,6 +28,13 @@ SieveScriptDebuggerWarningTest::SieveScriptDebuggerWarningTest(QObject *parent)
 SieveScriptDebuggerWarningTest::~SieveScriptDebuggerWarningTest()
 {
 
+}
+
+void SieveScriptDebuggerWarningTest::shouldHaveDefaultValue()
+{
+    KSieveUi::SieveScriptDebuggerWarning w;
+    //FIXME
+    //QVERIFY(w.isCloseButtonVisible());
 }
 
 QTEST_MAIN(SieveScriptDebuggerWarningTest)

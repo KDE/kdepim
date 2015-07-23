@@ -16,11 +16,15 @@
 */
 
 #include "sievescriptdebuggerfrontendwidget.h"
+#include "sievescriptdebuggerwarning.h"
 
 #include <QVBoxLayout>
 #include <QSplitter>
 #include "editor/sievetexteditwidget.h"
 #include "editor/sievetextedit.h"
+#include <texteditor/plaintexteditor/plaintexteditorwidget.h>
+#include <QLabel>
+#include <KUrlRequester>
 
 using namespace KSieveUi;
 
@@ -28,14 +32,41 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     : QWidget(parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->setMargin(0);
     setLayout(mainLayout);
-    QSplitter *splitter = new QSplitter;
+
+    QHBoxLayout *emailPathLayout = new QHBoxLayout;
+    mainLayout->addLayout(emailPathLayout);
+
+    //KF5 add i18n
+    QLabel *emailLab = new QLabel(QStringLiteral("Email path:"));
+    emailLab->setObjectName(QStringLiteral("emaillab"));
+
+    emailPathLayout->addWidget(emailLab);
+
+    mEmailPath = new KUrlRequester(this);
+    mEmailPath->setObjectName(QStringLiteral("emailpath"));
+    emailPathLayout->addWidget(mEmailPath);
+
+    QSplitter *splitter = new QSplitter(Qt::Vertical);
     splitter->setObjectName(QStringLiteral("splitter"));
     mainLayout->addWidget(splitter);
 
     mSieveTextEditWidget = new KSieveUi::SieveTextEditWidget(this);
     mSieveTextEditWidget->setObjectName(QStringLiteral("sievetexteditwidget"));
     splitter->addWidget(mSieveTextEditWidget);
+    splitter->setChildrenCollapsible(false);
+
+    mSieveTestResult = new PimCommon::PlainTextEditorWidget(this);
+    mSieveTestResult->setObjectName(QStringLiteral("sievetextresult"));
+    mSieveTestResult->setReadOnly(true);
+    splitter->addWidget(mSieveTestResult);
+
+
+    mSieveScriptDebuggerWarning = new KSieveUi::SieveScriptDebuggerWarning(this);
+    mSieveScriptDebuggerWarning->setObjectName(QStringLiteral("sievescriptdebuggerwarning"));
+    mainLayout->addWidget(mSieveScriptDebuggerWarning);
+
 
 }
 
