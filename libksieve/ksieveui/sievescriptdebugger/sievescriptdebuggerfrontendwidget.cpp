@@ -54,6 +54,8 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     mEmailPath = new KUrlRequester(this);
     mEmailPath->setObjectName(QStringLiteral("emailpath"));
     emailPathLayout->addWidget(mEmailPath);
+    mEmailPath->lineEdit()->setTrapReturnKey(true);
+    mEmailPath->lineEdit()->setClearButtonEnabled(true);
     connect(mEmailPath->lineEdit(), &KLineEdit::textChanged, this, &SieveScriptDebuggerFrontEndWidget::slotEmailChanged);
 
     QSplitter *splitter = new QSplitter(Qt::Vertical);
