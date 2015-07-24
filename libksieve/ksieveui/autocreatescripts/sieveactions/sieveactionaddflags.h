@@ -26,7 +26,7 @@ class SieveActionAddFlags : public SieveActionAbstractFlags
 {
     Q_OBJECT
 public:
-    SieveActionAddFlags(QObject *parent = Q_NULLPTR);
+    explicit SieveActionAddFlags(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
     QString flagsCode() const Q_DECL_OVERRIDE;
     QString help() const Q_DECL_OVERRIDE;

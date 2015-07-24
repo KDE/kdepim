@@ -25,7 +25,7 @@ class SieveActionEReject : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionEReject(QObject *parent = Q_NULLPTR);
+    explicit SieveActionEReject(QObject *parent = Q_NULLPTR);
 
     static SieveAction *newAction();
 

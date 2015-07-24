@@ -26,7 +26,7 @@ class SieveConditionVirusTest : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionVirusTest(QObject *parent = Q_NULLPTR);
+    explicit SieveConditionVirusTest(QObject *parent = Q_NULLPTR);
 
     static SieveCondition *newAction();
 

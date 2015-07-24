@@ -26,7 +26,7 @@ class SieveActionStop : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionStop(QObject *parent = Q_NULLPTR);
+    explicit SieveActionStop(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
     QString code(QWidget *) const Q_DECL_OVERRIDE;
     QString help() const Q_DECL_OVERRIDE;

@@ -92,9 +92,8 @@ SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
 
     toolbar->addAction(mUpload);
 
-    SieveEditorMenuBar *menuBar = 0;
     if (useMenuBar) {
-        menuBar = new SieveEditorMenuBar;
+        SieveEditorMenuBar *menuBar = new SieveEditorMenuBar;
         connect(menuBar, &SieveEditorMenuBar::copy, this, &SieveEditorWidget::copy);
         connect(menuBar, &SieveEditorMenuBar::find, this, &SieveEditorWidget::find);
         connect(menuBar, &SieveEditorMenuBar::replace, this, &SieveEditorWidget::replace);

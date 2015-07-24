@@ -25,7 +25,7 @@ class SieveActionFileInto : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionFileInto(QObject *parent = Q_NULLPTR);
+    explicit SieveActionFileInto(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
     QString code(QWidget *) const Q_DECL_OVERRIDE;
     QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;

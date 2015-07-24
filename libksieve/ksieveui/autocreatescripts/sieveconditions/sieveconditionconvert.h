@@ -26,7 +26,7 @@ class SieveConditionConvert : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionConvert(QObject *parent = Q_NULLPTR);
+    explicit SieveConditionConvert(QObject *parent = Q_NULLPTR);
     static SieveCondition *newAction();
     QString code(QWidget *) const Q_DECL_OVERRIDE;
     QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;

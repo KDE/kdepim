@@ -25,7 +25,7 @@ class SieveActionAddHeader : public SieveActionAbstractEditHeader
 {
     Q_OBJECT
 public:
-    SieveActionAddHeader(QObject *parent = Q_NULLPTR);
+    explicit SieveActionAddHeader(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
     QString code(QWidget *w) const Q_DECL_OVERRIDE;
     QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;

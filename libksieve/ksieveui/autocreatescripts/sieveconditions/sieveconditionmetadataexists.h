@@ -26,7 +26,7 @@ class SieveConditionMetaDataExists : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionMetaDataExists(QObject *parent = Q_NULLPTR);
+    explicit SieveConditionMetaDataExists(QObject *parent = Q_NULLPTR);
 
     static SieveCondition *newAction();
 

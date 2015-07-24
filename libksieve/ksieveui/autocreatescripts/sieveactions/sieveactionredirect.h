@@ -26,7 +26,7 @@ class SieveActionRedirect : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionRedirect(QObject *parent = Q_NULLPTR);
+    explicit SieveActionRedirect(QObject *parent = Q_NULLPTR);
 
     static SieveAction *newAction();
 

@@ -24,7 +24,7 @@ class SieveActionKeep : public SieveAction
 {
     Q_OBJECT
 public:
-    SieveActionKeep(QObject *parent = Q_NULLPTR);
+    explicit SieveActionKeep(QObject *parent = Q_NULLPTR);
     static SieveAction *newAction();
 
     QString code(QWidget *) const Q_DECL_OVERRIDE;

@@ -26,7 +26,7 @@ class SieveConditionMailboxExists : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionMailboxExists(QObject *parent = Q_NULLPTR);
+    explicit SieveConditionMailboxExists(QObject *parent = Q_NULLPTR);
 
     static SieveCondition *newAction();
 

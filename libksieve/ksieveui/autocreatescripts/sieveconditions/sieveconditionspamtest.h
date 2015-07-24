@@ -26,7 +26,7 @@ class SieveConditionSpamTest : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionSpamTest(QObject *parent = Q_NULLPTR);
+    explicit SieveConditionSpamTest(QObject *parent = Q_NULLPTR);
 
     static SieveCondition *newAction();
 

@@ -26,7 +26,7 @@ class SieveConditionMetaData : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionMetaData(QObject *parent = Q_NULLPTR);
+    explicit SieveConditionMetaData(QObject *parent = Q_NULLPTR);
 
     static SieveCondition *newAction();
 

@@ -26,7 +26,7 @@ class SieveConditionTrue : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionTrue(QObject *parent = Q_NULLPTR);
+    explicit SieveConditionTrue(QObject *parent = Q_NULLPTR);
 
     static SieveCondition *newAction();
 

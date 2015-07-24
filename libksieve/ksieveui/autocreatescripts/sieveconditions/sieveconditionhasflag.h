@@ -26,7 +26,7 @@ class SieveConditionHasFlag : public SieveCondition
 {
     Q_OBJECT
 public:
-    SieveConditionHasFlag(QObject *parent = Q_NULLPTR);
+    explicit SieveConditionHasFlag(QObject *parent = Q_NULLPTR);
 
     static SieveCondition *newAction();
 
