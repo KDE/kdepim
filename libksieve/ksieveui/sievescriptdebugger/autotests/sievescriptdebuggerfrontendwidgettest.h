@@ -29,6 +29,7 @@ public:
     ~SieveScriptDebuggerFrontEndWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shouldChangeButtonEnabledState();
 };
 
 #endif // SIEVESCRIPTDEBUGGERFRONTENDWIDGETTEST_H
