@@ -16,6 +16,7 @@
 */
 
 #include "sievescriptdebuggerfrontendwidget.h"
+#include "sievescriptdebuggertextedit.h"
 #include "sievescriptdebuggerwarning.h"
 
 #include <QVBoxLayout>
@@ -59,7 +60,7 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     splitter->setObjectName(QStringLiteral("splitter"));
     mainLayout->addWidget(splitter);
 
-    mSieveTextEditWidget = new KSieveUi::SieveTextEditWidget(this);
+    mSieveTextEditWidget = new KSieveUi::SieveTextEditWidget(new KSieveUi::SieveScriptDebuggerTextEdit(this), this);
     mSieveTextEditWidget->setObjectName(QStringLiteral("sievetexteditwidget"));
     splitter->addWidget(mSieveTextEditWidget);
     splitter->setChildrenCollapsible(false);
@@ -114,6 +115,7 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
         mSieveScriptDebuggerWarning->setErrorMessage(QStringLiteral("Impossible to open temporary file."));
         return;
     }
+    mDebugScript->setEnabled(false);
     mSieveTestResult->clear();
     QTextStream stream(temporaryFile);
     stream << mSieveTextEditWidget->textEdit()->toPlainText();
@@ -128,9 +130,8 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
     if (!mProcess->waitForStarted()) {
         delete mProcess;
         mProcess = 0;
+        mDebugScript->setEnabled(true);
     }
-    //Disable debug button;
-    //TODO
 }
 
 void SieveScriptDebuggerFrontEndWidget::slotReadStandardOutput()
@@ -149,6 +150,7 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugFinished()
 {
     delete mProcess;
     mProcess = 0;
+    mDebugScript->setEnabled(true);
 }
 
 QString SieveScriptDebuggerFrontEndWidget::script() const

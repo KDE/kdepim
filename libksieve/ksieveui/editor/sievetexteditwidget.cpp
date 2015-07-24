@@ -23,14 +23,34 @@
 #include "pimcommon/widgets/slidecontainer.h"
 using namespace KSieveUi;
 
+
+SieveTextEditWidget::SieveTextEditWidget(KSieveUi::SieveTextEdit *customTextEdit, QWidget *parent)
+    : QWidget(parent)
+{
+    initialize(customTextEdit);
+}
+
 SieveTextEditWidget::SieveTextEditWidget(QWidget *parent)
     : QWidget(parent)
+{
+    initialize();
+}
+
+SieveTextEditWidget::~SieveTextEditWidget()
+{
+
+}
+
+void SieveTextEditWidget::initialize(KSieveUi::SieveTextEdit *custom)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setMargin(0);
     setLayout(mainLayout);
-
-    mTextEdit = new KSieveUi::SieveTextEdit;
+    if (custom) {
+        mTextEdit = custom;
+    } else {
+        mTextEdit = new KSieveUi::SieveTextEdit;
+    }
     mTextEdit->setObjectName(QStringLiteral("textedit"));
     mTextEdit->setShowHelpMenu(false);
     mainLayout->addWidget(mTextEdit);
@@ -46,10 +66,6 @@ SieveTextEditWidget::SieveTextEditWidget(QWidget *parent)
     connect(mTextEdit, &SieveTextEdit::findText, this, &SieveTextEditWidget::slotFind);
     connect(mTextEdit, &SieveTextEdit::replaceText, this, &SieveTextEditWidget::slotReplace);
 
-}
-
-SieveTextEditWidget::~SieveTextEditWidget()
-{
 
 }
 

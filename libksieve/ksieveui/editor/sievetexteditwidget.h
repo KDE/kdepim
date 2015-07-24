@@ -33,6 +33,7 @@ class KSIEVEUI_EXPORT SieveTextEditWidget : public QWidget
     Q_OBJECT
 public:
     explicit SieveTextEditWidget(QWidget *parent = Q_NULLPTR);
+    SieveTextEditWidget(KSieveUi::SieveTextEdit *customTextEdit, QWidget *parent);
     ~SieveTextEditWidget();
     void setReadOnly(bool readOnly);
 
@@ -43,6 +44,7 @@ public Q_SLOTS:
     void slotFind();
 
 private:
+    void initialize(KSieveUi::SieveTextEdit *custom = Q_NULLPTR);
     KSieveUi::SieveTextEdit *mTextEdit;
     PimCommon::SlideContainer *mSliderContainer;
     PimCommon::PlainTextEditFindBar *mFindBar;
