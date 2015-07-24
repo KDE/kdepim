@@ -23,7 +23,7 @@ class RichTextComposerTest : public QObject
 {
     Q_OBJECT
 public:
-    RichTextComposerTest(QObject *parent = Q_NULLPTR);
+    explicit RichTextComposerTest(QObject *parent = Q_NULLPTR);
     ~RichTextComposerTest();
 
 private Q_SLOTS:

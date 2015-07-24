@@ -51,7 +51,7 @@ namespace MessageComposer
 class DistributionListItem : public QTreeWidgetItem
 {
 public:
-    DistributionListItem(QTreeWidget *tree)
+    explicit DistributionListItem(QTreeWidget *tree)
         : QTreeWidgetItem(tree)
     {
         setFlags(flags() | Qt::ItemIsUserCheckable);

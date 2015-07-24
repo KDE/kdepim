@@ -119,7 +119,7 @@ static bool isStructuralCollection(const Akonadi::Collection &collection)
 class StructuralCollectionsNotCheckableProxy : public KCheckableProxyModel
 {
 public:
-    StructuralCollectionsNotCheckableProxy(QObject *parent)
+    explicit StructuralCollectionsNotCheckableProxy(QObject *parent)
         : KCheckableProxyModel(parent)
     {
     }

@@ -49,7 +49,7 @@ protected:
 class CALENDARSUPPORT_EXPORT CategoryHierarchyReaderQComboBox : public CategoryHierarchyReader
 {
 public:
-    CategoryHierarchyReaderQComboBox(KComboBox *box) : mBox(box), mCurrentDepth(0) {}
+    explicit CategoryHierarchyReaderQComboBox(KComboBox *box) : mBox(box), mCurrentDepth(0) {}
     virtual ~CategoryHierarchyReaderQComboBox() {}
 
 protected:
