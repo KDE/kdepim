@@ -34,7 +34,9 @@
 #include <kblog/wordpressbuggy.h>
 #include <kblog/blogmedia.h>
 #include <kblog/blogcomment.h>
+#ifdef HAVE_GAPIBLOGGER_SUPPORT 
 #include "blogger.h"
+#endif
 #include "blogilo_debug.h"
 #include <KLocalizedString>
 
@@ -64,12 +66,13 @@ Backend::Backend(int blog_id, QObject *parent)
     qCDebug(BLOGILO_LOG) << "with blog id: " << blog_id;
     d->bBlog = DBMan::self()->blog(blog_id);
     d->kBlog = d->bBlog->blogBackend();
+#ifdef HAVE_GAPIBLOGGER_SUPPORT
     if (d->bBlog->api() == BilboBlog::BLOGGER_API) {
         KBlog::Blogger *blogger = qobject_cast<KBlog::Blogger *>(d->kBlog);
         connect(blogger, &KBlog::Blogger::authenticated, this, &Backend::bloggerAuthenticated);
         blogger->authenticate(DBMan::self()->getAuthData(blog_id));
     }
-
+#endif
     connect(d->kBlog, &KBlog::Blog::error, this, &Backend::error);
     connect(d->kBlog, &KBlog::Blog::errorPost, this, &Backend::error);
     connect(d->kBlog, &KBlog::Blog::errorComment, this, &Backend::error);

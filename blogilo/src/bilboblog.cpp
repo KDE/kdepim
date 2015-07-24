@@ -24,7 +24,9 @@
 #include "bilboblog.h"
 #include "dbman.h"
 #include <kblog/wordpressbuggy.h>
+#ifdef HAVE_GAPIBLOGGER_SUPPORT
 #include "blogger.h"
+#endif
 
 #include <QApplication>
 
@@ -96,9 +98,13 @@ KBlog::Blog *BilboBlog::blogBackend()
             d->kblog = new KBlog::WordpressBuggy(url(), this);
             break;
         case BilboBlog::BLOGGER_API:
+#ifdef HAVE_GAPIBLOGGER_SUPPORT
             d->kblog = new KBlog::Blogger(url(), this);
             qobject_cast<KBlog::Blogger *>(d->kblog)->setApiKey(QLatin1String("508396175529-icqp62q8t6st41gjv1du100fol6renq4.apps.googleusercontent.com"));
             qobject_cast<KBlog::Blogger *>(d->kblog)->setSecretKey(QLatin1String("JFPDXYmGIuM601vhgVGv0Dlx"));
+#else
+	    return 0;
+#endif
             break;
         }
         d->kblog->setUserAgent(QLatin1String(APPNAME), VERSION);

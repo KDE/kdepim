@@ -1,9 +1,14 @@
 
+if (KF5GAPI_FOUND)
+  include_directories(${LibKGAPI2_INCLUDE_DIR} )
+  add_definitions(-DHAVE_GAPIBLOGGER_SUPPORT)
+endif()
+
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} 
                      ${CMAKE_CURRENT_BINARY_DIR}  
                      ${CMAKE_SOURCE_DIR}/libkdepim
                      ${CMAKE_SOURCE_DIR}/pimcommon
-                     ${LibKGAPI2_INCLUDE_DIR} )
+                     )
 
 set(blogilo_SRCS
  blogilomigrateapplication.cpp
@@ -38,12 +43,14 @@ set(blogilo_SRCS
  storageservice/storageservicemanagersettingsjob.cpp
  configurestorageservicewidget.cpp
 
+)
+
+if (KF5GAPI_FOUND)
  # Blogger API implementation imported from KBlog due to circular deps between
  # kdepimlibs and libkgapi
  # TODO: Move back to KBlog in KF5
- blogger.cpp
-)
-
+   set(blogilo_SRCS ${blogilo_SRCS} blogger.cpp)
+endif()
 
 ki18n_wrap_ui(
    blogilo_SRCS
@@ -64,7 +71,11 @@ file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/*-apps-blogilo.png")
 ecm_add_app_icon(blogilo_SRCS ICONS ${ICONS_SRCS})
 add_executable( blogilo ${blogilo_SRCS})
 
-target_link_libraries( blogilo kdepim  KF5::TextEditor  KF5::WebKit KF5::Blog composereditorng  pimcommon KF5::Wallet Qt5::Sql KF5::GAPICore KF5::XmlRpcClient KF5::GAPIBlogger KF5::DBusAddons)
+target_link_libraries( blogilo kdepim  KF5::TextEditor  KF5::WebKit KF5::Blog composereditorng  pimcommon KF5::Wallet Qt5::Sql KF5::XmlRpcClient KF5::DBusAddons)
+
+if (KF5GAPI_FOUND)
+   target_link_libraries( blogilo KF5::GAPIBlogger KF5::GAPICore)
+endif()
 
 
 install( TARGETS blogilo ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )

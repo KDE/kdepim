@@ -30,7 +30,9 @@
 #include <kblog/metaweblog.h>
 #include <kblog/movabletype.h>
 #include <kblog/wordpressbuggy.h>
+#ifdef HAVE_GAPIBLOGGER_SUPPORT
 #include "blogger.h"
+#endif
 #include <kmessagebox.h>
 #include "blogilo_debug.h"
 #include <kio/jobclasses.h>
@@ -299,6 +301,7 @@ void AddEditBlog::fetchBlogId()
         blog->listBlogs();
         break;
     }
+#ifdef HAVE_GAPIBLOGGER_SUPPORT
     case 4: {
         KBlog::Blogger *blog = new KBlog::Blogger(QUrl(d->ui.txtUrl->text()), this);
         d->mBlog = blog;
@@ -310,6 +313,7 @@ void AddEditBlog::fetchBlogId()
         blog->authenticate();
         break;
     }
+#endif
     default:
         qCDebug(BLOGILO_LOG) << "Unknown API";
         return;
@@ -625,6 +629,7 @@ void AddEditBlog::hideWaitWidget()
 
 void AddEditBlog::bloggerAuthenticated(const QMap< QString, QString > &authData)
 {
+#ifdef HAVE_GAPIBLOGGER_SUPPORT
     d->bBlog->setAuthData(authData);
     KBlog::Blogger *blogger = qobject_cast<KBlog::Blogger *>(d->mBlog);
     connect(blogger, &KBlog::Blogger::listedBlogs, this, &AddEditBlog::fetchedBlogId);
@@ -633,4 +638,5 @@ void AddEditBlog::bloggerAuthenticated(const QMap< QString, QString > &authData)
     connect(d->mFetchBlogIdTimer, &QTimer::timeout, this, &AddEditBlog::handleFetchIDTimeout);
     d->mFetchBlogIdTimer->start(TIMEOUT);
     blogger->listBlogs();
+#endif
 }
