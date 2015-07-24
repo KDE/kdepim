@@ -26,6 +26,7 @@ namespace PimCommon
 class PlainTextEditorWidget;
 }
 class KUrlRequester;
+class QPushButton;
 namespace KSieveUi
 {
 class SieveTextEditWidget;
@@ -40,11 +41,16 @@ public:
     QString script() const;
     void setScript(const QString &script);
 
+private Q_SLOTS:
+    void slotDebugScript();
+    void slotEmailChanged(const QString &text);
+
 private:
     KSieveUi::SieveTextEditWidget *mSieveTextEditWidget;
     KSieveUi::SieveScriptDebuggerWarning *mSieveScriptDebuggerWarning;
     PimCommon::PlainTextEditorWidget *mSieveTestResult;
     KUrlRequester *mEmailPath;
+    QPushButton *mDebugScript;
 };
 }
 #endif // SIEVESCRIPTDEBUGGERFONTENDWIDGET_H

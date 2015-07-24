@@ -51,6 +51,10 @@ void SieveScriptDebuggerFrontEndWidgetTest::shouldHaveDefaultValue()
 
     KUrlRequester *emailPath = w.findChild<KUrlRequester *>(QStringLiteral("emailpath"));
     QVERIFY(emailPath);
+
+    QPushButton *debugScriptButton = w.findChild<QPushButton *>(QStringLiteral("debugbutton"));
+    QVERIFY(debugScriptButton);
+    QVERIFY(!debugScriptButton->isEnabled());
 }
 
 QTEST_MAIN(SieveScriptDebuggerFrontEndWidgetTest)

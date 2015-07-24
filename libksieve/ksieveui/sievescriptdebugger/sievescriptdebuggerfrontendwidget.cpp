@@ -25,6 +25,7 @@
 #include <texteditor/plaintexteditor/plaintexteditorwidget.h>
 #include <QLabel>
 #include <KUrlRequester>
+#include <KLineEdit>
 
 using namespace KSieveUi;
 
@@ -47,6 +48,7 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     mEmailPath = new KUrlRequester(this);
     mEmailPath->setObjectName(QStringLiteral("emailpath"));
     emailPathLayout->addWidget(mEmailPath);
+    connect(mEmailPath->lineEdit(), &KLineEdit::textChanged, this, &SieveScriptDebuggerFrontEndWidget::slotEmailChanged);
 
     QSplitter *splitter = new QSplitter(Qt::Vertical);
     splitter->setObjectName(QStringLiteral("splitter"));
@@ -67,12 +69,30 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     mSieveScriptDebuggerWarning->setObjectName(QStringLiteral("sievescriptdebuggerwarning"));
     mainLayout->addWidget(mSieveScriptDebuggerWarning);
 
-
+    //KF5 add i18n
+    mDebugScript = new QPushButton(QStringLiteral("Debug"));
+    mDebugScript->setObjectName(QStringLiteral("debugbutton"));
+    QHBoxLayout *debugButtonLayout = new QHBoxLayout;
+    mainLayout->addLayout(debugButtonLayout);
+    debugButtonLayout->addStretch();
+    debugButtonLayout->addWidget(mDebugScript);
+    mDebugScript->setEnabled(false);
+    connect(mDebugScript, &QPushButton::clicked, this, &SieveScriptDebuggerFrontEndWidget::slotDebugScript);
 }
 
 SieveScriptDebuggerFrontEndWidget::~SieveScriptDebuggerFrontEndWidget()
 {
 
+}
+
+void SieveScriptDebuggerFrontEndWidget::slotEmailChanged(const QString &text)
+{
+    mDebugScript->setEnabled(!text.trimmed().isEmpty());
+}
+
+void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
+{
+    //TODO
 }
 
 QString SieveScriptDebuggerFrontEndWidget::script() const
