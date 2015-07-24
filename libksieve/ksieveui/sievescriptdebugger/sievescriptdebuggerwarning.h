@@ -29,6 +29,9 @@ class KSIEVEUI_EXPORT SieveScriptDebuggerWarning : public KMessageWidget
 public:
     explicit SieveScriptDebuggerWarning(QWidget *parent = Q_NULLPTR);
     ~SieveScriptDebuggerWarning();
+
+    void setErrorMessage(const QString &msg);
+    void setWarningMessage(const QString &msg);
 };
 }
 #endif // SIEVESCRIPTDEBUGGERWARNING_H

@@ -92,6 +92,11 @@ void SieveScriptDebuggerFrontEndWidget::slotEmailChanged(const QString &text)
 
 void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
 {
+    if (mSieveTextEditWidget->textEdit()->toPlainText().trimmed().isEmpty()) {
+        //KF5 add i18n
+        mSieveScriptDebuggerWarning->setErrorMessage(QStringLiteral("Script text is empty."));
+        return;
+    }
     //TODO
 }
 

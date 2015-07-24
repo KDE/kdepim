@@ -33,3 +33,16 @@ SieveScriptDebuggerWarning::~SieveScriptDebuggerWarning()
 
 }
 
+void SieveScriptDebuggerWarning::setErrorMessage(const QString &msg)
+{
+    setMessageType(KMessageWidget::Error);
+    setText(msg);
+    animatedShow();
+}
+
+void SieveScriptDebuggerWarning::setWarningMessage(const QString &msg)
+{
+    setMessageType(KMessageWidget::Warning);
+    setText(msg);
+    animatedShow();
+}
