@@ -45,6 +45,9 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     QHBoxLayout *emailPathLayout = new QHBoxLayout;
     mainLayout->addLayout(emailPathLayout);
 
+
+    //USe QFormLayout
+
     //KF5 add i18n
     QLabel *emailLab = new QLabel(QStringLiteral("Email path:"));
     emailLab->setObjectName(QStringLiteral("emaillab"));
@@ -66,6 +69,7 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     extensionLayout->addWidget(extensionLab);
 
     mExtension = new KLineEdit(this);
+    //add placeholderText
     mExtension->setObjectName(QStringLiteral("extension"));
     mExtension->setClearButtonEnabled(true);
     extensionLayout->addWidget(mExtension);
