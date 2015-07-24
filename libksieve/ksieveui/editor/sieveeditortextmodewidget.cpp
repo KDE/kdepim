@@ -24,6 +24,7 @@
 #include "editor/warningwidget/sieveeditorwarning.h"
 #include "editor/warningwidget/sieveeditorparsingmissingfeaturewarning.h"
 #include "editor/sieveeditortabwidget.h"
+#include "sievescriptdebugger/sievescriptdebuggerdialog.h"
 
 #include "scriptsparsing/xmlprintingscriptbuilder.h"
 #include "scriptsparsing/parsingresultdialog.h"
@@ -433,5 +434,10 @@ void SieveEditorTextModeWidget::openBookmarkUrl(const QUrl &url)
 
 void SieveEditorTextModeWidget::debugSieveScript()
 {
+    QPointer<KSieveUi::SieveScriptDebuggerDialog> dlg = new KSieveUi::SieveScriptDebuggerDialog(this);
+    if (dlg->exec()) {
+        //TODO get text.
+    }
+    delete dlg;
     //TODO
 }
