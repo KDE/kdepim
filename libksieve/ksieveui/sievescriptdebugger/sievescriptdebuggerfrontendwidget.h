@@ -28,6 +28,7 @@ class PlainTextEditorWidget;
 class KUrlRequester;
 class QPushButton;
 class QProcess;
+class KLineEdit;
 namespace KSieveUi
 {
 class SieveTextEditWidget;
@@ -56,6 +57,7 @@ private:
     KUrlRequester *mEmailPath;
     QPushButton *mDebugScript;
     QProcess *mProcess;
+    KLineEdit *mExtension;
 };
 }
 #endif // SIEVESCRIPTDEBUGGERFONTENDWIDGET_H

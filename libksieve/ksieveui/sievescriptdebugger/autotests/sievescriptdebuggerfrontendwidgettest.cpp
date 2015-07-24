@@ -17,6 +17,7 @@
 
 #include "sievescriptdebuggerfrontendwidgettest.h"
 #include "../sievescriptdebuggerfrontendwidget.h"
+#include <KLineEdit>
 #include <KUrlRequester>
 #include <QLabel>
 #include <QSplitter>
@@ -55,6 +56,16 @@ void SieveScriptDebuggerFrontEndWidgetTest::shouldHaveDefaultValue()
     QPushButton *debugScriptButton = w.findChild<QPushButton *>(QStringLiteral("debugbutton"));
     QVERIFY(debugScriptButton);
     QVERIFY(!debugScriptButton->isEnabled());
+
+
+    QLabel *extensionLab = w.findChild<QLabel *>(QStringLiteral("extensionlab"));
+    QVERIFY(extensionLab);
+
+    KLineEdit *extension = w.findChild<KLineEdit *>(QStringLiteral("extension"));
+    QVERIFY(extension);
+    QVERIFY(extension->text().isEmpty());
+    QVERIFY(extension->isClearButtonEnabled());
+    QVERIFY(extension->isClearButtonEnabled());
 }
 
 void SieveScriptDebuggerFrontEndWidgetTest::shouldChangeButtonEnabledState()

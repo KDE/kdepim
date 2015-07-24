@@ -48,7 +48,6 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     //KF5 add i18n
     QLabel *emailLab = new QLabel(QStringLiteral("Email path:"));
     emailLab->setObjectName(QStringLiteral("emaillab"));
-
     emailPathLayout->addWidget(emailLab);
 
     mEmailPath = new KUrlRequester(this);
@@ -57,6 +56,20 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     mEmailPath->lineEdit()->setTrapReturnKey(true);
     mEmailPath->lineEdit()->setClearButtonEnabled(true);
     connect(mEmailPath->lineEdit(), &KLineEdit::textChanged, this, &SieveScriptDebuggerFrontEndWidget::slotEmailChanged);
+
+    QHBoxLayout *extensionLayout = new QHBoxLayout;
+    mainLayout->addLayout(extensionLayout);
+
+    //KF5 add i18n
+    QLabel *extensionLab = new QLabel(QStringLiteral("Extension:"));
+    extensionLab->setObjectName(QStringLiteral("extensionlab"));
+    extensionLayout->addWidget(extensionLab);
+
+    mExtension = new KLineEdit(this);
+    mExtension->setObjectName(QStringLiteral("extension"));
+    mExtension->setClearButtonEnabled(true);
+    extensionLayout->addWidget(mExtension);
+
 
     QSplitter *splitter = new QSplitter(Qt::Vertical);
     splitter->setObjectName(QStringLiteral("splitter"));
