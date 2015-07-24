@@ -27,6 +27,7 @@ class PlainTextEditorWidget;
 }
 class KUrlRequester;
 class QPushButton;
+class QProcess;
 namespace KSieveUi
 {
 class SieveTextEditWidget;
@@ -44,6 +45,9 @@ public:
 private Q_SLOTS:
     void slotDebugScript();
     void slotEmailChanged(const QString &text);
+    void slotReadStandardOutput();
+    void slotReadErrorOutput();
+    void slotDebugFinished();
 
 private:
     KSieveUi::SieveTextEditWidget *mSieveTextEditWidget;
@@ -51,6 +55,7 @@ private:
     PimCommon::PlainTextEditorWidget *mSieveTestResult;
     KUrlRequester *mEmailPath;
     QPushButton *mDebugScript;
+    QProcess *mProcess;
 };
 }
 #endif // SIEVESCRIPTDEBUGGERFONTENDWIDGET_H

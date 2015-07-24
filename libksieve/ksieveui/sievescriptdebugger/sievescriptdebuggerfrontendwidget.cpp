@@ -20,17 +20,22 @@
 
 #include <QVBoxLayout>
 #include <QSplitter>
+#include <QTemporaryFile>
+#include <QProcess>
+#include <QTextStream>
 #include "editor/sievetexteditwidget.h"
 #include "editor/sievetextedit.h"
 #include <texteditor/plaintexteditor/plaintexteditorwidget.h>
 #include <QLabel>
 #include <KUrlRequester>
 #include <KLineEdit>
+#include <QDebug>
 
 using namespace KSieveUi;
 
 SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mProcess(Q_NULLPTR)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setMargin(0);
@@ -97,7 +102,53 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
         mSieveScriptDebuggerWarning->setErrorMessage(QStringLiteral("Script text is empty."));
         return;
     }
+    if (!mEmailPath->url().isLocalFile()) {
+        //KF5 add i18n improve it too
+        mSieveScriptDebuggerWarning->setWarningMessage(QStringLiteral("Email file must be install in local."));
+        return;
+    }
+
+    QTemporaryFile *temporaryFile = new QTemporaryFile();
+    if (!temporaryFile->open()) {
+        //KF5 add i18n
+        mSieveScriptDebuggerWarning->setErrorMessage(QStringLiteral("Impossible to open temporary file."));
+        return;
+    }
+    mSieveTestResult->clear();
+    QTextStream stream(temporaryFile);
+    stream << mSieveTextEditWidget->textEdit()->toPlainText();
+    temporaryFile->flush();
+    mProcess = new QProcess(this);
+    temporaryFile->setParent(mProcess);
+    mProcess->start(QStringLiteral("sieve-test"), QStringList() << temporaryFile->fileName() << mEmailPath->url().toLocalFile());
+    connect(mProcess, &QProcess::readyReadStandardOutput, this, &SieveScriptDebuggerFrontEndWidget::slotReadStandardOutput);
+    connect(mProcess, &QProcess::readyReadStandardError, this, &SieveScriptDebuggerFrontEndWidget::slotReadErrorOutput);
+    connect(mProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(slotDebugFinished()));
+    //connect(mProcess, &QProcess::finished, this, &SieveScriptDebuggerFrontEndWidget::slotDebugFinished);
+    if (!mProcess->waitForStarted()) {
+        delete mProcess;
+        mProcess = 0;
+    }
+    //Disable debug button;
     //TODO
+}
+
+void SieveScriptDebuggerFrontEndWidget::slotReadStandardOutput()
+{
+    const QByteArray result = mProcess->readAllStandardOutput();
+    mSieveTestResult->editor()->appendPlainText(QString::fromLocal8Bit(result));
+}
+
+void SieveScriptDebuggerFrontEndWidget::slotReadErrorOutput()
+{
+    const QByteArray result = mProcess->readAllStandardError();
+    mSieveTestResult->editor()->appendPlainText(QString::fromLocal8Bit(result));
+}
+
+void SieveScriptDebuggerFrontEndWidget::slotDebugFinished()
+{
+    delete mProcess;
+    mProcess = 0;
 }
 
 QString SieveScriptDebuggerFrontEndWidget::script() const
