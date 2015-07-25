@@ -47,8 +47,6 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     QFormLayout *formLayout = new QFormLayout;
     mainLayout->addLayout(formLayout);
 
-    //USe QFormLayout
-
     QLabel *emailLab = new QLabel(i18n("Email path:"));
     emailLab->setObjectName(QStringLiteral("emaillab"));
 
@@ -69,6 +67,7 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     mExtension = new KLineEdit(this);
     //add placeholderText
     mExtension->setObjectName(QStringLiteral("extension"));
+    mExtension->setPlaceholderText(i18n("Activate extension with \"+<name of extension\", desactivate it with \"-<name of extension\"."));
     mExtension->setClearButtonEnabled(true);
 
     formLayout->addRow(extensionLab, mExtension);
