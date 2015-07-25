@@ -30,6 +30,7 @@
 #include <QLabel>
 #include <KUrlRequester>
 #include <KLineEdit>
+#include <KLocalizedString>
 #include <QDebug>
 
 using namespace KSieveUi;
@@ -48,8 +49,7 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
 
     //USe QFormLayout
 
-    //KF5 add i18n
-    QLabel *emailLab = new QLabel(QStringLiteral("Email path:"));
+    QLabel *emailLab = new QLabel(i18n("Email path:"));
     emailLab->setObjectName(QStringLiteral("emaillab"));
     emailPathLayout->addWidget(emailLab);
 
@@ -64,7 +64,7 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     mainLayout->addLayout(extensionLayout);
 
     //KF5 add i18n
-    QLabel *extensionLab = new QLabel(QStringLiteral("Extension:"));
+    QLabel *extensionLab = new QLabel(i18n("Extension:"));
     extensionLab->setObjectName(QStringLiteral("extensionlab"));
     extensionLayout->addWidget(extensionLab);
 
@@ -94,8 +94,7 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     mSieveScriptDebuggerWarning->setObjectName(QStringLiteral("sievescriptdebuggerwarning"));
     mainLayout->addWidget(mSieveScriptDebuggerWarning);
 
-    //KF5 add i18n
-    mDebugScript = new QPushButton(QStringLiteral("Debug"));
+    mDebugScript = new QPushButton(i18n("Debug"));
     mDebugScript->setObjectName(QStringLiteral("debugbutton"));
     QHBoxLayout *debugButtonLayout = new QHBoxLayout;
     mainLayout->addLayout(debugButtonLayout);
@@ -118,20 +117,17 @@ void SieveScriptDebuggerFrontEndWidget::slotEmailChanged(const QString &text)
 void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
 {
     if (mSieveTextEditWidget->textEdit()->toPlainText().trimmed().isEmpty()) {
-        //KF5 add i18n
-        mSieveScriptDebuggerWarning->setErrorMessage(QStringLiteral("Script text is empty."));
+        mSieveScriptDebuggerWarning->setErrorMessage(i18n("Script text is empty."));
         return;
     }
     if (!mEmailPath->url().isLocalFile()) {
-        //KF5 add i18n improve it too
-        mSieveScriptDebuggerWarning->setWarningMessage(QStringLiteral("Email file must be install in local."));
+        mSieveScriptDebuggerWarning->setWarningMessage(i18n("Email file must be install in local."));
         return;
     }
 
     QTemporaryFile *temporaryFile = new QTemporaryFile();
     if (!temporaryFile->open()) {
-        //KF5 add i18n
-        mSieveScriptDebuggerWarning->setErrorMessage(QStringLiteral("Impossible to open temporary file."));
+        mSieveScriptDebuggerWarning->setErrorMessage(i18n("Impossible to open temporary file."));
         return;
     }
     mDebugScript->setEnabled(false);
@@ -145,6 +141,7 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
     connect(mProcess, &QProcess::readyReadStandardOutput, this, &SieveScriptDebuggerFrontEndWidget::slotReadStandardOutput);
     connect(mProcess, &QProcess::readyReadStandardError, this, &SieveScriptDebuggerFrontEndWidget::slotReadErrorOutput);
     connect(mProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(slotDebugFinished()));
+    //TODO port to new connect api
     //connect(mProcess, &QProcess::finished, this, &SieveScriptDebuggerFrontEndWidget::slotDebugFinished);
     if (!mProcess->waitForStarted()) {
         delete mProcess;

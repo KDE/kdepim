@@ -436,8 +436,9 @@ void SieveEditorTextModeWidget::debugSieveScript()
 {
     QPointer<KSieveUi::SieveScriptDebuggerDialog> dlg = new KSieveUi::SieveScriptDebuggerDialog(this);
     if (dlg->exec()) {
+        const QString script = dlg->script();
+        mTextEdit->setPlainText(script);
         //TODO get text.
     }
     delete dlg;
-    //TODO
 }
