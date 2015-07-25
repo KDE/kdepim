@@ -24,6 +24,7 @@
 #include <QTemporaryFile>
 #include <QProcess>
 #include <QTextStream>
+#include <QFormLayout>
 #include "editor/sievetexteditwidget.h"
 #include "editor/sievetextedit.h"
 #include <texteditor/plaintexteditor/plaintexteditorwidget.h>
@@ -43,36 +44,34 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     mainLayout->setMargin(0);
     setLayout(mainLayout);
 
-    QHBoxLayout *emailPathLayout = new QHBoxLayout;
-    mainLayout->addLayout(emailPathLayout);
-
+    QFormLayout *formLayout = new QFormLayout;
+    mainLayout->addLayout(formLayout);
 
     //USe QFormLayout
 
     QLabel *emailLab = new QLabel(i18n("Email path:"));
     emailLab->setObjectName(QStringLiteral("emaillab"));
-    emailPathLayout->addWidget(emailLab);
 
     mEmailPath = new KUrlRequester(this);
     mEmailPath->setObjectName(QStringLiteral("emailpath"));
-    emailPathLayout->addWidget(mEmailPath);
     mEmailPath->lineEdit()->setTrapReturnKey(true);
     mEmailPath->lineEdit()->setClearButtonEnabled(true);
     connect(mEmailPath->lineEdit(), &KLineEdit::textChanged, this, &SieveScriptDebuggerFrontEndWidget::slotEmailChanged);
 
+    formLayout->addRow(emailLab, mEmailPath);
+
     QHBoxLayout *extensionLayout = new QHBoxLayout;
     mainLayout->addLayout(extensionLayout);
 
-    //KF5 add i18n
     QLabel *extensionLab = new QLabel(i18n("Extension:"));
     extensionLab->setObjectName(QStringLiteral("extensionlab"));
-    extensionLayout->addWidget(extensionLab);
 
     mExtension = new KLineEdit(this);
     //add placeholderText
     mExtension->setObjectName(QStringLiteral("extension"));
     mExtension->setClearButtonEnabled(true);
-    extensionLayout->addWidget(mExtension);
+
+    formLayout->addRow(extensionLab, mExtension);
 
 
     QSplitter *splitter = new QSplitter(Qt::Vertical);
