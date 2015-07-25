@@ -67,7 +67,7 @@ QIcon ShareServiceUrlManager::typeToIcon(ServiceType type)
     case LiveJournal:
         break;
     case ServiceEndType:
-        qCWarning(PIMCOMMON_LOG) <<"icon for unknow type requested. It's a bug.";
+        qCWarning(PIMCOMMON_LOG) << "icon for unknow type requested. It's a bug.";
         break;
     }
 

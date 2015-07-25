@@ -249,7 +249,7 @@ void StorageServiceDownloadDialog::downloadItem(StorageServiceTreeWidgetItem *it
         QFileInfo fileInfo(destination + QLatin1Char('/') + filename);
         if (fileInfo.exists()) {
             if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("Filename already exists. Do you want to overwrite it?"),
-                                                              i18nc("@title:window", "Overwrite file"))) {
+                    i18nc("@title:window", "Overwrite file"))) {
                 return;
             }
         }

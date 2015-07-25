@@ -23,7 +23,6 @@
 #include "pimcommon/widgets/slidecontainer.h"
 using namespace KSieveUi;
 
-
 SieveTextEditWidget::SieveTextEditWidget(KSieveUi::SieveTextEdit *customTextEdit, QWidget *parent)
     : QWidget(parent)
 {
@@ -65,7 +64,6 @@ void SieveTextEditWidget::initialize(KSieveUi::SieveTextEdit *custom)
     mainLayout->addWidget(mSliderContainer);
     connect(mTextEdit, &SieveTextEdit::findText, this, &SieveTextEditWidget::slotFind);
     connect(mTextEdit, &SieveTextEdit::replaceText, this, &SieveTextEditWidget::slotReplace);
-
 
 }
 

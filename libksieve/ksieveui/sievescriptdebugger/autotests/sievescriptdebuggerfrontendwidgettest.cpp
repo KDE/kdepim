@@ -57,7 +57,6 @@ void SieveScriptDebuggerFrontEndWidgetTest::shouldHaveDefaultValue()
     QVERIFY(debugScriptButton);
     QVERIFY(!debugScriptButton->isEnabled());
 
-
     QLabel *extensionLab = w.findChild<QLabel *>(QStringLiteral("extensionlab"));
     QVERIFY(extensionLab);
 
@@ -81,7 +80,6 @@ void SieveScriptDebuggerFrontEndWidgetTest::shouldChangeButtonEnabledState()
 
     emailPath->setUrl(QUrl::fromLocalFile(QStringLiteral("    ")));
     QVERIFY(!debugScriptButton->isEnabled());
-
 
 }
 

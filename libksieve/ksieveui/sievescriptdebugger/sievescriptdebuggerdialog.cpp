@@ -57,7 +57,7 @@ SieveScriptDebuggerDialog::~SieveScriptDebuggerDialog()
 
 void SieveScriptDebuggerDialog::setScript(const QString &script)
 {
-     mSieveScriptDebuggerWidget->setScript(script);
+    mSieveScriptDebuggerWidget->setScript(script);
 }
 
 QString SieveScriptDebuggerDialog::script() const

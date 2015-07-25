@@ -71,7 +71,6 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
 
     formLayout->addRow(extensionLab, mExtension);
 
-
     QSplitter *splitter = new QSplitter(Qt::Vertical);
     splitter->setObjectName(QStringLiteral("splitter"));
     mainLayout->addWidget(splitter);
@@ -85,7 +84,6 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     mSieveTestResult->setObjectName(QStringLiteral("sievetextresult"));
     mSieveTestResult->setReadOnly(true);
     splitter->addWidget(mSieveTestResult);
-
 
     mSieveScriptDebuggerWarning = new KSieveUi::SieveScriptDebuggerWarning(this);
     mSieveScriptDebuggerWarning->setObjectName(QStringLiteral("sievescriptdebuggerwarning"));
