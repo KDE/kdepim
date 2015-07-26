@@ -66,7 +66,7 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
 
     mExtension = new KLineEdit(this);
     mExtension->setObjectName(QStringLiteral("extension"));
-    mExtension->setPlaceholderText(i18n("Activate extension with \"+<name of extension>, desactivate it with \"-<name of extension>\""));
+    mExtension->setPlaceholderText(i18n("Activate extension with \"+<name of extension>, deactivate it with \"-<name of extension>\""));
     mExtension->setClearButtonEnabled(true);
     mExtension->setTrapReturnKey(true);
 
@@ -117,7 +117,7 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
         return;
     }
     if (!mEmailPath->url().isLocalFile()) {
-        mSieveScriptDebuggerWarning->setWarningMessage(i18n("Email file must be install in local."));
+        mSieveScriptDebuggerWarning->setWarningMessage(i18n("Email file must be installed locally."));
         return;
     }
 
