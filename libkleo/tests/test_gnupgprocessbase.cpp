@@ -133,7 +133,7 @@ int main(int argc, char **argv)
         return 1;
     }
     QApplication app(argc, argv);
-    KAboutData aboutData(QLatin1String("test_gnupgprocessbase"), i18n("GnuPGProcessBase Test"), QStringLiteral("0.1"));
+    KAboutData aboutData(QStringLiteral("test_gnupgprocessbase"), i18n("GnuPGProcessBase Test"), QStringLiteral("0.1"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();

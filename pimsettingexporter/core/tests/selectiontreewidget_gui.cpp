@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     QStandardPaths::setTestModeEnabled(true);
-    KAboutData aboutData(QLatin1String("selectiontypedialog_gui"), i18n("SelectionTypeTest_Gui"), QStringLiteral("1.0"));
+    KAboutData aboutData(QStringLiteral("selectiontypedialog_gui"), i18n("SelectionTypeTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for selectiontypedialog"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);

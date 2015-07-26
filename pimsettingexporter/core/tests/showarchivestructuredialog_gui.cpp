@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     QStandardPaths::setTestModeEnabled(true);
-    KAboutData aboutData(QLatin1String("showarchivestructuredialog_gui"), i18n("showarchivestructuredialog_Gui"), QStringLiteral("1.0"));
+    KAboutData aboutData(QStringLiteral("showarchivestructuredialog_gui"), i18n("showarchivestructuredialog_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for showarchivestructuredialog"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);

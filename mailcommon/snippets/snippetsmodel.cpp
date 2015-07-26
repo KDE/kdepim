@@ -358,7 +358,7 @@ QMimeData *SnippetsModel::mimeData(const QModelIndexList &indexes) const
     QDataStream stream(&encodedData, QIODevice::WriteOnly);
     stream << index.parent().internalId() << item->name() << item->text() << item->keySequence();
 
-    mimeData->setData(QLatin1String("text/x-kmail-textsnippet"), encodedData);
+    mimeData->setData(QStringLiteral("text/x-kmail-textsnippet"), encodedData);
     mimeData->setText(item->text());
 
     return mimeData;
@@ -377,7 +377,7 @@ bool SnippetsModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         return false;
     }
 
-    if (!data->hasFormat(QLatin1String("text/x-kmail-textsnippet"))) {
+    if (!data->hasFormat(QStringLiteral("text/x-kmail-textsnippet"))) {
         return false;
     }
 
@@ -391,7 +391,7 @@ bool SnippetsModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         return false;
     }
 
-    QByteArray encodedData = data->data(QLatin1String("text/x-kmail-textsnippet"));
+    QByteArray encodedData = data->data(QStringLiteral("text/x-kmail-textsnippet"));
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
 
     qint64 id;

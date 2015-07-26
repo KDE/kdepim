@@ -87,7 +87,7 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
     QStandardPaths::setTestModeEnabled(true);
 
-    KAboutData aboutData(QLatin1String("scamdetection_gui"), i18n("ScamDetectionTest_Gui"), QStringLiteral("1.0"));
+    KAboutData aboutData(QStringLiteral("scamdetection_gui"), i18n("ScamDetectionTest_Gui"), QStringLiteral("1.0"));
     aboutData.setShortDescription(i18n("Test for scamdetection widget"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
