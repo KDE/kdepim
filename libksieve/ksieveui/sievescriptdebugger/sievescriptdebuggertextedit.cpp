@@ -15,6 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "sievescriptdebuggertextedit.h"
+
+#include <KLocalizedString>
+
 #include <QAction>
 #include <QMenu>
 
@@ -33,9 +36,24 @@ SieveScriptDebuggerTextEdit::~SieveScriptDebuggerTextEdit()
 
 void SieveScriptDebuggerTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 {
-    if (!textCursor().hasSelection()) {
-        //Add action to add debug.
-    }
+    QAction *separator = new QAction(menu);
+    separator->setSeparator(true);
+    menu->addAction(separator);
+
+    QAction *addDebugAction = new QAction(i18n("Add debug here"), menu);
+    connect(addDebugAction, &QAction::triggered, this, &SieveScriptDebuggerTextEdit::slotAddDebug);
+    menu->addAction(addDebugAction);
+
+    //Add action to add debug.
     KSieveUi::SieveTextEdit::addExtraMenuEntry(menu, pos);
 }
 
+void SieveScriptDebuggerTextEdit::slotAddDebug()
+{
+    QTextCursor cursor(textCursor());
+    cursor.insertText(QStringLiteral("debug_log \"Subject with KDAB was found\";\n"));
+    if (!document()->toPlainText().contains(QStringLiteral("vnd.dovecot.debug"))) {
+        cursor.movePosition(QTextCursor::Start);
+        cursor.insertText(QStringLiteral("require \"vnd.dovecot.debug\";\n"));
+    }
+}
