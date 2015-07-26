@@ -66,8 +66,9 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
 
     mExtension = new KLineEdit(this);
     mExtension->setObjectName(QStringLiteral("extension"));
-    mExtension->setPlaceholderText(i18n("Activate extension with \"+<name of extension\", desactivate it with \"-<name of extension\"."));
+    mExtension->setPlaceholderText(i18n("Activate extension with \"+<name of extension>, desactivate it with \"-<name of extension>\""));
     mExtension->setClearButtonEnabled(true);
+    mExtension->setTrapReturnKey(true);
 
     formLayout->addRow(extensionLab, mExtension);
 
@@ -138,7 +139,12 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
         extensionList = QStringLiteral("-x \"%1\"").arg(mExtension->text());
     }
 
-    mProcess->start(QStringLiteral("sieve-test"), QStringList() << extensionList << temporaryFile->fileName() << mEmailPath->url().toLocalFile());
+    QStringList arguments;
+    if (!extensionList.isEmpty()) {
+        arguments << extensionList;
+    }
+    arguments << temporaryFile->fileName() << mEmailPath->url().toLocalFile();
+    mProcess->start(QStringLiteral("sieve-test"), QStringList() << arguments);
     connect(mProcess, &QProcess::readyReadStandardOutput, this, &SieveScriptDebuggerFrontEndWidget::slotReadStandardOutput);
     connect(mProcess, &QProcess::readyReadStandardError, this, &SieveScriptDebuggerFrontEndWidget::slotReadErrorOutput);
     connect(mProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(slotDebugFinished()));

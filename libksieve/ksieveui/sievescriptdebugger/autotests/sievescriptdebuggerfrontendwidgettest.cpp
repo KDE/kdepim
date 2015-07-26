@@ -64,7 +64,7 @@ void SieveScriptDebuggerFrontEndWidgetTest::shouldHaveDefaultValue()
     QVERIFY(extension);
     QVERIFY(extension->text().isEmpty());
     QVERIFY(extension->isClearButtonEnabled());
-    QVERIFY(extension->isClearButtonEnabled());
+    QVERIFY(extension->trapReturnKey());
 }
 
 void SieveScriptDebuggerFrontEndWidgetTest::shouldChangeButtonEnabledState()

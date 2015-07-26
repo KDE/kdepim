@@ -435,6 +435,7 @@ void SieveEditorTextModeWidget::openBookmarkUrl(const QUrl &url)
 void SieveEditorTextModeWidget::debugSieveScript()
 {
     QPointer<KSieveUi::SieveScriptDebuggerDialog> dlg = new KSieveUi::SieveScriptDebuggerDialog(this);
+    dlg->setScript(mTextEdit->toPlainText());
     if (dlg->exec()) {
         const QString script = dlg->script();
         mTextEdit->setPlainText(script);

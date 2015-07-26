@@ -213,6 +213,9 @@ void SieveEditorMainWindow::setupActions()
     mSieveEditorBookmarks = new SieveEditorBookmarks(this, ac, mBookmarkMenu->menu(), this);
     ac->addAction(QStringLiteral("bookmark"), mBookmarkMenu);
     connect(mSieveEditorBookmarks, &SieveEditorBookmarks::openUrl, this, &SieveEditorMainWindow::slotOpenBookmarkUrl);
+
+    mDebugSieveScriptAction = ac->addAction(QStringLiteral("debug_sieve"), mMainWidget->sieveEditorMainWidget(), SLOT(slotDebugSieveScript()));
+    mDebugSieveScriptAction->setText(i18n("Debug Sieve Script..."));
 }
 
 void SieveEditorMainWindow::slotRefreshList()
@@ -310,6 +313,7 @@ void SieveEditorMainWindow::slotUpdateActions()
     mZoomOutAction->setEnabled(editActionEnabled);
 
     mBookmarkMenu->setEnabled(editActionEnabled);
+    mDebugSieveScriptAction->setEnabled(editActionEnabled);
 }
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)

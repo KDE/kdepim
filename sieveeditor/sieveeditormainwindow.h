@@ -93,6 +93,7 @@ private:
     QAction *mUncommentAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
+    QAction *mDebugSieveScriptAction;
     PimCommon::KActionMenuChangeCase *mMenuChangeCaseAction;
 
     QLabel *mStatusBarInfo;
