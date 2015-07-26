@@ -52,10 +52,11 @@ void SieveEditorMenuBarTest::shouldHaveDefaultValue()
     QVERIFY(bar.fileMenu());
     QVERIFY(bar.commentCodeAction());
     QVERIFY(bar.uncommentCodeAction());
+    QVERIFY(bar.debugSieveScriptAction());
     QCOMPARE(bar.actions().count(), 3);
     QCOMPARE(bar.editorMenu()->actions().count(), 16);
     QCOMPARE(bar.fileMenu()->actions().count(), 0);
-    QCOMPARE(bar.toolsMenu()->actions().count(), 2);
+    QCOMPARE(bar.toolsMenu()->actions().count(), 3);
 
     QVERIFY(bar.findAction()->isEnabled());
     QVERIFY(bar.replaceAction()->isEnabled());
@@ -109,6 +110,9 @@ void SieveEditorMenuBarTest::shouldEmitSignals()
     QSignalSpy spyZoomOut(&bar, SIGNAL(zoomOut()));
     bar.zoomOutAction()->trigger();
 
+    QSignalSpy spyDebugScript(&bar, SIGNAL(debugSieveScript()));
+    bar.debugSieveScriptAction()->trigger();
+
     QCOMPARE(spyZoomOut.count(), 1);
     QCOMPARE(spyZoomIn.count(), 1);
     QCOMPARE(spyUnComment.count(), 1);
@@ -122,6 +126,7 @@ void SieveEditorMenuBarTest::shouldEmitSignals()
     QCOMPARE(spySelectAll.count(), 1);
     QCOMPARE(spyFind.count(), 1);
     QCOMPARE(spyReplace.count(), 1);
+    QCOMPARE(spyDebugScript.count(), 1);
 }
 
 QTEST_MAIN(SieveEditorMenuBarTest)

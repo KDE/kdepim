@@ -48,6 +48,9 @@ void SieveEditorMenuBar::initActions()
     mUncommentCodeAction = new QAction(i18n("Uncomment"), this);
     connect(mUncommentCodeAction, &QAction::triggered, this, &SieveEditorMenuBar::uncomment);
 
+    mDebugSieveAction = new QAction(i18n("Debug Sieve Script..."), this);
+    connect(mDebugSieveAction, &QAction::triggered, this, &SieveEditorMenuBar::debugSieveScript);
+
     mFindAction = KStandardAction::find(this, SIGNAL(find()), this);
     mReplaceAction = KStandardAction::replace(this, SIGNAL(replace()), this);
     mUndoAction = KStandardAction::undo(this, SIGNAL(undo()), this);
@@ -93,6 +96,7 @@ void SieveEditorMenuBar::initMenus()
 
     mToolsMenu->addAction(mCommentCodeAction);
     mToolsMenu->addAction(mUncommentCodeAction);
+    mToolsMenu->addAction(mDebugSieveAction);
 }
 
 QAction *SieveEditorMenuBar::uncommentCodeAction() const
@@ -108,6 +112,11 @@ QAction *SieveEditorMenuBar::zoomInAction() const
 QAction *SieveEditorMenuBar::zoomOutAction() const
 {
     return mZoomOutAction;
+}
+
+QAction *SieveEditorMenuBar::debugSieveScriptAction() const
+{
+    return mDebugSieveAction;
 }
 
 QAction *SieveEditorMenuBar::commentCodeAction() const
