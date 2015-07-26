@@ -76,6 +76,7 @@ protected:
 
 Q_SIGNALS:
     void dndDone();
+    void addNewDndSnippset(const QString &);
 private:
     SnippetItem *mRootItem;
 };

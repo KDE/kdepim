@@ -61,6 +61,10 @@ public:
     void insertSelectedSnippet();
     void insertActionSnippet();
 
+    void createSnippet(const QString &text = QString());
+
+    void slotAddNewDndSnippset(const QString &);
+
     void updateActionCollection(const QString &oldName, const QString &newName,
                                 const QKeySequence &keySequence, const QString &text);
 
@@ -136,6 +140,11 @@ void SnippetsManager::Private::selectionChanged()
 
 void SnippetsManager::Private::addSnippet()
 {
+    createSnippet();
+}
+
+void SnippetsManager::Private::createSnippet(const QString &text)
+{
     const bool noGroupAvailable = (mModel->rowCount() == 0);
 
     if (noGroupAvailable) {
@@ -154,6 +163,7 @@ void SnippetsManager::Private::addSnippet()
     dlg->setWindowTitle(i18nc("@title:window", "Add Snippet"));
     dlg->setGroupModel(mModel);
     dlg->setGroupIndex(currentGroupIndex());
+    dlg->setText(text);
 
     if (dlg->exec()) {
         const QModelIndex groupIndex = dlg->groupIndex();
@@ -172,6 +182,12 @@ void SnippetsManager::Private::addSnippet()
         mDirty = true;
     }
     delete dlg;
+
+}
+
+void SnippetsManager::Private::slotAddNewDndSnippset(const QString &text)
+{
+    createSnippet(text);
 }
 
 void SnippetsManager::Private::dndDone()
@@ -595,6 +611,7 @@ SnippetsManager::SnippetsManager(KActionCollection *actionCollection,
     connect(d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(selectionChanged()));
     connect(d->mModel, SIGNAL(dndDone()), SLOT(dndDone()));
+    connect(d->mModel, SIGNAL(addNewDndSnippset(QString)), this, SLOT(slotAddNewDndSnippset(QString)));
 
     connect(d->mAddSnippetAction, SIGNAL(triggered(bool)), SLOT(addSnippet()));
     connect(d->mEditSnippetAction, SIGNAL(triggered(bool)), SLOT(editSnippet()));

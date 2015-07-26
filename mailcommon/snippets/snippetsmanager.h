@@ -160,6 +160,7 @@ private:
     Q_PRIVATE_SLOT(d, void insertSelectedSnippet())
     Q_PRIVATE_SLOT(d, void insertActionSnippet())
     Q_PRIVATE_SLOT(d, void dndDone())
+    Q_PRIVATE_SLOT(d, void slotAddNewDndSnippset(QString))
     //@endcond
 };
 

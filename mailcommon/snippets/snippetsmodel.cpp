@@ -23,6 +23,7 @@
 #include <QMimeData>
 #include <QDataStream>
 #include <QStringList>
+#include <QDebug>
 
 using namespace MailCommon;
 
@@ -373,46 +374,64 @@ bool SnippetsModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         return true;
     }
 
-    if (!parent.isValid()) {
+
+    if (data->hasFormat(QStringLiteral("text/plain"))) {
+        if (column > 1) {
+            return false;
+        }
+        if (!parent.isValid()) {
+            return false;
+        }
+        SnippetItem *item = static_cast<SnippetItem *>(parent.internalPointer());
+
+        if (!item->isGroup()) {
+            return false;
+        }
+        const QString encodedData = QString::fromUtf8(data->data(QStringLiteral("text/plain")));
+        Q_EMIT addNewDndSnippset(encodedData);
         return false;
+    } else {
+        if (!parent.isValid()) {
+            return false;
+        }
+
+        if (!data->hasFormat(QStringLiteral("text/x-kmail-textsnippet"))) {
+            return false;
+        }
+
+        if (column > 1) {
+            return false;
+        }
+
+        SnippetItem *item = static_cast<SnippetItem *>(parent.internalPointer());
+
+        if (!item->isGroup()) {
+            return false;
+        }
+
+        QByteArray encodedData = data->data(QStringLiteral("text/x-kmail-textsnippet"));
+        QDataStream stream(&encodedData, QIODevice::ReadOnly);
+
+        qint64 id;
+        QString name;
+        QString text;
+        QString keySequence;
+        stream >> id >> name >> text >> keySequence;
+
+        if (parent.internalId() == id) {
+            return false;
+        }
+
+        insertRow(rowCount(parent), parent);
+
+        const QModelIndex idx = index(rowCount(parent) - 1, 0, parent);
+
+        setData(idx, name, SnippetsModel::NameRole);
+        setData(idx, text, SnippetsModel::TextRole);
+        setData(idx, keySequence, SnippetsModel::KeySequenceRole);
+        Q_EMIT dndDone();
+        return true;
     }
-
-    if (!data->hasFormat(QStringLiteral("text/x-kmail-textsnippet"))) {
-        return false;
-    }
-
-    if (column > 1) {
-        return false;
-    }
-
-    SnippetItem *item = static_cast<SnippetItem *>(parent.internalPointer());
-
-    if (!item->isGroup()) {
-        return false;
-    }
-
-    QByteArray encodedData = data->data(QStringLiteral("text/x-kmail-textsnippet"));
-    QDataStream stream(&encodedData, QIODevice::ReadOnly);
-
-    qint64 id;
-    QString name;
-    QString text;
-    QString keySequence;
-    stream >> id >> name >> text >> keySequence;
-
-    if (parent.internalId() == id) {
-        return false;
-    }
-
-    insertRow(rowCount(parent), parent);
-
-    const QModelIndex idx = index(rowCount(parent) - 1, 0, parent);
-
-    setData(idx, name, SnippetsModel::NameRole);
-    setData(idx, text, SnippetsModel::TextRole);
-    setData(idx, keySequence, SnippetsModel::KeySequenceRole);
-    Q_EMIT dndDone();
-    return true;
 }
 
 Qt::DropActions SnippetsModel::supportedDropActions() const
