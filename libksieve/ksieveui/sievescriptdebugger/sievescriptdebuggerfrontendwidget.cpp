@@ -133,12 +133,12 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
     mProcess = new QProcess(this);
     temporaryFile->setParent(mProcess);
 
-    QStringList extensionList;
+    QString extensionList;
     if (!mExtension->text().trimmed().isEmpty()) {
-        //TODO add extension
+        extensionList = QStringLiteral("-x \"%1\"").arg(mExtension->text());
     }
 
-    mProcess->start(QStringLiteral("sieve-test"), QStringList() << temporaryFile->fileName() << mEmailPath->url().toLocalFile());
+    mProcess->start(QStringLiteral("sieve-test"), QStringList() << extensionList << temporaryFile->fileName() << mEmailPath->url().toLocalFile());
     connect(mProcess, &QProcess::readyReadStandardOutput, this, &SieveScriptDebuggerFrontEndWidget::slotReadStandardOutput);
     connect(mProcess, &QProcess::readyReadStandardError, this, &SieveScriptDebuggerFrontEndWidget::slotReadErrorOutput);
     connect(mProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(slotDebugFinished()));
