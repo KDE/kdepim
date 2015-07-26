@@ -39,8 +39,7 @@ SieveScriptDebuggerWidget::SieveScriptDebuggerWidget(QWidget *parent)
     mSieveScriptFrontEnd->setObjectName(QStringLiteral("sievescriptfrontend"));
     mStackedWidget->addWidget(mSieveScriptFrontEnd);
 
-    // kf5.1 add i18n
-    mSieveNoExistingFrontEnd = new QLabel(QStringLiteral("sieve-test was not found on system. Please install it."));
+    mSieveNoExistingFrontEnd = new QLabel(i18n("\"sieve-test\" was not found on system. Please install it."));
     mSieveNoExistingFrontEnd->setObjectName(QStringLiteral("sievenoexistingfrontend"));
     mStackedWidget->addWidget(mSieveNoExistingFrontEnd);
 
