@@ -66,7 +66,7 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
 
     mExtension = new KLineEdit(this);
     mExtension->setObjectName(QStringLiteral("extension"));
-    mExtension->setPlaceholderText(i18n("Activate extension with \"+<name of extension>, deactivate it with \"-<name of extension>\""));
+    mExtension->setPlaceholderText(i18n("Activate extension with \"+<name of extension>\", deactivate it with \"-<name of extension>\""));
     mExtension->setClearButtonEnabled(true);
     mExtension->setTrapReturnKey(true);
 
