@@ -28,8 +28,8 @@
 #include "attachmenticonview.h"
 #include "ui_attachmenteditdialog.h"
 #include <KLocalizedString>
-
-#include <KIO/NetAccess>
+#include <KIO/StoredTransferJob>
+#include <KJobWidgets>
 #include <KLocale>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
@@ -148,17 +148,12 @@ void AttachmentEditDialog::slotApply()
 
     if (mUi->mStackedWidget->currentIndex() == 0) {
         if (mUi->mInlineCheck->isChecked()) {
-            QString tmpFile;
-            if (KIO::NetAccess::download(correctedUrl, tmpFile, this)) {
-                QFile f(tmpFile);
-                if (!f.open(QIODevice::ReadOnly)) {
-                    return;
-                }
-                QByteArray data = f.readAll();
-                f.close();
+            auto job = KIO::storedGet(url);
+            KJobWidgets::setWindow(job, 0);
+            if (job->exec()) {
+                QByteArray data  = job->data();
                 mItem->setData(data);
             }
-            KIO::NetAccess::removeTempFile(tmpFile);
         } else {
             mItem->setUri(correctedUrl);
         }

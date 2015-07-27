@@ -42,6 +42,8 @@
 #include <KRun>
 #include <KIO/Job>
 #include <KIO/NetAccess>
+#include <KIO/StoredTransferJob>
+#include <KJobWidgets>
 #include <KLocalizedString>
 #include <QIcon>
 #include <QUrl>
@@ -612,17 +614,12 @@ void IncidenceAttachment::addUriAttachment(const QString &uri,
             }
         }
     } else {
-        QString tmpFile;
-        if (KIO::NetAccess::download(uri, tmpFile, 0)) {
-            QFile f(tmpFile);
-            if (!f.open(QIODevice::ReadOnly)) {
-                return;
-            }
-            const QByteArray data = f.readAll();
-            f.close();
+        auto job = KIO::storedGet(uri);
+        KJobWidgets::setWindow(job, 0);
+        if (job->exec()) {
+            const QByteArray data = job->data();
             addDataAttachment(data, mimeType, label);
         }
-        KIO::NetAccess::removeTempFile(tmpFile);
     }
 }
 
