@@ -22,7 +22,6 @@
 #include <ChangeRecorder>
 #include <Collection>
 #include <CollectionFetchScope>
-#include <CollectionModel>
 #include <EntityTreeModel>
 #include <Item>
 #include <ItemDeleteJob>
@@ -83,7 +82,7 @@ void FolderCollectionMonitor::expireAllCollection(const QAbstractItemModel *mode
         const QModelIndex index = model->index(row, 0, parentIndex);
         const Akonadi::Collection collection =
             model->data(
-                index, Akonadi::CollectionModel::CollectionRole).value<Akonadi::Collection>();
+                index, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
 
         if (!collection.isValid() || Util::isVirtualCollection(collection)) {
             continue;

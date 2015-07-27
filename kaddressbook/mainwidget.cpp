@@ -50,7 +50,6 @@
 
 #include <AkonadiWidgets/ETMViewStateSaver>
 #include <AkonadiCore/CollectionFilterProxyModel>
-#include <AkonadiCore/CollectionModel>
 #include <AkonadiWidgets/ControlGui>
 #include <AkonadiCore/EntityMimeTypeFilterModel>
 #include <AkonadiWidgets/EntityTreeView>
