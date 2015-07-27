@@ -33,6 +33,7 @@
 #include <KLineEdit>
 #include <KLocalizedString>
 #include <QDebug>
+#include <QDate>
 
 using namespace KSieveUi;
 
@@ -127,7 +128,6 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
         return;
     }
     mDebugScript->setEnabled(false);
-    mSieveTestResult->clear();
     QTextStream stream(temporaryFile);
     stream << mSieveTextEditWidget->textEdit()->toPlainText();
     temporaryFile->flush();
@@ -143,6 +143,7 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
     if (!extensionList.isEmpty()) {
         arguments << extensionList;
     }
+
     arguments << temporaryFile->fileName() << mEmailPath->url().toLocalFile();
     mProcess->start(QStringLiteral("sieve-test"), QStringList() << arguments);
     connect(mProcess, &QProcess::readyReadStandardOutput, this, &SieveScriptDebuggerFrontEndWidget::slotReadStandardOutput);
@@ -150,6 +151,8 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
     connect(mProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(slotDebugFinished()));
     //TODO port to new connect api
     //connect(mProcess, &QProcess::finished, this, &SieveScriptDebuggerFrontEndWidget::slotDebugFinished);
+    mSieveTestResult->editor()->appendPlainText(QStringLiteral("--------------------------------------"));
+    mSieveTestResult->editor()->appendPlainText(QLocale().toString(QDateTime::currentDateTime()));
     if (!mProcess->waitForStarted()) {
         delete mProcess;
         mProcess = 0;
