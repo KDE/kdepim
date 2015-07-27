@@ -134,6 +134,7 @@ public:
             const QString templateScript = item->data(TemplateListWidget::Text).toString();
             createListWidgetItem(newName, templateScript, false);
             dirty = true;
+            slotModify();
         }
     }
 
