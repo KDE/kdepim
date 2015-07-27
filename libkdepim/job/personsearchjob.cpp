@@ -145,7 +145,7 @@ void PersonSearchJob::onCollectionsReceived(const Akonadi::Collection::List &lis
     Q_FOREACH (const Akonadi::Collection &col, list) {
         Person person;
         const QString &uid = col.name();
-        const CollectionIdentificationAttribute *const attr = col.attribute<CollectionIdentificationAttribute>();
+        const Akonadi::CollectionIdentificationAttribute *const attr = col.attribute<Akonadi::CollectionIdentificationAttribute>();
         const Akonadi::EntityDisplayAttribute *const displayname = col.attribute<Akonadi::EntityDisplayAttribute>();
         person.rootCollection = col.id();
         person.uid = uid;
@@ -189,7 +189,7 @@ void PersonSearchJob::onCollectionsReceived(const Akonadi::Collection::List &lis
 void PersonSearchJob::updatePersonCollection(const Person &person)
 {
     Akonadi::Collection c(person.rootCollection);
-    CollectionIdentificationAttribute *identification = c.attribute<CollectionIdentificationAttribute>(Akonadi::Entity::AddIfMissing);
+    Akonadi::CollectionIdentificationAttribute* identification = c.attribute<Akonadi::CollectionIdentificationAttribute>(Akonadi::Entity::AddIfMissing);
 
     if (person.updateDisplayName) {
         Akonadi::EntityDisplayAttribute *displayname  = c.attribute<Akonadi::EntityDisplayAttribute >(Akonadi::Entity::AddIfMissing);
@@ -233,7 +233,7 @@ void PersonSearchJob::modifyResult(KJob *job)
     const Akonadi::CollectionModifyJob *modifyJob = static_cast<Akonadi::CollectionModifyJob *>(job);
     const Akonadi::Collection &col = modifyJob->collection();
 
-    const CollectionIdentificationAttribute *const attr = col.attribute<CollectionIdentificationAttribute>();
+    const Akonadi::CollectionIdentificationAttribute *const attr = col.attribute<Akonadi::CollectionIdentificationAttribute>();
     const Akonadi::EntityDisplayAttribute *const displayname = col.attribute<Akonadi::EntityDisplayAttribute>();
     const QString &uid = col.name();
     Person &person = mMatches[col.name()];
