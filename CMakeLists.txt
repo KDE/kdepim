@@ -83,7 +83,7 @@ option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for 
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 option(KDEPIM_NO_TEXTTOSPEECH "Do not use TextToSpeech in the kdepim applications" FALSE)
 
-find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative OpenGL)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools OpenGL)
 find_package(Qt5X11Extras NO_MODULE)
 if (NOT KDEPIM_NO_TEXTTOSPEECH)
    find_package(Qt5 OPTIONAL_COMPONENTS TextToSpeech)
