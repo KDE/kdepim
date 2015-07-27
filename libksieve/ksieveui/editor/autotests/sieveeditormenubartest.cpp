@@ -33,6 +33,69 @@ SieveEditorMenuBarTest::~SieveEditorMenuBarTest()
 
 }
 
+void SieveEditorMenuBarTest::shouldDisableActions()
+{
+    KSieveUi::SieveEditorMenuBar bar;
+    QVERIFY(bar.goToLineAction()->isEnabled());
+    QVERIFY(bar.findAction()->isEnabled());
+    QVERIFY(bar.replaceAction()->isEnabled());
+    QVERIFY(bar.pasteAction()->isEnabled());
+    QVERIFY(bar.zoomInAction()->isEnabled());
+    QVERIFY(bar.zoomOutAction()->isEnabled());
+    QVERIFY(bar.editorMenu()->isEnabled());
+    QVERIFY(bar.toolsMenu()->isEnabled());
+    QVERIFY(bar.fileMenu()->isEnabled());
+    QVERIFY(bar.commentCodeAction()->isEnabled());
+    QVERIFY(bar.uncommentCodeAction()->isEnabled());
+    QVERIFY(!bar.undoAction()->isEnabled());
+    QVERIFY(!bar.redoAction()->isEnabled());
+    QVERIFY(!bar.copyAction()->isEnabled());
+    QVERIFY(bar.pasteAction()->isEnabled());
+    QVERIFY(!bar.cutAction()->isEnabled());
+    QVERIFY(bar.selectAllAction()->isEnabled());
+
+    bar.setEditorMode(false);
+    QVERIFY(!bar.goToLineAction()->isEnabled());
+    QVERIFY(!bar.findAction()->isEnabled());
+    QVERIFY(!bar.replaceAction()->isEnabled());
+    QVERIFY(!bar.pasteAction()->isEnabled());
+    QVERIFY(!bar.zoomInAction()->isEnabled());
+    QVERIFY(!bar.zoomOutAction()->isEnabled());
+    QVERIFY(!bar.selectAllAction()->isEnabled());
+    QVERIFY(bar.editorMenu()->isEnabled());
+    QVERIFY(bar.toolsMenu()->isEnabled());
+    QVERIFY(bar.fileMenu()->isEnabled());
+    QVERIFY(!bar.commentCodeAction()->isEnabled());
+    QVERIFY(!bar.uncommentCodeAction()->isEnabled());
+    QVERIFY(!bar.undoAction()->isEnabled());
+    QVERIFY(!bar.redoAction()->isEnabled());
+    QVERIFY(!bar.copyAction()->isEnabled());
+    QVERIFY(!bar.pasteAction()->isEnabled());
+    QVERIFY(!bar.cutAction()->isEnabled());
+    QVERIFY(!bar.selectAllAction()->isEnabled());
+
+    bar.setEditorMode(true);
+    QVERIFY(bar.goToLineAction()->isEnabled());
+    QVERIFY(bar.findAction()->isEnabled());
+    QVERIFY(bar.replaceAction()->isEnabled());
+    QVERIFY(bar.pasteAction()->isEnabled());
+    QVERIFY(bar.zoomInAction()->isEnabled());
+    QVERIFY(bar.zoomOutAction()->isEnabled());
+    QVERIFY(bar.selectAllAction()->isEnabled());
+    QVERIFY(bar.editorMenu()->isEnabled());
+    QVERIFY(bar.toolsMenu()->isEnabled());
+    QVERIFY(bar.fileMenu()->isEnabled());
+    QVERIFY(bar.commentCodeAction()->isEnabled());
+    QVERIFY(bar.uncommentCodeAction()->isEnabled());
+    QVERIFY(bar.undoAction()->isEnabled());
+    QVERIFY(bar.redoAction()->isEnabled());
+    QVERIFY(bar.copyAction()->isEnabled());
+    QVERIFY(bar.pasteAction()->isEnabled());
+    QVERIFY(bar.cutAction()->isEnabled());
+    QVERIFY(bar.selectAllAction()->isEnabled());
+
+}
+
 void SieveEditorMenuBarTest::shouldHaveDefaultValue()
 {
     KSieveUi::SieveEditorMenuBar bar;

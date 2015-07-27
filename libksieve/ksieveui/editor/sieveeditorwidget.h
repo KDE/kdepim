@@ -112,6 +112,7 @@ Q_SIGNALS:
     void undoAvailable(bool);
     void redoAvailable(bool);
     void copyAvailable(bool);
+    void changeModeEditor(bool);
 private:
     void changeSwitchButtonText();
     void changeMode(EditorMode mode);

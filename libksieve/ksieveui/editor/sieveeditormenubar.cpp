@@ -35,6 +35,23 @@ SieveEditorMenuBar::~SieveEditorMenuBar()
 
 }
 
+void SieveEditorMenuBar::setEditorMode(bool editorMode)
+{
+    mGoToLine->setEnabled(editorMode);
+    mFindAction->setEnabled(editorMode);
+    mReplaceAction->setEnabled(editorMode);
+    mUndoAction->setEnabled(editorMode);
+    mRedoAction->setEnabled(editorMode);
+    mCopyAction->setEnabled(editorMode);
+    mPasteAction->setEnabled(editorMode);
+    mCutAction->setEnabled(editorMode);
+    mSelectAllAction->setEnabled(editorMode);
+    mCommentCodeAction->setEnabled(editorMode);
+    mUncommentCodeAction->setEnabled(editorMode);
+    mZoomInAction->setEnabled(editorMode);
+    mZoomOutAction->setEnabled(editorMode);
+}
+
 void SieveEditorMenuBar::initActions()
 {
     mGoToLine = new QAction(i18n("Go to Line"), this);
