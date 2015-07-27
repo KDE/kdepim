@@ -20,6 +20,8 @@
 
 #include "snippetsmodel.h"
 
+#include <KMessageBox>
+#include <KLocalizedString>
 #include <QMimeData>
 #include <QDataStream>
 #include <QStringList>
@@ -384,11 +386,14 @@ bool SnippetsModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         }
         SnippetItem *item = static_cast<SnippetItem *>(parent.internalPointer());
 
-        if (!item->isGroup()) {
-            return false;
-        }
         const QString encodedData = QString::fromUtf8(data->data(QStringLiteral("text/plain")));
-        Q_EMIT addNewDndSnippset(encodedData);
+        if (item->isGroup()) {
+            Q_EMIT addNewDndSnippset(encodedData);
+        } else {
+            if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("Do you want to update snippet?"), i18n("Rename snippset"))) {
+                item->setText(encodedData);
+            }
+        }
         return false;
     } else {
         if (!parent.isValid()) {
