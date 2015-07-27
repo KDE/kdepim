@@ -107,7 +107,7 @@ MailFilterAgent::MailFilterAgent(const QString &id)
                 m_filterLogDialog = new FilterLogDialog(Q_NULLPTR);
                 const QPixmap pixmap = QIcon::fromTheme(QStringLiteral("view-filter")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
                 KNotification *notify = new KNotification(QStringLiteral("mailfilterlogenabled"));
-                notify->setComponentName(componentData().componentName());
+                notify->setComponentName(QApplication::applicationDisplayName());
                 notify->setPixmap(pixmap);
                 notify->setText(i18nc("Notification when the filter log was enabled", "Mail Filter Log Enabled"));
                 notify->sendEvent();
