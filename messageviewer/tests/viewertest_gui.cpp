@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     parser.addHelpOption();
     parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("+[file]"), i18n("File containing an email")));
     parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("headerstrategy"), i18n("Header Strategy: [all|rich|standard|brief|custom]"), QStringLiteral("strategy")));
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("headerstyle"), i18n("Header Style: [brief|plain|enterprise|mobile|fancy]"), QStringLiteral("style")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("headerstyle"), i18n("Header Style: [brief|plain|enterprise|fancy]"), QStringLiteral("style")));
 
     aboutData.setupCommandLine(&parser);
     parser.process(app);
