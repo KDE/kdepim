@@ -82,6 +82,18 @@ void SieveSyntaxHighlighterRules::init()
         m_rules.append(KPIMTextEdit::Rule(regex, textKeywordFormat));
     }
 
+    // Special debug info
+    QTextCharFormat debugFormat;
+    debugFormat.setForeground(Qt::red);
+    debugFormat.setFontWeight(QFont::Bold);
+    debugFormat.setFontItalic(true);
+    textKeywords << QStringLiteral("\\bdebug_log");
+    Q_FOREACH (const QString &s, textKeywords) {
+        const QRegExp regex(s, Qt::CaseSensitive);
+        m_rules.append(KPIMTextEdit::Rule(regex, debugFormat));
+    }
+
+
     // Match Type
     QTextCharFormat matchFormat;
     matchFormat.setForeground(Qt::red);
