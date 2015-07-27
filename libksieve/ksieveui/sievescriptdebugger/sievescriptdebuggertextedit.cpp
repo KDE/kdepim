@@ -44,7 +44,6 @@ void SieveScriptDebuggerTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &p
     connect(addDebugAction, &QAction::triggered, this, &SieveScriptDebuggerTextEdit::slotAddDebug);
     menu->addAction(addDebugAction);
 
-    //Add action to add debug.
     KSieveUi::SieveTextEdit::addExtraMenuEntry(menu, pos);
 }
 
