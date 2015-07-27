@@ -31,7 +31,7 @@ SelectedNotefolderDialog::SelectedNotefolderDialog(QWidget *parent)
     const QStringList mimeTypes(Akonadi::NoteUtils::noteMimeType());
     setMimeTypeFilter(mimeTypes);
     //setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-    setCaption(i18nc("@title:window", "Select Note Folder"));
+    setWindowTitle(i18nc("@title:window", "Select Note Folder"));
     setDescription(i18nc("@info",
                          "Select the folder where the note will be saved:"));
     changeCollectionDialogOptions(Akonadi::CollectionDialog::KeepTreeExpanded);

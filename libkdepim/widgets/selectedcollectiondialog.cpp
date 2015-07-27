@@ -43,7 +43,7 @@ SelectedCollectionDialog::SelectedCollectionDialog(QWidget *parent)
     const QStringList mimeTypes(KContacts::Addressee::mimeType());
     setMimeTypeFilter(mimeTypes);
     setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
-    setCaption(i18nc("@title:window", "Select Address Book"));
+    setWindowTitle(i18nc("@title:window", "Select Address Book"));
     setDescription(
         i18nc("@info",
               "Select the address book where the contact will be saved:"));
