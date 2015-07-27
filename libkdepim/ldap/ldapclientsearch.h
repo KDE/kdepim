@@ -50,7 +50,7 @@ struct LdapResult {
     /**
     * A list of LdapResult objects.
     */
-    typedef QList<LdapResult> List;
+    typedef QVector<LdapResult> List;
 
     LdapDN dn;
     QString name;         ///< The full name of the contact.
