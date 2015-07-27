@@ -25,6 +25,7 @@
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiCore/itemsearchjob.h>
+#include <AkonadiCore/SearchQuery>
 
 #include <KComboBox>
 #include <KMessageBox>
@@ -81,7 +82,8 @@ SearchWidget::~SearchWidget()
 
 void SearchWidget::search()
 {
-    Akonadi::ItemSearchJob *job = new Akonadi::ItemSearchJob(mQueryWidget->toPlainText());
+    Akonadi::ItemSearchJob *job = new Akonadi::ItemSearchJob(
+        Akonadi::SearchQuery::fromJSON(mQueryWidget->toPlainText().toUtf8()));
     connect(job, &Akonadi::ItemSearchJob::result, this, &SearchWidget::searchFinished);
 }
 
