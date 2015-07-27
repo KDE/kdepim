@@ -35,7 +35,7 @@ ImportWizardKernel::ImportWizardKernel(QObject *parent)
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor(session, this);
 
     mEntityTreeModel = new Akonadi::EntityTreeModel(folderCollectionMonitor(), this);
-    mEntityTreeModel->setIncludeUnsubscribed(false);
+    mEntityTreeModel->setListFilter(Akonadi::CollectionFetchScope::Enabled);
     mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
     mCollectionModel = new Akonadi::EntityMimeTypeFilterModel(this);

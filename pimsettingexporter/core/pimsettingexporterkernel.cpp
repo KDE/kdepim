@@ -45,7 +45,7 @@ PimSettingExporterKernel::PimSettingExporterKernel(QObject *parent)
     mFolderCollectionMonitor->monitor()->setMimeTypeMonitored(KAlarmCal::MIME_TEMPLATE);
 
     mEntityTreeModel = new Akonadi::EntityTreeModel(folderCollectionMonitor(), this);
-    mEntityTreeModel->setIncludeUnsubscribed(false);
+    mEntityTreeModel->setListFilter(Akonadi::CollectionFetchScope::Enabled);
     mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
     mCollectionModel = new Akonadi::EntityMimeTypeFilterModel(this);
