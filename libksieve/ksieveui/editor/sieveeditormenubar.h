@@ -55,6 +55,7 @@ public:
     QAction *debugSieveScriptAction() const;
 
 public Q_SLOTS:
+    void setEditorMode(bool editorMode);
     void slotUndoAvailable(bool b);
     void slotRedoAvailable(bool b);
     void slotCopyAvailable(bool b);

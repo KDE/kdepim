@@ -94,6 +94,7 @@ SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
 
     if (useMenuBar) {
         SieveEditorMenuBar *menuBar = new SieveEditorMenuBar;
+        connect(this, &SieveEditorWidget::changeModeEditor, menuBar, &SieveEditorMenuBar::setEditorMode);
         connect(menuBar, &SieveEditorMenuBar::copy, this, &SieveEditorWidget::copy);
         connect(menuBar, &SieveEditorMenuBar::find, this, &SieveEditorWidget::find);
         connect(menuBar, &SieveEditorMenuBar::replace, this, &SieveEditorWidget::replace);
@@ -353,6 +354,7 @@ void SieveEditorWidget::changeMode(EditorMode mode)
             mCheckSyntax->setEnabled(!mTextModeWidget->currentscript().isEmpty());
         }
         Q_EMIT modeEditorChanged(mode);
+        changeModeEditor((mMode == TextMode));
         changeSwitchButtonText();
     }
 }

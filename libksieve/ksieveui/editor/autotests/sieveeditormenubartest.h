@@ -29,6 +29,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldEmitSignals();
+    void shouldDisableActions();
 };
 
 #endif // SIEVEEDITORMENUBARTEST_H
