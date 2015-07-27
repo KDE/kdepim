@@ -345,16 +345,16 @@ void SieveEditorWidget::changeMode(EditorMode mode)
         mAutoGenerateScript->setEnabled(isTextMode);
 #if !defined(NDEBUG)
         if (mGenerateXml) {
-            mGenerateXml->setEnabled((mMode == TextMode));
+            mGenerateXml->setEnabled(isTextMode);
         }
 #endif
-        if (mMode == GraphicMode) {
-            mCheckSyntax->setEnabled(false);
-        } else {
+        if (isTextMode) {
             mCheckSyntax->setEnabled(!mTextModeWidget->currentscript().isEmpty());
+        } else {
+            mCheckSyntax->setEnabled(false);
         }
         Q_EMIT modeEditorChanged(mode);
-        changeModeEditor((mMode == TextMode));
+        changeModeEditor(isTextMode);
         changeSwitchButtonText();
     }
 }
