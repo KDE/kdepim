@@ -20,7 +20,6 @@
 #include "attachmentupdatejob.h"
 #include <QUrl>
 #include "attachmentfromurlutils.h"
-#include <KMimeType>
 #include "messagecore_debug.h"
 #include <QTimer>
 #include <KLocalizedString>
