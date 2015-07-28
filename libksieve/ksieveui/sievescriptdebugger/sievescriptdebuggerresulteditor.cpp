@@ -36,9 +36,11 @@ SieveScriptDebuggerResultEditor::~SieveScriptDebuggerResultEditor()
 void SieveScriptDebuggerResultEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 {
     PimCommon::PlainTextEditor::addExtraMenuEntry(menu, pos);
-    QAction *clearAction = new QAction(i18n("Clear"), menu);
-    connect(clearAction, &QAction::triggered, this, &SieveScriptDebuggerResultEditor::slotClear);
-    menu->addAction(clearAction);
+    if (isReadOnly()) {
+        QAction *clearAction = new QAction(i18n("Clear"), menu);
+        connect(clearAction, &QAction::triggered, this, &SieveScriptDebuggerResultEditor::slotClear);
+        menu->addAction(clearAction);
+    }
 }
 
 void SieveScriptDebuggerResultEditor::slotClear()
