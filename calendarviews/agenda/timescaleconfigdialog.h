@@ -52,7 +52,7 @@ private Q_SLOTS:
 
     void slotUpdateButton();
 private:
-    QStringList zones();
+    QStringList zones() const;
 
 private:
     class Private;

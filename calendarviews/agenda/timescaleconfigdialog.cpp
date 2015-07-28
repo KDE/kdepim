@@ -199,7 +199,7 @@ void TimeScaleConfigDialog::down()
     listWidget->setCurrentRow(qMin(row + 1, listWidget->count() - 1));
 }
 
-QStringList TimeScaleConfigDialog::zones()
+QStringList TimeScaleConfigDialog::zones() const
 {
     QStringList list;
     const int count = listWidget->count();
