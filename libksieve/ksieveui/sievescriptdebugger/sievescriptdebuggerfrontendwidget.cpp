@@ -18,6 +18,7 @@
 #include "sievescriptdebuggerfrontendwidget.h"
 #include "sievescriptdebuggertextedit.h"
 #include "sievescriptdebuggerwarning.h"
+#include "sievescriptdebuggerresulteditor.h"
 
 #include <QVBoxLayout>
 #include <QSplitter>
@@ -82,7 +83,7 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     splitter->addWidget(mSieveTextEditWidget);
     splitter->setChildrenCollapsible(false);
 
-    mSieveTestResult = new PimCommon::PlainTextEditorWidget(this);
+    mSieveTestResult = new PimCommon::PlainTextEditorWidget(new KSieveUi::SieveScriptDebuggerResultEditor(this), this);
     mSieveTestResult->setObjectName(QStringLiteral("sievetextresult"));
     mSieveTestResult->setReadOnly(true);
     splitter->addWidget(mSieveTestResult);

@@ -158,6 +158,7 @@ set(ksieveui_sievescriptdebugger_LIB_SRCS
   sievescriptdebugger/sievescriptdebuggerfrontendwidget.cpp
   sievescriptdebugger/sievescriptdebuggerwarning.cpp
   sievescriptdebugger/sievescriptdebuggertextedit.cpp
+  sievescriptdebugger/sievescriptdebuggerresulteditor.cpp
 )
 
 set(ksieveui_LIB_SRCS
