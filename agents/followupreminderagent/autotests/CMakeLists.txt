@@ -11,7 +11,7 @@ macro( followupreminder_agent _source )
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(followupreminder-${_name})
-  target_link_libraries( ${_name} Qt5::Test KF5::AkonadiCore followupreminder Qt5::Widgets KF5::I18n KF5::XmlGui KF5::KDELibs4Support)
+  target_link_libraries( ${_name} Qt5::Test KF5::AkonadiCore followupreminder Qt5::Widgets KF5::I18n KF5::XmlGui KF5::Service)
 endmacro()
 
 followupreminder_agent(followupreminderinfotest.cpp)
