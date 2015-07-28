@@ -127,7 +127,7 @@ QVariant KCalModel::data(const QModelIndex &index, int role) const
             return i18nc("@info",
                          "This model can only handle event, task, journal or free-busy list folders. "
                          "The current collection holds mimetypes: %1",
-                         collection().contentMimeTypes().join(QLatin1String(",")));
+                         collection().contentMimeTypes().join(QStringLiteral(",")));
         }
         return QVariant();
     }

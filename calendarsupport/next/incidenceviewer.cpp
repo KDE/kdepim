@@ -58,7 +58,7 @@ void TextBrowser::setSource(const QUrl &name)
             uri.startsWith(QString::fromLatin1("urn:x-ical").section(QLatin1Char(':'), 0, 0)) ||
             uri.startsWith(QStringLiteral("news:")) ||
             uri.startsWith(QStringLiteral("mailto:"))) {
-        uri.replace(QRegExp(QLatin1String("^([^:]+:)/+")), QStringLiteral("\\1"));
+        uri.replace(QRegExp(QStringLiteral("^([^:]+:)/+")), QStringLiteral("\\1"));
     }
 
     if (uri.startsWith(QStringLiteral("ATTACH:"))) {
