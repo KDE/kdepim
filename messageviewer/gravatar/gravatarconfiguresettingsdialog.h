@@ -41,6 +41,7 @@ private:
     QCheckBox *mUseDefaultPixmap;
     QCheckBox *mUseLibravatar;
     QCheckBox *mFallbackGravatar;
+    QCheckBox *mUseHttps;
     QPushButton *mClearGravatarCache;
     QSpinBox *mGravatarCacheSize;
 };

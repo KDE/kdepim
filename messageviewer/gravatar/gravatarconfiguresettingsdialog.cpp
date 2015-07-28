@@ -56,6 +56,10 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     mUseDefaultPixmap->setObjectName(QStringLiteral("usedefaultimage"));
     topLayout->addWidget(mUseDefaultPixmap);
 
+    mUseHttps = new QCheckBox(i18n("Use Https"));
+    mUseHttps->setObjectName(QStringLiteral("usehttps"));
+    topLayout->addWidget(mUseHttps);
+
     QHBoxLayout *cacheSizeLayout = new QHBoxLayout;
     topLayout->addLayout(cacheSizeLayout);
     QLabel *lab = new QLabel(i18n("Gravatar Cache Size:"));
@@ -92,6 +96,7 @@ void GravatarConfigureSettingsDialog::save()
     saveSpinBox(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
     saveCheckBox(mFallbackGravatar, MessageViewer::GlobalSettings::self()->fallbackToGravatarItem());
     saveCheckBox(mUseLibravatar, MessageViewer::GlobalSettings::self()->libravatarSupportEnabledItem());
+    saveCheckBox(mUseHttps, MessageViewer::GlobalSettings::self()->gravatarHttpsSupportItem());
     accept();
 }
 
@@ -101,6 +106,7 @@ void GravatarConfigureSettingsDialog::load()
     loadWidget(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
     loadWidget(mFallbackGravatar, MessageViewer::GlobalSettings::self()->fallbackToGravatarItem());
     loadWidget(mUseLibravatar, MessageViewer::GlobalSettings::self()->libravatarSupportEnabledItem());
+    loadWidget(mUseHttps, MessageViewer::GlobalSettings::self()->gravatarHttpsSupportItem());
 }
 
 void GravatarConfigureSettingsDialog::slotClearGravatarCache()
