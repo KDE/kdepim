@@ -59,8 +59,8 @@ public:
     bool isModifyTimeStamp() const;
     void setModifyTimeStamp(bool willModify);
 
-    QList<Category> categoryList() const;
-    void setCategoryList(const QList<Category> &list);
+    QVector<Category> categoryList() const;
+    void setCategoryList(const QVector<Category> &list);
 
     /**
      * Set all properties of post to new one, instead of Title and Content!

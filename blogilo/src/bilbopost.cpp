@@ -33,7 +33,7 @@ public:
     int mId;///id in DB
     int localId;
     bool mModifyTimeStamp;///Just for toolbox entry!
-    QList<Category> mCategoryList;
+    QVector<Category> mCategoryList;
 };
 
 BilboPost::BilboPost()
@@ -132,12 +132,12 @@ void BilboPost::setModifyTimeStamp(bool isModify)
     d_ptr->mModifyTimeStamp = isModify;
 }
 
-QList< Category > BilboPost::categoryList() const
+QVector<Category> BilboPost::categoryList() const
 {
     return d_ptr->mCategoryList;
 }
 
-void BilboPost::setCategoryList(const QList< Category > &list)
+void BilboPost::setCategoryList(const QVector<Category> &list)
 {
     d_ptr->mCategoryList = list;
     QStringList cats;

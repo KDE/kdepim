@@ -40,5 +40,5 @@ struct Category {
     int id;
     int blog_id;
 };
-
+Q_DECLARE_TYPEINFO(Category, Q_MOVABLE_TYPE);
 #endif

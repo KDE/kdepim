@@ -182,11 +182,11 @@ void Toolbox::slotLoadCategoryListFromDB(int blog_id)
         return;
     }
     clearCatList();
-    QList<Category> listCategories;
+    QVector<Category> listCategories;
     listCategories = DBMan::self()->listCategories(blog_id);
 
-    QList<Category>::const_iterator i;
-    QList<Category>::const_iterator endIt = listCategories.constEnd();
+    QVector<Category>::const_iterator i;
+    QVector<Category>::const_iterator endIt = listCategories.constEnd();
     for (i = listCategories.constBegin(); i != endIt; ++i) {
         CatCheckBox *cb = new CatCheckBox(i->name, this);
         cb->setCategory(*i);
@@ -333,9 +333,9 @@ void Toolbox::setFieldsValue(BilboPost *post)
     txtSummary->setPlainText(post->summary());
 }
 
-QList< Category > Toolbox::selectedCategories() const
+QVector<Category> Toolbox::selectedCategories() const
 {
-    QList<Category> list;
+    QVector<Category> list;
     const int count = d->listCategoryCheckBoxes.count();
     for (int i = 0; i < count; ++i) {
         if (d->listCategoryCheckBoxes.at(i)->isChecked()) {

@@ -1093,7 +1093,7 @@ QList< BilboPost * > DBMan::listPosts(int blog_id)
             tmp->setSlug(q.value(16).toString());
 
             ///get Category list:
-            QList<Category> catList;
+            QVector<Category> catList;
             QSqlQuery q2;
             q2.prepare(QLatin1String("SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
                         category.categoryId, category.parentId\
@@ -1158,7 +1158,7 @@ BilboPost DBMan::getPostInfo(int post_id)
             tmp.setSlug(q.value(17).toString());
 
             ///get Category list:
-            QList<Category> catList;
+            QVector<Category> catList;
             QSqlQuery q2;
             q2.prepare(QLatin1String("SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
                         category.categoryId, category.parentId, category.blog_id\
@@ -1252,9 +1252,9 @@ QMap< QString, int > DBMan::listCategoriesName(int blog_id)
     return list;
 }
 
-QList< Category > DBMan::listCategories(int blog_id)
+QVector<Category> DBMan::listCategories(int blog_id)
 {
-    QList< Category > list;
+    QVector<Category> list;
     QSqlQuery q;
     q.prepare(QLatin1String("SELECT catid, name, description, htmlUrl, rssUrl, categoryId, parentId FROM category\
                WHERE blog_id = ?"));
@@ -1327,7 +1327,7 @@ QMap<BilboPost *, int> DBMan::listTempPosts()
             tmp->setSlug(q.value(18).toString());
 
             ///get Category list:
-            QList<Category> catList;
+            QVector<Category> catList;
             QSqlQuery q2;
             q2.prepare(QLatin1String("SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
             category.categoryId, category.parentId\
@@ -1415,7 +1415,7 @@ BilboPost DBMan::localPost(int local_id)
             tmp.setSlug(q.value(18).toString());
 
             ///get Category list:
-            QList<Category> catList;
+            QVector<Category> catList;
             QSqlQuery q2;
             q2.prepare(QLatin1String("SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
             category.categoryId, category.parentId\

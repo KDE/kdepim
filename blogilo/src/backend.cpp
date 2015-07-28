@@ -53,7 +53,7 @@ public:
     {}
     KBlog::Blog *kBlog;
     BilboBlog *bBlog;
-    QList<Category> mCreatePostCategories;
+    QVector<Category> mCreatePostCategories;
     QMap<QString, KBlog::BlogPost *> mSetPostCategoriesMap;
     QMap<KBlog::BlogPost *, BilboPost::Status> mSubmitPostStatusMap;
     QMap<KBlog::BlogMedia *, BilboMedia *> mPublishMediaMap;

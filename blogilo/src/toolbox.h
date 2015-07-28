@@ -87,7 +87,7 @@ private:
     };
 
     QStringList selectedCategoriesTitle() const;
-    QList<Category> selectedCategories() const;
+    QVector<Category> selectedCategories() const;
     void setSelectedCategories(const QStringList &);
     QStringList currentTags();
     void clearCatList();
