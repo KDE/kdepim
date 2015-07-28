@@ -89,7 +89,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
 
 void ObjectTreeParserTester::test_parseEncapsulatedMessage()
 {
-    KMime::Message::Ptr msg = readAndParseMail(QLatin1String("encapsulated-with-attachment.mbox"));
+    KMime::Message::Ptr msg = readAndParseMail(QStringLiteral("encapsulated-with-attachment.mbox"));
     QCOMPARE(msg->subject()->as7BitString(false).constData(), "Fwd: Test with attachment");
     QCOMPARE(msg->contents().size(), 2);
 
@@ -125,7 +125,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
 
 void ObjectTreeParserTester::test_missingContentTypeHeader()
 {
-    KMime::Message::Ptr msg = readAndParseMail(QLatin1String("no-content-type.mbox"));
+    KMime::Message::Ptr msg = readAndParseMail(QStringLiteral("no-content-type.mbox"));
     QCOMPARE(msg->subject()->as7BitString(false).constData(), "Simple Mail Without Content-Type Header");
     QCOMPARE(msg->contents().size(), 0);
 
@@ -142,7 +142,7 @@ void ObjectTreeParserTester::test_missingContentTypeHeader()
 
 void ObjectTreeParserTester::test_inlinePGPDecryption()
 {
-    KMime::Message::Ptr msg = readAndParseMail(QLatin1String("inlinepgpencrypted.mbox"));
+    KMime::Message::Ptr msg = readAndParseMail(QStringLiteral("inlinepgpencrypted.mbox"));
 
     QCOMPARE(msg->subject()->as7BitString(false).constData(), "inlinepgpencrypted");
     QCOMPARE(msg->contents().size(), 0);
@@ -163,7 +163,7 @@ void ObjectTreeParserTester::test_inlinePGPDecryption()
 
 void ObjectTreeParserTester::test_HTML()
 {
-    KMime::Message::Ptr msg = readAndParseMail(QLatin1String("html.mbox"));
+    KMime::Message::Ptr msg = readAndParseMail(QStringLiteral("html.mbox"));
 
     QCOMPARE(msg->subject()->as7BitString(false).constData(), "HTML test");
     QCOMPARE(msg->contents().size(), 2);
@@ -180,7 +180,7 @@ void ObjectTreeParserTester::test_HTML()
 
 void ObjectTreeParserTester::test_HTMLOnly()
 {
-    KMime::Message::Ptr msg = readAndParseMail(QLatin1String("htmlonly.mbox"));
+    KMime::Message::Ptr msg = readAndParseMail(QStringLiteral("htmlonly.mbox"));
 
     QCOMPARE(msg->subject()->as7BitString(false).constData(), "HTML test");
     QCOMPARE(msg->contents().size(), 0);

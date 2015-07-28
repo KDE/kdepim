@@ -200,9 +200,9 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     // ------------------------------------------------------------------------------
 
     // automatic filters
-    KConfig config(QLatin1String("messagevieweradblockrc"));
+    KConfig config(QStringLiteral("messagevieweradblockrc"));
 
-    const QStringList itemList = config.groupList().filter(QRegExp(QLatin1String("FilterList \\d+")));
+    const QStringList itemList = config.groupList().filter(QRegExp(QStringLiteral("FilterList \\d+")));
     Q_FOREACH (const QString &item, itemList) {
         KConfigGroup filtersGroup(&config, item);
         const bool isFilterEnabled = filtersGroup.readEntry(QStringLiteral("FilterEnabled"), false);

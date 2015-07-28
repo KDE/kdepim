@@ -509,11 +509,11 @@ void TodoEditTest::shouldEnabledSaveOpenEditorButton()
     QCOMPARE(openEditor->isEnabled(), true);
     QCOMPARE(save->isEnabled(), true);
 
-    noteedit->setText(QLatin1String(" "));
+    noteedit->setText(QStringLiteral(" "));
     QCOMPARE(openEditor->isEnabled(), false);
     QCOMPARE(save->isEnabled(), false);
 
-    noteedit->setText(QLatin1String(" foo"));
+    noteedit->setText(QStringLiteral(" foo"));
     QCOMPARE(openEditor->isEnabled(), true);
     QCOMPARE(save->isEnabled(), true);
 }

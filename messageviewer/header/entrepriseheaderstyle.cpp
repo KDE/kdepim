@@ -55,7 +55,7 @@ QString EnterpriseHeaderStyle::format(KMime::Message *message) const
 
     // colors depend on if it is encapsulated or not
     QColor fontColor(Qt::white);
-    QString linkColor = QLatin1String("class =\"white\"");
+    QString linkColor = QStringLiteral("class =\"white\"");
     const QColor activeColor = KColorScheme(QPalette::Active, KColorScheme::Selection).
                                background().color();
     QColor activeColorDark = activeColor.dark(130);
@@ -63,13 +63,13 @@ QString EnterpriseHeaderStyle::format(KMime::Message *message) const
     if (!isTopLevel()) {
         activeColorDark = activeColor.dark(50);
         fontColor = QColor(Qt::black);
-        linkColor = QLatin1String("class =\"black\"");
+        linkColor = QStringLiteral("class =\"black\"");
     }
 
     QString imgpath(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("libmessageviewer/pics/")));
-    imgpath.prepend(QLatin1String("file:///"));
-    imgpath.append(QLatin1String("enterprise_"));
-    const QString borderSettings(QLatin1String(" padding-top: 0px; padding-bottom: 0px; border-width: 0px "));
+    imgpath.prepend(QStringLiteral("file:///"));
+    imgpath.append(QStringLiteral("enterprise_"));
+    const QString borderSettings(QStringLiteral(" padding-top: 0px; padding-bottom: 0px; border-width: 0px "));
     QString headerStr;
 
     // 3D borders

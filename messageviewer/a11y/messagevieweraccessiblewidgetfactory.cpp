@@ -36,6 +36,6 @@ MessageViewerAccessibleWidgetFactory::MessageViewerAccessibleWidgetFactory(QObje
 QStringList MessageViewerAccessibleWidgetFactory::keys() const
 {
     QStringList l;
-    l.append(QLatin1String("MessageViewer::MailWebView"));
+    l.append(QStringLiteral("MessageViewer::MailWebView"));
     return l;
 }

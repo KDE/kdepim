@@ -53,7 +53,7 @@ QString CustomHeaderStyle::format(KMime::Message *message) const
     // The direction of the header is determined according to the direction
     // of the application layout.
 
-    const QString dir = (QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr"));
+    const QString dir = (QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr"));
 
     // However, the direction of the message subject within the header is
     // determined according to the contents of the subject itself. Since

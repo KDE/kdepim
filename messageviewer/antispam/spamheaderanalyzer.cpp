@@ -163,7 +163,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores(KMime::Message *message)
         }
         //Find the confidence
         float confidence = -2.0;
-        QString confidenceString = QLatin1String("-2.0");
+        QString confidenceString = QStringLiteral("-2.0");
         bool confidenceValid = false;
         // Do we have the needed confidence field for this agent?
         const QByteArray confidenceHeaderName = (*it).confidenceHeader();

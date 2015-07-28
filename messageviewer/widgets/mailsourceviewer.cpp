@@ -142,13 +142,13 @@ void MailSourceViewer::setFixedFont()
 
 QString MailSourceViewer::reformat(const QString &src)
 {
-    const QRegExp cleanLeadingWhitespace(QLatin1String("(?:\\n)+\\w*"));
+    const QRegExp cleanLeadingWhitespace(QStringLiteral("(?:\\n)+\\w*"));
     QStringList tmpSource;
     QString source(src);
     int pos = 0;
     QString indent;
     // Best to be really verbose about this one...
-    const static QRegExp htmlTagRegExp(QLatin1String("<"
+    const static QRegExp htmlTagRegExp(QStringLiteral("<"
                                        "(/)?"    //Captures the / if this is an end tag.
                                        "(\\w+)"    //Captures TagName
                                        "(?:"                //Groups tag contents
@@ -202,7 +202,7 @@ QString MailSourceViewer::reformat(const QString &src)
             }
             // start tag
             tmpSource[i].prepend(indent);
-            indent.append(QLatin1String("  "));
+            indent.append(QStringLiteral("  "));
             continue;
         }
         // Data
@@ -210,7 +210,7 @@ QString MailSourceViewer::reformat(const QString &src)
     }
 
     // Finally reassemble and return :)
-    return tmpSource.join(QLatin1String("\n"));
+    return tmpSource.join(QStringLiteral("\n"));
 }
 
 }

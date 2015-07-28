@@ -74,7 +74,7 @@ void AttachmentEncryptWithChiasmusJob::start()
     Q_UNUSED(mContent);
 
     // FIXME: better detection of mimetype??
-    if (!mCurrentFileName.endsWith(QLatin1String(".xia"), Qt::CaseInsensitive)) {
+    if (!mCurrentFileName.endsWith(QStringLiteral(".xia"), Qt::CaseInsensitive)) {
         deleteLater();
         return;
     }
