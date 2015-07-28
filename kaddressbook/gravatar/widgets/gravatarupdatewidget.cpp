@@ -87,6 +87,9 @@ void GravatarUpdateWidget::slotSearchGravatar()
         job->setEmail(mEmail);
         if (job->canStart()) {
             job->setUseDefaultPixmap(false);
+            //TODO use https
+            //TODO use libgravatar
+            //TODO use fallbackgravatar
             connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
             connect(job, &PimCommon::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateWidget::slotResolvUrl);
             job->start();
