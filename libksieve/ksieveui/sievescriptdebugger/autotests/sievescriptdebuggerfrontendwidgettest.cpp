@@ -80,7 +80,32 @@ void SieveScriptDebuggerFrontEndWidgetTest::shouldChangeButtonEnabledState()
 
     emailPath->setUrl(QUrl::fromLocalFile(QStringLiteral("    ")));
     QVERIFY(!debugScriptButton->isEnabled());
+}
 
+void SieveScriptDebuggerFrontEndWidgetTest::shouldAddScript()
+{
+    KSieveUi::SieveScriptDebuggerFrontEndWidget w;
+    const QString script = QStringLiteral("foo foo \n bla bla");
+    w.setScript(script);
+    QCOMPARE(w.script(), script);
+}
+
+void SieveScriptDebuggerFrontEndWidgetTest::shouldNotAccept()
+{
+    KSieveUi::SieveScriptDebuggerFrontEndWidget w;
+    w.show();
+    w.setScript(QStringLiteral("debug_log"));
+    KSieveUi::SieveScriptDebuggerWarning *warning = w.findChild<KSieveUi::SieveScriptDebuggerWarning *>(QStringLiteral("sievescriptdebuggerwarning"));
+
+    QVERIFY(!w.canAccept());
+    QVERIFY(warning->isVisible());
+    w.setScript(QStringLiteral("foo foo \n bla bla"));
+    QVERIFY(w.canAccept());
+    QVERIFY(!warning->isVisible());
+
+    w.setScript(QStringLiteral("require \"vnd.dovecot.debug\""));
+    QVERIFY(!w.canAccept());
+    QVERIFY(warning->isVisible());
 }
 
 QTEST_MAIN(SieveScriptDebuggerFrontEndWidgetTest)

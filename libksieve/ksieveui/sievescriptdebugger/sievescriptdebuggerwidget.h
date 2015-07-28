@@ -35,6 +35,8 @@ public:
     void setScript(const QString &script);
     QString script() const;
 
+    bool canAccept() const;
+
 private:
     void checkSieveTestApplication();
     QStackedWidget *mStackedWidget;

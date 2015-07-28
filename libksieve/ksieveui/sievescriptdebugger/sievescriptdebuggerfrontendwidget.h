@@ -42,6 +42,7 @@ public:
 
     QString script() const;
     void setScript(const QString &script);
+    bool canAccept() const;
 
 private Q_SLOTS:
     void slotDebugScript();

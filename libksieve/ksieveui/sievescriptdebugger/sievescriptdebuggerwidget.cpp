@@ -52,6 +52,11 @@ SieveScriptDebuggerWidget::~SieveScriptDebuggerWidget()
 
 }
 
+bool SieveScriptDebuggerWidget::canAccept() const
+{
+    return mSieveScriptFrontEnd->canAccept();
+}
+
 void SieveScriptDebuggerWidget::setScript(const QString &script)
 {
     if (mStackedWidget->currentWidget() == mSieveScriptFrontEnd) {

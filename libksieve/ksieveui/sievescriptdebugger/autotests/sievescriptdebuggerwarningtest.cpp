@@ -33,8 +33,8 @@ SieveScriptDebuggerWarningTest::~SieveScriptDebuggerWarningTest()
 void SieveScriptDebuggerWarningTest::shouldHaveDefaultValue()
 {
     KSieveUi::SieveScriptDebuggerWarning w;
-    //FIXME
-    //QVERIFY(w.isCloseButtonVisible());
+    w.show();
+    QVERIFY(w.isCloseButtonVisible());
 }
 
 QTEST_MAIN(SieveScriptDebuggerWarningTest)

@@ -34,6 +34,9 @@ public:
     void setScript(const QString &script);
     QString script() const;
 
+private Q_SLOTS:
+    void slotAccepted();
+
 private:
     void writeConfig();
     void readConfig();

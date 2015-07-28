@@ -45,7 +45,7 @@ SieveScriptDebuggerDialog::SieveScriptDebuggerDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveScriptDebuggerDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveScriptDebuggerDialog::slotAccepted);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveScriptDebuggerDialog::reject);
 
     readConfig();
@@ -54,6 +54,13 @@ SieveScriptDebuggerDialog::SieveScriptDebuggerDialog(QWidget *parent)
 SieveScriptDebuggerDialog::~SieveScriptDebuggerDialog()
 {
     writeConfig();
+}
+
+void SieveScriptDebuggerDialog::slotAccepted()
+{
+    if (mSieveScriptDebuggerWidget->canAccept()) {
+        accept();
+    }
 }
 
 void SieveScriptDebuggerDialog::setScript(const QString &script)

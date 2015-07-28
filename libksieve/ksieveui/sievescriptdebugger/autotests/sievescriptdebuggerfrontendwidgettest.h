@@ -29,6 +29,8 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldChangeButtonEnabledState();
+    void shouldAddScript();
+    void shouldNotAccept();
 };
 
 #endif // SIEVESCRIPTDEBUGGERFRONTENDWIDGETTEST_H
