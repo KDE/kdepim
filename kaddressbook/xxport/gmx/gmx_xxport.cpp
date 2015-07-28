@@ -627,7 +627,7 @@ void GMXXXPort::doExport(QFile *fp, const KContacts::AddresseeList &list) const
                       QString()) << DELIM  // Position
 
                   << ((recId == typeHome) ?
-                      addressee->custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("X-SpousesName")) :
+                      addressee->custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-SpousesName")) :
                       QString()) << DELIM  // Comments
 
                   << recId << DELIM                   // Record_type_id (0,1,2)
@@ -639,7 +639,7 @@ void GMXXXPort::doExport(QFile *fp, const KContacts::AddresseeList &list) const
                       QString()) << DELIM  // Company
 
                   << ((recId == typeWork) ?
-                      addressee->custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("X-Department")) :
+                      addressee->custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Department")) :
                       QString()) << DELIM  // Department
 
                   << dateString(addressee->revision()) << DELIM   // Change_date

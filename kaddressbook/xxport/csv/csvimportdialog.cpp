@@ -201,7 +201,7 @@ CSVImportDialog::CSVImportDialog(QWidget *parent)
     connect(mModel, &QCsvModel::finishedLoading, this, &CSVImportDialog::modelFinishedLoading);
 
     delimiterClicked(0);
-    textQuoteChanged(QLatin1String("\""));
+    textQuoteChanged(QStringLiteral("\""));
     skipFirstRowChanged(false);
 }
 
@@ -410,7 +410,7 @@ void CSVImportDialog::initGUI()
 
     mDatePatternEdit = new QLineEdit(page);
     mainLayout->addWidget(mDatePatternEdit);
-    mDatePatternEdit->setText(QLatin1String("Y-M-D"));   // ISO 8601 date format as default
+    mDatePatternEdit->setText(QStringLiteral("Y-M-D"));   // ISO 8601 date format as default
     mDatePatternEdit->setToolTip(
         xi18nc("@info:tooltip",
                "<para><list><item>y: year with 2 digits</item>"
