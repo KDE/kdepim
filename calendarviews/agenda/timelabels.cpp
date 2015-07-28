@@ -124,15 +124,15 @@ void TimeLabels::updateConfig()
 {
     setFont(mTimeLabelsZone->preferences()->agendaTimeLabelsFont());
 
-    QString test = QLatin1String("20");
+    QString test = QStringLiteral("20");
     if (KLocale::global()->use12Clock()) {
-        test = QLatin1String("12");
+        test = QStringLiteral("12");
     }
     mMiniWidth = fontMetrics().width(test);
     if (KLocale::global()->use12Clock()) {
-        test = QLatin1String("pm");
+        test = QStringLiteral("pm");
     } else {
-        test = QLatin1String("00");
+        test = QStringLiteral("00");
     }
     QFont sFont = font();
     sFont.setPointSize(sFont.pointSize() / 2);

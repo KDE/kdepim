@@ -737,7 +737,7 @@ void AgendaItem::paintIcon(QPainter *p, int &x, int y, int ft)
     QString iconName;
     if (mIncidence->customProperty("KABC", "ANNIVERSARY") == QLatin1String("YES")) {
         mSpecialEvent = true;
-        iconName =  QLatin1String("view-calendar-wedding-anniversary");
+        iconName =  QStringLiteral("view-calendar-wedding-anniversary");
     } else if (mIncidence->customProperty("KABC", "BIRTHDAY") == QLatin1String("YES")) {
         mSpecialEvent = true;
         // We don't draw icon. The icon is drawn already, because it's the Akonadi::Collection's icon
@@ -1194,7 +1194,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
         p->drawPath(path);
 
         QPixmap separator;
-        QString key(QLatin1String("ko_hsep"));
+        QString key(QStringLiteral("ko_hsep"));
         if (!QPixmapCache::find(key, separator)) {
             separator = QPixmap(QStringLiteral(":/headerSeparator.png"));
             QPixmapCache::insert(key, separator);
@@ -1245,7 +1245,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
 
     if (r.width() - 16 > 0) {
         QPixmap topLines;
-        QString key(QLatin1String("ko_t"));
+        QString key(QStringLiteral("ko_t"));
         if (!QPixmapCache::find(key, topLines)) {
             topLines = QPixmap(QStringLiteral(":/topLines.png"));
             QPixmapCache::insert(key, topLines);
@@ -1327,7 +1327,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
     p->drawPixmap(r.x(), r.y() + r.height() - bh, bottomLeft, 0, 8 - bh, lw, bh);
 
     QPixmap bottomRight;
-    key = roundBottom ? QLatin1String("ko_br") : QLatin1String("ko_rbr");
+    key = roundBottom ? QStringLiteral("ko_br") : QStringLiteral("ko_rbr");
     if (!QPixmapCache::find(key, bottomRight)) {
         bottomRight = roundBottom ? QPixmap(QStringLiteral(":/roundBottomRight.png")) :
                       QPixmap(QStringLiteral(":/rectangularBottomRight.png"));

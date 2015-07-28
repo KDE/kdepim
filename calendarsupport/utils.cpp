@@ -321,7 +321,7 @@ bool CalendarSupport::isValidIncidenceItemUrl(const QUrl &url,
         return false;
     }
 
-    return supportedMimeTypes.contains(QUrlQuery(url).queryItemValue(QLatin1String("type")));
+    return supportedMimeTypes.contains(QUrlQuery(url).queryItemValue(QStringLiteral("type")));
 }
 
 bool CalendarSupport::isValidIncidenceItemUrl(const QUrl &url)
@@ -632,7 +632,7 @@ QString CalendarSupport::displayName(Akonadi::ETMCalendar *calendar, const Akona
         const QString nameStr = c.displayName(); // folder name: can be anything
 
         QString typeStr;
-        const QString mimeStr = c.contentMimeTypes().join(QLatin1String(","));
+        const QString mimeStr = c.contentMimeTypes().join(QStringLiteral(","));
         if (mimeStr.contains(QStringLiteral(".event"))) {
             typeStr = i18n("Calendar");
         } else if (mimeStr.contains(QStringLiteral(".todo"))) {
