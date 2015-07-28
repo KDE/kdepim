@@ -64,10 +64,10 @@ DBMan::DBMan()
     d->mWallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
     if (d->mWallet) {
         d->useWallet = true;
-        if (!d->mWallet->hasFolder(QLatin1String("blogilo"))) {
-            d->mWallet->createFolder(QLatin1String("blogilo"));
+        if (!d->mWallet->hasFolder(QStringLiteral("blogilo"))) {
+            d->mWallet->createFolder(QStringLiteral("blogilo"));
         }
-        d->mWallet->setFolder(QLatin1String("blogilo"));
+        d->mWallet->setFolder(QStringLiteral("blogilo"));
         qCDebug(BLOGILO_LOG) << "Wallet successfully opened.";
     } else {
         d->useWallet = false;
@@ -170,7 +170,7 @@ bool DBMan::createDB()
 
     QSqlQuery q;
     ///Blog table!
-    if (!q.exec(QLatin1String("CREATE TABLE blog (id INTEGER PRIMARY KEY, blogid TEXT, blog_url TEXT, username TEXT,\
+    if (!q.exec(QStringLiteral("CREATE TABLE blog (id INTEGER PRIMARY KEY, blogid TEXT, blog_url TEXT, username TEXT,\
                   password TEXT, style_url TEXT, api_type TEXT, title TEXT, direction TEXT,\
                   local_directory TEXT, icon_url TEXT)"))) {
         ret = false;
@@ -178,7 +178,7 @@ bool DBMan::createDB()
     }
 
     ///posts table!
-    if (!q.exec(QLatin1String("CREATE TABLE post (id INTEGER PRIMARY KEY, postid TEXT NOT NULL, blog_id NUMERIC NOT NULL,\
+    if (!q.exec(QStringLiteral("CREATE TABLE post (id INTEGER PRIMARY KEY, postid TEXT NOT NULL, blog_id NUMERIC NOT NULL,\
                   author TEXT, slug TEXT, post_password TEXT, title TEXT, content TEXT, text_more TEXT,\
                   c_time TEXT, m_time TEXT, is_private NUMERIC, is_comment_allowed NUMERIC,\
                   is_trackback_allowed NUMERIC, link TEXT, perma_link TEXT, summary TEXT, tags TEXT,\
@@ -188,7 +188,7 @@ bool DBMan::createDB()
     }
 
     ///comments table!
-    if (!q.exec(QLatin1String("CREATE TABLE comment (id INTEGER PRIMARY KEY, commentid TEXT NOT NULL, blog_id NUMERIC NOT NULL,\
+    if (!q.exec(QStringLiteral("CREATE TABLE comment (id INTEGER PRIMARY KEY, commentid TEXT NOT NULL, blog_id NUMERIC NOT NULL,\
         postId TEXT, author_name TEXT, author_url TEXT, author_email TEXT, title TEXT, content TEXT,\
         c_time TEXT, m_time TEXT, link TEXT, password TEXT,\
         status NUMERIC, UNIQUE(commentid, blog_id));"))) {
@@ -197,7 +197,7 @@ bool DBMan::createDB()
     }
 
     ///categories table!
-    if (!q.exec(QLatin1String("CREATE TABLE category (catid INTEGER PRIMARY KEY, name TEXT NOT NULL,\
+    if (!q.exec(QStringLiteral("CREATE TABLE category (catid INTEGER PRIMARY KEY, name TEXT NOT NULL,\
                   description TEXT, htmlUrl TEXT, rssUrl TEXT, categoryId TEXT, parentId TEXT,\
                   blog_id NUMERIC NOT NULL, UNIQUE(name,blog_id));"))) {
         ret = false;
@@ -205,27 +205,27 @@ bool DBMan::createDB()
     }
 
     ///files table
-    if (!q.exec(QLatin1String("CREATE TABLE file (fileid INTEGER PRIMARY KEY, name TEXT, blog_id NUMERIC, is_uploaded NUMERIC,\
+    if (!q.exec(QStringLiteral("CREATE TABLE file (fileid INTEGER PRIMARY KEY, name TEXT, blog_id NUMERIC, is_uploaded NUMERIC,\
         local_url TEXT, remote_url TEXT, mime_type TEXT);"))) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///connection bethween posts and categories
-    if (!q.exec(QLatin1String("CREATE TABLE post_cat (blogId TEXT NOT NULL, postId TEXT NOT NULL,\
+    if (!q.exec(QStringLiteral("CREATE TABLE post_cat (blogId TEXT NOT NULL, postId TEXT NOT NULL,\
         categoryId TEXT NOT NULL, UNIQUE(blogId,postId,categoryId));"))) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///connection bethween posts and media files
-    if (!q.exec(QLatin1String("CREATE TABLE post_file (post_id INTEGER, file_id INTEGER);"))) {
+    if (!q.exec(QStringLiteral("CREATE TABLE post_file (post_id INTEGER, file_id INTEGER);"))) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///local posts table
-    if (!q.exec(QLatin1String("CREATE TABLE local_post (local_id INTEGER PRIMARY KEY, id INTEGER UNIQUE, postid TEXT, blog_id NUMERIC,\
+    if (!q.exec(QStringLiteral("CREATE TABLE local_post (local_id INTEGER PRIMARY KEY, id INTEGER UNIQUE, postid TEXT, blog_id NUMERIC,\
         author TEXT, slug TEXT, post_password TEXT, title TEXT, content TEXT, text_more TEXT,\
         c_time TEXT, m_time TEXT, is_private NUMERIC, is_comment_allowed NUMERIC,\
         is_trackback_allowed NUMERIC, link TEXT, perma_link TEXT, summary TEXT, tags TEXT,\
@@ -235,13 +235,13 @@ bool DBMan::createDB()
     }
 
     ///Connection between local_posts and categories
-    if (!q.exec(QLatin1String("CREATE TABLE local_post_cat (local_id INT, categoryId TEXT);"))) {
+    if (!q.exec(QStringLiteral("CREATE TABLE local_post_cat (local_id INT, categoryId TEXT);"))) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///temporary posts table
-    if (!q.exec(QLatin1String("CREATE TABLE temp_post (local_id INTEGER PRIMARY KEY, id INTEGER UNIQUE, postid TEXT, blog_id NUMERIC,\
+    if (!q.exec(QStringLiteral("CREATE TABLE temp_post (local_id INTEGER PRIMARY KEY, id INTEGER UNIQUE, postid TEXT, blog_id NUMERIC,\
                  author TEXT, slug TEXT, post_password TEXT, title TEXT, content TEXT, text_more TEXT,\
                  c_time TEXT, m_time TEXT, is_private NUMERIC, is_comment_allowed NUMERIC,\
                  is_trackback_allowed NUMERIC, link TEXT, perma_link TEXT, summary TEXT, tags TEXT,\
@@ -251,25 +251,25 @@ bool DBMan::createDB()
     }
 
     ///Connection between temp_posts and categories
-    if (!q.exec(QLatin1String("CREATE TABLE temp_post_cat (local_id INT, categoryId TEXT);"))) {
+    if (!q.exec(QStringLiteral("CREATE TABLE temp_post_cat (local_id INT, categoryId TEXT);"))) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///Auth data
-    if (!q.exec(QLatin1String("CREATE TABLE auth_data (blog_id INT, key TEXT NOT NULL, value TEXT NOT NULL, UNIQUE(blog_id,key))"))) {
+    if (!q.exec(QStringLiteral("CREATE TABLE auth_data (blog_id INT, key TEXT NOT NULL, value TEXT NOT NULL, UNIQUE(blog_id,key))"))) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
-    if (!q.exec(QLatin1String("CREATE TABLE schema_version (version INT);"))) {
+    if (!q.exec(QStringLiteral("CREATE TABLE schema_version (version INT);"))) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     {
         QSqlQuery vq;
-        vq.prepare(QLatin1String("INSERT INTO schema_version (version) VALUES (?);"));
+        vq.prepare(QStringLiteral("INSERT INTO schema_version (version) VALUES (?);"));
         vq.addBindValue(DBMan::Private::DatabaseSchemaVersion);
         if (!vq.exec()) {
             ret = false;
@@ -278,13 +278,13 @@ bool DBMan::createDB()
     }
 
     ///delete related information on DB, On removing a post or a blog
-    q.exec(QLatin1String("CREATE TRIGGER delete_post AFTER DELETE ON post\
+    q.exec(QStringLiteral("CREATE TRIGGER delete_post AFTER DELETE ON post\
     BEGIN\
     DELETE FROM post_cat WHERE post_cat.postId=OLD.postid;\
     DELETE FROM post_file WHERE post_file.post_id=OLD.id;\
     DELETE FROM comment WHERE comment.postId=OLD.postid;\
     END"));
-    q.exec(QLatin1String("CREATE TRIGGER delete_blog AFTER DELETE ON blog \
+    q.exec(QStringLiteral("CREATE TRIGGER delete_blog AFTER DELETE ON blog \
     BEGIN\
     DELETE FROM category WHERE category.blog_id=OLD.id;\
     DELETE FROM file WHERE file.blog_id=OLD.id;\
@@ -292,11 +292,11 @@ bool DBMan::createDB()
     DELETE FROM comment WHERE comment.blog_id=OLD.id;\
     DELETE FROM auth_data WHERE auth_data.blog_id=OLD.id;\
     END"));
-    q.exec(QLatin1String("CREATE TRIGGER delete_temp_post AFTER DELETE ON temp_post \
+    q.exec(QStringLiteral("CREATE TRIGGER delete_temp_post AFTER DELETE ON temp_post \
     BEGIN\
     DELETE FROM temp_post_cat WHERE local_id=OLD.local_id;\
     END"));
-    q.exec(QLatin1String("CREATE TRIGGER delete_local_post AFTER DELETE ON local_post \
+    q.exec(QStringLiteral("CREATE TRIGGER delete_local_post AFTER DELETE ON local_post \
     BEGIN\
     DELETE FROM local_post_cat WHERE local_id=OLD.local_id;\
     END"));
