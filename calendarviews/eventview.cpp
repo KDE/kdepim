@@ -44,7 +44,6 @@ using namespace KPIM;
 
 #include <KCalUtils/RecurrenceActions>
 
-#include <KHolidays/Holidays>
 
 #include <KCheckableProxyModel>
 #include <KGuiItem>
