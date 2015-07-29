@@ -71,7 +71,6 @@ set(accountwizard_libs
   KF5::WidgetsAddons
   KF5::NewStuff
   Qt5::UiTools
-  KF5::DBusAddons
   kdepim
 )
 
@@ -82,7 +81,7 @@ if ( NOT ACCOUNTWIZARD_NO_GHNS )
 endif ()
 
 add_executable(accountwizard ${accountwizard_srcs} main.cpp)
-target_link_libraries(accountwizard ${accountwizard_libs})
+target_link_libraries(accountwizard ${accountwizard_libs} KF5::DBusAddons)
 
 add_library(accountwizard_plugin MODULE ${accountwizard_srcs} inprocess-main.cpp)
 target_link_libraries(accountwizard_plugin ${accountwizard_libs})
