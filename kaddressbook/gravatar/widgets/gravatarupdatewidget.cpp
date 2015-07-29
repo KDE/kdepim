@@ -21,6 +21,7 @@
 #include <KLocalizedString>
 #include <QLabel>
 #include <QPushButton>
+#include <QCheckBox>
 
 #include <gravatar/gravatarresolvurljob.h>
 
@@ -39,15 +40,27 @@ GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     mEmailLab->setObjectName(QStringLiteral("email"));
     mainLayout->addWidget(mEmailLab, 0, 1);
 
+    mUseHttps = new QCheckBox(i18n("Use HTTPS Protocol"));
+    mUseHttps->setObjectName(QStringLiteral("usehttps"));
+    mainLayout->addWidget(mUseHttps, 0, 2);
+
+    mUseLibravatar = new QCheckBox(i18n("Use Libravatar"));
+    mUseLibravatar->setObjectName(QStringLiteral("uselibravatar"));
+    mainLayout->addWidget(mUseLibravatar, 0, 3);
+
+    mFallbackGravatar = new QCheckBox(i18n("Fallback to Gravatar"));
+    mFallbackGravatar->setObjectName(QStringLiteral("fallbackgravatar"));
+    mainLayout->addWidget(mFallbackGravatar, 0, 4);
+
     mSearchGravatar = new QPushButton(i18n("Search"));
     mSearchGravatar->setEnabled(false);
     mSearchGravatar->setObjectName(QStringLiteral("search"));
-    mainLayout->addWidget(mSearchGravatar, 0, 2);
+    mainLayout->addWidget(mSearchGravatar, 0, 5);
     connect(mSearchGravatar, &QAbstractButton::clicked, this, &GravatarUpdateWidget::slotSearchGravatar);
 
     mResultGravatar = new QLabel;
     mResultGravatar->setObjectName(QStringLiteral("result"));
-    mainLayout->addWidget(mResultGravatar, 1, 0, 1, 3, Qt::AlignCenter);
+    mainLayout->addWidget(mResultGravatar, 1, 0, 1, 6, Qt::AlignCenter);
 }
 
 GravatarUpdateWidget::~GravatarUpdateWidget()
@@ -87,9 +100,9 @@ void GravatarUpdateWidget::slotSearchGravatar()
         job->setEmail(mEmail);
         if (job->canStart()) {
             job->setUseDefaultPixmap(false);
-            //TODO use https
-            //TODO use libgravatar
-            //TODO use fallbackgravatar
+            job->setUseHttps(mUseHttps->isChecked());
+            job->setUseLibravatar(mUseLibravatar->isChecked());
+            job->setFallbackGravatar(mFallbackGravatar->isChecked());
             connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
             connect(job, &PimCommon::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateWidget::slotResolvUrl);
             job->start();

@@ -22,6 +22,8 @@
 #include <QUrl>
 class QLabel;
 class QPushButton;
+class QCheckBox;
+
 namespace PimCommon
 {
 class GravatarResolvUrlJob;
@@ -51,6 +53,9 @@ private:
     QLabel *mEmailLab;
     QPushButton *mSearchGravatar;
     QLabel *mResultGravatar;
+    QCheckBox *mUseHttps;
+    QCheckBox *mUseLibravatar;
+    QCheckBox *mFallbackGravatar;
 };
 }
 

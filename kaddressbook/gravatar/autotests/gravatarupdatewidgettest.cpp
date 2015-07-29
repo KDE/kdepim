@@ -19,6 +19,7 @@
 #include <qtest.h>
 #include <QLabel>
 #include <QPushButton>
+#include <QCheckBox>
 #include <kaddressbook/gravatar/widgets/gravatarupdatewidget.h>
 GravatarUpdateWidgetTest::GravatarUpdateWidgetTest(QObject *parent)
     : QObject(parent)
@@ -39,6 +40,18 @@ void GravatarUpdateWidgetTest::shouldHaveDefaultValue()
 
     QLabel *emaillabel = widget.findChild<QLabel *>(QStringLiteral("email"));
     QVERIFY(emaillabel);
+
+    QCheckBox *useHttps = widget.findChild<QCheckBox *>(QStringLiteral("usehttps"));
+    QVERIFY(useHttps);
+    QVERIFY(!useHttps->isChecked());
+
+    QCheckBox *useLibravatar = widget.findChild<QCheckBox *>(QStringLiteral("uselibravatar"));
+    QVERIFY(useLibravatar);
+    QVERIFY(!useLibravatar->isChecked());
+
+    QCheckBox *useFallbackGravatar = widget.findChild<QCheckBox *>(QStringLiteral("fallbackgravatar"));
+    QVERIFY(useFallbackGravatar);
+    QVERIFY(!useFallbackGravatar->isChecked());
 
     QPushButton *searchGravatar = widget.findChild<QPushButton *>(QStringLiteral("search"));
     QVERIFY(searchGravatar);
