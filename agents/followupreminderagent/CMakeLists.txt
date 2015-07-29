@@ -17,7 +17,7 @@ kconfig_add_kcfg_files(followupreminderlib_SRCS
 add_library( followupreminder ${followupreminderlib_SRCS} )
 generate_export_header(followupreminder BASE_NAME followupreminder)
 target_link_libraries( followupreminder KF5::CoreAddons KF5::ConfigGui Qt5::DBus )
-
+target_include_directories(followupreminder PUBLIC $<TARGET_PROPERTY:KF5::AkonadiCore,INTERFACE_INCLUDE_DIRECTORIES>)
 set_target_properties( followupreminder PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
 
