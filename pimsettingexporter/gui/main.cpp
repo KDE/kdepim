@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
     migrate.setConfigFiles(QStringList() << QStringLiteral("pimsettingexporterrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("pimsettingexporter.rc"));
     migrate.migrate();
-    KLocalizedString::setApplicationDomain("pimsettingexporter");
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kontact")));
 
     PimSettingCommandLineOption parser;

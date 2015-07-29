@@ -29,7 +29,6 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    KLocalizedString::setApplicationDomain("pimsettingexporter");
 
     QCommandLineParser parser;
     KAboutData aboutData(QStringLiteral("pimsettingexporterconsole"), i18n("PIM Setting Exporter Console"),

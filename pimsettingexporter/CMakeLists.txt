@@ -1,4 +1,5 @@
 project(pimsettingexporter)
+add_definitions(-DTRANSLATION_DOMAIN=\"pimsettingexporter\")
 include_directories( 
                     ${CMAKE_SOURCE_DIR}/pimsettingexporter/
                     ${CMAKE_BINARY_DIR}/pimsettingexporter/ 
