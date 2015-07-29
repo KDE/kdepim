@@ -32,8 +32,6 @@ int main(int argc, char *argv[])
     migrate.setUiFiles(QStringList() << QStringLiteral("ktnefui.rc"));
     migrate.migrate();
 
-    KLocalizedString::setApplicationDomain("ktnef");
-
     KAboutData aboutData(QStringLiteral("ktnef"),
                          i18n("KTnef"),
                          QStringLiteral(KDEPIM_VERSION),
