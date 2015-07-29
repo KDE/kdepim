@@ -25,9 +25,11 @@
 #include <QUrl>
 #include "ksieveui/editor/sieveeditorwidget.h"
 class QTabWidget;
+class QStackedWidget;
 class SieveEditorTabWidget;
 class SieveEditorScriptManagerWidget;
 class SieveEditorPageWidget;
+class SieveEditorEmptyTabWidgetLabel;
 class SieveEditorMainWidget : public QSplitter
 {
     Q_OBJECT
@@ -98,12 +100,14 @@ private Q_SLOTS:
     void slotRedo();
     void slotSelectAll();
 private:
+    void updateStackedWidget();
     QWidget *hasExistingPage(const QUrl &url);
     QColor mModifiedScriptColor;
     QColor mScriptColor;
     SieveEditorTabWidget *mTabWidget;
     SieveEditorScriptManagerWidget *mScriptManagerWidget;
-
+    QStackedWidget *mStackedWidget;
+    SieveEditorEmptyTabWidgetLabel *mEditorEmptyLabel;
 };
 
 #endif // SIEVEEDITORMAINWIDGET_H

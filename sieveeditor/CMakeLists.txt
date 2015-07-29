@@ -33,6 +33,7 @@ set(sieveeditor_SRCS
   sieveeditorcentralwidget.cpp
   sieveeditorconfigureserverpage.cpp
   sieveeditorbookmarks.cpp
+  sieveeditoremptytabwidgetlabel.cpp
 )
 
 ki18n_wrap_ui(sieveeditor_SRCS
