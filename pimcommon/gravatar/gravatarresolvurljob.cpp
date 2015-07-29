@@ -72,7 +72,7 @@ void GravatarResolvUrlJob::startNetworkManager(const QUrl &url)
     if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
         if (!mNetworkAccessManager) {
             mNetworkAccessManager = new QNetworkAccessManager(this);
-            connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotFinishLoadPixmap(QNetworkReply*)));
+            connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &GravatarResolvUrlJob::slotFinishLoadPixmap);
         }
         QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(url));
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
