@@ -112,6 +112,17 @@ void MergeContacts::mergeToContact(KContacts::Addressee &newContact, const KCont
         }
     }
 
+    // Merge Impp
+    const Impp::List listImpp = fromContact.imppList();
+    if (!listImpp.isEmpty()) {
+        Impp::List newContactsImpp = newContact.imppList();
+        Q_FOREACH (const Impp &impp, listImpp) {
+            if (!newContactsImpp.contains(impp)) {
+                newContact.insertImpp(impp);
+            }
+        }
+    }
+
     if (!excludeConflictPart) {
         // Merge Name
         if (newContact.name().isEmpty() && !fromContact.name().isEmpty()) {

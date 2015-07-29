@@ -172,11 +172,10 @@ void MergeContactSelectListWidget::fillList(const KContacts::Addressee::List &ls
         case MergeContacts::Photo:
             //TODO fix when it's an url
             addItem(QString(), QIcon(QPixmap::fromImage(addr.photo().data())));
-            //FIXME add icon ?
             break;
         case MergeContacts::Logo:
+            //TODO fix when it's an url
             addItem(QString(), QIcon(QPixmap::fromImage(addr.logo().data())));
-            //FIXME add icon ?
             break;
         case MergeContacts::Anniversary: {
             QString anniversary;
