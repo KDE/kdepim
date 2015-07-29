@@ -140,7 +140,7 @@ QString ExportOpenPGPCertsToServerCommand::crashExitMessage(const QStringList &a
     return xi18nc("@info",
                   "<para>The GPG process that tried to export OpenPGP certificates "
                   "ended prematurely because of an unexpected error.</para>"
-                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QLatin1String(" "))) ;
+                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QStringLiteral(" "))) ;
 }
 
 QString ExportOpenPGPCertsToServerCommand::errorExitMessage(const QStringList &args) const

@@ -257,7 +257,7 @@ QString UiServer::Private::makeFileName(const QString &socket) const
     ensureDirectoryExists(gnupgHome);
     const QDir dir(gnupgHome);
     assert(dir.exists());
-    return dir.absoluteFilePath(QLatin1String("S.uiserver"));
+    return dir.absoluteFilePath(QStringLiteral("S.uiserver"));
 }
 
 void UiServer::Private::ensureDirectoryExists(const QString &path) const

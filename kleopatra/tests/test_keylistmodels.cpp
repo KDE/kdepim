@@ -137,8 +137,8 @@ int main(int argc, char *argv[])
     hierarchicalLay.addWidget(&hierarchicalLE);
     hierarchicalLay.addWidget(&hierarchical);
 
-    flatWidget.setWindowTitle(QLatin1String("Flat Key Listing"));
-    hierarchicalWidget.setWindowTitle(QLatin1String("Hierarchical Key Listing"));
+    flatWidget.setWindowTitle(QStringLiteral("Flat Key Listing"));
+    hierarchicalWidget.setWindowTitle(QStringLiteral("Hierarchical Key Listing"));
 
     Kleo::KeyListSortFilterProxyModel flatProxy, hierarchicalProxy;
 

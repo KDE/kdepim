@@ -202,7 +202,7 @@ public:
 
     void gnupgLogViewer()
     {
-        if (!QProcess::startDetached(QLatin1String("kwatchgnupg")))
+        if (!QProcess::startDetached(QStringLiteral("kwatchgnupg")))
             KMessageBox::error(q, i18n("Could not start the GnuPG Log Viewer (kwatchgnupg). "
                                        "Please check your installation."),
                                i18n("Error Starting KWatchGnuPG"));
@@ -210,7 +210,7 @@ public:
 
     void gnupgAdministrativeConsole()
     {
-        if (!QProcess::startDetached(QLatin1String("kgpgconf")))
+        if (!QProcess::startDetached(QStringLiteral("kgpgconf")))
             KMessageBox::error(q, i18n("Could not start the GnuPG Administrative Console (kgpgconf). "
                                        "Please check your installation."),
                                i18n("Error Starting KGpgConf"));

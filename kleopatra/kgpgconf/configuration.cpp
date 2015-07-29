@@ -672,6 +672,6 @@ QString ConfigEntry::toString(ConfigEntry::EscapeMode mode) const
     for (QList<QVariant>::const_iterator it = lst.constBegin(); it != end; ++it) {
         ret << (*it).toString(); // QVariant does the conversion
     }
-    return ret.join(QLatin1String(","));
+    return ret.join(QStringLiteral(","));
 }
 

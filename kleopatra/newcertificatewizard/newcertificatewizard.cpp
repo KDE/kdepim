@@ -521,7 +521,7 @@ public:
           ui()
     {
         ui.setupUi(this);
-        registerField(QLatin1String("pgp"), ui.pgpCLB);
+        registerField(QStringLiteral("pgp"), ui.pgpCLB);
     }
 
     void setProtocol(Protocol proto)
@@ -591,10 +591,10 @@ public:
         connect(ui.addEmailToDnCB, SIGNAL(toggled(bool)),
                 SLOT(slotUpdateResultLabel()));
         registerDialogPropertiesAsFields();
-        registerField(QLatin1String("dn"), ui.resultLE);
-        registerField(QLatin1String("name"), ui.nameLE);
-        registerField(QLatin1String("email"), ui.emailLE);
-        registerField(QLatin1String("comment"), ui.commentLE);
+        registerField(QStringLiteral("dn"), ui.resultLE);
+        registerField(QStringLiteral("name"), ui.nameLE);
+        registerField(QStringLiteral("email"), ui.emailLE);
+        registerField(QStringLiteral("comment"), ui.commentLE);
         updateForm();
     }
 
@@ -717,7 +717,7 @@ private Q_SLOTS:
     {
         Q_UNUSED(auditLog);
         if (result.error().code()) {
-            setField(QLatin1String("error"), result.error().isCanceled()
+            setField(QStringLiteral("error"), result.error().isCanceled()
                      ? i18n("Operation canceled.")
                      : i18n("Could not create certificate: %1",
                             QString::fromLocal8Bit(result.error().asString())));
@@ -767,13 +767,13 @@ public:
     {
         ui.setupUi(this);
         ui.dragQueen->setPixmap(QIcon::fromTheme(QStringLiteral("kleopatra")).pixmap(64, 64));
-        registerField(QLatin1String("error"),  ui.errorTB,   "plainText");
-        registerField(QLatin1String("result"), ui.resultTB,  "plainText");
-        registerField(QLatin1String("url"),    ui.dragQueen, "url");
+        registerField(QStringLiteral("error"),  ui.errorTB,   "plainText");
+        registerField(QStringLiteral("result"), ui.resultTB,  "plainText");
+        registerField(QStringLiteral("url"),    ui.dragQueen, "url");
         // hidden field, since QWizard can't deal with non-widget-backed fields...
         QLineEdit *le = new QLineEdit(this);
         le->hide();
-        registerField(QLatin1String("fingerprint"), le);
+        registerField(QStringLiteral("fingerprint"), le);
     }
 
     /* reimp */ void initializePage()

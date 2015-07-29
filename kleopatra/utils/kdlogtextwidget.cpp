@@ -193,7 +193,7 @@ unsigned int KDLogTextWidget::historySize() const
 */
 QString KDLogTextWidget::text() const
 {
-    return lines().join(QLatin1String("\n"));
+    return lines().join(QStringLiteral("\n"));
 }
 
 /*!

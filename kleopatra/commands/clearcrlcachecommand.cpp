@@ -73,7 +73,7 @@ QString ClearCrlCacheCommand::crashExitMessage(const QStringList &args) const
 {
     return i18n("The DirMngr process that tried to clear the CRL cache "
                 "ended prematurely because of an unexpected error. "
-                "Please check the output of %1 for details.", args.join(QLatin1String(" "))) ;
+                "Please check the output of %1 for details.", args.join(QStringLiteral(" "))) ;
 }
 
 QString ClearCrlCacheCommand::errorExitMessage(const QStringList &args) const

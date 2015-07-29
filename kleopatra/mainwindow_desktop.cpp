@@ -213,7 +213,7 @@ public:
 
     void gnupgLogViewer()
     {
-        if (!QProcess::startDetached(QLatin1String("kwatchgnupg")))
+        if (!QProcess::startDetached(QStringLiteral("kwatchgnupg")))
             KMessageBox::error(q, i18n("Could not start the GnuPG Log Viewer (kwatchgnupg). "
                                        "Please check your installation."),
                                i18n("Error Starting KWatchGnuPG"));
@@ -221,7 +221,7 @@ public:
 
     void gnupgAdministrativeConsole()
     {
-        if (!QProcess::startDetached(QLatin1String("kgpgconf")))
+        if (!QProcess::startDetached(QStringLiteral("kgpgconf")))
             KMessageBox::error(q, i18n("Could not start the GnuPG Administrative Console (kgpgconf). "
                                        "Please check your installation."),
                                i18n("Error Starting KGpgConf"));
@@ -230,7 +230,7 @@ public:
     void slotConfigCommitted();
     void slotContextMenuRequested(QAbstractItemView *, const QPoint &p)
     {
-        if (QMenu *const menu = qobject_cast<QMenu *>(q->factory()->container(QLatin1String("listview_popup"), q))) {
+        if (QMenu *const menu = qobject_cast<QMenu *>(q->factory()->container(QStringLiteral("listview_popup"), q))) {
             menu->exec(p);
         } else {
             qCDebug(KLEOPATRA_LOG) << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";

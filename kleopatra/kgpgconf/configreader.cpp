@@ -200,7 +200,7 @@ void ConfigReader::Private::readEntriesForComponent(ConfigComponent *component) 
             } else {
                 // normal entry
                 if (!currentGroup.get()) {    // first toplevel entry -> create toplevel group
-                    currentGroup.reset(new ConfigGroup(QLatin1String("<nogroup>")));
+                    currentGroup.reset(new ConfigGroup(QStringLiteral("<nogroup>")));
                 }
                 currentGroup->addEntry(createEntryFromParsedLine(lst));
             }

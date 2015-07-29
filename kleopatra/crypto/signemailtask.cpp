@@ -251,11 +251,11 @@ static QString collect_micalgs(const GpgME::SigningResult &result, GpgME::Protoc
 #endif
     if (proto == GpgME::OpenPGP)
         for (QStringList::iterator it = micalgs.begin(), end = micalgs.end() ; it != end ; ++it) {
-            it->prepend(QLatin1String("pgp-"));
+            it->prepend(QStringLiteral("pgp-"));
         }
     micalgs.sort();
     micalgs.erase(std::unique(micalgs.begin(), micalgs.end()), micalgs.end());
-    return micalgs.join(QLatin1String(","));
+    return micalgs.join(QStringLiteral(","));
 }
 
 void SignEMailTask::Private::slotResult(const SigningResult &result)

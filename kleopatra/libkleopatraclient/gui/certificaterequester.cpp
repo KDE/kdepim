@@ -58,7 +58,7 @@ public:
 private:
     void updateLineEdit()
     {
-        ui.lineEdit.setText(selectedCertificates.join(QLatin1String(" ")));
+        ui.lineEdit.setText(selectedCertificates.join(QStringLiteral(" ")));
     }
     void createCommand()
     {

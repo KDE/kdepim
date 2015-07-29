@@ -343,7 +343,7 @@ QVariant AbstractKeyListModel::data(const QModelIndex &index, int role) const
     else if (role == Qt::ToolTipRole) {
         return Formatting::toolTip(key, toolTipOptions());
     } else if (role == Qt::FontRole) {
-        return KeyFilterManager::instance()->font(key, (column == ShortKeyID) ? QFont(QLatin1String("courier")) : QFont());
+        return KeyFilterManager::instance()->font(key, (column == ShortKeyID) ? QFont(QStringLiteral("courier")) : QFont());
     }
 #endif
     else if (role == Qt::DecorationRole) {

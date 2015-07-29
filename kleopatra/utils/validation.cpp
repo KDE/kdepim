@@ -88,11 +88,11 @@ public:
         const QString domainRestored = QUrl::fromAce(domainEncoded);
         QString encoded = str.left(atIdx) + QLatin1Char('@') + QString::fromLatin1(domainEncoded);
         if (needsDotOrgAdded) {
-            assert(encoded.endsWith(QLatin1String("tmp.org")));
+            assert(encoded.endsWith(QStringLiteral("tmp.org")));
             encoded.chop(7);
         }
         if (needsOrgAdded) {
-            assert(encoded.endsWith(QLatin1String(".org")));
+            assert(encoded.endsWith(QStringLiteral(".org")));
             encoded.chop(3);   // '.' was part of domain before
         }
         qCDebug(KLEOPATRA_LOG) << "\n str           :" << str

@@ -623,7 +623,7 @@ static QString listKeysForInfo(const std::vector<Key> &keys)
 {
     QStringList list;
     std::transform(keys.begin(), keys.end(), list.begin(), &Formatting::formatKeyLink);
-    return list.join(QLatin1String("<br/>"));
+    return list.join(QStringLiteral("<br/>"));
 }
 
 void ResolveRecipientsPage::setAdditionalRecipientsInfo(const std::vector<Key> &recipients)

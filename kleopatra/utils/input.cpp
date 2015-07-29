@@ -369,7 +369,7 @@ QString ProcessStdOutInput::label() const
         return InputImplBase::label();
     }
     // output max. 3 arguments
-    const QString cmdline = (QStringList(m_command) + m_arguments.mid(0, 3)).join(QLatin1String(" "));
+    const QString cmdline = (QStringList(m_command) + m_arguments.mid(0, 3)).join(QStringLiteral(" "));
     if (m_arguments.size() > 3) {
         return i18nc("e.g. \"Output of tar xf - file1 ...\"", "Output of %1 ...", cmdline);
     } else {

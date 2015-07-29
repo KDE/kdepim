@@ -816,7 +816,7 @@ public:
                                                    i18nc("@title:window", "Encrypt-To-Self Warning"),
                                                    KStandardGuiItem::cont(),
                                                    KStandardGuiItem::cancel(),
-                                                   QLatin1String("warn-encrypt-to-non-self"), KMessageBox::Notify | KMessageBox::Dangerous)
+                                                   QStringLiteral("warn-encrypt-to-non-self"), KMessageBox::Notify | KMessageBox::Dangerous)
                     == KMessageBox::Cancel) {
                 return false;
             } else if (isRemoveUnencryptedFilesEnabled())
@@ -827,7 +827,7 @@ public:
                                                        i18nc("@title:window", "Encrypt-To-Self Warning"),
                                                        KStandardGuiItem::cont(),
                                                        KStandardGuiItem::cancel(),
-                                                       QLatin1String("warn-encrypt-to-non-self-destructive"), KMessageBox::Notify | KMessageBox::Dangerous)
+                                                       QStringLiteral("warn-encrypt-to-non-self-destructive"), KMessageBox::Notify | KMessageBox::Dangerous)
                         == KMessageBox::Cancel) {
                     return false;
                 }
@@ -1141,7 +1141,7 @@ void NewSignEncryptFilesWizard::setCreateArchivePreset(bool preset)
         return;
     }
     d->createArchivePreset = preset;
-    setField(QLatin1String("archive"), preset);
+    setField(QStringLiteral("archive"), preset);
     d->updateStartId();
 }
 
@@ -1151,7 +1151,7 @@ void NewSignEncryptFilesWizard::setCreateArchiveUserMutable(bool mut)
         return;
     }
     d->createArchiveUserMutable = mut;
-    setField(QLatin1String("archive-user-mutable"), mut);
+    setField(QStringLiteral("archive-user-mutable"), mut);
     d->updateStartId();
 }
 
@@ -1166,7 +1166,7 @@ void NewSignEncryptFilesWizard::setSigningPreset(bool preset)
         return;
     }
     d->signingPreset = preset;
-    setField(QLatin1String("signing-preset"), preset);
+    setField(QStringLiteral("signing-preset"), preset);
     d->updateStartId();
 }
 
@@ -1176,7 +1176,7 @@ void NewSignEncryptFilesWizard::setSigningUserMutable(bool mut)
         return;
     }
     d->signingUserMutable = mut;
-    setField(QLatin1String("signing-user-mutable"), mut);
+    setField(QStringLiteral("signing-user-mutable"), mut);
     d->updateStartId();
 }
 
@@ -1186,7 +1186,7 @@ void NewSignEncryptFilesWizard::setEncryptionPreset(bool preset)
         return;
     }
     d->encryptionPreset = preset;
-    setField(QLatin1String("encryption-preset"), preset);
+    setField(QStringLiteral("encryption-preset"), preset);
     d->updateStartId();
 }
 
@@ -1196,38 +1196,38 @@ void NewSignEncryptFilesWizard::setEncryptionUserMutable(bool mut)
         return;
     }
     d->encryptionUserMutable = mut;
-    setField(QLatin1String("encryption-user-mutable"), mut);
+    setField(QStringLiteral("encryption-user-mutable"), mut);
     d->updateStartId();
 }
 
 void NewSignEncryptFilesWizard::setFiles(const QStringList &files)
 {
-    setField(QLatin1String("files"), files);
+    setField(QStringLiteral("files"), files);
 }
 
 bool NewSignEncryptFilesWizard::isSigningSelected() const
 {
-    return field(QLatin1String("sign")).toBool() || field(QLatin1String("signencrypt")).toBool() ;
+    return field(QStringLiteral("sign")).toBool() || field(QStringLiteral("signencrypt")).toBool() ;
 }
 
 bool NewSignEncryptFilesWizard::isEncryptionSelected() const
 {
-    return field(QLatin1String("encrypt")).toBool() || field(QLatin1String("signencrypt")).toBool() ;
+    return field(QStringLiteral("encrypt")).toBool() || field(QStringLiteral("signencrypt")).toBool() ;
 }
 
 bool NewSignEncryptFilesWizard::isAsciiArmorEnabled() const
 {
-    return field(QLatin1String("armor")).toBool();
+    return field(QStringLiteral("armor")).toBool();
 }
 
 bool NewSignEncryptFilesWizard::isRemoveUnencryptedFilesEnabled() const
 {
-    return isEncryptionSelected() && field(QLatin1String("remove")).toBool();
+    return isEncryptionSelected() && field(QStringLiteral("remove")).toBool();
 }
 
 bool NewSignEncryptFilesWizard::isCreateArchiveSelected() const
 {
-    return field(QLatin1String("archive")).toBool();
+    return field(QStringLiteral("archive")).toBool();
 }
 
 shared_ptr<ArchiveDefinition> NewSignEncryptFilesWizard::selectedArchiveDefinition() const
