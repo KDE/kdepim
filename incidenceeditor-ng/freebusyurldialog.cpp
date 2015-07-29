@@ -22,8 +22,6 @@
 
 #include "freebusyurldialog.h"
 
-#include <KCalCore/FreeBusyUrlStore>
-
 #include <KLineEdit>
 #include <KLocalizedString>
 
@@ -31,10 +29,12 @@
 #include "incidenceeditor_debug.h"
 #include <QFrame>
 #include <QLabel>
+#include <KConfig>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QStandardPaths>
 
 using namespace IncidenceEditorNG;
 
@@ -90,12 +90,17 @@ FreeBusyUrlWidget::~FreeBusyUrlWidget()
 {
 }
 
+static QString freeBusyUrlStore()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("korganizer/freebusyurls");
+}
+
 void FreeBusyUrlWidget::loadConfig()
 {
     qCDebug(INCIDENCEEDITOR_LOG);
 
-    const QString url = KCalCore::FreeBusyUrlStore::self()->readUrl(mAttendee->email());
-    mUrlEdit->setText(url);
+    KConfig config(freeBusyUrlStore());
+    mUrlEdit->setText(config.group(mAttendee->email()).readEntry("url"));
 }
 
 void FreeBusyUrlWidget::saveConfig()
@@ -103,7 +108,7 @@ void FreeBusyUrlWidget::saveConfig()
     qCDebug(INCIDENCEEDITOR_LOG);
 
     const QString url = mUrlEdit->text();
-    KCalCore::FreeBusyUrlStore::self()->writeUrl(mAttendee->email(), url);
-    KCalCore::FreeBusyUrlStore::self()->sync();
+    KConfig config(freeBusyUrlStore());
+    config.group(mAttendee->email()).writeEntry("url", url);
 }
 
