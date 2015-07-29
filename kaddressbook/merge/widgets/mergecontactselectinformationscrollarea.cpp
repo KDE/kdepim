@@ -32,6 +32,7 @@ MergeContactSelectInformationScrollArea::MergeContactSelectInformationScrollArea
     : QWidget(parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->setMargin(0);
     setLayout(vbox);
     mStackWidget = new QStackedWidget;
     mStackWidget->setObjectName(QStringLiteral("stackwidget"));

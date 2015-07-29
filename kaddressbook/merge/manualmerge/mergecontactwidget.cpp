@@ -44,6 +44,7 @@ MergeContactWidget::MergeContactWidget(QWidget *parent)
       mConflictTypes(MergeContacts::None)
 {
     QVBoxLayout *lay = new QVBoxLayout;
+    lay->setMargin(0);
 
     QSplitter *splitter = new QSplitter;
     splitter->setObjectName(QStringLiteral("splitter"));
