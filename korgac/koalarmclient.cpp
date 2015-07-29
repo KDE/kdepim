@@ -43,11 +43,6 @@
 #include <KConfigGroup>
 #include <QApplication>
 
-#ifdef Q_OS_MAEMO_5
-#include <KSharedConfig>
-#include <QStandardPaths>
-#endif
-
 #include "koalarmclient_debug.h"
 
 using namespace KCalCore;
@@ -218,7 +213,6 @@ void KOAlarmClient::createReminder(const Akonadi::ETMCalendar::Ptr &calendar,
         return;
     }
 
-#if !defined(Q_OS_MAEMO_5)
     if (!mDialog) {
         mDialog = new AlarmDialog(calendar);
         connect(this, &KOAlarmClient::saveAllSignal, mDialog, &AlarmDialog::slotSave);
@@ -231,7 +225,6 @@ void KOAlarmClient::createReminder(const Akonadi::ETMCalendar::Ptr &calendar,
 
     mDialog->addIncidence(aitem, remindAtDate, displayText);
     mDialog->wakeUp();
-#endif
     saveLastCheckTime();
 }
 

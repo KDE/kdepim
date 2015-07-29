@@ -375,11 +375,7 @@ void KCMLdap::initGUI()
 
 QWidget *KCMLdap::dialogParent()
 {
-#ifdef Q_OS_MAEMO_5
-    return 0;
-#else
     return this;
-#endif
 }
 
 #include "kcmldap.moc"

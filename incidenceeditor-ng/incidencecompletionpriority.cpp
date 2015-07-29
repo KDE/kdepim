@@ -74,13 +74,6 @@ IncidenceCompletionPriority::IncidenceCompletionPriority(Ui::EventOrTodoDesktop 
     d->mUi->mTaskSeparator->hide();
 #endif
 
-#ifdef Q_OS_MAEMO_5
-    // The default looks really bad in the editor.
-    QPalette palette = d->mUi->mCompletionSlider->palette();
-    palette.setColor(QPalette::Window, Qt::white);
-    d->mUi->mCompletionSlider->setPalette(palette);
-#endif
-
     connect(d->mUi->mCompletionSlider, SIGNAL(valueChanged(int)), SLOT(sliderValueChanged(int)));
     connect(d->mUi->mPriorityCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceCompletionPriority::checkDirtyStatus);
 }

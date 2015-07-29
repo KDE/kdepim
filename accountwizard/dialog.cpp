@@ -42,10 +42,6 @@
 Dialog::Dialog(QWidget *parent, Qt::WindowFlags flags) :
     KAssistantDialog(parent, flags)
 {
-#if defined (Q_OS_MAEMO_5) || defined (MEEGO_EDITION_HARMATTAN)
-    setWindowState(Qt::WindowFullScreen);
-#endif
-
     mSetupManager = new SetupManager(this);
     const bool showPersonalDataPage = Global::typeFilter().size() == 1 && Global::typeFilter().first() == KMime::Message::mimeType();
 
