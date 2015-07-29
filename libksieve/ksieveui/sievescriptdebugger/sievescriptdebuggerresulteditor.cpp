@@ -36,7 +36,7 @@ SieveScriptDebuggerResultEditor::~SieveScriptDebuggerResultEditor()
 void SieveScriptDebuggerResultEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 {
     PimCommon::PlainTextEditor::addExtraMenuEntry(menu, pos);
-    if (isReadOnly()) {
+    if (isReadOnly() && !document()->isEmpty()) {
         QAction *clearAction = new QAction(i18n("Clear"), menu);
         connect(clearAction, &QAction::triggered, this, &SieveScriptDebuggerResultEditor::slotClear);
         menu->addAction(clearAction);
