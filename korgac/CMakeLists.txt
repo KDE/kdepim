@@ -43,9 +43,6 @@ qt5_add_dbus_adaptor(korgac_SRCS org.kde.korganizer.KOrgac.xml koalarmclient.h
   KOAlarmClient
 )
 
-if(RUNTIME_PLUGINS_STATIC)
-  add_definitions(-DSERIALIZER_PLUGIN_STATIC)
-endif()
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pixmaps/*-apps-korgac.png")
 ecm_add_app_icon(korgac_SRCS ICONS ${ICONS_SRCS})
@@ -77,10 +74,6 @@ target_link_libraries(korgac
   KF5::DBusAddons
   Phonon::phonon4qt5
 )
-
-if(RUNTIME_PLUGINS_STATIC)
-  target_link_libraries(korgac akonadi_serializer_kcalcore)
-endif()
 
 install(TARGETS
     korgac ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
