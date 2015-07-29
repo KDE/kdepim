@@ -73,6 +73,8 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
                 PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
                 job->setEmail(mEmailAddress);
                 job->setUseDefaultPixmap(GlobalSettings::self()->gravatarUseDefaultImage());
+                job->setUseLibravatar(GlobalSettings::self()->libravatarSupportEnabled());
+                job->setFallbackGravatar(GlobalSettings::self()->fallbackToGravatar());
                 if (job->canStart()) {
                     connect(job, SIGNAL(finished(PimCommon::GravatarResolvUrlJob*)), this, SLOT(slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob*)));
                     job->start();
