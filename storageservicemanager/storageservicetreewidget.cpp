@@ -481,7 +481,7 @@ void StorageServiceTreeWidget::slotFileDoubleClicked()
 {
     if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability) {
         if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to download this file?"),
-                                                           i18nc("@title:window", "Download File"))) {
+                i18nc("@title:window", "Download File"))) {
             Q_EMIT downloadFile();
         }
     }

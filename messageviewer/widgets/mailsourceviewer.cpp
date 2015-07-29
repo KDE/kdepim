@@ -166,7 +166,7 @@ QString MailSourceViewer::reformat(const QString &src)
                                        "|\\s*"            //Some white space.
                                        ")"
                                        "(/)?>" //Captures the "/" if this is a complete tag.
-                                                    ));
+                                                     ));
 
     //First make sure that each tag is surrounded by newlines
     while ((pos = htmlTagRegExp.indexIn(source, pos)) != -1) {

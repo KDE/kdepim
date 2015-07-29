@@ -855,7 +855,7 @@ void AttachmentControllerBase::attachmentProperties(AttachmentPart::Ptr part)
 void AttachmentControllerBase::attachDirectory(const QUrl &url)
 {
     const int rc = KMessageBox::warningYesNo(d->wParent, i18n("Do you really want to attach this directory \"%1\"?", url.toLocalFile()),
-                                             i18nc("@title:window", "Attach directory"));
+                   i18nc("@title:window", "Attach directory"));
     if (rc == KMessageBox::Yes) {
         addAttachment(url);
     }
@@ -912,7 +912,7 @@ void AttachmentControllerBase::showAddAttachmentFileDialog()
             MessageCore::StringUtil::setEncodingFile(urlWithEncoding, encoding);
             if (KMimeType::findByUrl(urlWithEncoding)->name() == QLatin1String("inode/directory")) {
                 const int rc = KMessageBox::warningYesNo(d->wParent, i18n("Do you really want to attach this directory \"%1\"?", url.toLocalFile()),
-                                                         i18nc("@title:window", "Attach directory"));
+                               i18nc("@title:window", "Attach directory"));
                 if (rc == KMessageBox::Yes) {
                     addAttachment(urlWithEncoding);
                 }

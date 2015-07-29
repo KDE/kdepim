@@ -93,7 +93,6 @@ void SieveSyntaxHighlighterRules::init()
         m_rules.append(KPIMTextEdit::Rule(regex, debugFormat));
     }
 
-
     // Match Type
     QTextCharFormat matchFormat;
     matchFormat.setForeground(Qt::red);
