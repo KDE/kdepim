@@ -3,8 +3,6 @@ include_directories(${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_SOURCE_DIR} ${CMAKE_BI
 if(KDEPIM_ONLY_KLEO)
   add_definitions(-DKDEPIM_ONLY_KLEO)
   set(_kcm_kleopatra_kleo_only_SRCS ../utils/kleo_kicondialog.cpp)
-else()
-  set(_kcm_kleopatra_extra_libs KF5::KIOCore)
 endif()
 
 if(BUILD_libkleopatraclient)
@@ -69,8 +67,6 @@ else()
 endif()
 
 target_link_libraries(kcm_kleopatra
-  
-  KF5::KCMUtils
   kleo
   ${_kcm_kleopatra_extra_libs}
   ${_kcm_kleopatra_libkleopatraclient_extra_LIBS}
