@@ -96,8 +96,8 @@ void ImportWizardUtil::storeInKWallet(const QString &name, ImportWizardUtil::Res
     case Imap:
         wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(), 0);
         if (wallet && wallet->isOpen()) {
-            if (!wallet->hasFolder(QLatin1String("imap"))) {
-                wallet->createFolder(QLatin1String("imap"));
+            if (!wallet->hasFolder(QStringLiteral("imap"))) {
+                wallet->createFolder(QStringLiteral("imap"));
             }
             wallet->setFolder(QLatin1String("imap"));
             wallet->writePassword(name + QLatin1String("rc"), password);
@@ -106,20 +106,20 @@ void ImportWizardUtil::storeInKWallet(const QString &name, ImportWizardUtil::Res
     case Pop3:
         wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(), 0);
         if (wallet && wallet->isOpen()) {
-            if (!wallet->hasFolder(QLatin1String("pop3"))) {
-                wallet->createFolder(QLatin1String("pop3"));
+            if (!wallet->hasFolder(QStringLiteral("pop3"))) {
+                wallet->createFolder(QStringLiteral("pop3"));
             }
-            wallet->setFolder(QLatin1String("pop3"));
+            wallet->setFolder(QStringLiteral("pop3"));
             wallet->writePassword(name, password);
         }
         break;
     case Ldap:
         wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
         if (wallet && wallet->isOpen()) {
-            if (!wallet->hasFolder(QLatin1String("ldapclient"))) {
-                wallet->createFolder(QLatin1String("ldapclient"));
+            if (!wallet->hasFolder(QStringLiteral("ldapclient"))) {
+                wallet->createFolder(QStringLiteral("ldapclient"));
             }
-            wallet->setFolder(QLatin1String("ldapclient"));
+            wallet->setFolder(QStringLiteral("ldapclient"));
             wallet->writePassword(name, password);
         }
     }

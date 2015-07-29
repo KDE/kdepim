@@ -135,7 +135,7 @@ QString ClawsMailSettings::writeColor(const QColor &col)
     if (col.alpha() != 255) {
         list.insert(3, QString::number(col.alpha()));
     }
-    return list.join(QLatin1String(","));
+    return list.join(QStringLiteral(","));
 }
 
 void ClawsMailSettings::readTemplateFormat(const KConfigGroup &group)
@@ -172,8 +172,8 @@ void ClawsMailSettings::readGlobalSettings(const KConfigGroup &group)
 
 void ClawsMailSettings::readTagColor(const KConfigGroup &group)
 {
-    const QString customColorPattern(QLatin1String("custom_color%1"));
-    const QString customColorLabelPattern(QLatin1String("custom_colorlabel%1"));
+    const QString customColorPattern(QStringLiteral("custom_color%1"));
+    const QString customColorLabelPattern(QStringLiteral("custom_colorlabel%1"));
     QVector<tagStruct> listTag;
     for (int i = 1; i <= 15; ++i) {
         if (group.hasKey(customColorPattern.arg(i))

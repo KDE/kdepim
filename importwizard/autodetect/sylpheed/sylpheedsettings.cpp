@@ -307,47 +307,47 @@ void SylpheedSettings::readPop3Account(const KConfigGroup &accountConfig, bool c
     if (SylpheedSettingsUtils::readConfig(QLatin1String("pop_port"), accountConfig, port, true)) {
         settings.insert(QLatin1String("Port"), port);
     }
-    if (accountConfig.hasKey(QLatin1String("ssl_pop"))) {
+    if (accountConfig.hasKey(QStringLiteral("ssl_pop"))) {
         const int sslPop = accountConfig.readEntry(QStringLiteral("ssl_pop"), 0);
         switch (sslPop) {
         case 0:
             //Nothing
             break;
         case 1:
-            settings.insert(QLatin1String("UseSSL"), true);
+            settings.insert(QStringLiteral("UseSSL"), true);
             break;
         case 2:
-            settings.insert(QLatin1String("UseTLS"), true);
+            settings.insert(QStringLiteral("UseTLS"), true);
             break;
         default:
             qCDebug(IMPORTWIZARD_LOG) << " unknown ssl_pop value " << sslPop;
             break;
         }
     }
-    if (accountConfig.hasKey(QLatin1String("remove_mail"))) {
+    if (accountConfig.hasKey(QStringLiteral("remove_mail"))) {
         const bool removeMail = (accountConfig.readEntry(QStringLiteral("remove_mail"), 1) == 1);
-        settings.insert(QLatin1String("LeaveOnServer"), removeMail);
+        settings.insert(QStringLiteral("LeaveOnServer"), removeMail);
     }
 
-    if (accountConfig.hasKey(QLatin1String("message_leave_time"))) {
-        settings.insert(QLatin1String("LeaveOnServerDays"), accountConfig.readEntry(QStringLiteral("message_leave_time")));
+    if (accountConfig.hasKey(QStringLiteral("message_leave_time"))) {
+        settings.insert(QStringLiteral("LeaveOnServerDays"), accountConfig.readEntry(QStringLiteral("message_leave_time")));
     }
     const QString user = accountConfig.readEntry(QStringLiteral("user_id"));
-    settings.insert(QLatin1String("Login"), user);
+    settings.insert(QStringLiteral("Login"), user);
 
     const QString password = accountConfig.readEntry(QStringLiteral("password"));
     settings.insert(QLatin1String("Password"), password);
 
     //use_apop_auth
-    if (accountConfig.hasKey(QLatin1String("use_apop_auth"))) {
+    if (accountConfig.hasKey(QStringLiteral("use_apop_auth"))) {
         const bool useApop = (accountConfig.readEntry(QStringLiteral("use_apop_auth"), 1) == 1);
         if (useApop) {
-            settings.insert(QLatin1String("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::APOP);
+            settings.insert(QStringLiteral("AuthenticationMethod"), MailTransport::Transport::EnumAuthenticationType::APOP);
         }
     }
     if (intervalCheckMail != -1) {
-        settings.insert(QLatin1String("IntervalCheckEnabled"), true);
-        settings.insert(QLatin1String("IntervalCheckInterval"), intervalCheckMail);
+        settings.insert(QStringLiteral("IntervalCheckEnabled"), true);
+        settings.insert(QStringLiteral("IntervalCheckInterval"), intervalCheckMail);
     }
 
     const QString agentIdentifyName = AbstractBase::createResource(QStringLiteral("akonadi_pop3_resource"), name, settings);
@@ -498,7 +498,7 @@ QString SylpheedSettings::readTransport(const KConfigGroup &accountConfig)
         mt->setName(smtpserver);
         mt->setHost(smtpserver);
         int port = 0;
-        if (SylpheedSettingsUtils::readConfig(QLatin1String("smtp_port"), accountConfig, port, true)) {
+        if (SylpheedSettingsUtils::readConfig(QStringLiteral("smtp_port"), accountConfig, port, true)) {
             mt->setPort(port);
         }
         const QString user = accountConfig.readEntry(QStringLiteral("smtp_user_id"));

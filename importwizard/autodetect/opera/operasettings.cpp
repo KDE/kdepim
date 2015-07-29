@@ -99,14 +99,14 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
         //We have not settings for it => same than manual check
         addCheckMailOnStartup(agentIdentifyName, enableManualCheck);
     } else if (incomingProtocol == QLatin1String("POP")) {
-        settings.insert(QLatin1String("Host"), serverName);
-        settings.insert(QLatin1String("Login"), userName);
+        settings.insert(QStringLiteral("Host"), serverName);
+        settings.insert(QStringLiteral("Login"), userName);
 
         const int leaveOnServer = grp.readEntry(QStringLiteral("Leave On Server"), -1);
         if (leaveOnServer == 1) {
-            settings.insert(QLatin1String("LeaveOnServer"), true);
+            settings.insert(QStringLiteral("LeaveOnServer"), true);
         } else if (leaveOnServer == 0) {
-            settings.insert(QLatin1String("LeaveOnServer"), false);
+            settings.insert(QStringLiteral("LeaveOnServer"), false);
         } else {
             qCDebug(IMPORTWIZARD_LOG) << " leave on server option unknown : " << leaveOnServer;
         }
