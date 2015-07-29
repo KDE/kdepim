@@ -268,7 +268,7 @@ protected:
     bool event(QEvent *event) Q_DECL_OVERRIDE;
     void dragEnterEvent(QDragEnterEvent *e) Q_DECL_OVERRIDE;
     void dropEvent(QDropEvent *e) Q_DECL_OVERRIDE;
-    /**reimp*/void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
     /** private movement functions. startMove needs to be called of only one of
      *  the multitems. it will then loop through the whole series using
