@@ -385,10 +385,4 @@ install(
 
 install(FILES kleopatra.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/kleopatra)
 
-if(KDEPIM_MOBILE_UI)
-  install(
-    FILES qml/kleopatra-mobile.qml qml/KleopatraActions.qml
-    DESTINATION ${KDE_INSTALL_DATADIR}/kleopatra
-  )
-endif()
 add_subdirectory(icons)
