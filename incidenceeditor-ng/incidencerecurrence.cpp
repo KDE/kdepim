@@ -20,11 +20,7 @@
 
 #include "incidencerecurrence.h"
 #include "incidencedatetime.h"
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_dialogmoremobile.h"
-#else
 #include "ui_dialogdesktop.h"
-#endif
 
 #include <KCalendarSystem>
 
@@ -74,11 +70,7 @@ enum {
     ComboIndexYearlyDay
 };
 
-#ifdef KDEPIM_MOBILE_UI
-IncidenceRecurrence::IncidenceRecurrence(IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui)
-#else
 IncidenceRecurrence::IncidenceRecurrence(IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui)
-#endif
     : mUi(ui), mDateTime(dateTime), mMonthlyInitialType(0), mYearlyInitialType(0)
 {
     setObjectName("IncidenceRecurrence");
@@ -91,7 +83,6 @@ IncidenceRecurrence::IncidenceRecurrence(IncidenceDateTime *dateTime, Ui::EventO
     handleEndAfterOccurrencesChange(1);
     toggleRecurrenceWidgets(RecurrenceTypeNone);
     fillCombos();
-#ifndef KDEPIM_MOBILE_UI
     QList<QLineEdit *> lineEdits;
     lineEdits << mUi->mExceptionDateEdit->lineEdit() << mUi->mRecurrenceEndDate->lineEdit();
     foreach (QLineEdit *lineEdit, lineEdits) {
@@ -99,7 +90,6 @@ IncidenceRecurrence::IncidenceRecurrence(IncidenceDateTime *dateTime, Ui::EventO
             lineEdit->setClearButtonEnabled(false);
         }
     }
-#endif
 
     connect(mDateTime, &IncidenceDateTime::startDateTimeToggled, this, &IncidenceRecurrence::handleDateTimeToggle);
 
@@ -107,9 +97,7 @@ IncidenceRecurrence::IncidenceRecurrence(IncidenceDateTime *dateTime, Ui::EventO
 
     connect(mUi->mExceptionAddButton, &QPushButton::clicked, this, &IncidenceRecurrence::addException);
     connect(mUi->mExceptionRemoveButton, &QPushButton::clicked, this, &IncidenceRecurrence::removeExceptions);
-#ifndef KDEPIM_MOBILE_UI
     connect(mUi->mExceptionDateEdit, &KDateComboBox::dateChanged, this, &IncidenceRecurrence::handleExceptionDateChange);
-#endif
     connect(mUi->mExceptionList, &QListWidget::itemSelectionChanged, this, &IncidenceRecurrence::updateRemoveExceptionButton);
     connect(mUi->mRecurrenceTypeCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceRecurrence::handleRecurrenceTypeChange);
     connect(mUi->mEndDurationEdit, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &IncidenceRecurrence::handleEndAfterOccurrencesChange);
@@ -124,9 +112,7 @@ IncidenceRecurrence::IncidenceRecurrence(IncidenceDateTime *dateTime, Ui::EventO
     connect(mUi->mYearlyCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceRecurrence::checkDirtyStatus);
     connect(mUi->mRecurrenceEndCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceRecurrence::checkDirtyStatus);
     connect(mUi->mEndDurationEdit, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &IncidenceRecurrence::checkDirtyStatus);
-#ifndef KDEPIM_MOBILE_UI
     connect(mUi->mRecurrenceEndDate, &KDateComboBox::dateChanged, this, &IncidenceRecurrence::checkDirtyStatus);
-#endif
     connect(mUi->mThisAndFutureCheck, &QCheckBox::stateChanged, this, &IncidenceRecurrence::checkDirtyStatus);
 }
 
@@ -921,7 +907,6 @@ void IncidenceRecurrence::toggleRecurrenceWidgets(int recurrenceType)
 {
     bool enable = (recurrenceType != RecurrenceTypeNone) && (recurrenceType != RecurrenceTypeException);
     mUi->mRecurrenceTypeCombo->setVisible(recurrenceType != RecurrenceTypeException);
-#ifndef KDEPIM_MOBILE_UI
     mUi->mRepeatLabel->setVisible(recurrenceType != RecurrenceTypeException);
     mUi->mRecurrenceEndLabel->setVisible(enable);
     mUi->mOnLabel->setVisible(enable && recurrenceType != RecurrenceTypeDaily);
@@ -929,7 +914,6 @@ void IncidenceRecurrence::toggleRecurrenceWidgets(int recurrenceType)
         // So we can hide the exceptions labels and not trigger column resizing.
         mUi->mRepeatLabel->setMinimumSize(mUi->mExceptionsLabel->sizeHint());
     }
-#endif
 
     mUi->mFrequencyLabel->setVisible(enable);
     mUi->mFrequencyEdit->setVisible(enable);

@@ -54,11 +54,7 @@ public:
     using IncidenceEditorNG::IncidenceEditor::save; // So we don't trigger -Woverloaded-virtual
     using IncidenceEditorNG::IncidenceEditor::load; // So we don't trigger -Woverloaded-virtual    
 
-#ifdef KDEPIM_MOBILE_UI
-    IncidenceRecurrence(IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui);
-#else
     IncidenceRecurrence(IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui);
-#endif
 
     virtual void load(const KCalCore::Incidence::Ptr &incidence);
     virtual void save(const KCalCore::Incidence::Ptr &incidence);
@@ -127,11 +123,7 @@ private:
     QDate currentDate() const;
 
 private:
-#ifdef KDEPIM_MOBILE_UI
-    Ui::EventOrTodoMore *mUi;
-#else
     Ui::EventOrTodoDesktop *mUi;
-#endif
     QDate mCurrentDate;
     IncidenceDateTime *mDateTime;
     KCalCore::DateList mExceptionDates;

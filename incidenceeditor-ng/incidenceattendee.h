@@ -28,7 +28,6 @@
 namespace Ui
 {
 class EventOrTodoDesktop;
-class EventOrTodoMore;
 }
 
 namespace KContacts
@@ -54,11 +53,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
 public:
     using IncidenceEditorNG::IncidenceEditor::save; // So we don't trigger -Woverloaded-virtual
     using IncidenceEditorNG::IncidenceEditor::load; // So we don't trigger -Woverloaded-virtual    
-#ifdef KDEPIM_MOBILE_UI
-    IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui);
-#else
     IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui);
-#endif
     ~IncidenceAttendee();
 
     virtual void load(const KCalCore::Incidence::Ptr &incidence);
@@ -135,11 +130,7 @@ private:
     void fillOrganizerCombo();
     void setActions(KCalCore::Incidence::IncidenceType actions);
 
-#ifdef KDEPIM_MOBILE_UI
-    Ui::EventOrTodoMore *mUi;
-#else
     Ui::EventOrTodoDesktop *mUi;
-#endif
     QWidget *mParentWidget;
     ConflictResolver *mConflictResolver;
 

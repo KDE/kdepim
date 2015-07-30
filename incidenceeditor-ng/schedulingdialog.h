@@ -22,11 +22,7 @@
 #define INCIDENCEEDITOR_SCHEDULINGDIALOG_H
 
 #include "incidenceeditors_ng_export.h"
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_mobileschedulingdialog.h"
-#else
 #include "ui_schedulingdialog.h"
-#endif
 
 #include <QDialog>
 #include <KDateTime>
@@ -82,9 +78,7 @@ private:
 
     ConflictResolver *mResolver;
     KPIM::FreePeriodModel *mPeriodModel;
-#ifndef KDEPIM_MOBILE_UI
     VisualFreeBusyWidget *mVisualWidget;
-#endif
 };
 
 }

@@ -22,22 +22,14 @@
 #include "alarmdialog.h"
 #include "alarmpresets.h"
 #include "incidencedatetime.h"
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_dialogmoremobile.h"
-#else
 #include "ui_dialogdesktop.h"
-#endif
 
 #include <calendarsupport/kcalprefs.h>
 
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
 
-#ifdef KDEPIM_MOBILE_UI
-IncidenceAlarm::IncidenceAlarm(IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui)
-#else
 IncidenceAlarm::IncidenceAlarm(IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui)
-#endif
     : mUi(ui),
       mDateTime(dateTime),
       mEnabledAlarmCount(0),
@@ -143,11 +135,7 @@ void IncidenceAlarm::editCurrentAlarm()
 {
     KCalCore::Alarm::Ptr currentAlarm = mAlarms.at(mUi->mAlarmList->currentRow());
 
-#ifdef KDEPIM_MOBILE_UI
-    QPointer<AlarmDialog> dialog(new AlarmDialog(mLoadedIncidence->type()));
-#else
     QPointer<AlarmDialog> dialog(new AlarmDialog(mLoadedIncidence->type(), mUi->mTabWidget));
-#endif
     dialog->load(currentAlarm);
 
     dialog->setAllowBeginReminders(mDateTime->startDateTimeEnabled());
@@ -171,18 +159,12 @@ void IncidenceAlarm::handleDateTimeToggle()
     mUi->mAlarmPresetCombo->setEnabled(mDateTime->endDateTimeEnabled());
     mUi->mAlarmAddPresetButton->setEnabled(mDateTime->endDateTimeEnabled());
 
-#ifndef KDEPIM_MOBILE_UI
     mUi->mQuickAddReminderLabel->setEnabled(mDateTime->endDateTimeEnabled());
-#endif
 }
 
 void IncidenceAlarm::newAlarm()
 {
-#ifdef KDEPIM_MOBILE_UI
-    QPointer<AlarmDialog> dialog(new AlarmDialog(mLoadedIncidence->type()));
-#else
     QPointer<AlarmDialog> dialog(new AlarmDialog(mLoadedIncidence->type(), mUi->mTabWidget));
-#endif
     const int reminderOffset = KCalPrefs::instance()->reminderTime();
 
     if (reminderOffset >= 0) {

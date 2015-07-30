@@ -19,12 +19,7 @@
 */
 
 #include "incidencewhatwhere.h"
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_dialogmobile.h"
-#include "ui_dialogmoremobile.h"
-#else
 #include "ui_dialogdesktop.h"
-#endif
 
 #include "incidenceeditor_debug.h"
 #include <KLocalizedString>

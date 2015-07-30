@@ -21,11 +21,7 @@
 #include "incidenceattachment.h"
 #include "attachmenteditdialog.h"
 #include "attachmenticonview.h"
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_dialogmoremobile.h"
-#else
 #include "ui_dialogdesktop.h"
-#endif
 
 #include <libkdepimdbusinterfaces/urihandler.h>
 
@@ -55,11 +51,7 @@
 
 using namespace IncidenceEditorNG;
 
-#ifdef KDEPIM_MOBILE_UI
-IncidenceAttachment::IncidenceAttachment(Ui::EventOrTodoMore *ui)
-#else
 IncidenceAttachment::IncidenceAttachment(Ui::EventOrTodoDesktop *ui)
-#endif
     : IncidenceEditor(0),
       mUi(ui),
       mPopupMenu(new QMenu)
@@ -151,11 +143,7 @@ void IncidenceAttachment::addAttachment()
 {
     AttachmentIconItem *item = new AttachmentIconItem(KCalCore::Attachment::Ptr(), mAttachmentView);
 
-#ifdef KDEPIM_MOBILE_UI
-    QWeakPointer<AttachmentEditDialog> dialog(new AttachmentEditDialog(item, 0));
-#else
     QWeakPointer<AttachmentEditDialog> dialog(new AttachmentEditDialog(item, mAttachmentView));
-#endif
     dialog.data()->setWindowTitle(i18nc("@title", "Add Attachment"));
     if (dialog.data()->exec() == QDialog::Rejected) {
         delete item;
@@ -361,13 +349,8 @@ void IncidenceAttachment::editSelectedAttachments()
                 return;
             }
 
-#ifdef KDEPIM_MOBILE_UI
-            QPointer<AttachmentEditDialog> dialog(
-                new AttachmentEditDialog(attitem, 0, false));
-#else
             QPointer<AttachmentEditDialog> dialog(
                 new AttachmentEditDialog(attitem, mAttachmentView, false));
-#endif
             dialog->setModal(false);
             connect(dialog.data(), SIGNAL(hidden()), dialog.data(), SLOT(delayedDestruct()));
             dialog->show();

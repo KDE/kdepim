@@ -21,9 +21,7 @@
 #include "schedulingdialog.h"
 #include "conflictresolver.h"
 #include "freebusymodel/freeperiodmodel.h"
-#ifndef KDEPIM_MOBILE_UI
 #include "visualfreebusywidget.h"
-#endif
 #include <KCalUtils/Stringify>
 
 #include <KCalendarSystem>
@@ -59,13 +57,11 @@ SchedulingDialog::SchedulingDialog(const QDate &startDate, const QTime &startTim
     Q_ASSERT(duration > 0);
     mDuration = duration;
 
-#ifndef KDEPIM_MOBILE_UI
     mVisualWidget = new VisualFreeBusyWidget(resolver->model(), 8);
     QVBoxLayout *ganttlayout = new QVBoxLayout(mGanttTab);
 
     mGanttTab->setLayout(ganttlayout);
     ganttlayout->addWidget(mVisualWidget);
-#endif
 
     connect(mStartDate, &KDateComboBox::dateEdited, mResolver, &ConflictResolver::setEarliestDate);
     connect(mStartTime, &KTimeComboBox::timeEdited, mResolver, &ConflictResolver::setEarliestTime);
@@ -103,28 +99,12 @@ SchedulingDialog::~SchedulingDialog()
 void SchedulingDialog::slotUpdateIncidenceStartEnd(const KDateTime &startDateTime,
         const KDateTime &endDateTime)
 {
-#ifdef KDEPIM_MOBILE_UI
-    Q_UNUSED(startDateTime);
-    Q_UNUSED(endDateTime);
-#else
     mVisualWidget->slotUpdateIncidenceStartEnd(startDateTime, endDateTime);
-#endif
 }
 
 void SchedulingDialog::fillCombos()
 {
 // Note: we depend on the following order
-#ifdef KDEPIM_MOBILE_UI
-    mRolesCombo->addItem(DesktopIcon("meeting-participant", 48),
-                         KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::ReqParticipant));
-    mRolesCombo->addItem(DesktopIcon("meeting-participant-optional", 48),
-                         KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::OptParticipant));
-    mRolesCombo->addItem(DesktopIcon("meeting-observer", 48),
-                         KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::NonParticipant));
-    mRolesCombo->addItem(DesktopIcon("meeting-chair", 48),
-                         KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::Chair));
-
-#else
     mRolesCombo->addItem(SmallIcon("meeting-participant"),
                          KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::ReqParticipant));
     mRolesCombo->addItem(SmallIcon("meeting-participant-optional"),
@@ -134,7 +114,6 @@ void SchedulingDialog::fillCombos()
     mRolesCombo->addItem(SmallIcon("meeting-chair"),
                          KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::Chair));
 
-#endif
     mRolesCombo->setWhatsThis(i18nc("@info:whatsthis",
                                     "Edits the role of the attendee."));
 

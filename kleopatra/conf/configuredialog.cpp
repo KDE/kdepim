@@ -54,13 +54,9 @@
 #endif // KLEO_STATIC_KCMODULES
 
 KCM_IMPORT_PLUGIN(kleopatra_config_dirserv)
-#ifndef KDEPIM_MOBILE_UI
 KCM_IMPORT_PLUGIN(kleopatra_config_appear)
-#endif
 #ifdef HAVE_KLEOPATRACLIENT_LIBRARY
-# ifndef KDEPIM_MOBILE_UI
 KCM_IMPORT_PLUGIN(kleopatra_config_cryptooperations)
-# endif
 KCM_IMPORT_PLUGIN(kleopatra_config_smimevalidation)
 #endif
 KCM_IMPORT_PLUGIN(kleopatra_config_gnupgsystem)
@@ -75,13 +71,9 @@ ConfigureDialog::ConfigureDialog(QWidget *parent)
     //QT5 showButton( User1, true );
 
     addMyModule(kleopatra_config_dirserv);
-#ifndef KDEPIM_MOBILE_UI
     addMyModule(kleopatra_config_appear);
-#endif
 #ifdef HAVE_KLEOPATRACLIENT_LIBRARY
-# ifndef KDEPIM_MOBILE_UI
     addMyModule(kleopatra_config_cryptooperations);
-# endif
     addMyModule(kleopatra_config_smimevalidation);
 #endif
     addMyModule(kleopatra_config_gnupgsystem);

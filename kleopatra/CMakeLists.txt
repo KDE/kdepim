@@ -338,12 +338,7 @@ else()
   set(_kleopatra_libkdepim_LIBS kdepim)
 endif()
 
-if(KDEPIM_MOBILE_UI)
-  set(_kleopatra_uiserver_extra_libs ${_kleopatra_uiserver_extra_libs} kdepimmobileui)
-  set(_kleopatra_mainwindow_SRCS mainwindow_mobile.cpp)
-else()
-  set(_kleopatra_mainwindow_SRCS mainwindow_desktop.cpp)
-endif()
+set(_kleopatra_mainwindow_SRCS mainwindow_desktop.cpp)
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-kleopatra.png")
 ecm_add_app_icon(_kleopatra_mainwindow_SRCS ICONS ${ICONS_SRCS})

@@ -71,9 +71,6 @@ class UiServer;
 
 #include <kleo/checksumdefinition.h>
 
-#ifdef KDEPIM_MOBILE_UI
-# include <kdeclarativeapplication.h>
-#endif
 
 #include "kleopatra_debug.h"
 #include <kcmdlineargs.h>
@@ -225,18 +222,11 @@ int main(int argc, char **argv)
 
     KCmdLineArgs::init(argc, argv, &aboutData);
 
-#ifdef KDEPIM_MOBILE_UI
-    KDeclarativeApplicationBase::preApplicationSetup(KleopatraApplication::commandLineOptions());
-#else
     KCmdLineArgs::addCmdLineOptions(KleopatraApplication::commandLineOptions());
-#endif
 
     qCDebug(KLEOPATRA_LOG) << "Statup timing:" << timer.elapsed() << "ms elapsed: Command line args created";
 
     KleopatraApplication app;
-#ifdef KDEPIM_MOBILE_UI
-    KDeclarativeApplicationBase::postApplicationSetup();
-#endif
 
     qCDebug(KLEOPATRA_LOG) << "Startup timing:" << timer.elapsed() << "ms elapsed: Application created";
 

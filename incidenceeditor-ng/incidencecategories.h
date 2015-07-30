@@ -26,7 +26,6 @@
 namespace Ui
 {
 class EventOrTodoDesktop;
-class EventOrTodoMore;
 }
 
 namespace IncidenceEditorNG
@@ -36,11 +35,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
 {
     Q_OBJECT
 public:
-#ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceCategories(Ui::EventOrTodoMore *ui);
-#else
     explicit IncidenceCategories(Ui::EventOrTodoDesktop *ui);
-#endif
 
     void load(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
     void load(const Akonadi::Item &item) Q_DECL_OVERRIDE;
@@ -53,7 +48,6 @@ public:
     QStringList categories() const;
 
     bool isDirty() const Q_DECL_OVERRIDE;
-    /**reimp*/
     void printDebugInfo() const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
@@ -69,11 +63,7 @@ private:
      * */
     void checkForUnknownCategories(const QStringList &categoriesToCheck);
 
-#ifdef KDEPIM_MOBILE_UI
-    Ui::EventOrTodoMore *mUi;
-#else
     Ui::EventOrTodoDesktop *mUi;
-#endif
     Akonadi::Tag::List mSelectedTags;
     bool mDirty;
 };

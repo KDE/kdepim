@@ -26,7 +26,6 @@
 namespace Ui
 {
 class EventOrTodoDesktop;
-class EventOrTodoMore;
 }
 
 namespace IncidenceEditorNG
@@ -40,11 +39,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
 public:
     using IncidenceEditorNG::IncidenceEditor::load;  // So we don't trigger -Woverloaded-virtual
     using IncidenceEditorNG::IncidenceEditor::save;  // So we don't trigger -Woverloaded-virtual
-#ifdef KDEPIM_MOBILE_UI
-    IncidenceAlarm(IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui);
-#else
     IncidenceAlarm(IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui);
-#endif
 
     virtual void load(const KCalCore::Incidence::Ptr &incidence);
     virtual void save(const KCalCore::Incidence::Ptr &incidence);
@@ -67,11 +62,7 @@ private:
     QString stringForAlarm(const KCalCore::Alarm::Ptr &alarm);
 
 private:
-#ifdef KDEPIM_MOBILE_UI
-    Ui::EventOrTodoMore *mUi;
-#else
     Ui::EventOrTodoDesktop *mUi;
-#endif
 
     KCalCore::Alarm::List mAlarms;
     IncidenceDateTime *mDateTime;

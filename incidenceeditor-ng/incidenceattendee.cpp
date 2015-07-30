@@ -33,11 +33,7 @@
 #include "incidencedatetime.h"
 #include "schedulingdialog.h"
 #include "freebusymodel/freebusyitemmodel.h"
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_dialogmoremobile.h"
-#else
 #include "ui_dialogdesktop.h"
-#endif
 
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <Akonadi/Contact/ContactGroupSearchJob>
@@ -55,13 +51,8 @@
 
 using namespace IncidenceEditorNG;
 
-#ifdef KDEPIM_MOBILE_UI
-IncidenceAttendee::IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTime,
-                                     Ui::EventOrTodoMore *ui)
-#else
 IncidenceAttendee::IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTime,
                                      Ui::EventOrTodoDesktop *ui)
-#endif
     : mUi(ui)
     , mParentWidget(parent)
     , mStateDelegate(new AttendeeComboBoxDelegate(this))
@@ -77,21 +68,6 @@ IncidenceAttendee::IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTim
     mDataModel->setKeepEmpty(true);
     mDataModel->setRemoveEmptyLines(true);
 
-#ifdef KDEPIM_MOBILE_UI
-    mRoleDelegate->addItem(DesktopIcon(QStringLiteral("meeting-participant"), 48),
-                           KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::ReqParticipant));
-    mRoleDelegate->addItem(DesktopIcon(QStringLiteral("meeting-participant-optional"), 48),
-                           KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::OptParticipant));
-    mRoleDelegate->addItem(DesktopIcon(QStringLiteral("meeting-observer"), 48),
-                           KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::NonParticipant));
-    mRoleDelegate->addItem(DesktopIcon(QStringLiteral("meeting-chair"), 48),
-                           KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::Chair));
-
-    mResponseDelegate->addItem(DesktopIcon(QStringLiteral("meeting-participant-request-response"), 48),
-                               i18nc("@item:inlistbox", "Request Response"));
-    mResponseDelegate->addItem(DesktopIcon(QStringLiteral("meeting-participant-no-response"), 48),
-                               i18nc("@item:inlistbox", "Request No Response"));
-#else
     mRoleDelegate->addItem(SmallIcon(QStringLiteral("meeting-participant")),
                            KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::ReqParticipant));
     mRoleDelegate->addItem(SmallIcon(QStringLiteral("meeting-participant-optional")),
@@ -105,7 +81,6 @@ IncidenceAttendee::IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTim
                                i18nc("@item:inlistbox", "Request Response"));
     mResponseDelegate->addItem(SmallIcon(QStringLiteral("meeting-participant-no-response")),
                                i18nc("@item:inlistbox", "Request No Response"));
-#endif
 
     mStateDelegate->setWhatsThis(i18nc("@info:whatsthis",
                                        "Edits the current attendance status of the attendee."));
@@ -125,7 +100,6 @@ IncidenceAttendee::IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTim
     filterProxyModel->setDynamicSortFilter(true);
     filterProxyModel->setSourceModel(mDataModel);
 
-#ifndef KDEPIM_MOBILE_UI
     connect(mUi->mGroupSubstitution, &QPushButton::clicked, this, &IncidenceAttendee::slotGroupSubstitutionPressed);
 
     mUi->mAttendeeTable->setModel(filterProxyModel);
@@ -137,7 +111,6 @@ IncidenceAttendee::IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTim
     mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::FullName, attendeeDelegate());
     mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::Status, stateDelegate());
     mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::Response, responseDelegate());
-#endif
 
     mUi->mOrganizerStack->setCurrentIndex(0);
 
@@ -423,9 +396,7 @@ void IncidenceAttendee::groupSearchResult(KJob *job)
 
 void IncidenceAttendee::updateGroupExpand()
 {
-#ifndef KDEPIM_MOBILE_UI
     mUi->mGroupSubstitution->setEnabled(mGroupList.count() > 0);
-#endif
 }
 
 void IncidenceAttendee::slotGroupSubstitutionPressed()
@@ -441,7 +412,6 @@ void IncidenceAttendee::slotGroupSubstitutionPressed()
 
 void IncidenceAttendee::expandResult(KJob *job)
 {
-#ifndef KDEPIM_MOBILE_UI
     Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
     Q_ASSERT(expandJob);
     Q_ASSERT(mExpandGroupJobs.contains(job));
@@ -458,7 +428,6 @@ void IncidenceAttendee::expandResult(KJob *job)
                                       member.uid()));
         dataModel()->insertAttendee(row, newAt);
     }
-#endif
 }
 
 void IncidenceAttendee::slotSelectAddresses()
@@ -534,7 +503,6 @@ void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()
 
 void IncidenceAttendee::slotConflictResolverAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
-#ifndef KDEPIM_MOBILE_UI
     if (AttendeeTableModel::FullName <= bottomRight.column() && AttendeeTableModel::FullName >= topLeft.column()) {
         for (int i = topLeft.row(); i <= bottomRight.row(); ++i) {
             QModelIndex email = dataModel()->index(i, AttendeeTableModel::Email);
@@ -548,7 +516,6 @@ void IncidenceAttendee::slotConflictResolverAttendeeChanged(const QModelIndex &t
         }
     }
     checkDirtyStatus();
-#endif
 }
 
 void IncidenceAttendee::slotConflictResolverAttendeeAdded(const QModelIndex &index, int first, int last)
@@ -748,7 +715,6 @@ void IncidenceAttendee::slotGroupSubstitutionLayoutChanged()
     mExpandGroupJobs.clear();
     mGroupList.clear();
 
-#ifndef KDEPIM_MOBILE_UI
     QAbstractItemModel *model = mUi->mAttendeeTable->model();
     if (!model) {
         return;
@@ -763,7 +729,6 @@ void IncidenceAttendee::slotGroupSubstitutionLayoutChanged()
     }
 
     updateGroupExpand();
-#endif
 }
 
 bool IncidenceAttendee::iAmOrganizer() const
@@ -903,7 +868,6 @@ AttendeeLineEditDelegate *IncidenceAttendee::attendeeDelegate() const
 
 void IncidenceAttendee::filterLayoutChanged()
 {
-#ifndef KDEPIM_MOBILE_UI
     QHeaderView *headerView = mUi->mAttendeeTable->horizontalHeader();
     headerView->setResizeMode(AttendeeTableModel::Role,  QHeaderView::ResizeToContents);
     headerView->setResizeMode(AttendeeTableModel::FullName, QHeaderView::Stretch);
@@ -913,7 +877,6 @@ void IncidenceAttendee::filterLayoutChanged()
     headerView->setSectionHidden(AttendeeTableModel::Name, true);
     headerView->setSectionHidden(AttendeeTableModel::Email, true);
     headerView->setSectionHidden(AttendeeTableModel::Available, true);
-#endif
 }
 
 void IncidenceAttendee::updateCount()
@@ -925,7 +888,6 @@ void IncidenceAttendee::updateCount()
 
 int IncidenceAttendee::attendeeCount() const
 {
-#ifndef KDEPIM_MOBILE_UI
     int c = 0;
     QModelIndex index;
     QAbstractItemModel *model = mUi->mAttendeeTable->model();
@@ -939,26 +901,12 @@ int IncidenceAttendee::attendeeCount() const
         }
     }
     return c;
-#endif
-    return 0;
 }
 
 void IncidenceAttendee::setActions(KCalCore::Incidence::IncidenceType actions)
 {
     mStateDelegate->clear();
     if (actions ==  KCalCore::Incidence::TypeEvent) {
-#ifdef KDEPIM_MOBILE_UI
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-attention"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::NeedsAction));
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-accepted"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::Accepted));
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-reject"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::Declined));
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-attempt"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::Tentative));
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-delegate"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::Delegated));
-#else
         mStateDelegate->addItem(SmallIcon(QStringLiteral("task-attention")),
                                 KCalUtils::Stringify::attendeeStatus(AttendeeData::NeedsAction));
         mStateDelegate->addItem(SmallIcon(QStringLiteral("task-accepted")),
@@ -969,24 +917,7 @@ void IncidenceAttendee::setActions(KCalCore::Incidence::IncidenceType actions)
                                 KCalUtils::Stringify::attendeeStatus(AttendeeData::Tentative));
         mStateDelegate->addItem(SmallIcon(QStringLiteral("task-delegate")),
                                 KCalUtils::Stringify::attendeeStatus(AttendeeData::Delegated));
-#endif
     } else {
-#ifdef KDEPIM_MOBILE_UI
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-attention"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::NeedsAction));
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-accepted"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::Accepted));
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-reject"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::Declined));
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-attempt"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::Tentative));
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-delegate"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::Delegated));
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-complete"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::Completed));
-        mStateDelegate->addItem(DesktopIcon(QStringLiteral("task-ongoing"), 48),
-                                KCalUtils::Stringify::attendeeStatus(AttendeeData::InProcess));
-#else
         mStateDelegate->addItem(SmallIcon(QStringLiteral("task-attention")),
                                 KCalUtils::Stringify::attendeeStatus(AttendeeData::NeedsAction));
         mStateDelegate->addItem(SmallIcon(QStringLiteral("task-accepted")),
@@ -1001,7 +932,6 @@ void IncidenceAttendee::setActions(KCalCore::Incidence::IncidenceType actions)
                                 KCalUtils::Stringify::attendeeStatus(AttendeeData::Completed));
         mStateDelegate->addItem(SmallIcon(QStringLiteral("task-ongoing")),
                                 KCalUtils::Stringify::attendeeStatus(AttendeeData::InProcess));
-#endif
     }
 }
 

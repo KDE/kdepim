@@ -25,7 +25,6 @@
 
 namespace Ui
 {
-class EventOrTodoMore;
 class EventOrTodoDesktop;
 }
 
@@ -45,11 +44,7 @@ public:
     using IncidenceEditorNG::IncidenceEditor::save; // So we don't trigger -Woverloaded-virtual
     using IncidenceEditorNG::IncidenceEditor::load; // So we don't trigger -Woverloaded-virtual    
 
-#ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceDescription(Ui::EventOrTodoMore *ui);
-#else
     explicit IncidenceDescription(Ui::EventOrTodoDesktop *ui);
-#endif
 
     ~IncidenceDescription();
 
@@ -70,11 +65,7 @@ private:
     void setupToolBar();
 
 private:
-#ifdef KDEPIM_MOBILE_UI
-    Ui::EventOrTodoMore *mUi;
-#else
     Ui::EventOrTodoDesktop *mUi;
-#endif
     //@cond PRIVATE
     Q_DECLARE_PRIVATE(IncidenceDescription)
     IncidenceDescriptionPrivate *const d;

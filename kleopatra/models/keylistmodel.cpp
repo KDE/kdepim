@@ -262,13 +262,11 @@ QVariant AbstractKeyListModel::headerData(int section, Qt::Orientation o, int ro
         if (role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole)
             switch (section) {
             case PrettyName:       return i18n("Name");
-#ifndef KDEPIM_MOBILE_UI
             case PrettyEMail:      return i18n("E-Mail");
             case ValidFrom:        return i18n("Valid From");
             case ValidUntil:       return i18n("Valid Until");
             case TechnicalDetails: return i18n("Details");
             case ShortKeyID:       return i18n("Key-ID");
-#endif
             case NumColumns:       ;
             }
     return QVariant();
@@ -304,9 +302,6 @@ QVariant AbstractKeyListModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole || role == Qt::EditRole)
         switch (column) {
         case PrettyName:
-#ifdef KDEPIM_MOBILE_UI
-            return Formatting::formatForComboBox(key);
-#else
             return Formatting::prettyName(key);
         case PrettyEMail:
             if (const char *const fpr = key.primaryFingerprint()) {
@@ -335,17 +330,14 @@ QVariant AbstractKeyListModel::data(const QModelIndex &index, int role) const
             return Formatting::type(key);
         case ShortKeyID:
             return QString::fromLatin1(key.shortKeyID());
-#endif // KDEPIM_MOBILE_UI
         case NumColumns:
             break;
         }
-#ifndef KDEPIM_MOBILE_UI
     else if (role == Qt::ToolTipRole) {
         return Formatting::toolTip(key, toolTipOptions());
     } else if (role == Qt::FontRole) {
         return KeyFilterManager::instance()->font(key, (column == ShortKeyID) ? QFont(QStringLiteral("courier")) : QFont());
     }
-#endif
     else if (role == Qt::DecorationRole) {
         return column == Icon ? returnIfValid(KeyFilterManager::instance()->icon(key)) : QVariant() ;
     } else if (role == Qt::BackgroundRole) {

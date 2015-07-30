@@ -22,12 +22,7 @@
 
 #include "editorconfig.h"
 
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_dialogmoremobile.h"
-#else
 #include "ui_dialogdesktop.h"
-#endif
-
 #include <libkdepim/widgets/tagwidgets.h>
 #include "incidenceeditor_debug.h"
 
@@ -35,21 +30,12 @@
 
 using namespace IncidenceEditorNG;
 
-#ifdef KDEPIM_MOBILE_UI
-IncidenceCategories::IncidenceCategories(Ui::EventOrTodoMore *ui)
-#else
 IncidenceCategories::IncidenceCategories(Ui::EventOrTodoDesktop *ui)
-#endif
     : mUi(ui)
 {
     setObjectName("IncidenceCategories");
 
-#ifdef KDEPIM_MOBILE_UI
-    //TODO: make modile part work again
-    //connect(mUi->mSelectCategoriesButton, SIGNAL(clicked()), SLOT(selectCategories()));
-#else
     connect(mUi->mTagWidget, &Akonadi::TagWidget::selectionChanged, this, &IncidenceCategories::onSelectionChanged);
-#endif
 }
 
 void IncidenceCategories::onSelectionChanged(const Akonadi::Tag::List &list)
@@ -76,9 +62,7 @@ void IncidenceCategories::load(const Akonadi::Item &item)
 {
     mSelectedTags = item.tags();
 
-#ifndef KDEPIM_MOBILE_UI
     mUi->mTagWidget->setSelection(item.tags());
-#endif
 }
 
 void IncidenceCategories::save(const KCalCore::Incidence::Ptr &incidence)

@@ -33,7 +33,6 @@
 namespace Ui
 {
 class EventOrTodoDesktop;
-class EventOrTodoMore;
 }
 
 namespace IncidenceEditorNG
@@ -47,11 +46,7 @@ public:
     using IncidenceEditorNG::IncidenceEditor::save; // So we don't trigger -Woverloaded-virtual
     using IncidenceEditorNG::IncidenceEditor::load; // So we don't trigger -Woverloaded-virtual    
 
-#ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceResource(IncidenceAttendee *mIeAttendee, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui);
-#else
     explicit IncidenceResource(IncidenceAttendee *mIeAttendee, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui);
-#endif
 
     void load(const KCalCore::Incidence::Ptr &incidence);
     void save(const KCalCore::Incidence::Ptr &incidence);
@@ -76,11 +71,7 @@ private Q_SLOTS:
 
     void dialogOkPressed();
 private:
-#ifdef KDEPIM_MOBILE_UI
-    Ui::EventOrTodoMore *mUi;
-#else
     Ui::EventOrTodoDesktop *mUi;
-#endif
 
     /** completer for findResources */
     QCompleter *completer;

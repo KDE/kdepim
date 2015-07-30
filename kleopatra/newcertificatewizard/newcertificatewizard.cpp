@@ -797,15 +797,9 @@ public:
         ui.makeBackupPB             ->setVisible(pgp());
         ui.createRevocationRequestPB->setVisible(pgp() && false);    // not implemented
 
-#ifdef KDEPIM_MOBILE_UI
-        ui.sendCertificateByEMailPB ->setVisible(false);
-        ui.sendRequestByEMailPB     ->setVisible(false);
-        ui.uploadToKeyserverPB      ->setVisible(false);
-#else
         ui.sendCertificateByEMailPB ->setVisible(pgp());
         ui.sendRequestByEMailPB     ->setVisible(!pgp());
         ui.uploadToKeyserverPB      ->setVisible(pgp());
-#endif
 
         if (!error && !pgp()) {
             if (signingAllowed() && !encryptionAllowed()) {

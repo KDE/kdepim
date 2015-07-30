@@ -26,7 +26,6 @@
 namespace Ui
 {
 class EventOrTodoDesktop;
-class EventOrTodoMore;
 }
 
 namespace IncidenceEditorNG
@@ -39,22 +38,14 @@ public:
     using IncidenceEditorNG::IncidenceEditor::save; // So we don't trigger -Woverloaded-virtual
     using IncidenceEditorNG::IncidenceEditor::load; // So we don't trigger -Woverloaded-virtual    
 
-#ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceSecrecy(Ui::EventOrTodoMore *ui);
-#else
     explicit IncidenceSecrecy(Ui::EventOrTodoDesktop *ui);
-#endif
 
     virtual void load(const KCalCore::Incidence::Ptr &incidence);
     virtual void save(const KCalCore::Incidence::Ptr &incidence);
     virtual bool isDirty() const;
 
 private:
-#ifdef KDEPIM_MOBILE_UI
-    Ui::EventOrTodoMore *mUi;
-#else
     Ui::EventOrTodoDesktop *mUi;
-#endif
 };
 
 }

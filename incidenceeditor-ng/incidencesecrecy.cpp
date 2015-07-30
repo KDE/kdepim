@@ -19,21 +19,13 @@
 */
 
 #include "incidencesecrecy.h"
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_dialogmoremobile.h"
-#else
 #include "ui_dialogdesktop.h"
-#endif
 
 #include <KCalUtils/Stringify>
 
 using namespace IncidenceEditorNG;
 
-#ifdef KDEPIM_MOBILE_UI
-IncidenceSecrecy::IncidenceSecrecy(Ui::EventOrTodoMore *ui)
-#else
 IncidenceSecrecy::IncidenceSecrecy(Ui::EventOrTodoDesktop *ui)
-#endif
     : mUi(ui)
 {
     setObjectName("IncidenceSecrecy");

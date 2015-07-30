@@ -27,7 +27,6 @@ class KJob;
 namespace Ui
 {
 class EventOrTodoDesktop;
-class EventOrTodoMore;
 }
 
 class QMenu;
@@ -47,11 +46,7 @@ public:
     using IncidenceEditorNG::IncidenceEditor::save; // So we don't trigger -Woverloaded-virtual
     using IncidenceEditorNG::IncidenceEditor::load; // So we don't trigger -Woverloaded-virtual
 
-#ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceAttachment(Ui::EventOrTodoMore *ui);
-#else
     explicit IncidenceAttachment(Ui::EventOrTodoDesktop *ui);
-#endif
 
     ~IncidenceAttachment();
 
@@ -96,11 +91,7 @@ private:
 
 private:
     AttachmentIconView *mAttachmentView;
-#ifdef KDEPIM_MOBILE_UI
-    Ui::EventOrTodoMore *mUi;
-#else
     Ui::EventOrTodoDesktop *mUi;
-#endif
 
     QMenu *mPopupMenu;
     QAction *mOpenAction;

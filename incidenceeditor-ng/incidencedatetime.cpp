@@ -19,18 +19,7 @@
 */
 
 #include "incidencedatetime.h"
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_dialogmobile.h"
-#include "ui_dialogmoremobile.h"
-#else
 #include "ui_dialogdesktop.h"
-#endif
-//#ifdef KDEPIM_MOBILE_UI
-//#include "ui_iedatetimemobile.h"
-//#else
-//#include "../editoralarms.h"
-//#include "ui_incidencedatetime.h"
-//#endif
 
 #include <calendarsupport/kcalprefs.h>
 
@@ -86,28 +75,9 @@ IncidenceDateTime::IncidenceDateTime(Ui::EventOrTodoDesktop *ui)
     setTimeZonesVisibility(false);
     setObjectName("IncidenceDateTime");
 
-#ifdef KDEPIM_MOBILE_UI
-    Q_UNUSED(mTimezoneCombosWereVisibile);
-    mUi->mTimeZoneComboStart->setVisible(false);
-    mUi->mTimeZoneComboEnd->setVisible(false);
-
-    // We don't want to see the combobox list / calendar in the mobile version
-    mUi->mStartDateEdit->setOptions(mUi->mStartDateEdit->options() & ~KDateComboBox::EditDate);
-    mUi->mEndDateEdit->setOptions(mUi->mEndDateEdit->options() & ~KDateComboBox::EditDate);
-    mUi->mStartTimeEdit->clear();
-    mUi->mEndTimeEdit->clear();
-
-    // This event filter is not needed in the desktop version
-    mUi->mStartDateEdit->installEventFilter(this);
-    mUi->mEndDateEdit->installEventFilter(this);
-    mUi->mStartTimeEdit->installEventFilter(this);
-    mUi->mEndTimeEdit->installEventFilter(this);
-#endif
-#ifndef KDEPIM_MOBILE_UI
     mUi->mTimeZoneLabel->setVisible(!mUi->mWholeDayCheck->isChecked());
     connect(mUi->mTimeZoneLabel, &QLabel::linkActivated, this, &IncidenceDateTime::toggleTimeZoneVisibility);
     mUi->mTimeZoneLabel->setContextMenuPolicy(Qt::NoContextMenu);
-#endif
 
     QList<QLineEdit *> lineEdits;
     lineEdits << mUi->mStartDateEdit->lineEdit() << mUi->mEndDateEdit->lineEdit()
@@ -264,7 +234,6 @@ QTime IncidenceDateTime::endTime() const
 
 void IncidenceDateTime::setTimeZonesVisibility(bool visible)
 {
-#ifndef KDEPIM_MOBILE_UI
     static const QString tz(i18nc("@action show or hide the time zone widgets", "Time zones"));
     QString placeholder("<a href=\"hide\"><font color='blue'>&lt;&lt; %1</font></a>");
     if (visible) {
@@ -274,7 +243,6 @@ void IncidenceDateTime::setTimeZonesVisibility(bool visible)
         placeholder = placeholder.arg(tz);
     }
     mUi->mTimeZoneLabel->setText(placeholder);
-#endif
 
     mUi->mTimeZoneComboStart->setVisible(visible);
     mUi->mTimeZoneComboEnd->setVisible(visible && type() != KCalCore::Incidence::TypeJournal);
@@ -450,7 +418,6 @@ void IncidenceDateTime::enableTimeEdits()
         mUi->mEndTimeEdit->setTime(QTime(1, 0));
     }
 
-#ifndef KDEPIM_MOBILE_UI
     const bool currentlyVisible = mUi->mTimeZoneLabel->text().contains("&lt;&lt;");
     setTimeZonesVisibility(!wholeDayChecked && mTimezoneCombosWereVisibile);
     mTimezoneCombosWereVisibile = currentlyVisible;
@@ -458,7 +425,6 @@ void IncidenceDateTime::enableTimeEdits()
         setTimeZonesVisibility(true);
         mTimezoneCombosWereVisibile = true;
     }
-#endif
 }
 
 bool IncidenceDateTime::isDirty(const KCalCore::Todo::Ptr &todo) const
@@ -991,10 +957,6 @@ void IncidenceDateTime::printDebugInfo() const
 
 void IncidenceDateTime::setTimeZoneLabelEnabled(bool enable)
 {
-#ifndef KDEPIM_MOBILE_UI
     mUi->mTimeZoneLabel->setVisible(enable);
-#else
-    Q_UNUSED(enable);
-#endif
 }
 

@@ -19,12 +19,7 @@
 */
 
 #include "incidencecompletionpriority.h"
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_dialogmobile.h"
-#include "ui_dialogmoremobile.h"
-#else
 #include "ui_dialogdesktop.h"
-#endif
 
 #include <KCalCore/Todo>
 
@@ -70,9 +65,7 @@ IncidenceCompletionPriority::IncidenceCompletionPriority(Ui::EventOrTodoDesktop 
     d->mUi->mTaskLabel->hide();
     const QFontMetrics metrics(d->mUi->mCompletedLabel->font());
     d->mUi->mCompletedLabel->setMinimumWidth(metrics.width(QStringLiteral("100%")));
-#ifndef KDEPIM_MOBILE_UI
     d->mUi->mTaskSeparator->hide();
-#endif
 
     connect(d->mUi->mCompletionSlider, SIGNAL(valueChanged(int)), SLOT(sliderValueChanged(int)));
     connect(d->mUi->mPriorityCombo, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidenceCompletionPriority::checkDirtyStatus);
@@ -97,9 +90,7 @@ void IncidenceCompletionPriority::load(const KCalCore::Incidence::Ptr &incidence
 
     d->mUi->mCompletionPriorityWidget->show();
     d->mUi->mTaskLabel->show();
-#ifndef KDEPIM_MOBILE_UI
     d->mUi->mTaskSeparator->show();
-#endif
 
     d->mOrigPercentCompleted = todo->percentComplete();
     d->mUi->mCompletionSlider->blockSignals(true);

@@ -27,11 +27,7 @@
 #include "attendeelineeditdelegate.h"
 #include "incidencedatetime.h"
 
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_dialogmoremobile.h"
-#else
 #include "ui_dialogdesktop.h"
-#endif
 
 #include <KDescendantsProxyModel>
 #include <KEmailAddress>
@@ -65,11 +61,7 @@ public:
     }
 };
 
-#ifdef KDEPIM_MOBILE_UI
-IncidenceResource::IncidenceResource(IncidenceAttendee *ieAttendee, IncidenceDateTime *dateTime, Ui::EventOrTodoMore *ui)
-#else
 IncidenceResource::IncidenceResource(IncidenceAttendee *ieAttendee, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui)
-#endif
     : IncidenceEditor(0)
     , mUi(ui)
     , dataModel(ieAttendee->dataModel())
@@ -82,7 +74,6 @@ IncidenceResource::IncidenceResource(IncidenceAttendee *ieAttendee, IncidenceDat
     connect(mDateTime, &IncidenceDateTime::startDateChanged, this, &IncidenceResource::slotDateChanged);
     connect(mDateTime, &IncidenceDateTime::endDateChanged, this, &IncidenceResource::slotDateChanged);
 
-#ifndef KDEPIM_MOBILE_UI
     QStringList attrs;
     attrs << QStringLiteral("cn") <<  QStringLiteral("mail");
 
@@ -120,7 +111,6 @@ IncidenceResource::IncidenceResource(IncidenceAttendee *ieAttendee, IncidenceDat
     connect(filterProxyModel, &ResourceFilterProxyModel::rowsRemoved, this, &IncidenceResource::updateCount);
     // only update when FullName is changed
     connect(filterProxyModel, &ResourceFilterProxyModel::dataChanged, this, &IncidenceResource::updateCount);
-#endif
 }
 
 void IncidenceResource::load(const KCalCore::Incidence::Ptr &incidence)
@@ -146,7 +136,6 @@ bool IncidenceResource::isDirty() const
 
 void IncidenceResource::bookResource()
 {
-#ifndef KDEPIM_MOBILE_UI
     if (mUi->mNewResource->text().trimmed().isEmpty()) {
         return;
     }
@@ -155,7 +144,6 @@ void IncidenceResource::bookResource()
     KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(name, email));
     attendee->setCuType(KCalCore::Attendee::Resource);
     dataModel->insertAttendee(dataModel->rowCount(), attendee);
-#endif
 }
 
 void IncidenceResource::findResources()
@@ -167,19 +155,16 @@ void IncidenceResource::dialogOkPressed()
 {
     ResourceItem::Ptr item = resourceDialog->selectedItem();
     if (item) {
-#ifndef KDEPIM_MOBILE_UI
         const QString name = item->ldapObject().value(QStringLiteral("cn"));
         const QString email = item->ldapObject().value(QStringLiteral("mail"));
         KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(name, email));
         attendee->setCuType(KCalCore::Attendee::Resource);
         dataModel->insertAttendee(dataModel->rowCount(), attendee);
-#endif
     }
 }
 
 void IncidenceResource::layoutChanged()
 {
-#ifndef KDEPIM_MOBILE_UI
     QHeaderView *headerView = mUi->mResourcesTable->horizontalHeader();
     headerView->setSectionHidden(AttendeeTableModel::CuType, true);
     headerView->setSectionHidden(AttendeeTableModel::Name, true);
@@ -189,7 +174,6 @@ void IncidenceResource::layoutChanged()
     headerView->setResizeMode(AttendeeTableModel::Available,  QHeaderView::ResizeToContents);
     headerView->setResizeMode(AttendeeTableModel::Status,  QHeaderView::ResizeToContents);
     headerView->setResizeMode(AttendeeTableModel::Response,  QHeaderView::ResizeToContents);
-#endif
 }
 
 void IncidenceResource::updateCount()
@@ -199,7 +183,6 @@ void IncidenceResource::updateCount()
 
 int IncidenceResource::resourceCount() const
 {
-#ifndef KDEPIM_MOBILE_UI
     int c = 0;
     QModelIndex index;
     QAbstractItemModel *model = mUi->mResourcesTable->model();
@@ -215,7 +198,5 @@ int IncidenceResource::resourceCount() const
     }
     return c;
 
-#endif
-    return 0;
 }
 

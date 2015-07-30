@@ -414,7 +414,6 @@ void Kleo::KeySelectionDialog::init(bool rememberChoice, bool extendedSelection,
     mTopLayout->setMargin(0);
 
     if (!text.isEmpty()) {
-#ifndef KDEPIM_MOBILE_UI
         QLabel *textLabel = new QLabel(text, page);
         textLabel->setWordWrap(true);
 
@@ -423,10 +422,8 @@ void Kleo::KeySelectionDialog::init(bool rememberChoice, bool extendedSelection,
         textLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
         connect(textLabel, SIGNAL(linkActivated(QString)), SLOT(slotStartCertificateManager(QString)));
         mTopLayout->addWidget(textLabel);
-#endif
     }
 
-#ifndef KDEPIM_MOBILE_UI
     QPushButton *const searchExternalPB =
         new QPushButton(i18n("Search for &External Certificates"), page);
     mTopLayout->addWidget(searchExternalPB, 0, Qt::AlignLeft);
@@ -435,7 +432,6 @@ void Kleo::KeySelectionDialog::init(bool rememberChoice, bool extendedSelection,
     if (initialQuery.isEmpty()) {
         searchExternalPB->hide();
     }
-#endif
 
     QHBoxLayout *hlay = new QHBoxLayout();
     mTopLayout->addLayout(hlay);
@@ -468,14 +464,12 @@ void Kleo::KeySelectionDialog::init(bool rememberChoice, bool extendedSelection,
     mTopLayout->addWidget(mKeyListView, 10);
 
     if (rememberChoice) {
-#ifndef KDEPIM_MOBILE_UI
         mRememberCB = new QCheckBox(i18n("&Remember choice"), page);
         mTopLayout->addWidget(mRememberCB);
         mRememberCB->setWhatsThis(
             i18n("<qt><p>If you check this box your choice will "
                  "be stored and you will not be asked again."
                  "</p></qt>"));
-#endif
     }
 
     connect(mCheckSelectionTimer, SIGNAL(timeout()),

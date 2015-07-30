@@ -19,11 +19,7 @@
 */
 
 #include "incidencedescription.h"
-#ifdef KDEPIM_MOBILE_UI
-#include "ui_dialogmoremobile.h"
-#else
 #include "ui_dialogdesktop.h"
-#endif
 
 #include "incidenceeditor_debug.h"
 #include <KActionCollection>
@@ -48,11 +44,7 @@ public:
 
 }
 
-#ifdef KDEPIM_MOBILE_UI
-IncidenceDescription::IncidenceDescription(Ui::EventOrTodoMore *ui)
-#else
 IncidenceDescription::IncidenceDescription(Ui::EventOrTodoDesktop *ui)
-#endif
     : IncidenceEditor(0), mUi(ui), d(new IncidenceDescriptionPrivate())
 {
     setObjectName("IncidenceDescription");
@@ -65,12 +57,8 @@ IncidenceDescription::IncidenceDescription(Ui::EventOrTodoDesktop *ui)
             KRichTextWidget::SupportAlignment |
             KRichTextWidget::SupportFormatPainting);
     mUi->mRichTextLabel->setContextMenuPolicy(Qt::NoContextMenu);
-#ifdef KDEPIM_MOBILE_UI
-    mUi->mRichTextLabel->hide();
-#else
     setupToolBar();
     connect(mUi->mRichTextLabel, &QLabel::linkActivated, this, &IncidenceDescription::toggleRichTextDescription);
-#endif
     connect(mUi->mDescriptionEdit, &KRichTextWidget::textChanged, this, &IncidenceDescription::checkDirtyStatus);
 }
 

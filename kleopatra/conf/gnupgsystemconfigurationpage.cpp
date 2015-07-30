@@ -51,11 +51,7 @@ GnuPGSystemConfigurationPage::GnuPGSystemConfigurationPage(QWidget *parent, cons
     CryptoConfig *const config = CryptoBackendFactory::instance()->config();
 
     mWidget = new CryptoConfigModule(config,
-#ifdef KDEPIM_MOBILE_UI
-                                     CryptoConfigModule::LinearizedLayout,
-#else
                                      CryptoConfigModule::TabbedLayout,
-#endif
                                      this);
     lay->addWidget(mWidget);
 
