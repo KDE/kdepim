@@ -119,14 +119,6 @@ void KAddressBookPlugin::slotNewContactGroup()
     QMetaObject::invokeMethod(part, "newGroup");
 }
 
-QString KAddressBookPlugin::tipFile() const
-{
-    // TODO: tips file
-    //QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kaddressbook/tips");
-    QString file;
-    return file;
-}
-
 KParts::ReadOnlyPart *KAddressBookPlugin::createPart()
 {
     KParts::ReadOnlyPart *part = loadPart();

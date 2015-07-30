@@ -45,7 +45,6 @@ public:
     KAddressBookPlugin(KontactInterface::Core *core, const QVariantList &);
     ~KAddressBookPlugin();
 
-    QString tipFile() const Q_DECL_OVERRIDE;
     bool isRunningStandalone() const Q_DECL_OVERRIDE;
     int weight() const Q_DECL_OVERRIDE
     {
