@@ -35,6 +35,8 @@ RichTextComposerTest::~RichTextComposerTest()
 void RichTextComposerTest::shouldHaveDefaultValue()
 {
     MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
     QVERIFY(!composer.autocorrection());
     QCOMPARE(composer.linePosition(), 0);
     QCOMPARE(composer.columnNumber(), 0);
