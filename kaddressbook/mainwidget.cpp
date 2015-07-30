@@ -728,9 +728,9 @@ void MainWidget::setupActions(KActionCollection *collection)
     collection->addAction(QStringLiteral("serverside_subscription"), mServerSideSubscription);
     connect(mServerSideSubscription, &QAction::triggered, this, &MainWidget::slotServerSideSubscription);
 
-    action = collection->addAction(QStringLiteral("gravatar"));
-    action->setText(i18n("Check gravatar..."));
-    connect(action, &QAction::triggered, this, &MainWidget::slotCheckGravatar);
+    mSearchGravatarAction = collection->addAction(QStringLiteral("search_gravatar"));
+    mSearchGravatarAction->setText(i18n("Check gravatar..."));
+    connect(mSearchGravatarAction, &QAction::triggered, this, &MainWidget::slotCheckGravatar);
 }
 
 void MainWidget::printPreview()
@@ -1131,6 +1131,7 @@ void MainWidget::slotCheckGravatar()
         Akonadi::Item item = lst.first();
         if (item.hasPayload<KContacts::Addressee>()) {
             QPointer<KABGravatar::GravatarUpdateDialog> dlg = new KABGravatar::GravatarUpdateDialog(this);
+            //dlg->setEmail();
             if (dlg->exec()) {
                 //extract emails.
             }

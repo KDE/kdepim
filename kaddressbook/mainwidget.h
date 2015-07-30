@@ -167,6 +167,7 @@ private:
     Akonadi::EntityTreeModel *entityTreeModel() const;
     QAction *mQuickSearchAction;
     QAction *mServerSideSubscription;
+    QAction *mSearchGravatarAction;
 };
 
 #endif
