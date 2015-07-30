@@ -67,6 +67,7 @@ void SieveEditorMenuBar::initActions()
     connect(mUncommentCodeAction, &QAction::triggered, this, &SieveEditorMenuBar::uncomment);
 
     mDebugSieveAction = new QAction(i18n("Debug Sieve Script..."), this);
+    mDebugSieveAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
     connect(mDebugSieveAction, &QAction::triggered, this, &SieveEditorMenuBar::debugSieveScript);
 
     mFindAction = KStandardAction::find(this, SIGNAL(find()), this);
