@@ -32,8 +32,8 @@ class Dialog : public KAssistantDialog
 public:
     explicit Dialog(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = 0);
 
-    /* reimpl */ void next() Q_DECL_OVERRIDE;
-    /* reimpl */ void back() Q_DECL_OVERRIDE;
+    void next() Q_DECL_OVERRIDE;
+    void back() Q_DECL_OVERRIDE;
 
     // give room for certain pages to create objects too.
     SetupManager *setupManager();

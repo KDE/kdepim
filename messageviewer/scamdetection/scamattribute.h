@@ -29,7 +29,6 @@ public:
     explicit ScamAttribute();
     ~ScamAttribute();
 
-    /* reimpl */
     ScamAttribute *clone() const Q_DECL_OVERRIDE;
     QByteArray type() const Q_DECL_OVERRIDE;
     QByteArray serialized() const Q_DECL_OVERRIDE;

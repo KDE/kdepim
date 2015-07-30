@@ -97,7 +97,6 @@ protected Q_SLOTS:
     */
     virtual void process() = 0;
 
-    /* reimpl */
     void slotResult(KJob *job) Q_DECL_OVERRIDE;
 
 private:

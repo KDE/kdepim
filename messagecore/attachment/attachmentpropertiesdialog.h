@@ -94,7 +94,6 @@ public:
     bool isSignEnabled() const;
 
 public Q_SLOTS:
-    /* reimpl */
     void accept() Q_DECL_OVERRIDE;
     void slotHelp();
 

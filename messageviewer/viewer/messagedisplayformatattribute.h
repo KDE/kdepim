@@ -34,7 +34,6 @@ public:
     explicit MessageDisplayFormatAttribute();
     ~MessageDisplayFormatAttribute();
 
-    /* reimpl */
     MessageDisplayFormatAttribute *clone() const Q_DECL_OVERRIDE;
     QByteArray type() const Q_DECL_OVERRIDE;
     QByteArray serialized() const Q_DECL_OVERRIDE;
