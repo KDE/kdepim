@@ -86,7 +86,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
               "associated with this calendar."));
     hbox->addWidget(mBlockAlarmsCheckBox);
 
-#ifndef KDEPIM_MOBILE_UI
     hbox = new QHBoxLayout();
     topLayout->addItem(hbox);
     mIconCheckBox = new QCheckBox(i18nc("@option:check", "&Use custom icon:"), this);
@@ -100,7 +99,6 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
     hbox->addWidget(mIconCheckBox);
     hbox->addWidget(mIconButton);
     hbox->addStretch();
-#endif
 
     if ((collection.parentCollection() != Akonadi::Collection::root()) && PimCommon::Util::isImapResource(collection.resource())) {
         const MailCommon::CollectionAnnotationsAttribute *annotationAttribute =
@@ -143,7 +141,6 @@ void CollectionGeneralPage::load(const Akonadi::Collection &collection)
         iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
     }
 
-#ifndef KDEPIM_MOBILE_UI
     if (iconName.isEmpty()) {
         const QStringList mimeTypes = collection.contentMimeTypes();
         if (collection.contentMimeTypes().count() > 1 ||
@@ -162,7 +159,6 @@ void CollectionGeneralPage::load(const Akonadi::Collection &collection)
         mIconButton->setIcon(iconName);
     }
     mIconCheckBox->setChecked(!iconName.isEmpty());
-#endif
 }
 
 void CollectionGeneralPage::save(Collection &collection)
@@ -177,14 +173,12 @@ void CollectionGeneralPage::save(Collection &collection)
     BlockAlarmsAttribute *attr = collection.attribute<BlockAlarmsAttribute>(Collection::AddIfMissing);
     attr->blockEverything(mBlockAlarmsCheckBox->isChecked());
 
-#ifndef KDEPIM_MOBILE_UI
     if (mIconCheckBox->isChecked()) {
         collection.attribute<EntityDisplayAttribute>(Collection::AddIfMissing)->
         setIconName(mIconButton->icon());
     } else if (collection.hasAttribute<EntityDisplayAttribute>()) {
         collection.attribute<EntityDisplayAttribute>()->setIconName(QString());
     }
-#endif
     MailCommon::CollectionAnnotationsAttribute *annotationsAttribute =
         collection.attribute<MailCommon::CollectionAnnotationsAttribute>(Entity::AddIfMissing);
 

@@ -41,13 +41,8 @@ public:
     {
         setupUi(this);
 
-#ifdef KDEPIM_MOBILE_UI
-        mButtonClear->setVisible(false);
-        mButtonEdit->setVisible(false);
-#else
         mButtonClear->setIcon(QIcon::fromTheme("edit-clear-locationbar-rtl"));
         mButtonEdit->setIcon(QIcon::fromTheme("document-properties"));
-#endif
     }
 };
 
@@ -176,13 +171,7 @@ CategorySelectDialog::CategorySelectDialog(CategoryConfig *cc, QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     QDialogButtonBox *buttonBox = 0;
-#ifdef KDEPIM_MOBILE_UI
-    // HACK: This is for maemo, which hides the button if there is only a cancel
-    //       button.
-    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
-#else
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel /*| QDialogButtonBox::Help*/ | QDialogButtonBox::Apply);
-#endif
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);

@@ -68,9 +68,7 @@ CategoryEditDialog::CategoryEditDialog(CategoryConfig *categoryConfig,
     mWidgets->mButtonRemove->setEnabled(false);
     mWidgets->mButtonRemove->setIcon(QIcon::fromTheme("list-remove"));
 
-#ifndef KDEPIM_MOBILE_UI
     mWidgets->mCategories->setDragDropMode(QAbstractItemView::InternalMove);
-#endif
 
     // unfortunately, kde-core-devel will not allow this code in QDialog
     // because these button's functionality cannot be easily generalized.

@@ -803,18 +803,12 @@ void ViewerPrivate::displaySplashPage(const QString &info)
     mMsgDisplay = false;
     adjustLayout();
 
-#ifdef KDEPIM_MOBILE_UI
-    const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("messageviewer/about/main_mobile.html"));
-    const QString stylesheet = QLatin1String("");
-    const QString rtlStylesheet = QLatin1String("");
-#else
     const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kmail2/about/main.html"));  //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
     const QString stylesheet = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/kf5/infopage/kde_infopage.css"));
     QString rtlStylesheet;
     if (QApplication::isRightToLeft()) {
         rtlStylesheet = QLatin1String("@import \"") + QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/kf5/infopage/kde_infopage_rtl.css")) +  QLatin1String("\";");
     }
-#endif
     QFile f(location);
     if (!f.open(QIODevice::ReadOnly)) {
         qCWarning(MESSAGEVIEWER_LOG) << "Failed to read splash page: " << f.errorString();
@@ -1552,21 +1546,12 @@ void ViewerPrivate::createWidgets()
     QHBoxLayout *mBoxHBoxLayout = new QHBoxLayout(mBox);
     mBoxHBoxLayout->setMargin(0);
 
-#ifndef KDEPIM_MOBILE_UI
     mColorBar = new HtmlStatusBar(mBox);
     mBoxHBoxLayout->addWidget(mColorBar);
     QWidget *readerBox = new QWidget(mBox);
     QVBoxLayout *readerBoxVBoxLayout = new QVBoxLayout(readerBox);
     readerBoxVBoxLayout->setMargin(0);
     mBoxHBoxLayout->addWidget(readerBox);
-#else // for mobile ui we position the HTML status bar on the right side
-    QWidget *readerBox = new QWidget(mBox);
-    readerBoxVBoxLayout = new QVBoxLayout(readerBox);
-    readerBoxVBoxLayout->setMargin(0);
-    mBoxHBoxLayout->addWidget(readerBox);
-    mColorBar = new HtmlStatusBar(mBox);
-    mBoxHBoxLayout->addWidget(mColorBar);
-#endif
 
     mColorBar->setObjectName(QStringLiteral("mColorBar"));
     mColorBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);

@@ -33,7 +33,6 @@ void GroupwareUiDelegate::requestIncidenceEditor(const Akonadi::Item &item)
 // The GroupwareUiDelegate interface should be a QObject. Right now we have no way of emitting a
 // finished signal, so we have to use dialog->exec();
 
-#ifndef KDEPIM_MOBILE_UI
     const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
     if (!incidence) {
         qCWarning(INCIDENCEEDITOR_LOG) << "Incidence is null, won't open the editor";
@@ -52,9 +51,6 @@ void GroupwareUiDelegate::requestIncidenceEditor(const Akonadi::Item &item)
         KCalCore::IncidenceBase::Ptr newIncidence = newItem.payload<KCalCore::Incidence::Ptr>();
         *incidence.staticCast<KCalCore::IncidenceBase>() = *newIncidence;
     }
-#else
-    Q_UNUSED(item);
-#endif
 }
 
 void GroupwareUiDelegate::setCalendar(const Akonadi::ETMCalendar::Ptr &calendar)

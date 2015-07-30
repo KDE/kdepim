@@ -56,9 +56,6 @@ TimeLabels::TimeLabels(const KDateTime::Spec &spec, int rows,
     mMousePos->setLineWidth(1);
     mMousePos->setFrameStyle(QFrame::HLine | QFrame::Plain);
     mMousePos->setFixedSize(width(), 1);
-#ifdef KDEPIM_MOBILE_UI
-    mMousePos->hide();
-#endif
     colorMousePos();
     mAgenda = Q_NULLPTR;
 
@@ -84,9 +81,7 @@ void TimeLabels::mousePosChanged(const QPoint &pos)
 void TimeLabels::showMousePos()
 {
     // touch screen have no mouse position
-#ifndef KDEPIM_MOBILE_UI
     mMousePos->show();
-#endif
 }
 
 void TimeLabels::hideMousePos()

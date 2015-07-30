@@ -460,11 +460,7 @@ void AlarmDialog::edit()
         return;
     }
 
-#if !defined(KDEPIM_MOBILE_UI)
     openIncidenceEditorNG(selection.first()->mIncidence);
-#else
-    openIncidenceEditorThroughKOrganizer(incidence);
-#endif
 }
 
 void AlarmDialog::suspend()

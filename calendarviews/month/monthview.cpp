@@ -109,7 +109,6 @@ void MonthViewPrivate::moveStartDate(int weeks, int months)
     start = start.addMonths(months);
     end = end.addMonths(months);
 
-#ifndef KDEPIM_MOBILE_UI
     KCalCore::DateList dateList;
     QDate d = start.date();
     const QDate e = end.date();
@@ -127,12 +126,6 @@ void MonthViewPrivate::moveStartDate(int weeks, int months)
      * #250256
      * */
     Q_EMIT q->datesSelected(dateList);
-#else
-    // korg-mobile doesn't use korg's date navigator.
-    // Before creating a solution with no #ifndef, we must first extract the remaining views from
-    // korg, and review the API.
-    q->setDateRange(start, end);
-#endif
 }
 
 void MonthViewPrivate::triggerDelayedReload(EventView::Change reason)

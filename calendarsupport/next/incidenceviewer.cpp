@@ -43,9 +43,7 @@ using namespace CalendarSupport;
 TextBrowser::TextBrowser(QWidget *parent)
     : QTextBrowser(parent)
 {
-#ifdef KDEPIM_MOBILE_UI
     setFrameStyle(QFrame::NoFrame);
-#endif
 }
 
 void TextBrowser::setSource(const QUrl &name)

@@ -78,7 +78,6 @@ set(QT_REQUIRED_VERSION "5.4.0")
 set(KF5_VERSION "5.12.0")
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
-option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 option(KDEPIM_NO_TEXTTOSPEECH "Do not use TextToSpeech in the kdepim applications" FALSE)
@@ -194,9 +193,6 @@ endif()
 
 ############### Desktop vs. Mobile options ##############
 
-if(KDEPIM_MOBILE_UI)
-  add_definitions( -DKDEPIM_MOBILE_UI )
-endif()
 add_definitions(-DQT_USE_QSTRINGBUILDER)
 
 

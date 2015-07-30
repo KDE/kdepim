@@ -239,13 +239,7 @@ CategoryDialog::CategoryDialog(CategoryConfig *cc, QWidget *parent)
     setLayout(mainLayout);
     QDialogButtonBox *buttonBox = 0;
 
-#ifdef KDEPIM_MOBILE_UI
-    // HACK: This is for maemo, which hides the button if there is only a cancel
-    //       button.
-    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
-#else
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel /*| QDialogButtonBox::Help*/ | QDialogButtonBox::Apply);
-#endif
 
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);

@@ -76,7 +76,6 @@ ArchiveDialog::ArchiveDialog(const Akonadi::ETMCalendar::Ptr &cal,
     mainLayout->addWidget(buttonBox);
 
     QVBoxLayout *topLayout = new QVBoxLayout(topFrame);
-#ifndef KDEPIM_MOBILE_UI
     QLabel *descLabel = new QLabel(topFrame);
     descLabel->setText(
         xi18nc("@info:whatsthis",
@@ -97,7 +96,6 @@ ArchiveDialog::ArchiveDialog(const Akonadi::ETMCalendar::Ptr &cal,
     descLabel->setContextMenuPolicy(Qt::NoContextMenu);
     topLayout->addWidget(descLabel);
     connect(descLabel, &QLabel::linkActivated, this, &ArchiveDialog::showWhatsThis);
-#endif
 
     QButtonGroup *radioBG = new QButtonGroup(this);
     connect(radioBG, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &ArchiveDialog::slotActionChanged);
@@ -204,7 +202,6 @@ ArchiveDialog::ArchiveDialog(const Akonadi::ETMCalendar::Ptr &cal,
     fileLayout->addWidget(mArchiveFile);
     topLayout->addLayout(fileLayout);
 
-#ifndef KDEPIM_MOBILE_UI
     QGroupBox *typeBox = new QGroupBox(i18nc("@title:group", "Type of Items to Archive"));
     typeBox->setWhatsThis(
         i18nc("@info:whatsthis",
@@ -215,10 +212,6 @@ ArchiveDialog::ArchiveDialog(const Akonadi::ETMCalendar::Ptr &cal,
 
     topLayout->addWidget(typeBox);
     QBoxLayout *typeLayout = new QVBoxLayout(typeBox);
-#else
-    QBoxLayout *typeLayout = new QHBoxLayout();
-    topLayout->addLayout(typeLayout);
-#endif
 
     mEvents = new QCheckBox(i18nc("@option:check", "Archive &Events"));
     mEvents->setToolTip(

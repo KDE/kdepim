@@ -126,46 +126,46 @@ install(TARGETS incidenceeditorsng ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 ### Build the mobile version if needed
 
 #if(KDEPIM_MOBILE_UI)
-  set(incidenceeditors_ng_mobile_LIB_SRCS
-    ${incidenceeditors_ng_shared_LIB_SRCS}
-  )
+  #set(incidenceeditors_ng_mobile_LIB_SRCS
+  #  ${incidenceeditors_ng_shared_LIB_SRCS}
+  #)
 
-  ki18n_wrap_ui(incidenceeditors_ng_mobile_LIB_SRCS
-    categoryeditdialog_base.ui
-    categoryselectdialog_base.ui
-    categorydialog_base.ui
-    editoralarms_base.ui
-    dialogdesktop.ui
-    dialogmobile.ui
-    dialogmoremobile.ui
-    attachmenteditdialog.ui
-    alarmdialog.ui
-    mobileschedulingdialog.ui
-  )
+  #ki18n_wrap_ui(incidenceeditors_ng_mobile_LIB_SRCS
+  #  categoryeditdialog_base.ui
+  #  categoryselectdialog_base.ui
+  #  categorydialog_base.ui
+  #  editoralarms_base.ui
+  #  dialogdesktop.ui
+  #  dialogmobile.ui
+  #  dialogmoremobile.ui
+  #  attachmenteditdialog.ui
+  #  alarmdialog.ui
+  #  mobileschedulingdialog.ui
+  #)
 
-  add_library(incidenceeditorsngmobile ${incidenceeditors_ng_mobile_LIB_SRCS})
+  #add_library(incidenceeditorsngmobile ${incidenceeditors_ng_mobile_LIB_SRCS})
 
-  target_link_libraries(incidenceeditorsngmobile
-    KF5::AkonadiCalendar
-    KF5::AkonadiMime
-    KF5::Codecs
-    kdepim               # For KPIM::K{Date|Time}Edit
-    calendarsupport      # For KCalPrefs
-    kdepimdbusinterfaces # For UriHandler
-    kdgantt2
-    eventviews
-    KF5::CalendarUtils
-    KF5::CalendarCore
-    KF5::MailTransport
-  )
+  #target_link_libraries(incidenceeditorsngmobile
+  #  KF5::AkonadiCalendar
+  #  KF5::AkonadiMime
+  #  KF5::Codecs
+  #  kdepim               # For KPIM::K{Date|Time}Edit
+  #  calendarsupport      # For KCalPrefs
+  #  kdepimdbusinterfaces # For UriHandler
+  #  kdgantt2
+  #  eventviews
+  #  KF5::CalendarUtils
+  #  KF5::CalendarCore
+  #  KF5::MailTransport
+  #)
 
-  set_target_properties(incidenceeditorsngmobile PROPERTIES
-    COMPILE_FLAGS -DKDEPIM_MOBILE_UI
-    VERSION ${KDEPIM_LIB_VERSION}
-    SOVERSION ${KDEPIM_LIB_SOVERSION}
-  )
+  #set_target_properties(incidenceeditorsngmobile PROPERTIES
+  #  COMPILE_FLAGS -DKDEPIM_MOBILE_UI
+  #  VERSION ${KDEPIM_LIB_VERSION}
+  #  SOVERSION ${KDEPIM_LIB_SOVERSION}
+  #)
 
-  install(TARGETS incidenceeditorsngmobile ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+  #install(TARGETS incidenceeditorsngmobile ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 #endif(KDEPIM_MOBILE_UI)
 
 ### Build the test app TODO: Make optional

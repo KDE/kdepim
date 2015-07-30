@@ -156,21 +156,6 @@ AttendeeLine::AttendeeLine(QWidget *parent)
 
     QBoxLayout *topLayout = new QHBoxLayout(this);
     topLayout->setMargin(0);
-#ifdef KDEPIM_MOBILE_UI
-    mRoleCombo->addItem(DesktopIcon("meeting-participant", 48),
-                        KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::ReqParticipant));
-    mRoleCombo->addItem(DesktopIcon("meeting-participant-optional", 48),
-                        KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::OptParticipant));
-    mRoleCombo->addItem(DesktopIcon("meeting-observer", 48),
-                        KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::NonParticipant));
-    mRoleCombo->addItem(DesktopIcon("meeting-chair", 48),
-                        KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::Chair));
-
-    mResponseCombo->addItem(DesktopIcon("meeting-participant-request-response", 48),
-                            i18nc("@item:inlistbox", "Request Response"));
-    mResponseCombo->addItem(DesktopIcon("meeting-participant-no-response", 48),
-                            i18nc("@item:inlistbox", "Request No Response"));
-#else
     mRoleCombo->addItem(SmallIcon("meeting-participant"),
                         KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::ReqParticipant));
     mRoleCombo->addItem(SmallIcon("meeting-participant-optional"),
@@ -184,7 +169,6 @@ AttendeeLine::AttendeeLine(QWidget *parent)
                             i18nc("@item:inlistbox", "Request Response"));
     mResponseCombo->addItem(SmallIcon("meeting-participant-no-response"),
                             i18nc("@item:inlistbox", "Request No Response"));
-#endif
 
     mEdit->setToolTip(i18nc("@info:tooltip",
                             "Enter the name or email address of the attendee."));
@@ -366,18 +350,6 @@ void AttendeeLine::setActions(AttendeeActions actions)
 {
     mStateCombo->clear();
     if (actions == EventActions) {
-#ifdef KDEPIM_MOBILE_UI
-        mStateCombo->addItem(DesktopIcon("task-attention", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::NeedsAction));
-        mStateCombo->addItem(DesktopIcon("task-accepted", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::Accepted));
-        mStateCombo->addItem(DesktopIcon("task-reject", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::Declined));
-        mStateCombo->addItem(DesktopIcon("task-attempt", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::Tentative));
-        mStateCombo->addItem(DesktopIcon("task-delegate", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::Delegated));
-#else
         mStateCombo->addItem(SmallIcon("task-attention"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::NeedsAction));
         mStateCombo->addItem(SmallIcon("task-accepted"),
@@ -388,24 +360,7 @@ void AttendeeLine::setActions(AttendeeActions actions)
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Tentative));
         mStateCombo->addItem(SmallIcon("task-delegate"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Delegated));
-#endif
     } else {
-#ifdef KDEPIM_MOBILE_UI
-        mStateCombo->addItem(DesktopIcon("task-attention", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::NeedsAction));
-        mStateCombo->addItem(DesktopIcon("task-accepted", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::Accepted));
-        mStateCombo->addItem(DesktopIcon("task-reject", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::Declined));
-        mStateCombo->addItem(DesktopIcon("task-attempt", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::Tentative));
-        mStateCombo->addItem(DesktopIcon("task-delegate", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::Delegated));
-        mStateCombo->addItem(DesktopIcon("task-complete", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::Completed));
-        mStateCombo->addItem(DesktopIcon("task-ongoing", 48),
-                             KCalUtils::Stringify::attendeeStatus(AttendeeData::InProcess));
-#else
         mStateCombo->addItem(SmallIcon("task-attention"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::NeedsAction));
         mStateCombo->addItem(SmallIcon("task-accepted"),
@@ -420,7 +375,6 @@ void AttendeeLine::setActions(AttendeeActions actions)
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Completed));
         mStateCombo->addItem(SmallIcon("task-ongoing"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::InProcess));
-#endif
     }
 }
 

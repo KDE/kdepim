@@ -32,15 +32,7 @@ DynamicPage::DynamicPage(const QString &uiFile, KAssistantDialog *parent) : Page
     layout->setMargin(0);
     setLayout(layout);
 
-#ifdef KDEPIM_MOBILE_UI
-    // for mobile ui we put the page into a scroll area in case it's too big
-    QScrollArea *pageParent = new QScrollArea(this);
-    pageParent->setFrameShape(QFrame::NoFrame);
-    pageParent->setWidgetResizable(true);
-    layout->addWidget(pageParent);
-#else
     QWidget *pageParent = this;
-#endif
 
     QUiLoader loader;
     QFile file(uiFile);
@@ -49,11 +41,7 @@ DynamicPage::DynamicPage(const QString &uiFile, KAssistantDialog *parent) : Page
     m_dynamicWidget = loader.load(&file, pageParent);
     file.close();
 
-#ifdef KDEPIM_MOBILE_UI
-    pageParent->setWidget(m_dynamicWidget);
-#else
     layout->addWidget(m_dynamicWidget);
-#endif
 
     setValid(true);
 }

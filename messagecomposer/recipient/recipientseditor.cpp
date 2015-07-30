@@ -64,10 +64,6 @@ RecipientsEditor::RecipientsEditor(QWidget *parent)
 {
     factory()->setParent(this);   // HACK: can't use 'this' above since it's not yet constructed at that point
     mSideWidget = new RecipientsEditorSideWidget(this, this);
-#ifdef KDEPIM_MOBILE_UI
-    // needs to much space on mobile and brings up too big sub-dialogs
-    mSideWidget->hide();
-#endif
 
     layout()->addWidget(mSideWidget);
 

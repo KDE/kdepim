@@ -190,11 +190,6 @@ bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
 #else
     QString constraint;
 
-#ifdef KDEPIM_MOBILE_UI
-    // start the mobile korg instead of the desktop one
-    constraint = QLatin1String("'mobile' in Keywords");
-#endif
-
     result = KDBusServiceStarter::self()->findServiceFor(QLatin1String("DBUS/Organizer"),
              constraint,
              &error, &dbusService) == 0;

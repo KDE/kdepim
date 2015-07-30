@@ -28,10 +28,6 @@ include_directories(
   ${ZLIB_INCLUDE_DIRS}
 )
 
-if(KDEPIM_MOBILE_UI)
-  add_definitions(-DKORG_NODND)
-endif()
-
 ########### next target ###############
 
 set(eventviews_LIB_SRCS
