@@ -18,6 +18,7 @@
 #include "richtextcomposercontrolertest.h"
 #include "../richtextcomposercontroler.h"
 #include "../richtextcomposer.h"
+#include <KActionCollection>
 #include <qtest.h>
 
 RichTextComposerControlerTest::RichTextComposerControlerTest(QObject *parent)
@@ -34,10 +35,11 @@ RichTextComposerControlerTest::~RichTextComposerControlerTest()
 void RichTextComposerControlerTest::shouldAlignLeft()
 {
     MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
     MessageComposer::RichTextComposerControler controler(&composer);
 
-    //FIXME CRASH
-    //controler.alignLeft();
+    controler.alignLeft();
     //TODO verify if text is align to left.
 }
 
