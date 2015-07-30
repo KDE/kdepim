@@ -73,19 +73,6 @@ target_link_libraries( filteractionrewriteheadertest
    KF5::AkonadiMime
 )
 
-set(mailcommon_filteractionbeeptest_SRCS filteractionbeeptest.cpp
-                                           ../filteractions/filteractionbeep.cpp
-                                           ../filteractions/filteractionwithnone.cpp)
-add_executable( filteractionbeeptest ${mailcommon_filteractionbeeptest_SRCS} )
-add_test(filteractionbeeptest filteractionbeeptest)
-ecm_mark_as_test(filteractionbeeptest)
-target_link_libraries( filteractionbeeptest
-   kdepim
-   mailcommon
-   Qt5::Test
-   Qt5::Core
-)
-
 set(mailcommon_filteractionsetstatustest_SRCS filteractionsetstatustest.cpp ../../mailcommon_debug.cpp
                                            ../filteractions/filteractionsetstatus.cpp
                                             ../filteractions/filteractionstatus.cpp

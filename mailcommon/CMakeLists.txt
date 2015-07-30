@@ -27,7 +27,6 @@ set(libmailcommon_filter_SRCS
   filter/filteractions/filteractionaddheader.cpp
   filter/filteractions/filteractionaddtag.cpp
   filter/filteractions/filteractionaddtoaddressbook.cpp
-  filter/filteractions/filteractionbeep.cpp
   filter/filteractions/filteractioncopy.cpp
   filter/filteractions/filteractiondelete.cpp
   filter/filteractions/filteractiondict.cpp

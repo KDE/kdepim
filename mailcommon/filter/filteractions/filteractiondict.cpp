@@ -22,7 +22,6 @@
 #include "filteractionaddheader.h"
 #include "filteractionaddtag.h"
 #include "filteractionaddtoaddressbook.h"
-#include "filteractionbeep.h"
 #include "filteractioncopy.h"
 #include "filteractiondelete.h"
 #include "filteractionexec.h"
@@ -74,7 +73,6 @@ void FilterActionDict::init()
     insert(FilterActionPlaySound::newAction);
     insert(FilterActionAddToAddressBook::newAction);
     insert(FilterActionDelete::newAction);
-    insert(FilterActionBeep::newAction);
     insert(FilterActionUnsetStatus::newAction);
     // Register custom filter actions below this line.
 }
