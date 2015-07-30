@@ -64,7 +64,9 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
         const KContacts::Addressee addressee = searchJob->contacts().at(0);
         processAddress(addressee);
         searchPhoto(searchJob->contacts());
-        emit update(Viewer::Delayed);
+        if (!mPhoto.isEmpty()) {
+            emit update(Viewer::Delayed);
+        }
     }
     if (!PimCommon::NetworkUtil::self()->lowBandwidth()) {
         if (mPhoto.isEmpty() && mPhoto.url().isEmpty()) {
