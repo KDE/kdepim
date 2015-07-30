@@ -19,6 +19,7 @@
 #include "../richtextcomposer.h"
 #include <qtest.h>
 #include <qsignalspy.h>
+#include <KActionCollection>
 Q_DECLARE_METATYPE(MessageComposer::RichTextComposer::Mode)
 RichTextComposerTest::RichTextComposerTest(QObject *parent)
     : QObject(parent)
@@ -45,6 +46,8 @@ void RichTextComposerTest::shouldHaveDefaultValue()
 void RichTextComposerTest::shouldChangeMode()
 {
     MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
     QSignalSpy spy(&composer, SIGNAL(textModeChanged(MessageComposer::RichTextComposer::Mode)));
     composer.activateRichText();
     QCOMPARE(composer.textMode(), MessageComposer::RichTextComposer::Rich);
