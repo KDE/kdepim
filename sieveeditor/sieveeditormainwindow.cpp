@@ -216,6 +216,7 @@ void SieveEditorMainWindow::setupActions()
 
     mDebugSieveScriptAction = ac->addAction(QStringLiteral("debug_sieve"), mMainWidget->sieveEditorMainWidget(), SLOT(slotDebugSieveScript()));
     mDebugSieveScriptAction->setText(i18n("Debug Sieve Script..."));
+    ac->setDefaultShortcut(mDebugSieveScriptAction, QKeySequence(Qt::CTRL + Qt::Key_D));
 }
 
 void SieveEditorMainWindow::slotRefreshList()
