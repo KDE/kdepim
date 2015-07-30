@@ -35,7 +35,6 @@ set(akonadiconsole_bin_SRCS
   monitoritem.cpp
   notificationmodel.cpp
   notificationmonitor.cpp
-  rawsocketconsole.cpp
   searchdialog.cpp
   searchwidget.cpp
   querydebugger.cpp
@@ -86,7 +85,6 @@ ki18n_wrap_ui(akonadiconsole_bin_SRCS
   dbbrowser.ui
   dbconsole.ui
   instanceselector.ui
-  rawsocketconsole.ui
   browserwidget_contentview.ui
   collectioninternalspage.ui
   tagpropertiesdialog.ui

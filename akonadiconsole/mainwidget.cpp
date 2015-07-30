@@ -25,7 +25,6 @@
 #include "dbbrowser.h"
 #include "dbconsole.h"
 #include "debugwidget.h"
-#include "rawsocketconsole.h"
 #include "searchdialog.h"
 #include "searchwidget.h"
 #include "jobtrackerwidget.h"
@@ -60,7 +59,6 @@ MainWidget::MainWidget(KXmlGuiWindow *parent)
     mBrowser = new BrowserWidget(parent, tabWidget);
     tabWidget->addTab(mBrowser, QStringLiteral("Browser"));
     tabWidget->addTab(new DebugWidget(tabWidget), QStringLiteral("Debugger"));
-    tabWidget->addTab(new RawSocketConsole(tabWidget), QStringLiteral("Raw Socket"));
     tabWidget->addTab(new DbBrowser(tabWidget), QStringLiteral("DB Browser"));
     tabWidget->addTab(new DbConsole(tabWidget), QStringLiteral("DB Console"));
     tabWidget->addTab(new QueryDebugger(tabWidget), QStringLiteral("Query Debugger"));
