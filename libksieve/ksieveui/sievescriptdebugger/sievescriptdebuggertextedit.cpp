@@ -50,7 +50,7 @@ void SieveScriptDebuggerTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &p
 void SieveScriptDebuggerTextEdit::slotAddDebug()
 {
     QTextCursor cursor(textCursor());
-    cursor.insertText(QStringLiteral("debug_log \"Subject with KDAB was found\";\n"));
+    cursor.insertText(QStringLiteral("debug_log \"DEBUG\";\n"));
     if (!document()->toPlainText().contains(QStringLiteral("vnd.dovecot.debug"))) {
         cursor.movePosition(QTextCursor::Start);
         cursor.insertText(QStringLiteral("require \"vnd.dovecot.debug\";\n"));
