@@ -42,7 +42,6 @@
 #include <QIcon>
 #include <QAction>
 #include <KActionCollection>
-#include <KCMultiDialog>
 #include <QTabWidget>
 #include <KXmlGuiWindow>
 
@@ -94,11 +93,6 @@ MainWidget::MainWidget(KXmlGuiWindow *parent)
     action = parent->actionCollection()->addAction(QStringLiteral("akonadiserver_restart"));
     action->setText(QStringLiteral("Restart Server"));
     connect(action, &QAction::triggered, this, &MainWidget::restartServer);
-
-    action = parent->actionCollection()->addAction(QStringLiteral("akonadiserver_configure"));
-    action->setText(QStringLiteral("Configure Server..."));
-    action->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
-    connect(action, &QAction::triggered, this, &MainWidget::configureServer);
 }
 
 MainWidget::~MainWidget()
@@ -143,12 +137,5 @@ void MainWidget::stopServer()
 void MainWidget::restartServer()
 {
     Akonadi::ControlGui::restart(this);
-}
-
-void MainWidget::configureServer()
-{
-    KCMultiDialog dlg;
-    dlg.addModule(QStringLiteral("kcm_akonadi_server"));
-    dlg.exec();
 }
 

@@ -36,9 +36,7 @@ Akonadi
 Having a working installation of Baloo and MySQL should
 normally result in a working installation of Akonadi.  Akonadi provides a self
 test dialog to make sure it really works. Please make sure all tests in this
-self test dialog pass.  The test can be found in a control center module that is
-started with 'kcmshell4 kcm_akonadi'. The test is in the tab 'Akonadi Server
-Configuration' and is started with the 'Test...' button.
+self test dialog pass.
 
 
 KDEPIM-Runtime
