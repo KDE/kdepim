@@ -55,11 +55,12 @@ IncidenceAttendee::IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTim
                                      Ui::EventOrTodoDesktop *ui)
     : mUi(ui)
     , mParentWidget(parent)
+    , mConflictResolver(0)
+    , mDateTime(dateTime)
     , mStateDelegate(new AttendeeComboBoxDelegate(this))
     , mRoleDelegate(new AttendeeComboBoxDelegate(this))
     , mResponseDelegate(new AttendeeComboBoxDelegate(this))
-    , mConflictResolver(0)
-    , mDateTime(dateTime)
+
 {
     KCalCore::Attendee::List attendees;
     KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee("", ""));
