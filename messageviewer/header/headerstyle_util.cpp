@@ -316,7 +316,7 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
             } else if (!photoMemento->photo().url().isEmpty()) {
                 settings.photoURL = photoMemento->photo().url();
                 if (settings.photoURL.startsWith(QLatin1Char('/'))) {
-                    settings.photoURL.prepend(QLatin1String("file:"));
+                    settings.photoURL.prepend(QStringLiteral("file:"));
                 }
             } else if (!photoMemento->gravatarPixmap().isNull()) {
                 const QImage photo = photoMemento->gravatarPixmap().toImage();
