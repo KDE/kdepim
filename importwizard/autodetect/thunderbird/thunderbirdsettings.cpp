@@ -386,14 +386,6 @@ void ThunderbirdSettings::readGlobalSettings()
     } else {
         addKmailConfig(QStringLiteral("Spelling"), QStringLiteral("backgroundCheckerEnabled"), false);
     }
-    const QString mailPlaySoundStr = QStringLiteral("mail.biff.play_sound");
-    if (mHashConfig.contains(mailPlaySoundStr)) {
-        const bool mailPlaySound = mHashConfig.value(mailPlaySoundStr).toBool();
-        addKmailConfig(QStringLiteral("General"), QStringLiteral("beep-on-mail"), mailPlaySound);
-    } else {
-        //Default value in thunderbird
-        addKmailConfig(QStringLiteral("General"), QStringLiteral("beep-on-mail"), true);
-    }
 
     const QString mailAlertShowSubjectStr = QStringLiteral("mail.biff.alert.show_subject");
     if (mHashConfig.contains(mailAlertShowSubjectStr)) {
