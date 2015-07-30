@@ -417,9 +417,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                     qCDebug(IMPORTWIZARD_LOG) << " smtp.text() :" << smtp.text();
                     QUrl smtpUrl(smtp.text());
                     const QString scheme = smtpUrl.scheme();
-                    if (scheme == QLatin1String("sendmail")) {
-                        transport->setType(MailTransport::Transport::EnumType::Sendmail);
-                    } else {
+                    if (scheme != QLatin1String("sendmail")) {
                         transport->setHost(smtpUrl.host());
                         transport->setName(smtpUrl.host());
                         //TODO setUserName :

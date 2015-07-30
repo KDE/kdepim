@@ -34,7 +34,6 @@ struct StringValueTable {
 
 static const StringValueTable<MailTransport::Transport::EnumType> transportTypeEnums[] = {
     { "smtp", MailTransport::Transport::EnumType::SMTP },
-    { "sendmail", MailTransport::Transport::EnumType::Sendmail },
     { "akonadi", MailTransport::Transport::EnumType::Akonadi }
 };
 static const int transportTypeEnumsSize = sizeof(transportTypeEnums) / sizeof(*transportTypeEnums);
