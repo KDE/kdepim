@@ -120,7 +120,7 @@ void SieveEditorMenuBarTest::shouldHaveDefaultValue()
     QVERIFY(bar.uncommentCodeAction());
     QVERIFY(bar.debugSieveScriptAction());
     QCOMPARE(bar.actions().count(), 3);
-    QCOMPARE(bar.editorMenu()->actions().count(), 16);
+    QCOMPARE(bar.editorMenu()->actions().count(), 17);
     QCOMPARE(bar.fileMenu()->actions().count(), 0);
     QCOMPARE(bar.toolsMenu()->actions().count(), 3);
 
