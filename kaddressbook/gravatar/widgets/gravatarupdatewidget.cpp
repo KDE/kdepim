@@ -105,6 +105,7 @@ void GravatarUpdateWidget::slotSearchGravatar()
             job->setFallbackGravatar(mFallbackGravatar->isChecked());
             connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
             connect(job, &PimCommon::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateWidget::slotResolvUrl);
+            mSearchGravatar->setEnabled(false);
             job->start();
         } else {
             mResultGravatar->setText(i18n("Search is impossible."));
@@ -127,5 +128,6 @@ void GravatarUpdateWidget::slotSearchGravatarFinished(PimCommon::GravatarResolvU
             mResultGravatar->setText(i18n("No Gravatar Found."));
         }
     }
+    mSearchGravatar->setEnabled(true);
 }
 
