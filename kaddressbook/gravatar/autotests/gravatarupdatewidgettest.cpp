@@ -35,6 +35,7 @@ GravatarUpdateWidgetTest::~GravatarUpdateWidgetTest()
 void GravatarUpdateWidgetTest::shouldHaveDefaultValue()
 {
     KABGravatar::GravatarUpdateWidget widget;
+    widget.show();
     QLabel *lab = widget.findChild<QLabel *>(QStringLiteral("emaillabel"));
     QVERIFY(lab);
 
@@ -44,14 +45,18 @@ void GravatarUpdateWidgetTest::shouldHaveDefaultValue()
     QCheckBox *useHttps = widget.findChild<QCheckBox *>(QStringLiteral("usehttps"));
     QVERIFY(useHttps);
     QVERIFY(!useHttps->isChecked());
+    QVERIFY(useHttps->isEnabled());
 
     QCheckBox *useLibravatar = widget.findChild<QCheckBox *>(QStringLiteral("uselibravatar"));
     QVERIFY(useLibravatar);
     QVERIFY(!useLibravatar->isChecked());
+    QVERIFY(useLibravatar->isEnabled());
 
     QCheckBox *useFallbackGravatar = widget.findChild<QCheckBox *>(QStringLiteral("fallbackgravatar"));
     QVERIFY(useFallbackGravatar);
     QVERIFY(!useFallbackGravatar->isChecked());
+    QVERIFY(!useFallbackGravatar->isEnabled());
+
 
     QPushButton *searchGravatar = widget.findChild<QPushButton *>(QStringLiteral("search"));
     QVERIFY(searchGravatar);
