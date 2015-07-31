@@ -126,12 +126,10 @@ MainWindow::MainWindow()
     connect(toolbox, &Toolbox::sigError, this, &MainWindow::slotError);
     connect(toolbox, &Toolbox::sigBusy, this, &MainWindow::slotBusy);
 
-    QList<BilboBlog *> blogList = DBMan::self()->blogList().values();
-    const int count = blogList.count();
-    for (int i = 0; i < count; ++i) {
-        QAction *act = new QAction(blogList.at(i)->title(), blogs);
+    foreach (BilboBlog *blog, DBMan::self()->blogList()) {
+        QAction *act = new QAction(blog->title(), blogs);
         act->setCheckable(true);
-        act->setData(blogList.at(i)->id());
+        act->setData(blog->id());
         blogs->addAction(act);
     }
     connect(blogs, static_cast<void (KSelectAction::*)(QAction *)>(&KSelectAction::triggered), this, &MainWindow::currentBlogChanged);
