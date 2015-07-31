@@ -71,11 +71,10 @@ IndividualMailDialog::~IndividualMailDialog()
 KCalCore::Attendee::List IndividualMailDialog::editAttendees() const
 {
     KCalCore::Attendee::List edit;
-    QList<KCalCore::Attendee::Ptr> attendees = mAttendeeDecision.keys();
-    foreach (const KCalCore::Attendee::Ptr &attendee, attendees) {
-        int index = mAttendeeDecision[attendee]->currentIndex();
-        if (mAttendeeDecision[attendee]->itemData(index, Qt::UserRole) == Edit) {
-            edit.append(attendee);
+    for (auto it = mAttendeeDecision.cbegin(), end = mAttendeeDecision.cend(); it != end; ++it) {
+        int index = it.value()->currentIndex();
+        if (it.value()->itemData(index, Qt::UserRole) == Edit) {
+            edit.append(it.key());
         }
     }
     return edit;
@@ -84,11 +83,10 @@ KCalCore::Attendee::List IndividualMailDialog::editAttendees() const
 KCalCore::Attendee::List IndividualMailDialog::updateAttendees() const
 {
     KCalCore::Attendee::List update;
-    QList<KCalCore::Attendee::Ptr> attendees = mAttendeeDecision.keys();
-    foreach (const KCalCore::Attendee::Ptr &attendee, attendees) {
-        int index = mAttendeeDecision[attendee]->currentIndex();
-        if (mAttendeeDecision[attendee]->itemData(index, Qt::UserRole) == Update) {
-            update.append(attendee);
+    for (auto it = mAttendeeDecision.cbegin(), end = mAttendeeDecision.cend(); it != end; ++it) {
+        int index = it.value()->currentIndex();
+        if (it.value()->itemData(index, Qt::UserRole) == Update) {
+            update.append(it.key());
         }
     }
     return update;
