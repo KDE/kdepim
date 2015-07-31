@@ -46,7 +46,7 @@ namespace HeaderStyleUtil
 //
 QString directionOf(const QString &str)
 {
-    return str.isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
+    return str.isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr");
 }
 
 QString strToHtml(const QString &str, KTextToHTML::Options flags)
