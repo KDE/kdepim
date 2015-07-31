@@ -30,6 +30,7 @@ GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
+    setWindowTitle(i18n("Check and update gravatar"));
     mGravatarUpdateWidget = new GravatarUpdateWidget(this);
     mGravatarUpdateWidget->setObjectName(QStringLiteral("gravatarupdatewidget"));
     mainLayout->addWidget(mGravatarUpdateWidget);
