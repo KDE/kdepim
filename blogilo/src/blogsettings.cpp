@@ -111,11 +111,8 @@ void BlogSettings::removeBlog()
 
 void BlogSettings::loadBlogsList()
 {
-    QList<BilboBlog *> list = DBMan::self()->blogList().values();
-    const int count = list.count();
-    for (int i = 0; i < count; ++i) {
-        addBlogToList(*list[i]);
-    }
+    foreach (BilboBlog *blog, DBMan::self()->blogList())
+        addBlogToList(*blog);
 }
 
 void BlogSettings::blogsTablestateChanged()
