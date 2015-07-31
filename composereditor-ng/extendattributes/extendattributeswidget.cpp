@@ -216,12 +216,11 @@ void ExtendAttributesWidgetPrivate::_k_slotRemoveAttribute()
 void ExtendAttributesWidgetPrivate::initialize()
 {
     if (!webElement.isNull()) {
-        const QStringList keys = attributesMap.keys();
-        Q_FOREACH (const QString &str, keys) {
-            if (webElement.hasAttribute(str)) {
+        for (auto it = attributesMap.cbegin(), end = attributesMap.cend(); it != end; ++it) {
+            if (webElement.hasAttribute(it.key())) {
                 QTreeWidgetItem *item = new QTreeWidgetItem(treeWidget);
-                item->setText(0, str);
-                item->setText(1, webElement.attribute(str));
+                item->setText(0, it.key());
+                item->setText(1, webElement.attribute(it.key()));
             }
         }
     }
@@ -230,17 +229,16 @@ void ExtendAttributesWidgetPrivate::initialize()
 void ExtendAttributesWidgetPrivate::changeAttributes()
 {
     if (!webElement.isNull()) {
-        const QStringList keys = attributesMap.keys();
-        Q_FOREACH (const QString &str, keys) {
-            const QList<QTreeWidgetItem *> lstItems = treeWidget->findItems(str, Qt::MatchCaseSensitive);
+        for (auto it = attributesMap.cbegin(), end = attributesMap.cend(); it != end; ++it) {
+            const QList<QTreeWidgetItem *> lstItems = treeWidget->findItems(it.key(), Qt::MatchCaseSensitive);
             if (lstItems.isEmpty()) {
-                if (webElement.hasAttribute(str)) {
-                    webElement.removeAttribute(str);
+                if (webElement.hasAttribute(it.key())) {
+                    webElement.removeAttribute(it.key());
                 }
             } else {
                 const QString value = lstItems.at(0)->text(1);
                 if (!value.isEmpty()) {
-                    webElement.setAttribute(str, value);
+                    webElement.setAttribute(it.key(), value);
                 }
             }
         }
