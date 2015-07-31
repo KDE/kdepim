@@ -21,12 +21,12 @@
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 
 #include <KLocalizedString>
+#include <KPluralHandlingSpinBox>
 #include <QBoxLayout>
 #include <QCheckBox>
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QPushButton>
-#include <QSpinBox>
 
 using namespace MessageViewer;
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
@@ -66,9 +66,10 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     lab->setObjectName(QStringLiteral("gravatarcachesizelabel"));
     cacheSizeLayout->addWidget(lab);
 
-    mGravatarCacheSize = new QSpinBox;
+    mGravatarCacheSize = new KPluralHandlingSpinBox;
     mGravatarCacheSize->setMinimum(1);
     mGravatarCacheSize->setMaximum(9999);
+    mGravatarCacheSize->setSuffix(ki18ncp("add space before image", " image", " images"));
     mGravatarCacheSize->setObjectName(QStringLiteral("gravatarcachesize"));
     cacheSizeLayout->addWidget(mGravatarCacheSize);
     cacheSizeLayout->addStretch();

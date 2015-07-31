@@ -20,7 +20,7 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QPushButton>
-#include <QSpinBox>
+#include <KPluralHandlingSpinBox>
 #include <QTest>
 
 GravatarConfigureSettingsDialogTest::GravatarConfigureSettingsDialogTest(QObject *parent)
@@ -46,7 +46,7 @@ void GravatarConfigureSettingsDialogTest::shouldHaveDefaultValue()
     QLabel *lab = dlg.findChild<QLabel *>(QStringLiteral("gravatarcachesizelabel"));
     QVERIFY(lab);
 
-    QSpinBox *gravatarCacheSize = dlg.findChild<QSpinBox *>(QStringLiteral("gravatarcachesize"));
+    KPluralHandlingSpinBox *gravatarCacheSize = dlg.findChild<KPluralHandlingSpinBox *>(QStringLiteral("gravatarcachesize"));
     QVERIFY(gravatarCacheSize);
 
     QCheckBox *useLibravatar = dlg.findChild<QCheckBox *>(QStringLiteral("uselibravatarcheckbox"));
