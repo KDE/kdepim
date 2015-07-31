@@ -41,9 +41,9 @@ public:
     explicit IncidenceCompletionPriority(Ui::EventOrTodoDesktop *ui);
     ~IncidenceCompletionPriority();
 
-    void load(const KCalCore::Incidence::Ptr &incidence);
-    void save(const KCalCore::Incidence::Ptr &incidence);
-    bool isDirty() const;
+    void load(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    void save(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    bool isDirty() const Q_DECL_OVERRIDE;
 
 private:
     class Private;

@@ -100,27 +100,27 @@ public:
     explicit AttendeeLine(QWidget *parent);
     virtual ~AttendeeLine() {}
 
-    virtual void activate();
-    virtual bool isActive() const;
+    void activate() Q_DECL_OVERRIDE;
+    bool isActive() const Q_DECL_OVERRIDE;
 
-    virtual bool isEmpty() const;
-    virtual void clear();
+    bool isEmpty() const Q_DECL_OVERRIDE;
+    void clear() Q_DECL_OVERRIDE;
 
-    virtual bool isModified() const;
-    virtual void clearModified();
+    bool isModified() const Q_DECL_OVERRIDE;
+    void clearModified() Q_DECL_OVERRIDE;
 
-    virtual KPIM::MultiplyingLineData::Ptr data() const;
-    virtual void setData(const KPIM::MultiplyingLineData::Ptr &data);
+    KPIM::MultiplyingLineData::Ptr data() const Q_DECL_OVERRIDE;
+    void setData(const KPIM::MultiplyingLineData::Ptr &data) Q_DECL_OVERRIDE;
 
-    virtual void fixTabOrder(QWidget *previous);
-    virtual QWidget *tabOut() const;
+    void fixTabOrder(QWidget *previous) Q_DECL_OVERRIDE;
+    QWidget *tabOut() const Q_DECL_OVERRIDE;
 
-    virtual void moveCompletionPopup();
-    virtual void setCompletionMode(KCompletion::CompletionMode);
+    void moveCompletionPopup() Q_DECL_OVERRIDE;
+    void setCompletionMode(KCompletion::CompletionMode) Q_DECL_OVERRIDE;
 
-    virtual int setColumnWidth(int w);
+    int setColumnWidth(int w) Q_DECL_OVERRIDE;
 
-    virtual void aboutToBeDeleted();
+    void aboutToBeDeleted() Q_DECL_OVERRIDE;
 
     void setActions(AttendeeActions actions);
 

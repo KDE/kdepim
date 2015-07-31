@@ -28,9 +28,9 @@ class INCIDENCEEDITORS_NG_EXPORT GroupwareUiDelegate : public Akonadi::Groupware
 {
 public:
 
-    void requestIncidenceEditor(const Akonadi::Item &item) /** Q_DECL_OVERRIDE */;
-    void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar) /** Q_DECL_OVERRIDE */;
-    void createCalendar() /** Q_DECL_OVERRIDE */;
+    void requestIncidenceEditor(const Akonadi::Item &item) Q_DECL_OVERRIDE;
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar) Q_DECL_OVERRIDE;
+    void createCalendar() Q_DECL_OVERRIDE;
 };
 
 }

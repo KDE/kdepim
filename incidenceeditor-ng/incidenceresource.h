@@ -48,9 +48,9 @@ public:
 
     explicit IncidenceResource(IncidenceAttendee *mIeAttendee, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui);
 
-    void load(const KCalCore::Incidence::Ptr &incidence);
-    void save(const KCalCore::Incidence::Ptr &incidence);
-    bool isDirty() const;
+    void load(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    void save(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    bool isDirty() const Q_DECL_OVERRIDE;
 
     /** resturn the count of resources */
     int resourceCount() const;

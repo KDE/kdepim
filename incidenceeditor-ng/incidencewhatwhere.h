@@ -47,10 +47,10 @@ public:
 
     explicit IncidenceWhatWhere(Ui::EventOrTodoDesktop *ui);
 
-    virtual void load(const KCalCore::Incidence::Ptr &incidence);
-    virtual void save(const KCalCore::Incidence::Ptr &incidence);
-    virtual bool isDirty() const;
-    virtual bool isValid() const;
+    void load(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    void save(const KCalCore::Incidence::Ptr &incidence) Q_DECL_OVERRIDE;
+    bool isDirty() const Q_DECL_OVERRIDE;
+    bool isValid() const Q_DECL_OVERRIDE;
     virtual void validate();
 
 private:

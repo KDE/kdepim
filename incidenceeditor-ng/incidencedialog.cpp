@@ -113,18 +113,18 @@ public:
     void slotInvalidCollection();
 
     /// ItemEditorUi methods
-    virtual bool containsPayloadIdentifiers(const QSet<QByteArray> &partIdentifiers) const;
+    bool containsPayloadIdentifiers(const QSet<QByteArray> &partIdentifiers) const Q_DECL_OVERRIDE;
     void handleItemSaveFinish(EditorItemManager::SaveAction);
     void handleItemSaveFail(EditorItemManager::SaveAction, const QString &errorMessage);
-    virtual bool hasSupportedPayload(const Akonadi::Item &item) const;
-    virtual bool isDirty() const;
-    virtual bool isValid() const;
-    virtual void load(const Akonadi::Item &item);
-    virtual Akonadi::Item save(const Akonadi::Item &item);
-    virtual Akonadi::Collection selectedCollection() const;
+    bool hasSupportedPayload(const Akonadi::Item &item) const Q_DECL_OVERRIDE;
+    bool isDirty() const Q_DECL_OVERRIDE;
+    bool isValid() const Q_DECL_OVERRIDE;
+    void load(const Akonadi::Item &item) Q_DECL_OVERRIDE;
+    Akonadi::Item save(const Akonadi::Item &item) Q_DECL_OVERRIDE;
+    Akonadi::Collection selectedCollection() const Q_DECL_OVERRIDE;
     void slotButtonClicked(int button);
 
-    virtual void reject(RejectReason reason, const QString &errorMessage = QString());
+    void reject(RejectReason reason, const QString &errorMessage = QString()) Q_DECL_OVERRIDE;
 };
 
 }
