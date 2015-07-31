@@ -16,6 +16,7 @@
   <name xml:lang="gl">Blogilo</name>
   <name xml:lang="hu">Blogilo</name>
   <name xml:lang="it">Blogilo</name>
+  <name xml:lang="ko">Blogilo</name>
   <name xml:lang="lt">Blogilo</name>
   <name xml:lang="nb">Blogilo</name>
   <name xml:lang="nds">Blogilo</name>
@@ -48,6 +49,7 @@
   <summary xml:lang="gl">Un cliente de KDE para blogues</summary>
   <summary xml:lang="hu">KDE-s blogkliens</summary>
   <summary xml:lang="it">Client KDE per il blog</summary>
+  <summary xml:lang="ko">KDE 블로그 클라이언트</summary>
   <summary xml:lang="lt">KDE tinklaraštinimo klientas</summary>
   <summary xml:lang="nb">En KDE bloggklient</summary>
   <summary xml:lang="nds">En Nettdaagbook-Programm för KDE</summary>
@@ -79,6 +81,7 @@
     <p xml:lang="gl">Blogilo é un cliente de KDE para blogues compatíbel coas API de varios tipos de blogue.</p>
     <p xml:lang="hu">A Blogilo egy blogkliens a KDE-hez, amely több különböző blog API-t támogat.</p>
     <p xml:lang="it">Blogilo è un programma client per i blog per KDE e supporta varie API per blog.</p>
+    <p xml:lang="ko">Blogilo는 여러 블로그 API를 지원하는 KDE 블로그 클라이언트입니다.</p>
     <p xml:lang="nb">Blogilo er en bloggeklient for KDE, den støtter forskjellige API-er for blogging.</p>
     <p xml:lang="nds">Blogilo is en Nettdaagbook-Client för KDE, de en Reeg Nettdaagbook-APIs ünnerstütten deit.</p>
     <p xml:lang="nl">Blogilo is een client voor blogging voor KDE, die verschillende blogging API's ondersteunt.</p>
@@ -110,6 +113,7 @@
     <p xml:lang="gl">Funcionalidades:</p>
     <p xml:lang="hu">Szolgáltatások:</p>
     <p xml:lang="it">Caratteristiche:</p>
+    <p xml:lang="ko">기능:</p>
     <p xml:lang="lt">Ypatybės:</p>
     <p xml:lang="nb">Egenskaper:</p>
     <p xml:lang="nds">Markmalen:</p>
@@ -142,6 +146,7 @@
       <li xml:lang="gl">Un potente editor visual e máis un editor HTML.</li>
       <li xml:lang="hu">Teljes WYSIWYG szerkesztő és HTML szerkesztő</li>
       <li xml:lang="it">Editor WYSIWYG completo + editor HTML</li>
+      <li xml:lang="ko">WYSIWYG 편집기 및 HTML 편집기</li>
       <li xml:lang="nb">En funksjonsrik WYSIWYG-redigerer + en HTML-redigerer</li>
       <li xml:lang="nds">En WYSIWYG-Editor mit all Funkschonen un en HTML-Editor</li>
       <li xml:lang="nl">Een WYSIWYG-editor met volledige functies + een HTML-editor</li>
@@ -171,6 +176,7 @@
       <li xml:lang="gl">Vista previa dos artigos usando o estilo do blogue.</li>
       <li xml:lang="hu">Bejegyzések előnézete a blog stílusában</li>
       <li xml:lang="it">Anteprima del post nello stile di blog prescelto</li>
+      <li xml:lang="ko">내 블로그 스타일로 미리 보기</li>
       <li xml:lang="nb">Forhåndsviser postingen din med bloggens stil</li>
       <li xml:lang="nds">Dien Bidrag mit Dien Stil vörweg ankieken</li>
       <li xml:lang="nl">Bekijken van uw post met uw blog-stijl</li>
@@ -199,6 +205,7 @@
       <li xml:lang="gl">Compatíbel coas API Blogger1.0, MetaWeblog, MovableType (Wordpress é compatíbel con todos estes!) e Google GData (usada nos blogues de Blogspot.com).</li>
       <li xml:lang="hu">A Blogger 1.0, MetaWeblog, MovableType (a Wordpress támogatja mindezeket!) és a Google GData (Blogspot.com blogok) API-k támogatása</li>
       <li xml:lang="it">Supporto delle API di Blogger1.0, MetaWeblog, MovableType (Wordpress li supporta tutti!) e di Google GData (usata nei blog Blogspot.com)</li>
+      <li xml:lang="ko">Blogger1.0, MetaWeblog, MovableType (Wordpress에서는 모두 지원합니다!) 지원 및 Google GData (Blogspot.com 블로그에 사용됨) API 지원</li>
       <li xml:lang="nb">Støtte for API-ene Blogger1.0, MetaWeblog, MovableType (Wordpress støtter alle disse!) og Google GData (brukt på blogger på Blogspot.com) </li>
       <li xml:lang="nds">Ünnerstütt de Blogger1.0-, MetaWeblog-, MovableType-APIs (Wordpress ünnerstütt de all!) un de GData-API (bruukt op Blogspot.com-Nettdaagböker)</li>
       <li xml:lang="nl">Ondersteuning voor Blogger1.0, MetaWeblog, MovableType (Wordpress ondersteunt deze allemaal!) en Google GData (gebruikt op Blogspot.com blogs) API's</li>
@@ -228,6 +235,7 @@
       <li xml:lang="gl">Permite crear, modificar e eliminar artigos.</li>
       <li xml:lang="hu">Bejegyzések létrehozása, módosítása és törlése.</li>
       <li xml:lang="it">Supporto per la creazione/modifica/eliminazione dei post.</li>
+      <li xml:lang="ko">글 쓰기/수정/삭제 지원.</li>
       <li xml:lang="nb">Støtte for å opprette/endre/slette postinger.</li>
       <li xml:lang="nds">Ünnerstütt dat Opstellen, Ännern un Wegdoon vun Bidrääg.</li>
       <li xml:lang="nl">Ondersteuning voor maken/wijzigen/verwijderen van posts.</li>
@@ -257,6 +265,7 @@
       <li xml:lang="gl">Permite crear borradores e programar a publicación futura de artigos.</li>
       <li xml:lang="hu">Vázlatok és időzített bejegyzések létrehozása</li>
       <li xml:lang="it">Supporto per la creazione di bozze e post pianificati.</li>
+      <li xml:lang="ko">임시 보관함 및 예약 글 쓰기 지원</li>
       <li xml:lang="nb">Støtte for å opprette kladd og tidspunkt-postinger</li>
       <li xml:lang="nds">Ünnerstütt dat Opstellen vun Vörverschonen un tietplaant Bidrääg.</li>
       <li xml:lang="nl">Ondersteuning voor maken van concepten en geplande posts</li>
@@ -285,6 +294,7 @@
       <li xml:lang="gl">Permite enviar ficheiros multimedia ao blogue (só mediante as API que o permiten, como MetaWeblog ou MovableType).</li>
       <li xml:lang="hu">Médiafájlok feltöltésének támogatása (csak támogatott API-k esetében, például MetaWeblog és MovableType)</li>
       <li xml:lang="it">Supporto per il caricamento nel blog di file multimediali (solo per le API supportate, per es. MetaWeblog e MovableType).</li>
+      <li xml:lang="ko">시스템에 있는 미디어 파일을 첨부할 수 있습니다. MetaWeblog 및 MovableType 같은 지원하는 API를 사용해야 합니다</li>
       <li xml:lang="nb">Støtte for å laste opp mediafiler til bloggen din (bare på støttede API-er, f.eks. MetaWeblog og MovableType)</li>
       <li xml:lang="nds">Ünnerstütt dat Hoochladen vun Mediendateien na Dien Nettdaagbook (bloots bi ünnerstütten APIs as MetaWeblog un MovableType).</li>
       <li xml:lang="nl">Ondersteuning voor uploaden van mediabestanden naar uw blog (alleen op ondersteunde API's bijv. MetaWeblog en MovableType)</li>
@@ -314,6 +324,7 @@
       <li xml:lang="gl">Permite obter os artigos máis recentes do blogue.</li>
       <li xml:lang="hu">Legutóbbi blogbejegyzéseinek letöltése.</li>
       <li xml:lang="it">Supporto per il recupero degli elementi di blog recenti.</li>
+      <li xml:lang="ko">최근 블로그 글 가져오기 지원</li>
       <li xml:lang="nb">Støtte for å hente dine nylige bloggoppføringer.</li>
       <li xml:lang="nds">Ünnerstütt dat Halen vun Dien niegst Nettdaagbook-Indrääg.</li>
       <li xml:lang="nl">Ondersteuning voor ophalen van uw recent blog-items.</li>
@@ -342,6 +353,7 @@
       <li xml:lang="gl">Permite engadir imaxes locais aos artigos. Cando envíe o artigo ao blogue, enviaranse tamén as imaxes (só pode facerse coas API que o permiten, como MetaWeblog ou MovableType).</li>
       <li xml:lang="hu">Képek hozzáadása a bejegyzésekhez a rendszeréről, melyek a bejegyzés elküldésekor kerülnek feltöltésre (csak támogatott API-k esetén, például MetaWeblog és MovableType).</li>
       <li xml:lang="it">Supporto per l'aggiunta di immagini dal tuo sistema al post. Le immagini verranno caricate all'invio del post al blog (solo per le API supportate, per es. MetaWeblog e MovableType)</li>
+      <li xml:lang="ko">시스템에 있는 사진을 첨부할 수 있습니다. MetaWeblog 및 MovableType 같은 지원하는 API를 사용해야 합니다</li>
       <li xml:lang="nb">Støtte for å legge til bilder til posting fra systemet ditt. De blir lastet opp når posten legges inn til bloggen med Submit (bare på støttede API-er, f.eks. MetaWeblog og MovableType)</li>
       <li xml:lang="nds">Ünnerstütt dat Tofögen vun Biller na Bidrääg vun Dien Reekner ut. Se warrt bi't Hoochladen vun den Bidrag na't Nettdaagbook mit hoochlaadt (bloots bi ünnerstütten APIs as MetaWeblog un MovableType).</li>
       <li xml:lang="nl">Ondersteuning voor het toevoegen van afbeeldingen aan de posts vanaf uw systeem. Deze worden geüpload bij het indienen van uw blog (alleen op ondersteunde API's bijv. MetaWeblog en MovableType)</li>
@@ -371,6 +383,7 @@
       <li xml:lang="gl">Permite gardar os artigos en local antes de publicalos.</li>
       <li xml:lang="hu">Helyi bejegyzések mentése publikálás előtt.</li>
       <li xml:lang="it">Supporto per il salvataggio degli elementi locali prima della pubblicazione.</li>
+      <li xml:lang="ko">글을 올리기 전 로컬 항목 저장 기능.</li>
       <li xml:lang="nb">Støtte for å lagre lokale oppføringer før publisering.</li>
       <li xml:lang="nds">Ünnerstütt dat lokale Sekern vun Indrääg ehr Du ehr apenmaakst.</li>
       <li xml:lang="nl">Ondersteuning voor opslaan van lokale items alvorens ze te publiceren.</li>
@@ -400,6 +413,7 @@
       <li xml:lang="gl">Garda copias dos seus artigos a medida que os escribe para evitar a perda de dato. Pode configurar os intervalos nos que se garda o seu traballo.</li>
       <li xml:lang="hu">Beállítható időközönként másolat készítése, az adatvesztéseket elkerülendő.</li>
       <li xml:lang="it">Salvataggio automatico configurabile della composizione, per prevenire la perdita di dati.</li>
+      <li xml:lang="ko">설정한 시간별 자동 저장 기능.</li>
       <li xml:lang="nb">Lagrer det du skriver med bestemte mellomrom for å sikre mot tap av data.</li>
       <li xml:lang="nds">Sekert Dien Texten bi't Schrieven na en instellbor Tiet, so kaamt Di keen Daten weg.</li>
       <li xml:lang="nl">Opslaan bij het schrijven om verlies van gegevens te voorkomen, op in te stellen intervals.</li>
@@ -429,6 +443,7 @@
       <li xml:lang="gl">Fornece un corretor ortográfico compatíbel con case todos os idiomas.</li>
       <li xml:lang="hu">Belső, automatikus helyesírás-ellenőrző (a KDE helyesírás-ellenőrzője, így a legtöbb nyelv támogatott).</li>
       <li xml:lang="it">Correzione automatica interna (viene usato il correttore ortografico di KDE, dunque è supportata la maggior parte delle lingue)</li>
+      <li xml:lang="ko">KDE 맞춤법 검사기를 통한 내장형 맞춤법 검사기</li>
       <li xml:lang="nb">Intern automatisk stavekontroll. (KDE stavekontroll brukes, så de fleste språk er støttet)</li>
       <li xml:lang="nds">Intern automaatsch Klookschriever (KDE sien Klookschriever, also warrt de mehrsten Spraken ünnerstütt)</li>
       <li xml:lang="nl">Interne automatische spellingcontrole. (KDE spellingcontrole wordt gebruikt zodat de meeste talen worden ondersteund)</li>

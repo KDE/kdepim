@@ -17,6 +17,7 @@
   <name xml:lang="gl">KAddressBook</name>
   <name xml:lang="hu">KAddressBook</name>
   <name xml:lang="it">KAddressBook</name>
+  <name xml:lang="ko">KAddressBook</name>
   <name xml:lang="lt">KAddressBook</name>
   <name xml:lang="nb">KAddressBook</name>
   <name xml:lang="nds">KAdressbook</name>
@@ -50,6 +51,7 @@
     <p xml:lang="gl">KAddressBook almacena todos os detalles persoais dos seus familiares, amigos e outros contactos.</p>
     <p xml:lang="hu">A KAddressBook tárolja a családja, barátai és más partnereinek minden személyes adatát.</p>
     <p xml:lang="it">KAddressBook memorizza tutti i dati personali dei vostri familiari, amici e altri contatti.</p>
+    <p xml:lang="ko">KAddressBook은 가족, 친구, 기타 연락처 정보를 저장합니다.</p>
     <p xml:lang="nb">KAddressBook lagrer alle personlige detaljer for famile, venner og andre kontakter.</p>
     <p xml:lang="nds">KAdressbook wohrt all de persöönlichen Enkelheiten över Dien Familie, Dien Frünnen un anner Kontakten.</p>
     <p xml:lang="nl">KAddressBook slaat alle persoonlijke details op van uw familie, vrienden en andere contactpersonen.</p>
@@ -83,6 +85,7 @@
     <p xml:lang="gl">Funcionalidades:</p>
     <p xml:lang="hu">Szolgáltatások:</p>
     <p xml:lang="it">Caratteristiche:</p>
+    <p xml:lang="ko">기능:</p>
     <p xml:lang="lt">Ypatybės:</p>
     <p xml:lang="nb">Egenskaper:</p>
     <p xml:lang="nds">Markmalen:</p>
@@ -115,6 +118,7 @@
       <li xml:lang="gl">Pode importar e exportar a practicamente todos os estándares de caderno de enderezos.</li>
       <li xml:lang="hu">Importálás és exportálás közel minden címjegyzékformátumba</li>
       <li xml:lang="it">Importazione ed esportazioni da quasi ogni formato standard di rubrica</li>
+      <li xml:lang="ko">거의 모든 주소록 표준 형식으로 연락처 가져오고 내보내기</li>
       <li xml:lang="nb">Importerer og eksporterer til nesten alle adressebok-standarder</li>
       <li xml:lang="nds">Importeren ut un Exporteren na meist all Adressbook-Standards.</li>
       <li xml:lang="nl">Importeert en exporteert naar bijna elke adresboekstandaard</li>
@@ -146,6 +150,7 @@
       <li xml:lang="gl">Pode ler ficheiros no formato «.vcf», e pode importar e exportar ficheiros en formato vCard ou CSV.</li>
       <li xml:lang="hu">A .vcf fájlformátum olvasása, vCard és CSV fájlok importálása és exportálása</li>
       <li xml:lang="it">Legge file in formato .vcf, e può importare ed esportare vCard e file in formato csv</li>
+      <li xml:lang="ko">.vcf 형식 파일을 읽고, vCard 및 CSV 파일로 가져오고 내보내기</li>
       <li xml:lang="nb">Leser filer i .vcf format, og kan importere og eksportere vCards og filer i csv format</li>
       <li xml:lang="nds">Leest Dateien in't VCF-Formaat un kann Daten ut vCard- un CSV-Dateien importeren un dor ok hen exporteren.</li>
       <li xml:lang="nl">Leest .vcf-formaat bestanden en kan vCards importeren en exporteren en csv-formaat bestanden</li>
@@ -173,6 +178,7 @@
       <li xml:lang="fi">Osaa käyttää useampia LDAP-palvelimia</li>
       <li xml:lang="gl">Pode configurarse para empregar varios servidores de LDAP.</li>
       <li xml:lang="it">Può utilizzare server LDAP multipli</li>
+      <li xml:lang="ko">다중 LDAP 서버 연결</li>
       <li xml:lang="nb">Kan bruke flere LDAP-tjenere</li>
       <li xml:lang="nl">Kan meerdere LDAP-servers gebruiken</li>
       <li xml:lang="pl">Możliwość używania wielu serwerów LDAP</li>
@@ -202,6 +208,7 @@
       <li xml:lang="gl">Permite configurar filtros e conta con potentes funcionalidades de busca.</li>
       <li xml:lang="hu">Konfigurálható szűrők és hatékony keresési képességek</li>
       <li xml:lang="it">Filtri configurabili e potenti funzionalità di ricerca</li>
+      <li xml:lang="ko">설정 가능한 필터와 강력한 검색 기능</li>
       <li xml:lang="nb">Fleksible filtre og kraftige søkemuligheter</li>
       <li xml:lang="nds">Instellbor Filtern un en deegt Söök</li>
       <li xml:lang="nl">In te stellen filters en krachtige zoekfuncties</li>
@@ -232,6 +239,7 @@
       <li xml:lang="gl">Intégrase con outros compoñentes de Kontact. Por exemplo, exporta as lembranzas de aniversarios a KOrganizer.</li>
       <li xml:lang="hu">Integráció más Kontact komponensekkel, például születésnapi emlékeztetők exportálása a KOrganizerbe</li>
       <li xml:lang="it">Si integra con altri componenti di Kontact, ad esempioesportazione dei promemoria dei compleanni in KOrganizer</li>
+      <li xml:lang="ko">KOragnizer에 생일 알림을 추가하는 것과 같은 다른 Kontact 구성 요소와 통합</li>
       <li xml:lang="nb">Integreres med andre Kontact-komponenter, f.eks. eksportere fødselsdag-påminnelser til KOrganizer</li>
       <li xml:lang="nds">Arbeit mit anner Kontact-Komponenten tosamen, exporteert a.B. Geboortsdag-Vöranstööt na KOrganizer.</li>
       <li xml:lang="nl">Integreert met andere componenten van Kontact, bijv. exporteren van herinneringen van verjaardagen aan KOrganizer</li>
@@ -261,6 +269,7 @@
       <li xml:lang="gl">Pode integrarse con software de xestión de grupos.</li>
       <li xml:lang="hu">Csoportmunka-integráció</li>
       <li xml:lang="it">Supporta l'integrazione di groupware</li>
+      <li xml:lang="ko">그룹웨어 통합 기능</li>
       <li xml:lang="nb">Kan integreres i gruppevare</li>
       <li xml:lang="nds">Arbeit mit Arbeitkoppelprogrammen tosamen</li>
       <li xml:lang="nl">Kan met groupware integreren</li>
@@ -291,6 +300,7 @@
       <li xml:lang="gl">Está baseado en Akonadi.</li>
       <li xml:lang="hu">Akonadi támogatás</li>
       <li xml:lang="it">Powered by Akonadi</li>
+      <li xml:lang="ko">Akonadi 기반</li>
       <li xml:lang="nb">Drives av Akonadi</li>
       <li xml:lang="nds">Akonadi arbeidt in'n Achtergrund</li>
       <li xml:lang="nl">Powered door Akonadi</li>
