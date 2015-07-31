@@ -180,35 +180,35 @@ void FilterImporterSylpheed::parseActions(const QDomElement &e,
         const QString nexttag = ruleFilter.tagName();
         QString value = ruleFilter.text();
         if (nexttag == QLatin1String("move")) {
-            actionName = QLatin1String("transfer");
+            actionName = QStringLiteral("transfer");
             value = ruleFilter.text();
         } else if (nexttag == QLatin1String("copy")) {
-            actionName = QLatin1String("copy");
+            actionName = QStringLiteral("copy");
             value = ruleFilter.text();
         } else if (nexttag == QLatin1String("not-receive")) {
             //TODO
         } else if (nexttag == QLatin1String("delete")) {
-            actionName = QLatin1String("delete");
+            actionName = QStringLiteral("delete");
         } else if (nexttag == QLatin1String("exec")) {
-            actionName = QLatin1String("execute");
+            actionName = QStringLiteral("execute");
             value = ruleFilter.text();
         } else if (nexttag == QLatin1String("exec-async")) {
-            actionName = QLatin1String("filter app");
+            actionName = QStringLiteral("filter app");
             value = ruleFilter.text();
         } else if (nexttag == QLatin1String("mark")) {
             //FIXME add tag ?
         } else if (nexttag == QLatin1String("color-label")) {
             //TODO
         } else if (nexttag == QLatin1String("mark-as-read")) {
-            actionName = QLatin1String("set status");
+            actionName = QStringLiteral("set status");
             value = QLatin1String("R");
         } else if (nexttag == QLatin1String("forward")) {
-            actionName = QLatin1String("forward");
+            actionName = QStringLiteral("forward");
             value = ruleFilter.text();
         } else if (nexttag == QLatin1String("forward-as-attachment")) {
             //TODO
         } else if (nexttag == QLatin1String("redirect")) {
-            actionName = QLatin1String("redirect");
+            actionName = QStringLiteral("redirect");
             value = ruleFilter.text();
         } else if (nexttag == QLatin1String("stop-eval")) {
             filter->setStopProcessingHere(true);

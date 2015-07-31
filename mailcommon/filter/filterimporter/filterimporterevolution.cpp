@@ -147,15 +147,15 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                     const QString flag = valueFilter.attribute(QStringLiteral("value"));
                                     qCDebug(MAILCOMMON_LOG) << " flag :" << flag;
                                     if (flag == QLatin1String("Seen")) {
-                                        contents = QLatin1String("Read");
+                                        contents = QStringLiteral("Read");
                                     } else if (flag == QLatin1String("Answered")) {
-                                        contents = QLatin1String("Sent");
+                                        contents = QStringLiteral("Sent");
                                     } else if (flag == QLatin1String("Draft")) {
                                         //FIXME
                                     } else if (flag == QLatin1String("Flagged")) { //Important
-                                        contents = QLatin1String("Important");
+                                        contents = QStringLiteral("Important");
                                     } else if (flag == QLatin1String("Junk")) {
-                                        contents = QLatin1String("Spam");
+                                        contents = QStringLiteral("Spam");
                                     } else {
                                         qCDebug(MAILCOMMON_LOG) << " unknown status flags " << flag;
                                     }
@@ -240,11 +240,11 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                         filter->setStopProcessingHere(true);
                         break;
                     } else if (name == QLatin1String("move-to-folder")) {
-                        actionName = QLatin1String("transfer");
+                        actionName = QStringLiteral("transfer");
                     } else if (name == QLatin1String("copy-to-folder")) {
-                        actionName = QLatin1String("copy");
+                        actionName = QStringLiteral("copy");
                     } else if (name == QLatin1String("delete")) {
-                        actionName = QLatin1String("delete");
+                        actionName = QStringLiteral("delete");
                     } else if (name == QLatin1String("label")) {
                         //TODO
                     } else if (name == QLatin1String("colour")) {
@@ -254,17 +254,17 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                     } else if (name == QLatin1String("adj-score")) {
                         //TODO
                     } else if (name == QLatin1String("set-status")) {
-                        actionName = QLatin1String("set status");
+                        actionName = QStringLiteral("set status");
                     } else if (name == QLatin1String("unset-status")) {
-                        actionName = QLatin1String("unset status");
+                        actionName = QStringLiteral("unset status");
                     } else if (name == QLatin1String("play-sound")) {
-                        actionName = QLatin1String("play sound");
+                        actionName = QStringLiteral("play sound");
                     } else if (name == QLatin1String("shell")) {
-                        actionName = QLatin1String("execute");
+                        actionName = QStringLiteral("execute");
                     } else if (name == QLatin1String("pipe")) {
-                        actionName = QLatin1String("filter app");
+                        actionName = QStringLiteral("filter app");
                     } else if (name == QLatin1String("forward")) {
-                        actionName = QLatin1String("forward");
+                        actionName = QStringLiteral("forward");
                     }
                     if (actionName.isEmpty()) {
                         qCDebug(MAILCOMMON_LOG) << " actiontype part : name : not implemented :" << name;

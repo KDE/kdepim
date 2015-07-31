@@ -70,7 +70,7 @@ void FilterImporterBalsa::parseFilter(const KConfigGroup &grp)
 
     const QString sound = grp.readEntry(QStringLiteral("Sound"));
     if (!sound.isEmpty()) {
-        const QString actionName = QLatin1String("play sound");
+        const QString actionName = QStringLiteral("play sound");
         createFilterAction(filter, actionName, sound);
     }
 
@@ -135,11 +135,11 @@ void FilterImporterBalsa::parseAction(int actionType, const QString &action, Mai
         break;
     case 1:
         //Copy
-        actionName = QLatin1String("copy");
+        actionName = QStringLiteral("copy");
         break;
     case 2:
         //Move
-        actionName = QLatin1String("transfer");
+        actionName = QStringLiteral("transfer");
         break;
     case 3:
         //Print
@@ -147,11 +147,11 @@ void FilterImporterBalsa::parseAction(int actionType, const QString &action, Mai
         break;
     case 4:
         //Execute
-        actionName = QLatin1String("execute");
+        actionName = QStringLiteral("execute");
         break;
     case 5:
         //Move to trash
-        actionName = QLatin1String("transfer");
+        actionName = QStringLiteral("transfer");
         //Special !
         break;
     case 6:

@@ -99,7 +99,7 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine(QTextStream &stream
                     }
                     lstValue << value;
                     value = lstValue.join(QLatin1String("\t"));
-                    actionName = QLatin1String("add header");
+                    actionName = QStringLiteral("add header");
                 } else if (actionName == QLatin1String("copy") || actionName == QLatin1String("transfer")) {
                     QUrl url = QUrl::fromLocalFile(value);
                     if (url.isValid()) {
@@ -387,30 +387,30 @@ QString FilterImporterThunderbird::extractActions(const QString &line,
 
     QString actionName;
     if (line == QLatin1String("Move to folder")) {
-        actionName = QLatin1String("transfer");
+        actionName = QStringLiteral("transfer");
     } else if (line == QLatin1String("Forward")) {
-        actionName = QLatin1String("forward");
+        actionName = QStringLiteral("forward");
     } else if (line == QLatin1String("Mark read")) {
-        actionName = QLatin1String("set status");
+        actionName = QStringLiteral("set status");
         value = QLatin1String("R");
     } else if (line == QLatin1String("Mark unread")) {
-        actionName = QLatin1String("set status");
+        actionName = QStringLiteral("set status");
         value = QLatin1String("U");   //TODO verify
     } else if (line == QLatin1String("Copy to folder")) {
-        actionName = QLatin1String("copy");
+        actionName = QStringLiteral("copy");
     } else if (line == QLatin1String("AddTag")) {
-        actionName = QLatin1String("add tag");
+        actionName = QStringLiteral("add tag");
     } else if (line == QLatin1String("Delete")) {
-        actionName = QLatin1String("delete");
+        actionName = QStringLiteral("delete");
     } else if (line == QLatin1String("Change priority")) {
-        actionName = QLatin1String("Change priority"); //Doesn't exist in kmail but we help us to importing
+        actionName = QStringLiteral("Change priority"); //Doesn't exist in kmail but we help us to importing
     } else if (line == QLatin1String("Ignore thread")) {
     } else if (line == QLatin1String("Ignore subthread")) {
     } else if (line == QLatin1String("Watch thread")) {
     } else if (line == QLatin1String("Mark flagged")) {
     } else if (line == QLatin1String("Label")) {
     } else if (line == QLatin1String("Reply")) {
-        actionName = QLatin1String("set Reply-To");
+        actionName = QStringLiteral("set Reply-To");
     } else if (line == QLatin1String("Stop execution")) {
         filter->setStopProcessingHere(true);
         return QString();
