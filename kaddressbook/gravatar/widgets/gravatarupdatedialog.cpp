@@ -34,17 +34,20 @@ GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
     setLayout(mainLayout);
     setWindowTitle(i18n("Check and update gravatar"));
     mGravatarUpdateWidget = new GravatarUpdateWidget(this);
+    connect(mGravatarUpdateWidget, &GravatarUpdateWidget::activateDialogButton, this, &GravatarUpdateDialog::slotActivateButton);
     mGravatarUpdateWidget->setObjectName(QStringLiteral("gravatarupdatewidget"));
     mainLayout->addWidget(mGravatarUpdateWidget);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel);
     buttonBox->setObjectName(QStringLiteral("buttonbox"));
-    QPushButton *saveImageButton = new QPushButton(i18n("Save Image"), this);
-    buttonBox->addButton(saveImageButton, QDialogButtonBox::ActionRole);
-    connect(saveImageButton, &QPushButton::clicked, this, &GravatarUpdateDialog::slotSaveImage);
+    mSaveImageButton = new QPushButton(i18n("Save Image"), this);
+    mSaveImageButton->setEnabled(false);
+    buttonBox->addButton(mSaveImageButton, QDialogButtonBox::ActionRole);
+    connect(mSaveImageButton, &QPushButton::clicked, this, &GravatarUpdateDialog::slotSaveImage);
 
-    QPushButton *saveUrlButton = new QPushButton(i18n("Save Image Url"), this);
-    buttonBox->addButton(saveUrlButton, QDialogButtonBox::ActionRole);
-    connect(saveUrlButton, &QPushButton::clicked, this, &GravatarUpdateDialog::slotSaveUrl);
+    mSaveUrlButton = new QPushButton(i18n("Save Image Url"), this);
+    buttonBox->addButton(mSaveUrlButton, QDialogButtonBox::ActionRole);
+    mSaveUrlButton->setEnabled(false);
+    connect(mSaveUrlButton, &QPushButton::clicked, this, &GravatarUpdateDialog::slotSaveUrl);
 
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     mainLayout->addWidget(buttonBox);
@@ -54,6 +57,12 @@ GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
 GravatarUpdateDialog::~GravatarUpdateDialog()
 {
     writeConfig();
+}
+
+void GravatarUpdateDialog::slotActivateButton()
+{
+    mSaveUrlButton->setEnabled(true);
+    mSaveImageButton->setEnabled(true);
 }
 
 bool GravatarUpdateDialog::saveUrl() const

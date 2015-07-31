@@ -44,10 +44,13 @@ private Q_SLOTS:
     void slotSaveImage();
     void slotSaveUrl();
 
+    void slotActivateButton();
 private:
     void readConfig();
     void writeConfig();
     GravatarUpdateWidget *mGravatarUpdateWidget;
+    QPushButton *mSaveImageButton;
+    QPushButton *mSaveUrlButton;
     bool mSaveUrl;
 };
 }

@@ -48,6 +48,10 @@ private Q_SLOTS:
 
     void slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *job);
     void slotResolvUrl(const QUrl &url);
+
+Q_SIGNALS:
+    void activateDialogButton();
+
 private:
     QString mEmail;
     QPixmap mPixmap;

@@ -151,6 +151,7 @@ void GravatarUpdateWidget::slotSearchGravatarFinished(PimCommon::GravatarResolvU
             mResultGravatar->setText(i18n("No Gravatar Found."));
         }
     }
+    Q_EMIT activateDialogButton();
     mSearchGravatar->setEnabled(true);
 }
 
