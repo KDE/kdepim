@@ -323,6 +323,8 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
             SLOT(trigger()));
     connect(mItemView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(itemSelectionChanged(QModelIndex,QModelIndex)));
+    connect(mItemView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
 
     // show the contact details view as default
     mDetailsViewStack->setCurrentWidget(mContactDetails);
@@ -713,10 +715,10 @@ void MainWidget::setupActions(KActionCollection *collection)
     action->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
     connect(action, &QAction::triggered, this, &MainWidget::slotSendMail);
 
-    action = collection->addAction(QStringLiteral("send_vcards"));
-    action->setText(i18n("Send vCards..."));
-    action->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
-    connect(action, &QAction::triggered, this, &MainWidget::slotSendVcards);
+    mSendVcardAction = collection->addAction(QStringLiteral("send_vcards"));
+    mSendVcardAction->setText(i18n("Send vCards..."));
+    mSendVcardAction->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
+    connect(mSendVcardAction, &QAction::triggered, this, &MainWidget::slotSendVcards);
 
     if (!qgetenv("KDEPIM_BALOO_DEBUG").isEmpty()) {
         action = collection->addAction(QStringLiteral("debug_baloo"));
@@ -1148,7 +1150,7 @@ void MainWidget::slotCheckGravatar()
                 }
             }
             if (dlg->exec()) {
-                KContacts::Picture picture;
+                KContacts::Picture picture = address.photo();
                 if (dlg->saveUrl()) {
                     QUrl url = dlg->resolvedUrl();
                     picture.setUrl(url.toString());
@@ -1173,3 +1175,19 @@ void MainWidget::slotModifyContactFinished(KJob *job)
         qCDebug(KADDRESSBOOK_LOG) << "Error while modifying items. " << job->error() << job->errorString();
     }
 }
+
+void MainWidget::slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+{
+    Q_UNUSED(selected);
+    Q_UNUSED(deselected);
+
+    bool hasUniqSelection = false;
+    bool hasSelection = false;
+    if (mItemView->selectionModel()->selection().count() == 1) {
+        hasUniqSelection = (mItemView->selectionModel()->selection().at(0).height() == 1);
+        hasSelection = true;
+    }
+    mSendVcardAction->setEnabled(hasSelection);
+    mSearchGravatarAction->setEnabled(hasUniqSelection);
+}
+
