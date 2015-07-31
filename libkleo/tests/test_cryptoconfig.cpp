@@ -175,8 +175,8 @@ int main(int argc, char **argv)
 
     {
         // Static querying of a single boolean option
-        static const char *s_groupName = "Monitor";
-        static const char *s_entryName = "quiet";
+        static const char s_groupName[] = "Monitor";
+        static const char s_entryName[] = "quiet";
         Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
         if (entry) {
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_None);
@@ -225,8 +225,8 @@ int main(int argc, char **argv)
 
     {
         // Static querying and setting of a single int option
-        static const char *s_groupName = "LDAP";
-        static const char *s_entryName = "ldaptimeout";
+        static const char s_groupName[] = "LDAP";
+        static const char s_entryName[] = "ldaptimeout";
         Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
         if (entry) {
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_UInt);
@@ -278,8 +278,8 @@ int main(int argc, char **argv)
 
     {
         // Static querying and setting of a single string option
-        static const char *s_groupName = "Debug";
-        static const char *s_entryName = "log-file";
+        static const char s_groupName[] = "Debug";
+        static const char s_entryName[] = "log-file";
         Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
         if (entry) {
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path);
@@ -326,8 +326,8 @@ int main(int argc, char **argv)
 
     {
         // Static querying and setting of the LDAP URL list option
-        static const char *s_groupName = "LDAP";
-        static const char *s_entryName = "LDAP Server";
+        static const char s_groupName[] = "LDAP";
+        static const char s_entryName[] = "LDAP Server";
         Kleo::CryptoConfigEntry *entry = config->entry("dirmngr", s_groupName, s_entryName);
         if (entry) {
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL);
