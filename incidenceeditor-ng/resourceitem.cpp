@@ -25,10 +25,10 @@
 using namespace IncidenceEditorNG;
 
 ResourceItem::ResourceItem(const KLDAP::LdapDN &dn, const QStringList &attrs, const KLDAP::LdapClient &ldapClient, const ResourceItem::Ptr &parent)
-    : dn(dn)
+    : parentItem(parent)
+    , dn(dn)
     , mAttrs(attrs)
     , mLdapClient(0, this)
-    , parentItem(parent)
 {
     if (!dn.isEmpty()) {
         KLDAP::LdapServer server = ldapClient.server();
