@@ -34,6 +34,7 @@ public:
     QPixmap pixmap() const;
     void setOriginalPixmap(const QPixmap &pix);
 
+    void setOriginalUrl(const QString &url);
 private Q_SLOTS:
     void slotAccepted();
 

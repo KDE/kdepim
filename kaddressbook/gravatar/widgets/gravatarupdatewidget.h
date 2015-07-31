@@ -42,6 +42,7 @@ public:
     void setOriginalPixmap(const QPixmap &pix);
     QUrl resolvedUrl() const;
 
+    void setOriginalUrl(const QString &url);
 private Q_SLOTS:
     void slotSearchGravatar();
 

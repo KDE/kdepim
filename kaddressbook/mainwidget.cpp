@@ -1143,7 +1143,7 @@ void MainWidget::slotCheckGravatar()
                     const QPixmap pix = QPixmap::fromImage(address.photo().data());
                     dlg->setOriginalPixmap(pix);
                 } else {
-                    //Add support for url
+                    dlg->setOriginalUrl(address.photo().url());
                 }
             }
             if (dlg->exec()) {

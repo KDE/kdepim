@@ -25,6 +25,8 @@
 
 #include <gravatar/gravatarresolvurljob.h>
 
+#include <kio/transferjob.h>
+
 using namespace KABGravatar;
 GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     : QWidget(parent)
@@ -78,6 +80,22 @@ void GravatarUpdateWidget::setEmail(const QString &email)
 QPixmap GravatarUpdateWidget::pixmap() const
 {
     return QPixmap();
+}
+
+void GravatarUpdateWidget::setOriginalUrl(const QString &url)
+{
+    QImage image;
+    QByteArray imageData;
+    KIO::TransferJob *job = KIO::get(url, KIO::NoReload);
+    QObject::connect(job, &KIO::TransferJob::data,
+                     [&imageData](KIO::Job *, const QByteArray &data) {
+                        imageData.append(data);
+                     });
+    if (job->exec()) {
+        if (image.loadFromData(imageData)) {
+            mResultGravatar->setPixmap(QPixmap::fromImage(image));
+        }
+    }
 }
 
 void GravatarUpdateWidget::setOriginalPixmap(const QPixmap &pix)

@@ -56,6 +56,11 @@ QPixmap GravatarUpdateDialog::pixmap() const
     return mGravatarUpdateWidget->pixmap();
 }
 
+void GravatarUpdateDialog::setOriginalUrl(const QString &url)
+{
+    mGravatarUpdateWidget->setOriginalUrl(url);
+}
+
 void GravatarUpdateDialog::setOriginalPixmap(const QPixmap &pix)
 {
     mGravatarUpdateWidget->setOriginalPixmap(pix);
