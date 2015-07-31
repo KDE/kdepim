@@ -51,7 +51,7 @@ KOAlarmClient::KOAlarmClient(QObject *parent)
     : QObject(parent), mDocker(0), mDialog(0)
 {
     new KOrgacAdaptor(this);
-    KDBusConnectionPool::threadConnection().registerObject(QLatin1String("/ac"), this);
+    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/ac"), this);
     qCDebug(KOALARMCLIENT_LOG);
 
     if (dockerEnabled()) {
