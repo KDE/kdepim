@@ -34,13 +34,16 @@ GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     QGridLayout *mainLayout = new QGridLayout;
     setLayout(mainLayout);
 
+    QHBoxLayout *hboxEmail = new QHBoxLayout;
+
     QLabel *lab = new QLabel(i18n("Email:"));
     lab->setObjectName(QStringLiteral("emaillabel"));
-    mainLayout->addWidget(lab, 0, 0);
+    hboxEmail->addWidget(lab);
 
     mEmailLab = new QLabel;
     mEmailLab->setObjectName(QStringLiteral("email"));
-    mainLayout->addWidget(mEmailLab, 0, 1);
+    hboxEmail->addWidget(mEmailLab);
+    mainLayout->addLayout(hboxEmail, 0, 0);
 
     mUseHttps = new QCheckBox(i18n("Use HTTPS Protocol"));
     mUseHttps->setObjectName(QStringLiteral("usehttps"));
@@ -63,7 +66,7 @@ GravatarUpdateWidget::GravatarUpdateWidget(QWidget *parent)
     connect(mUseLibravatar, &QCheckBox::toggled, mFallbackGravatar, &QCheckBox::setEnabled);
     mResultGravatar = new QLabel;
     mResultGravatar->setObjectName(QStringLiteral("result"));
-    mainLayout->addWidget(mResultGravatar, 5, 0, 5, 1, Qt::AlignCenter);
+    mainLayout->addWidget(mResultGravatar, 0, 2, 4, 1, Qt::AlignCenter);
 }
 
 GravatarUpdateWidget::~GravatarUpdateWidget()
