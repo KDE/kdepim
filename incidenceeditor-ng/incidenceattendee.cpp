@@ -605,7 +605,6 @@ void IncidenceAttendee::updateFBStatus(const KCalCore::Attendee::Ptr &attendee, 
     KCalCore::Attendee::List attendees = mDataModel->attendees();
     KDateTime startTime = mDateTime->currentStartDateTime();
     KDateTime endTime = mDateTime->currentEndDateTime();
-    QAbstractItemModel *model = mConflictResolver->model();
     if (attendees.contains(attendee)) {
         int row = dataModel()->attendees().indexOf(attendee);
         QModelIndex attendeeIndex = dataModel()->index(row, AttendeeTableModel::Available);
