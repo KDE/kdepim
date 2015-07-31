@@ -51,6 +51,8 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     mFallbackGravatar = new QCheckBox(i18n("Fallback to Gravatar"));
     mFallbackGravatar->setObjectName(QStringLiteral("fallbackgravatar"));
     topLayout->addWidget(mFallbackGravatar);
+    connect(mUseLibravatar, &QCheckBox::toggled, mFallbackGravatar, &QCheckBox::setEnabled);
+    mFallbackGravatar->setEnabled(false);
 
     mUseDefaultPixmap = new QCheckBox(i18n("Use Default Image"));
     mUseDefaultPixmap->setObjectName(QStringLiteral("usedefaultimage"));
