@@ -1130,8 +1130,22 @@ void MainWidget::slotCheckGravatar()
     if (lst.count() == 1) {
         Akonadi::Item item = lst.first();
         if (item.hasPayload<KContacts::Addressee>()) {
+            KContacts::Addressee address = item.payload<KContacts::Addressee>();
+            const QString email = address.preferredEmail();
+            if (email.isEmpty()) {
+                KMessageBox::error(this, i18n("Any email found for this contact."));
+                return;
+            }
             QPointer<KABGravatar::GravatarUpdateDialog> dlg = new KABGravatar::GravatarUpdateDialog(this);
-            //dlg->setEmail();
+            dlg->setEmail(email);
+            if (!address.photo().isEmpty()) {
+                if (address.photo().isIntern()) {
+                    const QPixmap pix = QPixmap::fromImage(address.photo().data());
+                    dlg->setOriginalPixmap(pix);
+                } else {
+                    //Add support for url
+                }
+            }
             if (dlg->exec()) {
                 //extract emails.
             }
