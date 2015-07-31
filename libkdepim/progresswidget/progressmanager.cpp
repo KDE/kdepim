@@ -124,11 +124,8 @@ void ProgressItem::cancel()
     qCDebug(LIBKDEPIM_LOG) << label();
     mCanceled = true;
     // Cancel all children.
-    QList<ProgressItem * > kids = mChildren.keys();
-    QList<ProgressItem * >::Iterator it(kids.begin());
-    QList<ProgressItem * >::Iterator end(kids.end());
-    for (; it != end; it++) {
-        ProgressItem *kid = *it;
+    for (auto it = mChildren.cbegin(), end = mChildren.cend(); it != end; ++it) {
+        ProgressItem *kid = it.key();
         if (kid->canBeCanceled()) {
             kid->cancel();
         }
