@@ -128,6 +128,8 @@ void GravatarUpdateWidget::slotSearchGravatar()
             connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
             connect(job, &PimCommon::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateWidget::slotResolvUrl);
             mSearchGravatar->setEnabled(false);
+            mPixmap = QPixmap();
+            mCurrentUrl.clear();
             job->start();
         } else {
             mResultGravatar->setText(i18n("Search is impossible."));
