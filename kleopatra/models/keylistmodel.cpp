@@ -388,17 +388,17 @@ public:
     explicit FlatKeyListModel(QObject *parent = Q_NULLPTR);
     ~FlatKeyListModel();
 
-    /* reimp */ int rowCount(const QModelIndex &pidx) const
+    int rowCount(const QModelIndex &pidx) const Q_DECL_OVERRIDE
     {
         return pidx.isValid() ? 0 : mKeysByFingerprint.size() ;
     }
 
 private:
-    /* reimp */ Key doMapToKey(const QModelIndex &index) const;
-    /* reimp */ QModelIndex doMapFromKey(const Key &key, int col) const;
-    /* reimp */ QList<QModelIndex> doAddKeys(const std::vector<Key> &keys);
-    /* reimp */ void doRemoveKey(const Key &key);
-    /* reimp */ void doClear()
+    Key doMapToKey(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QModelIndex doMapFromKey(const Key &key, int col) const Q_DECL_OVERRIDE;
+    QList<QModelIndex> doAddKeys(const std::vector<Key> &keys) Q_DECL_OVERRIDE;
+    void doRemoveKey(const Key &key) Q_DECL_OVERRIDE;
+    void doClear() Q_DECL_OVERRIDE
     {
         mKeysByFingerprint.clear();
     }
@@ -414,22 +414,22 @@ public:
     explicit HierarchicalKeyListModel(QObject *parent = Q_NULLPTR);
     ~HierarchicalKeyListModel();
 
-    /* reimp */ int rowCount(const QModelIndex &pidx) const;
+    int rowCount(const QModelIndex &pidx) const Q_DECL_OVERRIDE;
     using AbstractKeyListModel::index;
-    /* reimp */ QModelIndex index(int row, int col, const QModelIndex &pidx) const;
-    /* reimp */ QModelIndex parent(const QModelIndex &idx) const;
+    QModelIndex index(int row, int col, const QModelIndex &pidx) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &idx) const Q_DECL_OVERRIDE;
 
-    bool hasChildren(const QModelIndex &pidx) const
+    bool hasChildren(const QModelIndex &pidx) const Q_DECL_OVERRIDE
     {
         return rowCount(pidx) > 0 ;
     }
 
 private:
-    /* reimp */ Key doMapToKey(const QModelIndex &index) const;
-    /* reimp */ QModelIndex doMapFromKey(const Key &key, int col) const;
-    /* reimp */ QList<QModelIndex> doAddKeys(const std::vector<Key> &keys);
-    /* reimp */ void doRemoveKey(const Key &key);
-    /* reimp */ void doClear()
+    Key doMapToKey(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QModelIndex doMapFromKey(const Key &key, int col) const Q_DECL_OVERRIDE;
+    QList<QModelIndex> doAddKeys(const std::vector<Key> &keys) Q_DECL_OVERRIDE;
+    void doRemoveKey(const Key &key) Q_DECL_OVERRIDE;
+    void doClear() Q_DECL_OVERRIDE
     {
         mTopLevels.clear();
         mKeysByFingerprint.clear();

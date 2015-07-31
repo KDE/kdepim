@@ -702,7 +702,7 @@ private:
         connect(j, SIGNAL(result(GpgME::KeyGenerationResult,QByteArray,QString)),
                 this, SLOT(slotResult(GpgME::KeyGenerationResult,QByteArray,QString)));
         if (const Error err = j->start(createGnupgKeyParms()))
-            setField(QLatin1String("error"), i18n("Could not start certificate creation: %1",
+            setField(QStringLiteral("error"), i18n("Could not start certificate creation: %1",
                                                   QString::fromLocal8Bit(err.asString())));
         else {
             job = j;
@@ -721,29 +721,29 @@ private Q_SLOTS:
                      ? i18n("Operation canceled.")
                      : i18n("Could not create certificate: %1",
                             QString::fromLocal8Bit(result.error().asString())));
-            setField(QLatin1String("url"), QString());
-            setField(QLatin1String("result"), QString());
+            setField(QStringLiteral("url"), QString());
+            setField(QStringLiteral("result"), QString());
         } else if (pgp()) {
-            setField(QLatin1String("error"), QString());
-            setField(QLatin1String("url"), QString());
-            setField(QLatin1String("result"), i18n("Certificate created successfully.\n"
+            setField(QStringLiteral("error"), QString());
+            setField(QStringLiteral("url"), QString());
+            setField(QStringLiteral("result"), i18n("Certificate created successfully.\n"
                                                    "Fingerprint: %1", QLatin1String(result.fingerprint())));
         } else {
-            QFile file(tmpDir().absoluteFilePath(QLatin1String("request.p10")));
+            QFile file(tmpDir().absoluteFilePath(QStringLiteral("request.p10")));
 
             if (!file.open(QIODevice::WriteOnly)) {
-                setField(QLatin1String("error"), i18n("Could not write output file %1: %2",
+                setField(QStringLiteral("error"), i18n("Could not write output file %1: %2",
                                                       file.fileName(), file.errorString()));
-                setField(QLatin1String("url"), QString());
-                setField(QLatin1String("result"), QString());
+                setField(QStringLiteral("url"), QString());
+                setField(QStringLiteral("result"), QString());
             } else {
                 file.write(request);
-                setField(QLatin1String("error"), QString());
-                setField(QLatin1String("url"), QUrl::fromLocalFile(file.fileName()).toString());
-                setField(QLatin1String("result"), i18n("Certificate created successfully."));
+                setField(QStringLiteral("error"), QString());
+                setField(QStringLiteral("url"), QUrl::fromLocalFile(file.fileName()).toString());
+                setField(QStringLiteral("result"), i18n("Certificate created successfully."));
             }
         }
-        setField(QLatin1String("fingerprint"), QString::fromLatin1(result.fingerprint()));
+        setField(QStringLiteral("fingerprint"), QString::fromLatin1(result.fingerprint()));
         job = 0;
         Q_EMIT completeChanged();
         QMetaObject::invokeMethod(wizard(), "next", Qt::QueuedConnection);

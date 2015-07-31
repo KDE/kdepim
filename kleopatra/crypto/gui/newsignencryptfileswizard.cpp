@@ -312,27 +312,27 @@ public:
 
     QString archiveName(Protocol p) const
     {
-        return field(p == OpenPGP ? QLatin1String("archive-name-pgp") : QLatin1String("archive-name-cms")).toString();
+        return field(p == OpenPGP ? QStringLiteral("archive-name-pgp") : QStringLiteral("archive-name-cms")).toString();
     }
 
     bool isRemoveUnencryptedFilesEnabled() const
     {
-        return field(QLatin1String("remove")).toBool();
+        return field(QStringLiteral("remove")).toBool();
     }
 
     bool isSignOnlySelected() const
     {
-        return field(QLatin1String("sign")).toBool();
+        return field(QStringLiteral("sign")).toBool();
     }
 
     bool isEncryptOnlySelected() const
     {
-        return field(QLatin1String("encrypt")).toBool();
+        return field(QStringLiteral("encrypt")).toBool();
     }
 
     bool isSignEncryptSelected() const
     {
-        return field(QLatin1String("signencrypt")).toBool() ;
+        return field(QStringLiteral("signencrypt")).toBool() ;
     }
 
     bool isSigningSelected() const

@@ -47,8 +47,8 @@ public:
     ~SignCommand();
 
 private:
-    /* reimp */ int doStart();
-    /* reimp */ void doCanceled();
+    int doStart() Q_DECL_OVERRIDE;
+    void doCanceled() Q_DECL_OVERRIDE;
 public:
     static const char *staticName()
     {

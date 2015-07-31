@@ -157,7 +157,7 @@ shared_ptr<QIODevice> Log::createIOLogger(const shared_ptr<QIODevice> &io, const
 
     shared_ptr<IODeviceLogger> logger(new IODeviceLogger(io));
 
-    const QString timestamp = QDateTime::currentDateTime().toString(QLatin1String("yyMMdd-hhmmss"));
+    const QString timestamp = QDateTime::currentDateTime().toString(QStringLiteral("yyMMdd-hhmmss"));
 
     const QString fn = d->m_outputDirectory + QLatin1Char('/') + prefix + QLatin1Char('-') + timestamp + QLatin1Char('-') + KRandom::randomString(4);
     shared_ptr<QFile> file(new QFile(fn));

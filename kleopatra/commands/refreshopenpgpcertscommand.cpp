@@ -99,7 +99,7 @@ bool RefreshOpenPGPCertsCommand::preStartHook(QWidget *parent) const
                    "<para>Are you sure you want to continue?</para>"),
             i18nc("@title:window", "OpenPGP Certificate Refresh"),
             KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-            QLatin1String("warn-refresh-openpgp-expensive"))
+            QStringLiteral("warn-refresh-openpgp-expensive"))
            == KMessageBox::Continue;
 }
 
@@ -137,7 +137,7 @@ QString RefreshOpenPGPCertsCommand::errorExitMessage(const QStringList &args) co
     return i18nc("@info",
                  "<para>An error occurred while trying to refresh OpenPGP certificates.</para> "
                  "<para>The output from <command>%1</command> was: <message>%2</message></para>",
-                 args[0], errorString().replace(QLatin1String("\n"), QStringLiteral("<br>")));
+                 args[0], errorString().replace(QStringLiteral("\n"), QStringLiteral("<br>")));
 }
 
 QString RefreshOpenPGPCertsCommand::successMessage(const QStringList &) const

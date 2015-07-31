@@ -54,22 +54,12 @@ public:
 
     void setSectionResizeMode(unsigned int logicalIndex, ResizeMode mode);
     ResizeMode sectionResizeMode(unsigned int logicalIndex) const;
-#if 0
-    /* reimp */ void setModel(QAbstractItemModel *model);
-    /* reimp */ void setRootIndex(const QModelIndex &idx);
-#endif
 private:
     //@{
     /*! Defined, but not implemented, to catch at least some usage errors */
     void setResizeMode(int, ResizeMode);
     ResizeMode resizeMode() const;
     //@}
-#if 0
-protected:
-    /* reimp */ void updateGeometries();
-    void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    /* reimp */ void mouseReleaseEvent(QMouseEvent *e);
-#endif
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;

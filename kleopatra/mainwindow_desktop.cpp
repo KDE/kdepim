@@ -317,10 +317,10 @@ MainWindow::Private::Private(MainWindow *qq)
 
     setupActions();
 
-    connect(&controller, SIGNAL(message(QString,int)),  q->statusBar(), SLOT(showMessage(QString,int)));
+    connect(&controller, &KeyListController::message,  q->statusBar(), &QStatusBar::showMessage);
     connect(&controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)), q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)));
 
-    q->createGUI(QLatin1String("kleopatra.rc"));
+    q->createGUI(QStringLiteral("kleopatra.rc"));
 
     q->setAcceptDrops(true);
 

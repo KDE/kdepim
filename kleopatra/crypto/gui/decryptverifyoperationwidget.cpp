@@ -175,9 +175,6 @@ void DecryptVerifyOperationWidget::setArchiveDefinitions(const std::vector< shar
     }
 }
 
-static const int Mutable = 1;
-static const int Const   = 0;
-
 void DecryptVerifyOperationWidget::setMode(Mode mode)
 {
     setMode(mode, shared_ptr<ArchiveDefinition>());
@@ -214,7 +211,7 @@ void DecryptVerifyOperationWidget::setMode(Mode mode, const shared_ptr<ArchiveDe
 DecryptVerifyOperationWidget::Mode DecryptVerifyOperationWidget::mode() const
 {
     if (d->ui.verifyDetachedCB.isChecked())
-        if (d->ui.inputStack.currentIndex() == Const) {
+        if (d->ui.inputStack.currentIndex() == 0) {
             return VerifyDetachedWithSignature;
         } else {
             return VerifyDetachedWithSignedData;
@@ -232,7 +229,7 @@ void DecryptVerifyOperationWidget::setInputFileName(const QString &name)
 
 QString DecryptVerifyOperationWidget::inputFileName() const
 {
-    if (d->ui.inputStack.currentIndex() == Const) {
+    if (d->ui.inputStack.currentIndex() == 0) {
         return d->ui.inputFileNameLB.text();
     } else {
         return d->ui.inputFileNameRQ.fileName();
@@ -247,7 +244,7 @@ void DecryptVerifyOperationWidget::setSignedDataFileName(const QString &name)
 
 QString DecryptVerifyOperationWidget::signedDataFileName() const
 {
-    if (d->ui.signedDataStack.currentIndex() == Const) {
+    if (d->ui.signedDataStack.currentIndex() == 0) {
         return d->ui.signedDataFileNameLB.text();
     } else {
         return d->ui.signedDataFileNameRQ.fileName();

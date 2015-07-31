@@ -64,8 +64,8 @@ public:
     }
 
 private:
-    /* reimp */ void doStart();
-    /* reimp */ void doCancel();
+    void doStart() Q_DECL_OVERRIDE;
+    void doCancel() Q_DECL_OVERRIDE;
 
 private:
     class Private;

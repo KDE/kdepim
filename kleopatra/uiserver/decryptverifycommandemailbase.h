@@ -55,8 +55,8 @@ private:
     }
 
 private:
-    int doStart();
-    void doCanceled();
+    int doStart() Q_DECL_OVERRIDE;
+    void doCanceled() Q_DECL_OVERRIDE;
 public:
     static const char *staticName()
     {
@@ -71,8 +71,6 @@ private:
 class DecryptVerifyCommand : public AssuanCommandMixin<DecryptVerifyCommand, DecryptVerifyCommandEMailBase>
 {
 public:
-    //DecryptVerifyFilesCommand();
-    //~DecryptVerifyFilesCommand();
 
 private:
     DecryptVerifyOperation operation() const

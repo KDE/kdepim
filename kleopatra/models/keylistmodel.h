@@ -58,16 +58,16 @@ public:
     static AbstractKeyListModel *createFlatKeyListModel(QObject *parent = Q_NULLPTR);
     static AbstractKeyListModel *createHierarchicalKeyListModel(QObject *parent = Q_NULLPTR);
 
-    /* reimp */ GpgME::Key key(const QModelIndex &idx) const;
-    /* reimp */ std::vector<GpgME::Key> keys(const QList<QModelIndex> &indexes) const;
+    GpgME::Key key(const QModelIndex &idx) const Q_DECL_OVERRIDE;
+    std::vector<GpgME::Key> keys(const QList<QModelIndex> &indexes) const Q_DECL_OVERRIDE;
 
     using QAbstractItemModel::index;
-    /* reimp */ QModelIndex index(const GpgME::Key &key) const
+    QModelIndex index(const GpgME::Key &key) const Q_DECL_OVERRIDE
     {
         return index(key, 0);
     }
     QModelIndex index(const GpgME::Key &key, int col) const;
-    /* reimp */ QList<QModelIndex> indexes(const std::vector<GpgME::Key> &keys) const;
+    QList<QModelIndex> indexes(const std::vector<GpgME::Key> &keys) const Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void rowAboutToBeMoved(const QModelIndex &old_parent, int old_row);

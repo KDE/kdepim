@@ -60,12 +60,12 @@ public:
 
     virtual AbstractKeyListSortFilterProxyModel *clone() const = 0;
 
-    /* reimp */ GpgME::Key key(const QModelIndex &idx) const;
-    /* reimp */ std::vector<GpgME::Key> keys(const QList<QModelIndex> &indexes) const;
+    GpgME::Key key(const QModelIndex &idx) const Q_DECL_OVERRIDE;
+    std::vector<GpgME::Key> keys(const QList<QModelIndex> &indexes) const Q_DECL_OVERRIDE;
 
     using QAbstractItemModel::index;
-    /* reimp */ QModelIndex index(const GpgME::Key &key) const;
-    /* reimp */ QList<QModelIndex> indexes(const std::vector<GpgME::Key> &keys) const;
+    QModelIndex index(const GpgME::Key &key) const Q_DECL_OVERRIDE;
+    QList<QModelIndex> indexes(const std::vector<GpgME::Key> &keys) const Q_DECL_OVERRIDE;
 
 private:
     void init();
@@ -83,7 +83,7 @@ public:
     boost::shared_ptr<const KeyFilter> keyFilter() const;
     void setKeyFilter(const boost::shared_ptr<const KeyFilter> &kf);
 
-    /* reimp */ KeyListSortFilterProxyModel *clone() const;
+    KeyListSortFilterProxyModel *clone() const Q_DECL_OVERRIDE;
 
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
