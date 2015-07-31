@@ -53,10 +53,10 @@ public:
     virtual ~CategoryHierarchyReaderQComboBox() {}
 
 protected:
-    virtual void clear();
-    virtual void goUp();
-    virtual void addChild(const QString &label, const QVariant &userData = QVariant());
-    virtual int depth() const;
+    void clear() Q_DECL_OVERRIDE;
+    void goUp() Q_DECL_OVERRIDE;
+    void addChild(const QString &label, const QVariant &userData = QVariant()) Q_DECL_OVERRIDE;
+    int depth() const Q_DECL_OVERRIDE;
 
 private:
     KComboBox *mBox;
@@ -72,10 +72,10 @@ public:
     virtual ~CategoryHierarchyReaderQTreeWidget() {}
 
 protected:
-    virtual void clear();
-    virtual void goUp();
-    virtual void addChild(const QString &label, const QVariant &userData = QVariant());
-    virtual int depth() const;
+    void clear() Q_DECL_OVERRIDE;
+    void goUp() Q_DECL_OVERRIDE;
+    void addChild(const QString &label, const QVariant &userData = QVariant()) Q_DECL_OVERRIDE;
+    int depth() const Q_DECL_OVERRIDE;
 
 private:
     QTreeWidget *mTree;

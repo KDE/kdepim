@@ -64,7 +64,7 @@ public:
     virtual Plugin *createPluginFactory() = 0;
 
 protected:
-    virtual QObject *createObject(QObject *, const char *, const QStringList &)
+    QObject *createObject(QObject *, const char *, const QStringList &) Q_DECL_OVERRIDE
     {
         return 0;
     }

@@ -45,13 +45,13 @@ public:
     static KCalPrefs *instance();
 
     /** Set preferences to default values */
-    void usrSetDefaults();
+    void usrSetDefaults() Q_DECL_OVERRIDE;
 
     /** Read preferences from config file */
-    void usrRead();
+    void usrRead() Q_DECL_OVERRIDE;
 
     /** Write preferences to config file */
-    bool usrSave();
+    bool usrSave() Q_DECL_OVERRIDE;
 
 protected:
     void setTimeZoneDefault();

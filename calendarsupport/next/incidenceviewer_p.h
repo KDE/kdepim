@@ -34,7 +34,7 @@ class TextBrowser : public QTextBrowser
 public:
     explicit TextBrowser(QWidget *parent = Q_NULLPTR);
 
-    void setSource(const QUrl &name);
+    void setSource(const QUrl &name) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void attachmentUrlClicked(const QString &uri);

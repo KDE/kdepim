@@ -36,7 +36,7 @@ public:
         : KIdentityManagement::IdentityManager(true/*readonly*/, parent, name) {}
 
 protected:
-    virtual void createDefaultIdentity(QString &fullName, QString &emailAddress);
+    void createDefaultIdentity(QString &fullName, QString &emailAddress) Q_DECL_OVERRIDE;
 };
 
 KIdentityManagement::IdentityManager *identityManager();
