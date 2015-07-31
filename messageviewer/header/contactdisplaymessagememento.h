@@ -52,6 +52,8 @@ public:
 
     QPixmap gravatarPixmap() const;
 
+    QImage imageFromUrl() const;
+
 Q_SIGNALS:
     // TODO: Factor our update and detach into base class
     void update(MessageViewer::Viewer::UpdateMode);
@@ -66,6 +68,7 @@ private:
     Viewer::DisplayFormatMessage mForceDisplayTo;
     KContacts::Picture mPhoto;
     QPixmap mGravatarPixmap;
+    QImage mImageFromUrl;
     QString mEmailAddress;
     bool mFinished;
     bool mMailAllowToRemoteContent;

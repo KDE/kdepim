@@ -22,6 +22,7 @@
 #include "pimcommon/util/networkutil.h"
 #include "settings/globalsettings.h"
 #include <Akonadi/Contact/ContactSearchJob>
+#include <kio/transferjob.h>
 
 using namespace MessageViewer;
 
@@ -65,7 +66,36 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
         processAddress(addressee);
         searchPhoto(searchJob->contacts());
         if (!mPhoto.isEmpty()) {
-            emit update(Viewer::Delayed);
+            //We have a data raw => we can update message
+            if (mPhoto.isIntern()) {
+                emit update(Viewer::Delayed);
+            } else {
+                QUrl url = QUrl(mPhoto.url());
+                QImage image;
+                bool ok = false;
+
+                if (url.isLocalFile()) {
+                    if (image.load(url.toLocalFile())) {
+                        ok = true;
+                    }
+                } else {
+                    QByteArray imageData;
+                    KIO::TransferJob *job = KIO::get(url, KIO::NoReload);
+                    QObject::connect(job, &KIO::TransferJob::data,
+                                     [&imageData](KIO::Job *, const QByteArray &data) {
+                                        imageData.append(data);
+                                     });
+                    if (job->exec()) {
+                        if (image.loadFromData(imageData)) {
+                            ok = true;
+                        }
+                    }
+                }
+                if (ok) {
+                    mImageFromUrl = image;
+                    Q_EMIT update(Viewer::Delayed);
+                }
+            }
         }
     }
     if (!PimCommon::NetworkUtil::self()->lowBandwidth()) {
@@ -116,6 +146,11 @@ bool ContactDisplayMessageMemento::searchPhoto(const KContacts::AddresseeList &l
         }
     }
     return foundPhoto;
+}
+
+QImage ContactDisplayMessageMemento::imageFromUrl() const
+{
+    return mImageFromUrl;
 }
 
 QPixmap ContactDisplayMessageMemento::gravatarPixmap() const

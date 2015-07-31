@@ -313,6 +313,8 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
                 // get photo data and convert to data: url
                 const QImage photo = photoMemento->photo().data();
                 updateXFaceSettings(photo, settings);
+            } else if (!photoMemento->imageFromUrl().isNull()) {
+                updateXFaceSettings(photoMemento->imageFromUrl(), settings);
             } else if (!photoMemento->photo().url().isEmpty()) {
                 settings.photoURL = photoMemento->photo().url();
                 if (settings.photoURL.startsWith(QLatin1Char('/'))) {
