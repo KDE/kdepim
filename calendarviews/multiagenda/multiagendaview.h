@@ -57,7 +57,7 @@ public:
 
     bool customColumnSetupUsed() const;
     int customNumberOfColumns() const;
-    QVector<QString> customColumnTitles() const;
+    QStringList customColumnTitles() const;
     QVector<KCheckableProxyModel *>collectionSelectionModels() const;
 
     void setPreferences(const PrefsPtr &prefs) Q_DECL_OVERRIDE;

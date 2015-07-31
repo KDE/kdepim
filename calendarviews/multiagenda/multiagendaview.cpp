@@ -134,7 +134,7 @@ public:
     bool mPendingChanges;
     bool mCustomColumnSetupUsed;
     QVector<KCheckableProxyModel *> mCollectionSelectionModels;
-    QVector<QString> mCustomColumnTitles;
+    QStringList mCustomColumnTitles;
     int mCustomNumberOfColumns;
     QLabel *mLabel;
     QWidget *mRightDummyWidget;
@@ -692,12 +692,12 @@ void MultiAgendaView::doRestoreConfig(const KConfigGroup &configGroup)
 
     d->mCustomColumnSetupUsed = configGroup.readEntry("UseCustomColumnSetup", false);
     d->mCustomNumberOfColumns = configGroup.readEntry("CustomNumberOfColumns", 2);
-    d->mCustomColumnTitles =  configGroup.readEntry("ColumnTitles", QStringList()).toVector();
+    d->mCustomColumnTitles =  configGroup.readEntry("ColumnTitles", QStringList());
     if (d->mCustomColumnTitles.size() != d->mCustomNumberOfColumns) {
         const int orig = d->mCustomColumnTitles.size();
-        d->mCustomColumnTitles.resize(d->mCustomNumberOfColumns);
+        d->mCustomColumnTitles.reserve(d->mCustomNumberOfColumns);
         for (int i = orig; i < d->mCustomNumberOfColumns; ++i) {
-            d->mCustomColumnTitles[i] = generateColumnLabel(i);
+            d->mCustomColumnTitles.push_back(generateColumnLabel(i));
         }
     }
 
@@ -747,8 +747,7 @@ void MultiAgendaView::doSaveConfig(KConfigGroup &configGroup)
 {
     configGroup.writeEntry("UseCustomColumnSetup", d->mCustomColumnSetupUsed);
     configGroup.writeEntry("CustomNumberOfColumns", d->mCustomNumberOfColumns);
-    const QStringList titleList = d->mCustomColumnTitles.toList();
-    configGroup.writeEntry("ColumnTitles", titleList);
+    configGroup.writeEntry("ColumnTitles", d->mCustomColumnTitles);
     int idx = 0;
     foreach (KCheckableProxyModel *checkableProxyModel, d->mCollectionSelectionModels) {
         const QString groupName = configGroup.name() + QLatin1String("_subView_") + QString::number(idx);
@@ -775,10 +774,11 @@ void MultiAgendaView::customCollectionsChanged(ConfigDialogInterface *dlg)
     d->mCustomNumberOfColumns = dlg->numberOfColumns();
     QVector<KCheckableProxyModel *> newModels;
     newModels.resize(d->mCustomNumberOfColumns);
-    d->mCustomColumnTitles.resize(d->mCustomNumberOfColumns);
+    d->mCustomColumnTitles.clear();
+    d->mCustomColumnTitles.reserve(d->mCustomNumberOfColumns);
     for (int i = 0; i < d->mCustomNumberOfColumns; ++i) {
         newModels[i] = dlg->takeSelectionModel(i);
-        d->mCustomColumnTitles[i] = dlg->columnTitle(i);
+        d->mCustomColumnTitles.push_back(dlg->columnTitle(i));
     }
     d->mCollectionSelectionModels = newModels;
     d->mPendingChanges = true;
@@ -800,7 +800,7 @@ QVector<KCheckableProxyModel *> MultiAgendaView::collectionSelectionModels() con
     return d->mCollectionSelectionModels;
 }
 
-QVector<QString> MultiAgendaView::customColumnTitles() const
+QStringList MultiAgendaView::customColumnTitles() const
 {
     return d->mCustomColumnTitles;
 }
