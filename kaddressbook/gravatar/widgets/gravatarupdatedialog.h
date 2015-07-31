@@ -35,13 +35,20 @@ public:
     void setOriginalPixmap(const QPixmap &pix);
 
     void setOriginalUrl(const QString &url);
+
+    QUrl resolvedUrl() const;
+
+    bool saveUrl() const;
 private Q_SLOTS:
-    void slotAccepted();
+    void slotAccepted();    
+    void slotSaveImage();
+    void slotSaveUrl();
 
 private:
     void readConfig();
     void writeConfig();
     GravatarUpdateWidget *mGravatarUpdateWidget;
+    bool mSaveUrl;
 };
 }
 #endif // GRAVATARUPDATEDIALOG_H

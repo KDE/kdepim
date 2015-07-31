@@ -83,7 +83,7 @@ void GravatarUpdateWidget::setEmail(const QString &email)
 
 QPixmap GravatarUpdateWidget::pixmap() const
 {
-    return QPixmap();
+    return mPixmap;
 }
 
 void GravatarUpdateWidget::setOriginalUrl(const QString &url)
@@ -145,7 +145,8 @@ void GravatarUpdateWidget::slotSearchGravatarFinished(PimCommon::GravatarResolvU
 {
     if (job) {
         if (job->hasGravatar()) {
-            mResultGravatar->setPixmap(job->pixmap());
+            mPixmap = job->pixmap();
+            mResultGravatar->setPixmap(mPixmap);
         } else {
             mResultGravatar->setText(i18n("No Gravatar Found."));
         }

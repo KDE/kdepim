@@ -50,6 +50,7 @@ private Q_SLOTS:
     void slotResolvUrl(const QUrl &url);
 private:
     QString mEmail;
+    QPixmap mPixmap;
     QUrl mCurrentUrl;
     QLabel *mEmailLab;
     QPushButton *mSearchGravatar;

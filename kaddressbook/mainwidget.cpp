@@ -99,6 +99,7 @@
 #include <QStackedWidget>
 #include <QDBusConnection>
 #include <QDesktopServices>
+#include <ItemModifyJob>
 
 namespace
 {
@@ -1147,9 +1148,28 @@ void MainWidget::slotCheckGravatar()
                 }
             }
             if (dlg->exec()) {
-                //extract emails.
+                KContacts::Picture picture;
+                if (dlg->saveUrl()) {
+                    QUrl url = dlg->resolvedUrl();
+                    picture.setUrl(url.toString());
+                } else {
+                    QPixmap pix = dlg->pixmap();
+                    picture.setData(pix.toImage());
+                }
+                address.setPhoto(picture);
+                item.setPayload<KContacts::Addressee>(address);
+
+                Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item, this);
+                connect(modifyJob, &Akonadi::ItemModifyJob::result, this, &MainWidget::slotModifyContactFinished);
             }
             delete dlg;
         }
+    }
+}
+
+void MainWidget::slotModifyContactFinished(KJob *job)
+{
+    if (job->error()) {
+        qCDebug(KADDRESSBOOK_LOG) << "Error while modifying items. " << job->error() << job->errorString();
     }
 }

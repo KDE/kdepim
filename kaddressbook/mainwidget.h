@@ -114,6 +114,7 @@ private Q_SLOTS:
     void slotServerSideSubscription();
     void slotCurrentCollectionChanged(const Akonadi::Collection &col);
     void slotCheckGravatar();
+    void slotModifyContactFinished(KJob *job);
 private:
     const Akonadi::Item::List collectSelectedAllContactsItem(QItemSelectionModel *model);
     void initGrantleeThemeName();
