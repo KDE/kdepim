@@ -58,7 +58,7 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     mUseDefaultPixmap->setObjectName(QStringLiteral("usedefaultimage"));
     topLayout->addWidget(mUseDefaultPixmap);
 
-    mUseHttps = new QCheckBox(i18n("Use Https"));
+    mUseHttps = new QCheckBox(i18n("Use HTTPS"));
     mUseHttps->setObjectName(QStringLiteral("usehttps"));
     topLayout->addWidget(mUseHttps);
 
