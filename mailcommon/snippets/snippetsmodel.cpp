@@ -390,7 +390,7 @@ bool SnippetsModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         if (item->isGroup()) {
             Q_EMIT addNewDndSnippset(encodedData);
         } else {
-            if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("Do you want to update snippet?"), i18n("Rename snippset"))) {
+            if (KMessageBox::Yes == KMessageBox::questionYesNo(0, i18n("Do you want to update snippet?"), i18n("Rename snippet"))) {
                 item->setText(encodedData);
             }
         }
