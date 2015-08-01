@@ -142,12 +142,12 @@ protected:
 
 private:
     /**
-     * This method is called whenever the displayed contact @p group has been changed.
+     * This method is called whenever the displayed incidence @p item has been changed.
      */
-    void itemChanged(const Akonadi::Item &group) Q_DECL_OVERRIDE;
+    void itemChanged(const Akonadi::Item &item) Q_DECL_OVERRIDE;
 
     /**
-     * This method is called whenever the displayed contact group has been
+     * This method is called whenever the displayed incidence has been
      * removed from Akonadi.
      */
     void itemRemoved() Q_DECL_OVERRIDE;

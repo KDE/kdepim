@@ -244,6 +244,7 @@ void IncidenceViewer::itemChanged(const Akonadi::Item &item)
 
 void IncidenceViewer::itemRemoved()
 {
+    d->mCurrentItem = Akonadi::Item();
     d->mBrowser->clear();
 }
 
