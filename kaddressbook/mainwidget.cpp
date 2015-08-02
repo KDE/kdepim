@@ -1160,18 +1160,27 @@ void MainWidget::slotCheckGravatar()
             }
             if (dlg->exec()) {
                 KContacts::Picture picture = address.photo();
+                bool needToSave = false;
                 if (dlg->saveUrl()) {
-                    QUrl url = dlg->resolvedUrl();
-                    picture.setUrl(url.toString());
+                    const QUrl url = dlg->resolvedUrl();
+                    if (!url.isEmpty()) {
+                        picture.setUrl(url.toString());
+                        needToSave = true;
+                    }
                 } else {
-                    QPixmap pix = dlg->pixmap();
-                    picture.setData(pix.toImage());
+                    const QPixmap pix = dlg->pixmap();
+                    if (!pix.isNull()) {
+                        picture.setData(pix.toImage());
+                        needToSave = true;
+                    }
                 }
-                address.setPhoto(picture);
-                item.setPayload<KContacts::Addressee>(address);
+                if (needToSave) {
+                    address.setPhoto(picture);
+                    item.setPayload<KContacts::Addressee>(address);
 
-                Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item, this);
-                connect(modifyJob, &Akonadi::ItemModifyJob::result, this, &MainWidget::slotModifyContactFinished);
+                    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob(item, this);
+                    connect(modifyJob, &Akonadi::ItemModifyJob::result, this, &MainWidget::slotModifyContactFinished);
+                }
             }
             delete dlg;
         }
