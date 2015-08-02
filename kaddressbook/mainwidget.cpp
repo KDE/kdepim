@@ -329,10 +329,10 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     connect(mItemView, SIGNAL(doubleClicked(Akonadi::Item)),
             mActionManager->action(Akonadi::StandardContactActionManager::EditItem),
             SLOT(trigger()));
-    connect(mItemView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(itemSelectionChanged(QModelIndex,QModelIndex)));
-    connect(mItemView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(slotSelectionChanged()));
+    connect(mItemView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &MainWidget::itemSelectionChanged);
+    connect(mItemView->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &MainWidget::slotSelectionChanged);
 
     // show the contact details view as default
     mDetailsViewStack->setCurrentWidget(mContactDetails);
