@@ -175,7 +175,10 @@ static bool flushPart(QString &msg, QStringList &textParts,
 
 QMap<QString, QString> parseMailtoUrl(const KUrl &url)
 {
-    QMap<QString, QString> values = url.queryItems(KUrl::CaseInsensitiveKeys);
+    QMap<QString, QString> values;
+    if (url.scheme() != QLatin1String("mailto"))
+        return values;
+    values = url.queryItems(KUrl::CaseInsensitiveKeys);
 
     QStringList to;
     to << KEmailAddress::decodeMailtoUrl(url);

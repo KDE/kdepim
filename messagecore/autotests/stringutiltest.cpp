@@ -364,11 +364,10 @@ void StringUtilTest::test_parseMailtoUrl_data()
     QTest::addColumn<int>("numberOfTo");
 
     QTest::newRow("1 mailto") << QStringLiteral("mailto:foo@kde.org") << true << 1;
-    //I can't test it because it asserts in kpimutils
-    //QTest::newRow("invalid (not mailto)") << QStringLiteral("http://www.kde.org") << false << 0;
+    QTest::newRow("invalid (not mailto)") << QStringLiteral("http://www.kde.org") << false << 0;
     QTest::newRow("invalid (no email address") << QStringLiteral("mailto:") << false << 0;
-    //QTest::newRow("2 address") << QStringLiteral("mailto:foo@kde.org?foo2@kde.org") << true << 2;
-    //QTest::newRow("invalid") << QStringLiteral("fookde.org") << false << 0;
+    QTest::newRow("2 address") << QStringLiteral("mailto:foo@kde.org?to=foo2@kde.org") << true << 2;
+    QTest::newRow("invalid") << QStringLiteral("fookde.org") << false << 0;
 }
 
 void StringUtilTest::test_parseMailtoUrl()
