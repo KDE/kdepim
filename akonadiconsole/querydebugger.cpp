@@ -32,7 +32,6 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusArgument>
 #include <QtDBus/QDBusMetaType>
-#include <boost/concept_check.hpp>
 #include <QDateTime>
 
 #include <AkonadiCore/servermanager.h>
