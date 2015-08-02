@@ -94,10 +94,10 @@ bool MESSAGEVIEWER_EXPORT handleUrlWithQDesktopServices(const QUrl &url);
      */
 int MESSAGEVIEWER_EXPORT getWritePermissions();
 
-QList<KMime::Content *> MESSAGEVIEWER_EXPORT allContents(const KMime::Content *message);
-QList<KMime::Content *> MESSAGEVIEWER_EXPORT extractAttachments(const KMime::Message *message);
+KMime::Content::List MESSAGEVIEWER_EXPORT allContents(const KMime::Content *message);
+KMime::Content::List MESSAGEVIEWER_EXPORT extractAttachments(const KMime::Message *message);
 bool MESSAGEVIEWER_EXPORT saveContents(QWidget *parent,
-                                       const QList<KMime::Content *> &contents, KUrl &currentFolder);
+                                       const KMime::Content::List &contents, KUrl &currentFolder);
 bool MESSAGEVIEWER_EXPORT saveContent(QWidget *parent, KMime::Content *content,
                                       const QUrl &url);
 

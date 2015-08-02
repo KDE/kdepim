@@ -32,7 +32,7 @@ KMime::Content *MessageCore::NodeHelper::nextSibling(const KMime::Content *node)
     KMime::Content *next = 0;
     KMime::Content *parent = node->parent();
     if (parent) {
-        const KMime::Content::List contents = parent->contents();
+        const auto contents = parent->contents();
         const int index = contents.indexOf(const_cast<KMime::Content *>(node)) + 1;
         if (index < contents.size()) { //next on the same level
             next =  contents.at(index);

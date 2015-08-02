@@ -569,7 +569,7 @@ void ViewerPrivate::slotOpenWithDialogCurrentContent()
 
 void ViewerPrivate::slotOpenWithDialog()
 {
-    KMime::Content::List contents = selectedContents();
+    auto contents = selectedContents();
     if (contents.count() == 1) {
         attachmentOpenWith(contents.first());
     }
@@ -587,7 +587,7 @@ void ViewerPrivate::slotOpenWithActionCurrentContent(QAction *act)
 void ViewerPrivate::slotOpenWithAction(QAction *act)
 {
     KService::Ptr app = act->data().value<KService::Ptr>();
-    KMime::Content::List contents = selectedContents();
+    auto contents = selectedContents();
     if (contents.count() == 1) {
         attachmentOpenWith(contents.first(), app);
     }
@@ -733,11 +733,7 @@ KService::Ptr ViewerPrivate::getServiceOffer(KMime::Content *content)
 
 KMime::Content::List ViewerPrivate::selectedContents()
 {
-    KMime::Content::List contents;
-#ifndef QT_NO_TREEVIEW
-    contents = mMimePartTree->selectedContents();
-#endif
-    return contents;
+    return mMimePartTree->selectedContents();
 }
 
 void ViewerPrivate::attachmentOpenWith(KMime::Content *node, const KService::Ptr &offer)
@@ -1935,7 +1931,7 @@ void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
     }
     const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
     const bool isRoot = (content == mMessage.get());
-    const KMime::Content::List contents = Util::extractAttachments(mMessage.get());
+    const auto contents = Util::extractAttachments(mMessage.get());
 
     QMenu popup;
 
@@ -2149,7 +2145,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
 
 KMime::Content *ViewerPrivate::findContentByType(KMime::Content *content, const QByteArray &type)
 {
-    KMime::Content::List list = content->contents();
+    auto list = content->contents();
     Q_FOREACH (KMime::Content *c, list) {
         if (c->contentType()->mimeType() ==  type) {
             return c;
@@ -2667,7 +2663,7 @@ bool ViewerPrivate::mimePartTreeIsEmpty() const
 
 void ViewerPrivate::slotAttachmentSaveAs()
 {
-    const KMime::Content::List contents = selectedContents();
+    const auto contents = selectedContents();
     KUrl currentUrl;
     if (Util::saveAttachments(contents, mMainWindow, currentUrl)) {
         showOpenAttachmentFolderWidget(currentUrl);
@@ -2676,7 +2672,7 @@ void ViewerPrivate::slotAttachmentSaveAs()
 
 void ViewerPrivate::slotAttachmentSaveAll()
 {
-    const KMime::Content::List contents = Util::extractAttachments(mMessage.get());
+    const auto contents = Util::extractAttachments(mMessage.get());
     KUrl currentUrl;
     if (Util::saveAttachments(contents, mMainWindow, currentUrl)) {
         showOpenAttachmentFolderWidget(currentUrl);
@@ -2685,7 +2681,7 @@ void ViewerPrivate::slotAttachmentSaveAll()
 
 void ViewerPrivate::slotAttachmentView()
 {
-    KMime::Content::List contents = selectedContents();
+    auto contents = selectedContents();
 
     Q_FOREACH (KMime::Content *content, contents) {
         attachmentView(content);
@@ -2695,7 +2691,7 @@ void ViewerPrivate::slotAttachmentView()
 
 void ViewerPrivate::slotAttachmentProperties()
 {
-    KMime::Content::List contents = selectedContents();
+    auto contents = selectedContents();
 
     if (contents.isEmpty()) {
         return;
@@ -2716,8 +2712,7 @@ void ViewerPrivate::attachmentProperties(KMime::Content *content)
 void ViewerPrivate::slotAttachmentCopy()
 {
 #ifndef QT_NO_CLIPBOARD
-    KMime::Content::List contents = selectedContents();
-    attachmentCopy(contents);
+    attachmentCopy(selectedContents());
 #endif
 }
 
@@ -2750,7 +2745,7 @@ void ViewerPrivate::attachmentCopy(const KMime::Content::List &contents)
 
 void ViewerPrivate::slotAttachmentDelete()
 {
-    KMime::Content::List contents = selectedContents();
+    auto contents = selectedContents();
     if (contents.isEmpty()) {
         return;
     }
@@ -2767,7 +2762,7 @@ void ViewerPrivate::slotAttachmentDelete()
 
 void ViewerPrivate::slotAttachmentEdit()
 {
-    KMime::Content::List contents = selectedContents();
+    auto contents = selectedContents();
     if (contents.isEmpty()) {
         return;
     }

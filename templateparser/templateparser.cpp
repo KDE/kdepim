@@ -1247,7 +1247,7 @@ void TemplateParser::addProcessedBodyToMessage(const QString &plainBody,
 
     // Now, delete the old content and set the new content, which
     // is either only the new text or the new text with some attachments.
-    KMime::Content::List parts = mMsg->contents();
+    auto parts = mMsg->contents();
     foreach (KMime::Content *content, parts) {
         mMsg->removeContent(content, true/*delete*/);
     }

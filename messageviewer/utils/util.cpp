@@ -149,7 +149,7 @@ bool Util::handleUrlWithQDesktopServices(const QUrl &url)
 #endif
 }
 
-QList<KMime::Content *> Util::allContents(const KMime::Content *message)
+KMime::Content::List Util::allContents(const KMime::Content *message)
 {
     KMime::Content::List result;
     KMime::Content *child = MessageCore::NodeHelper::firstChild(message);
@@ -166,12 +166,11 @@ QList<KMime::Content *> Util::allContents(const KMime::Content *message)
     return result;
 }
 
-QList<KMime::Content *> Util::extractAttachments(const KMime::Message *message)
+KMime::Content::List Util::extractAttachments(const KMime::Message *message)
 {
-    const KMime::Content::List contents = allContents(message);
+    const auto contents = allContents(message);
     KMime::Content::List result;
-    for (KMime::Content::List::const_iterator it = contents.constBegin();
-            it != contents.constEnd();) {
+    for (auto it = contents.constBegin(); it != contents.constEnd();) {
         KMime::Content *content = *it;
         if (content->contentDisposition()->filename().trimmed().isEmpty() &&
                 (content->contentType()->name().trimmed().isEmpty() ||
@@ -186,7 +185,7 @@ QList<KMime::Content *> Util::extractAttachments(const KMime::Message *message)
     return result;
 }
 
-bool Util::saveContents(QWidget *parent, const QList<KMime::Content *> &contents, KUrl &currentFolder)
+bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, KUrl &currentFolder)
 {
     KUrl url, dirUrl;
     const bool multiple = (contents.count() > 1);

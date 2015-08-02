@@ -105,7 +105,7 @@ void NodeHelper::setNodeProcessed(KMime::Content *node, bool recurse)
     qCDebug(MESSAGEVIEWER_LOG) << "Node processed: " << node->index().toString() << node->contentType()->as7BitString();
     //<< " decodedContent" << node->decodedContent();
     if (recurse) {
-        KMime::Content::List contents = node->contents();
+        auto contents = node->contents();
         Q_FOREACH (KMime::Content *c, contents) {
             setNodeProcessed(c, true);
         }
@@ -135,7 +135,7 @@ void NodeHelper::setNodeUnprocessed(KMime::Content *node, bool recurse)
 
     qCDebug(MESSAGEVIEWER_LOG) << "Node UNprocessed: " << node;
     if (recurse) {
-        KMime::Content::List contents = node->contents();
+        auto contents = node->contents();
         Q_FOREACH (KMime::Content *c, contents) {
             setNodeUnprocessed(c, true);
         }
@@ -892,7 +892,7 @@ void NodeHelper::cleanFromExtraNodes(KMime::Content *node)
     QList<KMime::Content * > extraNodes = extraContents(node);
     Q_FOREACH (KMime::Content *extra, extraNodes) {
         QByteArray s = extra->encodedContent();
-        QList<KMime::Content * > children = node->contents();
+        auto children = node->contents();
         Q_FOREACH (KMime::Content *c, children) {
             if (c->encodedContent() == s) {
                 node->removeContent(c);
