@@ -69,7 +69,7 @@ public:
     QString references() const;
     void setReferences(const QString &references);
 
-    void setExtraHeaders(KMime::Headers::Base::List headers);
+    void setExtraHeaders(const KMime::Headers::Base::List &headers);
     KMime::Headers::Base::List extraHeaders() const;
 
     int transportId() const;

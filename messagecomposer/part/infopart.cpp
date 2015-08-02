@@ -167,7 +167,7 @@ void InfoPart::setReferences(const QString &references)
     d->references = references;
 }
 
-void InfoPart::setExtraHeaders(KMime::Headers::Base::List headers)
+void InfoPart::setExtraHeaders(const KMime::Headers::Base::List &headers)
 {
     d->extraHeaders = headers;
 }
