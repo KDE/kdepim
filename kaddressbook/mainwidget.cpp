@@ -332,7 +332,7 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
     connect(mItemView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(itemSelectionChanged(QModelIndex,QModelIndex)));
     connect(mItemView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
+            this, SLOT(slotSelectionChanged()));
 
     // show the contact details view as default
     mDetailsViewStack->setCurrentWidget(mContactDetails);
@@ -347,6 +347,7 @@ MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
 
     QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
     updateQuickSearchText();
+    slotSelectionChanged();
 }
 
 void MainWidget::configure()
@@ -1184,11 +1185,8 @@ void MainWidget::slotModifyContactFinished(KJob *job)
     }
 }
 
-void MainWidget::slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+void MainWidget::slotSelectionChanged()
 {
-    Q_UNUSED(selected);
-    Q_UNUSED(deselected);
-
     bool hasUniqSelection = false;
     bool hasSelection = false;
     if (mItemView->selectionModel()->selection().count() == 1) {
