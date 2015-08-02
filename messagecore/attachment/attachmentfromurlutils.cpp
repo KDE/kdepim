@@ -19,15 +19,18 @@
 #include "attachmentfromurljob.h"
 #include "attachmentfromurlutils.h"
 #include "messagecore/settings/globalsettings.h"
-#include <KMimeType>
 #include "messagecore_debug.h"
+
+#include <QMimeDatabase>
+#include <QMimeType>
 
 namespace MessageCore
 {
 MessageCore::AttachmentFromUrlBaseJob *AttachmentFromUrlUtils::createAttachmentJob(const QUrl &url, QObject *parent)
 {
     MessageCore::AttachmentFromUrlBaseJob *ajob = 0;
-    if (KMimeType::findByUrl(url)->name() == QLatin1String("inode/directory")) {
+    QMimeDatabase db;
+    if (db.mimeTypeForUrl(url).name() == QLatin1String("inode/directory")) {
         qCDebug(MESSAGECORE_LOG) << "Creating attachment from folder";
         ajob = new MessageCore::AttachmentFromFolderJob(url, parent);
     } else {

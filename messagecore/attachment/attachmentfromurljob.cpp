@@ -25,13 +25,14 @@
 #include <KIO/Scheduler>
 #include <KIO/TransferJob>
 #include <KLocalizedString>
-#include <KMimeType>
+#include <KFormat>
 
 #include <QFileInfo>
+#include <QMimeDatabase>
+#include <QMimeType>
+#include <QUrlQuery>
 
 #include <boost/shared_ptr.hpp>
-#include <KFormat>
-#include <QUrlQuery>
 
 using namespace MessageCore;
 
@@ -73,15 +74,16 @@ void AttachmentFromUrlJob::Private::transferJobResult(KJob *job)
     KIO::TransferJob *transferJob = static_cast<KIO::TransferJob *>(job);
 
     // Determine the MIME type and filename of the attachment.
-    const QString mimeType = transferJob->mimetype();
-    qCDebug(MESSAGECORE_LOG) << "Mimetype is" << mimeType;
+    const QString mimeTypeName = transferJob->mimetype();
+    qCDebug(MESSAGECORE_LOG) << "Mimetype is" << mimeTypeName;
 
     QString fileName = q->url().fileName();
     if (fileName.isEmpty()) {
-        const KMimeType::Ptr mimeTypePtr = KMimeType::mimeType(mimeType, KMimeType::ResolveAliases);
-        if (mimeTypePtr) {
+        QMimeDatabase db;
+        const auto mimeType = db.mimeTypeForName(mimeTypeName);
+        if (mimeType.isValid()) {
             fileName = i18nc("a file called 'unknown.ext'", "unknown%1",
-                             mimeTypePtr->mainExtension());
+                             mimeType.preferredSuffix());
         } else {
             fileName = i18nc("a file called 'unknown'", "unknown");
         }
@@ -94,7 +96,7 @@ void AttachmentFromUrlJob::Private::transferJobResult(KJob *job)
     QUrlQuery query(q->url());
     const QString value = query.queryItemValue(QLatin1Literal("charset"));
     part->setCharset(value.toLatin1());
-    part->setMimeType(mimeType.toLatin1());
+    part->setMimeType(mimeTypeName.toLatin1());
     part->setName(fileName);
     part->setFileName(fileName);
     part->setData(mData);
