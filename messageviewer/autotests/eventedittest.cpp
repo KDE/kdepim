@@ -254,7 +254,8 @@ void EventEditTest::shouldEventHasCorrectSubject()
     QString subject = QStringLiteral("Test Note");
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
-    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("noteedit"));
+    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("eventedit"));
+    QVERIFY(noteedit);
     QSignalSpy spy(&edit, SIGNAL(createEvent(KCalCore::Event::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
@@ -270,7 +271,8 @@ void EventEditTest::shouldSelectLineWhenPutMessage()
     QString subject = QStringLiteral("Test Note");
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
-    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("noteedit"));
+    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("eventedit"));
+    QVERIFY(noteedit);
     QVERIFY(noteedit->hasSelectedText());
     const QString selectedText = noteedit->selectedText();
     QCOMPARE(selectedText, QStringLiteral("Reply to \"%1\"").arg(subject));
@@ -292,7 +294,8 @@ void EventEditTest::shouldHaveCorrectStartEndDateTime()
     MessageViewer::EventDateTimeWidget *endDateTime = edit.findChild<MessageViewer::EventDateTimeWidget *>(QStringLiteral("enddatetimeedit"));
     endDateTime->setDateTime(endDt);
 
-    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("noteedit"));
+    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("eventedit"));
+    QVERIFY(noteedit);
     QSignalSpy spy(&edit, SIGNAL(createEvent(KCalCore::Event::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
@@ -312,7 +315,8 @@ void EventEditTest::shouldSetFocusWhenWeCallTodoEdit()
     MessageViewer::EventEdit edit;
     edit.show();
     QTest::qWaitForWindowExposed(&edit);
-    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("noteedit"));
+    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("eventedit"));
+    QVERIFY(noteedit);
     edit.setFocus();
     edit.showEventEdit();
     QVERIFY(noteedit->hasFocus());
@@ -346,7 +350,8 @@ void EventEditTest::shouldEnabledSaveOpenEditorButton()
     msg->subject(true)->fromUnicodeString(QStringLiteral("Test note"), "us-ascii");
     edit.setMessage(msg);
 
-    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("noteedit"));
+    QLineEdit *noteedit = edit.findChild<QLineEdit *>(QStringLiteral("eventedit"));
+    QVERIFY(noteedit);
     QPushButton *openEditor = edit.findChild<QPushButton *>(QStringLiteral("open-editor-button"));
     QPushButton *save = edit.findChild<QPushButton *>(QStringLiteral("save-button"));
     QCOMPARE(openEditor->isEnabled(), true);
