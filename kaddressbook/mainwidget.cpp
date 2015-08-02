@@ -145,7 +145,15 @@ public:
 }
 
 MainWidget::MainWidget(KXMLGUIClient *guiClient, QWidget *parent)
-    : QWidget(parent), mAllContactsModel(Q_NULLPTR), mXmlGuiClient(guiClient), mGrantleeThemeManager(Q_NULLPTR), mQuickSearchAction(Q_NULLPTR)
+    : QWidget(parent),
+      mAllContactsModel(Q_NULLPTR),
+      mXmlGuiClient(guiClient),
+      mGrantleeThemeManager(Q_NULLPTR),
+      mQuickSearchAction(Q_NULLPTR),
+      mServerSideSubscription(Q_NULLPTR),
+      mSearchGravatarAction(Q_NULLPTR),
+      mSendVcardAction(Q_NULLPTR),
+      mSendEmailAction(Q_NULLPTR)
 {
 
     (void) new KaddressbookAdaptor(this);
@@ -710,10 +718,10 @@ void MainWidget::setupActions(KActionCollection *collection)
     connect(mQuickSearchAction, &QAction::triggered, mQuickSearchWidget, &QuickSearchWidget::slotFocusQuickSearch);
     collection->setDefaultShortcut(mQuickSearchAction, QKeySequence(Qt::ALT + Qt::Key_Q));
 
-    action = collection->addAction(QStringLiteral("send_mail"));
-    action->setText(i18n("Send an email..."));
-    action->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
-    connect(action, &QAction::triggered, this, &MainWidget::slotSendMail);
+    mSendEmailAction = collection->addAction(QStringLiteral("send_mail"));
+    mSendEmailAction->setText(i18n("Send an email..."));
+    mSendEmailAction->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
+    connect(mSendEmailAction, &QAction::triggered, this, &MainWidget::slotSendMail);
 
     mSendVcardAction = collection->addAction(QStringLiteral("send_vcards"));
     mSendVcardAction->setText(i18n("Send vCards..."));
@@ -1188,6 +1196,7 @@ void MainWidget::slotSelectionChanged(const QItemSelection &selected, const QIte
         hasSelection = true;
     }
     mSendVcardAction->setEnabled(hasSelection);
+    mSendEmailAction->setEnabled(hasSelection);
     mSearchGravatarAction->setEnabled(hasUniqSelection);
 }
 

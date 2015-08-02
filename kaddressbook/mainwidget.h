@@ -172,6 +172,7 @@ private:
     QAction *mServerSideSubscription;
     QAction *mSearchGravatarAction;
     QAction *mSendVcardAction;
+    QAction *mSendEmailAction;
 };
 
 #endif
