@@ -47,6 +47,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     mTabWidget = new SieveEditorTabWidget;
     connect(mTabWidget, &SieveEditorTabWidget::tabCloseRequestedIndex, this, &SieveEditorMainWidget::slotTabCloseRequested);
     connect(mTabWidget, &SieveEditorTabWidget::tabRemoveAllExclude, this, &SieveEditorMainWidget::slotTabRemoveAllExclude);
+    connect(mTabWidget, &SieveEditorTabWidget::tabCloseAllTab, this, &SieveEditorMainWidget::slotTabCloseAllRequested);
 
     mStackedWidget->addWidget(mTabWidget);
     mStackedWidget->addWidget(mEditorEmptyLabel);
@@ -528,6 +529,11 @@ void SieveEditorMainWidget::slotTabCloseRequested(int index)
         delete page;
     }
     updateStackedWidget();
+}
+
+void SieveEditorMainWidget::slotTabCloseAllRequested()
+{
+    //TODO
 }
 
 void SieveEditorMainWidget::slotTabRemoveAllExclude(int index)

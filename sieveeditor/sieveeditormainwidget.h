@@ -99,6 +99,7 @@ private Q_SLOTS:
     void slotUndo();
     void slotRedo();
     void slotSelectAll();
+    void slotTabCloseAllRequested();
 private:
     void updateStackedWidget();
     QWidget *hasExistingPage(const QUrl &url);
