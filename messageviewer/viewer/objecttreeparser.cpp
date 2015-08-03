@@ -96,7 +96,6 @@
 
 #include <KEmailAddress>
 #include <KTextToHTML>
-//#include <kstyle.h>
 
 // Qt includes
 #include <QApplication>

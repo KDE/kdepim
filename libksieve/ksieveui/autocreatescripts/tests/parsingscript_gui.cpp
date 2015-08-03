@@ -21,7 +21,6 @@
 #include "xmlprintingscriptbuilder.h"
 #include "parsingresultdialog.h"
 
-//#include <config-libksieve.h> // SIZEOF_UNSIGNED_LONG
 #include <ksieve/parser.h>
 using KSieve::Parser;
 
