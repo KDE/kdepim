@@ -22,6 +22,7 @@
 #include <QPushButton>
 #include <KPluralHandlingSpinBox>
 #include <QTest>
+#include <KSeparator>
 
 GravatarConfigureSettingsDialogTest::GravatarConfigureSettingsDialogTest(QObject *parent)
     : QObject(parent)
@@ -59,6 +60,12 @@ void GravatarConfigureSettingsDialogTest::shouldHaveDefaultValue()
 
     QCheckBox *useHttps = dlg.findChild<QCheckBox *>(QStringLiteral("usehttps"));
     QVERIFY(useHttps);
+
+    KSeparator *separator = dlg.findChild<KSeparator *>(QStringLiteral("separator"));
+    QVERIFY(separator);
+
+    KSeparator *separator2 = dlg.findChild<KSeparator *>(QStringLiteral("separator2"));
+    QVERIFY(separator2);
 }
 
 QTEST_MAIN(GravatarConfigureSettingsDialogTest)

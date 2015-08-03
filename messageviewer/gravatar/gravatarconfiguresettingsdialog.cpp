@@ -22,6 +22,7 @@
 
 #include <KLocalizedString>
 #include <KPluralHandlingSpinBox>
+#include <KSeparator>
 #include <QBoxLayout>
 #include <QCheckBox>
 #include <QDialogButtonBox>
@@ -34,6 +35,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent)
     : QDialog(parent)
 {
+    setWindowTitle(i18n("Configure Gravatar"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *topLayout = new QVBoxLayout;
     setLayout(topLayout);
@@ -76,12 +78,20 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     cacheSizeLayout->addWidget(mGravatarCacheSize);
     cacheSizeLayout->addStretch();
 
+    KSeparator *separator = new KSeparator(this);
+    separator->setObjectName(QStringLiteral("separator"));
+    topLayout->addWidget(separator);
+
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     topLayout->addLayout(buttonLayout);
     mClearGravatarCache = new QPushButton(i18n("Clear Gravatar Cache"));
     mClearGravatarCache->setObjectName(QStringLiteral("cleargravatarcachebutton"));
     buttonLayout->addWidget(mClearGravatarCache);
     buttonLayout->addStretch();
+
+    separator = new KSeparator(this);
+    separator->setObjectName(QStringLiteral("separator2"));
+    topLayout->addWidget(separator);
 
     connect(mClearGravatarCache, &QAbstractButton::clicked, this, &GravatarConfigureSettingsDialog::slotClearGravatarCache);
     topLayout->addWidget(buttonBox);
