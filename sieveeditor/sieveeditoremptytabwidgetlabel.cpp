@@ -36,12 +36,17 @@ void SieveEditorEmptyTabWidgetLabel::init()
 {
     //TODO improve text
     const QString placeholderText = i18n("<html><body style=\"color:#909090; font-size:14px\">"
-          "<div align='center'>"
-          "<div style=\"font-size:20px\">Open a script</div>"
-          "<table><tr><td>"
-          "<hr/>"
-          "</td></tr></table>"
-          "</div>"
-          "</body></html>");
+                                         "<div align='center'>"
+                                         "<div style=\"font-size:20px\">Debug a script:</div>"
+                                         "<div></div>"
+                                         "<li>Tools > Debug Sieve Script"
+                                         "<div style=\"font-size:20px\">Autogenerate script:</div>"
+                                         "<div></div>"
+                                         "<li>Tools > Autogenerate script"
+                                         "<div style=\"font-size:20px\">Import script:</div>"
+                                         "<li>File > Import"
+                                         "<div></div>"
+                                         "</div>"
+                                         "</body></html>");
     setText(placeholderText);
 }
