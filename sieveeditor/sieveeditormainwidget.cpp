@@ -533,7 +533,9 @@ void SieveEditorMainWidget::slotTabCloseRequested(int index)
 
 void SieveEditorMainWidget::slotTabCloseAllRequested()
 {
-    //TODO
+    for (int i = mTabWidget->count() - 1; i >= 0; --i) {
+        slotTabCloseRequested(i);
+    }
 }
 
 void SieveEditorMainWidget::slotTabRemoveAllExclude(int index)
