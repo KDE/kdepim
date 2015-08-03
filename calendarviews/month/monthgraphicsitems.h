@@ -107,11 +107,11 @@ public:
     bool hasEventBelow(int height);
 
     // TODO : move this to a new GUI class (monthcell could be GraphicsItems)
-    ScrollIndicator *upArrow()
+    ScrollIndicator *upArrow() const
     {
         return mUpArrow;
     }
-    ScrollIndicator *downArrow()
+    ScrollIndicator *downArrow() const
     {
         return mDownArrow;
     }

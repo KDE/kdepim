@@ -47,10 +47,8 @@ public:
 
     bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay) const Q_DECL_OVERRIDE;
 
-    /* reimp */
     void setCalendar(const Akonadi::ETMCalendar::Ptr &cal) Q_DECL_OVERRIDE;
 
-    /* reimp */
     bool hasConfigurationDialog() const Q_DECL_OVERRIDE;
 
     void setChanges(Changes changes) Q_DECL_OVERRIDE;

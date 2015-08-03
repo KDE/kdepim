@@ -66,60 +66,42 @@ public:
 
     ~TodoModel();
 
-    /**reimp*/
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
 
-    /**reimp*/
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;
 
-    /**reimp*/
     QVariant headerData(int section, Qt::Orientation, int role) const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar);
 
-    /**reimp*/
     void setIncidenceChanger(Akonadi::IncidenceChanger *changer);
 
-    /**reimp*/
     QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     bool dropMimeData(const QMimeData *data, Qt::DropAction action,
                       int row, int column, const QModelIndex &parent) Q_DECL_OVERRIDE;
 
-    /**reimp*/
     QStringList mimeTypes() const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     QModelIndex mapToSource(const QModelIndex &proxyIndex) const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    /**reimp*/
     QModelIndex buddy(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
