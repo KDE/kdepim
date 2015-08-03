@@ -98,28 +98,28 @@ QString Util::fileNameForMimetype(const QString &mimeType, int iconSize,
 
     // convert non-registered types to registered types
     if (mimeType == QLatin1String("application/x-vnd.kolab.contact")) {
-        tMimeType = QLatin1String("text/x-vcard");
+        tMimeType = QStringLiteral("text/x-vcard");
     } else if (mimeType == QLatin1String("application/x-vnd.kolab.event")) {
-        tMimeType = QLatin1String("application/x-vnd.akonadi.calendar.event");
+        tMimeType = QStringLiteral("application/x-vnd.akonadi.calendar.event");
     } else if (mimeType == QLatin1String("application/x-vnd.kolab.task")) {
-        tMimeType = QLatin1String("application/x-vnd.akonadi.calendar.todo");
+        tMimeType = QStringLiteral("application/x-vnd.akonadi.calendar.todo");
     } else if (mimeType == QLatin1String("application/x-vnd.kolab.journal")) {
-        tMimeType = QLatin1String("application/x-vnd.akonadi.calendar.journal");
+        tMimeType = QStringLiteral("application/x-vnd.akonadi.calendar.journal");
     } else if (mimeType == QLatin1String("application/x-vnd.kolab.note")) {
-        tMimeType = QLatin1String("application/x-vnd.akonadi.note");
+        tMimeType = QStringLiteral("application/x-vnd.akonadi.note");
     }
     KMimeType::Ptr mime = KMimeType::mimeType(tMimeType, KMimeType::ResolveAliases);
     if (mime) {
         fileName = mime->iconName();
     } else {
-        fileName = QLatin1String("unknown");
+        fileName = QStringLiteral("unknown");
         if (!tMimeType.isEmpty()) {
             qCWarning(MESSAGEVIEWER_LOG) << "unknown mimetype" << tMimeType;
         }
     }
     //WorkAround for #199083
     if (fileName == QLatin1String("text-vcard")) {
-        fileName = QLatin1String("text-x-vcard");
+        fileName = QStringLiteral("text-x-vcard");
     }
     if (fileName.isEmpty()) {
         fileName = fallbackFileName1;
@@ -191,7 +191,7 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, K
     const bool multiple = (contents.count() > 1);
     if (multiple) {
         // get the dir
-        dirUrl = KFileDialog::getExistingDirectoryUrl(QUrl(QLatin1String("kfiledialog:///saveAttachment")),
+        dirUrl = KFileDialog::getExistingDirectoryUrl(QUrl(QStringLiteral("kfiledialog:///saveAttachment")),
                  parent,
                  i18n("Save Attachments To"));
         if (!dirUrl.isValid()) {
@@ -209,7 +209,7 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, K
         if (fileName.isEmpty()) {
             fileName = i18nc("filename for an unnamed attachment", "attachment.1");
         }
-        KUrl pathUrl = KUrl(QLatin1String("kfiledialog:///saveAttachment/"));
+        KUrl pathUrl = KUrl(QStringLiteral("kfiledialog:///saveAttachment/"));
         pathUrl.addPath(fileName);
         url = KFileDialog::getSaveUrl(pathUrl ,
                                       QString(),
