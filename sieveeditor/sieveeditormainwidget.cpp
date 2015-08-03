@@ -90,7 +90,7 @@ QWidget *SieveEditorMainWidget::hasExistingPage(const QUrl &url)
 
 void SieveEditorMainWidget::updateStackedWidget()
 {
-    if(mTabWidget->count() == 0) {
+    if (mTabWidget->count() == 0) {
         mStackedWidget->setCurrentWidget(mEditorEmptyLabel);
     } else {
         mStackedWidget->setCurrentWidget(mTabWidget);
