@@ -59,22 +59,22 @@ AdBlockRuleFallbackImpl::AdBlockRuleFallbackImpl(const QString &filter)
             QStringList options(parsedLine.mid(optionsNumber + 1).split(QLatin1Char(',')));
             parsedLine = parsedLine.left(optionsNumber);
 
-            if (options.removeOne(QLatin1String("match-case"))) {
+            if (options.removeOne(QStringLiteral("match-case"))) {
                 m_regExp.setCaseSensitivity(Qt::CaseSensitive);
             }
 
-            if (options.removeOne(QLatin1String("third-party"))) {
+            if (options.removeOne(QStringLiteral("third-party"))) {
                 m_thirdPartyOption = true;
             }
 
-            if (options.removeOne(QLatin1String("~third-party"))) {
+            if (options.removeOne(QStringLiteral("~third-party"))) {
                 m_thirdPartyOption = true;
                 m_thirdPartyOptionReversed = true;
             }
 
             Q_FOREACH (const QString &option, options) {
                 // Domain restricted filter
-                const QString domainKeyword(QLatin1String("domain="));
+                const QString domainKeyword(QStringLiteral("domain="));
                 if (option.startsWith(domainKeyword)) {
                     options.removeOne(option);
                     const QStringList domainList = option.mid(domainKeyword.length()).split(QLatin1Char('|'));
@@ -148,34 +148,34 @@ QString AdBlockRuleFallbackImpl::convertPatternToRegExp(const QString &wildcardP
     QString pattern = wildcardPattern;
 
     // remove multiple wildcards
-    pattern.replace(QRegExp(QLatin1String("\\*+")), QStringLiteral("*"));
+    pattern.replace(QRegExp(QStringLiteral("\\*+")), QStringLiteral("*"));
 
     // remove anchors following separator placeholder
-    pattern.replace(QRegExp(QLatin1String("\\^\\|$")), QStringLiteral("^"));
+    pattern.replace(QRegExp(QStringLiteral("\\^\\|$")), QStringLiteral("^"));
 
     // remove leading wildcards
-    pattern.replace(QRegExp(QLatin1String("^(\\*)")), QStringLiteral(""));
+    pattern.replace(QRegExp(QStringLiteral("^(\\*)")), QStringLiteral(""));
 
     // remove trailing wildcards
-    pattern.replace(QRegExp(QLatin1String("(\\*)$")), QStringLiteral(""));
+    pattern.replace(QRegExp(QStringLiteral("(\\*)$")), QStringLiteral(""));
 
     // escape special symbols
-    pattern.replace(QRegExp(QLatin1String("(\\W)")), QStringLiteral("\\\\1"));
+    pattern.replace(QRegExp(QStringLiteral("(\\W)")), QStringLiteral("\\\\1"));
 
     // process extended anchor at expression start
-    pattern.replace(QRegExp(QLatin1String("^\\\\\\|\\\\\\|")), QStringLiteral("^[\\w\\-]+:\\/+(?!\\/)(?:[^\\/]+\\.)?"));
+    pattern.replace(QRegExp(QStringLiteral("^\\\\\\|\\\\\\|")), QStringLiteral("^[\\w\\-]+:\\/+(?!\\/)(?:[^\\/]+\\.)?"));
 
     // process separator placeholders
-    pattern.replace(QRegExp(QLatin1String("\\\\\\^")), QStringLiteral("(?:[^\\w\\d\\-.%]|$)"));
+    pattern.replace(QRegExp(QStringLiteral("\\\\\\^")), QStringLiteral("(?:[^\\w\\d\\-.%]|$)"));
 
     // process anchor at expression start
-    pattern.replace(QRegExp(QLatin1String("^\\\\\\|")), QStringLiteral("^"));
+    pattern.replace(QRegExp(QStringLiteral("^\\\\\\|")), QStringLiteral("^"));
 
     // process anchor at expression end
-    pattern.replace(QRegExp(QLatin1String("\\\\\\|$")), QStringLiteral("$"));
+    pattern.replace(QRegExp(QStringLiteral("\\\\\\|$")), QStringLiteral("$"));
 
     // replace wildcards by .*
-    pattern.replace(QRegExp(QLatin1String("\\\\\\*")), QStringLiteral(".*"));
+    pattern.replace(QRegExp(QStringLiteral("\\\\\\*")), QStringLiteral(".*"));
 
     // Finally, return...
     return pattern;

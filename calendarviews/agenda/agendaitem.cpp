@@ -1269,7 +1269,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
     if (r.height() - 16 > 0) {
 
         QPixmap leftLines;
-        QString key(QLatin1String("ko_l"));
+        QString key(QStringLiteral("ko_l"));
         if (!QPixmapCache::find(key, leftLines)) {
             leftLines = QPixmap(QStringLiteral(":/leftLines.png"));
             QPixmapCache::insert(key, leftLines);
@@ -1279,7 +1279,7 @@ void AgendaItem::drawRoundedRect(QPainter *p, const QRect &rect,
                     QBrush(leftLines));
 
         QPixmap rightLines;
-        key = QLatin1String("ko_r");
+        key = QStringLiteral("ko_r");
         if (!QPixmapCache::find(key, rightLines)) {
             rightLines = QPixmap(QStringLiteral(":/rightLines.png"));
             QPixmapCache::insert(key, rightLines);

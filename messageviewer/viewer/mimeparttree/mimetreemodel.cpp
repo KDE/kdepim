@@ -47,7 +47,7 @@ public:
         Q_ASSERT(index.isValid());
         QStringList ids = index.toString().split(QLatin1Char('.'));
         const QString lastId = ids.takeLast();
-        index = KMime::ContentIndex(ids.join(QLatin1String(".")));
+        index = KMime::ContentIndex(ids.join(QStringLiteral(".")));
         return lastId.toInt();
     }
 

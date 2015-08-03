@@ -147,7 +147,7 @@ public:
 
         QMapIterator<QString, int> i(secondsSpent);
         QFontMetrics fm = p.fontMetrics();
-        int lineHeight = fm.boundingRect(QLatin1String("No category")).height();
+        int lineHeight = fm.boundingRect(QStringLiteral("No category")).height();
         int totalLineHeight = lineHeight + 2; // vertical margin included
 
         while (i.hasNext())

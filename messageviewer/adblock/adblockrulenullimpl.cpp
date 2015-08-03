@@ -58,77 +58,77 @@ bool AdBlockRuleNullImpl::isNullFilter(const QString &filter)
         // to check option && ~option. Hope it will NOT be a problem...
 
         // third_party: managed inside adblockrulefallbackimpl
-        if (option.endsWith(QLatin1String("third-party"))) {
+        if (option.endsWith(QStringLiteral("third-party"))) {
             return false;
         }
 
         // script
-        if (option.endsWith(QLatin1String("script"))) {
+        if (option.endsWith(QStringLiteral("script"))) {
             return true;
         }
 
         // image
-        if (option.endsWith(QLatin1String("image"))) {
+        if (option.endsWith(QStringLiteral("image"))) {
             return true;
         }
 
         // background
-        if (option.endsWith(QLatin1String("background"))) {
+        if (option.endsWith(QStringLiteral("background"))) {
             return true;
         }
 
         // stylesheet
-        if (option.endsWith(QLatin1String("stylesheet"))) {
+        if (option.endsWith(QStringLiteral("stylesheet"))) {
             return true;
         }
 
         // object
-        if (option.endsWith(QLatin1String("object"))) {
+        if (option.endsWith(QStringLiteral("object"))) {
             return true;
         }
 
         // xbl
-        if (option.endsWith(QLatin1String("xbl"))) {
+        if (option.endsWith(QStringLiteral("xbl"))) {
             return true;
         }
 
         // ping
-        if (option.endsWith(QLatin1String("ping"))) {
+        if (option.endsWith(QStringLiteral("ping"))) {
             return true;
         }
 
         // xmlhttprequest
-        if (option.endsWith(QLatin1String("xmlhttprequest"))) {
+        if (option.endsWith(QStringLiteral("xmlhttprequest"))) {
             return true;
         }
 
         // object_subrequest
-        if (option.endsWith(QLatin1String("object-subrequest"))) {
+        if (option.endsWith(QStringLiteral("object-subrequest"))) {
             return true;
         }
 
         // dtd
-        if (option.endsWith(QLatin1String("dtd"))) {
+        if (option.endsWith(QStringLiteral("dtd"))) {
             return true;
         }
 
         // subdocument
-        if (option.endsWith(QLatin1String("subdocument"))) {
+        if (option.endsWith(QStringLiteral("subdocument"))) {
             return true;
         }
 
         // document
-        if (option.endsWith(QLatin1String("document"))) {
+        if (option.endsWith(QStringLiteral("document"))) {
             return true;
         }
 
         // other
-        if (option.endsWith(QLatin1String("other"))) {
+        if (option.endsWith(QStringLiteral("other"))) {
             return true;
         }
 
         // collapse
-        if (option.endsWith(QLatin1String("collapse"))) {
+        if (option.endsWith(QStringLiteral("collapse"))) {
             return true;
         }
     }

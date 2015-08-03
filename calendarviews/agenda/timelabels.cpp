@@ -203,11 +203,11 @@ void TimeLabels::paintEvent(QPaintEvent *)
     // in some locale's
     QString suffix;
     if (!KLocale::global()->use12Clock()) {
-        suffix = QLatin1String("00");
+        suffix = QStringLiteral("00");
     } else {
-        suffix = QLatin1String("am");
+        suffix = QStringLiteral("am");
         if (cell > 11) {
-            suffix = QLatin1String("pm");
+            suffix = QStringLiteral("pm");
         }
     }
 

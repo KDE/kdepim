@@ -259,8 +259,8 @@ void AdBlockSettingWidget::save()
     saveSpinBox(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
 
     // automatic filters
-    KConfig config(QLatin1String("messagevieweradblockrc"));
-    const QStringList list = config.groupList().filter(QRegExp(QLatin1String("FilterList \\d+")));
+    KConfig config(QStringLiteral("messagevieweradblockrc"));
+    const QStringList list = config.groupList().filter(QRegExp(QStringLiteral("FilterList \\d+")));
     foreach (const QString &group, list) {
         config.deleteGroup(group);
     }
@@ -269,17 +269,17 @@ void AdBlockSettingWidget::save()
     for (int i = 0; i < numberItem; ++i) {
         QListWidgetItem *subItem = automaticFiltersListWidget->item(i);
         KConfigGroup grp = config.group(QStringLiteral("FilterList %1").arg(i));
-        grp.writeEntry(QLatin1String("FilterEnabled"), subItem->checkState() == Qt::Checked);
-        grp.writeEntry(QLatin1String("url"), subItem->data(UrlList).toString());
-        grp.writeEntry(QLatin1String("name"), subItem->text());
+        grp.writeEntry(QStringLiteral("FilterEnabled"), subItem->checkState() == Qt::Checked);
+        grp.writeEntry(QStringLiteral("url"), subItem->data(UrlList).toString());
+        grp.writeEntry(QStringLiteral("name"), subItem->text());
         if (subItem->data(LastUpdateList).toDateTime().isValid()) {
-            grp.writeEntry(QLatin1String("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
+            grp.writeEntry(QStringLiteral("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
         }
         QString path = subItem->data(PathList).toString();
         if (path.isEmpty()) {
             path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("kmail2/adblockrules-%1").arg(i);
         }
-        grp.writeEntry(QLatin1String("path"), path);
+        grp.writeEntry(QStringLiteral("path"), path);
     }
 
     config.sync();
