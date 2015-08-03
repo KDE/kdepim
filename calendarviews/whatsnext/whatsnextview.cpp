@@ -68,10 +68,10 @@ int WhatsNextView::currentDateCount() const
     return mStartDate.daysTo(mEndDate);
 }
 
-void WhatsNextView::createTaskRow(KIconLoader &kil)
+void WhatsNextView::createTaskRow(KIconLoader *kil)
 {
     QString ipath;
-    kil.loadIcon(QLatin1String("view-calendar-tasks"), KIconLoader::NoGroup, 22,
+    kil->loadIcon(QLatin1String("view-calendar-tasks"), KIconLoader::NoGroup, 22,
                  KIconLoader::DefaultState, QStringList(), &ipath);
     mText += QLatin1String("<h2><img src=\"");
     mText += ipath;
@@ -82,9 +82,9 @@ void WhatsNextView::createTaskRow(KIconLoader &kil)
 
 void WhatsNextView::updateView()
 {
-    KIconLoader kil(QLatin1String("korganizer"));
+    KIconLoader *kil = KIconLoader::global();
     QString ipath;
-    kil.loadIcon(QLatin1String("office-calendar"), KIconLoader::NoGroup, 32,
+    kil->loadIcon(QStringLiteral("office-calendar"), KIconLoader::NoGroup, 32,
                  KIconLoader::DefaultState, QStringList(), &ipath);
 
     mText = QStringLiteral("<table width=\"100%\">\n");
@@ -116,7 +116,7 @@ void WhatsNextView::updateView()
 
     if (events.count() > 0) {
         mText += QLatin1String("<p></p>");
-        kil.loadIcon(QLatin1String("view-calendar-day"), KIconLoader::NoGroup, 22,
+        kil->loadIcon(QLatin1String("view-calendar-day"), KIconLoader::NoGroup, 22,
                      KIconLoader::DefaultState, QStringList(), &ipath);
         mText += QLatin1String("<h2><img src=\"");
         mText += ipath;
@@ -197,7 +197,7 @@ void WhatsNextView::updateView()
             if (me->status() == KCalCore::Attendee::NeedsAction && me->RSVP()) {
                 if (replies == 0) {
                     mText += QLatin1String("<p></p>");
-                    kil.loadIcon(QLatin1String("mail-reply-sender"), KIconLoader::NoGroup, 22,
+                    kil->loadIcon(QLatin1String("mail-reply-sender"), KIconLoader::NoGroup, 22,
                                  KIconLoader::DefaultState, QStringList(), &ipath);
                     mText += QLatin1String("<h2><img src=\"");
                     mText += ipath;
@@ -217,7 +217,7 @@ void WhatsNextView::updateView()
             if (me->status() == KCalCore::Attendee::NeedsAction && me->RSVP()) {
                 if (replies == 0) {
                     mText += QLatin1String("<p></p>");
-                    kil.loadIcon(QLatin1String("mail-reply-sender"), KIconLoader::NoGroup, 22,
+                    kil->loadIcon(QLatin1String("mail-reply-sender"), KIconLoader::NoGroup, 22,
                                  KIconLoader::DefaultState, QStringList(), &ipath);
                     mText += QLatin1String("<h2><img src=\"");
                     mText += ipath;

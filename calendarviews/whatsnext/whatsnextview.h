@@ -88,7 +88,7 @@ private Q_SLOTS:
     void showIncidence(const QString &);
 
 private:
-    void createTaskRow(KIconLoader &kil);
+    void createTaskRow(KIconLoader *kil);
     WhatsNextTextBrowser *mView;
     QString mText;
     QDate mStartDate;
