@@ -83,7 +83,7 @@ void MonitorItem::isAllMonitoredChanged()
 
 void MonitorItem::monitoredCollectionsChanged()
 {
-    const QVector<long long> list = mInterface->monitoredCollections();
+    const QVector<qint64> list = mInterface->monitoredCollections();
     monitoredCollections.clear();
     for (int i = 0; i < list.size(); i++) {
         if (i > 0) {
@@ -97,7 +97,7 @@ void MonitorItem::monitoredCollectionsChanged()
 
 void MonitorItem::monitoredItemsChanged()
 {
-    const QVector<long long> list = mInterface->monitoredItems();
+    const QVector<qint64> list = mInterface->monitoredItems();
     monitoredItems.clear();
     for (int i = 0; i < list.size(); i++) {
         if (i > 0) {
