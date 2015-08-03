@@ -141,7 +141,7 @@ target_link_libraries(kaddressbookprivate
   KF5::KCMUtils
   KF5::Codecs
   grantleetheme
-  kleo
+  KF5::Gpgmepp
 )
 if (BUILD_TESTING)
    add_subdirectory(merge/autotests)
