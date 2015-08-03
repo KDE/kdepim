@@ -33,6 +33,7 @@ private Q_SLOTS:
     void test_stripOffMessagePrefixBenchmark();
     void test_parseMailtoUrl_data();
     void test_parseMailtoUrl();
+    void test_parseMailtoUrlExtra();
     void test_stripOffMessagePrefix_data();
     void test_stripOffMessagePrefix();
 };

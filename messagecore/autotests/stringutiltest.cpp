@@ -382,6 +382,17 @@ void StringUtilTest::test_parseMailtoUrl()
 
 }
 
+void StringUtilTest::test_parseMailtoUrlExtra()
+{
+    KUrl url("mailto:someone@example.com?subject=This%20is%20the%20subject&cc=someone_else@example.com&body=This%20is%20the%20body");
+    auto data = StringUtil::parseMailtoUrl(url);
+    QCOMPARE(data.size(), 4);
+    QCOMPARE(data.value(QLatin1String("to")), QLatin1String("someone@example.com"));
+    QCOMPARE(data.value(QLatin1String("subject")), QLatin1String("This is the subject"));
+    QCOMPARE(data.value(QLatin1String("cc")), QLatin1String("someone_else@example.com"));
+    QCOMPARE(data.value(QLatin1String("body")), QLatin1String("This is the body"));
+}
+
 void StringUtilTest::test_stripOffMessagePrefix_data()
 {
     QTest::addColumn<QString>("subject");
