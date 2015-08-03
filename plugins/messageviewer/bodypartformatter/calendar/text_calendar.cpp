@@ -552,14 +552,14 @@ public:
         // transport later
         const KIdentityManagement::Identity identity =
             KIdentityManagement::IdentityManager().identityForAddress(
-                findReceiver(viewerInstance->message().get()));
+                findReceiver(viewerInstance->message().data()));
 
         const bool nullIdentity = (identity == KIdentityManagement::Identity::null());
 
         if (!nullIdentity) {
             KMime::Headers::Generic *x_header =
                 new KMime::Headers::Generic(
-                "X-KMail-Identity", msg.get(), QByteArray::number(identity.uoid()));
+                "X-KMail-Identity", msg.data(), QByteArray::number(identity.uoid()));
             msg->setHeader(x_header);
         }
 
@@ -576,7 +576,7 @@ public:
             }
             transportId = TransportManager::self()->defaultTransportId();
         }
-        msg->setHeader(new KMime::Headers::Generic("X-KMail-Transport", msg.get(), QString::number(transportId), "utf-8"));
+        msg->setHeader(new KMime::Headers::Generic("X-KMail-Transport", msg.data(), QString::number(transportId), "utf-8"));
 
         // Outlook will only understand the reply if the From: header is the
         // same as the To: header of the invitation message.

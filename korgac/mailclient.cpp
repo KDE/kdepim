@@ -279,7 +279,7 @@ bool MailClient::send(const KIdentityManagement::Identity &identity,
 
         if (!attachment.isEmpty()) {
             KMime::Headers::ContentDisposition *disposition =
-                new KMime::Headers::ContentDisposition(message.get());
+                new KMime::Headers::ContentDisposition(message.data());
             disposition->setDisposition(KMime::Headers::CDinline);
             message->setHeader(disposition);
             message->contentTransferEncoding()->setEncoding(KMime::Headers::CEquPr);

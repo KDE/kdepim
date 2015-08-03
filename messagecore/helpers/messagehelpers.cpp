@@ -29,7 +29,7 @@ KMime::Message::Ptr MessageCore::Util::message(const Akonadi::Item &item)
         return KMime::Message::Ptr();
     }
 
-    return item.payload<boost::shared_ptr<KMime::Message> >();
+    return item.payload<KMime::Message::Ptr>();
 }
 
 bool MessageCore::Util::isStandaloneMessage(const Akonadi::Item &item)
@@ -59,10 +59,10 @@ void MessageCore::Util::addLinkInformation(const KMime::Message::Ptr &msg, Akona
         type += QLatin1String("forward");
     }
 
-    KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Link-Message", msg.get(), message, "utf-8");
+    KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Link-Message", msg.data(), message, "utf-8");
     msg->setHeader(header);
 
-    header = new KMime::Headers::Generic("X-KMail-Link-Type", msg.get(), type, "utf-8");
+    header = new KMime::Headers::Generic("X-KMail-Link-Type", msg.data(), type, "utf-8");
     msg->setHeader(header);
 }
 

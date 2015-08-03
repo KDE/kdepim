@@ -302,7 +302,7 @@ KMime::Content *ViewerPrivate::nodeFromUrl(const KUrl &url)
 {
     KMime::Content *node = 0;
     if (url.isEmpty()) {
-        return mMessage.get();
+        return mMessage.data();
     }
     if (!url.isLocalFile()) {
         QString path = url.path(KUrl::RemoveTrailingSlash);
@@ -312,7 +312,7 @@ KMime::Content *ViewerPrivate::nodeFromUrl(const KUrl &url)
             int i = path.left(path.indexOf(QLatin1Char(':'))).toInt();
             path = path.mid(path.indexOf(QLatin1Char(':')) + 1);
             KMime::ContentIndex idx(path);
-            QList<KMime::Content *> extras = mNodeHelper->extraContents(mMessage.get());
+            QList<KMime::Content *> extras = mNodeHelper->extraContents(mMessage.data());
             if (i >= 0 && i < extras.size()) {
                 KMime::Content *c = extras[i];
                 node = c->content(idx);
@@ -422,7 +422,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content *node, bool showWarning)
         return true;
     }
 
-    QList<KMime::Content *> extraNodes = mNodeHelper->extraContents(mMessage.get());
+    QList<KMime::Content *> extraNodes = mNodeHelper->extraContents(mMessage.data());
     if (extraNodes.contains(node->topLevel())) {
         KMessageBox::error(mMainWindow,
                            i18n("Deleting an attachment from an encrypted or old-style mailman message is not supported."),
@@ -471,7 +471,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content *node, bool showWarning)
 
     parent->assemble();
 
-    KMime::Message *modifiedMessage = mNodeHelper->messageWithExtraContent(mMessage.get());
+    KMime::Message *modifiedMessage = mNodeHelper->messageWithExtraContent(mMessage.data());
 #ifndef QT_NO_TREEVIEW
     mMimePartTree->mimePartModel()->setRoot(modifiedMessage);
 #endif
@@ -831,7 +831,7 @@ void ViewerPrivate::displayMessage()
 {
     showHideMimeTree();
 
-    mNodeHelper->setOverrideCodec(mMessage.get(), overrideCodec());
+    mNodeHelper->setOverrideCodec(mMessage.data(), overrideCodec());
 
     if (mMessageItem.hasAttribute<MessageViewer::MessageDisplayFormatAttribute>()) {
         const MessageViewer::MessageDisplayFormatAttribute *const attr = mMessageItem.attribute<MessageViewer::MessageDisplayFormatAttribute>();
@@ -861,9 +861,9 @@ void ViewerPrivate::displayMessage()
         htmlWriter()->queue(QLatin1String("<p></p>"));
     }
 
-    parseContent(mMessage.get());
+    parseContent(mMessage.data());
 #ifndef QT_NO_TREEVIEW
-    mMimePartTree->setRoot(mNodeHelper->messageWithExtraContent(mMessage.get()));
+    mMimePartTree->setRoot(mNodeHelper->messageWithExtraContent(mMessage.data()));
 #endif
     mColorBar->update();
 
@@ -987,9 +987,9 @@ void ViewerPrivate::parseContent(KMime::Content *content)
 
     // Pass control to the OTP now, which does the real work
     mNodeHelper->removeTempFiles();
-    mNodeHelper->setNodeUnprocessed(mMessage.get(), true);
+    mNodeHelper->setNodeUnprocessed(mMessage.data(), true);
     MailViewerSource otpSource(this);
-    ObjectTreeParser otp(&otpSource, mNodeHelper, 0, mMessage.get() != content /* show only single node */);
+    ObjectTreeParser otp(&otpSource, mNodeHelper, 0, mMessage.data() != content /* show only single node */);
     otp.setAllowAsync(!mPrinting);
     otp.setPrinting(mPrinting);
     otp.setShowRawToltecMail(mShowRawToltecMail);
@@ -1365,11 +1365,11 @@ void ViewerPrivate::setMessageInternal(const KMime::Message::Ptr message,
 
     mMessage = message;
     if (message) {
-        mNodeHelper->setOverrideCodec(mMessage.get(), overrideCodec());
+        mNodeHelper->setOverrideCodec(mMessage.data(), overrideCodec());
     }
 
 #ifndef QT_NO_TREEVIEW
-    mMimePartTree->setRoot(mNodeHelper->messageWithExtraContent(message.get()));
+    mMimePartTree->setRoot(mNodeHelper->messageWithExtraContent(message.data()));
     update(updateMode);
 #endif
 
@@ -1930,8 +1930,8 @@ void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
         }
     }
     const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
-    const bool isRoot = (content == mMessage.get());
-    const auto contents = Util::extractAttachments(mMessage.get());
+    const bool isRoot = (content == mMessage.data());
+    const auto contents = Util::extractAttachments(mMessage.data());
 
     QMenu popup;
 
@@ -2086,14 +2086,14 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
             }
 
             QString margin;
-            if (node != mMessage.get() || headerStyle() != HeaderStyle::enterprise()) {
+            if (node != mMessage.data() || headerStyle() != HeaderStyle::enterprise()) {
                 margin = QLatin1String("padding:2px; margin:2px; ");
             }
             QString align = QLatin1String("left");
             if (headerStyle() == HeaderStyle::enterprise()) {
                 align = QLatin1String("right");
             }
-            const bool result = (node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get());
+            const bool result = (node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.data());
             if (result)
                 html += QString::fromLatin1("<div style=\"background:%1; %2"
                                             "vertical-align:middle; float:%3; %4\">").arg(bgColor.name()).arg(margin)
@@ -2319,7 +2319,7 @@ void ViewerPrivate::slotShowMessageSource()
     if (!mMessage) {
         return;
     }
-    mNodeHelper->messageWithExtraContent(mMessage.get());
+    mNodeHelper->messageWithExtraContent(mMessage.data());
     const QString rawMessage = QString::fromLatin1(mMessage->encodedContent());
     const QString htmlSource = mViewer->htmlSource();
 
@@ -2575,8 +2575,8 @@ QString ViewerPrivate::attachmentInjectionHtml()
     }
 
     QColor background = KColorScheme(QPalette::Active, KColorScheme::View).background().color();
-    QString html = renderAttachments(mMessage.get(), background);
-    Q_FOREACH (KMime::Content *node, mNodeHelper->extraContents(mMessage.get())) {
+    QString html = renderAttachments(mMessage.data(), background);
+    Q_FOREACH (KMime::Content *node, mNodeHelper->extraContents(mMessage.data())) {
         html += renderAttachments(node, background);
     }
     if (html.isEmpty()) {
@@ -2672,7 +2672,7 @@ void ViewerPrivate::slotAttachmentSaveAs()
 
 void ViewerPrivate::slotAttachmentSaveAll()
 {
-    const auto contents = Util::extractAttachments(mMessage.get());
+    const auto contents = Util::extractAttachments(mMessage.data());
     KUrl currentUrl;
     if (Util::saveAttachments(contents, mMainWindow, currentUrl)) {
         showOpenAttachmentFolderWidget(currentUrl);

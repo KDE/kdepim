@@ -84,7 +84,7 @@ private Q_SLOTS:
         fileWriter.begin(QString());
         fileWriter.queue(cssHelper.htmlHead(false));
 
-        otp.parseObjectTree(msg.get());
+        otp.parseObjectTree(msg.data());
 
         fileWriter.queue(QLatin1String("</body></html>"));
         fileWriter.flush();

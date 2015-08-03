@@ -59,7 +59,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
     // Parse the message
     EmptySource emptySource;
     ObjectTreeParser otp(&emptySource);
-    otp.parseObjectTree(msg.get());
+    otp.parseObjectTree(msg.data());
 
     // Check that the textual content and the charset have the expected values
     QCOMPARE(otp.plainTextContent(), QStringLiteral("This is the message text."));
@@ -83,7 +83,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
     msg->setContent(content);
     msg->parse();
     ObjectTreeParser otp2(&emptySource);
-    otp2.parseObjectTree(msg.get());
+    otp2.parseObjectTree(msg.data());
     QCOMPARE(otp2.plainTextContentCharset().constData(), msg->defaultCharset().constData());
 }
 
@@ -99,7 +99,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
     NodeHelper nodeHelper;
     MessageCore::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
     ObjectTreeParser otp(&emptySource, &nodeHelper);
-    otp.parseObjectTree(msg.get());
+    otp.parseObjectTree(msg.data());
 
     // Check that the OTP didn't modify the message in weird ways
     QCOMPARE(msg->contents().size(), 2);
@@ -116,8 +116,8 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
 
     // Check that the objecttreeparser did process the encapsulated message
     KMime::Message::Ptr encapsulated = msg->contents().at(1)->bodyAsMessage();
-    QVERIFY(encapsulated.get());
-    QVERIFY(nodeHelper.nodeProcessed(encapsulated.get()));
+    QVERIFY(encapsulated.data());
+    QVERIFY(nodeHelper.nodeProcessed(encapsulated.data()));
     QVERIFY(nodeHelper.nodeProcessed(encapsulated->contents().at(0)));
     QVERIFY(nodeHelper.nodeProcessed(encapsulated->contents().at(1)));
     QVERIFY(nodeHelper.partMetaData(msg->contents().at(1)).isEncapsulatedRfc822Message);
@@ -134,7 +134,7 @@ void ObjectTreeParserTester::test_missingContentTypeHeader()
     NodeHelper nodeHelper;
     MessageCore::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
     ObjectTreeParser otp(&emptySource, &nodeHelper);
-    otp.parseObjectTree(msg.get());
+    otp.parseObjectTree(msg.data());
 
     QCOMPARE(otp.plainTextContent().toLatin1().data(), "asdfasdf");
     QVERIFY(otp.htmlContent().isEmpty());
@@ -154,7 +154,7 @@ void ObjectTreeParserTester::test_inlinePGPDecryption()
     ObjectTreeParser otp(&emptySource, &nodeHelper);
 
     emptySource.setAllowDecryption(true);
-    otp.parseObjectTree(msg.get());
+    otp.parseObjectTree(msg.data());
 
     QCOMPARE(otp.plainTextContent().toLatin1().data(), "some random text");
     QCOMPARE(otp.convertedTextContent().toLatin1().data(), "some random text\n");
@@ -171,7 +171,7 @@ void ObjectTreeParserTester::test_HTML()
     EmptySource emptySource;
     ObjectTreeParser otp(&emptySource);
 
-    otp.parseObjectTree(msg.get());
+    otp.parseObjectTree(msg.data());
 
     QCOMPARE(otp.plainTextContent().toLatin1().data(), "Some HTML text");
     QVERIFY(otp.htmlContent().contains(QStringLiteral("Some <span style=\" font-weight:600;\">HTML</span> text")));
@@ -188,7 +188,7 @@ void ObjectTreeParserTester::test_HTMLOnly()
     EmptySource emptySource;
     ObjectTreeParser otp(&emptySource);
 
-    otp.parseObjectTree(msg.get());
+    otp.parseObjectTree(msg.data());
 
     QVERIFY(otp.plainTextContent().isEmpty());
     QVERIFY(otp.htmlContent().contains(QStringLiteral("<b>SOME</b> HTML text.")));

@@ -357,7 +357,7 @@ void MessageFactoryTest::testCreateMDN()
 
     KMime::Message::Ptr mdn = factory.createMDN(KMime::MDN::AutomaticAction, KMime::MDN::Displayed, KMime::MDN::SentAutomatically);
 
-    QVERIFY(mdn.get());
+    QVERIFY(mdn.data());
     qDebug() << "mdn" << mdn->encodedContent();
     /*
       // parse the result and make sure it is valid in various ways
@@ -369,7 +369,7 @@ void MessageFactoryTest::testCreateMDN()
       MessageViewer::ProcessResult pResult( nh ); */
 
 //   qDebug() << MessageCore::NodeHelper::firstChild( mdn->mainBodyPart() )->encodedContent();
-//   qDebug() << MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.get(), "multipart", "report", true, true ) )->body();
+//   qDebug() << MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.data(), "multipart", "report", true, true ) )->body();
 
     QString mdnContent = QString::fromLatin1("The message sent on %1 to %2 with subject \"%3\" has been displayed. "
                          "This is no guarantee that the message has been read or understood.");
@@ -378,7 +378,7 @@ void MessageFactoryTest::testCreateMDN()
 
     qDebug() << "comparing with:" << mdnContent;
 
-    QCOMPARE_OR_DIFF(MessageCore::NodeHelper::next(MessageViewer::ObjectTreeParser::findType(mdn.get(), "multipart", "report", true, true))->body(),
+    QCOMPARE_OR_DIFF(MessageCore::NodeHelper::next(MessageViewer::ObjectTreeParser::findType(mdn.data(), "multipart", "report", true, true))->body(),
                      mdnContent.toLatin1());
 }
 

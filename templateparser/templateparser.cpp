@@ -291,7 +291,7 @@ void TemplateParser::processWithIdentity(uint uoid, const KMime::Message::Ptr &a
 
 void TemplateParser::processWithTemplate(const QString &tmpl)
 {
-    mOtp->parseObjectTree(mOrigMsg.get());
+    mOtp->parseObjectTree(mOrigMsg.data());
     const int tmpl_len = tmpl.length();
     QString plainBody, htmlBody;
 
@@ -335,7 +335,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 i += len;
                 if (!q.isEmpty()) {
                     KMime::Headers::Generic *header =
-                        new KMime::Headers::Generic("X-KMail-Dictionary", mMsg.get(),
+                        new KMime::Headers::Generic("X-KMail-Dictionary", mMsg.data(),
                                                     q, "utf-8");
                     mMsg->setHeader(header);
                 }
@@ -521,7 +521,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 htmlBody = htmlStr;
 
                 KMime::Headers::Generic *header =
-                    new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.get(),
+                    new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data(),
                                                 QString::number(0), "utf-8");
                 mMsg->setHeader(header);
 
@@ -1105,7 +1105,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 plainBody.clear();
                 htmlBody.clear();
                 KMime::Headers::Generic *header =
-                    new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.get(),
+                    new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data(),
                                                 QString::number(0), "utf-8");
                 mMsg->setHeader(header);
             } else if (cmd.startsWith(QStringLiteral("DEBUGOFF"))) {
@@ -1126,7 +1126,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 int oldI = i;
                 i += strlen("CURSOR");
                 KMime::Headers::Generic *header =
-                    new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.get(),
+                    new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data(),
                                                 QString::number(plainBody.length()), "utf-8");
                 /* if template is:
                 *  FOOBAR
@@ -1240,10 +1240,10 @@ void TemplateParser::addProcessedBodyToMessage(const QString &plainBody,
 {
     // Get the attachments of the original mail
     MessageCore::AttachmentCollector ac;
-    ac.collectAttachmentsFrom(mOrigMsg.get());
+    ac.collectAttachmentsFrom(mOrigMsg.data());
 
     MessageCore::ImageCollector ic;
-    ic.collectImagesFrom(mOrigMsg.get());
+    ic.collectImagesFrom(mOrigMsg.data());
 
     // Now, delete the old content and set the new content, which
     // is either only the new text or the new text with some attachments.
@@ -1294,7 +1294,7 @@ void TemplateParser::addProcessedBodyToMessage(const QString &plainBody,
 KMime::Content *TemplateParser::createMultipartMixed(const MessageCore::AttachmentCollector &ac,
         KMime::Content *textPart) const
 {
-    KMime::Content *mixedPart = new KMime::Content(mMsg.get());
+    KMime::Content *mixedPart = new KMime::Content(mMsg.data());
     const QByteArray boundary = KMime::multiPartBoundary();
     mixedPart->contentType()->setMimeType("multipart/mixed");
     mixedPart->contentType()->setBoundary(boundary);
@@ -1321,7 +1321,7 @@ KMime::Content *TemplateParser::createMultipartMixed(const MessageCore::Attachme
 KMime::Content *TemplateParser::createMultipartRelated(const MessageCore::ImageCollector &ic,
         KMime::Content *mainTextPart) const
 {
-    KMime::Content *relatedPart = new KMime::Content(mMsg.get());
+    KMime::Content *relatedPart = new KMime::Content(mMsg.data());
     const QByteArray boundary = KMime::multiPartBoundary();
     relatedPart->contentType()->setMimeType("multipart/related");
     relatedPart->contentType()->setBoundary(boundary);
@@ -1336,7 +1336,7 @@ KMime::Content *TemplateParser::createMultipartRelated(const MessageCore::ImageC
 
 KMime::Content *TemplateParser::createPlainPartContent(const QString &plainBody) const
 {
-    KMime::Content *textPart = new KMime::Content(mMsg.get());
+    KMime::Content *textPart = new KMime::Content(mMsg.data());
     textPart->contentType()->setMimeType("text/plain");
     QTextCodec *charset = selectCharset(m_charsets, plainBody);
     textPart->contentType()->setCharset(charset->name());
@@ -1348,7 +1348,7 @@ KMime::Content *TemplateParser::createPlainPartContent(const QString &plainBody)
 KMime::Content *TemplateParser::createMultipartAlternativeContent(const QString &plainBody,
         const QString &htmlBody) const
 {
-    KMime::Content *multipartAlternative = new KMime::Content(mMsg.get());
+    KMime::Content *multipartAlternative = new KMime::Content(mMsg.data());
     multipartAlternative->contentType()->setMimeType("multipart/alternative");
     const QByteArray boundary = KMime::multiPartBoundary();
     multipartAlternative->contentType()->setBoundary(boundary);
@@ -1356,7 +1356,7 @@ KMime::Content *TemplateParser::createMultipartAlternativeContent(const QString 
     KMime::Content *textPart = createPlainPartContent(plainBody);
     multipartAlternative->addContent(textPart);
 
-    KMime::Content *htmlPart = new KMime::Content(mMsg.get());
+    KMime::Content *htmlPart = new KMime::Content(mMsg.data());
     htmlPart->contentType()->setMimeType("text/html");
     QTextCodec *charset = selectCharset(m_charsets, htmlBody);
     htmlPart->contentType()->setCharset(charset->name());

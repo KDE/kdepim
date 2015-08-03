@@ -465,7 +465,7 @@ bool Util::saveMessageInMbox(const Akonadi::Item::List &retrievedMsgs, QWidget *
     const Akonadi::Item msgBase = retrievedMsgs.first();
 
     if (msgBase.hasPayload<KMime::Message::Ptr>()) {
-        fileName = MessageCore::StringUtil::cleanFileName(MessageViewer::NodeHelper::cleanSubject(msgBase.payload<KMime::Message::Ptr>().get()).trimmed());
+        fileName = MessageCore::StringUtil::cleanFileName(MessageViewer::NodeHelper::cleanSubject(msgBase.payload<KMime::Message::Ptr>().data()).trimmed());
     } else {
         fileName = i18n("message");
     }

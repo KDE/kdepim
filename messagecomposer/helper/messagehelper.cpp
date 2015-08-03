@@ -59,14 +59,14 @@ void initFromMessage(const KMime::Message::Ptr &msg, const KMime::Message::Ptr &
     if (idHeaders) {
         MessageHelper::initHeader(msg, identMan, id);
     } else {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Identity", msg.get(),
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Identity", msg.data(),
                 QString::number(id), "utf-8");
         msg->setHeader(header);
     }
 
     if (origMsg->headerByType("X-KMail-Transport")) {
         const QString transport = origMsg->headerByType("X-KMail-Transport")->asUnicodeString();
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Transport", msg.get(),
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Transport", msg.data(),
                 transport, "utf-8");
         msg->setHeader(header);
     }
@@ -111,47 +111,47 @@ void applyIdentity(const KMime::Message::Ptr &message, const KIdentityManagement
         message->removeHeader("Organization");
     } else {
         KMime::Headers::Organization *const organization
-            = new KMime::Headers::Organization(message.get(), ident.organization(), "utf-8");
+            = new KMime::Headers::Organization(message.data(), ident.organization(), "utf-8");
         message->setHeader(organization);
     }
 
     if (ident.isDefault()) {
         message->removeHeader("X-KMail-Identity");
     } else {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Identity", message.get(), QString::number(ident.uoid()), "utf-8");
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Identity", message.data(), QString::number(ident.uoid()), "utf-8");
         message->setHeader(header);
     }
 
     if (ident.transport().isEmpty()) {
         message->removeHeader("X-KMail-Transport");
     } else {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Transport", message.get(), ident.transport(), "utf-8");
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Transport", message.data(), ident.transport(), "utf-8");
         message->setHeader(header);
     }
 
     if (ident.fcc().isEmpty()) {
         message->removeHeader("X-KMail-Fcc");
     } else {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Fcc", message.get(), ident.fcc(), "utf-8");
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Fcc", message.data(), ident.fcc(), "utf-8");
         message->setHeader(header);
     }
 
     if (ident.drafts().isEmpty()) {
         message->removeHeader("X-KMail-Drafts");
     } else {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Drafts", message.get(), ident.drafts(), "utf-8");
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Drafts", message.data(), ident.drafts(), "utf-8");
         message->setHeader(header);
     }
 
     if (ident.templates().isEmpty()) {
         message->removeHeader("X-KMail-Templates");
     } else {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Templates", message.get(), ident.templates(), "utf-8");
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Templates", message.data(), ident.templates(), "utf-8");
         message->setHeader(header);
     }
 
     if (ident.disabledFcc()) {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-FccDisabled", message.get(), QLatin1String("true"), "utf-8");
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-FccDisabled", message.data(), QLatin1String("true"), "utf-8");
         message->setHeader(header);
     } else {
         message->removeHeader("X-KMail-FccDisabled");
@@ -237,7 +237,7 @@ QString replacePrefixes(const QString &str, const QStringList &prefixRegExps,
 
 void setAutomaticFields(const KMime::Message::Ptr &msg, bool aIsMulti)
 {
-    msg->setHeader(new KMime::Headers::Generic("MIME-Version", msg.get(), QLatin1String("1.0"), QLatin1String("utf-8").latin1()));
+    msg->setHeader(new KMime::Headers::Generic("MIME-Version", msg.data(), QLatin1String("1.0"), QLatin1String("utf-8").latin1()));
 
     if (aIsMulti || msg->contents().size() > 1) {
         // Set the type to 'Multipart' and the subtype to 'Mixed'

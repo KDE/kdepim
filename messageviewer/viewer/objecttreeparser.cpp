@@ -1843,20 +1843,20 @@ bool ObjectTreeParser::processMessageRfc822Subtype(KMime::Content *node, Process
 
         // The link to "Encapsulated message" is clickable, therefore the temp file needs to exists,
         // since the user can click the link and expect to have normal attachment operations there.
-        mNodeHelper->writeNodeToTempFile(message.get());
+        mNodeHelper->writeNodeToTempFile(message.data());
 
         // Paint the frame header
         htmlWriter()->queue(writeSigstatHeader(messagePart,
                                                cryptoProtocol(),
                                                message->from()->asUnicodeString(),
-                                               message.get()));
+                                               message.data()));
 
         // Paint the message header
-        htmlWriter()->queue(mSource->createMessageHeader(message.get()));
+        htmlWriter()->queue(mSource->createMessageHeader(message.data()));
 
         // Process the message, i.e. paint it by processing it with an OTP
         ObjectTreeParser otp(this);
-        otp.parseObjectTreeInternal(message.get());
+        otp.parseObjectTreeInternal(message.data());
 
         // Don't add the resulting textual content to our textual content here.
         // That is unwanted when inline forwarding a message, since the encapsulated message will

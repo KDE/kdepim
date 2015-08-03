@@ -70,7 +70,7 @@ void TemplateParserTester::test_convertedHtml()
     QCOMPARE(msg->contents().size(), 0);
 
     ObjectTreeParser otp(&emptySource);
-    otp.parseObjectTree(msg.get());
+    otp.parseObjectTree(msg.data());
 
     QVERIFY(otp.htmlContent().isEmpty());
     QVERIFY(!otp.plainTextContent().isEmpty());

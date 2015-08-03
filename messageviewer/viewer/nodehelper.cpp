@@ -1075,7 +1075,7 @@ bool NodeHelper::unencryptedMessage_helper(KMime::Content *node, QByteArray &res
                 resultingData += curNode->head() + '\n';
             }
 
-            returnValue = unencryptedMessage_helper(curNode->bodyAsMessage().get(), resultingData, true, recursionLevel + 1);
+            returnValue = unencryptedMessage_helper(curNode->bodyAsMessage().data(), resultingData, true, recursionLevel + 1);
         }
 
         else {
@@ -1095,7 +1095,7 @@ bool NodeHelper::unencryptedMessage_helper(KMime::Content *node, QByteArray &res
 KMime::Message::Ptr NodeHelper::unencryptedMessage(const KMime::Message::Ptr &originalMessage)
 {
     QByteArray resultingData;
-    const bool messageChanged = unencryptedMessage_helper(originalMessage.get(), resultingData, true);
+    const bool messageChanged = unencryptedMessage_helper(originalMessage.data(), resultingData, true);
     if (messageChanged) {
 #if 0
         qCDebug(MESSAGEVIEWER_LOG) << "Resulting data is:" << resultingData;

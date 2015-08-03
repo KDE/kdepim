@@ -223,7 +223,7 @@ void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &ms
     if (!otp.htmlContent().isEmpty()) {
         m_editor->setHtml(otp.htmlContent());
         Q_EMIT enableHtml();
-        collectImages(m_msg.get());
+        collectImages(m_msg.data());
     } else {
         m_editor->setPlainText(otp.plainTextContent());
     }
@@ -249,7 +249,7 @@ void MessageComposer::ComposerViewBase::updateTemplate(const KMime::Message::Ptr
     if (!otp.htmlContent().isEmpty()) {
         m_editor->setHtml(otp.htmlContent());
         Q_EMIT enableHtml();
-        collectImages(msg.get());
+        collectImages(msg.data());
     } else {
         m_editor->setPlainText(otp.plainTextContent());
     }
@@ -263,23 +263,23 @@ void MessageComposer::ComposerViewBase::updateTemplate(const KMime::Message::Ptr
 void MessageComposer::ComposerViewBase::saveMailSettings()
 {
     const KIdentityManagement::Identity identity = identityManager()->identityForUoid(m_identityCombo->currentIdentity());
-    m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Transport", m_msg.get(), QString::number(m_transport->currentTransportId()), "utf-8"));
+    m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Transport", m_msg.data(), QString::number(m_transport->currentTransportId()), "utf-8"));
 
-    m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Fcc", m_msg.get(), QString::number(m_fccCollection.id()) , "utf-8"));
-    m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Identity", m_msg.get(), QString::number(identity.uoid()), "utf-8"));
-    m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Dictionary", m_msg.get(), m_dictionary->currentDictionary(), "utf-8"));
+    m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Fcc", m_msg.data(), QString::number(m_fccCollection.id()) , "utf-8"));
+    m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Identity", m_msg.data(), QString::number(identity.uoid()), "utf-8"));
+    m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Dictionary", m_msg.data(), m_dictionary->currentDictionary(), "utf-8"));
 
     // Save the quote prefix which is used for this message. Each message can have
     // a different quote prefix, for example depending on the original sender.
     if (m_editor->quotePrefixName().isEmpty()) {
         m_msg->removeHeader("X-KMail-QuotePrefix");
     } else {
-        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-QuotePrefix", m_msg.get(), m_editor->quotePrefixName(), "utf-8"));
+        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-QuotePrefix", m_msg.data(), m_editor->quotePrefixName(), "utf-8"));
     }
 
     if (m_editor->composerControler()->isFormattingUsed()) {
         qCDebug(MESSAGECOMPOSER_LOG) << "HTML mode";
-        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Markup", m_msg.get(), QStringLiteral("true"), "utf-8"));
+        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-Markup", m_msg.data(), QStringLiteral("true"), "utf-8"));
     } else {
         m_msg->removeHeader("X-KMail-Markup");
         qCDebug(MESSAGECOMPOSER_LOG) << "Plain text";
@@ -341,11 +341,11 @@ void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::Sen
     if (m_neverEncrypt && saveIn != MessageComposer::MessageSender::SaveInNone) {
         // we can't use the state of the mail itself, to remember the
         // signing and encryption state, so let's add a header instead
-        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-SignatureActionEnabled", m_msg.get(),
+        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-SignatureActionEnabled", m_msg.data(),
                          m_sign ? QLatin1String("true") : QLatin1String("false"), "utf-8"));
-        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-EncryptActionEnabled", m_msg.get(),
+        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-EncryptActionEnabled", m_msg.data(),
                          m_encrypt ? QLatin1String("true") : QLatin1String("false"), "utf-8"));
-        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-CryptoMessageFormat", m_msg.get(), QString::number(m_cryptoMessageFormat), "utf-8"));
+        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-CryptoMessageFormat", m_msg.data(), QString::number(m_cryptoMessageFormat), "utf-8"));
     } else {
         MessageComposer::Util::removeNotNecessaryHeaders(m_msg);
     }
@@ -441,9 +441,9 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved(KJob *job)
                 unExpandedBcc << exp;
             }
         }
-        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-To", m_msg.get(), unExpandedTo.join(QStringLiteral(", ")).toLatin1()));
-        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-CC", m_msg.get(), unExpandedCc.join(QStringLiteral(", ")).toLatin1()));
-        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-BCC", m_msg.get(), unExpandedBcc.join(QStringLiteral(", ")).toLatin1()));
+        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-To", m_msg.data(), unExpandedTo.join(QStringLiteral(", ")).toLatin1()));
+        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-CC", m_msg.data(), unExpandedCc.join(QStringLiteral(", ")).toLatin1()));
+        m_msg->setHeader(new KMime::Headers::Generic("X-KMail-UnExpanded-BCC", m_msg.data(), unExpandedBcc.join(QStringLiteral(", ")).toLatin1()));
         autoresizeImage = false;
     }
 
@@ -939,7 +939,7 @@ void MessageComposer::ComposerViewBase::queueMessage(KMime::Message::Ptr message
     QMapIterator<QByteArray, QString> customHeader(m_customHeader);
     while (customHeader.hasNext()) {
         customHeader.next();
-        message->setHeader(new KMime::Headers::Generic(customHeader.key(), message.get(), customHeader.value(), "utf-8"));
+        message->setHeader(new KMime::Headers::Generic(customHeader.key(), message.data(), customHeader.value(), "utf-8"));
     }
     message->assemble();
     connect(qjob, &MailTransport::MessageQueueJob::result, this, &ComposerViewBase::slotQueueResult);

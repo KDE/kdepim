@@ -230,7 +230,7 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo(
     }
 
     // RFC 2298: An MDN MUST NOT be generated in response to an MDN.
-    if (MessageViewer::ObjectTreeParser::findType(msg.get(),
+    if (MessageViewer::ObjectTreeParser::findType(msg.data(),
             "message",
             "disposition-notification",
             true, true)) {

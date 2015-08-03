@@ -118,7 +118,7 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor(const KMime::Messa
                 file.write(aMsg->decodedContent());
             } else {
                 int index = *it; // we pass by reference below, so this is not const
-                KMime::Content *content = findMimeNodeForIndex(aMsg.get(), index);
+                KMime::Content *content = findMimeNodeForIndex(aMsg.data(), index);
                 if (content) {
                     file.write(content->decodedContent());
                 }
@@ -258,7 +258,7 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess(ItemContext &co
             const QString newUid = aMsg->headerByType("X-UID") ? aMsg->headerByType("X-UID")->asUnicodeString() : QString();
             if (uid != newUid) {
                 aMsg->setFrozen(false);
-                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-UID", aMsg.get(), uid, "utf-8");
+                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-UID", aMsg.data(), uid, "utf-8");
                 aMsg->setHeader(header);
                 aMsg->assemble();
             }

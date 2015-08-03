@@ -102,7 +102,7 @@ bool SearchRuleString::matches(const Akonadi::Item &item) const
         return false;
     }
     const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
-    Q_ASSERT(msg.get());
+    Q_ASSERT(msg.data());
 
     if (!msg->hasHeader("From")) {
         msg->parse(); // probably not parsed yet: make sure we can access all headers
