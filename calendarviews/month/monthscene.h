@@ -173,31 +173,31 @@ public:
         return mSelectedItem;
     }
 
-    QPixmap birthdayPixmap()
+    QPixmap birthdayPixmap() const
     {
         return mBirthdayPixmap;
     }
-    QPixmap anniversaryPixmap()
+    QPixmap anniversaryPixmap() const
     {
         return mAnniversaryPixmap;
     }
-    QPixmap alarmPixmap()
+    QPixmap alarmPixmap() const
     {
         return mAlarmPixmap;
     }
-    QPixmap recurPixmap()
+    QPixmap recurPixmap() const
     {
         return mRecurPixmap;
     }
-    QPixmap readonlyPixmap()
+    QPixmap readonlyPixmap() const
     {
         return mReadonlyPixmap;
     }
-    QPixmap replyPixmap()
+    QPixmap replyPixmap() const
     {
         return  mReplyPixmap;
     }
-    QPixmap holidayPixmap()
+    QPixmap holidayPixmap() const
     {
         return mHolidayPixmap;
     }
