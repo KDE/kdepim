@@ -67,7 +67,7 @@ private Q_SLOTS:
 
 private:
     QMenu *mMenu;
-    QList<QPair<QString, QIcon> > mList;
+    QVector<QPair<QString, QIcon> > mList;
     int mCurrentIndex;
 };
 
