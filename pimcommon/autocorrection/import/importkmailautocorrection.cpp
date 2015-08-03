@@ -50,7 +50,7 @@ bool ImportKMailAutocorrection::import(const QString &fileName, LoadAttribute lo
     QDomElement de = doc.documentElement();
 
     if (loadAttribute == All) {
-        const QDomElement upper = de.namedItem(QLatin1String("UpperCaseExceptions")).toElement();
+        const QDomElement upper = de.namedItem(QStringLiteral("UpperCaseExceptions")).toElement();
         if (!upper.isNull()) {
             const QDomNodeList nl = upper.childNodes();
             for (int i = 0; i < nl.count(); ++i) {
@@ -58,7 +58,7 @@ bool ImportKMailAutocorrection::import(const QString &fileName, LoadAttribute lo
             }
         }
 
-        const QDomElement twoUpper = de.namedItem(QLatin1String("TwoUpperLetterExceptions")).toElement();
+        const QDomElement twoUpper = de.namedItem(QStringLiteral("TwoUpperLetterExceptions")).toElement();
         if (!twoUpper.isNull()) {
             const QDomNodeList nl = twoUpper.childNodes();
             const int numberOfElement(nl.count());
@@ -68,7 +68,7 @@ bool ImportKMailAutocorrection::import(const QString &fileName, LoadAttribute lo
         }
 
         /* Load advanced autocorrect entry, including the format */
-        const QDomElement item = de.namedItem(QLatin1String("items")).toElement();
+        const QDomElement item = de.namedItem(QStringLiteral("items")).toElement();
         if (!item.isNull()) {
             const QDomNodeList nl = item.childNodes();
             const int numberOfElement(nl.count());
@@ -80,7 +80,7 @@ bool ImportKMailAutocorrection::import(const QString &fileName, LoadAttribute lo
             }
         }
 
-        const QDomElement doubleQuote = de.namedItem(QLatin1String("DoubleQuote")).toElement();
+        const QDomElement doubleQuote = de.namedItem(QStringLiteral("DoubleQuote")).toElement();
         if (!doubleQuote.isNull()) {
             const QDomNodeList nl = doubleQuote.childNodes();
             if (nl.count() == 1) {
@@ -92,7 +92,7 @@ bool ImportKMailAutocorrection::import(const QString &fileName, LoadAttribute lo
             }
         }
 
-        const QDomElement singleQuote = de.namedItem(QLatin1String("SimpleQuote")).toElement();
+        const QDomElement singleQuote = de.namedItem(QStringLiteral("SimpleQuote")).toElement();
         if (!singleQuote.isNull()) {
             const QDomNodeList nl = singleQuote.childNodes();
             if (nl.count() == 1) {
@@ -105,7 +105,7 @@ bool ImportKMailAutocorrection::import(const QString &fileName, LoadAttribute lo
         }
     }
     if (loadAttribute == All || loadAttribute == SuperScript) {
-        const QDomElement superScript = de.namedItem(QLatin1String("SuperScript")).toElement();
+        const QDomElement superScript = de.namedItem(QStringLiteral("SuperScript")).toElement();
         if (!superScript.isNull()) {
             const QDomNodeList nl = superScript.childNodes();
             const int numberOfNl(nl.count());

@@ -51,11 +51,11 @@ void ImapResourceCapabilitiesManager::searchCapabilities(const QString &identifi
     mImapResource.insert(identifier, true);
     QDBusInterface iface(
         QLatin1String("org.freedesktop.Akonadi.Resource.") + identifier,
-        QLatin1String("/"), QStringLiteral("org.kde.Akonadi.ImapResourceBase"),
+        QStringLiteral("/"), QStringLiteral("org.kde.Akonadi.ImapResourceBase"),
         KDBusConnectionPool::threadConnection(), this);
 
     if (iface.isValid()) {
-        QDBusPendingCall call = iface.asyncCall(QLatin1String("serverCapabilities"));
+        QDBusPendingCall call = iface.asyncCall(QStringLiteral("serverCapabilities"));
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
         watcher->setProperty("identifier", identifier);
         connect(watcher, &QDBusPendingCallWatcher::finished, this, &ImapResourceCapabilitiesManager::slotCapabilities);

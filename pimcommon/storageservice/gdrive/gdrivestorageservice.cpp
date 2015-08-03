@@ -99,10 +99,10 @@ void GDriveStorageService::readConfig()
     }
     QList<QUrl> scopeUrls;
 
-    scopeUrls << QUrl(QLatin1String("https://www.googleapis.com/auth/drive"));
-    scopeUrls << QUrl(QLatin1String("https://www.googleapis.com/auth/drive.file"));
-    scopeUrls << QUrl(QLatin1String("https://www.googleapis.com/auth/drive.metadata.readonly"));
-    scopeUrls << QUrl(QLatin1String("https://www.googleapis.com/auth/drive.readonly"));
+    scopeUrls << QUrl(QStringLiteral("https://www.googleapis.com/auth/drive"));
+    scopeUrls << QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.file"));
+    scopeUrls << QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.metadata.readonly"));
+    scopeUrls << QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.readonly"));
 
     if (accountName.isEmpty() || refreshTokenStr.isEmpty() || accessTokenStr.isEmpty()) {
         mAccount = KGAPI2::AccountPtr(new KGAPI2::Account());
