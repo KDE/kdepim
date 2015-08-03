@@ -38,7 +38,6 @@
 #include "kaddressbook_debug.h"
 #include <QDialog>
 #include <QFileDialog>
-#include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QTemporaryFile>
@@ -67,11 +66,11 @@ bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelecti
 
     bool ok = true;
     if (list.count() == 1) {
-        url = KFileDialog::getSaveUrl(
+        url = QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(
                   QString(list[ 0 ].givenName() +
                           QLatin1Char(QLatin1Char('_')) +
                           list[ 0 ].familyName() +
-                          QLatin1String(".vcf")));
+                          QLatin1String(".vcf"))));
         if (url.isEmpty()) {   // user canceled export
             return true;
         }
@@ -159,11 +158,9 @@ ContactList VCardXXPort::importContacts() const
         } else {
             const QString filter = i18n("*.vcf|vCard (*.vcf)\n*|all files (*)");
             urls =
-                KFileDialog::getOpenUrls(
+                QFileDialog::getOpenFileUrls(parentWidget(), i18nc("@title:window", "Select vCard to Import"),
                     QUrl(),
-                    filter,
-                    parentWidget(),
-                    i18nc("@title:window", "Select vCard to Import"));
+                    filter);
         }
 
         if (urls.isEmpty()) {
