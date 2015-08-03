@@ -70,7 +70,10 @@ target_link_libraries(messagecore
   KF5::PimTextEdit
   KF5::AkonadiMime
   KF5::Archive
-  KF5::KDELibs4Support
+  KF5::ConfigWidgets
+  KF5::Completion
+  KF5::IconThemes
+  Qt5::Network
 )
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
