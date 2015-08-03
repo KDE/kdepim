@@ -39,10 +39,8 @@ TextEditFindBarBase::TextEditFindBarBase(QWidget *parent)
       mHideWhenClose(true)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
-    topLayout->setMargin(0);
+    //topLayout->setMargin(0);
     QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(2);
-
     topLayout->addLayout(lay);
 
     QToolButton *closeBtn = new QToolButton(this);
