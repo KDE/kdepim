@@ -34,10 +34,6 @@
 
 #include "filedialog.h"
 
-#ifdef QT_NO_FILEDIALOG
-#include <KFileDialog>
-#include <QTextStream>
-#endif
 #include <QFileDialog>
 #include <QDir>
 #include <QMap>
