@@ -376,7 +376,7 @@ void StringUtilTest::test_parseMailtoUrl()
     QFETCH(bool, toIsNotEmpty);
     QFETCH(int, numberOfTo);
 
-    KUrl url(mailToUrl);
+    QUrl url(mailToUrl);
     QCOMPARE(!StringUtil::parseMailtoUrl(url).value(QStringLiteral("to")).isEmpty(), toIsNotEmpty);
     QCOMPARE(StringUtil::parseMailtoUrl(url).value(QStringLiteral("to")).split(QLatin1String(", "), QString::SkipEmptyParts).count(), numberOfTo);
 
@@ -384,7 +384,7 @@ void StringUtilTest::test_parseMailtoUrl()
 
 void StringUtilTest::test_parseMailtoUrlExtra()
 {
-    KUrl url("mailto:someone@example.com?subject=This%20is%20the%20subject&cc=someone_else@example.com&body=This%20is%20the%20body");
+    auto url = QUrl::fromEncoded("mailto:someone@example.com?subject=This%20is%20the%20subject&cc=someone_else@example.com&body=This%20is%20the%20body");
     auto data = StringUtil::parseMailtoUrl(url);
     QCOMPARE(data.size(), 4);
     QCOMPARE(data.value(QLatin1String("to")), QLatin1String("someone@example.com"));

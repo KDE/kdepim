@@ -25,7 +25,7 @@
 
 #include <QStringList>
 
-class KUrl;
+class QUrl;
 
 namespace KMime
 {
@@ -56,7 +56,7 @@ namespace StringUtil
 /**
    * Parses a mailto: url and extracts the information in the QMap (field name as key).
    */
-MESSAGECORE_EXPORT QMap<QString, QString> parseMailtoUrl(const KUrl &url);
+MESSAGECORE_EXPORT QMap<QString, QString> parseMailtoUrl(const QUrl &url);
 
 /**
    * Strips the signature blocks from a message text. "-- " is considered as a signature block separator.

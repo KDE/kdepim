@@ -30,11 +30,11 @@
 #include <KConfigGroup>
 #include "messagecore_debug.h"
 #include <KUser>
-#include <KUrl>
 
 #include <QHostInfo>
 #include <QRegExp>
 #include <QStringList>
+#include <QUrlQuery>
 #include <kpimtextedit/textutils.h>
 
 using namespace KMime;
@@ -173,12 +173,14 @@ static bool flushPart(QString &msg, QStringList &textParts,
     return appendEmptyLine;
 }
 
-QMap<QString, QString> parseMailtoUrl(const KUrl &url)
+QMap<QString, QString> parseMailtoUrl(const QUrl &url)
 {
     QMap<QString, QString> values;
     if (url.scheme() != QLatin1String("mailto"))
         return values;
-    values = url.queryItems(KUrl::CaseInsensitiveKeys);
+    QUrlQuery query(url);
+    foreach (auto queryItem, query.queryItems())
+        values.insert(queryItem.first, queryItem.second);
 
     QStringList to;
     to << KEmailAddress::decodeMailtoUrl(url);
