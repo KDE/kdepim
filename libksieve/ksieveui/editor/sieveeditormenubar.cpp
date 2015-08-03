@@ -115,7 +115,7 @@ void SieveEditorMenuBar::initMenus()
 
     mToolsMenu->addAction(mCommentCodeAction);
     mToolsMenu->addAction(mUncommentCodeAction);
-    mEditorMenu->addSeparator();
+    mToolsMenu->addSeparator();
     mToolsMenu->addAction(mDebugSieveAction);
 }
 
