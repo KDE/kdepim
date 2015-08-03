@@ -28,6 +28,8 @@ check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
 macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
 configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messageviewer.h)
 
+include_directories( ${GPGME_INCLUDES} )
+
 if(BUILD_TESTING)
    add_subdirectory(autotests)
    add_subdirectory(scamdetection/autotests)

@@ -33,6 +33,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${Boost_INCLUDE_DIR}
+  ${GPGME_INCLUDES}
 )
 
 if(USABLE_ASSUAN_FOUND)
