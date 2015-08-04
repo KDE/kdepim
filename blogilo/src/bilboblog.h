@@ -1,4 +1,4 @@
-(/*
+/*
     This file is part of Blogilo, A KDE Blogging Client
 
     Copyright (C) 2008-2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
