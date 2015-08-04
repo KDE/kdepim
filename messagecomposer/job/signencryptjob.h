@@ -66,7 +66,6 @@ public:
     KMime::Content *origContent();
 
 protected Q_SLOTS:
-    //virtual void doStart();
     void process() Q_DECL_OVERRIDE;
 
 private:

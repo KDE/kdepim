@@ -77,7 +77,7 @@ public:
     explicit AttachmentModel(QObject *parent);
     ~AttachmentModel();
 
-    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action,
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action,
                               int row, int column, const QModelIndex &parent) Q_DECL_OVERRIDE;
     QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
     QStringList mimeTypes() const Q_DECL_OVERRIDE;

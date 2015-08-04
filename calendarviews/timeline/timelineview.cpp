@@ -303,25 +303,21 @@ TimelineView::~TimelineView()
     delete d;
 }
 
-/*virtual*/
 Akonadi::Item::List TimelineView::selectedIncidences() const
 {
     return d->mSelectedItemList;
 }
 
-/*virtual*/
 KCalCore::DateList TimelineView::selectedIncidenceDates() const
 {
     return KCalCore::DateList();
 }
 
-/*virtual*/
 int TimelineView::currentDateCount() const
 {
     return 0;
 }
 
-/*virtual*/
 void TimelineView::showDates(const QDate &start, const QDate &end, const QDate &preferredMonth)
 {
     Q_UNUSED(preferredMonth);
@@ -417,14 +413,12 @@ void TimelineView::showDates(const QDate &start, const QDate &end, const QDate &
     d->splitterMoved();
 }
 
-/*virtual*/
 void TimelineView::showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date)
 {
     Q_UNUSED(incidenceList);
     Q_UNUSED(date);
 }
 
-/*virtual*/
 void TimelineView::updateView()
 {
     if (d->mStartDate.isValid() && d->mEndDate.isValid()) {
@@ -432,7 +426,6 @@ void TimelineView::updateView()
     }
 }
 
-/*virtual*/
 void TimelineView::changeIncidenceDisplay(const Akonadi::Item &incidence, int mode)
 {
     switch (mode) {

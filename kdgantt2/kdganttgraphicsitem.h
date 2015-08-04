@@ -49,7 +49,7 @@ public:
     explicit GraphicsItem(const QModelIndex &idx, QGraphicsItem *parent = Q_NULLPTR, GraphicsScene *scene = Q_NULLPTR);
     virtual ~GraphicsItem();
 
-    /*reimp*/int type() const;
+    int type() const Q_DECL_OVERRIDE;
     /*reimp (non-virtual)*/ GraphicsScene *scene() const;
 
     void updateItem(const Span &rowgeometry, const QPersistentModelIndex &idx);

@@ -90,12 +90,10 @@ Q_SIGNALS:
     void fullViewChanged(bool enabled);
 
 public Q_SLOTS:
-    // virtual slots
     void updateConfig() Q_DECL_OVERRIDE;
     void updateView() Q_DECL_OVERRIDE;
     void showIncidences(const Akonadi::Item::List &incidenceList, const QDate &date) Q_DECL_OVERRIDE;
 
-    // non-virtual slots
     void changeIncidenceDisplay(const Akonadi::Item &, int);
     void changeFullView(); /// Display in full window mode
     void moveBackMonth();  /// Shift the view one month back

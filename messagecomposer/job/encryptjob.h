@@ -62,7 +62,6 @@ public:
     QStringList recipients() const Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
-    //virtual void doStart();
     void process() Q_DECL_OVERRIDE;
 
 private:
