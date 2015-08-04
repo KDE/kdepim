@@ -48,6 +48,7 @@ private Q_SLOTS:
     void slotLinkClicked(const QString &link);
     void slotEmailFound(const QStringList &list);
 private:
+    void checkIfUpdateBlackListIsNeeded();
     void hideMoreResultAndChangeLimit();
     QStringList mOriginalExcludeDomain;
     KLineEdit *mSearchLineEdit;

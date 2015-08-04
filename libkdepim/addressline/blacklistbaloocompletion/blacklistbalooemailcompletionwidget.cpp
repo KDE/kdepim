@@ -191,6 +191,20 @@ void BlackListBalooEmailCompletionWidget::setEmailBlackList(const QStringList &l
     mEmailList->setEmailBlackList(list);
 }
 
+void BlackListBalooEmailCompletionWidget::checkIfUpdateBlackListIsNeeded()
+{
+    const QHash<QString, bool> result = mEmailList->blackListItemChanged();
+    if (!result.isEmpty()) {
+        KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kpimbalooblacklist"));
+        KConfigGroup group(config, "AddressLineEdit");
+        QStringList blackList = group.readEntry("BalooBackList", QStringList());
+        KPIM::BlackListBalooEmailUtil util;
+        util.initialBlackList(blackList);
+        util.newBlackList(result);
+        blackList = util.createNewBlackList();
+    }
+}
+
 void BlackListBalooEmailCompletionWidget::save()
 {
     const QString domain = mExcludeDomainLineEdit->text().remove(QLatin1Char(' '));
