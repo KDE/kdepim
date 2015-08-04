@@ -36,4 +36,9 @@ add_test(libkdepim_blacklistbalooemailcompletionwidgettest libkdepim_blacklistba
 ecm_mark_as_test(libkdepim_blacklistbalooemailcompletionwidgettest)
 target_link_libraries( libkdepim_blacklistbalooemailcompletionwidgettest Qt5::Test  kdepim)
 
+set( libkdepim_blacklistbalooemailwarningtest_SRCS blacklistbalooemailwarningtest.cpp ../blacklistbalooemailwarning.cpp )
+add_executable( libkdepim_blacklistbalooemailwarningtest ${libkdepim_blacklistbalooemailwarningtest_SRCS})
+add_test(libkdepim_blacklistbalooemailwarningtest libkdepim_blacklistbalooemailwarningtest)
+ecm_mark_as_test(libkdepim_blacklistbalooemailwarningtest)
+target_link_libraries( libkdepim_blacklistbalooemailwarningtest Qt5::Test  kdepim)
 
