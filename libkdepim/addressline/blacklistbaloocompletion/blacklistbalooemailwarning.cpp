@@ -19,13 +19,29 @@
 */
 
 #include "blacklistbalooemailwarning.h"
+#include <KLocalizedString>
+#include <QAction>
 
 using namespace KPIM;
 
 BlackListBalooEmailWarning::BlackListBalooEmailWarning(QWidget *parent)
     : KMessageWidget(parent)
 {
+    setVisible(false);
+    setCloseButtonVisible(false);
+    setMessageType(Warning);
+    setWordWrap(true);
 
+    setText(i18n("The list was changed. Do you want to save before to make another search ?"));
+    QAction *saveAction = new QAction(i18n("Save"), this);
+    saveAction->setObjectName(QStringLiteral("saveblacklist"));
+    connect(saveAction, &QAction::triggered, this, &BlackListBalooEmailWarning::slotSaveBlackList);
+    addAction(saveAction);
+
+    QAction *searchAction = new QAction(i18n("Search"), this);
+    searchAction->setObjectName(QStringLiteral("search"));
+    connect(searchAction, &QAction::triggered, this, &BlackListBalooEmailWarning::slotSearch);
+    addAction(searchAction);
 }
 
 BlackListBalooEmailWarning::~BlackListBalooEmailWarning()
@@ -33,3 +49,14 @@ BlackListBalooEmailWarning::~BlackListBalooEmailWarning()
 
 }
 
+void BlackListBalooEmailWarning::slotSaveBlackList()
+{
+    animatedHide();
+    Q_EMIT saveChanges();
+}
+
+void BlackListBalooEmailWarning::slotSearch()
+{
+    hide();
+    Q_EMIT newSearch();
+}

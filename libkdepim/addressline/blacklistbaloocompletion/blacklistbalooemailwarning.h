@@ -31,6 +31,14 @@ class BlackListBalooEmailWarning : public KMessageWidget
 public:
     explicit BlackListBalooEmailWarning(QWidget *parent = Q_NULLPTR);
     ~BlackListBalooEmailWarning();
+
+Q_SIGNALS:
+    void newSearch();
+    void saveChanges();
+
+private Q_SLOTS:
+    void slotSaveBlackList();
+    void slotSearch();
 };
 }
 #endif // BLACKLISTBALOOEMAILWARNING_H

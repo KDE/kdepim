@@ -22,6 +22,7 @@
 #include "blacklistbalooemaillist.h"
 #include "blacklistbalooemailsearchjob.h"
 #include "blacklistbalooemailutil.h"
+#include "blacklistbalooemailwarning.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -54,12 +55,12 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mSearchLineEdit->setClearButtonShown(true);
     mSearchLineEdit->setTrapReturnKey(true);
     mSearchLineEdit->setObjectName(QStringLiteral("search_lineedit"));
-    connect(mSearchLineEdit, &KLineEdit::returnPressed, this, &BlackListBalooEmailCompletionWidget::slotSearch);
+    connect(mSearchLineEdit, &KLineEdit::returnPressed, this, &BlackListBalooEmailCompletionWidget::slotCheckIfUpdateBlackListIsNeeded);
     searchLayout->addWidget(mSearchLineEdit);
 
     mSearchButton = new QPushButton(i18n("Search"));
     mSearchButton->setObjectName(QStringLiteral("search_button"));
-    connect(mSearchButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionWidget::slotSearch);
+    connect(mSearchButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionWidget::slotCheckIfUpdateBlackListIsNeeded);
     mSearchButton->setEnabled(false);
     searchLayout->addWidget(mSearchButton);
 
@@ -114,6 +115,13 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mExcludeDomainLineEdit->setClearButtonShown(true);
     mExcludeDomainLineEdit->setTrapReturnKey(true);
     mExcludeDomainLineEdit->setPlaceholderText(i18n("Separate domain with \'%1\'", QLatin1Char(',')));
+
+    mBlackListWarning = new BlackListBalooEmailWarning(this);
+    mBlackListWarning->setObjectName(QStringLiteral("backlistwarning"));
+    mainLayout->addWidget(mBlackListWarning);
+    connect(mBlackListWarning, &BlackListBalooEmailWarning::newSearch, this, &BlackListBalooEmailCompletionWidget::slotSearch);
+    connect(mBlackListWarning, &BlackListBalooEmailWarning::saveChanges, this, &BlackListBalooEmailCompletionWidget::slotSaveChanges);
+
     connect(mEmailList, &QListWidget::itemSelectionChanged, this, &BlackListBalooEmailCompletionWidget::slotSelectionChanged);
     slotSelectionChanged();
 }
@@ -191,17 +199,30 @@ void BlackListBalooEmailCompletionWidget::setEmailBlackList(const QStringList &l
     mEmailList->setEmailBlackList(list);
 }
 
-void BlackListBalooEmailCompletionWidget::checkIfUpdateBlackListIsNeeded()
+void BlackListBalooEmailCompletionWidget::slotSaveChanges()
+{
+    //TODO avoid to save a lot.
+    const QHash<QString, bool> result = mEmailList->blackListItemChanged();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kpimbalooblacklist"));
+    KConfigGroup group(config, "AddressLineEdit");
+    QStringList blackList = group.readEntry("BalooBackList", QStringList());
+    KPIM::BlackListBalooEmailUtil util;
+    util.initialBlackList(blackList);
+    util.newBlackList(result);
+    blackList = util.createNewBlackList();
+    group.writeEntry("BalooBackList", blackList);
+    group.sync();
+    mEmailList->setEmailBlackList(blackList);
+    slotSearch();
+}
+
+void BlackListBalooEmailCompletionWidget::slotCheckIfUpdateBlackListIsNeeded()
 {
     const QHash<QString, bool> result = mEmailList->blackListItemChanged();
-    if (!result.isEmpty()) {
-        KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kpimbalooblacklist"));
-        KConfigGroup group(config, "AddressLineEdit");
-        QStringList blackList = group.readEntry("BalooBackList", QStringList());
-        KPIM::BlackListBalooEmailUtil util;
-        util.initialBlackList(blackList);
-        util.newBlackList(result);
-        blackList = util.createNewBlackList();
+    if (result.isEmpty()) {
+        slotSearch();
+    } else {
+        mBlackListWarning->animatedShow();
     }
 }
 

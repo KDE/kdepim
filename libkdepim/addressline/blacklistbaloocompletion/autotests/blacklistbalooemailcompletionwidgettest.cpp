@@ -26,6 +26,7 @@
 #include <klineedit.h>
 #include <qpushbutton.h>
 #include <qtest.h>
+#include <addressline/blacklistbaloocompletion/blacklistbalooemailwarning.h>
 
 BlackListBalooEmailCompletionWidgetTest::BlackListBalooEmailCompletionWidgetTest(QObject *parent)
     : QObject(parent)
@@ -86,6 +87,9 @@ void BlackListBalooEmailCompletionWidgetTest::shouldHaveDefaultValue()
     QVERIFY(!searchInResult->placeholderText().isEmpty());
     QVERIFY(searchInResult->text().isEmpty());
     QVERIFY(searchInResult->isClearButtonEnabled());
+
+    KPIM::BlackListBalooEmailWarning *blackListWarning = widget.findChild<KPIM::BlackListBalooEmailWarning *>(QStringLiteral("backlistwarning"));
+    QVERIFY(blackListWarning);
 }
 
 void BlackListBalooEmailCompletionWidgetTest::shouldEnablePushButtonWhenTestSizeSupperiorToTwo()
