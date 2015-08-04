@@ -100,7 +100,6 @@ target_link_libraries(akonadiconsole_bin
   KF5::AkonadiCore
   KF5::AkonadiPrivate
   KF5::AkonadiContact
-  
   calendarsupport
   KF5::CalendarCore
   kdepim
