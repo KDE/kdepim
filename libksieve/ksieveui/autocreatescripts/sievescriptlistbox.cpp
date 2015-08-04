@@ -144,18 +144,22 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     hbHBoxLayout->addWidget(mBtnNew);
     mBtnNew->setIcon(QIcon::fromTheme(QStringLiteral("document-new")));
     mBtnNew->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
+    mBtnNew->setToolTip(i18n("New Script"));
     mBtnNew->setMinimumSize(mBtnNew->sizeHint() * 1.2);
 
     mBtnDelete = new QPushButton(QString(), hb);
     hbHBoxLayout->addWidget(mBtnDelete);
     mBtnDelete->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
     mBtnDelete->setIconSize(QSize(KIconLoader::SizeSmall, KIconLoader::SizeSmall));
+    mBtnDelete->setToolTip(i18n("Delete Script"));
     mBtnDelete->setMinimumSize(mBtnDelete->sizeHint() * 1.2);
 
     mBtnRename = new QPushButton(i18n("Rename..."), hb);
+    mBtnRename->setToolTip(i18n("Rename Script"));
     hbHBoxLayout->addWidget(mBtnRename);
 
     mBtnDescription = new QPushButton(i18n("Edit description..."), hb);
+    mBtnDescription->setToolTip(i18n("Edit Script Description"));
     hbHBoxLayout->addWidget(mBtnDescription);
 
     layout->addWidget(hb);
