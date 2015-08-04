@@ -161,7 +161,7 @@ static QVariantHash imAddressHash(const QString &typeKey, const QString &imAddre
 
     const QString iconUrl = QUrl::fromLocalFile(KIconLoader::global()->iconPath(IMProtocols::self()->icon(typeKey),
                             -KIconLoader::SizeSmall)).url();
-    const QString url = QString::fromLatin1("<img src=\"%1\" align=\"top\"/>").arg(iconUrl);
+    const QString url = QStringLiteral("<img src=\"%1\" align=\"top\"/>").arg(iconUrl);
     addressObject.insert(QStringLiteral("imIcon"), url);
 
     return addressObject;

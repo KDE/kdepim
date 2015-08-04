@@ -356,7 +356,7 @@ template <typename Base>
 class TableModelMixin : public Base
 {
 public:
-    explicit TableModelMixin(QObject *p = 0) : Base(p) {}
+    explicit TableModelMixin(QObject *p = Q_NULLPTR) : Base(p) {}
     ~TableModelMixin() {}
 
     using Base::index;

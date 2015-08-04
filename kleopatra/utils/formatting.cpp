@@ -100,22 +100,22 @@ QString Formatting::prettyNameAndEMail(int proto, const QString &id, const QStri
             if (email.isEmpty()) {
                 return QString();
             } else if (comment.isEmpty()) {
-                return QString::fromLatin1("<%1>").arg(email);
+                return QStringLiteral("<%1>").arg(email);
             } else {
-                return QString::fromLatin1("(%2) <%1>").arg(email, comment);
+                return QStringLiteral("(%2) <%1>").arg(email, comment);
             }
         }
         if (email.isEmpty()) {
             if (comment.isEmpty()) {
                 return name;
             } else {
-                return QString::fromLatin1("%1 (%2)").arg(name, comment);
+                return QStringLiteral("%1 (%2)").arg(name, comment);
             }
         }
         if (comment.isEmpty()) {
-            return QString::fromLatin1("%1 <%2>").arg(name, email);
+            return QStringLiteral("%1 <%2>").arg(name, email);
         } else {
-            return QString::fromLatin1("%1 (%3) <%2>").arg(name, email, comment);
+            return QStringLiteral("%1 (%3) <%2>").arg(name, email, comment);
         }
     }
 

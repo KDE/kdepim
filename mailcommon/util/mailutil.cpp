@@ -190,17 +190,17 @@ bool MailCommon::Util::ensureKorganizerRunning(bool switchTo)
 #else
     QString constraint;
 
-    result = KDBusServiceStarter::self()->findServiceFor(QLatin1String("DBUS/Organizer"),
+    result = KDBusServiceStarter::self()->findServiceFor(QStringLiteral("DBUS/Organizer"),
              constraint,
              &error, &dbusService) == 0;
 #endif
     if (result) {
         // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
-        QDBusInterface iface(QLatin1String("org.kde.korganizer"), QStringLiteral("/MainApplication"),
-                             QLatin1String("org.kde.PIMUniqueApplication"));
+        QDBusInterface iface(QStringLiteral("org.kde.korganizer"), QStringLiteral("/MainApplication"),
+                             QStringLiteral("org.kde.PIMUniqueApplication"));
         if (iface.isValid()) {
             if (switchTo) {
-                iface.call(QLatin1String("newInstance"));   // activate korganizer window
+                iface.call(QStringLiteral("newInstance"));   // activate korganizer window
             }
 #if 0 //Not exist
             QDBusInterface pimIface("org.kde.korganizer", "/korganizer_PimApplication",
