@@ -213,7 +213,7 @@ void AttachmentPart::setData(const QByteArray &data)
     d->mData = data;
 
     if (d->mAutoEncoding) {
-        QList<KMime::Headers::contentEncoding> possibleEncodings = KMime::encodingsForData(data);
+        auto possibleEncodings = KMime::encodingsForData(data);
         possibleEncodings.removeAll(KMime::Headers::CE8Bit);
         d->mEncoding = possibleEncodings.first();
     }

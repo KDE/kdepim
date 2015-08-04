@@ -61,7 +61,7 @@ bool SinglepartJobPrivate::chooseCTE()
 {
     Q_Q(SinglepartJob);
 
-    QList<KMime::Headers::contentEncoding> allowed = KMime::encodingsForData(data);
+    auto allowed = KMime::encodingsForData(data);
 
     if (!q->globalPart()->is8BitAllowed()) {
         allowed.removeAll(KMime::Headers::CE8Bit);
