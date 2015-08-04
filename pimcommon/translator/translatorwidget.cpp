@@ -75,6 +75,7 @@ public:
     MinimumComboBox *from;
     MinimumComboBox *to;
     QPushButton *translate;
+    QPushButton *clear;
     PimCommon::AbstractTranslator *abstractTranslator;
     KPIM::ProgressIndicatorWidget *progressIndictor;
     QPushButton *invert;
@@ -258,13 +259,13 @@ void TranslatorWidget::init()
     connect(d->invert, &QPushButton::clicked, this, &TranslatorWidget::slotInvertLanguage);
     hboxLayout->addWidget(d->invert);
 
-    QPushButton *clear = new QPushButton(i18n("Clear"), this);
-    clear->setObjectName(QStringLiteral("clear-button"));
+    d->clear = new QPushButton(i18n("Clear"), this);
+    d->clear->setObjectName(QStringLiteral("clear-button"));
 #ifndef QT_NO_ACCESSIBILITY
-    clear->setAccessibleName(i18n("Clear"));
+    d->clear->setAccessibleName(i18n("Clear"));
 #endif
-    connect(clear, &QPushButton::clicked, this, &TranslatorWidget::slotClear);
-    hboxLayout->addWidget(clear);
+    connect(d->clear, &QPushButton::clicked, this, &TranslatorWidget::slotClear);
+    hboxLayout->addWidget(d->clear);
 
     d->translate = new QPushButton(i18n("Translate"));
     d->translate->setObjectName(QStringLiteral("translate-button"));
@@ -340,6 +341,7 @@ void TranslatorWidget::slotConfigChanged()
 void TranslatorWidget::slotTextChanged()
 {
     d->translate->setEnabled(!d->inputText->document()->isEmpty());
+    d->clear->setEnabled(!d->inputText->document()->isEmpty());
 }
 
 void TranslatorWidget::slotFromLanguageChanged(int index, bool initialize)
