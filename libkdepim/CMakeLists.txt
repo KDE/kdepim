@@ -101,6 +101,7 @@ set(kdepim_addressline_blacklist_baloo_LIB_SRCS
    addressline/blacklistbaloocompletion/blacklistbalooemailsearchjob.cpp
    addressline/blacklistbaloocompletion/blacklistbalooemailutil.cpp
    addressline/blacklistbaloocompletion/blacklistbalooemailcompletionwidget.cpp
+   addressline/blacklistbaloocompletion/blacklistbalooemailwarning.cpp
 ) 
 
 set(kdepim_multiplyingline_LIB_SRCS
