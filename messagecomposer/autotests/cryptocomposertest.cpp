@@ -183,7 +183,7 @@ void CryptoComposerTest::testEditEncryptAttachments()
 {
     QFETCH(int, format);
     Composer *composer = new Composer;
-    QString data(QString::fromLatin1("All happy families are alike; each unhappy family is unhappy in its own way."));
+    QString data(QStringLiteral("All happy families are alike; each unhappy family is unhappy in its own way."));
     fillComposerData(composer, data);
     fillComposerCryptoData(composer);
 
@@ -241,7 +241,7 @@ void CryptoComposerTest::testEditEncryptAndLateAttachments()
 {
     QFETCH(int, format);
     Composer *composer = new Composer;
-    QString data(QString::fromLatin1("All happy families are alike; each unhappy family is unhappy in its own way."));
+    QString data(QStringLiteral("All happy families are alike; each unhappy family is unhappy in its own way."));
     fillComposerData(composer, data);
     fillComposerCryptoData(composer);
 

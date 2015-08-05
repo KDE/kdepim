@@ -1215,37 +1215,37 @@ void ImportMailJob::mergeLdapConfig(const KArchiveFile *archivefile, const QStri
 
     for (int i = 0; i < importingNumberSelectedHosts; ++i) {
         const QString auth = grpImporting.readEntry(QString::fromLatin1("SelectedAuth%1").arg(i), QString());
-        grpExisting.writeEntry(QString::fromLatin1("SelectedAuth%1").arg(existingNumberSelectedHosts + i + 1), auth);
-        grpExisting.writeEntry(QString::fromLatin1("SelectedBase%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedBase%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedBind%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedBind%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedHost%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedHost%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedMech%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedMech%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedPageSize%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedPageSize%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedPort%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedPort%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedPwdBind%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedPwdBind%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedSecurity%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedSecurity%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedSizeLimit%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedSizeLimit%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedTimeLimit%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedTimeLimit%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedUser%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedUser%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedVersion%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedVersion%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("SelectedUserFilter%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SelectedUserFilter%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("SelectedAuth%1").arg(existingNumberSelectedHosts + i + 1), auth);
+        grpExisting.writeEntry(QStringLiteral("SelectedBase%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedBase%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("SelectedBind%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedBind%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("SelectedHost%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedHost%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("SelectedMech%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedMech%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("SelectedPageSize%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedPageSize%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("SelectedPort%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedPort%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("SelectedPwdBind%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedPwdBind%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("SelectedSecurity%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedSecurity%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("SelectedSizeLimit%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedSizeLimit%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("SelectedTimeLimit%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedTimeLimit%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("SelectedUser%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedUser%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("SelectedVersion%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedVersion%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("SelectedUserFilter%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedUserFilter%1").arg(i), 0));
     }
 
     for (int i = 0; i < importingNumberHosts; ++i) {
-        grpExisting.writeEntry(QString::fromLatin1("Auth%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("Auth%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("Base%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("Base%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("Bind%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("Bind%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("Host%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("Host%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("Mech%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("Mech%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("PageSize%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("PageSize%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("Port%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("Port%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("PwdBind%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("PwdBind%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("Security%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("Security%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("SizeLimit%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("SizeLimit%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("TimeLimit%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("TimeLimit%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("User%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("User%1").arg(i), QString()));
-        grpExisting.writeEntry(QString::fromLatin1("Version%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("Version%1").arg(i), 0));
-        grpExisting.writeEntry(QString::fromLatin1("UserFilter%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QString::fromLatin1("UserFilter%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("Auth%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("Auth%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("Base%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("Base%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("Bind%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("Bind%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("Host%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("Host%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("Mech%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("Mech%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("PageSize%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("PageSize%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("Port%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("Port%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("PwdBind%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("PwdBind%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("Security%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("Security%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("SizeLimit%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("SizeLimit%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("TimeLimit%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("TimeLimit%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("User%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("User%1").arg(i), QString()));
+        grpExisting.writeEntry(QStringLiteral("Version%1").arg(existingNumberHosts + i + 1), grpImporting.readEntry(QStringLiteral("Version%1").arg(i), 0));
+        grpExisting.writeEntry(QStringLiteral("UserFilter%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("UserFilter%1").arg(i), 0));
     }
 
     grpExisting.sync();
