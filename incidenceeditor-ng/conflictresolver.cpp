@@ -35,7 +35,9 @@ ConflictResolver::ConflictResolver(QWidget *parentWidget, QObject *parent)
       mFBModel(new KPIM::FreeBusyItemModel(this)),
       mParentWidget(parentWidget),
       mWeekdays(7),
-      mSlotResolutionSeconds(DEFAULT_RESOLUTION_SECONDS)
+      mSlotResolutionSeconds(DEFAULT_RESOLUTION_SECONDS),
+      mTimeframeConstraint(KCalCore::Period(KDateTime::currentLocalDateTime(),
+                                            KDateTime::currentLocalDateTime()))
 {
 
     // trigger a reload in case any attendees were inserted before
