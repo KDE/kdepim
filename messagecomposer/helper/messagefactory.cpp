@@ -629,7 +629,7 @@ KMime::Message::Ptr MessageFactory::createMDN(KMime::MDN::ActionMode a,
         KMime::MDN::DispositionType d,
         KMime::MDN::SendingMode s,
         int mdnQuoteOriginal,
-        const QList<KMime::MDN::DispositionModifier> &m)
+        const QVector<KMime::MDN::DispositionModifier> &m)
 {
     // extract where to send to:
     QString receiptTo = m_origMsg->headerByType("Disposition-Notification-To") ? m_origMsg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");

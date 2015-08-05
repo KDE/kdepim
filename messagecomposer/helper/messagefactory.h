@@ -128,7 +128,7 @@ public:
                                   KMime::MDN::DispositionType d,
                                   KMime::MDN::SendingMode s,
                                   int mdnQuoteOriginal = 0,
-                                  const QList<KMime::MDN::DispositionModifier> &m = QList<KMime::MDN::DispositionModifier>());
+                                  const QVector<KMime::MDN::DispositionModifier> &m = QVector<KMime::MDN::DispositionModifier>());
 
     /**
     * Create a new forwarded MIME digest. If the user is trying to forward multiple messages
