@@ -57,6 +57,6 @@ void BlackListBalooEmailWarning::slotSaveBlackList()
 
 void BlackListBalooEmailWarning::slotSearch()
 {
-    hide();
+    animatedHide();
     Q_EMIT newSearch();
 }
