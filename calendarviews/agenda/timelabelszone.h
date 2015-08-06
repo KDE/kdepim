@@ -28,7 +28,6 @@
 
 #include <QWidget>
 
-#include <boost/shared_ptr.hpp>
 
 class QHBoxLayout;
 class QScrollArea;
@@ -40,7 +39,7 @@ class Agenda;
 class AgendaView;
 
 class Prefs;
-typedef boost::shared_ptr<Prefs> PrefsPtr;
+typedef QSharedPointer<Prefs> PrefsPtr;
 
 class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
 {

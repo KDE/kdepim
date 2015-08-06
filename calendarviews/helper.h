@@ -25,11 +25,7 @@
 #include "eventviews_export.h"
 
 #include <QColor>
-
-namespace boost
-{
-template <typename T> class shared_ptr;
-}
+#include <QSharedPointer>
 
 namespace Akonadi
 {
@@ -46,7 +42,7 @@ namespace EventViews
 {
 
 class Prefs;
-typedef boost::shared_ptr<Prefs> PrefsPtr;
+typedef QSharedPointer<Prefs> PrefsPtr;
 
 /**
  Returns a nice QColor for text, give the input color &c.

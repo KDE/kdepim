@@ -29,7 +29,7 @@ using namespace MessageCore;
 
 uint MessageCore::qHash(const MessageCore::AttachmentPart::Ptr &ptr)
 {
-    return ::qHash(ptr.get());
+    return ::qHash(ptr.data());
 }
 
 // TODO move to kmime_util?

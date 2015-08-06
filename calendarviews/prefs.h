@@ -31,10 +31,6 @@
 #include <KConfigSkeleton>
 #include <KDateTime>
 
-namespace boost
-{
-template <typename T> class shared_ptr;
-}
 
 namespace EventViews
 {
@@ -226,7 +222,7 @@ private:
     Private *const d;
 };
 
-typedef boost::shared_ptr<Prefs> PrefsPtr;
+typedef QSharedPointer<Prefs> PrefsPtr;
 
 }
 

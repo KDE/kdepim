@@ -24,6 +24,7 @@
 #include <QBuffer>
 #include <QDir>
 #include <QScopedPointer>
+#include <QSharedPointer>
 
 static const mode_t archivePerms = S_IFREG | 0644;
 

@@ -27,6 +27,7 @@
 
 #include <QBuffer>
 #include <QTimer>
+#include <QSharedPointer>
 #include <QDateTime>
 
 using namespace MessageCore;

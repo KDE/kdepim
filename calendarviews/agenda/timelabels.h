@@ -30,7 +30,6 @@
 
 #include <QFrame>
 
-#include <boost/shared_ptr.hpp>
 
 namespace EventViews
 {
@@ -39,7 +38,7 @@ class Agenda;
 class TimeLabelsZone;
 
 class Prefs;
-typedef boost::shared_ptr<Prefs> PrefsPtr;
+typedef QSharedPointer<Prefs> PrefsPtr;
 
 class EVENTVIEWS_EXPORT TimeLabels : public QFrame
 {

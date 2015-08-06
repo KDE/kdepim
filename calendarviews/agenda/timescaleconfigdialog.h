@@ -27,13 +27,11 @@
 
 #include <QDialog>
 
-#include <boost/shared_ptr.hpp>
-
 namespace EventViews
 {
 
 class Prefs;
-typedef boost::shared_ptr<Prefs> PrefsPtr;
+typedef QSharedPointer<Prefs> PrefsPtr;
 
 class EVENTVIEWS_EXPORT TimeScaleConfigDialog : public QDialog, private Ui::TimeScaleEditWidget
 {

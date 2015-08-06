@@ -32,7 +32,6 @@
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_headers.h>
 
-#include <boost/shared_ptr.hpp>
 #include <KLocalizedString>
 #include <KFormat>
 #include <KHelpClient>

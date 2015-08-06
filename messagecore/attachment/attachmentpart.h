@@ -26,8 +26,8 @@
 
 #include <QList>
 #include <QMetaType>
+#include <QSharedPointer>
 
-#include <boost/shared_ptr.hpp>
 class QUrl;
 namespace MessageCore
 {
@@ -43,7 +43,7 @@ public:
     /**
      * Defines a pointer to an attachment object.
      */
-    typedef boost::shared_ptr<AttachmentPart> Ptr;
+    typedef QSharedPointer<AttachmentPart> Ptr;
 
     /**
      * Defines a list of pointers to attachment objects.
@@ -210,7 +210,7 @@ private:
 };
 
 // FIXME I don't understand why this doesn't work if I put it outside namespace KPIM.
-MESSAGECORE_EXPORT uint qHash(const boost::shared_ptr<MessageCore::AttachmentPart> &);
+MESSAGECORE_EXPORT uint qHash(const QSharedPointer<MessageCore::AttachmentPart> &);
 
 }
 

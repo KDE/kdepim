@@ -30,15 +30,11 @@ namespace Akonadi
 class IncidenceChanger;
 }
 
-namespace boost
-{
-template <typename T> class shared_ptr;
-}
 
 namespace EventViews
 {
 class Prefs;
-typedef boost::shared_ptr<Prefs> PrefsPtr;
+typedef QSharedPointer<Prefs> PrefsPtr;
 }
 
 class QAction;

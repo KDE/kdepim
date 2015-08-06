@@ -80,7 +80,7 @@ enum {
 
 class EventViewPrivate;
 class Prefs;
-typedef boost::shared_ptr<Prefs> PrefsPtr;
+typedef QSharedPointer<Prefs> PrefsPtr;
 typedef boost::shared_ptr<CalendarSupport::KCalPrefs> KCalPrefsPtr;
 
 /**
