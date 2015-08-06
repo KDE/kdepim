@@ -41,7 +41,6 @@ bool SieveHelpButton::event(QEvent *event)
     if (event->type() == QEvent::WhatsThisClicked) {
         QWhatsThisClickedEvent *clicked = static_cast<QWhatsThisClickedEvent *>(event);
         new KRun(clicked->href(), this);
-        QWhatsThis::hideText();
         return true;
     }
     return QToolButton::event(event);
