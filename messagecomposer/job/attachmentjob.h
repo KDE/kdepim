@@ -25,11 +25,6 @@
 
 #include <messagecore/attachment/attachmentpart.h>
 
-namespace boost
-{
-template <typename T> class shared_ptr;
-}
-
 namespace MessageComposer
 {
 

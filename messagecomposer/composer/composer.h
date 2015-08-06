@@ -34,11 +34,6 @@
 #include <vector>
 #include <gpgme++/key.h>
 
-namespace boost
-{
-template <typename T> class shared_ptr;
-}
-
 namespace MessageComposer
 {
 
