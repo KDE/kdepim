@@ -54,7 +54,11 @@ SieveEditorPageWidget::~SieveEditorPageWidget()
 
 void SieveEditorPageWidget::slotCheckSyntaxClicked()
 {
-    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive);
+    const QString script = mSieveEditorWidget->script();
+    if (script.isEmpty()) {
+        return;
+    }
+    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, script, mWasActive, mWasActive);
     job->setInteractive(false);
     connect(job, &KManageSieve::SieveJob::errorMessage, this, &SieveEditorPageWidget::slotPutResultDebug);
 }

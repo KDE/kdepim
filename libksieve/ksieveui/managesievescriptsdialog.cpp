@@ -219,7 +219,11 @@ void ManageSieveScriptsDialog::slotSieveEditorCheckSyntaxClicked()
     if (!mSieveEditor) {
         return;
     }
-    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditor->script(), mWasActive, mWasActive);
+    const QString script = mSieveEditor->script();
+    if (script.isEmpty()) {
+        return;
+    }
+    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, script, mWasActive, mWasActive);
     job->setInteractive(false);
     connect(job, &KManageSieve::SieveJob::errorMessage, this, &ManageSieveScriptsDialog::slotPutResultDebug);
 }
