@@ -2,7 +2,6 @@ project(akonadiconsole)
 
 include_directories(
   ${AKONADI_INCLUDE_DIR}
-  ${Boost_INCLUDE_DIR}
 )
 
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})

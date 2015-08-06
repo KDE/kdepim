@@ -33,8 +33,6 @@ set(libmailimporter_SRCS
   mailimporter_debug.cpp
 )
 
-include_directories(${Boost_INCLUDE_DIR})
-
 ki18n_wrap_ui(libmailimporter_SRCS ui/importmailswidget.ui ui/selectthunderbirdprofilewidget.ui)
 
 add_library(mailimporter ${libmailimporter_SRCS})
