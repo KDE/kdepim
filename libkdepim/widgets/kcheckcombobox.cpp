@@ -40,7 +40,7 @@ using namespace KPIM;
 namespace KPIM
 {
 
-class KCheckComboBox::Private
+class Q_DECL_HIDDEN KCheckComboBox::Private
 {
     KCheckComboBox *q;
 

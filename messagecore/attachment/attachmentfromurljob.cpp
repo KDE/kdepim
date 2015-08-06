@@ -34,7 +34,7 @@
 
 using namespace MessageCore;
 
-class MessageCore::AttachmentFromUrlJob::Private
+class Q_DECL_HIDDEN MessageCore::AttachmentFromUrlJob::Private
 {
 public:
     Private(AttachmentFromUrlJob *qq);

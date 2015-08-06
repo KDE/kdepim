@@ -44,7 +44,7 @@
 
 using namespace MessageCore;
 
-class MessageCore::AttachmentPropertiesDialog::Private
+class Q_DECL_HIDDEN MessageCore::AttachmentPropertiesDialog::Private
 {
 public:
     Private(AttachmentPropertiesDialog *qq)

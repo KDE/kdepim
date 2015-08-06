@@ -58,7 +58,7 @@ private:
     QWidget *mOriginalParent;
 };
 
-class KDatePickerPopup::Private
+class Q_DECL_HIDDEN KDatePickerPopup::Private
 {
 public:
     Private(KDatePickerPopup *qq)

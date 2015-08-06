@@ -46,7 +46,7 @@ static Qt::CheckState boolToCheckState(bool checked)   // local
     }
 }
 
-class MessageComposer::AttachmentModel::Private
+class Q_DECL_HIDDEN MessageComposer::AttachmentModel::Private
 {
 public:
     Private(AttachmentModel *qq);

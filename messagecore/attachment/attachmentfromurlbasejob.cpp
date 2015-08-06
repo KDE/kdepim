@@ -20,7 +20,7 @@
 
 using namespace MessageCore;
 
-class AttachmentFromUrlBaseJob::Private
+class Q_DECL_HIDDEN AttachmentFromUrlBaseJob::Private
 {
 
 public:

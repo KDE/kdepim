@@ -463,7 +463,7 @@ private:
     QStringList mServerList;
 };
 
-class LdapSearchDialog::Private
+class Q_DECL_HIDDEN LdapSearchDialog::Private
 {
 public:
     Private(LdapSearchDialog *qq)

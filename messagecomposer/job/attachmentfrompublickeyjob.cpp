@@ -34,7 +34,7 @@
 using namespace MessageComposer;
 using MessageCore::AttachmentPart;
 
-class MessageComposer::AttachmentFromPublicKeyJob::Private
+class Q_DECL_HIDDEN MessageComposer::AttachmentFromPublicKeyJob::Private
 {
 public:
     Private(AttachmentFromPublicKeyJob *qq);

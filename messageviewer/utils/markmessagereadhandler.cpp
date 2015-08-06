@@ -30,7 +30,7 @@
 using namespace MessageViewer;
 Q_GLOBAL_STATIC(Akonadi::Item::List, sListItem)
 
-class MarkMessageReadHandler::Private
+class Q_DECL_HIDDEN MarkMessageReadHandler::Private
 {
 public:
     Private(MarkMessageReadHandler *qq)

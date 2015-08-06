@@ -76,7 +76,7 @@
 using namespace MessageComposer;
 using namespace MessageCore;
 
-class MessageComposer::AttachmentControllerBase::Private
+class Q_DECL_HIDDEN MessageComposer::AttachmentControllerBase::Private
 {
 public:
     Private(AttachmentControllerBase *qq);

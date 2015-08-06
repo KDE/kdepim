@@ -26,7 +26,7 @@
 
 using namespace MessageCore;
 
-class MessageCore::AttachmentUpdateJob::Private
+class Q_DECL_HIDDEN MessageCore::AttachmentUpdateJob::Private
 {
 public:
     Private(AttachmentUpdateJob *qq);

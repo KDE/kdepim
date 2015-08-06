@@ -45,7 +45,7 @@
 
 using namespace KPIM;
 
-class KWidgetLister::Private
+class Q_DECL_HIDDEN KWidgetLister::Private
 {
 public:
     Private(KWidgetLister *qq)

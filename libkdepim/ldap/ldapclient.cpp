@@ -38,7 +38,7 @@
 
 using namespace KLDAP;
 
-class LdapClient::Private
+class Q_DECL_HIDDEN LdapClient::Private
 {
 public:
     Private(LdapClient *qq)
