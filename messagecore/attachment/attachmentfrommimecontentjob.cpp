@@ -25,8 +25,6 @@
 #include "messagecore_debug.h"
 #include <kmime/kmime_content.h>
 
-#include <boost/shared_ptr.hpp>
-
 using namespace MessageCore;
 using KMime::Content;
 

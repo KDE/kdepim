@@ -18,7 +18,6 @@
 #define SEARCHRULE_H
 
 #include "mailcommon_export.h"
-#include <boost/shared_ptr.hpp>
 #include <AkonadiCore/SearchQuery>
 
 #include <AkonadiCore/Item>

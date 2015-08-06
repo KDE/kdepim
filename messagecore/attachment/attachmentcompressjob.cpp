@@ -29,8 +29,6 @@
 #include <QTimer>
 #include <QDateTime>
 
-#include <boost/shared_ptr.hpp>
-
 using namespace MessageCore;
 static const mode_t archivePerms = S_IFREG | 0644;
 

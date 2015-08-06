@@ -29,7 +29,6 @@
 
 #include <QSharedPointer>
 
-#include <boost/shared_ptr.hpp>
 #include <QMimeDatabase>
 #include <QMimeType>
 

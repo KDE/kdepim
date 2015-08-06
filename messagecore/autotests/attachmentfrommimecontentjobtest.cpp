@@ -20,8 +20,6 @@
 #include "attachmentfrommimecontentjobtest.h"
 #include "qtest_messagecore.h"
 
-#include <boost/shared_ptr.hpp>
-
 #include "messagecore_debug.h"
 #include <qtest.h>
 

@@ -32,8 +32,6 @@
 #include <QMimeType>
 #include <QUrlQuery>
 
-#include <boost/shared_ptr.hpp>
-
 using namespace MessageCore;
 
 class MessageCore::AttachmentFromUrlJob::Private

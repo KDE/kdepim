@@ -19,7 +19,6 @@
 
 #include "attachmentmodel.h"
 
-#include <boost/shared_ptr.hpp>
 
 #include <QMimeData>
 #include <QUrl>

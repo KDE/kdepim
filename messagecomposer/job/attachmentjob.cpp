@@ -22,8 +22,6 @@
 
 #include "attachmentjob.h"
 
-#include <boost/shared_ptr.hpp>
-
 #include <KEncodingProber>
 
 #include "contentjobbase_p.h"

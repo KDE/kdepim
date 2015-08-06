@@ -51,7 +51,6 @@ using namespace MessageComposer;
 
 #include <messageviewer/viewer/objecttreeparser.h>
 
-#include <boost/shared_ptr.hpp>
 using MessageCore::AttachmentPart;
 
 #include <gpgme++/key.h>

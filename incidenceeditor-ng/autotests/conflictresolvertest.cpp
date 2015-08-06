@@ -27,8 +27,6 @@
 
 #include <QWidget>
 
-#include <boost/shared_ptr.hpp>
-
 #include <qtest.h>
 
 using namespace IncidenceEditorNG;

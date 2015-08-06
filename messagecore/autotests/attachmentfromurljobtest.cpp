@@ -20,8 +20,6 @@
 #include "attachmentfromurljobtest.h"
 #include "qtest_messagecore.h"
 
-#include <boost/shared_ptr.hpp>
-
 #include <qtest.h>
 
 #include <messagecore/attachment/attachmentfromurljob.h>

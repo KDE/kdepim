@@ -26,7 +26,6 @@
 #include <qtest.h>
 
 #include <messagecore/attachment/attachmentpart.h>
-#include <boost/shared_ptr.hpp>
 using namespace MessageCore;
 
 QTEST_MAIN(AttachmentPartTest)

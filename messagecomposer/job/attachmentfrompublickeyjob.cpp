@@ -23,7 +23,6 @@
 
 #include "attachmentfrompublickeyjob.h"
 
-#include <boost/shared_ptr.hpp>
 
 #include <KDialogJobUiDelegate>
 #include <KLocalizedString>

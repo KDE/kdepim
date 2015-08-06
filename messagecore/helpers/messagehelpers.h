@@ -24,7 +24,6 @@
 
 #include <item.h>
 #include <Akonadi/KMime/MessageStatus>
-#include <boost/shared_ptr.hpp>
 #include <KMime/Message>
 
 namespace MessageCore

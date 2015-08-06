@@ -19,8 +19,6 @@
 
 #include "attachmentloadjob.h"
 
-#include <boost/shared_ptr.hpp>
-
 #include <QTimer>
 
 using namespace MessageCore;

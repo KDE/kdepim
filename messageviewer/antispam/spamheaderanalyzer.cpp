@@ -38,8 +38,6 @@
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_headers.h>
 
-#include <boost/shared_ptr.hpp>
-
 using namespace MessageViewer;
 
 // static

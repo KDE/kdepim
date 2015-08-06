@@ -35,7 +35,6 @@ using namespace KMime;
 using namespace MessageComposer;
 
 #include <messagecore/attachment/attachmentpart.h>
-#include <boost/shared_ptr.hpp>
 using MessageCore::AttachmentPart;
 
 QTEST_MAIN(ComposerTest)

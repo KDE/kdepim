@@ -40,7 +40,6 @@ using MessageComposer::MessageFactory;
 
 #include <QPointer>
 
-#include <boost/shared_ptr.hpp>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>

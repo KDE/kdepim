@@ -26,8 +26,6 @@
 #include "messagecomposer/utils/util.h"
 
 #include <kmime/kmime_message.h>
-#include <boost/shared_ptr.hpp>
-
 #include <progresswidget/progressmanager.h>
 
 #include <MailTransport/mailtransport/dispatcherinterface.h>

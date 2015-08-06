@@ -9,8 +9,6 @@
 #include <QSharedData>
 #include <QStringList>
 
-#include <boost/shared_ptr.hpp>
-
 using namespace MessageCore;
 
 typedef QString(*MagicDetectorFunc)(const KMime::Message::Ptr &, QByteArray &, QString &);
