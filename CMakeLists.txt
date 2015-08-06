@@ -176,9 +176,6 @@ set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libx
 find_package(KF5AkonadiSearch "5.0.4" CONFIG REQUIRED)
 set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
 
-find_package(ZLIB)
-set_package_properties(ZLIB PROPERTIES DESCRIPTION "The Zlib compression library" URL "http://www.zlib.net" TYPE REQUIRED)
-
 set(Prison_MIN_VERSION "1.2.0")
 find_package(KF5Prison ${Prison_MIN_VERSION} CONFIG)
 set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")

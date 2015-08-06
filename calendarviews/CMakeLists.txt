@@ -25,7 +25,6 @@ endif()
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${Boost_INCLUDE_DIR}
-  ${ZLIB_INCLUDE_DIRS}
 )
 
 ########### next target ###############
@@ -101,7 +100,6 @@ PUBLIC
 PRIVATE
   KF5::Codecs
   kdgantt2
-  ${ZLIB_LIBRARIES}
 )
 
 set_target_properties(eventviews PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
