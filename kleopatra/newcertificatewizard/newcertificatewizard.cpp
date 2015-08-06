@@ -703,7 +703,7 @@ private:
                 this, SLOT(slotResult(GpgME::KeyGenerationResult,QByteArray,QString)));
         if (const Error err = j->start(createGnupgKeyParms()))
             setField(QStringLiteral("error"), i18n("Could not start certificate creation: %1",
-                                                  QString::fromLocal8Bit(err.asString())));
+                                                   QString::fromLocal8Bit(err.asString())));
         else {
             job = j;
         }
@@ -727,13 +727,13 @@ private Q_SLOTS:
             setField(QStringLiteral("error"), QString());
             setField(QStringLiteral("url"), QString());
             setField(QStringLiteral("result"), i18n("Certificate created successfully.\n"
-                                                   "Fingerprint: %1", QLatin1String(result.fingerprint())));
+                                                    "Fingerprint: %1", QLatin1String(result.fingerprint())));
         } else {
             QFile file(tmpDir().absoluteFilePath(QStringLiteral("request.p10")));
 
             if (!file.open(QIODevice::WriteOnly)) {
                 setField(QStringLiteral("error"), i18n("Could not write output file %1: %2",
-                                                      file.fileName(), file.errorString()));
+                                                       file.fileName(), file.errorString()));
                 setField(QStringLiteral("url"), QString());
                 setField(QStringLiteral("result"), QString());
             } else {

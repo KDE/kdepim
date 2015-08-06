@@ -57,7 +57,6 @@ void GravatarUpdateWidgetTest::shouldHaveDefaultValue()
     QVERIFY(!useFallbackGravatar->isChecked());
     QVERIFY(!useFallbackGravatar->isEnabled());
 
-
     QPushButton *searchGravatar = widget.findChild<QPushButton *>(QStringLiteral("search"));
     QVERIFY(searchGravatar);
     QVERIFY(!searchGravatar->isEnabled());

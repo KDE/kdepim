@@ -337,8 +337,7 @@ QVariant AbstractKeyListModel::data(const QModelIndex &index, int role) const
         return Formatting::toolTip(key, toolTipOptions());
     } else if (role == Qt::FontRole) {
         return KeyFilterManager::instance()->font(key, (column == ShortKeyID) ? QFont(QStringLiteral("courier")) : QFont());
-    }
-    else if (role == Qt::DecorationRole) {
+    } else if (role == Qt::DecorationRole) {
         return column == Icon ? returnIfValid(KeyFilterManager::instance()->icon(key)) : QVariant() ;
     } else if (role == Qt::BackgroundRole) {
         return returnIfValid(KeyFilterManager::instance()->bgColor(key));
@@ -398,8 +397,7 @@ private:
     QModelIndex doMapFromKey(const Key &key, int col) const Q_DECL_OVERRIDE;
     QList<QModelIndex> doAddKeys(const std::vector<Key> &keys) Q_DECL_OVERRIDE;
     void doRemoveKey(const Key &key) Q_DECL_OVERRIDE;
-    void doClear() Q_DECL_OVERRIDE
-    {
+    void doClear() Q_DECL_OVERRIDE {
         mKeysByFingerprint.clear();
     }
 
@@ -429,8 +427,7 @@ private:
     QModelIndex doMapFromKey(const Key &key, int col) const Q_DECL_OVERRIDE;
     QList<QModelIndex> doAddKeys(const std::vector<Key> &keys) Q_DECL_OVERRIDE;
     void doRemoveKey(const Key &key) Q_DECL_OVERRIDE;
-    void doClear() Q_DECL_OVERRIDE
-    {
+    void doClear() Q_DECL_OVERRIDE {
         mTopLevels.clear();
         mKeysByFingerprint.clear();
         mKeysByExistingParent.clear();

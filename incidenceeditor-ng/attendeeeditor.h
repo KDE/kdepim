@@ -37,8 +37,7 @@ public:
     {
     }
 
-    KPIM::MultiplyingLine *newLine(QWidget *parent) Q_DECL_OVERRIDE
-    {
+    KPIM::MultiplyingLine *newLine(QWidget *parent) Q_DECL_OVERRIDE {
         return new AttendeeLine(parent);
     }
 };

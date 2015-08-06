@@ -111,8 +111,9 @@ void BlogSettings::removeBlog()
 
 void BlogSettings::loadBlogsList()
 {
-    foreach (BilboBlog *blog, DBMan::self()->blogList())
+    foreach (BilboBlog *blog, DBMan::self()->blogList()) {
         addBlogToList(*blog);
+    }
 }
 
 void BlogSettings::blogsTablestateChanged()

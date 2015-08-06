@@ -2304,7 +2304,6 @@ AgendaScrollArea::AgendaScrollArea(bool isAllDay, AgendaView *agendaView,
                              agendaView->preferences()->hourSize(), isInteractive);
     }
 
-
     setWidgetResizable(true);
     setWidget(mAgenda);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

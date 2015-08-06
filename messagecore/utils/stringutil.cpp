@@ -176,11 +176,13 @@ static bool flushPart(QString &msg, QStringList &textParts,
 QMap<QString, QString> parseMailtoUrl(const QUrl &url)
 {
     QMap<QString, QString> values;
-    if (url.scheme() != QLatin1String("mailto"))
+    if (url.scheme() != QLatin1String("mailto")) {
         return values;
+    }
     QUrlQuery query(url);
-    foreach (auto queryItem, query.queryItems())
+    foreach (auto queryItem, query.queryItems()) {
         values.insert(queryItem.first, queryItem.second);
+    }
 
     QStringList to;
     to << KEmailAddress::decodeMailtoUrl(url);

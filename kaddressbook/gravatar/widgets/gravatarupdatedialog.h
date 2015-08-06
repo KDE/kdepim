@@ -40,7 +40,7 @@ public:
 
     bool saveUrl() const;
 private Q_SLOTS:
-    void slotAccepted();    
+    void slotAccepted();
     void slotSaveImage();
     void slotSaveUrl();
 

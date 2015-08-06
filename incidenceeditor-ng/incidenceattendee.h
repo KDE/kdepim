@@ -52,7 +52,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     Q_OBJECT
 public:
     using IncidenceEditorNG::IncidenceEditor::save; // So we don't trigger -Woverloaded-virtual
-    using IncidenceEditorNG::IncidenceEditor::load; // So we don't trigger -Woverloaded-virtual    
+    using IncidenceEditorNG::IncidenceEditor::load; // So we don't trigger -Woverloaded-virtual
     IncidenceAttendee(QWidget *parent, IncidenceDateTime *dateTime, Ui::EventOrTodoDesktop *ui);
     ~IncidenceAttendee();
 

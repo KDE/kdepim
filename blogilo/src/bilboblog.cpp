@@ -103,7 +103,7 @@ KBlog::Blog *BilboBlog::blogBackend()
             qobject_cast<KBlog::Blogger *>(d->kblog)->setApiKey(QLatin1String("508396175529-icqp62q8t6st41gjv1du100fol6renq4.apps.googleusercontent.com"));
             qobject_cast<KBlog::Blogger *>(d->kblog)->setSecretKey(QLatin1String("JFPDXYmGIuM601vhgVGv0Dlx"));
 #else
-	    return 0;
+            return 0;
 #endif
             break;
         }

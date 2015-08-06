@@ -81,8 +81,7 @@ public:
     {
     }
 
-    ScheduledJob *run() Q_DECL_OVERRIDE
-    {
+    ScheduledJob *run() Q_DECL_OVERRIDE {
         return folder().isValid() ? new ExpireJob(folder(), isImmediate()) : 0;
     }
 

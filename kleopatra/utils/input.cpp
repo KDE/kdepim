@@ -69,8 +69,7 @@ class Process : public QProcess
 public:
     explicit Process(QObject *parent = Q_NULLPTR)
         : QProcess(parent) {}
-    void close() Q_DECL_OVERRIDE
-    {
+    void close() Q_DECL_OVERRIDE {
         closeReadChannel(StandardOutput);
     }
 };
@@ -92,8 +91,7 @@ public:
     {
         m_defaultLabel = l;
     }
-    void setLabel(const QString &l) Q_DECL_OVERRIDE
-    {
+    void setLabel(const QString &l) Q_DECL_OVERRIDE {
         m_customLabel = l;
     }
     QString errorString() const Q_DECL_OVERRIDE

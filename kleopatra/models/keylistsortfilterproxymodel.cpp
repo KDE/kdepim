@@ -189,8 +189,9 @@ bool KeyListSortFilterProxyModel::filterAcceptsRow(int source_row, const QModelI
 
     const QRegExp rx = filterRegExp();
     if (!name.contains(rx))
-        if (!email.contains(rx))
+        if (!email.contains(rx)) {
             return false;
+        }
 
     //
     // 2. Check that key filters match (if any are defined)

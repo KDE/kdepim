@@ -71,7 +71,6 @@ class UiServer;
 
 #include <kleo/checksumdefinition.h>
 
-
 #include "kleopatra_debug.h"
 #include <kcmdlineargs.h>
 #include <KLocalizedString>

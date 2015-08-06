@@ -31,7 +31,7 @@ public:
     ~BlackListBalooEmailWarningTest();
 
 private Q_SLOTS:
-    void shouldHaveDefaultValue();    
+    void shouldHaveDefaultValue();
     void shouldEmitSaveChanges();
     void shouldEmitNewSearch();
 };

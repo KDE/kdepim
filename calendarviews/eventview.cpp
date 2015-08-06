@@ -44,7 +44,6 @@ using namespace KPIM;
 
 #include <KCalUtils/RecurrenceActions>
 
-
 #include <KCheckableProxyModel>
 #include <KGuiItem>
 #include <KLocalizedString>

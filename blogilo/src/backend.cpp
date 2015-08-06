@@ -34,7 +34,7 @@
 #include <kblog/wordpressbuggy.h>
 #include <kblog/blogmedia.h>
 #include <kblog/blogcomment.h>
-#ifdef HAVE_GAPIBLOGGER_SUPPORT 
+#ifdef HAVE_GAPIBLOGGER_SUPPORT
 #include "blogger.h"
 #endif
 #include "blogilo_debug.h"

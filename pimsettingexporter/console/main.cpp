@@ -29,7 +29,6 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-
     QCommandLineParser parser;
     KAboutData aboutData(QStringLiteral("pimsettingexporterconsole"), i18n("PIM Setting Exporter Console"),
                          QStringLiteral(KDEPIM_VERSION), i18n("PIM Setting Exporter Console"), KAboutLicense::GPL_V2,

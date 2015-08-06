@@ -376,7 +376,6 @@ bool SnippetsModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         return true;
     }
 
-
     if (data->hasFormat(QStringLiteral("text/plain"))) {
         if (column > 1) {
             return false;
