@@ -22,7 +22,6 @@ set(templateparser_LIB_SRCS
 )
 
 include_directories(
-  ${Boost_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/libkleo
   ${CMAKE_SOURCE_DIR}/messagecore
   ${CMAKE_SOURCE_DIR}/messageviewer

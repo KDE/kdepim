@@ -4,7 +4,6 @@ project(kaddressbook)
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
   ${CMAKE_CURRENT_SOURCE_DIR}/printing/
-  ${Boost_INCLUDE_DIR}
   ${Grantlee_INCLUDE_DIRS}
 )
 

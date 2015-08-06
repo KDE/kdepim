@@ -3,7 +3,6 @@ include(ECMAddTests)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 include_directories(
-  ${Boost_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/libkleo
   ${CMAKE_SOURCE_DIR}/templateparser/
   ${CMAKE_BINARY_DIR}/templateparser/

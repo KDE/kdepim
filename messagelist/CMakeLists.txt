@@ -7,7 +7,6 @@ option(KDEPIM_FOLDEROPEN_PROFILE "Enable debug output for timing folder loading"
 configure_file(config-messagelist.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messagelist.h)
 
 include_directories(
-  ${Boost_INCLUDE_DIRS}
   ${BALOO_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/messagecore
