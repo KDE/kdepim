@@ -27,9 +27,6 @@
 #include <KCalCore/Incidence>
 #include <KCalCore/Event>
 
-#include <boost/shared_ptr.hpp>
-
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
 typedef QSharedPointer<KCalCore::Incidence> IncidencePtr;
 
 class AkonadiBrowserModel::State
@@ -90,10 +87,10 @@ public:
             return QVariant();
         }
 
-        if (!item.hasPayload<MessagePtr>()) {
+        if (!item.hasPayload<KMime::Message::Ptr>()) {
             return QVariant();
         }
-        const MessagePtr mail = item.payload<MessagePtr>();
+        const KMime::Message::Ptr mail = item.payload<KMime::Message::Ptr>();
 
         switch (column) {
         case 0:
@@ -353,11 +350,11 @@ bool AkonadiBrowserSortModel::lessThan(const QModelIndex &left, const QModelInde
         if (left.column() == 2) {
             const Item leftItem = left.data(EntityTreeModel::ItemRole).value<Item>();
             const Item rightItem = right.data(EntityTreeModel::ItemRole).value<Item>();
-            if (!leftItem.hasPayload<MessagePtr>() || !rightItem.hasPayload<MessagePtr>()) {
+            if (!leftItem.hasPayload<KMime::Message::Ptr>() || !rightItem.hasPayload<KMime::Message::Ptr>()) {
                 return false;
             }
-            const MessagePtr leftMail = leftItem.payload<MessagePtr>();
-            const MessagePtr rightMail = rightItem.payload<MessagePtr>();
+            const KMime::Message::Ptr leftMail = leftItem.payload<KMime::Message::Ptr>();
+            const KMime::Message::Ptr rightMail = rightItem.payload<KMime::Message::Ptr>();
 
             return leftMail->date(false)->dateTime() < rightMail->date(false)->dateTime();
         }
