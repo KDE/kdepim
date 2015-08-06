@@ -329,7 +329,7 @@ void TagPropertiesDialog::slotAccept()
         // This is a workaround for PSQL not supporting UPSERTs
         {
             QSqlQuery query(DbAccess::database());
-            query.prepare(QLatin1String("SELECT resourceId FROM TagRemoteIdResourceRelationTable WHERE tagId = ?"));
+            query.prepare(QStringLiteral("SELECT resourceId FROM TagRemoteIdResourceRelationTable WHERE tagId = ?"));
             query.addBindValue(mTag.id());
             if (!query.exec()) {
                 qCritical() << query.executedQuery();
