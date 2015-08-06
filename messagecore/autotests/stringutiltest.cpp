@@ -21,7 +21,7 @@
 #include "../utils/stringutil.h"
 
 #include "qtest.h"
-#include <KUrl>
+#include <QUrl>
 using namespace MessageCore;
 
 QTEST_MAIN(StringUtilTest)
