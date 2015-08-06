@@ -25,7 +25,6 @@ add_dependencies(kdepimdbusinterfaces kmail_xml)
 include_directories (
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
-    ${Boost_INCLUDE_DIR}
 )
 
 target_link_libraries(kdepimdbusinterfaces
