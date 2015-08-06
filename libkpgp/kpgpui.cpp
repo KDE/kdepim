@@ -54,8 +54,8 @@
 #include <kconfig.h>
 #include <QProgressDialog>
 #include <kwindowsystem.h>
-#include <klineedit.h>
 #include <QIcon>
+#include <QLineEdit>
 
 #include <assert.h>
 #include <string.h> // for memcpy(3)

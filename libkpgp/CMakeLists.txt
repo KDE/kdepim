@@ -37,7 +37,6 @@ target_link_libraries(kpgp
     KF5::Codecs
     KF5::IconThemes
     KF5::WindowSystem
-    KF5::Completion
     KF5::CoreAddons
 )
 
