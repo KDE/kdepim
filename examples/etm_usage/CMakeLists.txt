@@ -5,7 +5,6 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${kdepim_SOURCE_DIR}
   ${kdepim_SOURCE_DIR}/messageviewer
-  ${Boost_INCLUDE_DIRS}
 )
 
 set(etm_usage_SRCS

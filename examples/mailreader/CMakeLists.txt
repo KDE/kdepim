@@ -10,7 +10,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_SOURCE_DIR}/messagelist
   ${CMAKE_SOURCE_DIR}/messageviewer
-  ${Boost_INCLUDE_DIRS}
 )
 
 ki18n_wrap_ui(mailreader_SRCS mailreaderview.ui prefs_base.ui prefs_messagelist.ui)

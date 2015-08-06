@@ -1,7 +1,6 @@
 project(calendarviewsapp)
 
 include_directories(
-  ${Boost_INCLUDE_DIR}
   ${calendarView_SOURCE_DIR}/
   ${calendarView_SOURCE_DIR}/agenda
 )

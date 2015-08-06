@@ -23,11 +23,9 @@
 
 #include <kmime/kmime_message.h>
 
-#include <boost/shared_ptr.hpp>
-
 #include <QDebug>
 
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
+typedef QSharedPointer<KMime::Message> MessagePtr;
 
 using namespace Akonadi;
 

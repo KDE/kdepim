@@ -40,11 +40,6 @@
 #include <QByteArray>
 #include <QDate>
 
-namespace boost
-{
-template <typename T> class shared_ptr;
-}
-
 namespace KCalCore
 {
 template <typename T> class SortableList;
@@ -54,7 +49,7 @@ typedef SortableList<QDate> DateList;
 namespace KHolidays
 {
 class HolidayRegion;
-typedef boost::shared_ptr<HolidayRegion> HolidayRegionPtr;
+typedef QSharedPointer<HolidayRegion> HolidayRegionPtr;
 }
 
 namespace CalendarSupport
@@ -81,7 +76,7 @@ enum {
 class EventViewPrivate;
 class Prefs;
 typedef QSharedPointer<Prefs> PrefsPtr;
-typedef boost::shared_ptr<CalendarSupport::KCalPrefs> KCalPrefsPtr;
+typedef QSharedPointer<CalendarSupport::KCalPrefs> KCalPrefsPtr;
 
 /**
   EventView is the abstract base class from which all other calendar views

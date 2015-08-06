@@ -2,7 +2,7 @@ project(coisceim)
 
 
 
-include_directories( ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/messageviewer )
+include_directories( ${CMAKE_SOURCE_DIR}/messageviewer )
 
 set (coisceim_widget_SRCS
   coisceimwidget.cpp

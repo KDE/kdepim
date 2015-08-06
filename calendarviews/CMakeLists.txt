@@ -24,7 +24,6 @@ endif()
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${Boost_INCLUDE_DIR}
 )
 
 ########### next target ###############
