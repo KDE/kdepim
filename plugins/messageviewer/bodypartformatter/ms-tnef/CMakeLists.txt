@@ -1,8 +1,4 @@
 
-include_directories(
-  ${Boost_INCLUDE_DIRS}
-)
-
 add_definitions(-DTRANSLATION_DOMAIN=\"messageviewer_application_mstnef_plugin\")
 
 add_library(messageviewer_bodypartformatter_application_mstnef MODULE application_ms-tnef.cpp ms_tnef_debug.cpp)

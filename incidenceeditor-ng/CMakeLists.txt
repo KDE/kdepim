@@ -6,7 +6,6 @@ add_definitions(-DTRANSLATION_DOMAIN=\"libincidenceeditors\")
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${Boost_INCLUDE_DIR}
 )
 
 set(incidenceeditors_ng_shared_LIB_SRCS

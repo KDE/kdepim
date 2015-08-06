@@ -4,7 +4,6 @@ set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 add_definitions( -DMAIL_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data" )
 
 include_directories (
-    ${Boost_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libkleo
     ${CMAKE_BINARY_DIR}/messagecomposer
     ${CMAKE_SOURCE_DIR}/messagecomposer

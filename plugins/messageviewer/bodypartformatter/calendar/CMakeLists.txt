@@ -1,8 +1,4 @@
 
-include_directories(
-  ${Boost_INCLUDE_DIRS}
-)
-
 
 add_definitions(-DTRANSLATION_DOMAIN=\"messageviewer_text_calendar_plugin\")
 set(messageviewer_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp memorycalendarmemento.cpp syncitiphandler.cpp text_calendar_debug.cpp)

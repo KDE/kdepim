@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} )
+include_directories( ${CMAKE_SOURCE_DIR}/libkleo )
 
 add_definitions(-DTRANSLATION_DOMAIN=\"cryptopageplugin\")
 
