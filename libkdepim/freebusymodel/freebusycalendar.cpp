@@ -103,7 +103,6 @@ void FreeBusyCalendar::onRowsInserted(const QModelIndex &parent, int first, int 
         QModelIndex index = mModel->index(i, 0, parent);
 
         const KCalCore::FreeBusyPeriod &period = mModel->data(index, FreeBusyItemModel::FreeBusyPeriodRole).value<KCalCore::FreeBusyPeriod>();
-        const KCalCore::Attendee::Ptr &attendee = mModel->data(parent, FreeBusyItemModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
         const KCalCore::FreeBusy::Ptr &fb = mModel->data(parent, FreeBusyItemModel::FreeBusyRole).value<KCalCore::FreeBusy::Ptr>();
 
         KCalCore::Event::Ptr inc = KCalCore::Event::Ptr(new KCalCore::Event());
