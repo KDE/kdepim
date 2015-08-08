@@ -32,10 +32,10 @@ public:
     explicit StorageServiceConfigureDialog(QWidget *parent = Q_NULLPTR);
     ~StorageServiceConfigureDialog();
 
-    void writeSettings();
+    void writeSettings() Q_DECL_OVERRIDE;
 
 private:
-    void loadSettings();
+    void loadSettings() Q_DECL_OVERRIDE;
     QCheckBox *mCloseWallet;
 };
 

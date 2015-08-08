@@ -30,22 +30,22 @@ public:
     explicit WebDavJob(QObject *parent = Q_NULLPTR);
     ~WebDavJob();
 
-    void requestTokenAccess();
-    QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination);
-    void listFolder(const QString &folder = QString());
-    void accountInfo();
-    void createFolder(const QString &foldername, const QString &destination);
-    void shareLink(const QString &root, const QString &path);
-    void createServiceFolder();
-    QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
-    void deleteFile(const QString &filename);
-    void deleteFolder(const QString &foldername);
-    void renameFolder(const QString &source, const QString &destination);
-    void renameFile(const QString &oldName, const QString &newName);
-    void moveFolder(const QString &source, const QString &destination);
-    void moveFile(const QString &source, const QString &destination);
-    void copyFile(const QString &source, const QString &destination);
-    void copyFolder(const QString &source, const QString &destination);
+    void requestTokenAccess() Q_DECL_OVERRIDE;
+    QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination) Q_DECL_OVERRIDE;
+    void listFolder(const QString &folder = QString()) Q_DECL_OVERRIDE;
+    void accountInfo() Q_DECL_OVERRIDE;
+    void createFolder(const QString &foldername, const QString &destination) Q_DECL_OVERRIDE;
+    void shareLink(const QString &root, const QString &path) Q_DECL_OVERRIDE;
+    void createServiceFolder() Q_DECL_OVERRIDE;
+    QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination) Q_DECL_OVERRIDE;
+    void deleteFile(const QString &filename) Q_DECL_OVERRIDE;
+    void deleteFolder(const QString &foldername) Q_DECL_OVERRIDE;
+    void renameFolder(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void renameFile(const QString &oldName, const QString &newName) Q_DECL_OVERRIDE;
+    void moveFolder(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void moveFile(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void copyFile(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void copyFolder(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
     void initializeToken(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password);
 
 Q_SIGNALS:

@@ -29,7 +29,7 @@ class MatchingCheckableProxyModel : public KCheckableProxyModel
 {
 public:
     MatchingCheckableProxyModel(QObject *parent = Q_NULLPTR): KCheckableProxyModel(parent) {}
-    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchExactly) const
+    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchExactly) const Q_DECL_OVERRIDE
     {
         if (role == Qt::CheckStateRole) {
             return selectionModel()->selectedRows();

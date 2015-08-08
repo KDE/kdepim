@@ -40,15 +40,15 @@ public:
     explicit Legend(QWidget *parent = Q_NULLPTR);
     virtual ~Legend();
 
-    /*reimp*/ QModelIndex indexAt(const QPoint &point) const;
-    /*reimp*/ QRect visualRect(const QModelIndex &index) const;
+    QModelIndex indexAt(const QPoint &point) const Q_DECL_OVERRIDE;
+    QRect visualRect(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    /*reimp*/ void scrollTo(const QModelIndex &, ScrollHint = EnsureVisible) {}
+    void scrollTo(const QModelIndex &, ScrollHint = EnsureVisible) Q_DECL_OVERRIDE {}
 
     QSize sizeHint() const Q_DECL_OVERRIDE;
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;
 
-    /*reimp*/ void setModel(QAbstractItemModel *model);
+    void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
 
 protected:
     virtual QRect drawItem(QPainter *painter, const QModelIndex &index, const QPoint &pos = QPoint()) const;
@@ -57,24 +57,24 @@ protected:
 
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
-    /*reimp*/ int horizontalOffset() const
+    int horizontalOffset() const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    /*reimp*/ bool isIndexHidden(const QModelIndex &) const
+    bool isIndexHidden(const QModelIndex &) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    /*reimp*/ QModelIndex moveCursor(CursorAction, Qt::KeyboardModifiers)
+    QModelIndex moveCursor(CursorAction, Qt::KeyboardModifiers) Q_DECL_OVERRIDE
     {
         return QModelIndex();
     }
-    /*reimp*/ void setSelection(const QRect &, QItemSelectionModel::SelectionFlags) {}
-    /*reimp*/ int verticalOffset() const
+    void setSelection(const QRect &, QItemSelectionModel::SelectionFlags) Q_DECL_OVERRIDE {}
+    int verticalOffset() const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    /*reimp*/ QRegion visualRegionForSelection(const QItemSelection &) const
+    QRegion visualRegionForSelection(const QItemSelection &) const Q_DECL_OVERRIDE
     {
         return QRegion();
     }

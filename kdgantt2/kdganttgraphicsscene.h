@@ -117,8 +117,8 @@ Q_SIGNALS:
     void pressed(const QModelIndex &index);
 
 protected:
-    /*reimp*/ void helpEvent(QGraphicsSceneHelpEvent *helpEvent);
-    /*reimp*/ void drawBackground(QPainter *painter, const QRectF &rect);
+    void helpEvent(QGraphicsSceneHelpEvent *helpEvent) Q_DECL_OVERRIDE;
+    void drawBackground(QPainter *painter, const QRectF &rect) Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     void setModel(QAbstractItemModel *);

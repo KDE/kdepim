@@ -93,19 +93,19 @@ public:
         return m_endConstraints;
     }
 
-    /*reimp*/ QRectF boundingRect() const;
+    QRectF boundingRect() const Q_DECL_OVERRIDE;
     /*reimp*/ void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                         QWidget *widget = Q_NULLPTR);
+                         QWidget *widget = Q_NULLPTR) Q_DECL_OVERRIDE;
 
-    /*reimp*/ QVariant itemChange(GraphicsItemChange, const QVariant &value);
+    QVariant itemChange(GraphicsItemChange, const QVariant &value) Q_DECL_OVERRIDE;
 protected:
-    /*reimp*/ void focusInEvent(QFocusEvent *event);
-    /*reimp*/ void hoverMoveEvent(QGraphicsSceneHoverEvent *);
-    /*reimp*/ void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
-    /*reimp*/ void mousePressEvent(QGraphicsSceneMouseEvent *);
-    /*reimp*/ void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
-    /*reimp*/ void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *);
-    /*reimp*/ void mouseMoveEvent(QGraphicsSceneMouseEvent *);
+    void focusInEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *) Q_DECL_OVERRIDE;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *) Q_DECL_OVERRIDE;
+    void mousePressEvent(QGraphicsSceneMouseEvent *) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *) Q_DECL_OVERRIDE;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *) Q_DECL_OVERRIDE;
 
 private:
     void init();

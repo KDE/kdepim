@@ -39,15 +39,15 @@ public:
     TreeViewRowController(QTreeView *tv, QAbstractProxyModel *proxy);
     virtual ~TreeViewRowController();
 
-    /*reimp*/ int headerHeight() const;
-    /*reimp*/ int maximumItemHeight() const;
-    /*reimp*/ int totalHeight() const;
-    /*reimp*/ bool isRowVisible(const QModelIndex &idx) const;
-    /*reimp*/ bool isRowExpanded(const QModelIndex &idx) const;
-    /*reimp*/ Span rowGeometry(const QModelIndex &idx) const;
-    /*reimp*/ QModelIndex indexAt(int height) const;
-    /*reimp*/ QModelIndex indexAbove(const QModelIndex &idx) const;
-    /*reimp*/ QModelIndex indexBelow(const QModelIndex &idx) const;
+    int headerHeight() const Q_DECL_OVERRIDE;
+    int maximumItemHeight() const Q_DECL_OVERRIDE;
+    int totalHeight() const Q_DECL_OVERRIDE;
+    bool isRowVisible(const QModelIndex &idx) const Q_DECL_OVERRIDE;
+    bool isRowExpanded(const QModelIndex &idx) const Q_DECL_OVERRIDE;
+    Span rowGeometry(const QModelIndex &idx) const Q_DECL_OVERRIDE;
+    QModelIndex indexAt(int height) const Q_DECL_OVERRIDE;
+    QModelIndex indexAbove(const QModelIndex &idx) const Q_DECL_OVERRIDE;
+    QModelIndex indexBelow(const QModelIndex &idx) const Q_DECL_OVERRIDE;
 };
 }
 

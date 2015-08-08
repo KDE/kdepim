@@ -273,14 +273,14 @@ public:
     virtual ~PublicKeyRequester();
 
 protected:
-    KeyIDList keyRequestHook(Module *pgp) const;
+    KeyIDList keyRequestHook(Module *pgp) const Q_DECL_OVERRIDE;
 
 private:
     typedef KeyRequester base;
     class Private;
     Private *d;
 protected:
-    virtual void virtual_hook(int, void *);
+    void virtual_hook(int, void *) Q_DECL_OVERRIDE;
 };
 
 class LIBKPGP_EXPORT SecretKeyRequester : public KeyRequester
@@ -293,14 +293,14 @@ public:
     virtual ~SecretKeyRequester();
 
 protected:
-    KeyIDList keyRequestHook(Module *pgp) const;
+    KeyIDList keyRequestHook(Module *pgp) const Q_DECL_OVERRIDE;
 
 private:
     typedef KeyRequester base;
     class Private;
     Private *d;
 protected:
-    virtual void virtual_hook(int, void *);
+    void virtual_hook(int, void *) Q_DECL_OVERRIDE;
 };
 
 // -------------------------------------------------------------------------

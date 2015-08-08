@@ -55,7 +55,7 @@ public:
     {
     }
 
-    QSize sizeHint() const
+    QSize sizeHint() const Q_DECL_OVERRIDE
     {
         QSize s = QHeaderView::sizeHint();
         s.rheight() *= 2;

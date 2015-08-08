@@ -48,9 +48,9 @@ public:
 public Q_SLOTS:
     void scrollTo(int);
 protected:
-    /*reimp*/ void paintEvent(QPaintEvent *ev);
+    void paintEvent(QPaintEvent *ev) Q_DECL_OVERRIDE;
 #ifndef QT_NO_CONTEXTMENU
-    /*reimp*/ void contextMenuEvent(QContextMenuEvent *ev);
+    void contextMenuEvent(QContextMenuEvent *ev) Q_DECL_OVERRIDE;
 #endif
 private:
     qreal m_offset;

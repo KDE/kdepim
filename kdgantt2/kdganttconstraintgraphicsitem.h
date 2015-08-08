@@ -42,14 +42,14 @@ public:
                                     QGraphicsItem *parent = Q_NULLPTR, GraphicsScene *scene = Q_NULLPTR);
     virtual ~ConstraintGraphicsItem();
 
-    /*reimp*/ int type() const;
+    int type() const Q_DECL_OVERRIDE;
     /*reimp (non virtual)*/GraphicsScene *scene() const;
 
     /*reimp*/ QString ganttToolTip() const;
 
-    /*reimp*/ QRectF boundingRect() const;
+    QRectF boundingRect() const Q_DECL_OVERRIDE;
     /*reimp*/ void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                         QWidget *widget = Q_NULLPTR);
+                         QWidget *widget = Q_NULLPTR) Q_DECL_OVERRIDE;
 
     inline const Constraint &constraint() const
     {

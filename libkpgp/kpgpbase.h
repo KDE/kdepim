@@ -137,23 +137,23 @@ public:
     Base2();
     virtual ~Base2();
 
-    virtual int encrypt(Block &block, const KeyIDList &recipients);
-    virtual int clearsign(Block &block, const char *passphrase);
+    int encrypt(Block &block, const KeyIDList &recipients) Q_DECL_OVERRIDE;
+    int clearsign(Block &block, const char *passphrase) Q_DECL_OVERRIDE;
     virtual int encsign(Block &block, const KeyIDList &recipients,
-                        const char *passphrase = 0);
-    virtual int decrypt(Block &block, const char *passphrase = 0);
-    virtual int verify(Block &block)
+                        const char *passphrase = 0) Q_DECL_OVERRIDE;
+    int decrypt(Block &block, const char *passphrase = 0) Q_DECL_OVERRIDE;
+    int verify(Block &block) Q_DECL_OVERRIDE
     {
         return decrypt(block, 0);
     }
 
     virtual Key *readPublicKey(const KeyID &keyID,
                                const bool readTrust = false,
-                               Key *key = 0);
-    virtual KeyList publicKeys(const QStringList &patterns = QStringList());
-    virtual KeyList secretKeys(const QStringList &patterns = QStringList());
-    virtual QByteArray getAsciiPublicKey(const KeyID &keyID);
-    virtual int signKey(const KeyID &keyID, const char *passphrase);
+                               Key *key = 0) Q_DECL_OVERRIDE;
+    KeyList publicKeys(const QStringList &patterns = QStringList()) Q_DECL_OVERRIDE;
+    KeyList secretKeys(const QStringList &patterns = QStringList()) Q_DECL_OVERRIDE;
+    QByteArray getAsciiPublicKey(const KeyID &keyID) Q_DECL_OVERRIDE;
+    int signKey(const KeyID &keyID, const char *passphrase) Q_DECL_OVERRIDE;
 
 protected:
     KeyList doGetPublicKeys(const QByteArray &cmd,
@@ -172,23 +172,23 @@ public:
     BaseG();
     virtual ~BaseG();
 
-    virtual int encrypt(Block &block, const KeyIDList &recipients);
-    virtual int clearsign(Block &block, const char *passphrase);
+    int encrypt(Block &block, const KeyIDList &recipients) Q_DECL_OVERRIDE;
+    int clearsign(Block &block, const char *passphrase) Q_DECL_OVERRIDE;
     virtual int encsign(Block &block, const KeyIDList &recipients,
-                        const char *passphrase = 0);
-    virtual int decrypt(Block &block, const char *passphrase = 0);
-    virtual int verify(Block &block)
+                        const char *passphrase = 0) Q_DECL_OVERRIDE;
+    int decrypt(Block &block, const char *passphrase = 0) Q_DECL_OVERRIDE;
+    int verify(Block &block) Q_DECL_OVERRIDE
     {
         return decrypt(block, 0);
     }
 
     virtual Key *readPublicKey(const KeyID &keyID,
                                const bool readTrust = false,
-                               Key *key = 0);
-    virtual KeyList publicKeys(const QStringList &patterns = QStringList());
-    virtual KeyList secretKeys(const QStringList &patterns = QStringList());
-    virtual QByteArray getAsciiPublicKey(const KeyID &keyID);
-    virtual int signKey(const KeyID &keyID, const char *passphrase);
+                               Key *key = 0) Q_DECL_OVERRIDE;
+    KeyList publicKeys(const QStringList &patterns = QStringList()) Q_DECL_OVERRIDE;
+    KeyList secretKeys(const QStringList &patterns = QStringList()) Q_DECL_OVERRIDE;
+    QByteArray getAsciiPublicKey(const KeyID &keyID) Q_DECL_OVERRIDE;
+    int signKey(const KeyID &keyID, const char *passphrase) Q_DECL_OVERRIDE;
 
 private:
     Key *parseKeyData(const QByteArray &output, int &offset, Key *key = 0);
@@ -202,23 +202,23 @@ public:
     Base5();
     virtual ~Base5();
 
-    virtual int encrypt(Block &block, const KeyIDList &recipients);
-    virtual int clearsign(Block &block, const char *passphrase);
+    int encrypt(Block &block, const KeyIDList &recipients) Q_DECL_OVERRIDE;
+    int clearsign(Block &block, const char *passphrase) Q_DECL_OVERRIDE;
     virtual int encsign(Block &block, const KeyIDList &recipients,
-                        const char *passphrase = 0);
-    virtual int decrypt(Block &block, const char *passphrase = 0);
-    virtual int verify(Block &block)
+                        const char *passphrase = 0) Q_DECL_OVERRIDE;
+    int decrypt(Block &block, const char *passphrase = 0) Q_DECL_OVERRIDE;
+    int verify(Block &block) Q_DECL_OVERRIDE
     {
         return decrypt(block, 0);
     }
 
     virtual Key *readPublicKey(const KeyID &keyID,
                                const bool readTrust = false,
-                               Key *key = 0);
-    virtual KeyList publicKeys(const QStringList &patterns = QStringList());
-    virtual KeyList secretKeys(const QStringList &patterns = QStringList());
-    virtual QByteArray getAsciiPublicKey(const KeyID &keyID);
-    virtual int signKey(const KeyID &keyID, const char *passphrase);
+                               Key *key = 0) Q_DECL_OVERRIDE;
+    KeyList publicKeys(const QStringList &patterns = QStringList()) Q_DECL_OVERRIDE;
+    KeyList secretKeys(const QStringList &patterns = QStringList()) Q_DECL_OVERRIDE;
+    QByteArray getAsciiPublicKey(const KeyID &keyID) Q_DECL_OVERRIDE;
+    int signKey(const KeyID &keyID, const char *passphrase) Q_DECL_OVERRIDE;
 
 private:
     Key *parseKeyData(const QByteArray &output, int &offset, Key *key = 0);
@@ -234,22 +234,22 @@ public:
     Base6();
     virtual ~Base6();
 
-    virtual int decrypt(Block &block, const char *passphrase = 0);
-    virtual int verify(Block &block)
+    int decrypt(Block &block, const char *passphrase = 0) Q_DECL_OVERRIDE;
+    int verify(Block &block) Q_DECL_OVERRIDE
     {
         return decrypt(block, 0);
     }
 
     virtual Key *readPublicKey(const KeyID &keyID,
                                const bool readTrust = false,
-                               Key *key = 0);
-    virtual KeyList publicKeys(const QStringList &patterns = QStringList());
-    virtual KeyList secretKeys(const QStringList &patterns = QStringList());
+                               Key *key = 0) Q_DECL_OVERRIDE;
+    KeyList publicKeys(const QStringList &patterns = QStringList()) Q_DECL_OVERRIDE;
+    KeyList secretKeys(const QStringList &patterns = QStringList()) Q_DECL_OVERRIDE;
 
     virtual int isVersion6();
 
 protected:
-    virtual KeyList parseKeyList(const QByteArray &, bool);
+    KeyList parseKeyList(const QByteArray &, bool) Q_DECL_OVERRIDE;
 
 private:
     Key *parseKeyData(const QByteArray &output, int &offset, Key *key = 0);

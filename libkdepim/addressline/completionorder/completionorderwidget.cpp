@@ -210,7 +210,7 @@ public:
         return mItem;
     }
 
-    bool operator<(const QTreeWidgetItem &other) const
+    bool operator<(const QTreeWidgetItem &other) const Q_DECL_OVERRIDE
     {
         const QTreeWidgetItem *otherItem = &other;
         const CompletionViewItem *completionItem = static_cast<const CompletionViewItem *>(otherItem);

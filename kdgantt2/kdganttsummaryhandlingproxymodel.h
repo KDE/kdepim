@@ -42,16 +42,16 @@ public:
     QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
-    /*reimp*/ Qt::ItemFlags flags(const QModelIndex &idx) const;
+    Qt::ItemFlags flags(const QModelIndex &idx) const Q_DECL_OVERRIDE;
 
 protected:
-    /*reimp*/ void sourceModelReset();
-    /*reimp*/ void sourceLayoutChanged();
-    /*reimp*/ void sourceDataChanged(const QModelIndex &from, const QModelIndex &to);
-    /*reimp*/ void sourceColumnsAboutToBeInserted(const QModelIndex &idx, int start, int end);
-    /*reimp*/ void sourceColumnsAboutToBeRemoved(const QModelIndex &idx, int start, int end);
-    /*reimp*/ void sourceRowsAboutToBeInserted(const QModelIndex &idx, int start, int end);
-    /*reimp*/ void sourceRowsAboutToBeRemoved(const QModelIndex &, int start, int end);
+    void sourceModelReset() Q_DECL_OVERRIDE;
+    void sourceLayoutChanged() Q_DECL_OVERRIDE;
+    void sourceDataChanged(const QModelIndex &from, const QModelIndex &to) Q_DECL_OVERRIDE;
+    void sourceColumnsAboutToBeInserted(const QModelIndex &idx, int start, int end) Q_DECL_OVERRIDE;
+    void sourceColumnsAboutToBeRemoved(const QModelIndex &idx, int start, int end) Q_DECL_OVERRIDE;
+    void sourceRowsAboutToBeInserted(const QModelIndex &idx, int start, int end) Q_DECL_OVERRIDE;
+    void sourceRowsAboutToBeRemoved(const QModelIndex &, int start, int end) Q_DECL_OVERRIDE;
 };
 }
 
