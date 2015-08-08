@@ -59,22 +59,22 @@ public:
     ~QGpgMESignKeyJob();
 
     /*! \reimp from SignKeyJob */
-    GpgME::Error start(const GpgME::Key &key);
+    GpgME::Error start(const GpgME::Key &key) Q_DECL_OVERRIDE;
 
     /*! \reimp from SignKeyJob */
-    void setUserIDsToSign(const std::vector<unsigned int> &idsToSign);
+    void setUserIDsToSign(const std::vector<unsigned int> &idsToSign) Q_DECL_OVERRIDE;
 
     /*! \reimp from SignKeyJob */
-    void setCheckLevel(unsigned int checkLevel);
+    void setCheckLevel(unsigned int checkLevel) Q_DECL_OVERRIDE;
 
     /*! \reimp from SignKeyJob */
-    void setExportable(bool exportable);
+    void setExportable(bool exportable) Q_DECL_OVERRIDE;
 
     /*! \reimp from SignKeyJob */
-    void setSigningKey(const GpgME::Key &key);
+    void setSigningKey(const GpgME::Key &key) Q_DECL_OVERRIDE;
 
     /*! \reimp from SignKeyJob */
-    void setNonRevocable(bool nonRevocable);
+    void setNonRevocable(bool nonRevocable) Q_DECL_OVERRIDE;
 
 private:
     std::vector<unsigned int> m_userIDsToSign;

@@ -65,27 +65,27 @@ public:
     ErrorResult(int code, const QString &details)
         : Task::Result(), m_code(code), m_details(details) {}
 
-    /* reimp */ QString overview() const
+    QString overview() const Q_DECL_OVERRIDE
     {
         return makeOverview(m_details);
     }
-    /* reimp */ QString details() const
+    QString details() const Q_DECL_OVERRIDE
     {
         return QString();
     }
-    /* reimp */ int errorCode() const
+    int errorCode() const Q_DECL_OVERRIDE
     {
         return m_code;
     }
-    /* reimp */ QString errorString() const
+    QString errorString() const Q_DECL_OVERRIDE
     {
         return m_details;
     }
-    /* reimp */ VisualCode code() const
+    VisualCode code() const Q_DECL_OVERRIDE
     {
         return NeutralError;
     }
-    /* reimp */ AuditLog auditLog() const
+    AuditLog auditLog() const Q_DECL_OVERRIDE
     {
         return AuditLog();
     }

@@ -53,21 +53,21 @@ public:
     {
         m_result = res;
     }
-    /*reimp*/ GpgME::Protocol protocol() const
+    GpgME::Protocol protocol() const Q_DECL_OVERRIDE
     {
         return GpgME::UnknownProtocol;
     }
-    /*reimp*/ QString label() const
+    QString label() const Q_DECL_OVERRIDE
     {
         return m_label;
     }
-    /*reimp*/ void cancel() {}
+    void cancel() Q_DECL_OVERRIDE {}
 private:
-    /*reimp*/ void doStart()
+    void doStart() Q_DECL_OVERRIDE
     {
         QTimer::singleShot(0, this, SLOT(slotEmitResult()));
     }
-    /*reimp*/ unsigned long long inputSize() const
+    unsigned long long inputSize() const Q_DECL_OVERRIDE
     {
         return 0;
     }

@@ -364,7 +364,7 @@ public:
     }
 
     /* reimp */
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &idx) const
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &idx) const Q_DECL_OVERRIDE
     {
         switch (idx.column()) {
         case Model::Scheme:
@@ -376,7 +376,7 @@ public:
     }
 
     /* reimp */
-    void setEditorData(QWidget *editor, const QModelIndex &idx) const
+    void setEditorData(QWidget *editor, const QModelIndex &idx) const Q_DECL_OVERRIDE
     {
         switch (idx.column()) {
         case Model::Scheme:
@@ -392,7 +392,7 @@ public:
     }
 
     /* reimp */
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &idx) const
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &idx) const Q_DECL_OVERRIDE
     {
         switch (idx.column()) {
         case Model::Scheme:
@@ -408,7 +408,7 @@ public:
     }
 
     /* reimp */
-    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE
     {
         if (index.column() == Model::Scheme || index.column() == Model::Port) {
             editor->setGeometry(calculate_geometry(option.rect, editor->sizeHint()));

@@ -180,12 +180,12 @@ class ColumnStrategy : public Kleo::KeyListView::ColumnStrategy
 public:
     ColumnStrategy(unsigned int keyUsage);
 
-    QString title(int col) const;
-    int width(int col, const QFontMetrics &fm) const;
+    QString title(int col) const Q_DECL_OVERRIDE;
+    int width(int col, const QFontMetrics &fm) const Q_DECL_OVERRIDE;
 
-    QString text(const GpgME::Key &key, int col) const;
-    QString toolTip(const GpgME::Key &key, int col) const;
-    QIcon icon(const GpgME::Key &key, int col) const;
+    QString text(const GpgME::Key &key, int col) const Q_DECL_OVERRIDE;
+    QString toolTip(const GpgME::Key &key, int col) const Q_DECL_OVERRIDE;
+    QIcon icon(const GpgME::Key &key, int col) const Q_DECL_OVERRIDE;
 
 private:
     const QIcon mKeyGoodPix, mKeyBadPix, mKeyUnknownPix, mKeyValidPix;

@@ -299,19 +299,19 @@ public:
     }
 
 private:
-    /* reimp */ QString doGetPackCommand(Protocol p) const
+    QString doGetPackCommand(Protocol p) const Q_DECL_OVERRIDE
     {
         return m_packCommand[p];
     }
-    /* reimp */ QString doGetUnpackCommand(Protocol p) const
+    QString doGetUnpackCommand(Protocol p) const Q_DECL_OVERRIDE
     {
         return m_unpackCommand[p];
     }
-    /* reimp */ QStringList doGetPackArguments(Protocol p, const QStringList &files) const
+    QStringList doGetPackArguments(Protocol p, const QStringList &files) const Q_DECL_OVERRIDE
     {
         return m_packPrefixArguments[p] + files + m_packPostfixArguments[p];
     }
-    /* reimp */ QStringList doGetUnpackArguments(Protocol p, const QString &file) const
+    QStringList doGetUnpackArguments(Protocol p, const QString &file) const Q_DECL_OVERRIDE
     {
         QStringList copy = m_unpackArguments[p];
         copy.replaceInStrings(FILE_PLACEHOLDER, file);

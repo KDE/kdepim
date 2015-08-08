@@ -585,13 +585,13 @@ public:
         updateSignEncryptArchiveWidgetStates();
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return (!isArchiveRequested() || !archiveName(OpenPGP).isEmpty() && !archiveName(CMS).isEmpty())       // ### make more permissive
                && (isSigningSelected() || isEncryptionSelected()) ;
     }
 
-    /* reimp */ bool validatePage()
+    bool validatePage() Q_DECL_OVERRIDE
     {
         if (isSignOnlySelected() && isArchiveRequested())
             return KMessageBox::warningContinueCancel(this,
@@ -610,11 +610,11 @@ public:
         }
     }
 
-    /* reimp */ int nextId() const
+    int nextId() const Q_DECL_OVERRIDE
     {
         return isEncryptionSelected() ? RecipientsPageId : SignerPageId ;
     }
-    /* reimp */ void doSetPresetProtocol()
+    void doSetPresetProtocol() Q_DECL_OVERRIDE
     {
         updateSignEncryptArchiveWidgetStates();
     }
@@ -752,12 +752,12 @@ public:
         connect(&m_unselectPB, SIGNAL(clicked()), this, SLOT(unselect()));
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return !m_selectedKTV.keys().empty();
     }
 
-    /* reimp */ int nextId() const
+    int nextId() const Q_DECL_OVERRIDE
     {
         if (isSigningSelected()) {
             return SignerPageId;
@@ -782,7 +782,7 @@ public:
         return now != UnknownProtocol && then == UnknownProtocol ;
     }
 
-    /* reimp */ void initializePage()
+    void initializePage() Q_DECL_OVERRIDE
     {
 
         setCommitPage(!isSigningSelected());
@@ -804,7 +804,7 @@ public:
         m_lastEffectiveProtocol = currentEffectiveProtocol;
     }
 
-    /* reimp */ bool validatePage()
+    bool validatePage() Q_DECL_OVERRIDE
     {
         const std::vector<Key> &r = keys();
         if (_detail::none_of_secret(r)) {
@@ -928,17 +928,17 @@ public:
         return result;
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return !keys().empty();
     }
 
-    /* reimp */ int nextId() const
+    int nextId() const Q_DECL_OVERRIDE
     {
         return ResultPageId ;
     }
 
-    /* reimp */ void initializePage()
+    void initializePage() Q_DECL_OVERRIDE
     {
 
         if (QWizard *wiz = wizard()) {

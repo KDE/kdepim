@@ -235,15 +235,15 @@ namespace
 class ValidatorImpl : public SignerResolvePage::Validator
 {
 public:
-    QString explanation() const
+    QString explanation() const Q_DECL_OVERRIDE
     {
         return QString();
     }
-    bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return true;
     }
-    QString customWindowTitle() const
+    QString customWindowTitle() const Q_DECL_OVERRIDE
     {
         return QString();
     }

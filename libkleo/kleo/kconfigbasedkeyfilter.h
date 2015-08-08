@@ -52,35 +52,35 @@ public:
     KeyFilterImplBase();
     ~KeyFilterImplBase();
 
-    bool matches(const GpgME::Key &key, MatchContexts ctx) const;
+    bool matches(const GpgME::Key &key, MatchContexts ctx) const Q_DECL_OVERRIDE;
 
-    unsigned int specificity() const
+    unsigned int specificity() const Q_DECL_OVERRIDE
     {
         return mSpecificity;
     }
-    QString id() const
+    QString id() const Q_DECL_OVERRIDE
     {
         return mId;
     }
-    MatchContexts availableMatchContexts() const
+    MatchContexts availableMatchContexts() const Q_DECL_OVERRIDE
     {
         return mMatchContexts;
     }
 
-    QColor fgColor() const
+    QColor fgColor() const Q_DECL_OVERRIDE
     {
         return mFgColor;
     }
-    QColor bgColor() const
+    QColor bgColor() const Q_DECL_OVERRIDE
     {
         return mBgColor;
     }
-    FontDescription  fontDesription() const;
-    QString name() const
+    FontDescription  fontDesription() const Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE
     {
         return mName;
     }
-    QString icon() const
+    QString icon() const Q_DECL_OVERRIDE
     {
         return mIcon;
     }

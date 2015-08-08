@@ -543,7 +543,7 @@ public:
             ui.x509CLB->isChecked() ? CMS : UnknownProtocol ;
     }
 
-    /* reimp */ void initializePage()
+    void initializePage() Q_DECL_OVERRIDE
     {
         if (!initialized) {
             connect(ui.pgpCLB,  SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection);
@@ -552,7 +552,7 @@ public:
         initialized = true;
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return protocol() != UnknownProtocol ;
     }
@@ -598,13 +598,13 @@ public:
         updateForm();
     }
 
-    /* reimp */ bool isComplete() const;
-    /* reimp */ void initializePage()
+    bool isComplete() const Q_DECL_OVERRIDE;
+    void initializePage() Q_DECL_OVERRIDE
     {
         updateForm();
         dialog.setProtocol(pgp() ? OpenPGP : CMS);
     }
-    /* reimp */ void cleanupPage()
+    void cleanupPage() Q_DECL_OVERRIDE
     {
         saveValues();
     }
@@ -646,7 +646,7 @@ public:
         setButtonText(QWizard::CommitButton, i18nc("@action", "Create Key"));
     }
 
-    /* reimp */ void initializePage()
+    void initializePage() Q_DECL_OVERRIDE
     {
         slotShowDetails();
     }
@@ -678,12 +678,12 @@ public:
         ui.setupUi(this);
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return !job;
     }
 
-    /* reimp */ void initializePage()
+    void initializePage() Q_DECL_OVERRIDE
     {
         startJob();
     }
@@ -776,7 +776,7 @@ public:
         registerField(QStringLiteral("fingerprint"), le);
     }
 
-    /* reimp */ void initializePage()
+    void initializePage() Q_DECL_OVERRIDE
     {
         const bool error = isError();
 
@@ -822,7 +822,7 @@ public:
         initialized = true;
     }
 
-    /* reimp */ void cleanupPage()
+    void cleanupPage() Q_DECL_OVERRIDE
     {
         setButtonVisible(QWizard::CancelButton, true);
     }
@@ -832,7 +832,7 @@ public:
         return !ui.errorTB->toPlainText().isEmpty();
     }
 
-    /* reimp */ bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return !isError();
     }

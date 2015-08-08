@@ -187,7 +187,7 @@ private:
     class Private;
     Private *const d;
 protected:
-    virtual void virtual_hook(int, void *);
+    void virtual_hook(int, void *) Q_DECL_OVERRIDE;
 };
 
 class KLEO_EXPORT SigningKeyRequester : public KeyRequester
@@ -226,7 +226,7 @@ private:
     class Private;
     Private *const d;
 protected:
-    virtual void virtual_hook(int, void *);
+    void virtual_hook(int, void *) Q_DECL_OVERRIDE;
 };
 
 }

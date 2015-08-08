@@ -50,30 +50,30 @@ public:
     QGpgMEBackend();
     ~QGpgMEBackend();
 
-    QString name() const;
-    QString displayName() const;
+    QString name() const Q_DECL_OVERRIDE;
+    QString displayName() const Q_DECL_OVERRIDE;
 
-    CryptoConfig *config() const;
+    CryptoConfig *config() const Q_DECL_OVERRIDE;
 
-    Protocol *openpgp() const;
-    Protocol *smime() const;
-    Protocol *protocol(const char *name) const;
+    Protocol *openpgp() const Q_DECL_OVERRIDE;
+    Protocol *smime() const Q_DECL_OVERRIDE;
+    Protocol *protocol(const char *name) const Q_DECL_OVERRIDE;
 
-    bool checkForOpenPGP(QString *reason = Q_NULLPTR) const;
-    bool checkForSMIME(QString *reason = Q_NULLPTR) const;
-    bool checkForProtocol(const char *name, QString *reason) const;
+    bool checkForOpenPGP(QString *reason = Q_NULLPTR) const Q_DECL_OVERRIDE;
+    bool checkForSMIME(QString *reason = Q_NULLPTR) const Q_DECL_OVERRIDE;
+    bool checkForProtocol(const char *name, QString *reason) const Q_DECL_OVERRIDE;
 
-    bool supportsOpenPGP() const
+    bool supportsOpenPGP() const Q_DECL_OVERRIDE
     {
         return true;
     }
-    bool supportsSMIME() const
+    bool supportsSMIME() const Q_DECL_OVERRIDE
     {
         return true;
     }
-    bool supportsProtocol(const char *name) const;
+    bool supportsProtocol(const char *name) const Q_DECL_OVERRIDE;
 
-    const char *enumerateProtocols(int i) const;
+    const char *enumerateProtocols(int i) const Q_DECL_OVERRIDE;
 
 private:
     mutable Kleo::CryptoConfig *mCryptoConfig;

@@ -119,7 +119,7 @@ public:
         return QVariant();
     }
 
-    /* reimp */ QVariant headerData(int section, Qt::Orientation o, int role) const
+    QVariant headerData(int section, Qt::Orientation o, int role) const Q_DECL_OVERRIDE
     {
         if (o == Qt::Horizontal &&
                 section >= 0 && section < NumColumns &&

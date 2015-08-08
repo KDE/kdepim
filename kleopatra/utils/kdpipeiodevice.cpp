@@ -106,7 +106,7 @@ Q_SIGNALS:
     void readyRead();
 
 protected:
-    /* reimp */ void run();
+    void run() Q_DECL_OVERRIDE;
 
 private:
     int fd;
@@ -182,7 +182,7 @@ Q_SIGNALS:
     void bytesWritten(qint64);
 
 protected:
-    /* reimp */ void run();
+    void run() Q_DECL_OVERRIDE;
 
 private:
     int fd;

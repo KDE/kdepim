@@ -153,7 +153,7 @@ public Q_SLOTS:
     }
 
 protected:
-    void paintEvent(QPaintEvent *)
+    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE
     {
         QStylePainter p(this);
         p.setPen(palette().color(QPalette::Text));

@@ -84,7 +84,7 @@ public:
 
     }
 
-    /* reimp */ QVariant data(const QModelIndex &mi, int role = Qt::DisplayRole) const
+    QVariant data(const QModelIndex &mi, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
         if (mi.isValid() && role == Qt::BackgroundRole) {
             const QHash<QString, VerifyChecksumsDialog::Status>::const_iterator

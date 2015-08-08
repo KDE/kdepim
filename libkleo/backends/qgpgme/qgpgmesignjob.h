@@ -62,28 +62,28 @@ public:
     /*! \reimp from SignJob */
     GpgME::Error start(const std::vector<GpgME::Key> &signers,
                        const QByteArray &plainText,
-                       GpgME::SignatureMode mode);
+                       GpgME::SignatureMode mode) Q_DECL_OVERRIDE;
 
     /*! \reimp from SignJob */
     void start(const std::vector<GpgME::Key> &signers,
                const boost::shared_ptr<QIODevice> &plainText,
                const boost::shared_ptr<QIODevice> &signature,
-               GpgME::SignatureMode mode);
+               GpgME::SignatureMode mode) Q_DECL_OVERRIDE;
 
     /*! \reimp from SignJob */
     GpgME::SigningResult exec(const std::vector<GpgME::Key> &signers,
                               const QByteArray &plainText,
                               GpgME::SignatureMode mode,
-                              QByteArray &signature);
+                              QByteArray &signature) Q_DECL_OVERRIDE;
 
     /*! \reimp from Job */
-    void showErrorDialog(QWidget *parent, const QString &caption) const;
+    void showErrorDialog(QWidget *parent, const QString &caption) const Q_DECL_OVERRIDE;
 
     /*! \reimp from SignJob */
-    void setOutputIsBase64Encoded(bool on);
+    void setOutputIsBase64Encoded(bool on) Q_DECL_OVERRIDE;
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook(const result_type &r);
+    void resultHook(const result_type &r) Q_DECL_OVERRIDE;
 
 private:
     GpgME::SigningResult mResult;

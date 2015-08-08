@@ -110,7 +110,7 @@ public:
         return m_widgets.at(idx);
     }
 
-    bool isComplete() const
+    bool isComplete() const Q_DECL_OVERRIDE
     {
         return true;
     }

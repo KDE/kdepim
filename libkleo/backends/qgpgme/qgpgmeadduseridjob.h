@@ -57,7 +57,7 @@ public:
     ~QGpgMEAddUserIDJob();
 
     /*! \reimp from AddUserIDJob */
-    GpgME::Error start(const GpgME::Key &key, const QString &name, const QString &email, const QString &comment);
+    GpgME::Error start(const GpgME::Key &key, const QString &name, const QString &email, const QString &comment) Q_DECL_OVERRIDE;
 };
 }
 

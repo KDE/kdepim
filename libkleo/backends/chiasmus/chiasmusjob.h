@@ -62,12 +62,12 @@ public:
     ~ChiasmusJob();
 
     /*!\reimp SpecialJob */
-    GpgME::Error start();
+    GpgME::Error start() Q_DECL_OVERRIDE;
     /*!\reimp SpecialJob */
-    GpgME::Error exec();
+    GpgME::Error exec() Q_DECL_OVERRIDE;
 
     /*!\reimp Kleo::Job */
-    void showErrorDialog(QWidget *, const QString &) const;
+    void showErrorDialog(QWidget *, const QString &) const Q_DECL_OVERRIDE;
 
     Mode mode() const
     {
@@ -108,7 +108,7 @@ public:
     }
 
 public Q_SLOTS:
-    void slotCancel();
+    void slotCancel() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     GpgME::Error finished();

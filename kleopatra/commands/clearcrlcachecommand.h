@@ -49,14 +49,14 @@ public:
     ~ClearCrlCacheCommand();
 
 private:
-    /* reimp */ QStringList arguments() const;
+    QStringList arguments() const Q_DECL_OVERRIDE;
 
-    /* reimp */ QString errorCaption() const;
-    /* reimp */ QString successCaption() const;
+    QString errorCaption() const Q_DECL_OVERRIDE;
+    QString successCaption() const Q_DECL_OVERRIDE;
 
-    /* reimp */ QString crashExitMessage(const QStringList &) const;
-    /* reimp */ QString errorExitMessage(const QStringList &) const;
-    /* reimp */ QString successMessage(const QStringList &) const;
+    QString crashExitMessage(const QStringList &) const Q_DECL_OVERRIDE;
+    QString errorExitMessage(const QStringList &) const Q_DECL_OVERRIDE;
+    QString successMessage(const QStringList &) const Q_DECL_OVERRIDE;
 };
 
 }

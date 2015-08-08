@@ -60,16 +60,16 @@ public:
     ~QGpgMEKeyListJob();
 
     /*! \reimp from KeyListJob */
-    GpgME::Error start(const QStringList &patterns, bool secretOnly);
+    GpgME::Error start(const QStringList &patterns, bool secretOnly) Q_DECL_OVERRIDE;
 
     /*! \reimp from KeyListJob */
-    GpgME::KeyListResult exec(const QStringList &patterns, bool secretOnly, std::vector<GpgME::Key> &keys);
+    GpgME::KeyListResult exec(const QStringList &patterns, bool secretOnly, std::vector<GpgME::Key> &keys) Q_DECL_OVERRIDE;
 
     /*! \reimp from Job */
-    void showErrorDialog(QWidget *parent, const QString &caption) const;
+    void showErrorDialog(QWidget *parent, const QString &caption) const Q_DECL_OVERRIDE;
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook(const result_type &result);
+    void resultHook(const result_type &result) Q_DECL_OVERRIDE;
 
 private:
     GpgME::KeyListResult mResult;

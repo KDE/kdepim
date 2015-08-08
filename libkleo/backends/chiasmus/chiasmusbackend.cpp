@@ -204,86 +204,86 @@ public:
     {
         assert(i < kleo_chiasmus_config_entries_dim);
     }
-    QString name() const
+    QString name() const Q_DECL_OVERRIDE
     {
         return QLatin1String(kleo_chiasmus_config_entries[mIdx].name);
     }
-    QString description() const
+    QString description() const Q_DECL_OVERRIDE
     {
         return i18n(kleo_chiasmus_config_entries[mIdx].description);
     }
-    QString path() const
+    QString path() const Q_DECL_OVERRIDE
     {
         return name();
     }
-    bool isOptional() const
+    bool isOptional() const Q_DECL_OVERRIDE
     {
         return kleo_chiasmus_config_entries[mIdx].is_optional;
     }
-    bool isReadOnly() const
+    bool isReadOnly() const Q_DECL_OVERRIDE
     {
         return false;
     }
-    bool isList() const
+    bool isList() const Q_DECL_OVERRIDE
     {
         return kleo_chiasmus_config_entries[mIdx].is_list;
     }
-    bool isRuntime() const
+    bool isRuntime() const Q_DECL_OVERRIDE
     {
         return kleo_chiasmus_config_entries[mIdx].is_runtime;
     }
-    Level level() const
+    Level level() const Q_DECL_OVERRIDE
     {
         return static_cast<Level>(kleo_chiasmus_config_entries[mIdx].level);
     }
-    ArgType argType() const
+    ArgType argType() const Q_DECL_OVERRIDE
     {
         return static_cast<ArgType>(kleo_chiasmus_config_entries[mIdx].type);
     }
-    bool isSet() const
+    bool isSet() const Q_DECL_OVERRIDE
     {
         return mValue != defaultValue();
     }
-    bool boolValue() const
+    bool boolValue() const Q_DECL_OVERRIDE
     {
         return mValue.toBool();
     }
-    QString stringValue() const
+    QString stringValue() const Q_DECL_OVERRIDE
     {
         return mValue.toString();
     }
-    int intValue() const
+    int intValue() const Q_DECL_OVERRIDE
     {
         return mValue.toInt();
     }
-    unsigned int uintValue() const
+    unsigned int uintValue() const Q_DECL_OVERRIDE
     {
         return mValue.toUInt();
     }
-    KUrl urlValue() const
+    KUrl urlValue() const Q_DECL_OVERRIDE
     {
         if (argType() != ArgType_Path && argType() != ArgType_DirPath) {
             return KUrl(mValue.toString());
         }
         KUrl u; u.setPath(mValue.toString()); return u;
     }
-    unsigned int numberOfTimesSet() const
+    unsigned int numberOfTimesSet() const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    QStringList stringValueList() const
+    QStringList stringValueList() const Q_DECL_OVERRIDE
     {
         return mValue.toStringList();
     }
-    std::vector<int> intValueList() const
+    std::vector<int> intValueList() const Q_DECL_OVERRIDE
     {
         return to< std::vector<int> >(mValue);
     }
-    std::vector<unsigned int> uintValueList() const
+    std::vector<unsigned int> uintValueList() const Q_DECL_OVERRIDE
     {
         return to< std::vector<unsigned int> >(mValue);
     }
-    KUrl::List urlValueList() const
+    KUrl::List urlValueList() const Q_DECL_OVERRIDE
     {
         if (argType() != ArgType_Path && argType() != ArgType_DirPath) {
             return mValue.toStringList();
@@ -291,28 +291,28 @@ public:
             return to<KUrl::List>(mValue);
         }
     }
-    void resetToDefault()
+    void resetToDefault() Q_DECL_OVERRIDE
     {
         mValue = defaultValue();
         mDirty = false;
     }
-    void setBoolValue(bool value)
+    void setBoolValue(bool value) Q_DECL_OVERRIDE
     {
         setValue(QVariant(value));
     }
-    void setStringValue(const QString &value)
+    void setStringValue(const QString &value) Q_DECL_OVERRIDE
     {
         setValue(value);
     }
-    void setIntValue(int value)
+    void setIntValue(int value) Q_DECL_OVERRIDE
     {
         setValue(value);
     }
-    void setUIntValue(unsigned int value)
+    void setUIntValue(unsigned int value) Q_DECL_OVERRIDE
     {
         setValue(value);
     }
-    void setURLValue(const KUrl &value)
+    void setURLValue(const KUrl &value) Q_DECL_OVERRIDE
     {
         if (argType() != ArgType_Path && argType() != ArgType_DirPath) {
             setValue(value.url());
@@ -320,24 +320,24 @@ public:
             setValue(value.path());
         }
     }
-    void setNumberOfTimesSet(unsigned int) {}
-    void setStringValueList(const QStringList &value)
+    void setNumberOfTimesSet(unsigned int) Q_DECL_OVERRIDE {}
+    void setStringValueList(const QStringList &value) Q_DECL_OVERRIDE
     {
         setValue(value);
     }
-    void setIntValueList(const std::vector<int> &l)
+    void setIntValueList(const std::vector<int> &l) Q_DECL_OVERRIDE
     {
         setValue(from(l));
     }
-    void setUIntValueList(const std::vector<unsigned int> &l)
+    void setUIntValueList(const std::vector<unsigned int> &l) Q_DECL_OVERRIDE
     {
         setValue(from(l));
     }
-    void setURLValueList(const KUrl::List &l)
+    void setURLValueList(const KUrl::List &l) Q_DECL_OVERRIDE
     {
         setValue(from(l));
     }
-    bool isDirty() const
+    bool isDirty() const Q_DECL_OVERRIDE
     {
         return mDirty;
     }
@@ -427,27 +427,27 @@ public:
         clear();
         delete mConfigObject;
     }
-    QString name() const
+    QString name() const Q_DECL_OVERRIDE
     {
         return QStringLiteral("General");
     }
-    QString iconName() const
+    QString iconName() const Q_DECL_OVERRIDE
     {
         return QStringLiteral("chiasmus_chi");
     }
-    QString path() const
+    QString path() const Q_DECL_OVERRIDE
     {
         return QString();
     }
-    QString description() const
+    QString description() const Q_DECL_OVERRIDE
     {
         return i18n("General");
     }
-    Kleo::CryptoConfigEntry::Level level() const
+    Kleo::CryptoConfigEntry::Level level() const Q_DECL_OVERRIDE
     {
         return Kleo::CryptoConfigEntry::Level_Basic;
     }
-    QStringList entryList() const
+    QStringList entryList() const Q_DECL_OVERRIDE
     {
         QStringList result;
         for (unsigned int i = 0 ; i < kleo_chiasmus_config_entries_dim ; ++i) {
@@ -455,7 +455,7 @@ public:
         }
         return result;
     }
-    Kleo::CryptoConfigEntry *entry(const QString &name) const
+    Kleo::CryptoConfigEntry *entry(const QString &name) const Q_DECL_OVERRIDE
     {
         if (ChiasmusConfigEntry *entry = mCache[name]) {
             return entry;
@@ -515,23 +515,23 @@ public:
         }
     }
 
-    QString name() const
+    QString name() const Q_DECL_OVERRIDE
     {
         return QStringLiteral("Chiasmus");
     }
-    QString iconName() const
+    QString iconName() const Q_DECL_OVERRIDE
     {
         return QStringLiteral("chiasmus_chi");
     }
-    QString description() const
+    QString description() const Q_DECL_OVERRIDE
     {
         return i18n("Chiasmus");
     }
-    QStringList groupList() const
+    QStringList groupList() const Q_DECL_OVERRIDE
     {
         return QStringList() << QStringLiteral("General");
     }
-    Kleo::CryptoConfigGroup *group(const QString &name) const
+    Kleo::CryptoConfigGroup *group(const QString &name) const Q_DECL_OVERRIDE
     {
         if (name != QLatin1String("General")) {
             return 0;
@@ -555,11 +555,11 @@ public:
         delete mComponent;
     }
 
-    QStringList componentList() const
+    QStringList componentList() const Q_DECL_OVERRIDE
     {
         return QStringList() << QStringLiteral("Chiasmus") ;
     }
-    ChiasmusComponent *component(const QString &name) const
+    ChiasmusComponent *component(const QString &name) const Q_DECL_OVERRIDE
     {
         if (name != QLatin1String("Chiasmus")) {
             return 0;
@@ -569,13 +569,13 @@ public:
         }
         return mComponent;
     }
-    void sync(bool)
+    void sync(bool) Q_DECL_OVERRIDE
     {
         if (mComponent) {
             mComponent->sync();
         }
     }
-    void clear()
+    void clear() Q_DECL_OVERRIDE
     {
         delete mComponent;
         mComponent = 0;
@@ -593,84 +593,84 @@ public:
     }
     ~Protocol() {}
 
-    QString name() const
+    QString name() const Q_DECL_OVERRIDE
     {
         return QStringLiteral("Chiasmus");
     }
-    QString displayName() const
+    QString displayName() const Q_DECL_OVERRIDE
     {
         return i18n("Chiasmus command line tool");
     }
-    KeyListJob *keyListJob(bool, bool, bool) const
+    KeyListJob *keyListJob(bool, bool, bool) const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    ListAllKeysJob *listAllKeysJob(bool, bool) const
+    ListAllKeysJob *listAllKeysJob(bool, bool) const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    EncryptJob *encryptJob(bool, bool) const
+    EncryptJob *encryptJob(bool, bool) const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    DecryptJob *decryptJob() const
+    DecryptJob *decryptJob() const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    SignJob *signJob(bool, bool) const
+    SignJob *signJob(bool, bool) const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    VerifyDetachedJob *verifyDetachedJob(bool) const
+    VerifyDetachedJob *verifyDetachedJob(bool) const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    VerifyOpaqueJob *verifyOpaqueJob(bool) const
+    VerifyOpaqueJob *verifyOpaqueJob(bool) const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    KeyGenerationJob *keyGenerationJob() const
+    KeyGenerationJob *keyGenerationJob() const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    ImportFromKeyserverJob *importFromKeyserverJob() const
+    ImportFromKeyserverJob *importFromKeyserverJob() const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    ImportJob *importJob() const
+    ImportJob *importJob() const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    ExportJob *publicKeyExportJob(bool) const
+    ExportJob *publicKeyExportJob(bool) const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    ExportJob *secretKeyExportJob(bool, const QString &) const
+    ExportJob *secretKeyExportJob(bool, const QString &) const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    DownloadJob *downloadJob(bool) const
+    DownloadJob *downloadJob(bool) const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    DeleteJob *deleteJob() const
+    DeleteJob *deleteJob() const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    SignEncryptJob *signEncryptJob(bool, bool) const
+    SignEncryptJob *signEncryptJob(bool, bool) const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    DecryptVerifyJob *decryptVerifyJob(bool) const
+    DecryptVerifyJob *decryptVerifyJob(bool) const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    RefreshKeysJob *refreshKeysJob() const
+    RefreshKeysJob *refreshKeysJob() const Q_DECL_OVERRIDE
     {
         return 0;
     }
 
-    SpecialJob *specialJob(const char *type, const QMap<QString, QVariant> &args) const
+    SpecialJob *specialJob(const char *type, const QMap<QString, QVariant> &args) const Q_DECL_OVERRIDE
     {
         if (qstricmp(type, "x-obtain-keys") == 0 && args.size() == 0) {
             return new ObtainKeysJob();

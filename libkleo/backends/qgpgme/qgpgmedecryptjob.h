@@ -59,17 +59,17 @@ public:
     ~QGpgMEDecryptJob();
 
     /*! \reimp from DecryptJob */
-    GpgME::Error start(const QByteArray &cipherText);
+    GpgME::Error start(const QByteArray &cipherText) Q_DECL_OVERRIDE;
 
     /*! \reimp from DecryptJob */
-    void start(const boost::shared_ptr<QIODevice> &cipherText, const boost::shared_ptr<QIODevice> &plainText);
+    void start(const boost::shared_ptr<QIODevice> &cipherText, const boost::shared_ptr<QIODevice> &plainText) Q_DECL_OVERRIDE;
 
     /*! \reimp from DecryptJob */
     GpgME::DecryptionResult exec(const QByteArray &cipherText,
-                                 QByteArray &plainText);
+                                 QByteArray &plainText) Q_DECL_OVERRIDE;
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook(const result_type &r);
+    void resultHook(const result_type &r) Q_DECL_OVERRIDE;
 
 private:
     GpgME::DecryptionResult mResult;

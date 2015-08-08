@@ -46,11 +46,11 @@ public:
     //~VerifyCommand();
 
 private:
-    /* reimp */ DecryptVerifyOperation operation() const
+    DecryptVerifyOperation operation() const Q_DECL_OVERRIDE
     {
         return Verify;
     }
-    /* reimp */ Mode mode() const
+    Mode mode() const Q_DECL_OVERRIDE
     {
         return EMail;
     }

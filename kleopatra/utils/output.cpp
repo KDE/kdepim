@@ -111,7 +111,7 @@ public:
     explicit TemporaryFile(QObject *parent) : QTemporaryFile(parent) {}
     explicit TemporaryFile(const QString &templateName, QObject *parent) : QTemporaryFile(templateName, parent) {}
 
-    /* reimp */ void close()
+    void close() Q_DECL_OVERRIDE
     {
         if (isOpen()) {
             m_oldFileName = fileName();
@@ -193,11 +193,11 @@ public:
 
     }
 
-    /* reimp */ QString label() const
+    QString label() const Q_DECL_OVERRIDE
     {
         return m_customLabel.isEmpty() ? m_defaultLabel : m_customLabel;
     }
-    /* reimp */ void setLabel(const QString &label)
+    void setLabel(const QString &label) Q_DECL_OVERRIDE
     {
         m_customLabel = label;
     }
@@ -205,16 +205,16 @@ public:
     {
         m_defaultLabel = l;
     }
-    /* reimp */ void setBinaryOpt(bool value)
+    void setBinaryOpt(bool value) Q_DECL_OVERRIDE
     {
         m_binaryOpt = value;
     }
-    /* reimp */ bool binaryOpt() const
+    bool binaryOpt() const Q_DECL_OVERRIDE
     {
         return m_binaryOpt;
     }
 
-    /* reimp */ QString errorString() const
+    QString errorString() const Q_DECL_OVERRIDE
     {
         if (m_errorString.dirty()) {
             m_errorString = doErrorString();
@@ -222,11 +222,11 @@ public:
         return m_errorString;
     }
 
-    /* reimp */ bool isFinalized() const
+    bool isFinalized() const Q_DECL_OVERRIDE
     {
         return m_isFinalized;
     }
-    /* reimp */ void finalize()
+    void finalize() Q_DECL_OVERRIDE
     {
         qCDebug(KLEOPATRA_LOG) << this;
         if (m_isFinalized || m_isFinalizing) {
@@ -246,7 +246,7 @@ public:
         }
     }
 
-    /* reimp */ void cancel()
+    void cancel() Q_DECL_OVERRIDE
     {
         qCDebug(KLEOPATRA_LOG) << this;
         if (m_isFinalizing) {
@@ -288,15 +288,15 @@ class PipeOutput : public OutputImplBase
 public:
     explicit PipeOutput(assuan_fd_t fd);
 
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_io;
     }
-    /* reimp */ void doFinalize()
+    void doFinalize() Q_DECL_OVERRIDE
     {
         m_io->reallyClose();
     }
-    /* reimp */ void doCancel()
+    void doCancel() Q_DECL_OVERRIDE
     {
         doFinalize();
     }
@@ -309,11 +309,11 @@ class ProcessStdInOutput : public OutputImplBase
 public:
     explicit ProcessStdInOutput(const QString &cmd, const QStringList &args, const QDir &wd);
 
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_proc;
     }
-    /* reimp */ void doFinalize()
+    void doFinalize() Q_DECL_OVERRIDE
     {
         /*
           Make sure the data is written in the output here. If this
@@ -332,15 +332,15 @@ public:
         }
         m_proc->waitForFinished(PROCESS_MAX_RUNTIME_TIMEOUT);
     }
-    /* reimp */ void doCancel()
+    void doCancel() Q_DECL_OVERRIDE
     {
         m_proc->terminate();
         QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, m_proc.get(), SLOT(kill()));
     }
-    /* reimp */ QString label() const;
+    QString label() const Q_DECL_OVERRIDE;
 
 private:
-    /* reimp */ QString doErrorString() const;
+    QString doErrorString() const Q_DECL_OVERRIDE;
 
 private:
     const QString m_command;
@@ -357,16 +357,16 @@ public:
         qCDebug(KLEOPATRA_LOG) << this;
     }
 
-    /* reimp */ QString label() const
+    QString label() const Q_DECL_OVERRIDE
     {
         return QFileInfo(m_fileName).fileName();
     }
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_tmpFile;
     }
-    /* reimp */ void doFinalize();
-    /* reimp */ void doCancel()
+    void doFinalize() Q_DECL_OVERRIDE;
+    void doCancel() Q_DECL_OVERRIDE
     {
         qCDebug(KLEOPATRA_LOG) << this;
     }
@@ -385,16 +385,16 @@ class ClipboardOutput : public OutputImplBase
 public:
     explicit ClipboardOutput(QClipboard::Mode mode);
 
-    /* reimp */ QString label() const;
-    /* reimp */ shared_ptr<QIODevice> ioDevice() const
+    QString label() const Q_DECL_OVERRIDE;
+    shared_ptr<QIODevice> ioDevice() const Q_DECL_OVERRIDE
     {
         return m_buffer;
     }
-    /* reimp */ void doFinalize();
-    /* reimp */ void doCancel() {}
+    void doFinalize() Q_DECL_OVERRIDE;
+    void doCancel() Q_DECL_OVERRIDE {}
 
 private:
-    /* reimp */ QString doErrorString() const
+    QString doErrorString() const Q_DECL_OVERRIDE
     {
         return QString();
     }

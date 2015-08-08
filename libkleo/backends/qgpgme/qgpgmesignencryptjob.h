@@ -65,29 +65,29 @@ public:
     /*! \reimp from SignEncryptJob */
     GpgME::Error start(const std::vector<GpgME::Key> &signers,
                        const std::vector<GpgME::Key> &recipients,
-                       const QByteArray &plainText, bool alwaysTrust);
+                       const QByteArray &plainText, bool alwaysTrust) Q_DECL_OVERRIDE;
 
     /*! \reimp from SignEncryptJob */
     void start(const std::vector<GpgME::Key> &signers,
                const std::vector<GpgME::Key> &recipients,
                const boost::shared_ptr<QIODevice> &plainText,
                const boost::shared_ptr<QIODevice> &cipherText,
-               bool alwaysTrust);
+               bool alwaysTrust) Q_DECL_OVERRIDE;
 
     std::pair<GpgME::SigningResult, GpgME::EncryptionResult>
     exec(const std::vector<GpgME::Key> &signers,
          const std::vector<GpgME::Key> &recipients,
          const QByteArray &plainText, bool alwaysTrust,
-         QByteArray &cipherText);
+         QByteArray &cipherText) Q_DECL_OVERRIDE;
 
     /*! \reimp from Job */
-    void showErrorDialog(QWidget *parent, const QString &caption) const;
+    void showErrorDialog(QWidget *parent, const QString &caption) const Q_DECL_OVERRIDE;
 
     /*! \reimp from SignEncryptJob */
-    void setOutputIsBase64Encoded(bool on);
+    void setOutputIsBase64Encoded(bool on) Q_DECL_OVERRIDE;
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook(const result_type &r);
+    void resultHook(const result_type &r) Q_DECL_OVERRIDE;
 
 private:
     bool mOutputIsBase64Encoded;

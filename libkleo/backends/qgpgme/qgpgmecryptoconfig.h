@@ -64,9 +64,9 @@ public:
     QGpgMECryptoConfig();
     virtual ~QGpgMECryptoConfig();
 
-    virtual QStringList componentList() const;
+    QStringList componentList() const Q_DECL_OVERRIDE;
 
-    virtual Kleo::CryptoConfigComponent *component(const QString &name) const;
+    Kleo::CryptoConfigComponent *component(const QString &name) const Q_DECL_OVERRIDE;
 
     void clear() Q_DECL_OVERRIDE;
     void sync(bool runtime) Q_DECL_OVERRIDE;
@@ -94,20 +94,20 @@ public:
     QGpgMECryptoConfigComponent(QGpgMECryptoConfig *, const QString &name, const QString &description);
     ~QGpgMECryptoConfigComponent();
 
-    QString name() const
+    QString name() const Q_DECL_OVERRIDE
     {
         return mName;
     }
-    QString iconName() const
+    QString iconName() const Q_DECL_OVERRIDE
     {
         return mName;
     }
-    QString description() const
+    QString description() const Q_DECL_OVERRIDE
     {
         return mDescription;
     }
-    QStringList groupList() const;
-    Kleo::CryptoConfigGroup *group(const QString &name) const;
+    QStringList groupList() const Q_DECL_OVERRIDE;
+    Kleo::CryptoConfigGroup *group(const QString &name) const Q_DECL_OVERRIDE;
 
     void sync(bool runtime);
 
@@ -132,28 +132,28 @@ public:
     QGpgMECryptoConfigGroup(QGpgMECryptoConfigComponent *comp, const QString &name, const QString &description, int level);
     ~QGpgMECryptoConfigGroup();
 
-    QString name() const
+    QString name() const Q_DECL_OVERRIDE
     {
         return mName;
     }
-    QString iconName() const
+    QString iconName() const Q_DECL_OVERRIDE
     {
         return QString();
     }
-    QString description() const
+    QString description() const Q_DECL_OVERRIDE
     {
         return mDescription;
     }
-    QString path() const
+    QString path() const Q_DECL_OVERRIDE
     {
         return mComponent->name() + QLatin1Char('/') + mName ;
     }
-    Kleo::CryptoConfigEntry::Level level() const
+    Kleo::CryptoConfigEntry::Level level() const Q_DECL_OVERRIDE
     {
         return mLevel;
     }
-    QStringList entryList() const;
-    Kleo::CryptoConfigEntry *entry(const QString &name) const;
+    QStringList entryList() const Q_DECL_OVERRIDE;
+    Kleo::CryptoConfigEntry *entry(const QString &name) const Q_DECL_OVERRIDE;
 
 private:
     friend class QGpgMECryptoConfigComponent; // it adds the entries
@@ -171,53 +171,53 @@ public:
     QGpgMECryptoConfigEntry(QGpgMECryptoConfigGroup *group, const QStringList &parsedLine);
     ~QGpgMECryptoConfigEntry();
 
-    QString name() const
+    QString name() const Q_DECL_OVERRIDE
     {
         return mName;
     }
-    QString description() const
+    QString description() const Q_DECL_OVERRIDE
     {
         return mDescription;
     }
-    QString path() const
+    QString path() const Q_DECL_OVERRIDE
     {
         return mGroup->path() + QLatin1Char('/') + mName ;
     }
-    bool isOptional() const;
-    bool isReadOnly() const;
-    bool isList() const;
-    bool isRuntime() const;
-    Level level() const
+    bool isOptional() const Q_DECL_OVERRIDE;
+    bool isReadOnly() const Q_DECL_OVERRIDE;
+    bool isList() const Q_DECL_OVERRIDE;
+    bool isRuntime() const Q_DECL_OVERRIDE;
+    Level level() const Q_DECL_OVERRIDE
     {
         return static_cast<Level>(mLevel);
     }
-    ArgType argType() const
+    ArgType argType() const Q_DECL_OVERRIDE
     {
         return static_cast<ArgType>(mArgType);
     }
-    bool isSet() const;
-    bool boolValue() const;
-    QString stringValue() const;
-    int intValue() const;
-    unsigned int uintValue() const;
-    KUrl urlValue() const;
-    unsigned int numberOfTimesSet() const;
-    QStringList stringValueList() const;
-    std::vector<int> intValueList() const;
-    std::vector<unsigned int> uintValueList() const;
-    KUrl::List urlValueList() const;
-    void resetToDefault();
-    void setBoolValue(bool);
-    void setStringValue(const QString &);
-    void setIntValue(int);
-    void setUIntValue(unsigned int);
-    void setURLValue(const KUrl &);
-    void setNumberOfTimesSet(unsigned int);
-    void setStringValueList(const QStringList &);
-    void setIntValueList(const std::vector<int> &);
-    void setUIntValueList(const std::vector<unsigned int> &);
-    void setURLValueList(const KUrl::List &);
-    bool isDirty() const
+    bool isSet() const Q_DECL_OVERRIDE;
+    bool boolValue() const Q_DECL_OVERRIDE;
+    QString stringValue() const Q_DECL_OVERRIDE;
+    int intValue() const Q_DECL_OVERRIDE;
+    unsigned int uintValue() const Q_DECL_OVERRIDE;
+    KUrl urlValue() const Q_DECL_OVERRIDE;
+    unsigned int numberOfTimesSet() const Q_DECL_OVERRIDE;
+    QStringList stringValueList() const Q_DECL_OVERRIDE;
+    std::vector<int> intValueList() const Q_DECL_OVERRIDE;
+    std::vector<unsigned int> uintValueList() const Q_DECL_OVERRIDE;
+    KUrl::List urlValueList() const Q_DECL_OVERRIDE;
+    void resetToDefault() Q_DECL_OVERRIDE;
+    void setBoolValue(bool) Q_DECL_OVERRIDE;
+    void setStringValue(const QString &) Q_DECL_OVERRIDE;
+    void setIntValue(int) Q_DECL_OVERRIDE;
+    void setUIntValue(unsigned int) Q_DECL_OVERRIDE;
+    void setURLValue(const KUrl &) Q_DECL_OVERRIDE;
+    void setNumberOfTimesSet(unsigned int) Q_DECL_OVERRIDE;
+    void setStringValueList(const QStringList &) Q_DECL_OVERRIDE;
+    void setIntValueList(const std::vector<int> &) Q_DECL_OVERRIDE;
+    void setUIntValueList(const std::vector<unsigned int> &) Q_DECL_OVERRIDE;
+    void setURLValueList(const KUrl::List &) Q_DECL_OVERRIDE;
+    bool isDirty() const Q_DECL_OVERRIDE
     {
         return mDirty;
     }

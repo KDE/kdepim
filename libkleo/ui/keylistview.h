@@ -94,7 +94,7 @@ public:
     /*! \reimp for covariant return */
     KeyListViewItem *nextSibling() const;
     /*! \reimp */
-    bool operator<(const QTreeWidgetItem &other) const;
+    bool operator<(const QTreeWidgetItem &other) const Q_DECL_OVERRIDE;
     /*! \reimp */
     void takeItem(QTreeWidgetItem *item);
 

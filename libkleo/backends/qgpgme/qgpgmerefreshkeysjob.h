@@ -55,11 +55,11 @@ public:
     ~QGpgMERefreshKeysJob();
 
     /*! \reimp from RefreshKeysJob */
-    GpgME::Error start(const QStringList &patterns);
+    GpgME::Error start(const QStringList &patterns) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     /*! \reimp from Job */
-    void slotCancel();
+    void slotCancel() Q_DECL_OVERRIDE;
 
     void slotStatus(Kleo::GnuPGProcessBase *, const QString &, const QStringList &);
     void slotStderr();

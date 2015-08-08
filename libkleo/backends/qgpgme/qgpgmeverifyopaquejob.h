@@ -59,16 +59,16 @@ public:
     ~QGpgMEVerifyOpaqueJob();
 
     /*! \reimp from VerifyOpaqueJob */
-    GpgME::Error start(const QByteArray &signedData);
+    GpgME::Error start(const QByteArray &signedData) Q_DECL_OVERRIDE;
 
     /*! \reimp from VerifyOpaqueJob */
-    void start(const boost::shared_ptr<QIODevice> &signedData, const boost::shared_ptr<QIODevice> &plainText);
+    void start(const boost::shared_ptr<QIODevice> &signedData, const boost::shared_ptr<QIODevice> &plainText) Q_DECL_OVERRIDE;
 
     /*! \reimp form VerifyOpaqueJob */
-    GpgME::VerificationResult exec(const QByteArray &signedData, QByteArray &plainData);
+    GpgME::VerificationResult exec(const QByteArray &signedData, QByteArray &plainData) Q_DECL_OVERRIDE;
 
     /*! \reimp from ThreadedJobMixin */
-    void resultHook(const result_type &r);
+    void resultHook(const result_type &r) Q_DECL_OVERRIDE;
 
 private:
     GpgME::VerificationResult mResult;

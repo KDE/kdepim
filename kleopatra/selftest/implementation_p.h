@@ -50,28 +50,28 @@ public:
     explicit SelfTestImplementation(const QString &name);
     ~SelfTestImplementation();
 
-    /* reimp */ QString name() const
+    QString name() const Q_DECL_OVERRIDE
     {
         return m_name;
     }
-    /* reimp */ QString shortError() const
+    QString shortError() const Q_DECL_OVERRIDE
     {
         return m_error;
     }
-    /* reimp */ QString longError() const
+    QString longError() const Q_DECL_OVERRIDE
     {
         return m_explaination;
     }
-    /* reimp */ QString proposedFix() const
+    QString proposedFix() const Q_DECL_OVERRIDE
     {
         return m_proposedFix;
     }
 
-    /* reimp */ bool skipped() const
+    bool skipped() const Q_DECL_OVERRIDE
     {
         return m_skipped;
     }
-    /* reimp */ bool passed() const
+    bool passed() const Q_DECL_OVERRIDE
     {
         return m_passed;
     }

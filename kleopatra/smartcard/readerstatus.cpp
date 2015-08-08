@@ -563,7 +563,7 @@ private Q_SLOTS:
     }
 
 private:
-    /* reimp */ void run()
+    void run() Q_DECL_OVERRIDE
     {
 
         shared_ptr<Context> gpgAgent;

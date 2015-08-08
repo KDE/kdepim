@@ -57,10 +57,10 @@ public:
     ~QGpgMEDownloadJob();
 
     /*! \reimp from DownloadJob */
-    GpgME::Error start(const QStringList &fingerprints);
+    GpgME::Error start(const QStringList &fingerprints) Q_DECL_OVERRIDE;
 
     /*! \reimp from DownloadJob */
-    GpgME::Error start(const QByteArray &fingerprint, const boost::shared_ptr<QIODevice> &keyData);
+    GpgME::Error start(const QByteArray &fingerprint, const boost::shared_ptr<QIODevice> &keyData) Q_DECL_OVERRIDE;
 };
 
 }

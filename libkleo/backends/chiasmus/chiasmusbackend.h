@@ -55,37 +55,37 @@ public:
         return self;
     }
 
-    QString name() const;
-    QString displayName() const;
+    QString name() const Q_DECL_OVERRIDE;
+    QString displayName() const Q_DECL_OVERRIDE;
 
-    Kleo::CryptoConfig *config() const;
+    Kleo::CryptoConfig *config() const Q_DECL_OVERRIDE;
 
-    Kleo::CryptoBackend::Protocol *openpgp() const
+    Kleo::CryptoBackend::Protocol *openpgp() const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    Kleo::CryptoBackend::Protocol *smime() const
+    Kleo::CryptoBackend::Protocol *smime() const Q_DECL_OVERRIDE
     {
         return 0;
     }
-    Kleo::CryptoBackend::Protocol *protocol(const char *name) const;
+    Kleo::CryptoBackend::Protocol *protocol(const char *name) const Q_DECL_OVERRIDE;
 
-    bool checkForOpenPGP(QString *reason = Q_NULLPTR) const;
-    bool checkForSMIME(QString *reason = Q_NULLPTR) const;
+    bool checkForOpenPGP(QString *reason = Q_NULLPTR) const Q_DECL_OVERRIDE;
+    bool checkForSMIME(QString *reason = Q_NULLPTR) const Q_DECL_OVERRIDE;
     bool checkForChiasmus(QString *reason = Q_NULLPTR) const;
-    bool checkForProtocol(const char *name, QString *reason = Q_NULLPTR) const;
+    bool checkForProtocol(const char *name, QString *reason = Q_NULLPTR) const Q_DECL_OVERRIDE;
 
-    bool supportsOpenPGP() const
+    bool supportsOpenPGP() const Q_DECL_OVERRIDE
     {
         return false;
     }
-    bool supportsSMIME() const
+    bool supportsSMIME() const Q_DECL_OVERRIDE
     {
         return false;
     }
-    bool supportsProtocol(const char *name) const;
+    bool supportsProtocol(const char *name) const Q_DECL_OVERRIDE;
 
-    const char *enumerateProtocols(int i) const;
+    const char *enumerateProtocols(int i) const Q_DECL_OVERRIDE;
 
 private:
     class CryptoConfig;

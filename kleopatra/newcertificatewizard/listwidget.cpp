@@ -68,7 +68,7 @@ public:
         return m_rx;
     }
 
-    /* reimp */ QWidget *createEditor(QWidget *p, const QStyleOptionViewItem &o, const QModelIndex &i) const
+    QWidget *createEditor(QWidget *p, const QStyleOptionViewItem &o, const QModelIndex &i) const Q_DECL_OVERRIDE
     {
         QWidget *w = QItemDelegate::createEditor(p, o, i);
         if (!m_rx.isEmpty())

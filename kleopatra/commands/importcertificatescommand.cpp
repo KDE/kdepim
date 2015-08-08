@@ -87,7 +87,7 @@ public:
 
     ~ImportResultProxyModel() {}
 
-    /* reimp */ ImportResultProxyModel *clone() const
+    ImportResultProxyModel *clone() const Q_DECL_OVERRIDE
     {
         // compiler-generated copy ctor is fine!
         return new ImportResultProxyModel(*this);
@@ -100,7 +100,7 @@ public:
     }
 
 protected:
-    /* reimp */ QVariant data(const QModelIndex &index, int role) const
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE
     {
         if (!index.isValid() || role != Qt::ToolTipRole) {
             return AbstractKeyListSortFilterProxyModel::data(index, role);

@@ -59,7 +59,7 @@ public:
     ~QGpgMEKeyGenerationJob();
 
     /*! \reimp from KeygenerationJob */
-    GpgME::Error start(const QString &parameters);
+    GpgME::Error start(const QString &parameters) Q_DECL_OVERRIDE;
 };
 
 }

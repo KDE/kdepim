@@ -96,7 +96,7 @@ public:
     {
         return "ENCRYPT_FILES";
     }
-    /* reimp */ unsigned int operation() const
+    unsigned int operation() const Q_DECL_OVERRIDE
     {
         return SignAllowed | EncryptForced;
     }
@@ -109,7 +109,7 @@ public:
     {
         return "SIGN_FILES";
     }
-    /* reimp */ unsigned int operation() const
+    unsigned int operation() const Q_DECL_OVERRIDE
     {
         return SignForced | EncryptAllowed;
     }

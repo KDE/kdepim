@@ -45,7 +45,7 @@ public:
     //~DecryptCommand();
 
 private:
-    /* reimp */ DecryptVerifyOperation operation() const
+    DecryptVerifyOperation operation() const Q_DECL_OVERRIDE
     {
         if (hasOption("no-verify")) {
             return Decrypt;
