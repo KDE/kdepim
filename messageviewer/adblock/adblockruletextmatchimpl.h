@@ -41,12 +41,12 @@ class AdBlockRuleTextMatchImpl : public AdBlockRuleImpl
 public:
     explicit AdBlockRuleTextMatchImpl(const QString &filter);
 
-    bool match(const QNetworkRequest &request, const QString &encodedUrl, const QString &encodedUrlLowerCase) const;
+    bool match(const QNetworkRequest &request, const QString &encodedUrl, const QString &encodedUrlLowerCase) const Q_DECL_OVERRIDE;
 
     static bool isTextMatchFilter(const QString &filter);
 
-    QString ruleString() const;
-    QString ruleType() const;
+    QString ruleString() const Q_DECL_OVERRIDE;
+    QString ruleType() const Q_DECL_OVERRIDE;
 
 private:
     QString m_textToMatch;

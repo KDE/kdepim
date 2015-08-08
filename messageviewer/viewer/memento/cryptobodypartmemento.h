@@ -51,7 +51,7 @@ public:
         return m_auditLogError;
     }
 
-    void detach();
+    void detach() Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void update(MessageViewer::Viewer::UpdateMode);

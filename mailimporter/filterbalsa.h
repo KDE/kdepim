@@ -27,7 +27,7 @@ public:
     explicit FilterBalsa();
     ~FilterBalsa();
 
-    void import();
+    void import() Q_DECL_OVERRIDE;
     void importMails(const QString &maildir);
     static QString defaultSettingsPath();
     QString localMailDirPath();

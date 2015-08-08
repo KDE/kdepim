@@ -68,12 +68,12 @@ public:
     {
     }
 
-    Result format(BodyPart *part, MessageViewer::HtmlWriter *writer) const
+    Result format(BodyPart *part, MessageViewer::HtmlWriter *writer) const Q_DECL_OVERRIDE
     {
         return format(part, writer, 0);
     }
 
-    Result format(BodyPart *bodyPart, MessageViewer::HtmlWriter *writer, QObject *asyncResultObserver) const
+    Result format(BodyPart *bodyPart, MessageViewer::HtmlWriter *writer, QObject *asyncResultObserver) const Q_DECL_OVERRIDE
     {
         if (!writer) {
             return Ok;
@@ -184,7 +184,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 {
 public:
     bool handleClick(MessageViewer::Viewer *viewerInstance, BodyPart *bodyPart,
-                     const QString &path) const
+                     const QString &path) const Q_DECL_OVERRIDE
     {
 
         Q_UNUSED(viewerInstance);
@@ -229,7 +229,7 @@ public:
         return KContacts::Addressee();
     }
 
-    bool handleContextMenuRequest(BodyPart *part, const QString &path, const QPoint &point) const
+    bool handleContextMenuRequest(BodyPart *part, const QString &path, const QPoint &point) const Q_DECL_OVERRIDE
     {
         const QString vCard = part->asText();
         if (vCard.isEmpty()) {
@@ -256,7 +256,7 @@ public:
         return true;
     }
 
-    QString statusBarMessage(BodyPart *part, const QString &path) const
+    QString statusBarMessage(BodyPart *part, const QString &path) const Q_DECL_OVERRIDE
     {
         KContacts::Addressee a = findAddressee(part, path);
         const bool addToAddressBook = path.startsWith(QStringLiteral("addToAddressBook"));
@@ -313,15 +313,15 @@ public:
 class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
 {
 public:
-    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const
+    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const Q_DECL_OVERRIDE
     {
         return validIndex(idx) ? new Formatter() : 0 ;
     }
-    const char *type(int idx) const
+    const char *type(int idx) const Q_DECL_OVERRIDE
     {
         return validIndex(idx) ? "text" : 0 ;
     }
-    const char *subtype(int idx) const
+    const char *subtype(int idx) const Q_DECL_OVERRIDE
     {
         switch (idx) {
         case 0:
@@ -335,7 +335,7 @@ public:
         }
     }
 
-    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int idx) const
+    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int idx) const Q_DECL_OVERRIDE
     {
         return validIndex(idx) ? new UrlHandler() : 0 ;
     }

@@ -83,17 +83,17 @@ protected:
     ~AllHeaderStrategy() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "all";
     }
 
-    DefaultPolicy defaultPolicy() const
+    DefaultPolicy defaultPolicy() const Q_DECL_OVERRIDE
     {
         return Display;
     }
 
-    bool showHeader(const QString &) const
+    bool showHeader(const QString &) const Q_DECL_OVERRIDE
     {
         return true; // more efficient than default impl
     }
@@ -114,16 +114,16 @@ protected:
     ~RichHeaderStrategy() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "rich";
     }
 
-    QStringList headersToDisplay() const
+    QStringList headersToDisplay() const Q_DECL_OVERRIDE
     {
         return mHeadersToDisplay;
     }
-    DefaultPolicy defaultPolicy() const
+    DefaultPolicy defaultPolicy() const Q_DECL_OVERRIDE
     {
         return Hide;
     }
@@ -147,16 +147,16 @@ protected:
     ~StandardHeaderStrategy() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "standard";
     }
 
-    QStringList headersToDisplay() const
+    QStringList headersToDisplay() const Q_DECL_OVERRIDE
     {
         return mHeadersToDisplay;
     }
-    DefaultPolicy defaultPolicy() const
+    DefaultPolicy defaultPolicy() const Q_DECL_OVERRIDE
     {
         return Hide;
     }
@@ -180,16 +180,16 @@ protected:
     ~BriefHeaderStrategy() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "brief";
     }
 
-    QStringList headersToDisplay() const
+    QStringList headersToDisplay() const Q_DECL_OVERRIDE
     {
         return mHeadersToDisplay;
     }
-    DefaultPolicy defaultPolicy() const
+    DefaultPolicy defaultPolicy() const Q_DECL_OVERRIDE
     {
         return Hide;
     }
@@ -211,21 +211,21 @@ protected:
     ~CustomHeaderStrategy() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "custom";
     }
 
     void loadConfig();
-    QStringList headersToDisplay() const
+    QStringList headersToDisplay() const Q_DECL_OVERRIDE
     {
         return mHeadersToDisplay;
     }
-    QStringList headersToHide() const
+    QStringList headersToHide() const Q_DECL_OVERRIDE
     {
         return mHeadersToHide;
     }
-    DefaultPolicy defaultPolicy() const
+    DefaultPolicy defaultPolicy() const Q_DECL_OVERRIDE
     {
         return mDefaultPolicy;
     }
@@ -248,11 +248,11 @@ protected:
     ~GrantleeHeaderStrategy() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "grantlee";
     }
-    DefaultPolicy defaultPolicy() const
+    DefaultPolicy defaultPolicy() const Q_DECL_OVERRIDE
     {
         return Hide;
     }

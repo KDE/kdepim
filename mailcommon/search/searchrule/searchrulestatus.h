@@ -92,15 +92,15 @@ public:
     explicit SearchRuleStatus(Akonadi::MessageStatus status,
                               Function function = FuncContains);
 
-    virtual bool isEmpty() const ;
-    virtual bool matches(const Akonadi::Item &item) const;
+    bool isEmpty() const Q_DECL_OVERRIDE ;
+    bool matches(const Akonadi::Item &item) const Q_DECL_OVERRIDE;
 
     /**
      * @copydoc SearchRule::requiredPart()
      */
-    virtual RequiredPart requiredPart() const;
+    RequiredPart requiredPart() const Q_DECL_OVERRIDE;
 
-    virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const;
+    void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const Q_DECL_OVERRIDE;
 
     //Not possible to implement optimized form for status searching
     using SearchRule::matches;

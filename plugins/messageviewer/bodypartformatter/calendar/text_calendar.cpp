@@ -159,7 +159,7 @@ public:
         return mBodyPart->makeLink(id);
     }
 
-    KCalCore::Calendar::Ptr calendar() const
+    KCalCore::Calendar::Ptr calendar() const Q_DECL_OVERRIDE
     {
         return mCalendar;
     }
@@ -171,12 +171,12 @@ private:
 class Formatter : public Interface::BodyPartFormatter
 {
 public:
-    Result format(Interface::BodyPart *part, HtmlWriter *writer) const
+    Result format(Interface::BodyPart *part, HtmlWriter *writer) const Q_DECL_OVERRIDE
     {
         return format(part, writer, 0);
     }
 
-    Result format(Interface::BodyPart *bodyPart, HtmlWriter *writer, QObject *asyncResultObserver) const
+    Result format(Interface::BodyPart *bodyPart, HtmlWriter *writer, QObject *asyncResultObserver) const Q_DECL_OVERRIDE
     {
         if (!writer) {
             // Guard against crashes in createReply()
@@ -1167,7 +1167,7 @@ public:
 
     bool handleClick(Viewer *viewerInstance,
                      Interface::BodyPart *part,
-                     const QString &path) const
+                     const QString &path) const Q_DECL_OVERRIDE
     {
         // filter out known paths that don't belong to this type of urlmanager.
         // kolab/issue4054 msg27201
@@ -1311,7 +1311,7 @@ public:
 
     bool handleContextMenuRequest(Interface::BodyPart *part,
                                   const QString &path,
-                                  const QPoint &point) const
+                                  const QPoint &point) const Q_DECL_OVERRIDE
     {
         QString name = path;
         if (path.startsWith(QStringLiteral("ATTACH:"))) {
@@ -1345,7 +1345,7 @@ public:
     }
 
     QString statusBarMessage(Interface::BodyPart *,
-                             const QString &path) const
+                             const QString &path) const Q_DECL_OVERRIDE
     {
         if (!path.isEmpty()) {
             if (path == QLatin1String("accept")) {
@@ -1404,7 +1404,7 @@ public:
 class Plugin : public Interface::BodyPartFormatterPlugin
 {
 public:
-    const Interface::BodyPartFormatter *bodyPartFormatter(int idx) const
+    const Interface::BodyPartFormatter *bodyPartFormatter(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0 || idx == 1) {
             return new Formatter();
@@ -1413,7 +1413,7 @@ public:
         }
     }
 
-    const char *type(int idx) const
+    const char *type(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0 || idx == 1) {
             return "text";
@@ -1422,7 +1422,7 @@ public:
         }
     }
 
-    const char *subtype(int idx) const
+    const char *subtype(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0) {
             return "calendar";
@@ -1433,7 +1433,7 @@ public:
         }
     }
 
-    const Interface::BodyPartURLHandler *urlHandler(int idx) const
+    const Interface::BodyPartURLHandler *urlHandler(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0) {
             return new UrlHandler();

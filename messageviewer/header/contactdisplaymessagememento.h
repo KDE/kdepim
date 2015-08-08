@@ -48,7 +48,7 @@ public:
 
     bool finished() const;
 
-    void detach();
+    void detach() Q_DECL_OVERRIDE;
 
     QPixmap gravatarPixmap() const;
 

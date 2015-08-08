@@ -61,7 +61,7 @@ namespace
 class Formatter : public MessageViewer::Interface::BodyPartFormatter
 {
 public:
-    Result format(MessageViewer::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer) const
+    Result format(MessageViewer::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer) const Q_DECL_OVERRIDE
     {
 
         if (!writer) {
@@ -193,15 +193,15 @@ public:
 class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
 {
 public:
-    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const
+    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const Q_DECL_OVERRIDE
     {
         return idx == 0 ? new Formatter() : 0 ;
     }
-    const char *type(int idx) const
+    const char *type(int idx) const Q_DECL_OVERRIDE
     {
         return idx == 0 ? "application" : 0 ;
     }
-    const char *subtype(int idx) const
+    const char *subtype(int idx) const Q_DECL_OVERRIDE
     {
         if (idx == 0) {
             return "ms-tnef";
@@ -212,7 +212,7 @@ public:
         }
     }
 
-    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int) const
+    const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int) const Q_DECL_OVERRIDE
     {
         return 0;
     }

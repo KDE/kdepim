@@ -41,12 +41,12 @@ class AdBlockRuleNullImpl : public AdBlockRuleImpl
 public:
     explicit AdBlockRuleNullImpl(const QString &filter);
 
-    bool match(const QNetworkRequest &, const QString &, const QString &) const;
+    bool match(const QNetworkRequest &, const QString &, const QString &) const Q_DECL_OVERRIDE;
 
     static bool isNullFilter(const QString &filter);
 
-    QString ruleString() const;
-    QString ruleType() const;
+    QString ruleString() const Q_DECL_OVERRIDE;
+    QString ruleType() const Q_DECL_OVERRIDE;
 };
 }
 

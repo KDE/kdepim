@@ -32,7 +32,7 @@ public:
     QUrl loadingUrl() const;
 
 protected:
-    bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type);
+    bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type) Q_DECL_OVERRIDE;
 
 private:
     QUrl mLoadingUrl;

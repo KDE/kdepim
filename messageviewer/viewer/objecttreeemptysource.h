@@ -41,7 +41,7 @@ public:
     void setHtmlMode(MessageViewer::Util::HtmlMode mode) Q_DECL_OVERRIDE;
     void setAllowDecryption(bool allowDecryption);
     int levelQuote() Q_DECL_OVERRIDE;
-    const QTextCodec *overrideCodec();
+    const QTextCodec *overrideCodec() Q_DECL_OVERRIDE;
     QString createMessageHeader(KMime::Message *message) Q_DECL_OVERRIDE;
     const AttachmentStrategy *attachmentStrategy() Q_DECL_OVERRIDE;
     HtmlWriter *htmlWriter() Q_DECL_OVERRIDE;

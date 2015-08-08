@@ -48,7 +48,7 @@ class AnyTypeBodyPartFormatter
 {
     static const AnyTypeBodyPartFormatter *self;
 public:
-    Result format(Interface::BodyPart *, HtmlWriter *) const
+    Result format(Interface::BodyPart *, HtmlWriter *) const Q_DECL_OVERRIDE
     {
         qCDebug(MESSAGEVIEWER_LOG) << "Acting as a Interface::BodyPartFormatter!";
         return AsIcon;
@@ -57,7 +57,7 @@ public:
     // unhide the overload with three arguments
     using MessageViewer::Interface::BodyPartFormatter::format;
 
-    bool process(ObjectTreeParser *, KMime::Content *, ProcessResult &result) const
+    bool process(ObjectTreeParser *, KMime::Content *, ProcessResult &result) const Q_DECL_OVERRIDE
     {
         result.setNeverDisplayInline(true);
         return false;
@@ -77,7 +77,7 @@ class ImageTypeBodyPartFormatter : public BodyPartFormatter
 {
     static const ImageTypeBodyPartFormatter *self;
 public:
-    bool process(ObjectTreeParser *, KMime::Content *, ProcessResult &result) const
+    bool process(ObjectTreeParser *, KMime::Content *, ProcessResult &result) const Q_DECL_OVERRIDE
     {
         result.setIsImage(true);
         return false;

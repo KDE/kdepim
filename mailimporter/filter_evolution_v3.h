@@ -27,7 +27,7 @@ public:
     explicit FilterEvolution_v3();
     ~FilterEvolution_v3();
 
-    void import();
+    void import() Q_DECL_OVERRIDE;
     void importMails(const QString &maildir);
     static QString defaultSettingsPath();
 

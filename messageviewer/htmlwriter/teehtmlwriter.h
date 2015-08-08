@@ -56,14 +56,14 @@ public:
     //
     // HtmlWriter Interface
     //
-    void begin(const QString &cssDefs);
-    void end();
-    void reset();
-    void write(const QString &str);
-    void queue(const QString &str);
-    void flush();
-    void embedPart(const QByteArray &contentId, const QString &url);
-    void extraHead(const QString &str);
+    void begin(const QString &cssDefs) Q_DECL_OVERRIDE;
+    void end() Q_DECL_OVERRIDE;
+    void reset() Q_DECL_OVERRIDE;
+    void write(const QString &str) Q_DECL_OVERRIDE;
+    void queue(const QString &str) Q_DECL_OVERRIDE;
+    void flush() Q_DECL_OVERRIDE;
+    void embedPart(const QByteArray &contentId, const QString &url) Q_DECL_OVERRIDE;
+    void extraHead(const QString &str) Q_DECL_OVERRIDE;
 
 private:
     /** We own the HtmlWriters added to us! */

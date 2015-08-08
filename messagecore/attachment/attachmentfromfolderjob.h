@@ -61,7 +61,7 @@ public:
     KZip::Compression compression() const;
 
 protected Q_SLOTS:
-    void doStart();
+    void doStart() Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE

@@ -33,7 +33,7 @@ public:
     explicit FilterKMailArchive();
     ~FilterKMailArchive();
 
-    void import();
+    void import() Q_DECL_OVERRIDE;
     void importMails(const QString &archiveFile);
 private:
 

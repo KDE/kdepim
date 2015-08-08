@@ -41,10 +41,10 @@ class AdBlockRuleFallbackImpl : public AdBlockRuleImpl
 public:
     explicit AdBlockRuleFallbackImpl(const QString &filter);
 
-    bool match(const QNetworkRequest &request, const QString &encodedUrl, const QString &encodedUrlLowerCase) const;
+    bool match(const QNetworkRequest &request, const QString &encodedUrl, const QString &encodedUrlLowerCase) const Q_DECL_OVERRIDE;
 
-    QString ruleString() const;
-    QString ruleType() const;
+    QString ruleString() const Q_DECL_OVERRIDE;
+    QString ruleType() const Q_DECL_OVERRIDE;
 
 private:
     QString convertPatternToRegExp(const QString &wildcardPattern);

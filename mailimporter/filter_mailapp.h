@@ -26,7 +26,7 @@ public:
     explicit FilterMailApp();
     ~FilterMailApp();
 
-    void import();
+    void import() Q_DECL_OVERRIDE;
     void importMails(const QString &maildir);
 private:
     QStringList mMboxFiles;

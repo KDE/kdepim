@@ -52,14 +52,14 @@ public:
         QTimer::singleShot(0, this, SIGNAL(finished()));
     }
 
-    virtual void abort() {}
-    virtual qint64 bytesAvailable() const
+    void abort() Q_DECL_OVERRIDE {}
+    qint64 bytesAvailable() const Q_DECL_OVERRIDE
     {
         return 0;
     }
 
 protected:
-    virtual qint64 readData(char *, qint64)
+    qint64 readData(char *, qint64) Q_DECL_OVERRIDE
     {
         return -1;
     }

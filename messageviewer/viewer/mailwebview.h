@@ -124,11 +124,11 @@ protected:
     friend class MessageViewItem;
 #endif
     /// Reimplemented to catch context menu events and emit popupMenu()
-    virtual bool event(QEvent *event);
+    bool event(QEvent *event) Q_DECL_OVERRIDE;
     /// Reimplement for access key
-    virtual void keyReleaseEvent(QKeyEvent *);
-    virtual void keyPressEvent(QKeyEvent *);
-    virtual void wheelEvent(QWheelEvent *e);
+    void keyReleaseEvent(QKeyEvent *) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
+    void wheelEvent(QWheelEvent *e) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void hideAccessKeys();

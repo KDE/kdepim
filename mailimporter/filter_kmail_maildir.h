@@ -32,7 +32,7 @@ public:
     explicit FilterKMail_maildir();
     ~FilterKMail_maildir();
 
-    void import();
+    void import() Q_DECL_OVERRIDE;
     void importMails(const QString &maildir);
 
 private:

@@ -31,8 +31,8 @@ public:
 
 protected:
     void addEvenViewConfig(const QString &groupName, const QString &key, const QString &value);
-    void addImportInfo(const QString &log);
-    void addImportError(const QString &log);
+    void addImportInfo(const QString &log) Q_DECL_OVERRIDE;
+    void addImportError(const QString &log) Q_DECL_OVERRIDE;
 
 private:
     ImportWizard *mImportWizard;

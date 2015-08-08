@@ -47,8 +47,8 @@ public:
     explicit CollectionGeneralPage(QWidget *parent = Q_NULLPTR);
     ~CollectionGeneralPage();
 
-    void load(const Akonadi::Collection &collection);
-    void save(Akonadi::Collection &collection);
+    void load(const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
+    void save(Akonadi::Collection &collection) Q_DECL_OVERRIDE;
 
 protected:
     void init(const Akonadi::Collection &);

@@ -31,7 +31,7 @@ public:
     explicit FilterPlain();
     ~FilterPlain();
 
-    void import();
+    void import() Q_DECL_OVERRIDE;
 };
 }
 

@@ -33,7 +33,7 @@ class MessageHeaderGrantleeFilters : public QObject, public Grantlee::TagLibrary
 public:
     explicit MessageHeaderGrantleeFilters(QObject *parent = Q_NULLPTR);
     ~MessageHeaderGrantleeFilters();
-    QHash<QString, Grantlee::Filter *> filters(const QString &name = QString());
+    QHash<QString, Grantlee::Filter *> filters(const QString &name = QString()) Q_DECL_OVERRIDE;
 };
 
 #endif // MESSAGEHEADERGRANTLEEFILTERS_H

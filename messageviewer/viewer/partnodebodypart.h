@@ -61,28 +61,28 @@ public:
     explicit PartNodeBodyPart(KMime::Content *topLevelContent, KMime::Content *content,
                               NodeHelper *nodeHelper, const QTextCodec *codec = 0);
 
-    QString makeLink(const QString &path) const;
-    QString asText() const;
-    QByteArray asBinary() const;
-    QString contentTypeParameter(const char *param) const;
-    QString contentDescription() const;
+    QString makeLink(const QString &path) const Q_DECL_OVERRIDE;
+    QString asText() const Q_DECL_OVERRIDE;
+    QByteArray asBinary() const Q_DECL_OVERRIDE;
+    QString contentTypeParameter(const char *param) const Q_DECL_OVERRIDE;
+    QString contentDescription() const Q_DECL_OVERRIDE;
     //int contentDisposition() const;
-    QString contentDispositionParameter(const char *param) const;
-    bool hasCompleteBody() const;
+    QString contentDispositionParameter(const char *param) const Q_DECL_OVERRIDE;
+    bool hasCompleteBody() const Q_DECL_OVERRIDE;
 
-    Interface::BodyPartMemento *memento() const;
-    void setBodyPartMemento(Interface::BodyPartMemento *memento);
-    BodyPart::Display defaultDisplay() const;
+    Interface::BodyPartMemento *memento() const Q_DECL_OVERRIDE;
+    void setBodyPartMemento(Interface::BodyPartMemento *memento) Q_DECL_OVERRIDE;
+    BodyPart::Display defaultDisplay() const Q_DECL_OVERRIDE;
     void setDefaultDisplay(BodyPart::Display);
-    KMime::Content *content() const
+    KMime::Content *content() const Q_DECL_OVERRIDE
     {
         return mContent;
     }
-    KMime::Content *topLevelContent() const
+    KMime::Content *topLevelContent() const Q_DECL_OVERRIDE
     {
         return mTopLevelContent;
     }
-    NodeHelper *nodeHelper() const
+    NodeHelper *nodeHelper() const Q_DECL_OVERRIDE
     {
         return mNodeHelper;
     }

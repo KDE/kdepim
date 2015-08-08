@@ -24,25 +24,25 @@
 class MessageHeaderEmailShowLink : public Grantlee::Filter
 {
 public:
-    QVariant doFilter(const QVariant &input, const QVariant &argument = QVariant(), bool autoescape = false) const;
+    QVariant doFilter(const QVariant &input, const QVariant &argument = QVariant(), bool autoescape = false) const Q_DECL_OVERRIDE;
 
-    bool isSafe() const;
+    bool isSafe() const Q_DECL_OVERRIDE;
 };
 
 class MessageHeaderEmailNameOnly : public Grantlee::Filter
 {
 public:
-    QVariant doFilter(const QVariant &input, const QVariant &argument = QVariant(), bool autoescape = false) const;
+    QVariant doFilter(const QVariant &input, const QVariant &argument = QVariant(), bool autoescape = false) const Q_DECL_OVERRIDE;
 
-    bool isSafe() const;
+    bool isSafe() const Q_DECL_OVERRIDE;
 };
 
 class MessageHeaderEmailExpandable : public Grantlee::Filter
 {
 public:
-    QVariant doFilter(const QVariant &input, const QVariant &argument = QVariant(), bool autoescape = false) const;
+    QVariant doFilter(const QVariant &input, const QVariant &argument = QVariant(), bool autoescape = false) const Q_DECL_OVERRIDE;
 
-    bool isSafe() const;
+    bool isSafe() const Q_DECL_OVERRIDE;
 };
 
 #endif // MESSAGEHEADERFILTER_H

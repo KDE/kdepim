@@ -90,12 +90,12 @@ public:
     KMailProtocolURLHandler() : URLHandler() {}
     ~KMailProtocolURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const;
-    bool handleContextMenuRequest(const KUrl &url, const QPoint &, ViewerPrivate *) const
+    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const KUrl &url, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return url.scheme() == QLatin1String("kmail");
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const;
+    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 };
 
 class ExpandCollapseQuoteURLManager : public URLHandler
@@ -104,12 +104,12 @@ public:
     ExpandCollapseQuoteURLManager() : URLHandler() {}
     ~ExpandCollapseQuoteURLManager() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const
+    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const;
+    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 
 };
 
@@ -119,12 +119,12 @@ public:
     SMimeURLHandler() : URLHandler() {}
     ~SMimeURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const
+    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const;
+    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 };
 
 class MailToURLHandler : public URLHandler
@@ -133,15 +133,15 @@ public:
     MailToURLHandler() : URLHandler() {}
     ~MailToURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const
+    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const
+    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const;
+    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 };
 
 class ContactUidURLHandler : public URLHandler
@@ -150,9 +150,9 @@ public:
     ContactUidURLHandler() : URLHandler() {}
     ~ContactUidURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const;
-    bool handleContextMenuRequest(const KUrl &url, const QPoint &p, ViewerPrivate *) const;
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const;
+    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const KUrl &url, const QPoint &p, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 };
 
 class HtmlAnchorHandler : public URLHandler
@@ -161,12 +161,12 @@ public:
     HtmlAnchorHandler() : URLHandler() {}
     ~HtmlAnchorHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const
+    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const
+    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return QString();
     }
@@ -178,12 +178,12 @@ public:
     AttachmentURLHandler() : URLHandler() {}
     ~AttachmentURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const;
-    bool handleShiftClick(const KUrl &, ViewerPrivate *window) const;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const;
-    bool handleDrag(const KUrl &url, ViewerPrivate *window) const;
-    bool willHandleDrag(const KUrl &url, ViewerPrivate *window) const;
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const;
+    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleShiftClick(const KUrl &, ViewerPrivate *window) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleDrag(const KUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
+    bool willHandleDrag(const KUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 private:
     KMime::Content *nodeForUrl(const KUrl &url, ViewerPrivate *w) const;
     bool attachmentIsInHeader(const KUrl &url) const;
@@ -195,9 +195,9 @@ public:
     ShowAuditLogURLHandler() : URLHandler() {}
     ~ShowAuditLogURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const;
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const;
+    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 };
 
 // Handler that prevents dragging of internal images added by KMail, such as the envelope image
@@ -209,17 +209,17 @@ public:
     {}
     ~InternalImageURLHandler()
     {}
-    bool handleDrag(const KUrl &url, ViewerPrivate *window) const;
-    bool willHandleDrag(const KUrl &url, ViewerPrivate *window) const;
-    bool handleClick(const KUrl &, ViewerPrivate *) const
+    bool handleDrag(const KUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
+    bool willHandleDrag(const KUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
+    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const
+    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const
+    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return QString();
     }
@@ -233,12 +233,12 @@ public:
     ~KRunURLHandler()
     {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const
+    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const
+    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return QString();
     }
@@ -258,9 +258,9 @@ public:
     BodyPartURLHandlerManager() : URLHandler() {}
     ~BodyPartURLHandlerManager();
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const;
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const;
+    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 
     void registerHandler(const Interface::BodyPartURLHandler *handler);
     void unregisterHandler(const Interface::BodyPartURLHandler *handler);

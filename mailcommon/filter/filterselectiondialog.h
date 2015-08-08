@@ -46,7 +46,7 @@ public:
 public Q_SLOTS:
     void slotUnselectAllButton();
     void slotSelectAllButton();
-    void reject();
+    void reject() Q_DECL_OVERRIDE;
 
 private:
     void writeConfig();

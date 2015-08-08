@@ -51,7 +51,7 @@ public:
     static FilterAction *newAction();
 
     bool isEmpty() const Q_DECL_OVERRIDE;
-    QString informationAboutNotValidAction() const;
+    QString informationAboutNotValidAction() const Q_DECL_OVERRIDE;
 
 private:
     QRegExp mRegExp;

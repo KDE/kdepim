@@ -30,7 +30,7 @@ public:
     explicit FilterPMail();
     ~FilterPMail();
 
-    void import();
+    void import() Q_DECL_OVERRIDE;
     void importMails(const QString &chosenDir);
 
 protected:

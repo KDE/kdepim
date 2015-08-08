@@ -34,7 +34,7 @@ public:
     explicit FilterTheBat();
     ~FilterTheBat();
 
-    void import();
+    void import() Q_DECL_OVERRIDE;
     void importMails(const QString &maildir);
 
 private:

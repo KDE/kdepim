@@ -39,7 +39,7 @@ public:
     bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate) Q_DECL_OVERRIDE;
     void setSieveCapabilities(const QStringList &capabilities);
 protected:
-    QMimeData *mimeData(const QList<QListWidgetItem *> items) const;
+    QMimeData *mimeData(const QList<QListWidgetItem *> items) const Q_DECL_OVERRIDE;
 private:
     QStringList mCapabilities;
     PimCommon::TemplateManager *mTemplateManager;

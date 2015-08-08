@@ -77,24 +77,24 @@ protected:
     virtual ~IconicAttachmentStrategy() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "iconic";
     }
-    const AttachmentStrategy *next() const
+    const AttachmentStrategy *next() const Q_DECL_OVERRIDE
     {
         return smart();
     }
-    const AttachmentStrategy *prev() const
+    const AttachmentStrategy *prev() const Q_DECL_OVERRIDE
     {
         return headerOnly();
     }
 
-    bool inlineNestedMessages() const
+    bool inlineNestedMessages() const Q_DECL_OVERRIDE
     {
         return false;
     }
-    Display defaultDisplay(KMime::Content *node) const
+    Display defaultDisplay(KMime::Content *node) const Q_DECL_OVERRIDE
     {
         if (node->contentType()->isText() &&
                 node->contentDisposition()->filename().trimmed().isEmpty() &&
@@ -122,24 +122,24 @@ protected:
     virtual ~SmartAttachmentStrategy() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "smart";
     }
-    const AttachmentStrategy *next() const
+    const AttachmentStrategy *next() const Q_DECL_OVERRIDE
     {
         return inlined();
     }
-    const AttachmentStrategy *prev() const
+    const AttachmentStrategy *prev() const Q_DECL_OVERRIDE
     {
         return iconic();
     }
 
-    bool inlineNestedMessages() const
+    bool inlineNestedMessages() const Q_DECL_OVERRIDE
     {
         return true;
     }
-    Display defaultDisplay(KMime::Content *node) const
+    Display defaultDisplay(KMime::Content *node) const Q_DECL_OVERRIDE
     {
         return smartDisplay(node);
     }
@@ -158,24 +158,24 @@ protected:
     virtual ~InlinedAttachmentStrategy() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "inlined";
     }
-    const AttachmentStrategy *next() const
+    const AttachmentStrategy *next() const Q_DECL_OVERRIDE
     {
         return hidden();
     }
-    const AttachmentStrategy *prev() const
+    const AttachmentStrategy *prev() const Q_DECL_OVERRIDE
     {
         return smart();
     }
 
-    bool inlineNestedMessages() const
+    bool inlineNestedMessages() const Q_DECL_OVERRIDE
     {
         return true;
     }
-    Display defaultDisplay(KMime::Content *) const
+    Display defaultDisplay(KMime::Content *) const Q_DECL_OVERRIDE
     {
         return Inline;
     }
@@ -194,24 +194,24 @@ protected:
     virtual ~HiddenAttachmentStrategy() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "hidden";
     }
-    const AttachmentStrategy *next() const
+    const AttachmentStrategy *next() const Q_DECL_OVERRIDE
     {
         return headerOnly();
     }
-    const AttachmentStrategy *prev() const
+    const AttachmentStrategy *prev() const Q_DECL_OVERRIDE
     {
         return inlined();
     }
 
-    bool inlineNestedMessages() const
+    bool inlineNestedMessages() const Q_DECL_OVERRIDE
     {
         return false;
     }
-    Display defaultDisplay(KMime::Content *node) const
+    Display defaultDisplay(KMime::Content *node) const Q_DECL_OVERRIDE
     {
         if (node->contentType()->isText() &&
                 node->contentDisposition()->filename().trimmed().isEmpty() &&
@@ -241,25 +241,25 @@ protected:
     virtual ~HeaderOnlyAttachmentStrategy() {}
 
 public:
-    const char *name() const
+    const char *name() const Q_DECL_OVERRIDE
     {
         return "headerOnly";
     }
-    const AttachmentStrategy *next() const
+    const AttachmentStrategy *next() const Q_DECL_OVERRIDE
     {
         return iconic();
     }
-    const AttachmentStrategy *prev() const
+    const AttachmentStrategy *prev() const Q_DECL_OVERRIDE
     {
         return hidden();
     }
 
-    bool inlineNestedMessages() const
+    bool inlineNestedMessages() const Q_DECL_OVERRIDE
     {
         return true;
     }
 
-    Display defaultDisplay(KMime::Content *node) const
+    Display defaultDisplay(KMime::Content *node) const Q_DECL_OVERRIDE
     {
         if (NodeHelper::isInEncapsulatedMessage(node)) {
             return smartDisplay(node);
