@@ -67,12 +67,13 @@ QString ArchiveDefinition::installPath()
 {
     const QMutexLocker locker(&installPathMutex);
     QString *const ip = _installPath();
-    if (ip->isEmpty())
+    if (ip->isEmpty()) {
         if (QCoreApplication::instance()) {
             *ip = QCoreApplication::applicationDirPath();
         } else {
             qCWarning(KLEOPATRA_LOG) << "called before QCoreApplication was constructed";
         }
+    }
     return *ip;
 }
 void ArchiveDefinition::setInstallPath(const QString &ip)

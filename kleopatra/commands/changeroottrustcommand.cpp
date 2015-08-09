@@ -276,12 +276,14 @@ QString change_trust_file(const QString &trustListFile, const QString &key, Key:
 
     {
         QFile in(trustListFile);
-        if (in.exists())   // non-existence is not fatal...
+        if (in.exists()) {  // non-existence is not fatal...
             if (in.open(QIODevice::ReadOnly)) {
                 trustListFileContents = in.readAll().split('\n');
-            } else // ...but failure to open an existing file _is_
+            } else { // ...but failure to open an existing file _is_
                 return i18n("Cannot open existing file \"%1\" for reading: %2",
                             trustListFile, in.errorString());
+            }
+        }
         // close, so KSaveFile doesn't clobber the original
     }
 
@@ -328,22 +330,24 @@ QString change_trust_file(const QString &trustListFile, const QString &key, Key:
             } else {
                 out.write(keyColon.toLatin1() + ' ' + flags + rests + '\n');
             }
-        else if (trust == Key::Never)
+        else if (trust == Key::Never) {
             if (disabled) { // unchanged
                 out.write(rawLine + '\n');
             } else {
                 out.write('!' + keyColon.toLatin1() + ' ' + flags + rests + '\n');
             }
+        }
         // else: trust == Key::Unknown
         // -> don't write - ie.erase
     }
 
-    if (!found)   // add
+    if (!found) {  // add
         if (trust == Key::Ultimate) {
             out.write(keyColon.toLatin1() + ' ' + 'S' + '\n');
         } else if (trust == Key::Never) {
             out.write('!' + keyColon.toLatin1() + ' ' + 'S' + '\n');
         }
+    }
 
     if (!out.commit())
         return i18n("Failed to move file %1 to its final destination, %2: %3",

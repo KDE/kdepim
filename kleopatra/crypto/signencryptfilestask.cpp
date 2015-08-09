@@ -247,12 +247,14 @@ static QString escape(QString s)
 static QString makeResultDetails(const SigningResult &result, const QString &inputError, const QString &outputError)
 {
     const Error err = result.error();
-    if (err.code() == GPG_ERR_EIO)
+    if (err.code() == GPG_ERR_EIO) {
         if (!inputError.isEmpty()) {
             return i18n("Input error: %1", escape(inputError));
         } else if (!outputError.isEmpty()) {
             return i18n("Output error: %1", escape(outputError));
         }
+    }
+
     if (err) {
         return QString::fromLocal8Bit(err.asString()).toHtmlEscaped();
     }
@@ -262,12 +264,14 @@ static QString makeResultDetails(const SigningResult &result, const QString &inp
 static QString makeResultDetails(const EncryptionResult &result, const QString &inputError, const QString &outputError)
 {
     const Error err = result.error();
-    if (err.code() == GPG_ERR_EIO)
+    if (err.code() == GPG_ERR_EIO) {
         if (!inputError.isEmpty()) {
             return i18n("Input error: %1", escape(inputError));
         } else if (!outputError.isEmpty()) {
             return i18n("Output error: %1", escape(outputError));
         }
+    }
+
     if (err) {
         return QString::fromLocal8Bit(err.asString()).toHtmlEscaped();
     }

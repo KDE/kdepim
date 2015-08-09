@@ -298,7 +298,7 @@ QString Formatting::toolTip(const Key &key, int flags)
     const Subkey subkey = key.subkey(0);
 
     QString result;
-    if (flags & Validity)
+    if (flags & Validity) {
         if (key.protocol() == OpenPGP || (key.keyListMode() & Validate))
             if (key.isRevoked()) {
                 result += make_red(i18n("This certificate has been revoked."));
@@ -312,6 +312,7 @@ QString Formatting::toolTip(const Key &key, int flags)
         else {
             result += i18n("The validity of this certificate cannot be checked at the moment.");
         }
+    }
     if (flags == Validity) {
         return result;
     }
@@ -354,19 +355,23 @@ QString Formatting::toolTip(const Key &key, int flags)
     if (flags & Fingerprint) {
         result += format_row(i18n("Fingerprint"), key.primaryFingerprint());
     }
-    if (flags & OwnerTrust)
+    if (flags & OwnerTrust) {
         if (key.protocol() == OpenPGP) {
             result += format_row(i18n("Ownertrust"), ownerTrustShort(key));
-        } else if (key.isRoot())
+        } else if (key.isRoot()) {
             result += format_row(i18n("Trusted issuer?"),
                                  key.userID(0).validity() == UserID::Ultimate ? i18n("Yes") :
                                  /* else */                                     i18n("No"));
-    if (flags & StorageLocation)
+        }
+    }
+
+    if (flags & StorageLocation) {
         if (const char *card = subkey.cardSerialNumber()) {
             result += format_row(i18n("Stored"), i18nc("stored...", "on SmartCard with serial no. %1", QString::fromUtf8(card)));
         } else {
             result += format_row(i18n("Stored"), i18nc("stored...", "on this computer"));
         }
+    }
     result += QLatin1String("</table>");
 
     return result;

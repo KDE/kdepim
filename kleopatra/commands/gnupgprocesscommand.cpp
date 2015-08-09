@@ -293,7 +293,7 @@ void GnuPGProcessCommand::doCancel()
 
 void GnuPGProcessCommand::Private::slotProcessFinished(int code, QProcess::ExitStatus status)
 {
-    if (!canceled)
+    if (!canceled) {
         if (status == QProcess::CrashExit) {
             error(q->crashExitMessage(arguments), q->errorCaption());
         } else if (ignoresSuccessOrFailure) {
@@ -313,6 +313,8 @@ void GnuPGProcessCommand::Private::slotProcessFinished(int code, QProcess::ExitS
                 information(successMessage, q->successCaption());
             }
         }
+    }
+
     if (dialog) {
         dialog->setComplete(true);
     }

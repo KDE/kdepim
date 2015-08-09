@@ -121,12 +121,13 @@ static std::string stripAngleBrackets(const std::string &str)
 static std::string email(const UserID &uid)
 {
 
-    if (uid.parent().protocol() == OpenPGP)
+    if (uid.parent().protocol() == OpenPGP) {
         if (const char *const email = uid.email()) {
             return stripAngleBrackets(email);
         } else {
             return std::string();
         }
+    }
 
     assert(uid.parent().protocol() == CMS);
 
