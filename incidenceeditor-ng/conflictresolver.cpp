@@ -32,13 +32,14 @@ using namespace IncidenceEditorNG;
 
 ConflictResolver::ConflictResolver(QWidget *parentWidget, QObject *parent)
     : QObject(parent),
-      mTimeframeConstraint(KCalCore::Period(KDateTime::currentLocalDateTime(),
-                                            KDateTime::currentLocalDateTime())),
       mFBModel(new KPIM::FreeBusyItemModel(this)),
       mParentWidget(parentWidget),
       mWeekdays(7),
       mSlotResolutionSeconds(DEFAULT_RESOLUTION_SECONDS)
 {
+
+    const KDateTime currentLocalDateTime = KDateTime::currentLocalDateTime();
+    mTimeframeConstraint = KCalCore::Period(currentLocalDateTime, currentLocalDateTime);
 
     // trigger a reload in case any attendees were inserted before
     // the connection was made
