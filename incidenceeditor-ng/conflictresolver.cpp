@@ -52,6 +52,8 @@ ConflictResolver::ConflictResolver(QWidget *parentWidget, QObject *parent)
     mWeekdays.setBit(4);
     mWeekdays.setBit(5);
     mWeekdays.setBit(6);   // Sunday
+
+    mMandatoryRoles.reserve(4);
     mMandatoryRoles << KCalCore::Attendee::ReqParticipant
                     << KCalCore::Attendee::OptParticipant
                     << KCalCore::Attendee::NonParticipant
