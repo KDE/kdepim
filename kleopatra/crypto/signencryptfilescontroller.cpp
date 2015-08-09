@@ -224,7 +224,7 @@ void SignEncryptFilesController::setOperationMode(unsigned int mode)
 {
     Private::assertValidOperation(mode);
     if (contains_dir(d->files)) {
-        mode = mode & ~ArchiveMask | ArchiveForced;
+        mode = (mode & ~ArchiveMask) | ArchiveForced;
     }
     d->operation = mode;
     d->updateWizardMode();
