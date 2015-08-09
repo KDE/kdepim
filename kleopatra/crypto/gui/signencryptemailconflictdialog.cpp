@@ -350,8 +350,8 @@ public:
 
     bool wasInitiallyAmbiguous(Protocol proto) const
     {
-        return proto == OpenPGP && pgpAmbiguous
-               || proto == CMS     && cmsAmbiguous ;
+        return    (proto == OpenPGP && pgpAmbiguous)
+               || (proto == CMS     && cmsAmbiguous);
     }
 
     bool isStillAmbiguous(Protocol proto) const

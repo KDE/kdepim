@@ -622,8 +622,8 @@ private:
                 return;    // quit
             }
 
-            if (nullSlot && command == updateTransaction.command ||
-                    nullSlot && command == checkTransaction.command) {
+            if ((nullSlot && command == updateTransaction.command) ||
+                    (nullSlot && command == checkTransaction.command)) {
 
                 if (nullSlot && command == checkTransaction.command && !check_event_counter_changed(gpgAgent, eventCounter)) {
                     continue;    // early out

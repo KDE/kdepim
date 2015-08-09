@@ -184,10 +184,10 @@ static bool has_partial_match(bool sign, bool encrypt, Protocol proto, const std
 
 static bool has_perfect_overall_match(bool sign, bool encrypt, const std::vector<Sender> &senders, const std::vector<Recipient> &recipients, Protocol presetProtocol)
 {
-    return presetProtocol == OpenPGP   &&   has_perfect_match(sign, encrypt, OpenPGP, senders, recipients)
-           || presetProtocol == CMS       &&   has_perfect_match(sign, encrypt, CMS,     senders, recipients)
-           || has_perfect_match(sign, encrypt, OpenPGP, senders, recipients)   &&   !has_partial_match(sign, encrypt, CMS,     senders, recipients)
-           || has_perfect_match(sign, encrypt, CMS,     senders, recipients)   &&   !has_partial_match(sign, encrypt, OpenPGP, senders, recipients) ;
+    return (presetProtocol == OpenPGP   &&   has_perfect_match(sign, encrypt, OpenPGP, senders, recipients))
+           || (presetProtocol == CMS    &&   has_perfect_match(sign, encrypt, CMS,     senders, recipients))
+           || (has_perfect_match(sign, encrypt, OpenPGP, senders, recipients)   &&   !has_partial_match(sign, encrypt, CMS,     senders, recipients))
+           || (has_perfect_match(sign, encrypt, CMS,     senders, recipients)   &&   !has_partial_match(sign, encrypt, OpenPGP, senders, recipients));
 }
 
 static bool has_conflict(bool sign, bool encrypt, const std::vector<Sender> &senders, const std::vector<Recipient> &recipients, Protocol presetProtocol)

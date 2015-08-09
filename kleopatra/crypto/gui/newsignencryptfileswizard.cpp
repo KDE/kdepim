@@ -587,8 +587,8 @@ public:
 
     bool isComplete() const Q_DECL_OVERRIDE
     {
-        return (!isArchiveRequested() || !archiveName(OpenPGP).isEmpty() && !archiveName(CMS).isEmpty())       // ### make more permissive
-               && (isSigningSelected() || isEncryptionSelected()) ;
+        return (!isArchiveRequested() || (!archiveName(OpenPGP).isEmpty() && !archiveName(CMS).isEmpty()))       // ### make more permissive
+               && (isSigningSelected() || isEncryptionSelected());
     }
 
     bool validatePage() Q_DECL_OVERRIDE
@@ -1085,8 +1085,8 @@ private:
             if (signingPreset && !encryptionPreset && !encryptionUserMutable) {
                 return SignerPageId;
             }
-            if (encryptionPreset && !signingPreset && !signingUserMutable ||
-                    signingPreset && !signingUserMutable && encryptionPreset && !encryptionUserMutable) {
+            if ((encryptionPreset && !signingPreset && !signingUserMutable) ||
+                    (signingPreset && !signingUserMutable && encryptionPreset && !encryptionUserMutable)) {
                 return RecipientsPageId;
             }
         }
