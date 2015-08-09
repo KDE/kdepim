@@ -393,7 +393,6 @@ void IncidenceTreeModel::Private::insertNode(const PreNode::Ptr &prenode, bool s
         QList<Node::Ptr> childs = m_waitingForParent.values(node->uid);
         m_waitingForParent.remove(node->uid);
         Q_ASSERT(!childs.isEmpty());
-        const QModelIndex fromParent = QModelIndex();
 
         foreach (const Node::Ptr &child, childs) {
             const int fromRow = m_toplevelNodeList.indexOf(child);

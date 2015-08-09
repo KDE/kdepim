@@ -973,7 +973,6 @@ void CalPrintPluginBase::drawAgendaDayBox(QPainter &p, const KCalCore::Event::Li
 
     QList<CellItem *> cells;
 
-    Akonadi::Item::List::ConstIterator itEvents;
     foreach (const KCalCore::Event::Ptr &event, events) {
         if (event->allDay()) {
             continue;
