@@ -213,17 +213,17 @@ protected:
         doEmitResult(r);
         this->deleteLater();
     }
-    void slotCancel()
+    void slotCancel() Q_DECL_OVERRIDE
     {
         if (m_ctx) {
             m_ctx->cancelPendingOperation();
         }
     }
-    QString auditLogAsHtml() const
+    QString auditLogAsHtml() const Q_DECL_OVERRIDE
     {
         return m_auditLog;
     }
-    GpgME::Error auditLogError() const
+    GpgME::Error auditLogError() const Q_DECL_OVERRIDE
     {
         return m_auditLogError;
     }
