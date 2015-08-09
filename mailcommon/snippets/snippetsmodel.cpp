@@ -416,7 +416,7 @@ bool SnippetsModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         QByteArray encodedData = data->data(QStringLiteral("text/x-kmail-textsnippet"));
         QDataStream stream(&encodedData, QIODevice::ReadOnly);
 
-        qint64 id;
+        quintptr id;
         QString name;
         QString text;
         QString keySequence;

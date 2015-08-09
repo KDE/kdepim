@@ -402,7 +402,7 @@ static Task::Result::VisualCode codeForVerificationResult(const VerificationResu
         return Task::Result::Danger;
     }
 
-    if (std::count_if(sigs.begin(), sigs.end(), IsGoodOrValid) == sigs.size()) {
+    if ((size_t)std::count_if(sigs.begin(), sigs.end(), IsGoodOrValid) == sigs.size()) {
         return Task::Result::AllGood;
     }
 
