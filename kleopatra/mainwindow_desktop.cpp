@@ -97,12 +97,6 @@
 #include <vector>
 #include <KSharedConfig>
 
-#ifdef Q_OS_WIN32
-static const bool OS_WIN = true;
-#else
-static const bool OS_WIN = false;
-#endif
-
 using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace boost;

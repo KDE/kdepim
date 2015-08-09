@@ -27,8 +27,6 @@
 static const int gOptionSetInitialMarker = 0xcafe; // don't change
 static const int gOptionSetFinalMarker = 0xbabe; // don't change
 
-static const int gOptionSetCurrentVersion = 0x1001; // increase if you add new fields of change the meaning of some
-
 static const int gOptionSetWithReadOnLyModeVersion = 0x1002;
 
 using namespace MessageList::Core;

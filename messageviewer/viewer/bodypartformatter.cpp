@@ -147,7 +147,7 @@ struct SubtypeBuiltin {
     const char *subtype;
     BodyPartFormatterCreator create;
 };
-
+/*
 static const SubtypeBuiltin applicationSubtypeBuiltins[] = {
     { "octet-stream", &ApplicationOctetStreamBodyPartFormatter::create },
     { "pkcs7-mime", &ApplicationPkcs7MimeBodyPartFormatter::create },
@@ -210,6 +210,7 @@ static const struct {
 };
 
 #undef DIM
+*/
 
 static const BodyPartFormatter *createForText(const char *subtype)
 {

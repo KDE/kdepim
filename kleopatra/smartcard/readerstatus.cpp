@@ -78,7 +78,6 @@ using namespace Kleo::SmartCard;
 using namespace GpgME;
 using namespace boost;
 
-static const unsigned int RETRY_WAIT = 2; // seconds
 static const unsigned int CHECK_INTERVAL = 2000; // msecs
 
 static ReaderStatus *self = 0;

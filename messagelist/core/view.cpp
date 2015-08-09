@@ -740,10 +740,6 @@ void View::showEvent(QShowEvent *e)
     }
 }
 
-const int gHeaderContextMenuAdjustColumnSizesId = -1;
-const int gHeaderContextMenuShowDefaultColumnsId = -2;
-const int gHeaderContextMenuDisplayToolTipsId = -3;
-
 void View::slotHeaderContextMenuRequested(const QPoint &pnt)
 {
     if (!d->mTheme) {

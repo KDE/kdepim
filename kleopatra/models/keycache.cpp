@@ -572,8 +572,6 @@ std::vector<Key> KeyCache::findSubjects(std::vector<Key>::const_iterator first, 
     return result;
 }
 
-static const unsigned int LIKELY_CHAIN_DEPTH = 3;
-
 std::vector<Key> KeyCache::findIssuers(const Key &key, Options options) const
 {
 

@@ -148,9 +148,11 @@ static const char s_maxitems_componentName[] = "dirmngr";
 static const char s_maxitems_groupName[] = "LDAP";
 static const char s_maxitems_entryName[] = "max-replies";
 
+#ifdef NOT_USEFUL_CURRENTLY
 static const char s_addnewservers_componentName[] = "dirmngr";
 static const char s_addnewservers_groupName[] = "LDAP";
 static const char s_addnewservers_entryName[] = "add-servers";
+#endif
 
 DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)

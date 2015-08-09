@@ -61,8 +61,6 @@ using namespace Kleo::Dialogs;
 using namespace GpgME;
 using namespace boost;
 
-static const char option_prefix[] = "prefix";
-
 class SelectCertificateCommand::Private
 {
     friend class ::Kleo::SelectCertificateCommand;
