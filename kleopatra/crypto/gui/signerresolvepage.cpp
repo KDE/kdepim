@@ -455,7 +455,7 @@ void SignerResolvePage::Private::updateModeSelectionWidgets()
     signAndEncryptRB->setChecked(signingSelected && encryptionSelected);
     signOnlyRB->setChecked(signingSelected && !encryptionSelected);
     encryptOnlyRB->setChecked(encryptionSelected && !signingSelected);
-    const bool canSignAndEncrypt = !noSigningPossible && !noEncryptionPossible; bothMutable  &&presetProtocols != std::vector<Protocol>(1, CMS);
+    const bool canSignAndEncrypt = !noSigningPossible && !noEncryptionPossible && bothMutable && presetProtocols != std::vector<Protocol>(1, CMS);
     const bool canSignOnly = !encryptionSelected || encryptionMutable;
     const bool canEncryptOnly = !signingSelected || signingMutable;
 
