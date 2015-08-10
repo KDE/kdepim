@@ -53,15 +53,17 @@ public:
 
     AutoconfigKolabMail *execIspdb(const QString &file)
     {
-        QDir dir(QStringLiteral(AUTOCONFIG_DATA_DIR));
-        QString furl = QStringLiteral("file://%1/%2");
+        const QString filePath = QStringLiteral(AUTOCONFIG_DATA_DIR) + QLatin1Char('/') + file;
+        [](const QString &file) {
+            QVERIFY(QFile(file).exists());
+        }(filePath);
 
         QEventLoop loop;
         TAutoconfMail *ispdb = getAutoconf();
 
         connect(ispdb, &AutoconfigKolabMail::finished, &loop, &QEventLoop::quit);
 
-        QUrl url(furl.arg(dir.path()).arg(file));
+        const QUrl url = QUrl::fromLocalFile(filePath);
         ispdb->setEmail(QStringLiteral("john.doe@example.com"));
         ispdb->expectedUrls.append(url);
         ispdb->startJob(url);
@@ -97,8 +99,8 @@ private Q_SLOTS:
 
     void testLogin()
     {
-        QDir dir(QStringLiteral(AUTOCONFIG_DATA_DIR));
-        QString furl = QStringLiteral("file://%1/autoconfig.xml");
+        const QString filePath = QStringLiteral(AUTOCONFIG_DATA_DIR) + QStringLiteral("/autoconfig.xml");
+        QVERIFY(QFile(filePath).exists());
 
         QEventLoop loop;
         TAutoconfMail *ispdb = getAutoconf();
@@ -121,9 +123,10 @@ private Q_SLOTS:
         ispdb->replace[expected0] = QStringLiteral("http://localhost:8000/500");
         ispdb->replace[expected1] = QStringLiteral("http://localhost:8000/401");
         ispdb->replace[expected2] = QStringLiteral("http://localhost:8000/500");
-        ispdb->replace[expected3] = furl.arg(dir.path());
+        ispdb->replace[expected3] = QUrl::fromLocalFile(filePath);
         ispdb->start();
         loop.exec();
+
         QCOMPARE(ispdb->expectedUrls.count(), 0);
     }
 
@@ -134,9 +137,9 @@ private Q_SLOTS:
 
     void initTestCase()
     {
-        QDir dir(QStringLiteral(CURRENT_SOURCE_DIR));
-        QString furl = QStringLiteral("%1/errorserver.py");
-        process.start(QStringLiteral("python"), QStringList() << furl.arg(dir.path()));
+        const QString filePath = QStringLiteral(CURRENT_SOURCE_DIR "/errorserver.py");
+        QVERIFY(QFile(filePath).exists());
+        process.start(QStringLiteral("python"), QStringList() << filePath);
         process.waitForStarted();
         QCOMPARE(process.state(), QProcess::Running);
     }
