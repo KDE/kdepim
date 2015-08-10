@@ -117,6 +117,14 @@ String very_simplistic_diff(const String &a, const String &b)
 
 QTEST_MAIN(MessageFactoryTest)
 
+void MessageFactoryTest::initTestCase()
+{
+    // Force fake XDG dirs and KDEHOME so that KIdentityManagement does not
+    // read actual user data when running tests locally
+    QStandardPaths::setTestModeEnabled(true);
+    qputenv("KDEHOME", "~/.qttest/kde");
+}
+
 void MessageFactoryTest::testCreateReply()
 {
     KMime::Message::Ptr msg = createPlainTestMessage();
@@ -126,14 +134,14 @@ void MessageFactoryTest::testCreateReply()
     factory.setIdentityManager(identMan);
 
     MessageFactory::MessageReply reply =  factory.createReply();
-    QVERIFY(reply.replyAll = true);
+    reply.replyAll = true;
     qDebug() << reply.msg->body();
 
     QDateTime date = msg->date()->dateTime();
     QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
     datetime += QLatin1String(" ") + KLocale::global()->formatTime(date.time(), true);
     QString replyStr = QString::fromLatin1(QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n\n")));
-    QVERIFY(reply.msg->subject()->asUnicodeString() == QLatin1String("Re: Test Email Subject"));
+    QCOMPARE(reply.msg->subject()->asUnicodeString(), QLatin1String("Re: Test Email Subject"));
     QCOMPARE_OR_DIFF(reply.msg->body(), replyStr.toLatin1());
 
 }
@@ -149,7 +157,7 @@ void MessageFactoryTest::testCreateReplyHtml()
     factory.setIdentityManager(identMan);
 
     MessageFactory::MessageReply reply =  factory.createReply();
-    QVERIFY(reply.replyAll = true);
+    reply.replyAll = true;
     qDebug() << "html reply" << reply.msg->encodedContent();
 
     QDateTime date = msg->date()->dateTime();
@@ -157,8 +165,8 @@ void MessageFactoryTest::testCreateReplyHtml()
     datetime += QLatin1String(" ") + KLocale::global()->formatTime(date.time(), true);
     QString replyStr = QString::fromLatin1(QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> encoded?\n")));
     QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
-    QVERIFY(reply.msg->contentType()->mimeType() == "multipart/alternative");
-    QVERIFY(reply.msg->subject()->asUnicodeString() == QLatin1String("Re: reply to please"));
+    QCOMPARE(reply.msg->contentType()->mimeType(), QStringLiteral("multipart/alternative"));
+    QCOMPARE(reply.msg->subject()->asUnicodeString(), QLatin1String("Re: reply to please"));
     QCOMPARE_OR_DIFF(reply.msg->contents().at(0)->body(), replyStr.toLatin1());
 
 }
@@ -174,7 +182,7 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
     factory.setIdentityManager(identMan);
 
     MessageFactory::MessageReply reply =  factory.createReply();
-    QVERIFY(reply.replyAll = true);
+    reply.replyAll = true;
 //   qDebug() << "html reply" << reply.msg->encodedContent();
 
     QDateTime date = msg->date()->dateTime();
@@ -182,8 +190,8 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
     datetime += QLatin1String(" ") + KLocale::global()->formatTime(date.time(), true);
     QString replyStr = QString::fromLatin1(QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> quote me please.\n")));
     QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
-    QVERIFY(reply.msg->contentType()->mimeType() == "multipart/alternative");
-    QVERIFY(reply.msg->subject()->asUnicodeString() == QLatin1String("Re: asking for reply"));
+    QCOMPARE(reply.msg->contentType()->mimeType(), QStringLiteral("multipart/alternative"));
+    QCOMPARE(reply.msg->subject()->asUnicodeString(), QLatin1String("Re: asking for reply"));
     QCOMPARE_OR_DIFF(reply.msg->contents().at(0)->body(), replyStr.toLatin1());
 
 }
@@ -213,11 +221,10 @@ void MessageFactoryTest::testCreateForward()
                          "User-Agent: %3\n"
                          "X-KMail-Transport: 0\n"
                          "MIME-Version: 1.0\n"
-                         "Content-Type: text/plain; charset=\"ISO-8859-1\"\n"
+                         "Content-Type: text/plain; charset=\"US-ASCII\"\n"
                          "Content-Transfer-Encoding: 8Bit\n"
                          "X-KMail-Link-Message: 0\n"
                          "X-KMail-Link-Type: forward\n"
-                         "\n"
                          "\n"
                          "----------  Forwarded Message  ----------\n"
                          "\n"
@@ -467,10 +474,10 @@ void MessageFactoryTest::test_multipartAlternative()
     factory.setTemplate(str);
 
     MessageFactory::MessageReply reply =  factory.createReply();
-    QVERIFY(reply.replyAll = true);
+    reply.replyAll = true;
     QSKIP("This tests has been failing for a long time, please someone fix it", SkipSingle);
-    QVERIFY(reply.msg->contentType()->mimeType() == "multipart/alternative");
-    QVERIFY(reply.msg->subject()->asUnicodeString() == QLatin1String("Re: Plain Message Test"));
+    QCOMPARE(reply.msg->contentType()->mimeType(), QStringLiteral("multipart/alternative"));
+    QCOMPARE(reply.msg->subject()->asUnicodeString(), QLatin1String("Re: Plain Message Test"));
     QCOMPARE(reply.msg->contents().at(contentAt)->encodedBody().data(), expected.toLatin1().data());
 }
 
