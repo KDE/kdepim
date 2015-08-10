@@ -6,14 +6,14 @@ add_definitions(-DMAIL_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo
 )
-#include ( ${CMAKE_SOURCE_DIR}/cmake/modules/kde4_handle_crypto_rpath_for_executable.cmake )
+
+include ( ${CMAKE_SOURCE_DIR}/cmake/modules/kdepim_add_gpg_crypto_test.cmake )
 
 # convenience macro to add qtest unit tests
 macro(add_templateparser_unittest _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   add_executable( ${_name} ${_test} )
-  add_test( ${_name} ${_name} )
   ecm_mark_as_test(templateparser-${_name})
   target_link_libraries(${_name}
     kleo
@@ -27,9 +27,9 @@ macro(add_templateparser_unittest _source)
     KF5::AkonadiCore
     KF5::IdentityManagement
   )
+  add_gpg_crypto_test(${_name} templateparser-${_name})
 endmacro()
 
 add_templateparser_unittest(templateparsertest.cpp)
 add_templateparser_unittest(customtemplatesmenutest.cpp)
-#kde4_handle_crypto_rpath_for_executable( templateparsertest )
 
