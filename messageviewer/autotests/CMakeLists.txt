@@ -7,7 +7,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/messageviewer/
   ${Boost_INCLUDE_DIRS}
 )
-include ( ${CMAKE_SOURCE_DIR}/cmake/modules/kde4_handle_crypto_rpath_for_executable.cmake )
+include ( ${CMAKE_SOURCE_DIR}/cmake/modules/kdepim_add_gpg_crypto_test.cmake )
 
 
 add_definitions(-DKMAIL_UNITTESTS=YES)
@@ -33,13 +33,31 @@ macro(add_messageviewer_unittest _source)
   )
 endmacro ()
 
+macro(add_messageviewer_crypto_unittest _source)
+  set(_test ${_source} util.cpp)
+  get_filename_component(_name ${_source} NAME_WE)
+  add_executable( ${_name} ${_test} ${CMAKE_SOURCE_DIR}/messagecore/messagecore_debug.cpp ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp  testcsshelper.cpp )
+  ecm_mark_as_test(messageviewer-${_name})
+  target_link_libraries( ${_name}
+    messageviewer
+    kleo
+    KF5::QGpgme
+    Qt5::Test
+    Qt5::WebKitWidgets
+    KF5::KIOCore
+    KF5::Mime
+    KF5::AkonadiCore
+    KF5::AkonadiNotes
+    KF5::CalendarCore
+  )
+  add_gpg_crypto_test(${_name} messageviewer-${_name})
+endmacro ()
+
+
 add_messageviewer_unittest( htmlquotecolorertest.cpp )
-add_messageviewer_unittest( objecttreeparsertest.cpp )
-kde4_handle_crypto_rpath_for_executable( objecttreeparsertest )
-add_messageviewer_unittest( rendertest.cpp )
-kde4_handle_crypto_rpath_for_executable( rendertest )
-add_messageviewer_unittest( unencryptedmessagetest.cpp )
-kde4_handle_crypto_rpath_for_executable( unencryptedmessagetest )
+add_messageviewer_crypto_unittest( objecttreeparsertest.cpp )
+add_messageviewer_crypto_unittest( rendertest.cpp )
+add_messageviewer_crypto_unittest( unencryptedmessagetest.cpp )
 add_messageviewer_unittest( todoedittest.cpp )
 add_messageviewer_unittest( eventedittest.cpp )
 add_messageviewer_unittest( noteedittest.cpp )

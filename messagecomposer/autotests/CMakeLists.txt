@@ -9,7 +9,7 @@ include_directories (
     ${CMAKE_SOURCE_DIR}/messagecomposer
     ${CMAKE_SOURCE_DIR}/templateparser
 )
-include ( ${CMAKE_SOURCE_DIR}/cmake/modules/kde4_handle_crypto_rpath_for_executable.cmake )
+include ( ${CMAKE_SOURCE_DIR}/cmake/modules/kdepim_add_gpg_crypto_test.cmake )
 
 # Convenience macro to add messagecomposer unit tests.
 macro( add_messagecomposer_test _source )
@@ -27,10 +27,8 @@ macro( add_messagecomposer_cryptotest _source )
   set( _test cryptofunctions.cpp  ${CMAKE_SOURCE_DIR}/messagecore/messagecore_debug.cpp ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp ${_source} )
   get_filename_component( _name ${_source} NAME_WE )
   add_executable( ${_name} ${_test} )
-  add_test( ${_name} ${_name} )
   ecm_mark_as_test(messagecomposer-${_name})
-  #kde4_handle_crypto_rpath_for_executable( ${_name} )
-  target_link_libraries( 
+  target_link_libraries(
       ${_name}
       KF5::Mime
       messagecomposer
@@ -42,6 +40,7 @@ macro( add_messagecomposer_cryptotest _source )
       Qt5::Test
       KF5::QGpgme
       )
+  add_gpg_crypto_test(${_name} messagecomposer-${_name})
 endmacro()
 
 

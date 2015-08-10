@@ -7,8 +7,6 @@ include_directories(
   ${CMAKE_BINARY_DIR}/messageviewer/
   ${Boost_INCLUDE_DIRS}
 )
-include ( ${CMAKE_SOURCE_DIR}/cmake/modules/kde4_handle_crypto_rpath_for_executable.cmake )
-
 
 add_definitions(-DKMAIL_UNITTESTS=YES)
 
