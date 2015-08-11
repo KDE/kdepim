@@ -556,7 +556,8 @@ KMime::Message::Ptr MessageFactory::createRedirect(const QString &toStr, const Q
     msg->setHeader(header);
 
     if (msg->to(false)) {
-        KMime::Headers::To *headerT = new KMime::Headers::To(msg.data(), m_origMsg->to()->asUnicodeString(), "utf-8");
+        KMime::Headers::To *headerT = new KMime::Headers::To(msg.data());
+        headerT->fromUnicodeString(m_origMsg->to()->asUnicodeString(), "utf-8");
         msg->setHeader(headerT);
     }
 
@@ -710,7 +711,8 @@ KMime::Message::Ptr MessageFactory::createMDN(KMime::MDN::ActionMode a,
     receipt->to()->fromUnicodeString(receiptTo, "utf-8");
     //Laurent: We don't translate subject ?
     receipt->subject()->from7BitString("Message Disposition Notification");
-    KMime::Headers::InReplyTo *header = new KMime::Headers::InReplyTo(receipt.data(), m_origMsg->messageID()->asUnicodeString(), "utf-8");
+    KMime::Headers::InReplyTo *header = new KMime::Headers::InReplyTo(receipt.data());
+    header->fromUnicodeString(m_origMsg->messageID()->asUnicodeString(), "utf-8");
     receipt->setHeader(header);
 
     receipt->references()->from7BitString(getRefStr(m_origMsg));

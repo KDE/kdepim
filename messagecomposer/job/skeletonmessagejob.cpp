@@ -195,13 +195,15 @@ void SkeletonMessageJobPrivate::doStart()
 
     // In-Reply-To
     if (!infoPart->inReplyTo().isEmpty()) {
-        KMime::Headers::InReplyTo *header = new KMime::Headers::InReplyTo(message, infoPart->inReplyTo(), "utf-8");
+        KMime::Headers::InReplyTo *header = new KMime::Headers::InReplyTo(message);
+        header->fromUnicodeString(infoPart->inReplyTo(), "utf-8");
         message->setHeader(header);
     }
 
     // References
     if (!infoPart->references().isEmpty()) {
-        KMime::Headers::References *header = new KMime::Headers::References(message, infoPart->references(), "utf-8");
+        KMime::Headers::References *header = new KMime::Headers::References(message);
+        header->fromUnicodeString(infoPart->references(), "utf-8");
         message->setHeader(header);
     }
 
