@@ -131,7 +131,7 @@ void SignJobTest::testRecommentationRFC3156()
 {
     std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-    QString data = QString::fromUtf8("=2D Magic foo\nFrom test\n\n-- quaak\nOhno");
+    QString data = QStringLiteral("=2D Magic foo\nFrom test\n\n-- quaak\nOhno");
     KMime::Headers::contentEncoding cte = KMime::Headers::CEquPr;
 
     MessageComposer::Composer *composer = new MessageComposer::Composer;
@@ -155,7 +155,7 @@ void SignJobTest::testRecommentationRFC3156()
 
     QByteArray body = MessageCore::NodeHelper::firstChild(result)->body();
     QCOMPARE(QString::fromUtf8(body),
-             QString::fromUtf8("=3D2D Magic foo\nFrom=20test\n\n=2D- quaak\nOhno"));
+             QStringLiteral("=3D2D Magic foo\nFrom=20test\n\n=2D- quaak\nOhno"));
 
     ComposerTestUtil::verify(true, false, result, data.toUtf8(),
                              Kleo::OpenPGPMIMEFormat, cte);

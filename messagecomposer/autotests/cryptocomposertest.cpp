@@ -513,7 +513,7 @@ void CryptoComposerTest::testCTEquPr_data()
     QTest::newRow("CTEquPr:Encrypt") << data << false << true << Headers::CE7Bit;
     QTest::newRow("CTEquPr:SignEncrypt") << data << true << true << Headers::CE7Bit;
 
-    data = QString::fromUtf8("All happy families are alike;\n\n\n\neach unhappy family is unhappy in its own way.\n--\n hallloasdfasdfsadfsdf asdf sadfasdf sdf sdf sdf sadfasdf sdaf daf sdf asdf sadf asdf asdf [ä]");
+    data = QStringLiteral("All happy families are alike;\n\n\n\neach unhappy family is unhappy in its own way.\n--\n hallloasdfasdfsadfsdf asdf sadfasdf sdf sdf sdf sadfasdf sdaf daf sdf asdf sadf asdf asdf [ä]");
     QTest::newRow("CTEquPr:Sign:Newline") << data << true << false << Headers::CEquPr;
     QTest::newRow("CTEquPr:Encrypt:Newline") << data << false << true << Headers::CE7Bit;
     QTest::newRow("CTEquPr:SignEncrypt:Newline") << data << true << true << Headers::CE7Bit;
@@ -534,7 +534,7 @@ void CryptoComposerTest::testCTEbase64_data()
     QTest::addColumn<bool>("encrypt");
     QTest::addColumn<Headers::contentEncoding>("cte");
 
-    QString data(QString::fromUtf8("[ääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää]"));
+    QString data(QStringLiteral("[ääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää]"));
     QTest::newRow("CTEbase64:Sign") << data << true << false << Headers::CEbase64;
     QTest::newRow("CTEbase64:Encrypt") << data << false << true << Headers::CE7Bit;
     QTest::newRow("CTEbase64:SignEncrypt") << data << true << true << Headers::CE7Bit;

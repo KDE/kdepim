@@ -166,13 +166,13 @@ QString CustomLogWidget::toHtml() const
         LogType type = static_cast<LogType>(itemWidget->data(CustomLogWidget::ItemLogType).toInt());
         switch (type) {
         case Title:
-            logText = QString::fromUtf8("<font color=%1>%2</font>").arg(QColor(Qt::black).name()).arg(itemText);
+            logText = QStringLiteral("<font color=%1>%2</font>").arg(QColor(Qt::black).name()).arg(itemText);
             break;
         case Error:
-            logText = QString::fromUtf8("<font color=%1>%2</font>").arg(QColor(Qt::red).name()).arg(itemText);
+            logText = QStringLiteral("<font color=%1>%2</font>").arg(QColor(Qt::red).name()).arg(itemText);
             break;
         case Info:
-            logText = QString::fromUtf8("<font color=%1>%2</font>").arg(QColor(Qt::green).name()).arg(itemText);
+            logText = QStringLiteral("<font color=%1>%2</font>").arg(QColor(Qt::green).name()).arg(itemText);
             break;
         case EndLine:
             logText = QLatin1String("<br/>");

@@ -54,7 +54,7 @@ void SinglepartJobTest::testContentDisposition()
     SinglepartJob *cjob = new SinglepartJob(composer);
     QByteArray data("birds came flying from the underground");
     cjob->setData(data);
-    QString filename = QString::fromUtf8("test_ăîşţâ.txt");
+    QString filename = QStringLiteral("test_ăîşţâ.txt");
     cjob->contentDisposition()->setDisposition(Headers::CDattachment);
     cjob->contentDisposition()->setFilename(filename);
     QVERIFY(cjob->exec());

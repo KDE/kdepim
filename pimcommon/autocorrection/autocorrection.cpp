@@ -732,11 +732,11 @@ bool AutoCorrection::autoFractions()
     }
 
     if (trimmed.startsWith(QStringLiteral("1/2"))) {
-        mWord.replace(0, 3, QString::fromUtf8("½"));
+        mWord.replace(0, 3, QStringLiteral("½"));
     } else if (trimmed.startsWith(QStringLiteral("1/4"))) {
-        mWord.replace(0, 3, QString::fromUtf8("¼"));
+        mWord.replace(0, 3, QStringLiteral("¼"));
     } else if (trimmed.startsWith(QStringLiteral("3/4"))) {
-        mWord.replace(0, 3, QString::fromUtf8("¾"));
+        mWord.replace(0, 3, QStringLiteral("¾"));
     } else {
         return false;
     }

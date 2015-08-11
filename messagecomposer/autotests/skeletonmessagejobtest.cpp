@@ -37,7 +37,7 @@ void SkeletonMessageJobTest::testSubject_data()
     QTest::addColumn<QString>("subject");
 
     QTest::newRow("simple subject") << QStringLiteral("Antaa virrata sateen...");
-    QTest::newRow("non-ascii subject") << QString::fromUtf8("Muzicologă în bej, vând whisky și tequila, preț fix.");
+    QTest::newRow("non-ascii subject") << QStringLiteral("Muzicologă în bej, vând whisky și tequila, preț fix.");
     // NOTE: This works fine, but shows ??s in the debug output.  Why?
 }
 
@@ -114,15 +114,15 @@ void SkeletonMessageJobTest::testAddresses_data()
     }
 
     {
-        QString from = QString::fromUtf8("Şîşkin <one@example.com>");
+        QString from = QStringLiteral("Şîşkin <one@example.com>");
         QStringList to;
-        to << QString::fromUtf8("Ivan Turbincă <two@example.com>");
+        to << QStringLiteral("Ivan Turbincă <two@example.com>");
         to << QStringLiteral("two.two@example.com");
         QStringList cc;
-        cc << QString::fromUtf8("Luceafărul <three@example.com>");
+        cc << QStringLiteral("Luceafărul <three@example.com>");
         cc << QStringLiteral("three.three@example.com");
         QStringList bcc;
-        bcc << QString::fromUtf8("Zburătorul <four@example.com>");
+        bcc << QStringLiteral("Zburătorul <four@example.com>");
         bcc << QStringLiteral("four.four@example.com");
         QString replyto = QStringLiteral("Şîşzbură <five@example.com>");
 

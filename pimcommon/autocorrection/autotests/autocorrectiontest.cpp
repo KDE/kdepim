@@ -314,7 +314,7 @@ void AutoCorrectionTest::shouldReplaceAutoFraction()
     int position = text.length();
     autocorrection.autocorrect(false, doc, position);
 
-    QCOMPARE(doc.toPlainText(), QString::fromUtf8("½"));
+    QCOMPARE(doc.toPlainText(), QStringLiteral("½"));
 
     QString suffix = QStringLiteral(" after");
     text = QStringLiteral("1/2");
@@ -322,7 +322,7 @@ void AutoCorrectionTest::shouldReplaceAutoFraction()
     text += suffix;
     doc.setPlainText(text);
     autocorrection.autocorrect(false, doc, position);
-    QCOMPARE(doc.toPlainText(), QString(QString::fromUtf8("½") + suffix));
+    QCOMPARE(doc.toPlainText(), QString(QStringLiteral("½") + suffix));
     QCOMPARE(position, 1);
 
 }

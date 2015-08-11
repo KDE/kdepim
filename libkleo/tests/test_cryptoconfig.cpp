@@ -287,7 +287,7 @@ int main(int argc, char **argv)
             cout << "Log-file initially: " << val.toLocal8Bit().constData() << endl;
 
             // Test setting the option, sync'ing, then querying again
-            entry->setStringValue(QString::fromUtf8("/tmp/test:%e5ä"));
+            entry->setStringValue(QStringLiteral("/tmp/test:%e5ä"));
             assert(entry->isDirty());
             config->sync(true);
 
@@ -302,7 +302,7 @@ int main(int argc, char **argv)
             assert(entry);
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path);
             cout << "Log-file now: " << entry->stringValue().toLocal8Bit().constData() << endl;
-            assert(entry->stringValue() == QString::fromUtf8("/tmp/test:%e5ä"));     // (or even with %e5 decoded)
+            assert(entry->stringValue() == QStringLiteral("/tmp/test:%e5ä"));     // (or even with %e5 decoded)
 
             // Reset old value
 #if 0
