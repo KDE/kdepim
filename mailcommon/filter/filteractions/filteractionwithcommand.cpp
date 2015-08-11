@@ -258,7 +258,8 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess(ItemContext &co
             const QString newUid = aMsg->headerByType("X-UID") ? aMsg->headerByType("X-UID")->asUnicodeString() : QString();
             if (uid != newUid) {
                 aMsg->setFrozen(false);
-                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-UID", aMsg.data(), uid, "utf-8");
+                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-UID", aMsg.data());
+                header->fromUnicodeString(uid, "utf-8");
                 aMsg->setHeader(header);
                 aMsg->assemble();
             }

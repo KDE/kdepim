@@ -134,13 +134,15 @@ void SkeletonMessageJobPrivate::doStart()
 
     // Fcc:
     if (!infoPart->fcc().isEmpty()) {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Fcc", message, infoPart->fcc(), "utf-8");
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Fcc", message);
+        header->fromUnicodeString(infoPart->fcc(), "utf-8");
         message->setHeader(header);
     }
 
     //Transport:
     if (infoPart->transportId() > -1) {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Transport", message, QString::number(infoPart->transportId()), "utf-8");
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Transport", message);
+        header->fromUnicodeString(QString::number(infoPart->transportId()), "utf-8");
         message->setHeader(header);
     }
 
@@ -171,7 +173,8 @@ void SkeletonMessageJobPrivate::doStart()
     {
         if (globalPart->MDNRequested()) {
             const QString addr = infoPart->replyTo().isEmpty() ? infoPart->from() : infoPart->replyTo();
-            KMime::Headers::Generic *mdn = new KMime::Headers::Generic("Disposition-Notification-To", message, addr, "utf-8");
+            KMime::Headers::Generic *mdn = new KMime::Headers::Generic("Disposition-Notification-To", message);
+            mdn->fromUnicodeString(addr, "utf-8");
             message->setHeader(mdn);
         }
     }
@@ -187,8 +190,10 @@ void SkeletonMessageJobPrivate::doStart()
 
     // Urgent header
     if (infoPart->urgent()) {
-        KMime::Headers::Generic *urg1 = new KMime::Headers::Generic("X-PRIORITY", message, QStringLiteral("2 (High)"), "utf-8");
-        KMime::Headers::Generic *urg2 = new KMime::Headers::Generic("Priority", message, QStringLiteral("urgent"), "utf-8");
+        KMime::Headers::Generic *urg1 = new KMime::Headers::Generic("X-PRIORITY", message);
+        urg1->fromUnicodeString(QStringLiteral("2 (High)"), "utf-8");
+        KMime::Headers::Generic *urg2 = new KMime::Headers::Generic("Priority", message);
+        urg2->fromUnicodeString(QStringLiteral("urgent"), "utf-8");
         message->setHeader(urg1);
         message->setHeader(urg2);
     }

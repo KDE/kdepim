@@ -336,9 +336,8 @@ void ComposerPrivate::contentJobFinished(KJob *job)
         headers->setHeader(skeletonMessage->date());
         headers->setHeader(skeletonMessage->messageID());
 
-        KMime::Headers::Generic *realTo =
-            new KMime::Headers::Generic("X-KMail-EncBccRecipients",
-                                        headers, eJob->recipients().join(QLatin1String("%")),  "utf-8");
+        KMime::Headers::Generic *realTo = new KMime::Headers::Generic("X-KMail-EncBccRecipients", headers);
+        realTo->fromUnicodeString(eJob->recipients().join(QLatin1String("%")),  "utf-8");
 
         qCDebug(MESSAGECOMPOSER_LOG) << "got one of multiple messages sending to:" << realTo->asUnicodeString();
         qCDebug(MESSAGECOMPOSER_LOG) << "sending to recipients:" << recipients;

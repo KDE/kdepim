@@ -334,9 +334,8 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 const int len = parseQuotes(QStringLiteral("DICTIONARYLANGUAGE="), cmd, q);
                 i += len;
                 if (!q.isEmpty()) {
-                    KMime::Headers::Generic *header =
-                        new KMime::Headers::Generic("X-KMail-Dictionary", mMsg.data(),
-                                                    q, "utf-8");
+                    KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Dictionary", mMsg.data());
+                    header->fromUnicodeString(q, "utf-8");
                     mMsg->setHeader(header);
                 }
             } else if (cmd.startsWith(QStringLiteral("INSERT=")) || cmd.startsWith(QStringLiteral("PUT="))) {
@@ -520,9 +519,8 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 const QString htmlStr = pipe(pipe_cmd, htmlBody);
                 htmlBody = htmlStr;
 
-                KMime::Headers::Generic *header =
-                    new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data(),
-                                                QString::number(0), "utf-8");
+                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data());
+                header->fromUnicodeString(QString::number(0), "utf-8");
                 mMsg->setHeader(header);
 
             } else if (cmd.startsWith(QStringLiteral("TEXT"))) {
@@ -1104,9 +1102,8 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 i += strlen("CLEAR");
                 plainBody.clear();
                 htmlBody.clear();
-                KMime::Headers::Generic *header =
-                    new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data(),
-                                                QString::number(0), "utf-8");
+                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data());
+                header->fromUnicodeString(QString::number(0), "utf-8");
                 mMsg->setHeader(header);
             } else if (cmd.startsWith(QStringLiteral("DEBUGOFF"))) {
                 // turn off debug
@@ -1125,9 +1122,8 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: CURSOR";
                 int oldI = i;
                 i += strlen("CURSOR");
-                KMime::Headers::Generic *header =
-                    new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data(),
-                                                QString::number(plainBody.length()), "utf-8");
+                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data());
+                header->fromUnicodeString(QString::number(plainBody.length()), "utf-8");
                 /* if template is:
                 *  FOOBAR
                 *  %CURSOR

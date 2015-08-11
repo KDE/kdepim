@@ -42,10 +42,9 @@ FilterAction::ReturnCode FilterActionReplyTo::process(ItemContext &context , boo
     const QByteArray replyTo("Reply-To");
     KMime::Headers::Base *header = KMime::Headers::createHeader(replyTo);
     if (!header) {
-        header = new KMime::Headers::Generic(replyTo, msg.data(), mParameter, "utf-8");
-    } else {
-        header->fromUnicodeString(mParameter, "utf-8");
+        header = new KMime::Headers::Generic(replyTo, msg.data());
     }
+    header->fromUnicodeString(mParameter, "utf-8");
     msg->setHeader(header);
     msg->assemble();
 
