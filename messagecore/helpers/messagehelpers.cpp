@@ -59,11 +59,11 @@ void MessageCore::Util::addLinkInformation(const KMime::Message::Ptr &msg, Akona
         type += QLatin1String("forward");
     }
 
-    KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Link-Message", msg.data());
+    KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Link-Message");
     header->fromUnicodeString(message, "utf-8");
     msg->setHeader(header);
 
-    header = new KMime::Headers::Generic("X-KMail-Link-Type", msg.data());
+    header = new KMime::Headers::Generic("X-KMail-Link-Type");
     header->fromUnicodeString(type, "utf-8");
     msg->setHeader(header);
 }

@@ -68,7 +68,7 @@ void SkeletonMessageJobPrivate::doStart()
 
     // From:
     {
-        KMime::Headers::From *from = new KMime::Headers::From(message);
+        KMime::Headers::From *from = new KMime::Headers::From;
         KMime::Types::Mailbox address;
         address.fromUnicodeString(KEmailAddress::normalizeAddressesAndEncodeIdn(infoPart->from()));
         from->addAddress(address);
@@ -77,7 +77,7 @@ void SkeletonMessageJobPrivate::doStart()
 
     // To:
     {
-        KMime::Headers::To *to = new KMime::Headers::To(message);
+        KMime::Headers::To *to = new KMime::Headers::To;
         foreach (const QString &a, infoPart->to()) {
             KMime::Types::Mailbox address;
             address.fromUnicodeString(KEmailAddress::normalizeAddressesAndEncodeIdn(a));
@@ -88,7 +88,7 @@ void SkeletonMessageJobPrivate::doStart()
 
     // Reply To:
     if (!infoPart->replyTo().isEmpty()) {
-        KMime::Headers::ReplyTo *replyTo = new KMime::Headers::ReplyTo(message);
+        KMime::Headers::ReplyTo *replyTo = new KMime::Headers::ReplyTo;
         KMime::Types::Mailbox address;
         address.fromUnicodeString(KEmailAddress::normalizeAddressesAndEncodeIdn(infoPart->replyTo()));
         replyTo->addAddress(address);
@@ -97,7 +97,7 @@ void SkeletonMessageJobPrivate::doStart()
 
     // Cc:
     {
-        KMime::Headers::Cc *cc = new KMime::Headers::Cc(message);
+        KMime::Headers::Cc *cc = new KMime::Headers::Cc;
         foreach (const QString &a, infoPart->cc()) {
             KMime::Types::Mailbox address;
             address.fromUnicodeString(KEmailAddress::normalizeAddressesAndEncodeIdn(a));
@@ -108,7 +108,7 @@ void SkeletonMessageJobPrivate::doStart()
 
     // Bcc:
     {
-        KMime::Headers::Bcc *bcc = new KMime::Headers::Bcc(message);
+        KMime::Headers::Bcc *bcc = new KMime::Headers::Bcc;
         foreach (const QString &a, infoPart->bcc()) {
             KMime::Types::Mailbox address;
             address.fromUnicodeString(KEmailAddress::normalizeAddressesAndEncodeIdn(a));
@@ -119,7 +119,7 @@ void SkeletonMessageJobPrivate::doStart()
 
     // Subject:
     {
-        KMime::Headers::Subject *subject = new KMime::Headers::Subject(message);
+        KMime::Headers::Subject *subject = new KMime::Headers::Subject;
         subject->fromUnicodeString(infoPart->subject(), "utf-8");
         // TODO should we be more specific about the charset?
         message->setHeader(subject);
@@ -127,21 +127,21 @@ void SkeletonMessageJobPrivate::doStart()
 
     // Date:
     {
-        KMime::Headers::Date *date = new KMime::Headers::Date(message);
+        KMime::Headers::Date *date = new KMime::Headers::Date;
         date->setDateTime(QDateTime::currentDateTime());
         message->setHeader(date);
     }
 
     // Fcc:
     if (!infoPart->fcc().isEmpty()) {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Fcc", message);
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Fcc");
         header->fromUnicodeString(infoPart->fcc(), "utf-8");
         message->setHeader(header);
     }
 
     //Transport:
     if (infoPart->transportId() > -1) {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Transport", message);
+        KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Transport");
         header->fromUnicodeString(QString::number(infoPart->transportId()), "utf-8");
         message->setHeader(header);
     }
@@ -173,7 +173,7 @@ void SkeletonMessageJobPrivate::doStart()
     {
         if (globalPart->MDNRequested()) {
             const QString addr = infoPart->replyTo().isEmpty() ? infoPart->from() : infoPart->replyTo();
-            KMime::Headers::Generic *mdn = new KMime::Headers::Generic("Disposition-Notification-To", message);
+            KMime::Headers::Generic *mdn = new KMime::Headers::Generic("Disposition-Notification-To");
             mdn->fromUnicodeString(addr, "utf-8");
             message->setHeader(mdn);
         }
@@ -183,16 +183,16 @@ void SkeletonMessageJobPrivate::doStart()
     if (!infoPart->userAgent().isEmpty()) {
         QStringList extraInfo;
         extraInfo << QLatin1String(KDEPIM_GIT_REVISION_STRING) << QLatin1String(KDEPIM_GIT_LAST_CHANGE);
-        KMime::Headers::UserAgent *ua = new KMime::Headers::UserAgent(message);
+        KMime::Headers::UserAgent *ua = new KMime::Headers::UserAgent;
         ua->fromUnicodeString(KProtocolManager::userAgentForApplication(infoPart->userAgent(), QLatin1String(KDEPIM_VERSION), extraInfo), "utf-8");
         message->setHeader(ua);
     }
 
     // Urgent header
     if (infoPart->urgent()) {
-        KMime::Headers::Generic *urg1 = new KMime::Headers::Generic("X-PRIORITY", message);
+        KMime::Headers::Generic *urg1 = new KMime::Headers::Generic("X-PRIORITY");
         urg1->fromUnicodeString(QStringLiteral("2 (High)"), "utf-8");
-        KMime::Headers::Generic *urg2 = new KMime::Headers::Generic("Priority", message);
+        KMime::Headers::Generic *urg2 = new KMime::Headers::Generic("Priority");
         urg2->fromUnicodeString(QStringLiteral("urgent"), "utf-8");
         message->setHeader(urg1);
         message->setHeader(urg2);
@@ -200,14 +200,14 @@ void SkeletonMessageJobPrivate::doStart()
 
     // In-Reply-To
     if (!infoPart->inReplyTo().isEmpty()) {
-        KMime::Headers::InReplyTo *header = new KMime::Headers::InReplyTo(message);
+        KMime::Headers::InReplyTo *header = new KMime::Headers::InReplyTo;
         header->fromUnicodeString(infoPart->inReplyTo(), "utf-8");
         message->setHeader(header);
     }
 
     // References
     if (!infoPart->references().isEmpty()) {
-        KMime::Headers::References *header = new KMime::Headers::References(message);
+        KMime::Headers::References *header = new KMime::Headers::References;
         header->fromUnicodeString(infoPart->references(), "utf-8");
         message->setHeader(header);
     }

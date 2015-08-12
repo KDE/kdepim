@@ -263,17 +263,17 @@ void MessageComposer::ComposerViewBase::updateTemplate(const KMime::Message::Ptr
 void MessageComposer::ComposerViewBase::saveMailSettings()
 {
     const KIdentityManagement::Identity identity = identityManager()->identityForUoid(m_identityCombo->currentIdentity());
-    auto header = new KMime::Headers::Generic("X-KMail-Transport", m_msg.data());
+    auto header = new KMime::Headers::Generic("X-KMail-Transport");
     header->fromUnicodeString(QString::number(m_transport->currentTransportId()), "utf-8");
     m_msg->setHeader(header);
 
-    header = new KMime::Headers::Generic("X-KMail-Fcc", m_msg.data());
+    header = new KMime::Headers::Generic("X-KMail-Fcc");
     header->fromUnicodeString(QString::number(m_fccCollection.id()) , "utf-8");
     m_msg->setHeader(header);
-    header = new KMime::Headers::Generic("X-KMail-Identity", m_msg.data());
+    header = new KMime::Headers::Generic("X-KMail-Identity");
     header->fromUnicodeString(QString::number(identity.uoid()), "utf-8");
     m_msg->setHeader(header);
-    header = new KMime::Headers::Generic("X-KMail-Dictionary", m_msg.data());
+    header = new KMime::Headers::Generic("X-KMail-Dictionary");
     header->fromUnicodeString(m_dictionary->currentDictionary(), "utf-8");
     m_msg->setHeader(header);
 
@@ -282,14 +282,14 @@ void MessageComposer::ComposerViewBase::saveMailSettings()
     if (m_editor->quotePrefixName().isEmpty()) {
         m_msg->removeHeader("X-KMail-QuotePrefix");
     } else {
-        header = new KMime::Headers::Generic("X-KMail-QuotePrefix", m_msg.data());
+        header = new KMime::Headers::Generic("X-KMail-QuotePrefix");
         header->fromUnicodeString(m_editor->quotePrefixName(), "utf-8");
         m_msg->setHeader(header);
     }
 
     if (m_editor->composerControler()->isFormattingUsed()) {
         qCDebug(MESSAGECOMPOSER_LOG) << "HTML mode";
-        header = new KMime::Headers::Generic("X-KMail-Markup", m_msg.data());
+        header = new KMime::Headers::Generic("X-KMail-Markup");
         header->fromUnicodeString(QStringLiteral("true"), "utf-8");
         m_msg->setHeader(header);
     } else {
@@ -353,13 +353,13 @@ void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::Sen
     if (m_neverEncrypt && saveIn != MessageComposer::MessageSender::SaveInNone) {
         // we can't use the state of the mail itself, to remember the
         // signing and encryption state, so let's add a header instead
-        auto header = new KMime::Headers::Generic("X-KMail-SignatureActionEnabled", m_msg.data());
+        auto header = new KMime::Headers::Generic("X-KMail-SignatureActionEnabled");
         header->fromUnicodeString(m_sign ? QLatin1String("true") : QLatin1String("false"), "utf-8");
         m_msg->setHeader(header);
-        header = new KMime::Headers::Generic("X-KMail-EncryptActionEnabled", m_msg.data());
+        header = new KMime::Headers::Generic("X-KMail-EncryptActionEnabled");
         header->fromUnicodeString(m_encrypt ? QLatin1String("true") : QLatin1String("false"), "utf-8");
         m_msg->setHeader(header);
-        header = new KMime::Headers::Generic("X-KMail-CryptoMessageFormat", m_msg.data());
+        header = new KMime::Headers::Generic("X-KMail-CryptoMessageFormat");
         header->fromUnicodeString(QString::number(m_cryptoMessageFormat), "utf-8");
         m_msg->setHeader(header);
     } else {
@@ -457,13 +457,13 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved(KJob *job)
                 unExpandedBcc << exp;
             }
         }
-        auto header = new KMime::Headers::Generic("X-KMail-UnExpanded-To", m_msg.data());
+        auto header = new KMime::Headers::Generic("X-KMail-UnExpanded-To");
         header->from7BitString(unExpandedTo.join(QStringLiteral(", ")).toLatin1());
         m_msg->setHeader(header);
-        header = new KMime::Headers::Generic("X-KMail-UnExpanded-CC", m_msg.data());
+        header = new KMime::Headers::Generic("X-KMail-UnExpanded-CC");
         header->from7BitString(unExpandedCc.join(QStringLiteral(", ")).toLatin1());
         m_msg->setHeader(header);
-        header = new KMime::Headers::Generic("X-KMail-UnExpanded-BCC", m_msg.data());
+        header = new KMime::Headers::Generic("X-KMail-UnExpanded-BCC");
         header->from7BitString(unExpandedBcc.join(QStringLiteral(", ")).toLatin1());
         m_msg->setHeader(header);
         autoresizeImage = false;
@@ -961,7 +961,7 @@ void MessageComposer::ComposerViewBase::queueMessage(KMime::Message::Ptr message
     QMapIterator<QByteArray, QString> customHeader(m_customHeader);
     while (customHeader.hasNext()) {
         customHeader.next();
-        auto header = new KMime::Headers::Generic(customHeader.key(), message.data());
+        auto header = new KMime::Headers::Generic(customHeader.key());
         header->fromUnicodeString(customHeader.value(), "utf-8");
         message->setHeader(header);
     }

@@ -179,25 +179,19 @@ void SinglepartJob::process()
     // Set headers.
     if (d->contentDescription) {
         d->resultContent->setHeader(d->contentDescription);
-        d->contentDescription->setParent(d->resultContent);
     }
     if (d->contentDisposition) {
         d->resultContent->setHeader(d->contentDisposition);
-        d->contentDisposition->setParent(d->resultContent);
     }
     if (d->contentID) {
         d->resultContent->setHeader(d->contentID);
-        d->contentID->setParent(d->resultContent);
     }
     Q_ASSERT(d->contentTransferEncoding);   // chooseCTE() created it if it didn't exist.
     {
         d->resultContent->setHeader(d->contentTransferEncoding);
-        d->contentTransferEncoding->setParent(d->resultContent);
-
     }
     if (d->contentType) {
         d->resultContent->setHeader(d->contentType);
-        d->contentType->setParent(d->resultContent);
     }
 
     // Set data.

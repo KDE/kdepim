@@ -334,7 +334,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 const int len = parseQuotes(QStringLiteral("DICTIONARYLANGUAGE="), cmd, q);
                 i += len;
                 if (!q.isEmpty()) {
-                    KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Dictionary", mMsg.data());
+                    KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-Dictionary");
                     header->fromUnicodeString(q, "utf-8");
                     mMsg->setHeader(header);
                 }
@@ -519,7 +519,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 const QString htmlStr = pipe(pipe_cmd, htmlBody);
                 htmlBody = htmlStr;
 
-                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data());
+                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-CursorPos");
                 header->fromUnicodeString(QString::number(0), "utf-8");
                 mMsg->setHeader(header);
 
@@ -1102,7 +1102,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 i += strlen("CLEAR");
                 plainBody.clear();
                 htmlBody.clear();
-                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data());
+                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-CursorPos");
                 header->fromUnicodeString(QString::number(0), "utf-8");
                 mMsg->setHeader(header);
             } else if (cmd.startsWith(QStringLiteral("DEBUGOFF"))) {
@@ -1122,7 +1122,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: CURSOR";
                 int oldI = i;
                 i += strlen("CURSOR");
-                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-CursorPos", mMsg.data());
+                KMime::Headers::Generic *header = new KMime::Headers::Generic("X-KMail-CursorPos");
                 header->fromUnicodeString(QString::number(plainBody.length()), "utf-8");
                 /* if template is:
                 *  FOOBAR

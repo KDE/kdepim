@@ -557,7 +557,7 @@ public:
         const bool nullIdentity = (identity == KIdentityManagement::Identity::null());
 
         if (!nullIdentity) {
-            KMime::Headers::Generic *x_header = new KMime::Headers::Generic("X-KMail-Identity", msg.data());
+            KMime::Headers::Generic *x_header = new KMime::Headers::Generic("X-KMail-Identity");
             x_header->from7BitString(QByteArray::number(identity.uoid()));
             msg->setHeader(x_header);
         }
@@ -575,7 +575,7 @@ public:
             }
             transportId = TransportManager::self()->defaultTransportId();
         }
-        auto header = new KMime::Headers::Generic("X-KMail-Transport", msg.data());
+        auto header = new KMime::Headers::Generic("X-KMail-Transport");
         header->fromUnicodeString(QString::number(transportId), "utf-8");
         msg->setHeader(header);
 
