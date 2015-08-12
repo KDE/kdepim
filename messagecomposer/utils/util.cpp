@@ -34,7 +34,6 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_headers.h>
 #include <MailTransport/mailtransport/messagequeuejob.h>

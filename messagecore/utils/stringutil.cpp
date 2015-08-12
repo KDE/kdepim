@@ -21,7 +21,6 @@
 #include "config-enterprise.h"
 #include "settings/globalsettings.h"
 
-#include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_header_parsing.h>
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_message.h>
