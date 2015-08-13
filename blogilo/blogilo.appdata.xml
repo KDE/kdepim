@@ -226,7 +226,7 @@
       <li xml:lang="zh-TW">支援 Blogger1.0, MetaWeblog, MovableType (Wordpress 全部都支援！) 以及 Google GData (用於 Blogspot.com) APIs</li>
       <li>Support for Creating/Modifying/Deleting posts.</li>
       <li xml:lang="ar">دعم إنشاء التّدوينات وتعديلها وحذفها.</li>
-      <li xml:lang="ca">Implementa la creació/modificació/eliminació dels articles</li>
+      <li xml:lang="ca">Implementa la creació/modificació/eliminació dels articles.</li>
       <li xml:lang="de">Unterstützung für das Erstellen/Verändern/Löschen von Posts.</li>
       <li xml:lang="en-GB">Support for Creating/Modifying/Deleting posts.</li>
       <li xml:lang="es">Implementa creación/modificación/borrado de envíos.</li>
@@ -315,7 +315,7 @@
       <li xml:lang="zh-TW">支援上傳媒體檔到您的部落格中（但 API 必須有支援，如 MetaWeblog 與 MovableType）</li>
       <li>Support for Fetching your recent blog entries.</li>
       <li xml:lang="ar">دعم جلب أحدث مدخلات المدوّنة.</li>
-      <li xml:lang="ca">Implementa l'obtenció de les vostres entrades recents al blog</li>
+      <li xml:lang="ca">Implementa l'obtenció de les vostres entrades recents al blog.</li>
       <li xml:lang="de">Unterstützung für das Holen von aktuellen Blog-Einträgen</li>
       <li xml:lang="en-GB">Support for Fetching your recent blog entries.</li>
       <li xml:lang="es">Implementa la recuperación de sus entradas recientes de blog.</li>
@@ -374,7 +374,7 @@
       <li xml:lang="zh-TW">支援從您的系統新增媒體檔到您的部落格文章中。它會在提交文章時順便上傳到部落格中（但 API 必須有支援，如 MetaWeblog 與 MovableType）</li>
       <li>Support for saving local entries before publishing.</li>
       <li xml:lang="ar">دعم حفظ مدخلات محليّة قبل النّشر.</li>
-      <li xml:lang="ca">Implementa el desat de les entrades locals abans de publicar-les</li>
+      <li xml:lang="ca">Implementa el desat de les entrades locals abans de publicar-les.</li>
       <li xml:lang="de">Unterstützung für das Speichern lokaler Einträge vor der Veröffentlichung</li>
       <li xml:lang="en-GB">Support for saving local entries before publishing.</li>
       <li xml:lang="es">Implementa el guardado de entradas locales antes de publicarlas.</li>
@@ -404,7 +404,7 @@
       <li xml:lang="zh-TW">支援在發布前先在本地端儲存</li>
       <li>Saving your writing copy to prevent data loss, at configurable intervals.</li>
       <li xml:lang="ar">حفظ نسخة عمل لتجنّب فقدان البيانات، عند فترات يمكن ضبطها.</li>
-      <li xml:lang="ca">Desa una còpia de l'escriptura per evitar la pèrdua de dades, a intervals configurables</li>
+      <li xml:lang="ca">Desa una còpia de l'escriptura per evitar la pèrdua de dades, a intervals configurables.</li>
       <li xml:lang="de">Speicherung einer Kopie Ihrer Texte in einstellbaren Intervallen, um Datenverlust zu verhindern</li>
       <li xml:lang="en-GB">Saving your writing copy to prevent data loss, at configurable intervals.</li>
       <li xml:lang="es">Salvado de su copia escrita para evitar pérdidas de datos, a intervalos configurables.</li>
