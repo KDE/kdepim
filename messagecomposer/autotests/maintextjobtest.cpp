@@ -35,6 +35,9 @@ using namespace KMime;
 #include <messagecomposer/composer-ng/richtextcomposer.h>
 #include <messagecomposer/composer-ng/richtextcomposerimages.h>
 #include <messagecomposer/composer-ng/richtextcomposercontroler.h>
+
+#include <KActionCollection>
+
 using namespace MessageComposer;
 
 QTEST_MAIN(MainTextJobTest)
@@ -206,8 +209,10 @@ void MainTextJobTest::testHtml()
 
 void MainTextJobTest::testHtmlWithImages()
 {
+    KActionCollection ac(this);
     MessageComposer::RichTextComposer richTextcomposer;
     MessageComposer::RichTextComposerControler controler(&richTextcomposer);
+    richTextcomposer.createActions(&ac);
 
     KPIMTextEdit::TextEdit editor;
     QString image1 = KIconLoader::global()->iconPath(QLatin1String("folder-new"), KIconLoader::Small, false);
@@ -215,7 +220,9 @@ void MainTextJobTest::testHtmlWithImages()
     QString data = QStringLiteral("dust in the wind");
     editor.setTextOrHtml(data);
     editor.addImage(image1);
+    controler.composerImages()->addImage(image1);
     editor.addImage(image2);
+    controler.composerImages()->addImage(image2);
     MessageComposer::ImageList images = controler.composerImages()->embeddedImages();
     QCOMPARE(images.count(), 2);
     QString cid1 = images[0]->contentID;
