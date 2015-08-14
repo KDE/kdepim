@@ -87,7 +87,7 @@ You can set more options in the Advanced tab.</string>
      </widget>
     </item>
     <item row="5" column="1" colspan="2">
-     <widget class="KLineEdit" name="txtUrl">
+     <widget class="QLineEdit" name="txtUrl">
       <property name="text">
        <string>http://</string>
       </property>
@@ -143,17 +143,11 @@ You can set more options in the Advanced tab.</string>
      </widget>
     </item>
     <item row="8" column="1" colspan="2">
-     <widget class="KLineEdit" name="txtPass">
+     <widget class="QLineEdit" name="txtPass">
       <property name="echoMode">
        <enum>QLineEdit::Password</enum>
       </property>
-      <property name="urlDropsEnabled">
-       <bool>false</bool>
-      </property>
       <property name="showClearButton" stdset="0">
-       <bool>true</bool>
-      </property>
-      <property name="passwordMode">
        <bool>true</bool>
       </property>
      </widget>
@@ -240,7 +234,7 @@ You can set more options in the Advanced tab.</string>
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="KComboBox" name="comboApi">
+     <widget class="QComboBox" name="comboApi">
       <item>
        <property name="text">
         <string>Blogger 1.0 API</string>
@@ -298,7 +292,7 @@ You can set more options in the Advanced tab.</string>
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="KLineEdit" name="txtId"/>
+     <widget class="QLineEdit" name="txtId"/>
     </item>
     <item row="3" column="2">
      <widget class="QPushButton" name="btnFetch">
@@ -343,7 +337,7 @@ You can set more options in the Advanced tab.</string>
      </widget>
     </item>
     <item row="4" column="1">
-     <widget class="KComboBox" name="comboDir">
+     <widget class="QComboBox" name="comboDir">
       <item>
        <property name="text">
         <string>Left to Right</string>
@@ -503,18 +497,6 @@ You can set more options in the Advanced tab.</string>
   </widget>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>KSeparator</class>
    <extends>QFrame</extends>

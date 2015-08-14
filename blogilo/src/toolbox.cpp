@@ -39,6 +39,7 @@
 #include <KToolInvocation>
 #include <QClipboard>
 #include <QTimer>
+#include <QPointer>
 #include <qstatusbar.h>
 #include "blogilo_debug.h"
 #include <kxmlguiwindow.h>

@@ -91,17 +91,17 @@ AddEditBlog::AddEditBlog(int blog_id, QWidget *parent, Qt::WindowFlags flags)
     d->isNewBlog = true;
     d->mFetchAPITimer = d->mFetchBlogIdTimer = d->mFetchProfileIdTimer = Q_NULLPTR;
 
-    connect(d->ui.txtId, &KLineEdit::textChanged, this, &AddEditBlog::enableOkButton);
-    connect(d->ui.txtUrl, &KLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
+    connect(d->ui.txtId, &QLineEdit::textChanged, this, &AddEditBlog::enableOkButton);
+    connect(d->ui.txtUrl, &QLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
     connect(d->ui.txtUser, &QLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
-    connect(d->ui.txtPass, &KLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
+    connect(d->ui.txtPass, &QLineEdit::textChanged, this, &AddEditBlog::enableAutoConfBtn);
     connect(d->ui.btnAutoConf, &QPushButton::clicked, this, &AddEditBlog::autoConfigure);
     connect(d->ui.btnFetch, &QPushButton::clicked, this, &AddEditBlog::fetchBlogId);
-    connect(d->ui.comboApi, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &AddEditBlog::slotComboApiChanged);
-    connect(d->ui.txtUrl, &KLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
+    connect(d->ui.comboApi, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &AddEditBlog::slotComboApiChanged);
+    connect(d->ui.txtUrl, &QLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
     connect(d->ui.txtUser, &QLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
-    connect(d->ui.txtPass, &KLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
-    connect(d->ui.txtId, &KLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
+    connect(d->ui.txtPass, &QLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
+    connect(d->ui.txtId, &QLineEdit::returnPressed, this, &AddEditBlog::slotReturnPressed);
 
     if (blog_id > -1) {
         setWindowTitle(i18n("Edit blog settings"));

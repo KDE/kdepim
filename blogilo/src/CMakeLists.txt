@@ -64,7 +64,18 @@ file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/*-apps-blogilo.png")
 ecm_add_app_icon(blogilo_SRCS ICONS ${ICONS_SRCS})
 add_executable( blogilo ${blogilo_SRCS})
 
-target_link_libraries( blogilo kdepim  KF5::TextEditor  KF5::WebKit KF5::Blog composereditorng  pimcommon KF5::Wallet Qt5::Sql KF5::XmlRpcClient KF5::DBusAddons)
+target_link_libraries(blogilo
+    kdepim
+    composereditorng
+    pimcommon
+    KF5::TextEditor
+    KF5::WebKit
+    KF5::Blog
+    KF5::Wallet
+    Qt5::Sql
+    KF5::XmlRpcClient
+    KF5::DBusAddons
+)
 
 if (KF5GAPI_FOUND)
    target_link_libraries( blogilo KF5::GAPIBlogger KF5::GAPICore)

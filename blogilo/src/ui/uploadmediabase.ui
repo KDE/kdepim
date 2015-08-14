@@ -97,7 +97,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KComboBox" name="kcfg_uploadType"/>
+      <widget class="QComboBox" name="kcfg_uploadType"/>
      </item>
      <item>
       <spacer name="horizontalSpacer_2">
@@ -203,11 +203,6 @@
    <class>KImageFilePreview</class>
    <extends>QWidget</extends>
    <header>kimagefilepreview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

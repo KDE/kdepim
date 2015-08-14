@@ -264,7 +264,7 @@
             </widget>
            </item>
            <item>
-            <widget class="KComboBox" name="comboOptionsStatus">
+            <widget class="QComboBox" name="comboOptionsStatus">
              <property name="enabled">
               <bool>false</bool>
              </property>
@@ -603,11 +603,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
   <customwidget>
    <class>KSeparator</class>
    <extends>QFrame</extends>

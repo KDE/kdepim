@@ -69,7 +69,7 @@ UploadMediaDialog::UploadMediaDialog(QWidget *parent)
     setWindowModality(Qt::ApplicationModal);
     ui.kcfg_urlBrowser->setIcon(QIcon::fromTheme(QStringLiteral("document-open")));
     connect(ui.kcfg_urlBrowser, &QPushButton::clicked, this, &UploadMediaDialog::selectNewFile);
-    connect(ui.kcfg_uploadType, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &UploadMediaDialog::slotUploadTypeChanged);
+    connect(ui.kcfg_uploadType, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &UploadMediaDialog::slotUploadTypeChanged);
     connect(ui.kcfg_urlLineEdit, &QLineEdit::textChanged, this, &UploadMediaDialog::currentMediaChanged);
 }
 
