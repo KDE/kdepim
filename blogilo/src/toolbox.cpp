@@ -36,11 +36,11 @@
 #include <QMenu>
 #include <QIcon>
 #include <QAction>
-#include <KToolInvocation>
 #include <QClipboard>
 #include <QTimer>
 #include <QPointer>
 #include <qstatusbar.h>
+#include <QDesktopServices>
 #include "blogilo_debug.h"
 #include <kxmlguiwindow.h>
 #include <kmessagebox.h>
@@ -521,15 +521,15 @@ void Toolbox::openPostInBrowser()
         return;
     }
     BilboPost post = DBMan::self()->getPostInfo(lstEntriesList->currentItem()->data(BlogEntryID).toInt());
-    QString url;
+    QUrl url;
     if (!post.permaLink().isEmpty()) {
-        url = post.permaLink().toDisplayString(QUrl::PreferLocalFile);
+        url = post.permaLink().url();
     } else if (!post.link().isEmpty()) {
-        url = post.link().toDisplayString(QUrl::PreferLocalFile);
+        url = post.link().url();
     } else {
-        url = DBMan::self()->blogList().value(d->mCurrentBlogId)->blogUrl();
+        url = QUrl(DBMan::self()->blogList().value(d->mCurrentBlogId)->blogUrl());
     }
-    KToolInvocation::invokeBrowser(url);
+    QDesktopServices::openUrl(url);
 }
 
 void Toolbox::copyPostTitle()
