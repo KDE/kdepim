@@ -9,18 +9,18 @@ endif()
 
 configure_file(settings/sieve-editor.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/sieve-editor.kcfg)
 
-include_directories(${CMAKE_SOURCE_DIR}/libksieve
-        ${CMAKE_SOURCE_DIR}/pimcommon/sievehighlighter/
-        ${CMAKE_SOURCE_DIR}/pimcommon/util/
-        ${CMAKE_SOURCE_DIR}/libksieve/ksieveui
-	)
-
 if(BUILD_TESTING)
    add_subdirectory(tests)
    add_subdirectory(editor/tests)
    add_subdirectory(managescriptsjob/autotests)
    add_subdirectory(editor/autotests)
+   add_subdirectory(autocreatescripts/tests)
+   add_subdirectory(scriptsparsing/tests)
+   add_subdirectory(vacation/tests)
+   add_subdirectory(sievescriptdebugger/autotests)
+   add_subdirectory(sievescriptdebugger/tests)
 endif()
+
 set(ksieveui_vacation_LIB_SRCS
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
@@ -205,6 +205,8 @@ PRIVATE
   KF5::PimTextEdit
 )
 
+target_include_directories(ksieveui PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/ksieveui;${libksieve_BINARY_DIR}/ksieveui>")
+
 set_target_properties(
   ksieveui PROPERTIES
   VERSION ${KDEPIM_LIB_VERSION}
@@ -214,11 +216,3 @@ set_target_properties(
 install(TARGETS ksieveui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES data/ksieve_script.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
 install(DIRECTORY data/scripts/ DESTINATION ${KDE_INSTALL_DATADIR}/sieve/scripts/ )
-
-if (BUILD_TESTING)
-    add_subdirectory(autocreatescripts/tests)
-    add_subdirectory(scriptsparsing/tests)
-    add_subdirectory(vacation/tests)
-    add_subdirectory(sievescriptdebugger/autotests)
-    add_subdirectory(sievescriptdebugger/tests)
-endif ()

@@ -21,7 +21,7 @@
 #include "filteraction.h"
 
 #include "../kernel/mailkernel.h"
-#include "mdnadvicedialog.h"
+#include "filter/mdnadvicedialog.h"
 #include "util/mailutil.h"
 #include "mailcommon_debug.h"
 

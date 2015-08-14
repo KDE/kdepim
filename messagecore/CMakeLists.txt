@@ -6,9 +6,6 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 if (BUILD_TESTING)
    add_subdirectory(autotests)
 endif()
-include_directories( ${Boost_INCLUDE_DIR} 
-                     ${CMAKE_SOURCE_DIR}/pimcommon
-                   )
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libmessagecore\")
 
@@ -63,7 +60,6 @@ generate_export_header(messagecore BASE_NAME messagecore)
 
 target_link_libraries(messagecore
   KF5::Mime
-  
   KF5::KIOCore
   KF5::Codecs
   KF5::AkonadiCore
@@ -80,6 +76,9 @@ target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
   KF5::Mime
   KF5::KIOCore
 )
+
+target_include_directories(messagecore PUBLIC "$<BUILD_INTERFACE:${messagecore_SOURCE_DIR};${messagecore_BUILD_DIR};${Boost_INCLUDE_DIRS}>")
+
 
 set_target_properties(messagecore PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS messagecore ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

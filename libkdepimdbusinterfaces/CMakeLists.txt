@@ -1,4 +1,4 @@
-
+project(libkdepimdbusinterfaces)
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
@@ -22,20 +22,19 @@ generate_export_header(kdepimdbusinterfaces BASE_NAME kdepimdbusinterfaces)
 
 add_dependencies(kdepimdbusinterfaces kmail_xml)
 
-include_directories (
-    ${CMAKE_SOURCE_DIR}
-    ${CMAKE_BINARY_DIR}
-)
-
 target_link_libraries(kdepimdbusinterfaces
 PUBLIC
     KF5::AkonadiCore
 PRIVATE
-    KF5::AkonadiContact 
+    KF5::AkonadiContact
     KF5::KIOWidgets
     Qt5::DBus
 )
 
-set_target_properties(kdepimdbusinterfaces PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_VERSION})
+set_target_properties(kdepimdbusinterfaces
+    PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
+    SOVERSION ${KDEPIM_LIB_SOVERSION}
+)
 install(TARGETS kdepimdbusinterfaces ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
+target_include_directories(kdepimdbusinterfaces PUBLIC "$<BUILD_INTERFACE:${libkdepimdbusinterfaces_SOURCE_DIR};${libkdepimdbusinterfaces_BINARY_DIR}>")

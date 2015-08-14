@@ -1,7 +1,5 @@
 project(followupreminderagent)
 
-
-
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_followupreminder_agent\")
 
 set(followupreminderlib_SRCS 
@@ -17,12 +15,13 @@ kconfig_add_kcfg_files(followupreminderlib_SRCS
 add_library( followupreminder ${followupreminderlib_SRCS} )
 generate_export_header(followupreminder BASE_NAME followupreminder)
 target_link_libraries( followupreminder KF5::CoreAddons KF5::ConfigGui Qt5::DBus )
-target_include_directories(followupreminder PUBLIC $<TARGET_PROPERTY:KF5::AkonadiCore,INTERFACE_INCLUDE_DIRECTORIES>)
+target_include_directories(followupreminder PUBLIC "$<BUILD_INTERFACE:${followupreminderagent_SOURCE_DIR};${followupreminderagent_BINARY_DIR}>")
 set_target_properties( followupreminder PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
 
 install( TARGETS followupreminder ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
+################ Next target ########################
 
 set(followupreminderagent_job_SRCS
     jobs/followupreminderjob.cpp

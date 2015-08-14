@@ -22,9 +22,6 @@ if(EVENTVIEWS_NODECOS)
   add_definitions(-DEVENTVIEWS_NODECOS)
 endif()
 
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
 
 ########### next target ###############
 
@@ -92,7 +89,7 @@ PUBLIC
   KF5::AkonadiCore
   kdepim
   calendarsupport
-  
+
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::AkonadiCalendar
@@ -100,6 +97,8 @@ PRIVATE
   KF5::Codecs
   kdgantt2
 )
+
+target_include_directories(eventviews PUBLIC "$<BUILD_INTERFACE:${calendarView_SOURCE_DIR};${calendarView_BINARY_DIR}>")
 
 set_target_properties(eventviews PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS eventviews ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

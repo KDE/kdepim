@@ -1,11 +1,5 @@
 project(archivemailagent)
 
-include_directories(
-   ${CMAKE_SOURCE_DIR}/libkdepim
-   ${CMAKE_SOURCE_DIR}/mailcommon
-   ${CMAKE_SOURCE_DIR}/messagecomposer/
-)
-
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_archivemail_agent\")
 
 set(archivemailagent_SRCS

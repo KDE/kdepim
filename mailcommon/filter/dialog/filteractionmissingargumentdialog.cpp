@@ -17,11 +17,11 @@
 */
 
 #include "filteractionmissingargumentdialog.h"
-#include "kmfilteraccountlist.h"
-#include "folderrequester.h"
+#include "filter/kmfilteraccountlist.h"
+#include "folder/folderrequester.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
-#include "addtagdialog.h"
+#include "tag/addtagdialog.h"
 
 #include <EntityMimeTypeFilterModel>
 

@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "filterimportbalsatest.h"
-#include "mailfilter.h"
+#include "filter/mailfilter.h"
 #include "filtertestkernel.h"
 #include <mailcommon/kernel/mailkernel.h>
 #include <AkonadiCore/qtest_akonadi.h>

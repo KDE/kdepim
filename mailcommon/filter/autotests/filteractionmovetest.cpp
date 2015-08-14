@@ -18,7 +18,8 @@
 #include "filteractionmovetest.h"
 #include <qtest.h>
 #include "../filteractions/filteractionmove.h"
-#include <folderrequester.h>
+#include "folder/folderrequester.h"
+
 FilterActionMoveTest::FilterActionMoveTest(QObject *parent)
     : QObject(parent)
 {

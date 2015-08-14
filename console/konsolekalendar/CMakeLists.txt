@@ -15,19 +15,12 @@ set(konsolekalendar_SRCS
    konsolekalendar.cpp 
    main.cpp )
 
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ${Boost_INCLUDE_DIRS}
-)
-   
-
 #file(GLOB ICONS_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-calendar.png")
 #ecm_add_app_icon(konsolekalendar_SRCS ICONS ${ICONS_SRCS})
 
 add_executable(konsolekalendar ${konsolekalendar_SRCS})
 
 target_link_libraries(konsolekalendar
-                      
                       KF5::CalendarUtils
                       KF5::CalendarCore
                       kdepim

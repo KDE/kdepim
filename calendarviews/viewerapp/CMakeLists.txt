@@ -1,10 +1,5 @@
 project(calendarviewsapp)
 
-include_directories(
-  ${calendarView_SOURCE_DIR}/
-  ${calendarView_SOURCE_DIR}/agenda
-)
-
 set(viewerapp_SRCS
   main.cpp
   mainwindow.cpp

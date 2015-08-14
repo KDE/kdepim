@@ -3,14 +3,6 @@ project(korgac)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-# enable exception handling
-
-
-include_directories(
-  ${CMAKE_SOURCE_DIR}/calendarsupport
-  ${CMAKE_BINARY_DIR}/calendarsupport
-)
-
 add_subdirectory(pixmaps)
 
 if(BUILD_TESTING)

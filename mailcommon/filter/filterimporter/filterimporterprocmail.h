@@ -18,7 +18,7 @@
 #ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERPROCMAIL_P_H
 #define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERPROCMAIL_P_H
 
-#include "filterimporter/filterimporterabstract.h"
+#include "filter/filterimporter/filterimporterabstract.h"
 
 #include <QTextStream>
 

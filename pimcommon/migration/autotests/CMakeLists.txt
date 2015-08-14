@@ -1,17 +1,11 @@
-include_directories(${CMAKE_SOURCE_DIR}/pimcommon/ ${CMAKE_BINARY_DIR}/pimcommon/
-)
+add_definitions(-DMIGRATION_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
-add_definitions( -DMIGRATION_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data" )
+macro(add_pimcommon_migration_unittest _source)
+    ecm_add_test(${_source}
+        NAME_PREFIX "pimcommon-migration-"
+        LINK_LIBRARIES Qt5::Test KF5::CoreAddons KF5::ConfigCore pimcommon
+    )
+endmacro()
 
-set( pimcommon_migrateapplicationfilestest_source migrateapplicationfilestest.cpp )
-add_executable(migrateapplicationfilestest ${pimcommon_migrateapplicationfilestest_source})
-ecm_mark_as_test(pimcommon-migrateapplicationfilestest)
-target_link_libraries( migrateapplicationfilestest Qt5::Test KF5::CoreAddons KF5::ConfigCore pimcommon)
-
-
-
-set( pimcommon_migratefileinfotest_source migratefileinfotest.cpp )
-add_executable(migratefileinfotest ${pimcommon_migratefileinfotest_source})
-ecm_mark_as_test(pimcommon-migratefileinfotest)
-target_link_libraries( migratefileinfotest Qt5::Test pimcommon)
-
+add_pimcommon_migration_unittest(migrateapplicationfilestest.cpp)
+add_pimcommon_migration_unittest(migratefileinfotest.cpp)

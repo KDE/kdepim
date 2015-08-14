@@ -1,11 +1,15 @@
-
+project(libkdepim)
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 if(BUILD_TESTING)
    add_subdirectory(tests)
+   add_subdirectory(addressline/blacklistbaloocompletion/autotests)
+   add_subdirectory(addressline/autotests/)
+   add_subdirectory(freebusymodel/autotests)
 endif()
+
 add_subdirectory(pics)
 
 
@@ -160,6 +164,9 @@ target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   KF5::AkonadiCalendar
 )
 
+target_include_directories(kdepim PUBLIC "$<BUILD_INTERFACE:${libkdepim_SOURCE_DIR};${libkdepim_BINARY_DIR}>")
+
+
 if(MINGW)
    target_link_libraries(kdepim oleaut32)
 endif()
@@ -214,9 +221,3 @@ install(FILES ldap/kcmldap.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 ########### install files ###############
 
 install(FILES interfaces/org.kde.addressbook.service.xml interfaces/org.kde.mailtransport.service.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
-
-if (BUILD_TESTING)
-add_subdirectory(addressline/blacklistbaloocompletion/autotests)
-add_subdirectory(addressline/autotests/)
-add_subdirectory(freebusymodel/autotests)
-endif()

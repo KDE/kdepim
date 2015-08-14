@@ -18,8 +18,9 @@
 #include "filteractionexectest.h"
 #include <qtest.h>
 #include "../filteractions/filteractionexec.h"
+#include "../filteractions/filteractionwithurl.h"
+
 #include <KUrlRequester>
-#include <filteractions/filteractionwithurl.h>
 
 FilterActionExecTest::FilterActionExecTest(QObject *parent)
     : QObject(parent)

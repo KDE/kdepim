@@ -18,7 +18,7 @@
 #ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERTHUNDERBIRD_P_H
 #define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERTHUNDERBIRD_P_H
 
-#include "filterimporter/filterimporterabstract.h"
+#include "filter/filterimporter/filterimporterabstract.h"
 #include "mailcommon_export.h"
 #include <QTextStream>
 

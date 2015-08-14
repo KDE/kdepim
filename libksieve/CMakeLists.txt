@@ -5,9 +5,9 @@ check_type_size("unsigned long" SIZEOF_UNSIGNED_LONG)
 configure_file(config-libksieve.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-libksieve.h)
 
 set(libksieve_parser_SRCS
-  ${CMAKE_SOURCE_DIR}/libksieve/parser/utf8validator.cpp
-  ${CMAKE_SOURCE_DIR}/libksieve/parser/lexer.cpp
-  ${CMAKE_SOURCE_DIR}/libksieve/parser/parser.cpp
+  parser/utf8validator.cpp
+  parser/lexer.cpp
+  parser/parser.cpp
 )
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libksieve\")
@@ -23,14 +23,17 @@ endif()
 ########### next target ###############
 
 set(ksieve_LIB_SRCS
-  ${CMAKE_SOURCE_DIR}/libksieve/shared/error.cpp
+  shared/error.cpp
   ${libksieve_parser_SRCS}
 )
 
 add_library(ksieve ${ksieve_LIB_SRCS})
 generate_export_header(ksieve BASE_NAME ksieve)
 
+
 target_link_libraries(ksieve Qt5::Core KF5::I18n)
+
+target_include_directories(ksieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/parser;${libksieve_BINARY_DIR}/parser>")
 
 set_target_properties(
   ksieve PROPERTIES

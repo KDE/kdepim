@@ -1,8 +1,3 @@
-include_directories(
-  ${CMAKE_SOURCE_DIR}/messageviewer
-  ${CMAKE_BINARY_DIR}/messageviewer
-)
-
 if(NOT KDEPIM_NO_WEBKIT)
 set(adblocksettings_gui_SRCS adblocksettings_gui.cpp)
 add_executable(adblocksettings_gui ${adblocksettings_gui_SRCS})

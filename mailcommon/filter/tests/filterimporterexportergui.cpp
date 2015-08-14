@@ -16,14 +16,15 @@
 */
 
 #include "filterimporterexportergui.h"
-#include "mailcommon/filter/filterimporterexporter.h"
+#include "filter/filterimporterexporter.h"
+#include "filter/mailfilter.h"
 
 #include <qapplication.h>
 #include <QVBoxLayout>
 #include <QMenu>
-#include <mailfilter.h>
 #include <qmenubar.h>
 #include <QTextEdit>
+
 Q_DECLARE_METATYPE(MailCommon::FilterImporterExporter::FilterType)
 FilterImporterExporterGui::FilterImporterExporterGui(QWidget *parent)
     : QWidget(parent)

@@ -17,9 +17,9 @@
 
 #include "mailcommon_debug.h"
 #include "filterimporterabstract.h"
-#include "filteractions/filteractiondict.h"
-#include "filtermanager.h"
-#include "mailfilter.h"
+#include "filter/filteractions/filteractiondict.h"
+#include "filter/filtermanager.h"
+#include "filter/mailfilter.h"
 
 #include <QFile>
 

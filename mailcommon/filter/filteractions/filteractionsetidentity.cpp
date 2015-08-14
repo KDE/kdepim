@@ -21,7 +21,7 @@
 #include "messagecore/utils/stringutil.h"
 
 #include "kernel/mailkernel.h"
-#include "dialog/filteractionmissingargumentdialog.h"
+#include "filter/dialog/filteractionmissingargumentdialog.h"
 
 #include <KIdentityManagement/Identity>
 #include <KIdentityManagement/IdentityCombo>

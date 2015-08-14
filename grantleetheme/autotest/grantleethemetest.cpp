@@ -16,7 +16,7 @@
 */
 
 #include "grantleethemetest.h"
-#include "../grantleetheme.h"
+#include "grantleetheme.h"
 #include <qtest.h>
 #include <QDir>
 

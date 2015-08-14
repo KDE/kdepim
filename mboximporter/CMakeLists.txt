@@ -11,11 +11,9 @@ set(mboximporter_SRCS
   mboximportkernel.cpp
 )
 
-ki18n_wrap_ui(mboximporter_SRCS 
-                  ui/mboximportwidget.ui
+ki18n_wrap_ui(mboximporter_SRCS
+              ui/mboximportwidget.ui
 )
-
-include_directories(${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon ${CMAKE_SOURCE_DIR}/messagecomposer)
 
 add_executable(mboximporter ${mboximporter_SRCS})
 

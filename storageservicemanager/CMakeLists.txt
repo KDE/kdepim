@@ -4,11 +4,6 @@ add_definitions(-DTRANSLATION_DOMAIN=\"storageservicemanager\")
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/pimcommon/
-  ${CMAKE_SOURCE_DIR}/libkdepim/
-)
-
 set( storageservicemanager_kcfg_SRCS settings/storageservicemanagerglobalconfig.kcfgc )
 
 kconfig_add_kcfg_files(storageservicemanager_kcfg_SRCS ${storageservicemanager_kcfg_SRCS})

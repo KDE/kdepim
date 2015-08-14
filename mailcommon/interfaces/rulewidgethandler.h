@@ -31,7 +31,7 @@
 #ifndef MAILCOMMON_INTERFACES_RULEWIDGETHANDLER_H
 #define MAILCOMMON_INTERFACES_RULEWIDGETHANDLER_H
 
-#include "searchpattern.h"
+#include "search/searchpattern.h"
 
 #include <QByteArray>
 

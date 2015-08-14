@@ -19,7 +19,7 @@
 
 #include "filteractionwithtest.h"
 
-#include "soundtestwidget.h"
+#include "filter/soundtestwidget.h"
 
 #include <QTextDocument>
 

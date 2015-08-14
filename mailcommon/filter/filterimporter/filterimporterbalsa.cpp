@@ -16,8 +16,8 @@
 */
 
 #include "filterimporterbalsa.h"
-#include "filtermanager.h"
-#include "mailfilter.h"
+#include "filter/filtermanager.h"
+#include "filter/mailfilter.h"
 #include "mailcommon_debug.h"
 #include <KConfig>
 #include <KConfigGroup>

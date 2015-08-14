@@ -16,7 +16,7 @@
 */
 
 #include "filterimporterthunderbird.h"
-#include "mailfilter.h"
+#include "filter/mailfilter.h"
 #include "mailcommon_debug.h"
 #include <QUrl>
 

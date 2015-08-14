@@ -20,6 +20,8 @@ target_link_libraries(kmanagesieve
   ${Sasl2_LIBRARIES}
 )
 
+target_include_directories(kmanagesieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/kmanagesieve;${libksieve_BINARY_DIR}/kmanagesieve>")
+
 set_target_properties(
   kmanagesieve PROPERTIES
   VERSION ${KDEPIM_LIB_VERSION}

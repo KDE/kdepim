@@ -23,6 +23,8 @@ if(BUILD_TESTING)
    add_subdirectory( autotests )
    add_subdirectory( composer-ng/autotests )
    add_subdirectory( imagescaling/autotests )
+   add_subdirectory( imagescaling/tests )
+   add_subdirectory( composer-ng/tests )
 endif()
 
 
@@ -174,11 +176,8 @@ PRIVATE
   followupreminder
 )
 
+target_include_directories(messagecomposer PUBLIC "$<BUILD_INTERFACE:${messagecomposer_SOURCE_DIR};${messagecomposer_BINARY_DIR}>")
+
 set_target_properties( messagecomposer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
 install( TARGETS messagecomposer ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
-
-if(BUILD_TESTING)
-    add_subdirectory(imagescaling/tests)
-    add_subdirectory(composer-ng/tests)
-endif()

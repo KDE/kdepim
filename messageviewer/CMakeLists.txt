@@ -28,15 +28,20 @@ check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
 macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
 configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messageviewer.h)
 
-include_directories( ${GPGME_INCLUDES} )
+# target_include_directories does not handle empty include paths
+include_directories(${GPGME_INCLUDES})
 
 if(BUILD_TESTING)
    add_subdirectory(autotests)
    add_subdirectory(scamdetection/autotests)
    add_subdirectory(findbar/autotests)
    add_subdirectory(tests)
+   add_subdirectory(scamdetection/tests)
+   add_subdirectory(adblock/tests/)
+   add_subdirectory(gravatar/autotests/)
 endif()
 add_subdirectory(pics)
+add_subdirectory(grantleefilters)
 
 if(DEBUG_SIGNATURE)
    add_definitions(-DDEBUG_SIGNATURE)
@@ -214,14 +219,17 @@ generate_export_header(messageviewer BASE_NAME messageviewer)
 
 target_link_libraries(messageviewer 
 PUBLIC
-  messagecore kdepim kpgp kleo
+  messagecore
+  kdepim
+  kpgp
+  kleo
+  pimcommon
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::AkonadiNotes
   KF5::Contacts
   KF5::KDELibs4Support
   ${_mailwebview_lib}
-  pimcommon
 PRIVATE
   grantleetheme
   kaddressbookgrantlee
@@ -235,14 +243,7 @@ PRIVATE
   KF5::Gpgmepp
 )
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/grantleetheme
-    ${CMAKE_SOURCE_DIR}/messagecore
-    ${CMAKE_SOURCE_DIR}/pimcommon
-    ${CMAKE_SOURCE_DIR}/libkdepim
-    ${CMAKE_SOURCE_DIR}/libkleo
-    ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee
-)
+target_include_directories(messageviewer PUBLIC "$<BUILD_INTERFACE:${messageviewer_SOURCE_DIR};${messageviewer_BINARY_DIR}>")
 
 set_target_properties( messageviewer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 install(TARGETS messageviewer ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
@@ -253,14 +254,6 @@ install(TARGETS messageviewer ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 install(DIRECTORY themes DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )
 
 install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
-
-add_subdirectory(grantleefilters)
-
-if(BUILD_TESTING)
-    add_subdirectory(scamdetection/tests)
-    add_subdirectory(adblock/tests/)
-    add_subdirectory(gravatar/autotests/)
-endif()
 
 install(FILES notify/messageviewer.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 install(FILES scamdetection/data/longurlServices.json DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )

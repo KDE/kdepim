@@ -19,10 +19,10 @@
 
 #include "filteractionwidget.h"
 #include "mailcommon_debug.h"
-#include "filteraction.h"
-#include "filteractiondict.h"
-#include "filtermanager.h"
-#include "mailfilter.h"
+#include "filter/filteractions/filteraction.h"
+#include "filter/filteractions/filteractiondict.h"
+#include "filter/filtermanager.h"
+#include "filter/mailfilter.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KLocalizedString>

@@ -1,15 +1,5 @@
 project( headerthemeeditor )
 
-
-
-include_directories(
-  ${CMAKE_SOURCE_DIR}/messageviewer
-  ${CMAKE_SOURCE_DIR}/pimcommon/
-  ${CMAKE_SOURCE_DIR}/grantleeeditor/grantleethemeeditor
-  ${CMAKE_SOURCE_DIR}/grantleeeditor/
-)
-
-
 set(headerthemeeditor_SRCS
   main.cpp
   headerthemeeditor_debug.cpp

@@ -2,8 +2,7 @@ project(importwizard)
 
 
 include_directories(
-		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
-		    ${CMAKE_SOURCE_DIR}/importwizard/autodetect/
+    ${importwizard_SOURCE_DIR}/autodetect/
 )
 
 

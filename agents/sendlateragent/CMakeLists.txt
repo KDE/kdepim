@@ -21,15 +21,25 @@ kconfig_add_kcfg_files(sendlaterlib_SRCS
 
 ki18n_wrap_ui(sendlaterlib_SRCS ui/sendlaterwidget.ui)
 
-
 add_library( sendlater ${sendlaterlib_SRCS} )
 generate_export_header(sendlater BASE_NAME sendlater)
-target_link_libraries( sendlater PUBLIC KF5::AkonadiCore KF5::ConfigCore Qt5::Widgets PRIVATE KF5::I18n KF5::WidgetsAddons KF5::ConfigGui Qt5::DBus )
-
+target_link_libraries(sendlater
+  PUBLIC
+    KF5::AkonadiCore
+    KF5::ConfigCore
+    Qt5::Widgets
+  PRIVATE
+    KF5::I18n
+    KF5::WidgetsAddons
+    KF5::ConfigGui
+    Qt5::DBus
+)
+target_include_directories(sendlater PUBLIC "$<BUILD_INTERFACE:${sendlateragent_SOURCE_DIR};${sendlateragent_BINARY_DIR}>")
 set_target_properties( sendlater PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
 install( TARGETS sendlater ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
+############# Next target ###################
 
 set(sendlateragent_SRCS
    sendlateragent_debug.cpp

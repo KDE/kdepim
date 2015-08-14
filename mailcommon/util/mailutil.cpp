@@ -41,7 +41,7 @@
 #include "mailcommon_debug.h"
 #include "calendarinterface.h"
 #include "job/expirejob.h"
-#include "foldercollection.h"
+#include "folder/foldercollection.h"
 #include "pop3settings.h"
 #include "kernel/mailkernel.h"
 #include "filter/dialog/filteractionmissingargumentdialog.h"

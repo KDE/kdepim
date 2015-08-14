@@ -16,8 +16,8 @@
 */
 
 #include "filterimporterevolution.h"
-#include "filtermanager.h"
-#include "mailfilter.h"
+#include "filter/filtermanager.h"
+#include "filter/mailfilter.h"
 
 #include <QFile>
 #include <QDir>

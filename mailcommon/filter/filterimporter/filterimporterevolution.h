@@ -18,7 +18,7 @@
 #ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTEREVOLUTION_P_H
 #define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTEREVOLUTION_P_H
 
-#include "filterimporter/filterimporterabstract.h"
+#include "filter/filterimporter/filterimporterabstract.h"
 
 #include <QDomElement>
 

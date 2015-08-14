@@ -1,12 +1,7 @@
 project(pimcommon)
-include_directories(
-  ${CMAKE_SOURCE_DIR}/libkdepim
-  ${CMAKE_CURRENT_SOURCE_DIR}/util/
-  ${CMAKE_CURRENT_SOURCE_DIR}/shorturl/
-)
+
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
-
 
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libpimcommon\")
@@ -269,7 +264,7 @@ ki18n_wrap_ui(libpimcommon_SRCS
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
   kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
-  set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
+  set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "util/metatype.h")
   qt5_add_dbus_interface(libpimcommon_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_fileName} ${_className}
   )
@@ -314,6 +309,10 @@ PRIVATE
     KF5::Wallet
     KF5::DBusAddons
 )
+
+target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR};${pimcommon_BINARY_DIR}>")
+target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR}/shorturl;${pimcommon_BINARY_DIR}/shorturl>")
+target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR}/util;${pimcommon_BINARY_DIR}/util>")
 
 set_target_properties(pimcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS pimcommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

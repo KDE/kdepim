@@ -26,7 +26,7 @@
 #include "journalprint.h"
 #include "yearprint.h"
 
-#include <calendarviews/prefs.h>
+//#include <calendarviews/prefs.h>
 
 #include <KDEPrintDialog>
 #include <KMessageBox>

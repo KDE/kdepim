@@ -18,7 +18,7 @@
 #ifndef FILTERIMPORTERGMAIL_H
 #define FILTERIMPORTERGMAIL_H
 
-#include "filterimporter/filterimporterabstract.h"
+#include "filter/filterimporter/filterimporterabstract.h"
 class QFile;
 namespace MailCommon
 {

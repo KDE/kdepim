@@ -1,32 +1,12 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+macro(add_pimcommon_gravatar_unittest _name)
+    ecm_add_test(${ARGN}
+        TEST_NAME ${_name}
+        NAME_PREFIX "pimcommon-gravatar-"
+        LINK_LIBRARIES Qt5::Test pimcommon
+    )
+endmacro()
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/pimcommon
-)
-
-set( pimcommon_gravatar_SRCS gravatarresolvurljobtest.cpp )
-add_executable( pimcommon_gravatartest ${pimcommon_gravatar_SRCS})
-add_test(pimcommon_gravatartest pimcommon_gravatartest)
-ecm_mark_as_test(pimcommon_gravatartest)
-target_link_libraries( pimcommon_gravatartest Qt5::Test  pimcommon)
-
-set( pimcommon_gravatardownloadpixmapwidget_SRCS gravatardownloadpixmapwidgettest.cpp ../widgets/gravatardownloadpixmapwidget.cpp ../../pimcommon_debug.cpp )
-add_executable( pimcommon_gravatardownloadpixmapwidget ${pimcommon_gravatardownloadpixmapwidget_SRCS})
-add_test(pimcommon_gravatardownloadpixmapwidget pimcommon_gravatardownloadpixmapwidget)
-ecm_mark_as_test(pimcommon_gravatardownloadpixmapwidget)
-target_link_libraries( pimcommon_gravatardownloadpixmapwidget Qt5::Test  pimcommon)
-
-
-set( pimcommon_gravatardownloadpixmapdialog_SRCS gravatardownloadpixmapdialogtest.cpp ../widgets/gravatardownloadpixmapdialog.cpp ../../pimcommon_debug.cpp)
-add_executable( pimcommon_gravatardownloadpixmapdialog ${pimcommon_gravatardownloadpixmapdialog_SRCS})
-add_test(pimcommon_gravatardownloadpixmapdialog pimcommon_gravatardownloadpixmapdialog)
-ecm_mark_as_test(pimcommon_gravatardownloadpixmapdialog)
-target_link_libraries( pimcommon_gravatardownloadpixmapdialog Qt5::Test  pimcommon)
-
-
-set( pimcommon_gravatarcache_SRCS gravatarcachetest.cpp ../../pimcommon_debug.cpp)
-add_executable( pimcommon_gravatarcache ${pimcommon_gravatarcache_SRCS})
-add_test(pimcommon_gravatarcache pimcommon_gravatarcache)
-ecm_mark_as_test(pimcommon_gravatarcache)
-target_link_libraries( pimcommon_gravatarcache Qt5::Test  pimcommon)
-
+add_pimcommon_gravatar_unittest(cachetest gravatarcachetest.cpp)
+add_pimcommon_gravatar_unittest(downloadpixmapwidgettest gravatardownloadpixmapwidgettest.cpp ../widgets/gravatardownloadpixmapwidget.cpp ../../pimcommon_debug.cpp)
+add_pimcommon_gravatar_unittest(downloadpixmapdialogtest gravatardownloadpixmapdialogtest.cpp ../widgets/gravatardownloadpixmapdialog.cpp ../../pimcommon_debug.cpp)
+add_pimcommon_gravatar_unittest(resolveurljobtest gravatarresolvurljobtest.cpp)

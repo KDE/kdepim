@@ -1,16 +1,10 @@
 
 macro(add_pimcommon_baloodebug_unittest _source)
-  set(_test ${_source} )
-  get_filename_component(_name ${_source} NAME_WE)
-  add_executable( ${_name} ${_test} )
-  add_test( ${_name} ${_name} )
-  ecm_mark_as_test(pimcommon-baloodebug-${_name})
-  target_link_libraries( ${_name}
-    pimcommon
-    Qt5::Test
-    Qt5::Core
-    Qt5::Gui
-  )
+    ecm_add_test(${_source}
+        NAME_PREFIX "pimcommon-baloodebug-"
+        LINK_LIBRARIES Qt5::Test Qt5::Gui pimcommon
+        GUI
+    )
 endmacro ()
 
 add_pimcommon_baloodebug_unittest(baloodebugdialogtest.cpp)

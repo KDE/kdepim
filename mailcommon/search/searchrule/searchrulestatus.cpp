@@ -16,7 +16,7 @@
 */
 
 #include "searchrulestatus.h"
-#include "filterlog.h"
+#include "filter/filterlog.h"
 using MailCommon::FilterLog;
 
 #include <KMime/KMimeMessage>

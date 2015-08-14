@@ -23,7 +23,7 @@
 #include "interfaces/mailinterfaces.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
-#include "mdnadvicedialog.h"
+#include "filter/mdnadvicedialog.h"
 #include "mailcommon_debug.h"
 #include <messagecomposer/helper/messagefactory.h>
 #include <messagecomposer/sender/messagesender.h>

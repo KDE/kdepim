@@ -1,5 +1,4 @@
-
-include_directories(${CMAKE_SOURCE_DIR}/kaddressbook)
+include_directories(${kaddressbook_SOURCE_DIR})
 
 set(kontact_kaddressbookplugin_PART_SRCS
     kaddressbookplugin_debug.cpp

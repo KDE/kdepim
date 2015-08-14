@@ -1,6 +1,3 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
-
 # Convenience macro to add kleo unit tests.
 macro( add_kleo_test _source )
   set( _test ${_source} )

@@ -4,7 +4,6 @@ project(kaddressbook)
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
   ${CMAKE_CURRENT_SOURCE_DIR}/printing/
-  ${Grantlee_INCLUDE_DIRS}
 )
 
 
@@ -156,6 +155,8 @@ endif()
 if(KF5Prison_FOUND)
    target_link_libraries(kaddressbookprivate KF5::Prison)
 endif()
+
+target_include_directories(kaddressbookprivate PUBLIC "$<BUILD_INTERFACE:${kaddressbook_SOURCE_DIR};${kaddressbook_BINARY_DIR}>")
 
 set_target_properties(kaddressbookprivate PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS kaddressbookprivate ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)

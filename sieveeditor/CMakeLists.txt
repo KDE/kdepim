@@ -3,10 +3,6 @@ project( sieveeditor )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/libksieve/ksieveui/
-)
-
 set( sieveeditor_kcfg_SRCS settings/sieveeditorglobalconfig.kcfgc )
 
 kconfig_add_kcfg_files(sieveeditor_kcfg_SRCS ${sieveeditor_kcfg_SRCS})
@@ -47,7 +43,7 @@ target_link_libraries(sieveeditor
                        KF5::MailTransport
                        KF5::DBusAddons 
                        KF5::I18n
-                       pimcommon 
+                       pimcommon
                        ksieveui
                        kmanagesieve
 )

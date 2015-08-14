@@ -1,44 +1,31 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+macro(add_libkdepim_blacklistbaloocompletion_unittest _name)
+    ecm_add_test(${ARGN}
+        TEST_NAME ${_name}
+        NAME_PREFIX "libkdepim-addessline-blaclistbaloocompletion-"
+        LINK_LIBRARIES Qt5::Test kdepim
+    )
+endmacro()
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/libkdepim
+add_libkdepim_blacklistbaloocompletion_unittest(emailcompletiondialogtest
+    blacklistbalooemailcompletiondialogtest.cpp
+    ../blacklistbalooemailcompletionwidget.cpp
+    ../blacklistbalooemailwarning.cpp
 )
-
-set( libkdepim_blacklistbalooemailcompletiondialogtest_SRCS blacklistbalooemailcompletiondialogtest.cpp ../blacklistbalooemailcompletionwidget.cpp ../blacklistbalooemailwarning.cpp)
-add_executable( libkdepim_blacklistbalooemailcompletiondialogtest ${libkdepim_blacklistbalooemailcompletiondialogtest_SRCS})
-add_test(libkdepim_blacklistbalooemailcompletiondialogtest libkdepim_blacklistbalooemailcompletiondialogtest)
-ecm_mark_as_test(libkdepim_blacklistbalooemailcompletiondialogtest)
-target_link_libraries( libkdepim_blacklistbalooemailcompletiondialogtest Qt5::Test  kdepim)
-
-
-set( libkdepim_blacklistbalooemaillisttest_SRCS blacklistbalooemaillisttest.cpp )
-add_executable( libkdepim_blacklistbalooemaillisttest ${libkdepim_blacklistbalooemaillisttest_SRCS})
-add_test(libkdepim_blacklistbalooemaillisttest libkdepim_blacklistbalooemaillisttest)
-ecm_mark_as_test(libkdepim_blacklistbalooemaillisttest)
-target_link_libraries( libkdepim_blacklistbalooemaillisttest Qt5::Test  kdepim)
-
-set( libkdepim_blacklistbalooemailsearchjobtest_SRCS blacklistbalooemailsearchjobtest.cpp )
-add_executable( libkdepim_blacklistbalooemailsearchjobtest ${libkdepim_blacklistbalooemailsearchjobtest_SRCS})
-add_test(libkdepim_blacklistbalooemailsearchjobtest libkdepim_blacklistbalooemailsearchjobtest)
-ecm_mark_as_test(libkdepim_blacklistbalooemailsearchjobtest)
-target_link_libraries( libkdepim_blacklistbalooemailsearchjobtest Qt5::Test  kdepim)
-
-set( libkdepim_blacklistbalooemailutiltest_SRCS blacklistbalooemailutiltest.cpp )
-add_executable( libkdepim_blacklistbalooemailutiltest ${libkdepim_blacklistbalooemailutiltest_SRCS})
-add_test(libkdepim_blacklistbalooemailutiltest libkdepim_blacklistbalooemailutiltest)
-ecm_mark_as_test(libkdepim_blacklistbalooemailutiltest)
-target_link_libraries( libkdepim_blacklistbalooemailutiltest Qt5::Test  kdepim)
-
-
-set( libkdepim_blacklistbalooemailcompletionwidgettest_SRCS blacklistbalooemailcompletionwidgettest.cpp ../blacklistbalooemailcompletionwidget.cpp ../blacklistbalooemailwarning.cpp)
-add_executable( libkdepim_blacklistbalooemailcompletionwidgettest ${libkdepim_blacklistbalooemailcompletionwidgettest_SRCS})
-add_test(libkdepim_blacklistbalooemailcompletionwidgettest libkdepim_blacklistbalooemailcompletionwidgettest)
-ecm_mark_as_test(libkdepim_blacklistbalooemailcompletionwidgettest)
-target_link_libraries( libkdepim_blacklistbalooemailcompletionwidgettest Qt5::Test  kdepim)
-
-set( libkdepim_blacklistbalooemailwarningtest_SRCS blacklistbalooemailwarningtest.cpp ../blacklistbalooemailwarning.cpp )
-add_executable( libkdepim_blacklistbalooemailwarningtest ${libkdepim_blacklistbalooemailwarningtest_SRCS})
-add_test(libkdepim_blacklistbalooemailwarningtest libkdepim_blacklistbalooemailwarningtest)
-ecm_mark_as_test(libkdepim_blacklistbalooemailwarningtest)
-target_link_libraries( libkdepim_blacklistbalooemailwarningtest Qt5::Test  kdepim)
-
+add_libkdepim_blacklistbaloocompletion_unittest(emailcompletionwidgettest
+    blacklistbalooemailcompletionwidgettest.cpp
+    ../blacklistbalooemailcompletionwidget.cpp
+    ../blacklistbalooemailwarning.cpp
+)
+add_libkdepim_blacklistbaloocompletion_unittest(emaillisttest
+    blacklistbalooemaillisttest.cpp
+)
+add_libkdepim_blacklistbaloocompletion_unittest(emailsearchjobtest
+    blacklistbalooemailsearchjobtest.cpp
+)
+add_libkdepim_blacklistbaloocompletion_unittest(emailutiltest
+    blacklistbalooemailutiltest.cpp
+)
+add_libkdepim_blacklistbaloocompletion_unittest(emailwarningtest
+    blacklistbalooemailwarningtest.cpp
+    ../blacklistbalooemailwarning.cpp
+)

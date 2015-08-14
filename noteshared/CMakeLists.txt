@@ -68,6 +68,9 @@ PUBLIC
 PRIVATE
      KF5::DNSSD pimcommon  KF5::Mime KF5::AkonadiNotes
 )
+
+target_include_directories(noteshared PUBLIC "$<BUILD_INTERFACE:${noteshared_SOURCE_DIR};${noteshared_BINARY_DIR}>")
+
 set_target_properties(noteshared PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS noteshared ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if (BUILD_TESTING)

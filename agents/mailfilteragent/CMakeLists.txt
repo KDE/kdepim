@@ -4,12 +4,6 @@ add_subdirectory( kconf_update )
 
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_mailfilter_agent\")
 
-include_directories(
-  ${Boost_INCLUDE_DIR}
-)
-
-
-
 set(akonadi_mailfilter_agent_SRCS
   dummykernel.cpp
   filterlogdialog.cpp

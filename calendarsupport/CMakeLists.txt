@@ -1,14 +1,11 @@
+project(calendarsupport)
+
 # Commented because it uses your real calendar. You can loose data.
 # I'll uncomment this when tests use testrunner.
 # add_subdirectory(next/tests)
 
-include_directories(
-  ${Boost_INCLUDE_DIR}
-  ${CMAKE_BINARY_DIR}/calendarviews
-)
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
 add_definitions(-DQT_NO_CAST_TO_ASCII)
-
 
 add_definitions(-DTRANSLATION_DOMAIN=\"calendarsupport\")
 
@@ -75,6 +72,8 @@ PRIVATE
   kdepimdbusinterfaces
 )
 
+target_include_directories(calendarsupport PUBLIC "$<BUILD_INTERFACE:${calendarsupport_SOURCE_DIR};${calendarsupport_BINARY_DIR};${Boost_INCLUDE_DIRS}>")
+
 set_target_properties(calendarsupport
   PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
   SOVERSION ${KDEPIM_LIB_SOVERSION}
@@ -82,21 +81,28 @@ set_target_properties(calendarsupport
 
 install(TARGETS calendarsupport ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
+
+############# Next target #######################
+
 set(calendarsupportcollectionpage_LIB_SRCS
     collectiongeneralpage.cpp
 )
 
 add_library(calendarsupportcollectionpage ${calendarsupportcollectionpage_LIB_SRCS})
+add_dependencies(calendarsupportcollectionpage mailcommon)
 generate_export_header(calendarsupportcollectionpage BASE_NAME calendarsupportcollectionpage)
 target_link_libraries(
   calendarsupportcollectionpage
-PRIVATE
+PUBLIC
   KF5::AkonadiCore
-  KF5::CalendarCore
   mailcommon
+PRIVATE
+  KF5::CalendarCore
   pimcommon
   KF5::AkonadiCalendar
 )
+
+target_include_directories(calendarsupportcollectionpage PUBLIC "$<BUILD_INTERFACE:${calendarsupport_SOURCE_DIR};${calendarsupport_BINARY_DIR};${Boost_INCLUDE_DIRS}>")
 
 set_target_properties(calendarsupportcollectionpage
   PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
@@ -104,6 +110,4 @@ set_target_properties(calendarsupportcollectionpage
 )
 
 install(TARGETS calendarsupportcollectionpage ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
-
 install(FILES calendarplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})

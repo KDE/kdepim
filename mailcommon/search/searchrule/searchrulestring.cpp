@@ -16,7 +16,7 @@
 */
 
 #include "searchrulestring.h"
-#include "filterlog.h"
+#include "filter/filterlog.h"
 using MailCommon::FilterLog;
 
 #include <Akonadi/Contact/ContactSearchJob>

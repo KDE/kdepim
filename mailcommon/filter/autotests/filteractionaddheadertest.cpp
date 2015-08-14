@@ -17,10 +17,11 @@
 
 #include "filteractionaddheadertest.h"
 #include "../filteractions/filteractionaddheader.h"
+#include "filter/itemcontext.h"
+
 #include <KLineEdit>
 #include <QLabel>
 #include <qtest.h>
-#include <itemcontext.h>
 #include <widgets/minimumcombobox.h>
 
 FilterActionAddHeaderTest::FilterActionAddHeaderTest(QObject *parent)

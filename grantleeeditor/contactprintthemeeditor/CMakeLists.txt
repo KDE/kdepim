@@ -1,16 +1,6 @@
 project( contactprintthemeeditor )
 
 
-
-
-include_directories(
-  ${CMAKE_SOURCE_DIR}/pimcommon/
-  ${CMAKE_SOURCE_DIR}/grantleeeditor/grantleethemeeditor
-  ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee
-  ${CMAKE_SOURCE_DIR}/grantleeeditor/
-)
-
-
 set(contactprintthemeeditor_SRCS
   main.cpp
   contactprintthemeeditor_debug.cpp
@@ -28,12 +18,12 @@ set(contactprintthemeeditor_SRCS
 
 
 add_executable(contactprintthemeeditor ${contactprintthemeeditor_SRCS} )
-target_link_libraries(contactprintthemeeditor 
-                       KF5::DBusAddons                        
-                       KF5::NewStuff 
+target_link_libraries(contactprintthemeeditor
+                       KF5::DBusAddons
+                       KF5::NewStuff
                        KF5::AkonadiContact
-                       pimcommon 
-                       grantleethemeeditor 
+                       pimcommon
+                       grantleethemeeditor
                        kaddressbookgrantlee
 )
 

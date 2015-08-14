@@ -19,7 +19,7 @@
 #include "mailcommon_debug.h"
 #include <QFile>
 #include <QDir>
-#include "mailfilter.h"
+#include "filter/mailfilter.h"
 
 using namespace MailCommon;
 

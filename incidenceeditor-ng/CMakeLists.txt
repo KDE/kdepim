@@ -1,12 +1,10 @@
+project(incidenceeditorng)
+
 if(KDEPIM_MOBILE_UI)
   remove_definitions(-DKDEPIM_MOBILE_UI)
 endif()
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libincidenceeditors\")
-
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
 
 set(incidenceeditors_ng_shared_LIB_SRCS
   incidenceeditor_debug.cpp
@@ -101,6 +99,7 @@ add_library(incidenceeditorsng ${incidenceeditors_ng_desktop_LIB_SRCS})
 generate_export_header(incidenceeditorsng BASE_NAME incidenceeditors_ng)
 
 target_link_libraries(incidenceeditorsng
+PUBLIC
   KF5::AkonadiCalendar
   KF5::AkonadiMime
   KF5::CalendarCore
@@ -108,10 +107,11 @@ target_link_libraries(incidenceeditorsng
   KF5::MailTransport
   KF5::Codecs
   kdepim
-  kdepimdbusinterfaces # For UriHandler
   calendarsupport      # For KCalPrefs
   eventviews
   kdgantt2             # For FreeBusy Editor
+PRIVATE
+  kdepimdbusinterfaces # For UriHandler
 )
 
 set_target_properties(incidenceeditorsng
@@ -121,6 +121,7 @@ set_target_properties(incidenceeditorsng
 
 install(TARGETS incidenceeditorsng ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
+target_include_directories(incidenceeditorsng PUBLIC "$<BUILD_INTERFACE:${incidenceeditorng_SOURCE_DIR};${incidenceeditorng_BINARY_DIR}>")
 
 set(testincidenceeditor_SRCS main.cpp)
 

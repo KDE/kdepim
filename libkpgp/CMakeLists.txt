@@ -1,3 +1,4 @@
+project(libkpgp)
 
 add_subdirectory( pics )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -39,6 +40,8 @@ target_link_libraries(kpgp
     KF5::WindowSystem
     KF5::CoreAddons
 )
+
+target_include_directories(kpgp PUBLIC "$<BUILD_INTERFACE:${libkpgp_SOURCE_DIR};${libkpgp_BINARY_DIR}>")
 
 set_target_properties(kpgp PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS kpgp ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

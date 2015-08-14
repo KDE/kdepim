@@ -23,7 +23,7 @@
 #include "searchrule/searchruledate.h"
 #include "searchrule/searchrulestring.h"
 #include "searchrule/searchrulestatus.h"
-#include "filterlog.h"
+#include "filter/filterlog.h"
 using MailCommon::FilterLog;
 #include "mailcommon_debug.h"
 #include <Akonadi/Contact/ContactSearchJob>

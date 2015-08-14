@@ -18,7 +18,7 @@
  */
 
 #include "filteractionpipethroughtest.h"
-#include "filteractions/filteractionpipethrough.h"
+#include "../filteractions/filteractionpipethrough.h"
 #include <qtest.h>
 
 using namespace MailCommon;

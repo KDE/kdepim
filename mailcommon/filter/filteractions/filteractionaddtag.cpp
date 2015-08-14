@@ -18,8 +18,8 @@
  */
 
 #include "filteractionaddtag.h"
-#include "filtermanager.h"
-#include "dialog/filteractionmissingargumentdialog.h"
+#include "filter/filtermanager.h"
+#include "filter/dialog/filteractionmissingargumentdialog.h"
 #include "pimcommon/widgets/minimumcombobox.h"
 
 #include <QTextDocument>

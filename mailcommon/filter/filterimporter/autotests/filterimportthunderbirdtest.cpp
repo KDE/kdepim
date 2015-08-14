@@ -17,7 +17,7 @@
 #include "filterimportthunderbirdtest.h"
 #include "../filterimporterthunderbird.h"
 #include "filtertestkernel.h"
-#include "mailfilter.h"
+#include "filter/mailfilter.h"
 #include <AkonadiCore/qtest_akonadi.h>
 #include <mailcommon/kernel/mailkernel.h>
 

@@ -1,7 +1,5 @@
 project(mailimporter)
 
-
-
 add_definitions(-DTRANSLATION_DOMAIN=\"libmailimporter\")
 
 set(libmailimporter_SRCS
@@ -46,6 +44,8 @@ PRIVATE
   kdepim
   KF5::Archive
 )
+
+target_include_directories(mailimporter PUBLIC "$<BUILD_INTERFACE:${mailimporter_SOURCE_DIR};${mailimporter_BINARY_DIR}>")
 
 set_target_properties(mailimporter PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS mailimporter ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

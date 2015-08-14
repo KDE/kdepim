@@ -16,7 +16,7 @@
 */
 
 #include "grantleeprinttest.h"
-#include "../grantleeprint.h"
+#include "printing/grantleeprint.h"
 #include <qtest.h>
 #include <KContacts/Addressee>
 

@@ -1,14 +1,7 @@
 
 if (KF5GAPI_FOUND)
-  include_directories(${LibKGAPI2_INCLUDE_DIR} )
   add_definitions(-DHAVE_GAPIBLOGGER_SUPPORT)
 endif()
-
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} 
-                     ${CMAKE_CURRENT_BINARY_DIR}  
-                     ${CMAKE_SOURCE_DIR}/libkdepim
-                     ${CMAKE_SOURCE_DIR}/pimcommon
-                     )
 
 set(blogilo_SRCS
  blogilomigrateapplication.cpp

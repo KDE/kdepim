@@ -1,20 +1,9 @@
-include_directories(
-  ${CMAKE_SOURCE_DIR}/mailcommon/search/
-  ${CMAKE_SOURCE_DIR}/pimcommon/util/
-  ${CMAKE_CURRENT_SOURCE_DIR}/filter
-  ${CMAKE_CURRENT_SOURCE_DIR}/tag/
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}/snippets
-  ${CMAKE_CURRENT_SOURCE_DIR}/folder
-  ${CMAKE_CURRENT_SOURCE_DIR}/util
-)
+project(mailcommon)
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libmailcommon\")
 
 #add_definitions( -DQT_NO_CAST_FROM_ASCII )
 #add_definitions( -DQT_NO_CAST_TO_ASCII )
-
-
 
 
 set(libmailcommon_filter_SRCS
@@ -176,7 +165,7 @@ set(libmailcommon_SRCS
   ${libmailcommon_search_SRCS}
   ${libmailcommon_job_SRCS}
   ${libmailcommon_collection_SRCS}
-  ${libmailcommon_folder_SRCS}   
+  ${libmailcommon_folder_SRCS}
   ${libmailcommon_filter_SRCS}
 )
 kconfig_add_kcfg_files(libmailcommon_SRCS
@@ -213,26 +202,28 @@ qt5_add_dbus_interfaces(libmailcommon_SRCS
 add_library(mailcommon ${libmailcommon_SRCS})
 generate_export_header(mailcommon BASE_NAME mailcommon)
 
-target_link_libraries(mailcommon 
+target_link_libraries(mailcommon
 PUBLIC
-  messagecomposer 
+  messagecomposer
   kdepim
   pimcommon
   KF5::AkonadiCore
   KF5::AkonadiMime
 PRIVATE
   messageviewer
-  KF5::Mime
   mailimporter
-  KF5::Codecs
   messagecore
   templateparser
+  KF5::Mime
+  KF5::Codecs
   KF5::MailTransport
-  Phonon::phonon4qt5 
+  Phonon::phonon4qt5
 )
 
-set_target_properties(mailcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
+target_include_directories(mailcommon PUBLIC "$<BUILD_INTERFACE:${mailcommon_SOURCE_DIR};${mailcommon_BINARY_DIR}>")
+target_include_directories(mailcommon PUBLIC "$<BUILD_INTERFACE:${mailcommon_SOURCE_DIR}/search;>")
 
+set_target_properties(mailcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS mailcommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 if (BUILD_TESTING)

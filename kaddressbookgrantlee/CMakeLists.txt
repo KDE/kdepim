@@ -1,10 +1,5 @@
 project(kaddressbookgrantlee)
 
-
-include_directories(
-  ${Grantlee_INCLUDE_DIRS}
-)
-
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_definitions(-DTRANSLATION_DOMAIN=\"libkaddressbookgrantlee\")
@@ -44,8 +39,11 @@ PRIVATE
   kleo
 )
 
+target_include_directories(kaddressbookgrantlee PUBLIC "$<BUILD_INTERFACE:${kaddressbookgrantlee_SOURCE_DIR};${kaddressbookgrantlee_BINARY_DIR};${Grantlee_INCLUDE_DIRS}>")
+
 set_target_properties(kaddressbookgrantlee PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS kaddressbookgrantlee ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+
 
 if (BUILD_TESTING)
    add_subdirectory(printing/autotests)

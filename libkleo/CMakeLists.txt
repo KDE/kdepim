@@ -1,4 +1,8 @@
-include_directories( ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
+project(libkleo)
+
+# target_include_directories does not handle empty include paths
+include_directories(${GPGME_INCLUDES})
+
 if (KDEPIM_ONLY_KLEO)
   add_definitions( -DKDEPIM_ONLY_KLEO )
 endif ()
@@ -120,6 +124,8 @@ target_link_libraries(kleo ${kleo_LIB_LIBS} )
 endif()
 set_target_properties(kleo PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 install(TARGETS kleo ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+
+target_include_directories(kleo PUBLIC "$<BUILD_INTERFACE:${libkleo_SOURCE_DIR};${libkleo_BINARY_DIR};${Boost_INCLUDE_DIR}>")
 
 if ( WIN32 )
 install ( FILES libkleopatrarc-win32.desktop DESTINATION ${KDE_INSTALL_CONFDIR} RENAME libkleopatrarc )

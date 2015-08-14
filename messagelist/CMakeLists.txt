@@ -1,18 +1,9 @@
 project(messagelist)
 
-
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
 option(KDEPIM_FOLDEROPEN_PROFILE "Enable debug output for timing folder loading" FALSE)
 configure_file(config-messagelist.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messagelist.h)
-
-include_directories(
-  ${BALOO_INCLUDE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_SOURCE_DIR}/messagecore
-  ${CMAKE_SOURCE_DIR}/pimcommon
-  )
-
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libmessagelist\")
 
@@ -96,7 +87,6 @@ kconfig_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
 add_library(messagelist ${libmessagelist_SRCS})
 generate_export_header(messagelist BASE_NAME messagelist)
 target_link_libraries(messagelist
-  
   KF5::KIOCore
   KF5::AkonadiCore
   KF5::AkonadiMime
@@ -105,6 +95,8 @@ target_link_libraries(messagelist
   messagecore
   pimcommon
 )
+
+target_include_directories(messagelist PUBLIC "$<BUILD_INTERFACE:${messagelist_SOURCE_DIR};${messagelist_BINARY_DIR}>")
 
 set_target_properties(messagelist PROPERTIES
   VERSION ${KDEPIM_LIB_VERSION}

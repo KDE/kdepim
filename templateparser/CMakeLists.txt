@@ -23,9 +23,7 @@ set(templateparser_LIB_SRCS
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo
-  ${CMAKE_SOURCE_DIR}/messagecore
   ${CMAKE_SOURCE_DIR}/messageviewer
-  ${CMAKE_SOURCE_DIR}/pimcommon
 )
 
 kconfig_add_kcfg_files(templateparser_LIB_SRCS settings/templatesconfiguration_kfg.kcfgc)
@@ -57,6 +55,10 @@ set_target_properties(templateparser PROPERTIES
   VERSION ${KDEPIM_LIB_VERSION}
   SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
+
+target_include_directories(templateparser PUBLIC "$<BUILD_INTERFACE:${templateparser_SOURCE_DIR};${templateparser_BINARY_DIR}>")
+target_include_directories(templateparser PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR};${pimcommon_BINARY_DIR}>")
+
 
 install(TARGETS templateparser ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 

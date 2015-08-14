@@ -19,7 +19,7 @@
 
 #include <QDateTime>
 
-#include "filterlog.h"
+#include "filter/filterlog.h"
 using MailCommon::FilterLog;
 
 #include <KMime/KMimeMessage>

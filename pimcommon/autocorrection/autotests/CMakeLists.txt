@@ -1,22 +1,10 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+macro(add_pimcommon_autocorrect_unittest _source)
+    ecm_add_test(${_source}
+        NAME_PREFIX "pimcommon-autocorrection-"
+        LINK_LIBRARIES Qt5::Test pimcommon
+    )
+endmacro()
 
-
-set( autocorrectiontest_SRCS autocorrectiontest.cpp )
-add_executable( autocorrectiontest ${autocorrectiontest_SRCS})
-add_test(autocorrectiontest autocorrectiontest)
-ecm_mark_as_test(autocorrectiontest)
-target_link_libraries( autocorrectiontest Qt5::Test  pimcommon)
-
-
-set( lineeditwithautocorrectiontest_SRCS lineeditwithautocorrectiontest.cpp )
-add_executable( lineeditwithautocorrectiontest ${lineeditwithautocorrectiontest_SRCS})
-add_test(lineeditwithautocorrectiontest lineeditwithautocorrectiontest)
-ecm_mark_as_test(lineeditwithautocorrectiontest)
-target_link_libraries( lineeditwithautocorrectiontest Qt5::Test  pimcommon)
-
-set( richtexteditwithautocorrectiontest_SRCS richtexteditwithautocorrectiontest.cpp )
-add_executable( richtexteditwithautocorrectiontest ${richtexteditwithautocorrectiontest_SRCS})
-add_test(richtexteditwithautocorrectiontest richtexteditwithautocorrectiontest)
-ecm_mark_as_test(richtexteditwithautocorrectiontest)
-target_link_libraries( richtexteditwithautocorrectiontest Qt5::Test  pimcommon)
-
+add_pimcommon_autocorrect_unittest(autocorrectiontest.cpp)
+add_pimcommon_autocorrect_unittest(lineeditwithautocorrectiontest.cpp)
+add_pimcommon_autocorrect_unittest(richtexteditwithautocorrectiontest.cpp)

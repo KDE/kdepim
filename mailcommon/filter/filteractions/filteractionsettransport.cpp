@@ -19,7 +19,7 @@
 
 #include "filteractionsettransport.h"
 
-#include "dialog/filteractionmissingargumentdialog.h"
+#include "filter/dialog/filteractionmissingargumentdialog.h"
 
 #include <KLocalizedString>
 #include <MailTransport/Transport>

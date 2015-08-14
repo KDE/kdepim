@@ -1,18 +1,12 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-
 add_subdirectory(gnupg_home)
 
-include_directories( ${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/messagecore ${CMAKE_BINARY_DIR}/messagecore)
-
 # Convenience macro to add unit tests.
-macro( add_messagecore_test _source )
-  set( _test ${_source} )
-  get_filename_component( _name ${_source} NAME_WE )
-  add_executable( ${_name} ${_test} )
-  add_test( ${_name} ${_name} )
-  set_target_properties(${_name} PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/\\"")
-  ecm_mark_as_test(messagecore-${_name})
-  target_link_libraries( ${_name} messagecore Qt5::Test  kleo )
+macro(add_messagecore_test _source )
+    add_definitions(-DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/\\"")
+    ecm_add_test(${_source}
+        NAME_PREFIX "messagecore-"
+        LINK_LIBRARIES Qt5::Test kleo messagecore
+    )
 endmacro()
 
 # Attachment tests.
@@ -25,12 +19,10 @@ add_messagecore_test( attachmentupdatejobtest.cpp )
 
 # Other tests
 add_messagecore_test( stringutiltest.cpp )
-add_messagecore_test( mailinglisttest.cpp ) 
+add_messagecore_test( mailinglisttest.cpp )
 
-
-set( mdnstateattributetest_source mdnstateattributetest.cpp ../misc/mdnstateattribute.cpp)
-add_executable(  mdnstateattributetest ${mdnstateattributetest_source})
-add_test(mdnstateattributetest mdnstateattributetest)
-ecm_mark_as_test(mdnstateattributetest)
-target_link_libraries( mdnstateattributetest Qt5::Test Qt5::Gui KF5::AkonadiCore)
-
+ecm_add_test(mdnstateattributetest.cpp ../misc/mdnstateattribute.cpp
+    TEST_NAME msdnattributetest
+    NAME_PREFIX "messagecore-"
+    LINK_LIBRARIES Qt5::Test Qt5::Gui KF5::AkonadiCore messagecore
+)

@@ -5,4 +5,3 @@ target_link_libraries(selectmultiselectiondialog_gui
   KF5::Mime
   pimcommon
 )
-

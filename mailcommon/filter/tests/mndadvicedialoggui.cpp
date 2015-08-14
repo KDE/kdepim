@@ -15,7 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "mdnadvicedialog.h"
+#include "filter/mdnadvicedialog.h"
+
 #include <QApplication>
 
 int main(int argc, char **argv)

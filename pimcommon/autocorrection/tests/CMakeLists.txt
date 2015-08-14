@@ -1,5 +1,3 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-
 set(autocorrection_gui_SRCS autocorrection_gui.cpp)
 add_executable(autocorrection_gui ${autocorrection_gui_SRCS})
 target_link_libraries(autocorrection_gui

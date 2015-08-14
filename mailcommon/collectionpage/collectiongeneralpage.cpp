@@ -21,7 +21,7 @@
 #include "incidencesforwidget.h"
 #include "contenttypewidget.h"
 #include "attributes/collectionannotationsattribute.h"
-#include "foldercollection.h"
+#include "folder/foldercollection.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 

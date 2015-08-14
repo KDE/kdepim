@@ -19,7 +19,7 @@
 
 #include "filteractionplaysound.h"
 
-#include "dialog/filteractionmissingargumentdialog.h"
+#include "filter/dialog/filteractionmissingargumentdialog.h"
 
 #include <phonon/mediaobject.h>
 

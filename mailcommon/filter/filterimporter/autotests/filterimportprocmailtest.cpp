@@ -16,7 +16,7 @@
 */
 #include "filterimportprocmailtest.h"
 #include "../filterimporterprocmail.h"
-#include "mailfilter.h"
+#include "filter/mailfilter.h"
 #include <AkonadiCore/qtest_akonadi.h>
 #include "filtertestkernel.h"
 #include <mailcommon/kernel/mailkernel.h>
