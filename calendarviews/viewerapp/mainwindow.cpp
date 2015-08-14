@@ -21,8 +21,8 @@
 
 #include "settings.h"
 
-#include "agenda.h"
-#include "agendaview.h"
+#include "agenda/agenda.h"
+#include "agenda/agendaview.h"
 #include "month/monthview.h"
 #include "multiagenda/multiagendaview.h"
 #include "timeline/timelineview.h"
