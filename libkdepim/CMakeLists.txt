@@ -197,7 +197,6 @@ endif()
 
 
 set( kcm_ldap_SRCS
-     ldap/addhostdialog.cpp
      ldap/kcmldap.cpp
 )
 

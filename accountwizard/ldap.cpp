@@ -210,7 +210,7 @@ void Ldap::edit()
     KLDAP::LdapClientSearchConfig clientSearchConfig;
     KConfigGroup group = clientSearchConfig.config()->group(QStringLiteral("LDAP"));
     clientSearchConfig.readConfig(server, group, m_entry, true);
-    AddHostDialog dlg(&server, 0);
+    KLDAP::AddHostDialog dlg(&server, 0);
 
     if (dlg.exec() && !server.host().isEmpty()) { //krazy:exclude=crashy
         clientSearchConfig.writeConfig(server, group, m_entry, true);

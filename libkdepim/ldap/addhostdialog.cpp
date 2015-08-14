@@ -32,6 +32,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+using namespace KLDAP;
+
 AddHostDialog::AddHostDialog(KLDAP::LdapServer *server, QWidget *parent)
     : QDialog(parent)
 {

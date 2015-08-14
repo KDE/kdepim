@@ -140,7 +140,7 @@ void KCMLdap::slotItemClicked(QListWidgetItem *item)
 void KCMLdap::slotAddHost()
 {
     KLDAP::LdapServer server;
-    AddHostDialog dlg(&server, dialogParent());
+    KLDAP::AddHostDialog dlg(&server, dialogParent());
 
     if (dlg.exec() && !server.host().isEmpty()) {   //krazy:exclude=crashy
         new LDAPItem(mHostListView, server);
@@ -157,7 +157,7 @@ void KCMLdap::slotEditHost()
     }
 
     KLDAP::LdapServer server = item->server();
-    AddHostDialog dlg(&server, dialogParent());
+    KLDAP::AddHostDialog dlg(&server, dialogParent());
     dlg.setWindowTitle(i18n("Edit Host"));
 
     if (dlg.exec() && !server.host().isEmpty()) {   //krazy:exclude=crashy
