@@ -29,7 +29,7 @@
 namespace IncidenceEditorNG
 {
 
-class INCIDENCEEDITORS_NG_EXPORT AttendeeLineFactory : public KPIM::MultiplyingLineFactory
+class AttendeeLineFactory : public KPIM::MultiplyingLineFactory
 {
     Q_OBJECT
 public:
@@ -42,7 +42,7 @@ public:
     }
 };
 
-class INCIDENCEEDITORS_NG_EXPORT AttendeeEditor : public KPIM::MultiplyingLineEditor
+class AttendeeEditor : public KPIM::MultiplyingLineEditor
 {
     Q_OBJECT
 public:

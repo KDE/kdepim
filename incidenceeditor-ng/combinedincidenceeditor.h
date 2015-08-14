@@ -21,7 +21,6 @@
 #ifndef COMBINEDINCIDENCEEDITOR_H
 #define COMBINEDINCIDENCEEDITOR_H
 
-#include "incidenceeditors_ng_export.h"
 #include "incidenceeditor-ng.h"
 
 #include <KMessageWidget>
@@ -35,7 +34,7 @@ namespace IncidenceEditorNG
  * IncidenceEditors. The CombinedIncidenceEditor keeps track of the dirty state
  * of the IncidenceEditors that where combined.
  */
-class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEditor
+class CombinedIncidenceEditor : public IncidenceEditor
 {
     Q_OBJECT
 public:

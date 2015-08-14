@@ -33,7 +33,7 @@ namespace IncidenceEditorNG
 
 class IncidenceDateTime;
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceAlarm : public IncidenceEditor
+class IncidenceAlarm : public IncidenceEditor
 {
     Q_OBJECT
 public:

@@ -47,7 +47,7 @@ class AttendeeTableModel;
 class ConflictResolver;
 class IncidenceDateTime;
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
+class IncidenceAttendee : public IncidenceEditor
 {
     Q_OBJECT
 public:

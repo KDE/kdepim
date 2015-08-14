@@ -21,8 +21,6 @@
 #ifndef INCIDENCEEDITOR_VISUALFREEBUSYWIDGET_H
 #define INCIDENCEEDITOR_VISUALFREEBUSYWIDGET_H
 
-#include "incidenceeditors_ng_export.h"
-
 #include <KDateTime>
 
 #include <QWidget>
@@ -47,7 +45,7 @@ namespace IncidenceEditorNG
 class FreeBusyGanttProxyModel;
 class RowController;
 
-class INCIDENCEEDITORS_NG_EXPORT VisualFreeBusyWidget : public QWidget
+class VisualFreeBusyWidget : public QWidget
 {
     Q_OBJECT
 public:

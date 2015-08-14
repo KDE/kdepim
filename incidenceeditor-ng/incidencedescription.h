@@ -37,7 +37,7 @@ class IncidenceDescriptionPrivate;
  * The IncidenceDescriptionEditor keeps track of the following Incidence parts:
  * - description
  */
-class INCIDENCEEDITORS_NG_EXPORT IncidenceDescription : public IncidenceEditor
+class IncidenceDescription : public IncidenceEditor
 {
     Q_OBJECT
 public:

@@ -27,8 +27,6 @@
 #ifndef INCIDENCEEDITOR_ATTACHMENTEDITDIALOG_H
 #define INCIDENCEEDITOR_ATTACHMENTEDITDIALOG_H
 
-#include "incidenceeditors_ng_export.h"
-
 #include <KCalCore/Attachment>
 #include <QUrl>
 #include <QDialog>
@@ -47,7 +45,7 @@ namespace IncidenceEditorNG
 
 class AttachmentIconItem;
 
-class INCIDENCEEDITORS_NG_EXPORT AttachmentEditDialog : public QDialog
+class AttachmentEditDialog : public QDialog
 {
     Q_OBJECT
 public:

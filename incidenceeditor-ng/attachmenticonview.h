@@ -42,7 +42,7 @@
 namespace IncidenceEditorNG
 {
 
-class INCIDENCEEDITORS_NG_EXPORT AttachmentIconView : public QListWidget
+class AttachmentIconView : public QListWidget
 {
     friend class EditorAttachments;
 public:

@@ -21,7 +21,6 @@
 #ifndef INCIDENCEEDITOR_SCHEDULINGDIALOG_H
 #define INCIDENCEEDITOR_SCHEDULINGDIALOG_H
 
-#include "incidenceeditors_ng_export.h"
 #include "ui_schedulingdialog.h"
 
 #include <QDialog>
@@ -38,7 +37,7 @@ namespace IncidenceEditorNG
 class ConflictResolver;
 class VisualFreeBusyWidget;
 
-class INCIDENCEEDITORS_NG_EXPORT SchedulingDialog : public QDialog, private Ui_Dialog
+class SchedulingDialog : public QDialog, private Ui_Dialog
 {
     Q_OBJECT
 public:

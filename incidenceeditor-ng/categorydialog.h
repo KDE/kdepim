@@ -24,8 +24,6 @@
 #ifndef INCIDENCEEDITOR_CATEGORYDIALOG_H
 #define INCIDENCEEDITOR_CATEGORYDIALOG_H
 
-#include "incidenceeditors_ng_export.h"
-
 #include <QDialog>
 
 class CategoryWidgetBase;
@@ -40,7 +38,7 @@ namespace IncidenceEditorNG
 
 class AutoCheckTreeWidget;
 
-class INCIDENCEEDITORS_NG_EXPORT CategoryWidget : public QWidget
+class CategoryWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -77,7 +75,7 @@ private:
     CalendarSupport::CategoryConfig *mCategoryConfig;
 };
 
-class INCIDENCEEDITORS_NG_EXPORT CategoryDialog : public QDialog
+class CategoryDialog : public QDialog
 {
     Q_OBJECT
 public:

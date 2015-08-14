@@ -21,8 +21,6 @@
 #ifndef INCIDENCEEDITOR_ATTENDEELINE_H
 #define INCIDENCEEDITOR_ATTENDEELINE_H
 
-#include "incidenceeditors_ng_export.h"
-
 #include <libkdepim/addressline/addresslineedit/addresseelineedit.h>
 #include <libkdepim/multiplyingline/multiplyingline.h>
 
@@ -38,7 +36,7 @@ namespace IncidenceEditorNG
 
 class AttendeeData;
 
-class INCIDENCEEDITORS_NG_EXPORT AttendeeComboBox : public QToolButton
+class AttendeeComboBox : public QToolButton
 {
     Q_OBJECT
 public:
@@ -71,7 +69,7 @@ private:
     int mCurrentIndex;
 };
 
-class INCIDENCEEDITORS_NG_EXPORT AttendeeLineEdit : public KPIM::AddresseeLineEdit
+class AttendeeLineEdit : public KPIM::AddresseeLineEdit
 {
     Q_OBJECT
 public:
@@ -88,7 +86,7 @@ protected:
     void keyPressEvent(QKeyEvent *ev) Q_DECL_OVERRIDE;
 };
 
-class INCIDENCEEDITORS_NG_EXPORT AttendeeLine : public KPIM::MultiplyingLine
+class AttendeeLine : public KPIM::MultiplyingLine
 {
     Q_OBJECT
 public:

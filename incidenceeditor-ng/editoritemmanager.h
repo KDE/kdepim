@@ -21,8 +21,6 @@
 #ifndef INCIDENCEEDITOR_EDITORITEMMANAGER_H
 #define INCIDENCEEDITOR_EDITORITEMMANAGER_H
 
-#include "incidenceeditors_ng_export.h"
-
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <Collection>
 #include <QObject>
@@ -49,7 +47,7 @@ class ItemEditorPrivate;
  * Item modifying and monitoring of changes to the item during editing.
  */
 // template <typename PayloadT>
-class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
+class EditorItemManager : public QObject
 {
     Q_OBJECT
 public:
@@ -157,7 +155,7 @@ private:
     Q_PRIVATE_SLOT(d_ptr, void moveJobFinished(KJob *job))
 };
 
-class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi
+class ItemEditorUi
 {
 public:
     enum RejectReason {

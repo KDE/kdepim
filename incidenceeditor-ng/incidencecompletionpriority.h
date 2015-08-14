@@ -31,7 +31,7 @@ class EventOrTodoDesktop;
 namespace IncidenceEditorNG
 {
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceCompletionPriority : public IncidenceEditor
+class IncidenceCompletionPriority : public IncidenceEditor
 {
     Q_OBJECT
 public:

@@ -42,7 +42,7 @@ class ICalTimeZones;
 namespace IncidenceEditorNG
 {
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
+class IncidenceDateTime : public IncidenceEditor
 {
     Q_OBJECT
 public:

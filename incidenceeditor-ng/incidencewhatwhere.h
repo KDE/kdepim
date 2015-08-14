@@ -21,7 +21,6 @@
 #ifndef INCIDENCEEDITOR_INCIDENCEWHATWHERE_H
 #define INCIDENCEEDITOR_INCIDENCEWHATWHERE_H
 
-#include "incidenceeditors_ng_export.h"
 #include "incidenceeditor-ng.h"
 
 namespace Ui
@@ -38,7 +37,7 @@ namespace IncidenceEditorNG
  * - Location
  * - Categories
  */
-class INCIDENCEEDITORS_NG_EXPORT IncidenceWhatWhere : public IncidenceEditor
+class IncidenceWhatWhere : public IncidenceEditor
 {
     Q_OBJECT
 public:

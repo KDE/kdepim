@@ -37,7 +37,7 @@ namespace IncidenceEditorNG
 
 class AutoCheckTreeWidget;
 
-class INCIDENCEEDITORS_NG_EXPORT CategorySelectWidget : public QWidget
+class CategorySelectWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -70,7 +70,7 @@ private:
     CalendarSupport::CategoryConfig *mCategoryConfig;
 };
 
-class INCIDENCEEDITORS_NG_EXPORT CategorySelectDialog : public QDialog
+class CategorySelectDialog : public QDialog
 {
     Q_OBJECT
 public:

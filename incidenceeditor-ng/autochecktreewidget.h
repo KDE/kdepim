@@ -19,8 +19,6 @@
 #ifndef INCIDENCEEDITOR_AUTOCHECKTREEWIDGET_H
 #define INCIDENCEEDITOR_AUTOCHECKTREEWIDGET_H
 
-#include "incidenceeditors_ng_export.h"
-
 #include <QTreeWidget>
 
 namespace IncidenceEditorNG
@@ -35,7 +33,7 @@ namespace IncidenceEditorNG
 
   @author Mathias Soeken <msoeken@tzi.de>
 */
-class INCIDENCEEDITORS_NG_EXPORT AutoCheckTreeWidget : public QTreeWidget
+class AutoCheckTreeWidget : public QTreeWidget
 {
     Q_OBJECT
 

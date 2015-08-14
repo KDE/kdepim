@@ -39,7 +39,7 @@ namespace IncidenceEditorNG
 {
 class ResourceManagement;
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceResource : public IncidenceEditor
+class IncidenceResource : public IncidenceEditor
 {
     Q_OBJECT
 public:

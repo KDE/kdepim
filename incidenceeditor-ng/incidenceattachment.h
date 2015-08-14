@@ -39,7 +39,7 @@ namespace IncidenceEditorNG
 
 class AttachmentIconView;
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
+class IncidenceAttachment : public IncidenceEditor
 {
     Q_OBJECT
 public:

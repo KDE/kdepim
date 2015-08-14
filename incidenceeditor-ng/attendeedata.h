@@ -21,8 +21,6 @@
 #ifndef INCIDENCEEDITOR_ATTENDEEDATA_H
 #define INCIDENCEEDITOR_ATTENDEEDATA_H
 
-#include "incidenceeditors_ng_export.h"
-
 #include <libkdepim/multiplyingline/multiplyingline.h>
 
 #include <KCalCore/Attendee>
@@ -30,7 +28,7 @@
 namespace IncidenceEditorNG
 {
 
-class  INCIDENCEEDITORS_NG_EXPORT AttendeeData
+class AttendeeData
     : public KPIM::MultiplyingLineData, public KCalCore::Attendee
 {
 public:

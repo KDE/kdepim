@@ -47,7 +47,7 @@ enum RecurrenceType {
     RecurrenceTypeException
 };
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
+class IncidenceRecurrence : public IncidenceEditor
 {
     Q_OBJECT
 public:

@@ -40,7 +40,7 @@ class CategoryConfig;
 namespace IncidenceEditorNG
 {
 
-class INCIDENCEEDITORS_NG_EXPORT CategoryEditDialog : public QDialog
+class CategoryEditDialog : public QDialog
 {
     Q_OBJECT
 public:
