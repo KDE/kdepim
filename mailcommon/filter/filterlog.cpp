@@ -39,7 +39,7 @@
 
 using namespace MailCommon;
 
-class FilterLog::Private
+class Q_DECL_HIDDEN FilterLog::Private
 {
 public:
     Private(FilterLog *qq)

@@ -115,7 +115,7 @@ bool ListViewItem::operator<(const QTreeWidgetItem &other) const
     }
 }
 
-class ListView::Private
+class Q_DECL_HIDDEN ListView::Private
 {
 public:
     Private()

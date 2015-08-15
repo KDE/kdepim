@@ -56,7 +56,7 @@
 namespace MessageList
 {
 
-class Widget::Private
+class Q_DECL_HIDDEN Widget::Private
 {
 public:
     Private(Widget *owner)

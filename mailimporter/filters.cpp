@@ -45,7 +45,7 @@
 
 using namespace MailImporter;
 
-class Filter::Private
+class Q_DECL_HIDDEN Filter::Private
 {
 public:
     Private(const QString &_name, const QString &_author, const QString &_info)

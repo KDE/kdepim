@@ -21,7 +21,7 @@
 
 using namespace MessageComposer;
 
-class TextPart::Private
+class Q_DECL_HIDDEN TextPart::Private
 {
 public:
     Private()

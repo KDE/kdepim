@@ -167,7 +167,7 @@ private:
     QVector<QPair<QByteArray, KIMAP::Acl::Rights> > mRights;
 };
 
-class PimCommon::AclManager::Private
+class Q_DECL_HIDDEN PimCommon::AclManager::Private
 {
 public:
     Private(AclManager *qq)

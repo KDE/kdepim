@@ -31,7 +31,7 @@ using namespace MessageCore;
 /**
  *  @internal
  */
-class MDNStateAttribute::Private
+class Q_DECL_HIDDEN MDNStateAttribute::Private
 {
 public:
     MDNSentState dataToState(const QByteArray &data)

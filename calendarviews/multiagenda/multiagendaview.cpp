@@ -96,7 +96,7 @@ static QString generateColumnLabel(int c)
     return i18n("Agenda %1", c + 1);
 }
 
-class MultiAgendaView::Private
+class Q_DECL_HIDDEN MultiAgendaView::Private
 {
 public:
     Private(MultiAgendaView *qq) :

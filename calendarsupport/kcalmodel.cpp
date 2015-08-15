@@ -35,7 +35,7 @@
 
 using namespace CalendarSupport;
 
-class KCalModel::Private
+class Q_DECL_HIDDEN KCalModel::Private
 {
 public:
     Private(KCalModel *model)

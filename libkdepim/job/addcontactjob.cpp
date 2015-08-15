@@ -32,7 +32,7 @@
 
 using namespace KPIM;
 
-class AddContactJob::Private
+class Q_DECL_HIDDEN AddContactJob::Private
 {
 public:
     Private(AddContactJob *qq, const KContacts::Addressee &contact, QWidget *parentWidget)

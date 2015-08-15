@@ -66,7 +66,7 @@ void TextBrowser::setSource(const QUrl &name)
     }
 }
 
-class IncidenceViewer::Private
+class Q_DECL_HIDDEN IncidenceViewer::Private
 {
 public:
     Private(IncidenceViewer *parent)

@@ -36,7 +36,7 @@
 namespace MailCommon
 {
 
-class FilterManager::Private
+class Q_DECL_HIDDEN FilterManager::Private
 {
 public:
     Private(FilterManager *qq)

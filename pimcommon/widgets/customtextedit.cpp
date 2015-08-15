@@ -25,7 +25,7 @@
 #include <QAction>
 
 using namespace PimCommon;
-class CustomTextEdit::Private
+class Q_DECL_HIDDEN CustomTextEdit::Private
 {
 public:
     Private(const QString &_configFile)

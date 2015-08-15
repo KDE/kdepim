@@ -41,7 +41,7 @@
 
 using namespace PimCommon;
 
-class AnnotationEditDialog::Private
+class Q_DECL_HIDDEN AnnotationEditDialog::Private
 {
 public:
     Private()

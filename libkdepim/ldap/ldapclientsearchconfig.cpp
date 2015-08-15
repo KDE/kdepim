@@ -29,7 +29,7 @@
 
 using namespace KLDAP;
 
-class LdapClientSearchConfig::Private
+class Q_DECL_HIDDEN LdapClientSearchConfig::Private
 {
 public:
     Private()

@@ -48,7 +48,7 @@
 namespace MessageList
 {
 
-class Pane::Private
+class Q_DECL_HIDDEN Pane::Private
 {
 public:
     Private(Pane *owner)

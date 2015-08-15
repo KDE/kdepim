@@ -33,7 +33,7 @@
 
 using namespace MailCommon;
 
-class FavoriteCollectionWidget::Private
+class Q_DECL_HIDDEN FavoriteCollectionWidget::Private
 {
 public:
     Private()

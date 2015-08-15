@@ -28,7 +28,7 @@
 using namespace MessageCore;
 using KMime::Content;
 
-class MessageCore::AttachmentFromMimeContentJob::Private
+class Q_DECL_HIDDEN MessageCore::AttachmentFromMimeContentJob::Private
 {
 public:
     const Content *mMimeContent;

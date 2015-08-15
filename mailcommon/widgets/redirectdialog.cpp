@@ -57,7 +57,7 @@
 
 using namespace MailCommon;
 
-class RedirectDialog::Private
+class Q_DECL_HIDDEN RedirectDialog::Private
 {
 public:
     Private(RedirectDialog *qq, RedirectDialog::SendMode mode)

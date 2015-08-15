@@ -39,7 +39,7 @@
 
 using namespace PimCommon;
 
-class SpellCheckLineEdit::Private
+class Q_DECL_HIDDEN SpellCheckLineEdit::Private
 {
 public:
     Private()

@@ -28,7 +28,7 @@
 
 using namespace CalendarSupport;
 
-class CollectionSelection::Private
+class Q_DECL_HIDDEN CollectionSelection::Private
 {
 public:
     explicit Private(QItemSelectionModel *model_) : model(model_)

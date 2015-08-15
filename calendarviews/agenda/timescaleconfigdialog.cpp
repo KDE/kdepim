@@ -32,7 +32,7 @@
 
 using namespace EventViews;
 
-class TimeScaleConfigDialog::Private
+class Q_DECL_HIDDEN TimeScaleConfigDialog::Private
 {
 public:
     Private(TimeScaleConfigDialog *parent, const PrefsPtr &preferences)

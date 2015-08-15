@@ -30,7 +30,7 @@
 
 using namespace PimCommon;
 
-class PimCommon::EmailAddressRequester::Private
+class Q_DECL_HIDDEN PimCommon::EmailAddressRequester::Private
 {
 public:
     Private(EmailAddressRequester *qq)

@@ -64,7 +64,7 @@ static bool isInExclusionFileTypeList(KMime::Content *node)
     return false;
 }
 
-class MessageCore::AttachmentCollector::Private
+class Q_DECL_HIDDEN MessageCore::AttachmentCollector::Private
 {
 public:
     std::vector<KMime::Content *> mAttachments;

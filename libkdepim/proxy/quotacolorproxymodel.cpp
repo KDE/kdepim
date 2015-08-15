@@ -31,7 +31,7 @@ static const int qmlForegroundRole = 1984;
 /**
  * @internal
  */
-class QuotaColorProxyModel::Private
+class Q_DECL_HIDDEN QuotaColorProxyModel::Private
 {
 public:
     Private(QuotaColorProxyModel *parent)

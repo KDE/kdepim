@@ -46,7 +46,7 @@ static qint64 sizeWithEncoding(const QByteArray &data,
     return size;
 }
 
-class MessageCore::AttachmentPart::Private
+class Q_DECL_HIDDEN MessageCore::AttachmentPart::Private
 {
 public:
     Private()

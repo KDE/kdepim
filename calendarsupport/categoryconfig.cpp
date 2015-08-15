@@ -54,7 +54,7 @@ static QStringList categoryDefaults()
     return l;
 }
 
-class CategoryConfig::Private
+class Q_DECL_HIDDEN CategoryConfig::Private
 {
 public:
     explicit Private(KCoreConfigSkeleton *cfg) : config(cfg)

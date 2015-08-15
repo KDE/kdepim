@@ -125,7 +125,7 @@ void FilterImporterExporter::writeFiltersToConfig(const QList<MailFilter *> &fil
     config->sync();
 }
 
-class FilterImporterExporter::Private
+class Q_DECL_HIDDEN FilterImporterExporter::Private
 {
 public:
     Private(QWidget *parent)

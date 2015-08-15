@@ -43,7 +43,7 @@ using namespace CalendarSupport;
 
 Q_GLOBAL_STATIC(KCalPrefs, globalPrefs)
 
-class KCalPrefs::Private
+class Q_DECL_HIDDEN KCalPrefs::Private
 {
 public:
     Private() : mDefaultCalendarId(-1)

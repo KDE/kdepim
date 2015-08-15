@@ -40,7 +40,7 @@ class ThemeEditor;
 class ThemeListWidget;
 class ThemeListWidgetItem;
 
-class ConfigureThemesDialog::Private
+class Q_DECL_HIDDEN ConfigureThemesDialog::Private
 {
 public:
     Private(ConfigureThemesDialog *owner)

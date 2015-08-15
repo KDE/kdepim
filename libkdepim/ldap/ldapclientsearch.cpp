@@ -51,7 +51,7 @@
 
 using namespace KLDAP;
 
-class LdapClientSearch::Private
+class Q_DECL_HIDDEN LdapClientSearch::Private
 {
 public:
     Private(LdapClientSearch *qq)

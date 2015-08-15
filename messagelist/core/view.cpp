@@ -52,7 +52,7 @@
 
 using namespace MessageList::Core;
 
-class View::Private
+class Q_DECL_HIDDEN View::Private
 {
 public:
     Private(View *owner, Widget *parent)

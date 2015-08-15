@@ -63,7 +63,7 @@
 using namespace EventViews;
 
 ///////////////////////////////////////////////////////////////////////////////
-class MarcusBains::Private
+class Q_DECL_HIDDEN MarcusBains::Private
 {
 public:
     Private(EventView *eventView, Agenda *agenda)
@@ -200,7 +200,7 @@ void MarcusBains::updateLocationRecalc(bool recalculate)
 
 ////////////////////////////////////////////////////////////////////////////
 
-class Agenda::Private
+class Q_DECL_HIDDEN Agenda::Private
 {
 public:
     Private(AgendaView *agendaView, QScrollArea *scrollArea,

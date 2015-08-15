@@ -38,7 +38,7 @@
 
 using namespace MailCommon;
 
-class SnippetsManager::Private
+class Q_DECL_HIDDEN SnippetsManager::Private
 {
 public:
     Private(SnippetsManager *qq, QWidget *parent)

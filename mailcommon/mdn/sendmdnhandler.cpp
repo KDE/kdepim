@@ -39,7 +39,7 @@
 
 using namespace MailCommon;
 
-class SendMdnHandler::Private
+class Q_DECL_HIDDEN SendMdnHandler::Private
 {
 public:
     Private(SendMdnHandler *qq, IKernel *kernel)

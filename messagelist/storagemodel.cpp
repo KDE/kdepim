@@ -50,7 +50,7 @@
 namespace MessageList
 {
 
-class StorageModel::Private
+class Q_DECL_HIDDEN StorageModel::Private
 {
 public:
     void onSourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);

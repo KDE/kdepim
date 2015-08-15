@@ -32,7 +32,7 @@
 
 using namespace KPIM;
 
-class OpenEmailAddressJob::Private
+class Q_DECL_HIDDEN OpenEmailAddressJob::Private
 {
 public:
     Private(OpenEmailAddressJob *qq, const QString &emailString, QWidget *parentWidget)
