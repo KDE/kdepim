@@ -38,7 +38,6 @@
 
 #include <KRun>
 #include <QTemporaryFile>
-#include <KToolInvocation>
 #include <KIO/NetAccess>
 #include <KJob>
 #include "calendarsupport_debug.h"
@@ -46,6 +45,7 @@
 #include <QFile>
 #include <QPointer>
 #include <QMimeDatabase>
+#include <QDesktopServices>
 
 using namespace KCalCore;
 using namespace Akonadi;
@@ -177,7 +177,7 @@ bool AttachmentHandler::view(const Attachment::Ptr &attachment)
 
     bool stat = true;
     if (attachment->isUri()) {
-        KToolInvocation::invokeBrowser(attachment->uri());
+        QDesktopServices::openUrl(attachment->uri());
     } else {
         // put the attachment in a temporary file and launch it
         QUrl tempUrl = tempFileForAttachment(attachment);

@@ -29,9 +29,10 @@
 #include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"
 #include "kaddressbook_debug.h"
 #include <QTemporaryDir>
-#include <KToolInvocation>
 #include <QFile>
 #include <KLocalizedString>
+#include <QDesktopServices>
+
 using namespace KABSendVCards;
 
 SendVcardsJob::SendVcardsJob(const Akonadi::Item::List &listItem, QObject *parent)
@@ -105,7 +106,7 @@ void SendVcardsJob::jobFinished()
 {
     const QStringList lstAttachment = mAttachmentTemporary->temporaryFiles();
     if (!lstAttachment.isEmpty()) {
-        KToolInvocation::invokeMailer(QString(), QString(), QString(), QString(), QString(), QString(), lstAttachment);
+        QDesktopServices::openUrl(QStringLiteral("mailto:"));
     } else {
         sendVCardsError(i18n("No vCard created."));
     }

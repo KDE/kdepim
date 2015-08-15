@@ -34,6 +34,7 @@
 #include <ktoolinvocation.h>
 #include <QUrl>
 #include <QObject>
+#include <QDesktopServices>
 
 bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
 {
@@ -54,7 +55,7 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
         kmail.showMail(serialNumberStr.toLongLong());
         return true;
     } else if (uri.startsWith(QStringLiteral("mailto:"))) {
-        KToolInvocation::invokeMailer(uri.mid(7), QString());
+        QDesktopServices::openUrl(QUrl(uri));
         return true;
     } else if (uri.startsWith(QStringLiteral("uid:"))) {
 

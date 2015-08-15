@@ -70,13 +70,13 @@ using namespace KCalCore;
 #include <KRun>
 #include <KSystemTimeZone>
 #include <QTemporaryFile>
-#include <KToolInvocation>
 #include <KIO/NetAccess>
 #include <QIcon>
 #include <KLocalizedString>
 #include <QFileDialog>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QDesktopServices>
 
 using namespace MailTransport;
 
@@ -1015,7 +1015,7 @@ public:
         }
 
         if (attachment->isUri()) {
-            KToolInvocation::invokeBrowser(attachment->uri());
+            QDesktopServices::openUrl(attachment->uri());
         } else {
             // put the attachment in a temporary file and launch it
             QTemporaryFile *file;
@@ -1275,7 +1275,13 @@ public:
                     summary = i18n("Re: %1", summary);
                 }
 
-                KToolInvocation::invokeMailer(incidence->organizer()->email(), summary);
+                QUrlQuery query;
+                query.addQueryItem(QStringLiteral("to"), incidence->organizer()->email());
+                query.addQueryItem(QStringLiteral("subject"), summary);
+                QUrl url;
+                url.setScheme(QStringLiteral("mailto"));
+                url.setQuery(query);
+                QDesktopServices::openUrl(url);
             //fall through
             case KMessageBox::Yes: // means "do not send"
                 if (saveFile(QStringLiteral("Receiver Not Searched"), iCal, QStringLiteral("reply"))) {

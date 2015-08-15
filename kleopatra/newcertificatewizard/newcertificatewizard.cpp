@@ -927,7 +927,6 @@ private Q_SLOTS:
     {
         qCDebug(KLEOPATRA_LOG) << "to:" << to << "subject:" << subject
                                << "body:" << body << "attachment:" << attachment;
-        // KToolInvocation::invokeMailer is broken on Windows, and openUrl works fine on Unix, too.
 
         // RFC 2368 says body's linebreaks need to be encoded as
         // "%0D%0A", so normalize body to CRLF:
