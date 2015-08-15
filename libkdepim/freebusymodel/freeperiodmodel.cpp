@@ -22,10 +22,11 @@
 
 #include <KCalCore/Period>
 
-#include <KCalendarSystem>
+#include <KLocale>
 #include <KFormat>
 #include <KSystemTimeZones>
 
+#include <QLocale>
 #include <QSet>
 
 using namespace KPIM;
@@ -145,21 +146,19 @@ KCalCore::Period::List FreePeriodModel::splitPeriodsByDay(
 QString FreePeriodModel::day(int index) const
 {
     KCalCore::Period period = mPeriodList.at(index);
-    const KCalendarSystem *calSys = KLocale::global()->calendar();
     const QDate startDate = period.start().date();
     return ki18nc("@label Day of the week name, example: Monday,", "%1,").
-           subs(calSys->weekDayName(startDate.dayOfWeek(), KCalendarSystem::LongDayName)).toString();
+           subs(QLocale::system().dayName(startDate.dayOfWeek(), QLocale::LongFormat)).toString();
 }
 
 QString FreePeriodModel::date(int index) const
 {
     KCalCore::Period period = mPeriodList.at(index);
-    const KCalendarSystem *calSys = KLocale::global()->calendar();
 
     const QDate startDate = period.start().date();
-    const QString startTime = KLocale::global()->formatTime(period.start().time());
-    const QString endTime = KLocale::global()->formatTime(period.end().time());
-    const QString longMonthName = calSys->monthName(startDate);
+    const QString startTime = QLocale::system().toString(period.start().time(), QLocale::ShortFormat);
+    const QString endTime = QLocale::system().toString(period.end().time(), QLocale::ShortFormat);
+    const QString longMonthName = QLocale::system().monthName(startDate.month());
     return ki18nc("@label A time period duration. It is preceded/followed (based on the "
                   "orientation) by the name of the week, see the message above. "
                   "example: 12 June, 8:00am to 9:30am",
@@ -173,14 +172,12 @@ QString FreePeriodModel::date(int index) const
 QString FreePeriodModel::stringify(int index) const
 {
     KCalCore::Period period = mPeriodList.at(index);
-    const KCalendarSystem *calSys = KLocale::global()->calendar();
 
     const QDate startDate = period.start().date();
     const QString startTime = KLocale::global()->formatTime(period.start().time(), false, true);
     const QString endTime = KLocale::global()->formatTime(period.end().time(), false, true);
-    const QString longMonthName = calSys->monthName(startDate);
-    const QString dayofWeek = calSys->weekDayName(startDate.dayOfWeek(),
-                              KCalendarSystem::LongDayName);
+    const QString longMonthName = QLocale::system().monthName(startDate.month(), QLocale::LongFormat);
+    const QString dayofWeek = QLocale::system().dayName(startDate.dayOfWeek(), QLocale::LongFormat);
 
     // TODO i18n, ping chusslove
     return ki18nc("@label A time period duration. KLocale is used to format the components. "
@@ -202,10 +199,10 @@ QString FreePeriodModel::tooltipify(int index) const
     toolTip += QLatin1String("<b>") + i18nc("@info:tooltip", "Free Period") + QLatin1String("</b>");
     toolTip += QLatin1String("<hr>");
     toolTip += QLatin1String("<i>") + i18nc("@info:tooltip period start time", "Start:") + QLatin1String("</i>&nbsp;");
-    toolTip += KLocale::global()->formatDateTime(period.start().toTimeSpec(timeSpec).dateTime());
+    toolTip += QLocale::system().toString(period.start().toTimeSpec(timeSpec).dateTime(), QLocale::ShortFormat);
     toolTip += QLatin1String("<br>");
     toolTip += QLatin1String("<i>") + i18nc("@info:tooltip period end time", "End:") + QLatin1String("</i>&nbsp;");
-    toolTip += KLocale::global()->formatDateTime(period.end().toTimeSpec(timeSpec).dateTime());
+    toolTip += QLocale::system().toString(period.end().toTimeSpec(timeSpec).dateTime(), QLocale::ShortFormat);
     toolTip += QLatin1String("<br>");
     toolTip += QLatin1String("<i>") + i18nc("@info:tooltip period duration", "Duration:") + QLatin1String("</i>&nbsp;");
     toolTip += KFormat().formatSpelloutDuration(duration);
