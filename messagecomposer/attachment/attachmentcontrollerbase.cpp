@@ -862,15 +862,15 @@ void AttachmentControllerBase::attachDirectory(const QUrl &url)
     }
 }
 
-#include <KUrl>
 void AttachmentControllerBase::attachFiles(const QList<QUrl> &urls, const QString &encoding)
 {
     const int numberOfFiles(urls.count());
     for (int i = 0; i < numberOfFiles; ++i) {
-        const KUrl url = urls.at(i);
-        KUrl urlWithEncoding = url;
-        urlWithEncoding.setFileEncoding(encoding);
-        addAttachment(urlWithEncoding);
+        auto url = urls.at(i);
+        QUrlQuery query(url);
+        query.addQueryItem(QStringLiteral("charset"), encoding);
+        url.setQuery(query.toString());
+        addAttachment(url);
     }
 }
 
