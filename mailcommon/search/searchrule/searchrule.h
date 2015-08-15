@@ -240,7 +240,11 @@ public:
     /**
      * Adds query terms to the given term group.
      */
-    virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const {  }
+    virtual void addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const
+    {
+        Q_UNUSED(groupTerm);
+        Q_UNUSED(emptyIsNotAnError);
+    }
 
     QDataStream &operator>>(QDataStream &) const;
     virtual QString informationAboutNotValidRules() const
