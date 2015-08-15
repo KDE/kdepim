@@ -229,17 +229,6 @@ MESSAGECORE_EXPORT QString smartQuote(const QString &message, int maxLineLength)
 MESSAGECORE_EXPORT QString formatString(const QString &wildString, const QString &fromAddr = QString());
 
 /**
-   * Determines if the MIME part with the specified type and subtype is a crypto part.
-   * For example, this function returns true for type "application" and subtype "pgp-encrypted".
-   * The filename is needed if the part is named "msg.asc", in which case it is also a crypto part.
-   *
-   * This function is useful for finding out if the part should be handled as attachment or not.
-   *
-   * All strings are handled case-insensitive.
-   */
-MESSAGECORE_EXPORT bool isCryptoPart(const QString &type, const QString &subType, const QString &fileName);
-
-/**
    * Cleans a filename by replacing characters not allowed or wanted on the filesystem
    *  e.g. ':', '/', '\' with '_'
    */

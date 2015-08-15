@@ -950,20 +950,6 @@ QString smartQuote(const QString &msg, int maxLineLength)
     return result;
 }
 
-bool isCryptoPart(const QString &type, const QString &subType, const QString &fileName)
-{
-    const QString subTypeLower(subType.toLower());
-    return (type.toLower() == QLatin1String("application") &&
-            (subTypeLower == QLatin1String("pgp-encrypted") ||
-             subTypeLower == QLatin1String("pgp-signature") ||
-             subTypeLower == QLatin1String("pkcs7-mime") ||
-             subTypeLower == QLatin1String("pkcs7-signature") ||
-             subTypeLower == QLatin1String("x-pkcs7-signature") ||
-             (subTypeLower == QLatin1String("octet-stream") &&
-              (fileName.toLower() == QLatin1String("msg.asc") ||
-               fileName.toLower() == QLatin1String("encrypted.asc")))));
-}
-
 QString formatString(const QString &wildString, const QString &fromAddr)
 {
     QString result;

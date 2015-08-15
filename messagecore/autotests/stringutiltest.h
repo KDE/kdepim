@@ -29,7 +29,6 @@ private Q_SLOTS:
     void test_SmartQuote_data();
     void test_SmartQuote();
     void test_signatureStripping();
-    void test_isCryptoPart();
     void test_stripOffMessagePrefixBenchmark();
     void test_parseMailtoUrl_data();
     void test_parseMailtoUrl();

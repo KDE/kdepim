@@ -941,9 +941,7 @@ NodeHelper::AttachmentDisplayInfo NodeHelper::attachmentDisplayInfo(KMime::Conte
 
     bool typeBlacklisted = node->contentType()->mediaType().toLower() == "multipart";
     if (!typeBlacklisted) {
-        typeBlacklisted = MessageCore::StringUtil::isCryptoPart(QLatin1String(node->contentType()->mediaType()),
-                          QLatin1String(node->contentType()->subType()),
-                          node->contentDisposition()->filename());
+        typeBlacklisted = KMime::isCryptoPart(node);
     }
     typeBlacklisted = typeBlacklisted || node == node->topLevel();
     const bool firstTextChildOfEncapsulatedMsg =
