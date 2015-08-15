@@ -36,8 +36,7 @@
 
 #include <QVector>
 
-class KUrl;
-
+class QUrl;
 class QString;
 class QPoint;
 
@@ -81,12 +80,12 @@ public:
     void registerHandler(const Interface::BodyPartURLHandler *handler);
     void unregisterHandler(const Interface::BodyPartURLHandler *handler);
 
-    bool handleClick(const KUrl &url, ViewerPrivate *w = Q_NULLPTR) const;
-    bool handleShiftClick(const KUrl &url, ViewerPrivate *window = Q_NULLPTR) const;
-    bool handleContextMenuRequest(const KUrl &url, const QPoint &p, ViewerPrivate *w = Q_NULLPTR) const;
-    bool willHandleDrag(const KUrl &url, ViewerPrivate *window = Q_NULLPTR) const;
-    bool handleDrag(const KUrl &url, ViewerPrivate *window = Q_NULLPTR) const;
-    QString statusBarMessage(const KUrl &url, ViewerPrivate *w = Q_NULLPTR) const;
+    bool handleClick(const QUrl &url, ViewerPrivate *w = Q_NULLPTR) const;
+    bool handleShiftClick(const QUrl &url, ViewerPrivate *window = Q_NULLPTR) const;
+    bool handleContextMenuRequest(const QUrl &url, const QPoint &p, ViewerPrivate *w = Q_NULLPTR) const;
+    bool willHandleDrag(const QUrl &url, ViewerPrivate *window = Q_NULLPTR) const;
+    bool handleDrag(const QUrl &url, ViewerPrivate *window = Q_NULLPTR) const;
+    QString statusBarMessage(const QUrl &url, ViewerPrivate *w = Q_NULLPTR) const;
 
 private:
     typedef QVector<const URLHandler *> HandlerList;

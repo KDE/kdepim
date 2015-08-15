@@ -53,7 +53,6 @@
 #include <KEmailAddress>
 
 #include <KRun>
-#include <KUrl>
 #include <KLocalizedString>
 #include <kmessagebox.h>
 
@@ -67,6 +66,7 @@
 #include <QDrag>
 #include <QMimeDatabase>
 #include <QStandardPaths>
+#include <QUrl>
 
 #include <algorithm>
 
@@ -89,12 +89,12 @@ public:
     KMailProtocolURLHandler() : URLHandler() {}
     ~KMailProtocolURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    bool handleContextMenuRequest(const KUrl &url, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    bool handleClick(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const QUrl &url, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return url.scheme() == QLatin1String("kmail");
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 };
 
 class ExpandCollapseQuoteURLManager : public URLHandler
@@ -103,12 +103,12 @@ public:
     ExpandCollapseQuoteURLManager() : URLHandler() {}
     ~ExpandCollapseQuoteURLManager() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    bool handleClick(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const QUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 
 };
 
@@ -118,12 +118,12 @@ public:
     SMimeURLHandler() : URLHandler() {}
     ~SMimeURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    bool handleClick(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const QUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 };
 
 class MailToURLHandler : public URLHandler
@@ -132,15 +132,15 @@ public:
     MailToURLHandler() : URLHandler() {}
     ~MailToURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    bool handleClick(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    bool handleContextMenuRequest(const QUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 };
 
 class ContactUidURLHandler : public URLHandler
@@ -149,9 +149,9 @@ public:
     ContactUidURLHandler() : URLHandler() {}
     ~ContactUidURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    bool handleContextMenuRequest(const KUrl &url, const QPoint &p, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleClick(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const QUrl &url, const QPoint &p, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 };
 
 class HtmlAnchorHandler : public URLHandler
@@ -160,12 +160,12 @@ public:
     HtmlAnchorHandler() : URLHandler() {}
     ~HtmlAnchorHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    bool handleClick(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const QUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    QString statusBarMessage(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return QString();
     }
@@ -177,15 +177,15 @@ public:
     AttachmentURLHandler() : URLHandler() {}
     ~AttachmentURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    bool handleShiftClick(const KUrl &, ViewerPrivate *window) const Q_DECL_OVERRIDE;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    bool handleDrag(const KUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
-    bool willHandleDrag(const KUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleClick(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleShiftClick(const QUrl &, ViewerPrivate *window) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const QUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleDrag(const QUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
+    bool willHandleDrag(const QUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 private:
-    KMime::Content *nodeForUrl(const KUrl &url, ViewerPrivate *w) const;
-    bool attachmentIsInHeader(const KUrl &url) const;
+    KMime::Content *nodeForUrl(const QUrl &url, ViewerPrivate *w) const;
+    bool attachmentIsInHeader(const QUrl &url) const;
 };
 
 class ShowAuditLogURLHandler : public URLHandler
@@ -194,9 +194,9 @@ public:
     ShowAuditLogURLHandler() : URLHandler() {}
     ~ShowAuditLogURLHandler() {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleClick(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const QUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 };
 
 // Handler that prevents dragging of internal images added by KMail, such as the envelope image
@@ -208,17 +208,17 @@ public:
     {}
     ~InternalImageURLHandler()
     {}
-    bool handleDrag(const KUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
-    bool willHandleDrag(const KUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
-    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    bool handleDrag(const QUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
+    bool willHandleDrag(const QUrl &url, ViewerPrivate *window) const Q_DECL_OVERRIDE;
+    bool handleClick(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    bool handleContextMenuRequest(const QUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    QString statusBarMessage(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return QString();
     }
@@ -232,12 +232,12 @@ public:
     ~KRunURLHandler()
     {}
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    bool handleClick(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const QUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return false;
     }
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
+    QString statusBarMessage(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE
     {
         return QString();
     }
@@ -257,9 +257,9 @@ public:
     BodyPartURLHandlerManager() : URLHandler() {}
     ~BodyPartURLHandlerManager();
 
-    bool handleClick(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    bool handleContextMenuRequest(const KUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE;
-    QString statusBarMessage(const KUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleClick(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    bool handleContextMenuRequest(const QUrl &, const QPoint &, ViewerPrivate *) const Q_DECL_OVERRIDE;
+    QString statusBarMessage(const QUrl &, ViewerPrivate *) const Q_DECL_OVERRIDE;
 
     void registerHandler(const Interface::BodyPartURLHandler *handler);
     void unregisterHandler(const Interface::BodyPartURLHandler *handler);
@@ -290,7 +290,7 @@ void URLHandlerManager::BodyPartURLHandlerManager::unregisterHandler(const Inter
     mHandlers.erase(remove(mHandlers.begin(), mHandlers.end(), handler), mHandlers.end());
 }
 
-static KMime::Content *partNodeFromXKMailUrl(const KUrl &url, ViewerPrivate *w, QString *path)
+static KMime::Content *partNodeFromXKMailUrl(const QUrl &url, ViewerPrivate *w, QString *path)
 {
     assert(path);
 
@@ -315,7 +315,7 @@ static KMime::Content *partNodeFromXKMailUrl(const KUrl &url, ViewerPrivate *w, 
     return w->nodeFromUrl(urlParts[1]);
 }
 
-bool URLHandlerManager::BodyPartURLHandlerManager::handleClick(const KUrl &url, ViewerPrivate *w) const
+bool URLHandlerManager::BodyPartURLHandlerManager::handleClick(const QUrl &url, ViewerPrivate *w) const
 {
     QString path;
     KMime::Content *node = partNodeFromXKMailUrl(url, w, &path);
@@ -335,7 +335,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleClick(const KUrl &url, 
     return false;
 }
 
-bool URLHandlerManager::BodyPartURLHandlerManager::handleContextMenuRequest(const KUrl &url, const QPoint &p, ViewerPrivate *w) const
+bool URLHandlerManager::BodyPartURLHandlerManager::handleContextMenuRequest(const QUrl &url, const QPoint &p, ViewerPrivate *w) const
 {
     QString path;
     KMime::Content *node = partNodeFromXKMailUrl(url, w, &path);
@@ -352,7 +352,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleContextMenuRequest(cons
     return false;
 }
 
-QString URLHandlerManager::BodyPartURLHandlerManager::statusBarMessage(const KUrl &url, ViewerPrivate *w) const
+QString URLHandlerManager::BodyPartURLHandlerManager::statusBarMessage(const QUrl &url, ViewerPrivate *w) const
 {
     QString path;
     KMime::Content *node = partNodeFromXKMailUrl(url, w, &path);
@@ -427,7 +427,7 @@ void URLHandlerManager::unregisterHandler(const Interface::BodyPartURLHandler *h
     }
 }
 
-bool URLHandlerManager::handleClick(const KUrl &url, ViewerPrivate *w) const
+bool URLHandlerManager::handleClick(const QUrl& url, ViewerPrivate* w) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
     for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)
@@ -437,7 +437,7 @@ bool URLHandlerManager::handleClick(const KUrl &url, ViewerPrivate *w) const
     return false;
 }
 
-bool URLHandlerManager::handleShiftClick(const KUrl &url, ViewerPrivate *window) const
+bool URLHandlerManager::handleShiftClick(const QUrl& url, ViewerPrivate* window) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
     for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)
@@ -447,7 +447,7 @@ bool URLHandlerManager::handleShiftClick(const KUrl &url, ViewerPrivate *window)
     return false;
 }
 
-bool URLHandlerManager::willHandleDrag(const KUrl &url, ViewerPrivate *window) const
+bool URLHandlerManager::willHandleDrag(const QUrl& url, ViewerPrivate* window) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
 
@@ -458,7 +458,7 @@ bool URLHandlerManager::willHandleDrag(const KUrl &url, ViewerPrivate *window) c
     return false;
 }
 
-bool URLHandlerManager::handleDrag(const KUrl &url, ViewerPrivate *window) const
+bool URLHandlerManager::handleDrag(const QUrl& url, ViewerPrivate* window) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
     for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)
@@ -468,7 +468,7 @@ bool URLHandlerManager::handleDrag(const KUrl &url, ViewerPrivate *window) const
     return false;
 }
 
-bool URLHandlerManager::handleContextMenuRequest(const KUrl &url, const QPoint &p, ViewerPrivate *w) const
+bool URLHandlerManager::handleContextMenuRequest(const QUrl &url, const QPoint &p, ViewerPrivate *w) const
 {
 
     HandlerList::const_iterator end(mHandlers.constEnd());
@@ -479,7 +479,7 @@ bool URLHandlerManager::handleContextMenuRequest(const KUrl &url, const QPoint &
     return false;
 }
 
-QString URLHandlerManager::statusBarMessage(const KUrl &url, ViewerPrivate *w) const
+QString URLHandlerManager::statusBarMessage(const QUrl &url, ViewerPrivate *w) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
     for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it) {
@@ -499,7 +499,7 @@ QString URLHandlerManager::statusBarMessage(const KUrl &url, ViewerPrivate *w) c
 
 namespace
 {
-bool KMailProtocolURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
+bool KMailProtocolURLHandler::handleClick(const QUrl &url, ViewerPrivate *w) const
 {
     if (url.scheme() == QLatin1String("kmail")) {
         if (!w) {
@@ -565,7 +565,7 @@ bool KMailProtocolURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) con
     return false;
 }
 
-QString KMailProtocolURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate *) const
+QString KMailProtocolURLHandler::statusBarMessage(const QUrl &url, ViewerPrivate *) const
 {
     if (url.scheme() == QLatin1String("kmail")) {
         const QString urlPath(url.path());
@@ -608,8 +608,7 @@ QString KMailProtocolURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate
 namespace
 {
 
-bool ExpandCollapseQuoteURLManager::handleClick(
-    const KUrl &url, ViewerPrivate *w) const
+bool ExpandCollapseQuoteURLManager::handleClick(const QUrl &url, ViewerPrivate *w) const
 {
     //  kmail:levelquote/?num      -> the level quote to collapse.
     //  kmail:levelquote/?-num      -> expand all levels quote.
@@ -624,8 +623,7 @@ bool ExpandCollapseQuoteURLManager::handleClick(
     }
     return false;
 }
-QString ExpandCollapseQuoteURLManager::statusBarMessage(
-    const KUrl &url, ViewerPrivate *) const
+QString ExpandCollapseQuoteURLManager::statusBarMessage(const QUrl &url, ViewerPrivate *) const
 {
     if (url.scheme() == QLatin1String("kmail") && url.path() == QLatin1String("levelquote")) {
         const QString query = url.query();
@@ -684,14 +682,14 @@ bool foundSMIMEData(const QString &aUrl,
 
 namespace
 {
-bool SMimeURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
+bool SMimeURLHandler::handleClick(const QUrl &url, ViewerPrivate *w) const
 {
-    if (!url.hasRef()) {
+    if (!url.hasFragment()) {
         return false;
     }
     QString displayName, libName, keyId;
     if (!foundSMIMEData(url.path() + QLatin1Char('#') +
-                        QUrl::fromPercentEncoding(url.ref().toLatin1()),
+                        QUrl::fromPercentEncoding(url.fragment().toLatin1()),
                         displayName, libName, keyId)) {
         return false;
     }
@@ -704,11 +702,11 @@ bool SMimeURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
     return true;
 }
 
-QString SMimeURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate *) const
+QString SMimeURLHandler::statusBarMessage(const QUrl &url, ViewerPrivate *) const
 {
     QString displayName, libName, keyId;
     if (!foundSMIMEData(url.path() + QLatin1Char('#') +
-                        QUrl::fromPercentEncoding(url.ref().toLatin1()),
+                        QUrl::fromPercentEncoding(url.fragment().toLatin1()),
                         displayName, libName, keyId)) {
         return QString();
     }
@@ -718,20 +716,20 @@ QString SMimeURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate *) cons
 
 namespace
 {
-bool HtmlAnchorHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
+bool HtmlAnchorHandler::handleClick(const QUrl &url, ViewerPrivate *w) const
 {
-    if (url.hasHost() || !url.hasRef()) {
+    if (!url.host().isEmpty() || !url.hasFragment()) {
         return false;
     }
 
-    w->htmlPart()->scrollToAnchor(url.ref());
+    w->htmlPart()->scrollToAnchor(url.fragment());
     return true;
 }
 }
 
 namespace
 {
-QString MailToURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate *) const
+QString MailToURLHandler::statusBarMessage(const QUrl &url, ViewerPrivate *) const
 {
     if (url.scheme() == QLatin1String("mailto")) {
         return KEmailAddress::decodeMailtoUrl(url);
@@ -757,13 +755,13 @@ static QString searchFullEmailByUid(const QString &uid)
     return fullEmail;
 }
 
-static void runKAddressBook(const KUrl &url)
+static void runKAddressBook(const QUrl &url)
 {
     KPIM::OpenEmailAddressJob *job = new KPIM::OpenEmailAddressJob(url.path(), 0);
     job->start();
 }
 
-bool ContactUidURLHandler::handleClick(const KUrl &url, ViewerPrivate *) const
+bool ContactUidURLHandler::handleClick(const QUrl &url, ViewerPrivate *) const
 {
     if (url.scheme() == QLatin1String("uid")) {
         runKAddressBook(url);
@@ -773,7 +771,7 @@ bool ContactUidURLHandler::handleClick(const KUrl &url, ViewerPrivate *) const
     }
 }
 
-bool ContactUidURLHandler::handleContextMenuRequest(const KUrl &url, const QPoint &p,
+bool ContactUidURLHandler::handleContextMenuRequest(const QUrl &url, const QPoint &p,
         ViewerPrivate *) const
 {
     if (url.scheme() != QLatin1String("uid") || url.path().isEmpty()) {
@@ -807,7 +805,7 @@ bool ContactUidURLHandler::handleContextMenuRequest(const KUrl &url, const QPoin
     return true;
 }
 
-QString ContactUidURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate *) const
+QString ContactUidURLHandler::statusBarMessage(const QUrl &url, ViewerPrivate *) const
 {
     if (url.scheme() == QLatin1String("uid")) {
         return i18n("Lookup the contact in KAddressbook");
@@ -819,7 +817,7 @@ QString ContactUidURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate *)
 
 namespace
 {
-KMime::Content *AttachmentURLHandler::nodeForUrl(const KUrl &url, ViewerPrivate *w) const
+KMime::Content *AttachmentURLHandler::nodeForUrl(const QUrl &url, ViewerPrivate *w) const
 {
     if (!w || !w->mMessage) {
         return 0;
@@ -831,17 +829,18 @@ KMime::Content *AttachmentURLHandler::nodeForUrl(const KUrl &url, ViewerPrivate 
     return 0;
 }
 
-bool AttachmentURLHandler::attachmentIsInHeader(const KUrl &url) const
+bool AttachmentURLHandler::attachmentIsInHeader(const QUrl &url) const
 {
     bool inHeader = false;
-    const QString place = url.queryItem(QStringLiteral("place")).toLower();
+    QUrlQuery query(url);
+    const QString place = query.queryItemValue(QStringLiteral("place")).toLower();
     if (!place.isNull()) {
         inHeader = (place == QLatin1String("header"));
     }
     return inHeader;
 }
 
-bool AttachmentURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
+bool AttachmentURLHandler::handleClick(const QUrl &url, ViewerPrivate *w) const
 {
     KMime::Content *node = nodeForUrl(url, w);
     if (!node) {
@@ -861,7 +860,7 @@ bool AttachmentURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
     return true;
 }
 
-bool AttachmentURLHandler::handleShiftClick(const KUrl &url, ViewerPrivate *window) const
+bool AttachmentURLHandler::handleShiftClick(const QUrl &url, ViewerPrivate *window) const
 {
     KMime::Content *node = nodeForUrl(url, window);
     if (!node) {
@@ -878,12 +877,12 @@ bool AttachmentURLHandler::handleShiftClick(const KUrl &url, ViewerPrivate *wind
     return true;
 }
 
-bool AttachmentURLHandler::willHandleDrag(const KUrl &url, ViewerPrivate *window) const
+bool AttachmentURLHandler::willHandleDrag(const QUrl &url, ViewerPrivate *window) const
 {
     return nodeForUrl(url, window) != 0;
 }
 
-bool AttachmentURLHandler::handleDrag(const KUrl &url, ViewerPrivate *window) const
+bool AttachmentURLHandler::handleDrag(const QUrl &url, ViewerPrivate *window) const
 {
 #ifndef QT_NO_DRAGANDDROP
     KMime::Content *node = nodeForUrl(url, window);
@@ -917,7 +916,7 @@ bool AttachmentURLHandler::handleDrag(const KUrl &url, ViewerPrivate *window) co
         return false;
 }
 
-bool AttachmentURLHandler::handleContextMenuRequest(const KUrl &url, const QPoint &p, ViewerPrivate *w) const
+bool AttachmentURLHandler::handleContextMenuRequest(const QUrl &url, const QPoint &p, ViewerPrivate *w) const
 {
     KMime::Content *node = nodeForUrl(url, w);
     if (!node) {
@@ -928,7 +927,7 @@ bool AttachmentURLHandler::handleContextMenuRequest(const KUrl &url, const QPoin
     return true;
 }
 
-QString AttachmentURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate *w) const
+QString AttachmentURLHandler::statusBarMessage(const QUrl &url, ViewerPrivate *w) const
 {
     KMime::Content *node = nodeForUrl(url, w);
     if (!node) {
@@ -951,17 +950,18 @@ QString AttachmentURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate *w
 
 namespace
 {
-static QString extractAuditLog(const KUrl &url)
+static QString extractAuditLog(const QUrl &url)
 {
     if (url.scheme() != QLatin1String("kmail")
             || url.path() != QLatin1String("showAuditLog")) {
         return QString();
     }
-    assert(!url.queryItem(QLatin1String("log")).isEmpty());
-    return url.queryItem(QStringLiteral("log"));
+    QUrlQuery query(url);
+    assert(!query.queryItemValue(QStringLiteral("log")).isEmpty());
+    return query.queryItemValue(QStringLiteral("log"));
 }
 
-bool ShowAuditLogURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
+bool ShowAuditLogURLHandler::handleClick(const QUrl &url, ViewerPrivate *w) const
 {
     const QString auditLog = extractAuditLog(url);
     if (auditLog.isEmpty()) {
@@ -971,14 +971,14 @@ bool ShowAuditLogURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) cons
     return true;
 }
 
-bool ShowAuditLogURLHandler::handleContextMenuRequest(const KUrl &url, const QPoint &, ViewerPrivate *w) const
+bool ShowAuditLogURLHandler::handleContextMenuRequest(const QUrl &url, const QPoint &, ViewerPrivate *w) const
 {
     Q_UNUSED(w);
     // disable RMB for my own links:
     return !extractAuditLog(url).isEmpty();
 }
 
-QString ShowAuditLogURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate *) const
+QString ShowAuditLogURLHandler::statusBarMessage(const QUrl &url, ViewerPrivate *) const
 {
     if (extractAuditLog(url).isEmpty()) {
         return QString();
@@ -990,7 +990,7 @@ QString ShowAuditLogURLHandler::statusBarMessage(const KUrl &url, ViewerPrivate 
 
 namespace
 {
-bool InternalImageURLHandler::handleDrag(const KUrl &url, ViewerPrivate *window) const
+bool InternalImageURLHandler::handleDrag(const QUrl &url, ViewerPrivate *window) const
 {
     Q_UNUSED(window);
     Q_UNUSED(url);
@@ -1000,7 +1000,7 @@ bool InternalImageURLHandler::handleDrag(const KUrl &url, ViewerPrivate *window)
     return false;
 }
 
-bool InternalImageURLHandler::willHandleDrag(const KUrl &url, ViewerPrivate *window) const
+bool InternalImageURLHandler::willHandleDrag(const QUrl &url, ViewerPrivate *window) const
 {
     Q_UNUSED(window);
     if (url.scheme() == QLatin1String("data") && url.path().startsWith(QStringLiteral("image"))) {
@@ -1014,7 +1014,7 @@ bool InternalImageURLHandler::willHandleDrag(const KUrl &url, ViewerPrivate *win
 
 namespace
 {
-bool KRunURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
+bool KRunURLHandler::handleClick(const QUrl &url, ViewerPrivate *w) const
 {
     const QString scheme(url.scheme());
     if ((scheme == QLatin1String("http")) || (scheme == QLatin1String("https")) ||
@@ -1033,11 +1033,11 @@ bool KRunURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
                 mime.name() == QLatin1String("application/x-ms-dos-executable") ||
                 mime.name() == QLatin1String("application/x-shellscript")) {
             if (KMessageBox::warningYesNo(0, xi18nc("@info", "Do you really want to execute <filename>%1</filename>?",
-                                                    url.pathOrUrl()), QString(), KGuiItem(i18n("Execute")), KStandardGuiItem::cancel()) != KMessageBox::Yes) {
+                                                    url.toDisplayString(QUrl::PreferLocalFile)), QString(), KGuiItem(i18n("Execute")), KStandardGuiItem::cancel()) != KMessageBox::Yes) {
                 return true;
             }
         }
-        if (!MessageViewer::Util::handleUrlWithQDesktopServices(url.pathOrUrl())) {
+        if (!MessageViewer::Util::handleUrlWithQDesktopServices(url)) {
             KRun *runner = new KRun(url, w->viewer());   // will delete itself
             runner->setRunExecutables(false);
         }
