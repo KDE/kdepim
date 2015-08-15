@@ -124,7 +124,7 @@ bool KonsoleKalendar::printCalendarList()
 
 bool KonsoleKalendar::createAkonadiResource(const QString &icalFileName)
 {
-    Akonadi::AgentType type = Akonadi::AgentManager::self()->type(QLatin1String("akonadi_ical_resource"));
+    Akonadi::AgentType type = Akonadi::AgentManager::self()->type(QStringLiteral("akonadi_ical_resource"));
     Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(type);
     job->setProperty("path", icalFileName);
     QEventLoop loop;
@@ -289,12 +289,12 @@ bool KonsoleKalendar::showInstance()
                     lastdate = m_variables->getEndDateTime().date();
                 }
 
-                KCalUtils::HTMLExportSettings htmlSettings(QLatin1String("Konsolekalendar"));
+                KCalUtils::HTMLExportSettings htmlSettings(QStringLiteral("Konsolekalendar"));
 
                 //TODO: get progname and url from the values set in main
-                htmlSettings.setCreditName(QLatin1String("KonsoleKalendar"));
+                htmlSettings.setCreditName(QStringLiteral("KonsoleKalendar"));
                 htmlSettings.setCreditURL(
-                    QLatin1String("http://pim.kde.org/components/konsolekalendar.php"));
+                    QStringLiteral("http://pim.kde.org/components/konsolekalendar.php"));
 
                 htmlSettings.setExcludePrivate(true);
                 htmlSettings.setExcludeConfidential(true);

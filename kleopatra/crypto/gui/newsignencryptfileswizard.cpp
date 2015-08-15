@@ -307,7 +307,7 @@ public:
 
     bool isArchiveRequested() const
     {
-        return field(QLatin1String("archive")).toBool();
+        return field(QStringLiteral("archive")).toBool();
     }
 
     QString archiveName(Protocol p) const
@@ -603,7 +603,7 @@ public:
                            "<para>Future versions of Kleopatra are expected to also support detached signatures in this case.</para>"),
                     i18nc("@title:window", "Unusual Signature Warning"),
                     KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                    QLatin1String("signencryptfileswizard-archive+sign-only-warning"))
+                    QStringLiteral("signencryptfileswizard-archive+sign-only-warning"))
                    == KMessageBox::Continue ;
         else {
             return true;

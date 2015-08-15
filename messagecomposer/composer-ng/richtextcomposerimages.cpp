@@ -77,7 +77,7 @@ void RichTextComposerImages::addImageHelper(const QUrl &url, int width, int heig
     QFileInfo fi(url.path());
     QString imageName =
         fi.baseName().isEmpty() ?
-        QLatin1String("image.png") :
+        QStringLiteral("image.png") :
         QString(fi.baseName() + QLatin1String(".png"));
     addImageHelper(imageName, image, width, height);
 }

@@ -70,7 +70,7 @@ QString CustomHeaderStyle::format(KMime::Message *message) const
             (headersToDisplay.isEmpty() && strategy->defaultPolicy() == HeaderStrategy::Display)) {
         // crude way to emulate "all" headers - Note: no strings have
         // i18n(), so direction should always be ltr.
-        headerStr = QLatin1String("<div class=\"header\" dir=\"ltr\">");
+        headerStr = QStringLiteral("<div class=\"header\" dir=\"ltr\">");
         const QStringList headersToHide = strategy->headersToHide();
         headerStr += formatAllMessageHeaders(message, headersToHide);
         return headerStr + QLatin1String("</div>");
@@ -91,7 +91,7 @@ QString CustomHeaderStyle::format(KMime::Message *message) const
                 headerStr.append(QLatin1String("&nbsp;&nbsp;<a href=\"") + vCardName() +
                                  QLatin1String("\">") + i18n("[vCard]") + QLatin1String("</a>"));
 
-            if (strategy->showHeader(QLatin1String("organization"))
+            if (strategy->showHeader(QStringLiteral("organization"))
                     && message->headerByType("Organization"))
                 headerStr.append(QLatin1String("&nbsp;&nbsp;(") +
                                  MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("Organization")->asUnicodeString()) + QLatin1Char(')'));

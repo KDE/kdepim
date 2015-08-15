@@ -374,20 +374,20 @@ static std::vector<GpgME::Key> trustedOrConfirmed(const std::vector<GpgME::Key> 
     if (!fishies.empty()) {
         // certificates can't have marginal trust
         msg += i18n("\nThe following keys are only marginally trusted: \n");
-        msg += keysAsStrings(fishies).join(QLatin1String(","));
+        msg += keysAsStrings(fishies).join(QStringLiteral(","));
     }
     if (!ickies.empty()) {
         msg += i18n("\nThe following keys or certificates have unknown trust level: \n");
-        msg += keysAsStrings(ickies).join(QLatin1String(","));
+        msg += keysAsStrings(ickies).join(QStringLiteral(","));
     }
     if (!rewookies.empty()) {
         msg += i18n("\nThe following keys or certificates are <b>revoked</b>: \n");
-        msg += keysAsStrings(rewookies).join(QLatin1String(","));
+        msg += keysAsStrings(rewookies).join(QStringLiteral(","));
     }
 
     if (KMessageBox::warningContinueCancel(Q_NULLPTR, msg, i18n("Not Fully Trusted Encryption Keys"),
                                            KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                                           QLatin1String("not fully trusted encryption key warning"))
+                                           QStringLiteral("not fully trusted encryption key warning"))
             == KMessageBox::Continue) {
         return keys;
     } else {
@@ -947,7 +947,7 @@ Kpgp::Result Kleo::KeyResolver::setEncryptToSelfKeys(const QStringList &fingerpr
                                  "to use.");
         return KMessageBox::warningContinueCancel(Q_NULLPTR, msg, i18n("Unusable Encryption Keys"),
                 KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                QLatin1String("unusable own encryption key warning"))
+                QStringLiteral("unusable own encryption key warning"))
                == KMessageBox::Continue ? Kpgp::Ok : Kpgp::Canceled ;
     }
 
@@ -995,7 +995,7 @@ Kpgp::Result Kleo::KeyResolver::setSigningKeys(const QStringList &fingerprints)
                                  "to use.");
         return KMessageBox::warningContinueCancel(Q_NULLPTR, msg, i18n("Unusable Signing Keys"),
                 KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                QLatin1String("unusable signing key warning"))
+                QStringLiteral("unusable signing key warning"))
                == KMessageBox::Continue ? Kpgp::Ok : Kpgp::Canceled ;
     }
 
@@ -1323,7 +1323,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, boo
             if (KMessageBox::warningContinueCancel(Q_NULLPTR, msg,
                                                    i18n("Unusable Encryption Keys"),
                                                    KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                                                   QLatin1String("encrypt-to-self will fail warning"))
+                                                   QStringLiteral("encrypt-to-self will fail warning"))
                     == KMessageBox::Cancel) {
                 return Kpgp::Canceled;
             }
@@ -1351,7 +1351,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, boo
             if (KMessageBox::warningContinueCancel(Q_NULLPTR, msg,
                                                    i18n("Unusable Encryption Keys"),
                                                    KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                                                   QLatin1String("encrypt-to-self will fail warning"))
+                                                   QStringLiteral("encrypt-to-self will fail warning"))
                     == KMessageBox::Cancel) {
                 return Kpgp::Canceled;
             }
@@ -1381,7 +1381,7 @@ Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForEncryption()
                                                i18n("Unusable Signing Keys"),
                                                KGuiItem(i18n("Do Not OpenPGP-Sign")),
                                                KStandardGuiItem::cancel(),
-                                               QLatin1String("signing will fail warning"))
+                                               QStringLiteral("signing will fail warning"))
                 == KMessageBox::Cancel) {
             return Kpgp::Canceled;
         }
@@ -1399,7 +1399,7 @@ Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForEncryption()
                                                i18n("Unusable Signing Keys"),
                                                KGuiItem(i18n("Do Not S/MIME-Sign")),
                                                KStandardGuiItem::cancel(),
-                                               QLatin1String("signing will fail warning"))
+                                               QStringLiteral("signing will fail warning"))
                 == KMessageBox::Cancel) {
             return Kpgp::Canceled;
         }
@@ -1783,7 +1783,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys(const QString &pers
 
     if (!fingerprints.empty()) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Using encryption keys 0x"
-                                     << fingerprints.join(QLatin1String(", 0x"))
+                                     << fingerprints.join(QStringLiteral(", 0x"))
                                      << "for" << person;
         std::vector<GpgME::Key> keys = lookup(fingerprints);
         if (!keys.empty()) {
@@ -1866,7 +1866,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::lookup(const QStringList &patterns, b
     if (patterns.empty()) {
         return std::vector<GpgME::Key>();
     }
-    qCDebug(MESSAGECOMPOSER_LOG) << "( \"" << patterns.join(QLatin1String("\", \"")) << "\"," << secret << ")";
+    qCDebug(MESSAGECOMPOSER_LOG) << "( \"" << patterns.join(QStringLiteral("\", \"")) << "\"," << secret << ")";
     std::vector<GpgME::Key> result;
     if (mCryptoMessageFormats & (InlineOpenPGPFormat | OpenPGPMIMEFormat))
         if (const Kleo::CryptoBackend::Protocol *p = Kleo::CryptoBackendFactory::instance()->openpgp()) {
@@ -1950,14 +1950,14 @@ Kleo::KeyResolver::ContactPreferences Kleo::KeyResolver::lookupContactPreference
     ContactPreferences pref;
     if (!res.isEmpty()) {
         KContacts::Addressee addr = res.at(0);
-        QString encryptPref = addr.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("CRYPTOENCRYPTPREF"));
+        QString encryptPref = addr.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("CRYPTOENCRYPTPREF"));
         pref.encryptionPreference = Kleo::stringToEncryptionPreference(encryptPref);
-        QString signPref = addr.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("CRYPTOSIGNPREF"));
+        QString signPref = addr.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("CRYPTOSIGNPREF"));
         pref.signingPreference = Kleo::stringToSigningPreference(signPref);
-        QString cryptoFormats = addr.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("CRYPTOPROTOPREF"));
+        QString cryptoFormats = addr.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("CRYPTOPROTOPREF"));
         pref.cryptoMessageFormat = Kleo::stringToCryptoMessageFormat(cryptoFormats);
-        pref.pgpKeyFingerprints = addr.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("OPENPGPFP")).split(QLatin1Char(','), QString::SkipEmptyParts);
-        pref.smimeCertFingerprints = addr.custom(QLatin1String("KADDRESSBOOK"), QStringLiteral("SMIMEFP")).split(QLatin1Char(','), QString::SkipEmptyParts);
+        pref.pgpKeyFingerprints = addr.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("OPENPGPFP")).split(QLatin1Char(','), QString::SkipEmptyParts);
+        pref.smimeCertFingerprints = addr.custom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("SMIMEFP")).split(QLatin1Char(','), QString::SkipEmptyParts);
     }
     // insert into map and grab resulting iterator
     d->mContactPreferencesMap.insert(std::make_pair(address, pref));

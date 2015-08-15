@@ -58,17 +58,17 @@ void WebDavStorageService::readConfig()
             if (lst.contains(storageServiceName())) {
                 QMap<QString, QString> map;
                 wallet->readMap(storageServiceName(), map);
-                if (map.contains(QLatin1String("public location"))) {
-                    mPublicLocation = map.value(QLatin1String("public location"));
+                if (map.contains(QStringLiteral("public location"))) {
+                    mPublicLocation = map.value(QStringLiteral("public location"));
                 }
-                if (map.contains(QLatin1String("service location"))) {
-                    mServiceLocation = map.value(QLatin1String("service location"));
+                if (map.contains(QStringLiteral("service location"))) {
+                    mServiceLocation = map.value(QStringLiteral("service location"));
                 }
-                if (map.contains(QLatin1String("username"))) {
-                    mUsername = map.value(QLatin1String("username"));
+                if (map.contains(QStringLiteral("username"))) {
+                    mUsername = map.value(QStringLiteral("username"));
                 }
-                if (map.contains(QLatin1String("password"))) {
-                    mPassword = map.value(QLatin1String("password"));
+                if (map.contains(QStringLiteral("password"))) {
+                    mPassword = map.value(QStringLiteral("password"));
                 }
             }
             mNeedToReadConfigFirst = false;
@@ -116,10 +116,10 @@ void WebDavStorageService::slotAuthorizationDone(const QString &publicLocation, 
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
             QMap<QString, QString> map;
-            map[QLatin1String("public location")] = mPublicLocation;
-            map[QLatin1String("service location")] = mServiceLocation;
-            map[QLatin1String("username")] = mUsername;
-            map[QLatin1String("password")] = mPassword;
+            map[QStringLiteral("public location")] = mPublicLocation;
+            map[QStringLiteral("service location")] = mServiceLocation;
+            map[QStringLiteral("username")] = mUsername;
+            map[QStringLiteral("password")] = mPassword;
             wallet->writeMap(walletEntry, map);
         }
     }
@@ -357,14 +357,14 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     }
     QString parentFolder;
     if (!currentFolder.isEmpty()) {
-        QStringList parts = currentFolder.split(QLatin1String("/"), QString::SkipEmptyParts);
+        QStringList parts = currentFolder.split(QStringLiteral("/"), QString::SkipEmptyParts);
         if (!parts.isEmpty()) {
             parts.removeLast();
         }
 
-        parentFolder = parts.join(QLatin1String("/"));
+        parentFolder = parts.join(QStringLiteral("/"));
         if (parentFolder.isEmpty()) {
-            parentFolder = QLatin1String("/");
+            parentFolder = QStringLiteral("/");
         }
         if (!parentFolder.endsWith(QLatin1Char('/'))) {
             parentFolder += QLatin1String("/");
@@ -381,20 +381,20 @@ QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &
 {
     //qCDebug(PIMCOMMON_LOG)<<" variantMap"<<variantMap;
     QMap<QString, QString> information;
-    if (variantMap.contains(QLatin1String("path"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QLatin1String("path")).toString());
+    if (variantMap.contains(QStringLiteral("path"))) {
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QStringLiteral("path")).toString());
     }
-    if (variantMap.contains(QLatin1String("isDir"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), variantMap.value(QLatin1String("isDir")).toBool() ? i18n("Directory") : i18n("File"));
+    if (variantMap.contains(QStringLiteral("isDir"))) {
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), variantMap.value(QStringLiteral("isDir")).toBool() ? i18n("Directory") : i18n("File"));
     }
-    if (variantMap.contains(QLatin1String("getcontentlength"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(variantMap.value(QLatin1String("getcontentlength")).toString().toLongLong()));
+    if (variantMap.contains(QStringLiteral("getcontentlength"))) {
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(variantMap.value(QStringLiteral("getcontentlength")).toString().toLongLong()));
     }
-    if (variantMap.contains(QLatin1String("lastmodified"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((QDateTime::fromString(variantMap.value(QLatin1String("lastmodified")).toString())), QLocale::ShortFormat));
+    if (variantMap.contains(QStringLiteral("lastmodified"))) {
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), QLocale().toString((QDateTime::fromString(variantMap.value(QStringLiteral("lastmodified")).toString())), QLocale::ShortFormat));
     }
-    if (variantMap.contains(QLatin1String("creationdate"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((QDateTime::fromString(variantMap.value(QLatin1String("creationdate")).toString())), QLocale::ShortFormat));
+    if (variantMap.contains(QStringLiteral("creationdate"))) {
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), QLocale().toString((QDateTime::fromString(variantMap.value(QStringLiteral("creationdate")).toString())), QLocale::ShortFormat));
     }
     //qCDebug(PIMCOMMON_LOG)<<" information"<<information;
     return information;
@@ -402,8 +402,8 @@ QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &
 
 QString WebDavStorageService::fileIdentifier(const QVariantMap &variantMap)
 {
-    if (variantMap.contains(QLatin1String("path"))) {
-        return variantMap.value(QLatin1String("path")).toString();
+    if (variantMap.contains(QStringLiteral("path"))) {
+        return variantMap.value(QStringLiteral("path")).toString();
     }
     return QString();
 }
@@ -495,12 +495,12 @@ QUrl WebDavStorageService::serviceUrl()
 
 QString WebDavStorageService::serviceName()
 {
-    return QLatin1String("webdav");
+    return QStringLiteral("webdav");
 }
 
 QString WebDavStorageService::iconName()
 {
-    return QLatin1String("folder-remote");
+    return QStringLiteral("folder-remote");
 }
 
 StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()

@@ -252,7 +252,7 @@ public:
 DetailledPrintStyle::DetailledPrintStyle(PrintingWizard *parent)
     : PrintStyle(parent), mPageAppearance(new AppearancePage(parent))
 {
-    setPreview(QLatin1String("detailed-style.png"));
+    setPreview(QStringLiteral("detailed-style.png"));
     setPreferredSortOptions(ContactFields::FormattedName, Qt::AscendingOrder);
 
     addPage(mPageAppearance, i18n("Detailed Print Style - Appearance"));

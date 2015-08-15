@@ -184,7 +184,7 @@ void SkeletonMessageJobPrivate::doStart()
         QStringList extraInfo;
         extraInfo << QLatin1String(KDEPIM_GIT_REVISION_STRING) << QLatin1String(KDEPIM_GIT_LAST_CHANGE);
         KMime::Headers::UserAgent *ua = new KMime::Headers::UserAgent;
-        ua->fromUnicodeString(KProtocolManager::userAgentForApplication(infoPart->userAgent(), QLatin1String(KDEPIM_VERSION), extraInfo), "utf-8");
+        ua->fromUnicodeString(KProtocolManager::userAgentForApplication(infoPart->userAgent(), QStringLiteral(KDEPIM_VERSION), extraInfo), "utf-8");
         message->setHeader(ua);
     }
 

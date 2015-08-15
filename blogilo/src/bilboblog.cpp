@@ -100,8 +100,8 @@ KBlog::Blog *BilboBlog::blogBackend()
         case BilboBlog::BLOGGER_API:
 #ifdef HAVE_GAPIBLOGGER_SUPPORT
             d->kblog = new KBlog::Blogger(url(), this);
-            qobject_cast<KBlog::Blogger *>(d->kblog)->setApiKey(QLatin1String("508396175529-icqp62q8t6st41gjv1du100fol6renq4.apps.googleusercontent.com"));
-            qobject_cast<KBlog::Blogger *>(d->kblog)->setSecretKey(QLatin1String("JFPDXYmGIuM601vhgVGv0Dlx"));
+            qobject_cast<KBlog::Blogger *>(d->kblog)->setApiKey(QStringLiteral("508396175529-icqp62q8t6st41gjv1du100fol6renq4.apps.googleusercontent.com"));
+            qobject_cast<KBlog::Blogger *>(d->kblog)->setSecretKey(QStringLiteral("JFPDXYmGIuM601vhgVGv0Dlx"));
 #else
             return 0;
 #endif

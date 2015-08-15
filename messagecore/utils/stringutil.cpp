@@ -191,7 +191,7 @@ QMap<QString, QString> parseMailtoUrl(const QUrl &url)
         to << toStr;
     }
 
-    values.insert(QLatin1String("to"), to.join(QStringLiteral(", ")));
+    values.insert(QStringLiteral("to"), to.join(QStringLiteral(", ")));
     return values;
 }
 
@@ -199,9 +199,9 @@ QString stripSignature(const QString &msg)
 {
     // Following RFC 3676, only > before --
     // I prefer to not delete a SB instead of delete good mail content.
-    const QRegExp sbDelimiterSearch = QRegExp(QLatin1String("(^|\n)[> ]*-- \n"));
+    const QRegExp sbDelimiterSearch = QRegExp(QStringLiteral("(^|\n)[> ]*-- \n"));
     // The regular expression to look for prefix change
-    const QRegExp commonReplySearch = QRegExp(QLatin1String("^[ ]*>"));
+    const QRegExp commonReplySearch = QRegExp(QStringLiteral("^[ ]*>"));
 
     QString res = msg;
     int posDeletingStart = 1; // to start looking at 0
@@ -277,7 +277,7 @@ QString generateMessageId(const QString &address, const QString &suffix)
 {
     const QDateTime dateTime = QDateTime::currentDateTime();
 
-    QString msgIdStr = QLatin1Char('<') + dateTime.toString(QLatin1String("yyyyMMddhhmm.sszzz"));
+    QString msgIdStr = QLatin1Char('<') + dateTime.toString(QStringLiteral("yyyyMMddhhmm.sszzz"));
 
     if (!suffix.isEmpty()) {
         msgIdStr += QLatin1Char('@') + suffix;
@@ -1075,7 +1075,7 @@ QString stripOffPrefixes(const QString &subject)
     // construct a big regexp that
     // 1. is anchored to the beginning of str (sans whitespace)
     // 2. matches at least one of the part regexps in prefixRegExps
-    const QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*").arg(prefixRegExps.join(QLatin1String(")|(?:")));
+    const QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*").arg(prefixRegExps.join(QStringLiteral(")|(?:")));
 
     static QString regExpPattern;
     static QRegExp regExp;

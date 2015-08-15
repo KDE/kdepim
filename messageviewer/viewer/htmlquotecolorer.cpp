@@ -139,8 +139,8 @@ QString HTMLQuoteColorer::process(const QString &htmlSource, QString &extraHead)
         frame->evaluateJavaScript(script);
         page.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
     }
-    const QWebElement body = frame->documentElement().findFirst(QLatin1String("body"));
-    const QWebElement header = frame->documentElement().findFirst(QLatin1String("head"));
+    const QWebElement body = frame->documentElement().findFirst(QStringLiteral("body"));
+    const QWebElement header = frame->documentElement().findFirst(QStringLiteral("head"));
 
     extraHead = header.toInnerXml();
     return body.toInnerXml();

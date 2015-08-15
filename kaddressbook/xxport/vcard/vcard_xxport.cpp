@@ -75,9 +75,9 @@ bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelecti
             return true;
         }
 
-        if (option(QLatin1String("version")) == QLatin1String("v21")) {
+        if (option(QStringLiteral("version")) == QLatin1String("v21")) {
             ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v2_1));
-        } else if (option(QLatin1String("version")) == QLatin1String("v30")) {
+        } else if (option(QStringLiteral("version")) == QLatin1String("v30")) {
             ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v3_0));
         } else {
             ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v4_0));
@@ -107,9 +107,9 @@ bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelecti
 
                 bool tmpOk = false;
 
-                if (option(QLatin1String("version")) == QLatin1String("v21")) {
+                if (option(QStringLiteral("version")) == QLatin1String("v21")) {
                     tmpOk = doExport(url, converter.exportVCard(contact, KContacts::VCardConverter::v2_1));
-                } else if (option(QLatin1String("version")) == QLatin1String("v30")) {
+                } else if (option(QStringLiteral("version")) == QLatin1String("v30")) {
                     tmpOk = doExport(url, converter.exportVCard(contact, KContacts::VCardConverter::v3_0));
                 } else {
                     tmpOk = doExport(url, converter.exportVCard(contact, KContacts::VCardConverter::v4_0));
@@ -125,9 +125,9 @@ bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelecti
                 return true; // user canceled export
             }
 
-            if (option(QLatin1String("version")) == QLatin1String("v21")) {
+            if (option(QStringLiteral("version")) == QLatin1String("v21")) {
                 ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v2_1));
-            } else if (option(QLatin1String("version")) == QLatin1String("v30")) {
+            } else if (option(QStringLiteral("version")) == QLatin1String("v30")) {
                 ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v3_0));
             } else {
                 ok = doExport(url, converter.exportVCards(list, KContacts::VCardConverter::v4_0));
@@ -207,7 +207,7 @@ ContactList VCardXXPort::importContacts() const
             }
         }
 
-        if (!option(QLatin1String("importUrl")).isEmpty()) {     // a vcard was passed via cmd
+        if (!option(QStringLiteral("importUrl")).isEmpty()) {     // a vcard was passed via cmd
             if (addrList.isEmpty()) {
                 if (anyFailures && urls.count() > 1) {
                     KMessageBox::information(
@@ -405,8 +405,8 @@ KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addresse
 void VCardXXPort::addKey(KContacts::Addressee &addr, KContacts::Key::Type type) const
 {
 #ifdef QGPGME_FOUND
-    const QString fingerprint = addr.custom(QLatin1String("KADDRESSBOOK"),
-                                            (type == KContacts::Key::PGP ? QLatin1String("OPENPGPFP") : QLatin1String("SMIMEFP")));
+    const QString fingerprint = addr.custom(QStringLiteral("KADDRESSBOOK"),
+                                            (type == KContacts::Key::PGP ? QStringLiteral("OPENPGPFP") : QStringLiteral("SMIMEFP")));
     if (fingerprint.isEmpty()) {
         return;
     }

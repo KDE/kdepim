@@ -474,25 +474,25 @@ QString RichTextComposerControler::toCleanHtml() const
 {
     QString result = richTextComposer()->toHtml();
 
-    static const QString EMPTYLINEHTML = QLatin1String(
+    static const QString EMPTYLINEHTML = QStringLiteral(
             "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
             "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; \">&nbsp;</p>");
 
     // Qt inserts various style properties based on the current mode of the editor (underline,
     // bold, etc), but only empty paragraphs *also* have qt-paragraph-type set to 'empty'.
-    static const QString EMPTYLINEREGEX = QLatin1String(
+    static const QString EMPTYLINEREGEX = QStringLiteral(
             "<p style=\"-qt-paragraph-type:empty;(.*)</p>");
 
-    static const QString OLLISTPATTERNQT = QLatin1String(
+    static const QString OLLISTPATTERNQT = QStringLiteral(
             "<ol style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px;");
 
-    static const QString ULLISTPATTERNQT = QLatin1String(
+    static const QString ULLISTPATTERNQT = QStringLiteral(
             "<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px;");
 
-    static const QString ORDEREDLISTHTML = QLatin1String(
+    static const QString ORDEREDLISTHTML = QStringLiteral(
             "<ol style=\"margin-top: 0px; margin-bottom: 0px;");
 
-    static const QString UNORDEREDLISTHTML = QLatin1String(
+    static const QString UNORDEREDLISTHTML = QStringLiteral(
                 "<ul style=\"margin-top: 0px; margin-bottom: 0px;");
 
     // fix 1 - empty lines should show as empty lines - MS Outlook treats margin-top:0px; as
@@ -580,7 +580,7 @@ void RichTextComposerControler::insertLink(const QString &url)
 
         cursor.setPosition(cursor.selectionEnd());
         cursor.setCharFormat(originalFormat);
-        cursor.insertText(QLatin1String(" \n"));
+        cursor.insertText(QStringLiteral(" \n"));
         cursor.endEditBlock();
     } else {
         richTextComposer()->textCursor().insertText(url + QLatin1Char('\n'));
@@ -617,7 +617,7 @@ void RichTextComposerControler::insertShareLink(const QString &url)
 
         cursor.setPosition(cursor.selectionEnd());
         cursor.setCharFormat(originalFormat);
-        cursor.insertText(QLatin1String(" \n"));
+        cursor.insertText(QStringLiteral(" \n"));
         cursor.endEditBlock();
     } else {
         richTextComposer()->textCursor().insertText(QLatin1Char('\n') + msg + QLatin1Char('\n') + url + QLatin1Char('\n'));

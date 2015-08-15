@@ -78,7 +78,7 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
         QDBusInterface resourceSettings(QLatin1String("org.freedesktop.Akonadi.Resource.") + identifier, QStringLiteral("/Settings"), QStringLiteral("org.kde.Akonadi.Imap.Wallet"));
 
         QString pwd;
-        QDBusReply<QString> replyPass = resourceSettings.call(QLatin1String("password"));
+        QDBusReply<QString> replyPass = resourceSettings.call(QStringLiteral("password"));
         if (replyPass.isValid()) {
             pwd = replyPass;
         }
@@ -106,7 +106,7 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
             authStr = QStringLiteral("ANONYMOUS");
             break;
         default:
-            authStr = QLatin1String("PLAIN");
+            authStr = QStringLiteral("PLAIN");
             break;
         }
         u.addQueryItem(QStringLiteral("x-mech"), authStr);
@@ -158,7 +158,7 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
             u.setUserName(interface->userName());
             QDBusInterface resourceSettings(QLatin1String("org.freedesktop.Akonadi.Resource.") + identifier, QStringLiteral("/Settings"), QStringLiteral("org.kde.Akonadi.Imap.Wallet"));
             QString pwd;
-            QDBusReply<QString> replyPass = resourceSettings.call(QLatin1String("password"));
+            QDBusReply<QString> replyPass = resourceSettings.call(QStringLiteral("password"));
             if (replyPass.isValid()) {
                 pwd = replyPass;
             }
@@ -166,7 +166,7 @@ QUrl KSieveUi::Util::findSieveUrlForAccount(const QString &identifier)
         } else if (resultCustomAuthentication == QLatin1String("CustomUserPassword")) {
             QDBusInterface resourceSettings(QLatin1String("org.freedesktop.Akonadi.Resource.") + identifier, QStringLiteral("/Settings"), QStringLiteral("org.kde.Akonadi.Imap.Wallet"));
             QString pwd;
-            QDBusReply<QString> replyPass = resourceSettings.call(QLatin1String("sieveCustomPassword"));
+            QDBusReply<QString> replyPass = resourceSettings.call(QStringLiteral("sieveCustomPassword"));
             if (replyPass.isValid()) {
                 pwd = replyPass;
             }

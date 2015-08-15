@@ -51,7 +51,7 @@ void ImportAkregatorJob::start()
 
 void ImportAkregatorJob::restoreConfig()
 {
-    const QString akregatorStr(QLatin1String("akregatorrc"));
+    const QString akregatorStr(QStringLiteral("akregatorrc"));
     restoreConfigFile(akregatorStr);
     Q_EMIT info(i18n("Config restored."));
 }

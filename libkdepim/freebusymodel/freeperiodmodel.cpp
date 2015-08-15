@@ -198,7 +198,7 @@ QString FreePeriodModel::tooltipify(int index) const
     KDateTime::Spec timeSpec = KSystemTimeZones::local();
     KCalCore::Period period = mPeriodList.at(index);
     unsigned long duration = period.duration().asSeconds() * 1000; // we want milliseconds
-    QString toolTip = QLatin1String("<qt>");
+    QString toolTip = QStringLiteral("<qt>");
     toolTip += QLatin1String("<b>") + i18nc("@info:tooltip", "Free Period") + QLatin1String("</b>");
     toolTip += QLatin1String("<hr>");
     toolTip += QLatin1String("<i>") + i18nc("@info:tooltip period start time", "Start:") + QLatin1String("</i>&nbsp;");

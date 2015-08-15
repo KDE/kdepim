@@ -92,7 +92,7 @@ void SylpheedSettings::readCustomHeader(QFile *customHeaderFile)
         }
     }
     if (!header.isEmpty()) {
-        const int oldValue = readKmailSettings(QLatin1String("General"), QStringLiteral("mime-header-count"));
+        const int oldValue = readKmailSettings(QStringLiteral("General"), QStringLiteral("mime-header-count"));
         int newValue = header.count();
         if (oldValue != -1) {
             newValue += oldValue;
@@ -298,14 +298,14 @@ void SylpheedSettings::readPop3Account(const KConfigGroup &accountConfig, bool c
 {
     QMap<QString, QVariant> settings;
     const QString host = accountConfig.readEntry("receive_server");
-    settings.insert(QLatin1String("Host"), host);
+    settings.insert(QStringLiteral("Host"), host);
 
     const QString name = accountConfig.readEntry(QStringLiteral("name"));
     const QString inbox = MailCommon::Util::convertFolderPathToCollectionStr(accountConfig.readEntry(QStringLiteral("inbox")));
-    settings.insert(QLatin1String("TargetCollection"), inbox);
+    settings.insert(QStringLiteral("TargetCollection"), inbox);
     int port = 0;
-    if (SylpheedSettingsUtils::readConfig(QLatin1String("pop_port"), accountConfig, port, true)) {
-        settings.insert(QLatin1String("Port"), port);
+    if (SylpheedSettingsUtils::readConfig(QStringLiteral("pop_port"), accountConfig, port, true)) {
+        settings.insert(QStringLiteral("Port"), port);
     }
     if (accountConfig.hasKey(QStringLiteral("ssl_pop"))) {
         const int sslPop = accountConfig.readEntry(QStringLiteral("ssl_pop"), 0);
@@ -336,7 +336,7 @@ void SylpheedSettings::readPop3Account(const KConfigGroup &accountConfig, bool c
     settings.insert(QStringLiteral("Login"), user);
 
     const QString password = accountConfig.readEntry(QStringLiteral("password"));
-    settings.insert(QLatin1String("Password"), password);
+    settings.insert(QStringLiteral("Password"), password);
 
     //use_apop_auth
     if (accountConfig.hasKey(QStringLiteral("use_apop_auth"))) {
@@ -427,7 +427,7 @@ void SylpheedSettings::readImapAccount(const KConfigGroup &accountConfig, bool c
 
 void SylpheedSettings::readAccount(const KConfigGroup &accountConfig , bool checkMailOnStartup, int intervalCheckMail)
 {
-    if (accountConfig.hasKey(QLatin1String("protocol"))) {
+    if (accountConfig.hasKey(QStringLiteral("protocol"))) {
         const int protocol = accountConfig.readEntry(QStringLiteral("protocol"), 0);
         switch (protocol) {
         case 0:
@@ -547,7 +547,7 @@ QString SylpheedSettings::readTransport(const KConfigGroup &accountConfig)
 
         }
         QString domainName;
-        if (SylpheedSettingsUtils::readConfig(QLatin1String("domain"), accountConfig, domainName, false)) {
+        if (SylpheedSettingsUtils::readConfig(QStringLiteral("domain"), accountConfig, domainName, false)) {
             mt->setLocalHostname(domainName);
         }
 

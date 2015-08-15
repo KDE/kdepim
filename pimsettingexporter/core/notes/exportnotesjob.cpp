@@ -67,11 +67,11 @@ void ExportNotesJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    const QString knotesStr(QLatin1String("knotesrc"));
+    const QString knotesStr(QStringLiteral("knotesrc"));
     const QString knotesrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + knotesStr;
     backupFile(knotesrc, Utils::configsPath(), knotesStr);
 
-    const QString globalNoteSettingsStr(QLatin1String("globalnotesettings"));
+    const QString globalNoteSettingsStr(QStringLiteral("globalnotesettings"));
     const QString globalNoteSettingsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + globalNoteSettingsStr;
 
     if (QFile(globalNoteSettingsrc).exists()) {
@@ -81,11 +81,11 @@ void ExportNotesJob::backupConfig()
         tmp.open();
 
         KConfig *knoteConfig = globalnotesettingsrc->copyTo(tmp.fileName());
-        const QString selectFolderNoteStr(QLatin1String("SelectNoteFolder"));
+        const QString selectFolderNoteStr(QStringLiteral("SelectNoteFolder"));
         if (knoteConfig->hasGroup(selectFolderNoteStr)) {
             KConfigGroup selectFolderNoteGroup = knoteConfig->group(selectFolderNoteStr);
 
-            const QString selectFolderNoteGroupStr(QLatin1String("DefaultFolder"));
+            const QString selectFolderNoteGroupStr(QStringLiteral("DefaultFolder"));
             Utils::convertCollectionIdsToRealPath(selectFolderNoteGroup, selectFolderNoteGroupStr);
         }
         knoteConfig->sync();

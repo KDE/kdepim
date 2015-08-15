@@ -113,7 +113,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
             m_origMsg->headerByType("List-Post")->asUnicodeString().contains(QStringLiteral("mailto:"), Qt::CaseInsensitive)) {
 
         const QString listPost = m_origMsg->headerByType("List-Post")->asUnicodeString();
-        QRegExp rx(QLatin1String("<mailto:([^@>]+)@([^>]+)>"), Qt::CaseInsensitive);
+        QRegExp rx(QStringLiteral("<mailto:([^@>]+)@([^>]+)>"), Qt::CaseInsensitive);
         if (rx.indexIn(listPost, 0) != -1) {   // matched
             m_mailingListAddresses << MessageCore::StringUtil::mailboxFromUnicodeString(rx.cap(1) + QLatin1Char('@') + rx.cap(2));
         }
@@ -462,7 +462,7 @@ KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Mess
     KMime::Content *msgPart = new KMime::Content(fwdMsg.data());
     msgPart->contentType()->setMimeType("message/rfc822");
 
-    msgPart->contentDisposition()->setParameter(QLatin1String("filename"), i18n("forwarded message"));
+    msgPart->contentDisposition()->setParameter(QStringLiteral("filename"), i18n("forwarded message"));
     msgPart->contentDisposition()->setDisposition(KMime::Headers::CDinline);
     msgPart->contentDescription()->fromUnicodeString(fwdMsg->from()->asUnicodeString() + QLatin1String(": ") + fwdMsg->subject()->asUnicodeString(), "utf-8");
     msgPart->setBody(fwdMsg->encodedContent());
@@ -747,7 +747,7 @@ QPair< KMime::Message::Ptr, KMime::Content * > MessageFactory::createForwardDige
     digest->contentType()->setMimeType("multipart/digest");
     digest->contentType()->setBoundary(KMime::multiPartBoundary());
     digest->contentDescription()->fromUnicodeString(QString::fromLatin1("Digest of %1 messages.").arg(items.count()), "utf8");
-    digest->contentDisposition()->setFilename(QLatin1String("digest"));
+    digest->contentDisposition()->setFilename(QStringLiteral("digest"));
     digest->fromUnicodeString(mainPartText);
 
     int id = 0;
@@ -766,7 +766,7 @@ QPair< KMime::Message::Ptr, KMime::Content * > MessageFactory::createForwardDige
         part->contentType()->setCharset(fMsg->contentType()->charset());
         part->contentID()->setIdentifier(fMsg->contentID()->identifier());
         part->contentDescription()->fromUnicodeString(fMsg->contentDescription()->asUnicodeString(), "utf8");
-        part->contentDisposition()->setParameter(QLatin1String("name"), i18n("forwarded message"));
+        part->contentDisposition()->setParameter(QStringLiteral("name"), i18n("forwarded message"));
         part->fromUnicodeString(QString::fromLatin1(fMsg->encodedContent()));
         part->assemble();
         MessageCore::Util::addLinkInformation(msg, item.id(), Akonadi::MessageStatus::statusForwarded());
@@ -975,7 +975,7 @@ void MessageFactory::applyCharset(const KMime::Message::Ptr msg)
         // first convert the body from its current encoding to unicode representation
         QTextCodec *bodyCodec = KCharsets::charsets()->codecForName(QString::fromLatin1(msg->contentType()->charset()));
         if (!bodyCodec) {
-            bodyCodec = KCharsets::charsets()->codecForName(QLatin1String("UTF-8"));
+            bodyCodec = KCharsets::charsets()->codecForName(QStringLiteral("UTF-8"));
         }
 
         const QString body = bodyCodec->toUnicode(msg->body());

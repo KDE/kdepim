@@ -121,7 +121,7 @@ void FilterImporterSylpheed::parseConditions(const QDomElement &e, MailCommon::M
             contentsName = ruleFilter.text();
         } else if (nexttag == QLatin1String("unread")) {
             fieldName = "<status>";
-            contentsName = QLatin1String("Unread");
+            contentsName = QStringLiteral("Unread");
         } else if (nexttag == QLatin1String("mark")) {
             //TODO
         } else if (nexttag == QLatin1String("color-label")) {
@@ -201,7 +201,7 @@ void FilterImporterSylpheed::parseActions(const QDomElement &e,
             //TODO
         } else if (nexttag == QLatin1String("mark-as-read")) {
             actionName = QStringLiteral("set status");
-            value = QLatin1String("R");
+            value = QStringLiteral("R");
         } else if (nexttag == QLatin1String("forward")) {
             actionName = QStringLiteral("forward");
             value = ruleFilter.text();

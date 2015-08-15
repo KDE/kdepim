@@ -638,7 +638,7 @@ QString ConfigEntry::toString(ConfigEntry::EscapeMode mode) const
                     }
                 }
             }
-            QString res = lst.join(QLatin1String(","));
+            QString res = lst.join(QStringLiteral(","));
             //qCDebug(KGPGCONF_LOG) <<"toString:" << res;
             return res;
         } else { // normal string

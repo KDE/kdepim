@@ -279,7 +279,7 @@ void TagPropertiesDialog::slotAccept()
 
     if (mTag.isValid() && !mRemovedRIDs.isEmpty()) {
         QSqlQuery query(DbAccess::database());
-        QString queryStr = QLatin1String("DELETE FROM TagRemoteIdResourceRelationTable "
+        QString queryStr = QStringLiteral("DELETE FROM TagRemoteIdResourceRelationTable "
                                          "WHERE tagId = ? AND "
                                          "resourceId IN (SELECT id "
                                          "FROM ResourceTable "
@@ -288,7 +288,7 @@ void TagPropertiesDialog::slotAccept()
         for (int i = 0; i < mRemovedRIDs.count(); ++i) {
             conds << QStringLiteral("name = ?");
         }
-        queryStr += conds.join(QLatin1String(" OR ")) + QLatin1String(")");
+        queryStr += conds.join(QStringLiteral(" OR ")) + QLatin1String(")");
         query.prepare(queryStr);
         query.addBindValue(mTag.id());
         Q_FOREACH (const QString &removedRid, mRemovedRIDs) {
@@ -310,7 +310,7 @@ void TagPropertiesDialog::slotAccept()
             for (int i = 0; i < mChangedRIDs.count(); ++i) {
                 conds << QStringLiteral("name = ?");
             }
-            queryStr += conds.join(QLatin1String(" OR "));
+            queryStr += conds.join(QStringLiteral(" OR "));
             query.prepare(queryStr);
             Q_FOREACH (const QString &res, mChangedRIDs) {
                 query.addBindValue(res);

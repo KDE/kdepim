@@ -73,7 +73,7 @@ NoteHostDialog::NoteHostDialog(const QString &caption, QWidget *parent)
     m_servicesView = new QTreeView(page);
     pageVBoxLayout->addWidget(m_servicesView);
     m_servicesView->setRootIsDecorated(false);
-    KDNSSD::ServiceModel *mdl = new KDNSSD::ServiceModel(new KDNSSD::ServiceBrowser(QLatin1String("_knotes._tcp"), true), this);
+    KDNSSD::ServiceModel *mdl = new KDNSSD::ServiceModel(new KDNSSD::ServiceBrowser(QStringLiteral("_knotes._tcp"), true), this);
     m_servicesView->setModel(mdl);
     m_servicesView->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_servicesView->hideColumn(KDNSSD::ServiceModel::Port);

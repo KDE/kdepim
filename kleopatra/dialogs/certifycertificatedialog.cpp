@@ -282,7 +282,7 @@ void SummaryPage::setSummary(const SummaryPage::Summary &sum)
     Q_FOREACH (const unsigned int i, sum.selectedUserIDs) {
         ids += Formatting::prettyUserID(key.userID(i)).toHtmlEscaped();
     }
-    m_userIDsLabel->setText(QLatin1String("<qt>") + ids.join(QLatin1String("<br/>")) + QLatin1String("</qt>"));
+    m_userIDsLabel->setText(QLatin1String("<qt>") + ids.join(QStringLiteral("<br/>")) + QLatin1String("</qt>"));
     m_secretKeyLabel->setText(sum.secretKey.isNull() ? i18n("Default certificate") : Formatting::prettyNameAndEMail(sum.secretKey));
 #ifdef KLEO_SIGN_KEY_CERTLEVEL_SUPPORT
     switch (sum.checkLevel) {

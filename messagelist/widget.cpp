@@ -245,7 +245,7 @@ void Widget::slotTagsFetched(KJob *job)
             addMessageTagItem(SmallIcon(iconName), label, QVariant(id));
         }
     }
-    conf.writeEntry(QLatin1String("TagSelected"), tagFound);
+    conf.writeEntry(QStringLiteral("TagSelected"), tagFound);
     conf.sync();
 
     setCurrentStatusFilterItem();

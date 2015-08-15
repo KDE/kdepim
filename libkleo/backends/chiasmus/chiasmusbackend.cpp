@@ -485,7 +485,7 @@ private:
         if (!mConfigObject)
             // this is unsafe. We're a lib, used by concurrent apps.
         {
-            mConfigObject = new KConfig(QLatin1String("chiasmusbackendrc"));
+            mConfigObject = new KConfig(QStringLiteral("chiasmusbackendrc"));
         }
         return mConfigObject;
     }
@@ -758,7 +758,7 @@ bool Kleo::ChiasmusBackend::checkForChiasmus(QString *reason) const
     std::auto_ptr<Protocol> tmp(mProtocol);
     mProtocol = 0;
 
-    const CryptoConfigEntry *path = config()->entry(QLatin1String("Chiasmus"), QStringLiteral("General"), QStringLiteral("path"));
+    const CryptoConfigEntry *path = config()->entry(QStringLiteral("Chiasmus"), QStringLiteral("General"), QStringLiteral("path"));
     assert(path); assert(path->argType() == CryptoConfigEntry::ArgType_Path);
     const QString chiasmus = path->urlValue().path();
     const QFileInfo fi(KShell::tildeExpand(chiasmus));

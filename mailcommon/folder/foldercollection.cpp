@@ -189,7 +189,7 @@ void FolderCollection::readConfig()
     mPutRepliesInSameFolder = configGroup.readEntry("PutRepliesInSameFolder", false);
     mHideInSelectionDialog = configGroup.readEntry("HideInSelectionDialog", false);
 
-    if (configGroup.hasKey(QLatin1String("IgnoreNewMail"))) {
+    if (configGroup.hasKey(QStringLiteral("IgnoreNewMail"))) {
         if (configGroup.readEntry(QStringLiteral("IgnoreNewMail"), false)) {
             //migrate config.
             Akonadi::NewMailNotifierAttribute *newMailNotifierAttr = mCollection.attribute<Akonadi::NewMailNotifierAttribute>(Akonadi::Entity::AddIfMissing);

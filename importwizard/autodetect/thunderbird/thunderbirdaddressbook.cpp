@@ -27,13 +27,13 @@ ThunderBirdAddressBook::ThunderBirdAddressBook(const QDir &dir, ImportWizard *pa
     : AbstractAddressBook(parent)
 {
     readAddressBook(dir.path() + QLatin1String("/impab.mab"));
-    const QStringList filesimportab = dir.entryList(QStringList(QLatin1String("impab-[0-9]*.map")), QDir::Files, QDir::Name);
+    const QStringList filesimportab = dir.entryList(QStringList(QStringLiteral("impab-[0-9]*.map")), QDir::Files, QDir::Name);
     Q_FOREACH (const QString &file, filesimportab) {
         readAddressBook(dir.path() + QLatin1Char('/') + file);
     }
     readAddressBook(dir.path() + QLatin1String("/abook.mab"));
 
-    const QStringList files = dir.entryList(QStringList(QLatin1String("abook-[0-9]*.map")), QDir::Files, QDir::Name);
+    const QStringList files = dir.entryList(QStringList(QStringLiteral("abook-[0-9]*.map")), QDir::Files, QDir::Name);
     Q_FOREACH (const QString &file, files) {
         readAddressBook(dir.path() + QLatin1Char('/') + file);
     }
@@ -141,11 +141,11 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
                                 } else if (column == QLatin1String("SecondEmail")) {
                                     qCDebug(IMPORTWIZARD_LOG) << " column " << column << " found but not imported. Need to look at how to import it";
                                 } else if (column == QLatin1String("PreferMailFormat")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("MailPreferedFormatting"), value);
+                                    contact.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("MailPreferedFormatting"), value);
                                 } else if (column == QLatin1String("PopularityIndex")) {
                                     qCDebug(IMPORTWIZARD_LOG) << " column " << column << " found but not imported. Need to look at how to import it";
                                 } else if (column == QLatin1String("AllowRemoteContent")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("MailAllowToRemoteContent"), value);
+                                    contact.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("MailAllowToRemoteContent"), value);
                                 } else if (column == QLatin1String("WorkPhone")) {
                                     contact.insertPhoneNumber(KContacts::PhoneNumber(value, KContacts::PhoneNumber::Work));
                                 } else if (column == QLatin1String("HomePhone")) {
@@ -221,13 +221,13 @@ void ThunderBirdAddressBook::readAddressBook(const QString &filename)
                                 } else if (column == QLatin1String("BirthDay")) {
                                     birthday = value.toInt();
                                 } else if (column == QLatin1String("Custom1")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("Custom1"), value);
+                                    contact.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("Custom1"), value);
                                 } else if (column == QLatin1String("Custom2")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("Custom2"), value);
+                                    contact.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("Custom2"), value);
                                 } else if (column == QLatin1String("Custom3")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("Custom3"), value);
+                                    contact.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("Custom3"), value);
                                 } else if (column == QLatin1String("Custom4")) {
-                                    contact.insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("Custom4"), value);
+                                    contact.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("Custom4"), value);
                                 } else if (column == QLatin1String("Notes")) {
                                     contact.setNote(value);
                                 } else {

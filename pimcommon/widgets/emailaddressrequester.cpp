@@ -67,7 +67,7 @@ void EmailAddressRequester::Private::slotAddressBook()
         }
     }
 
-    mLineEdit->setText(text + addressList.join(QLatin1String(",")));
+    mLineEdit->setText(text + addressList.join(QStringLiteral(",")));
 }
 
 EmailAddressRequester::EmailAddressRequester(QWidget *parent)

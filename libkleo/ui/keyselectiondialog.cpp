@@ -622,7 +622,7 @@ void Kleo::KeySelectionDialog::slotStartCertificateManager(const QString &query)
     }
 #endif
     Q_UNUSED(query);
-    if (!QProcess::startDetached(QLatin1String("kleopatra"), args))
+    if (!QProcess::startDetached(QStringLiteral("kleopatra"), args))
         KMessageBox::error(this,
                            i18n("Could not start certificate manager; "
                                 "please check your installation."),
@@ -902,7 +902,7 @@ void Kleo::KeySelectionDialog::slotFilter()
     }
 
     // OK, so we need to filter:
-    QRegExp keyIdRegExp(QLatin1String("(?:0x)?[A-F0-9]{1,8}"), Qt::CaseInsensitive);
+    QRegExp keyIdRegExp(QStringLiteral("(?:0x)?[A-F0-9]{1,8}"), Qt::CaseInsensitive);
     if (keyIdRegExp.exactMatch(mSearchText)) {
         if (mSearchText.startsWith(QStringLiteral("0X")))
             // search for keyID only:

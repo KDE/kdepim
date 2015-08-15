@@ -300,7 +300,7 @@ void BoxJob::parseAccountInfo(const QString &data)
 void BoxJob::refreshToken()
 {
     mActionType = PimCommon::StorageServiceAbstract::AccessTokenAction;
-    QNetworkRequest request(QUrl(QLatin1String("https://www.box.com/api/oauth2/token")));
+    QNetworkRequest request(QUrl(QStringLiteral("https://www.box.com/api/oauth2/token")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QUrl postData;
     postData.addQueryItem(QStringLiteral("refresh_token"), mRefreshToken);
@@ -441,7 +441,7 @@ QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &upload
         if (file->open(QIODevice::ReadOnly)) {
             QUrl url;
             //TODO upload multipart
-            url.setUrl(QLatin1String("https://upload.box.com/api/2.0/files/content"));
+            url.setUrl(QStringLiteral("https://upload.box.com/api/2.0/files/content"));
             QNetworkRequest request(url);
             request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
             request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
@@ -463,7 +463,7 @@ void BoxJob::listFolder(const QString &folder)
     mActionType = PimCommon::StorageServiceAbstract::ListFolderAction;
     mError = false;
     QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath + (folder.isEmpty() ? QLatin1String("0") : folder) + QLatin1String("/items?fields=name,created_at,size,modified_at,id"));
+    url.setUrl(mApiUrl + mFolderInfoPath + (folder.isEmpty() ? QStringLiteral("0") : folder) + QLatin1String("/items?fields=name,created_at,size,modified_at,id"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
@@ -491,7 +491,7 @@ void BoxJob::createFolderJob(const QString &foldername, const QString &destinati
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"name\":\"%1\", \"parent\": {\"id\": \"%2\"}}").arg(foldername).arg((destination.isEmpty() ? QLatin1String("0") : destination));
+    const QString data = QString::fromLatin1("{\"name\":\"%1\", \"parent\": {\"id\": \"%2\"}}").arg(foldername).arg((destination.isEmpty() ? QStringLiteral("0") : destination));
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
@@ -553,7 +553,7 @@ void BoxJob::parseCreateServiceFolder(const QString &data)
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qCDebug(PIMCOMMON_LOG) << " info" << info;
 #endif
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     deleteLater();
 }
 

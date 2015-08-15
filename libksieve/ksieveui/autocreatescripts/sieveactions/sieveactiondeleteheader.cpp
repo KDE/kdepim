@@ -32,7 +32,7 @@
 using namespace KSieveUi;
 
 SieveActionDeleteHeader::SieveActionDeleteHeader(QObject *parent)
-    : SieveActionAbstractEditHeader(QLatin1String("deleteheader"), i18n("Delete header"), parent)
+    : SieveActionAbstractEditHeader(QStringLiteral("deleteheader"), i18n("Delete header"), parent)
 {
 }
 
@@ -83,7 +83,7 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
                 QDomNode testNode = e.toElement();
                 return setParamWidgetValue(testNode.toElement(), w, error);
             } else if (tagName == QLatin1String("tag")) {
-                SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
+                SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("matchtype"));
                 combo->setCode(AutoCreateScriptUtil::tagValue(e.text()), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
@@ -113,14 +113,14 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
 
 QString SieveActionDeleteHeader::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
+    const SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("matchtype"));
     bool isNegative = false;
     const QString matchTypeStr = combo->code(isNegative);
 
-    const QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("headeredit"));
+    const QLineEdit *edit = w->findChild<QLineEdit *>(QStringLiteral("headeredit"));
     const QString headerStr = edit->text();
 
-    const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("valueedit"));
+    const QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("valueedit"));
     const QString valueStr = value->text();
 
     return QStringLiteral("deleteheader %1 \"%2\" \"%3\";").arg((isNegative ? QLatin1String("not ") + matchTypeStr : matchTypeStr)).arg(headerStr).arg(valueStr);

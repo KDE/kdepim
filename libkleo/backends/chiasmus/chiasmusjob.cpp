@@ -162,7 +162,7 @@ GpgME::Error Kleo::ChiasmusJob::finished()
         }
 
     const Kleo::CryptoConfigEntry *showOutput
-        = ChiasmusBackend::instance()->config()->entry(QLatin1String("Chiasmus"), QStringLiteral("General"), QStringLiteral("show-output"));
+        = ChiasmusBackend::instance()->config()->entry(QStringLiteral("Chiasmus"), QStringLiteral("General"), QStringLiteral("show-output"));
     if (showOutput && showOutput->boolValue()) {
         showChiasmusOutput();
     }

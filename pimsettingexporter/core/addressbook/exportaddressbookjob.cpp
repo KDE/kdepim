@@ -109,7 +109,7 @@ void ExportAddressbookJob::backupConfig()
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
 
-    const QString kaddressbookStr(QLatin1String("kaddressbookrc"));
+    const QString kaddressbookStr(QStringLiteral("kaddressbookrc"));
     const QString kaddressbookrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kaddressbookStr;
     if (QFile(kaddressbookrc).exists()) {
         KSharedConfigPtr kaddressbook = KSharedConfig::openConfig(kaddressbookrc);
@@ -119,17 +119,17 @@ void ExportAddressbookJob::backupConfig()
 
         KConfig *kaddressBookConfig = kaddressbook->copyTo(tmp.fileName());
 
-        const QString collectionViewCheckStateStr(QLatin1String("CollectionViewCheckState"));
+        const QString collectionViewCheckStateStr(QStringLiteral("CollectionViewCheckState"));
         if (kaddressBookConfig->hasGroup(collectionViewCheckStateStr)) {
             KConfigGroup group = kaddressBookConfig->group(collectionViewCheckStateStr);
-            const QString selectionKey(QLatin1String("Selection"));
+            const QString selectionKey(QStringLiteral("Selection"));
             Utils::convertCollectionListToRealPath(group, selectionKey);
         }
 
-        const QString collectionViewStateStr(QLatin1String("CollectionViewState"));
+        const QString collectionViewStateStr(QStringLiteral("CollectionViewState"));
         if (kaddressBookConfig->hasGroup(collectionViewStateStr)) {
             KConfigGroup group = kaddressBookConfig->group(collectionViewStateStr);
-            QString currentKey(QLatin1String("Current"));
+            QString currentKey(QStringLiteral("Current"));
             Utils::convertCollectionToRealPath(group, currentKey);
 
             currentKey = QStringLiteral("Expansion");

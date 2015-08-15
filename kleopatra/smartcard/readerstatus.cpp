@@ -143,7 +143,7 @@ static QByteArray read_file(const QString &fileName)
 
 static unsigned int parseFileName(const QString &fileName, bool *ok)
 {
-    QRegExp rx(QLatin1String("reader_(\\d+)\\.status"));
+    QRegExp rx(QStringLiteral("reader_(\\d+)\\.status"));
     if (ok) {
         *ok = false;
     }
@@ -418,7 +418,7 @@ static std::vector<CardInfo> update_cardinfo(const QString &gnupgHomePath, share
         qCWarning(KLEOPATRA_LOG) << "gnupg home" << gnupgHomePath << "does not exist!";
     }
 
-    const CardInfo ci = get_card_status(gnupgHome.absoluteFilePath(QLatin1String("reader_0.status")), 0, gpgAgent);
+    const CardInfo ci = get_card_status(gnupgHome.absoluteFilePath(QStringLiteral("reader_0.status")), 0, gpgAgent);
 #ifdef DEBUG_SCREADER
     qCDebug(KLEOPATRA_LOG) << "</update_cardinfo>";
 #endif
@@ -519,7 +519,7 @@ public Q_SLOTS:
             return;
         }
 
-        QStringList files = gnupgHome.entryList(QStringList(QLatin1String("reader_*.status")), QDir::Files, QDir::Name);
+        QStringList files = gnupgHome.entryList(QStringList(QStringLiteral("reader_*.status")), QDir::Files, QDir::Name);
         bool *dummy = 0;
         kdtools::sort(files, boost::bind(parseFileName, _1, dummy) < boost::bind(parseFileName, _2, dummy));
 
@@ -726,7 +726,7 @@ public:
 
         qRegisterMetaType<Status>("Kleo::SmartCard::ReaderStatus::Status");
 
-        watcher.whitelistFiles(QStringList(QLatin1String("reader_*.status")));
+        watcher.whitelistFiles(QStringList(QStringLiteral("reader_*.status")));
         watcher.addPath(Kleo::gnupgHomeDirectory());
         watcher.setDelay(100);
 

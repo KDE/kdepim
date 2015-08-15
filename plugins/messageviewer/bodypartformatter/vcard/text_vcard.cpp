@@ -112,8 +112,8 @@ public:
                       QLatin1String("</h2></div>"));
 
         count = 0;
-        static QString defaultPixmapPath = QLatin1String("file:///") + KIconLoader::global()->iconPath(QLatin1String("user-identity"), KIconLoader::Desktop);
-        static QString defaultMapIconPath = QLatin1String("file:///") + KIconLoader::global()->iconPath(QLatin1String("document-open-remote"), KIconLoader::Small);
+        static QString defaultPixmapPath = QLatin1String("file:///") + KIconLoader::global()->iconPath(QStringLiteral("user-identity"), KIconLoader::Desktop);
+        static QString defaultMapIconPath = QLatin1String("file:///") + KIconLoader::global()->iconPath(QStringLiteral("document-open-remote"), KIconLoader::Small);
 
         if (!memento) {
             MessageViewer::VcardMemento *memento = new MessageViewer::VcardMemento(lst);

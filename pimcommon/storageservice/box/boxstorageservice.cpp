@@ -125,9 +125,9 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
             QMap<QString, QString> map;
-            map[QLatin1String("Refresh Token")] = mRefreshToken;
-            map[QLatin1String("Token")] = mToken;
-            map[QLatin1String("Expire Time")] = mExpireDateTime.toString();
+            map[QStringLiteral("Refresh Token")] = mRefreshToken;
+            map[QStringLiteral("Token")] = mToken;
+            map[QStringLiteral("Expire Time")] = mExpireDateTime.toString();
             wallet->writeMap(walletEntry, map);
         }
     }
@@ -457,7 +457,7 @@ QString BoxStorageService::description()
 
 QUrl BoxStorageService::serviceUrl()
 {
-    return QUrl(QLatin1String("https://app.box.com/"));
+    return QUrl(QStringLiteral("https://app.box.com/"));
 }
 
 QString BoxStorageService::serviceName()
@@ -612,7 +612,7 @@ QString BoxStorageService::fileShareRoot(const QVariantMap &variantMap)
 
 QRegExp BoxStorageService::disallowedSymbols() const
 {
-    return QRegExp(QLatin1String("[/:?*\\|]"));
+    return QRegExp(QStringLiteral("[/:?*\\|]"));
 }
 
 QString BoxStorageService::disallowedSymbolsStr() const

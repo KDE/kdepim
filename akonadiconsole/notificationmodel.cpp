@@ -137,7 +137,7 @@ NotificationModel::NotificationEntity::NotificationEntity(const Protocol::Change
 NotificationModel::NotificationModel(QObject *parent) :
     QAbstractItemModel(parent)
 {
-    QString service = QLatin1String("org.freedesktop.Akonadi");
+    QString service = QStringLiteral("org.freedesktop.Akonadi");
     if (Akonadi::ServerManager::hasInstanceIdentifier()) {
         service += QLatin1String(".") + Akonadi::ServerManager::instanceIdentifier();
     }

@@ -64,7 +64,7 @@ QString PlainHeaderStyle::format(KMime::Message *message) const
             && strategy->defaultPolicy() == HeaderStrategy::Display) {
         // crude way to emulate "all" headers - Note: no strings have
         // i18n(), so direction should always be ltr.
-        headerStr = QLatin1String("<div class=\"header\" dir=\"ltr\">");
+        headerStr = QStringLiteral("<div class=\"header\" dir=\"ltr\">");
         headerStr += formatAllMessageHeaders(message);
         return headerStr + QLatin1String("</div>");
     }
@@ -76,11 +76,11 @@ QString PlainHeaderStyle::format(KMime::Message *message) const
         headerStr += QString::fromLatin1("<div dir=\"%1\"><b style=\"font-size:130%\">").arg(subjectDir) +
                      MessageViewer::HeaderStyleUtil::subjectString(message) + QLatin1String("</b></div>\n");
 
-    if (strategy->showHeader(QLatin1String("date"))) {
+    if (strategy->showHeader(QStringLiteral("date"))) {
         headerStr.append(i18n("Date: ") + MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ false)) + QLatin1String("<br/>\n"));
     }
 
-    if (strategy->showHeader(QLatin1String("from"))) {
+    if (strategy->showHeader(QStringLiteral("from"))) {
         /*FIXME(Andras) review if it is still needed
         if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
         fromStr = message->fromStrip(); // let's use that
@@ -91,7 +91,7 @@ QString PlainHeaderStyle::format(KMime::Message *message) const
             headerStr.append(QLatin1String("&nbsp;&nbsp;<a href=\"") + vCardName() +
                              QLatin1String("\">") + i18n("[vCard]") + QLatin1String("</a>"));
 
-        if (strategy->showHeader(QLatin1String("organization"))
+        if (strategy->showHeader(QStringLiteral("organization"))
                 && message->headerByType("Organization"))
             headerStr.append(QLatin1String("&nbsp;&nbsp;(") +
                              MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("Organization")->asUnicodeString()) + QLatin1Char(')'));

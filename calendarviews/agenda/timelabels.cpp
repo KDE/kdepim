@@ -256,7 +256,7 @@ void TimeLabels::paintEvent(QPaintEvent *)
         // handle 24h and am/pm time formats
         if (KLocale::global()->use12Clock()) {
             if (cell == 12) {
-                suffix = QLatin1String("pm");
+                suffix = QStringLiteral("pm");
             }
             if (cell == 0) {
                 hour.setNum(12);

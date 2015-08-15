@@ -39,7 +39,7 @@ void SelectComparatorComboBox::initialize()
     Q_FOREACH (const QString &capability, KSieveUi::SieveEditorGraphicalModeWidget::sieveCapabilities()) {
         if (capability.startsWith(QStringLiteral("comparator-"))) {
             QString str(capability);
-            str.remove(QLatin1String("comparator-"));
+            str.remove(QStringLiteral("comparator-"));
             addItem(str, capability);
         }
     }

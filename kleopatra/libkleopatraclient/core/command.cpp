@@ -457,7 +457,7 @@ static QString get_default_socket_name()
     if (homeDir.isEmpty()) {
         return QString();
     }
-    return QDir(homeDir).absoluteFilePath(QLatin1String("S.uiserver"));
+    return QDir(homeDir).absoluteFilePath(QStringLiteral("S.uiserver"));
 }
 
 static QString default_socket_name()

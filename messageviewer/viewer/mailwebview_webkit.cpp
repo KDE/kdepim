@@ -71,12 +71,12 @@ static bool isHiddenElement(const QWebElement &element)
     }
 
     // visibility set to 'hidden' in the element itself or its parent elements.
-    if (element.styleProperty(QLatin1String("visibility"), QWebElement::ComputedStyle).compare(QLatin1String("hidden"), Qt::CaseInsensitive) == 0) {
+    if (element.styleProperty(QStringLiteral("visibility"), QWebElement::ComputedStyle).compare(QLatin1String("hidden"), Qt::CaseInsensitive) == 0) {
         return true;
     }
 
     // display set to 'none' in the element itself or its parent elements.
-    if (element.styleProperty(QLatin1String("display"), QWebElement::ComputedStyle).compare(QLatin1String("none"), Qt::CaseInsensitive) == 0) {
+    if (element.styleProperty(QStringLiteral("display"), QWebElement::ComputedStyle).compare(QLatin1String("none"), Qt::CaseInsensitive) == 0) {
         return true;
     }
 
@@ -86,7 +86,7 @@ static bool isHiddenElement(const QWebElement &element)
 static bool isEditableElement(QWebPage *page)
 {
     const QWebFrame *frame = (page ? page->currentFrame() : 0);
-    QWebElement element = (frame ? frame->findFirstElement(QLatin1String(":focus")) : QWebElement());
+    QWebElement element = (frame ? frame->findFirstElement(QStringLiteral(":focus")) : QWebElement());
     if (!element.isNull()) {
         const QString tagName(element.tagName());
         if (tagName.compare(QLatin1String("textarea"), Qt::CaseInsensitive) == 0) {
@@ -97,7 +97,7 @@ static bool isEditableElement(QWebPage *page)
                 && (type.isEmpty() || type == QLatin1String("text") || type == QLatin1String("password"))) {
             return true;
         }
-        if (element.evaluateJavaScript(QLatin1String("this.isContentEditable")).toBool()) {
+        if (element.evaluateJavaScript(QStringLiteral("this.isContentEditable")).toBool()) {
             return true;
         }
     }
@@ -278,7 +278,7 @@ void MailWebView::injectAttachments(const function<QString()> &delayedHtml)
 {
     // for QTextBrowser, can be implemented empty
     QWebElement doc = page()->currentFrame()->documentElement();
-    QWebElement injectionPoint = doc.findFirst(QLatin1String("*#attachmentInjectionPoint"));
+    QWebElement injectionPoint = doc.findFirst(QStringLiteral("*#attachmentInjectionPoint"));
     if (injectionPoint.isNull()) {
         return;
     }
@@ -375,7 +375,7 @@ void MailWebView::setElementByIdVisible(const QString &id, bool visible)
     if (visible) {
         e.removeAttribute(QStringLiteral("display"));
     } else {
-        e.setStyleProperty(QLatin1String("display"), QStringLiteral("none"));
+        e.setStyleProperty(QStringLiteral("display"), QStringLiteral("none"));
     }
 }
 
@@ -522,7 +522,7 @@ void MailWebView::showAccessKeys()
     }
     QList<QWebElement> unLabeledElements;
     QRect viewport = QRect(page()->mainFrame()->scrollPosition(), page()->viewportSize());
-    const QString selectorQuery(QLatin1String("a[href],"
+    const QString selectorQuery(QStringLiteral("a[href],"
                                 "area,"
                                 "button:not([disabled]),"
                                 "input:not([disabled]):not([hidden]),"

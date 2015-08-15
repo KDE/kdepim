@@ -113,7 +113,7 @@ void SieveActionWidget::initWidget()
     QStringList listCapabilities = SieveEditorGraphicalModeWidget::sieveCapabilities();
     //imapflags was old name of imap4flags but still used.
     if (listCapabilities.contains(QStringLiteral("imap4flags"))) {
-        listCapabilities.append(QLatin1String("imapflags"));
+        listCapabilities.append(QStringLiteral("imapflags"));
     }
     for (index = 0, it = list.constBegin(); it != end; ++it, ++index) {
         if ((*it)->needCheckIfServerHasCapability()) {

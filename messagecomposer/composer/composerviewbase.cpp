@@ -161,19 +161,19 @@ void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &ms
 
     // If we are loading from a draft, load unexpanded aliases as well
     if (m_msg->hasHeader("X-KMail-UnExpanded-To")) {
-        const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-To")->asUnicodeString().split(QLatin1String(","));
+        const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-To")->asUnicodeString().split(QStringLiteral(","));
         foreach (const QString &addr, spl) {
             m_recipientsEditor->addRecipient(addr, MessageComposer::Recipient::To);
         }
     }
     if (m_msg->hasHeader("X-KMail-UnExpanded-CC")) {
-        const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-CC")->asUnicodeString().split(QLatin1String(","));
+        const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-CC")->asUnicodeString().split(QStringLiteral(","));
         foreach (const QString &addr, spl) {
             m_recipientsEditor->addRecipient(addr, MessageComposer::Recipient::Cc);
         }
     }
     if (m_msg->hasHeader("X-KMail-UnExpanded-BCC")) {
-        const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-BCC")->asUnicodeString().split(QLatin1String(","));
+        const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-BCC")->asUnicodeString().split(QStringLiteral(","));
         foreach (const QString &addr, spl) {
             m_recipientsEditor->addRecipient(addr, MessageComposer::Recipient::Bcc);
         }
@@ -354,10 +354,10 @@ void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::Sen
         // we can't use the state of the mail itself, to remember the
         // signing and encryption state, so let's add a header instead
         auto header = new KMime::Headers::Generic("X-KMail-SignatureActionEnabled");
-        header->fromUnicodeString(m_sign ? QLatin1String("true") : QLatin1String("false"), "utf-8");
+        header->fromUnicodeString(m_sign ? QStringLiteral("true") : QStringLiteral("false"), "utf-8");
         m_msg->setHeader(header);
         header = new KMime::Headers::Generic("X-KMail-EncryptActionEnabled");
-        header->fromUnicodeString(m_encrypt ? QLatin1String("true") : QLatin1String("false"), "utf-8");
+        header->fromUnicodeString(m_encrypt ? QStringLiteral("true") : QStringLiteral("false"), "utf-8");
         m_msg->setHeader(header);
         header = new KMime::Headers::Generic("X-KMail-CryptoMessageFormat");
         header->fromUnicodeString(QString::number(m_cryptoMessageFormat), "utf-8");
@@ -813,7 +813,7 @@ void MessageComposer::ComposerViewBase::fillInfoPart(MessageComposer::InfoPart *
         infoPart->setBcc(m_recipientsEditor->recipientStringList(MessageComposer::Recipient::Bcc));
     }
     infoPart->setSubject(subject());
-    infoPart->setUserAgent(QLatin1String("KMail"));
+    infoPart->setUserAgent(QStringLiteral("KMail"));
     infoPart->setUrgent(m_urgent);
 
     if (m_msg->inReplyTo()) {
@@ -1029,9 +1029,9 @@ void MessageComposer::ComposerViewBase::initAutoSave()
 
     // Ensure that the autosave directory exists.
     QDir dataDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/")) ;
-    if (!dataDirectory.exists(QLatin1String("autosave"))) {
+    if (!dataDirectory.exists(QStringLiteral("autosave"))) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Creating autosave directory.";
-        dataDirectory.mkdir(QLatin1String("autosave"));
+        dataDirectory.mkdir(QStringLiteral("autosave"));
     }
 
     // Construct a file name
@@ -1233,7 +1233,7 @@ void MessageComposer::ComposerViewBase::saveMessage(KMime::Message::Ptr message,
     message->assemble();
 
     Akonadi::Item item;
-    item.setMimeType(QLatin1String("message/rfc822"));
+    item.setMimeType(QStringLiteral("message/rfc822"));
     item.setPayload(message);
     Akonadi::MessageFlags::copyMessageFlags(*message, item);
 
@@ -1363,8 +1363,8 @@ void MessageComposer::ComposerViewBase::addAttachmentPart(KMime::Content *partTo
         part->setDescription(partToAttach->contentDescription()->asUnicodeString());
     }
     if (partToAttach->contentType(false)) {
-        if (partToAttach->contentType()->hasParameter(QLatin1String("name"))) {
-            part->setName(partToAttach->contentType()->parameter(QLatin1String("name")));
+        if (partToAttach->contentType()->hasParameter(QStringLiteral("name"))) {
+            part->setName(partToAttach->contentType()->parameter(QStringLiteral("name")));
         }
     }
     if (partToAttach->contentDisposition(false)) {

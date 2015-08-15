@@ -188,7 +188,7 @@ QString CSSHelperBase::cssDefinitions(bool fixed) const
 QString CSSHelperBase::htmlHead(bool /*fixed*/) const
 {
     return
-        QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n"
+        QStringLiteral("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n"
                       "<html><head><title></title></head>\n"
                       "<body>\n");
 }

@@ -51,7 +51,7 @@ static bool haveKeyserverConfigured()
     if (!config) {
         return false;
     }
-    const Kleo::CryptoConfigEntry *const entry = config->entry(QLatin1String("gpg"), QStringLiteral("Keyserver"), QStringLiteral("keyserver"));
+    const Kleo::CryptoConfigEntry *const entry = config->entry(QStringLiteral("gpg"), QStringLiteral("Keyserver"), QStringLiteral("keyserver"));
     return entry && !entry->stringValue().isEmpty();
 }
 
@@ -85,7 +85,7 @@ bool RefreshOpenPGPCertsCommand::preStartHook(QWidget *parent) const
                                                        "as fallback server?</para>"),
                                                i18nc("@title:window", "OpenPGP Certificate Refresh"),
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                                               QLatin1String("warn-refresh-openpgp-missing-keyserver"))
+                                               QStringLiteral("warn-refresh-openpgp-missing-keyserver"))
                 != KMessageBox::Continue) {
             return false;
         }
@@ -129,7 +129,7 @@ QString RefreshOpenPGPCertsCommand::crashExitMessage(const QStringList &args) co
     return xi18nc("@info",
                   "<para>The GPG process that tried to refresh OpenPGP certificates "
                   "ended prematurely because of an unexpected error.</para>"
-                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QLatin1String(" "))) ;
+                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QStringLiteral(" "))) ;
 }
 
 QString RefreshOpenPGPCertsCommand::errorExitMessage(const QStringList &args) const

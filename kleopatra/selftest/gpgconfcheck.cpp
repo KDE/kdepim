@@ -98,7 +98,7 @@ public:
         Q_FOREACH (const QByteArray &line, lines)
             if (line.startsWith("sysconfdir:"))     //krazy:exclude=strings
                 try {
-                    return QDir(QFile::decodeName(hexdecode(line.mid(strlen("sysconfdir:"))))).exists(QLatin1String("gpgconf.conf"));
+                    return QDir(QFile::decodeName(hexdecode(line.mid(strlen("sysconfdir:"))))).exists(QStringLiteral("gpgconf.conf"));
                 } catch (...) {
                     return false;
                 }
@@ -134,7 +134,7 @@ public:
                 i18n("There was an error executing the GnuPG configuration self-check for %2:\n"
                      "  %1\n"
                      "You might want to execute \"gpgconf %3\" on the command line.\n",
-                     message, m_component.isEmpty() ? QLatin1String("GnuPG") : m_component, arguments().join(QLatin1String(" ")));
+                     message, m_component.isEmpty() ? QStringLiteral("GnuPG") : m_component, arguments().join(QStringLiteral(" ")));
             if (!output.trimmed().isEmpty()) {
                 m_explaination += QLatin1Char('\n') + i18n("Diagnostics:") + QLatin1Char('\n') + output ;
             }

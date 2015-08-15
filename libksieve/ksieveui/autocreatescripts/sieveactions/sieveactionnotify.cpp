@@ -31,7 +31,7 @@
 using namespace KSieveUi;
 
 SieveActionNotify::SieveActionNotify(QObject *parent)
-    : SieveAction(QLatin1String("notify"), i18n("Notify"), parent)
+    : SieveAction(QStringLiteral("notify"), i18n("Notify"), parent)
 {
 }
 
@@ -83,13 +83,13 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
                 if (tagValue == QLatin1String("message")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
-                        QLineEdit *message = w->findChild<QLineEdit *>(QLatin1String("message"));
+                        QLineEdit *message = w->findChild<QLineEdit *>(QStringLiteral("message"));
                         message->setText(AutoCreateScriptUtil::quoteStr(strValue));
                     }
                 } else if (tagValue == QLatin1String("importance")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
-                        SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox *>(QLatin1String("importancecombo"));
+                        SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox *>(QStringLiteral("importancecombo"));
                         importance->setCode(strValue, name(), error);
                     }
                 } else {
@@ -101,7 +101,7 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
             } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else if (tagName == QLatin1String("str")) {
-                QLineEdit *method = w->findChild<QLineEdit *>(QLatin1String("method"));
+                QLineEdit *method = w->findChild<QLineEdit *>(QStringLiteral("method"));
                 method->setText(AutoCreateScriptUtil::quoteStr(e.text()));
             } else {
                 unknownTag(tagName, error);
@@ -115,20 +115,20 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
 
 QString SieveActionNotify::code(QWidget *w) const
 {
-    QString result = QLatin1String("notify");
-    const SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox *>(QLatin1String("importancecombo"));
+    QString result = QStringLiteral("notify");
+    const SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox *>(QStringLiteral("importancecombo"));
     const QString importanceStr = importance->code();
     if (!importanceStr.isEmpty()) {
         result += QString::fromLatin1(" :importance \"%1\"").arg(importanceStr);
     }
 
-    const QLineEdit *message = w->findChild<QLineEdit *>(QLatin1String("message"));
+    const QLineEdit *message = w->findChild<QLineEdit *>(QStringLiteral("message"));
     const QString messageStr = message->text();
     if (!messageStr.isEmpty()) {
         result += QString::fromLatin1(" :message \"%2\"").arg(messageStr);
     }
 
-    const QLineEdit *method = w->findChild<QLineEdit *>(QLatin1String("method"));
+    const QLineEdit *method = w->findChild<QLineEdit *>(QStringLiteral("method"));
     const QString methodStr = method->text();
     result += QString::fromLatin1(" \"%3\";").arg(methodStr);
 

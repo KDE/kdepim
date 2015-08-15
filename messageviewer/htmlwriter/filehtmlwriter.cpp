@@ -40,7 +40,7 @@ namespace MessageViewer
 
 FileHtmlWriter::FileHtmlWriter(const QString &filename)
     : HtmlWriter(),
-      mFile(filename.isEmpty() ? QLatin1String("filehtmlwriter.out") : filename)
+      mFile(filename.isEmpty() ? QStringLiteral("filehtmlwriter.out") : filename)
 {
     mStream.setCodec("UTF-8");
 }

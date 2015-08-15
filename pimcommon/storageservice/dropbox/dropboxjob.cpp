@@ -38,12 +38,12 @@ using namespace PimCommon;
 DropBoxJob::DropBoxJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
-    mApiPath = QLatin1String("https://api.dropbox.com/1/");
+    mApiPath = QStringLiteral("https://api.dropbox.com/1/");
     mOauthconsumerKey = PimCommon::StorageServiceJobConfig::self()->dropboxOauthConsumerKey();
     mOauthSignature = PimCommon::StorageServiceJobConfig::self()->dropboxOauthSignature();
     mRootPath = PimCommon::StorageServiceJobConfig::self()->dropboxRootPath();
-    mOauthVersion = QLatin1String("1.0");
-    mOauthSignatureMethod = QLatin1String("PLAINTEXT");
+    mOauthVersion = QStringLiteral("1.0");
+    mOauthSignatureMethod = QStringLiteral("PLAINTEXT");
     mTimestamp = QString::number(QDateTime::currentMSecsSinceEpoch() / 1000);
     mNonce = PimCommon::StorageServiceUtils::generateNonce(8);
     connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &DropBoxJob::slotSendDataFinished);
@@ -550,11 +550,11 @@ void DropBoxJob::renameFolder(const QString &source, const QString &destination)
     addDefaultUrlItem(url);
     url.addQueryItem(QStringLiteral("from_path"), source);
 
-    QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
+    QStringList parts = source.split(QStringLiteral("/"), QString::SkipEmptyParts);
     parts.removeLast();
-    QString destinationFolder = parts.join(QLatin1String("/"));
+    QString destinationFolder = parts.join(QStringLiteral("/"));
     if (destinationFolder.isEmpty()) {
-        destinationFolder = QLatin1String("/");
+        destinationFolder = QStringLiteral("/");
     }
     if (!destinationFolder.endsWith(QLatin1Char('/'))) {
         destinationFolder += QLatin1String("/");
@@ -580,11 +580,11 @@ void DropBoxJob::renameFile(const QString &oldName, const QString &newName)
     addDefaultUrlItem(url);
 
     //Generate new path.
-    QStringList parts = oldName.split(QLatin1String("/"), QString::SkipEmptyParts);
+    QStringList parts = oldName.split(QStringLiteral("/"), QString::SkipEmptyParts);
     parts.removeLast();
-    QString destinationFolder = parts.join(QLatin1String("/"));
+    QString destinationFolder = parts.join(QStringLiteral("/"));
     if (destinationFolder.isEmpty()) {
-        destinationFolder = QLatin1String("/");
+        destinationFolder = QStringLiteral("/");
     }
     if (!destinationFolder.endsWith(QLatin1Char('/'))) {
         destinationFolder += QLatin1String("/");

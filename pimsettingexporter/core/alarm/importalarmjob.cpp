@@ -109,7 +109,7 @@ void ImportAlarmJob::restoreResources()
                         //TODO  adapt directory name too
                         extractZipFile(file, copyToDirName, newUrl.path());
                     }
-                    settings.insert(QLatin1String("Path"), newUrl.path());
+                    settings.insert(QStringLiteral("Path"), newUrl.path());
 
                     const QString agentConfigFile = value.akonadiAgentConfigFile;
                     if (!agentConfigFile.isEmpty()) {
@@ -186,7 +186,7 @@ void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, con
 
 void ImportAlarmJob::restoreConfig()
 {
-    const QString kalarmStr(QLatin1String("kalarmrc"));
+    const QString kalarmStr(QStringLiteral("kalarmrc"));
     const KArchiveEntry *kalarmrcentry  = mArchiveDirectory->entry(Utils::configsPath() + kalarmStr);
     if (kalarmrcentry && kalarmrcentry->isFile()) {
         const KArchiveFile *kalarmrcFile = static_cast<const KArchiveFile *>(kalarmrcentry);
@@ -208,10 +208,10 @@ void ImportAlarmJob::importkalarmConfig(const KArchiveFile *kalarmFile, const QS
     copyToFile(kalarmFile, kalarmrc, filename, prefix);
     KSharedConfig::Ptr kalarmConfig = KSharedConfig::openConfig(kalarmrc);
 
-    const QString collectionsStr(QLatin1String("Collections"));
+    const QString collectionsStr(QStringLiteral("Collections"));
     if (kalarmConfig->hasGroup(collectionsStr)) {
         KConfigGroup group = kalarmConfig->group(collectionsStr);
-        const QString selectionKey(QLatin1String("FavoriteCollectionIds"));
+        const QString selectionKey(QStringLiteral("FavoriteCollectionIds"));
         convertRealPathToCollectionList(group, selectionKey, false);
     }
 

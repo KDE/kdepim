@@ -56,7 +56,7 @@ void GenerateGlobalScriptJob::start()
 
 void GenerateGlobalScriptJob::writeMasterScript()
 {
-    const QString masterScript = QLatin1String("# MASTER\n"
+    const QString masterScript = QStringLiteral("# MASTER\n"
                                  "#\n"
                                  "# This file is authoritative for your system and MUST BE KEPT ACTIVE.\n"
                                  "#\n"
@@ -98,7 +98,7 @@ void GenerateGlobalScriptJob::slotPutMasterResult(KManageSieve::SieveJob *, bool
 
 void GenerateGlobalScriptJob::writeUserScript()
 {
-    QString userScript = QLatin1String("# USER Management Script\n"
+    QString userScript = QStringLiteral("# USER Management Script\n"
                                        "#\n"
                                        "# This script includes the various active sieve scripts\n"
                                        "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"

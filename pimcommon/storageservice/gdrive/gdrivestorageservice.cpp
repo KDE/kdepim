@@ -160,10 +160,10 @@ void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, co
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
             QMap<QString, QString> map;
-            map[QLatin1String("Account Name")] = accountName;
-            map[QLatin1String("Token")] = token;
-            map[QLatin1String("Refresh Token")] = refreshToken;
-            map[QLatin1String("Expire Time")] = mExpireDateTime.toString();
+            map[QStringLiteral("Account Name")] = accountName;
+            map[QStringLiteral("Token")] = token;
+            map[QStringLiteral("Refresh Token")] = refreshToken;
+            map[QStringLiteral("Expire Time")] = mExpireDateTime.toString();
             wallet->writeMap(walletEntry, map);
         }
     }
@@ -533,7 +533,7 @@ QString GDriveStorageService::description()
 
 QUrl GDriveStorageService::serviceUrl()
 {
-    return QUrl(QLatin1String("http://www.google.com/drive"));
+    return QUrl(QStringLiteral("http://www.google.com/drive"));
 }
 
 QString GDriveStorageService::serviceName()

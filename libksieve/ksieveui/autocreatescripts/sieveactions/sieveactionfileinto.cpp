@@ -28,7 +28,7 @@
 //Add support for adding flags
 using namespace KSieveUi;
 SieveActionFileInto::SieveActionFileInto(QObject *parent)
-    : SieveAction(QLatin1String("fileinto"), i18n("File Into"), parent)
+    : SieveAction(QStringLiteral("fileinto"), i18n("File Into"), parent)
 {
     mHasCopySupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("copy"));
     mHasMailBoxSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("mailbox"));
@@ -70,7 +70,7 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                 const QString tagValue = e.text();
                 if (tagValue == QLatin1String("copy")) {
                     if (mHasCopySupport) {
-                        QCheckBox *copy = w->findChild<QCheckBox *>(QLatin1String("copy"));
+                        QCheckBox *copy = w->findChild<QCheckBox *>(QStringLiteral("copy"));
                         copy->setChecked(true);
                     } else {
                         error += i18n("Action \"fileinto\" has \"copy\" argument but current server does not support it") + QLatin1Char('\n');
@@ -78,16 +78,16 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                     }
                 } else if (tagValue == QLatin1String("create")) {
                     if (mHasMailBoxSupport) {
-                        QCheckBox *create = w->findChild<QCheckBox *>(QLatin1String("create"));
+                        QCheckBox *create = w->findChild<QCheckBox *>(QStringLiteral("create"));
                         create->setChecked(true);
                     } else {
-                        serverDoesNotSupportFeatures(QLatin1String("fileinto"), error);
+                        serverDoesNotSupportFeatures(QStringLiteral("fileinto"), error);
                         qCDebug(LIBKSIEVE_LOG) << "SieveActionFileInto::setParamWidgetValue server has not create support ";
                     }
                 }
             } else if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                QLineEdit *edit = w->findChild<QLineEdit *>(QLatin1String("fileintolineedit"));
+                QLineEdit *edit = w->findChild<QLineEdit *>(QStringLiteral("fileintolineedit"));
                 edit->setText(tagValue);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -137,13 +137,13 @@ QStringList SieveActionFileInto::needRequires(QWidget *parent) const
     QStringList lst;
     lst << QStringLiteral("fileinto");
     if (mHasCopySupport) {
-        const QCheckBox *copy = parent->findChild<QCheckBox *>(QLatin1String("copy"));
+        const QCheckBox *copy = parent->findChild<QCheckBox *>(QStringLiteral("copy"));
         if (copy->isChecked()) {
             lst << QStringLiteral("copy");
         }
     }
     if (mHasMailBoxSupport) {
-        const QCheckBox *create = parent->findChild<QCheckBox *>(QLatin1String("create"));
+        const QCheckBox *create = parent->findChild<QCheckBox *>(QStringLiteral("create"));
         if (create->isChecked()) {
             lst << QStringLiteral("mailbox");
         }

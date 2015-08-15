@@ -108,15 +108,15 @@ void LdapClientSearchConfig::readConfig(KLDAP::LdapServer &server, KConfigGroup 
                 i18n("Store clear text password in KWallet"),
                 KStandardGuiItem::yes(),
                 KStandardGuiItem::no(),
-                QLatin1String("DoAskToStoreToKwallet"))) {
+                QStringLiteral("DoAskToStoreToKwallet"))) {
             d->wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
             if (d->wallet) {
                 connect(d->wallet, &KWallet::Wallet::walletClosed, this, &LdapClientSearchConfig::slotWalletClosed);
                 d->useWallet = true;
-                if (!d->wallet->hasFolder(QLatin1String("ldapclient"))) {
-                    d->wallet->createFolder(QLatin1String("ldapclient"));
+                if (!d->wallet->hasFolder(QStringLiteral("ldapclient"))) {
+                    d->wallet->createFolder(QStringLiteral("ldapclient"));
                 }
-                d->wallet->setFolder(QLatin1String("ldapclient"));
+                d->wallet->setFolder(QStringLiteral("ldapclient"));
                 d->wallet->writePassword(pwdBindBNEntry, pwdBindDN);
                 config.deleteEntry(pwdBindBNEntry);
                 config.sync();
@@ -127,9 +127,9 @@ void LdapClientSearchConfig::readConfig(KLDAP::LdapServer &server, KConfigGroup 
         d->wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
         if (d->wallet) {
             d->useWallet = true;
-            if (!d->wallet->setFolder(QLatin1String("ldapclient"))) {
-                d->wallet->createFolder(QLatin1String("ldapclient"));
-                d->wallet->setFolder(QLatin1String("ldapclient"));
+            if (!d->wallet->setFolder(QStringLiteral("ldapclient"))) {
+                d->wallet->createFolder(QStringLiteral("ldapclient"));
+                d->wallet->setFolder(QStringLiteral("ldapclient"));
             }
             d->wallet->readPassword(pwdBindBNEntry, pwdBindDN);
             if (!pwdBindDN.isEmpty()) {
@@ -172,7 +172,7 @@ void LdapClientSearchConfig::writeConfig(const KLDAP::LdapServer &server, KConfi
 {
     QString prefix;
     if (active) {
-        prefix = QLatin1String("Selected");
+        prefix = QStringLiteral("Selected");
     }
 
     config.writeEntry(prefix + QString::fromLatin1("Host%1").arg(j), server.host());

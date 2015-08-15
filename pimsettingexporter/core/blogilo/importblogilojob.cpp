@@ -51,7 +51,7 @@ void ImportBlogiloJob::start()
 
 void ImportBlogiloJob::restoreConfig()
 {
-    const QString blogiloStr(QLatin1String("blogilorc"));
+    const QString blogiloStr(QStringLiteral("blogilorc"));
     restoreConfigFile(blogiloStr);
     Q_EMIT info(i18n("Config restored."));
 }

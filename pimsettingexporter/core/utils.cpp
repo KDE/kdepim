@@ -138,7 +138,7 @@ QUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &st
 
 QUrl Utils::resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath)
 {
-    KConfigGroup group = resourceConfig->group(QLatin1String("General"));
+    KConfigGroup group = resourceConfig->group(QStringLiteral("General"));
     QString url = group.readEntry(QStringLiteral("Path"), defaultPath);
     if (!url.isEmpty()) {
         url.replace(QLatin1String("$HOME"), QDir::homePath());
@@ -235,13 +235,13 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     KConfig *config = resourceConfig->copyTo(tmp.fileName());
 
     if (identifier.contains(POP3_RESOURCE_IDENTIFIER)) {
-        const QString targetCollection = QLatin1String("targetCollection");
+        const QString targetCollection = QStringLiteral("targetCollection");
         KConfigGroup group = config->group("General");
         if (group.hasKey(targetCollection)) {
             group.writeEntry(targetCollection, MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
         }
     } else if (PimCommon::Util::isImapResource(identifier)) {
-        const QString trash = QLatin1String("TrashCollection");
+        const QString trash = QStringLiteral("TrashCollection");
         KConfigGroup group = config->group("cache");
         if (group.hasKey(trash)) {
             group.writeEntry(trash, MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(trash).toLongLong())));

@@ -31,7 +31,7 @@
 
 using namespace KSieveUi;
 SieveConditionEnvironment::SieveConditionEnvironment(QObject *parent)
-    : SieveCondition(QLatin1String("environment"), i18n("Environment"), parent)
+    : SieveCondition(QStringLiteral("environment"), i18n("Environment"), parent)
 {
 }
 

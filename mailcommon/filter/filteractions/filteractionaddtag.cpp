@@ -34,7 +34,7 @@ FilterAction *FilterActionAddTag::newAction()
 }
 
 FilterActionAddTag::FilterActionAddTag(QObject *parent)
-    : FilterAction(QLatin1String("add tag"), i18n("Add Tag"), parent),
+    : FilterAction(QStringLiteral("add tag"), i18n("Add Tag"), parent),
       mComboBox(0)
 {
     mList = FilterManager::instance()->tagList();

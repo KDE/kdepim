@@ -33,7 +33,7 @@ YouSendItJob::YouSendItJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
     mApiKey = PimCommon::StorageServiceJobConfig::self()->youSendItApiKey();
-    mDefaultUrl = QLatin1String("https://test2-api.yousendit.com");
+    mDefaultUrl = QStringLiteral("https://test2-api.yousendit.com");
     connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &YouSendItJob::slotSendDataFinished);
 }
 
@@ -55,7 +55,7 @@ void YouSendItJob::copyFile(const QString &/*source*/, const QString &/*destinat
     mActionType = PimCommon::StorageServiceAbstract::CopyFileAction;
     mError = false;
     qCDebug(PIMCOMMON_LOG) << " not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     deleteLater();
 }
 
@@ -64,7 +64,7 @@ void YouSendItJob::copyFolder(const QString &/*source*/, const QString &/*destin
     mActionType = PimCommon::StorageServiceAbstract::CopyFolderAction;
     mError = false;
     qCDebug(PIMCOMMON_LOG) << " not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     deleteLater();
 }
 
@@ -78,7 +78,7 @@ void YouSendItJob::createServiceFolder()
 QNetworkReply *YouSendItJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     qCDebug(PIMCOMMON_LOG) << " not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     deleteLater();
     return Q_NULLPTR;
 }
@@ -511,7 +511,7 @@ void YouSendItJob::parseRenameFolder(const QString &data)
 void YouSendItJob::parseDownloadFile(const QString &data)
 {
     qCDebug(PIMCOMMON_LOG) << " data :" << data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     //Q_EMIT downLoadFileDone(filename);
     //TODO
     deleteLater();
@@ -535,7 +535,7 @@ void YouSendItJob::parseDeleteFolder(const QString &data)
 void YouSendItJob::parseCreateServiceFolder(const QString &data)
 {
     qCDebug(PIMCOMMON_LOG) << " create service folder not implmented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     deleteLater();
 }
 
@@ -653,7 +653,7 @@ void YouSendItJob::shareLink(const QString &root, const QString &path)
 {
     mError = false;
     mActionType = PimCommon::StorageServiceAbstract::ShareLinkAction;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     qCDebug(PIMCOMMON_LOG) << " not implemented";
     deleteLater();
 }

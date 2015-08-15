@@ -398,11 +398,11 @@ void SearchRuleWidget::initFieldList(SearchPatternEdit::SearchPatternEditOptions
 
     // these others only represent message headers and you can add to
     // them as you like
-    mFilterFieldList.append(QLatin1String("List-Id"));
-    mFilterFieldList.append(QLatin1String("Resent-From"));
-    mFilterFieldList.append(QLatin1String("X-Loop"));
-    mFilterFieldList.append(QLatin1String("X-Mailing-List"));
-    mFilterFieldList.append(QLatin1String("X-Spam-Flag"));
+    mFilterFieldList.append(QStringLiteral("List-Id"));
+    mFilterFieldList.append(QStringLiteral("Resent-From"));
+    mFilterFieldList.append(QStringLiteral("X-Loop"));
+    mFilterFieldList.append(QStringLiteral("X-Mailing-List"));
+    mFilterFieldList.append(QStringLiteral("X-Spam-Flag"));
 }
 
 void SearchRuleWidget::slotRuleFieldChanged(const QString &field)

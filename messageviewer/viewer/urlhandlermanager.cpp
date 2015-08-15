@@ -647,7 +647,7 @@ bool foundSMIMEData(const QString &aUrl,
                     QString &libName,
                     QString &keyId)
 {
-    static QString showCertMan(QLatin1String("showCertificate#"));
+    static QString showCertMan(QStringLiteral("showCertificate#"));
     displayName.clear();
     libName.clear();
     keyId.clear();
@@ -697,7 +697,7 @@ bool SMimeURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
     }
     QStringList lst;
     lst << QStringLiteral("-parent-windowid") << QString::number((qlonglong)w->viewer()->mainWindow()->winId()) << QStringLiteral("-query") << keyId;
-    if (!QProcess::startDetached(QLatin1String("kleopatra"), lst))
+    if (!QProcess::startDetached(QStringLiteral("kleopatra"), lst))
         KMessageBox::error(w->mMainWindow, i18n("Could not start certificate manager. "
                                                 "Please check your installation."),
                            i18n("KMail Error"));
@@ -834,7 +834,7 @@ KMime::Content *AttachmentURLHandler::nodeForUrl(const KUrl &url, ViewerPrivate 
 bool AttachmentURLHandler::attachmentIsInHeader(const KUrl &url) const
 {
     bool inHeader = false;
-    const QString place = url.queryItem(QLatin1String("place")).toLower();
+    const QString place = url.queryItem(QStringLiteral("place")).toLower();
     if (!place.isNull()) {
         inHeader = (place == QLatin1String("header"));
     }
@@ -958,7 +958,7 @@ static QString extractAuditLog(const KUrl &url)
         return QString();
     }
     assert(!url.queryItem(QLatin1String("log")).isEmpty());
-    return url.queryItem(QLatin1String("log"));
+    return url.queryItem(QStringLiteral("log"));
 }
 
 bool ShowAuditLogURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const

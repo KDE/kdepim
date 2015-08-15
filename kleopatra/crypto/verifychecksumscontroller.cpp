@@ -158,7 +158,7 @@ private:
 
         if (!errors.empty())
             q->setLastError(gpg_error(GPG_ERR_GENERAL),
-                            errors.join(QLatin1String("\n")));
+                            errors.join(QStringLiteral("\n")));
         q->emitDoneOrError();
     }
 
@@ -316,7 +316,7 @@ static std::vector<File> parse_sum_file(const QString &fileName)
     QFile f(fileName);
     if (f.open(QIODevice::ReadOnly)) {
         QTextStream s(&f);
-        QRegExp rx(QLatin1String("(\\?)([a-f0-9A-F]+) ([ *])([^\n]+)\n*"));
+        QRegExp rx(QStringLiteral("(\\?)([a-f0-9A-F]+) ([ *])([^\n]+)\n*"));
         while (!s.atEnd()) {
             const QString line = s.readLine();
             if (rx.exactMatch(line)) {
@@ -531,9 +531,9 @@ static QStringList c_lang_environment()
     QStringList env = QProcess::systemEnvironment();
     env.erase(std::remove_if(env.begin(), env.end(),
                              boost::bind(&QRegExp::exactMatch,
-                                         QRegExp(QLatin1String("^LANG=.*"), fs_cs), _1)),
+                                         QRegExp(QStringLiteral("^LANG=.*"), fs_cs), _1)),
               env.end());
-    env.push_back(QLatin1String("LANG=C"));
+    env.push_back(QStringLiteral("LANG=C"));
     return env;
 }
 

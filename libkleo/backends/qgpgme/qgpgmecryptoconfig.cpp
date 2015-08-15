@@ -287,7 +287,7 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut()
                 // normal entry
                 if (!mCurrentGroup) {    // first toplevel entry -> create toplevel group
                     mCurrentGroup = new QGpgMECryptoConfigGroup(this, QStringLiteral("<nogroup>"), QString(), 0);
-                    mCurrentGroupName = QLatin1String("<nogroup>");
+                    mCurrentGroupName = QStringLiteral("<nogroup>");
                 }
                 const QString &name = lst[0];
                 QGpgMECryptoConfigEntry *value = new QGpgMECryptoConfigEntry(mCurrentGroup, lst);
@@ -639,7 +639,7 @@ static KUrl parseURL(int mRealArgType, const QString &str)
         if (items.count() == 5) {
             QStringList::const_iterator it = items.constBegin();
             KUrl url;
-            url.setProtocol(QLatin1String("ldap"));
+            url.setProtocol(QStringLiteral("ldap"));
             url.setHost(urlpart_decode(*it++));
 
             bool ok;
@@ -650,7 +650,7 @@ static KUrl parseURL(int mRealArgType, const QString &str)
                 qCWarning(GPGPME_BACKEND_LOG) << "parseURL: malformed LDAP server port, ignoring: \"" << *it << "\"";
             }
 
-            url.setPath(QLatin1String("/"));   // workaround KUrl parsing bug
+            url.setPath(QStringLiteral("/"));   // workaround KUrl parsing bug
             url.setUserName(urlpart_decode(*it++));
             url.setPassword(urlpart_decode(*it++));
             url.setQuery(urlpart_decode(*it));
@@ -900,7 +900,7 @@ QString QGpgMECryptoConfigEntry::toString(bool escape) const
                     }
                 }
             }
-            const QString res = lst.join(QLatin1String(","));
+            const QString res = lst.join(QStringLiteral(","));
             //qCDebug(GPGPME_BACKEND_LOG) <<"toString:" << res;
             return res;
         } else { // normal string
@@ -929,7 +929,7 @@ QString QGpgMECryptoConfigEntry::toString(bool escape) const
     for (QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it) {
         ret << (*it).toString(); // QVariant does the conversion
     }
-    return ret.join(QLatin1String(","));
+    return ret.join(QStringLiteral(","));
 }
 
 QString QGpgMECryptoConfigEntry::outputString() const

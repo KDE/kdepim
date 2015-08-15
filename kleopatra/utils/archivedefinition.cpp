@@ -162,9 +162,9 @@ static void parse_command(QString cmdline, const QString &id, const QString &whi
     cmdline.replace(FILE_PLACEHOLDER,        QLatin1String("__files_go_here__"))
     .replace(INSTALLPATH_PLACEHOLDER, QStringLiteral("__path_goes_here__"));
     l = KShell::splitArgs(cmdline, KShell::AbortOnMeta | KShell::TildeExpand, &errors);
-    l = l.replaceInStrings(QLatin1String("__files_go_here__"), FILE_PLACEHOLDER);
-    if (l.indexOf(QRegExp(QLatin1String(".*__path_goes_here__.*"))) >= 0) {
-        l = l.replaceInStrings(QLatin1String("__path_goes_here__"), ArchiveDefinition::installPath());
+    l = l.replaceInStrings(QStringLiteral("__files_go_here__"), FILE_PLACEHOLDER);
+    if (l.indexOf(QRegExp(QStringLiteral(".*__path_goes_here__.*"))) >= 0) {
+        l = l.replaceInStrings(QStringLiteral("__path_goes_here__"), ArchiveDefinition::installPath());
     }
     if (errors == KShell::BadQuoting) {
         throw ArchiveDefinitionError(id, i18n("Quoting error in '%1' entry", whichCommand));
@@ -351,7 +351,7 @@ shared_ptr<Input> ArchiveDefinition::createInputFromPackCommand(GpgME::Protocol 
     checkProtocol(p);
     const QString base = heuristicBaseDirectory(files);
     if (base.isEmpty()) {
-        throw Kleo::Exception(GPG_ERR_CONFLICT, i18n("Cannot find common base directory for these files:\n%1", files.join(QLatin1String("\n"))));
+        throw Kleo::Exception(GPG_ERR_CONFLICT, i18n("Cannot find common base directory for these files:\n%1", files.join(QStringLiteral("\n"))));
     }
     qCDebug(KLEOPATRA_LOG) << "heuristicBaseDirectory(" << files << ") ->" << base;
     const QStringList relative = makeRelativeTo(base, files);
@@ -398,7 +398,7 @@ std::vector< shared_ptr<ArchiveDefinition> > ArchiveDefinition::getArchiveDefini
 {
     std::vector< shared_ptr<ArchiveDefinition> > result;
     if (KConfig *config = CryptoBackendFactory::instance()->configObject()) {
-        const QStringList groups = config->groupList().filter(QRegExp(QLatin1String("^Archive Definition #")));
+        const QStringList groups = config->groupList().filter(QRegExp(QStringLiteral("^Archive Definition #")));
         result.reserve(groups.size());
         Q_FOREACH (const QString &group, groups)
             try {

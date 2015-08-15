@@ -351,9 +351,9 @@ public:
 
     bool found() const
     {
-        return mResults.count(QLatin1String("x-spam-flag")) &&
-               mResults.count(QLatin1String("spam-flag-yes")) &&
-               mResults.count(QLatin1String("stop")) ;
+        return mResults.count(QStringLiteral("x-spam-flag")) &&
+               mResults.count(QStringLiteral("spam-flag-yes")) &&
+               mResults.count(QStringLiteral("stop")) ;
     }
 };
 
@@ -409,8 +409,8 @@ public:
 
     QString domainName() /*not const, since map::op[] isn't const*/
     {
-        return mResults.count(QLatin1String("stop")) && mResults.count(QLatin1String("from"))
-               ? mResults[QLatin1String("domainName")] : QString();
+        return mResults.count(QStringLiteral("stop")) && mResults.count(QStringLiteral("from"))
+               ? mResults[QStringLiteral("domainName")] : QString();
     }
 };
 

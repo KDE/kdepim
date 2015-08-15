@@ -128,9 +128,9 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
             QMap<QString, QString> map;
-            map[QLatin1String("Username")] = username;
-            map[QLatin1String("Token")] = token;
-            map[QLatin1String("Password")] = mPassword;
+            map[QStringLiteral("Username")] = username;
+            map[QStringLiteral("Token")] = token;
+            map[QStringLiteral("Password")] = mPassword;
             wallet->writeMap(walletEntry, map);
         }
     }
@@ -214,7 +214,7 @@ QString YouSendItStorageService::description()
 
 QUrl YouSendItStorageService::serviceUrl()
 {
-    return QUrl(QLatin1String("https://www.yousendit.com/"));
+    return QUrl(QStringLiteral("https://www.yousendit.com/"));
 }
 
 QString YouSendItStorageService::serviceName()

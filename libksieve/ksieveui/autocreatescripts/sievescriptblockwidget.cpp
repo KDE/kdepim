@@ -187,10 +187,10 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
         QString blockStr;
         switch (pageType()) {
         case BlockIf:
-            blockStr = QLatin1String("if ");
+            blockStr = QStringLiteral("if ");
             break;
         case BlockElsIf:
-            blockStr = QLatin1String("elsif ");
+            blockStr = QStringLiteral("elsif ");
             break;
         case BlockElse:
             break;

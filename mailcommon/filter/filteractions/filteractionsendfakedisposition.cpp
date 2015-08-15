@@ -38,7 +38,7 @@ static const KMime::MDN::DispositionType mdns[] = {
 static const int numMDNs = sizeof(mdns) / sizeof(*mdns);
 
 FilterActionSendFakeDisposition::FilterActionSendFakeDisposition(QObject *parent)
-    : FilterActionWithStringList(QLatin1String("fake mdn"), i18n("Send Fake MDN"), parent)
+    : FilterActionWithStringList(QStringLiteral("fake mdn"), i18n("Send Fake MDN"), parent)
 {
     // if you change this list, also update
     // mdns above

@@ -54,13 +54,13 @@ QString AutoCreateScriptUtil::quoteStr(QString str)
 QString AutoCreateScriptUtil::createList(const QStringList &lst, bool addSemiColon, bool protectSlash)
 {
     QString result;
-    result = QLatin1String("[");
+    result = QStringLiteral("[");
     bool wasFirst = true;
     Q_FOREACH (QString str, lst) {
         if (protectSlash) {
             str = str.replace(QLatin1Char('\\'), QStringLiteral("\\\\"));
         }
-        result += (wasFirst ? QString() : QLatin1String(",")) + QString::fromLatin1(" \"%1\"").arg(quoteStr(str));
+        result += (wasFirst ? QString() : QStringLiteral(",")) + QString::fromLatin1(" \"%1\"").arg(quoteStr(str));
         wasFirst = false;
     }
     result += QLatin1String(" ]");
@@ -83,10 +83,10 @@ QStringList AutoCreateScriptUtil::createListFromString(QString str)
     } else {
         return lst;
     }
-    lst = str.split(QLatin1String(", "));
+    lst = str.split(QStringLiteral(", "));
     QStringList resultLst;
     Q_FOREACH (QString s, lst) {
-        s.remove(QLatin1String("\""));
+        s.remove(QStringLiteral("\""));
         resultLst << s.trimmed();
     }
     lst = resultLst;
@@ -103,12 +103,12 @@ QString AutoCreateScriptUtil::createAddressList(const QString &str, bool addSemi
 
 QString AutoCreateScriptUtil::negativeString(bool isNegative)
 {
-    return (isNegative ? QLatin1String("not ") : QString());
+    return (isNegative ? QStringLiteral("not ") : QString());
 }
 
 QString AutoCreateScriptUtil::tagValueWithCondition(const QString &tag, bool notCondition)
 {
-    return (notCondition ? QLatin1String("[NOT]") : QString()) + QLatin1Char(':') + tag;
+    return (notCondition ? QStringLiteral("[NOT]") : QString()) + QLatin1Char(':') + tag;
 }
 
 QString AutoCreateScriptUtil::tagValue(const QString &tag)

@@ -70,7 +70,7 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor(const KMime::Messa
 {
     QString result = mParameter;
     QList<int> argList;
-    QRegExp r(QLatin1String("%[0-9-]+"));
+    QRegExp r(QStringLiteral("%[0-9-]+"));
 
     // search for '%n'
     int start = -1;
@@ -152,7 +152,7 @@ void substituteMessageHeaders(const KMime::Message::Ptr &aMsg, QString &result)
 {
     // Replace the %{foo} with the content of the foo header field.
     // If the header doesn't exist, remove the placeholder.
-    QRegExp header_rx(QLatin1String("%\\{([a-z0-9-]+)\\}"), Qt::CaseInsensitive);
+    QRegExp header_rx(QStringLiteral("%\\{([a-z0-9-]+)\\}"), Qt::CaseInsensitive);
     int idx = 0;
     while ((idx = header_rx.indexIn(result, idx)) != -1) {
         const KMime::Headers::Base *header = aMsg->headerByType(header_rx.cap(1).toLatin1());

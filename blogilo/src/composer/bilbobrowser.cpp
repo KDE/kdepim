@@ -162,7 +162,7 @@ void BilboBrowser::slotCompleted(bool ok)
 void BilboBrowser::slotSetStatusBarText(const QString &text)
 {
     QString statusText = text;
-    statusText.remove(QLatin1String("<qt>"));
+    statusText.remove(QStringLiteral("<qt>"));
     browserStatus->showMessage(statusText);
 }
 

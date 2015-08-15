@@ -92,7 +92,7 @@ void AttachmentFromUrlJob::Private::transferJobResult(KJob *job)
 
     AttachmentPart::Ptr part = AttachmentPart::Ptr(new AttachmentPart);
     QUrlQuery query(q->url());
-    const QString value = query.queryItemValue(QLatin1Literal("charset"));
+    const QString value = query.queryItemValue(QStringLiteral("charset"));
     part->setCharset(value.toLatin1());
     part->setMimeType(mimeTypeName.toLatin1());
     part->setName(fileName);

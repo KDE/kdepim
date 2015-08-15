@@ -239,7 +239,7 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content *node)
         fileName = fileName.mid(slashPos + 1);
     }
     if (fileName.isEmpty()) {
-        fileName = QLatin1String("unnamed");
+        fileName = QStringLiteral("unnamed");
     }
     fname += QLatin1Char('/') + fileName;
 
@@ -526,7 +526,7 @@ QString NodeHelper::replacePrefixes(const QString &str,
     // 1. is anchored to the beginning of str (sans whitespace)
     // 2. matches at least one of the part regexps in prefixRegExps
     QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*")
-                        .arg(prefixRegExps.join(QLatin1String(")|(?:")));
+                        .arg(prefixRegExps.join(QStringLiteral(")|(?:")));
     QRegExp rx(bigRegExp, Qt::CaseInsensitive);
     if (!rx.isValid()) {
         qCWarning(MESSAGEVIEWER_LOG) << "bigRegExp = \""
@@ -755,7 +755,7 @@ QStringList NodeHelper::supportedEncodings(bool usAscii)
     }
     encodings.sort();
     if (usAscii) {
-        encodings.prepend(KCharsets::charsets()->descriptionForEncoding(QLatin1String("us-ascii")));
+        encodings.prepend(KCharsets::charsets()->descriptionForEncoding(QStringLiteral("us-ascii")));
     }
     return encodings;
 }

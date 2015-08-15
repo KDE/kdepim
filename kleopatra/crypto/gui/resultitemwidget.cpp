@@ -94,7 +94,7 @@ public:
 
 static QUrl auditlog_url_template()
 {
-    QUrl url(QLatin1String("kleoresultitem://showauditlog"));
+    QUrl url(QStringLiteral("kleoresultitem://showauditlog"));
     return url;
 }
 

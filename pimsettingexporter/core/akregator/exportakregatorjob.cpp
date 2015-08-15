@@ -65,7 +65,7 @@ void ExportAkregatorJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    const QString akregatorStr(QLatin1String("akregatorrc"));
+    const QString akregatorStr(QStringLiteral("akregatorrc"));
     const QString akregatorsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + akregatorStr;
     backupFile(akregatorsrc, Utils::configsPath(), akregatorStr);
     Q_EMIT info(i18n("Config backup done."));

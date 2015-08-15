@@ -109,7 +109,7 @@ QString NoteUtils::createToolTip(const Akonadi::Item &item)
             const QString bckColorName = attr->backgroundColor().name();
             const QString txtColorName = attr->foregroundColor().name();;
             const bool textIsLeftToRight = (QApplication::layoutDirection() == Qt::LeftToRight);
-            const QString textDirection =  textIsLeftToRight ? QLatin1String("left") : QLatin1String("right");
+            const QString textDirection =  textIsLeftToRight ? QStringLiteral("left") : QStringLiteral("right");
 
             tip = QString::fromLatin1(
                       "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"

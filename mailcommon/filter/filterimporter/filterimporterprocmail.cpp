@@ -90,15 +90,15 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine(QTextStream &stream,
         QByteArray fieldName;
         SearchRule::Function functionName = SearchRule::FuncRegExp;
         if (line.startsWith(QStringLiteral("^From:"))) {
-            line.remove(QLatin1String("^From:"));
+            line.remove(QStringLiteral("^From:"));
             fieldName = "from";
         } else if (line.startsWith(QStringLiteral("^Subject:"))) {
-            line.remove(QLatin1String("^Subject:"));
+            line.remove(QStringLiteral("^Subject:"));
             fieldName = "subject";
         } else if (line.startsWith(QStringLiteral("^Sender:"))) {
-            line.remove(QLatin1String("^Sender:"));
+            line.remove(QStringLiteral("^Sender:"));
         } else if (line.startsWith(QStringLiteral("^(To|Cc):"))) {
-            line.remove(QLatin1String("^(To|Cc):"));
+            line.remove(QStringLiteral("^(To|Cc):"));
             fieldName = "<recipients>";
         } else {
             qCDebug(MAILCOMMON_LOG) << " line condition not parsed :" << line;
@@ -111,7 +111,7 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine(QTextStream &stream,
         //Redirect email
     } else if (line.startsWith(QLatin1Char('|'))) {
         //Shell
-        const QString actionName(QLatin1String("execute"));
+        const QString actionName(QStringLiteral("execute"));
         const QString value(line);
         createFilterAction(filter, actionName, value);
     } else if (line.startsWith(QLatin1Char('{'))) {
@@ -119,7 +119,7 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine(QTextStream &stream,
     } else if (line.startsWith(QLatin1Char('}'))) {
         //End block
     } else {
-        const QString actionName(QLatin1String("transfer"));
+        const QString actionName(QStringLiteral("transfer"));
         const QString value(line);
         createFilterAction(filter, actionName, value);
         //Folder

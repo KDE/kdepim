@@ -487,7 +487,7 @@ static KUrl parseURL(int mRealArgType, const QString &str)
         if (items.count() == 5) {
             QStringList::const_iterator it = items.constBegin();
             KUrl url;
-            url.setProtocol(QLatin1String("ldap"));
+            url.setProtocol(QStringLiteral("ldap"));
             url.setHost(urlpart_decode(*it++));
 
             bool ok;
@@ -498,7 +498,7 @@ static KUrl parseURL(int mRealArgType, const QString &str)
                 qCWarning(GPGPME_BACKEND_LOG) << "parseURL: malformed LDAP server port, ignoring: \"" << *it << "\"";
             }
 
-            url.setPath(QLatin1String("/"));   // workaround KUrl parsing bug
+            url.setPath(QStringLiteral("/"));   // workaround KUrl parsing bug
             url.setUserName(urlpart_decode(*it++));
             url.setPassword(urlpart_decode(*it++));
             url.setQuery(urlpart_decode(*it));

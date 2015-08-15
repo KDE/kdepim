@@ -87,7 +87,7 @@ static bool hasMyWritableEventsFolders(const QString &family)
 {
     QString myfamily = family;
     if (family.isEmpty()) {
-        myfamily = QLatin1String("calendar");
+        myfamily = QStringLiteral("calendar");
     }
 
 #if 0 // TODO port to Akonadi
@@ -1092,15 +1092,15 @@ public:
     {
         if (MailCommon::Util::ensureKorganizerRunning(true)) {
             QDBusInterface *kontact =
-                new QDBusInterface(QLatin1String("org.kde.kontact"), QStringLiteral("/KontactInterface"),
-                                   QLatin1String("org.kde.kontact.KontactInterface"), QDBusConnection::sessionBus());
+                new QDBusInterface(QStringLiteral("org.kde.kontact"), QStringLiteral("/KontactInterface"),
+                                   QStringLiteral("org.kde.kontact.KontactInterface"), QDBusConnection::sessionBus());
             if (kontact->isValid()) {
-                kontact->call(QLatin1String("selectPlugin"), QStringLiteral("kontact_korganizerplugin"));
+                kontact->call(QStringLiteral("selectPlugin"), QStringLiteral("kontact_korganizerplugin"));
             }
             delete kontact;
 
             OrgKdeKorganizerCalendarInterface *iface =
-                new OrgKdeKorganizerCalendarInterface(QLatin1String("org.kde.korganizer"), QStringLiteral("/Calendar"),
+                new OrgKdeKorganizerCalendarInterface(QStringLiteral("org.kde.korganizer"), QStringLiteral("/Calendar"),
                         QDBusConnection::sessionBus(), 0);
             if (!iface->isValid()) {
                 qCDebug(TEXT_CALENDAR_LOG) << "Calendar interface is not valid! " << iface->lastError().message();
@@ -1244,8 +1244,8 @@ public:
             return true;
         } else if (path == QLatin1String("reply") || path == QLatin1String("cancel") || path == QLatin1String("accept_counter")) {
             // These should just be saved with their type as the dir
-            const QString p = (path == QLatin1String("accept_counter") ? QLatin1String("reply") : path);
-            if (saveFile(QLatin1String("Receiver Not Searched"), iCal, p)) {
+            const QString p = (path == QLatin1String("accept_counter") ? QStringLiteral("reply") : path);
+            if (saveFile(QStringLiteral("Receiver Not Searched"), iCal, p)) {
                 if (GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
                     viewerInstance->deleteMessage();
                 }
@@ -1278,7 +1278,7 @@ public:
                 KToolInvocation::invokeMailer(incidence->organizer()->email(), summary);
             //fall through
             case KMessageBox::Yes: // means "do not send"
-                if (saveFile(QLatin1String("Receiver Not Searched"), iCal, QStringLiteral("reply"))) {
+                if (saveFile(QStringLiteral("Receiver Not Searched"), iCal, QStringLiteral("reply"))) {
                     if (GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
                         viewerInstance->deleteMessage();
                         result = true;

@@ -127,7 +127,7 @@ QString StyleGetter::styledHtml(const int blogid,
         buffer.append(QString::fromUtf8(line));
     }
 
-    QRegExp typeRx(QLatin1String("(TYPE[^>]+>)"));
+    QRegExp typeRx(QStringLiteral("(TYPE[^>]+>)"));
     buffer.remove(typeRx);
 
     QRegExp titleRx(QStringLiteral("%1[\\d]*").arg(QLatin1String(POST_TITLE)));
@@ -184,7 +184,7 @@ void StyleGetter::slotHtmlCopied(KJob *job)
     href = href.remove(filenameOffset + 1, 255);
     QString base(QLatin1String("<base href=\"") + href + QLatin1String("\"/>"));
 
-    QRegExp rxBase(QLatin1String("(<base\\shref=[^>]+>)"));
+    QRegExp rxBase(QStringLiteral("(<base\\shref=[^>]+>)"));
     if (rxBase.indexIn(QLatin1String(httpData)) != -1) {
         httpData.replace(rxBase.cap(1).toLatin1(), base.toLatin1());
     } else {

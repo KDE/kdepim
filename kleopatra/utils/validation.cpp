@@ -45,10 +45,10 @@
 
 using namespace Kleo;
 
-static const QString email_rx = QLatin1String("[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?");
+static const QString email_rx = QStringLiteral("[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?");
 // these are modeled after gnupg/g10/keygen.c:ask_user_id:
-static const QString name_rx = QLatin1String("[^0-9<>][^<>@]{4,}");
-static const QString comment_rx = QLatin1String("[^()]*");
+static const QString name_rx = QStringLiteral("[^0-9<>][^<>@]{4,}");
+static const QString comment_rx = QStringLiteral("[^()]*");
 
 namespace
 {

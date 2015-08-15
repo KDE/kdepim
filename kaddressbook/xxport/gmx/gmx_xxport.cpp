@@ -277,7 +277,7 @@ ContactList GMXXXPort::importContacts() const
                 addressee->setOrganization(itemList[16]);   // Company
             }
             if (!itemList[17].isEmpty()) {
-                addressee->insertCustom(QLatin1String("KADDRESSBOOK"), QStringLiteral("X-Department"), itemList[17]);   // Department
+                addressee->insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Department"), itemList[17]);   // Department
             }
             if (checkDateTime(itemList[18], dt)) {
                 addressee->setRevision(dt);   // Change_date

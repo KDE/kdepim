@@ -115,7 +115,7 @@ QString CompactStyle::contactsToHtml(const KContacts::Addressee::List &contacts)
         } else {
             style += QLatin1String("#ffffff");
         }
-        content += QLatin1String("    <td style=\"") + style + QLatin1String(";\">") + values.join(QLatin1String("; ")) + QLatin1String("</td>\n");
+        content += QLatin1String("    <td style=\"") + style + QLatin1String(";\">") + values.join(QStringLiteral("; ")) + QLatin1String("</td>\n");
         content += QLatin1String("   </tr>\n");
         odd = !odd;
     }

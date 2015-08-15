@@ -80,7 +80,7 @@ PassphraseDialog::PassphraseDialog(QWidget *parent,
 {
     setWindowTitle(caption);
 
-    setPixmap(BarIcon(QLatin1String("dialog-password")));
+    setPixmap(BarIcon(QStringLiteral("dialog-password")));
 
     if (keyID.isNull()) {
         setPrompt(i18n("Please enter your OpenPGP passphrase:"));
@@ -326,10 +326,10 @@ KeySelectionDialog::KeySelectionDialog(const KeyList &keyList,
     mStartSearchTimer->setSingleShot(true);
 
     // load the key status icons
-    mKeyGoodPix    = new QPixmap(UserIcon(QLatin1String("key_ok")));
-    mKeyBadPix     = new QPixmap(UserIcon(QLatin1String("key_bad")));
-    mKeyUnknownPix = new QPixmap(UserIcon(QLatin1String("key_unknown")));
-    mKeyValidPix   = new QPixmap(UserIcon(QLatin1String("key")));
+    mKeyGoodPix    = new QPixmap(UserIcon(QStringLiteral("key_ok")));
+    mKeyBadPix     = new QPixmap(UserIcon(QStringLiteral("key_bad")));
+    mKeyUnknownPix = new QPixmap(UserIcon(QStringLiteral("key_unknown")));
+    mKeyValidPix   = new QPixmap(UserIcon(QStringLiteral("key")));
 
     QFrame *page = new QFrame(this);
     mainLayout->addWidget(page);
@@ -956,7 +956,7 @@ void KeySelectionDialog::slotCheckSelection(QTreeWidgetItem *plvi /* = 0 */)
                 }
             }
         }
-        qCDebug(KPGP_LOG) << "Selected keys:" << newKeyIdList.toStringList().join(QLatin1String(","));
+        qCDebug(KPGP_LOG) << "Selected keys:" << newKeyIdList.toStringList().join(QStringLiteral(","));
         mKeyIds = newKeyIdList;
         if (!keysToBeChecked.isEmpty()) {
             keysAllowed = keysAllowed && checkKeys(keysToBeChecked);
@@ -1057,7 +1057,7 @@ void KeySelectionDialog::slotFilter()
     }
 
     // OK, so we need to filter:
-    QRegExp keyIdRegExp(QLatin1String("(?:0x)?[A-F0-9]{1,8}"), Qt::CaseInsensitive);
+    QRegExp keyIdRegExp(QStringLiteral("(?:0x)?[A-F0-9]{1,8}"), Qt::CaseInsensitive);
     if (keyIdRegExp.exactMatch(mSearchText)) {
         if (mSearchText.startsWith(QStringLiteral("0X")))
             // search for keyID only:
@@ -1384,7 +1384,7 @@ KeyApprovalDialog::KeyApprovalDialog(const QStringList &addresses,
         if (keyIDs[0].isEmpty()) {
             keyidsL->setText(xi18nc("@info", "<placeholder>none</placeholder> means 'no key'"));
         } else {
-            keyidsL->setText(QLatin1String("0x") + keyIDs[0].toStringList().join(QLatin1String("\n0x")));
+            keyidsL->setText(QLatin1String("0x") + keyIDs[0].toStringList().join(QStringLiteral("\n0x")));
         }
         keyidsL->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
         /*
@@ -1448,7 +1448,7 @@ KeyApprovalDialog::KeyApprovalDialog(const QStringList &addresses,
         if ((*kit).isEmpty()) {
             keyidsL->setText(xi18nc("@info", "<placeholder>none</placeholder> means 'no key'"));
         } else {
-            keyidsL->setText(QLatin1String("0x") + (*kit).toStringList().join(QLatin1String("\n0x")));
+            keyidsL->setText(QLatin1String("0x") + (*kit).toStringList().join(QStringLiteral("\n0x")));
         }
         keyidsL->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
         /*
@@ -1571,7 +1571,7 @@ KeyApprovalDialog::slotChangeEncryptionKey(int nr)
     if (!keyIds.isEmpty()) {
         mKeys[nr] = keyIds;
         QLabel *keyidsL = mKeyIdsLabels[nr];
-        keyidsL->setText(QLatin1String("0x") + keyIds.toStringList().join(QLatin1String("\n0x")));
+        keyidsL->setText(QLatin1String("0x") + keyIds.toStringList().join(QStringLiteral("\n0x")));
         /*
         QListBox* qlb = mKeyIdListBoxes[nr];
         qlb->clear();

@@ -77,7 +77,7 @@ QString Formatting::prettyName(int proto, const char *id, const char *name_, con
 
     if (proto == CMS) {
         const DN subject(id);
-        const QString cn = subject[QLatin1String("CN")].trimmed();
+        const QString cn = subject[QStringLiteral("CN")].trimmed();
         if (cn.isEmpty()) {
             return subject.prettyDN();
         }
@@ -121,7 +121,7 @@ QString Formatting::prettyNameAndEMail(int proto, const QString &id, const QStri
 
     if (proto == CMS) {
         const DN subject(id);
-        const QString cn = subject[QLatin1String("CN")].trimmed();
+        const QString cn = subject[QStringLiteral("CN")].trimmed();
         if (cn.isEmpty()) {
             return subject.prettyDN();
         }
@@ -212,7 +212,7 @@ QString Formatting::prettyEMail(const char *email_, const char *id)
     if (email_ && parseMailbox(email_, email_ + strlen(email_), mailBox)) {
         return mailBox.addrSpec().asPrettyString();
     } else {
-        return DN(id)[QLatin1String("EMAIL")].trimmed();
+        return DN(id)[QStringLiteral("EMAIL")].trimmed();
     }
 }
 
@@ -687,7 +687,7 @@ QString Formatting::importMetaData(const Import &import, const QStringList &ids)
     } else
         return result + QLatin1Char('\n') +
                i18n("This certificate was imported from the following sources:") + QLatin1Char('\n') +
-               ids.join(QLatin1String("\n"));
+               ids.join(QStringLiteral("\n"));
 }
 
 QString Formatting::importMetaData(const Import &import)
@@ -723,7 +723,7 @@ QString Formatting::importMetaData(const Import &import)
 
     return results.empty()
            ? i18n("The import contained no new data for this certificate. It is unchanged.")
-           : results.join(QLatin1String("\n"));
+           : results.join(QStringLiteral("\n"));
 }
 
 //

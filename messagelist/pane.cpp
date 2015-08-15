@@ -1065,20 +1065,20 @@ void Pane::writeConfig(bool restoreSession)
     KConfigGroup conf(MessageList::Core::Settings::self()->config(), "MessageListPane");
 
     // Delete list before
-    const QStringList list = MessageList::Core::Settings::self()->config()->groupList().filter(QRegExp(QLatin1String("MessageListTab\\d+")));
+    const QStringList list = MessageList::Core::Settings::self()->config()->groupList().filter(QRegExp(QStringLiteral("MessageListTab\\d+")));
     foreach (const QString &group, list) {
         MessageList::Core::Settings::self()->config()->deleteGroup(group);
     }
 
     if (restoreSession) {
-        conf.writeEntry(QLatin1String("currentIndex"), currentIndex());
-        conf.writeEntry(QLatin1String("tabNumber"), count());
+        conf.writeEntry(QStringLiteral("currentIndex"), currentIndex());
+        conf.writeEntry(QStringLiteral("tabNumber"), count());
 
         for (int i = 0; i < count(); ++i) {
             Widget *w = qobject_cast<Widget *>(widget(i));
             KConfigGroup grp(MessageList::Core::Settings::self()->config(), QString::fromLatin1("MessageListTab%1").arg(i));
-            grp.writeEntry(QLatin1String("collectionId"), w->currentCollection().id());
-            grp.writeEntry(QLatin1String("HeaderState"), w->view()->header()->saveState());
+            grp.writeEntry(QStringLiteral("collectionId"), w->currentCollection().id());
+            grp.writeEntry(QStringLiteral("HeaderState"), w->view()->header()->saveState());
         }
     }
     conf.sync();
@@ -1086,7 +1086,7 @@ void Pane::writeConfig(bool restoreSession)
 
 void Pane::readConfig(bool restoreSession)
 {
-    if (MessageList::Core::Settings::self()->config()->hasGroup(QLatin1String("MessageListPane"))) {
+    if (MessageList::Core::Settings::self()->config()->hasGroup(QStringLiteral("MessageListPane"))) {
         KConfigGroup conf(MessageList::Core::Settings::self()->config(), "MessageListPane");
         const int numberOfTab = conf.readEntry(QStringLiteral("tabNumber"), 0);
         if (numberOfTab == 0) {

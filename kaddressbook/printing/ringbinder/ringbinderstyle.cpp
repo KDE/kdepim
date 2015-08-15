@@ -115,7 +115,7 @@ static QString contactsToHtml(const KContacts::Addressee::List &contacts, int fi
                    nameString + leftBlock.join(QString()) + QLatin1String("</td>\n");
         content += QLatin1String("    <td style=\"padding-left: 3px; padding-top: 3px; padding-right: 3px; "
                                  "padding-bottom: 3px;\">") +
-                   rightBlock.join(QLatin1String("<br/>")) + QLatin1String("</td>\n");
+                   rightBlock.join(QStringLiteral("<br/>")) + QLatin1String("</td>\n");
         content += QLatin1String("   </tr>\n");
     }
     content += QLatin1String("  </table>\n");

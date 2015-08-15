@@ -51,7 +51,7 @@ QString FilterImporterBalsa::defaultFiltersSettingsPath()
 
 void FilterImporterBalsa::readConfig(KConfig *config)
 {
-    const QStringList filterList = config->groupList().filter(QRegExp(QLatin1String("filter-\\d+")));
+    const QStringList filterList = config->groupList().filter(QRegExp(QStringLiteral("filter-\\d+")));
     Q_FOREACH (const QString &filter, filterList) {
         KConfigGroup grp = config->group(filter);
         parseFilter(grp);
@@ -88,10 +88,10 @@ void FilterImporterBalsa::parseCondition(const QString &condition, MailCommon::M
 {
     QStringList conditionList;
     if (condition.startsWith(QStringLiteral("OR "))) {
-        conditionList = condition.split(QLatin1String("OR"));
+        conditionList = condition.split(QStringLiteral("OR"));
         filter->pattern()->setOp(SearchPattern::OpOr);
     } else if (condition.startsWith(QStringLiteral("AND "))) {
-        conditionList = condition.split(QLatin1String("AND"));
+        conditionList = condition.split(QStringLiteral("AND"));
         filter->pattern()->setOp(SearchPattern::OpAnd);
     } else {
         //no multi condition

@@ -65,7 +65,7 @@ void ExportBlogiloJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    const QString blogiloStr(QLatin1String("blogilorc"));
+    const QString blogiloStr(QStringLiteral("blogilorc"));
     const QString blogilorc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + blogiloStr;
     backupFile(blogilorc, Utils::configsPath(), blogiloStr);
 
@@ -76,7 +76,7 @@ void ExportBlogiloJob::backupData()
 {
     showInfo(i18n("Backing up data..."));
     MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
-    const QString dbfileStr = QLatin1String("blogilo.db");
+    const QString dbfileStr = QStringLiteral("blogilo.db");
     const QString dbfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/blogilo/") + dbfileStr ;
 
     backupFile(dbfile, Utils::dataPath() +  QLatin1String("/blogilo/"), dbfileStr);

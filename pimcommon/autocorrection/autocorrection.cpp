@@ -963,7 +963,7 @@ void AutoCorrection::readAutoCorrectionXmlFile(bool forceGlobal)
             fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("autocorrect/") + kdelang + QLatin1String(".xml"));
         }
         if (fname.isEmpty() && kdelang.contains(QStringLiteral("_"))) {
-            kdelang.remove(QRegExp(QLatin1String("_.*")));
+            kdelang.remove(QRegExp(QStringLiteral("_.*")));
             fname = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("autocorrect/") + kdelang + QLatin1String(".xml"));
         }
     }
@@ -1015,7 +1015,7 @@ void AutoCorrection::readAutoCorrectionXmlFile(bool forceGlobal)
 
 void AutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
 {
-    const QString fname = filename.isEmpty() ? QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml") : filename;
+    const QString fname = filename.isEmpty() ? QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QStringLiteral("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml") : filename;
     QFileInfo fileInfo(fname);
     QDir().mkpath(fileInfo.absolutePath());
     QFile file(fname);

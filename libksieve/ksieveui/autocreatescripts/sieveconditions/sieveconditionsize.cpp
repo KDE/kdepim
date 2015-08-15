@@ -29,7 +29,7 @@
 using namespace KSieveUi;
 
 SieveConditionSize::SieveConditionSize(QObject *parent)
-    : SieveCondition(QLatin1String("size"), i18n("Size"), parent)
+    : SieveCondition(QStringLiteral("size"), i18n("Size"), parent)
 {
 }
 
@@ -62,9 +62,9 @@ QWidget *SieveConditionSize::createParamWidget(QWidget *parent) const
 
 QString SieveConditionSize::code(QWidget *w) const
 {
-    const QComboBox *combo = w->findChild<QComboBox *>(QLatin1String("combosize"));
+    const QComboBox *combo = w->findChild<QComboBox *>(QStringLiteral("combosize"));
     const QString comparaison = combo->itemData(combo->currentIndex()).toString();
-    const SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget *>(QLatin1String("sizewidget"));
+    const SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget *>(QStringLiteral("sizewidget"));
     return QStringLiteral("size %1 %2").arg(comparaison).arg(sizeWidget->code());
 }
 
@@ -82,7 +82,7 @@ bool SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
-                QComboBox *combo = w->findChild<QComboBox *>(QLatin1String("combosize"));
+                QComboBox *combo = w->findChild<QComboBox *>(QStringLiteral("combosize"));
                 const int index = combo->findData(AutoCreateScriptUtil::tagValue(tagValue));
                 if (index != -1) {
                     combo->setCurrentIndex(index);
@@ -93,7 +93,7 @@ bool SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
                 if (e.hasAttribute(QStringLiteral("quantifier"))) {
                     numIdentifier = e.attribute(QStringLiteral("quantifier"));
                 }
-                SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget *>(QLatin1String("sizewidget"));
+                SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget *>(QStringLiteral("sizewidget"));
                 sizeWidget->setCode(tagValue, numIdentifier, name(), error);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing

@@ -193,7 +193,7 @@ void MessageItemPrivate::fillTagList(const Akonadi::Tag::List &taglist)
     //Priority sort this and make bestTag more efficient
 
     foreach (const Akonadi::Tag &tag, taglist) {
-        QString symbol = QLatin1String("mail-tagged");
+        QString symbol = QStringLiteral("mail-tagged");
         Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>();
         if (attr) {
             if (!attr->iconName().isEmpty()) {
@@ -608,10 +608,10 @@ QString MessageItem::accessibleText(const Theme *theme, int columnIndex)
             rightStrings.insert(rightStrings.begin(), accessibleTextForField(contentItem->type()));
         }
 
-        rowsTexts.append((leftStrings + rightStrings).join(QLatin1String(" ")));
+        rowsTexts.append((leftStrings + rightStrings).join(QStringLiteral(" ")));
     }
 
-    return rowsTexts.join(QLatin1String(" "));
+    return rowsTexts.join(QStringLiteral(" "));
 }
 
 void MessageItem::subTreeToList(QList< MessageItem * > &list)

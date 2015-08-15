@@ -38,7 +38,7 @@ FilterImporterEvolution::FilterImporterEvolution(QFile *file)
         qCDebug(MAILCOMMON_LOG) << "No filters defined";
         return;
     }
-    filters = filters.firstChildElement(QLatin1String("ruleset"));
+    filters = filters.firstChildElement(QStringLiteral("ruleset"));
     for (QDomElement e = filters.firstChildElement(); !e.isNull(); e = e.nextSiblingElement()) {
         const QString tag = e.tagName();
         if (tag == QLatin1String("rule")) {
@@ -174,7 +174,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                     if (folder.hasAttribute(QStringLiteral("uri"))) {
                                         contents = folder.attribute(QStringLiteral("uri"));
                                         if (!contents.isEmpty()) {
-                                            contents.remove(QLatin1String("folder://"));
+                                            contents.remove(QStringLiteral("folder://"));
                                         }
                                     }
                                 } else if (name == QLatin1String("address")) {
@@ -292,7 +292,7 @@ void FilterImporterEvolution::parsePartAction(const QDomElement &ruleFilter,
                                     if (folder.hasAttribute(QStringLiteral("uri"))) {
                                         value = folder.attribute(QStringLiteral("uri"));
                                         if (!value.isEmpty()) {
-                                            value.remove(QLatin1String("folder://"));
+                                            value.remove(QStringLiteral("folder://"));
                                         }
                                         qCDebug(MAILCOMMON_LOG) << " contents folder :" << value;
                                     }

@@ -579,7 +579,7 @@ public:
         ui.setupUi(this);
 
         // set errorLB to have a fixed height of two lines:
-        ui.errorLB->setText(QLatin1String("2<br>1"));
+        ui.errorLB->setText(QStringLiteral("2<br>1"));
         ui.errorLB->setFixedHeight(ui.errorLB->minimumSizeHint().height());
         ui.errorLB->clear();
 
@@ -847,7 +847,7 @@ private Q_SLOTS:
     void slotSaveRequestToFile()
     {
         QString fileName = FileDialog::getSaveFileName(this, i18nc("@title", "Save Request"),
-                           QLatin1String("imp"), i18n("PKCS#10 Requests (*.p10)"));
+                           QStringLiteral("imp"), i18n("PKCS#10 Requests (*.p10)"));
         if (fileName.isEmpty()) {
             return;
         }
@@ -931,7 +931,7 @@ private Q_SLOTS:
 
         // RFC 2368 says body's linebreaks need to be encoded as
         // "%0D%0A", so normalize body to CRLF:
-        body.replace(QLatin1Char('\n'), QStringLiteral("\r\n")).remove(QLatin1String("\r\r"));
+        body.replace(QLatin1Char('\n'), QStringLiteral("\r\n")).remove(QStringLiteral("\r\r"));
 
         QByteArray encoded = "mailto:?to=" + QUrl::toPercentEncoding(to)
                              + "&subject=" + QUrl::toPercentEncoding(subject)
@@ -948,7 +948,7 @@ private Q_SLOTS:
                                         "<para>If your mail client does not have an attachment, then drag the <application>Kleopatra</application> icon and drop it on the message compose window of your mail client.</para>"
                                         "<para>If that does not work, either, save the request to a file, and then attach that.</para>"),
                                  i18nc("@title", "Sending Mail"),
-                                 QLatin1String("newcertificatewizard-mailto-troubles"));
+                                 QStringLiteral("newcertificatewizard-mailto-troubles"));
     }
 
     void slotUploadCertificateToDirectoryServer()
@@ -1002,8 +1002,8 @@ private:
         }
         const bool sign = signingAllowed();
         const bool encr = encryptionAllowed();
-        setField(QLatin1String("signingAllowed"),    !sign);
-        setField(QLatin1String("encryptionAllowed"), !encr);
+        setField(QStringLiteral("signingAllowed"),    !sign);
+        setField(QStringLiteral("encryptionAllowed"), !encr);
         // restart and skip to Overview Page:
         wizard()->restart();
         for (int i = wizard()->currentId() ; i < NewCertificateWizard::OverviewPageId ; ++i) {
@@ -1028,7 +1028,7 @@ class NewCertificateWizard::Private
 public:
     explicit Private(NewCertificateWizard *qq)
         : q(qq),
-          tmp(QDir::temp().absoluteFilePath(QLatin1String("kleo-"))),
+          tmp(QDir::temp().absoluteFilePath(QStringLiteral("kleo-"))),
           ui(q)
     {
         q->setWindowTitle(i18nc("@title", "Certificate Creation Wizard"));
@@ -1531,7 +1531,7 @@ QString OverviewPage::i18nFormatGnupgKeyParms(bool details) const
             s     << Row<        >(i18n("Comment:"),           comment());
         }
     } else {
-        s         << Row<        >(i18n("Subject-DN:"),        DN(dn()).dn(QLatin1String(",<br>")));
+        s         << Row<        >(i18n("Subject-DN:"),        DN(dn()).dn(QStringLiteral(",<br>")));
     }
     if (details) {
         s         << Row<        >(i18n("Key Type:"),          QLatin1String(gpgme_pubkey_algo_name(static_cast<gpgme_pubkey_algo_t>(keyType()))));
@@ -1594,13 +1594,13 @@ QString KeyCreationPage::createGnupgKeyParms() const
     if (const unsigned int strength = keyStrength()) {
         s << "key-length:    " << strength                 << endl;
     }
-    s     << "key-usage:     " << keyUsages().join(QLatin1String(" "))    << endl;
+    s     << "key-usage:     " << keyUsages().join(QStringLiteral(" "))    << endl;
     if (const unsigned int subkey = subkeyType()) {
         s << "subkey-type:   " << gpgme_pubkey_algo_name(static_cast<gpgme_pubkey_algo_t>(subkey)) << endl;
         if (const unsigned int strength = subkeyStrength()) {
             s << "subkey-length: " << strength             << endl;
         }
-        s << "subkey-usage:  " << subkeyUsages().join(QLatin1String(" ")) << endl;
+        s << "subkey-usage:  " << subkeyUsages().join(QStringLiteral(" ")) << endl;
     }
     if (pgp() && expiryDate().isValid()) {
         s << "expire-date:   " << expiryDate().toString(Qt::ISODate) << endl;

@@ -306,7 +306,7 @@ void ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node)
     // Also force word wrapping, which is useful for printing, see https://issues.kolab.org/issue3992.
     bool isRoot = node->isTopLevel();
     if (isRoot && htmlWriter()) {
-        htmlWriter()->queue(QLatin1String("<div style=\"position: relative; word-wrap: break-word\">\n"));
+        htmlWriter()->queue(QStringLiteral("<div style=\"position: relative; word-wrap: break-word\">\n"));
     }
 
     for (; node ; node = MessageCore::NodeHelper::nextSibling(node)) {
@@ -382,7 +382,7 @@ void ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node)
     }
 
     if (isRoot && htmlWriter()) {
-        htmlWriter()->queue(QLatin1String("</div>\n"));
+        htmlWriter()->queue(QStringLiteral("</div>\n"));
     }
 }
 
@@ -845,7 +845,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
 
         } else if (!hideErrors) {
             QString txt;
-            txt = QLatin1String("<hr><b><h2>");
+            txt = QStringLiteral("<hr><b><h2>");
             txt.append(i18n("The crypto engine returned no cleartext data."));
             txt.append(QLatin1String("</h2></b>"));
             txt.append(QLatin1String("<br/>&nbsp;<br/>"));
@@ -913,7 +913,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
 
 void ObjectTreeParser::writeDeferredDecryptionBlock()
 {
-    const QString iconName = QLatin1String("file:///") + KIconLoader::global()->iconPath(QLatin1String("document-decrypt"),
+    const QString iconName = QLatin1String("file:///") + KIconLoader::global()->iconPath(QStringLiteral("document-decrypt"),
                              KIconLoader::Small);
     const QString decryptedData = QLatin1String("<div style=\"font-size:large; text-align:center;"
                                   "padding-top:20pt;\">")
@@ -991,7 +991,7 @@ void ObjectTreeParser::writeCertificateImportResult(const GpgME::ImportResult &r
     comment += QLatin1String("&nbsp;<br/>");
     htmlWriter()->queue(comment);
     if (!nImp && !nSKImp) {
-        htmlWriter()->queue(QLatin1String("<hr>"));
+        htmlWriter()->queue(QStringLiteral("<hr>"));
         return;
     }
     const std::vector<GpgME::Import> imports = res.imports();
@@ -1012,10 +1012,10 @@ void ObjectTreeParser::writeCertificateImportResult(const GpgME::ImportResult &r
                 htmlWriter()->queue(i18n("New or changed: %1", QLatin1String((*it).fingerprint())));
             }
         }
-        htmlWriter()->queue(QLatin1String("<br/>"));
+        htmlWriter()->queue(QStringLiteral("<br/>"));
     }
 
-    htmlWriter()->queue(QLatin1String("<hr>"));
+    htmlWriter()->queue(QStringLiteral("<hr>"));
 }
 
 bool ObjectTreeParser::okDecryptMIME(KMime::Content &data,
@@ -1267,29 +1267,29 @@ bool ObjectTreeParser::processTextHtmlSubtype(KMime::Content *curNode, ProcessRe
             // because only spam contains obfuscated external references.
             if (!mSource->htmlLoadExternal() &&
                     containsExternalReferences(bodyText, extraHead)) {
-                htmlWriter()->queue(QLatin1String("<div class=\"htmlWarn\">\n"));
+                htmlWriter()->queue(QStringLiteral("<div class=\"htmlWarn\">\n"));
                 htmlWriter()->queue(i18n("<b>Note:</b> This HTML message may contain external "
                                          "references to images etc. For security/privacy reasons "
                                          "external references are not loaded. If you trust the "
                                          "sender of this message then you can load the external "
                                          "references for this message "
                                          "<a href=\"kmail:loadExternal\">by clicking here</a>."));
-                htmlWriter()->queue(QLatin1String("</div><br/><br/>"));
+                htmlWriter()->queue(QStringLiteral("</div><br/><br/>"));
             }
-            htmlWriter()->queue(QLatin1String("<div style=\"position: relative\">\n"));
+            htmlWriter()->queue(QStringLiteral("<div style=\"position: relative\">\n"));
             // Make sure the body is relative, so that nothing is painted over above "Note: ..."
             // if a malicious message uses absolute positioning. #137643
             htmlWriter()->queue(bodyText);
         } else {
-            htmlWriter()->queue(QLatin1String("<div class=\"htmlWarn\">\n"));
+            htmlWriter()->queue(QStringLiteral("<div class=\"htmlWarn\">\n"));
             htmlWriter()->queue(i18n("<b>Note:</b> This is an HTML message. For "
                                      "security reasons, only the raw HTML code "
                                      "is shown. If you trust the sender of this "
                                      "message then you can activate formatted "
                                      "HTML display for this message "
                                      "<a href=\"kmail:showHTML\">by clicking here</a>."));
-            htmlWriter()->queue(QLatin1String("</div><br/><br/>"));
-            htmlWriter()->queue(QLatin1String("<div style=\"position: relative\">\n"));
+            htmlWriter()->queue(QStringLiteral("</div><br/><br/>"));
+            htmlWriter()->queue(QStringLiteral("<div style=\"position: relative\">\n"));
             // Make sure the body is relative, so that nothing is painted over above "Note: ..."
             // if a malicious message uses absolute positioning. #137643
             ConvertHtmlToPlainText convert;
@@ -1298,7 +1298,7 @@ bool ObjectTreeParser::processTextHtmlSubtype(KMime::Content *curNode, ProcessRe
             result.replace(QLatin1String("\n"), QStringLiteral("<br>"));
             htmlWriter()->queue(result);
         }
-        htmlWriter()->queue(QLatin1String("</div>\n"));
+        htmlWriter()->queue(QStringLiteral("</div>\n"));
         mSource->setHtmlMode(Util::Html);
         return true;
     }
@@ -1358,7 +1358,7 @@ bool ObjectTreeParser::processMailmanMessage(KMime::Content *curNode)
     //  curNode = curNode->mRoot;
 
     // at least one message found: build a mime tree
-    digestHeaderStr = QLatin1String("Content-Type: text/plain\nContent-Description: digest header\n\n");
+    digestHeaderStr = QStringLiteral("Content-Type: text/plain\nContent-Description: digest header\n\n");
     digestHeaderStr += str.mid(0, thisDelim);
     createAndParseTempNode(mTopLevelContent, digestHeaderStr.toLatin1(), "Digest Header");
     //mReader->queueHtml("<br><hr><br>");
@@ -1384,7 +1384,7 @@ bool ObjectTreeParser::processMailmanMessage(KMime::Content *curNode)
         //while( thisDelim < cstr.size() && '\n' == cstr[thisDelim] )
         //  ++thisDelim;
 
-        partStr = QLatin1String("Content-Type: message/rfc822\nContent-Description: embedded message\n\n");
+        partStr = QStringLiteral("Content-Type: message/rfc822\nContent-Description: embedded message\n\n");
         partStr += QLatin1String("Content-Type: text/plain\n");
         partStr += str.mid(thisDelim, nextDelim - thisDelim);
         QString subject = QString::fromLatin1("embedded message");
@@ -1424,7 +1424,7 @@ bool ObjectTreeParser::processMailmanMessage(KMime::Content *curNode)
     } else {
         thisDelim = thisDelim + 1;
     }
-    partStr = QLatin1String("Content-Type: text/plain\nContent-Description: digest footer\n\n");
+    partStr = QStringLiteral("Content-Type: text/plain\nContent-Description: digest footer\n\n");
     partStr += str.mid(thisDelim);
     createAndParseTempNode(mTopLevelContent, partStr.toLatin1(), "Digest Footer");
     return true;
@@ -1463,7 +1463,7 @@ bool ObjectTreeParser::processTextPlainSubtype(KMime::Content *curNode, ProcessR
 
         const QString fileName;
         mNodeHelper->writeNodeToTempFile(curNode);
-        const QString dir = QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr") ;
+        const QString dir = QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr") ;
 
         QString htmlStr = QLatin1String("<table cellspacing=\"1\" class=\"textAtm\">"
                                         "<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">");
@@ -1497,7 +1497,7 @@ bool ObjectTreeParser::processTextPlainSubtype(KMime::Content *curNode, ProcessR
         mNodeHelper->setNodeDisplayedEmbedded(curNode, true);
     }
     if (bDrawFrame && htmlWriter()) {
-        htmlWriter()->queue(QLatin1String("</td></tr></table>"));
+        htmlWriter()->queue(QStringLiteral("</td></tr></table>"));
     }
 
     return true;
@@ -1645,7 +1645,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, Proce
         return true;
     }
 
-    QString protocolContentType = node->contentType()->parameter(QLatin1String("protocol")).toLower();
+    QString protocolContentType = node->contentType()->parameter(QStringLiteral("protocol")).toLower();
     const QString signatureContentType = QLatin1String(signature->contentType()->mimeType().toLower());
     if (protocolContentType.isEmpty()) {
         qCWarning(MESSAGEVIEWER_LOG) << "Message doesn't set the protocol for the multipart/signed content-type, "
@@ -1974,7 +1974,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
         return false;
     }
 
-    const QString smimeType = node->contentType()->parameter(QLatin1String("smime-type")).toLower();
+    const QString smimeType = node->contentType()->parameter(QStringLiteral("smime-type")).toLower();
 
     if (smimeType == QLatin1String("certs-only")) {
         result.setNeverDisplayInline(true);
@@ -2227,7 +2227,7 @@ bool ObjectTreeParser::processApplicationChiasmusTextSubtype(KMime::Content *cur
                                                0, //cryptPlugWrapper(),
                                                NodeHelper::fromAsString(curNode)));
     const QByteArray body = bOkDecrypt ? decryptedBody : data;
-    const QString chiasmusCharset = curNode->contentType()->parameter(QLatin1String("chiasmus-charset"));
+    const QString chiasmusCharset = curNode->contentType()->parameter(QStringLiteral("chiasmus-charset"));
     const QTextCodec *aCodec = chiasmusCharset.isEmpty() ? codecFor(curNode)
                                : NodeHelper::codecForName(chiasmusCharset.toLatin1());
     htmlWriter()->queue(quotedHTML(aCodec->toUnicode(body), false /*decorate*/));
@@ -2518,7 +2518,7 @@ static QString writeSimpleSigstatHeader(const PartMetaData &block, bool printing
 
 static QString beginVerboseSigstatHeader()
 {
-    return QLatin1String("<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td rowspan=\"2\">");
+    return QStringLiteral("<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td rowspan=\"2\">");
 }
 
 static QString makeShowAuditLogLink(const GpgME::Error &err, const QString &auditLog)
@@ -2540,8 +2540,8 @@ static QString makeShowAuditLogLink(const GpgME::Error &err, const QString &audi
 
     if (!auditLog.isEmpty()) {
         QUrl url;
-        url.setScheme(QLatin1String("kmail"));
-        url.setPath(QLatin1String("showAuditLog"));
+        url.setScheme(QStringLiteral("kmail"));
+        url.setPath(QStringLiteral("showAuditLog"));
         QUrlQuery urlquery(url);
         urlquery.addQueryItem(QStringLiteral("log"), auditLog);
         url.setQuery(urlquery);
@@ -2573,8 +2573,8 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
     QString signer = block.signer;
 
     QString htmlStr, simpleHtmlStr;
-    const QString dir = QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
-    QString cellPadding(QLatin1String("cellpadding=\"1\""));
+    const QString dir = QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr");
+    QString cellPadding(QStringLiteral("cellpadding=\"1\""));
 
     if (block.isEncapsulatedRfc822Message) {
         htmlStr += QLatin1String("<table cellspacing=\"1\" ") + cellPadding + QLatin1String(" class=\"rfc822\">"
@@ -2605,7 +2605,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
     }
 
     if (block.isSigned && block.inProgress) {
-        block.signClass = QLatin1String("signInProgress");
+        block.signClass = QStringLiteral("signInProgress");
         htmlStr += QLatin1String("<table cellspacing=\"1\" ") + cellPadding + QLatin1String(" class=\"signInProgress\">"
                    "<tr class=\"signInProgressH\"><td dir=\"") + dir + QLatin1String("\">");
         htmlStr += i18n("Please wait while the signature is being verified...");
@@ -2687,18 +2687,18 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
             // special color handling: S/MIME uses only green/yellow/red.
             switch (frameColor) {
             case SIG_FRAME_COL_RED:
-                block.signClass = QLatin1String("signErr");//"signCMSRed";
+                block.signClass = QStringLiteral("signErr");//"signCMSRed";
                 onlyShowKeyURL = true;
                 break;
             case SIG_FRAME_COL_YELLOW:
                 if (block.technicalProblem) {
-                    block.signClass = QLatin1String("signWarn");
+                    block.signClass = QStringLiteral("signWarn");
                 } else {
-                    block.signClass = QLatin1String("signOkKeyBad");    //"signCMSYellow";
+                    block.signClass = QStringLiteral("signOkKeyBad");    //"signCMSYellow";
                 }
                 break;
             case SIG_FRAME_COL_GREEN:
-                block.signClass = QLatin1String("signOkKeyOk");//"signCMSGreen";
+                block.signClass = QStringLiteral("signOkKeyOk");//"signCMSGreen";
                 // extra hint for green case
                 // that email addresses in DN do not match fromAddress
                 QString greenCaseWarning;
@@ -2837,7 +2837,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
             // old frame settings for PGP:
 
             if (block.signer.isEmpty() || block.technicalProblem) {
-                block.signClass = QLatin1String("signWarn");
+                block.signClass = QStringLiteral("signWarn");
                 QString frame = QLatin1String("<table cellspacing=\"1\" ") + cellPadding + QLatin1String(" "
                                 "class=\"") + block.signClass + QLatin1String("\">"
                                         "<tr class=\"") + block.signClass + QLatin1String("H\"><td dir=\"") + dir + QLatin1String("\">");
@@ -2880,9 +2880,9 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
 
                 if (block.isGoodSignature) {
                     if (block.keyTrust < Kpgp::KPGP_VALIDITY_MARGINAL) {
-                        block.signClass = QLatin1String("signOkKeyBad");
+                        block.signClass = QStringLiteral("signOkKeyBad");
                     } else {
-                        block.signClass = QLatin1String("signOkKeyOk");
+                        block.signClass = QStringLiteral("signOkKeyOk");
                     }
                     QString frame = QLatin1String("<table cellspacing=\"1\" ") + cellPadding + QLatin1String(" "
                                     "class=\"") + block.signClass + QLatin1String("\">"
@@ -2925,7 +2925,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
                     htmlStr += endVerboseSigstatHeader(block) + frame;
                     simpleHtmlStr += frame;
                 } else {
-                    block.signClass = QLatin1String("signErr");
+                    block.signClass = QStringLiteral("signErr");
                     QString frame = QLatin1String("<table cellspacing=\"1\" ") + cellPadding + QLatin1String(" "
                                     "class=\"") + block.signClass + QLatin1String("\">"
                                             "<tr class=\"") + block.signClass + QLatin1String("H\"><td dir=\"") + dir + QLatin1String("\">");
@@ -2958,7 +2958,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
 
 QString ObjectTreeParser::writeSigstatFooter(PartMetaData &block)
 {
-    const QString dir = (QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr"));
+    const QString dir = (QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr"));
 
     QString htmlStr;
 
@@ -3003,7 +3003,7 @@ void ObjectTreeParser::writeAttachmentMarkFooter()
         return;
     }
 
-    htmlWriter()->queue(QLatin1String("</div>"));
+    htmlWriter()->queue(QStringLiteral("</div>"));
 }
 
 //-----------------------------------------------------------------------------
@@ -3022,7 +3022,7 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
                                     KMMsgEncryptionState &inlineEncryptionState,
                                     bool decorate)
 {
-    const QString dir = (QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr"));
+    const QString dir = (QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr"));
     //QString headerStr = QString::fromLatin1("<div dir=\"%1\">").arg(dir);
 
     inlineSignatureState  = KMMsgNotSigned;
@@ -3297,8 +3297,8 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
         quoteFontTag[i] = cssHelper()->quoteFontTag(i);
         deepQuoteFontTag[i] = cssHelper()->quoteFontTag(i + 3);
     }
-    const QString normalEndTag = QLatin1String("</div>");
-    const QString quoteEnd = QLatin1String("</div>");
+    const QString normalEndTag = QStringLiteral("</div>");
+    const QString quoteEnd = QStringLiteral("</div>");
 
     const unsigned int length = s.length();
     bool paraIsRTL = false;
@@ -3319,10 +3319,10 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
     if (GlobalSettings::self()->showExpandQuotesMark()) {
         // Cache Icons
         if (mCollapseIcon.isEmpty()) {
-            mCollapseIcon = iconToDataUrl(IconNameCache::instance()->iconPath(QLatin1String("quotecollapse"), 0));
+            mCollapseIcon = iconToDataUrl(IconNameCache::instance()->iconPath(QStringLiteral("quotecollapse"), 0));
         }
         if (mExpandIcon.isEmpty()) {
-            mExpandIcon = iconToDataUrl(IconNameCache::instance()->iconPath(QLatin1String("quoteexpand"), 0));
+            mExpandIcon = iconToDataUrl(IconNameCache::instance()->iconPath(QStringLiteral("quoteexpand"), 0));
         }
     }
 
@@ -3420,7 +3420,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
                 if (startNewPara) {
                     paraIsRTL = line.isRightToLeft();
                 }
-                htmlStr += QString::fromLatin1("<div dir=\"%1\">").arg(paraIsRTL ? QLatin1String("rtl") : QLatin1String("ltr"));
+                htmlStr += QString::fromLatin1("<div dir=\"%1\">").arg(paraIsRTL ? QStringLiteral("rtl") : QStringLiteral("ltr"));
                 htmlStr += KTextToHTML::convertToHtml(line, convertFlags);
                 htmlStr += QLatin1String("</div>");
                 startNewPara = looksLikeParaBreak(s, pos);

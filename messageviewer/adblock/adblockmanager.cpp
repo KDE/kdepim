@@ -90,7 +90,7 @@ void AdBlockManager::reloadConfig()
 
 void AdBlockManager::loadSettings()
 {
-    KConfig config(QLatin1String("messagevieweradblockrc"));
+    KConfig config(QStringLiteral("messagevieweradblockrc"));
     // ----------------
 
     _hostWhiteList.clear();
@@ -109,7 +109,7 @@ void AdBlockManager::loadSettings()
     QDateTime today = QDateTime::currentDateTime();
     const int days = GlobalSettings::self()->adBlockUpdateInterval();
 
-    const QStringList itemList = config.groupList().filter(QRegExp(QLatin1String("FilterList \\d+")));
+    const QStringList itemList = config.groupList().filter(QRegExp(QStringLiteral("FilterList \\d+")));
     Q_FOREACH (const QString &item, itemList) {
         KConfigGroup filtersGroup(&config, item);
         const bool isFilterEnabled = filtersGroup.readEntry(QStringLiteral("FilterEnabled"), false);
@@ -265,11 +265,11 @@ void AdBlockManager::updateSubscription(const QString &path, const QString &url,
     QUrl destUrl = QUrl::fromLocalFile(rulesFilePath);
 
     KIO::FileCopyJob *job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
-    job->metaData().insert(QLatin1String("ssl_no_client_cert"), QStringLiteral("TRUE"));
-    job->metaData().insert(QLatin1String("ssl_no_ui"), QStringLiteral("TRUE"));
-    job->metaData().insert(QLatin1String("UseCache"), QStringLiteral("false"));
-    job->metaData().insert(QLatin1String("cookies"), QStringLiteral("none"));
-    job->metaData().insert(QLatin1String("no-auth"), QStringLiteral("true"));
+    job->metaData().insert(QStringLiteral("ssl_no_client_cert"), QStringLiteral("TRUE"));
+    job->metaData().insert(QStringLiteral("ssl_no_ui"), QStringLiteral("TRUE"));
+    job->metaData().insert(QStringLiteral("UseCache"), QStringLiteral("false"));
+    job->metaData().insert(QStringLiteral("cookies"), QStringLiteral("none"));
+    job->metaData().insert(QStringLiteral("no-auth"), QStringLiteral("true"));
     job->setProperty("itemname", itemName);
 
     connect(job, &KIO::FileCopyJob::finished, this, &AdBlockManager::slotFinished);
@@ -278,23 +278,23 @@ void AdBlockManager::updateSubscription(const QString &path, const QString &url,
 void AdBlockManager::slotFinished(KJob *job)
 {
     if (job->error()) {
-        KNotification *notify = new KNotification(QLatin1String("adblock-list-download-failed"));
-        notify->setComponentName(QLatin1String("messageviewer"));
+        KNotification *notify = new KNotification(QStringLiteral("adblock-list-download-failed"));
+        notify->setComponentName(QStringLiteral("messageviewer"));
         notify->setText(i18n("Download new ad-block list was failed."));
         notify->sendEvent();
         return;
     }
 
-    KNotification *notify = new KNotification(QLatin1String("adblock-list-download-done"));
-    notify->setComponentName(QLatin1String("messageviewer"));
+    KNotification *notify = new KNotification(QStringLiteral("adblock-list-download-done"));
+    notify->setComponentName(QStringLiteral("messageviewer"));
     notify->setText(i18n("Download new ad-block list was done."));
     notify->sendEvent();
     const QString itemName = job->property("itemname").toString();
     if (!itemName.isEmpty()) {
-        KConfig config(QLatin1String("messagevieweradblockrc"));
+        KConfig config(QStringLiteral("messagevieweradblockrc"));
         if (config.hasGroup(itemName)) {
             KConfigGroup grp = config.group(itemName);
-            grp.writeEntry(QLatin1String("lastUpdate"), QDateTime::currentDateTime());
+            grp.writeEntry(QStringLiteral("lastUpdate"), QDateTime::currentDateTime());
         }
     }
 

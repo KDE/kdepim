@@ -67,7 +67,7 @@ public:
         return
             !q->collection().isValid() ||
             collectionMatchesMimeTypes() ||
-            q->collection().contentMimeTypes() == QStringList(QLatin1String("inode/directory"));
+            q->collection().contentMimeTypes() == QStringList(QStringLiteral("inode/directory"));
     }
 
 private:

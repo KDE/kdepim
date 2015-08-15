@@ -86,7 +86,7 @@ public:
         static const QLatin1String sepStyle("style=\"color: black; font-weight: bold;\"");
         static const QLatin1String chunkStyle("style=\"color: blue;\"");
 
-        QString html = QLatin1String("<br><div align=\"center\">");
+        QString html = QStringLiteral("<br><div align=\"center\">");
         html += QLatin1String("<pre ") + tableStyle + QLatin1Char('>');
 
         const QStringList lines = diff.split(QLatin1Char('\n'));

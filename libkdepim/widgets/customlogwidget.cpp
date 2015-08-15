@@ -157,7 +157,7 @@ void CustomLogWidget::addEndLineLogEntry()
 
 QString CustomLogWidget::toHtml() const
 {
-    QString result = QLatin1String("<html>\n<body>\n");
+    QString result = QStringLiteral("<html>\n<body>\n");
     result += QLatin1String("<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n");
     for (int i = 0; i < count(); ++i)  {
         QListWidgetItem *itemWidget = item(i);
@@ -175,7 +175,7 @@ QString CustomLogWidget::toHtml() const
             logText = QStringLiteral("<font color=%1>%2</font>").arg(QColor(Qt::green).name()).arg(itemText);
             break;
         case EndLine:
-            logText = QLatin1String("<br/>");
+            logText = QStringLiteral("<br/>");
             break;
         default:
             qCDebug(LIBKDEPIM_LOG) << "LogType undefined" << type;

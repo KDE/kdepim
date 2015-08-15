@@ -129,9 +129,9 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, con
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
             QMap<QString, QString> map;
-            map[QLatin1String("Refresh Token")] = mRefreshToken;
-            map[QLatin1String("Token")] = mToken;
-            map[QLatin1String("Expire Time")] = mExpireDateTime.toString();
+            map[QStringLiteral("Refresh Token")] = mRefreshToken;
+            map[QStringLiteral("Token")] = mToken;
+            map[QStringLiteral("Expire Time")] = mExpireDateTime.toString();
             wallet->writeMap(walletEntry, map);
         }
     }
@@ -245,7 +245,7 @@ QString HubicStorageService::description()
 
 QUrl HubicStorageService::serviceUrl()
 {
-    return QUrl(QLatin1String("https://hubic.com"));
+    return QUrl(QStringLiteral("https://hubic.com"));
 }
 
 QString HubicStorageService::serviceName()

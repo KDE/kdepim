@@ -86,7 +86,7 @@ void WebKitPartHtmlWriter::end()
         insertExtraHead();
         mExtraHead.clear();
     }
-    mHtmlView->setHtml(mHtml, QUrl(QLatin1String("file:///")));
+    mHtmlView->setHtml(mHtml, QUrl(QStringLiteral("file:///")));
     mHtmlView->show();
     mHtml.clear();
 
@@ -142,7 +142,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
     // virtual loadResource() (for QTextBrowser)
 #ifndef KDEPIM_NO_WEBKIT
     QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
-    QWebElementCollection images = root.findAll(QLatin1String("img"));
+    QWebElementCollection images = root.findAll(QStringLiteral("img"));
     QWebElementCollection::iterator end(images.end());
     for (QWebElementCollection::iterator it = images.begin(); it != end; ++it) {
         QUrl url((*it).attribute(QStringLiteral("src")));
@@ -159,7 +159,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
 
 void WebKitPartHtmlWriter::insertExtraHead()
 {
-    const QString headTag(QLatin1String("<head>"));
+    const QString headTag(QStringLiteral("<head>"));
     const int index = mHtml.indexOf(headTag);
     if (index != -1) {
         mHtml.insert(index + headTag.length(), mExtraHead);

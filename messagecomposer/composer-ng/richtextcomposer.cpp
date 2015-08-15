@@ -624,7 +624,7 @@ static void insertSignatureHelper(const QString &signature,
         QString lineSep;
         if (addNewlines) {
             if (isHtml) {
-                lineSep = QLatin1String("<br>");
+                lineSep = QStringLiteral("<br>");
             } else {
                 lineSep = QLatin1Char('\n');
             }

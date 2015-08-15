@@ -82,7 +82,7 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
 PimSettingExporterWindow::~PimSettingExporterWindow()
 {
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup groupConfig = config->group(QLatin1String("Recent File"));
+    KConfigGroup groupConfig = config->group(QStringLiteral("Recent File"));
     mRecentFilesAction->saveEntries(groupConfig);
 }
 
@@ -156,7 +156,7 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     mRecentFilesAction = KStandardAction::openRecent(this, SLOT(slotRestoreFile(QUrl)), ac);
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    KConfigGroup groupConfig = config->group(QLatin1String("Recent File"));
+    KConfigGroup groupConfig = config->group(QStringLiteral("Recent File"));
     mRecentFilesAction->loadEntries(groupConfig);
 }
 

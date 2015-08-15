@@ -279,12 +279,12 @@ void MessageComposer::Util::addSendReplyForwardAction(const KMime::Message::Ptr 
 
 bool MessageComposer::Util::sendMailDispatcherIsOnline(QWidget *parent)
 {
-    Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance(QLatin1String("akonadi_maildispatcher_agent"));
+    Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance(QStringLiteral("akonadi_maildispatcher_agent"));
     if (!instance.isValid()) {
         const int rc = KMessageBox::warningYesNo(parent, i18n("The mail dispatcher is not set up, so mails cannot be sent. Do you want to create a mail dispatcher?"),
                        i18n("No mail dispatcher."), KStandardGuiItem::yes(), KStandardGuiItem::no(), QStringLiteral("no_maildispatcher"));
         if (rc == KMessageBox::Yes) {
-            const Akonadi::AgentType type = Akonadi::AgentManager::self()->type(QLatin1String("akonadi_maildispatcher_agent"));
+            const Akonadi::AgentType type = Akonadi::AgentManager::self()->type(QStringLiteral("akonadi_maildispatcher_agent"));
             Q_ASSERT(type.isValid());
             Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(type); // async. We'll have to try again later.
             job->start();

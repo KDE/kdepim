@@ -251,12 +251,12 @@ void LdapClient::Private::finishCurrentObject()
     }
 
     if (groupofnames) {
-        KLDAP::LdapAttrMap::ConstIterator it = mCurrentObject.attributes().find(QLatin1String("mail"));
+        KLDAP::LdapAttrMap::ConstIterator it = mCurrentObject.attributes().find(QStringLiteral("mail"));
         if (it == mCurrentObject.attributes().end()) {
             // No explicit mail address found so far?
             // Fine, then we use the address stored in the DN.
             QString sMail;
-            const QStringList lMail = mCurrentObject.dn().toString().split(QLatin1String(",dc="), QString::SkipEmptyParts);
+            const QStringList lMail = mCurrentObject.dn().toString().split(QStringLiteral(",dc="), QString::SkipEmptyParts);
             const int n = lMail.count();
             if (n) {
                 if (lMail.first().toLower().startsWith(QStringLiteral("cn="))) {
@@ -270,7 +270,7 @@ void LdapClient::Private::finishCurrentObject()
                             sMail.append(QLatin1Char('.'));
                         }
                     }
-                    mCurrentObject.addValue(QLatin1String("mail"), sMail.toUtf8());
+                    mCurrentObject.addValue(QStringLiteral("mail"), sMail.toUtf8());
                 }
             }
         }

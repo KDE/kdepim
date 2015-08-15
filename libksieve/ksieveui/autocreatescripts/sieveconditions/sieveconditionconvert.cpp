@@ -78,11 +78,11 @@ QString SieveConditionConvert::code(QWidget *w) const
     const QString fromMimeTypeStr = fromMimeType->code();
     result += QString::fromLatin1("%1 ").arg(fromMimeTypeStr);
 
-    const SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("to"));
+    const SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox *>(QStringLiteral("to"));
     const QString toMimeTypeStr = toMimeType->code();
     result += QString::fromLatin1("%1 ").arg(toMimeTypeStr);
 
-    const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget *>(QLatin1String("params"));
+    const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget *>(QStringLiteral("params"));
     const QString paramsStr = params->code();
     if (!paramsStr.isEmpty()) {
         result += QString::fromLatin1("%1").arg(paramsStr);
@@ -120,10 +120,10 @@ bool SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWid
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 if (index == 0) {
-                    SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("from"));
+                    SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox *>(QStringLiteral("from"));
                     fromMimeType->setCode(e.text(), name(), error);
                 } else if (index == 1) {
-                    SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("to"));
+                    SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox *>(QStringLiteral("to"));
                     toMimeType->setCode(e.text(), name(), error);
                 } else {
                     tooManyArgument(tagName, index, 2, error);
@@ -131,7 +131,7 @@ bool SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWid
                 }
                 ++index;
             } else if (tagName == QLatin1String("list")) {
-                SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget *>(QLatin1String("params"));
+                SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget *>(QStringLiteral("params"));
                 params->setCode(AutoCreateScriptUtil::listValue(e), error);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing

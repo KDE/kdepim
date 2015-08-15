@@ -87,18 +87,18 @@ MailCommon::MailFilter *FilterImporterThunderbird::parseLine(QTextStream &stream
                     QStringList lstValue;
                     lstValue << QStringLiteral("X-Priority");
                     if (value == QLatin1String("Highest")) {
-                        value = QLatin1String("1 (Highest)");
+                        value = QStringLiteral("1 (Highest)");
                     } else if (value == QLatin1String("High")) {
-                        value = QLatin1String("2 (High)");
+                        value = QStringLiteral("2 (High)");
                     } else if (value == QLatin1String("Normal")) {
-                        value = QLatin1String("3 (Normal)");
+                        value = QStringLiteral("3 (Normal)");
                     } else if (value == QLatin1String("Low")) {
-                        value = QLatin1String("4 (Low)");
+                        value = QStringLiteral("4 (Low)");
                     } else if (value == QLatin1String("Lowest")) {
-                        value = QLatin1String("5 (Lowest)");
+                        value = QStringLiteral("5 (Lowest)");
                     }
                     lstValue << value;
-                    value = lstValue.join(QLatin1String("\t"));
+                    value = lstValue.join(QStringLiteral("\t"));
                     actionName = QStringLiteral("add header");
                 } else if (actionName == QLatin1String("copy") || actionName == QLatin1String("transfer")) {
                     QUrl url = QUrl::fromLocalFile(value);
@@ -154,7 +154,7 @@ void FilterImporterThunderbird::extractConditions(const QString &line,
 {
     if (line.startsWith(QStringLiteral("AND"))) {
         filter->pattern()->setOp(SearchPattern::OpAnd);
-        const QStringList conditionsList = line.split(QLatin1String("AND "));
+        const QStringList conditionsList = line.split(QStringLiteral("AND "));
         const int numberOfCond(conditionsList.count());
         for (int i = 0; i < numberOfCond; ++i) {
             if (!conditionsList.at(i).trimmed().isEmpty()) {
@@ -163,7 +163,7 @@ void FilterImporterThunderbird::extractConditions(const QString &line,
         }
     } else if (line.startsWith(QStringLiteral("OR"))) {
         filter->pattern()->setOp(SearchPattern::OpOr);
-        const QStringList conditionsList = line.split(QLatin1String("OR "));
+        const QStringList conditionsList = line.split(QStringLiteral("OR "));
         const int numberOfCond(conditionsList.count());
         for (int i = 0; i < numberOfCond; ++i) {
             if (!conditionsList.at(i).trimmed().isEmpty()) {
@@ -330,13 +330,13 @@ bool FilterImporterThunderbird::splitConditions(const QString &cond,
     QString contentsName;
     if (fieldName == "<status>") {
         if (contents == QLatin1String("read")) {
-            contentsName = QLatin1String("Read");
+            contentsName = QStringLiteral("Read");
         } else if (contents == QLatin1String("unread")) {
-            contentsName = QLatin1String("Unread");
+            contentsName = QStringLiteral("Unread");
         } else if (contents == QLatin1String("new")) {
-            contentsName = QLatin1String("New");
+            contentsName = QStringLiteral("New");
         } else if (contents == QLatin1String("forwarded")) {
-            contentsName = QLatin1String("Forwarded");
+            contentsName = QStringLiteral("Forwarded");
         } else {
             qCDebug(MAILCOMMON_LOG) << " contents for status not implemented " << contents;
         }
@@ -392,10 +392,10 @@ QString FilterImporterThunderbird::extractActions(const QString &line,
         actionName = QStringLiteral("forward");
     } else if (line == QLatin1String("Mark read")) {
         actionName = QStringLiteral("set status");
-        value = QLatin1String("R");
+        value = QStringLiteral("R");
     } else if (line == QLatin1String("Mark unread")) {
         actionName = QStringLiteral("set status");
-        value = QLatin1String("U");   //TODO verify
+        value = QStringLiteral("U");   //TODO verify
     } else if (line == QLatin1String("Copy to folder")) {
         actionName = QStringLiteral("copy");
     } else if (line == QLatin1String("AddTag")) {
@@ -459,7 +459,7 @@ QString FilterImporterThunderbird::cleanArgument(const QString &line, const QStr
 {
     QString str = line;
     str.remove(removeStr);
-    str.remove(QLatin1String("\""));
+    str.remove(QStringLiteral("\""));
     str.remove(str.length(), 1);   //remove last "
     return str;
 }

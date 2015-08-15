@@ -68,7 +68,7 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::start(const QStringList &patterns)
 
     mPatternsToDo = patterns;
     if (mPatternsToDo.empty()) {
-        mPatternsToDo.push_back(QLatin1String(" "));    // empty list means all -> mae
+        mPatternsToDo.push_back(QStringLiteral(" "));    // empty list means all -> mae
     }
     // sure to fail the first
     // startAProcess() guard clause

@@ -135,7 +135,7 @@ static std::string email(const UserID &uid)
         if (*id == '<') {
             return stripAngleBrackets(id);
         } else {
-            return DN(id)[QLatin1String("EMAIL")].trimmed().toUtf8().constData();
+            return DN(id)[QStringLiteral("EMAIL")].trimmed().toUtf8().constData();
         }
     else {
         return std::string();
@@ -316,7 +316,7 @@ static QString formatSigningInformation(const Signature &sig, const Key &key)
 
 static QString strikeOut(const QString &str, bool strike)
 {
-    return QString(strike ? QLatin1String("<s>%1</s>") : QLatin1String("%1")).arg(str.toHtmlEscaped());
+    return QString(strike ? QStringLiteral("<s>%1</s>") : QStringLiteral("%1")).arg(str.toHtmlEscaped());
 }
 
 static QString formatInputOutputLabel(const QString &input, const QString &output, bool inputDeleted, bool outputDeleted)
@@ -576,7 +576,7 @@ static QString formatDecryptVerifyResultDetails(const DecryptionResult &dr,
     if (IsErrorOrCanceled(dr) || !relevantInDecryptVerifyContext(vr)) {
         return drDetails;
     }
-    return drDetails + (drDetails.isEmpty() ? QString() : QLatin1String("<br/>")) + formatVerificationResultDetails(vr, info, errorString);
+    return drDetails + (drDetails.isEmpty() ? QString() : QStringLiteral("<br/>")) + formatVerificationResultDetails(vr, info, errorString);
 }
 
 } // anon namespace

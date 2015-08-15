@@ -26,7 +26,7 @@
 #include <QWebFrame>
 
 using namespace MessageViewer;
-static QString IPv4_PATTERN = QLatin1String("\\b[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{0,3})?(?:\\.[0-9]{0,3})?");
+static QString IPv4_PATTERN = QStringLiteral("\\b[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{0,3})?(?:\\.[0-9]{0,3})?");
 static QString addWarningColor(const QString &url)
 {
     const QString error = QStringLiteral("<font color=#FF0000>%1</font>").arg(url);
@@ -79,7 +79,7 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
     bool foundScam = false;
     QRegExp ip4regExp;
     ip4regExp.setPattern(IPv4_PATTERN);
-    const QWebElementCollection allAnchor = rootElement.findAll(QLatin1String("a"));
+    const QWebElementCollection allAnchor = rootElement.findAll(QStringLiteral("a"));
     Q_FOREACH (const QWebElement &anchorElement, allAnchor) {
         //1) detect if title has a url and title != href
         const QString href = anchorElement.attribute(QStringLiteral("href"));
@@ -120,8 +120,8 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
             } else if (url.toString().contains(QStringLiteral("url?q="))) { //4) redirect url.
                 details += QLatin1String("<li>") + i18n("This email contains a link (%1) which has a redirection", addWarningColor(url.toString())) + QLatin1String("</li>");
                 foundScam = true;
-            } else if ((url.toString().count(QLatin1String("http://")) > 1) ||
-                       (url.toString().count(QLatin1String("https://")) > 1)) { //5) more that 1 http in url.
+            } else if ((url.toString().count(QStringLiteral("http://")) > 1) ||
+                       (url.toString().count(QStringLiteral("https://")) > 1)) { //5) more that 1 http in url.
                 if (!url.toString().contains(QStringLiteral("kmail:showAuditLog"))) {
                     details += QLatin1String("<li>") + i18n("This email contains a link (%1) which contains multiple http://. This is often the case in scam emails.", addWarningColor(url.toString())) + QLatin1String("</li>");
                     foundScam = true;
@@ -137,7 +137,7 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
         }
     }
     //3) has form
-    if (rootElement.findAll(QLatin1String("form")).count() > 0) {
+    if (rootElement.findAll(QStringLiteral("form")).count() > 0) {
         details += QLatin1String("<li></b>") + i18n("Message contains form element. This is often the case in scam emails.") + QLatin1String("</b></li>");
         foundScam = true;
     }

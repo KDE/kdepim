@@ -25,7 +25,7 @@
 QColor ComposerEditorNG::Utils::convertRgbToQColor(QString rgb)
 {
     rgb.chop(1);
-    rgb.remove(QLatin1String("rgb("));
+    rgb.remove(QStringLiteral("rgb("));
     rgb = rgb.simplified();
     const QStringList colorLst = rgb.split(QLatin1Char(','));
     if (colorLst.count() == 3) {
@@ -38,7 +38,7 @@ QColor ComposerEditorNG::Utils::convertRgbToQColor(QString rgb)
 QUrl ComposerEditorNG::Utils::guessUrlFromString(const QString &string)
 {
     const QString urlStr = string.trimmed();
-    const QRegExp test(QLatin1String("^[a-zA-Z]+\\:.*"));
+    const QRegExp test(QStringLiteral("^[a-zA-Z]+\\:.*"));
 
     // Check if it looks like a qualified URL. Try parsing it and see.
     const bool hasSchema = test.exactMatch(urlStr);
@@ -59,7 +59,7 @@ QUrl ComposerEditorNG::Utils::guessUrlFromString(const QString &string)
         const int dotIndex = urlStr.indexOf(QLatin1Char('.'));
         if (dotIndex != -1) {
             const QString prefix = urlStr.left(dotIndex).toLower();
-            const QString schema = (prefix == QLatin1String("ftp")) ? prefix : QLatin1String("http");
+            const QString schema = (prefix == QLatin1String("ftp")) ? prefix : QStringLiteral("http");
             QUrl url(schema + QLatin1String("://") + urlStr, QUrl::TolerantMode);
             if (url.isValid()) {
                 return url;

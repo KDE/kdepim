@@ -29,7 +29,7 @@
 
 using namespace KSieveUi;
 SieveActionConvert::SieveActionConvert(QObject *parent)
-    : SieveAction(QLatin1String("convert"), i18n("Convert"), parent)
+    : SieveAction(QStringLiteral("convert"), i18n("Convert"), parent)
 {
 }
 
@@ -82,10 +82,10 @@ bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 if (index == 0) {
-                    SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("from"));
+                    SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox *>(QStringLiteral("from"));
                     fromMimeType->setCode(e.text(), name(), error);
                 } else if (index == 1) {
-                    SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox *>(QLatin1String("to"));
+                    SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox *>(QStringLiteral("to"));
                     toMimeType->setCode(e.text(), name(), error);
                 } else {
                     tooManyArgument(tagName, index, 2, error);
@@ -93,7 +93,7 @@ bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
                 }
                 ++index;
             } else if (tagName == QLatin1String("list")) {
-                SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget *>(QLatin1String("params"));
+                SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget *>(QStringLiteral("params"));
                 params->setCode(AutoCreateScriptUtil::listValue(e), error);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing

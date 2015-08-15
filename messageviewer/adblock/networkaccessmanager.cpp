@@ -74,7 +74,7 @@ MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent)
     QString c = QLocale(lang).name();
 
     if (c == QLatin1String("C")) {
-        c = QLatin1String("en-US");
+        c = QStringLiteral("en-US");
     } else {
         c = c.replace(QLatin1Char('_') , QLatin1Char('-'));
     }
@@ -122,7 +122,7 @@ static void hideBlockedElements(const QUrl &url, QWebElementCollection &collecti
         const QUrl baseUrl((*it).webFrame()->baseUrl());
         QString src = (*it).attribute(QStringLiteral("src"));
         if (src.isEmpty()) {
-            src = (*it).evaluateJavaScript(QLatin1String("this.src")).toString();
+            src = (*it).evaluateJavaScript(QStringLiteral("this.src")).toString();
         }
         if (src.isEmpty()) {
             continue;

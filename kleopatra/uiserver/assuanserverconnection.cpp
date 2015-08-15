@@ -396,7 +396,7 @@ private:
         AssuanServerConnection::Private &conn = *static_cast<AssuanServerConnection::Private *>(assuan_get_pointer(ctx_));
 
         const QString str = QString::fromUtf8(line);
-        QRegExp rx(QLatin1String("(\\d+)(?:\\s+(.*))?"));
+        QRegExp rx(QStringLiteral("(\\d+)(?:\\s+(.*))?"));
         if (!rx.exactMatch(str)) {
             static const QString errorString = i18n("Parse error");
             return assuan_process_done_msg(ctx_, gpg_error(GPG_ERR_ASS_SYNTAX), errorString);
@@ -803,7 +803,7 @@ private:
 
     static QByteArray dumpStringList(const QStringList &sl)
     {
-        return sl.join(QLatin1String("\n")).toUtf8();
+        return sl.join(QStringLiteral("\n")).toUtf8();
     }
 
     template <typename T_container>

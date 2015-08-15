@@ -467,7 +467,7 @@ static void printStat(const QString &message, int arg)
 {
     if (arg > 0) {
         print(message.leftJustified(50), false);
-        const QString s = QLatin1String(": %1");
+        const QString s = QStringLiteral(": %1");
         print(s.arg(arg));
     }
 }
@@ -475,7 +475,7 @@ static void printStat(const QString &message, int arg)
 void CalendarJanitor::sanityCheck8()
 {
     beginTest(i18n("Gathering statistics..."));
-    print(QLatin1String("\n"));
+    print(QStringLiteral("\n"));
 
     int numOldAlarms = 0;
     int numAttachments = 0;
@@ -627,11 +627,11 @@ void CalendarJanitor::printFound(const Akonadi::Item &item, const QString &expla
     KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
     m_numDamaged++;
     if (m_numDamaged == 1) {
-        print(QLatin1String(" [!!]"));
+        print(QStringLiteral(" [!!]"));
         if (!explanation.isEmpty()) {
-            print(QLatin1String("    "), false);
+            print(QStringLiteral("    "), false);
             print(explanation, false);
-            print(QLatin1String(":\n"));
+            print(QStringLiteral(":\n"));
         }
     }
     print(QLatin1String("    * ") + i18n("Found buggy incidence:"));
@@ -649,9 +649,9 @@ void CalendarJanitor::beginTest(const QString &message)
 void CalendarJanitor::endTest(bool printEnabled, const QString fixExplanation, const QString &fixExplanation2)
 {
     if (m_numDamaged == 0 && printEnabled) {
-        print(QLatin1String(" [OK]"));
+        print(QStringLiteral(" [OK]"));
     } else if (m_numDamaged > 0) {
-        print(QLatin1String("\n    "), false);
+        print(QStringLiteral("\n    "), false);
         if (m_options.action() == Options::ActionScanAndFix) {
             print(fixExplanation2);
         } else {

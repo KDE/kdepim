@@ -103,7 +103,7 @@ SearchRule::Function TextRuleWidgetHandler::currentFunction(
     const QStackedWidget *functionStack) const
 {
     const PimCommon::MinimumComboBox *funcCombo =
-        functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("textRuleFuncCombo"));
+        functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("textRuleFuncCombo"));
 
     if (funcCombo && funcCombo->currentIndex() >= 0) {
         return TextFunctions[funcCombo->currentIndex()].id;
@@ -126,7 +126,7 @@ QString TextRuleWidgetHandler::currentValue(const QStackedWidget *valueStack,
         SearchRule::Function) const
 {
     //in other cases of func it is a lineedit
-    const RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+    const RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
 
     if (lineEdit) {
         return lineEdit->text();
@@ -169,7 +169,7 @@ void TextRuleWidgetHandler::reset(QStackedWidget *functionStack,
                                   QStackedWidget *valueStack) const
 {
     // reset the function combo box
-    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("textRuleFuncCombo"));
+    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("textRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -178,7 +178,7 @@ void TextRuleWidgetHandler::reset(QStackedWidget *functionStack,
     }
 
     // reset the value widget
-    RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+    RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
     if (lineEdit) {
         lineEdit->blockSignals(true);
         lineEdit->clear();
@@ -207,7 +207,7 @@ bool TextRuleWidgetHandler::setRule(QStackedWidget *functionStack,
         }
     }
 
-    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox *>(QLatin1String("textRuleFuncCombo"));
+    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox *>(QStringLiteral("textRuleFuncCombo"));
 
     if (funcCombo) {
         funcCombo->blockSignals(true);
@@ -220,7 +220,7 @@ bool TextRuleWidgetHandler::setRule(QStackedWidget *functionStack,
         functionStack->setCurrentWidget(funcCombo);
     }
     RegExpLineEdit *lineEdit =
-        valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+        valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
 
     if (lineEdit) {
         lineEdit->blockSignals(true);
@@ -240,16 +240,16 @@ bool TextRuleWidgetHandler::update(const QByteArray &,
                                    QStackedWidget *valueStack) const
 {
     // raise the correct function widget
-    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QLatin1String("textRuleFuncCombo")));
+    functionStack->setCurrentWidget(functionStack->findChild<QWidget *>(QStringLiteral("textRuleFuncCombo")));
 
     // raise the correct value widget
     SearchRule::Function func = currentFunction(functionStack);
     if (func == SearchRule::FuncIsInAddressbook ||
             func == SearchRule::FuncIsNotInAddressbook) {
-        valueStack->setCurrentWidget(valueStack->findChild<QWidget *>(QLatin1String("textRuleValueHider")));
+        valueStack->setCurrentWidget(valueStack->findChild<QWidget *>(QStringLiteral("textRuleValueHider")));
     } else {
         RegExpLineEdit *lineEdit =
-            valueStack->findChild<RegExpLineEdit *>(QLatin1String("regExpLineEdit"));
+            valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
 
         if (lineEdit) {
             lineEdit->showEditButton(func == SearchRule::FuncRegExp ||

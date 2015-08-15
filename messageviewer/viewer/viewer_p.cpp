@@ -178,7 +178,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mHeaderStyle(0),
       mUpdateReaderWinTimer(0),
       mResizeTimer(0),
-      mOldGlobalOverrideEncoding(QLatin1String("---")),   // init with dummy value
+      mOldGlobalOverrideEncoding(QStringLiteral("---")),   // init with dummy value
       mMsgDisplay(true),
       mCSSHelper(0),
       mMainWindow(mainWindow),
@@ -233,7 +233,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     mShareServiceManager = new PimCommon::ShareServiceUrlManager(this);
 
     mThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Mail, QString::fromLatin1("header.desktop"), mActionCollection, QStringLiteral("messageviewer/themes/"));
-    mThemeManager->setDownloadNewStuffConfigFile(QLatin1String("messageviewer_header_themes.knsrc"));
+    mThemeManager->setDownloadNewStuffConfigFile(QStringLiteral("messageviewer_header_themes.knsrc"));
     connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
     connect(mThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
 
@@ -343,8 +343,8 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
             return;
         }
         if (node->contentType()->mimeType() == "message/external-body") {
-            if (node->contentType()->hasParameter(QLatin1String("url"))) {
-                const QString url = node->contentType()->parameter(QLatin1String("url"));
+            if (node->contentType()->hasParameter(QStringLiteral("url"))) {
+                const QString url = node->contentType()->parameter(QStringLiteral("url"));
                 KRun::runUrl(QUrl(url), QStringLiteral("text/html"), q);
                 return;
             }
@@ -432,7 +432,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content *node, bool showWarning)
     if (showWarning && KMessageBox::warningContinueCancel(mMainWindow,
             i18n("Deleting an attachment might invalidate any digital signature on this message."),
             i18n("Delete Attachment"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
-            QLatin1String("DeleteAttachmentSignatureWarning"))
+            QStringLiteral("DeleteAttachmentSignatureWarning"))
             != KMessageBox::Continue) {
         return false; //cancelled
     }
@@ -858,7 +858,7 @@ void ViewerPrivate::displayMessage()
         const QColor background = KColorScheme(QPalette::Active, KColorScheme::View).background(KColorScheme::NegativeBackground).color();
 
         htmlWriter()->queue(QString::fromLatin1("<div style=\"background:%1;color:%2;border:1px solid %3\">%4</div>").arg(background.name(), foreground.name(), foreground.name(), attr->message().toHtmlEscaped()));
-        htmlWriter()->queue(QLatin1String("<p></p>"));
+        htmlWriter()->queue(QStringLiteral("<p></p>"));
     }
 
     parseContent(mMessage.data());
@@ -867,7 +867,7 @@ void ViewerPrivate::displayMessage()
 #endif
     mColorBar->update();
 
-    htmlWriter()->queue(QLatin1String("</body></html>"));
+    htmlWriter()->queue(QStringLiteral("</body></html>"));
     connect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(injectAttachments()), Qt::UniqueConnection);
     connect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(toggleFullAddressList()), Qt::UniqueConnection);
     connect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotMessageRendered()), Qt::UniqueConnection);
@@ -1437,7 +1437,7 @@ void ViewerPrivate::setMessagePart(KMime::Content *node)
 
         parseContent(node);
 
-        htmlWriter()->queue(QLatin1String("</body></html>"));
+        htmlWriter()->queue(QStringLiteral("</body></html>"));
         htmlWriter()->flush();
     }
 }
@@ -2086,11 +2086,11 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
 
             QString margin;
             if (node != mMessage.data() || headerStyle() != HeaderStyle::enterprise()) {
-                margin = QLatin1String("padding:2px; margin:2px; ");
+                margin = QStringLiteral("padding:2px; margin:2px; ");
             }
-            QString align = QLatin1String("left");
+            QString align = QStringLiteral("left");
             if (headerStyle() == HeaderStyle::enterprise()) {
-                align = QLatin1String("right");
+                align = QStringLiteral("right");
             }
             const bool result = (node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.data());
             if (result)
@@ -2115,7 +2115,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
             if (!info.icon.isEmpty()) {
                 QImage tmpImg(info.icon);
                 if (tmpImg.width() > 48 || tmpImg.height() > 48) {
-                    imageMaxSize = QLatin1String("width=\"48\" height=\"48\"");
+                    imageMaxSize = QStringLiteral("width=\"48\" height=\"48\"");
                 }
             }
             html += QString::fromLatin1("<img %1 style=\"vertical-align:middle;\" src=\"").arg(imageMaxSize) + info.icon + QLatin1String("\"/>&nbsp;");
@@ -3040,8 +3040,8 @@ void ViewerPrivate::setShowFullCcAddressList(bool showFullCcAddressList)
 
 void ViewerPrivate::toggleFullAddressList()
 {
-    toggleFullAddressList(QLatin1String("To"));
-    toggleFullAddressList(QLatin1String("Cc"));
+    toggleFullAddressList(QStringLiteral("To"));
+    toggleFullAddressList(QStringLiteral("Cc"));
 }
 
 QString ViewerPrivate::recipientsQuickListLinkHtml(bool doShow, const QString &field)

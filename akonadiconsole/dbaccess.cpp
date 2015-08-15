@@ -60,7 +60,7 @@ public:
 
     QString saveDir(const char *resource, const QString &relPath = QString())
     {
-        QString fullRelPath = QLatin1String("akonadi");
+        QString fullRelPath = QStringLiteral("akonadi");
         if (ServerManager::hasInstanceIdentifier()) {
             fullRelPath += QLatin1String("/instance/") + ServerManager::instanceIdentifier();
         }

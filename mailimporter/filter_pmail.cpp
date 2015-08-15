@@ -69,11 +69,11 @@ void FilterPMail::importMails(const QString  &chosenDir)
     }
 
     filterInfo()->addInfoLogEntry(i18n("Importing new mail files ('.cnm')..."));
-    processFiles(QLatin1String("*.[cC][nN][mM]"), &FilterPMail::importNewMessage);
+    processFiles(QStringLiteral("*.[cC][nN][mM]"), &FilterPMail::importNewMessage);
     filterInfo()->addInfoLogEntry(i18n("Importing mail folders ('.pmm')..."));
-    processFiles(QLatin1String("*.[pP][mM][mM]"), &FilterPMail::importMailFolder);
+    processFiles(QStringLiteral("*.[pP][mM][mM]"), &FilterPMail::importMailFolder);
     filterInfo()->addInfoLogEntry(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
-    processFiles(QLatin1String("*.[mM][bB][xX]"), &FilterPMail::importUnixMailFolder);
+    processFiles(QStringLiteral("*.[mM][bB][xX]"), &FilterPMail::importUnixMailFolder);
 
     filterInfo()->addInfoLogEntry(i18n("Finished importing emails from %1", mailDir()));
     filterInfo()->setCurrent(100);
@@ -114,7 +114,7 @@ void FilterPMail::processFiles(const QString &mask, void(FilterPMail::* workFunc
 /** this function imports one *.CNM message */
 void FilterPMail::importNewMessage(const QString &file)
 {
-    QString destFolder(QLatin1String("PegasusMail-Import/New Messages"));
+    QString destFolder(QStringLiteral("PegasusMail-Import/New Messages"));
     filterInfo()->setTo(destFolder);
 
     /* comment by Danny Kukawka:
@@ -225,13 +225,13 @@ void FilterPMail::importUnixMailFolder(const QString &file)
     } pmg_head;
 
     QFile f;
-    QString folder(QLatin1String("PegasusMail-Import/")), s(file), separate;
+    QString folder(QStringLiteral("PegasusMail-Import/")), s(file), separate;
     QByteArray line(MAX_LINE, '\0');
     int n = 0, l = 0;
 
     /** Get the folder name */
-    s.replace(QRegExp(QLatin1String("mbx$")), QStringLiteral("pmg"));
-    s.replace(QRegExp(QLatin1String("MBX$")), QStringLiteral("PMG"));
+    s.replace(QRegExp(QStringLiteral("mbx$")), QStringLiteral("pmg"));
+    s.replace(QRegExp(QStringLiteral("MBX$")), QStringLiteral("PMG"));
     f.setFileName(s);
     if (! f.open(QIODevice::ReadOnly)) {
         filterInfo()->alert(i18n("Unable to open %1, skipping", s));

@@ -185,7 +185,7 @@ void TranslatorWidget::writeConfig()
 {
     KConfigGroup myGroup(KSharedConfig::openConfig(), "TranslatorWidget");
     if (d->languageSettingsChanged) {
-        myGroup.writeEntry(QLatin1String("FromLanguage"), d->from->itemData(d->from->currentIndex()).toString());
+        myGroup.writeEntry(QStringLiteral("FromLanguage"), d->from->itemData(d->from->currentIndex()).toString());
         myGroup.writeEntry("ToLanguage", d->to->itemData(d->to->currentIndex()).toString());
     }
     myGroup.writeEntry("mainSplitter", d->splitter->sizes());

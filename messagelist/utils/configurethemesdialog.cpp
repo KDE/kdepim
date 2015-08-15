@@ -432,7 +432,7 @@ void ConfigureThemesDialog::Private::importThemeButtonClicked()
     if (!filename.isEmpty()) {
         KConfig config(filename);
 
-        if (config.hasGroup(QLatin1String("MessageListView::Themes"))) {
+        if (config.hasGroup(QStringLiteral("MessageListView::Themes"))) {
             KConfigGroup grp(&config, QStringLiteral("MessageListView::Themes"));
             const int cnt = grp.readEntry("Count", 0);
             int idx = 0;

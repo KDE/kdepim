@@ -85,7 +85,7 @@ Module::Module()
 {
     pgp = 0;
 
-    config = new KConfig(QLatin1String("kpgprc"));
+    config = new KConfig(QStringLiteral("kpgprc"));
 
     init();
 }
@@ -222,7 +222,7 @@ Module::prepare(bool needPassPhrase, Block *block)
             // the user uses gpg-agent which asks itself for the passphrase
             qCDebug(KPGP_LOG) << "user uses gpg-agent -> don't ask for passphrase";
             // set dummy passphrase (because else signing doesn't work -> FIXME)
-            setPassPhrase(QLatin1String("dummy"));
+            setPassPhrase(QStringLiteral("dummy"));
         } else {
             QString ID;
             if (block) {
@@ -594,7 +594,7 @@ Module::getEncryptionKeys(KeyIDList &encryptionKeyIds,
     qCDebug(KPGP_LOG) << "recipientKeyIds = (";
     QVector<KeyIDList>::const_iterator kit;
     for (kit = recipientKeyIds.constBegin(); kit != recipientKeyIds.constEnd(); ++kit) {
-        qCDebug(KPGP_LOG) << "( 0x" << (*kit).toStringList().join(QLatin1String(", 0x"))
+        qCDebug(KPGP_LOG) << "( 0x" << (*kit).toStringList().join(QStringLiteral(", 0x"))
                           << " ),\n";
     }
     qCDebug(KPGP_LOG) << ")";
@@ -1283,7 +1283,7 @@ Module::getEncryptionKeys(const QString &person)
     KeyIDList keyIds = keysForAddress(address);
     if (!keyIds.isEmpty()) {
         qCDebug(KPGP_LOG) << "Using encryption keys 0x"
-                          << keyIds.toStringList().join(QLatin1String(", 0x"))
+                          << keyIds.toStringList().join(QStringLiteral(", 0x"))
                           << "for" << person;
         // Check if all of the keys are a trusted and valid encryption keys
         bool keysOk = true;

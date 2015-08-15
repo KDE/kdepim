@@ -128,7 +128,7 @@ bool Filter::addAkonadiMessage(const Akonadi::Collection &collection,
 {
     Akonadi::Item item;
 
-    item.setMimeType(QLatin1String("message/rfc822"));
+    item.setMimeType(QStringLiteral("message/rfc822"));
 
     if (status.isOfUnknownStatus()) {
         KMime::Headers::Base *statusHeaders = message->headerByType("X-Status");
@@ -388,9 +388,9 @@ int Filter::countDirectory(const QDir &dir, bool searchHiddenDirectory)
     int countDir = 0;
     QStringList subDirs;
     if (searchHiddenDirectory) {
-        subDirs = dir.entryList(QStringList(QLatin1String("*")), QDir::Dirs | QDir::Hidden, QDir::Name);
+        subDirs = dir.entryList(QStringList(QStringLiteral("*")), QDir::Dirs | QDir::Hidden, QDir::Name);
     } else {
-        subDirs = dir.entryList(QStringList(QLatin1String("[^\\.]*")), QDir::Dirs, QDir::Name);    // Removal of . and ..
+        subDirs = dir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Dirs, QDir::Name);    // Removal of . and ..
     }
 
     QStringList::ConstIterator end = subDirs.constEnd();

@@ -232,7 +232,7 @@ void Manager::saveAggregationForStorageModel(const QString &modelId, const QStri
     }
 
     if (!storageUsesPrivateAggregation) {
-        conf.writeEntry(QLatin1String("DefaultSet"), id);
+        conf.writeEntry(QStringLiteral("DefaultSet"), id);
     }
 }
 
@@ -553,7 +553,7 @@ void Manager::saveThemeForStorageModel(const QString &storageModelIndex, const Q
     }
 
     if (!storageUsesPrivateTheme) {
-        conf.writeEntry(QLatin1String("DefaultSet"), id);
+        conf.writeEntry(QStringLiteral("DefaultSet"), id);
     }
 }
 

@@ -108,7 +108,7 @@ QString SieveConditionSpamTest::serverNeedsCapability() const
 
 QStringList SieveConditionSpamTest::needRequires(QWidget *w) const
 {
-    const SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox *>(QLatin1String("comparator"));
+    const SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox *>(QStringLiteral("comparator"));
     QStringList lst;
     lst << QStringLiteral("spamtest") << QStringLiteral("relational") << comparator->require();
     if (mHasSpamTestPlusSupport) {
@@ -137,7 +137,7 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
                         QDomElement relationalElement = node.toElement();
                         if (!relationalElement.isNull()) {
                             if (relationalElement.tagName() == QLatin1String("str")) {
-                                SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType *>(QLatin1String("relation"));
+                                SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType *>(QStringLiteral("relation"));
                                 relation->setCode(AutoCreateScriptUtil::tagValue(tagValue), relationalElement.text(), name(), error);
                             }
                         }
@@ -148,17 +148,17 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
                         QDomElement comparatorElement = node.toElement();
                         if (!comparatorElement.isNull()) {
                             if (comparatorElement.tagName() == QLatin1String("str")) {
-                                SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox *>(QLatin1String("comparator"));
+                                SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox *>(QStringLiteral("comparator"));
                                 comparator->setCode(comparatorElement.text(), name(), error);
                             }
                         }
                     }
                 } else if (tagValue == QLatin1String("percent")) {
                     if (mHasSpamTestPlusSupport) {
-                        QCheckBox *checkbox = w->findChild<QCheckBox *>(QLatin1String("percent"));
+                        QCheckBox *checkbox = w->findChild<QCheckBox *>(QStringLiteral("percent"));
                         checkbox->setChecked(true);
                     } else {
-                        serverDoesNotSupportFeatures(QLatin1String("percent"), error);
+                        serverDoesNotSupportFeatures(QStringLiteral("percent"), error);
                         qCDebug(LIBKSIEVE_LOG) << " SieveConditionSpamTest::setParamWidgetValue server has not percent support";
                     }
                 } else {
@@ -166,7 +166,7 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
                     qCDebug(LIBKSIEVE_LOG) << " SieveConditionSpamTest::setParamWidgetValue unknown tagvalue " << tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
-                QSpinBox *spinbox = w->findChild<QSpinBox *>(QLatin1String("value"));
+                QSpinBox *spinbox = w->findChild<QSpinBox *>(QStringLiteral("value"));
                 spinbox->setValue(e.text().toInt());
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing

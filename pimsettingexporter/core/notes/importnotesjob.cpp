@@ -137,7 +137,7 @@ void ImportNotesJob::restoreResources()
                         //TODO  adapt directory name too
                         extractZipFile(file, copyToDirName, newUrl.path());
                     }
-                    settings.insert(QLatin1String("Path"), newUrl.path());
+                    settings.insert(QStringLiteral("Path"), newUrl.path());
 
                     const QString agentConfigFile = value.akonadiAgentConfigFile;
                     if (!agentConfigFile.isEmpty()) {

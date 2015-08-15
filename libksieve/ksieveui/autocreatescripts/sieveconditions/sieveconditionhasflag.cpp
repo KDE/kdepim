@@ -81,20 +81,20 @@ QWidget *SieveConditionHasFlag::createParamWidget(QWidget *parent) const
 
 QString SieveConditionHasFlag::code(QWidget *w) const
 {
-    const SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
+    const SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("matchtype"));
     bool isNegative = false;
     const QString matchString = matchTypeCombo->code(isNegative);
 
     QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("hasflag %1").arg(matchString);
 
     if (hasVariableSupport) {
-        const QLineEdit *variableName = w->findChild<QLineEdit *>(QLatin1String("variablename"));
+        const QLineEdit *variableName = w->findChild<QLineEdit *>(QStringLiteral("variablename"));
         const QString variableNameStr = variableName->text();
         if (!variableNameStr.isEmpty()) {
             result += QLatin1String(" \"") + variableNameStr + QLatin1Char('"');
         }
 
-        const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
+        const QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
         const QString valueStr = value->text();
         result += QLatin1String(" \"") + valueStr + QLatin1Char('"');
     }
@@ -143,7 +143,7 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
-                SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox *>(QLatin1String("matchtype"));
+                SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox *>(QStringLiteral("matchtype"));
                 matchTypeCombo->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 strList << e.text();
@@ -160,15 +160,15 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
     }
     switch (strList.count()) {
     case 1: {
-        QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
+        QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
         value->setText(strList.at(0));
         break;
     }
     case 2: {
         if (hasVariableSupport) {
-            QLineEdit *variableName = w->findChild<QLineEdit *>(QLatin1String("variablename"));
+            QLineEdit *variableName = w->findChild<QLineEdit *>(QStringLiteral("variablename"));
             variableName->setText(strList.at(0));
-            QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
+            QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
             value->setText(strList.at(1));
         } else {
             qCDebug(LIBKSIEVE_LOG) << " SieveConditionHasFlag has not variable support";

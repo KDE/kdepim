@@ -36,12 +36,12 @@ HubicJob::HubicJob(QObject *parent)
     mClientId = PimCommon::StorageServiceJobConfig::self()->hubicClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->hubicClientSecret();
     mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
-    mServiceUrl = QLatin1String("https://api.hubic.com");
-    mApiUrl = QLatin1String("https://api.hubic.com");
-    mAuthorizePath = QLatin1String("/oauth/auth/");
-    mPathToken = QLatin1String("/oauth/token/");
-    mCurrentAccountInfoPath = QLatin1String("/1.0/account/usage");
-    mSwiftTokenPath = QLatin1String("/1.0/account/credentials");
+    mServiceUrl = QStringLiteral("https://api.hubic.com");
+    mApiUrl = QStringLiteral("https://api.hubic.com");
+    mAuthorizePath = QStringLiteral("/oauth/auth/");
+    mPathToken = QStringLiteral("/oauth/token/");
+    mCurrentAccountInfoPath = QStringLiteral("/1.0/account/usage");
+    mSwiftTokenPath = QStringLiteral("/1.0/account/credentials");
 }
 
 HubicJob::~HubicJob()
@@ -61,7 +61,7 @@ void HubicJob::createServiceFolder()
     mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolderAction;
     mError = false;
     //TODO
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     qCDebug(PIMCOMMON_LOG) << " not implemented";
     deleteLater();
 }
@@ -291,7 +291,7 @@ void HubicJob::parseAccountInfo(const QString &data)
 void HubicJob::refreshToken()
 {
     mActionType = PimCommon::StorageServiceAbstract::AccessTokenAction;
-    QNetworkRequest request(QUrl(QLatin1String("https://api.hubic.com/oauth/token/")));
+    QNetworkRequest request(QUrl(QStringLiteral("https://api.hubic.com/oauth/token/")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QUrl postData;
     postData.addQueryItem(QStringLiteral("refresh_token"), mRefreshToken);
@@ -464,7 +464,7 @@ void HubicJob::parseCreateServiceFolder(const QString &data)
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qCDebug(PIMCOMMON_LOG) << " info" << info;
 #endif
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT actionFailed(QStringLiteral("Not Implemented"));
     deleteLater();
 }
 

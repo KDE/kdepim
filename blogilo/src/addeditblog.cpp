@@ -224,7 +224,7 @@ void AddEditBlog::gotHtml(KJob *job)
         qCDebug(BLOGILO_LOG) << " rel=\"openid.server\" href=\"http://www.livejournal.com/openid/server.bml\" matched";
         d->mFetchAPITimer->deleteLater();
         d->ui.comboApi->setCurrentIndex(0);
-        d->ui.txtUrl->setText(QLatin1String("http://www.liverjournal.com/interface/blogger/"));
+        d->ui.txtUrl->setText(QStringLiteral("http://www.liverjournal.com/interface/blogger/"));
         d->ui.txtId->setText(d->ui.txtUser->text());
         hideWaitWidget();
         return;

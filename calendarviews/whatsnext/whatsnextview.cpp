@@ -71,7 +71,7 @@ int WhatsNextView::currentDateCount() const
 void WhatsNextView::createTaskRow(KIconLoader *kil)
 {
     QString ipath;
-    kil->loadIcon(QLatin1String("view-calendar-tasks"), KIconLoader::NoGroup, 22,
+    kil->loadIcon(QStringLiteral("view-calendar-tasks"), KIconLoader::NoGroup, 22,
                   KIconLoader::DefaultState, QStringList(), &ipath);
     mText += QLatin1String("<h2><img src=\"");
     mText += ipath;
@@ -116,7 +116,7 @@ void WhatsNextView::updateView()
 
     if (events.count() > 0) {
         mText += QLatin1String("<p></p>");
-        kil->loadIcon(QLatin1String("view-calendar-day"), KIconLoader::NoGroup, 22,
+        kil->loadIcon(QStringLiteral("view-calendar-day"), KIconLoader::NoGroup, 22,
                       KIconLoader::DefaultState, QStringList(), &ipath);
         mText += QLatin1String("<h2><img src=\"");
         mText += ipath;
@@ -197,7 +197,7 @@ void WhatsNextView::updateView()
             if (me->status() == KCalCore::Attendee::NeedsAction && me->RSVP()) {
                 if (replies == 0) {
                     mText += QLatin1String("<p></p>");
-                    kil->loadIcon(QLatin1String("mail-reply-sender"), KIconLoader::NoGroup, 22,
+                    kil->loadIcon(QStringLiteral("mail-reply-sender"), KIconLoader::NoGroup, 22,
                                   KIconLoader::DefaultState, QStringList(), &ipath);
                     mText += QLatin1String("<h2><img src=\"");
                     mText += ipath;
@@ -217,7 +217,7 @@ void WhatsNextView::updateView()
             if (me->status() == KCalCore::Attendee::NeedsAction && me->RSVP()) {
                 if (replies == 0) {
                     mText += QLatin1String("<p></p>");
-                    kil->loadIcon(QLatin1String("mail-reply-sender"), KIconLoader::NoGroup, 22,
+                    kil->loadIcon(QStringLiteral("mail-reply-sender"), KIconLoader::NoGroup, 22,
                                   KIconLoader::DefaultState, QStringList(), &ipath);
                     mText += QLatin1String("<h2><img src=\"");
                     mText += ipath;

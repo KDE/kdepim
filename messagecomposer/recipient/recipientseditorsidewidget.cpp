@@ -116,7 +116,7 @@ void RecipientsEditorSideWidget::setTotal(int recipients, int lines)
 
 void RecipientsEditorSideWidget::updateTotalToolTip()
 {
-    QString text = QLatin1String("<qt>");
+    QString text = QStringLiteral("<qt>");
 
     QString to;
     QString cc;

@@ -365,7 +365,7 @@ Akonadi::Collection MailCommon::Util::parentCollectionFromItem(const Akonadi::It
 QString MailCommon::Util::realFolderPath(const QString &path)
 {
     QString realPath(path);
-    realPath.remove(QLatin1String(".directory"));
+    realPath.remove(QStringLiteral(".directory"));
     realPath.replace(QLatin1String("/."), QStringLiteral("/"));
     if (!realPath.isEmpty() && (realPath.at(0) == QLatin1Char('.'))) {
         realPath.remove(0, 1);   //remove first "."

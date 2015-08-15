@@ -324,29 +324,29 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                     //imapx://name@pop3.xx.org:993/;security-method=ssl-on-alternate-port;namespace;shell-command=ssh%20-C%20-l%20%25u%20%25h%20exec%20/usr/sbin/imapd%20;use-shell-command=true
                     if (scheme == QLatin1String("imap") || scheme == QLatin1String("imapx")) {
                         if (port > 0) {
-                            settings.insert(QLatin1String("ImapPort"), port);
+                            settings.insert(QStringLiteral("ImapPort"), port);
                         }
                         //Perhaps imapx is specific don't know
                         if (intervalCheck) {
-                            settings.insert(QLatin1String("IntervalCheckEnabled"), true);
+                            settings.insert(QStringLiteral("IntervalCheckEnabled"), true);
                         }
                         if (interval > -1) {
-                            settings.insert(QLatin1String("IntervalCheckTime"), interval);
+                            settings.insert(QStringLiteral("IntervalCheckTime"), interval);
                         }
 
                         bool found = false;
                         const QString securityMethod = getSecurityMethod(listArgument, found);
                         if (found) {
                             if (securityMethod == QLatin1String("none")) {
-                                settings.insert(QLatin1String("Safety"), QStringLiteral("None"));
+                                settings.insert(QStringLiteral("Safety"), QStringLiteral("None"));
                                 //Nothing
                             } else if (securityMethod == QLatin1String("ssl-on-alternate-port")) {
-                                settings.insert(QLatin1String("Safety"), QStringLiteral("SSL"));
+                                settings.insert(QStringLiteral("Safety"), QStringLiteral("SSL"));
                             } else {
                                 qCDebug(IMPORTWIZARD_LOG) << " security method unknown : " << path;
                             }
                         } else {
-                            settings.insert(QLatin1String("Safety"), QStringLiteral("STARTTLS"));
+                            settings.insert(QStringLiteral("Safety"), QStringLiteral("STARTTLS"));
                         }
 
                         addAuth(settings, QStringLiteral("Authentication"), userName);
@@ -356,7 +356,7 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                         addToManualCheck(agentIdentifyName, enableManualCheck);
                     } else if (scheme == QLatin1String("pop")) {
                         if (port > 0) {
-                            settings.insert(QLatin1String("Port"), port);
+                            settings.insert(QStringLiteral("Port"), port);
                         }
                         bool found = false;
                         const QString securityMethod = getSecurityMethod(listArgument, found);
@@ -364,22 +364,22 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                             if (securityMethod == QLatin1String("none")) {
                                 //Nothing
                             } else if (securityMethod == QLatin1String("ssl-on-alternate-port")) {
-                                settings.insert(QLatin1String("UseSSL"), true);
+                                settings.insert(QStringLiteral("UseSSL"), true);
                             } else {
                                 qCDebug(IMPORTWIZARD_LOG) << " security method unknown : " << path;
                             }
                         } else {
-                            settings.insert(QLatin1String("UseTLS"), true);
+                            settings.insert(QStringLiteral("UseTLS"), true);
                         }
 
                         if (intervalCheck) {
-                            settings.insert(QLatin1String("IntervalCheckEnabled"), true);
+                            settings.insert(QStringLiteral("IntervalCheckEnabled"), true);
                         }
                         if (interval > -1) {
-                            settings.insert(QLatin1String("IntervalCheckInterval"), interval);
+                            settings.insert(QStringLiteral("IntervalCheckInterval"), interval);
                         }
                         if (e.hasAttribute(QStringLiteral("keep-on-server")) && e.attribute(QStringLiteral("keep-on-server")) == QLatin1String("true")) {
-                            settings.insert(QLatin1String("LeaveOnServer"), true);
+                            settings.insert(QStringLiteral("LeaveOnServer"), true);
                         }
                         addAuth(settings, QStringLiteral("AuthenticationMethod"), userName);
                         const QString agentIdentifyName = AbstractBase::createResource(QStringLiteral("akonadi_pop3_resource"), name, settings);
@@ -388,12 +388,12 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
                         addToManualCheck(agentIdentifyName, enableManualCheck);
                     } else if (scheme == QLatin1String("spool") || scheme == QLatin1String("mbox")) {
                         //mbox file
-                        settings.insert(QLatin1String("Path"), path);
-                        settings.insert(QLatin1String("DisplayName"), name);
+                        settings.insert(QStringLiteral("Path"), path);
+                        settings.insert(QStringLiteral("DisplayName"), name);
                         AbstractBase::createResource(QStringLiteral("akonadi_mbox_resource"), name, settings);
 
                     } else if (scheme == QLatin1String("maildir") || scheme == QLatin1String("spooldir")) {
-                        settings.insert(QLatin1String("Path"), path);
+                        settings.insert(QStringLiteral("Path"), path);
                         AbstractBase::createResource(QStringLiteral("akonadi_maildir_resource"), name, settings);
                     } else if (scheme == QLatin1String("nntp")) {
                         //FIXME in the future
@@ -474,10 +474,10 @@ void EvolutionSettings::extractAccountInfo(const QString &info)
             }
             storeTransport(transport, true);
         } else if (tag == QLatin1String("drafts-folder")) {
-            const QString selectedFolder = MailCommon::Util::convertFolderPathToCollectionStr(e.text().remove(QLatin1String("folder://")));
+            const QString selectedFolder = MailCommon::Util::convertFolderPathToCollectionStr(e.text().remove(QStringLiteral("folder://")));
             newIdentity->setDrafts(selectedFolder);
         } else if (tag == QLatin1String("sent-folder")) {
-            const QString selectedFolder = MailCommon::Util::convertFolderPathToCollectionStr(e.text().remove(QLatin1String("folder://")));
+            const QString selectedFolder = MailCommon::Util::convertFolderPathToCollectionStr(e.text().remove(QStringLiteral("folder://")));
             newIdentity->setFcc(selectedFolder);
         } else if (tag == QLatin1String("auto-cc")) {
             if (e.hasAttribute(QStringLiteral("always")) && (e.attribute(QStringLiteral("always")) == QLatin1String("true"))) {

@@ -253,7 +253,7 @@ void SortOrder::writeConfig(KConfigGroup &conf, const QString &storageId,
 {
     QString id = storageId;
     if (!storageUsesPrivateSortOrder) {
-        id = QLatin1String("GlobalSortOrder");
+        id = QStringLiteral("GlobalSortOrder");
         conf.deleteEntry(storageId + MessageList::Util::messageSortingConfigName());
         conf.deleteEntry(storageId + MessageList::Util::messageSortDirectionConfigName());
         conf.deleteEntry(storageId + MessageList::Util::groupSortingConfigName());

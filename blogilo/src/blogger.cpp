@@ -266,9 +266,9 @@ void Blogger::authenticate(const QMap<QString, QString> &authData)
     if (!authData.isEmpty()) {
         QList<QUrl> scopes;
         scopes << KGAPI2::Account::bloggerScopeUrl();
-        account = KGAPI2::AccountPtr(new KGAPI2::Account(authData[QLatin1String("account")],
-                                     authData[QLatin1String("accessToken")],
-                                     authData[QLatin1String("refreshToken")],
+        account = KGAPI2::AccountPtr(new KGAPI2::Account(authData[QStringLiteral("account")],
+                                     authData[QStringLiteral("accessToken")],
+                                     authData[QStringLiteral("refreshToken")],
                                      scopes));
         d->account = account;
     } else {
@@ -295,9 +295,9 @@ void BloggerPrivate::_k_onAuthenticateFinished(KGAPI2::Job *job)
     account = authJob->account();
 
     QMap<QString, QString> authData;
-    authData[QLatin1String("account")] = account->accountName();
-    authData[QLatin1String("accessToken")] = account->accessToken();
-    authData[QLatin1String("refreshToken")] = account->refreshToken();
+    authData[QStringLiteral("account")] = account->accountName();
+    authData[QStringLiteral("accessToken")] = account->accessToken();
+    authData[QStringLiteral("refreshToken")] = account->refreshToken();
 
     Q_EMIT q->authenticated(authData);
 
@@ -314,7 +314,7 @@ void Blogger::listBlogs()
     Q_D(Blogger);
 
     KGAPI2::Blogger::BlogFetchJob *fetchJob
-        = new KGAPI2::Blogger::BlogFetchJob(QLatin1String("self"),
+        = new KGAPI2::Blogger::BlogFetchJob(QStringLiteral("self"),
                                             KGAPI2::Blogger::BlogFetchJob::FetchByUserId,
                                             d->account,
                                             this);

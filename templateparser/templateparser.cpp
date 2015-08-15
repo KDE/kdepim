@@ -81,7 +81,7 @@ QTextCodec *selectCharset(const QStringList &charsets, const QString &text)
         }
     }
     qCDebug(TEMPLATEPARSER_LOG) << "No appropriate charset found.";
-    return KCharsets::charsets()->codecForName(QLatin1String("utf-8"));
+    return KCharsets::charsets()->codecForName(QStringLiteral("utf-8"));
 }
 
 TemplateParser::TemplateParser(const KMime::Message::Ptr &amsg, const Mode amode) :
@@ -1226,7 +1226,7 @@ QString TemplateParser::getHtmlSignature() const
 
     if (!signature.isInlinedHtml()) {
         signature = signature.rawText().toHtmlEscaped();
-        return signature.rawText().replace(QRegExp(QLatin1String("\n")), QStringLiteral("<br />"));
+        return signature.rawText().replace(QRegExp(QStringLiteral("\n")), QStringLiteral("<br />"));
     }
     return signature.rawText();
 }
@@ -1303,10 +1303,10 @@ KMime::Content *TemplateParser::createMultipartMixed(const MessageCore::Attachme
         // If the content type has no name or filename parameter, add one, since otherwise the name
         // would be empty in the attachment view of the composer, which looks confusing
         if (attachment->contentType(false)) {
-            if (!attachment->contentType()->hasParameter(QLatin1String("name")) &&
-                    !attachment->contentType()->hasParameter(QLatin1String("filename"))) {
+            if (!attachment->contentType()->hasParameter(QStringLiteral("name")) &&
+                    !attachment->contentType()->hasParameter(QStringLiteral("filename"))) {
                 attachment->contentType()->setParameter(
-                    QLatin1String("name"), i18nc("@item:intext", "Attachment %1", attachmentNumber));
+                    QStringLiteral("name"), i18nc("@item:intext", "Attachment %1", attachmentNumber));
             }
         }
         ++attachmentNumber;
@@ -1444,7 +1444,7 @@ QString TemplateParser::findTemplate()
     if (mIdentity) {
         iid = TemplatesConfiguration::configIdString(mIdentity);          // templates ID for that identity
     } else {
-        iid = QLatin1String("IDENTITY_NO_IDENTITY"); // templates ID for no identity
+        iid = QStringLiteral("IDENTITY_NO_IDENTITY"); // templates ID for no identity
     }
 
     Templates iconf(iid);
@@ -1600,10 +1600,10 @@ QString TemplateParser::htmlMessageText(bool aStripSignature, AllowSelection isS
     //TODO to be tested/verified if this is not an issue
     page.settings()->setAttribute(QWebSettings::JavascriptEnabled, true);
     const QString bodyElement = page.currentFrame()->evaluateJavaScript(
-                                    QLatin1String("document.getElementsByTagName('body')[0].innerHTML")).toString();
+                                    QStringLiteral("document.getElementsByTagName('body')[0].innerHTML")).toString();
 
     mHeadElement = page.currentFrame()->evaluateJavaScript(
-                       QLatin1String("document.getElementsByTagName('head')[0].innerHTML")).toString();
+                       QStringLiteral("document.getElementsByTagName('head')[0].innerHTML")).toString();
 
     page.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
 
@@ -1626,7 +1626,7 @@ QString TemplateParser::quotedPlainText(const QString &selection) const
 {
     QString content = selection;
     // Remove blank lines at the beginning:
-    const int firstNonWS = content.indexOf(QRegExp(QLatin1String("\\S")));
+    const int firstNonWS = content.indexOf(QRegExp(QStringLiteral("\\S")));
     const int lineStart = content.lastIndexOf(QLatin1Char('\n'), firstNonWS);
     if (lineStart >= 0) {
         content.remove(0, static_cast<unsigned int>(lineStart));
@@ -1702,7 +1702,7 @@ void TemplateParser::makeValidHtml(QString &body)
 {
     QRegExp regEx;
     regEx.setMinimal(true);
-    regEx.setPattern(QLatin1String("<html.*>"));
+    regEx.setPattern(QStringLiteral("<html.*>"));
 
     if (!body.isEmpty() && !body.contains(regEx)) {
         regEx.setPattern(QStringLiteral("<body.*>"));

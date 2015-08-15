@@ -346,7 +346,7 @@ bool CalendarSupport::isValidTodoItemUrl(const QUrl &url)
         return false;
     }
 
-    return QUrlQuery(url).queryItemValue(QLatin1String("type")) == KCalCore::Todo::todoMimeType();
+    return QUrlQuery(url).queryItemValue(QStringLiteral("type")) == KCalCore::Todo::todoMimeType();
 }
 
 bool CalendarSupport::canDecode(const QMimeData *md)

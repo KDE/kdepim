@@ -188,7 +188,7 @@ private:
             commentRequiredLB->hide();
 
             // set errorLB to have a fixed height of two lines:
-            errorLB->setText(QLatin1String("2<br>1"));
+            errorLB->setText(QStringLiteral("2<br>1"));
             errorLB->setFixedHeight(errorLB->minimumSizeHint().height());
             errorLB->clear();
 

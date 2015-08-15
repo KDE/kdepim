@@ -214,7 +214,7 @@ KConfig *Kleo::CryptoBackendFactory::configObject() const
     if (!mConfigObject)
         // this is unsafe. We're a lib, used by concurrent apps.
     {
-        mConfigObject = new KConfig(QLatin1String("libkleopatrarc"));
+        mConfigObject = new KConfig(QStringLiteral("libkleopatrarc"));
     }
     return mConfigObject;
 }

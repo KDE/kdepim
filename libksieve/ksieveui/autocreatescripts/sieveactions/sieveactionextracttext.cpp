@@ -76,10 +76,10 @@ bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWi
             if (tagName == QLatin1String("tag")) {
                 //TODO ?
             } else if (tagName == QLatin1String("num")) {
-                QSpinBox *numberOfCharacters = w->findChild<QSpinBox *>(QLatin1String("numberOfCharacters"));
+                QSpinBox *numberOfCharacters = w->findChild<QSpinBox *>(QStringLiteral("numberOfCharacters"));
                 numberOfCharacters->setValue(e.text().toInt());
             } else if (tagName == QLatin1String("str")) {
-                QLineEdit *variableName = w->findChild<QLineEdit *>(QLatin1String("variablename"));
+                QLineEdit *variableName = w->findChild<QLineEdit *>(QStringLiteral("variablename"));
                 variableName->setText(e.text());
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -97,10 +97,10 @@ bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWi
 
 QString SieveActionExtractText::code(QWidget *w) const
 {
-    const QSpinBox *numberOfCharacters = w->findChild<QSpinBox *>(QLatin1String("numberOfCharacters"));
+    const QSpinBox *numberOfCharacters = w->findChild<QSpinBox *>(QStringLiteral("numberOfCharacters"));
     const QString numberOfCharactersStr = QString::number(numberOfCharacters->value());
 
-    const QLineEdit *variableName = w->findChild<QLineEdit *>(QLatin1String("variablename"));
+    const QLineEdit *variableName = w->findChild<QLineEdit *>(QStringLiteral("variablename"));
     const QString variableNameStr = variableName->text();
 
     const QString result = QStringLiteral("extracttext :first %1 \"%2\";").arg(numberOfCharactersStr).arg(variableNameStr);

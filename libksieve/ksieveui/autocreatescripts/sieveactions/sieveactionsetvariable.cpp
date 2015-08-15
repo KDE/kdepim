@@ -32,7 +32,7 @@
 
 using namespace KSieveUi;
 SieveActionSetVariable::SieveActionSetVariable(QObject *parent)
-    : SieveAction(QLatin1String("set"), i18n("Variable"), parent)
+    : SieveAction(QStringLiteral("set"), i18n("Variable"), parent)
 {
     mHasRegexCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QStringLiteral("regex"));
 }
@@ -94,14 +94,14 @@ bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWi
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
+                QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
                 value->setText(tagValue);
                 node = node.nextSibling();
                 QDomElement variableElement = node.toElement();
                 if (!variableElement.isNull()) {
                     const QString variableTagName = variableElement.tagName();
                     if (variableTagName == QLatin1String("str")) {
-                        QLineEdit *variable = w->findChild<QLineEdit *>(QLatin1String("variable"));
+                        QLineEdit *variable = w->findChild<QLineEdit *>(QStringLiteral("variable"));
                         variable->setText(variableElement.text());
                     }
                 } else {
@@ -111,13 +111,13 @@ bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWi
                 const QString tagValue = e.text();
                 if (tagValue == QLatin1String("quoteregex")) {
                     if (mHasRegexCapability) {
-                        QCheckBox *protectAgainstUseRegexp = w->findChild<QCheckBox *>(QLatin1String("regexprotect"));
+                        QCheckBox *protectAgainstUseRegexp = w->findChild<QCheckBox *>(QStringLiteral("regexprotect"));
                         protectAgainstUseRegexp->setChecked(true);
                     } else {
                         error += QLatin1Char('\n') + i18n("Script needs regex support, but server does not have it.");
                     }
                 } else {
-                    SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox *>(QLatin1String("modifier"));
+                    SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox *>(QStringLiteral("modifier"));
                     modifier->setCode(AutoCreateScriptUtil::tagValue(tagValue), name(), error);
                 }
             } else if (tagName == QLatin1String("crlf")) {
@@ -136,25 +136,25 @@ bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWi
 
 QString SieveActionSetVariable::code(QWidget *w) const
 {
-    QString result = QLatin1String("set ");
-    const SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox *>(QLatin1String("modifier"));
+    QString result = QStringLiteral("set ");
+    const SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox *>(QStringLiteral("modifier"));
     const QString modifierStr = modifier->code();
     if (!modifierStr.isEmpty()) {
         result += modifierStr + QLatin1Char(' ');
     }
 
     if (mHasRegexCapability) {
-        const QCheckBox *protectAgainstUseRegexp = w->findChild<QCheckBox *>(QLatin1String("regexprotect"));
+        const QCheckBox *protectAgainstUseRegexp = w->findChild<QCheckBox *>(QStringLiteral("regexprotect"));
         if (protectAgainstUseRegexp->isChecked()) {
             result += QLatin1String(":quoteregex ");
         }
     }
 
-    const QLineEdit *value = w->findChild<QLineEdit *>(QLatin1String("value"));
+    const QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
     const QString valueStr = value->text();
     result += QString::fromLatin1("\"%1\" ").arg(valueStr);
 
-    const QLineEdit *variable = w->findChild<QLineEdit *>(QLatin1String("variable"));
+    const QLineEdit *variable = w->findChild<QLineEdit *>(QStringLiteral("variable"));
     const QString variableStr = variable->text();
     result += QString::fromLatin1("\"%1\";").arg(variableStr);
 

@@ -43,7 +43,7 @@ SieveAction *SieveActionKeep::newAction()
 QString SieveActionKeep::code(QWidget *w) const
 {
     if (mHasFlagSupport) {
-        const SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
+        const SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QStringLiteral("flagswidget"));
         const QString flagCode = flagsWidget->code();
         if (flagCode.isEmpty()) {
             return QStringLiteral("keep;");
@@ -89,10 +89,10 @@ bool SieveActionKeep::setParamWidgetValue(const QDomElement &element, QWidget *w
             if (!e.isNull()) {
                 const QString tagName = e.tagName();
                 if (tagName == QLatin1String("list")) {
-                    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
+                    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QStringLiteral("flagswidget"));
                     flagsWidget->setFlags(AutoCreateScriptUtil::listValue(e));
                 } else if (tagName == QLatin1String("str")) {
-                    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QLatin1String("flagswidget"));
+                    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget *>(QStringLiteral("flagswidget"));
                     flagsWidget->setFlags(QStringList() << e.text());
                 } else if (tagName == QLatin1String("tag") && e.text() == QLatin1String("flags")) {
                     //nothing :)

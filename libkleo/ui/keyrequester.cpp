@@ -114,7 +114,7 @@ void Kleo::KeyRequester::init()
     mEraseButton->setAutoDefault(false);
     mEraseButton->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,
                                             QSizePolicy::Minimum));
-    mEraseButton->setIcon(QIcon::fromTheme(QApplication::isRightToLeft() ? QLatin1String("edit-clear-locationbar-ltr") : QLatin1String("edit-clear-locationbar-rtl")));
+    mEraseButton->setIcon(QIcon::fromTheme(QApplication::isRightToLeft() ? QStringLiteral("edit-clear-locationbar-ltr") : QStringLiteral("edit-clear-locationbar-rtl")));
     mEraseButton->setToolTip(i18n("Clear"));
 
     // the button to call the KeySelectionDialog:

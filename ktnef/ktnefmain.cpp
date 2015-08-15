@@ -487,7 +487,7 @@ void KTNEFMain::slotEditToolbars()
 
 void KTNEFMain::slotNewToolbarConfig()
 {
-    createGUI(QLatin1String("ktnefui.rc"));
+    createGUI(QStringLiteral("ktnefui.rc"));
     applyMainWindowSettings(KSharedConfig::openConfig()->group("MainWindow"));
 }
 

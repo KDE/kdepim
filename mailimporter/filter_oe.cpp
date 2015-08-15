@@ -68,7 +68,7 @@ void FilterOE::importMails(const QString  &maildir)
     }
 
     QDir dir(mailDir());
-    QStringList files = dir.entryList(QStringList(QLatin1String("*.[dDmM][bB][xX]")), QDir::Files, QDir::Name);
+    QStringList files = dir.entryList(QStringList(QStringLiteral("*.[dDmM][bB][xX]")), QDir::Files, QDir::Name);
     if (files.isEmpty()) {
         filterInfo()->alert(i18n("No Outlook Express mailboxes found in directory %1.", mailDir()));
         return;

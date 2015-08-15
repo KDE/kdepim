@@ -50,7 +50,7 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
         serialNumberStr = serialNumberStr.left(serialNumberStr.indexOf(QLatin1Char('/')));
 
         org::kde::kmail::kmail kmail(
-            QLatin1String("org.kde.kmail"), QStringLiteral("/KMail"), QDBusConnection::sessionBus());
+            QStringLiteral("org.kde.kmail"), QStringLiteral("/KMail"), QDBusConnection::sessionBus());
         kmail.showMail(serialNumberStr.toLongLong());
         return true;
     } else if (uri.startsWith(QStringLiteral("mailto:"))) {
@@ -69,23 +69,23 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
         }
     } else if (uri.startsWith(QStringLiteral("urn:x-ical"))) {
         // make sure korganizer is running or the part is shown
-        KToolInvocation::startServiceByDesktopPath(QLatin1String("korganizer"));
+        KToolInvocation::startServiceByDesktopPath(QStringLiteral("korganizer"));
 
         // we must work around QUrl breakage (it doesn't know about URNs)
         const QString uid = QUrl::fromPercentEncoding(uri.toLatin1()).mid(11);
         OrgKdeKorganizerKorganizerInterface korganizerIface(
-            QLatin1String("org.kde.korganizer"), QStringLiteral("/Korganizer"), QDBusConnection::sessionBus());
+            QStringLiteral("org.kde.korganizer"), QStringLiteral("/Korganizer"), QDBusConnection::sessionBus());
 
         return korganizerIface.showIncidence(uid);
     } else if (uri.startsWith(QStringLiteral("akonadi:"))) {
         const QUrl url(uri);
-        const QString mimeType = QUrlQuery(url).queryItemValue(QLatin1String("type"));
+        const QString mimeType = QUrlQuery(url).queryItemValue(QStringLiteral("type"));
         if (mimeType.toLower() == QLatin1String("message/rfc822")) {
             // make sure kmail is running or the part is shown
-            KToolInvocation::startServiceByDesktopPath(QLatin1String("kmail"));
+            KToolInvocation::startServiceByDesktopPath(QStringLiteral("kmail"));
 
             org::kde::kmail::kmail kmail(
-                QLatin1String("org.kde.kmail"), QStringLiteral("/KMail"), QDBusConnection::sessionBus());
+                QStringLiteral("org.kde.kmail"), QStringLiteral("/KMail"), QDBusConnection::sessionBus());
             kmail.viewMessage(uri);
             return true;
         }

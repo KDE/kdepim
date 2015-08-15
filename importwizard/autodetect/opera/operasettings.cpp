@@ -117,12 +117,12 @@ void OperaSettings::readAccount(const KConfigGroup &grp)
             if (removeDelay != -1) {
                 //Opera store delay as second !!! :)
                 removeDelay = removeDelay / (24 * 60 * 60);
-                settings.insert(QLatin1String("LeaveOnServerDays"), removeDelay);
+                settings.insert(QStringLiteral("LeaveOnServerDays"), removeDelay);
             }
         } //TODO: else
 
         if (port != -1) {
-            settings.insert(QLatin1String("Port"), port);
+            settings.insert(QStringLiteral("Port"), port);
         }
         //TODO:
         const int delay = grp.readEntry(QStringLiteral("Initial Poll Delay"), -1);

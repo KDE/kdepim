@@ -58,7 +58,7 @@ QString ComposerTableDialogPrivate::html() const
     const int numberRow(insertTableWidget->rows());
 
     QString htmlTable = QString::fromLatin1("<table border='%1'").arg(insertTableWidget->border());
-    htmlTable += QString::fromLatin1(" width='%1%2'").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QLatin1String("%") : QString());
+    htmlTable += QString::fromLatin1(" width='%1%2'").arg(insertTableWidget->length()).arg(insertTableWidget->typeOfLength() == QTextLength::PercentageLength ? QStringLiteral("%") : QString());
     htmlTable += QString::fromLatin1(">");
     for (int i = 0; i < numberRow; ++i) {
         htmlTable += QLatin1String("<tr>");

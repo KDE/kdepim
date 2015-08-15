@@ -153,9 +153,9 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
             QMap<QString, QString> map;
-            map[QLatin1String("Access Token")] = mAccessToken;
-            map[QLatin1String("Access Token Secret")] = mAccessTokenSecret;
-            map[QLatin1String("Access Oauth Signature")] = mAccessOauthSignature;
+            map[QStringLiteral("Access Token")] = mAccessToken;
+            map[QStringLiteral("Access Token Secret")] = mAccessTokenSecret;
+            map[QStringLiteral("Access Oauth Signature")] = mAccessOauthSignature;
             wallet->writeMap(walletEntry, map);
         }
     }
@@ -248,7 +248,7 @@ QString DropBoxStorageService::description()
 
 QUrl DropBoxStorageService::serviceUrl()
 {
-    return QUrl(QLatin1String("https://www.dropbox.com/"));
+    return QUrl(QStringLiteral("https://www.dropbox.com/"));
 }
 
 QString DropBoxStorageService::serviceName()
@@ -466,11 +466,11 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
                 if (path == QLatin1String("/")) {
                     parentFolder = path;
                 } else {
-                    QStringList parts = path.split(QLatin1String("/"));
+                    QStringList parts = path.split(QStringLiteral("/"));
                     parts.removeLast();
-                    parentFolder = parts.join(QLatin1String("/"));
+                    parentFolder = parts.join(QStringLiteral("/"));
                     if (parentFolder.isEmpty()) {
-                        parentFolder = QLatin1String("/");
+                        parentFolder = QStringLiteral("/");
                     }
                 }
             }

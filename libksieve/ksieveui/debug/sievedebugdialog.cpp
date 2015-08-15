@@ -166,7 +166,7 @@ void SieveDebugDialog::slotGetScript(KManageSieve::SieveJob * /* job */, bool su
 void SieveDebugDialog::slotGetScriptList(KManageSieve::SieveJob *job, bool success,
         const QStringList &scriptList, const QString &activeScript)
 {
-    qCDebug(LIBKSIEVE_LOG) << "Success:" << success << ", List:" << scriptList.join(QLatin1String(",")) <<
+    qCDebug(LIBKSIEVE_LOG) << "Success:" << success << ", List:" << scriptList.join(QStringLiteral(",")) <<
                            ", active:" << activeScript;
     mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
 
@@ -192,7 +192,7 @@ void SieveDebugDialog::slotGetScriptList(KManageSieve::SieveJob *job, bool succe
         for (QStringList::const_iterator it = scriptList.constBegin(); it != end; ++it) {
             mEdit->editor()->appendPlainText(QLatin1String("* ") + *it + QLatin1Char('\n'));
         }
-        mEdit->editor()->appendPlainText(QLatin1String("\n"));
+        mEdit->editor()->appendPlainText(QStringLiteral("\n"));
         mEdit->editor()->appendPlainText(i18n("Active script: %1\n\n", activeScript));
     }
 

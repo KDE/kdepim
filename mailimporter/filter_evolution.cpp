@@ -100,7 +100,7 @@ void FilterEvolution::importDirContents(const QString &dirName, const QString &K
 {
     // If there is a mbox, we import it
     QDir dir(dirName);
-    if (dir.exists(QLatin1String("mbox"))) {
+    if (dir.exists(QStringLiteral("mbox"))) {
         importMBox(dirName + QLatin1String("/mbox"), KMailRootDir, KMailSubDir);
     }
     // If there are subfolders, we import them one by one

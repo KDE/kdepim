@@ -127,25 +127,25 @@ void EmailAddressResolveJob::slotAliasExpansionDone(KJob *job)
 void EmailAddressResolveJob::setFrom(const QString &from)
 {
     mFrom = from;
-    mResultMap.insert(QLatin1String("infoPartFrom"), from);
+    mResultMap.insert(QStringLiteral("infoPartFrom"), from);
 }
 
 void EmailAddressResolveJob::setTo(const QStringList &to)
 {
     mTo = to;
-    mResultMap.insert(QLatin1String("infoPartTo"), to.join(QStringLiteral(", ")));
+    mResultMap.insert(QStringLiteral("infoPartTo"), to.join(QStringLiteral(", ")));
 }
 
 void EmailAddressResolveJob::setCc(const QStringList &cc)
 {
     mCc = cc;
-    mResultMap.insert(QLatin1String("infoPartCc"), cc.join(QStringLiteral(", ")));
+    mResultMap.insert(QStringLiteral("infoPartCc"), cc.join(QStringLiteral(", ")));
 }
 
 void EmailAddressResolveJob::setBcc(const QStringList &bcc)
 {
     mBcc = bcc;
-    mResultMap.insert(QLatin1String("infoPartBcc"), bcc.join(QStringLiteral(", ")));
+    mResultMap.insert(QStringLiteral("infoPartBcc"), bcc.join(QStringLiteral(", ")));
 }
 
 QString EmailAddressResolveJob::expandedFrom() const

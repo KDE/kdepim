@@ -39,7 +39,7 @@ WebDavJob::WebDavJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent),
       mNbAuthCheck(0)
 {
-    mShareApi = QLatin1String("/ocs/v1.php/apps/files_sharing/api/v1/shares");
+    mShareApi = QStringLiteral("/ocs/v1.php/apps/files_sharing/api/v1/shares");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
     connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
 }
@@ -111,7 +111,7 @@ void WebDavJob::copyFile(const QString &source, const QString &destination)
     mError = false;
     QString filename;
     if (!source.isEmpty()) {
-        QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
+        QStringList parts = source.split(QStringLiteral("/"), QString::SkipEmptyParts);
         filename = parts.takeLast();
     }
 
@@ -130,7 +130,7 @@ void WebDavJob::copyFolder(const QString &source, const QString &destination)
     mError = false;
     QString filename;
     if (!source.isEmpty()) {
-        QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
+        QStringList parts = source.split(QStringLiteral("/"), QString::SkipEmptyParts);
         filename = parts.takeLast();
     }
 
@@ -167,11 +167,11 @@ void WebDavJob::renameFolder(const QString &source, const QString &destination)
 
     QString destinationFolder;
     if (!source.isEmpty()) {
-        QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
+        QStringList parts = source.split(QStringLiteral("/"), QString::SkipEmptyParts);
         parts.removeLast();
-        destinationFolder = parts.join(QLatin1String("/"));
+        destinationFolder = parts.join(QStringLiteral("/"));
         if (destinationFolder.isEmpty()) {
-            destinationFolder = QLatin1String("/");
+            destinationFolder = QStringLiteral("/");
         }
         if (!destinationFolder.endsWith(QLatin1Char('/'))) {
             destinationFolder += QLatin1String("/");
@@ -200,11 +200,11 @@ void WebDavJob::renameFile(const QString &oldName, const QString &newName)
 
     QString destination;
     if (!oldName.isEmpty()) {
-        QStringList parts = oldName.split(QLatin1String("/"), QString::SkipEmptyParts);
+        QStringList parts = oldName.split(QStringLiteral("/"), QString::SkipEmptyParts);
         parts.removeLast();
-        destination = parts.join(QLatin1String("/"));
+        destination = parts.join(QStringLiteral("/"));
         if (destination.isEmpty()) {
-            destination = QLatin1String("/");
+            destination = QStringLiteral("/");
         }
         if (!destination.endsWith(QLatin1Char('/'))) {
             destination += QLatin1String("/");
@@ -268,7 +268,7 @@ void WebDavJob::moveFolder(const QString &source, const QString &destination)
     mError = false;
     QString destinationPath;
     if (!source.isEmpty()) {
-        QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
+        QStringList parts = source.split(QStringLiteral("/"), QString::SkipEmptyParts);
         const QString folderName = parts.takeLast();
 
         destinationPath = destination;
@@ -294,7 +294,7 @@ void WebDavJob::moveFile(const QString &source, const QString &destination)
     mError = false;
     QString destinationPath;
     if (!source.isEmpty()) {
-        QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
+        QStringList parts = source.split(QStringLiteral("/"), QString::SkipEmptyParts);
         const QString folderName = parts.takeLast();
 
         destinationPath = destination;
@@ -523,11 +523,11 @@ void WebDavJob::parseAccountInfo(const QString &data)
             continue;
         }
 
-        QDomElement href = n.namedItem(QLatin1String("href")).toElement();
+        QDomElement href = n.namedItem(QStringLiteral("href")).toElement();
 
         if (!href.isNull()) {
 
-            QDomNodeList propstats = thisResponse.elementsByTagName(QLatin1String("propstat"));
+            QDomNodeList propstats = thisResponse.elementsByTagName(QStringLiteral("propstat"));
             for (int i = 0; i < propstats.count(); ++i) {
                 QDomNodeList propstat = propstats.item(i).childNodes();
                 for (int j = 0; j < propstat.count(); ++j) {

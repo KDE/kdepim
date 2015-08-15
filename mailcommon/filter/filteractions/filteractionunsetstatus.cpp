@@ -27,7 +27,7 @@ FilterAction *FilterActionUnsetStatus::newAction()
 }
 
 FilterActionUnsetStatus::FilterActionUnsetStatus(QObject *parent)
-    : FilterActionStatus(QLatin1String("unset status"), i18nc("action: to unset the status", "Unset Status"), parent)
+    : FilterActionStatus(QStringLiteral("unset status"), i18nc("action: to unset the status", "Unset Status"), parent)
 {
 }
 
@@ -89,11 +89,11 @@ QString FilterActionUnsetStatus::sieveCode() const
     QString flagCode;
     const QString parameter = argsAsString();
     if (parameter == QLatin1String("R")) {
-        flagCode = QLatin1String("\\\\Seen");
+        flagCode = QStringLiteral("\\\\Seen");
     } else if (parameter == QLatin1String("D")) {
-        flagCode = QLatin1String("\\\\Deleted");
+        flagCode = QStringLiteral("\\\\Deleted");
     } else if (parameter == QLatin1String("A")) {
-        flagCode = QLatin1String("\\\\Answered");
+        flagCode = QStringLiteral("\\\\Answered");
     } else {
         qCDebug(MAILCOMMON_LOG) << " FilterActionSetStatus::sieveCode() unknown flags" << parameter;
         flagCode = parameter;

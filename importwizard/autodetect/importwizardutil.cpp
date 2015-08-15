@@ -99,7 +99,7 @@ void ImportWizardUtil::storeInKWallet(const QString &name, ImportWizardUtil::Res
             if (!wallet->hasFolder(QStringLiteral("imap"))) {
                 wallet->createFolder(QStringLiteral("imap"));
             }
-            wallet->setFolder(QLatin1String("imap"));
+            wallet->setFolder(QStringLiteral("imap"));
             wallet->writePassword(name + QLatin1String("rc"), password);
         }
         break;

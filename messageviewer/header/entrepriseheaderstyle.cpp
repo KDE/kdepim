@@ -100,7 +100,7 @@ QString EnterpriseHeaderStyle::format(KMime::Message *message) const
         QLatin1String("    <table style=\"color: ") + fontColor.name() + QLatin1String(" ! important; margin: 1px; border-spacing: 0px;\" cellpadding=0> \n");
 
     // subject
-    if (strategy->showHeader(QLatin1String("subject"))) {
+    if (strategy->showHeader(QStringLiteral("subject"))) {
         headerStr +=
             QLatin1String("     <tr> \n"
                           "      <td style=\"font-size: 0.5em; text-align: right; padding-left: 5px; padding-right: 24px; ") + borderSettings + QLatin1String("\"></td> \n"
@@ -110,7 +110,7 @@ QString EnterpriseHeaderStyle::format(KMime::Message *message) const
     }
 
     // from
-    if (strategy->showHeader(QLatin1String("from"))) {
+    if (strategy->showHeader(QStringLiteral("from"))) {
         // We by design use the stripped mail address here, it is more enterprise-like.
         QString fromPart = StringUtil::emailAddrAsAnchor(message->from(),
                            StringUtil::DisplayNameOnly, linkColor);
@@ -127,7 +127,7 @@ QString EnterpriseHeaderStyle::format(KMime::Message *message) const
     }
 
     // to line
-    if (strategy->showHeader(QLatin1String("to"))) {
+    if (strategy->showHeader(QStringLiteral("to"))) {
         headerStr +=
             QLatin1String("     <tr> "
                           "      <td style=\"font-size: 0.8em; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; ") + borderSettings + QLatin1String("\">") + i18n("To: ") + QLatin1String("</td> "
@@ -138,7 +138,7 @@ QString EnterpriseHeaderStyle::format(KMime::Message *message) const
     }
 
     // cc line, if any
-    if (strategy->showHeader(QLatin1String("cc")) && message->cc(false)) {
+    if (strategy->showHeader(QStringLiteral("cc")) && message->cc(false)) {
         headerStr +=
             QLatin1String("     <tr> "
                           "      <td style=\"font-size: 0.8em; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; ") + borderSettings + QLatin1String("\">") + i18n("CC: ") + QLatin1String("</td> "
@@ -149,7 +149,7 @@ QString EnterpriseHeaderStyle::format(KMime::Message *message) const
     }
 
     // bcc line, if any
-    if (strategy->showHeader(QLatin1String("bcc")) && message->bcc(false)) {
+    if (strategy->showHeader(QStringLiteral("bcc")) && message->bcc(false)) {
         headerStr +=
             QLatin1String("     <tr> "
                           "      <td style=\"font-size: 0.8em; text-align: right; vertical-align:top; padding-left: 5px; padding-right: 24px; ") + borderSettings + QLatin1String("\">") + i18n("BCC: ") + QLatin1String("</td> "

@@ -50,7 +50,7 @@ Kleo::SymCryptRunProcessBase::SymCryptRunProcessBase(const QString &class_, cons
           << QStringLiteral("--class") << class_
           << QStringLiteral("--program") << program
           << QStringLiteral("--keyfile") << keyFile
-          << (mode == Encrypt ? QLatin1String("--encrypt") : QLatin1String("--decrypt"));
+          << (mode == Encrypt ? QStringLiteral("--encrypt") : QStringLiteral("--decrypt"));
 }
 
 Kleo::SymCryptRunProcessBase::~SymCryptRunProcessBase() {}

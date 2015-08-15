@@ -437,7 +437,7 @@ void BackupJob::start()
     }
 
     mProgressItem = KPIM::ProgressManager::createProgressItem(
-                        QLatin1String("BackupJob"),
+                        QStringLiteral("BackupJob"),
                         i18n("Archiving"),
                         QString(),
                         true);

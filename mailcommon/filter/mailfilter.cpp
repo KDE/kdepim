@@ -500,16 +500,16 @@ void MailFilter::writeConfig(KConfigGroup &config, bool exportFilter) const
 
     QStringList sets;
     if (bApplyOnInbound) {
-        sets.append(QLatin1String("check-mail"));
+        sets.append(QStringLiteral("check-mail"));
     }
     if (bApplyBeforeOutbound) {
-        sets.append(QLatin1String("before-send-mail"));
+        sets.append(QStringLiteral("before-send-mail"));
     }
     if (bApplyOnOutbound) {
-        sets.append(QLatin1String("send-mail"));
+        sets.append(QStringLiteral("send-mail"));
     }
     if (bApplyOnExplicit) {
-        sets.append(QLatin1String("manual-filtering"));
+        sets.append(QStringLiteral("manual-filtering"));
     }
     config.writeEntry("apply-on", sets);
 
@@ -600,7 +600,7 @@ const QString MailFilter::asString() const
     result += "Filter name: " + name() + " (" + mIdentifier  + ")\n";
     result += mPattern.asString() + '\n';
 
-    result += QString("Filter is %1\n").arg(bEnabled ? QLatin1String("enabled") : QLatin1String("disabled"));
+    result += QString("Filter is %1\n").arg(bEnabled ? QStringLiteral("enabled") : QStringLiteral("disabled"));
 
     QList<FilterAction *>::const_iterator it(mActions.constBegin());
     QList<FilterAction *>::const_iterator end(mActions.constEnd());

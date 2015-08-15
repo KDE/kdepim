@@ -668,7 +668,7 @@ void DateTimeGrid::paintGrid(QPainter *painter,
         d->paintVerticalUserDefinedLines(painter, sceneRect, exposedRect, &d->month_lower, widget);
         break;
     case ScaleAuto: {
-        const qreal tabw = QApplication::fontMetrics().width(QLatin1String("XXXXX"));
+        const qreal tabw = QApplication::fontMetrics().width(QStringLiteral("XXXXX"));
         const qreal dayw = dayWidth();
         if (dayw > 24 * 60 * 60 * tabw) {
             d->paintVerticalUserDefinedLines(painter, sceneRect, exposedRect, &d->minute_lower, widget);
@@ -736,7 +736,7 @@ int DateTimeGrid::Private::tabHeight(const QString &txt, QWidget *widget) const
 
 void DateTimeGrid::Private::getAutomaticFormatters(DateTimeScaleFormatter **lower, DateTimeScaleFormatter **upper)
 {
-    const qreal tabw = QApplication::fontMetrics().width(QLatin1String("XXXXX"));
+    const qreal tabw = QApplication::fontMetrics().width(QStringLiteral("XXXXX"));
     const qreal dayw = dayWidth;
     if (dayw > 24 * 60 * 60 * tabw) {
         *lower = &minute_lower;

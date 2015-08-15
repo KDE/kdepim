@@ -271,7 +271,7 @@ struct FindExtension : std::unary_function<shared_ptr<ArchiveDefinition>, bool> 
     FindExtension(const QString &ext, Protocol proto) : ext(ext), proto(proto) {}
     bool operator()(const shared_ptr<ArchiveDefinition> &ad) const
     {
-        qCDebug(KLEOPATRA_LOG) << "   considering" << (ad ? ad->label() : QLatin1String("<null>")) << "for" << ext;
+        qCDebug(KLEOPATRA_LOG) << "   considering" << (ad ? ad->label() : QStringLiteral("<null>")) << "for" << ext;
         bool result;
         if (proto == UnknownProtocol) {
             result = ad && (ad->extensions(OpenPGP).contains(ext, Qt::CaseInsensitive) || ad->extensions(CMS).contains(ext, Qt::CaseInsensitive));

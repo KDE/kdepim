@@ -93,7 +93,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     }
 
     // the subject line and box below for details
-    if (strategy->showHeader(QLatin1String("subject"))) {
+    if (strategy->showHeader(QStringLiteral("subject"))) {
         KTextToHTML::Options flags = KTextToHTML::PreserveSpaces;
         if (GlobalSettings::self()->showEmoticons()) {
             flags |= KTextToHTML::ReplaceSmileys;
@@ -108,7 +108,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     // from line
     // the mailto: URLs can contain %3 etc., therefore usage of multiple
     // QString::arg is not possible
-    if (strategy->showHeader(QLatin1String("from"))) {
+    if (strategy->showHeader(QStringLiteral("from"))) {
 
         const QVector<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
         headerStr += QString::fromLatin1("<tr><th>%1</th>\n"
@@ -131,7 +131,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
                      + QLatin1String("</td></tr>\n");
     }
     // to line
-    if (strategy->showHeader(QLatin1String("to"))) {
+    if (strategy->showHeader(QStringLiteral("to"))) {
         const QVector<KMime::Types::Mailbox> resentTo = MessageViewer::HeaderStyleUtil::resentToList(message);
 
         QString to;
@@ -143,7 +143,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
         } else {
             to = StringUtil::emailAddrAsAnchor(message->to(), StringUtil::DisplayFullAddress,
                                                QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
-                                               QLatin1String("FullToAddressList"),
+                                               QStringLiteral("FullToAddressList"),
                                                GlobalSettings::self()->numberOfAddressesToShow());
         }
 
@@ -154,30 +154,30 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     }
 
     // cc line, if an
-    if (strategy->showHeader(QLatin1String("cc")) && message->cc(false))
+    if (strategy->showHeader(QStringLiteral("cc")) && message->cc(false))
         headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                              "<td>%2</td></tr>\n")
                          .arg(i18n("CC: "))
                          .arg(StringUtil::emailAddrAsAnchor(message->cc(), StringUtil::DisplayFullAddress,
                                  QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
-                                 QLatin1String("FullCcAddressList"),
+                                 QStringLiteral("FullCcAddressList"),
                                  GlobalSettings::self()->numberOfAddressesToShow())));
 
     // Bcc line, if any
-    if (strategy->showHeader(QLatin1String("bcc")) && message->bcc(false))
+    if (strategy->showHeader(QStringLiteral("bcc")) && message->bcc(false))
         headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                              "<td>%2</td></tr>\n")
                          .arg(i18n("BCC: "))
                          .arg(StringUtil::emailAddrAsAnchor(message->bcc(), StringUtil::DisplayFullAddress)));
 
-    if (strategy->showHeader(QLatin1String("date")))
+    if (strategy->showHeader(QStringLiteral("date")))
         headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                              "<td dir=\"%2\">%3</td></tr>\n")
                          .arg(i18n("Date: "))
                          .arg(MessageViewer::HeaderStyleUtil::directionOf(MessageViewer::HeaderStyleUtil::dateStr(message->date()->dateTime())))
                          .arg(MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ false))));
     if (GlobalSettings::self()->showUserAgent()) {
-        if (strategy->showHeader(QLatin1String("user-agent"))) {
+        if (strategy->showHeader(QStringLiteral("user-agent"))) {
             if (message->headerByType("User-Agent")) {
                 headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                                      "<td>%2</td></tr>\n")
@@ -186,7 +186,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
             }
         }
 
-        if (strategy->showHeader(QLatin1String("x-mailer"))) {
+        if (strategy->showHeader(QStringLiteral("x-mailer"))) {
             if (message->headerByType("X-Mailer")) {
                 headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                                      "<td>%2</td></tr>\n")
@@ -196,7 +196,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
         }
     }
 
-    if (strategy->showHeader(QLatin1String("x-bugzilla-url")) && message->headerByType("X-Bugzilla-URL")) {
+    if (strategy->showHeader(QStringLiteral("x-bugzilla-url")) && message->headerByType("X-Bugzilla-URL")) {
         const QString product   = message->headerByType("X-Bugzilla-Product")   ? message->headerByType("X-Bugzilla-Product")->asUnicodeString() : QString();
         const QString component = message->headerByType("X-Bugzilla-Component") ? message->headerByType("X-Bugzilla-Component")->asUnicodeString() : QString();
         const QString status    = message->headerByType("X-Bugzilla-Status")    ? message->headerByType("X-Bugzilla-Status")->asUnicodeString() : QString();
@@ -208,7 +208,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
                          .arg(MessageViewer::HeaderStyleUtil::strToHtml(status)));
     }
 
-    if (strategy->showHeader(QLatin1String("disposition-notification-to")) && message->headerByType("Disposition-Notification-To")) {
+    if (strategy->showHeader(QStringLiteral("disposition-notification-to")) && message->headerByType("Disposition-Notification-To")) {
         const QString to = message->headerByType("Disposition-Notification-To") ? message->headerByType("Disposition-Notification-To")->asUnicodeString() : QString();
         headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                              "<td>%2</tr>\n")
