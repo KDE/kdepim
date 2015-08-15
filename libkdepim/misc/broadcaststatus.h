@@ -55,24 +55,6 @@ public:
         return mStatusMsg;
     }
 
-    /** Sets a status bar message with timestamp */
-    void setStatusMsgWithTimestamp(const QString &message);
-
-    /** Sets a transmission completed status bar message */
-    void setStatusMsgTransmissionCompleted(int numMessages,
-                                           int numBytes = -1,
-                                           int numBytesRead = -1,
-                                           int numBytesToRead = -1,
-                                           bool mLeaveOnServer = false,
-                                           KPIM::ProgressItem *progressItem = Q_NULLPTR);
-    void setStatusMsgTransmissionCompleted(const QString &account,
-                                           int numMessages,
-                                           int numBytes = -1,
-                                           int numBytesRead = -1,
-                                           int numBytesToRead = -1,
-                                           bool mLeaveOnServer = false,
-                                           KPIM::ProgressItem *progressItem = Q_NULLPTR);
-
 public Q_SLOTS:
     /**
       Emit an update status bar signal. It's a slot so it can be hooked up
