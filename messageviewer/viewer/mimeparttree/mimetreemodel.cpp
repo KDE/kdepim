@@ -29,8 +29,6 @@
 #include <KLocalizedString>
 #include <KMimeType>
 #include <KFormat>
-Q_DECLARE_METATYPE(KMime::Content *)
-Q_DECLARE_METATYPE(KMime::ContentIndex)
 
 using namespace MessageViewer;
 

@@ -42,7 +42,6 @@ namespace MessageViewer
 extern MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_eventEditStubModel;
 }
 
-Q_DECLARE_METATYPE(KMime::Message::Ptr)
 EventEditTest::EventEditTest()
 {
     qRegisterMetaType<Akonadi::Collection>();

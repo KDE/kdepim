@@ -243,6 +243,3 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
 }
 
 }
-Q_DECLARE_METATYPE(KMime::Headers::Cc *)
-Q_DECLARE_METATYPE(KMime::Headers::To *)
-Q_DECLARE_METATYPE(KMime::Headers::Bcc *)

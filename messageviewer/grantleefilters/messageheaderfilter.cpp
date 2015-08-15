@@ -76,6 +76,3 @@ bool MessageHeaderEmailExpandable::isSafe() const
 {
     return true;
 }
-Q_DECLARE_METATYPE(KMime::Headers::Cc *)
-Q_DECLARE_METATYPE(KMime::Headers::To *)
-Q_DECLARE_METATYPE(KMime::Headers::Bcc *)

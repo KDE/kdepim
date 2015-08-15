@@ -38,7 +38,6 @@ namespace MessageViewer
 extern MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_noteEditStubModel;
 }
 
-Q_DECLARE_METATYPE(KMime::Message::Ptr)
 NoteEditTest::NoteEditTest()
 {
     qRegisterMetaType<Akonadi::Collection>();

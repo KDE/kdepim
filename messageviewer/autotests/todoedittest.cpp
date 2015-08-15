@@ -39,7 +39,6 @@ namespace MessageViewer
 extern MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_todoEditStubModel;
 }
 
-Q_DECLARE_METATYPE(KMime::Message::Ptr)
 TodoEditTest::TodoEditTest()
 {
     qRegisterMetaType<Akonadi::Collection>();
