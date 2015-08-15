@@ -41,16 +41,6 @@ public:
         root(Q_NULLPTR)
     {}
 
-    // FIXME: this should actually be a member function of ContentIndex
-    int contentIndexUp(KMime::ContentIndex &index)
-    {
-        Q_ASSERT(index.isValid());
-        QStringList ids = index.toString().split(QLatin1Char('.'));
-        const QString lastId = ids.takeLast();
-        index = KMime::ContentIndex(ids.join(QStringLiteral(".")));
-        return lastId.toInt();
-    }
-
     QString descriptionForContent(KMime::Content *content)
     {
         KMime::Message *const message = dynamic_cast<KMime::Message *>(content);
@@ -176,11 +166,11 @@ QModelIndex MimeTreeModel::parent(const QModelIndex &index) const
     if (!currentIndex.isValid()) {
         return QModelIndex();
     }
-    d->contentIndexUp(currentIndex);
+    currentIndex.up();
     KMime::Content *parentContent = d->root->content(currentIndex);
     int row = 0;
     if (currentIndex.isValid()) {
-        row = d->contentIndexUp(currentIndex) - 1;    // 1 based -> 0 based
+        row = currentIndex.up() - 1;    // 1 based -> 0 based
     }
 
     return createIndex(row, 0, parentContent);
