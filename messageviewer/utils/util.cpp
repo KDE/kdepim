@@ -57,13 +57,12 @@
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kio/netaccess.h>
-
-#include <QTemporaryFile>
+#include <KFileDialog>
 #include <ktoolinvocation.h>
+
 #include <QAction>
 #include <QIcon>
-
-#include <KFileDialog>
+#include <QTemporaryFile>
 #include <QFileDialog>
 #include <QTextCodec>
 #include <QWidget>
@@ -71,6 +70,7 @@
 #include <QDBusConnectionInterface>
 #include <QActionGroup>
 #include <QPointer>
+#include <QMimeDatabase>
 
 using namespace MessageViewer;
 
@@ -108,9 +108,10 @@ QString Util::fileNameForMimetype(const QString &mimeType, int iconSize,
     } else if (mimeType == QLatin1String("application/x-vnd.kolab.note")) {
         tMimeType = QStringLiteral("application/x-vnd.akonadi.note");
     }
-    KMimeType::Ptr mime = KMimeType::mimeType(tMimeType, KMimeType::ResolveAliases);
-    if (mime) {
-        fileName = mime->iconName();
+    QMimeDatabase mimeDb;
+    auto mime = mimeDb.mimeTypeForName(tMimeType);
+    if (mime.isValid()) {
+        fileName = mime.iconName();
     } else {
         fileName = QStringLiteral("unknown");
         if (!tMimeType.isEmpty()) {
@@ -127,7 +128,7 @@ QString Util::fileNameForMimetype(const QString &mimeType, int iconSize,
             fileName = fallbackFileName2;
         }
         if (!fileName.isEmpty()) {
-            fileName = KMimeType::findByPath(QLatin1String("/tmp/") + fileName, 0, true)->iconName();
+            fileName = mimeDb.mimeTypeForFile(QLatin1String("/tmp/") + fileName).iconName();
         }
     }
 
@@ -550,14 +551,17 @@ QAction *Util::createAppAction(const KService::Ptr &service, bool singleOffer, Q
     return act;
 }
 
-KMimeType::Ptr Util::mimetype(const QString &name)
+QMimeType Util::mimetype(const QString &name)
 {
+    QMimeDatabase db;
     // consider the filename if mimetype cannot be found by content-type
-    KMimeType::Ptr mimeType = KMimeType::findByPath(name, 0, true /* no disk access */);
-    if (mimeType->name() == QLatin1String("application/octet-stream")) {
-        // consider the attachment's contents if neither the Content-Type header
-        // nor the filename give us a clue
-        mimeType = KMimeType::findByFileContent(name);
+    auto mimeTypes = db.mimeTypesForFileName(name);
+    foreach (const auto &mt, mimeTypes) {
+        if (mt.name() != QLatin1String("application/octet-stream"))
+            return mt;
     }
-    return mimeType;
+
+    // consider the attachment's contents if neither the Content-Type header
+    // nor the filename give us a clue
+    return db.mimeTypeForFile(name);
 }

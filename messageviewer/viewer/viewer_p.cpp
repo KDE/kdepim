@@ -61,7 +61,6 @@
 #include <QWebFrame>
 #include <QMenu>
 #include <KMessageBox>
-#include <KMimeType>
 #include <KMimeTypeChooser>
 #include <KMimeTypeTrader>
 #include <KRun>
@@ -102,6 +101,7 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QHeaderView>
+#include <QMimeDatabase>
 
 //libkdepim
 #include "libkdepim/misc/broadcaststatus.h"
@@ -365,9 +365,9 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
     }
     // determine the MIME type of the attachment
     // prefer the value of the Content-Type header
-    KMimeType::Ptr mimetype = KMimeType::mimeType(QString::fromLatin1(node->contentType()->mimeType().toLower()),
-                              KMimeType::ResolveAliases);
-    if (!mimetype.isNull() && mimetype->is(KContacts::Addressee::mimeType())) {
+    QMimeDatabase mimeDb;
+    auto mimetype = mimeDb.mimeTypeForName(QString::fromLatin1(node->contentType()->mimeType().toLower()));
+    if (mimetype.isValid() && mimetype.inherits(KContacts::Addressee::mimeType())) {
         showVCard(node);
         return;
     }
@@ -381,16 +381,16 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
         return;
     }
 
-    if (mimetype.isNull() || mimetype->name() == QLatin1String("application/octet-stream")) {
+    if (!mimetype.isValid() || mimetype.name() == QLatin1String("application/octet-stream")) {
         mimetype = Util::mimetype(name);
     }
     KService::Ptr offer =
-        KMimeTypeTrader::self()->preferredService(mimetype->name(), QStringLiteral("Application"));
+        KMimeTypeTrader::self()->preferredService(mimetype.name(), QStringLiteral("Application"));
 
     const QString filenameText = NodeHelper::fileName(node);
 
     AttachmentDialog dialog(mMainWindow, filenameText, offer ? offer->name() : QString(),
-                            QString::fromLatin1("askSave_") + mimetype->name());
+                            QString::fromLatin1("askSave_") + mimetype.name());
     const int choice = dialog.exec();
 
     if (choice == AttachmentDialog::Save) {
@@ -616,9 +616,10 @@ void ViewerPrivate::showAttachmentPopup(KMime::Content *node, const QString &nam
         createOpenWithMenu(menu, contentTypeStr, true);
     }
 
-    KMimeType::Ptr mimetype = KMimeType::mimeType(contentTypeStr, KMimeType::ResolveAliases);
-    if (!mimetype.isNull()) {
-        const QStringList parentMimeType = mimetype->allParentMimeTypes();
+    QMimeDatabase mimeDb;
+    auto mimetype = mimeDb.mimeTypeForName(contentTypeStr);
+    if (mimetype.isValid()) {
+        const QStringList parentMimeType = mimetype.parentMimeTypes();
         if ((contentTypeStr == QLatin1String("text/plain")) ||
                 (contentTypeStr == QLatin1String("image/png")) ||
                 (contentTypeStr == QLatin1String("image/jpeg")) ||
@@ -715,20 +716,20 @@ KService::Ptr ViewerPrivate::getServiceOffer(KMime::Content *content)
     const QString contentTypeStr = QLatin1String(content->contentType()->mimeType());
 
     // determine the MIME type of the attachment
-    KMimeType::Ptr mimetype;
     // prefer the value of the Content-Type header
-    mimetype = KMimeType::mimeType(contentTypeStr, KMimeType::ResolveAliases);
+    QMimeDatabase mimeDb;
+    auto mimetype = mimeDb.mimeTypeForName(contentTypeStr);
 
-    if (!mimetype.isNull() && mimetype->is(KContacts::Addressee::mimeType())) {
+    if (mimetype.isValid() && mimetype.inherits(KContacts::Addressee::mimeType())) {
         attachmentView(content);
         return KService::Ptr(0);
     }
 
-    if (mimetype.isNull() || mimetype->name() == QLatin1String("application/octet-stream")) {
+    if (!mimetype.isValid() || mimetype.name() == QLatin1String("application/octet-stream")) {
         /*TODO(Andris) port when on-demand loading is done   && msgPart.isComplete() */
         mimetype = MessageViewer::Util::mimetype(fileName);
     }
-    return KMimeTypeTrader::self()->preferredService(mimetype->name(), QStringLiteral("Application"));
+    return KMimeTypeTrader::self()->preferredService(mimetype.name(), QStringLiteral("Application"));
 }
 
 KMime::Content::List ViewerPrivate::selectedContents()

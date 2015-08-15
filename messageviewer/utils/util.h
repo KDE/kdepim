@@ -40,7 +40,6 @@
 
 #include "messageviewer_export.h"
 #include "kmime/kmime_content.h"
-#include <KMimeType>
 #include <QString>
 #include <KService>
 #include <AkonadiCore/Item>
@@ -49,6 +48,7 @@ class QUrl;
 class QWidget;
 class QActionGroup;
 class QAction;
+class QMimeType;
 
 namespace KMime
 {
@@ -128,9 +128,9 @@ void speakSelectedText(const QString &text);
 MESSAGEVIEWER_EXPORT QAction *createAppAction(const KService::Ptr &service, bool singleOffer, QActionGroup *actionGroup, QObject *parent);
 
 /**
-     * Search mimetype from filename when mimetype is empty or application/octet-stream
-     **/
-MESSAGEVIEWER_EXPORT KMimeType::Ptr mimetype(const QString &name);
+ * Search mimetype from filename when mimetype is empty or application/octet-stream
+ **/
+MESSAGEVIEWER_EXPORT QMimeType mimetype(const QString &name);
 }
 
 }

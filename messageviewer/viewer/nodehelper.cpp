@@ -498,7 +498,7 @@ QString NodeHelper::iconName(KMime::Content *node, int size)
 
     QByteArray mimeType = node->contentType()->mimeType();
     if (mimeType.isNull() || mimeType == "application/octet-stream") {
-        const QString mime = Util::mimetype(node->contentDisposition()->filename())->name();
+        const QString mime = Util::mimetype(node->contentDisposition()->filename()).name();
         mimeType = mime.toLatin1();
     }
     mimeType = mimeType.toLower();

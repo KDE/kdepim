@@ -25,10 +25,11 @@
 #include <kmime/kmime_content.h>
 #include <KMime/Message>
 
-#include <QIcon>
 #include <KLocalizedString>
-#include <KMimeType>
 #include <KFormat>
+
+#include <QIcon>
+#include <QMimeDatabase>
 
 using namespace MessageViewer;
 
@@ -70,11 +71,11 @@ public:
     {
         if (content->contentType(false)) {
             const QString contentMimeType = QString::fromLatin1(content->contentType()->mimeType());
-            KMimeType::Ptr mimeType = KMimeType::mimeType(contentMimeType);
-            if (!mimeType) {
+            auto mimeType = m_mimeDb.mimeTypeForName(contentMimeType);
+            if (!mimeType.isValid()) {
                 return contentMimeType;
             }
-            return mimeType->comment();
+            return mimeType.comment();
         } else {
             return QString();
         }
@@ -91,24 +92,25 @@ public:
     QIcon iconForContent(KMime::Content *content)
     {
         if (content->contentType(false)) {
-            KMimeType::Ptr mimeType = KMimeType::mimeType(QString::fromLatin1(content->contentType()->mimeType()));
-            if (!mimeType || mimeType->name() == QLatin1String("application/octet-stream")) {
+            auto mimeType = m_mimeDb.mimeTypeForName(QString::fromLatin1(content->contentType()->mimeType()));
+            if (!mimeType.isValid() || mimeType.name() == QLatin1String("application/octet-stream")) {
                 const QString name = descriptionForContent(content);
                 mimeType = MessageViewer::Util::mimetype(name);
             }
-            if (!mimeType || mimeType->iconName().isEmpty()) {
+            if (!mimeType.isValid() || mimeType.iconName().isEmpty()) {
                 return QIcon();
             }
-            if (mimeType->name().startsWith(QStringLiteral("multipart/"))) {
+            if (mimeType.name().startsWith(QStringLiteral("multipart/"))) {
                 return QIcon::fromTheme(QStringLiteral("folder"));
             }
-            return QIcon::fromTheme(mimeType->iconName());
+            return QIcon::fromTheme(mimeType.iconName());
         } else {
             return QIcon();
         }
     }
 
     KMime::Content *root;
+    QMimeDatabase m_mimeDb;
 };
 
 MimeTreeModel::MimeTreeModel(QObject *parent) :

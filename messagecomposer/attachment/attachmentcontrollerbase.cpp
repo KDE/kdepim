@@ -48,6 +48,7 @@
 #include <KEncodingFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <KMimeType>
 #include <KMimeTypeTrader>
 #include <QPushButton>
 #include <KRun>

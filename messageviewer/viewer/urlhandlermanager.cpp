@@ -52,27 +52,26 @@
 #include <kmime/kmime_content.h>
 #include <KEmailAddress>
 
-#include <QMenu>
-#include <KMimeType>
 #include <KRun>
-
 #include <KUrl>
-#include <QIcon>
+#include <KLocalizedString>
+#include <kmessagebox.h>
 
+#include <QMenu>
+#include <QIcon>
 #include <QApplication>
 #include <QClipboard>
 #include <QProcess>
 #include <QFile>
 #include <QMimeData>
 #include <QDrag>
+#include <QMimeDatabase>
+#include <QStandardPaths>
 
 #include <algorithm>
 
 #include <ui/messagebox.h>
 
-#include <KLocalizedString>
-#include <kmessagebox.h>
-#include <QStandardPaths>
 
 using std::for_each;
 using std::remove;
@@ -1027,11 +1026,12 @@ bool KRunURLHandler::handleClick(const KUrl &url, ViewerPrivate *w) const
         KPIM::BroadcastStatus::instance()->setTransientStatusMsg(i18n("Opening URL..."));
         QTimer::singleShot(2000, KPIM::BroadcastStatus::instance(), SLOT(reset()));
 
-        KMimeType::Ptr mime = KMimeType::findByUrl(url);
-        if (mime->name() == QLatin1String("application/x-desktop") ||
-                mime->name() == QLatin1String("application/x-executable") ||
-                mime->name() == QLatin1String("application/x-ms-dos-executable") ||
-                mime->name() == QLatin1String("application/x-shellscript")) {
+        QMimeDatabase mimeDb;
+        auto mime = mimeDb.mimeTypeForUrl(url);
+        if (mime.name() == QLatin1String("application/x-desktop") ||
+                mime.name() == QLatin1String("application/x-executable") ||
+                mime.name() == QLatin1String("application/x-ms-dos-executable") ||
+                mime.name() == QLatin1String("application/x-shellscript")) {
             if (KMessageBox::warningYesNo(0, xi18nc("@info", "Do you really want to execute <filename>%1</filename>?",
                                                     url.pathOrUrl()), QString(), KGuiItem(i18n("Execute")), KStandardGuiItem::cancel()) != KMessageBox::Yes) {
                 return true;
