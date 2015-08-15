@@ -21,8 +21,6 @@
 #ifndef INCIDENCEEDITOR_CATEGORYSELECTDIALOG_H
 #define INCIDENCEEDITOR_CATEGORYSELECTDIALOG_H
 
-#include "incidenceeditors_ng_export.h"
-
 #include <QDialog>
 
 class CategorySelectWidgetBase;
