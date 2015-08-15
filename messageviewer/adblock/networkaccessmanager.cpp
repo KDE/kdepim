@@ -26,7 +26,6 @@
 #include <KLocalizedString>
 #include <KProtocolInfo>
 #include <KRun>
-#include <KGlobal>
 
 #include <QTimer>
 #include <QWidget>
@@ -71,7 +70,8 @@ namespace MessageViewer
 MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent)
     : KIO::AccessManager(parent)
 {
-    QString c = KLocale::global()->language();
+    auto lang = QLocale::system().language();
+    QString c = QLocale(lang).name();
 
     if (c == QLatin1String("C")) {
         c = QLatin1String("en-US");

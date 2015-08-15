@@ -38,9 +38,8 @@
 #include <KLocalizedString>
 #include <kcharsets.h>
 #include <kde_file.h>
-#include <QUrl>
-#include <KLocale>
 
+#include <QUrl>
 #include <QDir>
 #include <QTextCodec>
 
@@ -63,7 +62,7 @@ NodeHelper::NodeHelper() :
 {
     //TODO(Andras) add methods to modify these prefixes
 
-    mLocalCodec = QTextCodec::codecForName(KLocale::global()->encoding());
+    mLocalCodec = QTextCodec::codecForLocale();
 
     // In the case of Japan. Japanese locale name is "eucjp" but
     // The Japanese mail systems normally used "iso-2022-jp" of locale name.
@@ -775,7 +774,7 @@ QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStr
     for (; it != end; ++it) {
         QByteArray encoding = (*it).toLatin1();
         if (encoding == "locale") {
-            encoding = QTextCodec::codecForName(KLocale::global()->encoding())->name();
+            encoding = QTextCodec::codecForLocale()->name();
             encoding = encoding.toLower();
         }
         if (text.isEmpty()) {

@@ -2796,7 +2796,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
                                                     keyWithWithoutURL);
                                 else
                                     htmlStr += i18n("Message was signed on %1 with key %2.",
-                                                    KLocale::global()->formatDateTime(created),
+                                                    QLocale::system().toString(created, QLocale::ShortFormat),
                                                     keyWithWithoutURL);
                             } else {
                                 if (onlyShowKeyURL)
@@ -2804,7 +2804,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
                                                     keyWithWithoutURL);
                                 else
                                     htmlStr += i18n("Message was signed by %3 on %1 with key %2",
-                                                    KLocale::global()->formatDateTime(created),
+                                                    QLocale::system().toString(created, QLocale::ShortFormat),
                                                     keyWithWithoutURL,
                                                     signer);
                             }
@@ -2851,7 +2851,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
                         QDateTime created = block.creationTime;
                         if (created.isValid())
                             htmlStr += i18n("Message was signed on %1 with unknown key %2.",
-                                            KLocale::global()->formatDateTime(created),
+                                            QLocale::system().toString(created, QLocale::ShortFormat),
                                             keyWithWithoutURL);
                         else
                             htmlStr += i18n("Message was signed with unknown key %1.",

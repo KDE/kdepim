@@ -30,8 +30,6 @@
 #include "contactdisplaymessagememento.h"
 #include "kxface.h"
 
-#include <KLocale>
-
 #include <KEmailAddress>
 #include <KTextToHTML>
 
@@ -62,8 +60,7 @@ QString dateString(KMime::Message *message, bool printing, bool shortDate)
         return i18nc("Unknown date", "Unknown");
     }
     if (printing) {
-        KLocale *locale = KLocale::global();
-        return locale->formatDateTime(dateTime);
+        return QLocale::system().toString(dateTime, QLocale::ShortFormat);
     } else {
         if (shortDate) {
             return dateShortStr(dateTime);
@@ -225,7 +222,8 @@ QString dateStr(const QDateTime &dateTime)
 
 QString dateShortStr(const QDateTime &dateTime)
 {
-    return KLocale::global()->formatDateTime(dateTime, KLocale::FancyShortDate);
+    KMime::DateFormatter formatter(KMime::DateFormatter::Fancy);
+    return formatter.dateString(dateTime);
 }
 
 QVector<KMime::Types::Mailbox> resentFromList(KMime::Message *message)
