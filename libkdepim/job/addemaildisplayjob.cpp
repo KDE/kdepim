@@ -45,7 +45,7 @@
 
 using namespace KPIM;
 
-class AddEmailDiplayJob::Private
+class Q_DECL_HIDDEN AddEmailDiplayJob::Private
 {
 public:
     Private(AddEmailDiplayJob *qq, const QString &emailString, QWidget *parentWidget)

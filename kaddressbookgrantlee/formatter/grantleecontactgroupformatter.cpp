@@ -37,7 +37,7 @@
 
 using namespace KAddressBookGrantlee;
 
-class GrantleeContactGroupFormatter::Private
+class Q_DECL_HIDDEN GrantleeContactGroupFormatter::Private
 {
 public:
     Private()

@@ -26,7 +26,7 @@
 
 using namespace IncidenceEditorNG;
 
-class KTimeZoneComboBox::Private
+class Q_DECL_HIDDEN KTimeZoneComboBox::Private
 {
 public:
     Private(KTimeZoneComboBox *parent)

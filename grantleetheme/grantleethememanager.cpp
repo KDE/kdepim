@@ -37,7 +37,7 @@
 
 using namespace GrantleeTheme;
 
-class GrantleeThemeManager::Private
+class Q_DECL_HIDDEN GrantleeThemeManager::Private
 {
 public:
     Private(GrantleeTheme::GrantleeThemeManager::Application type, const QString &desktopFileName, KActionCollection *ac, const QString &relativePath, GrantleeThemeManager *qq)
