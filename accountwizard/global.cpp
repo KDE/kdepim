@@ -23,7 +23,6 @@
 #include <qfileinfo.h>
 #include <QDir>
 #include <kio/copyjob.h>
-#include <kio/netaccess.h>
 #include <QDir>
 #include <QStandardPaths>
 
@@ -104,7 +103,7 @@ QString Global::unpackAssistant(const QUrl &remotePackageUrl)
         localPackageFile = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/accountwizard/") + remoteFileName ;
         KIO::Job *job = KIO::copy(remotePackageUrl, QUrl::fromLocalFile(localPackageFile), KIO::Overwrite | KIO::HideProgressInfo);
         qCDebug(ACCOUNTWIZARD_LOG) << "downloading remote URL" << remotePackageUrl << "to" << localPackageFile;
-        if (!KIO::NetAccess::synchronousRun(job, 0)) {
+        if (!job->exec()) {
             return QString();
         }
     }
@@ -115,7 +114,7 @@ QString Global::unpackAssistant(const QUrl &remotePackageUrl)
     const QString dest = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QLatin1String("/") ;
     QDir().mkpath(dest + file.fileName());
     KIO::Job *getJob = KIO::copy(file, QUrl::fromLocalFile(dest), KIO::Overwrite | KIO::HideProgressInfo);
-    if (KIO::NetAccess::synchronousRun(getJob, 0)) {
+    if (getJob->exec()) {
         qCDebug(ACCOUNTWIZARD_LOG) << "worked, unpacked in " << dest;
         return dest + file.fileName() + QLatin1Char('/') + assistant + QLatin1Char('/') + assistant + QLatin1String(".desktop");
     } else {
