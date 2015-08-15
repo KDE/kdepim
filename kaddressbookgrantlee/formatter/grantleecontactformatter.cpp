@@ -34,9 +34,9 @@
 #include <KColorScheme>
 
 #include <KIconLoader>
-#include <KLocale>
 #include <KStringHandler>
 #include <KConfigGroup>
+#include <KLocalizedString>
 
 #include <akonadi/contact/improtocols.h>
 
@@ -470,7 +470,7 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
 
                         } else if (descriptionType == QLatin1String("time")) {
                             const QTime time = QTime::fromString(value, Qt::ISODate);
-                            value = KLocale::global()->formatTime(time);
+                            value = QLocale::system().toString(time, QLocale::ShortFormat);
 
                         } else if (descriptionType == QLatin1String("datetime")) {
                             const QDateTime dateTime = QDateTime::fromString(value, Qt::ISODate);
