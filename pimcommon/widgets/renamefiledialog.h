@@ -30,7 +30,7 @@
 #define RENAMEFILEDIALOG_H
 
 #include <QDialog>
-#include <KUrl>
+#include <QUrl>
 
 #include "pimcommon_export.h"
 
@@ -41,7 +41,7 @@ class PIMCOMMON_EXPORT RenameFileDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit RenameFileDialog(const KUrl &url, bool multiFiles, QWidget *parent);
+    explicit RenameFileDialog(const QUrl &url, bool multiFiles, QWidget *parent);
     ~RenameFileDialog();
 
     enum RenameFileDialogResult {
@@ -52,7 +52,7 @@ public:
         RENAMEFILE_OVERWRITEALL = 4
     };
 
-    KUrl newName() const;
+    QUrl newName() const;
 
 private Q_SLOTS:
     void slotOverwritePressed();

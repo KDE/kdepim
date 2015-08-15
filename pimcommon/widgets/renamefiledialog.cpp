@@ -46,7 +46,7 @@ using namespace PimCommon;
 class PimCommon::RenameFileDialog::RenameFileDialogPrivate
 {
 public:
-    RenameFileDialogPrivate(const KUrl &_url, RenameFileDialog *qq)
+    RenameFileDialogPrivate(const QUrl &_url, RenameFileDialog *qq)
         : url(_url),
           applyAll(Q_NULLPTR),
           rename(Q_NULLPTR),
@@ -56,9 +56,9 @@ public:
     {
 
     }
-    QString suggestName(const KUrl &baseURL, const QString &oldName);
+    QString suggestName(const QUrl &baseURL, const QString &oldName);
 
-    KUrl url;
+    QUrl url;
     QCheckBox *applyAll;
     QPushButton *rename;
     QPushButton *suggestNewName;
@@ -67,7 +67,7 @@ public:
 
 };
 
-QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const KUrl &baseURL, const QString &oldName)
+QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const QUrl &baseURL, const QString &oldName)
 {
     QString dotSuffix, suggestedName;
     QString basename = oldName;
@@ -109,7 +109,7 @@ QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const 
     // TODO: network transparency. However, using NetAccess from a modal dialog
     // could be a problem, no? (given that it uses a modal widget itself....)
     if (baseURL.isLocalFile()) {
-        exists = QFileInfo(baseURL.toLocalFile(KUrl::AddTrailingSlash) + suggestedName).exists();
+        exists = QFileInfo(baseURL.toLocalFile() + QLatin1Char('/') + suggestedName).exists();
     }
 
     if (!exists) {
@@ -120,7 +120,7 @@ QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const 
 
 }
 
-RenameFileDialog::RenameFileDialog(const KUrl &url, bool multiFiles, QWidget *parent)
+RenameFileDialog::RenameFileDialog(const QUrl &url, bool multiFiles, QWidget *parent)
     : QDialog(parent),
       d(new RenameFileDialogPrivate(url, this))
 {
@@ -217,18 +217,16 @@ void RenameFileDialog::slotSuggestNewNamePressed()
         return;
     }
 
-    KUrl destDirectory(d->url);
-
-    destDirectory.setPath(destDirectory.directory());
+    auto destDirectory = d->url.adjusted(QUrl::RemoveFilename);
     d->nameEdit->setText(d->suggestName(destDirectory, d->nameEdit->text()));
 }
 
-KUrl RenameFileDialog::newName() const
+QUrl RenameFileDialog::newName() const
 {
-    KUrl newDest(d->url);
     const QString fileName = d->nameEdit->text();
 
-    newDest.setFileName(KIO::encodeFileName(fileName));
+    auto newDest = d->url.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash);
+    newDest.setPath(newDest.path() + QLatin1Char('/') + KIO::encodeFileName(fileName));
 
     return newDest;
 }
