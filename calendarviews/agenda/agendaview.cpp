@@ -48,7 +48,6 @@
 
 #include <KCalendarSystem>
 #include <KIconLoader> // for SmallIcon()
-#include <KGlobalSettings>
 #include <KHBox>
 #include <KMessageBox>
 #include <KServiceTypeTrader>
@@ -736,7 +735,6 @@ void AgendaView::init(const QDate &start, const QDate &end)
     /* Create agenda splitter */
     d->mSplitterAgenda = new QSplitter(Qt::Vertical, this);
     d->mGridLayout->addWidget(d->mSplitterAgenda, 1, 0);
-    d->mSplitterAgenda->setOpaqueResize(KGlobalSettings::opaqueResize());
 
     /* Create day name labels for agenda columns */
     d->mTopDayLabelsFrame = new KHBox(d->mSplitterAgenda);

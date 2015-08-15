@@ -66,7 +66,6 @@
 #include <KRun>
 #include <KSelectAction>
 #include <KSharedConfigPtr>
-#include <KGlobalSettings>
 #include <KStandardGuiItem>
 #include <QTemporaryDir>
 #include <QTemporaryFile>
@@ -1596,7 +1595,6 @@ void ViewerPrivate::createWidgets()
 #ifndef QT_NO_TREEVIEW
     mSplitter->setStretchFactor(mSplitter->indexOf(mMimePartTree), 0);
 #endif
-    mSplitter->setOpaqueResize(KGlobalSettings::opaqueResize());
 }
 
 void ViewerPrivate::createActions()

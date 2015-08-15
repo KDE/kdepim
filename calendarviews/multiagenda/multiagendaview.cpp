@@ -38,7 +38,6 @@ using namespace KPIM;
 #include <KCalCore/Event>
 
 #include <KCheckableProxyModel>
-#include <KGlobalSettings>
 #include <KLocalizedString>
 #include <QVBoxLayout>
 #include <KViewStateMaintainer>
@@ -162,7 +161,6 @@ MultiAgendaView::MultiAgendaView(QWidget *parent)
 
     d->mLeftSplitter = new QSplitter(Qt::Vertical, topSideBox);
     topSideBoxVBoxLayout->addWidget(d->mLeftSplitter);
-    d->mLeftSplitter->setOpaqueResize(KGlobalSettings::opaqueResize());
 
     d->mLabel = new QLabel(i18n("All Day"), d->mLeftSplitter);
     d->mLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -214,7 +212,6 @@ MultiAgendaView::MultiAgendaView(QWidget *parent)
 
     d->mRightSplitter = new QSplitter(Qt::Vertical, topSideBox);
     topSideBoxVBoxLayout->addWidget(d->mRightSplitter);
-    d->mRightSplitter->setOpaqueResize(KGlobalSettings::opaqueResize());
 
     connect(d->mLeftSplitter, &QSplitter::splitterMoved, this, &MultiAgendaView::resizeSplitters);
     connect(d->mRightSplitter, &QSplitter::splitterMoved, this, &MultiAgendaView::resizeSplitters);
