@@ -15,7 +15,7 @@ ${_library_path_variable}=${_ld_library_path}\${${_library_path_variable}:+:\$${
 _result=$?
 _pid=`echo GETINFO pid | GNUPGHOME=${_gnupghome} gpg-connect-agent | grep 'D' | cut -d' ' -f2`
 if [ ! -z \"\$_pid\" ]; then
-    echo \"Waiting for gpg-agent to terminate...\"
+    echo \"Waiting for gpg-agent to terminate (PID: $_pid)...\"
     while kill -0 \"\$_pid\"; do
         sleep 1
     done
