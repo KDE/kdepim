@@ -43,7 +43,6 @@
 #include <QString>
 #include <KService>
 #include <AkonadiCore/Item>
-class KUrl;
 class QUrl;
 class QWidget;
 class QActionGroup;
@@ -97,7 +96,7 @@ int MESSAGEVIEWER_EXPORT getWritePermissions();
 KMime::Content::List MESSAGEVIEWER_EXPORT allContents(const KMime::Content *message);
 KMime::Content::List MESSAGEVIEWER_EXPORT extractAttachments(const KMime::Message *message);
 bool MESSAGEVIEWER_EXPORT saveContents(QWidget *parent,
-                                       const KMime::Content::List &contents, KUrl &currentFolder);
+                                       const KMime::Content::List &contents, QUrl &currentFolder);
 bool MESSAGEVIEWER_EXPORT saveContent(QWidget *parent, KMime::Content *content,
                                       const QUrl &url);
 
@@ -122,7 +121,7 @@ QString MESSAGEVIEWER_EXPORT fileNameForMimetype(const QString &mimeType, int ic
         const QString &fallbackFileName2 = QString());
 bool MESSAGEVIEWER_EXPORT saveMessageInMbox(const Akonadi::Item::List &retrievedMsgs, QWidget *parent, bool appendMessages = false);
 
-bool MESSAGEVIEWER_EXPORT saveAttachments(const KMime::Content::List &contents, QWidget *parent, KUrl &currentFolder);
+bool MESSAGEVIEWER_EXPORT saveAttachments(const KMime::Content::List &contents, QWidget *parent, QUrl &currentFolder);
 
 void speakSelectedText(const QString &text);
 MESSAGEVIEWER_EXPORT QAction *createAppAction(const KService::Ptr &service, bool singleOffer, QActionGroup *actionGroup, QObject *parent);

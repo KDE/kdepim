@@ -186,9 +186,9 @@ KMime::Content::List Util::extractAttachments(const KMime::Message *message)
     return result;
 }
 
-bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, KUrl &currentFolder)
+bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, QUrl &currentFolder)
 {
-    KUrl url, dirUrl;
+    QUrl url, dirUrl;
     const bool multiple = (contents.count() > 1);
     if (multiple) {
         // get the dir
@@ -200,7 +200,8 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, K
         }
 
         // we may not get a slash-terminated url out of KFileDialog
-        dirUrl.adjustPath(KUrl::AddTrailingSlash);
+        if (!dirUrl.path().endsWith(QLatin1Char('/')))
+            dirUrl.setPath(dirUrl.path() + QLatin1Char('/'));
         currentFolder = dirUrl;
     } else {
         // only one item, get the desired filename
@@ -210,8 +211,7 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, K
         if (fileName.isEmpty()) {
             fileName = i18nc("filename for an unnamed attachment", "attachment.1");
         }
-        KUrl pathUrl = KUrl(QStringLiteral("kfiledialog:///saveAttachment/"));
-        pathUrl.addPath(fileName);
+        QUrl pathUrl(QStringLiteral("kfiledialog:///saveAttachment/") + fileName);
         url = KFileDialog::getSaveUrl(pathUrl ,
                                       QString(),
                                       parent,
@@ -219,7 +219,7 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, K
         if (url.isEmpty()) {
             return false;
         }
-        currentFolder = KUrl(url.upUrl());
+        currentFolder = KIO::upUrl(url);
     }
     QMap< QString, int > renameNumbering;
 
@@ -227,7 +227,7 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, K
     int unnamedAtmCount = 0;
     PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
     foreach (KMime::Content *content, contents) {
-        KUrl curUrl;
+        QUrl curUrl;
         if (!dirUrl.isEmpty()) {
             curUrl = dirUrl;
             QString fileName = MessageViewer::NodeHelper::fileName(content);
@@ -237,7 +237,9 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, K
                 fileName = i18nc("filename for the %1-th unnamed attachment",
                                  "attachment.%1", unnamedAtmCount);
             }
-            curUrl.setFileName(fileName);
+            if (!curUrl.path().endsWith(QLatin1Char('/')))
+                curUrl.setPath(curUrl.path() + QLatin1Char('/'));
+            curUrl.setPath(curUrl.path() + fileName);
         } else {
             curUrl = url;
         }
@@ -257,7 +259,8 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, K
                 int dotIdx = file.lastIndexOf(QLatin1Char('.'));
                 file = file.insert((dotIdx >= 0) ? dotIdx : file.length(), QStringLiteral("_") + QString::number(num));
             }
-            curUrl.setFileName(file);
+            curUrl = curUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash);
+            curUrl.setPath(curUrl.path() + QLatin1Char('/') + file);
 
             // Increment the counter for both the old and the new filename
             if (!renameNumbering.contains(origFile)) {
@@ -446,7 +449,7 @@ int Util::getWritePermissions()
     }
 }
 
-bool Util::saveAttachments(const KMime::Content::List &contents, QWidget *parent, KUrl &currentFolder)
+bool Util::saveAttachments(const KMime::Content::List &contents, QWidget *parent, QUrl &currentFolder)
 {
     if (contents.isEmpty()) {
         KMessageBox::information(parent, i18n("Found no attachments to save."));

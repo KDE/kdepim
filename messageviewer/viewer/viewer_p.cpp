@@ -393,7 +393,7 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
     const int choice = dialog.exec();
 
     if (choice == AttachmentDialog::Save) {
-        KUrl currentUrl;
+        QUrl currentUrl;
         if (Util::saveContents(mMainWindow, KMime::Content::List() << node, currentUrl)) {
             showOpenAttachmentFolderWidget(currentUrl);
         }
@@ -2661,7 +2661,7 @@ bool ViewerPrivate::mimePartTreeIsEmpty() const
 void ViewerPrivate::slotAttachmentSaveAs()
 {
     const auto contents = selectedContents();
-    KUrl currentUrl;
+    QUrl currentUrl;
     if (Util::saveAttachments(contents, mMainWindow, currentUrl)) {
         showOpenAttachmentFolderWidget(currentUrl);
     }
@@ -2670,7 +2670,7 @@ void ViewerPrivate::slotAttachmentSaveAs()
 void ViewerPrivate::slotAttachmentSaveAll()
 {
     const auto contents = Util::extractAttachments(mMessage.data());
-    KUrl currentUrl;
+    QUrl currentUrl;
     if (Util::saveAttachments(contents, mMainWindow, currentUrl)) {
         showOpenAttachmentFolderWidget(currentUrl);
     }
@@ -2803,7 +2803,7 @@ void ViewerPrivate::slotHandleAttachment(int choice)
         attachmentProperties(mCurrentContent);
         break;
     case Viewer::Save: {
-        KUrl currentUrl;
+        QUrl currentUrl;
         if (Util::saveContents(mMainWindow, KMime::Content::List() << mCurrentContent, currentUrl)) {
             showOpenAttachmentFolderWidget(currentUrl);
         }
