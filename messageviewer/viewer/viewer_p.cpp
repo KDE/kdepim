@@ -297,14 +297,14 @@ ViewerPrivate::~ViewerPrivate()
 }
 
 //-----------------------------------------------------------------------------
-KMime::Content *ViewerPrivate::nodeFromUrl(const KUrl &url)
+KMime::Content *ViewerPrivate::nodeFromUrl(const QUrl& url)
 {
     KMime::Content *node = 0;
     if (url.isEmpty()) {
         return mMessage.data();
     }
     if (!url.isLocalFile()) {
-        QString path = url.path(KUrl::RemoveTrailingSlash);
+        QString path = url.adjusted(QUrl::StripTrailingSlash).path();
         if (path.contains(QLatin1Char(':'))) {
             //if the content was not found, it might be in an extra node. Get the index of the extra node (the first part of the url),
             //and use the remaining part as a ContentIndex to find the node inside the extra node
@@ -2204,7 +2204,7 @@ void ViewerPrivate::slotUrlOn(const QString &link, const QString &title, const Q
     // The "link" we get here is not URL-encoded, and therefore there is no way the KUrl or QUrl could
     // parse it correctly. To workaround that, we use QWebFrame::hitTestContent() on the mouse position
     // to get the URL before WebKit managed to mangle it.
-    KUrl url(mViewer->linkOrImageUrlAt(QCursor::pos()));
+    QUrl url(mViewer->linkOrImageUrlAt(QCursor::pos()));
     const QString protocol = url.scheme();
     if (protocol == QLatin1String("kmail") ||
             protocol == QLatin1String("x-kmail") ||
@@ -2235,12 +2235,10 @@ void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QUrl &imageUrl, const Q
     if (!mMsgDisplay) {
         return;
     }
-    const KUrl url(aUrl);
-    const KUrl iUrl(imageUrl);
-    mClickedUrl = url;
-    mImageUrl = iUrl;
+    mClickedUrl = aUrl;
+    mImageUrl = imageUrl;
 
-    if (URLHandlerManager::instance()->handleContextMenuRequest(url, aPos, this)) {
+    if (URLHandlerManager::instance()->handleContextMenuRequest(aUrl, aPos, this)) {
         return;
     }
 
@@ -2248,7 +2246,7 @@ void ViewerPrivate::slotUrlPopup(const QUrl &aUrl, const QUrl &imageUrl, const Q
         return;
     }
 
-    if (url.scheme() == QLatin1String("mailto")) {
+    if (aUrl.scheme() == QLatin1String("mailto")) {
         mCopyURLAction->setText(i18n("Copy Email Address"));
     } else {
         mCopyURLAction->setText(i18n("Copy Link Address"));
@@ -2645,7 +2643,7 @@ void ViewerPrivate::slotAttachmentOpen()
 #endif
 }
 
-void ViewerPrivate::showOpenAttachmentFolderWidget(const KUrl &url)
+void ViewerPrivate::showOpenAttachmentFolderWidget(const QUrl &url)
 {
     mOpenAttachmentFolderWidget->setFolder(url);
     mOpenAttachmentFolderWidget->slotShowWarning();
@@ -2724,8 +2722,7 @@ void ViewerPrivate::attachmentCopy(const KMime::Content::List &contents)
 
     QList<QUrl> urls;
     Q_FOREACH (KMime::Content *content, contents) {
-        KUrl kUrl = mNodeHelper->writeNodeToTempFile(content);
-        QUrl url = QUrl::fromPercentEncoding(kUrl.toEncoded());
+        auto url = QUrl::fromLocalFile(mNodeHelper->writeNodeToTempFile(content));
         if (!url.isValid()) {
             continue;
         }
