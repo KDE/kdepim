@@ -225,6 +225,7 @@ PUBLIC
   KF5::AkonadiMime
   KF5::Contacts
   KF5::ItemViews
+  KF5::Gpgmepp
 PRIVATE
   ${_mailwebview_lib}
   kdepim
@@ -242,7 +243,6 @@ PRIVATE
   KF5::Gpgmepp
   KF5::KDELibs4Support
   KF5::AkonadiNotes
-  KF5::Gpgmepp
 )
 
 target_include_directories(messageviewer PUBLIC "$<BUILD_INTERFACE:${messageviewer_SOURCE_DIR};${messageviewer_BINARY_DIR}>")
