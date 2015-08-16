@@ -138,8 +138,8 @@ void MessageFactoryTest::testCreateReply()
     qDebug() << reply.msg->body();
 
     QDateTime date = msg->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
-    datetime += QLatin1String(" ") + KLocale::global()->formatTime(date.time(), true);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
+    datetime += QLatin1String(" ") + QLocale::system().toString(date.time(), QLocale::LongFormat);
     QString replyStr = QString::fromLatin1(QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n\n")));
     QCOMPARE(reply.msg->subject()->asUnicodeString(), QLatin1String("Re: Test Email Subject"));
     QCOMPARE_OR_DIFF(reply.msg->body(), replyStr.toLatin1());
@@ -211,8 +211,8 @@ void MessageFactoryTest::testCreateForward()
     KMime::Message::Ptr fw =  factory.createForward();
 
     QDateTime date = msg->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
-    datetime += QLatin1String(", ") + KLocale::global()->formatTime(date.time(), true);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
+    datetime += QLatin1String(", ") + QLocale::system().toString(date.time(), QLocale::LongFormat);
 
     QString fwdMsg = QString::fromLatin1(
                          "From: another <another@another.com>\n"
