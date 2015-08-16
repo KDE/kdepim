@@ -299,6 +299,8 @@ PUBLIC
     kdepim
     KF5::IMAP
     KF5::AkonadiWidgets
+    KF5::TextWidgets
+    KF5::KIOCore
     Qt5::WebKitWidgets
 PRIVATE
     KF5::Archive
@@ -308,6 +310,7 @@ PRIVATE
     KF5::SonnetCore
     KF5::Wallet
     KF5::DBusAddons
+    KF5::KDELibs4Support
 )
 
 target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR};${pimcommon_BINARY_DIR}>")
@@ -362,6 +365,7 @@ if (Qt5Designer_FOUND)
     kf5designerplugin_add_plugin(pimcommonwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
     target_link_libraries(pimcommonwidgets
         pimcommon
+        KF5::KDELibs4Support
     )
     if(NOT WIN32)
         # Since there are no libraries provided by this module,

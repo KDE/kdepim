@@ -41,8 +41,11 @@ ki18n_wrap_ui(sieveeditor_SRCS
 add_executable(sieveeditor ${sieveeditor_SRCS} )
 target_link_libraries(sieveeditor
                        KF5::MailTransport
+                       KF5::Bookmarks
                        KF5::DBusAddons 
                        KF5::I18n
+                       KF5::IconThemes
+                       KF5::XmlGui
                        pimcommon
                        ksieveui
                        kmanagesieve

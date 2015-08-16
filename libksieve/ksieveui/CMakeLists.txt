@@ -197,10 +197,12 @@ PRIVATE
   KF5::Archive
   KF5::AkonadiCore
   KF5::Mime
+  KF5::IconThemes
   KF5::IdentityManagement
   KF5::MailTransport
   KF5::KIOWidgets
   KF5::NewStuff
+  KF5::WindowSystem
   Qt5::WebKitWidgets
   KF5::PimTextEdit
 )

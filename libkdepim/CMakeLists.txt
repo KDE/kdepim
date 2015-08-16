@@ -140,27 +140,22 @@ add_library(kdepim ${kdepim_LIB_SRCS})
 generate_export_header(kdepim BASE_NAME kdepim)
 
 target_link_libraries(kdepim
+ PUBLIC
   KF5::Contacts
   KF5::Codecs
+  KF5::Completion
+  KF5::I18n
+  KF5::ItemViews
   KF5::Ldap
   KF5::KCMUtils
   KF5::Mime
   KF5::AkonadiCore
   KF5::AkonadiContact
   KF5::AkonadiWidgets
-  KF5::AkonadiCalendar
   KF5::KCMUtils
   KF5::AkonadiSearchPIM
   KF5::Wallet
-)
-
-
-target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
-  KF5::Contacts
-  KF5::Codecs
-  KF5::Ldap
-  KF5::AkonadiCore
-  KF5::AkonadiContact
+ PRIVATE
   KF5::AkonadiCalendar
 )
 
@@ -182,6 +177,7 @@ if (Qt5Designer_FOUND)
 
     target_link_libraries(kdepimwidgets
         kdepim
+        KF5::KDELibs4Support
     )
     if(NOT WIN32)
         # Since there are no libraries provided by this module,
@@ -210,7 +206,7 @@ set( kcm_ldap_SRCS
 add_library(kcm_ldap MODULE ${kcm_ldap_SRCS})
 
 
-target_link_libraries(kcm_ldap   kdepim)
+target_link_libraries(kcm_ldap   kdepim KF5::IconThemes)
 
 kcoreaddons_desktop_to_json(kcm_ldap ldap/kcmldap.desktop)
 

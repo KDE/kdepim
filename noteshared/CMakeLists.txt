@@ -66,7 +66,7 @@ target_link_libraries(noteshared
 PUBLIC
      KF5::AkonadiCore
 PRIVATE
-     KF5::DNSSD pimcommon  KF5::Mime KF5::AkonadiNotes
+     KF5::DNSSD pimcommon  KF5::Mime KF5::AkonadiNotes KF5::KDELibs4Support
 )
 
 target_include_directories(noteshared PUBLIC "$<BUILD_INTERFACE:${noteshared_SOURCE_DIR};${noteshared_BINARY_DIR}>")

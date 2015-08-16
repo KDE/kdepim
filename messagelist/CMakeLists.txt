@@ -87,6 +87,7 @@ kconfig_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
 add_library(messagelist ${libmessagelist_SRCS})
 generate_export_header(messagelist BASE_NAME messagelist)
 target_link_libraries(messagelist
+ PUBLIC
   KF5::KIOCore
   KF5::AkonadiCore
   KF5::AkonadiMime
@@ -94,6 +95,8 @@ target_link_libraries(messagelist
   KF5::AkonadiSearchPIM
   messagecore
   pimcommon
+ PRIVATE
+  KF5::KDELibs4Support
 )
 
 target_include_directories(messagelist PUBLIC "$<BUILD_INTERFACE:${messagelist_SOURCE_DIR};${messagelist_BINARY_DIR}>")

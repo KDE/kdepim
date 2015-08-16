@@ -31,7 +31,7 @@ generate_export_header(grantleethemeeditor BASE_NAME grantleethemeeditor)
 
 target_include_directories(grantleethemeeditor PUBLIC "$<BUILD_INTERFACE:${grantleeditor_SOURCE_DIR};${grantleethemeeditor_SOURCE_DIR};${grantleethemeeditor_BINAY_DIR}>")
 
-target_link_libraries(grantleethemeeditor KF5::Archive KF5::PimTextEdit pimcommon)
+target_link_libraries(grantleethemeeditor KF5::Archive KF5::KIOWidgets KF5::PimTextEdit pimcommon)
 
 set_target_properties(grantleethemeeditor PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS grantleethemeeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

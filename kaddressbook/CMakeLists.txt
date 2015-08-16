@@ -140,6 +140,7 @@ target_link_libraries(kaddressbookprivate
   KF5::Codecs
   grantleetheme
   KF5::Gpgmepp
+  KF5::KDELibs4Support
 )
 if (BUILD_TESTING)
    add_subdirectory(merge/autotests)

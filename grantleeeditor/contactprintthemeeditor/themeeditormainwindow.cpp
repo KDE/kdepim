@@ -29,7 +29,7 @@
 #include <KMessageBox>
 #include <QFileDialog>
 #include <KRecentFilesAction>
-#include <KNS3/KNewStuffAction>
+#include <kns3/knewstuffaction.h>
 #include <KConfigGroup>
 
 #include <QApplication>
