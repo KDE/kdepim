@@ -68,6 +68,9 @@ target_link_libraries(akonadi_sendlater_agent
   pimcommon
   KF5::AkonadiAgentBase
   KF5::DBusAddons
+  KF5::WindowSystem
+  KF5::XmlGui
+  KF5::Notifications
 )
 
 if( APPLE )

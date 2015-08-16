@@ -36,6 +36,10 @@ target_link_libraries(akonadi_archivemail_agent
   KF5::AkonadiMime
   KF5::AkonadiAgentBase
   KF5::DBusAddons
+  KF5::XmlGui
+  KF5::WindowSystem
+  KF5::KIOWidgets
+  KF5::Notifications
   mailcommon
 )
 

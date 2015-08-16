@@ -36,6 +36,8 @@ target_link_libraries(akonadi_mailfilter_agent
   KF5::Mime
   KF5::IdentityManagement
   KF5::DBusAddons
+  KF5::Notifications
+  KF5::WindowSystem
 )
 
 install(TARGETS akonadi_mailfilter_agent ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

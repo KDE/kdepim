@@ -218,6 +218,9 @@ PRIVATE
   KF5::Codecs
   KF5::MailTransport
   Phonon::phonon4qt5
+  KF5::XmlGui
+  KF5::KIOWidgets
+  KF5::WindowSystem
 )
 
 target_include_directories(mailcommon PUBLIC "$<BUILD_INTERFACE:${mailcommon_SOURCE_DIR};${mailcommon_BINARY_DIR}>")
@@ -240,7 +243,7 @@ if (Qt5Designer_FOUND)
     kf5designerplugin_add_plugin(mailcommonwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
  
     target_link_libraries(mailcommonwidgets
-        mailcommon
+        mailcommon KF5::KDELibs4Support
     )
     if(NOT WIN32)
         # Since there are no libraries provided by this module,

@@ -96,6 +96,7 @@ target_link_libraries(importwizard
   KF5::AkonadiCore
   KF5::MailTransport
   KF5::DBusAddons
+  KF5::XmlGui
   mailimporter
   pimcommon
   mailcommon

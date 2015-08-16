@@ -168,8 +168,8 @@ PUBLIC
   kdepim
   pimcommon
   KF5::AkonadiWidgets
-  KF5::CalendarCore
 PRIVATE
+  KF5::CalendarCore
   KF5::KIOCore
   Grantlee5::TextDocument
   sendlater
