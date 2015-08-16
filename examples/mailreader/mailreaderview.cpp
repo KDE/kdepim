@@ -15,7 +15,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QDebug>
-#include <KUrl>
+#include <QUrl>
 
 #include <AkonadiCore/item.h>
 #include "messagelist/core/settings.h"
@@ -31,8 +31,8 @@ mailreaderView::mailreaderView(QWidget *parent)
     setLayout(layout);
     setAutoFillBackground(true);
     displayAboutPage();
-    connect(m_readerWin, SIGNAL(urlClicked(Akonadi::Item,KUrl)), this,
-            SLOT(urlClicked(Akonadi::Item,KUrl)));
+    connect(m_readerWin, SIGNAL(urlClicked(Akonadi::Item,QUrl)), this,
+            SLOT(urlClicked(Akonadi::Item,QUrl)));
 }
 
 mailreaderView::~mailreaderView()
@@ -80,7 +80,7 @@ void mailreaderView::displayAboutPage()
     m_readerWin->displaySplashPage(info.toString());
 }
 
-void mailreaderView::urlClicked(const Akonadi::Item &item , const KUrl &url)
+void mailreaderView::urlClicked(const Akonadi::Item &item , const QUrl &url)
 {
     Q_UNUSED(item);
     //TODO "Handle click"

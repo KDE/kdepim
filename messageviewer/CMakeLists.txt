@@ -228,7 +228,6 @@ PUBLIC
   KF5::AkonadiMime
   KF5::AkonadiNotes
   KF5::Contacts
-  KF5::KDELibs4Support
   ${_mailwebview_lib}
 PRIVATE
   grantleetheme
@@ -241,6 +240,7 @@ PRIVATE
   KF5::Mime
   KF5::Mbox
   KF5::Gpgmepp
+  KF5::KDELibs4Support
 )
 
 target_include_directories(messageviewer PUBLIC "$<BUILD_INTERFACE:${messageviewer_SOURCE_DIR};${messageviewer_BINARY_DIR}>")

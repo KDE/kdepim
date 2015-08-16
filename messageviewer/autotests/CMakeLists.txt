@@ -69,5 +69,5 @@ ecm_add_test(converthtmltoplaintexttest.cpp ../viewer/converthtmltoplaintext.cpp
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
-add_akonadi_isolated_test_advanced( viewertest.cpp "" "messageviewer")
+add_akonadi_isolated_test_advanced( viewertest.cpp "" "messageviewer;KF5::XmlGui")
 

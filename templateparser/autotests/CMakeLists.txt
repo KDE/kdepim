@@ -22,6 +22,8 @@ macro(add_templateparser_unittest _source)
     KF5::Mime
     KF5::AkonadiCore
     KF5::IdentityManagement
+    KF5::XmlGui
+    KF5::KDELibs4Support
   )
   add_gpg_crypto_test(${_name} templateparser-${_name})
 endmacro()

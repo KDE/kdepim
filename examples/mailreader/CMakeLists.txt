@@ -21,6 +21,7 @@ add_executable(akonadimailreader ${mailreader_SRCS})
 target_link_libraries(akonadimailreader
   KF5::AkonadiMime
   KF5::AkonadiCore
+  KF5::XmlGui
   
   kdepim
   kleo
