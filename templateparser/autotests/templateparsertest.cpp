@@ -177,11 +177,11 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
     const QString file = QStringLiteral("plain-message.mbox");
     const QString fileName = QString(dir.path() + QLatin1Char('/') +  file);
     QTest::newRow("%OTIME") << "%OTIME" << fileName << KLocale::global()->formatTime(QTime(11, 30), false) << false;
-    QTest::newRow("%OTIMELONG") << "%OTIMELONG" << fileName << KLocale::global()->formatTime(QTime(11, 30, 27), true) << false;
+    QTest::newRow("%OTIMELONG") << "%OTIMELONG" << fileName << QLocale::system().toString(QTime(11, 30, 27), QLocale::LongFormat) << false;
     QTest::newRow("%OTIMELONGEN") << "%OTIMELONGEN" << fileName << QLocale(QLocale::C).toString(QTime(11, 30, 27), QLocale::LongFormat) << false;
-    QTest::newRow("%ODATE") << "%ODATE" << fileName << KLocale::global()->formatDate(QDate(2011, 8, 7), KLocale::LongDate) << false;
-    QTest::newRow("%ODATESHORT") << "%ODATESHORT" << fileName << KLocale::global()->formatDate(QDate(2011, 8, 7), KLocale::ShortDate) << false;
-    QTest::newRow("%ODATEEN") << "%ODATEEN" << fileName << KLocale(QStringLiteral("C")).formatDate(QDate(2011, 8, 7), KLocale::LongDate) << false;
+    QTest::newRow("%ODATE") << "%ODATE" << fileName << QLocale::system().toString(QDate(2011, 8, 7), QLocale::LongFormat) << false;
+    QTest::newRow("%ODATESHORT") << "%ODATESHORT" << fileName << QLocale::system().toString(QDate(2011, 8, 7), QLocale::ShortFormat) << false;
+    QTest::newRow("%ODATEEN") << "%ODATEEN" << fileName << QLocale::c().toString(QDate(2011, 8, 7), QLocale::LongFormat) << false;
     QTest::newRow("%OFULLSUBJ") << "%OFULLSUBJ" << fileName << "Plain Message Test" << false;
     QTest::newRow("%OFULLSUBJECT") << "%OFULLSUBJECT" << fileName << "Plain Message Test" << false;
     QTest::newRow("%OFROMFNAME") << "%OFROMFNAME" << fileName << "Sudhendu" << false;
@@ -198,8 +198,8 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
     QTest::newRow("%NOP") << "%NOP" << fileName << "" << false;
     QTest::newRow("%DICTIONARYLANGUAGE=\"en\"") << "%DICTIONARYLANGUAGE=\"en\"" << fileName << "" << true;
     QTest::newRow("%DICTIONARYLANGUAGE=\"\"") << "%DICTIONARYLANGUAGE=\"\"" << fileName << "" << false;
-    QTest::newRow("%OTIMELONG %OFULLSUBJECT") << "%OTIMELONG %OFULLSUBJECT" << fileName << KLocale::global()->formatTime(QTime(11, 30, 27), true) + QStringLiteral(" Plain Message Test") << false;
-    QTest::newRow("%OTIMELONG\n%OFULLSUBJECT") << "%OTIMELONG\n%OFULLSUBJECT" << fileName << KLocale::global()->formatTime(QTime(11, 30, 27), true) + QStringLiteral("\nPlain Message Test") << false;
+    QTest::newRow("%OTIMELONG %OFULLSUBJECT") << "%OTIMELONG %OFULLSUBJECT" << fileName << QLocale::system().toString(QTime(11, 30, 27), QLocale::LongFormat) + QStringLiteral(" Plain Message Test") << false;
+    QTest::newRow("%OTIMELONG\n%OFULLSUBJECT") << "%OTIMELONG\n%OFULLSUBJECT" << fileName << QLocale::system().toString(QTime(11, 30, 27), QLocale::LongFormat) + QStringLiteral("\nPlain Message Test") << false;
     QTest::newRow("%REM=\"sdfsfsdsdfsdf\"") << "%REM=\"sdfsfsdsdfsdf\"" << fileName << "" << false;
     QTest::newRow("%CLEAR") << "%CLEAR" << fileName << "" << false;
     QTest::newRow("FOO foo") << "FOO foo" << fileName << "FOO foo" << false;

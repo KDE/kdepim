@@ -32,9 +32,7 @@
 #include <KIdentityManagement/Identity>
 #include <KIdentityManagement/IdentityManager>
 
-#include <KCalendarSystem>
 #include <KCharsets>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KProcess>
@@ -296,8 +294,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
     QString plainBody, htmlBody;
 
     bool dnl = false;
-    KLocale *definedLocale = KLocale::global();
-    bool needToDeleteLocale = false;
+    auto definedLocale = QLocale::system();
     for (int i = 0; i < tmpl_len; ++i) {
         QChar c = tmpl[i];
         // qCDebug(TEMPLATEPARSER_LOG) << "Next char: " << c;
@@ -321,13 +318,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 const int len = parseQuotes(QStringLiteral("LANGUAGE="), cmd, q);
                 i += len;
                 if (!q.isEmpty()) {
-                    if (KLocale::global()->installedLanguages().contains(q)) {
-                        if (needToDeleteLocale) {
-                            delete definedLocale;
-                        }
-                        definedLocale = new KLocale(q);
-                        needToDeleteLocale = true;
-                    }
+                    definedLocale = QLocale(q);
                 }
             } else if (cmd.startsWith(QStringLiteral("DICTIONARYLANGUAGE="))) {
                 QString q;
@@ -955,7 +946,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: DATESHORT";
                 i += strlen("DATESHORT");
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = definedLocale->formatDate(date.date(), KLocale::ShortDate);
+                const QString str = definedLocale.toString(date.date(), QLocale::ShortFormat);
                 plainBody.append(str);
                 const QString body = plainToHtml(str);
                 htmlBody.append(body);
@@ -964,7 +955,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: DATE";
                 i += strlen("DATE");
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = definedLocale->formatDate(date.date(), KLocale::LongDate);
+                const QString str = definedLocale.toString(date.date(), QLocale::LongFormat);
                 plainBody.append(str);
                 const QString body = plainToHtml(str);
                 htmlBody.append(body);
@@ -973,8 +964,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: DOW";
                 i += strlen("DOW");
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = definedLocale->calendar()->weekDayName(date.date(),
-                                    KCalendarSystem::LongDayName);
+                const QString str = definedLocale.dayName(date.date().dayOfWeek(), QLocale::LongFormat);
                 plainBody.append(str);
                 const QString body = plainToHtml(str);
                 htmlBody.append(body);
@@ -993,7 +983,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: TIMELONG";
                 i += strlen("TIMELONG");
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = definedLocale->formatTime(date.time(), true);
+                const QString str = definedLocale.toString(date.time(), QLocale::LongFormat);
                 plainBody.append(str);
                 const QString body = plainToHtml(str);
                 htmlBody.append(body);
@@ -1002,7 +992,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: TIME";
                 i += strlen("TIME");
                 const QDateTime date = QDateTime::currentDateTime();
-                const QString str = definedLocale->formatTime(date.time(), false);
+                const QString str = definedLocale.toString(date.time(), QLocale::ShortFormat);
                 plainBody.append(str);
                 const QString body = plainToHtml(str);
                 htmlBody.append(body);
@@ -1012,8 +1002,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 i += strlen("ODATEEN");
                 if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    KLocale locale(QStringLiteral("C"));
-                    const QString str = locale.formatDate(date.date(), KLocale::LongDate);
+                    const QString str = QLocale::c().toString(date.date(), QLocale::LongFormat);
                     plainBody.append(str);
                     const QString body = plainToHtml(str);
                     htmlBody.append(body);
@@ -1024,7 +1013,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 i += strlen("ODATESHORT");
                 if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    const QString str = definedLocale->formatDate(date.date(), KLocale::ShortDate);
+                    const QString str = definedLocale.toString(date.date(), QLocale::ShortFormat);
                     plainBody.append(str);
                     const QString body = plainToHtml(str);
                     htmlBody.append(body);
@@ -1035,7 +1024,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 i += strlen("ODATE");
                 if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    const QString str = definedLocale->formatDate(date.date(), KLocale::LongDate);
+                    const QString str = definedLocale.toString(date.date(), QLocale::LongFormat);
                     plainBody.append(str);
                     const QString body = plainToHtml(str);
                     htmlBody.append(body);
@@ -1046,8 +1035,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 i += strlen("ODOW");
                 if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    const QString str =
-                        definedLocale->calendar()->weekDayName(date.date(), KCalendarSystem::LongDayName);
+                    const QString str = definedLocale.dayName(date.date().dayOfWeek(), QLocale::LongFormat);
                     plainBody.append(str);
                     const QString body = plainToHtml(str);
                     htmlBody.append(body);
@@ -1069,7 +1057,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 i += strlen("OTIMELONG");
                 if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    const QString str = definedLocale->formatTime(date.time(), true);
+                    const QString str = definedLocale.toString(date.time(), QLocale::LongFormat);
                     plainBody.append(str);
                     const QString body = plainToHtml(str);
                     htmlBody.append(body);
@@ -1080,7 +1068,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 i += strlen("OTIME");
                 if (mOrigMsg) {
                     const QDateTime date = mOrigMsg->date()->dateTime();
-                    const QString str = definedLocale->formatTime(date.time(), false);
+                    const QString str = definedLocale.toString(date.time(), QLocale::ShortFormat);
                     plainBody.append(str);
                     const QString body = plainToHtml(str);
                     htmlBody.append(body);
@@ -1186,9 +1174,6 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
         makeValidHtml(htmlBody);
     }
     addProcessedBodyToMessage(plainBody, htmlBody);
-    if (needToDeleteLocale) {
-        delete definedLocale;
-    }
 }
 
 QString TemplateParser::getPlainSignature() const

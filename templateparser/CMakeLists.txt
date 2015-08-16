@@ -50,7 +50,7 @@ PRIVATE
   KF5::IdentityManagement
   messagecore
   Qt5::WebKitWidgets
-  KF5::KDELibs4Support
+  KF5::XmlGui
 )
 set_target_properties(templateparser PROPERTIES
   VERSION ${KDEPIM_LIB_VERSION}
