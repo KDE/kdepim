@@ -40,8 +40,9 @@
 #include <gpgme++/error.h>
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/key.h>
-
+#include <QTimer>
 #include <QObject>
+#include <QSignalSpy>
 
 Q_DECLARE_METATYPE(GpgME::VerificationResult)
 
@@ -189,6 +190,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_KLEOMAIN(VerifyTest, NoGUI)
+QTEST_KLEOMAIN(VerifyTest)
 
 #include "test_verify.moc"
