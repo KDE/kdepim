@@ -755,7 +755,7 @@ bool Kleo::ChiasmusBackend::checkForChiasmus(QString *reason) const
 {
 
     // kills the protocol instance when we return false:
-    std::auto_ptr<Protocol> tmp(mProtocol);
+    std::unique_ptr<Protocol> tmp(mProtocol);
     mProtocol = 0;
 
     const CryptoConfigEntry *path = config()->entry(QStringLiteral("Chiasmus"), QStringLiteral("General"), QStringLiteral("path"));

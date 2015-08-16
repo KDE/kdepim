@@ -615,7 +615,7 @@ void SignEncryptFilesController::Private::ensureWizardCreated()
         return;
     }
 
-    std::auto_ptr<NewSignEncryptFilesWizard> w(new NewSignEncryptFilesWizard);
+    std::unique_ptr<NewSignEncryptFilesWizard> w(new NewSignEncryptFilesWizard);
     w->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(w.get(), SIGNAL(operationPrepared()), q, SLOT(slotWizardOperationPrepared()), Qt::QueuedConnection);

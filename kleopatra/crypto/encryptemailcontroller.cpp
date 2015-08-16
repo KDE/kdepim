@@ -319,7 +319,7 @@ void EncryptEMailController::Private::ensureWizardCreated() const
         return;
     }
 
-    std::auto_ptr<EncryptEMailWizard> w(new EncryptEMailWizard);
+    std::unique_ptr<EncryptEMailWizard> w(new EncryptEMailWizard);
     w->setAttribute(Qt::WA_DeleteOnClose);
     Kleo::EMailOperationsPreferences prefs;
     w->setQuickMode(prefs.quickEncryptEMail());

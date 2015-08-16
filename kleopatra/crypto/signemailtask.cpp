@@ -103,7 +103,7 @@ public:
     explicit Private(SignEMailTask *qq);
 
 private:
-    std::auto_ptr<Kleo::SignJob> createJob(GpgME::Protocol proto);
+    std::unique_ptr<Kleo::SignJob> createJob(GpgME::Protocol proto);
 
 private:
     void slotResult(const SigningResult &);
@@ -202,7 +202,7 @@ void SignEMailTask::doStart()
 
     d->micAlg.clear();
 
-    std::auto_ptr<Kleo::SignJob> job = d->createJob(protocol());
+    std::unique_ptr<Kleo::SignJob> job = d->createJob(protocol());
     kleo_assert(job.get());
 
     job->start(d->signers,
@@ -219,12 +219,12 @@ void SignEMailTask::cancel()
     }
 }
 
-std::auto_ptr<Kleo::SignJob> SignEMailTask::Private::createJob(GpgME::Protocol proto)
+std::unique_ptr<Kleo::SignJob> SignEMailTask::Private::createJob(GpgME::Protocol proto)
 {
     const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(proto);
     kleo_assert(backend);
     bool shouldArmor = (proto == OpenPGP || q->asciiArmor()) && !output->binaryOpt();
-    std::auto_ptr<Kleo::SignJob> signJob(backend->signJob(/*armor=*/ shouldArmor, /*textmode=*/false));
+    std::unique_ptr<Kleo::SignJob> signJob(backend->signJob(/*armor=*/ shouldArmor, /*textmode=*/false));
     kleo_assert(signJob.get());
     if (proto == CMS && !q->asciiArmor() && !output->binaryOpt()) {
         signJob->setOutputIsBase64Encoded(true);

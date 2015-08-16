@@ -150,7 +150,7 @@ void SignJob::process()
     Q_ASSERT(proto);
 
     qCDebug(MESSAGECOMPOSER_LOG) << "creating signJob from:" << proto->name() << proto->displayName();
-    std::auto_ptr<Kleo::SignJob> job(proto->signJob(!d->binaryHint(d->format), d->format == Kleo::InlineOpenPGPFormat));
+    std::unique_ptr<Kleo::SignJob> job(proto->signJob(!d->binaryHint(d->format), d->format == Kleo::InlineOpenPGPFormat));
     // for now just do the main recipients
     QByteArray signature;
 

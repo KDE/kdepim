@@ -228,7 +228,7 @@ QMimeData *CalendarSupport::createMimeData(const Akonadi::Item::List &items,
         return 0;
     }
 
-    std::auto_ptr<QMimeData> mimeData(new QMimeData);
+    std::unique_ptr<QMimeData> mimeData(new QMimeData);
 
     mimeData->setUrls(urls);
 
@@ -276,7 +276,7 @@ static QByteArray findMostCommonType(const Akonadi::Item::List &items)
 QDrag *CalendarSupport::createDrag(const Akonadi::Item::List &items,
                                    const KDateTime::Spec &timeSpec, QWidget *parent)
 {
-    std::auto_ptr<QDrag> drag(new QDrag(parent));
+    std::unique_ptr<QDrag> drag(new QDrag(parent));
     drag->setMimeData(CalendarSupport::createMimeData(items, timeSpec));
 
     const QByteArray common = findMostCommonType(items);

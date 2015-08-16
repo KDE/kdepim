@@ -215,7 +215,7 @@ public:
         }
         const QString dir = QFile::decodeName(dirNative);
         const QString logFileName = QDir(dir).absoluteFilePath(QStringLiteral("kleopatra.log.%1").arg(mygetpid()));
-        std::auto_ptr<QFile> logFile(new QFile(logFileName));
+        std::unique_ptr<QFile> logFile(new QFile(logFileName));
         if (!logFile->open(QIODevice::WriteOnly | QIODevice::Append)) {
             qCDebug(KLEOPATRA_LOG) << "Could not open file for logging: " << logFileName << "\nLogging disabled";
             return;

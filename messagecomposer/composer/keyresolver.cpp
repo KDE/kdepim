@@ -1870,7 +1870,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::lookup(const QStringList &patterns, b
     std::vector<GpgME::Key> result;
     if (mCryptoMessageFormats & (InlineOpenPGPFormat | OpenPGPMIMEFormat))
         if (const Kleo::CryptoBackend::Protocol *p = Kleo::CryptoBackendFactory::instance()->openpgp()) {
-            std::auto_ptr<Kleo::KeyListJob> job(p->keyListJob(false, false, true));     // use validating keylisting
+            std::unique_ptr<Kleo::KeyListJob> job(p->keyListJob(false, false, true));     // use validating keylisting
             if (job.get()) {
                 std::vector<GpgME::Key> keys;
                 job->exec(patterns, secret, keys);
@@ -1879,7 +1879,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::lookup(const QStringList &patterns, b
         }
     if (mCryptoMessageFormats & (SMIMEFormat | SMIMEOpaqueFormat))
         if (const Kleo::CryptoBackend::Protocol *p = Kleo::CryptoBackendFactory::instance()->smime()) {
-            std::auto_ptr<Kleo::KeyListJob> job(p->keyListJob(false, false, true));     // use validating keylisting
+            std::unique_ptr<Kleo::KeyListJob> job(p->keyListJob(false, false, true));     // use validating keylisting
             if (job.get()) {
                 std::vector<GpgME::Key> keys;
                 job->exec(patterns, secret, keys);

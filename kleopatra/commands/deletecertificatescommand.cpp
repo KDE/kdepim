@@ -367,7 +367,7 @@ void DeleteCertificatesCommand::Private::startDeleteJob(GpgME::Protocol protocol
     const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(protocol);
     assert(backend);
 
-    std::auto_ptr<MultiDeleteJob> job(new MultiDeleteJob(backend));
+    std::unique_ptr<MultiDeleteJob> job(new MultiDeleteJob(backend));
 
     if (protocol == CMS)
         connect(job.get(), SIGNAL(result(GpgME::Error,GpgME::Key)),

@@ -238,7 +238,7 @@ void ExportCertificateCommand::Private::startExportJob(GpgME::Protocol protocol,
     const bool binary = protocol == GpgME::OpenPGP
                         ? fileName.endsWith(QStringLiteral(".gpg"), Qt::CaseInsensitive) || fileName.endsWith(QStringLiteral(".pgp"), Qt::CaseInsensitive)
                         : fileName.endsWith(QStringLiteral(".der"), Qt::CaseInsensitive) ;
-    std::auto_ptr<ExportJob> job(backend->publicKeyExportJob(!binary));
+    std::unique_ptr<ExportJob> job(backend->publicKeyExportJob(!binary));
     assert(job.get());
 
     connect(job.get(), SIGNAL(result(GpgME::Error,QByteArray)),

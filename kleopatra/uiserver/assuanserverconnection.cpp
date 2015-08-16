@@ -1411,7 +1411,7 @@ int AssuanCommand::inquire(const char *keyword, QObject *receiver, const char *s
     }
 
 #if defined(HAVE_ASSUAN2) || defined(HAVE_ASSUAN_INQUIRE_EXT)
-    std::auto_ptr<InquiryHandler> ih(new InquiryHandler(keyword, receiver));
+    std::unique_ptr<InquiryHandler> ih(new InquiryHandler(keyword, receiver));
     receiver->connect(ih.get(), SIGNAL(signal(int,QByteArray,QByteArray)), slot);
     if (const gpg_error_t err = assuan_inquire_ext(d->ctx.get(), keyword,
 # if !defined(HAVE_ASSUAN2) && !defined(HAVE_NEW_STYLE_ASSUAN_INQUIRE_EXT)

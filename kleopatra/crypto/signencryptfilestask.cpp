@@ -306,9 +306,9 @@ public:
     explicit Private(SignEncryptFilesTask *qq);
 
 private:
-    std::auto_ptr<Kleo::SignJob> createSignJob(GpgME::Protocol proto);
-    std::auto_ptr<Kleo::SignEncryptJob> createSignEncryptJob(GpgME::Protocol proto);
-    std::auto_ptr<Kleo::EncryptJob> createEncryptJob(GpgME::Protocol proto);
+    std::unique_ptr<Kleo::SignJob> createSignJob(GpgME::Protocol proto);
+    std::unique_ptr<Kleo::SignEncryptJob> createSignEncryptJob(GpgME::Protocol proto);
+    std::unique_ptr<Kleo::EncryptJob> createEncryptJob(GpgME::Protocol proto);
     shared_ptr<const Task::Result> makeErrorResult(const Error &err, const QString &errStr, const AuditLog &auditLog);
 
 private:
@@ -477,7 +477,7 @@ void SignEncryptFilesTask::doStart()
 
     if (d->encrypt)
         if (d->sign) {
-            std::auto_ptr<Kleo::SignEncryptJob> job = d->createSignEncryptJob(protocol());
+            std::unique_ptr<Kleo::SignEncryptJob> job = d->createSignEncryptJob(protocol());
             kleo_assert(job.get());
 
             job->start(d->signers, d->recipients,
@@ -485,7 +485,7 @@ void SignEncryptFilesTask::doStart()
 
             d->job = job.release();
         } else {
-            std::auto_ptr<Kleo::EncryptJob> job = d->createEncryptJob(protocol());
+            std::unique_ptr<Kleo::EncryptJob> job = d->createEncryptJob(protocol());
             kleo_assert(job.get());
 
             job->start(d->recipients, d->input->ioDevice(), d->output->ioDevice(), true);
@@ -493,7 +493,7 @@ void SignEncryptFilesTask::doStart()
             d->job = job.release();
         }
     else if (d->sign) {
-        std::auto_ptr<Kleo::SignJob> job = d->createSignJob(protocol());
+        std::unique_ptr<Kleo::SignJob> job = d->createSignJob(protocol());
         kleo_assert(job.get());
 
         job->start(d->signers,
@@ -513,11 +513,11 @@ void SignEncryptFilesTask::cancel()
     }
 }
 
-std::auto_ptr<Kleo::SignJob> SignEncryptFilesTask::Private::createSignJob(GpgME::Protocol proto)
+std::unique_ptr<Kleo::SignJob> SignEncryptFilesTask::Private::createSignJob(GpgME::Protocol proto)
 {
     const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(proto);
     kleo_assert(backend);
-    std::auto_ptr<Kleo::SignJob> signJob(backend->signJob(q->asciiArmor(), /*textmode=*/false));
+    std::unique_ptr<Kleo::SignJob> signJob(backend->signJob(q->asciiArmor(), /*textmode=*/false));
     kleo_assert(signJob.get());
     connect(signJob.get(), SIGNAL(progress(QString,int,int)),
             q, SLOT(setProgress(QString,int,int)));
@@ -526,11 +526,11 @@ std::auto_ptr<Kleo::SignJob> SignEncryptFilesTask::Private::createSignJob(GpgME:
     return signJob;
 }
 
-std::auto_ptr<Kleo::SignEncryptJob> SignEncryptFilesTask::Private::createSignEncryptJob(GpgME::Protocol proto)
+std::unique_ptr<Kleo::SignEncryptJob> SignEncryptFilesTask::Private::createSignEncryptJob(GpgME::Protocol proto)
 {
     const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(proto);
     kleo_assert(backend);
-    std::auto_ptr<Kleo::SignEncryptJob> signEncryptJob(backend->signEncryptJob(q->asciiArmor(), /*textmode=*/false));
+    std::unique_ptr<Kleo::SignEncryptJob> signEncryptJob(backend->signEncryptJob(q->asciiArmor(), /*textmode=*/false));
     kleo_assert(signEncryptJob.get());
     connect(signEncryptJob.get(), SIGNAL(progress(QString,int,int)),
             q, SLOT(setProgress(QString,int,int)));
@@ -539,11 +539,11 @@ std::auto_ptr<Kleo::SignEncryptJob> SignEncryptFilesTask::Private::createSignEnc
     return signEncryptJob;
 }
 
-std::auto_ptr<Kleo::EncryptJob> SignEncryptFilesTask::Private::createEncryptJob(GpgME::Protocol proto)
+std::unique_ptr<Kleo::EncryptJob> SignEncryptFilesTask::Private::createEncryptJob(GpgME::Protocol proto)
 {
     const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(proto);
     kleo_assert(backend);
-    std::auto_ptr<Kleo::EncryptJob> encryptJob(backend->encryptJob(q->asciiArmor(), /*textmode=*/false));
+    std::unique_ptr<Kleo::EncryptJob> encryptJob(backend->encryptJob(q->asciiArmor(), /*textmode=*/false));
     kleo_assert(encryptJob.get());
     connect(encryptJob.get(), SIGNAL(progress(QString,int,int)),
             q, SLOT(setProgress(QString,int,int)));

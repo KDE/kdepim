@@ -405,8 +405,8 @@ bool KDPipeIODevice::Private::doOpen(int fd_, Qt::HANDLE handle_, OpenMode mode_
         return false;    // need to have at least read -or- write
     }
 
-    std::auto_ptr<Reader> reader_;
-    std::auto_ptr<Writer> writer_;
+    std::unique_ptr<Reader> reader_;
+    std::unique_ptr<Writer> writer_;
 
     if (mode_ & ReadOnly) {
         reader_.reset(new Reader(fd_, handle_));

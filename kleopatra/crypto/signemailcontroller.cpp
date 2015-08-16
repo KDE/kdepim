@@ -351,7 +351,7 @@ void SignEMailController::Private::ensureWizardCreated()
         return;
     }
 
-    std::auto_ptr<SignEMailWizard> w(new SignEMailWizard);
+    std::unique_ptr<SignEMailWizard> w(new SignEMailWizard);
     w->setAttribute(Qt::WA_DeleteOnClose);
     connect(w.get(), SIGNAL(signersResolved()), q, SLOT(slotWizardSignersResolved()), Qt::QueuedConnection);
     connect(w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection);

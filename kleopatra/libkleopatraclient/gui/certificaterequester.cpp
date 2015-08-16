@@ -62,7 +62,7 @@ private:
     }
     void createCommand()
     {
-        std::auto_ptr<SelectCertificateCommand> cmd(new SelectCertificateCommand);
+        std::unique_ptr<SelectCertificateCommand> cmd(new SelectCertificateCommand);
 
         cmd->setMultipleCertificatesAllowed(multipleCertificatesAllowed);
         cmd->setOnlySigningCertificatesAllowed(onlySigningCertificatesAllowed);

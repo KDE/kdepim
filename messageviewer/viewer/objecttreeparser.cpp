@@ -2130,7 +2130,7 @@ bool ObjectTreeParser::decryptChiasmus(const QByteArray &data, QByteArray &bodyD
         return false;
     }
 
-    const std::auto_ptr<Kleo::SpecialJob> listjob(chiasmus->specialJob("x-obtain-keys", QMap<QString, QVariant>()));
+    const std::unique_ptr<Kleo::SpecialJob> listjob(chiasmus->specialJob("x-obtain-keys", QMap<QString, QVariant>()));
     if (!listjob.get()) {
         errorText = i18n("Chiasmus backend does not offer the "
                          "\"x-obtain-keys\" function. Please report this bug.");

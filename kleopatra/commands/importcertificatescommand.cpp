@@ -407,13 +407,13 @@ void ImportCertificatesCommand::Private::tryToFinish()
     finished();
 }
 
-static std::auto_ptr<ImportJob> get_import_job(GpgME::Protocol protocol)
+static std::unique_ptr<ImportJob> get_import_job(GpgME::Protocol protocol)
 {
     assert(protocol != UnknownProtocol);
     if (const Kleo::CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(protocol)) {
-        return std::auto_ptr<ImportJob>(backend->importJob());
+        return std::unique_ptr<ImportJob>(backend->importJob());
     } else {
-        return std::auto_ptr<ImportJob>();
+        return std::unique_ptr<ImportJob>();
     }
 }
 
@@ -425,7 +425,7 @@ void ImportCertificatesCommand::Private::startImport(GpgME::Protocol protocol, c
         return;
     }
 
-    std::auto_ptr<ImportJob> job = get_import_job(protocol);
+    std::unique_ptr<ImportJob> job = get_import_job(protocol);
     if (!job.get()) {
         nonWorkingProtocols.push_back(protocol);
         error(i18n("The type of this certificate (%1) is not supported by this Kleopatra installation.",
@@ -448,13 +448,13 @@ void ImportCertificatesCommand::Private::startImport(GpgME::Protocol protocol, c
     }
 }
 
-static std::auto_ptr<ImportFromKeyserverJob> get_import_from_keyserver_job(GpgME::Protocol protocol)
+static std::unique_ptr<ImportFromKeyserverJob> get_import_from_keyserver_job(GpgME::Protocol protocol)
 {
     assert(protocol != UnknownProtocol);
     if (const Kleo::CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(protocol)) {
-        return std::auto_ptr<ImportFromKeyserverJob>(backend->importFromKeyserverJob());
+        return std::unique_ptr<ImportFromKeyserverJob>(backend->importFromKeyserverJob());
     } else {
-        return std::auto_ptr<ImportFromKeyserverJob>();
+        return std::unique_ptr<ImportFromKeyserverJob>();
     }
 }
 
@@ -466,7 +466,7 @@ void ImportCertificatesCommand::Private::startImport(GpgME::Protocol protocol, c
         return;
     }
 
-    std::auto_ptr<ImportFromKeyserverJob> job = get_import_from_keyserver_job(protocol);
+    std::unique_ptr<ImportFromKeyserverJob> job = get_import_from_keyserver_job(protocol);
     if (!job.get()) {
         nonWorkingProtocols.push_back(protocol);
         error(i18n("The type of this certificate (%1) is not supported by this Kleopatra installation.",

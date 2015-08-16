@@ -57,7 +57,7 @@ static void testSign()
 
     std::vector<GpgME::Key> signingKeys;
 
-    std::auto_ptr<Kleo::KeyListJob> listJob(proto->keyListJob(false, false, true));     // use validating keylisting
+    std::unique_ptr<Kleo::KeyListJob> listJob(proto->keyListJob(false, false, true));     // use validating keylisting
     if (listJob.get()) {
         // ##### Adjust this to your own identity
         listJob->exec(QStringList("kloecker@kde.org"), true /*secret*/, signingKeys);

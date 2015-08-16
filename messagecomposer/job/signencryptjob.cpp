@@ -169,7 +169,7 @@ void SignEncryptJob::process()
     //d->resultContent = new KMime::Content;
 
     qCDebug(MESSAGECOMPOSER_LOG) << "creating signencrypt from:" << proto->name() << proto->displayName();
-    std::auto_ptr<Kleo::SignEncryptJob> job(proto->signEncryptJob(!d->binaryHint(d->format), d->format == Kleo::InlineOpenPGPFormat));
+    std::unique_ptr<Kleo::SignEncryptJob> job(proto->signEncryptJob(!d->binaryHint(d->format), d->format == Kleo::InlineOpenPGPFormat));
     QByteArray encBody;
     d->content->assemble();
 

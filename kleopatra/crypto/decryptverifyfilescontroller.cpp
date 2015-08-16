@@ -253,7 +253,7 @@ void DecryptVerifyFilesController::Private::ensureWizardCreated()
         return;
     }
 
-    std::auto_ptr<DecryptVerifyFilesWizard> w(new DecryptVerifyFilesWizard);
+    std::unique_ptr<DecryptVerifyFilesWizard> w(new DecryptVerifyFilesWizard);
     w->setWindowTitle(i18n("Decrypt/Verify Files"));
     w->setAttribute(Qt::WA_DeleteOnClose);
 

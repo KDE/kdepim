@@ -117,11 +117,11 @@ ConfigReader::~ConfigReader()
 
 Config *ConfigReader::readConfig() const
 {
-    std::auto_ptr<Config> cfg(new Config);
+    std::unique_ptr<Config> cfg(new Config);
     const QMap<QString, QString> componentInfo = d->readComponentInfo();
 
     Q_FOREACH (const QString &i, componentInfo) {
-        std::auto_ptr<ConfigComponent> component(new ConfigComponent(i));
+        std::unique_ptr<ConfigComponent> component(new ConfigComponent(i));
         component->setDescription(componentInfo[i]);
         d->readEntriesForComponent(component.get());
         cfg->addComponent(component.release());
@@ -136,7 +136,7 @@ ConfigEntry *ConfigReader::Private::createEntryFromParsedLine(const QStringList 
     assert(parsedLine.count() >= 10);   // called checked for it already
     QStringList::const_iterator it = parsedLine.begin();
     const QString name = *it++;
-    std::auto_ptr<ConfigEntry> entry(new ConfigEntry(name));
+    std::unique_ptr<ConfigEntry> entry(new ConfigEntry(name));
     const int flags = (*it++).toInt();
     const int level = (*it++).toInt();
     Q_UNUSED(level);
@@ -165,7 +165,7 @@ void ConfigReader::Private::readEntriesForComponent(ConfigComponent *component) 
     args << QStringLiteral("--list-options") << component->name();
     GpgConfResult res = runGpgConf(args);
 
-    std::auto_ptr<ConfigGroup> currentGroup;
+    std::unique_ptr<ConfigGroup> currentGroup;
 
     QBuffer buf(&res.stdOut);
     buf.open(QIODevice::ReadOnly);

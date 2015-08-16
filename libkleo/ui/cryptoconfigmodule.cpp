@@ -172,7 +172,7 @@ void Kleo::CryptoConfigModule::init(Layout layout)
             continue;
         }
 
-        std::auto_ptr<CryptoConfigComponentGUI> compGUI(new CryptoConfigComponentGUI(this, comp));
+        std::unique_ptr<CryptoConfigComponentGUI> compGUI(new CryptoConfigComponentGUI(this, comp));
         compGUI->setObjectName(*it);
         // KJanusWidget doesn't seem to have iterators, so we store a copy...
         mComponentGUIs.append(compGUI.get());

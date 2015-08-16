@@ -40,7 +40,7 @@
 #include <QStringList>
 #include <QTextCodec>
 
-#include <memory> // std::auto_ptr
+#include <memory> // std::unique_ptr
 
 #include <assert.h>
 #include <ctype.h> // isdigit
@@ -663,7 +663,7 @@ bool Lexer::Impl::parseQuotedString(QString &result)
 
     const QTextCodec *const codec = QTextCodec::codecForMib(106);    // UTF-8
     assert(codec);
-    const std::auto_ptr<QTextDecoder> dec(codec->makeDecoder());
+    const std::unique_ptr<QTextDecoder> dec(codec->makeDecoder());
     assert(dec.get());
 
     while (!atEnd())
