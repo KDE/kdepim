@@ -28,7 +28,6 @@
 
 #include "blogilo_debug.h"
 #include <KLocalizedString>
-#include <kdatetime.h>
 #include <kurl.h>
 #include <kwallet.h>
 #include <kio/deletejob.h>
@@ -477,9 +476,9 @@ int DBMan::addPost(const BilboPost &post, int blog_id)
     q.addBindValue(post.title());
     q.addBindValue(post.content());
     q.addBindValue(post.additionalContent());
-    q.addBindValue(post.creationDateTime().toString(KDateTime::ISODate));
-    q.addBindValue((post.modificationDateTime().isNull() ? post.creationDateTime().toString(KDateTime::ISODate) :
-                    post.modificationDateTime().toString(KDateTime::ISODate)));
+    q.addBindValue(post.creationDateTime().toString(Qt::ISODate));
+    q.addBindValue((post.modificationDateTime().isNull() ? post.creationDateTime().toString(Qt::ISODate) :
+                    post.modificationDateTime().toString(Qt::ISODate)));
     q.addBindValue(post.isPrivate());
     q.addBindValue(post.isCommentAllowed());
     q.addBindValue(post.isTrackBackAllowed());
@@ -542,8 +541,8 @@ bool DBMan::editPost(const BilboPost &post, int blog_id)
     q.addBindValue(post.title());
     q.addBindValue(post.content());
     q.addBindValue(post.additionalContent());
-    q.addBindValue(post.creationDateTime().toString(KDateTime::ISODate));
-    q.addBindValue(post.modificationDateTime().toString(KDateTime::ISODate));
+    q.addBindValue(post.creationDateTime().toString(Qt::ISODate));
+    q.addBindValue(post.modificationDateTime().toString(Qt::ISODate));
     q.addBindValue(post.isPrivate());
     q.addBindValue(post.isCommentAllowed());
     q.addBindValue(post.isTrackBackAllowed());
@@ -778,8 +777,8 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
         q.addBindValue(post.title());
         q.addBindValue(post.content());
         q.addBindValue(post.additionalContent());
-        q.addBindValue(post.creationDateTime().toString(KDateTime::ISODate));
-        q.addBindValue(post.creationDateTime().toString(KDateTime::ISODate));
+        q.addBindValue(post.creationDateTime().toString(Qt::ISODate));
+        q.addBindValue(post.creationDateTime().toString(Qt::ISODate));
         q.addBindValue(post.isPrivate());
         q.addBindValue(post.isCommentAllowed());
         q.addBindValue(post.isTrackBackAllowed());
@@ -811,8 +810,8 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
         q.addBindValue(post.title());
         q.addBindValue(post.content());
         q.addBindValue(post.additionalContent());
-        q.addBindValue(post.creationDateTime().toString(KDateTime::ISODate));
-        q.addBindValue(post.creationDateTime().toString(KDateTime::ISODate));
+        q.addBindValue(post.creationDateTime().toString(Qt::ISODate));
+        q.addBindValue(post.creationDateTime().toString(Qt::ISODate));
         q.addBindValue(post.isPrivate());
         q.addBindValue(post.isCommentAllowed());
         q.addBindValue(post.isTrackBackAllowed());
@@ -843,8 +842,8 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
         q.addBindValue( post.title() );
         q.addBindValue( post.content() );
         q.addBindValue( post.additionalContent() );
-        q.addBindValue( post.creationDateTime().toString( KDateTime::ISODate ) );
-        q.addBindValue( post.creationDateTime().toString( KDateTime::ISODate ) );
+        q.addBindValue( post.creationDateTime().toString( Qt::ISODate ) );
+        q.addBindValue( post.creationDateTime().toString( Qt::ISODate ) );
         q.addBindValue( post.isPrivate() );
         q.addBindValue( post.isCommentAllowed() );
         q.addBindValue( post.isTrackBackAllowed() );
@@ -1079,8 +1078,8 @@ QList< BilboPost * > DBMan::listPosts(int blog_id)
             tmp->setPostId(q.value(1).toString());
             tmp->setTitle(q.value(3).toString());
             tmp->setContent(q.value(4).toString());
-            tmp->setCreationDateTime(KDateTime::fromString(q.value(5).toString(), KDateTime::ISODate));
-            tmp->setModificationDateTime(KDateTime::fromString(q.value(6).toString(), KDateTime::ISODate));
+            tmp->setCreationDateTime(QDateTime::fromString(q.value(5).toString(), Qt::ISODate));
+            tmp->setModificationDateTime(QDateTime::fromString(q.value(6).toString(), Qt::ISODate));
             tmp->setPrivate(q.value(7).toBool());
             tmp->setCommentAllowed(q.value(8).toBool());
             tmp->setTrackBackAllowed(q.value(9).toBool());
@@ -1141,8 +1140,8 @@ BilboPost DBMan::getPostInfo(int post_id)
             tmp.setPostId(q.value(1).toString());
             tmp.setTitle(q.value(3).toString());
             tmp.setContent(q.value(4).toString());
-            tmp.setCreationDateTime(KDateTime::fromString(q.value(5).toString(), KDateTime::ISODate));
-            tmp.setModificationDateTime(KDateTime::fromString(q.value(6).toString(), KDateTime::ISODate));
+            tmp.setCreationDateTime(QDateTime::fromString(q.value(5).toString(), Qt::ISODate));
+            tmp.setModificationDateTime(QDateTime::fromString(q.value(6).toString(), Qt::ISODate));
             tmp.setPrivate(q.value(7).toBool());
             tmp.setCommentAllowed(q.value(8).toBool());
             tmp.setTrackBackAllowed(q.value(9).toBool());
@@ -1224,7 +1223,7 @@ QVector<QVariantMap> DBMan::listPostsInfo(int blog_id)
             QVariantMap entry;
             entry[ QStringLiteral("title") ] = q.value(0).toString();
             entry[ QStringLiteral("id") ] = q.value(1).toInt();
-            entry[ QStringLiteral("c_time") ] = KDateTime::fromString(q.value(2).toString()).dateTime();
+            entry[ QStringLiteral("c_time") ] = QDateTime::fromString(q.value(2).toString());
             entry[ QStringLiteral("is_private") ] = q.value(3).toBool();
             list.append(entry);
         }
@@ -1314,8 +1313,8 @@ QMap<BilboPost *, int> DBMan::listTempPosts()
             tmp->setAuthor(q.value(4).toString());
             tmp->setTitle(q.value(5).toString());
             tmp->setContent(q.value(6).toString());
-            tmp->setCreationDateTime(KDateTime::fromString(q.value(8).toString(), KDateTime::ISODate));
-            tmp->setModificationDateTime(KDateTime::fromString(q.value(9).toString(), KDateTime::ISODate));
+            tmp->setCreationDateTime(QDateTime::fromString(q.value(8).toString(), Qt::ISODate));
+            tmp->setModificationDateTime(QDateTime::fromString(q.value(9).toString(), Qt::ISODate));
             tmp->setPrivate(q.value(10).toBool());
             tmp->setCommentAllowed(q.value(11).toBool());
             tmp->setTrackBackAllowed(q.value(12).toBool());
@@ -1402,8 +1401,8 @@ BilboPost DBMan::localPost(int local_id)
             tmp.setTitle(q.value(5).toString());
             tmp.setContent(q.value(6).toString());
             tmp.setAdditionalContent(q.value(7).toString());
-            tmp.setCreationDateTime(KDateTime::fromString(q.value(8).toString(), KDateTime::ISODate));
-            tmp.setModificationDateTime(KDateTime::fromString(q.value(9).toString(), KDateTime::ISODate));
+            tmp.setCreationDateTime(QDateTime::fromString(q.value(8).toString(), Qt::ISODate));
+            tmp.setModificationDateTime(QDateTime::fromString(q.value(9).toString(), Qt::ISODate));
             tmp.setPrivate(q.value(10).toBool());
             tmp.setCommentAllowed(q.value(11).toBool());
             tmp.setTrackBackAllowed(q.value(12).toBool());

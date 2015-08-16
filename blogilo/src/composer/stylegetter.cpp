@@ -38,10 +38,10 @@
 #include <kmessagebox.h>
 #include <klocalizedstring.h>
 #include "blogilo_debug.h"
-#include <kdatetime.h>
 #include <KUrl>
 
 #include <QFile>
+#include <QDateTime>
 
 static const char POST_TITLE[] = "Temporary-Post-Used-For-Style-Detection-Title-";
 static const char  POST_CONTENT[] = "Temporary-Post-Used-For-Style-Detection-Content-";
@@ -76,7 +76,7 @@ StyleGetter::StyleGetter(const int blogid, QObject *parent)
 
     if ((tempBlog->api() == BilboBlog::MOVABLETYPE_API) ||
             (tempBlog->api() == BilboBlog::WORDPRESSBUGGY_API)) {
-        mTempPost->setCreationDateTime(KDateTime(QDate(2000, 1, 1), QTime(0, 0), KDateTime::UTC));
+        mTempPost->setCreationDateTime(QDateTime(QDate(2000, 1, 1), QTime(0, 0), Qt::UTC));
     }
 
     b = new Backend(blogid);

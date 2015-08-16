@@ -104,8 +104,8 @@ void BloggerPrivate::updateKBlogPost(BlogPost *kblog, const KGAPI2::Blogger::Pos
     kblog->setTitle(postPtr->title());
     kblog->setContent(postPtr->content());
     kblog->setTags(postPtr->labels());
-    kblog->setCreationDateTime(KDateTime(postPtr->published()));
-    kblog->setModificationDateTime(KDateTime(postPtr->updated()));
+    kblog->setCreationDateTime(postPtr->published());
+    kblog->setModificationDateTime(postPtr->updated());
     kblog->setLink(postPtr->url());
     kblog->setPrivate(postPtr->status() == QLatin1String("DRAFT"));
     // TODO: Try to match more?
@@ -121,8 +121,8 @@ KGAPI2::Blogger::PostPtr BloggerPrivate::KBlogPostToKGAPI(const BlogPost *const 
     postPtr->setTitle(kblog->title());
     postPtr->setContent(kblog->content());
     postPtr->setLabels(kblog->tags());
-    postPtr->setPublished(kblog->creationDateTime().dateTime());
-    postPtr->setUpdated(kblog->modificationDateTime().dateTime());
+    postPtr->setPublished(kblog->creationDateTime());
+    postPtr->setUpdated(kblog->modificationDateTime());
     postPtr->setUrl(kblog->link());
     return postPtr;
 }
@@ -167,8 +167,8 @@ BlogComment BloggerPrivate::KGAPICommentToKBlogComment(const KGAPI2::Blogger::Co
     BlogComment kblogComment;
     kblogComment.setCommentId(commentPtr->id());
     kblogComment.setContent(commentPtr->content());
-    kblogComment.setCreationDateTime(KDateTime(commentPtr->published()));
-    kblogComment.setModificationDateTime(KDateTime(commentPtr->updated()));
+    kblogComment.setCreationDateTime(commentPtr->published());
+    kblogComment.setModificationDateTime(commentPtr->updated());
     kblogComment.setName(commentPtr->authorName());
     return kblogComment;
 }

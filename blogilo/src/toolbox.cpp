@@ -39,6 +39,7 @@
 #include <QClipboard>
 #include <QTimer>
 #include <QPointer>
+#include <QTimeZone>
 #include <qstatusbar.h>
 #include <QDesktopServices>
 #include "blogilo_debug.h"
@@ -278,22 +279,20 @@ void Toolbox::getFieldsValue(BilboPost *currentPost)
     currentPost->setModifyTimeStamp(chkOptionsTime->isChecked());
     if (currentPost->status() == KBlog::BlogPost::New) {
         if (chkOptionsTime->isChecked()) {
-            currentPost->setModificationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
-            currentPost->setCreationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
+            currentPost->setModificationDateTime(QDateTime(optionsDate->date(), optionsTime->time()));
+            currentPost->setCreationDateTime(QDateTime(optionsDate->date(), optionsTime->time()));
         } else {
-            currentPost->setCreationDateTime(KDateTime::currentLocalDateTime());
-            currentPost->setModificationDateTime(KDateTime::currentLocalDateTime());
+            currentPost->setCreationDateTime(QDateTime::currentDateTime());
+            currentPost->setModificationDateTime(QDateTime::currentDateTime());
         }
     } else {
-        currentPost->setCreationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
-        currentPost->setModificationDateTime(KDateTime(optionsDate->date(), optionsTime->time()));
+        currentPost->setCreationDateTime(QDateTime(optionsDate->date(), optionsTime->time()));
+        currentPost->setModificationDateTime(QDateTime(optionsDate->date(), optionsTime->time()));
     }
-    if (currentPost->creationDateTime().isUtc() || currentPost->modificationDateTime().isUtc()) {
+    if (currentPost->creationDateTime().timeZone() == QTimeZone("UTC") || currentPost->modificationDateTime().timeZone() == QTimeZone("UTC")) {
         qCDebug(BLOGILO_LOG) << "creationDateTime was UTC!";
-        currentPost->setCreationDateTime(KDateTime(currentPost->creationDateTime().dateTime(),
-                                         KDateTime::LocalZone));
-        currentPost->setModificationDateTime(KDateTime(currentPost->modificationDateTime().dateTime(),
-                                             KDateTime::LocalZone));
+        currentPost->setCreationDateTime(currentPost->creationDateTime().toLocalTime());
+        currentPost->setModificationDateTime(currentPost->modificationDateTime().toLocalTime());
     }
     currentPost->setSlug(txtSlug->text());
     currentPost->setPrivate((comboOptionsStatus->currentIndex() == 1) ? true : false);
@@ -323,10 +322,10 @@ void Toolbox::setFieldsValue(BilboPost *post)
     chkOptionsComments->setChecked(post->isCommentAllowed());
     chkOptionsTrackback->setChecked(post->isTrackBackAllowed());
     chkOptionsTime->setChecked(post->isModifyTimeStamp());
-    if (post->creationDateTime().isUtc() || post->modificationDateTime().isUtc()) {
+    if (post->creationDateTime().timeZone() == QTimeZone("UTC") || post->modificationDateTime().timeZone() == QTimeZone("UTC")) {
         qCDebug(BLOGILO_LOG) << "creationDateTime was UTC!";
-        post->setCreationDateTime(KDateTime(post->creationDateTime().dateTime(), KDateTime::LocalZone));
-        post->setModificationDateTime(KDateTime(post->modificationDateTime().dateTime(), KDateTime::LocalZone));
+        post->setCreationDateTime(post->creationDateTime().toLocalTime());
+        post->setModificationDateTime(post->modificationDateTime().toLocalTime());
     }
     optionsTime->setTime(post->creationDateTime().time());
     optionsDate->setDate(post->creationDateTime().date());

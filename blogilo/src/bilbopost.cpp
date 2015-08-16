@@ -22,9 +22,9 @@
 */
 
 #include "bilbopost.h"
-#include <kdatetime.h>
 #include "blogilo_debug.h"
 #include <QStringList>
+#include <QDateTime>
 
 class BilboPostPrivate
 {
@@ -39,8 +39,8 @@ public:
 BilboPost::BilboPost()
     : KBlog::BlogPost(), d_ptr(new BilboPostPrivate)
 {
-    this->setCreationDateTime(KDateTime::currentLocalDateTime());
-    this->setModificationDateTime(KDateTime::currentLocalDateTime());
+    this->setCreationDateTime(QDateTime::currentDateTime());
+    this->setModificationDateTime(QDateTime::currentDateTime());
     this->setCommentAllowed(true);
     this->setPrivate(false);
     this->setTrackBackAllowed(true);
