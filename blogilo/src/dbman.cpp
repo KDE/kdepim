@@ -28,7 +28,6 @@
 
 #include "blogilo_debug.h"
 #include <KLocalizedString>
-#include <kurl.h>
 #include <kwallet.h>
 #include <kio/deletejob.h>
 #include <kmessagebox.h>
@@ -39,6 +38,7 @@
 #include <QSqlDatabase>
 #include <QDateTime>
 #include <QStandardPaths>
+#include <QUrl>
 
 class DBMan::Private
 {
@@ -1083,8 +1083,8 @@ QList< BilboPost * > DBMan::listPosts(int blog_id)
             tmp->setPrivate(q.value(7).toBool());
             tmp->setCommentAllowed(q.value(8).toBool());
             tmp->setTrackBackAllowed(q.value(9).toBool());
-            tmp->setLink(KUrl(q.value(10).toString()));
-            tmp->setPermaLink(KUrl(q.value(11).toString()));
+            tmp->setLink(QUrl(q.value(10).toString()));
+            tmp->setPermaLink(QUrl(q.value(11).toString()));
             tmp->setSummary(q.value(12).toString());
             tmp->setTags(q.value(13).toString().split(QLatin1Char(','), QString::SkipEmptyParts));
             tmp->setStatus((KBlog::BlogPost::Status) q.value(14).toInt());
@@ -1318,8 +1318,8 @@ QMap<BilboPost *, int> DBMan::listTempPosts()
             tmp->setPrivate(q.value(10).toBool());
             tmp->setCommentAllowed(q.value(11).toBool());
             tmp->setTrackBackAllowed(q.value(12).toBool());
-            tmp->setLink(KUrl(q.value(13).toString()));
-            tmp->setPermaLink(KUrl(q.value(14).toString()));
+            tmp->setLink(QUrl(q.value(13).toString()));
+            tmp->setPermaLink(QUrl(q.value(14).toString()));
             tmp->setSummary(q.value(15).toString());
             tmp->setTags(q.value(16).toString().split(QLatin1Char(','), QString::SkipEmptyParts));
             tmp->setStatus((KBlog::BlogPost::Status) q.value(17).toInt());
@@ -1406,8 +1406,8 @@ BilboPost DBMan::localPost(int local_id)
             tmp.setPrivate(q.value(10).toBool());
             tmp.setCommentAllowed(q.value(11).toBool());
             tmp.setTrackBackAllowed(q.value(12).toBool());
-            tmp.setLink(KUrl(q.value(13).toString()));
-            tmp.setPermaLink(KUrl(q.value(14).toString()));
+            tmp.setLink(QUrl(q.value(13).toString()));
+            tmp.setPermaLink(QUrl(q.value(14).toString()));
             tmp.setSummary(q.value(15).toString());
             tmp.setTags(q.value(16).toString().split(QLatin1Char(','), QString::SkipEmptyParts));
             tmp.setStatus((KBlog::BlogPost::Status) q.value(17).toInt());

@@ -38,8 +38,8 @@
 #include <kmessagebox.h>
 #include <klocalizedstring.h>
 #include "blogilo_debug.h"
-#include <KUrl>
 
+#include <QUrl>
 #include <QFile>
 #include <QDateTime>
 
@@ -109,14 +109,14 @@ QString StyleGetter::styledHtml(const int blogid,
     //QString url = QString( "bilbo/%1/" ).arg( blogid );
     QString url = QStringLiteral("blogilo/%1/").arg(blogid);
     url = KStandardDirs::locateLocal("data", url , true);
-    KUrl dest(url);
-    dest.addPath(QStringLiteral("style.html"));
+    QUrl dest(url);
+    dest.setPath(dest.path() + QStringLiteral("/style.html"));
     dest.setScheme(QStringLiteral("file"));
 
     if (!dest.isValid()) {
         return QLatin1String("<html><body><h2 align='center'>") + title + QLatin1String("</h2><br>") + content + QLatin1String("</html>");
     }
-    QFile file(dest.pathOrUrl());
+    QFile file(dest.toLocalFile());
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         return QLatin1String("<html><body><h2 align='center'>") + title + QLatin1String("</h2><br>") + content + QLatin1String("</html>");
     }
@@ -143,7 +143,7 @@ void StyleGetter::slotTempPostPublished(int blogId, BilboPost *post)
 {
     qCDebug(BLOGILO_LOG);
 
-    KUrl postUrl;
+    QUrl postUrl;
 //     postUrl = post->permaLink();
     postUrl = post->link();
     if (postUrl.isEmpty()) {
@@ -152,7 +152,7 @@ void StyleGetter::slotTempPostPublished(int blogId, BilboPost *post)
         postUrl = post->permaLink();
         if (postUrl.isEmpty()) {
             qCDebug(BLOGILO_LOG) << "permaLink was empty";
-            postUrl = KUrl(DBMan::self()->blog(blogId)->blogUrl());
+            postUrl = QUrl(DBMan::self()->blog(blogId)->blogUrl());
         }
     }
 

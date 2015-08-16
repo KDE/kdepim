@@ -75,6 +75,7 @@ target_link_libraries(blogilo
     Qt5::Sql
     KF5::XmlRpcClient
     KF5::DBusAddons
+    KF5::XmlGui
 )
 
 if (KF5GAPI_FOUND)

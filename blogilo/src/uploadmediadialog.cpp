@@ -35,10 +35,10 @@
 #include <kio/jobclasses.h>
 #include <kio/job.h>
 #include <KLocalizedString>
-#include <KUrl>
 #include <KMimeType>
 #include <QIcon>
 
+#include <QUrl>
 #include <QClipboard>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
@@ -109,7 +109,7 @@ bool UploadMediaDialog::selectNewFile()
         return false;
     }
 
-    KUrl mediaUrl(mediaPath);
+    QUrl mediaUrl(mediaPath);
     ui.kcfg_urlLineEdit->setText(mediaPath);
     ui.kcfg_Name->setText(mediaUrl.fileName());
     ui.kcfg_previewer->showPreview(mediaUrl);
@@ -131,7 +131,7 @@ void UploadMediaDialog::slotOkClicked()
     UploadType type = static_cast<UploadType>(ui.kcfg_uploadType->itemData(ui.kcfg_uploadType->currentIndex()).toInt());
     if (type == BlogAPI) {  ///Using API!
         BilboMedia *media = new BilboMedia(this);
-        KUrl mediaUrl(ui.kcfg_urlLineEdit->text());
+        QUrl mediaUrl(ui.kcfg_urlLineEdit->text());
         media->setLocalUrl(mediaUrl);
         media->setName(ui.kcfg_Name->text().isEmpty() ? mediaUrl.fileName() : ui.kcfg_Name->text());
         media->setBlogId(mCurrentBlog->id());
@@ -149,13 +149,12 @@ void UploadMediaDialog::slotOkClicked()
             KMessageBox::sorry(this, i18n("Please insert FTP URL."));
             return;
         }
-        KUrl dest;
+        QUrl dest;
         dest.setUrl(ui.kcfg_FtpPath->text() , QUrl::TolerantMode);
         if (dest.isValid()) {
             if (dest.scheme() == QLatin1String("ftp") || dest.scheme() == QLatin1String("sftp")) {
-                KUrl src(ui.kcfg_urlLineEdit->text());
-                dest.addPath(ui.kcfg_Name->text().isEmpty() ? src.fileName() :
-                             ui.kcfg_Name->text());
+                QUrl src(ui.kcfg_urlLineEdit->text());
+                dest.setPath(dest.path() + QStringLiteral("/") + (ui.kcfg_Name->text().isEmpty() ? src.fileName() : ui.kcfg_Name->text()));
                 KIO::FileCopyJob *job = KIO::file_copy(src, dest);
                 connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMediaObjectUploaded(KJob*)));
                 job->start();
@@ -179,12 +178,11 @@ void UploadMediaDialog::slotMediaObjectUploaded(KJob *job)
         slotError(job->errorString());
     } else {
         KIO::FileCopyJob *fcj = qobject_cast<KIO::FileCopyJob *>(job);
-        KUrl tmpUrl(ui.kcfg_httpUrl->text());
+        QUrl tmpUrl(ui.kcfg_httpUrl->text());
         QString destUrl;
         if (tmpUrl.isValid()) {
-            tmpUrl.adjustPath(KUrl::AddTrailingSlash);
-            tmpUrl.setFileName(ui.kcfg_Name->text());
-            destUrl = tmpUrl.prettyUrl();
+            tmpUrl.setPath(tmpUrl.path() + QStringLiteral("/") + ui.kcfg_Name->text());
+            destUrl = tmpUrl.toDisplayString(QUrl::FullyDecoded);
         } else {
             destUrl = fcj->destUrl().toDisplayString();
         }
