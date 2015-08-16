@@ -20,8 +20,6 @@
 
 #include "storageservicetreewidgetitem.h"
 #include "storageservicetreewidget.h"
-#include <KGlobal>
-#include <KLocale>
 #include <KFormat>
 using namespace PimCommon;
 
