@@ -70,7 +70,7 @@
 #include <QTemporaryDir>
 #include <QTemporaryFile>
 #include <KToggleAction>
-#include <KPrintPreview>
+#include <QPrintPreviewDialog>
 #include <kdeprintdialog.h>
 #include <QIcon>
 #include <kfileitemactions.h>
@@ -2517,9 +2517,10 @@ void ViewerPrivate::slotPrintPreview()
     if (!mMessage) {
         return;
     }
-    QPrinter printer;
-    KPrintPreview previewdlg(&printer/*, mViewer*/);
-    mViewer->print(&printer);
+    QPrintPreviewDialog previewdlg(mViewer);
+    connect(&previewdlg, &QPrintPreviewDialog::paintRequested, this, [this](QPrinter *printer) {
+        mViewer->print(printer);
+    });
     previewdlg.exec();
 }
 
