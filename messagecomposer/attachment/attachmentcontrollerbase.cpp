@@ -785,6 +785,7 @@ void AttachmentControllerBase::editAttachment(AttachmentPart::Ptr part, MessageV
     case MessageViewer::EditorWatcher::CannotStart:
         qCWarning(MESSAGECOMPOSER_LOG) << "Could not start EditorWatcher.";
     case MessageViewer::EditorWatcher::Unknown:
+    case MessageViewer::EditorWatcher::Canceled:
     case MessageViewer::EditorWatcher::NoServiceFound: {
         delete watcher;
         delete tempFile;
