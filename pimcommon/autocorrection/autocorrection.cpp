@@ -58,9 +58,9 @@ AutoCorrection::AutoCorrection()
 
     readConfig();
 
-    KLocale *locale = KLocale::global();
+    auto locale = QLocale::system();
     for (int i = 1; i <= 7; ++i) {
-        mCacheNameOfDays.append(locale->calendar()->weekDayName(i).toLower());
+        mCacheNameOfDays.append(locale.dayName(i).toLower());
     }
 }
 
