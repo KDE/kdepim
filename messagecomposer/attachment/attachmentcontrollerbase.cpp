@@ -48,11 +48,11 @@
 #include <KEncodingFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KMimeType>
 #include <KMimeTypeTrader>
 #include <QPushButton>
 #include <KRun>
 #include <QTemporaryFile>
+#include <QMimeDatabase>
 #include <KFileItemActions>
 #include <KActionMenu>
 
@@ -609,10 +609,11 @@ void AttachmentControllerBase::showContextMenu()
     if (numberOfParts > 0) {
         if (numberOfParts == 1) {
             const QString mimetype = QString::fromLatin1(d->selectedParts.first()->mimeType());
-            KMimeType::Ptr mime = KMimeType::mimeType(mimetype);
+            QMimeDatabase mimeDb;
+            auto mime = mimeDb.mimeTypeForName(mimetype);
             QStringList parentMimeType;
-            if (mime) {
-                parentMimeType = mime->allParentMimeTypes();
+            if (mime.isValid()) {
+                parentMimeType = mime.allAncestors();
             }
             if ((mimetype == QLatin1String("text/plain")) ||
                     (mimetype == QLatin1String("image/png")) ||
@@ -912,7 +913,9 @@ void AttachmentControllerBase::showAddAttachmentFileDialog()
             const QUrl url = result.URLs.at(i);
             QUrl urlWithEncoding = url;
             MessageCore::StringUtil::setEncodingFile(urlWithEncoding, encoding);
-            if (KMimeType::findByUrl(urlWithEncoding)->name() == QLatin1String("inode/directory")) {
+            QMimeDatabase mimeDb;
+            auto mimeType = mimeDb.mimeTypeForUrl(urlWithEncoding);
+            if (mimeType.name() == QLatin1String("inode/directory")) {
                 const int rc = KMessageBox::warningYesNo(d->wParent, i18n("Do you really want to attach this directory \"%1\"?", url.toLocalFile()),
                                i18nc("@title:window", "Attach directory"));
                 if (rc == KMessageBox::Yes) {
