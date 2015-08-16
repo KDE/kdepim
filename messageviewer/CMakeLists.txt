@@ -242,6 +242,7 @@ PRIVATE
   KF5::Gpgmepp
   KF5::KDELibs4Support
   KF5::AkonadiNotes
+  KF5::Gpgmepp
 )
 
 target_include_directories(messageviewer PUBLIC "$<BUILD_INTERFACE:${messageviewer_SOURCE_DIR};${messageviewer_BINARY_DIR}>")
