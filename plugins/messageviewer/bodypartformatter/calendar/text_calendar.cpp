@@ -1270,6 +1270,7 @@ public:
             case KMessageBox::Cancel:
                 break;
             case KMessageBox::No: // means "send email"
+            {
                 summary = incidence->summary();
                 if (!summary.isEmpty()) {
                     summary = i18n("Re: %1", summary);
@@ -1282,6 +1283,7 @@ public:
                 url.setScheme(QStringLiteral("mailto"));
                 url.setQuery(query);
                 QDesktopServices::openUrl(url);
+            }
             //fall through
             case KMessageBox::Yes: // means "do not send"
                 if (saveFile(QStringLiteral("Receiver Not Searched"), iCal, QStringLiteral("reply"))) {
