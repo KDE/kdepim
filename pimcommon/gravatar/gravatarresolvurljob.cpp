@@ -19,14 +19,18 @@
 
 #include "gravatarresolvurljob.h"
 #include "gravatarcache.h"
+#include "pimcommon_debug.h"
+
+#include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QStringList>
 #include <QPixmap>
 #include <QUrlQuery>
-#include "pimcommon_debug.h"
-#include <solid/networking.h>
+#include <QNetworkConfigurationManager>
 
 using namespace PimCommon;
+
+static QNetworkConfigurationManager *s_networkConfigMgr = 0;
 
 GravatarResolvUrlJob::GravatarResolvUrlJob(QObject *parent)
     : QObject(parent),
@@ -40,7 +44,8 @@ GravatarResolvUrlJob::GravatarResolvUrlJob(QObject *parent)
       mFallbackDone(false),
       mUseHttps(false)
 {
-
+    if (!s_networkConfigMgr)
+        s_networkConfigMgr = new QNetworkConfigurationManager(QCoreApplication::instance());
 }
 
 GravatarResolvUrlJob::~GravatarResolvUrlJob()
@@ -50,7 +55,7 @@ GravatarResolvUrlJob::~GravatarResolvUrlJob()
 
 bool GravatarResolvUrlJob::canStart() const
 {
-    if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
+    if (s_networkConfigMgr->isOnline()) {
         return !mEmail.trimmed().isEmpty() && (mEmail.contains(QLatin1Char('@')));
     } else {
         return false;
@@ -69,7 +74,7 @@ bool GravatarResolvUrlJob::hasGravatar() const
 
 void GravatarResolvUrlJob::startNetworkManager(const QUrl &url)
 {
-    if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
+    if (s_networkConfigMgr->isOnline()) {
         if (!mNetworkAccessManager) {
             mNetworkAccessManager = new QNetworkAccessManager(this);
             connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &GravatarResolvUrlJob::slotFinishLoadPixmap);
