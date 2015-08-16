@@ -71,7 +71,6 @@
 #include <QTemporaryFile>
 #include <KToggleAction>
 #include <QPrintPreviewDialog>
-#include <kdeprintdialog.h>
 #include <QIcon>
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
@@ -2533,7 +2532,7 @@ void ViewerPrivate::slotPrintMsg()
     }
     QPrinter printer;
 
-    AutoQPointer<QPrintDialog> dlg(KdePrint::createPrintDialog(&printer));
+    AutoQPointer<QPrintDialog> dlg(new QPrintDialog(&printer));
 
     if (dlg && dlg->exec() == QDialog::Accepted) {
         mViewer->print(&printer);
