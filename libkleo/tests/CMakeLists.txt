@@ -4,8 +4,7 @@ macro( add_kleo_test _source )
   get_filename_component( _name ${_source} NAME_WE )
   add_executable( ${_name} ${_test} )
   ecm_mark_as_test(kleo-${_name})
-  target_link_libraries( ${_name} kleo 
-)
+  target_link_libraries( ${_name} kleo KF5::KDELibs4Support)
 endmacro()
 
 

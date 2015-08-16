@@ -68,6 +68,7 @@ endif()
 
 target_link_libraries(kcm_kleopatra
   kleo
+  KF5::KDELibs4Support
   ${_kcm_kleopatra_extra_libs}
   ${_kcm_kleopatra_libkleopatraclient_extra_LIBS}
 )

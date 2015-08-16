@@ -63,6 +63,7 @@ target_link_libraries(test_verify
   kleo
   Qt5::Test
   KF5::QGpgme
+  KF5::KDELibs4Support
 )
 
 ########### next target ###############

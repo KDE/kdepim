@@ -22,6 +22,8 @@ add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
 
 target_link_libraries(kwatchgnupg
   KF5::DBusAddons  
+  KF5::XmlGui
+  KF5::KDELibs4Support
   kleo
 )
 
