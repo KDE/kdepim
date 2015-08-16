@@ -1145,7 +1145,7 @@ void MainWidget::slotCheckGravatar()
             KContacts::Addressee address = item.payload<KContacts::Addressee>();
             const QString email = address.preferredEmail();
             if (email.isEmpty()) {
-                KMessageBox::error(this, i18n("Any email found for this contact."));
+                KMessageBox::error(this, i18n("No email found for this contact."));
                 return;
             }
             QPointer<KABGravatar::GravatarUpdateDialog> dlg = new KABGravatar::GravatarUpdateDialog(this);
