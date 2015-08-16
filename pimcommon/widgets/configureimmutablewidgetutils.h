@@ -20,8 +20,7 @@
 
 #include "pimcommon_export.h"
 
-#include <KConfigSkeletonItem>
-#include <KConfigSkeleton>
+#include <KCoreConfigSkeleton>
 
 class QWidget;
 class QGroupBox;
