@@ -56,9 +56,11 @@
 #include <kcharsets.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
-#include <kio/netaccess.h>
 #include <KFileDialog>
 #include <ktoolinvocation.h>
+#include <KJobWidgets>
+#include <KIO/StatJob>
+#include <KIO/FileCopyJob>
 
 #include <QAction>
 #include <QIcon>
@@ -76,7 +78,15 @@ using namespace MessageViewer;
 
 bool Util::checkOverwrite(const QUrl &url, QWidget *w)
 {
-    if (KIO::NetAccess::exists(url, KIO::NetAccess::DestinationSide, w)) {
+    bool fileExists = false;
+    if (url.isLocalFile()) {
+        fileExists = QFile::exists(url.toLocalFile());
+    } else {
+        auto job = KIO::stat(url, KIO::StatJob::DestinationSide, 0);
+        KJobWidgets::setWindow(job, w);
+        fileExists = job->exec();
+    }
+    if (fileExists) {
         if (KMessageBox::Cancel == KMessageBox::warningContinueCancel(
                     w,
                     i18n("A file named \"%1\" already exists. "
@@ -280,8 +290,17 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, Q
             }
 
             if (!(result == PimCommon::RenameFileDialog::RENAMEFILE_OVERWRITEALL ||
-                    result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL)) {
-                if (KIO::NetAccess::exists(curUrl, KIO::NetAccess::DestinationSide, parent)) {
+                    result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL))
+            {
+                bool fileExists = false;
+                if (curUrl.isLocalFile()) {
+                    fileExists = QFile::exists(curUrl.toLocalFile());
+                } else {
+                    auto job = KIO::stat(curUrl, KIO::StatJob::DestinationSide, 0);
+                    KJobWidgets::setWindow(job, parent);
+                    fileExists = job->exec();
+                }
+                if (fileExists) {
                     PimCommon::RenameFileDialog *dlg = new PimCommon::RenameFileDialog(curUrl, multiple, parent);
                     result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
                     if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE ||
@@ -421,12 +440,14 @@ bool Util::saveContent(QWidget *parent, KMime::Content *content, const QUrl &url
         // QTemporaryFile::fileName() is only defined while the file is open
         QString tfName = tf.fileName();
         tf.close();
-        if (!KIO::NetAccess::upload(tfName, url, parent)) {
+        auto job = KIO::file_copy(QUrl::fromLocalFile(tfName), url);
+        KJobWidgets::setWindow(job, parent);
+        if (!job->exec()) {
             KMessageBox::error(parent,
                                xi18nc("1 = file name, 2 = error string",
                                       "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
                                       url.toDisplayString(),
-                                      KIO::NetAccess::lastErrorString()),
+                                      job->errorString()),
                                i18n("Error saving attachment"));
             return false;
         }

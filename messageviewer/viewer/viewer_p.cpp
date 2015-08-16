@@ -77,7 +77,6 @@
 #include <KFileItemListProperties>
 #include <KLocalizedString>
 #include <QMimeData>
-#include <KIO/NetAccess>
 #include <KContacts/Addressee>
 #include <KContacts/VCardConverter>
 #include <KEmailAddress>
