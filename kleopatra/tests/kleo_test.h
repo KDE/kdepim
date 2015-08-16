@@ -34,6 +34,7 @@
 #include <qtest.h>
 #include <KAboutData>
 #include <KLocalizedString>
+#include <QDir>
 #ifndef KLEO_TEST_GNUPGHOME
 #error KLEO_TEST_GNUPGHOME not defined!
 #endif
