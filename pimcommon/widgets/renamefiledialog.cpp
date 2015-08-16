@@ -31,8 +31,8 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <KLocalizedString>
-#include <kio/global.h>
-#include <kio/netaccess.h>
+#include <KIO/StatJob>
+#include <KJobWidgets>
 #include <KMessageBox>
 
 #include <QHBoxLayout>
@@ -195,9 +195,18 @@ void RenameFileDialog::slotRenamePressed()
     if (d->nameEdit->text().isEmpty()) {
         return;
     }
-    const QString name = newName().path();
-    if (KIO::NetAccess::exists(name, KIO::NetAccess::DestinationSide, this)) {
-        KMessageBox::error(this, i18n("This filename \"%1\" already exists.", name), i18n("File already exists"));
+
+    bool fileExists = false;
+    if (newName().isLocalFile()) {
+        fileExists = QFile::exists(newName().path());
+    } else {
+        auto job = KIO::stat(newName(), KIO::StatJob::DestinationSide, 0);
+        KJobWidgets::setWindow(job, this);
+        fileExists = job->exec();
+    }
+
+    if (fileExists) {
+        KMessageBox::error(this, i18n("This filename \"%1\" already exists.", newName().toDisplayString(QUrl::PreferLocalFile)), i18n("File already exists"));
         return;
     }
     done(RENAMEFILE_RENAME);
