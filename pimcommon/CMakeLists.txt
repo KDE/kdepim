@@ -299,8 +299,8 @@ PUBLIC
     KF5::AkonadiWidgets
     KF5::TextWidgets
     KF5::KIOCore
-    Qt5::WebKitWidgets
     KF5::ConfigWidgets
+    Qt5::Network
 PRIVATE
     KF5::IMAP
     kdepim
@@ -312,6 +312,7 @@ PRIVATE
     KF5::Wallet
     KF5::DBusAddons
     KF5::KDELibs4Support
+    Qt5::WebKitWidgets
 )
 
 target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR};${pimcommon_BINARY_DIR}>")

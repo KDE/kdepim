@@ -225,8 +225,8 @@ PUBLIC
   KF5::AkonadiMime
   KF5::Contacts
   KF5::ItemViews
-  ${_mailwebview_lib}
 PRIVATE
+  ${_mailwebview_lib}
   kdepim
   kpgp
   kleo
@@ -246,6 +246,9 @@ PRIVATE
 
 target_include_directories(messageviewer PUBLIC "$<BUILD_INTERFACE:${messageviewer_SOURCE_DIR};${messageviewer_BINARY_DIR}>")
 target_include_directories(messageviewer PUBLIC $<TARGET_PROPERTY:kpgp,INTERFACE_INCLUDE_DIRECTORIES>)
+if(NOT KDEPIM_NO_WEBKIT)
+  target_include_directories(messageviewer PUBLIC $<TARGET_PROPERTY:KF5::WebKit,INTERFACE_INCLUDE_DIRECTORIES>)
+endif()
 
 set_target_properties( messageviewer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 install(TARGETS messageviewer ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )

@@ -17,5 +17,6 @@ target_link_libraries(adblockblockableitemdialog_gui
   KF5::KIOCore
   messageviewer
   kdepim
+  Qt5::WebKitWidgets
 )
 endif()

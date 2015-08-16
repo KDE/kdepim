@@ -19,6 +19,7 @@ set(contactprintthemeeditor_SRCS
 
 add_executable(contactprintthemeeditor ${contactprintthemeeditor_SRCS} )
 target_link_libraries(contactprintthemeeditor
+                       Qt5::WebKitWidgets
                        KF5::DBusAddons
                        KF5::NewStuff
                        KF5::AkonadiContact
