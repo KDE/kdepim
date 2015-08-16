@@ -37,11 +37,12 @@
 #include <AkonadiSearch/PIM/contactcompleter.h>
 
 #include <ldap/ldapclientsearch.h>
-#include <solid/networking.h>
 #include <addressline/addresslineedit/baloocompletionemail.h>
 #include <akonadi/contact/contactsearchjob.h>
+#include <QNetworkConfigurationManager>
 
 #include <addressline/blacklistbaloocompletion/blacklistbalooemailcompletiondialog.h>
+static QNetworkConfigurationManager *s_networkConfigMgr = 0;
 
 namespace KPIM
 {
@@ -59,8 +60,12 @@ AddresseeLineEditPrivate::AddresseeLineEditPrivate(KPIM::AddresseeLineEdit *qq, 
       m_showOU(false),
       m_enableBalooSearch(true)
 {
+    if (!s_networkConfigMgr)
+        s_networkConfigMgr = new QNetworkConfigurationManager(QCoreApplication::instance());
+
     m_delayedQueryTimer.setSingleShot(true);
     connect(&m_delayedQueryTimer, SIGNAL(timeout()), this, SLOT(slotTriggerDelayedQueries()));
+
 }
 
 AddresseeLineEditPrivate::~AddresseeLineEditPrivate()
@@ -663,7 +668,7 @@ void AddresseeLineEditPrivate::slotReturnPressed(const QString &)
 
 void AddresseeLineEditPrivate::slotStartLDAPLookup()
 {
-    if (Solid::Networking::status() == Solid::Networking::Connected || Solid::Networking::status() == Solid::Networking::Unknown) {
+    if (s_networkConfigMgr->isOnline()) {
 
         const KCompletion::CompletionMode mode = q->completionMode();
         if (mode == KCompletion::CompletionNone) {
