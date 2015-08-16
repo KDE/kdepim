@@ -437,7 +437,7 @@ TabWidget::Private::Private(TabWidget *qq)
     layout.setMargin(0);
     layout.addWidget(&tabWidget);
 
-    tabWidget.setTabBarHidden(true);
+    tabWidget.tabBar()->hide();
     tabWidget.setMovable(true);
 
     connect(&tabWidget, SIGNAL(currentChanged(int)), q, SLOT(currentIndexChanged(int)));
@@ -579,7 +579,11 @@ void TabWidget::Private::enableDisablePageActions(QAction *actions[], const Page
     actions[ExpandAll]   ->setEnabled(p && p->isHierarchicalView());
     actions[CollapseAll] ->setEnabled(p && p->isHierarchicalView());
 
-    tabWidget.setTabBarHidden(tabWidget.count() < 2);
+    if (tabWidget.count() < 2) {
+       tabWidget.tabBar()->hide();
+    } else {
+       tabWidget.tabBar()->show();
+    }
 }
 
 void TabWidget::Private::slotPageTitleChanged(const QString &)
