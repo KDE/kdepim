@@ -33,13 +33,14 @@
 #include <kcontacts/contactgroup.h>
 #include <kcontacts/vcardconverter.h>
 
-#include <kio/netaccess.h>
-#include <qmenu.h>
-#include <qurl.h>
 #include <kmessagebox.h>
 #include <kcompletionbox.h>
 #include <KLocalizedString>
+#include <KIO/StoredTransferJob>
+#include <KJobWidgets>
 
+#include <qmenu.h>
+#include <qurl.h>
 #include <QFile>
 #include <QCursor>
 #include <QKeyEvent>
@@ -152,25 +153,21 @@ void ComposerLineEdit::dropEvent(QDropEvent *event)
             // Otherwise, download the vCard to which the Url points
             else {
                 KContacts::VCardConverter converter;
-                QString fileName;
-                if (KIO::NetAccess::download(url, fileName, parentWidget())) {
-                    QFile file(fileName);
-                    if (file.open(QIODevice::ReadOnly)) {
-                        QByteArray data = file.readAll();
-                        file.close();
-                        list += converter.parseVCards(data);
-                        KIO::NetAccess::removeTempFile(fileName);
+                auto job = KIO::storedGet(url);
+                KJobWidgets::setWindow(job, parentWidget());
+                if (job->exec()) {
+                    QByteArray data = job->data();
+                    list += converter.parseVCards(data);
 
-                        if (list.isEmpty()) {  // try to parse a contact group
-                            KContacts::ContactGroup group;
-                            QBuffer dataStream(&data);
-                            dataStream.open(QIODevice::ReadOnly);
-                            QString error;
-                            if (KContacts::ContactGroupTool::convertFromXml(&dataStream, group, &error)) {
-                                Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group);
-                                connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &ComposerLineEdit::groupExpandResult);
-                                expandJob->start();
-                            }
+                    if (list.isEmpty()) {  // try to parse a contact group
+                        KContacts::ContactGroup group;
+                        QBuffer dataStream(&data);
+                        dataStream.open(QIODevice::ReadOnly);
+                        QString error;
+                        if (KContacts::ContactGroupTool::convertFromXml(&dataStream, group, &error)) {
+                            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group);
+                            connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &ComposerLineEdit::groupExpandResult);
+                            expandJob->start();
                         }
                     }
                 } else {
