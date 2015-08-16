@@ -221,15 +221,14 @@ target_link_libraries(messageviewer
 PUBLIC
   messagecore
   kdepim
-  kpgp
-  kleo
   pimcommon
   KF5::AkonadiCore
   KF5::AkonadiMime
-  KF5::AkonadiNotes
   KF5::Contacts
   ${_mailwebview_lib}
 PRIVATE
+  kpgp
+  kleo
   grantleetheme
   kaddressbookgrantlee
   incidenceeditorsng
@@ -241,9 +240,11 @@ PRIVATE
   KF5::Mbox
   KF5::Gpgmepp
   KF5::KDELibs4Support
+  KF5::AkonadiNotes
 )
 
 target_include_directories(messageviewer PUBLIC "$<BUILD_INTERFACE:${messageviewer_SOURCE_DIR};${messageviewer_BINARY_DIR}>")
+target_include_directories(messageviewer PUBLIC $<TARGET_PROPERTY:kpgp,INTERFACE_INCLUDE_DIRECTORIES>)
 
 set_target_properties( messageviewer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 install(TARGETS messageviewer ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
