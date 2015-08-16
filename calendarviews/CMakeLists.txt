@@ -87,13 +87,13 @@ generate_export_header(eventviews BASE_NAME eventviews)
 target_link_libraries(eventviews
 PUBLIC
   KF5::AkonadiCore
-  kdepim
   calendarsupport
 
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::AkonadiCalendar
 PRIVATE
+  kdepim
   KF5::Codecs
   kdgantt2
 )

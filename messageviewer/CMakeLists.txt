@@ -220,13 +220,14 @@ generate_export_header(messageviewer BASE_NAME messageviewer)
 target_link_libraries(messageviewer 
 PUBLIC
   messagecore
-  kdepim
   pimcommon
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Contacts
+  KF5::ItemViews
   ${_mailwebview_lib}
 PRIVATE
+  kdepim
   kpgp
   kleo
   grantleetheme

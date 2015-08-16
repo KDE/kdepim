@@ -296,13 +296,14 @@ PUBLIC
     KF5::Contacts
     KF5::AkonadiContact
     KF5::AkonadiCore
-    kdepim
     KF5::IMAP
     KF5::AkonadiWidgets
     KF5::TextWidgets
     KF5::KIOCore
     Qt5::WebKitWidgets
+    KF5::ConfigWidgets
 PRIVATE
+    kdepim
     KF5::Archive
     KF5::Codecs
     KF5::NewStuff

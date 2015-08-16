@@ -106,11 +106,11 @@ PUBLIC
   KF5::CalendarUtils
   KF5::MailTransport
   KF5::Codecs
-  kdepim
   calendarsupport      # For KCalPrefs
   eventviews
   kdgantt2             # For FreeBusy Editor
 PRIVATE
+  kdepim
   kdepimdbusinterfaces # For UriHandler
 )
 

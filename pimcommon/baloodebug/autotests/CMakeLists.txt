@@ -2,7 +2,7 @@
 macro(add_pimcommon_baloodebug_unittest _source)
     ecm_add_test(${_source}
         NAME_PREFIX "pimcommon-baloodebug-"
-        LINK_LIBRARIES Qt5::Test Qt5::Gui pimcommon
+        LINK_LIBRARIES Qt5::Test Qt5::Gui pimcommon KF5::Completion
         GUI
     )
 endmacro ()

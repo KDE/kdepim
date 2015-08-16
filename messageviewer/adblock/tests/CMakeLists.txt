@@ -16,5 +16,6 @@ add_executable(adblockblockableitemdialog_gui ${adblockblockableitemdialog_gui_S
 target_link_libraries(adblockblockableitemdialog_gui
   KF5::KIOCore
   messageviewer
+  kdepim
 )
 endif()
