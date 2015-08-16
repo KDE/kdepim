@@ -296,13 +296,13 @@ PUBLIC
     KF5::Contacts
     KF5::AkonadiContact
     KF5::AkonadiCore
-    KF5::IMAP
     KF5::AkonadiWidgets
     KF5::TextWidgets
     KF5::KIOCore
     Qt5::WebKitWidgets
     KF5::ConfigWidgets
 PRIVATE
+    KF5::IMAP
     kdepim
     KF5::Archive
     KF5::Codecs
@@ -317,6 +317,7 @@ PRIVATE
 target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR};${pimcommon_BINARY_DIR}>")
 target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR}/shorturl;${pimcommon_BINARY_DIR}/shorturl>")
 target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR}/util;${pimcommon_BINARY_DIR}/util>")
+target_include_directories(pimcommon PUBLIC $<TARGET_PROPERTY:KF5::IMAP,INTERFACE_INCLUDE_DIRECTORIES>)
 
 set_target_properties(pimcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS pimcommon ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
