@@ -19,7 +19,6 @@
 
 #include "attachmentmodel.h"
 
-
 #include <QMimeData>
 #include <QUrl>
 

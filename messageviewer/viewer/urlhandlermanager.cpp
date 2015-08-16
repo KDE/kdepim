@@ -72,7 +72,6 @@
 
 #include <ui/messagebox.h>
 
-
 using std::for_each;
 using std::remove;
 using std::find;
@@ -427,7 +426,7 @@ void URLHandlerManager::unregisterHandler(const Interface::BodyPartURLHandler *h
     }
 }
 
-bool URLHandlerManager::handleClick(const QUrl& url, ViewerPrivate* w) const
+bool URLHandlerManager::handleClick(const QUrl &url, ViewerPrivate *w) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
     for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)
@@ -437,7 +436,7 @@ bool URLHandlerManager::handleClick(const QUrl& url, ViewerPrivate* w) const
     return false;
 }
 
-bool URLHandlerManager::handleShiftClick(const QUrl& url, ViewerPrivate* window) const
+bool URLHandlerManager::handleShiftClick(const QUrl &url, ViewerPrivate *window) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
     for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)
@@ -447,7 +446,7 @@ bool URLHandlerManager::handleShiftClick(const QUrl& url, ViewerPrivate* window)
     return false;
 }
 
-bool URLHandlerManager::willHandleDrag(const QUrl& url, ViewerPrivate* window) const
+bool URLHandlerManager::willHandleDrag(const QUrl &url, ViewerPrivate *window) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
 
@@ -458,7 +457,7 @@ bool URLHandlerManager::willHandleDrag(const QUrl& url, ViewerPrivate* window) c
     return false;
 }
 
-bool URLHandlerManager::handleDrag(const QUrl& url, ViewerPrivate* window) const
+bool URLHandlerManager::handleDrag(const QUrl &url, ViewerPrivate *window) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
     for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)

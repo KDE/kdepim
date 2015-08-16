@@ -102,8 +102,7 @@ public:
     /** Rescans the plugin directory to find any newly installed
         plugins.
     **/
-    void scan() Q_DECL_OVERRIDE
-    {
+    void scan() Q_DECL_OVERRIDE {
         doScan(T_config::path);
     }
 

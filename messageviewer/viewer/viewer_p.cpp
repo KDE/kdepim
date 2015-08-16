@@ -297,7 +297,7 @@ ViewerPrivate::~ViewerPrivate()
 }
 
 //-----------------------------------------------------------------------------
-KMime::Content *ViewerPrivate::nodeFromUrl(const QUrl& url)
+KMime::Content *ViewerPrivate::nodeFromUrl(const QUrl &url)
 {
     KMime::Content *node = 0;
     if (url.isEmpty()) {

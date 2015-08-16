@@ -189,8 +189,8 @@ QString CSSHelperBase::htmlHead(bool /*fixed*/) const
 {
     return
         QStringLiteral("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n"
-                      "<html><head><title></title></head>\n"
-                      "<body>\n");
+                       "<html><head><title></title></head>\n"
+                       "<body>\n");
 }
 
 QString CSSHelperBase::quoteFontTag(int level) const

@@ -99,14 +99,14 @@ void GenerateGlobalScriptJob::slotPutMasterResult(KManageSieve::SieveJob *, bool
 void GenerateGlobalScriptJob::writeUserScript()
 {
     QString userScript = QStringLiteral("# USER Management Script\n"
-                                       "#\n"
-                                       "# This script includes the various active sieve scripts\n"
-                                       "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
-                                       "# \n"
-                                       "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
-                                       "#\n"
-                                       "\n"
-                                       "require [\"include\"];\n");
+                                        "#\n"
+                                        "# This script includes the various active sieve scripts\n"
+                                        "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
+                                        "# \n"
+                                        "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
+                                        "#\n"
+                                        "\n"
+                                        "require [\"include\"];\n");
 
     Q_FOREACH (const QString &activeScript, mListUserActiveScripts) {
         userScript += QString::fromLatin1("\ninclude :personal \"%1\"").arg(activeScript);

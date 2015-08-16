@@ -23,7 +23,6 @@
 
 #include "attachmentfrompublickeyjob.h"
 
-
 #include <KDialogJobUiDelegate>
 #include <KLocalizedString>
 

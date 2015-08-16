@@ -58,8 +58,7 @@ public:
     }
 
 protected:
-    qint64 readData(char *, qint64) Q_DECL_OVERRIDE
-    {
+    qint64 readData(char *, qint64) Q_DECL_OVERRIDE {
         return -1;
     }
 };

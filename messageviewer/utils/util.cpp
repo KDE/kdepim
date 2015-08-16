@@ -200,8 +200,9 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, Q
         }
 
         // we may not get a slash-terminated url out of KFileDialog
-        if (!dirUrl.path().endsWith(QLatin1Char('/')))
+        if (!dirUrl.path().endsWith(QLatin1Char('/'))) {
             dirUrl.setPath(dirUrl.path() + QLatin1Char('/'));
+        }
         currentFolder = dirUrl;
     } else {
         // only one item, get the desired filename
@@ -237,8 +238,9 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, Q
                 fileName = i18nc("filename for the %1-th unnamed attachment",
                                  "attachment.%1", unnamedAtmCount);
             }
-            if (!curUrl.path().endsWith(QLatin1Char('/')))
+            if (!curUrl.path().endsWith(QLatin1Char('/'))) {
                 curUrl.setPath(curUrl.path() + QLatin1Char('/'));
+            }
             curUrl.setPath(curUrl.path() + fileName);
         } else {
             curUrl = url;
@@ -560,8 +562,9 @@ QMimeType Util::mimetype(const QString &name)
     // consider the filename if mimetype cannot be found by content-type
     auto mimeTypes = db.mimeTypesForFileName(name);
     foreach (const auto &mt, mimeTypes) {
-        if (mt.name() != QLatin1String("application/octet-stream"))
+        if (mt.name() != QLatin1String("application/octet-stream")) {
             return mt;
+        }
     }
 
     // consider the attachment's contents if neither the Content-Type header
