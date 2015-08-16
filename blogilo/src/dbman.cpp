@@ -40,6 +40,7 @@
 #include <QSqlDatabase>
 #include <QDateTime>
 #include <QStandardPaths>
+#include <QDir>
 
 class DBMan::Private
 {
@@ -142,6 +143,10 @@ bool DBMan::connectDB()
     if (d->db.isOpen()) {
         return true;
     }
+    if (!QDir(DATA_DIR).exists()) {
+        QDir().mkpath(DATA_DIR);
+    }
+
     d->db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"));
     d->db.setDatabaseName(QString(CONF_DB));
 
