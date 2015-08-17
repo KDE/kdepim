@@ -51,21 +51,19 @@
 #include "core/delegate.h"
 #include "core/manager.h"
 #include "core/messageitemsetmanager.h"
+#include "messagelist_debug.h"
 
 #include <item.h>
 #include <Akonadi/KMime/MessageStatus>
 #include "messagecore/utils/stringutil.h"
 
+#include <KLocalizedString>
+
 #include <QApplication>
 #include <QTimer>
 #include <QDateTime>
 #include <QScrollBar>
-
-#include <KLocalizedString>
-#include <KCalendarSystem>
-
 #include <QIcon>
-#include "messagelist_debug.h"
 #include <QLocale>
 
 namespace MessageList
@@ -1283,9 +1281,9 @@ void ModelPrivate::attachMessageToGroupHeader(MessageItem *mi)
         QDateTime dt;
         dt.setTime_t(date);
         QDate dDate = dt.date();
-        const KCalendarSystem *calendar = KLocale::global()->calendar();
         int daysAgo = -1;
-        if (calendar->isValid(dDate) && calendar->isValid(mTodayDate)) {
+        const int daysInWeek = 7;
+        if (dDate.isValid() && mTodayDate.isValid()) {
             daysAgo = dDate.daysTo(mTodayDate);
         }
 
@@ -1296,18 +1294,17 @@ void ModelPrivate::attachMessageToGroupHeader(MessageItem *mi)
             groupLabel = mCachedTodayLabel;
         } else if (daysAgo == 1) { // Yesterday
             groupLabel = mCachedYesterdayLabel;
-        } else if (daysAgo > 1 && daysAgo < calendar->daysInWeek(mTodayDate)) {   // Within last seven days
-            groupLabel = KLocale::global()->calendar()->weekDayName(dDate);
+        } else if (daysAgo > 1 && daysAgo < daysInWeek) {   // Within last seven days
+            groupLabel = QLocale::system().dayName(dDate.dayOfWeek());
         } else if (mAggregation->grouping() == Aggregation::GroupByDate) {   // GroupByDate seven days or more ago
-            groupLabel = KLocale::global()->formatDate(dDate, KLocale::ShortDate);
-        } else if ((calendar->month(dDate) == calendar->month(mTodayDate)) &&       // GroupByDateRange within this month
-                   (calendar->year(dDate) == calendar->year(mTodayDate))) {
-            int startOfWeekDaysAgo = (calendar->daysInWeek(mTodayDate) + calendar->dayOfWeek(mTodayDate) -
-                                      QLocale().firstDayOfWeek()) % calendar->daysInWeek(mTodayDate);
-            int weeksAgo = ((daysAgo - startOfWeekDaysAgo) / calendar->daysInWeek(mTodayDate)) + 1;
+            groupLabel = QLocale::system().toString(dDate, QLocale::ShortFormat);
+        } else if (dDate.month() == mTodayDate.month() &&       // GroupByDateRange within this month
+                   dDate.year() == mTodayDate.year()) {
+            int startOfWeekDaysAgo = (daysInWeek + mTodayDate.dayOfWeek() - QLocale().firstDayOfWeek()) % daysInWeek;
+            int weeksAgo = ((daysAgo - startOfWeekDaysAgo) / daysInWeek) + 1;
             switch (weeksAgo) {
             case 0: // This week
-                groupLabel = KLocale::global()->calendar()->weekDayName(dDate);
+                groupLabel = QLocale::system().dayName(dDate.dayOfWeek());
                 break;
             case 1: // 1 week ago
                 groupLabel = mCachedLastWeekLabel;
@@ -1327,11 +1324,11 @@ void ModelPrivate::attachMessageToGroupHeader(MessageItem *mi)
             default: // should never happen
                 groupLabel = mCachedUnknownLabel;
             }
-        } else if (calendar->year(dDate) == calendar->year(mTodayDate)) {       // GroupByDateRange within this year
-            groupLabel = calendar->monthName(dDate);
+        } else if (dDate.year() == mTodayDate.year()) {       // GroupByDateRange within this year
+            groupLabel = QLocale::system().monthName(dDate.month());
         } else { // GroupByDateRange in previous years
-            groupLabel = i18nc("Message Aggregation Group Header: Month name and Year number", "%1 %2", calendar->monthName(dDate),
-                               calendar->formatDate(dDate, KLocale::Year, KLocale::LongNumber));
+            groupLabel = i18nc("Message Aggregation Group Header: Month name and Year number", "%1 %2", QLocale::system().monthName(dDate.month()),
+                               QLocale::system().toString(dDate, QLatin1Literal("yyyy")));
         }
         break;
     }
