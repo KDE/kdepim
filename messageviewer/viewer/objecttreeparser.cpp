@@ -86,8 +86,6 @@
 // KDE includes
 
 #include <KLocalizedString>
-#include <kmimetype.h>
-#include <kglobal.h>
 #include <QTemporaryFile>
 
 #include <kiconloader.h>

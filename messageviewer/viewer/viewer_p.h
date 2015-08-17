@@ -32,7 +32,7 @@
 #include <kmime/kmime_message.h>
 #include <kservice.h>
 #include <ksharedconfig.h>
-#include <kurl.h>
+#include <QUrl>
 #include <KCalCore/Todo>
 #include <KCalCore/Event>
 
