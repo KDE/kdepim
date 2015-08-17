@@ -50,7 +50,7 @@ void BlogiloMigrateApplication::initializeMigrator()
     // Database
     PimCommon::MigrateFileInfo migrateInfoDatabase;
     migrateInfoDatabase.setFolder(false);
-    migrateInfoDatabase.setType(QStringLiteral("apps"));
+    migrateInfoDatabase.setType(QStringLiteral("data"));
     migrateInfoDatabase.setPath(QStringLiteral("blogilo/blogilo.db"));
     migrateInfoDatabase.setVersion(initialVersion);
     mMigrator.insertMigrateInfo(migrateInfoDatabase);
