@@ -29,7 +29,6 @@
 #include "qwebframe.h"
 #include "qtest.h"
 #include <QDir>
-#include <KLocale>
 #include <QLocale>
 
 using namespace MessageViewer;
@@ -176,7 +175,7 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
     QDir dir(QLatin1String(MAIL_DATA_DIR));
     const QString file = QStringLiteral("plain-message.mbox");
     const QString fileName = QString(dir.path() + QLatin1Char('/') +  file);
-    QTest::newRow("%OTIME") << "%OTIME" << fileName << KLocale::global()->formatTime(QTime(11, 30), false) << false;
+    QTest::newRow("%OTIME") << "%OTIME" << fileName << QLocale::system().toString(QTime(11, 30, 27), QLocale::ShortFormat) << false;
     QTest::newRow("%OTIMELONG") << "%OTIMELONG" << fileName << QLocale::system().toString(QTime(11, 30, 27), QLocale::LongFormat) << false;
     QTest::newRow("%OTIMELONGEN") << "%OTIMELONGEN" << fileName << QLocale(QLocale::C).toString(QTime(11, 30, 27), QLocale::LongFormat) << false;
     QTest::newRow("%ODATE") << "%ODATE" << fileName << QLocale::system().toString(QDate(2011, 8, 7), QLocale::LongFormat) << false;
