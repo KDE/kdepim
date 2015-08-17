@@ -66,7 +66,7 @@ QList<QWidget *> InvalidFilterListItemDelegate::createItemWidgets(const QModelIn
 {
     QLabel *label = new QLabel();
     QToolButton *showInformationToolButton = new QToolButton();
-    connect(showInformationToolButton, SIGNAL(clicked()), this, SLOT(slotShowDetails()));
+    connect(showInformationToolButton, &QAbstractButton::clicked, this, &InvalidFilterListItemDelegate::slotShowDetails);
     return QList<QWidget *>() << label << showInformationToolButton;
 }
 

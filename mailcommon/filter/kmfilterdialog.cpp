@@ -163,8 +163,8 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     menu->addAction(act);
     user3Button->setMenu(menu);
 
-    connect(user2Button, SIGNAL(clicked()),
-            this, SLOT(slotExportFilters()));
+    connect(user2Button, &QAbstractButton::clicked,
+            this, &KMFilterDialog::slotExportFilters);
     buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
 
     QWidget *w = new QWidget(this);
@@ -331,11 +331,11 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     // combo box to the filter
     connect(mApplyOnIn, &QCheckBox::clicked, this, &KMFilterDialog::slotApplicabilityChanged);
     connect(mApplyOnForAll, &QRadioButton::clicked, this, &KMFilterDialog::slotApplicabilityChanged);
-    connect(mApplyOnForTraditional, SIGNAL(clicked()), this, SLOT(slotApplicabilityChanged()));
-    connect(mApplyOnForChecked, SIGNAL(clicked()), this, SLOT(slotApplicabilityChanged()));
-    connect(mApplyBeforeOut, SIGNAL(clicked()), this, SLOT(slotApplicabilityChanged()));
-    connect(mApplyOnOut, SIGNAL(clicked()), this, SLOT(slotApplicabilityChanged()));
-    connect(mApplyOnCtrlJ, SIGNAL(clicked()), this, SLOT(slotApplicabilityChanged()));
+    connect(mApplyOnForTraditional, &QAbstractButton::clicked, this, &KMFilterDialog::slotApplicabilityChanged);
+    connect(mApplyOnForChecked, &QAbstractButton::clicked, this, &KMFilterDialog::slotApplicabilityChanged);
+    connect(mApplyBeforeOut, &QAbstractButton::clicked, this, &KMFilterDialog::slotApplicabilityChanged);
+    connect(mApplyOnOut, &QAbstractButton::clicked, this, &KMFilterDialog::slotApplicabilityChanged);
+    connect(mApplyOnCtrlJ, &QAbstractButton::clicked, this, &KMFilterDialog::slotApplicabilityChanged);
     connect(mAccountList, &KMFilterAccountList::itemChanged, this, &KMFilterDialog::slotApplicableAccountsChanged);
 
     // transfer changes from the 'stop processing here'
@@ -359,26 +359,26 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     connect(mPatternEdit, &MailCommon::SearchPatternEdit::maybeNameChanged, mFilterList, &KMFilterListBox::slotUpdateFilterName);
 
     // save filters on 'Apply' or 'OK'
-    connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
-            this, SLOT(slotApply()));
+    connect(buttonBox->button(QDialogButtonBox::Apply), &QAbstractButton::clicked,
+            this, &KMFilterDialog::slotApply);
 
     // save dialog size on 'OK'
     connect(okButton, SIGNAL(clicked()),
             this, SLOT(slotSaveSize()));
 
     // destruct the dialog on close and Cancel
-    connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-            this, SLOT(slotFinished()));
+    connect(buttonBox->button(QDialogButtonBox::Cancel), &QAbstractButton::clicked,
+            this, &KMFilterDialog::slotFinished);
 
     // disable closing when user wants to continue editing
-    connect(mFilterList, SIGNAL(abortClosing()),
-            this, SLOT(slotDisableAccept()));
+    connect(mFilterList, &KMFilterListBox::abortClosing,
+            this, &KMFilterDialog::slotDisableAccept);
 
     connect(mFilterList, &KMFilterListBox::filterCreated, this, &KMFilterDialog::slotDialogUpdated);
-    connect(mFilterList, SIGNAL(filterRemoved(QList<MailCommon::MailFilter*>)),
-            this, SLOT(slotDialogUpdated()));
-    connect(mFilterList, SIGNAL(filterUpdated(MailCommon::MailFilter*)),
-            this, SLOT(slotDialogUpdated()));
+    connect(mFilterList, &KMFilterListBox::filterRemoved,
+            this, &KMFilterDialog::slotDialogUpdated);
+    connect(mFilterList, &KMFilterListBox::filterUpdated,
+            this, &KMFilterDialog::slotDialogUpdated);
     connect(mFilterList, &KMFilterListBox::filterOrderAltered, this, &KMFilterDialog::slotDialogUpdated);
     connect(mPatternEdit, &MailCommon::SearchPatternEdit::patternChanged, this, &KMFilterDialog::slotDialogUpdated);
     connect(mActionLister, SIGNAL(widgetAdded(QWidget*)), this, SLOT(slotDialogUpdated()));

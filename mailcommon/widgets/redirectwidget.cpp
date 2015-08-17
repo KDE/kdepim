@@ -60,7 +60,7 @@ RedirectWidget::RedirectWidget(QWidget *parent)
                              "where you can select recipients out "
                              "of all available addresses."));
     hbox->addWidget(BtnTo);
-    connect(BtnTo, SIGNAL(clicked()), SLOT(slotAddressSelection()));
+    connect(BtnTo, &QAbstractButton::clicked, this, &RedirectWidget::slotAddressSelection);
 
     connect(mEdit, &QLineEdit::textChanged, this, &RedirectWidget::addressChanged);
 }

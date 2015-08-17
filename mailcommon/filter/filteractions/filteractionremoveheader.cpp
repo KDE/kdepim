@@ -52,8 +52,8 @@ QWidget *FilterActionRemoveHeader::createParamWidget(QWidget *parent) const
     setParamWidgetValue(comboBox);
 
     connect(comboBox, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::currentIndexChanged), this, &FilterActionRemoveHeader::filterActionModified);
-    connect(comboBox->lineEdit(), SIGNAL(textChanged(QString)),
-            this, SIGNAL(filterActionModified()));
+    connect(comboBox->lineEdit(), &QLineEdit::textChanged,
+            this, &FilterAction::filterActionModified);
 
     return comboBox;
 }

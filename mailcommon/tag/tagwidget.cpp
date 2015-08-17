@@ -108,8 +108,8 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     mIconButton->setIconType(KIconLoader::NoGroup, KIconLoader::Action);
     mIconButton->setIcon(QIcon::fromTheme(QStringLiteral("mail-tagged")));
     settings->addWidget(mIconButton, 5, 1);
-    connect(mIconButton, SIGNAL(iconChanged(QString)),
-            SIGNAL(iconNameChanged(QString)));
+    connect(mIconButton, &KIconButton::iconChanged,
+            this, &TagWidget::iconNameChanged);
 
     QLabel *iconlabel = new QLabel(i18n("Message tag &icon:"),
                                    this);
@@ -118,8 +118,8 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
 
     //We do not connect the checkbox to icon selector since icons are used in the
     //menus as well
-    connect(mIconButton, SIGNAL(iconChanged(QString)),
-            this, SLOT(slotEmitChangeCheck()));
+    connect(mIconButton, &KIconButton::iconChanged,
+            this, &TagWidget::slotEmitChangeCheck);
 
     //Sixth for shortcut
     mKeySequenceWidget = new KKeySequenceWidget(this);

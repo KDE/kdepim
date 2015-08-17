@@ -50,7 +50,7 @@ SoundTestWidget::SoundTestWidget(QWidget *parent)
 
     connect(m_playButton, &QPushButton::clicked, this, &SoundTestWidget::playSound);
     connect(m_urlRequester, &KUrlRequester::openFileDialog, this, &SoundTestWidget::openSoundDialog);
-    connect(m_urlRequester->lineEdit(), SIGNAL(textChanged(QString)), SLOT(slotUrlChanged(QString)));
+    connect(m_urlRequester->lineEdit(), &QLineEdit::textChanged, this, &SoundTestWidget::slotUrlChanged);
 
     slotUrlChanged(m_urlRequester->lineEdit()->text());
 }

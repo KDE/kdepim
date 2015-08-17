@@ -68,7 +68,7 @@ QWidget *FilterActionWithUrl::createParamWidget(QWidget *parent) const
     layout->addWidget(requester);
     mHelpButton = new FilterActionWithUrlHelpButton(parent);
     mHelpButton->setObjectName(QStringLiteral("helpbutton"));
-    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    connect(mHelpButton, &QAbstractButton::clicked, this, &FilterActionWithUrl::slotHelp);
     layout->addWidget(mHelpButton);
 
     connect(requester, &KUrlRequester::textChanged, this, &FilterActionWithUrl::filterActionModified);

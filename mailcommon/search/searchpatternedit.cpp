@@ -211,15 +211,15 @@ void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
 
     connect(mRuleField, SIGNAL(activated(QString)),
             this, SLOT(slotRuleFieldChanged(QString)));
-    connect(mRuleField, SIGNAL(editTextChanged(QString)),
-            this, SLOT(slotRuleFieldChanged(QString)));
-    connect(mRuleField, SIGNAL(editTextChanged(QString)),
-            this, SIGNAL(fieldChanged(QString)));
+    connect(mRuleField, &QComboBox::editTextChanged,
+            this, &SearchRuleWidget::slotRuleFieldChanged);
+    connect(mRuleField, &QComboBox::editTextChanged,
+            this, &SearchRuleWidget::fieldChanged);
 
-    connect(mAdd, SIGNAL(clicked()),
-            this, SLOT(slotAddWidget()));
-    connect(mRemove, SIGNAL(clicked()),
-            this, SLOT(slotRemoveWidget()));
+    connect(mAdd, &QAbstractButton::clicked,
+            this, &SearchRuleWidget::slotAddWidget);
+    connect(mRemove, &QAbstractButton::clicked,
+            this, &SearchRuleWidget::slotRemoveWidget);
 }
 
 void SearchRuleWidget::updateAddRemoveButton(bool addButtonEnabled, bool removeButtonEnabled)
