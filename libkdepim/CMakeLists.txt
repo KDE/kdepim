@@ -153,9 +153,9 @@ target_link_libraries(kdepim
   KF5::AkonadiContact
   KF5::AkonadiWidgets
   KF5::KCMUtils
-  KF5::AkonadiSearchPIM
   KF5::Wallet
  PRIVATE
+  KF5::AkonadiSearchPIM
   KF5::AkonadiCalendar
 )
 
