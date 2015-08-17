@@ -49,7 +49,6 @@
 #include <TagFetchJob>
 #include <Tag>
 
-#include <KPrintPreview>
 #include <KCalCore/CalFormat>
 #include <QIcon>
 #include <KIconLoader>
@@ -342,13 +341,10 @@ TodoView::TodoView(const EventViews::PrefsPtr &prefs,
                                       i18nc("@action:inmenu print the to-do", "&Print..."),
                                       this, SIGNAL(printTodo()));
 
-    if (KPrintPreview::isAvailable()) {
-
-        mItemPopupMenuItemOnlyEntries << mItemPopupMenu->addAction(
-                                          cachedSmallIcon(QStringLiteral("document-print-preview")),
-                                          i18nc("@action:inmenu print preview the to-do", "Print Previe&w..."),
-                                          this, SIGNAL(printPreviewTodo()));
-    }
+    mItemPopupMenuItemOnlyEntries << mItemPopupMenu->addAction(
+                                         cachedSmallIcon(QStringLiteral("document-print-preview")),
+                                         i18nc("@action:inmenu print preview the to-do", "Print Previe&w..."),
+                                         this, SIGNAL(printPreviewTodo()));
     mItemPopupMenu->addSeparator();
     a = mItemPopupMenu->addAction(
             KIconLoader::global()->loadIcon(QStringLiteral("edit-delete"), KIconLoader::NoGroup, KIconLoader::SizeSmall),
