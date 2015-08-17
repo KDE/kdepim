@@ -50,7 +50,7 @@ ProviderPage::ProviderPage(KAssistantDialog *parent) :
     connect(m_downloadManager, &KNS3::DownloadManager::entryStatusChanged, this, &ProviderPage::providerStatusChanged);
     m_downloadManager->setSearchOrder(KNS3::DownloadManager::Alphabetical);
 
-    connect(ui.listView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged()));
+    connect(ui.listView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ProviderPage::selectionChanged);
 
     qCDebug(ACCOUNTWIZARD_LOG);
 }

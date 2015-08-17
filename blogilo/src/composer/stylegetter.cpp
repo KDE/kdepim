@@ -80,8 +80,8 @@ StyleGetter::StyleGetter(const int blogid, QObject *parent)
     }
 
     b = new Backend(blogid);
-    connect(b, SIGNAL(sigPostPublished(int,BilboPost*)), this,
-            SLOT(slotTempPostPublished(int,BilboPost*)));
+    connect(b, &Backend::sigPostPublished, this,
+            &StyleGetter::slotTempPostPublished);
     connect(b, &Backend::sigError, this, &StyleGetter::slotError);
 
     Q_EMIT sigGetStyleProgress(10);
@@ -160,8 +160,8 @@ void StyleGetter::slotTempPostPublished(int blogId, BilboPost *post)
 
     mTempPost = post;
     KIO::StoredTransferJob *job = KIO::storedGet(postUrl, KIO::NoReload, KIO::HideProgressInfo);
-    connect(job, SIGNAL(result(KJob*)),
-            this, SLOT(slotHtmlCopied(KJob*)));
+    connect(job, &KJob::result,
+            this, &StyleGetter::slotHtmlCopied);
 
 }
 

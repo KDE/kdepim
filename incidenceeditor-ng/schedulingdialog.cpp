@@ -77,7 +77,7 @@ SchedulingDialog::SchedulingDialog(const QDate &startDate, const QTime &startTim
     connect(mMoveBeginTimeEdit, &KTimeComboBox::timeEdited, this, &SchedulingDialog::slotSetEndTimeLabel);
 
     mTableView->setModel(mPeriodModel);
-    connect(mTableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotRowSelectionChanged(QModelIndex,QModelIndex)));
+    connect(mTableView->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &SchedulingDialog::slotRowSelectionChanged);
 
     mStartDate->setDate(startDate);
     mEndDate->setDate(mStartDate->date().addDays(7));

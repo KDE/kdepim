@@ -101,7 +101,6 @@ CategoryEditDialog::CategoryEditDialog(CategoryConfig *categoryConfig,
     connect(mWidgets->mButtonRemove, &QPushButton::clicked, this, &CategoryEditDialog::remove);
     connect(okButton, &QPushButton::clicked, this, &CategoryEditDialog::slotOk);
     connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &CategoryEditDialog::slotCancel);
-    //connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(slotApply()) );
 }
 
 CategoryEditDialog::~CategoryEditDialog()

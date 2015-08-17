@@ -49,11 +49,11 @@ BilboBrowser::BilboBrowser(QWidget *parent)
 
     createUi(parent);
 
-    connect(mWebView, SIGNAL(loadProgress(int)),
-            browserProgress, SLOT(setValue(int)));
+    connect(mWebView, &QWebView::loadProgress,
+            browserProgress, &QProgressBar::setValue);
     connect(mWebView, &KWebView::loadFinished, this, &BilboBrowser::slotCompleted);
-    connect(mWebView, SIGNAL(statusBarMessage(QString)), this,
-            SLOT(slotSetStatusBarText(QString)));
+    connect(mWebView, &QWebView::statusBarMessage, this,
+            &BilboBrowser::slotSetStatusBarText);
 }
 
 BilboBrowser::~BilboBrowser()

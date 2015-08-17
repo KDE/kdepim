@@ -76,14 +76,14 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow(QWidget *parent)
     connect(mWatcher, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(slotWatcherExited(int,QProcess::ExitStatus)));
 
-    connect(mWatcher, SIGNAL(readyReadStandardOutput()),
-            this, SLOT(slotReadStdout()));
+    connect(mWatcher, &QProcess::readyReadStandardOutput,
+            this, &KWatchGnuPGMainWindow::slotReadStdout);
 
     slotReadConfig();
     mSysTray = new KWatchGnuPGTray(this);
     mSysTray->show();
-    connect(mSysTray, SIGNAL(quitSelected()),
-            this, SLOT(slotQuit()));
+    connect(mSysTray, &KSystemTrayIcon::quitSelected,
+            this, &KWatchGnuPGMainWindow::slotQuit);
 
     setAutoSaveSettings();
 }

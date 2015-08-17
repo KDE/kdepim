@@ -36,10 +36,10 @@ public:
 AutoCheckTreeWidget::AutoCheckTreeWidget(QWidget *parent)
     : QTreeWidget(parent), d(new Private())
 {
-    connect(model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(slotRowsInserted(QModelIndex,int,int)));
-    connect(model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
-            SLOT(slotDataChanged(QModelIndex,QModelIndex)));
+    connect(model(), &QAbstractItemModel::rowsInserted,
+            this, &AutoCheckTreeWidget::slotRowsInserted);
+    connect(model(), &QAbstractItemModel::dataChanged, this,
+            &AutoCheckTreeWidget::slotDataChanged);
 
     setColumnCount(2);
 }

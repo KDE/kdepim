@@ -190,7 +190,7 @@ CSVImportDialog::CSVImportDialog(QWidget *parent)
 
     connect(mUrlRequester, SIGNAL(returnPressed(QString)), this, SLOT(setFile(QString)));
     connect(mUrlRequester, SIGNAL(urlSelected(QUrl)), this, SLOT(setFile(QUrl)));
-    connect(mUrlRequester->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(urlChanged(QString)));
+    connect(mUrlRequester->lineEdit(), &QLineEdit::textChanged, this, &CSVImportDialog::urlChanged);
     connect(mDelimiterGroup, SIGNAL(buttonClicked(int)), this, SLOT(delimiterClicked(int)));
     connect(mDelimiterEdit, SIGNAL(returnPressed()), this, SLOT(customDelimiterChanged()));
     connect(mDelimiterEdit, SIGNAL(textChanged(QString)),  this, SLOT(customDelimiterChanged(QString)));

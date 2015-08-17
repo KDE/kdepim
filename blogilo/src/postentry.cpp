@@ -91,7 +91,7 @@ PostEntry::PostEntry(QWidget *parent)
     : QFrame(parent), d(new Private)
 {
     createUi();
-    connect(d->wysiwygEditor->editor(), SIGNAL(textChanged()), this, SIGNAL(textChanged()));
+    connect(d->wysiwygEditor->editor(), &ComposerEditorNG::ComposerEditor::textChanged, this, &PostEntry::textChanged);
     connect(d->htmlEditor->document(), SIGNAL(textChanged(KTextEditor::Document*)),
             this, SIGNAL(textChanged()));
     layout()->addWidget(d->tabWidget);
