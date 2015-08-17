@@ -1,7 +1,5 @@
 [Global]
 PluginName=KDEPimMailCommonWidgets
-Includes=kcomponentdata.h
-Init=new KComponentData("kdepimmailcommonwidgets");
 
 [MailCommon::SearchPatternEdit]
 ToolTip=Search pattern editor (KDE-PIM)

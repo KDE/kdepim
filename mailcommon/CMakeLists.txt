@@ -243,7 +243,7 @@ if (Qt5Designer_FOUND)
     kf5designerplugin_add_plugin(mailcommonwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
  
     target_link_libraries(mailcommonwidgets
-        mailcommon KF5::KDELibs4Support
+        mailcommon
     )
     if(NOT WIN32)
         # Since there are no libraries provided by this module,
