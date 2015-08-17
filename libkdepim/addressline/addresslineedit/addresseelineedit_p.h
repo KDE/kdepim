@@ -86,6 +86,9 @@ public:
     KLDAP::LdapClientSearch *ldapSearch();
     QStringList balooBlackList() const;
 
+public Q_SLOTS:
+    void slotShowOUChanged(bool);
+
 private Q_SLOTS:
     void slotCompletion();
     void slotPopupCompletion(const QString &);
@@ -99,7 +102,6 @@ private Q_SLOTS:
     void slotAkonadiCollectionsReceived(const Akonadi::Collection::List &);
     void searchInBaloo();
     void slotTriggerDelayedQueries();
-    void slotShowOUChanged(bool);
     void slotConfigureBalooBlackList();
 
 private:

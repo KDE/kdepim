@@ -426,7 +426,7 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
         showOU->setCheckable(true);
 
         showOU->setChecked(d->showOU());
-        connect(showOU, SIGNAL(triggered(bool)), d, SLOT(slotShowOUChanged(bool)));
+        connect(showOU, &QAction::triggered, d, &AddresseeLineEditPrivate::slotShowOUChanged);
         menu->addAction(showOU);
     }
     configureCompletionOrder(menu);
