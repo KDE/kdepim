@@ -28,7 +28,6 @@
 #include <QDomDocument>
 #include <QFile>
 #include <QDir>
-#include <KCalendarSystem>
 #include <KLocalizedString>
 #include <QStandardPaths>
 #include <QFileInfo>
