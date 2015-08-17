@@ -81,9 +81,11 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow(QWidget *parent)
 
     slotReadConfig();
     mSysTray = new KWatchGnuPGTray(this);
-    mSysTray->show();
-    connect(mSysTray, &KSystemTrayIcon::quitSelected,
-            this, &KWatchGnuPGMainWindow::slotQuit);
+    QAction* act = mSysTray->action(QStringLiteral("quit"));
+    if (act)
+    {
+        connect(act, &QAction::triggered, this, &KWatchGnuPGMainWindow::slotQuit);
+    }
 
     setAutoSaveSettings();
 }

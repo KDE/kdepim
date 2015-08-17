@@ -33,12 +33,12 @@
 #ifndef TRAY_H
 #define TRAY_H
 
-#include <ksystemtrayicon.h>
 #include <QIcon>
+#include <kstatusnotifieritem.h>
 
 class KWatchGnuPGMainWindow;
 
-class KWatchGnuPGTray : public KSystemTrayIcon
+class KWatchGnuPGTray : public KStatusNotifierItem
 {
     Q_OBJECT
 public:

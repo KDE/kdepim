@@ -40,7 +40,7 @@
 #include <kiconloader.h>
 
 KWatchGnuPGTray::KWatchGnuPGTray(KWatchGnuPGMainWindow *mainwin)
-    : KSystemTrayIcon(mainwin)
+    : KStatusNotifierItem(mainwin)
 {
     qCDebug(KWATCHGNUPG_LOG) << "KWatchGnuPGTray::KWatchGnuPGTray";
 
@@ -48,11 +48,9 @@ KWatchGnuPGTray::KWatchGnuPGTray(KWatchGnuPGMainWindow *mainwin)
     KIconLoader::global()->addAppDir(QStringLiteral("kwatchgnupg"));
     KIconLoader::global()->addAppDir(QStringLiteral("kdepim"));
 
-    mNormalPix = loadIcon(QStringLiteral("kwatchgnupg"));
-    mAttentionPix = loadIcon(QStringLiteral("kwatchgnupg2"));
-
-    setIcon(mNormalPix);
-    this->setToolTip(i18n("KWatchGnuPG Log Viewer"));
+    mNormalPix.addPixmap(KIconLoader::global()->loadIcon(QStringLiteral("kwatchgnupg"), KIconLoader::Panel));
+    mAttentionPix.addPixmap(KIconLoader::global()->loadIcon(QStringLiteral("kwatchgnupg2"), KIconLoader::Panel));
+    setToolTipTitle(i18n("KWatchGnuPG Log Viewer"));
 }
 
 KWatchGnuPGTray::~KWatchGnuPGTray()
@@ -62,9 +60,9 @@ KWatchGnuPGTray::~KWatchGnuPGTray()
 void KWatchGnuPGTray::setAttention(bool att)
 {
     if (att) {
-        setIcon(mAttentionPix);
+        setIconByPixmap(mAttentionPix);
     } else {
-        setIcon(mNormalPix);
+        setIconByPixmap(mNormalPix);
     }
 }
 
