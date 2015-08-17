@@ -18,9 +18,6 @@ endif()
 
 add_subdirectory(icons)
 add_subdirectory(printing)
-if(BUILD_TESTING)
-   add_subdirectory(autotests)
-endif()
 
 if(KF5Gpgmepp_FOUND)
   add_definitions(-DQGPGME_FOUND)
@@ -150,6 +147,7 @@ if (BUILD_TESTING)
    add_subdirectory(sendvcards/autotests)
    add_subdirectory(gravatar/autotests)
    add_subdirectory(gravatar/tests)
+   add_subdirectory(autotests)
 endif()
 
 if(KF5Gpgmepp_FOUND)
