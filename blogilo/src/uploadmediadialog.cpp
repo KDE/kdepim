@@ -35,7 +35,6 @@
 #include <kio/jobclasses.h>
 #include <kio/job.h>
 #include <KLocalizedString>
-#include <KMimeType>
 #include <QIcon>
 
 #include <QUrl>
@@ -43,6 +42,7 @@
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QMimeDatabase>
 
 UploadMediaDialog::UploadMediaDialog(QWidget *parent)
     : QDialog(parent), mCurrentBlog(Q_NULLPTR)
@@ -135,7 +135,8 @@ void UploadMediaDialog::slotOkClicked()
         media->setLocalUrl(mediaUrl);
         media->setName(ui.kcfg_Name->text().isEmpty() ? mediaUrl.fileName() : ui.kcfg_Name->text());
         media->setBlogId(mCurrentBlog->id());
-        media->setMimeType(KMimeType::findByUrl(mediaUrl, 0, true)->name());
+        QMimeDatabase mimeDb;
+        media->setMimeType(mimeDb.mimeTypeForUrl(mediaUrl).name());
         Backend *b = new Backend(mCurrentBlog->id(), this);
         connect(b, SIGNAL(sigMediaUploaded(BilboMedia*)),
                 this, SLOT(slotMediaObjectUploaded(BilboMedia*)));
