@@ -96,18 +96,18 @@ void TagPropertiesDialog::setupUi()
 
     if (mTag.isValid()) {
         ui.idLabel->setText(QString::number(mTag.id()));
-        ui.typeEdit->setText(QString::fromLatin1(mTag.type()));
-        ui.gidEdit->setText(QString::fromLatin1(mTag.gid()));
+        ui.typeEdit->setText(QLatin1String(mTag.type()));
+        ui.gidEdit->setText(QLatin1String(mTag.gid()));
         ui.parentIdLabel->setText(QString::number(mTag.parent().id()));
 
         for (int i = 0; i < attributes.count(); ++i) {
             QModelIndex index = mAttributesModel->index(i, 0);
             Q_ASSERT(index.isValid());
-            mAttributesModel->setData(index, QString::fromLatin1(attributes[i]->type()));
+            mAttributesModel->setData(index, QLatin1String(attributes[i]->type()));
             mAttributesModel->item(i, 0)->setEditable(false);
             index = mAttributesModel->index(i, 1);
             Q_ASSERT(index.isValid());
-            mAttributesModel->setData(index, QString::fromLatin1(attributes[i]->serialized()));
+            mAttributesModel->setData(index, QLatin1String(attributes[i]->serialized()));
             mAttributesModel->item(i, 1)->setEditable(true);
         }
 

@@ -189,9 +189,9 @@ static bool is_version(const char *actual, int major, int minor, int patch)
     ok = !std::lexicographical_compare(begin(actual_version), end(actual_version),
                                        begin(required_version), end(required_version));
     if (ok) {
-        qCDebug(KLEOPATRA_LOG)  << QString::fromLatin1("%1.%2.%3").arg(major).arg(minor).arg(patch) << "<=" << actual ;
+        qCDebug(KLEOPATRA_LOG)  << QStringLiteral("%1.%2.%3").arg(major).arg(minor).arg(patch) << "<=" << actual ;
     } else {
-        qCDebug(KLEOPATRA_LOG) << QString::fromLatin1("%1.%2.%3").arg(major).arg(minor).arg(patch) << ">" << actual ;
+        qCDebug(KLEOPATRA_LOG) << QStringLiteral("%1.%2.%3").arg(major).arg(minor).arg(patch) << ">" << actual ;
     }
     return ok;
 }

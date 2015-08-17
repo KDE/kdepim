@@ -332,7 +332,7 @@ void BrowserWidget::setItem(const Akonadi::Item &item)
 
     QStringList tags;
     foreach (const Tag &tag, item.tags()) {
-        tags << QString::fromLatin1(tag.gid());
+        tags << QLatin1String(tag.gid());
     }
     contentUi.tags->setItems(tags);
 

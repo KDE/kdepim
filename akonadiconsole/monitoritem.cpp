@@ -124,7 +124,7 @@ void MonitorItem::monitoredResourcesChanged()
         if (i > 0) {
             monitoredResources += QStringLiteral(", ");
         }
-        monitoredResources += QString::fromLatin1(list[i]);
+        monitoredResources += QLatin1String(list[i]);
     }
 
     Q_EMIT changed(MonitorsModel::MonitoredResourcesColumn);
@@ -138,7 +138,7 @@ void MonitorItem::ignoredSessionsChanged()
         if (i > 0) {
             ignoredSessions += QLatin1String(", ");
         }
-        ignoredSessions += QString::fromLatin1(list[i]);
+        ignoredSessions += QLatin1String(list[i]);
     }
 
     Q_EMIT changed(MonitorsModel::IgnoredSessionsColumn);

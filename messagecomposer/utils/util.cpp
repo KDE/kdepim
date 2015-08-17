@@ -115,7 +115,7 @@ KMime::Content *MessageComposer::Util::composeHeadersAndBody(KMime::Content *ori
         } else {                                //enc SMIME, sign/enc SMIMEOpaque
             result->contentTransferEncoding()->setEncoding(KMime::Headers::CEbase64);
             result->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
-            result->contentDisposition()->setFilename(QString::fromLatin1("smime.p7m"));
+            result->contentDisposition()->setFilename(QStringLiteral("smime.p7m"));
 
             result->assemble();
             //qCDebug(MESSAGECOMPOSER_LOG) << "processed header:" << result->head();

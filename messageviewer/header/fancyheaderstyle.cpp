@@ -147,7 +147,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
                                                GlobalSettings::self()->numberOfAddressesToShow());
         }
 
-        headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
+        headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
                                              "<td>%2</td></tr>\n")
                          .arg(i18nc("To-field of the mail header.", "To: "))
                          .arg(to));
@@ -155,7 +155,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
 
     // cc line, if an
     if (strategy->showHeader(QStringLiteral("cc")) && message->cc(false))
-        headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
+        headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
                                              "<td>%2</td></tr>\n")
                          .arg(i18n("CC: "))
                          .arg(StringUtil::emailAddrAsAnchor(message->cc(), StringUtil::DisplayFullAddress,
@@ -165,13 +165,13 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
 
     // Bcc line, if any
     if (strategy->showHeader(QStringLiteral("bcc")) && message->bcc(false))
-        headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
+        headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
                                              "<td>%2</td></tr>\n")
                          .arg(i18n("BCC: "))
                          .arg(StringUtil::emailAddrAsAnchor(message->bcc(), StringUtil::DisplayFullAddress)));
 
     if (strategy->showHeader(QStringLiteral("date")))
-        headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
+        headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
                                              "<td dir=\"%2\">%3</td></tr>\n")
                          .arg(i18n("Date: "))
                          .arg(MessageViewer::HeaderStyleUtil::directionOf(MessageViewer::HeaderStyleUtil::dateStr(message->date()->dateTime())))
@@ -179,7 +179,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     if (GlobalSettings::self()->showUserAgent()) {
         if (strategy->showHeader(QStringLiteral("user-agent"))) {
             if (message->headerByType("User-Agent")) {
-                headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
+                headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
                                                      "<td>%2</td></tr>\n")
                                  .arg(i18n("User-Agent: "))
                                  .arg(MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("User-Agent")->asUnicodeString())));
@@ -188,7 +188,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
 
         if (strategy->showHeader(QStringLiteral("x-mailer"))) {
             if (message->headerByType("X-Mailer")) {
-                headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
+                headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
                                                      "<td>%2</td></tr>\n")
                                  .arg(i18n("X-Mailer: "))
                                  .arg(MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("X-Mailer")->asUnicodeString())));

@@ -1569,7 +1569,7 @@ QString OverviewPage::i18nFormatGnupgKeyParms(bool details) const
 
 static QString encode_dns(const QString &dns)
 {
-    return QString::fromLatin1(QUrl::toAce(dns));
+    return QLatin1String(QUrl::toAce(dns));
 }
 
 static QString encode_email(const QString &email)

@@ -37,9 +37,9 @@ void AttachmentCompressJobTest::testCompress()
     for (int i = 0; i < 100; ++i) {
         data += "This is some highly compressible text...\n";
     }
-    const QString name = QString::fromLatin1("name");
-    const QString fileName = QString::fromLatin1("name.txt");
-    const QString description = QString::fromLatin1("description");
+    const QString name = QStringLiteral("name");
+    const QString fileName = QStringLiteral("name.txt");
+    const QString description = QStringLiteral("description");
 
     // Create the original part.
     AttachmentPart::Ptr origPart = AttachmentPart::Ptr(new AttachmentPart);

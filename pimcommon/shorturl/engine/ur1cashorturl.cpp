@@ -59,7 +59,7 @@ void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply)
         return;
     }
 
-    QString output = QString::fromLatin1(reply->readAll());
+    QString output = QLatin1String(reply->readAll());
     qCDebug(PIMCOMMON_LOG) << "void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << output;
     QRegExp rx(QStringLiteral("<p class=[\'\"]success[\'\"]>(.*)</p>"));
     rx.setMinimal(true);

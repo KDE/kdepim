@@ -381,7 +381,7 @@ void AgentWidget::cloneAgent(KJob *job)
         if (signature.startsWith("Introspect")) {   // D-Bus stuff // krazy:exclude=strings
             continue;
         }
-        const QString methodName = QString::fromLatin1(signature.left(signature.indexOf('(')));
+        const QString methodName = QLatin1String(signature.left(signature.indexOf('(')));
         const QDBusMessage reply = sourceIface.call(methodName);
         if (reply.arguments().count() != 1) {
             qCritical() << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
