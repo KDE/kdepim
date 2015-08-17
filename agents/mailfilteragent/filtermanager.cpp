@@ -546,8 +546,8 @@ QString FilterManager::createUniqueName(const QString &name) const
                 found = true;
                 ++counter;
                 uniqueName = name;
-                uniqueName += QString::fromLatin1(" (") + QString::number(counter)
-                              + QString::fromLatin1(")");
+                uniqueName += QLatin1String(" (") + QString::number(counter)
+                              + QLatin1String(")");
                 break;
             }
         }

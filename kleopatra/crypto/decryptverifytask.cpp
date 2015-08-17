@@ -249,12 +249,12 @@ static QString renderFingerprint(const char *fpr)
     if (!fpr) {
         return QString();
     }
-    return QString::fromLatin1("0x%1").arg(QString::fromLatin1(fpr).toUpper());
+    return QStringLiteral("0x%1").arg(QString::fromLatin1(fpr).toUpper());
 }
 
 static QString renderKeyLink(const QString &fpr, const QString &text)
 {
-    return QString::fromLatin1("<a href=\"key:%1\">%2</a>").arg(fpr, text);
+    return QStringLiteral("<a href=\"key:%1\">%2</a>").arg(fpr, text);
 }
 
 static QString renderKey(const Key &key)

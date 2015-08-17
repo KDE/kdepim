@@ -358,7 +358,7 @@ void QGpgMECryptoConfigComponent::sync(bool runtime)
     // Call gpgconf --change-options <component>
     const QString gpgconf = QGpgMECryptoConfig::gpgConfPath();
     QString commandLine = gpgconf.isEmpty()
-                          ? QString::fromLatin1("gpgconf")
+                          ? QStringLiteral("gpgconf")
                           : KShell::quoteArg(gpgconf) ;
     if (runtime) {
         commandLine += QLatin1String(" --runtime");
@@ -913,7 +913,7 @@ QString QGpgMECryptoConfigEntry::toString(bool escape) const
     }
     if (!isList()) { // non-list non-string
         if (mArgType == ArgType_None) {
-            return mValue.toBool() ? QString::fromLatin1("1") : QString();
+            return mValue.toBool() ? QStringLiteral("1") : QString();
         } else { // some int
             Q_ASSERT(mArgType == ArgType_Int || mArgType == ArgType_UInt);
             return mValue.toString(); // int to string conversion

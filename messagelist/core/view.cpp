@@ -2364,7 +2364,7 @@ bool View::event(QEvent *e)
     const bool textIsLeftToRight = (QApplication::layoutDirection() == Qt::LeftToRight);
     const QString textDirection =  textIsLeftToRight ? QStringLiteral("left") : QStringLiteral("right");
 
-    QString tip = QString::fromLatin1(
+    QString tip = QStringLiteral(
                       "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"
                   );
 
@@ -2372,7 +2372,7 @@ bool View::event(QEvent *e)
     case Item::Message: {
         MessageItem *mi = static_cast< MessageItem * >(it);
 
-        tip += QString::fromLatin1(
+        tip += QStringLiteral(
                    "<tr>" \
                    "<td bgcolor=\"%1\" align=\"%4\" valign=\"middle\">" \
                    "<div style=\"color: %2; font-weight: bold;\">" \
@@ -2382,13 +2382,13 @@ bool View::event(QEvent *e)
                    "</tr>"
                ).arg(txtColorName).arg(bckColorName).arg(mi->subject().toHtmlEscaped()).arg(textDirection);
 
-        tip += QString::fromLatin1(
+        tip += QLatin1String(
                    "<tr>" \
                    "<td align=\"center\" valign=\"middle\">" \
                    "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"
                );
 
-        const QString htmlCodeForStandardRow = QString::fromLatin1(
+        const QString htmlCodeForStandardRow = QStringLiteral(
                 "<tr>" \
                 "<td align=\"right\" valign=\"top\" width=\"45\">" \
                 "<div style=\"font-weight: bold;\"><nobr>" \
@@ -2444,7 +2444,7 @@ bool View::event(QEvent *e)
             }
         }
 
-        tip += QString::fromLatin1(
+        tip += QLatin1String(
                    "</table" \
                    "</td>" \
                    "</tr>"
@@ -2468,7 +2468,7 @@ bool View::event(QEvent *e)
                              stats.mUnreadChildCount
                          );
 
-            tip += QString::fromLatin1(
+            tip += QStringLiteral(
                        "<tr>" \
                        "<td bgcolor=\"%1\" align=\"%3\" valign=\"middle\">" \
                        "<nobr>%2</nobr>" \
@@ -2482,7 +2482,7 @@ bool View::event(QEvent *e)
     case Item::GroupHeader: {
         GroupHeaderItem *ghi = static_cast< GroupHeaderItem * >(it);
 
-        tip += QString::fromLatin1(
+        tip += QStringLiteral(
                    "<tr>" \
                    "<td bgcolor=\"%1\" align=\"%4\" valign=\"middle\">" \
                    "<div style=\"color: %2; font-weight: bold;\">" \
@@ -2623,7 +2623,7 @@ bool View::event(QEvent *e)
         }
 
         if (!description.isEmpty()) {
-            tip += QString::fromLatin1(
+            tip += QStringLiteral(
                        "<tr>" \
                        "<td align=\"%2\" valign=\"middle\">" \
                        "%1" \
@@ -2650,7 +2650,7 @@ bool View::event(QEvent *e)
                              stats.mUnreadChildCount
                          );
 
-            tip += QString::fromLatin1(
+            tip += QStringLiteral(
                        "<tr>" \
                        "<td bgcolor=\"%1\" align=\"%3\" valign=\"middle\">" \
                        "<nobr>%2</nobr>" \
@@ -2666,7 +2666,7 @@ bool View::event(QEvent *e)
         break;
     }
 
-    tip += QString::fromLatin1(
+    tip += QLatin1String(
                "</table>"
            );
 

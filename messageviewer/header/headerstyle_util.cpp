@@ -197,7 +197,7 @@ QString drawSpamMeter(SpamError spamError, double percent, double confidence,
                          "Full report:\n%2",
                          errorMsg, filterHeader);
     }
-    return QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\" style=\"border: 1px solid black;\" title=\"%4\"> &nbsp;")
+    return QStringLiteral("<img src=\"%1\" width=\"%2\" height=\"%3\" style=\"border: 1px solid black;\" title=\"%4\"> &nbsp;")
            .arg(imgToDataUrl(meterBar), QString::number(meterWidth),
                 QString::number(meterHeight), titleText) + confidenceString;
 }
@@ -208,7 +208,7 @@ QString imgToDataUrl(const QImage &image)
     QBuffer buffer(&ba);
     buffer.open(QIODevice::WriteOnly);
     image.save(&buffer, "PNG");
-    return QString::fromLatin1("data:image/%1;base64,%2").arg(QString::fromLatin1("PNG"), QString::fromLatin1(ba.toBase64()));
+    return QStringLiteral("data:image/%1;base64,%2").arg(QStringLiteral("PNG"), QString::fromLatin1(ba.toBase64()));
 }
 
 QString dateStr(const QDateTime &dateTime)

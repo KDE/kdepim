@@ -56,12 +56,12 @@ void FilterImporterThunderbird::readStream(QTextStream &stream)
 
 QString FilterImporterThunderbird::defaultIcedoveFiltersSettingsPath()
 {
-    return QString::fromLatin1("%1/.icedove/").arg(QDir::homePath());
+    return QStringLiteral("%1/.icedove/").arg(QDir::homePath());
 }
 
 QString FilterImporterThunderbird::defaultThunderbirdFiltersSettingsPath()
 {
-    return QString::fromLatin1("%1/.thunderbird/").arg(QDir::homePath());
+    return QStringLiteral("%1/.thunderbird/").arg(QDir::homePath());
 }
 
 MailCommon::MailFilter *FilterImporterThunderbird::parseLine(QTextStream &stream,
@@ -346,7 +346,7 @@ bool FilterImporterThunderbird::splitConditions(const QString &cond,
         contentsName = QString::number(value);
     } else if (fieldName == "<date>") {
         QLocale locale(QLocale::C);
-        const QDate date = locale.toDate(contents, QString::fromLatin1("dd-MMM-yyyy"));
+        const QDate date = locale.toDate(contents, QStringLiteral("dd-MMM-yyyy"));
         contentsName = date.toString(Qt::ISODate);
     } else {
         contentsName = contents;

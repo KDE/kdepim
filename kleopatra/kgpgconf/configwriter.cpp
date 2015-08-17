@@ -63,10 +63,10 @@ struct GpgConfConfEntry {
 
         QString str;
         if (useDefault) {
-            str += QString::fromLatin1("   %1 %2 [default]\n").arg(component, option);
+            str += QStringLiteral("   %1 %2 [default]\n").arg(component, option);
         }
         if (!(useDefault && changeStr.isEmpty())) {
-            str += QString::fromLatin1("   %1 %2 %3 %4\n").arg(component, option, changeStr, value);
+            str += QStringLiteral("   %1 %2 %3 %4\n").arg(component, option, changeStr, value);
         }
         return str;
     }

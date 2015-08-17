@@ -124,7 +124,7 @@ public:
                         int i = 2;
                         const QString originalName(theme.name());
                         while (alreadyLoadedThemeName.contains(themeName)) {
-                            themeName = originalName + QString::fromLatin1(" (%1)").arg(i);
+                            themeName = originalName + QStringLiteral(" (%1)").arg(i);
                             ++i;
                         }
                         theme.setName(themeName);

@@ -76,7 +76,7 @@ bool CustomManageSieveWidget::refreshList()
             item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
             treeView()->expandItem(last);
         } else {
-            serverName += QString::fromLatin1(" (%1)").arg(u.userName());
+            serverName += QStringLiteral(" (%1)").arg(u.userName());
             KManageSieve::SieveJob *job = KManageSieve::SieveJob::list(u);
             connect(job, &KManageSieve::SieveJob::gotList, this, &CustomManageSieveWidget::slotGotList);
             mJobs.insert(job, last);

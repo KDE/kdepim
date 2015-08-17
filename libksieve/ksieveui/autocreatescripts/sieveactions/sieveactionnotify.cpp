@@ -119,18 +119,18 @@ QString SieveActionNotify::code(QWidget *w) const
     const SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox *>(QStringLiteral("importancecombo"));
     const QString importanceStr = importance->code();
     if (!importanceStr.isEmpty()) {
-        result += QString::fromLatin1(" :importance \"%1\"").arg(importanceStr);
+        result += QStringLiteral(" :importance \"%1\"").arg(importanceStr);
     }
 
     const QLineEdit *message = w->findChild<QLineEdit *>(QStringLiteral("message"));
     const QString messageStr = message->text();
     if (!messageStr.isEmpty()) {
-        result += QString::fromLatin1(" :message \"%2\"").arg(messageStr);
+        result += QStringLiteral(" :message \"%2\"").arg(messageStr);
     }
 
     const QLineEdit *method = w->findChild<QLineEdit *>(QStringLiteral("method"));
     const QString methodStr = method->text();
-    result += QString::fromLatin1(" \"%3\";").arg(methodStr);
+    result += QStringLiteral(" \"%3\";").arg(methodStr);
 
     return result;
 }

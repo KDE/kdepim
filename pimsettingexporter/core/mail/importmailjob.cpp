@@ -339,7 +339,7 @@ void ImportMailJob::restoreResources()
                     if (leaveOnserver.hasKey(QStringLiteral("downloadLater"))) {
                         settings.insert(QStringLiteral("DownloadLater"), leaveOnserver.readEntry("downloadLater", QStringList()));
                     }
-                    const QString newResource = mCreateResource->createResource(QString::fromLatin1("akonadi_pop3_resource"), filename, settings);
+                    const QString newResource = mCreateResource->createResource(QStringLiteral("akonadi_pop3_resource"), filename, settings);
                     if (!newResource.isEmpty()) {
                         mHashResources.insert(filename, newResource);
                         infoAboutNewResource(newResource);
@@ -826,14 +826,14 @@ void ImportMailJob::restoreConfig()
             const KArchiveEntry *entry = themeDir->entry(entryName);
             if (entry && entry->isDirectory()) {
                 QString subFolderName = entryName;
-                QDir themeDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("messageviewer/themes/%1").arg(entryName));
+                QDir themeDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("messageviewer/themes/%1").arg(entryName));
                 int i = 1;
                 while (themeDirectory.exists()) {
-                    subFolderName = entryName + QString::fromLatin1("_%1").arg(i);
-                    themeDirectory = QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("messageviewer/themes/%1").arg(subFolderName));
+                    subFolderName = entryName + QStringLiteral("_%1").arg(i);
+                    themeDirectory = QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("messageviewer/themes/%1").arg(subFolderName));
                     ++i;
                 }
-                copyToDirectory(entry, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("messageviewer/themes/%1").arg(subFolderName));
+                copyToDirectory(entry, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("messageviewer/themes/%1").arg(subFolderName));
             }
         }
     }
@@ -887,10 +887,10 @@ void ImportMailJob::restoreIdentity()
                             const KArchiveEntry *vcardEntry = mArchiveDirectory->entry(Utils::identitiesPath() + QString::number(oldUid) + QDir::separator() + file.fileName());
                             if (vcardEntry && vcardEntry->isFile()) {
                                 const KArchiveFile *vcardFile = static_cast<const KArchiveFile *>(vcardEntry);
-                                QString vcardFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("kmail2/%1").arg(fileInfo.fileName());
+                                QString vcardFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("kmail2/%1").arg(fileInfo.fileName());
                                 int i = 1;
                                 while (QFile(vcardFileName).exists()) {
-                                    vcardFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("kmail2/%1_%2").arg(i).arg(fileInfo.fileName());
+                                    vcardFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("kmail2/%1_%2").arg(i).arg(fileInfo.fileName());
                                     ++i;
                                 }
                                 vcardFile->copyTo(QFileInfo(vcardFilePath).absolutePath());
@@ -928,7 +928,7 @@ QString ImportMailJob::uniqueIdentityName(const QString &name)
     QString newName(name);
     int i = 0;
     while (!mIdentityManager->isUnique(newName)) {
-        newName = QString::fromLatin1("%1_%2").arg(name).arg(i);
+        newName = QStringLiteral("%1_%2").arg(name).arg(i);
         ++i;
     }
     return newName;
@@ -1214,7 +1214,7 @@ void ImportMailJob::mergeLdapConfig(const KArchiveFile *archivefile, const QStri
     grpExisting.writeEntry(QStringLiteral("NumSelectedHosts"), (existingNumberSelectedHosts + importingNumberSelectedHosts));
 
     for (int i = 0; i < importingNumberSelectedHosts; ++i) {
-        const QString auth = grpImporting.readEntry(QString::fromLatin1("SelectedAuth%1").arg(i), QString());
+        const QString auth = grpImporting.readEntry(QStringLiteral("SelectedAuth%1").arg(i), QString());
         grpExisting.writeEntry(QStringLiteral("SelectedAuth%1").arg(existingNumberSelectedHosts + i + 1), auth);
         grpExisting.writeEntry(QStringLiteral("SelectedBase%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedBase%1").arg(i), QString()));
         grpExisting.writeEntry(QStringLiteral("SelectedBind%1").arg(existingNumberSelectedHosts + i + 1), grpImporting.readEntry(QStringLiteral("SelectedBind%1").arg(i), QString()));
@@ -1300,9 +1300,9 @@ void ImportMailJob::mergeSieveTemplate(const KArchiveFile *archivefile, const QS
     const int numberOfImportingTemplate = grpImportExisting.readEntry(QStringLiteral("templateCount"), 0);
 
     for (int i = 0; i < numberOfImportingTemplate; ++i) {
-        KConfigGroup templateDefine = importingSieveTemplateConfig->group(QString::fromLatin1("templateDefine_%1").arg(i));
+        KConfigGroup templateDefine = importingSieveTemplateConfig->group(QStringLiteral("templateDefine_%1").arg(i));
 
-        KConfigGroup newTemplateDefineGrp = existingConfig->group(QString::fromLatin1("templateDefine_%1").arg(numberOfExistingTemplate));
+        KConfigGroup newTemplateDefineGrp = existingConfig->group(QStringLiteral("templateDefine_%1").arg(numberOfExistingTemplate));
         newTemplateDefineGrp.writeEntry(QStringLiteral("Name"), templateDefine.readEntry(QStringLiteral("Name")));
         newTemplateDefineGrp.writeEntry(QStringLiteral("Text"), templateDefine.readEntry(QStringLiteral("Text")));
         ++numberOfExistingTemplate;

@@ -85,7 +85,7 @@ QString SieveConditionHasFlag::code(QWidget *w) const
     bool isNegative = false;
     const QString matchString = matchTypeCombo->code(isNegative);
 
-    QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("hasflag %1").arg(matchString);
+    QString result = AutoCreateScriptUtil::negativeString(isNegative) + QStringLiteral("hasflag %1").arg(matchString);
 
     if (hasVariableSupport) {
         const QLineEdit *variableName = w->findChild<QLineEdit *>(QStringLiteral("variablename"));

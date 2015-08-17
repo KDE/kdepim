@@ -750,7 +750,7 @@ void GraphicsScene::doPrint(QPainter *painter, const QRectF &targetRect,
             item->setPos(0, rg.start());
         } while ((sidx = rowController()->indexBelow(sidx)).isValid());
         // Add a little margin to textWidth
-        textWidth += QFontMetricsF(sceneFont).width(QString::fromLatin1("X"));
+        textWidth += QFontMetricsF(sceneFont).width(QStringLiteral("X"));
         Q_FOREACH (QGraphicsTextItem *item, textLabels) {
             item->setPos(scnRect.left() - textWidth, item->y());
             item->show();

@@ -230,7 +230,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     }
     mShareServiceManager = new PimCommon::ShareServiceUrlManager(this);
 
-    mThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Mail, QString::fromLatin1("header.desktop"), mActionCollection, QStringLiteral("messageviewer/themes/"));
+    mThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Mail, QStringLiteral("header.desktop"), mActionCollection, QStringLiteral("messageviewer/themes/"));
     mThemeManager->setDownloadNewStuffConfigFile(QStringLiteral("messageviewer_header_themes.knsrc"));
     connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
     connect(mThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
@@ -387,7 +387,7 @@ void ViewerPrivate::openAttachment(KMime::Content *node, const QString &name)
     const QString filenameText = NodeHelper::fileName(node);
 
     AttachmentDialog dialog(mMainWindow, filenameText, offer ? offer->name() : QString(),
-                            QString::fromLatin1("askSave_") + mimetype.name());
+                            QLatin1String("askSave_") + mimetype.name());
     const int choice = dialog.exec();
 
     if (choice == AttachmentDialog::Save) {
@@ -453,9 +453,9 @@ bool ViewerPrivate::deleteAttachment(KMime::Content *node, bool showWarning)
     // text/plain part:
     KMime::Content *deletePart = new KMime::Content(parent);
     deletePart->contentType()->setMimeType("text/x-moz-deleted");
-    deletePart->contentType()->setName(QString::fromLatin1("Deleted: %1").arg(name), "utf8");
+    deletePart->contentType()->setName(QStringLiteral("Deleted: %1").arg(name), "utf8");
     deletePart->contentDisposition()->setDisposition(KMime::Headers::CDattachment);
-    deletePart->contentDisposition()->setFilename(QString::fromLatin1("Deleted: %1").arg(name));
+    deletePart->contentDisposition()->setFilename(QStringLiteral("Deleted: %1").arg(name));
 
     deletePart->contentType()->setCharset("utf-8");
     deletePart->contentTransferEncoding()->from7BitString("7bit");
@@ -855,7 +855,7 @@ void ViewerPrivate::displayMessage()
         const QColor foreground = KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::NegativeText).color();
         const QColor background = KColorScheme(QPalette::Active, KColorScheme::View).background(KColorScheme::NegativeBackground).color();
 
-        htmlWriter()->queue(QString::fromLatin1("<div style=\"background:%1;color:%2;border:1px solid %3\">%4</div>").arg(background.name(), foreground.name(), foreground.name(), attr->message().toHtmlEscaped()));
+        htmlWriter()->queue(QStringLiteral("<div style=\"background:%1;color:%2;border:1px solid %3\">%4</div>").arg(background.name(), foreground.name(), foreground.name(), attr->message().toHtmlEscaped()));
         htmlWriter()->queue(QStringLiteral("<p></p>"));
     }
 
@@ -2092,7 +2092,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
             }
             const bool result = (node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.data());
             if (result)
-                html += QString::fromLatin1("<div style=\"background:%1; %2"
+                html += QStringLiteral("<div style=\"background:%1; %2"
                                             "vertical-align:middle; float:%3; %4\">").arg(bgColor.name()).arg(margin)
                         .arg(align).arg(visibility);
             html += subHtml;
@@ -2104,11 +2104,11 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
         NodeHelper::AttachmentDisplayInfo info = NodeHelper::attachmentDisplayInfo(node);
         if (info.displayInHeader) {
             html += QLatin1String("<div style=\"float:left;\">");
-            html += QString::fromLatin1("<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">").arg(bgColor.name());
+            html += QStringLiteral("<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">").arg(bgColor.name());
             mNodeHelper->writeNodeToTempFile(node);
             const QString href = mNodeHelper->asHREF(node, QStringLiteral("header"));
-            html += QString::fromLatin1("<a href=\"") + href +
-                    QString::fromLatin1("\">");
+            html += QLatin1String("<a href=\"") + href +
+                    QLatin1String("\">");
             QString imageMaxSize;
             if (!info.icon.isEmpty()) {
                 QImage tmpImg(info.icon);
@@ -2116,7 +2116,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
                     imageMaxSize = QStringLiteral("width=\"48\" height=\"48\"");
                 }
             }
-            html += QString::fromLatin1("<img %1 style=\"vertical-align:middle;\" src=\"").arg(imageMaxSize) + info.icon + QLatin1String("\"/>&nbsp;");
+            html += QStringLiteral("<img %1 style=\"vertical-align:middle;\" src=\"").arg(imageMaxSize) + info.icon + QLatin1String("\"/>&nbsp;");
             if (headerStyle() == HeaderStyle::enterprise()) {
                 QFont bodyFont = mCSSHelper->bodyFont(mUseFixedFont);
                 QFontMetrics fm(bodyFont);
@@ -2983,7 +2983,7 @@ void ViewerPrivate::scrollToAttachment(KMime::Content *node)
     const KMime::Content *root = node->topLevel();
     const int totalChildCount = Util::allContents(root).size();
     for (int i = 0 ; i < totalChildCount + 1 ; ++i) {
-        mViewer->removeAttachmentMarking(QString::fromLatin1("attachmentDiv%1").arg(i + 1));
+        mViewer->removeAttachmentMarking(QStringLiteral("attachmentDiv%1").arg(i + 1));
     }
 
     // Don't mark hidden nodes, that would just produce a strange yellow line
@@ -2994,7 +2994,7 @@ void ViewerPrivate::scrollToAttachment(KMime::Content *node)
     // Now, color the div of the attachment in yellow, so that the user sees what happened.
     // We created a special marked div for this in writeAttachmentMarkHeader() in ObjectTreeParser,
     // find and modify that now.
-    mViewer->markAttachment(QLatin1String("attachmentDiv") + indexStr, QString::fromLatin1("border:2px solid %1").arg(cssHelper()->pgpWarnColor().name()));
+    mViewer->markAttachment(QLatin1String("attachmentDiv") + indexStr, QStringLiteral("border:2px solid %1").arg(cssHelper()->pgpWarnColor().name()));
 }
 
 void ViewerPrivate::setUseFixedFont(bool useFixedFont)

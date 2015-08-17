@@ -234,19 +234,19 @@ int main(int argc, char *argv[])
                      QString::fromLatin1(progDisplay)).toLocal8Bit().data()
              << endl;
         cout << i18nc("the default export format", "  %1 [Default]",
-                      QString::fromLatin1("Text")).toLocal8Bit().data()
+                      QStringLiteral("Text")).toLocal8Bit().data()
              << endl;
         cout << i18nc("short text export", "  %1 (like %2, but more compact)",
-                      QString::fromLatin1("Short"), QString::fromLatin1("Text")).toLocal8Bit().data()
+                      QStringLiteral("Short"), QStringLiteral("Text")).toLocal8Bit().data()
              << endl;
         cout << i18nc("HTML export", "  %1",
-                      QString::fromLatin1("HTML")).toLocal8Bit().data()
+                      QStringLiteral("HTML")).toLocal8Bit().data()
              << endl;
         cout << i18nc("HTMLmonth export", "  %1 (like %2, but in a month view)",
-                      QString::fromLatin1("HTMLmonth"), QString::fromLatin1("HTML")).toLocal8Bit().data()
+                      QStringLiteral("HTMLmonth"), QStringLiteral("HTML")).toLocal8Bit().data()
              << endl;
         cout << i18nc("comma-separated values export", "  %1 (Comma-Separated Values)",
-                      QString::fromLatin1("CSV")).toLocal8Bit().data()
+                      QStringLiteral("CSV")).toLocal8Bit().data()
              << endl;
         cout << endl;
         return 0;

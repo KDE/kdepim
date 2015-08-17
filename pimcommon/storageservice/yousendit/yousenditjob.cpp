@@ -96,7 +96,7 @@ void YouSendItJob::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFileAction;
     mError = false;
-    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1").arg(filename));
+    QUrl url(mDefaultUrl + QStringLiteral("/dpi/v1/folder/file/%1").arg(filename));
     qCDebug(PIMCOMMON_LOG) << " url" << url;
     QNetworkRequest request = setDefaultHeader(url);
     QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
@@ -107,7 +107,7 @@ void YouSendItJob::deleteFolder(const QString &foldername)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFolderAction;
     mError = false;
-    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1").arg(foldername));
+    QUrl url(mDefaultUrl + QStringLiteral("/dpi/v1/folder/%1").arg(foldername));
     QNetworkRequest request = setDefaultHeader(url);
     QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &YouSendItJob::slotError);
@@ -117,7 +117,7 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFolderAction;
     mError = false;
-    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1/rename?name=%2").arg(source).arg(destination));
+    QUrl url(mDefaultUrl + QStringLiteral("/dpi/v1/folder/%1/rename?name=%2").arg(source).arg(destination));
     QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     QUrl postData;
@@ -131,7 +131,7 @@ void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFileAction;
     mError = false;
-    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1/rename?name=%2").arg(oldName).arg(newName));
+    QUrl url(mDefaultUrl + QStringLiteral("/dpi/v1/folder/file/%1/rename?name=%2").arg(oldName).arg(newName));
     QNetworkRequest request = setDefaultHeader(url);
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
@@ -146,7 +146,7 @@ void YouSendItJob::moveFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFolderAction;
     mError = false;
-    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1/move?parentId=%2").arg(source).arg(destination));
+    QUrl url(mDefaultUrl + QStringLiteral("/dpi/v1/folder/%1/move?parentId=%2").arg(source).arg(destination));
     QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
 
@@ -160,7 +160,7 @@ void YouSendItJob::moveFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFileAction;
     mError = false;
-    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1/move?parentId=%2").arg(source).arg(destination));
+    QUrl url(mDefaultUrl + QStringLiteral("/dpi/v1/folder/file/%1/move?parentId=%2").arg(source).arg(destination));
     QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
 
@@ -227,7 +227,7 @@ void YouSendItJob::listFolder(const QString &folder)
     if (folder.isEmpty()) {
         url.setUrl(mDefaultUrl + QLatin1String("/dpi/v1/folder/0"));
     } else {
-        url.setUrl(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1").arg(folder));
+        url.setUrl(mDefaultUrl + QStringLiteral("/dpi/v1/folder/%1").arg(folder));
     }
     url.addQueryItem(QStringLiteral("email"), mUsername);
     url.addQueryItem(QStringLiteral("X-Auth-Token"), mToken);

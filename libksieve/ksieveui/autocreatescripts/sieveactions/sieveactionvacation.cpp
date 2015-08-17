@@ -168,16 +168,16 @@ QString SieveActionVacation::code(QWidget *w) const
     const QString addressesStr = addresses->text();
     QString result = QStringLiteral("vacation");
     if (!dayStr.isEmpty()) {
-        result += QString::fromLatin1(" %1 %2").arg(vacationTypeStr).arg(dayStr);
+        result += QStringLiteral(" %1 %2").arg(vacationTypeStr).arg(dayStr);
     }
     if (!subjectStr.isEmpty()) {
-        result += QString::fromLatin1(" :subject \"%1\"").arg(subjectStr);
+        result += QStringLiteral(" :subject \"%1\"").arg(subjectStr);
     }
     if (!addressesStr.isEmpty()) {
-        result += QString::fromLatin1(" :addresses %1").arg(AutoCreateScriptUtil::createAddressList(addressesStr, false));
+        result += QStringLiteral(" :addresses %1").arg(AutoCreateScriptUtil::createAddressList(addressesStr, false));
     }
     if (!textStr.isEmpty()) {
-        result += QString::fromLatin1(" text:%1").arg(AutoCreateScriptUtil::createMultiLine(textStr));
+        result += QStringLiteral(" text:%1").arg(AutoCreateScriptUtil::createMultiLine(textStr));
     } else {
         result += QLatin1Char(';');    //Be sure to have ";"
     }

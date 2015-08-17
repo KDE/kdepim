@@ -178,8 +178,8 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
         if (group) {
             Kleo::CryptoConfigEntry *entry = group->entry(QStringLiteral("log-file"));
             if (entry) {
-                entry->setStringValue(QString::fromLatin1("socket://") + config.readEntry("Socket", WATCHGNUPGSOCKET));
-                logclients << QString::fromLatin1("%1 (%2)").arg(*it).arg(comp->description());
+                entry->setStringValue(QLatin1String("socket://") + config.readEntry("Socket", WATCHGNUPGSOCKET));
+                logclients << QStringLiteral("%1 (%2)").arg(*it).arg(comp->description());
             }
             entry = group->entry(QStringLiteral("debug-level"));
             if (entry) {

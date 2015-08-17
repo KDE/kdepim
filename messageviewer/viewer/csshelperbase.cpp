@@ -237,7 +237,7 @@ static const char *const quoteFontSizes[] = { "85", "80", "75" };
 
 QString CSSHelperBase::printCssDefinitions(bool fixed) const
 {
-    const QString headerFont = QString::fromLatin1("  font-family: \"%1\" ! important;\n"
+    const QString headerFont = QStringLiteral("  font-family: \"%1\" ! important;\n"
                                "  font-size: %2pt ! important;\n")
                                .arg(mPrintFont.family())
                                .arg(mPrintFont.pointSize());
@@ -256,7 +256,7 @@ QString CSSHelperBase::printCssDefinitions(bool fixed) const
     }
 
     return
-        QString::fromLatin1("body {\n"
+        QStringLiteral("body {\n"
                             "  font-family: \"%1\" ! important;\n"
                             "  font-size: %2pt ! important;\n"
                             "  color: #000000 ! important;\n"
@@ -265,7 +265,7 @@ QString CSSHelperBase::printCssDefinitions(bool fixed) const
         .arg(printFont.family(),
              QString::number(printFont.pointSize()))
         +
-        QString::fromLatin1("tr.textAtmH,\n"
+        QStringLiteral("tr.textAtmH,\n"
                             "tr.signInProgressH,\n"
                             "tr.rfc822H,\n"
                             "tr.encrH,\n"
@@ -329,14 +329,14 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
     const QString fgColor = mForegroundColor.name();
     const QString bgColor = mBackgroundColor.name();
     const QString linkColor = mLinkColor.name();
-    const QString headerFont = QString::fromLatin1("  font-family: \"%1\" ! important;\n"
+    const QString headerFont = QStringLiteral("  font-family: \"%1\" ! important;\n"
                                "  font-size: %2px ! important;\n")
                                .arg(mBodyFont.family())
                                .arg(pointsToPixel(helper->mPaintDevice, mBodyFont.pointSize()));
     const QString background = (mBackingPixmapOn
-                                ? QString::fromLatin1("  background-image:url(file:///%1) ! important;\n")
+                                ? QStringLiteral("  background-image:url(file:///%1) ! important;\n")
                                 .arg(mBackingPixmapStr)
-                                : QString::fromLatin1("  background-color: %1 ! important;\n")
+                                : QStringLiteral("  background-color: %1 ! important;\n")
                                 .arg(bgColor));
     const QString bodyFontSize = QString::number(pointsToPixel(helper->mPaintDevice, fontSize(fixed))) + QLatin1String("px");
     const QPalette &pal = QApplication::palette();
@@ -354,7 +354,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
 
     // CSS definitions for quote levels 1-3
     for (int i = 0 ; i < 3 ; ++i) {
-        quoteCSS += QString::fromLatin1("div.quotelevel%1 {\n"
+        quoteCSS += QStringLiteral("div.quotelevel%1 {\n"
                                         "  color: %2 ! important;\n")
                     .arg(QString::number(i + 1), mQuoteColor[i].name());
         if (mQuoteFont[i].italic()) {
@@ -371,7 +371,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
 
     // CSS definitions for quote levels 4+
     for (int i = 0 ; i < 3 ; ++i) {
-        quoteCSS += QString::fromLatin1("div.deepquotelevel%1 {\n"
+        quoteCSS += QStringLiteral("div.deepquotelevel%1 {\n"
                                         "  color: %2 ! important;\n")
                     .arg(QString::number(i + 1), mQuoteColor[i].name());
         if (mQuoteFont[i].italic()) {
@@ -387,7 +387,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
     }
 
     return
-        QString::fromLatin1("body {\n"
+        QStringLiteral("body {\n"
                             "  font-family: \"%1\" ! important;\n"
                             "  font-size: %2 ! important;\n"
                             "  color: %3 ! important;\n"
@@ -408,7 +408,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
                                "}\n\n" )
           +
           */
-        QString::fromLatin1("a {\n"
+        QStringLiteral("a {\n"
                             "  color: %1 ! important;\n"
                             "  text-decoration: none ! important;\n"
                             "}\n\n"
@@ -443,7 +443,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
                             "}\n\n")
         .arg(linkColor, fgColor, bgColor, headerFont)
         +
-        QString::fromLatin1("table.encr {\n"
+        QStringLiteral("table.encr {\n"
                             "  background-color: %1 ! important;\n"
                             "}\n\n"
 
@@ -458,7 +458,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
              headerFont,
              cPgpEncrB.name())
         +
-        QString::fromLatin1("table.signOkKeyOk {\n"
+        QStringLiteral("table.signOkKeyOk {\n"
                             "  background-color: %1 ! important;\n"
                             "}\n\n"
 
@@ -473,7 +473,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
              headerFont,
              cPgpOk1B.name())
         +
-        QString::fromLatin1("table.signOkKeyBad {\n"
+        QStringLiteral("table.signOkKeyBad {\n"
                             "  background-color: %1 ! important;\n"
                             "}\n\n"
 
@@ -488,7 +488,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
              headerFont,
              cPgpOk0B.name())
         +
-        QString::fromLatin1("table.signWarn {\n"
+        QStringLiteral("table.signWarn {\n"
                             "  background-color: %1 ! important;\n"
                             "}\n\n"
 
@@ -503,7 +503,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
              headerFont,
              cPgpWarnB.name())
         +
-        QString::fromLatin1("table.signErr {\n"
+        QStringLiteral("table.signErr {\n"
                             "  background-color: %1 ! important;\n"
                             "}\n\n"
 
@@ -518,13 +518,13 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
              headerFont,
              cPgpErrB.name())
         +
-        QString::fromLatin1("div.htmlWarn {\n"
+        QStringLiteral("div.htmlWarn {\n"
                             "  border: 2px solid %1 ! important;\n"
                             "  line-height: normal;\n"
                             "}\n\n")
         .arg(cHtmlWarning.name())
         +
-        QString::fromLatin1("div.header {\n"
+        QStringLiteral("div.header {\n"
                             "%1"
                             "}\n\n"
 
@@ -582,7 +582,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
 QString CSSHelperBase::commonCssDefinitions() const
 {
     const QPalette &pal = QApplication::palette();
-    const QString headerFont = QString::fromLatin1("font-family: \"%1\" ! important;\n"
+    const QString headerFont = QStringLiteral("font-family: \"%1\" ! important;\n"
                                "  font-size: %2px ! important;\n")
                                .arg(mBodyFont.family())
                                .arg(pointsToPixel(this->mPaintDevice, mBodyFont.pointSize()));

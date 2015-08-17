@@ -316,7 +316,7 @@ void ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node)
 
         KMime::ContentIndex contentIndex = node->index();
         if (htmlWriter() /*&& contentIndex.isValid()*/) {
-            htmlWriter()->queue(QString::fromLatin1("<a name=\"att%1\"></a>").arg(contentIndex.toString()));
+            htmlWriter()->queue(QStringLiteral("<a name=\"att%1\"></a>").arg(contentIndex.toString()));
         }
 
         QByteArray mediaType("text");
@@ -405,9 +405,9 @@ void ObjectTreeParser::defaultHandling(KMime::Content *node, ProcessResult &resu
     }
 
     if (node->contentType()->mimeType() == QByteArray("application/octet-stream") &&
-            (node->contentType()->name().endsWith(QString::fromLatin1("p7m")) ||
-             node->contentType()->name().endsWith(QString::fromLatin1("p7s")) ||
-             node->contentType()->name().endsWith(QString::fromLatin1("p7c"))
+            (node->contentType()->name().endsWith(QLatin1String("p7m")) ||
+             node->contentType()->name().endsWith(QLatin1String("p7s")) ||
+             node->contentType()->name().endsWith(QLatin1String("p7c"))
             ) &&
             processApplicationPkcs7MimeSubtype(node, result)) {
         return;
@@ -1385,7 +1385,7 @@ bool ObjectTreeParser::processMailmanMessage(KMime::Content *curNode)
         partStr = QStringLiteral("Content-Type: message/rfc822\nContent-Description: embedded message\n\n");
         partStr += QLatin1String("Content-Type: text/plain\n");
         partStr += str.mid(thisDelim, nextDelim - thisDelim);
-        QString subject = QString::fromLatin1("embedded message");
+        QString subject = QStringLiteral("embedded message");
         QString subSearch = QStringLiteral("\nSubject:");
         int subPos = partStr.indexOf(subSearch, 0, Qt::CaseInsensitive);
         if (-1 < subPos) {
@@ -2656,13 +2656,13 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
         QString keyWithWithoutURL;
         if (cryptProto) {
             startKeyHREF =
-                QString::fromLatin1("<a href=\"kmail:showCertificate#%1 ### %2 ### %3\">")
+                QStringLiteral("<a href=\"kmail:showCertificate#%1 ### %2 ### %3\">")
                 .arg(cryptProto->displayName(),
                      cryptProto->name(),
                      QString::fromLatin1(block.keyId));
 
             keyWithWithoutURL =
-                QString::fromLatin1("%1%2</a>").arg(startKeyHREF, QString::fromLatin1(QByteArray(QByteArray("0x") + block.keyId)));
+                QStringLiteral("%1%2</a>").arg(startKeyHREF, QString::fromLatin1(QByteArray(QByteArray("0x") + block.keyId)));
         } else {
             keyWithWithoutURL = QLatin1String("0x") + QString::fromUtf8(block.keyId);
         }
@@ -2990,7 +2990,7 @@ void ObjectTreeParser::writeAttachmentMarkHeader(KMime::Content *node)
         return;
     }
 
-    htmlWriter()->queue(QString::fromLatin1("<div id=\"attachmentDiv%1\">\n").arg(node->index().toString()));
+    htmlWriter()->queue(QStringLiteral("<div id=\"attachmentDiv%1\">\n").arg(node->index().toString()));
 }
 
 //-----------------------------------------------------------------------------
@@ -3379,7 +3379,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
                         if (!curHidden) {
                             //Expand all quotes
                             htmlStr += QLatin1String("<div class=\"quotelevelmark\" >") ;
-                            htmlStr += QString::fromLatin1("<a href=\"kmail:levelquote?%1 \">"
+                            htmlStr += QStringLiteral("<a href=\"kmail:levelquote?%1 \">"
                                                            "<img src=\"%2\" alt=\"\" title=\"\"/></a>")
                                        .arg(-1)
                                        .arg(mExpandIcon);
@@ -3388,7 +3388,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
                         }
                     } else {
                         htmlStr += QLatin1String("<div class=\"quotelevelmark\" >");
-                        htmlStr += QString::fromLatin1("<a href=\"kmail:levelquote?%1 \">"
+                        htmlStr += QStringLiteral("<a href=\"kmail:levelquote?%1 \">"
                                                        "<img src=\"%2\" alt=\"\" title=\"\"/></a>")
                                    .arg(actQuoteLevel)
                                    .arg(mCollapseIcon);
@@ -3418,7 +3418,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
                 if (startNewPara) {
                     paraIsRTL = line.isRightToLeft();
                 }
-                htmlStr += QString::fromLatin1("<div dir=\"%1\">").arg(paraIsRTL ? QStringLiteral("rtl") : QStringLiteral("ltr"));
+                htmlStr += QStringLiteral("<div dir=\"%1\">").arg(paraIsRTL ? QStringLiteral("rtl") : QStringLiteral("ltr"));
                 htmlStr += KTextToHTML::convertToHtml(line, convertFlags);
                 htmlStr += QLatin1String("</div>");
                 startNewPara = looksLikeParaBreak(s, pos);

@@ -88,22 +88,22 @@ QString SieveConditionMetaData::code(QWidget *w) const
     bool isNegative = false;
     const QString matchString = selectType->code(isNegative);
 
-    QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("metadata %1 ").arg(matchString);
+    QString result = AutoCreateScriptUtil::negativeString(isNegative) + QStringLiteral("metadata %1 ").arg(matchString);
 
     const QLineEdit *mailbox = w->findChild<QLineEdit *>(QStringLiteral("mailbox"));
     const QString mailboxStr = mailbox->text();
 
-    result += QString::fromLatin1("\"%1\" ").arg(mailboxStr);
+    result += QStringLiteral("\"%1\" ").arg(mailboxStr);
 
     const QLineEdit *annotation = w->findChild<QLineEdit *>(QStringLiteral("annotation"));
     const QString annotationStr = annotation->text();
 
-    result += QString::fromLatin1("\"%1\" ").arg(annotationStr);
+    result += QStringLiteral("\"%1\" ").arg(annotationStr);
 
     const QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
     const QString valueStr = value->text();
 
-    result += QString::fromLatin1("\"%1\"").arg(valueStr);
+    result += QStringLiteral("\"%1\"").arg(valueStr);
     return result;
 }
 

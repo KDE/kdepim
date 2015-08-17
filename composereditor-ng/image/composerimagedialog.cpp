@@ -210,25 +210,25 @@ QString ComposerImageDialogPrivate::html() const
         imageWidth = imageWidget->imageWidth();
         imageHeight = imageWidget->imageHeight();
     }
-    QString imageHtml = QString::fromLatin1("<img");
+    QString imageHtml = QStringLiteral("<img");
     if (imageWidth > 0) {
-        imageHtml += QString::fromLatin1(" width=%1").arg(imageWidth);
+        imageHtml += QStringLiteral(" width=%1").arg(imageWidth);
     }
     if (imageHeight > 0) {
-        imageHtml += QString::fromLatin1(" height=%1").arg(imageHeight);
+        imageHtml += QStringLiteral(" height=%1").arg(imageHeight);
     }
     if (!url.isEmpty()) {
-        imageHtml += QString::fromLatin1(" src='file://%1'").arg(url.path());
+        imageHtml += QStringLiteral(" src='file://%1'").arg(url.path());
     }
     QString str = title->text();
     if (!str.isEmpty()) {
-        imageHtml += QString::fromLatin1(" title='%1'").arg(str);
+        imageHtml += QStringLiteral(" title='%1'").arg(str);
     }
     str = alternateTitle->text();
     if (!str.isEmpty()) {
-        imageHtml += QString::fromLatin1(" alt='%1'").arg(str);
+        imageHtml += QStringLiteral(" alt='%1'").arg(str);
     }
-    imageHtml += QString::fromLatin1(" />");
+    imageHtml += QLatin1String(" />");
     return imageHtml;
 }
 

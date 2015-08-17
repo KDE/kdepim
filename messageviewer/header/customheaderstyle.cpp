@@ -80,7 +80,7 @@ QString CustomHeaderStyle::format(KMime::Message *message) const
 
     Q_FOREACH (const QString &headerToDisplay, headersToDisplay) {
         if (headerToDisplay.toLower() == QLatin1String("subject")) {
-            headerStr += QString::fromLatin1("<div dir=\"%1\"><b style=\"font-size:130%\">").arg(subjectDir) +
+            headerStr += QStringLiteral("<div dir=\"%1\"><b style=\"font-size:130%\">").arg(subjectDir) +
                          MessageViewer::HeaderStyleUtil::subjectString(message) + QLatin1String("</b></div>\n");
         } else if (headerToDisplay.toLower() == QLatin1String("date")) {
             headerStr.append(i18n("Date: ") + MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ false)) + QLatin1String("<br/>\n"));

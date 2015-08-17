@@ -137,7 +137,7 @@ void MultiImapVacationDialog::createPage(const QString &serverName, const QUrl &
     VacationPageWidget *page = new VacationPageWidget;
     page->setServerUrl(url);
     page->setServerName(serverName);
-    mTabWidget->addTab(page, serverName + QString::fromLatin1(" (%1)").arg(url.userName()));
+    mTabWidget->addTab(page, serverName + QStringLiteral(" (%1)").arg(url.userName()));
 }
 
 void MultiImapVacationDialog::readConfig()

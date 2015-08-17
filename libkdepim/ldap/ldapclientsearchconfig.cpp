@@ -51,7 +51,7 @@ public:
     KWallet::Wallet *wallet;
 };
 
-K_GLOBAL_STATIC_WITH_ARGS(KConfig, s_config, (QLatin1String("kabldaprc"), KConfig::NoGlobals))
+K_GLOBAL_STATIC_WITH_ARGS(KConfig, s_config, (QStringLiteral("kabldaprc"), KConfig::NoGlobals))
 
 KConfig *LdapClientSearchConfig::config()
 {
@@ -75,33 +75,33 @@ void LdapClientSearchConfig::readConfig(KLDAP::LdapServer &server, KConfigGroup 
         prefix = QStringLiteral("Selected");
     }
 
-    const QString host =  config.readEntry(prefix + QString::fromLatin1("Host%1").arg(j),
+    const QString host =  config.readEntry(prefix + QStringLiteral("Host%1").arg(j),
                                            QString()).trimmed();
     if (!host.isEmpty()) {
         server.setHost(host);
     }
 
-    const int port = config.readEntry(prefix + QString::fromLatin1("Port%1").arg(j), 389);
+    const int port = config.readEntry(prefix + QStringLiteral("Port%1").arg(j), 389);
     server.setPort(port);
 
-    const QString base = config.readEntry(prefix + QString::fromLatin1("Base%1").arg(j),
+    const QString base = config.readEntry(prefix + QStringLiteral("Base%1").arg(j),
                                           QString()).trimmed();
     if (!base.isEmpty()) {
         server.setBaseDn(KLDAP::LdapDN(base));
     }
 
-    const QString user = config.readEntry(prefix + QString::fromLatin1("User%1").arg(j),
+    const QString user = config.readEntry(prefix + QStringLiteral("User%1").arg(j),
                                           QString()).trimmed();
     if (!user.isEmpty()) {
         server.setUser(user);
     }
 
-    const QString bindDN = config.readEntry(prefix + QString::fromLatin1("Bind%1").arg(j), QString()).trimmed();
+    const QString bindDN = config.readEntry(prefix + QStringLiteral("Bind%1").arg(j), QString()).trimmed();
     if (!bindDN.isEmpty()) {
         server.setBindDn(bindDN);
     }
 
-    const QString pwdBindBNEntry = prefix + QString::fromLatin1("PwdBind%1").arg(j);
+    const QString pwdBindBNEntry = prefix + QStringLiteral("PwdBind%1").arg(j);
     QString pwdBindDN = config.readEntry(pwdBindBNEntry, QString());
     if (!pwdBindDN.isEmpty()) {
         if (d->askWallet && KMessageBox::Yes == KMessageBox::questionYesNo(Q_NULLPTR, i18n("LDAP password is stored as clear text, do you want to store it in kwallet?"),
@@ -140,14 +140,14 @@ void LdapClientSearchConfig::readConfig(KLDAP::LdapServer &server, KConfigGroup 
         }
     }
 
-    server.setTimeLimit(config.readEntry(prefix + QString::fromLatin1("TimeLimit%1").arg(j), 0));
-    server.setSizeLimit(config.readEntry(prefix + QString::fromLatin1("SizeLimit%1").arg(j), 0));
-    server.setPageSize(config.readEntry(prefix + QString::fromLatin1("PageSize%1").arg(j), 0));
-    server.setVersion(config.readEntry(prefix + QString::fromLatin1("Version%1").arg(j), 3));
+    server.setTimeLimit(config.readEntry(prefix + QStringLiteral("TimeLimit%1").arg(j), 0));
+    server.setSizeLimit(config.readEntry(prefix + QStringLiteral("SizeLimit%1").arg(j), 0));
+    server.setPageSize(config.readEntry(prefix + QStringLiteral("PageSize%1").arg(j), 0));
+    server.setVersion(config.readEntry(prefix + QStringLiteral("Version%1").arg(j), 3));
 
     QString tmp;
-    tmp = config.readEntry(prefix + QString::fromLatin1("Security%1").arg(j),
-                           QString::fromLatin1("None"));
+    tmp = config.readEntry(prefix + QStringLiteral("Security%1").arg(j),
+                           QStringLiteral("None"));
     server.setSecurity(KLDAP::LdapServer::None);
     if (tmp == QLatin1String("SSL")) {
         server.setSecurity(KLDAP::LdapServer::SSL);
@@ -155,8 +155,8 @@ void LdapClientSearchConfig::readConfig(KLDAP::LdapServer &server, KConfigGroup 
         server.setSecurity(KLDAP::LdapServer::TLS);
     }
 
-    tmp = config.readEntry(prefix + QString::fromLatin1("Auth%1").arg(j),
-                           QString::fromLatin1("Anonymous"));
+    tmp = config.readEntry(prefix + QStringLiteral("Auth%1").arg(j),
+                           QStringLiteral("Anonymous"));
     server.setAuth(KLDAP::LdapServer::Anonymous);
     if (tmp == QLatin1String("Simple")) {
         server.setAuth(KLDAP::LdapServer::Simple);
@@ -164,8 +164,8 @@ void LdapClientSearchConfig::readConfig(KLDAP::LdapServer &server, KConfigGroup 
         server.setAuth(KLDAP::LdapServer::SASL);
     }
 
-    server.setMech(config.readEntry(prefix + QString::fromLatin1("Mech%1").arg(j), QString()));
-    server.setFilter(config.readEntry(prefix + QString::fromLatin1("UserFilter%1").arg(j), QString()));
+    server.setMech(config.readEntry(prefix + QStringLiteral("Mech%1").arg(j), QString()));
+    server.setFilter(config.readEntry(prefix + QStringLiteral("UserFilter%1").arg(j), QString()));
 }
 
 void LdapClientSearchConfig::writeConfig(const KLDAP::LdapServer &server, KConfigGroup &config, int j, bool active)
@@ -175,13 +175,13 @@ void LdapClientSearchConfig::writeConfig(const KLDAP::LdapServer &server, KConfi
         prefix = QStringLiteral("Selected");
     }
 
-    config.writeEntry(prefix + QString::fromLatin1("Host%1").arg(j), server.host());
-    config.writeEntry(prefix + QString::fromLatin1("Port%1").arg(j), server.port());
-    config.writeEntry(prefix + QString::fromLatin1("Base%1").arg(j), server.baseDn().toString());
-    config.writeEntry(prefix + QString::fromLatin1("User%1").arg(j), server.user());
-    config.writeEntry(prefix + QString::fromLatin1("Bind%1").arg(j), server.bindDn());
+    config.writeEntry(prefix + QStringLiteral("Host%1").arg(j), server.host());
+    config.writeEntry(prefix + QStringLiteral("Port%1").arg(j), server.port());
+    config.writeEntry(prefix + QStringLiteral("Base%1").arg(j), server.baseDn().toString());
+    config.writeEntry(prefix + QStringLiteral("User%1").arg(j), server.user());
+    config.writeEntry(prefix + QStringLiteral("Bind%1").arg(j), server.bindDn());
 
-    const QString passwordEntry = prefix + QString::fromLatin1("PwdBind%1").arg(j);
+    const QString passwordEntry = prefix + QStringLiteral("PwdBind%1").arg(j);
     const QString password = server.password();
     if (!password.isEmpty()) {
         if (d->useWallet && !d->wallet) {
@@ -195,10 +195,10 @@ void LdapClientSearchConfig::writeConfig(const KLDAP::LdapServer &server, KConfi
         }
     }
 
-    config.writeEntry(prefix + QString::fromLatin1("TimeLimit%1").arg(j), server.timeLimit());
-    config.writeEntry(prefix + QString::fromLatin1("SizeLimit%1").arg(j), server.sizeLimit());
-    config.writeEntry(prefix + QString::fromLatin1("PageSize%1").arg(j), server.pageSize());
-    config.writeEntry(prefix + QString::fromLatin1("Version%1").arg(j), server.version());
+    config.writeEntry(prefix + QStringLiteral("TimeLimit%1").arg(j), server.timeLimit());
+    config.writeEntry(prefix + QStringLiteral("SizeLimit%1").arg(j), server.sizeLimit());
+    config.writeEntry(prefix + QStringLiteral("PageSize%1").arg(j), server.pageSize());
+    config.writeEntry(prefix + QStringLiteral("Version%1").arg(j), server.version());
     QString tmp;
     switch (server.security()) {
     case KLDAP::LdapServer::TLS:
@@ -210,7 +210,7 @@ void LdapClientSearchConfig::writeConfig(const KLDAP::LdapServer &server, KConfi
     default:
         tmp = QStringLiteral("None");
     }
-    config.writeEntry(prefix + QString::fromLatin1("Security%1").arg(j), tmp);
+    config.writeEntry(prefix + QStringLiteral("Security%1").arg(j), tmp);
     switch (server.auth()) {
     case KLDAP::LdapServer::Simple:
         tmp = QStringLiteral("Simple");
@@ -221,9 +221,9 @@ void LdapClientSearchConfig::writeConfig(const KLDAP::LdapServer &server, KConfi
     default:
         tmp = QStringLiteral("Anonymous");
     }
-    config.writeEntry(prefix + QString::fromLatin1("Auth%1").arg(j), tmp);
-    config.writeEntry(prefix + QString::fromLatin1("Mech%1").arg(j), server.mech());
-    config.writeEntry(prefix + QString::fromLatin1("UserFilter%1").arg(j), server.filter().trimmed());
+    config.writeEntry(prefix + QStringLiteral("Auth%1").arg(j), tmp);
+    config.writeEntry(prefix + QStringLiteral("Mech%1").arg(j), server.mech());
+    config.writeEntry(prefix + QStringLiteral("UserFilter%1").arg(j), server.filter().trimmed());
 }
 
 void LdapClientSearchConfig::slotWalletClosed()

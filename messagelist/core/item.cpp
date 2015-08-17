@@ -580,7 +580,7 @@ int Item::appendChildItem(Model *model, Item *child)
 
 void Item::dump(const QString &prefix)
 {
-    QString out = QString::fromLatin1("%1 %x VIEWABLE:%2").arg(prefix).arg(d_ptr->mIsViewable ? QStringLiteral("yes") : QStringLiteral("no"));
+    QString out = QStringLiteral("%1 %x VIEWABLE:%2").arg(prefix).arg(d_ptr->mIsViewable ? QStringLiteral("yes") : QStringLiteral("no"));
     qDebug(out.toUtf8().data(), this);
 
     QString nPrefix(prefix);

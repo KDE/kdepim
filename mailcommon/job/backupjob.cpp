@@ -320,11 +320,11 @@ QString BackupJob::pathForCollection(const Akonadi::Collection &collection) cons
     if (collection != mRootFolder) {
         Q_ASSERT(curCol.isValid());
         while (curCol != mRootFolder) {
-            fullPath.prepend(QLatin1Char('.') + collectionName(curCol) + QString::fromLatin1(".directory/"));
+            fullPath.prepend(QLatin1Char('.') + collectionName(curCol) + QLatin1String(".directory/"));
             curCol = curCol.parentCollection();
         }
         Q_ASSERT(curCol == mRootFolder);
-        fullPath.prepend(QLatin1Char('.') + collectionName(curCol) + QString::fromLatin1(".directory/"));
+        fullPath.prepend(QLatin1Char('.') + collectionName(curCol) + QLatin1String(".directory/"));
     }
     return fullPath;
 }

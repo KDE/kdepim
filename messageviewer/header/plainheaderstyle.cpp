@@ -69,11 +69,11 @@ QString PlainHeaderStyle::format(KMime::Message *message) const
         return headerStr + QLatin1String("</div>");
     }
 
-    headerStr = QString::fromLatin1("<div class=\"header\" dir=\"%1\">").arg(dir);
+    headerStr = QStringLiteral("<div class=\"header\" dir=\"%1\">").arg(dir);
 
     //case HdrLong:
     if (strategy->showHeader(QStringLiteral("subject")))
-        headerStr += QString::fromLatin1("<div dir=\"%1\"><b style=\"font-size:130%\">").arg(subjectDir) +
+        headerStr += QStringLiteral("<div dir=\"%1\"><b style=\"font-size:130%\">").arg(subjectDir) +
                      MessageViewer::HeaderStyleUtil::subjectString(message) + QLatin1String("</b></div>\n");
 
     if (strategy->showHeader(QStringLiteral("date"))) {

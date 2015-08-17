@@ -26,7 +26,7 @@
 
 QString AutoCreateScriptUtil::createMultiLine(const QString &str)
 {
-    const QString result = QString::fromLatin1("\n%1\n.\n;\n").arg(str);
+    const QString result = QStringLiteral("\n%1\n.\n;\n").arg(str);
     return result;
 }
 
@@ -60,7 +60,7 @@ QString AutoCreateScriptUtil::createList(const QStringList &lst, bool addSemiCol
         if (protectSlash) {
             str = str.replace(QLatin1Char('\\'), QStringLiteral("\\\\"));
         }
-        result += (wasFirst ? QString() : QStringLiteral(",")) + QString::fromLatin1(" \"%1\"").arg(quoteStr(str));
+        result += (wasFirst ? QString() : QStringLiteral(",")) + QStringLiteral(" \"%1\"").arg(quoteStr(str));
         wasFirst = false;
     }
     result += QLatin1String(" ]");
@@ -156,7 +156,7 @@ QStringList AutoCreateScriptUtil::listValue(const QDomElement &element)
 QString AutoCreateScriptUtil::fixListValue(QString valueStr)
 {
     if (!(valueStr.startsWith(QLatin1Char('[')) && valueStr.endsWith(QLatin1Char(']')))) {
-        valueStr = QString::fromLatin1("\"%1\"").arg(valueStr);
+        valueStr = QStringLiteral("\"%1\"").arg(valueStr);
     }
 
     return valueStr;
@@ -172,6 +172,6 @@ QString AutoCreateScriptUtil::createFullWhatsThis(const QString &help, const QSt
     if (href.isEmpty()) {
         return help;
     }
-    const QString fullWhatsThis = QLatin1String("<qt>") + help + QString::fromLatin1("<br><a href=\'%1\'>%2</a></qt>").arg(href).arg(i18n("More information"));
+    const QString fullWhatsThis = QLatin1String("<qt>") + help + QStringLiteral("<br><a href=\'%1\'>%2</a></qt>").arg(href).arg(i18n("More information"));
     return fullWhatsThis;
 }

@@ -298,7 +298,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
             code += QLatin1Char('"') + i18n("\"%1\" is not supported with condition \"%2\"", QLatin1String(mField), conditionToString(mFunction)) + QLatin1Char('"');
             return;
         }
-        code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(QString::number(mContents.toInt() + offset));
+        code += QStringLiteral("size %1 %2K").arg(comparaison).arg(QString::number(mContents.toInt() + offset));
     } else if (mField == "<status>") {
         //TODO ?
         code += QLatin1Char('"') + i18n("<status> not implemented/supported") + QLatin1Char('"');
@@ -404,7 +404,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
             code += QLatin1Char('"') + i18n("\"%1\" is not supported with condition \"%2\"", QLatin1String(mField), conditionToString(mFunction)) + QLatin1Char('"');
             return;
         }
-        code += (negative ? QStringLiteral("not ") : QString()) + QString::fromLatin1("body :text %1 \"%2\"").arg(comparaison).arg(contentStr);
+        code += (negative ? QStringLiteral("not ") : QString()) + QStringLiteral("body :text %1 \"%2\"").arg(comparaison).arg(contentStr);
     } else {
         QString comparaison;
         bool negative = false;
@@ -485,7 +485,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
             code += QLatin1Char('"') + i18n("\"%1\" is not supported with condition \"%2\"", QLatin1String(mField), conditionToString(mFunction)) + QLatin1Char('"');
             return;
         }
-        code += (negative ? QStringLiteral("not ") : QString()) + QString::fromLatin1("header %1 \"%2\" \"%3\"").arg(comparaison).arg(QLatin1String(mField)).arg(contentStr);
+        code += (negative ? QStringLiteral("not ") : QString()) + QStringLiteral("header %1 \"%2\" \"%3\"").arg(comparaison).arg(QLatin1String(mField)).arg(contentStr);
     }
 }
 

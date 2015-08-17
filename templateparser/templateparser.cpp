@@ -529,7 +529,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
                 qCDebug(TEMPLATEPARSER_LOG) << "Command: OTEXTSIZE";
                 i += strlen("OTEXTSIZE");
                 if (mOrigMsg) {
-                    const QString str = QString::fromLatin1("%1").arg(mOrigMsg->body().length());
+                    const QString str = QStringLiteral("%1").arg(mOrigMsg->body().length());
                     plainBody.append(str);
                     const QString body = plainToHtml(str);
                     htmlBody.append(body);

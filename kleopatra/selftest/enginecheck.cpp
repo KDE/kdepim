@@ -216,7 +216,7 @@ bool SelfTestImplementation::ensureEngineVersion(GpgME::Engine engine, int major
                                 engine_name(engine), major, minor, patch, QString::fromUtf8(ei.version()));
         m_proposedFix += xi18nc("@info",
                                 "<para>Install <application>%1</application> version %2 or higher.</para>",
-                                engine_name(engine), QString::fromLatin1("%1.%2.%3").arg(major).arg(minor).arg(patch));
+                                engine_name(engine), QStringLiteral("%1.%2.%3").arg(major).arg(minor).arg(patch));
     } else {
         // not properly installed
         m_explaination = xi18nc("@info",

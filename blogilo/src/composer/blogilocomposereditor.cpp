@@ -103,7 +103,7 @@ void BlogiloComposerEditor::setReadOnly(bool _readOnly)
 {
     if (readOnly != _readOnly) {
         readOnly = _readOnly;
-        view()->evaluateJavascript(QString::fromLatin1("setReadOnly(%1)").arg(readOnly ? QStringLiteral("true") : QStringLiteral("false")));
+        view()->evaluateJavascript(QStringLiteral("setReadOnly(%1)").arg(readOnly ? QStringLiteral("true") : QStringLiteral("false")));
     }
 }
 
@@ -130,7 +130,7 @@ QList< BilboMedia * > BlogiloComposerEditor::getLocalImages()
 
 void BlogiloComposerEditor::replaceImageSrc(const QString &src, const QString &dest)
 {
-    const QString cmd = QString::fromLatin1("replaceImageSrc('%1','%2')").arg(src).arg(dest);
+    const QString cmd = QStringLiteral("replaceImageSrc('%1','%2')").arg(src).arg(dest);
     view()->evaluateJavascript(cmd);
 }
 
@@ -145,7 +145,7 @@ void BlogiloComposerEditor::slotToggleCode(bool)
     if (selection.isEmpty()) {
         return;
     }
-    const QString html = QString::fromLatin1("<code>%1</code>").arg(selection);
+    const QString html = QStringLiteral("<code>%1</code>").arg(selection);
     execCommand(QStringLiteral("insertHtml"), html);
 }
 
@@ -179,7 +179,7 @@ void BlogiloComposerEditor::execCommand(const QString &cmd, const QString &arg)
 
 void BlogiloComposerEditor::insertShortUrl(const QString &url)
 {
-    QString html = QString::fromLatin1("<a href=\'%1\'>%1</a>").arg(url);
+    QString html = QStringLiteral("<a href=\'%1\'>%1</a>").arg(url);
     execCommand(QStringLiteral("insertHtml"), html);
 }
 

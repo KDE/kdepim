@@ -66,7 +66,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     // of the application layout.
 
     const QString dir = QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr");
-    QString headerStr = QString::fromLatin1("<div class=\"fancy header\" dir=\"%1\">\n").arg(dir);
+    QString headerStr = QStringLiteral("<div class=\"fancy header\" dir=\"%1\">\n").arg(dir);
 
     // However, the direction of the message subject within the header is
     // determined according to the contents of the subject itself. Since
@@ -87,7 +87,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     MessageViewer::HeaderStyleUtil::xfaceSettings xface = MessageViewer::HeaderStyleUtil::xface(this, message);
     if (!xface.photoURL.isEmpty()) {
         qCDebug(MESSAGEVIEWER_LOG) << "Got a photo:" << xface.photoURL;
-        userHTML = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\">")
+        userHTML = QStringLiteral("<img src=\"%1\" width=\"%2\" height=\"%3\">")
                    .arg(xface.photoURL).arg(xface.photoWidth).arg(xface.photoHeight);
         userHTML = QLatin1String("<div class=\"senderpic\">") + userHTML + QLatin1String("</div>");
     }
@@ -99,7 +99,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
             flags |= KTextToHTML::ReplaceSmileys;
         }
 
-        headerStr += QString::fromLatin1("<div dir=\"%1\">%2</div>\n")
+        headerStr += QStringLiteral("<div dir=\"%1\">%2</div>\n")
                      .arg(subjectDir)
                      .arg(MessageViewer::HeaderStyleUtil::subjectString(message, flags));
     }
@@ -111,7 +111,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     if (strategy->showHeader(QStringLiteral("from"))) {
 
         const QVector<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
-        headerStr += QString::fromLatin1("<tr><th>%1</th>\n"
+        headerStr += QStringLiteral("<tr><th>%1</th>\n"
                                          "<td>")
                      .arg(i18n("From: "))
                      + StringUtil::emailAddrAsAnchor(message->from(), StringUtil::DisplayFullAddress)
@@ -138,7 +138,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
         if (message->headerByType("Resent-To")) {
             to = StringUtil::emailAddrAsAnchor(resentTo, StringUtil::DisplayFullAddress) + QLatin1Char(' ') + i18n("(receiver was %1)", StringUtil::emailAddrAsAnchor(message->to(), StringUtil::DisplayFullAddress,
                     QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
-                    QLatin1String("FullToAddressList"),
+                    QStringLiteral("FullToAddressList"),
                     GlobalSettings::self()->numberOfAddressesToShow()));
         } else {
             to = StringUtil::emailAddrAsAnchor(message->to(), StringUtil::DisplayFullAddress,
@@ -200,7 +200,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
         const QString product   = message->headerByType("X-Bugzilla-Product")   ? message->headerByType("X-Bugzilla-Product")->asUnicodeString() : QString();
         const QString component = message->headerByType("X-Bugzilla-Component") ? message->headerByType("X-Bugzilla-Component")->asUnicodeString() : QString();
         const QString status    = message->headerByType("X-Bugzilla-Status")    ? message->headerByType("X-Bugzilla-Status")->asUnicodeString() : QString();
-        headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
+        headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
                                              "<td>%2/%3, <strong>%4</strong></td></tr>\n")
                          .arg(i18n("Bugzilla: "))
                          .arg(MessageViewer::HeaderStyleUtil::strToHtml(product))
@@ -210,7 +210,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
 
     if (strategy->showHeader(QStringLiteral("disposition-notification-to")) && message->headerByType("Disposition-Notification-To")) {
         const QString to = message->headerByType("Disposition-Notification-To") ? message->headerByType("Disposition-Notification-To")->asUnicodeString() : QString();
-        headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
+        headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
                                              "<td>%2</tr>\n")
                          .arg(i18n("MDN To: "))
                          .arg(to));
@@ -218,10 +218,10 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
 
     headerStr.append(QLatin1String("<tr><td colspan=\"2\"><div id=\"attachmentInjectionPoint\"></div></td></tr>"));
     headerStr.append(
-        QString::fromLatin1("</table></td><td align=\"center\">%1</td></tr></table>\n").arg(userHTML));
+        QStringLiteral("</table></td><td align=\"center\">%1</td></tr></table>\n").arg(userHTML));
 
     if (!spamHTML.isEmpty())
-        headerStr.append(QString::fromLatin1("<div class=\"spamheader\" dir=\"%1\"><b>%2</b>&nbsp;<span style=\"padding-left: 20px;\">%3</span></div>\n")
+        headerStr.append(QStringLiteral("<div class=\"spamheader\" dir=\"%1\"><b>%2</b>&nbsp;<span style=\"padding-left: 20px;\">%3</span></div>\n")
                          .arg(subjectDir, i18n("Spam Status:"), spamHTML));
 
     headerStr += QLatin1String("</div>\n\n");

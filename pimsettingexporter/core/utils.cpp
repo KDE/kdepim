@@ -259,7 +259,7 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
 
 QUrl Utils::akonadiAgentConfigPath(const QString &identifier)
 {
-    const QString relativeFileName = QString::fromLatin1("akonadi/%1%2").arg(Utils::prefixAkonadiConfigFile()).arg(identifier);
+    const QString relativeFileName = QStringLiteral("akonadi/%1%2").arg(Utils::prefixAkonadiConfigFile()).arg(identifier);
     const QString configFile = Akonadi::XdgBaseDirs::findResourceFile("config", relativeFileName);
     if (!configFile.isEmpty()) {
         return QUrl::fromLocalFile(configFile);
@@ -290,7 +290,7 @@ void Utils::addVersion(KZip *archive)
 {
     QTemporaryFile tmp;
     tmp.open();
-    const bool fileAdded  = archive->addLocalFile(tmp.fileName(), Utils::infoPath() + QString::fromLatin1("VERSION_%1").arg(currentArchiveVersion()));
+    const bool fileAdded  = archive->addLocalFile(tmp.fileName(), Utils::infoPath() + QStringLiteral("VERSION_%1").arg(currentArchiveVersion()));
     if (!fileAdded) {
         //TODO add i18n ?
         qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "version file can not add to archive";

@@ -381,7 +381,7 @@ void BoxJob::moveFolder(const QString &source, const QString &destination)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"parent\": {\"id\" : \"%1\"} }").arg(destination);
+    const QString data = QStringLiteral("{\"parent\": {\"id\" : \"%1\"} }").arg(destination);
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }
@@ -396,7 +396,7 @@ void BoxJob::moveFile(const QString &source, const QString &destination)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"parent\": {\"id\" : \"%1\"} }").arg(destination);
+    const QString data = QStringLiteral("{\"parent\": {\"id\" : \"%1\"} }").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
@@ -407,11 +407,11 @@ void BoxJob::copyFile(const QString &source, const QString &destination)
     mActionType = PimCommon::StorageServiceAbstract::CopyFileAction;
     mError = false;
     QUrl url;
-    url.setUrl(mApiUrl + mFileInfoPath + QString::fromLatin1("%1/copy").arg(source));
+    url.setUrl(mApiUrl + mFileInfoPath + QStringLiteral("%1/copy").arg(source));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
+    const QString data = QStringLiteral("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
@@ -422,11 +422,11 @@ void BoxJob::copyFolder(const QString &source, const QString &destination)
     mActionType = PimCommon::StorageServiceAbstract::CopyFolderAction;
     mError = false;
     QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath + QString::fromLatin1("%1/copy").arg(source));
+    url.setUrl(mApiUrl + mFolderInfoPath + QStringLiteral("%1/copy").arg(source));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
+    const QString data = QStringLiteral("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
@@ -491,7 +491,7 @@ void BoxJob::createFolderJob(const QString &foldername, const QString &destinati
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer " + mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"name\":\"%1\", \"parent\": {\"id\": \"%2\"}}").arg(foldername).arg((destination.isEmpty() ? QStringLiteral("0") : destination));
+    const QString data = QStringLiteral("{\"name\":\"%1\", \"parent\": {\"id\": \"%2\"}}").arg(foldername).arg((destination.isEmpty() ? QStringLiteral("0") : destination));
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &BoxJob::slotError);
 }

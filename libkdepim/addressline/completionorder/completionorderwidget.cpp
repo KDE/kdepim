@@ -79,7 +79,7 @@ public:
     void save(CompletionOrderWidget *) Q_DECL_OVERRIDE {
         KConfig *config = KLDAP::LdapClientSearchConfig::config();
         KConfigGroup group(config, "LDAP");
-        group.writeEntry(QString::fromLatin1("SelectedCompletionWeight%1").arg(mLdapClient->clientNumber()),
+        group.writeEntry(QStringLiteral("SelectedCompletionWeight%1").arg(mLdapClient->clientNumber()),
         mWeight);
         group.sync();
     }

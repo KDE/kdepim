@@ -332,8 +332,8 @@ QString MailFilterAgent::printCollectionMonitored()
             if (!printDebugCollection.isEmpty()) {
                 printDebugCollection += QLatin1Char('\n');
             }
-            printDebugCollection += QString::fromLatin1("Collection name: %1\n").arg(collection.name());
-            printDebugCollection += QString::fromLatin1("Collection id: %1\n").arg(collection.id());
+            printDebugCollection += QStringLiteral("Collection name: %1\n").arg(collection.name());
+            printDebugCollection += QStringLiteral("Collection id: %1\n").arg(collection.id());
         }
     }
     return printDebugCollection;

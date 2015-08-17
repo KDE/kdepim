@@ -56,7 +56,7 @@ QString SieveActionFileInto::code(QWidget *w) const
             result += QLatin1String(":create ");
         }
     }
-    return result + QString::fromLatin1("\"%1\";").arg(text);
+    return result + QStringLiteral("\"%1\";").arg(text);
 }
 
 bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)

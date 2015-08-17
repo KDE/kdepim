@@ -102,7 +102,7 @@ private:
         const unsigned int idx = 2 * x509 + armor;
         const char *const extension = extensions[idx];
 
-        const QString nf = i18n("Secret Key Files") + QString::fromLatin1("(*%1 *%2 *%3 *%4 *.pgp)")
+        const QString nf = i18n("Secret Key Files") + QStringLiteral("(*%1 *%2 *%3 *%4 *.pgp)")
                            .arg(QLatin1String(extensions[idx]), QLatin1String(extensions[(idx + 1) % 4]), QLatin1String(extensions[(idx + 2) % 4]), QLatin1String(extensions[(idx + 3) % 4]));
         ui.outputFileFR->setNameFilter(nf);
 

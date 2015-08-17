@@ -152,11 +152,11 @@ QString SieveActionSetVariable::code(QWidget *w) const
 
     const QLineEdit *value = w->findChild<QLineEdit *>(QStringLiteral("value"));
     const QString valueStr = value->text();
-    result += QString::fromLatin1("\"%1\" ").arg(valueStr);
+    result += QStringLiteral("\"%1\" ").arg(valueStr);
 
     const QLineEdit *variable = w->findChild<QLineEdit *>(QStringLiteral("variable"));
     const QString variableStr = variable->text();
-    result += QString::fromLatin1("\"%1\";").arg(variableStr);
+    result += QStringLiteral("\"%1\";").arg(variableStr);
 
     return result;
 }

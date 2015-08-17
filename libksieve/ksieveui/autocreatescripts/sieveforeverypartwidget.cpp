@@ -87,7 +87,7 @@ void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requ
         if (loopName.isEmpty()) {
             script += QLatin1String("foreverypart {");
         } else {
-            script += QString::fromLatin1("foreverypart :name \"%1\" {").arg(loopName);
+            script += QStringLiteral("foreverypart :name \"%1\" {").arg(loopName);
         }
     }
 }

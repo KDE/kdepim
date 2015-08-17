@@ -53,17 +53,17 @@ void SelectConvertParameterWidget::setCode(const QStringList &code, QString &err
     }
 
     QString widthStr = code.at(0);
-    widthStr = widthStr.remove(QString::fromLatin1("pix-x="));
+    widthStr = widthStr.remove(QStringLiteral("pix-x="));
 
     QString heightStr = code.at(1);
-    heightStr = heightStr.remove(QString::fromLatin1("pix-y="));
+    heightStr = heightStr.remove(QStringLiteral("pix-y="));
     mWidth->setValue(widthStr.toInt());
     mHeight->setValue(heightStr.toInt());
 }
 
 QString SelectConvertParameterWidget::code() const
 {
-    return QString::fromLatin1("[\"pix-x=%1\",\"pix-y=%2\"]").arg(mWidth->value()).arg(mHeight->value());
+    return QStringLiteral("[\"pix-x=%1\",\"pix-y=%2\"]").arg(mWidth->value()).arg(mHeight->value());
 }
 
 void SelectConvertParameterWidget::initialize()

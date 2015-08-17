@@ -72,7 +72,7 @@ QString Formatting::prettyName(int proto, const char *id, const char *name_, con
         if (comment.isEmpty()) {
             return name;
         }
-        return QString::fromLatin1("%1 (%2)").arg(name, comment);
+        return QStringLiteral("%1 (%2)").arg(name, comment);
     }
 
     if (proto == CMS) {
@@ -587,7 +587,7 @@ QString Formatting::formatKeyLink(const Key &key)
     if (key.isNull()) {
         return QString();
     }
-    return QString::fromLatin1("<a href=\"key:%1\">%2</a>").arg(QLatin1String(key.primaryFingerprint()), Formatting::prettyName(key));
+    return QStringLiteral("<a href=\"key:%1\">%2</a>").arg(QLatin1String(key.primaryFingerprint()), Formatting::prettyName(key));
 }
 
 QString Formatting::formatForComboBox(const GpgME::Key &key)
@@ -616,7 +616,7 @@ static QString keyToString(const Key &key)
     } else if (email.isEmpty()) {
         return name;
     } else {
-        return QString::fromLatin1("%1 <%2>").arg(name, email);
+        return QStringLiteral("%1 <%2>").arg(name, email);
     }
 }
 

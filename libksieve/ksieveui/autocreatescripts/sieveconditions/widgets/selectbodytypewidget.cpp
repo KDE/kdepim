@@ -59,7 +59,7 @@ QString SelectBodyTypeWidget::code() const
 {
     QString value = mBodyCombobox->itemData(mBodyCombobox->currentIndex()).toString();
     if (value == QLatin1String(":content")) {
-        value += QString::fromLatin1(" \"%1\"").arg(mBodyLineEdit->text());
+        value += QStringLiteral(" \"%1\"").arg(mBodyLineEdit->text());
     }
     return value;
 }

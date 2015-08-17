@@ -277,7 +277,7 @@ void AdBlockSettingWidget::save()
         }
         QString path = subItem->data(PathList).toString();
         if (path.isEmpty()) {
-            path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("kmail2/adblockrules-%1").arg(i);
+            path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("kmail2/adblockrules-%1").arg(i);
         }
         grp.writeEntry(QStringLiteral("path"), path);
     }

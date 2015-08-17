@@ -64,7 +64,7 @@ public:
         const QPair<QByteArray, KIMAP::Acl::Rights> right = mRights.at(index.row());
         switch (role) {
         case Qt::DisplayRole:
-            return QString::fromLatin1("%1: %2").
+            return QStringLiteral("%1: %2").
                    arg(QString::fromLatin1(right.first)).
                    arg(AclUtils::permissionsToUserString(right.second));
         case UserIdRole:

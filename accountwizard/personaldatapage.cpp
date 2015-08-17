@@ -39,7 +39,7 @@ QString accountName(Ispdb *ispdb, QString username)
 {
     const int pos(username.indexOf(QLatin1Char('@')));
     username = username.left(pos);
-    return ispdb->name(Ispdb::Long) + QString::fromLatin1(" (%1)").arg(username);
+    return ispdb->name(Ispdb::Long) + QStringLiteral(" (%1)").arg(username);
 }
 
 PersonalDataPage::PersonalDataPage(Dialog *parent) :

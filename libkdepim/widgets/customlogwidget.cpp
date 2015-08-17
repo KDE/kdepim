@@ -46,7 +46,7 @@ QTextDocument *LogItemDelegate::document(const QStyleOptionViewItem &option, con
 
     QString text = option4.text;
 
-    const QString content = QString::fromLatin1(
+    const QString content = QStringLiteral(
                                 "<html style=\"color:%1\">"
                                 "<body> %2").arg(textColor.name().toUpper()).arg(text)
                             + QLatin1String("</table></body></html>");

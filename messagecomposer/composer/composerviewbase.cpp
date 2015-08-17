@@ -1705,9 +1705,9 @@ bool MessageComposer::ComposerViewBase::hasMissingAttachments(const QStringList 
 
     QStringList attachWordsList = attachmentKeywords;
 
-    QRegExp rx(QString::fromLatin1("\\b") +
-               attachWordsList.join(QString::fromLatin1("\\b|\\b")) +
-               QString::fromLatin1("\\b"));
+    QRegExp rx(QLatin1String("\\b") +
+               attachWordsList.join(QStringLiteral("\\b|\\b")) +
+               QLatin1String("\\b"));
     rx.setCaseSensitivity(Qt::CaseInsensitive);
 
     // check whether the subject contains one of the attachment key words
@@ -1718,7 +1718,7 @@ bool MessageComposer::ComposerViewBase::hasMissingAttachments(const QStringList 
     if (!gotMatch) {
         // check whether the non-quoted text contains one of the attachment key
         // words
-        QRegExp quotationRx(QString::fromLatin1("^([ \\t]*([|>:}#]|[A-Za-z]+>))+"));
+        QRegExp quotationRx(QStringLiteral("^([ \\t]*([|>:}#]|[A-Za-z]+>))+"));
         QTextDocument *doc = m_editor->document();
         QTextBlock end(doc->end());
         for (QTextBlock it = doc->begin(); it != end; it = it.next()) {

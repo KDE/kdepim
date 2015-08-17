@@ -49,7 +49,7 @@ bool SieveEditorManageSieveWidget::refreshList()
     const QVector<SieveEditorUtil::SieveServerConfig> listConfig = SieveEditorUtil::readServerSieveConfig();
     Q_FOREACH (const SieveEditorUtil::SieveServerConfig &conf, listConfig) {
         last = new SieveTreeWidgetItem(treeView(), last);
-        last->setText(0, conf.serverName + QString::fromLatin1(" (%1)").arg(conf.userName));
+        last->setText(0, conf.serverName + QStringLiteral(" (%1)").arg(conf.userName));
         last->setIcon(0, SmallIcon(QStringLiteral("network-server")));
 
         const QUrl u = conf.url();

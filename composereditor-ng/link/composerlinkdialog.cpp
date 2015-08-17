@@ -145,11 +145,11 @@ QString ComposerLinkDialogPrivate::html() const
     const QUrl url = ComposerEditorNG::Utils::guessUrlFromString(linkLocation->text());
     if (url.isValid()) {
         const QString targetStr = target->itemData(target->currentIndex()).toString();
-        QString html = QString::fromLatin1("<a ");
+        QString html = QStringLiteral("<a ");
         if (!targetStr.isEmpty()) {
-            html += QString::fromLatin1("target=\'%1\'").arg(targetStr);
+            html += QStringLiteral("target=\'%1\'").arg(targetStr);
         }
-        html += QString::fromLatin1("href=\'%1\'>%2</a>").arg(url.toString()).arg(linkText->text());
+        html += QStringLiteral("href=\'%1\'>%2</a>").arg(url.toString()).arg(linkText->text());
         return html;
     }
     return QString();

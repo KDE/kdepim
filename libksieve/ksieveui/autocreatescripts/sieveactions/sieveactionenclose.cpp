@@ -121,19 +121,19 @@ QString SieveActionEnclose::code(QWidget *w) const
     const QLineEdit *subject = w->findChild<QLineEdit *>(QStringLiteral("subject"));
     const QString subjectStr = subject->text();
     if (!subjectStr.isEmpty()) {
-        result += QString::fromLatin1(":subject \"%1\" ").arg(subjectStr);
+        result += QStringLiteral(":subject \"%1\" ").arg(subjectStr);
     }
 
     const QLineEdit *headers = w->findChild<QLineEdit *>(QStringLiteral("headers"));
     const QString headersStr = headers->text();
     if (!headersStr.isEmpty()) {
-        result += QString::fromLatin1(":headers \"%1\" ").arg(headersStr);
+        result += QStringLiteral(":headers \"%1\" ").arg(headersStr);
     }
 
     const MultiLineEdit *edit = w->findChild<MultiLineEdit *>(QStringLiteral("text"));
     const QString text = edit->toPlainText();
     if (!text.isEmpty()) {
-        result += QString::fromLatin1("text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));
+        result += QStringLiteral("text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));
     } else {
         result += QLatin1Char(';');
     }

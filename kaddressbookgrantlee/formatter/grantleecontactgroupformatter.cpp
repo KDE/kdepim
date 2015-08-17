@@ -116,7 +116,7 @@ static QVariantHash memberHash(const KContacts::ContactGroup::Data &data)
 
     const QString emailLink = QStringLiteral("<a href=\"mailto:") +
                               QString::fromLatin1(QUrl::toPercentEncoding(contact.fullEmail())) +
-                              QString::fromLatin1("\">%1</a>").arg(contact.preferredEmail());
+                              QStringLiteral("\">%1</a>").arg(contact.preferredEmail());
 
     setHashField(memberObject, QStringLiteral("emailLink"), emailLink);
 

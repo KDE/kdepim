@@ -616,7 +616,7 @@ KMime::Message::Ptr MessageFactory::createDeliveryReceipt()
     QString str, receiptTo;
     KMime::Message::Ptr receipt;
 
-    receiptTo = m_origMsg->headerByType("Disposition-Notification-To") ? m_origMsg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
+    receiptTo = m_origMsg->headerByType("Disposition-Notification-To") ? m_origMsg->headerByType("Disposition-Notification-To")->asUnicodeString() : QStringLiteral("");
     if (receiptTo.trimmed().isEmpty()) {
         return  KMime::Message::Ptr();
     }
@@ -625,13 +625,13 @@ KMime::Message::Ptr MessageFactory::createDeliveryReceipt()
     receipt =  KMime::Message::Ptr(new KMime::Message);
     const uint originalIdentity = identityUoid(m_origMsg);
     MessageHelper::initFromMessage(receipt, m_origMsg, m_identityManager, originalIdentity);
-    receipt->to()->fromUnicodeString(receiptTo, QString::fromLatin1("utf-8").toLatin1());
+    receipt->to()->fromUnicodeString(receiptTo, QStringLiteral("utf-8").toLatin1());
     receipt->subject()->fromUnicodeString(i18n("Receipt: ") + m_origMsg->subject()->asUnicodeString(), "utf-8");
 
-    str  = QString::fromLatin1("Your message was successfully delivered.");
-    str += QString::fromLatin1("\n\n---------- Message header follows ----------\n");
+    str  = QStringLiteral("Your message was successfully delivered.");
+    str += QLatin1String("\n\n---------- Message header follows ----------\n");
     str += QString::fromLatin1(m_origMsg->head());
-    str += QString::fromLatin1("--------------------------------------------\n");
+    str += QLatin1String("--------------------------------------------\n");
     // Conversion to toLatin1 is correct here as Mail headers should contain
     // ascii only
     receipt->setBody(str.toLatin1());
@@ -648,7 +648,7 @@ KMime::Message::Ptr MessageFactory::createMDN(KMime::MDN::ActionMode a,
         const QVector<KMime::MDN::DispositionModifier> &m)
 {
     // extract where to send to:
-    QString receiptTo = m_origMsg->headerByType("Disposition-Notification-To") ? m_origMsg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
+    QString receiptTo = m_origMsg->headerByType("Disposition-Notification-To") ? m_origMsg->headerByType("Disposition-Notification-To")->asUnicodeString() : QStringLiteral("");
     if (receiptTo.trimmed().isEmpty()) {
         return KMime::Message::Ptr(new KMime::Message);
     }
@@ -671,7 +671,7 @@ KMime::Message::Ptr MessageFactory::createMDN(KMime::MDN::ActionMode a,
     receipt->contentType()->setCharset("us-ascii");
     receipt->removeHeader("Content-Transfer-Encoding");
     // Modify the ContentType directly (replaces setAutomaticFields(true))
-    receipt->contentType()->setParameter(QString::fromLatin1("report-type"), QString::fromLatin1("disposition-notification"));
+    receipt->contentType()->setParameter(QStringLiteral("report-type"), QStringLiteral("disposition-notification"));
 
     QString description = replaceHeadersInString(m_origMsg, KMime::MDN::descriptionFor(d, m));
 
@@ -745,7 +745,7 @@ QPair< KMime::Message::Ptr, KMime::Content * > MessageFactory::createForwardDige
 
     digest->contentType()->setMimeType("multipart/digest");
     digest->contentType()->setBoundary(KMime::multiPartBoundary());
-    digest->contentDescription()->fromUnicodeString(QString::fromLatin1("Digest of %1 messages.").arg(items.count()), "utf8");
+    digest->contentDescription()->fromUnicodeString(QStringLiteral("Digest of %1 messages.").arg(items.count()), "utf8");
     digest->contentDisposition()->setFilename(QStringLiteral("digest"));
     digest->fromUnicodeString(mainPartText);
 
@@ -834,7 +834,7 @@ void MessageFactory::putRepliesInSameFolder(Akonadi::Entity::Id parentColId)
 bool MessageFactory::MDNRequested(const KMime::Message::Ptr &msg)
 {
     // extract where to send to:
-    QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
+    QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QStringLiteral("");
     if (receiptTo.trimmed().isEmpty()) {
         return false;
     }
@@ -845,7 +845,7 @@ bool MessageFactory::MDNRequested(const KMime::Message::Ptr &msg)
 bool MessageFactory::MDNConfirmMultipleRecipients(const KMime::Message::Ptr &msg)
 {
     // extract where to send to:
-    QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
+    QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QStringLiteral("");
     if (receiptTo.trimmed().isEmpty()) {
         return false;
     }
@@ -855,7 +855,7 @@ bool MessageFactory::MDNConfirmMultipleRecipients(const KMime::Message::Ptr &msg
     // MDN sent) ] if there is more than one distinct address in the
     // Disposition-Notification-To header.
     qCDebug(MESSAGECOMPOSER_LOG) << "KEmailAddress::splitAddressList(receiptTo):"
-                                 << KEmailAddress::splitAddressList(receiptTo).join(QString::fromLatin1("\n"));
+                                 << KEmailAddress::splitAddressList(receiptTo).join(QStringLiteral("\n"));
 
     return KEmailAddress::splitAddressList(receiptTo).count() > 1;
 }
@@ -863,7 +863,7 @@ bool MessageFactory::MDNConfirmMultipleRecipients(const KMime::Message::Ptr &msg
 bool MessageFactory::MDNReturnPathEmpty(const KMime::Message::Ptr &msg)
 {
     // extract where to send to:
-    QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
+    QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QStringLiteral("");
     if (receiptTo.trimmed().isEmpty()) {
         return false;
     }
@@ -884,7 +884,7 @@ bool MessageFactory::MDNReturnPathEmpty(const KMime::Message::Ptr &msg)
 bool MessageFactory::MDNReturnPathNotInRecieptTo(const  KMime::Message::Ptr &msg)
 {
     // extract where to send to:
-    QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
+    QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QStringLiteral("");
     if (receiptTo.trimmed().isEmpty()) {
         return false;
     }
@@ -895,7 +895,7 @@ bool MessageFactory::MDNReturnPathNotInRecieptTo(const  KMime::Message::Ptr &msg
     // in the Return-Path header. [...] Confirmation from the user
     // SHOULD be obtained (or no MDN sent) if there is no Return-Path
     // header in the message [...]
-    KMime::Types::AddrSpecList returnPathList = MessageHelper::extractAddrSpecs(msg, QString::fromLatin1("Return-Path").toLatin1());
+    KMime::Types::AddrSpecList returnPathList = MessageHelper::extractAddrSpecs(msg, QStringLiteral("Return-Path").toLatin1());
     QString returnPath = returnPathList.isEmpty() ? QString()
                          : returnPathList.front().localPart + QChar::fromLatin1('@') + returnPathList.front().domain;
     qCDebug(MESSAGECOMPOSER_LOG) << "clean return path:" << returnPath;
@@ -911,8 +911,8 @@ bool MessageFactory::MDNMDNUnknownOption(const KMime::Message::Ptr &msg)
     // not understand the meaning of the parameter, it MUST NOT generate
     // an MDN with any disposition type other than "failed" in response
     // to the request.
-    QString notificationOptions = msg->headerByType("Disposition-Notification-Options") ? msg->headerByType("Disposition-Notification-Options")->asUnicodeString() : QString::fromLatin1("");
-    if (notificationOptions.contains(QString::fromLatin1("required"), Qt::CaseSensitive)) {
+    QString notificationOptions = msg->headerByType("Disposition-Notification-Options") ? msg->headerByType("Disposition-Notification-Options")->asUnicodeString() : QStringLiteral("");
+    if (notificationOptions.contains(QStringLiteral("required"), Qt::CaseSensitive)) {
         // ### hacky; should parse...
         // There is a required option that we don't understand. We need to
         // ask the user what we should do:
@@ -931,7 +931,7 @@ uint MessageFactory::identityUoid(const KMime::Message::Ptr &msg)
     int id = idString.toUInt(&ok);
 
     if (!ok || id == 0) {
-        id = m_identityManager->identityForAddress(msg->to()->asUnicodeString() + QString::fromLatin1(", ") + msg->cc()->asUnicodeString()).uoid();
+        id = m_identityManager->identityForAddress(msg->to()->asUnicodeString() + QLatin1String(", ") + msg->cc()->asUnicodeString()).uoid();
     }
 
     if (id == 0 && m_folderId > 0) {
@@ -943,10 +943,10 @@ uint MessageFactory::identityUoid(const KMime::Message::Ptr &msg)
 QString MessageFactory::replaceHeadersInString(const KMime::Message::Ptr &msg, const QString &s)
 {
     QString result = s;
-    QRegExp rx(QString::fromLatin1("\\$\\{([a-z0-9-]+)\\}"), Qt::CaseInsensitive);
+    QRegExp rx(QStringLiteral("\\$\\{([a-z0-9-]+)\\}"), Qt::CaseInsensitive);
     Q_ASSERT(rx.isValid());
 
-    QRegExp rxDate(QString::fromLatin1("\\$\\{date\\}"));
+    QRegExp rxDate(QStringLiteral("\\$\\{date\\}"));
     Q_ASSERT(rxDate.isValid());
 
     qCDebug(MESSAGECOMPOSER_LOG) << "creating mdn date:" << msg->date()->dateTime().toTime_t() << KMime::DateFormatter::formatDate(
@@ -961,7 +961,7 @@ QString MessageFactory::replaceHeadersInString(const KMime::Message::Ptr &msg, c
 
     idx = 0;
     while ((idx = rx.indexIn(result, idx)) != -1) {
-        QString replacement = msg->headerByType(rx.cap(1).toLatin1()) ? msg->headerByType(rx.cap(1).toLatin1())->asUnicodeString() : QString::fromLatin1("");
+        QString replacement = msg->headerByType(rx.cap(1).toLatin1()) ? msg->headerByType(rx.cap(1).toLatin1())->asUnicodeString() : QStringLiteral("");
         result.replace(idx, rx.matchedLength(), replacement);
         idx += replacement.length();
     }

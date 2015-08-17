@@ -121,7 +121,7 @@ DateTimeScaleFormatter::DateTimeScaleFormatter(Range range, const QString &forma
 }
 
 DateTimeScaleFormatter::DateTimeScaleFormatter(Range range, const QString &format, Qt::Alignment alignment)
-    : _d(new Private(range, format, QString::fromLatin1("%1"), alignment))
+    : _d(new Private(range, format, QStringLiteral("%1"), alignment))
 {
 }
 
@@ -156,9 +156,9 @@ QString DateTimeScaleFormatter::format(const QDateTime &datetime) const
     QString result = d->format;
     // additional feature: Weeknumber
     const QString shortWeekNumber = QString::number(datetime.date().weekNumber());
-    const QString longWeekNumber = (shortWeekNumber.length() == 1 ? QString::fromLatin1("0") : QString()) + shortWeekNumber;
-    result.replace(QString::fromLatin1("ww"), longWeekNumber);
-    result.replace(QString::fromLatin1("w"), shortWeekNumber);
+    const QString longWeekNumber = (shortWeekNumber.length() == 1 ? QStringLiteral("0") : QString()) + shortWeekNumber;
+    result.replace(QLatin1String("ww"), longWeekNumber);
+    result.replace(QLatin1String("w"), shortWeekNumber);
     result = datetime.toLocalTime().toString(result);
     return result;
 }
@@ -878,7 +878,7 @@ void DateTimeGrid::paintHourScaleHeader(QPainter *painter,
             opt.init(widget);
         }
         opt.rect = QRectF(x - offset + 1, headerRect.top() + headerRect.height() / 2., dayWidth() / 24., headerRect.height() / 2.).toAlignedRect();
-        opt.text = dt.time().toString(QString::fromLatin1("hh"));
+        opt.text = dt.time().toString(QStringLiteral("hh"));
         opt.textAlignment = Qt::AlignCenter;
         style->drawControl(QStyle::CE_Header, &opt, painter, widget);
     }
@@ -914,7 +914,7 @@ void DateTimeGrid::paintDayScaleHeader(QPainter *painter,  const QRectF &headerR
         QStyleOptionHeader opt;
         opt.init(widget);
         opt.rect = QRectF(x - offset + 1, headerRect.top() + headerRect.height() / 2., dayWidth(), headerRect.height() / 2.).toAlignedRect();
-        opt.text = dt.toString(QString::fromLatin1("ddd")).left(1);
+        opt.text = dt.toString(QStringLiteral("ddd")).left(1);
         opt.textAlignment = Qt::AlignCenter;
         style->drawControl(QStyle::CE_Header, &opt, painter, widget);
     }

@@ -462,7 +462,7 @@ bool DBMan::removeBlog(int blog_id)
         qCDebug(BLOGILO_LOG) << q.lastError().text();
         return res;
     }
-    const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("blogilo/%1/").arg(blog_id);
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("blogilo/%1/").arg(blog_id);
     KIO::del(QUrl::fromLocalFile(path), KIO::HideProgressInfo);
     reloadBlogList();
     return res;

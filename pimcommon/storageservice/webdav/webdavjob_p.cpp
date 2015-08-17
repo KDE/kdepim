@@ -115,7 +115,7 @@ QNetworkReply *WebDavJob::propfind(const QUrl &path, const QByteArray &query, in
     if (depth == 2) {
         value = QStringLiteral("infinity");
     } else {
-        value = QString::fromLatin1("%1").arg(depth);
+        value = QStringLiteral("%1").arg(depth);
     }
     req.setRawHeader(QByteArray("Depth"), value.toUtf8());
     return davRequest(QStringLiteral("PROPFIND"), req, query);

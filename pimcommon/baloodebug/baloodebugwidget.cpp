@@ -94,7 +94,7 @@ void BalooDebugWidget::doSearch()
 
 QString BalooDebugWidget::plainText() const
 {
-    return QString::fromLatin1("Item: %1\n").arg(mLineEdit->text()) + mPlainTextEditor->toPlainText();
+    return QStringLiteral("Item: %1\n").arg(mLineEdit->text()) + mPlainTextEditor->toPlainText();
 }
 
 void BalooDebugWidget::slotSearch()

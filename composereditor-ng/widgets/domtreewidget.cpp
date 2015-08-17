@@ -80,7 +80,7 @@ void DomTreeWidgetPrivate::examineChildElements(const QWebElement &parentElement
         Q_FOREACH (const QString &str, listAttributes) {
             QTreeWidgetItem *subItem = new QTreeWidgetItem();
             const QString value = element.attribute(str);
-            subItem->setText(0, str + QString::fromLatin1(" (%1)").arg(value));
+            subItem->setText(0, str + QStringLiteral(" (%1)").arg(value));
             item->addChild(subItem);
         }
 

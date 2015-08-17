@@ -109,7 +109,7 @@ void GenerateGlobalScriptJob::writeUserScript()
                                         "require [\"include\"];\n");
 
     Q_FOREACH (const QString &activeScript, mListUserActiveScripts) {
-        userScript += QString::fromLatin1("\ninclude :personal \"%1\"").arg(activeScript);
+        userScript += QStringLiteral("\ninclude :personal \"%1\"").arg(activeScript);
     }
 
     QUrl url(mCurrentUrl);

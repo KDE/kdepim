@@ -434,7 +434,7 @@ QString FilterOE::getFolderName(const QString &filename)
                 QString _tmpFileName = tmp[1];
                 _tmpFileName = _tmpFileName.toLower();
                 if (_tmpFileName == search) {
-                    folder.prepend(tmp[0] + QString::fromLatin1("/"));
+                    folder.prepend(tmp[0] + QLatin1String("/"));
                     search = tmp[3];
                     foundFilename = true;
                 }
@@ -446,7 +446,7 @@ QString FilterOE::getFolderName(const QString &filename)
                         found = true;
                         break;
                     } else {
-                        folder.prepend(tmp[0] + QString::fromLatin1("/"));
+                        folder.prepend(tmp[0] + QLatin1String("/"));
                         search = tmp[3];
                     }
                 }

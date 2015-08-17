@@ -199,7 +199,7 @@ void Pane::Private::addActivateTabAction(int i)
     actionname.sprintf("activate_tab_%02d", i);
     QAction *action = new QAction(i18n("Activate Tab %1", i), q);
     mXmlGuiClient->actionCollection()->addAction(actionname, action);
-    mXmlGuiClient->actionCollection()->setDefaultShortcut(action, QKeySequence(QString::fromLatin1("Alt+%1").arg(i)));
+    mXmlGuiClient->actionCollection()->setDefaultShortcut(action, QKeySequence(QStringLiteral("Alt+%1").arg(i)));
     connect(action, SIGNAL(triggered(bool)), q, SLOT(activateTab()));
 }
 
@@ -1076,7 +1076,7 @@ void Pane::writeConfig(bool restoreSession)
 
         for (int i = 0; i < count(); ++i) {
             Widget *w = qobject_cast<Widget *>(widget(i));
-            KConfigGroup grp(MessageList::Core::Settings::self()->config(), QString::fromLatin1("MessageListTab%1").arg(i));
+            KConfigGroup grp(MessageList::Core::Settings::self()->config(), QStringLiteral("MessageListTab%1").arg(i));
             grp.writeEntry(QStringLiteral("collectionId"), w->currentCollection().id());
             grp.writeEntry(QStringLiteral("HeaderState"), w->view()->header()->saveState());
         }
@@ -1121,7 +1121,7 @@ void Pane::readConfig(bool restoreSession)
 
 void Pane::restoreHeaderSettings(int index)
 {
-    KConfigGroup grp(MessageList::Core::Settings::self()->config(), QString::fromLatin1("MessageListTab%1").arg(index));
+    KConfigGroup grp(MessageList::Core::Settings::self()->config(), QStringLiteral("MessageListTab%1").arg(index));
     if (grp.exists()) {
         Widget *w = qobject_cast<Widget *>(widget(index));
         w->view()->header()->restoreState(grp.readEntry(QStringLiteral("HeaderState"), QByteArray()));

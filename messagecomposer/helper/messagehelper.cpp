@@ -199,13 +199,13 @@ QString cleanSubject(const KMime::Message::Ptr &msg, const QStringList &prefixRe
 QString forwardSubject(const KMime::Message::Ptr &msg)
 {
     return cleanSubject(msg, MessageComposer::MessageComposerSettings::self()->forwardPrefixes(),
-                        MessageComposer::MessageComposerSettings::self()->replaceForwardPrefix(), QString::fromLatin1("Fwd:"));
+                        MessageComposer::MessageComposerSettings::self()->replaceForwardPrefix(), QStringLiteral("Fwd:"));
 }
 
 QString replySubject(const KMime::Message::Ptr &msg)
 {
     return cleanSubject(msg, MessageComposer::MessageComposerSettings::self()->replyPrefixes(),
-                        MessageComposer::MessageComposerSettings::self()->replaceReplyPrefix(), QString::fromLatin1("Re:"));
+                        MessageComposer::MessageComposerSettings::self()->replaceReplyPrefix(), QStringLiteral("Re:"));
 }
 
 QString replacePrefixes(const QString &str, const QStringList &prefixRegExps,
@@ -215,15 +215,15 @@ QString replacePrefixes(const QString &str, const QStringList &prefixRegExps,
     // construct a big regexp that
     // 1. is anchored to the beginning of str (sans whitespace)
     // 2. matches at least one of the part regexps in prefixRegExps
-    QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*")
-                        .arg(prefixRegExps.join(QString::fromLatin1(")|(?:")));
+    QString bigRegExp = QStringLiteral("^(?:\\s+|(?:%1))+\\s*")
+                        .arg(prefixRegExps.join(QStringLiteral(")|(?:")));
     QRegExp rx(bigRegExp, Qt::CaseInsensitive);
     if (rx.isValid()) {
         QString tmp = str;
         if (rx.indexIn(tmp) == 0) {
             recognized = true;
             if (replace) {
-                return tmp.replace(0, rx.matchedLength(), newPrefix + QString::fromLatin1(" "));
+                return tmp.replace(0, rx.matchedLength(), newPrefix + QLatin1String(" "));
             }
         }
     } else {
@@ -235,7 +235,7 @@ QString replacePrefixes(const QString &str, const QStringList &prefixRegExps,
     }
 
     if (!recognized) {
-        return newPrefix + QString::fromLatin1(" ") + str;
+        return newPrefix + QLatin1String(" ") + str;
     } else {
         return str;
     }

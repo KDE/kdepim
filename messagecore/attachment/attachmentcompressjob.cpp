@@ -83,8 +83,8 @@ void AttachmentCompressJob::Private::doStart()
     // Create new part.
     Q_ASSERT(mCompressedPart == 0);
     mCompressedPart = AttachmentPart::Ptr(new AttachmentPart);
-    mCompressedPart->setName(mOriginalPart->name() + QString::fromLatin1(".zip"));     // TODO not sure name should be .zipped too
-    mCompressedPart->setFileName(mOriginalPart->fileName() + QString::fromLatin1(".zip"));
+    mCompressedPart->setName(mOriginalPart->name() + QLatin1String(".zip"));     // TODO not sure name should be .zipped too
+    mCompressedPart->setFileName(mOriginalPart->fileName() + QLatin1String(".zip"));
     mCompressedPart->setDescription(mOriginalPart->description());
     mCompressedPart->setInline(mOriginalPart->isInline());
     mCompressedPart->setMimeType("application/zip");

@@ -525,7 +525,7 @@ QString NodeHelper::replacePrefixes(const QString &str,
     // construct a big regexp that
     // 1. is anchored to the beginning of str (sans whitespace)
     // 2. matches at least one of the part regexps in prefixRegExps
-    QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*")
+    QString bigRegExp = QStringLiteral("^(?:\\s+|(?:%1))+\\s*")
                         .arg(prefixRegExps.join(QStringLiteral(")|(?:")));
     QRegExp rx(bigRegExp, Qt::CaseInsensitive);
     if (!rx.isValid()) {
@@ -708,7 +708,7 @@ QString NodeHelper::persistentIndex(const KMime::Content *node) const
         const int extraNodesSize(extraNodes.size());
         for (int i = 0; i < extraNodesSize; ++i)
             if (topLevel == extraNodes.at(i)) {
-                return indexStr.prepend(QString::fromLatin1("%1:").arg(i));
+                return indexStr.prepend(QStringLiteral("%1:").arg(i));
             }
     }
     return indexStr;
@@ -716,7 +716,7 @@ QString NodeHelper::persistentIndex(const KMime::Content *node) const
 
 QString NodeHelper::asHREF(const KMime::Content *node, const QString &place)
 {
-    return QString::fromLatin1("attachment:%1?place=%2").arg(persistentIndex(node), place);
+    return QStringLiteral("attachment:%1?place=%2").arg(persistentIndex(node), place);
 }
 
 QString NodeHelper::fixEncoding(const QString &encoding)

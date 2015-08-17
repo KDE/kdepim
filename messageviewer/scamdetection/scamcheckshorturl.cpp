@@ -54,7 +54,7 @@ void ScamCheckShortUrl::expandedUrl(const QUrl &url)
         KPIM::BroadcastStatus::instance()->setStatusMsg(i18n("No network connection detected, we cannot expand url."));
         return;
     }
-    const QUrl newUrl = QString::fromLatin1("http://api.longurl.org/v2/expand?url=%1&format=json").arg(url.url());
+    const QUrl newUrl = QStringLiteral("http://api.longurl.org/v2/expand?url=%1&format=json").arg(url.url());
 
     qCDebug(MESSAGEVIEWER_LOG) << " newUrl " << newUrl;
     QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(newUrl));

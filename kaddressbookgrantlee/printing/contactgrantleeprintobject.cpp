@@ -220,7 +220,7 @@ QString ContactGrantleePrintObject::photo() const
     if (mAddress.photo().isEmpty()) {
         return QString();
     } else {
-        const QString photoStr = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\"> &nbsp;")
+        const QString photoStr = QStringLiteral("<img src=\"%1\" width=\"%2\" height=\"%3\"> &nbsp;")
                                  .arg(imgToDataUrl(mAddress.photo().data()), QString::number(60), QString::number(60));
         return photoStr;
     }
@@ -232,7 +232,7 @@ QString ContactGrantleePrintObject::imgToDataUrl(const QImage &image) const
     QBuffer buffer(&ba);
     buffer.open(QIODevice::WriteOnly);
     image.save(&buffer, "PNG");
-    return QString::fromLatin1("data:image/%1;base64,%2").arg(QString::fromLatin1("PNG"), QString::fromLatin1(ba.toBase64()));
+    return QStringLiteral("data:image/%1;base64,%2").arg(QStringLiteral("PNG"), QString::fromLatin1(ba.toBase64()));
 }
 
 QString ContactGrantleePrintObject::logo() const
@@ -240,7 +240,7 @@ QString ContactGrantleePrintObject::logo() const
     if (mAddress.logo().isEmpty()) {
         return QString();
     } else {
-        const QString photoStr = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\"> &nbsp;")
+        const QString photoStr = QStringLiteral("<img src=\"%1\" width=\"%2\" height=\"%3\"> &nbsp;")
                                  .arg(imgToDataUrl(mAddress.logo().data()), QString::number(60), QString::number(60));
         return photoStr;
     }

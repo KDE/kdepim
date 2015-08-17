@@ -298,7 +298,7 @@ void KMFilterListBox::createFilter(const QByteArray &field, const QString &value
 
     MailFilter *newFilter = new MailFilter();
     newFilter->pattern()->append(newRule);
-    newFilter->pattern()->setName(QString::fromLatin1("<%1>: %2").
+    newFilter->pattern()->setName(QStringLiteral("<%1>: %2").
                                   arg(QString::fromLatin1(field)).
                                   arg(value));
 
@@ -336,7 +336,7 @@ void KMFilterListBox::slotUpdateFilterName()
     if (filter->isAutoNaming()) {
         // auto-naming of patterns
         if (!p->isEmpty() && p->first() && !p->first()->field().trimmed().isEmpty()) {
-            shouldBeName = QString::fromLatin1("<%1>: %2").
+            shouldBeName = QStringLiteral("<%1>: %2").
                            arg(QString::fromLatin1(p->first()->field())).
                            arg(p->first()->contents());
         } else {

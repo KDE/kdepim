@@ -570,10 +570,10 @@ QString AutoCorrection::autoDetectURL(const QString &_word) const
             newWord = QLatin1String("mailto:") + word;
             break;
         case 2:
-            newWord = (secure ? QStringLiteral("https://") : QLatin1String("http://")) + word;
+            newWord = (secure ? QStringLiteral("https://") : QStringLiteral("http://")) + word;
             break;
         case 3:
-            newWord = (secure ? QStringLiteral("ftps://") : QLatin1String("ftp://")) + word;
+            newWord = (secure ? QStringLiteral("ftps://") : QStringLiteral("ftp://")) + word;
             break;
         }
         //qCDebug(PIMCOMMON_LOG) <<"newWord:" << newWord;

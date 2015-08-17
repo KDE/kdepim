@@ -282,7 +282,7 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
     foreach (const QString &email, rawContact.emails()) {
         const QString fullEmail = QString::fromLatin1(QUrl::toPercentEncoding(rawContact.fullEmail(email)));
 
-        const QString url = QString::fromLatin1("<a href=\"mailto:%1\">%2</a>")
+        const QString url = QStringLiteral("<a href=\"mailto:%1\">%2</a>")
                             .arg(fullEmail, email);
         emails << url;
     }
@@ -355,7 +355,7 @@ QString GrantleeContactFormatter::toHtml(HtmlForm form) const
     }
     // Note
     if (!rawContact.note().isEmpty()) {
-        const QString notes = QString::fromLatin1("<a>%1</a>").arg(rawContact.note().replace(QLatin1Char('\n'), QStringLiteral("<br>")));
+        const QString notes = QStringLiteral("<a>%1</a>").arg(rawContact.note().replace(QLatin1Char('\n'), QStringLiteral("<br>")));
         contactObject.insert(QStringLiteral("note"), notes);
         grantleeContactUtil.insertVariableToQVariantHash(contactObject, QStringLiteral("notei18n"));
     }

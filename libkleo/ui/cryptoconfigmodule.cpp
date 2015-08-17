@@ -486,7 +486,7 @@ QString Kleo::CryptoConfigEntryGUI::description() const
 {
     QString descr = mEntry->description();
     if (descr.isEmpty()) { // shouldn't happen
-        return QString::fromLatin1("<%1>").arg(mName);
+        return QStringLiteral("<%1>").arg(mName);
     }
     if (i18nc("Translate this to 'yes' or 'no' (use the English words!) "
               "depending on whether your language uses "
@@ -993,7 +993,7 @@ Kleo::ParsedKeyserver Kleo::parseKeyserver(const QString &str)
             const QString key = kvpair.left(idx);
             const QString value = kvpair.mid(idx + 1);
             if (value.isEmpty()) {
-                result.options.push_back(qMakePair(key, QString::fromLatin1("")));    // make sure it's not a null QString, only an empty one
+                result.options.push_back(qMakePair(key, QStringLiteral("")));    // make sure it's not a null QString, only an empty one
             } else {
                 result.options.push_back(qMakePair(key, value));
             }

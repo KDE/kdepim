@@ -76,16 +76,16 @@ QString SieveConditionConvert::code(QWidget *w) const
     QString result = QStringLiteral("convert ");
     const SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox *>(QStringLiteral("from"));
     const QString fromMimeTypeStr = fromMimeType->code();
-    result += QString::fromLatin1("%1 ").arg(fromMimeTypeStr);
+    result += QStringLiteral("%1 ").arg(fromMimeTypeStr);
 
     const SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox *>(QStringLiteral("to"));
     const QString toMimeTypeStr = toMimeType->code();
-    result += QString::fromLatin1("%1 ").arg(toMimeTypeStr);
+    result += QStringLiteral("%1 ").arg(toMimeTypeStr);
 
     const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget *>(QStringLiteral("params"));
     const QString paramsStr = params->code();
     if (!paramsStr.isEmpty()) {
-        result += QString::fromLatin1("%1").arg(paramsStr);
+        result += QStringLiteral("%1").arg(paramsStr);
     }
     return result;
 }

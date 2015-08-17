@@ -401,7 +401,7 @@ QNetworkReply *DropBoxJob::uploadFile(const QString &filename, const QString &up
         if (file->open(QIODevice::ReadOnly)) {
             const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
             const QString r = mAccessOauthSignature.replace(QLatin1Char('&'), QStringLiteral("%26"));
-            const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files_put/dropbox///%7/%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5&overwrite=false").
+            const QString str = QStringLiteral("https://api-content.dropbox.com/1/files_put/dropbox///%7/%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5&overwrite=false").
                                 arg(uploadAsName).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp).arg(defaultDestination);
             QUrl url(str);
             QNetworkRequest request(url);
@@ -473,7 +473,7 @@ void DropBoxJob::shareLink(const QString &root, const QString &path)
     mActionType = PimCommon::StorageServiceAbstract::ShareLinkAction;
     mError = false;
 
-    QUrl url = QUrl(mApiPath + QString::fromLatin1("shares/%1/%2").arg(root).arg(path));
+    QUrl url = QUrl(mApiPath + QStringLiteral("shares/%1/%2").arg(root).arg(path));
     url.addQueryItem(QStringLiteral("root"), mRootPath);
     addDefaultUrlItem(url);
     QNetworkRequest request(url);
@@ -499,7 +499,7 @@ QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &file
     mDownloadFile = new QFile(defaultDestination + QLatin1Char('/') + name);
     if (mDownloadFile->open(QIODevice::WriteOnly)) {
         const QString r = mAccessOauthSignature.replace(QLatin1Char('&'), QStringLiteral("%26"));
-        const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files/dropbox///%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5").
+        const QString str = QStringLiteral("https://api-content.dropbox.com/1/files/dropbox///%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5").
                             arg(name).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp);
         QUrl url(str);
         QNetworkRequest request(url);

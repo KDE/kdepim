@@ -111,10 +111,10 @@ QString NoteUtils::createToolTip(const Akonadi::Item &item)
             const bool textIsLeftToRight = (QApplication::layoutDirection() == Qt::LeftToRight);
             const QString textDirection =  textIsLeftToRight ? QStringLiteral("left") : QStringLiteral("right");
 
-            tip = QString::fromLatin1(
+            tip = QStringLiteral(
                       "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"
                   );
-            tip += QString::fromLatin1(
+            tip += QStringLiteral(
                        "<tr>" \
                        "<td bgcolor=\"%1\" align=\"%4\" valign=\"middle\">" \
                        "<div style=\"color: %2; font-weight: bold;\">" \
@@ -123,7 +123,7 @@ QString NoteUtils::createToolTip(const Akonadi::Item &item)
                        "</td>" \
                        "</tr>"
                    ).arg(bckColorName).arg(txtColorName).arg(realName.toHtmlEscaped()).arg(textDirection);
-            const QString htmlCodeForStandardRow = QString::fromLatin1(
+            const QString htmlCodeForStandardRow = QStringLiteral(
                     "<tr>" \
                     "<td bgcolor=\"%1\" align=\"left\" valign=\"top\">" \
                     "<div style=\"color: %2;\">" \
@@ -136,7 +136,7 @@ QString NoteUtils::createToolTip(const Akonadi::Item &item)
             if (!content.trimmed().isEmpty()) {
                 tip += htmlCodeForStandardRow.arg(bckColorName).arg(txtColorName).arg(isRichText ? content : content.replace(QLatin1Char('\n'), QStringLiteral("<br>")));
             }
-            tip += QString::fromLatin1(
+            tip += QLatin1String(
                        "</table" \
                        "</td>" \
                        "</tr>"

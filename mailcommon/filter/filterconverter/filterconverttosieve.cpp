@@ -44,7 +44,7 @@ void FilterConvertToSieve::convert()
         }
         QString requireStr;
         Q_FOREACH (const QString &require, requires) {
-            requireStr += QString::fromLatin1("require \"%1\";").arg(require);
+            requireStr += QStringLiteral("require \"%1\";").arg(require);
             requireStr += QLatin1Char('\n');
         }
         result = requireStr + code;

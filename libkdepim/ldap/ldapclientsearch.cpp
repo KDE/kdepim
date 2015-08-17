@@ -109,7 +109,7 @@ LdapClientSearch::LdapClientSearch(QObject *parent)
                    << QStringLiteral("sn");
 
     // Set the filter, to make sure old usage (before 4.14) of this object still works.
-    d->mFilter = QString::fromLatin1("&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
+    d->mFilter = QStringLiteral("&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
                                      "(|(cn=%1*)(mail=%1*)(givenName=%1*)(sn=%1*))");
 
     d->readConfig();
@@ -126,7 +126,7 @@ LdapClientSearch::~LdapClientSearch()
 void LdapClientSearch::Private::readWeighForClient(LdapClient *client, const KConfigGroup &config,
         int clientNumber)
 {
-    const int completionWeight = config.readEntry(QString::fromLatin1("SelectedCompletionWeight%1").arg(clientNumber), -1);
+    const int completionWeight = config.readEntry(QStringLiteral("SelectedCompletionWeight%1").arg(clientNumber), -1);
     if (completionWeight != -1) {
         client->setCompletionWeight(completionWeight);
     }

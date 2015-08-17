@@ -336,7 +336,7 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         const QString name = PimCommon::StorageServiceManager::serviceToI18n(type);
         const QUrl serviceUrl = PimCommon::StorageServiceManager::serviceUrl(type);
         const QString descriptionStr = QLatin1String("<b>") + i18n("Name: %1", name) + QLatin1String("</b><br>") + description + QLatin1String("<br>") +
-                                       QString::fromLatin1("<a href=\"%1\">").arg(serviceUrl.toString()) + serviceUrl.toString() + QLatin1String("</a>");
+                                       QStringLiteral("<a href=\"%1\">").arg(serviceUrl.toString()) + serviceUrl.toString() + QLatin1String("</a>");
         mDescription->setText(descriptionStr);
         if (mListStorageService.contains(mListService->currentItem()->data(Name).toString())) {
             StorageServiceAbstract *storage = mListStorageService.value(mListService->currentItem()->data(Name).toString());

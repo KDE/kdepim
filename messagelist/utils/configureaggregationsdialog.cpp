@@ -357,7 +357,7 @@ QString ConfigureAggregationsDialog::Private::uniqueNameForAggregation(const QSt
     AggregationListWidgetItem *item = findAggregationItemByName(ret, skipAggregation);
     while (item) {
         idx++;
-        ret = QString::fromLatin1("%1 %2").arg(baseName).arg(idx);
+        ret = QStringLiteral("%1 %2").arg(baseName).arg(idx);
         item = findAggregationItemByName(ret, skipAggregation);
     }
     return ret;
@@ -451,7 +451,7 @@ void ConfigureAggregationsDialog::Private::exportAggregationButtonClicked()
     if (list.isEmpty()) {
         return;
     }
-    const QString filename = QFileDialog::getSaveFileName(q, i18n("Export Aggregation"), QString(), QString::fromLatin1("*"));
+    const QString filename = QFileDialog::getSaveFileName(q, i18n("Export Aggregation"), QString(), QStringLiteral("*"));
     if (!filename.isEmpty()) {
         KConfig config(filename);
 
@@ -461,7 +461,7 @@ void ConfigureAggregationsDialog::Private::exportAggregationButtonClicked()
         int idx = 0;
         Q_FOREACH (QListWidgetItem *item, list) {
             AggregationListWidgetItem *themeItem = static_cast< AggregationListWidgetItem * >(item);
-            grp.writeEntry(QString::fromLatin1("Set%1").arg(idx), themeItem->aggregation()->saveToString());
+            grp.writeEntry(QStringLiteral("Set%1").arg(idx), themeItem->aggregation()->saveToString());
             ++idx;
         }
     }

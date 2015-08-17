@@ -426,7 +426,7 @@ void ThemePreviewWidget::setTheme(Theme *theme)
     for (QList< Theme::Column * >::ConstIterator it = columns.constBegin(); it != end; ++it) {
         QString label = (*it)->label();
         if ((*it)->visibleByDefault()) {
-            label += QString::fromLatin1(" (%1)").arg(i18nc("Indicates whether or not a header label is visible", "Visible"));
+            label += QStringLiteral(" (%1)").arg(i18nc("Indicates whether or not a header label is visible", "Visible"));
         }
 
         headerLabels.append(label);
