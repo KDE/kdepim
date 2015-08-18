@@ -387,7 +387,7 @@ bool GMXXXPort::exportContacts(const ContactList &list, VCardExportSelectionWidg
         QFile file(fileName);
 
         if (!file.open(QIODevice::WriteOnly)) {
-            QString txt = i18n("<qt>Unable to open file <b>%1</b>.</qt>", fileName);
+            const QString txt = i18n("<qt>Unable to open file <b>%1</b>.</qt>", fileName);
             KMessageBox::error(parentWidget(), txt);
             return false;
         }
