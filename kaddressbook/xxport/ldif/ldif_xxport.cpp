@@ -42,7 +42,9 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QTemporaryFile>
-#include <KIO/NetAccess>
+#include <KJobWidgets>
+#include <KIO/StatJob>
+#include <KIO/FileCopyJob>
 
 #include <QFile>
 #include <QTextStream>
@@ -110,8 +112,10 @@ bool LDIFXXPort::exportContacts(const ContactList &list, VCardExportSelectionWid
 
         doExport(&tmpFile, list);
         tmpFile.flush();
+        auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), url);
+        KJobWidgets::setWindow(job, parentWidget());
+        return job->exec();
 
-        return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
     } else {
         QString fileName = url.toLocalFile();
 

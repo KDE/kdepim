@@ -82,11 +82,13 @@
 
 #include "kaddressbook_debug.h"
 #include <QFileDialog>
-#include <KIO/NetAccess>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QTemporaryFile>
 #include <QUrl>
+#include <KJobWidgets>
+#include <KIO/StatJob>
+#include <KIO/FileCopyJob>
 
 #include <QFile>
 #include <QMap>
@@ -377,8 +379,9 @@ bool GMXXXPort::exportContacts(const ContactList &list, VCardExportSelectionWidg
 
         doExport(&tmpFile, list.addressList());
         tmpFile.flush();
-
-        return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
+        auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), url);
+        KJobWidgets::setWindow(job, parentWidget());
+        return job->exec();
     } else {
         QString fileName = url.toLocalFile();
         QFile file(fileName);

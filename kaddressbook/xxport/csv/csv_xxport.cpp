@@ -28,7 +28,9 @@
 #include <KMessageBox>
 #include <QTemporaryFile>
 #include <QUrl>
-#include <KIO/NetAccess>
+#include <KJobWidgets>
+#include <KIO/StatJob>
+#include <KIO/FileCopyJob>
 
 #include <QPointer>
 #include <QTextCodec>
@@ -71,9 +73,9 @@ bool CsvXXPort::exportContacts(const ContactList &contacts , VCardExportSelectio
 
         exportToFile(&tmpFile, contacts.addressList());
         tmpFile.flush();
-
-        return KIO::NetAccess::upload(tmpFile.fileName(), url, parentWidget());
-
+        auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), url);
+        KJobWidgets::setWindow(job, parentWidget());
+        return job->exec();
     } else {
         QFile file(url.toLocalFile());
         if (!file.open(QIODevice::WriteOnly)) {
