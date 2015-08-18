@@ -39,13 +39,13 @@ public:
           mMainWindow(Q_NULLPTR)
     {
     }
-    int activate(const QStringList &arguments) Q_DECL_OVERRIDE;
+    int activate(const QStringList &arguments, const QString&) Q_DECL_OVERRIDE;
 
 private:
     MainWindow *mMainWindow;
 };
 
-int KAddressBookApplication::activate(const QStringList &arguments)
+int KAddressBookApplication::activate(const QStringList &arguments, const QString&)
 {
     if (!mMainWindow) {
         mMainWindow = new MainWindow;
