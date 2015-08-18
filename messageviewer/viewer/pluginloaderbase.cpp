@@ -21,13 +21,13 @@
 
 #include "pluginloaderbase.h"
 #include "messageviewer_debug.h"
-#include <KConfigGroup>
 
+#include <KConfigGroup>
 #include <KGlobal>
-#include <KLibrary>
 #include <KLocalizedString>
 #include <KStandardDirs>
 #include <KConfig>
+#include <KPluginLoader>
 
 #include <QFile>
 #include <QStringList>
@@ -97,7 +97,7 @@ void PluginLoaderBase::doScan(const char *path)
     }
 }
 
-KLibrary::void_function_ptr PluginLoaderBase::mainFunc(const QString &type, const char *mf_name) const
+QFunctionPointer PluginLoaderBase::mainFunc(const QString &type, const char *mf_name) const
 {
     if (type.isEmpty() || !mPluginMap.contains(type)) {
         return 0;
@@ -108,7 +108,7 @@ KLibrary::void_function_ptr PluginLoaderBase::mainFunc(const QString &type, cons
         return 0;
     }
 
-    const KLibrary *lib = openLibrary(libName);
+    const QLibrary *lib = openLibrary(libName);
     if (!lib) {
         return 0;
     }
@@ -118,7 +118,7 @@ KLibrary::void_function_ptr PluginLoaderBase::mainFunc(const QString &type, cons
     mPluginMap[ type ] = pmd;
 
     const QString factory_name = libName + QLatin1Char('_') + QString::fromLatin1(mf_name);
-    KLibrary::void_function_ptr sym = const_cast<KLibrary *>(lib)->resolveFunction(factory_name.toLatin1());
+    auto sym = const_cast<QLibrary*>(lib)->resolve(factory_name.toLatin1());
     if (!sym) {
         qCWarning(MESSAGEVIEWER_LOG) << "No symbol named \"" << factory_name.toLatin1() << "\" (" << factory_name << ") was found in library \"" << libName << "\"";
         return 0;
@@ -127,9 +127,9 @@ KLibrary::void_function_ptr PluginLoaderBase::mainFunc(const QString &type, cons
     return sym;
 }
 
-const KLibrary *PluginLoaderBase::openLibrary(const QString &libName) const
+const QLibrary *PluginLoaderBase::openLibrary(const QString &libName) const
 {
-    KLibrary *library = new KLibrary(libName);
+    auto library = new QLibrary(KPluginLoader::findPlugin(libName));
     if (library->fileName().isEmpty() || !library->load()) {
         qCWarning(MESSAGEVIEWER_LOG) << "Could not load plugin library" << libName << "error:" << library->errorString() << library->fileName();
         delete library;

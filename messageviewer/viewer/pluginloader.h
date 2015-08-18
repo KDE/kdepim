@@ -23,8 +23,7 @@
 #define PLUGINLOADER_H
 
 #include "pluginloaderbase.h"
-#include <KLibrary>
-#include <KGlobal>
+
 /**
  * @short A generic plugin loader for when KPart::Plugin is overkill
  * @author Marc Mutz <mutz@kde.org> based on KABC's FormatFactory
@@ -111,7 +110,7 @@ public:
         for when you want to handle builtin types */
     virtual T *createForName(const QString &type) const
     {
-        KLibrary::void_function_ptr main_func = mainFunc(type, T_config::mainfunc);
+        auto main_func = mainFunc(type, T_config::mainfunc);
         if (!main_func) {
             return 0;
         }

@@ -24,7 +24,7 @@
 
 #include <QString>
 #include <QMap>
-#include <KLibrary>
+#include <QLibrary>
 
 class QStringList;
 
@@ -69,10 +69,10 @@ protected:
 
     /** Returns a pointer to symbol @p main_func in the library that
         implements the plugin of type @p type */
-    KLibrary::void_function_ptr mainFunc(const QString &type, const char *main_func) const;
+    QFunctionPointer mainFunc(const QString &type, const char *main_func) const;
 
 private:
-    const KLibrary *openLibrary(const QString &libName) const;
+    const QLibrary *openLibrary(const QString &libName) const;
     mutable QMap< QString, PluginMetaData > mPluginMap;
 
     class Private;
