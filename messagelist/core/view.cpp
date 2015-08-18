@@ -2295,8 +2295,9 @@ void View::dropEvent(QDropEvent *e)
 void View::changeEvent(QEvent *e)
 {
     switch (e->type()) {
-    case QEvent::PaletteChange:
     case QEvent::FontChange:
+        d->mDelegate->generalFontChanged();
+    case QEvent::PaletteChange:
     case QEvent::StyleChange:
     case QEvent::LayoutDirectionChange:
     case QEvent::LocaleChange:

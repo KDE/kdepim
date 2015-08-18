@@ -49,6 +49,10 @@ class ThemeDelegate : public QStyledItemDelegate
 public:
     explicit ThemeDelegate(QAbstractItemView *parent);
     ~ThemeDelegate();
+    /**
+    * Called when the global fonts change (from systemsettings)
+    */
+    void generalFontChanged();
 
 private:
     const Theme *mTheme;  ///< Shallow pointer to the current theme
@@ -242,11 +246,6 @@ protected:
     */
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-private Q_SLOTS:
-    /**
-    * Called when the global fonts change (from systemsettings)
-    */
-    void slotGeneralFontChanged();
 };
 
 } // namespace Core

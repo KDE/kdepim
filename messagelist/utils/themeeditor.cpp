@@ -282,6 +282,15 @@ ThemePreviewWidget::ThemePreviewWidget(QWidget *parent)
     header()->setMovable(false);
 }
 
+void ThemePreviewWidget::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::FontChange) {
+        mDelegate->generalFontChanged();
+    }
+    QTreeWidget::changeEvent(event);
+}
+
+
 ThemePreviewWidget::~ThemePreviewWidget()
 {
 }
