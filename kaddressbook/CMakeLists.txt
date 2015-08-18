@@ -23,6 +23,9 @@ add_subdirectory(printing)
 if(BUILD_TESTING)
    add_subdirectory(autotests)
 endif()
+add_subdirectory(kontactplugin)
+add_subdirectory(kconf_update)
+
 
 if(KF5Gpgmepp_FOUND)
   add_definitions(-DQGPGME_FOUND)
@@ -209,5 +212,3 @@ install(FILES
 install(FILES data/kaddressbook_themes.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
 
 install(DIRECTORY printing/grantlee/themes/ DESTINATION ${KDE_INSTALL_DATADIR}/kaddressbook/printing/themes/ )
-
-add_subdirectory(kontactplugin)

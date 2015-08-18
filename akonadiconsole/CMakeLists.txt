@@ -10,6 +10,8 @@ include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+add_subdirectory(icons)
+add_subdirectory(kconf_update)
 
 set(akonadiconsole_bin_SRCS
   akonadiconsole_debug.cpp
@@ -115,6 +117,3 @@ target_link_libraries(akonadiconsole_bin
 install(TARGETS akonadiconsole_bin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS org.kde.akonadiconsole.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES akonadiconsoleui.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/akonadiconsole)
-
-add_subdirectory(icons)
-
