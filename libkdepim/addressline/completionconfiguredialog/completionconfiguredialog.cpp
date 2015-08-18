@@ -24,7 +24,6 @@
 #include <QDialogButtonBox>
 #include <QTabWidget>
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KSharedConfig>
 #include <ldap/ldapclientsearch.h>
 #include <addressline/completionorder/completionorderwidget.h>
