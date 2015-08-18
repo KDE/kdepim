@@ -66,6 +66,8 @@ if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
+add_subdirectory(kconf_update)
+
 if(WIN32)
   set(_kleopatra_extra_uiserver_SRCS uiserver/uiserver_win.cpp)
   set(_kleopatra_extra_SRCS utils/gnupg-registry.c selftest/registrycheck.cpp)
