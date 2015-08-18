@@ -23,7 +23,7 @@
 #include "jobtrackermodel.h"
 #include "jobtracker.h"
 
-#include <KLocale>
+#include <QLocale>
 #include <QStringList>
 #include <QModelIndex>
 #include <QDateTime>
@@ -131,7 +131,7 @@ int JobTrackerModel::columnCount(const QModelIndex &parent) const
 
 static QString formatTimeWithMsec(const QTime &time)
 {
-    return QString(KLocale::global()->formatTime(time, true)
+    return QString(QLocale().toString(time)
                    + QStringLiteral(".%1").arg(time.msec(), 3, 10, QLatin1Char('0')));
 }
 

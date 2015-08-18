@@ -24,7 +24,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusPendingCall>
 
-#include <KLocale>
+#include <QLocale>
 
 #include "akonadiconsole_debug.h"
 #include <AkonadiCore/ServerManager>
@@ -246,7 +246,7 @@ QVariant NotificationModel::data(const QModelIndex &index, int role) const
         if (role == Qt::DisplayRole) {
             switch (index.column()) {
             case 0:
-                return QString(KLocale::global()->formatTime(block->timestamp.time(), true) +
+                return QString(QLocale().toString(block->timestamp.time()) +
                                QStringLiteral(".%1").arg(block->timestamp.time().msec(), 3, 10, QLatin1Char('0')));
             case 1:
                 return block->nodes.count();
