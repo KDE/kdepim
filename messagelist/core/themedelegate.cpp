@@ -33,7 +33,7 @@
 #include <QPixmap>
 #include <QLinearGradient>
 #include <KColorScheme>
-#include <KGlobalSettings>
+//#include <KGlobalSettings>
 #include <QFontDatabase>
 
 using namespace MessageList::Core;
@@ -51,7 +51,7 @@ ThemeDelegate::ThemeDelegate(QAbstractItemView *parent)
 {
     mItemView = parent;
     mTheme = Q_NULLPTR;
-    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &ThemeDelegate::slotGeneralFontChanged);
+    //connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &ThemeDelegate::slotGeneralFontChanged);
 }
 
 ThemeDelegate::~ThemeDelegate()
