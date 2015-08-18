@@ -33,6 +33,7 @@ public:
     ~GravatarConfigureSettingsDialog();
 
 private Q_SLOTS:
+    void slotRestoreDefault();
     void slotClearGravatarCache();
     void save();
 

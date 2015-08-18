@@ -36,7 +36,7 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     : QDialog(parent)
 {
     setWindowTitle(i18n("Configure Gravatar"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
     QVBoxLayout *topLayout = new QVBoxLayout;
     setLayout(topLayout);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -44,6 +44,7 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &GravatarConfigureSettingsDialog::save);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &GravatarConfigureSettingsDialog::reject);
+    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &GravatarConfigureSettingsDialog::slotRestoreDefault);
     okButton->setDefault(true);
 
     mUseLibravatar = new QCheckBox(i18n("Use Libravatar"));
@@ -101,6 +102,13 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
 GravatarConfigureSettingsDialog::~GravatarConfigureSettingsDialog()
 {
 
+}
+
+void GravatarConfigureSettingsDialog::slotRestoreDefault()
+{
+    const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults(true);
+    load();
+    GlobalSettings::self()->useDefaults(bUseDefaults);
 }
 
 void GravatarConfigureSettingsDialog::save()
