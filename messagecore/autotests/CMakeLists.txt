@@ -2,7 +2,7 @@ add_subdirectory(gnupg_home)
 
 # Convenience macro to add unit tests.
 macro(add_messagecore_test _source )
-    add_definitions(-DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/\\"")
+    add_definitions(-DKDESRCDIR="${CMAKE_CURRENT_SOURCE_DIR}")
     ecm_add_test(${_source}
         NAME_PREFIX "messagecore-"
         LINK_LIBRARIES Qt5::Test kleo messagecore
