@@ -177,7 +177,7 @@ KMKernel::KMKernel (QObject *parent) :
     // for Windows and Macintosh.
     if ( mNetCodec->name().toLower() == "eucjp"
      #if defined Q_WS_WIN || defined Q_WS_MACX
-         || netCodec->name().toLower() == "shift-jis" // OK?
+         || mNetCodec->name().toLower() == "shift-jis" // OK?
      #endif
          )
     {
