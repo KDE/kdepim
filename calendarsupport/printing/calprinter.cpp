@@ -243,7 +243,7 @@ CalPrintDialog::CalPrintDialog(int initialPrintType, const PrintPlugin::List &pl
     }
     // Insert all plugins in sorted order; plugins with clashing IDs will be first
     QMap<int, PrintPlugin *>::ConstIterator mapit;
-    int firstButton = true;
+    bool firstButton = true;
     int id = 0;
     for (mapit = mPluginIDs.constBegin(); mapit != mPluginIDs.constEnd(); ++mapit) {
         PrintPlugin *p = mapit.value();
