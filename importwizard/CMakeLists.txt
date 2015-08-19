@@ -8,7 +8,7 @@ include_directories(
 
 
 add_subdirectory(icons)
-
+add_subdirectory(kconf_update)
 set(importwizard_SRCS
 importwizard_debug.cpp
 importwizardkernel.cpp
