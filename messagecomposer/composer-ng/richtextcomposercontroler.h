@@ -22,7 +22,6 @@
 #include "richtextcomposer.h"
 #include "messagecomposer_export.h"
 class QTextCursor;
-class QTextDocument;
 namespace MessageComposer
 {
 class RichTextComposer;

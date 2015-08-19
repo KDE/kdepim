@@ -18,7 +18,6 @@
 #ifndef TEMPLATESTEXTEDITOR_H
 #define TEMPLATESTEXTEDITOR_H
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
-class QCompleter;
 class QKeyEvent;
 namespace KPIMTextEdit
 {

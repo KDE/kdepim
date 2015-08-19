@@ -21,7 +21,6 @@
 #include <sonnet/spellcheckdecorator.h>
 #include "messagecomposer_export.h"
 
-class KTextEdit;
 
 namespace MessageComposer
 {

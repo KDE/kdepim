@@ -35,10 +35,6 @@
 #include "messageviewer/viewer/editorwatcher.h"
 class KActionCollection;
 class QAction;
-namespace MessageCore
-{
-class AttachmentFromUrlBaseJob;
-}
 
 namespace MessageComposer
 {

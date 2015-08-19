@@ -27,7 +27,6 @@
 #include <KMime/Message>
 
 #include <QTextEdit>
-class QUrl;
 namespace KMime
 {
 class Content;

@@ -27,11 +27,6 @@ namespace PimCommon
 class AutoCorrection;
 }
 
-namespace KPIMTextEdit
-{
-class EMailQuoteHighlighter;
-}
-
 namespace MessageComposer
 {
 class RichTextComposerSignatures;
