@@ -46,6 +46,10 @@
 #include <KIO/NetAccess>
 #include <KSharedConfig>
 
+#include <KJobWidgets>
+#include <KIO/StatJob>
+#include <KIO/FileCopyJob>
+
 #include <QFile>
 #include <QPointer>
 
@@ -260,8 +264,9 @@ bool VCardXXPort::doExport(const QUrl &url, const QByteArray &data) const
 
     tmpFile.write(data);
     tmpFile.flush();
-
-    return KIO::NetAccess::upload(tmpFile.fileName(), newUrl, parentWidget());
+    auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), newUrl);
+    KJobWidgets::setWindow(job, parentWidget());
+    return job->exec();
 }
 
 KContacts::Addressee::List VCardXXPort::filterContacts(const KContacts::Addressee::List &addrList, VCardExportSelectionWidget::ExportFields exportFieldType) const
