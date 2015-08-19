@@ -109,5 +109,5 @@ set_target_properties(calendarsupportcollectionpage
   SOVERSION ${KDEPIM_LIB_VERSION}
 )
 
-install(TARGETS calendarsupportcollectionpage ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS calendarsupportcollectionpage ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(FILES calendarplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
