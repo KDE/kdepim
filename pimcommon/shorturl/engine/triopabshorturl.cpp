@@ -42,6 +42,11 @@ QString TriopabShortUrl::shortUrlName() const
     return QStringLiteral("to.ly");
 }
 
+bool TriopabShortUrl::isUp() const
+{
+    return true;
+}
+
 void TriopabShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
     if (!mErrorFound) {

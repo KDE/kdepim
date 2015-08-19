@@ -103,8 +103,8 @@ int PimCommon::ShortUrlUtils::readEngineSettings()
 {
     KConfigGroup grp(KSharedConfig::openConfig(), "ShortUrl");
     int engineType = grp.readEntry("Engine", static_cast<int>(PimCommon::ShortUrlUtils::Tinyurl));
-    //Google engine is dead for the moment.
-    if (engineType == PimCommon::ShortUrlUtils::Google) {
+    //Google engine is dead for the moment. and to.ly
+    if (engineType == PimCommon::ShortUrlUtils::Google || engineType == PimCommon::ShortUrlUtils::TriopAB) {
         engineType = static_cast<int>(PimCommon::ShortUrlUtils::Tinyurl);
     }
     return engineType;
