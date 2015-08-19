@@ -36,6 +36,8 @@ target_link_libraries(pimsettingexporter
   pimsettingexporterprivate
 )
 
+add_subdirectory(kconf_update)
+
 install(TARGETS pimsettingexporter ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES
