@@ -30,6 +30,7 @@ add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
 target_link_libraries(pimsettingexporter
  PRIVATE
+  KF5::XmlGui
   KF5::DBusAddons
   mailcommon
   pimcommon
