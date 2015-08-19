@@ -34,6 +34,7 @@ protected:
 
 private Q_SLOTS:
     void slotClear();
+    void slotSaveAs();
 };
 }
 #endif // SIEVESCRIPTDEBUGGERRESULTEDITOR_H

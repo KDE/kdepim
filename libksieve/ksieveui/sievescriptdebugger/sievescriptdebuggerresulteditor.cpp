@@ -16,6 +16,7 @@
 */
 
 #include "sievescriptdebuggerresulteditor.h"
+#include "pimcommon/util/pimutil.h"
 #include <KLocalizedString>
 #include <QAction>
 #include <QMenu>
@@ -40,7 +41,17 @@ void SieveScriptDebuggerResultEditor::addExtraMenuEntry(QMenu *menu, const QPoin
         QAction *clearAction = new QAction(i18n("Clear"), menu);
         connect(clearAction, &QAction::triggered, this, &SieveScriptDebuggerResultEditor::slotClear);
         menu->addAction(clearAction);
+
+        QAction *saveAsAction = new QAction(i18n("Save As"), menu);
+        connect(saveAsAction, &QAction::triggered, this, &SieveScriptDebuggerResultEditor::slotSaveAs);
+        menu->addAction(saveAsAction);
     }
+}
+
+void SieveScriptDebuggerResultEditor::slotSaveAs()
+{
+    const QString filter = i18n("Text Files (*.txt);;All Files (*)");
+    PimCommon::Util::saveTextAs(toPlainText(), filter, this);
 }
 
 void SieveScriptDebuggerResultEditor::slotClear()
