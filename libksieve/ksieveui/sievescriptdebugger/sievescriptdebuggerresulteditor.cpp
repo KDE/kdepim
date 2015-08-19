@@ -41,7 +41,7 @@ void SieveScriptDebuggerResultEditor::addExtraMenuEntry(QMenu *menu, const QPoin
         QAction *clearAction = new QAction(i18n("Clear"), menu);
         connect(clearAction, &QAction::triggered, this, &SieveScriptDebuggerResultEditor::slotClear);
         menu->addAction(clearAction);
-
+        menu->addSeparator();
         QAction *saveAsAction = new QAction(i18n("Save As"), menu);
         connect(saveAsAction, &QAction::triggered, this, &SieveScriptDebuggerResultEditor::slotSaveAs);
         menu->addAction(saveAsAction);
