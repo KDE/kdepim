@@ -41,7 +41,7 @@ GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
     mEnableGravatarSupport->setChecked(false);
     mainLayout->addWidget(mEnableGravatarSupport);
 
-    mConfigureGravatarSetting = new QPushButton(i18n("Configure"));
+    mConfigureGravatarSetting = new QPushButton(i18n("Configure..."));
     mConfigureGravatarSetting->setObjectName(QStringLiteral("configure"));
     mainLayout->addWidget(mConfigureGravatarSetting);
     connect(mConfigureGravatarSetting, &QPushButton::clicked, this, &GravatarConfigWidget::slotConfigureSettings);
