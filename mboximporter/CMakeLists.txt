@@ -18,6 +18,7 @@ ki18n_wrap_ui(mboximporter_SRCS
 add_executable(mboximporter ${mboximporter_SRCS})
 
 target_link_libraries(mboximporter
+PRIVATE
   KF5::AkonadiCore
   KF5::IdentityManagement
   mailimporter
