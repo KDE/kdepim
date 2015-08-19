@@ -47,6 +47,11 @@ QString Ur1CaShortUrl::shortUrlName() const
     return QStringLiteral("Ur1Ca");
 }
 
+bool Ur1CaShortUrl::isUp() const
+{
+    return true;
+}
+
 void Ur1CaShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)
 {
     reply->ignoreSslErrors(error);
