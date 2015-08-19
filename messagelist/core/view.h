@@ -31,7 +31,6 @@
 
 class QMenu;
 
-class QTimer;
 
 namespace Akonadi
 {
@@ -50,7 +49,6 @@ class Aggregation;
 class Delegate;
 class Item;
 class MessageItem;
-class GroupHeaderItem;
 class Model;
 class Theme;
 class SortOrder;

@@ -32,7 +32,6 @@
 #include <messagelist/messagelist_export.h>
 
 class KLineEdit;
-class QTimer;
 class QActionGroup;
 class KComboBox;
 class QMenu;

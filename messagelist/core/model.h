@@ -34,7 +34,6 @@
 
 #include <messagelist/messagelist_export.h>
 
-class QTime;
 
 namespace MessageList
 {

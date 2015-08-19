@@ -31,10 +31,8 @@
 
 class KXMLGUIClient;
 class QAbstractItemModel;
-class QAbstractProxyModel;
 class QItemSelectionModel;
 class QItemSelection;
-class QToolButton;
 
 namespace KPIM
 {

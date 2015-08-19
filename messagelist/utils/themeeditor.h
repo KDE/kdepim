@@ -31,7 +31,6 @@
 
 #include <QDialog>
 
-class QPaintDevice;
 class QCheckBox;
 
 class KComboBox;

@@ -28,7 +28,6 @@
 #include <messagelist/core/modelinvariantindex.h>
 #include <messagelist/messagelist_export.h>
 
-class QTimer;
 
 namespace MessageList
 {
@@ -38,7 +37,6 @@ namespace Core
 
 class ModelInvariantRowMapper;
 class ModelInvariantRowMapperPrivate;
-class RowShift;
 
 /**
  * This class is an optimizing helper for dealing with large flat QAbstractItemModel objects.

@@ -27,17 +27,9 @@
 
 #include <messagelist/messagelist_export.h>
 
-class QPushButton;
 
 namespace MessageList
 {
-
-namespace Core
-{
-
-class Manager;
-
-} // namespace Core
 
 namespace Utils
 {

@@ -31,7 +31,6 @@
 #include <messagelist/core/sortorder.h>
 #include <QFontDatabase>
 
-class QPaintDevice;
 
 namespace MessageList
 {
