@@ -99,7 +99,7 @@ void MessageBox::auditLog(QWidget *parent, const QString &log, const QString &ca
     AuditLogViewer *const alv = new AuditLogViewer(log, parent);
     alv->setAttribute(Qt::WA_DeleteOnClose);
     alv->setObjectName(QStringLiteral("alv"));
-    alv->setCaption(caption);
+    alv->setWindowTitle(caption);
     alv->show();
 }
 

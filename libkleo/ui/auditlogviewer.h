@@ -21,7 +21,7 @@
 #ifndef AUDITLOGVIEWER_H
 #define AUDITLOGVIEWER_H
 
-#include <KDialog>
+#include <QDialog>
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 namespace PimCommon
@@ -34,7 +34,7 @@ namespace Kleo
 namespace Private
 {
 
-class AuditLogViewer : public KDialog
+class AuditLogViewer : public QDialog
 {
     Q_OBJECT
 public:
@@ -45,12 +45,8 @@ public:
     void setAuditLog(const QString &log);
 
 private Q_SLOTS:
-#ifndef QT_NO_FILEDIALOG
-    void slotUser1();
-#endif
-#ifndef QT_NO_CLIPBOARD
-    void slotUser2();
-#endif
+    void slotSaveAs();
+    void slotCopyClip();
 
 private:
     void writeConfig();

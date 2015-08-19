@@ -27,43 +27,50 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <QTextStream>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <KIconLoader>
 
 using namespace Kleo::Private;
 
 AuditLogViewer::AuditLogViewer(const QString &log, QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       m_log(/* sic */),
       m_textEdit(new PimCommon::RichTextEditorWidget(this))
 {
-    setCaption(i18n("View GnuPG Audit Log"));
-    setButtons(Close
-#ifndef QT_NO_FILEDIALOG
-               | User1
-#endif
-#ifndef QT_NO_CLIPBOARD
-               | User2
-#endif
-              );
-    setDefaultButton(Close);
-#ifndef QT_NO_FILEDIALOG
-    setButtonGuiItem(User1, KGuiItem(i18n("&Save to Disk..."), QStringLiteral("document-save-as")));
-#endif
-#ifndef QT_NO_CLIPBOARD
-    setButtonGuiItem(User2, KGuiItem(i18n("&Copy to Clipboard"), QStringLiteral("edit-copy"), i18n("Copy Audit Log to Clipboard")));
-#endif
-    showButtonSeparator(false);
-    setModal(false);
-    setMainWidget(m_textEdit);
+    setWindowTitle(i18n("View GnuPG Audit Log"));
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    buttonBox->button(QDialogButtonBox::Close)->setIcon(KIconLoader::global()->loadIcon(
+                                                        QStringLiteral("dialog-close"),
+                                                        KIconLoader::Small));
+
+    QPushButton *copyClipBtn = new QPushButton;
+    copyClipBtn->setText(i18n("&Copy to Clipboard"));
+    copyClipBtn->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("edit-copy"),
+                                                         KIconLoader::Small));
+    buttonBox->addButton(copyClipBtn, QDialogButtonBox::ActionRole);
+    connect(copyClipBtn, &QPushButton::clicked, this, &AuditLogViewer::slotCopyClip);
+
+    QPushButton *saveAsBtn = new QPushButton;
+    saveAsBtn->setText(i18n("&Save to Disk..."));
+    saveAsBtn->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("document-save-as"),
+                                                       KIconLoader::Small));
+    buttonBox->addButton(saveAsBtn, QDialogButtonBox::ActionRole);
+    connect(saveAsBtn, &QPushButton::clicked, this, &AuditLogViewer::slotSaveAs);
+
     m_textEdit->setObjectName(QStringLiteral("m_textEdit"));
     m_textEdit->setReadOnly(true);
+
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(m_textEdit);
+    mainLayout->addWidget(buttonBox);
+    setLayout(mainLayout);
+
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+
     setAuditLog(log);
 
-#ifndef QT_NO_FILEDIALOG
-    connect(this, &KDialog::user1Clicked, this, &AuditLogViewer::slotUser1);
-#endif
-#ifndef QT_NO_CLIPBOARD
-    connect(this, &KDialog::user2Clicked, this, &AuditLogViewer::slotUser2);
-#endif
     readConfig();
 }
 
@@ -81,8 +88,7 @@ void AuditLogViewer::setAuditLog(const QString &log)
     m_textEdit->setHtml(QLatin1String("<qt>") + log + QLatin1String("</qt>"));
 }
 
-#ifndef QT_NO_FILEDIALOG
-void AuditLogViewer::slotUser1()
+void AuditLogViewer::slotSaveAs()
 {
     const QString fileName = QFileDialog::getSaveFileName(this, i18n("Choose File to Save GnuPG Audit Log to"));
     if (fileName.isEmpty()) {
@@ -111,16 +117,13 @@ void AuditLogViewer::slotUser1()
                                       file.fileName(), QString::fromLocal8Bit(strerror(err))),
                            i18n("File Save Error"));
 }
-#endif // QT_NO_FILEDIALOG
 
-#ifndef QT_NO_CLIPBOARD
-void AuditLogViewer::slotUser2()
+void AuditLogViewer::slotCopyClip()
 {
     m_textEdit->editor()->selectAll();
     m_textEdit->editor()->copy();
     m_textEdit->editor()->textCursor().clearSelection();
 }
-#endif // QT_NO_CLIPBOARD
 
 void AuditLogViewer::readConfig()
 {
