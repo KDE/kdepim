@@ -148,7 +148,6 @@ target_link_libraries(kdepim
   KF5::ItemViews
   KF5::Ldap
   KF5::KCMUtils
-  KF5::Mime
   KF5::AkonadiCore
   KF5::AkonadiContact
   KF5::AkonadiWidgets

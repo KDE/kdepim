@@ -38,14 +38,13 @@
 #include <KContacts/ContactGroup>
 #include <kldap/LdapServer>
 
-#include <KMime/Util>
-
 #include <KCompletionBox>
 #include "libkdepim_debug.h"
 #include <KLocalizedString>
 #include <KStandardShortcut>
-#include <QMimeData>
+#include <KCodecs>
 
+#include <QMimeData>
 #include <QApplication>
 #include <QObject>
 #include <QRegExp>
@@ -282,7 +281,7 @@ void AddresseeLineEdit::dropEvent(QDropEvent *event)
                     mailtoURL = true;
                     QString address;
                     address = QUrl::fromPercentEncoding(url.path().toLatin1());
-                    address = KMime::decodeRFC2047String(address.toLatin1());
+                    address = KCodecs::decodeRFC2047String(address);
                     if (!contents.isEmpty()) {
                         contents.append(QStringLiteral(", "));
                     }
