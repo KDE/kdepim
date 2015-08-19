@@ -34,6 +34,7 @@
 #include <QTemporaryDir>
 #include <kzip.h>
 #include <KIconEngine>
+#include <KStandardAction>
 #include <QTemporaryFile>
 
 #include <QPushButton>
@@ -65,7 +66,8 @@ SieveEditorWidget::SieveEditorWidget(bool useMenuBar, QWidget *parent)
     mCheckSyntax = new QAction(i18n("Check Syntax"), this);
     connect(mCheckSyntax, &QAction::triggered, this, &SieveEditorWidget::slotCheckSyntax);
     toolbar->addAction(mCheckSyntax);
-    mSaveAs = toolbar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
+    mSaveAs = KStandardAction::saveAs(this, SLOT(slotSaveAs()), this);
+    toolbar->addAction(mSaveAs);
     toolbar->addAction(i18n("Import..."), this, SLOT(slotImport()));
 
     mAutoGenerateScript = new QAction(i18n("Autogenerate Script..."), this);
