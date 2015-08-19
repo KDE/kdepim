@@ -199,7 +199,7 @@ int TodoViewSortFilterProxyModel::compareStartDates(const QModelIndex &left,
         CalendarSupport::todo(right.data(TodoModel::TodoRole). value<Akonadi::Item>());
 
     if (!leftTodo || !rightTodo) {
-        return false;
+        return 0;
     }
 
     const bool leftIsEmpty  = !leftTodo->hasStartDate();
@@ -246,7 +246,7 @@ int TodoViewSortFilterProxyModel::compareDueDates(const QModelIndex &left,
         CalendarSupport::todo(right.data(TodoModel::TodoRole). value<Akonadi::Item>());
 
     if (!leftTodo || !rightTodo) {
-        return false;
+        return 0;
     }
 
     const bool leftIsEmpty  = !leftTodo->hasDueDate();

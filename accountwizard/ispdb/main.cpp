@@ -129,5 +129,5 @@ int main(int argc, char **argv)
                                    << "- authentication:" << authTypeToStr(s.authentication);
     }
 
-    return true;
+    return 0;
 }
