@@ -16,7 +16,10 @@ kconfig_add_kcfg_files(libgrantleetheme_SRCS
 add_library(grantleetheme ${libgrantleetheme_SRCS})
 generate_export_header(grantleetheme BASE_NAME grantleetheme)
 
-target_link_libraries(grantleetheme KF5::NewStuff KF5::I18n)
+target_link_libraries(grantleetheme 
+PRIVATE
+  KF5::NewStuff KF5::I18n
+)
 
 set_target_properties(grantleetheme PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS grantleetheme ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

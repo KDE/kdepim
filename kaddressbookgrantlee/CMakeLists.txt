@@ -32,6 +32,8 @@ target_link_libraries(kaddressbookgrantlee
 PUBLIC
   Grantlee5::Templates
 PRIVATE
+  KF5::ConfigWidgets
+  KF5::Service
   grantleetheme
   KF5::AkonadiCore
   KF5::Contacts
