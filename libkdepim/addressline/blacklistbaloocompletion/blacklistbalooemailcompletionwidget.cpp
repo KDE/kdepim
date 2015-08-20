@@ -58,7 +58,7 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     connect(mSearchLineEdit, &KLineEdit::returnPressed, this, &BlackListBalooEmailCompletionWidget::slotCheckIfUpdateBlackListIsNeeded);
     searchLayout->addWidget(mSearchLineEdit);
 
-    mSearchButton = new QPushButton(i18n("Search"));
+    mSearchButton = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-find")), i18n("Search"));
     mSearchButton->setObjectName(QStringLiteral("search_button"));
     connect(mSearchButton, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionWidget::slotCheckIfUpdateBlackListIsNeeded);
     mSearchButton->setEnabled(false);
