@@ -120,7 +120,7 @@ void BlackListBalooEmailCompletionWidgetTest::shouldChangeEnableSelectUnSelectBu
     QVERIFY(!unselectButton->isEnabled());
 
     KPIM::BlackListBalooEmailList *emailList = widget.findChild<KPIM::BlackListBalooEmailList *>(QStringLiteral("email_list"));
-    emailList->slotEmailFound(QStringList() << QStringLiteral("foo") << QStringLiteral("bla") << QStringLiteral("bli"));
+    emailList->setEmailFound(QStringList() << QStringLiteral("foo") << QStringLiteral("bla") << QStringLiteral("bli"));
 
     emailList->selectAll();
     QVERIFY(unselectButton->isEnabled());

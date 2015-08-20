@@ -71,7 +71,7 @@ void BlackListBalooEmailList::setExcludeDomain(const QStringList &domain)
     mExcludeDomain = domain;
 }
 
-void BlackListBalooEmailList::slotEmailFound(const QStringList &list)
+void BlackListBalooEmailList::setEmailFound(const QStringList &list)
 {
     mFirstResult = true;
     clear();
