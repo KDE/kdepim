@@ -38,7 +38,9 @@ PRIVATE
   KF5::AkonadiCore
   KF5::Contacts
   KF5::AkonadiContact
+  KF5::IconThemes
   kleo
+  KF5::I18n
 )
 
 target_include_directories(kaddressbookgrantlee PUBLIC "$<BUILD_INTERFACE:${kaddressbookgrantlee_SOURCE_DIR};${kaddressbookgrantlee_BINARY_DIR};${Grantlee_INCLUDE_DIRS}>")

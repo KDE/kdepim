@@ -64,6 +64,7 @@ target_link_libraries(test_verify
   Qt5::Test
   KF5::QGpgme
   KF5::CoreAddons
+  KF5::I18n
 )
 
 ########### next target ###############
@@ -83,6 +84,7 @@ if(USABLE_ASSUAN_FOUND)
   else()
     add_executable(test_uiserver ${test_uiserver_SRCS})
   endif()
+  target_link_libraries(test_uiserver KF5::I18n)
 
   if(ASSUAN2_FOUND)
     target_link_libraries(test_uiserver

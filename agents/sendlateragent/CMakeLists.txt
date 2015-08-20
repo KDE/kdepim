@@ -26,13 +26,13 @@ generate_export_header(sendlater BASE_NAME sendlater)
 target_link_libraries(sendlater
   PUBLIC
     KF5::AkonadiCore
-    KF5::ConfigCore
-    Qt5::Widgets
   PRIVATE
+    KF5::ConfigCore
     KF5::I18n
     KF5::WidgetsAddons
     KF5::ConfigGui
     Qt5::DBus
+    Qt5::Widgets
 )
 target_include_directories(sendlater PUBLIC "$<BUILD_INTERFACE:${sendlateragent_SOURCE_DIR};${sendlateragent_BINARY_DIR}>")
 set_target_properties( sendlater PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )

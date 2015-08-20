@@ -353,6 +353,7 @@ target_link_libraries(kleopatra_bin
   KF5::Mime
   KF5::KCMUtils
   KF5::KDELibs4Support
+  KF5::I18n
   ${_kleopatra_uiserver_extra_libs}
   ${_kleopatra_libkdepim_LIBS}
 )
