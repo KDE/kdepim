@@ -154,6 +154,7 @@ void SieveScriptDebuggerFrontEndWidget::slotDebugScript()
     //connect(mProcess, &QProcess::finished, this, &SieveScriptDebuggerFrontEndWidget::slotDebugFinished);
     mSieveTestResult->editor()->appendPlainText(QStringLiteral("--------------------------------------"));
     mSieveTestResult->editor()->appendPlainText(QLocale().toString(QDateTime::currentDateTime()));
+    mSieveTestResult->editor()->appendPlainText(QStringLiteral("\n"));
     if (!mProcess->waitForStarted()) {
         delete mProcess;
         mProcess = 0;
