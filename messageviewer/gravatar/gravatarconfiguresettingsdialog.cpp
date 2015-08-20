@@ -47,6 +47,16 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &GravatarConfigureSettingsDialog::slotRestoreDefault);
     okButton->setDefault(true);
 
+
+    mUseDefaultPixmap = new QCheckBox(i18n("Use Default Image"));
+    mUseDefaultPixmap->setObjectName(QStringLiteral("usedefaultimage"));
+    topLayout->addWidget(mUseDefaultPixmap);
+
+    mUseHttps = new QCheckBox(i18n("Use HTTPS"));
+    mUseHttps->setObjectName(QStringLiteral("usehttps"));
+    topLayout->addWidget(mUseHttps);
+
+
     mUseLibravatar = new QCheckBox(i18n("Use Libravatar"));
     mUseLibravatar->setObjectName(QStringLiteral("uselibravatarcheckbox"));
     topLayout->addWidget(mUseLibravatar);
@@ -56,14 +66,6 @@ GravatarConfigureSettingsDialog::GravatarConfigureSettingsDialog(QWidget *parent
     topLayout->addWidget(mFallbackGravatar);
     connect(mUseLibravatar, &QCheckBox::toggled, mFallbackGravatar, &QCheckBox::setEnabled);
     mFallbackGravatar->setEnabled(false);
-
-    mUseDefaultPixmap = new QCheckBox(i18n("Use Default Image"));
-    mUseDefaultPixmap->setObjectName(QStringLiteral("usedefaultimage"));
-    topLayout->addWidget(mUseDefaultPixmap);
-
-    mUseHttps = new QCheckBox(i18n("Use HTTPS"));
-    mUseHttps->setObjectName(QStringLiteral("usehttps"));
-    topLayout->addWidget(mUseHttps);
 
     QHBoxLayout *cacheSizeLayout = new QHBoxLayout;
     topLayout->addLayout(cacheSizeLayout);
