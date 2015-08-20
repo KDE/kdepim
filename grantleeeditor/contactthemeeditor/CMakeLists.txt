@@ -19,6 +19,7 @@ set(contactthemeeditor_SRCS
 
 add_executable(contactthemeeditor ${contactthemeeditor_SRCS} )
 target_link_libraries(contactthemeeditor
+PRIVATE
                        KF5::DBusAddons
                        KF5::NewStuff
                        KF5::AkonadiContact
