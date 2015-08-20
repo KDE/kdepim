@@ -206,7 +206,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mDecrytMessageOverwrite(false),
       mShowSignatureDetails(false),
       mShowAttachmentQuicklist(true),
-      mShowRawToltecMail(false),
       mRecursionCountForDisplayMessage(0),
       mCurrentContent(0),
       mMessagePartNode(0),
@@ -976,13 +975,6 @@ void ViewerPrivate::parseContent(KMime::Content *content)
         }
     }
 
-    if (!NodeHelper::isToltecMessage(content) || mShowRawToltecMail) {
-        KMime::Message *message = dynamic_cast<KMime::Message *>(content);
-        if (message) {
-            htmlWriter()->queue(writeMsgHeader(message, hasVCard ? vCardContent : 0, true));
-        }
-    }
-
     // Pass control to the OTP now, which does the real work
     mNodeHelper->removeTempFiles();
     mNodeHelper->setNodeUnprocessed(mMessage.data(), true);
@@ -990,7 +982,6 @@ void ViewerPrivate::parseContent(KMime::Content *content)
     ObjectTreeParser otp(&otpSource, mNodeHelper, 0, mMessage.data() != content /* show only single node */);
     otp.setAllowAsync(!mPrinting);
     otp.setPrinting(mPrinting);
-    otp.setShowRawToltecMail(mShowRawToltecMail);
     otp.parseObjectTree(content);
 
     // TODO: Setting the signature state to nodehelper is not enough, it should actually
@@ -1325,7 +1316,6 @@ void ViewerPrivate::resetStateForNewMessage()
 #endif
     mSavedRelativePosition = 0;
     setShowSignatureDetails(false);
-    mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
     mFindBar->closeBar();
     mTranslatorWidget->slotCloseWidget();
     mCreateTodo->slotCloseWidget();

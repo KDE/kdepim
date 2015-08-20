@@ -34,14 +34,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
   </group>
 
   <group name="Reader">
-    <entry name="ShowToltecReplacementText" type="Bool">
-      <label>When encountering a Toltec scheduling message, display a custom replacement text for it.</label>
-      <default>true</default>
-    </entry>
-    <entry name="ToltecReplacementText" type="String">
-      <label>The text that will be displayed as a replacement when encountering Toltec scheduling messages.</label>
-      <default code="true">MessageViewer::ObjectTreeParser::defaultToltecReplacementText()</default>
-    </entry>
     <entry name="AutoImportKeys" type="Bool">
       <default>false</default>
     </entry>

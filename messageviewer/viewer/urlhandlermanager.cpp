@@ -555,10 +555,6 @@ bool KMailProtocolURLHandler::handleClick(const QUrl &url, ViewerPrivate *w) con
             w->setShowFullCcAddressList(false);
             w->update(Viewer::Force);
             return true;
-        } else if (urlPath == QLatin1String("showRawToltecMail")) {
-            w->setShowRawToltecMail(true);
-            w->update(Viewer::Force);
-            return true;
         }
     }
     return false;
@@ -594,8 +590,6 @@ QString KMailProtocolURLHandler::statusBarMessage(const QUrl &url, ViewerPrivate
             return i18n("Show full \"Cc\" list");
         } else if (urlPath == QLatin1String("hideFullCcAddressList")) {
             return i18n("Hide full \"Cc\" list");
-        } else if (urlPath == QLatin1String("showRawToltecMail")) {
-            return i18n("Show Raw Message");
         } else {
             return QString();
         }

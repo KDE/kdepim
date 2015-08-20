@@ -441,21 +441,6 @@ public:
         mIncludeSignatures = include;
     }
 
-    // Controls whether Toltec invitations are displayed in their raw form or as a replacement text,
-    // which is used in processToltecMail().
-    void setShowRawToltecMail(bool showRawToltecMail)
-    {
-        mShowRawToltecMail = showRawToltecMail;
-    }
-    bool showRawToltecMail() const
-    {
-        return mShowRawToltecMail;
-    }
-
-    /// Default text for processToltecMail(), which is used in messageviewer.kcfg, therefore it
-    /// needs to be static here.
-    static QString defaultToltecReplacementText();
-
     const AttachmentStrategy *attachmentStrategy() const
     {
         return mAttachmentStrategy;
@@ -543,17 +528,6 @@ private:
                        bool &actuallyEncrypted,
                        bool &decryptionStarted,
                        PartMetaData &partMetaData);
-
-    /**
-    * This is called for all multipart/mixed nodes. It checks if that belongs to a Toltec mail,
-    * by checking various criteria.
-    * If it is a toltec mail, a special text, instead of the confusing toltec text, will be
-    * displayed.
-    *
-    * @return true if the mail was indeed a toltec mail, in which case the node should not be
-    *              processed further
-    */
-    bool processToltecMail(KMime::Content *node);
 
     bool processMailmanMessage(KMime::Content *node);
 
@@ -676,7 +650,6 @@ private:
     bool mIncludeSignatures;
     bool mHasPendingAsyncJobs;
     bool mAllowAsync;
-    bool mShowRawToltecMail;
     const AttachmentStrategy *mAttachmentStrategy;
     // DataUrl Icons cache
     QString mCollapseIcon;

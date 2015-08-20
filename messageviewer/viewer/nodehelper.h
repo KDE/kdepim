@@ -187,8 +187,6 @@ public:
     // UrlHandlerManager.
     QString asHREF(const KMime::Content *node, const QString &place);
 
-    static bool isToltecMessage(KMime::Content *node);
-
     /**
      * @return true if this node is a child or an encapsulated message
      */

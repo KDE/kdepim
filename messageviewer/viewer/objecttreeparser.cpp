@@ -161,7 +161,6 @@ ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
       mIncludeSignatures(includeSignatures),
       mHasPendingAsyncJobs(false),
       mAllowAsync(topLevelParser->mAllowAsync),
-      mShowRawToltecMail(false),
       mAttachmentStrategy(strategy)
 {
     init();
@@ -182,7 +181,6 @@ ObjectTreeParser::ObjectTreeParser(ObjectTreeSourceIf *source,
       mIncludeSignatures(includeSignatures),
       mHasPendingAsyncJobs(false),
       mAllowAsync(false),
-      mShowRawToltecMail(false),
       mAttachmentStrategy(strategy),
       mPrinting(false)
 {
@@ -1513,31 +1511,8 @@ void ObjectTreeParser::standardChildHandling(KMime::Content *child)
     copyContentFrom(&otp);
 }
 
-QString ObjectTreeParser::defaultToltecReplacementText()
-{
-    return i18n("This message is a <i>Toltec</i> Groupware object, it can only be viewed with "
-                "Microsoft Outlook in combination with the Toltec connector.");
-}
-
-bool ObjectTreeParser::processToltecMail(KMime::Content *node)
-{
-    if (!node || !htmlWriter() || !GlobalSettings::self()->showToltecReplacementText() ||
-            !NodeHelper::isToltecMessage(node) || mShowRawToltecMail) {
-        return false;
-    }
-
-    htmlWriter()->queue(GlobalSettings::self()->toltecReplacementText());
-    htmlWriter()->queue(QLatin1String("<br/><br/><a href=\"kmail:showRawToltecMail\">") +
-                        i18n("Show Raw Message") + QLatin1String("</a>"));
-    return true;
-}
-
 bool ObjectTreeParser::processMultiPartMixedSubtype(KMime::Content *node, ProcessResult &)
 {
-    if (processToltecMail(node)) {
-        return true;
-    }
-
     KMime::Content *child = MessageCore::NodeHelper::firstChild(node);
     if (!child) {
         return false;
