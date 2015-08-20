@@ -55,8 +55,9 @@ void GravatarConfigWidgetTest::shouldChangeState()
     QCheckBox *enableGravatar = w.findChild<QCheckBox *>(QStringLiteral("gravatarcheckbox"));
 
     QPushButton *configure = w.findChild<QPushButton *>(QStringLiteral("configure"));
-    //TODO
-
+    QVERIFY(!configure->isEnabled());
+    enableGravatar->toggle();
+    QVERIFY(configure->isEnabled());
 }
 
 void GravatarConfigWidgetTest::shoulEmitConfigChangedSignal()
