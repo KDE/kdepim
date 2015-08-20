@@ -40,8 +40,8 @@
 #include <QTimer>
 #include <QTextCodec>
 #include "noteshared_debug.h"
-#include <kglobal.h>
 #include <KLocalizedString>
+#include <QLocale>
 
 // Maximum note size in chars we are going to accept,
 // to prevent "note floods".
@@ -60,9 +60,7 @@ NotesNetworkReceiver::NotesNetworkReceiver(QTcpSocket *s)
       m_buffer(new QByteArray()),
       m_sock(s)
 {
-    const QString date =
-        KLocale::global()->formatDateTime(QDateTime::currentDateTime(),
-                                          KLocale::ShortDate, false);
+    const QString date = QLocale().toString(QDateTime::currentDateTime(), QLocale::ShortFormat);
 
     // Add the remote IP or hostname and the date to the title, to help the
     // user guess who wrote it.
