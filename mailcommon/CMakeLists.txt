@@ -244,6 +244,7 @@ if (Qt5Designer_FOUND)
  
     target_link_libraries(mailcommonwidgets
         mailcommon
+        kdepim
     )
     if(NOT WIN32)
         # Since there are no libraries provided by this module,

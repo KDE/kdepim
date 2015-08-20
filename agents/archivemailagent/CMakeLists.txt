@@ -41,6 +41,7 @@ target_link_libraries(akonadi_archivemail_agent
   KF5::KIOWidgets
   KF5::Notifications
   mailcommon
+  kdepim
 )
 
 if( APPLE )

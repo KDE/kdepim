@@ -8,7 +8,7 @@ macro( add_messagecomposer_test _source )
     ecm_add_test(${_source}
         NAME_PREFIX "messagecomposer-"
         LINK_LIBRARIES KF5::Mime messagecomposer messageviewer messagecore templateparser
-                       KF5::PimTextEdit Qt5::Test KF5::IdentityManagement KF5::Contacts KF5::AkonadiCore KF5::XmlGui KF5::KDELibs4Support
+                       KF5::PimTextEdit Qt5::Test KF5::IdentityManagement KF5::Contacts KF5::AkonadiCore KF5::XmlGui KF5::KDELibs4Support kdepim
     )
 endmacro()
 
@@ -24,6 +24,7 @@ macro( add_messagecomposer_cryptotest _source )
         messageviewer
         messagecore
         kleo
+        kdepim
         KF5::PimTextEdit
         KF5::AkonadiCore
         Qt5::Test

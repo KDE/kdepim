@@ -165,10 +165,10 @@ PUBLIC
   messageviewer
   templateparser
   kleo
-  kdepim
   pimcommon
   KF5::AkonadiWidgets
 PRIVATE
+  kdepim
   KF5::CalendarCore
   KF5::KIOCore
   Grantlee5::TextDocument
