@@ -1589,15 +1589,13 @@ void ViewerPrivate::createActions()
         return;
     }
 
-    KToggleAction *raction = 0;
-
     // header style
     KActionMenu *headerMenu  = new KActionMenu(i18nc("View->", "&Headers"), this);
     ac->addAction(QStringLiteral("view_headers"), headerMenu);
     addHelpTextAction(headerMenu, i18n("Choose display style of message headers"));
 
     QActionGroup *group = new QActionGroup(this);
-    raction = new KToggleAction(i18nc("View->headers->", "&Enterprise Headers"), this);
+    KToggleAction *raction = new KToggleAction(i18nc("View->headers->", "&Enterprise Headers"), this);
     ac->addAction(QStringLiteral("view_headers_enterprise"), raction);
     connect(raction, &QAction::triggered, this, &ViewerPrivate::slotEnterpriseHeaders);
     addHelpTextAction(raction, i18n("Show the list of headers in Enterprise style"));
