@@ -43,12 +43,12 @@
 #include <QTemporaryFile>
 #include <QUrl>
 #include <KStandardGuiItem>
-#include <KIO/NetAccess>
 #include <KSharedConfig>
 
 #include <KJobWidgets>
 #include <KIO/StatJob>
 #include <KIO/FileCopyJob>
+#include <KIO/StoredTransferJob>
 
 #include <QFile>
 #include <QPointer>
@@ -149,7 +149,6 @@ bool VCardXXPort::exportContacts(const ContactList &contacts, VCardExportSelecti
 
 ContactList VCardXXPort::importContacts() const
 {
-    QString fileName;
     ContactList contactList;
     KContacts::Addressee::List addrList;
     QList<QUrl> urls;
@@ -178,34 +177,19 @@ ContactList VCardXXPort::importContacts() const
         for (int i = 0; i < numberOfUrl; ++i) {
             const QUrl url = urls.at(i);
 
-            if (KIO::NetAccess::download(url, fileName, parentWidget())) {
+            auto job = KIO::storedGet(url);
+            KJobWidgets::setWindow(job, parentWidget());
+            if (job->exec()) {
 
-                QFile file(fileName);
-
-                if (file.open(QIODevice::ReadOnly)) {
-                    const QByteArray data = file.readAll();
-                    file.close();
-                    if (!data.isEmpty()) {
-                        addrList += parseVCard(data);
-                    }
-
-                    KIO::NetAccess::removeTempFile(fileName);
-                } else {
-                    const QString msg = xi18nc(
-                                            "@info",
-                                            "<para>When trying to read the vCard, "
-                                            "there was an error opening the file <filename>%1</filename>:</para>"
-                                            "<para>%2</para>",
-                                            url.toDisplayString(),
-                                            i18nc("QFile", file.errorString().toLatin1()));
-                    KMessageBox::error(parentWidget(), msg, caption);
-                    anyFailures = true;
+                const QByteArray data = job->data();
+                if (!data.isEmpty()) {
+                    addrList += parseVCard(data);
                 }
             } else {
                 const QString msg = xi18nc(
                                         "@info",
                                         "<para>Unable to access vCard:</para><para>%1</para>",
-                                        KIO::NetAccess::lastErrorString());
+                                        job->errorString());
                 KMessageBox::error(parentWidget(), msg, caption);
                 anyFailures = true;
             }
