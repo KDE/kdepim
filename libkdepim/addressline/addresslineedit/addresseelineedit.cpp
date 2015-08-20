@@ -36,7 +36,7 @@
 #include <kdelibs4configmigrator.h>
 #include <KContacts/Addressee>
 #include <KContacts/ContactGroup>
-#include <kldap/LdapServer>
+#include <KLDAP/LdapServer>
 
 #include <KMime/Util>
 
