@@ -174,14 +174,14 @@ void BlackListBalooEmailCompletionWidget::slotSearch()
         KPIM::BlackListBalooEmailSearchJob *job = new KPIM::BlackListBalooEmailSearchJob(this);
         job->setSearchEmail(searchEmail);
         job->setLimit(mLimit);
-        connect(job, &BlackListBalooEmailSearchJob::emailsFound, mEmailList, &BlackListBalooEmailList::slotEmailFound);
+        connect(job, &BlackListBalooEmailSearchJob::emailsFound, this, &BlackListBalooEmailCompletionWidget::slotEmailFound);
         job->start();
     }
 }
 
 void BlackListBalooEmailCompletionWidget::slotEmailFound(const QStringList &list)
 {
-    mEmailList->slotEmailFound(list);
+    mEmailList->setEmailFound(list);
     mMoreResult->setVisible(list.count() == mLimit);
     mEmailList->scrollToBottom();
 }

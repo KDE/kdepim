@@ -54,12 +54,11 @@ public:
     QHash<QString, bool> blackListItemChanged() const;
 
     void setExcludeDomain(const QStringList &domain);
+    void setEmailFound(const QStringList &);
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
     void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
-public Q_SLOTS:
-    void slotEmailFound(const QStringList &);
 
 private:
     void generalPaletteChanged();
