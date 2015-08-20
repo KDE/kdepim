@@ -37,11 +37,6 @@
 #include "messagecore_debug.h"
 #include <kmime/kmime_content.h>
 
-static bool isInSkipList(KMime::Content *)
-{
-    return false;
-}
-
 static bool isInExclusionList(KMime::Content *node)
 {
     if (!node) {
@@ -84,11 +79,6 @@ void MessageCore::ImageCollector::collectImagesFrom(KMime::Content *node)
 
         if (node->topLevel()->textContent() == node) {
             node = MessageCore::NodeHelper::next(node);
-            continue;
-        }
-
-        if (isInSkipList(node)) {
-            node = MessageCore::NodeHelper::next(node, false);   // skip even the children
             continue;
         }
 
