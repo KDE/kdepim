@@ -65,7 +65,7 @@
 
 #include "kleopatra_debug.h"
 #include <KLocalizedString>
-#include <KLocale>
+#include <QLocale>
 
 #include <QByteArray>
 #include <QDateTime>
@@ -277,7 +277,7 @@ static QString renderKeyEMailOnlyNameAsFallback(const Key &key)
 
 static QString formatDate(const QDateTime &dt)
 {
-    return KLocale::global()->formatDateTime(dt);
+    return QLocale().toString(dt);
 }
 static QString formatSigningInformation(const Signature &sig, const Key &key)
 {
