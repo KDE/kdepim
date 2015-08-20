@@ -1502,6 +1502,7 @@ void AdvancedSettingsDialog::updateWidgetVisibility() {
     }
     if ( protocol == CMS ) {
         ui.encryptionCB->setEnabled( true );
+        ui.rsaSubCB->setChecked( false );
     }
     ui.expiryDE->setVisible( protocol == OpenPGP );
     ui.expiryCB->setVisible( protocol == OpenPGP );
