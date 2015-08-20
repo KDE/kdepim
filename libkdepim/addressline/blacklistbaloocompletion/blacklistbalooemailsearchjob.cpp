@@ -57,9 +57,6 @@ void BlackListBalooEmailSearchJob::setSearchEmail(const QString &searchEmail)
 
 void BlackListBalooEmailSearchJob::setLimit(int limit)
 {
-    if (limit < 10) {
-        limit = 10;
-    }
-    mLimit = limit;
+    mLimit = qMax(10, limit);
 }
 
