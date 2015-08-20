@@ -20,6 +20,7 @@
 #include "sievescriptdebuggerwarning.h"
 #include "sievescriptdebuggerresulteditor.h"
 
+#include <QScrollBar>
 #include <QVBoxLayout>
 #include <QSplitter>
 #include <QTemporaryFile>
@@ -189,6 +190,7 @@ QString SieveScriptDebuggerFrontEndWidget::script() const
 void SieveScriptDebuggerFrontEndWidget::setScript(const QString &script)
 {
     mSieveTextEditWidget->textEdit()->setPlainText(script);
+    mSieveTextEditWidget->textEdit()->verticalScrollBar()->setValue(mSieveTextEditWidget->textEdit()->verticalScrollBar()->maximum());
 }
 
 bool SieveScriptDebuggerFrontEndWidget::canAccept() const
