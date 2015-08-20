@@ -78,11 +78,6 @@ MESSAGECORE_EXPORT KMime::Types::AddressList splitAddressField(const QByteArray 
 MESSAGECORE_EXPORT QString generateMessageId(const QString &address, const QString &suffix);
 
 /**
-   * Converts the angle brackets in @p text to their HTML representatives.
-   */
-MESSAGECORE_EXPORT QByteArray convertAngleBracketsToHtml(const QByteArray &text);
-
-/**
    * Returns a displayable string from the list of email @p addresses.
    */
 MESSAGECORE_EXPORT QByteArray stripEmailAddr(const QByteArray &addresses);
