@@ -28,7 +28,6 @@
 #include "bilbomedia.h"
 #include "backend.h"
 
-#include <KApplication>
 #include "blogilo_debug.h"
 #include <KMessageBox>
 #include <QFileDialog>

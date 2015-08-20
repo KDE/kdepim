@@ -21,7 +21,6 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, see http://www.gnu.org/licenses/
 */
-//krazy:excludeall=qmethods due to use of KStatusBar::showMessage()
 
 #include "toolbox.h"
 #include "dbman.h"
@@ -45,7 +44,6 @@
 #include "blogilo_debug.h"
 #include <kxmlguiwindow.h>
 #include <kmessagebox.h>
-#include <kdatetime.h>
 
 class Toolbox::Private
 {
