@@ -290,8 +290,7 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, Q
             }
 
             if (!(result == PimCommon::RenameFileDialog::RENAMEFILE_OVERWRITEALL ||
-                    result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL))
-            {
+                    result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL)) {
                 bool fileExists = false;
                 if (curUrl.isLocalFile()) {
                     fileExists = QFile::exists(curUrl.toLocalFile());

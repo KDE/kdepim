@@ -3380,7 +3380,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
                             //Expand all quotes
                             htmlStr += QLatin1String("<div class=\"quotelevelmark\" >") ;
                             htmlStr += QStringLiteral("<a href=\"kmail:levelquote?%1 \">"
-                                                           "<img src=\"%2\" alt=\"\" title=\"\"/></a>")
+                                                      "<img src=\"%2\" alt=\"\" title=\"\"/></a>")
                                        .arg(-1)
                                        .arg(mExpandIcon);
                             htmlStr += QLatin1String("</div><br/>");
@@ -3389,7 +3389,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
                     } else {
                         htmlStr += QLatin1String("<div class=\"quotelevelmark\" >");
                         htmlStr += QStringLiteral("<a href=\"kmail:levelquote?%1 \">"
-                                                       "<img src=\"%2\" alt=\"\" title=\"\"/></a>")
+                                                  "<img src=\"%2\" alt=\"\" title=\"\"/></a>")
                                    .arg(actQuoteLevel)
                                    .arg(mCollapseIcon);
                         htmlStr += QLatin1String("</div>");

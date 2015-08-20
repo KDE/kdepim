@@ -257,67 +257,67 @@ QString CSSHelperBase::printCssDefinitions(bool fixed) const
 
     return
         QStringLiteral("body {\n"
-                            "  font-family: \"%1\" ! important;\n"
-                            "  font-size: %2pt ! important;\n"
-                            "  color: #000000 ! important;\n"
-                            "  background-color: #ffffff ! important\n"
-                            "}\n\n")
+                       "  font-family: \"%1\" ! important;\n"
+                       "  font-size: %2pt ! important;\n"
+                       "  color: #000000 ! important;\n"
+                       "  background-color: #ffffff ! important\n"
+                       "}\n\n")
         .arg(printFont.family(),
              QString::number(printFont.pointSize()))
         +
         QStringLiteral("tr.textAtmH,\n"
-                            "tr.signInProgressH,\n"
-                            "tr.rfc822H,\n"
-                            "tr.encrH,\n"
-                            "tr.signOkKeyOkH,\n"
-                            "tr.signOkKeyBadH,\n"
-                            "tr.signWarnH,\n"
-                            "tr.signErrH,\n"
-                            "div.header {\n"
-                            "%1"
-                            "}\n\n"
+                       "tr.signInProgressH,\n"
+                       "tr.rfc822H,\n"
+                       "tr.encrH,\n"
+                       "tr.signOkKeyOkH,\n"
+                       "tr.signOkKeyBadH,\n"
+                       "tr.signWarnH,\n"
+                       "tr.signErrH,\n"
+                       "div.header {\n"
+                       "%1"
+                       "}\n\n"
 
-                            "div.fancy.header > div {\n"
-                            "  background-color: %2 ! important;\n"
-                            "  color: %3 ! important;\n"
-                            "  padding: 4px ! important;\n"
-                            "  border: solid %3 1px ! important;\n"
-                            "  line-height: normal;\n"
-                            "}\n\n"
+                       "div.fancy.header > div {\n"
+                       "  background-color: %2 ! important;\n"
+                       "  color: %3 ! important;\n"
+                       "  padding: 4px ! important;\n"
+                       "  border: solid %3 1px ! important;\n"
+                       "  line-height: normal;\n"
+                       "}\n\n"
 
-                            "div.fancy.header > div a[href] { color: %3 ! important; }\n\n"
+                       "div.fancy.header > div a[href] { color: %3 ! important; }\n\n"
 
-                            "div.fancy.header > table.outer{\n"
-                            "  background-color: %2 ! important;\n"
-                            "  color: %3 ! important;\n"
-                            "  border-bottom: solid %3 1px ! important;\n"
-                            "  border-left: solid %3 1px ! important;\n"
-                            "  border-right: solid %3 1px ! important;\n"
-                            "}\n\n"
+                       "div.fancy.header > table.outer{\n"
+                       "  background-color: %2 ! important;\n"
+                       "  color: %3 ! important;\n"
+                       "  border-bottom: solid %3 1px ! important;\n"
+                       "  border-left: solid %3 1px ! important;\n"
+                       "  border-right: solid %3 1px ! important;\n"
+                       "}\n\n"
 
-                            "div.spamheader {\n"
-                            "  display:none ! important;\n"
-                            "}\n\n"
+                       "div.spamheader {\n"
+                       "  display:none ! important;\n"
+                       "}\n\n"
 
-                            "div.htmlWarn {\n"
-                            "  border: 2px solid #ffffff ! important;\n"
-                            "  line-height: normal;\n"
-                            "}\n\n"
+                       "div.htmlWarn {\n"
+                       "  border: 2px solid #ffffff ! important;\n"
+                       "  line-height: normal;\n"
+                       "}\n\n"
 
-                            "div.senderpic{\n"
-                            "  font-size:0.8em ! important;\n"
-                            "  border:1px solid black ! important;\n"
-                            "  background-color:%2 ! important;\n"
-                            "}\n\n"
+                       "div.senderpic{\n"
+                       "  font-size:0.8em ! important;\n"
+                       "  border:1px solid black ! important;\n"
+                       "  background-color:%2 ! important;\n"
+                       "}\n\n"
 
-                            "div.senderstatus{\n"
-                            "  text-align:center ! important;\n"
-                            "}\n\n"
+                       "div.senderstatus{\n"
+                       "  text-align:center ! important;\n"
+                       "}\n\n"
 
-                            "div.noprint {\n"
-                            "  display:none ! important;\n"
-                            "}\n\n"
-                           )
+                       "div.noprint {\n"
+                       "  display:none ! important;\n"
+                       "}\n\n"
+                      )
         .arg(headerFont,
              pal.color(QPalette::Background).name(),
              pal.color(QPalette::Foreground).name())
@@ -355,7 +355,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
     // CSS definitions for quote levels 1-3
     for (int i = 0 ; i < 3 ; ++i) {
         quoteCSS += QStringLiteral("div.quotelevel%1 {\n"
-                                        "  color: %2 ! important;\n")
+                                   "  color: %2 ! important;\n")
                     .arg(QString::number(i + 1), mQuoteColor[i].name());
         if (mQuoteFont[i].italic()) {
             quoteCSS += QLatin1String("  font-style: italic ! important;\n");
@@ -372,7 +372,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
     // CSS definitions for quote levels 4+
     for (int i = 0 ; i < 3 ; ++i) {
         quoteCSS += QStringLiteral("div.deepquotelevel%1 {\n"
-                                        "  color: %2 ! important;\n")
+                                   "  color: %2 ! important;\n")
                     .arg(QString::number(i + 1), mQuoteColor[i].name());
         if (mQuoteFont[i].italic()) {
             quoteCSS += QLatin1String("  font-style: italic ! important;\n");
@@ -388,11 +388,11 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
 
     return
         QStringLiteral("body {\n"
-                            "  font-family: \"%1\" ! important;\n"
-                            "  font-size: %2 ! important;\n"
-                            "  color: %3 ! important;\n"
-                            "%4"
-                            "}\n\n")
+                       "  font-family: \"%1\" ! important;\n"
+                       "  font-size: %2 ! important;\n"
+                       "  color: %3 ! important;\n"
+                       "%4"
+                       "}\n\n")
         .arg(bodyFont(fixed).family(),
              bodyFontSize,
              fgColor,
@@ -409,166 +409,166 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
           +
           */
         QStringLiteral("a {\n"
-                            "  color: %1 ! important;\n"
-                            "  text-decoration: none ! important;\n"
-                            "}\n\n"
+                       "  color: %1 ! important;\n"
+                       "  text-decoration: none ! important;\n"
+                       "}\n\n"
 
-                            "a.white {\n"
-                            "  color: white ! important;\n"
-                            "}\n\n"
+                       "a.white {\n"
+                       "  color: white ! important;\n"
+                       "}\n\n"
 
-                            "a.black {\n"
-                            "  color: black ! important;\n"
-                            "}\n\n"
+                       "a.black {\n"
+                       "  color: black ! important;\n"
+                       "}\n\n"
 
-                            "table.textAtm { background-color: %2 ! important; }\n\n"
+                       "table.textAtm { background-color: %2 ! important; }\n\n"
 
-                            "tr.textAtmH {\n"
-                            "  background-color: %3 ! important;\n"
-                            "%4"
-                            "}\n\n"
+                       "tr.textAtmH {\n"
+                       "  background-color: %3 ! important;\n"
+                       "%4"
+                       "}\n\n"
 
-                            "tr.textAtmB {\n"
-                            "  background-color: %3 ! important;\n"
-                            "}\n\n"
+                       "tr.textAtmB {\n"
+                       "  background-color: %3 ! important;\n"
+                       "}\n\n"
 
-                            "table.signInProgress,\n"
-                            "table.rfc822 {\n"
-                            "  background-color: %3 ! important;\n"
-                            "}\n\n"
+                       "table.signInProgress,\n"
+                       "table.rfc822 {\n"
+                       "  background-color: %3 ! important;\n"
+                       "}\n\n"
 
-                            "tr.signInProgressH,\n"
-                            "tr.rfc822H {\n"
-                            "%4"
-                            "}\n\n")
+                       "tr.signInProgressH,\n"
+                       "tr.rfc822H {\n"
+                       "%4"
+                       "}\n\n")
         .arg(linkColor, fgColor, bgColor, headerFont)
         +
         QStringLiteral("table.encr {\n"
-                            "  background-color: %1 ! important;\n"
-                            "}\n\n"
+                       "  background-color: %1 ! important;\n"
+                       "}\n\n"
 
-                            "tr.encrH {\n"
-                            "  background-color: %2 ! important;\n"
-                            "%3"
-                            "}\n\n"
+                       "tr.encrH {\n"
+                       "  background-color: %2 ! important;\n"
+                       "%3"
+                       "}\n\n"
 
-                            "tr.encrB { background-color: %4 ! important; }\n\n")
+                       "tr.encrB { background-color: %4 ! important; }\n\n")
         .arg(cPgpEncrF.name(),
              cPgpEncrH.name(),
              headerFont,
              cPgpEncrB.name())
         +
         QStringLiteral("table.signOkKeyOk {\n"
-                            "  background-color: %1 ! important;\n"
-                            "}\n\n"
+                       "  background-color: %1 ! important;\n"
+                       "}\n\n"
 
-                            "tr.signOkKeyOkH {\n"
-                            "  background-color: %2 ! important;\n"
-                            "%3"
-                            "}\n\n"
+                       "tr.signOkKeyOkH {\n"
+                       "  background-color: %2 ! important;\n"
+                       "%3"
+                       "}\n\n"
 
-                            "tr.signOkKeyOkB { background-color: %4 ! important; }\n\n")
+                       "tr.signOkKeyOkB { background-color: %4 ! important; }\n\n")
         .arg(cPgpOk1F.name(),
              cPgpOk1H.name(),
              headerFont,
              cPgpOk1B.name())
         +
         QStringLiteral("table.signOkKeyBad {\n"
-                            "  background-color: %1 ! important;\n"
-                            "}\n\n"
+                       "  background-color: %1 ! important;\n"
+                       "}\n\n"
 
-                            "tr.signOkKeyBadH {\n"
-                            "  background-color: %2 ! important;\n"
-                            "%3"
-                            "}\n\n"
+                       "tr.signOkKeyBadH {\n"
+                       "  background-color: %2 ! important;\n"
+                       "%3"
+                       "}\n\n"
 
-                            "tr.signOkKeyBadB { background-color: %4 ! important; }\n\n")
+                       "tr.signOkKeyBadB { background-color: %4 ! important; }\n\n")
         .arg(cPgpOk0F.name(),
              cPgpOk0H.name(),
              headerFont,
              cPgpOk0B.name())
         +
         QStringLiteral("table.signWarn {\n"
-                            "  background-color: %1 ! important;\n"
-                            "}\n\n"
+                       "  background-color: %1 ! important;\n"
+                       "}\n\n"
 
-                            "tr.signWarnH {\n"
-                            "  background-color: %2 ! important;\n"
-                            "%3"
-                            "}\n\n"
+                       "tr.signWarnH {\n"
+                       "  background-color: %2 ! important;\n"
+                       "%3"
+                       "}\n\n"
 
-                            "tr.signWarnB { background-color: %4 ! important; }\n\n")
+                       "tr.signWarnB { background-color: %4 ! important; }\n\n")
         .arg(cPgpWarnF.name(),
              cPgpWarnH.name(),
              headerFont,
              cPgpWarnB.name())
         +
         QStringLiteral("table.signErr {\n"
-                            "  background-color: %1 ! important;\n"
-                            "}\n\n"
+                       "  background-color: %1 ! important;\n"
+                       "}\n\n"
 
-                            "tr.signErrH {\n"
-                            "  background-color: %2 ! important;\n"
-                            "%3"
-                            "}\n\n"
+                       "tr.signErrH {\n"
+                       "  background-color: %2 ! important;\n"
+                       "%3"
+                       "}\n\n"
 
-                            "tr.signErrB { background-color: %4 ! important; }\n\n")
+                       "tr.signErrB { background-color: %4 ! important; }\n\n")
         .arg(cPgpErrF.name(),
              cPgpErrH.name(),
              headerFont,
              cPgpErrB.name())
         +
         QStringLiteral("div.htmlWarn {\n"
-                            "  border: 2px solid %1 ! important;\n"
-                            "  line-height: normal;\n"
-                            "}\n\n")
+                       "  border: 2px solid %1 ! important;\n"
+                       "  line-height: normal;\n"
+                       "}\n\n")
         .arg(cHtmlWarning.name())
         +
         QStringLiteral("div.header {\n"
-                            "%1"
-                            "}\n\n"
+                       "%1"
+                       "}\n\n"
 
-                            "div.fancy.header > div {\n"
-                            "  background-color: %2 ! important;\n"
-                            "  color: %3 ! important;\n"
-                            "  border: solid %4 1px ! important;\n"
-                            "  line-height: normal;\n"
-                            "}\n\n"
+                       "div.fancy.header > div {\n"
+                       "  background-color: %2 ! important;\n"
+                       "  color: %3 ! important;\n"
+                       "  border: solid %4 1px ! important;\n"
+                       "  line-height: normal;\n"
+                       "}\n\n"
 
-                            "div.fancy.header > div a[href] { color: %3 ! important; }\n\n"
+                       "div.fancy.header > div a[href] { color: %3 ! important; }\n\n"
 
-                            "div.fancy.header > div a[href]:hover { text-decoration: underline ! important; }\n\n"
+                       "div.fancy.header > div a[href]:hover { text-decoration: underline ! important; }\n\n"
 
-                            "div.fancy.header > div.spamheader {\n"
-                            "  background-color: #cdcdcd ! important;\n"
-                            "  border-top: 0px ! important;\n"
-                            "  padding: 3px ! important;\n"
-                            "  color: black ! important;\n"
-                            "  font-weight: bold ! important;\n"
-                            "  font-size: smaller ! important;\n"
-                            "}\n\n"
+                       "div.fancy.header > div.spamheader {\n"
+                       "  background-color: #cdcdcd ! important;\n"
+                       "  border-top: 0px ! important;\n"
+                       "  padding: 3px ! important;\n"
+                       "  color: black ! important;\n"
+                       "  font-weight: bold ! important;\n"
+                       "  font-size: smaller ! important;\n"
+                       "}\n\n"
 
-                            "div.fancy.header > table.outer {\n"
-                            "  background-color: %5 ! important;\n"
-                            "  color: %4 ! important;\n"
-                            "  border-bottom: solid %4 1px ! important;\n"
-                            "  border-left: solid %4 1px ! important;\n"
-                            "  border-right: solid %4 1px ! important;\n"
-                            "}\n\n"
+                       "div.fancy.header > table.outer {\n"
+                       "  background-color: %5 ! important;\n"
+                       "  color: %4 ! important;\n"
+                       "  border-bottom: solid %4 1px ! important;\n"
+                       "  border-left: solid %4 1px ! important;\n"
+                       "  border-right: solid %4 1px ! important;\n"
+                       "}\n\n"
 
-                            "div.senderpic{\n"
-                            "  padding: 0px ! important;\n"
-                            "  font-size:0.8em ! important;\n"
-                            "  border:1px solid %6 ! important;\n"
-                            // FIXME: InfoBackground crashes KHTML
-                            //"  background-color:InfoBackground ! important;\n"
-                            "  background-color:%5 ! important;\n"
-                            "}\n\n"
+                       "div.senderpic{\n"
+                       "  padding: 0px ! important;\n"
+                       "  font-size:0.8em ! important;\n"
+                       "  border:1px solid %6 ! important;\n"
+                       // FIXME: InfoBackground crashes KHTML
+                       //"  background-color:InfoBackground ! important;\n"
+                       "  background-color:%5 ! important;\n"
+                       "}\n\n"
 
-                            "div.senderstatus{\n"
-                            "  text-align:center ! important;\n"
-                            "}\n\n"
-                           )
+                       "div.senderstatus{\n"
+                       "  text-align:center ! important;\n"
+                       "}\n\n"
+                      )
 
         .arg(headerFont)
         .arg(pal.color(QPalette::Highlight).name(),

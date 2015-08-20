@@ -2093,7 +2093,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
             const bool result = (node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.data());
             if (result)
                 html += QStringLiteral("<div style=\"background:%1; %2"
-                                            "vertical-align:middle; float:%3; %4\">").arg(bgColor.name()).arg(margin)
+                                       "vertical-align:middle; float:%3; %4\">").arg(bgColor.name()).arg(margin)
                         .arg(align).arg(visibility);
             html += subHtml;
             if (result) {
@@ -2517,7 +2517,7 @@ void ViewerPrivate::slotPrintPreview()
         return;
     }
     QPrintPreviewDialog previewdlg(mViewer);
-    connect(&previewdlg, &QPrintPreviewDialog::paintRequested, this, [this](QPrinter *printer) {
+    connect(&previewdlg, &QPrintPreviewDialog::paintRequested, this, [this](QPrinter * printer) {
         mViewer->print(printer);
     });
     previewdlg.exec();

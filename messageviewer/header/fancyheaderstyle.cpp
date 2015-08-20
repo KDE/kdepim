@@ -112,7 +112,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
 
         const QVector<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
         headerStr += QStringLiteral("<tr><th>%1</th>\n"
-                                         "<td>")
+                                    "<td>")
                      .arg(i18n("From: "))
                      + StringUtil::emailAddrAsAnchor(message->from(), StringUtil::DisplayFullAddress)
                      + (message->headerByType("Resent-From") ? QLatin1String("&nbsp;")
@@ -148,7 +148,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
         }
 
         headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
-                                             "<td>%2</td></tr>\n")
+                                        "<td>%2</td></tr>\n")
                          .arg(i18nc("To-field of the mail header.", "To: "))
                          .arg(to));
     }
@@ -156,7 +156,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     // cc line, if an
     if (strategy->showHeader(QStringLiteral("cc")) && message->cc(false))
         headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
-                                             "<td>%2</td></tr>\n")
+                                        "<td>%2</td></tr>\n")
                          .arg(i18n("CC: "))
                          .arg(StringUtil::emailAddrAsAnchor(message->cc(), StringUtil::DisplayFullAddress,
                                  QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
@@ -166,13 +166,13 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     // Bcc line, if any
     if (strategy->showHeader(QStringLiteral("bcc")) && message->bcc(false))
         headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
-                                             "<td>%2</td></tr>\n")
+                                        "<td>%2</td></tr>\n")
                          .arg(i18n("BCC: "))
                          .arg(StringUtil::emailAddrAsAnchor(message->bcc(), StringUtil::DisplayFullAddress)));
 
     if (strategy->showHeader(QStringLiteral("date")))
         headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
-                                             "<td dir=\"%2\">%3</td></tr>\n")
+                                        "<td dir=\"%2\">%3</td></tr>\n")
                          .arg(i18n("Date: "))
                          .arg(MessageViewer::HeaderStyleUtil::directionOf(MessageViewer::HeaderStyleUtil::dateStr(message->date()->dateTime())))
                          .arg(MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ false))));
@@ -180,7 +180,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
         if (strategy->showHeader(QStringLiteral("user-agent"))) {
             if (message->headerByType("User-Agent")) {
                 headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
-                                                     "<td>%2</td></tr>\n")
+                                                "<td>%2</td></tr>\n")
                                  .arg(i18n("User-Agent: "))
                                  .arg(MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("User-Agent")->asUnicodeString())));
             }
@@ -189,7 +189,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
         if (strategy->showHeader(QStringLiteral("x-mailer"))) {
             if (message->headerByType("X-Mailer")) {
                 headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
-                                                     "<td>%2</td></tr>\n")
+                                                "<td>%2</td></tr>\n")
                                  .arg(i18n("X-Mailer: "))
                                  .arg(MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("X-Mailer")->asUnicodeString())));
             }
@@ -201,7 +201,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
         const QString component = message->headerByType("X-Bugzilla-Component") ? message->headerByType("X-Bugzilla-Component")->asUnicodeString() : QString();
         const QString status    = message->headerByType("X-Bugzilla-Status")    ? message->headerByType("X-Bugzilla-Status")->asUnicodeString() : QString();
         headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
-                                             "<td>%2/%3, <strong>%4</strong></td></tr>\n")
+                                        "<td>%2/%3, <strong>%4</strong></td></tr>\n")
                          .arg(i18n("Bugzilla: "))
                          .arg(MessageViewer::HeaderStyleUtil::strToHtml(product))
                          .arg(MessageViewer::HeaderStyleUtil::strToHtml(component))
@@ -211,7 +211,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     if (strategy->showHeader(QStringLiteral("disposition-notification-to")) && message->headerByType("Disposition-Notification-To")) {
         const QString to = message->headerByType("Disposition-Notification-To") ? message->headerByType("Disposition-Notification-To")->asUnicodeString() : QString();
         headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
-                                             "<td>%2</tr>\n")
+                                        "<td>%2</tr>\n")
                          .arg(i18n("MDN To: "))
                          .arg(to));
     }

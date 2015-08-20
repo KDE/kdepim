@@ -118,7 +118,7 @@ QFunctionPointer PluginLoaderBase::mainFunc(const QString &type, const char *mf_
     mPluginMap[ type ] = pmd;
 
     const QString factory_name = libName + QLatin1Char('_') + QString::fromLatin1(mf_name);
-    auto sym = const_cast<QLibrary*>(lib)->resolve(factory_name.toLatin1());
+    auto sym = const_cast<QLibrary *>(lib)->resolve(factory_name.toLatin1());
     if (!sym) {
         qCWarning(MESSAGEVIEWER_LOG) << "No symbol named \"" << factory_name.toLatin1() << "\" (" << factory_name << ") was found in library \"" << libName << "\"";
         return 0;
