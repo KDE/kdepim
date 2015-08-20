@@ -57,6 +57,7 @@ add_library(composereditorng ${libcomposereditor_ng_SRCS})
 generate_export_header(composereditorng BASE_NAME composereditorng)
 
 target_link_libraries(composereditorng 
+ PRIVATE
    KF5::WebKit Qt5::WebKitWidgets KF5::PimTextEdit KF5::KDELibs4Support KF5::SonnetCore pimcommon
 )
 
