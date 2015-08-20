@@ -61,7 +61,7 @@ void PrintProgress::addMessage(const QString &msg)
     QString head = QLatin1String("<qt><b>") + i18n("Progress") +
                    QLatin1String(":</b><ul>");
 
-    QString foot = QStringLiteral("</ul></qt>");
+    const QString foot = QStringLiteral("</ul></qt>");
 
     QString body;
     QStringList::ConstIterator it;
