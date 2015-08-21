@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_BINARY_DIR}/accountwizard )
 add_definitions (-DTEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 add_definitions (-DCURRENT_SOURCE_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}\\"")
 

@@ -10,7 +10,6 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_subdirectory(pics)
 
 set(ktnef_SRCS
-  ktnef_debug.cpp
   attachpropertydialog.cpp
   ktnefmain.cpp
   ktnefview.cpp
@@ -18,6 +17,7 @@ set(ktnef_SRCS
   messagepropertydialog.cpp
   qwmf.cpp
 )
+ecm_qt_declare_logging_category(ktnef_SRCS HEADER ktnef_debug.h IDENTIFIER KTNEFAPPS_LOG CATEGORY_NAME log_ktnefapps)
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pics/hicolor/*-apps-ktnef.png")
 ecm_add_app_icon(ktnef_SRCS ICONS ${ICONS_SRCS})

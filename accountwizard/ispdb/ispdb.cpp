@@ -19,7 +19,7 @@
 */
 
 #include "ispdb.h"
-#include "../accountwizard_debug.h"
+#include "accountwizard_debug.h"
 #include <kio/job.h>
 #include <kio/jobclasses.h>
 #include <KLocalizedString>

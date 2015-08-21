@@ -18,7 +18,7 @@
 
 #include "autoconfigkolabmail.h"
 #include <QDomDocument>
-#include "../accountwizard_debug.h"
+#include "accountwizard_debug.h"
 
 AutoconfigKolabMail::AutoconfigKolabMail(QObject *parent)
     : Ispdb(parent)
