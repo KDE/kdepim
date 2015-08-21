@@ -4,6 +4,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"korgac\")
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+
 add_subdirectory(pixmaps)
 
 if(BUILD_TESTING)
@@ -14,8 +15,9 @@ endif()
 
 set(korgac_SRCS
   koalarmclient.cpp
-  koalarmclient_debug.cpp
 )
+
+ecm_qt_declare_logging_category(korgac_SRCS HEADER koalarmclient_debug.h IDENTIFIER KOALARMCLIENT_LOG CATEGORY_NAME log_koalarmclient)
 
 set(korgac_SRCS ${korgac_SRCS} korgacmain.cpp)
 

@@ -26,7 +26,6 @@ endif()
 ########### next target ###############
 
 set(eventviews_LIB_SRCS
-  calendarview_debug.cpp
   eventview_p.cpp
   eventview.cpp
   helper.cpp
@@ -77,6 +76,7 @@ set(eventviews_LIB_SRCS
 
 kconfig_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc)
 
+ecm_qt_declare_logging_category(eventviews_LIB_SRCS HEADER calendarview_debug.h IDENTIFIER CALENDARVIEW_LOG CATEGORY_NAME log_calendarview)
 ki18n_wrap_ui(eventviews_LIB_SRCS
   agenda/timescaleedit_base.ui
 )

@@ -28,10 +28,11 @@ set(libmailimporter_SRCS
   filterbalsa.cpp 
   selectthunderbirdprofilewidget.cpp 
   othermailerutil.cpp
-  mailimporter_debug.cpp
 )
 
 ki18n_wrap_ui(libmailimporter_SRCS ui/importmailswidget.ui ui/selectthunderbirdprofilewidget.ui)
+
+ecm_qt_declare_logging_category(libmailimporter_SRCS HEADER mailimporter_debug.h IDENTIFIER MAILIMPORTER_LOG CATEGORY_NAME log_mailimporter)
 
 add_library(mailimporter ${libmailimporter_SRCS})
 generate_export_header(mailimporter BASE_NAME mailimporter)
