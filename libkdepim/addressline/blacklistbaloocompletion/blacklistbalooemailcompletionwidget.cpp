@@ -256,3 +256,11 @@ void BlackListBalooEmailCompletionWidget::slotLinkClicked(const QString &link)
         slotSearch();
     }
 }
+
+void BlackListBalooEmailCompletionWidget::slotShowAllBlacklistedEmail()
+{
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral("kpimbalooblacklist"));
+    KConfigGroup group(config, "AddressLineEdit");
+    const QStringList balooBlackList = group.readEntry("BalooBackList", QStringList());
+    slotEmailFound(balooBlackList);
+}

@@ -50,6 +50,7 @@ private Q_SLOTS:
     void slotEmailFound(const QStringList &list);
     void slotCheckIfUpdateBlackListIsNeeded();
     void slotSaveChanges();
+    void slotShowAllBlacklistedEmail();
 private:
     void hideMoreResultAndChangeLimit();
     QStringList mOriginalExcludeDomain;
