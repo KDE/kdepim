@@ -48,7 +48,7 @@
 #include <messageviewer/viewer/objecttreeemptysource.h>
 #include <messageviewer/viewer/objecttreeparser.h>
 #ifndef QT_NO_CURSOR
-#include <messageviewer/utils/kcursorsaver.h>
+#include <mailcommon/util/kcursorsaver.h>
 #endif
 
 #include <sonnet/dictionarycombobox.h>
@@ -311,7 +311,7 @@ void MessageComposer::ComposerViewBase::send(MessageComposer::MessageSender::Sen
     mSaveIn = saveIn;
 
 #ifndef QT_NO_CURSOR
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 #endif
 
     const KIdentityManagement::Identity identity = identityManager()->identityForUoid(m_identityCombo->currentIdentity());
@@ -1797,7 +1797,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToSign(bool doSignComple
     case Kleo::Ask: {
         // the user wants to be asked or has to be asked
 #ifndef QT_NO_CURSOR
-        MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+        MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 #endif
         const QString msg = i18n("Examination of the recipient's signing preferences "
                                  "yielded that you be asked whether or not to sign "
@@ -1823,7 +1823,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToSign(bool doSignComple
     case Kleo::Conflict: {
         // warn the user that there are conflicting signing preferences
 #ifndef QT_NO_CURSOR
-        MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+        MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 #endif
         const QString msg = i18n("There are conflicting signing preferences "
                                  "for these recipients.\n"
@@ -1847,7 +1847,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToSign(bool doSignComple
     break;
     case Kleo::Impossible: {
 #ifndef QT_NO_CURSOR
-        MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+        MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 #endif
         const QString msg = i18n("You have requested to sign this message, "
                                  "but no valid signing keys have been configured "
@@ -1868,7 +1868,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToSign(bool doSignComple
     if (!sign || !doSignCompletely) {
         if (MessageComposer::MessageComposerSettings::self()->cryptoWarningUnsigned()) {
 #ifndef QT_NO_CURSOR
-            MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+            MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 #endif
             const QString msg = sign && !doSignCompletely ?
                                 i18n("Some parts of this message will not be signed.\n"
@@ -1919,7 +1919,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToEncrypt(bool doEncrypt
     case Kleo::Ask: {
         // the user wants to be asked or has to be asked
 #ifndef QT_NO_CURSOR
-        MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+        MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 #endif
         const QString msg = opportunistic
                             ? i18n("Valid trusted encryption keys were found for all recipients.\n"
@@ -1952,7 +1952,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToEncrypt(bool doEncrypt
     case Kleo::Conflict: {
         // warn the user that there are conflicting encryption preferences
 #ifndef QT_NO_CURSOR
-        MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+        MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 #endif
         const QString msg = i18n("There are conflicting encryption preferences "
                                  "for these recipients.\n"
@@ -1976,7 +1976,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToEncrypt(bool doEncrypt
     break;
     case Kleo::Impossible: {
 #ifndef QT_NO_CURSOR
-        MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+        MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 #endif
         const QString msg = i18n("You have requested to encrypt this message, "
                                  "and to encrypt a copy to yourself, "
@@ -1998,7 +1998,7 @@ bool MessageComposer::ComposerViewBase::determineWhetherToEncrypt(bool doEncrypt
     if (!encrypt || !doEncryptCompletely) {
         if (MessageComposer::MessageComposerSettings::self()->cryptoWarningUnencrypted()) {
 #ifndef QT_NO_CURSOR
-            MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+            MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 #endif
             const QString msg = !doEncryptCompletely ?
                                 i18n("Some parts of this message will not be encrypted.\n"

@@ -24,7 +24,7 @@
 #include "mailcommon/util/mailutil.h"
 #include "pimcommon/util/createresource.h"
 
-#include "messageviewer/utils/kcursorsaver.h"
+#include "mailcommon/util/kcursorsaver.h"
 
 #include <MailTransport/mailtransport/transportmanager.h>
 
@@ -166,7 +166,7 @@ void ImportMailJob::restoreTransports()
         Q_EMIT error(i18n("mailtransports file could not be found in the archive."));
     } else {
         Q_EMIT info(i18n("Restore transports..."));
-        MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+        MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
         const KArchiveEntry *transport = mArchiveDirectory->entry(path);
         if (transport && transport->isFile()) {
             const KArchiveFile *fileTransport = static_cast<const KArchiveFile *>(transport);
@@ -254,7 +254,7 @@ void ImportMailJob::restoreTransports()
 void ImportMailJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
     QDir dir(mTempDirName);
     dir.mkdir(Utils::resourcesPath());
     Q_FOREACH (const QString &filename, mFileList) {
@@ -456,7 +456,7 @@ void ImportMailJob::restoreMails()
 {
     QStringList listResourceToSync;
     Q_EMIT info(i18n("Restore mails..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
     QDir dir(mTempDirName);
     dir.mkdir(Utils::mailsPath());
     const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::mailsPath());
@@ -576,7 +576,7 @@ void ImportMailJob::restoreMails()
 
 void ImportMailJob::restoreConfig()
 {
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
     const QString filtersPath(Utils::configsPath() + QLatin1String("filters"));
     if (!mFileList.contains(filtersPath)) {
         Q_EMIT error(i18n("filters file could not be found in the archive."));
@@ -849,7 +849,7 @@ void ImportMailJob::restoreIdentity()
         Q_EMIT error(i18n("emailidentities file could not be found in the archive."));
     } else {
         Q_EMIT info(i18n("Restore identities..."));
-        MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+        MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
         const KArchiveEntry *identity = mArchiveDirectory->entry(path);
         if (identity && identity->isFile()) {
             const KArchiveFile *fileIdentity = static_cast<const KArchiveFile *>(identity);
@@ -941,7 +941,7 @@ void ImportMailJob::restoreAkonadiDb()
         Q_EMIT error(i18n("Akonadi database file could not be found in the archive."));
     } else {
         Q_EMIT info(i18n("Restore Akonadi Database..."));
-        MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+        MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 
         const KArchiveEntry *akonadiDataBaseEntry = mArchiveDirectory->entry(akonadiDbPath);
         if (akonadiDataBaseEntry && akonadiDataBaseEntry->isFile()) {

@@ -17,7 +17,7 @@
 
 #include "exportnotesjob.h"
 
-#include "messageviewer/utils/kcursorsaver.h"
+#include "mailcommon/util/kcursorsaver.h"
 
 #include <AkonadiCore/AgentManager>
 
@@ -66,7 +66,7 @@ void ExportNotesJob::start()
 void ExportNotesJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
     const QString knotesStr(QStringLiteral("knotesrc"));
     const QString knotesrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + knotesStr;
     backupFile(knotesrc, Utils::configsPath(), knotesStr);
@@ -98,7 +98,7 @@ void ExportNotesJob::backupConfig()
 void ExportNotesJob::backupData()
 {
     showInfo(i18n("Backing up data..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 
 #if 0  //Code for knote <knote-akonadi
     const QString icsfileStr = QLatin1String("notes.ics");

@@ -4,7 +4,7 @@
 #include <QCursor>
 #include <QApplication>
 
-namespace MessageViewer
+namespace MailCommon
 {
 
 /**

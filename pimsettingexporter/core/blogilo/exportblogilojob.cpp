@@ -17,7 +17,7 @@
 
 #include "exportblogilojob.h"
 
-#include "messageviewer/utils/kcursorsaver.h"
+#include "mailcommon/util/kcursorsaver.h"
 
 #include <AkonadiCore/AgentManager>
 
@@ -64,7 +64,7 @@ void ExportBlogiloJob::start()
 void ExportBlogiloJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
     const QString blogiloStr(QStringLiteral("blogilorc"));
     const QString blogilorc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + blogiloStr;
     backupFile(blogilorc, Utils::configsPath(), blogiloStr);
@@ -75,7 +75,7 @@ void ExportBlogiloJob::backupConfig()
 void ExportBlogiloJob::backupData()
 {
     showInfo(i18n("Backing up data..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
     const QString dbfileStr = QStringLiteral("blogilo.db");
     const QString dbfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/blogilo/") + dbfileStr ;
 

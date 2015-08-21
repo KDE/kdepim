@@ -16,7 +16,7 @@
 */
 
 #include "exportaddressbookjob.h"
-#include "messageviewer/utils/kcursorsaver.h"
+#include "mailcommon/util/kcursorsaver.h"
 
 #include <AkonadiCore/AgentManager>
 
@@ -66,7 +66,7 @@ void ExportAddressbookJob::start()
 void ExportAddressbookJob::backupResources()
 {
     showInfo(i18n("Backing up resources..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach (const Akonadi::AgentInstance &agent, list) {
@@ -107,7 +107,7 @@ void ExportAddressbookJob::backupResources()
 void ExportAddressbookJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
 
     const QString kaddressbookStr(QStringLiteral("kaddressbookrc"));
     const QString kaddressbookrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kaddressbookStr;

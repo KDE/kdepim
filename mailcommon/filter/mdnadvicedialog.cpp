@@ -28,7 +28,7 @@ using MessageComposer::MessageFactory;
 
 #include <messageviewer/settings/globalsettings.h>
 #ifndef QT_NO_CURSOR
-#include <messageviewer/utils/kcursorsaver.h>
+#include <mailcommon/util/kcursorsaver.h>
 #endif
 #include <messageviewer/viewer/objecttreeparser.h>
 
@@ -282,7 +282,7 @@ int MDNAdviceHelper::requestAdviceOnMDN(const char *what)
     for (int i = 0; i < numMdnMessageBoxes; ++i) {
         if (!qstrcmp(what, mdnMessageBoxes[i].dontAskAgainID)) {
 #ifndef QT_NO_CURSOR
-            const MessageViewer::KCursorSaver saver(Qt::ArrowCursor);
+            const MailCommon::KCursorSaver saver(Qt::ArrowCursor);
 #endif
             MessageComposer::MDNAdvice answer;
             answer = questionIgnoreSend(i18n(mdnMessageBoxes[i].text),

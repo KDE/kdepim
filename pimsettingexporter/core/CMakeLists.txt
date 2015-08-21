@@ -73,7 +73,6 @@ generate_export_header(pimsettingexporterprivate BASE_NAME pimsettingexporter)
 
 target_link_libraries(pimsettingexporterprivate
 PRIVATE
-  messageviewer
   KF5::AkonadiCore
   KF5::AkonadiPrivate
   KF5::Mime

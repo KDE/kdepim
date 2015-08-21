@@ -17,7 +17,7 @@
 
 #include "exportakregatorjob.h"
 
-#include "messageviewer/utils/kcursorsaver.h"
+#include "mailcommon/util/kcursorsaver.h"
 
 #include <AkonadiCore/AgentManager>
 
@@ -64,7 +64,7 @@ void ExportAkregatorJob::start()
 void ExportAkregatorJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
     const QString akregatorStr(QStringLiteral("akregatorrc"));
     const QString akregatorsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + akregatorStr;
     backupFile(akregatorsrc, Utils::configsPath(), akregatorStr);
@@ -74,7 +74,7 @@ void ExportAkregatorJob::backupConfig()
 void ExportAkregatorJob::backupData()
 {
     showInfo(i18n("Backing up data..."));
-    MessageViewer::KCursorSaver busy(MessageViewer::KBusyPtr::busy());
+    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
     const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/akregator") ;
     QDir akregatorDirectory(akregatorDir);
     if (akregatorDirectory.exists()) {
