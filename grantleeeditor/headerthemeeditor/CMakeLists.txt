@@ -2,7 +2,6 @@ project( headerthemeeditor )
 
 set(headerthemeeditor_SRCS
   main.cpp
-  headerthemeeditor_debug.cpp
   themeeditormainwindow.cpp 
   themeeditorpage.cpp
   previewwidget.cpp
@@ -15,6 +14,7 @@ set(headerthemeeditor_SRCS
   themeeditorwidget.cpp
 )
 
+ecm_qt_declare_logging_category(headerthemeeditor_SRCS HEADER headerthemeeditor_debug.h IDENTIFIER HEADERTHEMEEDITOR_LOG CATEGORY_NAME log_headerthemeeditor)
 
 add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )
 target_link_libraries(headerthemeeditor KF5::Mime  KF5::NewStuff pimcommon messageviewer grantleethemeeditor KF5::DBusAddons grantleetheme)

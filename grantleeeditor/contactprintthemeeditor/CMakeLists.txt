@@ -3,7 +3,6 @@ project( contactprintthemeeditor )
 
 set(contactprintthemeeditor_SRCS
   main.cpp
-  contactprintthemeeditor_debug.cpp
   defaultcompletion.cpp
   editorpage.cpp
   contactprintthemeconfiguredialog.cpp
@@ -15,7 +14,7 @@ set(contactprintthemeeditor_SRCS
   themetemplatewidget.cpp
   contactprintthemepreview.cpp
 )
-
+ecm_qt_declare_logging_category(contactprintthemeeditor_SRCS HEADER contactprintthemeeditor_debug.h IDENTIFIER CONTACTPRINTTHEMEEDITOR_LOG CATEGORY_NAME log_contactprintthemeeditor)
 
 add_executable(contactprintthemeeditor ${contactprintthemeeditor_SRCS} )
 target_link_libraries(contactprintthemeeditor

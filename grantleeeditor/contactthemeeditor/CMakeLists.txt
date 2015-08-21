@@ -2,7 +2,6 @@ project( contactthemeeditor )
 
 set(contactthemeeditor_SRCS
   main.cpp
-  contactthemeeditor_debug.cpp
   defaultcompletion.cpp
   contactdefaulttemplate.cpp
   contacteditorwidget.cpp
@@ -15,7 +14,7 @@ set(contactthemeeditor_SRCS
   contacteditorutil.cpp
   contactpreviewwidget.cpp
 )
-
+ecm_qt_declare_logging_category(contactthemeeditor_SRCS HEADER contactthemeeditor_debug.h IDENTIFIER CONTACTTHEMEEDITOR_LOG CATEGORY_NAME log_contactthemeeditor)
 
 add_executable(contactthemeeditor ${contactthemeeditor_SRCS} )
 target_link_libraries(contactthemeeditor
