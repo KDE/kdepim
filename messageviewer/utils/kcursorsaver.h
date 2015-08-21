@@ -3,7 +3,6 @@
 
 #include <QCursor>
 #include <QApplication>
-#include "messageviewer_export.h"
 
 namespace MessageViewer
 {
