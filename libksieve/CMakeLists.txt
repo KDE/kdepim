@@ -31,7 +31,10 @@ add_library(ksieve ${ksieve_LIB_SRCS})
 generate_export_header(ksieve BASE_NAME ksieve)
 
 
-target_link_libraries(ksieve Qt5::Core KF5::I18n)
+target_link_libraries(ksieve 
+PRIVATE
+  Qt5::Core KF5::I18n
+)
 
 target_include_directories(ksieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/parser>")
 
