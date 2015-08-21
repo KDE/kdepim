@@ -46,17 +46,9 @@ set(libkdgantt_mocable_files
   kdganttlegend
   kdgantttimescalezoomdialog
 )
-#foreach(it ${libkdgantt_mocable_files})
-#  qt5_generate_moc(${it}.h ${CMAKE_BINARY_DIR}/kdgantt2/moc_${it}.cpp)
-#  macro_add_file_dependencies(${it}.cpp ${CMAKE_BINARY_DIR}/kdgantt2/moc_${it}.cpp)
-#endforeach(it)
-#
-#qt5_generate_moc(kdganttgraphicsview_p.h ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
-#macro_add_file_dependencies(kdganttgraphicsview.cpp ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
-
 add_library(kdgantt2 ${libkdgantt2_SRCS})
 generate_export_header(kdgantt2 BASE_NAME kdgantt)
-target_link_libraries(kdgantt2  Qt5::Widgets Qt5::PrintSupport )
+target_link_libraries(kdgantt2  PRIVATE Qt5::Widgets Qt5::PrintSupport )
 
 target_include_directories(kdgantt2 PUBLIC "$<BUILD_INTERFACE:${kdgantt2_SOURCE_DIR};${kdgantt2_BINARY_DIR}>")
 
