@@ -38,7 +38,7 @@
 #include <KColorScheme>
 #include <KComboBox>
 #include <QDialog>
-#include <QLineEdit>
+#include <KLineEdit>
 #include <KLocalizedString>
 #include <KMessageBox>
 
@@ -95,8 +95,10 @@ void CollectionGeneralPage::init(const Akonadi::Collection &collection)
         label = new QLabel(i18nc("@label:textbox Name of the folder.", "&Name:"), this);
         hl->addWidget(label);
 
-        mNameEdit = new QLineEdit(this);
-        connect(mNameEdit, &QLineEdit::textChanged, this, &CollectionGeneralPage::slotNameChanged);
+        mNameEdit = new KLineEdit(this);
+        mNameEdit->setTrapReturnKey(true);
+
+        connect(mNameEdit, &KLineEdit::textChanged, this, &CollectionGeneralPage::slotNameChanged);
         label->setBuddy(mNameEdit);
         hl->addWidget(mNameEdit);
     }
