@@ -220,16 +220,11 @@ void RecipientsEditor::slotLineAdded(MultiplyingLine *line)
 
     if (count > 0) {
         if (count == 1) {
-            if (MessageComposer::MessageComposerSettings::self()->secondRecipientTypeDefault() ==
-                    MessageComposer::MessageComposerSettings::EnumSecondRecipientTypeDefault::To) {
+            RecipientLineNG *last_rec = qobject_cast< RecipientLineNG * >(lines().last());
+            if (last_rec && last_rec->recipientType() == Recipient::Bcc) {
                 rec->setRecipientType(Recipient::To);
             } else {
-                RecipientLineNG *last_rec = qobject_cast< RecipientLineNG * >(lines().last());
-                if (last_rec && last_rec->recipientType() == Recipient::Bcc) {
-                    rec->setRecipientType(Recipient::To);
-                } else {
-                    rec->setRecipientType(Recipient::Cc);
-                }
+                rec->setRecipientType(Recipient::Cc);
             }
         } else {
             RecipientLineNG *last_rec = qobject_cast< RecipientLineNG * >(lines().at(lines().count() - 2));

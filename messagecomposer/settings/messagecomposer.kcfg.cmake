@@ -79,13 +79,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>Maximum number of recipient entries:</label>
       <default>200</default>
     </entry>
-    <entry name="SecondRecipientTypeDefault" type="Enum">
-      <choices>
-        <choice name="To"/>
-        <choice name="Cc"/>
-      </choices>
-      <default>To</default>
-    </entry>
     
    <entry name="OutlookCompatibleAttachments" type="Bool" key="outlook-compatible-attachments">
       <label>Outlook-compatible attachment naming</label>
