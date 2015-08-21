@@ -65,6 +65,7 @@ target_link_libraries(test_verify
   KF5::QGpgme
   KF5::CoreAddons
   KF5::I18n
+  Qt5::Widgets
 )
 
 ########### next target ###############
