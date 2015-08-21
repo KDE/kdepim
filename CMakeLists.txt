@@ -169,7 +169,7 @@ configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version
 
 include_directories(${kdepim_SOURCE_DIR} ${kdepim_BINARY_DIR})
 
-set(KF5AkonadiServer_MIN_VERSION "5.0.51")
+set(KF5AkonadiServer_MIN_VERSION "5.1.51")
 find_package(KF5AkonadiServer ${KF5AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 
 find_package(Xsltproc)
