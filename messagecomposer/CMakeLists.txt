@@ -161,12 +161,12 @@ PUBLIC
   KF5::PimTextEdit
   KF5::IdentityManagement
   messagecore
-  messageviewer
   templateparser
   kleo
   pimcommon
-  KF5::AkonadiWidgets
 PRIVATE
+  messageviewer
+  KF5::AkonadiWidgets
   kdepim
   KF5::CalendarCore
   KF5::KIOCore
