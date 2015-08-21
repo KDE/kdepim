@@ -36,7 +36,6 @@ set(followupreminderagent_job_SRCS
 )
 
 set(followupreminderagent_SRCS
-    followupreminderagent_debug.cpp
     followupreminderagent.cpp
     followupremindermanager.cpp
     followupreminderinfodialog.cpp
@@ -45,6 +44,7 @@ set(followupreminderagent_SRCS
     ${followupreminderagent_job_SRCS}
 )
 
+ecm_qt_declare_logging_category(followupreminderagent_SRCS HEADER followupreminderagent_debug.h IDENTIFIER FOLLOWUPREMINDERAGENT_LOG CATEGORY_NAME log_followupreminderagent)
 qt5_add_dbus_adaptor(followupreminderagent_SRCS org.freedesktop.Akonadi.FollowUpReminder.xml followupreminderagent.h FollowUpReminderAgent)
 
 add_executable(akonadi_followupreminder_agent ${followupreminderagent_SRCS})

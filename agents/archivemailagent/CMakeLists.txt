@@ -3,7 +3,6 @@ project(archivemailagent)
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_archivemail_agent\")
 
 set(archivemailagent_SRCS
-   archivemailagent_debug.cpp
    archivemailkernel.cpp
    archivemailagent.cpp
    archivemailmanager.cpp
@@ -24,6 +23,7 @@ kconfig_add_kcfg_files(archivemailagent_SRCS
 
 qt5_add_dbus_adaptor(archivemailagent_SRCS org.freedesktop.Akonadi.ArchiveMailAgent.xml archivemailagent.h ArchiveMailAgent)
 
+ecm_qt_declare_logging_category(archivemailagent_SRCS HEADER archivemailagent_debug.h IDENTIFIER ARCHIVEMAILAGENT_LOG CATEGORY_NAME log_archivemailagent)
 
 
 ki18n_wrap_ui(archivemailagent_SRCS ui/archivemailwidget.ui )

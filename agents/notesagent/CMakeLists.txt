@@ -3,7 +3,6 @@ project(notesagent)
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_notes_agent\")
 
 set(notesagent_SRCS
-    notesagent_debug.cpp
     notesagent.cpp
     notesmanager.cpp
     notesagentsettingsdialog.cpp
@@ -17,6 +16,7 @@ kconfig_add_kcfg_files(notesagent_SRCS
 
 
 qt5_add_dbus_adaptor(notesagent_SRCS org.freedesktop.Akonadi.NotesAgent.xml notesagent.h NotesAgent)
+ecm_qt_declare_logging_category(notesagent_SRCS HEADER notesagent_debug.h IDENTIFIER NOTESAGENT_LOG CATEGORY_NAME log_notesagentagent)
 
 add_executable(akonadi_notes_agent ${notesagent_SRCS})
 

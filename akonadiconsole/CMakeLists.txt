@@ -13,7 +13,6 @@ add_subdirectory(icons)
 add_subdirectory(kconf_update)
 
 set(akonadiconsole_bin_SRCS
-  akonadiconsole_debug.cpp
   agentwidget.cpp
   agentconfigdialog.cpp
   agentconfigmodel.cpp
@@ -44,6 +43,8 @@ set(akonadiconsole_bin_SRCS
   jobtrackermodel.cpp
   tagpropertiesdialog.cpp
 )
+
+ecm_qt_declare_logging_category(akonadiconsole_bin_SRCS HEADER akonadiconsole_debug.h IDENTIFIER AKONADICONSOLE_LOG CATEGORY_NAME log_akonadiconsole)
 
 qt5_generate_dbus_interface(jobtracker.h org.freedesktop.Akonadi.JobTracker.xml)
 qt5_add_dbus_adaptor(akonadiconsole_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.JobTracker.xml jobtracker.h JobTracker)
