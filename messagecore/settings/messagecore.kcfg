@@ -37,14 +37,6 @@
     <entry name="UseDefaultColors" type="Bool" key="defaultColors">
       <default>true</default>
     </entry>
-        <entry name="FallbackCharacterEncoding" type="String"
-    key="FallbackCharacterEncoding">
-      <default code="true">QString::fromLatin1(
-      QTextCodec::codecForLocale()-&gt;name() ).toLower() ==
-      QLatin1String("eucjp") ? QLatin1String("jis7") : QString::fromLatin1(
-      QTextCodec::codecForLocale()-&gt;name() ).toLower()</default>
-      <whatsthis>Some emails, especially those generated automatically, do not specify the character encoding which needs to be used to properly display them. In such cases a fallback character encoding will be used, which you can configure here. Set it to the character encoding most commonly used in your part of the world. As a default the encoding configured for the whole system is used.</whatsthis>
-    </entry>
     <entry name="OverrideCharacterEncoding" type="String"
     key="encoding">
       <default></default>

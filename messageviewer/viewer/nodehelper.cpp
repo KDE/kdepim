@@ -554,11 +554,6 @@ const QTextCodec *NodeHelper::codec(KMime::Content *node)
         c = codecForName(node->contentType()->charset());
     }
     if (!c) {
-        // Ok, no override and nothing in the message, let's use the fallback
-        // the user configured
-        c = codecForName(MessageCore::GlobalSettings::self()->fallbackCharacterEncoding().toLatin1());
-    }
-    if (!c) {
         // no charset means us-ascii (RFC 2045), so using local encoding should
         // be okay
         c = mLocalCodec;

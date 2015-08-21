@@ -40,13 +40,10 @@ ConfigureWidget::ConfigureWidget(QWidget *parent)
     layout()->setContentsMargins(0, 0, 0, 0);
 
     QStringList encodings = NodeHelper::supportedEncodings(false);
-    mSettingsUi->fallbackCharacterEncoding->addItems(encodings);
     encodings.prepend(i18n("Auto"));
     mSettingsUi->overrideCharacterEncoding->addItems(encodings);
     mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
 
-    mSettingsUi->fallbackCharacterEncoding->setWhatsThis(
-        MessageCore::GlobalSettings::self()->fallbackCharacterEncodingItem()->whatsThis());
     mSettingsUi->overrideCharacterEncoding->setWhatsThis(
         MessageCore::GlobalSettings::self()->overrideCharacterEncodingItem()->whatsThis());
     mSettingsUi->kcfg_ShowEmoticons->setWhatsThis(
@@ -56,7 +53,6 @@ ConfigureWidget::ConfigureWidget(QWidget *parent)
     mSettingsUi->kcfg_ShowExpandQuotesMark->setWhatsThis(
         GlobalSettings::self()->showExpandQuotesMarkItem()->whatsThis());
 
-    connect(mSettingsUi->fallbackCharacterEncoding, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ConfigureWidget::settingsChanged);
     connect(mSettingsUi->overrideCharacterEncoding, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ConfigureWidget::settingsChanged);
 
     connect(mSettingsUi->configureCustomHeadersButton, &QPushButton::clicked, this, &ConfigureWidget::showCustomHeadersDialog);
@@ -70,7 +66,6 @@ ConfigureWidget::~ConfigureWidget()
 
 void ConfigureWidget::readConfig()
 {
-    readCurrentFallbackCodec();
     readCurrentOverrideCodec();
     mSettingsUi->kcfg_CollapseQuoteLevelSpin->setEnabled(
         GlobalSettings::self()->showExpandQuotesMark());
@@ -78,41 +73,10 @@ void ConfigureWidget::readConfig()
 
 void ConfigureWidget::writeConfig()
 {
-    MessageCore::GlobalSettings::self()->setFallbackCharacterEncoding(
-        NodeHelper::encodingForName(mSettingsUi->fallbackCharacterEncoding->currentText()));
     MessageCore::GlobalSettings::self()->setOverrideCharacterEncoding(
         mSettingsUi->overrideCharacterEncoding->currentIndex() == 0 ?
         QString() :
         NodeHelper::encodingForName(mSettingsUi->overrideCharacterEncoding->currentText()));
-
-    KMime::setFallbackCharEncoding(NodeHelper::encodingForName(mSettingsUi->fallbackCharacterEncoding->currentText()));
-
-}
-
-void ConfigureWidget::readCurrentFallbackCodec()
-{
-    const QStringList encodings = NodeHelper::supportedEncodings(false);
-    QStringList::ConstIterator it(encodings.constBegin());
-    const QStringList::ConstIterator end(encodings.constEnd());
-    const QString currentEncoding = MessageCore::GlobalSettings::self()->fallbackCharacterEncoding();
-    uint i = 0;
-    int indexOfLatin9 = 0;
-    bool found = false;
-    for (; it != end; ++it) {
-        const QString encoding = NodeHelper::encodingForName(*it);
-        if (encoding == QLatin1String("ISO-8859-15")) {
-            indexOfLatin9 = i;
-        }
-        if (encoding == currentEncoding) {
-            mSettingsUi->fallbackCharacterEncoding->setCurrentIndex(i);
-            found = true;
-            break;
-        }
-        ++i;
-    }
-    if (!found) { // nothing matched, use latin9
-        mSettingsUi->fallbackCharacterEncoding->setCurrentIndex(indexOfLatin9);
-    }
 }
 
 void ConfigureWidget::readCurrentOverrideCodec()

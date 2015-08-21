@@ -158,32 +158,6 @@
    <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Fallback character e&amp;ncoding:</string>
-       </property>
-       <property name="buddy">
-        <cstring>fallbackCharacterEncoding</cstring>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="KComboBox" name="fallbackCharacterEncoding">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
       <widget class="QLabel" name="label_3">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -199,7 +173,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="0" column="1">
       <widget class="KComboBox" name="overrideCharacterEncoding">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -209,7 +183,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="1" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
         <string>Minimum font size:</string>
@@ -219,7 +193,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="1" column="1">
       <widget class="QSpinBox" name="kcfg_MinimumFontSize">
        <property name="minimum">
         <number>2</number>
@@ -229,7 +203,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="2" column="1">
       <spacer name="verticalSpacer_3">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -245,21 +219,7 @@
        </property>
       </spacer>
      </item>
-     <item row="4" column="1">
-      <widget class="QPushButton" name="configureCustomHeadersButton">
-       <property name="text">
-        <string>Configure Custom Headers...</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QCheckBox" name="kcfg_showSpamStatus">
-       <property name="text">
-        <string>Show spam status &amp;in fancy headers</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
         <string>Headers:</string>
@@ -269,7 +229,21 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="3" column="1">
+      <widget class="QPushButton" name="configureCustomHeadersButton">
+       <property name="text">
+        <string>Configure Custom Headers...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QCheckBox" name="kcfg_showSpamStatus">
+       <property name="text">
+        <string>Show spam status &amp;in fancy headers</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
       <widget class="QCheckBox" name="kcfg_ShowUserAgent">
        <property name="text">
         <string>Show user agent in fancy headers</string>
@@ -307,7 +281,6 @@
   <tabstop>kcfg_ShrinkQuotes</tabstop>
   <tabstop>kcfg_ShowExpandQuotesMark</tabstop>
   <tabstop>kcfg_CollapseQuoteLevelSpin</tabstop>
-  <tabstop>fallbackCharacterEncoding</tabstop>
   <tabstop>overrideCharacterEncoding</tabstop>
   <tabstop>kcfg_MinimumFontSize</tabstop>
   <tabstop>configureCustomHeadersButton</tabstop>
