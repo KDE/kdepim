@@ -934,9 +934,6 @@ void AttachmentControllerBase::addAttachment(AttachmentPart::Ptr part)
     part->setSigned(d->model->isSignSelected());
     d->model->addAttachment(part);
 
-    if (MessageComposer::MessageComposerSettings::self()->showMessagePartDialogOnAttach()) {
-        attachmentProperties(part);
-    }
     Q_EMIT fileAttached();
 }
 
