@@ -64,7 +64,7 @@ set(pimsettingexporter_LIB_SRCS
   importexportprogressindicatorbase.cpp
 )
 
-
+ecm_qt_declare_logging_category(pimsettingexporter_LIB_SRCS HEADER pimsettingexportcore_debug.h IDENTIFIER PIMSETTINGEXPORTERCORE_LOG CATEGORY_NAME log_pimsettingexportercore)
 
 add_library(pimsettingexporterprivate ${pimsettingexporter_LIB_SRCS})
 generate_export_header(pimsettingexporterprivate BASE_NAME pimsettingexporter)

@@ -9,7 +9,6 @@ include_directories(
 add_subdirectory(icons)
 add_subdirectory(kconf_update)
 set(importwizard_SRCS
-importwizard_debug.cpp
 importwizardkernel.cpp
 importwizard.cpp
 main.cpp
@@ -86,6 +85,8 @@ ki18n_wrap_ui(importwizard_SRCS
                   ui/manual/manualimportmailpage.ui  
                   ui/manual/manualselectfilterpage.ui
 )
+
+ecm_qt_declare_logging_category(importwizard_SRCS HEADER importwizard_debug.h IDENTIFIER IMPORTWIZARD_LOG CATEGORY_NAME log_importwizard)
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-kontact-import-wizard.png")
 ecm_add_app_icon(importwizard_SRCS ICONS ${ICONS_SRCS})

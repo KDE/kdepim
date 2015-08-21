@@ -100,7 +100,6 @@ set(kaddressbook_gravatar_SRCS
 )
 
 set(kaddressbook_LIB_SRCS
-  kaddressbook_debug.cpp
   contactlist.cpp
   aboutdata.cpp
   categoryfilterproxymodel.cpp
@@ -122,6 +121,8 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_sendvcards_SRCS}
   ${kaddressbook_gravatar_SRCS}
 )
+
+ecm_qt_declare_logging_category(kaddressbook_LIB_SRCS HEADER kaddressbook_debug.h IDENTIFIER KADDRESSBOOK_LOG CATEGORY_NAME log_kaddressbook)
 
 qt5_add_dbus_adaptor( kaddressbook_LIB_SRCS org.kde.kaddressbook.xml mainwidget.h MainWidget)
 
