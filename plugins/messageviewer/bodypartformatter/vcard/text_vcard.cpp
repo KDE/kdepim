@@ -36,7 +36,6 @@
 #include <messageviewer/viewer/nodehelper.h>
 #include "updatecontactjob.h"
 #include "vcardmemento.h"
-#define TRANSLATION_DOMAIN "messageviewer_text_vcard_plugin"
 
 using MessageViewer::Interface::BodyPart;
 #include "messageviewer/htmlwriter/webkitparthtmlwriter.h"
