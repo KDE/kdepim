@@ -537,9 +537,9 @@ void ViewerPrivate::createOpenWithMenu(QMenu *topMenu, const QString &contentTyp
         QAction *openWithAct = new QAction(menu);
         openWithAct->setText(openWithActionName);
         if (fromCurrentContent) {
-            connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialogCurrentContent()));
+            connect(openWithAct, &QAction::triggered, this, &ViewerPrivate::slotOpenWithDialogCurrentContent);
         } else {
-            connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
+            connect(openWithAct, &QAction::triggered, this, &ViewerPrivate::slotOpenWithDialog);
         }
 
         menu->addAction(openWithAct);
@@ -547,9 +547,9 @@ void ViewerPrivate::createOpenWithMenu(QMenu *topMenu, const QString &contentTyp
         QAction *act = new QAction(topMenu);
         act->setText(i18nc("@title:menu", "&Open With..."));
         if (fromCurrentContent) {
-            connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialogCurrentContent()));
+            connect(act, &QAction::triggered, this, &ViewerPrivate::slotOpenWithDialogCurrentContent);
         } else {
-            connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialog()));
+            connect(act, &QAction::triggered, this, &ViewerPrivate::slotOpenWithDialog);
         }
         topMenu->addAction(act);
     }
