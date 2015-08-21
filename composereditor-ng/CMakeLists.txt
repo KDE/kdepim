@@ -14,7 +14,6 @@ add_definitions(-DTRANSLATION_DOMAIN=\"libcomposereditorng\")
 #generate_export_header(COMPOSEREDITORNG BASE_NAME composereditor)
 
 set(libcomposereditor_ng_SRCS
-    composereditorng_debug.cpp 
     composereditor.cpp
     composerview.cpp
     link/composerlinkdialog.cpp
@@ -51,6 +50,7 @@ kconfig_add_kcfg_files(libcomposereditor_ng_SRCS
 
 
 ki18n_wrap_ui(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
+ecm_qt_declare_logging_category(libcomposereditor_ng_SRCS HEADER composereditorng_debug.h IDENTIFIER COMPOSEREDITORNG_LOG CATEGORY_NAME log_composereditorng)
 
 
 add_library(composereditorng ${libcomposereditor_ng_SRCS})
