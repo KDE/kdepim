@@ -93,6 +93,7 @@ private:
     QAction *mUncommentAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
+    QAction *mZoomResetAction;
     QAction *mDebugSieveScriptAction;
     PimCommon::KActionMenuChangeCase *mMenuChangeCaseAction;
 

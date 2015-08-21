@@ -94,6 +94,7 @@ public:
     QUrl currentHelpUrl() const;
     void openBookmarkUrl(const QUrl &url);
     void debugSieveScript();
+    void zoomReset();
 Q_SIGNALS:
     void enableButtonOk(bool);
     void switchToGraphicalMode();

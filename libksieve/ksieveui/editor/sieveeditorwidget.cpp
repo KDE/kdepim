@@ -230,6 +230,13 @@ void SieveEditorWidget::zoomIn()
     }
 }
 
+void SieveEditorWidget::zoomReset()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->zoomReset();
+    }
+}
+
 void SieveEditorWidget::zoomOut()
 {
     if (mMode == TextMode) {

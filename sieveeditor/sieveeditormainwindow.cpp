@@ -197,9 +197,19 @@ void SieveEditorMainWindow::setupActions()
     mUncommentAction = ac->addAction(QStringLiteral("uncomment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotUncomment()));
     mUncommentAction->setText(i18n("Uncomment"));
 
-    mZoomInAction = KStandardAction::zoomIn(mMainWidget->sieveEditorMainWidget(), SLOT(slotZoomIn()), ac);
+    mZoomInAction = new QAction(QIcon::fromTheme(QStringLiteral("zoom-in")), i18n("&Zoom In"), this);
+    ac->addAction(QStringLiteral("zoom_in"), mZoomInAction);
+    connect(mZoomInAction, &QAction::triggered, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotZoomIn);
+    ac->setDefaultShortcut(mZoomInAction, QKeySequence(Qt::CTRL | Qt::Key_Plus));
 
-    mZoomOutAction = KStandardAction::zoomOut(mMainWidget->sieveEditorMainWidget(), SLOT(slotZoomOut()), ac);
+    mZoomOutAction = new QAction(QIcon::fromTheme(QStringLiteral("zoom-out")), i18n("Zoom &Out"), this);
+    ac->addAction(QStringLiteral("zoom_out"), mZoomOutAction);
+    connect(mZoomOutAction, &QAction::triggered, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotZoomOut);
+    ac->setDefaultShortcut(mZoomOutAction, QKeySequence(Qt::CTRL | Qt::Key_Minus));
+
+    mZoomResetAction = ac->addAction(QStringLiteral("zoom_reset"), mMainWidget->sieveEditorMainWidget(), SLOT(slotZoomReset()));
+    ac->setDefaultShortcut(mZoomResetAction, QKeySequence(Qt::CTRL | Qt::Key_0));
+    mZoomResetAction->setText(i18nc("Reset the zoom", "Reset"));
 
     mMenuChangeCaseAction = new PimCommon::KActionMenuChangeCase(this);
     ac->addAction(QStringLiteral("change_case_menu"), mMenuChangeCaseAction);
@@ -312,6 +322,7 @@ void SieveEditorMainWindow::slotUpdateActions()
     mMenuChangeCaseAction->setEnabled(editActionEnabled);
     mZoomInAction->setEnabled(editActionEnabled);
     mZoomOutAction->setEnabled(editActionEnabled);
+    mZoomResetAction->setEnabled(editActionEnabled);
 
     mBookmarkMenu->setEnabled(editActionEnabled);
     mDebugSieveScriptAction->setEnabled(editActionEnabled);

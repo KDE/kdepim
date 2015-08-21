@@ -48,6 +48,7 @@
 #include <QPointer>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QDebug>
 
 #include <errno.h>
 
@@ -290,6 +291,11 @@ void SieveEditorTextModeWidget::zoomIn()
 void SieveEditorTextModeWidget::zoomOut()
 {
     mTextEdit->zoomOut();
+}
+
+void SieveEditorTextModeWidget::zoomReset()
+{
+    mTextEdit->zoomReset();
 }
 
 void SieveEditorTextModeWidget::slotFind()

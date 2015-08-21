@@ -60,6 +60,7 @@ public:
     void lowerCase();
     void sentenceCase();
     void reverseCase();
+    void zoomReset();
 private Q_SLOTS:
     void slotUpdateLineNumberAreaWidth(int newBlockCount);
     void slotUpdateLineNumberArea(const QRect &, int);
@@ -89,6 +90,7 @@ private:
     PimCommon::SieveSyntaxHighlighterRules mSieveHighliterRules;
     SieveLineNumberArea *m_sieveLineNumberArea;
     KPIMTextEdit::TextEditorCompleter *mTextEditorCompleter;
+    int mInitialFontSize;
     bool mShowHelpMenu;
 };
 

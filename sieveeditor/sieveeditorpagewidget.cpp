@@ -312,6 +312,11 @@ void SieveEditorPageWidget::zoomOut()
     mSieveEditorWidget->zoomOut();
 }
 
+void SieveEditorPageWidget::zoomReset()
+{
+    mSieveEditorWidget->zoomReset();
+}
+
 void SieveEditorPageWidget::openBookmarkUrl(const QUrl &url)
 {
     mSieveEditorWidget->openBookmarkUrl(url);

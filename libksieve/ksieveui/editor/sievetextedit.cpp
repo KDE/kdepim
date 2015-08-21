@@ -44,12 +44,14 @@ using namespace KSieveUi;
 
 SieveTextEdit::SieveTextEdit(QWidget *parent)
     : PimCommon::PlainTextEditor(parent),
+      mInitialFontSize(0),
       mShowHelpMenu(true)
 {
     setSpellCheckingConfigFileName(QStringLiteral("sieveeditorrc"));
     setWordWrapMode(QTextOption::NoWrap);
     setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     m_sieveLineNumberArea = new SieveLineNumberArea(this);
+    mInitialFontSize = font().pointSize();
 
     connect(this, &SieveTextEdit::blockCountChanged, this, &SieveTextEdit::slotUpdateLineNumberAreaWidth);
     connect(this, &SieveTextEdit::updateRequest, this, &SieveTextEdit::slotUpdateLineNumberArea);
@@ -395,5 +397,14 @@ void SieveTextEdit::uncomment()
         }
         textcursor.insertText(text);
         setTextCursor(textcursor);
+    }
+}
+
+void SieveTextEdit::zoomReset()
+{
+    if (mInitialFontSize > 0) {
+        QFont f = font();
+        f.setPointSize(mInitialFontSize);
+        setFont(f);
     }
 }

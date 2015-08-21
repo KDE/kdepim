@@ -503,6 +503,17 @@ void SieveEditorMainWidget::slotZoomOut()
     }
 }
 
+void SieveEditorMainWidget::slotZoomReset()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->zoomReset();
+        }
+    }
+}
+
 void SieveEditorMainWidget::slotGeneralPaletteChanged()
 {
     const QPalette pal = palette();
