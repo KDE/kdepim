@@ -11,7 +11,6 @@ kconfig_add_kcfg_files(storageservicemanager_kcfg_SRCS ${storageservicemanager_k
 set(storageservicemanager_SRCS
   ${storageservicemanager_kcfg_SRCS}
   main.cpp
-  storageservicemanager_debug.cpp
   storageservicemanagermainwindow.cpp
   storageservicepage.cpp
   storageservicetabwidget.cpp
@@ -26,6 +25,8 @@ set(storageservicemanager_SRCS
   storageservicemanagermainwidget.cpp
   storageserviceconfigurestoragewidget.cpp
 )
+
+ecm_qt_declare_logging_category(storageservicemanager_SRCS HEADER storageservicemanager_debug.h IDENTIFIER STORAGESERVICEMANAGER_LOG CATEGORY_NAME log_storageservicemanager)
 
 add_executable(storageservicemanager ${storageservicemanager_SRCS} )
 target_link_libraries(storageservicemanager 
