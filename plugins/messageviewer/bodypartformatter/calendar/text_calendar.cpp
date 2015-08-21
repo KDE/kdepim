@@ -60,23 +60,25 @@ using namespace KCalCore;
 #include <MailTransport/MessageQueueJob>
 #include <MailTransport/TransportManager>
 
-#include <KDBusServiceStarter>
-#include <QUrl>
 #include "text_calendar_debug.h"
-#include <QInputDialog>
-#include <QMenu>
-#include <KMessageBox>
 
+#include <KDBusServiceStarter>
+#include <KMessageBox>
 #include <KRun>
 #include <KSystemTimeZone>
-#include <QTemporaryFile>
-#include <KIO/NetAccess>
-#include <QIcon>
+#include <KIO/FileCopyJob>
+#include <KIO/StatJob>
 #include <KLocalizedString>
+
+#include <QUrl>
+#include <QTemporaryFile>
+#include <QIcon>
 #include <QFileDialog>
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QDesktopServices>
+#include <QInputDialog>
+#include <QMenu>
 
 using namespace MailTransport;
 
@@ -371,7 +373,14 @@ public:
         }
 
         if (attachment->isUri()) {
-            if (!KIO::NetAccess::exists(attachment->uri(), KIO::NetAccess::SourceSide, 0)) {
+            bool fileExists = false;
+            if (QUrl(attachment->uri()).isLocalFile()) {
+                fileExists = QFile::exists(attachment->uri());
+            } else {
+                auto job = KIO::stat(attachment->uri(), KIO::StatJob::SourceSide, 0);
+                fileExists = job->exec();
+            }
+            if (fileExists) {
                 KMessageBox::information(
                     0,
                     i18n("The invitation attachment \"%1\" is a web link that "
@@ -1063,7 +1072,8 @@ public:
         bool stat = false;
         if (a->isUri()) {
             // save the attachment url
-            stat = KIO::NetAccess::file_copy(a->uri(), QUrl::fromLocalFile(saveAsFile));
+            auto job = KIO::file_copy(a->uri(), QUrl::fromLocalFile(saveAsFile));
+            stat = job->exec();
         } else {
             // put the attachment in a temporary file and save it
             QTemporaryFile *file;
@@ -1081,7 +1091,8 @@ public:
             file->write(QByteArray::fromBase64(a->data()));
             file->close();
 
-            stat = KIO::NetAccess::file_copy(QUrl::fromLocalFile(file->fileName()), QUrl::fromLocalFile(saveAsFile));
+            auto job = KIO::file_copy(QUrl::fromLocalFile(file->fileName()), QUrl::fromLocalFile(saveAsFile));
+            stat = job->exec();
 
             delete file;
         }
