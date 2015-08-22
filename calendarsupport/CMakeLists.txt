@@ -12,7 +12,6 @@ add_definitions(-DTRANSLATION_DOMAIN=\"calendarsupport\")
 ########### next target ###############
 
 set(calendarsupport_LIB_SRCS
-  calendarsupport_debug.cpp
   archivedialog.cpp
   attachmenthandler.cpp
   calendarsingleton.cpp
@@ -48,6 +47,7 @@ ki18n_wrap_ui(calendarsupport_LIB_SRCS
   printing/calprintweekconfig_base.ui
   printing/calprintyearconfig_base.ui
 )
+ecm_qt_declare_logging_category(calendarsupport_LIB_SRCS HEADER calendarsupport_debug.h IDENTIFIER CALENDARSUPPORT_LOG CATEGORY_NAME log_calendarsupport)
 
 kconfig_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
 
