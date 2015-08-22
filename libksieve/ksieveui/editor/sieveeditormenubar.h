@@ -54,6 +54,7 @@ public:
     QAction *zoomOutAction() const;
     QAction *debugSieveScriptAction() const;
 
+    QAction *zoomResetAction() const;
 public Q_SLOTS:
     void setEditorMode(bool editorMode);
     void slotUndoAvailable(bool b);
@@ -74,6 +75,7 @@ Q_SIGNALS:
     void zoomIn();
     void zoomOut();
     void debugSieveScript();
+    void zoomReset();
 
 private:
     void initActions();
@@ -91,6 +93,7 @@ private:
     QAction *mUncommentCodeAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
+    QAction *mZoomResetAction;
     QAction *mDebugSieveAction;
     QMenu *mEditorMenu;
     QMenu *mToolsMenu;

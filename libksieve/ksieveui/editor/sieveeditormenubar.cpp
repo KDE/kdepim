@@ -50,6 +50,7 @@ void SieveEditorMenuBar::setEditorMode(bool editorMode)
     mUncommentCodeAction->setEnabled(editorMode);
     mZoomInAction->setEnabled(editorMode);
     mZoomOutAction->setEnabled(editorMode);
+    mZoomResetAction->setEnabled(editorMode);
     mDebugSieveAction->setEnabled(editorMode);
 }
 
@@ -80,6 +81,12 @@ void SieveEditorMenuBar::initActions()
     mSelectAllAction = KStandardAction::selectAll(this, SIGNAL(selectAll()), this);
     mZoomInAction = KStandardAction::zoomIn(this, SIGNAL(zoomIn()), this);
     mZoomOutAction = KStandardAction::zoomOut(this, SIGNAL(zoomOut()), this);
+
+    mZoomResetAction = new QAction(i18nc("Reset the zoom", "Reset"), this);
+    mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
+    connect(mZoomResetAction, &QAction::triggered, this, &SieveEditorMenuBar::zoomReset);
+
+
     mUndoAction->setEnabled(false);
     mRedoAction->setEnabled(false);
     mCopyAction->setEnabled(false);
@@ -112,6 +119,7 @@ void SieveEditorMenuBar::initMenus()
     mEditorMenu->addSeparator();
     mEditorMenu->addAction(mZoomInAction);
     mEditorMenu->addAction(mZoomOutAction);
+    mEditorMenu->addAction(mZoomResetAction);
 
     mToolsMenu->addAction(mCommentCodeAction);
     mToolsMenu->addAction(mUncommentCodeAction);
@@ -122,6 +130,11 @@ void SieveEditorMenuBar::initMenus()
 QAction *SieveEditorMenuBar::uncommentCodeAction() const
 {
     return mUncommentCodeAction;
+}
+
+QAction *SieveEditorMenuBar::zoomResetAction() const
+{
+    return mZoomResetAction;
 }
 
 QAction *SieveEditorMenuBar::zoomInAction() const

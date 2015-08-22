@@ -42,6 +42,7 @@ void SieveEditorMenuBarTest::shouldDisableActions()
     QVERIFY(bar.pasteAction()->isEnabled());
     QVERIFY(bar.zoomInAction()->isEnabled());
     QVERIFY(bar.zoomOutAction()->isEnabled());
+    QVERIFY(bar.zoomResetAction()->isEnabled());
     QVERIFY(bar.editorMenu()->isEnabled());
     QVERIFY(bar.toolsMenu()->isEnabled());
     QVERIFY(bar.fileMenu()->isEnabled());
@@ -62,6 +63,7 @@ void SieveEditorMenuBarTest::shouldDisableActions()
     QVERIFY(!bar.pasteAction()->isEnabled());
     QVERIFY(!bar.zoomInAction()->isEnabled());
     QVERIFY(!bar.zoomOutAction()->isEnabled());
+    QVERIFY(!bar.zoomResetAction()->isEnabled());
     QVERIFY(!bar.selectAllAction()->isEnabled());
     QVERIFY(bar.editorMenu()->isEnabled());
     QVERIFY(bar.toolsMenu()->isEnabled());
@@ -83,6 +85,7 @@ void SieveEditorMenuBarTest::shouldDisableActions()
     QVERIFY(bar.pasteAction()->isEnabled());
     QVERIFY(bar.zoomInAction()->isEnabled());
     QVERIFY(bar.zoomOutAction()->isEnabled());
+    QVERIFY(bar.zoomResetAction()->isEnabled());
     QVERIFY(bar.selectAllAction()->isEnabled());
     QVERIFY(bar.editorMenu()->isEnabled());
     QVERIFY(bar.toolsMenu()->isEnabled());
@@ -112,6 +115,7 @@ void SieveEditorMenuBarTest::shouldHaveDefaultValue()
     QVERIFY(bar.cutAction());
     QVERIFY(bar.zoomInAction());
     QVERIFY(bar.zoomOutAction());
+    QVERIFY(bar.zoomResetAction());
     QVERIFY(bar.selectAllAction());
     QVERIFY(bar.editorMenu());
     QVERIFY(bar.toolsMenu());
@@ -120,7 +124,7 @@ void SieveEditorMenuBarTest::shouldHaveDefaultValue()
     QVERIFY(bar.uncommentCodeAction());
     QVERIFY(bar.debugSieveScriptAction());
     QCOMPARE(bar.actions().count(), 3);
-    QCOMPARE(bar.editorMenu()->actions().count(), 16);
+    QCOMPARE(bar.editorMenu()->actions().count(), 17);
     QCOMPARE(bar.fileMenu()->actions().count(), 0);
     QCOMPARE(bar.toolsMenu()->actions().count(), 4);
 
@@ -176,6 +180,9 @@ void SieveEditorMenuBarTest::shouldEmitSignals()
     QSignalSpy spyZoomOut(&bar, SIGNAL(zoomOut()));
     bar.zoomOutAction()->trigger();
 
+    QSignalSpy spyZoomReset(&bar, SIGNAL(zoomReset()));
+    bar.zoomResetAction()->trigger();
+
     QSignalSpy spyDebugScript(&bar, SIGNAL(debugSieveScript()));
     bar.debugSieveScriptAction()->trigger();
 
@@ -192,6 +199,7 @@ void SieveEditorMenuBarTest::shouldEmitSignals()
     QCOMPARE(spySelectAll.count(), 1);
     QCOMPARE(spyFind.count(), 1);
     QCOMPARE(spyReplace.count(), 1);
+    QCOMPARE(spyZoomReset.count(), 1);
     QCOMPARE(spyDebugScript.count(), 1);
 }
 
