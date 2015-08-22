@@ -284,7 +284,6 @@ void CSVImportDialog::initGUI()
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &CSVImportDialog::slotOk);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
-    mainLayout->addWidget(buttonBox);
     mOkButton->setDefault(true);
 
     mainLayout->addWidget(page);
@@ -483,6 +482,8 @@ void CSVImportDialog::initGUI()
     mOkButton->setEnabled(false);
     mUser1Button->setEnabled(false);
     mUser2Button->setEnabled(false);
+    mainLayout->addWidget(buttonBox);
+
 
     resize(500, 400);
 }
