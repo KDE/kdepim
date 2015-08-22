@@ -102,10 +102,6 @@ void MESSAGECOMPOSER_EXPORT setAutomaticFields(const KMime::Message::Ptr &msg, b
    */
 QByteArray MESSAGECOMPOSER_EXPORT getRefStr(const KMime::Message::Ptr &msg);
 
-QString MESSAGECOMPOSER_EXPORT ccStrip(const KMime::Message::Ptr &msg);
-QString MESSAGECOMPOSER_EXPORT toStrip(const KMime::Message::Ptr &msg);
-QString MESSAGECOMPOSER_EXPORT fromStrip(const KMime::Message::Ptr &msg);
-
 /** Returns @p str with all "forward" and "reply" prefixes stripped off.
   **/
 QString MESSAGECOMPOSER_EXPORT stripOffPrefixes(const QString &str);

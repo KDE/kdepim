@@ -254,21 +254,6 @@ void setAutomaticFields(const KMime::Message::Ptr &msg, bool aIsMulti)
     }
 }
 
-QString ccStrip(const KMime::Message::Ptr &msg)
-{
-    return MessageCore::StringUtil::stripEmailAddr(msg->cc()->asUnicodeString());
-}
-
-QString toStrip(const KMime::Message::Ptr &msg)
-{
-    return MessageCore::StringUtil::stripEmailAddr(msg->to()->asUnicodeString());
-}
-
-QString fromStrip(const KMime::Message::Ptr &msg)
-{
-    return MessageCore::StringUtil::stripEmailAddr(msg->from()->asUnicodeString());
-}
-
 QString stripOffPrefixes(const QString &str)
 {
     return replacePrefixes(str, MessageComposer::MessageComposerSettings::self()->replyPrefixes() + MessageComposer::MessageComposerSettings::self()->forwardPrefixes(),
