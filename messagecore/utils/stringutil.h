@@ -78,16 +78,10 @@ MESSAGECORE_EXPORT KMime::Types::AddressList splitAddressField(const QByteArray 
 MESSAGECORE_EXPORT QString generateMessageId(const QString &address, const QString &suffix);
 
 /**
-   * Returns a displayable string from the list of email @p addresses.
-   */
-MESSAGECORE_EXPORT QByteArray stripEmailAddr(const QByteArray &addresses);
-
-#ifndef MESSAGECORE_NO_DEPRECATED
-/**
-   * Does the same as the above function. Shouldn't be used.
-   */
+  * Returns a displayable string from the list of email @p addresses.
+  * Inefficient, use KMime::Headers::*::displayString() directly instead.
+  */
 MESSAGECORE_DEPRECATED_EXPORT QString stripEmailAddr(const QString &emailAddr);
-#endif
 
 /**
    * Quotes the following characters which have a special meaning in HTML:
