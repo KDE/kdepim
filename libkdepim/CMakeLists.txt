@@ -125,9 +125,9 @@ set(kdepim_LIB_SRCS
    ${kdepim_addressline_LIB_SRCS}
    ${kdepim_freebusy_LIB_SRCS}
    ${kdepim_multiplyingline_LIB_SRCS}
-   libkdepim_debug.cpp
    prefs/kprefsdialog.cpp
 )
+ecm_qt_declare_logging_category(kdepim_LIB_SRCS HEADER libkdepim_debug.h IDENTIFIER LIBKDEPIM_LOG CATEGORY_NAME log_libkdepim)
 
 if (KDEPIM_INPROCESS_LDAP)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
