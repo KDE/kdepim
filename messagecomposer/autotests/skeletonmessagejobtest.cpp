@@ -167,10 +167,10 @@ void SkeletonMessageJobTest::testAddresses()
     {
         QVERIFY(message->to(false));
         qDebug() << "To:" << message->to()->asUnicodeString();
-        foreach (const QString &addr, message->to()->prettyAddresses()) {
-            qDebug() << addr;
-            QVERIFY(to.contains(addr));
-            to.removeOne(addr);
+        foreach (const auto &addr, message->to()->mailboxes()) {
+            qDebug() << addr.prettyAddress();
+            QVERIFY(to.contains(addr.prettyAddress()));
+            to.removeOne(addr.prettyAddress());
         }
         QVERIFY(to.isEmpty());
     }
@@ -178,10 +178,10 @@ void SkeletonMessageJobTest::testAddresses()
     {
         QVERIFY(message->cc(false));
         qDebug() << "Cc:" << message->cc()->asUnicodeString();
-        foreach (const QString &addr, message->cc()->prettyAddresses()) {
-            qDebug() << addr;
-            QVERIFY(cc.contains(addr));
-            cc.removeOne(addr);
+        foreach (const auto &addr, message->cc()->mailboxes()) {
+            qDebug() << addr.prettyAddress();
+            QVERIFY(cc.contains(addr.prettyAddress()));
+            cc.removeOne(addr.prettyAddress());
         }
         QVERIFY(cc.isEmpty());
     }
@@ -189,10 +189,10 @@ void SkeletonMessageJobTest::testAddresses()
     {
         QVERIFY(message->bcc(false));
         qDebug() << "Bcc:" << message->bcc()->asUnicodeString();
-        foreach (const QString &addr, message->bcc()->prettyAddresses()) {
-            qDebug() << addr;
-            QVERIFY(bcc.contains(addr));
-            bcc.removeOne(addr);
+        foreach (const auto &addr, message->bcc()->mailboxes()) {
+            qDebug() << addr.prettyAddress();
+            QVERIFY(bcc.contains(addr.prettyAddress()));
+            bcc.removeOne(addr.prettyAddress());
         }
         QVERIFY(bcc.isEmpty());
     }
