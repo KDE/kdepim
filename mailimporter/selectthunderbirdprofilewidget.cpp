@@ -23,6 +23,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+using namespace MailImporter;
+
 SelectThunderbirdProfileDialog::SelectThunderbirdProfileDialog(QWidget *parent)
     : QDialog(parent)
 {
