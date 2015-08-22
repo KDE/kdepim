@@ -45,12 +45,12 @@ set(libmessagelist_SRCS
   utils/themeconfigbutton.cpp
   utils/themeeditor.cpp
 
-  messagelist_debug.cpp
   pane.cpp
   storagemodel.cpp
   widget.cpp
   messagelistutil.cpp
 )
+ecm_qt_declare_logging_category(libmessagelist_SRCS HEADER messagelist_debug.h IDENTIFIER MESSAGELIST_LOG CATEGORY_NAME log_messagelist)
 
 set(libmessagelist_core_HEADERS
   core/enums.h
