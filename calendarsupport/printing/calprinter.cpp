@@ -28,9 +28,7 @@
 
 //#include <calendarviews/prefs.h>
 
-#include <KDEPrintDialog>
 #include <KMessageBox>
-#include <KPrintPreview>
 #include <KStandardGuiItem>
 #include <QVBoxLayout>
 
@@ -38,6 +36,7 @@
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QPrintDialog>
+#include <QPrintPreviewDialog>
 #include <QSplitter>
 #include <QStackedWidget>
 #include <KConfigGroup>
@@ -155,12 +154,14 @@ void CalPrinter::doPrint(PrintPlugin *selectedStyle,
     }
 
     if (preview) {
-        QPointer<KPrintPreview> printPreview = new KPrintPreview(&printer);
-        selectedStyle->doPrint(&printer);
+        QPointer<QPrintPreviewDialog> printPreview = new QPrintPreviewDialog(&printer);
+        connect(printPreview.data(), &QPrintPreviewDialog::paintRequested, this, [selectedStyle, &printer]() {
+            selectedStyle->doPrint(&printer);
+        });
         printPreview->exec();
         delete printPreview;
     } else {
-        QPointer<QPrintDialog> printDialog = KdePrint::createPrintDialog(&printer, mParent);
+        QPointer<QPrintDialog> printDialog = new QPrintDialog(&printer, mParent);
         if (printDialog->exec() == QDialog::Accepted) {
             selectedStyle->doPrint(&printer);
         }
