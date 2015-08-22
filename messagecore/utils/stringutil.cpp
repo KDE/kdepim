@@ -589,24 +589,6 @@ QString emailAddrAsAnchor(KMime::Headers::Generics::AddressList *addressList,
     return emailAddrAsAnchor(addressList->mailboxes(), display, cssStyle, link, expandable, fieldName, collapseNumber);
 }
 
-QStringList stripAddressFromAddressList(const QString &address,
-                                        const QStringList &list)
-{
-    QStringList addresses(list);
-    const QString addrSpec(KEmailAddress::extractEmailAddress(address));
-
-    for (QStringList::Iterator it = addresses.begin(); it != addresses.end();) {
-        if (qstricmp(addrSpec.toUtf8().data(),
-                     KEmailAddress::extractEmailAddress(*it).toUtf8().data()) == 0) {
-            it = addresses.erase(it);
-        } else {
-            ++it;
-        }
-    }
-
-    return addresses;
-}
-
 bool addressIsInAddressList(const QString &address,
                             const QStringList &addresses)
 {

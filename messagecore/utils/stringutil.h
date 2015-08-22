@@ -175,13 +175,6 @@ MESSAGECORE_EXPORT QString emailAddrAsAnchor(const QVector<KMime::Types::Mailbox
         int collapseNumber = 4);
 
 /**
-   * Strips an address from an address list. This is for example used
-   * when replying to all.
-   */
-MESSAGECORE_EXPORT QStringList stripAddressFromAddressList(const QString &address,
-        const QStringList &addresses);
-
-/**
    * Returns true if the given address is contained in the given address list.
    */
 MESSAGECORE_EXPORT bool addressIsInAddressList(const QString &address,
