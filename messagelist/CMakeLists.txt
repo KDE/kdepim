@@ -88,11 +88,11 @@ add_library(messagelist ${libmessagelist_SRCS})
 generate_export_header(messagelist BASE_NAME messagelist)
 target_link_libraries(messagelist
  PUBLIC
-  KF5::KIOCore
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Mime
  PRIVATE
+  KF5::KIOCore
   messagecore
   pimcommon
   KF5::AkonadiSearchPIM
