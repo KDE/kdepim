@@ -286,8 +286,6 @@ void CSVImportDialog::initGUI()
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     mOkButton->setDefault(true);
 
-    mainLayout->addWidget(page);
-
     QGridLayout *layout = new QGridLayout(page);
     mainLayout->addLayout(layout);
     layout->setMargin(0);
