@@ -35,11 +35,11 @@
 
 #include <KEmailAddress>
 #include <KIO/Job>
-#include <KIO/NetAccess>
+#include <KIO/StoredTransferJob>
 #include "incidenceeditor_debug.h"
 #include <KLocalizedString>
-#include <QUrl>
 
+#include <QUrl>
 #include <QFile>
 
 using namespace CalendarSupport;
@@ -266,28 +266,18 @@ void IncidenceDefaults::setAttachments(const QStringList &attachments,
 
             KCalCore::Attachment::Ptr attachment;
             if (inlineAttachment) {
-                QString tmpFile;
-                if (KIO::NetAccess::download(*it, tmpFile, 0)) {
-                    QFile f(tmpFile);
-                    if (f.open(QIODevice::ReadOnly)) {
-                        const QByteArray data = f.readAll();
-                        f.close();
+                auto job = KIO::storedGet(*it);
+                if (job->exec()) {
+                    const QByteArray data = job->data();
+                    attachment = KCalCore::Attachment::Ptr(new KCalCore::Attachment(data.toBase64(), mimeType));
 
-                        attachment =
-                            KCalCore::Attachment::Ptr(new KCalCore::Attachment(data.toBase64(), mimeType));
-
-                        if (i < attachmentLabels.count()) {
-                            attachment->setLabel(attachmentLabels[ i ]);
-                        }
-                    } else {
-                        qCCritical(INCIDENCEEDITOR_LOG) << "Error opening " << *it;
+                    if (i < attachmentLabels.count()) {
+                        attachment->setLabel(attachmentLabels[ i ]);
                     }
                 } else {
                     qCCritical(INCIDENCEEDITOR_LOG) << "Error downloading uri " << *it
-                                                    << KIO::NetAccess::lastErrorString();
+                                                    << job->errorString();
                 }
-                // TODO, this method needs better error reporting.
-                KIO::NetAccess::removeTempFile(tmpFile);
 
                 if (d_ptr->mCleanupTemporaryFiles) {
                     QFile file(*it);

@@ -37,7 +37,6 @@
 #include <KProtocolManager>
 #include <KRun>
 #include <KIO/Job>
-#include <KIO/NetAccess>
 #include <KIO/StoredTransferJob>
 #include <KJobWidgets>
 #include <KLocalizedString>
@@ -261,9 +260,9 @@ void IncidenceAttachment::saveAttachment(QListWidgetItem *item)
         sourceUrl = mAttachmentView->tempFileForAttachment(att);
     }
     // save the attachment url
-    if (!KIO::NetAccess::file_copy(sourceUrl, QUrl::fromLocalFile(saveAsFile)) &&
-            KIO::NetAccess::lastError()) {
-        KMessageBox::error(0, KIO::NetAccess::lastErrorString());
+    auto job = KIO::file_copy(sourceUrl, QUrl::fromLocalFile(saveAsFile));
+    if (!job->exec() && job->error()) {
+        KMessageBox::error(0, job->errorString());
     }
 }
 
