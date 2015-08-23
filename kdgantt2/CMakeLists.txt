@@ -3,7 +3,6 @@ project(kdgantt2)
 add_definitions(-DTRANSLATION_DOMAIN=\"kdgantt2\")
 # Those paths need to be absolute since this file is included from other CMakeLists.txt files
 set(libkdgantt2_SRCS
-kdgantt_debug.cpp
 kdganttabstractgrid.cpp
 kdganttabstractrowcontroller.cpp
 kdganttconstraint.cpp
@@ -25,6 +24,8 @@ kdganttsummaryhandlingproxymodel.cpp
 kdgantttreeviewrowcontroller.cpp
 kdganttview.cpp
 )
+
+ecm_qt_declare_logging_category(libkdgantt2_SRCS HEADER kdgantt_debug.h IDENTIFIER KDGANTT_LOG CATEGORY_NAME log_kdgantt)
 
 add_definitions(-DKDAB_NO_UNIT_TESTS -DKDGANTT_SHAREDLIB -DKDGANTT_BUILD_KDGANTT_LIB)
 

@@ -13,7 +13,6 @@ configure_file(config-libkpgp.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-libkpgp
 ########### next target ###############
 
 set(kpgp_LIB_SRCS
-   kpgp_debug.cpp
    kpgpblock.cpp
    kpgpui.cpp
    kpgpkey.cpp
@@ -24,9 +23,12 @@ set(kpgp_LIB_SRCS
    kpgpbase5.cpp
    kpgpbase6.cpp )
 
+ecm_qt_declare_logging_category(kpgp_LIB_SRCS HEADER kpgp_debug.h IDENTIFIER KPGP_LOG CATEGORY_NAME log_kpgp)
 
 add_library(kpgp ${kpgp_LIB_SRCS})
 generate_export_header(kpgp BASE_NAME libkpgp)
+
+
 
 target_link_libraries(kpgp
   PUBLIC
