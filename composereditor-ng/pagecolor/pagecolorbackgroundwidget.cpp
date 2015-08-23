@@ -21,7 +21,7 @@
 #include "pagecolorbackgroundwidget.h"
 #include "ui_pagecolorbackgroundwidget.h"
 
-#include <KImageIO>
+#include <QImageReader>
 #include <QUrl>
 
 using namespace ComposerEditorNG;
@@ -31,8 +31,11 @@ PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
     ui(new Ui::PageColorBackgroundWidget)
 {
     ui->setupUi(this);
-
-    const QStringList mimetypes = KImageIO::mimeTypes(KImageIO::Reading);
+    QList<QByteArray> lstImages = QImageReader::supportedImageFormats();
+    QStringList mimetypes;
+    Q_FOREACH( const QByteArray &format, lstImages) {
+      mimetypes.append(QString::fromLatin1(format));
+    }
     ui->backgroundImage->setFilter(mimetypes.join(QStringLiteral(" ")));
     ui->groupBox->setEnabled(false);
     connect(ui->customColors, &QRadioButton::toggled, ui->groupBox, &QGroupBox::setEnabled);

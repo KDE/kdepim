@@ -47,12 +47,12 @@
 #include <KMessageBox>
 #include "composereditorng_debug.h"
 #include <KFontAction>
-#include <KPrintPreview>
 #include <KRun>
 #include <QUrl>
 #include <QIcon>
 #include <KStandardShortcut>
 
+#include <QPrintPreviewDialog>
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 #include <QWebFrame>
@@ -791,9 +791,10 @@ void ComposerViewPrivate::_k_slotPrint()
 
 void ComposerViewPrivate::_k_slotPrintPreview()
 {
-    QPrinter printer;
-    KPrintPreview previewdlg(&printer, q);
-    q->print(&printer);
+    QPrintPreviewDialog previewdlg(q);
+    q->connect(&previewdlg, &QPrintPreviewDialog::paintRequested, q, [this](QPrinter *printer) {
+        q->print(printer);
+    });
     previewdlg.exec();
 }
 
