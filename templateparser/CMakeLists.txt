@@ -17,7 +17,6 @@ set(templateparser_LIB_SRCS
   templatesinsertcommand.cpp
   templatestextedit.cpp
   templatestexteditor.cpp
-  templateparser_debug.cpp
   templatessyntaxhighlighterrules.cpp
 )
 
@@ -25,6 +24,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo
   ${CMAKE_SOURCE_DIR}/messageviewer
 )
+
+ecm_qt_declare_logging_category(templateparser_LIB_SRCS HEADER templateparser_debug.h IDENTIFIER TEMPLATEPARSER_LOG CATEGORY_NAME log_templateparser)
 
 kconfig_add_kcfg_files(templateparser_LIB_SRCS settings/templatesconfiguration_kfg.kcfgc)
 
