@@ -1,9 +1,5 @@
 project(calendarsupport)
 
-# Commented because it uses your real calendar. You can loose data.
-# I'll uncomment this when tests use testrunner.
-# add_subdirectory(next/tests)
-
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
 add_definitions(-DQT_NO_CAST_TO_ASCII)
 
@@ -50,8 +46,6 @@ ki18n_wrap_ui(calendarsupport_LIB_SRCS
 ecm_qt_declare_logging_category(calendarsupport_LIB_SRCS HEADER calendarsupport_debug.h IDENTIFIER CALENDARSUPPORT_LOG CATEGORY_NAME log_calendarsupport)
 
 kconfig_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
-
-# qt5_add_dbus_interface(calendarsupport_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.Akonadi.CalendarSearchAgent.xml calendarsearchinterface)
 
 add_library(calendarsupport ${calendarsupport_LIB_SRCS})
 generate_export_header(calendarsupport BASE_NAME calendarsupport)
