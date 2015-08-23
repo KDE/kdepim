@@ -286,11 +286,11 @@ void CSVImportDialog::initGUI()
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     mOkButton->setDefault(true);
 
-    QGridLayout *layout = new QGridLayout(page);
+    QGridLayout *layout = new QGridLayout;
     mainLayout->addLayout(layout);
     layout->setMargin(0);
 
-    QHBoxLayout *hbox = new QHBoxLayout();
+    QHBoxLayout *hbox = new QHBoxLayout;
 
     QLabel *label = new QLabel(i18nc("@label", "File to import:"), page);
     mainLayout->addWidget(label);
