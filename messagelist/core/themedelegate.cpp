@@ -93,23 +93,28 @@ static QFontMetrics cachedFontMetrics(const QFont &font)
     static QHash<QString, QFontMetrics *> fontMetricsCache;
     const QString fontKey = font.key();
 
-    if (!fontMetricsCache.contains(fontKey)) {
+    const auto it = fontMetricsCache.constFind(fontKey);
+    if (it == fontMetricsCache.constEnd()) {
         QFontMetrics *metrics = new QFontMetrics(font);
         fontMetricsCache.insert(fontKey, metrics);
+        return *metrics;
     }
 
-    return *fontMetricsCache[ fontKey ];
+    return *it.value();
 }
 
 static int cachedFontHeightKey(const QFont &font, const QString &fontKey)
 {
     static QHash<QString, int> fontHeightCache;
 
-    if (!fontHeightCache.contains(fontKey)) {
-        fontHeightCache.insert(fontKey, cachedFontMetrics(font).height());
+    const auto it = fontHeightCache.constFind(fontKey);
+    if (it == fontHeightCache.constEnd()) {
+        auto height = cachedFontMetrics(font).height();
+        fontHeightCache.insert(fontKey, height);
+        return height;
     }
 
-    return fontHeightCache[ fontKey ];
+    return it.value();
 }
 
 static inline void paint_right_aligned_elided_text(const QString &text, Theme::ContentItem *ci, QPainter *painter, int &left, int top, int &right, Qt::LayoutDirection layoutDir, const QFont &font)
