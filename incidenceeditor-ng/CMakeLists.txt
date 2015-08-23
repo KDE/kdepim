@@ -1,9 +1,5 @@
 project(incidenceeditorng)
 
-if(KDEPIM_MOBILE_UI)
-  remove_definitions(-DKDEPIM_MOBILE_UI)
-endif()
-
 add_definitions(-DTRANSLATION_DOMAIN=\"libincidenceeditors\")
 
 set(incidenceeditors_ng_shared_LIB_SRCS

@@ -358,10 +358,6 @@ target_link_libraries(kleopatra_bin
   ${_kleopatra_libkdepim_LIBS}
 )
 
-if(KDEPIM_MOBILE_UI)
-  target_link_libraries(kleopatra_bin Qt5::Declarative)
-endif()
-
 if(USABLE_ASSUAN_FOUND)
   target_link_libraries(kleopatra_bin )
 endif()
