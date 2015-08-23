@@ -101,13 +101,13 @@ PUBLIC
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::MailTransport
-  KF5::Codecs
   calendarsupport      # For KCalPrefs
   eventviews
   kdgantt2             # For FreeBusy Editor
 PRIVATE
   kdepim
   kdepimdbusinterfaces # For UriHandler
+  KF5::Codecs
 )
 
 set_target_properties(incidenceeditorsng
