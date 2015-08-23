@@ -263,12 +263,13 @@ bool StorageModel::initializeMessageItem(MessageList::Core::MessageItem *mi,
 
 static QByteArray md5Encode(const QByteArray &str)
 {
-    if (str.trimmed().isEmpty()) {
+    auto trimmed = str.trimmed();
+    if (trimmed.isEmpty()) {
         return QByteArray();
     }
 
     QCryptographicHash c(QCryptographicHash::Md5);
-    c.addData(str.trimmed());
+    c.addData(trimmed);
     return c.result();
 }
 
@@ -287,16 +288,22 @@ void StorageModel::fillMessageItemThreadingData(MessageList::Core::MessageItem *
         // fall through
     }
     case PerfectThreadingPlusReferences:
-        if (!mail->references()->identifiers().isEmpty()) {
-            mi->setReferencesIdMD5(md5Encode(mail->references()->identifiers().last()));
+    {
+        const auto refs = mail->references()->identifiers();
+        if (!refs.isEmpty()) {
+            mi->setReferencesIdMD5(md5Encode(refs.last()));
         }
+    }
     // fall through
     case PerfectThreadingOnly:
+    {
         mi->setMessageIdMD5(md5Encode(mail->messageID()->identifier()));
-        if (!mail->inReplyTo()->identifiers().isEmpty()) {
-            mi->setInReplyToIdMD5(md5Encode(mail->inReplyTo()->identifiers().first()));
+        const auto inReplyTos = mail->inReplyTo()->identifiers();
+        if (!inReplyTos.isEmpty()) {
+            mi->setInReplyToIdMD5(md5Encode(inReplyTos.first()));
         }
         break;
+    }
     default:
         Q_ASSERT(false);   // should never happen
         break;
