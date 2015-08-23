@@ -48,7 +48,6 @@
 #include "composereditorng_debug.h"
 #include <KFontAction>
 #include <KPrintPreview>
-#include <kdeprintdialog.h>
 #include <KRun>
 #include <QUrl>
 #include <QIcon>
@@ -782,7 +781,7 @@ void ComposerViewPrivate::_k_slotSaveAs()
 void ComposerViewPrivate::_k_slotPrint()
 {
     QPrinter printer;
-    QPointer<QPrintDialog> dlg(KdePrint::createPrintDialog(&printer));
+    QPointer<QPrintDialog> dlg(new QPrintDialog(&printer));
 
     if (dlg->exec() == QDialog::Accepted) {
         q->print(&printer);

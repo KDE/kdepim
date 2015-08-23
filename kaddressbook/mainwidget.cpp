@@ -84,7 +84,6 @@
 #include <QTextBrowser>
 #include <KToggleAction>
 #include <KCMultiDialog>
-#include <kdeprintdialog.h>
 #include <KPrintPreview>
 #include <KXMLGUIClient>
 #include <KIconLoader>
@@ -773,7 +772,7 @@ void MainWidget::print()
     printer.setOutputFileName(Settings::self()->defaultFileName());
     printer.setCollateCopies(true);
 
-    QPointer<QPrintDialog> printDialog = KdePrint::createPrintDialog(&printer, this);
+    QPointer<QPrintDialog> printDialog = new QPrintDialog(&printer, this);
 
     printDialog->setWindowTitle(i18n("Print Contacts"));
     if (!printDialog->exec() || !printDialog) {
