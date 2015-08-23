@@ -173,6 +173,7 @@ PRIVATE
   Grantlee5::TextDocument
   sendlater
   followupreminder
+  KF5::Archive
 )
 
 target_include_directories(messagecomposer PUBLIC "$<BUILD_INTERFACE:${messagecomposer_SOURCE_DIR};${messagecomposer_BINARY_DIR}>")

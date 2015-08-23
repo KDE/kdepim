@@ -51,6 +51,8 @@ PRIVATE
   messagecore
   Qt5::WebKitWidgets
   KF5::XmlGui
+  KF5::IconThemes
+  KF5::Completion
 )
 set_target_properties(templateparser PROPERTIES
   VERSION ${KDEPIM_LIB_VERSION}

@@ -19,7 +19,7 @@ set(pimsettingexporterconsole_SRCS
 
 add_executable(pimsettingexporterconsole ${pimsettingexporterconsole_SRCS})
 
-target_link_libraries(pimsettingexporterconsole KF5::ConfigCore Qt5::Xml KF5::CoreAddons KF5::I18n
+target_link_libraries(pimsettingexporterconsole KF5::ConfigCore Qt5::Xml KF5::CoreAddons KF5::I18n KF5::Archive
   pimsettingexporterprivate
 )
 if (BUILD_TESTING)

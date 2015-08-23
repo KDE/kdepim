@@ -4,7 +4,7 @@ macro(messagelist_unittest _source)
     ecm_add_test(${_source} ../messagelist_debug.cpp
         TEST_NAME ${_name}
         NAME_PREFIX "messagelist-"
-        LINK_LIBRARIES Qt5::Test messagecore messagelist pimcommon
+        LINK_LIBRARIES Qt5::Test messagecore messagelist pimcommon KF5::Completion
     )
 endmacro ()
 

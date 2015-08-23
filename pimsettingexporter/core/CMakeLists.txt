@@ -79,6 +79,7 @@ PRIVATE
   KF5::MailTransport
   KF5::AlarmCalendar
   mailcommon
+  KF5::Archive
 )
 
 set_target_properties(pimsettingexporterprivate PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})

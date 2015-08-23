@@ -97,6 +97,8 @@ target_link_libraries(messagelist
   pimcommon
   KF5::AkonadiSearchPIM
   KF5::XmlGui
+  KF5::IconThemes
+  KF5::Completion
 )
 
 target_include_directories(messagelist PUBLIC "$<BUILD_INTERFACE:${messagelist_SOURCE_DIR};${messagelist_BINARY_DIR}>")

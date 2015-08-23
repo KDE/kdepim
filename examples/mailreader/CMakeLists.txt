@@ -22,7 +22,7 @@ target_link_libraries(akonadimailreader
   KF5::AkonadiMime
   KF5::AkonadiCore
   KF5::XmlGui
-  
+  KF5::IconThemes  
   kdepim
   kleo
   kpgp

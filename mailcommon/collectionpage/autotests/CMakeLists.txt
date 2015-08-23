@@ -2,7 +2,7 @@ macro(add_mailcommon_collectionpage_test _name)
     ecm_add_test(${ARGN}
         TEST_NAME ${_name}
         NAME_PREFIX "mailcommon-collectionpage-"
-        LINK_LIBRARIES Qt5::Test Qt5::Gui KF5::AkonadiCore mailcommon
+        LINK_LIBRARIES Qt5::Test Qt5::Gui KF5::AkonadiCore mailcommon KF5::Completion
     )
 endmacro()
 

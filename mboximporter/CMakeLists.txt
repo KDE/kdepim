@@ -23,6 +23,7 @@ PRIVATE
   KF5::IdentityManagement
   mailimporter
   mailcommon
+  KF5::Completion
 )
 
 install(TARGETS mboximporter  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )

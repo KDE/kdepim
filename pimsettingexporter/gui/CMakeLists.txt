@@ -36,6 +36,7 @@ target_link_libraries(pimsettingexporter
   pimcommon
   kdepim
   pimsettingexporterprivate
+  KF5::Archive
 )
 
 add_subdirectory(kconf_update)

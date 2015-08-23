@@ -6,6 +6,7 @@ target_link_libraries(selectiontreewidget_gui
   KF5::AkonadiPrivate
   mailcommon
   pimcommon
+  KF5::Archive
 )
 
 set(showarchivestructuredialog_gui_SRCS showarchivestructuredialog_gui.cpp ../../gui/dialog/showarchivestructuredialog.cpp ../utils.cpp ../xml/templateselection.cpp ../pimsettingexportcore_debug.cpp ../../gui/pimsettingexportgui_debug.cpp)
@@ -15,4 +16,5 @@ target_link_libraries(showarchivestructuredialog_gui
   KF5::AkonadiPrivate
   mailcommon
   pimcommon
+  KF5::Archive
 )

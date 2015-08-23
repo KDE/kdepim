@@ -42,6 +42,7 @@ target_link_libraries(akonadi_archivemail_agent
   KF5::Notifications
   mailcommon
   kdepim
+  KF5::IconThemes
 )
 
 if( APPLE )

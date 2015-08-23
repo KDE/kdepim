@@ -60,6 +60,10 @@ add_library(messagecore ${messagecore_LIB_SRCS})
 generate_export_header(messagecore BASE_NAME messagecore)
 
 target_link_libraries(messagecore
+PUBLIC
+  KF5::Mime
+  KF5::KIOCore
+PRIVATE
   KF5::Mime
   KF5::KIOCore
   KF5::Codecs
@@ -71,11 +75,6 @@ target_link_libraries(messagecore
   KF5::Completion
   KF5::IconThemes
   Qt5::Network
-)
-
-target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
-  KF5::Mime
-  KF5::KIOCore
 )
 
 target_include_directories(messagecore PUBLIC "$<BUILD_INTERFACE:${messagecore_SOURCE_DIR};${messagecore_BUILD_DIR};${Boost_INCLUDE_DIRS}>")
