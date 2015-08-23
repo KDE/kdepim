@@ -64,8 +64,6 @@ PUBLIC
   KF5::Mime
   KF5::KIOCore
 PRIVATE
-  KF5::Mime
-  KF5::KIOCore
   KF5::Codecs
   KF5::AkonadiCore
   KF5::PimTextEdit
