@@ -78,8 +78,6 @@ MAILCOMMON_EXPORT bool showJobErrorMessage(KJob *job);
 
 MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances(bool excludeMailTransport = true);
 
-MAILCOMMON_EXPORT bool ensureKorganizerRunning(bool switchTo);
-
 /**
    * Returns the identity of the folder that contains the given Akonadi::Item.
    */

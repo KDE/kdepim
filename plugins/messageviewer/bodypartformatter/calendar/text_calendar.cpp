@@ -41,7 +41,6 @@
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodypartformatter.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <mailcommon/util/mailutil.h>
 #include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
 using namespace MessageViewer;
 
@@ -70,6 +69,9 @@ using namespace KCalCore;
 #include <KIO/StatJob>
 #include <KLocalizedString>
 
+#include <QEventLoop>
+#include <QDBusServiceWatcher>
+#include <QProcess>
 #include <QUrl>
 #include <QTemporaryFile>
 #include <QIcon>
@@ -1099,9 +1101,77 @@ public:
         return stat;
     }
 
+    bool ensureKorganizerRunning(bool switchTo) const
+    {
+        // FIXME: this function should be inside a QObject, and async,
+        //         and Q_EMIT a signal when korg registered itself successfuly
+
+        QString error;
+        bool result = true;
+        QString dbusService;
+
+    #if defined(Q_OS_WIN32)
+        //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
+        QDBusInterface *interface = new QDBusInterface(QLatin1String("org.kde.korganizer"), QStringLiteral("/MainApplication"));
+        if (!interface->isValid()) {
+            qCDebug(TEXT_CALENDAR_LOG) << "Starting korganizer...";
+
+            QDBusServiceWatcher *watcher =
+                new QDBusServiceWatcher(QLatin1String("org.kde.korganizer"), QDBusConnection::sessionBus(),
+                                        QDBusServiceWatcher::WatchForRegistration);
+            QEventLoop loop;
+            watcher->connect(watcher, &QDBusServiceWatcher::serviceRegistered, &loop, &QEventLoop::quit);
+            result = QProcess::startDetached(QLatin1String("korganizer"));
+            if (result) {
+                qCDebug(TEXT_CALENDAR_LOG) << "Starting loop";
+                loop.exec();
+                qCDebug(TEXT_CALENDAR_LOG) << "Korganizer finished starting";
+            } else {
+                qCWarning(TEXT_CALENDAR_LOG) << "Failed to start korganizer with QProcess";
+            }
+
+            delete watcher;
+        }
+        delete interface;
+    #else
+        QString constraint;
+
+        result = KDBusServiceStarter::self()->findServiceFor(QStringLiteral("DBUS/Organizer"),
+                 constraint,
+                 &error, &dbusService) == 0;
+    #endif
+        if (result) {
+            // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
+            QDBusInterface iface(QStringLiteral("org.kde.korganizer"), QStringLiteral("/MainApplication"),
+                                 QStringLiteral("org.kde.PIMUniqueApplication"));
+            if (iface.isValid()) {
+                if (switchTo) {
+                    iface.call(QStringLiteral("newInstance"));   // activate korganizer window
+                }
+    #if 0 //Not exist
+                QDBusInterface pimIface("org.kde.korganizer", "/korganizer_PimApplication",
+                                        "org.kde.PIMUniqueApplication");
+                QDBusReply<bool> r = pimIface.call("load");
+                if (!r.isValid() || !r.value()) {
+                    qCWarning(TEXT_CALENDAR_LOG) << "Loading korganizer failed: " << pimIface.lastError().message();
+                }
+    #endif
+            } else {
+                qCWarning(TEXT_CALENDAR_LOG) << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
+            }
+
+            // We don't do anything with it, we just need it to be running so that it handles
+            // the incoming directory.
+        } else {
+            qCWarning(TEXT_CALENDAR_LOG) << "Couldn't start DBUS/Organizer:" << dbusService << error;
+        }
+        return result;
+    }
+
+
     void showCalendar(const QDate &date) const
     {
-        if (MailCommon::Util::ensureKorganizerRunning(true)) {
+        if (ensureKorganizerRunning(true)) {
             QDBusInterface *kontact =
                 new QDBusInterface(QStringLiteral("org.kde.kontact"), QStringLiteral("/KontactInterface"),
                                    QStringLiteral("org.kde.kontact.KontactInterface"), QDBusConnection::sessionBus());

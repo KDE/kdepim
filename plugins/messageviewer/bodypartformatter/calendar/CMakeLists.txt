@@ -23,7 +23,6 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   KF5::AkonadiMime
   calendarsupport
   kdepim
-  mailcommon
   messageviewer
 )
 
