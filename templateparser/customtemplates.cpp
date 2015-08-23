@@ -279,9 +279,6 @@ void CustomTemplates::slotAddClicked()
             return;
         }
 
-        // KShortcut::null() doesn't seem to be present, although documented
-        // see slotShortcutChanged(). oh, and you should look up documentation on the EBN!
-        // FIXME There must be a better way of doing this...
         QKeySequence nullShortcut;
         CustomTemplateItem *item =
             new CustomTemplateItem(mUi->mList, str, QString(), nullShortcut, TUniversal,
@@ -334,9 +331,6 @@ void CustomTemplates::slotDuplicateClicked()
     }
     CustomTemplateItem *origItem = static_cast<CustomTemplateItem *>(currentItem);
     const QString templateName = createUniqueName(origItem->text(1));
-    // KShortcut::null() doesn't seem to be present, although documented
-    // see slotShortcutChanged(). oh, and you should look up documentation on the EBN!
-    // FIXME There must be a better way of doing this...
     QKeySequence nullShortcut;
     CustomTemplates::Type type =  origItem->customType();
     CustomTemplateItem *item =
