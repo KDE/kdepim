@@ -62,8 +62,8 @@ generate_export_header(messagecore BASE_NAME messagecore)
 target_link_libraries(messagecore
 PUBLIC
   KF5::Mime
-  KF5::KIOCore
 PRIVATE
+  KF5::KIOCore
   KF5::Codecs
   KF5::AkonadiCore
   KF5::PimTextEdit
