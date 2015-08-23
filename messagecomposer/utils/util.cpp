@@ -304,27 +304,6 @@ bool MessageComposer::Util::sendMailDispatcherIsOnline(QWidget *parent)
     return false;
 }
 
-void MessageComposer::Util::addTextBox(QTextEdit *edit)
-{
-    QTextCursor cursor = edit->textCursor();
-    if (cursor.hasSelection()) {
-        QString s = cursor.selectedText();
-        s.prepend(QLatin1String(",----[  ]\n| "));
-        s.replace(QChar::ParagraphSeparator, QStringLiteral("\n| "));
-        s.append(QLatin1String("\n`----"));
-        edit->insertPlainText(s);
-    } else {
-        //int oldPos = cursor.position();
-        cursor.movePosition(QTextCursor::StartOfBlock);
-        cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-        const QString s = cursor.selectedText();
-        const QString str = QStringLiteral(",----[  ]\n| %1\n`----").arg(s);
-        cursor.insertText(str);
-        //cursor.setPosition( qMax( 0, oldPos - 2 ) );
-        edit->setTextCursor(cursor);
-    }
-}
-
 void MessageComposer::Util::removeNotNecessaryHeaders(const KMime::Message::Ptr &msg)
 {
     msg->removeHeader("X-KMail-SignatureActionEnabled");
