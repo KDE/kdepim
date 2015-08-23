@@ -399,3 +399,26 @@ void StringUtilTest::test_stripOffMessagePrefix()
     const QString subjectAfterStrip = StringUtil::stripOffPrefixes(subject);
     QCOMPARE(subjectAfterStrip, result);
 }
+
+void StringUtilTest::test_formatQuotePrefix_data()
+{
+    QTest::addColumn<QString>("quotePattern");
+    QTest::addColumn<QString>("from");
+    QTest::addColumn<QString>("result");
+
+    QTest::newRow("empty") << QString() << QString() << QString();
+    QTest::newRow("default") << QStringLiteral("> ") << QStringLiteral("Jon Doe") << QStringLiteral("> ");
+    QTest::newRow("initials") << QStringLiteral("| %f |") << QStringLiteral("Jon Doe") << QStringLiteral("| JD |");
+    QTest::newRow("initials one name") << QStringLiteral("| %f |") << QStringLiteral("Jon") << QStringLiteral("| Jo |");
+    QTest::newRow("initials one letter") << QStringLiteral("| %f |") << QStringLiteral("J") << QStringLiteral("| J |");
+    QTest::newRow("initials empty name") << QStringLiteral("| %f |") << QString() << QStringLiteral("|  |");
+    QTest::newRow("percent") << QStringLiteral("%% %_ %a") << QString() << QStringLiteral("%   %a");
+}
+
+void StringUtilTest::test_formatQuotePrefix()
+{
+    QFETCH(QString, quotePattern);
+    QFETCH(QString, from);
+    QFETCH(QString, result);
+    QCOMPARE(MessageCore::StringUtil::formatString(quotePattern, from), result);
+}

@@ -731,6 +731,8 @@ QString formatString(const QString &wildString, const QString &fromAddr)
             switch (ch.toLatin1()) {
             case 'f': { // sender's initals
                 QString str = stripEmailAddr(fromAddr);
+                if (str.isEmpty())
+                    break;
 
                 uint j = 0;
                 for (; str[j] > QLatin1Char(' '); ++j)
