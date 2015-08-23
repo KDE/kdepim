@@ -54,7 +54,9 @@ using MessageViewer::Interface::BodyPart;
 #include <QMenu>
 #include <KMessageBox>
 #include <QTemporaryFile>
-#include <KIO/NetAccess>
+#include <KJobWidgets>
+#include <KIO/StatJob>
+#include <KIO/FileCopyJob>
 #include "vcard_debug.h"
 
 namespace
@@ -304,8 +306,8 @@ public:
         QByteArray data = vCard.toUtf8();
         tmpFile.write(data);
         tmpFile.flush();
-
-        return KIO::NetAccess::upload(tmpFile.fileName(), saveAsUrl, 0);
+        auto job = KIO::file_copy(QUrl::fromLocalFile(tmpFile.fileName()), saveAsUrl);
+        return job->exec();
     }
 };
 
