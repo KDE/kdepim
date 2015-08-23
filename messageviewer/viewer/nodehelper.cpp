@@ -327,7 +327,6 @@ void NodeHelper::addTempFile(const QString &file)
     mAttachmentFilesDir->addTempFile(file);
 }
 
-
 bool NodeHelper::isInEncapsulatedMessage(KMime::Content *node)
 {
     const KMime::Content *const topLevel = node->topLevel();

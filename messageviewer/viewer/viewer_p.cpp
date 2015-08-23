@@ -978,7 +978,6 @@ void ViewerPrivate::parseContent(KMime::Content *content)
         htmlWriter()->queue(writeMsgHeader(message, hasVCard ? vCardContent : 0, true));
     }
 
-
     // Pass control to the OTP now, which does the real work
     mNodeHelper->removeTempFiles();
     mNodeHelper->setNodeUnprocessed(mMessage.data(), true);

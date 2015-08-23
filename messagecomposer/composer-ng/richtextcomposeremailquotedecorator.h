@@ -21,7 +21,6 @@
 #include <sonnet/spellcheckdecorator.h>
 #include "messagecomposer_export.h"
 
-
 namespace MessageComposer
 {
 class RichTextComposer;

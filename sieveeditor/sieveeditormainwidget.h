@@ -78,7 +78,7 @@ public Q_SLOTS:
     void slotLowerCase();
     void slotReverseCase();
     void slotZoomIn();
-    void slotZoomOut();    
+    void slotZoomOut();
     void slotZoomReset();
 
 Q_SIGNALS:

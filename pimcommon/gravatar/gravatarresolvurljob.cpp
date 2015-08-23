@@ -44,8 +44,9 @@ GravatarResolvUrlJob::GravatarResolvUrlJob(QObject *parent)
       mFallbackDone(false),
       mUseHttps(false)
 {
-    if (!s_networkConfigMgr)
+    if (!s_networkConfigMgr) {
         s_networkConfigMgr = new QNetworkConfigurationManager(QCoreApplication::instance());
+    }
 }
 
 GravatarResolvUrlJob::~GravatarResolvUrlJob()
