@@ -734,15 +734,15 @@ QString formatQuotePrefix(const QString& wildString, const QString& fromDisplayS
                     break;
 
                 uint j = 0;
-                for (; fromDisplayString[j] > QLatin1Char(' '); ++j)
-                    ;
                 const unsigned int strLength(fromDisplayString.length());
+                for (; j < strLength && fromDisplayString[j] > QLatin1Char(' '); ++j)
+                    ;
                 for (; j < strLength && fromDisplayString[j] <= QLatin1Char(' '); ++j)
                     ;
                 result += fromDisplayString[0];
-                if (fromDisplayString[j] > QLatin1Char(' ')) {
+                if (j < strLength && fromDisplayString[j] > QLatin1Char(' ')) {
                     result += fromDisplayString[j];
-                } else {
+                } else if (strLength > 1) {
                     if (fromDisplayString[1] > QLatin1Char(' ')) {
                         result += fromDisplayString[1];
                     }
