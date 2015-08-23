@@ -38,9 +38,12 @@
 #include "calendarsupport_debug.h"
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <QTemporaryFile>
 #include <KIO/NetAccess>
+#include <KIO/FileCopyJob>
+#include <KJobWidgets>
 #include <KLocale>
+
+#include <QTemporaryFile>
 
 using namespace KCalCore;
 using namespace KCalUtils;
@@ -283,9 +286,10 @@ void EventArchiver::archiveIncidences(const Akonadi::ETMCalendar::Ptr &calendar,
     QUrl srcUrl;
     srcUrl.setPath(archiveFile);
     if (srcUrl != archiveURL) {
-        if (!KIO::NetAccess::upload(archiveFile, archiveURL, widget)) {
-            KMessageBox::error(widget, i18n("Cannot write archive. %1",
-                                            KIO::NetAccess::lastErrorString()));
+        auto job = KIO::file_copy(archiveFile, archiveURL);
+        KJobWidgets::setWindow(job, widget);
+        if (!job->exec()) {
+            KMessageBox::error(widget, i18n("Cannot write archive. %1", job->errorString()));
             QFile::remove(tmpFileName);
             return;
         }

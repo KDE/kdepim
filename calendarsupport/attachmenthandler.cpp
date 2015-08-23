@@ -32,16 +32,17 @@
 #include "calendarsupport/utils.h"
 
 #include <ItemFetchJob>
-#include <QFileDialog>
+
 #include <KLocalizedString>
 #include <KMessageBox>
-
 #include <KRun>
-#include <QTemporaryFile>
+#include <KIO/FileCopyJob>
 #include <KIO/NetAccess>
 #include <KJob>
 #include "calendarsupport_debug.h"
 
+#include <QFileDialog>
+#include <QTemporaryFile>
 #include <QFile>
 #include <QPointer>
 #include <QMimeDatabase>
@@ -235,14 +236,16 @@ bool AttachmentHandler::saveAs(const Attachment::Ptr &attachment)
     bool stat = false;
     if (attachment->isUri()) {
         // save the attachment url
-        stat = KIO::NetAccess::file_copy(attachment->uri(), QUrl::fromLocalFile(saveAsFile));
+        auto job = KIO::file_copy(attachment->uri(), QUrl::fromLocalFile(saveAsFile));
+        stat = job->exec();
     } else {
         // put the attachment in a temporary file and save it
         QUrl tempUrl = tempFileForAttachment(attachment);
         if (tempUrl.isValid()) {
-            stat = KIO::NetAccess::file_copy(tempUrl, QUrl::fromLocalFile(saveAsFile));
-            if (!stat && KIO::NetAccess::lastError()) {
-                KMessageBox::error(d->mParent, KIO::NetAccess::lastErrorString());
+            auto job = KIO::file_copy(tempUrl, QUrl::fromLocalFile(saveAsFile));
+            stat = job->exec();
+            if (!stat && job->error()) {
+                KMessageBox::error(d->mParent, job->errorString());
             }
         } else {
             stat = false;

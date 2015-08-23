@@ -37,6 +37,8 @@
 
 #include <KHolidays/kholidays/Holidays>
 
+#include <KIdentityManagement/IdentityManager>
+
 #include <KCalCore/CalFilter>
 #include <KCalCore/Event>
 #include <KCalCore/FreeBusy>
@@ -51,20 +53,19 @@
 #include <KCalUtils/ICalDrag>
 #include <KCalUtils/VCalDrag>
 
-#include <QUrl>
 #include <KIconLoader>
+#include <KMessageBox>
+#include <KIO/FileCopyJob>
 
+#include <QUrl>
 #include <QAbstractItemModel>
 #include <QDrag>
 #include <QMimeData>
 #include <QModelIndex>
 #include <QPointer>
+#include <QFileDialog>
 
 #include <boost/bind.hpp>
-#include <KMessageBox>
-#include <KIdentityManagement/IdentityManager>
-#include <QFileDialog>
-#include <KIO/NetAccess>
 #include "calendarsupport_debug.h"
 
 using namespace CalendarSupport;
@@ -777,9 +778,9 @@ void CalendarSupport::saveAttachments(const Akonadi::Item &item, QWidget *parent
             sourceUrl = incidence->writeAttachmentToTempFile(attachment);
         }
         // save the attachment url
-        if (!KIO::NetAccess::file_copy(sourceUrl, QUrl::fromLocalFile(targetFile)) &&
-                KIO::NetAccess::lastError()) {
-            KMessageBox::error(parentWidget, KIO::NetAccess::lastErrorString());
+        auto job = KIO::file_copy(sourceUrl, QUrl::fromLocalFile(targetFile));
+        if (!job->exec() && job->error()) {
+            KMessageBox::error(parentWidget, job->errorString());
         }
     }
 }
