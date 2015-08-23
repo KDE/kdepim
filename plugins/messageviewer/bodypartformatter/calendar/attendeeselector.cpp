@@ -24,7 +24,6 @@
 
 #include <KLocalizedString>
 #include <QPushButton>
-#include <kguiitem.h>
 #include <KGuiItem>
 #include <KStandardGuiItem>
 #include <KConfigGroup>
