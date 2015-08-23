@@ -715,7 +715,7 @@ QString smartQuote(const QString &msg, int maxLineLength)
     return result;
 }
 
-QString formatString(const QString &wildString, const QString &fromAddr)
+QString formatQuotePrefix(const QString& wildString, const QString& fromDisplayString)
 {
     QString result;
 
@@ -730,22 +730,21 @@ QString formatString(const QString &wildString, const QString &fromAddr)
             ch = wildString[i++];
             switch (ch.toLatin1()) {
             case 'f': { // sender's initals
-                QString str = stripEmailAddr(fromAddr);
-                if (str.isEmpty())
+                if (fromDisplayString.isEmpty())
                     break;
 
                 uint j = 0;
-                for (; str[j] > QLatin1Char(' '); ++j)
+                for (; fromDisplayString[j] > QLatin1Char(' '); ++j)
                     ;
-                unsigned int strLength(str.length());
-                for (; j < strLength && str[j] <= QLatin1Char(' '); ++j)
+                const unsigned int strLength(fromDisplayString.length());
+                for (; j < strLength && fromDisplayString[j] <= QLatin1Char(' '); ++j)
                     ;
-                result += str[0];
-                if (str[j] > QLatin1Char(' ')) {
-                    result += str[j];
+                result += fromDisplayString[0];
+                if (fromDisplayString[j] > QLatin1Char(' ')) {
+                    result += fromDisplayString[j];
                 } else {
-                    if (str[1] > QLatin1Char(' ')) {
-                        result += str[1];
+                    if (fromDisplayString[1] > QLatin1Char(' ')) {
+                        result += fromDisplayString[1];
                     }
                 }
             }

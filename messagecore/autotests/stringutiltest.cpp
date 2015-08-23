@@ -420,5 +420,5 @@ void StringUtilTest::test_formatQuotePrefix()
     QFETCH(QString, quotePattern);
     QFETCH(QString, from);
     QFETCH(QString, result);
-    QCOMPARE(MessageCore::StringUtil::formatString(quotePattern, from), result);
+    QCOMPARE(MessageCore::StringUtil::formatQuotePrefix(quotePattern, from), result);
 }

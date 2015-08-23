@@ -1600,7 +1600,7 @@ QString TemplateParser::quotedPlainText(const QString &selection) const
     }
 
     const QString indentStr =
-        MessageCore::StringUtil::formatString(mQuoteString, mOrigMsg->from()->asUnicodeString());
+        MessageCore::StringUtil::formatQuotePrefix(mQuoteString, mOrigMsg->from()->displayString());
     if (GlobalSettings::self()->smartQuote() && mWrap) {
         content = MessageCore::StringUtil::smartQuote(content, mColWrap - indentStr.length());
     }

@@ -204,11 +204,11 @@ MESSAGECORE_EXPORT QString guessEmailAddressFromLoginName(const QString &userNam
 MESSAGECORE_EXPORT QString smartQuote(const QString &message, int maxLineLength);
 
 /**
-  * Convert wildcards into normal string
+  * Convert quote wildcards into the final quote prefix.
   * @param wildString the string to be converted
-  * @fromAddr from email address to convert to displayable string
+  * @param fromDisplayString displayable string of the from email address
   */
-MESSAGECORE_EXPORT QString formatString(const QString &wildString, const QString &fromAddr = QString());
+MESSAGECORE_EXPORT QString formatQuotePrefix(const QString &wildString, const QString &fromDisplayString);
 
 /**
    * Cleans a filename by replacing characters not allowed or wanted on the filesystem
