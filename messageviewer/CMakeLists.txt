@@ -196,10 +196,11 @@ set(libmessageviewer_SRCS
   ${libmessageviewer_antispam_SRCS}
   ${libmessageviewer_job_SRCS}
   settings/globalsettings.cpp
-  messageviewer_debug.cpp
   ${_mailwebview_cpp}
   ${libmessageviewer_gravatar_SRCS}
 )
+
+ecm_qt_declare_logging_category(libmessageviewer_SRCS HEADER messageviewer_debug.h IDENTIFIER MESSAGEVIEWER_LOG CATEGORY_NAME log_messageviewer)
 
 kconfig_add_kcfg_files(libmessageviewer_SRCS
   settings/globalsettings_base.kcfgc

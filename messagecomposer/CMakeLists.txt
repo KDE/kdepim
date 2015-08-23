@@ -127,13 +127,13 @@ set( messagecomposer_src
      ${messagecomposer_followupreminder_SRCS}
      ${messagecomposer_composerng_SRCS}
      utils/util.cpp
-     messagecomposer_debug.cpp
      settings/messagecomposersettings.cpp
 )
 
 ki18n_wrap_ui(messagecomposer_src
      imagescaling/ui/imagescalingwidget.ui
 )
+ecm_qt_declare_logging_category(messagecomposer_src HEADER messagecomposer_debug.h IDENTIFIER MESSAGECOMPOSER_LOG CATEGORY_NAME log_messagecomposer)
 
 
 if(KDEPIM_ENTERPRISE_BUILD)

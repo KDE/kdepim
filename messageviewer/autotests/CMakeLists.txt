@@ -8,7 +8,8 @@ add_definitions(-DKMAIL_UNITTESTS=YES)
 # convenience macro to add qtest unit tests
 macro(add_messageviewer_unittest _source)
     get_filename_component(_name ${_source} NAME_WE)
-    ecm_add_test(${_source} util.cpp ${CMAKE_SOURCE_DIR}/messagecore/messagecore_debug.cpp ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp testcsshelper.cpp
+    ecm_qt_declare_logging_category(_test HEADER messagecore_debug.h IDENTIFIER MESSAGECORE_LOG CATEGORY_NAME log_messagecore)
+    ecm_add_test(${_source} util.cpp messagecore_debug.cpp ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp testcsshelper.cpp
         TEST_NAME ${_name}
         NAME_PREFIX "messageviewer-"
         LINK_LIBRARIES messageviewer kleo KF5::QGpgme Qt5::Test Qt5::WebKitWidgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::AkonadiNotes KF5::CalendarCore
@@ -17,8 +18,9 @@ endmacro ()
 
 macro(add_messageviewer_crypto_unittest _source)
     set(_test ${_source} util.cpp)
+    ecm_qt_declare_logging_category(_test HEADER messagecore_debug.h IDENTIFIER MESSAGECORE_LOG CATEGORY_NAME log_messagecore) 
     get_filename_component(_name ${_source} NAME_WE)
-    add_executable( ${_name} ${_test} ${CMAKE_SOURCE_DIR}/messagecore/messagecore_debug.cpp ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp  testcsshelper.cpp )
+    add_executable( ${_name} ${_test} messagecore_debug.cpp ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp  testcsshelper.cpp )
     ecm_mark_as_test(messageviewer-${_name})
     target_link_libraries( ${_name}
         messageviewer

@@ -43,7 +43,6 @@ set(messagecore_LIB_SRCS
    ${messagecore_helper_LIB_SRCS}
    settings/globalsettings.cpp
    utils/stringutil.cpp
-   messagecore_debug.cpp
 )
 
 kconfig_add_kcfg_files(messagecore_LIB_SRCS
@@ -54,6 +53,8 @@ ki18n_wrap_ui(messagecore_LIB_SRCS
   attachment/ui/attachmentpropertiesdialog.ui
   attachment/ui/attachmentpropertiesdialog_readonly.ui
 )
+
+ecm_qt_declare_logging_category(messagecore_LIB_SRCS HEADER messagecore_debug.h IDENTIFIER MESSAGECORE_LOG CATEGORY_NAME log_messagecore)
 
 add_library(messagecore ${messagecore_LIB_SRCS})
 generate_export_header(messagecore BASE_NAME messagecore)
