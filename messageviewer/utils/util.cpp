@@ -202,9 +202,7 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, Q
     const bool multiple = (contents.count() > 1);
     if (multiple) {
         // get the dir
-        dirUrl = KFileDialog::getExistingDirectoryUrl(QUrl(),
-                 parent,
-                 i18n("Save Attachments To"));
+        dirUrl = QFileDialog::getExistingDirectoryUrl(parent, i18n("Save Attachments To"));
         if (!dirUrl.isValid()) {
             return false;
         }
