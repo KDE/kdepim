@@ -54,7 +54,6 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     KIconLoader::global()->addAppDir("libkleopatra");
-    KIconLoader::global()->addAppDir("kdepim");
 
     Kleo::KeySelectionDialog dlg("Kleo::KeySelectionDialog Test",
                                  "Please select a key:",

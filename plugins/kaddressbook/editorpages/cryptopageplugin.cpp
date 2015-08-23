@@ -50,7 +50,6 @@ CryptoPagePlugin::CryptoPagePlugin()
     : mReadOnly(false)
 {
     KIconLoader::global()->addAppDir(QStringLiteral("libkleopatra"));
-    KIconLoader::global()->addAppDir(QStringLiteral("kdepim"));
 
     QGridLayout *topLayout = new QGridLayout(this);
     topLayout->setColumnStretch(1, 1);

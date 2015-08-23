@@ -46,7 +46,6 @@ KWatchGnuPGTray::KWatchGnuPGTray(KWatchGnuPGMainWindow *mainwin)
 
     setObjectName(QStringLiteral("KWatchGnuPG Tray Window"));
     KIconLoader::global()->addAppDir(QStringLiteral("kwatchgnupg"));
-    KIconLoader::global()->addAppDir(QStringLiteral("kdepim"));
 
     mNormalPix.addPixmap(KIconLoader::global()->loadIcon(QStringLiteral("kwatchgnupg"), KIconLoader::Panel));
     mAttentionPix.addPixmap(KIconLoader::global()->loadIcon(QStringLiteral("kwatchgnupg2"), KIconLoader::Panel));

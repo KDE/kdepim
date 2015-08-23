@@ -84,7 +84,6 @@ static void add_resources()
 {
     KIconLoader::global()->addAppDir(QStringLiteral("libkleopatra"));
     KIconLoader::global()->addAppDir(QStringLiteral("kwatchgnupg"));
-    KIconLoader::global()->addAppDir(QStringLiteral("kdepim"));
 }
 
 static const struct {
