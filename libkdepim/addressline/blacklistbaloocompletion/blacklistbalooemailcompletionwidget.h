@@ -60,6 +60,7 @@ private:
     QPushButton *mSearchButton;
     QPushButton *mSelectButton;
     QPushButton *mUnselectButton;
+    QPushButton *mShowAllBlackListedEmails;
     QLabel *mMoreResult;
     KListWidgetSearchLine *mSearchInResultLineEdit;
     BlackListBalooEmailWarning *mBlackListWarning;

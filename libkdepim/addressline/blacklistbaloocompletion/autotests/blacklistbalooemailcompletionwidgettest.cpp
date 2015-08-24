@@ -54,13 +54,16 @@ void BlackListBalooEmailCompletionWidgetTest::shouldHaveDefaultValue()
     QVERIFY(searchLineEdit->text().isEmpty());
 
     QPushButton *seachButton = widget.findChild<QPushButton *>(QStringLiteral("search_button"));
+    QVERIFY(seachButton);
+    QVERIFY(!seachButton->isEnabled());
 
     QLabel *moreResult = widget.findChild<QLabel *>(QStringLiteral("moreresultlabel"));
     QVERIFY(moreResult);
     QVERIFY(!moreResult->isVisible());
 
-    QVERIFY(seachButton);
-    QVERIFY(!seachButton->isEnabled());
+
+    QPushButton *showAllBlackListedEmails = widget.findChild<QPushButton *>(QStringLiteral("show_blacklisted_email_button"));
+    QVERIFY(showAllBlackListedEmails);
 
     KPIM::BlackListBalooEmailList *emailList = widget.findChild<KPIM::BlackListBalooEmailList *>(QStringLiteral("email_list"));
     QVERIFY(emailList);

@@ -64,6 +64,11 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mSearchButton->setEnabled(false);
     searchLayout->addWidget(mSearchButton);
 
+    mShowAllBlackListedEmails = new QPushButton(i18n("Show Blacklisted Emails"));
+    mShowAllBlackListedEmails->setObjectName(QStringLiteral("show_blacklisted_email_button"));
+    connect(mShowAllBlackListedEmails, &QAbstractButton::clicked, this, &BlackListBalooEmailCompletionWidget::slotShowAllBlacklistedEmail);
+    searchLayout->addWidget(mShowAllBlackListedEmails);
+
     mEmailList = new BlackListBalooEmailList;
     mEmailList->setObjectName(QStringLiteral("email_list"));
     mainLayout->addWidget(mEmailList);
