@@ -140,7 +140,7 @@ void FreeBusyCalendar::onRowsInserted(const QModelIndex &parent, int first, int 
 void FreeBusyCalendar::onRowsRemoved(const QModelIndex &parent, int first, int last)
 {
     if (!parent.isValid()) {
-        for (int i = first; i <= last; --i) {
+        for (int i = first; i <= last; ++i) {
             QModelIndex index = mModel->index(i, 0);
             onRowsRemoved(index, 0, mModel->rowCount(index) - 1);
         }
