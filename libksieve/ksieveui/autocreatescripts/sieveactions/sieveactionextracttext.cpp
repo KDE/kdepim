@@ -107,7 +107,7 @@ QString SieveActionExtractText::code(QWidget *w) const
     return result;
 }
 
-QStringList SieveActionExtractText::needRequires(QWidget *parent) const
+QStringList SieveActionExtractText::needRequires(QWidget * /*parent*/) const
 {
     return QStringList() << QStringLiteral("extracttext");
 }

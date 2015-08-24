@@ -292,7 +292,7 @@ void SieveGlobalVariableLister::loadScript(const QDomElement &element, QString &
     w->loadScript(element, error);
 }
 
-void SieveGlobalVariableLister::loadSetVariable(const QDomElement &element, QString &error)
+void SieveGlobalVariableLister::loadSetVariable(const QDomElement &element, QString &/*error*/)
 {
     QString variableName;
     QString variableValue;
