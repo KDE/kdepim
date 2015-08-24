@@ -1,5 +1,5 @@
 macro(add_mailcommon_filter_test _name)
-    ecm_add_test(${ARGN} ${mailcommon_SOURCE_DIR}/mailcommon_debug.cpp
+    ecm_add_test(${ARGN} ${mailcommon_BINARY_DIR}/mailcommon_debug.cpp
         TEST_NAME ${_name}
         NAME_PREFIX "mailcommon-filter-"
         LINK_LIBRARIES Qt5::Test Qt5::Gui KF5::AkonadiCore KF5::AkonadiMime

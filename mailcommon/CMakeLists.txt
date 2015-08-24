@@ -155,7 +155,6 @@ set(libmailcommon_util_SRCS
 
 set(libmailcommon_SRCS
   kernel/mailkernel.cpp
-  mailcommon_debug.cpp
   ${libmailcommon_util_SRCS}
   ${libmailcommon_mdn_SRCS}
   ${libmailcommon_invalidfilters}
@@ -172,7 +171,7 @@ kconfig_add_kcfg_files(libmailcommon_SRCS
     settings/mailcommonsettings_base.kcfgc
 )
 
-
+ecm_qt_declare_logging_category(libmailcommon_SRCS HEADER mailcommon_debug.h IDENTIFIER MAILCOMMON_LOG CATEGORY_NAME log_mailcommon)
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "dbusoperators.h")
 

@@ -23,8 +23,9 @@ set(pimsettingexporter_SRCS
     importexportprogressindicatorgui.cpp
     pimsettingexporterwindow.cpp
     pimsettingcommandlineoption.cpp
-    pimsettingexportgui_debug.cpp
     main.cpp)
+
+ecm_qt_declare_logging_category(pimsettingexporter_SRCS HEADER pimsettingexportgui_debug.h IDENTIFIER PIMSETTINGEXPORTERGUI_LOG CATEGORY_NAME log_pimsettingexportergui)
 
 add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 

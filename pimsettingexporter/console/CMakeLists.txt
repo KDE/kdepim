@@ -17,6 +17,8 @@ set(pimsettingexporterconsole_SRCS
     loginfile.cpp
     main.cpp)
 
+ecm_qt_declare_logging_category(pimsettingexporterconsole_SRCS HEADER pimsettingexportconsole_debug.h IDENTIFIER PIMSETTINGEXPORTERCONSOLE_LOG CATEGORY_NAME log_pimsettingexporterconsole)
+
 add_executable(pimsettingexporterconsole ${pimsettingexporterconsole_SRCS})
 
 target_link_libraries(pimsettingexporterconsole KF5::ConfigCore Qt5::Xml KF5::CoreAddons KF5::I18n KF5::Archive
