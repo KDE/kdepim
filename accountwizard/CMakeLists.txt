@@ -74,6 +74,7 @@ set(accountwizard_libs
   kdepim
   KF5::ItemViews
   KF5::I18n
+  KF5::Ldap
 )
 
 if ( NOT ACCOUNTWIZARD_NO_GHNS )

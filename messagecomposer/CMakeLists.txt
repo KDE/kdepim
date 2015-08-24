@@ -170,6 +170,7 @@ PRIVATE
   sendlater
   followupreminder
   KF5::Archive
+  KF5::Ldap
 )
 
 target_include_directories(messagecomposer PUBLIC "$<BUILD_INTERFACE:${messagecomposer_SOURCE_DIR};${messagecomposer_BINARY_DIR}>")

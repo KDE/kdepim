@@ -13,4 +13,5 @@ target_link_libraries(resourcemanagement_gui
   KF5::Mime
   incidenceeditorsng
   kdepim
+  KF5::Ldap
 )

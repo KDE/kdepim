@@ -108,6 +108,7 @@ PRIVATE
   kdepim
   kdepimdbusinterfaces # For UriHandler
   KF5::Codecs
+  KF5::Ldap
 )
 
 set_target_properties(incidenceeditorsng
