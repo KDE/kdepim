@@ -255,9 +255,6 @@ endif()
 set_target_properties( messageviewer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 install(TARGETS messageviewer ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
-#install( FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION  ${KDE_INSTALL_INCLUDEDIR}/messageviewer COMPONENT devel)
-
-
 install(DIRECTORY themes DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )
 
 install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
