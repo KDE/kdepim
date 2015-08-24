@@ -35,6 +35,7 @@
 
 EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent)
     : GrantleeThemeEditor::EditorPage(type, parent),
+      mPreview(Q_NULLPTR),
       mWidgetSplitter(0)
 {
     QVBoxLayout *lay = new QVBoxLayout;

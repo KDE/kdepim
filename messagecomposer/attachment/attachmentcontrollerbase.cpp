@@ -162,6 +162,7 @@ AttachmentControllerBase::Private::Private(AttachmentControllerBase *qq)
     , selectAllAction(Q_NULLPTR)
     , attachmentMenu(Q_NULLPTR)
     , addOwnVcardAction(Q_NULLPTR)
+    , reloadAttachmentAction(Q_NULLPTR)
     , attachVCardsAction(Q_NULLPTR)
 {
 }
