@@ -37,6 +37,7 @@
 #include <KMessageBox>
 
 #include <QLayout>
+#include <QDebug>
 
 using namespace MessageComposer;
 using namespace KPIM;
@@ -50,7 +51,11 @@ RecipientLineFactory::RecipientLineFactory(QObject *parent)
 KPIM::MultiplyingLine *RecipientLineFactory::newLine(QWidget *parent)
 {
     RecipientLineNG *line = new RecipientLineNG(parent);
-    connect(line, SIGNAL(addRecipient(RecipientLineNG*,QString)), qobject_cast<RecipientsEditor *>(parent), SLOT(addRecipient(RecipientLineNG*,QString)));
+    if (qobject_cast<RecipientsEditor *>(parent)) {
+        connect(line, SIGNAL(addRecipient(RecipientLineNG*,QString)), qobject_cast<RecipientsEditor *>(parent), SLOT(addRecipient(RecipientLineNG*,QString)));
+    } else {
+        qWarning() << "RecipientLineFactory::newLine: We can't connect to new line" << parent;
+    }
     return line;
 }
 
