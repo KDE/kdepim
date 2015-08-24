@@ -102,7 +102,7 @@ bool MessageCore::NodeHelper::isAttachment(KMime::Content *node)
 
 bool MessageCore::NodeHelper::isHeuristicalAttachment(KMime::Content *node)
 {
-    if (isAttachment(node)) {
+    if (NodeHelper::isAttachment(node)) {
         return true;
     }
 
