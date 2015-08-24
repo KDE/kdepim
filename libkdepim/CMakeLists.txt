@@ -142,18 +142,18 @@ generate_export_header(kdepim BASE_NAME kdepim)
 target_link_libraries(kdepim
  PUBLIC
   KF5::Contacts
-  KF5::Codecs
-  KF5::Completion
-  KF5::I18n
-  KF5::ItemViews
   KF5::Ldap
-  KF5::KCMUtils
   KF5::AkonadiCore
   KF5::AkonadiContact
   KF5::AkonadiWidgets
+ PRIVATE
+  KF5::Codecs
+  KF5::Completion
+  KF5::I18n
   KF5::KCMUtils
   KF5::Wallet
- PRIVATE
+  KF5::AkonadiContact
+  KF5::ItemViews
   KF5::AkonadiSearchPIM
   KF5::AkonadiCalendar
 )
@@ -205,7 +205,7 @@ set( kcm_ldap_SRCS
 add_library(kcm_ldap MODULE ${kcm_ldap_SRCS})
 
 
-target_link_libraries(kcm_ldap   kdepim KF5::IconThemes)
+target_link_libraries(kcm_ldap   kdepim KF5::IconThemes KF5::KCMUtils KF5::I18n)
 
 kcoreaddons_desktop_to_json(kcm_ldap ldap/kcmldap.desktop)
 

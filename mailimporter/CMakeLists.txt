@@ -44,6 +44,9 @@ PRIVATE
   KF5::AkonadiMime
   kdepim
   KF5::Archive
+  KF5::I18n
+  KF5::ConfigCore
+  Qt5::Xml
 )
 
 target_include_directories(mailimporter PUBLIC "$<BUILD_INTERFACE:${mailimporter_SOURCE_DIR};${mailimporter_BINARY_DIR}>")

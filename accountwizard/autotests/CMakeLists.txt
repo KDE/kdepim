@@ -12,4 +12,5 @@ target_link_libraries(ldaptest
     KF5::Ldap
     Qt5::Test
     kdepim
+    KF5::I18n
   )

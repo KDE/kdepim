@@ -72,6 +72,8 @@ set(accountwizard_libs
   KF5::NewStuff
   Qt5::UiTools
   kdepim
+  KF5::ItemViews
+  KF5::I18n
 )
 
 if ( NOT ACCOUNTWIZARD_NO_GHNS )

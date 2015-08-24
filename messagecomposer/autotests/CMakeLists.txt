@@ -31,6 +31,7 @@ macro( add_messagecomposer_cryptotest _source )
         Qt5::Test
         KF5::QGpgme
         KF5::IconThemes
+        KF5::Completion
     )
     add_gpg_crypto_test(${_name} ${_name})
 endmacro()

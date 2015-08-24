@@ -104,6 +104,7 @@ target_link_libraries(importwizard
   kdepim
   messagecomposer
   messageviewer
+  KF5::Completion
 )
 
 install(TARGETS importwizard  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
