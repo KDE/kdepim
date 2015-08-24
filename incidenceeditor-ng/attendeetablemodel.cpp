@@ -30,6 +30,7 @@ AttendeeTableModel::AttendeeTableModel(const KCalCore::Attendee::List &attendees
     : QAbstractTableModel(parent)
     , mAttendeeList(attendees)
     , mKeepEmpty(false)
+    , mRemoveEmptyLines(false)
 {
 
 }

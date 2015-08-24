@@ -31,7 +31,8 @@
 using namespace IncidenceEditorNG;
 
 IncidenceCategories::IncidenceCategories(Ui::EventOrTodoDesktop *ui)
-    : mUi(ui)
+    : mUi(ui),
+      mDirty(false)
 {
     setObjectName("IncidenceCategories");
 

@@ -78,6 +78,7 @@ MessageFactory::MessageFactory(const KMime::Message::Ptr &origMsg, Akonadi::Item
     : m_identityManager(Q_NULLPTR)
     , m_origMsg(origMsg)
     , m_origId(0)
+    , m_folderId(0)
     , m_parentFolderId(0)
     , m_collection(col)
     , m_replyStrategy(MessageComposer::ReplySmart)

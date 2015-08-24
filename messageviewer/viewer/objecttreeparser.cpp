@@ -161,7 +161,8 @@ ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
       mIncludeSignatures(includeSignatures),
       mHasPendingAsyncJobs(false),
       mAllowAsync(topLevelParser->mAllowAsync),
-      mAttachmentStrategy(strategy)
+      mAttachmentStrategy(strategy),
+      mPrinting(false)
 {
     init();
 }

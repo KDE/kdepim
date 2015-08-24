@@ -225,6 +225,7 @@ private:
 CompletionOrderWidget::CompletionOrderWidget(QWidget *parent)
     : QWidget(parent),
       mConfig(QStringLiteral("kpimcompletionorder")),
+      mCollectionModel(Q_NULLPTR),
       mLdapSearch(0),
       mDirty(false)
 {
