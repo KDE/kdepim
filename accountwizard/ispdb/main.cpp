@@ -89,8 +89,9 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     QString email(QStringLiteral("blablabla@gmail.com"));
-    if (!parser.value(QStringLiteral("email")).isEmpty()) {
-        email = parser.value(QStringLiteral("email"));
+    const QString argEmail = parser.value(QStringLiteral("email"));
+    if (!argEmail.isEmpty()) {
+        email = argEmail;
     }
 
     QEventLoop loop;

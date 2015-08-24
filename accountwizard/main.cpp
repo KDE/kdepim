@@ -70,8 +70,9 @@ int main(int argc, char **argv)
         Global::setAssistant(parser.value(QStringLiteral("assistant")));
     }
 
-    if (!parser.value(QStringLiteral("type")).isEmpty()) {
-        Global::setTypeFilter(parser.value(QStringLiteral("type")).split(QLatin1Char(',')));
+    QString typeValue = parser.value(QStringLiteral("type"));
+    if (!typeValue.isEmpty()) {
+        Global::setTypeFilter(typeValue.split(QLatin1Char(',')));
     }
 
     Dialog dlg(0/*, Qt::WindowStaysOnTopHint*/);
