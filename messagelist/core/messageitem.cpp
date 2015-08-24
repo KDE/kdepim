@@ -271,11 +271,13 @@ QString MessageItem::annotation() const
     if (d->mAkonadiItem.hasAttribute<Akonadi::EntityAnnotationsAttribute>()) {
         Akonadi::EntityAnnotationsAttribute *attr = d->mAkonadiItem.attribute<Akonadi::EntityAnnotationsAttribute>();
         const QMap<QByteArray, QByteArray> annotations = attr->annotations();
-        if (annotations.contains("/private/comment")) {
-            return QString::fromLatin1(annotations.value("/private/comment"));
+        QByteArray annot = annotations.value("/private/comment");
+        if (!annot.isEmpty()) {
+            return QString::fromLatin1(annot);
         }
-        if (annotations.contains("/shared/comment")) {
-            return QString::fromLatin1(annotations.value("/shared/comment"));
+        annot = annotations.value("/shared/comment");
+        if (!annot.isEmpty()) {
+            return QString::fromLatin1(annot);
         }
     }
     return QString();

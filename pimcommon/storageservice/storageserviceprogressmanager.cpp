@@ -108,8 +108,8 @@ void StorageServiceProgressManager::slotDownloadFileProgress(const QString &serv
 
 void StorageServiceProgressManager::slotDownloadFileDone(const QString &serviceName, const QString &)
 {
-    if (mHashList.contains(serviceName)) {
-        ProgressJob *job = mHashList.value(serviceName);
+    ProgressJob *job = mHashList.value(serviceName);
+    if (job) {
         KPIM::ProgressItem *mProgressItem = job->item();
         if (mProgressItem) {
             mProgressItem->setComplete();
@@ -120,8 +120,8 @@ void StorageServiceProgressManager::slotDownloadFileDone(const QString &serviceN
 
 void StorageServiceProgressManager::slotDownloadFileFailed(const QString &serviceName, const QString &)
 {
-    if (mHashList.contains(serviceName)) {
-        ProgressJob *job = mHashList.value(serviceName);
+    ProgressJob *job = mHashList.value(serviceName);
+    if (job) {
         KPIM::ProgressItem *mProgressItem = job->item();
         if (mProgressItem) {
             mProgressItem->setComplete();

@@ -258,8 +258,8 @@ void StorageServiceManager::slotDownloadFile()
     QAction *act = qobject_cast< QAction * >(sender());
     if (act) {
         const QString type = act->data().toString();
-        if (mListService.contains(type)) {
-            StorageServiceAbstract *service = mListService.value(type);
+        StorageServiceAbstract *service = mListService.value(type);
+        if (service) {
             QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(service, Q_NULLPTR);
             dlg->setDefaultDownloadPath(mDefaultUploadFolder);
             dlg->exec();
@@ -280,8 +280,8 @@ void StorageServiceManager::slotDeleteFile()
     QAction *act = qobject_cast< QAction * >(sender());
     if (act) {
         const QString type = act->data().toString();
-        if (mListService.contains(type)) {
-            StorageServiceAbstract *service = mListService.value(type);
+        StorageServiceAbstract *service = mListService.value(type);
+        if (service) {
             QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(StorageServiceDeleteDialog::DeleteFiles, service);
             defaultConnect(service);
             connect(dlg.data(), &StorageServiceDeleteDialog::deleteFileDone, this, &StorageServiceManager::deleteFileDone);
@@ -296,8 +296,8 @@ void StorageServiceManager::slotDeleteFolder()
     QAction *act = qobject_cast< QAction * >(sender());
     if (act) {
         const QString type = act->data().toString();
-        if (mListService.contains(type)) {
-            StorageServiceAbstract *service = mListService.value(type);
+        StorageServiceAbstract *service = mListService.value(type);
+        if (service) {
             QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(StorageServiceDeleteDialog::DeleteFolders, service);
             defaultConnect(service);
             connect(dlg.data(), &StorageServiceDeleteDialog::deleteFolderDone, this, &StorageServiceManager::deleteFolderDone);
@@ -312,8 +312,8 @@ void StorageServiceManager::slotAccountInfo()
     QAction *act = qobject_cast< QAction * >(sender());
     if (act) {
         const QString type = act->data().toString();
-        if (mListService.contains(type)) {
-            StorageServiceAbstract *service = mListService.value(type);
+        StorageServiceAbstract *service = mListService.value(type);
+        if (service) {
             defaultConnect(service);
             connect(service, &StorageServiceAbstract::accountInfoDone, this, &StorageServiceManager::accountInfoDone, Qt::UniqueConnection);
             service->accountInfo();
