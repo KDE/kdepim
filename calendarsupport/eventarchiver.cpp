@@ -252,7 +252,9 @@ void EventArchiver::archiveIncidences(const Akonadi::ETMCalendar::Ptr &calendar,
 
     // There is no KIO::NetAccess availabe for Windows CE
     if (KIO::NetAccess::exists(archiveURL, KIO::NetAccess::SourceSide, widget)) {
-        if (!KIO::NetAccess::download(archiveURL, archiveFile, widget)) {
+        auto job = KIO::file_copy(archiveURL, QUrl::fromLocalFile(archiveFile));
+        KJobWidgets::setWindow(job, widget);
+        if (!job->exec()) {
             qCDebug(CALENDARSUPPORT_LOG) << "Can't download archive file";
             QFile::remove(tmpFileName);
             return;

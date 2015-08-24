@@ -29,6 +29,7 @@
   @author Allen Winter \<winter@kde.org\>
 */
 #include "attachmenthandler.h"
+#include "calendarsupport_debug.h"
 #include "calendarsupport/utils.h"
 
 #include <ItemFetchJob>
@@ -37,9 +38,9 @@
 #include <KMessageBox>
 #include <KRun>
 #include <KIO/FileCopyJob>
-#include <KIO/NetAccess>
+#include <KIO/StatJob>
+#include <KJobWidgets>
 #include <KJob>
-#include "calendarsupport_debug.h"
 
 #include <QFileDialog>
 #include <QTemporaryFile>
@@ -110,7 +111,9 @@ Attachment::Ptr AttachmentHandler::find(const QString &attachmentName,
     }
 
     if (a->isUri()) {
-        if (!KIO::NetAccess::exists(a->uri(), KIO::NetAccess::SourceSide, d->mParent)) {
+        auto job = KIO::stat(a->uri(), KIO::StatJob::SourceSide, 0);
+        KJobWidgets::setWindow(job, d->mParent);
+        if (!job->exec()) {
             KMessageBox::sorry(
                 d->mParent,
                 i18n("The attachment \"%1\" is a web link that is inaccessible from this computer. ",
