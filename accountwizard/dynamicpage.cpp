@@ -36,10 +36,13 @@ DynamicPage::DynamicPage(const QString &uiFile, KAssistantDialog *parent) : Page
 
     QUiLoader loader;
     QFile file(uiFile);
-    file.open(QFile::ReadOnly);
-    qCDebug(ACCOUNTWIZARD_LOG) << uiFile;
-    m_dynamicWidget = loader.load(&file, pageParent);
-    file.close();
+    if (file.open(QFile::ReadOnly)) {
+        qCDebug(ACCOUNTWIZARD_LOG) << uiFile;
+        m_dynamicWidget = loader.load(&file, pageParent);
+        file.close();
+    } else {
+        qCDebug(ACCOUNTWIZARD_LOG) << "Unable to open: " << uiFile;
+    }
 
     layout->addWidget(m_dynamicWidget);
 
