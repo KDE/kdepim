@@ -166,7 +166,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
     QString fileName(filename);
 
     QFile file;
-    if (type != ThunderBirdFilter) {
+    if ((type != ThunderBirdFilter) && (type != IcedoveFilter)) {
         if (fileName.isEmpty()) {
             QString title;
             QString defaultPath;
@@ -176,8 +176,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
                 defaultPath = QDir::homePath();
                 break;
             case ThunderBirdFilter:
-                title = i18n("Import Thunderbird Filters");
-                defaultPath = MailCommon::FilterImporterThunderbird::defaultThunderbirdFiltersSettingsPath();
+            case IcedoveFilter:
                 break;
             case EvolutionFilter:
                 title = i18n("Import Evolution Filters");
@@ -198,10 +197,6 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
             case ClawsMailFilter:
                 title = i18n("Import Claws Mail Filters");
                 defaultPath = MailCommon::FilterImporterClawsMails::defaultFiltersSettingsPath();
-                break;
-            case IcedoveFilter:
-                title = i18n("Import Icedove Filters");
-                defaultPath = MailCommon::FilterImporterThunderbird::defaultIcedoveFiltersSettingsPath();
                 break;
             case GmailFilter:
                 title = i18n("Import Gmail Filters");

@@ -62,12 +62,15 @@ class Q_DECL_HIDDEN RedirectDialog::Private
 public:
     Private(RedirectDialog *qq, RedirectDialog::SendMode mode)
         : q(qq),
-          mEditTo(0),
-          mEditCc(0),
-          mEditBcc(0),
+          mEditTo(Q_NULLPTR),
+          mEditCc(Q_NULLPTR),
+          mEditBcc(Q_NULLPTR),
           mSendMode(mode),
-          mComboboxIdentity(0),
-          mTransportCombobox(0)
+          mComboboxIdentity(Q_NULLPTR),
+          mTransportCombobox(Q_NULLPTR),
+          mUser1Button(Q_NULLPTR),
+          mUser2Button(Q_NULLPTR)
+
     {
     }
     enum TypeAddress {

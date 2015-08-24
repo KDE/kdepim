@@ -45,7 +45,8 @@ public:
         : q(qq),
           mButtonGroup(Q_NULLPTR),
           mUserIdLineEdit(Q_NULLPTR),
-          mButtonLayout(Q_NULLPTR)
+          mButtonLayout(Q_NULLPTR),
+          mOkButton(Q_NULLPTR)
     {
     }
 

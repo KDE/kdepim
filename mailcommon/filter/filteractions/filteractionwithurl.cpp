@@ -42,7 +42,8 @@ FilterActionWithUrlHelpButton::~FilterActionWithUrlHelpButton()
 }
 
 FilterActionWithUrl::FilterActionWithUrl(const QString &name, const QString &label, QObject *parent)
-    : FilterAction(name, label, parent)
+    : FilterAction(name, label, parent),
+      mHelpButton(Q_NULLPTR)
 {
 }
 

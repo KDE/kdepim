@@ -52,6 +52,7 @@ public:
           action_insert_horizontal_rule(Q_NULLPTR),
           action_text_foreground_color(Q_NULLPTR),
           action_text_background_color(Q_NULLPTR),
+          action_manage_link(Q_NULLPTR),
           action_list_indent(Q_NULLPTR),
           action_list_dedent(Q_NULLPTR),
           action_list_style(Q_NULLPTR),
