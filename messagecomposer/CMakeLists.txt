@@ -3,16 +3,12 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"libmessagecomposer\")
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/libkdepim
-    ${CMAKE_SOURCE_DIR}/libkleo
-    ${CMAKE_SOURCE_DIR}/messagecore
     ${CMAKE_SOURCE_DIR}/messageviewer
     ${CMAKE_SOURCE_DIR}/messageviewer/viewer/
     ${CMAKE_SOURCE_DIR}/messagecomposer/recipient/
     ${CMAKE_SOURCE_DIR}/messagecomposer/job
     ${CMAKE_SOURCE_DIR}/messagecomposer/utils/
     ${CMAKE_SOURCE_DIR}/messagecomposer/composer/
-    ${CMAKE_SOURCE_DIR}/pimcommon/
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
