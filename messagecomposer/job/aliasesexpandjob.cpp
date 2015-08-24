@@ -163,8 +163,9 @@ void AliasesExpandJob::finishExpansion()
         }
 
         // take prefetched expand nick name results
-        if (!mNicknameExpansionResults.value(recipient).isEmpty()) {
-            mEmailAddresses += mNicknameExpansionResults.value(recipient);
+        const QString recipientValue = mNicknameExpansionResults.value(recipient);
+        if (!recipientValue.isEmpty()) {
+            mEmailAddresses += recipientValue;
             continue;
         }
 
