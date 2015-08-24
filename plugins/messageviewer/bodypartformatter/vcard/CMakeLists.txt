@@ -1,7 +1,9 @@
 
 add_definitions(-DTRANSLATION_DOMAIN=\"messageviewer_text_vcard_plugin\")
 
-set(messageviewer_bodypartformatter_text_vcard_PART_SRCS text_vcard.cpp vcardmemento.cpp updatecontactjob.cpp vcard_debug.cpp)
+set(messageviewer_bodypartformatter_text_vcard_PART_SRCS text_vcard.cpp vcardmemento.cpp updatecontactjob.cpp)
+ecm_qt_declare_logging_category(messageviewer_bodypartformatter_text_vcard_PART_SRCS HEADER vcard_debug.h IDENTIFIER VCARD_LOG CATEGORY_NAME log_vcard)
+
 add_library(messageviewer_bodypartformatter_text_vcard MODULE ${messageviewer_bodypartformatter_text_vcard_PART_SRCS})
 target_link_libraries(messageviewer_bodypartformatter_text_vcard  KF5::Contacts kdepim messageviewer KF5::IconThemes KF5::JobWidgets)
 install(TARGETS messageviewer_bodypartformatter_text_vcard DESTINATION ${KDE_INSTALL_PLUGINDIR})

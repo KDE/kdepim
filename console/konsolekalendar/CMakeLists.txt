@@ -5,7 +5,6 @@ add_subdirectory(pics)
 ########### next target ###############
 
 set(konsolekalendar_SRCS 
-   konsolekalendar_debug.cpp
    konsolekalendarepoch.cpp 
    konsolekalendardelete.cpp 
    konsolekalendarchange.cpp 
@@ -17,6 +16,8 @@ set(konsolekalendar_SRCS
 
 #file(GLOB ICONS_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-calendar.png")
 #ecm_add_app_icon(konsolekalendar_SRCS ICONS ${ICONS_SRCS})
+
+ecm_qt_declare_logging_category(konsolekalendar_SRCS HEADER konsolekalendar_debug.h IDENTIFIER KONSOLEKALENDAR_LOG CATEGORY_NAME log_konsolekalendar)
 
 add_executable(konsolekalendar ${konsolekalendar_SRCS})
 

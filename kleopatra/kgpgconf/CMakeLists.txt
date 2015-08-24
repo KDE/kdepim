@@ -12,8 +12,8 @@ set(_kgpgconf_SRCS
   exception.cpp
   main.cpp
   mainwindow.cpp
-  kgpgconf_debug.cpp
 )
+ecm_qt_declare_logging_category(_kgpgconf_SRCS HEADER kgpgconf_debug.h IDENTIFIER KGPGCONF_LOG CATEGORY_NAME log_kgpgconf)
 
 ki18n_wrap_ui(_kgpgconf_SRCS mainwidget.ui)
 

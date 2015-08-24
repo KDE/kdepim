@@ -8,8 +8,8 @@ set(kwatchgnupg_SRCS
   aboutdata.cpp
   tray.cpp
   main.cpp
-  kwatchgnupg_debug.cpp
 )
+ecm_qt_declare_logging_category(kwatchgnupg_SRCS HEADER kwatchgnupg_debug.h IDENTIFIER KWATCHGNUPG_LOG CATEGORY_NAME log_kwatchgnupg)
 
 if(WIN32)
   set(kwatchgnupg_SRCS ${kwatchgnupg_SRCS} ../utils/gnupg-registry.c)
