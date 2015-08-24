@@ -202,7 +202,8 @@ public:
         Q_FOREACH (const PimCommon::defaultTemplate &tmp, templatesLst) {
             createListWidgetItem(tmp.name, tmp.text, true);
         }
-        if (!config.data()->groupList().isEmpty()) {
+        KConfigGroup group = config.data()->group("template");
+        if (group.hasKey(QStringLiteral("templateCount"))) {
             loadTemplates(config.data());
         }
         dirty = false;
