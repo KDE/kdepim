@@ -1182,6 +1182,8 @@ void MainWidget::slotCheckGravatar()
                 }
             }
             delete dlg;
+        } else {
+            KMessageBox::information(this, i18n("A contact group was selected."));
         }
     }
 }
