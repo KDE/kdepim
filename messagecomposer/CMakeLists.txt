@@ -151,15 +151,15 @@ generate_export_header(messagecomposer BASE_NAME messagecomposer)
 target_link_libraries(messagecomposer
 PUBLIC
   KF5::Mime
-  KF5::AkonadiMime
-  KF5::AkonadiCore
-  KF5::MailTransport
-  KF5::PimTextEdit
-  KF5::IdentityManagement
   messagecore
-  templateparser
-  kleo
   pimcommon
+  KF5::AkonadiCore
+  KF5::IdentityManagement
+  KF5::AkonadiMime
+  KF5::MailTransport
+  kleo
+  KF5::PimTextEdit
+  templateparser
 PRIVATE
   messageviewer
   KF5::AkonadiWidgets

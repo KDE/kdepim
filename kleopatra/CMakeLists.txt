@@ -288,9 +288,10 @@ set(_kleopatra_SRCS
   aboutdata.cpp
   systrayicon.cpp
   kleopatraapplication.cpp
-  kleopatra_debug.cpp
   main.cpp
 )
+
+ecm_qt_declare_logging_category(_kleopatra_SRCS HEADER kleopatra_debug.h IDENTIFIER KLEOPATRA_LOG CATEGORY_NAME log_kleopatra)
 
 if(KLEO_MODEL_TEST)
   add_definitions(-DKLEO_MODEL_TEST)

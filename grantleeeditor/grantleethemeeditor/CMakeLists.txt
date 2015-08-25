@@ -14,7 +14,6 @@ set(libgrantleethemeeditor_SRCS
     previewwidget.cpp
     configurewidget.cpp
     grantleeplaintexteditor.cpp
-    grantleethemeeditor_debug.cpp
 )
 
 kconfig_add_kcfg_files(libgrantleethemeeditor_SRCS
@@ -25,6 +24,7 @@ ki18n_wrap_ui(libgrantleethemeeditor_SRCS
     ui/configurewidget.ui
 )
 
+ecm_qt_declare_logging_category(libgrantleethemeeditor_SRCS HEADER grantleethemeeditor_debug.h IDENTIFIER GRANTLEETHEMEEDITOR_LOG CATEGORY_NAME log_grantleethemeeditor)
 
 add_library(grantleethemeeditor ${libgrantleethemeeditor_SRCS})
 generate_export_header(grantleethemeeditor BASE_NAME grantleethemeeditor)
