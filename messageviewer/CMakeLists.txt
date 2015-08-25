@@ -225,9 +225,9 @@ PUBLIC
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Contacts
-  KF5::ItemViews
   KF5::Gpgmepp
 PRIVATE
+  KF5::ItemViews
   ${_mailwebview_lib}
   kdepim
   kpgp
