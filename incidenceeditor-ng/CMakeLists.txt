@@ -3,7 +3,6 @@ project(incidenceeditorng)
 add_definitions(-DTRANSLATION_DOMAIN=\"libincidenceeditors\")
 
 set(incidenceeditors_ng_shared_LIB_SRCS
-  incidenceeditor_debug.cpp
   attachmenteditdialog.cpp
   attachmenticonview.cpp
   attendeedata.cpp
@@ -66,6 +65,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   resourceitem.cpp
   resourcemodel.cpp
 )
+ecm_qt_declare_logging_category(incidenceeditors_ng_shared_LIB_SRCS HEADER incidenceeditor_debug.h IDENTIFIER INCIDENCEEDITOR_LOG CATEGORY_NAME log_incidenceeditor)
 
 kconfig_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc)
 

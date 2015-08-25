@@ -1,7 +1,9 @@
 
 
 add_definitions(-DTRANSLATION_DOMAIN=\"messageviewer_text_calendar_plugin\")
-set(messageviewer_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp memorycalendarmemento.cpp syncitiphandler.cpp text_calendar_debug.cpp)
+set(messageviewer_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp memorycalendarmemento.cpp syncitiphandler.cpp)
+
+ecm_qt_declare_logging_category(messageviewer_bodypartformatter_text_calendar_PART_SRCS HEADER text_calendar_debug.h IDENTIFIER TEXT_CALENDAR_LOG CATEGORY_NAME log_text_calendar)
 
 qt5_add_dbus_interfaces(messageviewer_bodypartformatter_text_calendar_PART_SRCS
   ${CMAKE_SOURCE_DIR}/korganizer/data/org.kde.Korganizer.Calendar.xml
