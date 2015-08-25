@@ -50,7 +50,7 @@
 
 static const int updateDelayMilliSecs = 500;
 
-class Kleo::KeyListView::Private
+class Q_DECL_HIDDEN Kleo::KeyListView::Private
 {
 public:
     Private() : updateTimer(0) {}

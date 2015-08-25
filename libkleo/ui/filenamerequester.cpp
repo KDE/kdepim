@@ -43,7 +43,7 @@
 
 using namespace Kleo;
 
-class FileNameRequester::Private
+class Q_DECL_HIDDEN FileNameRequester::Private
 {
     friend class ::Kleo::FileNameRequester;
     FileNameRequester *const q;

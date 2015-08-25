@@ -21,7 +21,7 @@
 using namespace IncidenceEditorNG;
 
 //@cond PRIVATE
-class AutoCheckTreeWidget::Private
+class Q_DECL_HIDDEN AutoCheckTreeWidget::Private
 {
 public:
     Private()

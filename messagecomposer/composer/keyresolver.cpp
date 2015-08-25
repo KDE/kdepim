@@ -643,7 +643,7 @@ struct FormatInfo {
     std::vector<GpgME::Key> signKeys;
 };
 
-struct Kleo::KeyResolver::Private {
+struct Q_DECL_HIDDEN Kleo::KeyResolver::Private {
     std::set<QByteArray> alreadyWarnedFingerprints;
 
     std::vector<GpgME::Key> mOpenPGPSigningKeys; // signing

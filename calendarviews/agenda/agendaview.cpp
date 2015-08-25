@@ -75,7 +75,7 @@ enum {
     SHRINKDOWN = 2  // points less for the timezone font
 };
 
-class EventIndicator::Private
+class Q_DECL_HIDDEN EventIndicator::Private
 {
     EventIndicator *const q;
 

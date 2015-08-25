@@ -27,7 +27,7 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QUrl>
-class BilboMedia::Private
+class Q_DECL_HIDDEN BilboMedia::Private
 {
 public:
     Private()

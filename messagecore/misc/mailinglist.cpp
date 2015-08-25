@@ -249,7 +249,7 @@ static QStringList headerToAddress(const QString &header)
     return  addresses;
 }
 
-class MessageCore::MailingList::Private : public QSharedData
+class Q_DECL_HIDDEN MessageCore::MailingList::Private : public QSharedData
 {
 public:
     Private()

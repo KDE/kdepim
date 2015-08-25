@@ -23,7 +23,7 @@
 
 using namespace MessageCore;
 
-class MessageCore::AttachmentLoadJob::Private
+class Q_DECL_HIDDEN MessageCore::AttachmentLoadJob::Private
 {
 public:
     AttachmentPart::Ptr mPart;

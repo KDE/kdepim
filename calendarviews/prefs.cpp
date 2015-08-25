@@ -258,7 +258,7 @@ void BaseConfig::setTimeZoneDefault()
     mTimeSpec = zone;
 }
 
-class Prefs::Private
+class Q_DECL_HIDDEN Prefs::Private
 {
 public:
     Private(Prefs *parent) : mAppConfig(Q_NULLPTR), q(parent) {}

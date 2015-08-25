@@ -30,7 +30,7 @@
 
 #include <QApplication>
 
-class BilboBlog::Private
+class Q_DECL_HIDDEN BilboBlog::Private
 {
 public:
     Private()

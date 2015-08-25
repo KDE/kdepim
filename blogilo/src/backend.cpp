@@ -45,7 +45,7 @@
 
 const QRegExp splitRX(QStringLiteral("((<hr/?>)?<!--split-->)"));
 
-class Backend::Private
+class Q_DECL_HIDDEN Backend::Private
 {
 public:
     Private()

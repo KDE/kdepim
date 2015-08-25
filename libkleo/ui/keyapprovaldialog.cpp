@@ -93,7 +93,7 @@ static QStringList preferencesStrings()
            << i18n("Ask Whenever Encryption is Possible");
 }
 
-class Kleo::KeyApprovalDialog::Private
+class Q_DECL_HIDDEN Kleo::KeyApprovalDialog::Private
 {
 public:
     Private() : selfRequester(0), prefsChanged(false) {}
