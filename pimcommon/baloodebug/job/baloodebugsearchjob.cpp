@@ -23,7 +23,8 @@
 
 using namespace PimCommon;
 BalooDebugSearchJob::BalooDebugSearchJob(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mProcess(Q_NULLPTR)
 {
 
 }

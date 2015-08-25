@@ -63,7 +63,8 @@ namespace MessageViewer
 {
 
 MailSourceViewer::MailSourceViewer(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      mFindBar(Q_NULLPTR)
 {
     setAttribute(Qt::WA_DeleteOnClose);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);

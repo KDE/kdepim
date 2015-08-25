@@ -33,7 +33,9 @@ using namespace KPIM;
 
 PersonSearchJob::PersonSearchJob(const QString &searchString, QObject *parent)
     : KJob(parent),
-      mSearchString(searchString)
+      mSearchString(searchString),
+      mCollectionSearchDone(false),
+      mLdapSearchDone(false)
 {
     connect(&mLdapSearch, static_cast<void (KLDAP::LdapClientSearch::*)(const QList<KLDAP::LdapResultObject> &)>(&KLDAP::LdapClientSearch::searchData),
             this, &PersonSearchJob::onLDAPSearchData);

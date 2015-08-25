@@ -45,6 +45,7 @@ public:
         : q(qq),
           mJob(Q_NULLPTR),
           mActive(false),
+          mClientNumber(0),
           mSession(Q_NULLPTR)
     {
     }

@@ -146,7 +146,8 @@ void IndividualMessageQueueJob::handleJobFinished(KJob *job)
 
 IndividualMailITIPHandlerDialogDelegate::IndividualMailITIPHandlerDialogDelegate(const KCalCore::Incidence::Ptr &incidence,
         KCalCore::iTIPMethod method, QWidget *parent)
-    : Akonadi::ITIPHandlerDialogDelegate(incidence, method, parent)
+    : Akonadi::ITIPHandlerDialogDelegate(incidence, method, parent),
+      mDialog(Q_NULLPTR)
 {
 }
 
