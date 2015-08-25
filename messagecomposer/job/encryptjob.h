@@ -45,7 +45,7 @@ class EncryptJobPrivate;
   Encrypt the contents of a message .
   Used as a subjob of CryptoMessage
 */
-class MESSAGECOMPOSER_EXPORT EncryptJob : public ContentJobBase, public AbstractEncryptJob
+class MESSAGECOMPOSER_EXPORT EncryptJob : public ContentJobBase, public MessageComposer::AbstractEncryptJob
 {
     Q_OBJECT
 

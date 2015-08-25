@@ -28,7 +28,8 @@
 
 class QString;
 class QNetworkRequest;
-
+namespace MessageViewer
+{
 class AdBlockRuleImpl
 {
 public:
@@ -41,5 +42,5 @@ public:
     virtual QString ruleString() const = 0;
     virtual QString ruleType() const = 0;
 };
-
+}
 #endif // ADBLOCKRULEIMPL_H

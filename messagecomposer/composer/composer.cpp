@@ -321,8 +321,8 @@ void ComposerPrivate::contentJobFinished(KJob *job)
     // create the final headers and body,
     // taking into account secondary recipients for encryption
     if (encData.size() > 1) {  // crypto job with secondary recipients..
-        Q_ASSERT(dynamic_cast<AbstractEncryptJob *>(job));    // we need to get the recipients for this job
-        AbstractEncryptJob *eJob = dynamic_cast<AbstractEncryptJob *>(job);
+        Q_ASSERT(dynamic_cast<MessageComposer::AbstractEncryptJob *>(job));    // we need to get the recipients for this job
+        MessageComposer::AbstractEncryptJob *eJob = dynamic_cast<MessageComposer::AbstractEncryptJob *>(job);
 
         keys = eJob->encryptionKeys();
         recipients = eJob->recipients();

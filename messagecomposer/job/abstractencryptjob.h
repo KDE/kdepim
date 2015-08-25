@@ -30,7 +30,8 @@
   * Simple interface that both EncryptJob and SignEncryptJob implement
   * so the composer can extract some encryption-specific job info from them
   */
-
+namespace MessageComposer
+{
 class AbstractEncryptJob
 {
 public:
@@ -49,5 +50,5 @@ public:
     virtual std::vector<GpgME::Key> encryptionKeys() const = 0;
     virtual QStringList recipients() const = 0;
 };
-
+}
 #endif
