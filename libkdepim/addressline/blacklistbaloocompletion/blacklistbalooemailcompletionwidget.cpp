@@ -79,8 +79,13 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mSearchInResultLineEdit->setObjectName(QStringLiteral("searchinresultlineedit"));
     mSearchInResultLineEdit->setClearButtonEnabled(true);
     mSearchInResultLineEdit->setPlaceholderText(i18n("Search in result..."));
-    searchLineLayout->addStretch(0);
 
+
+    searchLineLayout->addStretch(0);
+    mNumberOfEmailsFound = new QLabel;
+    mNumberOfEmailsFound->setObjectName(QStringLiteral("numberofemailsfound"));
+
+    searchLineLayout->addWidget(mNumberOfEmailsFound);
     searchLineLayout->addWidget(mSearchInResultLineEdit);
 
     QHBoxLayout *selectElementLayout = new QHBoxLayout;
@@ -197,6 +202,11 @@ void BlackListBalooEmailCompletionWidget::slotEmailFound(const QStringList &list
     mEmailList->setEmailFound(list);
     mMoreResult->setVisible(list.count() == mLimit);
     mEmailList->scrollToBottom();
+    if (list.count() == 0) {
+        mNumberOfEmailsFound->setText(i18n("No email found."));
+    } else {
+        mNumberOfEmailsFound->setText(i18np("1 email found", "%1 emails found", list.count()));
+    }
 }
 
 void BlackListBalooEmailCompletionWidget::setEmailBlackList(const QStringList &list)

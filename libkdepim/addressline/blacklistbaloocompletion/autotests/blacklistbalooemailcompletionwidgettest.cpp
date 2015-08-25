@@ -61,6 +61,9 @@ void BlackListBalooEmailCompletionWidgetTest::shouldHaveDefaultValue()
     QVERIFY(moreResult);
     QVERIFY(!moreResult->isVisible());
 
+    QLabel *mNumberOfEmailsFound = widget.findChild<QLabel *>(QStringLiteral("numberofemailsfound"));
+    QVERIFY(mNumberOfEmailsFound);
+    QVERIFY(mNumberOfEmailsFound->text().isEmpty());
 
     QPushButton *showAllBlackListedEmails = widget.findChild<QPushButton *>(QStringLiteral("show_blacklisted_email_button"));
     QVERIFY(showAllBlackListedEmails);

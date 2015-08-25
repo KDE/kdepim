@@ -54,6 +54,7 @@ private Q_SLOTS:
 private:
     void hideMoreResultAndChangeLimit();
     QStringList mOriginalExcludeDomain;
+    QLabel *mNumberOfEmailsFound;
     KLineEdit *mSearchLineEdit;
     KLineEdit *mExcludeDomainLineEdit;
     BlackListBalooEmailList *mEmailList;
