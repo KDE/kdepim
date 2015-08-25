@@ -44,7 +44,7 @@ private Q_SLOTS:
     void slotSaveImage();
     void slotSaveUrl();
 
-    void slotActivateButton();
+    void slotActivateButton(bool state);
 private:
     void readConfig();
     void writeConfig();

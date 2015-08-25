@@ -50,7 +50,7 @@ private Q_SLOTS:
     void slotResolvUrl(const QUrl &url);
 
 Q_SIGNALS:
-    void activateDialogButton();
+    void activateDialogButton(bool state);
 
 private:
     QString mEmail;

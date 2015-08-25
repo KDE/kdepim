@@ -128,6 +128,7 @@ void GravatarUpdateWidget::slotSearchGravatar()
             connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
             connect(job, &PimCommon::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateWidget::slotResolvUrl);
             mSearchGravatar->setEnabled(false);
+            Q_EMIT activateDialogButton(false);
             mPixmap = QPixmap();
             mCurrentUrl.clear();
             job->start();
@@ -153,7 +154,7 @@ void GravatarUpdateWidget::slotSearchGravatarFinished(PimCommon::GravatarResolvU
             mResultGravatar->setText(i18n("No Gravatar Found."));
         }
     }
-    Q_EMIT activateDialogButton();
+    Q_EMIT activateDialogButton(true);
     mSearchGravatar->setEnabled(true);
 }
 

@@ -59,10 +59,10 @@ GravatarUpdateDialog::~GravatarUpdateDialog()
     writeConfig();
 }
 
-void GravatarUpdateDialog::slotActivateButton()
+void GravatarUpdateDialog::slotActivateButton(bool state)
 {
-    mSaveUrlButton->setEnabled(true);
-    mSaveImageButton->setEnabled(true);
+    mSaveUrlButton->setEnabled(state);
+    mSaveImageButton->setEnabled(state);
 }
 
 bool GravatarUpdateDialog::saveUrl() const
