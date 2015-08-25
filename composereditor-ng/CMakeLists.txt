@@ -8,11 +8,6 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libcomposereditorng\")
 
-#add_definitions(-DQT_STATICPLUGIN)
-#qt5_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
-
-#generate_export_header(COMPOSEREDITORNG BASE_NAME composereditor)
-
 set(libcomposereditor_ng_SRCS
     composereditor.cpp
     composerview.cpp
@@ -38,7 +33,6 @@ set(libcomposereditor_ng_SRCS
     list/composerlistdialog.cpp
     helper/tablehelper.cpp
     helper/listhelper.cpp
-    #spellplugin/kspellplugin.cpp 
     widgets/domtreewidget.cpp 
     widgets/findreplacebar.cpp
     ${wk_HEADERS_MOC}
