@@ -24,7 +24,8 @@
 #include <QString>
 #include <QStringList>
 #include <QDomNode>
-
+namespace KSieveUi
+{
 namespace AutoCreateScriptUtil
 {
 QString createMultiLine(const QString &str);
@@ -43,5 +44,5 @@ QString quoteStr(QString str);
 void comboboxItemNotFound(const QString &searchItem, const QString &name, QString &error);
 QString createFullWhatsThis(const QString &help, const QString &href);
 }
-
+}
 #endif // AUTOCREATESCRIPTUTIL_H

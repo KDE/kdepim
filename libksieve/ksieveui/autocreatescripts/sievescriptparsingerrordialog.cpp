@@ -27,7 +27,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
-
+using namespace KSieveUi;
 SieveScriptParsingErrorDialog::SieveScriptParsingErrorDialog(QWidget *parent)
     : QDialog(parent)
 {

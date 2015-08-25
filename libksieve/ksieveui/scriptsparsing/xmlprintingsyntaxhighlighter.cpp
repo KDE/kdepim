@@ -17,6 +17,8 @@
 
 #include "xmlprintingsyntaxhighlighter.h"
 
+using namespace KSieveUi;
+
 XMLPrintingSyntaxHighLighter::XMLPrintingSyntaxHighLighter(QTextDocument *doc)
     : KPIMTextEdit::SyntaxHighlighterBase(doc)
 {

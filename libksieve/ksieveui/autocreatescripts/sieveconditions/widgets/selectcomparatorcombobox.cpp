@@ -19,6 +19,7 @@
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
+using namespace KSieveUi;
 SelectComparatorComboBox::SelectComparatorComboBox(QWidget *parent)
     : QComboBox(parent)
 {

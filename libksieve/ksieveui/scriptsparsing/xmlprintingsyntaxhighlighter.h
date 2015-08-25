@@ -23,7 +23,8 @@
 #include <QRegExp>
 
 class QTextDocument;
-
+namespace KSieveUi
+{
 class XMLPrintingSyntaxHighLighter : public KPIMTextEdit::SyntaxHighlighterBase
 {
     Q_OBJECT
@@ -34,5 +35,5 @@ public:
 private:
     void init() Q_DECL_OVERRIDE;
 };
-
+}
 #endif // XMLPRINTINGSYNTAXHIGHLIGHTER_H

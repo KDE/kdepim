@@ -23,6 +23,7 @@
 #include <KLocalizedString>
 
 #include <QStringList>
+using namespace KSieveUi;
 
 QString AutoCreateScriptUtil::createMultiLine(const QString &str)
 {

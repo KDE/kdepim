@@ -23,6 +23,8 @@ namespace PimCommon
 {
 class RichTextEditorWidget;
 }
+namespace KSieveUi
+{
 class KSIEVEUI_EXPORT SieveScriptParsingErrorDialog : public QDialog
 {
     Q_OBJECT
@@ -42,5 +44,5 @@ private:
 private:
     PimCommon::RichTextEditorWidget *mTextEdit;
 };
-
+}
 #endif // SIEVESCRIPTPARSINGERRORDIALOG_H

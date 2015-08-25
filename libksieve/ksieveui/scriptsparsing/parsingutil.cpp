@@ -25,6 +25,8 @@ using KSieve::Parser;
 
 #include "libksieve_debug.h"
 
+using namespace KSieveUi;
+
 QDomDocument ParsingUtil::parseScript(const QString &scriptStr, bool &result)
 {
     const QByteArray script = scriptStr.toUtf8();

@@ -19,7 +19,8 @@
 #define SELECTCOMPARATORCOMBOBOX_H
 
 #include <QComboBox>
-
+namespace KSieveUi
+{
 class SelectComparatorComboBox : public QComboBox
 {
     Q_OBJECT
@@ -37,5 +38,5 @@ Q_SIGNALS:
 private:
     void initialize();
 };
-
+}
 #endif // SELECTCOMPARATORCOMBOBOX_H
