@@ -18,6 +18,7 @@
 #include "grantleecontactutils.h"
 
 #include <KLocalizedString>
+using namespace KAddressBookGrantlee;
 
 GrantleeContactUtils::GrantleeContactUtils()
 {
