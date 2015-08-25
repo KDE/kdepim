@@ -4,11 +4,11 @@ set_package_properties(Sasl2 PROPERTIES DESCRIPTION "Cyrus SASL API" URL "http:/
 include_directories(${SASL2_INCLUDE_DIR})
 
 set(kmanagesieve_LIB_SRCS
-  kmanagersieve_debug.cpp
   response.cpp
   session.cpp
   sievejob.cpp
 )
+ecm_qt_declare_logging_category(kmanagesieve_LIB_SRCS HEADER kmanagersieve_debug.h IDENTIFIER KMANAGERSIEVE_LOG CATEGORY_NAME log_kmanagersieve)
 
 add_library(kmanagesieve ${kmanagesieve_LIB_SRCS})
 generate_export_header(kmanagesieve BASE_NAME kmanagesieve)
