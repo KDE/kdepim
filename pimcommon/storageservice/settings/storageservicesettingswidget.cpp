@@ -304,8 +304,9 @@ void StorageServiceSettingsWidget::slotAuthenticationFailed(const QString &servi
         if (mListService->item(i)->data(Name).toString() == serviceName) {
             item = static_cast<PimCommon::StorageListWidgetItem *>(mListService->item(i));
             item->stopAnimation();
-            if (mListStorageService.contains(serviceName)) {
-                mListStorageService.value(serviceName)->removeConfig();
+            auto service = mListStorageService.value(serviceName);
+            if (service) {
+                service->removeConfig();
             }
             mListStorageService.remove(serviceName);
             delete item;

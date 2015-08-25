@@ -215,7 +215,7 @@ void StorageServiceManager::slotShareFile()
         const QString type = act->data().toString();
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
-            if (service->hasUploadOrDownloadInProgress()) {
+            if (service && service->hasUploadOrDownloadInProgress()) {
                 KMessageBox::information(Q_NULLPTR, i18n("There is still an upload in progress."));
             } else {
                 const QString fileName = QFileDialog::getOpenFileName(Q_NULLPTR, i18n("File to upload"));
