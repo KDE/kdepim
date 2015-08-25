@@ -127,8 +127,8 @@ void StorageServiceSettingsWidget::slotAuthenticate()
     QListWidgetItem *item = mListService->currentItem();
     if (item) {
         const QString serviceName = item->data(Name).toString();
-        if (mListStorageService.contains(serviceName)) {
-            StorageServiceAbstract *storage = mListStorageService.value(serviceName);
+        auto storage = mListStorageService.value(serviceName);
+        if (storage) {
             storage->authentication();
         }
     }
@@ -390,8 +390,8 @@ void StorageServiceSettingsWidget::slotModifyService()
     QListWidgetItem *item = mListService->currentItem();
     if (item) {
         const QString serviceName = item->data(Name).toString();
-        if (mListStorageService.contains(serviceName)) {
-            StorageServiceAbstract *storage = mListStorageService.value(serviceName);
+        auto storage = mListStorageService.value(serviceName);
+        if (storage) {
             storage->authentication();
         }
     }
