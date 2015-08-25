@@ -293,15 +293,16 @@ endif()
 
 target_link_libraries(pimcommon
 PUBLIC
+    KF5::AkonadiCore
+    KF5::TextWidgets
+    KF5::AkonadiWidgets
     KF5::Contacts
     KF5::AkonadiContact
-    KF5::AkonadiCore
-    KF5::AkonadiWidgets
-    KF5::TextWidgets
+    Qt5::Network
     KF5::KIOCore
     KF5::ConfigWidgets
-    Qt5::Network
 PRIVATE
+    Qt5::WebKitWidgets
     KF5::IMAP
     kdepim
     KF5::Archive
@@ -312,7 +313,6 @@ PRIVATE
     KF5::Wallet
     KF5::DBusAddons
     KF5::KDELibs4Support
-    Qt5::WebKitWidgets
 )
 
 target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR};${pimcommon_BINARY_DIR}>")
