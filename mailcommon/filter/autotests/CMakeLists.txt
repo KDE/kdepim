@@ -3,7 +3,7 @@ macro(add_mailcommon_filter_test _name)
         TEST_NAME ${_name}
         NAME_PREFIX "mailcommon-filter-"
         LINK_LIBRARIES Qt5::Test Qt5::Gui KF5::AkonadiCore KF5::AkonadiMime
-                       kdepim mailcommon pimcommon Phonon::phonon4qt5 KF5::KIOWidgets KF5::IconThemes 
+                       kdepim mailcommon pimcommon Phonon::phonon4qt5 KF5::KIOWidgets KF5::IconThemes templateparser KF5::MailTransport 
     )
 endmacro()
 

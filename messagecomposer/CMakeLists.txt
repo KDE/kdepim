@@ -156,11 +156,11 @@ PUBLIC
   KF5::AkonadiCore
   KF5::IdentityManagement
   KF5::AkonadiMime
-  KF5::MailTransport
   kleo
+PRIVATE
+  KF5::MailTransport
   KF5::PimTextEdit
   templateparser
-PRIVATE
   messageviewer
   KF5::AkonadiWidgets
   kdepim
