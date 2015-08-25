@@ -6,7 +6,7 @@ macro( add_sievescriptdebugger_test _source )
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(sievescriptdebugger-${_name})
-  target_link_libraries( ${_name}  ksieveui Qt5::Test    )
+  target_link_libraries( ${_name}  ksieveui Qt5::Test KF5::Completion KF5::KIOWidgets)
 endmacro()
 
 

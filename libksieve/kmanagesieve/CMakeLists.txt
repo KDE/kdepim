@@ -14,6 +14,7 @@ add_library(kmanagesieve ${kmanagesieve_LIB_SRCS})
 generate_export_header(kmanagesieve BASE_NAME kmanagesieve)
 
 target_link_libraries(kmanagesieve
+PRIVATE
   KF5::I18n 
   KF5::KIOCore
   KF5::KIOWidgets
