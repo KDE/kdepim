@@ -86,7 +86,6 @@ void SieveEditorMenuBar::initActions()
     mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
     connect(mZoomResetAction, &QAction::triggered, this, &SieveEditorMenuBar::zoomReset);
 
-
     mUndoAction->setEnabled(false);
     mRedoAction->setEnabled(false);
     mCopyAction->setEnabled(false);
