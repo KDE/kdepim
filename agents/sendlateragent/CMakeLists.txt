@@ -7,8 +7,11 @@ if(BUILD_TESTING)
     add_subdirectory(autotests)
 endif()
 
+set(sendlater_common_SRCS)
+ecm_qt_declare_logging_category(sendlater_common_SRCS HEADER sendlateragent_debug.h IDENTIFIER SENDLATERAGENT_LOG CATEGORY_NAME log_sendlateragent)
+
 set(sendlaterlib_SRCS 
-    sendlateragent_debug.cpp
+    ${sendlater_common_SRCS}
     sendlaterinfo.cpp
     sendlaterdialog.cpp
     sendlaterutil.cpp
@@ -43,7 +46,7 @@ install( TARGETS sendlater ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 ############# Next target ###################
 
 set(sendlateragent_SRCS
-   sendlateragent_debug.cpp
+   ${sendlater_common_SRCS}
    sendlateragent.cpp
    sendlaterconfiguredialog.cpp
    sendlaterconfigurewidget.cpp

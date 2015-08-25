@@ -55,9 +55,8 @@ set(libkleo_backend_qgpgme_SRCS
     backends/qgpgme/qgpgmecryptoconfig.cpp
     backends/qgpgme/qgpgmenewcryptoconfig.cpp
     backends/qgpgme/qgpgmerefreshkeysjob.cpp
-    backends/qgpgme/gpgme_backend_debug.cpp
     )
-
+ecm_qt_declare_logging_category(libkleo_backend_qgpgme_SRCS HEADER gpgme_backend_debug.h IDENTIFIER GPGPME_BACKEND_LOG CATEGORY_NAME log_gpgme_backend)
 
 set(libkleo_backend_chiasmus_SRCS
     backends/chiasmus/config_data.c
@@ -93,9 +92,9 @@ set(libkleo_ui_common_SRCS
    ui/directoryserviceswidget.cpp
    ui/progressbar.cpp
    ui/progressdialog.cpp
-   ui/kleo_ui_debug.cpp
    ui/auditlogviewer.cpp
    )
+ecm_qt_declare_logging_category(libkleo_ui_common_SRCS HEADER kleo_ui_debug.h IDENTIFIER KLEO_UI_LOG CATEGORY_NAME log_kleo_ui)
 
 set(libkleo_ui_SRCS    # make this a separate lib.
     ui/keylistview.cpp

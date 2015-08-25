@@ -74,9 +74,9 @@ set(kdepim_ldap_LIB_SRCS
    ldap/ldapsearchdialog.cpp
    ldap/ldapclientsearch.cpp
    ldap/ldapclientsearchconfig.cpp
-   ldap/ldapclient_debug.cpp
    ldap/addhostdialog.cpp
 )
+ecm_qt_declare_logging_category(kdepim_ldap_LIB_SRCS HEADER ldapclient_debug.h IDENTIFIER LDAPCLIENT_LOG CATEGORY_NAME log_ldapclient)
 
 set(kdepim_misc_LIB_SRCS
    misc/broadcaststatus.cpp

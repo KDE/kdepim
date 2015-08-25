@@ -234,7 +234,6 @@ set(libpimcommon_manageserversidesubscription_SRCS
 )
 
 set(libpimcommon_SRCS
-  pimcommon_debug.cpp
   settings/pimcommonsettings.cpp
   ${libpimcommon_manageserversidesubscription_SRCS}
   ${libpimcommon_webshortcut_SRCS}
@@ -256,6 +255,8 @@ set(libpimcommon_SRCS
   ${libpimcommon_temporary_SRCS}
   ${libpimcommon_gravatar_SRCS}
 )
+
+ecm_qt_declare_logging_category(libpimcommon_SRCS HEADER pimcommon_debug.h IDENTIFIER PIMCOMMON_LOG CATEGORY_NAME log_pimcommon)
 
 ki18n_wrap_ui(libpimcommon_SRCS
      autocorrection/ui/autocorrectionwidget.ui
