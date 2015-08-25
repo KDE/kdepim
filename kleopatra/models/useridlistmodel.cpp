@@ -57,7 +57,7 @@ namespace
 
 static inline bool is_userid_level(const QModelIndex &idx)
 {
-    return idx.isValid() && idx.internalId() < 0 ;
+    return idx.isValid()/* && idx.internalId() < 0 */;
 }
 
 static inline int extract_uid_number(const QModelIndex &idx)
@@ -67,7 +67,7 @@ static inline int extract_uid_number(const QModelIndex &idx)
 
 static inline bool is_signature_level(const QModelIndex &idx)
 {
-    return idx.isValid() && idx.internalId() >= 0 ;
+    return idx.isValid()/* && idx.internalId() >= 0*/ ;
 }
 
 }
