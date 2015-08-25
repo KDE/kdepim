@@ -24,12 +24,12 @@
 #include "visualfreebusywidget.h"
 #include <KCalUtils/Stringify>
 
-#include <KCalendarSystem>
-
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KConfigGroup>
+
 #include <QDialogButtonBox>
+#include <QLocale>
 #include <QPushButton>
 #include <QVBoxLayout>
 
@@ -181,15 +181,14 @@ void SchedulingDialog::slotRowSelectionChanged(const QModelIndex &current,
     KCalCore::Period period = current.data(KPIM::FreePeriodModel::PeriodRole).value<KCalCore::Period>();
     const QDate startDate = period.start().date();
 
-    const KCalendarSystem *calSys = KLocale::global()->calendar();
-    const int dayOfWeek = calSys->dayOfWeek(startDate);
+    const int dayOfWeek = startDate.dayOfWeek();
     const QString dayLabel =
         ki18nc("@label Day of week followed by day of the month, then the month. "
                "Example: Monday, 12 June",
                "%1, %2 %3").
-        subs(calSys->weekDayName(dayOfWeek, KCalendarSystem::LongDayName)).
+        subs(QLocale::system().dayName(dayOfWeek, QLocale::LongFormat)).
         subs(startDate.day()).
-        subs(calSys->monthName(startDate)).toString();
+        subs(QLocale::system().monthName(startDate.month(), QLocale::LongFormat)).toString();
 
     mMoveDayLabel->setText(dayLabel);
     mMoveBeginTimeEdit->setTimeRange(period.start().time(),
@@ -207,7 +206,7 @@ void SchedulingDialog::slotSetEndTimeLabel(const QTime &startTime)
     const QString endTimeLabel =
         ki18nc("@label This is a suffix following a time selecting widget. "
                "Example: [timeedit] to 10:00am",
-               "to %1").subs(KLocale::global()->formatTime(endTime)).toString();
+               "to %1").subs(QLocale::system().toString(endTime)).toString();
 
     mMoveEndTimeLabel->setText(endTimeLabel);
     mSelectedTime = startTime;
