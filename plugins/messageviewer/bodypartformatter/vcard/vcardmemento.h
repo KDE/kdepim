@@ -33,6 +33,7 @@ namespace MessageViewer
 
 struct VCard {
     VCard()
+        : found(false)
     {
 
     }
