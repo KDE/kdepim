@@ -22,6 +22,7 @@
 #include <QListWidgetItem>
 
 #include <KLocalizedString>
+using namespace MailCommon;
 
 SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(const QString &defaultSettingPath, QWidget *parent) :
     QWidget(parent),

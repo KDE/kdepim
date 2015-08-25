@@ -26,7 +26,8 @@ namespace Ui
 {
 class SelectThunderbirdFilterFilesWidget;
 }
-
+namespace MailCommon
+{
 class SelectThunderbirdFilterFilesWidget : public QWidget
 {
     Q_OBJECT
@@ -50,5 +51,5 @@ private Q_SLOTS:
 private:
     Ui::SelectThunderbirdFilterFilesWidget *ui;
 };
-
+}
 #endif // SELECTTHUNDERBIRDFILTERFILESWIDGET_H

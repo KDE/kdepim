@@ -42,8 +42,8 @@ SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(const QSt
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectThunderbirdFilterFilesDialog::reject);
     okButton->setDefault(true);
     setModal(true);
-    mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(defaultSettingPath, this);
-    connect(mSelectFilterFilesWidget, &SelectThunderbirdFilterFilesWidget::enableOkButton, okButton, &QPushButton::setEnabled);
+    mSelectFilterFilesWidget = new MailCommon::SelectThunderbirdFilterFilesWidget(defaultSettingPath, this);
+    connect(mSelectFilterFilesWidget, &MailCommon::SelectThunderbirdFilterFilesWidget::enableOkButton, okButton, &QPushButton::setEnabled);
     mainLayout->addWidget(mSelectFilterFilesWidget);
     mainLayout->addWidget(buttonBox);
     readConfig();

@@ -20,10 +20,11 @@
 
 #include <QDialog>
 class QUrl;
-class SelectThunderbirdFilterFilesWidget;
+
 
 namespace MailCommon
 {
+class SelectThunderbirdFilterFilesWidget;
 class SelectThunderbirdFilterFilesDialog : public QDialog
 {
 public:
