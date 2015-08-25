@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 
     const QString packageArgument = parser.value(QStringLiteral("package"));
     if (!packageArgument.isEmpty()) {
-        Global::setAssistant(Global::unpackAssistant(QUrl::fromLocalFile(packageArgument));
+        Global::setAssistant(Global::unpackAssistant(QUrl::fromLocalFile(packageArgument)));
     } else {
         Global::setAssistant(parser.value(QStringLiteral("assistant")));
     }
