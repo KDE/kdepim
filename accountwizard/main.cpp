@@ -64,8 +64,9 @@ int main(int argc, char **argv)
 
     Akonadi::ControlGui::start(0);
 
-    if (!parser.value(QStringLiteral("package")).isEmpty()) {
-        Global::setAssistant(Global::unpackAssistant(QUrl::fromLocalFile(parser.value(QStringLiteral("package")))));
+    const QString packageArgument = parser.value(QStringLiteral("package"));
+    if (!packageArgument.isEmpty()) {
+        Global::setAssistant(Global::unpackAssistant(QUrl::fromLocalFile(packageArgument));
     } else {
         Global::setAssistant(parser.value(QStringLiteral("assistant")));
     }
