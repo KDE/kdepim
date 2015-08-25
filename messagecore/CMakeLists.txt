@@ -75,8 +75,7 @@ PRIVATE
   Qt5::Network
 )
 
-target_include_directories(messagecore PUBLIC "$<BUILD_INTERFACE:${messagecore_SOURCE_DIR};${messagecore_BUILD_DIR};${Boost_INCLUDE_DIRS}>")
-
+target_include_directories(messagecore PUBLIC "$<BUILD_INTERFACE:${messagecore_SOURCE_DIR};${messagecore_BINARY_DIR};${Boost_INCLUDE_DIRS}>")
 
 set_target_properties(messagecore PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS messagecore ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
