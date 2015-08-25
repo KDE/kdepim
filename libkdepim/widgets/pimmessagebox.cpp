@@ -27,6 +27,8 @@
 #include <qdialog.h>
 #include <QPushButton>
 
+using namespace KPIM;
+
 QDialogButtonBox::StandardButton PIMMessageBox::fourBtnMsgBox(QWidget *parent, QMessageBox::Icon type,
         const QString &text,
         const QString &caption,

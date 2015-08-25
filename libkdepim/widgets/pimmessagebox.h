@@ -30,7 +30,8 @@
 #include <QMessageBox>
 #include <QString>
 #include <QDialogButtonBox>
-
+namespace KPIM
+{
 class KDEPIM_EXPORT PIMMessageBox
 {
 public:
@@ -42,5 +43,5 @@ public:
             const QString &button3Text = QString(),
             KMessageBox::Options options = KMessageBox::Notify);
 };
-
+}
 #endif
