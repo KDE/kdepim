@@ -187,7 +187,7 @@ void PersonalDataPage::configureSmtpAccount()
         default: break;
         }
         switch (s.socketType) {
-        case Ispdb::Plain: t->setEncryption(QStringLiteral("none")); break;
+        case Ispdb::None: t->setEncryption(QStringLiteral("none")); break;
         case Ispdb::SSL: t->setEncryption(QStringLiteral("ssl")); break;
         case Ispdb::StartTLS: t->setEncryption(QStringLiteral("tls")); break;
         default: break;
