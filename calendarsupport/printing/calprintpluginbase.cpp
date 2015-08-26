@@ -657,8 +657,7 @@ int CalPrintPluginBase::drawFooter(QPainter &p, const QRect &footbox)
     QFont oldfont(p.font());
     p.setFont(QFont(QStringLiteral("sans-serif"), 6));
     QFontMetrics fm(p.font());
-    QString dateStr =
-        KLocale::global()->formatDateTime(QDateTime::currentDateTime(), KLocale::LongDate);
+    QString dateStr = QLocale::system().toString(QDateTime::currentDateTime(), QLocale::LongFormat);
     p.drawText(footbox, Qt::AlignCenter | Qt::AlignVCenter | Qt::TextSingleLine,
                i18nc("print date: formatted-datetime", "printed: %1", dateStr));
     p.setFont(oldfont);
@@ -797,7 +796,7 @@ void CalPrintPluginBase::drawTimeLine(QPainter &p, const QTime &fromTime,
             } else {
                 p.drawLine(box.left(), (int)newY, box.right(), (int)newY);
                 QTime time(curTime.hour(), 0);
-                numStr = KLocale::global()->formatTime(time);
+                numStr = QLocale::system().toString(time, QLocale::ShortFormat);
                 if (box.width() < 60) {
                     p.setFont(QFont(QStringLiteral("sans-serif"), 7, QFont::Bold));     // for weekprint
                 } else {
@@ -1039,14 +1038,14 @@ void CalPrintPluginBase::drawAgendaItem(PrintCellItem *item, QPainter &p,
             if (event->location().isEmpty()) {
                 str = i18nc("starttime - endtime summary",
                             "%1-%2 %3",
-                            KLocale::global()->formatTime(item->start().toLocalZone().time()),
-                            KLocale::global()->formatTime(item->end().toLocalZone().time()),
+                            QLocale::system().toString(item->start().toLocalZone().time(), QLocale::ShortFormat),
+                            QLocale::system().toString(item->end().toLocalZone().time(), QLocale::ShortFormat),
                             cleanStr(event->summary()));
             } else {
                 str = i18nc("starttime - endtime summary, location",
                             "%1-%2 %3, %4",
-                            KLocale::global()->formatTime(item->start().toLocalZone().time()),
-                            KLocale::global()->formatTime(item->end().toLocalZone().time()),
+                            QLocale::system().toString(item->start().toLocalZone().time(), QLocale::ShortFormat),
+                            QLocale::system().toString(item->end().toLocalZone().time(), QLocale::ShortFormat),
                             cleanStr(event->summary()),
                             cleanStr(event->location()));
             }
@@ -1088,7 +1087,7 @@ void CalPrintPluginBase::drawDayBox(QPainter &p, const QDate &qd,
                                     bool excludePrivate)
 {
     QString dayNumStr;
-    const KLocale *local = KLocale::global();
+    const auto local = QLocale::system();
 
     QTime myFromTime, myToTime;
     if (fromTime.isValid()) {
@@ -1159,7 +1158,7 @@ void CalPrintPluginBase::drawDayBox(QPainter &p, const QDate &qd,
         if (currEvent->allDay() || currEvent->isMultiDay()) {
             timeText.clear();
         } else {
-            timeText = local->formatTime(currEvent->dtStart().toLocalZone().time()) + QLatin1Char(' ');
+            timeText = local.toString(currEvent->dtStart().toLocalZone().time(), QLocale::ShortFormat) + QLatin1Char(' ');
         }
         p.save();
         setColorsByIncidenceCategory(p, currEvent);
@@ -1216,7 +1215,7 @@ void CalPrintPluginBase::drawDayBox(QPainter &p, const QDate &qd,
                 continue;
             }
             if (todo->hasStartDate() && !todo->allDay()) {
-                timeText = KLocale::global()->formatTime(todo->dtStart().toLocalZone().time()) + QLatin1Char(' ');
+                timeText = QLocale::system().toString(todo->dtStart().toLocalZone().time(), QLocale::ShortFormat) + QLatin1Char(' ');
             } else {
                 timeText.clear();
             }
@@ -1237,8 +1236,8 @@ void CalPrintPluginBase::drawDayBox(QPainter &p, const QDate &qd,
                 } else {
                     str = i18nc("to-do summary (Due: date)", "%1 (Due: %2)",
                                 summaryStr,
-                                KLocale::global()->formatDate(
-                                    todo->dtDue().toLocalZone().date(), KLocale::ShortDate));
+                                QLocale::system().toString(
+                                    todo->dtDue().toLocalZone().date(), QLocale::ShortFormat));
                 }
             } else {
                 str = summaryStr;
@@ -1909,7 +1908,7 @@ void CalPrintPluginBase::drawTodo(int &count, const KCalCore::Todo::Ptr &todo, Q
                                   bool excludePrivate)
 {
     QString outStr;
-    const KLocale *local = KLocale::global();
+    const auto local = QLocale::system();
     QRect rect;
     TodoParentStart startpt;
     // This list keeps all starting points of the parent to-dos so the connection
@@ -1993,7 +1992,7 @@ void CalPrintPluginBase::drawTodo(int &count, const KCalCore::Todo::Ptr &todo, Q
     p.setFont(oldFont);
     // due date
     if (todo->hasDueDate() && posDueDt >= 0) {
-        outStr = local->formatDate(todo->dtDue().toLocalZone().date(), KLocale::ShortDate);
+        outStr = local.toString(todo->dtDue().toLocalZone().date(), QLocale::ShortFormat);
         rect = p.boundingRect(posDueDt, y, x + width, -1,
                               Qt::AlignTop | Qt::AlignLeft, outStr);
         p.drawText(rect, Qt::AlignTop | Qt::AlignLeft, outStr);
@@ -2141,8 +2140,8 @@ void CalPrintPluginBase::drawJournal(const KCalCore::Journal::Ptr &journal, QPai
     QFont oldFont(p.font());
     p.setFont(QFont(QStringLiteral("sans-serif"), 15));
     QString headerText;
-    QString dateText(KLocale::global()->formatDate(journal->dtStart().toLocalZone().date(),
-                     KLocale::LongDate));
+    QString dateText(QLocale::system().toString(journal->dtStart().toLocalZone().date(),
+                     QLocale::LongFormat));
 
     if (journal->summary().isEmpty()) {
         headerText = dateText;
