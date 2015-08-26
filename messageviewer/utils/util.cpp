@@ -56,7 +56,7 @@
 #include <kcharsets.h>
 #include <KLocalizedString>
 #include <kmessagebox.h>
-#include <KFileDialog>
+#include <QFileDialog>
 #include <ktoolinvocation.h>
 #include <KJobWidgets>
 #include <KIO/StatJob>
@@ -221,10 +221,7 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, Q
             fileName = i18nc("filename for an unnamed attachment", "attachment.1");
         }
         QUrl pathUrl(QUrl::fromLocalFile(fileName));
-        url = KFileDialog::getSaveUrl(pathUrl ,
-                                      QString(),
-                                      parent,
-                                      i18n("Save Attachment"));
+        url = QFileDialog::getSaveFileUrl(parent, i18n("Save Attachment"), pathUrl);
         if (url.isEmpty()) {
             return false;
         }
