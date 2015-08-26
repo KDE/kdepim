@@ -216,6 +216,18 @@ bool SieveEditorMainWidget::isRedoAvailable() const
     return false;
 }
 
+bool SieveEditorMainWidget::isWordWrap() const
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            return page->isWordWrap();
+        }
+    }
+    return false;
+}
+
 bool SieveEditorMainWidget::hasSelection() const
 {
     QWidget *w = mTabWidget->currentWidget();

@@ -333,6 +333,7 @@ void SieveEditorMainWindow::slotUpdateActions()
     mBookmarkMenu->setEnabled(editActionEnabled);
     mDebugSieveScriptAction->setEnabled(editActionEnabled);
     mWrapTextAction->setEnabled(editActionEnabled);
+    mWrapTextAction->setChecked(mMainWidget->sieveEditorMainWidget()->isWordWrap());
 }
 
 void SieveEditorMainWindow::slotUndoAvailable(bool b)

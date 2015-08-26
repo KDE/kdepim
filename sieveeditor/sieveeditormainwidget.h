@@ -51,6 +51,7 @@ public:
     KSieveUi::SieveEditorWidget::EditorMode pageMode() const;
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;
+    bool isWordWrap() const;
 
     bool hasSelection() const;
     QString currentHelpTitle() const;
