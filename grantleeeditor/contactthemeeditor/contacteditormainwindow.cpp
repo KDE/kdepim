@@ -189,7 +189,7 @@ void ContactEditorMainWindow::slotOpenTheme()
         return;
     }
 
-    const QString directory = QFileDialog::getExistingDirectory(this, i18n("Select theme directory"), QStringLiteral("kfiledialog:///OpenTheme"));
+    const QString directory = QFileDialog::getExistingDirectory(this, i18n("Select theme directory"));
     if (directory.isEmpty()) {
         return;
     }
@@ -321,7 +321,7 @@ void ContactEditorMainWindow::slotThemeSelected(const QUrl &url)
 
 void ContactEditorMainWindow::slotSaveAsTheme()
 {
-    const QString directory = QFileDialog::getExistingDirectory(this, i18n("Select theme directory"), QStringLiteral("kfiledialog:///SaveTheme"));
+    const QString directory = QFileDialog::getExistingDirectory(this, i18n("Select theme directory"));
     if (!directory.isEmpty()) {
         if (mContactEditor) {
             mContactEditor->saveThemeAs(directory);
