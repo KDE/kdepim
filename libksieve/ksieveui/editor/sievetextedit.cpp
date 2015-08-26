@@ -400,6 +400,11 @@ void SieveTextEdit::uncomment()
     }
 }
 
+bool SieveTextEdit::isWordWrap() const
+{
+    return (wordWrapMode() == QTextOption::WordWrap);
+}
+
 void SieveTextEdit::wordWrap(bool state)
 {
     setWordWrapMode(state ? QTextOption::WordWrap : QTextOption::NoWrap);

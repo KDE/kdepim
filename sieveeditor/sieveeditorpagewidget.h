@@ -81,6 +81,7 @@ public:
     void debugSieveScript();
     void zoomReset();
     void wordWrap(bool state);
+    bool isWordWrap() const;
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

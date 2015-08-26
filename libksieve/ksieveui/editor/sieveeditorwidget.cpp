@@ -231,6 +231,14 @@ void SieveEditorWidget::zoomIn()
     }
 }
 
+bool SieveEditorWidget::isWordWrap() const
+{
+    if (mMode == TextMode) {
+        return mTextModeWidget->isWordWrap();
+    }
+    return false;
+}
+
 void SieveEditorWidget::wordWrap(bool state)
 {
     if (mMode == TextMode) {

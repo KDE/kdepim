@@ -81,6 +81,7 @@ public:
     void debugSieveScript();
     void zoomReset();
     void wordWrap(bool state);
+    bool isWordWrap() const;
 public Q_SLOTS:
     void find();
     void replace();

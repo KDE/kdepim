@@ -62,6 +62,7 @@ public:
     void reverseCase();
     void zoomReset();
     void wordWrap(bool state);
+    bool isWordWrap() const;
 private Q_SLOTS:
     void slotUpdateLineNumberAreaWidth(int newBlockCount);
     void slotUpdateLineNumberArea(const QRect &, int);

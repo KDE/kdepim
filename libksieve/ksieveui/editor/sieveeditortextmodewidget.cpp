@@ -293,6 +293,11 @@ void SieveEditorTextModeWidget::zoomOut()
     mTextEdit->zoomOut();
 }
 
+bool SieveEditorTextModeWidget::isWordWrap() const
+{
+    return mTextEdit->isWordWrap();
+}
+
 void SieveEditorTextModeWidget::wordWrap(bool state)
 {
     mTextEdit->wordWrap(state);

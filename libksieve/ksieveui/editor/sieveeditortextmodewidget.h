@@ -96,6 +96,7 @@ public:
     void debugSieveScript();
     void zoomReset();
     void wordWrap(bool state);
+    bool isWordWrap() const;
 Q_SIGNALS:
     void enableButtonOk(bool);
     void switchToGraphicalMode();

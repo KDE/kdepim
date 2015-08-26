@@ -317,6 +317,11 @@ void SieveEditorPageWidget::wordWrap(bool state)
     mSieveEditorWidget->wordWrap(state);
 }
 
+bool SieveEditorPageWidget::isWordWrap() const
+{
+    return mSieveEditorWidget->isWordWrap();
+}
+
 void SieveEditorPageWidget::zoomReset()
 {
     mSieveEditorWidget->zoomReset();
