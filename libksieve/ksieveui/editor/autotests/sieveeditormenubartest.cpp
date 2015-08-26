@@ -55,6 +55,7 @@ void SieveEditorMenuBarTest::shouldDisableActions()
     QVERIFY(bar.pasteAction()->isEnabled());
     QVERIFY(!bar.cutAction()->isEnabled());
     QVERIFY(bar.selectAllAction()->isEnabled());
+    QVERIFY(bar.wordWrapAction()->isEnabled());
 
     bar.setEditorMode(false);
     QVERIFY(!bar.goToLineAction()->isEnabled());
@@ -77,6 +78,7 @@ void SieveEditorMenuBarTest::shouldDisableActions()
     QVERIFY(!bar.pasteAction()->isEnabled());
     QVERIFY(!bar.cutAction()->isEnabled());
     QVERIFY(!bar.selectAllAction()->isEnabled());
+    QVERIFY(!bar.wordWrapAction()->isEnabled());
 
     bar.setEditorMode(true);
     QVERIFY(bar.goToLineAction()->isEnabled());
@@ -99,7 +101,7 @@ void SieveEditorMenuBarTest::shouldDisableActions()
     QVERIFY(bar.pasteAction()->isEnabled());
     QVERIFY(bar.cutAction()->isEnabled());
     QVERIFY(bar.selectAllAction()->isEnabled());
-
+    QVERIFY(bar.wordWrapAction()->isEnabled());
 }
 
 void SieveEditorMenuBarTest::shouldHaveDefaultValue()
@@ -123,8 +125,9 @@ void SieveEditorMenuBarTest::shouldHaveDefaultValue()
     QVERIFY(bar.commentCodeAction());
     QVERIFY(bar.uncommentCodeAction());
     QVERIFY(bar.debugSieveScriptAction());
+    QVERIFY(bar.wordWrapAction());
     QCOMPARE(bar.actions().count(), 3);
-    QCOMPARE(bar.editorMenu()->actions().count(), 17);
+    QCOMPARE(bar.editorMenu()->actions().count(), 19);
     QCOMPARE(bar.fileMenu()->actions().count(), 0);
     QCOMPARE(bar.toolsMenu()->actions().count(), 4);
 
@@ -186,6 +189,9 @@ void SieveEditorMenuBarTest::shouldEmitSignals()
     QSignalSpy spyDebugScript(&bar, SIGNAL(debugSieveScript()));
     bar.debugSieveScriptAction()->trigger();
 
+    QSignalSpy spyWordWrapScript(&bar, SIGNAL(wordWrap(bool)));
+    bar.wordWrapAction()->trigger();
+
     QCOMPARE(spyZoomOut.count(), 1);
     QCOMPARE(spyZoomIn.count(), 1);
     QCOMPARE(spyUnComment.count(), 1);
@@ -201,6 +207,7 @@ void SieveEditorMenuBarTest::shouldEmitSignals()
     QCOMPARE(spyReplace.count(), 1);
     QCOMPARE(spyZoomReset.count(), 1);
     QCOMPARE(spyDebugScript.count(), 1);
+    QCOMPARE(spyWordWrapScript.count(), 1);
 }
 
 QTEST_MAIN(SieveEditorMenuBarTest)

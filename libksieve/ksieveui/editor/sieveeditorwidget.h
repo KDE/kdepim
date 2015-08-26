@@ -80,7 +80,6 @@ public:
     void openBookmarkUrl(const QUrl &url);
     void debugSieveScript();
     void zoomReset();
-    void wordWrap(bool state);
     bool isWordWrap() const;
 public Q_SLOTS:
     void find();
@@ -99,6 +98,7 @@ public Q_SLOTS:
     void slotCheckSyntax();
     void comment();
     void uncomment();
+    void wordWrap(bool state);
 
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);

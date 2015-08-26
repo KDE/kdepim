@@ -52,6 +52,7 @@ void SieveEditorMenuBar::setEditorMode(bool editorMode)
     mZoomOutAction->setEnabled(editorMode);
     mZoomResetAction->setEnabled(editorMode);
     mDebugSieveAction->setEnabled(editorMode);
+    mWordWrapAction->setEnabled(editorMode);
 }
 
 void SieveEditorMenuBar::initActions()
@@ -86,6 +87,10 @@ void SieveEditorMenuBar::initActions()
     mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
     connect(mZoomResetAction, &QAction::triggered, this, &SieveEditorMenuBar::zoomReset);
 
+    mWordWrapAction = new QAction(i18n("Wordwrap"), this);
+    mWordWrapAction->setCheckable(true);
+    connect(mWordWrapAction, &QAction::triggered, this, &SieveEditorMenuBar::wordWrap);
+
     mUndoAction->setEnabled(false);
     mRedoAction->setEnabled(false);
     mCopyAction->setEnabled(false);
@@ -119,6 +124,8 @@ void SieveEditorMenuBar::initMenus()
     mEditorMenu->addAction(mZoomInAction);
     mEditorMenu->addAction(mZoomOutAction);
     mEditorMenu->addAction(mZoomResetAction);
+    mEditorMenu->addSeparator();
+    mEditorMenu->addAction(mWordWrapAction);
 
     mToolsMenu->addAction(mCommentCodeAction);
     mToolsMenu->addAction(mUncommentCodeAction);
@@ -134,6 +141,11 @@ QAction *SieveEditorMenuBar::uncommentCodeAction() const
 QAction *SieveEditorMenuBar::zoomResetAction() const
 {
     return mZoomResetAction;
+}
+
+QAction *SieveEditorMenuBar::wordWrapAction() const
+{
+    return mWordWrapAction;
 }
 
 QAction *SieveEditorMenuBar::zoomInAction() const

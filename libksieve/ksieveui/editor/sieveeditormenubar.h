@@ -19,6 +19,7 @@
 #define SIEVEEDITORMENUBAR_H
 
 #include <QMenuBar>
+
 class QAction;
 class QMenu;
 namespace KSieveUi
@@ -55,6 +56,7 @@ public:
     QAction *debugSieveScriptAction() const;
 
     QAction *zoomResetAction() const;
+    QAction *wordWrapAction() const;
 public Q_SLOTS:
     void setEditorMode(bool editorMode);
     void slotUndoAvailable(bool b);
@@ -76,6 +78,7 @@ Q_SIGNALS:
     void zoomOut();
     void debugSieveScript();
     void zoomReset();
+    void wordWrap(bool state);
 
 private:
     void initActions();
@@ -95,6 +98,7 @@ private:
     QAction *mZoomOutAction;
     QAction *mZoomResetAction;
     QAction *mDebugSieveAction;
+    QAction *mWordWrapAction;
     QMenu *mEditorMenu;
     QMenu *mToolsMenu;
     QMenu *mFileMenu;
