@@ -48,7 +48,11 @@ using namespace CalendarSupport;
 
 CollectionGeneralPage::CollectionGeneralPage(QWidget *parent)
     : CollectionPropertiesPage(parent),
-      mIncidencesForComboBox(0)
+      mBlockAlarmsCheckBox(Q_NULLPTR),
+      mNameEdit(Q_NULLPTR),
+      mIconCheckBox(Q_NULLPTR),
+      mIconButton(Q_NULLPTR),
+      mIncidencesForComboBox(Q_NULLPTR)
 {
     setObjectName(QStringLiteral("CalendarSupport::CollectionGeneralPage"));
     setPageTitle(i18nc("@title:tab General settings for a folder.", "General"));

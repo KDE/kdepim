@@ -55,7 +55,8 @@ public:
           mFetchProfileIdTimer(Q_NULLPTR),
           mFetchBlogIdTimer(Q_NULLPTR),
           mFetchAPITimer(Q_NULLPTR),
-          wait(Q_NULLPTR)
+          wait(Q_NULLPTR),
+          okButton(Q_NULLPTR)
     {}
     Ui::AddEditBlogBase ui;
     QTabWidget *mainW;
