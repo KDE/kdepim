@@ -80,6 +80,7 @@ public Q_SLOTS:
     void slotZoomIn();
     void slotZoomOut();
     void slotZoomReset();
+    void slotWordWrap(bool);
 
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);

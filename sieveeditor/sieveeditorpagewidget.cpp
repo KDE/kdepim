@@ -312,6 +312,11 @@ void SieveEditorPageWidget::zoomOut()
     mSieveEditorWidget->zoomOut();
 }
 
+void SieveEditorPageWidget::wordWrap(bool state)
+{
+    mSieveEditorWidget->wordWrap(state);
+}
+
 void SieveEditorPageWidget::zoomReset()
 {
     mSieveEditorWidget->zoomReset();

@@ -227,6 +227,12 @@ void SieveEditorMainWindow::setupActions()
     mDebugSieveScriptAction = ac->addAction(QStringLiteral("debug_sieve"), mMainWidget->sieveEditorMainWidget(), SLOT(slotDebugSieveScript()));
     mDebugSieveScriptAction->setText(i18n("Debug Sieve Script..."));
     ac->setDefaultShortcut(mDebugSieveScriptAction, QKeySequence(Qt::CTRL + Qt::Key_D));
+
+
+    mWrapTextAction = new QAction(i18n("Wordwarp"), this);
+    mWrapTextAction->setCheckable(true);
+    ac->addAction(QStringLiteral("wordwrap"), mWrapTextAction);
+    connect(mWrapTextAction, SIGNAL(triggered(bool)), mMainWidget->sieveEditorMainWidget(), SLOT(slotWordWrap(bool)));
 }
 
 void SieveEditorMainWindow::slotRefreshList()

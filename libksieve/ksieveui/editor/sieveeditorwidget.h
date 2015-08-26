@@ -80,6 +80,7 @@ public:
     void openBookmarkUrl(const QUrl &url);
     void debugSieveScript();
     void zoomReset();
+    void wordWrap(bool state);
 public Q_SLOTS:
     void find();
     void replace();

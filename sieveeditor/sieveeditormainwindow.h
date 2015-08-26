@@ -95,6 +95,7 @@ private:
     QAction *mZoomOutAction;
     QAction *mZoomResetAction;
     QAction *mDebugSieveScriptAction;
+    QAction *mWrapTextAction;
     PimCommon::KActionMenuChangeCase *mMenuChangeCaseAction;
 
     QLabel *mStatusBarInfo;

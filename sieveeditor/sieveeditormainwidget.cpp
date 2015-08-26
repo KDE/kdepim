@@ -514,6 +514,17 @@ void SieveEditorMainWidget::slotZoomReset()
     }
 }
 
+void SieveEditorMainWidget::slotWordWrap(bool state)
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->wordWrap(state);
+        }
+    }
+}
+
 void SieveEditorMainWidget::slotGeneralPaletteChanged()
 {
     const QPalette pal = palette();

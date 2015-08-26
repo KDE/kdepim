@@ -400,6 +400,11 @@ void SieveTextEdit::uncomment()
     }
 }
 
+void SieveTextEdit::wordWrap(bool state)
+{
+    setWordWrapMode(state ? QTextOption::WordWrap : QTextOption::NoWrap);
+}
+
 void SieveTextEdit::zoomReset()
 {
     if (mInitialFontSize > 0) {

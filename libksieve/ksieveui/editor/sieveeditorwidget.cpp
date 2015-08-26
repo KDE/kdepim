@@ -231,6 +231,13 @@ void SieveEditorWidget::zoomIn()
     }
 }
 
+void SieveEditorWidget::wordWrap(bool state)
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->wordWrap(state);
+    }
+}
+
 void SieveEditorWidget::zoomReset()
 {
     if (mMode == TextMode) {
