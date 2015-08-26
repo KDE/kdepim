@@ -220,7 +220,7 @@ bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, Q
         if (fileName.isEmpty()) {
             fileName = i18nc("filename for an unnamed attachment", "attachment.1");
         }
-        QUrl pathUrl(QStringLiteral("kfiledialog:///saveAttachment/") + fileName);
+        QUrl pathUrl(QUrl::fromLocalFile(fileName));
         url = KFileDialog::getSaveUrl(pathUrl ,
                                       QString(),
                                       parent,
