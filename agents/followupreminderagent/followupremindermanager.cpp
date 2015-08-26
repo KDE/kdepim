@@ -65,6 +65,8 @@ void FollowUpReminderManager::load(bool forceReloadConfig)
                 if (!mInitialize) {
                     FollowUpReminderInfo *noAnswerInfo = new FollowUpReminderInfo(*info);
                     noAnswerList.append(noAnswerInfo);
+                } else {
+                    delete info;
                 }
             }
         } else {
