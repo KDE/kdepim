@@ -31,6 +31,7 @@
 #include "settings/messagecomposersettings.h"
 #include <messagecomposer/recipient/distributionlistdialog.h>
 #include "messageviewer/utils/autoqpointer.h"
+#include "messagecomposer_debug.h"
 
 #include <KMime/Headers>
 #include <KLocalizedString>
@@ -54,7 +55,7 @@ KPIM::MultiplyingLine *RecipientLineFactory::newLine(QWidget *parent)
     if (qobject_cast<RecipientsEditor *>(parent)) {
         connect(line, SIGNAL(addRecipient(RecipientLineNG*,QString)), qobject_cast<RecipientsEditor *>(parent), SLOT(addRecipient(RecipientLineNG*,QString)));
     } else {
-        qWarning() << "RecipientLineFactory::newLine: We can't connect to new line" << parent;
+        qCWarning(MESSAGECOMPOSER_LOG) << "RecipientLineFactory::newLine: We can't connect to new line" << parent;
     }
     return line;
 }
