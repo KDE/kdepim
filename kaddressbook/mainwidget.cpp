@@ -732,7 +732,7 @@ void MainWidget::setupActions(KActionCollection *collection)
         action = collection->addAction(QStringLiteral("debug_baloo"));
         //Don't translate it. It's just for debug
         action->setText(QStringLiteral("Debug baloo..."));
-        connect(action, SIGNAL(triggered(bool)), this, SLOT(slotDebugBaloo()));
+        connect(action, &QAction::triggered, this, &MainWidget::slotDebugBaloo);
     }
 
     mServerSideSubscription = new QAction(QIcon::fromTheme(QStringLiteral("folder-bookmarks")), i18n("Serverside Subscription..."), this);
