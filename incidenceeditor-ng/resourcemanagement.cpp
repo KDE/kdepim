@@ -60,7 +60,7 @@ using namespace IncidenceEditorNG;
 class FreebusyViewCalendar : public EventViews::ViewCalendar
 {
 public:
-    virtual ~FreebusyViewCalendar() {};
+    virtual ~FreebusyViewCalendar() {}
     bool isValid(const KCalCore::Incidence::Ptr &incidence) const Q_DECL_OVERRIDE
     {
         return isValid(incidence->uid());
