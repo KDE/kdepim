@@ -3086,13 +3086,11 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
                 VerifyOpaqueBodyPartMemento *m
                     = new VerifyOpaqueBodyPartMemento(job, cryptProto->keyListJob(), block.text());
                 m->exec();
-                if (m) {
-                    text = aCodec->toUnicode(m->plainText());
-                    messagePart.auditLogError = m->auditLogError();
-                    messagePart.auditLog = m->auditLogAsHtml();
-                    signatures = m->verifyResult().signatures();
-                    messagePart.isSigned = signatures.size() > 0;
-                }
+                text = aCodec->toUnicode(m->plainText());
+                messagePart.auditLogError = m->auditLogError();
+                messagePart.auditLog = m->auditLogAsHtml();
+                signatures = m->verifyResult().signatures();
+                messagePart.isSigned = signatures.size() > 0;
             }
 
             if (!messagePart.isEncrypted && !messagePart.isSigned) {
