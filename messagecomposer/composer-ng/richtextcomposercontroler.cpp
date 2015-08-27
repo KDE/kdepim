@@ -40,7 +40,7 @@
 
 using namespace MessageComposer;
 
-class RichTextComposerControler::RichTextComposerControlerPrivate
+class Q_DECL_HIDDEN RichTextComposerControler::RichTextComposerControlerPrivate
 {
 public:
     RichTextComposerControlerPrivate(RichTextComposer *composer, RichTextComposerControler *qq)

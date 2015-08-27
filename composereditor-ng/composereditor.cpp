@@ -31,7 +31,7 @@
 namespace ComposerEditorNG
 {
 
-class ComposerEditorPrivate
+class Q_DECL_HIDDEN ComposerEditorPrivate
 {
 public:
     ComposerEditorPrivate(ComposerEditor *qq)

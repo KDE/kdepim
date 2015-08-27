@@ -43,7 +43,7 @@
 
 using namespace PimCommon;
 
-class PimCommon::RenameFileDialog::RenameFileDialogPrivate
+class Q_DECL_HIDDEN PimCommon::RenameFileDialog::RenameFileDialogPrivate
 {
 public:
     RenameFileDialogPrivate(const QUrl &_url, RenameFileDialog *qq)

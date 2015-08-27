@@ -28,7 +28,7 @@
 namespace MailCommon
 {
 
-class EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
+class Q_DECL_HIDDEN EntityCollectionOrderProxyModel::EntityCollectionOrderProxyModelPrivate
 {
 public:
     EntityCollectionOrderProxyModelPrivate()

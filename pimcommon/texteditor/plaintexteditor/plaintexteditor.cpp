@@ -53,7 +53,7 @@
 
 using namespace PimCommon;
 
-class PlainTextEditor::PlainTextEditorPrivate
+class Q_DECL_HIDDEN PlainTextEditor::PlainTextEditorPrivate
 {
 public:
     PlainTextEditorPrivate(PlainTextEditor *qq)

@@ -47,7 +47,7 @@
 
 using namespace PimCommon;
 
-class TranslatorWidget::TranslatorWidgetPrivate
+class Q_DECL_HIDDEN TranslatorWidget::TranslatorWidgetPrivate
 {
 public:
     TranslatorWidgetPrivate()

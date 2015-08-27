@@ -22,7 +22,7 @@
 #include <QTextBlock>
 using namespace MessageComposer;
 
-class RichTextComposerSignatures::RichTextComposerSignaturesPrivate
+class Q_DECL_HIDDEN RichTextComposerSignatures::RichTextComposerSignaturesPrivate
 {
 public:
     RichTextComposerSignaturesPrivate(RichTextComposer *composer)

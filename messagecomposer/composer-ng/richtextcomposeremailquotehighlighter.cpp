@@ -19,7 +19,7 @@
 #include "messagecomposer/composer-ng/richtextcomposer.h"
 using namespace MessageComposer;
 
-class MessageComposer::RichTextComposerEmailQuoteHighlighter::RichTextComposerEmailQuoteHighlighterPrivate
+class Q_DECL_HIDDEN MessageComposer::RichTextComposerEmailQuoteHighlighter::RichTextComposerEmailQuoteHighlighterPrivate
 {
 public:
     QColor col1;

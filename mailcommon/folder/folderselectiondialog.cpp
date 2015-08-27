@@ -43,7 +43,7 @@
 namespace MailCommon
 {
 
-class FolderSelectionDialog::FolderSelectionDialogPrivate
+class Q_DECL_HIDDEN FolderSelectionDialog::FolderSelectionDialogPrivate
 {
 public:
     FolderSelectionDialogPrivate()

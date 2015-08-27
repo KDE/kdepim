@@ -27,7 +27,7 @@
 
 using namespace MessageComposer;
 
-class RichTextExternalComposer::RichTextExternalComposerPrivate
+class Q_DECL_HIDDEN RichTextExternalComposer::RichTextExternalComposerPrivate
 {
 public:
     RichTextExternalComposerPrivate(RichTextComposer *composer)

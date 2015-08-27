@@ -29,7 +29,7 @@
 
 using namespace MessageComposer;
 
-class RichTextComposerImages::RichTextComposerImagesPrivate
+class Q_DECL_HIDDEN RichTextComposerImages::RichTextComposerImagesPrivate
 {
 public:
     RichTextComposerImagesPrivate(RichTextComposer *editor)

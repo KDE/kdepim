@@ -22,7 +22,7 @@
 
 using namespace PimCommon;
 
-class PimCommon::PlainTextSyntaxSpellCheckingHighlighter::PlainTextSyntaxSpellCheckingHighlighterPrivate
+class Q_DECL_HIDDEN PimCommon::PlainTextSyntaxSpellCheckingHighlighter::PlainTextSyntaxSpellCheckingHighlighterPrivate
 {
 public:
     PlainTextSyntaxSpellCheckingHighlighterPrivate(PlainTextEditor *plainText)

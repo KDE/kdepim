@@ -48,7 +48,7 @@
 #include <QClipboard>
 
 using namespace PimCommon;
-class RichTextEditor::RichTextEditorPrivate
+class Q_DECL_HIDDEN RichTextEditor::RichTextEditorPrivate
 {
 public:
     RichTextEditorPrivate(RichTextEditor *qq)

@@ -38,7 +38,7 @@ namespace ComposerEditorNG
 {
 class ComposerImageResizeWidget;
 
-class ComposerViewPrivate
+class Q_DECL_HIDDEN ComposerViewPrivate
 {
 public:
     ComposerViewPrivate(ComposerView *qq)

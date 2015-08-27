@@ -52,7 +52,7 @@
 namespace MailCommon
 {
 
-class FolderTreeWidget::FolderTreeWidgetPrivate
+class Q_DECL_HIDDEN FolderTreeWidget::FolderTreeWidgetPrivate
 {
 public:
     FolderTreeWidgetPrivate()

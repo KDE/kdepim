@@ -19,7 +19,7 @@
 #include "richtextcomposeremailquotedecorator.h"
 using namespace MessageComposer;
 
-class RichTextComposerEmailQuoteDecorator::RichTextComposerEmailQuoteDecoratorPrivate
+class Q_DECL_HIDDEN RichTextComposerEmailQuoteDecorator::RichTextComposerEmailQuoteDecoratorPrivate
 {
 public:
     RichTextComposerEmailQuoteDecoratorPrivate(RichTextComposer *textEdit)
