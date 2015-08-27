@@ -40,7 +40,6 @@
 
 class KLineEdit;
 class QSpinBox;
-class KUrlRequester;
 
 class QPushButton;
 class QGridLayout;
@@ -220,7 +219,6 @@ public:
     void doSave() Q_DECL_OVERRIDE;
     void doLoad() Q_DECL_OVERRIDE;
 private:
-    KUrlRequester *mUrlRequester;
     Kleo::FileNameRequester *mFileNameRequester;
 };
 
@@ -241,7 +239,6 @@ public:
     void doSave() Q_DECL_OVERRIDE;
     void doLoad() Q_DECL_OVERRIDE;
 private:
-    KUrlRequester *mUrlRequester;
     Kleo::FileNameRequester *mFileNameRequester;
 };
 
@@ -264,7 +261,6 @@ public:
 
 private:
     QLineEdit *mLineEdit;
-    KUrlRequester *mUrlRequester;
 };
 
 /**

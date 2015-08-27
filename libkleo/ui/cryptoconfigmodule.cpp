@@ -45,9 +45,6 @@
 #include <QDialogButtonBox>
 
 #include <QSpinBox>
-#ifndef KDEPIM_ONLY_KLEO
-# include <kurlrequester.h>
-#endif
 
 #include <QApplication>
 #include <QLabel>
@@ -602,39 +599,23 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
     Kleo::CryptoConfigEntry *entry, const QString &entryName,
     QGridLayout *glay, QWidget *widget)
     : CryptoConfigEntryGUI(module, entry, entryName),
-      mUrlRequester(0),
       mFileNameRequester(0)
 {
     const int row = glay->rowCount();
     QWidget *req;
-#ifdef KDEPIM_ONLY_KLEO
     req = mFileNameRequester = new FileNameRequester(widget);
     mFileNameRequester->setExistingOnly(false);
     mFileNameRequester->setFilter(QDir::Files);
-#else
-    req = mUrlRequester = new KUrlRequester(widget);
-    mUrlRequester->setMode(KFile::File | KFile::LocalOnly);
-#endif
     QLabel *label = new QLabel(description(), widget);
     label->setBuddy(req);
     glay->addWidget(label, row, 1);
     glay->addWidget(req, row, 2);
     if (entry->isReadOnly()) {
         label->setEnabled(false);
-#ifndef KDEPIM_ONLY_KLEO
-        if (mUrlRequester) {
-            mUrlRequester->setEnabled(false);
-        }
-#endif
         if (mFileNameRequester) {
             mFileNameRequester->setEnabled(false);
         }
     } else {
-#ifndef KDEPIM_ONLY_KLEO
-        if (mUrlRequester)
-            connect(mUrlRequester, SIGNAL(textChanged(QString)),
-                    this, SLOT(slotChanged()));
-#endif
         if (mFileNameRequester)
             connect(mFileNameRequester, SIGNAL(fileNameChanged(QString)),
                     this, SLOT(slotChanged()));
@@ -643,20 +624,12 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
 
 void Kleo::CryptoConfigEntryPath::doSave()
 {
-#ifdef KDEPIM_ONLY_KLEO
     mEntry->setURLValue(QUrl::fromLocalFile(mFileNameRequester->fileName()));
-#else
-    mEntry->setURLValue(mUrlRequester->url());
-#endif
 }
 
 void Kleo::CryptoConfigEntryPath::doLoad()
 {
-#ifdef KDEPIM_ONLY_KLEO
     mFileNameRequester->setFileName(mEntry->urlValue().toLocalFile());
-#else
-    mUrlRequester->setUrl(mEntry->urlValue());
-#endif
 }
 
 ////
@@ -666,39 +639,23 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
     Kleo::CryptoConfigEntry *entry, const QString &entryName,
     QGridLayout *glay, QWidget *widget)
     : CryptoConfigEntryGUI(module, entry, entryName),
-      mUrlRequester(0),
       mFileNameRequester(0)
 {
     const int row = glay->rowCount();
     QWidget *req;
-#ifdef KDEPIM_ONLY_KLEO
     req = mFileNameRequester = new FileNameRequester(widget);
     mFileNameRequester->setExistingOnly(false);
     mFileNameRequester->setFilter(QDir::Dirs);
-#else
-    req = mUrlRequester = new KUrlRequester(widget);
-    mUrlRequester->setMode(KFile::Directory | KFile::LocalOnly);
-#endif
     QLabel *label = new QLabel(description(), widget);
     label->setBuddy(req);
     glay->addWidget(label, row, 1);
     glay->addWidget(req, row, 2);
     if (entry->isReadOnly()) {
         label->setEnabled(false);
-#ifndef KDEPIM_ONLY_KLEO
-        if (mUrlRequester) {
-            mUrlRequester->setEnabled(false);
-        }
-#endif
         if (mFileNameRequester) {
             mFileNameRequester->setEnabled(false);
         }
     } else {
-#ifndef KDEPIM_ONLY_KLEO
-        if (mUrlRequester)
-            connect(mUrlRequester, SIGNAL(textChanged(QString)),
-                    this, SLOT(slotChanged()));
-#endif
         if (mFileNameRequester)
             connect(mFileNameRequester, SIGNAL(fileNameChanged(QString)),
                     this, SLOT(slotChanged()));
@@ -707,20 +664,12 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
 
 void Kleo::CryptoConfigEntryDirPath::doSave()
 {
-#ifdef KDEPIM_ONLY_KLEO
     mEntry->setURLValue(QUrl::fromLocalFile(mFileNameRequester->fileName()));
-#else
-    mEntry->setURLValue(mUrlRequester->url());
-#endif
 }
 
 void Kleo::CryptoConfigEntryDirPath::doLoad()
 {
-#ifdef KDEPIM_ONLY_KLEO
     mFileNameRequester->setFileName(mEntry->urlValue().toLocalFile());
-#else
-    mUrlRequester->setUrl(mEntry->urlValue());
-#endif
 }
 
 ////
@@ -731,29 +680,16 @@ Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
     QGridLayout *glay, QWidget *widget)
     : CryptoConfigEntryGUI(module, entry, entryName),
       mLineEdit(0)
-#ifndef KDEPIM_ONLY_KLEO
-      , mUrlRequester(0)
-#endif
 {
     const int row = glay->rowCount();
     QWidget *req;
-#ifdef KDEPIM_ONLY_KLEO
     req = mLineEdit = new QLineEdit(widget);
-#else
-    req = mUrlRequester = new KUrlRequester(widget);
-    mUrlRequester->setMode(KFile::File | KFile::ExistingOnly);
-#endif
     QLabel *label = new QLabel(description(), widget);
     label->setBuddy(req);
     glay->addWidget(label, row, 1);
     glay->addWidget(req, row, 2);
     if (entry->isReadOnly()) {
         label->setEnabled(false);
-#ifndef KDEPIM_ONLY_KLEO
-        if (mUrlRequester) {
-            mUrlRequester->setEnabled(false);
-        }
-#endif
         if (mLineEdit) {
             mLineEdit->setEnabled(false);
         }
@@ -765,20 +701,12 @@ Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
 
 void Kleo::CryptoConfigEntryURL::doSave()
 {
-#ifdef KDEPIM_ONLY_KLEO
     mEntry->setURLValue(KUrl(mLineEdit->text()));
-#else
-    mEntry->setURLValue(mUrlRequester->url());
-#endif
 }
 
 void Kleo::CryptoConfigEntryURL::doLoad()
 {
-#ifdef KDEPIM_ONLY_KLEO
     mLineEdit->setText(mEntry->urlValue().url());
-#else
-    mUrlRequester->setUrl(mEntry->urlValue().url());
-#endif
 }
 
 ////
