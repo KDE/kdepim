@@ -340,9 +340,9 @@ void AlarmDialog::addIncidence(const Akonadi::Item &incidenceitem,
                                displayStr);
 
     if (incidence->type() == Incidence::TypeEvent) {
-        item->setIcon(0, SmallIcon(QStringLiteral("view-calendar-day")));
+        item->setIcon(0, QIcon::fromTheme(QStringLiteral("view-calendar-day")));
     } else if (incidence->type() == Incidence::TypeTodo) {
-        item->setIcon(0, SmallIcon(QStringLiteral("view-calendar-tasks")));
+        item->setIcon(0, QIcon::fromTheme(QStringLiteral("view-calendar-tasks")));
     }
 
     item->mHappening = dateTime;

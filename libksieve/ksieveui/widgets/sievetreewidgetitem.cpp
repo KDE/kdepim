@@ -90,6 +90,6 @@ void SieveTreeWidgetItem::setProgressAnimation(const QPixmap &pix)
 
 void SieveTreeWidgetItem::setDefaultIcon()
 {
-    setIcon(0, SmallIcon(QStringLiteral("network-server")));
+    setIcon(0, QIcon::fromTheme(QStringLiteral("network-server")));
 }
 

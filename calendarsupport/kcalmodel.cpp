@@ -32,7 +32,7 @@
 #include <KLocalizedString>
 
 #include <QPixmap>
-
+#include <QIcon>
 using namespace CalendarSupport;
 
 class Q_DECL_HIDDEN KCalModel::Private
@@ -145,13 +145,13 @@ QVariant KCalModel::data(const QModelIndex &index, int role) const
     case Qt::DecorationRole:
         if (index.column() == 0) {
             if (incidence->type() == KCalCore::Incidence::TypeTodo) {
-                return SmallIcon(QStringLiteral("view-pim-tasks"));
+                return QIcon::fromTheme(QStringLiteral("view-pim-tasks"));
             } else if (incidence->type() == KCalCore::Incidence::TypeJournal) {
-                return SmallIcon(QStringLiteral("view-pim-journal"));
+                return QIcon::fromTheme(QStringLiteral("view-pim-journal"));
             } else if (incidence->type() == KCalCore::Incidence::TypeEvent) {
-                return SmallIcon(QStringLiteral("view-calendar"));
+                return QIcon::fromTheme(QStringLiteral("view-calendar"));
             } else {
-                return SmallIcon(QStringLiteral("network-wired"));
+                return QIcon::fromTheme(QStringLiteral("network-wired"));
             }
         }
         break;

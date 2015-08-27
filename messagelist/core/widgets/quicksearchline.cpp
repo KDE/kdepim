@@ -366,21 +366,21 @@ void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLay
     mFilterStatusMapper = new QSignalMapper(this);
     connect(mFilterStatusMapper, static_cast<void (QSignalMapper::*)(int)>(&QSignalMapper::mapped), this, &QuickSearchLine::statusButtonsClicked);
 
-    createQuickSearchButton(SmallIcon(QStringLiteral("mail-unread")), i18nc("@action:inmenu Status of a message", "Unread"), Akonadi::MessageStatus::statusUnread().toQInt32(), quickSearchButtonLayout);
+    createQuickSearchButton(QIcon::fromTheme(QStringLiteral("mail-unread")), i18nc("@action:inmenu Status of a message", "Unread"), Akonadi::MessageStatus::statusUnread().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QStringLiteral("mail-replied")),
+    createQuickSearchButton(QIcon::fromTheme(QStringLiteral("mail-replied")),
                             i18nc("@action:inmenu Status of a message", "Replied"),
                             Akonadi::MessageStatus::statusReplied().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QStringLiteral("mail-forwarded")),
+    createQuickSearchButton(QIcon::fromTheme(QStringLiteral("mail-forwarded")),
                             i18nc("@action:inmenu Status of a message", "Forwarded"),
                             Akonadi::MessageStatus::statusForwarded().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QStringLiteral("emblem-important")),
+    createQuickSearchButton(QIcon::fromTheme(QStringLiteral("emblem-important")),
                             i18nc("@action:inmenu Status of a message", "Important"),
                             Akonadi::MessageStatus::statusImportant().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QStringLiteral("mail-task")),
+    createQuickSearchButton(QIcon::fromTheme(QStringLiteral("mail-task")),
                             i18nc("@action:inmenu Status of a message", "Action Item"),
                             Akonadi::MessageStatus::statusToAct().toQInt32(), quickSearchButtonLayout);
 
@@ -392,19 +392,19 @@ void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLay
                             i18nc("@action:inmenu Status of a message", "Ignored"),
                             Akonadi::MessageStatus::statusIgnored().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QStringLiteral("mail-attachment")),
+    createQuickSearchButton(QIcon::fromTheme(QStringLiteral("mail-attachment")),
                             i18nc("@action:inmenu Status of a message", "Has Attachment"),
                             Akonadi::MessageStatus::statusHasAttachment().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QStringLiteral("mail-invitation")),
+    createQuickSearchButton(QIcon::fromTheme(QStringLiteral("mail-invitation")),
                             i18nc("@action:inmenu Status of a message", "Has Invitation"),
                             Akonadi::MessageStatus::statusHasInvitation().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QStringLiteral("mail-mark-junk")),
+    createQuickSearchButton(QIcon::fromTheme(QStringLiteral("mail-mark-junk")),
                             i18nc("@action:inmenu Status of a message", "Spam"),
                             Akonadi::MessageStatus::statusSpam().toQInt32(), quickSearchButtonLayout);
 
-    createQuickSearchButton(SmallIcon(QStringLiteral("mail-mark-notjunk")),
+    createQuickSearchButton(QIcon::fromTheme(QStringLiteral("mail-mark-notjunk")),
                             i18nc("@action:inmenu Status of a message", "Ham"),
                             Akonadi::MessageStatus::statusHam().toQInt32(), quickSearchButtonLayout);
 }
