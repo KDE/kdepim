@@ -138,6 +138,13 @@ public:
         }
         if (validate) {
             mode |= GpgME::Validate;
+            /* Setting the context to offline mode disables CRL / OCSP checks in
+               this Job. Otherwise we would try to fetch the CRL's for all CMS
+               keys in the users keyring because GpgME::Validate includes remote
+               resources by default in the validity check.
+               This setting only has any effect if gpgsm >= 2.1.6 is used.
+               */
+            context->setOffline(true);
         }
         context->setKeyListMode(mode);
         return new Kleo::QGpgMEListAllKeysJob(context);
