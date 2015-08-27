@@ -74,10 +74,13 @@ private Q_SLOTS:
 private:
     KLineEdit *mTagNameLineEdit;
 
-    QCheckBox *mTextColorCheck, *mBackgroundColorCheck,
-              *mTextFontCheck, *mInToolbarCheck;
+    QCheckBox *mTextColorCheck;
+    QCheckBox *mBackgroundColorCheck;
+    QCheckBox *mTextFontCheck;
+    QCheckBox *mInToolbarCheck;
 
-    KColorCombo *mTextColorCombo, *mBackgroundColorCombo;
+    KColorCombo *mTextColorCombo;
+    KColorCombo *mBackgroundColorCombo;
 
     KFontRequester *mFontRequester;
 
