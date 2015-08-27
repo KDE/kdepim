@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "custommanagesievewidget.h"
 #include "managesievescriptsdialog.h"
 #include "widgets/managesievetreeview.h"
 #include "editor/sievetextedit.h"
@@ -44,50 +45,6 @@
 
 using namespace KSieveUi;
 
-CustomManageSieveWidget::CustomManageSieveWidget(QWidget *parent)
-    : KSieveUi::ManageSieveWidget(parent)
-{
-
-}
-
-CustomManageSieveWidget::~CustomManageSieveWidget()
-{
-
-}
-
-bool CustomManageSieveWidget::refreshList()
-{
-    bool noImapFound = true;
-    SieveTreeWidgetItem *last = Q_NULLPTR;
-    Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
-    foreach (const Akonadi::AgentInstance &type, lst) {
-        if (type.status() == Akonadi::AgentInstance::Broken) {
-            continue;
-        }
-
-        QString serverName = type.name();
-        last = new SieveTreeWidgetItem(treeView(), last);
-        last->setIcon(0, QIcon::fromTheme(QStringLiteral("network-server")));
-
-        const QUrl u = KSieveUi::Util::findSieveUrlForAccount(type.identifier());
-        if (u.isEmpty()) {
-            QTreeWidgetItem *item = new QTreeWidgetItem(last);
-            item->setText(0, i18n("No Sieve URL configured"));
-            item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
-            treeView()->expandItem(last);
-        } else {
-            serverName += QStringLiteral(" (%1)").arg(u.userName());
-            KManageSieve::SieveJob *job = KManageSieve::SieveJob::list(u);
-            connect(job, &KManageSieve::SieveJob::gotList, this, &CustomManageSieveWidget::slotGotList);
-            mJobs.insert(job, last);
-            mUrls.insert(last, u);
-            last->startAnimation();
-        }
-        last->setText(0, serverName);
-        noImapFound = false;
-    }
-    return noImapFound;
-}
 
 ManageSieveScriptsDialog::ManageSieveScriptsDialog(QWidget *parent)
     : QDialog(parent),

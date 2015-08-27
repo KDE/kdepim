@@ -35,17 +35,7 @@ class SieveJob;
 namespace KSieveUi
 {
 class SieveEditor;
-class CustomManageSieveWidget : public KSieveUi::ManageSieveWidget
-{
-    Q_OBJECT
-public:
-    explicit CustomManageSieveWidget(QWidget *parent = Q_NULLPTR);
-    virtual ~CustomManageSieveWidget();
-
-protected:
-    bool refreshList() Q_DECL_OVERRIDE;
-};
-
+class CustomManageSieveWidget;
 class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
 {
     Q_OBJECT

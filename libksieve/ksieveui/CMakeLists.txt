@@ -163,6 +163,7 @@ set(ksieveui_sievescriptdebugger_LIB_SRCS
 
 set(ksieveui_LIB_SRCS
   managesievescriptsdialog.cpp
+  custommanagesievewidget.cpp
   widgets/sievetreewidgetitem.cpp
   widgets/managesievetreeview.cpp
   widgets/managesievewidget.cpp
