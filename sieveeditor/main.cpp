@@ -30,6 +30,7 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("sieveeditor"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("sieveeditorrc") << QStringLiteral("sievetemplaterc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("sieveeditorui.rc"));

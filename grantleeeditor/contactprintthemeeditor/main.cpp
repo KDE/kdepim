@@ -30,7 +30,7 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     KLocalizedString::setApplicationDomain("contactprintthemeeditor");
     KAboutData aboutData(QStringLiteral("contactprintthemeeditor"),
                          i18n("Contact Print Theme Editor"),
