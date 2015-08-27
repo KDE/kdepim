@@ -604,7 +604,7 @@ void ViewerPrivate::showAttachmentPopup(KMime::Content *node, const QString &nam
     connect(attachmentMapper, SIGNAL(mapped(int)),
             this, SLOT(slotHandleAttachment(int)));
 
-    action = menu->addAction(SmallIcon(QStringLiteral("document-open")), i18nc("to open", "Open"));
+    action = menu->addAction(QIcon::fromTheme(QStringLiteral("document-open")), i18nc("to open", "Open"));
     action->setEnabled(!deletedAttachment);
     connect(action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()));
     attachmentMapper->setMapping(action, Viewer::Open);
@@ -638,12 +638,12 @@ void ViewerPrivate::showAttachmentPopup(KMime::Content *node, const QString &nam
         attachmentMapper->setMapping(action, Viewer::ScrollTo);
     }
 
-    action = menu->addAction(SmallIcon(QStringLiteral("document-save-as")), i18n("Save As..."));
+    action = menu->addAction(QIcon::fromTheme(QStringLiteral("document-save-as")), i18n("Save As..."));
     action->setEnabled(!deletedAttachment);
     connect(action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()));
     attachmentMapper->setMapping(action, Viewer::Save);
 
-    action = menu->addAction(SmallIcon(QStringLiteral("edit-copy")), i18n("Copy"));
+    action = menu->addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy"));
     action->setEnabled(!deletedAttachment);
     connect(action, SIGNAL(triggered(bool)), attachmentMapper, SLOT(map()));
     attachmentMapper->setMapping(action, Viewer::Copy);
@@ -654,13 +654,13 @@ void ViewerPrivate::showAttachmentPopup(KMime::Content *node, const QString &nam
                            !isEncapsulatedMessage;
 
     if (GlobalSettings::self()->allowAttachmentEditing()) {
-        action = menu->addAction(SmallIcon(QStringLiteral("document-properties")), i18n("Edit Attachment"));
+        action = menu->addAction(QIcon::fromTheme(QStringLiteral("document-properties")), i18n("Edit Attachment"));
         connect(action, SIGNAL(triggered()), attachmentMapper, SLOT(map()));
         attachmentMapper->setMapping(action, Viewer::Edit);
         action->setEnabled(canChange);
     }
     if (GlobalSettings::self()->allowAttachmentDeletion()) {
-        action = menu->addAction(SmallIcon(QStringLiteral("edit-delete")), i18n("Delete Attachment"));
+        action = menu->addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete Attachment"));
         connect(action, SIGNAL(triggered()), attachmentMapper, SLOT(map()));
         attachmentMapper->setMapping(action, Viewer::Delete);
         action->setEnabled(canChange && !deletedAttachment);
@@ -1924,11 +1924,11 @@ void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
     QMenu popup;
 
     if (!isRoot) {
-        popup.addAction(SmallIcon(QStringLiteral("document-save-as")), i18n("Save &As..."),
+        popup.addAction(QIcon::fromTheme(QStringLiteral("document-save-as")), i18n("Save &As..."),
                         this, SLOT(slotAttachmentSaveAs()));
 
         if (isAttachment) {
-            popup.addAction(SmallIcon(QStringLiteral("document-open")), i18nc("to open", "Open"),
+            popup.addAction(QIcon::fromTheme(QStringLiteral("document-open")), i18nc("to open", "Open"),
                             this, SLOT(slotAttachmentOpen()));
 
             if (selectedContents().count() == 1) {
@@ -1948,15 +1948,15 @@ void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
     // edit + delete only for attachments
     if (!isRoot) {
         if (isAttachment) {
-            popup.addAction(SmallIcon(QStringLiteral("edit-copy")), i18n("Copy"),
+            popup.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy"),
                             this, SLOT(slotAttachmentCopy()));
 #if 0  //FIXME Laurent Comment for the moment it crash see Bug 287177
             if (GlobalSettings::self()->allowAttachmentDeletion())
-                popup.addAction(SmallIcon("edit-delete"), i18n("Delete Attachment"),
+                popup.addAction(QIcon::fromTheme("edit-delete"), i18n("Delete Attachment"),
                                 this, SLOT(slotAttachmentDelete()));
 #endif
             if (GlobalSettings::self()->allowAttachmentEditing())
-                popup.addAction(SmallIcon(QStringLiteral("document-properties")), i18n("Edit Attachment"),
+                popup.addAction(QIcon::fromTheme(QStringLiteral("document-properties")), i18n("Edit Attachment"),
                                 this, SLOT(slotAttachmentEdit()));
         }
 
