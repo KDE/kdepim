@@ -35,6 +35,7 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("akonadiconsole"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("akonadiconsolerc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("akonadiconsoleui.rc"));

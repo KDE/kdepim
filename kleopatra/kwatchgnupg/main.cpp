@@ -47,6 +47,7 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("kwatchgnupg"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("kwatchgnupgrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("kwatchgnupgui.rc"));

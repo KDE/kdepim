@@ -28,7 +28,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("pimsettingexporter"));
     migrate.setConfigFiles(QStringList() << QStringLiteral("pimsettingexporterrc"));
     migrate.setUiFiles(QStringList() << QStringLiteral("pimsettingexporter.rc"));
