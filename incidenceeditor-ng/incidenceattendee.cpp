@@ -457,10 +457,6 @@ void IncidenceAttendee::slotSelectAddresses()
                                                   partStat,
                                                   KCalCore::Attendee::ReqParticipant
                                                                         ));
-                    if (pos < 0) {
-                        pos = dataModel()->rowCount() - 1;
-                    }
-
                     dataModel()->insertAttendee(pos, newAt);
 
                     mExpandGroupJobs.insert(job, newAt);
