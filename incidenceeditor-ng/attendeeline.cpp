@@ -156,18 +156,18 @@ AttendeeLine::AttendeeLine(QWidget *parent)
 
     QBoxLayout *topLayout = new QHBoxLayout(this);
     topLayout->setMargin(0);
-    mRoleCombo->addItem(SmallIcon("meeting-participant"),
+    mRoleCombo->addItem(QIcon::fromTheme("meeting-participant"),
                         KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::ReqParticipant));
-    mRoleCombo->addItem(SmallIcon("meeting-participant-optional"),
+    mRoleCombo->addItem(QIcon::fromTheme("meeting-participant-optional"),
                         KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::OptParticipant));
-    mRoleCombo->addItem(SmallIcon("meeting-observer"),
+    mRoleCombo->addItem(QIcon::fromTheme("meeting-observer"),
                         KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::NonParticipant));
-    mRoleCombo->addItem(SmallIcon("meeting-chair"),
+    mRoleCombo->addItem(QIcon::fromTheme("meeting-chair"),
                         KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::Chair));
 
-    mResponseCombo->addItem(SmallIcon("meeting-participant-request-response"),
+    mResponseCombo->addItem(QIcon::fromTheme("meeting-participant-request-response"),
                             i18nc("@item:inlistbox", "Request Response"));
-    mResponseCombo->addItem(SmallIcon("meeting-participant-no-response"),
+    mResponseCombo->addItem(QIcon::fromTheme("meeting-participant-no-response"),
                             i18nc("@item:inlistbox", "Request No Response"));
 
     mEdit->setToolTip(i18nc("@info:tooltip",
@@ -349,31 +349,32 @@ int AttendeeLine::setColumnWidth(int w)
 void AttendeeLine::setActions(AttendeeActions actions)
 {
     mStateCombo->clear();
+    return;
     if (actions == EventActions) {
-        mStateCombo->addItem(SmallIcon("task-attention"),
+        mStateCombo->addItem(QIcon::fromTheme("task-attention"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::NeedsAction));
-        mStateCombo->addItem(SmallIcon("task-accepted"),
+        mStateCombo->addItem(QIcon::fromTheme("task-accepted"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Accepted));
-        mStateCombo->addItem(SmallIcon("task-reject"),
+        mStateCombo->addItem(QIcon::fromTheme("task-reject"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Declined));
-        mStateCombo->addItem(SmallIcon("task-attempt"),
+        mStateCombo->addItem(QIcon::fromTheme("task-attempt"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Tentative));
-        mStateCombo->addItem(SmallIcon("task-delegate"),
+        mStateCombo->addItem(QIcon::fromTheme("task-delegate"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Delegated));
     } else {
-        mStateCombo->addItem(SmallIcon("task-attention"),
+        mStateCombo->addItem(QIcon::fromTheme("task-attention"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::NeedsAction));
-        mStateCombo->addItem(SmallIcon("task-accepted"),
+        mStateCombo->addItem(QIcon::fromTheme("task-accepted"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Accepted));
-        mStateCombo->addItem(SmallIcon("task-reject"),
+        mStateCombo->addItem(QIcon::fromTheme("task-reject"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Declined));
-        mStateCombo->addItem(SmallIcon("task-attempt"),
+        mStateCombo->addItem(QIcon::fromTheme("task-attempt"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Tentative));
-        mStateCombo->addItem(SmallIcon("task-delegate"),
+        mStateCombo->addItem(QIcon::fromTheme("task-delegate"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Delegated));
-        mStateCombo->addItem(SmallIcon("task-complete"),
+        mStateCombo->addItem(QIcon::fromTheme("task-complete"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::Completed));
-        mStateCombo->addItem(SmallIcon("task-ongoing"),
+        mStateCombo->addItem(QIcon::fromTheme("task-ongoing"),
                              KCalUtils::Stringify::attendeeStatus(AttendeeData::InProcess));
     }
 }

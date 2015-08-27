@@ -602,11 +602,11 @@ void IncidenceDialogPrivate::load(const Akonadi::Item &item)
     }
 
     if (mEditor->type() == KCalCore::Incidence::TypeTodo) {
-        q->setWindowIcon(SmallIcon("view-calendar-tasks"));
+        q->setWindowIcon(QIcon::fromTheme("view-calendar-tasks"));
     } else if (mEditor->type() == KCalCore::Incidence::TypeEvent) {
-        q->setWindowIcon(SmallIcon("view-calendar-day"));
+        q->setWindowIcon(QIcon::fromTheme("view-calendar-day"));
     } else if (mEditor->type() == KCalCore::Incidence::TypeJournal) {
-        q->setWindowIcon(SmallIcon("view-pim-journal"));
+        q->setWindowIcon(QIcon::fromTheme("view-pim-journal"));
     }
 
     // Initialize tab's titles
