@@ -118,8 +118,8 @@ void CalPrintYear::setDateRange(const QDate &from, const QDate &to)
 void CalPrintYear::print(QPainter &p, int width, int height)
 {
     const KCalendarSystem *calsys = calendarSystem();
-    KLocale *locale = KLocale::global();
-    if (!calsys || !locale) {
+    auto locale = QLocale::system();
+    if (!calsys) {
         return;
     }
 
@@ -152,8 +152,8 @@ void CalPrintYear::print(QPainter &p, int width, int height)
         }
         QDate end(calsys->addMonths(start, monthsPerPage));
         end = calsys->addDays(end, -1);
-        QString stdate = locale->formatDate(start);
-        QString endate = locale->formatDate(end);
+        QString stdate = locale.toString(start, QLocale::ShortFormat);
+        QString endate = locale.toString(end, QLocale::ShortFormat);
         QString title;
         if (orientation() == QPrinter::Landscape) {
             title = i18nc("date from - to", "%1 - %2", stdate, endate);
