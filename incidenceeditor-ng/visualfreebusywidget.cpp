@@ -300,50 +300,6 @@ VisualFreeBusyWidget::~VisualFreeBusyWidget()
 
 void VisualFreeBusyWidget::showAttendeeStatusMenu()
 {
-//   QMenu *menu = new QMenu( 0 );
-//
-//   QAction *needsaction =
-//     menu->addAction( SmallIcon( "help-about" ),
-//                      KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::NeedsAction ) );
-//   QAction *accepted =
-//     menu->addAction( SmallIcon( "dialog-ok-apply" ),
-//                      KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::Accepted ) );
-//   QAction *declined =
-//     menu->addAction( SmallIcon( "dialog-cancel" ),
-//                      KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::Declined ) );
-//   QAction *tentative =
-//     menu->addAction( SmallIcon( "dialog-ok" ),
-//                      KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::Tentative ) );
-//   QAction *delegated =
-//     menu->addAction( SmallIcon( "mail-forward" ),
-//                      KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::Delegated ) );
-//   QAction *completed =
-//     menu->addAction( SmallIcon( "mail-mark-read" ),
-//                      KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::Completed ) );
-//   QAction *inprocess =
-//     menu->addAction( SmallIcon( "help-about" ),
-//                      KCalUtils::Stringify::attendeeStatus( KCalCore::Attendee::InProcess ) );
-//   QAction *ret = menu->exec( QCursor::pos() );
-//   delete menu;
-//   if ( ret == needsaction ) {
-//     currentAttendee()->setStatus( KCalCore::Attendee::NeedsAction );
-//   } else if ( ret == accepted ) {
-//     currentAttendee()->setStatus( KCalCore::Attendee::Accepted );
-//   } else if ( ret == declined ) {
-//     currentAttendee()->setStatus( KCalCore::Attendee::Declined );
-//   } else if ( ret == tentative ) {
-//     currentAttendee()->setStatus( KCalCore::Attendee::Tentative );
-//   } else if ( ret == delegated ) {
-//     currentAttendee()->setStatus( KCalCore::Attendee::Delegated );
-//   } else if ( ret == completed ) {
-//     currentAttendee()->setStatus( KCalCore::Attendee::Completed );
-//   } else if ( ret == inprocess ) {
-//     currentAttendee()->setStatus( KCalCore::Attendee::InProcess );
-//   } else {
-//     return;
-//   }
-
-//   updateCurrentItem();
 }
 
 void VisualFreeBusyWidget::slotCenterOnStart()
@@ -366,36 +322,6 @@ void VisualFreeBusyWidget::slotIntervalColorRectangleMoved(const KDateTime &star
 */
 void VisualFreeBusyWidget::slotPickDate()
 {
-    //TODO implement or discard
-//  KDateTime::Spec timeSpec = KSystemTimeZones::local();
-//  KDateTime start = mDtStart;
-//  KDateTime end = mDtEnd;
-//  bool success = mResolver->findFreeSlot( KCalCore::Period( start, end ) );
-//
-//  if ( success ) {
-//    if ( start == mDtStart && end == mDtEnd ) {
-//      KMessageBox::information(
-//        this,
-//        i18nc( "@info", "The meeting already has suitable start/end times." ),
-//        QString(),
-//        "MeetingTimeOKFreeBusy" );
-//      } else {
-//        if ( KMessageBox::questionYesNo(
-//          this,
-//          i18nc( "@info",
-//                 "The next available time slot for the meeting is:<nl/>"
-//                 "Start: %1<nl/>End: %2<nl/>"
-//                 "Would you like to move the meeting to this time slot?",
-//                 start.dateTime().toString(), end.dateTime().toString() ), QString(),
-//                 KStandardGuiItem::yes(), KStandardGuiItem::no(),
-//                 "MeetingMovedFreeBusy" ) == KMessageBox::Yes ) {
-//          Q_EMIT dateTimesChanged( start, end );
-//          slotUpdateGanttView( start, end );
-//          }
-//      }
-//    } else {
-//      KMessageBox::sorry( this, i18nc( "@info", "No suitable date found." ) );
-//  }
 }
 
 void VisualFreeBusyWidget::slotScaleChanged(int newScale)
@@ -431,6 +357,5 @@ void VisualFreeBusyWidget::slotZoomToTime()
 
 void VisualFreeBusyWidget::splitterMoved()
 {
-//  mLeftView->setColumnWidth( 0, mLeftView->width() );
 }
 
