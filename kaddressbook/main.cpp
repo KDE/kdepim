@@ -58,6 +58,7 @@ int KAddressBookApplication::activate(const QStringList &arguments, const QStrin
 int main(int argc, char **argv)
 {
     KAddressBookApplication app(argc, &argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     KLocalizedString::setApplicationDomain("kaddressbook");
 
     AboutData about;
