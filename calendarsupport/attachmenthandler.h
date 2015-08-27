@@ -34,7 +34,6 @@
 
 class KJob;
 
-class QString;
 class QWidget;
 
 namespace CalendarSupport
