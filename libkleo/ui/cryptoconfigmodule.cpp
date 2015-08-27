@@ -42,7 +42,8 @@
 #include "kleo_ui_debug.h"
 #include <kiconloader.h>
 #include <qicon.h>
-#include <KDialog>
+#include <QDialogButtonBox>
+
 #include <QSpinBox>
 #ifndef KDEPIM_ONLY_KLEO
 # include <kurlrequester.h>
@@ -149,7 +150,6 @@ void Kleo::CryptoConfigModule::init(Layout layout)
     if (type == Plain) {
         QWidget *w = new QWidget(this);
         QVBoxLayout *l = new QVBoxLayout(w);
-        l->setSpacing(KDialog::spacingHint());
         l->setMargin(0);
         QScrollArea *s = new QScrollArea(w);
         s->setFrameStyle(QFrame::NoFrame);
@@ -184,7 +184,6 @@ void Kleo::CryptoConfigModule::init(Layout layout)
         } else {
             vbox = new QWidget(this);
             vlay = new QVBoxLayout(vbox);
-            vlay->setSpacing(KDialog::spacingHint());
             vlay->setMargin(0);
             KPageWidgetItem *pageItem = new KPageWidgetItem(vbox, comp->description());
             if (type != Tabbed) {
@@ -279,7 +278,6 @@ Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
       mComponent(component)
 {
     QGridLayout *glay = new QGridLayout(this);
-    glay->setSpacing(KDialog::spacingHint());
     const QStringList groups = mComponent->groupList();
     if (groups.size() > 1) {
         glay->setColumnMinimumWidth(0, KDHorizontalLine::indentHint());
@@ -916,24 +914,45 @@ void Kleo::CryptoConfigEntryLDAPURL::doSave()
     mEntry->setURLValueList(mURLList);
 }
 
+void prepareURLCfgDialog(QDialog *dialog, DirectoryServicesWidget *dirserv, bool readOnly)
+{
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+
+    if (!readOnly) {
+        buttonBox->addButton(QDialogButtonBox::Cancel);
+        buttonBox->addButton(QDialogButtonBox::RestoreDefaults);
+
+        QPushButton *defaultsBtn = buttonBox->button(QDialogButtonBox::RestoreDefaults);
+
+        QObject::connect(defaultsBtn, &QPushButton::clicked, dirserv,
+                         &DirectoryServicesWidget::clear);
+        QObject::connect(buttonBox, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
+    }
+
+    QObject::connect(buttonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(dirserv);
+    layout->addWidget(buttonBox);
+    dialog->setLayout(layout);
+}
+
 void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
 {
     // I'm a bad boy and I do it all on the stack. Enough classes already :)
     // This is just a simple dialog around the directory-services-widget
-    KDialog dialog(mPushButton->parentWidget());
-    dialog.setCaption(i18n("Configure LDAP Servers"));
-    if (mEntry->isReadOnly()) {
-        dialog.setButtons(KDialog::Ok);
-    } else {
-        dialog.setButtons(KDialog::Default | KDialog::Cancel | KDialog::Ok);
-    }
+    QDialog dialog(mPushButton->parentWidget());
+    dialog.setWindowTitle(i18n("Configure LDAP Servers"));
+
     DirectoryServicesWidget *dirserv = new DirectoryServicesWidget(&dialog);
+
+    prepareURLCfgDialog(&dialog, dirserv, mEntry->isReadOnly());
+
     dirserv->setX509ReadOnly(mEntry->isReadOnly());
     dirserv->setAllowedSchemes(DirectoryServicesWidget::LDAP);
     dirserv->setAllowedProtocols(DirectoryServicesWidget::X509Protocol);
     dirserv->addX509Services(mURLList);
-    dialog.setMainWidget(dirserv);
-    connect(&dialog, &KDialog::defaultClicked, dirserv, &DirectoryServicesWidget::clear);
+
     if (dialog.exec()) {
         setURLList(dirserv->x509Services());
         slotChanged();
@@ -1044,18 +1063,20 @@ void Kleo::CryptoConfigEntryKeyserver::slotOpenDialog()
 {
     // I'm a bad boy and I do it all on the stack. Enough classes already :)
     // This is just a simple dialog around the directory-services-widget
-    KDialog dialog(mPushButton->parentWidget());
-    dialog.setCaption(i18n("Configure Keyservers"));
-    dialog.setButtons(KDialog::Default | KDialog::Cancel | KDialog::Ok);
-    DirectoryServicesWidget dirserv(&dialog);
-    dirserv.setOpenPGPReadOnly(mEntry->isReadOnly());
-    dirserv.setAllowedSchemes(DirectoryServicesWidget::AllSchemes);
-    dirserv.setAllowedProtocols(DirectoryServicesWidget::OpenPGPProtocol);
-    dirserv.addOpenPGPServices(string2urls(mLabel->text()));
-    dialog.setMainWidget(&dirserv);
-    connect(&dialog, &KDialog::defaultClicked, &dirserv, &DirectoryServicesWidget::clear);
+    QDialog dialog(mPushButton->parentWidget());
+    dialog.setWindowTitle(i18n("Configure Keyservers"));
+
+    DirectoryServicesWidget *dirserv = new DirectoryServicesWidget(&dialog);
+
+    prepareURLCfgDialog(&dialog, dirserv, mEntry->isReadOnly());
+
+    dirserv->setOpenPGPReadOnly(mEntry->isReadOnly());
+    dirserv->setAllowedSchemes(DirectoryServicesWidget::AllSchemes);
+    dirserv->setAllowedProtocols(DirectoryServicesWidget::OpenPGPProtocol);
+    dirserv->addOpenPGPServices(string2urls(mLabel->text()));
+
     if (dialog.exec()) {
-        mLabel->setText(urls2string(dirserv.openPGPServices()));
+        mLabel->setText(urls2string(dirserv->openPGPServices()));
         slotChanged();
     }
 }
