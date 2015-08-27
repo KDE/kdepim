@@ -723,7 +723,7 @@ void GraphicsScene::doPrint(QPainter *painter, const QRectF &targetRect,
     QFont sceneFont(font());
     if (printer) {
         sceneFont = QFont(font(), printer);
-        sceneFont.setPixelSize(font().pointSize());
+        sceneFont.setPointSize(font().pointSize());
     }
 
     const QRectF oldScnRect(sceneRect());

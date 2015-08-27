@@ -205,7 +205,7 @@ void MonthGraphicsView::drawBackground(QPainter *p, const QRectF &rect)
                       calSys->formatDate(mMonthView->averageDate(),
                                          KLocale::Year, KLocale::LongNumber)));
 
-    font.setPixelSize(dayLabelsHeight - 10);
+    font.setPointSize(dayLabelsHeight - 10);
     p->setFont(font);
 
     const QDate start = mMonthView->actualStartDateTime().date();
@@ -293,7 +293,7 @@ void MonthGraphicsView::drawBackground(QPainter *p, const QRectF &rect)
     }
 
     font = mMonthView->preferences()->monthViewFont();
-    font.setPixelSize(MonthCell::topMargin() - 4);
+    font.setPointSize(MonthCell::topMargin() - 4);
 
     p->setFont(font);
 

@@ -57,7 +57,7 @@ public:
         QPen oldPen = p.pen();
         QFont oldFont = p.font();
         QFont font = p.font();
-        font.setPixelSize(25);
+        font.setPointSize(25);
         font.setBold(true);
         p.setFont(font);
         p.setPen(QColor(Qt::white));
@@ -74,7 +74,7 @@ public:
             KLocale::global()->formatDate(mTimeSpentView->mStartDate),
             KLocale::global()->formatDate(mTimeSpentView->mEndDate));
         }
-        font.setPixelSize(20);
+        font.setPointSize(20);
         font.setBold(true);
         p.setFont(font);
         p.drawText(QPoint(margin, 60), dateText);

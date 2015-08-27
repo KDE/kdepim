@@ -89,7 +89,7 @@ public:
         // Dashed up and down arrow characters
         ch = QChar(mLocation == Top ? 0x21e1 : 0x21e3);
         QFont font = q->font();
-        font.setPixelSize(KIconLoader::global()->currentSize(KIconLoader::Dialog));
+        font.setPointSize(KIconLoader::global()->currentSize(KIconLoader::Dialog));
         QFontMetrics fm(font);
         QRect rect = fm.boundingRect(ch).adjusted(-2, -2, 2, 2);
         mPixmap = QPixmap(rect.size());
