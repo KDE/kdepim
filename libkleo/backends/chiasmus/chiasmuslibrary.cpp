@@ -36,11 +36,11 @@
 
 #include "kleo/cryptoconfig.h"
 
-#include <klibloader.h>
 #include <QDebug>
 #include <KLocalizedString>
 
 #include <QByteArray>
+#include <QLibrary>
 
 #include <vector>
 #include <algorithm>
@@ -69,7 +69,7 @@ Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus(QString *reason
     assert(lib);
     const QString libfile = lib->urlValue().path();
     if (!mXiaLibrary) {
-        mXiaLibrary = new KLibrary(libfile);
+        mXiaLibrary = new QLibrary(libfile);
     }
     if (mXiaLibrary->fileName().isEmpty() || !mXiaLibrary->isLoaded()) {
         if (reason)
@@ -81,7 +81,7 @@ Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus(QString *reason
         mXiaLibrary = 0;
         return 0;
     }
-    KLibrary::void_function_ptr symbol = mXiaLibrary->resolveFunction("Chiasmus");
+    QFunctionPointer symbol = mXiaLibrary->resolve("Chiasmus");
     if (!symbol) {
         if (reason)
             *reason = i18n("Failed to load %1: %2",

@@ -36,7 +36,7 @@
 #include <qvector.h>
 #include <qbytearray.h>
 
-class KLibrary;
+class QLibrary;
 
 namespace Kleo
 {
@@ -60,7 +60,7 @@ private:
 
 private:
     static ChiasmusLibrary *self;
-    mutable KLibrary *mXiaLibrary;
+    mutable QLibrary *mXiaLibrary;
 };
 
 }
