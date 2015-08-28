@@ -9,7 +9,7 @@ add_definitions(-DKMAIL_UNITTESTS=YES)
 macro(add_messageviewer_unittest _source)
     get_filename_component(_name ${_source} NAME_WE)
     ecm_qt_declare_logging_category(_test HEADER messagecore_debug.h IDENTIFIER MESSAGECORE_LOG CATEGORY_NAME log_messagecore)
-    ecm_add_test(${_source} util.cpp messagecore_debug.cpp ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp testcsshelper.cpp
+    ecm_add_test(${_source} util.cpp messagecore_debug.cpp ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp testcsshelper.cpp ${CMAKE_SOURCE_DIR}/messageviewer/viewer/cryptohelper.cpp
         TEST_NAME ${_name}
         NAME_PREFIX "messageviewer-"
         LINK_LIBRARIES messageviewer kleo KF5::QGpgme Qt5::Test Qt5::WebKitWidgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::AkonadiNotes KF5::CalendarCore
@@ -41,6 +41,7 @@ add_messageviewer_unittest( htmlquotecolorertest.cpp )
 add_messageviewer_crypto_unittest( objecttreeparsertest.cpp )
 add_messageviewer_crypto_unittest( rendertest.cpp )
 add_messageviewer_crypto_unittest( unencryptedmessagetest.cpp )
+add_messageviewer_unittest( cryptohelpertest.cpp )
 add_messageviewer_unittest( todoedittest.cpp )
 add_messageviewer_unittest( eventedittest.cpp )
 add_messageviewer_unittest( noteedittest.cpp )

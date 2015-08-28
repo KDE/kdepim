@@ -81,6 +81,7 @@ set(libmessageviewer_viewer_SRCS
   viewer/bodypartformatter.cpp
   viewer/bodypartformatterfactory.cpp
   viewer/chiasmuskeyselector.cpp
+  viewer/cryptohelper.cpp
   viewer/csshelper.cpp
   viewer/csshelperbase.cpp
   viewer/editorwatcher.cpp
