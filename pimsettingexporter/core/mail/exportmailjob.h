@@ -26,7 +26,7 @@
 class QUrl;
 class ArchiveStorage;
 
-class PIMSETTINGEXPORTER_EXPORT ExportMailJob : public AbstractImportExportJob
+class ExportMailJob : public AbstractImportExportJob
 {
 public:
     explicit ExportMailJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);

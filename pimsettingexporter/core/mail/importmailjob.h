@@ -28,7 +28,7 @@ class KArchiveDirectory;
 class KArchiveFile;
 class ArchiveStorage;
 
-class PIMSETTINGEXPORTER_EXPORT ImportMailJob : public AbstractImportExportJob
+class ImportMailJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:

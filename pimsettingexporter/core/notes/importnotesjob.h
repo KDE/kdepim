@@ -22,7 +22,7 @@
 #include "pimsettingexporter_export.h"
 class ArchiveStorage;
 
-class PIMSETTINGEXPORTER_EXPORT ImportNotesJob : public AbstractImportExportJob
+class ImportNotesJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:

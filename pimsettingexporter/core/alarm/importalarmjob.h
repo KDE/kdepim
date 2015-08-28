@@ -22,7 +22,7 @@
 
 class ArchiveStorage;
 
-class PIMSETTINGEXPORTER_EXPORT ImportAlarmJob : public AbstractImportExportJob
+class ImportAlarmJob : public AbstractImportExportJob
 {
     Q_OBJECT
 public:
