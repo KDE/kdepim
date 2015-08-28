@@ -31,7 +31,7 @@
 
 namespace KPIM
 {
-
+class FreeBusyCalendarPrivate;
 class KDEPIM_EXPORT FreeBusyCalendar : QObject
 {
     Q_OBJECT
@@ -52,7 +52,7 @@ private Q_SLOTS:
 
 private:
     void deleteAllEvents();
-
+    FreeBusyCalendarPrivate *const d;
     FreeBusyItemModel *mModel;
     KCalCore::Calendar::Ptr mCalendar;
     QMap<QModelIndex, KCalCore::Event::Ptr> mFbEvent;

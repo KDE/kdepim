@@ -34,62 +34,77 @@
 
 using namespace KPIM;
 
+class KPIM::FreeBusyCalendarPrivate
+{
+public:
+    FreeBusyCalendarPrivate()
+        : mModel(Q_NULLPTR)
+    {
+
+    }
+
+    FreeBusyItemModel *mModel;
+    KCalCore::Calendar::Ptr mCalendar;
+    QMap<QModelIndex, KCalCore::Event::Ptr> mFbEvent;
+};
+
 FreeBusyCalendar::FreeBusyCalendar(QObject *parent)
     : QObject(parent)
-    , mModel(Q_NULLPTR)
+    , d(new KPIM::FreeBusyCalendarPrivate)
 {
-    mCalendar = KCalCore::Calendar::Ptr(new KCalCore::MemoryCalendar(KSystemTimeZones::local()));
+    d->mCalendar = KCalCore::Calendar::Ptr(new KCalCore::MemoryCalendar(KSystemTimeZones::local()));
     qCDebug(LIBKDEPIM_LOG) << "creating" << this;
 }
 
 FreeBusyCalendar::~FreeBusyCalendar()
 {
     qCDebug(LIBKDEPIM_LOG) << "deleting" << this;
+    delete d;
 }
 
 KCalCore::Calendar::Ptr FreeBusyCalendar::calendar() const
 {
-    return mCalendar;
+    return d->mCalendar;
 }
 
 FreeBusyItemModel *FreeBusyCalendar::model() const
 {
-    return mModel;
+    return d->mModel;
 }
 
 void FreeBusyCalendar::setModel(FreeBusyItemModel *model)
 {
-    if (model != mModel) {
-        if (mModel) {
-            disconnect(mModel, 0, 0, 0);
+    if (model != d->mModel) {
+        if (d->mModel) {
+            disconnect(d->mModel, 0, 0, 0);
         }
-        mModel = model;
-        connect(mModel, SIGNAL(layoutChanged()), SLOT(onLayoutChanged()));
-        connect(mModel, SIGNAL(modelReset()), SLOT(onLayoutChanged()));
-        connect(mModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+        d->mModel = model;
+        connect(d->mModel, SIGNAL(layoutChanged()), SLOT(onLayoutChanged()));
+        connect(d->mModel, SIGNAL(modelReset()), SLOT(onLayoutChanged()));
+        connect(d->mModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
                 SLOT(onRowsRemoved(QModelIndex,int,int)));
-        connect(mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+        connect(d->mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
                 SLOT(onRowsInserted(QModelIndex,int,int)));
-        connect(mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+        connect(d->mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                 SLOT(onRowsChanged(QModelIndex,QModelIndex)));
     }
 }
 
 void FreeBusyCalendar::deleteAllEvents()
 {
-    foreach (const KCalCore::Event::Ptr &event, mCalendar->events()) {
-        mCalendar->deleteEvent(event);
+    foreach (const KCalCore::Event::Ptr &event, d->mCalendar->events()) {
+        d->mCalendar->deleteEvent(event);
     }
 }
 
 void FreeBusyCalendar::onLayoutChanged()
 {
-    if (!mFbEvent.isEmpty()) {
+    if (!d->mFbEvent.isEmpty()) {
         deleteAllEvents();
-        mFbEvent.clear();
-        for (int i = mModel->rowCount() - 1; i >= 0; --i) {
-            QModelIndex parent = mModel->index(i, 0);
-            onRowsInserted(parent, 0, mModel->rowCount(parent) - 1);
+        d->mFbEvent.clear();
+        for (int i = d->mModel->rowCount() - 1; i >= 0; --i) {
+            QModelIndex parent = d->mModel->index(i, 0);
+            onRowsInserted(parent, 0, d->mModel->rowCount(parent) - 1);
         }
     }
 }
@@ -100,10 +115,10 @@ void FreeBusyCalendar::onRowsInserted(const QModelIndex &parent, int first, int 
         return;
     }
     for (int i = first; i <= last; ++i) {
-        QModelIndex index = mModel->index(i, 0, parent);
+        QModelIndex index = d->mModel->index(i, 0, parent);
 
-        const KCalCore::FreeBusyPeriod &period = mModel->data(index, FreeBusyItemModel::FreeBusyPeriodRole).value<KCalCore::FreeBusyPeriod>();
-        const KCalCore::FreeBusy::Ptr &fb = mModel->data(parent, FreeBusyItemModel::FreeBusyRole).value<KCalCore::FreeBusy::Ptr>();
+        const KCalCore::FreeBusyPeriod &period = d->mModel->data(index, FreeBusyItemModel::FreeBusyPeriodRole).value<KCalCore::FreeBusyPeriod>();
+        const KCalCore::FreeBusy::Ptr &fb = d->mModel->data(parent, FreeBusyItemModel::FreeBusyRole).value<KCalCore::FreeBusy::Ptr>();
 
         KCalCore::Event::Ptr inc = KCalCore::Event::Ptr(new KCalCore::Event());
         inc->setDtStart(period.start());
@@ -132,8 +147,8 @@ void FreeBusyCalendar::onRowsInserted(const QModelIndex &parent, int first, int 
         }
         inc->setSummary(summary);
 
-        mFbEvent.insert(index, inc);
-        mCalendar->addEvent(inc);
+        d->mFbEvent.insert(index, inc);
+        d->mCalendar->addEvent(inc);
     }
 }
 
@@ -141,14 +156,14 @@ void FreeBusyCalendar::onRowsRemoved(const QModelIndex &parent, int first, int l
 {
     if (!parent.isValid()) {
         for (int i = first; i <= last; ++i) {
-            QModelIndex index = mModel->index(i, 0);
-            onRowsRemoved(index, 0, mModel->rowCount(index) - 1);
+            QModelIndex index = d->mModel->index(i, 0);
+            onRowsRemoved(index, 0, d->mModel->rowCount(index) - 1);
         }
     } else {
         for (int i = first; i <= last; ++i) {
-            QModelIndex index = mModel->index(i, 0, parent);
-            KCalCore::Event::Ptr inc = mFbEvent.take(index);
-            mCalendar->deleteEvent(inc);
+            QModelIndex index = d->mModel->index(i, 0, parent);
+            KCalCore::Event::Ptr inc = d->mFbEvent.take(index);
+            d->mCalendar->deleteEvent(inc);
         }
     }
 }
@@ -159,9 +174,9 @@ void FreeBusyCalendar::onRowsChanged(const QModelIndex &topLeft, const QModelInd
         return;
     }
     for (int i = topLeft.row(); i <= bottomRight.row(); ++i) {
-        QModelIndex index = mModel->index(i, 0, topLeft.parent());
-        KCalCore::Event::Ptr inc = mFbEvent.value(index);
-        mCalendar->beginChange(inc);
-        mCalendar->endChange(inc);
+        QModelIndex index = d->mModel->index(i, 0, topLeft.parent());
+        KCalCore::Event::Ptr inc = d->mFbEvent.value(index);
+        d->mCalendar->beginChange(inc);
+        d->mCalendar->endChange(inc);
     }
 }
