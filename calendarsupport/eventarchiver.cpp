@@ -38,8 +38,8 @@
 #include "calendarsupport_debug.h"
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KIO/NetAccess>
 #include <KIO/FileCopyJob>
+#include <KIO/StatJob>
 #include <KJobWidgets>
 
 #include <QLocale>
@@ -249,9 +249,19 @@ void EventArchiver::archiveIncidences(const Akonadi::ETMCalendar::Ptr &calendar,
     // Get or create the archive file
     QUrl archiveURL(KCalPrefs::instance()->mArchiveFile);
     QString archiveFile;
+    QTemporaryFile downloadTempFile;
 
-    // There is no KIO::NetAccess availabe for Windows CE
-    if (KIO::NetAccess::exists(archiveURL, KIO::NetAccess::SourceSide, widget)) {
+    bool fileExists = false;
+    if (archiveURL.isLocalFile()) {
+        fileExists = QFile::exists(archiveURL.toLocalFile());
+    } else {
+        auto job = KIO::stat(archiveURL, KIO::StatJob::SourceSide, 0);
+        KJobWidgets::setWindow(job, widget);
+        fileExists = job->exec();
+    }
+
+    if (fileExists) {
+        archiveFile = downloadTempFile.fileName();
         auto job = KIO::file_copy(archiveURL, QUrl::fromLocalFile(archiveFile));
         KJobWidgets::setWindow(job, widget);
         if (!job->exec()) {
@@ -297,7 +307,6 @@ void EventArchiver::archiveIncidences(const Akonadi::ETMCalendar::Ptr &calendar,
         }
     }
 
-    KIO::NetAccess::removeTempFile(archiveFile);
     QFile::remove(tmpFileName);
 
     // We don't want it to ask to send invitations for each incidence.
