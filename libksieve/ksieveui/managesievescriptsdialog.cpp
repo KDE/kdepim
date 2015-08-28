@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "custommanagesievewidget.h"
 #include "managesievescriptsdialog.h"
+#include "widgets/custommanagesievewidget.h"
 #include "widgets/managesievetreeview.h"
 #include "editor/sievetextedit.h"
 #include "editor/sieveeditor.h"
