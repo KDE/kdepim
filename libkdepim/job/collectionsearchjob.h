@@ -31,13 +31,13 @@
 
 namespace KPIM
 {
-
+class CollectionSearchJobPrivate;
 class KDEPIM_EXPORT CollectionSearchJob : public KJob
 {
     Q_OBJECT
 public:
     explicit CollectionSearchJob(const QString &searchString, const QStringList &mimetypeFilter, QObject *parent = Q_NULLPTR);
-
+    ~CollectionSearchJob();
     void start() Q_DECL_OVERRIDE;
 
     Akonadi::Collection::List matchingCollections() const;
@@ -48,6 +48,7 @@ private Q_SLOTS:
     void onAncestorsFetched(KJob *);
 
 private:
+    CollectionSearchJobPrivate *const d;
     QString mSearchString;
     QStringList mMimeTypeFilter;
     Akonadi::Collection::List mMatchingCollections;

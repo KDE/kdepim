@@ -31,7 +31,7 @@ namespace KLDAP
 {
 class LdapConfigWidget;
 class LdapServer;
-
+class AddHostDialogPrivate;
 class KDEPIM_EXPORT AddHostDialog : public QDialog
 {
     Q_OBJECT
@@ -50,9 +50,7 @@ private Q_SLOTS:
 private:
     void writeConfig();
     void readConfig();
-    KLDAP::LdapConfigWidget *mCfg;
-    KLDAP::LdapServer *mServer;
-    QPushButton *mOkButton;
+    AddHostDialogPrivate *const d;
 };
 
 }

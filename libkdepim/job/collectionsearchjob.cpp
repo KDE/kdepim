@@ -27,25 +27,42 @@ without including the source code for Qt in the source distribution.
 #include <AkonadiSearch/PIM/collectionquery.h>
 
 using namespace KPIM;
+class KPIM::CollectionSearchJobPrivate
+{
+public:
+    CollectionSearchJobPrivate(const QString &searchString, const QStringList &mimetypeFilter)
+        : mSearchString(searchString),
+          mMimeTypeFilter(mimetypeFilter)
+    {
+    }
+    QString mSearchString;
+    QStringList mMimeTypeFilter;
+    Akonadi::Collection::List mMatchingCollections;
+    Akonadi::Collection::List mAncestors;
+};
 
 CollectionSearchJob::CollectionSearchJob(const QString &searchString, const QStringList &mimetypeFilter, QObject *parent)
     : KJob(parent),
-      mSearchString(searchString),
-      mMimeTypeFilter(mimetypeFilter)
+      d(new KPIM::CollectionSearchJobPrivate(searchString, mimetypeFilter))
 {
+}
+
+CollectionSearchJob::~CollectionSearchJob()
+{
+    delete d;
 }
 
 void CollectionSearchJob::start()
 {
     Akonadi::Search::PIM::CollectionQuery query;
-    if (mSearchString == QLatin1String("*")) {
+    if (d->mSearchString == QLatin1String("*")) {
         query.setNamespace(QStringList() << QStringLiteral(""));
     } else {
         //We exclude the other users namespace
         query.setNamespace(QStringList() << QStringLiteral("shared") << QStringLiteral(""));
-        query.pathMatches(mSearchString);
+        query.pathMatches(d->mSearchString);
     }
-    query.setMimetype(mMimeTypeFilter);
+    query.setMimetype(d->mMimeTypeFilter);
     query.setLimit(200);
     Akonadi::Search::PIM::ResultIterator it = query.exec();
     Akonadi::Collection::List collections;
@@ -71,11 +88,11 @@ void CollectionSearchJob::start()
 void CollectionSearchJob::onCollectionsReceived(const Akonadi::Collection::List &list)
 {
     Q_FOREACH (const Akonadi::Collection &col, list) {
-        mMatchingCollections << col;
+        d->mMatchingCollections << col;
         Akonadi::Collection ancestor = col.parentCollection();
         while (ancestor.isValid() && (ancestor != Akonadi::Collection::root())) {
-            if (!mAncestors.contains(ancestor)) {
-                mAncestors << ancestor;
+            if (!d->mAncestors.contains(ancestor)) {
+                d->mAncestors << ancestor;
             }
             ancestor = ancestor.parentCollection();
         }
@@ -89,8 +106,8 @@ void CollectionSearchJob::onCollectionsFetched(KJob *job)
         emitResult();
         return;
     }
-    if (!mAncestors.isEmpty()) {
-        Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(mAncestors, Akonadi::CollectionFetchJob::Base, this);
+    if (!d->mAncestors.isEmpty()) {
+        Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(d->mAncestors, Akonadi::CollectionFetchJob::Base, this);
         fetchJob->fetchScope().setListFilter(Akonadi::CollectionFetchScope::NoFilter);
         connect(fetchJob, &Akonadi::CollectionFetchJob::result, this, &CollectionSearchJob::onAncestorsFetched);
     } else {
@@ -124,16 +141,16 @@ void CollectionSearchJob::onAncestorsFetched(KJob *job)
     }
     Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob *>(job);
     Akonadi::Collection::List matchingCollections;
-    Q_FOREACH (const Akonadi::Collection &c, mMatchingCollections) {
+    Q_FOREACH (const Akonadi::Collection &c, d->mMatchingCollections) {
         //We need to replace the parents with the version that contains the name, so we can display it accordingly
         matchingCollections << replaceParent(c, fetchJob->collections());
     }
-    mMatchingCollections = matchingCollections;
+    d->mMatchingCollections = matchingCollections;
     emitResult();
 }
 
 Akonadi::Collection::List CollectionSearchJob::matchingCollections() const
 {
-    return mMatchingCollections;
+    return d->mMatchingCollections;
 }
 

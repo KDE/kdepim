@@ -33,22 +33,36 @@
 #include <QVBoxLayout>
 
 using namespace KLDAP;
+class KLDAP::AddHostDialogPrivate
+{
+public:
+    AddHostDialogPrivate()
+        : mCfg(Q_NULLPTR),
+          mServer(Q_NULLPTR),
+          mOkButton(Q_NULLPTR)
+    {
+    }
+    KLDAP::LdapConfigWidget *mCfg;
+    KLDAP::LdapServer *mServer;
+    QPushButton *mOkButton;
+};
 
 AddHostDialog::AddHostDialog(KLDAP::LdapServer *server, QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new KLDAP::AddHostDialogPrivate)
 {
     setWindowTitle(i18n("Add Host"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-    mOkButton->setDefault(true);
-    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    d->mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    d->mOkButton->setDefault(true);
+    d->mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AddHostDialog::reject);
-    mOkButton->setDefault(true);
+    d->mOkButton->setDefault(true);
     setModal(true);
 
-    mServer = server;
+    d->mServer = server;
 
     QWidget *page = new QWidget(this);
     mainLayout->addWidget(page);
@@ -56,7 +70,7 @@ AddHostDialog::AddHostDialog(KLDAP::LdapServer *server, QWidget *parent)
     QHBoxLayout *layout = new QHBoxLayout(page);
     layout->setMargin(0);
 
-    mCfg = new KLDAP::LdapConfigWidget(
+    d->mCfg = new KLDAP::LdapConfigWidget(
         KLDAP::LdapConfigWidget::W_USER |
         KLDAP::LdapConfigWidget::W_PASS |
         KLDAP::LdapConfigWidget::W_BINDDN |
@@ -73,56 +87,57 @@ AddHostDialog::AddHostDialog(KLDAP::LdapServer *server, QWidget *parent)
         KLDAP::LdapConfigWidget::W_AUTHBOX,
         page);
 
-    layout->addWidget(mCfg);
-    mCfg->setHost(mServer->host());
-    mCfg->setPort(mServer->port());
-    mCfg->setDn(mServer->baseDn());
-    mCfg->setUser(mServer->user());
-    mCfg->setBindDn(mServer->bindDn());
-    mCfg->setPassword(mServer->password());
-    mCfg->setTimeLimit(mServer->timeLimit());
-    mCfg->setSizeLimit(mServer->sizeLimit());
-    mCfg->setPageSize(mServer->pageSize());
-    mCfg->setVersion(mServer->version());
-    mCfg->setFilter(mServer->filter());
-    switch (mServer->security()) {
+    layout->addWidget(d->mCfg);
+    d->mCfg->setHost(d->mServer->host());
+    d->mCfg->setPort(d->mServer->port());
+    d->mCfg->setDn(d->mServer->baseDn());
+    d->mCfg->setUser(d->mServer->user());
+    d->mCfg->setBindDn(d->mServer->bindDn());
+    d->mCfg->setPassword(d->mServer->password());
+    d->mCfg->setTimeLimit(d->mServer->timeLimit());
+    d->mCfg->setSizeLimit(d->mServer->sizeLimit());
+    d->mCfg->setPageSize(d->mServer->pageSize());
+    d->mCfg->setVersion(d->mServer->version());
+    d->mCfg->setFilter(d->mServer->filter());
+    switch (d->mServer->security()) {
     case KLDAP::LdapServer::TLS:
-        mCfg->setSecurity(KLDAP::LdapConfigWidget::TLS);
+        d->mCfg->setSecurity(KLDAP::LdapConfigWidget::TLS);
         break;
     case KLDAP::LdapServer::SSL:
-        mCfg->setSecurity(KLDAP::LdapConfigWidget::SSL);
+        d->mCfg->setSecurity(KLDAP::LdapConfigWidget::SSL);
         break;
     default:
-        mCfg->setSecurity(KLDAP::LdapConfigWidget::None);
+        d->mCfg->setSecurity(KLDAP::LdapConfigWidget::None);
     }
 
-    switch (mServer->auth()) {
+    switch (d->mServer->auth()) {
     case KLDAP::LdapServer::Simple:
-        mCfg->setAuth(KLDAP::LdapConfigWidget::Simple);
+        d->mCfg->setAuth(KLDAP::LdapConfigWidget::Simple);
         break;
     case KLDAP::LdapServer::SASL:
-        mCfg->setAuth(KLDAP::LdapConfigWidget::SASL);
+        d->mCfg->setAuth(KLDAP::LdapConfigWidget::SASL);
         break;
     default:
-        mCfg->setAuth(KLDAP::LdapConfigWidget::Anonymous);
+        d->mCfg->setAuth(KLDAP::LdapConfigWidget::Anonymous);
     }
-    mCfg->setMech(mServer->mech());
+    d->mCfg->setMech(d->mServer->mech());
 
     KAcceleratorManager::manage(this);
-    connect(mCfg, &KLDAP::LdapConfigWidget::hostNameChanged, this, &AddHostDialog::slotHostEditChanged);
-    connect(mOkButton, &QPushButton::clicked, this, &AddHostDialog::slotOk);
-    mOkButton->setEnabled(!mServer->host().isEmpty());
+    connect(d->mCfg, &KLDAP::LdapConfigWidget::hostNameChanged, this, &AddHostDialog::slotHostEditChanged);
+    connect(d->mOkButton, &QPushButton::clicked, this, &AddHostDialog::slotOk);
+    d->mOkButton->setEnabled(!d->mServer->host().isEmpty());
     readConfig();
 }
 
 AddHostDialog::~AddHostDialog()
 {
     writeConfig();
+    delete d;
 }
 
 void AddHostDialog::slotHostEditChanged(const QString &text)
 {
-    mOkButton->setEnabled(!text.isEmpty());
+    d->mOkButton->setEnabled(!text.isEmpty());
 }
 
 void AddHostDialog::readConfig()
@@ -143,38 +158,38 @@ void AddHostDialog::writeConfig()
 
 void AddHostDialog::slotOk()
 {
-    mServer->setHost(mCfg->host());
-    mServer->setPort(mCfg->port());
-    mServer->setBaseDn(mCfg->dn());
-    mServer->setUser(mCfg->user());
-    mServer->setBindDn(mCfg->bindDn());
-    mServer->setPassword(mCfg->password());
-    mServer->setTimeLimit(mCfg->timeLimit());
-    mServer->setSizeLimit(mCfg->sizeLimit());
-    mServer->setPageSize(mCfg->pageSize());
-    mServer->setVersion(mCfg->version());
-    mServer->setFilter(mCfg->filter());
-    switch (mCfg->security()) {
+    d->mServer->setHost(d->mCfg->host());
+    d->mServer->setPort(d->mCfg->port());
+    d->mServer->setBaseDn(d->mCfg->dn());
+    d->mServer->setUser(d->mCfg->user());
+    d->mServer->setBindDn(d->mCfg->bindDn());
+    d->mServer->setPassword(d->mCfg->password());
+    d->mServer->setTimeLimit(d->mCfg->timeLimit());
+    d->mServer->setSizeLimit(d->mCfg->sizeLimit());
+    d->mServer->setPageSize(d->mCfg->pageSize());
+    d->mServer->setVersion(d->mCfg->version());
+    d->mServer->setFilter(d->mCfg->filter());
+    switch (d->mCfg->security()) {
     case KLDAP::LdapConfigWidget::TLS:
-        mServer->setSecurity(KLDAP::LdapServer::TLS);
+        d->mServer->setSecurity(KLDAP::LdapServer::TLS);
         break;
     case KLDAP::LdapConfigWidget::SSL:
-        mServer->setSecurity(KLDAP::LdapServer::SSL);
+        d->mServer->setSecurity(KLDAP::LdapServer::SSL);
         break;
     default:
-        mServer->setSecurity(KLDAP::LdapServer::None);
+        d->mServer->setSecurity(KLDAP::LdapServer::None);
     }
-    switch (mCfg->auth()) {
+    switch (d->mCfg->auth()) {
     case KLDAP::LdapConfigWidget::Simple:
-        mServer->setAuth(KLDAP::LdapServer::Simple);
+        d->mServer->setAuth(KLDAP::LdapServer::Simple);
         break;
     case KLDAP::LdapConfigWidget::SASL:
-        mServer->setAuth(KLDAP::LdapServer::SASL);
+        d->mServer->setAuth(KLDAP::LdapServer::SASL);
         break;
     default:
-        mServer->setAuth(KLDAP::LdapServer::Anonymous);
+        d->mServer->setAuth(KLDAP::LdapServer::Anonymous);
     }
-    mServer->setMech(mCfg->mech());
+    d->mServer->setMech(d->mCfg->mech());
     QDialog::accept();
 }
 

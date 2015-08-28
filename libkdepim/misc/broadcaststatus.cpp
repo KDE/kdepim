@@ -48,6 +48,11 @@ BroadcastStatus *BroadcastStatus::instance()
     return instance_;
 }
 
+QString BroadcastStatus::statusMsg() const
+{
+    return mStatusMsg;
+}
+
 BroadcastStatus::BroadcastStatus()
     : mTransientActive(false)
 {

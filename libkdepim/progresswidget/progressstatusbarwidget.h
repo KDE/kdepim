@@ -24,6 +24,7 @@
 namespace KPIM
 {
 class StatusbarProgressWidget;
+class ProgressStatusBarWidgetPrivate;
 class KDEPIM_EXPORT ProgressStatusBarWidget : public QObject
 {
     Q_OBJECT
@@ -34,6 +35,7 @@ public:
     KPIM::StatusbarProgressWidget *littleProgress() const;
 
 private:
+    ProgressStatusBarWidgetPrivate *const d;
     KPIM::StatusbarProgressWidget *mLittleProgress;
 };
 }

@@ -50,10 +50,7 @@ public:
     static BroadcastStatus *instance();
 
     /** Return the last status message from setStatusMsg() */
-    QString statusMsg() const
-    {
-        return mStatusMsg;
-    }
+    QString statusMsg() const;
 
 public Q_SLOTS:
     /**

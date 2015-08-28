@@ -21,25 +21,36 @@
 #include "progressdialog.h"
 
 using namespace KPIM;
+class KPIM::ProgressStatusBarWidgetPrivate
+{
+public:
+    ProgressStatusBarWidgetPrivate()
+        : mLittleProgress(Q_NULLPTR)
+    {
+
+    }
+    KPIM::StatusbarProgressWidget *mLittleProgress;
+};
 
 ProgressStatusBarWidget::ProgressStatusBarWidget(QWidget *alignWidget, QWidget *parent, unsigned int showTypeProgressItem)
-    : QObject(parent)
+    : QObject(parent),
+      d(new KPIM::ProgressStatusBarWidgetPrivate)
 {
     KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog(alignWidget, parent);
     progressDialog->setShowTypeProgressItem(showTypeProgressItem);
     progressDialog->hide();
 
-    mLittleProgress = new KPIM::StatusbarProgressWidget(progressDialog, alignWidget);
-    mLittleProgress->setShowTypeProgressItem(showTypeProgressItem);
-    mLittleProgress->show();
+    d->mLittleProgress = new KPIM::StatusbarProgressWidget(progressDialog, alignWidget);
+    d->mLittleProgress->setShowTypeProgressItem(showTypeProgressItem);
+    d->mLittleProgress->show();
 }
 
 ProgressStatusBarWidget::~ProgressStatusBarWidget()
 {
-
+    delete d;
 }
 
 KPIM::StatusbarProgressWidget *ProgressStatusBarWidget::littleProgress() const
 {
-    return mLittleProgress;
+    return d->mLittleProgress;
 }

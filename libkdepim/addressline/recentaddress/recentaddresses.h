@@ -109,10 +109,10 @@ public:
 
 private:
     explicit RecentAddresses(KConfig *config = Q_NULLPTR);
+    void adjustSize();
 
     KContacts::Addressee::List m_addresseeList;
 
-    void adjustSize();
 
     int m_maxCount;
 };
