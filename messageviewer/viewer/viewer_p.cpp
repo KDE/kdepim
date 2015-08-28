@@ -659,12 +659,10 @@ void ViewerPrivate::showAttachmentPopup(KMime::Content *node, const QString &nam
         attachmentMapper->setMapping(action, Viewer::Edit);
         action->setEnabled(canChange);
     }
-    if (GlobalSettings::self()->allowAttachmentDeletion()) {
-        action = menu->addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete Attachment"));
-        connect(action, SIGNAL(triggered()), attachmentMapper, SLOT(map()));
-        attachmentMapper->setMapping(action, Viewer::Delete);
-        action->setEnabled(canChange && !deletedAttachment);
-    }
+    action = menu->addAction(QIcon::fromTheme(QStringLiteral("edit-delete")), i18n("Delete Attachment"));
+    connect(action, SIGNAL(triggered()), attachmentMapper, SLOT(map()));
+    attachmentMapper->setMapping(action, Viewer::Delete);
+    action->setEnabled(canChange && !deletedAttachment);
     if (name.endsWith(QLatin1String(".xia"), Qt::CaseInsensitive)
             && Kleo::CryptoBackendFactory::instance()->protocol("Chiasmus")) {
         action = menu->addAction(i18n("Decrypt With Chiasmus..."));
@@ -1951,9 +1949,8 @@ void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
             popup.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy"),
                             this, SLOT(slotAttachmentCopy()));
 #if 0  //FIXME Laurent Comment for the moment it crash see Bug 287177
-            if (GlobalSettings::self()->allowAttachmentDeletion())
-                popup.addAction(QIcon::fromTheme("edit-delete"), i18n("Delete Attachment"),
-                                this, SLOT(slotAttachmentDelete()));
+            popup.addAction(QIcon::fromTheme("edit-delete"), i18n("Delete Attachment"),
+                            this, SLOT(slotAttachmentDelete()));
 #endif
             if (GlobalSettings::self()->allowAttachmentEditing())
                 popup.addAction(QIcon::fromTheme(QStringLiteral("document-properties")), i18n("Edit Attachment"),

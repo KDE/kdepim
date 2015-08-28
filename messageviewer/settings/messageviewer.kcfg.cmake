@@ -76,10 +76,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>Show user agent in fancy headers</label>
       <whatsthis>Enable this option to get the User-Agent and X-Mailer header lines displayed when using fancy headers.</whatsthis>
     </entry>
-    <entry name="AllowAttachmentDeletion" type="Bool">
-      <default>true</default>
-      <label>Allow to delete attachments of existing mails.</label>
-    </entry>
     <entry name="AllowAttachmentEditing" type="Bool">
       <default>false</default>
       <label>Allow to edit attachments of existing mails.</label>
@@ -111,11 +107,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
         </choice>
       </choices>
       <default>Never</default>
-    </entry>
-    <entry name="numberOfAddressesToShow" type="Int">
-      <label>Number of addresses to show before collapsing</label>
-      <default>4</default>
-      <min>1</min>
     </entry>
     <entry name="MimePaneHeight" type="Int">
       <default>100</default>
