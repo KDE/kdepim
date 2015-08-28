@@ -37,6 +37,7 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     MainWindow *wid = new MainWindow;
     wid->setVisible(true);
     return app.exec();
