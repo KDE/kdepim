@@ -19,9 +19,7 @@
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include "search/searchpattern.h"
-#include "widgets/regexplineedit.h"
-using MailCommon::RegExpLineEdit;
-
+#include <KLineEdit>
 #include <KLocalizedString>
 
 #include <QStackedWidget>
@@ -78,7 +76,9 @@ QWidget *TextRuleWidgetHandler::createValueWidget(int number,
         const QObject *receiver) const
 {
     if (number == 0) {
-        RegExpLineEdit *lineEdit = new RegExpLineEdit(valueStack);
+        KLineEdit *lineEdit = new KLineEdit(valueStack);
+        lineEdit->setClearButtonEnabled(true);
+        lineEdit->setTrapReturnKey(true);
         lineEdit->setObjectName(QStringLiteral("regExpLineEdit"));
         QObject::connect(lineEdit, SIGNAL(textChanged(QString)),
                          receiver, SLOT(slotValueChanged()));
@@ -126,7 +126,7 @@ QString TextRuleWidgetHandler::currentValue(const QStackedWidget *valueStack,
         SearchRule::Function) const
 {
     //in other cases of func it is a lineedit
-    const RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
+    const KLineEdit *lineEdit = valueStack->findChild<KLineEdit *>(QStringLiteral("regExpLineEdit"));
 
     if (lineEdit) {
         return lineEdit->text();
@@ -178,12 +178,11 @@ void TextRuleWidgetHandler::reset(QStackedWidget *functionStack,
     }
 
     // reset the value widget
-    RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
+    KLineEdit *lineEdit = valueStack->findChild<KLineEdit *>(QStringLiteral("regExpLineEdit"));
     if (lineEdit) {
         lineEdit->blockSignals(true);
         lineEdit->clear();
         lineEdit->blockSignals(false);
-        lineEdit->showEditButton(false);
         valueStack->setCurrentWidget(lineEdit);
     }
 }
@@ -219,15 +218,13 @@ bool TextRuleWidgetHandler::setRule(QStackedWidget *functionStack,
         funcCombo->blockSignals(false);
         functionStack->setCurrentWidget(funcCombo);
     }
-    RegExpLineEdit *lineEdit =
-        valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
+    KLineEdit *lineEdit =
+        valueStack->findChild<KLineEdit *>(QStringLiteral("regExpLineEdit"));
 
     if (lineEdit) {
         lineEdit->blockSignals(true);
         lineEdit->setText(rule->contents());
         lineEdit->blockSignals(false);
-        lineEdit->showEditButton(func == SearchRule::FuncRegExp ||
-                                 func == SearchRule::FuncNotRegExp);
         valueStack->setCurrentWidget(lineEdit);
     }
     return true;
@@ -248,12 +245,10 @@ bool TextRuleWidgetHandler::update(const QByteArray &,
             func == SearchRule::FuncIsNotInAddressbook) {
         valueStack->setCurrentWidget(valueStack->findChild<QWidget *>(QStringLiteral("textRuleValueHider")));
     } else {
-        RegExpLineEdit *lineEdit =
-            valueStack->findChild<RegExpLineEdit *>(QStringLiteral("regExpLineEdit"));
+        KLineEdit *lineEdit =
+            valueStack->findChild<KLineEdit *>(QStringLiteral("regExpLineEdit"));
 
         if (lineEdit) {
-            lineEdit->showEditButton(func == SearchRule::FuncRegExp ||
-                                     func == SearchRule::FuncNotRegExp);
             valueStack->setCurrentWidget(lineEdit);
         }
     }

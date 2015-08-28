@@ -18,8 +18,6 @@
 #include "numericdoublerulewidgethandler.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 #include "search/searchpattern.h"
-#include "widgets/regexplineedit.h"
-using MailCommon::RegExpLineEdit;
 
 #include <KLocalizedString>
 

@@ -17,13 +17,12 @@
 
 #include "tagrulewidgethandler.h"
 #include "search/searchpattern.h"
-#include "widgets/regexplineedit.h"
-using MailCommon::RegExpLineEdit;
 #include "mailcommon_debug.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <QIcon>
 #include <KLocalizedString>
+#include <KLineEdit>
 #include <KJob>
 
 #include <Tag>
@@ -145,7 +144,9 @@ QWidget *TagRuleWidgetHandler::createValueWidget(int number,
         const QObject *receiver) const
 {
     if (number == 0) {
-        RegExpLineEdit *lineEdit = new RegExpLineEdit(valueStack);
+        KLineEdit *lineEdit = new KLineEdit(valueStack);
+        lineEdit->setClearButtonEnabled(true);
+        lineEdit->setTrapReturnKey(true);
         lineEdit->setObjectName(QStringLiteral("tagRuleRegExpLineEdit"));
         QObject::connect(lineEdit, SIGNAL(textChanged(QString)),
                          receiver, SLOT(slotValueChanged()));
@@ -203,8 +204,8 @@ QString TagRuleWidgetHandler::value(const QByteArray &field,
     SearchRule::Function func = function(field, functionStack);
     if (func == SearchRule::FuncRegExp || func == SearchRule::FuncNotRegExp) {
         // Use regexp line edit
-        const RegExpLineEdit *lineEdit =
-            valueStack->findChild<RegExpLineEdit *>(QStringLiteral("tagRuleRegExpLineEdit"));
+        const KLineEdit *lineEdit =
+            valueStack->findChild<KLineEdit *>(QStringLiteral("tagRuleRegExpLineEdit"));
 
         if (lineEdit) {
             return lineEdit->text();
@@ -256,14 +257,13 @@ void TagRuleWidgetHandler::reset(QStackedWidget *functionStack,
     }
 
     // reset the status value combo box and reg exp line edit
-    RegExpLineEdit *lineEdit =
-        valueStack->findChild<RegExpLineEdit *>(QStringLiteral("tagRuleRegExpLineEdit"));
+    KLineEdit *lineEdit =
+        valueStack->findChild<KLineEdit *>(QStringLiteral("tagRuleRegExpLineEdit"));
 
     if (lineEdit) {
         lineEdit->blockSignals(true);
         lineEdit->clear();
         lineEdit->blockSignals(false);
-        lineEdit->showEditButton(false);
         valueStack->setCurrentWidget(lineEdit);
     }
 
@@ -320,13 +320,12 @@ bool TagRuleWidgetHandler::setRule(QStackedWidget *functionStack,
     // set the value
     if (func == SearchRule::FuncRegExp || func == SearchRule::FuncNotRegExp) {
         // set reg exp value
-        RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit *>(QStringLiteral("tagRuleRegExpLineEdit"));
+        KLineEdit *lineEdit = valueStack->findChild<KLineEdit *>(QStringLiteral("tagRuleRegExpLineEdit"));
 
         if (lineEdit) {
             lineEdit->blockSignals(true);
             lineEdit->setText(rule->contents());
             lineEdit->blockSignals(false);
-            lineEdit->showEditButton(true);
             valueStack->setCurrentWidget(lineEdit);
         }
     } else {

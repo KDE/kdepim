@@ -19,7 +19,6 @@
 
 #include "filteractionrewriteheader.h"
 
-#include "widgets/regexplineedit.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KLineEdit>
@@ -131,7 +130,9 @@ QWidget *FilterActionRewriteHeader::createParamWidget(QWidget *parent) const
     label->setFixedWidth(label->sizeHint().width());
     layout->addWidget(label, 0);
 
-    RegExpLineEdit *regExpLineEdit = new RegExpLineEdit(widget);
+    KLineEdit *regExpLineEdit = new KLineEdit(widget);
+    regExpLineEdit->setClearButtonEnabled(true);
+    regExpLineEdit->setTrapReturnKey(true);
     regExpLineEdit->setObjectName(QStringLiteral("search"));
     layout->addWidget(regExpLineEdit, 1);
 
@@ -151,7 +152,7 @@ QWidget *FilterActionRewriteHeader::createParamWidget(QWidget *parent) const
     connect(comboBox, static_cast<void (PimCommon::MinimumComboBox::*)(int)>(&PimCommon::MinimumComboBox::currentIndexChanged), this, &FilterActionRewriteHeader::filterActionModified);
     connect(comboBox->lineEdit(), &QLineEdit::textChanged,
             this, &FilterAction::filterActionModified);
-    connect(regExpLineEdit, &RegExpLineEdit::textChanged, this, &FilterActionRewriteHeader::filterActionModified);
+    connect(regExpLineEdit, &KLineEdit::textChanged, this, &FilterActionRewriteHeader::filterActionModified);
     connect(lineEdit, &KLineEdit::textChanged, this, &FilterActionRewriteHeader::filterActionModified);
 
     return widget;
@@ -172,7 +173,7 @@ void FilterActionRewriteHeader::setParamWidgetValue(QWidget *paramWidget) const
         comboBox->setCurrentIndex(index);
     }
 
-    RegExpLineEdit *regExpLineEdit = paramWidget->findChild<RegExpLineEdit *>(QStringLiteral("search"));
+    KLineEdit *regExpLineEdit = paramWidget->findChild<KLineEdit *>(QStringLiteral("search"));
     Q_ASSERT(regExpLineEdit);
     regExpLineEdit->setText(mRegExp.pattern());
 
@@ -187,7 +188,7 @@ void FilterActionRewriteHeader::applyParamWidgetValue(QWidget *paramWidget)
     Q_ASSERT(comboBox);
     mParameter = comboBox->currentText();
 
-    const RegExpLineEdit *regExpLineEdit = paramWidget->findChild<RegExpLineEdit *>(QStringLiteral("search"));
+    const KLineEdit *regExpLineEdit = paramWidget->findChild<KLineEdit *>(QStringLiteral("search"));
     Q_ASSERT(regExpLineEdit);
     mRegExp.setPattern(regExpLineEdit->text());
 
@@ -202,7 +203,7 @@ void FilterActionRewriteHeader::clearParamWidget(QWidget *paramWidget) const
     Q_ASSERT(comboBox);
     comboBox->setCurrentIndex(0);
 
-    RegExpLineEdit *regExpLineEdit = paramWidget->findChild<RegExpLineEdit *>(QStringLiteral("search"));
+    KLineEdit *regExpLineEdit = paramWidget->findChild<KLineEdit *>(QStringLiteral("search"));
     Q_ASSERT(regExpLineEdit);
     regExpLineEdit->clear();
 

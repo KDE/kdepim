@@ -22,7 +22,6 @@
 #include <QLabel>
 #include <QWidget>
 #include <widgets/minimumcombobox.h>
-#include <widgets/regexplineedit.h>
 FilterActionRewriteHeaderTest::FilterActionRewriteHeaderTest(QObject *parent)
     : QObject(parent)
 {
@@ -45,7 +44,7 @@ void FilterActionRewriteHeaderTest::shouldHaveDefaultValue()
     QLabel *label = w->findChild<QLabel *>(QStringLiteral("label_replace"));
     QVERIFY(label);
 
-    MailCommon::RegExpLineEdit *regExpLineEdit = w->findChild<MailCommon::RegExpLineEdit *>(QStringLiteral("search"));
+    KLineEdit *regExpLineEdit = w->findChild<KLineEdit *>(QStringLiteral("search"));
     QVERIFY(regExpLineEdit);
     QVERIFY(regExpLineEdit->text().isEmpty());
 
