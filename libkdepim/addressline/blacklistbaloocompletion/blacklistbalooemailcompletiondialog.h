@@ -26,6 +26,7 @@
 namespace KPIM
 {
 class BlackListBalooEmailCompletionWidget;
+class BlackListBalooEmailCompletionDialogPrivate;
 class KDEPIM_EXPORT BlackListBalooEmailCompletionDialog : public QDialog
 {
     Q_OBJECT
@@ -40,7 +41,7 @@ private Q_SLOTS:
 private:
     void writeConfig();
     void readConfig();
-    BlackListBalooEmailCompletionWidget *mBlackListWidget;
+    BlackListBalooEmailCompletionDialogPrivate *const d;
 };
 }
 

@@ -30,9 +30,21 @@
 #include <QDialogButtonBox>
 
 using namespace KPIM;
+class KPIM::BlackListBalooEmailCompletionDialogPrivate
+{
+public:
+    BlackListBalooEmailCompletionDialogPrivate()
+        : mBlackListWidget(Q_NULLPTR)
+    {
+
+    }
+    BlackListBalooEmailCompletionWidget *mBlackListWidget;
+};
+
 
 BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new KPIM::BlackListBalooEmailCompletionDialogPrivate)
 {
     setWindowTitle(i18n("Blacklist Email Completion"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -43,10 +55,10 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     okButton->setDefault(true);
-    mBlackListWidget = new BlackListBalooEmailCompletionWidget(this);
-    mBlackListWidget->load();
-    mBlackListWidget->setObjectName(QStringLiteral("blacklistwidget"));
-    mainLayout->addWidget(mBlackListWidget);
+    d->mBlackListWidget = new BlackListBalooEmailCompletionWidget(this);
+    d->mBlackListWidget->load();
+    d->mBlackListWidget->setObjectName(QStringLiteral("blacklistwidget"));
+    mainLayout->addWidget(d->mBlackListWidget);
 
     mainLayout->addWidget(buttonBox);
 
@@ -58,11 +70,12 @@ BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget
 BlackListBalooEmailCompletionDialog::~BlackListBalooEmailCompletionDialog()
 {
     writeConfig();
+    delete d;
 }
 
 void BlackListBalooEmailCompletionDialog::setEmailBlackList(const QStringList &list)
 {
-    mBlackListWidget->setEmailBlackList(list);
+    d->mBlackListWidget->setEmailBlackList(list);
 }
 
 void BlackListBalooEmailCompletionDialog::readConfig()
@@ -82,7 +95,7 @@ void BlackListBalooEmailCompletionDialog::writeConfig()
 
 void BlackListBalooEmailCompletionDialog::slotSave()
 {
-    mBlackListWidget->save();
+    d->mBlackListWidget->save();
     accept();
 }
 
