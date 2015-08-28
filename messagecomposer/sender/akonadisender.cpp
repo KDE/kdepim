@@ -71,10 +71,27 @@ static void extractSenderToCCAndBcc(const KMime::Message::Ptr &aMsg, QString &se
     }
 }
 
+class MessageComposer::AkonadiSenderPrivate
+{
+public:
+    AkonadiSenderPrivate()
+        : mCustomTransportId(-1)
+    {
+
+    }
+    QSet<KJob *> mPendingJobs;
+    int mCustomTransportId;
+};
+
 AkonadiSender::AkonadiSender(QObject *parent)
     : QObject(parent),
-      mCustomTransportId(-1)
+      d(new MessageComposer::AkonadiSenderPrivate)
 {
+}
+
+AkonadiSender::~AkonadiSender()
+{
+    delete d;
 }
 
 bool AkonadiSender::doSend(const KMime::Message::Ptr &aMsg, short sendNow)
@@ -97,13 +114,13 @@ bool AkonadiSender::doSendQueued(int customTransportId)
         return false;
     }
 
-    mCustomTransportId = customTransportId;
+    d->mCustomTransportId = customTransportId;
 
     DispatcherInterface *dispatcher = new DispatcherInterface();
-    if (mCustomTransportId == -1) {
+    if (d->mCustomTransportId == -1) {
         dispatcher->dispatchManually();
     } else {
-        dispatcher->dispatchManualTransport(mCustomTransportId);
+        dispatcher->dispatchManualTransport(d->mCustomTransportId);
     }
     delete dispatcher;
     return true;
@@ -131,8 +148,8 @@ void AkonadiSender::sendOrQueueMessage(const KMime::Message::Ptr &message, Messa
 
     // Get transport.
     int transportId = -1;
-    if (mCustomTransportId != -1) {
-        transportId = mCustomTransportId;
+    if (d->mCustomTransportId != -1) {
+        transportId = d->mCustomTransportId;
     } else {
         transportId = message->headerByType("X-KMail-Transport") ? message->headerByType("X-KMail-Transport")->asUnicodeString().toInt() : -1;
     }
@@ -169,7 +186,7 @@ void AkonadiSender::sendOrQueueMessage(const KMime::Message::Ptr &message, Messa
 
     // Queue the message.
     connect(qjob, &MessageQueueJob::result, this, &AkonadiSender::queueJobResult);
-    mPendingJobs.insert(qjob);
+    d->mPendingJobs.insert(qjob);
     qjob->start();
     qCDebug(MESSAGECOMPOSER_LOG) << "QueueJob started.";
 
@@ -181,8 +198,8 @@ void AkonadiSender::sendOrQueueMessage(const KMime::Message::Ptr &message, Messa
 
 void AkonadiSender::queueJobResult(KJob *job)
 {
-    Q_ASSERT(mPendingJobs.contains(job));
-    mPendingJobs.remove(job);
+    Q_ASSERT(d->mPendingJobs.contains(job));
+    d->mPendingJobs.remove(job);
 
     if (job->error()) {
         qCDebug(MESSAGECOMPOSER_LOG) << "QueueJob failed with error" << job->errorString();

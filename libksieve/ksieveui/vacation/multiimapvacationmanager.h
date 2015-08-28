@@ -24,7 +24,7 @@
 
 namespace KSieveUi
 {
-class KSIEVEUI_EXPORT MultiImapVacationManager : public QObject
+class MultiImapVacationManager : public QObject
 {
     Q_OBJECT
 public:

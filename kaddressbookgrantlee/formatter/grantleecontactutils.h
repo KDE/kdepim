@@ -18,11 +18,10 @@
 #ifndef GRANTLEECONTACTUTILS_H
 #define GRANTLEECONTACTUTILS_H
 
-#include "kaddressbook_grantlee_export.h"
 #include <QVariantHash>
 namespace KAddressBookGrantlee
 {
-class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactUtils
+class GrantleeContactUtils
 {
 public:
     GrantleeContactUtils();

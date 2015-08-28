@@ -31,7 +31,7 @@ class SieveJob;
 
 namespace KSieveUi
 {
-class KSIEVEUI_EXPORT VacationCreateScriptJob : public QObject
+class VacationCreateScriptJob : public QObject
 {
     Q_OBJECT
 public:

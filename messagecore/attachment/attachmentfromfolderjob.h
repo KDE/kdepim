@@ -19,8 +19,6 @@
 #ifndef MESSAGECORE_ATTACHMENTFROMFOLDERJOB_H
 #define MESSAGECORE_ATTACHMENTFROMFOLDERJOB_H
 
-#include "messagecore_export.h"
-
 #include "attachmentfromurlbasejob.h"
 
 #include <KZip>
@@ -28,7 +26,7 @@
 namespace MessageCore
 {
 
-class MESSAGECORE_EXPORT AttachmentFromFolderJob : public AttachmentFromUrlBaseJob
+class AttachmentFromFolderJob : public AttachmentFromUrlBaseJob
 {
 
     Q_OBJECT

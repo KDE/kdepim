@@ -28,6 +28,7 @@ class PlainTextEditFindBar;
 namespace KSieveUi
 {
 class SieveTextEdit;
+class SieveTextEditWidgetPrivate;
 class KSIEVEUI_EXPORT SieveTextEditWidget : public QWidget
 {
     Q_OBJECT
@@ -45,6 +46,7 @@ public Q_SLOTS:
 
 private:
     void initialize(KSieveUi::SieveTextEdit *custom = Q_NULLPTR);
+    SieveTextEditWidgetPrivate *const d;
     KSieveUi::SieveTextEdit *mTextEdit;
     PimCommon::SlideContainer *mSliderContainer;
     PimCommon::PlainTextEditFindBar *mFindBar;

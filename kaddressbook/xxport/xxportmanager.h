@@ -37,7 +37,7 @@ class QSignalMapper;
 /**
  * @short The class that manages import and export of contacts.
  */
-class KADDRESSBOOK_EXPORT XXPortManager : public QObject
+class XXPortManager : public QObject
 {
     Q_OBJECT
 

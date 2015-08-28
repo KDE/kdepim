@@ -23,21 +23,38 @@
 #include "pimcommon/widgets/slidecontainer.h"
 using namespace KSieveUi;
 
+class KSieveUi::SieveTextEditWidgetPrivate
+{
+public:
+    SieveTextEditWidgetPrivate()
+        : mTextEdit(Q_NULLPTR),
+          mSliderContainer(Q_NULLPTR),
+          mFindBar(Q_NULLPTR)
+    {
+
+    }
+    KSieveUi::SieveTextEdit *mTextEdit;
+    PimCommon::SlideContainer *mSliderContainer;
+    PimCommon::PlainTextEditFindBar *mFindBar;
+};
+
 SieveTextEditWidget::SieveTextEditWidget(KSieveUi::SieveTextEdit *customTextEdit, QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new KSieveUi::SieveTextEditWidgetPrivate)
 {
     initialize(customTextEdit);
 }
 
 SieveTextEditWidget::SieveTextEditWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new KSieveUi::SieveTextEditWidgetPrivate)
 {
     initialize();
 }
 
 SieveTextEditWidget::~SieveTextEditWidget()
 {
-
+    delete d;
 }
 
 void SieveTextEditWidget::initialize(KSieveUi::SieveTextEdit *custom)
@@ -46,51 +63,51 @@ void SieveTextEditWidget::initialize(KSieveUi::SieveTextEdit *custom)
     mainLayout->setMargin(0);
     setLayout(mainLayout);
     if (custom) {
-        mTextEdit = custom;
+        d->mTextEdit = custom;
     } else {
-        mTextEdit = new KSieveUi::SieveTextEdit;
+        d->mTextEdit = new KSieveUi::SieveTextEdit;
     }
-    mTextEdit->setObjectName(QStringLiteral("textedit"));
-    mTextEdit->setShowHelpMenu(false);
-    mainLayout->addWidget(mTextEdit);
+    d->mTextEdit->setObjectName(QStringLiteral("textedit"));
+    d->mTextEdit->setShowHelpMenu(false);
+    mainLayout->addWidget(d->mTextEdit);
 
-    mSliderContainer = new PimCommon::SlideContainer(this);
-    mSliderContainer->setObjectName(QStringLiteral("slidercontainer"));
-    mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, this);
-    mFindBar->setObjectName(QStringLiteral("findbar"));
-    mFindBar->setHideWhenClose(false);
-    connect(mFindBar, &PimCommon::TextEditFindBarBase::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
-    mSliderContainer->setContent(mFindBar);
-    mainLayout->addWidget(mSliderContainer);
-    connect(mTextEdit, &SieveTextEdit::findText, this, &SieveTextEditWidget::slotFind);
-    connect(mTextEdit, &SieveTextEdit::replaceText, this, &SieveTextEditWidget::slotReplace);
+    d->mSliderContainer = new PimCommon::SlideContainer(this);
+    d->mSliderContainer->setObjectName(QStringLiteral("slidercontainer"));
+    d->mFindBar = new PimCommon::PlainTextEditFindBar(d->mTextEdit, this);
+    d->mFindBar->setObjectName(QStringLiteral("findbar"));
+    d->mFindBar->setHideWhenClose(false);
+    connect(d->mFindBar, &PimCommon::TextEditFindBarBase::hideFindBar, d->mSliderContainer, &PimCommon::SlideContainer::slideOut);
+    d->mSliderContainer->setContent(d->mFindBar);
+    mainLayout->addWidget(d->mSliderContainer);
+    connect(d->mTextEdit, &SieveTextEdit::findText, this, &SieveTextEditWidget::slotFind);
+    connect(d->mTextEdit, &SieveTextEdit::replaceText, this, &SieveTextEditWidget::slotReplace);
 
 }
 
 void SieveTextEditWidget::setReadOnly(bool readOnly)
 {
-    mTextEdit->setReadOnly(readOnly);
+    d->mTextEdit->setReadOnly(readOnly);
 }
 
 void SieveTextEditWidget::slotReplace()
 {
-    mFindBar->showReplace();
-    mSliderContainer->slideIn();
-    mFindBar->focusAndSetCursor();
+    d->mFindBar->showReplace();
+    d->mSliderContainer->slideIn();
+    d->mFindBar->focusAndSetCursor();
 }
 
 void SieveTextEditWidget::slotFind()
 {
-    if (mTextEdit->textCursor().hasSelection()) {
-        mFindBar->setText(mTextEdit->textCursor().selectedText());
+    if (d->mTextEdit->textCursor().hasSelection()) {
+        d->mFindBar->setText(d->mTextEdit->textCursor().selectedText());
     }
-    mTextEdit->moveCursor(QTextCursor::Start);
-    mFindBar->showFind();
-    mSliderContainer->slideIn();
-    mFindBar->focusAndSetCursor();
+    d->mTextEdit->moveCursor(QTextCursor::Start);
+    d->mFindBar->showFind();
+    d->mSliderContainer->slideIn();
+    d->mFindBar->focusAndSetCursor();
 }
 
 SieveTextEdit *SieveTextEditWidget::textEdit() const
 {
-    return mTextEdit;
+    return d->mTextEdit;
 }

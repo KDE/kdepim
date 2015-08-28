@@ -32,12 +32,14 @@ class KJob;
 
 namespace MessageComposer
 {
+class AkonadiSenderPrivate;
 class MESSAGECOMPOSER_EXPORT AkonadiSender: public QObject, public MessageSender
 {
     Q_OBJECT
 
 public:
     explicit AkonadiSender(QObject *parent = Q_NULLPTR);
+    ~AkonadiSender();
 
 protected:
     /**
@@ -69,6 +71,7 @@ private Q_SLOTS:
     void queueJobResult(KJob *job);
 
 private:
+    AkonadiSenderPrivate *const d;
     QSet<KJob *> mPendingJobs;
     int mCustomTransportId;
 

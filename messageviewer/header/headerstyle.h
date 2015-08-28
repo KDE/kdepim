@@ -58,7 +58,7 @@ class NodeHelper;
     @author Marc Mutz <mutz@kde.org>
     @see HeaderStrategy
 **/
-class MESSAGEVIEWER_EXPORT HeaderStyle
+class MESSAGEVIEWER_EXPORT  HeaderStyle
 {
 protected:
     HeaderStyle();
