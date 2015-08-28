@@ -24,6 +24,7 @@
 
 namespace MessageComposer
 {
+class ImageScalingPrivate;
 class MESSAGECOMPOSER_EXPORT ImageScaling
 {
 public:
@@ -60,10 +61,7 @@ public:
 
     QString generateNewName();
 private:
-    QImage mImage;
-    QBuffer mBuffer;
-    QString mName;
-    QByteArray mMimeType;
+    ImageScalingPrivate *const d;
 };
 }
 

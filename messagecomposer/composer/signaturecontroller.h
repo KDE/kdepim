@@ -42,11 +42,13 @@ class RichTextComposer;
  *  happening on a KMEditor triggerd by identity selection or menu actions.
  *  @since 4.5
  */
+class SignatureControllerPrivate;
 class MESSAGECOMPOSER_EXPORT SignatureController : public QObject
 {
     Q_OBJECT
 public:
     explicit SignatureController(QObject *parent = Q_NULLPTR);
+    ~SignatureController();
 
     void setEditor(MessageComposer::RichTextComposer *editor);
     void setIdentityCombo(KIdentityManagement::IdentityCombo *combo);
@@ -100,6 +102,7 @@ private Q_SLOTS:
     void identityChanged(uint id);
 
 private:
+    SignatureControllerPrivate *const d;
     MessageComposer::RichTextComposer *m_editor;
     KIdentityManagement::IdentityCombo *m_identityCombo;
     uint m_currentIdentityId;

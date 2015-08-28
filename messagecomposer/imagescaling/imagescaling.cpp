@@ -19,17 +19,33 @@
 
 using namespace MessageComposer;
 
+class MessageComposer::ImageScalingPrivate
+{
+public:
+    ImageScalingPrivate()
+    {
+
+    }
+
+    QImage mImage;
+    QBuffer mBuffer;
+    QString mName;
+    QByteArray mMimeType;
+};
+
 ImageScaling::ImageScaling()
+    : d(new MessageComposer::ImageScalingPrivate)
 {
 }
 
 ImageScaling::~ImageScaling()
 {
+    delete d;
 }
 
 bool ImageScaling::loadImageFromData(const QByteArray &data)
 {
-    if (!mImage.loadFromData(data)) {
+    if (!d->mImage.loadFromData(data)) {
         return false;
     }
     return true;
@@ -37,11 +53,11 @@ bool ImageScaling::loadImageFromData(const QByteArray &data)
 
 bool ImageScaling::resizeImage()
 {
-    if (mImage.isNull()) {
+    if (d->mImage.isNull()) {
         return false;
     }
-    const int width = mImage.width();
-    const int height = mImage.height();
+    const int width = d->mImage.width();
+    const int height = d->mImage.height();
     int newWidth = -1;
     int newHeight = -1;
     if (MessageComposer::MessageComposerSettings::self()->reduceImageToMaximum()) {
@@ -87,13 +103,13 @@ bool ImageScaling::resizeImage()
         }
     }
     if ((newHeight != height) || (newWidth != width)) {
-        mBuffer.open(QIODevice::WriteOnly);
-        mImage = mImage.scaled(newWidth, newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
+        d->mBuffer.open(QIODevice::WriteOnly);
+        d->mImage = d->mImage.scaled(newWidth, newHeight, MessageComposer::MessageComposerSettings::self()->keepImageRatio() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
 
         QByteArray format;
-        if (mMimeType == "image/jpeg") {
+        if (d->mMimeType == "image/jpeg") {
             format = "JPG";
-        } else if (mMimeType == "image/png") {
+        } else if (d->mMimeType == "image/png") {
             format = "PNG";
         } else {
             format = MessageComposer::MessageComposerSettings::self()->writeFormat().toLocal8Bit();
@@ -101,8 +117,8 @@ bool ImageScaling::resizeImage()
                 format = "PNG";
             }
         }
-        const bool result = mImage.save(&mBuffer, format);
-        mBuffer.close();
+        const bool result = d->mImage.save(&d->mBuffer, format);
+        d->mBuffer.close();
         return result;
     } else {
         return false;
@@ -113,11 +129,11 @@ bool ImageScaling::resizeImage()
 
 QByteArray ImageScaling::mimetype() const
 {
-    if (mMimeType.isEmpty()) {
+    if (d->mMimeType.isEmpty()) {
         return QByteArray();
     }
-    if ((mMimeType == "image/jpeg") || (mMimeType == "image/png")) {
-        return mMimeType;
+    if ((d->mMimeType == "image/jpeg") || (d->mMimeType == "image/png")) {
+        return d->mMimeType;
     } else {
         //Add more mimetype if a day we add more saving format.
         const QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
@@ -134,47 +150,47 @@ QByteArray ImageScaling::mimetype() const
 
 void ImageScaling::setMimetype(const QByteArray &mimetype)
 {
-    mMimeType = mimetype;
+    d->mMimeType = mimetype;
 }
 
 void ImageScaling::setName(const QString &name)
 {
-    mName = name;
+    d->mName = name;
 }
 
 QByteArray ImageScaling::imageArray() const
 {
-    return mBuffer.data();
+    return d->mBuffer.data();
 }
 
 QString ImageScaling::generateNewName()
 {
-    if (mName.isEmpty()) {
+    if (d->mName.isEmpty()) {
         return QString();
     }
 
     // Don't rename it.
-    if ((mMimeType == "image/jpeg") || (mMimeType == "image/png")) {
-        return mName;
+    if ((d->mMimeType == "image/jpeg") || (d->mMimeType == "image/png")) {
+        return d->mName;
     }
     QString type = MessageComposer::MessageComposerSettings::self()->writeFormat();
     if (type.isEmpty()) {
         type = QStringLiteral("PNG");
     }
-    if (mName.endsWith(QStringLiteral(".png"))) {
+    if (d->mName.endsWith(QStringLiteral(".png"))) {
         if (type != QLatin1String("PNG")) {
-            mName.replace(QStringLiteral(".png"), QStringLiteral(".jpg"));
+            d->mName.replace(QStringLiteral(".png"), QStringLiteral(".jpg"));
         }
-    } else if (mName.endsWith(QStringLiteral(".jpg"))) {
+    } else if (d->mName.endsWith(QStringLiteral(".jpg"))) {
         if (type != QLatin1String("JPG")) {
-            mName.replace(QStringLiteral(".jpg"), QStringLiteral(".png"));
+            d->mName.replace(QStringLiteral(".jpg"), QStringLiteral(".png"));
         }
     } else {
         if (type == QLatin1String("PNG")) {
-            mName += QLatin1String(".png");
+            d->mName += QLatin1String(".png");
         } else {
-            mName += QLatin1String(".jpg");
+            d->mName += QLatin1String(".jpg");
         }
     }
-    return mName;
+    return d->mName;
 }

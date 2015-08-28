@@ -30,6 +30,7 @@ class QButtonGroup;
 
 namespace MessageComposer
 {
+class ImageScalingWidgetPrivate;
 class MESSAGECOMPOSER_EXPORT ImageScalingWidget : public QWidget
 {
     Q_OBJECT
@@ -56,10 +57,7 @@ private:
     void initWriteImageFormat();
     void updateEmailsFilterTypeSettings();
     void updateSettings();
-    Ui::ImageScalingWidget *ui;
-    QButtonGroup *mSourceFilenameFilterGroup;
-    QButtonGroup *mRecipientFilterGroup;
-    bool mWasChanged;
+    ImageScalingWidgetPrivate *const d;
 };
 }
 
