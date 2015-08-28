@@ -21,8 +21,6 @@
 #ifndef RICHTEXTCOMPOSER_INSERTHTMLDIALOG_H
 #define RICHTEXTCOMPOSER_INSERTHTMLDIALOG_H
 
-#include "messagecomposer_export.h"
-
 #include <KTextEdit>
 #include <QDialog>
 
@@ -48,7 +46,7 @@ private:
     KPIMTextEdit::TextEditorCompleter *mTextEditorCompleter;
 };
 
-class MESSAGECOMPOSER_EXPORT InsertHtmlDialog : public QDialog
+class InsertHtmlDialog : public QDialog
 {
     Q_OBJECT
 public:
