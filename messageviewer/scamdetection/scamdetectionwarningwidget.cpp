@@ -24,9 +24,20 @@
 
 using namespace MessageViewer;
 
+class MessageViewer::ScamDetectionWarningWidgetPrivate
+{
+public:
+    ScamDetectionWarningWidgetPrivate()
+        : mUseInTestApps(false)
+    {
+
+    }
+    bool mUseInTestApps;
+};
+
 ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
     : KMessageWidget(parent),
-      mUseInTestApps(false)
+      d(new MessageViewer::ScamDetectionWarningWidgetPrivate)
 {
     setVisible(false);
     setCloseButtonVisible(true);
@@ -57,11 +68,12 @@ ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
 
 ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
 {
+    delete d;
 }
 
 void ScamDetectionWarningWidget::setUseInTestApps(bool b)
 {
-    mUseInTestApps = b;
+    d->mUseInTestApps = b;
 }
 
 void ScamDetectionWarningWidget::slotMessageIsNotAScam()
@@ -84,7 +96,7 @@ void ScamDetectionWarningWidget::slotShowWarning()
 
 void ScamDetectionWarningWidget::slotDisableScamDetection()
 {
-    if (!mUseInTestApps) {
+    if (!d->mUseInTestApps) {
         MessageViewer::GlobalSettings::self()->setScamDetectionEnabled(false);
         MessageViewer::GlobalSettings::self()->save();
     }

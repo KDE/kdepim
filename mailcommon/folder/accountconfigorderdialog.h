@@ -22,12 +22,9 @@
 #include <KConfigGroup>
 #include "mailcommon_export.h"
 
-class QListWidget;
-class QPushButton;
-class QCheckBox;
 namespace MailCommon
 {
-
+class AccountConfigOrderDialogPrivate;
 class MAILCOMMON_EXPORT AccountConfigOrderDialog : public QDialog
 {
     Q_OBJECT
@@ -49,10 +46,7 @@ private:
     void writeConfig();
     void readConfig();
     void init();
-    QListWidget *mListAccount;
-    QPushButton *mUpButton;
-    QPushButton *mDownButton;
-    QCheckBox *mEnableAccountOrder;
+    AccountConfigOrderDialogPrivate *const d;
 };
 }
 

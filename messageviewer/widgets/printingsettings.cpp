@@ -23,41 +23,56 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
 using namespace MessageViewer;
 
-PrintingSettings::PrintingSettings(QWidget *parent)
-    : QWidget(parent), mPrintingUi(new Ui_PrintingSettings)
+class MessageViewer::PrintingSettingsPrivate
 {
-    mPrintingUi->setupUi(this);
-    connect(mPrintingUi->mPrintEmptySelectedText, &QCheckBox::toggled, this, &PrintingSettings::changed);
-    connect(mPrintingUi->respectExpandCollapseSettings, &QCheckBox::toggled, this, &PrintingSettings::changed);
-    connect(mPrintingUi->printBackgroundColorAndImages, &QCheckBox::toggled, this, &PrintingSettings::changed);
+public:
+    PrintingSettingsPrivate()
+        : mPrintingUi(new Ui_PrintingSettings)
+    {
+
+    }
+    ~PrintingSettingsPrivate()
+    {
+        delete mPrintingUi;
+    }
+
+    Ui_PrintingSettings *mPrintingUi;
+};
+
+PrintingSettings::PrintingSettings(QWidget *parent)
+    : QWidget(parent), d(new MessageViewer::PrintingSettingsPrivate)
+{
+    d->mPrintingUi->setupUi(this);
+    connect(d->mPrintingUi->mPrintEmptySelectedText, &QCheckBox::toggled, this, &PrintingSettings::changed);
+    connect(d->mPrintingUi->respectExpandCollapseSettings, &QCheckBox::toggled, this, &PrintingSettings::changed);
+    connect(d->mPrintingUi->printBackgroundColorAndImages, &QCheckBox::toggled, this, &PrintingSettings::changed);
 }
 
 PrintingSettings::~PrintingSettings()
 {
-    delete mPrintingUi;
-    mPrintingUi = 0;
+    delete d;
 }
 
 void PrintingSettings::save()
 {
-    saveCheckBox(mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
-    saveCheckBox(mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
-    saveCheckBox(mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
+    saveCheckBox(d->mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
+    saveCheckBox(d->mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
+    saveCheckBox(d->mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
 }
 
 void PrintingSettings::doLoadFromGlobalSettings()
 {
-    loadWidget(mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
-    loadWidget(mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
-    loadWidget(mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
+    loadWidget(d->mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
+    loadWidget(d->mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
+    loadWidget(d->mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
 }
 
 void PrintingSettings::doResetToDefaultsOther()
 {
     const bool bUseDefaults = GlobalSettings::self()->useDefaults(true);
-    loadWidget(mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
-    loadWidget(mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
-    loadWidget(mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
+    loadWidget(d->mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
+    loadWidget(d->mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
+    loadWidget(d->mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
     GlobalSettings::self()->useDefaults(bUseDefaults);
 }
 

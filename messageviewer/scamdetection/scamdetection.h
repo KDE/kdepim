@@ -29,6 +29,7 @@ namespace MessageViewer
 {
 class ScamDetectionDetailsDialog;
 class ScamCheckShortUrl;
+class ScamDetectionPrivate;
 class MESSAGEVIEWER_EXPORT ScamDetection : public QObject
 {
     Q_OBJECT
@@ -49,9 +50,7 @@ Q_SIGNALS:
     void messageMayBeAScam();
 
 private:
-    QString mDetails;
-    QPointer<MessageViewer::ScamDetectionDetailsDialog> mDetailsDialog;
-    ScamCheckShortUrl *mCheckShortUrl;
+    ScamDetectionPrivate *const d;
 };
 }
 

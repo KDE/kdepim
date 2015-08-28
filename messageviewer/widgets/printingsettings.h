@@ -21,10 +21,9 @@
 #include "messageviewer_export.h"
 #include <QWidget>
 
-class Ui_PrintingSettings;
 namespace MessageViewer
 {
-
+class PrintingSettingsPrivate;
 class MESSAGEVIEWER_EXPORT PrintingSettings : public QWidget
 {
     Q_OBJECT
@@ -40,7 +39,7 @@ Q_SIGNALS:
     void changed();
 
 private:
-    Ui_PrintingSettings *mPrintingUi;
+    PrintingSettingsPrivate *const d;
 };
 }
 #endif // PRINTINGSETTINGS_H

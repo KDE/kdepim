@@ -43,8 +43,26 @@ struct InstanceStruct {
     QIcon icon;
 };
 
+class MailCommon::AccountConfigOrderDialogPrivate
+{
+public:
+    AccountConfigOrderDialogPrivate()
+        : mListAccount(Q_NULLPTR),
+          mUpButton(Q_NULLPTR),
+          mDownButton(Q_NULLPTR),
+          mEnableAccountOrder(Q_NULLPTR)
+    {
+
+    }
+    QListWidget *mListAccount;
+    QPushButton *mUpButton;
+    QPushButton *mDownButton;
+    QCheckBox *mEnableAccountOrder;
+};
+
 AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new MailCommon::AccountConfigOrderDialogPrivate)
 {
     setWindowTitle(i18n("Edit Accounts Order"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -63,45 +81,45 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     QVBoxLayout *vbox = new QVBoxLayout;
     page->setLayout(vbox);
 
-    mEnableAccountOrder = new QCheckBox(i18n("Use custom order"));
-    connect(mEnableAccountOrder, &QCheckBox::clicked, this, &AccountConfigOrderDialog::slotEnableAccountOrder);
-    vbox->addWidget(mEnableAccountOrder);
+    d->mEnableAccountOrder = new QCheckBox(i18n("Use custom order"));
+    connect(d->mEnableAccountOrder, &QCheckBox::clicked, this, &AccountConfigOrderDialog::slotEnableAccountOrder);
+    vbox->addWidget(d->mEnableAccountOrder);
 
     QHBoxLayout *vlay = new QHBoxLayout;
     vbox->addLayout(vlay);
 
-    mListAccount = new QListWidget(this);
-    mListAccount->setDragDropMode(QAbstractItemView::InternalMove);
-    vlay->addWidget(mListAccount);
+    d->mListAccount = new QListWidget(this);
+    d->mListAccount->setDragDropMode(QAbstractItemView::InternalMove);
+    vlay->addWidget(d->mListAccount);
 
     QWidget *upDownBox = new QWidget(page);
     QVBoxLayout *upDownBoxVBoxLayout = new QVBoxLayout(upDownBox);
     upDownBoxVBoxLayout->setMargin(0);
-    mUpButton = new QPushButton(upDownBox);
-    upDownBoxVBoxLayout->addWidget(mUpButton);
-    mUpButton->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
-    mUpButton->setToolTip(i18nc("Move selected account up.", "Up"));
-    mUpButton->setEnabled(false);   // b/c no item is selected yet
-    mUpButton->setFocusPolicy(Qt::StrongFocus);
-    mUpButton->setAutoRepeat(true);
+    d->mUpButton = new QPushButton(upDownBox);
+    upDownBoxVBoxLayout->addWidget(d->mUpButton);
+    d->mUpButton->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
+    d->mUpButton->setToolTip(i18nc("Move selected account up.", "Up"));
+    d->mUpButton->setEnabled(false);   // b/c no item is selected yet
+    d->mUpButton->setFocusPolicy(Qt::StrongFocus);
+    d->mUpButton->setAutoRepeat(true);
 
-    mDownButton = new QPushButton(upDownBox);
-    upDownBoxVBoxLayout->addWidget(mDownButton);
-    mDownButton->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
-    mDownButton->setToolTip(i18nc("Move selected account down.", "Down"));
-    mDownButton->setEnabled(false);   // b/c no item is selected yet
-    mDownButton->setFocusPolicy(Qt::StrongFocus);
-    mDownButton->setAutoRepeat(true);
+    d->mDownButton = new QPushButton(upDownBox);
+    upDownBoxVBoxLayout->addWidget(d->mDownButton);
+    d->mDownButton->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
+    d->mDownButton->setToolTip(i18nc("Move selected account down.", "Down"));
+    d->mDownButton->setEnabled(false);   // b/c no item is selected yet
+    d->mDownButton->setFocusPolicy(Qt::StrongFocus);
+    d->mDownButton->setAutoRepeat(true);
 
     QWidget *spacer = new QWidget(upDownBox);
     upDownBoxVBoxLayout->addWidget(spacer);
     upDownBoxVBoxLayout->setStretchFactor(spacer, 100);
     vlay->addWidget(upDownBox);
 
-    connect(mUpButton, &QPushButton::clicked, this, &AccountConfigOrderDialog::slotMoveUp);
-    connect(mDownButton, &QPushButton::clicked, this, &AccountConfigOrderDialog::slotMoveDown);
-    connect(mListAccount, &QListWidget::itemSelectionChanged, this, &AccountConfigOrderDialog::slotEnableControls);
-    connect(mListAccount->model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), SLOT(slotEnableControls()));
+    connect(d->mUpButton, &QPushButton::clicked, this, &AccountConfigOrderDialog::slotMoveUp);
+    connect(d->mDownButton, &QPushButton::clicked, this, &AccountConfigOrderDialog::slotMoveDown);
+    connect(d->mListAccount, &QListWidget::itemSelectionChanged, this, &AccountConfigOrderDialog::slotEnableControls);
+    connect(d->mListAccount->model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), SLOT(slotEnableControls()));
 
     connect(okButton, &QPushButton::clicked, this, &AccountConfigOrderDialog::slotOk);
     readConfig();
@@ -111,13 +129,14 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
 AccountConfigOrderDialog::~AccountConfigOrderDialog()
 {
     writeConfig();
+    delete d;
 }
 
 void AccountConfigOrderDialog::slotEnableAccountOrder(bool state)
 {
-    mListAccount->setEnabled(state);
-    mUpButton->setEnabled(state);
-    mDownButton->setEnabled(state);
+    d->mListAccount->setEnabled(state);
+    d->mUpButton->setEnabled(state);
+    d->mDownButton->setEnabled(state);
     if (state) {
         slotEnableControls();
     }
@@ -125,40 +144,40 @@ void AccountConfigOrderDialog::slotEnableAccountOrder(bool state)
 
 void AccountConfigOrderDialog::slotMoveUp()
 {
-    if (!mListAccount->currentItem()) {
+    if (!d->mListAccount->currentItem()) {
         return;
     }
-    const int pos = mListAccount->row(mListAccount->currentItem());
-    mListAccount->blockSignals(true);
-    QListWidgetItem *item = mListAccount->takeItem(pos);
+    const int pos = d->mListAccount->row(d->mListAccount->currentItem());
+    d->mListAccount->blockSignals(true);
+    QListWidgetItem *item = d->mListAccount->takeItem(pos);
     // now selected item is at idx(idx-1), so
     // insert the other item at idx, ie. above(below).
-    mListAccount->insertItem(pos - 1,  item);
-    mListAccount->blockSignals(false);
-    mListAccount->setCurrentRow(pos - 1);
+    d->mListAccount->insertItem(pos - 1,  item);
+    d->mListAccount->blockSignals(false);
+    d->mListAccount->setCurrentRow(pos - 1);
 }
 
 void AccountConfigOrderDialog::slotMoveDown()
 {
-    if (!mListAccount->currentItem()) {
+    if (!d->mListAccount->currentItem()) {
         return;
     }
-    const int pos = mListAccount->row(mListAccount->currentItem());
-    mListAccount->blockSignals(true);
-    QListWidgetItem *item = mListAccount->takeItem(pos);
+    const int pos = d->mListAccount->row(d->mListAccount->currentItem());
+    d->mListAccount->blockSignals(true);
+    QListWidgetItem *item = d->mListAccount->takeItem(pos);
     // now selected item is at idx(idx-1), so
     // insert the other item at idx, ie. above(below).
-    mListAccount->insertItem(pos + 1 , item);
-    mListAccount->blockSignals(false);
-    mListAccount->setCurrentRow(pos + 1);
+    d->mListAccount->insertItem(pos + 1 , item);
+    d->mListAccount->blockSignals(false);
+    d->mListAccount->setCurrentRow(pos + 1);
 }
 
 void AccountConfigOrderDialog::slotEnableControls()
 {
-    QListWidgetItem *item = mListAccount->currentItem();
+    QListWidgetItem *item = d->mListAccount->currentItem();
 
-    mUpButton->setEnabled(item && mListAccount->currentRow() != 0);
-    mDownButton->setEnabled(item && mListAccount->currentRow() != mListAccount->count() - 1);
+    d->mUpButton->setEnabled(item && d->mListAccount->currentRow() != 0);
+    d->mDownButton->setEnabled(item && d->mListAccount->currentRow() != d->mListAccount->count() - 1);
 }
 
 void AccountConfigOrderDialog::init()
@@ -208,25 +227,25 @@ void AccountConfigOrderDialog::init()
         const QString identifier(finalList.at(i));
         if (mapInstance.contains(identifier)) {
             InstanceStruct tmp = mapInstance.value(identifier);
-            QListWidgetItem *item = new QListWidgetItem(tmp.icon, tmp.name, mListAccount);
+            QListWidgetItem *item = new QListWidgetItem(tmp.icon, tmp.name, d->mListAccount);
             item->setData(AccountConfigOrderDialog::IdentifierAccount, identifier);
-            mListAccount->addItem(item);
+            d->mListAccount->addItem(item);
         }
     }
-    mEnableAccountOrder->setChecked(MailCommon::MailCommonSettings::self()->enableAccountOrder());
+    d->mEnableAccountOrder->setChecked(MailCommon::MailCommonSettings::self()->enableAccountOrder());
     slotEnableAccountOrder(MailCommon::MailCommonSettings::self()->enableAccountOrder());
 }
 
 void AccountConfigOrderDialog::slotOk()
 {
     QStringList order;
-    const int numberOfItems(mListAccount->count());
+    const int numberOfItems(d->mListAccount->count());
     for (int i = 0; i < numberOfItems; ++i) {
-        order << mListAccount->item(i)->data(AccountConfigOrderDialog::IdentifierAccount).toString();
+        order << d->mListAccount->item(i)->data(AccountConfigOrderDialog::IdentifierAccount).toString();
     }
 
     MailCommon::MailCommonSettings::self()->setOrder(order);
-    MailCommon::MailCommonSettings::self()->setEnableAccountOrder(mEnableAccountOrder->isChecked());
+    MailCommon::MailCommonSettings::self()->setEnableAccountOrder(d->mEnableAccountOrder->isChecked());
     MailCommon::MailCommonSettings::self()->save();
     QDialog::accept();
 }

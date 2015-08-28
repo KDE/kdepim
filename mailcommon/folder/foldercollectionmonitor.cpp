@@ -36,33 +36,49 @@
 namespace MailCommon
 {
 
+class FolderCollectionMonitorPrivate
+{
+public:
+    FolderCollectionMonitorPrivate()
+        : mMonitor(Q_NULLPTR)
+    {
+
+    }
+
+    Akonadi::ChangeRecorder *mMonitor;
+};
+
+
+
 FolderCollectionMonitor::FolderCollectionMonitor(Akonadi::Session *session, QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      d(new MailCommon::FolderCollectionMonitorPrivate)
 {
     // monitor collection changes
-    mMonitor = new Akonadi::ChangeRecorder(this);
-    mMonitor->setSession(session);
-    mMonitor->setCollectionMonitored(Akonadi::Collection::root());
-    mMonitor->fetchCollectionStatistics(true);
-    mMonitor->collectionFetchScope().setIncludeStatistics(true);
-    mMonitor->fetchCollection(true);
-    mMonitor->setAllMonitored(true);
-    mMonitor->setMimeTypeMonitored(KMime::Message::mimeType());
-    mMonitor->setResourceMonitored("akonadi_search_resource", true);
-    mMonitor->itemFetchScope().fetchPayloadPart(Akonadi::MessagePart::Envelope);
-    mMonitor->itemFetchScope().setFetchModificationTime(false);
-    mMonitor->itemFetchScope().setFetchRemoteIdentification(false);
-    mMonitor->itemFetchScope().setFetchTags(true);
-    mMonitor->itemFetchScope().fetchAttribute<Akonadi::EntityAnnotationsAttribute>(true);
+    d->mMonitor = new Akonadi::ChangeRecorder(this);
+    d->mMonitor->setSession(session);
+    d->mMonitor->setCollectionMonitored(Akonadi::Collection::root());
+    d->mMonitor->fetchCollectionStatistics(true);
+    d->mMonitor->collectionFetchScope().setIncludeStatistics(true);
+    d->mMonitor->fetchCollection(true);
+    d->mMonitor->setAllMonitored(true);
+    d->mMonitor->setMimeTypeMonitored(KMime::Message::mimeType());
+    d->mMonitor->setResourceMonitored("akonadi_search_resource", true);
+    d->mMonitor->itemFetchScope().fetchPayloadPart(Akonadi::MessagePart::Envelope);
+    d->mMonitor->itemFetchScope().setFetchModificationTime(false);
+    d->mMonitor->itemFetchScope().setFetchRemoteIdentification(false);
+    d->mMonitor->itemFetchScope().setFetchTags(true);
+    d->mMonitor->itemFetchScope().fetchAttribute<Akonadi::EntityAnnotationsAttribute>(true);
 }
 
 FolderCollectionMonitor::~FolderCollectionMonitor()
 {
+    delete d;
 }
 
 Akonadi::ChangeRecorder *FolderCollectionMonitor::monitor() const
 {
-    return mMonitor;
+    return d->mMonitor;
 }
 
 void FolderCollectionMonitor::expireAllFolders(bool immediate,

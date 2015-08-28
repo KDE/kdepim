@@ -24,6 +24,7 @@
 
 namespace MessageViewer
 {
+class ScamDetectionWarningWidgetPrivate;
 class MESSAGEVIEWER_EXPORT ScamDetectionWarningWidget : public KMessageWidget
 {
     Q_OBJECT
@@ -51,7 +52,7 @@ private Q_SLOTS:
     void slotMessageIsNotAScam();
 
 private:
-    bool mUseInTestApps;
+    ScamDetectionWarningWidgetPrivate *const d;
 };
 }
 

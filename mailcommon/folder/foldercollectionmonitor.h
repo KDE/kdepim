@@ -37,7 +37,7 @@ class Session;
 
 namespace MailCommon
 {
-
+class FolderCollectionMonitorPrivate;
 class MAILCOMMON_EXPORT FolderCollectionMonitor : public QObject
 {
     Q_OBJECT
@@ -58,7 +58,7 @@ protected:
                              const QModelIndex &parentIndex = QModelIndex());
 
 private:
-    Akonadi::ChangeRecorder *mMonitor;
+    FolderCollectionMonitorPrivate *const d;
 };
 
 }

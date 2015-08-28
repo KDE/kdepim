@@ -32,36 +32,49 @@ static QString addWarningColor(const QString &url)
     const QString error = QStringLiteral("<font color=#FF0000>%1</font>").arg(url);
     return error;
 }
+class MessageViewer::ScamDetectionPrivate
+{
+public:
+    ScamDetectionPrivate(ScamDetection *q)
+        : mCheckShortUrl(new ScamCheckShortUrl(q))
+    {
+
+    }
+    QString mDetails;
+    QPointer<MessageViewer::ScamDetectionDetailsDialog> mDetailsDialog;
+    ScamCheckShortUrl *mCheckShortUrl;
+};
 
 ScamDetection::ScamDetection(QObject *parent)
     : QObject(parent),
-      mCheckShortUrl(new ScamCheckShortUrl(this))
+      d(new MessageViewer::ScamDetectionPrivate(this))
 {
 }
 
 ScamDetection::~ScamDetection()
 {
+    delete d;
 }
 
 ScamCheckShortUrl *ScamDetection::scamCheckShortUrl() const
 {
-    return mCheckShortUrl;
+    return d->mCheckShortUrl;
 }
 
 void ScamDetection::scanPage(QWebFrame *frame)
 {
 #ifndef KDEPIM_NO_WEBKIT
     if (GlobalSettings::self()->scamDetectionEnabled()) {
-        mDetails.clear();
-        mDetails = QLatin1String("<b>") + i18n("Details:") + QLatin1String("</b><ul>");
+        d->mDetails.clear();
+        d->mDetails = QLatin1String("<b>") + i18n("Details:") + QLatin1String("</b><ul>");
         bool foundScam = false;
         const QWebElement rootElement = frame->documentElement();
-        bool result = scanFrame(rootElement, mDetails);
+        bool result = scanFrame(rootElement, d->mDetails);
         if (result) {
             foundScam = true;
         }
         foreach (QWebFrame *childFrame, frame->childFrames()) {
-            result = scanFrame(childFrame->documentElement(), mDetails);
+            result = scanFrame(childFrame->documentElement(), d->mDetails);
             if (result) {
                 foundScam = true;
             }
@@ -150,11 +163,11 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
 
 void ScamDetection::showDetails()
 {
-    if (!mDetailsDialog) {
-        mDetailsDialog = new MessageViewer::ScamDetectionDetailsDialog;
+    if (!d->mDetailsDialog) {
+        d->mDetailsDialog = new MessageViewer::ScamDetectionDetailsDialog;
     }
 
-    mDetailsDialog->setDetails(mDetails);
-    mDetailsDialog->show();
+    d->mDetailsDialog->setDetails(d->mDetails);
+    d->mDetailsDialog->show();
 }
 
