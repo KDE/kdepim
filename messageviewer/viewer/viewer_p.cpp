@@ -1466,17 +1466,9 @@ void ViewerPrivate::adjustLayout()
     const int mimeH = GlobalSettings::self()->mimePaneHeight();
     const int messageH = GlobalSettings::self()->messagePaneHeight();
     QList<int> splitterSizes;
-    if (GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom) {
-        splitterSizes << messageH << mimeH;
-    } else {
-        splitterSizes << mimeH << messageH;
-    }
+    splitterSizes << messageH << mimeH;
 
-    if (GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom) {
-        mSplitter->addWidget(mMimePartTree);
-    } else {
-        mSplitter->insertWidget(0, mMimePartTree);
-    }
+    mSplitter->addWidget(mMimePartTree);
     mSplitter->setSizes(splitterSizes);
 
     if (GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always &&
@@ -1503,10 +1495,8 @@ void ViewerPrivate::saveSplitterSizes() const
     if (mMimePartTree->isHidden()) {
         return;    // don't rely on QSplitter maintaining sizes for hidden widgets.
     }
-
-    const bool mimeTreeAtBottom = GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom;
-    GlobalSettings::self()->setMimePaneHeight(mSplitter->sizes()[ mimeTreeAtBottom ? 1 : 0 ]);
-    GlobalSettings::self()->setMessagePaneHeight(mSplitter->sizes()[ mimeTreeAtBottom ? 0 : 1 ]);
+    GlobalSettings::self()->setMimePaneHeight(mSplitter->sizes()[1]);
+    GlobalSettings::self()->setMessagePaneHeight(mSplitter->sizes()[0]);
 #endif
 }
 

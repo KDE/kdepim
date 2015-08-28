@@ -84,18 +84,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>false</default>
       <label>Always decrypt messages when viewing or ask before decrypting</label>
     </entry>
-    <entry name="MimeTreeLocation" type="Enum">
-      <label>Message Structure Viewer Placement</label>
-      <choices>
-        <choice name="top">
-          <label>Above the message pane</label>
-        </choice>
-        <choice name="bottom">
-          <label>Below the message pane</label>
-        </choice>
-      </choices>
-      <default>bottom</default>
-    </entry>
     <entry name="MimeTreeMode" type="Enum">
       <label>Message Structure Viewer</label>
       <choices>
