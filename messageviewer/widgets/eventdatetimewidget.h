@@ -26,6 +26,7 @@ class KTimeComboBox;
 
 namespace MessageViewer
 {
+class EventDateTimeWidgetPrivate;
 class MESSAGEVIEWER_EXPORT EventDateTimeWidget : public QWidget
 {
     Q_OBJECT
@@ -48,8 +49,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotDateTimeChanged();
 private:
-    KDateComboBox *mDateEdit;
-    KTimeComboBox *mTimeEdit;
+    EventDateTimeWidgetPrivate *const d;
 };
 }
 

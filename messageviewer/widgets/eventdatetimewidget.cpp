@@ -23,30 +23,44 @@
 #include <QDateTime>
 
 using namespace MessageViewer;
+class MessageViewer::EventDateTimeWidgetPrivate
+{
+public:
+    EventDateTimeWidgetPrivate()
+        : mDateEdit(Q_NULLPTR),
+          mTimeEdit(Q_NULLPTR)
+    {
+
+    }
+    KDateComboBox *mDateEdit;
+    KTimeComboBox *mTimeEdit;
+};
+
 EventDateTimeWidget::EventDateTimeWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new MessageViewer::EventDateTimeWidgetPrivate)
 {
     QHBoxLayout *mainLayout = new QHBoxLayout;
     mainLayout->setSpacing(0);
     mainLayout->setMargin(0);
     setLayout(mainLayout);
-    mDateEdit = new KDateComboBox;
-    mDateEdit->setObjectName(QStringLiteral("eventdatecombobox"));
-    mainLayout->addWidget(mDateEdit);
-    mTimeEdit = new KTimeComboBox;
-    mTimeEdit->setObjectName(QStringLiteral("eventtimecombobox"));
-    mainLayout->addWidget(mTimeEdit);
+    d->mDateEdit = new KDateComboBox;
+    d->mDateEdit->setObjectName(QStringLiteral("eventdatecombobox"));
+    mainLayout->addWidget(d->mDateEdit);
+    d->mTimeEdit = new KTimeComboBox;
+    d->mTimeEdit->setObjectName(QStringLiteral("eventtimecombobox"));
+    mainLayout->addWidget(d->mTimeEdit);
     const QDateTime currentDateTime = QDateTime::currentDateTime();
     setDateTime(currentDateTime);
-    connect(mDateEdit, &KDateComboBox::dateChanged, this, &EventDateTimeWidget::slotDateTimeChanged);
-    connect(mTimeEdit, &KTimeComboBox::timeChanged, this, &EventDateTimeWidget::slotDateTimeChanged);
-    connect(mDateEdit, &KDateComboBox::dateEdited, this, &EventDateTimeWidget::slotDateTimeChanged);
-    connect(mTimeEdit, &KTimeComboBox::timeEdited, this, &EventDateTimeWidget::slotDateTimeChanged);
+    connect(d->mDateEdit, &KDateComboBox::dateChanged, this, &EventDateTimeWidget::slotDateTimeChanged);
+    connect(d->mTimeEdit, &KTimeComboBox::timeChanged, this, &EventDateTimeWidget::slotDateTimeChanged);
+    connect(d->mDateEdit, &KDateComboBox::dateEdited, this, &EventDateTimeWidget::slotDateTimeChanged);
+    connect(d->mTimeEdit, &KTimeComboBox::timeEdited, this, &EventDateTimeWidget::slotDateTimeChanged);
 }
 
 EventDateTimeWidget::~EventDateTimeWidget()
 {
-
+    delete d;
 }
 
 void EventDateTimeWidget::slotDateTimeChanged()
@@ -57,8 +71,8 @@ void EventDateTimeWidget::slotDateTimeChanged()
 void EventDateTimeWidget::setMinimumDateTime(const QDateTime &dtime)
 {
     if (dateTime() != dtime) {
-        mDateEdit->setMinimumDate(dtime.date());
-        mTimeEdit->setMinimumTime(dtime.time());
+        d->mDateEdit->setMinimumDate(dtime.date());
+        d->mTimeEdit->setMinimumTime(dtime.time());
     }
 }
 
@@ -66,8 +80,8 @@ void EventDateTimeWidget::setDateTime(const QDateTime &dTime)
 {
     if (dateTime() != dTime) {
         blockSignals(true);
-        mDateEdit->setDate(dTime.date());
-        mTimeEdit->setTime(dTime.time());
+        d->mDateEdit->setDate(dTime.date());
+        d->mTimeEdit->setTime(dTime.time());
         blockSignals(false);
         slotDateTimeChanged();
     }
@@ -76,27 +90,27 @@ void EventDateTimeWidget::setDateTime(const QDateTime &dTime)
 QDateTime EventDateTimeWidget::dateTime() const
 {
     QDateTime dateTime = QDateTime::currentDateTime();
-    dateTime.setTime(mTimeEdit->time());
-    dateTime.setDate(mDateEdit->date());
+    dateTime.setTime(d->mTimeEdit->time());
+    dateTime.setDate(d->mDateEdit->date());
     return dateTime;
 }
 
 QDate EventDateTimeWidget::date() const
 {
-    return mDateEdit->date();
+    return d->mDateEdit->date();
 }
 
 QTime EventDateTimeWidget::time() const
 {
-    return mTimeEdit->time();
+    return d->mTimeEdit->time();
 }
 
 void EventDateTimeWidget::setTime(const QTime &time)
 {
-    mTimeEdit->setTime(time);
+    d->mTimeEdit->setTime(time);
 }
 
 void EventDateTimeWidget::setDate(const QDate &date)
 {
-    mDateEdit->setDate(date);
+    d->mDateEdit->setDate(date);
 }
