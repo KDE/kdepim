@@ -23,6 +23,11 @@ ki18n_wrap_ui(_kgpgconf_SRCS mainwidget.ui)
 
 add_executable(kgpgconf ${_kgpgconf_SRCS})
 
-target_link_libraries(kgpgconf KF5::QGpgme Qt5::Core KF5::Gpgmepp KF5::I18n Qt5::Widgets)
+target_link_libraries(kgpgconf KF5::QGpgme Qt5::Core KF5::I18n Qt5::Widgets)
+if (WIN32)
+   target_link_libraries(kgpgconf KF5::Gpgmepp)
+else()
+   target_link_libraries(kgpgconf KF5::Gpgmepp-pthread)
+endif()
 
 install(TARGETS kgpgconf ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

@@ -225,7 +225,6 @@ PUBLIC
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Contacts
-  KF5::Gpgmepp
 PRIVATE
   KF5::ItemViews
   ${_mailwebview_lib}
@@ -241,10 +240,14 @@ PRIVATE
   KF5::MailTransport
   KF5::Mime
   KF5::Mbox
-  KF5::Gpgmepp
   KF5::KDELibs4Support
   KF5::AkonadiNotes
 )
+if (WIN32)
+  target_link_libraries(messageviewer PUBLIC KF5::Gpgmepp)
+else()
+  target_link_libraries(messageviewer PUBLIC KF5::Gpgmepp-pthread)
+endif()
 
 target_include_directories(messageviewer PUBLIC "$<BUILD_INTERFACE:${messageviewer_SOURCE_DIR};${messageviewer_BINARY_DIR}>")
 target_include_directories(messageviewer PUBLIC $<TARGET_PROPERTY:kpgp,INTERFACE_INCLUDE_DIRECTORIES>)

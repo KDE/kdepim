@@ -139,11 +139,15 @@ target_link_libraries(kaddressbookprivate
   KF5::KCMUtils
   KF5::Codecs
   grantleetheme
-  KF5::Gpgmepp
   KF5::KDELibs4Support
   KF5::IconThemes
   Qt5::PrintSupport
 )
+if (WIN32)
+   target_link_libraries(kaddressbookprivate KF5::Gpgmepp)
+else()
+   target_link_libraries(kaddressbookprivate KF5::Gpgmepp-pthread)
+endif()
 if (BUILD_TESTING)
    add_subdirectory(merge/autotests)
    add_subdirectory(sendmail/autotests)
