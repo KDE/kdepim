@@ -23,8 +23,6 @@
 
 #include <QAbstractItemModel>
 
-#include <messagelist/messagelist_export.h>
-
 namespace Akonadi
 {
 class MessageStatus;
@@ -42,7 +40,7 @@ class MessageItem;
  * The QAbstractItemModel based interface that you need
  * to provide for your storage to work with MessageList.
  */
-class MESSAGELIST_EXPORT StorageModel : public QAbstractItemModel
+class StorageModel : public QAbstractItemModel
 {
     Q_OBJECT
 

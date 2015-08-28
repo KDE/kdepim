@@ -25,16 +25,13 @@
 
 #include <QListWidget>
 
-#include <messagelist/messagelist_export.h>
-
-
 namespace MessageList
 {
 
 namespace Utils
 {
 
-class MESSAGELIST_EXPORT ConfigureThemesDialog : public QDialog
+class ConfigureThemesDialog : public QDialog
 {
     Q_OBJECT
 

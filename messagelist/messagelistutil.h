@@ -34,21 +34,21 @@ namespace MessageList
 {
 namespace Util
 {
-MESSAGELIST_EXPORT QString messageSortingConfigName();
-MESSAGELIST_EXPORT QString messageSortDirectionConfigName();
-MESSAGELIST_EXPORT QString groupSortingConfigName();
-MESSAGELIST_EXPORT QString groupSortDirectionConfigName();
-MESSAGELIST_EXPORT QString messageUniqueIdConfigName();
-MESSAGELIST_EXPORT QString storageModelSortOrderGroup();
-MESSAGELIST_EXPORT QString storageModelThemesGroup();
-MESSAGELIST_EXPORT QString storageModelAggregationsGroup();
-MESSAGELIST_EXPORT QString setForStorageModelConfigName();
-MESSAGELIST_EXPORT QString storageModelSelectedMessageGroup();
+QString messageSortingConfigName();
+QString messageSortDirectionConfigName();
+QString groupSortingConfigName();
+QString groupSortDirectionConfigName();
+QString messageUniqueIdConfigName();
+QString storageModelSortOrderGroup();
+QString storageModelThemesGroup();
+QString storageModelAggregationsGroup();
+QString setForStorageModelConfigName();
+QString storageModelSelectedMessageGroup();
 MESSAGELIST_EXPORT void deleteConfig(const QString &collectionId);
 MESSAGELIST_EXPORT QColor unreadDefaultMessageColor();
 MESSAGELIST_EXPORT QColor importantDefaultMessageColor();
 MESSAGELIST_EXPORT QColor todoDefaultMessageColor();
-MESSAGELIST_EXPORT void fillViewMenu(QMenu *menu, QObject *receiver);
+void fillViewMenu(QMenu *menu, QObject *receiver);
 
 /// Returns the first few lines of the actual email text if available.
 MESSAGELIST_EXPORT QString contentSummary(const Akonadi::Item &item);

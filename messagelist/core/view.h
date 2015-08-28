@@ -26,7 +26,6 @@
 #include <QPoint>
 
 #include <messagelist/core/enums.h>
-#include <messagelist/messagelist_export.h>
 #include <messagelist/core/widgets/quicksearchline.h>
 
 class QMenu;
@@ -60,7 +59,7 @@ class Widget;
  * based on QTreeView, has a Model that manipulates the underlying message storage
  * and a Delegate that is responsable of painting the items.
  */
-class MESSAGELIST_EXPORT View : public QTreeView
+class View : public QTreeView
 {
     friend class Model;
     friend class ModelPrivate;

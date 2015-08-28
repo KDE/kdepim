@@ -32,9 +32,6 @@
 
 #include <time.h> // time_t
 
-#include <messagelist/messagelist_export.h>
-
-
 namespace MessageList
 {
 
@@ -71,7 +68,7 @@ class ModelPrivate;
  * StorageModel must offer a consistent rappresentation of a "flat" folder containing
  * messages.
  */
-class MESSAGELIST_EXPORT Model : public QAbstractItemModel
+class Model : public QAbstractItemModel
 {
     friend class Item;
     friend class ItemPrivate;

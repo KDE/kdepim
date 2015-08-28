@@ -23,7 +23,6 @@
 
 #include <qglobal.h> // defines uint, at least.
 
-#include <messagelist/messagelist_export.h>
 
 namespace MessageList
 {
@@ -41,7 +40,7 @@ class RowShift;
  *
  * This class is meant to be used together with ModelInvariantRowMapper.
  */
-class MESSAGELIST_EXPORT ModelInvariantIndex
+class ModelInvariantIndex
 {
     friend class ModelInvariantRowMapper;
     friend class ModelInvariantRowMapperPrivate;

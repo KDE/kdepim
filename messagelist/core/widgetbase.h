@@ -29,8 +29,6 @@
 #include <messagelist/core/sortorder.h>
 #include <messagelist/core/widgets/quicksearchline.h>
 
-#include <messagelist/messagelist_export.h>
-
 class KLineEdit;
 class QActionGroup;
 class KComboBox;
@@ -57,7 +55,7 @@ class View;
  * Provides a widget which has the messagelist and the most important helper widgets,
  * like the search line and the comboboxes for changing status filtering, aggregation etc.
  */
-class MESSAGELIST_EXPORT Widget : public QWidget
+class Widget : public QWidget
 {
     friend class View;
 

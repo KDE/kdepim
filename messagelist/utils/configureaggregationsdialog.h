@@ -25,8 +25,6 @@
 
 #include <QListWidget>
 
-#include <messagelist/messagelist_export.h>
-
 
 namespace MessageList
 {
@@ -47,7 +45,7 @@ namespace Utils
  * This is managed by MessageList::Manager. Take a look at it first
  * if you want to display this dialog.
  */
-class MESSAGELIST_EXPORT ConfigureAggregationsDialog : public QDialog
+class ConfigureAggregationsDialog : public QDialog
 {
     Q_OBJECT
 
