@@ -27,7 +27,7 @@
 #include "messagecomposer_export.h"
 namespace MessageComposer
 {
-
+class FollowupReminderCreateJobPrivate;
 class MESSAGECOMPOSER_EXPORT FollowupReminderCreateJob : public KJob
 {
     Q_OBJECT
@@ -53,8 +53,7 @@ private Q_SLOTS:
     void slotCreateNewTodo(KJob *job);
 private:
     void writeFollowupReminderInfo();
-    Akonadi::Collection mCollection;
-    FollowUpReminder::FollowUpReminderInfo *mInfo;
+    FollowupReminderCreateJobPrivate *const d;
 };
 }
 

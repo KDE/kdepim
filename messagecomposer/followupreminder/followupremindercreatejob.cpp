@@ -23,60 +23,77 @@
 #include <AkonadiCore/ItemCreateJob>
 
 using namespace MessageComposer;
+class MessageComposer::FollowupReminderCreateJobPrivate
+{
+public:
+    FollowupReminderCreateJobPrivate()
+        : mInfo(Q_NULLPTR)
+    {
+
+    }
+    ~FollowupReminderCreateJobPrivate()
+    {
+        delete mInfo;
+    }
+
+    Akonadi::Collection mCollection;
+    FollowUpReminder::FollowUpReminderInfo *mInfo;
+};
+
 
 FollowupReminderCreateJob::FollowupReminderCreateJob(QObject *parent)
     : KJob(parent),
-      mInfo(new FollowUpReminder::FollowUpReminderInfo)
+      d(new MessageComposer::FollowupReminderCreateJobPrivate)
 {
 
 }
 
 FollowupReminderCreateJob::~FollowupReminderCreateJob()
 {
-    delete mInfo;
+    delete d;
 }
 
 void FollowupReminderCreateJob::setFollowUpReminderDate(const QDate &date)
 {
-    mInfo->setFollowUpReminderDate(date);
+    d->mInfo->setFollowUpReminderDate(date);
 }
 
 void FollowupReminderCreateJob::setOriginalMessageItemId(Akonadi::Entity::Id value)
 {
-    mInfo->setOriginalMessageItemId(value);
+    d->mInfo->setOriginalMessageItemId(value);
 }
 
 void FollowupReminderCreateJob::setMessageId(const QString &messageId)
 {
-    mInfo->setMessageId(messageId);
+    d->mInfo->setMessageId(messageId);
 }
 
 void FollowupReminderCreateJob::setTo(const QString &to)
 {
-    mInfo->setTo(to);
+    d->mInfo->setTo(to);
 }
 
 void FollowupReminderCreateJob::setSubject(const QString &subject)
 {
-    mInfo->setSubject(subject);
+    d->mInfo->setSubject(subject);
 }
 
 void FollowupReminderCreateJob::setCollectionToDo(const Akonadi::Collection &collection)
 {
-    mCollection = collection;
+    d->mCollection = collection;
 }
 
 void FollowupReminderCreateJob::start()
 {
-    if (mInfo->isValid()) {
-        if (mCollection.isValid()) {
+    if (d->mInfo->isValid()) {
+        if (d->mCollection.isValid()) {
             KCalCore::Todo::Ptr todo(new KCalCore::Todo);
-            todo->setSummary(i18n("Wait answer from \"%1\" send to \"%2\"").arg(mInfo->subject()).arg(mInfo->to()));
+            todo->setSummary(i18n("Wait answer from \"%1\" send to \"%2\"").arg(d->mInfo->subject()).arg(d->mInfo->to()));
             Akonadi::Item newTodoItem;
             newTodoItem.setMimeType(KCalCore::Todo::todoMimeType());
             newTodoItem.setPayload<KCalCore::Todo::Ptr>(todo);
 
-            Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob(newTodoItem, mCollection);
+            Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob(newTodoItem, d->mCollection);
             connect(createJob, &Akonadi::ItemCreateJob::result, this, &FollowupReminderCreateJob::slotCreateNewTodo);
         } else {
             writeFollowupReminderInfo();
@@ -94,13 +111,13 @@ void FollowupReminderCreateJob::slotCreateNewTodo(KJob *job)
         qCDebug(MESSAGECOMPOSER_LOG) << "Error during create new Todo " << job->errorString();
     } else {
         Akonadi::ItemCreateJob *createJob = qobject_cast<Akonadi::ItemCreateJob *>(job);
-        mInfo->setTodoId(createJob->item().id());
+        d->mInfo->setTodoId(createJob->item().id());
     }
     writeFollowupReminderInfo();
 }
 
 void FollowupReminderCreateJob::writeFollowupReminderInfo()
 {
-    FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(FollowUpReminder::FollowUpReminderUtil::defaultConfig(), mInfo, true);
+    FollowUpReminder::FollowUpReminderUtil::writeFollowupReminderInfo(FollowUpReminder::FollowUpReminderUtil::defaultConfig(), d->mInfo, true);
     Q_EMIT emitResult();
 }
