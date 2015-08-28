@@ -138,13 +138,11 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
         if (message->headerByType("Resent-To")) {
             to = StringUtil::emailAddrAsAnchor(resentTo, StringUtil::DisplayFullAddress) + QLatin1Char(' ') + i18n("(receiver was %1)", StringUtil::emailAddrAsAnchor(message->to(), StringUtil::DisplayFullAddress,
                     QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
-                    QStringLiteral("FullToAddressList"),
-                    GlobalSettings::self()->numberOfAddressesToShow()));
+                    QStringLiteral("FullToAddressList")));
         } else {
             to = StringUtil::emailAddrAsAnchor(message->to(), StringUtil::DisplayFullAddress,
                                                QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
-                                               QStringLiteral("FullToAddressList"),
-                                               GlobalSettings::self()->numberOfAddressesToShow());
+                                               QStringLiteral("FullToAddressList"));
         }
 
         headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
@@ -160,8 +158,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
                          .arg(i18n("CC: "))
                          .arg(StringUtil::emailAddrAsAnchor(message->cc(), StringUtil::DisplayFullAddress,
                                  QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
-                                 QStringLiteral("FullCcAddressList"),
-                                 GlobalSettings::self()->numberOfAddressesToShow())));
+                                 QStringLiteral("FullCcAddressList"))));
 
     // Bcc line, if any
     if (strategy->showHeader(QStringLiteral("bcc")) && message->bcc(false))

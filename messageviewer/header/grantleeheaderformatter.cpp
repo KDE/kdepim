@@ -114,8 +114,7 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     headerObject.insert(QStringLiteral("toStr"), message->to()->asUnicodeString());
     const QString val = MessageCore::StringUtil::emailAddrAsAnchor(message->to(), MessageCore::StringUtil::DisplayFullAddress,
                         QString(), MessageCore::StringUtil::ShowLink,
-                        MessageCore::StringUtil::ExpandableAddresses, QStringLiteral("FullToAddressList"),
-                        GlobalSettings::self()->numberOfAddressesToShow());
+                        MessageCore::StringUtil::ExpandableAddresses, QStringLiteral("FullToAddressList"));
     headerObject.insert(QStringLiteral("toExpandable"), val);
     headerObject.insert(QStringLiteral("toMailbox"), QVariant::fromValue(message->to()));
 
@@ -132,8 +131,7 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
         headerObject.insert(QStringLiteral("ccMailbox"), QVariant::fromValue(message->cc()));
         const QString val = MessageCore::StringUtil::emailAddrAsAnchor(message->cc(), MessageCore::StringUtil::DisplayFullAddress,
                             QString(), MessageCore::StringUtil::ShowLink,
-                            MessageCore::StringUtil::ExpandableAddresses, QStringLiteral("FullToAddressList"),
-                            GlobalSettings::self()->numberOfAddressesToShow());
+                            MessageCore::StringUtil::ExpandableAddresses, QStringLiteral("FullToAddressList"));
         headerObject.insert(QStringLiteral("ccExpandable"), val);
     }
 
@@ -144,8 +142,7 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
         headerObject.insert(QStringLiteral("bccMailbox"), QVariant::fromValue(message->bcc()));
         const QString val = MessageCore::StringUtil::emailAddrAsAnchor(message->bcc(), MessageCore::StringUtil::DisplayFullAddress,
                             QString(), MessageCore::StringUtil::ShowLink,
-                            MessageCore::StringUtil::ExpandableAddresses, QStringLiteral("FullToAddressList"),
-                            GlobalSettings::self()->numberOfAddressesToShow());
+                            MessageCore::StringUtil::ExpandableAddresses, QStringLiteral("FullToAddressList"));
         headerObject.insert(QStringLiteral("bccExpandable"), val);
     }
     headerObject.insert(QStringLiteral("fromi18n"), i18n("From:"));
