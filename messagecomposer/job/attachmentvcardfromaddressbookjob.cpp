@@ -25,16 +25,27 @@
 
 using namespace MessageComposer;
 
+class MessageComposer::AttachmentVcardFromAddressBookJobPrivate
+{
+public:
+    AttachmentVcardFromAddressBookJobPrivate(Akonadi::Item item)
+        : mItem(item)
+    {
+
+    }
+    Akonadi::Item mItem;
+};
+
 AttachmentVcardFromAddressBookJob::AttachmentVcardFromAddressBookJob(const Akonadi::Item &item, QObject *parent)
     : MessageCore::AttachmentLoadJob(parent),
-      mItem(item)
+      d(new MessageComposer::AttachmentVcardFromAddressBookJobPrivate(item))
 {
 
 }
 
 AttachmentVcardFromAddressBookJob::~AttachmentVcardFromAddressBookJob()
 {
-
+    delete d;
 }
 
 void AttachmentVcardFromAddressBookJob::addAttachment(const QByteArray &data, const QString &attachmentName)
@@ -53,23 +64,23 @@ void AttachmentVcardFromAddressBookJob::addAttachment(const QByteArray &data, co
 
 void AttachmentVcardFromAddressBookJob::doStart()
 {
-    if (mItem.isValid()) {
-        if (mItem.hasPayload<KContacts::Addressee>()) {
-            const KContacts::Addressee contact = mItem.payload<KContacts::Addressee>();
+    if (d->mItem.isValid()) {
+        if (d->mItem.hasPayload<KContacts::Addressee>()) {
+            const KContacts::Addressee contact = d->mItem.payload<KContacts::Addressee>();
             if (contact.isEmpty()) {
                 invalidContact();
             } else {
                 const QString contactRealName(contact.realName());
                 const QString attachmentName = (contactRealName.isEmpty() ? QStringLiteral("vcard") : contactRealName) + QLatin1String(".vcf");
 
-                QByteArray data = mItem.payloadData();
+                QByteArray data = d->mItem.payloadData();
                 //Workaround about broken kaddressbook fields.
                 PimCommon::VCardUtil vcardUtil;
                 vcardUtil.adaptVcard(data);
                 addAttachment(data, attachmentName);
             }
-        } else if (mItem.hasPayload<KContacts::ContactGroup>()) {
-            const KContacts::ContactGroup group = mItem.payload<KContacts::ContactGroup>();
+        } else if (d->mItem.hasPayload<KContacts::ContactGroup>()) {
+            const KContacts::ContactGroup group = d->mItem.payload<KContacts::ContactGroup>();
             const QString groupName(group.name());
             const QString attachmentName = (groupName.isEmpty() ? QStringLiteral("vcard") : groupName) + QLatin1String(".vcf");
             Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group, this);

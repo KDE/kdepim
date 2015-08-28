@@ -31,6 +31,7 @@ class QAbstractItemModel;
 
 namespace MessageComposer
 {
+class FollowUpReminderSelectDateDialogPrivate;
 class MESSAGECOMPOSER_EXPORT FollowUpReminderSelectDateDialog : public QDialog
 {
     Q_OBJECT
@@ -47,9 +48,7 @@ private Q_SLOTS:
     void slotDateChanged();
     void updateOkButton();
 private:
-    KDateComboBox *mDateComboBox;
-    Akonadi::CollectionComboBox *mCollectionCombobox;
-    QPushButton *mOkButton;
+    FollowUpReminderSelectDateDialogPrivate *const d;
 };
 }
 

@@ -36,20 +36,36 @@
 #include <QLineEdit>
 #include <kdatecombobox.h>
 using namespace MessageComposer;
+class MessageComposer::FollowUpReminderSelectDateDialogPrivate
+{
+public:
+    FollowUpReminderSelectDateDialogPrivate()
+        : mDateComboBox(Q_NULLPTR),
+          mCollectionCombobox(Q_NULLPTR),
+          mOkButton(Q_NULLPTR)
+    {
+
+    }
+    KDateComboBox *mDateComboBox;
+    Akonadi::CollectionComboBox *mCollectionCombobox;
+    QPushButton *mOkButton;
+};
+
 FollowUpReminderSelectDateDialog::FollowUpReminderSelectDateDialog(QWidget *parent, QAbstractItemModel *model)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new MessageComposer::FollowUpReminderSelectDateDialogPrivate)
 {
     setWindowTitle(i18n("Select Date"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *topLayout = new QVBoxLayout;
     setLayout(topLayout);
-    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-    mOkButton->setObjectName(QStringLiteral("ok_button"));
-    mOkButton->setDefault(true);
-    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    d->mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    d->mOkButton->setObjectName(QStringLiteral("ok_button"));
+    d->mOkButton->setDefault(true);
+    d->mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &FollowUpReminderSelectDateDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &FollowUpReminderSelectDateDialog::reject);
-    mOkButton->setDefault(true);
+    d->mOkButton->setDefault(true);
     setModal(true);
 
     QWidget *mainWidget = new QWidget(this);
@@ -59,39 +75,40 @@ FollowUpReminderSelectDateDialog::FollowUpReminderSelectDateDialog(QWidget *pare
     QFormLayout *formLayout = new QFormLayout;
     mainLayout->addLayout(formLayout);
 
-    mDateComboBox = new KDateComboBox;
-    mDateComboBox->setMinimumDate(QDate::currentDate());
-    mDateComboBox->setObjectName(QStringLiteral("datecombobox"));
+    d->mDateComboBox = new KDateComboBox;
+    d->mDateComboBox->setMinimumDate(QDate::currentDate());
+    d->mDateComboBox->setObjectName(QStringLiteral("datecombobox"));
 
     QDate currentDate = QDate::currentDate();
     currentDate = currentDate.addDays(1);
-    mDateComboBox->setDate(currentDate);
+    d->mDateComboBox->setDate(currentDate);
 
-    formLayout->addRow(i18n("Date:"), mDateComboBox);
+    formLayout->addRow(i18n("Date:"), d->mDateComboBox);
 
-    mCollectionCombobox = new Akonadi::CollectionComboBox(model);
-    mCollectionCombobox->setMinimumWidth(250);
-    mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
-    mCollectionCombobox->setMimeTypeFilter(QStringList() << KCalCore::Todo::todoMimeType());
-    mCollectionCombobox->setObjectName(QStringLiteral("collectioncombobox"));
+    d->mCollectionCombobox = new Akonadi::CollectionComboBox(model);
+    d->mCollectionCombobox->setMinimumWidth(250);
+    d->mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+    d->mCollectionCombobox->setMimeTypeFilter(QStringList() << KCalCore::Todo::todoMimeType());
+    d->mCollectionCombobox->setObjectName(QStringLiteral("collectioncombobox"));
 
-    formLayout->addRow(i18n("Store ToDo in:"), mCollectionCombobox);
+    formLayout->addRow(i18n("Store ToDo in:"), d->mCollectionCombobox);
 
-    connect(mDateComboBox->lineEdit(), &QLineEdit::textChanged, this, &FollowUpReminderSelectDateDialog::slotDateChanged);
-    connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(updateOkButton()));
+    connect(d->mDateComboBox->lineEdit(), &QLineEdit::textChanged, this, &FollowUpReminderSelectDateDialog::slotDateChanged);
+    connect(d->mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(updateOkButton()));
     updateOkButton();
 }
 
 FollowUpReminderSelectDateDialog::~FollowUpReminderSelectDateDialog()
 {
+    delete d;
 }
 
 void FollowUpReminderSelectDateDialog::updateOkButton()
 {
-    mOkButton->setEnabled(!mDateComboBox->lineEdit()->text().isEmpty()
-                          && mDateComboBox->date().isValid()
-                          && (mCollectionCombobox->count() > 0)
-                          && mCollectionCombobox->currentCollection().isValid());
+    d->mOkButton->setEnabled(!d->mDateComboBox->lineEdit()->text().isEmpty()
+                          && d->mDateComboBox->date().isValid()
+                          && (d->mCollectionCombobox->count() > 0)
+                          && d->mCollectionCombobox->currentCollection().isValid());
 }
 
 void FollowUpReminderSelectDateDialog::slotDateChanged()
@@ -101,12 +118,12 @@ void FollowUpReminderSelectDateDialog::slotDateChanged()
 
 QDate FollowUpReminderSelectDateDialog::selectedDate() const
 {
-    return mDateComboBox->date();
+    return d->mDateComboBox->date();
 }
 
 Akonadi::Collection FollowUpReminderSelectDateDialog::collection() const
 {
-    return mCollectionCombobox->currentCollection();
+    return d->mCollectionCombobox->currentCollection();
 }
 
 void FollowUpReminderSelectDateDialog::accept()
@@ -116,7 +133,7 @@ void FollowUpReminderSelectDateDialog::accept()
         KMessageBox::error(this, i18n("The selected date must be greater than the current date."), i18n("Invalid date"));
         return;
     }
-    if (!mCollectionCombobox->currentCollection().isValid()) {
+    if (!d->mCollectionCombobox->currentCollection().isValid()) {
         KMessageBox::error(this, i18n("The selected folder is not valid."), i18n("Invalid folder"));
         return;
     }

@@ -23,6 +23,7 @@
 #include "messagecomposer_export.h"
 namespace MessageComposer
 {
+class AttachmentVcardFromAddressBookJobPrivate;
 class MESSAGECOMPOSER_EXPORT AttachmentVcardFromAddressBookJob : public MessageCore::AttachmentLoadJob
 {
     Q_OBJECT
@@ -39,7 +40,7 @@ private Q_SLOTS:
 private:
     void invalidContact();
     void addAttachment(const QByteArray &data, const QString &attachmentName);
-    Akonadi::Item mItem;
+    AttachmentVcardFromAddressBookJobPrivate *const d;
 };
 }
 #endif // ATTACHMENTVCARDFROMADDRESSBOOKJOB_H
