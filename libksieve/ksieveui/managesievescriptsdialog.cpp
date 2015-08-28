@@ -29,9 +29,7 @@
 #include <kmessagebox.h>
 #include <KConfigGroup>
 
-#include <agentinstance.h>
 #include <kmanagesieve/sievejob.h>
-#include <ksieveui/util/util.h>
 
 #include <QApplication>
 #include <QTreeWidget>
