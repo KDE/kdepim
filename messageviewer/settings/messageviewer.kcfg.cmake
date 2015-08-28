@@ -194,13 +194,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
 
   </group>
 
-  <group name="TextIndex">
-    <entry name="automaticDecrypt" type="Bool"
-    key="automaticDecrypt">
-      <default>true</default>
-    </entry>
-  </group>
-
   <group name="MDN">
     <entry name="notSendWhenEncrypted" type="Bool" key="not-send-when-encrypted">
       <label>Do not send MDNs in response to encrypted messages</label>
