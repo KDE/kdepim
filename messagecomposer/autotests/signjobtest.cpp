@@ -155,7 +155,7 @@ void SignJobTest::testRecommentationRFC3156()
 
     QByteArray body = MessageCore::NodeHelper::firstChild(result)->body();
     QCOMPARE(QString::fromUtf8(body),
-             QStringLiteral("=3D2D Magic foo\nFrom=20test\n\n=2D- quaak\nOhno"));
+             QStringLiteral("=3D2D Magic foo\n=46rom test\n\n=2D- quaak\nOhno"));
 
     ComposerTestUtil::verify(true, false, result, data.toUtf8(),
                              Kleo::OpenPGPMIMEFormat, cte);
