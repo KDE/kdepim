@@ -95,10 +95,9 @@ int MESSAGEVIEWER_EXPORT getWritePermissions();
 
 KMime::Content::List MESSAGEVIEWER_EXPORT allContents(const KMime::Content *message);
 KMime::Content::List MESSAGEVIEWER_EXPORT extractAttachments(const KMime::Message *message);
-bool MESSAGEVIEWER_EXPORT saveContents(QWidget *parent,
-                                       const KMime::Content::List &contents, QUrl &currentFolder);
-bool MESSAGEVIEWER_EXPORT saveContent(QWidget *parent, KMime::Content *content,
-                                      const QUrl &url);
+
+bool saveContents(QWidget *parent, const KMime::Content::List &contents, QUrl &currentFolder);
+bool saveContent(QWidget *parent, KMime::Content *content, const QUrl &url);
 
 /**
      * Finds the filename of an icon based on the given mimetype or filenames.
