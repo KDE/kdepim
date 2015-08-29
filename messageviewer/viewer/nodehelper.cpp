@@ -968,22 +968,22 @@ bool NodeHelper::unencryptedMessage_helper(KMime::Content *node, QByteArray &res
             if (decryptedNode->contentType(false)) {
                 headers.contentType()->from7BitString(decryptedNode->contentType()->as7BitString(false));
             } else {
-                headers.removeHeader(headers.contentType()->type());
+                headers.removeHeader<KMime::Headers::ContentType>();
             }
             if (decryptedNode->contentTransferEncoding(false)) {
                 headers.contentTransferEncoding()->from7BitString(decryptedNode->contentTransferEncoding()->as7BitString(false));
             } else {
-                headers.removeHeader(headers.contentTransferEncoding()->type());
+                headers.removeHeader<KMime::Headers::ContentTransferEncoding>();
             }
             if (decryptedNode->contentDisposition(false)) {
                 headers.contentDisposition()->from7BitString(decryptedNode->contentDisposition()->as7BitString(false));
             } else {
-                headers.removeHeader(headers.contentDisposition()->type());
+                headers.removeHeader<KMime::Headers::ContentDisposition>();
             }
             if (decryptedNode->contentDescription(false)) {
                 headers.contentDescription()->from7BitString(decryptedNode->contentDescription()->as7BitString(false));
             } else {
-                headers.removeHeader(headers.contentDescription()->type());
+                headers.removeHeader<KMime::Headers::ContentDescription>();
             }
             headers.assemble();
 

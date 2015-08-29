@@ -506,7 +506,7 @@ QByteArray asSendableString(const KMime::Message::Ptr &originalMessage)
     message->setContent(originalMessage->encodedContent());
 
     removePrivateHeaderFields(message);
-    message->removeHeader("Bcc");
+    message->removeHeader<KMime::Headers::Bcc>();
 
     return message->encodedContent();
 }
@@ -517,7 +517,7 @@ QByteArray headerAsSendableString(const KMime::Message::Ptr &originalMessage)
     message->setContent(originalMessage->encodedContent());
 
     removePrivateHeaderFields(message);
-    message->removeHeader("Bcc");
+    message->removeHeader<KMime::Headers::Bcc>();
 
     return message->head();
 }

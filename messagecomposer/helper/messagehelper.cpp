@@ -108,7 +108,7 @@ void applyIdentity(const KMime::Message::Ptr &message, const KIdentityManagement
     }
 
     if (ident.organization().isEmpty()) {
-        message->removeHeader("Organization");
+        message->removeHeader<KMime::Headers::Organization>();
     } else {
         KMime::Headers::Organization *const organization = new KMime::Headers::Organization;
         organization->fromUnicodeString(ident.organization(), "utf-8");

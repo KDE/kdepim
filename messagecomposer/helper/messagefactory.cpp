@@ -354,8 +354,8 @@ KMime::Message::Ptr MessageFactory::createForward()
               && m_origMsg->contentType()->subType() != "plain"))) {
         const uint originalIdentity = identityUoid(m_origMsg);
         MessageHelper::initFromMessage(msg, m_origMsg, m_identityManager, originalIdentity);
-        msg->removeHeader("Content-Type");
-        msg->removeHeader("Content-Transfer-Encoding");
+        msg->removeHeader<KMime::Headers::ContentType>();
+        msg->removeHeader<KMime::Headers::ContentTransferEncoding>();
 
         msg->contentType()->setMimeType("multipart/mixed");
 
@@ -456,7 +456,7 @@ KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Mess
 {
     // remove headers that shouldn't be forwarded
     MessageCore::StringUtil::removePrivateHeaderFields(fwdMsg);
-    fwdMsg->removeHeader("Bcc");
+    fwdMsg->removeHeader<KMime::Headers::Bcc>();
     fwdMsg->assemble();
     // set the part
     KMime::Content *msgPart = new KMime::Content(fwdMsg.data());
@@ -483,7 +483,7 @@ KMime::Message::Ptr MessageFactory::createResend()
     KMime::Message::Ptr msg(new KMime::Message);
     msg->setContent(m_origMsg->encodedContent());
     msg->parse();
-    msg->removeHeader("Message-Id");
+    msg->removeHeader<KMime::Headers::MessageID>();
     uint originalIdentity = identityUoid(m_origMsg);
 
     // Set the identity from above
@@ -670,7 +670,7 @@ KMime::Message::Ptr MessageFactory::createMDN(KMime::MDN::ActionMode a,
     receipt->contentType()->from7BitString("multipart/report");
     receipt->contentType()->setBoundary(KMime::multiPartBoundary());
     receipt->contentType()->setCharset("us-ascii");
-    receipt->removeHeader("Content-Transfer-Encoding");
+    receipt->removeHeader<KMime::Headers::ContentTransferEncoding>();
     // Modify the ContentType directly (replaces setAutomaticFields(true))
     receipt->contentType()->setParameter(QStringLiteral("report-type"), QStringLiteral("disposition-notification"));
 
@@ -758,7 +758,7 @@ QPair< KMime::Message::Ptr, KMime::Content * > MessageFactory::createForwardDige
         }
 
         MessageCore::StringUtil::removePrivateHeaderFields(fMsg);
-        fMsg->removeHeader("Bcc");
+        fMsg->removeHeader<KMime::Headers::Bcc>();
         fMsg->assemble();
         KMime::Content *part = new KMime::Content(digest);
 
