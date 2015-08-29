@@ -35,6 +35,7 @@
 #include <KIconLoader>
 
 #include <QLabel>
+#include <QIcon>
 
 using namespace KPIM;
 
@@ -59,12 +60,12 @@ void SSLLabel::setState(State state)
     switch (state) {
     case Encrypted:
         this->setToolTip(i18n("Connection is encrypted"));
-        setPixmap(SmallIcon(QStringLiteral("security-high")));
+        setPixmap(QIcon::fromTheme(QStringLiteral("security-high")).pixmap(QSize(16, 16)));
         show();
         break;
     case Unencrypted:
         this->setToolTip(i18n("Connection is unencrypted"));
-        setPixmap(SmallIcon(QStringLiteral("security-low")));
+        setPixmap(QIcon::fromTheme(QStringLiteral("security-low")).pixmap(QSize(16, 16)));
         show();
         break;
     case Unknown:
