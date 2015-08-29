@@ -208,7 +208,7 @@ private:
 class FakeItemPrivate;
 
 /// A message item that can have a fake tag list and a fake annotation
-class MESSAGELIST_EXPORT FakeItem : public MessageItem
+class FakeItem : public MessageItem
 {
 public:
 

@@ -26,7 +26,6 @@
 #include <QList>
 
 #include <messagelist/core/modelinvariantindex.h>
-#include <messagelist/messagelist_export.h>
 
 
 namespace MessageList
@@ -89,7 +88,7 @@ class ModelInvariantRowMapperPrivate;
  * It doesn't impact performance at all. You just have to remember to delete
  * your ModelInvariantIndex objects when you no longer need them.
  */
-class MESSAGELIST_EXPORT ModelInvariantRowMapper : public QObject
+class ModelInvariantRowMapper : public QObject
 {
     friend class ModelInvariantIndex;
 

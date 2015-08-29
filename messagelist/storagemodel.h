@@ -26,8 +26,6 @@
 
 #include <kmime/kmime_message.h>
 
-#include <messagelist/messagelist_export.h>
-
 class QAbstractItemModel;
 class QItemSelectionModel;
 
@@ -42,7 +40,7 @@ class MessageItem;
 /**
  * The Akonadi specific implementation of the Core::StorageModel.
  */
-class MESSAGELIST_EXPORT StorageModel : public MessageList::Core::StorageModel
+class StorageModel : public MessageList::Core::StorageModel
 {
     Q_OBJECT
 
