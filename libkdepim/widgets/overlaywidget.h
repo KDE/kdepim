@@ -55,10 +55,7 @@ public:
     OverlayWidget(QWidget *alignWidget, QWidget *parent);
     ~OverlayWidget();
 
-    QWidget *alignWidget()
-    {
-        return mAlignWidget;
-    }
+    QWidget *alignWidget() const;
     void setAlignWidget(QWidget *alignWidget);
 
 protected:

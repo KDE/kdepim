@@ -59,6 +59,11 @@ AntiSpamConfig *AntiSpamConfig::instance()
     return &theAntiSpamConfigSingletonProvider->instance;
 }
 
+const SpamAgents AntiSpamConfig::agents() const
+{
+    return mAgents;
+}
+
 AntiSpamConfig::AntiSpamConfig()
 {
     // A post routine can be used to delete the object when QCoreApplication destructs,

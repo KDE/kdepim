@@ -45,6 +45,11 @@ OverlayWidget::~OverlayWidget()
 {
 }
 
+QWidget *OverlayWidget::alignWidget() const
+{
+    return mAlignWidget;
+}
+
 void OverlayWidget::reposition()
 {
     if (!mAlignWidget) {

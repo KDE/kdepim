@@ -36,7 +36,7 @@ class Ui_InvitationSettings;
 
 namespace MessageViewer
 {
-
+class InvitationSettingsPrivate;
 class  MESSAGEVIEWER_EXPORT InvitationSettings : public QWidget
 {
     Q_OBJECT
@@ -55,6 +55,7 @@ Q_SIGNALS:
     void changed();
 
 private:
+    InvitationSettingsPrivate *const d;
     Ui_InvitationSettings *mInvitationUi;
 };
 

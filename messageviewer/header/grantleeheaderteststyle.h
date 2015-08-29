@@ -32,10 +32,7 @@ public:
     ~GrantleeHeaderTestStyle();
 
 public:
-    const char *name() const Q_DECL_OVERRIDE
-    {
-        return "grantleetest";
-    }
+    const char *name() const Q_DECL_OVERRIDE;
 
     QString format(KMime::Message *message) const Q_DECL_OVERRIDE;
 
@@ -43,10 +40,7 @@ public:
     void setMainFilename(const QString &);
     void setExtraDisplayHeaders(const QStringList &);
 
-    bool hasAttachmentQuickList() const Q_DECL_OVERRIDE
-    {
-        return true;
-    }
+    bool hasAttachmentQuickList() const Q_DECL_OVERRIDE;
 
 private:
     QStringList mExtraDisplay;

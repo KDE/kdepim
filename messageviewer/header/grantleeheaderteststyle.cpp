@@ -38,6 +38,11 @@ GrantleeHeaderTestStyle::~GrantleeHeaderTestStyle()
     delete mGrantleeFormatter;
 }
 
+const char *GrantleeHeaderTestStyle::name() const
+{
+    return "grantleetest";
+}
+
 QString GrantleeHeaderTestStyle::format(KMime::Message *message) const
 {
     if (!message) {
@@ -59,6 +64,11 @@ void GrantleeHeaderTestStyle::setMainFilename(const QString &filename)
 void GrantleeHeaderTestStyle::setExtraDisplayHeaders(const QStringList &extraDisplay)
 {
     mExtraDisplay = extraDisplay;
+}
+
+bool GrantleeHeaderTestStyle::hasAttachmentQuickList() const
+{
+    return true;
 }
 
 }

@@ -322,20 +322,10 @@ public:
                               const AttachmentStrategy *attachmentStrategy = 0);
     virtual ~ObjectTreeParser();
 
-    void setAllowAsync(bool allow)
-    {
-        assert(!mHasPendingAsyncJobs);
-        mAllowAsync = allow;
-    }
-    bool allowAsync() const
-    {
-        return mAllowAsync;
-    }
+    void setAllowAsync(bool allow);
+    bool allowAsync() const;
 
-    bool hasPendingAsyncJobs() const
-    {
-        return mHasPendingAsyncJobs;
-    }
+    bool hasPendingAsyncJobs() const;
 
     /**
     * The text of the message, ie. what would appear in the
@@ -353,10 +343,7 @@ public:
     * Not to be consfused with the HTML code that the message viewer widget displays, that HTML
     * is written out by htmlWriter() and a totally different pair of shoes.
     */
-    QString htmlContent() const
-    {
-        return mHtmlContent;
-    }
+    QString htmlContent() const;
 
     /**
     * Returns a plain text version of the content, which is either plainTextContent() if that exists,
@@ -375,70 +362,28 @@ public:
     * If there were more than one text/plain MIME parts in the mail, the this is the charset
     * of the last MIME part processed.
     */
-    QByteArray plainTextContentCharset() const
-    {
-        return mPlainTextContentCharset;
-    }
-    QByteArray htmlContentCharset() const
-    {
-        return mHtmlContentCharset;
-    }
+    QByteArray plainTextContentCharset() const;
+    QByteArray htmlContentCharset() const;
 
-    void setCryptoProtocol(const Kleo::CryptoBackend::Protocol *protocol)
-    {
-        mCryptoProtocol = protocol;
-    }
-    const Kleo::CryptoBackend::Protocol *cryptoProtocol() const
-    {
-        return mCryptoProtocol;
-    }
+    void setCryptoProtocol(const Kleo::CryptoBackend::Protocol *protocol);
+    const Kleo::CryptoBackend::Protocol *cryptoProtocol() const;
 
-    bool showOnlyOneMimePart() const
-    {
-        return mShowOnlyOneMimePart;
-    }
-    void setShowOnlyOneMimePart(bool show)
-    {
-        mShowOnlyOneMimePart = show;
-    }
+    bool showOnlyOneMimePart() const;
+    void setShowOnlyOneMimePart(bool show);
 
-    bool keepEncryptions() const
-    {
-        return mKeepEncryptions;
-    }
-    void setKeepEncryptions(bool keep)
-    {
-        mKeepEncryptions = keep;
-    }
+    bool keepEncryptions() const;
+    void setKeepEncryptions(bool keep);
 
-    bool includeSignatures() const
-    {
-        return mIncludeSignatures;
-    }
-    void setIncludeSignatures(bool include)
-    {
-        mIncludeSignatures = include;
-    }
+    bool includeSignatures() const;
+    void setIncludeSignatures(bool include);
 
-    const AttachmentStrategy *attachmentStrategy() const
-    {
-        return mAttachmentStrategy;
-    }
+    const AttachmentStrategy *attachmentStrategy() const;
 
-    HtmlWriter *htmlWriter() const
-    {
-        return mSource->htmlWriter();
-    }
+    HtmlWriter *htmlWriter() const;
 
-    CSSHelper *cssHelper() const
-    {
-        return mSource->cssHelper();
-    }
+    CSSHelper *cssHelper() const;
 
-    NodeHelper *nodeHelper() const
-    {
-        return mNodeHelper;
-    }
+    NodeHelper *nodeHelper() const;
 
     /** Parse beginning at a given node and recursively parsing
       the children of that node and it's next sibling. */

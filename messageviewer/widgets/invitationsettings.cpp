@@ -36,53 +36,69 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
 using namespace MessageViewer;
 
-InvitationSettings::InvitationSettings(QWidget *parent)
-    : QWidget(parent), mInvitationUi(new Ui_InvitationSettings)
+class MessageViewer::InvitationSettingsPrivate
 {
-    mInvitationUi->setupUi(this);
+public:
+    InvitationSettingsPrivate()
+        : mInvitationUi(new Ui_InvitationSettings)
+    {
 
-    mInvitationUi->mDeleteInvitations->setText(
+    }
+
+    ~InvitationSettingsPrivate()
+    {
+        delete mInvitationUi;
+        mInvitationUi = 0;
+    }
+    Ui_InvitationSettings *mInvitationUi;
+};
+
+InvitationSettings::InvitationSettings(QWidget *parent)
+    : QWidget(parent), d(new MessageViewer::InvitationSettingsPrivate)
+{
+    d->mInvitationUi->setupUi(this);
+
+    d->mInvitationUi->mDeleteInvitations->setText(
         i18n(GlobalSettings::self()->
              deleteInvitationEmailsAfterSendingReplyItem()->label().toUtf8()));
-    mInvitationUi->mDeleteInvitations->setWhatsThis(
+    d->mInvitationUi->mDeleteInvitations->setWhatsThis(
         i18n(GlobalSettings::self()->
              deleteInvitationEmailsAfterSendingReplyItem()->whatsThis().toUtf8()));
-    connect(mInvitationUi->mDeleteInvitations, &QCheckBox::toggled, this, &InvitationSettings::changed);
+    connect(d->mInvitationUi->mDeleteInvitations, &QCheckBox::toggled, this, &InvitationSettings::changed);
 
-    mInvitationUi->mLegacyMangleFromTo->setWhatsThis(
+    d->mInvitationUi->mLegacyMangleFromTo->setWhatsThis(
         i18n(GlobalSettings::self()->legacyMangleFromToHeadersItem()->whatsThis().toUtf8()));
-    connect(mInvitationUi->mLegacyMangleFromTo, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
+    connect(d->mInvitationUi->mLegacyMangleFromTo, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 
-    mInvitationUi->mLegacyBodyInvites->setWhatsThis(
+    d->mInvitationUi->mLegacyBodyInvites->setWhatsThis(
         i18n(GlobalSettings::self()->legacyBodyInvitesItem()->whatsThis().toUtf8()));
-    connect(mInvitationUi->mLegacyBodyInvites, &QCheckBox::toggled, this, &InvitationSettings::slotLegacyBodyInvitesToggled);
-    connect(mInvitationUi->mLegacyBodyInvites, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
+    connect(d->mInvitationUi->mLegacyBodyInvites, &QCheckBox::toggled, this, &InvitationSettings::slotLegacyBodyInvitesToggled);
+    connect(d->mInvitationUi->mLegacyBodyInvites, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 
-    mInvitationUi->mExchangeCompatibleInvitations->setWhatsThis(
+    d->mInvitationUi->mExchangeCompatibleInvitations->setWhatsThis(
         i18n(GlobalSettings::self()->exchangeCompatibleInvitationsItem()->whatsThis().toUtf8()));
-    connect(mInvitationUi->mExchangeCompatibleInvitations, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
+    connect(d->mInvitationUi->mExchangeCompatibleInvitations, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 
-    mInvitationUi->mOutlookCompatibleInvitationComments->setWhatsThis(
+    d->mInvitationUi->mOutlookCompatibleInvitationComments->setWhatsThis(
         i18n(GlobalSettings::self()->
              outlookCompatibleInvitationReplyCommentsItem()->whatsThis().toUtf8()));
-    connect(mInvitationUi->mOutlookCompatibleInvitationComments, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
+    connect(d->mInvitationUi->mOutlookCompatibleInvitationComments, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 
-    mInvitationUi->mOutlookCompatibleInvitationComparisons->setWhatsThis(
+    d->mInvitationUi->mOutlookCompatibleInvitationComparisons->setWhatsThis(
         i18n(GlobalSettings::self()->
              outlookCompatibleInvitationComparisonsItem()->whatsThis().toUtf8()));
-    connect(mInvitationUi->mOutlookCompatibleInvitationComparisons, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
+    connect(d->mInvitationUi->mOutlookCompatibleInvitationComparisons, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 
     //Laurent BUG:257723: in kmail2 it's not possible to not send automatically.
-    mInvitationUi->mAutomaticSending->hide();
-    mInvitationUi->mAutomaticSending->setWhatsThis(
+    d->mInvitationUi->mAutomaticSending->hide();
+    d->mInvitationUi->mAutomaticSending->setWhatsThis(
         i18n(GlobalSettings::self()->automaticSendingItem()->whatsThis().toUtf8()));
-    connect(mInvitationUi->mAutomaticSending, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
+    connect(d->mInvitationUi->mAutomaticSending, &QCheckBox::stateChanged, this, &InvitationSettings::changed);
 }
 
 InvitationSettings::~InvitationSettings()
 {
-    delete mInvitationUi;
-    mInvitationUi = 0;
+    delete d;
 }
 
 void InvitationSettings::slotLegacyBodyInvitesToggled(bool on)
@@ -103,33 +119,33 @@ void InvitationSettings::slotLegacyBodyInvitesToggled(bool on)
     }
     // Invitations in the body are autosent in any case (no point in editing raw ICAL)
     // So the autosend option is only available if invitations are sent as attachment.
-    mInvitationUi->mAutomaticSending->setEnabled(!mInvitationUi->mLegacyBodyInvites->isChecked());
+    d->mInvitationUi->mAutomaticSending->setEnabled(!d->mInvitationUi->mLegacyBodyInvites->isChecked());
 }
 
 void InvitationSettings::doLoadFromGlobalSettings()
 {
-    loadWidget(mInvitationUi->mLegacyMangleFromTo, GlobalSettings::self()->legacyMangleFromToHeadersItem());
-    mInvitationUi->mLegacyBodyInvites->blockSignals(true);
-    loadWidget(mInvitationUi->mLegacyBodyInvites, GlobalSettings::self()->legacyBodyInvitesItem());
-    mInvitationUi->mLegacyBodyInvites->blockSignals(false);
-    loadWidget(mInvitationUi->mExchangeCompatibleInvitations, GlobalSettings::self()->exchangeCompatibleInvitationsItem());
-    loadWidget(mInvitationUi->mOutlookCompatibleInvitationComments, GlobalSettings::self()->outlookCompatibleInvitationReplyCommentsItem());
-    loadWidget(mInvitationUi->mOutlookCompatibleInvitationComparisons, GlobalSettings::self()->outlookCompatibleInvitationComparisonsItem());
-    loadWidget(mInvitationUi->mAutomaticSending, GlobalSettings::self()->automaticSendingItem());
+    loadWidget(d->mInvitationUi->mLegacyMangleFromTo, GlobalSettings::self()->legacyMangleFromToHeadersItem());
+    d->mInvitationUi->mLegacyBodyInvites->blockSignals(true);
+    loadWidget(d->mInvitationUi->mLegacyBodyInvites, GlobalSettings::self()->legacyBodyInvitesItem());
+    d->mInvitationUi->mLegacyBodyInvites->blockSignals(false);
+    loadWidget(d->mInvitationUi->mExchangeCompatibleInvitations, GlobalSettings::self()->exchangeCompatibleInvitationsItem());
+    loadWidget(d->mInvitationUi->mOutlookCompatibleInvitationComments, GlobalSettings::self()->outlookCompatibleInvitationReplyCommentsItem());
+    loadWidget(d->mInvitationUi->mOutlookCompatibleInvitationComparisons, GlobalSettings::self()->outlookCompatibleInvitationComparisonsItem());
+    loadWidget(d->mInvitationUi->mAutomaticSending, GlobalSettings::self()->automaticSendingItem());
     //TODO verify it
-    mInvitationUi->mAutomaticSending->setEnabled(!mInvitationUi->mLegacyBodyInvites->isChecked());
-    loadWidget(mInvitationUi->mDeleteInvitations, GlobalSettings::self()->deleteInvitationEmailsAfterSendingReplyItem());
+    d->mInvitationUi->mAutomaticSending->setEnabled(!d->mInvitationUi->mLegacyBodyInvites->isChecked());
+    loadWidget(d->mInvitationUi->mDeleteInvitations, GlobalSettings::self()->deleteInvitationEmailsAfterSendingReplyItem());
 }
 
 void InvitationSettings::save()
 {
-    saveCheckBox(mInvitationUi->mLegacyMangleFromTo, GlobalSettings::self()->legacyMangleFromToHeadersItem());
-    saveCheckBox(mInvitationUi->mLegacyBodyInvites, GlobalSettings::self()->legacyBodyInvitesItem());
-    saveCheckBox(mInvitationUi->mExchangeCompatibleInvitations, GlobalSettings::self()->exchangeCompatibleInvitationsItem());
-    saveCheckBox(mInvitationUi->mOutlookCompatibleInvitationComments, GlobalSettings::self()->outlookCompatibleInvitationReplyCommentsItem());
-    saveCheckBox(mInvitationUi->mOutlookCompatibleInvitationComparisons, GlobalSettings::self()->outlookCompatibleInvitationComparisonsItem());
-    saveCheckBox(mInvitationUi->mAutomaticSending, GlobalSettings::self()->automaticSendingItem());
-    saveCheckBox(mInvitationUi->mDeleteInvitations, GlobalSettings::self()->deleteInvitationEmailsAfterSendingReplyItem());
+    saveCheckBox(d->mInvitationUi->mLegacyMangleFromTo, GlobalSettings::self()->legacyMangleFromToHeadersItem());
+    saveCheckBox(d->mInvitationUi->mLegacyBodyInvites, GlobalSettings::self()->legacyBodyInvitesItem());
+    saveCheckBox(d->mInvitationUi->mExchangeCompatibleInvitations, GlobalSettings::self()->exchangeCompatibleInvitationsItem());
+    saveCheckBox(d->mInvitationUi->mOutlookCompatibleInvitationComments, GlobalSettings::self()->outlookCompatibleInvitationReplyCommentsItem());
+    saveCheckBox(d->mInvitationUi->mOutlookCompatibleInvitationComparisons, GlobalSettings::self()->outlookCompatibleInvitationComparisonsItem());
+    saveCheckBox(d->mInvitationUi->mAutomaticSending, GlobalSettings::self()->automaticSendingItem());
+    saveCheckBox(d->mInvitationUi->mDeleteInvitations, GlobalSettings::self()->deleteInvitationEmailsAfterSendingReplyItem());
 }
 
 QString InvitationSettings::helpAnchor() const
@@ -140,16 +156,16 @@ QString InvitationSettings::helpAnchor() const
 void InvitationSettings::doResetToDefaultsOther()
 {
     const bool bUseDefaults = GlobalSettings::self()->useDefaults(true);
-    loadWidget(mInvitationUi->mLegacyMangleFromTo, GlobalSettings::self()->legacyMangleFromToHeadersItem());
-    mInvitationUi->mLegacyBodyInvites->blockSignals(true);
-    loadWidget(mInvitationUi->mLegacyBodyInvites, GlobalSettings::self()->legacyBodyInvitesItem());
-    mInvitationUi->mLegacyBodyInvites->blockSignals(false);
-    loadWidget(mInvitationUi->mExchangeCompatibleInvitations, GlobalSettings::self()->exchangeCompatibleInvitationsItem());
-    loadWidget(mInvitationUi->mOutlookCompatibleInvitationComments, GlobalSettings::self()->outlookCompatibleInvitationReplyCommentsItem());
-    loadWidget(mInvitationUi->mOutlookCompatibleInvitationComparisons, GlobalSettings::self()->outlookCompatibleInvitationComparisonsItem());
-    loadWidget(mInvitationUi->mAutomaticSending, GlobalSettings::self()->automaticSendingItem());
+    loadWidget(d->mInvitationUi->mLegacyMangleFromTo, GlobalSettings::self()->legacyMangleFromToHeadersItem());
+    d->mInvitationUi->mLegacyBodyInvites->blockSignals(true);
+    loadWidget(d->mInvitationUi->mLegacyBodyInvites, GlobalSettings::self()->legacyBodyInvitesItem());
+    d->mInvitationUi->mLegacyBodyInvites->blockSignals(false);
+    loadWidget(d->mInvitationUi->mExchangeCompatibleInvitations, GlobalSettings::self()->exchangeCompatibleInvitationsItem());
+    loadWidget(d->mInvitationUi->mOutlookCompatibleInvitationComments, GlobalSettings::self()->outlookCompatibleInvitationReplyCommentsItem());
+    loadWidget(d->mInvitationUi->mOutlookCompatibleInvitationComparisons, GlobalSettings::self()->outlookCompatibleInvitationComparisonsItem());
+    loadWidget(d->mInvitationUi->mAutomaticSending, GlobalSettings::self()->automaticSendingItem());
     //TODO verify it
-    mInvitationUi->mAutomaticSending->setEnabled(!mInvitationUi->mLegacyBodyInvites->isChecked());
-    loadWidget(mInvitationUi->mDeleteInvitations, GlobalSettings::self()->deleteInvitationEmailsAfterSendingReplyItem());
+    d->mInvitationUi->mAutomaticSending->setEnabled(!d->mInvitationUi->mLegacyBodyInvites->isChecked());
+    loadWidget(d->mInvitationUi->mDeleteInvitations, GlobalSettings::self()->deleteInvitationEmailsAfterSendingReplyItem());
     GlobalSettings::self()->useDefaults(bUseDefaults);
 }

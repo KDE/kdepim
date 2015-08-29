@@ -127,10 +127,7 @@ public:
     * Returns a list of all agents found on the system. This
     * might list SA twice, if both the C and the Perl version are present.
     */
-    const SpamAgents agents() const
-    {
-        return mAgents;
-    }
+    const SpamAgents agents() const;
 
     /**
     * Returns a list of unique agents, found on the system. SpamAssassin will

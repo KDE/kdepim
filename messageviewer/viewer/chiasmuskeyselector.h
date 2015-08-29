@@ -3,7 +3,6 @@
 
 #include <QDialog>
 #include <KConfigGroup>
-#include "messageviewer_export.h"
 
 class QListWidget;
 class QLineEdit;

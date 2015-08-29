@@ -226,6 +226,27 @@ ObjectTreeParser::~ObjectTreeParser()
     }
 }
 
+void ObjectTreeParser::setAllowAsync(bool allow)
+{
+    assert(!mHasPendingAsyncJobs);
+    mAllowAsync = allow;
+}
+
+bool ObjectTreeParser::allowAsync() const
+{
+    return mAllowAsync;
+}
+
+bool ObjectTreeParser::hasPendingAsyncJobs() const
+{
+    return mHasPendingAsyncJobs;
+}
+
+QString ObjectTreeParser::htmlContent() const
+{
+    return mHtmlContent;
+}
+
 void ObjectTreeParser::copyContentFrom(const ObjectTreeParser *other)
 {
     mPlainTextContent += other->plainTextContent();
@@ -3598,4 +3619,74 @@ QString ObjectTreeParser::convertedHtmlContent() const
         htmlContent = convertedHtml.replace(QRegExp(QStringLiteral("\n")), QStringLiteral("<br />"));
     }
     return htmlContent.append(QLatin1Char('\n'));
+}
+
+QByteArray ObjectTreeParser::plainTextContentCharset() const
+{
+    return mPlainTextContentCharset;
+}
+
+QByteArray ObjectTreeParser::htmlContentCharset() const
+{
+    return mHtmlContentCharset;
+}
+
+void ObjectTreeParser::setCryptoProtocol(const Kleo::CryptoBackend::Protocol *protocol)
+{
+    mCryptoProtocol = protocol;
+}
+
+const Kleo::CryptoBackend::Protocol *ObjectTreeParser::cryptoProtocol() const
+{
+    return mCryptoProtocol;
+}
+
+bool ObjectTreeParser::showOnlyOneMimePart() const
+{
+    return mShowOnlyOneMimePart;
+}
+
+void ObjectTreeParser::setShowOnlyOneMimePart(bool show)
+{
+    mShowOnlyOneMimePart = show;
+}
+
+bool ObjectTreeParser::keepEncryptions() const
+{
+    return mKeepEncryptions;
+}
+
+void ObjectTreeParser::setKeepEncryptions(bool keep)
+{
+    mKeepEncryptions = keep;
+}
+
+bool ObjectTreeParser::includeSignatures() const
+{
+    return mIncludeSignatures;
+}
+
+void ObjectTreeParser::setIncludeSignatures(bool include)
+{
+    mIncludeSignatures = include;
+}
+
+const AttachmentStrategy *ObjectTreeParser::attachmentStrategy() const
+{
+    return mAttachmentStrategy;
+}
+
+HtmlWriter *ObjectTreeParser::htmlWriter() const
+{
+    return mSource->htmlWriter();
+}
+
+CSSHelper *ObjectTreeParser::cssHelper() const
+{
+    return mSource->cssHelper();
+}
+
+MessageViewer::NodeHelper *ObjectTreeParser::nodeHelper() const
+{
+    return mNodeHelper;
 }
