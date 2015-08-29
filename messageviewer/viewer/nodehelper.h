@@ -112,7 +112,6 @@ public:
 
     /** Attach an extra node to an existing node */
     void attachExtraContent(KMime::Content *topLevelNode, KMime::Content *content);
-    void removeAllExtraContent(KMime::Content *topLevelNode);
 
     /** Get the extra nodes attached to the @param topLevelNode and all sub-nodes of @param topLevelNode */
     QList<KMime::Content *> extraContents(KMime::Content *topLevelNode) const;
@@ -122,23 +121,11 @@ public:
      */
     KMime::Message *messageWithExtraContent(KMime::Content *topLevelNode);
 
-    /**
-     * Returns true if the given node at least one extra content node,
-     *  implying that the given node is an encrypted node or otherwise a type of
-     *  node that needs extra handling.
-     */
-    bool isPermanentWithExtraContent(KMime::Content *node) const;
-
     /** Get a QTextCodec suitable for this message part */
     const QTextCodec *codec(KMime::Content *node);
 
     /** Set the charset the user selected for the message to display */
     void setOverrideCodec(KMime::Content *node, const QTextCodec *codec);
-
-    const QTextCodec *localCodec() const
-    {
-        return mLocalCodec;
-    }
 
     Interface::BodyPartMemento *bodyPartMemento(KMime::Content *node, const QByteArray &which) const;
 
@@ -243,9 +230,6 @@ public:
      * @param usAscii if true, US-Ascii encoding will be prepended to the list.
      */
     static QStringList supportedEncodings(bool usAscii);   //TODO(Andras) move to a utility class?
-
-    static QByteArray autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text);
-    static QByteArray toUsAscii(const QString &_str, bool *ok);
 
     static QString fromAsString(KMime::Content *node);
 

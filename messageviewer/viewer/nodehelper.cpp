@@ -717,62 +717,6 @@ QStringList NodeHelper::supportedEncodings(bool usAscii)
     return encodings;
 }
 
-QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text)
-{
-    QStringList charsets = encodingList;
-    if (!_encoding.isEmpty()) {
-        QString currentCharset = QString::fromLatin1(_encoding);
-        charsets.removeAll(currentCharset);
-        charsets.prepend(currentCharset);
-    }
-
-    QStringList::ConstIterator it = charsets.constBegin();
-    QStringList::ConstIterator end = charsets.constEnd();
-    for (; it != end; ++it) {
-        QByteArray encoding = (*it).toLatin1();
-        if (encoding == "locale") {
-            encoding = QTextCodec::codecForLocale()->name();
-            encoding = encoding.toLower();
-        }
-        if (text.isEmpty()) {
-            return encoding;
-        }
-        if (encoding == "us-ascii") {
-            bool ok;
-            (void) toUsAscii(text, &ok);
-            if (ok) {
-                return encoding;
-            }
-        } else {
-            const QTextCodec *codec = codecForName(encoding);
-            if (!codec) {
-                qCDebug(MESSAGEVIEWER_LOG) << "Auto-Charset: Something is wrong and I cannot get a codec:" << encoding;
-            } else {
-                if (codec->canEncode(text)) {
-                    return encoding;
-                }
-            }
-        }
-    }
-    return 0;
-}
-
-QByteArray NodeHelper::toUsAscii(const QString &_str, bool *ok)
-{
-    bool all_ok = true;
-    QString result = _str;
-    const int len = result.length();
-    for (int i = 0; i < len; ++i)
-        if (result.at(i).unicode() >= 128) {
-            result[i] = '?';
-            all_ok = false;
-        }
-    if (ok) {
-        *ok = all_ok;
-    }
-    return result.toLatin1();
-}
-
 QString NodeHelper::fromAsString(KMime::Content *node)
 {
     KMime::Message *topLevel = dynamic_cast<KMime::Message *>(node->topLevel());
@@ -788,16 +732,6 @@ void NodeHelper::attachExtraContent(KMime::Content *topLevelNode, KMime::Content
     mExtraContents[topLevelNode].append(content);
 }
 
-void NodeHelper::removeAllExtraContent(KMime::Content *topLevelNode)
-{
-    const QMap< KMime::Content *, QList<KMime::Content *> >::iterator it
-        = mExtraContents.find(topLevelNode);
-    if (it != mExtraContents.end()) {
-        qDeleteAll(*it);
-        mExtraContents.erase(it);
-    }
-}
-
 QList< KMime::Content * > NodeHelper::extraContents(KMime::Content *topLevelnode) const
 {
     const QMap< KMime::Content *, QList<KMime::Content *> >::const_iterator it
@@ -807,13 +741,6 @@ QList< KMime::Content * > NodeHelper::extraContents(KMime::Content *topLevelnode
     } else {
         return *it;
     }
-}
-
-bool NodeHelper::isPermanentWithExtraContent(KMime::Content *node) const
-{
-    const QMap< KMime::Content *, QList<KMime::Content *> >::const_iterator it
-        = mExtraContents.find(node);
-    return it != mExtraContents.end() && !it->empty();
 }
 
 void NodeHelper::mergeExtraNodes(KMime::Content *node)
