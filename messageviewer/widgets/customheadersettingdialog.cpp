@@ -18,7 +18,10 @@
 #include "customheadersettingdialog.h"
 #include "header/customheadersettingwidget.h"
 #include "settings/globalsettings.h"
+
 #include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace MessageViewer;
 

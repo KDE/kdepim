@@ -48,6 +48,7 @@
 #include <QKeyEvent>
 #include <QLabel>
 #include <QFontDatabase>
+#include <QVBoxLayout>
 
 namespace MailCommon
 {

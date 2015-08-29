@@ -686,21 +686,21 @@ Kleo::KeyResolver::~KeyResolver()
     delete d; d = Q_NULLPTR;
 }
 
-Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry(const GpgME::Key &key, const char *dontAskAgainName,
+Kleo::Result Kleo::KeyResolver::checkKeyNearExpiry(const GpgME::Key &key, const char *dontAskAgainName,
         bool mine, bool sign, bool ca,
         int recur_limit, const GpgME::Key &orig) const
 {
     if (recur_limit <= 0) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Key chain too long (>100 certs)";
-        return Kpgp::Ok;
+        return Kleo::Ok;
     }
     const GpgME::Subkey subkey = key.subkey(0);
     if (d->alreadyWarnedFingerprints.count(subkey.fingerprint())) {
-        return Kpgp::Ok;    // already warned about this one (and so about it's issuers)
+        return Kleo::Ok;    // already warned about this one (and so about it's issuers)
     }
 
     if (subkey.neverExpires()) {
-        return Kpgp::Ok;
+        return Kleo::Ok;
     }
     static const double secsPerDay = 24 * 60 * 60;
     const double secsTillExpiry = ::difftime(subkey.expirationTime(), time(Q_NULLPTR));
@@ -795,7 +795,7 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry(const GpgME::Key &key, const 
                                                ? i18n("OpenPGP Key Expired")
                                                : i18n("S/MIME Certificate Expired"),
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(), QLatin1String(dontAskAgainName)) == KMessageBox::Cancel) {
-            return Kpgp::Canceled;
+            return Kleo::Canceled;
         }
     } else {
         const int daysTillExpiry = 1 + int(secsTillExpiry / secsPerDay);
@@ -903,27 +903,27 @@ Kpgp::Result Kleo::KeyResolver::checkKeyNearExpiry(const GpgME::Key &key, const 
                                                    KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                    QLatin1String(dontAskAgainName))
                     == KMessageBox::Cancel) {
-                return Kpgp::Canceled;
+                return Kleo::Canceled;
             }
         }
     }
     if (key.isRoot()) {
-        return Kpgp::Ok;
+        return Kleo::Ok;
     } else if (const char *chain_id = key.chainID()) {
         const std::vector<GpgME::Key> issuer = lookup(QStringList(QLatin1String(chain_id)), false);
         if (issuer.empty()) {
-            return Kpgp::Ok;
+            return Kleo::Ok;
         } else
             return checkKeyNearExpiry(issuer.front(), dontAskAgainName, mine, sign,
                                       true, recur_limit - 1, ca ? orig : key);
     }
-    return Kpgp::Ok;
+    return Kleo::Ok;
 }
 
-Kpgp::Result Kleo::KeyResolver::setEncryptToSelfKeys(const QStringList &fingerprints)
+Kleo::Result Kleo::KeyResolver::setEncryptToSelfKeys(const QStringList &fingerprints)
 {
     if (!encryptToSelf()) {
-        return Kpgp::Ok;
+        return Kleo::Ok;
     }
 
     std::vector<GpgME::Key> keys = lookup(fingerprints);
@@ -948,32 +948,32 @@ Kpgp::Result Kleo::KeyResolver::setEncryptToSelfKeys(const QStringList &fingerpr
         return KMessageBox::warningContinueCancel(Q_NULLPTR, msg, i18n("Unusable Encryption Keys"),
                 KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                 QStringLiteral("unusable own encryption key warning"))
-               == KMessageBox::Continue ? Kpgp::Ok : Kpgp::Canceled ;
+               == KMessageBox::Continue ? Kleo::Ok : Kleo::Canceled;
     }
 
     // check for near-expiry:
     std::vector<GpgME::Key>::const_iterator end(d->mOpenPGPEncryptToSelfKeys.end());
 
     for (std::vector<GpgME::Key>::const_iterator it = d->mOpenPGPEncryptToSelfKeys.begin() ; it != end ; ++it) {
-        const Kpgp::Result r = checkKeyNearExpiry(*it, "own encryption key expires soon warning",
+        const Kleo::Result r = checkKeyNearExpiry(*it, "own encryption key expires soon warning",
                                true, false);
-        if (r != Kpgp::Ok) {
+        if (r != Kleo::Ok) {
             return r;
         }
     }
     std::vector<GpgME::Key>::const_iterator end2(d->mSMIMEEncryptToSelfKeys.end());
     for (std::vector<GpgME::Key>::const_iterator it = d->mSMIMEEncryptToSelfKeys.begin() ; it != end2 ; ++it) {
-        const Kpgp::Result r = checkKeyNearExpiry(*it, "own encryption key expires soon warning",
+        const Kleo::Result r = checkKeyNearExpiry(*it, "own encryption key expires soon warning",
                                true, false);
-        if (r != Kpgp::Ok) {
+        if (r != Kleo::Ok) {
             return r;
         }
     }
 
-    return Kpgp::Ok;
+    return Kleo::Ok;
 }
 
-Kpgp::Result Kleo::KeyResolver::setSigningKeys(const QStringList &fingerprints)
+Kleo::Result Kleo::KeyResolver::setSigningKeys(const QStringList &fingerprints)
 {
     std::vector<GpgME::Key> keys = lookup(fingerprints, true);   // secret keys
     std::remove_copy_if(keys.begin(), keys.end(),
@@ -996,28 +996,28 @@ Kpgp::Result Kleo::KeyResolver::setSigningKeys(const QStringList &fingerprints)
         return KMessageBox::warningContinueCancel(Q_NULLPTR, msg, i18n("Unusable Signing Keys"),
                 KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                 QStringLiteral("unusable signing key warning"))
-               == KMessageBox::Continue ? Kpgp::Ok : Kpgp::Canceled ;
+               == KMessageBox::Continue ? Kleo::Ok : Kleo::Canceled;
     }
 
     // check for near expiry:
 
     for (std::vector<GpgME::Key>::const_iterator it = d->mOpenPGPSigningKeys.begin() ; it != d->mOpenPGPSigningKeys.end() ; ++it) {
-        const Kpgp::Result r = checkKeyNearExpiry(*it, "signing key expires soon warning",
+        const Kleo::Result r = checkKeyNearExpiry(*it, "signing key expires soon warning",
                                true, true);
-        if (r != Kpgp::Ok) {
+        if (r != Kleo::Ok) {
             return r;
         }
     }
 
     for (std::vector<GpgME::Key>::const_iterator it = d->mSMIMESigningKeys.begin() ; it != d->mSMIMESigningKeys.end() ; ++it) {
-        const Kpgp::Result r = checkKeyNearExpiry(*it, "signing key expires soon warning",
+        const Kleo::Result r = checkKeyNearExpiry(*it, "signing key expires soon warning",
                                true, true);
-        if (r != Kpgp::Ok) {
+        if (r != Kleo::Ok) {
             return r;
         }
     }
 
-    return Kpgp::Ok;
+    return Kleo::Ok;
 }
 
 void Kleo::KeyResolver::setPrimaryRecipients(const QStringList &addresses)
@@ -1156,7 +1156,7 @@ bool Kleo::KeyResolver::encryptionPossible() const
                              EmptyKeyList) == d->mSecondaryEncryptionKeys.end() ;
 }
 
-Kpgp::Result Kleo::KeyResolver::resolveAllKeys(bool &signingRequested, bool &encryptionRequested)
+Kleo::Result Kleo::KeyResolver::resolveAllKeys(bool &signingRequested, bool &encryptionRequested)
 {
     if (!encryptionRequested && !signingRequested) {
         // make a dummy entry with all recipients, but no signing or
@@ -1164,9 +1164,9 @@ Kpgp::Result Kleo::KeyResolver::resolveAllKeys(bool &signingRequested, bool &enc
         dump();
         d->mFormatInfoMap[OpenPGPMIMEFormat].splitInfos.push_back(SplitInfo(allRecipients()));
         dump();
-        return Kpgp::Ok;
+        return Kleo::Ok;
     }
-    Kpgp::Result result = Kpgp::Ok;
+    Kleo::Result result = Kleo::Ok;
     if (encryptionRequested) {
         bool finalySendUnencrypted = false;
         result = resolveEncryptionKeys(signingRequested, finalySendUnencrypted);
@@ -1174,22 +1174,22 @@ Kpgp::Result Kleo::KeyResolver::resolveAllKeys(bool &signingRequested, bool &enc
             encryptionRequested = false;
         }
     }
-    if (result != Kpgp::Ok) {
+    if (result != Kleo::Ok) {
         return result;
     }
     if (encryptionRequested) {
         result = resolveSigningKeysForEncryption();
     } else {
         result = resolveSigningKeysForSigningOnly();
-        if (result == Kpgp::Failure) {
+        if (result == Kleo::Failure) {
             signingRequested = false;
-            return Kpgp::Ok;
+            return Kleo::Ok;
         }
     }
     return result;
 }
 
-Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, bool &finalySendUnencrypted)
+Kleo::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, bool &finalySendUnencrypted)
 {
     //
     // 1. Get keys for all recipients:
@@ -1203,7 +1203,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, boo
         it->keys = getEncryptionKeys(it->address, false);
         qCDebug(MESSAGECOMPOSER_LOG) << "got # keys:" << it->keys.size();
         if (it->keys.empty()) {
-            return Kpgp::Canceled;
+            return Kleo::Canceled;
         }
         QString addr = canonicalAddress(it->address).toLower();
         const ContactPreferences pref = lookupContactPreferences(addr);
@@ -1219,7 +1219,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, boo
         }
         it->keys = getEncryptionKeys(it->address, false);
         if (it->keys.empty()) {
-            return Kpgp::Canceled;
+            return Kleo::Canceled;
         }
         QString addr = canonicalAddress(it->address).toLower();
         const ContactPreferences pref = lookupContactPreferences(addr);
@@ -1230,8 +1230,8 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, boo
 
     // 1a: Present them to the user
 
-    const Kpgp::Result res = showKeyApprovalDialog(finalySendUnencrypted);
-    if (res != Kpgp::Ok) {
+    const Kleo::Result res = showKeyApprovalDialog(finalySendUnencrypted);
+    if (res != Kleo::Ok) {
         return res;
     }
 
@@ -1291,9 +1291,9 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, boo
         const std::vector<SplitInfo> si_list = encryptionItems(concreteCryptoMessageFormats[i]);
         for (std::vector<SplitInfo>::const_iterator sit = si_list.begin() ; sit != si_list.end() ; ++sit)
             for (std::vector<GpgME::Key>::const_iterator kit = sit->keys.begin() ; kit != sit->keys.end() ; ++kit) {
-                const Kpgp::Result r = checkKeyNearExpiry(*kit, "other encryption key near expiry warning",
+                const Kleo::Result r = checkKeyNearExpiry(*kit, "other encryption key near expiry warning",
                                        false, false);
-                if (r != Kpgp::Ok) {
+                if (r != Kleo::Ok) {
                     return r;
                 }
             }
@@ -1302,7 +1302,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, boo
     // 4. Check that we have the right keys for encryptToSelf()
 
     if (!encryptToSelf()) {
-        return Kpgp::Ok;
+        return Kleo::Ok;
     }
 
     // 4a. Check for OpenPGP keys
@@ -1325,7 +1325,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, boo
                                                    KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                    QStringLiteral("encrypt-to-self will fail warning"))
                     == KMessageBox::Cancel) {
-                return Kpgp::Canceled;
+                return Kleo::Canceled;
             }
             // FIXME: Allow selection
         }
@@ -1353,7 +1353,7 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, boo
                                                    KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                    QStringLiteral("encrypt-to-self will fail warning"))
                     == KMessageBox::Cancel) {
-                return Kpgp::Canceled;
+                return Kleo::Canceled;
             }
             // FIXME: Allow selection
         }
@@ -1364,10 +1364,10 @@ Kpgp::Result Kleo::KeyResolver::resolveEncryptionKeys(bool signingRequested, boo
     // FIXME: Present another message if _both_ OpenPGP and S/MIME keys
     // are missing.
 
-    return Kpgp::Ok;
+    return Kleo::Ok;
 }
 
-Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForEncryption()
+Kleo::Result Kleo::KeyResolver::resolveSigningKeysForEncryption()
 {
     if ((!encryptionItems(InlineOpenPGPFormat).empty() ||
             !encryptionItems(OpenPGPMIMEFormat).empty())
@@ -1383,7 +1383,7 @@ Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForEncryption()
                                                KStandardGuiItem::cancel(),
                                                QStringLiteral("signing will fail warning"))
                 == KMessageBox::Cancel) {
-            return Kpgp::Canceled;
+            return Kleo::Canceled;
         }
         // FIXME: Allow selection
     }
@@ -1401,7 +1401,7 @@ Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForEncryption()
                                                KStandardGuiItem::cancel(),
                                                QStringLiteral("signing will fail warning"))
                 == KMessageBox::Cancel) {
-            return Kpgp::Canceled;
+            return Kleo::Canceled;
         }
         // FIXME: Allow selection
     }
@@ -1416,10 +1416,10 @@ Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForEncryption()
             dump();
         }
 
-    return Kpgp::Ok;
+    return Kleo::Ok;
 }
 
-Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForSigningOnly()
+Kleo::Result Kleo::KeyResolver::resolveSigningKeysForSigningOnly()
 {
     //
     // we don't need to distinguish between primary and secondary
@@ -1455,7 +1455,7 @@ Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForSigningOnly()
         fi.splitInfos.resize(1);
         fi.splitInfos.front() = SplitInfo(allRecipients());
         dump();
-        return Kpgp::Ok;
+        return Kleo::Ok;
     }
 
     const QString msg = i18n("Examination of recipient's signing preferences "
@@ -1466,9 +1466,9 @@ Kpgp::Result Kleo::KeyResolver::resolveSigningKeysForSigningOnly()
                                            KStandardGuiItem::cont())
             == KMessageBox::Continue) {
         d->mFormatInfoMap[OpenPGPMIMEFormat].splitInfos.push_back(SplitInfo(allRecipients()));
-        return Kpgp::Failure; // means "Ok, but without signing"
+        return Kleo::Failure; // means "Ok, but without signing"
     }
-    return Kpgp::Canceled;
+    return Kleo::Canceled;
 }
 
 std::vector<GpgME::Key> Kleo::KeyResolver::signingKeysFor(CryptoMessageFormat f) const
@@ -1574,7 +1574,7 @@ void Kleo::KeyResolver::dump() const
 #endif
 }
 
-Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog(bool &finalySendUnencrypted)
+Kleo::Result Kleo::KeyResolver::showKeyApprovalDialog(bool &finalySendUnencrypted)
 {
     const bool showKeysForApproval = showApprovalDialog()
                                      || std::find_if(d->mPrimaryEncryptionKeys.begin(), d->mPrimaryEncryptionKeys.end(),
@@ -1583,7 +1583,7 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog(bool &finalySendUnencrypte
                                              ApprovalNeeded) != d->mSecondaryEncryptionKeys.end() ;
 
     if (!showKeysForApproval) {
-        return Kpgp::Ok;
+        return Kleo::Ok;
     }
 
     std::vector<Kleo::KeyApprovalDialog::Item> items;
@@ -1610,7 +1610,7 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog(bool &finalySendUnencrypte
 
     if (dlg->exec() == QDialog::Rejected) {
         delete dlg;
-        return Kpgp::Canceled;
+        return Kleo::Canceled;
     }
 
     items = dlg->items();
@@ -1650,7 +1650,7 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog(bool &finalySendUnencrypte
                                                i18n("Missing Key Warning"),
                                                KGuiItem(i18n("&Encrypt")))
                 == KMessageBox::Cancel) {
-            return Kpgp::Canceled;
+            return Kleo::Canceled;
         } else {
             mEncryptToSelf = false;
         }
@@ -1675,7 +1675,7 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog(bool &finalySendUnencrypte
                                                i18n("Missing Key Warning"),
                                                KGuiItem(i18n("Send &Unencrypted")))
                 == KMessageBox::Cancel) {
-            return Kpgp::Canceled;
+            return Kleo::Canceled;
         }
         finalySendUnencrypted = true;
     } else if (emptyListCount > 0) {
@@ -1693,7 +1693,7 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog(bool &finalySendUnencrypte
                                                i18n("Missing Key Warning"),
                                                KGuiItem(i18n("&Encrypt")))
                 == KMessageBox::Cancel) {
-            return Kpgp::Canceled;
+            return Kleo::Canceled;
         }
     }
 
@@ -1716,7 +1716,7 @@ Kpgp::Result Kleo::KeyResolver::showKeyApprovalDialog(bool &finalySendUnencrypte
                         std::back_inserter(d->mSMIMEEncryptToSelfKeys),
                         NotValidTrustedSMIMEEncryptionKey);    // -= trusted (see above, too)?
 
-    return Kpgp::Ok;
+    return Kleo::Ok;
 }
 
 std::vector<Kleo::KeyResolver::SplitInfo> Kleo::KeyResolver::encryptionItems(Kleo::CryptoMessageFormat f) const

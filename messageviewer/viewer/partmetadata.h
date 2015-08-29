@@ -21,8 +21,7 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/context.h>
 
-#include <libkpgp/kpgp.h>
-#include <QString>
+#include <QStringList>
 #include <qdatetime.h>
 
 namespace MessageViewer
@@ -47,7 +46,7 @@ public:
     QString signer;
     QStringList signerMailAddresses;
     QByteArray keyId;
-    Kpgp::Validity keyTrust;
+    GpgME::Signature::Validity keyTrust;
     QString status;  // to be used for unknown plug-ins
     int status_code; // to be used for i18n of OpenPGP and S/MIME CryptPlugs
     QString errorText;

@@ -41,7 +41,6 @@
 #include "libkleo/ui/keyapprovaldialog.h"
 #include "kleo/enum.h"
 
-#include <libkpgp/kpgp.h> // for Kpgp::Result
 #include <gpgme++/key.h>
 
 #include <vector>
@@ -51,6 +50,11 @@ class QStringList;
 namespace Kleo
 {
 
+enum Result {
+    Failure = 0,
+    Ok = 1,
+    Canceled = 2
+};
 /**
      \short A class to resolve signing/encryption keys w.r.t. per-recipient preferences
 
@@ -174,12 +178,12 @@ public:
        self. Also looks them up and complains if they're not usable or
        found.
     */
-    Kpgp::Result setEncryptToSelfKeys(const QStringList &fingerprints);
+    Kleo::Result setEncryptToSelfKeys(const QStringList &fingerprints);
     /**
         Set the fingerprints of keys to be used for signing. Also
         looks them up and complains if they're not usable or found.
     */
-    Kpgp::Result setSigningKeys(const QStringList &fingerprints);
+    Kleo::Result setSigningKeys(const QStringList &fingerprints);
     /**
        Set the list of primary (To/CC) recipient addresses. Also looks
        up possible keys, but doesn't interact with the user.
@@ -208,7 +212,7 @@ public:
        Queries the user for missing keys and displays a key approval
        dialog if needed.
     */
-    Kpgp::Result resolveAllKeys(bool &signingRequested, bool &encryptionRequested);
+    Kleo::Result resolveAllKeys(bool &signingRequested, bool &encryptionRequested);
 
     /**
        @return the signing keys to use (if any) for the given message
@@ -235,14 +239,14 @@ private:
     std::vector<Item> getEncryptionItems(const QStringList &recipients);
     std::vector<GpgME::Key> getEncryptionKeys(const QString &recipient, bool quiet) const;
 
-    Kpgp::Result showKeyApprovalDialog(bool &finalySendUnencrypted);
+    Kleo::Result showKeyApprovalDialog(bool &finalySendUnencrypted);
 
     bool encryptionPossible() const;
     bool signingPossible() const;
-    Kpgp::Result resolveEncryptionKeys(bool signingRequested , bool &finalySendUnencrypted);
-    Kpgp::Result resolveSigningKeysForEncryption();
-    Kpgp::Result resolveSigningKeysForSigningOnly();
-    Kpgp::Result checkKeyNearExpiry(const GpgME::Key &key,
+    Kleo::Result resolveEncryptionKeys(bool signingRequested , bool &finalySendUnencrypted);
+    Kleo::Result resolveSigningKeysForEncryption();
+    Kleo::Result resolveSigningKeysForSigningOnly();
+    Kleo::Result checkKeyNearExpiry(const GpgME::Key &key,
                                     const char *dontAskAgainName, bool mine,
                                     bool sign, bool ca = false, int recurse_limit = 100,
                                     const GpgME::Key &orig_key = GpgME::Key::null) const;

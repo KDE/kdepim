@@ -71,8 +71,7 @@
 #include <kleo/keylistjob.h>
 #include <kleo/importjob.h>
 #include <kleo/dn.h>
-#include <libkpgp/kpgpblock.h>
-#include <libkpgp/kpgp.h>
+#include "cryptohelper.h"
 
 // KDEPIMLIBS includes
 #include <gpgme++/importresult.h>
@@ -576,7 +575,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
     messagePart.isGoodSignature = false;
     messagePart.isEncrypted = false;
     messagePart.isDecryptable = false;
-    messagePart.keyTrust = Kpgp::KPGP_VALIDITY_UNKNOWN;
+    messagePart.keyTrust = GpgME::Signature::Unknown;
     messagePart.status = i18n("Wrong Crypto Plug-In.");
     messagePart.status_code = GPGME_SIG_STAT_NONE;
 
@@ -777,7 +776,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
             messagePart.keyId = signature.fingerprint();
         }
         // ### Ugh. We depend on two enums being in sync:
-        messagePart.keyTrust = (Kpgp::Validity)signature.validity();
+        messagePart.keyTrust = signature.validity();
         if (key.numUserIDs() > 0 && key.userID(0).id()) {
             messagePart.signer = Kleo::DN(key.userID(0).id()).prettyDN();
         }
@@ -2844,7 +2843,7 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
                 signer = QLatin1String("<a href=\"mailto:") + signer + QLatin1String("\">") + signer + QLatin1String("</a>");
 
                 if (block.isGoodSignature) {
-                    if (block.keyTrust < Kpgp::KPGP_VALIDITY_MARGINAL) {
+                    if (block.keyTrust < GpgME::Signature::Marginal) {
                         block.signClass = QStringLiteral("signOkKeyBad");
                     } else {
                         block.signClass = QStringLiteral("signOkKeyOk");
@@ -2865,19 +2864,19 @@ QString ObjectTreeParser::writeSigstatHeader(PartMetaData &block,
                     htmlStr += QLatin1String("<br />");
 
                     switch (block.keyTrust) {
-                    case Kpgp::KPGP_VALIDITY_UNKNOWN:
+                    case GpgME::Signature::Unknown:
                         htmlStr += i18n("The signature is valid, but the key's "
                                         "validity is unknown.");
                         break;
-                    case Kpgp::KPGP_VALIDITY_MARGINAL:
+                    case GpgME::Signature::Marginal:
                         htmlStr += i18n("The signature is valid and the key is "
                                         "marginally trusted.");
                         break;
-                    case Kpgp::KPGP_VALIDITY_FULL:
+                    case GpgME::Signature::Full:
                         htmlStr += i18n("The signature is valid and the key is "
                                         "fully trusted.");
                         break;
-                    case Kpgp::KPGP_VALIDITY_ULTIMATE:
+                    case GpgME::Signature::Ultimate:
                         htmlStr += i18n("The signature is valid and the key is "
                                         "ultimately trusted.");
                         break;
@@ -2980,6 +2979,110 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
     writeBodyStr(aStr, aCodec, fromAddress, dummy1, dummy2, false);
 }
 
+bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData& messagePart, QByteArray &verifiedText, std::vector <GpgME::Signature>& signatures)
+{
+    //copied from ObjectTreeParser::writeOpaqueOrMultipartSignedData
+    messagePart.isSigned = false;
+    messagePart.technicalProblem = (cryptProto == 0);
+    messagePart.keyTrust = GpgME::Signature::Unknown;
+    messagePart.status = i18n("Wrong Crypto Plug-In.");
+    messagePart.status_code = GPGME_SIG_STAT_NONE;
+
+    Kleo::VerifyOpaqueJob *job = cryptProto->verifyOpaqueJob();
+    VerifyOpaqueBodyPartMemento *m
+        = new VerifyOpaqueBodyPartMemento(job, cryptProto->keyListJob(), data);
+    m->exec();
+
+    verifiedText = m->plainText();
+    messagePart.auditLogError = m->auditLogError();
+    messagePart.auditLog = m->auditLogAsHtml();
+    signatures = m->verifyResult().signatures();
+    messagePart.isSigned = !signatures.empty();
+
+    return messagePart.isSigned;
+}
+
+void ObjectTreeParser::sigStatusToMetaData(const std::vector <GpgME::Signature>& signatures, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData& messagePart)
+{
+    if (messagePart.isSigned) {
+        //copied from ObjectTreeParser::writeOpaqueOrMultipartSignedData
+        GpgME::Signature signature = signatures.front();
+        GpgME::Key key;
+        messagePart.status_code = signatureToStatus(signature);
+        messagePart.isGoodSignature = messagePart.status_code & GPGME_SIG_STAT_GOOD;
+        // save extended signature status flags
+        messagePart.sigSummary = signature.summary();
+
+        // Search for the key by it's fingerprint so that we can check for
+        // trust etc.
+        Kleo::KeyListJob *job = cryptProto->keyListJob(false);    // local, no sigs
+        if (!job) {
+            qCDebug(MESSAGEVIEWER_LOG) << "The Crypto backend does not support listing keys. ";
+        } else {
+            std::vector<GpgME::Key> found_keys;
+            // As we are local it is ok to make this synchronous
+            GpgME::KeyListResult res = job->exec(QStringList(QLatin1String(signature.fingerprint())), false, found_keys);
+            if (res.error()) {
+                qCDebug(MESSAGEVIEWER_LOG) << "Error while searching key for Fingerprint: " << signature.fingerprint();
+            }
+            if (found_keys.size() > 1) {
+                // Should not Happen
+                qCDebug(MESSAGEVIEWER_LOG) << "Oops: Found more then one Key for Fingerprint: " << signature.fingerprint();
+            }
+            if (found_keys.size() != 1) {
+                // Should not Happen at this point
+                qCDebug(MESSAGEVIEWER_LOG) << "Oops: Found no Key for Fingerprint: " << signature.fingerprint();
+            } else {
+                key = found_keys[0];
+            }
+        }
+
+        if (key.keyID()) {
+            messagePart.keyId = key.keyID();
+        }
+        if (messagePart.keyId.isEmpty()) {
+            messagePart.keyId = signature.fingerprint();
+        }
+        messagePart.keyTrust = signature.validity();
+        if (key.numUserIDs() > 0 && key.userID(0).id()) {
+            messagePart.signer = Kleo::DN(key.userID(0).id()).prettyDN();
+        }
+        for (uint iMail = 0; iMail < key.numUserIDs(); ++iMail) {
+            // The following if /should/ always result in TRUE but we
+            // won't trust implicitely the plugin that gave us these data.
+            if (key.userID(iMail).email()) {
+                QString email = QString::fromUtf8(key.userID(iMail).email());
+                // ### work around gpgme 0.3.x / cryptplug bug where the
+                // ### email addresses are specified as angle-addr, not addr-spec:
+                if (email.startsWith(QLatin1Char('<')) && email.endsWith(QLatin1Char('>'))) {
+                    email = email.mid(1, email.length() - 2);
+                }
+                if (!email.isEmpty()) {
+                    messagePart.signerMailAddresses.append(email);
+                }
+            }
+        }
+
+        if (signature.creationTime()) {
+            messagePart.creationTime.setTime_t(signature.creationTime());
+        } else {
+            messagePart.creationTime = QDateTime();
+        }
+        if (messagePart.signer.isEmpty()) {
+            if (key.numUserIDs() > 0 && key.userID(0).name()) {
+                messagePart.signer = Kleo::DN(key.userID(0).name()).prettyDN();
+            }
+            if (!messagePart.signerMailAddresses.empty()) {
+                if (messagePart.signer.isEmpty()) {
+                    messagePart.signer = messagePart.signerMailAddresses.front();
+                } else {
+                    messagePart.signer += QLatin1String(" <") + messagePart.signerMailAddresses.front() + QLatin1Char('>');
+                }
+            }
+        }
+    }
+}
+
 //-----------------------------------------------------------------------------
 void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aCodec,
                                     const QString &fromAddress,
@@ -2992,51 +3095,57 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
 
     inlineSignatureState  = KMMsgNotSigned;
     inlineEncryptionState = KMMsgNotEncrypted;
-    QList<Kpgp::Block> pgpBlocks;
-    QList<QByteArray> nonPgpBlocks;
-    if (Kpgp::Module::prepareMessageForDecryption(aStr, pgpBlocks, nonPgpBlocks)) {
+    QList<Block> blocks = prepareMessageForDecryption(aStr);
 
-        const Kleo::CryptoBackend::Protocol *cryptProto = Kleo::CryptoBackendFactory::instance()->openpgp();
-        setCryptoProtocol(cryptProto);
+    bool updatePlainText = false;   // If there are encrypted or signed parts inside the node
+                                    // we need to update mPlainTextContent
+
+    if (!blocks.isEmpty()) {
+
+        if  (blocks.count() > 1 || blocks.at(0).type() != MessageViewer::NoPgpBlock) {
+            const Kleo::CryptoBackend::Protocol* cryptProto = Kleo::CryptoBackendFactory::instance()->openpgp();
+            setCryptoProtocol( cryptProto );
+        }
 
         QString htmlStr;
         QString plainTextStr;
+
+        /* The (overall) signature/encrypted status is broken
+         * if one unencrypted part is at the beginning or in the middle
+         * because mailmain adds an unencrypted part at the end this should not break the overall status
+         *
+         * That's why we first set the tmp status and if one crypted/signed block comes afterwards, than
+         * the status is set to unencryped
+         */
         bool fullySignedOrEncrypted = true;
+        bool fullySignedOrEncryptedTmp = true;
 
-        QList<Kpgp::Block>::iterator pbit =  pgpBlocks.begin();
-        QListIterator<QByteArray> npbit(nonPgpBlocks);
-
-        for (; pbit != pgpBlocks.end(); ++pbit) {
-            // insert the next Non-OpenPGP block
-            QByteArray str(npbit.next());
-            if (!str.trimmed().isEmpty()) {
-                const QString text = aCodec->toUnicode(str);
-                plainTextStr += text;
-                if (htmlWriter()) {
-                    htmlStr += quotedHTML(text, decorate);
-                }
-                qCDebug(MESSAGEVIEWER_LOG) << "Non-empty Non-OpenPGP block found: '" << str  << "'";
-                fullySignedOrEncrypted = false;
-            }
-
-            Kpgp::Block &block = *pbit;
-            KMime::Content *content = new KMime::Content;
-            content->setBody(block.text());
-            content->parse();
-
-            std::vector<GpgME::Signature> signatures;
-            bool passphraseError;
+        Q_FOREACH (const Block &block, blocks) {
+            std::vector<GpgME::Signature> signatures;       //write signature state
             PartMetaData messagePart;
             messagePart.isEncrypted = false;
             messagePart.isSigned = false;
 
             QString text;
 
-            if (block.type() == Kpgp::PgpMessageBlock) {
+            if (!fullySignedOrEncryptedTmp) {
+                fullySignedOrEncrypted = false;
+            }
+
+            if (block.type() == NoPgpBlock && !block.text().trimmed().isEmpty()) {
+                 fullySignedOrEncryptedTmp = false;
+            } else if (block.type() == PgpMessageBlock) {
+                updatePlainText = true;
                 if (!mSource->decryptMessage()) {
                     writeDeferredDecryptionBlock();
                     continue;
                 }
+
+                KMime::Content *content = new KMime::Content;
+                content->setBody(block.text());
+                content->parse();
+
+                bool passphraseError;                           //write error
 
                 QByteArray decryptedData;
                 bool signatureFound;
@@ -3054,7 +3163,7 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
 
                 if (decryptionStarted) {
                     writeDecryptionInProgressBlock();
-                    return;
+                    continue;
                 }
 
                 messagePart.isDecryptable = bOkDecrypt;
@@ -3063,28 +3172,18 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
 
                 text = aCodec->toUnicode(decryptedData);
 
-            } else if (block.type() == Kpgp::ClearsignedBlock) {
-                //copied from ObjectTreeParser::writeOpaqueOrMultipartSignedData
-                messagePart.isSigned = false;
-                messagePart.technicalProblem = (cryptProto == 0);
+            } else if (block.type() == ClearsignedBlock) {
+                updatePlainText = true;
                 messagePart.isEncrypted = false;
                 messagePart.isDecryptable = false;
-                messagePart.keyTrust = Kpgp::KPGP_VALIDITY_UNKNOWN;
-                messagePart.status = i18n("Wrong Crypto Plug-In.");
-                messagePart.status_code = GPGME_SIG_STAT_NONE;
 
-                Kleo::VerifyOpaqueJob *job = cryptProto->verifyOpaqueJob();
-                VerifyOpaqueBodyPartMemento *m
-                    = new VerifyOpaqueBodyPartMemento(job, cryptProto->keyListJob(), block.text());
-                m->exec();
-                text = aCodec->toUnicode(m->plainText());
-                messagePart.auditLogError = m->auditLogError();
-                messagePart.auditLog = m->auditLogAsHtml();
-                signatures = m->verifyResult().signatures();
-                messagePart.isSigned = signatures.size() > 0;
+                QByteArray verifiedText;
+                if (okVerify(block.text(), cryptoProtocol(), messagePart, verifiedText, signatures)) {
+                    text = aCodec->toUnicode(verifiedText);
+                }
             }
 
-            if (!messagePart.isEncrypted && !messagePart.isSigned) {
+            if (!messagePart.isEncrypted && !messagePart.isSigned && !block.text().trimmed().isEmpty()) {
                 text = aCodec->toUnicode(block.text());
             }
 
@@ -3094,112 +3193,25 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
 
             if (messagePart.isSigned) {
                 inlineSignatureState = KMMsgPartiallySigned;
-
-                //copied from ObjectTreeParser::writeOpaqueOrMultipartSignedData
-                GpgME::Signature signature = signatures.front();
-                GpgME::Key key;
-                messagePart.status_code = signatureToStatus(signature);
-                messagePart.isGoodSignature = messagePart.status_code & GPGME_SIG_STAT_GOOD;
-                // save extended signature status flags
-                messagePart.sigSummary = signature.summary();
-
-                // Search for the key by it's fingerprint so that we can check for
-                // trust etc.
-                Kleo::KeyListJob *job = cryptProto->keyListJob(false);    // local, no sigs
-                if (!job) {
-                    qCDebug(MESSAGEVIEWER_LOG) << "The Crypto backend does not support listing keys. ";
-                } else {
-                    std::vector<GpgME::Key> found_keys;
-                    // As we are local it is ok to make this synchronous
-                    GpgME::KeyListResult res = job->exec(QStringList(QLatin1String(signature.fingerprint())), false, found_keys);
-                    if (res.error()) {
-                        qCDebug(MESSAGEVIEWER_LOG) << "Error while searching key for Fingerprint: " << signature.fingerprint();
-                    }
-                    if (found_keys.size() > 1) {
-                        // Should not Happen
-                        qCDebug(MESSAGEVIEWER_LOG) << "Oops: Found more then one Key for Fingerprint: " << signature.fingerprint();
-                    }
-                    if (found_keys.size() != 1) {
-                        // Should not Happen at this point
-                        qCDebug(MESSAGEVIEWER_LOG) << "Oops: Found no Key for Fingerprint: " << signature.fingerprint();
-                    } else {
-                        key = found_keys[0];
-                    }
-                }
-
-                if (key.keyID()) {
-                    messagePart.keyId = key.keyID();
-                }
-                if (messagePart.keyId.isEmpty()) {
-                    messagePart.keyId = signature.fingerprint();
-                }
-                // ### Ugh. We depend on two enums being in sync:
-                messagePart.keyTrust = (Kpgp::Validity)signature.validity();
-                if (key.numUserIDs() > 0 && key.userID(0).id()) {
-                    messagePart.signer = Kleo::DN(key.userID(0).id()).prettyDN();
-                }
-                for (uint iMail = 0; iMail < key.numUserIDs(); ++iMail) {
-                    // The following if /should/ always result in TRUE but we
-                    // won't trust implicitely the plugin that gave us these data.
-                    if (key.userID(iMail).email()) {
-                        QString email = QString::fromUtf8(key.userID(iMail).email());
-                        // ### work around gpgme 0.3.x / cryptplug bug where the
-                        // ### email addresses are specified as angle-addr, not addr-spec:
-                        if (email.startsWith(QLatin1Char('<')) && email.endsWith(QLatin1Char('>'))) {
-                            email = email.mid(1, email.length() - 2);
-                        }
-                        if (!email.isEmpty()) {
-                            messagePart.signerMailAddresses.append(email);
-                        }
-                    }
-                }
-
-                if (signature.creationTime()) {
-                    messagePart.creationTime.setTime_t(signature.creationTime());
-                } else {
-                    messagePart.creationTime = QDateTime();
-                }
-                if (messagePart.signer.isEmpty()) {
-                    if (key.numUserIDs() > 0 && key.userID(0).name()) {
-                        messagePart.signer = Kleo::DN(key.userID(0).name()).prettyDN();
-                    }
-                    if (!messagePart.signerMailAddresses.empty()) {
-                        if (messagePart.signer.isEmpty()) {
-                            messagePart.signer = messagePart.signerMailAddresses.front();
-                        } else {
-                            messagePart.signer += QLatin1String(" <") + messagePart.signerMailAddresses.front() + QLatin1Char('>');
-                        }
-                    }
-                }
+                sigStatusToMetaData(signatures, cryptoProtocol(), messagePart);
             }
 
             plainTextStr += text;
 
             if (htmlWriter()) {
                 if (messagePart.isEncrypted || messagePart.isSigned) {
-                    htmlStr += writeSigstatHeader(messagePart, cryptProto, fromAddress);
+                    htmlStr += writeSigstatHeader(messagePart, cryptoProtocol(), fromAddress);
                 }
 
                 if (messagePart.isEncrypted && !messagePart.isDecryptable) {
                     htmlStr += text;    //Do not quote ErrorText
-                } else {
+                } else if (!text.trimmed().isEmpty()) {
                     htmlStr += quotedHTML(text, decorate);
                 }
 
                 if (messagePart.isEncrypted || messagePart.isSigned) {
                     htmlStr += writeSigstatFooter(messagePart);
                 }
-            }
-
-        }
-
-        // add the last Non-OpenPGP block
-        QByteArray str(nonPgpBlocks.last());
-        if (!str.trimmed().isEmpty()) {
-            const QString text = aCodec->toUnicode(str);
-            plainTextStr += text;
-            if (htmlWriter()) {
-                htmlStr += quotedHTML(text, decorate);
             }
         }
 
@@ -3216,19 +3228,10 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
         if (htmlWriter()) {
             htmlWriter()->queue(htmlStr);
         }
-        mPlainTextContent = plainTextStr;
-        mPlainTextContentCharset = aCodec->name();
-    } else { // No inline PGP encryption
 
-        const QString plainText = aCodec->toUnicode(aStr);
-
-        if (mPlainTextContent.isEmpty()) {
-            mPlainTextContent = plainText;
+        if (updatePlainText || mPlainTextContent.isEmpty()) {
+            mPlainTextContent = plainTextStr;
             mPlainTextContentCharset = aCodec->name();
-        }
-
-        if (htmlWriter()) {
-            htmlWriter()->queue(quotedHTML(plainText, decorate));
         }
     }
 }

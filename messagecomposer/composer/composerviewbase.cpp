@@ -594,7 +594,6 @@ inline int signingChainCertNearExpiryWarningThresholdInDays()
 
 inline bool encryptToSelf()
 {
-    // return !Kpgp::Module::getKpgp() || Kpgp::Module::getKpgp()->encryptToSelf();
     return MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf();
 }
 
@@ -638,7 +637,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
     if (!id.smimeEncryptionKey().isEmpty()) {
         encryptToSelfKeys.push_back(QLatin1String(id.smimeEncryptionKey()));
     }
-    if (keyResolver->setEncryptToSelfKeys(encryptToSelfKeys) != Kpgp::Ok) {
+    if (keyResolver->setEncryptToSelfKeys(encryptToSelfKeys) != Kleo::Ok) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Failed to set encryptoToSelf keys!";
         return QList< MessageComposer::Composer * >();
     }
@@ -650,7 +649,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
     if (!id.smimeSigningKey().isEmpty()) {
         signKeys.push_back(QLatin1String(id.smimeSigningKey()));
     }
-    if (keyResolver->setSigningKeys(signKeys) != Kpgp::Ok) {
+    if (keyResolver->setSigningKeys(signKeys) != Kleo::Ok) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Failed to set signing keys!";
         return QList< MessageComposer::Composer * >();
     }
@@ -711,11 +710,11 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
         return QList< MessageComposer::Composer * >() << new MessageComposer::Composer();
     }
 
-    const Kpgp::Result kpgpResult = keyResolver->resolveAllKeys(signSomething, encryptSomething);
-    if (kpgpResult == Kpgp::Canceled) {
+    const Kleo::Result kpgpResult = keyResolver->resolveAllKeys(signSomething, encryptSomething);
+    if (kpgpResult == Kleo::Canceled) {
         qCDebug(MESSAGECOMPOSER_LOG) << "resolveAllKeys: one key resolution canceled by user";
         return QList< MessageComposer::Composer *>();
-    } else if (kpgpResult != Kpgp::Ok) {
+    } else if (kpgpResult != Kleo::Ok) {
         // TODO handle failure
         qCDebug(MESSAGECOMPOSER_LOG) << "resolveAllKeys: failed to resolve keys! oh noes";
         Q_EMIT failed(i18n("Failed to resolve keys. Please report a bug."));

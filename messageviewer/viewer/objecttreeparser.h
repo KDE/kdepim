@@ -508,6 +508,9 @@ private:
                        bool &decryptionStarted,
                        PartMetaData &partMetaData);
 
+    bool okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, MessageViewer::PartMetaData &messagePart, QByteArray &verifiedText, std::vector< GpgME::Signature > &signatures);
+    void sigStatusToMetaData(const std::vector<GpgME::Signature>& signatures, const Kleo::CryptoBackend::Protocol *cryptoProtocol, PartMetaData& messagePart);
+
     bool processMailmanMessage(KMime::Content *node);
 
     /** Checks whether @p str contains external references. To be precise,
