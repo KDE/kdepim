@@ -47,7 +47,6 @@ target_link_libraries(etm_usage
   
   kdepim
   kleo
-  kpgp
   messagecore
   messagelist
   messageviewer

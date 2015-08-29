@@ -230,7 +230,6 @@ PRIVATE
   KF5::ItemViews
   ${_mailwebview_lib}
   kdepim
-  kpgp
   kleo
   grantleetheme
   kaddressbookgrantlee
@@ -251,7 +250,6 @@ else()
 endif()
 
 target_include_directories(messageviewer PUBLIC "$<BUILD_INTERFACE:${messageviewer_SOURCE_DIR};${messageviewer_BINARY_DIR}>")
-target_include_directories(messageviewer PUBLIC $<TARGET_PROPERTY:kpgp,INTERFACE_INCLUDE_DIRECTORIES>)
 if(NOT KDEPIM_NO_WEBKIT)
   target_include_directories(messageviewer PUBLIC $<TARGET_PROPERTY:KF5::WebKit,INTERFACE_INCLUDE_DIRECTORIES>)
 endif()

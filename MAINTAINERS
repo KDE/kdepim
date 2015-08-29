@@ -31,7 +31,6 @@ followupreminderagent Laurent Montel <montel@kde.org>
 libkdepim             Laurent Montel <montel@kde.org>
 libkdepimdbusinterfaces ?
 libkleo               Marc Mutz <mutz@kde.org>
-libkpgp               DEPRECATED
 libksieve             Laurent Montel <montel@kde.org>
 mailcommon            Laurent Montel <montel@kde.org>
 mailfilteragent       Laurent Montel <montel@kde.org>
