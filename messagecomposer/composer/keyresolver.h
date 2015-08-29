@@ -128,7 +128,7 @@ enum Result {
      a copy of it's own to hide the other secondary recipients.
     */
 
-class MESSAGECOMPOSER_EXPORT KeyResolver
+class KeyResolver
 {
 public:
     KeyResolver(bool encToSelf, bool showApproval, bool oppEncryption,

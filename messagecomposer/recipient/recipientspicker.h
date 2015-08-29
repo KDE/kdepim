@@ -40,8 +40,7 @@ class LdapSearchDialog;
 namespace MessageComposer
 {
 
-// ### temporary export
-class MESSAGECOMPOSER_EXPORT RecipientsPicker : public QDialog
+class RecipientsPicker : public QDialog
 {
     Q_OBJECT
 
