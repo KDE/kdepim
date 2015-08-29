@@ -27,7 +27,7 @@
 namespace MessageViewer
 {
 
-class MESSAGEVIEWER_EXPORT PartMetaData
+class PartMetaData
 {
 public:
     PartMetaData()

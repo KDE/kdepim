@@ -13,7 +13,7 @@ class QPushButton;
 namespace MessageViewer
 {
 
-class MESSAGEVIEWER_EXPORT ChiasmusKeySelector : public QDialog
+class ChiasmusKeySelector : public QDialog
 {
     Q_OBJECT
 
