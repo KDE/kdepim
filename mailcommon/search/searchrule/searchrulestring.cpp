@@ -166,9 +166,9 @@ bool SearchRuleString::matches(const Akonadi::Item &item) const
 
     // these two functions need the kmmessage therefore they don't call matchesInternal
     if (function() == FuncHasAttachment) {
-        return (!msg->attachments().isEmpty());
+        return KMime::hasAttachment(msg.data());
     } else if (function() == FuncHasNoAttachment) {
-        return (msg->attachments().isEmpty());
+        return !KMime::hasAttachment(msg.data());
     }
 
     bool rc = matchesInternal(msgContents);
