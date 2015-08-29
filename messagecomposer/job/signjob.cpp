@@ -184,9 +184,8 @@ void SignJob::process()
 
             if (d->content->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit) {
                 for (int i = 0; i < search.size(); ++i) {
-                    QByteArray start = "\n"  + search[i];
-                    if (body.indexOf(start) > -1 ||
-                            body.startsWith(search[i])) {
+                    const auto pos = body.indexOf(search[i]);
+                    if (pos == 0 || (pos > 0 && body.at(pos - 1) == '\n')) {
                         changed = true;
                         break;
                     }
@@ -199,16 +198,10 @@ void SignJob::process()
             }
 
             for (int i = 0; i < search.size(); ++i) {
-                QByteArray start = "\n"  + search[i];
-                QByteArray replace = "\n" + replacements[i];
-                if (body.indexOf(start) > -1) {
+                const auto pos = body.indexOf(search[i]);
+                if (pos == 0 || (pos > 0 && body.at(pos - 1) == '\n')) {
                     changed = true;
-                    body.replace(start, replace);
-                }
-
-                if (body.startsWith(search[i])) {
-                    changed = true;
-                    body.replace(0, search[i].size(), replacements[i]);
+                    body.replace(pos, search[i].size(), replacements[i]);
                 }
             }
 
