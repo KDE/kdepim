@@ -192,12 +192,17 @@ private:
     const unsigned int mKeyUsage;
 };
 
+static QString iconPath(const QString &name)
+{
+    return QStandardPaths::locate(QStandardPaths::GenericDataLocation, "libkleopatra/pics/" + name + ".png");
+}
+
 ColumnStrategy::ColumnStrategy(unsigned int keyUsage)
     : Kleo::KeyListView::ColumnStrategy(),
-      mKeyGoodPix(QStringLiteral("key_ok")),
-      mKeyBadPix(QStringLiteral("key_bad")),
-      mKeyUnknownPix(QStringLiteral("key_unknown")),
-      mKeyValidPix(QStringLiteral("key")),
+      mKeyGoodPix(iconPath(QStringLiteral("key_ok"))),
+      mKeyBadPix(iconPath(QStringLiteral("key_bad"))),
+      mKeyUnknownPix(iconPath(QStringLiteral("key_unknown"))),
+      mKeyValidPix(iconPath(QStringLiteral("key"))),
       mKeyUsage(keyUsage)
 {
     if (keyUsage == 0)
