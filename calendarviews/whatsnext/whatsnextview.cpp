@@ -98,12 +98,12 @@ void WhatsNextView::updateView()
 
     mText += QLatin1String("<h2>");
     if (mStartDate.daysTo(mEndDate) < 1) {
-        mText += KLocale::global()->formatDate(mStartDate);
+        mText += QLocale::system().toString(mStartDate);
     } else {
         mText += i18nc(
                      "date from - to", "%1 - %2",
-                     KLocale::global()->formatDate(mStartDate),
-                     KLocale::global()->formatDate(mEndDate));
+                     QLocale::system().toString(mStartDate),
+                     QLocale::system().toString(mEndDate));
     }
     mText += QLatin1String("</h2>\n");
 
@@ -284,13 +284,13 @@ void WhatsNextView::appendEvent(const KCalCore::Incidence::Ptr &incidence, const
         } else {
             mText += i18nc(
                          "date, from - to", "%1, %2 - %3",
-                         KLocale::global()->formatDate(
+                         QLocale::system().toString(
                              starttime.toTimeSpec(CalendarSupport::KCalPrefs::instance()->timeSpec()).date(),
-                             KLocale::ShortDate),
-                         KLocale::global()->formatTime(
-                             starttime.toTimeSpec(CalendarSupport::KCalPrefs::instance()->timeSpec()).time()),
-                         KLocale::global()->formatTime(
-                             endtime.toTimeSpec(CalendarSupport::KCalPrefs::instance()->timeSpec()).time()));
+                             QLocale::ShortFormat),
+                         QLocale::system().toString(
+                             starttime.toTimeSpec(CalendarSupport::KCalPrefs::instance()->timeSpec()).time(), QLocale::ShortFormat),
+                         QLocale::system().toString(
+                             endtime.toTimeSpec(CalendarSupport::KCalPrefs::instance()->timeSpec()).time(), QLocale::ShortFormat));
         }
     }
     mText += QLatin1String("</b></td><td><a ");

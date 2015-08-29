@@ -33,7 +33,7 @@
 #include <QBoxLayout>
 #include <QPainter>
 #include <QPaintEvent>
-#include <KLocale>
+#include <QLocale>
 
 using namespace EventViews;
 
@@ -68,11 +68,11 @@ public:
         QString dateText;
         if (mTimeSpentView->mStartDate.daysTo(mTimeSpentView->mEndDate) < 1)
         {
-            dateText = KLocale::global()->formatDate(mTimeSpentView->mStartDate);
+            dateText = QLocale::system().toString(mTimeSpentView->mStartDate);
         } else {
             dateText = i18nc("Date from - to", "%1 - %2",
-            KLocale::global()->formatDate(mTimeSpentView->mStartDate),
-            KLocale::global()->formatDate(mTimeSpentView->mEndDate));
+            QLocale::system().toString(mTimeSpentView->mStartDate),
+            QLocale::system().toString(mTimeSpentView->mEndDate));
         }
         font.setPointSize(20);
         font.setBold(true);

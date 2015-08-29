@@ -44,7 +44,7 @@
 #include <QBoxLayout>
 #include <QHeaderView>
 #include <QTreeWidget>
-#include <KLocale>
+#include <QLocale>
 
 using namespace EventViews;
 using namespace KCalCore;
@@ -65,9 +65,9 @@ static QString cleanSummary(const QString &summary, const KDateTime &next)
 
     if (next.isValid()) {
         const QString dateStr =
-            KLocale::global()->formatDate(
+            QLocale::system().toString(
                 next.toTimeSpec(CalendarSupport::KCalPrefs::instance()->timeSpec()).date(),
-                KLocale::ShortDate);
+                QLocale::ShortFormat);
         retStr = i18nc("%1 is an item summary. %2 is the date when this item reoccurs",
                        "%1 (next: %2)", retStr, dateStr);
     }
@@ -351,15 +351,15 @@ void ListView::showDates(const QDate &start, const QDate &end, const QDate &pref
 
     KDateTime kStart(start);
     const QString startStr =
-        KLocale::global()->formatDate(
+        QLocale::system().toString(
             kStart.toTimeSpec(CalendarSupport::KCalPrefs::instance()->timeSpec()).date(),
-            KLocale::ShortDate);
+            QLocale::ShortFormat);
 
     KDateTime kEnd(end);
     const QString endStr =
-        KLocale::global()->formatDate(
+        QLocale::system().toString(
             kEnd.toTimeSpec(CalendarSupport::KCalPrefs::instance()->timeSpec()).date(),
-            KLocale::ShortDate);
+            QLocale::ShortFormat);
 
     d->mTreeWidget->headerItem()->setText(Summary_Column,
                                           i18n("Summary [%1 - %2]", startStr, endStr));

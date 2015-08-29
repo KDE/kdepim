@@ -1197,12 +1197,12 @@ void AgendaView::createDayLabels(bool force)
         KVBox *bottomDayLabelBox = new KVBox(d->mBottomDayLabels);
         d->mLayoutBottomDayLabels->addWidget(bottomDayLabelBox);
 
-        int dW = calsys->dayOfWeek(date);
-        QString veryLongStr = KLocale::global()->formatDate(date);
+        int dW = date.dayOfWeek();
+        QString veryLongStr = QLocale::system().toString(date, QLocale::LongFormat);
         QString longstr = i18nc("short_weekday date (e.g. Mon 13)", "%1 %2",
                                 calsys->weekDayName(dW, KCalendarSystem::ShortDayName),
                                 calsys->day(date));
-        QString shortstr = QString::number(calsys->day(date));
+        QString shortstr = QString::number(date.day());
 
         AlternateLabel *dayLabel =
             new AlternateLabel(shortstr, longstr, veryLongStr, topDayLabelBox);

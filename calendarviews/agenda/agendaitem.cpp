@@ -48,7 +48,7 @@
 #include <QPixmapCache>
 #include <QToolTip>
 #include <QMimeData>
-#include <KLocale>
+#include <QLocale>
 
 using namespace KCalCore;
 using namespace EventViews;
@@ -931,26 +931,26 @@ void AgendaItem::paintEvent(QPaintEvent *ev)
     QString shortH;
     QString longH;
     if (!isMultiItem()) {
-        shortH = KLocale::global()->formatTime(mIncidence->dateTime(KCalCore::Incidence::RoleDisplayStart).
-                                               toTimeSpec(mEventView->preferences()->timeSpec()).time());
+        shortH = QLocale::system().toString(mIncidence->dateTime(KCalCore::Incidence::RoleDisplayStart).
+                                               toTimeSpec(mEventView->preferences()->timeSpec()).time(), QLocale::ShortFormat);
 
         if (CalendarSupport::hasEvent(mIncidence)) {
             longH = i18n("%1 - %2",
                          shortH,
-                         KLocale::global()->formatTime(
+                         QLocale::system().toString(
                              mIncidence->dateTime(KCalCore::Incidence::RoleEnd).toTimeSpec(
-                                 mEventView->preferences()->timeSpec()).time()));
+                                 mEventView->preferences()->timeSpec()).time(), QLocale::ShortFormat));
         } else {
             longH = shortH;
         }
     } else if (!mMultiItemInfo->mFirstMultiItem) {
-        shortH = KLocale::global()->formatTime(
-                     mIncidence->dtStart().toTimeSpec(mEventView->preferences()->timeSpec()).time());
+        shortH = QLocale::system().toString(
+                     mIncidence->dtStart().toTimeSpec(mEventView->preferences()->timeSpec()).time(), QLocale::ShortFormat);
         longH = shortH;
     } else {
-        shortH = KLocale::global()->formatTime(
+        shortH = QLocale::system().toString(
                      mIncidence->dateTime(KCalCore::Incidence::RoleEnd).toTimeSpec(
-                         mEventView->preferences()->timeSpec()).time());
+                         mEventView->preferences()->timeSpec()).time(), QLocale::ShortFormat);
         longH = i18n("- %1", shortH);
     }
 
@@ -1040,9 +1040,9 @@ void AgendaItem::paintEvent(QPaintEvent *ev)
                 // multi-day, all-day event
                 shortH =
                     i18n("%1 - %2",
-                         KLocale::global()->formatDate(
+                         QLocale::system().toString(
                              mIncidence->dtStart().toTimeSpec(mEventView->preferences()->timeSpec()).date()),
-                         KLocale::global()->formatDate(
+                         QLocale::system().toString(
                              mIncidence->dateTime(KCalCore::Incidence::RoleEnd).toTimeSpec(
                                  mEventView->preferences()->timeSpec()).date()));
                 longH = shortH;
