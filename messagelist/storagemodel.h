@@ -19,6 +19,7 @@
 #ifndef __MESSAGELIST_STORAGEMODEL_H__
 #define __MESSAGELIST_STORAGEMODEL_H__
 
+#include <messagelist/messagelist_export.h>
 #include <messagelist/core/storagemodelbase.h>
 
 #include <collection.h>
@@ -40,7 +41,7 @@ class MessageItem;
 /**
  * The Akonadi specific implementation of the Core::StorageModel.
  */
-class StorageModel : public MessageList::Core::StorageModel
+class MESSAGELIST_EXPORT StorageModel : public MessageList::Core::StorageModel
 {
     Q_OBJECT
 
