@@ -1477,7 +1477,7 @@ bool ObjectTreeParser::processTextPlainSubtype(KMime::Content *curNode, ProcessR
     if (!isMailmanMessage(curNode) ||
             !processMailmanMessage(curNode)) {
         const QString oldPlainText = mPlainTextContent;
-        writeBodyString(curNode->body(), NodeHelper::fromAsString(curNode),
+        writeBodyString(curNode->decodedContent(), NodeHelper::fromAsString(curNode),
                         codecFor(curNode), result, !bDrawFrame);
 
         // Revert changes to mPlainTextContent made by writeBodyString if this is not the first
