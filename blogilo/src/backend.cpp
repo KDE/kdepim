@@ -202,8 +202,9 @@ void Backend::uploadMedia(BilboMedia *media)
         m->setMimetype(media->mimeType());
 
         QByteArray data;
-        KIO::TransferJob *job = KIO::get(media->localUrl(), KIO::Reload, KIO::HideProgressInfo);
-        if (!KIO::NetAccess::synchronousRun(job, Q_NULLPTR, &data)) {
+        KIO::StoredTransferJob *job = KIO::storedGet(media->localUrl(), KIO::Reload, KIO::HideProgressInfo);
+        if (!job->exec()) {
+            data = job->data();
             qCCritical(BLOGILO_LOG) << "Job error: " << job->errorString();
             tmp = i18n("Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().toDisplayString());
             qCDebug(BLOGILO_LOG) << "Emitting sigError...";
