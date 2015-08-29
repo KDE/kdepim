@@ -288,7 +288,7 @@ void CryptoComposerTest::testEditEncryptAndLateAttachments()
     // Let's load the email to the viewer
     view.setMessage(message, true);
 
-    QModelIndex index = model.index(0, 0);
+    //QModelIndex index = model.index(0, 0);
     QCOMPARE(editor.toPlainText(), data);
     QCOMPARE(model.rowCount(), 2);
     AttachmentPart::Ptr part = model.attachments()[0];
