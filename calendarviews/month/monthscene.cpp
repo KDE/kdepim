@@ -35,6 +35,7 @@
 #include <QResizeEvent>
 #include <KLocalizedString>
 #include <QToolTip>
+#include <QIcon>
 
 static const int AUTO_REPEAT_DELAY = 600;
 
@@ -54,13 +55,13 @@ MonthScene::MonthScene(MonthView *parent)
       mStartHeight(0),
       mCurrentIndicator(Q_NULLPTR)
 {
-    mBirthdayPixmap  = SmallIcon(QStringLiteral("view-calendar-birthday"));
-    mAnniversaryPixmap = SmallIcon(QStringLiteral("view-calendar-wedding-anniversary"));
-    mAlarmPixmap     = SmallIcon(QStringLiteral("appointment-reminder"));
-    mRecurPixmap     = SmallIcon(QStringLiteral("appointment-recurring"));
-    mReadonlyPixmap  = SmallIcon(QStringLiteral("object-locked"));
-    mReplyPixmap     = SmallIcon(QStringLiteral("mail-reply-sender"));
-    mHolidayPixmap   = SmallIcon(QStringLiteral("view-calendar-holiday"));
+    mBirthdayPixmap  = QIcon::fromTheme(QStringLiteral("view-calendar-birthday")).pixmap(16, 16);
+    mAnniversaryPixmap = QIcon::fromTheme(QStringLiteral("view-calendar-wedding-anniversary")).pixmap(16, 16);
+    mAlarmPixmap     = QIcon::fromTheme(QStringLiteral("appointment-reminder")).pixmap(16, 16);
+    mRecurPixmap     = QIcon::fromTheme(QStringLiteral("appointment-recurring")).pixmap(16, 16);
+    mReadonlyPixmap  = QIcon::fromTheme(QStringLiteral("object-locked")).pixmap(16, 16);
+    mReplyPixmap     = QIcon::fromTheme(QStringLiteral("mail-reply-sender")).pixmap(16, 16);
+    mHolidayPixmap   = QIcon::fromTheme(QStringLiteral("view-calendar-holiday")).pixmap(16, 16);
 
     setSceneRect(0, 0, parent->width(), parent->height());
 }

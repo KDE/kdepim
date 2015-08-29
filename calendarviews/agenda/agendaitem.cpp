@@ -759,7 +759,7 @@ void AgendaItem::paintIcons(QPainter *p, int &x, int y, int ft)
     if (icons.contains(EventViews::EventView::CalendarCustomIcon)) {
         const QString iconName = mCalendar->iconForIncidence(mIncidence);
         if (!iconName.isEmpty() && iconName != QLatin1String("view-calendar") && iconName != QLatin1String("office-calendar")) {
-            conditionalPaint(p, true, x, y, ft, SmallIcon(iconName));
+            conditionalPaint(p, true, x, y, ft, QIcon::fromTheme(iconName).pixmap(16, 16));
         }
     }
 
@@ -767,7 +767,7 @@ void AgendaItem::paintIcons(QPainter *p, int &x, int y, int ft)
 
     if (isTodo && icons.contains(EventViews::EventView::TaskIcon)) {
         const QString iconName = mIncidence->iconName(mOccurrenceDateTime.toTimeSpec(mIncidence->dtStart().timeSpec()));
-        conditionalPaint(p, !mSpecialEvent, x, y, ft, SmallIcon(iconName));
+        conditionalPaint(p, !mSpecialEvent, x, y, ft, QIcon::fromTheme(iconName).pixmap(16, 16));
     }
 
     if (icons.contains(EventView::RecurringIcon)) {
@@ -827,13 +827,13 @@ void AgendaItem::paintEvent(QPaintEvent *ev)
     // Also look at #17984
 
     if (!alarmPxmp) {
-        alarmPxmp     = new QPixmap(SmallIcon(QStringLiteral("task-reminder")));
-        recurPxmp     = new QPixmap(SmallIcon(QStringLiteral("appointment-recurring")));
-        readonlyPxmp  = new QPixmap(SmallIcon(QStringLiteral("object-locked")));
-        replyPxmp     = new QPixmap(SmallIcon(QStringLiteral("mail-reply-sender")));
-        groupPxmp     = new QPixmap(SmallIcon(QStringLiteral("meeting-attending")));
-        groupPxmpTent = new QPixmap(SmallIcon(QStringLiteral("meeting-attending-tentative")));
-        organizerPxmp = new QPixmap(SmallIcon(QStringLiteral("meeting-organizer")));
+        alarmPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("task-reminder")).pixmap(16,16));
+        recurPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("appointment-recurring")).pixmap(16,16));
+        readonlyPxmp  = new QPixmap(QIcon::fromTheme(QStringLiteral("object-locked")).pixmap(16,16));
+        replyPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("mail-reply-sender")).pixmap(16,16));
+        groupPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("meeting-attending")).pixmap(16,16));
+        groupPxmpTent = new QPixmap(QIcon::fromTheme(QStringLiteral("meeting-attending-tentative")).pixmap(16,16));
+        organizerPxmp = new QPixmap(QIcon::fromTheme(QStringLiteral("meeting-organizer")).pixmap(16,16));
     }
 
     QColor bgColor;

@@ -27,7 +27,7 @@
 #include <Item>
 
 #include <KIconLoader>
-
+#include <QIcon>
 #include <QPixmap>
 #include <QPixmapCache>
 
@@ -64,7 +64,7 @@ QPixmap EventViews::cachedSmallIcon(const QString &name)
 {
     QPixmap p;
     if (!QPixmapCache::find(name, &p)) {
-        p = SmallIcon(name);
+        p = QIcon::fromTheme(name).pixmap(16,16);
     }
 
     return p;
