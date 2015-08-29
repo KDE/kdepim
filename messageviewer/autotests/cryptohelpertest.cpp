@@ -27,14 +27,14 @@ using namespace MessageViewer;
 
 void CryptoHelperTest::testPMFDEmpty()
 {
-    QCOMPARE(prepareMessageForDecryption("").count(),0);
+    QCOMPARE(prepareMessageForDecryption("").count(), 0);
 }
 
 void CryptoHelperTest::testPMFDWithNoPGPBlock()
 {
     const QByteArray text = "testblabla";
     const QList<Block> blocks = prepareMessageForDecryption(text);
-    QCOMPARE(blocks.count(),1);
+    QCOMPARE(blocks.count(), 1);
     QCOMPARE(blocks[0].text(), text);
     QCOMPARE(blocks[0].type(), NoPgpBlock);
 }
@@ -42,36 +42,36 @@ void CryptoHelperTest::testPMFDWithNoPGPBlock()
 void CryptoHelperTest::testPGPBlockType()
 {
     const QString blockText = QLatin1String("text");
-    const QString preString =QLatin1String("before\n");
+    const QString preString = QLatin1String("before\n");
     for (int i = 1; i <= PrivateKeyBlock; ++i) {
         QString name;
         switch (i) {
         case PgpMessageBlock:
-                name = QLatin1String("MESSAGE");
-                break;
+            name = QLatin1String("MESSAGE");
+            break;
         case MultiPgpMessageBlock:
-                name = QLatin1String("MESSAGE PART");
-                break;
+            name = QLatin1String("MESSAGE PART");
+            break;
         case SignatureBlock:
-                name = QLatin1String("SIGNATURE");
-                break;
+            name = QLatin1String("SIGNATURE");
+            break;
         case ClearsignedBlock:
-                name = QLatin1String("SIGNED MESSAGE");
-                break;
+            name = QLatin1String("SIGNED MESSAGE");
+            break;
         case PublicKeyBlock:
-                name = QLatin1String("PUBLIC KEY BLOCK");
-                break;
+            name = QLatin1String("PUBLIC KEY BLOCK");
+            break;
         case PrivateKeyBlock:
-                name = QLatin1String("PRIVATE KEY BLOCK");
-                break;
+            name = QLatin1String("PRIVATE KEY BLOCK");
+            break;
         }
         QString text = QLatin1String("-----BEGIN PGP ") + name + QLatin1String("\n") + blockText;
-        QList<Block> blocks = prepareMessageForDecryption(preString.toLatin1()+text.toLatin1());
-        QCOMPARE(blocks.count(),1);
+        QList<Block> blocks = prepareMessageForDecryption(preString.toLatin1() + text.toLatin1());
+        QCOMPARE(blocks.count(), 1);
         QCOMPARE(blocks[0].type(), UnknownBlock);
 
-        text += QLatin1String("\n-----END PGP ")+name+QLatin1String("\n");
-        blocks = prepareMessageForDecryption(preString.toLatin1()+text.toLatin1());
+        text += QLatin1String("\n-----END PGP ") + name + QLatin1String("\n");
+        blocks = prepareMessageForDecryption(preString.toLatin1() + text.toLatin1());
         QCOMPARE(blocks.count(), 2);
         QCOMPARE(blocks[1].text(), text.toLatin1());
         QCOMPARE(blocks[1].type(), static_cast<PGPBlockType>(i));
@@ -86,23 +86,23 @@ void CryptoHelperTest::testDeterminePGPBlockType()
         switch (i) {
 
         case PgpMessageBlock:
-                name = QLatin1String("MESSAGE");
-                break;
+            name = QLatin1String("MESSAGE");
+            break;
         case MultiPgpMessageBlock:
-                name = QLatin1String("MESSAGE PART");
-                break;
+            name = QLatin1String("MESSAGE PART");
+            break;
         case SignatureBlock:
-                name = QLatin1String("SIGNATURE");
-                break;
+            name = QLatin1String("SIGNATURE");
+            break;
         case ClearsignedBlock:
-                name = QLatin1String("SIGNED MESSAGE");
-                break;
+            name = QLatin1String("SIGNED MESSAGE");
+            break;
         case PublicKeyBlock:
-                name = QLatin1String("PUBLIC KEY BLOCK");
-                break;
+            name = QLatin1String("PUBLIC KEY BLOCK");
+            break;
         case PrivateKeyBlock:
-                name = QLatin1String("PRIVATE KEY BLOCK");
-                break;
+            name = QLatin1String("PRIVATE KEY BLOCK");
+            break;
         }
         const QString text = QLatin1String("-----BEGIN PGP ") + name + QLatin1String("\n") + blockText + QLatin1String("\n");
         const Block block = Block(text.toLatin1());
@@ -115,7 +115,7 @@ void CryptoHelperTest::testEmbededPGPBlock()
 {
     const QByteArray text = QByteArray("before\n-----BEGIN PGP MESSAGE-----\ncrypted - you see :)\n-----END PGP MESSAGE-----\nafter");
     const QList<Block> blocks = prepareMessageForDecryption(text);
-    QCOMPARE(blocks.count(),3);
+    QCOMPARE(blocks.count(), 3);
     QCOMPARE(blocks[0].text(), QByteArray("before\n"));
     QCOMPARE(blocks[1].text(), QByteArray("-----BEGIN PGP MESSAGE-----\ncrypted - you see :)\n-----END PGP MESSAGE-----\n"));
     QCOMPARE(blocks[2].text(), QByteArray("after"));
@@ -125,7 +125,7 @@ void CryptoHelperTest::testClearSignedMessage()
 {
     const QByteArray text = QByteArray("before\n-----BEGIN PGP SIGNED MESSAGE-----\nsigned content\n-----BEGIN PGP SIGNATURE-----\nfancy signature\n-----END PGP SIGNATURE-----\nafter");
     const QList<Block> blocks = prepareMessageForDecryption(text);
-    QCOMPARE(blocks.count(),3);
+    QCOMPARE(blocks.count(), 3);
     QCOMPARE(blocks[0].text(), QByteArray("before\n"));
     QCOMPARE(blocks[1].text(), QByteArray("-----BEGIN PGP SIGNED MESSAGE-----\nsigned content\n-----BEGIN PGP SIGNATURE-----\nfancy signature\n-----END PGP SIGNATURE-----\n"));
     QCOMPARE(blocks[2].text(), QByteArray("after"));
@@ -135,7 +135,7 @@ void CryptoHelperTest::testMultipleBlockMessage()
 {
     const QByteArray text = QByteArray("before\n-----BEGIN PGP SIGNED MESSAGE-----\nsigned content\n-----BEGIN PGP SIGNATURE-----\nfancy signature\n-----END PGP SIGNATURE-----\nafter\n-----BEGIN PGP MESSAGE-----\ncrypted - you see :)\n-----END PGP MESSAGE-----\n");
     const QList<Block> blocks = prepareMessageForDecryption(text);
-    QCOMPARE(blocks.count(),4);
+    QCOMPARE(blocks.count(), 4);
     QCOMPARE(blocks[0].text(), QByteArray("before\n"));
     QCOMPARE(blocks[1].text(), QByteArray("-----BEGIN PGP SIGNED MESSAGE-----\nsigned content\n-----BEGIN PGP SIGNATURE-----\nfancy signature\n-----END PGP SIGNATURE-----\n"));
     QCOMPARE(blocks[2].text(), QByteArray("after\n"));

@@ -80,7 +80,6 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     mSearchInResultLineEdit->setClearButtonEnabled(true);
     mSearchInResultLineEdit->setPlaceholderText(i18n("Search in result..."));
 
-
     searchLineLayout->addStretch(0);
     mNumberOfEmailsFound = new QLabel;
     mNumberOfEmailsFound->setObjectName(QStringLiteral("numberofemailsfound"));

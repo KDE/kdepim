@@ -48,7 +48,6 @@ public:
     bool mWasChanged;
 };
 
-
 ImageScalingWidget::ImageScalingWidget(QWidget *parent)
     : QWidget(parent),
       d(new MessageComposer::ImageScalingWidgetPrivate)
@@ -142,9 +141,9 @@ void ImageScalingWidget::slotSourceFilterClicked(int button)
 void ImageScalingWidget::slotRecipientFilterClicked(int button)
 {
     d->ui->resizeEmailsPattern->setEnabled((button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeEachEmailsContainsPattern) ||
-                                        (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern));
+                                           (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::ResizeOneEmailContainsPattern));
     d->ui->doNotResizePattern->setEnabled((button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeEachEmailsContainsPattern) ||
-                                       (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern));
+                                          (button == MessageComposer::MessageComposerSettings::EnumFilterRecipientType::DontResizeOneEmailContainsPattern));
     Q_EMIT changed();
 }
 

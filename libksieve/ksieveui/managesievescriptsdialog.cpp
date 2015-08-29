@@ -43,7 +43,6 @@
 
 using namespace KSieveUi;
 
-
 ManageSieveScriptsDialog::ManageSieveScriptsDialog(QWidget *parent)
     : QDialog(parent),
       mSieveEditor(Q_NULLPTR),

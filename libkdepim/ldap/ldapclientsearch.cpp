@@ -110,7 +110,7 @@ LdapClientSearch::LdapClientSearch(QObject *parent)
 
     // Set the filter, to make sure old usage (before 4.14) of this object still works.
     d->mFilter = QStringLiteral("&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
-                                     "(|(cn=%1*)(mail=%1*)(givenName=%1*)(sn=%1*))");
+                                "(|(cn=%1*)(mail=%1*)(givenName=%1*)(sn=%1*))");
 
     d->readConfig();
     connect(KDirWatch::self(), SIGNAL(dirty(QString)), this,

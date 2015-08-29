@@ -113,7 +113,6 @@ private:
 
     KContacts::Addressee::List m_addresseeList;
 
-
     int m_maxCount;
 };
 

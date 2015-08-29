@@ -60,8 +60,9 @@ AddresseeLineEditPrivate::AddresseeLineEditPrivate(KPIM::AddresseeLineEdit *qq, 
       m_showOU(false),
       m_enableBalooSearch(true)
 {
-    if (!s_networkConfigMgr)
+    if (!s_networkConfigMgr) {
         s_networkConfigMgr = new QNetworkConfigurationManager(QCoreApplication::instance());
+    }
 
     m_delayedQueryTimer.setSingleShot(true);
     connect(&m_delayedQueryTimer, SIGNAL(timeout()), this, SLOT(slotTriggerDelayedQueries()));

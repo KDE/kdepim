@@ -41,7 +41,6 @@ public:
     BlackListBalooEmailCompletionWidget *mBlackListWidget;
 };
 
-
 BlackListBalooEmailCompletionDialog::BlackListBalooEmailCompletionDialog(QWidget *parent)
     : QDialog(parent),
       d(new KPIM::BlackListBalooEmailCompletionDialogPrivate)

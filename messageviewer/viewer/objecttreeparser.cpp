@@ -2979,7 +2979,7 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
     writeBodyStr(aStr, aCodec, fromAddress, dummy1, dummy2, false);
 }
 
-bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData& messagePart, QByteArray &verifiedText, std::vector <GpgME::Signature>& signatures)
+bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData &messagePart, QByteArray &verifiedText, std::vector <GpgME::Signature> &signatures)
 {
     //copied from ObjectTreeParser::writeOpaqueOrMultipartSignedData
     messagePart.isSigned = false;
@@ -3002,7 +3002,7 @@ bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBacken
     return messagePart.isSigned;
 }
 
-void ObjectTreeParser::sigStatusToMetaData(const std::vector <GpgME::Signature>& signatures, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData& messagePart)
+void ObjectTreeParser::sigStatusToMetaData(const std::vector <GpgME::Signature> &signatures, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData &messagePart)
 {
     if (messagePart.isSigned) {
         //copied from ObjectTreeParser::writeOpaqueOrMultipartSignedData
@@ -3098,13 +3098,13 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
     QList<Block> blocks = prepareMessageForDecryption(aStr);
 
     bool updatePlainText = false;   // If there are encrypted or signed parts inside the node
-                                    // we need to update mPlainTextContent
+    // we need to update mPlainTextContent
 
     if (!blocks.isEmpty()) {
 
-        if  (blocks.count() > 1 || blocks.at(0).type() != MessageViewer::NoPgpBlock) {
-            const Kleo::CryptoBackend::Protocol* cryptProto = Kleo::CryptoBackendFactory::instance()->openpgp();
-            setCryptoProtocol( cryptProto );
+        if (blocks.count() > 1 || blocks.at(0).type() != MessageViewer::NoPgpBlock) {
+            const Kleo::CryptoBackend::Protocol *cryptProto = Kleo::CryptoBackendFactory::instance()->openpgp();
+            setCryptoProtocol(cryptProto);
         }
 
         QString htmlStr;
@@ -3133,7 +3133,7 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
             }
 
             if (block.type() == NoPgpBlock && !block.text().trimmed().isEmpty()) {
-                 fullySignedOrEncryptedTmp = false;
+                fullySignedOrEncryptedTmp = false;
             } else if (block.type() == PgpMessageBlock) {
                 updatePlainText = true;
                 if (!mSource->decryptMessage()) {

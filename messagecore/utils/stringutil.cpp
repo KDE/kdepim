@@ -715,7 +715,7 @@ QString smartQuote(const QString &msg, int maxLineLength)
     return result;
 }
 
-QString formatQuotePrefix(const QString& wildString, const QString& fromDisplayString)
+QString formatQuotePrefix(const QString &wildString, const QString &fromDisplayString)
 {
     QString result;
 
@@ -730,8 +730,9 @@ QString formatQuotePrefix(const QString& wildString, const QString& fromDisplayS
             ch = wildString[i++];
             switch (ch.toLatin1()) {
             case 'f': { // sender's initals
-                if (fromDisplayString.isEmpty())
+                if (fromDisplayString.isEmpty()) {
                     break;
+                }
 
                 uint j = 0;
                 const unsigned int strLength(fromDisplayString.length());

@@ -25,48 +25,50 @@ namespace MessageViewer
 {
 
 enum PGPBlockType {
-  UnknownBlock = -1,        // BEGIN PGP ???
-  NoPgpBlock = 0,
-  PgpMessageBlock = 1,      // BEGIN PGP MESSAGE
-  MultiPgpMessageBlock = 2, // BEGIN PGP MESSAGE, PART X[/Y]
-  SignatureBlock = 3,       // BEGIN PGP SIGNATURE
-  ClearsignedBlock = 4,     // BEGIN PGP SIGNED MESSAGE
-  PublicKeyBlock = 5,       // BEGIN PGP PUBLIC KEY BLOCK
-  PrivateKeyBlock = 6       // BEGIN PGP PRIVATE KEY BLOCK (PGP 2.x: ...SECRET...)
+    UnknownBlock = -1,        // BEGIN PGP ???
+    NoPgpBlock = 0,
+    PgpMessageBlock = 1,      // BEGIN PGP MESSAGE
+    MultiPgpMessageBlock = 2, // BEGIN PGP MESSAGE, PART X[/Y]
+    SignatureBlock = 3,       // BEGIN PGP SIGNATURE
+    ClearsignedBlock = 4,     // BEGIN PGP SIGNED MESSAGE
+    PublicKeyBlock = 5,       // BEGIN PGP PUBLIC KEY BLOCK
+    PrivateKeyBlock = 6       // BEGIN PGP PRIVATE KEY BLOCK (PGP 2.x: ...SECRET...)
 };
 
-class Block {
+class Block
+{
 public:
-  Block(const QByteArray &m)
-  : msg(m)
-  {
-      mType = determineType();
-  }
+    Block(const QByteArray &m)
+        : msg(m)
+    {
+        mType = determineType();
+    }
 
-  Block(const QByteArray &m, PGPBlockType t)
-  : msg(m)
-  , mType(t)
-  {
+    Block(const QByteArray &m, PGPBlockType t)
+        : msg(m)
+        , mType(t)
+    {
 
-  }
+    }
 
-  QByteArray text() const {
-      return msg;
-  }
-  PGPBlockType type() const {
-      return mType;
-  }
-  PGPBlockType determineType() const;
+    QByteArray text() const
+    {
+        return msg;
+    }
+    PGPBlockType type() const
+    {
+        return mType;
+    }
+    PGPBlockType determineType() const;
 
-  QByteArray msg;
-  PGPBlockType mType;
+    QByteArray msg;
+    PGPBlockType mType;
 };
-
 
 /** Parses the given message and splits it into OpenPGP blocks and
     Non-OpenPGP blocks.
 */
-QList<Block> prepareMessageForDecryption(const QByteArray& msg);
+QList<Block> prepareMessageForDecryption(const QByteArray &msg);
 
 } // namespace MessageViewer
 

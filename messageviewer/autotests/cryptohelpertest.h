@@ -21,7 +21,8 @@
 
 #include <QObject>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class CryptoHelperTest : public QObject
 {

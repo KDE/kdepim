@@ -40,7 +40,6 @@ public:
     FollowUpReminder::FollowUpReminderInfo *mInfo;
 };
 
-
 FollowupReminderCreateJob::FollowupReminderCreateJob(QObject *parent)
     : KJob(parent),
       d(new MessageComposer::FollowupReminderCreateJobPrivate)
