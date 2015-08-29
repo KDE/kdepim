@@ -84,7 +84,7 @@ bool MESSAGEVIEWER_EXPORT checkOverwrite(const QUrl &url, QWidget *w);
      * on Windows and MacOSX.
      * Returns false if it did nothing (such as on other platforms).
      */
-bool MESSAGEVIEWER_EXPORT handleUrlWithQDesktopServices(const QUrl &url);
+bool handleUrlWithQDesktopServices(const QUrl &url);
 
 /**
      * evaluates GlobalSettings->disregardUmask()
@@ -129,7 +129,7 @@ MESSAGEVIEWER_EXPORT QAction *createAppAction(const KService::Ptr &service, bool
 /**
  * Search mimetype from filename when mimetype is empty or application/octet-stream
  **/
-MESSAGEVIEWER_EXPORT QMimeType mimetype(const QString &name);
+QMimeType mimetype(const QString &name);
 }
 
 }
