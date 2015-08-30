@@ -61,18 +61,12 @@ public:
      * @return the error code of the job. This must only be called from
      * the slot connected to the finished() signal.
      */
-    int error() const
-    {
-        return mErrorCode;
-    }
+    int error() const;
 
     /**
      * @return true if this job can be canceled, e.g. to exit the application
      */
-    bool isCancellable() const
-    {
-        return mCancellable;
-    }
+    bool isCancellable() const;
 
     /**
      * Call this to change the "cancellable" property of this job.
@@ -80,10 +74,7 @@ public:
      * are cancellable, the others are not. But when copying, a non-cancellable
      * tGetMessage is needed.
      */
-    void setCancellable(bool b)
-    {
-        mCancellable = b;
-    }
+    void setCancellable(bool b);
 
 Q_SIGNALS:
     /**

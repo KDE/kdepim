@@ -23,10 +23,10 @@
 
 #include "mailcommon_export.h"
 #include <QWidget>
-class KComboBox;
 
 namespace MailCommon
 {
+class IncidencesForWidgetPrivate;
 class MAILCOMMON_EXPORT IncidencesForWidget : public QWidget
 {
     Q_OBJECT
@@ -41,7 +41,7 @@ Q_SIGNALS:
     void currentIndexChanged(int value);
 
 private:
-    KComboBox *mIncidencesForComboBox;
+    IncidencesForWidgetPrivate *const d;
 };
 }
 

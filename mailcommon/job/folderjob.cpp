@@ -63,5 +63,20 @@ void FolderJob::kill()
     delete this;
 }
 
+int FolderJob::error() const
+{
+    return mErrorCode;
+}
+
+bool FolderJob::isCancellable() const
+{
+    return mCancellable;
+}
+
+void FolderJob::setCancellable(bool b)
+{
+    mCancellable = b;
+}
+
 }
 

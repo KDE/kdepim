@@ -23,9 +23,9 @@
 
 #include <QWidget>
 #include "mailcommon_export.h"
-class KComboBox;
 namespace MailCommon
 {
+class ContentTypeWidgetPrivate;
 class MAILCOMMON_EXPORT ContentTypeWidget : public QWidget
 {
     Q_OBJECT
@@ -43,7 +43,7 @@ Q_SIGNALS:
     void activated(int index);
 
 private:
-    KComboBox *mContentsComboBox;
+    ContentTypeWidgetPrivate *const d;
 };
 }
 #endif // CONTENTTYPEWIDGET_H

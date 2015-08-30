@@ -50,18 +50,35 @@
 namespace MailCommon
 {
 
+class FolderRequesterPrivate
+{
+public:
+    FolderRequesterPrivate()
+        : mEdit(Q_NULLPTR),
+          mMustBeReadWrite(true),
+          mShowOutbox(true),
+          mNotCreateNewFolder(false)
+    {
+    }
+    Akonadi::Collection mCollection;
+    KLineEdit *mEdit;
+    bool mMustBeReadWrite;
+    bool mShowOutbox;
+    bool mNotCreateNewFolder;
+};
+
 FolderRequester::FolderRequester(QWidget *parent)
     : QWidget(parent),
-      mMustBeReadWrite(true), mShowOutbox(true), mNotCreateNewFolder(false)
+      d(new MailCommon::FolderRequesterPrivate)
 {
     QHBoxLayout *hlay = new QHBoxLayout(this);
     hlay->setContentsMargins(0, 0, 0, 0);
 
-    mEdit = new KLineEdit(this);
-    mEdit->setPlaceholderText(i18n("Select Folder"));
-    mEdit->setTrapReturnKey(true);
-    mEdit->setReadOnly(true);
-    hlay->addWidget(mEdit);
+    d->mEdit = new KLineEdit(this);
+    d->mEdit->setPlaceholderText(i18n("Select Folder"));
+    d->mEdit->setTrapReturnKey(true);
+    d->mEdit->setReadOnly(true);
+    hlay->addWidget(d->mEdit);
 
     QToolButton *button = new QToolButton(this);
     button->setIcon(QIcon::fromTheme(QStringLiteral("folder")));
@@ -80,10 +97,10 @@ void FolderRequester::slotOpenDialog()
     FolderSelectionDialog::SelectionFolderOptions options = FolderSelectionDialog::EnableCheck ;
     options |= FolderSelectionDialog::HideVirtualFolder;
     options |= FolderSelectionDialog::NotUseGlobalSettings;
-    if (mNotCreateNewFolder) {
+    if (d->mNotCreateNewFolder) {
         options |= FolderSelectionDialog::NotAllowToCreateNewFolder;
     }
-    if (!mShowOutbox) {
+    if (!d->mShowOutbox) {
         options |= FolderSelectionDialog::HideOutboxFolder;
     }
 
@@ -92,7 +109,7 @@ void FolderRequester::slotOpenDialog()
 
     dlg->setWindowTitle(i18n("Select Folder"));
     dlg->setModal(false);
-    dlg->setSelectedCollection(mCollection);
+    dlg->setSelectedCollection(d->mCollection);
 
     if (dlg->exec() && dlg) {
         setCollection(dlg->selectedCollection(), false);
@@ -102,47 +119,48 @@ void FolderRequester::slotOpenDialog()
 //-----------------------------------------------------------------------------
 FolderRequester::~FolderRequester()
 {
+    delete d;
 }
 
 Akonadi::Collection FolderRequester::collection() const
 {
-    return mCollection;
+    return d->mCollection;
 }
 
 void FolderRequester::setCollectionFullPath(const Akonadi::Collection &col)
 {
     if (KernelIf->collectionModel()) {
-        mEdit->setText(Util::fullCollectionPath(col));
+        d->mEdit->setText(Util::fullCollectionPath(col));
     } else {
-        mEdit->clear();
+        d->mEdit->clear();
     }
 }
 
 //-----------------------------------------------------------------------------
 void FolderRequester::setCollection(const Akonadi::Collection &collection, bool fetchCollection)
 {
-    mCollection = collection;
-    if (mCollection.isValid()) {
+    d->mCollection = collection;
+    if (d->mCollection.isValid()) {
         if (fetchCollection) {
             Akonadi::CollectionFetchJob *job =
-                new Akonadi::CollectionFetchJob(mCollection, Akonadi::CollectionFetchJob::Base, this);
+                new Akonadi::CollectionFetchJob(d->mCollection, Akonadi::CollectionFetchJob::Base, this);
 
             connect(job, &Akonadi::CollectionFetchJob::result, this, &FolderRequester::slotCollectionsReceived);
         } else {
-            setCollectionFullPath(mCollection);
+            setCollectionFullPath(d->mCollection);
         }
-    } else if (!mMustBeReadWrite) {   // the Local Folders root node was selected
-        mEdit->setText(i18n("Local Folders"));
+    } else if (!d->mMustBeReadWrite) {   // the Local Folders root node was selected
+        d->mEdit->setText(i18n("Local Folders"));
     }
 
-    Q_EMIT folderChanged(mCollection);
+    Q_EMIT folderChanged(d->mCollection);
 }
 
 void FolderRequester::slotCollectionsReceived(KJob *job)
 {
     if (job->error()) {
-        mCollection = Akonadi::Collection();
-        mEdit->setText(i18n("Please select a folder"));
+        d->mCollection = Akonadi::Collection();
+        d->mEdit->setText(i18n("Please select a folder"));
         return;
     }
 
@@ -152,20 +170,20 @@ void FolderRequester::slotCollectionsReceived(KJob *job)
     if (!collections.isEmpty()) {
         const Akonadi::Collection collection = collections.first();
         // in case this is still the collection we are interested in, update
-        if (collection.id() == mCollection.id()) {
-            mCollection = collection;
+        if (collection.id() == d->mCollection.id()) {
+            d->mCollection = collection;
             setCollectionFullPath(collection);
         }
     } else {
         // the requested collection doesn't exists anymore
-        mCollection = Akonadi::Collection();
-        mEdit->setText(i18n("Please select a folder"));
+        d->mCollection = Akonadi::Collection();
+        d->mEdit->setText(i18n("Please select a folder"));
     }
 }
 
 bool FolderRequester::hasCollection() const
 {
-    return mCollection.isValid();
+    return d->mCollection.isValid();
 }
 
 //-----------------------------------------------------------------------------
@@ -180,17 +198,17 @@ void FolderRequester::keyPressEvent(QKeyEvent *e)
 
 void FolderRequester::setMustBeReadWrite(bool readwrite)
 {
-    mMustBeReadWrite = readwrite;
+    d->mMustBeReadWrite = readwrite;
 }
 
 void FolderRequester::setShowOutbox(bool show)
 {
-    mShowOutbox = show;
+    d->mShowOutbox = show;
 }
 
 void FolderRequester::setNotAllowToCreateNewFolder(bool notCreateNewFolder)
 {
-    mNotCreateNewFolder = notCreateNewFolder;
+    d->mNotCreateNewFolder = notCreateNewFolder;
 }
 
 } // namespace MailCommon

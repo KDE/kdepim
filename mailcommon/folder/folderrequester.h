@@ -57,6 +57,7 @@ namespace MailCommon
  *  - or allow to replace the built-in dialog by your own
  * - Allow to pass in an existing ETM, to remove the Kernel dependency
  */
+class FolderRequesterPrivate;
 class MAILCOMMON_EXPORT FolderRequester: public QWidget
 {
     Q_OBJECT
@@ -119,6 +120,7 @@ protected:
     void setCollectionFullPath(const Akonadi::Collection &col);
 
 protected:
+    FolderRequesterPrivate *const d;
     Akonadi::Collection mCollection;
     KLineEdit *mEdit;
     bool mMustBeReadWrite;

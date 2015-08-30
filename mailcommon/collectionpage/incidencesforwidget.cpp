@@ -25,9 +25,19 @@
 #include <KComboBox>
 
 using namespace MailCommon;
+class MailCommon::IncidencesForWidgetPrivate
+{
+public:
+    IncidencesForWidgetPrivate()
+        : mIncidencesForComboBox(Q_NULLPTR)
+    {
 
+    }
+    KComboBox *mIncidencesForComboBox;
+};
 IncidencesForWidget::IncidencesForWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new MailCommon::IncidencesForWidgetPrivate)
 {
     QHBoxLayout *hbox = new QHBoxLayout(this);
     hbox->setMargin(0);
@@ -36,13 +46,13 @@ IncidencesForWidget::IncidencesForWidget(QWidget *parent)
     label->setObjectName(QStringLiteral("contentstypelabel"));
     hbox->addWidget(label);
 
-    mIncidencesForComboBox = new KComboBox(this);
-    label->setBuddy(mIncidencesForComboBox);
-    hbox->addWidget(mIncidencesForComboBox);
+    d->mIncidencesForComboBox = new KComboBox(this);
+    label->setBuddy(d->mIncidencesForComboBox);
+    hbox->addWidget(d->mIncidencesForComboBox);
 
-    mIncidencesForComboBox->addItem(i18n("Nobody"));
-    mIncidencesForComboBox->addItem(i18n("Admins of This Folder"));
-    mIncidencesForComboBox->addItem(i18n("All Readers of This Folder"));
+    d->mIncidencesForComboBox->addItem(i18n("Nobody"));
+    d->mIncidencesForComboBox->addItem(i18n("Admins of This Folder"));
+    d->mIncidencesForComboBox->addItem(i18n("All Readers of This Folder"));
     const QString whatsThisForMyOwnFolders =
         i18n("This setting defines which users sharing "
              "this folder should get \"busy\" periods in their freebusy lists "
@@ -58,23 +68,23 @@ IncidencesForWidget::IncidencesForWidget(QWidget *parent)
              "A company-wide folder with optional events in it would use \"Nobody\" "
              "since it is not known who will go to those events.");
 
-    mIncidencesForComboBox->setObjectName(QStringLiteral("contentstypecombobox"));
-    mIncidencesForComboBox->setWhatsThis(whatsThisForMyOwnFolders);
-    connect(mIncidencesForComboBox, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidencesForWidget::currentIndexChanged);
+    d->mIncidencesForComboBox->setObjectName(QStringLiteral("contentstypecombobox"));
+    d->mIncidencesForComboBox->setWhatsThis(whatsThisForMyOwnFolders);
+    connect(d->mIncidencesForComboBox, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &IncidencesForWidget::currentIndexChanged);
 }
 
 IncidencesForWidget::~IncidencesForWidget()
 {
-
+    delete d;
 }
 
 int IncidencesForWidget::currentIndex() const
 {
-    return mIncidencesForComboBox->currentIndex();
+    return d->mIncidencesForComboBox->currentIndex();
 }
 
 void IncidencesForWidget::setCurrentIndex(int index)
 {
-    mIncidencesForComboBox->setCurrentIndex(index);
+    d->mIncidencesForComboBox->setCurrentIndex(index);
 }
 
