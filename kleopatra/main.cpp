@@ -226,6 +226,7 @@ int main(int argc, char **argv)
     qCDebug(KLEOPATRA_LOG) << "Statup timing:" << timer.elapsed() << "ms elapsed: Command line args created";
 
     KleopatraApplication app;
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 
     qCDebug(KLEOPATRA_LOG) << "Startup timing:" << timer.elapsed() << "ms elapsed: Application created";
 
