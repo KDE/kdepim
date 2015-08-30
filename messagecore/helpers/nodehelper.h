@@ -61,14 +61,6 @@ MESSAGECORE_EXPORT KMime::Content *firstChild(const KMime::Content *node);
 /**
    * Returns whether the given @p node is an attachment.
    *
-   * @todo The node parameters here should be const, be there is no const version of
-   *       functions like contentDisposition() yet
-   */
-MESSAGECORE_EXPORT bool isAttachment(KMime::Content *node);
-
-/**
-   * Returns whether the given @p node is an attachment.
-   *
    * In opposite to isAttachment() some additional tests are executed which
    * might however return a false result.
    *

@@ -78,35 +78,26 @@ KMime::Content *MessageCore::NodeHelper::firstChild(const KMime::Content *node)
     return child;
 }
 
-bool MessageCore::NodeHelper::isAttachment(KMime::Content *node)
+bool MessageCore::NodeHelper::isHeuristicalAttachment(KMime::Content *node)
 {
-    if (node->head().isEmpty()) {
+    if (!node) {
         return false;
     }
 
-    const KMime::Headers::ContentType *const contentType = node ? node->contentType(false) : 0;
+    const KMime::Headers::ContentType *const contentType = node->contentType(false);
     if (contentType &&
-            contentType->mediaType().toLower() == "message" &&
-            contentType->subType().toLower() == "rfc822") {
+        contentType->mediaType().toLower() == "message" &&
+        contentType->subType().toLower() == "rfc822") {
         // Messages are always attachments. Normally message attachments created from KMail have a content
         // disposition, but some mail clients omit that.
         return true;
     }
 
-    if (!node->contentDisposition(false)) {
-        return false;
-    }
-
-    return (node->contentDisposition()->disposition() == KMime::Headers::CDattachment);
-}
-
-bool MessageCore::NodeHelper::isHeuristicalAttachment(KMime::Content *node)
-{
-    if (NodeHelper::isAttachment(node)) {
+    auto cd = node->contentDisposition(false);
+    if (cd && cd->disposition() == KMime::Headers::CDattachment) {
         return true;
     }
 
-    const KMime::Headers::ContentType *const contentType = node ? node->contentType(false) : 0;
     if ((contentType && !contentType->name().isEmpty()) ||
             (node->contentDisposition(false) && !node->contentDisposition()->filename().isEmpty())) {
         return true;
