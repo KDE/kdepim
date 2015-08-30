@@ -12,7 +12,6 @@ add_definitions(-DTRANSLATION_DOMAIN=\"libmessagecore\")
 ########### next target ###############
 
 set(messagecore_attachment_LIB_SRCS
-   attachment/attachmentcollector.cpp
    attachment/attachmentcompressjob.cpp
    attachment/attachmentfromfolderjob.cpp
    attachment/attachmentfrommimecontentjob.cpp

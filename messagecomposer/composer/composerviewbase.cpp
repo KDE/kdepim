@@ -56,7 +56,6 @@
 
 #include <messagecore/helpers/messagehelpers.h>
 #include <messagecore/utils/stringutil.h>
-#include <messagecore/attachment/attachmentcollector.h>
 #include <messagecore/helpers/nodehelper.h>
 
 #include <MailTransport/mailtransport/transportcombobox.h>
