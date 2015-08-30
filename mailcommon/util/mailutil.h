@@ -100,7 +100,7 @@ enum SearchDirection {
    * @param ignoreCollectionCallback A callback method to ignore certain
    *        collections by returning @c true.
    */
-MAILCOMMON_EXPORT QModelIndex nextUnreadCollection(QAbstractItemModel *model,
+QModelIndex nextUnreadCollection(QAbstractItemModel *model,
         const QModelIndex &current,
         SearchDirection direction,
         bool (*ignoreCollectionCallback)(const Akonadi::Collection &collection) = 0);
@@ -122,7 +122,7 @@ MAILCOMMON_EXPORT QString convertFolderPathToCollectionStr(const QString &folder
 MAILCOMMON_EXPORT bool foundMailer();
 MAILCOMMON_EXPORT bool isLocalCollection(const QString &resource);
 
-MAILCOMMON_EXPORT bool ignoreNewMailInFolder(const Akonadi::Collection &collection);
+bool ignoreNewMailInFolder(const Akonadi::Collection &collection);
 MAILCOMMON_EXPORT MailCommon::ExpireCollectionAttribute *expirationCollectionAttribute(const Akonadi::Collection &collection, bool &mustDeleteExpirationAttribute);
 }
 
