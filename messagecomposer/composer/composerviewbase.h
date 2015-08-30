@@ -98,7 +98,6 @@ public:
     * Set the message to be opened in the composer window, and set the internal data structures to
     *  keep track of it.
     */
-    void setMessage(const KMime::Message::Ptr &newMsg);
     void setMessage(const KMime::Message::Ptr &newMsg, bool allowDecryption);
 
     void updateTemplate(const KMime::Message::Ptr &msg);

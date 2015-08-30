@@ -140,11 +140,6 @@ bool MessageComposer::ComposerViewBase::isComposing() const
     return !m_composers.isEmpty();
 }
 
-void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &newMsg)
-{
-    setMessage(newMsg, false);                        // Do not decrypt message by default (old behaviour)
-}
-
 void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &msg, bool allowDecryption)
 {
     if (m_attachmentModel)  {
