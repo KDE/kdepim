@@ -60,7 +60,7 @@ namespace CalendarSupport
   Base class for Calendar printing classes. Each sub class represents one
   calendar print format.
 */
-class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
+class CalPrintPluginBase : public PrintPlugin
 {
 public:
     enum DisplayFlags {

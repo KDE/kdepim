@@ -36,23 +36,11 @@ public:
     {
     }
     virtual ~CellItem() {}
-    void setSubCells(int v)
-    {
-        mSubCells = v;
-    }
-    int subCells() const
-    {
-        return mSubCells;
-    }
+    void setSubCells(int v);
+    int subCells() const;
 
-    void setSubCell(int v)
-    {
-        mSubCell = v;
-    }
-    int subCell() const
-    {
-        return mSubCell;
-    }
+    void setSubCell(int v);
+    int subCell() const;
 
     virtual bool overlaps(CellItem *other) const = 0;
 

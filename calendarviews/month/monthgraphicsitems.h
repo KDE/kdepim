@@ -66,7 +66,7 @@ private:
 /**
  * Keeps information about a month cell.
  */
-class EVENTVIEWS_EXPORT MonthCell
+class MonthCell
 {
 public:
     MonthCell(int id, const QDate &date, QGraphicsScene *scene);

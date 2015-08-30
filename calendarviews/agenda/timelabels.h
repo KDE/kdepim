@@ -24,8 +24,6 @@
 #ifndef EVENTVIEWS_TIMELABELS_H
 #define EVENTVIEWS_TIMELABELS_H
 
-#include "eventviews_export.h"
-
 #include <KDateTime>
 
 #include <QFrame>
@@ -40,7 +38,7 @@ class TimeLabelsZone;
 class Prefs;
 typedef QSharedPointer<Prefs> PrefsPtr;
 
-class EVENTVIEWS_EXPORT TimeLabels : public QFrame
+class TimeLabels : public QFrame
 {
     Q_OBJECT
 public:

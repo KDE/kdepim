@@ -27,6 +27,26 @@
 
 using namespace CalendarSupport;
 
+void CellItem::setSubCells(int v)
+{
+    mSubCells = v;
+}
+
+int CellItem::subCells() const
+{
+    return mSubCells;
+}
+
+void CellItem::setSubCell(int v)
+{
+    mSubCell = v;
+}
+
+int CellItem::subCell() const
+{
+    return mSubCell;
+}
+
 QString CellItem::label() const
 {
     return xi18n("<placeholder>undefined</placeholder>");

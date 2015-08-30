@@ -22,8 +22,6 @@
 #ifndef EVENTVIEWS_HELPER_H
 #define EVENTVIEWS_HELPER_H
 
-#include "eventviews_export.h"
-
 #include <QColor>
 #include <QSharedPointer>
 
@@ -47,7 +45,7 @@ typedef QSharedPointer<Prefs> PrefsPtr;
 /**
  Returns a nice QColor for text, give the input color &c.
 */
-EVENTVIEWS_EXPORT QColor getTextColor(const QColor &c);
+QColor getTextColor(const QColor &c);
 
 /**
   This method returns the proper resource / subresource color for the view.
@@ -57,17 +55,17 @@ EVENTVIEWS_EXPORT QColor getTextColor(const QColor &c);
   @param incidence the incidence for which the color is needed (to
                    determine which  subresource needs to be used)
 */
-EVENTVIEWS_EXPORT QColor resourceColor(const Akonadi::Item &incidence,
+QColor resourceColor(const Akonadi::Item &incidence,
                                        const PrefsPtr &preferences);
 
-EVENTVIEWS_EXPORT QColor resourceColor(const Akonadi::Collection &collection,
+QColor resourceColor(const Akonadi::Collection &collection,
                                        const PrefsPtr &preferences);
 
 /**
   Returns the number of years between the @p start QDate and the @p end QDate
   (i.e. the difference in the year number of both dates)
 */
-EVENTVIEWS_EXPORT int yearDiff(const QDate &start, const QDate &end);
+int yearDiff(const QDate &start, const QDate &end);
 
 /**
    Equivalent to SmallIcon( name ), but uses QPixmapCache.
@@ -76,7 +74,7 @@ EVENTVIEWS_EXPORT int yearDiff(const QDate &start, const QDate &end);
    @return A new pixmap if it isn't yet in cache, otherwise returns the
            cached one.
 */
-EVENTVIEWS_EXPORT QPixmap cachedSmallIcon(const QString &name);
+QPixmap cachedSmallIcon(const QString &name);
 
 }
 

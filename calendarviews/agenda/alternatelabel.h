@@ -23,14 +23,13 @@
 #ifndef EVENTVIEWS_ALTERNATELABEL_H
 #define EVENTVIEWS_ALTERNATELABEL_H
 
-#include "eventviews_export.h"
 
 #include <QLabel>
 
 namespace EventViews
 {
 
-class EVENTVIEWS_EXPORT AlternateLabel : public QLabel
+class AlternateLabel : public QLabel
 {
     Q_OBJECT
 public:

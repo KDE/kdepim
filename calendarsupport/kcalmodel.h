@@ -26,7 +26,7 @@
 namespace CalendarSupport
 {
 
-class CALENDARSUPPORT_EXPORT KCalModel : public Akonadi::ItemModel
+class KCalModel : public Akonadi::ItemModel
 {
 public:
     enum Column {
