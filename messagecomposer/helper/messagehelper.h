@@ -97,11 +97,6 @@ QString replacePrefixes(const QString &str,
     attachments / multiple body parts. */
 void setAutomaticFields(const KMime::Message::Ptr &msg, bool isMultipart = false);
 
-/** Creates reference string for reply to messages.
-   *  reference = original first reference + original last reference + original msg-id
-   */
-QByteArray MESSAGECOMPOSER_EXPORT getRefStr(const KMime::Message::Ptr &msg);
-
 /** Returns @p str with all "forward" and "reply" prefixes stripped off.
   **/
 QString MESSAGECOMPOSER_EXPORT stripOffPrefixes(const QString &str);
