@@ -34,7 +34,7 @@
 #include "dbman.h"
 
 #include <kio/job.h>
-#include <kstandarddirs.h>
+
 #include <kmessagebox.h>
 #include <klocalizedstring.h>
 #include "blogilo_debug.h"
@@ -42,6 +42,7 @@
 #include <QUrl>
 #include <QFile>
 #include <QDateTime>
+#include <QStandardPaths>
 
 static const char POST_TITLE[] = "Temporary-Post-Used-For-Style-Detection-Title-";
 static const char  POST_CONTENT[] = "Temporary-Post-Used-For-Style-Detection-Content-";
@@ -56,13 +57,8 @@ StyleGetter::StyleGetter(const int blogid, QObject *parent)
                                    DBMan::self()->lastErrorText());
         return;
     }
-    // sets cachePath to ~/.kde4/share/apps/bilbo/blog_host_name/
-//     QString blogDir = DBMan::self()->getBlogInfo( blogid ).url().host();
-//     QString blogDir = tempBlog.url().host();
-//     qCDebug(BLOGILO_LOG) << blogDir;
-//     mCachePath = KStandardDirs::locateLocal( "data", "bilbo/" + blogDir + '/' , true );
     QString url = QStringLiteral("blogilo/%1/").arg(blogid);
-    mCachePath = KStandardDirs::locateLocal("data", url , true);
+    mCachePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + url;
     generateRandomPostStrings();
     mParent = qobject_cast< QWidget * >(parent);
     Q_ASSERT(mParent);
@@ -99,16 +95,8 @@ QString StyleGetter::styledHtml(const int blogid,
                                 const QString &content)
 {
     qCDebug(BLOGILO_LOG);
-//     BilboBlog tempBlog = DBMan::self()->getBlogInfo( blogid );
-//     if ( tempBlog.isError() ) {
-//         qCDebug(BLOGILO_LOG) << DBMan::self()->lastErrorText();
-//         return "<html><body><b>" + title + "</b><br>" + content + "</html>";
-//     }
-//
-//     QString blogDir = tempBlog.url().host();
-    //QString url = QString( "bilbo/%1/" ).arg( blogid );
     QString url = QStringLiteral("blogilo/%1/").arg(blogid);
-    url = KStandardDirs::locateLocal("data", url , true);
+    url = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + url;
     QUrl dest(url);
     dest.setPath(dest.path() + QStringLiteral("/style.html"));
     dest.setScheme(QStringLiteral("file"));
