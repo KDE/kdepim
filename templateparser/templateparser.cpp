@@ -23,7 +23,6 @@
 #include "templatesconfiguration_kfg.h"
 #include "templatesconfiguration.h"
 
-#include <messagecore/attachment/attachmentcollector.h>
 #include <messagecore/misc/imagecollector.h>
 #include <messagecore/utils/stringutil.h>
 
@@ -1201,10 +1200,6 @@ QString TemplateParser::getHtmlSignature() const
 void TemplateParser::addProcessedBodyToMessage(const QString &plainBody,
         const QString &htmlBody) const
 {
-    // Get the attachments of the original mail
-    MessageCore::AttachmentCollector ac;
-    ac.collectAttachmentsFrom(mOrigMsg.data());
-
     MessageCore::ImageCollector ic;
     ic.collectImagesFrom(mOrigMsg.data());
 
@@ -1242,9 +1237,13 @@ void TemplateParser::addProcessedBodyToMessage(const QString &plainBody,
     // If we have some attachments, create a multipart/mixed mail and
     // add the normal body as well as the attachments
     KMime::Content *mainPart = textPart;
-    if (!ac.attachments().empty() && mMode == Forward) {
-        mainPart = createMultipartMixed(ac, textPart);
-        mainPart->assemble();
+    if (mMode == Forward) {
+        auto attachments = mOrigMsg->attachments();
+        attachments += mOtp->nodeHelper()->attachmentsOfExtraContents();
+        if (!attachments.isEmpty()) {
+            mainPart = createMultipartMixed(attachments, textPart);
+            mainPart->assemble();
+        }
     }
 
     mMsg->setBody(mainPart->encodedBody());
@@ -1254,7 +1253,7 @@ void TemplateParser::addProcessedBodyToMessage(const QString &plainBody,
     mMsg->parse();
 }
 
-KMime::Content *TemplateParser::createMultipartMixed(const MessageCore::AttachmentCollector &ac,
+KMime::Content *TemplateParser::createMultipartMixed(const QVector<KMime::Content*> &attachments,
         KMime::Content *textPart) const
 {
     KMime::Content *mixedPart = new KMime::Content(mMsg.data());
@@ -1265,7 +1264,7 @@ KMime::Content *TemplateParser::createMultipartMixed(const MessageCore::Attachme
     mixedPart->addContent(textPart);
 
     int attachmentNumber = 1;
-    foreach (KMime::Content *attachment, ac.attachments()) {
+    foreach (KMime::Content *attachment, attachments) {
         mixedPart->addContent(attachment);
         // If the content type has no name or filename parameter, add one, since otherwise the name
         // would be empty in the attachment view of the composer, which looks confusing

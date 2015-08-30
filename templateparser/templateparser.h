@@ -42,7 +42,6 @@ class IdentityManager;
 
 namespace MessageCore
 {
-class AttachmentCollector;
 class ImageCollector;
 }
 
@@ -364,12 +363,11 @@ private:
     /**
      * Returns a multipart/mixed KMime::Content that has textPart and all
      * attachments as children.
-     * @param ac a reference to an MessageCore::AttachmentCollector that has
-     *           collected all attachments.
+     * @param attachments the list of attachments to add
      * @param textPart a KMime::Content that is to be added as a child.
      * @since 4.8
      */
-    KMime::Content *createMultipartMixed(const MessageCore::AttachmentCollector &ac,
+    KMime::Content *createMultipartMixed(const QVector<KMime::Content*> &attachments,
                                          KMime::Content *textPart) const;
 
     /**
