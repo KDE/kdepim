@@ -20,6 +20,7 @@
 */
 
 #include "incidencedialog.h"
+#include "incidenceeditor_debug.h"
 #include "combinedincidenceeditor.h"
 #include "editorconfig.h"
 #include "incidencealarm.h"
@@ -50,15 +51,14 @@
 #include <KCalUtils/Stringify>
 
 #include <KMessageBox>
-#include <KStandardDirs>
 #include <KSystemTimeZones>
-
 #include <KIconLoader>
-#include <QIcon>
-#include "incidenceeditor_debug.h"
+#include <KSharedConfig>
 
 #include <QCloseEvent>
-#include <KSharedConfig>
+#include <QDir>
+#include <QIcon>
+#include <QStandardPaths>
 
 using namespace IncidenceEditorNG;
 
@@ -295,8 +295,8 @@ void IncidenceDialogPrivate::loadTemplate(const QString &templateName)
 
     KCalCore::MemoryCalendar::Ptr cal(new KCalCore::MemoryCalendar(KSystemTimeZones::local()));
 
-    const QString fileName = KStandardDirs::locateLocal(
-                                 "data",
+    const QString fileName = QStandardPaths::locate(
+                                 QStandardPaths::GenericDataLocation,
                                  "korganizer/templates/" +
                                  typeToString(mEditor->type()) + '/' +
                                  templateName);
@@ -384,11 +384,10 @@ void IncidenceDialogPrivate::saveTemplate(const QString &templateName)
         Q_ASSERT_X(false, "saveTemplate", "Fix your program");
     }
 
-    const QString fileName = KStandardDirs::locateLocal(
-                                 "data",
-                                 "korganizer/templates/" +
-                                 typeToString(mEditor->type()) + '/' +
-                                 templateName);
+    QString fileName = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+                                 "korganizer/templates/" + typeToString(mEditor->type()) + '/';
+    QDir::root().mkpath(fileName);
+    fileName += templateName;
 
     KCalCore::ICalFormat format;
     format.save(cal, fileName);
@@ -400,10 +399,10 @@ void IncidenceDialogPrivate::storeTemplatesInConfig(const QStringList &templateN
     // be changed by adding a setTemplates method.
     const QStringList origTemplates =
         IncidenceEditorNG::EditorConfig::instance()->templates(mEditor->type());
-    const QString defaultPath = KStandardDirs::locateLocal(
-                                    "data",
+    const QString defaultPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
                                     "korganizer/templates/" +
-                                    typeToString(mEditor->type()) + '/');
+                                    typeToString(mEditor->type()) + '/';
+    QDir::root().mkpath(defaultPath);
     Q_FOREACH (const QString &tmpl, origTemplates) {
         if (!templateNames.contains(tmpl)) {
             const QString fileName = defaultPath + tmpl;
