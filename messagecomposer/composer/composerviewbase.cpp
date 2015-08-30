@@ -191,22 +191,11 @@ void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &ms
     otp.parseObjectTree(msgContent);
 
     // Load the attachments
-    MessageCore::AttachmentCollector ac;
-    ac.collectAttachmentsFrom(msgContent);
-    std::vector<KMime::Content *>::const_iterator end(ac.attachments().end());
-    for (std::vector<KMime::Content *>::const_iterator it = ac.attachments().begin();
-            it != end ; ++it) {
-        if (otp.nodeHelper()->partMetaData((*it)->parent()).isEncrypted) {                  // gpg mime has a msg.asc as subelement, that is recognized as attachment
-            MessageCore::AttachmentCollector acEnc;
-            acEnc.collectAttachmentsFrom(otp.nodeHelper()->decryptedNodeForContent((*it)->parent()));
-            std::vector<KMime::Content *>::const_iterator endEnc(acEnc.attachments().end());
-            for (std::vector<KMime::Content *>::const_iterator itEnc = acEnc.attachments().begin();
-                    itEnc != endEnc ; ++itEnc) {
-                addAttachmentPart(*itEnc);
-            }
-        } else {
-            addAttachmentPart(*it);
-        }
+    foreach (auto att, otp.nodeHelper()->attachmentsOfExtraContents()) {
+        addAttachmentPart(att);
+    }
+    foreach (auto att, msgContent->attachments()) {
+        addAttachmentPart(att);
     }
 
     int transportId = -1;
