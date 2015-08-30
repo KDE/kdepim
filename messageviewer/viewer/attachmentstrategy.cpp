@@ -37,26 +37,28 @@
 
 #include <kmime/kmime_content.h>
 
-#include <messagecore/helpers/nodehelper.h>
 #include "messageviewer_debug.h"
 namespace MessageViewer
 {
 
 static AttachmentStrategy::Display smartDisplay(KMime::Content *node)
 {
-    if (node->contentDisposition()->disposition() == KMime::Headers::CDinline)
+    const auto cd = node->contentDisposition(false);
+
+    if (cd && cd->disposition() == KMime::Headers::CDinline)
         // explict "inline" disposition:
     {
         return AttachmentStrategy::Inline;
     }
-    if (MessageCore::NodeHelper::isAttachment(node))
+    if (cd && cd->disposition() == KMime::Headers::CDattachment)
         // explicit "attachment" disposition:
     {
         return AttachmentStrategy::AsIcon;
     }
-    if (node->contentType()->isText() &&
-            node->contentDisposition()->filename().trimmed().isEmpty() &&
-            node->contentType()->name().trimmed().isEmpty())
+
+    const auto ct = node->contentType(false);
+    if (ct && ct->isText() && ct->name().trimmed().isEmpty() &&
+        (!cd || cd->filename().trimmed().isEmpty()))
         // text/* w/o filename parameter:
     {
         return AttachmentStrategy::Inline;
