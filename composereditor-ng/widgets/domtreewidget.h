@@ -21,15 +21,13 @@
 #ifndef DOMTREEWIDGET_H
 #define DOMTREEWIDGET_H
 
-#include "composereditorng_export.h"
-
 #include <QWidget>
 class QWebView;
 
 namespace ComposerEditorNG
 {
 class DomTreeWidgetPrivate;
-class COMPOSEREDITORNG_EXPORT DomTreeWidget : public QWidget
+class DomTreeWidget : public QWidget
 {
     Q_OBJECT
 public:
