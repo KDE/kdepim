@@ -65,14 +65,14 @@ ecm_add_app_icon(blogilo_SRCS ICONS ${ICONS_SRCS})
 add_executable( blogilo ${blogilo_SRCS})
 
 target_link_libraries(blogilo
-    kdepim
-    composereditorng
+    KF5::Blog
     pimcommon
+    Qt5::Sql
+    composereditorng
+    kdepim
     KF5::TextEditor
     KF5::WebKit
-    KF5::Blog
     KF5::Wallet
-    Qt5::Sql
     KF5::DBusAddons
     KF5::XmlGui
 )
