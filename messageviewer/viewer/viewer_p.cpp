@@ -1907,7 +1907,7 @@ void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
     }
     const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
     const bool isRoot = (content == mMessage.data());
-    const auto contents = Util::extractAttachments(mMessage.data());
+    const auto hasAttachments = KMime::hasAttachment(mMessage.data());
 
     QMenu popup;
 
@@ -1928,7 +1928,7 @@ void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
         }
     }
 
-    if (!contents.isEmpty()) {
+    if (hasAttachments) {
         popup.addAction(i18n("Save All Attachments..."), this,
                         SLOT(slotAttachmentSaveAll()));
     }
@@ -2646,7 +2646,7 @@ void ViewerPrivate::slotAttachmentSaveAs()
 
 void ViewerPrivate::slotAttachmentSaveAll()
 {
-    const auto contents = Util::extractAttachments(mMessage.data());
+    const auto contents = mMessage->attachments();
     QUrl currentUrl;
     if (Util::saveAttachments(contents, mMainWindow, currentUrl)) {
         showOpenAttachmentFolderWidget(currentUrl);

@@ -177,25 +177,6 @@ KMime::Content::List Util::allContents(const KMime::Content *message)
     return result;
 }
 
-KMime::Content::List Util::extractAttachments(const KMime::Message *message)
-{
-    const auto contents = allContents(message);
-    KMime::Content::List result;
-    for (auto it = contents.constBegin(); it != contents.constEnd();) {
-        KMime::Content *content = *it;
-        if (content->contentDisposition()->filename().trimmed().isEmpty() &&
-                (content->contentType()->name().trimmed().isEmpty() ||
-                 content == message)) {
-            ++it;
-        } else {
-            result << (*it);
-            ++it;
-        }
-    }
-
-    return result;
-}
-
 bool Util::saveContents(QWidget *parent, const KMime::Content::List &contents, QUrl &currentFolder)
 {
     QUrl url, dirUrl;
