@@ -734,13 +734,7 @@ void NodeHelper::attachExtraContent(KMime::Content *topLevelNode, KMime::Content
 
 QList< KMime::Content * > NodeHelper::extraContents(KMime::Content *topLevelnode) const
 {
-    const QMap< KMime::Content *, QList<KMime::Content *> >::const_iterator it
-        = mExtraContents.find(topLevelnode);
-    if (it == mExtraContents.end()) {
-        return QList<KMime::Content *>();
-    } else {
-        return *it;
-    }
+    return mExtraContents.value(topLevelnode);
 }
 
 void NodeHelper::mergeExtraNodes(KMime::Content *node)
