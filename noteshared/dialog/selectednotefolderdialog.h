@@ -19,11 +19,10 @@
 #define SELECTEDNOTEFOLDERDIALOG_H
 
 #include <AkonadiWidgets/CollectionDialog>
-#include "noteshared_export.h"
 
 namespace NoteShared
 {
-class NOTESHARED_EXPORT SelectedNotefolderDialog : public Akonadi::CollectionDialog
+class SelectedNotefolderDialog : public Akonadi::CollectionDialog
 {
     Q_OBJECT
 public:

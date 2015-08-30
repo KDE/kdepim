@@ -21,7 +21,7 @@
 #include "pimsettingexporter_export.h"
 class KZip;
 
-class PIMSETTINGEXPORTER_EXPORT ArchiveStorage : public QObject
+class ArchiveStorage : public QObject
 {
     Q_OBJECT
 public:

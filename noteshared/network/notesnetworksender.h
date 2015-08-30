@@ -35,10 +35,9 @@
 #define NOTENETWORKSENDER_H
 
 #include <QTcpSocket>
-#include "noteshared_export.h"
 namespace NoteShared
 {
-class NOTESHARED_EXPORT NotesNetworkSender : public QObject
+class NotesNetworkSender : public QObject
 {
     Q_OBJECT
 public:
