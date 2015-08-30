@@ -73,7 +73,6 @@ target_link_libraries(blogilo
     KF5::Blog
     KF5::Wallet
     Qt5::Sql
-    KF5::XmlRpcClient
     KF5::DBusAddons
     KF5::XmlGui
 )
