@@ -258,6 +258,14 @@ public:
      */
     KMime::Message::Ptr unencryptedMessage(const KMime::Message::Ptr &originalMessage);
 
+    /**
+     * Returns a list of attachments of attached extra content nodes.
+     * This is mainly useful is order to get attachments of encrypted messages.
+     * Note that this does not include attachments from the primary node tree.
+     * @see KMime::Content::attachments().
+     */
+    QVector<KMime::Content*> attachmentsOfExtraContents() const;
+
 private:
 
     bool unencryptedMessage_helper(KMime::Content *node, QByteArray &resultingData, bool addHeaders,

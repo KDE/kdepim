@@ -34,13 +34,14 @@ macro(add_messageviewer_crypto_unittest _source)
         KF5::AkonadiNotes
         KF5::CalendarCore
     )
-    add_gpg_crypto_test(${_name} ${_name})
+    add_gpg_crypto_test(${_name} messageviewer-${_name})
 endmacro ()
 
 add_messageviewer_unittest( htmlquotecolorertest.cpp )
 add_messageviewer_crypto_unittest( objecttreeparsertest.cpp )
 add_messageviewer_crypto_unittest( rendertest.cpp )
 add_messageviewer_crypto_unittest( unencryptedmessagetest.cpp )
+add_messageviewer_crypto_unittest( attachmenttest.cpp )
 add_messageviewer_unittest( cryptohelpertest.cpp )
 add_messageviewer_unittest( todoedittest.cpp )
 add_messageviewer_unittest( eventedittest.cpp )
