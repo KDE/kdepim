@@ -24,8 +24,6 @@
 #ifndef EVENTVIEWS_MONTHGRAPHICSITEMS_H
 #define EVENTVIEWS_MONTHGRAPHICSITEMS_H
 
-#include "eventviews_export.h"
-
 #include <QDate>
 #include <QGraphicsItem>
 
@@ -38,7 +36,7 @@ class MonthItem;
  * Graphics items which indicates that the view can be scrolled to display
  * more events.
  */
-class EVENTVIEWS_EXPORT ScrollIndicator : public QGraphicsItem
+class ScrollIndicator : public QGraphicsItem
 {
 public:
     enum ArrowDirection {
@@ -130,7 +128,7 @@ private:
  * A MonthGraphicsItem representing a part of an event. There should be
  * one part per row = week
  */
-class EVENTVIEWS_EXPORT MonthGraphicsItem : public QObject, public QGraphicsItem
+class MonthGraphicsItem : public QObject, public QGraphicsItem
 {
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)

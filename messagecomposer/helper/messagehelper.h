@@ -52,11 +52,11 @@ void MESSAGECOMPOSER_EXPORT initHeader(const KMime::Message::Ptr &message, const
 
 /** Set the from, to, cc, bcc, encrytion etc headers as specified in the
   * given identity. */
-void MESSAGECOMPOSER_EXPORT applyIdentity(const KMime::Message::Ptr &message, const KIdentityManagement::IdentityManager *identMan,  uint id);
+void applyIdentity(const KMime::Message::Ptr &message, const KIdentityManagement::IdentityManager *identMan,  uint id);
 
 /** Initialize headers fields according to the identity and the transport
    header of the given original message */
-void MESSAGECOMPOSER_EXPORT initFromMessage(const KMime::Message::Ptr &msg, const KMime::Message::Ptr &orgiMsg, KIdentityManagement::IdentityManager *,
+void initFromMessage(const KMime::Message::Ptr &msg, const KMime::Message::Ptr &orgiMsg, KIdentityManagement::IdentityManager *,
         uint id, bool idHeaders = true);
 
 KMime::Types::AddrSpecList MESSAGECOMPOSER_EXPORT extractAddrSpecs(const KMime::Message::Ptr &msg, const QByteArray &header);
@@ -67,25 +67,25 @@ KMime::Types::AddrSpecList MESSAGECOMPOSER_EXPORT extractAddrSpecs(const KMime::
       sequence of whitespace-delimited prefixes at the beginning of
       #subject() is replaced by @p newPrefix
   **/
-QString MESSAGECOMPOSER_EXPORT cleanSubject(const KMime::Message::Ptr &msg, const QStringList &prefixRegExps, bool replace,
+QString cleanSubject(const KMime::Message::Ptr &msg, const QStringList &prefixRegExps, bool replace,
         const QString &newPrefix);
 
 /** Return this mails subject, with all "forward" and "reply"
       prefixes removed */
-QString MESSAGECOMPOSER_EXPORT cleanSubject(const KMime::Message::Ptr &msg);
+QString cleanSubject(const KMime::Message::Ptr &msg);
 
 /** Return this mails subject, formatted for "forward" mails */
-QString MESSAGECOMPOSER_EXPORT forwardSubject(const KMime::Message::Ptr &msg);
+QString forwardSubject(const KMime::Message::Ptr &msg);
 
 /** Return this mails subject, formatted for "reply" mails */
-QString MESSAGECOMPOSER_EXPORT replySubject(const KMime::Message::Ptr &msg);
+QString replySubject(const KMime::Message::Ptr &msg);
 /** Check for prefixes @p prefixRegExps in @p str. If none
       is found, @p newPrefix + ' ' is prepended to @p str and the
       resulting string is returned. If @p replace is true, any
       sequence of whitespace-delimited prefixes at the beginning of
       @p str is replaced by @p newPrefix.
   **/
-QString MESSAGECOMPOSER_EXPORT replacePrefixes(const QString &str,
+QString replacePrefixes(const QString &str,
         const QStringList &prefixRegExps,
         bool replace,
         const QString &newPrefix);
@@ -95,7 +95,7 @@ QString MESSAGECOMPOSER_EXPORT replacePrefixes(const QString &str,
     Call this method before sending *after* all changes to the message
     are done because this method does things different if there are
     attachments / multiple body parts. */
-void MESSAGECOMPOSER_EXPORT setAutomaticFields(const KMime::Message::Ptr &msg, bool isMultipart = false);
+void setAutomaticFields(const KMime::Message::Ptr &msg, bool isMultipart = false);
 
 /** Creates reference string for reply to messages.
    *  reference = original first reference + original last reference + original msg-id

@@ -30,7 +30,7 @@
 namespace CalendarSupport
 {
 
-class CALENDARSUPPORT_EXPORT CalPrintJournal : public CalPrintPluginBase
+class CalPrintJournal : public CalPrintPluginBase
 {
 public:
     CalPrintJournal(): CalPrintPluginBase() {}

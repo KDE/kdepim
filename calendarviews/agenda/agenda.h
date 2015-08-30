@@ -48,7 +48,7 @@ class Agenda;
 class AgendaItem;
 class AgendaView;
 
-class EVENTVIEWS_EXPORT MarcusBains : public QFrame
+class MarcusBains : public QFrame
 {
     Q_OBJECT
 public:

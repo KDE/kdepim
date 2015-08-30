@@ -41,7 +41,7 @@ class AgendaView;
 class Prefs;
 typedef QSharedPointer<Prefs> PrefsPtr;
 
-class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
+class TimeLabelsZone : public QWidget
 {
     Q_OBJECT
 public:

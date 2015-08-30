@@ -22,7 +22,6 @@
 #ifndef EVENTVIEWS_TIMESCALECONFIGDIALOG_H
 #define EVENTVIEWS_TIMESCALECONFIGDIALOG_H
 
-#include "eventviews_export.h"
 #include "ui_timescaleedit_base.h"
 
 #include <QDialog>
@@ -33,7 +32,7 @@ namespace EventViews
 class Prefs;
 typedef QSharedPointer<Prefs> PrefsPtr;
 
-class EVENTVIEWS_EXPORT TimeScaleConfigDialog : public QDialog, private Ui::TimeScaleEditWidget
+class TimeScaleConfigDialog : public QDialog, private Ui::TimeScaleEditWidget
 {
     Q_OBJECT
 
