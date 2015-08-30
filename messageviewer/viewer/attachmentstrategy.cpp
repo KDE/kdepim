@@ -81,14 +81,6 @@ public:
     {
         return "iconic";
     }
-    const AttachmentStrategy *next() const Q_DECL_OVERRIDE
-    {
-        return smart();
-    }
-    const AttachmentStrategy *prev() const Q_DECL_OVERRIDE
-    {
-        return headerOnly();
-    }
 
     bool inlineNestedMessages() const Q_DECL_OVERRIDE
     {
@@ -126,14 +118,6 @@ public:
     {
         return "smart";
     }
-    const AttachmentStrategy *next() const Q_DECL_OVERRIDE
-    {
-        return inlined();
-    }
-    const AttachmentStrategy *prev() const Q_DECL_OVERRIDE
-    {
-        return iconic();
-    }
 
     bool inlineNestedMessages() const Q_DECL_OVERRIDE
     {
@@ -162,14 +146,6 @@ public:
     {
         return "inlined";
     }
-    const AttachmentStrategy *next() const Q_DECL_OVERRIDE
-    {
-        return hidden();
-    }
-    const AttachmentStrategy *prev() const Q_DECL_OVERRIDE
-    {
-        return smart();
-    }
 
     bool inlineNestedMessages() const Q_DECL_OVERRIDE
     {
@@ -197,14 +173,6 @@ public:
     const char *name() const Q_DECL_OVERRIDE
     {
         return "hidden";
-    }
-    const AttachmentStrategy *next() const Q_DECL_OVERRIDE
-    {
-        return headerOnly();
-    }
-    const AttachmentStrategy *prev() const Q_DECL_OVERRIDE
-    {
-        return inlined();
     }
 
     bool inlineNestedMessages() const Q_DECL_OVERRIDE
@@ -244,14 +212,6 @@ public:
     const char *name() const Q_DECL_OVERRIDE
     {
         return "headerOnly";
-    }
-    const AttachmentStrategy *next() const Q_DECL_OVERRIDE
-    {
-        return iconic();
-    }
-    const AttachmentStrategy *prev() const Q_DECL_OVERRIDE
-    {
-        return hidden();
     }
 
     bool inlineNestedMessages() const Q_DECL_OVERRIDE

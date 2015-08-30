@@ -71,8 +71,6 @@ public:
     //
 
     virtual const char *name() const = 0;
-    virtual const AttachmentStrategy *next() const = 0;
-    virtual const AttachmentStrategy *prev() const = 0;
 
     //
     // Bahavioural:
