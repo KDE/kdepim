@@ -229,7 +229,7 @@ void Widget::slotTagsFetched(KJob *job)
     }
     const QStringList tagSelectedLst = tagSelected.split(QLatin1Char(','));
 
-    addMessageTagItem(SmallIcon(QStringLiteral("mail-flag")), i18nc("Item in list of Akonadi tags, to show all e-mails", "All"), QString());
+    addMessageTagItem(QIcon::fromTheme(QStringLiteral("mail-flag")).pixmap(16, 16), i18nc("Item in list of Akonadi tags, to show all e-mails", "All"), QString());
 
     QStringList tagFound;
     foreach (const Akonadi::Tag &akonadiTag, fetchJob->tags()) {
@@ -242,7 +242,7 @@ void Widget::slotTagsFetched(KJob *job)
             if (attr) {
                 iconName = attr->iconName();
             }
-            addMessageTagItem(SmallIcon(iconName), label, QVariant(id));
+            addMessageTagItem(QIcon::fromTheme(iconName).pixmap(16, 16), label, QVariant(id));
         }
     }
     conf.writeEntry(QStringLiteral("TagSelected"), tagFound);
