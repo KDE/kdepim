@@ -18,7 +18,6 @@
 #ifndef VACATIONHELPERJOB_H
 #define VACATIONHELPERJOB_H
 
-#include "ksieveui_export.h"
 
 #include <QUrl>
 
@@ -30,7 +29,7 @@ class SieveJob;
 
 namespace KSieveUi
 {
-class KSIEVEUI_EXPORT VacationHelperJob : public QObject
+class VacationHelperJob : public QObject
 {
     Q_OBJECT
 public:

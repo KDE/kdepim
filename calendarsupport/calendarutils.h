@@ -22,8 +22,6 @@
 #ifndef CALENDARSUPPORT_CALENDARUTILS_H
 #define CALENDARSUPPORT_CALENDARUTILS_H
 
-#include "calendarsupport_export.h"
-
 #include <Collection>
 #include <Akonadi/Calendar/ETMCalendar>
 
@@ -44,7 +42,7 @@ class CalendarUtilsPrivate;
     NOTE: this class will only start an modify job for an Item when no other job
           started by this class for the same Item is still running.
  */
-class CALENDARSUPPORT_EXPORT CalendarUtils : public QObject
+class CalendarUtils : public QObject
 {
     Q_OBJECT
 public:

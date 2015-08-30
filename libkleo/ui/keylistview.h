@@ -67,7 +67,7 @@ inline const T *lvi_cast(const QTreeWidgetItem *item)
 
 class KeyListView;
 
-class KLEO_EXPORT KeyListViewItem : public QTreeWidgetItem
+class KeyListViewItem : public QTreeWidgetItem
 {
 public:
     KeyListViewItem(KeyListView *parent, const GpgME::Key &key);
