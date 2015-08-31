@@ -41,8 +41,6 @@ public:
     {
         return true;
     }
-private:
-    static QString imgToDataUrl(const QImage &image);
 };
 
 }
