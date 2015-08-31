@@ -34,9 +34,6 @@
 
 #include <QDialog>
 #include "noteshared_export.h"
-class KDateComboBox;
-class KTimeComboBox;
-class QButtonGroup;
 class QDateTime;
 namespace NoteShared
 {

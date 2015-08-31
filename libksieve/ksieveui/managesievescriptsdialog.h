@@ -25,7 +25,6 @@
 #include <QUrl>
 
 class QTreeWidgetItem;
-class QPushButton;
 
 namespace KManageSieve
 {
@@ -35,7 +34,6 @@ class SieveJob;
 namespace KSieveUi
 {
 class SieveEditor;
-class CustomManageSieveWidget;
 class ManageSieveScriptsDialogPrivate;
 class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
 {

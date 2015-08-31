@@ -22,11 +22,6 @@
 #include <QPushButton>
 #include <AkonadiCore/Collection>
 #include "messagecomposer_export.h"
-namespace Akonadi
-{
-class CollectionComboBox;
-}
-class KDateComboBox;
 class QAbstractItemModel;
 
 namespace MessageComposer

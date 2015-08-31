@@ -25,7 +25,6 @@
 #include "kdepim_export.h"
 namespace KPIM
 {
-class BlackListBalooEmailCompletionWidget;
 class BlackListBalooEmailCompletionDialogPrivate;
 class KDEPIM_EXPORT BlackListBalooEmailCompletionDialog : public QDialog
 {

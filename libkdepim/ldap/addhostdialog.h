@@ -25,11 +25,9 @@
 #include "libkdepim/kdepim_export.h"
 #include <qdialog.h>
 
-class QPushButton;
 
 namespace KLDAP
 {
-class LdapConfigWidget;
 class LdapServer;
 class AddHostDialogPrivate;
 class KDEPIM_EXPORT AddHostDialog : public QDialog

@@ -22,7 +22,6 @@
 
 namespace KSieveUi
 {
-class SieveEditor;
 class CustomManageSieveWidget : public KSieveUi::ManageSieveWidget
 {
     Q_OBJECT

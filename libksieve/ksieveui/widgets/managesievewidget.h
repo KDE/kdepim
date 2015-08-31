@@ -25,7 +25,6 @@
 #include <QMap>
 
 class QTreeWidgetItem;
-class QNetworkConfigurationManager;
 
 namespace KManageSieve
 {

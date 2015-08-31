@@ -26,7 +26,6 @@ namespace Ui
 class ImageScalingWidget;
 }
 
-class QButtonGroup;
 
 namespace MessageComposer
 {

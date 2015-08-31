@@ -31,7 +31,6 @@
 namespace KPIM
 {
 
-class ProgressItem;
 
 /**
    Provides a singleton which broadcasts status messages by emitting

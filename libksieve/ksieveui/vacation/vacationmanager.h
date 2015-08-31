@@ -26,8 +26,6 @@
 class QWidget;
 namespace KSieveUi
 {
-class MultiImapVacationManager;
-class MultiImapVacationDialog;
 class VacationManagerPrivate;
 class KSIEVEUI_EXPORT VacationManager : public QObject
 {
