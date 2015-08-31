@@ -680,7 +680,7 @@ KMime::Message::Ptr MessageFactory::createMDN(KMime::MDN::ActionMode a,
     KMime::Content *firstMsgPart = new KMime::Content(m_origMsg.data());
     firstMsgPart->contentType()->setMimeType("text/plain");
     firstMsgPart->contentType()->setCharset("utf-8");
-    firstMsgPart->contentTransferEncoding()->from7BitString("7bit");
+    firstMsgPart->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
     firstMsgPart->setBody(description.toUtf8());
     receipt->addContent(firstMsgPart);
 
@@ -689,7 +689,7 @@ KMime::Message::Ptr MessageFactory::createMDN(KMime::MDN::ActionMode a,
     secondMsgPart->contentType()->setMimeType("message/disposition-notification");
     //secondMsgPart.setCharset( "us-ascii" );
 
-    secondMsgPart->contentTransferEncoding()->from7BitString("7bit");
+    secondMsgPart->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
     secondMsgPart->setBody(KMime::MDN::dispositionNotificationBodyContent(
                                finalRecipient,
                                m_origMsg->headerByType("Original-Recipient") ? m_origMsg->headerByType("Original-Recipient")->as7BitString() : "",
