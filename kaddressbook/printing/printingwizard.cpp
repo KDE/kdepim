@@ -71,7 +71,7 @@ PrintingWizard::PrintingWizard(QPrinter *printer, QItemSelectionModel *selection
 
     registerStyles();
 
-    if (mStyleFactories.count() > Settings::self()->printingStyle()) {
+    if (mPrintStyleDefinition.count() > Settings::self()->printingStyle()) {
         mStylePage->setPrintingStyle(Settings::self()->printingStyle());   // should Q_EMIT styleChanged
         slotStyleSelected(Settings::self()->printingStyle());
     }
@@ -150,7 +150,7 @@ void PrintingWizard::loadGrantleeStyle()
             const QString printThemePath(dirIt.filePath() + QDir::separator());
             if (!printThemePath.isEmpty()) {
                 alreadyLoadedThemeName << name;
-                mStyleFactories.append(new GrantleeStyleFactory(name, printThemePath, this));
+                mPrintStyleDefinition.append(new PrintStyleDefinition(new GrantleeStyleFactory(name, printThemePath, this)));
             }
         }
     }
@@ -158,36 +158,35 @@ void PrintingWizard::loadGrantleeStyle()
 
 void PrintingWizard::registerStyles()
 {
-    mStyleFactories.append(new DetailledPrintStyleFactory(this));
-    mStyleFactories.append(new MikesStyleFactory(this));
-    mStyleFactories.append(new RingBinderPrintStyleFactory(this));
-    mStyleFactories.append(new CompactStyleFactory(this));
+    mPrintStyleDefinition.append(new PrintStyleDefinition(new DetailledPrintStyleFactory(this)));
+    mPrintStyleDefinition.append(new PrintStyleDefinition(new MikesStyleFactory(this)));
+    mPrintStyleDefinition.append(new PrintStyleDefinition(new RingBinderPrintStyleFactory(this)));
+    mPrintStyleDefinition.append(new PrintStyleDefinition(new CompactStyleFactory(this)));
 
     loadGrantleeStyle();
 
     mStylePage->clearStyleNames();
-    for (int i = 0; i < mStyleFactories.count(); ++i) {
-        mStylePage->addStyleName(mStyleFactories.at(i)->description());
+    for (int i = 0; i < mPrintStyleDefinition.count(); ++i) {
+        mStylePage->addStyleName(mPrintStyleDefinition.at(i)->printstyleFactory->description());
     }
 }
 
 void PrintingWizard::slotStyleSelected(int index)
 {
-    if (index < 0 || index >= mStyleFactories.count()) {
+    if (index < 0 || index >= mPrintStyleDefinition.count()) {
         return;
     }
-
     if (mStyle) {
         mStyle->hidePages();
     }
 
-    mStyle = mStyleList.value(index);
+    mStyle = mPrintStyleDefinition.value(index)->printStyle;
     if (!mStyle) {
-        PrintStyleFactory *factory = mStyleFactories.at(index);
+        PrintStyleFactory *factory = mPrintStyleDefinition.at(index)->printstyleFactory;
         qCDebug(KADDRESSBOOK_LOG) << "creating print style" << factory->description();
 
         mStyle = factory->create();
-        mStyleList.insert(index, mStyle);
+        mPrintStyleDefinition.value(index)->printStyle = mStyle;
     }
 
     mStyle->showPages();

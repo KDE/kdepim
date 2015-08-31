@@ -113,8 +113,20 @@ protected Q_SLOTS:
     void slotStyleSelected(int);
 
 protected:
-    QList<PrintStyleFactory *> mStyleFactories;
-    QList<PrintStyle *> mStyleList;
+    class PrintStyleDefinition
+    {
+    public:
+        PrintStyleDefinition(PrintStyleFactory *factory = Q_NULLPTR, PrintStyle *style = Q_NULLPTR)
+            : printstyleFactory(factory),
+              printStyle(style)
+        {
+
+        }
+        PrintStyleFactory *printstyleFactory;
+        PrintStyle *printStyle;
+    };
+
+    QList<PrintStyleDefinition *> mPrintStyleDefinition;
     QPrinter *mPrinter;
     PrintStyle *mStyle;
     PrintProgress *mProgress;
