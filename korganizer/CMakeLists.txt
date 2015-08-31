@@ -1,9 +1,12 @@
 project(korganizer)
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5850)
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
+# Perl is needed for ical2vcal
+find_package(Perl)
+set_package_properties(Perl PROPERTIES DESCRIPTION "The Perl language interpreter" URL "http://www.perl.org" TYPE OPTIONAL PURPOSE "Needed for the ICal 2 VCal import tool")
 
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5850)
+add_definitions(-DQT_NO_CAST_FROM_ASCII)
+add_definitions(-DQT_NO_CAST_TO_ASCII)
 
 # enable exception handling
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
@@ -34,10 +37,13 @@ if(KDEPIM_BUILD_DESKTOP)
   add_subdirectory(kcmconfigs)
 endif()
 
-set(PERL ${PERL_EXECUTABLE})
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/data/ical2vcal.cmake ${CMAKE_CURRENT_BINARY_DIR}/ical2vcal @ONLY
-)
+if(PERL_FOUND)
+  add_definitions(-DHAVE_PERL)
+  set(PERL ${PERL_EXECUTABLE})
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/ical2vcal.cmake ${CMAKE_CURRENT_BINARY_DIR}/ical2vcal @ONLY
+  )
+endif()
 
 ########### next target ###############
 
@@ -333,9 +339,11 @@ set(korganizerprivate_LIB_SRCS
     DESTINATION ${XDG_APPS_INSTALL_DIR}
   )
 
-  install(PROGRAMS
-    ${CMAKE_CURRENT_BINARY_DIR}/ical2vcal
-    DESTINATION ${BIN_INSTALL_DIR}
-  )
+  if(PERL_FOUND)
+    install(PROGRAMS
+      ${CMAKE_CURRENT_BINARY_DIR}/ical2vcal
+      DESTINATION ${BIN_INSTALL_DIR}
+    )
+  endif()
 
 endif()

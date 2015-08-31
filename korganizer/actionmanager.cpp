@@ -287,6 +287,7 @@ void ActionManager::initActions()
   mACollection->addAction( QLatin1String("import_icalendar"), mImportAction );
   connect( mImportAction, SIGNAL(triggered(bool)), SLOT(file_import()) );
 
+#if defined(HAVE_PERL)
   KAction *importAction = new KAction( i18n( "&Import From UNIX Ical Tool" ), this );
   importAction->setHelpText(
     i18n( "Import a calendar in another format" ) );
@@ -295,7 +296,7 @@ void ActionManager::initActions()
           "of a non-iCalendar formatted file into your current calendar." ) );
   mACollection->addAction( QLatin1String("import_ical"), importAction );
   connect( importAction, SIGNAL(triggered(bool)), SLOT(file_icalimport()) );
-
+#endif
   action = new KAction( i18n( "Get &Hot New Stuff..." ), this );
   mACollection->addAction( QLatin1String("downloadnewstuff"), action );
   connect( action, SIGNAL(triggered(bool)), SLOT(downloadNewStuff()) );
@@ -1970,4 +1971,3 @@ void ActionManager::handleExportJobResult( KJob *job )
     delete htmlExportJob->settings();
   }
 }
-
