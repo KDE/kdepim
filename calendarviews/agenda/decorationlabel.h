@@ -24,7 +24,6 @@
 #ifndef EVENTVIEWS_DECORATIONLABEL_H
 #define EVENTVIEWS_DECORATIONLABEL_H
 
-#include "eventviews_export.h"
 #include "calendardecoration.h"
 
 #include <QLabel>
@@ -32,7 +31,7 @@
 namespace EventViews
 {
 
-class EVENTVIEWS_EXPORT DecorationLabel : public QLabel
+class DecorationLabel : public QLabel
 {
     Q_OBJECT
 public:

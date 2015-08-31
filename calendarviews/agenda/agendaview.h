@@ -56,7 +56,7 @@ class Agenda;
 class AgendaItem;
 class AgendaView;
 
-class EVENTVIEWS_EXPORT EventIndicator : public QFrame
+class EventIndicator : public QFrame
 {
     Q_OBJECT
 public:

@@ -23,8 +23,6 @@
 #ifndef EVENTVIEWS_MONTHSCENE_H
 #define EVENTVIEWS_MONTHSCENE_H
 
-#include "eventviews_export.h"
-
 #include <Collection>
 #include <Item>
 
@@ -47,7 +45,7 @@ class MonthItem;
 class MonthView;
 class ScrollIndicator;
 
-class EVENTVIEWS_EXPORT MonthScene : public QGraphicsScene
+class MonthScene : public QGraphicsScene
 {
     Q_OBJECT
 
@@ -322,7 +320,7 @@ private:
 /**
  * Renders a MonthScene
  */
-class EVENTVIEWS_EXPORT MonthGraphicsView : public QGraphicsView
+class MonthGraphicsView : public QGraphicsView
 {
 public:
     explicit MonthGraphicsView(MonthView *parent);
