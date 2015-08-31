@@ -25,9 +25,10 @@
 
 #include <KCalCore/FreeBusyPeriod>
 
-#include <KLocale>
 #include <KLocalizedString>
 #include <KSystemTimeZones>
+
+#include <QLocale>
 
 using namespace IncidenceEditorNG;
 
@@ -96,10 +97,10 @@ QString FreeBusyGanttProxyModel::tooltipify(const KCalCore::FreeBusyPeriod &peri
         toolTip += "<br>";
     }
     toolTip += "<i>" + i18nc("@info:tooltip period start time", "Start:") + "</i>" + "&nbsp;";
-    toolTip += KLocale::global()->formatDateTime(period.start().toTimeSpec(timeSpec).dateTime());
+    toolTip += QLocale::system().toString(period.start().toTimeSpec(timeSpec).dateTime(), QLocale::ShortFormat);
     toolTip += "<br>";
     toolTip += "<i>" + i18nc("@info:tooltip period end time", "End:") + "</i>" + "&nbsp;";
-    toolTip += KLocale::global()->formatDateTime(period.end().toTimeSpec(timeSpec).dateTime());
+    toolTip += QLocale::system().toString(period.end().toTimeSpec(timeSpec).dateTime(), QLocale::ShortFormat);
     toolTip += "<br>";
     toolTip += "</qt>";
     return toolTip;
