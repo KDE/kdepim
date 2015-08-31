@@ -99,6 +99,11 @@ GpgME::ImportResult KleoJobExecutor::exec(Kleo::ImportJob *job, const QByteArray
     return mImportResult;
 }
 
+Error KleoJobExecutor::auditLogError() const
+{
+    return mAuditLogError;
+}
+
 void KleoJobExecutor::verificationResult(const GpgME::VerificationResult &result)
 {
     qCDebug(MESSAGEVIEWER_LOG) << "Detached verification job finished";

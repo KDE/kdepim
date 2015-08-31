@@ -338,4 +338,9 @@ const AttachmentStrategy *AttachmentStrategy::headerOnly()
     return headerOnlyStrategy;
 }
 
+bool AttachmentStrategy::requiresAttachmentListInHeader() const
+{
+    return false;
+}
+
 }

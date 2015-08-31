@@ -80,10 +80,7 @@ public:
 
     virtual bool inlineNestedMessages() const = 0;
     virtual Display defaultDisplay(KMime::Content *node) const = 0;
-    virtual bool requiresAttachmentListInHeader() const
-    {
-        return false;
-    }
+    virtual bool requiresAttachmentListInHeader() const;
 };
 
 }

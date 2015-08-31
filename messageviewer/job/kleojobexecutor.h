@@ -60,10 +60,7 @@ public:
             QByteArray &plainText);
     GpgME::ImportResult exec(Kleo::ImportJob *job, const QByteArray &certData);
 
-    GpgME::Error auditLogError() const
-    {
-        return mAuditLogError;
-    }
+    GpgME::Error auditLogError() const;
     QString auditLogAsHtml() const;
 
 private Q_SLOTS:

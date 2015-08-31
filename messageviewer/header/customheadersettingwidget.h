@@ -18,7 +18,6 @@
 #ifndef CUSTOMHEADERSETTINGWIDGET_H
 #define CUSTOMHEADERSETTINGWIDGET_H
 
-#include "messageviewer_export.h"
 
 #include <QWidget>
 
@@ -32,7 +31,7 @@ class QButtonGroup;
 namespace MessageViewer
 {
 
-class MESSAGEVIEWER_EXPORT CustomHeaderSettingWidget : public QWidget
+class CustomHeaderSettingWidget : public QWidget
 {
     Q_OBJECT
 public:
