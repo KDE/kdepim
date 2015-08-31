@@ -72,9 +72,6 @@ private Q_SLOTS:
 
 private:
     AkonadiSenderPrivate *const d;
-    QSet<KJob *> mPendingJobs;
-    int mCustomTransportId;
-
 };
 }
 #endif /* AKONADISENDER_H */

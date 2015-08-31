@@ -50,8 +50,7 @@ public:
 };
 
 class RecipientsPicker;
-class RecipientsEditorSideWidget;
-
+class RecipientsEditorPrivate;
 class MESSAGECOMPOSER_EXPORT RecipientsEditor : public KPIM::MultiplyingLineEditor
 {
     Q_OBJECT
@@ -100,8 +99,7 @@ protected:
     RecipientLineNG *activeLine() const Q_DECL_OVERRIDE;
 
 private:
-    KConfig *mRecentAddressConfig;
-    RecipientsEditorSideWidget *mSideWidget;
+    RecipientsEditorPrivate *const d;
 };
 
 }

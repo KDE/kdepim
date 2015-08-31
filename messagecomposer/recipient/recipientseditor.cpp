@@ -65,19 +65,33 @@ int RecipientLineFactory::maximumRecipients()
     return MessageComposer::MessageComposerSettings::self()->maximumRecipients();
 }
 
+class MessageComposer::RecipientsEditorPrivate
+{
+public:
+    RecipientsEditorPrivate()
+        : mRecentAddressConfig(Q_NULLPTR),
+          mSideWidget(Q_NULLPTR)
+    {
+
+    }
+    KConfig *mRecentAddressConfig;
+    RecipientsEditorSideWidget *mSideWidget;
+};
+
 RecipientsEditor::RecipientsEditor(QWidget *parent)
-    : MultiplyingLineEditor(new RecipientLineFactory(Q_NULLPTR), parent), mRecentAddressConfig(Q_NULLPTR)
+    : MultiplyingLineEditor(new RecipientLineFactory(Q_NULLPTR), parent),
+      d(new MessageComposer::RecipientsEditorPrivate)
 {
     factory()->setParent(this);   // HACK: can't use 'this' above since it's not yet constructed at that point
-    mSideWidget = new RecipientsEditorSideWidget(this, this);
+    d->mSideWidget = new RecipientsEditorSideWidget(this, this);
 
-    layout()->addWidget(mSideWidget);
+    layout()->addWidget(d->mSideWidget);
 
-    connect(mSideWidget, &RecipientsEditorSideWidget::pickedRecipient, this, &RecipientsEditor::slotPickedRecipient);
-    connect(mSideWidget, &RecipientsEditorSideWidget::saveDistributionList, this, &RecipientsEditor::saveDistributionList);
+    connect(d->mSideWidget, &RecipientsEditorSideWidget::pickedRecipient, this, &RecipientsEditor::slotPickedRecipient);
+    connect(d->mSideWidget, &RecipientsEditorSideWidget::saveDistributionList, this, &RecipientsEditor::saveDistributionList);
 
     //   connect( mView, SIGNAL(focusRight()),
-    //     mSideWidget, SLOT(setFocus()) );
+    //     d->mSideWidget, SLOT(setFocus()) );
 
     connect(this, &RecipientsEditor::lineAdded, this, &RecipientsEditor::slotLineAdded);
     connect(this, &RecipientsEditor::lineDeleted, this, &RecipientsEditor::slotLineDeleted);
@@ -87,6 +101,7 @@ RecipientsEditor::RecipientsEditor(QWidget *parent)
 
 RecipientsEditor::~RecipientsEditor()
 {
+    delete d;
 }
 
 bool RecipientsEditor::addRecipient(const QString &recipient, Recipient::Type type)
@@ -181,12 +196,12 @@ void RecipientsEditor::saveDistributionList()
 
 void RecipientsEditor::selectRecipients()
 {
-    mSideWidget->pickRecipient();
+    d->mSideWidget->pickRecipient();
 }
 
 void MessageComposer::RecipientsEditor::setRecentAddressConfig(KConfig *config)
 {
-    mRecentAddressConfig = config;
+    d->mRecentAddressConfig = config;
     if (config) {
         MultiplyingLine *line;
         foreach (line, lines()) {
@@ -207,7 +222,7 @@ void MessageComposer::RecipientsEditor::slotPickedRecipient(const Recipient &rec
 
 RecipientsPicker *RecipientsEditor::picker() const
 {
-    return mSideWidget->picker();
+    return d->mSideWidget->picker();
 }
 
 void RecipientsEditor::slotLineAdded(MultiplyingLine *line)
@@ -220,8 +235,8 @@ void RecipientsEditor::slotLineAdded(MultiplyingLine *line)
         return;
     }
 
-    if (mRecentAddressConfig) {
-        rec->setRecentAddressConfig(mRecentAddressConfig);
+    if (d->mRecentAddressConfig) {
+        rec->setRecentAddressConfig(d->mRecentAddressConfig);
     }
 
     if (count > 0) {
@@ -294,7 +309,7 @@ void RecipientsEditor::slotCalculateTotal()
     }
 
     // update the side widget
-    mSideWidget->setTotal(count, lines().count());
+    d->mSideWidget->setTotal(count, lines().count());
 }
 
 RecipientLineNG *RecipientsEditor::activeLine() const

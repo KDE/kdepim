@@ -28,6 +28,7 @@ namespace KSieveUi
 {
 class MultiImapVacationManager;
 class MultiImapVacationDialog;
+class VacationManagerPrivate;
 class KSIEVEUI_EXPORT VacationManager : public QObject
 {
     Q_OBJECT
@@ -49,9 +50,7 @@ private Q_SLOTS:
     void slotDialogOk();
 
 private:
-    QPointer<KSieveUi::MultiImapVacationDialog> mMultiImapVacationDialog;
-    QPointer<KSieveUi::MultiImapVacationManager> mCheckVacation;
-    QWidget *mWidget;
+    VacationManagerPrivate *const d;
 };
 }
 

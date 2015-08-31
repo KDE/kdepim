@@ -35,6 +35,7 @@ namespace MessageComposer
 {
 
 /** Represents a mail recipient. */
+class RecipientPrivate;
 class MESSAGECOMPOSER_EXPORT Recipient : public KPIM::MultiplyingLineData
 {
 public:
@@ -44,7 +45,7 @@ public:
     enum Type { To, Cc, Bcc, Undefined };
 
     Recipient(const QString &email = QString(), Type type = To);   //krazy:exclude=explicit
-
+    ~Recipient();
     void setType(Type type);
     Type type() const;
 
@@ -65,9 +66,7 @@ public:
     static QStringList allTypeLabels();
 
 private:
-    QString mEmail;
-    QString mName;
-    Type mType;
+    RecipientPrivate *const d;
 };
 
 }

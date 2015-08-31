@@ -62,25 +62,44 @@ void SieveTreeWidgetProgress::stopAnimation()
     mItem->setDefaultIcon();
 }
 
-SieveTreeWidgetItem::SieveTreeWidgetItem(QTreeWidget *treeWidget, QTreeWidgetItem *item)
-    : QTreeWidgetItem(treeWidget, item)
+class KSieveUi::SieveTreeWidgetItemPrivate
 {
-    mProgress = new SieveTreeWidgetProgress(this);
+public:
+    SieveTreeWidgetItemPrivate()
+        : mProgress(Q_NULLPTR)
+    {
+
+    }
+    ~SieveTreeWidgetItemPrivate()
+    {
+        delete mProgress;
+    }
+
+    SieveTreeWidgetProgress *mProgress;
+};
+
+
+
+SieveTreeWidgetItem::SieveTreeWidgetItem(QTreeWidget *treeWidget, QTreeWidgetItem *item)
+    : QTreeWidgetItem(treeWidget, item),
+      d(new KSieveUi::SieveTreeWidgetItemPrivate)
+{
+    d->mProgress = new SieveTreeWidgetProgress(this);
 }
 
 SieveTreeWidgetItem::~SieveTreeWidgetItem()
 {
-    delete mProgress;
+    delete d;
 }
 
 void SieveTreeWidgetItem::startAnimation()
 {
-    mProgress->startAnimation();
+    d->mProgress->startAnimation();
 }
 
 void SieveTreeWidgetItem::stopAnimation()
 {
-    mProgress->stopAnimation();
+    d->mProgress->stopAnimation();
 }
 
 void SieveTreeWidgetItem::setProgressAnimation(const QPixmap &pix)

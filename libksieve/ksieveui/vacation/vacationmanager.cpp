@@ -24,70 +24,85 @@
 
 using namespace KSieveUi;
 
+class KSieveUi::VacationManagerPrivate
+{
+public:
+    VacationManagerPrivate(QWidget *parent)
+        : mWidget(parent)
+    {
+
+    }
+
+    QPointer<KSieveUi::MultiImapVacationDialog> mMultiImapVacationDialog;
+    QPointer<KSieveUi::MultiImapVacationManager> mCheckVacation;
+    QWidget *mWidget;
+};
+
 VacationManager::VacationManager(QWidget *parent)
     : QObject(parent),
-      mWidget(parent)
+      d(new KSieveUi::VacationManagerPrivate(parent))
 {
 }
 
 VacationManager::~VacationManager()
 {
+    delete d;
 }
 
 void VacationManager::checkVacation()
 {
-    delete mCheckVacation;
+    delete d->mCheckVacation;
 
-    mCheckVacation = new KSieveUi::MultiImapVacationManager(this);
-    connect(mCheckVacation, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)));
-    connect(mCheckVacation, SIGNAL(requestEditVacation()), SIGNAL(editVacation()));
-    mCheckVacation->checkVacation();
+    d->mCheckVacation = new KSieveUi::MultiImapVacationManager(this);
+    connect(d->mCheckVacation, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)));
+    connect(d->mCheckVacation, SIGNAL(requestEditVacation()), SIGNAL(editVacation()));
+    d->mCheckVacation->checkVacation();
 }
 
 void VacationManager::slotEditVacation(const QString &serverName)
 {
-    if (mMultiImapVacationDialog) {
-        mMultiImapVacationDialog->show();
-        mMultiImapVacationDialog->raise();
-        mMultiImapVacationDialog->activateWindow();
+    if (d->mMultiImapVacationDialog) {
+        d->mMultiImapVacationDialog->show();
+        d->mMultiImapVacationDialog->raise();
+        d->mMultiImapVacationDialog->activateWindow();
         if (!serverName.isEmpty()) {
-            mMultiImapVacationDialog->switchToServerNamePage(serverName);
+            d->mMultiImapVacationDialog->switchToServerNamePage(serverName);
         }
         return;
     }
 
-    mMultiImapVacationDialog = new KSieveUi::MultiImapVacationDialog(mWidget);
-    connect(mMultiImapVacationDialog.data(), &KSieveUi::MultiImapVacationDialog::okClicked, this, &VacationManager::slotDialogOk);
-    connect(mMultiImapVacationDialog.data(), &KSieveUi::MultiImapVacationDialog::cancelClicked, this, &VacationManager::slotDialogCanceled);
-    mMultiImapVacationDialog->show();
+    d->mMultiImapVacationDialog = new KSieveUi::MultiImapVacationDialog(d->mWidget);
+    connect(d->mMultiImapVacationDialog.data(), &KSieveUi::MultiImapVacationDialog::okClicked, this, &VacationManager::slotDialogOk);
+    connect(d->mMultiImapVacationDialog.data(), &KSieveUi::MultiImapVacationDialog::cancelClicked, this, &VacationManager::slotDialogCanceled);
+    d->mMultiImapVacationDialog->show();
     if (!serverName.isEmpty()) {
-        mMultiImapVacationDialog->switchToServerNamePage(serverName);
+        d->mMultiImapVacationDialog->switchToServerNamePage(serverName);
     }
 
 }
 
 void VacationManager::slotDialogCanceled()
 {
-    if (mMultiImapVacationDialog->isVisible()) {
-        mMultiImapVacationDialog->hide();
+    if (d->mMultiImapVacationDialog->isVisible()) {
+        d->mMultiImapVacationDialog->hide();
     }
 
-    mMultiImapVacationDialog->deleteLater();
-    mMultiImapVacationDialog = Q_NULLPTR;
+    d->mMultiImapVacationDialog->deleteLater();
+    d->mMultiImapVacationDialog = Q_NULLPTR;
 }
 
 void VacationManager::slotDialogOk()
 {
-    QList<KSieveUi::VacationCreateScriptJob *> listJob = mMultiImapVacationDialog->listCreateJob();
+    QList<KSieveUi::VacationCreateScriptJob *> listJob = d->mMultiImapVacationDialog->listCreateJob();
     Q_FOREACH (KSieveUi::VacationCreateScriptJob *job, listJob) {
         connect(job, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)));
         job->start();
     }
-    if (mMultiImapVacationDialog->isVisible()) {
-        mMultiImapVacationDialog->hide();
+    if (d->mMultiImapVacationDialog->isVisible()) {
+        d->mMultiImapVacationDialog->hide();
     }
 
-    mMultiImapVacationDialog->deleteLater();
+    d->mMultiImapVacationDialog->deleteLater();
 
-    mMultiImapVacationDialog = Q_NULLPTR;
+    d->mMultiImapVacationDialog = Q_NULLPTR;
 }

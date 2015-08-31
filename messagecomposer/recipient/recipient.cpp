@@ -29,50 +29,70 @@
 using namespace KPIM;
 using namespace MessageComposer;
 
-Recipient::Recipient(const QString &email, Recipient::Type type)
-    : mEmail(email), mType(type)
+class MessageComposer::RecipientPrivate
 {
+public:
+    RecipientPrivate(const QString &email, Recipient::Type type)
+        : mEmail(email),
+          mType(type)
+    {
+
+    }
+
+    QString mEmail;
+    QString mName;
+    MessageComposer::Recipient::Type mType;
+};
+
+Recipient::Recipient(const QString &email, Recipient::Type type)
+    : d(new MessageComposer::RecipientPrivate(email, type))
+{
+}
+
+Recipient::~Recipient()
+{
+    delete d;
 }
 
 void Recipient::setType(Type type)
 {
-    mType = type;
+    d->mType = type;
 }
 
 Recipient::Type Recipient::type() const
 {
-    return mType;
+    return d->mType;
 }
 
 void Recipient::setEmail(const QString &email)
 {
-    mEmail = email;
+    d->mEmail = email;
 }
 
 QString Recipient::email() const
 {
-    return mEmail;
+    return d->mEmail;
 }
 
 void Recipient::setName(const QString &name)
 {
-    mName = name;
+    d->mName = name;
 }
 
 QString Recipient::name() const
 {
-    return mName;
+    return d->mName;
 }
 
 bool Recipient::isEmpty() const
 {
-    return mEmail.isEmpty();
+    return d->mEmail.isEmpty();
 }
 
 void Recipient::clear()
 {
-    mEmail.clear();
-    mType = Recipient::To;
+    d->mEmail.clear();
+    d->mType = Recipient::To;
 }
 
 int Recipient::typeToId(Recipient::Type type)
@@ -87,7 +107,7 @@ Recipient::Type Recipient::idToType(int id)
 
 QString Recipient::typeLabel() const
 {
-    return typeLabel(mType);
+    return typeLabel(d->mType);
 }
 
 QString Recipient::typeLabel(Recipient::Type type)
