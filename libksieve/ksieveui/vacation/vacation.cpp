@@ -65,6 +65,16 @@ Vacation::~Vacation()
     qCDebug(LIBKSIEVE_LOG) << "~Vacation()";
 }
 
+bool Vacation::isUsable() const
+{
+    return !mUrl.isEmpty();
+}
+
+QString Vacation::serverName() const
+{
+    return mServerName;
+}
+
 QUrl Vacation::findURL(QString &serverName) const
 {
     const Akonadi::AgentInstance::List instances = Util::imapAgentInstances();

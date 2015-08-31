@@ -41,14 +41,8 @@ public:
     explicit Vacation(QObject *parent = Q_NULLPTR, bool checkonly = false, const QUrl &url = QUrl());
     virtual ~Vacation();
 
-    bool isUsable() const
-    {
-        return !mUrl.isEmpty();
-    }
-    QString serverName() const
-    {
-        return mServerName;
-    }
+    bool isUsable() const;
+    QString serverName() const;
 
     void showVacationDialog();
 
