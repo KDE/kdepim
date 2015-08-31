@@ -43,10 +43,6 @@ MailWebView::MailWebView(KActionCollection *actionCollection, QWidget *parent)
             this, SIGNAL(linkHovered(QString)));
     connect(this, SIGNAL(anchorClicked(QUrl)),
             this, SIGNAL(linkClicked(QUrl)));
-
-#ifdef KDEPIM_MOBILE_UI
-    setFrameShape(NoFrame);
-#endif
 }
 
 MailWebView::~MailWebView() {}

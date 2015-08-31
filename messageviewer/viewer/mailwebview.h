@@ -120,9 +120,6 @@ Q_SIGNALS:
     void messageMayBeAScam();
 
 protected:
-#ifdef KDEPIM_MOBILE_UI
-    friend class MessageViewItem;
-#endif
     /// Reimplemented to catch context menu events and emit popupMenu()
     bool event(QEvent *event) Q_DECL_OVERRIDE;
     /// Reimplement for access key
