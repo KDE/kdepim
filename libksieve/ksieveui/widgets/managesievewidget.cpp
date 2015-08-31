@@ -33,26 +33,50 @@
 #include <QNetworkConfigurationManager>
 
 using namespace KSieveUi;
+class KSieveUi::ManageSieveWidgetPrivate
+{
+public:
+    ManageSieveWidgetPrivate()
+        : mTreeView(Q_NULLPTR),
+          mNetworkConfigurationManager(Q_NULLPTR),
+          mClearAll(false),
+          mBlockSignal(false)
+
+    {
+
+    }
+    ~ManageSieveWidgetPrivate()
+    {
+        delete mNetworkConfigurationManager;
+    }
+
+    // Maps top-level items to their child which has the radio button selection
+    QMap<QTreeWidgetItem *, QTreeWidgetItem *> mSelectedItems;
+    ManageSieveTreeView *mTreeView;
+    QNetworkConfigurationManager *mNetworkConfigurationManager;
+    bool mClearAll : 1;
+    bool mBlockSignal : 1;
+};
+
 ManageSieveWidget::ManageSieveWidget(QWidget *parent)
     : QWidget(parent),
-      mClearAll(false),
-      mBlockSignal(false)
+      d(new KSieveUi::ManageSieveWidgetPrivate)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
 
-    mTreeView = new ManageSieveTreeView;
+    d->mTreeView = new ManageSieveTreeView;
 #ifndef QT_NO_CONTEXTMENU
-    connect(mTreeView, &ManageSieveTreeView::customContextMenuRequested, this, &ManageSieveWidget::slotContextMenuRequested);
+    connect(d->mTreeView, &ManageSieveTreeView::customContextMenuRequested, this, &ManageSieveWidget::slotContextMenuRequested);
 #endif
-    connect(mTreeView, &ManageSieveTreeView::itemDoubleClicked, this, &ManageSieveWidget::slotDoubleClicked);
-    connect(mTreeView, &ManageSieveTreeView::itemSelectionChanged, this, &ManageSieveWidget::slotUpdateButtons);
-    connect(mTreeView, &ManageSieveTreeView::itemChanged, this, &ManageSieveWidget::slotItemChanged);
+    connect(d->mTreeView, &ManageSieveTreeView::itemDoubleClicked, this, &ManageSieveWidget::slotDoubleClicked);
+    connect(d->mTreeView, &ManageSieveTreeView::itemSelectionChanged, this, &ManageSieveWidget::slotUpdateButtons);
+    connect(d->mTreeView, &ManageSieveTreeView::itemChanged, this, &ManageSieveWidget::slotItemChanged);
 
-    mNetworkConfigurationManager = new QNetworkConfigurationManager();
-    connect(mNetworkConfigurationManager, &QNetworkConfigurationManager::onlineStateChanged, this, &ManageSieveWidget::slotSystemNetworkOnlineStateChanged);
+    d->mNetworkConfigurationManager = new QNetworkConfigurationManager();
+    connect(d->mNetworkConfigurationManager, &QNetworkConfigurationManager::onlineStateChanged, this, &ManageSieveWidget::slotSystemNetworkOnlineStateChanged);
 
-    lay->addWidget(mTreeView);
+    lay->addWidget(d->mTreeView);
     setLayout(lay);
     QTimer::singleShot(0, this, SLOT(slotCheckNetworkStatus()));
 }
@@ -60,39 +84,39 @@ ManageSieveWidget::ManageSieveWidget(QWidget *parent)
 ManageSieveWidget::~ManageSieveWidget()
 {
     clear();
-    delete mNetworkConfigurationManager;
+    delete d;
 }
 
 void ManageSieveWidget::slotCheckNetworkStatus()
 {
-    slotSystemNetworkOnlineStateChanged(mNetworkConfigurationManager->isOnline());
+    slotSystemNetworkOnlineStateChanged(d->mNetworkConfigurationManager->isOnline());
 }
 
 void ManageSieveWidget::slotSystemNetworkOnlineStateChanged(bool state)
 {
     if (state) {
-        mTreeView->setEnabled(true);
+        d->mTreeView->setEnabled(true);
         slotRefresh();
     } else {
-        mTreeView->setEnabled(false);
-        mTreeView->setNetworkDown(false);
+        d->mTreeView->setEnabled(false);
+        d->mTreeView->setNetworkDown(false);
     }
 }
 
 ManageSieveTreeView *ManageSieveWidget::treeView() const
 {
-    return mTreeView;
+    return d->mTreeView;
 }
 
 void ManageSieveWidget::killAllJobs()
 {
-    mClearAll = true;
+    d->mClearAll = true;
     QMap<KManageSieve::SieveJob *, QTreeWidgetItem *>::const_iterator it = mJobs.constBegin();
     while (it != mJobs.constEnd()) {
         it.key()->kill();
         ++it;
     }
-    mClearAll = false;
+    d->mClearAll = false;
     mJobs.clear();
 }
 
@@ -107,25 +131,25 @@ bool ManageSieveWidget::serverHasError(QTreeWidgetItem *item) const
 
 void ManageSieveWidget::slotItemChanged(QTreeWidgetItem *item, int col)
 {
-    if (!item || mBlockSignal || (col != 0)) {
+    if (!item || d->mBlockSignal || (col != 0)) {
         return;
     }
     if (!isFileNameItem(item)) {
         return;
     }
     QTreeWidgetItem *parent = item->parent();
-    if ((mSelectedItems[parent] != item) && itemIsActived(item)) {
-        mSelectedItems[parent] = item;
+    if ((d->mSelectedItems[parent] != item) && itemIsActived(item)) {
+        d->mSelectedItems[parent] = item;
         changeActiveScript(parent, true);
     } else {
-        mSelectedItems[parent] = item;
+        d->mSelectedItems[parent] = item;
         changeActiveScript(parent, false);
     }
 }
 
 void ManageSieveWidget::slotContextMenuRequested(const QPoint &p)
 {
-    QTreeWidgetItem *item = mTreeView->itemAt(p);
+    QTreeWidgetItem *item = d->mTreeView->itemAt(p);
     if (!item) {
         return;
     }
@@ -147,13 +171,13 @@ void ManageSieveWidget::slotContextMenuRequested(const QPoint &p)
         }
     }
     if (!menu.actions().isEmpty()) {
-        menu.exec(mTreeView->viewport()->mapToGlobal(p));
+        menu.exec(d->mTreeView->viewport()->mapToGlobal(p));
     }
 }
 
 void ManageSieveWidget::slotCancelFetch()
 {
-    QTreeWidgetItem *item = mTreeView->currentItem();
+    QTreeWidgetItem *item = d->mTreeView->currentItem();
     if (item) {
         const QList<KManageSieve::SieveJob *>jobs = mJobs.keys(item);
         Q_FOREACH (KManageSieve::SieveJob *job, jobs) {
@@ -164,7 +188,7 @@ void ManageSieveWidget::slotCancelFetch()
 
 void ManageSieveWidget::slotNewScript()
 {
-    QTreeWidgetItem *currentItem = mTreeView->currentItem();
+    QTreeWidgetItem *currentItem = d->mTreeView->currentItem();
     if (!currentItem) {
         return;
     }
@@ -216,18 +240,18 @@ void ManageSieveWidget::slotNewScript()
 
     const QStringList currentCapabilities = currentItem->data(0, SIEVE_SERVER_CAPABILITIES).toStringList();
 
-    mBlockSignal = true;
+    d->mBlockSignal = true;
     QTreeWidgetItem *newItem = new QTreeWidgetItem(currentItem);
     newItem->setFlags(newItem->flags() & (Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable));
     newItem->setText(0, name);
     newItem->setCheckState(0, Qt::Unchecked);
-    mBlockSignal = false;
+    d->mBlockSignal = false;
     Q_EMIT newScript(u, currentCapabilities);
 }
 
 void ManageSieveWidget::slotEditScript()
 {
-    QTreeWidgetItem *currentItem = mTreeView->currentItem();
+    QTreeWidgetItem *currentItem = d->mTreeView->currentItem();
     if (!isFileNameItem(currentItem)) {
         return;
     }
@@ -247,13 +271,13 @@ void ManageSieveWidget::slotEditScript()
 
 void ManageSieveWidget::slotDeactivateScript()
 {
-    QTreeWidgetItem *item = mTreeView->currentItem();
+    QTreeWidgetItem *item = d->mTreeView->currentItem();
     if (!isFileNameItem(item)) {
         return;
     }
     QTreeWidgetItem *parent = item->parent();
     if (itemIsActived(item)) {
-        mSelectedItems[parent] = item;
+        d->mSelectedItems[parent] = item;
         changeActiveScript(parent, false);
     }
 }
@@ -266,14 +290,14 @@ void ManageSieveWidget::changeActiveScript(QTreeWidgetItem *item, bool activate)
     if (!mUrls.count(item)) {
         return;
     }
-    if (!mSelectedItems.count(item)) {
+    if (!d->mSelectedItems.count(item)) {
         return;
     }
     QUrl u = mUrls[item];
     if (u.isEmpty()) {
         return;
     }
-    QTreeWidgetItem *selected = mSelectedItems[item];
+    QTreeWidgetItem *selected = d->mSelectedItems[item];
     if (!selected) {
         return;
     }
@@ -286,7 +310,7 @@ void ManageSieveWidget::changeActiveScript(QTreeWidgetItem *item, bool activate)
     } else {
         job = KManageSieve::SieveJob::deactivate(u);
     }
-    mBlockSignal = true;
+    d->mBlockSignal = true;
     connect(job, &KManageSieve::SieveJob::result, this, &ManageSieveWidget::slotRefresh);
 }
 
@@ -307,14 +331,14 @@ bool ManageSieveWidget::isFileNameItem(QTreeWidgetItem *item) const
 void ManageSieveWidget::clear()
 {
     killAllJobs();
-    mSelectedItems.clear();
+    d->mSelectedItems.clear();
     mUrls.clear();
-    mTreeView->clear();
+    d->mTreeView->clear();
 }
 
 void ManageSieveWidget::slotDeleteScript()
 {
-    QTreeWidgetItem *currentItem =  mTreeView->currentItem();
+    QTreeWidgetItem *currentItem =  d->mTreeView->currentItem();
     if (!isFileNameItem(currentItem)) {
         return;
     }
@@ -359,26 +383,26 @@ bool ManageSieveWidget::isProtectedName(const QString &name)
 
 void ManageSieveWidget::slotRefresh()
 {
-    mBlockSignal = true;
+    d->mBlockSignal = true;
     clear();
     const bool noImapFound = refreshList();
     slotUpdateButtons();
-    mTreeView->setNoImapFound(noImapFound);
+    d->mTreeView->setNoImapFound(noImapFound);
     if (!noImapFound) {
-        mBlockSignal = false;
+        d->mBlockSignal = false;
     }
     Q_EMIT serverSieveFound(!noImapFound);
 }
 
 void ManageSieveWidget::slotUpdateButtons()
 {
-    Q_EMIT updateButtons(mTreeView->currentItem());
+    Q_EMIT updateButtons(d->mTreeView->currentItem());
 }
 
 void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript)
 {
     qCDebug(LIBKSIEVE_LOG) << "void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript) success: " << success << " listScript" << listScript;
-    if (mClearAll) {
+    if (d->mClearAll) {
         return;
     }
     qCDebug(LIBKSIEVE_LOG) << " After mClear All";
@@ -391,16 +415,16 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
 
     mJobs.remove(job);
     if (!success) {
-        mBlockSignal = false;
+        d->mBlockSignal = false;
         parent->setData(0, SIEVE_SERVER_ERROR, true);
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, i18n("Failed to fetch the list of scripts"));
         item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
-        mTreeView->expandItem(parent);
+        d->mTreeView->expandItem(parent);
         return;
     }
 
-    mBlockSignal = true; // don't trigger slotItemChanged
+    d->mBlockSignal = true; // don't trigger slotItemChanged
     Q_FOREACH (const QString &script, listScript) {
         //Hide protected name.
         const QString lowerScript(script.toLower());
@@ -414,10 +438,10 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
         const bool isActive = (script == activeScript);
         item->setCheckState(0, isActive ? Qt::Checked : Qt::Unchecked);
         if (isActive) {
-            mSelectedItems[parent] = item;
+            d->mSelectedItems[parent] = item;
         }
     }
-    mBlockSignal = false;
+    d->mBlockSignal = false;
 
     qCDebug(LIBKSIEVE_LOG) << " LOAD";
     const bool hasIncludeCapability = job->sieveCapabilities().contains(QStringLiteral("include"));
@@ -430,7 +454,7 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
     parent->setData(0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities());
     parent->setData(0, SIEVE_SERVER_ERROR, false);
     parent->setData(0, SIEVE_SERVER_MODE, hasIncludeCapability ? Kep14EditorMode : NormalEditorMode);
-    mTreeView->expandItem(parent);
+    d->mTreeView->expandItem(parent);
 }
 
 void ManageSieveWidget::slotDoubleClicked(QTreeWidgetItem *item)
@@ -443,7 +467,7 @@ void ManageSieveWidget::slotDoubleClicked(QTreeWidgetItem *item)
 
 void ManageSieveWidget::enableDisableActions(bool &newScriptAction, bool &editScriptAction, bool &deleteScriptAction, bool &desactivateScriptAction)
 {
-    QTreeWidgetItem *item = mTreeView->currentItem();
+    QTreeWidgetItem *item = d->mTreeView->currentItem();
 
     bool enabled = true;
     if (!item) {

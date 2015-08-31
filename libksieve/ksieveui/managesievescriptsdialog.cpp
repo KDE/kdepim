@@ -43,11 +43,35 @@
 
 using namespace KSieveUi;
 
+class KSieveUi::ManageSieveScriptsDialogPrivate
+{
+public:
+    ManageSieveScriptsDialogPrivate()
+        : mSieveEditor(Q_NULLPTR),
+          mIsNewScript(false),
+          mWasActive(false)
+    {
+
+    }
+
+    CustomManageSieveWidget *mTreeView;
+    SieveEditor *mSieveEditor;
+
+    QUrl mCurrentURL;
+    QStringList mCurrentCapabilities;
+
+    QPushButton *mNewScript;
+    QPushButton *mEditScript;
+    QPushButton *mDeleteScript;
+    QPushButton *mDeactivateScript;
+
+    bool mIsNewScript : 1;
+    bool mWasActive : 1;
+};
+
 ManageSieveScriptsDialog::ManageSieveScriptsDialog(QWidget *parent)
     : QDialog(parent),
-      mSieveEditor(Q_NULLPTR),
-      mIsNewScript(false),
-      mWasActive(false)
+      d(new KSieveUi::ManageSieveScriptsDialogPrivate)
 {
     setWindowTitle(i18n("Manage Sieve Scripts"));
     setModal(false);
@@ -61,30 +85,30 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog(QWidget *parent)
     vlay->setSpacing(0);
     vlay->setMargin(0);
 
-    mTreeView = new CustomManageSieveWidget(frame);
-    connect(mTreeView, &CustomManageSieveWidget::editScript, this, &ManageSieveScriptsDialog::slotEditScript);
-    connect(mTreeView, &CustomManageSieveWidget::newScript, this, &ManageSieveScriptsDialog::slotNewScript);
-    connect(mTreeView, &CustomManageSieveWidget::updateButtons, this, &ManageSieveScriptsDialog::slotUpdateButtons);
-    vlay->addWidget(mTreeView);
+    d->mTreeView = new CustomManageSieveWidget(frame);
+    connect(d->mTreeView, &CustomManageSieveWidget::editScript, this, &ManageSieveScriptsDialog::slotEditScript);
+    connect(d->mTreeView, &CustomManageSieveWidget::newScript, this, &ManageSieveScriptsDialog::slotNewScript);
+    connect(d->mTreeView, &CustomManageSieveWidget::updateButtons, this, &ManageSieveScriptsDialog::slotUpdateButtons);
+    vlay->addWidget(d->mTreeView);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     vlay->addLayout(buttonLayout);
 
-    mNewScript = new QPushButton(i18nc("create a new sieve script", "New..."));
-    connect(mNewScript, &QPushButton::clicked, mTreeView, &CustomManageSieveWidget::slotNewScript);
-    buttonLayout->addWidget(mNewScript);
+    d->mNewScript = new QPushButton(i18nc("create a new sieve script", "New..."));
+    connect(d->mNewScript, &QPushButton::clicked, d->mTreeView, &CustomManageSieveWidget::slotNewScript);
+    buttonLayout->addWidget(d->mNewScript);
 
-    mEditScript = new QPushButton(i18n("Edit..."));
-    connect(mEditScript, &QPushButton::clicked, mTreeView, &CustomManageSieveWidget::slotEditScript);
-    buttonLayout->addWidget(mEditScript);
+    d->mEditScript = new QPushButton(i18n("Edit..."));
+    connect(d->mEditScript, &QPushButton::clicked, d->mTreeView, &CustomManageSieveWidget::slotEditScript);
+    buttonLayout->addWidget(d->mEditScript);
 
-    mDeleteScript = new QPushButton(i18n("Delete"));
-    connect(mDeleteScript, &QPushButton::clicked, mTreeView, &CustomManageSieveWidget::slotDeleteScript);
-    buttonLayout->addWidget(mDeleteScript);
+    d->mDeleteScript = new QPushButton(i18n("Delete"));
+    connect(d->mDeleteScript, &QPushButton::clicked, d->mTreeView, &CustomManageSieveWidget::slotDeleteScript);
+    buttonLayout->addWidget(d->mDeleteScript);
 
-    mDeactivateScript = new QPushButton(i18n("Deactivate"));
-    connect(mDeactivateScript, &QPushButton::clicked, mTreeView, &CustomManageSieveWidget::slotDeactivateScript);
-    buttonLayout->addWidget(mDeactivateScript);
+    d->mDeactivateScript = new QPushButton(i18n("Deactivate"));
+    connect(d->mDeactivateScript, &QPushButton::clicked, d->mTreeView, &CustomManageSieveWidget::slotDeactivateScript);
+    buttonLayout->addWidget(d->mDeactivateScript);
 
     QPushButton *close = new QPushButton;
     KGuiItem::assign(close, KStandardGuiItem::close());
@@ -99,13 +123,14 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog(QWidget *parent)
         resize(sizeHint().width(), sizeHint().height());
     }
 
-    mTreeView->slotRefresh();
+    d->mTreeView->slotRefresh();
 }
 
 ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
 {
     KConfigGroup group(KSharedConfig::openConfig(), "ManageSieveScriptsDialog");
     group.writeEntry("Size", size());
+    delete d;
 }
 
 void ManageSieveScriptsDialog::hideEvent(QHideEvent *event)
@@ -122,27 +147,27 @@ void ManageSieveScriptsDialog::slotUpdateButtons(QTreeWidgetItem *item)
     bool editScriptAction;
     bool deleteScriptAction;
     bool desactivateScriptAction;
-    mTreeView->enableDisableActions(newScriptAction, editScriptAction, deleteScriptAction, desactivateScriptAction);
-    mNewScript->setEnabled(newScriptAction);
-    mEditScript->setEnabled(editScriptAction);
-    mDeleteScript->setEnabled(deleteScriptAction);
-    mDeactivateScript->setEnabled(desactivateScriptAction);
+    d->mTreeView->enableDisableActions(newScriptAction, editScriptAction, deleteScriptAction, desactivateScriptAction);
+    d->mNewScript->setEnabled(newScriptAction);
+    d->mEditScript->setEnabled(editScriptAction);
+    d->mDeleteScript->setEnabled(deleteScriptAction);
+    d->mDeactivateScript->setEnabled(desactivateScriptAction);
 }
 
 void ManageSieveScriptsDialog::slotEditScript(const QUrl &url, const QStringList &capabilities)
 {
-    mCurrentURL = url;
-    mCurrentCapabilities = capabilities;
-    mIsNewScript = false;
+    d->mCurrentURL = url;
+    d->mCurrentCapabilities = capabilities;
+    d->mIsNewScript = false;
     KManageSieve::SieveJob *job = KManageSieve::SieveJob::get(url);
     connect(job, &KManageSieve::SieveJob::result, this, &ManageSieveScriptsDialog::slotGetResult);
 }
 
 void ManageSieveScriptsDialog::slotNewScript(const QUrl &url, const QStringList &capabilities)
 {
-    mCurrentCapabilities = capabilities;
-    mCurrentURL = url;
-    mIsNewScript = true;
+    d->mCurrentCapabilities = capabilities;
+    d->mCurrentURL = url;
+    d->mIsNewScript = true;
     slotGetResult(Q_NULLPTR, true, QString(), false);
 }
 
@@ -152,32 +177,32 @@ void ManageSieveScriptsDialog::slotGetResult(KManageSieve::SieveJob *, bool succ
         return;
     }
 
-    if (mSieveEditor) {
+    if (d->mSieveEditor) {
         return;
     }
 
     disableManagerScriptsDialog(true);
-    mSieveEditor = new SieveEditor;
-    mSieveEditor->setScriptName(mCurrentURL.fileName());
-    mSieveEditor->setSieveCapabilities(mCurrentCapabilities);
-    mSieveEditor->setScript(script);
-    connect(mSieveEditor, &SieveEditor::okClicked, this, &ManageSieveScriptsDialog::slotSieveEditorOkClicked);
-    connect(mSieveEditor, &SieveEditor::cancelClicked, this, &ManageSieveScriptsDialog::slotSieveEditorCancelClicked);
-    connect(mSieveEditor, &SieveEditor::checkSyntax, this, &ManageSieveScriptsDialog::slotSieveEditorCheckSyntaxClicked);
-    mSieveEditor->show();
-    mWasActive = isActive;
+    d->mSieveEditor = new SieveEditor;
+    d->mSieveEditor->setScriptName(d->mCurrentURL.fileName());
+    d->mSieveEditor->setSieveCapabilities(d->mCurrentCapabilities);
+    d->mSieveEditor->setScript(script);
+    connect(d->mSieveEditor, &SieveEditor::okClicked, this, &ManageSieveScriptsDialog::slotSieveEditorOkClicked);
+    connect(d->mSieveEditor, &SieveEditor::cancelClicked, this, &ManageSieveScriptsDialog::slotSieveEditorCancelClicked);
+    connect(d->mSieveEditor, &SieveEditor::checkSyntax, this, &ManageSieveScriptsDialog::slotSieveEditorCheckSyntaxClicked);
+    d->mSieveEditor->show();
+    d->mWasActive = isActive;
 }
 
 void ManageSieveScriptsDialog::slotSieveEditorCheckSyntaxClicked()
 {
-    if (!mSieveEditor) {
+    if (!d->mSieveEditor) {
         return;
     }
-    const QString script = mSieveEditor->script();
+    const QString script = d->mSieveEditor->script();
     if (script.isEmpty()) {
         return;
     }
-    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, script, mWasActive, mWasActive);
+    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(d->mCurrentURL, script, d->mWasActive, d->mWasActive);
     job->setInteractive(false);
     connect(job, &KManageSieve::SieveJob::errorMessage, this, &ManageSieveScriptsDialog::slotPutResultDebug);
 }
@@ -185,39 +210,39 @@ void ManageSieveScriptsDialog::slotSieveEditorCheckSyntaxClicked()
 void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
 {
     disableManagerScriptsDialog(false);
-    if (!mSieveEditor) {
+    if (!d->mSieveEditor) {
         return;
     }
-    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditor->script(), mWasActive, mWasActive);
+    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(d->mCurrentURL, d->mSieveEditor->script(), d->mWasActive, d->mWasActive);
     connect(job, &KManageSieve::SieveJob::result, this, &ManageSieveScriptsDialog::slotPutResult);
 }
 
 void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
 {
     disableManagerScriptsDialog(false);
-    mSieveEditor->deleteLater();
-    mSieveEditor = Q_NULLPTR;
-    mCurrentURL = QUrl();
-    if (mIsNewScript) {
-        mTreeView->slotRefresh();
+    d->mSieveEditor->deleteLater();
+    d->mSieveEditor = Q_NULLPTR;
+    d->mCurrentURL = QUrl();
+    if (d->mIsNewScript) {
+        d->mTreeView->slotRefresh();
     }
 }
 
 void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob *, bool success , const QString &errorMsg)
 {
     if (success) {
-        mSieveEditor->addOkMessage(i18n("No errors found."));
+        d->mSieveEditor->addOkMessage(i18n("No errors found."));
     } else {
         if (errorMsg.isEmpty()) {
-            mSieveEditor->addFailedMessage(i18n("An unknown error was encountered."));
+            d->mSieveEditor->addFailedMessage(i18n("An unknown error was encountered."));
         } else {
-            mSieveEditor->addFailedMessage(errorMsg);
+            d->mSieveEditor->addFailedMessage(errorMsg);
         }
     }
     //Put original script after check otherwise we will put a script even if we don't click on ok
-    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditor->originalScript(), mWasActive, mWasActive);
+    KManageSieve::SieveJob *job = KManageSieve::SieveJob::put(d->mCurrentURL, d->mSieveEditor->originalScript(), d->mWasActive, d->mWasActive);
     job->setInteractive(false);
-    mSieveEditor->resultDone();
+    d->mSieveEditor->resultDone();
 }
 
 void ManageSieveScriptsDialog::slotPutResult(KManageSieve::SieveJob *, bool success)
@@ -225,11 +250,11 @@ void ManageSieveScriptsDialog::slotPutResult(KManageSieve::SieveJob *, bool succ
     if (success) {
         KMessageBox::information(this, i18n("The Sieve script was successfully uploaded."),
                                  i18n("Sieve Script Upload"));
-        mSieveEditor->deleteLater();
-        mSieveEditor = Q_NULLPTR;
-        mCurrentURL = QUrl();
+        d->mSieveEditor->deleteLater();
+        d->mSieveEditor = Q_NULLPTR;
+        d->mCurrentURL = QUrl();
     } else {
-        mSieveEditor->show();
+        d->mSieveEditor->show();
     }
 }
 

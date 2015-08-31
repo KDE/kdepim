@@ -35,6 +35,7 @@ class SieveJob;
 namespace KSieveUi
 {
 class ManageSieveTreeView;
+class ManageSieveWidgetPrivate;
 class KSIEVEUI_EXPORT ManageSieveWidget : public QWidget
 {
     Q_OBJECT
@@ -94,12 +95,7 @@ private:
     void changeActiveScript(QTreeWidgetItem *item, bool activate);
     bool isProtectedName(const QString &name);
 
-    // Maps top-level items to their child which has the radio button selection
-    QMap<QTreeWidgetItem *, QTreeWidgetItem *> mSelectedItems;
-    ManageSieveTreeView *mTreeView;
-    QNetworkConfigurationManager *mNetworkConfigurationManager;
-    bool mClearAll : 1;
-    bool mBlockSignal : 1;
+    ManageSieveWidgetPrivate *const d;
 };
 }
 

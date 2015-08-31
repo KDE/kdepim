@@ -58,12 +58,12 @@ namespace Util
 /**
  * Returns the sieve url for the account with the given @p identifier.
  */
-KSIEVEUI_EXPORT QUrl findSieveUrlForAccount(const QString &identifier);
+QUrl findSieveUrlForAccount(const QString &identifier);
 
 /**
  * Returns the list of configured IMAP agent instances.
  */
-KSIEVEUI_EXPORT Akonadi::AgentInstance::List imapAgentInstances();
+Akonadi::AgentInstance::List imapAgentInstances();
 
 /**
  * Returns whether the availability of a vacation sieve script shall

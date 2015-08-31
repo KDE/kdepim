@@ -36,6 +36,7 @@ namespace KSieveUi
 {
 class SieveEditor;
 class CustomManageSieveWidget;
+class ManageSieveScriptsDialogPrivate;
 class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
 {
     Q_OBJECT
@@ -69,20 +70,7 @@ private:
     void disableManagerScriptsDialog(bool disable);
 
 private:
-
-    CustomManageSieveWidget *mTreeView;
-    SieveEditor *mSieveEditor;
-
-    QUrl mCurrentURL;
-    QStringList mCurrentCapabilities;
-
-    QPushButton *mNewScript;
-    QPushButton *mEditScript;
-    QPushButton *mDeleteScript;
-    QPushButton *mDeactivateScript;
-
-    bool mIsNewScript : 1;
-    bool mWasActive : 1;
+    ManageSieveScriptsDialogPrivate *const d;
 };
 
 }

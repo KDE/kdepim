@@ -20,8 +20,6 @@
 
 #include <QObject>
 
-#include "ksieveui_export.h"
-
 namespace KSieveUi
 {
 class MultiImapVacationManager : public QObject
