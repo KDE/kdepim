@@ -19,7 +19,6 @@
 #define ExportMailJob_H
 
 #include "abstractimportexportjob.h"
-#include "pimsettingexporter_export.h"
 #include <KSharedConfig>
 #include <QDateTime>
 #include <time.h>

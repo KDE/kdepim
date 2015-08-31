@@ -20,7 +20,6 @@
 
 #include "abstractimportexportjob.h"
 #include <AkonadiCore/Collection>
-#include "pimsettingexporter_export.h"
 #include <QStringList>
 #include <QHash>
 #include <KArchive>
