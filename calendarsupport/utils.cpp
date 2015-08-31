@@ -35,7 +35,7 @@
 #include <Akonadi/Calendar/PublishDialog>
 #include <akonadi/calendar/calendarsettings.h>
 
-#include <KHolidays/kholidays/Holidays>
+#include <KHolidays/HolidayRegion>
 
 #include <KIdentityManagement/IdentityManager>
 
@@ -679,7 +679,7 @@ QList<QDate> CalendarSupport::workDays(const QDate &startDate,
         for (int i = 0; i < listCount; ++i) {
             const Holiday &h = list.at(i);
             if (h.dayType() == Holiday::NonWorkday) {
-                result.removeAll(h.date());
+                result.removeAll(h.observedStartDate());
             }
         }
     }
@@ -696,7 +696,7 @@ QStringList CalendarSupport::holiday(const QDate &date)
     const int listCount = list.count();
     hdays.reserve(listCount);
     for (int i = 0; i < listCount; ++i) {
-        hdays.append(list.at(i).text());
+        hdays.append(list.at(i).name());
     }
     return hdays;
 }
