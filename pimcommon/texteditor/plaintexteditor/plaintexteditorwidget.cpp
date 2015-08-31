@@ -119,6 +119,9 @@ void PlainTextEditorWidget::setReadOnly(bool readOnly)
 void PlainTextEditorWidget::slotReplace()
 {
     if (mEditor->searchSupport()) {
+        if (mEditor->textCursor().hasSelection()) {
+            mFindBar->setText(mEditor->textCursor().selectedText());
+        }
         mFindBar->showReplace();
         mSliderContainer->slideIn();
         mFindBar->focusAndSetCursor();

@@ -140,6 +140,9 @@ void RichTextEditorWidget::setReadOnly(bool readOnly)
 void RichTextEditorWidget::slotReplace()
 {
     if (mEditor->searchSupport()) {
+        if (mEditor->textCursor().hasSelection()) {
+            mFindBar->setText(mEditor->textCursor().selectedText());
+        }
         mFindBar->showReplace();
         mSliderContainer->slideIn();
         mFindBar->focusAndSetCursor();

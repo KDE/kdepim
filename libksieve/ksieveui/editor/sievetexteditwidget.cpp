@@ -21,6 +21,7 @@
 
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditfindbar.h"
 #include "pimcommon/widgets/slidecontainer.h"
+#include <QDebug>
 using namespace KSieveUi;
 
 class KSieveUi::SieveTextEditWidgetPrivate
@@ -91,6 +92,9 @@ void SieveTextEditWidget::setReadOnly(bool readOnly)
 
 void SieveTextEditWidget::slotReplace()
 {
+    if (d->mTextEdit->textCursor().hasSelection()) {
+        d->mFindBar->setText(d->mTextEdit->textCursor().selectedText());
+    }
     d->mFindBar->showReplace();
     d->mSliderContainer->slideIn();
     d->mFindBar->focusAndSetCursor();
