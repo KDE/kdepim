@@ -145,7 +145,7 @@ static QRect calculate_geometry(const QRect &cell, const QSize &sizeHint)
                  cell.width(), height);
 }
 
-struct KUrl_compare : std::binary_function<QUrl, QUrl, bool> {
+struct QUrl_compare : std::binary_function<QUrl, QUrl, bool> {
     bool operator()(const QUrl &lhs, const QUrl &rhs) const
     {
         return QString::compare(display_scheme(lhs), display_scheme(rhs), Qt::CaseInsensitive) == 0
@@ -154,8 +154,8 @@ struct KUrl_compare : std::binary_function<QUrl, QUrl, bool> {
                && lhs.userName() == rhs.userName()
                // ... ignore password...
                && (!is_ldap_scheme(lhs)
-                   || QUrl::fromPercentEncoding(lhs.query().mid(1).toLatin1())
-                   == QUrl::fromPercentEncoding(rhs.query().mid(1).toLatin1())) ;
+                   || lhs.query()
+                   == rhs.query());
     }
 };
 
@@ -197,15 +197,15 @@ public:
             }
     }
 
-    QModelIndex addOpenPGPService(const KUrl &url, bool force = false)
+    QModelIndex addOpenPGPService(const QUrl &url, bool force = false)
     {
         return addService(url, false, true, force);
     }
-    QModelIndex addX509Service(const KUrl &url, bool force = false)
+    QModelIndex addX509Service(const QUrl &url, bool force = false)
     {
         return addService(url, true, false, force);
     }
-    QModelIndex addService(const KUrl &url, bool x509, bool pgp, bool force)
+    QModelIndex addService(const QUrl &url, bool x509, bool pgp, bool force)
     {
         const std::vector<Item>::iterator it = force ? m_items.end() : findExistingUrl(url) ;
         unsigned int row;
@@ -238,9 +238,9 @@ public:
     {
         return row < m_items.size() && m_items[row].x509 && isLdapRow(row) ;
     }
-    KUrl          service(unsigned int row) const
+    QUrl          service(unsigned int row) const
     {
-        return row < m_items.size() ?  m_items[row].url : KUrl() ;
+        return row < m_items.size() ?  m_items[row].url : QUrl() ;
     }
 
     bool isReadOnlyRow(unsigned int row) const
@@ -339,7 +339,7 @@ private:
     std::vector<Item>::iterator findExistingUrl(const QUrl &url)
     {
         return std::find_if(m_items.begin(), m_items.end(),
-                            boost::bind(KUrl_compare(), url, boost::bind(&Item::url, _1)));
+                            boost::bind(QUrl_compare(), url, boost::bind(&Item::url, _1)));
     }
 };
 
@@ -664,16 +664,16 @@ DirectoryServicesWidget::Protocols DirectoryServicesWidget::readOnlyProtocols() 
     return d->readOnlyProtocols;
 }
 
-void DirectoryServicesWidget::addOpenPGPServices(const KUrl::List &urls)
+void DirectoryServicesWidget::addOpenPGPServices(const QList<QUrl> &urls)
 {
-    Q_FOREACH (const KUrl &url, urls) {
+    Q_FOREACH (const QUrl &url, urls) {
         d->model.addOpenPGPService(url);
     }
 }
 
-KUrl::List DirectoryServicesWidget::openPGPServices() const
+QList<QUrl> DirectoryServicesWidget::openPGPServices() const
 {
-    KUrl::List result;
+    QList<QUrl> result;
     for (unsigned int i = 0, end = d->model.numServices() ; i != end ; ++i)
         if (d->model.isOpenPGPService(i)) {
             result.push_back(d->model.service(i));
@@ -681,16 +681,16 @@ KUrl::List DirectoryServicesWidget::openPGPServices() const
     return result;
 }
 
-void DirectoryServicesWidget::addX509Services(const KUrl::List &urls)
+void DirectoryServicesWidget::addX509Services(const QList<QUrl> &urls)
 {
-    Q_FOREACH (const KUrl &url, urls) {
+    Q_FOREACH (const QUrl &url, urls) {
         d->model.addX509Service(url);
     }
 }
 
-KUrl::List DirectoryServicesWidget::x509Services() const
+QList<QUrl> DirectoryServicesWidget::x509Services() const
 {
-    KUrl::List result;
+    QList<QUrl> result;
     for (unsigned int i = 0, end = d->model.numServices() ; i != end ; ++i)
         if (d->model.isX509Service(i)) {
             result.push_back(d->model.service(i));
@@ -773,7 +773,7 @@ QVariant Model::data(const QModelIndex &index, int role) const
                 return display_port(m_items[row].url);
             case BaseDN:
                 if (isLdapRow(row)) {
-                    return QUrl::fromPercentEncoding(m_items[row].url.query().mid(1).toLatin1());    // decode query and skip leading '?'
+                    return m_items[row].url.query();
                 } else {
                     return QVariant();
                 }
@@ -897,7 +897,6 @@ bool Model::doSetData(unsigned int row, unsigned int column, const QVariant &val
         case Host:
             if (display_host(m_items[row].url) != m_items[row].url.host()) {
                 m_items[row].url.setScheme(display_scheme(m_items[row].url));
-                m_items[row].url.setPath(QStringLiteral("/"));
             }
             m_items[row].url.setHost(value.toString());
             return true;
@@ -913,7 +912,6 @@ bool Model::doSetData(unsigned int row, unsigned int column, const QVariant &val
                 m_items[row].url.setPath(QString());
                 m_items[row].url.setQuery(QString());
             } else {
-                m_items[row].url.setPath(QStringLiteral("/"));   // workaround KUrl parsing bug
                 m_items[row].url.setQuery(value.toString());
             }
             return true;

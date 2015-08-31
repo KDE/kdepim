@@ -421,7 +421,7 @@ static const constructor listWidgets[CryptoConfigEntry::NumArgType] = {
     &_create<CryptoConfigEntryLineEdit>,
     &_create<CryptoConfigEntryLineEdit>,
     0, // Path
-    0, // URL
+    0, // Formerly URL
     &_create<CryptoConfigEntryLDAPURL>,
     0, // DirPath
 };
@@ -432,7 +432,7 @@ static const constructor scalarWidgets[CryptoConfigEntry::NumArgType] = {
     &_create<CryptoConfigEntrySpinBox>,  // Int
     &_create<CryptoConfigEntrySpinBox>,  // UInt
     &_create<CryptoConfigEntryPath>,     // Path
-    &_create<CryptoConfigEntryURL>,      // URL
+    0,                                   // Formerly URL
     0,                                   // LDAPURL
     &_create<CryptoConfigEntryDirPath>,  // DirPath
 };
@@ -629,7 +629,11 @@ void Kleo::CryptoConfigEntryPath::doSave()
 
 void Kleo::CryptoConfigEntryPath::doLoad()
 {
-    mFileNameRequester->setFileName(mEntry->urlValue().toLocalFile());
+    if (mEntry->urlValue().isLocalFile()) {
+        mFileNameRequester->setFileName(mEntry->urlValue().toLocalFile());
+    } else {
+        mFileNameRequester->setFileName(mEntry->urlValue().toString());
+    }
 }
 
 ////
@@ -670,43 +674,6 @@ void Kleo::CryptoConfigEntryDirPath::doSave()
 void Kleo::CryptoConfigEntryDirPath::doLoad()
 {
     mFileNameRequester->setFileName(mEntry->urlValue().toLocalFile());
-}
-
-////
-
-Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
-    CryptoConfigModule *module,
-    Kleo::CryptoConfigEntry *entry, const QString &entryName,
-    QGridLayout *glay, QWidget *widget)
-    : CryptoConfigEntryGUI(module, entry, entryName),
-      mLineEdit(0)
-{
-    const int row = glay->rowCount();
-    QWidget *req;
-    req = mLineEdit = new QLineEdit(widget);
-    QLabel *label = new QLabel(description(), widget);
-    label->setBuddy(req);
-    glay->addWidget(label, row, 1);
-    glay->addWidget(req, row, 2);
-    if (entry->isReadOnly()) {
-        label->setEnabled(false);
-        if (mLineEdit) {
-            mLineEdit->setEnabled(false);
-        }
-    } else {
-        connect(req, SIGNAL(textChanged(QString)),
-                this, SLOT(slotChanged()));
-    }
-}
-
-void Kleo::CryptoConfigEntryURL::doSave()
-{
-    mEntry->setURLValue(KUrl(mLineEdit->text()));
-}
-
-void Kleo::CryptoConfigEntryURL::doLoad()
-{
-    mLineEdit->setText(mEntry->urlValue().url());
 }
 
 ////
@@ -887,7 +854,7 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
     }
 }
 
-void Kleo::CryptoConfigEntryLDAPURL::setURLList(const KUrl::List &urlList)
+void Kleo::CryptoConfigEntryLDAPURL::setURLList(const QList<QUrl> &urlList)
 {
     mURLList = urlList;
     if (mURLList.isEmpty()) {
@@ -977,12 +944,17 @@ void Kleo::CryptoConfigEntryKeyserver::doSave()
     mEntry->setStringValue(assembleKeyserver(mParsedKeyserver));
 }
 
-static KUrl::List string2urls(const QString &str)
+static QList<QUrl> string2urls(const QString &str)
 {
-    return str.isEmpty() ? KUrl::List() : KUrl(str) ;
+    QList<QUrl> ret;
+    if (str.isEmpty()) {
+        return ret;
+    }
+    ret << QUrl::fromUserInput(str);
+    return ret;
 }
 
-static QString urls2string(const KUrl::List &urls)
+static QString urls2string(const QList<QUrl> &urls)
 {
     return urls.empty() ? QString() : urls.front().url() ;
 }

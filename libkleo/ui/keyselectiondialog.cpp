@@ -59,7 +59,6 @@
 #include <kconfiggroup.h>
 #include <qmenu.h>
 #include <QLineEdit>
-#include <kurl.h>
 
 // Qt
 #include <QCheckBox>

@@ -270,25 +270,6 @@ QGpgMENewCryptoConfigEntry *QGpgMENewCryptoConfigGroup::entry(const QString &nam
     return m_entriesByName.value(name).get();
 }
 
-#if 0
-////
-
-static QString gpgconf_unescape(const QString &str)
-{
-    // Looks like it's the same rules as KUrl.
-    return QUrl::fromPercentEncoding(str.toLatin1());
-}
-
-static QString gpgconf_escape(const QString &str)
-{
-    // Escape special chars (including ':' and '%')
-    QString enc = QUrl::toPercentEncoding(str);   // and convert to utf8 first (to get %12%34 for one special char)
-    // Also encode commas, for lists.
-    enc.replace(',', "%2c");
-    return enc;
-}
-#endif
-
 static QString urlpart_encode(const QString &str)
 {
     QString enc(str);
@@ -479,15 +460,15 @@ unsigned int QGpgMENewCryptoConfigEntry::uintValue() const
     return m_option.currentValue().uintValue();
 }
 
-static KUrl parseURL(int mRealArgType, const QString &str)
+static QUrl parseURL(int mRealArgType, const QString &str)
 {
     if (mRealArgType == 33) {   // LDAP server
         // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
         QStringList items = str.split(QLatin1Char(':'));
         if (items.count() == 5) {
             QStringList::const_iterator it = items.constBegin();
-            KUrl url;
-            url.setProtocol(QStringLiteral("ldap"));
+            QUrl url;
+            url.setScheme(QStringLiteral("ldap"));
             url.setHost(urlpart_decode(*it++));
 
             bool ok;
@@ -498,9 +479,14 @@ static KUrl parseURL(int mRealArgType, const QString &str)
                 qCWarning(GPGPME_BACKEND_LOG) << "parseURL: malformed LDAP server port, ignoring: \"" << *it << "\"";
             }
 
-            url.setPath(QStringLiteral("/"));   // workaround KUrl parsing bug
-            url.setUserName(urlpart_decode(*it++));
-            url.setPassword(urlpart_decode(*it++));
+            const QString userName = urlpart_decode(*it++);
+            if (!userName.isEmpty()) {
+                url.setUserName(userName);
+            }
+            const QString passWord = urlpart_decode(*it++);
+            if (!passWord.isEmpty()) {
+                url.setPassword(passWord);
+            }
             url.setQuery(urlpart_decode(*it));
             return url;
         } else {
@@ -508,33 +494,31 @@ static KUrl parseURL(int mRealArgType, const QString &str)
         }
     }
     // other URLs : assume wellformed URL syntax.
-    return KUrl(str);
+    return QUrl(str);
 }
 
 // The opposite of parseURL
-static QString splitURL(int mRealArgType, const KUrl &url)
+static QString splitURL(int mRealArgType, const QUrl &url)
 {
     if (mRealArgType == 33) {   // LDAP server
         // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
         Q_ASSERT(url.scheme() == QLatin1String("ldap"));
         return urlpart_encode(url.host()) + QLatin1Char(':') +
                (url.port() != -1 ? QString::number(url.port()) : QString()) + QLatin1Char(':') +     // -1 is used for default ports, omit
-               urlpart_encode(url.user()) + QLatin1Char(':') +
-               urlpart_encode(url.pass()) + QLatin1Char(':') +
-               // KUrl automatically encoded the query (e.g. for spaces inside it),
-               // so decode it before writing it out to gpgconf (issue119)
-               urlpart_encode(QUrl::fromPercentEncoding(url.query().mid(1).toLatin1()));
+               urlpart_encode(url.userName()) + QLatin1Char(':') +
+               urlpart_encode(url.password()) + QLatin1Char(':') +
+               urlpart_encode(url.query());
     }
     return url.path();
 }
 
-KUrl QGpgMENewCryptoConfigEntry::urlValue() const
+QUrl QGpgMENewCryptoConfigEntry::urlValue() const
 {
     const Type type = m_option.type();
     Q_ASSERT(type == FilenameType || type == LdapServerType);
     Q_ASSERT(!isList());
     if (type == FilenameType) {
-        KUrl url;
+        QUrl url;
         url.setPath(QFile::decodeName(m_option.currentValue().stringValue()));
         return url;
     }
@@ -548,17 +532,6 @@ unsigned int QGpgMENewCryptoConfigEntry::numberOfTimesSet() const
     return m_option.currentValue().uintValue();
 }
 
-QStringList QGpgMENewCryptoConfigEntry::stringValueList() const
-{
-    Q_ASSERT(m_option.alternateType() == StringType);
-    Q_ASSERT(isList());
-    const Argument arg = m_option.currentValue();
-    const std::vector<const char *> values = arg.stringValues();
-    QStringList result;
-    BOOST_FOREACH(const char *value, values)
-    result.push_back(QString::fromUtf8(value));
-    return result;
-}
 
 std::vector<int> QGpgMENewCryptoConfigEntry::intValueList() const
 {
@@ -574,17 +547,17 @@ std::vector<unsigned int> QGpgMENewCryptoConfigEntry::uintValueList() const
     return m_option.currentValue().uintValues();
 }
 
-KUrl::List QGpgMENewCryptoConfigEntry::urlValueList() const
+QList<QUrl> QGpgMENewCryptoConfigEntry::urlValueList() const
 {
     const Type type = m_option.type();
     Q_ASSERT(type == FilenameType || type == LdapServerType);
     Q_ASSERT(isList());
     const Argument arg = m_option.currentValue();
     const std::vector<const char *> values = arg.stringValues();
-    KUrl::List ret;
+    QList<QUrl> ret;
     BOOST_FOREACH(const char *value, values)
     if (type == FilenameType) {
-        KUrl url;
+        QUrl url;
         url.setPath(QFile::decodeName(value));
         ret << url;
     } else {
@@ -638,7 +611,7 @@ void QGpgMENewCryptoConfigEntry::setUIntValue(unsigned int i)
     m_option.setNewValue(m_option.createUIntArgument(i));
 }
 
-void QGpgMENewCryptoConfigEntry::setURLValue(const KUrl &url)
+void QGpgMENewCryptoConfigEntry::setURLValue(const QUrl &url)
 {
     const Type type = m_option.type();
     Q_ASSERT(type == FilenameType || type == LdapServerType);
@@ -661,22 +634,6 @@ void QGpgMENewCryptoConfigEntry::setNumberOfTimesSet(unsigned int i)
     m_option.setNewValue(m_option.createNoneListArgument(i));
 }
 
-void QGpgMENewCryptoConfigEntry::setStringValueList(const QStringList &lst)
-{
-    const Type type = m_option.type();
-    Q_ASSERT(m_option.alternateType() == StringType);
-    Q_ASSERT(isList());
-    std::vector<std::string> values;
-    values.reserve(lst.size());
-    Q_FOREACH (const QString &s, lst)
-        if (type == FilenameType) {
-            values.push_back(QFile::encodeName(s).constData());
-        } else {
-            values.push_back(s.toUtf8().constData());
-        }
-    m_option.setNewValue(m_option.createStringListArgument(values));
-}
-
 void QGpgMENewCryptoConfigEntry::setIntValueList(const std::vector<int> &lst)
 {
     Q_ASSERT(m_option.alternateType() == IntegerType);
@@ -691,14 +648,14 @@ void QGpgMENewCryptoConfigEntry::setUIntValueList(const std::vector<unsigned int
     m_option.setNewValue(m_option.createUIntListArgument(lst));
 }
 
-void QGpgMENewCryptoConfigEntry::setURLValueList(const KUrl::List &urls)
+void QGpgMENewCryptoConfigEntry::setURLValueList(const QList<QUrl> &urls)
 {
     const Type type = m_option.type();
     Q_ASSERT(m_option.alternateType() == StringType);
     Q_ASSERT(isList());
     std::vector<std::string> values;
     values.reserve(urls.size());
-    Q_FOREACH (const KUrl &url, urls)
+    Q_FOREACH (const QUrl &url, urls)
         if (type == FilenameType) {
             values.push_back(QFile::encodeName(url.path()).constData());
         } else {

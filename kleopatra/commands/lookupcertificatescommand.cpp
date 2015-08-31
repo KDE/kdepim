@@ -422,7 +422,7 @@ static bool haveX509DirectoryServerConfigured()
     const Kleo::CryptoConfigEntry *entry = config->entry(QStringLiteral("dirmngr"), QStringLiteral("LDAP"), QStringLiteral("LDAP Server"));
     bool entriesExist = entry && !entry->urlValueList().empty();
     entry = config->entry(QStringLiteral("gpgsm"), QStringLiteral("Configuration"), QStringLiteral("keyserver"));
-    entriesExist |= entry && !entry->stringValueList().empty();
+    entriesExist |= entry && !entry->urlValueList().empty();
     return entriesExist;
 }
 

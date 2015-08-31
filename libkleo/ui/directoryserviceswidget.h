@@ -34,7 +34,7 @@
 #define DIRECTORYSERVICESWIDGET_H
 
 #include "kleo_export.h"
-#include <kurl.h>
+#include <QUrl>
 #include <QWidget>
 
 namespace Kleo
@@ -82,11 +82,11 @@ public:
     void setOpenPGPReadOnly(bool ro);
     void setX509ReadOnly(bool ro);
 
-    void addOpenPGPServices(const KUrl::List &urls);
-    KUrl::List openPGPServices() const;
+    void addOpenPGPServices(const QList<QUrl> &urls);
+    QList<QUrl> openPGPServices() const;
 
-    void addX509Services(const KUrl::List &urls);
-    KUrl::List x509Services() const;
+    void addX509Services(const QList<QUrl> &urls);
+    QList<QUrl> x509Services() const;
 
 public Q_SLOTS:
     void clear();

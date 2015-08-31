@@ -49,6 +49,7 @@
 #include <QFileInfo>
 
 #include <QList>
+#include <QUrl>
 
 #include <map>
 #include <memory>
@@ -81,15 +82,15 @@ MAKE_TO(int, toInt);
 MAKE_TO(unsigned int, toUInt);
 
 template <>
-class to<KUrl>
+class to<QUrl>
 {
-    KUrl m;
+    QUrl m;
 public:
     to(const QVariant &v)
     {
         m.setPath(v.toString());
     }
-    operator KUrl() const
+    operator QUrl() const
     {
         return m;
     }
@@ -132,22 +133,6 @@ public:
     }
 };
 
-template <>
-class to<KUrl::List>
-{
-    KUrl::List m;
-public:
-    to(const QVariant &v)
-    {
-        // wow, KUrl::List is broken... it lacks conversion from and to QVL<KUrl>...
-        m += to< QList<KUrl> >(v);
-    }
-    operator KUrl::List() const
-    {
-        return m;
-    }
-};
-
 // from<> is the demarshaller. See to<> for why this is a class...
 
 template <typename T>
@@ -165,8 +150,8 @@ QVariant from(const T &t)
 template <> struct from_helper<bool> : public QVariant {
     from_helper(bool b) : QVariant(b) {}
 };
-template <> struct from_helper<KUrl> : public QVariant {
-    from_helper(const KUrl &url) : QVariant(url.path()) {}
+template <> struct from_helper<QUrl> : public QVariant {
+    from_helper(const QUrl &url) : QVariant(url.path()) {}
 };
 template <typename T> struct from_helper< QList<T> > : public QVariant {
     from_helper(const QList<T> &l)
@@ -187,9 +172,6 @@ template <typename T> struct from_helper< std::vector<T> > : public QVariant {
         }
         QVariant::operator=(result);
     }
-};
-template <> struct from_helper<KUrl::List> : public from_helper< QList<KUrl> > {
-    from_helper(const KUrl::List &l) : from_helper< QList<KUrl> >(l) {}
 };
 
 class ChiasmusConfigEntry : public Kleo::CryptoConfigEntry
@@ -260,20 +242,14 @@ public:
     {
         return mValue.toUInt();
     }
-    KUrl urlValue() const Q_DECL_OVERRIDE
+    QUrl urlValue() const Q_DECL_OVERRIDE
     {
-        if (argType() != ArgType_Path && argType() != ArgType_DirPath) {
-            return KUrl(mValue.toString());
-        }
-        KUrl u; u.setPath(mValue.toString()); return u;
+        Q_ASSERT(argType() == ArgType_Path || argType() == ArgType_DirPath);
+        return QUrl::fromLocalFile(mValue.toString());
     }
     unsigned int numberOfTimesSet() const Q_DECL_OVERRIDE
     {
         return 0;
-    }
-    QStringList stringValueList() const Q_DECL_OVERRIDE
-    {
-        return mValue.toStringList();
     }
     std::vector<int> intValueList() const Q_DECL_OVERRIDE
     {
@@ -283,13 +259,9 @@ public:
     {
         return to< std::vector<unsigned int> >(mValue);
     }
-    KUrl::List urlValueList() const Q_DECL_OVERRIDE
+    QList<QUrl> urlValueList() const Q_DECL_OVERRIDE
     {
-        if (argType() != ArgType_Path && argType() != ArgType_DirPath) {
-            return mValue.toStringList();
-        } else {
-            return to<KUrl::List>(mValue);
-        }
+        return to< QList<QUrl> >(mValue);
     }
     void resetToDefault() Q_DECL_OVERRIDE
     {
@@ -312,19 +284,15 @@ public:
     {
         setValue(value);
     }
-    void setURLValue(const KUrl &value) Q_DECL_OVERRIDE
+    void setURLValue(const QUrl &value) Q_DECL_OVERRIDE
     {
-        if (argType() != ArgType_Path && argType() != ArgType_DirPath) {
+        if (argType() != ArgType_Path) {
             setValue(value.url());
         } else {
             setValue(value.path());
         }
     }
     void setNumberOfTimesSet(unsigned int) Q_DECL_OVERRIDE {}
-    void setStringValueList(const QStringList &value) Q_DECL_OVERRIDE
-    {
-        setValue(value);
-    }
     void setIntValueList(const std::vector<int> &l) Q_DECL_OVERRIDE
     {
         setValue(from(l));
@@ -333,7 +301,7 @@ public:
     {
         setValue(from(l));
     }
-    void setURLValueList(const KUrl::List &l) Q_DECL_OVERRIDE
+    void setURLValueList(const QList<QUrl> &l) Q_DECL_OVERRIDE
     {
         setValue(from(l));
     }
@@ -406,7 +374,6 @@ QVariant ChiasmusConfigEntry::defaultValue() const
         } else {
             return QString::fromLatin1(data.defaults.path);
         }
-    case ArgType_URL:
     case ArgType_LDAPURL:
         if (isList()) {
             return QList<QVariant>() << QString::fromLatin1(data.defaults.url);

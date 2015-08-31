@@ -243,27 +243,6 @@ private:
 };
 
 /**
- * A widget manager for an URL entry in the crypto config
- */
-class CryptoConfigEntryURL : public CryptoConfigEntryGUI
-{
-    Q_OBJECT
-
-public:
-    CryptoConfigEntryURL(CryptoConfigModule *module,
-                         Kleo::CryptoConfigEntry *entry,
-                         const QString &entryName,
-                         QGridLayout *layout,
-                         QWidget *parent = Q_NULLPTR);
-
-    void doSave() Q_DECL_OVERRIDE;
-    void doLoad() Q_DECL_OVERRIDE;
-
-private:
-    QLineEdit *mLineEdit;
-};
-
-/**
  * A widget manager for an int/uint entry in the crypto config
  */
 class CryptoConfigEntrySpinBox : public CryptoConfigEntryGUI
@@ -320,10 +299,10 @@ public:
 private Q_SLOTS:
     void slotOpenDialog();
 private:
-    void setURLList(const KUrl::List &urlList);
+    void setURLList(const QList<QUrl> &urlList);
     QLabel *mLabel;
     QPushButton *mPushButton;
-    KUrl::List mURLList;
+    QList<QUrl> mURLList;
 };
 
 /**

@@ -100,9 +100,6 @@ int main(int argc, char **argv)
                         cout << " uint value=" << entry->uintValue();
                         break;
                     case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
-                    case Kleo::CryptoConfigEntry::ArgType_URL:
-                        cout << " URL value=" << entry->urlValue().prettyUrl().toLocal8Bit().constData();
-                    // fallthrough
                     case Kleo::CryptoConfigEntry::ArgType_Path:
                     // fallthrough
                     case Kleo::CryptoConfigEntry::ArgType_DirPath:
@@ -143,25 +140,24 @@ int main(int argc, char **argv)
                         cout << " uint values=" << str.toLocal8Bit().constData();
                         break;
                     }
-                    case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
-                    case Kleo::CryptoConfigEntry::ArgType_URL: {
+                    case Kleo::CryptoConfigEntry::ArgType_LDAPURL: {
                         // (marc) if an entry isn't optional, you have to unset it for the default to take effect, so this assert is wrong:
                         // assert( entry->isOptional() ); // empty lists must be allowed (see https://www.intevation.de/roundup/aegypten/issue121)
-                        KUrl::List urls = entry->urlValueList();
-                        cout << " url values=" << urls.toStringList().join(" ").toLocal8Bit().constData() << "\n    ";
+                        QList<QUrl> urls = entry->urlValueList();
+                        cout << " url values ";
+                        Q_FOREACH (const QUrl &url, urls) {
+                           cout << url.toString().toLocal8Bit().constData() << " ";
+                        }
+                        cout << endl;
                     }
                     // fallthrough
                     case Kleo::CryptoConfigEntry::ArgType_Path:
                     // fallthrough
                     case Kleo::CryptoConfigEntry::ArgType_DirPath:
                     // fallthrough
-                    case Kleo::CryptoConfigEntry::ArgType_String: {
-                        // (marc) if an entry isn't optional, you have to unset it for the default to take effect, so this assert is wrong:
-                        // assert( entry->isOptional() ); // empty lists must be allowed (see https://www.intevation.de/roundup/aegypten/issue121)
-                        QStringList lst = entry->stringValueList();
-                        cout << " string values=" << lst.join(" ").toLocal8Bit().constData();
-                        break;
-                    }
+                    case Kleo::CryptoConfigEntry::ArgType_String:
+                    // fallthrough string value lists were removed from
+                    // gpgconf in 2008
                     case Kleo::CryptoConfigEntry::NumArgType:
                         // just metadata and should never actually occur in the switch
                         break;
@@ -332,20 +328,21 @@ int main(int argc, char **argv)
         if (entry) {
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL);
             assert(entry->isList());
-            KUrl::List val = entry->urlValueList();
-            cout << "URL list initially: " << val.toStringList().join(", ").toLocal8Bit().constData() << endl;
+            QList<QUrl> val = entry->urlValueList();
+            cout << "Url list initially: ";
+            Q_FOREACH (const QUrl &url, val) {
+               cout << url.toString().toLocal8Bit().constData() << ", ";
+            }
+            cout << endl;
 
             // Test setting the option, sync'ing, then querying again
-            KUrl::List lst;
-            // We use non-empty paths to workaround a bug in KUrl (kdelibs-3.2)
-            lst << KUrl("ldap://a:389/?b");
-            // Test with query containing a literal ':' (KUrl supports this)
-            // and a ' ' (KUrl will escape it, see issue119)
-            lst << KUrl("ldap://foo:389/?a:b c");
-            lst << KUrl("ldap://server:389/?a%3db,c=DE");   // the query contains a literal ','
+            QList<QUrl> lst;
+            lst << QUrl("ldap://a:389?b");
+            lst << QUrl("ldap://foo:389?a:b c");
+            lst << QUrl("ldap://server:389?a=b,c=DE");   // the query contains a literal ','
             //cout << " trying to set: " << lst.toStringList().join(", ").local8Bit() << endl;
-            assert(lst[0].query() == "?b");
-            assert(lst[1].query() == "?a:b%20c");   // see, the space got escaped
+            assert(lst[0].query() == "b");
+            assert(lst[1].query() == "a:b c");   // see, the space got _not_escaped
             entry->setURLValueList(lst);
             assert(entry->isDirty());
             config->sync(true);
@@ -361,31 +358,28 @@ int main(int argc, char **argv)
             assert(entry);
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL);
             assert(entry->isList());
-            // Get raw a:b:c:d:e form
-            QStringList asStringList = entry->stringValueList();
-            assert(asStringList.count() == 3);
-            cout << "asStringList[0]=" << asStringList[0].toLocal8Bit().constData() << endl;
-            cout << "asStringList[1]=" << asStringList[1].toLocal8Bit().constData() << endl;
-            cout << "asStringList[2]=" << asStringList[2].toLocal8Bit().constData() << endl;
-            assert(asStringList[0] == "a:389:::b");
-            assert(asStringList[1] == "foo:389:::a%3ab c");   // the space must be decoded (issue119)
-            assert(asStringList[2] == "server:389:::a=b,c=DE");   // all decoded
-            // Get KUrl form
-            KUrl::List newlst = entry->urlValueList();
-            cout << "URL list now: " << newlst.toStringList().join(", ").toLocal8Bit().constData() << endl;
+            // Get QUrl form
+            QList<QUrl> newlst = entry->urlValueList();
+            cout << "URL list now: ";
+            Q_FOREACH (const QUrl &url, newlst) {
+               cout << url.toString().toLocal8Bit().constData() << endl;
+            }
+            cout << endl;
             assert(newlst.count() == 3);
-            //cout << "newlst[0]=" << newlst[0].url().local8Bit() << endl;
-            //cout << "lst[0]=" << lst[0].url().local8Bit() << endl;
-            assert(newlst[0] == lst[0]);
-            assert(newlst[1].url() == "ldap://foo:389/?a:b c");   // != lst[1] due to encoded space
-            assert(newlst[2].url() == "ldap://server:389/?a=b,c=DE");   // != lst[2] due to the encoded =
+            assert(newlst[0].url() == lst[0].url());
+            assert(newlst[1].url() == lst[1].url());
+            assert(newlst[2].url() == lst[2].url());
 
             // Reset old value
             entry->setURLValueList(val);
             assert(entry->isDirty());
             config->sync(true);
 
-            cout << "URL list reset to initial: " << val.toStringList().join(", ").toLocal8Bit().constData() << endl;
+            cout << "URL list reset to initial: ";
+            Q_FOREACH (const QUrl &url, newlst) {
+               cout << url.toString().toLocal8Bit().constData() << ", ";
+            }
+            cout << endl;
         } else {
             cout << "Entry 'dirmngr/" << s_groupName << "/" << s_entryName << "' not found" << endl;
         }

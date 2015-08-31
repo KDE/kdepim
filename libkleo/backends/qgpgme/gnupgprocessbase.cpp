@@ -32,7 +32,6 @@
 
 #include "gnupgprocessbase.h"
 
-#include <kurl.h>
 #include <QDebug>
 #include "gpgme_backend_debug.h"
 

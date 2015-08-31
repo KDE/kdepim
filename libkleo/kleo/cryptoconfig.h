@@ -37,7 +37,7 @@
 /* we read this file from a C compiler, and are only interested in the
  * enums... */
 
-#include <kurl.h>
+#include <QUrl>
 
 #include <vector>
 
@@ -72,12 +72,11 @@ public:
        @li ArgType_UInt        An unsigned integer number.
        @li ArgType_Path        A string that describes the pathname of a file.
        The file does not necessarily need to exist.
-       Separated from string so that e.g. a KUrlRequester can be used.
+       Separated from string so that e.g. a FileDialog can be used.
        @li ArgType_DirPath        A string that describes the pathname of a directory.
        The directory does not necessarily need to exist.
-       Separated from path so that e.g. a KUrlRequester can be used which only
+       Separated from path so that e.g. a FileDialog can be used which only
        allows directories to be selected.
-       @li ArgType_URL                A URL
        @li ArgType_LDAPURL        A LDAP URL
        Separated from URL so that a more specific widget can be shown, hiding the url syntax
     */
@@ -86,7 +85,7 @@ public:
                    ArgType_Int = 2,
                    ArgType_UInt = 3,
                    ArgType_Path = 4,
-                   ArgType_URL = 5,
+                   /* Nr. 5 was URL historically. */
                    ArgType_LDAPURL = 6,
                    ArgType_DirPath = 7,
 
@@ -170,17 +169,12 @@ public:
     /**
      * Return value as a URL (only meaningful for Path and URL argtypes)
      */
-    virtual KUrl urlValue() const = 0;
+    virtual QUrl urlValue() const = 0;
 
     /**
      * Return number of times the option is set (only valid for ArgType_None, if isList())
      */
     virtual unsigned int numberOfTimesSet() const = 0;
-
-    /**
-     * Return value as a list of strings (mostly meaningful for String, Path and URL argtypes, if isList())
-     */
-    virtual QStringList stringValueList() const = 0;
 
     /**
      * Return value as a list of signed ints
@@ -195,7 +189,7 @@ public:
     /**
      * Return value as a list of URLs (only meaningful for Path and URL argtypes, if isList())
      */
-    virtual KUrl::List urlValueList() const = 0;
+    virtual QList<QUrl> urlValueList() const = 0;
 
     /**
      * Reset an option to its default value
@@ -226,17 +220,12 @@ public:
     /**
      * Set value as a URL (only meaningful for Path (if local) and URL argtypes)
      */
-    virtual void setURLValue(const KUrl &) = 0;
+    virtual void setURLValue(const QUrl &) = 0;
 
     /**
      * Set the number of times the option is set (only valid for ArgType_None, if isList())
      */
     virtual void setNumberOfTimesSet(unsigned int) = 0;
-
-    /**
-     * Set a new string-list value (only allowed for String, Path and URL argtypes, if isList())
-     */
-    virtual void setStringValueList(const QStringList &) = 0;
 
     /**
      * Set a new list of signed int values
@@ -251,7 +240,7 @@ public:
     /**
      * Set value as a URL list (only meaningful for Path (if all URLs are local) and URL argtypes, if isList())
      */
-    virtual void setURLValueList(const KUrl::List &) = 0;
+    virtual void setURLValueList(const QList<QUrl> &) = 0;
 
     /**
      * @return true if the value was changed

@@ -74,23 +74,21 @@ public:
     QString stringValue() const Q_DECL_OVERRIDE;
     int intValue() const Q_DECL_OVERRIDE;
     unsigned int uintValue() const Q_DECL_OVERRIDE;
-    KUrl urlValue() const Q_DECL_OVERRIDE;
+    QUrl urlValue() const Q_DECL_OVERRIDE;
     unsigned int numberOfTimesSet() const Q_DECL_OVERRIDE;
-    QStringList stringValueList() const Q_DECL_OVERRIDE;
     std::vector<int> intValueList() const Q_DECL_OVERRIDE;
     std::vector<unsigned int> uintValueList() const Q_DECL_OVERRIDE;
-    KUrl::List urlValueList() const Q_DECL_OVERRIDE;
+    QList<QUrl> urlValueList() const Q_DECL_OVERRIDE;
     void resetToDefault() Q_DECL_OVERRIDE;
     void setBoolValue(bool) Q_DECL_OVERRIDE;
     void setStringValue(const QString &) Q_DECL_OVERRIDE;
     void setIntValue(int) Q_DECL_OVERRIDE;
     void setUIntValue(unsigned int) Q_DECL_OVERRIDE;
-    void setURLValue(const KUrl &) Q_DECL_OVERRIDE;
+    void setURLValue(const QUrl &) Q_DECL_OVERRIDE;
     void setNumberOfTimesSet(unsigned int) Q_DECL_OVERRIDE;
-    void setStringValueList(const QStringList &) Q_DECL_OVERRIDE;
     void setIntValueList(const std::vector<int> &) Q_DECL_OVERRIDE;
     void setUIntValueList(const std::vector<unsigned int> &) Q_DECL_OVERRIDE;
-    void setURLValueList(const KUrl::List &) Q_DECL_OVERRIDE;
+    void setURLValueList(const QList<QUrl> &) Q_DECL_OVERRIDE;
     bool isDirty() const Q_DECL_OVERRIDE;
 
 #if 0

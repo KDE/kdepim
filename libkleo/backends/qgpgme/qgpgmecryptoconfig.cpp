@@ -426,33 +426,48 @@ Kleo::CryptoConfigEntry *QGpgMECryptoConfigGroup::entry(const QString &name) con
 
 ////
 
-static QString gpgconf_unescape(const QString &str)
+static QString gpgconf_unescape(const QString &str, bool handleComma = true)
 {
-    // Looks like it's the same rules as KUrl.
-    return QUrl::fromPercentEncoding(str.toLatin1());
+    /* See gpgconf_escape */
+    QString dec(str);
+    dec.replace(QStringLiteral("%25"), QStringLiteral("%"));
+    dec.replace(QStringLiteral("%3a"), QStringLiteral(":"));
+    if (handleComma) {
+        dec.replace(QStringLiteral("%2c"), QStringLiteral(","));
+    }
+    return dec;
 }
 
-static QString gpgconf_escape(const QString &str)
+static QString gpgconf_escape(const QString &str, bool handleComma = true)
 {
-    // Escape special chars (including ':' and '%')
-    QString enc = QLatin1String(QUrl::toPercentEncoding(str));   // and convert to utf8 first (to get %12%34 for one special char)
-    // Also encode commas, for lists.
-    enc.replace(QLatin1Char(','), QStringLiteral("%2c"));
-    return enc;
+    /* Gpgconf does not really percent encode. It just
+     * encodes , % and : characters. It expects all other
+     * chars to be UTF-8 encoded.
+     * Except in the Base-DN part where a , may not be percent
+     * escaped.
+     */
+    QString esc(str);
+    esc.replace(QLatin1Char('%'), QStringLiteral("%25"));
+    esc.replace(QLatin1Char(':'), QStringLiteral("%3a"));
+    if (handleComma) {
+        esc.replace(QLatin1Char(','), QStringLiteral("%2c"));
+    }
+    return esc;
 }
 
-static QString urlpart_encode(const QString &str)
-{
-    QString enc(str);
-    enc.replace(QLatin1Char('%'), QStringLiteral("%25"));   // first!
-    enc.replace(QLatin1Char(':'), QStringLiteral("%3a"));
-    //qCDebug(GPGPME_BACKEND_LOG) <<"  urlpart_encode:" << str <<" ->" << enc;
-    return enc;
+static QString urlpart_escape(const QString &str) {
+    /* We need to double escape here, as a username or password
+     * or an LDAP Base-DN may contain : or , and in that
+     * case we would break gpgconf's format if we only escaped
+     * the : once. As an escaped : is used internaly to split
+     * the parts of an url. */
+
+    return gpgconf_escape(gpgconf_escape(str, false), false);
 }
 
-static QString urlpart_decode(const QString &str)
-{
-    return QUrl::fromPercentEncoding(str.toLatin1());
+static QString urlpart_unescape(const QString &str) {
+    /* See urlpart_escape */
+    return gpgconf_unescape(gpgconf_unescape(str, false), false);
 }
 
 // gpgconf arg type number -> CryptoConfigEntry arg type enum mapping
@@ -631,16 +646,16 @@ unsigned int QGpgMECryptoConfigEntry::uintValue() const
     return mValue.toUInt();
 }
 
-static KUrl parseURL(int mRealArgType, const QString &str)
+static QUrl parseURL(int mRealArgType, const QString &str)
 {
     if (mRealArgType == 33) {   // LDAP server
         // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
         QStringList items = str.split(QLatin1Char(':'));
         if (items.count() == 5) {
             QStringList::const_iterator it = items.constBegin();
-            KUrl url;
-            url.setProtocol(QStringLiteral("ldap"));
-            url.setHost(urlpart_decode(*it++));
+            QUrl url;
+            url.setScheme(QStringLiteral("ldap"));
+            url.setHost(gpgconf_unescape(*it++));
 
             bool ok;
             const int port = (*it++).toInt(&ok);
@@ -650,44 +665,46 @@ static KUrl parseURL(int mRealArgType, const QString &str)
                 qCWarning(GPGPME_BACKEND_LOG) << "parseURL: malformed LDAP server port, ignoring: \"" << *it << "\"";
             }
 
-            url.setPath(QStringLiteral("/"));   // workaround KUrl parsing bug
-            url.setUserName(urlpart_decode(*it++));
-            url.setPassword(urlpart_decode(*it++));
-            url.setQuery(urlpart_decode(*it));
+            const QString userName = urlpart_unescape(*it++);
+            if (!userName.isEmpty()) {
+                url.setUserName(userName);
+            }
+            const QString passWord = urlpart_unescape(*it++);
+            if (!passWord.isEmpty()) {
+                url.setPassword(passWord);
+            }
+            url.setQuery(urlpart_unescape(*it));
             return url;
         } else {
             qCWarning(GPGPME_BACKEND_LOG) << "parseURL: malformed LDAP server:" << str;
         }
     }
     // other URLs : assume wellformed URL syntax.
-    return KUrl(str);
+    return QUrl(str);
 }
 
 // The opposite of parseURL
-static QString splitURL(int mRealArgType, const KUrl &url)
+static QString splitURL(int mRealArgType, const QUrl &url)
 {
     if (mRealArgType == 33) {   // LDAP server
         // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
-        Q_ASSERT(url.protocol() == QLatin1String("ldap"));
-        return urlpart_encode(url.host()) + QLatin1Char(':') +
+        Q_ASSERT(url.scheme() == QLatin1String("ldap"));
+        return gpgconf_escape(url.host()) + QLatin1Char(':') +
                (url.port() != -1 ? QString::number(url.port()) : QString()) + QLatin1Char(':') +     // -1 is used for default ports, omit
-               urlpart_encode(url.user()) + QLatin1Char(':') +
-               urlpart_encode(url.pass()) + QLatin1Char(':') +
-               // KUrl automatically encoded the query (e.g. for spaces inside it),
-               // so decode it before writing it out to gpgconf (issue119)
-               urlpart_encode(QUrl::fromPercentEncoding(url.query().mid(1).toLatin1()));
+               urlpart_escape(url.userName()) + QLatin1Char(':') +
+               urlpart_escape(url.password()) + QLatin1Char(':') +
+               urlpart_escape(url.query());
     }
     return url.path();
 }
 
-KUrl QGpgMECryptoConfigEntry::urlValue() const
+QUrl QGpgMECryptoConfigEntry::urlValue() const
 {
-    Q_ASSERT(mArgType == ArgType_Path || mArgType == ArgType_URL || mArgType == ArgType_LDAPURL);
+    Q_ASSERT(mArgType == ArgType_Path || mArgType == ArgType_LDAPURL);
     Q_ASSERT(!isList());
     QString str = mValue.toString();
     if (mArgType == ArgType_Path) {
-        KUrl url;
-        url.setPath(str);
+        QUrl url = QUrl::fromUserInput(str, QString(), QUrl::AssumeLocalFile);
         return url;
     }
     return parseURL(mRealArgType, str);
@@ -698,13 +715,6 @@ unsigned int QGpgMECryptoConfigEntry::numberOfTimesSet() const
     Q_ASSERT(mArgType == ArgType_None);
     Q_ASSERT(isList());
     return mValue.toUInt();
-}
-
-QStringList QGpgMECryptoConfigEntry::stringValueList() const
-{
-    Q_ASSERT(isStringType());
-    Q_ASSERT(isList());
-    return mValue.toStringList();
 }
 
 std::vector<int> QGpgMECryptoConfigEntry::intValueList() const
@@ -733,18 +743,16 @@ std::vector<unsigned int> QGpgMECryptoConfigEntry::uintValueList() const
     return ret;
 }
 
-KUrl::List QGpgMECryptoConfigEntry::urlValueList() const
+QList<QUrl> QGpgMECryptoConfigEntry::urlValueList() const
 {
-    Q_ASSERT(mArgType == ArgType_Path || mArgType == ArgType_URL || mArgType == ArgType_LDAPURL);
+    Q_ASSERT(mArgType == ArgType_Path || mArgType == ArgType_LDAPURL);
     Q_ASSERT(isList());
     QStringList lst = mValue.toStringList();
 
-    KUrl::List ret;
+    QList<QUrl> ret;
     for (QStringList::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it) {
         if (mArgType == ArgType_Path) {
-            KUrl url;
-            url.setPath(*it);
-            ret << url;
+            QUrl url = QUrl::fromUserInput(*it, QString(), QUrl::AssumeLocalFile);
         } else {
             ret << parseURL(mRealArgType, *it);
         }
@@ -808,7 +816,7 @@ void QGpgMECryptoConfigEntry::setUIntValue(unsigned int i)
     mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setURLValue(const KUrl &url)
+void QGpgMECryptoConfigEntry::setURLValue(const QUrl &url)
 {
     QString str = splitURL(mRealArgType, url);
     if (str.isEmpty() && !isOptional()) {
@@ -826,17 +834,6 @@ void QGpgMECryptoConfigEntry::setNumberOfTimesSet(unsigned int i)
     Q_ASSERT(isList());
     mValue = i;
     mSet = i > 0;
-    mDirty = true;
-}
-
-void QGpgMECryptoConfigEntry::setStringValueList(const QStringList &lst)
-{
-    mValue = lst;
-    if (lst.isEmpty() && !isOptional()) {
-        mSet = false;
-    } else {
-        mSet = true;
-    }
     mDirty = true;
 }
 
@@ -870,10 +867,10 @@ void QGpgMECryptoConfigEntry::setUIntValueList(const std::vector<unsigned int> &
     mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setURLValueList(const KUrl::List &urls)
+void QGpgMECryptoConfigEntry::setURLValueList(const QList<QUrl> &urls)
 {
     QStringList lst;
-    for (KUrl::List::const_iterator it = urls.constBegin(); it != urls.constEnd(); ++it) {
+    for (QList<QUrl>::const_iterator it = urls.constBegin(); it != urls.constEnd(); ++it) {
         lst << splitURL(mRealArgType, *it);
     }
     mValue = lst;
@@ -924,6 +921,7 @@ QString QGpgMECryptoConfigEntry::toString(bool escape) const
     if (mArgType == ArgType_None) {
         return QString::number(numberOfTimesSet());
     }
+
     QStringList ret;
     QList<QVariant> lst = mValue.toList();
     for (QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it) {
@@ -942,7 +940,6 @@ bool QGpgMECryptoConfigEntry::isStringType() const
 {
     return (mArgType == Kleo::CryptoConfigEntry::ArgType_String
             || mArgType == Kleo::CryptoConfigEntry::ArgType_Path
-            || mArgType == Kleo::CryptoConfigEntry::ArgType_URL
             || mArgType == Kleo::CryptoConfigEntry::ArgType_LDAPURL);
 }
 
