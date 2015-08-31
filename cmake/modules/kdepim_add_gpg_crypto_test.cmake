@@ -24,7 +24,7 @@ macro (ADD_GPG_CRYPTO_TEST _target _testname)
       else (APPLE)
          set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/:${LIB_INSTALL_DIR}:${QT_LIBRARY_DIR}")
       endif (APPLE)
-      get_target_property(_executable ${_target} LOCATION )
+      set(_executable "$<TARGET_FILE:${_target}>")
 
       # use add_custom_target() to have the sh-wrapper generated during build time instead of cmake time
       add_custom_command(TARGET ${_target} POST_BUILD
@@ -36,15 +36,13 @@ macro (ADD_GPG_CRYPTO_TEST _target _testname)
       )
 
       set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${_executable}.shell" )
-      add_test(${_testname} ${_executable}.shell)
+      add_test(NAME ${_testname} COMMAND ${_executable}.shell)
 
    else (UNIX)
       # under windows, set the property WRAPPER_SCRIPT just to the name of the executable
       # maybe later this will change to a generated batch file (for setting the PATH so that the Qt libs are found)
-      get_target_property(_executable ${_target} LOCATION )
-
       set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}\;${LIB_INSTALL_DIR}\;${QT_LIBRARY_DIR}")
-      get_target_property(_executable ${_target} LOCATION )
+      set(_executable "$<TARGET_FILE:${_target}>")
 
       # use add_custom_target() to have the batch-file-wrapper generated during build time instead of cmake time
       add_custom_command(TARGET ${_target} POST_BUILD
@@ -55,7 +53,7 @@ macro (ADD_GPG_CRYPTO_TEST _target _testname)
          -P ${CMAKE_SOURCE_DIR}/cmake/modules/kdepim_generate_crypto_test_wrapper.cmake
          )
 
-      add_test(${_testname} ${_executable}.bat)
+      add_test(NAME ${_testname} COMMAND ${_executable}.bat)
 
    endif (UNIX)
 endmacro (ADD_GPG_CRYPTO_TEST)
