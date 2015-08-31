@@ -59,7 +59,6 @@ if(USABLE_ASSUAN_FOUND)
   add_subdirectory(libkleopatraclient)
 endif()
 
-add_subdirectory(kgpgconf)
 add_subdirectory(kwatchgnupg)
 
 if(BUILD_TESTING)

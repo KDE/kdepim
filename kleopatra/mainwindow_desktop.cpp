@@ -213,14 +213,6 @@ public:
                                i18n("Error Starting KWatchGnuPG"));
     }
 
-    void gnupgAdministrativeConsole()
-    {
-        if (!QProcess::startDetached(QStringLiteral("kgpgconf")))
-            KMessageBox::error(q, i18n("Could not start the GnuPG Administrative Console (kgpgconf). "
-                                       "Please check your installation."),
-                               i18n("Error Starting KGpgConf"));
-    }
-
     void slotConfigCommitted();
     void slotContextMenuRequested(QAbstractItemView *, const QPoint &p)
     {
@@ -343,12 +335,6 @@ void MainWindow::Private::setupActions()
         {
             "tools_start_kwatchgnupg", i18n("GnuPG Log Viewer"), QString(),
             "kwatchgnupg", q, SLOT(gnupgLogViewer()), QString(), false, true
-        },
-#endif
-#if 0
-        {
-            "tools_start_kgpgconf", i18n("GnuPG Administrative Console"), QString(),
-            "kgpgconf", q, SLOT(gnupgLogViewer()), QString(), false, true
         },
 #endif
         // most have been MOVED TO keylistcontroller.cpp
