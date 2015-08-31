@@ -89,7 +89,7 @@ ResolveRecipientsPage::ListWidget::~ListWidget()
 
 void ResolveRecipientsPage::ListWidget::onSelectionChange()
 {
-    Q_FOREACH (const QString &i, widgets.keys()) {   //krazy:exclude=foreach
+    Q_FOREACH (const QString &i, widgets.keys()) {
         assert(items.contains(i));
         widgets[i]->setSelected(items[i]->isSelected());
     }

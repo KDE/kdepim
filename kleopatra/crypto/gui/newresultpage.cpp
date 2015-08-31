@@ -131,7 +131,7 @@ void NewResultPage::Private::allDone()
     const bool errorOccurred =
         kdtools::any(m_collections, mem_fn(&TaskCollection::errorOccurred));
     m_collections.clear();
-    Q_FOREACH (const QString &i, m_progressLabelByTag.keys()) {   //krazy:exclude=foreach
+    Q_FOREACH (const QString &i, m_progressLabelByTag.keys()) {
         if (!i.isEmpty()) {
             m_progressLabelByTag.value(i)->setText(i18n("%1: All operations completed.", i));
         } else {
