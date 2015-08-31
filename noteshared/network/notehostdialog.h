@@ -34,7 +34,6 @@
 #define KNOTEHOSTDIALOG_H
 
 #include <QDialog>
-#include "noteshared_export.h"
 class KHistoryComboBox;
 class QTreeView;
 class QModelIndex;
@@ -45,7 +44,7 @@ class QPushButton;
  */
 namespace NoteShared
 {
-class NOTESHARED_EXPORT NoteHostDialog : public QDialog
+class NoteHostDialog : public QDialog
 {
     Q_OBJECT
 public:

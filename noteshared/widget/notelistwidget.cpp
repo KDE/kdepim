@@ -21,25 +21,38 @@
 #include "noteshared/noteutils.h"
 
 using namespace NoteShared;
+class NoteShared::NoteListWidgetPrivate
+{
+public:
+    NoteListWidgetPrivate()
+    {
+
+    }
+
+    Akonadi::Item::List mNotes;
+};
+
+
 NoteListWidget::NoteListWidget(QWidget *parent)
-    : QListWidget(parent)
+    : QListWidget(parent),
+      d(new NoteShared::NoteListWidgetPrivate)
 {
     setSelectionMode(QAbstractItemView::ExtendedSelection);
 }
 
 NoteListWidget::~NoteListWidget()
 {
-
+    delete d;
 }
 
 void NoteListWidget::addNotes(const Akonadi::Item::List &notes)
 {
     Q_FOREACH (const Akonadi::Item &note, notes) {
-        if (mNotes.contains(note)) {
+        if (d->mNotes.contains(note)) {
             continue;
         }
         createItem(note);
-        mNotes.append(note);
+        d->mNotes.append(note);
     }
 }
 
@@ -48,7 +61,7 @@ void NoteListWidget::removeNote(const Akonadi::Item &note)
     for (int i = 0; i < count(); ++i) {
         if (item(i)->data(AkonadiId) == note.id()) {
             delete item(i);
-            mNotes.removeAll(note);
+            d->mNotes.removeAll(note);
             break;
         }
     }
@@ -57,8 +70,8 @@ void NoteListWidget::removeNote(const Akonadi::Item &note)
 void NoteListWidget::setNotes(const Akonadi::Item::List &notes)
 {
     clear();
-    mNotes = notes;
-    Q_FOREACH (const Akonadi::Item &note, mNotes) {
+    d->mNotes = notes;
+    Q_FOREACH (const Akonadi::Item &note, d->mNotes) {
         createItem(note);
     }
 }

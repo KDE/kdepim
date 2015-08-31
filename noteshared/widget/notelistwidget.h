@@ -24,6 +24,7 @@
 
 namespace NoteShared
 {
+class NoteListWidgetPrivate;
 class NOTESHARED_EXPORT NoteListWidget : public QListWidget
 {
 public:
@@ -41,11 +42,11 @@ public:
     Akonadi::Item::List selectedNotes() const;
 
 private:
+    void createItem(const Akonadi::Item &note);
     enum listViewData {
         AkonadiId = Qt::UserRole + 1
     };
-    Akonadi::Item::List mNotes;
-    void createItem(const Akonadi::Item &note);
+    NoteListWidgetPrivate *const d;
 };
 }
 

@@ -38,10 +38,9 @@
 #include <QAbstractSocket>
 
 class QTcpSocket;
-class QTimer;
-
 namespace NoteShared
 {
+class NotesNetworkReceiverPrivate;
 class NOTESHARED_EXPORT NotesNetworkReceiver : public QObject
 {
     Q_OBJECT
@@ -59,12 +58,7 @@ private Q_SLOTS:
     void slotError(QAbstractSocket::SocketError);
 
 private:
-    QTimer *m_timer;       // to avoid memory and connection floods
-
-    QByteArray *m_buffer;
-    QTcpSocket *m_sock;
-
-    QString m_titleAddon;
+    NotesNetworkReceiverPrivate *const d;
 };
 }
 #endif
