@@ -597,7 +597,7 @@ public:
                 msg->from()->fromUnicodeString(identity.fullEmailAddr(), "utf-8");
             }
             // Remove BCC from identity on ical invitations (kolab/issue474)
-            msg->bcc()->clear();
+            msg->removeHeader<KMime::Headers::Bcc>();
         }
 
 #if 0 // For now assume automatic sending

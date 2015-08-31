@@ -42,8 +42,8 @@ namespace MessageHelper
 void initHeader(const KMime::Message::Ptr &message, const KIdentityManagement::IdentityManager *identMan, uint id)
 {
     applyIdentity(message, identMan, id);
-    message->to()->clear();
-    message->subject()->clear();
+    message->removeHeader<KMime::Headers::To>();
+    message->removeHeader<KMime::Headers::Subject>();
     message->date()->setDateTime(QDateTime::currentDateTime());
 
     const QStringList extraInfo = QStringList() << QString::fromLocal8Bit(KDEPIM_GIT_REVISION_STRING) << QString::fromLocal8Bit(KDEPIM_GIT_LAST_CHANGE);
@@ -78,19 +78,19 @@ void applyIdentity(const KMime::Message::Ptr &message, const KIdentityManagement
         identMan->identityForUoidOrDefault(id);
 
     if (ident.fullEmailAddr().isEmpty()) {
-        message->from()->clear();
+        message->removeHeader<KMime::Headers::From>();
     } else {
         message->from()->addAddress(ident.primaryEmailAddress().toUtf8(), ident.fullName());
     }
 
     if (ident.replyToAddr().isEmpty()) {
-        message->replyTo()->clear();
+        message->removeHeader<KMime::Headers::ReplyTo>();
     } else {
         message->replyTo()->addAddress(ident.replyToAddr().toUtf8());
     }
 
     if (ident.bcc().isEmpty()) {
-        message->bcc()->clear();
+        message->removeHeader<KMime::Headers::Bcc>();
     } else {
         const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString(ident.bcc());
         foreach (const KMime::Types::Mailbox &mailbox, mailboxes) {
@@ -99,7 +99,7 @@ void applyIdentity(const KMime::Message::Ptr &message, const KIdentityManagement
     }
 
     if (ident.cc().isEmpty()) {
-        message->cc()->clear();
+        message->removeHeader<KMime::Headers::Cc>();
     } else {
         const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString(ident.cc());
         foreach (const KMime::Types::Mailbox &mailbox, mailboxes) {

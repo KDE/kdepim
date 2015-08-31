@@ -216,11 +216,11 @@ void MessageFactoryTest::testCreateForward()
 
     QString fwdMsg = QString::fromLatin1(
                          "From: another <another@another.com>\n"
-                         "Subject: Fwd: Test Email Subject\n"
                          "Date: %2\n"
                          "User-Agent: %3\n"
                          "X-KMail-Transport: 0\n"
                          "MIME-Version: 1.0\n"
+                         "Subject: Fwd: Test Email Subject\n"
                          "Content-Type: text/plain; charset=\"US-ASCII\"\n"
                          "Content-Transfer-Encoding: 8Bit\n"
                          "X-KMail-Link-Message: 0\n"
