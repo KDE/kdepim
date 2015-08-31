@@ -340,7 +340,7 @@ private:
     Private *const d;
 };
 
-class EVENTVIEWS_EXPORT AgendaScrollArea : public QScrollArea
+class AgendaScrollArea : public QScrollArea
 {
 public:
     AgendaScrollArea(bool allDay, AgendaView *agendaView, bool isInteractive, QWidget *parent);

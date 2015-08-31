@@ -22,8 +22,6 @@
 #ifndef EVENTVIEWS_TIMELABELSZONE_H
 #define EVENTVIEWS_TIMELABELSZONE_H
 
-#include "eventviews_export.h"
-
 #include <KDateTime>
 
 #include <QWidget>
