@@ -23,14 +23,13 @@
 #ifndef CALENDARSUPPORT_PRINTING_YEARPRINT_H
 #define CALENDARSUPPORT_PRINTING_YEARPRINT_H
 
-#include "calendarsupport_export.h"
 #include "calprintpluginbase.h"
 #include "ui_calprintyearconfig_base.h"
 
 namespace CalendarSupport
 {
 
-class CALENDARSUPPORT_EXPORT  CalPrintYear : public CalPrintPluginBase
+class CalPrintYear : public CalPrintPluginBase
 {
 public:
     CalPrintYear(): CalPrintPluginBase() {}
@@ -72,7 +71,7 @@ protected:
     int mSubDaysEvents, mHolidaysEvents;
 };
 
-class CALENDARSUPPORT_EXPORT CalPrintYearConfig
+class CalPrintYearConfig
     : public QWidget, public Ui::CalPrintYearConfig_Base
 {
 public:

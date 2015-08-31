@@ -20,7 +20,6 @@
 #ifndef CALENDARSUPPORT_KCALMODEL_H
 #define CALENDARSUPPORT_KCALMODEL_H
 
-#include "calendarsupport_export.h"
 #include <ItemModel>
 
 namespace CalendarSupport

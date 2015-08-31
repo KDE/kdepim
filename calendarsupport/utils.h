@@ -76,11 +76,6 @@ CALENDARSUPPORT_EXPORT KCalCore::Event::Ptr event(const Akonadi::Item &item);
 CALENDARSUPPORT_EXPORT KCalCore::Event::Ptr event(const KCalCore::Incidence::Ptr &incidence);
 
 /**
- * returns event pointers from an akonadi item, or a null pointer if the item has no such payload
- */
-CALENDARSUPPORT_EXPORT KCalCore::Event::List eventsFromItems(const Akonadi::Item::List &items);
-
-/**
  * returns incidence pointers from an akonadi item.
  */
 CALENDARSUPPORT_EXPORT KCalCore::Incidence::List incidencesFromItems(
@@ -142,22 +137,12 @@ CALENDARSUPPORT_EXPORT bool hasJournal(const Akonadi::Item &item);
 CALENDARSUPPORT_EXPORT bool hasJournal(const KCalCore::Incidence::Ptr &incidence);
 
 /**
- * returns whether this item can be deleted
- */
-CALENDARSUPPORT_EXPORT bool hasDeleteRights(const Akonadi::Item &item);
-
-/**
- * returns whether this item can be changed
- */
-CALENDARSUPPORT_EXPORT bool hasChangeRights(const Akonadi::Item &item);
-
-/**
  * returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
  */
-CALENDARSUPPORT_EXPORT bool isValidIncidenceItemUrl(const QUrl &url,
+bool isValidIncidenceItemUrl(const QUrl &url,
         const QStringList &supportedMimeTypes);
 
-CALENDARSUPPORT_EXPORT bool isValidIncidenceItemUrl(const QUrl &url);
+bool isValidIncidenceItemUrl(const QUrl &url);
 
 /**
  * returns @p true if the mime data object contains any of the following:
@@ -173,18 +158,12 @@ CALENDARSUPPORT_EXPORT QList<QUrl> incidenceItemUrls(const QMimeData *mimeData);
 CALENDARSUPPORT_EXPORT QList<QUrl> todoItemUrls(const QMimeData *mimeData);
 
 CALENDARSUPPORT_EXPORT bool mimeDataHasIncidence(const QMimeData *mimeData);
-CALENDARSUPPORT_EXPORT bool mimeDataHasTodo(const QMimeData *mimeData);
 
 CALENDARSUPPORT_EXPORT KCalCore::Todo::List todos(const QMimeData *mimeData,
         const KDateTime::Spec &timeSpec);
 
 CALENDARSUPPORT_EXPORT KCalCore::Incidence::List incidences(const QMimeData *mimeData,
         const KDateTime::Spec &timeSpec);
-
-/**
-* returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
-*/
-CALENDARSUPPORT_EXPORT bool isValidTodoItemUrl(const QUrl &url);
 
 /**
 * creates mime data object for dragging an akonadi item containing an incidence

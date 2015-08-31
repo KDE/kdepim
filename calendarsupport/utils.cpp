@@ -104,17 +104,6 @@ KCalCore::Event::Ptr CalendarSupport::event(const KCalCore::Incidence::Ptr &inci
     return KCalCore::Event::Ptr();
 }
 
-KCalCore::Event::List CalendarSupport::eventsFromItems(const Akonadi::Item::List &items)
-{
-    KCalCore::Event::List events;
-    Q_FOREACH (const Akonadi::Item &item, items) {
-        if (const KCalCore::Event::Ptr e = CalendarSupport::event(item)) {
-            events.push_back(e);
-        }
-    }
-    return events;
-}
-
 KCalCore::Incidence::List CalendarSupport::incidencesFromItems(const Akonadi::Item::List &items)
 {
     KCalCore::Incidence::List incidences;
@@ -341,15 +330,6 @@ static bool containsValidIncidenceItemUrl(const QList<QUrl> &urls)
                      bind(CalendarSupport::isValidIncidenceItemUrl, _1)) != urls.constEnd();
 }
 
-bool CalendarSupport::isValidTodoItemUrl(const QUrl &url)
-{
-    if (!url.isValid() || url.scheme() != QLatin1String("akonadi")) {
-        return false;
-    }
-
-    return QUrlQuery(url).queryItemValue(QStringLiteral("type")) == KCalCore::Todo::todoMimeType();
-}
-
 bool CalendarSupport::canDecode(const QMimeData *md)
 {
     Q_ASSERT(md);
@@ -380,11 +360,6 @@ QList<QUrl> CalendarSupport::todoItemUrls(const QMimeData *mimeData)
         }
     }
     return urls;
-}
-
-bool CalendarSupport::mimeDataHasTodo(const QMimeData *mimeData)
-{
-    return !todoItemUrls(mimeData).isEmpty() || !todos(mimeData, KDateTime::Spec()).isEmpty();
 }
 
 bool CalendarSupport::mimeDataHasIncidence(const QMimeData *mimeData)

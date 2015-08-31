@@ -70,7 +70,7 @@ protected:
     bool mUseDateRange;
 };
 
-class CALENDARSUPPORT_EXPORT CalPrintJournalConfig
+class CalPrintJournalConfig
     : public QWidget, public Ui::CalPrintJournalConfig_Base
 {
 public:

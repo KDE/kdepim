@@ -21,8 +21,6 @@
 #ifndef CALENDARSUPPORT_INCIDENCEATTACHMENTMODEL_H
 #define CALENDARSUPPORT_INCIDENCEATTACHMENTMODEL_H
 
-#include "calendarsupport_export.h"
-
 #include <Attribute>
 #include <Item>
 
@@ -39,7 +37,7 @@ namespace CalendarSupport
 {
 class IncidenceAttachmentModelPrivate;
 
-class CALENDARSUPPORT_EXPORT IncidenceAttachmentModel : public QAbstractListModel
+class IncidenceAttachmentModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int attachmentCount READ rowCount NOTIFY rowCountChanged)
