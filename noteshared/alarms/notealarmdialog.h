@@ -40,11 +40,13 @@ class QButtonGroup;
 class QDateTime;
 namespace NoteShared
 {
+class NoteAlarmDialogPrivate;
 class NOTESHARED_EXPORT NoteAlarmDialog : public QDialog
 {
     Q_OBJECT
 public:
     explicit NoteAlarmDialog(const QString &caption, QWidget *parent = Q_NULLPTR);
+    ~NoteAlarmDialog();
     void setAlarm(const QDateTime &dateTime);
     QDateTime alarm() const;
 
@@ -52,9 +54,7 @@ private Q_SLOTS:
     void slotButtonChanged(int);
 
 private:
-    KDateComboBox *m_atDate;
-    KTimeComboBox *m_atTime;
-    QButtonGroup *m_buttons;
+    NoteAlarmDialogPrivate *const d;
 };
 }
 

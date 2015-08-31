@@ -25,6 +25,7 @@ class KJob;
 
 namespace NoteShared
 {
+class CreateNewNoteJobPrivate;
 class NOTESHARED_EXPORT CreateNewNoteJob : public QObject
 {
     Q_OBJECT
@@ -49,10 +50,7 @@ private Q_SLOTS:
     void slotSelectNewCollection();
 private:
     void createFetchCollectionJob(bool useSettings);
-    QString mTitle;
-    QString mText;
-    bool mRichText;
-    QWidget *mWidget;
+    CreateNewNoteJobPrivate *const d;
 };
 }
 
