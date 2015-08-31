@@ -91,7 +91,7 @@ protected:
 
 private:
     QScrollArea *mSA;
-    QWidget *mVBox;
+    QWidget *mCurrentWidget;
     QMap<QDate, EventViews::JournalDateView *> mEntries;
     Akonadi::IncidenceChanger *mChanger;
 //    DateList mSelectedDates;  // List of dates to be displayed

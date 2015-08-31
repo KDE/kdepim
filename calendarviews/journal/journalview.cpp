@@ -42,12 +42,12 @@ JournalView::JournalView(QWidget *parent) : EventView(parent), mChanger(Q_NULLPT
     QVBoxLayout *topLayout = new QVBoxLayout(this);
     topLayout->setMargin(0);
     mSA = new QScrollArea(this);
-    mVBox = new QWidget(mSA->viewport());
-    QVBoxLayout *mVBoxVBoxLayout = new QVBoxLayout(mVBox);
+    mCurrentWidget = new QWidget(mSA->viewport());
+    QVBoxLayout *mVBoxVBoxLayout = new QVBoxLayout(mCurrentWidget);
     mVBoxVBoxLayout->setMargin(0);
     mSA->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mSA->setWidgetResizable(true);
-    mSA->setWidget(mVBox);
+    mSA->setWidget(mCurrentWidget);
     topLayout->addWidget(mSA);
 
     installEventFilter(this);
@@ -63,8 +63,8 @@ void JournalView::appendJournal(const Akonadi::Item &journal, const QDate &dt)
     if (mEntries.contains(dt)) {
         entry = mEntries[dt];
     } else {
-        entry = new JournalDateView(calendar(), mVBox);
-        mVBox->layout()->addWidget(entry);
+        entry = new JournalDateView(calendar(), mCurrentWidget);
+        mCurrentWidget->layout()->addWidget(entry);
         entry->setDate(dt);
         entry->setIncidenceChanger(mChanger);
         entry->show();
