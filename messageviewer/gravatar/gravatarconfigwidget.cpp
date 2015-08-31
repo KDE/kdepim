@@ -29,31 +29,46 @@
 using namespace MessageViewer;
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
+class MessageViewer::GravatarConfigWidgetPrivate
+{
+public:
+    GravatarConfigWidgetPrivate()
+        : mEnableGravatarSupport(Q_NULLPTR),
+          mConfigureGravatarSetting(Q_NULLPTR)
+    {
+
+    }
+
+    QCheckBox *mEnableGravatarSupport;
+    QPushButton *mConfigureGravatarSetting;
+};
+
 GravatarConfigWidget::GravatarConfigWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new MessageViewer::GravatarConfigWidgetPrivate)
 {
     QHBoxLayout *mainLayout = new QHBoxLayout;
     setLayout(mainLayout);
     mainLayout->setMargin(0);
 
-    mEnableGravatarSupport = new QCheckBox(i18n("Enable Gravatar Support"));
-    mEnableGravatarSupport->setObjectName(QStringLiteral("gravatarcheckbox"));
-    mEnableGravatarSupport->setChecked(false);
-    mainLayout->addWidget(mEnableGravatarSupport);
+    d->mEnableGravatarSupport = new QCheckBox(i18n("Enable Gravatar Support"));
+    d->mEnableGravatarSupport->setObjectName(QStringLiteral("gravatarcheckbox"));
+    d->mEnableGravatarSupport->setChecked(false);
+    mainLayout->addWidget(d->mEnableGravatarSupport);
 
-    mConfigureGravatarSetting = new QPushButton(i18n("Configure..."));
-    mConfigureGravatarSetting->setObjectName(QStringLiteral("configure"));
-    mainLayout->addWidget(mConfigureGravatarSetting);
-    connect(mConfigureGravatarSetting, &QPushButton::clicked, this, &GravatarConfigWidget::slotConfigureSettings);
+    d->mConfigureGravatarSetting = new QPushButton(i18n("Configure..."));
+    d->mConfigureGravatarSetting->setObjectName(QStringLiteral("configure"));
+    mainLayout->addWidget(d->mConfigureGravatarSetting);
+    connect(d->mConfigureGravatarSetting, &QPushButton::clicked, this, &GravatarConfigWidget::slotConfigureSettings);
     mainLayout->addStretch();
 
-    connect(mEnableGravatarSupport, &QCheckBox::toggled, this, &GravatarConfigWidget::slotGravatarEnableChanged);
+    connect(d->mEnableGravatarSupport, &QCheckBox::toggled, this, &GravatarConfigWidget::slotGravatarEnableChanged);
     updateWidgetState(false);
 }
 
 GravatarConfigWidget::~GravatarConfigWidget()
 {
-
+    delete d;
 }
 
 void GravatarConfigWidget::slotConfigureSettings()
@@ -71,21 +86,21 @@ void GravatarConfigWidget::slotGravatarEnableChanged(bool state)
 
 void GravatarConfigWidget::updateWidgetState(bool state)
 {
-    mConfigureGravatarSetting->setEnabled(state);
+    d->mConfigureGravatarSetting->setEnabled(state);
 }
 
 void GravatarConfigWidget::save()
 {
-    saveCheckBox(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
-    if (!mEnableGravatarSupport->isChecked()) {
+    saveCheckBox(d->mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
+    if (!d->mEnableGravatarSupport->isChecked()) {
         PimCommon::GravatarCache::self()->clearAllCache();
     }
 }
 
 void GravatarConfigWidget::doLoadFromGlobalSettings()
 {
-    loadWidget(mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
-    updateWidgetState(mEnableGravatarSupport->isChecked());
+    loadWidget(d->mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
+    updateWidgetState(d->mEnableGravatarSupport->isChecked());
 }
 
 void GravatarConfigWidget::doResetToDefaultsOther()

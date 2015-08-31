@@ -20,10 +20,9 @@
 
 #include <QWidget>
 #include "messageviewer_export.h"
-class QCheckBox;
-class QPushButton;
 namespace MessageViewer
 {
+class GravatarConfigWidgetPrivate;
 class MESSAGEVIEWER_EXPORT GravatarConfigWidget : public QWidget
 {
     Q_OBJECT
@@ -44,8 +43,7 @@ private Q_SLOTS:
 
 private:
     void updateWidgetState(bool state);
-    QCheckBox *mEnableGravatarSupport;
-    QPushButton *mConfigureGravatarSetting;
+    GravatarConfigWidgetPrivate *const d;
 };
 }
 
