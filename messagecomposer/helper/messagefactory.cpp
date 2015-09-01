@@ -77,13 +77,11 @@ static KMime::Types::Mailbox::List stripMyAddressesFromAddressList(const KMime::
 MessageFactory::MessageFactory(const KMime::Message::Ptr &origMsg, Akonadi::Item::Id id, const Akonadi::Collection &col)
     : m_identityManager(Q_NULLPTR)
     , m_origMsg(origMsg)
-    , m_origId(0)
     , m_folderId(0)
     , m_parentFolderId(0)
     , m_collection(col)
     , m_replyStrategy(MessageComposer::ReplySmart)
     , m_quote(true)
-    , m_allowDecryption(true)
     , m_id(id)
 {
 
@@ -311,7 +309,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
         if (MessageComposer::MessageComposerSettings::quoteSelectionOnly()) {
             parser.setSelection(m_selection);
         }
-        parser.setAllowDecryption(m_allowDecryption);
+        parser.setAllowDecryption(true);
         if (!m_template.isEmpty()) {
             parser.process(m_template, m_origMsg);
         } else {
@@ -422,7 +420,7 @@ QPair< KMime::Message::Ptr, QList< KMime::Content * > > MessageFactory::createAt
     if (numberOfItems >= 2) {
         // don't respect X-KMail-Identity headers because they might differ for
         // the selected mails
-        MessageHelper::initHeader(msg, m_identityManager, m_origId);
+        MessageHelper::initHeader(msg, m_identityManager, 0);
     } else if (numberOfItems == 1) {
         KMime::Message::Ptr firstMsg = MessageCore::Util::message(items.first());
         const uint originalIdentity = identityUoid(firstMsg);
@@ -474,7 +472,7 @@ KMime::Content *MessageFactory::createForwardAttachmentMessage(const KMime::Mess
 #else
     qCDebug(MESSAGECOMPOSER_LOG) << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
-    MessageCore::Util::addLinkInformation(fwdMsg, m_origId, Akonadi::MessageStatus::statusForwarded());
+    MessageCore::Util::addLinkInformation(fwdMsg, 0, Akonadi::MessageStatus::statusForwarded());
     return msgPart;
 }
 
@@ -787,11 +785,6 @@ void MessageFactory::setIdentityManager(KIdentityManagement::IdentityManager *id
     m_identityManager = ident;
 }
 
-void MessageFactory::setMessageItemID(Akonadi::Entity::Id id)
-{
-    m_origId = id;
-}
-
 void MessageFactory::setReplyStrategy(MessageComposer::ReplyStrategy replyStrategy)
 {
     m_replyStrategy = replyStrategy;
@@ -805,11 +798,6 @@ void MessageFactory::setSelection(const QString &selection)
 void MessageFactory::setQuote(bool quote)
 {
     m_quote = quote;
-}
-
-void MessageFactory::setAllowDecryption(bool allowD)
-{
-    m_allowDecryption = allowD;
 }
 
 void MessageFactory::setTemplate(const QString &templ)

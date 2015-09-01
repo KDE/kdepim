@@ -150,11 +150,6 @@ public:
     void setIdentityManager(KIdentityManagement::IdentityManager *ident);
 
     /**
-    * Required to link created messages properly with original message.
-    */
-    void setMessageItemID(Akonadi::Entity::Id id);
-
-    /**
     * Set the reply strategy to use. Default is ReplySmart.
     */
     void setReplyStrategy(MessageComposer::ReplyStrategy replyStrategy);
@@ -169,11 +164,6 @@ public:
     *  Default is to quote.
     */
     void setQuote(bool quote);
-
-    /**
-    * Decrypt a message if required during message processing. Default is true.
-    */
-    void setAllowDecryption(bool allowD);
 
     /**
     * Set the template to be used when creating the reply. Default is to not
@@ -256,11 +246,9 @@ private:
     QByteArray getRefStr(const KMime::Message::Ptr &msg);
     KMime::Content *createForwardAttachmentMessage(const KMime::Message::Ptr &fwdMsg);
 
-    // TODO move IdentityManager used in KMail to kdepimlibs when not in freeze
     KIdentityManagement::IdentityManager *m_identityManager;
     // Required parts to create messages
     KMime::Message::Ptr m_origMsg;
-    Akonadi::Entity::Id m_origId;
     Akonadi::Item::Id m_folderId;
     Akonadi::Item::Id m_parentFolderId;
 
@@ -269,7 +257,7 @@ private:
     // Optional settings the calling class may set
     MessageComposer::ReplyStrategy m_replyStrategy;
     QString m_selection, m_template;
-    bool m_quote, m_allowDecryption;
+    bool m_quote;
     KMime::Types::Mailbox::List m_mailingListAddresses;
     Akonadi::Item::Id m_id;
 
