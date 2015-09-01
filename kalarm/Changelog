@@ -1,5 +1,8 @@
 KAlarm Change Log
 
+=== Version 2.10.13 --- 1 September 2015 ===
+- Fix conversion error in sub-repetition value from command line or D-Bus command.
+
 === Version 2.10.12 (KDE 4.14.2) --- 30 September 2014 ===
 - Make New Audio Alarm dialogue use sound file repeat preference setting.
 
