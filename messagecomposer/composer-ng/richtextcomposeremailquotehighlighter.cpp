@@ -55,50 +55,6 @@ RichTextComposerEmailQuoteHighlighter::~RichTextComposerEmailQuoteHighlighter()
 {
     delete d;
 }
-#if 0
-QString RichTextComposerEmailQuoteHighlighter::highlightText(const QString &text,
-        const QColor &quoteDepth1,
-        const QColor &quoteDepth2,
-        const QColor &quoteDepth3)
-{
-    const QStringList splitList = text.split(QLatin1Char('\n'));
-    QString result;
-    QStringList::const_iterator it = splitList.constBegin();
-    QStringList::const_iterator end = splitList.constEnd();
-    while (it != end) {
-        result.append(highlightParagraph((*it) + QLatin1Char('\n'),
-                                         quoteDepth1, quoteDepth2, quoteDepth3));
-        ++it;
-    }
-    return result;
-}
-
-QString RichTextComposerEmailQuoteHighlighter::highlightParagraph(const QString &text,
-        const QColor &quoteDepth1,
-        const QColor &quoteDepth2,
-        const QColor &quoteDepth3)
-{
-    QString simplified = text;
-    simplified = simplified.remove(QRegExp(QLatin1String("\\s"))).
-                 replace(QLatin1Char('|'), QLatin1Char('>')).
-                 replace(QLatin1String("&gt;"), QStringLiteral(">"));
-
-    while (simplified.startsWith(QStringLiteral(">>>>"))) {
-        simplified = simplified.mid(3);
-    }
-
-    QString result(QLatin1String("<font color=\"%1\">%2</font>"));
-    if (simplified.startsWith(QStringLiteral(">>>"))) {
-        return result.arg(quoteDepth3.name(), text);
-    } else if (simplified.startsWith(QStringLiteral(">>"))) {
-        return result.arg(quoteDepth2.name(), text);
-    } else if (simplified.startsWith(QStringLiteral(">"))) {
-        return result.arg(quoteDepth1.name(), text);
-    }
-
-    return text;
-}
-#endif
 void RichTextComposerEmailQuoteHighlighter::setQuoteColor(const QColor &normalColor,
         const QColor &quoteDepth1,
         const QColor &quoteDepth2,
