@@ -107,11 +107,6 @@ void CustomToolsWidget::customToolWasClosed()
     d->mTranslatorWidget->toggleAction()->setChecked(false);
 }
 
-ShortUrlWidget *CustomToolsWidget::shortUrlWidget() const
-{
-    return d->mShortUrlWidget;
-}
-
 TranslatorWidget *CustomToolsWidget::translatorWidget() const
 {
     return d->mTranslatorWidget;
