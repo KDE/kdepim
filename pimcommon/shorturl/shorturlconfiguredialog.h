@@ -20,12 +20,11 @@
 
 #include <QDialog>
 #include <KConfigGroup>
-#include "pimcommon/pimcommon_export.h"
 
 namespace PimCommon
 {
 class ShortUrlConfigureWidget;
-class PIMCOMMON_EXPORT ShortUrlConfigureDialog : public QDialog
+class ShortUrlConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:

@@ -28,17 +28,19 @@ class Rule;
 
 namespace PimCommon
 {
+class SieveSyntaxHighlighterRulesPrivate;
 class PIMCOMMON_EXPORT SieveSyntaxHighlighterRules
 {
 public:
     SieveSyntaxHighlighterRules();
+    ~SieveSyntaxHighlighterRules();
 
     void addCapabilities(const QStringList &capabilities);
 
     QVector<KPIMTextEdit::Rule> rules() const;
 private:
     void init();
-    QVector<KPIMTextEdit::Rule> m_rules;
+    SieveSyntaxHighlighterRulesPrivate *const d;
 };
 }
 #endif // SIEVESYNTAXHIGHLIGHTERRULES_H

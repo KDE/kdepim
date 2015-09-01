@@ -43,9 +43,9 @@ class  MESSAGEVIEWER_EXPORT InvitationSettings : public QWidget
 public:
     explicit InvitationSettings(QWidget *parent = Q_NULLPTR);
     ~InvitationSettings();
-    /*reimp*/ void save();
+    void save();
     QString helpAnchor() const;
-    /*reimp*/ void doLoadFromGlobalSettings();
+    void doLoadFromGlobalSettings();
     void doResetToDefaultsOther();
 
 private Q_SLOTS:
@@ -56,7 +56,6 @@ Q_SIGNALS:
 
 private:
     InvitationSettingsPrivate *const d;
-    Ui_InvitationSettings *mInvitationUi;
 };
 
 }

@@ -29,15 +29,41 @@
 
 using namespace PimCommon;
 
+class PimCommon::TextToSpeechWidgetPrivate
+{
+public:
+    TextToSpeechWidgetPrivate()
+        : mNeedToHide(false),
+          mStopButton(Q_NULLPTR),
+          mPlayPauseButton(Q_NULLPTR),
+          mConfigureButton(Q_NULLPTR),
+          mTextToSpeechInterface(Q_NULLPTR),
+          mTextToSpeechActions(Q_NULLPTR),
+          mVolume(Q_NULLPTR)
+    {
+
+    }
+
+    bool mNeedToHide;
+    QPointer<PimCommon::TextToSpeechConfigDialog> mConfigDialog;
+    QToolButton *mStopButton;
+    QToolButton *mPlayPauseButton;
+    QToolButton *mConfigureButton;
+    AbstractTextToSpeechInterface *mTextToSpeechInterface;
+    TextToSpeechActions *mTextToSpeechActions;
+    QSlider *mVolume;
+};
+
+
 TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     : QWidget(parent),
-      mNeedToHide(false)
+      d(new PimCommon::TextToSpeechWidgetPrivate)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
 
-    mTextToSpeechActions = new TextToSpeechActions(this);
-    connect(mTextToSpeechActions, &TextToSpeechActions::stateChanged, this, &TextToSpeechWidget::stateChanged);
+    d->mTextToSpeechActions = new TextToSpeechActions(this);
+    connect(d->mTextToSpeechActions, &TextToSpeechActions::stateChanged, this, &TextToSpeechWidget::stateChanged);
 
     QToolButton *close = new QToolButton(this);
     close->setObjectName(QStringLiteral("close-button"));
@@ -49,75 +75,76 @@ TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
 
     QLabel *volume = new QLabel(i18n("Volume:"));
     hbox->addWidget(volume);
-    mVolume = new QSlider;
-    mVolume->setMinimumWidth(100);
-    mVolume->setOrientation(Qt::Horizontal);
-    mVolume->setObjectName(QStringLiteral("volumeslider"));
-    mVolume->setRange(0, 100);
-    connect(mVolume, &QSlider::valueChanged, this, &TextToSpeechWidget::slotVolumeChanged);
-    hbox->addWidget(mVolume);
+    d->mVolume = new QSlider;
+    d->mVolume->setMinimumWidth(100);
+    d->mVolume->setOrientation(Qt::Horizontal);
+    d->mVolume->setObjectName(QStringLiteral("volumeslider"));
+    d->mVolume->setRange(0, 100);
+    connect(d->mVolume, &QSlider::valueChanged, this, &TextToSpeechWidget::slotVolumeChanged);
+    hbox->addWidget(d->mVolume);
 
-    mStopButton = new QToolButton;
-    mStopButton->setObjectName(QStringLiteral("stopbutton"));
-    mStopButton->setDefaultAction(mTextToSpeechActions->stopAction());
-    hbox->addWidget(mStopButton);
+    d->mStopButton = new QToolButton;
+    d->mStopButton->setObjectName(QStringLiteral("stopbutton"));
+    d->mStopButton->setDefaultAction(d->mTextToSpeechActions->stopAction());
+    hbox->addWidget(d->mStopButton);
 
-    mPlayPauseButton = new QToolButton;
-    mPlayPauseButton->setObjectName(QStringLiteral("playpausebutton"));
-    mPlayPauseButton->setDefaultAction(mTextToSpeechActions->playPauseAction());
-    hbox->addWidget(mPlayPauseButton);
+    d->mPlayPauseButton = new QToolButton;
+    d->mPlayPauseButton->setObjectName(QStringLiteral("playpausebutton"));
+    d->mPlayPauseButton->setDefaultAction(d->mTextToSpeechActions->playPauseAction());
+    hbox->addWidget(d->mPlayPauseButton);
 
-    mConfigureButton = new QToolButton;
-    mConfigureButton->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
-    mConfigureButton->setToolTip(i18n("Configure..."));
-    mConfigureButton->setObjectName(QStringLiteral("configurebutton"));
-    connect(mConfigureButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotConfigure);
-    hbox->addWidget(mConfigureButton);
+    d->mConfigureButton = new QToolButton;
+    d->mConfigureButton->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
+    d->mConfigureButton->setToolTip(i18n("Configure..."));
+    d->mConfigureButton->setObjectName(QStringLiteral("configurebutton"));
+    connect(d->mConfigureButton, &QToolButton::clicked, this, &TextToSpeechWidget::slotConfigure);
+    hbox->addWidget(d->mConfigureButton);
 
-    mTextToSpeechInterface = new TextToSpeechInterface(this, this);
+    d->mTextToSpeechInterface = new TextToSpeechInterface(this, this);
     hide();
 }
 
 TextToSpeechWidget::~TextToSpeechWidget()
 {
+    delete d;
 }
 
 void TextToSpeechWidget::slotConfigure()
 {
-    if (!mConfigDialog.data()) {
-        mNeedToHide = false;
-        mConfigDialog = new TextToSpeechConfigDialog(this);
-        if (mConfigDialog->exec()) {
-            mTextToSpeechInterface->reloadSettings();
+    if (!d->mConfigDialog.data()) {
+        d->mNeedToHide = false;
+        d->mConfigDialog = new TextToSpeechConfigDialog(this);
+        if (d->mConfigDialog->exec()) {
+            d->mTextToSpeechInterface->reloadSettings();
         }
-        delete mConfigDialog;
-        if (mNeedToHide) {
+        delete d->mConfigDialog;
+        if (d->mNeedToHide) {
             hide();
-            mNeedToHide = false;
+            d->mNeedToHide = false;
         }
     }
 }
 
 void TextToSpeechWidget::slotVolumeChanged(int value)
 {
-    mTextToSpeechInterface->setVolume(value);
+    d->mTextToSpeechInterface->setVolume(value);
 }
 
 bool TextToSpeechWidget::isReady() const
 {
-    return mTextToSpeechInterface->isReady();
+    return d->mTextToSpeechInterface->isReady();
 }
 
 void TextToSpeechWidget::say(const QString &text)
 {
-    if (mTextToSpeechInterface->isReady()) {
-        mTextToSpeechInterface->say(text);
+    if (d->mTextToSpeechInterface->isReady()) {
+        d->mTextToSpeechInterface->say(text);
     }
 }
 
 TextToSpeechWidget::State TextToSpeechWidget::state() const
 {
-    return mTextToSpeechActions->state();
+    return d->mTextToSpeechActions->state();
 }
 
 void TextToSpeechWidget::slotStateChanged(PimCommon::TextToSpeech::State state)
@@ -125,9 +152,9 @@ void TextToSpeechWidget::slotStateChanged(PimCommon::TextToSpeech::State state)
     switch (state) {
     case PimCommon::TextToSpeech::Ready: {
         if (state == PimCommon::TextToSpeech::Ready) {
-            mTextToSpeechActions->setState(TextToSpeechWidget::Stop);
-            if (mConfigDialog) {
-                mNeedToHide = true;
+            d->mTextToSpeechActions->setState(TextToSpeechWidget::Stop);
+            if (d->mConfigDialog) {
+                d->mNeedToHide = true;
             } else {
                 hide();
             }
@@ -142,11 +169,11 @@ void TextToSpeechWidget::slotStateChanged(PimCommon::TextToSpeech::State state)
 
 void TextToSpeechWidget::setState(TextToSpeechWidget::State state)
 {
-    mTextToSpeechActions->setState(state);
+    d->mTextToSpeechActions->setState(state);
 }
 
 void TextToSpeechWidget::setTextToSpeechInterface(AbstractTextToSpeechInterface *interface)
 {
-    delete mTextToSpeechInterface;
-    mTextToSpeechInterface = interface;
+    delete d->mTextToSpeechInterface;
+    d->mTextToSpeechInterface = interface;
 }

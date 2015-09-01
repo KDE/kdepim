@@ -27,16 +27,18 @@ class ChangeRecorder;
 }
 namespace NoteShared
 {
+class NotesChangeRecorderPrivate;
 class NOTESHARED_EXPORT NotesChangeRecorder : public QObject
 {
     Q_OBJECT
 public:
     explicit NotesChangeRecorder(QObject *parent = Q_NULLPTR);
+    ~NotesChangeRecorder();
 
     Akonadi::ChangeRecorder *changeRecorder() const;
 
 private:
-    Akonadi::ChangeRecorder *mChangeRecorder;
+    NotesChangeRecorderPrivate *const d;
 };
 }
 

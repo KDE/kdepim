@@ -22,13 +22,10 @@
 #include <QWidget>
 #include "pimcommon_export.h"
 #include "pimcommon/texttospeech/texttospeech.h"
-class QToolButton;
-class QSlider;
 namespace PimCommon
 {
 class AbstractTextToSpeechInterface;
-class TextToSpeechConfigDialog;
-class TextToSpeechActions;
+class TextToSpeechWidgetPrivate;
 class PIMCOMMON_EXPORT TextToSpeechWidget : public QWidget
 {
     Q_OBJECT
@@ -63,14 +60,7 @@ private Q_SLOTS:
     void slotConfigure();
 
 private:
-    bool mNeedToHide;
-    QPointer<PimCommon::TextToSpeechConfigDialog> mConfigDialog;
-    QToolButton *mStopButton;
-    QToolButton *mPlayPauseButton;
-    QToolButton *mConfigureButton;
-    AbstractTextToSpeechInterface *mTextToSpeechInterface;
-    TextToSpeechActions *mTextToSpeechActions;
-    QSlider *mVolume;
+    TextToSpeechWidgetPrivate *const d;
 };
 }
 #endif // TEXTTOSPEECHWIDGET_H

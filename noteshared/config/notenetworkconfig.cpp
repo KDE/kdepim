@@ -31,9 +31,25 @@
 #include <QGroupBox>
 
 using namespace NoteShared;
+class NoteShared::NoteNetworkConfigWidgetPrivate
+{
+public:
+    NoteNetworkConfigWidgetPrivate()
+        : mTmpChkB(Q_NULLPTR),
+          kcfg_SenderID(Q_NULLPTR),
+          kcfg_Port(Q_NULLPTR)
+    {
+
+    }
+
+    QCheckBox *mTmpChkB;
+    QLineEdit *kcfg_SenderID;
+    QSpinBox *kcfg_Port;
+};
 
 NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new NoteShared::NoteNetworkConfigWidgetPrivate)
 {
     QVBoxLayout *lay = new QVBoxLayout(this);
     QWidget *w =  new QWidget(this);
@@ -44,9 +60,9 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
     QGroupBox *incoming = new QGroupBox(i18n("Incoming Notes"));
     QHBoxLayout *tmpLayout = new QHBoxLayout;
 
-    mTmpChkB = new QCheckBox(i18n("Accept incoming notes"));
-    mTmpChkB->setObjectName(QStringLiteral("kcfg_ReceiveNotes"));
-    tmpLayout->addWidget(mTmpChkB);
+    d->mTmpChkB = new QCheckBox(i18n("Accept incoming notes"));
+    d->mTmpChkB->setObjectName(QStringLiteral("kcfg_ReceiveNotes"));
+    tmpLayout->addWidget(d->mTmpChkB);
     incoming->setLayout(tmpLayout);
     layout->addWidget(incoming);
 
@@ -54,12 +70,12 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
     tmpLayout = new QHBoxLayout;
 
     QLabel *label_SenderID = new QLabel(i18n("&Sender ID:"));
-    kcfg_SenderID = new QLineEdit;
-    kcfg_SenderID->setClearButtonEnabled(true);
-    kcfg_SenderID->setObjectName(QStringLiteral("kcfg_SenderID"));
-    label_SenderID->setBuddy(kcfg_SenderID);
+    d->kcfg_SenderID = new QLineEdit;
+    d->kcfg_SenderID->setClearButtonEnabled(true);
+    d->kcfg_SenderID->setObjectName(QStringLiteral("d->kcfg_SenderID"));
+    label_SenderID->setBuddy(d->kcfg_SenderID);
     tmpLayout->addWidget(label_SenderID);
-    tmpLayout->addWidget(kcfg_SenderID);
+    tmpLayout->addWidget(d->kcfg_SenderID);
     outgoing->setLayout(tmpLayout);
     layout->addWidget(outgoing);
 
@@ -69,33 +85,33 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
 
     tmpLayout->addWidget(label_Port);
 
-    kcfg_Port = new QSpinBox;
-    kcfg_Port->setObjectName(QStringLiteral("kcfg_Port"));
-    kcfg_Port->setRange(0, 65535);
-    label_Port->setBuddy(kcfg_Port);
-    tmpLayout->addWidget(kcfg_Port);
+    d->kcfg_Port = new QSpinBox;
+    d->kcfg_Port->setObjectName(QStringLiteral("d->kcfg_Port"));
+    d->kcfg_Port->setRange(0, 65535);
+    label_Port->setBuddy(d->kcfg_Port);
+    tmpLayout->addWidget(d->kcfg_Port);
     layout->addLayout(tmpLayout);
     lay->addStretch();
 }
 
 NoteNetworkConfigWidget::~NoteNetworkConfigWidget()
 {
-
+    delete d;
 }
 
 void NoteNetworkConfigWidget::save()
 {
-    NoteShared::NoteSharedGlobalConfig::self()->setReceiveNotes(mTmpChkB->isChecked());
-    NoteShared::NoteSharedGlobalConfig::self()->setSenderID(kcfg_SenderID->text());
-    NoteShared::NoteSharedGlobalConfig::self()->setPort(kcfg_Port->value());
+    NoteShared::NoteSharedGlobalConfig::self()->setReceiveNotes(d->mTmpChkB->isChecked());
+    NoteShared::NoteSharedGlobalConfig::self()->setSenderID(d->kcfg_SenderID->text());
+    NoteShared::NoteSharedGlobalConfig::self()->setPort(d->kcfg_Port->value());
     NoteShared::NoteSharedGlobalConfig::self()->save();
 }
 
 void NoteNetworkConfigWidget::load()
 {
-    mTmpChkB->setChecked(NoteShared::NoteSharedGlobalConfig::self()->receiveNotes());
-    kcfg_SenderID->setText(NoteShared::NoteSharedGlobalConfig::self()->senderID());
-    kcfg_Port->setValue(NoteShared::NoteSharedGlobalConfig::self()->port());
+    d->mTmpChkB->setChecked(NoteShared::NoteSharedGlobalConfig::self()->receiveNotes());
+    d->kcfg_SenderID->setText(NoteShared::NoteSharedGlobalConfig::self()->senderID());
+    d->kcfg_Port->setValue(NoteShared::NoteSharedGlobalConfig::self()->port());
 }
 
 NoteNetworkConfig::NoteNetworkConfig(QWidget *parent)

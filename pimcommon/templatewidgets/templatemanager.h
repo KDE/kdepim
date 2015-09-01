@@ -39,7 +39,7 @@ struct TemplateInfo {
         qCDebug(PIMCOMMON_LOG) << " name :" << name << " script :" << script;
     }
 };
-
+class TemplateManagerPrivate;
 class PIMCOMMON_EXPORT TemplateManager : public QObject
 {
     Q_OBJECT
@@ -55,10 +55,7 @@ private:
     void initTemplatesDirectories(const QString &templatesRelativePath);
     TemplateInfo loadTemplate(const QString &themePath, const QString &defaultDesktopFileName);
 
-    QStringList mTemplatesDirectories;
-
-    PimCommon::TemplateListWidget *mTemplateListWidget;
-    KDirWatch *mDirWatch;
+    TemplateManagerPrivate *const d;
 };
 }
 

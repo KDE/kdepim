@@ -29,6 +29,7 @@ namespace MessageViewer
 {
 
 /** An ObjectTreeSource that does not work on anything */
+class EmptySourcePrivate;
 class MESSAGEVIEWER_EXPORT EmptySource : public ObjectTreeSourceIf
 {
 public:
@@ -49,6 +50,7 @@ public:
     QObject *sourceObject() Q_DECL_OVERRIDE;
 
 private:
+    EmptySourcePrivate *const d;
     bool mAllowDecryption;
 };
 

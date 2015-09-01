@@ -24,7 +24,7 @@ class QCheckBox;
 class QSpinBox;
 namespace NoteShared
 {
-
+class NoteNetworkConfigWidgetPrivate;
 class NOTESHARED_EXPORT NoteNetworkConfigWidget : public QWidget
 {
     Q_OBJECT
@@ -35,9 +35,7 @@ public:
     void save();
     void load();
 private:
-    QCheckBox *mTmpChkB;
-    QLineEdit *kcfg_SenderID;
-    QSpinBox *kcfg_Port;
+    NoteNetworkConfigWidgetPrivate *const d;
 };
 
 class NOTESHARED_EXPORT NoteNetworkConfig : public KCModule

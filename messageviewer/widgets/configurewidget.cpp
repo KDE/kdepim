@@ -32,58 +32,76 @@
 
 using namespace MessageViewer;
 
-ConfigureWidget::ConfigureWidget(QWidget *parent)
-    : QWidget(parent)
+class MessageViewer::ConfigureWidgetPrivate
 {
-    mSettingsUi = new Ui_Settings;
-    mSettingsUi->setupUi(this);
+public:
+    ConfigureWidgetPrivate()
+        : mSettingsUi(Q_NULLPTR)
+    {
+
+    }
+
+    ~ConfigureWidgetPrivate()
+    {
+        delete mSettingsUi;
+        mSettingsUi = Q_NULLPTR;
+    }
+
+    Ui_Settings *mSettingsUi;
+};
+
+ConfigureWidget::ConfigureWidget(QWidget *parent)
+    : QWidget(parent),
+      d(new MessageViewer::ConfigureWidgetPrivate)
+{
+    d->mSettingsUi = new Ui_Settings;
+    d->mSettingsUi->setupUi(this);
     layout()->setContentsMargins(0, 0, 0, 0);
 
     QStringList encodings = NodeHelper::supportedEncodings(false);
     encodings.prepend(i18n("Auto"));
-    mSettingsUi->overrideCharacterEncoding->addItems(encodings);
-    mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
+    d->mSettingsUi->overrideCharacterEncoding->addItems(encodings);
+    d->mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
 
-    mSettingsUi->overrideCharacterEncoding->setWhatsThis(
+    d->mSettingsUi->overrideCharacterEncoding->setWhatsThis(
         MessageCore::GlobalSettings::self()->overrideCharacterEncodingItem()->whatsThis());
-    mSettingsUi->kcfg_ShowEmoticons->setWhatsThis(
+    d->mSettingsUi->kcfg_ShowEmoticons->setWhatsThis(
         GlobalSettings::self()->showEmoticonsItem()->whatsThis());
-    mSettingsUi->kcfg_ShrinkQuotes->setWhatsThis(
+    d->mSettingsUi->kcfg_ShrinkQuotes->setWhatsThis(
         GlobalSettings::self()->shrinkQuotesItem()->whatsThis());
-    mSettingsUi->kcfg_ShowExpandQuotesMark->setWhatsThis(
+    d->mSettingsUi->kcfg_ShowExpandQuotesMark->setWhatsThis(
         GlobalSettings::self()->showExpandQuotesMarkItem()->whatsThis());
 
-    connect(mSettingsUi->overrideCharacterEncoding, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ConfigureWidget::settingsChanged);
+    connect(d->mSettingsUi->overrideCharacterEncoding, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ConfigureWidget::settingsChanged);
 
-    connect(mSettingsUi->configureCustomHeadersButton, &QPushButton::clicked, this, &ConfigureWidget::showCustomHeadersDialog);
+    connect(d->mSettingsUi->configureCustomHeadersButton, &QPushButton::clicked, this, &ConfigureWidget::showCustomHeadersDialog);
 }
 
 ConfigureWidget::~ConfigureWidget()
 {
-    delete mSettingsUi;
-    mSettingsUi = 0;
+    delete d;
 }
 
 void ConfigureWidget::readConfig()
 {
     readCurrentOverrideCodec();
-    mSettingsUi->kcfg_CollapseQuoteLevelSpin->setEnabled(
+    d->mSettingsUi->kcfg_CollapseQuoteLevelSpin->setEnabled(
         GlobalSettings::self()->showExpandQuotesMark());
 }
 
 void ConfigureWidget::writeConfig()
 {
     MessageCore::GlobalSettings::self()->setOverrideCharacterEncoding(
-        mSettingsUi->overrideCharacterEncoding->currentIndex() == 0 ?
+        d->mSettingsUi->overrideCharacterEncoding->currentIndex() == 0 ?
         QString() :
-        NodeHelper::encodingForName(mSettingsUi->overrideCharacterEncoding->currentText()));
+        NodeHelper::encodingForName(d->mSettingsUi->overrideCharacterEncoding->currentText()));
 }
 
 void ConfigureWidget::readCurrentOverrideCodec()
 {
     const QString &currentOverrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
     if (currentOverrideEncoding.isEmpty()) {
-        mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
+        d->mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
         return;
     }
     QStringList encodings = NodeHelper::supportedEncodings(false);
@@ -93,7 +111,7 @@ void ConfigureWidget::readCurrentOverrideCodec()
     int i = 0;
     for (; it != end; ++it) {
         if (NodeHelper::encodingForName(*it) == currentOverrideEncoding) {
-            mSettingsUi->overrideCharacterEncoding->setCurrentIndex(i);
+            d->mSettingsUi->overrideCharacterEncoding->setCurrentIndex(i);
             break;
         }
         ++i;
@@ -102,7 +120,7 @@ void ConfigureWidget::readCurrentOverrideCodec()
         // the current value of overrideCharacterEncoding is an unknown encoding => reset to Auto
         qCWarning(MESSAGEVIEWER_LOG) << "Unknown override character encoding" << currentOverrideEncoding
                                      << ". Resetting to Auto.";
-        mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
+        d->mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
         MessageCore::GlobalSettings::self()->setOverrideCharacterEncoding(QString());
     }
 }

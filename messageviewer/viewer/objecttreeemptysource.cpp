@@ -25,13 +25,27 @@
 namespace MessageViewer
 {
 
-EmptySource::EmptySource() : ObjectTreeSourceIf()
+class EmptySourcePrivate
 {
-    mAllowDecryption = false;
+public:
+    EmptySourcePrivate()
+        : mAllowDecryption(false)
+    {
+
+    }
+    bool mAllowDecryption;
+};
+
+EmptySource::EmptySource()
+    : ObjectTreeSourceIf(),
+      d(new MessageViewer::EmptySourcePrivate)
+{
+    d->mAllowDecryption = false;
 }
 
 EmptySource::~EmptySource()
 {
+    delete d;
 }
 
 bool EmptySource::htmlMail()
@@ -41,7 +55,7 @@ bool EmptySource::htmlMail()
 
 bool EmptySource::decryptMessage()
 {
-    return mAllowDecryption;
+    return d->mAllowDecryption;
 }
 
 bool EmptySource::htmlLoadExternal()
@@ -61,7 +75,7 @@ void EmptySource::setHtmlMode(Util::HtmlMode mode)
 
 void EmptySource::setAllowDecryption(bool allowDecryption)
 {
-    mAllowDecryption = allowDecryption;
+    d->mAllowDecryption = allowDecryption;
 }
 
 int EmptySource::levelQuote()

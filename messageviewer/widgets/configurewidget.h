@@ -35,6 +35,7 @@ namespace MessageViewer
  *
  * @author Andras Mantia <andras@kdab.net>
  */
+class ConfigureWidgetPrivate;
 class MESSAGEVIEWER_EXPORT ConfigureWidget : public QWidget
 {
     Q_OBJECT
@@ -67,8 +68,7 @@ private Q_SLOTS:
 private:
     void readCurrentFallbackCodec();
     void readCurrentOverrideCodec();
-
-    Ui_Settings *mSettingsUi;
+    ConfigureWidgetPrivate *const d;
 };
 
 }
