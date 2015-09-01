@@ -33,7 +33,7 @@
 
 using namespace MailCommon;
 
-static const char *funcConfigNames[] = {
+static const char *const funcConfigNames[] = {
     "contains", "contains-not",
     "equals", "not-equal",
     "regexp", "not-regexp",
