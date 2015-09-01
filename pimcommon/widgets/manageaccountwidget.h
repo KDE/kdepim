@@ -32,6 +32,7 @@ class QAbstractItemDelegate;
 class QAbstractItemView;
 namespace PimCommon
 {
+class ManageAccountWidgetPrivate;
 class PIMCOMMON_EXPORT ManageAccountWidget : public QWidget
 {
     Q_OBJECT
@@ -62,13 +63,7 @@ private Q_SLOTS:
     void slotModifySelectedAccount();
     void slotAddAccount();
 private:
-    QString mSpecialCollectionIdentifier;
-
-    QStringList mMimeTypeFilter;
-    QStringList mCapabilityFilter;
-    QStringList mExcludeCapabilities;
-
-    Ui::ManageAccountWidget *mWidget;
+    ManageAccountWidgetPrivate *const d;
 };
 }
 

@@ -52,6 +52,9 @@ public Q_SLOTS:
     void slotInsertCommand(const QString &cmd, int adjustCursor = 0);
     void slotTextChanged();
 
+private Q_SLOTS:
+    void slotHelpLinkClicked(const QString &);
+
 Q_SIGNALS:
     void changed();
 
@@ -60,8 +63,6 @@ private:
     QString strOrBlank(const QString &str);
     QString mHelpString;
 
-private Q_SLOTS:
-    void slotHelpLinkClicked(const QString &);
 };
 
 }

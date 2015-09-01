@@ -75,6 +75,21 @@ CustomTemplatesMenu::~CustomTemplatesMenu()
     delete mCustomForwardMapper;
 }
 
+KActionMenu *CustomTemplatesMenu::replyActionMenu() const
+{
+    return mCustomReplyActionMenu;
+}
+
+KActionMenu *CustomTemplatesMenu::replyAllActionMenu() const
+{
+    return mCustomReplyAllActionMenu;
+}
+
+KActionMenu *CustomTemplatesMenu::forwardActionMenu() const
+{
+    return mCustomForwardActionMenu;
+}
+
 void CustomTemplatesMenu::clear()
 {
     QListIterator<QAction *> ait(mCustomTemplateActions);

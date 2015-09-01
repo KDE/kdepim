@@ -42,18 +42,9 @@ public:
     CustomTemplatesMenu(QWidget *parent, KActionCollection *ac);
     ~CustomTemplatesMenu();
 
-    KActionMenu *replyActionMenu() const
-    {
-        return mCustomReplyActionMenu;
-    }
-    KActionMenu *replyAllActionMenu() const
-    {
-        return mCustomReplyAllActionMenu;
-    }
-    KActionMenu *forwardActionMenu() const
-    {
-        return mCustomForwardActionMenu;
-    }
+    KActionMenu *replyActionMenu() const;
+    KActionMenu *replyAllActionMenu() const;
+    KActionMenu *forwardActionMenu() const;
 
 public Q_SLOTS:
     void update();
@@ -77,10 +68,14 @@ private:
     QList<QAction *> mCustomTemplateActions;
 
     // Custom template actions menu
-    KActionMenu *mCustomReplyActionMenu, *mCustomReplyAllActionMenu, *mCustomForwardActionMenu;
+    KActionMenu *mCustomReplyActionMenu;
+    KActionMenu *mCustomReplyAllActionMenu;
+    KActionMenu *mCustomForwardActionMenu;
 
     // Signal mappers for custom template actions
-    QSignalMapper *mCustomReplyMapper, *mCustomReplyAllMapper, *mCustomForwardMapper;
+    QSignalMapper *mCustomReplyMapper;
+    QSignalMapper *mCustomReplyAllMapper;
+    QSignalMapper *mCustomForwardMapper;
 };
 
 }
