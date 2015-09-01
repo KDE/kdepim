@@ -23,7 +23,7 @@
 #include <AkonadiCore/agentinstancecreatejob.h>
 #pragma message("port QT5")
 
-//QT5 #include "maildirsettings.h"
+#include "maildirsettings.h"
 
 #include <Akonadi/Notes/NoteUtils>
 
@@ -83,8 +83,7 @@ void LocalResourceCreator::slotInstanceCreated(KJob *job)
     Akonadi::AgentInstance instance = createJob->instance();
 
     instance.setName(i18nc("Default name for resource holding notes", "Local Notes"));
-#if 0 //QT5
-    OrgKdeAkonadiMaildirSettingsInterface *iface = new OrgKdeAkonadiMaildirSettingsInterface(
+    org::kde::Akonadi::Maildir::Settings *iface = new org::kde::Akonadi::Maildir::Settings(
         QLatin1String("org.freedesktop.Akonadi.Resource.") + instance.identifier(),
         QLatin1String("/Settings"), QDBusConnection::sessionBus(), this);
 
@@ -96,7 +95,6 @@ void LocalResourceCreator::slotInstanceCreated(KJob *job)
         return;
     }
     delete iface;
-#endif
     instance.reconfigure();
 
     Akonadi::ResourceSynchronizationJob *syncJob = new Akonadi::ResourceSynchronizationJob(instance, this);
