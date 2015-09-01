@@ -458,7 +458,6 @@ void SieveEditorTextModeWidget::debugSieveScript()
     if (dlg->exec()) {
         const QString script = dlg->script();
         mTextEdit->setPlainText(script);
-        //TODO get text.
     }
     delete dlg;
 }
