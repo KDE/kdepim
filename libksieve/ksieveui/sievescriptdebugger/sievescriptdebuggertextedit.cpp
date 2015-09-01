@@ -26,7 +26,7 @@ using namespace KSieveUi;
 SieveScriptDebuggerTextEdit::SieveScriptDebuggerTextEdit(QWidget *parent)
     : KSieveUi::SieveTextEdit(parent)
 {
-
+    setWordWrapMode(QTextOption::WordWrap);
 }
 
 SieveScriptDebuggerTextEdit::~SieveScriptDebuggerTextEdit()
