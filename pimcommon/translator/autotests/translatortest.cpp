@@ -27,6 +27,8 @@
 #include <QComboBox>
 #include <QSignalSpy>
 
+#include <KXmlGui/KActionCollection>
+
 TranslatorTest::TranslatorTest()
 {
 
@@ -35,6 +37,7 @@ TranslatorTest::TranslatorTest()
 void TranslatorTest::shouldHaveDefaultValuesOnCreation()
 {
     PimCommon::TranslatorWidget edit;
+    edit.createAction(new KActionCollection(&edit));
     QComboBox *from = edit.findChild<QComboBox *>(QStringLiteral("from"));
     QComboBox *to = edit.findChild<QComboBox *>(QStringLiteral("to"));
 

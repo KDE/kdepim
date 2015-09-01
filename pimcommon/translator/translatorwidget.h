@@ -24,6 +24,7 @@
 #include <kio/job.h>
 #include <texteditor/plaintexteditor/plaintexteditorwidget.h>
 class KToggleAction;
+class KActionCollection;
 namespace PimCommon
 {
 
@@ -70,6 +71,7 @@ public:
 
     KToggleAction *toggleAction();
 
+    void createAction(KActionCollection *ac);
 public Q_SLOTS:
     void slotTranslate();
     void slotCloseWidget();

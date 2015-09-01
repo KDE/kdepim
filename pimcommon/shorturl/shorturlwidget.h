@@ -27,6 +27,7 @@ class QPushButton;
 class QLabel;
 class QLineEdit;
 class QNetworkConfigurationManager;
+class KActionCollection;
 namespace KPIM
 {
 class ProgressIndicatorLabel;
@@ -45,6 +46,7 @@ public:
     void setStandalone(bool b);
     KToggleAction *toggleAction();
 
+    void createAction(KActionCollection *ac);
 public Q_SLOTS:
     void settingsUpdated();
 

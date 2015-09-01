@@ -23,6 +23,7 @@
 #include <QWidget>
 class KToggleAction;
 class QStackedWidget;
+class KActionCollection;
 namespace PimCommon
 {
 class ShortUrlWidget;
@@ -37,7 +38,7 @@ public:
         ShortUrlTool = 1
     };
 
-    explicit CustomToolsWidget(QWidget *parent = Q_NULLPTR);
+    explicit CustomToolsWidget(QWidget *parent = Q_NULLPTR, KActionCollection *ac = Q_NULLPTR);
     ~CustomToolsWidget();
 
     void switchToTool(CustomToolsWidget::ToolType type);

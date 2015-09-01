@@ -36,6 +36,7 @@
 #include <QClipboard>
 #include <QToolButton>
 #include <QPointer>
+#include <KActionCollection>
 
 using namespace PimCommon;
 
@@ -219,12 +220,15 @@ void ShortUrlWidget::setStandalone(bool b)
     mStandalone = b;
 }
 
+void ShortUrlWidget::createAction(KActionCollection *ac)
+{
+    Q_UNUSED(ac);
+    mToggleAction = new KToggleAction(i18n("Generate Shorten Url"), this);
+    mToggleAction->setChecked(false);
+}
+
 KToggleAction *ShortUrlWidget::toggleAction()
 {
-    if (!mToggleAction) {
-        mToggleAction = new KToggleAction(i18n("Generate Shorten Url"), this);
-        mToggleAction->setChecked(false);
-    }
     return mToggleAction;
 }
 

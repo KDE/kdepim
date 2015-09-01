@@ -314,6 +314,7 @@ PRIVATE
     KF5::Wallet
     KF5::DBusAddons
     KF5::KDELibs4Support
+    KF5::XmlGui
 )
 
 target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR};${pimcommon_BINARY_DIR}>")

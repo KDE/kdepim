@@ -31,6 +31,7 @@
 #include <KMessageBox>
 #include <KToggleAction>
 
+#include <KActionCollection>
 #include <QIcon>
 #include <QMimeData>
 
@@ -323,13 +324,16 @@ void TranslatorWidget::init()
 
 }
 
+void TranslatorWidget::createAction(KActionCollection *ac)
+{
+    d->action = new KToggleAction(i18n("&Translator"), this);
+    if (ac)
+        ac->setDefaultShortcut(d->action, QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
+    d->action->setChecked(false);
+}
+
 KToggleAction *TranslatorWidget::toggleAction()
 {
-    if (!d->action) {
-        d->action = new KToggleAction(i18n("&Translator"), this);
-        d->action->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
-        d->action->setChecked(false);
-    }
     return d->action;
 }
 

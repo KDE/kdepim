@@ -42,7 +42,7 @@ public:
     TranslatorWidget *mTranslatorWidget;
 };
 
-CustomToolsWidget::CustomToolsWidget(QWidget *parent)
+CustomToolsWidget::CustomToolsWidget(QWidget *parent, KActionCollection *ac)
     : QWidget(parent),
       d(new PimCommon::CustomToolsWidgetPrivate)
 {
@@ -57,6 +57,9 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent)
     d->mTranslatorWidget->setStandalone(false);
     d->mStackedWidget->addWidget(d->mShortUrlWidget);
     d->mStackedWidget->addWidget(d->mTranslatorWidget);
+
+    d->mShortUrlWidget->createAction(ac);
+    d->mTranslatorWidget->createAction(ac);
 
     connect(d->mShortUrlWidget, &ShortUrlWidget::shortUrlWasClosed, this, &CustomToolsWidget::slotHideTools);
     connect(d->mShortUrlWidget->toggleAction(), &KToggleAction::triggered, this, &CustomToolsWidget::slotVisibleShortUrlTools);
