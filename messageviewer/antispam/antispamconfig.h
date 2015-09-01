@@ -112,7 +112,7 @@ class AntiSpamConfigSingletonProvider;
     by calling @p SpamConfig::instance() and use any of the
     public member functions.
   */
-class MESSAGEVIEWER_EXPORT AntiSpamConfig
+class AntiSpamConfig
 {
     friend class AntiSpamConfigSingletonProvider;
 private:
