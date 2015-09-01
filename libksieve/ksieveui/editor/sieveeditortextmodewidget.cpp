@@ -321,6 +321,9 @@ void SieveEditorTextModeWidget::slotFind()
 
 void SieveEditorTextModeWidget::slotReplace()
 {
+    if (mTextEdit->textCursor().hasSelection()) {
+        mFindBar->setText(mTextEdit->textCursor().selectedText());
+    }
     mFindBar->showReplace();
     mSliderContainer->slideIn();
     mFindBar->focusAndSetCursor();
