@@ -23,12 +23,11 @@
 #include "messageviewer_debug.h"
 
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KLocalizedString>
-#include <KStandardDirs>
 #include <KConfig>
 #include <KPluginLoader>
 
+#include <QDir>
 #include <QFile>
 #include <QStringList>
 
@@ -55,12 +54,18 @@ void PluginLoaderBase::doScan(const char *path)
 {
     mPluginMap.clear();
 
-    const QStringList list =
-        KGlobal::dirs()->findAllResources("data", QString::fromLatin1(path),
-                                          KStandardDirs::Recursive |
-                                          KStandardDirs::NoDuplicates);
+    const auto list = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QString::fromLatin1(path), QStandardPaths::LocateDirectory);
+    foreach (const auto &folder, list)
+        doScanOneFolder(folder);
+}
+
+void PluginLoaderBase::doScanOneFolder(const QString& folder)
+{
+    QDir dir(folder);
+    const auto list = dir.entryList(QStringList() << QLatin1String("*.desktop"), QDir::Files | QDir::Readable);
     for (QStringList::const_iterator it = list.constBegin(); it != list.constEnd(); ++it) {
-        KConfig config(*it, KConfig::SimpleConfig);
+        const auto fileName = folder + QLatin1Char('/') + *it;
+        KConfig config(fileName, KConfig::SimpleConfig);
         if (config.hasGroup("Misc") && config.hasGroup("Plugin")) {
             KConfigGroup group(&config, "Plugin");
 

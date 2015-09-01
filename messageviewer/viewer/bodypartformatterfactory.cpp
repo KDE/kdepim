@@ -56,7 +56,7 @@ namespace
 DEFINE_PLUGIN_LOADER(BodyPartFormatterPluginLoader,
                      Interface::BodyPartFormatterPlugin,
                      "create_bodypart_formatter_plugin",
-                     "messageviewer/plugins/bodypartformatter/*.desktop")
+                     "messageviewer/plugins/bodypartformatter/")
 
 }
 
