@@ -28,8 +28,21 @@
 
 using namespace PimCommon;
 
+class PimCommon::BalooDebugDialogPrivate
+{
+public:
+    BalooDebugDialogPrivate()
+        : mBalooDebugWidget(Q_NULLPTR)
+    {
+
+    }
+
+    BalooDebugWidget *mBalooDebugWidget;
+};
+
 BalooDebugDialog::BalooDebugDialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new PimCommon::BalooDebugDialogPrivate)
 {
     //Don't translate it's just a dialog to debug
     setWindowTitle(QStringLiteral("Debug baloo"));
@@ -43,9 +56,9 @@ BalooDebugDialog::BalooDebugDialog(QWidget *parent)
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &BalooDebugDialog::reject);
-    mBalooDebugWidget = new BalooDebugWidget(this);
-    mBalooDebugWidget->setObjectName(QStringLiteral("baloodebugwidget"));
-    mainLayout->addWidget(mBalooDebugWidget);
+    d->mBalooDebugWidget = new BalooDebugWidget(this);
+    d->mBalooDebugWidget->setObjectName(QStringLiteral("baloodebugwidget"));
+    mainLayout->addWidget(d->mBalooDebugWidget);
     mainLayout->addWidget(buttonBox);
     readConfig();
 }
@@ -53,6 +66,7 @@ BalooDebugDialog::BalooDebugDialog(QWidget *parent)
 BalooDebugDialog::~BalooDebugDialog()
 {
     writeConfig();
+    delete d;
 }
 
 void BalooDebugDialog::readConfig()
@@ -72,22 +86,22 @@ void BalooDebugDialog::writeConfig()
 
 void BalooDebugDialog::setAkonadiId(Akonadi::Item::Id akonadiId)
 {
-    mBalooDebugWidget->setAkonadiId(akonadiId);
+    d->mBalooDebugWidget->setAkonadiId(akonadiId);
 }
 
 void BalooDebugDialog::setSearchType(BalooDebugSearchPathComboBox::SearchType type)
 {
-    mBalooDebugWidget->setSearchType(type);
+    d->mBalooDebugWidget->setSearchType(type);
 }
 
 void BalooDebugDialog::doSearch()
 {
-    mBalooDebugWidget->doSearch();
+    d->mBalooDebugWidget->doSearch();
 }
 
 void BalooDebugDialog::slotSaveAs()
 {
     const QString filter = i18n("Text Files (*.txt);;All Files (*)");
-    PimCommon::Util::saveTextAs(mBalooDebugWidget->plainText(), filter, this);
+    PimCommon::Util::saveTextAs(d->mBalooDebugWidget->plainText(), filter, this);
 }
 

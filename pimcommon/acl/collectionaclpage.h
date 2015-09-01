@@ -40,12 +40,14 @@ class CollectionAclWidget;
 /**
  * "Access Control" tab in the folder dialog
  */
+class CollectionAclPagePrivate;
 class PIMCOMMON_EXPORT CollectionAclPage : public Akonadi::CollectionPropertiesPage
 {
     Q_OBJECT
 
 public:
     explicit CollectionAclPage(QWidget *parent = Q_NULLPTR);
+    ~CollectionAclPage();
 
     void load(const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
     void save(Akonadi::Collection &collection) Q_DECL_OVERRIDE;
@@ -56,7 +58,7 @@ protected:
     void init();
 
 private:
-    CollectionAclWidget *mCollectionAclWidget;
+    CollectionAclPagePrivate *const d;
 };
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionAclPageFactory, CollectionAclPage)
 }

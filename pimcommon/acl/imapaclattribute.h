@@ -36,13 +36,14 @@
 
 namespace PimCommon
 {
-
+class ImapAclAttributePrivate;
 class PIMCOMMON_EXPORT ImapAclAttribute : public Akonadi::Attribute
 {
 public:
     ImapAclAttribute();
     ImapAclAttribute(const QMap<QByteArray, KIMAP::Acl::Rights> &rights,
                      const QMap<QByteArray, KIMAP::Acl::Rights> &oldRights);
+    ~ImapAclAttribute();
     void setRights(const QMap<QByteArray, KIMAP::Acl::Rights> &rights);
     QMap<QByteArray, KIMAP::Acl::Rights> rights() const;
     QMap<QByteArray, KIMAP::Acl::Rights> oldRights() const;
@@ -55,6 +56,7 @@ public:
 
     bool operator==(const ImapAclAttribute &other) const;
 private:
+    ImapAclAttributePrivate *const d;
     QMap<QByteArray, KIMAP::Acl::Rights> mRights;
     QMap<QByteArray, KIMAP::Acl::Rights> mOldRights;
     KIMAP::Acl::Rights mMyRights;

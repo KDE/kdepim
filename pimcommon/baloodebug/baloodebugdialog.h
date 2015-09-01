@@ -26,6 +26,7 @@
 namespace PimCommon
 {
 class BalooDebugWidget;
+class BalooDebugDialogPrivate;
 class PIMCOMMON_EXPORT BalooDebugDialog : public QDialog
 {
     Q_OBJECT
@@ -41,7 +42,7 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    BalooDebugWidget *mBalooDebugWidget;
+    BalooDebugDialogPrivate *const d;
 };
 }
 

@@ -29,40 +29,62 @@
 
 using namespace PimCommon;
 
+class PimCommon::ImapAclAttributePrivate
+{
+public:
+    ImapAclAttributePrivate()
+    {
+
+    }
+
+    QMap<QByteArray, KIMAP::Acl::Rights> mRights;
+    QMap<QByteArray, KIMAP::Acl::Rights> mOldRights;
+    KIMAP::Acl::Rights mMyRights;
+};
+
+
 ImapAclAttribute::ImapAclAttribute()
+    : d(new PimCommon::ImapAclAttributePrivate)
 {
 }
 
 ImapAclAttribute::ImapAclAttribute(const QMap<QByteArray, KIMAP::Acl::Rights> &rights,
                                    const QMap<QByteArray, KIMAP::Acl::Rights> &oldRights)
-    : mRights(rights), mOldRights(oldRights)
+    : d(new PimCommon::ImapAclAttributePrivate)
 {
+      d->mRights = rights;
+      d->mOldRights = oldRights;
+}
+
+ImapAclAttribute::~ImapAclAttribute()
+{
+    delete d;
 }
 
 void ImapAclAttribute::setRights(const QMap<QByteArray, KIMAP::Acl::Rights> &rights)
 {
-    mOldRights = mRights;
-    mRights = rights;
+    d->mOldRights = d->mRights;
+    d->mRights = rights;
 }
 
 QMap<QByteArray, KIMAP::Acl::Rights> ImapAclAttribute::rights() const
 {
-    return mRights;
+    return d->mRights;
 }
 
 QMap<QByteArray, KIMAP::Acl::Rights> ImapAclAttribute::oldRights() const
 {
-    return mOldRights;
+    return d->mOldRights;
 }
 
 void ImapAclAttribute::setMyRights(KIMAP::Acl::Rights rights)
 {
-    mMyRights = rights;
+    d->mMyRights = rights;
 }
 
 KIMAP::Acl::Rights ImapAclAttribute::myRights() const
 {
-    return mMyRights;
+    return d->mMyRights;
 }
 
 QByteArray ImapAclAttribute::type() const
@@ -73,8 +95,8 @@ QByteArray ImapAclAttribute::type() const
 
 ImapAclAttribute *ImapAclAttribute::clone() const
 {
-    ImapAclAttribute *attr = new ImapAclAttribute(mRights, mOldRights);
-    attr->setMyRights(mMyRights);
+    ImapAclAttribute *attr = new ImapAclAttribute(d->mRights, d->mOldRights);
+    attr->setMyRights(d->mMyRights);
     return attr;
 }
 
@@ -83,7 +105,7 @@ QByteArray ImapAclAttribute::serialized() const
     QByteArray result;
 
     bool added = false;
-    for (auto it = mRights.cbegin(), end = mRights.cend(); it != end; ++it) {
+    for (auto it = d->mRights.cbegin(), end = d->mRights.cend(); it != end; ++it) {
         result += it.key();
         result += ' ';
         result += KIMAP::Acl::rightsToString(it.value());
@@ -98,7 +120,7 @@ QByteArray ImapAclAttribute::serialized() const
     result += " %% ";
 
     added = false;
-    for (auto it = mOldRights.cbegin(), end = mOldRights.cend(); it != end; ++it) {
+    for (auto it = d->mOldRights.cbegin(), end = d->mOldRights.cend(); it != end; ++it) {
         result += it.key();
         result += ' ';
         result += KIMAP::Acl::rightsToString(it.value());
@@ -110,9 +132,9 @@ QByteArray ImapAclAttribute::serialized() const
         result.chop(3);
     }
 
-    if (mMyRights) {
+    if (d->mMyRights) {
         result += " %% ";
-        result += KIMAP::Acl::rightsToString(mMyRights);
+        result += KIMAP::Acl::rightsToString(d->mMyRights);
     }
 
     return result;
@@ -138,9 +160,9 @@ static void fillRightsMap(const QList<QByteArray> &rights, QMap <QByteArray, KIM
 
 void ImapAclAttribute::deserialize(const QByteArray &data)
 {
-    mRights.clear();
-    mOldRights.clear();
-    mMyRights = KIMAP::Acl::None;
+    d->mRights.clear();
+    d->mOldRights.clear();
+    d->mMyRights = KIMAP::Acl::None;
 
     QList<QByteArray> parts;
     int lastPos = 0;
@@ -154,10 +176,10 @@ void ImapAclAttribute::deserialize(const QByteArray &data)
     if (parts.size() < 2) {
         return;
     }
-    fillRightsMap(parts.at(0).split('%'), mRights);
-    fillRightsMap(parts.at(1).split('%'), mOldRights);
+    fillRightsMap(parts.at(0).split('%'), d->mRights);
+    fillRightsMap(parts.at(1).split('%'), d->mOldRights);
     if (parts.size() >= 3) {
-        mMyRights = KIMAP::Acl::rightsFromString(parts.at(2));
+        d->mMyRights = KIMAP::Acl::rightsFromString(parts.at(2));
     }
 }
 
