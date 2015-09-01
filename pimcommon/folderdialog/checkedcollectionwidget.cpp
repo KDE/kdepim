@@ -33,8 +33,28 @@
 
 using namespace PimCommon;
 
+class PimCommon::CheckedCollectionWidgetPrivate
+{
+public:
+    CheckedCollectionWidgetPrivate()
+        : mFolderView(Q_NULLPTR),
+          mSelectionModel(Q_NULLPTR),
+          mCheckProxy(Q_NULLPTR),
+          mCollectionFilter(Q_NULLPTR),
+          mEntityTreeModel(Q_NULLPTR)
+    {
+
+    }
+    QTreeView *mFolderView;
+    QItemSelectionModel *mSelectionModel;
+    KCheckableProxyModel *mCheckProxy;
+    KRecursiveFilterProxyModel *mCollectionFilter;
+    Akonadi::EntityTreeModel *mEntityTreeModel;
+};
+
 CheckedCollectionWidget::CheckedCollectionWidget(const QString &mimetype, QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new PimCommon::CheckedCollectionWidgetPrivate)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->setMargin(0);
@@ -48,25 +68,25 @@ CheckedCollectionWidget::CheckedCollectionWidget(const QString &mimetype, QWidge
     connect(changeRecorder, &Akonadi::ChangeRecorder::collectionAdded, this, &CheckedCollectionWidget::collectionAdded);
     connect(changeRecorder, &Akonadi::ChangeRecorder::collectionRemoved, this, &CheckedCollectionWidget::collectionRemoved);
 
-    mEntityTreeModel = new Akonadi::EntityTreeModel(changeRecorder, this);
+    d->mEntityTreeModel = new Akonadi::EntityTreeModel(changeRecorder, this);
     // Set the model to show only collections, not items.
-    mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::NoItemPopulation);
+    d->mEntityTreeModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::NoItemPopulation);
 
     Akonadi::CollectionFilterProxyModel *mimeTypeProxy = new Akonadi::CollectionFilterProxyModel(this);
     mimeTypeProxy->setExcludeVirtualCollections(true);
     mimeTypeProxy->addMimeTypeFilters(QStringList() << mimetype);
-    mimeTypeProxy->setSourceModel(mEntityTreeModel);
+    mimeTypeProxy->setSourceModel(d->mEntityTreeModel);
 
     // Create the Check proxy model.
-    mSelectionModel = new QItemSelectionModel(mimeTypeProxy);
-    mCheckProxy = new KCheckableProxyModel(this);
-    mCheckProxy->setSelectionModel(mSelectionModel);
-    mCheckProxy->setSourceModel(mimeTypeProxy);
+    d->mSelectionModel = new QItemSelectionModel(mimeTypeProxy);
+    d->mCheckProxy = new KCheckableProxyModel(this);
+    d->mCheckProxy->setSelectionModel(d->mSelectionModel);
+    d->mCheckProxy->setSourceModel(mimeTypeProxy);
 
-    mCollectionFilter = new KRecursiveFilterProxyModel(this);
-    mCollectionFilter->setSourceModel(mCheckProxy);
-    mCollectionFilter->setDynamicSortFilter(true);
-    mCollectionFilter->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    d->mCollectionFilter = new KRecursiveFilterProxyModel(this);
+    d->mCollectionFilter->setSourceModel(d->mCheckProxy);
+    d->mCollectionFilter->setDynamicSortFilter(true);
+    d->mCollectionFilter->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
     QLineEdit *searchLine = new QLineEdit(this);
     searchLine->setPlaceholderText(i18n("Search..."));
@@ -75,41 +95,42 @@ CheckedCollectionWidget::CheckedCollectionWidget(const QString &mimetype, QWidge
 
     vbox->addWidget(searchLine);
 
-    mFolderView = new QTreeView;
-    mFolderView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mFolderView->setAlternatingRowColors(true);
-    mFolderView->setModel(mCollectionFilter);
+    d->mFolderView = new QTreeView;
+    d->mFolderView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    d->mFolderView->setAlternatingRowColors(true);
+    d->mFolderView->setModel(d->mCollectionFilter);
 
-    vbox->addWidget(mFolderView);
+    vbox->addWidget(d->mFolderView);
 }
 
 CheckedCollectionWidget::~CheckedCollectionWidget()
 {
+    delete d;
 }
 
 Akonadi::EntityTreeModel *CheckedCollectionWidget::entityTreeModel() const
 {
-    return mEntityTreeModel;
+    return d->mEntityTreeModel;
 }
 
 QTreeView *CheckedCollectionWidget::folderTreeView() const
 {
-    return mFolderView;
+    return d->mFolderView;
 }
 
 QItemSelectionModel *CheckedCollectionWidget::selectionModel() const
 {
-    return mSelectionModel;
+    return d->mSelectionModel;
 }
 
 KCheckableProxyModel *CheckedCollectionWidget::checkableProxy() const
 {
-    return mCheckProxy;
+    return d->mCheckProxy;
 }
 
 void CheckedCollectionWidget::slotSetCollectionFilter(const QString &filter)
 {
-    mCollectionFilter->setFilterWildcard(filter);
-    mFolderView->expandAll();
+    d->mCollectionFilter->setFilterWildcard(filter);
+    d->mFolderView->expandAll();
 }
 

@@ -22,7 +22,6 @@
 #include "pimcommon_export.h"
 
 class QItemSelectionModel;
-class KRecursiveFilterProxyModel;
 class QTreeView;
 class KCheckableProxyModel;
 
@@ -34,6 +33,7 @@ class Collection;
 
 namespace PimCommon
 {
+class CheckedCollectionWidgetPrivate;
 class PIMCOMMON_EXPORT CheckedCollectionWidget : public QWidget
 {
     Q_OBJECT
@@ -57,11 +57,7 @@ private Q_SLOTS:
     void slotSetCollectionFilter(const QString &filter);
 
 private:
-    QTreeView *mFolderView;
-    QItemSelectionModel *mSelectionModel;
-    KCheckableProxyModel *mCheckProxy;
-    KRecursiveFilterProxyModel *mCollectionFilter;
-    Akonadi::EntityTreeModel *mEntityTreeModel;
+    CheckedCollectionWidgetPrivate *const d;
 };
 }
 
