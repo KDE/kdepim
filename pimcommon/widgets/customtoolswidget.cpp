@@ -27,40 +27,55 @@
 #include "pimcommon_debug.h"
 
 using namespace PimCommon;
+class PimCommon::CustomToolsWidgetPrivate
+{
+public:
+    CustomToolsWidgetPrivate()
+        : mStackedWidget(Q_NULLPTR),
+          mShortUrlWidget(Q_NULLPTR),
+          mTranslatorWidget(Q_NULLPTR)
+    {
+
+    }
+    QStackedWidget *mStackedWidget;
+    ShortUrlWidget *mShortUrlWidget;
+    TranslatorWidget *mTranslatorWidget;
+};
 
 CustomToolsWidget::CustomToolsWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new PimCommon::CustomToolsWidgetPrivate)
 {
     QHBoxLayout *lay = new QHBoxLayout;
-    mStackedWidget = new QStackedWidget;
-    lay->addWidget(mStackedWidget);
+    d->mStackedWidget = new QStackedWidget;
+    lay->addWidget(d->mStackedWidget);
     setLayout(lay);
 
-    mShortUrlWidget = new ShortUrlWidget;
-    mTranslatorWidget = new TranslatorWidget;
-    mShortUrlWidget->setStandalone(false);
-    mTranslatorWidget->setStandalone(false);
-    mStackedWidget->addWidget(mShortUrlWidget);
-    mStackedWidget->addWidget(mTranslatorWidget);
+    d->mShortUrlWidget = new ShortUrlWidget;
+    d->mTranslatorWidget = new TranslatorWidget;
+    d->mShortUrlWidget->setStandalone(false);
+    d->mTranslatorWidget->setStandalone(false);
+    d->mStackedWidget->addWidget(d->mShortUrlWidget);
+    d->mStackedWidget->addWidget(d->mTranslatorWidget);
 
-    connect(mShortUrlWidget, &ShortUrlWidget::shortUrlWasClosed, this, &CustomToolsWidget::slotHideTools);
-    connect(mShortUrlWidget->toggleAction(), &KToggleAction::triggered, this, &CustomToolsWidget::slotVisibleShortUrlTools);
+    connect(d->mShortUrlWidget, &ShortUrlWidget::shortUrlWasClosed, this, &CustomToolsWidget::slotHideTools);
+    connect(d->mShortUrlWidget->toggleAction(), &KToggleAction::triggered, this, &CustomToolsWidget::slotVisibleShortUrlTools);
 
-    connect(mTranslatorWidget, &TranslatorWidget::translatorWasClosed, this, &CustomToolsWidget::slotHideTools);
-    connect(mTranslatorWidget->toggleAction(), &KToggleAction::triggered, this, &CustomToolsWidget::slotVisibleTranslatorTools);
+    connect(d->mTranslatorWidget, &TranslatorWidget::translatorWasClosed, this, &CustomToolsWidget::slotHideTools);
+    connect(d->mTranslatorWidget->toggleAction(), &KToggleAction::triggered, this, &CustomToolsWidget::slotVisibleTranslatorTools);
 
-    connect(mShortUrlWidget, &ShortUrlWidget::shortUrlWasClosed, this, &CustomToolsWidget::shortUrlWasClosed);
-    connect(mShortUrlWidget, &ShortUrlWidget::insertShortUrl, this, &CustomToolsWidget::insertShortUrl);
+    connect(d->mShortUrlWidget, &ShortUrlWidget::shortUrlWasClosed, this, &CustomToolsWidget::shortUrlWasClosed);
+    connect(d->mShortUrlWidget, &ShortUrlWidget::insertShortUrl, this, &CustomToolsWidget::insertShortUrl);
 
-    connect(mTranslatorWidget, &TranslatorWidget::translatorWasClosed, this, &CustomToolsWidget::translatorWasClosed);
+    connect(d->mTranslatorWidget, &TranslatorWidget::translatorWasClosed, this, &CustomToolsWidget::translatorWasClosed);
 
-    mStackedWidget->setCurrentWidget(mTranslatorWidget);
+    d->mStackedWidget->setCurrentWidget(d->mTranslatorWidget);
     hide();
 }
 
 CustomToolsWidget::~CustomToolsWidget()
 {
-
+    delete d;
 }
 
 void CustomToolsWidget::slotVisibleTranslatorTools(bool b)
@@ -85,18 +100,18 @@ void CustomToolsWidget::slotVisibleShortUrlTools(bool b)
 
 void CustomToolsWidget::customToolWasClosed()
 {
-    mShortUrlWidget->toggleAction()->setChecked(false);
-    mTranslatorWidget->toggleAction()->setChecked(false);
+    d->mShortUrlWidget->toggleAction()->setChecked(false);
+    d->mTranslatorWidget->toggleAction()->setChecked(false);
 }
 
 ShortUrlWidget *CustomToolsWidget::shortUrlWidget() const
 {
-    return mShortUrlWidget;
+    return d->mShortUrlWidget;
 }
 
 TranslatorWidget *CustomToolsWidget::translatorWidget() const
 {
-    return mTranslatorWidget;
+    return d->mTranslatorWidget;
 }
 
 KToggleAction *CustomToolsWidget::action(CustomToolsWidget::ToolType type)
@@ -104,10 +119,10 @@ KToggleAction *CustomToolsWidget::action(CustomToolsWidget::ToolType type)
     KToggleAction *act = Q_NULLPTR;
     switch (type) {
     case TranslatorTool:
-        act = mTranslatorWidget->toggleAction();
+        act = d->mTranslatorWidget->toggleAction();
         break;
     case ShortUrlTool:
-        act = mShortUrlWidget->toggleAction();
+        act = d->mShortUrlWidget->toggleAction();
         break;
     default:
         qCDebug(PIMCOMMON_LOG) << " type unknown :" << type;
@@ -120,12 +135,12 @@ void CustomToolsWidget::switchToTool(CustomToolsWidget::ToolType type)
 {
     switch (type) {
     case TranslatorTool:
-        mStackedWidget->setCurrentWidget(mTranslatorWidget);
-        mShortUrlWidget->toggleAction()->setChecked(false);
+        d->mStackedWidget->setCurrentWidget(d->mTranslatorWidget);
+        d->mShortUrlWidget->toggleAction()->setChecked(false);
         break;
     case ShortUrlTool:
-        mStackedWidget->setCurrentWidget(mShortUrlWidget);
-        mTranslatorWidget->toggleAction()->setChecked(false);
+        d->mStackedWidget->setCurrentWidget(d->mShortUrlWidget);
+        d->mTranslatorWidget->toggleAction()->setChecked(false);
         break;
     default:
         qCDebug(PIMCOMMON_LOG) << " type unknown :" << type;
@@ -136,9 +151,9 @@ void CustomToolsWidget::switchToTool(CustomToolsWidget::ToolType type)
 
 CustomToolsWidget::ToolType CustomToolsWidget::toolType() const
 {
-    if (mStackedWidget->currentWidget() == mTranslatorWidget) {
+    if (d->mStackedWidget->currentWidget() == d->mTranslatorWidget) {
         return TranslatorTool;
-    } else if (mStackedWidget->currentWidget() == mShortUrlWidget) {
+    } else if (d->mStackedWidget->currentWidget() == d->mShortUrlWidget) {
         return ShortUrlTool;
     } else {
         qCDebug(PIMCOMMON_LOG) << " unknown tool";

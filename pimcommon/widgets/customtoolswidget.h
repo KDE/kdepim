@@ -27,6 +27,7 @@ namespace PimCommon
 {
 class ShortUrlWidget;
 class TranslatorWidget;
+class CustomToolsWidgetPrivate;
 class PIMCOMMON_EXPORT CustomToolsWidget : public QWidget
 {
     Q_OBJECT
@@ -61,9 +62,7 @@ Q_SIGNALS:
 
 private:
     void customToolWasClosed();
-    QStackedWidget *mStackedWidget;
-    ShortUrlWidget *mShortUrlWidget;
-    TranslatorWidget *mTranslatorWidget;
+    CustomToolsWidgetPrivate *const d;
 };
 }
 #endif // CUSTOMTOOLSWIDGET_H
