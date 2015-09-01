@@ -19,11 +19,10 @@
 #define SIEVESCRIPTDEBUGGERTEXTEDIT_H
 
 #include <editor/sievetextedit.h>
-#include "ksieveui_export.h"
 
 namespace KSieveUi
 {
-class KSIEVEUI_EXPORT SieveScriptDebuggerTextEdit : public KSieveUi::SieveTextEdit
+class SieveScriptDebuggerTextEdit : public KSieveUi::SieveTextEdit
 {
     Q_OBJECT
 public:
