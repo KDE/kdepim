@@ -172,6 +172,7 @@ set(libpimcommon_widgets_SRCS
   widgets/kactionmenuchangecase.cpp
   widgets/lineeditwithcompleter.cpp
   widgets/spellchecklineedit.cpp
+  widgets/customtoolsabstract.cpp
 )
 
 set(libtexttospeech_SRCS

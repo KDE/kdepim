@@ -24,6 +24,7 @@ class QAction;
 class KActionCollection;
 namespace PimCommon
 {
+class KActionMenuChangeCasePrivate;
 class PIMCOMMON_EXPORT KActionMenuChangeCase : public KActionMenu
 {
     Q_OBJECT
@@ -48,10 +49,7 @@ Q_SIGNALS:
     void reverseCase();
 
 private:
-    QAction *mUpperCase;
-    QAction *mSentenceCase;
-    QAction *mLowerCase;
-    QAction *mReverseCase;
+    KActionMenuChangeCasePrivate *const d;
 };
 }
 

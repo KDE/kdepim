@@ -20,59 +20,78 @@
 #include <KActionCollection>
 #include <QAction>
 using namespace PimCommon;
+class PimCommon::KActionMenuChangeCasePrivate
+{
+public:
+    KActionMenuChangeCasePrivate()
+        : mUpperCase(Q_NULLPTR),
+          mSentenceCase(Q_NULLPTR),
+          mLowerCase(Q_NULLPTR),
+          mReverseCase(Q_NULLPTR)
+    {
+
+    }
+
+    QAction *mUpperCase;
+    QAction *mSentenceCase;
+    QAction *mLowerCase;
+    QAction *mReverseCase;
+};
+
 KActionMenuChangeCase::KActionMenuChangeCase(QObject *parent)
-    : KActionMenu(parent)
+    : KActionMenu(parent),
+      d(new PimCommon::KActionMenuChangeCasePrivate)
 {
     setText(i18n("Change Case"));
-    mUpperCase = new QAction(i18n("Uppercase"), this);
-    connect(mUpperCase, &QAction::triggered, this, &KActionMenuChangeCase::upperCase);
+    d->mUpperCase = new QAction(i18n("Uppercase"), this);
+    connect(d->mUpperCase, &QAction::triggered, this, &KActionMenuChangeCase::upperCase);
 
-    mSentenceCase = new QAction(i18n("Sentence case"), this);
-    connect(mSentenceCase, &QAction::triggered, this, &KActionMenuChangeCase::sentenceCase);
+    d->mSentenceCase = new QAction(i18n("Sentence case"), this);
+    connect(d->mSentenceCase, &QAction::triggered, this, &KActionMenuChangeCase::sentenceCase);
 
-    mLowerCase = new QAction(i18n("Lowercase"), this);
-    connect(mLowerCase, &QAction::triggered, this, &KActionMenuChangeCase::lowerCase);
+    d->mLowerCase = new QAction(i18n("Lowercase"), this);
+    connect(d->mLowerCase, &QAction::triggered, this, &KActionMenuChangeCase::lowerCase);
 
-    mReverseCase = new QAction(i18n("Reverse Case"), this);
-    connect(mReverseCase, &QAction::triggered, this, &KActionMenuChangeCase::reverseCase);
+    d->mReverseCase = new QAction(i18n("Reverse Case"), this);
+    connect(d->mReverseCase, &QAction::triggered, this, &KActionMenuChangeCase::reverseCase);
 
-    addAction(mUpperCase);
-    addAction(mLowerCase);
-    addAction(mSentenceCase);
-    addAction(mReverseCase);
+    addAction(d->mUpperCase);
+    addAction(d->mLowerCase);
+    addAction(d->mSentenceCase);
+    addAction(d->mReverseCase);
 }
 
 KActionMenuChangeCase::~KActionMenuChangeCase()
 {
-
+    delete d;
 }
 
 QAction *KActionMenuChangeCase::upperCaseAction() const
 {
-    return mUpperCase;
+    return d->mUpperCase;
 }
 
 QAction *KActionMenuChangeCase::sentenceCaseAction() const
 {
-    return mSentenceCase;
+    return d->mSentenceCase;
 }
 
 QAction *KActionMenuChangeCase::lowerCaseAction() const
 {
-    return mLowerCase;
+    return d->mLowerCase;
 }
 
 QAction *KActionMenuChangeCase::reverseCaseAction() const
 {
-    return mReverseCase;
+    return d->mReverseCase;
 }
 
 void KActionMenuChangeCase::appendInActionCollection(KActionCollection *ac)
 {
     if (ac) {
-        ac->addAction(QStringLiteral("change_to_uppercase"), mUpperCase);
-        ac->addAction(QStringLiteral("change_to_sentencecase"), mSentenceCase);
-        ac->addAction(QStringLiteral("change_to_lowercase"), mLowerCase);
-        ac->addAction(QStringLiteral("change_to_reversecase"), mReverseCase);
+        ac->addAction(QStringLiteral("change_to_uppercase"), d->mUpperCase);
+        ac->addAction(QStringLiteral("change_to_sentencecase"), d->mSentenceCase);
+        ac->addAction(QStringLiteral("change_to_lowercase"), d->mLowerCase);
+        ac->addAction(QStringLiteral("change_to_reversecase"), d->mReverseCase);
     }
 }
