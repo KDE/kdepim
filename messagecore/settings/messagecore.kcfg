@@ -8,10 +8,6 @@
   <include>QFontDatabase</include>
   
   <group name="General">
-    <entry name="disregardUmask" type="Bool">
-      <label>Disregard the user's umask setting and use "read-write for the user only" instead</label>
-      <default>false</default>
-    </entry>
     <entry name="dateFormat" type="Int">
       <default code="true">int( KMime::DateFormatter::Fancy )</default>
     </entry>

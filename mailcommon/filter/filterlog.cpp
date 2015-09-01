@@ -210,8 +210,6 @@ bool FilterLog::saveToFile(const QString &fileName) const
         return false;
     }
 
-    fchmod(file.handle(), MessageViewer::Util::getWritePermissions());
-
     file.write("<html>\n<body>\n");
     file.write("<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n");
     foreach (const QString &entry, d->mLogEntries) {

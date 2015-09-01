@@ -86,13 +86,6 @@ bool MESSAGEVIEWER_EXPORT checkOverwrite(const QUrl &url, QWidget *w);
      */
 bool handleUrlWithQDesktopServices(const QUrl &url);
 
-/**
-     * evaluates GlobalSettings->disregardUmask()
-     * and returns resulting permissions for storing files
-     * @return specific file permissions or -1 for default permissions
-     */
-int MESSAGEVIEWER_EXPORT getWritePermissions();
-
 KMime::Content::List allContents(const KMime::Content *message);
 
 bool saveContents(QWidget *parent, const KMime::Content::List &contents, QUrl &currentFolder);

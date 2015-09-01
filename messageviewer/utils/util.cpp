@@ -384,12 +384,6 @@ bool Util::saveContent(QWidget *parent, KMime::Content *content, const QUrl &url
                                i18n("Error saving attachment"));
             return false;
         }
-
-        const int permissions = MessageViewer::Util::getWritePermissions();
-        if (permissions >= 0) {
-            fchmod(file.handle(), permissions);
-        }
-
         ds.setDevice(&file);
     } else {
         // tmp file for upload
@@ -435,16 +429,6 @@ bool Util::saveContent(QWidget *parent, KMime::Content *content, const QUrl &url
     delete mNodeHelper;
 #endif
     return true;
-}
-
-int Util::getWritePermissions()
-{
-    // #79685, #232001 by default use the umask the user defined, but let it be configurable
-    if (MessageCore::GlobalSettings::self()->disregardUmask()) {
-        return S_IRUSR | S_IWUSR;
-    } else {
-        return -1;
-    }
 }
 
 bool Util::saveAttachments(const KMime::Content::List &contents, QWidget *parent, QUrl &currentFolder)
