@@ -30,7 +30,7 @@
 namespace MailCommon
 {
 
-class MAILCOMMON_EXPORT MDNAdviceHelper : public QObject
+class MDNAdviceHelper : public QObject
 {
     Q_OBJECT
 public:
@@ -61,8 +61,8 @@ public:
 
 private:
     explicit MDNAdviceHelper(QObject *parent = Q_NULLPTR)
+        : QObject(parent)
     {
-        Q_UNUSED(parent);
     }
 
     virtual ~MDNAdviceHelper()

@@ -18,7 +18,6 @@
 #ifndef KMFILTERLISTBOX_H
 #define KMFILTERLISTBOX_H
 
-#include "mailcommon_export.h"
 #include "search/searchpattern.h"
 #include <QGroupBox>
 #include <QListWidgetItem>
@@ -67,7 +66,7 @@ private:
     MailCommon::MailFilter *mFilter;
 };
 
-class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
+class KMFilterListBox : public QGroupBox
 {
     Q_OBJECT
 public:
