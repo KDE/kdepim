@@ -13,7 +13,6 @@
 
 class mailreaderView;
 class KToggleAction;
-class KUrl;
 class KComboBox;
 class QAction;
 class KJob;

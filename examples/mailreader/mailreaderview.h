@@ -11,7 +11,6 @@
 #include "ui_mailreaderview.h"
 
 class QPainter;
-class KUrl;
 
 namespace MessageViewer
 {

@@ -2177,7 +2177,7 @@ void ViewerPrivate::slotUrlOn(const QString &link, const QString &title, const Q
     Q_UNUSED(title)
     Q_UNUSED(textContent)
 
-    // The "link" we get here is not URL-encoded, and therefore there is no way the KUrl or QUrl could
+    // The "link" we get here is not URL-encoded, and therefore there is no way QUrl could
     // parse it correctly. To workaround that, we use QWebFrame::hitTestContent() on the mouse position
     // to get the URL before WebKit managed to mangle it.
     QUrl url(mViewer->linkOrImageUrlAt(QCursor::pos()));
