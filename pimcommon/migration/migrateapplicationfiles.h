@@ -25,6 +25,7 @@
 #include "pimcommon_export.h"
 namespace PimCommon
 {
+class MigrateApplicationFilesPrivate;
 class PIMCOMMON_EXPORT MigrateApplicationFiles : public QObject
 {
     Q_OBJECT
@@ -58,12 +59,7 @@ private:
     void migrateFolder(const MigrateFileInfo &info);
     void migrateFile(const MigrateFileInfo &info);
     bool migrateConfig();
-    QVector<MigrateFileInfo> mMigrateInfoList;
-    QString mConfigFileName;
-    QString mApplicationName;
-    Kdelibs4Migration mMigration;
-    int mMigrateApplicationVersion;
-    int mCurrentConfigVersion;
+    MigrateApplicationFilesPrivate *const d;
 };
 }
 #endif // MIGRATEAPPLICATIONFILE_H

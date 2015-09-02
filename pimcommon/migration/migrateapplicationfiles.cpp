@@ -26,17 +26,35 @@
 
 using namespace PimCommon;
 
+class PimCommon::MigrateApplicationFilesPrivate
+{
+public:
+    MigrateApplicationFilesPrivate()
+        : mMigrateApplicationVersion(1),
+          mCurrentConfigVersion(0)
+    {
+
+    }
+
+    QVector<MigrateFileInfo> mMigrateInfoList;
+    QString mConfigFileName;
+    QString mApplicationName;
+    Kdelibs4Migration mMigration;
+    int mMigrateApplicationVersion;
+    int mCurrentConfigVersion;
+};
+
+
 MigrateApplicationFiles::MigrateApplicationFiles(QObject *parent)
     : QObject(parent),
-      mMigrateApplicationVersion(1),
-      mCurrentConfigVersion(0)
+      d(new PimCommon::MigrateApplicationFilesPrivate)
 {
 
 }
 
 MigrateApplicationFiles::~MigrateApplicationFiles()
 {
-
+    delete d;
 }
 
 void MigrateApplicationFiles::finished()
@@ -47,21 +65,21 @@ void MigrateApplicationFiles::finished()
 
 bool MigrateApplicationFiles::start()
 {
-    if (mApplicationName.isEmpty()) {
+    if (d->mApplicationName.isEmpty()) {
         qCDebug(PIMCOMMON_LOG) << "Missing application name";
     }
     // Testing for kdehome
-    if (!mMigration.kdeHomeFound()) {
+    if (!d->mMigration.kdeHomeFound()) {
         finished();
         return false;
     }
 
-    if (mMigrateInfoList.isEmpty()) {
+    if (d->mMigrateInfoList.isEmpty()) {
         finished();
         return false;
     }
 
-    if (mConfigFileName.isEmpty()) {
+    if (d->mConfigFileName.isEmpty()) {
         qCDebug(PIMCOMMON_LOG) << " config file name not defined.";
         finished();
         return false;
@@ -72,8 +90,8 @@ bool MigrateApplicationFiles::start()
 bool MigrateApplicationFiles::migrateConfig()
 {
     qCDebug(PIMCOMMON_LOG) << "Start migration...";
-    Q_FOREACH (const MigrateFileInfo &info, mMigrateInfoList) {
-        if ((info.version() == -1) || (info.version() > mCurrentConfigVersion)) {
+    Q_FOREACH (const MigrateFileInfo &info, d->mMigrateInfoList) {
+        if ((info.version() == -1) || (info.version() > d->mCurrentConfigVersion)) {
             if (info.folder()) {
                 migrateFolder(info);
             } else {
@@ -88,39 +106,39 @@ bool MigrateApplicationFiles::migrateConfig()
 
 QString MigrateApplicationFiles::applicationName() const
 {
-    return mApplicationName;
+    return d->mApplicationName;
 }
 
 void MigrateApplicationFiles::setApplicationName(const QString &applicationName)
 {
-    mApplicationName = applicationName;
+    d->mApplicationName = applicationName;
 }
 
 int MigrateApplicationFiles::currentConfigVersion() const
 {
-    return mCurrentConfigVersion;
+    return d->mCurrentConfigVersion;
 }
 
 void MigrateApplicationFiles::setCurrentConfigVersion(int currentConfigVersion)
 {
-    mCurrentConfigVersion = currentConfigVersion;
+    d->mCurrentConfigVersion = currentConfigVersion;
 }
 
 QString MigrateApplicationFiles::configFileName() const
 {
-    return mConfigFileName;
+    return d->mConfigFileName;
 }
 
 void MigrateApplicationFiles::setConfigFileName(const QString &configFileName)
 {
-    mConfigFileName = configFileName;
+    d->mConfigFileName = configFileName;
 }
 
 void MigrateApplicationFiles::writeConfig()
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(mConfigFileName, KConfig::SimpleConfig);
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(d->mConfigFileName, KConfig::SimpleConfig);
     KConfigGroup grp = config->group(QStringLiteral("Migratekde4"));
-    grp.writeEntry(QStringLiteral("Version"), mMigrateApplicationVersion);
+    grp.writeEntry(QStringLiteral("Version"), d->mMigrateApplicationVersion);
     grp.sync();
 }
 
@@ -129,7 +147,7 @@ void MigrateApplicationFiles::migrateFolder(const MigrateFileInfo &info)
     QString originalPath;
     QString newPath;
     if (info.type() == QLatin1String("data")) {
-        originalPath = mMigration.locateLocal("data", info.path());
+        originalPath = d->mMigration.locateLocal("data", info.path());
         newPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + info.path();
         QFileInfo fileInfo(newPath);
         QDir().mkpath(fileInfo.absolutePath());
@@ -177,7 +195,7 @@ void MigrateApplicationFiles::migrateFile(const MigrateFileInfo &info)
     QString originalPath;
     QString newPath;
     if (info.type() == QLatin1String("data")) {
-        originalPath = mMigration.locateLocal("data", info.path());
+        originalPath = d->mMigration.locateLocal("data", info.path());
         newPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + info.path();
         QFileInfo fileInfo(newPath);
         QDir().mkpath(fileInfo.absolutePath());
@@ -209,25 +227,25 @@ void MigrateApplicationFiles::migrateFile(const MigrateFileInfo &info)
 
 int MigrateApplicationFiles::version() const
 {
-    return mMigrateApplicationVersion;
+    return d->mMigrateApplicationVersion;
 }
 
 void MigrateApplicationFiles::setVersion(int version)
 {
-    mMigrateApplicationVersion = version;
+    d->mMigrateApplicationVersion = version;
 }
 
 bool MigrateApplicationFiles::checkIfNecessary()
 {
-    if (mConfigFileName.isEmpty()) {
+    if (d->mConfigFileName.isEmpty()) {
         qCDebug(PIMCOMMON_LOG) << " config file name not defined.";
         return false;
     }
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(mConfigFileName, KConfig::SimpleConfig);
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(d->mConfigFileName, KConfig::SimpleConfig);
     if (config->hasGroup(QStringLiteral("Migratekde4"))) {
         KConfigGroup grp = config->group(QStringLiteral("Migratekde4"));
-        mCurrentConfigVersion = grp.readEntry(QStringLiteral("Version"), 0);
-        if (mCurrentConfigVersion < mMigrateApplicationVersion) {
+        d->mCurrentConfigVersion = grp.readEntry(QStringLiteral("Version"), 0);
+        if (d->mCurrentConfigVersion < d->mMigrateApplicationVersion) {
             return true;
         } else {
             return false;
@@ -239,7 +257,7 @@ bool MigrateApplicationFiles::checkIfNecessary()
 void MigrateApplicationFiles::insertMigrateInfo(const MigrateFileInfo &info)
 {
     if (info.isValid()) {
-        mMigrateInfoList.append(info);
+        d->mMigrateInfoList.append(info);
     }
 }
 
