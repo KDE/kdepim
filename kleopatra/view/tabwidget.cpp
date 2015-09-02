@@ -47,7 +47,7 @@
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
-#include <KTabWidget>
+#include <QTabWidget>
 #include <KConfigGroup>
 #include <KConfig>
 #include <QAction>
@@ -405,7 +405,7 @@ private:
 private:
     AbstractKeyListModel *flatModel;
     AbstractKeyListModel *hierarchicalModel;
-    KTabWidget tabWidget;
+    QTabWidget tabWidget;
     QVBoxLayout layout;
     enum {
         Rename,
@@ -664,7 +664,7 @@ void TabWidget::Private::movePageLeft(Page *page)
     if (idx <= 0) {
         return;
     }
-    tabWidget.moveTab(idx, idx - 1);
+    tabWidget.tabBar()->moveTab(idx, idx - 1);
     enableDisableCurrentPageActions();
 }
 
@@ -677,7 +677,7 @@ void TabWidget::Private::movePageRight(Page *page)
     if (idx < 0 || idx >= tabWidget.count() - 1) {
         return;
     }
-    tabWidget.moveTab(idx, idx + 1);
+    tabWidget.tabBar()->moveTab(idx, idx + 1);
     enableDisableCurrentPageActions();
 }
 
