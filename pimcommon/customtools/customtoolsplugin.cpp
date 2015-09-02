@@ -15,38 +15,38 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "customtoolsabstract.h"
+#include "customtoolsplugin.h"
 
 using namespace PimCommon;
 
-class PimCommon::CustomToolsAbstractPrivate
+class PimCommon::CustomToolsPluginPrivate
 {
 public:
-    CustomToolsAbstractPrivate()
+    CustomToolsPluginPrivate()
     {
 
     }
 };
 
-CustomToolsAbstract::CustomToolsAbstract(QObject *parent)
+CustomToolsPlugin::CustomToolsPlugin(QObject *parent)
     : QObject(parent),
-      d(new PimCommon::CustomToolsAbstractPrivate)
+      d(new PimCommon::CustomToolsPluginPrivate)
 {
 
 }
 
 
-CustomToolsAbstract::~CustomToolsAbstract()
+CustomToolsPlugin::~CustomToolsPlugin()
 {
     delete d;
 }
 
-void CustomToolsAbstract::setShortcut(KActionCollection *ac)
+void CustomToolsPlugin::setShortcut(KActionCollection *ac)
 {
     Q_UNUSED(ac);
 }
 
-void CustomToolsAbstract::setText(const QString &)
+void CustomToolsPlugin::setText(const QString &)
 {
 
 }

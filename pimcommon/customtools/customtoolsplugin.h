@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CUSTOMTOOLSABSTRACT_H
-#define CUSTOMTOOLSABSTRACT_H
+#ifndef CUSTOMTOOLSPLUGIN_H
+#define CUSTOMTOOLSPLUGIN_H
 
 #include "pimcommon/pimcommon_export.h"
 #include <QObject>
@@ -24,13 +24,13 @@ class KToggleAction;
 class KActionCollection;
 namespace PimCommon
 {
-class CustomToolsAbstractPrivate;
-class PIMCOMMON_EXPORT CustomToolsAbstract : public QObject
+class CustomToolsPluginPrivate;
+class PIMCOMMON_EXPORT CustomToolsPlugin : public QObject
 {
     Q_OBJECT
 public:
-    explicit CustomToolsAbstract(QObject *parent = Q_NULLPTR);
-    ~CustomToolsAbstract();
+    explicit CustomToolsPlugin(QObject *parent = Q_NULLPTR);
+    ~CustomToolsPlugin();
 
     virtual void createAction() = 0;
     virtual KToggleAction *action() const = 0;
@@ -46,7 +46,7 @@ Q_SIGNALS:
     void insertText(const QString &);
 
 private:
-    CustomToolsAbstractPrivate *const d;
+    CustomToolsPluginPrivate *const d;
 };
 }
-#endif // CUSTOMTOOLSABSTRACT_H
+#endif // CUSTOMTOOLSPLUGIN_H
