@@ -327,7 +327,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
     }
 
     if (m_origMsg->hasHeader("X-KMail-EncryptActionEnabled") &&
-            m_origMsg->headerByType("X-KMail-EncryptActionEnabled")->as7BitString().contains("true")) {
+            m_origMsg->headerByType("X-KMail-EncryptActionEnabled")->as7BitString(false).contains("true")) {
         auto header = new KMime::Headers::Generic("X-KMail-EncryptActionEnabled");
         header->fromUnicodeString(QStringLiteral("true"), "utf-8");
         msg->setHeader(header);
@@ -690,8 +690,8 @@ KMime::Message::Ptr MessageFactory::createMDN(KMime::MDN::ActionMode a,
     secondMsgPart->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
     secondMsgPart->setBody(KMime::MDN::dispositionNotificationBodyContent(
                                finalRecipient,
-                               m_origMsg->headerByType("Original-Recipient") ? m_origMsg->headerByType("Original-Recipient")->as7BitString() : "",
-                               m_origMsg->messageID()->as7BitString(), /* Message-ID */
+                               m_origMsg->headerByType("Original-Recipient") ? m_origMsg->headerByType("Original-Recipient")->as7BitString(false) : "",
+                               m_origMsg->messageID()->as7BitString(false), /* Message-ID */
                                d, a, s, m, special));
     receipt->addContent(secondMsgPart);
 
@@ -1001,7 +1001,8 @@ QByteArray MessageFactory::getRefStr(const KMime::Message::Ptr &msg)
     QByteArray firstRef, lastRef, refStr, retRefStr;
     int i, j;
 
-    refStr = msg->headerByType("References") ? msg->headerByType("References")->as7BitString().trimmed() : "";
+    if (auto hdr = msg->references(false))
+        refStr = hdr->as7BitString(false).trimmed();
 
     if (refStr.isEmpty()) {
         return msg->messageID()->as7BitString(false);
