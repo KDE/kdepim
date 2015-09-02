@@ -58,19 +58,19 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent, KActionCollection *ac)
     d->mStackedWidget->addWidget(d->mShortUrlWidget);
     d->mStackedWidget->addWidget(d->mTranslatorWidget);
 
+    d->mShortUrlWidget->createAction();
+    d->mTranslatorWidget->createAction();
+
     d->mShortUrlWidget->setShortcut(ac);
     d->mTranslatorWidget->setShortcut(ac);
 
-    connect(d->mShortUrlWidget, &ShortUrlWidget::shortUrlWasClosed, this, &CustomToolsWidget::slotHideTools);
+    connect(d->mShortUrlWidget, &ShortUrlWidget::toolsWasClosed, this, &CustomToolsWidget::slotHideTools);
     connect(d->mShortUrlWidget->toggleAction(), &KToggleAction::triggered, this, &CustomToolsWidget::slotVisibleShortUrlTools);
 
-    connect(d->mTranslatorWidget, &TranslatorWidget::translatorWasClosed, this, &CustomToolsWidget::slotHideTools);
+    connect(d->mTranslatorWidget, &TranslatorWidget::toolsWasClosed, this, &CustomToolsWidget::slotHideTools);
     connect(d->mTranslatorWidget->toggleAction(), &KToggleAction::triggered, this, &CustomToolsWidget::slotVisibleTranslatorTools);
 
-    connect(d->mShortUrlWidget, &ShortUrlWidget::shortUrlWasClosed, this, &CustomToolsWidget::shortUrlWasClosed);
     connect(d->mShortUrlWidget, &ShortUrlWidget::insertText, this, &CustomToolsWidget::insertText);
-
-    connect(d->mTranslatorWidget, &TranslatorWidget::translatorWasClosed, this, &CustomToolsWidget::translatorWasClosed);
 
     d->mStackedWidget->setCurrentWidget(d->mTranslatorWidget);
     hide();

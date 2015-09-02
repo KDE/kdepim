@@ -72,6 +72,7 @@ public:
     KToggleAction *toggleAction();
 
     void setShortcut(KActionCollection *ac);
+    void createAction();
 public Q_SLOTS:
     void slotTranslate();
     void slotCloseWidget();
@@ -90,7 +91,7 @@ protected:
     bool event(QEvent *e) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
-    void translatorWasClosed();
+    void toolsWasClosed();
 
 private:
     void init();

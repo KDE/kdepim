@@ -47,6 +47,7 @@ public:
     KToggleAction *toggleAction();
 
     void setShortcut(KActionCollection *ac);
+    void createAction();
 public Q_SLOTS:
     void settingsUpdated();
 
@@ -63,7 +64,7 @@ private Q_SLOTS:
     void slotOpenShortUrl();
 
 Q_SIGNALS:
-    void shortUrlWasClosed();
+    void toolsWasClosed();
     void insertText(const QString &Url);
 
 private:

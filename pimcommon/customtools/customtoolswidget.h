@@ -55,9 +55,7 @@ private Q_SLOTS:
     void slotVisibleTranslatorTools(bool b);
 
 Q_SIGNALS:
-    void shortUrlWasClosed();
     void toolSwitched(PimCommon::CustomToolsWidget::ToolType type);
-    void translatorWasClosed();
     void insertText(const QString &url);
 
 private:

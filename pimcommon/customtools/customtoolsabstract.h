@@ -32,6 +32,7 @@ public:
     explicit CustomToolsAbstract(QObject *parent = Q_NULLPTR);
     ~CustomToolsAbstract();
 
+    virtual void createAction() = 0;
     virtual KToggleAction *action() const = 0;
     virtual QWidget *createView() = 0;
 

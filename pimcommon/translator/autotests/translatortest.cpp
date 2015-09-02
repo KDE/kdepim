@@ -37,6 +37,7 @@ TranslatorTest::TranslatorTest()
 void TranslatorTest::shouldHaveDefaultValuesOnCreation()
 {
     PimCommon::TranslatorWidget edit;
+    edit.createAction();
     edit.setShortcut(new KActionCollection(&edit));
     QComboBox *from = edit.findChild<QComboBox *>(QStringLiteral("from"));
     QComboBox *to = edit.findChild<QComboBox *>(QStringLiteral("to"));
@@ -118,7 +119,7 @@ void TranslatorTest::shouldEmitTranslatorWasClosedSignalWhenCloseIt()
     PimCommon::TranslatorWidget edit;
     edit.show();
     QTest::qWaitForWindowExposed(&edit);
-    QSignalSpy spy(&edit, SIGNAL(translatorWasClosed()));
+    QSignalSpy spy(&edit, SIGNAL(toolsWasClosed()));
     QTest::keyClick(&edit, Qt::Key_Escape);
     QCOMPARE(spy.count(), 1);
 }

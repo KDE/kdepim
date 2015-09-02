@@ -324,12 +324,16 @@ void TranslatorWidget::init()
 
 }
 
-void TranslatorWidget::setShortcut(KActionCollection *ac)
+void TranslatorWidget::createAction()
 {
     d->action = new KToggleAction(i18n("&Translator"), this);
+    d->action->setChecked(false);
+}
+
+void TranslatorWidget::setShortcut(KActionCollection *ac)
+{
     if (ac)
         ac->setDefaultShortcut(d->action, QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
-    d->action->setChecked(false);
 }
 
 KToggleAction *TranslatorWidget::toggleAction()
@@ -451,7 +455,7 @@ void TranslatorWidget::slotCloseWidget()
     if (d->standalone) {
         hide();
     }
-    Q_EMIT translatorWasClosed();
+    Q_EMIT toolsWasClosed();
 }
 
 bool TranslatorWidget::event(QEvent *e)

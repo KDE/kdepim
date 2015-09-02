@@ -212,7 +212,7 @@ void ShortUrlWidget::slotCloseWidget()
         hide();
     }
 
-    Q_EMIT shortUrlWasClosed();
+    Q_EMIT toolsWasClosed();
 }
 
 void ShortUrlWidget::setStandalone(bool b)
@@ -220,11 +220,15 @@ void ShortUrlWidget::setStandalone(bool b)
     mStandalone = b;
 }
 
+void ShortUrlWidget::createAction()
+{
+    mToggleAction = new KToggleAction(i18n("Generate Shorten Url"), this);
+    mToggleAction->setChecked(false);
+}
+
 void ShortUrlWidget::setShortcut(KActionCollection *ac)
 {
     Q_UNUSED(ac);
-    mToggleAction = new KToggleAction(i18n("Generate Shorten Url"), this);
-    mToggleAction->setChecked(false);
 }
 
 KToggleAction *ShortUrlWidget::toggleAction()
