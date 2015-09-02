@@ -84,7 +84,8 @@ int main(int argc, char **argv)
     dlg.show();
 
     KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
-    QStringList capabilities = PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities();
+    PimCommon::SieveSyntaxHighlighterUtil sieveHighlighterutil;
+    const QStringList capabilities = sieveHighlighterutil.fullCapabilities();
     //Add all capabilities for testing
     dialog->setSieveCapabilities(capabilities);
     QString error;

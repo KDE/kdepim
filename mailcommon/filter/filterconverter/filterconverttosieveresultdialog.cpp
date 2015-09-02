@@ -55,7 +55,9 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     mEditor->editor()->setSpellCheckingSupport(false);
     mEditor->setObjectName(QStringLiteral("editor"));
     PimCommon::SieveSyntaxHighlighter *syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter(mEditor->editor()->document());
-    syntaxHighlighter->addCapabilities(PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities());
+    PimCommon::SieveSyntaxHighlighterUtil sieveHighlighterutil;
+    const QStringList capabilities = sieveHighlighterutil.fullCapabilities();
+    syntaxHighlighter->addCapabilities(capabilities);
     topLayout->addWidget(mEditor);
     topLayout->addWidget(buttonBox);
 

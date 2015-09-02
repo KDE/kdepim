@@ -19,7 +19,7 @@
 
 namespace PimCommon
 {
-QStringList SieveSyntaxHighlighterUtil::fullCapabilities()
+QStringList SieveSyntaxHighlighterUtil::fullCapabilities() const
 {
     return  QStringList()
             << QStringLiteral("mboxmetadata")

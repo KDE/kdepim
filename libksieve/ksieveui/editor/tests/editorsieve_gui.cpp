@@ -45,7 +45,8 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     SieveEditorTestWidget *dialog = new SieveEditorTestWidget;
-    const QStringList capabilities = PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities();
+    PimCommon::SieveSyntaxHighlighterUtil sieveHighlighterutil;
+    const QStringList capabilities = sieveHighlighterutil.fullCapabilities();
     //Add all capabilities for testing
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec()) {

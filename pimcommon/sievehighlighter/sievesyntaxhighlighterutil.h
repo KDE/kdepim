@@ -24,10 +24,11 @@
 namespace PimCommon
 {
 
-namespace SieveSyntaxHighlighterUtil
+class PIMCOMMON_EXPORT SieveSyntaxHighlighterUtil
 {
-PIMCOMMON_EXPORT QStringList fullCapabilities();
-}
+public:
+    QStringList fullCapabilities() const;
+};
 
 }
 

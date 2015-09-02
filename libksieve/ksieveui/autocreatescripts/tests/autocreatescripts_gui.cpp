@@ -37,7 +37,8 @@ int main(int argc, char **argv)
     parser.process(app);
     aboutData.processCommandLine(&parser);
     KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
-    QStringList capabilities = PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities();
+    PimCommon::SieveSyntaxHighlighterUtil sieveHighlighterutil;
+    const QStringList capabilities = sieveHighlighterutil.fullCapabilities();
     //Add all capabilities for testing
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec()) {
