@@ -36,8 +36,6 @@
 
 #include <QList>
 
-#include <kurl.h>
-
 class KLineEdit;
 class QSpinBox;
 
