@@ -32,7 +32,11 @@ namespace KPIM
 {
 
 struct KDEPIM_EXPORT Person {
-    Person(): rootCollection(-1), updateDisplayName(false) {}
+    Person()
+        : rootCollection(-1), updateDisplayName(false)
+    {
+
+    }
     QString name;
     QString uid;
     QString ou;

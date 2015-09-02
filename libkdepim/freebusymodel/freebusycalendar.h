@@ -53,9 +53,6 @@ private Q_SLOTS:
 private:
     void deleteAllEvents();
     FreeBusyCalendarPrivate *const d;
-    FreeBusyItemModel *mModel;
-    KCalCore::Calendar::Ptr mCalendar;
-    QMap<QModelIndex, KCalCore::Event::Ptr> mFbEvent;
 };
 
 }

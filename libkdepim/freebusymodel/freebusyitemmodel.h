@@ -40,6 +40,7 @@ namespace KPIM
  * the 2nd-level child nodes represent the FreeBusyPeriods of the parent
  * freebusy item.
  */
+class FreeBusyItemModelPrivate;
 class KDEPIM_EXPORT FreeBusyItemModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -105,10 +106,7 @@ private:
                             const KCalCore::FreeBusyPeriod::List &list);
     void updateFreeBusyData(const FreeBusyItem::Ptr &);
 
-    QTimer mReloadTimer;
-    bool mForceDownload;
-    QList<FreeBusyItem::Ptr> mFreeBusyItems;
-    ItemPrivateData *mRootData;
+    FreeBusyItemModelPrivate *const d;
 };
 
 }
