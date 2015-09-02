@@ -16,7 +16,7 @@
 */
 
 #include "customtoolswidget_gui.h"
-#include "pimcommon/widgets/customtoolswidget.h"
+#include "pimcommon/customtools/customtoolswidget.h"
 #include <QStandardPaths>
 #include <KLocalizedString>
 

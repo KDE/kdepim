@@ -163,7 +163,6 @@ set(libpimcommon_widgets_SRCS
   widgets/simplestringlisteditor.cpp
   widgets/customtextedit.cpp
   widgets/customtreeview.cpp
-  widgets/customtoolswidget.cpp
   widgets/configureimmutablewidgetutils.cpp
   widgets/slidecontainer.cpp
   widgets/emailaddressrequester.cpp
@@ -172,7 +171,11 @@ set(libpimcommon_widgets_SRCS
   widgets/kactionmenuchangecase.cpp
   widgets/lineeditwithcompleter.cpp
   widgets/spellchecklineedit.cpp
-  widgets/customtoolsabstract.cpp
+)
+
+set(libpimcommon_customtools_SRCS
+    customtools/customtoolsabstract.cpp
+    customtools/customtoolswidget.cpp
 )
 
 set(libtexttospeech_SRCS
@@ -255,6 +258,7 @@ set(libpimcommon_SRCS
   ${libpimcommon_baloodebug_SRCS}
   ${libpimcommon_temporary_SRCS}
   ${libpimcommon_gravatar_SRCS}
+  ${libpimcommon_customtools_SRCS}
 )
 
 ecm_qt_declare_logging_category(libpimcommon_SRCS HEADER pimcommon_debug.h IDENTIFIER PIMCOMMON_LOG CATEGORY_NAME log_pimcommon)

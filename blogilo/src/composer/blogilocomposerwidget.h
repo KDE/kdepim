@@ -22,7 +22,7 @@
 #define BLOGILOCOMPOSERWIDGET_H
 
 #include <QWidget>
-#include "pimcommon/widgets/customtoolswidget.h"
+#include "pimcommon/customtools/customtoolswidget.h"
 class BlogiloComposerEditor;
 class BlogiloComposerView;
 class BlogiloComposerWidget : public QWidget
