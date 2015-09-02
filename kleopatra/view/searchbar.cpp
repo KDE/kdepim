@@ -38,7 +38,7 @@
 #include <kleo/keyfiltermanager.h>
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QComboBox>
 #include <QHBoxLayout>
@@ -83,7 +83,7 @@ private:
     }
 
 private:
-    KLineEdit *lineEdit;
+    QLineEdit *lineEdit;
     QComboBox *combo;
 };
 
@@ -92,8 +92,8 @@ SearchBar::Private::Private(SearchBar *qq)
 {
     QHBoxLayout *layout = new QHBoxLayout(q);
     layout->setMargin(0);
-    lineEdit = new KLineEdit(q);
-    lineEdit->setClearButtonShown(true);
+    lineEdit = new QLineEdit(q);
+    lineEdit->setClearButtonEnabled(true);
     lineEdit->setPlaceholderText(i18n("Search..."));
     layout->addWidget(lineEdit, /*stretch=*/1);
     combo = new QComboBox(q);
@@ -105,7 +105,7 @@ SearchBar::Private::Private(SearchBar *qq)
     KDAB_SET_OBJECT_NAME(lineEdit);
     KDAB_SET_OBJECT_NAME(combo);
 
-    connect(lineEdit, &KLineEdit::textChanged, q, &SearchBar::stringFilterChanged);
+    connect(lineEdit, &QLineEdit::textChanged, q, &SearchBar::stringFilterChanged);
     connect(combo, SIGNAL(currentIndexChanged(int)), q, SLOT(slotKeyFilterChanged(int)));
 }
 
@@ -153,7 +153,7 @@ void SearchBar::setChangeKeyFilterEnabled(bool on)
     d->combo->setEnabled(on);
 }
 
-KLineEdit *SearchBar::lineEdit() const
+QLineEdit *SearchBar::lineEdit() const
 {
     return d->lineEdit;
 }

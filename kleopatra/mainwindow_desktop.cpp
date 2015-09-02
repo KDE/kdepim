@@ -72,8 +72,7 @@
 #include <KEditToolBar>
 #include <KAboutApplicationDialog>
 #include "kleopatra_debug.h"
-#include <KLineEdit>
-#include "kleopatra_debug.h"
+#include <QLineEdit>
 #include <KActionMenu>
 #include <KConfigGroup>
 

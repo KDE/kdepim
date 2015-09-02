@@ -39,7 +39,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-class KLineEdit;
+class QLineEdit;
 
 namespace Kleo
 {
@@ -56,7 +56,7 @@ public:
     QString stringFilter() const;
     const boost::shared_ptr<KeyFilter> &keyFilter() const;
 
-    KLineEdit *lineEdit() const;
+    QLineEdit *lineEdit() const;
 
     void updateClickMessage(const QString &shortcutStr);
 
