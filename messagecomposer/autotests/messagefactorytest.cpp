@@ -49,7 +49,7 @@
 #include <QDateTime>
 #include <KCharsets>
 #include <QDir>
-#include <KLocale>
+#include <QLocale>
 #include "templateparser/globalsettings_base.h"
 #include "templateparser/templateparser_export.h"
 
@@ -161,8 +161,8 @@ void MessageFactoryTest::testCreateReplyHtml()
     qDebug() << "html reply" << reply.msg->encodedContent();
 
     QDateTime date = msg->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
-    datetime += QLatin1String(" ") + KLocale::global()->formatTime(date.time(), true);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
+    datetime += QLatin1String(" ") + QLocale::system().toString(date.time(), QLocale::LongFormat);
     QString replyStr = QString::fromLatin1(QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> encoded?\n")));
     QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
     QCOMPARE(reply.msg->contentType()->mimeType(), QStringLiteral("multipart/alternative"));
@@ -186,8 +186,8 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
 //   qDebug() << "html reply" << reply.msg->encodedContent();
 
     QDateTime date = msg->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
-    datetime += QLatin1String(" ") + KLocale::global()->formatTime(date.time(), true);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
+    datetime += QLatin1String(" ") + QLocale::system().toString(date.time(), QLocale::LongFormat);
     QString replyStr = QString::fromLatin1(QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> quote me please.\n")));
     QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
     QCOMPARE(reply.msg->contentType()->mimeType(), QStringLiteral("multipart/alternative"));
@@ -259,7 +259,7 @@ void MessageFactoryTest::testCreateRedirect()
     KMime::Message::Ptr rdir =  factory.createRedirect(redirectTo);
 
     QDateTime date = rdir->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
     datetime = rdir->date()->asUnicodeString();
 
 //   qDebug() << rdir->encodedContent();
@@ -316,7 +316,7 @@ void MessageFactoryTest::testCreateResend()
     KMime::Message::Ptr rdir =  factory.createResend();
 
     QDateTime date = rdir->date()->dateTime();
-    QString datetime = KLocale::global()->formatDate(date.date(), KLocale::LongDate);
+    QString datetime = QLocale::system().toString(date.date(), QLocale::LongFormat);
     datetime = rdir->date()->asUnicodeString();
 
 //   qDebug() << msg->encodedContent();
