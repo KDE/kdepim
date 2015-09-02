@@ -58,8 +58,8 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent, KActionCollection *ac)
     d->mStackedWidget->addWidget(d->mShortUrlWidget);
     d->mStackedWidget->addWidget(d->mTranslatorWidget);
 
-    d->mShortUrlWidget->createAction(ac);
-    d->mTranslatorWidget->createAction(ac);
+    d->mShortUrlWidget->setShortcut(ac);
+    d->mTranslatorWidget->setShortcut(ac);
 
     connect(d->mShortUrlWidget, &ShortUrlWidget::shortUrlWasClosed, this, &CustomToolsWidget::slotHideTools);
     connect(d->mShortUrlWidget->toggleAction(), &KToggleAction::triggered, this, &CustomToolsWidget::slotVisibleShortUrlTools);

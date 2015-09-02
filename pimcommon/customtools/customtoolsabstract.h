@@ -38,7 +38,7 @@ public:
     virtual void setShortcut(KActionCollection *ac);
 
 Q_SIGNALS:
-    void customToolsWasClosed();
+    void toolsWasClosed();
     void activateTool(QWidget *);
     void insertText(const QString &);
 

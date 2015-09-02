@@ -324,7 +324,7 @@ void TranslatorWidget::init()
 
 }
 
-void TranslatorWidget::createAction(KActionCollection *ac)
+void TranslatorWidget::setShortcut(KActionCollection *ac)
 {
     d->action = new KToggleAction(i18n("&Translator"), this);
     if (ac)

@@ -71,7 +71,7 @@ public:
 
     KToggleAction *toggleAction();
 
-    void createAction(KActionCollection *ac);
+    void setShortcut(KActionCollection *ac);
 public Q_SLOTS:
     void slotTranslate();
     void slotCloseWidget();

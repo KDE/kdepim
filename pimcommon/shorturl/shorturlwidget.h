@@ -46,7 +46,7 @@ public:
     void setStandalone(bool b);
     KToggleAction *toggleAction();
 
-    void createAction(KActionCollection *ac);
+    void setShortcut(KActionCollection *ac);
 public Q_SLOTS:
     void settingsUpdated();
 

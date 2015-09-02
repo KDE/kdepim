@@ -220,7 +220,7 @@ void ShortUrlWidget::setStandalone(bool b)
     mStandalone = b;
 }
 
-void ShortUrlWidget::createAction(KActionCollection *ac)
+void ShortUrlWidget::setShortcut(KActionCollection *ac)
 {
     Q_UNUSED(ac);
     mToggleAction = new KToggleAction(i18n("Generate Shorten Url"), this);

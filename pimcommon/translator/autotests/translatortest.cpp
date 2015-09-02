@@ -37,7 +37,7 @@ TranslatorTest::TranslatorTest()
 void TranslatorTest::shouldHaveDefaultValuesOnCreation()
 {
     PimCommon::TranslatorWidget edit;
-    edit.createAction(new KActionCollection(&edit));
+    edit.setShortcut(new KActionCollection(&edit));
     QComboBox *from = edit.findChild<QComboBox *>(QStringLiteral("from"));
     QComboBox *to = edit.findChild<QComboBox *>(QStringLiteral("to"));
 
