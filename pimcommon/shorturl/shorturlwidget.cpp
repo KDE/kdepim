@@ -126,7 +126,7 @@ void ShortUrlWidget::slotInsertShortUrl()
 {
     const QString shortUrl = mShortUrl->text();
     if (!shortUrl.isEmpty()) {
-        Q_EMIT insertShortUrl(shortUrl);
+        Q_EMIT insertText(shortUrl);
     }
 }
 

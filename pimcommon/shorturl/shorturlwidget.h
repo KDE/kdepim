@@ -64,7 +64,7 @@ private Q_SLOTS:
 
 Q_SIGNALS:
     void shortUrlWasClosed();
-    void insertShortUrl(const QString &Url);
+    void insertText(const QString &Url);
 
 private:
     void loadEngine();

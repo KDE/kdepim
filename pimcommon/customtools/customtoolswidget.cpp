@@ -68,7 +68,7 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent, KActionCollection *ac)
     connect(d->mTranslatorWidget->toggleAction(), &KToggleAction::triggered, this, &CustomToolsWidget::slotVisibleTranslatorTools);
 
     connect(d->mShortUrlWidget, &ShortUrlWidget::shortUrlWasClosed, this, &CustomToolsWidget::shortUrlWasClosed);
-    connect(d->mShortUrlWidget, &ShortUrlWidget::insertShortUrl, this, &CustomToolsWidget::insertShortUrl);
+    connect(d->mShortUrlWidget, &ShortUrlWidget::insertText, this, &CustomToolsWidget::insertText);
 
     connect(d->mTranslatorWidget, &TranslatorWidget::translatorWasClosed, this, &CustomToolsWidget::translatorWasClosed);
 
