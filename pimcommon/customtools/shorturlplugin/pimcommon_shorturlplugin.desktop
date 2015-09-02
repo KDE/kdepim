@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=PimCommonCustomTools/Plugin
+X-KDE-Library=pimcommon_shorturlplugin
+Name=Shorturl
