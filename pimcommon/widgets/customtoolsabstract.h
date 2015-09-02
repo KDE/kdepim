@@ -25,7 +25,7 @@ class KActionCollection;
 namespace PimCommon
 {
 class CustomToolsAbstractPrivate;
-class CustomToolsAbstract : public QObject
+class PIMCOMMON_EXPORT CustomToolsAbstract : public QObject
 {
     Q_OBJECT
 public:
