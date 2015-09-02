@@ -45,3 +45,8 @@ void CustomToolsAbstract::setShortcut(KActionCollection *ac)
 {
     Q_UNUSED(ac);
 }
+
+void CustomToolsAbstract::setText(const QString &)
+{
+
+}

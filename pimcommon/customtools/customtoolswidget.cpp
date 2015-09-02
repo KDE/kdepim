@@ -147,18 +147,6 @@ void CustomToolsWidget::switchToTool(CustomToolsWidget::ToolType type)
     Q_EMIT toolSwitched(type);
 }
 
-CustomToolsWidget::ToolType CustomToolsWidget::toolType() const
-{
-    if (d->mStackedWidget->currentWidget() == d->mTranslatorWidget) {
-        return TranslatorTool;
-    } else if (d->mStackedWidget->currentWidget() == d->mShortUrlWidget) {
-        return ShortUrlTool;
-    } else {
-        qCDebug(PIMCOMMON_LOG) << " unknown tool";
-        return TranslatorTool;
-    }
-}
-
 void CustomToolsWidget::slotHideTools()
 {
     customToolWasClosed();

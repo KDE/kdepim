@@ -38,6 +38,7 @@ public:
     virtual QString customToolName() const = 0;
 
     virtual void setShortcut(KActionCollection *ac);
+    virtual void setText(const QString &);
 
 Q_SIGNALS:
     void toolsWasClosed();

@@ -43,8 +43,6 @@ public:
 
     void switchToTool(CustomToolsWidget::ToolType type);
 
-    CustomToolsWidget::ToolType toolType() const;
-
     KToggleAction *action(CustomToolsWidget::ToolType type);
 
     TranslatorWidget *translatorWidget() const;
