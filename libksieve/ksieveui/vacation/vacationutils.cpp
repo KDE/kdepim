@@ -26,6 +26,7 @@
 #include <QLocale>
 
 using KMime::Types::AddrSpecList;
+using namespace KSieveUi;
 
 static inline QString dotstuff(QString s)     // krazy:exclude=passbyvalue
 {
@@ -42,12 +43,12 @@ static inline QString stringReplace(QString s)
     return s.replace(QLatin1Char('\"'), QStringLiteral("\\\""));
 }
 
-QString KSieveUi::VacationUtils::defaultSubject()
+QString VacationUtils::defaultSubject()
 {
     return i18n("Out of office till %1", QLocale().toString(QDate::currentDate().addDays(1)));
 }
 
-QString KSieveUi::VacationUtils::defaultMessageText()
+QString VacationUtils::defaultMessageText()
 {
     return i18n("I am out of office till %1.\n"
                 "\n"
@@ -62,12 +63,12 @@ QString KSieveUi::VacationUtils::defaultMessageText()
                 QLocale().toString(QDate::currentDate().addDays(1)));
 }
 
-int KSieveUi::VacationUtils::defaultNotificationInterval()
+int VacationUtils::defaultNotificationInterval()
 {
     return 7; // days
 }
 
-QStringList KSieveUi::VacationUtils::defaultMailAliases()
+QStringList VacationUtils::defaultMailAliases()
 {
     QStringList sl;
     KIdentityManagement::IdentityManager manager(true);
@@ -81,27 +82,27 @@ QStringList KSieveUi::VacationUtils::defaultMailAliases()
     return sl;
 }
 
-bool KSieveUi::VacationUtils::defaultSendForSpam()
+bool VacationUtils::defaultSendForSpam()
 {
     return VacationSettings::outOfOfficeReactToSpam();
 }
 
-QString KSieveUi::VacationUtils::defaultDomainName()
+QString VacationUtils::defaultDomainName()
 {
     return VacationSettings::outOfOfficeDomain();
 }
 
-QDate KSieveUi::VacationUtils::defaultStartDate()
+QDate VacationUtils::defaultStartDate()
 {
     return QDate::currentDate();
 }
 
-QDate KSieveUi::VacationUtils::defaultEndDate()
+QDate VacationUtils::defaultEndDate()
 {
     return defaultStartDate().addDays(7);
 }
 
-bool KSieveUi::VacationUtils::parseScript(const QString &script, QString &messageText,
+bool VacationUtils::parseScript(const QString &script, QString &messageText,
         QString &subject,
         int &notificationInterval, QStringList &aliases,
         bool &sendForSpam, QString &domainName,
@@ -148,7 +149,7 @@ bool KSieveUi::VacationUtils::parseScript(const QString &script, QString &messag
     return true;
 }
 
-QString KSieveUi::VacationUtils::composeScript(const QString &messageText,
+QString VacationUtils::composeScript(const QString &messageText,
         const QString &subject,
         int notificationInterval,
         const AddrSpecList &addrSpecs,
