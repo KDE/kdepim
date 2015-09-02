@@ -177,6 +177,7 @@ set(libpimcommon_customtools_SRCS
   customtools/customtoolsplugin.cpp
   customtools/customtoolswidget.cpp
   customtools/customtoolspluginmanager.cpp
+  customtools/customtoolswidgetng.cpp
 )
 
 set(libtexttospeech_SRCS
@@ -365,6 +366,7 @@ if (BUILD_TESTING)
    add_subdirectory(storageservice/dropbox/icons/)
    add_subdirectory(texttospeech/tests)
    add_subdirectory(gravatar/tests)
+   add_subdirectory(customtools/autotests)
 endif()
 
 if( LibKGAPI2_FOUND )
@@ -394,3 +396,5 @@ if (Qt5Designer_FOUND)
     )
 endif()
 
+add_subdirectory(customtools/shorturlplugin)
+add_subdirectory(customtools/translatorplugin)

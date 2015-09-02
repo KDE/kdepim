@@ -34,7 +34,7 @@ public:
 
     virtual void createAction() = 0;
     virtual KToggleAction *action() const = 0;
-    virtual QWidget *createView() = 0;
+    virtual QWidget *createView(QWidget *parent = Q_NULLPTR) = 0;
     virtual QString customToolName() const = 0;
 
     virtual void setShortcut(KActionCollection *ac);
