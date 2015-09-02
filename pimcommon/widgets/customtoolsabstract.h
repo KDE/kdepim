@@ -33,11 +33,14 @@ public:
     ~CustomToolsAbstract();
 
     virtual KToggleAction *action() const = 0;
+    virtual QWidget *createView() = 0;
 
     virtual void setShortcut(KActionCollection *ac);
 
 Q_SIGNALS:
     void customToolsWasClosed();
+    void activateTool(QWidget *);
+    void insertText(const QString &);
 
 private:
     CustomToolsAbstractPrivate *const d;
