@@ -20,13 +20,9 @@
 #include <QWidget>
 #include "mailimporter_export.h"
 class QListWidgetItem;
-namespace Ui
-{
-class ImportMailsWidget;
-}
 namespace MailImporter
 {
-
+class ImportMailsWidgetPrivate;
 class MAILIMPORTER_EXPORT ImportMailsWidget : public QWidget
 {
     Q_OBJECT
@@ -48,7 +44,7 @@ public:
     void addErrorLogEntry(const QString &log);
 
 private:
-    Ui::ImportMailsWidget *ui;
+    ImportMailsWidgetPrivate *const d;
 };
 }
 

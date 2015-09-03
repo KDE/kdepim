@@ -22,71 +22,87 @@
 
 using namespace MailImporter;
 
+class MailImporter::ImportMailsWidgetPrivate
+{
+public:
+    ImportMailsWidgetPrivate()
+        : ui(new Ui::ImportMailsWidget)
+    {
+
+    }
+    ~ImportMailsWidgetPrivate()
+    {
+        delete ui;
+    }
+
+    Ui::ImportMailsWidget *ui;
+};
+
 ImportMailsWidget::ImportMailsWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ImportMailsWidget)
+    d(new MailImporter::ImportMailsWidgetPrivate)
 {
-    ui->setupUi(this);
+    d->ui->setupUi(this);
 }
 
 ImportMailsWidget::~ImportMailsWidget()
 {
-    delete ui;
+    delete d;
 }
 
 void ImportMailsWidget::setStatusMessage(const QString &status)
 {
-    ui->textStatus->setText(status);
+    d->ui->textStatus->setText(status);
 }
 
 void ImportMailsWidget::setFrom(const QString &from)
 {
-    ui->from->setText(from);
+    d->ui->from->setText(from);
 }
 
 void ImportMailsWidget::setTo(const QString &to)
 {
-    ui->to->setText(to);
+    d->ui->to->setText(to);
 }
 
 void ImportMailsWidget::setCurrent(const QString &current)
 {
-    ui->current->setText(current);
+    d->ui->current->setText(current);
 }
 
 void  ImportMailsWidget::setCurrent(int percent)
 {
-    ui->done_current->setValue(percent);
+    d->ui->done_current->setValue(percent);
 }
 
 void  ImportMailsWidget::setOverall(int percent)
 {
-    ui->done_overall->setValue(percent);
+    d->ui->done_overall->setValue(percent);
 }
 
 void ImportMailsWidget::addItem(QListWidgetItem *item)
 {
-    ui->log->addItem(item);
+    d->ui->log->addItem(item);
 }
 
 void ImportMailsWidget::setLastCurrentItem()
 {
-    ui->log->setCurrentItem(ui->log->item(ui->log->count() - 1));
+    d->ui->log->setCurrentItem(d->ui->log->item(d->ui->log->count() - 1));
 }
 
 void ImportMailsWidget::addInfoLogEntry(const QString &log)
 {
-    ui->log->addInfoLogEntry(log);
+    d->ui->log->addInfoLogEntry(log);
 }
 
 void ImportMailsWidget::addErrorLogEntry(const QString &log)
 {
-    ui->log->addErrorLogEntry(log);
+    d->ui->log->addErrorLogEntry(log);
 }
 
 void ImportMailsWidget::clear()
 {
-    ui->log->clear();
+    d->ui->log->clear();
     setCurrent(0);
     setOverall(0);
     setCurrent(QString());

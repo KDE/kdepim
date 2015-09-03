@@ -27,7 +27,8 @@ namespace Ui
 class SelectThunderbirdProfileWidget;
 }
 
-namespace MailImporter {
+namespace MailImporter
+{
 
 class SelectThunderbirdProfileWidget : public QWidget
 {

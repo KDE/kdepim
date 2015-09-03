@@ -44,7 +44,7 @@ FilterEvolution_v3::FilterEvolution_v3()
                   "<p>Select the base directory of your local Evolution mailfolder (usually ~/.local/share/evolution/mail/local/).</p>"
                   "<p>Since it is possible to recreate the folder structure, the folders "
                   "will be stored under: \"Evolution-Import\".</p>")),
-      d(new MailImporter::FilterEvolution_v3Private)
+    d(new MailImporter::FilterEvolution_v3Private)
 {
 }
 
