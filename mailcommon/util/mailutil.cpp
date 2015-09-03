@@ -154,7 +154,6 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances(bool excludeMailDi
     return relevantInstances;
 }
 
-
 uint MailCommon::Util::folderIdentity(const Akonadi::Item &item)
 {
     uint id = 0;

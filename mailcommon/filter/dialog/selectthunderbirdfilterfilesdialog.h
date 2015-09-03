@@ -21,7 +21,6 @@
 #include <QDialog>
 class QUrl;
 
-
 namespace MailCommon
 {
 class SelectThunderbirdFilterFilesWidget;

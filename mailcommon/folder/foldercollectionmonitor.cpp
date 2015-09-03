@@ -48,8 +48,6 @@ public:
     Akonadi::ChangeRecorder *mMonitor;
 };
 
-
-
 FolderCollectionMonitor::FolderCollectionMonitor(Akonadi::Session *session, QObject *parent)
     : QObject(parent),
       d(new MailCommon::FolderCollectionMonitorPrivate)
