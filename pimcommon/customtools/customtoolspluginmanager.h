@@ -21,7 +21,7 @@
 
 #include <QObject>
 #include "pimcommon_export.h"
-
+class KToggleAction;
 namespace PimCommon
 {
 class CustomToolsPluginManagerPrivate;
@@ -34,6 +34,7 @@ public:
     explicit CustomToolsPluginManager(QObject *parent = Q_NULLPTR);
     ~CustomToolsPluginManager();
 
+    QList<KToggleAction *> actionList() const;
 private:
     CustomToolsPluginManagerPrivate *const d;
 };

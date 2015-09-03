@@ -73,6 +73,7 @@ public:
     }
     void initializePluginList();
     void loadPlugin(CustomToolsPluginInfo *item);
+    QList<KToggleAction *> actionList() const;
     QVector<CustomToolsPluginInfo> mPluginList;
     CustomToolsPluginManager *q;
 };
@@ -109,7 +110,25 @@ void CustomToolsPluginManagerPrivate::initializePluginList()
 void CustomToolsPluginManagerPrivate::loadPlugin(CustomToolsPluginInfo *item)
 {
     item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<PimCommon::CustomToolsPlugin>(q, QVariantList() << item->saveName());
+    if (item->plugin) {
+        item->plugin->createAction();
+    }
     qDebug()<<" item->plugin"<<item->plugin;
+}
+
+QList<KToggleAction *> CustomToolsPluginManagerPrivate::actionList() const
+{
+    QList<KToggleAction *> listActions;
+#if 0
+    QVector<CustomToolsPluginInfo>::iterator end(mPluginList.end());
+    for (QVector<CustomToolsPluginInfo>::iterator it = mPluginList.begin(); it != end; ++it) {
+        if ((*it).plugin) {
+            listActions = (*it).plugin->action();
+        }
+    }
+ #endif
+    //TODO
+    return listActions;
 }
 
 
@@ -130,5 +149,8 @@ CustomToolsPluginManager::~CustomToolsPluginManager()
     delete d;
 }
 
-
+QList<KToggleAction *> CustomToolsPluginManager::actionList() const
+{
+    return d->actionList();
+}
 
