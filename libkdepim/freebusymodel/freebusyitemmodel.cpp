@@ -78,7 +78,6 @@ private:
     ItemPrivateData *parentItem;
 };
 
-
 class KPIM::FreeBusyItemModelPrivate
 {
 public:

@@ -25,7 +25,6 @@
 #include "libkdepim/kdepim_export.h"
 #include <qdialog.h>
 
-
 namespace KLDAP
 {
 class LdapServer;
