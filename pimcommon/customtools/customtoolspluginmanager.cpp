@@ -22,25 +22,41 @@
 #include <KPluginLoader>
 #include <kpluginmetadata.h>
 #include <QDebug>
+#include <QFileInfo>
 
 using namespace PimCommon;
 
 class CustomToolsPluginInfo
 {
 public:
+    CustomToolsPluginInfo()
+        : plugin(Q_NULLPTR)
+    {
+
+    }
+    QString saveName() const;
+
     KPluginMetaData metaData;
     PimCommon::CustomToolsPlugin *plugin;
 };
 
+QString CustomToolsPluginInfo::saveName() const
+{
+    return QFileInfo(metaData.fileName()).baseName();
+}
 
 class PimCommon::CustomToolsPluginManagerPrivate
 {
 public:
-    CustomToolsPluginManagerPrivate()
+    CustomToolsPluginManagerPrivate(CustomToolsPluginManager *qq)
+        : q(qq)
     {
 
     }
     void initializePluginList();
+    void loadPlugin(CustomToolsPluginInfo *item);
+    QVector<CustomToolsPluginInfo> mPluginList;
+    CustomToolsPluginManager *q;
 };
 
 void CustomToolsPluginManagerPrivate::initializePluginList()
@@ -49,10 +65,38 @@ void CustomToolsPluginManagerPrivate::initializePluginList()
         return md.serviceTypes().contains(QStringLiteral("PimCommonCustomTools/Plugin"));
     });
     qDebug()<<" plugins.count() "<<plugins.count();
+
+
+    QVectorIterator<KPluginMetaData> i(plugins);
+    i.toBack();
+    QSet<QString> unique;
+    while (i.hasPrevious()) {
+        CustomToolsPluginInfo info;
+        info.metaData = i.previous();
+
+        // only load plugins once, even if found multiple times!
+        if (unique.contains(info.saveName()))
+            continue;
+        info.plugin = Q_NULLPTR;
+        mPluginList.push_back(info);
+        unique.insert(info.saveName());
+    }
+    qDebug()<<" mPluginList.count() "<<mPluginList.count();
+    QVector<CustomToolsPluginInfo>::iterator end(mPluginList.end());
+    for (QVector<CustomToolsPluginInfo>::iterator it = mPluginList.begin(); it != end; ++it) {
+        loadPlugin(&(*it));
+    }
 }
 
+void CustomToolsPluginManagerPrivate::loadPlugin(CustomToolsPluginInfo *item)
+{
+    item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<PimCommon::CustomToolsPlugin>(q, QVariantList() << item->saveName());
+    qDebug()<<" item->plugin"<<item->plugin;
+}
+
+
 CustomToolsPluginManager::CustomToolsPluginManager(QObject *parent)
-    : d(new PimCommon::CustomToolsPluginManagerPrivate)
+    : d(new PimCommon::CustomToolsPluginManagerPrivate(this))
 {
     d->initializePluginList();
 }
@@ -61,5 +105,6 @@ CustomToolsPluginManager::~CustomToolsPluginManager()
 {
     delete d;
 }
+
 
 
