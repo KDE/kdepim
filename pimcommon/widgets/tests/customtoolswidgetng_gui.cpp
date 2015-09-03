@@ -46,7 +46,8 @@ CustomToolWidgetNgTest::CustomToolWidgetNgTest(QWidget *parent)
     mCustomTools = new PimCommon::CustomToolsWidgetNg;
     lay->addWidget(mCustomTools);
     setLayout(lay);
-    PimCommon::CustomToolsPluginManager *manager = new PimCommon::CustomToolsPluginManager(this);
+    //initialize instance
+    PimCommon::CustomToolsPluginManager::self();
 }
 
 CustomToolWidgetNgTest::~CustomToolWidgetNgTest()

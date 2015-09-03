@@ -29,6 +29,8 @@ class PIMCOMMON_EXPORT CustomToolsPluginManager : public QObject
 {
     Q_OBJECT
 public:
+    static CustomToolsPluginManager *self();
+
     explicit CustomToolsPluginManager(QObject *parent = Q_NULLPTR);
     ~CustomToolsPluginManager();
 
