@@ -193,8 +193,8 @@ void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &ms
     }
 
     int transportId = -1;
-    if (m_msg->headerByType("X-KMail-Transport")) {
-        transportId = m_msg->headerByType("X-KMail-Transport")->asUnicodeString().toInt();
+    if (auto hdr = m_msg->headerByType("X-KMail-Transport")) {
+        transportId = hdr->asUnicodeString().toInt();
     }
 
     const MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById(transportId);
@@ -211,8 +211,8 @@ void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &ms
         m_editor->setPlainText(otp.plainTextContent());
     }
 
-    if (m_msg->headerByType("X-KMail-CursorPos")) {
-        m_editor->setCursorPositionFromStart(m_msg->headerByType("X-KMail-CursorPos")->asUnicodeString().toInt());
+    if (auto hdr = m_msg->headerByType("X-KMail-CursorPos")) {
+        m_editor->setCursorPositionFromStart(hdr->asUnicodeString().toInt());
     }
     delete msgContent;
 }
@@ -237,8 +237,8 @@ void MessageComposer::ComposerViewBase::updateTemplate(const KMime::Message::Ptr
         m_editor->setPlainText(otp.plainTextContent());
     }
 
-    if (msg->headerByType("X-KMail-CursorPos")) {
-        m_editor->setCursorPositionFromStart(m_msg->headerByType("X-KMail-CursorPos")->asUnicodeString().toInt());
+    if (auto hdr = msg->headerByType("X-KMail-CursorPos")) {
+        m_editor->setCursorPositionFromStart(hdr->asUnicodeString().toInt());
     }
     delete msgContent;
 }
@@ -807,56 +807,56 @@ void MessageComposer::ComposerViewBase::fillInfoPart(MessageComposer::InfoPart *
     }
 
     KMime::Headers::Base::List extras;
-    if (m_msg->headerByType("X-KMail-SignatureActionEnabled")) {
-        extras << m_msg->headerByType("X-KMail-SignatureActionEnabled");
+    if (auto hdr = m_msg->headerByType("X-KMail-SignatureActionEnabled")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-EncryptActionEnabled")) {
-        extras << m_msg->headerByType("X-KMail-EncryptActionEnabled");
+    if (auto hdr = m_msg->headerByType("X-KMail-EncryptActionEnabled")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-CryptoMessageFormat")) {
-        extras << m_msg->headerByType("X-KMail-CryptoMessageFormat");
+    if (auto hdr = m_msg->headerByType("X-KMail-CryptoMessageFormat")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-UnExpanded-To")) {
-        extras << m_msg->headerByType("X-KMail-UnExpanded-To");
+    if (auto hdr = m_msg->headerByType("X-KMail-UnExpanded-To")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-UnExpanded-CC")) {
-        extras << m_msg->headerByType("X-KMail-UnExpanded-CC");
+    if (auto hdr = m_msg->headerByType("X-KMail-UnExpanded-CC")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-UnExpanded-BCC")) {
-        extras << m_msg->headerByType("X-KMail-UnExpanded-BCC");
+    if (auto hdr = m_msg->headerByType("X-KMail-UnExpanded-BCC")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("Organization")) {
-        extras << m_msg->headerByType("Organization");
+    if (auto hdr = m_msg->organization(false)) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-Identity")) {
-        extras << m_msg->headerByType("X-KMail-Identity");
+    if (auto hdr = m_msg->headerByType("X-KMail-Identity")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-Transport")) {
-        extras << m_msg->headerByType("X-KMail-Transport");
+    if (auto hdr = m_msg->headerByType("X-KMail-Transport")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-Fcc")) {
-        extras << m_msg->headerByType("X-KMail-Fcc");
+    if (auto hdr = m_msg->headerByType("X-KMail-Fcc")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-Drafts")) {
-        extras << m_msg->headerByType("X-KMail-Drafts");
+    if (auto hdr = m_msg->headerByType("X-KMail-Drafts")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-Templates")) {
-        extras << m_msg->headerByType("X-KMail-Templates");
+    if (auto hdr = m_msg->headerByType("X-KMail-Templates")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-Link-Message")) {
-        extras << m_msg->headerByType("X-KMail-Link-Message");
+    if (auto hdr = m_msg->headerByType("X-KMail-Link-Message")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-Link-Type")) {
-        extras << m_msg->headerByType("X-KMail-Link-Type");
+    if (auto hdr = m_msg->headerByType("X-KMail-Link-Type")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-Face")) {
-        extras << m_msg->headerByType("X-Face");
+    if (auto hdr = m_msg->headerByType("X-Face")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-FccDisabled")) {
-        extras << m_msg->headerByType("X-KMail-FccDisabled");
+    if (auto hdr = m_msg->headerByType("X-KMail-FccDisabled")) {
+        extras << hdr;
     }
-    if (m_msg->headerByType("X-KMail-Dictionary")) {
-        extras << m_msg->headerByType("X-KMail-Dictionary");
+    if (auto hdr = m_msg->headerByType("X-KMail-Dictionary")) {
+        extras << hdr;
     }
 
     infoPart->setExtraHeaders(extras);

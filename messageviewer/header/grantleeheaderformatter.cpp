@@ -161,8 +161,8 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     headerObject.insert(QStringLiteral("date"), MessageViewer::HeaderStyleUtil::dateStr(message->date()->dateTime()));
 
     if (GlobalSettings::self()->showUserAgent()) {
-        if (message->headerByType("User-Agent")) {
-            headerObject.insert(QStringLiteral("useragent"), MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("User-Agent")->asUnicodeString()));
+        if (auto hdr = message->userAgent(false)) {
+            headerObject.insert(QStringLiteral("useragent"), MessageViewer::HeaderStyleUtil::strToHtml(hdr->asUnicodeString()));
         }
 
         if (message->headerByType("X-Mailer")) {
@@ -182,7 +182,7 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
         headerObject.insert(QStringLiteral("resentto"), StringUtil::emailAddrAsAnchor(resentTo, StringUtil::DisplayFullAddress));
     }
 
-    if (KMime::Headers::Base *organization = message->headerByType("Organization")) {
+    if (auto organization = message->organization(false)) {
         headerObject.insert(QStringLiteral("organization") , MessageViewer::HeaderStyleUtil::strToHtml(organization->asUnicodeString()));
     }
 

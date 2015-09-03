@@ -119,8 +119,8 @@ MessageFactory::MessageReply MessageFactory::createReply()
 
     switch (m_replyStrategy) {
     case MessageComposer::ReplySmart: {
-        if (m_origMsg->headerByType("Mail-Followup-To")) {
-            toList << MessageCore::StringUtil::mailboxListFrom7BitString(m_origMsg->headerByType("Mail-Followup-To")->as7BitString(false));
+        if (auto hdr = m_origMsg->headerByType("Mail-Followup-To")) {
+            toList << MessageCore::StringUtil::mailboxListFrom7BitString(hdr->as7BitString(false));
         } else if (!replyToList.isEmpty()) {
             toList = replyToList;
             // use the ReplyAll template only when it's a reply to a mailing list
@@ -155,8 +155,8 @@ MessageFactory::MessageReply MessageFactory::createReply()
     }
     break;
     case MessageComposer::ReplyList: {
-        if (m_origMsg->headerByType("Mail-Followup-To")) {
-            toList << MessageCore::StringUtil::mailboxFrom7BitString(m_origMsg->headerByType("Mail-Followup-To")->as7BitString(false));
+        if (auto hdr = m_origMsg->headerByType("Mail-Followup-To")) {
+            toList << MessageCore::StringUtil::mailboxFrom7BitString(hdr->as7BitString(false));
         } else if (!m_mailingListAddresses.isEmpty()) {
             toList << m_mailingListAddresses[ 0 ];
         } else if (!replyToList.isEmpty()) {
@@ -913,8 +913,8 @@ bool MessageFactory::MDNMDNUnknownOption(const KMime::Message::Ptr &msg)
 uint MessageFactory::identityUoid(const KMime::Message::Ptr &msg)
 {
     QString idString;
-    if (msg->headerByType("X-KMail-Identity")) {
-        idString = msg->headerByType("X-KMail-Identity")->asUnicodeString().trimmed();
+    if (auto hdr = msg->headerByType("X-KMail-Identity")) {
+        idString = hdr->asUnicodeString().trimmed();
     }
     bool ok = false;
     int id = idString.toUInt(&ok);

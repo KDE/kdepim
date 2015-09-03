@@ -123,10 +123,10 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
                      + (!vCardName().isEmpty() ? QLatin1String("&nbsp;&nbsp;<a href=\"") + vCardName() + QLatin1String("\">")
                         + i18n("[vCard]") + QLatin1String("</a>")
                         : QString())
-                     + (!message->headerByType("Organization")
+                     + (!message->organization(false)
                         ? QString()
                         : QLatin1String("&nbsp;&nbsp;(")
-                        + MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("Organization")->asUnicodeString())
+                        + MessageViewer::HeaderStyleUtil::strToHtml(message->organization()->asUnicodeString())
                         + QLatin1Char(')'))
                      + QLatin1String("</td></tr>\n");
     }
@@ -175,11 +175,11 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
                          .arg(MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ false))));
     if (GlobalSettings::self()->showUserAgent()) {
         if (strategy->showHeader(QStringLiteral("user-agent"))) {
-            if (message->headerByType("User-Agent")) {
+            if (auto hdr = message->userAgent(false)) {
                 headerStr.append(QStringLiteral("<tr><th>%1</th>\n"
                                                 "<td>%2</td></tr>\n")
                                  .arg(i18n("User-Agent: "))
-                                 .arg(MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("User-Agent")->asUnicodeString())));
+                                 .arg(MessageViewer::HeaderStyleUtil::strToHtml(hdr->asUnicodeString())));
             }
         }
 

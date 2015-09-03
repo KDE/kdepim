@@ -92,9 +92,9 @@ QString CustomHeaderStyle::format(KMime::Message *message) const
                                  QLatin1String("\">") + i18n("[vCard]") + QLatin1String("</a>"));
 
             if (strategy->showHeader(QStringLiteral("organization"))
-                    && message->headerByType("Organization"))
+                    && message->organization(false))
                 headerStr.append(QLatin1String("&nbsp;&nbsp;(") +
-                                 MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("Organization")->asUnicodeString()) + QLatin1Char(')'));
+                                 MessageViewer::HeaderStyleUtil::strToHtml(message->organization()->asUnicodeString()) + QLatin1Char(')'));
             headerStr.append(QLatin1String("<br/>\n"));
         } else if (headerToDisplay.toLower() == QLatin1String("to")) {
             headerStr.append(i18nc("To-field of the mailheader.", "To: ") +
