@@ -22,7 +22,6 @@
 #include <QVariant>
 namespace PimCommon
 {
-class ShortUrlWidget;
 class ShorturlPlugin : public PimCommon::CustomToolsPlugin
 {
     Q_OBJECT
@@ -30,18 +29,9 @@ public:
     explicit ShorturlPlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
     ~ShorturlPlugin();
 
-    void createAction() Q_DECL_OVERRIDE;
-    KToggleAction *action() const Q_DECL_OVERRIDE;
-    QWidget *createView(QWidget *parent) Q_DECL_OVERRIDE;
+    CustomToolsViewInterface *createView(CustomToolsWidgetNg *parent) Q_DECL_OVERRIDE;
     QString customToolName() const Q_DECL_OVERRIDE;
-    void setShortcut(KActionCollection *ac) Q_DECL_OVERRIDE;
 
-private Q_SLOTS:
-    void slotActivateShorturl(bool b);
-
-private:
-    KToggleAction *mAction;
-    ShortUrlWidget *mShortUrlWidget;
 };
 }
 #endif // SHORTURLPLUGIN_H

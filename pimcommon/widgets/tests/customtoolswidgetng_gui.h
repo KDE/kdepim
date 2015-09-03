@@ -31,9 +31,6 @@ public:
     explicit CustomToolWidgetNgTest(QWidget *parent = Q_NULLPTR);
     ~CustomToolWidgetNgTest();
 
-private Q_SLOTS:
-    void slotSwitchComponent(int);
-
 private:
     PimCommon::CustomToolsWidgetNg *mCustomTools;
 };

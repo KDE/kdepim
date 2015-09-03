@@ -178,6 +178,7 @@ set(libpimcommon_customtools_SRCS
   customtools/customtoolswidget.cpp
   customtools/customtoolspluginmanager.cpp
   customtools/customtoolswidgetng.cpp
+  customtools/customtoolsviewinterface.cpp
 )
 
 set(libtexttospeech_SRCS

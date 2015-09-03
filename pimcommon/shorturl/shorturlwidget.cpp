@@ -29,6 +29,7 @@
 #include <QIcon>
 #include <QNetworkConfigurationManager>
 
+#include <QDebug>
 #include <QLabel>
 #include <QGridLayout>
 #include <QPushButton>
@@ -47,6 +48,7 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
       mToggleAction(Q_NULLPTR),
       mStandalone(false)
 {
+    qDebug()<<"ShortUrlWidget::ShortUrlWidget "<<this;
     loadEngine();
     QGridLayout *grid = new QGridLayout;
     grid->setMargin(2);

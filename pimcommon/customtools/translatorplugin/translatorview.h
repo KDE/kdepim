@@ -15,34 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef TRANSLATORVIEW_H
+#define TRANSLATORVIEW_H
 
-#ifndef CUSTOMTOOLSWIDGETNG_H
-#define CUSTOMTOOLSWIDGETNG_H
+#include <customtools/customtoolsviewinterface.h>
+#include "translator/translatorwidget.h"
 
-#include <QWidget>
-#include "pimcommon_export.h"
-class KToggleAction;
 namespace PimCommon
 {
-class CustomToolsWidgetNgPrivate;
-class PIMCOMMON_EXPORT CustomToolsWidgetNg : public QWidget
+class TranslatorView : public PimCommon::CustomToolsViewInterface
 {
     Q_OBJECT
 public:
-    explicit CustomToolsWidgetNg(QWidget *parent = Q_NULLPTR);
-    ~CustomToolsWidgetNg();
+    explicit TranslatorView(QWidget *parent);
+    ~TranslatorView();
+    KToggleAction *action() const Q_DECL_OVERRIDE;
 
-    QList<KToggleAction *> actionList() const;
-public Q_SLOTS:
-    void slotToolsWasClosed();
-    void slotActivateView(QWidget *w);
-
-Q_SIGNALS:
-    void insertText(const QString &url);
+private Q_SLOTS:
+    void slotActivateTranslator(bool state);
 
 private:
-    void initializeView();
-    CustomToolsWidgetNgPrivate *const d;
+    void createAction();
+    KToggleAction *mAction;
+    PimCommon::TranslatorWidget *mTranslatorWidget;
+
 };
 }
-#endif // CUSTOMTOOLSWIDGETNG_H
+#endif // TRANSLATORVIEW_H

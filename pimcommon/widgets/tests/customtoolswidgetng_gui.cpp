@@ -20,6 +20,7 @@
 #include "pimcommon/customtools/customtoolspluginmanager.h"
 #include <QStandardPaths>
 #include <KLocalizedString>
+#include <KToggleAction>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -27,37 +28,30 @@
 #include <QApplication>
 #include <KAboutData>
 #include <QCommandLineParser>
+#include <QMenu>
+#include <QToolBar>
 
 CustomToolWidgetNgTest::CustomToolWidgetNgTest(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
 
-    QHBoxLayout *hbox = new QHBoxLayout;
-    lay->addLayout(hbox);
-    QLabel *lab = new QLabel(i18n("Switch component:"));
-    hbox->addWidget(lab);
-
-    QComboBox *style = new QComboBox;
-    hbox->addWidget(style);
-    style->addItems(QStringList() << i18n("Translate") << i18n("Short url"));
-    connect(style, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &CustomToolWidgetNgTest::slotSwitchComponent);
+    QToolBar *menu = new QToolBar;
+    lay->addWidget(menu);
 
     mCustomTools = new PimCommon::CustomToolsWidgetNg;
+    QList<KToggleAction *> lst = mCustomTools->actionList();
+    Q_FOREACH(KToggleAction *act, lst) {
+        menu->addAction(act);
+    }
+
     lay->addWidget(mCustomTools);
     setLayout(lay);
-    //initialize instance
-    PimCommon::CustomToolsPluginManager::self();
 }
 
 CustomToolWidgetNgTest::~CustomToolWidgetNgTest()
 {
 
-}
-
-void CustomToolWidgetNgTest::slotSwitchComponent(int index)
-{
-    //mCustomTools->switchToTool(static_cast<PimCommon::CustomToolsWidget::ToolType>(index));
 }
 
 int main(int argc, char **argv)

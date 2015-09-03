@@ -24,6 +24,7 @@
 class KToggleAction;
 namespace PimCommon
 {
+class CustomToolsPlugin;
 class CustomToolsPluginManagerPrivate;
 class PIMCOMMON_EXPORT CustomToolsPluginManager : public QObject
 {
@@ -34,7 +35,7 @@ public:
     explicit CustomToolsPluginManager(QObject *parent = Q_NULLPTR);
     ~CustomToolsPluginManager();
 
-    QList<KToggleAction *> actionList() const;
+    QVector<PimCommon::CustomToolsPlugin *> pluginsList() const;
 private:
     CustomToolsPluginManagerPrivate *const d;
 };

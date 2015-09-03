@@ -15,34 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SHORTURLVIEW_H
+#define SHORTURLVIEW_H
 
-#ifndef CUSTOMTOOLSWIDGETNG_H
-#define CUSTOMTOOLSWIDGETNG_H
+#include <customtools/customtoolsviewinterface.h>
 
-#include <QWidget>
-#include "pimcommon_export.h"
-class KToggleAction;
+#include <shorturlwidget.h>
+
+
 namespace PimCommon
 {
-class CustomToolsWidgetNgPrivate;
-class PIMCOMMON_EXPORT CustomToolsWidgetNg : public QWidget
+class ShorturlView : public PimCommon::CustomToolsViewInterface
 {
     Q_OBJECT
 public:
-    explicit CustomToolsWidgetNg(QWidget *parent = Q_NULLPTR);
-    ~CustomToolsWidgetNg();
+    explicit ShorturlView(QWidget *parent = Q_NULLPTR);
+    ~ShorturlView();
+    KToggleAction *action() const Q_DECL_OVERRIDE;
 
-    QList<KToggleAction *> actionList() const;
-public Q_SLOTS:
-    void slotToolsWasClosed();
-    void slotActivateView(QWidget *w);
-
-Q_SIGNALS:
-    void insertText(const QString &url);
+private Q_SLOTS:
+    void slotActivateShorturl(bool state);
 
 private:
-    void initializeView();
-    CustomToolsWidgetNgPrivate *const d;
+    void createAction();
+    KToggleAction *mAction;
+    PimCommon::ShortUrlWidget *mShorturl;
 };
 }
-#endif // CUSTOMTOOLSWIDGETNG_H
+#endif // SHORTURLVIEW_H

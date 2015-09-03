@@ -40,13 +40,3 @@ CustomToolsPlugin::~CustomToolsPlugin()
 {
     delete d;
 }
-
-void CustomToolsPlugin::setShortcut(KActionCollection *ac)
-{
-    Q_UNUSED(ac);
-}
-
-void CustomToolsPlugin::setText(const QString &)
-{
-
-}

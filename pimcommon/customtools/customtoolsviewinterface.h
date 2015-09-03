@@ -15,34 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef CUSTOMTOOLSVIEWINTERFACE_H
+#define CUSTOMTOOLSVIEWINTERFACE_H
 
-#ifndef CUSTOMTOOLSWIDGETNG_H
-#define CUSTOMTOOLSWIDGETNG_H
+#include "pimcommon_export.h"
 
 #include <QWidget>
-#include "pimcommon_export.h"
 class KToggleAction;
 namespace PimCommon
 {
-class CustomToolsWidgetNgPrivate;
-class PIMCOMMON_EXPORT CustomToolsWidgetNg : public QWidget
+class PIMCOMMON_EXPORT CustomToolsViewInterface : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CustomToolsWidgetNg(QWidget *parent = Q_NULLPTR);
-    ~CustomToolsWidgetNg();
+    explicit CustomToolsViewInterface(QWidget *parent = Q_NULLPTR);
+    virtual ~CustomToolsViewInterface();
 
-    QList<KToggleAction *> actionList() const;
-public Q_SLOTS:
-    void slotToolsWasClosed();
-    void slotActivateView(QWidget *w);
+    virtual void setText(const QString &text);
+    virtual KToggleAction *action() const;
 
 Q_SIGNALS:
-    void insertText(const QString &url);
+    void insertText(const QString &text);
+    void toolsWasClosed();
+    void activateView(QWidget *);
 
-private:
-    void initializeView();
-    CustomToolsWidgetNgPrivate *const d;
 };
 }
-#endif // CUSTOMTOOLSWIDGETNG_H
+#endif // CUSTOMTOOLSVIEWINTERFACE_H

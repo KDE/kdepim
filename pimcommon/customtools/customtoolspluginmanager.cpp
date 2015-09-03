@@ -71,9 +71,9 @@ public:
     {
 
     }
+    QVector<PimCommon::CustomToolsPlugin *> pluginsList() const;
     void initializePluginList();
     void loadPlugin(CustomToolsPluginInfo *item);
-    QList<KToggleAction *> actionList() const;
     QVector<CustomToolsPluginInfo> mPluginList;
     CustomToolsPluginManager *q;
 };
@@ -107,28 +107,22 @@ void CustomToolsPluginManagerPrivate::initializePluginList()
     }
 }
 
+QVector<PimCommon::CustomToolsPlugin *> CustomToolsPluginManagerPrivate::pluginsList() const
+{
+    QVector<PimCommon::CustomToolsPlugin *> lst;
+    QVector<CustomToolsPluginInfo>::ConstIterator end(mPluginList.constEnd());
+    for (QVector<CustomToolsPluginInfo>::ConstIterator it = mPluginList.constBegin(); it != end; ++it) {
+        if ((*it).plugin) {
+            lst << (*it).plugin;
+        }
+    }
+    return lst;
+}
+
 void CustomToolsPluginManagerPrivate::loadPlugin(CustomToolsPluginInfo *item)
 {
     item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<PimCommon::CustomToolsPlugin>(q, QVariantList() << item->saveName());
-    if (item->plugin) {
-        item->plugin->createAction();
-    }
     qDebug()<<" item->plugin"<<item->plugin;
-}
-
-QList<KToggleAction *> CustomToolsPluginManagerPrivate::actionList() const
-{
-    QList<KToggleAction *> listActions;
-#if 0
-    QVector<CustomToolsPluginInfo>::iterator end(mPluginList.end());
-    for (QVector<CustomToolsPluginInfo>::iterator it = mPluginList.begin(); it != end; ++it) {
-        if ((*it).plugin) {
-            listActions = (*it).plugin->action();
-        }
-    }
- #endif
-    //TODO
-    return listActions;
 }
 
 
@@ -149,8 +143,7 @@ CustomToolsPluginManager::~CustomToolsPluginManager()
     delete d;
 }
 
-QList<KToggleAction *> CustomToolsPluginManager::actionList() const
+QVector<PimCommon::CustomToolsPlugin *> CustomToolsPluginManager::pluginsList() const
 {
-    return d->actionList();
+    return d->pluginsList();
 }
-

@@ -1,5 +1,6 @@
 set(pimcommon_shorturlplugin_SRCS
    shorturlplugin.cpp
+   shorturlview.cpp
 )
 
 add_library(pimcommon_shorturlplugin MODULE ${pimcommon_shorturlplugin_SRCS})

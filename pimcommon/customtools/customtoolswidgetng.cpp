@@ -15,9 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "customtoolsplugin.h"
+#include "customtoolsviewinterface.h"
 #include "customtoolswidgetng.h"
+#include "pimcommon/customtools/customtoolspluginmanager.h"
+#include <KToggleAction>
+
 #include <QHBoxLayout>
 #include <QStackedWidget>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -30,6 +36,7 @@ public:
 
     }
     QStackedWidget *mStackedWidget;
+    QList<PimCommon::CustomToolsViewInterface *> mListInterfaceView;
 };
 
 CustomToolsWidgetNg::CustomToolsWidgetNg(QWidget *parent)
@@ -41,10 +48,47 @@ CustomToolsWidgetNg::CustomToolsWidgetNg(QWidget *parent)
     d->mStackedWidget->setObjectName(QStringLiteral("stackedwidget"));
     lay->addWidget(d->mStackedWidget);
     setLayout(lay);
+    initializeView();
 }
 
 
 CustomToolsWidgetNg::~CustomToolsWidgetNg()
 {
     delete d;
+}
+
+void CustomToolsWidgetNg::initializeView()
+{
+    QVector<CustomToolsPlugin *> localPluginsList = PimCommon::CustomToolsPluginManager::self()->pluginsList();
+    Q_FOREACH(CustomToolsPlugin *plugin, localPluginsList) {
+        PimCommon::CustomToolsViewInterface *localCreateView = plugin->createView(this);
+        d->mListInterfaceView.append(localCreateView);
+        d->mStackedWidget->addWidget(localCreateView);
+    }
+}
+
+void CustomToolsWidgetNg::slotToolsWasClosed()
+{
+    Q_FOREACH(PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
+        interface->action()->setChecked(false);
+    }
+}
+
+void CustomToolsWidgetNg::slotActivateView(QWidget *w)
+{
+    if (w) {
+        d->mStackedWidget->setCurrentWidget(w);
+        setVisible(true);
+    } else {
+        setVisible(false);
+    }
+}
+
+QList<KToggleAction *> CustomToolsWidgetNg::actionList() const
+{
+    QList<KToggleAction *> lstActions;
+    Q_FOREACH(PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
+        lstActions << interface->action();
+    }
+    return lstActions;
 }

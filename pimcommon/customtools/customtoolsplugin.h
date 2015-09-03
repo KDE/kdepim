@@ -24,6 +24,8 @@ class KToggleAction;
 class KActionCollection;
 namespace PimCommon
 {
+class CustomToolsWidgetNg;
+class CustomToolsViewInterface;
 class CustomToolsPluginPrivate;
 class PIMCOMMON_EXPORT CustomToolsPlugin : public QObject
 {
@@ -32,18 +34,8 @@ public:
     explicit CustomToolsPlugin(QObject *parent = Q_NULLPTR);
     ~CustomToolsPlugin();
 
-    virtual void createAction() = 0;
-    virtual KToggleAction *action() const = 0;
-    virtual QWidget *createView(QWidget *parent = Q_NULLPTR) = 0;
+    virtual PimCommon::CustomToolsViewInterface *createView(CustomToolsWidgetNg *parent = Q_NULLPTR) = 0;
     virtual QString customToolName() const = 0;
-
-    virtual void setShortcut(KActionCollection *ac);
-    virtual void setText(const QString &);
-
-Q_SIGNALS:
-    void toolsWasClosed();
-    void activateTool(QWidget *);
-    void insertText(const QString &);
 
 private:
     CustomToolsPluginPrivate *const d;

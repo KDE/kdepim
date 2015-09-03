@@ -1,5 +1,6 @@
 set(pimcommon_translatorplugin_SRCS
    translatorplugin.cpp
+   translatorview.cpp
 )
 
 add_library(pimcommon_translatorplugin MODULE ${pimcommon_translatorplugin_SRCS})

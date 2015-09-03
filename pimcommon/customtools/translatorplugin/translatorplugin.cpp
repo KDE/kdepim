@@ -16,19 +16,17 @@
 */
 
 #include "translatorplugin.h"
-#include "translator/translatorwidget.h"
+#include "translatorview.h"
 #include <KLocalizedString>
-#include <KActionCollection>
 #include <KToggleAction>
 #include <kpluginfactory.h>
+#include <customtools/customtoolswidgetng.h>
 
 using namespace PimCommon;
 K_PLUGIN_FACTORY_WITH_JSON(PimCommonTranslatorPluginFactory,"pimcommon_translatorplugin.json", registerPlugin<TranslatorPlugin>();)
 
 TranslatorPlugin::TranslatorPlugin(QObject *parent, const QList<QVariant> &)
-    : PimCommon::CustomToolsPlugin(parent),
-      mAction(Q_NULLPTR),
-      mTranslatorWidget(Q_NULLPTR)
+    : PimCommon::CustomToolsPlugin(parent)
 {
 
 }
@@ -38,23 +36,15 @@ TranslatorPlugin::~TranslatorPlugin()
 
 }
 
-void TranslatorPlugin::createAction()
+CustomToolsViewInterface *TranslatorPlugin::createView(CustomToolsWidgetNg *parent)
 {
-    mAction = new KToggleAction(i18n("&Translator"), this);
-    connect(mAction, &KToggleAction::toggled, this, &TranslatorPlugin::slotActivateTranslator);
-    mAction->setChecked(false);
-}
+    PimCommon::TranslatorView *view = new PimCommon::TranslatorView(parent);
 
-KToggleAction *TranslatorPlugin::action() const
-{
-    return mAction;
-}
+    connect(view, &PimCommon::TranslatorView::toolsWasClosed, parent, &CustomToolsWidgetNg::slotToolsWasClosed);
+    connect(view, &PimCommon::TranslatorView::insertText, parent, &CustomToolsWidgetNg::insertText);
+    connect(view, &PimCommon::TranslatorView::activateView, parent, &CustomToolsWidgetNg::slotActivateView);
+    return view;
 
-QWidget *TranslatorPlugin::createView(QWidget *parent)
-{
-    mTranslatorWidget = new PimCommon::TranslatorWidget(parent);
-    connect(mTranslatorWidget, &PimCommon::TranslatorWidget::toolsWasClosed, this, &TranslatorPlugin::toolsWasClosed);
-    return mTranslatorWidget;
 }
 
 QString TranslatorPlugin::customToolName() const
@@ -62,19 +52,4 @@ QString TranslatorPlugin::customToolName() const
     return i18n("Translator");
 }
 
-void TranslatorPlugin::setShortcut(KActionCollection *ac)
-{
-    if (ac)
-        ac->setDefaultShortcut(mAction, QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
-}
-
-void TranslatorPlugin::setText(const QString &text)
-{
-    mTranslatorWidget->setTextToTranslate(text);
-}
-
-void TranslatorPlugin::slotActivateTranslator(bool b)
-{
-    Q_EMIT activateTool(b ? mTranslatorWidget : Q_NULLPTR);
-}
 #include "translatorplugin.moc"

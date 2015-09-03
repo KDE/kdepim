@@ -16,17 +16,17 @@
 */
 
 #include "shorturlplugin.h"
-#include "shorturl/shorturlwidget.h"
+#include "shorturlview.h"
 #include <KLocalizedString>
 #include <KToggleAction>
 #include <kpluginfactory.h>
+#include <customtools/customtoolswidgetng.h>
 
 using namespace PimCommon;
 K_PLUGIN_FACTORY_WITH_JSON(PimCommonShorturlPluginFactory,"pimcommon_shorturlplugin.json", registerPlugin<ShorturlPlugin>();)
 
 ShorturlPlugin::ShorturlPlugin(QObject *parent, const QList<QVariant> &)
-    : PimCommon::CustomToolsPlugin(parent),
-      mAction(Q_NULLPTR)
+    : PimCommon::CustomToolsPlugin(parent)
 {
 
 }
@@ -36,24 +36,14 @@ ShorturlPlugin::~ShorturlPlugin()
 
 }
 
-void ShorturlPlugin::createAction()
+CustomToolsViewInterface *ShorturlPlugin::createView(CustomToolsWidgetNg *parent)
 {
-    mAction = new KToggleAction(i18n("Generate Shorten Url"), this);
-    connect(mAction, &KToggleAction::toggled, this, &ShorturlPlugin::slotActivateShorturl);
-    mAction->setChecked(false);
-}
+    PimCommon::ShorturlView *view = new PimCommon::ShorturlView(parent);
 
-KToggleAction *ShorturlPlugin::action() const
-{
-    return mAction;
-}
-
-QWidget *ShorturlPlugin::createView(QWidget *parent)
-{
-    mShortUrlWidget = new PimCommon::ShortUrlWidget(parent);
-    connect(mShortUrlWidget, &PimCommon::ShortUrlWidget::toolsWasClosed, this, &ShorturlPlugin::toolsWasClosed);
-    connect(mShortUrlWidget, &ShortUrlWidget::insertText, this, &ShorturlPlugin::insertText);
-    return mShortUrlWidget;
+    connect(view, &PimCommon::ShorturlView::toolsWasClosed, parent, &CustomToolsWidgetNg::slotToolsWasClosed);
+    connect(view, &PimCommon::ShorturlView::insertText, parent, &CustomToolsWidgetNg::insertText);
+    connect(view, &PimCommon::ShorturlView::activateView, parent, &CustomToolsWidgetNg::slotActivateView);
+    return view;
 }
 
 QString ShorturlPlugin::customToolName() const
@@ -61,14 +51,5 @@ QString ShorturlPlugin::customToolName() const
     return i18n("Translator");
 }
 
-void ShorturlPlugin::setShortcut(KActionCollection *ac)
-{
-    Q_UNUSED(ac);
-}
-
-void ShorturlPlugin::slotActivateShorturl(bool b)
-{
-    Q_EMIT activateTool(b ? mShortUrlWidget : Q_NULLPTR);
-}
 
 #include "shorturlplugin.moc"

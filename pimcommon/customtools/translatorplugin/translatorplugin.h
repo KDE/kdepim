@@ -30,19 +30,9 @@ public:
     explicit TranslatorPlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
     ~TranslatorPlugin();
 
-    void createAction() Q_DECL_OVERRIDE;
-    KToggleAction *action() const Q_DECL_OVERRIDE;
-    QWidget *createView(QWidget *parent) Q_DECL_OVERRIDE;
+    CustomToolsViewInterface *createView(CustomToolsWidgetNg *parent) Q_DECL_OVERRIDE;
     QString customToolName() const Q_DECL_OVERRIDE;
-    void setShortcut(KActionCollection *ac) Q_DECL_OVERRIDE;
-    void setText(const QString &) Q_DECL_OVERRIDE;
 
-private Q_SLOTS:
-    void slotActivateTranslator(bool b);
-
-private:
-    KToggleAction *mAction;
-    PimCommon::TranslatorWidget *mTranslatorWidget;
 };
 }
 #endif // TRANSLATORPLUGIN_H
