@@ -307,6 +307,11 @@ void CompletionOrderWidget::save()
     }
 }
 
+KConfig *CompletionOrderWidget::configFile()
+{
+    return &mConfig;
+}
+
 void CompletionOrderWidget::addRecentAddressItem()
 {
     //Be default it's the first.

@@ -74,10 +74,7 @@ public:
     ~CompletionOrderWidget();
     void save();
 
-    KConfig *configFile()
-    {
-        return &mConfig;
-    }
+    KConfig *configFile();
     void loadCompletionItems();
     void setLdapClientSearch(KLDAP::LdapClientSearch *ldapSearch);
 

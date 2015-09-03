@@ -51,9 +51,21 @@
 
 using namespace KPIM;
 
+class KPIM::CompletionOrderEditorPrivate
+{
+public:
+    CompletionOrderEditorPrivate()
+        : mCompletionOrderWidget(Q_NULLPTR)
+    {
+
+    }
+
+    CompletionOrderWidget *mCompletionOrderWidget;
+};
+
 CompletionOrderEditor::CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch,
         QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent), d(new KPIM::CompletionOrderEditorPrivate)
 {
     setWindowTitle(i18n("Edit Completion Order"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -70,21 +82,22 @@ CompletionOrderEditor::CompletionOrderEditor(KLDAP::LdapClientSearch *ldapSearch
     QHBoxLayout *pageHBoxLayout = new QHBoxLayout(page);
     pageHBoxLayout->setMargin(0);
 
-    mCompletionOrderWidget = new CompletionOrderWidget(this);
-    mCompletionOrderWidget->setObjectName(QStringLiteral("completionorderwidget"));
+    d->mCompletionOrderWidget = new CompletionOrderWidget(this);
+    d->mCompletionOrderWidget->setObjectName(QStringLiteral("completionorderwidget"));
 
-    mainLayout->addWidget(mCompletionOrderWidget);
+    mainLayout->addWidget(d->mCompletionOrderWidget);
     mainLayout->addWidget(buttonBox);
 
-    mCompletionOrderWidget->setLdapClientSearch(ldapSearch);
+    d->mCompletionOrderWidget->setLdapClientSearch(ldapSearch);
 
-    mCompletionOrderWidget->loadCompletionItems();
+    d->mCompletionOrderWidget->loadCompletionItems();
     readConfig();
 }
 
 CompletionOrderEditor::~CompletionOrderEditor()
 {
     writeConfig();
+    delete d;
 }
 
 void CompletionOrderEditor::readConfig()
@@ -105,7 +118,7 @@ void CompletionOrderEditor::writeConfig()
 
 void CompletionOrderEditor::slotOk()
 {
-    mCompletionOrderWidget->save();
+    d->mCompletionOrderWidget->save();
     accept();
 }
 

@@ -42,6 +42,7 @@ class LdapClientSearch;
 namespace KPIM
 {
 class CompletionOrderWidget;
+class CompletionOrderEditorPrivate;
 class KDEPIM_EXPORT CompletionOrderEditor : public QDialog
 {
     Q_OBJECT
@@ -56,7 +57,7 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    CompletionOrderWidget *mCompletionOrderWidget;
+    CompletionOrderEditorPrivate *const d;
 };
 
 } // namespace
