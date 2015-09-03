@@ -23,7 +23,7 @@
 #include <composereditor-ng/composerview.h>
 namespace PimCommon
 {
-class CustomToolsWidget;
+class CustomToolsWidgetNg;
 }
 
 class BlogiloComposerView : public ComposerEditorNG::ComposerView
@@ -36,13 +36,13 @@ public:
     void startEditing();
     void addExtraAction(QMenu *menu) Q_DECL_OVERRIDE;
 
-    void setCustomTools(PimCommon::CustomToolsWidget *customTool);
+    void setCustomTools(PimCommon::CustomToolsWidgetNg *customTool);
 
 private Q_SLOTS:
     void slotSendMouseReleaseEvent();
 
 private:
-    PimCommon::CustomToolsWidget *mCustomTools;
+    PimCommon::CustomToolsWidgetNg *mCustomTools;
 };
 
 #endif // BLOGILOCOMPOSERVIEW_H

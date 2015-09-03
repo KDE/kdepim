@@ -31,6 +31,7 @@ public:
     ~TranslatorView();
     KToggleAction *action() const Q_DECL_OVERRIDE;
 
+    void setText(const QString &text) Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void slotActivateTranslator(bool state);
 

@@ -175,7 +175,6 @@ set(libpimcommon_widgets_SRCS
 
 set(libpimcommon_customtools_SRCS
   customtools/customtoolsplugin.cpp
-  customtools/customtoolswidget.cpp
   customtools/customtoolspluginmanager.cpp
   customtools/customtoolswidgetng.cpp
   customtools/customtoolsviewinterface.cpp

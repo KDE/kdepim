@@ -18,7 +18,6 @@
 #include "translatorplugin.h"
 #include "translatorview.h"
 #include <KLocalizedString>
-#include <KToggleAction>
 #include <kpluginfactory.h>
 #include <customtools/customtoolswidgetng.h>
 

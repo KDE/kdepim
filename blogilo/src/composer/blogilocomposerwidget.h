@@ -22,9 +22,13 @@
 #define BLOGILOCOMPOSERWIDGET_H
 
 #include <QWidget>
-#include "pimcommon/customtools/customtoolswidget.h"
+
 class BlogiloComposerEditor;
 class BlogiloComposerView;
+namespace PimCommon
+{
+class CustomToolsWidgetNg;
+}
 class BlogiloComposerWidget : public QWidget
 {
     Q_OBJECT
@@ -35,12 +39,11 @@ public:
     BlogiloComposerEditor *editor() const;
 
 private Q_SLOTS:
-    void slotToolSwitched(PimCommon::CustomToolsWidget::ToolType);
-    void slotInsertShortUrl(const QString &shortUrl);
-
+    void slotInsertShortUrl(const QString &shortUrl);    
+    void slotInsertText();
 private:
     BlogiloComposerEditor *mEditor;
-    PimCommon::CustomToolsWidget *mCustomToolsWidget;
+    PimCommon::CustomToolsWidgetNg *mCustomToolsWidget;
 };
 
 #endif // BLOGILOCOMPOSERWIDGET_H

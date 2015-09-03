@@ -34,12 +34,16 @@ public:
     ~CustomToolsWidgetNg();
 
     QList<KToggleAction *> actionList() const;
+
+    void setText(const QString &text);
+
 public Q_SLOTS:
     void slotToolsWasClosed();
     void slotActivateView(QWidget *w);
 
 Q_SIGNALS:
     void insertText(const QString &url);
+    void toolActivated();
 
 private:
     void initializeView(KActionCollection *ac);

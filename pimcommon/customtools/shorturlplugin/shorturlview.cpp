@@ -29,6 +29,7 @@ ShorturlView::ShorturlView(KActionCollection *ac, QWidget *parent)
       mShorturl(Q_NULLPTR)
 {
     QHBoxLayout *layout = new QHBoxLayout;
+    layout->setMargin(0);
     createAction(ac);
     mShorturl = new PimCommon::ShortUrlWidget(this);
     connect(mShorturl, &PimCommon::ShortUrlWidget::toolsWasClosed, this, &ShorturlView::toolsWasClosed);

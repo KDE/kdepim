@@ -21,8 +21,7 @@
 #include "blogilocomposerwidget.h"
 #include "blogilocomposereditor.h"
 #include "blogilocomposerview.h"
-#include "pimcommon/translator/translatorwidget.h"
-
+#include "pimcommon/customtools/customtoolswidgetng.h"
 #include <QVBoxLayout>
 
 BlogiloComposerWidget::BlogiloComposerWidget(BlogiloComposerView *view, QWidget *parent)
@@ -33,9 +32,9 @@ BlogiloComposerWidget::BlogiloComposerWidget(BlogiloComposerView *view, QWidget 
     mEditor = new BlogiloComposerEditor(view, this);
 
     lay->addWidget(mEditor);
-    mCustomToolsWidget = new PimCommon::CustomToolsWidget;
-    connect(mCustomToolsWidget, &PimCommon::CustomToolsWidget::toolSwitched, this, &BlogiloComposerWidget::slotToolSwitched);
-    connect(mCustomToolsWidget, &PimCommon::CustomToolsWidget::insertText, this, &BlogiloComposerWidget::slotInsertShortUrl);
+    mCustomToolsWidget = new PimCommon::CustomToolsWidgetNg(Q_NULLPTR);
+    connect(mCustomToolsWidget, &PimCommon::CustomToolsWidgetNg::insertText, this, &BlogiloComposerWidget::slotInsertShortUrl);
+    connect(mCustomToolsWidget, &PimCommon::CustomToolsWidgetNg::toolActivated, this, &BlogiloComposerWidget::slotInsertText);
     lay->addWidget(mCustomToolsWidget);
     setLayout(lay);
     view->setCustomTools(mCustomToolsWidget);
@@ -51,13 +50,11 @@ BlogiloComposerEditor *BlogiloComposerWidget::editor() const
     return mEditor;
 }
 
-void BlogiloComposerWidget::slotToolSwitched(PimCommon::CustomToolsWidget::ToolType type)
+void BlogiloComposerWidget::slotInsertText()
 {
-    if (type == PimCommon::CustomToolsWidget::TranslatorTool) {
-        const QString text = mEditor->view()->selectedText();
-        if (!text.isEmpty()) {
-            mCustomToolsWidget->translatorWidget()->setTextToTranslate(text);
-        }
+    const QString text = mEditor->view()->selectedText();
+    if (!text.isEmpty()) {
+        mCustomToolsWidget->setText(text);
     }
 }
 

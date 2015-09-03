@@ -18,7 +18,7 @@
 */
 
 #include "blogilocomposerview.h"
-#include "pimcommon/customtools/customtoolswidget.h"
+#include "pimcommon/customtools/customtoolswidgetng.h"
 
 #include <KToggleAction>
 
@@ -39,7 +39,7 @@ BlogiloComposerView::~BlogiloComposerView()
 
 }
 
-void BlogiloComposerView::setCustomTools(PimCommon::CustomToolsWidget *customTool)
+void BlogiloComposerView::setCustomTools(PimCommon::CustomToolsWidgetNg *customTool)
 {
     mCustomTools = customTool;
 }
@@ -65,8 +65,9 @@ void BlogiloComposerView::addExtraAction(QMenu *menu)
 {
     if (mCustomTools) {
         menu->addSeparator();
-        menu->addAction(mCustomTools->action(PimCommon::CustomToolsWidget::TranslatorTool));
-        menu->addAction(mCustomTools->action(PimCommon::CustomToolsWidget::ShortUrlTool));
+        Q_FOREACH(KToggleAction *ta, mCustomTools->actionList()) {
+            menu->addAction(ta);
+        }
     }
 }
 

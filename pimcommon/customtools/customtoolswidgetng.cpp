@@ -86,6 +86,7 @@ void CustomToolsWidgetNg::slotActivateView(QWidget *w)
                 interface->action()->setChecked(false);
             }
         }
+        Q_EMIT toolActivated();
     } else {
         setVisible(false);
         slotToolsWasClosed();
@@ -99,4 +100,16 @@ QList<KToggleAction *> CustomToolsWidgetNg::actionList() const
         lstActions << interface->action();
     }
     return lstActions;
+}
+
+void CustomToolsWidgetNg::setText(const QString &text)
+{
+    if (isVisible()) {
+        Q_FOREACH(PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
+            if (interface == d->mStackedWidget->currentWidget()) {
+                interface->setText(text);
+                break;
+            }
+        }
+    }
 }
