@@ -22,6 +22,7 @@
 #include <QWidget>
 #include "pimcommon_export.h"
 class KToggleAction;
+class KActionCollection;
 namespace PimCommon
 {
 class CustomToolsWidgetNgPrivate;
@@ -29,7 +30,7 @@ class PIMCOMMON_EXPORT CustomToolsWidgetNg : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CustomToolsWidgetNg(QWidget *parent = Q_NULLPTR);
+    explicit CustomToolsWidgetNg(KActionCollection *ac, QWidget *parent = Q_NULLPTR);
     ~CustomToolsWidgetNg();
 
     QList<KToggleAction *> actionList() const;
@@ -41,7 +42,7 @@ Q_SIGNALS:
     void insertText(const QString &url);
 
 private:
-    void initializeView();
+    void initializeView(KActionCollection *ac);
     CustomToolsWidgetNgPrivate *const d;
 };
 }

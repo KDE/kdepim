@@ -34,7 +34,7 @@ public:
     explicit CustomToolsPlugin(QObject *parent = Q_NULLPTR);
     ~CustomToolsPlugin();
 
-    virtual PimCommon::CustomToolsViewInterface *createView(CustomToolsWidgetNg *parent = Q_NULLPTR) = 0;
+    virtual PimCommon::CustomToolsViewInterface *createView(KActionCollection *ac, CustomToolsWidgetNg *parent = Q_NULLPTR) = 0;
     virtual QString customToolName() const = 0;
 
 private:

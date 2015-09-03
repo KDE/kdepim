@@ -36,9 +36,9 @@ ShorturlPlugin::~ShorturlPlugin()
 
 }
 
-CustomToolsViewInterface *ShorturlPlugin::createView(CustomToolsWidgetNg *parent)
+CustomToolsViewInterface *ShorturlPlugin::createView(KActionCollection *ac, CustomToolsWidgetNg *parent)
 {
-    PimCommon::ShorturlView *view = new PimCommon::ShorturlView(parent);
+    PimCommon::ShorturlView *view = new PimCommon::ShorturlView(ac, parent);
 
     connect(view, &PimCommon::ShorturlView::toolsWasClosed, parent, &CustomToolsWidgetNg::slotToolsWasClosed);
     connect(view, &PimCommon::ShorturlView::insertText, parent, &CustomToolsWidgetNg::insertText);

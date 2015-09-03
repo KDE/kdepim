@@ -19,6 +19,7 @@
 #include "customtools/customtoolswidgetng.h"
 #include <QStackedWidget>
 #include <QTest>
+#include <KXmlGui/KActionCollection>
 
 CustomToolsWidgetNgTest::CustomToolsWidgetNgTest(QObject *parent)
     : QObject(parent)
@@ -33,7 +34,7 @@ CustomToolsWidgetNgTest::~CustomToolsWidgetNgTest()
 
 void CustomToolsWidgetNgTest::shouldHaveDefaultValue()
 {
-    PimCommon::CustomToolsWidgetNg widget;
+    PimCommon::CustomToolsWidgetNg widget(new KActionCollection(this));
 
     QStackedWidget *stackWidget = widget.findChild<QStackedWidget *>(QStringLiteral("stackedwidget"));
     QVERIFY(stackWidget);

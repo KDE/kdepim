@@ -20,9 +20,10 @@
 #include <QHBoxLayout>
 #include <KLocalizedString>
 #include <KToggleAction>
+#include <KActionCollection>
 
 using namespace PimCommon;
-TranslatorView::TranslatorView(QWidget *parent)
+TranslatorView::TranslatorView(KActionCollection *ac, QWidget *parent)
     : PimCommon::CustomToolsViewInterface(parent),
       mAction(Q_NULLPTR)
 {
@@ -32,7 +33,7 @@ TranslatorView::TranslatorView(QWidget *parent)
     connect(mTranslatorWidget, &PimCommon::TranslatorWidget::toolsWasClosed, this, &TranslatorView::toolsWasClosed);
 
     layout->addWidget(mTranslatorWidget);
-    createAction();
+    createAction(ac);
 }
 
 
@@ -57,9 +58,12 @@ void TranslatorView::slotActivateTranslator(bool state)
     }
 }
 
-void TranslatorView::createAction()
+void TranslatorView::createAction(KActionCollection *ac)
 {
     mAction = new KToggleAction(i18n("&Translator"), this);
     connect(mAction, &KToggleAction::triggered, this, &TranslatorView::slotActivateTranslator);
+    if (ac) {
+        ac->addAction(QStringLiteral("translator"), mAction);
+    }
     mAction->setChecked(false);
 }

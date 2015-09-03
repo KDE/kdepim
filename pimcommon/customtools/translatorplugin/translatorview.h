@@ -27,7 +27,7 @@ class TranslatorView : public PimCommon::CustomToolsViewInterface
 {
     Q_OBJECT
 public:
-    explicit TranslatorView(QWidget *parent);
+    explicit TranslatorView(KActionCollection *ac, QWidget *parent);
     ~TranslatorView();
     KToggleAction *action() const Q_DECL_OVERRIDE;
 
@@ -35,7 +35,7 @@ private Q_SLOTS:
     void slotActivateTranslator(bool state);
 
 private:
-    void createAction();
+    void createAction(KActionCollection *ac);
     KToggleAction *mAction;
     PimCommon::TranslatorWidget *mTranslatorWidget;
 

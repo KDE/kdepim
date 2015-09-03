@@ -19,16 +19,17 @@
 #include <KToggleAction>
 #include <KLocalizedString>
 #include <QHBoxLayout>
+#include <KXmlGui/kactioncollection.h>
 
 using namespace PimCommon;
 
-ShorturlView::ShorturlView(QWidget *parent)
+ShorturlView::ShorturlView(KActionCollection *ac, QWidget *parent)
     : PimCommon::CustomToolsViewInterface(parent),
       mAction(Q_NULLPTR),
       mShorturl(Q_NULLPTR)
 {
     QHBoxLayout *layout = new QHBoxLayout;
-    createAction();
+    createAction(ac);
     mShorturl = new PimCommon::ShortUrlWidget(this);
     connect(mShorturl, &PimCommon::ShortUrlWidget::toolsWasClosed, this, &ShorturlView::toolsWasClosed);
     connect(mShorturl, &PimCommon::ShortUrlWidget::insertText, this, &ShorturlView::insertText);
@@ -47,10 +48,13 @@ KToggleAction *ShorturlView::action() const
     return mAction;
 }
 
-void ShorturlView::createAction()
+void ShorturlView::createAction(KActionCollection *ac)
 {
     mAction = new KToggleAction(i18n("Generate Shorten Url"), this);
     connect(mAction, &KToggleAction::triggered, this, &ShorturlView::slotActivateShorturl);
+    if (ac) {
+        ac->addAction(QStringLiteral("shorten_url"), mAction);
+    }
     mAction->setChecked(false);
 }
 

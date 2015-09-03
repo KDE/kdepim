@@ -30,7 +30,7 @@ public:
     explicit TranslatorPlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
     ~TranslatorPlugin();
 
-    CustomToolsViewInterface *createView(CustomToolsWidgetNg *parent) Q_DECL_OVERRIDE;
+    CustomToolsViewInterface *createView(KActionCollection *ac, CustomToolsWidgetNg *parent) Q_DECL_OVERRIDE;
     QString customToolName() const Q_DECL_OVERRIDE;
 
 };

@@ -36,9 +36,9 @@ TranslatorPlugin::~TranslatorPlugin()
 
 }
 
-CustomToolsViewInterface *TranslatorPlugin::createView(CustomToolsWidgetNg *parent)
+CustomToolsViewInterface *TranslatorPlugin::createView(KActionCollection *ac, CustomToolsWidgetNg *parent)
 {
-    PimCommon::TranslatorView *view = new PimCommon::TranslatorView(parent);
+    PimCommon::TranslatorView *view = new PimCommon::TranslatorView(ac, parent);
 
     connect(view, &PimCommon::TranslatorView::toolsWasClosed, parent, &CustomToolsWidgetNg::slotToolsWasClosed);
     connect(view, &PimCommon::TranslatorView::insertText, parent, &CustomToolsWidgetNg::insertText);

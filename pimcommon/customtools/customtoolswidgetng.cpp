@@ -39,7 +39,7 @@ public:
     QList<PimCommon::CustomToolsViewInterface *> mListInterfaceView;
 };
 
-CustomToolsWidgetNg::CustomToolsWidgetNg(QWidget *parent)
+CustomToolsWidgetNg::CustomToolsWidgetNg(KActionCollection *ac, QWidget *parent)
     : QWidget(parent),
       d(new PimCommon::CustomToolsWidgetNgPrivate)
 {
@@ -48,7 +48,8 @@ CustomToolsWidgetNg::CustomToolsWidgetNg(QWidget *parent)
     d->mStackedWidget->setObjectName(QStringLiteral("stackedwidget"));
     lay->addWidget(d->mStackedWidget);
     setLayout(lay);
-    initializeView();
+    initializeView(ac);
+    hide();
 }
 
 
@@ -57,11 +58,11 @@ CustomToolsWidgetNg::~CustomToolsWidgetNg()
     delete d;
 }
 
-void CustomToolsWidgetNg::initializeView()
+void CustomToolsWidgetNg::initializeView(KActionCollection *ac)
 {
     QVector<CustomToolsPlugin *> localPluginsList = PimCommon::CustomToolsPluginManager::self()->pluginsList();
     Q_FOREACH(CustomToolsPlugin *plugin, localPluginsList) {
-        PimCommon::CustomToolsViewInterface *localCreateView = plugin->createView(this);
+        PimCommon::CustomToolsViewInterface *localCreateView = plugin->createView(ac, this);
         d->mListInterfaceView.append(localCreateView);
         d->mStackedWidget->addWidget(localCreateView);
     }

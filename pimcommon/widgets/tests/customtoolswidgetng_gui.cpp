@@ -31,6 +31,8 @@
 #include <QMenu>
 #include <QToolBar>
 
+#include <KXmlGui/kactioncollection.h>
+
 CustomToolWidgetNgTest::CustomToolWidgetNgTest(QWidget *parent)
     : QWidget(parent)
 {
@@ -39,7 +41,7 @@ CustomToolWidgetNgTest::CustomToolWidgetNgTest(QWidget *parent)
     QToolBar *menu = new QToolBar;
     lay->addWidget(menu);
 
-    mCustomTools = new PimCommon::CustomToolsWidgetNg;
+    mCustomTools = new PimCommon::CustomToolsWidgetNg(new KActionCollection(this));
     QList<KToggleAction *> lst = mCustomTools->actionList();
     Q_FOREACH(KToggleAction *act, lst) {
         menu->addAction(act);
