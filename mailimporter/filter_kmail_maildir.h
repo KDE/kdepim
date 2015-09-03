@@ -26,6 +26,7 @@
  */
 namespace MailImporter
 {
+class FilterKMail_maildirPrivate;
 class MAILIMPORTER_EXPORT FilterKMail_maildir : public Filter
 {
 public:
@@ -40,6 +41,7 @@ private:
 
     void importDirContents(const QString &);
     void importFiles(const QString &);
+    FilterKMail_maildirPrivate *const d;
     int mImportDirDone;
     int mTotalDir;
 };

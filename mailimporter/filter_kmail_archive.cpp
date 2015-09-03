@@ -34,19 +34,31 @@
 
 using namespace MailImporter;
 
+class MailImporter::FilterKMailArchivePrivate
+{
+public:
+    FilterKMailArchivePrivate()
+        : mTotalFiles(0),
+          mFilesDone(0)
+    {
+    }
+
+    int mTotalFiles;
+    int mFilesDone;
+};
 FilterKMailArchive::FilterKMailArchive()
     : Filter(i18n("Import KMail Archive File"),
              "Klar\xE4lvdalens Datakonsult AB",
              i18n("<p><b>KMail Archive File Import Filter</b></p>"
                   "<p>This filter will import archives files previously exported by KMail.</p>"
                   "<p>Archive files contain a complete folder subtree compressed into a single file.</p>")),
-    mTotalFiles(0),
-    mFilesDone(0)
+    d(new MailImporter::FilterKMailArchivePrivate)
 {
 }
 
 FilterKMailArchive::~FilterKMailArchive()
 {
+    delete d;
 }
 
 // Input: .inbox.directory
@@ -87,7 +99,7 @@ bool FilterKMailArchive::importMessage(const KArchiveFile *file, const QString &
         KMime::Headers::MessageID *messageId = newMessage->messageID(false);
         if (messageId && !messageId->asUnicodeString().isEmpty()) {
             if (checkForDuplicates(messageId->asUnicodeString(), collection, folderPath)) {
-                mTotalFiles--;
+                d->mTotalFiles--;
                 return true;
             }
         }
@@ -95,7 +107,7 @@ bool FilterKMailArchive::importMessage(const KArchiveFile *file, const QString &
 
     const bool result = addAkonadiMessage(collection, newMessage);
     if (result) {
-        mFilesDone++;
+        d->mFilesDone++;
     }
     return result;
 }
@@ -114,17 +126,17 @@ bool FilterKMailArchive::importFolder(const KArchiveDirectory *folder, const QSt
 
         foreach (const QString &entryName, messageDir->entries()) {
             filterInfo()->setCurrent(cur * 100 / total);
-            filterInfo()->setOverall(mFilesDone * 100 / mTotalFiles);
+            filterInfo()->setOverall(d->mFilesDone * 100 / d->mTotalFiles);
             const KArchiveEntry *const entry = messageDir->entry(entryName);
 
             if (entry->isFile()) {
-                const int oldCount = mFilesDone;
+                const int oldCount = d->mFilesDone;
                 if (!importMessage(static_cast<const KArchiveFile *>(entry), folderPath)) {
                     return false;
                 }
 
                 // Adjust the counter. Total count can decrease because importMessage() detects a duplicate
-                if (oldCount != mFilesDone) {
+                if (oldCount != d->mFilesDone) {
                     cur++;
                 } else {
                     total--;
@@ -224,7 +236,7 @@ void FilterKMailArchive::importMails(const QString  &archiveFile)
 
     filterInfo()->setOverall(0);
     filterInfo()->addInfoLogEntry(i18n("Counting files in archive..."));
-    mTotalFiles = countFiles(archive->directory());
+    d->mTotalFiles = countFiles(archive->directory());
 
     if (importDirectory(archive->directory(), QString())) {
         filterInfo()->setOverall(100);
@@ -232,7 +244,7 @@ void FilterKMailArchive::importMails(const QString  &archiveFile)
         filterInfo()->addInfoLogEntry(i18n("Importing the archive file '%1' into the folder '%2' succeeded.",
                                            archiveFile, filterInfo()->rootCollection().name()));
         filterInfo()->addInfoLogEntry(i18np("1 message was imported.", "%1 messages were imported.",
-                                            mFilesDone));
+                                            d->mFilesDone));
     } else {
         filterInfo()->addInfoLogEntry(i18n("Importing the archive failed."));
     }

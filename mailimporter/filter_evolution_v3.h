@@ -21,6 +21,7 @@
 #include "filters.h"
 namespace MailImporter
 {
+class FilterEvolution_v3Private;
 class MAILIMPORTER_EXPORT FilterEvolution_v3 : public Filter
 {
 public:
@@ -37,9 +38,7 @@ private:
     void processDirectory(const QString &path);
 
     Akonadi::MessageStatus statusFromFile(const QString &filename);
-    int mImportDirDone;
-    int mTotalDir;
-
+    FilterEvolution_v3Private *const d;
 };
 }
 

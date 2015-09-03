@@ -24,6 +24,19 @@
 
 using namespace MailImporter;
 
+class MailImporter::FilterKMail_maildirPrivate
+{
+public:
+    FilterKMail_maildirPrivate()
+        : mImportDirDone(0),
+          mTotalDir(0)
+    {
+
+    }
+    int mImportDirDone;
+    int mTotalDir;
+};
+
 /** Default constructor. */
 FilterKMail_maildir::FilterKMail_maildir() :
     Filter(i18n("Import KMail Maildirs and Folder Structure"),
@@ -36,14 +49,14 @@ FilterKMail_maildir::FilterKMail_maildir() :
                 "<p>This filter does not import KMail mailfolders with mbox files.</p>"
                 "<p>Since it is possible to recreate the folder structure, the folders "
                 "will be stored under: \"KMail-Import\" in your local folder.</p>")),
-    mImportDirDone(0),
-    mTotalDir(0)
+    d(new MailImporter::FilterKMail_maildirPrivate)
 {
 }
 
 /** Destructor. */
 FilterKMail_maildir::~FilterKMail_maildir()
 {
+    delete d;
 }
 
 /** Recursive import of KMail maildir. */
@@ -69,9 +82,9 @@ void FilterKMail_maildir::processDirectory(const QString &path)
         if (!(*filename == QLatin1String(".") || *filename == QLatin1String(".."))) {
             filterInfo()->setCurrent(0);
             importDirContents(dir.filePath(*filename));
-            filterInfo()->setOverall((mTotalDir > 0) ? (int)((float) mImportDirDone / mTotalDir * 100) : 0);
+            filterInfo()->setOverall((d->mTotalDir > 0) ? (int)((float) d->mImportDirDone / d->mTotalDir * 100) : 0);
             filterInfo()->setCurrent(100);
-            ++mImportDirDone;
+            ++d->mImportDirDone;
         }
     }
 }
@@ -91,11 +104,11 @@ void FilterKMail_maildir::importMails(const QString &maildir)
         filterInfo()->addErrorLogEntry(i18n("No files found for import."));
     } else {
         filterInfo()->setOverall(0);
-        mImportDirDone = 0;
+        d->mImportDirDone = 0;
 
         /** Recursive import of the MailArchives */
         QDir dir(mailDir());
-        mTotalDir = Filter::countDirectory(dir, true /*search hidden directory*/);
+        d->mTotalDir = Filter::countDirectory(dir, true /*search hidden directory*/);
         processDirectory(mailDir());
 
         filterInfo()->addInfoLogEntry(i18n("Finished importing emails from %1", mailDir()));

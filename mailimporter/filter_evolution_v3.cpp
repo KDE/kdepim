@@ -23,6 +23,19 @@
 
 using namespace MailImporter;
 
+class MailImporter::FilterEvolution_v3Private
+{
+public:
+    FilterEvolution_v3Private()
+        : mImportDirDone(-1),
+          mTotalDir(-1)
+    {
+
+    }
+
+    int mImportDirDone;
+    int mTotalDir;
+};
 /** Default constructor. */
 FilterEvolution_v3::FilterEvolution_v3()
     : Filter(i18n("Import Evolution 3.x Local Mails and Folder Structure"),
@@ -30,13 +43,15 @@ FilterEvolution_v3::FilterEvolution_v3()
              i18n("<p><b>Evolution 3.x import filter</b></p>"
                   "<p>Select the base directory of your local Evolution mailfolder (usually ~/.local/share/evolution/mail/local/).</p>"
                   "<p>Since it is possible to recreate the folder structure, the folders "
-                  "will be stored under: \"Evolution-Import\".</p>"))
+                  "will be stored under: \"Evolution-Import\".</p>")),
+      d(new MailImporter::FilterEvolution_v3Private)
 {
 }
 
 /** Destructor. */
 FilterEvolution_v3::~FilterEvolution_v3()
 {
+    delete d;
 }
 
 QString FilterEvolution_v3::defaultSettingsPath()
@@ -72,7 +87,7 @@ void FilterEvolution_v3::processDirectory(const QString &path)
         if (!(*filename == QLatin1String(".") || *filename == QLatin1String(".."))) {
             filterInfo()->setCurrent(0);
             importDirContents(dir.filePath(*filename));
-            filterInfo()->setOverall((mTotalDir > 0) ? (int)((float) mImportDirDone / mTotalDir * 100) : 0);
+            filterInfo()->setOverall((d->mTotalDir > 0) ? (int)((float) d->mImportDirDone / d->mTotalDir * 100) : 0);
             filterInfo()->setCurrent(100);
         }
     }
@@ -94,11 +109,11 @@ void FilterEvolution_v3::importMails(const QString &maildir)
         filterInfo()->addErrorLogEntry(i18n("No files found for import."));
     } else {
         filterInfo()->setOverall(0);
-        mImportDirDone = 0;
+        d->mImportDirDone = 0;
 
         /** Recursive import of the MailArchives */
         QDir dir(mailDir());
-        mTotalDir = Filter::countDirectory(dir, true /*search hidden directory*/);
+        d->mTotalDir = Filter::countDirectory(dir, true /*search hidden directory*/);
 
         processDirectory(mailDir());
 
