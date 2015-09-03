@@ -20,10 +20,12 @@
 #include <KLocalizedString>
 #include <KActionCollection>
 #include <KToggleAction>
+#include <kpluginfactory.h>
 
 using namespace PimCommon;
+K_PLUGIN_FACTORY_WITH_JSON(PimCommonTranslatorPluginFactory,"pimcommon_translatorplugin.json", registerPlugin<TranslatorPlugin>();)
 
-TranslatorPlugin::TranslatorPlugin(QObject *parent)
+TranslatorPlugin::TranslatorPlugin(QObject *parent, const QList<QVariant> &)
     : PimCommon::CustomToolsPlugin(parent),
       mAction(Q_NULLPTR),
       mTranslatorWidget(Q_NULLPTR)
@@ -75,3 +77,4 @@ void TranslatorPlugin::slotActivateTranslator(bool b)
 {
     Q_EMIT activateTool(b ? mTranslatorWidget : Q_NULLPTR);
 }
+#include "translatorplugin.moc"

@@ -17,6 +17,7 @@
 
 #include "customtoolswidgetng_gui.h"
 #include "pimcommon/customtools/customtoolswidgetng.h"
+#include "pimcommon/customtools/customtoolspluginmanager.h"
 #include <QStandardPaths>
 #include <KLocalizedString>
 
@@ -45,6 +46,7 @@ CustomToolWidgetNgTest::CustomToolWidgetNgTest(QWidget *parent)
     mCustomTools = new PimCommon::CustomToolsWidgetNg;
     lay->addWidget(mCustomTools);
     setLayout(lay);
+    PimCommon::CustomToolsPluginManager *manager = new PimCommon::CustomToolsPluginManager(this);
 }
 
 CustomToolWidgetNgTest::~CustomToolWidgetNgTest()

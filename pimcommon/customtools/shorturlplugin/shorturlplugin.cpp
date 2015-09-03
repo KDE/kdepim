@@ -19,10 +19,12 @@
 #include "shorturl/shorturlwidget.h"
 #include <KLocalizedString>
 #include <KToggleAction>
+#include <kpluginfactory.h>
 
 using namespace PimCommon;
+K_PLUGIN_FACTORY_WITH_JSON(PimCommonShorturlPluginFactory,"pimcommon_shorturlplugin.json", registerPlugin<ShorturlPlugin>();)
 
-ShorturlPlugin::ShorturlPlugin(QObject *parent)
+ShorturlPlugin::ShorturlPlugin(QObject *parent, const QList<QVariant> &)
     : PimCommon::CustomToolsPlugin(parent),
       mAction(Q_NULLPTR)
 {
@@ -68,3 +70,5 @@ void ShorturlPlugin::slotActivateShorturl(bool b)
 {
     Q_EMIT activateTool(b ? mShortUrlWidget : Q_NULLPTR);
 }
+
+#include "shorturlplugin.moc"

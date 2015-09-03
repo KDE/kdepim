@@ -18,6 +18,8 @@
 #ifndef SHORTURLPLUGIN_H
 #define SHORTURLPLUGIN_H
 #include "customtools/customtoolsplugin.h"
+
+#include <QVariant>
 namespace PimCommon
 {
 class ShortUrlWidget;
@@ -25,7 +27,7 @@ class ShorturlPlugin : public PimCommon::CustomToolsPlugin
 {
     Q_OBJECT
 public:
-    explicit ShorturlPlugin(QObject *parent = Q_NULLPTR);
+    explicit ShorturlPlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
     ~ShorturlPlugin();
 
     void createAction() Q_DECL_OVERRIDE;

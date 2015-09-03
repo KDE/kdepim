@@ -18,6 +18,8 @@
 #ifndef TRANSLATORPLUGIN_H
 #define TRANSLATORPLUGIN_H
 #include "customtools/customtoolsplugin.h"
+
+#include <QVariant>
 namespace PimCommon
 {
 class TranslatorWidget;
@@ -25,7 +27,7 @@ class TranslatorPlugin : public PimCommon::CustomToolsPlugin
 {
     Q_OBJECT
 public:
-    explicit TranslatorPlugin(QObject *parent = Q_NULLPTR);
+    explicit TranslatorPlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
     ~TranslatorPlugin();
 
     void createAction() Q_DECL_OVERRIDE;
