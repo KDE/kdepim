@@ -60,6 +60,6 @@ void TranslatorView::slotActivateTranslator(bool state)
 void TranslatorView::createAction()
 {
     mAction = new KToggleAction(i18n("&Translator"), this);
-    connect(mAction, &KToggleAction::toggled, this, &TranslatorView::slotActivateTranslator);
+    connect(mAction, &KToggleAction::triggered, this, &TranslatorView::slotActivateTranslator);
     mAction->setChecked(false);
 }

@@ -50,7 +50,7 @@ KToggleAction *ShorturlView::action() const
 void ShorturlView::createAction()
 {
     mAction = new KToggleAction(i18n("Generate Shorten Url"), this);
-    connect(mAction, &KToggleAction::toggled, this, &ShorturlView::slotActivateShorturl);
+    connect(mAction, &KToggleAction::triggered, this, &ShorturlView::slotActivateShorturl);
     mAction->setChecked(false);
 }
 

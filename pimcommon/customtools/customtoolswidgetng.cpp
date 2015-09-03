@@ -79,8 +79,14 @@ void CustomToolsWidgetNg::slotActivateView(QWidget *w)
     if (w) {
         d->mStackedWidget->setCurrentWidget(w);
         setVisible(true);
+        Q_FOREACH(PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
+            if (interface != w) {
+                interface->action()->setChecked(false);
+            }
+        }
     } else {
         setVisible(false);
+        slotToolsWasClosed();
     }
 }
 
