@@ -16,9 +16,22 @@
 */
 
 
+#include "customtoolsplugin.h"
 #include "customtoolspluginmanager.h"
+#include <KPluginFactory>
+#include <KPluginLoader>
+#include <kpluginmetadata.h>
+#include <QDebug>
 
 using namespace PimCommon;
+
+class CustomToolsPluginInfo
+{
+public:
+    KPluginMetaData metaData;
+    PimCommon::CustomToolsPlugin *plugin;
+};
+
 
 class PimCommon::CustomToolsPluginManagerPrivate
 {
@@ -27,16 +40,26 @@ public:
     {
 
     }
+    void initializePluginList();
 };
+
+void CustomToolsPluginManagerPrivate::initializePluginList()
+{
+    const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("pimcommon"), [](const KPluginMetaData & md) {
+        return md.serviceTypes().contains(QStringLiteral("PimCommonCustomTools/Plugin"));
+    });
+    qDebug()<<" plugins.count() "<<plugins.count();
+}
 
 CustomToolsPluginManager::CustomToolsPluginManager(QObject *parent)
     : d(new PimCommon::CustomToolsPluginManagerPrivate)
 {
-
+    d->initializePluginList();
 }
 
 CustomToolsPluginManager::~CustomToolsPluginManager()
 {
     delete d;
 }
+
 

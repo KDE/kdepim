@@ -28,3 +28,10 @@ ecm_mark_as_test(testspellchecklineedit)
 
 target_link_libraries(testspellchecklineedit pimcommon )
 
+set(customtoolswidgetng_gui_SRCS customtoolswidgetng_gui.cpp)
+add_executable(customtoolswidgetng_gui ${customtoolswidgetng_gui_SRCS})
+target_link_libraries(customtoolswidgetng_gui
+  Qt5::Test
+  pimcommon
+)
+
