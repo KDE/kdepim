@@ -26,6 +26,9 @@ class CustomToolsWidgetNgTest : public QObject
 public:
     explicit CustomToolsWidgetNgTest(QObject *parent = Q_NULLPTR);
     ~CustomToolsWidgetNgTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // CUSTOMTOOLSWIDGETNGTEST_H

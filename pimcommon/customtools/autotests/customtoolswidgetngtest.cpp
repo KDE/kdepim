@@ -16,6 +16,8 @@
 */
 
 #include "customtoolswidgetngtest.h"
+#include "customtools/customtoolswidgetng.h"
+#include <QStackedWidget>
 #include <QTest>
 
 CustomToolsWidgetNgTest::CustomToolsWidgetNgTest(QObject *parent)
@@ -27,6 +29,14 @@ CustomToolsWidgetNgTest::CustomToolsWidgetNgTest(QObject *parent)
 CustomToolsWidgetNgTest::~CustomToolsWidgetNgTest()
 {
 
+}
+
+void CustomToolsWidgetNgTest::shouldHaveDefaultValue()
+{
+    PimCommon::CustomToolsWidgetNg widget;
+
+    QStackedWidget *stackWidget = widget.findChild<QStackedWidget *>(QStringLiteral("stackedwidget"));
+    QVERIFY(stackWidget);
 }
 
 QTEST_MAIN(CustomToolsWidgetNgTest)
