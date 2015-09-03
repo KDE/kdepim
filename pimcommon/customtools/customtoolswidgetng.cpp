@@ -73,6 +73,7 @@ void CustomToolsWidgetNg::slotToolsWasClosed()
     Q_FOREACH(PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
         interface->action()->setChecked(false);
     }
+    hide();
 }
 
 void CustomToolsWidgetNg::slotActivateView(QWidget *w)
