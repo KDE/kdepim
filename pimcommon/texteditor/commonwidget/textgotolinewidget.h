@@ -25,6 +25,7 @@ class QSpinBox;
 class QPushButton;
 namespace PimCommon
 {
+class TextGoToLineWidgetPrivate;
 class PIMCOMMON_EXPORT TextGoToLineWidget : public QWidget
 {
     Q_OBJECT
@@ -47,8 +48,7 @@ private Q_SLOTS:
     void slotGoToLine();
 
 private:
-    QSpinBox *mSpinbox;
-    QPushButton *mGoToLine;
+    TextGoToLineWidgetPrivate *const d;
 };
 }
 #endif // TEXTGOTOLINEWIDGET_H

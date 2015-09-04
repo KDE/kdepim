@@ -27,11 +27,10 @@
  * user by placing this above other widgets.
  */
 #include <QWidget>
-#include "pimcommon_export.h"
 class QTimer;
 namespace PimCommon
 {
-class PIMCOMMON_EXPORT TextMessageIndicator : public QWidget
+class TextMessageIndicator : public QWidget
 {
 public:
     explicit TextMessageIndicator(QWidget *parent = Q_NULLPTR);

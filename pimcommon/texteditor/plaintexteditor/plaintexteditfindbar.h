@@ -26,6 +26,7 @@
 class QPlainTextEdit;
 namespace PimCommon
 {
+class PlainTextEditFindBarPrivate;
 class PIMCOMMON_EXPORT PlainTextEditFindBar : public TextEditFindBarBase
 {
     Q_OBJECT
@@ -48,7 +49,7 @@ private Q_SLOTS:
     void slotReplaceAllText() Q_DECL_OVERRIDE;
 
 private:
-    QPlainTextEdit *mView;
+    PlainTextEditFindBarPrivate *const d;
 };
 
 }

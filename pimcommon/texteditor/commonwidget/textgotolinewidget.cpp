@@ -29,8 +29,23 @@
 
 using namespace PimCommon;
 
+class PimCommon::TextGoToLineWidgetPrivate
+{
+public:
+    TextGoToLineWidgetPrivate()
+        : mSpinbox(Q_NULLPTR),
+          mGoToLine(Q_NULLPTR)
+    {
+
+    }
+
+    QSpinBox *mSpinbox;
+    QPushButton *mGoToLine;
+};
+
 TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new PimCommon::TextGoToLineWidgetPrivate)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->setMargin(2);
@@ -50,46 +65,46 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
 
     QLabel *lab = new QLabel(i18n("Go to Line:"));
     hbox->addWidget(lab);
-    mSpinbox = new QSpinBox;
-    mSpinbox->setMinimum(1);
-    mSpinbox->setObjectName(QStringLiteral("line"));
-    connect(mSpinbox, &QSpinBox::editingFinished, this, &TextGoToLineWidget::slotGoToLine);
-    hbox->addWidget(mSpinbox);
-    mGoToLine = new QPushButton(QIcon::fromTheme(QStringLiteral("go-jump")), i18n("Go"));
-    mGoToLine->setFlat(true);
-    connect(mGoToLine, &QPushButton::clicked, this, &TextGoToLineWidget::slotGoToLine);
-    mGoToLine->setObjectName(QStringLiteral("gotoline"));
-    hbox->addWidget(mGoToLine);
+    d->mSpinbox = new QSpinBox;
+    d->mSpinbox->setMinimum(1);
+    d->mSpinbox->setObjectName(QStringLiteral("line"));
+    connect(d->mSpinbox, &QSpinBox::editingFinished, this, &TextGoToLineWidget::slotGoToLine);
+    hbox->addWidget(d->mSpinbox);
+    d->mGoToLine = new QPushButton(QIcon::fromTheme(QStringLiteral("go-jump")), i18n("Go"));
+    d->mGoToLine->setFlat(true);
+    connect(d->mGoToLine, &QPushButton::clicked, this, &TextGoToLineWidget::slotGoToLine);
+    d->mGoToLine->setObjectName(QStringLiteral("gotoline"));
+    hbox->addWidget(d->mGoToLine);
     hbox->addStretch();
-    mSpinbox->setFocus();
+    d->mSpinbox->setFocus();
 }
 
 TextGoToLineWidget::~TextGoToLineWidget()
 {
-
+    delete d;
 }
 
 void TextGoToLineWidget::setMaximumLineCount(int max)
 {
-    mSpinbox->setMaximum(max);
+    d->mSpinbox->setMaximum(max);
 }
 
 void TextGoToLineWidget::goToLine()
 {
     show();
-    mSpinbox->setFocus();
-    mSpinbox->selectAll();
+    d->mSpinbox->setFocus();
+    d->mSpinbox->selectAll();
 }
 
 void TextGoToLineWidget::slotGoToLine()
 {
-    Q_EMIT moveToLine(mSpinbox->value());
+    Q_EMIT moveToLine(d->mSpinbox->value());
 }
 
 void TextGoToLineWidget::showEvent(QShowEvent *e)
 {
     if (!e->spontaneous()) {
-        mSpinbox->setFocus();
+        d->mSpinbox->setFocus();
     }
     QWidget::showEvent(e);
 }

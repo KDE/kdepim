@@ -26,118 +26,137 @@
 #include <QTextCursor>
 
 using namespace PimCommon;
+class PimCommon::PlainTextEditorWidgetPrivate
+{
+public:
+    PlainTextEditorWidgetPrivate()
+        : mFindBar(Q_NULLPTR),
+          mEditor(Q_NULLPTR),
+          mTextToSpeechWidget(Q_NULLPTR),
+          mSliderContainer(Q_NULLPTR)
+    {
+
+    }
+
+    PimCommon::PlainTextEditFindBar *mFindBar;
+    PlainTextEditor *mEditor;
+    PimCommon::TextToSpeechWidget *mTextToSpeechWidget;
+    PimCommon::SlideContainer *mSliderContainer;
+};
 
 PlainTextEditorWidget::PlainTextEditorWidget(PlainTextEditor *customEditor, QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new PimCommon::PlainTextEditorWidgetPrivate)
 {
     init(customEditor);
 }
 
 PlainTextEditorWidget::PlainTextEditorWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new PimCommon::PlainTextEditorWidgetPrivate)
 {
     init();
 }
 
 PlainTextEditorWidget::~PlainTextEditorWidget()
 {
-
+    delete d;
 }
 
 PlainTextEditor *PlainTextEditorWidget::editor() const
 {
-    return mEditor;
+    return d->mEditor;
 }
 
 void PlainTextEditorWidget::clear()
 {
-    mEditor->clear();
+    d->mEditor->clear();
 }
 
 void PlainTextEditorWidget::setSpellCheckingConfigFileName(const QString &_fileName)
 {
-    mEditor->setSpellCheckingConfigFileName(_fileName);
+    d->mEditor->setSpellCheckingConfigFileName(_fileName);
 }
 
 void PlainTextEditorWidget::setPlainText(const QString &text)
 {
-    mEditor->setPlainText(text);
+    d->mEditor->setPlainText(text);
 }
 
 QString PlainTextEditorWidget::toPlainText() const
 {
-    return mEditor->toPlainText();
+    return d->mEditor->toPlainText();
 }
 
 void PlainTextEditorWidget::init(PlainTextEditor *customEditor)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
-    mTextToSpeechWidget = new PimCommon::TextToSpeechWidget(this);
-    lay->addWidget(mTextToSpeechWidget);
+    d->mTextToSpeechWidget = new PimCommon::TextToSpeechWidget(this);
+    lay->addWidget(d->mTextToSpeechWidget);
     if (customEditor) {
-        mEditor = customEditor;
+        d->mEditor = customEditor;
     } else {
-        mEditor = new PlainTextEditor;
+        d->mEditor = new PlainTextEditor;
     }
-    lay->addWidget(mEditor);
-    connect(mEditor, &PlainTextEditor::say, mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::say);
+    lay->addWidget(d->mEditor);
+    connect(d->mEditor, &PlainTextEditor::say, d->mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::say);
 
-    mSliderContainer = new PimCommon::SlideContainer(this);
+    d->mSliderContainer = new PimCommon::SlideContainer(this);
 
-    mFindBar = new PimCommon::PlainTextEditFindBar(mEditor, this);
-    mFindBar->setHideWhenClose(false);
-    connect(mFindBar, &PimCommon::PlainTextEditFindBar::displayMessageIndicator, mEditor, &PlainTextEditor::slotDisplayMessageIndicator);
-    connect(mFindBar, &PimCommon::PlainTextEditFindBar::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
-    mSliderContainer->setContent(mFindBar);
+    d->mFindBar = new PimCommon::PlainTextEditFindBar(d->mEditor, this);
+    d->mFindBar->setHideWhenClose(false);
+    connect(d->mFindBar, &PimCommon::PlainTextEditFindBar::displayMessageIndicator, d->mEditor, &PlainTextEditor::slotDisplayMessageIndicator);
+    connect(d->mFindBar, &PimCommon::PlainTextEditFindBar::hideFindBar, d->mSliderContainer, &PimCommon::SlideContainer::slideOut);
+    d->mSliderContainer->setContent(d->mFindBar);
 
-    lay->addWidget(mSliderContainer);
+    lay->addWidget(d->mSliderContainer);
 
     QShortcut *shortcut = new QShortcut(this);
     shortcut->setKey(Qt::Key_F + Qt::CTRL);
     connect(shortcut, &QShortcut::activated, this, &PlainTextEditorWidget::slotFind);
-    connect(mEditor, &PlainTextEditor::findText, this, &PlainTextEditorWidget::slotFind);
+    connect(d->mEditor, &PlainTextEditor::findText, this, &PlainTextEditorWidget::slotFind);
 
     shortcut = new QShortcut(this);
     shortcut->setKey(Qt::Key_R + Qt::CTRL);
     connect(shortcut, &QShortcut::activated, this, &PlainTextEditorWidget::slotReplace);
-    connect(mEditor, &PlainTextEditor::replaceText, this, &PlainTextEditorWidget::slotReplace);
+    connect(d->mEditor, &PlainTextEditor::replaceText, this, &PlainTextEditorWidget::slotReplace);
 
     setLayout(lay);
 }
 
 bool PlainTextEditorWidget::isReadOnly() const
 {
-    return mEditor->isReadOnly();
+    return d->mEditor->isReadOnly();
 }
 
 void PlainTextEditorWidget::setReadOnly(bool readOnly)
 {
-    mEditor->setReadOnly(readOnly);
+    d->mEditor->setReadOnly(readOnly);
 }
 
 void PlainTextEditorWidget::slotReplace()
 {
-    if (mEditor->searchSupport()) {
-        if (mEditor->textCursor().hasSelection()) {
-            mFindBar->setText(mEditor->textCursor().selectedText());
+    if (d->mEditor->searchSupport()) {
+        if (d->mEditor->textCursor().hasSelection()) {
+            d->mFindBar->setText(d->mEditor->textCursor().selectedText());
         }
-        mFindBar->showReplace();
-        mSliderContainer->slideIn();
-        mFindBar->focusAndSetCursor();
+        d->mFindBar->showReplace();
+        d->mSliderContainer->slideIn();
+        d->mFindBar->focusAndSetCursor();
     }
 }
 
 void PlainTextEditorWidget::slotFind()
 {
-    if (mEditor->searchSupport()) {
-        if (mEditor->textCursor().hasSelection()) {
-            mFindBar->setText(mEditor->textCursor().selectedText());
+    if (d->mEditor->searchSupport()) {
+        if (d->mEditor->textCursor().hasSelection()) {
+            d->mFindBar->setText(d->mEditor->textCursor().selectedText());
         }
-        mEditor->moveCursor(QTextCursor::Start);
-        mFindBar->showFind();
-        mSliderContainer->slideIn();
-        mFindBar->focusAndSetCursor();
+        d->mEditor->moveCursor(QTextCursor::Start);
+        d->mFindBar->showFind();
+        d->mSliderContainer->slideIn();
+        d->mFindBar->focusAndSetCursor();
     }
 }
 

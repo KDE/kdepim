@@ -28,6 +28,7 @@ class RichTextEditor;
 class RichTextEditFindBar;
 class TextToSpeechWidget;
 class SlideContainer;
+class RichTextEditorWidgetPrivate;
 class PIMCOMMON_EXPORT RichTextEditorWidget : public QWidget
 {
     Q_OBJECT
@@ -62,10 +63,7 @@ private Q_SLOTS:
 
 private:
     void init(RichTextEditor *customEditor = Q_NULLPTR);
-    PimCommon::RichTextEditFindBar *mFindBar;
-    RichTextEditor *mEditor;
-    PimCommon::TextToSpeechWidget *mTextToSpeechWidget;
-    PimCommon::SlideContainer *mSliderContainer;
+    RichTextEditorWidgetPrivate *const d;
 };
 }
 

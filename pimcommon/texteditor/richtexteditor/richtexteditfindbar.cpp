@@ -26,53 +26,67 @@
 #include <QTextEdit>
 
 using namespace PimCommon;
+class PimCommon::RichTextEditFindBarPrivate
+{
+public:
+    RichTextEditFindBarPrivate()
+        : mView(Q_NULLPTR)
+    {
+
+    }
+
+    QTextEdit *mView;
+};
+
+
 
 RichTextEditFindBar::RichTextEditFindBar(QTextEdit *view, QWidget *parent)
     : TextEditFindBarBase(parent),
-      mView(view)
+      d(new PimCommon::RichTextEditFindBarPrivate)
 {
 }
 
 RichTextEditFindBar::~RichTextEditFindBar()
 {
+    delete d;
 }
 
 void RichTextEditFindBar::slotSearchText(bool backward, bool isAutoSearch)
 {
-    mView->moveCursor(QTextCursor::Start);
+    d->mView->moveCursor(QTextCursor::Start);
     searchText(backward, isAutoSearch);
 }
 
 bool RichTextEditFindBar::viewIsReadOnly() const
 {
-    return mView->isReadOnly();
+    return d->mView->isReadOnly();
 }
 
 bool RichTextEditFindBar::documentIsEmpty() const
 {
-    return mView->document()->isEmpty();
+    return d->mView->document()->isEmpty();
 }
 
 bool RichTextEditFindBar::searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions)
 {
-    const bool found = mView->find(text, searchOptions);
+    const bool found = d->mView->find(text, searchOptions);
     mFindWidget->setFoundMatch(found);
     return found;
 }
 
 void RichTextEditFindBar::autoSearchMoveCursor()
 {
-    QTextCursor cursor = mView->textCursor();
+    QTextCursor cursor = d->mView->textCursor();
     cursor.setPosition(cursor.selectionStart());
-    mView->setTextCursor(cursor);
+    d->mView->setTextCursor(cursor);
 }
 
 void RichTextEditFindBar::slotReplaceText()
 {
     //FIXME!
-    if (mView->textCursor().hasSelection()) {
-        if (mView->textCursor().selectedText() == mFindWidget->search()->text()) {
-            mView->textCursor().insertText(mReplaceWidget->replace()->text());
+    if (d->mView->textCursor().hasSelection()) {
+        if (d->mView->textCursor().selectedText() == mFindWidget->search()->text()) {
+            d->mView->textCursor().insertText(mReplaceWidget->replace()->text());
             //search next after replace text.
             searchText(false, false);
         }
@@ -84,6 +98,6 @@ void RichTextEditFindBar::slotReplaceText()
 void RichTextEditFindBar::slotReplaceAllText()
 {
     //FIXME richtext
-    mView->setPlainText(mView->toPlainText().replace(mFindWidget->findRegExp(), mReplaceWidget->replace()->text()));
+    d->mView->setPlainText(d->mView->toPlainText().replace(mFindWidget->findRegExp(), mReplaceWidget->replace()->text()));
 }
 
