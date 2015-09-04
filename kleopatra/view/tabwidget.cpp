@@ -314,11 +314,7 @@ public:
     ~Private() {}
 
 private:
-    void slotContextMenu(const QPoint &p)
-    {
-        slotContextMenu(0, p);
-    }
-    void slotContextMenu(QWidget *w, const QPoint &p);
+    void slotContextMenu(const QPoint &p);
     void currentIndexChanged(int index);
     void slotPageTitleChanged(const QString &title);
     void slotPageKeyFilterChanged(const shared_ptr<KeyFilter> &filter);
@@ -440,9 +436,12 @@ TabWidget::Private::Private(TabWidget *qq)
     tabWidget.tabBar()->hide();
     tabWidget.setMovable(true);
 
+    tabWidget.tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
+
     connect(&tabWidget, SIGNAL(currentChanged(int)), q, SLOT(currentIndexChanged(int)));
-    connect(&tabWidget, SIGNAL(contextMenu(QPoint)), q, SLOT(slotContextMenu(QPoint)));
-    connect(&tabWidget, SIGNAL(contextMenu(QWidget*,QPoint)), q, SLOT(slotContextMenu(QWidget*,QPoint)));
+    connect(tabWidget.tabBar(), &QWidget::customContextMenuRequested, q, [this](const QPoint& p) {
+                slotContextMenu(p);
+            });
 
     const action_data actionDataNew = {
         "window_new_tab", i18n("New Tab"), i18n("Open a new tab"),
@@ -504,10 +503,10 @@ TabWidget::Private::Private(TabWidget *qq)
     setCornerAction(currentPageActions[Close], Qt::TopRightCorner);
 }
 
-void TabWidget::Private::slotContextMenu(QWidget *w, const QPoint &p)
+void TabWidget::Private::slotContextMenu(const QPoint &p)
 {
-    assert(!w || qobject_cast<Page *>(w));
-    Page *const contextMenuPage = static_cast<Page *>(w);
+    const int tabUnderPos = tabWidget.tabBar()->tabAt(p);
+    Page *const contextMenuPage = static_cast<Page *>(tabWidget.widget(tabUnderPos));
     const Page *const current = currentPage();
 
     QAction **const actions = contextMenuPage == current ? currentPageActions : otherPageActions ;
@@ -525,7 +524,7 @@ void TabWidget::Private::slotContextMenu(QWidget *w, const QPoint &p)
     menu.addSeparator();
     menu.addAction(actions[Close]);
 
-    const QAction *const action = menu.exec(p);
+    const QAction *const action = menu.exec(tabWidget.tabBar()->mapToGlobal(p));
 
     if (contextMenuPage == current || action == newAction) {
         return;    // performed through signal/slot connections...
