@@ -27,7 +27,7 @@ class MessageComposer::FollowupReminderCreateJobPrivate
 {
 public:
     FollowupReminderCreateJobPrivate()
-        : mInfo(Q_NULLPTR)
+        : mInfo(new FollowUpReminder::FollowUpReminderInfo)
     {
 
     }
