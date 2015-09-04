@@ -1,7 +1,5 @@
 [Global]
 PluginName=KDEPimWidgets
-Includes=kcomponentdata.h
-Init=new KComponentData("kdepimwidgets");
 
 [KPIM::AddresseeLineEdit]
 ToolTip=Addressee Line Edit (KDE-PIM)

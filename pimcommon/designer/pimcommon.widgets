@@ -1,7 +1,5 @@
 [Global]
 PluginName=PimCommonWidgets
-Includes=kcomponentdata.h
-Init=new KComponentData("pimcommonwidgets");
 
 [PimCommon::SimpleStringListEditor]
 ToolTip=A listbox with add/remove/move up/down button (KDE-PIM)

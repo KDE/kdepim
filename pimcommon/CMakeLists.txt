@@ -378,7 +378,7 @@ if (Qt5Designer_FOUND)
     kf5designerplugin_add_plugin(pimcommonwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
     target_link_libraries(pimcommonwidgets
         pimcommon
-        KF5::KDELibs4Support
+        #KF5::KDELibs4Support
     )
     if(NOT WIN32)
         # Since there are no libraries provided by this module,

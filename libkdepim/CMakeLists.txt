@@ -175,8 +175,7 @@ if (Qt5Designer_FOUND)
     kf5designerplugin_add_plugin(kdepimwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/kdepim.widgets)
 
     target_link_libraries(kdepimwidgets
-        kdepim
-        KF5::KDELibs4Support
+        kdepim KF5::Completion
     )
     if(NOT WIN32)
         # Since there are no libraries provided by this module,
