@@ -70,7 +70,7 @@ public:
 
     virtual ~IKernel()
     {
-    };
+    }
 };
 
 /** Filter related interface */
@@ -81,7 +81,7 @@ public:
     virtual void createFilter(const QByteArray &field, const QString &value) = 0;
     virtual ~IFilter()
     {
-    };
+    }
 };
 
 /** Interface to access some settings. */
@@ -101,7 +101,7 @@ public:
 
     virtual ~ISettings()
     {
-    };
+    }
 };
 
 }
