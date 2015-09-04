@@ -71,6 +71,7 @@ void TranslatorView::createAction(KActionCollection *ac)
     connect(mAction, &KToggleAction::triggered, this, &TranslatorView::slotActivateTranslator);
     if (ac) {
         ac->addAction(QStringLiteral("translator"), mAction);
+        ac->setDefaultShortcut(mAction,QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
     }
     mAction->setChecked(false);
 }
