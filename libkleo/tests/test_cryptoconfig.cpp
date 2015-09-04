@@ -32,9 +32,7 @@
 #include "libkleo/backends/qgpgme/qgpgmecryptoconfig.h"
 #include "libkleo/backends/qgpgme/qgpgmenewcryptoconfig.h"
 
-#include <kapplication.h>
-#include <K4AboutData>
-#include <kcmdlineargs.h>
+#include <QCoreApplication>
 #include <iostream>
 
 using namespace std;
@@ -57,9 +55,8 @@ int main(int argc, char **argv)
         argc = 1;    // hide from KDE
     }
 
-    K4AboutData aboutData("test_cryptoconfig", 0, ki18n("CryptoConfig Test"), "0.1");
-    KCmdLineArgs::init(argc, argv, &aboutData);
-    KApplication app(false);
+    QCoreApplication::setApplicationName("test_cryptoconfig");
+    QCoreApplication app(argc, argv);
 
     Kleo::CryptoConfig *config = 0;
     if (newCryptoConfig) {
