@@ -58,6 +58,8 @@
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 
+#include <KConfigGroup>
+#include <KHelpClient>
 #include <KMessageBox>
 #include <KLocalizedString>
 
@@ -487,9 +489,11 @@ private:
         explicit UI(Dialogs::CertificateDetailsDialog *qq)
             : Ui_CertificateDetailsDialog()
         {
-            setupUi(qq->mainWidget());
-            qq->setButtons(KDialog::Help | KDialog::Close);
-            qq->setHelp(QString(), QStringLiteral("kleopatra"));
+            QWidget *mainWidget = new QWidget;
+            setupUi(mainWidget);
+
+            QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Help |
+                                                               QDialogButtonBox::Close);
             chainTW->header()->setResizeMode(0, QHeaderView::Stretch);
 
             dumpLTW->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
@@ -497,12 +501,22 @@ private:
             dumpLTW->setMinimumVisibleColumns(40);
 
             subkeyHLine->setTitle(i18nc("@title", "Subkeys"));
+
+            QVBoxLayout *layout = new QVBoxLayout;
+            layout->addWidget(mainWidget);
+            layout->addWidget(buttonBox);
+            qq->setLayout(layout);
+
+            QObject::connect(buttonBox, &QDialogButtonBox::rejected, qq, &QDialog::reject);
+            QObject::connect(buttonBox, &QDialogButtonBox::helpRequested, qq, [] {
+                                 KHelpClient::invokeHelp(QStringLiteral("kleopatra"));
+                             });
         }
     } ui;
 };
 
 CertificateDetailsDialog::CertificateDetailsDialog(QWidget *p)
-    : KDialog(p), d(new Private(this))
+    : QDialog(p), d(new Private(this))
 {
     d->readConfig();
 }

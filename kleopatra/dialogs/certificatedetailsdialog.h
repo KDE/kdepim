@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_DIALOGS_CERTIFICATEDETAILSDIALOG_H__
 #define __KLEOPATRA_DIALOGS_CERTIFICATEDETAILSDIALOG_H__
 
-#include <kdialog.h>
+#include <QDialog>
 
 #include <utils/pimpl_ptr.h>
 
@@ -47,7 +47,7 @@ namespace Kleo
 namespace Dialogs
 {
 
-class CertificateDetailsDialog : public KDialog
+class CertificateDetailsDialog : public QDialog
 {
     Q_OBJECT
 public:
