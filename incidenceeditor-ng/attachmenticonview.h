@@ -30,8 +30,6 @@
 #ifndef INCIDENCEEDITOR_ATTACHMENTICONVIEW_H
 #define INCIDENCEEDITOR_ATTACHMENTICONVIEW_H
 
-#include "incidenceeditors_ng_export.h"
-
 #include <KCalCore/Attachment>
 
 #include <QMimeType>
@@ -60,7 +58,7 @@ private:
     mutable QHash<KCalCore::Attachment::Ptr, QUrl> mTempFiles;
 };
 
-class INCIDENCEEDITORS_NG_EXPORT AttachmentIconItem : public QListWidgetItem
+class AttachmentIconItem : public QListWidgetItem
 {
 public:
     AttachmentIconItem(const KCalCore::Attachment::Ptr &att, QListWidget *parent);

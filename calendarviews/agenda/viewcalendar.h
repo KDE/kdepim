@@ -54,7 +54,7 @@ public:
     virtual KCalCore::Calendar::Ptr getCalendar() const = 0;
 };
 
-class EVENTVIEWS_EXPORT AkonadiViewCalendar: public ViewCalendar
+class AkonadiViewCalendar: public ViewCalendar
 {
 public:
     typedef QSharedPointer<AkonadiViewCalendar> Ptr;
@@ -77,7 +77,7 @@ public:
     AgendaView *mAgendaView;
 };
 
-class EVENTVIEWS_EXPORT MultiViewCalendar : public ViewCalendar
+class MultiViewCalendar : public ViewCalendar
 {
 public:
     typedef QSharedPointer<MultiViewCalendar> Ptr;
