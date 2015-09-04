@@ -25,7 +25,6 @@
 
 namespace PimCommon
 {
-class BalooDebugWidget;
 class BalooDebugDialogPrivate;
 class PIMCOMMON_EXPORT BalooDebugDialog : public QDialog
 {

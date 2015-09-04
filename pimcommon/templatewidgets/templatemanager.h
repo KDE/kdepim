@@ -23,7 +23,6 @@
 #include <QStringList>
 #include "pimcommon_debug.h"
 
-class KDirWatch;
 namespace PimCommon
 {
 class TemplateListWidget;

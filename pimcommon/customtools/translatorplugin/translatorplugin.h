@@ -22,7 +22,6 @@
 #include <QVariant>
 namespace PimCommon
 {
-class TranslatorWidget;
 class TranslatorPlugin : public PimCommon::CustomToolsPlugin
 {
     Q_OBJECT

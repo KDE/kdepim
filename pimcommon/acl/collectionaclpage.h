@@ -36,7 +36,6 @@
 
 namespace PimCommon
 {
-class CollectionAclWidget;
 /**
  * "Access Control" tab in the folder dialog
  */

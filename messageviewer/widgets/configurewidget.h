@@ -23,7 +23,6 @@
 #include "messageviewer_export.h"
 
 #include <QWidget>
-class Ui_Settings;
 
 class KConfigDialogManager;
 

@@ -20,7 +20,6 @@
 
 #include "pimcommon/pimcommon_export.h"
 #include <QObject>
-class KToggleAction;
 class KActionCollection;
 namespace PimCommon
 {

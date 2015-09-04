@@ -21,8 +21,6 @@
 #include <QWidget>
 #include <QDateTime>
 #include "messageviewer_export.h"
-class KDateComboBox;
-class KTimeComboBox;
 
 namespace MessageViewer
 {

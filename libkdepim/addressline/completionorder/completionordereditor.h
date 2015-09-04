@@ -41,7 +41,6 @@ class LdapClientSearch;
 
 namespace KPIM
 {
-class CompletionOrderWidget;
 class CompletionOrderEditorPrivate;
 class KDEPIM_EXPORT CompletionOrderEditor : public QDialog
 {

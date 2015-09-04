@@ -32,7 +32,6 @@
 
 #include <QWidget>
 
-class Ui_InvitationSettings;
 
 namespace MessageViewer
 {
