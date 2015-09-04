@@ -26,25 +26,37 @@
 
 using namespace PimCommon;
 
+class PimCommon::WebShortcutMenuManagerPrivate
+{
+public:
+    WebShortcutMenuManagerPrivate()
+    {
+
+    }
+
+    QString mSelectedText;
+};
+
 WebShortcutMenuManager::WebShortcutMenuManager(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      d(new PimCommon::WebShortcutMenuManagerPrivate)
 {
 
 }
 
 WebShortcutMenuManager::~WebShortcutMenuManager()
 {
-
+    delete d;
 }
 
 QString WebShortcutMenuManager::selectedText() const
 {
-    return mSelectedText;
+    return d->mSelectedText;
 }
 
 void WebShortcutMenuManager::setSelectedText(const QString &selectedText)
 {
-    mSelectedText = selectedText;
+    d->mSelectedText = selectedText;
 }
 
 void WebShortcutMenuManager::slotConfigureWebShortcuts()
@@ -54,11 +66,11 @@ void WebShortcutMenuManager::slotConfigureWebShortcuts()
 
 void WebShortcutMenuManager::addWebShortcutsMenu(QMenu *menu)
 {
-    if (mSelectedText.isEmpty()) {
+    if (d->mSelectedText.isEmpty()) {
         return;
     }
 
-    QString searchText = mSelectedText;
+    QString searchText = d->mSelectedText;
     searchText = searchText.replace(QLatin1Char('\n'), QLatin1Char(' ')).replace(QLatin1Char('\r'), QLatin1Char(' ')).simplified();
 
     if (searchText.isEmpty()) {

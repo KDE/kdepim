@@ -23,6 +23,7 @@
 class QMenu;
 namespace PimCommon
 {
+class WebShortcutMenuManagerPrivate;
 class PIMCOMMON_EXPORT WebShortcutMenuManager : public QObject
 {
     Q_OBJECT
@@ -40,7 +41,7 @@ private Q_SLOTS:
     void slotHandleWebShortcutAction();
 
 private:
-    QString mSelectedText;
+    WebShortcutMenuManagerPrivate *const d;
 };
 }
 
