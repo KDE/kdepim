@@ -28,8 +28,6 @@ namespace IncidenceEditorNG
 {
 
 QString translateLDAPAttributeForDisplay(const QString &attribute);
-QString translateKolabLDAPAttributeForDisplay(const QString &attribute);
-
 } // namespace IncidenceEditorNG
 
 #endif //LDAPUTLS_H

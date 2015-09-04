@@ -46,16 +46,3 @@ QString IncidenceEditorNG::translateLDAPAttributeForDisplay(const QString &attri
     }
     return ret;
 }
-
-QString IncidenceEditorNG::translateKolabLDAPAttributeForDisplay(const QString &attribute)
-{
-    QString ret = attribute;
-    if (attribute == QLatin1String("numseats")) {
-        ret = i18nc("kolabldap", "Number of seats");
-    } else if (attribute == QLatin1String("beamer_present")) {
-        ret = i18nc("kolabldap", "Beamer");
-    } else if (attribute == QLatin1String("conf_phone_present")) {
-        ret = i18nc("kolabldap", "Conference phone");
-    }
-    return ret;
-}
