@@ -27,20 +27,34 @@
 #include <QTextCodec>
 
 using namespace MessageComposer;
+class MessageComposer::InsertTextFileJobPrivate
+{
+public:
+    InsertTextFileJobPrivate(QTextEdit *editor, const QUrl &url)
+        : mEditor(editor), mUrl(url)
+    {
+
+    }
+    QPointer<QTextEdit> mEditor;
+    QUrl mUrl;
+    QString mEncoding;
+    QByteArray mFileData;
+};
 
 InsertTextFileJob::InsertTextFileJob(QTextEdit *editor, const QUrl &url)
-    : KJob(editor), mEditor(editor), mUrl(url)
+    : KJob(editor), d(new MessageComposer::InsertTextFileJobPrivate(editor, url))
 {
 }
 
 InsertTextFileJob::~InsertTextFileJob()
 {
+    delete d;
 }
 
 void InsertTextFileJob::slotFileData(KIO::Job *job, const QByteArray &data)
 {
     Q_UNUSED(job);
-    mFileData += data;
+    d->mFileData += data;
 }
 
 void InsertTextFileJob::slotGetJobFinished(KJob *job)
@@ -53,13 +67,13 @@ void InsertTextFileJob::slotGetJobFinished(KJob *job)
         return;
     }
 
-    if (mEditor) {
-        if (!mEncoding.isEmpty()) {
-            const QTextCodec *fileCodec = KCharsets::charsets()->codecForName(mEncoding);
+    if (d->mEditor) {
+        if (!d->mEncoding.isEmpty()) {
+            const QTextCodec *fileCodec = KCharsets::charsets()->codecForName(d->mEncoding);
             if (fileCodec) {
-                mEditor->textCursor().insertText(fileCodec->toUnicode(mFileData.data()));
+                d->mEditor->textCursor().insertText(fileCodec->toUnicode(d->mFileData.data()));
             } else {
-                mEditor->textCursor().insertText(QString::fromLocal8Bit(mFileData.data()));
+                d->mEditor->textCursor().insertText(QString::fromLocal8Bit(d->mFileData.data()));
             }
         }
     }
@@ -69,12 +83,12 @@ void InsertTextFileJob::slotGetJobFinished(KJob *job)
 
 void InsertTextFileJob::setEncoding(const QString &encoding)
 {
-    mEncoding = encoding;
+    d->mEncoding = encoding;
 }
 
 void InsertTextFileJob::start()
 {
-    KIO::TransferJob *job = KIO::get(mUrl);
+    KIO::TransferJob *job = KIO::get(d->mUrl);
     connect(job, &KIO::TransferJob::result, this, &InsertTextFileJob::slotGetJobFinished);
     connect(job, &KIO::TransferJob::data, this, &InsertTextFileJob::slotFileData);
     job->start();

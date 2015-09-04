@@ -26,6 +26,7 @@ class KActionMenu;
 class QAction;
 namespace PimCommon
 {
+class ShareServiceUrlManagerPrivate;
 class PIMCOMMON_EXPORT ShareServiceUrlManager : public QObject
 {
     Q_OBJECT
@@ -60,7 +61,7 @@ private:
     QIcon typeToIcon(ServiceType type);
     QString typeToI18n(ServiceType type);
     void initializeMenu();
-    KActionMenu *mMenu;
+    ShareServiceUrlManagerPrivate *const d;
 };
 }
 Q_DECLARE_METATYPE(PimCommon::ShareServiceUrlManager::ServiceType)

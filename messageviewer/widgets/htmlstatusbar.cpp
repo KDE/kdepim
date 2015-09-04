@@ -54,6 +54,31 @@ HtmlStatusBar::HtmlStatusBar(QWidget *parent)
 
 HtmlStatusBar::~HtmlStatusBar() {}
 
+Util::HtmlMode HtmlStatusBar::mode() const
+{
+    return mMode ;
+}
+
+bool HtmlStatusBar::isHtml() const
+{
+    return mode() == Util::Html;
+}
+
+bool HtmlStatusBar::isNormal() const
+{
+    return mode() == Util::Normal;
+}
+
+bool HtmlStatusBar::isMultipartHtml() const
+{
+    return mode() == Util::MultipartHtml;
+}
+
+bool HtmlStatusBar::isMultipartPlain() const
+{
+    return mode() == Util::MultipartPlain;
+}
+
 void HtmlStatusBar::update()
 {
     QPalette pal = palette();

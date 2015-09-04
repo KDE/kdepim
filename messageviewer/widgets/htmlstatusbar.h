@@ -73,26 +73,11 @@ public:
     ~HtmlStatusBar();
 
     /** @return current mode. */
-    Util::HtmlMode mode() const
-    {
-        return mMode ;
-    }
-    bool isHtml() const
-    {
-        return mode() == Util::Html;
-    }
-    bool isNormal() const
-    {
-        return mode() == Util::Normal;
-    }
-    bool isMultipartHtml() const
-    {
-        return mode() == Util::MultipartHtml;
-    }
-    bool isMultipartPlain() const
-    {
-        return mode() == Util::MultipartPlain;
-    }
+    Util::HtmlMode mode() const;
+    bool isHtml() const;
+    bool isNormal() const;
+    bool isMultipartHtml() const;
+    bool isMultipartPlain() const;
 
     // Update the status bar, for example when the color scheme changed.
     void update();

@@ -25,21 +25,33 @@
 
 using namespace PimCommon;
 
+class PimCommon::ShareServiceUrlManagerPrivate
+{
+public:
+    ShareServiceUrlManagerPrivate()
+        : mMenu(Q_NULLPTR)
+    {
+
+    }
+
+    KActionMenu *mMenu;
+};
+
 ShareServiceUrlManager::ShareServiceUrlManager(QObject *parent)
     : QObject(parent),
-      mMenu(Q_NULLPTR)
+      d(new PimCommon::ShareServiceUrlManagerPrivate)
 {
     initializeMenu();
 }
 
 ShareServiceUrlManager::~ShareServiceUrlManager()
 {
-
+    delete d;
 }
 
 KActionMenu *ShareServiceUrlManager::menu() const
 {
-    return mMenu;
+    return d->mMenu;
 }
 
 QIcon ShareServiceUrlManager::typeToIcon(ServiceType type)
@@ -110,7 +122,7 @@ QString ShareServiceUrlManager::typeToI18n(ServiceType type)
 
 void ShareServiceUrlManager::initializeMenu()
 {
-    mMenu = new KActionMenu(QIcon::fromTheme(QStringLiteral("document-share")), i18n("Share On..."), this);
+    d->mMenu = new KActionMenu(QIcon::fromTheme(QStringLiteral("document-share")), i18n("Share On..."), this);
     for (int i = 0; i < ServiceEndType; ++i) {
         const ServiceType type = static_cast<ServiceType>(i);
         QAction *action = new QAction(i18nc("@action:inmenu Share On...", "%1", typeToI18n(type)), this);
@@ -119,9 +131,9 @@ void ShareServiceUrlManager::initializeMenu()
         if (!icon.isNull()) {
             action->setIcon(icon);
         }
-        mMenu->addAction(action);
+        d->mMenu->addAction(action);
     }
-    connect(mMenu->menu(), &QMenu::triggered, this, &ShareServiceUrlManager::slotSelectServiceUrl);
+    connect(d->mMenu->menu(), &QMenu::triggered, this, &ShareServiceUrlManager::slotSelectServiceUrl);
 }
 
 void ShareServiceUrlManager::slotSelectServiceUrl(QAction *act)
