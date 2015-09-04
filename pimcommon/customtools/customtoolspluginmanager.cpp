@@ -21,8 +21,8 @@
 #include <KPluginFactory>
 #include <KPluginLoader>
 #include <kpluginmetadata.h>
-#include <QDebug>
 #include <QFileInfo>
+#include <QSet>
 
 using namespace PimCommon;
 
@@ -83,7 +83,6 @@ void CustomToolsPluginManagerPrivate::initializePluginList()
     const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("pimcommon"), [](const KPluginMetaData & md) {
         return md.serviceTypes().contains(QStringLiteral("PimCommonCustomTools/Plugin"));
     });
-    qDebug()<<" plugins.count() "<<plugins.count();
 
 
     QVectorIterator<KPluginMetaData> i(plugins);
@@ -100,7 +99,6 @@ void CustomToolsPluginManagerPrivate::initializePluginList()
         mPluginList.push_back(info);
         unique.insert(info.saveName());
     }
-    qDebug()<<" mPluginList.count() "<<mPluginList.count();
     QVector<CustomToolsPluginInfo>::iterator end(mPluginList.end());
     for (QVector<CustomToolsPluginInfo>::iterator it = mPluginList.begin(); it != end; ++it) {
         loadPlugin(&(*it));
@@ -122,7 +120,6 @@ QVector<PimCommon::CustomToolsPlugin *> CustomToolsPluginManagerPrivate::plugins
 void CustomToolsPluginManagerPrivate::loadPlugin(CustomToolsPluginInfo *item)
 {
     item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<PimCommon::CustomToolsPlugin>(q, QVariantList() << item->saveName());
-    qDebug()<<" item->plugin"<<item->plugin;
 }
 
 
