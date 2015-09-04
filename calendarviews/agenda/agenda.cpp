@@ -42,7 +42,6 @@
 #include <KCalUtils/RecurrenceActions>
 
 #include <KMessageBox>
-#include <KLocale>
 #include "calendarview_debug.h"
 
 #include <QApplication>
@@ -176,7 +175,7 @@ void MarcusBains::updateLocationRecalc(bool recalculate)
     QPalette pal1 = d->mTimeBox->palette();
     pal1.setColor(QPalette::WindowText, color);
     d->mTimeBox->setPalette(pal1);
-    d->mTimeBox->setText(KLocale::global()->formatTime(time, showSeconds));
+    d->mTimeBox->setText(QLocale::system().toString(time, showSeconds ? QLocale::LongFormat : QLocale::ShortFormat));
     d->mTimeBox->adjustSize();
     if (y - d->mTimeBox->height() >= 0) {
         y -= d->mTimeBox->height();

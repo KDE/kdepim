@@ -34,7 +34,6 @@
 
 #include <QBoxLayout>
 #include <KLocale>
-#include <KGlobal>
 using namespace EventViews;
 
 void WhatsNextTextBrowser::setSource(const QUrl &name)

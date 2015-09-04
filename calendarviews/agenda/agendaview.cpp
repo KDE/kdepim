@@ -46,7 +46,6 @@
 #include <KCalCore/CalFormat>
 #include <KCalCore/OccurrenceIterator>
 
-#include <KCalendarSystem>
 #include <KIconLoader> // for SmallIcon()
 #include <KHBox>
 #include <KMessageBox>
@@ -1178,8 +1177,6 @@ void AgendaView::createDayLabels(bool force)
     KVBox *bottomWeekLabelBox = new KVBox(d->mBottomDayLabels);
     d->mLayoutBottomDayLabels->addWidget(bottomWeekLabelBox);
 
-    const KCalendarSystem *calsys = KLocale::global()->calendar();
-
 #ifndef EVENTVIEWS_NODECOS
     QList<CalendarDecoration::Decoration *> topDecos;
     QStringList topStrDecos = preferences()->decorationsAtAgendaViewTop();
@@ -1200,8 +1197,8 @@ void AgendaView::createDayLabels(bool force)
         int dW = date.dayOfWeek();
         QString veryLongStr = QLocale::system().toString(date, QLocale::LongFormat);
         QString longstr = i18nc("short_weekday date (e.g. Mon 13)", "%1 %2",
-                                calsys->weekDayName(dW, KCalendarSystem::ShortDayName),
-                                calsys->day(date));
+                                QLocale::system().dayName(dW, QLocale::ShortFormat),
+                                date.day());
         QString shortstr = QString::number(date.day());
 
         AlternateLabel *dayLabel =

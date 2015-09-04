@@ -28,7 +28,6 @@
 
 #include <calendarsupport/utils.h>
 
-#include <KCalendarSystem>
 #include <KIconLoader>
 
 #include <QGraphicsSceneMouseEvent>
@@ -196,15 +195,13 @@ void MonthGraphicsView::drawBackground(QPainter *p, const QRectF &rect)
     font.setPointSize(15);
     p->setFont(font);
     const int dayLabelsHeight = 20;
-    const KCalendarSystem *calSys = KLocale::global()->calendar();
     p->drawText(QRect(0,  0,   // top right
                       static_cast<int>(mScene->sceneRect().width()),
                       static_cast<int>(mScene->headerHeight() - dayLabelsHeight)),
                 Qt::AlignCenter,
                 i18nc("monthname year", "%1 %2",
-                      calSys->monthName(mMonthView->averageDate()),
-                      calSys->formatDate(mMonthView->averageDate(),
-                                         KLocale::Year, KLocale::LongNumber)));
+                      QLocale::system().monthName(mMonthView->averageDate().month()),
+                      mMonthView->averageDate().year()));
 
     font.setPointSize(dayLabelsHeight - 10);
     p->setFont(font);
@@ -227,7 +224,7 @@ void MonthGraphicsView::drawBackground(QPainter *p, const QRectF &rect)
                           mScene->columnWidth(),
                           15),
                     Qt::AlignCenter,
-                    calSys->weekDayName(d, KCalendarSystem::LongDayName));
+                    QLocale::system().dayName(d.dayOfWeek(), QLocale::LongFormat));
     }
 
     /*
@@ -344,17 +341,15 @@ void MonthGraphicsView::drawBackground(QPainter *p, const QRectF &rect)
             cell->downArrow()->hide();
         }
 
-        const KCalendarSystem *calSys = KLocale::global()->calendar();
-
         QString dayText;
         // Prepend month name if d is the first or last day of month
-        if (calSys->day(d) == 1 ||                   // d is the first day of month
-                calSys->day(d.addDays(1)) == 1) {       // d is the last day of month
+        if (d.day() == 1 ||                   // d is the first day of month
+                d.addDays(1).day() == 1) {       // d is the last day of month
             dayText = i18nc("'Month day' for month view cells", "%1 %2",
-                            calSys->monthName(d, KCalendarSystem::ShortName),
-                            calSys->day(d));
+                            QLocale::system().monthName(d.month(), QLocale::ShortFormat),
+                            d.day());
         } else {
-            dayText = QString::number(calSys->day(d));
+            dayText = QString::number(d.day());
         }
 
         p->drawText(QRect(mScene->cellHorizontalPos(cell),     // top right
