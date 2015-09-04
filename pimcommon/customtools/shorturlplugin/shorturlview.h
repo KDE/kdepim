@@ -19,12 +19,10 @@
 #define SHORTURLVIEW_H
 
 #include <customtools/customtoolsviewinterface.h>
-
-#include <shorturlwidget.h>
-
-
+class KActionCollection;
 namespace PimCommon
 {
+class ShortUrlWidget;
 class ShorturlView : public PimCommon::CustomToolsViewInterface
 {
     Q_OBJECT

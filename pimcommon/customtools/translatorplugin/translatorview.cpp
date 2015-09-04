@@ -16,6 +16,7 @@
 */
 
 #include "translatorview.h"
+#include "translator/translatorwidget.h"
 
 #include <QHBoxLayout>
 #include <KLocalizedString>

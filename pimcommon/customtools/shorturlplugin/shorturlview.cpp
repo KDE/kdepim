@@ -19,7 +19,8 @@
 #include <KToggleAction>
 #include <KLocalizedString>
 #include <QHBoxLayout>
-#include <KXmlGui/kactioncollection.h>
+#include <kactioncollection.h>
+#include <shorturlwidget.h>
 
 using namespace PimCommon;
 

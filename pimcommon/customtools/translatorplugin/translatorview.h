@@ -19,10 +19,10 @@
 #define TRANSLATORVIEW_H
 
 #include <customtools/customtoolsviewinterface.h>
-#include "translator/translatorwidget.h"
-
+class KActionCollection;
 namespace PimCommon
 {
+class TranslatorWidget;
 class TranslatorView : public PimCommon::CustomToolsViewInterface
 {
     Q_OBJECT
