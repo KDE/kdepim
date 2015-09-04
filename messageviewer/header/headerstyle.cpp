@@ -74,6 +74,106 @@ bool HeaderStyle::hasAttachmentQuickList() const
     return false;
 }
 
+void HeaderStyle::setMessagePath(const QString &path)
+{
+    mMessagePath = path;
+}
+
+QString HeaderStyle::messagePath() const
+{
+    return mMessagePath;
+}
+
+void HeaderStyle::setHeaderStrategy(const HeaderStrategy *strategy)
+{
+    mStrategy = strategy;
+}
+
+const HeaderStrategy *HeaderStyle::headerStrategy() const
+{
+    return mStrategy;
+}
+
+void HeaderStyle::setVCardName(const QString &vCardName)
+{
+    mVCardName = vCardName;
+}
+
+QString HeaderStyle::vCardName() const
+{
+    return mVCardName;
+}
+
+void HeaderStyle::setPrinting(bool printing)
+{
+    mPrinting = printing;
+}
+
+bool HeaderStyle::isPrinting() const
+{
+    return mPrinting;
+}
+
+void HeaderStyle::setTopLevel(bool topLevel)
+{
+    mTopLevel = topLevel;
+}
+
+bool HeaderStyle::isTopLevel() const
+{
+    return mTopLevel;
+}
+
+void HeaderStyle::setNodeHelper(NodeHelper *nodeHelper)
+{
+    mNodeHelper = nodeHelper;
+}
+
+NodeHelper *HeaderStyle::nodeHelper() const
+{
+    return mNodeHelper;
+}
+
+void HeaderStyle::setAllowAsync(bool allowAsync)
+{
+    mAllowAsync = allowAsync;
+}
+
+bool HeaderStyle::allowAsync() const
+{
+    return mAllowAsync;
+}
+
+void HeaderStyle::setSourceObject(QObject *sourceObject)
+{
+    mSourceObject = sourceObject;
+}
+
+QObject *HeaderStyle::sourceObject() const
+{
+    return mSourceObject;
+}
+
+void HeaderStyle::setMessageStatus(const Akonadi::MessageStatus &status)
+{
+    mMessageStatus = status;
+}
+
+Akonadi::MessageStatus HeaderStyle::messageStatus() const
+{
+    return mMessageStatus;
+}
+
+void HeaderStyle::setTheme(const GrantleeTheme::Theme &theme)
+{
+    mTheme = theme;
+}
+
+GrantleeTheme::Theme HeaderStyle::theme() const
+{
+    return mTheme;
+}
+
 HeaderStyle *HeaderStyle::create(Type type)
 {
     switch (type) {

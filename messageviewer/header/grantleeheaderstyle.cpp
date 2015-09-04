@@ -37,12 +37,22 @@ GrantleeHeaderStyle::~GrantleeHeaderStyle()
     delete mGrantleeFormatter;
 }
 
+const char *GrantleeHeaderStyle::name() const
+{
+    return "grantlee";
+}
+
 QString GrantleeHeaderStyle::format(KMime::Message *message) const
 {
     if (!message) {
         return QString();
     }
     return mGrantleeFormatter->toHtml(theme(), isPrinting(), this, message);
+}
+
+bool GrantleeHeaderStyle::hasAttachmentQuickList() const
+{
+    return true;
 }
 
 }

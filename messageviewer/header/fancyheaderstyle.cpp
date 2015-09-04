@@ -51,6 +51,11 @@ namespace MessageViewer
 //   Like PlainHeaderStyle, but with slick frames and background colours.
 //
 
+const char *FancyHeaderStyle::name() const
+{
+    return "fancy";
+}
+
 QString FancyHeaderStyle::format(KMime::Message *message) const
 {
     if (!message) {
@@ -223,6 +228,11 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
 
     headerStr += QLatin1String("</div>\n\n");
     return headerStr;
+}
+
+bool FancyHeaderStyle::hasAttachmentQuickList() const
+{
+    return true;
 }
 
 }

@@ -32,17 +32,12 @@ protected:
     ~GrantleeHeaderStyle();
 
 public:
-    const char *name() const Q_DECL_OVERRIDE
-    {
-        return "grantlee";
-    }
+    const char *name() const Q_DECL_OVERRIDE;
 
     QString format(KMime::Message *message) const Q_DECL_OVERRIDE;
 
-    bool hasAttachmentQuickList() const Q_DECL_OVERRIDE
-    {
-        return true;
-    }
+    bool hasAttachmentQuickList() const Q_DECL_OVERRIDE;
+
 private:
     GrantleeHeaderFormatter *mGrantleeFormatter;
 };

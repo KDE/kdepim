@@ -100,95 +100,35 @@ public:
     // Should return true if this style has an attachment quick list
     virtual bool hasAttachmentQuickList() const;
 
-    void setMessagePath(const QString &path)
-    {
-        mMessagePath = path;
-    }
-    QString messagePath() const
-    {
-        return mMessagePath;
-    }
+    void setMessagePath(const QString &path);
+    QString messagePath() const;
 
-    void setHeaderStrategy(const HeaderStrategy *strategy)
-    {
-        mStrategy = strategy;
-    }
-    const HeaderStrategy *headerStrategy() const
-    {
-        return mStrategy;
-    }
+    void setHeaderStrategy(const HeaderStrategy *strategy);
+    const HeaderStrategy *headerStrategy() const;
 
-    void setVCardName(const QString &vCardName)
-    {
-        mVCardName = vCardName;
-    }
-    QString vCardName() const
-    {
-        return mVCardName;
-    }
+    void setVCardName(const QString &vCardName);
+    QString vCardName() const;
 
-    void setPrinting(bool printing)
-    {
-        mPrinting = printing;
-    }
-    bool isPrinting() const
-    {
-        return mPrinting;
-    }
+    void setPrinting(bool printing);
+    bool isPrinting() const;
 
-    void setTopLevel(bool topLevel)
-    {
-        mTopLevel = topLevel;
-    }
-    bool isTopLevel() const
-    {
-        return mTopLevel;
-    }
+    void setTopLevel(bool topLevel);
+    bool isTopLevel() const;
 
-    void setNodeHelper(NodeHelper *nodeHelper)
-    {
-        mNodeHelper = nodeHelper;
-    }
-    NodeHelper *nodeHelper() const
-    {
-        return mNodeHelper;
-    }
+    void setNodeHelper(NodeHelper *nodeHelper);
+    NodeHelper *nodeHelper() const;
 
-    void setAllowAsync(bool allowAsync)
-    {
-        mAllowAsync = allowAsync;
-    }
-    bool allowAsync() const
-    {
-        return mAllowAsync;
-    }
+    void setAllowAsync(bool allowAsync);
+    bool allowAsync() const;
 
-    void setSourceObject(QObject *sourceObject)
-    {
-        mSourceObject = sourceObject;
-    }
-    QObject *sourceObject() const
-    {
-        return mSourceObject;
-    }
+    void setSourceObject(QObject *sourceObject);
+    QObject *sourceObject() const;
 
-    void setMessageStatus(const Akonadi::MessageStatus &status)
-    {
-        mMessageStatus = status;
-    }
-    Akonadi::MessageStatus messageStatus() const
-    {
-        return mMessageStatus;
-    }
+    void setMessageStatus(const Akonadi::MessageStatus &status);
+    Akonadi::MessageStatus messageStatus() const;
 
-    void setTheme(const GrantleeTheme::Theme &theme)
-    {
-        mTheme = theme;
-    }
-    GrantleeTheme::Theme theme() const
-    {
-        return mTheme;
-    }
+    void setTheme(const GrantleeTheme::Theme &theme);
+    GrantleeTheme::Theme theme() const;
 
 private:
     GrantleeTheme::Theme mTheme;

@@ -36,7 +36,7 @@ using namespace MessageCore;
 namespace MessageViewer
 {
 
-class GrantleeHeaderFormatter::Private
+class Q_DECL_HIDDEN GrantleeHeaderFormatter::Private
 {
 public:
     Private()
