@@ -29,7 +29,9 @@
 
 #include <QVector>
 
+#ifndef Q_MOC_RUN
 #include <boost/weak_ptr.hpp>
+#endif
 
 namespace Akregator {
 

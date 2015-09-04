@@ -58,8 +58,10 @@
 #include <QPointer>
 #include <QTimer>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#endif
 
 using namespace Kleo;
 using namespace Kleo::Crypto;

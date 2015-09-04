@@ -41,9 +41,11 @@
 #include <gpgme++/global.h>
 #include <gpgme++/error.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 #include <boost/mem_fn.hpp>
+#endif
 
 #include <sstream>
 #include <string>

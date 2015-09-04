@@ -35,7 +35,9 @@
 
 #include <kleo/exception.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/preprocessor/stringize.hpp>
+#endif
 
 #include <assert.h>
 

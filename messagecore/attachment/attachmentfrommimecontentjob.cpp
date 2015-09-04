@@ -25,7 +25,9 @@
 #include <kdebug.h>
 #include <kmime/kmime_content.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 using namespace MessageCore;
 using KMime::Content;

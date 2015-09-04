@@ -34,7 +34,9 @@ using namespace MessageComposer;
 
 #include <messagecore/attachment/attachmentfromurljob.h>
 #include <messagecore/attachment/attachmentpart.h>
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 using namespace MessageCore;
 
 #define PATH_ATTACHMENTS QLatin1String( KDESRCDIR "/attachments/" )

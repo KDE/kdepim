@@ -27,7 +27,9 @@
 #include <QtCore/QList>
 #include <QtCore/QMetaType>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 class KUrl;
 namespace MessageCore {
 

@@ -33,7 +33,9 @@
 #ifndef __KLEOPATRA_UTILS_CACHED_H__
 #define __KLEOPATRA_UTILS_CACHED_H__
 
+#ifndef Q_MOC_RUN
 #include <boost/call_traits.hpp>
+#endif
 
 namespace Kleo {
 

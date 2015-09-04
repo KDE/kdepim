@@ -60,7 +60,9 @@
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 
 using namespace Kleo;
 using namespace Kleo::Crypto;

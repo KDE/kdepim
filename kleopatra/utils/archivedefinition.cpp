@@ -55,7 +55,9 @@
 #include <QMutex>
 #include <QCoreApplication>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 using namespace GpgME;
 using namespace Kleo;

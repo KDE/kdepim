@@ -44,6 +44,7 @@
 #include <gpgme++/context.h>
 #include <gpgme++/interfaces/progressprovider.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include <boost/bind.hpp>
@@ -51,6 +52,7 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
+#endif
 
 #include <cassert>
 

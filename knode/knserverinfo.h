@@ -15,7 +15,9 @@
 #ifndef KNSERVERINFO_H
 #define KNSERVERINFO_H
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 #include <QString>
 
 class KConfigGroup;

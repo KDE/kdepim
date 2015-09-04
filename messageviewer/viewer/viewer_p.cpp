@@ -153,7 +153,9 @@
 #include <Akonadi/CollectionFetchJob>
 #include <akonadi/collectionfetchscope.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 
 using namespace boost;
 using namespace MailTransport;

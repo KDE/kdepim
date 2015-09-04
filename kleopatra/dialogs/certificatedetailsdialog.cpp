@@ -66,7 +66,9 @@
 #include <QPointer>
 #include <QHeaderView>
 
+#ifndef Q_MOC_RUN
 #include <boost/mem_fn.hpp>
+#endif
 
 #include <algorithm>
 #include <cassert>

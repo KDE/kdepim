@@ -44,7 +44,9 @@ using MailCommon::FilterLog;
 #include <krandom.h>
 
 #include <algorithm>
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 
 
 using namespace MailCommon;

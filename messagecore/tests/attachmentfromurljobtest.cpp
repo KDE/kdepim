@@ -20,7 +20,9 @@
 #include "attachmentfromurljobtest.h"
 #include "qtest_messagecore.h"
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 #include <qtest_kde.h>
 

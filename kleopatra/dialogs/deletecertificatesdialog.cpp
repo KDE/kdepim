@@ -56,7 +56,9 @@
 
 #include <gpgme++/key.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/mem_fn.hpp>
+#endif
 
 #include <cassert>
 

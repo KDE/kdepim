@@ -44,9 +44,11 @@
 
 #include <gpgme++/configuration.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#endif
 
 #include <vector>
 #include <utility>

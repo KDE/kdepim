@@ -40,7 +40,9 @@
 #include <QStringList>
 #include <QByteArray>
 
+#ifndef Q_MOC_RUN
 #include <boost/mem_fn.hpp>
+#endif
 
 #include <algorithm>
 #include <iterator>

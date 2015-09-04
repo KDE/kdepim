@@ -33,7 +33,9 @@
 #include <kparts/browserextension.h>
 #include <kparts/part.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 class KConfigGroup;
 class KUrl;

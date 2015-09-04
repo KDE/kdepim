@@ -47,8 +47,10 @@
 
 #include <qwindowdefs.h> // for WId
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#endif
 
 #include <string>
 #include <map>

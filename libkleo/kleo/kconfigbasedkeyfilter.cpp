@@ -37,7 +37,9 @@
 #include <kconfiggroup.h>
 #include <klocale.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/mem_fn.hpp>
+#endif
 #include <algorithm>
 
 using namespace Kleo;

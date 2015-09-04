@@ -28,7 +28,9 @@
 #include <QList>
 #include <QString>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 #include <akonadi/searchquery.h>
 
 namespace Akonadi {

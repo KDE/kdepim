@@ -40,7 +40,9 @@
 #include <utils/pimpl_ptr.h>
 #include <utils/types.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 class QDialog;
 

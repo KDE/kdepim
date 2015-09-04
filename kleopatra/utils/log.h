@@ -36,7 +36,9 @@
 #include <utils/pimpl_ptr.h>
 
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 #include <cstdio>
 

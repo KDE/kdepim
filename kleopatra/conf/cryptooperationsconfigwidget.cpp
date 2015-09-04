@@ -47,7 +47,9 @@
 
 #include <QLayout>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 using namespace Kleo;
 using namespace Kleo::Config;

@@ -41,7 +41,9 @@
 
 #include <gpgme++/keylistresult.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 
 using namespace Kleo;
 using namespace boost;

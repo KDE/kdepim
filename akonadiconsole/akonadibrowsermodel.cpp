@@ -28,7 +28,9 @@
 #include <kcalcore/incidence.h>
 #include <kcalcore/event.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
 typedef QSharedPointer<KCalCore::Incidence> IncidencePtr;

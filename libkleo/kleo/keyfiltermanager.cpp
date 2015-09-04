@@ -48,8 +48,10 @@
 #include <QAbstractListModel>
 #include <QModelIndex>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
 #include <boost/iterator/filter_iterator.hpp>
+#endif
 
 #include <algorithm>
 #include <vector>

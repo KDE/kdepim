@@ -89,8 +89,10 @@
 #include <kleo/cryptoconfig.h>
 #include <kleo/stl_util.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#endif
 
 #include <vector>
 

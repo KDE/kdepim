@@ -73,8 +73,10 @@
 
 #include <gpgme++/key.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
+#endif
 
 using namespace GpgME;
 using namespace boost;

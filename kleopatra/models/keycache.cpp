@@ -63,11 +63,13 @@
 #include <QPointer>
 #include <QTimer>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
 #include <boost/mem_fn.hpp>
 #include <boost/range.hpp>
 #include <boost/weak_ptr.hpp>
 #include <boost/iterator/filter_iterator.hpp>
+#endif
 
 #include <utility>
 #include <algorithm>

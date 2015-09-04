@@ -52,8 +52,10 @@
 #include <QTimer>
 #include <QFile>
 
+#ifndef Q_MOC_RUN
 #include <boost/range/empty.hpp>
 #include <boost/bind.hpp>
+#endif
 
 #include <algorithm>
 #include <cassert>

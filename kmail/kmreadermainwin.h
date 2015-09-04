@@ -8,7 +8,9 @@
 #include <kurl.h>
 #include <KMime/Message>
 
+#ifndef Q_MOC_RUN
 #include <boost/scoped_ptr.hpp>
+#endif
 #include <akonadi/item.h>
 #include <akonadi/collection.h>
 #include <QModelIndex>

@@ -19,7 +19,9 @@
 
 
 #include "mailcommon_export.h"
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 #include <akonadi/searchquery.h>
 
 #include <Akonadi/Item>

@@ -54,7 +54,9 @@
 
 #include <QTextDocument> // Qt::escape
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 
 #include <gpg-error.h>
 

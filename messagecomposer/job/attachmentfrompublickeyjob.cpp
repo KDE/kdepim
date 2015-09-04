@@ -23,7 +23,9 @@
 
 #include "attachmentfrompublickeyjob.h"
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 #include <KDebug>
 #include <kdialogjobuidelegate.h> //krazy:exclude=camelcase TODO wait for kdelibs4.10

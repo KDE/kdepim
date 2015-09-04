@@ -57,7 +57,9 @@
 #include <QTimer>
 #include <QTreeView>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 
 #include <vector>
 #include <cassert>

@@ -28,7 +28,9 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QTimer>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 using namespace MessageCore;
 static const mode_t archivePerms = S_IFREG | 0644;

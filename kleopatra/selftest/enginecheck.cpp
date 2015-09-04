@@ -48,8 +48,10 @@
 #include <QFile>
 #include <QRegExp>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
 #include <boost/range.hpp>
+#endif
 
 #include <algorithm>
 #include <cassert>

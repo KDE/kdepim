@@ -31,7 +31,9 @@
 
 #include <QObject>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 class QDomDocument;
 class QDomNode;

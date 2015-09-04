@@ -27,7 +27,9 @@
 
 #include "command.h"
 
+#ifndef Q_MOC_RUN
 #include <boost/weak_ptr.hpp>
+#endif
 
 class QDomDocument;
 

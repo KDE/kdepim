@@ -40,7 +40,9 @@
 
 #include <QBuffer>
 
+#ifndef Q_MOC_RUN
 #include <boost/weak_ptr.hpp>
+#endif
 
 #include <cassert>
 

@@ -75,7 +75,9 @@
 #include <QStringList>
 #include <QTextDocument> // Qt::escape
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 
 #include <algorithm>
 #include <cassert>

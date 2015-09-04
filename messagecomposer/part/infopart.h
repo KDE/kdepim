@@ -26,7 +26,9 @@
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_headers.h>
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 namespace MessageComposer {
 

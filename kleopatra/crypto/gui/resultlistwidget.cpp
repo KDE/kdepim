@@ -50,8 +50,10 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
 #include <boost/mem_fn.hpp>
+#endif
 
 #include <cassert>
 

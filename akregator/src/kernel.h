@@ -25,7 +25,9 @@
 #ifndef AKREGATOR_KERNEL_H
 #define AKREGATOR_KERNEL_H
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 #include "akregator_export.h"
 

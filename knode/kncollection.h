@@ -15,7 +15,9 @@
 #ifndef KNCOLLECTION_H
 #define KNCOLLECTION_H
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 #include <QString>
 
 class KNCollectionViewItem;

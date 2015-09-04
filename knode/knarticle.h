@@ -17,7 +17,9 @@
 
 #include "knjobdata.h"
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 #include <QFile>
 #include <QColor>
 #include <kmime/kmime_headers.h>

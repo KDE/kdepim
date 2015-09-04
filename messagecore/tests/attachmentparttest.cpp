@@ -26,7 +26,9 @@
 #include <qtest_kde.h>
 
 #include <messagecore/attachment/attachmentpart.h>
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 using namespace MessageCore;
 
 QTEST_KDEMAIN( AttachmentPartTest, NoGUI )

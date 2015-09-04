@@ -63,7 +63,9 @@
 #include <QPixmap>
 #include <QPointer>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 #include <KMessageBox>
 #include <KPIMIdentities/IdentityManager>
 #include <KFileDialog>

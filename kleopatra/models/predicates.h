@@ -39,7 +39,9 @@
 
 #include <gpgme++/key.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 
 #include <cstring>
 #include <algorithm>

@@ -10,7 +10,9 @@
 #include <QtCore/QSharedData>
 #include <QtCore/QStringList>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 using namespace MessageCore;
 

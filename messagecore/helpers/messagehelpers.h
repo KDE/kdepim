@@ -24,7 +24,9 @@
 
 #include <akonadi/item.h>
 #include <akonadi/kmime/messagestatus.h>
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 #include <KMime/Message>
 
 namespace MessageCore {

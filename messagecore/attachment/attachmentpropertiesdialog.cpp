@@ -35,7 +35,9 @@
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_util.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 using namespace MessageCore;
 

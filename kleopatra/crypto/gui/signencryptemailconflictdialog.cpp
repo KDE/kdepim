@@ -68,8 +68,10 @@
 #include <QStyle>
 #include <QPointer>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
+#endif
 
 #include <iterator>
 

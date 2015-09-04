@@ -37,7 +37,9 @@
 #include <models/keylistmodelinterface.h>
 
 #include <utils/pimpl_ptr.h>
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 namespace GpgME {
     class Key;

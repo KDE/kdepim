@@ -43,7 +43,9 @@
 
 #include <gpgme++/error.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/static_assert.hpp>
+#endif
 
 #include <cassert>
 

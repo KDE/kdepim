@@ -28,7 +28,9 @@
 # include <KWebView>
 #endif
 
+#ifndef Q_MOC_RUN
 #include <boost/function.hpp>
+#endif
 
 class QLabel;
 class KActionCollection;

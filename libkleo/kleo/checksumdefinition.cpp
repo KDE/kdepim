@@ -51,7 +51,9 @@
 #include <QMutex>
 #include <QCoreApplication>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 #ifdef stdin
 # undef stdin // pah..

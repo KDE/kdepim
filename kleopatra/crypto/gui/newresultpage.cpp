@@ -41,7 +41,9 @@
 
 #include <kleo/stl_util.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/mem_fn.hpp>
+#endif
 
 #include <KLocalizedString>
 

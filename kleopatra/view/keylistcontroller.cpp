@@ -83,7 +83,9 @@
 #include <QItemSelectionModel>
 #include <QAction>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 
 #include <algorithm>
 #include <cassert>

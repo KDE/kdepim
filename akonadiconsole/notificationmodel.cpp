@@ -30,7 +30,9 @@
 #include <Akonadi/ServerManager>
 
 #include <akonadi/private/imapparser_p.h>
+#ifndef Q_MOC_RUN
 #include <boost/concept_check.hpp>
+#endif
 #include <akonadi/private/notificationmessagev3_p.h>
 
 using namespace Akonadi;

@@ -44,8 +44,10 @@
 #include <assuan.h>
 #include <gpg-error.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
+#endif
 
 #include <algorithm>
 #include <string>

@@ -44,7 +44,9 @@
 
 #include <kleo/stl_util.h>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 
 #include <set>
 #include <cassert>

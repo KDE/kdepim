@@ -78,7 +78,9 @@
 #include <QUrl>
 #include <QDesktopServices>
 
+#ifndef Q_MOC_RUN
 #include <boost/range.hpp>
+#endif
 
 #include <algorithm>
 

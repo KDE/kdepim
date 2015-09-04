@@ -24,7 +24,9 @@
 
 #include <QGraphicsProxyWidget>
 
+#ifndef Q_MOC_RUN
 #include <boost/function.hpp>
+#endif
 
 class QGraphicsView;
 class QWidget;

@@ -36,7 +36,9 @@
 #include "kleo/kleo_export.h"
 #include <QtCore/QObject>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 #include <kleo/keyfilter.h>
 

@@ -33,7 +33,9 @@
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextDocumentFragment>
+#ifndef Q_MOC_RUN
 #include <boost/concept_check.hpp>
+#endif
 
 using namespace PimPrint::Calendar;
 

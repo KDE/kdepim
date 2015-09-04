@@ -58,12 +58,14 @@
 #include <QThread>
 #include <QPointer>
 
+#ifndef Q_MOC_RUN
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/range.hpp>
 #include <boost/bind.hpp>
+#endif
 
 #include <vector>
 #include <set>

@@ -144,7 +144,9 @@ using namespace KMime;
 #include <QApplication>
 #include <QList>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 #include <algorithm>
 #include <memory>
 

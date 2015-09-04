@@ -45,7 +45,9 @@
 #include <QHash>
 #include <QSet>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
+#endif
 
 #include <algorithm>
 #include <iterator>

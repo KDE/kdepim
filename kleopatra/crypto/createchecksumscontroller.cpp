@@ -62,8 +62,10 @@
 #include <QDir>
 #include <QProcess>
 
+#ifndef Q_MOC_RUN
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
+#endif
 
 #include <gpg-error.h>
 

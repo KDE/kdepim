@@ -62,8 +62,10 @@
 #include <QColorDialog>
 #include <QFontDialog>
 
+#ifndef Q_MOC_RUN
 #include <boost/range.hpp>
 #include <boost/bind.hpp>
+#endif
 
 #include <algorithm>
 #include <cassert>

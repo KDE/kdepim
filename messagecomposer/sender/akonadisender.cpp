@@ -27,7 +27,9 @@
 #include "messagecomposer/utils/util.h"
 
 #include <kmime/kmime_message.h>
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
+#endif
 
 #include <progresswidget/progressmanager.h>
 

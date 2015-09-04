@@ -22,11 +22,13 @@
 #ifndef __KDTOOLSCORE_STL_UTIL_H__
 #define __KDTOOLSCORE_STL_UTIL_H__
 
+#ifndef Q_MOC_RUN
 #include <boost/range.hpp>
 #include <boost/iterator/filter_iterator.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/version.hpp>
+#endif
 
 #include <algorithm>
 #include <numeric>

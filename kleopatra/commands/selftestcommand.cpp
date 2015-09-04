@@ -57,8 +57,10 @@
 #include <KSplashScreen>
 #include <KSharedConfig>
 
+#ifndef Q_MOC_RUN
 #include <boost/shared_ptr.hpp>
 #include <boost/mem_fn.hpp>
+#endif
 
 #include <vector>
 

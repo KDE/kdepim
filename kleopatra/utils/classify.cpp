@@ -43,7 +43,9 @@
 #include <QtAlgorithms>
 #include <QByteArrayMatcher>
 
+#ifndef Q_MOC_RUN
 #include <boost/range.hpp>
+#endif
 
 #ifdef __GLIBCXX__
 # include <ext/algorithm>
