@@ -27,6 +27,7 @@
  */
 namespace MailImporter
 {
+class FilterTheBatPrivate;
 class MAILIMPORTER_EXPORT FilterTheBat : public Filter
 {
 
@@ -41,9 +42,7 @@ private:
     void importDirContents(const QString &);
     void importFiles(const QString &);
     void processDirectory(const QString &path);
-    int mImportDirDone;
-    int mTotalDir;
-
+    FilterTheBatPrivate *const d;
 };
 }
 

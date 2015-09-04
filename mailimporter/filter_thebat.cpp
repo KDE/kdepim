@@ -26,6 +26,20 @@
 
 using namespace MailImporter;
 
+class MailImporter::FilterTheBatPrivate
+{
+public:
+    FilterTheBatPrivate()
+        : mImportDirDone(0),
+          mTotalDir(0)
+    {
+
+    }
+
+    int mImportDirDone;
+    int mTotalDir;
+};
+
 /** Default constructor. */
 FilterTheBat::FilterTheBat() :
     Filter(i18n("Import The Bat! Mails and Folder Structure"),
@@ -36,13 +50,15 @@ FilterTheBat::FilterTheBat() :
                 "<p><b>Note:</b> This filter imports the *.tbb-files from \'The Bat!\' "
                 "local folder, e.g. from POP accounts, and not from IMAP/DIMAP accounts.</p>"
                 "<p>Since it is possible to recreate the folder structure, the folders "
-                "will be stored under: \"TheBat-Import\" in your local account.</p>"))
+                "will be stored under: \"TheBat-Import\" in your local account.</p>")),
+    d(new MailImporter::FilterTheBatPrivate)
 {
 }
 
 /** Destructor. */
 FilterTheBat::~FilterTheBat()
 {
+    delete d;
 }
 
 /** Recursive import of The Bat! maildir. */
@@ -66,8 +82,8 @@ void FilterTheBat::processDirectory(const QString &path)
             break;
         }
         importDirContents(dir.filePath(*filename));
-        filterInfo()->setOverall((mTotalDir > 0) ? (int)((float) mImportDirDone / mTotalDir * 100) : 0);
-        ++mImportDirDone;
+        filterInfo()->setOverall((d->mTotalDir > 0) ? (int)((float) d->mImportDirDone / d->mTotalDir * 100) : 0);
+        ++d->mImportDirDone;
     }
 }
 
@@ -86,11 +102,11 @@ void FilterTheBat::importMails(const QString  &maildir)
         filterInfo()->addErrorLogEntry(i18n("No files found for import."));
     } else {
         filterInfo()->setOverall(0);
-        mImportDirDone = 0;
+        d->mImportDirDone = 0;
 
         /** Recursive import of the MailFolders */
         QDir dir(mailDir());
-        mTotalDir = Filter::countDirectory(dir, false);
+        d->mTotalDir = Filter::countDirectory(dir, false);
 
         processDirectory(mailDir());
 

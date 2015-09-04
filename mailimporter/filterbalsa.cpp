@@ -24,6 +24,19 @@
 
 using namespace MailImporter;
 
+class MailImporter::FilterBalsaPrivate
+{
+public:
+    FilterBalsaPrivate()
+        : mImportDirDone(0),
+          mTotalDir(0)
+    {
+
+    }
+
+    int mImportDirDone;
+    int mTotalDir;
+};
 /** Default constructor. */
 FilterBalsa::FilterBalsa()
     : Filter(i18n("Import Balsa Local Mails and Folder Structure"),
@@ -31,13 +44,15 @@ FilterBalsa::FilterBalsa()
              i18n("<p><b>Balsa import filter</b></p>"
                   "<p>Select the base directory of your local Balsa mailfolder (usually ~/mail/).</p>"
                   "<p>Since it is possible to recreate the folder structure, the folders "
-                  "will be stored under: \"Balsa-Import\".</p>"))
+                  "will be stored under: \"Balsa-Import\".</p>")),
+      d(new MailImporter::FilterBalsaPrivate)
 {
 }
 
 /** Destructor. */
 FilterBalsa::~FilterBalsa()
 {
+    delete d;
 }
 
 QString FilterBalsa::defaultSettingsPath()
@@ -78,7 +93,7 @@ void FilterBalsa::processDirectory(const QString &path)
         if (!(*filename == QLatin1String(".") || *filename == QLatin1String(".."))) {
             filterInfo()->setCurrent(0);
             importDirContents(dir.filePath(*filename));
-            filterInfo()->setOverall((mTotalDir > 0) ? (int)((float) mImportDirDone / mTotalDir * 100) : 0);
+            filterInfo()->setOverall((d->mTotalDir > 0) ? (int)((float) d->mImportDirDone / d->mTotalDir * 100) : 0);
             filterInfo()->setCurrent(100);
         }
     }
@@ -100,11 +115,11 @@ void FilterBalsa::importMails(const QString &maildir)
         filterInfo()->addErrorLogEntry(i18n("No files found for import."));
     } else {
         filterInfo()->setOverall(0);
-        mImportDirDone = 0;
+        d->mImportDirDone = 0;
 
         /** Recursive import of the MailArchives */
         QDir dir(mailDir());
-        mTotalDir = Filter::countDirectory(dir, true /*search hidden directory*/);
+        d->mTotalDir = Filter::countDirectory(dir, true /*search hidden directory*/);
 
         processDirectory(mailDir());
 
