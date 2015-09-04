@@ -45,7 +45,6 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     : QWidget(parent),
       mShorturlServiceName(Q_NULLPTR),
       mEngine(Q_NULLPTR),
-      mToggleAction(Q_NULLPTR),
       mStandalone(false)
 {
     qDebug()<<"ShortUrlWidget::ShortUrlWidget "<<this;
@@ -220,22 +219,6 @@ void ShortUrlWidget::slotCloseWidget()
 void ShortUrlWidget::setStandalone(bool b)
 {
     mStandalone = b;
-}
-
-void ShortUrlWidget::createAction()
-{
-    mToggleAction = new KToggleAction(i18n("Generate Shorten Url"), this);
-    mToggleAction->setChecked(false);
-}
-
-void ShortUrlWidget::setShortcut(KActionCollection *ac)
-{
-    Q_UNUSED(ac);
-}
-
-KToggleAction *ShortUrlWidget::toggleAction()
-{
-    return mToggleAction;
 }
 
 void ShortUrlWidget::slotOpenShortUrl()

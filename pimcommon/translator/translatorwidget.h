@@ -69,10 +69,6 @@ public:
     void readConfig();
     void setStandalone(bool b);
 
-    KToggleAction *toggleAction();
-
-    void setShortcut(KActionCollection *ac);
-    void createAction();
 public Q_SLOTS:
     void slotTranslate();
     void slotCloseWidget();

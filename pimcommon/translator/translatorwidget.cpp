@@ -53,7 +53,6 @@ class Q_DECL_HIDDEN TranslatorWidget::TranslatorWidgetPrivate
 public:
     TranslatorWidgetPrivate()
         : abstractTranslator(Q_NULLPTR),
-          action(Q_NULLPTR),
           languageSettingsChanged(false),
           standalone(true)
     {
@@ -81,7 +80,6 @@ public:
     KPIM::ProgressIndicatorWidget *progressIndictor;
     QPushButton *invert;
     QSplitter *splitter;
-    KToggleAction *action;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
     bool languageSettingsChanged;
     bool standalone;
@@ -322,23 +320,6 @@ void TranslatorWidget::init()
     setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
     d->languageSettingsChanged = false;
 
-}
-
-void TranslatorWidget::createAction()
-{
-    d->action = new KToggleAction(i18n("&Translator"), this);
-    d->action->setChecked(false);
-}
-
-void TranslatorWidget::setShortcut(KActionCollection *ac)
-{
-    if (ac)
-        ac->setDefaultShortcut(d->action, QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
-}
-
-KToggleAction *TranslatorWidget::toggleAction()
-{
-    return d->action;
 }
 
 void TranslatorWidget::slotConfigChanged()

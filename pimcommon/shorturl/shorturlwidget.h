@@ -22,7 +22,6 @@
 #include "pimcommon_export.h"
 
 class KLineEdit;
-class KToggleAction;
 class QPushButton;
 class QLabel;
 class QLineEdit;
@@ -44,10 +43,6 @@ public:
     ~ShortUrlWidget();
 
     void setStandalone(bool b);
-    KToggleAction *toggleAction();
-
-    void setShortcut(KActionCollection *ac);
-    void createAction();
 public Q_SLOTS:
     void settingsUpdated();
 
@@ -79,7 +74,6 @@ private:
     AbstractShortUrl *mEngine;
     KPIM::ProgressIndicatorLabel *mIndicatorLabel;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
-    KToggleAction *mToggleAction;
     bool mStandalone;
 };
 }

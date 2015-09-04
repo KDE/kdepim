@@ -37,8 +37,6 @@ TranslatorTest::TranslatorTest()
 void TranslatorTest::shouldHaveDefaultValuesOnCreation()
 {
     PimCommon::TranslatorWidget edit;
-    edit.createAction();
-    edit.setShortcut(new KActionCollection(&edit));
     QComboBox *from = edit.findChild<QComboBox *>(QStringLiteral("from"));
     QComboBox *to = edit.findChild<QComboBox *>(QStringLiteral("to"));
 
@@ -54,7 +52,6 @@ void TranslatorTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(to);
     QCOMPARE(from->count() > 0, true);
     QCOMPARE(to->count() > 0, true);
-    QVERIFY(edit.toggleAction());
     QVERIFY(inputtext);
     QVERIFY(translatedText);
     QCOMPARE(inputtext->toPlainText(), QString());
