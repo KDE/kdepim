@@ -113,7 +113,9 @@ MessageFactory::MessageReply MessageFactory::createReply()
         const QString listPost = m_origMsg->headerByType("List-Post")->asUnicodeString();
         QRegExp rx(QStringLiteral("<mailto:([^@>]+)@([^>]+)>"), Qt::CaseInsensitive);
         if (rx.indexIn(listPost, 0) != -1) {   // matched
-            m_mailingListAddresses << MessageCore::StringUtil::mailboxFromUnicodeString(rx.cap(1) + QLatin1Char('@') + rx.cap(2));
+            KMime::Types::Mailbox mailbox;
+            mailbox.fromUnicodeString(rx.cap(1) + QLatin1Char('@') + rx.cap(2));
+            m_mailingListAddresses << mailbox;
         }
     }
 
@@ -156,7 +158,9 @@ MessageFactory::MessageReply MessageFactory::createReply()
     break;
     case MessageComposer::ReplyList: {
         if (auto hdr = m_origMsg->headerByType("Mail-Followup-To")) {
-            toList << MessageCore::StringUtil::mailboxFrom7BitString(hdr->as7BitString(false));
+            KMime::Types::Mailbox mailbox;
+            mailbox.from7BitString(hdr->as7BitString(false));
+            toList << mailbox;
         } else if (!m_mailingListAddresses.isEmpty()) {
             toList << m_mailingListAddresses[ 0 ];
         } else if (!replyToList.isEmpty()) {

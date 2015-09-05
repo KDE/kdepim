@@ -874,42 +874,11 @@ KMime::Types::Mailbox::List mailboxListFromUnicodeString(const QString &addresse
     return header.mailboxes();
 }
 
-KMime::Types::Mailbox mailboxFromUnicodeString(const QString &address)
-{
-    DummyHeader header;
-    header.fromUnicodeString(address, "utf-8");
-
-    const KMime::Types::Mailbox::List mailboxes = header.mailboxes();
-    if (mailboxes.isEmpty()) {
-        return KMime::Types::Mailbox();
-    }
-
-    if (mailboxes.size() > 1) {
-        qCDebug(MESSAGECORE_LOG) << " mailboxes size > 1 ";
-    }
-    return mailboxes.first();
-}
-
 KMime::Types::Mailbox::List mailboxListFrom7BitString(const QByteArray &addresses)
 {
     DummyHeader header;
     header.from7BitString(addresses);
     return header.mailboxes();
-}
-
-KMime::Types::Mailbox mailboxFrom7BitString(const QByteArray &address)
-{
-    DummyHeader header;
-    header.from7BitString(address);
-
-    const KMime::Types::Mailbox::List mailboxes = header.mailboxes();
-    if (mailboxes.isEmpty()) {
-        return KMime::Types::Mailbox();
-    }
-    if (mailboxes.size() > 1) {
-        qCDebug(MESSAGECORE_LOG) << " mailboxes size > 1 ";
-    }
-    return mailboxes.first();
 }
 
 QString mailboxListToUnicodeString(const KMime::Types::Mailbox::List &addresses)
