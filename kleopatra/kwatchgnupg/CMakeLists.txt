@@ -25,7 +25,7 @@ target_link_libraries(kwatchgnupg
   KF5::XmlGui
   KF5::Notifications
   KF5::TextWidgets
-  KF5::KDELibs4Support
+  KF5::IconThemes
   kleo
 )
 
