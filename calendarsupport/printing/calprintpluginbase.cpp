@@ -676,25 +676,21 @@ void CalPrintPluginBase::drawSmallMonth(QPainter &p, const QDate &qd, const QRec
     p.setFont(QFont(QStringLiteral("sans-serif"), int(cellHeight - 2), QFont::Normal));
 
     // draw the title
-    if (mCalSys) {
-        QRect titleBox(box);
-        titleBox.setHeight(int(cellHeight + 1));
-        p.drawText(titleBox, Qt::AlignTop | Qt::AlignHCenter, mCalSys->monthName(qd));
-    }
+    QRect titleBox(box);
+    titleBox.setHeight(int(cellHeight + 1));
+    p.drawText(titleBox, Qt::AlignTop | Qt::AlignHCenter, QLocale::system().monthName(month));
 
     // draw days of week
     QRect wdayBox(box);
     wdayBox.setTop(int(box.top() + 3 + cellHeight));
     wdayBox.setHeight(int(2 * cellHeight) - int(cellHeight));
 
-    if (mCalSys) {
-        for (int col = 0; col < 7; ++col) {
-            QString tmpStr = mCalSys->weekDayName(monthDate2)[0].toUpper();
-            wdayBox.setLeft(int(box.left() + col * cellWidth));
-            wdayBox.setRight(int(box.left() + (col + 1) * cellWidth));
-            p.drawText(wdayBox, Qt::AlignCenter, tmpStr);
-            monthDate2 = monthDate2.addDays(1);
-        }
+    for (int col = 0; col < 7; ++col) {
+        QString tmpStr = QLocale::system().dayName(monthDate2.dayOfWeek())[0].toUpper();
+        wdayBox.setLeft(int(box.left() + col * cellWidth));
+        wdayBox.setRight(int(box.left() + (col + 1) * cellWidth));
+        p.drawText(wdayBox, Qt::AlignCenter, tmpStr);
+        monthDate2 = monthDate2.addDays(1);
     }
 
     // draw separator line
@@ -741,7 +737,7 @@ void CalPrintPluginBase::drawDaysOfWeek(QPainter &p,
 
 void CalPrintPluginBase::drawDaysOfWeekBox(QPainter &p, const QDate &qd, const QRect &box)
 {
-    drawSubHeaderBox(p, (mCalSys) ? (mCalSys->weekDayName(qd)) : QString(), box);
+    drawSubHeaderBox(p, QLocale::system().dayName(qd.dayOfWeek()), box);
 }
 
 void CalPrintPluginBase::drawTimeLine(QPainter &p, const QTime &fromTime,
@@ -1096,11 +1092,11 @@ void CalPrintPluginBase::drawDayBox(QPainter &p, const QDate &qd,
         myToTime = QTime(23, 59, 59);
     }
 
-    if (fullDate && mCalSys) {
+    if (fullDate) {
         dayNumStr = i18nc("weekday, shortmonthname daynumber",
                           "%1, %2 %3",
-                          mCalSys->weekDayName(qd),
-                          mCalSys->monthName(qd, KCalendarSystem::ShortName),
+                          QLocale::system().dayName(qd.dayOfWeek()),
+                          QLocale::system().monthName(qd.month(), QLocale::ShortFormat),
                           QString::number(qd.day()));
     } else {
         dayNumStr = QString::number(qd.day());
@@ -1556,13 +1552,13 @@ void CalPrintPluginBase::drawMonth(QPainter &p, const QDate &dt,
     subheaderBox.setHeight(subHeaderHeight());
     QRect borderBox(box);
     borderBox.setTop(subheaderBox.bottom() + 1);
-    drawSubHeaderBox(p, calsys->monthName(dt), subheaderBox);
+    drawSubHeaderBox(p, QLocale::system().monthName(dt.month()), subheaderBox);
     // correct for half the border width
     int correction = (BOX_BORDER_WIDTH/*-1*/) / 2;
     QRect daysBox(borderBox);
     daysBox.adjust(correction, correction, -correction, -correction);
 
-    int daysinmonth = calsys->daysInMonth(dt);
+    int daysinmonth = dt.daysInMonth();
     if (maxdays <= 0) {
         maxdays = daysinmonth;
     }
@@ -2185,14 +2181,14 @@ void CalPrintPluginBase::drawSplitHeaderRight(QPainter &p, const QDate &fd,
     if (mCalSys) {
         if (fd.month() == td.month()) {
             title = i18nc("Date range: Month dayStart - dayEnd", "%1 %2 - %3",
-                          mCalSys->monthName(fd, KCalendarSystem::LongName),
+                          QLocale::system().monthName(fd.month(), QLocale::LongFormat),
                           mCalSys->formatDate(fd, KLocale::Day, KLocale::LongNumber),
                           mCalSys->formatDate(td, KLocale::Day, KLocale::LongNumber));
         } else {
             title = i18nc("Date range: monthStart dayStart - monthEnd dayEnd", "%1 %2 - %3 %4",
-                          mCalSys->monthName(fd, KCalendarSystem::LongName),
+                          QLocale::system().monthName(fd.month(), QLocale::LongFormat),
                           mCalSys->formatDate(fd, KLocale::Day, KLocale::LongNumber),
-                          mCalSys->monthName(td, KCalendarSystem::LongName),
+                          QLocale::system().monthName(td.month(), QLocale::LongFormat),
                           mCalSys->formatDate(td, KLocale::Day, KLocale::LongNumber));
         }
     }

@@ -22,8 +22,6 @@
 #include "incidencedatetime.h"
 #include "ui_dialogdesktop.h"
 
-#include <KCalendarSystem>
-
 #include "incidenceeditor_debug.h"
 #include <KLocalizedString>
 #include <QLocale>
@@ -474,7 +472,6 @@ void IncidenceRecurrence::fillCombos()
         return;
     }
 
-    const KCalendarSystem *calSys = KLocale::global()->calendar();
     // Next the monthly combo. This contains the following elements:
     // - nth day of the month
     // - (month.lastDay() - n)th day of the month
@@ -494,19 +491,16 @@ void IncidenceRecurrence::fillCombos()
 
     item = subsOrdinal(
                ki18nc("example: the 5th Wednesday", "the %1 %2"), monthWeekFromStart()).
-           subs(
-               calSys->weekDayName(date.dayOfWeek(), KCalendarSystem::LongDayName)).toString();
+           subs(QLocale::system().dayName(date.dayOfWeek(), QLocale::QLocale::LongFormat)).toString();
     mUi->mMonthlyCombo->addItem(item);
 
     if (monthWeekFromEnd() == 1) {
         item = ki18nc("example: the last Wednesday", "the last %1").
-               subs(calSys->weekDayName(
-                        date.dayOfWeek(), KCalendarSystem::LongDayName)).toString();
+               subs(QLocale::system().dayName(date.dayOfWeek(), QLocale::LongFormat)).toString();
     } else {
         item = subsOrdinal(
                    ki18nc("example: the 5th to last Wednesday", "the %1 to last %2"), monthWeekFromEnd()).
-               subs(calSys->weekDayName(
-                        date.dayOfWeek(), KCalendarSystem::LongDayName)).toString();
+               subs(QLocale::system().dayName(date.dayOfWeek(), QLocale::LongFormat)).toString();
     }
     mUi->mMonthlyCombo->addItem(item);
     mUi->mMonthlyCombo->setCurrentIndex(currentMonthlyIndex == -1 ? 0 : currentMonthlyIndex);
@@ -519,7 +513,7 @@ void IncidenceRecurrence::fillCombos()
     // - the ${m}th day of the year
     const int currentYearlyIndex = mUi->mYearlyCombo->currentIndex();
     mUi->mYearlyCombo->clear();
-    const QString longMonthName = calSys->monthName(date);
+    const QString longMonthName = QLocale::system().monthName(date.month(), QLocale::LongFormat);
     item = subsOrdinal(ki18nc("example: the 5th of June", "the %1 of %2"), date.day()).
            subs(longMonthName).toString();
     mUi->mYearlyCombo->addItem(item);
@@ -531,19 +525,19 @@ void IncidenceRecurrence::fillCombos()
 
     item = subsOrdinal(
                ki18nc("example: the 4th Wednesday of June", "the %1 %2 of %3"), monthWeekFromStart()).
-           subs(calSys->weekDayName(date.dayOfWeek(), KCalendarSystem::LongDayName)).
+           subs(QLocale::system().dayName(date.dayOfWeek(), QLocale::LongFormat)).
            subs(longMonthName).toString();
     mUi->mYearlyCombo->addItem(item);
 
     if (monthWeekFromEnd() == 1) {
         item = ki18nc("example: the last Wednesday of June", "the last %1 of %2").
-               subs(calSys->weekDayName(date.dayOfWeek(), KCalendarSystem::LongDayName)).
+               subs(QLocale::system().dayName(date.dayOfWeek(), QLocale::LongFormat)).
                subs(longMonthName).toString();
     } else {
         item = subsOrdinal(
                    ki18nc("example: the 4th to last Wednesday of June", "the %1 to last %2 of %3 "),
                    monthWeekFromEnd()).
-               subs(calSys->weekDayName(date.dayOfWeek(), KCalendarSystem::LongDayName)).
+               subs(QLocale::system().dayName(date.dayOfWeek(), QLocale::LongFormat)).
                subs(longMonthName).toString();
     }
     mUi->mYearlyCombo->addItem(item);
@@ -854,7 +848,7 @@ void IncidenceRecurrence::setDefaults()
     setFrequency(1);
 
     // -1 because we want between 0 and 6
-    const int day = KLocale::global()->calendar()->dayOfWeek(currentDate()) - 1;
+    const int day = currentDate().dayOfWeek() - 1;
 
     QBitArray checkDays(7, 0);
     checkDays.setBit(day);
