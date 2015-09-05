@@ -209,11 +209,7 @@ QVector<Akregator::Feed*> Akregator::Feed::feeds()
 
 Article Akregator::Feed::findArticle(const QString& guid) const
 {
-  Article a;
-  if ( !d->articles.isEmpty() ) {
-    a = d->articles[guid];
-  }
-  return a;
+    return d->articles.value(guid);
 }
 
 QList<Article> Akregator::Feed::articles()
@@ -885,5 +881,3 @@ void Akregator::Feed::enforceLimitArticleNumber()
         }
     }
 }
-
-
