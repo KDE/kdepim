@@ -334,11 +334,6 @@ const KCalendarSystem *CalPrintPluginBase::calendarSystem()
     return mCalSys;
 }
 
-void CalPrintPluginBase::setCalendarSystem(const KCalendarSystem *calsys)
-{
-    mCalSys = calsys;
-}
-
 int CalPrintPluginBase::headerHeight() const
 {
     if (mHeaderHeight >= 0) {

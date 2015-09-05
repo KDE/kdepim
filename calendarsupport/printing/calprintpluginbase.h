@@ -156,7 +156,6 @@ public:
     void setBorderWidth(const int border);
 
     const KCalendarSystem *calendarSystem();
-    void setCalendarSystem(const KCalendarSystem *calsys);
 
     /*****************************************************************
      **               PRINTING HELPER FUNCTIONS                     **
