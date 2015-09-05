@@ -81,6 +81,10 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
 
 TextGoToLineWidget::~TextGoToLineWidget()
 {
+    // mSpinbox can emit signals from its dtor, which are connected to this object
+    // so we need to make sure these connections are removed before we destroy ourselves
+    delete d->mSpinbox;
+
     delete d;
 }
 
