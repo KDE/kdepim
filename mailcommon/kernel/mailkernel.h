@@ -57,53 +57,29 @@ public:
      * MUST be called with a valid interface pointer, before any Kernel::self()
      * method is used. The pointer ownership will not be transferred to Kernel.
      */
-    void registerKernelIf(IKernel *kernelIf)
-    {
-        mKernelIf = kernelIf;
-    }
+    void registerKernelIf(IKernel *kernelIf);
 
-    bool kernelIsRegistered() const
-    {
-        return mKernelIf != 0;
-    }
+    bool kernelIsRegistered() const;
 
-    IKernel *kernelIf() const
-    {
-        Q_ASSERT(mKernelIf);
-        return mKernelIf;
-    }
+    IKernel *kernelIf() const;
 
     /**
      * Registers the interface dealing with mail settings. This function
      * MUST be called with a valid interface pointer, before any Kernel::self()
      * method is used. The pointer ownership will not be transferred to Kernel.
      */
-    void registerSettingsIf(ISettings *settingsIf)
-    {
-        mSettingsIf = settingsIf;
-    }
+    void registerSettingsIf(ISettings *settingsIf);
 
-    ISettings *settingsIf() const
-    {
-        Q_ASSERT(mSettingsIf);
-        return mSettingsIf;
-    }
+    ISettings *settingsIf() const;
 
     /**
      * Registers the interface dealing with mail settings. This function
      * MUST be called with a valid interface pointer, before any Kernel::self()
      * method is used. The pointer ownership will not be transferred to Kernel.
      */
-    void registerFilterIf(IFilter *filterIf)
-    {
-        mFilterIf = filterIf;
-    }
+    void registerFilterIf(IFilter *filterIf);
 
-    IFilter *filterIf() const
-    {
-        Q_ASSERT(mFilterIf);
-        return mFilterIf;
-    }
+    IFilter *filterIf() const;
 
     /**
      * Returns the collection associated with the given @p id, or an invalid

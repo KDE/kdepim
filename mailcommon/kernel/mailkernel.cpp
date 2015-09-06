@@ -75,6 +75,44 @@ Kernel *Kernel::self()
     return sInstance->kernel; //will create it
 }
 
+void Kernel::registerKernelIf(IKernel *kernelIf)
+{
+    mKernelIf = kernelIf;
+}
+
+bool Kernel::kernelIsRegistered() const
+{
+    return mKernelIf != 0;
+}
+
+IKernel *Kernel::kernelIf() const
+{
+    Q_ASSERT(mKernelIf);
+    return mKernelIf;
+}
+
+void Kernel::registerSettingsIf(ISettings *settingsIf)
+{
+    mSettingsIf = settingsIf;
+}
+
+ISettings *Kernel::settingsIf() const
+{
+    Q_ASSERT(mSettingsIf);
+    return mSettingsIf;
+}
+
+void Kernel::registerFilterIf(IFilter *filterIf)
+{
+    mFilterIf = filterIf;
+}
+
+IFilter *Kernel::filterIf() const
+{
+    Q_ASSERT(mFilterIf);
+    return mFilterIf;
+}
+
 PimCommon::ImapResourceCapabilitiesManager *Kernel::imapResourceManager() const
 {
     return mImapResourceManager;
