@@ -121,7 +121,9 @@ void RichTextComposerControler::disablePainter()
     // If the painter is active, paint the selection with the
     // correct format.
     if (richTextComposer()->textCursor().hasSelection()) {
-        richTextComposer()->textCursor().setCharFormat(d->painterFormat);
+        QTextCursor cursor = richTextComposer()->textCursor();
+        cursor.setCharFormat(d->painterFormat);
+        richTextComposer()->setTextCursor(cursor);
     }
     d->painterActive = false;
 }
