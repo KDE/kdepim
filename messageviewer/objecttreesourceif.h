@@ -47,8 +47,8 @@ class MESSAGEVIEWER_EXPORT ObjectTreeSourceIf
 
 public:
 
-    ObjectTreeSourceIf() {};
-    virtual ~ObjectTreeSourceIf() {};
+    ObjectTreeSourceIf() {}
+    virtual ~ObjectTreeSourceIf() {}
 
     /**
       * Sets the type of mail that is currently displayed. Applications can display this
