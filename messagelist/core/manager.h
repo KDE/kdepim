@@ -26,7 +26,6 @@
 #include <QHash>
 #include <QObject>
 
-#include <messagelist/messagelist_export.h>
 #include <collection.h>
 class QPixmap;
 
