@@ -24,7 +24,7 @@
 class QPlainTextEdit;
 namespace TemplateParser
 {
-
+class TemplatesConfigurationPrivate;
 class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::TemplatesConfigurationBase
 {
     Q_OBJECT
@@ -32,6 +32,7 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
 public:
 
     explicit TemplatesConfiguration(QWidget *parent = Q_NULLPTR, const QString &name = QString());
+    ~TemplatesConfiguration();
 
     void loadFromGlobal();
     void saveToGlobal();
@@ -61,8 +62,7 @@ Q_SIGNALS:
 private:
     QPlainTextEdit *currentTextEdit() const;
     QString strOrBlank(const QString &str);
-    QString mHelpString;
-
+    TemplatesConfigurationPrivate *const d;
 };
 
 }

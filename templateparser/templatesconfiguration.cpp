@@ -29,9 +29,20 @@
 #include <QWhatsThis>
 
 using namespace TemplateParser;
+class TemplateParser::TemplatesConfigurationPrivate
+{
+public:
+    TemplatesConfigurationPrivate()
+    {
+
+    }
+
+    QString mHelpString;
+};
 
 TemplatesConfiguration::TemplatesConfiguration(QWidget *parent, const QString &name)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new TemplateParser::TemplatesConfigurationPrivate)
 {
     setupUi(this);
     setObjectName(name);
@@ -53,7 +64,7 @@ TemplatesConfiguration::TemplatesConfiguration(QWidget *parent, const QString &n
     connect(mInsertCommand, SIGNAL(insertCommand(QString,int)),
             this, SLOT(slotInsertCommand(QString,int)));
 
-    mHelpString =
+    d->mHelpString =
         i18n("<p>Here you can create and manage templates to use when "
              "composing new messages, replies or forwarded messages.</p>"
              "<p>The message templates support substitution commands, "
@@ -61,17 +72,17 @@ TemplatesConfiguration::TemplatesConfiguration(QWidget *parent, const QString &n
              "the <i>Insert command</i> menu.</p>");
     const QString templateConfigurationName(name);
     if (templateConfigurationName == QLatin1String("folder-templates")) {
-        mHelpString +=
+        d->mHelpString +=
             i18n("<p>Templates specified here are folder-specific. "
                  "They override both global templates and per-identity "
                  "templates.</p>");
     } else if (templateConfigurationName == QLatin1String("identity-templates")) {
-        mHelpString +=
+        d->mHelpString +=
             i18n("<p>Templates specified here are identity-specific. "
                  "They override global templates, but can be overridden by "
                  "per-folder templates if they are specified.</p>");
     } else {
-        mHelpString +=
+        d->mHelpString +=
             i18n("<p>These are global (default) templates. They can be overridden "
                  "by per-identity templates or per-folder templates "
                  "if they are specified.</p>");
@@ -83,9 +94,14 @@ TemplatesConfiguration::TemplatesConfiguration(QWidget *parent, const QString &n
     mHelp->setContextMenuPolicy(Qt::NoContextMenu);
 }
 
+TemplatesConfiguration::~TemplatesConfiguration()
+{
+    delete d;
+}
+
 void TemplatesConfiguration::slotHelpLinkClicked(const QString &)
 {
-    QWhatsThis::showText(QCursor::pos(), mHelpString);
+    QWhatsThis::showText(QCursor::pos(), d->mHelpString);
 }
 
 void TemplatesConfiguration::slotTextChanged()

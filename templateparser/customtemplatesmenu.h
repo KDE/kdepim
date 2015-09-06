@@ -33,7 +33,7 @@ class KActionMenu;
 
 namespace TemplateParser
 {
-
+class CustomTemplatesMenuPrivate;
 class TEMPLATEPARSER_EXPORT CustomTemplatesMenu : public QObject
 {
     Q_OBJECT
@@ -61,7 +61,7 @@ private Q_SLOTS:
 
 private:
     void clear();
-
+    CustomTemplatesMenuPrivate *const d;
     KActionCollection *mOwnerActionCollection;
 
     QStringList mCustomTemplates;
