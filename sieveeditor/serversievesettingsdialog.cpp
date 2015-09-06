@@ -50,14 +50,31 @@ ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ServerSieveSettingsDialog::reject);
     mainLayout->addWidget(buttonBox);
 
-    resize(400, 300);
+    readConfig();
     mOkButton->setEnabled(false);
 }
 
 ServerSieveSettingsDialog::~ServerSieveSettingsDialog()
 {
-
+    writeConfig();
 }
+
+void ServerSieveSettingsDialog::readConfig()
+{
+    KConfigGroup group(KSharedConfig::openConfig(), "ServerSieveSettingsDialog");
+    const QSize size = group.readEntry("Size", QSize(450, 350));
+    if (size.isValid()) {
+        resize(size);
+    }
+}
+
+void ServerSieveSettingsDialog::writeConfig()
+{
+    KConfigGroup group(KSharedConfig::openConfig(), "ServerSieveSettingsDialog");
+    group.writeEntry("Size", size());
+    group.sync();
+}
+
 
 void ServerSieveSettingsDialog::slotEnableButtonOk(bool b)
 {

@@ -51,6 +51,8 @@ private Q_SLOTS:
     void slotEnableButtonOk(bool);
 
 private:
+    void readConfig();
+    void writeConfig();
     ServerSieveSettings *mServerSieveSettings;
     QPushButton *mOkButton;
 };
