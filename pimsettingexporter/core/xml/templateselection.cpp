@@ -205,6 +205,10 @@ void TemplateSelection::createTemplate(const QHash<Utils::AppsType, Utils::impor
             saveParameters(i.value().types, tag);
             break;
         }
+        case Utils::Unknown: {
+            qCCritical(PIMSETTINGEXPORTERCORE_LOG) << "Code must not use this enum here";
+            break;
+        }
         }
         ++i;
     }
