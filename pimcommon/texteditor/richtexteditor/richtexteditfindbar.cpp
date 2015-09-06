@@ -29,8 +29,8 @@ using namespace PimCommon;
 class PimCommon::RichTextEditFindBarPrivate
 {
 public:
-    RichTextEditFindBarPrivate()
-        : mView(Q_NULLPTR)
+    RichTextEditFindBarPrivate(QTextEdit *view)
+        : mView(view)
     {
 
     }
@@ -40,7 +40,7 @@ public:
 
 RichTextEditFindBar::RichTextEditFindBar(QTextEdit *view, QWidget *parent)
     : TextEditFindBarBase(parent),
-      d(new PimCommon::RichTextEditFindBarPrivate)
+      d(new PimCommon::RichTextEditFindBarPrivate(view))
 {
 }
 
