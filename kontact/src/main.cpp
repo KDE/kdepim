@@ -81,7 +81,7 @@ public Q_SLOTS:
     void loadCommandLineOptionsForNewInstance();
 
 private:
-    MainWindow *mMainWindow;
+    QPointer<MainWindow> mMainWindow;
     bool mSessionRestored;
 };
 
