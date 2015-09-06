@@ -16,7 +16,6 @@ add_library( followupreminder ${followupreminderlib_SRCS} )
 generate_export_header(followupreminder BASE_NAME followupreminder)
 target_link_libraries( followupreminder 
 PRIVATE
-   KF5::CoreAddons 
    KF5::ConfigGui 
    Qt5::DBus 
 )
