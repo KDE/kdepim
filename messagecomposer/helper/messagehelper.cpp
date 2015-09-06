@@ -260,36 +260,4 @@ QString stripOffPrefixes(const QString &str)
                            true, QString()).trimmed();
 }
 
-QString skipKeyword(const QString &aStr, QChar sepChar,
-                    bool *hasKeyword)
-{
-    QString str = aStr;
-
-    while (str[0] == QChar::fromLatin1(' ')) {
-        str.remove(0, 1);
-    }
-    if (hasKeyword) {
-        *hasKeyword = false;
-    }
-
-    unsigned int i = 0, maxChars = 3;
-    unsigned int strLength(str.length());
-    for (i = 0; i < strLength && i < maxChars; ++i) {
-        if (str[i] < QChar::fromLatin1('A') || str[i] == sepChar) {
-            break;
-        }
-    }
-
-    if (str[i] == sepChar) { // skip following spaces too
-        do {
-            ++i;
-        } while (str[i] == QChar::fromLatin1(' '));
-        if (hasKeyword) {
-            *hasKeyword = true;
-        }
-        return str.mid(i);
-    }
-    return str;
-}
-
 }
