@@ -54,7 +54,6 @@ public:
     QSlider *mVolume;
 };
 
-
 TextToSpeechWidget::TextToSpeechWidget(QWidget *parent)
     : QWidget(parent),
       d(new PimCommon::TextToSpeechWidgetPrivate)

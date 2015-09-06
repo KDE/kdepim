@@ -1005,8 +1005,9 @@ QByteArray MessageFactory::getRefStr(const KMime::Message::Ptr &msg)
     QByteArray firstRef, lastRef, refStr, retRefStr;
     int i, j;
 
-    if (auto hdr = msg->references(false))
+    if (auto hdr = msg->references(false)) {
         refStr = hdr->as7BitString(false).trimmed();
+    }
 
     if (refStr.isEmpty()) {
         return msg->messageID()->as7BitString(false);

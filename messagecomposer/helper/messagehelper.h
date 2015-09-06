@@ -57,7 +57,7 @@ void applyIdentity(const KMime::Message::Ptr &message, const KIdentityManagement
 /** Initialize headers fields according to the identity and the transport
    header of the given original message */
 void initFromMessage(const KMime::Message::Ptr &msg, const KMime::Message::Ptr &orgiMsg, KIdentityManagement::IdentityManager *,
-        uint id, bool idHeaders = true);
+                     uint id, bool idHeaders = true);
 
 KMime::Types::AddrSpecList MESSAGECOMPOSER_EXPORT extractAddrSpecs(const KMime::Message::Ptr &msg, const QByteArray &header);
 
@@ -68,7 +68,7 @@ KMime::Types::AddrSpecList MESSAGECOMPOSER_EXPORT extractAddrSpecs(const KMime::
       #subject() is replaced by @p newPrefix
   **/
 QString cleanSubject(const KMime::Message::Ptr &msg, const QStringList &prefixRegExps, bool replace,
-        const QString &newPrefix);
+                     const QString &newPrefix);
 
 /** Return this mails subject, with all "forward" and "reply"
       prefixes removed */
@@ -86,9 +86,9 @@ QString replySubject(const KMime::Message::Ptr &msg);
       @p str is replaced by @p newPrefix.
   **/
 QString replacePrefixes(const QString &str,
-        const QStringList &prefixRegExps,
-        bool replace,
-        const QString &newPrefix);
+                        const QStringList &prefixRegExps,
+                        bool replace,
+                        const QString &newPrefix);
 
 /** Set fields that are either automatically set (Message-id)
     or that do not change from one message to another (MIME-Version).
@@ -107,7 +107,7 @@ QString stripOffPrefixes(const QString &str);
    * If keywordFound is specified it will be true if a keyword was skipped
    * and false otherwise. */
 QString skipKeyword(const QString &str, QChar sepChar = QLatin1Char(':'),
-        bool *keywordFound = Q_NULLPTR);
+                    bool *keywordFound = Q_NULLPTR);
 
 }
 

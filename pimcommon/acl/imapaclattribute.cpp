@@ -42,7 +42,6 @@ public:
     KIMAP::Acl::Rights mMyRights;
 };
 
-
 ImapAclAttribute::ImapAclAttribute()
     : d(new PimCommon::ImapAclAttributePrivate)
 {
@@ -52,8 +51,8 @@ ImapAclAttribute::ImapAclAttribute(const QMap<QByteArray, KIMAP::Acl::Rights> &r
                                    const QMap<QByteArray, KIMAP::Acl::Rights> &oldRights)
     : d(new PimCommon::ImapAclAttributePrivate)
 {
-      d->mRights = rights;
-      d->mOldRights = oldRights;
+    d->mRights = rights;
+    d->mOldRights = oldRights;
 }
 
 ImapAclAttribute::~ImapAclAttribute()

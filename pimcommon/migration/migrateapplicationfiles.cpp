@@ -44,7 +44,6 @@ public:
     int mCurrentConfigVersion;
 };
 
-
 MigrateApplicationFiles::MigrateApplicationFiles(QObject *parent)
     : QObject(parent),
       d(new PimCommon::MigrateApplicationFilesPrivate)

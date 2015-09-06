@@ -367,7 +367,7 @@ private:
      * @param textPart a KMime::Content that is to be added as a child.
      * @since 4.8
      */
-    KMime::Content *createMultipartMixed(const QVector<KMime::Content*> &attachments,
+    KMime::Content *createMultipartMixed(const QVector<KMime::Content *> &attachments,
                                          KMime::Content *textPart) const;
 
     /**

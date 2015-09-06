@@ -1253,7 +1253,7 @@ void TemplateParser::addProcessedBodyToMessage(const QString &plainBody,
     mMsg->parse();
 }
 
-KMime::Content *TemplateParser::createMultipartMixed(const QVector<KMime::Content*> &attachments,
+KMime::Content *TemplateParser::createMultipartMixed(const QVector<KMime::Content *> &attachments,
         KMime::Content *textPart) const
 {
     KMime::Content *mixedPart = new KMime::Content(mMsg.data());

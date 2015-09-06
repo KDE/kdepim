@@ -38,8 +38,6 @@ public:
     QTextEdit *mView;
 };
 
-
-
 RichTextEditFindBar::RichTextEditFindBar(QTextEdit *view, QWidget *parent)
     : TextEditFindBarBase(parent),
       d(new PimCommon::RichTextEditFindBarPrivate)

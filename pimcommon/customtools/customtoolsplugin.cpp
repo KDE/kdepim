@@ -35,7 +35,6 @@ CustomToolsPlugin::CustomToolsPlugin(QObject *parent)
 
 }
 
-
 CustomToolsPlugin::~CustomToolsPlugin()
 {
     delete d;

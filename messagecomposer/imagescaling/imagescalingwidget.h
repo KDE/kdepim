@@ -26,7 +26,6 @@ namespace Ui
 class ImageScalingWidget;
 }
 
-
 namespace MessageComposer
 {
 class ImageScalingWidgetPrivate;

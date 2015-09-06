@@ -22,7 +22,7 @@
 #include <customtools/customtoolswidgetng.h>
 
 using namespace PimCommon;
-K_PLUGIN_FACTORY_WITH_JSON(PimCommonTranslatorPluginFactory,"pimcommon_translatorplugin.json", registerPlugin<TranslatorPlugin>();)
+K_PLUGIN_FACTORY_WITH_JSON(PimCommonTranslatorPluginFactory, "pimcommon_translatorplugin.json", registerPlugin<TranslatorPlugin>();)
 
 TranslatorPlugin::TranslatorPlugin(QObject *parent, const QList<QVariant> &)
     : PimCommon::CustomToolsPlugin(parent)

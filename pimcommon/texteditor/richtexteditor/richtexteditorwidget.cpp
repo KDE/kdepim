@@ -45,7 +45,6 @@ public:
     PimCommon::SlideContainer *mSliderContainer;
 };
 
-
 RichTextEditorWidget::RichTextEditorWidget(RichTextEditor *customEditor, QWidget *parent)
     : QWidget(parent),
       d(new PimCommon::RichTextEditorWidgetPrivate)

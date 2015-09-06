@@ -23,7 +23,7 @@
 #include <customtools/customtoolswidgetng.h>
 
 using namespace PimCommon;
-K_PLUGIN_FACTORY_WITH_JSON(PimCommonShorturlPluginFactory,"pimcommon_shorturlplugin.json", registerPlugin<ShorturlPlugin>();)
+K_PLUGIN_FACTORY_WITH_JSON(PimCommonShorturlPluginFactory, "pimcommon_shorturlplugin.json", registerPlugin<ShorturlPlugin>();)
 
 ShorturlPlugin::ShorturlPlugin(QObject *parent, const QList<QVariant> &)
     : PimCommon::CustomToolsPlugin(parent)
@@ -50,6 +50,5 @@ QString ShorturlPlugin::customToolName() const
 {
     return i18n("Translator");
 }
-
 
 #include "shorturlplugin.moc"

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "customtoolsplugin.h"
 #include "customtoolspluginmanager.h"
 #include <KPluginFactory>
@@ -84,7 +83,6 @@ void CustomToolsPluginManagerPrivate::initializePluginList()
         return md.serviceTypes().contains(QStringLiteral("PimCommonCustomTools/Plugin"));
     });
 
-
     QVectorIterator<KPluginMetaData> i(plugins);
     i.toBack();
     QSet<QString> unique;
@@ -93,8 +91,9 @@ void CustomToolsPluginManagerPrivate::initializePluginList()
         info.metaData = i.previous();
 
         // only load plugins once, even if found multiple times!
-        if (unique.contains(info.saveName()))
+        if (unique.contains(info.saveName())) {
             continue;
+        }
         info.plugin = Q_NULLPTR;
         mPluginList.push_back(info);
         unique.insert(info.saveName());
@@ -121,7 +120,6 @@ void CustomToolsPluginManagerPrivate::loadPlugin(CustomToolsPluginInfo *item)
 {
     item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<PimCommon::CustomToolsPlugin>(q, QVariantList() << item->saveName());
 }
-
 
 CustomToolsPluginManager *CustomToolsPluginManager::self()
 {

@@ -52,7 +52,6 @@ CustomToolsWidgetNg::CustomToolsWidgetNg(KActionCollection *ac, QWidget *parent)
     hide();
 }
 
-
 CustomToolsWidgetNg::~CustomToolsWidgetNg()
 {
     delete d;
@@ -61,7 +60,7 @@ CustomToolsWidgetNg::~CustomToolsWidgetNg()
 void CustomToolsWidgetNg::initializeView(KActionCollection *ac)
 {
     QVector<CustomToolsPlugin *> localPluginsList = PimCommon::CustomToolsPluginManager::self()->pluginsList();
-    Q_FOREACH(CustomToolsPlugin *plugin, localPluginsList) {
+    Q_FOREACH (CustomToolsPlugin *plugin, localPluginsList) {
         PimCommon::CustomToolsViewInterface *localCreateView = plugin->createView(ac, this);
         d->mListInterfaceView.append(localCreateView);
         d->mStackedWidget->addWidget(localCreateView);
@@ -70,7 +69,7 @@ void CustomToolsWidgetNg::initializeView(KActionCollection *ac)
 
 void CustomToolsWidgetNg::slotToolsWasClosed()
 {
-    Q_FOREACH(PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
+    Q_FOREACH (PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
         interface->action()->setChecked(false);
     }
     hide();
@@ -81,7 +80,7 @@ void CustomToolsWidgetNg::slotActivateView(QWidget *w)
     if (w) {
         d->mStackedWidget->setCurrentWidget(w);
         setVisible(true);
-        Q_FOREACH(PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
+        Q_FOREACH (PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
             if (interface != w) {
                 interface->action()->setChecked(false);
             }
@@ -96,7 +95,7 @@ void CustomToolsWidgetNg::slotActivateView(QWidget *w)
 QList<KToggleAction *> CustomToolsWidgetNg::actionList() const
 {
     QList<KToggleAction *> lstActions;
-    Q_FOREACH(PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
+    Q_FOREACH (PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
         lstActions << interface->action();
     }
     return lstActions;
@@ -105,7 +104,7 @@ QList<KToggleAction *> CustomToolsWidgetNg::actionList() const
 void CustomToolsWidgetNg::setText(const QString &text)
 {
     if (isVisible()) {
-        Q_FOREACH(PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
+        Q_FOREACH (PimCommon::CustomToolsViewInterface *interface, d->mListInterfaceView) {
             if (interface == d->mStackedWidget->currentWidget()) {
                 interface->setText(text);
                 break;
