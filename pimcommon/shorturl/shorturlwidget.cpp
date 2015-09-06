@@ -47,7 +47,6 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
       mEngine(Q_NULLPTR),
       mStandalone(false)
 {
-    qDebug() << "ShortUrlWidget::ShortUrlWidget " << this;
     loadEngine();
     QGridLayout *grid = new QGridLayout;
     grid->setMargin(2);
