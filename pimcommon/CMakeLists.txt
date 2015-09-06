@@ -289,7 +289,8 @@ generate_export_header(pimcommon BASE_NAME pimcommon)
 
 if( KF5GAPI_FOUND )
   target_link_libraries(pimcommon
-    PUBLIC KF5::GAPIDrive
+    PRIVATE
+      KF5::GAPIDrive
   )
 endif()
 
