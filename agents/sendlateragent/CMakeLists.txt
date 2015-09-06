@@ -36,7 +36,6 @@ target_link_libraries(sendlater
     KF5::ConfigGui
     Qt5::DBus
     Qt5::Widgets
-    KF5::IconThemes
 )
 target_include_directories(sendlater PUBLIC "$<BUILD_INTERFACE:${sendlateragent_SOURCE_DIR};${sendlateragent_BINARY_DIR}>")
 set_target_properties( sendlater PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
