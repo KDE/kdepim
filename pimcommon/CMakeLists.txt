@@ -296,7 +296,7 @@ endif()
 
 if ( Qt5TextToSpeech_FOUND ) 
   target_link_libraries(pimcommon
-    PUBLIC Qt5::TextToSpeech
+    PRIVATE Qt5::TextToSpeech
   )
 endif()
 
