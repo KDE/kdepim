@@ -411,7 +411,8 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved(KJob *job)
             listEmails << mExpandedTo;
             listEmails << mExpandedCc;
             listEmails << mExpandedBcc;
-            autoresizeImage = MessageComposer::Utils::filterRecipients(listEmails);
+            MessageComposer::Utils resizeUtils;
+            autoresizeImage = resizeUtils.filterRecipients(listEmails);
         }
 
     } else { // saved to draft, so keep the old values, not very nice.
@@ -479,7 +480,8 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved(KJob *job)
     if (autoresizeImage) {
         if (MessageComposer::MessageComposerSettings::self()->askBeforeResizing()) {
             if (m_attachmentModel) {
-                if (MessageComposer::Utils::containsImage(m_attachmentModel->attachments())) {
+                MessageComposer::Utils resizeUtils;
+                if (resizeUtils.containsImage(m_attachmentModel->attachments())) {
                     const int rc = KMessageBox::warningYesNo(m_parentWidget, i18n("Do you want to resize images?"),
                                    i18n("Auto Resize Images"), KStandardGuiItem::yes(), KStandardGuiItem::no());
                     if (rc == KMessageBox::Yes) {
