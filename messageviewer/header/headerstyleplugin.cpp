@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "headerstyleplugin.h"Z
+#include "headerstyleplugin.h"
 
 using namespace MessageViewer;
 class MessageViewer::HeaderStylePluginPrivate

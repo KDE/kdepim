@@ -29,3 +29,8 @@ FancyHeaderStyleInterface::~FancyHeaderStyleInterface()
 
 }
 
+KToggleAction *FancyHeaderStyleInterface::action() const
+{
+    return Q_NULLPTR;
+}
+

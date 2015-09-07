@@ -28,6 +28,7 @@ namespace MessageViewer
 class HeaderStyle;
 class HeaderStrategy;
 class HeaderStylePluginPrivate;
+class HeaderStyleInterface;
 class MESSAGEVIEWER_EXPORT HeaderStylePlugin : public QObject
 {
     Q_OBJECT
@@ -37,7 +38,7 @@ public:
 
     virtual HeaderStyle *headerStyle() const = 0;
     virtual HeaderStrategy *headerStrategy() const = 0;
-    virtual KToggleAction *createAction(KActionCollection *ac) = 0;
+    virtual HeaderStyleInterface *createView(KActionCollection *ac) = 0;
 
 private:
     HeaderStylePluginPrivate *const d;

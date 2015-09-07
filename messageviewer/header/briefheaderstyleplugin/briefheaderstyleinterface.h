@@ -30,6 +30,7 @@ public:
     explicit BriefHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
     ~BriefHeaderStyleInterface();
 
+    KToggleAction *action() const Q_DECL_OVERRIDE;
 };
 
 }

@@ -29,3 +29,8 @@ GrantleeHeaderStyleInterface::~GrantleeHeaderStyleInterface()
 
 }
 
+KToggleAction *GrantleeHeaderStyleInterface::action() const
+{
+    return Q_NULLPTR;
+}
+

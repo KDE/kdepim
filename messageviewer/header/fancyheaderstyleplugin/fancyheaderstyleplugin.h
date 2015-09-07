@@ -33,7 +33,7 @@ public:
 
     HeaderStyle *headerStyle() const Q_DECL_OVERRIDE;
     HeaderStrategy *headerStrategy() const Q_DECL_OVERRIDE;
-    KToggleAction *createAction(KActionCollection *ac) Q_DECL_OVERRIDE;
+    HeaderStyleInterface *createView(KActionCollection *ac) Q_DECL_OVERRIDE;
 private:
     HeaderStyle *mHeaderStyle;
     HeaderStrategy *mHeaderStrategy;

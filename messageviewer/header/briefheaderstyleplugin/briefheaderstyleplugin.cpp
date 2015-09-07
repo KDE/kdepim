@@ -16,6 +16,7 @@
 */
 
 #include "briefheaderstyleplugin.h"
+#include "briefheaderstyleinterface.h"
 #include "header/briefheaderstyle.h"
 //Temporary
 #include "header/headerstrategy_p.h"
@@ -46,10 +47,11 @@ HeaderStrategy *BriefHeaderStylePlugin::headerStrategy() const
     return mHeaderStrategy;
 }
 
-KToggleAction *BriefHeaderStylePlugin::createAction(KActionCollection *ac)
+MessageViewer::HeaderStyleInterface *BriefHeaderStylePlugin::createView(KActionCollection *ac)
 {
+    MessageViewer::BriefHeaderStyleInterface *view = new MessageViewer::BriefHeaderStyleInterface(mHeaderStyle, mHeaderStrategy);
     //TODO
-    return Q_NULLPTR;
+    return view;
 }
 
 #include "briefheaderstyleplugin.moc"

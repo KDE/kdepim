@@ -46,7 +46,7 @@ HeaderStrategy *CustomHeaderStylePlugin::headerStrategy() const
     return mHeaderStrategy;
 }
 
-KToggleAction *CustomHeaderStylePlugin::createAction(KActionCollection *ac)
+HeaderStyleInterface *CustomHeaderStylePlugin::createView(KActionCollection *ac)
 {
     //TODO
     return Q_NULLPTR;

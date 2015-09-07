@@ -46,7 +46,7 @@ HeaderStrategy *FancyHeaderStylePlugin::headerStrategy() const
     return mHeaderStrategy;
 }
 
-KToggleAction *FancyHeaderStylePlugin::createAction(KActionCollection *ac)
+HeaderStyleInterface *FancyHeaderStylePlugin::createView(KActionCollection *ac)
 {
     //TODO
     return Q_NULLPTR;

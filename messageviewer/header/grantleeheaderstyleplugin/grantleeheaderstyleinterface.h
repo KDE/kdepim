@@ -30,6 +30,7 @@ public:
     explicit GrantleeHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
     ~GrantleeHeaderStyleInterface();
 
+    KToggleAction *action() const Q_DECL_OVERRIDE;
 };
 
 }

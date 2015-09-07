@@ -29,3 +29,8 @@ EnterpriseHeaderStyleInterface::~EnterpriseHeaderStyleInterface()
 
 }
 
+KToggleAction *EnterpriseHeaderStyleInterface::action() const
+{
+    return Q_NULLPTR;
+}
+

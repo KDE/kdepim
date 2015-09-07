@@ -29,3 +29,8 @@ BriefHeaderStyleInterface::~BriefHeaderStyleInterface()
 
 }
 
+KToggleAction *BriefHeaderStyleInterface::action() const
+{
+    return Q_NULLPTR;
+}
+

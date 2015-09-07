@@ -29,3 +29,8 @@ CustomHeaderStyleInterface::~CustomHeaderStyleInterface()
 
 }
 
+KToggleAction *CustomHeaderStyleInterface::action() const
+{
+    return Q_NULLPTR;
+}
+
