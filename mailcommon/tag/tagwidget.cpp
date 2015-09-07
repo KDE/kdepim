@@ -32,9 +32,44 @@
 #include <QIcon>
 #include <KConfigGroup>
 using namespace MailCommon;
+class MailCommon::TagWidgetPrivate
+{
+public:
+    TagWidgetPrivate()
+        : mTagNameLineEdit(Q_NULLPTR),
+          mTextColorCheck(Q_NULLPTR),
+          mBackgroundColorCheck(Q_NULLPTR),
+          mTextFontCheck(Q_NULLPTR),
+          mInToolbarCheck(Q_NULLPTR),
+          mTextColorCombo(Q_NULLPTR),
+          mBackgroundColorCombo(Q_NULLPTR),
+          mFontRequester(Q_NULLPTR),
+          mIconButton(Q_NULLPTR),
+          mKeySequenceWidget(Q_NULLPTR)
+    {
+
+    }
+
+    KLineEdit *mTagNameLineEdit;
+
+    QCheckBox *mTextColorCheck;
+    QCheckBox *mBackgroundColorCheck;
+    QCheckBox *mTextFontCheck;
+    QCheckBox *mInToolbarCheck;
+
+    KColorCombo *mTextColorCombo;
+    KColorCombo *mBackgroundColorCombo;
+
+    KFontRequester *mFontRequester;
+
+    KIconButton *mIconButton;
+
+    KKeySequenceWidget *mKeySequenceWidget;
+};
 
 TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      d(new MailCommon::TagWidgetPrivate)
 {
     QGridLayout *settings = new QGridLayout;
     setLayout(settings);
@@ -44,109 +79,109 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     settings->addLayout(spacer, 0, 0, 1, 2);
 
     //First row for renaming
-    mTagNameLineEdit = new KLineEdit(this);
-    mTagNameLineEdit->setClearButtonEnabled(true);
-    mTagNameLineEdit->setTrapReturnKey(true);
-    settings->addWidget(mTagNameLineEdit, 1, 1);
+    d->mTagNameLineEdit = new KLineEdit(this);
+    d->mTagNameLineEdit->setClearButtonEnabled(true);
+    d->mTagNameLineEdit->setTrapReturnKey(true);
+    settings->addWidget(d->mTagNameLineEdit, 1, 1);
 
     QLabel *namelabel = new QLabel(i18nc("@label:listbox Name of the tag", "Name:")
                                    , this);
-    namelabel->setBuddy(mTagNameLineEdit);
+    namelabel->setBuddy(d->mTagNameLineEdit);
     settings->addWidget(namelabel, 1, 0);
 
-    connect(mTagNameLineEdit, &KLineEdit::textChanged, this, &TagWidget::slotEmitChangeCheck);
+    connect(d->mTagNameLineEdit, &KLineEdit::textChanged, this, &TagWidget::slotEmitChangeCheck);
 
     //Second row for text color
-    mTextColorCheck = new QCheckBox(i18n("Change te&xt color:"),
+    d->mTextColorCheck = new QCheckBox(i18n("Change te&xt color:"),
                                     this);
-    settings->addWidget(mTextColorCheck, 2, 0);
+    settings->addWidget(d->mTextColorCheck, 2, 0);
 
-    mTextColorCombo = new KColorCombo(this);
-    settings->addWidget(mTextColorCombo, 2, 1);
-    mTextColorCombo->setEnabled(false);
+    d->mTextColorCombo = new KColorCombo(this);
+    settings->addWidget(d->mTextColorCombo, 2, 1);
+    d->mTextColorCombo->setEnabled(false);
 
-    connect(mTextColorCheck, &QCheckBox::toggled, mTextColorCombo, &KColorCombo::setEnabled);
-    connect(mTextColorCheck, &QCheckBox::stateChanged,
+    connect(d->mTextColorCheck, &QCheckBox::toggled, d->mTextColorCombo, &KColorCombo::setEnabled);
+    connect(d->mTextColorCheck, &QCheckBox::stateChanged,
             this, &TagWidget::slotEmitChangeCheck);
-    connect(mTextColorCombo, &KColorCombo::activated,
+    connect(d->mTextColorCombo, &KColorCombo::activated,
             this, &TagWidget::slotEmitChangeCheck);
 
     //Third row for text background color
-    mBackgroundColorCheck = new QCheckBox(i18n("Change &background color:"),
+    d->mBackgroundColorCheck = new QCheckBox(i18n("Change &background color:"),
                                           this);
-    settings->addWidget(mBackgroundColorCheck, 3, 0);
+    settings->addWidget(d->mBackgroundColorCheck, 3, 0);
 
-    mBackgroundColorCombo = new KColorCombo(this);
-    settings->addWidget(mBackgroundColorCombo, 3, 1);
-    mBackgroundColorCombo->setEnabled(false);
+    d->mBackgroundColorCombo = new KColorCombo(this);
+    settings->addWidget(d->mBackgroundColorCombo, 3, 1);
+    d->mBackgroundColorCombo->setEnabled(false);
 
-    connect(mBackgroundColorCheck, &QAbstractButton::toggled,
-            mBackgroundColorCombo, &QWidget::setEnabled);
-    connect(mBackgroundColorCheck, &QCheckBox::stateChanged,
+    connect(d->mBackgroundColorCheck, &QAbstractButton::toggled,
+            d->mBackgroundColorCombo, &QWidget::setEnabled);
+    connect(d->mBackgroundColorCheck, &QCheckBox::stateChanged,
             this, &TagWidget::slotEmitChangeCheck);
-    connect(mBackgroundColorCombo, &KColorCombo::activated,
+    connect(d->mBackgroundColorCombo, &KColorCombo::activated,
             this, &TagWidget::slotEmitChangeCheck);
 
     //Fourth for font selection
-    mTextFontCheck = new QCheckBox(i18n("Change fo&nt:"), this);
-    settings->addWidget(mTextFontCheck, 4, 0);
+    d->mTextFontCheck = new QCheckBox(i18n("Change fo&nt:"), this);
+    settings->addWidget(d->mTextFontCheck, 4, 0);
 
-    mFontRequester = new KFontRequester(this);
-    settings->addWidget(mFontRequester, 4, 1);
-    mFontRequester->setEnabled(false);
+    d->mFontRequester = new KFontRequester(this);
+    settings->addWidget(d->mFontRequester, 4, 1);
+    d->mFontRequester->setEnabled(false);
 
-    connect(mTextFontCheck, &QAbstractButton::toggled,
-            mFontRequester, &QWidget::setEnabled);
-    connect(mTextFontCheck, &QCheckBox::stateChanged,
+    connect(d->mTextFontCheck, &QAbstractButton::toggled,
+            d->mFontRequester, &QWidget::setEnabled);
+    connect(d->mTextFontCheck, &QCheckBox::stateChanged,
             this, &TagWidget::slotEmitChangeCheck);
-    connect(mFontRequester, &KFontRequester::fontSelected,
+    connect(d->mFontRequester, &KFontRequester::fontSelected,
             this, &TagWidget::slotEmitChangeCheck);
 
     //Fifth for toolbar icon
-    mIconButton = new KIconButton(this);
-    mIconButton->setIconSize(16);
-    mIconButton->setIconType(KIconLoader::NoGroup, KIconLoader::Action);
-    mIconButton->setIcon(QIcon::fromTheme(QStringLiteral("mail-tagged")));
-    settings->addWidget(mIconButton, 5, 1);
-    connect(mIconButton, &KIconButton::iconChanged,
+    d->mIconButton = new KIconButton(this);
+    d->mIconButton->setIconSize(16);
+    d->mIconButton->setIconType(KIconLoader::NoGroup, KIconLoader::Action);
+    d->mIconButton->setIcon(QIcon::fromTheme(QStringLiteral("mail-tagged")));
+    settings->addWidget(d->mIconButton, 5, 1);
+    connect(d->mIconButton, &KIconButton::iconChanged,
             this, &TagWidget::iconNameChanged);
 
     QLabel *iconlabel = new QLabel(i18n("Message tag &icon:"),
                                    this);
-    iconlabel->setBuddy(mIconButton);
+    iconlabel->setBuddy(d->mIconButton);
     settings->addWidget(iconlabel, 5, 0);
 
     //We do not connect the checkbox to icon selector since icons are used in the
     //menus as well
-    connect(mIconButton, &KIconButton::iconChanged,
+    connect(d->mIconButton, &KIconButton::iconChanged,
             this, &TagWidget::slotEmitChangeCheck);
 
     //Sixth for shortcut
-    mKeySequenceWidget = new KKeySequenceWidget(this);
-    settings->addWidget(mKeySequenceWidget, 6, 1);
+    d->mKeySequenceWidget = new KKeySequenceWidget(this);
+    settings->addWidget(d->mKeySequenceWidget, 6, 1);
     QLabel *sclabel = new QLabel(i18n("Shortc&ut:") , this);
-    sclabel->setBuddy(mKeySequenceWidget);
+    sclabel->setBuddy(d->mKeySequenceWidget);
     settings->addWidget(sclabel, 6, 0);
     if (!actionCollections.isEmpty()) {
-        mKeySequenceWidget->setCheckActionCollections(actionCollections);
-        connect(mKeySequenceWidget, &KKeySequenceWidget::keySequenceChanged,
+        d->mKeySequenceWidget->setCheckActionCollections(actionCollections);
+        connect(d->mKeySequenceWidget, &KKeySequenceWidget::keySequenceChanged,
                 this, &TagWidget::slotEmitChangeCheck);
     } else {
-        mKeySequenceWidget->setEnabled(false);
+        d->mKeySequenceWidget->setEnabled(false);
     }
 
     //Seventh for Toolbar checkbox
-    mInToolbarCheck = new QCheckBox(i18n("Enable &toolbar button"),
+    d->mInToolbarCheck = new QCheckBox(i18n("Enable &toolbar button"),
                                     this);
-    settings->addWidget(mInToolbarCheck, 7, 0);
-    connect(mInToolbarCheck, &QCheckBox::stateChanged,
+    settings->addWidget(d->mInToolbarCheck, 7, 0);
+    connect(d->mInToolbarCheck, &QCheckBox::stateChanged,
             this, &TagWidget::slotEmitChangeCheck);
 
 }
 
 TagWidget::~TagWidget()
 {
-
+    delete d;
 }
 
 void TagWidget::slotEmitChangeCheck()
@@ -156,48 +191,48 @@ void TagWidget::slotEmitChangeCheck()
 
 void TagWidget::setTagTextColor(const QColor &color)
 {
-    mTextColorCheck->setEnabled(true);
+    d->mTextColorCheck->setEnabled(true);
     if (color.isValid()) {
-        mTextColorCheck->setChecked(true);
-        mTextColorCombo->setColor(color);
+        d->mTextColorCheck->setChecked(true);
+        d->mTextColorCombo->setColor(color);
     } else {
-        mTextColorCheck->setChecked(false);
-        mTextColorCombo->setColor(Qt::white);
+        d->mTextColorCheck->setChecked(false);
+        d->mTextColorCombo->setColor(Qt::white);
     }
-    mTextColorCombo->setEnabled(mTextColorCheck->isChecked());
+    d->mTextColorCombo->setEnabled(d->mTextColorCheck->isChecked());
 }
 
 void TagWidget::setTagBackgroundColor(const QColor &color)
 {
-    mBackgroundColorCheck->setEnabled(true);
+    d->mBackgroundColorCheck->setEnabled(true);
     if (color.isValid()) {
-        mBackgroundColorCheck->setChecked(true);
-        mBackgroundColorCombo->setColor(color);
+        d->mBackgroundColorCheck->setChecked(true);
+        d->mBackgroundColorCombo->setColor(color);
     } else {
-        mBackgroundColorCheck->setChecked(false);
-        mBackgroundColorCombo->setColor(Qt::white);
+        d->mBackgroundColorCheck->setChecked(false);
+        d->mBackgroundColorCombo->setColor(Qt::white);
     }
-    mBackgroundColorCombo->setEnabled(mBackgroundColorCheck->isChecked());
+    d->mBackgroundColorCombo->setEnabled(d->mBackgroundColorCheck->isChecked());
 }
 
 void TagWidget::setTagTextFont(const QFont &font)
 {
-    mTextFontCheck->setEnabled(true);
-    mTextFontCheck->setChecked((font != QFont()));
-    mFontRequester->setFont(font);
-    mFontRequester->setEnabled(mTextFontCheck->isChecked());
+    d->mTextFontCheck->setEnabled(true);
+    d->mTextFontCheck->setChecked((font != QFont()));
+    d->mFontRequester->setFont(font);
+    d->mFontRequester->setEnabled(d->mTextFontCheck->isChecked());
 }
 
 MailCommon::Tag::SaveFlags TagWidget::saveFlags() const
 {
     MailCommon::Tag::SaveFlags saveFlags = 0;
-    if (mTextColorCheck->isChecked()) {
+    if (d->mTextColorCheck->isChecked()) {
         saveFlags |= MailCommon::Tag::TextColor;
     }
-    if (mBackgroundColorCheck->isChecked()) {
+    if (d->mBackgroundColorCheck->isChecked()) {
         saveFlags |= MailCommon::Tag::BackgroundColor;
     }
-    if (mTextFontCheck->isChecked()) {
+    if (d->mTextFontCheck->isChecked()) {
         saveFlags |= MailCommon::Tag::Font;
     }
 
@@ -206,68 +241,68 @@ MailCommon::Tag::SaveFlags TagWidget::saveFlags() const
 
 void TagWidget::recordTagSettings(MailCommon::Tag::Ptr tag)
 {
-    tag->textColor = mTextColorCheck->isChecked() ? mTextColorCombo->color() : QColor();
+    tag->textColor = d->mTextColorCheck->isChecked() ? d->mTextColorCombo->color() : QColor();
 
-    tag->backgroundColor = mBackgroundColorCheck->isChecked() ? mBackgroundColorCombo->color() : QColor();
+    tag->backgroundColor = d->mBackgroundColorCheck->isChecked() ? d->mBackgroundColorCombo->color() : QColor();
 
-    tag->textFont = mTextFontCheck->isChecked() ? mFontRequester->font() : QFont();
+    tag->textFont = d->mTextFontCheck->isChecked() ? d->mFontRequester->font() : QFont();
 
     tag->iconName = iconButton()->icon();
-    if (mKeySequenceWidget->isEnabled()) {
-        mKeySequenceWidget->applyStealShortcut();
-        tag->shortcut = QKeySequence(mKeySequenceWidget->keySequence());
+    if (d->mKeySequenceWidget->isEnabled()) {
+        d->mKeySequenceWidget->applyStealShortcut();
+        tag->shortcut = QKeySequence(d->mKeySequenceWidget->keySequence());
     }
 
-    tag->inToolbar = mInToolbarCheck->isChecked();
+    tag->inToolbar = d->mInToolbarCheck->isChecked();
 }
 
 KLineEdit *TagWidget::tagNameLineEdit() const
 {
-    return mTagNameLineEdit;
+    return d->mTagNameLineEdit;
 }
 
 QCheckBox *TagWidget::textColorCheck() const
 {
-    return mTextColorCheck;
+    return d->mTextColorCheck;
 }
 
 QCheckBox *TagWidget::textFontCheck() const
 {
-    return mTextFontCheck;
+    return d->mTextFontCheck;
 }
 
 QCheckBox *TagWidget::backgroundColorCheck() const
 {
-    return mBackgroundColorCheck;
+    return d->mBackgroundColorCheck;
 }
 
 QCheckBox *TagWidget::inToolBarCheck() const
 {
-    return mInToolbarCheck;
+    return d->mInToolbarCheck;
 }
 
 KColorCombo *TagWidget::textColorCombo() const
 {
-    return mTextColorCombo;
+    return d->mTextColorCombo;
 }
 
 KColorCombo *TagWidget::backgroundColorCombo() const
 {
-    return mBackgroundColorCombo;
+    return d->mBackgroundColorCombo;
 }
 
 KFontRequester *TagWidget::fontRequester() const
 {
-    return mFontRequester;
+    return d->mFontRequester;
 }
 
 KIconButton *TagWidget::iconButton() const
 {
-    return mIconButton;
+    return d->mIconButton;
 }
 
 KKeySequenceWidget *TagWidget::keySequenceWidget() const
 {
-    return mKeySequenceWidget;
+    return d->mKeySequenceWidget;
 }
 

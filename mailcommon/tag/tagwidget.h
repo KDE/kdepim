@@ -34,7 +34,7 @@ class KActionCollection;
 
 namespace MailCommon
 {
-
+class TagWidgetPrivate;
 class MAILCOMMON_EXPORT TagWidget : public QWidget
 {
     Q_OBJECT
@@ -72,21 +72,7 @@ private Q_SLOTS:
     void slotEmitChangeCheck();
 
 private:
-    KLineEdit *mTagNameLineEdit;
-
-    QCheckBox *mTextColorCheck;
-    QCheckBox *mBackgroundColorCheck;
-    QCheckBox *mTextFontCheck;
-    QCheckBox *mInToolbarCheck;
-
-    KColorCombo *mTextColorCombo;
-    KColorCombo *mBackgroundColorCombo;
-
-    KFontRequester *mFontRequester;
-
-    KIconButton *mIconButton;
-
-    KKeySequenceWidget *mKeySequenceWidget;
+    TagWidgetPrivate *const d;
 };
 }
 
