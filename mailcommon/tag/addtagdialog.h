@@ -29,7 +29,7 @@ class KActionCollection;
 namespace MailCommon
 {
 class TagWidget;
-
+class AddTagDialogPrivate;
 class MAILCOMMON_EXPORT AddTagDialog : public QDialog
 {
     Q_OBJECT
@@ -47,12 +47,7 @@ private Q_SLOTS:
     void onTagCreated(KJob *job);
 
 private:
-    QString mLabel;
-    QString mGid;
-    MailCommon::TagWidget *mTagWidget;
-    QList<MailCommon::Tag::Ptr> mTags;
-    Akonadi::Tag mTag;
-    QPushButton *mOkButton;
+    AddTagDialogPrivate *const d;
 };
 }
 #endif // ADDTAGDIALOG_H

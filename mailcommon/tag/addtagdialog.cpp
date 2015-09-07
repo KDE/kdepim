@@ -31,65 +31,84 @@
 #include <QPushButton>
 
 using namespace MailCommon;
+class MailCommon::AddTagDialogPrivate
+{
+public:
+    AddTagDialogPrivate()
+        : mTagWidget(Q_NULLPTR),
+          mOkButton(Q_NULLPTR)
+    {
+
+    }
+
+    QString mLabel;
+    QString mGid;
+    MailCommon::TagWidget *mTagWidget;
+    QList<MailCommon::Tag::Ptr> mTags;
+    Akonadi::Tag mTag;
+    QPushButton *mOkButton;
+};
 
 AddTagDialog::AddTagDialog(const QList<KActionCollection *> &actions, QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new MailCommon::AddTagDialogPrivate)
 {
     setModal(true);
     setWindowTitle(i18n("Add Tag"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-    mOkButton->setDefault(true);
-    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    d->mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    d->mOkButton->setDefault(true);
+    d->mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &AddTagDialog::slotSave);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AddTagDialog::reject);
-    mOkButton->setDefault(true);
+    d->mOkButton->setDefault(true);
 
-    mTagWidget = new MailCommon::TagWidget(actions, this);
+    d->mTagWidget = new MailCommon::TagWidget(actions, this);
 
-    connect(mTagWidget->tagNameLineEdit(), &KLineEdit::textChanged, this, &AddTagDialog::slotTagNameChanged);
-    mOkButton->setEnabled(false);
-    mainLayout->addWidget(mTagWidget);
+    connect(d->mTagWidget->tagNameLineEdit(), &KLineEdit::textChanged, this, &AddTagDialog::slotTagNameChanged);
+    d->mOkButton->setEnabled(false);
+    mainLayout->addWidget(d->mTagWidget);
     mainLayout->addWidget(buttonBox);
 }
 
 AddTagDialog::~AddTagDialog()
 {
+    delete d;
 }
 
 void AddTagDialog::setTags(const QList<MailCommon::Tag::Ptr> &tags)
 {
-    mTags = tags;
+    d->mTags = tags;
 }
 
 void AddTagDialog::slotTagNameChanged(const QString &text)
 {
-    mOkButton->setEnabled(!text.trimmed().isEmpty());
+    d->mOkButton->setEnabled(!text.trimmed().isEmpty());
 }
 
 void AddTagDialog::slotSave()
 {
-    const QString name(mTagWidget->tagNameLineEdit()->text());
+    const QString name(d->mTagWidget->tagNameLineEdit()->text());
 
-    Q_FOREACH (const MailCommon::Tag::Ptr &tag, mTags) {
+    Q_FOREACH (const MailCommon::Tag::Ptr &tag, d->mTags) {
         if (tag->name() == name) {
             KMessageBox::error(this, i18n("Tag %1 already exists", name));
-            mTagWidget->tagNameLineEdit()->setFocus();
-            mTagWidget->tagNameLineEdit()->selectAll();
+            d->mTagWidget->tagNameLineEdit()->setFocus();
+            d->mTagWidget->tagNameLineEdit()->selectAll();
             return;
         }
     }
 
     MailCommon::Tag::Ptr tag(Tag::createDefaultTag(name));
-    mTagWidget->recordTagSettings(tag);
-    MailCommon::Tag::SaveFlags saveFlags = mTagWidget->saveFlags();
+    d->mTagWidget->recordTagSettings(tag);
+    MailCommon::Tag::SaveFlags saveFlags = d->mTagWidget->saveFlags();
     const Akonadi::Tag akonadiTag = tag->saveToAkonadi(saveFlags);
     Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(akonadiTag, this);
     connect(createJob, &Akonadi::TagCreateJob::result, this, &AddTagDialog::onTagCreated);
 
-    mLabel = name;
+    d->mLabel = name;
 }
 
 void AddTagDialog::onTagCreated(KJob *job)
@@ -100,17 +119,17 @@ void AddTagDialog::onTagCreated(KJob *job)
         return;
     }
     Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob *>(job);
-    mTag = createJob->tag();
+    d->mTag = createJob->tag();
     accept();
 }
 
 QString AddTagDialog::label() const
 {
-    return mLabel;
+    return d->mLabel;
 }
 
 Akonadi::Tag AddTagDialog::tag() const
 {
-    return mTag;
+    return d->mTag;
 }
 

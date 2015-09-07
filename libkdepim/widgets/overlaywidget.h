@@ -47,6 +47,7 @@ namespace KPIM
  * Currently the only supported type of alignment is "right aligned, on top of the other widget".
  *
  */
+class OverlayWidgetPrivate;
 class KDEPIM_EXPORT OverlayWidget : public QFrame
 {
     Q_OBJECT
@@ -66,7 +67,7 @@ private:
     void reposition();
 
 private:
-    QWidget *mAlignWidget;
+    OverlayWidgetPrivate *const d;
 };
 
 } // namespace

@@ -121,11 +121,6 @@ protected:
 
 protected:
     FolderRequesterPrivate *const d;
-    Akonadi::Collection mCollection;
-    KLineEdit *mEdit;
-    bool mMustBeReadWrite;
-    bool mShowOutbox;
-    bool mNotCreateNewFolder;
 };
 
 }

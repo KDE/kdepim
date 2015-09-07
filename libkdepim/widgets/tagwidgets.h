@@ -53,11 +53,13 @@ private:
     QStringList mCachedTagNames;
 };
 
+class TagSelectionDialogPrivate;
 class KDEPIM_EXPORT TagSelectionDialog : public Akonadi::TagSelectionDialog
 {
     Q_OBJECT
 public:
     explicit TagSelectionDialog(QWidget *parent = Q_NULLPTR);
+    ~TagSelectionDialog();
     void setSelection(const QStringList &);
     QStringList selection() const;
     Akonadi::Tag::List tagSelection() const;
@@ -66,7 +68,7 @@ private Q_SLOTS:
     void onTagCreated(KJob *);
 
 private:
-    Akonadi::Tag::List mTagList;
+    TagSelectionDialogPrivate *const d;
 };
 
 }

@@ -81,15 +81,31 @@ QStringList TagWidget::selection() const
     return mCachedTagNames;
 }
 
+class KPIM::TagSelectionDialogPrivate
+{
+public:
+    TagSelectionDialogPrivate()
+    {
+
+    }
+
+    Akonadi::Tag::List mTagList;
+};
 TagSelectionDialog::TagSelectionDialog(QWidget *parent)
-    :   Akonadi::TagSelectionDialog(parent)
+    : Akonadi::TagSelectionDialog(parent),
+      d(new KPIM::TagSelectionDialogPrivate)
 {
 
 }
 
+TagSelectionDialog::~TagSelectionDialog()
+{
+    delete d;
+}
+
 void TagSelectionDialog::setSelection(const QStringList &tagNames)
 {
-    mTagList.clear();
+    d->mTagList.clear();
     foreach (const QString &name, tagNames) {
         //TODO fetch by GID instead, we don't really want to create tags here
         Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag::genericTag(name), this);
@@ -105,8 +121,8 @@ void TagSelectionDialog::onTagCreated(KJob *job)
         return;
     }
     Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob *>(job);
-    mTagList << createJob->tag();
-    Akonadi::TagSelectionDialog::setSelection(mTagList);
+    d->mTagList << createJob->tag();
+    Akonadi::TagSelectionDialog::setSelection(d->mTagList);
 }
 
 QStringList TagSelectionDialog::selection() const

@@ -34,8 +34,20 @@
 
 using namespace KPIM;
 
+class KPIM::OverlayWidgetPrivate
+{
+public:
+    OverlayWidgetPrivate()
+        : mAlignWidget(Q_NULLPTR)
+    {
+
+    }
+
+    QWidget *mAlignWidget;
+};
+
 OverlayWidget::OverlayWidget(QWidget *alignWidget, QWidget *parent)
-    : QFrame(parent), mAlignWidget(Q_NULLPTR)
+    : QFrame(parent), d(new KPIM::OverlayWidgetPrivate)
 {
     setAlignWidget(alignWidget);
     setLayout(new QHBoxLayout(this));
@@ -43,25 +55,26 @@ OverlayWidget::OverlayWidget(QWidget *alignWidget, QWidget *parent)
 
 OverlayWidget::~OverlayWidget()
 {
+    delete d;
 }
 
 QWidget *OverlayWidget::alignWidget() const
 {
-    return mAlignWidget;
+    return d->mAlignWidget;
 }
 
 void OverlayWidget::reposition()
 {
-    if (!mAlignWidget) {
+    if (!d->mAlignWidget) {
         return;
     }
     // p is in the alignWidget's coordinates
     QPoint p;
     // We are always above the alignWidget, right-aligned with it.
-    p.setX(mAlignWidget->width() - width());
+    p.setX(d->mAlignWidget->width() - width());
     p.setY(-height());
     // Position in the toplevelwidget's coordinates
-    QPoint pTopLevel = mAlignWidget->mapTo(topLevelWidget(), p);
+    QPoint pTopLevel = d->mAlignWidget->mapTo(topLevelWidget(), p);
     // Position in the widget's parentWidget coordinates
     QPoint pParent = parentWidget()->mapFrom(topLevelWidget(), pTopLevel);
     // Move 'this' to that position.
@@ -70,18 +83,18 @@ void OverlayWidget::reposition()
 
 void OverlayWidget::setAlignWidget(QWidget *w)
 {
-    if (w == mAlignWidget) {
+    if (w == d->mAlignWidget) {
         return;
     }
 
-    if (mAlignWidget) {
-        mAlignWidget->removeEventFilter(this);
+    if (d->mAlignWidget) {
+        d->mAlignWidget->removeEventFilter(this);
     }
 
-    mAlignWidget = w;
+    d->mAlignWidget = w;
 
-    if (mAlignWidget) {
-        mAlignWidget->installEventFilter(this);
+    if (d->mAlignWidget) {
+        d->mAlignWidget->installEventFilter(this);
     }
 
     reposition();
@@ -89,7 +102,7 @@ void OverlayWidget::setAlignWidget(QWidget *w)
 
 bool OverlayWidget::eventFilter(QObject *o, QEvent *e)
 {
-    if (o == mAlignWidget &&
+    if (o == d->mAlignWidget &&
             (e->type() == QEvent::Move || e->type() == QEvent::Resize)) {
         reposition();
     }
