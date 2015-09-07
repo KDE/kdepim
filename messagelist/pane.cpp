@@ -35,8 +35,6 @@
 #include <QMouseEvent>
 #include <QHeaderView>
 
-#include <etmviewstatesaver.h>
-
 #include "storagemodel.h"
 #include "core/widgets/quicksearchline.h"
 #include "widget.h"
