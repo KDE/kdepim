@@ -96,6 +96,7 @@ PRIVATE
   kdepim
   KF5::Codecs
   kdgantt2
+  KF5::AkonadiWidgets
 )
 
 target_include_directories(eventviews PUBLIC "$<BUILD_INTERFACE:${calendarView_SOURCE_DIR};${calendarView_BINARY_DIR}>")
