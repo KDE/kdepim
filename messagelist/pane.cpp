@@ -82,6 +82,7 @@ public:
     void moveTabForward();
     void changeQuicksearchVisibility(bool);
     void addActivateTabAction(int i);
+    void slotTabCloseRequested(int index);
     QItemSelection mapSelectionToSource(const QItemSelection &selection) const;
     QItemSelection mapSelectionFromSource(const QItemSelection &selection) const;
     void updateTabControls();
@@ -163,6 +164,7 @@ Pane::Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *
             SLOT(onCloseTabClicked()));
 
     setTabsClosable(Core::Settings::self()->tabsHaveCloseButton());
+    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(slotTabCloseRequested(int)));
 
     readConfig(restoreSession);
     setMovable(true);
@@ -199,6 +201,14 @@ void Pane::Private::addActivateTabAction(int i)
     mXmlGuiClient->actionCollection()->addAction(actionname, action);
     mXmlGuiClient->actionCollection()->setDefaultShortcut(action, QKeySequence(QStringLiteral("Alt+%1").arg(i)));
     connect(action, SIGNAL(triggered(bool)), q, SLOT(activateTab()));
+}
+
+void Pane::Private::slotTabCloseRequested(int index)
+{
+    QWidget *w = q->widget(index);
+    if (w) {
+        closeTab(w);
+    }
 }
 
 void Pane::setXmlGuiClient(KXMLGUIClient *xmlGuiClient)
