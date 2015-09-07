@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "entrepriseheaderstyle.h"
+#include "enterpriseheaderstyle.h"
 #include "header/headerstyle_util.h"
 
 #include "header/headerstrategy.h"

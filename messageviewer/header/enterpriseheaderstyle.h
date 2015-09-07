@@ -19,14 +19,14 @@
 #define ENTREPRISEHEADERSTYLE_H
 
 #include "header/headerstyle.h"
-
+#include "messageviewer_export.h"
 namespace MessageViewer
 {
 
-class EnterpriseHeaderStyle : public HeaderStyle
+class MESSAGEVIEWER_EXPORT EnterpriseHeaderStyle : public HeaderStyle
 {
     friend class HeaderStyle;
-protected:
+public:
     EnterpriseHeaderStyle() : HeaderStyle() {}
     ~EnterpriseHeaderStyle() {}
 
