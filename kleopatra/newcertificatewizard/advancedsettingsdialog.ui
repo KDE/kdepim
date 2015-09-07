@@ -269,9 +269,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
+   <class>QComboBox</class>
   </customwidget>
   <customwidget>
    <class>Kleo::NewCertificateUi::ListWidget</class>
@@ -284,7 +282,7 @@
   </customwidget>
   <customwidget>
    <class>KDateComboBox</class>
-   <extends>KComboBox</extends>
+   <extends>QComboBox</extends>
    <header>kdatecombobox.h</header>
   </customwidget>
  </customwidgets>
