@@ -464,6 +464,7 @@ private:
     Q_PRIVATE_SLOT(d, void onTabContextMenuRequest(const QPoint &))
     Q_PRIVATE_SLOT(d, void updateTabControls())
     Q_PRIVATE_SLOT(d, void changeQuicksearchVisibility(bool))
+    Q_PRIVATE_SLOT(d, void slotTabCloseRequested(int index))
 
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 
