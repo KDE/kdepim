@@ -4,6 +4,7 @@ ServiceTypes=PimCommonCustomTools/Plugin
 X-KDE-Library=pimcommon_translatorplugin
 Name=Translator
 Name[ca]=Traductor
+Name[fi]=Käännösohjelma
 Name[nl]=Vertaler
 Name[pl]=Tłumacz
 Name[pt]=Tradutor
