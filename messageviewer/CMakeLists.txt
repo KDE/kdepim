@@ -145,6 +145,7 @@ set(libmessageviewer_header_SRCS
   header/grantleeheaderteststyle.cpp
   header/kxface.cpp
   header/headerplugin.cpp
+  header/headerstylepluginmanager.cpp
 )
 
 set(libmessageviewer_scamdetection_SRCS
@@ -265,3 +266,5 @@ install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${KDE_IN
 
 install(FILES notify/messageviewer.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR} )
 install(FILES scamdetection/data/longurlServices.json DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )
+
+add_subdirectory(header/briefheaderstyleplugin)

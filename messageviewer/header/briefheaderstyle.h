@@ -35,14 +35,15 @@
 #define BRIEFHEADERSTYLE_H
 
 #include "header/headerstyle.h"
-
+#include "messageviewer_export.h"
 namespace MessageViewer
 {
 
-class BriefHeaderStyle : public HeaderStyle
+//TEMPORARY
+class MESSAGEVIEWER_EXPORT BriefHeaderStyle : public HeaderStyle
 {
     friend class HeaderStyle;
-protected:
+public:
     BriefHeaderStyle() : HeaderStyle() {}
     ~BriefHeaderStyle() {}
 

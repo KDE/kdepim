@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=MessageViewerHeaderStyle/Plugin
+X-KDE-Library=messageviewer_briefheaderstyleplugin
+Name=Brief Header Style

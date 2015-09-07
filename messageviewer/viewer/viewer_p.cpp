@@ -1584,7 +1584,7 @@ void ViewerPrivate::createActions()
     }
 
     // header style
-    KActionMenu *headerMenu  = new KActionMenu(i18nc("View->", "&Headers"), this);
+    KActionMenu *headerMenu = new KActionMenu(i18nc("View->", "&Headers"), this);
     ac->addAction(QStringLiteral("view_headers"), headerMenu);
     addHelpTextAction(headerMenu, i18n("Choose display style of message headers"));
 

@@ -15,32 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef HEADERPLUGIN_H
-#define HEADERPLUGIN_H
+#ifndef BRIEFHEADERSTYLEPLUGIN_H
+#define BRIEFHEADERSTYLEPLUGIN_H
 
-#include <QObject>
+#include "header/headerplugin.h"
 
-#include "messageviewer_export.h"
-class KToggleAction;
-class KActionCollection;
+#include <QVariant>
+
 namespace MessageViewer
 {
-class HeaderStyle;
-class HeaderStrategy;
-class HeaderPluginPrivate;
-class MESSAGEVIEWER_EXPORT HeaderPlugin : public QObject
+class BriefHeaderStylePlugin : public MessageViewer::HeaderPlugin
 {
     Q_OBJECT
 public:
-    explicit HeaderPlugin(QObject *parent = Q_NULLPTR);
-    ~HeaderPlugin();
+    explicit BriefHeaderStylePlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
+    ~BriefHeaderStylePlugin();
 
-    virtual HeaderStyle *headerStyle() const = 0;
-    virtual HeaderStrategy *headerStrategy() const = 0;
-    virtual KToggleAction *createAction(KActionCollection *ac) = 0;
-
+    HeaderStyle *headerStyle() const Q_DECL_OVERRIDE;
+    HeaderStrategy *headerStrategy() const Q_DECL_OVERRIDE;
+    KToggleAction *createAction(KActionCollection *ac) Q_DECL_OVERRIDE;
 private:
-    HeaderPluginPrivate *const d;
+    HeaderStyle *mHeaderStyle;
+    HeaderStrategy *mHeaderStrategy;
 };
 }
-#endif // HEADERPLUGIN_H
+#endif // BRIEFHEADERSTYLEPLUGIN_H

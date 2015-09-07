@@ -34,6 +34,7 @@
 #ifndef HEADERSTRATEGY_P_H
 #define HEADERSTRATEGY_P_H
 #include "header/headerstrategy.h"
+#include "messageviewer_export.h"
 #include <QStringList>
 //
 // AllHeaderStrategy:
@@ -170,10 +171,11 @@ private:
 //   From, Subject, Date
 //
 
-class BriefHeaderStrategy : public HeaderStrategy
+//Temporary
+class MESSAGEVIEWER_EXPORT BriefHeaderStrategy : public HeaderStrategy
 {
     friend class HeaderStrategy;
-protected:
+public:
     BriefHeaderStrategy()
         : HeaderStrategy(),
           mHeadersToDisplay(stringList(briefHeaders, numBriefHeaders)) {}
