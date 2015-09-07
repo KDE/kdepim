@@ -146,6 +146,7 @@ set(libmessageviewer_header_SRCS
   header/kxface.cpp
   header/headerstyleplugin.cpp
   header/headerstylepluginmanager.cpp
+  header/headerstyleinterface.cpp
 )
 
 set(libmessageviewer_scamdetection_SRCS

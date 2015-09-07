@@ -1,5 +1,6 @@
 set(messageviewer_grantleeheaderstyleplugin_SRCS
    grantleeheaderstyleplugin.cpp
+   grantleeheaderstyleinterface.cpp
 )
 
 add_library(messageviewer_grantleeheaderstyleplugin MODULE ${messageviewer_grantleeheaderstyleplugin_SRCS})

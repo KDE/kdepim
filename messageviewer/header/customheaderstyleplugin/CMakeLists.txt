@@ -1,5 +1,6 @@
 set(messageviewer_customheaderstyleplugin_SRCS
    customheaderstyleplugin.cpp   
+   customheaderstyleinterface.cpp
 )
 
 add_library(messageviewer_customheaderstyleplugin MODULE ${messageviewer_customheaderstyleplugin_SRCS})
