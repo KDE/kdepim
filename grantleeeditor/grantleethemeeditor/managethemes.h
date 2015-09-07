@@ -25,7 +25,7 @@ class QListWidget;
 class QPushButton;
 namespace GrantleeThemeEditor
 {
-
+class ManageThemesPrivate;
 class GRANTLEETHEMEEDITOR_EXPORT ManageThemes : public QDialog
 {
     Q_OBJECT
@@ -41,9 +41,7 @@ private:
     void readConfig();
     void writeConfig();
     void initialize();
-    QString mLocalDirectory;
-    QListWidget *mListThemes;
-    QPushButton *mDeleteTheme;
+    ManageThemesPrivate *const d;
 };
 }
 #endif // MANAGETHEMES_H

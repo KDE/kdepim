@@ -28,8 +28,23 @@
 #include <QPushButton>
 
 using namespace GrantleeThemeEditor;
+class GrantleeThemeEditor::NewThemeDialogPrivate
+{
+public:
+    NewThemeDialogPrivate()
+        : mThemeName(Q_NULLPTR),
+          mUrlRequester(Q_NULLPTR),
+          mOkButton(Q_NULLPTR)
+    {
+
+    }
+    KLineEdit *mThemeName;
+    KUrlRequester *mUrlRequester;
+    QPushButton *mOkButton;
+};
 NewThemeDialog::NewThemeDialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new GrantleeThemeEditor::NewThemeDialogPrivate)
 {
     setWindowTitle(i18n("New Theme"));
 
@@ -40,18 +55,18 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Theme name:"));
     lay->addWidget(lab);
 
-    mThemeName = new KLineEdit;
-    mThemeName->setTrapReturnKey(true);
-    connect(mThemeName, &KLineEdit::textChanged, this, &NewThemeDialog::slotUpdateOkButton);
-    lay->addWidget(mThemeName);
+    d->mThemeName = new KLineEdit;
+    d->mThemeName->setTrapReturnKey(true);
+    connect(d->mThemeName, &KLineEdit::textChanged, this, &NewThemeDialog::slotUpdateOkButton);
+    lay->addWidget(d->mThemeName);
 
     lab = new QLabel(i18n("Theme directory:"));
     lay->addWidget(lab);
 
-    mUrlRequester = new KUrlRequester;
-    mUrlRequester->setMode(KFile::Directory | KFile::LocalOnly);
-    connect(mUrlRequester->lineEdit(), &KLineEdit::textChanged, this, &NewThemeDialog::slotUpdateOkButton);
-    lay->addWidget(mUrlRequester);
+    d->mUrlRequester = new KUrlRequester;
+    d->mUrlRequester->setMode(KFile::Directory | KFile::LocalOnly);
+    connect(d->mUrlRequester->lineEdit(), &KLineEdit::textChanged, this, &NewThemeDialog::slotUpdateOkButton);
+    lay->addWidget(d->mUrlRequester);
 
     w->setLayout(lay);
 
@@ -60,42 +75,43 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     mainLayout->addWidget(w);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-    mOkButton->setDefault(true);
-    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    d->mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    d->mOkButton->setDefault(true);
+    d->mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &NewThemeDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &NewThemeDialog::reject);
     mainLayout->addWidget(buttonBox);
-    mOkButton->setDefault(true);
-    mOkButton->setFocus();
+    d->mOkButton->setDefault(true);
+    d->mOkButton->setFocus();
 
-    mOkButton->setEnabled(false);
+    d->mOkButton->setEnabled(false);
     resize(300, 150);
-    mThemeName->setFocus();
+    d->mThemeName->setFocus();
     readConfig();
 }
 
 NewThemeDialog::~NewThemeDialog()
 {
+    delete d;
 }
 
 void NewThemeDialog::readConfig()
 {
-    mUrlRequester->setUrl(QUrl::fromLocalFile(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
+    d->mUrlRequester->setUrl(QUrl::fromLocalFile(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
 }
 
 QString NewThemeDialog::themeName() const
 {
-    return mThemeName->text();
+    return d->mThemeName->text();
 }
 
 QString NewThemeDialog::directory() const
 {
-    return mUrlRequester->lineEdit()->text();
+    return d->mUrlRequester->lineEdit()->text();
 }
 
 void NewThemeDialog::slotUpdateOkButton()
 {
-    mOkButton->setEnabled(!mUrlRequester->lineEdit()->text().isEmpty() && !mThemeName->text().isEmpty());
+    d->mOkButton->setEnabled(!d->mUrlRequester->lineEdit()->text().isEmpty() && !d->mThemeName->text().isEmpty());
 }
 

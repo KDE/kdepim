@@ -21,11 +21,9 @@
 #include "grantleethemeeditor_export.h"
 #include <QDialog>
 
-class KLineEdit;
-class KUrlRequester;
-class QPushButton;
 namespace GrantleeThemeEditor
 {
+class NewThemeDialogPrivate;
 class GRANTLEETHEMEEDITOR_EXPORT NewThemeDialog : public QDialog
 {
     Q_OBJECT
@@ -41,9 +39,7 @@ private Q_SLOTS:
 
 private:
     void readConfig();
-    KLineEdit *mThemeName;
-    KUrlRequester *mUrlRequester;
-    QPushButton *mOkButton;
+    NewThemeDialogPrivate *const d;
 };
 }
 #endif // NEWTHEMEDIALOG_H

@@ -32,11 +32,26 @@
 #include <KConfigGroup>
 
 using namespace GrantleeThemeEditor;
+class GrantleeThemeEditor::ManageThemesPrivate
+{
+public:
+    ManageThemesPrivate()
+        : mListThemes(Q_NULLPTR),
+          mDeleteTheme(Q_NULLPTR)
+    {
+
+    }
+
+    QString mLocalDirectory;
+    QListWidget *mListThemes;
+    QPushButton *mDeleteTheme;
+};
 
 ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new GrantleeThemeEditor::ManageThemesPrivate)
 {
-    mLocalDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativeThemePath;
+    d->mLocalDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativeThemePath;
     setWindowTitle(i18n("Manage Theme"));
     QWidget *w = new QWidget;
 
@@ -46,15 +61,15 @@ ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
     QLabel *lab = new QLabel(i18n("Local themes:"));
     lay->addWidget(lab);
 
-    mListThemes = new QListWidget;
-    connect(mListThemes, &QListWidget::itemSelectionChanged, this, &ManageThemes::slotItemSelectionChanged);
-    mListThemes->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    lay->addWidget(mListThemes);
+    d->mListThemes = new QListWidget;
+    connect(d->mListThemes, &QListWidget::itemSelectionChanged, this, &ManageThemes::slotItemSelectionChanged);
+    d->mListThemes->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    lay->addWidget(d->mListThemes);
 
-    mDeleteTheme = new QPushButton(i18n("Delete theme"));
-    connect(mDeleteTheme, &QPushButton::clicked, this, &ManageThemes::slotDeleteTheme);
-    mDeleteTheme->setEnabled(false);
-    lay->addWidget(mDeleteTheme);
+    d->mDeleteTheme = new QPushButton(i18n("Delete theme"));
+    connect(d->mDeleteTheme, &QPushButton::clicked, this, &ManageThemes::slotDeleteTheme);
+    d->mDeleteTheme->setEnabled(false);
+    lay->addWidget(d->mDeleteTheme);
 
     w->setLayout(lay);
 
@@ -73,6 +88,7 @@ ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
 ManageThemes::~ManageThemes()
 {
     writeConfig();
+    delete d;
 }
 
 void ManageThemes::readConfig()
@@ -92,11 +108,11 @@ void ManageThemes::writeConfig()
 
 void ManageThemes::slotDeleteTheme()
 {
-    QList<QListWidgetItem *> selectItems = mListThemes->selectedItems();
+    QList<QListWidgetItem *> selectItems = d->mListThemes->selectedItems();
     if (!selectItems.isEmpty()) {
         if (KMessageBox::questionYesNo(this, i18np("Do you want to remove selected theme?", "Do you want to remove %1 selected themes?", selectItems.count()), i18n("Remove theme")) == KMessageBox::Yes) {
             Q_FOREACH (QListWidgetItem *item, selectItems) {
-                if (QDir((mLocalDirectory + QDir::separator() + item->text())).removeRecursively()) {
+                if (QDir((d->mLocalDirectory + QDir::separator() + item->text())).removeRecursively()) {
                     delete item;
                 } else {
                     KMessageBox::error(this, i18n("Theme \"%1\" cannot be deleted. Please contact your administrator.", item->text()), i18n("Delete theme failed"));
@@ -108,19 +124,19 @@ void ManageThemes::slotDeleteTheme()
 
 void ManageThemes::initialize()
 {
-    QDir dir(mLocalDirectory);
+    QDir dir(d->mLocalDirectory);
     if (dir.exists()) {
-        QDirIterator dirIt(mLocalDirectory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot);
+        QDirIterator dirIt(d->mLocalDirectory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot);
         while (dirIt.hasNext()) {
             dirIt.next();
             const QString dirName = dirIt.fileName();
-            new QListWidgetItem(dirName, mListThemes);
+            new QListWidgetItem(dirName, d->mListThemes);
         }
     }
 }
 
 void ManageThemes::slotItemSelectionChanged()
 {
-    mDeleteTheme->setEnabled(!mListThemes->selectedItems().isEmpty());
+    d->mDeleteTheme->setEnabled(!d->mListThemes->selectedItems().isEmpty());
 }
 
