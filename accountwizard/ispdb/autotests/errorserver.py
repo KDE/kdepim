@@ -6,7 +6,7 @@ class ErrorServer(BaseHTTPServer.BaseHTTPRequestHandler):
     /500 -> error 500
     '''
     def do_GET(self):
-        self.send_response(int(os.path.basename(self.path)))
+        self.send_error(int(os.path.basename(self.path)))
 
 def run(server_class=BaseHTTPServer.HTTPServer,
         handler_class=ErrorServer):
