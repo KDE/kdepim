@@ -21,10 +21,10 @@
 #include "pimcommon_export.h"
 
 #include <QWidget>
-#include <QComboBox>
 
 namespace PimCommon
 {
+class ShortUrlConfigureWidgetPrivate;
 class PIMCOMMON_EXPORT ShortUrlConfigureWidget : public QWidget
 {
     Q_OBJECT
@@ -44,8 +44,7 @@ Q_SIGNALS:
 
 private:
     void init();
-    QComboBox *mShortUrlServer;
-    bool mChanged;
+    ShortUrlConfigureWidgetPrivate *const d;
 };
 }
 

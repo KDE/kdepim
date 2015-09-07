@@ -25,9 +25,24 @@
 #include <QHBoxLayout>
 
 using namespace PimCommon;
+
+class PimCommon::ShortUrlConfigureWidgetPrivate
+{
+public:
+    ShortUrlConfigureWidgetPrivate()
+        : mShortUrlServer(Q_NULLPTR),
+          mChanged(false)
+    {
+
+    }
+    QComboBox *mShortUrlServer;
+    bool mChanged;
+};
+
+
 ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
     : QWidget(parent),
-      mChanged(false)
+      d(new PimCommon::ShortUrlConfigureWidgetPrivate)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
@@ -35,9 +50,9 @@ ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Select Short URL server:"));
     lay->addWidget(lab);
 
-    mShortUrlServer = new QComboBox;
-    connect(mShortUrlServer, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &ShortUrlConfigureWidget::slotChanged);
-    lay->addWidget(mShortUrlServer);
+    d->mShortUrlServer = new QComboBox;
+    connect(d->mShortUrlServer, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &ShortUrlConfigureWidget::slotChanged);
+    lay->addWidget(d->mShortUrlServer);
     setLayout(lay);
     init();
     loadConfig();
@@ -45,45 +60,45 @@ ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
 
 ShortUrlConfigureWidget::~ShortUrlConfigureWidget()
 {
-
+    delete d;
 }
 
 void ShortUrlConfigureWidget::slotChanged()
 {
-    mChanged = true;
+    d->mChanged = true;
 }
 
 void ShortUrlConfigureWidget::init()
 {
     //Google doesn't work now.
     for (int i = PimCommon::ShortUrlUtils::Tinyurl; i < PimCommon::ShortUrlUtils::EndListEngine; ++i) {
-        mShortUrlServer->addItem(PimCommon::ShortUrlUtils::stringFromEngineType(static_cast<PimCommon::ShortUrlUtils::EngineType>(i)), i);
+        d->mShortUrlServer->addItem(PimCommon::ShortUrlUtils::stringFromEngineType(static_cast<PimCommon::ShortUrlUtils::EngineType>(i)), i);
     }
 }
 
 void ShortUrlConfigureWidget::loadConfig()
 {
     const int engineType = PimCommon::ShortUrlUtils::readEngineSettings();
-    int index = mShortUrlServer->findData(engineType);
+    int index = d->mShortUrlServer->findData(engineType);
     if (index < 0) {
         index = 0;
     }
-    mShortUrlServer->setCurrentIndex(index);
-    mChanged = false;
+    d->mShortUrlServer->setCurrentIndex(index);
+    d->mChanged = false;
 }
 
 void ShortUrlConfigureWidget::writeConfig()
 {
-    if (mChanged) {
-        PimCommon::ShortUrlUtils::writeEngineSettings(mShortUrlServer->itemData(mShortUrlServer->currentIndex()).toInt());
+    if (d->mChanged) {
+        PimCommon::ShortUrlUtils::writeEngineSettings(d->mShortUrlServer->itemData(d->mShortUrlServer->currentIndex()).toInt());
         Q_EMIT settingsChanged();
     }
-    mChanged = false;
+    d->mChanged = false;
 }
 
 void ShortUrlConfigureWidget::resetToDefault()
 {
-    mShortUrlServer->setCurrentIndex(0);
-    mChanged = false;
+    d->mShortUrlServer->setCurrentIndex(0);
+    d->mChanged = false;
 }
 

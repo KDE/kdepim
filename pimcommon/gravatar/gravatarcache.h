@@ -21,10 +21,11 @@
 #include "pimcommon_export.h"
 
 #include <QPixmap>
-#include <QCache>
+
 
 namespace PimCommon
 {
+class GravatarCachePrivate;
 class PIMCOMMON_EXPORT GravatarCache : public QObject
 {
     Q_OBJECT
@@ -45,9 +46,7 @@ public:
     void clearAllCache();
 
 private:
-    QCache<QString, QPixmap> mCachePixmap;
-    QString mGravatarPath;
-    int mMaximumSize;
+    GravatarCachePrivate *const d;
 };
 }
 

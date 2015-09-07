@@ -26,6 +26,7 @@
 class QNetworkAccessManager;
 namespace PimCommon
 {
+class GravatarResolvUrlJobPrivate;
 class PIMCOMMON_EXPORT GravatarResolvUrlJob : public QObject
 {
     Q_OBJECT
@@ -78,18 +79,7 @@ private:
     void startNetworkManager(const QUrl &url);
     QUrl createUrl(bool useLibravatar);
     QString calculateHash(bool useLibravator);
-    QPixmap mPixmap;
-    QString mEmail;
-    QString mCalculatedHash;
-    QNetworkAccessManager *mNetworkAccessManager;
-    int mSize;
-    bool mHasGravatar;
-    bool mUseDefaultPixmap;
-    bool mUseCache;
-    bool mUseLibravatar;
-    bool mFallbackGravatar;
-    bool mFallbackDone;
-    bool mUseHttps;
+    GravatarResolvUrlJobPrivate *const d;
 };
 }
 

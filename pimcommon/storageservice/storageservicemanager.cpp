@@ -55,8 +55,25 @@ static QString newDBusObjectName()
     return name;
 }
 
+class PimCommon::StorageServiceManagerPrivate
+{
+public:
+    StorageServiceManagerPrivate()
+    {
+
+    }
+    ~StorageServiceManagerPrivate()
+    {
+        qDeleteAll(mListService);
+    }
+
+    QMap<QString, StorageServiceAbstract *> mListService;
+    QString mDefaultUploadFolder;
+};
+
 StorageServiceManager::StorageServiceManager(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      d(new PimCommon::StorageServiceManagerPrivate)
 {
     new StorageManagerAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -72,13 +89,13 @@ StorageServiceManager::StorageServiceManager(QObject *parent)
 
 StorageServiceManager::~StorageServiceManager()
 {
-    qDeleteAll(mListService);
+    delete d;
 }
 
 void StorageServiceManager::removeService(const QString &serviceName)
 {
-    if (mListService.contains(serviceName)) {
-        mListService.remove(serviceName);
+    if (d->mListService.contains(serviceName)) {
+        d->mListService.remove(serviceName);
     }
 }
 
@@ -101,12 +118,12 @@ void StorageServiceManager::slotConfigChanged(const QString &id)
 
 QMap<QString, StorageServiceAbstract *> StorageServiceManager::listService() const
 {
-    return mListService;
+    return d->mListService;
 }
 
 void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbstract *> &lst)
 {
-    mListService = lst;
+    d->mListService = lst;
     writeConfig();
 
     // DBus signal for other IdentityManager instances
@@ -115,12 +132,12 @@ void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbs
 
 void StorageServiceManager::setDefaultUploadFolder(const QString &folder)
 {
-    mDefaultUploadFolder = folder;
+    d->mDefaultUploadFolder = folder;
 }
 
 QString StorageServiceManager::defaultUploadFolder() const
 {
-    return mDefaultUploadFolder;
+    return d->mDefaultUploadFolder;
 }
 
 KActionMenu *StorageServiceManager::menuShareLinkServices(QWidget *parent) const
@@ -148,12 +165,12 @@ KActionMenu *StorageServiceManager::menuDownloadServices(QWidget *parent) const
 KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstract::Capability mainCapability, const QList<PimCommon::StorageServiceAbstract::Capability> &lstCapability, QWidget *parent) const
 {
     KActionMenu *menuService = new KActionMenu(i18n("Storage service"), parent);
-    if (mListService.isEmpty()) {
+    if (d->mListService.isEmpty()) {
         QAction *act = new QAction(i18n("No Storage service configured"), menuService);
         act->setEnabled(false);
         menuService->addAction(act);
     } else {
-        QMapIterator<QString, StorageServiceAbstract *> i(mListService);
+        QMapIterator<QString, StorageServiceAbstract *> i(d->mListService);
         while (i.hasNext()) {
             i.next();
             //FIXME
@@ -213,8 +230,8 @@ void StorageServiceManager::slotShareFile()
     QAction *act = qobject_cast< QAction * >(sender());
     if (act) {
         const QString type = act->data().toString();
-        if (mListService.contains(type)) {
-            StorageServiceAbstract *service = mListService.value(type);
+        if (d->mListService.contains(type)) {
+            StorageServiceAbstract *service = d->mListService.value(type);
             if (service && service->hasUploadOrDownloadInProgress()) {
                 KMessageBox::information(Q_NULLPTR, i18n("There is still an upload in progress."));
             } else {
@@ -258,10 +275,10 @@ void StorageServiceManager::slotDownloadFile()
     QAction *act = qobject_cast< QAction * >(sender());
     if (act) {
         const QString type = act->data().toString();
-        StorageServiceAbstract *service = mListService.value(type);
+        StorageServiceAbstract *service = d->mListService.value(type);
         if (service) {
             QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(service, Q_NULLPTR);
-            dlg->setDefaultDownloadPath(mDefaultUploadFolder);
+            dlg->setDefaultDownloadPath(d->mDefaultUploadFolder);
             dlg->exec();
             delete dlg;
         }
@@ -280,7 +297,7 @@ void StorageServiceManager::slotDeleteFile()
     QAction *act = qobject_cast< QAction * >(sender());
     if (act) {
         const QString type = act->data().toString();
-        StorageServiceAbstract *service = mListService.value(type);
+        StorageServiceAbstract *service = d->mListService.value(type);
         if (service) {
             QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(StorageServiceDeleteDialog::DeleteFiles, service);
             defaultConnect(service);
@@ -296,7 +313,7 @@ void StorageServiceManager::slotDeleteFolder()
     QAction *act = qobject_cast< QAction * >(sender());
     if (act) {
         const QString type = act->data().toString();
-        StorageServiceAbstract *service = mListService.value(type);
+        StorageServiceAbstract *service = d->mListService.value(type);
         if (service) {
             QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(StorageServiceDeleteDialog::DeleteFolders, service);
             defaultConnect(service);
@@ -312,7 +329,7 @@ void StorageServiceManager::slotAccountInfo()
     QAction *act = qobject_cast< QAction * >(sender());
     if (act) {
         const QString type = act->data().toString();
-        StorageServiceAbstract *service = mListService.value(type);
+        StorageServiceAbstract *service = d->mListService.value(type);
         if (service) {
             defaultConnect(service);
             connect(service, &StorageServiceAbstract::accountInfoDone, this, &StorageServiceManager::accountInfoDone, Qt::UniqueConnection);
@@ -323,7 +340,7 @@ void StorageServiceManager::slotAccountInfo()
 
 void StorageServiceManager::readConfig()
 {
-    mListService.clear();
+    d->mListService.clear();
     KConfig conf(kconfigName());
     KConfigGroup grp(&conf, QStringLiteral("General"));
 
@@ -331,34 +348,34 @@ void StorageServiceManager::readConfig()
     Q_FOREACH (const QString &service, services) {
         PimCommon::StorageServiceAbstract *storageService = Q_NULLPTR;
         if (service == serviceName(DropBox)) {
-            if (!mListService.contains(serviceName(DropBox))) {
+            if (!d->mListService.contains(serviceName(DropBox))) {
                 storageService = new DropBoxStorageService();
             }
         } else if (service == serviceName(Hubic)) {
-            if (!mListService.contains(serviceName(Hubic))) {
+            if (!d->mListService.contains(serviceName(Hubic))) {
                 storageService = new HubicStorageService();
             }
         } else if (service == serviceName(YouSendIt)) {
-            if (!mListService.contains(serviceName(YouSendIt))) {
+            if (!d->mListService.contains(serviceName(YouSendIt))) {
                 storageService = new YouSendItStorageService();
             }
         } else if (service == serviceName(WebDav)) {
-            if (!mListService.contains(serviceName(WebDav))) {
+            if (!d->mListService.contains(serviceName(WebDav))) {
                 storageService = new WebDavStorageService();
             }
         } else if (service == serviceName(Box)) {
-            if (!mListService.contains(serviceName(Box))) {
+            if (!d->mListService.contains(serviceName(Box))) {
                 storageService = new BoxStorageService();
             }
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
         } else if (service == serviceName(GDrive)) {
-            if (!mListService.contains(serviceName(GDrive))) {
+            if (!d->mListService.contains(serviceName(GDrive))) {
                 storageService = new GDriveStorageService();
             }
 #endif
         }
         if (storageService) {
-            mListService.insert(service, storageService);
+            d->mListService.insert(service, storageService);
         }
     }
 }
@@ -367,7 +384,7 @@ void StorageServiceManager::writeConfig()
 {
     KConfig conf(kconfigName());
     KConfigGroup grp(&conf, QStringLiteral("General"));
-    grp.writeEntry("Services", mListService.keys());
+    grp.writeEntry("Services", d->mListService.keys());
     conf.sync();
 }
 

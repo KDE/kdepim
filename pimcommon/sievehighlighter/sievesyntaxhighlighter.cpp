@@ -20,25 +20,37 @@
 #include "sievesyntaxhighlighterrules.h"
 
 using namespace PimCommon;
+class PimCommon::SieveSyntaxHighlighterPrivate
+{
+public:
+    SieveSyntaxHighlighterPrivate()
+    {
+
+    }
+
+    SieveSyntaxHighlighterRules mRules;
+};
 
 SieveSyntaxHighlighter::SieveSyntaxHighlighter(QTextDocument *doc)
-    : SyntaxHighlighterBase(doc)
+    : SyntaxHighlighterBase(doc),
+      d(new PimCommon::SieveSyntaxHighlighterPrivate)
 {
     init();
 }
 
 SieveSyntaxHighlighter::~SieveSyntaxHighlighter()
 {
+    delete d;
 }
 
 void SieveSyntaxHighlighter::addCapabilities(const QStringList &capabilities)
 {
-    mRules.addCapabilities(capabilities);
-    m_rules = mRules.rules();
+    d->mRules.addCapabilities(capabilities);
+    m_rules = d->mRules.rules();
 }
 
 void SieveSyntaxHighlighter::init()
 {
-    m_rules = mRules.rules();
+    m_rules = d->mRules.rules();
 }
 

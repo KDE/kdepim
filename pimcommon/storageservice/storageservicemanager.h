@@ -26,6 +26,7 @@
 class KActionMenu;
 namespace PimCommon
 {
+class StorageServiceManagerPrivate;
 class PIMCOMMON_EXPORT StorageServiceManager : public QObject
 {
     Q_OBJECT
@@ -96,8 +97,7 @@ private:
     void defaultConnect(StorageServiceAbstract *service);
     void readConfig();
     void writeConfig();
-    QMap<QString, StorageServiceAbstract *> mListService;
-    QString mDefaultUploadFolder;
+    StorageServiceManagerPrivate *const d;
 };
 }
 

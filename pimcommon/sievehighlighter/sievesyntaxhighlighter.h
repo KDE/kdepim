@@ -30,6 +30,7 @@ class QTextDocument;
 
 namespace PimCommon
 {
+class SieveSyntaxHighlighterPrivate;
 class PIMCOMMON_EXPORT SieveSyntaxHighlighter : public KPIMTextEdit::SyntaxHighlighterBase
 {
     Q_OBJECT
@@ -41,7 +42,7 @@ public:
 
 private:
     void init() Q_DECL_OVERRIDE;
-    SieveSyntaxHighlighterRules mRules;
+    SieveSyntaxHighlighterPrivate *const d;
 };
 
 }
