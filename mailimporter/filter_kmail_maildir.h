@@ -42,8 +42,6 @@ private:
     void importDirContents(const QString &);
     void importFiles(const QString &);
     FilterKMail_maildirPrivate *const d;
-    int mImportDirDone;
-    int mTotalDir;
 };
 }
 
