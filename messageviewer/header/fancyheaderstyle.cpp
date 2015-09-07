@@ -44,8 +44,7 @@
 
 using namespace MessageCore;
 
-namespace MessageViewer
-{
+using namespace MessageViewer;
 //
 // FancyHeaderStyle:
 //   Like PlainHeaderStyle, but with slick frames and background colours.
@@ -233,6 +232,4 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
 bool FancyHeaderStyle::hasAttachmentQuickList() const
 {
     return true;
-}
-
 }

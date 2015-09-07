@@ -141,4 +141,10 @@ QString CustomHeaderStyle::formatAllMessageHeaders(KMime::Message *message, cons
     }
     return result;
 }
+
+const char *MessageViewer::CustomHeaderStyle::name() const
+{
+    return "custom";
+}
+
 }

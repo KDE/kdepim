@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,28 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CUSTOMHEADERSTYLE_H
-#define CUSTOMHEADERSTYLE_H
+#ifndef CUSTOMHEADERSTYLEPLUGIN_H
+#define CUSTOMHEADERSTYLEPLUGIN_H
 
-#include "header/headerstyle.h"
-#include "messageviewer_export.h"
+#include "header/headerplugin.h"
+
+#include <QVariant>
 
 namespace MessageViewer
 {
-
-class MESSAGEVIEWER_EXPORT CustomHeaderStyle : public HeaderStyle
+class CustomHeaderStylePlugin : public MessageViewer::HeaderPlugin
 {
+    Q_OBJECT
 public:
-    CustomHeaderStyle() : HeaderStyle() {}
-    ~CustomHeaderStyle() {}
+    explicit CustomHeaderStylePlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
+    ~CustomHeaderStylePlugin();
 
-public:
-    const char *name() const Q_DECL_OVERRIDE;
-
+    HeaderStyle *headerStyle() const Q_DECL_OVERRIDE;
+    HeaderStrategy *headerStrategy() const Q_DECL_OVERRIDE;
+    KToggleAction *createAction(KActionCollection *ac) Q_DECL_OVERRIDE;
 private:
-    QString format(KMime::Message *message) const Q_DECL_OVERRIDE;
-    QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
+    HeaderStyle *mHeaderStyle;
+    HeaderStrategy *mHeaderStrategy;
 };
 }
-
-#endif // CUSTOMHEADERSTYLE_H
+#endif // CUSTOMHEADERSTYLEPLUGIN_H

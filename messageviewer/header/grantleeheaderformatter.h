@@ -20,6 +20,7 @@
 
 #include <QString>
 #include <grantlee/templateloader.h>
+#include "messageviewer_export.h"
 namespace KMime
 {
 class Message;
@@ -33,7 +34,7 @@ class Theme;
 namespace MessageViewer
 {
 class HeaderStyle;
-class GrantleeHeaderFormatter
+class MESSAGEVIEWER_EXPORT GrantleeHeaderFormatter
 {
 public:
     explicit GrantleeHeaderFormatter();

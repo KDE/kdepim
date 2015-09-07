@@ -137,7 +137,7 @@ set(libmessageviewer_header_SRCS
   header/grantleeheaderstyle.cpp
   header/customheaderstyle.cpp
   header/plainheaderstyle.cpp
-  header/entrepriseheaderstyle.cpp
+  header/enterpriseheaderstyle.cpp
   header/headerstyle_util.cpp
   header/fancyheaderstyle.cpp
   header/customheadersettingwidget.cpp
@@ -269,3 +269,6 @@ install(FILES scamdetection/data/longurlServices.json DESTINATION ${KDE_INSTALL_
 
 add_subdirectory(header/briefheaderstyleplugin)
 add_subdirectory(header/fancyheaderstyleplugin)
+add_subdirectory(header/enterpriseheaderstyleplugin)
+add_subdirectory(header/customheaderstyleplugin)
+add_subdirectory(header/grantleeheaderstyleplugin)

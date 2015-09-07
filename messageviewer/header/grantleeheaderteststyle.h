@@ -24,6 +24,7 @@
 namespace MessageViewer
 {
 class GrantleeHeaderFormatter;
+class GrantleeHeaderTestStylePrivate;
 class MESSAGEVIEWER_EXPORT GrantleeHeaderTestStyle : public HeaderStyle
 {
     friend class GrantleeHeaderStyle;
@@ -43,10 +44,7 @@ public:
     bool hasAttachmentQuickList() const Q_DECL_OVERRIDE;
 
 private:
-    QStringList mExtraDisplay;
-    QString mAbsolutePath;
-    QString mMainFilename;
-    GrantleeHeaderFormatter *mGrantleeFormatter;
+    GrantleeHeaderTestStylePrivate *const d;
 };
 }
 

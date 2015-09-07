@@ -23,11 +23,10 @@
 namespace MessageViewer
 {
 class GrantleeHeaderFormatter;
-
-class GrantleeHeaderStyle : public HeaderStyle
+//Temporary.
+class MESSAGEVIEWER_EXPORT GrantleeHeaderStyle : public HeaderStyle
 {
-    friend class HeaderStyle;
-protected:
+public:
     GrantleeHeaderStyle();
     ~GrantleeHeaderStyle();
 

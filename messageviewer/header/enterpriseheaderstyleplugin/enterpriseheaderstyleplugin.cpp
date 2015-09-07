@@ -15,41 +15,41 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "fancyheaderstyleplugin.h"
-#include "header/fancyheaderstyle.h"
+#include "enterpriseheaderstyleplugin.h"
+#include "header/enterpriseheaderstyle.h"
 //Temporary
 #include "header/headerstrategy_p.h"
 #include <kpluginfactory.h>
 using namespace MessageViewer;
 
-K_PLUGIN_FACTORY_WITH_JSON(MessageViewerFancyHeaderStylePluginFactory, "messageviewer_fancyheaderstyleplugin.json", registerPlugin<FancyHeaderStylePlugin>();)
+K_PLUGIN_FACTORY_WITH_JSON(MessageViewerEnterpriseHeaderStylePluginFactory, "messageviewer_enterpriseheaderstyleplugin.json", registerPlugin<EnterpriseHeaderStylePlugin>();)
 
-FancyHeaderStylePlugin::FancyHeaderStylePlugin(QObject *parent, const QList<QVariant> &)
+EnterpriseHeaderStylePlugin::EnterpriseHeaderStylePlugin(QObject *parent, const QList<QVariant> &)
     : MessageViewer::HeaderPlugin(parent),
-      mHeaderStyle(new FancyHeaderStyle),
-      mHeaderStrategy(new RichHeaderStrategy)
+      mHeaderStyle(new EnterpriseHeaderStyle),
+      mHeaderStrategy(new BriefHeaderStrategy)
 {
 }
 
-FancyHeaderStylePlugin::~FancyHeaderStylePlugin()
+EnterpriseHeaderStylePlugin::~EnterpriseHeaderStylePlugin()
 {
 
 }
 
-HeaderStyle *FancyHeaderStylePlugin::headerStyle() const
+HeaderStyle *EnterpriseHeaderStylePlugin::headerStyle() const
 {
     return mHeaderStyle;
 }
 
-HeaderStrategy *FancyHeaderStylePlugin::headerStrategy() const
+HeaderStrategy *EnterpriseHeaderStylePlugin::headerStrategy() const
 {
     return mHeaderStrategy;
 }
 
-KToggleAction *FancyHeaderStylePlugin::createAction(KActionCollection *ac)
+KToggleAction *EnterpriseHeaderStylePlugin::createAction(KActionCollection *ac)
 {
     //TODO
     return Q_NULLPTR;
 }
 
-#include "fancyheaderstyleplugin.moc"
+#include "enterpriseheaderstyleplugin.moc"

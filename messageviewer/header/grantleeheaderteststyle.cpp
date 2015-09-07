@@ -24,18 +24,34 @@
 
 using namespace MessageViewer;
 
-namespace MessageViewer
+class MessageViewer::GrantleeHeaderTestStylePrivate
 {
+public:
+    GrantleeHeaderTestStylePrivate()
+        : mGrantleeFormatter(new GrantleeHeaderFormatter)
+    {
+
+    }
+    ~GrantleeHeaderTestStylePrivate()
+    {
+        delete mGrantleeFormatter;
+    }
+
+    QStringList mExtraDisplay;
+    QString mAbsolutePath;
+    QString mMainFilename;
+    GrantleeHeaderFormatter *mGrantleeFormatter;
+};
 
 GrantleeHeaderTestStyle::GrantleeHeaderTestStyle()
-    : HeaderStyle()
+    : HeaderStyle(),
+      d(new MessageViewer::GrantleeHeaderTestStylePrivate)
 {
-    mGrantleeFormatter = new GrantleeHeaderFormatter;
 }
 
 GrantleeHeaderTestStyle::~GrantleeHeaderTestStyle()
 {
-    delete mGrantleeFormatter;
+    delete d;
 }
 
 const char *GrantleeHeaderTestStyle::name() const
@@ -48,27 +64,25 @@ QString GrantleeHeaderTestStyle::format(KMime::Message *message) const
     if (!message) {
         return QString();
     }
-    return mGrantleeFormatter->toHtml(mExtraDisplay, mAbsolutePath, mMainFilename, this, message, isPrinting());
+    return d->mGrantleeFormatter->toHtml(d->mExtraDisplay, d->mAbsolutePath, d->mMainFilename, this, message, isPrinting());
 }
 
 void GrantleeHeaderTestStyle::setAbsolutePath(const QString &path)
 {
-    mAbsolutePath = path;
+    d->mAbsolutePath = path;
 }
 
 void GrantleeHeaderTestStyle::setMainFilename(const QString &filename)
 {
-    mMainFilename = filename;
+    d->mMainFilename = filename;
 }
 
 void GrantleeHeaderTestStyle::setExtraDisplayHeaders(const QStringList &extraDisplay)
 {
-    mExtraDisplay = extraDisplay;
+    d->mExtraDisplay = extraDisplay;
 }
 
 bool GrantleeHeaderTestStyle::hasAttachmentQuickList() const
 {
     return true;
-}
-
 }

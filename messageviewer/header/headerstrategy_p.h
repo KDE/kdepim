@@ -105,10 +105,10 @@ public:
 //   Date, Subject, From, To, CC, ### what exactly?
 //
 
-class RichHeaderStrategy : public HeaderStrategy
+class MESSAGEVIEWER_EXPORT RichHeaderStrategy : public HeaderStrategy
 {
     friend class HeaderStrategy;
-protected:
+public:
     RichHeaderStrategy()
         : HeaderStrategy(),
           mHeadersToDisplay(stringList(richHeaders, numRichHeaders)) {}
@@ -205,10 +205,10 @@ private:
 //   Determined by user
 //
 
-class CustomHeaderStrategy : public HeaderStrategy
+class MESSAGEVIEWER_EXPORT CustomHeaderStrategy : public HeaderStrategy
 {
     friend class HeaderStrategy;
-protected:
+public:
     CustomHeaderStrategy();
     ~CustomHeaderStrategy() {}
 
@@ -242,10 +242,9 @@ private:
 // CustomHeaderStrategy
 //   Determined by grantlee theme.
 //
-class GrantleeHeaderStrategy : public HeaderStrategy
+class MESSAGEVIEWER_EXPORT GrantleeHeaderStrategy : public HeaderStrategy
 {
-    friend class HeaderStrategy;
-protected:
+public:
     GrantleeHeaderStrategy() {}
     ~GrantleeHeaderStrategy() {}
 
