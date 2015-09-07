@@ -35,6 +35,7 @@
 #include "kleopatraapplication.h"
 
 #include "mainwindow.h"
+#include "kleopatra_options.h"
 #include "systrayicon.h"
 #include <smartcard/readerstatus.h>
 #include <conf/configuredialog.h>
@@ -59,19 +60,17 @@
 
 #include <KIconLoader>
 #include <KLocalizedString>
-#include <KCmdLineOptions>
 #include "kleopatra_debug.h"
+#include <KMessageBox>
 #include <KWindowSystem>
 #include <QUrl>
 
 #include <QFile>
 #include <QDir>
 #include <QPointer>
+#include <QCommandLineOption>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/range.hpp>
-#include <boost/bind.hpp>
-#include <boost/mem_fn.hpp>
 
 #include <memory>
 #include <KSharedConfig>
@@ -84,50 +83,6 @@ static void add_resources()
 {
     KIconLoader::global()->addAppDir(QStringLiteral("libkleopatra"));
     KIconLoader::global()->addAppDir(QStringLiteral("kwatchgnupg"));
-}
-
-static const struct {
-    const char *option;
-    const char *description;
-    char short_option[4];
-} kleo_options[] = {
-    { "daemon",             I18N_NOOP("Run UI server only, hide main window"),    ""  },
-    { "openpgp",            I18N_NOOP("Use OpenPGP for the following operation"), "p" },
-    { "cms",                I18N_NOOP("Use CMS (X.509, S/MIME) for the following operation"), "c" },
-    { "import-certificate", I18N_NOOP("Import certificate file(s)"),              "i" },
-    { "encrypt",            I18N_NOOP("Encrypt file(s)"),                         "e" },
-    { "sign",               I18N_NOOP("Sign file(s)"),                            "s" },
-    { "sign-encrypt",       I18N_NOOP("Sign and/or encrypt file(s)"),             "E" },
-    { "encrypt-sign",       I18N_NOOP("Same as --sign-encrypt, do not use"),      ""  },
-    { "decrypt",            I18N_NOOP("Decrypt file(s)"),                         "d" },
-    { "verify",             I18N_NOOP("Verify file/signature"),                   "V" },
-    { "decrypt-verify",     I18N_NOOP("Decrypt and/or verify file(s)"),          "D" },
-    { "query <fingerprint>", I18N_NOOP("Search for Certificate by fingerprint"),   "q" },
-    { "parent-windowid <windowId>",   I18N_NOOP("Parent Window Id for dialogs"),   "" },
-    //{ "show-certificate",   I18N_NOOP("Show Certificate(s) by fingerprint(s)"),   ""  },
-};
-
-static KCmdLineOptions make_kleopatra_args()
-{
-    KCmdLineOptions options;
-#ifdef HAVE_USABLE_ASSUAN
-    options.add("uiserver-socket <argument>", ki18n("Location of the socket the ui server is listening on"));
-#endif
-    for (unsigned int i = 0 ; i < sizeof kleo_options / sizeof * kleo_options ; ++i) {
-        if (*kleo_options[i].short_option) {
-            options.add(kleo_options[i].short_option);
-        }
-        options.add(kleo_options[i].option, ki18n(kleo_options[i].description));
-    }
-    options.add("+[File]", ki18n("File(s) to process"));
-    return options;
-}
-
-// static
-KCmdLineOptions KleopatraApplication::commandLineOptions()
-{
-    static KCmdLineOptions options = make_kleopatra_args();
-    return options;
 }
 
 static QList<QByteArray> default_logging_options()
@@ -144,8 +99,7 @@ class KleopatraApplication::Private
 public:
     explicit Private(KleopatraApplication *qq)
         : q(qq),
-          ignoreNewInstance(true),
-          firstNewInstance(true)
+          ignoreNewInstance(true)
     {
         KDAB_SET_OBJECT_NAME(readerStatus);
 #ifndef QT_NO_SYSTEMTRAYICON
@@ -177,7 +131,6 @@ private:
 
 public:
     bool ignoreNewInstance;
-    bool firstNewInstance;
     QPointer<ConfigureDialog> configureDialog;
     QPointer<MainWindow> mainWindow;
     SmartCard::ReaderStatus readerStatus;
@@ -236,8 +189,8 @@ public:
     }
 };
 
-KleopatraApplication::KleopatraApplication()
-    : KUniqueApplication(), d(new Private(this))
+KleopatraApplication::KleopatraApplication(int &argc, char *argv[])
+    : QApplication(argc, argv), d(new Private(this))
 {
     add_resources();
     d->setupKeyCache();
@@ -255,70 +208,89 @@ KleopatraApplication::~KleopatraApplication()
     KSharedConfig::openConfig()->sync();
 }
 
-static QStringList files_from_args(const shared_ptr<const KCmdLineArgs> &args)
-{
-    QStringList result;
-    for (int i = 0, end = args->count() ; i < end ; ++i) {
-        const QUrl url = args->url(i);
-        if (url.scheme() == QLatin1String("file")) {
-            result.push_back(url.toLocalFile());
-        }
-    }
-    return result;
-}
-
 namespace
 {
 typedef void (KleopatraApplication::*Func)(const QStringList &, GpgME::Protocol);
-struct _Funcs {
-    const char *opt;
-    Func func;
-};
 }
 
-int KleopatraApplication::newInstance()
+void KleopatraApplication::slotActivateRequested(const QStringList& arguments,
+                                                 const QString &workingDirectory)
 {
-    qCDebug(KLEOPATRA_LOG) << "ignoreNewInstance =" << d->ignoreNewInstance;
+    QCommandLineParser parser;
+
+    kleopatra_options(&parser);
+    QString err;
+    if (!arguments.isEmpty() && !parser.parse(arguments)) {
+        err = parser.errorText();
+    } else if (arguments.isEmpty()) {
+        // KDBusServices omits the application name if no other
+        // arguments are provided. In that case the parser prints
+        // a warning.
+        parser.parse(QStringList() << QCoreApplication::applicationFilePath());
+    }
+
+    if (err.isEmpty()) {
+        err = newInstance(parser, workingDirectory);
+    }
+
+    if (!err.isEmpty()) {
+        KMessageBox::sorry(NULL, err.toHtmlEscaped(), i18n("Failed to execute command"));
+        emit setExitValue(1);
+    }
+}
+
+QString KleopatraApplication::newInstance(const QCommandLineParser& parser,
+                                          const QString &workingDirectory)
+{
     if (d->ignoreNewInstance) {
-        return 0;
+        qCDebug(KLEOPATRA_LOG) << "New instance ignored because of ignoreNewInstance";
+        return QString();
     }
 
-    const shared_ptr<KCmdLineArgs> args(KCmdLineArgs::parsedArgs(), mem_fn(&KCmdLineArgs::clear));
+    QStringList files;
+    const QDir cwd = QDir(workingDirectory);
+    Q_FOREACH (const QString& file, parser.positionalArguments()) {
+        // We do not check that file exists here. Better handle
+        // these errors in the UI.
+        if (QFileInfo(file).isAbsolute()) {
+            files << file;
+        } else {
+            files << cwd.absoluteFilePath(file);
+        }
+    }
 
-    const QStringList files = files_from_args(args);
+    GpgME::Protocol protocol = GpgME::UnknownProtocol;
 
-    const bool openpgp = args->isSet("openpgp");
-    const bool cms     = args->isSet("cms");
-    if (openpgp) {
+    if (parser.isSet(QStringLiteral("openpgp"))) {
         qCDebug(KLEOPATRA_LOG) << "found OpenPGP";
-    }
-    if (cms) {
-        qCDebug(KLEOPATRA_LOG)     << "found CMS";
+        protocol = GpgME::OpenPGP;
     }
 
-    if (openpgp && cms) {
-        qCDebug(KLEOPATRA_LOG) << "ambigious scheme: --openpgp and --cms";
-        return 1;
+    if (parser.isSet(QStringLiteral("cms"))) {
+        qCDebug(KLEOPATRA_LOG) << "found CMS";
+        if (protocol == GpgME::OpenPGP) {
+           return i18n("Ambigious protocol: --openpgp and --cms");
+        }
+        protocol = GpgME::CMS;
     }
 
     // Check for --query command
-    if (args->isSet("query")) {
-        const QString fingerPrint = args->getOption("query");
+    if (parser.isSet(QStringLiteral("query"))) {
+        const QString fingerPrint = parser.value(QStringLiteral("query"));
         if (fingerPrint.isEmpty()) {
-            qCDebug(KLEOPATRA_LOG) << "no fingerprint specified: --query";
-            return 1;
+            return i18n("No fingerprint argument specified for --query");
         }
 
         // Check for Parent Window id
         WId parentId = 0;
-        if (args->isSet("parent-windowid")) {
+        if (parser.isSet(QStringLiteral("parent-windowid"))) {
 #ifdef Q_OS_WIN
             // WId is not a portable type as it is a pointer type on Windows.
             // casting it from an integer is ok though as the values are guranteed to
             // be compatible in the documentation.
-            parentId = reinterpret_cast<WId>(args->getOption("parent-windowid").toUInt());
+            parentId = reinterpret_cast<WId>(parser.value(QStringLiteral("parent-windowid")).toUInt());
 #else
-            parentId = args->getOption("parent-windowid").toUInt();
+            parentId = parser.value(QStringLiteral("parent-windowid")).toUInt();
 #endif
         }
 
@@ -331,7 +303,6 @@ int KleopatraApplication::newInstance()
                 cmd->setParentWId(parentId);
             };
             cmd->start();
-            return 0;
         } else {
             // show local detail
             DetailsCommand *const cmd = new DetailsCommand(key, 0);
@@ -339,53 +310,48 @@ int KleopatraApplication::newInstance()
                 cmd->setParentWId(parentId);
             };
             cmd->start();
-            return 0;
         }
-
+        return QString();
     }
 
-    static const _Funcs funcs[] = {
-#ifndef QT_NO_SYSTEMTRAYICON
-        { "import-certificate", &KleopatraApplication::importCertificatesFromFile },
-#endif
-        { "encrypt", &KleopatraApplication::encryptFiles               },
-        { "sign", &KleopatraApplication::signFiles                  },
-        { "encrypt-sign", &KleopatraApplication::signEncryptFiles           },
-        { "sign-encrypt", &KleopatraApplication::signEncryptFiles           },
-        { "decrypt", &KleopatraApplication::decryptFiles               },
-        { "verify", &KleopatraApplication::verifyFiles                },
-        { "decrypt-verify", &KleopatraApplication::decryptVerifyFiles         },
+    static const QMap<QString, Func> funcMap {
+        { QStringLiteral("import-certificate"), &KleopatraApplication::importCertificatesFromFile },
+        { QStringLiteral("encrypt"), &KleopatraApplication::encryptFiles },
+        { QStringLiteral("sign"), &KleopatraApplication::signFiles },
+        { QStringLiteral("encrypt-sign"), &KleopatraApplication::signEncryptFiles },
+        { QStringLiteral("sign-encrypt"), &KleopatraApplication::signEncryptFiles },
+        { QStringLiteral("decrypt"), &KleopatraApplication::decryptFiles },
+        { QStringLiteral("verify"), &KleopatraApplication::verifyFiles },
+        { QStringLiteral("decrypt-verify"), &KleopatraApplication::decryptVerifyFiles }
     };
 
-    const _Funcs *const it1 = std::find_if(begin(funcs), end(funcs),
-                                           boost::bind(&KCmdLineArgs::isSet, args, boost::bind(&_Funcs::opt, _1)));
+    QString found;
+    Q_FOREACH (const QString &opt, funcMap.keys()) {
+        if (parser.isSet(opt) && found.isEmpty()) {
+            found = opt;
+        } else if (parser.isSet(opt)) {
+            return i18n("Ambiguous commands \"%1\" and \"%2\"", found, opt);
+        }
+    }
 
-    if (const Func func = it1 == end(funcs) ? 0 : it1->func) {
-        const _Funcs *it2 = std::find_if(it1 + 1, end(funcs),
-                                         boost::bind(&KCmdLineArgs::isSet, args, boost::bind(&_Funcs::opt, _1)));
-        if (it2 != end(funcs)) {
-            qCDebug(KLEOPATRA_LOG) << "ambiguous command" << it1->opt << "vs." << it2->opt;
-            return 1;
-        }
+    if (!found.isEmpty()) {
         if (files.empty()) {
-            qCDebug(KLEOPATRA_LOG) << it1->opt << "without arguments";
-            return 1;
+            return i18n("No files specificed for \"%1\" command", found);
         }
-        qCDebug(KLEOPATRA_LOG) << "found" << it1->opt;
-        (this->*func)(files, openpgp ? GpgME::OpenPGP : cms ? GpgME::CMS : GpgME::UnknownProtocol);
+        qCDebug(KLEOPATRA_LOG) << "found" << found;
+        (this->*funcMap.value(found))(files, protocol);
     } else {
         if (files.empty()) {
-            if (!(d->firstNewInstance && isSessionRestored())) {
+            if (!isSessionRestored()) {
                 qCDebug(KLEOPATRA_LOG) << "openOrRaiseMainWindow";
                 openOrRaiseMainWindow();
             }
         } else {
-            qCDebug(KLEOPATRA_LOG) << "files without command"; // possible?
-            return 1;
+            return i18n("No command provided but arguments present");
         }
     }
 
-    return 0;
+    return QString();
 }
 
 #ifndef QT_NO_SYSTEMTRAYICON
@@ -502,15 +468,15 @@ void KleopatraApplication::startMonitoringSmartCard()
 {
     d->readerStatus.startMonitoring();
 }
+#endif // QT_NO_SYSTEMTRAYICON
 
 void KleopatraApplication::importCertificatesFromFile(const QStringList &files, GpgME::Protocol /*proto*/)
 {
     openOrRaiseMainWindow();
     if (!files.empty()) {
-        d->sysTray.mainWindow()->importCertificatesFromFile(files);
+        mainWindow()->importCertificatesFromFile(files);
     }
 }
-#endif // QT_NO_SYSTEMTRAYICON
 
 void KleopatraApplication::encryptFiles(const QStringList &files, GpgME::Protocol proto)
 {
@@ -566,11 +532,6 @@ void KleopatraApplication::decryptVerifyFiles(const QStringList &files, GpgME::P
 void KleopatraApplication::setIgnoreNewInstance(bool ignore)
 {
     d->ignoreNewInstance = ignore;
-}
-
-void KleopatraApplication::setFirstNewInstance(bool on)
-{
-    d->firstNewInstance = on;
 }
 
 bool KleopatraApplication::ignoreNewInstance() const

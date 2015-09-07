@@ -93,19 +93,19 @@ static const about_data credits[] = {
 };
 
 AboutData::AboutData()
-    : K4AboutData("kleopatra", 0, ki18n("Kleopatra"),
-                  kleopatra_version, ki18n(description), License_GPL,
-                  ki18n("(c) 2002 Steffen\xC2\xA0Hansen, Matthias\xC2\xA0Kalle\xC2\xA0" "Dalheimer, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB\n"
-                        "(c) 2004, 2007, 2008, 2009 Marc\xC2\xA0Mutz, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB"))
+    : KAboutData(QStringLiteral("kleopatra"), i18n("Kleopatra"),
+                  QLatin1String(kleopatra_version), i18n(description), KAboutLicense::GPL,
+                  i18n("(c) 2002 Steffen\xC2\xA0Hansen, Matthias\xC2\xA0Kalle\xC2\xA0" "Dalheimer, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB\n"
+                       "(c) 2004, 2007, 2008, 2009 Marc\xC2\xA0Mutz, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB"))
 {
     using ::authors;
     using ::credits;
     for (unsigned int i = 0 ; i < sizeof authors / sizeof * authors ; ++i)
-        addAuthor(ki18n(authors[i].name), ki18n(authors[i].desc),
-                  authors[i].email, authors[i].web);
+        addAuthor(i18n(authors[i].name), i18n(authors[i].desc),
+                  QLatin1String(authors[i].email), QLatin1String(authors[i].web));
     for (unsigned int i = 0 ; i < sizeof credits / sizeof * credits ; ++i)
-        addCredit(ki18n(credits[i].name), ki18n(credits[i].desc),
-                  credits[i].email, credits[i].web);
+        addCredit(i18n(credits[i].name), i18n(credits[i].desc),
+                  QLatin1String(credits[i].email), QLatin1String(credits[i].web));
 }
 
 static const char gpg4win_description[] = I18N_NOOP("Gpg4win is an installer package for Windows for EMail and "
@@ -169,11 +169,11 @@ static QPixmap UserIcon_nocached2(const char *name)
 }
 
 AboutGpg4WinData::AboutGpg4WinData()
-    : K4AboutData("gpg4win", 0, ki18n("Gpg4win"),
-                  gpg4win_version().toLatin1(), ki18n(gpg4win_description),
-                  License_GPL, KLocalizedString(), KLocalizedString(), "http://www.gpg4win.de")
+    : KAboutData(QStringLiteral("gpg4win"), i18n("Gpg4win"),
+                  gpg4win_version(), i18n(gpg4win_description),
+                  KAboutLicense::GPL, QString(), QString(), QStringLiteral("http://www.gpg4win.de"))
 {
-    setCustomAuthorText(ki18n(gpg4win_credits_description), ki18n(gpg4win_credits_description));
-    addAuthor(ki18n(gpg4win_credits_persons), KLocalizedString(), 0 , 0);
+    setCustomAuthorText(i18n(gpg4win_credits_description), i18n(gpg4win_credits_description));
+    addAuthor(i18n(gpg4win_credits_persons), QString(), QString(), QString());
     setProgramLogo(UserIcon_nocached2("gpg4win"));
 }

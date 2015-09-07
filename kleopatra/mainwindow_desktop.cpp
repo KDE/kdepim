@@ -60,12 +60,12 @@
 #include "progresswidget/progressdialog.h"
 #include <QStatusBar>
 #include <KXMLGUIFactory>
-#include <KApplication>
+#include <QApplication>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KStandardAction>
 #include <QAction>
-#include <K4AboutData>
+#include <KAboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KShortcutsDialog>
@@ -100,17 +100,6 @@ using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace boost;
 using namespace GpgME;
-
-namespace
-{
-
-static const K4AboutData *aboutGpg4WinData()
-{
-    static const AboutGpg4WinData data;
-    return &data;
-}
-
-}
 
 static KGuiItem KStandardGuiItem_quit()
 {
@@ -449,7 +438,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
             setEnabled(true);
         }
     }
-    if (isQuitting || kapp->sessionSaving()) {
+    if (isQuitting || qApp->isSavingSession()) {
         d->ui.tabWidget.saveViews(KSharedConfig::openConfig().data());
         KConfigGroup grp(KConfigGroup(KSharedConfig::openConfig(), autoSaveGroup()));
         saveMainWindowSettings(grp);

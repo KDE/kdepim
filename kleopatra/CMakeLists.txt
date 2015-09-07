@@ -352,8 +352,12 @@ target_link_libraries(kleopatra_bin
   kleo
   KF5::Mime
   KF5::KCMUtils
-  KF5::KDELibs4Support
   KF5::I18n
+  KF5::XmlGui
+  KF5::IconThemes
+  KF5::WindowSystem
+  KF5::DBusAddons
+  Qt5::Network
   ${_kleopatra_uiserver_extra_libs}
   ${_kleopatra_libkdepim_LIBS}
 )

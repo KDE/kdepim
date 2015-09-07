@@ -54,7 +54,7 @@
 #include <QIcon>
 #include <KLocalizedString>
 #include <KAboutApplicationDialog>
-#include <k4aboutdata.h>
+#include <KAboutData>
 #include <KActionMenu>
 #include <QEventLoopLocker>
 

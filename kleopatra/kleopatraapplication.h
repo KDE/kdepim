@@ -33,31 +33,43 @@
 #ifndef __KLEOPATRAAPPLICATION_H__
 #define __KLEOPATRAAPPLICATION_H__
 
-#include <KUniqueApplication>
+#include <QApplication>
+#include <QCommandLineParser>
 
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
 
-class KCmdLineOptions;
 class MainWindow;
 class SysTrayIcon;
 
-class KleopatraApplication : public KUniqueApplication
+class KleopatraApplication : public QApplication
 {
     Q_OBJECT
 public:
-    KleopatraApplication();
+    KleopatraApplication(int &argc, char *argv[]);
     ~KleopatraApplication();
-
-    static KCmdLineOptions commandLineOptions();
 
     static KleopatraApplication *instance()
     {
         return qobject_cast<KleopatraApplication *>(qApp);
     }
 
-    int newInstance() Q_DECL_OVERRIDE;
+    /** Starts a new instance or a command from the command line.
+     *
+     * Handles the parser options and starts the according commands.
+     * If ignoreNewInstance is set this function does nothing.
+     * The parser should have been initialized with kleopatra_options and
+     * already processed.
+     * If kleopatra is not session restored 
+     *
+     * @param parser: The command line parser to use.
+     * @param workingDirectory: Optional working directory for file arguments.
+     *
+     * @returns an empty QString on success. A localized error message otherwise.
+     * */
+    QString newInstance(const QCommandLineParser& parser,
+                        const QString& workingDirectory=QString());
 
     void setMainWindow(MainWindow *mw);
 
@@ -68,7 +80,6 @@ public:
     SysTrayIcon *sysTrayIcon();
 
     void setIgnoreNewInstance(bool on);
-    void setFirstNewInstance(bool on);
     bool ignoreNewInstance() const;
     void toggleMainWindowVisibility();
     void restoreMainWindow();
@@ -86,6 +97,12 @@ public Q_SLOTS:
     void decryptFiles(const QStringList &files, GpgME::Protocol proto);
     void verifyFiles(const QStringList &files, GpgME::Protocol proto);
     void decryptVerifyFiles(const QStringList &files, GpgME::Protocol proto);
+    void slotActivateRequested(const QStringList &arguments, const QString &workingDirectory);
+
+Q_SIGNALS:
+    /* Emited from slotActivateRequested to enable setting the
+     * correct exitValue */
+    void setExitValue(int value);
 
 private:
     class Private;
