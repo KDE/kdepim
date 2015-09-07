@@ -222,6 +222,7 @@ PRIVATE
   KF5::IconThemes
   KF5::Archive
   KF5::ItemViews
+  KF5::Ldap
 )
 
 target_include_directories(mailcommon PUBLIC "$<BUILD_INTERFACE:${mailcommon_SOURCE_DIR};${mailcommon_BINARY_DIR}>")

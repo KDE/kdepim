@@ -33,6 +33,7 @@ macro( add_messagecomposer_cryptotest _source )
         KF5::IconThemes
         KF5::Completion
         KF5::MailTransport
+        KF5::Ldap
     )
     add_gpg_crypto_test(${_name} ${_name})
 endmacro()

@@ -144,8 +144,8 @@ target_link_libraries(kdepim
   KF5::AkonadiCore
   KF5::AkonadiContact
   KF5::AkonadiWidgets
-  KF5::Ldap
  PRIVATE
+  KF5::Ldap
   KF5::Contacts
   KF5::Codecs
   KF5::Completion
