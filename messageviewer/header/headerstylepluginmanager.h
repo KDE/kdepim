@@ -22,7 +22,7 @@
 #include "messageviewer_export.h"
 namespace MessageViewer
 {
-class HeaderPlugin;
+class HeaderStylePlugin;
 class HeaderStylePluginManagerPrivate;
 class MESSAGEVIEWER_EXPORT HeaderStylePluginManager : public QObject
 {
@@ -33,7 +33,7 @@ public:
     explicit HeaderStylePluginManager(QObject *parent = Q_NULLPTR);
     ~HeaderStylePluginManager();
 
-    QVector<MessageViewer::HeaderPlugin *> pluginsList() const;
+    QVector<MessageViewer::HeaderStylePlugin *> pluginsList() const;
 private:
     HeaderStylePluginManagerPrivate *const d;
 };

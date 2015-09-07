@@ -18,13 +18,13 @@
 #ifndef BRIEFHEADERSTYLEPLUGIN_H
 #define BRIEFHEADERSTYLEPLUGIN_H
 
-#include "header/headerplugin.h"
+#include "header/headerstyleplugin.h"
 
 #include <QVariant>
 
 namespace MessageViewer
 {
-class BriefHeaderStylePlugin : public MessageViewer::HeaderPlugin
+class BriefHeaderStylePlugin : public MessageViewer::HeaderStylePlugin
 {
     Q_OBJECT
 public:

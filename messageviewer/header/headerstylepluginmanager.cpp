@@ -16,7 +16,7 @@
 */
 
 #include "headerstylepluginmanager.h"
-#include "headerplugin.h"
+#include "headerstyleplugin.h"
 #include <KPluginFactory>
 #include <KPluginLoader>
 #include <kpluginmetadata.h>
@@ -54,7 +54,7 @@ public:
     QString saveName() const;
 
     KPluginMetaData metaData;
-    MessageViewer::HeaderPlugin *plugin;
+    MessageViewer::HeaderStylePlugin *plugin;
 };
 
 QString HeaderStylePluginInfo::saveName() const
@@ -70,7 +70,7 @@ public:
     {
 
     }
-    QVector<MessageViewer::HeaderPlugin *> pluginsList() const;
+    QVector<MessageViewer::HeaderStylePlugin *> pluginsList() const;
     void initializePluginList();
     void loadPlugin(HeaderStylePluginInfo *item);
     QVector<HeaderStylePluginInfo> mPluginList;
@@ -104,9 +104,9 @@ void HeaderStylePluginManagerPrivate::initializePluginList()
     }
 }
 
-QVector<MessageViewer::HeaderPlugin *> HeaderStylePluginManagerPrivate::pluginsList() const
+QVector<MessageViewer::HeaderStylePlugin *> HeaderStylePluginManagerPrivate::pluginsList() const
 {
-    QVector<MessageViewer::HeaderPlugin *> lst;
+    QVector<MessageViewer::HeaderStylePlugin *> lst;
     QVector<HeaderStylePluginInfo>::ConstIterator end(mPluginList.constEnd());
     for (QVector<HeaderStylePluginInfo>::ConstIterator it = mPluginList.constBegin(); it != end; ++it) {
         if ((*it).plugin) {
@@ -118,7 +118,7 @@ QVector<MessageViewer::HeaderPlugin *> HeaderStylePluginManagerPrivate::pluginsL
 
 void HeaderStylePluginManagerPrivate::loadPlugin(HeaderStylePluginInfo *item)
 {
-    item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<MessageViewer::HeaderPlugin>(q, QVariantList() << item->saveName());
+    item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<MessageViewer::HeaderStylePlugin>(q, QVariantList() << item->saveName());
 }
 
 HeaderStylePluginManager *HeaderStylePluginManager::self()
@@ -138,7 +138,7 @@ HeaderStylePluginManager::~HeaderStylePluginManager()
     delete d;
 }
 
-QVector<MessageViewer::HeaderPlugin *> HeaderStylePluginManager::pluginsList() const
+QVector<MessageViewer::HeaderStylePlugin *> HeaderStylePluginManager::pluginsList() const
 {
     return d->pluginsList();
 }

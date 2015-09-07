@@ -18,13 +18,13 @@
 #ifndef GRANTLEEHEADERSTYLEPLUGIN_H
 #define GRANTLEEHEADERSTYLEPLUGIN_H
 
-#include "header/headerplugin.h"
+#include "header/headerstyleplugin.h"
 
 #include <QVariant>
 
 namespace MessageViewer
 {
-class GrantleeHeaderStylePlugin : public MessageViewer::HeaderPlugin
+class GrantleeHeaderStylePlugin : public MessageViewer::HeaderStylePlugin
 {
     Q_OBJECT
 public:

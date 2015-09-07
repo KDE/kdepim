@@ -18,13 +18,13 @@
 #ifndef ENTERPRISEHEADERSTYLEPLUGIN_H
 #define ENTERPRISEHEADERSTYLEPLUGIN_H
 
-#include "header/headerplugin.h"
+#include "header/headerstyleplugin.h"
 
 #include <QVariant>
 
 namespace MessageViewer
 {
-class EnterpriseHeaderStylePlugin : public MessageViewer::HeaderPlugin
+class EnterpriseHeaderStylePlugin : public MessageViewer::HeaderStylePlugin
 {
     Q_OBJECT
 public:

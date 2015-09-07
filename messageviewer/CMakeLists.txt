@@ -144,7 +144,7 @@ set(libmessageviewer_header_SRCS
   header/grantleeheaderformatter.cpp
   header/grantleeheaderteststyle.cpp
   header/kxface.cpp
-  header/headerplugin.cpp
+  header/headerstyleplugin.cpp
   header/headerstylepluginmanager.cpp
 )
 

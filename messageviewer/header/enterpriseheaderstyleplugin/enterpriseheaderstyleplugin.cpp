@@ -25,7 +25,7 @@ using namespace MessageViewer;
 K_PLUGIN_FACTORY_WITH_JSON(MessageViewerEnterpriseHeaderStylePluginFactory, "messageviewer_enterpriseheaderstyleplugin.json", registerPlugin<EnterpriseHeaderStylePlugin>();)
 
 EnterpriseHeaderStylePlugin::EnterpriseHeaderStylePlugin(QObject *parent, const QList<QVariant> &)
-    : MessageViewer::HeaderPlugin(parent),
+    : MessageViewer::HeaderStylePlugin(parent),
       mHeaderStyle(new EnterpriseHeaderStyle),
       mHeaderStrategy(new BriefHeaderStrategy)
 {

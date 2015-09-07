@@ -18,13 +18,13 @@
 #ifndef FANCYHEADERSTYLEPLUGIN_H
 #define FANCYHEADERSTYLEPLUGIN_H
 
-#include "header/headerplugin.h"
+#include "header/headerstyleplugin.h"
 
 #include <QVariant>
 
 namespace MessageViewer
 {
-class FancyHeaderStylePlugin : public MessageViewer::HeaderPlugin
+class FancyHeaderStylePlugin : public MessageViewer::HeaderStylePlugin
 {
     Q_OBJECT
 public:

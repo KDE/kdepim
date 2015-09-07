@@ -25,7 +25,7 @@ using namespace MessageViewer;
 K_PLUGIN_FACTORY_WITH_JSON(MessageViewerFancyHeaderStylePluginFactory, "messageviewer_fancyheaderstyleplugin.json", registerPlugin<FancyHeaderStylePlugin>();)
 
 FancyHeaderStylePlugin::FancyHeaderStylePlugin(QObject *parent, const QList<QVariant> &)
-    : MessageViewer::HeaderPlugin(parent),
+    : MessageViewer::HeaderStylePlugin(parent),
       mHeaderStyle(new FancyHeaderStyle),
       mHeaderStrategy(new RichHeaderStrategy)
 {

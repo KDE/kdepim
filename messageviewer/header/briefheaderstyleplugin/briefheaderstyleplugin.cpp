@@ -25,7 +25,7 @@ using namespace MessageViewer;
 K_PLUGIN_FACTORY_WITH_JSON(MessageViewerBriefHeaderStylePluginFactory, "messageviewer_briefheaderstyleplugin.json", registerPlugin<BriefHeaderStylePlugin>();)
 
 BriefHeaderStylePlugin::BriefHeaderStylePlugin(QObject *parent, const QList<QVariant> &)
-    : MessageViewer::HeaderPlugin(parent),
+    : MessageViewer::HeaderStylePlugin(parent),
       mHeaderStyle(new BriefHeaderStyle),
       mHeaderStrategy(new BriefHeaderStrategy)
 {
