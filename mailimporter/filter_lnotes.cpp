@@ -23,6 +23,23 @@
 
 #include "filter_lnotes.h"
 using namespace MailImporter;
+class MailImporter::FilterLNotesPrivate
+{
+public:
+    FilterLNotesPrivate()
+        : currentFile(1),
+          totalFiles(0)
+    {
+
+    }
+
+    /** the working directory */
+    QDir dir;
+    /** which file (of d->totalFiles) is now in the work? */
+    int currentFile;
+    /** total number of files that get imported */
+    int totalFiles;
+};
 
 /** Default constructor. */
 FilterLNotes::FilterLNotes() :
@@ -35,14 +52,14 @@ FilterLNotes::FilterLNotes() :
                 "<p><b>Note:</b> Since it is possible to recreate the folder structure, the imported "
                 "messages will be stored in subfolders named by the files they came from under: "
                 "\"LNotes-Import\" in your local folder.</p>"))
+  ,d(new MailImporter::FilterLNotesPrivate)
 {
-    currentFile = 1;
-    totalFiles = 0;
 }
 
 /** Destructor. */
 FilterLNotes::~FilterLNotes()
 {
+    delete d;
 }
 
 /**
@@ -58,20 +75,20 @@ void FilterLNotes::import()
         return;
     }
 
-    currentFile = 1;
-    totalFiles = 0;
+    d->currentFile = 1;
+    d->totalFiles = 0;
 
-    totalFiles = filenames.count();
+    d->totalFiles = filenames.count();
     filterInfo()->setOverall(0);
 
     // See filter_mbox.cxx for better reference.
     QStringList::ConstIterator end = filenames.constEnd();
     for (QStringList::ConstIterator filename = filenames.constBegin(); filename != end; ++filename) {
 
-        ++currentFile;
+        ++d->currentFile;
         filterInfo()->addInfoLogEntry(i18n("Importing emails from %1", *filename));
         ImportLNotes(*filename);
-        filterInfo()->setOverall(100 * currentFile / totalFiles);
+        filterInfo()->setOverall(100 * d->currentFile / d->totalFiles);
         if (filterInfo()->shouldTerminate()) {
             break;
         }

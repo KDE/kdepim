@@ -28,16 +28,29 @@
 
 using namespace MailImporter;
 
+class MailImporter::FilterMailAppPrivate
+{
+public:
+    FilterMailAppPrivate()
+    {
+
+    }
+
+    QStringList mMboxFiles;
+};
+
 FilterMailApp::FilterMailApp() :
     Filter(i18n("Import From OS X Mail"),
            "Chris Howells<br /><br />Filter accelerated by Danny Kukawka )",
            i18n("<p><b>OS X Mail Import Filter</b></p>"
-                "<p>This filter imports e-mails from the Mail client in Apple Mac OS X.</p>"))
+                "<p>This filter imports e-mails from the Mail client in Apple Mac OS X.</p>")),
+    d(new MailImporter::FilterMailAppPrivate)
 {
 }
 
 FilterMailApp::~FilterMailApp()
 {
+    delete d;
 }
 
 void FilterMailApp::import()
@@ -63,8 +76,8 @@ void FilterMailApp::importMails(const QString  &maildir)
     //   qCDebug(MAILIMPORTER_LOG) <<"starting by looking in directory" << directory;
     traverseDirectory(mailDir());
 
-    QStringList::ConstIterator end(mMboxFiles.constEnd());
-    for (QStringList::ConstIterator filename = mMboxFiles.constBegin(); filename != end; ++filename, ++currentFile) {
+    QStringList::ConstIterator end(d->mMboxFiles.constEnd());
+    for (QStringList::ConstIterator filename = d->mMboxFiles.constBegin(); filename != end; ++filename, ++currentFile) {
         if (filterInfo()->shouldTerminate()) {
             break;
         }
@@ -122,9 +135,9 @@ void FilterMailApp::importMails(const QString  &maildir)
                 int currentPercentage = (int)(((float) mbox.pos() / filenameInfo.size()) * 100);
                 filterInfo()->setCurrent(currentPercentage);
                 if (currentFile == 1) {
-                    overall_status = (int)(currentPercentage * ((float)currentFile / mMboxFiles.count()));
+                    overall_status = (int)(currentPercentage * ((float)currentFile / d->mMboxFiles.count()));
                 } else {
-                    overall_status = (int)(((currentFile - 1) * (100.0 / (float)mMboxFiles.count())) + (currentPercentage * (1.0 / (float)mMboxFiles.count())));
+                    overall_status = (int)(((currentFile - 1) * (100.0 / (float)d->mMboxFiles.count())) + (currentPercentage * (1.0 / (float)d->mMboxFiles.count())));
                 }
                 filterInfo()->setOverall(overall_status);
                 if (filterInfo()->shouldTerminate()) {
@@ -162,7 +175,7 @@ void FilterMailApp::traverseDirectory(const QString &dirName)
         } else {
             if (!fi.isDir() && (filename == QLatin1String("mbox"))) {
                 qCDebug(MAILIMPORTER_LOG) << "adding the file" << fi.filePath();
-                mMboxFiles.append(fi.filePath());
+                d->mMboxFiles.append(fi.filePath());
             }
         }
     }

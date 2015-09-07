@@ -20,6 +20,7 @@
  */
 namespace MailImporter
 {
+class FilterMailAppPrivate;
 class MAILIMPORTER_EXPORT FilterMailApp : public Filter
 {
 public:
@@ -29,6 +30,7 @@ public:
     void import() Q_DECL_OVERRIDE;
     void importMails(const QString &maildir);
 private:
+    FilterMailAppPrivate *const d;
     QStringList mMboxFiles;
     void traverseDirectory(const QString &);
 };

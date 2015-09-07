@@ -24,7 +24,7 @@
  */
 namespace MailImporter
 {
-
+class FilterLNotesPrivate;
 class MAILIMPORTER_EXPORT FilterLNotes : public Filter
 {
 public:
@@ -34,13 +34,7 @@ public:
     void import() Q_DECL_OVERRIDE;
 
 private:
-    /** the working directory */
-    QDir dir;
-    /** which file (of totalFiles) is now in the work? */
-    int currentFile;
-    /** total number of files that get imported */
-    int totalFiles;
-
+    FilterLNotesPrivate *const d;
     /**
     * This is were all the real action is gonna be handled.
     * Gets called once for EACH file imported

@@ -27,6 +27,18 @@
 
 using namespace MailImporter;
 
+class MailImporter::FilterSylpheedPrivate
+{
+public:
+    FilterSylpheedPrivate()
+        : mImportDirDone(0),
+          mTotalDir(0)
+    {
+
+    }
+    int mImportDirDone;
+    int mTotalDir;
+};
 /** Default constructor. */
 FilterSylpheed::FilterSylpheed() :
     Filter(i18n("Import Sylpheed Maildirs and Folder Structure"),
@@ -36,13 +48,15 @@ FilterSylpheed::FilterSylpheed() :
                 "(usually: ~/Mail ).</p>"
                 "<p>Since it is possible to recreate the folder structure, the folders "
                 "will be stored under: \"Sylpheed-Import\" in your local folder.</p>"
-                "<p>This filter also recreates the status of message, e.g. new or forwarded.</p>"))
+                "<p>This filter also recreates the status of message, e.g. new or forwarded.</p>")),
+    d(new MailImporter::FilterSylpheedPrivate)
 {
 }
 
 /** Destructor. */
 FilterSylpheed::~FilterSylpheed()
 {
+    delete d;
 }
 
 QString FilterSylpheed::defaultSettingsPath()
@@ -106,8 +120,8 @@ void FilterSylpheed::processDirectory(const QString &path)
             break;
         }
         importDirContents(dir.filePath(*filename));
-        filterInfo()->setOverall((mTotalDir > 0) ? (int)((float) mImportDirDone / mTotalDir * 100) : 0);
-        ++mImportDirDone;
+        filterInfo()->setOverall((d->mTotalDir > 0) ? (int)((float) d->mImportDirDone / d->mTotalDir * 100) : 0);
+        ++d->mImportDirDone;
     }
 }
 
@@ -127,12 +141,12 @@ void FilterSylpheed::importMails(const QString &maildir)
     } else {
         filterInfo()->setOverall(0);
 
-        mImportDirDone = 0;
+        d->mImportDirDone = 0;
 
         /** Recursive import of the MailFolders */
         QDir dir(mailDir());
 
-        mTotalDir = Filter::countDirectory(dir, false);
+        d->mTotalDir = Filter::countDirectory(dir, false);
         processDirectory(mailDir());
 
         filterInfo()->addInfoLogEntry(i18n("Finished importing emails from %1", mailDir()));

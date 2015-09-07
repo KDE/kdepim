@@ -28,6 +28,7 @@
  */
 namespace MailImporter
 {
+class FilterSylpheedPrivate;
 class MAILIMPORTER_EXPORT FilterSylpheed : public Filter
 {
 
@@ -53,9 +54,7 @@ private:
 
     void readMarkFile(const QString &, QHash<QString, unsigned long> &);
     Akonadi::MessageStatus msgFlagsToString(unsigned long flags);
-    int mImportDirDone;
-    int mTotalDir;
-
+    FilterSylpheedPrivate *const d;
 };
 }
 
