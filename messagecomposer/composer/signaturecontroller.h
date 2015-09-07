@@ -103,9 +103,6 @@ private Q_SLOTS:
 
 private:
     SignatureControllerPrivate *const d;
-    MessageComposer::RichTextComposer *m_editor;
-    KIdentityManagement::IdentityCombo *m_identityCombo;
-    uint m_currentIdentityId;
 };
 
 }
