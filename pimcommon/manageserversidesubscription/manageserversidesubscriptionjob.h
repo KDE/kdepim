@@ -43,8 +43,6 @@ private Q_SLOTS:
     void slotConfigureSubscriptionFinished(QDBusPendingCallWatcher *watcher);
 private:
     ManageServerSideSubscriptionJobPrivate *const d;
-    Akonadi::Collection mCurrentCollection;
-    QWidget *mParentWidget;
 };
 }
 
