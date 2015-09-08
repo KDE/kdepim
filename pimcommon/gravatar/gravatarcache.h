@@ -22,7 +22,6 @@
 
 #include <QPixmap>
 
-
 namespace PimCommon
 {
 class GravatarCachePrivate;

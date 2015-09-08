@@ -58,7 +58,7 @@ static AttachmentStrategy::Display smartDisplay(KMime::Content *node)
 
     const auto ct = node->contentType(false);
     if (ct && ct->isText() && ct->name().trimmed().isEmpty() &&
-        (!cd || cd->filename().trimmed().isEmpty()))
+            (!cd || cd->filename().trimmed().isEmpty()))
         // text/* w/o filename parameter:
     {
         return AttachmentStrategy::Inline;

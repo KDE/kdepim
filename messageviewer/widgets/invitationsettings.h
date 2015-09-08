@@ -32,7 +32,6 @@
 
 #include <QWidget>
 
-
 namespace MessageViewer
 {
 class InvitationSettingsPrivate;

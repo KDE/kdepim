@@ -18,7 +18,7 @@
 #include "briefheaderstyleinterface.h"
 
 using namespace MessageViewer;
-BriefHeaderStyleInterface::BriefHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy,QObject *parent)
+BriefHeaderStyleInterface::BriefHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
     : MessageViewer::HeaderStyleInterface(headerStyle, headerStrategy, parent)
 {
 

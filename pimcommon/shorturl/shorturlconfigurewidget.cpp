@@ -39,7 +39,6 @@ public:
     bool mChanged;
 };
 
-
 ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
     : QWidget(parent),
       d(new PimCommon::ShortUrlConfigureWidgetPrivate)

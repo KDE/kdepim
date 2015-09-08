@@ -18,7 +18,6 @@
 #ifndef CUSTOMHEADERSETTINGWIDGET_H
 #define CUSTOMHEADERSETTINGWIDGET_H
 
-
 #include <QWidget>
 
 namespace PimCommon

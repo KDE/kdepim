@@ -20,7 +20,8 @@
 
 #include <header/headerstyleinterface.h>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class CustomHeaderStyleInterface : public MessageViewer::HeaderStyleInterface
 {

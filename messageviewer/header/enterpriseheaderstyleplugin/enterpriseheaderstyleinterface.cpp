@@ -18,7 +18,7 @@
 #include "enterpriseheaderstyleinterface.h"
 
 using namespace MessageViewer;
-EnterpriseHeaderStyleInterface::EnterpriseHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy,QObject *parent)
+EnterpriseHeaderStyleInterface::EnterpriseHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
     : MessageViewer::HeaderStyleInterface(headerStyle, headerStrategy, parent)
 {
 

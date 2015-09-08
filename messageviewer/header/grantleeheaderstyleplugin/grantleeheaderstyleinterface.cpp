@@ -18,7 +18,7 @@
 #include "grantleeheaderstyleinterface.h"
 
 using namespace MessageViewer;
-GrantleeHeaderStyleInterface::GrantleeHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy,QObject *parent)
+GrantleeHeaderStyleInterface::GrantleeHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
     : MessageViewer::HeaderStyleInterface(headerStyle, headerStrategy, parent)
 {
 

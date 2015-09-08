@@ -55,11 +55,12 @@ void PluginLoaderBase::doScan(const char *path)
     mPluginMap.clear();
 
     const auto list = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QString::fromLatin1(path), QStandardPaths::LocateDirectory);
-    foreach (const auto &folder, list)
+    foreach (const auto &folder, list) {
         doScanOneFolder(folder);
+    }
 }
 
-void PluginLoaderBase::doScanOneFolder(const QString& folder)
+void PluginLoaderBase::doScanOneFolder(const QString &folder)
 {
     QDir dir(folder);
     const auto list = dir.entryList(QStringList() << QLatin1String("*.desktop"), QDir::Files | QDir::Readable);

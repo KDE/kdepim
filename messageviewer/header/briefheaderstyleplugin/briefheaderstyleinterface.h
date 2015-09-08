@@ -21,7 +21,8 @@
 #include <header/headerstyleinterface.h>
 
 class KActionCollection;
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class BriefHeaderStyleInterface : public MessageViewer::HeaderStyleInterface
 {

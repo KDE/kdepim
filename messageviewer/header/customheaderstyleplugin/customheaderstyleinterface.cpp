@@ -18,7 +18,7 @@
 #include "customheaderstyleinterface.h"
 
 using namespace MessageViewer;
-CustomHeaderStyleInterface::CustomHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy,QObject *parent)
+CustomHeaderStyleInterface::CustomHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
     : MessageViewer::HeaderStyleInterface(headerStyle, headerStrategy, parent)
 {
 

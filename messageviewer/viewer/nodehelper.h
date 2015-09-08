@@ -264,7 +264,7 @@ public:
      * Note that this does not include attachments from the primary node tree.
      * @see KMime::Content::attachments().
      */
-    QVector<KMime::Content*> attachmentsOfExtraContents() const;
+    QVector<KMime::Content *> attachmentsOfExtraContents() const;
 
 private:
 
