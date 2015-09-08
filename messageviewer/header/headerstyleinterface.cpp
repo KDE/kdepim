@@ -17,6 +17,7 @@
 
 #include "headerstyle.h"
 #include "headerstyleinterface.h"
+#include <QAction>
 using namespace MessageViewer;
 
 HeaderStyleInterface::HeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
@@ -35,5 +36,14 @@ HeaderStyleInterface::~HeaderStyleInterface()
 QList<KToggleAction *> HeaderStyleInterface::action() const
 {
     return mAction;
+}
+
+void HeaderStyleInterface::addHelpTextAction(QAction *act, const QString &text)
+{
+    act->setStatusTip(text);
+    act->setToolTip(text);
+    if (act->whatsThis().isEmpty()) {
+        act->setWhatsThis(text);
+    }
 }
 

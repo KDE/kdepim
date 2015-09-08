@@ -16,7 +16,9 @@
 */
 
 #include "enterpriseheaderstyleinterface.h"
-
+#include <KToggleAction>
+#include <KLocalizedString>
+#include <KActionCollection>
 using namespace MessageViewer;
 EnterpriseHeaderStyleInterface::EnterpriseHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
     : MessageViewer::HeaderStyleInterface(headerStyle, headerStrategy, parent)
@@ -31,6 +33,11 @@ EnterpriseHeaderStyleInterface::~EnterpriseHeaderStyleInterface()
 
 void EnterpriseHeaderStyleInterface::createAction(KActionCollection *ac)
 {
-
+    KToggleAction *act= new KToggleAction(i18nc("View->headers->", "&Enterprise Headers"), this);
+    ac->addAction(QStringLiteral("view_headers_enterprise"), act);
+    //TODO
+    //connect(raction, &QAction::triggered, this, &ViewerPrivate::slotEnterpriseHeaders);
+    addHelpTextAction(act, i18n("Show the list of headers in Enterprise style"));
+    mAction.append(act);
 }
 

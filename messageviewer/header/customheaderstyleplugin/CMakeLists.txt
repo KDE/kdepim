@@ -9,6 +9,7 @@ target_link_libraries(messageviewer_customheaderstyleplugin
   messageviewer
   #Temporary
   grantleetheme
+  KF5::XmlGui
 )
 
 install(TARGETS messageviewer_customheaderstyleplugin DESTINATION ${PLUGIN_INSTALL_DIR}/messageviewer)

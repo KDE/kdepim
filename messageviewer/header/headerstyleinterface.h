@@ -22,6 +22,7 @@
 #include "messageviewer_export.h"
 class KToggleAction;
 class KActionCollection;
+class QAction;
 namespace MessageViewer
 {
 class HeaderStyle;
@@ -39,6 +40,7 @@ Q_SIGNALS:
     void styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy);
 
 protected:
+    void addHelpTextAction(QAction *act, const QString &text);
     HeaderStyle *mHeaderStyle;
     HeaderStrategy *mHeaderStrategy;
     QList<KToggleAction *> mAction;
