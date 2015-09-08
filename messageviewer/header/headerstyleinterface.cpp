@@ -22,18 +22,17 @@ using namespace MessageViewer;
 HeaderStyleInterface::HeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
     : QObject(parent),
       mHeaderStyle(headerStyle),
-      mHeaderStrategy(headerStrategy),
-      mAction(Q_NULLPTR)
+      mHeaderStrategy(headerStrategy)
 {
 
 }
 
 HeaderStyleInterface::~HeaderStyleInterface()
 {
-
+    qDeleteAll(mAction);
 }
 
-KToggleAction *HeaderStyleInterface::action() const
+QList<KToggleAction *> HeaderStyleInterface::action() const
 {
     return mAction;
 }
