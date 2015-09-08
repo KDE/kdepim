@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2015 Sandro Knauß <knauss@kolabsys.com>
 
 # This library is free software; you can redistribute it and/or modify it
