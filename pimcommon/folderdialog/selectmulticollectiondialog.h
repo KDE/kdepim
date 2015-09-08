@@ -25,6 +25,7 @@
 namespace PimCommon
 {
 class SelectMultiCollectionWidget;
+class SelectMultiCollectionDialogPrivate;
 class PIMCOMMON_EXPORT SelectMultiCollectionDialog : public QDialog
 {
     Q_OBJECT
@@ -39,7 +40,7 @@ private:
     void initialize(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection = QList<Akonadi::Collection::Id>());
     void writeConfig();
     void readConfig();
-    SelectMultiCollectionWidget *mSelectMultiCollection;
+    SelectMultiCollectionDialogPrivate *const d;
 };
 }
 

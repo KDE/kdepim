@@ -25,40 +25,53 @@
 #include <QTimer>
 
 using namespace PimCommon;
+class PimCommon::AttachmentTemporaryFilesDirsPrivate
+{
+public:
+    AttachmentTemporaryFilesDirsPrivate()
+        : mDelayRemoveAll(10000)
+    {
+
+    }
+    QStringList mTempFiles;
+    QStringList mTempDirs;
+    int mDelayRemoveAll;
+};
 
 AttachmentTemporaryFilesDirs::AttachmentTemporaryFilesDirs(QObject *parent)
     : QObject(parent),
-      mDelayRemoveAll(10000)
+      d(new PimCommon::AttachmentTemporaryFilesDirsPrivate)
 {
 
 }
 
 AttachmentTemporaryFilesDirs::~AttachmentTemporaryFilesDirs()
 {
+    delete d;
 }
 
 void AttachmentTemporaryFilesDirs::setDelayRemoveAllInMs(int ms)
 {
-    mDelayRemoveAll = (ms < 0) ? 0 : ms;
+    d->mDelayRemoveAll = (ms < 0) ? 0 : ms;
 }
 
 void AttachmentTemporaryFilesDirs::removeTempFiles()
 {
-    QTimer::singleShot(mDelayRemoveAll, this, SLOT(slotRemoveTempFiles()));
+    QTimer::singleShot(d->mDelayRemoveAll, this, SLOT(slotRemoveTempFiles()));
 }
 
 void AttachmentTemporaryFilesDirs::forceCleanTempFiles()
 {
-    QStringList::ConstIterator end = mTempFiles.constEnd();
-    for (QStringList::ConstIterator it = mTempFiles.constBegin(); it != end; ++it) {
+    QStringList::ConstIterator end = d->mTempFiles.constEnd();
+    for (QStringList::ConstIterator it = d->mTempFiles.constBegin(); it != end; ++it) {
         QFile::remove(*it);
     }
-    mTempFiles.clear();
-    end = mTempDirs.constEnd();
-    for (QStringList::ConstIterator it = mTempDirs.constBegin(); it != end; ++it) {
+    d->mTempFiles.clear();
+    end = d->mTempDirs.constEnd();
+    for (QStringList::ConstIterator it = d->mTempDirs.constBegin(); it != end; ++it) {
         QDir(*it).rmdir(*it);
     }
-    mTempDirs.clear();
+    d->mTempDirs.clear();
 }
 
 void AttachmentTemporaryFilesDirs::slotRemoveTempFiles()
@@ -70,25 +83,25 @@ void AttachmentTemporaryFilesDirs::slotRemoveTempFiles()
 
 void AttachmentTemporaryFilesDirs::addTempFile(const QString &file)
 {
-    if (!mTempFiles.contains(file)) {
-        mTempFiles.append(file);
+    if (!d->mTempFiles.contains(file)) {
+        d->mTempFiles.append(file);
     }
 }
 
 void AttachmentTemporaryFilesDirs::addTempDir(const QString &dir)
 {
-    if (!mTempDirs.contains(dir)) {
-        mTempDirs.append(dir);
+    if (!d->mTempDirs.contains(dir)) {
+        d->mTempDirs.append(dir);
     }
 }
 
 QStringList AttachmentTemporaryFilesDirs::temporaryFiles() const
 {
-    return mTempFiles;
+    return d->mTempFiles;
 }
 
 QStringList AttachmentTemporaryFilesDirs::temporaryDirs() const
 {
-    return mTempDirs;
+    return d->mTempDirs;
 }
 

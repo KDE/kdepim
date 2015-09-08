@@ -27,14 +27,28 @@
 
 using namespace PimCommon;
 
+class PimCommon::SelectMultiCollectionDialogPrivate
+{
+public:
+    SelectMultiCollectionDialogPrivate()
+        : mSelectMultiCollection(Q_NULLPTR)
+    {
+
+    }
+
+    SelectMultiCollectionWidget *mSelectMultiCollection;
+};
+
 SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new PimCommon::SelectMultiCollectionDialogPrivate)
 {
     initialize(mimetype, selectedCollection);
 }
 
 SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QString &mimetype, QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new PimCommon::SelectMultiCollectionDialogPrivate)
 {
     initialize(mimetype);
 }
@@ -42,6 +56,7 @@ SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QString &mimetype
 SelectMultiCollectionDialog::~SelectMultiCollectionDialog()
 {
     writeConfig();
+    delete d;
 }
 
 void SelectMultiCollectionDialog::initialize(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection)
@@ -56,8 +71,8 @@ void SelectMultiCollectionDialog::initialize(const QString &mimetype, const QLis
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SelectMultiCollectionDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SelectMultiCollectionDialog::reject);
 
-    mSelectMultiCollection = new SelectMultiCollectionWidget(mimetype, selectedCollection);
-    mainLayout->addWidget(mSelectMultiCollection);
+    d->mSelectMultiCollection = new SelectMultiCollectionWidget(mimetype, selectedCollection);
+    mainLayout->addWidget(d->mSelectMultiCollection);
     mainLayout->addWidget(buttonBox);
     readConfig();
 }
@@ -79,6 +94,6 @@ void SelectMultiCollectionDialog::writeConfig()
 
 QVector<Akonadi::Collection> SelectMultiCollectionDialog::selectedCollection() const
 {
-    return mSelectMultiCollection->selectedCollection();
+    return d->mSelectMultiCollection->selectedCollection();
 }
 

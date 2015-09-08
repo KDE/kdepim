@@ -27,7 +27,7 @@
 
 namespace PimCommon
 {
-
+class AttachmentTemporaryFilesDirsPrivate;
 class PIMCOMMON_EXPORT AttachmentTemporaryFilesDirs : public QObject
 {
     Q_OBJECT
@@ -49,9 +49,7 @@ private Q_SLOTS:
     void slotRemoveTempFiles();
 
 private:
-    QStringList mTempFiles;
-    QStringList mTempDirs;
-    int mDelayRemoveAll;
+    AttachmentTemporaryFilesDirsPrivate *const d;
 };
 
 }

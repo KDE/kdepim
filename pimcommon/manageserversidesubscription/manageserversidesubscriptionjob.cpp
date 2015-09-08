@@ -27,29 +27,42 @@
 
 using namespace PimCommon;
 
+class PimCommon::ManageServerSideSubscriptionJobPrivate
+{
+public:
+    ManageServerSideSubscriptionJobPrivate()
+        : mParentWidget(Q_NULLPTR)
+    {
+
+    }
+
+    Akonadi::Collection mCurrentCollection;
+    QWidget *mParentWidget;
+};
+
 ManageServerSideSubscriptionJob::ManageServerSideSubscriptionJob(QObject *parent)
     : QObject(parent),
-      mParentWidget(Q_NULLPTR)
+      d(new PimCommon::ManageServerSideSubscriptionJobPrivate)
 {
 
 }
 
 ManageServerSideSubscriptionJob::~ManageServerSideSubscriptionJob()
 {
-
+    delete d;
 }
 
 void ManageServerSideSubscriptionJob::start()
 {
-    if (!mCurrentCollection.isValid()) {
+    if (!d->mCurrentCollection.isValid()) {
         qCDebug(PIMCOMMON_LOG) << " collection not defined";
         deleteLater();
         return;
     }
     bool isImapOnline = false;
-    if (PimCommon::Util::isImapFolder(mCurrentCollection, isImapOnline)) {
+    if (PimCommon::Util::isImapFolder(d->mCurrentCollection, isImapOnline)) {
         QDBusInterface iface(
-            QLatin1String("org.freedesktop.Akonadi.Resource.") + mCurrentCollection.resource(),
+            QLatin1String("org.freedesktop.Akonadi.Resource.") + d->mCurrentCollection.resource(),
             QStringLiteral("/"), QStringLiteral("org.kde.Akonadi.ImapResourceBase"),
             KDBusConnectionPool::threadConnection(), this);
         if (!iface.isValid()) {
@@ -57,7 +70,7 @@ void ManageServerSideSubscriptionJob::start()
             deleteLater();
             return;
         }
-        QDBusPendingCall call = iface.asyncCall(QStringLiteral("configureSubscription"), (qlonglong)mParentWidget->winId());
+        QDBusPendingCall call = iface.asyncCall(QStringLiteral("configureSubscription"), (qlonglong)d->mParentWidget->winId());
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
         connect(watcher, &QDBusPendingCallWatcher::finished, this, &ManageServerSideSubscriptionJob::slotConfigureSubscriptionFinished);
     }
@@ -68,9 +81,9 @@ void ManageServerSideSubscriptionJob::slotConfigureSubscriptionFinished(QDBusPen
     QDBusPendingReply<int> reply = *watcher;
     if (reply.isValid()) {
         if (reply == -2) {
-            KMessageBox::error(mParentWidget, i18n("IMAP server not configured yet. Please configure the server in the IMAP account before setting up server-side subscription."));
+            KMessageBox::error(d->mParentWidget, i18n("IMAP server not configured yet. Please configure the server in the IMAP account before setting up server-side subscription."));
         } else if (reply == -1) {
-            KMessageBox::error(mParentWidget, i18n("Log in failed, please configure the IMAP account before setting up server-side subscription."));
+            KMessageBox::error(d->mParentWidget, i18n("Log in failed, please configure the IMAP account before setting up server-side subscription."));
         }
     } else {
         qCDebug(PIMCOMMON_LOG) << "ManageServerSideSubscriptionJob return an invalid reply";
@@ -82,11 +95,11 @@ void ManageServerSideSubscriptionJob::slotConfigureSubscriptionFinished(QDBusPen
 
 void ManageServerSideSubscriptionJob::setParentWidget(QWidget *parentWidget)
 {
-    mParentWidget = parentWidget;
+    d->mParentWidget = parentWidget;
 }
 
 void ManageServerSideSubscriptionJob::setCurrentCollection(const Akonadi::Collection &col)
 {
-    mCurrentCollection = col;
+    d->mCurrentCollection = col;
 }
 

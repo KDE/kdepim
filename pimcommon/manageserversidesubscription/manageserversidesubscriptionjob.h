@@ -25,6 +25,7 @@
 class QDBusPendingCallWatcher;
 namespace PimCommon
 {
+class ManageServerSideSubscriptionJobPrivate;
 class PIMCOMMON_EXPORT ManageServerSideSubscriptionJob : public QObject
 {
     Q_OBJECT
@@ -41,6 +42,7 @@ public:
 private Q_SLOTS:
     void slotConfigureSubscriptionFinished(QDBusPendingCallWatcher *watcher);
 private:
+    ManageServerSideSubscriptionJobPrivate *const d;
     Akonadi::Collection mCurrentCollection;
     QWidget *mParentWidget;
 };
