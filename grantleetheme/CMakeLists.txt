@@ -10,7 +10,7 @@ set(libgrantleetheme_SRCS
 )
 
 kconfig_add_kcfg_files(libgrantleetheme_SRCS
-  globalsettings_base.kcfgc
+  globalsettings_grantleetheme.kcfgc
 )
 
 add_library(grantleetheme ${libgrantleetheme_SRCS})

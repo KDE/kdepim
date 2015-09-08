@@ -41,7 +41,7 @@
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
 #include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
 #include "grantleetheme/grantleethememanager.h"
-#include "grantleetheme/globalsettings_base.h"
+#include "grantleetheme/globalsettings_grantleetheme.h"
 
 #include "libkdepim/misc/uistatesaver.h"
 

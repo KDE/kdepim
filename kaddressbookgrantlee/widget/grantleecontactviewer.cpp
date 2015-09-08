@@ -17,7 +17,7 @@
 
 #include "grantleecontactviewer.h"
 #include "formatter/grantleecontactformatter.h"
-#include <grantleetheme/globalsettings_base.h>
+#include <grantleetheme/globalsettings_grantleetheme.h>
 #include <KSharedConfig>
 #include <grantleetheme/grantleethememanager.h>
 
