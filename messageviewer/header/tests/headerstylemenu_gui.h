@@ -15,27 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef HEADERSTYLEMENU_H
-#define HEADERSTYLEMENU_H
+#ifndef TEST_HEADERSTYLEMENU_GUI_H
+#define TEST_HEADERSTYLEMENU_GUI_H
 
-#include "messageviewer_export.h"
-
-#include <QObject>
-class KActionMenu;
-class KActionCollection;
-namespace MessageViewer
-{
-class HeaderStyleMenuPrivate;
-class MESSAGEVIEWER_EXPORT HeaderStyleMenu : public QObject
+#include <QWidget>
+class HeaderStyleMenuTest : public QWidget
 {
     Q_OBJECT
 public:
-    explicit HeaderStyleMenu(KActionCollection *ac, QObject *parent = Q_NULLPTR);
-    ~HeaderStyleMenu();
-
-    KActionMenu *menu() const;
-private:
-    HeaderStyleMenuPrivate *const d;
+    explicit HeaderStyleMenuTest(QWidget *parent = Q_NULLPTR);
+    ~HeaderStyleMenuTest();
 };
-}
-#endif // HEADERSTYLEMENU_H
+
+#endif
