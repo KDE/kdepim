@@ -148,7 +148,7 @@ void AddEditBlog::autoConfigure()
 {
     qCDebug(BLOGILO_LOG);
     if (d->ui.txtUrl->text().isEmpty() || d->ui.txtUser->text().isEmpty() || d->ui.txtPass->text().isEmpty()) {
-        qCDebug(BLOGILO_LOG) << "Username, Password or Url doesn't set!";
+        qCDebug(BLOGILO_LOG) << "Username, Password or URL not set!";
         KMessageBox::sorry(this, i18n("You have to set the username, password and URL of your blog or website."),
                            i18n("Incomplete fields"));
         return;
@@ -384,7 +384,7 @@ void AddEditBlog::fetchedBlogId(const QList< QMap < QString , QString > > &list)
         int i = 0;
         blogsList->setColumnCount(4);
         QStringList headers;
-        headers << i18n("Title") << i18n("Url");
+        headers << i18n("Title") << i18n("URL");
 
         blogsList->setHorizontalHeaderLabels(headers);
         blogsList->setColumnHidden(2, true);

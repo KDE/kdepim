@@ -78,7 +78,7 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     grid->addWidget(mConvertButton, 1, 2);
     connect(mConvertButton, &QPushButton::clicked, this, &ShortUrlWidget::slotConvertUrl);
 
-    mInsertShortUrl = new QPushButton(i18n("Insert Short Url"));
+    mInsertShortUrl = new QPushButton(i18n("Insert Short URL"));
     connect(mInsertShortUrl, &QPushButton::clicked, this, &ShortUrlWidget::slotInsertShortUrl);
     grid->addWidget(mInsertShortUrl, 2, 2);
 
@@ -104,7 +104,7 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     mShortUrl->setReadOnly(true);
     grid->addWidget(mShortUrl, 4, 1);
 
-    mOpenShortUrl = new QPushButton(i18n("Open Short Url"));
+    mOpenShortUrl = new QPushButton(i18n("Open Short URL"));
     connect(mOpenShortUrl, &QPushButton::clicked, this, &ShortUrlWidget::slotOpenShortUrl);
     grid->addWidget(mOpenShortUrl, 4, 2);
 

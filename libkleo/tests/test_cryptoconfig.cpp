@@ -326,7 +326,7 @@ int main(int argc, char **argv)
             assert(entry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL);
             assert(entry->isList());
             QList<QUrl> val = entry->urlValueList();
-            cout << "Url list initially: ";
+            cout << "URL list initially: ";
             Q_FOREACH (const QUrl &url, val) {
                cout << url.toString().toLocal8Bit().constData() << ", ";
             }

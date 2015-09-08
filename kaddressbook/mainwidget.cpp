@@ -740,7 +740,7 @@ void MainWidget::setupActions(KActionCollection *collection)
     connect(mServerSideSubscription, &QAction::triggered, this, &MainWidget::slotServerSideSubscription);
 
     mSearchGravatarAction = collection->addAction(QStringLiteral("search_gravatar"));
-    mSearchGravatarAction->setText(i18n("Check gravatar..."));
+    mSearchGravatarAction->setText(i18n("Check Gravatar..."));
     connect(mSearchGravatarAction, &QAction::triggered, this, &MainWidget::slotCheckGravatar);
 }
 

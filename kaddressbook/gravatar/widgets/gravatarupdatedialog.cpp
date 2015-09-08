@@ -32,7 +32,7 @@ GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    setWindowTitle(i18n("Check and update gravatar"));
+    setWindowTitle(i18n("Check and update Gravatar"));
     mGravatarUpdateWidget = new GravatarUpdateWidget(this);
     connect(mGravatarUpdateWidget, &GravatarUpdateWidget::activateDialogButton, this, &GravatarUpdateDialog::slotActivateButton);
     mGravatarUpdateWidget->setObjectName(QStringLiteral("gravatarupdatewidget"));
@@ -44,7 +44,7 @@ GravatarUpdateDialog::GravatarUpdateDialog(QWidget *parent)
     buttonBox->addButton(mSaveImageButton, QDialogButtonBox::ActionRole);
     connect(mSaveImageButton, &QPushButton::clicked, this, &GravatarUpdateDialog::slotSaveImage);
 
-    mSaveUrlButton = new QPushButton(i18n("Save Image Url"), this);
+    mSaveUrlButton = new QPushButton(i18n("Save Image URL"), this);
     buttonBox->addButton(mSaveUrlButton, QDialogButtonBox::ActionRole);
     mSaveUrlButton->setEnabled(false);
     connect(mSaveUrlButton, &QPushButton::clicked, this, &GravatarUpdateDialog::slotSaveUrl);

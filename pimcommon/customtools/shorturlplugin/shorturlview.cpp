@@ -52,7 +52,7 @@ KToggleAction *ShorturlView::action() const
 
 void ShorturlView::createAction(KActionCollection *ac)
 {
-    mAction = new KToggleAction(i18n("Generate Shorten Url"), this);
+    mAction = new KToggleAction(i18n("Generate Shortened URL"), this);
     connect(mAction, &KToggleAction::triggered, this, &ShorturlView::slotActivateShorturl);
     if (ac) {
         ac->addAction(QStringLiteral("shorten_url"), mAction);
