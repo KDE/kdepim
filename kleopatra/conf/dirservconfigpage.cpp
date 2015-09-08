@@ -212,17 +212,6 @@ static QList<QUrl> string2urls(const QString &str)
     return ret;
 }
 
-static QList<QUrl> strings2urls(const QStringList &strs)
-{
-    QList<QUrl> urls;
-    Q_FOREACH (const QString &str, strs) {
-        if (!str.isEmpty()) {
-            urls.push_back(QUrl::fromPercentEncoding(str.toLocal8Bit()));
-        }
-    }
-    return urls;
-}
-
 void DirectoryServicesConfigurationPage::load()
 {
 
