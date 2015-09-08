@@ -36,6 +36,7 @@ namespace KPIM
    signals. Interested mainwindows can connect to the statusMsg()
    signal and update statusBars or whatever they use for showing status.
 */
+class BroadcastStatusPrivate;
 class KDEPIM_EXPORT BroadcastStatus : public QObject
 {
 
@@ -75,8 +76,7 @@ Q_SIGNALS:
 
 protected:
     BroadcastStatus();
-    QString mStatusMsg;
-    bool mTransientActive;
+    BroadcastStatusPrivate *const d;
 };
 
 }

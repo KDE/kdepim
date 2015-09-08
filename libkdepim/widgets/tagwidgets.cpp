@@ -30,33 +30,53 @@
 
 using namespace KPIM;
 
-TagWidget::TagWidget(QWidget *parent)
-    :   QWidget(parent)
+class KPIM::TagWidgetPrivate
 {
-    mTagWidget = new Akonadi::TagWidget(this);
-    connect(mTagWidget, &Akonadi::TagWidget::selectionChanged, this, &TagWidget::onSelectionChanged);
+public:
+    TagWidgetPrivate()
+        : mTagWidget(Q_NULLPTR)
+    {
+
+    }
+
+    Akonadi::TagWidget *mTagWidget;
+    Akonadi::Tag::List mTagList;
+    QStringList mCachedTagNames;
+};
+
+TagWidget::TagWidget(QWidget *parent)
+    : QWidget(parent),
+      d(new KPIM::TagWidgetPrivate)
+{
+    d->mTagWidget = new Akonadi::TagWidget(this);
+    connect(d->mTagWidget, &Akonadi::TagWidget::selectionChanged, this, &TagWidget::onSelectionChanged);
     QHBoxLayout *l = new QHBoxLayout;
     l->setMargin(0);
     l->setSpacing(0);
-    l->addWidget(mTagWidget);
+    l->addWidget(d->mTagWidget);
     setLayout(l);
+}
+
+TagWidget::~TagWidget()
+{
+    delete d;
 }
 
 void TagWidget::onSelectionChanged(const Akonadi::Tag::List &tags)
 {
     Q_UNUSED(tags);
-    mCachedTagNames.clear();
-    Q_FOREACH (const Akonadi::Tag &tag, mTagWidget->selection()) {
-        mCachedTagNames << tag.name();
+    d->mCachedTagNames.clear();
+    Q_FOREACH (const Akonadi::Tag &tag, d->mTagWidget->selection()) {
+        d->mCachedTagNames << tag.name();
     }
-    Q_EMIT selectionChanged(mCachedTagNames);
+    Q_EMIT selectionChanged(d->mCachedTagNames);
     Q_EMIT selectionChanged(tags);
 }
 
 void TagWidget::setSelection(const QStringList &tagNames)
 {
-    mTagList.clear();
-    mCachedTagNames = tagNames;
+    d->mTagList.clear();
+    d->mCachedTagNames = tagNames;
     foreach (const QString &name, tagNames) {
         //TODO fetch by GID instead, we don't really want to create tags here
         Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag::genericTag(name), this);
@@ -72,13 +92,13 @@ void TagWidget::onTagCreated(KJob *job)
         return;
     }
     Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob *>(job);
-    mTagList << createJob->tag();
-    mTagWidget->setSelection(mTagList);
+    d->mTagList << createJob->tag();
+    d->mTagWidget->setSelection(d->mTagList);
 }
 
 QStringList TagWidget::selection() const
 {
-    return mCachedTagNames;
+    return d->mCachedTagNames;
 }
 
 class KPIM::TagSelectionDialogPrivate

@@ -48,40 +48,55 @@ BroadcastStatus *BroadcastStatus::instance()
     return instance_;
 }
 
-QString BroadcastStatus::statusMsg() const
+
+class BroadcastStatusPrivate
 {
-    return mStatusMsg;
-}
+public:
+    BroadcastStatusPrivate()
+        : mTransientActive(false)
+    {
+
+    }
+
+    QString mStatusMsg;
+    bool mTransientActive;
+};
 
 BroadcastStatus::BroadcastStatus()
-    : mTransientActive(false)
+    : d(new KPIM::BroadcastStatusPrivate)
 {
 }
 
 BroadcastStatus::~BroadcastStatus()
 {
     instance_ = Q_NULLPTR;
+    delete d;
+}
+
+QString BroadcastStatus::statusMsg() const
+{
+    return d->mStatusMsg;
 }
 
 void BroadcastStatus::setStatusMsg(const QString &message)
 {
-    mStatusMsg = message;
-    if (!mTransientActive) {
+    d->mStatusMsg = message;
+    if (!d->mTransientActive) {
         Q_EMIT statusMsg(message);
     }
 }
 
 void BroadcastStatus::setTransientStatusMsg(const QString &msg)
 {
-    mTransientActive = true;
+    d->mTransientActive = true;
     Q_EMIT statusMsg(msg);
 }
 
 void BroadcastStatus::reset()
 {
-    mTransientActive = false;
+    d->mTransientActive = false;
     // restore
-    Q_EMIT statusMsg(mStatusMsg);
+    Q_EMIT statusMsg(d->mStatusMsg);
 }
 
 }

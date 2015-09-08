@@ -105,6 +105,11 @@ void ProgressItem::removeChild(ProgressItem *kiddo)
     }
 }
 
+bool ProgressItem::canceled() const
+{
+    return mCanceled;
+}
+
 unsigned int ProgressItem::typeProgressItem() const
 {
     return mType;
@@ -146,10 +151,30 @@ void ProgressItem::setProgress(unsigned int v)
     Q_EMIT progressItemProgress(this, mProgress);
 }
 
+const QString &ProgressItem::id() const
+{
+    return mId;
+}
+
+ProgressItem *ProgressItem::parent() const
+{
+    return mParent.data();
+}
+
+const QString &ProgressItem::label() const
+{
+    return mLabel;
+}
+
 void ProgressItem::setLabel(const QString &v)
 {
     mLabel = v;
     Q_EMIT progressItemLabel(this, mLabel);
+}
+
+const QString &ProgressItem::status() const
+{
+    return mStatus;
 }
 
 void ProgressItem::setStatus(const QString &v)
@@ -158,9 +183,19 @@ void ProgressItem::setStatus(const QString &v)
     Q_EMIT progressItemStatus(this, mStatus);
 }
 
+bool ProgressItem::canBeCanceled() const
+{
+    return mCanBeCanceled;
+}
+
 void ProgressItem::setCanBeCanceled(bool b)
 {
     mCanBeCanceled = b;
+}
+
+ProgressItem::CryptoStatus ProgressItem::cryptoStatus() const
+{
+    return mCryptoStatus;
 }
 
 void ProgressItem::setCryptoStatus(ProgressItem::CryptoStatus v)
@@ -169,10 +204,20 @@ void ProgressItem::setCryptoStatus(ProgressItem::CryptoStatus v)
     Q_EMIT progressItemCryptoStatus(this, v);
 }
 
+bool ProgressItem::usesBusyIndicator() const
+{
+    return mUsesBusyIndicator;
+}
+
 void ProgressItem::setUsesBusyIndicator(bool useBusyIndicator)
 {
     mUsesBusyIndicator = useBusyIndicator;
     Q_EMIT progressItemUsesBusyIndicator(this, useBusyIndicator);
+}
+
+unsigned int ProgressItem::progress() const
+{
+    return mProgress;
 }
 
 // ======================================
@@ -351,6 +396,31 @@ void ProgressManager::slotAbortAll()
         it.value()->cancel();
     }
 
+}
+
+void KPIM::ProgressItem::setTotalItems(unsigned int v)
+{
+    mTotal = v;
+}
+
+unsigned int ProgressItem::totalItems() const
+{
+    return mTotal;
+}
+
+void ProgressItem::setCompletedItems(unsigned int v)
+{
+    mCompleted = v;
+}
+
+void ProgressItem::incCompletedItems(unsigned int v)
+{
+    mCompleted += v;
+}
+
+unsigned int ProgressItem::completedItems() const
+{
+    return mCompleted;
 }
 
 } // namespace

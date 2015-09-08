@@ -60,26 +60,17 @@ public:
      * @return The id string which uniquely identifies the operation
      *         represented by this item.
      */
-    const QString &id() const
-    {
-        return mId;
-    }
+    const QString &id() const;
 
     /**
      * @return The parent item of this one, if there is one.
      */
-    ProgressItem *parent() const
-    {
-        return mParent.data();
-    }
+    ProgressItem *parent() const;
 
     /**
      * @return The user visible string to be used to represent this item.
      */
-    const QString &label() const
-    {
-        return mLabel;
-    }
+    const QString &label() const;
 
     /**
      * @param v Set the user visible string identifying this item.
@@ -89,10 +80,7 @@ public:
     /**
      * @return The string to be used for showing this item's current status.
      */
-    const QString &status() const
-    {
-        return mStatus;
-    }
+    const QString &status() const;
     /**
      * Set the string to be used for showing this item's current status.
      * @param v The status string.
@@ -102,10 +90,7 @@ public:
     /**
      * @return Whether this item can be canceled.
      */
-    bool canBeCanceled() const
-    {
-        return mCanBeCanceled;
-    }
+    bool canBeCanceled() const;
 
     /**
      * @param b Set if can be canceled
@@ -116,10 +101,7 @@ public:
      * @return Whether this item uses secure communication
      * (Account uses ssl, for example.).
      */
-    CryptoStatus cryptoStatus() const
-    {
-        return mCryptoStatus;
-    }
+    CryptoStatus cryptoStatus() const;
 
     /**
      * Set whether this item uses crypted communication, so listeners
@@ -131,10 +113,7 @@ public:
     /**
      * @return whether this item uses a busy indicator instead of real progress display
      */
-    bool usesBusyIndicator() const
-    {
-        return mUsesBusyIndicator;
-    }
+    bool usesBusyIndicator() const;
 
     /**
      * Sets whether this item uses a busy indicator instead of real progress for its progress bar.
@@ -146,10 +125,7 @@ public:
     /**
      * @return The current progress value of this item in percent.
      */
-    unsigned int progress() const
-    {
-        return mProgress;
-    }
+    unsigned int progress() const;
 
     /**
      * Set the progress (percentage of completion) value of this item.
@@ -175,26 +151,11 @@ public:
     void cancel();
 
     // Often needed values for calculating progress.
-    void setTotalItems(unsigned int v)
-    {
-        mTotal = v;
-    }
-    unsigned int totalItems() const
-    {
-        return mTotal;
-    }
-    void setCompletedItems(unsigned int v)
-    {
-        mCompleted = v;
-    }
-    void incCompletedItems(unsigned int v = 1)
-    {
-        mCompleted += v;
-    }
-    unsigned int completedItems() const
-    {
-        return mCompleted;
-    }
+    void setTotalItems(unsigned int v);
+    unsigned int totalItems() const;
+    void setCompletedItems(unsigned int v);
+    void incCompletedItems(unsigned int v = 1);
+    unsigned int completedItems() const;
 
     /**
      * Recalculate progress according to total/completed items and update.
@@ -204,10 +165,7 @@ public:
     void addChild(ProgressItem *kiddo);
     void removeChild(ProgressItem *kiddo);
 
-    bool canceled() const
-    {
-        return mCanceled;
-    }
+    bool canceled() const;
 
     unsigned int typeProgressItem() const;
     void setTypeProgressItem(unsigned int);

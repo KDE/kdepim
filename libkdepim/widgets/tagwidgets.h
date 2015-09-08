@@ -31,12 +31,13 @@ class TagWidget;
 
 namespace KPIM
 {
-
+class TagWidgetPrivate;
 class KDEPIM_EXPORT TagWidget: public QWidget
 {
     Q_OBJECT
 public:
     explicit TagWidget(QWidget *parent = Q_NULLPTR);
+    ~TagWidget();
     void setSelection(const QStringList &);
     QStringList selection() const;
 Q_SIGNALS:
@@ -48,9 +49,7 @@ private Q_SLOTS:
     void onSelectionChanged(const Akonadi::Tag::List &);
 
 private:
-    Akonadi::TagWidget *mTagWidget;
-    Akonadi::Tag::List mTagList;
-    QStringList mCachedTagNames;
+    TagWidgetPrivate *const d;
 };
 
 class TagSelectionDialogPrivate;

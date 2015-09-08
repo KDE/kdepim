@@ -36,7 +36,6 @@ public:
 
 private:
     ProgressStatusBarWidgetPrivate *const d;
-    KPIM::StatusbarProgressWidget *mLittleProgress;
 };
 }
 
