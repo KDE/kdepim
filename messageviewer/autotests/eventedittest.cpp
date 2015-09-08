@@ -18,7 +18,7 @@
 #include "eventedittest.h"
 #include "widgets/eventedit.h"
 #include "widgets/eventdatetimewidget.h"
-#include "messageviewer/globalsettings_base.h"
+#include "messageviewer/globalsettings_messageviewer.h"
 
 #include <AkonadiCore/Collection>
 #include <AkonadiWidgets/CollectionComboBox>

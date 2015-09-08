@@ -67,7 +67,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 )
 ecm_qt_declare_logging_category(incidenceeditors_ng_shared_LIB_SRCS HEADER incidenceeditor_debug.h IDENTIFIER INCIDENCEEDITOR_LOG CATEGORY_NAME log_incidenceeditor)
 
-kconfig_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc)
+kconfig_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_incidenceeditor.kcfgc)
 
 ### Build the desktop version
 

@@ -16,7 +16,7 @@
 */
 
 #include "todoedit.h"
-#include "messageviewer/globalsettings_base.h"
+#include "messageviewer/globalsettings_messageviewer.h"
 #include "messageviewer_debug.h"
 #include <KLocalizedString>
 #include <QLineEdit>

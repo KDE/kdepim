@@ -24,7 +24,7 @@
 
 #include "incidenceeditors_ng_export.h"
 
-#include "incidenceeditor-ng/globalsettings_base.h"
+#include "incidenceeditor-ng/globalsettings_incidenceeditor.h"
 
 namespace IncidenceEditorNG
 {
