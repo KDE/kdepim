@@ -51,7 +51,6 @@ public:
 
 private:
     EmptySourcePrivate *const d;
-    bool mAllowDecryption;
 };
 
 }

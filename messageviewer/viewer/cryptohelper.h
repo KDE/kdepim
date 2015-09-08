@@ -38,27 +38,12 @@ enum PGPBlockType {
 class Block
 {
 public:
-    Block(const QByteArray &m)
-        : msg(m)
-    {
-        mType = determineType();
-    }
+    Block(const QByteArray &m);
 
-    Block(const QByteArray &m, PGPBlockType t)
-        : msg(m)
-        , mType(t)
-    {
+    Block(const QByteArray &m, PGPBlockType t);
 
-    }
-
-    QByteArray text() const
-    {
-        return msg;
-    }
-    PGPBlockType type() const
-    {
-        return mType;
-    }
+    QByteArray text() const;
+    PGPBlockType type() const;
     PGPBlockType determineType() const;
 
     QByteArray msg;

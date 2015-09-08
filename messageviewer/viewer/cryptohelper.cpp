@@ -125,3 +125,26 @@ QList<Block> MessageViewer::prepareMessageForDecryption(const QByteArray &msg)
 
     return blocks;
 }
+
+Block::Block(const QByteArray &m)
+    : msg(m)
+{
+    mType = determineType();
+}
+
+Block::Block(const QByteArray &m, PGPBlockType t)
+    : msg(m)
+    , mType(t)
+{
+
+}
+
+QByteArray MessageViewer::Block::text() const
+{
+    return msg;
+}
+
+PGPBlockType Block::type() const
+{
+    return mType;
+}
