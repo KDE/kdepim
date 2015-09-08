@@ -46,7 +46,7 @@ void RichTextComposerActionsTest::shouldHaveDefaultValue()
     composerActions.createActions(actionCollection);
 
     QVERIFY(!actionCollection->actions().isEmpty());
-    QCOMPARE(composerActions.numberOfActions(), actionCollection->actions().count());
+    QCOMPARE(composerActions.numberOfActions(), actionCollection->actions().count() - 4);
 }
 
 void RichTextComposerActionsTest::shouldHaveActions()
@@ -80,10 +80,6 @@ void RichTextComposerActionsTest::shouldHaveActions()
         << QStringLiteral("format_list_indent_less")
         << QStringLiteral("format_list_indent_more")
         << QStringLiteral("format_list_style")
-        << QStringLiteral("paste_quoted")
-        << QStringLiteral("tools_quote")
-        << QStringLiteral("tools_unquote")
-        << QStringLiteral("paste_without_formatting")
         << QStringLiteral("add_image")
         << QStringLiteral("add_emoticon")
         << QStringLiteral("insert_html")
@@ -92,9 +88,20 @@ void RichTextComposerActionsTest::shouldHaveActions()
         << QStringLiteral("format_reset")
         << QStringLiteral("format_painter");
 
+    QStringList actionNoRichText;
+    actionNoRichText << QStringLiteral("paste_quoted")
+                     << QStringLiteral("tools_quote")
+                     << QStringLiteral("tools_unquote")
+                     << QStringLiteral("paste_without_formatting");
+
+
+
     QCOMPARE(lst.count(), composerActions.numberOfActions());
     Q_FOREACH (QAction *act, actionCollection->actions()) {
-        QVERIFY(lst.contains(act->objectName()));
+        const QString actionName = act->objectName();
+        if (!actionNoRichText.contains(actionName)) {
+            QVERIFY(lst.contains(actionName));
+        }
     }
 }
 
@@ -107,13 +114,23 @@ void RichTextComposerActionsTest::shouldChangeEnableState()
     KActionCollection *actionCollection = new KActionCollection(&composerActions);
     composerActions.createActions(actionCollection);
 
+    QStringList actionNoRichText;
+    actionNoRichText << QStringLiteral("paste_quoted")
+                     << QStringLiteral("tools_quote")
+                     << QStringLiteral("tools_unquote")
+                     << QStringLiteral("paste_without_formatting");
+
     composerActions.setActionsEnabled(false);
     Q_FOREACH (QAction *act, actionCollection->actions()) {
-        QVERIFY(!act->isEnabled());
+        if (!actionNoRichText.contains(act->objectName())) {
+            QVERIFY(!act->isEnabled());
+        }
     }
     composerActions.setActionsEnabled(true);
     Q_FOREACH (QAction *act, actionCollection->actions()) {
-        QVERIFY(act->isEnabled());
+        if (!actionNoRichText.contains(act->objectName())) {
+            QVERIFY(act->isEnabled());
+        }
     }
 }
 

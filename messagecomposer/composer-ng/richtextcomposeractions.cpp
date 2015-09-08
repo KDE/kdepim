@@ -363,23 +363,20 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     ac->addAction(QStringLiteral("paste_quoted"), d->action_paste_quotation);
     ac->setDefaultShortcut(d->action_paste_quotation, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O));
     connect(d->action_paste_quotation, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotPasteAsQuotation);
-    d->richTextActionList.append(d->action_paste_quotation);
 
     d->action_add_quote_chars = new QAction(i18n("Add &Quote Characters"), this);
     d->action_add_quote_chars->setObjectName(QStringLiteral("tools_quote"));
     ac->addAction(QStringLiteral("tools_quote"), d->action_add_quote_chars);
     connect(d->action_add_quote_chars, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotAddQuotes);
-    d->richTextActionList.append(d->action_add_quote_chars);
+
 
     d->action_remove_quote_chars = new QAction(i18n("Re&move Quote Characters"), this);
     d->action_remove_quote_chars->setObjectName(QStringLiteral("tools_unquote"));
     connect(d->action_remove_quote_chars, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotRemoveQuotes);
-    d->richTextActionList.append(d->action_remove_quote_chars);
     ac->addAction(QStringLiteral("tools_unquote"), d->action_remove_quote_chars);
 
     d->action_paste_without_formatting = new QAction(i18n("Paste Without Formatting"), this);
     d->action_paste_without_formatting->setObjectName(QStringLiteral("paste_without_formatting"));
-    d->richTextActionList.append(d->action_paste_without_formatting);
     ac->addAction(QStringLiteral("paste_without_formatting"), d->action_paste_without_formatting);
     ac->setDefaultShortcut(d->action_paste_without_formatting, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_V));
     connect(d->action_paste_without_formatting, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotPasteWithoutFormatting);
