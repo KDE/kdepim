@@ -29,8 +29,8 @@ EnterpriseHeaderStyleInterface::~EnterpriseHeaderStyleInterface()
 
 }
 
-KToggleAction *EnterpriseHeaderStyleInterface::action() const
+void EnterpriseHeaderStyleInterface::createAction(KActionCollection *ac)
 {
-    return Q_NULLPTR;
+
 }
 

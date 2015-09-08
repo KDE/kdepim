@@ -22,7 +22,8 @@ using namespace MessageViewer;
 HeaderStyleInterface::HeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
     : QObject(parent),
       mHeaderStyle(headerStyle),
-      mHeaderStrategy(headerStrategy)
+      mHeaderStrategy(headerStrategy),
+      mAction(Q_NULLPTR)
 {
 
 }
@@ -30,5 +31,10 @@ HeaderStyleInterface::HeaderStyleInterface(MessageViewer::HeaderStyle *headerSty
 HeaderStyleInterface::~HeaderStyleInterface()
 {
 
+}
+
+KToggleAction *HeaderStyleInterface::action() const
+{
+    return mAction;
 }
 

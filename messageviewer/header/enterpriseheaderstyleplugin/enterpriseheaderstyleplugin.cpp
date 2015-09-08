@@ -46,7 +46,7 @@ HeaderStrategy *EnterpriseHeaderStylePlugin::headerStrategy() const
     return mHeaderStrategy;
 }
 
-HeaderStyleInterface *EnterpriseHeaderStylePlugin::createView(KActionCollection *ac)
+HeaderStyleInterface *EnterpriseHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
 {
     //TODO
     return Q_NULLPTR;

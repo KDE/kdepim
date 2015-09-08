@@ -21,6 +21,7 @@
 #include <QObject>
 #include "messageviewer_export.h"
 class KToggleAction;
+class KActionCollection;
 namespace MessageViewer
 {
 class HeaderStyle;
@@ -31,11 +32,13 @@ class MESSAGEVIEWER_EXPORT HeaderStyleInterface : public QObject
 public:
     explicit HeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
     virtual ~HeaderStyleInterface();
-    virtual KToggleAction *action() const = 0;
+    KToggleAction *action() const;
+    virtual void createAction(KActionCollection *ac) = 0;
 
 protected:
     HeaderStyle *mHeaderStyle;
     HeaderStrategy *mHeaderStrategy;
+    KToggleAction *mAction;
 };
 }
 #endif // HEADERSTYLEINTERFACE_H

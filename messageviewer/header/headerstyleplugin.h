@@ -38,7 +38,7 @@ public:
 
     virtual HeaderStyle *headerStyle() const = 0;
     virtual HeaderStrategy *headerStrategy() const = 0;
-    virtual HeaderStyleInterface *createView(KActionCollection *ac) = 0;
+    virtual HeaderStyleInterface *createView(KActionCollection *ac, QObject *parent = Q_NULLPTR) = 0;
 
 private:
     HeaderStylePluginPrivate *const d;

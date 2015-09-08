@@ -46,7 +46,7 @@ HeaderStrategy *GrantleeHeaderStylePlugin::headerStrategy() const
     return mHeaderStrategy;
 }
 
-HeaderStyleInterface *GrantleeHeaderStylePlugin::createView(KActionCollection *ac)
+HeaderStyleInterface *GrantleeHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
 {
     //TODO
     return Q_NULLPTR;

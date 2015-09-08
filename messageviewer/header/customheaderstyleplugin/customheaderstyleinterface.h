@@ -20,7 +20,6 @@
 
 #include <header/headerstyleinterface.h>
 
-
 namespace MessageViewer {
 
 class CustomHeaderStyleInterface : public MessageViewer::HeaderStyleInterface
@@ -29,7 +28,7 @@ class CustomHeaderStyleInterface : public MessageViewer::HeaderStyleInterface
 public:
     explicit CustomHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
     ~CustomHeaderStyleInterface();
-    KToggleAction *action() const Q_DECL_OVERRIDE;
+    void createAction(KActionCollection *ac) Q_DECL_OVERRIDE;
 
 };
 

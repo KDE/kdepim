@@ -20,7 +20,7 @@
 
 #include <header/headerstyleinterface.h>
 
-
+class KActionCollection;
 namespace MessageViewer {
 
 class BriefHeaderStyleInterface : public MessageViewer::HeaderStyleInterface
@@ -30,7 +30,7 @@ public:
     explicit BriefHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
     ~BriefHeaderStyleInterface();
 
-    KToggleAction *action() const Q_DECL_OVERRIDE;
+    void createAction(KActionCollection *ac) Q_DECL_OVERRIDE;
 };
 
 }

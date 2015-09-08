@@ -29,8 +29,8 @@ BriefHeaderStyleInterface::~BriefHeaderStyleInterface()
 
 }
 
-KToggleAction *BriefHeaderStyleInterface::action() const
+void BriefHeaderStyleInterface::createAction(KActionCollection *ac)
 {
-    return Q_NULLPTR;
+
 }
 

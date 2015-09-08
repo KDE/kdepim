@@ -29,8 +29,8 @@ GrantleeHeaderStyleInterface::~GrantleeHeaderStyleInterface()
 
 }
 
-KToggleAction *GrantleeHeaderStyleInterface::action() const
+void GrantleeHeaderStyleInterface::createAction(KActionCollection *ac)
 {
-    return Q_NULLPTR;
+
 }
 

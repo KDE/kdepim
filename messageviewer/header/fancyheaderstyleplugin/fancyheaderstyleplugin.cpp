@@ -46,7 +46,7 @@ HeaderStrategy *FancyHeaderStylePlugin::headerStrategy() const
     return mHeaderStrategy;
 }
 
-HeaderStyleInterface *FancyHeaderStylePlugin::createView(KActionCollection *ac)
+HeaderStyleInterface *FancyHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
 {
     //TODO
     return Q_NULLPTR;

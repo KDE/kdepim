@@ -30,7 +30,7 @@ public:
     explicit FancyHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
     ~FancyHeaderStyleInterface();
 
-    KToggleAction *action() const Q_DECL_OVERRIDE;
+    void createAction(KActionCollection *ac) Q_DECL_OVERRIDE;
 };
 
 }

@@ -29,8 +29,8 @@ CustomHeaderStyleInterface::~CustomHeaderStyleInterface()
 
 }
 
-KToggleAction *CustomHeaderStyleInterface::action() const
+void CustomHeaderStyleInterface::createAction(KActionCollection *ac)
 {
-    return Q_NULLPTR;
+
 }
 
