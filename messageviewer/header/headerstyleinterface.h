@@ -35,6 +35,9 @@ public:
     KToggleAction *action() const;
     virtual void createAction(KActionCollection *ac) = 0;
 
+Q_SIGNALS:
+    void styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy);
+
 protected:
     HeaderStyle *mHeaderStyle;
     HeaderStrategy *mHeaderStrategy;
