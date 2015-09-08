@@ -1,13 +1,9 @@
 /***************************************************************************
-                          filter_mailapp.cxx  -  OS X Mail App import
+                          filter_mbox.cxx  -  mbox mail import
                              -------------------
-    copyright            : (C) 2004 by Chris Howells
-    email                : howells@kde.org
-
-    Derived from code by:
+    begin                : Sat Apr 5 2003
     copyright            : (C) 2003 by Laurence Anderson
     email                : l.d.anderson@warwick.ac.uk
-
  ***************************************************************************/
 
 /***************************************************************************
@@ -20,78 +16,60 @@
  ***************************************************************************/
 
 #include <KLocalizedString>
-#include <qtemporaryfile.h>
+#include <qfiledialog.h>
+#include <QTemporaryFile>
 #include "mailimporter_debug.h"
-#include <QFileDialog>
 
-#include "filter_mailapp.h"
+#include "filtermbox.h"
 
 using namespace MailImporter;
 
-class MailImporter::FilterMailAppPrivate
+FilterMBox::FilterMBox() :
+    Filter(i18n("Import mbox Files (UNIX, Evolution)"),
+           "Laurence Anderson <p>( Filter accelerated by Danny Kukawka )</p>",
+           i18n("<p><b>mbox import filter</b></p>"
+                "<p>This filter will import mbox files into KMail. Use this filter "
+                "if you want to import mails from Ximian Evolution or other mailers "
+                "that use this traditional UNIX format.</p>"
+                "<p><b>Note:</b> Emails will be imported into folders named after the "
+                "file they came from, prefixed with MBOX-</p>"))
 {
-public:
-    FilterMailAppPrivate()
-    {
+}
 
+FilterMBox::~FilterMBox()
+{
+}
+
+void FilterMBox::import()
+{
+    const QStringList filenames = QFileDialog::getOpenFileNames(filterInfo()->parent(), QString(), QDir::homePath(), i18n("mbox Files (*.mbox)"));
+    if (filenames.isEmpty()) {
+        filterInfo()->alert(i18n("No files selected."));
+        return;
     }
-
-    QStringList mMboxFiles;
-};
-
-FilterMailApp::FilterMailApp() :
-    Filter(i18n("Import From OS X Mail"),
-           "Chris Howells<br /><br />Filter accelerated by Danny Kukawka )",
-           i18n("<p><b>OS X Mail Import Filter</b></p>"
-                "<p>This filter imports e-mails from the Mail client in Apple Mac OS X.</p>")),
-    d(new MailImporter::FilterMailAppPrivate)
-{
+    importMails(filenames);
 }
 
-FilterMailApp::~FilterMailApp()
-{
-    delete d;
-}
-
-void FilterMailApp::import()
-{
-    const QString directory = QFileDialog::getExistingDirectory(filterInfo()->parent() , QString(),  QDir::homePath());
-    importMails(directory);
-}
-
-void FilterMailApp::importMails(const QString  &maildir)
+void FilterMBox::importMails(const QStringList &filenames)
 {
     int currentFile = 1;
     int overall_status = 0;
     bool first_msg = true;
 
-    setMailDir(maildir);
-    if (mailDir().isEmpty()) {
-        filterInfo()->alert(i18n("No files selected."));
-        return;
-    }
-
     filterInfo()->setOverall(0);
 
-    //   qCDebug(MAILIMPORTER_LOG) <<"starting by looking in directory" << directory;
-    traverseDirectory(mailDir());
-
-    QStringList::ConstIterator end(d->mMboxFiles.constEnd());
-    for (QStringList::ConstIterator filename = d->mMboxFiles.constBegin(); filename != end; ++filename, ++currentFile) {
-        if (filterInfo()->shouldTerminate()) {
-            break;
-        }
+    QStringList::ConstIterator end(filenames.constEnd());
+    for (QStringList::ConstIterator filename = filenames.constBegin(); filename != end; ++filename, ++currentFile) {
         QFile mbox(*filename);
         if (! mbox.open(QIODevice::ReadOnly)) {
             filterInfo()->alert(i18n("Unable to open %1, skipping", *filename));
         } else {
             QFileInfo filenameInfo(*filename);
-            qCDebug(MAILIMPORTER_LOG) << "importing filename" << *filename;
-            QStringList name = (*filename).split('/', QString::SkipEmptyParts);
-            QString folderName(name[name.count() - 2]);
+            QString folderName("MBOX-" + filenameInfo.completeBaseName());
 
             filterInfo()->setCurrent(0);
             filterInfo()->addInfoLogEntry(i18n("Importing emails from %1...", *filename));
+
             filterInfo()->setFrom(*filename);
             filterInfo()->setTo(folderName);
 
@@ -101,6 +79,7 @@ void FilterMailApp::importMails(const QString  &maildir)
             while (! mbox.atEnd()) {
                 QTemporaryFile tmp;
                 tmp.open();
+                qint64 filepos = 0;
                 /* comment by Danny:
                 * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only
                 * support Unicode/Latin1/Locale. So you lost information from emails with
@@ -110,14 +89,28 @@ void FilterMailApp::importMails(const QString  &maildir)
                 */
                 QByteArray separate;
 
-                if (!first_msg) {
+                /* check if the first line start with "From " (and not "From: ") and discard the line
+                * in this case because some IMAP servers (e.g. Cyrus) don't accept this header line */
+                if (!first_msg && ((separate = input.data()).left(5) !=  "From ")) {
                     tmp.write(input, l);
                 }
+
                 l = mbox.readLine(input.data(), MAX_LINE); // read the first line, prevent "From "
-                tmp.write(input, l);
+
+                if ((separate = input.data()).left(5) != "From ") {
+                    tmp.write(input, l);
+                }
 
                 while (! mbox.atEnd() && (l = mbox.readLine(input.data(), MAX_LINE)) && ((separate = input.data()).left(5) != "From ")) {
                     tmp.write(input, l);
+
+                    // workaround to fix hang if a corrupted mbox contains some
+                    // binary data, for more see bug #106796
+                    if (mbox.pos() == filepos) {
+                        mbox.seek(mbox.size());
+                    } else {
+                        filepos = mbox.pos();
+                    }
                 }
                 tmp.flush();
                 first_msg = false;
@@ -126,20 +119,25 @@ void FilterMailApp::importMails(const QString  &maildir)
                 * addMessage() == old function, need more time and check for duplicates
                 * addMessage_fastImport == new function, faster and no check for duplicates
                 */
-                if (filterInfo()->removeDupMessage()) {
-                    addMessage(folderName, tmp.fileName());
+                if (tmp.size() > 0) {
+                    if (filterInfo()->removeDupMessage()) {
+                        addMessage(folderName, tmp.fileName());
+                    } else {
+                        addMessage_fastImport(folderName, tmp.fileName());
+                    }
                 } else {
-                    addMessage_fastImport(folderName, tmp.fileName());
+                    qCWarning(MAILIMPORTER_LOG) << "Message size is 0 bytes, not importing it.";
                 }
 
                 int currentPercentage = (int)(((float) mbox.pos() / filenameInfo.size()) * 100);
                 filterInfo()->setCurrent(currentPercentage);
                 if (currentFile == 1) {
-                    overall_status = (int)(currentPercentage * ((float)currentFile / d->mMboxFiles.count()));
+                    overall_status = (int)(currentPercentage * ((float)currentFile / filenames.count()));
                 } else {
-                    overall_status = (int)(((currentFile - 1) * (100.0 / (float)d->mMboxFiles.count())) + (currentPercentage * (1.0 / (float)d->mMboxFiles.count())));
+                    overall_status = (int)(((currentFile - 1) * (100.0 / (float)filenames.count())) + (currentPercentage * (1.0 / (float)filenames.count())));
                 }
                 filterInfo()->setOverall(overall_status);
+
                 if (filterInfo()->shouldTerminate()) {
                     break;
                 }
@@ -148,35 +146,16 @@ void FilterMailApp::importMails(const QString  &maildir)
             filterInfo()->addInfoLogEntry(i18n("Finished importing emails from %1", *filename));
             if (countDuplicates() > 0) {
                 filterInfo()->addInfoLogEntry(i18np("1 duplicate message not imported to folder %2 in KMail",
-                                                    "%1 duplicate messages not imported to folder %2 in KMail", countDuplicates(), folderName));
+                                                    "%1 duplicate messages not imported to folder %2 in KMail",
+                                                    countDuplicates(), folderName));
             }
+            if (filterInfo()->shouldTerminate()) {
+                filterInfo()->addInfoLogEntry(i18n("Finished import, canceled by user."));
+            }
+
             setCountDuplicates(0);
+            // don't forget to close the file !!!
             mbox.close();
-        }
-    }
-    if (filterInfo()->shouldTerminate()) {
-        filterInfo()->addInfoLogEntry(i18n("Finished import, canceled by user."));
-    }
-}
-
-void FilterMailApp::traverseDirectory(const QString &dirName)
-{
-    QDir dir(dirName);
-    dir.setFilter(QDir::Dirs | QDir::Files);
-
-    const QFileInfoList fileinfolist = dir.entryInfoList();
-    Q_FOREACH (const QFileInfo &fi, fileinfolist) {
-        const QString filename(fi.fileName());
-        if (filename == QLatin1String(".") || filename == QLatin1String("..")) {
-            continue;
-        }
-        if (fi.isDir() && fi.isReadable()) {
-            traverseDirectory(fi.filePath());
-        } else {
-            if (!fi.isDir() && (filename == QLatin1String("mbox"))) {
-                qCDebug(MAILIMPORTER_LOG) << "adding the file" << fi.filePath();
-                d->mMboxFiles.append(fi.filePath());
-            }
         }
     }
 }

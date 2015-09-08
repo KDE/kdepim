@@ -16,7 +16,7 @@
 */
 
 #include "oe/oeimportdata.h"
-#include "mailimporter/filter_oe.h"
+#include "mailimporter/filteroe.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"

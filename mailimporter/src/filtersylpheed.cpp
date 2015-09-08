@@ -16,7 +16,7 @@
  ***************************************************************************/
 /* Copyright (c) 2012-2015 Montel Laurent <montel@kde.org>                      */
 
-#include "filter_sylpheed.h"
+#include "filtersylpheed.h"
 
 #include <KLocalizedString>
 #include <qfiledialog.h>

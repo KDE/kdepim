@@ -19,7 +19,7 @@
 
 #include "templateparsertest.h"
 #define protected public
-#include "templateparser/templateparser.h"
+#include "templateparser.h"
 #undef protected
 #include "messageviewer/viewer/objecttreeparser.h"
 #include "messageviewer/viewer/objecttreeemptysource.h"

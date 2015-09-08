@@ -1,9 +1,9 @@
 /***************************************************************************
-            filter_evolution_v2.cxx  -  Evolution 2.0.x mail import
+            filter_thunderbird.cxx  -  Thunderbird mail import
                              -------------------
     begin                : Januar 26 2005
-    copyright            : (C) 2005 by Danny Kukawka <danny.kukawka@web.de>
-                           (inspired and partly copied from filter_evolution)
+    copyright            : (C) 2005 by Danny Kukawka
+    email                : danny.kukawka@web.de
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,72 +15,132 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "filter_evolution_v2.h"
-
+#include "filterthunderbird.h"
+#include "selectthunderbirdprofilewidget.h"
 #include <KLocalizedString>
 #include <qfiledialog.h>
+#include <KConfigGroup>
 #include <QTemporaryFile>
+#include <KConfig>
+#include <QFile>
 #include <QPointer>
 
 using namespace MailImporter;
 
 /** Default constructor. */
-FilterEvolution_v2::FilterEvolution_v2() :
-    Filter(i18n("Import Evolution 2.x Local Mails and Folder Structure"),
+FilterThunderbird::FilterThunderbird() :
+    Filter(i18n("Import Thunderbird/Mozilla Local Mails and Folder Structure"),
            "Danny Kukawka",
-           i18n("<p><b>Evolution 2.x import filter</b></p>"
-                "<p>Select the base directory of your local Evolution mailfolder (usually ~/.evolution/mail/local/).</p>"
-                "<p><b>Note:</b> Never choose a Folder which <u>does not</u> contain mbox-files (for example "
-                "a maildir): if you do, you will get many new folders.</p>"
+           i18n("<p><b>Thunderbird/Mozilla import filter</b></p>"
+                "<p>Select your base Thunderbird/Mozilla mailfolder"
+                " (usually ~/.thunderbird/*.default/Mail/Local Folders/).</p>"
+                "<p><b>Note:</b> Never choose a Folder which <u>does not</u> contain mbox-files (for example,"
+                " a maildir): if you do, you will get many new folders.</p>"
                 "<p>Since it is possible to recreate the folder structure, the folders "
-                "will be stored under: \"Evolution-Import\".</p>"))
+                "will be stored under: \"Thunderbird-Import\".</p>"))
 {
 }
 
 /** Destructor. */
-FilterEvolution_v2::~FilterEvolution_v2()
+FilterThunderbird::~FilterThunderbird()
 {
 }
 
-QString FilterEvolution_v2::defaultSettingsPath()
+QString FilterThunderbird::defaultSettingsPath()
 {
-    return QDir::homePath() + QLatin1String("/.evolution/mail/local");
+    return QDir::homePath() + QLatin1String("/.thunderbird/");
 }
 
-/** Recursive import of Evolution's mboxes. */
-void FilterEvolution_v2::import()
+QString FilterThunderbird::defaultProfile(const QString defaultSettingPath, QWidget *parent)
 {
-    setCountDuplicates(0);
-    /**
-    * We ask the user to choose Evolution's root directory.
-    * This should be usually ~/.evolution/mail/local/
-    */
-    QString evolDir = defaultSettingsPath();
-    QDir d(evolDir);
-    if (!d.exists()) {
-        evolDir = QDir::homePath();
+    QString currentProfile;
+    QMap<QString, QString> listProfile = FilterThunderbird::listProfile(currentProfile, defaultSettingPath);
+    if (listProfile.isEmpty()) {
+        return QString();
+    } else if (listProfile.count() == 1) {
+        return currentProfile;
+    } else {
+        SelectThunderbirdProfileDialog dialog(parent);
+        dialog.fillProfile(listProfile, currentProfile);
+        if (dialog.exec()) {
+            return dialog.selectedProfile();
+        }
     }
+    return currentProfile;
+}
 
+QMap<QString, QString> FilterThunderbird::listProfile(QString &currentProfile, const QString &defaultSettingPath)
+{
+    const QString thunderbirdPath = defaultSettingPath + QLatin1String("/profiles.ini");
+    QMap<QString, QString> lstProfile;
+    QFile profiles(thunderbirdPath);
+    if (profiles.exists()) {
+        //ini file.
+        KConfig config(thunderbirdPath);
+        const QStringList profileList = config.groupList().filter(QRegExp("Profile\\d+"));
+        const bool uniqProfile = (profileList.count() == 1);
+        if (uniqProfile) {
+            KConfigGroup group = config.group(profileList.at(0));
+            const QString path = group.readEntry("Path");
+            const QString name = group.readEntry(QStringLiteral("Name"));
+            currentProfile = path;
+            lstProfile.insert(name, path);
+            return lstProfile;
+        } else {
+            Q_FOREACH (const QString &profileName, profileList) {
+                KConfigGroup group = config.group(profileName);
+                const QString path = group.readEntry("Path");
+                const QString name = group.readEntry(QStringLiteral("Name"));
+                if (group.hasKey("Default") && (group.readEntry("Default", 0) == 1)) {
+                    currentProfile = path;
+                }
+                lstProfile.insert(name, path);
+            }
+        }
+    }
+    return lstProfile;
+
+}
+
+QString FilterThunderbird::defaultInstallFolder() const
+{
+    return QStringLiteral("Thunderbird-Import/");
+}
+
+QString FilterThunderbird::settingsPath()
+{
+    return FilterThunderbird::defaultSettingsPath();
+}
+
+void FilterThunderbird::import()
+{
+    /**
+    * We ask the user to choose Thunderbird's root directory.
+    * This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
+    */
+    QString thunderDir = settingsPath();
+    QDir d(thunderDir);
+    if (!d.exists()) {
+        thunderDir = QDir::homePath();
+    }
     // Select directory from where I have to import files
-    const QString maildir = QFileDialog::getExistingDirectory(0, QString(), evolDir);
+    const QString maildir = QFileDialog::getExistingDirectory(0, QString(), thunderDir);
     if (!maildir.isEmpty()) {
         importMails(maildir);
     }
 }
 
-bool FilterEvolution_v2::excludeFiles(const QString &file)
+bool FilterThunderbird::excludeFiles(const QString  &file)
 {
-    if ((file.endsWith(QLatin1String(".db")) ||
-            file.endsWith(QLatin1String(".cmeta")) ||
-            file.endsWith(QLatin1String(".ev-summary")) ||
-            file.endsWith(QLatin1String(".ibex.index")) ||
-            file.endsWith(QLatin1String(".ibex.index.data")))) {
+    if ((file.endsWith(QLatin1String(".msf")) ||
+            file.endsWith(QLatin1String("msgFilterRules.dat")) ||
+            file.endsWith(QLatin1String(".html")))) {
         return true;
     }
     return false;
 }
 
-void FilterEvolution_v2::importMails(const QString &maildir)
+void FilterThunderbird::importMails(const QString  &maildir)
 {
     setMailDir(maildir);
     if (mailDir().isEmpty()) {
@@ -91,17 +151,16 @@ void FilterEvolution_v2::importMails(const QString &maildir)
     * If the user only select homedir no import needed because
     * there should be no files and we surely import wrong files.
     */
-    else if (mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + QLatin1Char('/'))) {
+    else if (mailDir() == QDir::homePath() || mailDir() == (QDir::homePath() + '/')) {
         filterInfo()->addErrorLogEntry(i18n("No files found for import."));
     } else {
         filterInfo()->setOverall(0);
-
         /** Recursive import of the MailArchives */
         QDir dir(mailDir());
         const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
-        QStringList::ConstIterator endFilename(rootSubDirs.constEnd());
-        for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != endFilename ; ++filename, ++currentDir) {
+        QStringList::ConstIterator end = rootSubDirs.constEnd();
+        for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
             if (filterInfo()->shouldTerminate()) {
                 break;
             }
@@ -112,8 +171,8 @@ void FilterEvolution_v2::importMails(const QString &maildir)
         /** import last but not least all archives from the root-dir */
         QDir importDir(mailDir());
         const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
-        endFilename = files.constEnd();
-        for (QStringList::ConstIterator mailFile = files.constBegin(); mailFile != endFilename; ++mailFile) {
+        QStringList::ConstIterator mailFileEnd = files.constEnd();
+        for (QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
             if (filterInfo()->shouldTerminate()) {
                 break;
             }
@@ -128,9 +187,9 @@ void FilterEvolution_v2::importMails(const QString &maildir)
         if (countDuplicates() > 0) {
             filterInfo()->addInfoLogEntry(i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
         }
-        if (filterInfo()->shouldTerminate()) {
-            filterInfo()->addInfoLogEntry(i18n("Finished import, canceled by user."));
-        }
+    }
+    if (filterInfo()->shouldTerminate()) {
+        filterInfo()->addInfoLogEntry(i18n("Finished import, canceled by user."));
     }
     filterInfo()->setCurrent(100);
     filterInfo()->setOverall(100);
@@ -143,31 +202,36 @@ void FilterEvolution_v2::importMails(const QString &maildir)
  * @param KMailRootDir The directory's root directory in KMail's folder structure.
  * @param KMailSubDir The directory's direct ancestor in KMail's folder structure.
  */
-void FilterEvolution_v2::importDirContents(const QString &dirName, const QString &KMailRootDir, const QString &KMailSubDir)
+void FilterThunderbird::importDirContents(const QString &dirName, const QString &KMailRootDir, const QString &KMailSubDir)
 {
     if (filterInfo()->shouldTerminate()) {
         return;
     }
-
     /** Here Import all archives in the current dir */
     QDir dir(dirName);
 
     QDir importDir(dirName);
     const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
-    QStringList::ConstIterator mailFileEnd(files.constEnd());
+    QStringList::ConstIterator mailFileEnd = files.constEnd();
     for (QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
+        if (filterInfo()->shouldTerminate()) {
+            break;
+        }
         QString temp_mailfile = *mailFile;
         if (!excludeFiles(temp_mailfile)) {
             filterInfo()->addInfoLogEntry(i18n("Start import file %1...", temp_mailfile));
-            importMBox((dirName + QLatin1Char('/') + temp_mailfile) , KMailRootDir, KMailSubDir);
+            importMBox((dirName + '/' + temp_mailfile) , KMailRootDir, KMailSubDir);
         }
     }
 
     /** If there are subfolders, we import them one by one */
     QDir subfolders(dirName);
     const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
-    QStringList::ConstIterator end(subDirs.constEnd());
+    QStringList::ConstIterator end = subDirs.constEnd();
     for (QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
+        if (filterInfo()->shouldTerminate()) {
+            break;
+        }
         QString kSubDir;
         if (!KMailSubDir.isNull()) {
             kSubDir = KMailSubDir + QLatin1Char('/') + *filename;
@@ -185,7 +249,7 @@ void FilterEvolution_v2::importDirContents(const QString &dirName, const QString
  * @param KMailRootDir The directory's root directory in KMail's folder structure.
  * @param KMailSubDir The directory's equivalent in KMail's folder structure. *
  */
-void FilterEvolution_v2::importMBox(const QString &mboxName, const QString &rootDir, const QString &targetDir)
+void FilterThunderbird::importMBox(const QString &mboxName, const QString &rootDir, const QString &targetDir)
 {
     QFile mbox(mboxName);
     bool first_msg = true;
@@ -205,10 +269,9 @@ void FilterEvolution_v2::importMBox(const QString &mboxName, const QString &root
         } else {
             filterInfo()->setFrom(mboxName);
         }
-
-        if (targetDir.contains(QStringLiteral(".sbd"))) {
+        if (targetDir.contains(".sbd")) {
             QString tmp_info = targetDir;
-            tmp_info.remove(QStringLiteral(".sbd"));
+            tmp_info.remove(".sbd");
             filterInfo()->setTo(tmp_info);
         } else {
             filterInfo()->setTo(targetDir);
@@ -245,14 +308,14 @@ void FilterEvolution_v2::importMBox(const QString &mboxName, const QString &root
             QString destFolder;
             QString _targetDir = targetDir;
             if (!targetDir.isNull()) {
-                if (_targetDir.contains(QStringLiteral(".sbd"))) {
-                    _targetDir.remove(QStringLiteral(".sbd"));
+                if (_targetDir.contains(".sbd")) {
+                    _targetDir.remove(".sbd");
                 }
-                destFolder += "Evolution-Import/" + _targetDir + QLatin1Char('/') + filenameInfo.completeBaseName(); // mboxName;
+                destFolder += defaultInstallFolder() + _targetDir + '/' + filenameInfo.completeBaseName();// mboxName;
             } else {
-                destFolder = "Evolution-Import/" + rootDir;
-                if (destFolder.contains(QStringLiteral(".sbd"))) {
-                    destFolder.remove(QStringLiteral(".sbd"));
+                destFolder = defaultInstallFolder() + rootDir;
+                if (destFolder.contains(".sbd")) {
+                    destFolder.remove(".sbd");
                 }
             }
 
@@ -265,7 +328,8 @@ void FilterEvolution_v2::importMBox(const QString &mboxName, const QString &root
             int currentPercentage = (int)(((float) mbox.pos() / filenameInfo.size()) * 100);
             filterInfo()->setCurrent(currentPercentage);
             if (filterInfo()->shouldTerminate()) {
-                break;
+                mbox.close();
+                return;
             }
         }
         mbox.close();

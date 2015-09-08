@@ -17,7 +17,7 @@
 
 #include "operasettings.h"
 #include "importwizard_debug.h"
-#include "mailimporter/filter_opera.h"
+#include "mailimporter/filteropera.h"
 
 #include <MailTransport/mailtransport/transportmanager.h>
 #include "mailcommon/util/mailutil.h"

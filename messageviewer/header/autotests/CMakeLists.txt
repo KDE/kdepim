@@ -8,7 +8,7 @@ macro(add_messageviewer_header_unittest _source _additional _jsonfile)
     add_test( ${_name} ${_name} )
     
     ecm_mark_as_test(messageviewer-header-${_name})
-    target_link_libraries( ${_name} messageviewer kleo KF5::QGpgme Qt5::Test Qt5::WebKitWidgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::AkonadiNotes KF5::CalendarCore grantleetheme)
+    target_link_libraries( ${_name} messageviewer kleo KF5::QGpgme Qt5::Test Qt5::WebKitWidgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::AkonadiNotes KF5::CalendarCore KF5::GrantleeTheme)
 
 endmacro ()
 

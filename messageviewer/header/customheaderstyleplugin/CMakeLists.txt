@@ -8,7 +8,7 @@ add_library(messageviewer_customheaderstyleplugin MODULE ${messageviewer_customh
 target_link_libraries(messageviewer_customheaderstyleplugin
   messageviewer
   #Temporary
-  grantleetheme
+  KF5::GrantleeTheme
   KF5::XmlGui
 )
 

@@ -34,7 +34,7 @@ PUBLIC
 PRIVATE
   KF5::ConfigWidgets
   KF5::Service
-  grantleetheme
+  KF5::GrantleeTheme
   KF5::AkonadiCore
   KF5::Contacts
   KF5::AkonadiContact

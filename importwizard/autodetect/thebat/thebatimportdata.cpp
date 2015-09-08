@@ -16,7 +16,7 @@
 */
 
 #include "thebat/thebatimportdata.h"
-#include "mailimporter/filter_thebat.h"
+#include "mailimporter/filterthebat.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"

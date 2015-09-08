@@ -22,7 +22,7 @@
 #include <QTemporaryFile>
 #include "mailimporter_debug.h"
 
-#include "filter_pmail.h"
+#include "filterpmail.h"
 
 using namespace MailImporter;
 

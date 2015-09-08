@@ -27,7 +27,7 @@
 #include "viewer/objecttreeemptysource.h"
 #include "viewer/objecttreeviewersource.h"
 #include "messagedisplayformatattribute.h"
-#include "grantleetheme/grantleethememanager.h"
+#include "grantleethememanager.h"
 #include "grantleetheme/globalsettings_grantleetheme.h"
 #include "scamdetection/scamdetectionwarningwidget.h"
 #include "scamdetection/scamattribute.h"

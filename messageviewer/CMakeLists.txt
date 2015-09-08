@@ -238,7 +238,7 @@ PRIVATE
   ${_mailwebview_lib}
   kdepim
   kleo
-  grantleetheme
+  KF5::GrantleeTheme
   kaddressbookgrantlee
   incidenceeditorsng
   Grantlee5::TextDocument

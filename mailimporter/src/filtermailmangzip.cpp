@@ -21,7 +21,7 @@
 #include "mailimporter_debug.h"
 #include <KFilterDev>
 
-#include "filter_mailmangzip.h"
+#include "filtermailmangzip.h"
 
 using namespace MailImporter;
 

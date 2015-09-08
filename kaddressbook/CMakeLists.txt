@@ -138,7 +138,7 @@ target_link_libraries(kaddressbookprivate
   KF5::AkonadiContact
   KF5::KCMUtils
   KF5::Codecs
-  grantleetheme
+  KF5::GrantleeTheme
   KF5::KDELibs4Support
   KF5::IconThemes
   Qt5::PrintSupport

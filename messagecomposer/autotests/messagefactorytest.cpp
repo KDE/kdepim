@@ -50,7 +50,7 @@
 #include <KCharsets>
 #include <QDir>
 #include <QLocale>
-#include "templateparser/globalsettings_base.h"
+#include "globalsettings_templateparser.h"
 #include "templateparser/templateparser_export.h"
 
 using namespace MessageComposer;

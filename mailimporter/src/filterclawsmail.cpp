@@ -17,7 +17,7 @@
 
 /* based on filter_sylpheed filter */
 
-#include "filter_clawsmail.h"
+#include "filterclawsmail.h"
 
 #include <KLocalizedString>
 #include "mailimporter_debug.h"

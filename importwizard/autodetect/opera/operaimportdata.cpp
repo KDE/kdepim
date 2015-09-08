@@ -18,7 +18,7 @@
 #include "opera/operaimportdata.h"
 #include "opera/operaaddressbook.h"
 #include "opera/operasettings.h"
-#include "mailimporter/filter_opera.h"
+#include "mailimporter/filteropera.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"

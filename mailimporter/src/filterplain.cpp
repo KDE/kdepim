@@ -18,7 +18,7 @@
 #include <KLocalizedString>
 #include <QFileDialog>
 
-#include "filter_plain.h"
+#include "filterplain.h"
 
 using namespace MailImporter;
 

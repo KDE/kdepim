@@ -8,7 +8,7 @@ add_library(messageviewer_standardsheaderstyleplugin MODULE ${messageviewer_stan
 target_link_libraries(messageviewer_standardsheaderstyleplugin
   messageviewer
   #Temporary
-  grantleetheme
+  KF5::GrantleeTheme
   KF5::XmlGui
 )
 

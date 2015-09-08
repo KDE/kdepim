@@ -16,7 +16,7 @@
  ***************************************************************************/
 /* Copyright (c) 2012-2015 Montel Laurent <montel@kde.org>                      */
 
-#include "filter_thebat.h"
+#include "filterthebat.h"
 
 #include <QRegExp>
 #include <QPointer>
