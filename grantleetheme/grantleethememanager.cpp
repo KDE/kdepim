@@ -16,7 +16,7 @@
 */
 
 #include "grantleethememanager.h"
-#include "globalsettings_base.h"
+#include "globalsettings_grantleetheme.h"
 
 #include <KDirWatch>
 #include <KConfigGroup>
