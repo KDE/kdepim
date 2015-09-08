@@ -45,7 +45,7 @@ set(messagecore_LIB_SRCS
 )
 
 kconfig_add_kcfg_files(messagecore_LIB_SRCS
-  settings/globalsettings_base.kcfgc
+  settings/globalsettings_messagecore.kcfgc
 )
 
 ki18n_wrap_ui(messagecore_LIB_SRCS
