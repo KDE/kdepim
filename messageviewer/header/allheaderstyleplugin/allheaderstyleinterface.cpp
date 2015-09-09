@@ -16,7 +16,9 @@
 */
 
 #include "allheaderstyleinterface.h"
-
+#include <KToggleAction>
+#include <KLocalizedString>
+#include <KActionCollection>
 using namespace MessageViewer;
 AllHeaderStyleInterface::AllHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
     : MessageViewer::HeaderStyleInterface(headerStyle, headerStrategy, parent)
@@ -31,6 +33,9 @@ AllHeaderStyleInterface::~AllHeaderStyleInterface()
 
 void AllHeaderStyleInterface::createAction(KActionCollection *ac)
 {
-
+    KToggleAction *act = new KToggleAction(i18nc("View->headers->", "&All Headers"), this);
+    ac->addAction(QStringLiteral("view_headers_all"), act);
+    //connect(raction, &QAction::triggered, this, &ViewerPrivate::slotAllHeaders);
+    addHelpTextAction(act, i18n("Show all message headers"));
 }
 

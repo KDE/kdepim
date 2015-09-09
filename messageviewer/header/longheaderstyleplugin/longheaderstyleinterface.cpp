@@ -16,6 +16,9 @@
 */
 
 #include "longheaderstyleinterface.h"
+#include <KToggleAction>
+#include <KLocalizedString>
+#include <KActionCollection>
 
 using namespace MessageViewer;
 LongHeaderStyleInterface::LongHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
@@ -31,6 +34,11 @@ LongHeaderStyleInterface::~LongHeaderStyleInterface()
 
 void LongHeaderStyleInterface::createAction(KActionCollection *ac)
 {
+    KToggleAction *act = new KToggleAction(i18nc("View->headers->", "&Long Headers"), this);
+    ac->addAction(QStringLiteral("view_headers_long"), act);
+    //connect(raction, &QAction::triggered, this, &ViewerPrivate::slotLongHeaders);
+    addHelpTextAction(act, i18n("Show long list of message headers"));
+    mAction.append(act);
 
 }
 

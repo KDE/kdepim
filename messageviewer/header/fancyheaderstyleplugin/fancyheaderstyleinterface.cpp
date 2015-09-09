@@ -16,6 +16,9 @@
 */
 
 #include "fancyheaderstyleinterface.h"
+#include <KToggleAction>
+#include <KLocalizedString>
+#include <KActionCollection>
 
 using namespace MessageViewer;
 FancyHeaderStyleInterface::FancyHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
@@ -31,6 +34,10 @@ FancyHeaderStyleInterface::~FancyHeaderStyleInterface()
 
 void FancyHeaderStyleInterface::createAction(KActionCollection *ac)
 {
-
+    KToggleAction *act  = new KToggleAction(i18nc("View->headers->", "&Fancy Headers"), this);
+    ac->addAction(QStringLiteral("view_headers_fancy"), act);
+    ///connect(raction, &QAction::triggered, this, &ViewerPrivate::slotFancyHeaders);
+    addHelpTextAction(act, i18n("Show the list of headers in a fancy format"));
+    mAction.append(act);
 }
 

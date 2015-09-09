@@ -16,6 +16,9 @@
 */
 
 #include "customheaderstyleinterface.h"
+#include <KToggleAction>
+#include <KLocalizedString>
+#include <KActionCollection>
 
 using namespace MessageViewer;
 CustomHeaderStyleInterface::CustomHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
@@ -31,6 +34,10 @@ CustomHeaderStyleInterface::~CustomHeaderStyleInterface()
 
 void CustomHeaderStyleInterface::createAction(KActionCollection *ac)
 {
-
+    KToggleAction *act = new KToggleAction(i18nc("View->headers->", "&Custom Headers"), this);
+    ac->addAction(QStringLiteral("view_custom_headers"), act);
+    //connect(raction, &QAction::triggered, this, &ViewerPrivate::slotCustomHeaders);
+    addHelpTextAction(act, i18n("Show custom headers"));
+    mAction.append(act);
 }
 

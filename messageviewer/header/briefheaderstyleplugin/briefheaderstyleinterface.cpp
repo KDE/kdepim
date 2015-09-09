@@ -16,6 +16,9 @@
 */
 
 #include "briefheaderstyleinterface.h"
+#include <KToggleAction>
+#include <KLocalizedString>
+#include <KActionCollection>
 
 using namespace MessageViewer;
 BriefHeaderStyleInterface::BriefHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
@@ -31,6 +34,10 @@ BriefHeaderStyleInterface::~BriefHeaderStyleInterface()
 
 void BriefHeaderStyleInterface::createAction(KActionCollection *ac)
 {
-
+    KToggleAction *act = new KToggleAction(i18nc("View->headers->", "&Brief Headers"), this);
+    ac->addAction(QStringLiteral("view_headers_brief"), act);
+    //connect(raction, &QAction::triggered, this, &ViewerPrivate::slotBriefHeaders);
+    addHelpTextAction(act, i18n("Show brief list of message headers"));
+    mAction.append(act);
 }
 

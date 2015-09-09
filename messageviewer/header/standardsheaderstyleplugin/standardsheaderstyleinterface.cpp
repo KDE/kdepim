@@ -16,6 +16,9 @@
 */
 
 #include "standardsheaderstyleinterface.h"
+#include <KToggleAction>
+#include <KLocalizedString>
+#include <KActionCollection>
 
 using namespace MessageViewer;
 StandardsHeaderStyleInterface::StandardsHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
@@ -31,6 +34,10 @@ StandardsHeaderStyleInterface::~StandardsHeaderStyleInterface()
 
 void StandardsHeaderStyleInterface::createAction(KActionCollection *ac)
 {
-
+    KToggleAction *act = new KToggleAction(i18nc("View->headers->", "&Standard Headers"), this);
+    ac->addAction(QStringLiteral("view_headers_standard"), act);
+    //connect(raction, &QAction::triggered, this, &ViewerPrivate::slotStandardHeaders);
+    addHelpTextAction(act, i18n("Show standard list of message headers"));
+    mAction.append(act);
 }
 
