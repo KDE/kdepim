@@ -41,7 +41,7 @@
 #include "formatter/grantleecontactformatter.h"
 #include "formatter/grantleecontactgroupformatter.h"
 #include "grantleetheme/grantleethememanager.h"
-#include "grantleetheme/globalsettings_grantleetheme.h"
+#include "globalsettings_grantleetheme.h"
 
 #include "libkdepim/misc/uistatesaver.h"
 
