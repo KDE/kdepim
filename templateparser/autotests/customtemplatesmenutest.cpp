@@ -16,7 +16,7 @@
 */
 
 #include "customtemplatesmenutest.h"
-#include "../customtemplatesmenu.h"
+#include "customtemplatesmenu.h"
 #include <kactioncollection.h>
 #include <qtest.h>
 

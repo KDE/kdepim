@@ -1,81 +1,76 @@
-/*
-  Copyright (c) 2012-2015 Montel Laurent <montel@kde.org>
+/***************************************************************************
+           filter_kmail_maildir.cxx  -  Kmail maildir mail import
+                            -------------------
+   begin                : April 06 2005
+   copyright            : (C) 2005 by Danny Kukawka
+   email                : danny.kukawka@web.de
+***************************************************************************/
 
-  This program is free software; you can redistribute it and/or modify it
-  under the terms of the GNU General Public License, version 2, as
-  published by the Free Software Foundation.
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+/* Copyright (c) 2012-2015 Montel Laurent <montel@kde.org>                      */
 
-  This program is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  General Public License for more details.
-
-  You should have received a copy of the GNU General Public License along
-  with this program; if not, write to the Free Software Foundation, Inc.,
-  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
-
-#include "filter_evolution_v3.h"
+#include "filterkmail_maildir.h"
 
 #include <KLocalizedString>
-#include <QFileDialog>
+#include <qfiledialog.h>
 #include <QPointer>
 
 using namespace MailImporter;
 
-class MailImporter::FilterEvolution_v3Private
+class MailImporter::FilterKMail_maildirPrivate
 {
 public:
-    FilterEvolution_v3Private()
-        : mImportDirDone(-1),
-          mTotalDir(-1)
+    FilterKMail_maildirPrivate()
+        : mImportDirDone(0),
+          mTotalDir(0)
     {
 
     }
-
     int mImportDirDone;
     int mTotalDir;
 };
+
 /** Default constructor. */
-FilterEvolution_v3::FilterEvolution_v3()
-    : Filter(i18n("Import Evolution 3.x Local Mails and Folder Structure"),
-             "Laurent Montel",
-             i18n("<p><b>Evolution 3.x import filter</b></p>"
-                  "<p>Select the base directory of your local Evolution mailfolder (usually ~/.local/share/evolution/mail/local/).</p>"
-                  "<p>Since it is possible to recreate the folder structure, the folders "
-                  "will be stored under: \"Evolution-Import\".</p>")),
-    d(new MailImporter::FilterEvolution_v3Private)
+FilterKMail_maildir::FilterKMail_maildir() :
+    Filter(i18n("Import KMail Maildirs and Folder Structure"),
+           "Danny Kukawka",
+           i18n("<p><b>KMail import filter</b></p>"
+                "<p>Select the base directory of the KMail mailfolder you want to import.</p>"
+                "<p><b>Note:</b> Never select your current local KMail maildir (usually "
+                "~/Mail or ~/.kde/share/apps/kmail/mail ): in this case, ImportWizard may become stuck "
+                "in a continuous loop. </p>"
+                "<p>This filter does not import KMail mailfolders with mbox files.</p>"
+                "<p>Since it is possible to recreate the folder structure, the folders "
+                "will be stored under: \"KMail-Import\" in your local folder.</p>")),
+    d(new MailImporter::FilterKMail_maildirPrivate)
 {
 }
 
 /** Destructor. */
-FilterEvolution_v3::~FilterEvolution_v3()
+FilterKMail_maildir::~FilterKMail_maildir()
 {
     delete d;
 }
 
-QString FilterEvolution_v3::defaultSettingsPath()
-{
-    return QDir::homePath() + QLatin1String("/.local/share/evolution/mail/local/");
-}
-
 /** Recursive import of KMail maildir. */
-void FilterEvolution_v3::import()
+void FilterKMail_maildir::import()
 {
     setCountDuplicates(0);
-    QString evolDir = defaultSettingsPath();
-    QDir d(evolDir);
-    if (!d.exists()) {
-        evolDir = QDir::homePath();
-    }
-
-    const QString dir = QFileDialog::getExistingDirectory(0, QString(), evolDir);
-    if (!dir.isEmpty()) {
-        importMails(dir);
+    const QString homeDir = QDir::homePath();
+    const QString maildir = QFileDialog::getExistingDirectory(0, QString(), homeDir);
+    if (!maildir.isEmpty()) {
+        importMails(maildir);
     }
 }
 
-void FilterEvolution_v3::processDirectory(const QString &path)
+void FilterKMail_maildir::processDirectory(const QString &path)
 {
     QDir dir(path);
     const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
@@ -89,12 +84,12 @@ void FilterEvolution_v3::processDirectory(const QString &path)
             importDirContents(dir.filePath(*filename));
             filterInfo()->setOverall((d->mTotalDir > 0) ? (int)((float) d->mImportDirDone / d->mTotalDir * 100) : 0);
             filterInfo()->setCurrent(100);
+            ++d->mImportDirDone;
         }
     }
-
 }
 
-void FilterEvolution_v3::importMails(const QString &maildir)
+void FilterKMail_maildir::importMails(const QString &maildir)
 {
     setMailDir(maildir);
     if (mailDir().isEmpty()) {
@@ -114,18 +109,15 @@ void FilterEvolution_v3::importMails(const QString &maildir)
         /** Recursive import of the MailArchives */
         QDir dir(mailDir());
         d->mTotalDir = Filter::countDirectory(dir, true /*search hidden directory*/);
-
         processDirectory(mailDir());
 
         filterInfo()->addInfoLogEntry(i18n("Finished importing emails from %1", mailDir()));
-
         if (countDuplicates() > 0) {
             filterInfo()->addInfoLogEntry(i18np("1 duplicate message not imported", "%1 duplicate messages not imported", countDuplicates()));
         }
-
-        if (filterInfo()->shouldTerminate()) {
-            filterInfo()->addInfoLogEntry(i18n("Finished import, canceled by user."));
-        }
+    }
+    if (filterInfo()->shouldTerminate()) {
+        filterInfo()->addInfoLogEntry(i18n("Finished import, canceled by user."));
     }
     filterInfo()->setCurrent(100);
     filterInfo()->setOverall(100);
@@ -136,13 +128,14 @@ void FilterEvolution_v3::importMails(const QString &maildir)
  * @param info Information storage for the operation.
  * @param dirName The name of the directory to import.
  */
-void FilterEvolution_v3::importDirContents(const QString &dirName)
+void FilterKMail_maildir::importDirContents(const QString &dirName)
 {
 
     /** Here Import all archives in the current dir */
     importFiles(dirName);
 
     /** If there are subfolders, we import them one by one */
+
     processDirectory(dirName);
 }
 
@@ -151,7 +144,7 @@ void FilterEvolution_v3::importDirContents(const QString &dirName)
  * @param info Information storage for the operation.
  * @param dirName The name of the directory to import.
  */
-void FilterEvolution_v3::importFiles(const QString &dirName)
+void FilterKMail_maildir::importFiles(const QString &dirName)
 {
 
     QDir dir(dirName);
@@ -167,78 +160,50 @@ void FilterEvolution_v3::importFiles(const QString &dirName)
         if (filterInfo()->shouldTerminate()) {
             return;
         }
+
         QString temp_mailfile = *mailFile;
-        if (!(temp_mailfile.endsWith(QLatin1String(".db"))
-                || temp_mailfile.endsWith(QLatin1String(".cmeta"))
-                || temp_mailfile.endsWith(QLatin1String(".ev-summary"))
-                || temp_mailfile.endsWith(QLatin1String(".ibex.index"))
-                || temp_mailfile.endsWith(QLatin1String(".ibex.index.data")))) {
+        if (!(temp_mailfile.endsWith(QLatin1String(".index")) || temp_mailfile.endsWith(QLatin1String(".index.ids")) ||
+                temp_mailfile.endsWith(QLatin1String(".index.sorted")) || temp_mailfile.endsWith(QLatin1String(".uidcache")))) {
             if (!generatedPath) {
-                _path = i18nc("define folder name where we import evolution mails", "Evolution-Import");
+                _path = "KMail-Import";
                 QString _tmp = dir.filePath(*mailFile);
                 _tmp = _tmp.remove(mailDir(), Qt::CaseSensitive);
-                QStringList subFList = _tmp.split(QLatin1Char('/'), QString::SkipEmptyParts);
+                const QStringList subFList = _tmp.split(QLatin1Char('/'), QString::SkipEmptyParts);
                 QStringList::ConstIterator end(subFList.end());
                 for (QStringList::ConstIterator it = subFList.constBegin(); it != end; ++it) {
                     QString _cat = *it;
                     if (!(_cat == *mailFile)) {
-                        if (_cat.startsWith(QLatin1Char('.'))) {
+                        if (_cat.startsWith('.') && _cat.endsWith(".directory")) {
+                            _cat.remove(0, 1);
+                            _cat.remove((_cat.length() - 10), 10);
+                        } else if (_cat.startsWith('.')) {
                             _cat = _cat.remove(0 , 1);
                         }
-                        //Evolution store inbox as "."
-                        if (_cat.startsWith(QLatin1Char('.'))) {
-                            _cat = _cat.replace(0, 1, QStringLiteral("Inbox/"));
-                        }
-
                         _path += QLatin1Char('/') + _cat;
-                        _path.replace(QLatin1Char('.'), QLatin1Char('/'));
                     }
                 }
-                if (_path.endsWith(QLatin1String("cur"))) {
+                if (_path.endsWith("cur")) {
                     _path.remove(_path.length() - 4 , 4);
                 }
                 QString _info = _path;
-                filterInfo()->addInfoLogEntry(i18n("Import folder %1...", _info));
+                filterInfo()->addInfoLogEntry(i18n("Import folder %1...", _info.remove(0, 12)));
                 filterInfo()->setFrom(_info);
                 filterInfo()->setTo(_path);
                 generatedPath = true;
             }
-            Akonadi::MessageStatus status = statusFromFile(*mailFile);
 
             if (filterInfo()->removeDupMessage()) {
-                if (! addMessage(_path, dir.filePath(*mailFile), status)) {
-                    filterInfo()->addErrorLogEntry(i18n("Could not import %1", *mailFile));
+                if (! addMessage(_path, dir.filePath(*mailFile))) {
+                    filterInfo()->addErrorLogEntry(i18n("Could not import %1, duplicated message", *mailFile));
                 }
                 filterInfo()->setCurrent((int)((float) currentFile / numFiles * 100));
             } else {
-                if (! addMessage_fastImport(_path, dir.filePath(*mailFile), status)) {
+                if (! addMessage_fastImport(_path, dir.filePath(*mailFile))) {
                     filterInfo()->addErrorLogEntry(i18n("Could not import %1", *mailFile));
                 }
                 filterInfo()->setCurrent((int)((float) currentFile / numFiles * 100));
             }
         }
     }
-}
-
-Akonadi::MessageStatus FilterEvolution_v3::statusFromFile(const QString &filename)
-{
-    Akonadi::MessageStatus status;
-    const int statusIndex = filename.indexOf(":2,");
-    if (statusIndex != -1) {
-        const QString statusStr = filename.right(filename.length() - statusIndex - 3);
-        if (statusStr.contains(QLatin1Char('S'))) {
-            status.setRead(true);
-        }
-        if (statusStr.contains(QLatin1Char('F'))) {
-
-        }
-        if (statusStr.contains(QLatin1Char('R'))) {
-            status.setReplied(true);
-        }
-        if (statusStr.contains(QLatin1Char('P'))) {
-            status.setForwarded(true);
-        }
-    }
-    return status;
 }
 

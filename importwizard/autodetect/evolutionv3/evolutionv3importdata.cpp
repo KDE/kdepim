@@ -19,7 +19,7 @@
 #include "evolutionsettings.h"
 #include "evolutioncalendar.h"
 #include "evolutionaddressbook.h"
-#include "mailimporter/filter_evolution_v3.h"
+#include "mailimporter/filterevolution_v3.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "mailcommon/filter/filterimporterexporter.h"

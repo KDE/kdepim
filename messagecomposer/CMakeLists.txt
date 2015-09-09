@@ -160,7 +160,7 @@ PUBLIC
 PRIVATE
   KF5::MailTransport
   KF5::PimTextEdit
-  templateparser
+  KF5::TemplateParser
   messageviewer
   KF5::AkonadiWidgets
   kdepim

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,33 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MAILIMPORTER_FILTER_CLAWSMAILS_HXX
-#define MAILIMPORTER_FILTER_CLAWSMAILS_HXX
+#ifndef FILTERICEDOVE_H
+#define FILTERICEDOVE_H
 
-#include <QHash>
-
-#include "filter_sylpheed.h"
-/**
- * Imports Sylpheed mail folder with maildir format recursively, recreating the folder structure.
- * @author Danny Kukawka
- */
+#include "filterthunderbird.h"
 namespace MailImporter
 {
-class MAILIMPORTER_EXPORT FilterClawsMail : public FilterSylpheed
+class MAILIMPORTER_EXPORT FilterIcedove : public FilterThunderbird
 {
-
 public:
-    explicit FilterClawsMail();
-    ~FilterClawsMail();
+    FilterIcedove();
+    ~FilterIcedove();
 
     static QString defaultSettingsPath();
-
-    /* return local mail dir from folderlist.xml*/
-    QString localMailDirPath() Q_DECL_OVERRIDE;
-    bool excludeFile(const QString &file) Q_DECL_OVERRIDE;
+protected:
     QString defaultInstallFolder() const Q_DECL_OVERRIDE;
-    QString markFile() const Q_DECL_OVERRIDE;
+    QString settingsPath() Q_DECL_OVERRIDE;
 };
 }
 
-#endif
+#endif // FILTERICEDOVE_H

@@ -21,7 +21,7 @@
 #include "mailimporter_debug.h"
 #include <QFileInfo>
 
-#include "filter_lnotes.h"
+#include "filterlnotes.h"
 using namespace MailImporter;
 class MailImporter::FilterLNotesPrivate
 {

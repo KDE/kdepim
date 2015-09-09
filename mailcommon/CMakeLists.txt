@@ -209,9 +209,9 @@ PUBLIC
 PRIVATE
   kdepim
   messageviewer
-  mailimporter
+  KF5::MailImporter
   messagecore
-  templateparser
+  KF5::TemplateParser
   KF5::Mime
   KF5::Codecs
   KF5::MailTransport

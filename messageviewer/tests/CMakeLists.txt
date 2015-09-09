@@ -7,6 +7,6 @@ target_link_libraries(viewertest_gui
   Qt5::WebKitWidgets
   KF5::Mime
   messageviewer
-  grantleetheme
+  KF5::GrantleeTheme
 )
 

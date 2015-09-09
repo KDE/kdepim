@@ -22,7 +22,7 @@
 #include "mailimporter_debug.h"
 #include <QFileDialog>
 
-#include "filter_oe.h"
+#include "filteroe.h"
 
 #define OE4_SIG_1 0x36464d4a
 #define OE4_SIG_2 0x00010003

@@ -8,7 +8,7 @@ target_link_libraries(templateeditor_gui
   Qt5::Test
   Qt5::WebKitWidgets
   KF5::KIOCore
-  templateparser
+  KF5::TemplateParser
 )
 
 set(templateconfigurewidget_gui_SRCS templateconfigurewidget_gui.cpp)
@@ -17,6 +17,6 @@ target_link_libraries(templateconfigurewidget_gui
   Qt5::Test
   Qt5::WebKitWidgets
   KF5::KIOCore
-  templateparser
+  KF5::TemplateParser
   KF5::I18n
 )

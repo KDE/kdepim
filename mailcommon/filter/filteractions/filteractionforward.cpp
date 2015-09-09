@@ -29,8 +29,8 @@
 #include <messagecomposer/sender/messagesender.h>
 #include <pimcommon/widgets/emailaddressrequester.h>
 #include <messagecore/utils/stringutil.h>
-#include <templateparser/customtemplates.h>
-#include <templateparser/customtemplates_kfg.h>
+#include <customtemplates.h>
+#include <customtemplates_kfg.h>
 
 #include <KLocalizedString>
 #include <KLineEdit>

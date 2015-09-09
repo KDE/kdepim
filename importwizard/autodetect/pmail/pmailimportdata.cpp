@@ -17,7 +17,7 @@
 
 #include "pmail/pmailimportdata.h"
 #include "pmail/pmailsettings.h"
-#include "mailimporter/filter_pmail.h"
+#include "mailimporter/filterpmail.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 #include "importwizard.h"

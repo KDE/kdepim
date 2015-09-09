@@ -16,7 +16,7 @@
 */
 
 #include "evolutionv2/evolutionv2importdata.h"
-#include "mailimporter/filter_evolution_v2.h"
+#include "mailimporter/filterevolution_v2.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
 

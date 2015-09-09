@@ -21,7 +21,7 @@
 #include "mailimporter_debug.h"
 #include <QPointer>
 
-#include "filter_opera.h"
+#include "filteropera.h"
 
 using namespace MailImporter;
 

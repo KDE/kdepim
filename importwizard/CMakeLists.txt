@@ -98,7 +98,7 @@ target_link_libraries(importwizard
   KF5::MailTransport
   KF5::DBusAddons
   KF5::XmlGui
-  mailimporter
+  KF5::MailImporter
   pimcommon
   mailcommon
   kdepim

@@ -20,7 +20,7 @@
 #include "mboximportkernel.h"
 #include "mboximporterinfogui.h"
 
-#include <mailimporter/filter_mbox.h>
+#include <mailimporter/filtermbox.h>
 #include <mailimporter/importmailswidget.h>
 
 #include <mailcommon/kernel/mailkernel.h>
