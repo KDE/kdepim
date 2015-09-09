@@ -35,7 +35,6 @@ set(libcomposereditor_ng_SRCS
     helper/listhelper.cpp
     widgets/domtreewidget.cpp 
     widgets/findreplacebar.cpp
-    ${wk_HEADERS_MOC}
 )
 
 kconfig_add_kcfg_files(libcomposereditor_ng_SRCS
