@@ -21,7 +21,7 @@
 
 using namespace MailImporter;
 
-class FilterInfo::Private
+class Q_DECL_HIDDEN FilterInfo::Private
 {
 public:
     Private()

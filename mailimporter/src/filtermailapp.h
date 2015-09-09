@@ -31,7 +31,6 @@ public:
     void importMails(const QString &maildir);
 private:
     FilterMailAppPrivate *const d;
-    QStringList mMboxFiles;
     void traverseDirectory(const QString &);
 };
 }

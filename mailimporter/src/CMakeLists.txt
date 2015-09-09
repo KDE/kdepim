@@ -89,6 +89,7 @@ ecm_generate_headers(MailImporter_CamelCase_HEADERS
   FilterIcedove
   OtherMailerUtil
   ImportMailsWidget
+  Filters
   FilterInfo
   REQUIRED_HEADERS MailImporter_HEADERS
   PREFIX MailImporter
