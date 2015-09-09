@@ -51,7 +51,6 @@ MessageViewer::HeaderStyleInterface *BriefHeaderStylePlugin::createView(KActionC
 {
     MessageViewer::BriefHeaderStyleInterface *view = new MessageViewer::BriefHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
     view->createAction(ac);
-    //TODO
     return view;
 }
 

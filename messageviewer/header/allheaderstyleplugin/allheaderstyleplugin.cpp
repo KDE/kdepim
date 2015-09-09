@@ -17,6 +17,7 @@
 
 #include "allheaderstyleplugin.h"
 #include "header/fancyheaderstyle.h"
+#include "allheaderstyleinterface.h"
 //Temporary
 #include "header/headerstrategy_p.h"
 #include <kpluginfactory.h>
@@ -48,8 +49,9 @@ HeaderStrategy *AllHeaderStylePlugin::headerStrategy() const
 
 HeaderStyleInterface *AllHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
 {
-    //TODO
-    return Q_NULLPTR;
+    MessageViewer::AllHeaderStyleInterface *view = new MessageViewer::AllHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
+    view->createAction(ac);
+    return view;
 }
 
 #include "allheaderstyleplugin.moc"
