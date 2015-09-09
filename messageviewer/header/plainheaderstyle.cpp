@@ -133,4 +133,10 @@ QString PlainHeaderStyle::formatAllMessageHeaders(KMime::Message *message) const
 
     return result;
 }
+
+const char *MessageViewer::PlainHeaderStyle::name() const
+{
+    return "plain";
+}
+
 }

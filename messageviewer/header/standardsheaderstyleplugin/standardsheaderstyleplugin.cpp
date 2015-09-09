@@ -54,4 +54,9 @@ HeaderStyleInterface *StandardsHeaderStylePlugin::createView(KActionCollection *
     return view;
 }
 
+QString StandardsHeaderStylePlugin::name() const
+{
+    return QStringLiteral("standards-header");
+}
+
 #include "standardsheaderstyleplugin.moc"

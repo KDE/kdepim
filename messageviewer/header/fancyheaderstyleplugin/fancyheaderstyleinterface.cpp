@@ -36,7 +36,7 @@ void FancyHeaderStyleInterface::createAction(KActionCollection *ac)
 {
     KToggleAction *act  = new KToggleAction(i18nc("View->headers->", "&Fancy Headers"), this);
     ac->addAction(QStringLiteral("view_headers_fancy"), act);
-    ///connect(raction, &QAction::triggered, this, &ViewerPrivate::slotFancyHeaders);
+    connect(act, &KToggleAction::triggered, this, &FancyHeaderStyleInterface::slotStyleChanged);
     addHelpTextAction(act, i18n("Show the list of headers in a fancy format"));
     mAction.append(act);
 }

@@ -31,6 +31,7 @@ GrantleeHeaderStyleInterface::~GrantleeHeaderStyleInterface()
 
 void GrantleeHeaderStyleInterface::createAction(KActionCollection *ac)
 {
+    //connect(act, &KToggleAction::triggered, this, &BriefHeaderStyleInterface::slotStyleChanged);
 
 }
 

@@ -35,8 +35,7 @@ void EnterpriseHeaderStyleInterface::createAction(KActionCollection *ac)
 {
     KToggleAction *act= new KToggleAction(i18nc("View->headers->", "&Enterprise Headers"), this);
     ac->addAction(QStringLiteral("view_headers_enterprise"), act);
-    //TODO
-    //connect(raction, &QAction::triggered, this, &ViewerPrivate::slotEnterpriseHeaders);
+    connect(act, &KToggleAction::triggered, this, &EnterpriseHeaderStyleInterface::slotStyleChanged);
     addHelpTextAction(act, i18n("Show the list of headers in Enterprise style"));
     mAction.append(act);
 }

@@ -35,6 +35,7 @@ public:
     HeaderStyle *headerStyle() const Q_DECL_OVERRIDE;
     HeaderStrategy *headerStrategy() const Q_DECL_OVERRIDE;
     HeaderStyleInterface *createView(KActionCollection *ac, QObject *parent = Q_NULLPTR) Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE;
 private:
     HeaderStyle *mHeaderStyle;
     HeaderStrategy *mHeaderStrategy;

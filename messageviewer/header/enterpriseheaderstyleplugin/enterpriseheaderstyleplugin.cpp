@@ -54,4 +54,9 @@ HeaderStyleInterface *EnterpriseHeaderStylePlugin::createView(KActionCollection 
     return view;
 }
 
+QString EnterpriseHeaderStylePlugin::name() const
+{
+    return QStringLiteral("enterprise");
+}
+
 #include "enterpriseheaderstyleplugin.moc"

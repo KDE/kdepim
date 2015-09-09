@@ -35,7 +35,7 @@ void AllHeaderStyleInterface::createAction(KActionCollection *ac)
 {
     KToggleAction *act = new KToggleAction(i18nc("View->headers->", "&All Headers"), this);
     ac->addAction(QStringLiteral("view_headers_all"), act);
-    //connect(raction, &QAction::triggered, this, &ViewerPrivate::slotAllHeaders);
+    connect(act, &KToggleAction::triggered, this, &AllHeaderStyleInterface::slotStyleChanged);
     addHelpTextAction(act, i18n("Show all message headers"));
     mAction.append(act);
 }

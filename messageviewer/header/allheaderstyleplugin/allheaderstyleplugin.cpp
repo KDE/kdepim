@@ -54,4 +54,10 @@ HeaderStyleInterface *AllHeaderStylePlugin::createView(KActionCollection *ac, QO
     return view;
 }
 
+QString MessageViewer::AllHeaderStylePlugin::name() const
+{
+    return QStringLiteral("all-headers");
+}
+
 #include "allheaderstyleplugin.moc"
+

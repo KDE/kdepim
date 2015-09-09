@@ -54,4 +54,9 @@ MessageViewer::HeaderStyleInterface *BriefHeaderStylePlugin::createView(KActionC
     return view;
 }
 
+QString BriefHeaderStylePlugin::name() const
+{
+    return QStringLiteral("brief");
+}
+
 #include "briefheaderstyleplugin.moc"

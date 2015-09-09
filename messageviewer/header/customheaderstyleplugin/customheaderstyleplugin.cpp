@@ -54,4 +54,9 @@ HeaderStyleInterface *CustomHeaderStylePlugin::createView(KActionCollection *ac,
     return view;
 }
 
+QString CustomHeaderStylePlugin::name() const
+{
+    return QStringLiteral("custom");
+}
+
 #include "customheaderstyleplugin.moc"

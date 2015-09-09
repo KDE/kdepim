@@ -46,3 +46,8 @@ void HeaderStyleInterface::addHelpTextAction(QAction *act, const QString &text)
     }
 }
 
+
+void MessageViewer::HeaderStyleInterface::slotStyleChanged()
+{
+    Q_EMIT styleChanged(mHeaderStyle, mHeaderStrategy);
+}

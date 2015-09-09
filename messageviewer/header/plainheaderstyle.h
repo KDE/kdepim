@@ -31,10 +31,7 @@ protected:
     ~PlainHeaderStyle() {}
 
 public:
-    const char *name() const Q_DECL_OVERRIDE
-    {
-        return "plain";
-    }
+    const char *name() const Q_DECL_OVERRIDE;
 
     QString format(KMime::Message *message) const Q_DECL_OVERRIDE;
 

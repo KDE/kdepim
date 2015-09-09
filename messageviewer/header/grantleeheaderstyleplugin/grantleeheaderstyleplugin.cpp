@@ -54,4 +54,9 @@ HeaderStyleInterface *GrantleeHeaderStylePlugin::createView(KActionCollection *a
     return view;
 }
 
+QString GrantleeHeaderStylePlugin::name() const
+{
+    return QStringLiteral("grantlee");
+}
+
 #include "grantleeheaderstyleplugin.moc"

@@ -36,7 +36,7 @@ void CustomHeaderStyleInterface::createAction(KActionCollection *ac)
 {
     KToggleAction *act = new KToggleAction(i18nc("View->headers->", "&Custom Headers"), this);
     ac->addAction(QStringLiteral("view_custom_headers"), act);
-    //connect(raction, &QAction::triggered, this, &ViewerPrivate::slotCustomHeaders);
+    connect(act, &KToggleAction::triggered, this, &CustomHeaderStyleInterface::slotStyleChanged);
     addHelpTextAction(act, i18n("Show custom headers"));
     mAction.append(act);
 }

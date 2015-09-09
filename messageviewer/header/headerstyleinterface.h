@@ -39,6 +39,8 @@ public:
 Q_SIGNALS:
     void styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy);
 
+protected Q_SLOTS:
+    void slotStyleChanged();
 protected:
     void addHelpTextAction(QAction *act, const QString &text);
     HeaderStyle *mHeaderStyle;

@@ -54,4 +54,9 @@ HeaderStyleInterface *FancyHeaderStylePlugin::createView(KActionCollection *ac, 
     return view;
 }
 
+QString FancyHeaderStylePlugin::name() const
+{
+    return QStringLiteral("fancy");
+}
+
 #include "fancyheaderstyleplugin.moc"

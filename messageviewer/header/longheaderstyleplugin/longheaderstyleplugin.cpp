@@ -54,4 +54,9 @@ HeaderStyleInterface *LongHeaderStylePlugin::createView(KActionCollection *ac, Q
     return view;
 }
 
+QString LongHeaderStylePlugin::name() const
+{
+    return QStringLiteral("long-header");
+}
+
 #include "longheaderstyleplugin.moc"
