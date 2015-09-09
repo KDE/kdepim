@@ -52,15 +52,16 @@ QString CellItem::label() const
     return xi18n("<placeholder>undefined</placeholder>");
 }
 
-QList<CellItem *> CellItem::placeItem(QList<CellItem *> cells, CellItem *placeItem)
+QList<CellItem *> CellItem::placeItem(const QList<CellItem *> &cells, CellItem *placeItem)
 {
     QList<CellItem *> conflictItems;
     int maxSubCells = 0;
     QMultiHash<int, CellItem *> subCellDict;
 
     // Find all items which are in same cell
-    QList<CellItem *>::iterator it;
-    for (it = cells.begin(); it != cells.end(); ++it) {
+    QList<CellItem *>::ConstIterator it;
+    QList<CellItem *>::ConstIterator end(cells.constEnd());
+    for (it = cells.constBegin(); it != cells.end(); ++it) {
         CellItem *item = *it;
         if (item == placeItem) {
             continue;
