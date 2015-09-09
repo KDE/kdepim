@@ -24,7 +24,7 @@ PRIVATE
                        KF5::AkonadiContact
                        pimcommon
                        grantleethemeeditor
-                       kaddressbookgrantlee
+                       KF5::KaddressbookGrantlee
 )
 
 install(TARGETS contactthemeeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
