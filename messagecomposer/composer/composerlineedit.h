@@ -29,14 +29,14 @@
 class KConfig;
 namespace MessageComposer
 {
-
+class ComposerLineEditPrivate;
 class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
 {
     Q_OBJECT
 
 public:
     explicit ComposerLineEdit(bool useCompletion, QWidget *parent = Q_NULLPTR);
-
+    ~ComposerLineEdit();
     void setRecentAddressConfig(KConfig *config);
 
     void setExpandIntern(bool);
@@ -75,11 +75,7 @@ private:
     void insertEmails(const QStringList &emails);
 
 private:
-    KConfig *m_recentAddressConfig;
-    QList<KJob *> mMightBeGroupJobs;
-    KContacts::ContactGroup::List mGroups;
-    bool mAutoGroupExpand;
-    bool mExpandIntern;
+    ComposerLineEditPrivate *const d;
 };
 
 }

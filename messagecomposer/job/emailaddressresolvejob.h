@@ -38,6 +38,7 @@ class Composer;
 /**
  * @short A job to resolve nicknames, distribution lists and email addresses for queued emails.
  */
+class EmailAddressResolveJobPrivate;
 class MESSAGECOMPOSER_EXPORT EmailAddressResolveJob : public KJob
 {
     Q_OBJECT
@@ -105,11 +106,7 @@ private Q_SLOTS:
     void slotAliasExpansionDone(KJob *);
 
 private:
-    int mJobCount;
-    QVariantMap mResultMap;
-    QString mFrom;
-    QStringList mTo, mCc, mBcc;
-    QString mDefaultDomainName;
+    EmailAddressResolveJobPrivate *const d;
 };
 
 }
