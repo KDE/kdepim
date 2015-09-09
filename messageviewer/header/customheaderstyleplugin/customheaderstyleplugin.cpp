@@ -16,6 +16,7 @@
 */
 
 #include "customheaderstyleplugin.h"
+#include "customheaderstyleinterface.h"
 #include "header/customheaderstyle.h"
 //Temporary
 #include "header/headerstrategy_p.h"
@@ -48,8 +49,9 @@ HeaderStrategy *CustomHeaderStylePlugin::headerStrategy() const
 
 HeaderStyleInterface *CustomHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
 {
-    //TODO
-    return Q_NULLPTR;
+    MessageViewer::HeaderStyleInterface *view = new MessageViewer::CustomHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
+    view->createAction(ac);
+    return view;
 }
 
 #include "customheaderstyleplugin.moc"

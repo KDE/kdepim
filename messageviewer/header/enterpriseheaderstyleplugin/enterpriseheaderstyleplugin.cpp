@@ -17,6 +17,7 @@
 
 #include "enterpriseheaderstyleplugin.h"
 #include "header/enterpriseheaderstyle.h"
+#include "enterpriseheaderstyleinterface.h"
 //Temporary
 #include "header/headerstrategy_p.h"
 #include <kpluginfactory.h>
@@ -48,8 +49,9 @@ HeaderStrategy *EnterpriseHeaderStylePlugin::headerStrategy() const
 
 HeaderStyleInterface *EnterpriseHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
 {
-    //TODO
-    return Q_NULLPTR;
+    MessageViewer::HeaderStyleInterface *view = new MessageViewer::EnterpriseHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
+    view->createAction(ac);
+    return view;
 }
 
 #include "enterpriseheaderstyleplugin.moc"

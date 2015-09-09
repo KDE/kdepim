@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "fancyheaderstyleinterface.h"
 #include "fancyheaderstyleplugin.h"
 #include "header/fancyheaderstyle.h"
 //Temporary
@@ -48,8 +49,9 @@ HeaderStrategy *FancyHeaderStylePlugin::headerStrategy() const
 
 HeaderStyleInterface *FancyHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
 {
-    //TODO
-    return Q_NULLPTR;
+    MessageViewer::HeaderStyleInterface *view = new MessageViewer::FancyHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
+    view->createAction(ac);
+    return view;
 }
 
 #include "fancyheaderstyleplugin.moc"

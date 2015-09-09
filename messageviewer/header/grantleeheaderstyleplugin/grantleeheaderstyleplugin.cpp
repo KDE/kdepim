@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "grantleeheaderstyleinterface.h"
 #include "grantleeheaderstyleplugin.h"
 #include "header/grantleeheaderstyle.h"
 //Temporary
@@ -48,8 +49,9 @@ HeaderStrategy *GrantleeHeaderStylePlugin::headerStrategy() const
 
 HeaderStyleInterface *GrantleeHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
 {
-    //TODO
-    return Q_NULLPTR;
+    MessageViewer::HeaderStyleInterface *view = new MessageViewer::GrantleeHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
+    view->createAction(ac);
+    return view;
 }
 
 #include "grantleeheaderstyleplugin.moc"

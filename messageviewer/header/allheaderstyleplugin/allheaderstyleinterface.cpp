@@ -37,5 +37,6 @@ void AllHeaderStyleInterface::createAction(KActionCollection *ac)
     ac->addAction(QStringLiteral("view_headers_all"), act);
     //connect(raction, &QAction::triggered, this, &ViewerPrivate::slotAllHeaders);
     addHelpTextAction(act, i18n("Show all message headers"));
+    mAction.append(act);
 }
 

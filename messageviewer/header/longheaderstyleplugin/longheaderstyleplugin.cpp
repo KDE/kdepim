@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "longheaderstyleinterface.h"
 #include "longheaderstyleplugin.h"
 #include "header/fancyheaderstyle.h"
 //Temporary
@@ -48,8 +49,9 @@ HeaderStrategy *LongHeaderStylePlugin::headerStrategy() const
 
 HeaderStyleInterface *LongHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
 {
-    //TODO
-    return Q_NULLPTR;
+    MessageViewer::HeaderStyleInterface *view = new MessageViewer::LongHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
+    view->createAction(ac);
+    return view;
 }
 
 #include "longheaderstyleplugin.moc"

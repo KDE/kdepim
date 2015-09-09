@@ -16,6 +16,7 @@
 */
 
 #include "standardsheaderstyleplugin.h"
+#include "standardsheaderstyleinterface.h"
 #include "header/fancyheaderstyle.h"
 //Temporary
 #include "header/headerstrategy_p.h"
@@ -48,8 +49,9 @@ HeaderStrategy *StandardsHeaderStylePlugin::headerStrategy() const
 
 HeaderStyleInterface *StandardsHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
 {
-    //TODO
-    return Q_NULLPTR;
+    MessageViewer::HeaderStyleInterface *view = new MessageViewer::StandardsHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
+    view->createAction(ac);
+    return view;
 }
 
 #include "standardsheaderstyleplugin.moc"
