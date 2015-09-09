@@ -27,6 +27,7 @@ class QStackedWidget;
 namespace KSieveUi
 {
 class VacationCreateScriptJob;
+class MultiImapVacationDialogPrivate;
 class KSIEVEUI_EXPORT MultiImapVacationDialog : public QDialog
 {
     Q_OBJECT
@@ -52,9 +53,7 @@ private:
     void init();
     void readConfig();
     void writeConfig();
-    QList<VacationCreateScriptJob *> mListCreateJob;
-    QTabWidget *mTabWidget;
-    QStackedWidget *mStackedWidget;
+    MultiImapVacationDialogPrivate *const d;
 };
 }
 

@@ -38,8 +38,25 @@
 #include <QPushButton>
 
 using namespace KSieveUi;
+
+class KSieveUi::MultiImapVacationDialogPrivate
+{
+public:
+    MultiImapVacationDialogPrivate()
+        : mTabWidget(Q_NULLPTR),
+          mStackedWidget(Q_NULLPTR)
+    {
+
+    }
+
+    QList<VacationCreateScriptJob *> mListCreateJob;
+    QTabWidget *mTabWidget;
+    QStackedWidget *mStackedWidget;
+};
+
 MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new KSieveUi::MultiImapVacationDialogPrivate)
 {
     setWindowTitle(i18n("Configure \"Out of Office\" Replies"));
 
@@ -52,13 +69,14 @@ MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
 MultiImapVacationDialog::~MultiImapVacationDialog()
 {
     writeConfig();
+    delete d;
 }
 
 void MultiImapVacationDialog::switchToServerNamePage(const QString &serverName)
 {
-    for (int i = 0; i < mTabWidget->count(); ++i) {
-        if (mTabWidget->tabText(i) == serverName) {
-            mTabWidget->setCurrentIndex(i);
+    for (int i = 0; i < d->mTabWidget->count(); ++i) {
+        if (d->mTabWidget->tabText(i) == serverName) {
+            d->mTabWidget->setCurrentIndex(i);
             break;
         }
     }
@@ -66,17 +84,17 @@ void MultiImapVacationDialog::switchToServerNamePage(const QString &serverName)
 
 QList<VacationCreateScriptJob *> MultiImapVacationDialog::listCreateJob() const
 {
-    return mListCreateJob;
+    return d->mListCreateJob;
 }
 
 void MultiImapVacationDialog::init()
 {
-    mStackedWidget = new QStackedWidget;
+    d->mStackedWidget = new QStackedWidget;
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    mainLayout->addWidget(mStackedWidget);
-    mTabWidget = new QTabWidget;
-    mStackedWidget->addWidget(mTabWidget);
+    mainLayout->addWidget(d->mStackedWidget);
+    d->mTabWidget = new QTabWidget;
+    d->mStackedWidget->addWidget(d->mTabWidget);
 
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -89,8 +107,8 @@ void MultiImapVacationDialog::init()
     vbox->addWidget(lab);
     vbox->addStretch();
     lab->setWordWrap(true);
-    mStackedWidget->addWidget(w);
-    mStackedWidget->setCurrentIndex(0);
+    d->mStackedWidget->addWidget(w);
+    d->mStackedWidget->setCurrentIndex(0);
     bool foundOneImap = false;
     const Akonadi::AgentInstance::List instances = KSieveUi::Util::imapAgentInstances();
     foreach (const Akonadi::AgentInstance &instance, instances) {
@@ -116,14 +134,14 @@ void MultiImapVacationDialog::init()
         connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this, &MultiImapVacationDialog::slotDefaultClicked);
         okButton->setDefault(true);
     } else {
-        mStackedWidget->setCurrentIndex(1);
+        d->mStackedWidget->setCurrentIndex(1);
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
         connect(buttonBox, &QDialogButtonBox::accepted, this, &MultiImapVacationDialog::slotOkClicked);
         connect(buttonBox, &QDialogButtonBox::rejected, this, &MultiImapVacationDialog::slotCanceled);
     }
     mainLayout->addWidget(buttonBox);
-    if (mTabWidget->count() <= 1) {
-        mTabWidget->tabBar()->hide();
+    if (d->mTabWidget->count() <= 1) {
+        d->mTabWidget->tabBar()->hide();
     }
 }
 
@@ -137,7 +155,7 @@ void MultiImapVacationDialog::createPage(const QString &serverName, const QUrl &
     VacationPageWidget *page = new VacationPageWidget;
     page->setServerUrl(url);
     page->setServerName(serverName);
-    mTabWidget->addTab(page, serverName + QStringLiteral(" (%1)").arg(url.userName()));
+    d->mTabWidget->addTab(page, serverName + QStringLiteral(" (%1)").arg(url.userName()));
 }
 
 void MultiImapVacationDialog::readConfig()
@@ -159,12 +177,12 @@ void MultiImapVacationDialog::writeConfig()
 
 void MultiImapVacationDialog::slotOkClicked()
 {
-    for (int i = 0; i < mTabWidget->count(); ++i) {
-        VacationPageWidget *vacationPage = qobject_cast<VacationPageWidget *>(mTabWidget->widget(i));
+    for (int i = 0; i < d->mTabWidget->count(); ++i) {
+        VacationPageWidget *vacationPage = qobject_cast<VacationPageWidget *>(d->mTabWidget->widget(i));
         if (vacationPage) {
             VacationCreateScriptJob *job = vacationPage->writeScript();
             if (job) {
-                mListCreateJob.append(job);
+                d->mListCreateJob.append(job);
             }
         }
     }
@@ -173,8 +191,8 @@ void MultiImapVacationDialog::slotOkClicked()
 
 void MultiImapVacationDialog::slotDefaultClicked()
 {
-    for (int i = 0; i < mTabWidget->count(); ++i) {
-        VacationPageWidget *vacationPage = qobject_cast<VacationPageWidget *>(mTabWidget->widget(i));
+    for (int i = 0; i < d->mTabWidget->count(); ++i) {
+        VacationPageWidget *vacationPage = qobject_cast<VacationPageWidget *>(d->mTabWidget->widget(i));
         if (vacationPage) {
             vacationPage->setDefault();
         }
