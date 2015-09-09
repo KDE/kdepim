@@ -269,7 +269,7 @@ QString KleopatraApplication::newInstance(const QCommandLineParser& parser,
     if (parser.isSet(QStringLiteral("cms"))) {
         qCDebug(KLEOPATRA_LOG) << "found CMS";
         if (protocol == GpgME::OpenPGP) {
-           return i18n("Ambigious protocol: --openpgp and --cms");
+           return i18n("Ambiguous protocol: --openpgp and --cms");
         }
         protocol = GpgME::CMS;
     }
@@ -336,7 +336,7 @@ QString KleopatraApplication::newInstance(const QCommandLineParser& parser,
 
     if (!found.isEmpty()) {
         if (files.empty()) {
-            return i18n("No files specificed for \"%1\" command", found);
+            return i18n("No files specified for \"%1\" command", found);
         }
         qCDebug(KLEOPATRA_LOG) << "found" << found;
         (this->*funcMap.value(found))(files, protocol);

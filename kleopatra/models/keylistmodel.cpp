@@ -205,7 +205,7 @@ QList<QModelIndex> AbstractKeyListModel::indexes(const std::vector<Key> &keys) c
     QList<QModelIndex> result;
     std::transform(keys.begin(), keys.end(),
                    std::back_inserter(result),
-                   // if some compilers are complaining about ambigious overloads, use this line instead:
+                   // if some compilers are complaining about ambiguous overloads, use this line instead:
                    //bind( static_cast<QModelIndex(AbstractKeyListModel::*)(const Key&,int)const>( &AbstractKeyListModel::index ), this, _1, 0 ) );
                    boost::bind(&AbstractKeyListModel::index, this, _1, 0));
     return result;

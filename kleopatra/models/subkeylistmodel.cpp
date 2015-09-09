@@ -136,7 +136,7 @@ QList<QModelIndex> SubkeyListModel::indexes(const std::vector<Subkey> &subkeys) 
     // O(N*M), but who cares...?
     std::transform(subkeys.begin(), subkeys.end(),
                    std::back_inserter(result),
-                   // if some compilers are complaining about ambigious overloads, use this line instead:
+                   // if some compilers are complaining about ambiguous overloads, use this line instead:
                    //bind( static_cast<QModelIndex(SubKeyListModel::*)(const Subkey&,int)const>( &SubkeyListModel::index ), this, _1, 0 ) );
                    boost::bind(&SubkeyListModel::index, this, _1, 0));
     return result;
