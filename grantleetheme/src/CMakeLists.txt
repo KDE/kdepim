@@ -40,7 +40,6 @@ ecm_generate_headers(GrantleeTheme_CamelCase_HEADERS
   HEADER_NAMES
   GrantleeThemeManager
   GrantleeTheme
-  #Theme
   REQUIRED_HEADERS GrantleeTheme_HEADERS
   PREFIX GrantleeTheme
 )
