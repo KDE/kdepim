@@ -18,7 +18,9 @@
 
 #include "briefheaderstyleplugintest.h"
 #include "header/briefheaderstyleplugin/briefheaderstyleplugin.h"
+#include "header/briefheaderstyleplugin/briefheaderstyleinterface.h"
 #include <QTest>
+#include <KActionCollection>
 BriefHeaderStylePluginTest::BriefHeaderStylePluginTest(QObject *parent)
     : QObject(parent)
 {
@@ -35,6 +37,14 @@ void BriefHeaderStylePluginTest::shouldHaveDefaultValue()
     MessageViewer::BriefHeaderStylePlugin plugin;
     QVERIFY(plugin.headerStyle());
     QVERIFY(plugin.headerStrategy());
+}
+
+void BriefHeaderStylePluginTest::shouldCreateInterface()
+{
+    MessageViewer::BriefHeaderStylePlugin plugin;
+    MessageViewer::HeaderStyleInterface *interface = plugin.createView(new KActionCollection(this));
+    QVERIFY(interface);
+    QVERIFY(!interface->action().isEmpty());
 }
 
 QTEST_MAIN(BriefHeaderStylePluginTest)
