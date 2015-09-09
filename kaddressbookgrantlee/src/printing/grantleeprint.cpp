@@ -18,7 +18,7 @@
 #include "grantleeprint.h"
 #include "contactgrantleeprintobject.h"
 
-#include "kaddressbookgrantlee/formatter/grantleecontactutils.h"
+#include "formatter/grantleecontactutils.h"
 
 #include <grantlee/context.h>
 #include <grantlee/engine.h>

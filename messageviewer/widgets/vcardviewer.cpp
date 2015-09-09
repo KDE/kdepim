@@ -20,7 +20,7 @@
 
 #include "vcardviewer.h"
 #include "settings/globalsettings.h"
-#include "kaddressbookgrantlee/widget/grantleecontactviewer.h"
+#include "widget/grantleecontactviewer.h"
 
 #include <kcontacts/vcardconverter.h>
 using KContacts::VCardConverter;

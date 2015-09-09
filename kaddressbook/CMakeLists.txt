@@ -132,7 +132,7 @@ generate_export_header(kaddressbookprivate BASE_NAME kaddressbook)
 target_link_libraries(kaddressbookprivate
   kdepim
   pimcommon
-  kaddressbookgrantlee
+  KF5::KaddressbookGrantlee
   KF5::AkonadiCore
   KF5::Contacts
   KF5::AkonadiContact

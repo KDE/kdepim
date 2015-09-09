@@ -239,7 +239,7 @@ PRIVATE
   kdepim
   kleo
   KF5::GrantleeTheme
-  kaddressbookgrantlee
+  KF5::KaddressbookGrantlee
   incidenceeditorsng
   Grantlee5::TextDocument
   Grantlee5::Templates

@@ -19,7 +19,7 @@
 #include "../searchduplicate/searchduplicateresultwidget.h"
 #include "../searchduplicate/resultduplicatetreewidget.h"
 #include "../widgets/mergecontactloseinformationwarning.h"
-#include <kaddressbookgrantlee/widget/grantleecontactviewer.h>
+#include <widget/grantleecontactviewer.h>
 #include <QSplitter>
 #include <QTreeWidget>
 #include <QLabel>
