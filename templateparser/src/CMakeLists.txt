@@ -74,10 +74,13 @@ install(FILES
 
 ecm_generate_headers(TemplateParser_CamelCase_HEADERS
   HEADER_NAMES
-  TemplatesTextEdit
+  CustomTemplates
   CustomTemplatesMenu
-  TemplatesConfiguration
+  DefaultTemplates
   TemplateParser
+  TemplatesConfiguration
+  TemplatesTextEdit
+  TemplatesUtil
   REQUIRED_HEADERS TemplateParser_HEADERS
   PREFIX TemplateParser
 )
