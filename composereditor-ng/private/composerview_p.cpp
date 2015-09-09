@@ -28,7 +28,7 @@
 #include "image/composerimageresizewidget.h"
 #include "pagecolor/pagecolorbackgrounddialog.h"
 #include "helper/listhelper_p.h"
-#include "globalsettings_base.h"
+#include "globalsetting_composereditorng.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>

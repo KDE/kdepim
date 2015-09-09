@@ -39,7 +39,7 @@ set(libcomposereditor_ng_SRCS
 )
 
 kconfig_add_kcfg_files(libcomposereditor_ng_SRCS
-   globalsettings_base.kcfgc 
+   globalsetting_composereditorng.kcfgc 
 )
 
 
