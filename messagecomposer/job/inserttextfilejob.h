@@ -60,10 +60,6 @@ private Q_SLOTS:
 
 private:
     InsertTextFileJobPrivate *const d;
-    QPointer<QTextEdit> mEditor;
-    QUrl mUrl;
-    QString mEncoding;
-    QByteArray mFileData;
 };
 
 }
