@@ -16,7 +16,7 @@
 */
 
 #include "headerstyleinterface.h"
-#include "headerstylemenu.h"
+#include "headerstylemenumanager.h"
 #include "headerstyleplugin.h"
 #include "headerstylepluginmanager.h"
 #include <KActionMenu>
@@ -26,10 +26,10 @@
 
 using namespace MessageViewer;
 
-class MessageViewer::HeaderStyleMenuPrivate
+class MessageViewer::HeaderStyleMenuManagerPrivate
 {
 public:
-    HeaderStyleMenuPrivate(HeaderStyleMenu *qq)
+    HeaderStyleMenuManagerPrivate(HeaderStyleMenuManager *qq)
         : group(Q_NULLPTR),
           headerMenu(Q_NULLPTR),
           q(qq)
@@ -41,10 +41,10 @@ public:
     QList<MessageViewer::HeaderStyleInterface *> lstInterface;
     QActionGroup *group;
     KActionMenu *headerMenu;
-    HeaderStyleMenu *q;
+    HeaderStyleMenuManager *q;
 };
 
-void HeaderStyleMenuPrivate::addHelpTextAction(QAction *act, const QString &text)
+void HeaderStyleMenuManagerPrivate::addHelpTextAction(QAction *act, const QString &text)
 {
     act->setStatusTip(text);
     act->setToolTip(text);
@@ -53,7 +53,7 @@ void HeaderStyleMenuPrivate::addHelpTextAction(QAction *act, const QString &text
     }
 }
 
-void HeaderStyleMenuPrivate::initialize(KActionCollection *ac)
+void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
 {
     headerMenu = new KActionMenu(i18nc("View->", "&Headers"), q);
     ac->addAction(QStringLiteral("view_headers"), headerMenu);
@@ -71,20 +71,20 @@ void HeaderStyleMenuPrivate::initialize(KActionCollection *ac)
     }
 }
 
-HeaderStyleMenu::HeaderStyleMenu(KActionCollection *ac, QObject *parent)
+HeaderStyleMenuManager::HeaderStyleMenuManager(KActionCollection *ac, QObject *parent)
     : QObject(parent),
-      d(new MessageViewer::HeaderStyleMenuPrivate(this))
+      d(new MessageViewer::HeaderStyleMenuManagerPrivate(this))
 {
     d->initialize(ac);
 }
 
-HeaderStyleMenu::~HeaderStyleMenu()
+HeaderStyleMenuManager::~HeaderStyleMenuManager()
 {
     delete d;
 }
 
 
-KActionMenu *MessageViewer::HeaderStyleMenu::menu() const
+KActionMenu *MessageViewer::HeaderStyleMenuManager::menu() const
 {
     return d->headerMenu;
 }

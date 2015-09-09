@@ -9,8 +9,19 @@ macro(add_messageviewer_header_unittest _source _additional _jsonfile)
     
     ecm_mark_as_test(messageviewer-header-${_name})
     target_link_libraries( ${_name} messageviewer kleo KF5::QGpgme Qt5::Test Qt5::WebKitWidgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::AkonadiNotes KF5::CalendarCore grantleetheme)
-
 endmacro ()
+
+
+macro(add_messageviewer_header_class_unittest _source )
+    set( _test ${_source})
+    get_filename_component(_name ${_source} NAME_WE)
+    add_executable( ${_name} ${_test} )
+    add_test( ${_name} ${_name} )
+
+    ecm_mark_as_test(messageviewer-header-${_name})
+    target_link_libraries( ${_name} messageviewer kleo KF5::QGpgme Qt5::Test Qt5::WebKitWidgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::AkonadiNotes KF5::CalendarCore grantleetheme)
+endmacro ()
+
 
 add_messageviewer_header_unittest( briefheaderstyleplugintest.cpp "../briefheaderstyleplugin/briefheaderstyleplugin.cpp;../briefheaderstyleplugin/briefheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../briefheaderstyleplugin/messageviewer_briefheaderstyleplugin.desktop")
 
@@ -26,3 +37,5 @@ add_messageviewer_header_unittest( fancyheaderstyleplugintest.cpp "../fancyheade
 add_messageviewer_header_unittest( longheaderstyleplugintest.cpp "../longheaderstyleplugin/longheaderstyleplugin.cpp;../longheaderstyleplugin/longheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../longheaderstyleplugin/messageviewer_longheaderstyleplugin.desktop")
 
 add_messageviewer_header_unittest( standardsheaderstyleplugintest.cpp "../standardsheaderstyleplugin/standardsheaderstyleplugin.cpp;../standardsheaderstyleplugin/standardsheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../standardsheaderstyleplugin/messageviewer_standardsheaderstyleplugin.desktop")
+
+add_messageviewer_header_class_unittest( headerstylepluginmanagertest.cpp)

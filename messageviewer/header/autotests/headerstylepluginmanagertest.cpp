@@ -15,34 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "headerstyle.h"
-#include "headerstyleinterface.h"
-#include <QAction>
-using namespace MessageViewer;
+#include "headerstylepluginmanagertest.h"
+#include "../headerstylemenumanager.h"
+#include <KActionCollection>
+#include <QTest>
 
-HeaderStyleInterface::HeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
-    : QObject(parent),
-      mHeaderStyle(headerStyle),
-      mHeaderStrategy(headerStrategy)
+HeaderStylePluginManagerTest::HeaderStylePluginManagerTest(QObject *parent)
+    : QObject(parent)
 {
 
 }
 
-HeaderStyleInterface::~HeaderStyleInterface()
+HeaderStylePluginManagerTest::~HeaderStylePluginManagerTest()
 {
+
 }
 
-QList<KToggleAction *> HeaderStyleInterface::action() const
+void HeaderStylePluginManagerTest::shouldHaveDefaultValue()
 {
-    return mAction;
+    MessageViewer::HeaderStyleMenuManager menu(new KActionCollection(this));
+    QVERIFY(menu.menu());
 }
 
-void HeaderStyleInterface::addHelpTextAction(QAction *act, const QString &text)
-{
-    act->setStatusTip(text);
-    act->setToolTip(text);
-    if (act->whatsThis().isEmpty()) {
-        act->setWhatsThis(text);
-    }
-}
-
+QTEST_MAIN(HeaderStylePluginManagerTest)

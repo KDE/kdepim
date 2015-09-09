@@ -149,7 +149,7 @@ set(libmessageviewer_header_SRCS
   header/headerstyleplugin.cpp
   header/headerstylepluginmanager.cpp
   header/headerstyleinterface.cpp
-  header/headerstylemenu.cpp
+  header/headerstylemenumanager.cpp
 )
 
 set(libmessageviewer_scamdetection_SRCS

@@ -15,27 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef HEADERSTYLEMENU_H
-#define HEADERSTYLEMENU_H
-
-#include "messageviewer_export.h"
+#ifndef HEADERSTYLEPLUGINMANAGERTEST_H
+#define HEADERSTYLEPLUGINMANAGERTEST_H
 
 #include <QObject>
-class KActionMenu;
-class KActionCollection;
-namespace MessageViewer
-{
-class HeaderStyleMenuPrivate;
-class MESSAGEVIEWER_EXPORT HeaderStyleMenu : public QObject
+
+class HeaderStylePluginManagerTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit HeaderStyleMenu(KActionCollection *ac, QObject *parent = Q_NULLPTR);
-    ~HeaderStyleMenu();
+    explicit HeaderStylePluginManagerTest(QObject *parent = Q_NULLPTR);
+    ~HeaderStylePluginManagerTest();
 
-    KActionMenu *menu() const;
-private:
-    HeaderStyleMenuPrivate *const d;
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+
 };
-}
-#endif // HEADERSTYLEMENU_H
+
+#endif // HEADERSTYLEPLUGINMANAGERTEST_H
