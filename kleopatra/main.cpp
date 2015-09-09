@@ -94,6 +94,7 @@ class UiServer;
 #include <boost/shared_ptr.hpp>
 
 #include <cassert>
+#include <iostream>
 #include <QCommandLineParser>
 
 using namespace boost;
