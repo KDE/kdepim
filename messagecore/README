@@ -2,7 +2,7 @@ What should be put here?
 ========================
 
 Stuff here needs to comply with at least these rules (additionally to all the other ones that apply to all code):
-- no dependencies on legacy libs (Qt3/KDE3 support, kresources, libkdepim)
+- no dependencies on legacy libs (libkdepim)
 - no dependencies on:
   - libmessagelist
   - libmessageviewer
