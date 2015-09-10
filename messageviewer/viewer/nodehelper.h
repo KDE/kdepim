@@ -267,7 +267,7 @@ public:
     QVector<KMime::Content *> attachmentsOfExtraContents() const;
 
 private:
-
+    Q_DISABLE_COPY(NodeHelper)
     bool unencryptedMessage_helper(KMime::Content *node, QByteArray &resultingData, bool addHeaders,
                                    int recursionLevel = 1);
 
