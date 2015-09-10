@@ -973,8 +973,7 @@ bool ObjectTreeParser::okDecryptMIME(KMime::Content &data,
     assert(mSource->decryptMessage());
 
     const QString errorMsg = i18n("Could not decrypt the data.");
-    if (cryptProto /*FIXME(Andras) port to akonadi
-             && !kmkernel->contextMenuShown()*/) {
+    if (cryptProto) {
         QByteArray ciphertext = data.decodedContent();
 #ifdef MARCS_DEBUG
         QString cipherStr = QString::fromLatin1(ciphertext);
@@ -1084,23 +1083,6 @@ bool ObjectTreeParser::okDecryptMIME(KMime::Content &data,
         case NO_PLUGIN:
             partMetaData.errorText = i18n("No appropriate crypto plug-in was found.");
             break;
-        }
-    } else if (/*FIXME(Andras) port to akonadi
-                       kmkernel->contextMenuShown()*/ false) {
-        // ### Workaround for bug 56693 (kmail freeze with the complete desktop
-        // ### while pinentry-qt appears)
-        QByteArray ciphertext(data.decodedContent());
-        QString cipherStr = QString::fromLatin1(ciphertext);
-        bool cipherIsBinary = (!cipherStr.contains(QStringLiteral("BEGIN ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
-                              (!cipherStr.contains(QStringLiteral("BEGIN PGP ENCRYPTED MESSAGE"), Qt::CaseInsensitive)) &&
-                              (!cipherStr.contains(QStringLiteral("BEGIN PGP MESSAGE"), Qt::CaseInsensitive));
-        if (!cipherIsBinary) {
-            decryptedData = ciphertext;
-        } else {
-            decryptedData = "<div style=\"font-size:x-large; text-align:center;"
-                            "padding:20pt;\">"
-                            + errorMsg.toUtf8()
-                            + "</div>";
         }
     }
 
