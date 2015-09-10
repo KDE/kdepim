@@ -39,6 +39,7 @@ public:
 
 Q_SIGNALS:
     void styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy);
+    void styleUpdated();
 
 private:
     HeaderStyleMenuManagerPrivate *const d;

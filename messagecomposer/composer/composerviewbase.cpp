@@ -54,9 +54,9 @@
 #include <sonnet/dictionarycombobox.h>
 #include <KIdentityManagement/Identity>
 
-#include <messagecore/helpers/messagehelpers.h>
-#include <messagecore/utils/stringutil.h>
-#include <messagecore/helpers/nodehelper.h>
+#include <helpers/messagehelpers.h>
+#include <utils/stringutil.h>
+#include <helpers/nodehelper.h>
 
 #include <MailTransport/mailtransport/transportcombobox.h>
 #include <MailTransport/mailtransport/messagequeuejob.h>

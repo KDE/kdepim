@@ -27,7 +27,7 @@
 
 #include <QUrl>
 
-#include <messagecore/attachment/attachmentpart.h>
+#include <attachment/attachmentpart.h>
 #include <AkonadiCore/item.h>
 #include <KJob>
 #include <KService>

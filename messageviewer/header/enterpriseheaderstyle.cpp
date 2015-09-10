@@ -20,7 +20,7 @@
 
 #include "header/headerstrategy.h"
 
-#include <messagecore/utils/stringutil.h>
+#include <utils/stringutil.h>
 
 #include <KLocalizedString>
 #include <KColorScheme>

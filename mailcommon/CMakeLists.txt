@@ -210,7 +210,7 @@ PRIVATE
   kdepim
   messageviewer
   KF5::MailImporter
-  messagecore
+  KF5::MessageCore
   KF5::TemplateParser
   KF5::Mime
   KF5::Codecs

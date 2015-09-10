@@ -20,8 +20,8 @@
 #include "kernel/mailkernel.h"
 #include "mailcommon_debug.h"
 
-#include <messagecore/helpers/messagehelpers.h>
-#include <messagecore/misc/mdnstateattribute.h>
+#include <helpers/messagehelpers.h>
+#include <misc/mdnstateattribute.h>
 
 #include <messagecomposer/helper/messagefactory.h>
 using MessageComposer::MessageFactory;

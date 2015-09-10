@@ -22,8 +22,8 @@
 #include "utils/util.h"
 #include "settings/messagecomposersettings.h"
 
-#include "messagecore/misc/mailinglist.h"
-#include "messagecore/utils/stringutil.h"
+#include "misc/mailinglist.h"
+#include "utils/stringutil.h"
 
 #include <KProtocolManager>
 #include <KMime/Message>

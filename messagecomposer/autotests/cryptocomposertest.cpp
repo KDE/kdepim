@@ -47,8 +47,8 @@ using namespace KMime;
 #include <recipientseditor.h>
 using namespace MessageComposer;
 
-#include <messagecore/attachment/attachmentpart.h>
-#include <messagecore/helpers/nodehelper.h>
+#include <attachment/attachmentpart.h>
+#include <helpers/nodehelper.h>
 #include <setupenv.h>
 
 #include <messageviewer/viewer/objecttreeparser.h>

@@ -26,9 +26,9 @@
 #include "utils/util.h"
 #include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"
 
-#include <messagecore/helpers/nodehelper.h>
-#include <messagecore/utils/stringutil.h>
-#include "messagecore/settings/messagecoresettings.h"
+#include <helpers/nodehelper.h>
+#include <utils/stringutil.h>
+#include "settings/messagecoresettings.h"
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_message.h>

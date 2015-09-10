@@ -20,8 +20,8 @@
 
 #include "messagecomposer/sender/akonadisender.h"
 #include "messagecomposer/utils/util.h"
-#include "messagecore/helpers/messagehelpers.h"
-#include "messagecore/utils/stringutil.h"
+#include "helpers/messagehelpers.h"
+#include "utils/stringutil.h"
 
 #include <MailTransport/mailtransport/transportattribute.h>
 #include <MailTransport/mailtransport/sentbehaviourattribute.h>

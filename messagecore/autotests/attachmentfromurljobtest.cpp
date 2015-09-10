@@ -22,8 +22,8 @@
 
 #include <qtest.h>
 
-#include <messagecore/attachment/attachmentfromurljob.h>
-#include <messagecore/utils/stringutil.h>
+#include <attachment/attachmentfromurljob.h>
+#include <utils/stringutil.h>
 using namespace MessageCore;
 
 QTEST_MAIN(AttachmentFromUrlJobTest)

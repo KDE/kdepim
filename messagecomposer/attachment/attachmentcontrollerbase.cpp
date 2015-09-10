@@ -32,7 +32,7 @@
 #include "messageviewer/viewer/editorwatcher.h"
 #include "messageviewer/viewer/nodehelper.h"
 #include "messageviewer/utils/util.h"
-#include "messagecore/utils/stringutil.h"
+#include "utils/stringutil.h"
 
 #include <AkonadiCore/itemfetchjob.h>
 #include <kio/jobuidelegate.h>
@@ -59,13 +59,13 @@
 #include <libkleo/kleo/cryptobackendfactory.h>
 #include <libkleo/ui/keyselectiondialog.h>
 
-#include <messagecore/attachment/attachmentcompressjob.h>
-#include <messagecore/attachment/attachmentfromfolderjob.h>
-#include <messagecore/attachment/attachmentfrommimecontentjob.h>
-#include <messagecore/attachment/attachmentfromurljob.h>
-#include <messagecore/attachment/attachmentpropertiesdialog.h>
-#include <messagecore/attachment/attachmentupdatejob.h>
-#include <messagecore/attachment/attachmentfromurlutils.h>
+#include <attachment/attachmentcompressjob.h>
+#include <attachment/attachmentfromfolderjob.h>
+#include <attachment/attachmentfrommimecontentjob.h>
+#include <attachment/attachmentfromurljob.h>
+#include <attachment/attachmentpropertiesdialog.h>
+#include <attachment/attachmentupdatejob.h>
+#include <attachment/attachmentfromurlutils.h>
 #include <settings/messagecomposersettings.h>
 #include <KIO/Job>
 #include <Akonadi/Contact/EmailAddressSelectionDialog>

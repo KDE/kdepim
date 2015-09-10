@@ -25,7 +25,7 @@
 #include <KZip>
 #include <qtest.h>
 
-#include <messagecore/attachment/attachmentcompressjob.h>
+#include <attachment/attachmentcompressjob.h>
 using namespace MessageCore;
 
 QTEST_MAIN(AttachmentCompressJobTest)

@@ -47,7 +47,7 @@ target_link_libraries(etm_usage
   
   kdepim
   kleo
-  messagecore
+  KF5::MessageCore
   messagelist
   messageviewer
 )

@@ -23,7 +23,7 @@
 #include "contentjobbase.h"
 #include "messagecomposer_export.h"
 
-#include <messagecore/attachment/attachmentpart.h>
+#include <attachment/attachmentpart.h>
 
 namespace MessageComposer
 {

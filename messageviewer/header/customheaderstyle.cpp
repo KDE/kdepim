@@ -22,7 +22,7 @@
 #include "settings/messageviewersettings.h"
 #include "viewer/nodehelper.h"
 
-#include <messagecore/utils/stringutil.h>
+#include <utils/stringutil.h>
 
 #include <KLocalizedString>
 

@@ -44,7 +44,7 @@
 #include <messageviewer/viewer/nodehelper.h>
 #include <setupenv.h>
 
-#include <messagecore/helpers/nodehelper.h>
+#include <helpers/nodehelper.h>
 
 QTEST_MAIN(SignEncryptTest)
 

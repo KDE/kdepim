@@ -1,81 +1,84 @@
+cmake_minimum_required(VERSION 2.8.12)
+
 project(messagecore)
 
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
+if(${CMAKE_SOURCE_DIR} STREQUAL ${messagecore_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.14.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
+
+
+set(KF5_VERSION "5.14.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.42")
+set(KDEPIM_LIB_VERSION "5.43.0")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
+set(KPIMTEXTEDIT_LIB_VERSION "4.84.0")
+
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
+
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGECORE
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/messagecore_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageCoreConfigVersion.cmake"
+                        SOVERSION 5
+)
+
+########### Targets ###########
+
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5MessageCore")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5MessageCoreConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageCoreConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageCoreConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageCoreConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
+
+install(EXPORT KF5MessageCoreTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5MessageCoreTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/messagecore_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGECORE
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/messagecore_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5MessageCoreConfigVersion.cmake"
+                        SOVERSION 5
+)
+endif()
+
+add_subdirectory(src)
 if (BUILD_TESTING)
    add_subdirectory(autotests)
 endif()
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libmessagecore\")
-
-########### next target ###############
-
-set(messagecore_attachment_LIB_SRCS
-   attachment/attachmentcompressjob.cpp
-   attachment/attachmentfromfolderjob.cpp
-   attachment/attachmentfrommimecontentjob.cpp
-   attachment/attachmentfromurlbasejob.cpp
-   attachment/attachmentfromurljob.cpp
-   attachment/attachmentloadjob.cpp
-   attachment/attachmentpart.cpp
-   attachment/attachmentpropertiesdialog.cpp
-   attachment/attachmentupdatejob.cpp
-   attachment/attachmentfromurlutils.cpp
-)
-
-set(messagecore_misc_LIB_SRCS
-   misc/imagecollector.cpp
-   misc/mailinglist.cpp
-   misc/mdnstateattribute.cpp
-)
-
-
-set(messagecore_helper_LIB_SRCS
-   helpers/messagehelpers.cpp
-   helpers/nodehelper.cpp
-)
-
-set(messagecore_LIB_SRCS
-   ${messagecore_attachment_LIB_SRCS}
-   ${messagecore_misc_LIB_SRCS}
-   ${messagecore_helper_LIB_SRCS}
-   settings/messagecoresettings.cpp
-   utils/stringutil.cpp
-   messagecoreutil.cpp
-)
-
-kconfig_add_kcfg_files(messagecore_LIB_SRCS
-  settings/globalsettings_messagecore.kcfgc
-)
-
-ki18n_wrap_ui(messagecore_LIB_SRCS
-  attachment/ui/attachmentpropertiesdialog.ui
-  attachment/ui/attachmentpropertiesdialog_readonly.ui
-)
-
-ecm_qt_declare_logging_category(messagecore_LIB_SRCS HEADER messagecore_debug.h IDENTIFIER MESSAGECORE_LOG CATEGORY_NAME log_messagecore)
-
-add_library(messagecore ${messagecore_LIB_SRCS})
-generate_export_header(messagecore BASE_NAME messagecore)
-
-target_link_libraries(messagecore
-PUBLIC
-  KF5::Mime
-PRIVATE
-  KF5::KIOCore
-  KF5::Codecs
-  KF5::AkonadiCore
-  KF5::PimTextEdit
-  KF5::AkonadiMime
-  KF5::Archive
-  KF5::ConfigWidgets
-  KF5::Completion
-  KF5::IconThemes
-  Qt5::Network
-)
-
-target_include_directories(messagecore PUBLIC "$<BUILD_INTERFACE:${messagecore_SOURCE_DIR};${messagecore_BINARY_DIR}>")
-
-set_target_properties(messagecore PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS messagecore ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

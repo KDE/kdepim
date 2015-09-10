@@ -33,7 +33,7 @@
 #include <messageviewer/viewer/objecttreeemptysource.h>
 #include <messageviewer/viewer/csshelper.h>
 
-#include <messagecore/helpers/nodehelper.h>
+#include <helpers/nodehelper.h>
 
 #include <QDebug>
 #include <QtTest>

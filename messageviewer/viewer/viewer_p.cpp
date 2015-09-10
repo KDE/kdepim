@@ -102,7 +102,7 @@
 
 //libkdepim
 #include "libkdepim/misc/broadcaststatus.h"
-#include <messagecore/attachment/attachmentpropertiesdialog.h>
+#include <attachment/attachmentpropertiesdialog.h>
 
 #include <AkonadiCore/collection.h>
 #include <AkonadiCore/itemfetchjob.h>
@@ -140,10 +140,10 @@
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
 
-#include <messagecore/utils/stringutil.h>
+#include <utils/stringutil.h>
 
-#include <messagecore/helpers/nodehelper.h>
-#include "messagecore/settings/messagecoresettings.h"
+#include <helpers/nodehelper.h>
+#include "settings/messagecoresettings.h"
 #include <AkonadiCore/agentinstance.h>
 #include <AkonadiCore/agentmanager.h>
 #include <AkonadiCore/CollectionFetchJob>

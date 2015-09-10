@@ -66,6 +66,7 @@ void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
         lstInterface.append(interface);
         q->connect(interface, SIGNAL(styleChanged(MessageViewer::HeaderStyle*,MessageViewer::HeaderStrategy*)), q,
                    SIGNAL(styleChanged(MessageViewer::HeaderStyle*,MessageViewer::HeaderStrategy*)));
+        q->connect(interface, SIGNAL(styleUpdated()), q, SIGNAL(styleUpdated()));
     }
 }
 

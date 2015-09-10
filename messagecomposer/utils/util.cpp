@@ -42,7 +42,7 @@
 #include <AkonadiCore/agentinstance.h>
 #include <AkonadiCore/agentinstancecreatejob.h>
 #include <AkonadiCore/agentmanager.h>
-#include <messagecore/helpers/messagehelpers.h>
+#include <helpers/messagehelpers.h>
 
 KMime::Content *setBodyAndCTE(QByteArray &encodedBody, KMime::Headers::ContentType *contentType, KMime::Content *ret)
 {

@@ -6,6 +6,6 @@ Mutators=true
 Singleton=true
 ItemAccessors=true
 SetUserTexts=true
-IncludeFiles=messagecoreutil.h,messagecore/messagecore_export.h,kmime/kmime_dateformatter.h,kcolorscheme.h
+IncludeFiles=messagecoreutil.h,messagecore_export.h,kmime/kmime_dateformatter.h,kcolorscheme.h
 TranslationDomain=libmessagecore
 TranslationSystem=kde

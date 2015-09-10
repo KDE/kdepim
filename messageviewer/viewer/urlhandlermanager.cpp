@@ -43,7 +43,7 @@
 #include "utils/util.h"
 #include "stl_util.h"
 
-#include <messagecore/utils/stringutil.h>
+#include <utils/stringutil.h>
 #include <libkdepim/misc/broadcaststatus.h>
 #include <libkdepim/job/openemailaddressjob.h>
 

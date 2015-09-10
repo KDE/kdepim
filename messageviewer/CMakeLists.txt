@@ -228,7 +228,7 @@ generate_export_header(messageviewer BASE_NAME messageviewer)
 
 target_link_libraries(messageviewer 
 PUBLIC
-  messagecore
+  KF5::MessageCore
   pimcommon
   KF5::AkonadiCore
   KF5::AkonadiMime

@@ -22,7 +22,7 @@
 
 #include "messagecore_export.h"
 
-#include "messagecore/globalsettings_messagecore.h"
+#include "globalsettings_messagecore.h"
 
 namespace MessageCore
 {

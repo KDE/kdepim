@@ -67,7 +67,7 @@ target_link_libraries(akonadi_sendlater_agent
   KF5::MailTransport
   KF5::Mime
   messagecomposer
-  messagecore
+  KF5::MessageCore
   pimcommon
   KF5::AkonadiAgentBase
   KF5::DBusAddons

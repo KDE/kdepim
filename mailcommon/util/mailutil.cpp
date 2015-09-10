@@ -57,8 +57,8 @@
 #include "mailimporter/filtericedove.h"
 #include "mailimporter/othermailerutil.h"
 
-#include <messagecore/utils/stringutil.h>
-#include <messagecore/helpers/messagehelpers.h>
+#include <utils/stringutil.h>
+#include <helpers/messagehelpers.h>
 
 #include <messagecomposer/helper/messagehelper.h>
 

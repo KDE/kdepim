@@ -19,7 +19,7 @@
 
 #include "filteractionsendfakedisposition.h"
 
-#include <messagecore/misc/mdnstateattribute.h>
+#include <misc/mdnstateattribute.h>
 
 #include <KLocalizedString>
 

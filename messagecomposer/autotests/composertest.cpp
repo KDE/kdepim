@@ -34,7 +34,7 @@ using namespace KMime;
 #include <messagecomposer/part/textpart.h>
 using namespace MessageComposer;
 
-#include <messagecore/attachment/attachmentpart.h>
+#include <attachment/attachmentpart.h>
 using MessageCore::AttachmentPart;
 
 QTEST_MAIN(ComposerTest)

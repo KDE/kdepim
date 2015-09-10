@@ -18,7 +18,7 @@
 */
 #include "stringutiltest.h"
 
-#include "../utils/stringutil.h"
+#include "../src/utils/stringutil.h"
 
 #include "qtest.h"
 #include <QUrl>

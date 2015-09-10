@@ -17,7 +17,7 @@
 
 #include "messageheaderfilter.h"
 #include <kmime/kmime_headers.h>
-#include <messagecore/utils/stringutil.h>
+#include <utils/stringutil.h>
 #include <grantlee/util.h>
 #include <QDebug>
 

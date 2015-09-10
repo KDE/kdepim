@@ -93,7 +93,7 @@ target_link_libraries(messagelist
   KF5::Mime
  PRIVATE
   KF5::KIOCore
-  messagecore
+  KF5::MessageCore
   pimcommon
   KF5::AkonadiSearchPIM
   KF5::XmlGui

@@ -5,7 +5,7 @@ macro(add_messagecore_test _source )
     add_definitions(-DKDESRCDIR="${CMAKE_CURRENT_SOURCE_DIR}")
     ecm_add_test(${_source}
         NAME_PREFIX "messagecore-"
-        LINK_LIBRARIES Qt5::Test kleo messagecore Qt5::Widgets KF5::Archive KF5::Completion KF5::ConfigCore KF5::CoreAddons
+        LINK_LIBRARIES Qt5::Test kleo KF5::MessageCore Qt5::Widgets KF5::Archive KF5::Completion KF5::ConfigCore KF5::CoreAddons
     )
 endmacro()
 
@@ -21,8 +21,8 @@ add_messagecore_test( attachmentupdatejobtest.cpp )
 add_messagecore_test( stringutiltest.cpp )
 add_messagecore_test( mailinglisttest.cpp )
 
-ecm_add_test(mdnstateattributetest.cpp ../misc/mdnstateattribute.cpp
+ecm_add_test(mdnstateattributetest.cpp ../src/misc/mdnstateattribute.cpp
     TEST_NAME msdnattributetest
     NAME_PREFIX "messagecore-"
-    LINK_LIBRARIES Qt5::Test Qt5::Gui KF5::AkonadiCore messagecore 
+    LINK_LIBRARIES Qt5::Test Qt5::Gui KF5::AkonadiCore KF5::MessageCore
 )

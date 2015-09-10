@@ -20,7 +20,7 @@
 #include "kernel/mailkernel.h"
 #include "mailcommonsettings_base.h"
 
-#include <messagecore/settings/messagecoresettings.h>
+#include <settings/messagecoresettings.h>
 
 #include <KLocalizedString>
 #include <KXMLGUIClient>

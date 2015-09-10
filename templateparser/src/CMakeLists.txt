@@ -49,7 +49,7 @@ PRIVATE
   KF5::AkonadiCore
   messageviewer
   KF5::IdentityManagement
-  messagecore
+  KF5::MessageCore
   Qt5::WebKitWidgets
   KF5::XmlGui
   KF5::IconThemes

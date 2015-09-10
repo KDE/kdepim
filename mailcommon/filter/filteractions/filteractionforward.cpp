@@ -28,7 +28,7 @@
 #include <messagecomposer/helper/messagefactory.h>
 #include <messagecomposer/sender/messagesender.h>
 #include <pimcommon/widgets/emailaddressrequester.h>
-#include <messagecore/utils/stringutil.h>
+#include <utils/stringutil.h>
 #include <customtemplates.h>
 #include <customtemplates_kfg.h>
 

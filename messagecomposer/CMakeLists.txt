@@ -151,7 +151,7 @@ generate_export_header(messagecomposer BASE_NAME messagecomposer)
 target_link_libraries(messagecomposer
 PUBLIC
   KF5::Mime
-  messagecore
+  KF5::MessageCore
   pimcommon
   KF5::AkonadiCore
   KF5::IdentityManagement
