@@ -4,5 +4,6 @@ target_link_libraries(headerstylemenu_gui
   Qt5::Test
   messageviewer
   KF5::XmlGui
+  KF5::GrantleeTheme
 )
 

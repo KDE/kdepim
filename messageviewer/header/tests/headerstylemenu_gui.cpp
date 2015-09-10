@@ -16,6 +16,7 @@
 */
 
 #include "headerstylemenu_gui.h"
+#include "header/headerstylemenumanager.h"
 #include <QStandardPaths>
 #include <KLocalizedString>
 
@@ -24,17 +25,38 @@
 #include <QCommandLineParser>
 #include <QMenu>
 #include <QToolBar>
+#include <QMenuBar>
+#include <QVBoxLayout>
 
-#include <KXmlGui/kactioncollection.h>
+#include <kactioncollection.h>
+#include <KActionMenu>
+#include <QTextEdit>
+
+#include <header/headerstrategy.h>
+#include <header/headerstyle.h>
 
 HeaderStyleMenuTest::HeaderStyleMenuTest(QWidget *parent)
     : QWidget(parent)
 {
+    QMenuBar *menu = new QMenuBar(this);
+    QVBoxLayout *hbox = new QVBoxLayout(this);
+    hbox->addWidget(menu);
+    MessageViewer::HeaderStyleMenuManager *manager = new MessageViewer::HeaderStyleMenuManager(new KActionCollection(this), this);
+    connect(manager, &MessageViewer::HeaderStyleMenuManager::styleChanged, this, &HeaderStyleMenuTest::styleChanged);
+    menu->addAction(manager->menu());
+    mTextEdit = new QTextEdit(this);
+    mTextEdit->setReadOnly(true);
+    hbox->addWidget(mTextEdit);
 }
 
 HeaderStyleMenuTest::~HeaderStyleMenuTest()
 {
 
+}
+
+void HeaderStyleMenuTest::styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy)
+{
+    mTextEdit->append(QStringLiteral("strategy: %1, headerstyle: %2").arg(QLatin1String(headerStrategy->name())).arg(QLatin1String(headerStyle->name())));
 }
 
 int main(int argc, char **argv)

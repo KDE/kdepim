@@ -19,12 +19,23 @@
 #define TEST_HEADERSTYLEMENU_GUI_H
 
 #include <QWidget>
+class QTextEdit;
+namespace MessageViewer
+{
+class HeaderStyle;
+class HeaderStrategy;
+}
+
 class HeaderStyleMenuTest : public QWidget
 {
     Q_OBJECT
 public:
     explicit HeaderStyleMenuTest(QWidget *parent = Q_NULLPTR);
     ~HeaderStyleMenuTest();
+private Q_SLOTS:
+    void styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy);
+private:
+    QTextEdit *mTextEdit;
 };
 
 #endif
