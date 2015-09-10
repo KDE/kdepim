@@ -76,10 +76,9 @@ static QStringList stringList(const char *const headers[], int numHeaders)
     return sl;
 }
 
-class AllHeaderStrategy : public HeaderStrategy
+class MESSAGEVIEWER_EXPORT AllHeaderStrategy : public HeaderStrategy
 {
-    friend class HeaderStrategy;
-protected:
+public:
     AllHeaderStrategy() : HeaderStrategy() {}
     ~AllHeaderStrategy() {}
 

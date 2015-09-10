@@ -16,7 +16,7 @@
 */
 
 #include "allheaderstyleplugin.h"
-#include "header/fancyheaderstyle.h"
+#include "header/plainheaderstyle.h"
 #include "allheaderstyleinterface.h"
 //Temporary
 #include "header/headerstrategy_p.h"
@@ -27,8 +27,8 @@ K_PLUGIN_FACTORY_WITH_JSON(MessageViewerFancyHeaderStylePluginFactory, "messagev
 
 AllHeaderStylePlugin::AllHeaderStylePlugin(QObject *parent, const QList<QVariant> &)
     : MessageViewer::HeaderStylePlugin(parent),
-      mHeaderStyle(new FancyHeaderStyle),
-      mHeaderStrategy(new RichHeaderStrategy)
+      mHeaderStyle(new PlainHeaderStyle),
+      mHeaderStrategy(new AllHeaderStrategy)
 {
 }
 
