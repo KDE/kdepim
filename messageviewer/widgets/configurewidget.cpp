@@ -25,7 +25,7 @@
 #include "settings/globalsettings.h"
 #include "viewer/nodehelper.h"
 
-#include "messagecore/settings/globalsettings.h"
+#include "messagecore/settings/globalsettings_messagecore_impl.h"
 
 #include <KConfigDialogManager>
 #include <KLocalizedString>

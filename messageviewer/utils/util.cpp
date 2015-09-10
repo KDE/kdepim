@@ -41,7 +41,7 @@
 #include "utils/iconnamecache.h"
 #include "viewer/nodehelper.h"
 #include "messageviewer_debug.h"
-#include "messagecore/settings/globalsettings.h"
+#include "messagecore/settings/globalsettings_messagecore_impl.h"
 #include "messagecore/helpers/nodehelper.h"
 #include "messagecore/utils/stringutil.h"
 

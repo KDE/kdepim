@@ -143,7 +143,7 @@
 #include <messagecore/utils/stringutil.h>
 
 #include <messagecore/helpers/nodehelper.h>
-#include "messagecore/settings/globalsettings.h"
+#include "messagecore/settings/globalsettings_messagecore_impl.h"
 #include <AkonadiCore/agentinstance.h>
 #include <AkonadiCore/agentmanager.h>
 #include <AkonadiCore/CollectionFetchJob>

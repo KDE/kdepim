@@ -22,7 +22,7 @@
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 
-#include <messagecore/settings/globalsettings.h>
+#include <messagecore/settings/globalsettings_messagecore_impl.h>
 
 #include <AgentInstance>
 #include <AgentManager>

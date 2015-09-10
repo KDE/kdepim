@@ -42,7 +42,7 @@
 
 #include <KLocalizedString>
 
-#include "messagecore/settings/globalsettings.h"
+#include "messagecore/settings/globalsettings_messagecore_impl.h"
 
 using namespace MessageCore;
 

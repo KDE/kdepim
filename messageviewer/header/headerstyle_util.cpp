@@ -21,7 +21,7 @@
 #include "messageviewer_debug.h"
 #include <messagecore/utils/stringutil.h>
 
-#include "messagecore/settings/globalsettings.h"
+#include "messagecore/settings/globalsettings_messagecore_impl.h"
 #include "settings/globalsettings.h"
 
 #include <KLocalizedString>
