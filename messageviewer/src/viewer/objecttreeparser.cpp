@@ -604,155 +604,28 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
     GpgME::Key key;
 
     if (doCheck && cryptProto) {
-#ifdef DEBUG_SIGNATURE
-        qCDebug(MESSAGEVIEWER_LOG) << "tokoe: doCheck and cryptProto";
-#endif
         GpgME::VerificationResult result;
         if (data) {   // detached
-#ifdef DEBUG_SIGNATURE
-            qCDebug(MESSAGEVIEWER_LOG) << "tokoe: is detached signature";
-#endif
-            const VerifyDetachedBodyPartMemento *m
-                = dynamic_cast<VerifyDetachedBodyPartMemento *>(mNodeHelper->bodyPartMemento(&sign, "verifydetached"));
-            if (!m) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: no memento available";
-#endif
-                Kleo::VerifyDetachedJob *job = cryptProto->verifyDetachedJob();
-                if (!job) {
-                    cryptPlugError = CANT_VERIFY_SIGNATURES;
-                    // PENDING(marc) cryptProto = 0 here?
-                } else {
-                    QByteArray plainData = cleartext;
-                    VerifyDetachedBodyPartMemento *newM
-                        = new VerifyDetachedBodyPartMemento(job, cryptProto->keyListJob(), signaturetext, plainData);
-                    if (allowAsync()) {
-#ifdef DEBUG_SIGNATURE
-                        qCDebug(MESSAGEVIEWER_LOG) << "tokoe: allowAsync";
-#endif
-                        QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
-                                         mNodeHelper, SLOT(update(MessageViewer::Viewer::UpdateMode)));
-                        QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
-                                         mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)));
-                        if (newM->start()) {
-#ifdef DEBUG_SIGNATURE
-                            qCDebug(MESSAGEVIEWER_LOG) << "tokoe: new memento started";
-#endif
-                            messagePart.inProgress = true;
-                            mHasPendingAsyncJobs = true;
-                        } else {
-                            m = newM;
-                        }
-                    } else {
-                        newM->exec();
-                        m = newM;
-                    }
-                    mNodeHelper->setBodyPartMemento(&sign, "verifydetached", newM);
-                }
-            } else if (m->isRunning()) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: memento is running";
-#endif
-                messagePart.inProgress = true;
-                mHasPendingAsyncJobs = true;
-                m = 0;
-            }
-
-            if (m) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: memento finished, assign result";
-#endif
-                result = m->verifyResult();
-                messagePart.auditLogError = m->auditLogError();
-                messagePart.auditLog = m->auditLogAsHtml();
-                key = m->signingKey();
-            }
+            okVerify(cleartext, cryptProto, messagePart, cleartext, signatures, signaturetext, &sign);
         } else { // opaque
-#ifdef DEBUG_SIGNATURE
-            qCDebug(MESSAGEVIEWER_LOG) << "tokoe: is opaque signature";
-#endif
-            const VerifyOpaqueBodyPartMemento *m
-                = dynamic_cast<VerifyOpaqueBodyPartMemento *>(mNodeHelper->bodyPartMemento(&sign, "verifyopaque"));
-            if (!m) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: no memento available";
-#endif
-                Kleo::VerifyOpaqueJob *job = cryptProto->verifyOpaqueJob();
-                if (!job) {
-                    cryptPlugError = CANT_VERIFY_SIGNATURES;
-                    // PENDING(marc) cryptProto = 0 here?
-                } else {
-                    VerifyOpaqueBodyPartMemento *newM
-                        = new VerifyOpaqueBodyPartMemento(job, cryptProto->keyListJob(), signaturetext);
-                    if (allowAsync()) {
-#ifdef DEBUG_SIGNATURE
-                        qCDebug(MESSAGEVIEWER_LOG) << "tokoe: allowAsync";
-#endif
-                        QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), mSource->sourceObject(),
-                                         SLOT(update(MessageViewer::Viewer::UpdateMode)));
-                        if (newM->start()) {
-#ifdef DEBUG_SIGNATURE
-                            qCDebug(MESSAGEVIEWER_LOG) << "tokoe: new memento started";
-#endif
-                            messagePart.inProgress = true;
-                            mHasPendingAsyncJobs = true;
-                        } else {
-                            m = newM;
-                        }
-                    } else {
-                        newM->exec();
-                        m = newM;
-                    }
-                    mNodeHelper->setBodyPartMemento(&sign, "verifyopaque", newM);
-                }
-            } else if (m->isRunning()) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: memento is running";
-#endif
-                messagePart.inProgress = true;
-                mHasPendingAsyncJobs = true;
-                m = 0;
-            }
-
-            if (m) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: memento finished, assign result";
-#endif
-                result = m->verifyResult();
-                cleartext = m->plainText();
-                messagePart.auditLogError = m->auditLogError();
-                messagePart.auditLog = m->auditLogAsHtml();
-                key = m->signingKey();
-            }
+            okVerify(signaturetext, cryptProto, messagePart, cleartext, signatures, QByteArray(), &sign);
         }
+        /* vielleicht noch nötig??
+        if (messagePart.isSigned) {
+            result = m->verifyResult();
+            key = m->signingKey();
+        }
+
         std::stringstream ss;
         ss << result;
-#ifdef DEBUG_SIGNATURE
-        qCDebug(MESSAGEVIEWER_LOG) << ss.str().c_str();
-#endif
-        signatures = result.signatures();
+        signatures = result.signatures(); */
     } else {
         messagePart.auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
     }
 
-#ifdef DEBUG_SIGNATURE
-    if (doCheck) {
-        qCDebug(MESSAGEVIEWER_LOG) << "returned from CRYPTPLUG";
-    }
-#endif
-
     // ### only one signature supported
-    if (!signatures.empty()) {
-#ifdef DEBUG_SIGNATURE
-        qCDebug(MESSAGEVIEWER_LOG) << "\nFound signature";
-#endif
-        messagePart.isSigned = true;
+    if (messagePart.isSigned) {
         sigStatusToMetaData(signatures, cryptProto, messagePart, key);
-#ifdef DEBUG_SIGNATURE
-        qCDebug(MESSAGEVIEWER_LOG) << "\n  key id:" << messagePart.keyId
-                                   << "\n  key trust:" << messagePart.keyTrust
-                                   << "\n  signer:" << messagePart.signer;
-#endif
     } else {
         messagePart.creationTime = QDateTime();
     }
@@ -2898,7 +2771,7 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
     writeBodyStr(aStr, aCodec, fromAddress, dummy1, dummy2, false);
 }
 
-bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData &messagePart, QByteArray &verifiedText, std::vector <GpgME::Signature> &signatures)
+bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData &messagePart, QByteArray &verifiedText, std::vector <GpgME::Signature> &signatures, const QByteArray &signature, KMime::Content &sign)
 {
     //copied from ObjectTreeParser::writeOpaqueOrMultipartSignedData
     messagePart.isSigned = false;
@@ -2907,17 +2780,49 @@ bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBacken
     messagePart.status = i18n("Wrong Crypto Plug-In.");
     messagePart.status_code = GPGME_SIG_STAT_NONE;
 
-    Kleo::VerifyOpaqueJob *job = cryptProto->verifyOpaqueJob();
-    VerifyOpaqueBodyPartMemento *m
-        = new VerifyOpaqueBodyPartMemento(job, cryptProto->keyListJob(), data);
-    m->exec();
+    CryptoBodyPartMemento *m = dynamic_cast<VerifyDetachedBodyPartMemento *>(mNodeHelper->bodyPartMemento(&sign, "verifydetached"));
 
-    verifiedText = m->plainText();
-    messagePart.auditLogError = m->auditLogError();
-    messagePart.auditLog = m->auditLogAsHtml();
-    signatures = m->verifyResult().signatures();
-    messagePart.isSigned = !signatures.empty();
+    if (!m) {
+        if (signature) {
+            Kleo::VerifyDetachedJob *job = cryptProto->verifyDetachedJob();
+            if (job) {
+                m = new VerifyDetachedBodyPartMemento(job, cryptProto->keyListJob(), signaturetext, plainData);
+            }
+        } else {
+            Kleo::VerifyOpaqueJob *job = cryptProto->verifyOpaqueJob();
+            if (job) {
+                m = new VerifyOpaqueBodyPartMemento(job, cryptProto->keyListJob(), data);
+            }
+        }
+        if (m) {
+            if (allowAsync()) {
+                QObject::connect(m, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
+                                 nodeHelper(), SIGNAL(update(MessageViewer::Viewer::UpdateMode)));
+                QObject::connect(m, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
+                                 mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)));
 
+                if (m->start()) {
+                    messagePart.inProgress = true;
+                    mHasPendingAsyncJobs = true;
+                }
+            } else {
+                m->exec();
+            }
+            mNodeHelper->setBodyPartMemento(&sign, "verifydetached", m);
+        }
+    } else if (m->isRunning()) {
+        messagePart.inProgress = true;
+        mHasPendingAsyncJobs = true;
+        m = 0;
+    }
+
+    if (m) {
+        verifiedText = m->plainText();
+        messagePart.auditLogError = m->auditLogError();
+        messagePart.auditLog = m->auditLogAsHtml();
+        signatures = m->verifyResult().signatures();
+        messagePart.isSigned = !signatures.empty();
+    }
     return messagePart.isSigned;
 }
 
@@ -3097,7 +3002,7 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
                 messagePart.isDecryptable = false;
 
                 QByteArray verifiedText;
-                if (okVerify(block.text(), cryptoProtocol(), messagePart, verifiedText, signatures)) {
+                if (okVerify(block.text(), cryptoProtocol(), messagePart, verifiedText, signatures, QByteArray(), KMime::Content())) {
                     text = aCodec->toUnicode(verifiedText);
                 }
             }
