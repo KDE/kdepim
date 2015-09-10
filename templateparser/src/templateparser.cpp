@@ -18,7 +18,7 @@
  */
 
 #include "templateparser.h"
-#include "globalsettings_base.h"
+#include "globalsettings_templateparser.h"
 #include "customtemplates_kfg.h"
 #include "templatesconfiguration_kfg.h"
 #include "templatesconfiguration.h"

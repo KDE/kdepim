@@ -19,7 +19,7 @@
 #include "customtemplatesmenu.h"
 #include "customtemplates.h"
 #include "customtemplates_kfg.h"
-#include "globalsettings_base.h"
+#include "globalsettings_templateparser.h"
 
 #include <KActionCollection>
 #include <KActionMenu>
