@@ -19,7 +19,7 @@
 #include "notesagent_debug.h"
 #include <ItemFetchJob>
 #include <ItemFetchScope>
-#include "noteshared/attributes/notedisplayattribute.h"
+#include "attributes/notedisplayattribute.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 

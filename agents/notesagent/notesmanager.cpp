@@ -17,11 +17,11 @@
 
 #include "notesmanager.h"
 #include "notesharedglobalconfig.h"
-#include "noteshared/network/notesnetworkreceiver.h"
-#include "noteshared/job/createnewnotejob.h"
-#include "noteshared/akonadi/noteschangerecorder.h"
-#include "noteshared/akonadi/notesakonaditreemodel.h"
-#include "noteshared/attributes/notealarmattribute.h"
+#include "network/notesnetworkreceiver.h"
+#include "job/createnewnotejob.h"
+#include "akonadi/noteschangerecorder.h"
+#include "akonadi/notesakonaditreemodel.h"
+#include "attributes/notealarmattribute.h"
 #include "notesagentalarmdialog.h"
 
 #include <AkonadiCore/Session>

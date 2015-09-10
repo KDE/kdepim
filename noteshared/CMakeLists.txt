@@ -1,80 +1,82 @@
+cmake_minimum_required(VERSION 2.8.12)
+
 project(noteshared)
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${noteshared_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.14.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libnoteshared\")
 
-set(libnoteshared_akonadi_SRCS
-    akonadi/notesakonaditreemodel.cpp
-    akonadi/noteschangerecorder.cpp
+set(KF5_VERSION "5.14.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.42")
+set(KDEPIM_LIB_VERSION "5.43.0")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
+
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX NOTESHARED
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/noteshared_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5NoteSharedConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-set(libnoteshared_SRCS
-    noteshared_debug.cpp
-    attributes/notealarmattribute.cpp
-    attributes/notedisplayattribute.cpp
-    attributes/notelockattribute.cpp
-    attributes/showfoldernotesattribute.cpp
-    attributes/attributeregistrar.cpp
-    noteutils.cpp
-    network/notesnetworksender.cpp
-    network/notesnetworkreceiver.cpp
-    network/notehostdialog.cpp
-    editor/noteeditorutils.cpp
-    editor/noteeditor.cpp
-    config/noteactionconfig.cpp
-    config/notenetworkconfig.cpp
-    resources/localresourcecreator.cpp
-    job/createnewnotejob.cpp
-    dialog/selectednotefolderdialog.cpp
-    widget/notelistwidget.cpp
-    alarms/notealarmdialog.cpp
-    ${libnoteshared_akonadi_SRCS}
+########### Targets ###########
+
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5NoteShared")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5NoteSharedConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5NoteSharedConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
-ecm_qt_declare_logging_category(libnoteshared_SRCS HEADER noteshared_debug.h IDENTIFIER NOTESHARED_LOG CATEGORY_NAME log_noteshared)
-
-macro(add_resource_iface _kcfgFile _ifaceName _className)
-  kcfg_generate_dbus_interface(${_kcfgFile} ${_ifaceName})
-  string(TOLOWER ${_className} _codeFile)
-  set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "resources/metatype.h")
-  qt5_add_dbus_interface(libnoteshared_SRCS
-    ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
-  )
-endmacro()
-
-add_resource_iface( ${CMAKE_CURRENT_SOURCE_DIR}/resources/maildirresource.kcfg
-                   org.kde.Akonadi.Maildir.Settings MaildirSettings )
-
-add_custom_target(noteshared_settings_xml ALL
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Maildir.Settings.xml
-  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources/maildirresource.kcfg
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5NoteSharedConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5NoteSharedConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
 )
 
+install(EXPORT KF5NoteSharedTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5NoteSharedTargets.cmake NAMESPACE KF5::)
 
-
-set( libnoteshared_kcfg_lib_SRCS settings/notesharedglobalconfig.kcfgc )
-
-kconfig_add_kcfg_files(libnoteshared_kcfg_lib_SRCS ${libnoteshared_kcfg_lib_SRCS})
-
-
-add_library(noteshared ${libnoteshared_SRCS} ${libnoteshared_kcfg_lib_SRCS} )
-generate_export_header(noteshared BASE_NAME noteshared)
-
-target_link_libraries(noteshared
-PUBLIC
-     KF5::AkonadiCore
-PRIVATE
-     KF5::DNSSD pimcommon  KF5::Mime KF5::AkonadiNotes KF5::KDELibs4Support
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/noteshared_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
 )
 
-target_include_directories(noteshared PUBLIC "$<BUILD_INTERFACE:${noteshared_SOURCE_DIR};${noteshared_BINARY_DIR}>")
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX NOTESHARED
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/noteshared_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5NoteSharedConfigVersion.cmake"
+                        SOVERSION 5
+)
+endif()
 
-set_target_properties(noteshared PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS noteshared ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+add_subdirectory(src)
 if (BUILD_TESTING)
-   add_subdirectory(attributes/autotests)
    add_subdirectory(autotests)
 endif()
+

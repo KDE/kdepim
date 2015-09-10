@@ -27,7 +27,7 @@ target_link_libraries(akonadi_notes_agent
   KF5::NotifyConfig
   KF5::DBusAddons
   KF5::KDELibs4Support
-  noteshared
+  KF5::NoteShared
   pimcommon
 )
 
