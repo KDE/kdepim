@@ -19,7 +19,7 @@
  */
 
 #include "vcardviewer.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "widget/grantleecontactviewer.h"
 
 #include <kcontacts/vcardconverter.h>

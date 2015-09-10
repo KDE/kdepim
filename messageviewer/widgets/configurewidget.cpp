@@ -22,10 +22,10 @@
 #include "messageviewer_debug.h"
 #include "ui_settings.h"
 #include "utils/util.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "viewer/nodehelper.h"
 
-#include "messagecore/settings/globalsettings_messagecore_impl.h"
+#include "messagecore/settings/messagecoresettings.h"
 
 #include <KConfigDialogManager>
 #include <KLocalizedString>

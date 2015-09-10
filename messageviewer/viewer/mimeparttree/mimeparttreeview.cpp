@@ -17,7 +17,7 @@
 
 #include "mimeparttreeview.h"
 #include "mimetreemodel.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 
 #include <KMime/Content>
 

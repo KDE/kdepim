@@ -20,7 +20,7 @@
 #include "messageviewer_debug.h"
 #include "pimcommon/gravatar/gravatarresolvurljob.h"
 #include "pimcommon/util/networkutil.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include <Akonadi/Contact/ContactSearchJob>
 #include <kio/transferjob.h>
 

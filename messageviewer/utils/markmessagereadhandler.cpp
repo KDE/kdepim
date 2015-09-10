@@ -21,7 +21,7 @@
 
 #include "markmessagereadhandler.h"
 
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 
 #include <AkonadiCore/itemmodifyjob.h>
 #include <Akonadi/KMime/MessageFlags>

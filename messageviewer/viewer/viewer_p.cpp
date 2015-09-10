@@ -118,7 +118,7 @@
 #include "widgets/attachmentdialog.h"
 #include "viewer/attachmentstrategy.h"
 #include "csshelper.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "header/headerstyle.h"
 #include "header/headerstrategy.h"
 #include "widgets/htmlstatusbar.h"
@@ -143,7 +143,7 @@
 #include <messagecore/utils/stringutil.h>
 
 #include <messagecore/helpers/nodehelper.h>
-#include "messagecore/settings/globalsettings_messagecore_impl.h"
+#include "messagecore/settings/messagecoresettings.h"
 #include <AkonadiCore/agentinstance.h>
 #include <AkonadiCore/agentmanager.h>
 #include <AkonadiCore/CollectionFetchJob>

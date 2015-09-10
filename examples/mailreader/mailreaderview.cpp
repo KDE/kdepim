@@ -7,7 +7,7 @@
 #include "settings.h"
 #include "messageviewer/viewer/viewer.h"
 #include "messageviewer/viewer/attachmentstrategy.h"
-#include <messageviewer/settings/globalsettings.h>
+#include <messageviewer/settings/messageviewersettings.h>
 #include <KXmlGuiWindow>
 #include <KConfigDialog>
 

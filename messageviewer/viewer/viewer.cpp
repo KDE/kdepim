@@ -28,7 +28,7 @@
 #include "viewer_p.h"
 #include "widgets/configurewidget.h"
 #include "csshelper.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "viewer/mailwebview.h"
 #include "viewer/mimeparttree/mimetreemodel.h"
 #include "viewer/mimeparttree/mimeparttreeview.h"

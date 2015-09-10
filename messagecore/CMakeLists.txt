@@ -40,7 +40,7 @@ set(messagecore_LIB_SRCS
    ${messagecore_attachment_LIB_SRCS}
    ${messagecore_misc_LIB_SRCS}
    ${messagecore_helper_LIB_SRCS}
-   settings/globalsettings_messagecore_impl.cpp
+   settings/messagecoresettings.cpp
    utils/stringutil.cpp
 )
 

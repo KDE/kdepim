@@ -32,9 +32,9 @@
 */
 
 #include "htmlstatusbar.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 
-#include "messagecore/settings/globalsettings_messagecore_impl.h"
+#include "messagecore/settings/messagecoresettings.h"
 
 #include <KLocalizedString>
 #include <kconfiggroup.h>

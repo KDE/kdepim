@@ -17,7 +17,7 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "globalsettings_messagecore_impl.h"
+#include "messagecoresettings.h"
 
 using namespace MessageCore;
 

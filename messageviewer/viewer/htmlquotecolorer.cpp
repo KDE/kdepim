@@ -19,7 +19,7 @@
 */
 
 #include "htmlquotecolorer.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 
 #ifndef KDEPIM_NO_WEBKIT
 #include <QWebPage>

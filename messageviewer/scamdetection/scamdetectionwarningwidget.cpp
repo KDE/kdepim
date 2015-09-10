@@ -16,7 +16,7 @@
 */
 
 #include "scamdetectionwarningwidget.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 
 #include <KLocalizedString>
 #include <QAction>

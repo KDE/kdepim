@@ -17,7 +17,7 @@
 
 #include "customheadersettingwidget.h"
 #include "pimcommon/widgets/simplestringlisteditor.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 
 #include <KConfig>
 #include <KConfigGroup>

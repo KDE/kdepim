@@ -19,7 +19,7 @@
 #include "header/headerstyle_util.h"
 
 #include "header/headerstrategy.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "viewer/nodehelper.h"
 
 #include <messagecore/utils/stringutil.h>

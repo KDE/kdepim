@@ -17,7 +17,7 @@
 
 #include "printingsettings.h"
 #include "ui_printingsettings.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
 

@@ -51,7 +51,7 @@
 #include "viewer/bodypartformatterfactory.h"
 #include "viewer/partnodebodypart.h"
 #include "interfaces/bodypartformatter.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "utils/util.h"
 #include "job/kleojobexecutor.h"
 #include "viewer/nodehelper.h"

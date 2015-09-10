@@ -203,7 +203,7 @@ set(libmessageviewer_SRCS
   ${libmessageviewer_htmlwriter_SRCS}
   ${libmessageviewer_antispam_SRCS}
   ${libmessageviewer_job_SRCS}
-  settings/globalsettings.cpp
+  settings/messageviewersettings.cpp
   ${_mailwebview_cpp}
   ${libmessageviewer_gravatar_SRCS}
 )

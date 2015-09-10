@@ -30,9 +30,9 @@
 */
 
 #include "csshelper.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 
-#include "messagecore/settings/globalsettings_messagecore_impl.h"
+#include "messagecore/settings/messagecoresettings.h"
 
 #include <kconfig.h>
 #include <kconfiggroup.h>

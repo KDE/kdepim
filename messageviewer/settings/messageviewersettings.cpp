@@ -21,7 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "globalsettings.h"
+#include "messageviewersettings.h"
 #include <QTimer>
 
 using namespace MessageViewer;

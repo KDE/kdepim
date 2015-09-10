@@ -18,7 +18,7 @@
 #include "scamdetection.h"
 #include "scamdetectiondetailsdialog.h"
 #include "scamcheckshorturl.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 
 #include <KLocalizedString>
 

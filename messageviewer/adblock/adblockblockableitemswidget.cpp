@@ -17,7 +17,7 @@
 
 #include "adblockblockableitemswidget.h"
 #include "adblockcreatefilterdialog.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "adblock/adblockmanager.h"
 #include "pimcommon/widgets/customtreeview.h"
 #include "messageviewer_debug.h"

@@ -23,7 +23,7 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QPointer>
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 
 using namespace MessageViewer;

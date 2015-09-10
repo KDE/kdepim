@@ -27,7 +27,7 @@
 // Self Includes
 #include "adblockmanager.h"
 #include "messageviewer_debug.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "adblock/adblockutil.h"
 
 #include "webpage.h"

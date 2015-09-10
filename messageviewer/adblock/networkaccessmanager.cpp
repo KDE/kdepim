@@ -20,7 +20,7 @@
 
 #include "networkaccessmanager.h"
 #include "messageviewer_debug.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "adblockmanager.h"
 
 #include <KLocalizedString>

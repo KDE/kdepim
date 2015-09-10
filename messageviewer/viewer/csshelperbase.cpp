@@ -29,7 +29,7 @@
     your version.
 */
 
-#include <messagecore/settings/globalsettings_messagecore_impl.h>
+#include <messagecore/settings/messagecoresettings.h>
 #include "csshelperbase.h"
 
 #include <KColorScheme>

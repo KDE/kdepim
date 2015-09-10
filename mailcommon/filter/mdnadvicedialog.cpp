@@ -26,7 +26,7 @@
 #include <messagecomposer/helper/messagefactory.h>
 using MessageComposer::MessageFactory;
 
-#include <messageviewer/settings/globalsettings.h>
+#include <messageviewer/settings/messageviewersettings.h>
 #ifndef QT_NO_CURSOR
 #include <mailcommon/util/kcursorsaver.h>
 #endif

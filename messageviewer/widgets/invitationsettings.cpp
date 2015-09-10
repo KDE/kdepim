@@ -27,7 +27,7 @@
 
 #include "invitationsettings.h"
 #include "ui_invitationsettings.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
 

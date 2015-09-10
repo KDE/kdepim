@@ -18,7 +18,7 @@
 #include "attachmentencryptwithchiasmusjob.h"
 #include "viewer/chiasmuskeyselector.h"
 #include "utils/util.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "utils/autoqpointer.h"
 #include <gpgme++/error.h>
 

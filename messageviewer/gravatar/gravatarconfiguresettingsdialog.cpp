@@ -17,7 +17,7 @@
 
 #include "gravatarconfiguresettingsdialog.h"
 #include "pimcommon/gravatar/gravatarcache.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 
 #include <KLocalizedString>

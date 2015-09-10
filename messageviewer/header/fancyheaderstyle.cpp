@@ -22,7 +22,7 @@
 
 #include "header/headerstrategy.h"
 #include <KTextToHTML>
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 #include "viewer/nodehelper.h"
 
 #include <messagecore/utils/stringutil.h>

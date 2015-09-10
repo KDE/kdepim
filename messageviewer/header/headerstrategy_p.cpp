@@ -32,7 +32,7 @@
 */
 
 #include "headerstrategy_p.h"
-#include "settings/globalsettings.h"
+#include "settings/messageviewersettings.h"
 
 namespace MessageViewer
 {
