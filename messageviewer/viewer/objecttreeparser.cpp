@@ -743,97 +743,8 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
 #ifdef DEBUG_SIGNATURE
         qCDebug(MESSAGEVIEWER_LOG) << "\nFound signature";
 #endif
-        GpgME::Signature signature = signatures.front();
-
-        messagePart.status_code = signatureToStatus(signature);
-        messagePart.status = QString::fromLocal8Bit(signature.status().asString());
-        for (uint i = 1; i < signatures.size(); ++i) {
-            if (signatureToStatus(signatures[i]) != messagePart.status_code) {
-                messagePart.status_code = GPGME_SIG_STAT_DIFF;
-                messagePart.status = i18n("Different results for signatures");
-            }
-        }
-        if (messagePart.status_code & GPGME_SIG_STAT_GOOD) {
-            messagePart.isGoodSignature = true;
-            if (!doCheck) {
-                // We have a good signature but did not do a verify,
-                // this means the signature was already validated before by
-                // decryptverify for example.
-                Q_ASSERT(!key.keyID());   // There should be no key set without doCheck
-
-                // Search for the key by it's fingerprint so that we can check for
-                // trust etc.
-                Kleo::KeyListJob *job = cryptProto->keyListJob(false);    // local, no sigs
-                if (!job) {
-                    qCDebug(MESSAGEVIEWER_LOG) << "The Crypto backend does not support listing keys. ";
-                } else {
-                    std::vector<GpgME::Key> found_keys;
-                    // As we are local it is ok to make this synchronous
-                    GpgME::KeyListResult res = job->exec(QStringList(QLatin1String(signature.fingerprint())), false, found_keys);
-                    if (res.error()) {
-                        qCDebug(MESSAGEVIEWER_LOG) << "Error while searching key for Fingerprint: " << signature.fingerprint();
-                    }
-                    if (found_keys.size() > 1) {
-                        // Should not Happen
-                        qCDebug(MESSAGEVIEWER_LOG) << "Oops: Found more then one Key for Fingerprint: " << signature.fingerprint();
-                    }
-                    if (found_keys.size() != 1) {
-                        // Should not Happen at this point
-                        qCDebug(MESSAGEVIEWER_LOG) << "Oops: Found no Key for Fingerprint: " << signature.fingerprint();
-                    } else {
-                        key = found_keys[0];
-                    }
-                }
-            }
-        }
-
-        // save extended signature status flags
-        messagePart.sigSummary = signature.summary();
-
-        if (key.keyID()) {
-            messagePart.keyId = key.keyID();
-        }
-        if (messagePart.keyId.isEmpty()) {
-            messagePart.keyId = signature.fingerprint();
-        }
-        // ### Ugh. We depend on two enums being in sync:
-        messagePart.keyTrust = signature.validity();
-        if (key.numUserIDs() > 0 && key.userID(0).id()) {
-            messagePart.signer = Kleo::DN(key.userID(0).id()).prettyDN();
-        }
-        for (uint iMail = 0; iMail < key.numUserIDs(); ++iMail) {
-            // The following if /should/ always result in TRUE but we
-            // won't trust implicitely the plugin that gave us these data.
-            if (key.userID(iMail).email()) {
-                QString email = QString::fromUtf8(key.userID(iMail).email());
-                // ### work around gpgme 0.3.x / cryptplug bug where the
-                // ### email addresses are specified as angle-addr, not addr-spec:
-                if (email.startsWith(QLatin1Char('<')) && email.endsWith(QLatin1Char('>'))) {
-                    email = email.mid(1, email.length() - 2);
-                }
-                if (!email.isEmpty()) {
-                    messagePart.signerMailAddresses.append(email);
-                }
-            }
-        }
-
-        if (signature.creationTime()) {
-            messagePart.creationTime.setTime_t(signature.creationTime());
-        } else {
-            messagePart.creationTime = QDateTime();
-        }
-        if (messagePart.signer.isEmpty()) {
-            if (key.numUserIDs() > 0 && key.userID(0).name()) {
-                messagePart.signer = Kleo::DN(key.userID(0).name()).prettyDN();
-            }
-            if (!messagePart.signerMailAddresses.empty()) {
-                if (messagePart.signer.isEmpty()) {
-                    messagePart.signer = messagePart.signerMailAddresses.front();
-                } else {
-                    messagePart.signer += QLatin1String(" <") + messagePart.signerMailAddresses.front() + QLatin1Char('>');
-                }
-            }
-        }
+        messagePart.isSigned = true;
+        sigStatusToMetaData(signatures, cryptProto, messagePart, key);
 #ifdef DEBUG_SIGNATURE
         qCDebug(MESSAGEVIEWER_LOG) << "\n  key id:" << messagePart.keyId
                                    << "\n  key trust:" << messagePart.keyTrust
@@ -3023,38 +2934,38 @@ bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBacken
     return messagePart.isSigned;
 }
 
-void ObjectTreeParser::sigStatusToMetaData(const std::vector <GpgME::Signature> &signatures, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData &messagePart)
+void ObjectTreeParser::sigStatusToMetaData(const std::vector <GpgME::Signature> &signatures, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData &messagePart, GpgME::Key key)
 {
     if (messagePart.isSigned) {
-        //copied from ObjectTreeParser::writeOpaqueOrMultipartSignedData
         GpgME::Signature signature = signatures.front();
-        GpgME::Key key;
         messagePart.status_code = signatureToStatus(signature);
         messagePart.isGoodSignature = messagePart.status_code & GPGME_SIG_STAT_GOOD;
         // save extended signature status flags
         messagePart.sigSummary = signature.summary();
 
-        // Search for the key by it's fingerprint so that we can check for
-        // trust etc.
-        Kleo::KeyListJob *job = cryptProto->keyListJob(false);    // local, no sigs
-        if (!job) {
-            qCDebug(MESSAGEVIEWER_LOG) << "The Crypto backend does not support listing keys. ";
-        } else {
-            std::vector<GpgME::Key> found_keys;
-            // As we are local it is ok to make this synchronous
-            GpgME::KeyListResult res = job->exec(QStringList(QLatin1String(signature.fingerprint())), false, found_keys);
-            if (res.error()) {
-                qCDebug(MESSAGEVIEWER_LOG) << "Error while searching key for Fingerprint: " << signature.fingerprint();
-            }
-            if (found_keys.size() > 1) {
-                // Should not Happen
-                qCDebug(MESSAGEVIEWER_LOG) << "Oops: Found more then one Key for Fingerprint: " << signature.fingerprint();
-            }
-            if (found_keys.size() != 1) {
-                // Should not Happen at this point
-                qCDebug(MESSAGEVIEWER_LOG) << "Oops: Found no Key for Fingerprint: " << signature.fingerprint();
+        if (messagePart.isGoodSignature && !key.keyID()) {
+            // Search for the key by it's fingerprint so that we can check for
+            // trust etc.
+            Kleo::KeyListJob *job = cryptProto->keyListJob(false);    // local, no sigs
+            if (!job) {
+                qCDebug(MESSAGEVIEWER_LOG) << "The Crypto backend does not support listing keys. ";
             } else {
-                key = found_keys[0];
+                std::vector<GpgME::Key> found_keys;
+                // As we are local it is ok to make this synchronous
+                GpgME::KeyListResult res = job->exec(QStringList(QLatin1String(signature.fingerprint())), false, found_keys);
+                if (res.error()) {
+                    qCDebug(MESSAGEVIEWER_LOG) << "Error while searching key for Fingerprint: " << signature.fingerprint();
+                }
+                if (found_keys.size() > 1) {
+                    // Should not Happen
+                    qCDebug(MESSAGEVIEWER_LOG) << "Oops: Found more then one Key for Fingerprint: " << signature.fingerprint();
+                }
+                if (found_keys.size() != 1) {
+                    // Should not Happen at this point
+                    qCDebug(MESSAGEVIEWER_LOG) << "Oops: Found no Key for Fingerprint: " << signature.fingerprint();
+                } else {
+                    key = found_keys[0];
+                }
             }
         }
 
@@ -3214,7 +3125,7 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
 
             if (messagePart.isSigned) {
                 inlineSignatureState = KMMsgPartiallySigned;
-                sigStatusToMetaData(signatures, cryptoProtocol(), messagePart);
+                sigStatusToMetaData(signatures, cryptoProtocol(), messagePart, GpgME::Key());
             }
 
             plainTextStr += text;
