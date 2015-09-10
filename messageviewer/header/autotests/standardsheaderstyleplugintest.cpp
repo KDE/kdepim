@@ -21,6 +21,9 @@
 #include "header/standardsheaderstyleplugin/standardsheaderstyleinterface.h"
 #include <QTest>
 #include <KActionCollection>
+#include <KActionMenu>
+#include <QActionGroup>
+
 StandardsHeaderStylePluginTest::StandardsHeaderStylePluginTest(QObject *parent)
     : QObject(parent)
 {
@@ -42,7 +45,10 @@ void StandardsHeaderStylePluginTest::shouldHaveDefaultValue()
 void StandardsHeaderStylePluginTest::shouldCreateInterface()
 {
     MessageViewer::StandardsHeaderStylePlugin plugin;
-    MessageViewer::HeaderStyleInterface *interface = plugin.createView(new KActionCollection(this));
+    KActionMenu *menu = new KActionMenu(this);
+    QActionGroup *act = new QActionGroup(this);
+
+    MessageViewer::HeaderStyleInterface *interface = plugin.createView(menu, act, new KActionCollection(this));
     QVERIFY(interface);
     QVERIFY(!interface->action().isEmpty());
 }

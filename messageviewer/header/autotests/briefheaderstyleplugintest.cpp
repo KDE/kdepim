@@ -21,6 +21,9 @@
 #include "header/briefheaderstyleplugin/briefheaderstyleinterface.h"
 #include <QTest>
 #include <KActionCollection>
+#include <KActionMenu>
+#include <QActionGroup>
+
 BriefHeaderStylePluginTest::BriefHeaderStylePluginTest(QObject *parent)
     : QObject(parent)
 {
@@ -42,7 +45,9 @@ void BriefHeaderStylePluginTest::shouldHaveDefaultValue()
 void BriefHeaderStylePluginTest::shouldCreateInterface()
 {
     MessageViewer::BriefHeaderStylePlugin plugin;
-    MessageViewer::HeaderStyleInterface *interface = plugin.createView(new KActionCollection(this));
+    KActionMenu *menu = new KActionMenu(this);
+    QActionGroup *act = new QActionGroup(this);
+    MessageViewer::HeaderStyleInterface *interface = plugin.createView(menu, act, new KActionCollection(this));
     QVERIFY(interface);
     QVERIFY(!interface->action().isEmpty());
 }

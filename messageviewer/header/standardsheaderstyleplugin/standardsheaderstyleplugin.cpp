@@ -47,7 +47,7 @@ HeaderStrategy *StandardsHeaderStylePlugin::headerStrategy() const
     return mHeaderStrategy;
 }
 
-HeaderStyleInterface *StandardsHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
+HeaderStyleInterface *StandardsHeaderStylePlugin::createView(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac, QObject *parent)
 {
     MessageViewer::HeaderStyleInterface *view = new MessageViewer::StandardsHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
     view->createAction(ac);

@@ -21,6 +21,9 @@
 #include "header/longheaderstyleplugin/longheaderstyleinterface.h"
 #include <QTest>
 #include <KActionCollection>
+#include <KActionMenu>
+#include <QActionGroup>
+
 LongHeaderStylePluginTest::LongHeaderStylePluginTest(QObject *parent)
     : QObject(parent)
 {
@@ -42,7 +45,10 @@ void LongHeaderStylePluginTest::shouldHaveDefaultValue()
 void LongHeaderStylePluginTest::shouldCreateInterface()
 {
     MessageViewer::LongHeaderStylePlugin plugin;
-    MessageViewer::HeaderStyleInterface *interface = plugin.createView(new KActionCollection(this));
+    KActionMenu *menu = new KActionMenu(this);
+    QActionGroup *act = new QActionGroup(this);
+
+    MessageViewer::HeaderStyleInterface *interface = plugin.createView(menu, act, new KActionCollection(this));
     QVERIFY(interface);
     QVERIFY(!interface->action().isEmpty());
 }

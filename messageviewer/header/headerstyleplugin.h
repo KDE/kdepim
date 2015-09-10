@@ -23,6 +23,8 @@
 #include "messageviewer_export.h"
 class KToggleAction;
 class KActionCollection;
+class QActionGroup;
+class KActionMenu;
 namespace MessageViewer
 {
 class HeaderStyle;
@@ -38,7 +40,7 @@ public:
 
     virtual HeaderStyle *headerStyle() const = 0;
     virtual HeaderStrategy *headerStrategy() const = 0;
-    virtual HeaderStyleInterface *createView(KActionCollection *ac, QObject *parent = Q_NULLPTR) = 0;
+    virtual HeaderStyleInterface *createView(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac, QObject *parent = Q_NULLPTR) = 0;
     virtual QString name() const = 0;
 
 private:

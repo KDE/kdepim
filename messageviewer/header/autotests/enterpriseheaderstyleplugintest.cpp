@@ -21,6 +21,9 @@
 #include "header/enterpriseheaderstyleplugin/enterpriseheaderstyleinterface.h"
 #include <QTest>
 #include <KActionCollection>
+#include <KActionMenu>
+#include <QActionGroup>
+
 EnterpriseHeaderStylePluginTest::EnterpriseHeaderStylePluginTest(QObject *parent)
     : QObject(parent)
 {
@@ -42,7 +45,10 @@ void EnterpriseHeaderStylePluginTest::shouldHaveDefaultValue()
 void EnterpriseHeaderStylePluginTest::shouldCreateInterface()
 {
     MessageViewer::EnterpriseHeaderStylePlugin plugin;
-    MessageViewer::HeaderStyleInterface *interface = plugin.createView(new KActionCollection(this));
+    KActionMenu *menu = new KActionMenu(this);
+    QActionGroup *act = new QActionGroup(this);
+
+    MessageViewer::HeaderStyleInterface *interface = plugin.createView(menu, act, new KActionCollection(this));
     QVERIFY(interface);
     QVERIFY(!interface->action().isEmpty());
 }

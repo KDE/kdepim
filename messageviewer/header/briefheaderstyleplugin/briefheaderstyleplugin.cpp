@@ -47,7 +47,7 @@ HeaderStrategy *BriefHeaderStylePlugin::headerStrategy() const
     return mHeaderStrategy;
 }
 
-MessageViewer::HeaderStyleInterface *BriefHeaderStylePlugin::createView(KActionCollection *ac, QObject *parent)
+MessageViewer::HeaderStyleInterface *BriefHeaderStylePlugin::createView(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac, QObject *parent)
 {
     MessageViewer::BriefHeaderStyleInterface *view = new MessageViewer::BriefHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
     view->createAction(ac);
