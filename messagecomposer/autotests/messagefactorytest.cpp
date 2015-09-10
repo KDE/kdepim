@@ -51,7 +51,7 @@
 #include <QDir>
 #include <QLocale>
 #include "globalsettings_templateparser.h"
-#include "templateparser/templateparser_export.h"
+#include "templateparser_export.h"
 
 using namespace MessageComposer;
 using namespace MessageComposer;
