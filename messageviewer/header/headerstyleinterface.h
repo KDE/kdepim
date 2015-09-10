@@ -23,6 +23,8 @@
 class KToggleAction;
 class KActionCollection;
 class QAction;
+class QActionGroup;
+class KActionMenu;
 namespace MessageViewer
 {
 class HeaderStyle;
@@ -34,7 +36,7 @@ public:
     explicit HeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
     virtual ~HeaderStyleInterface();
     QList<KToggleAction * > action() const;
-    virtual void createAction(KActionCollection *ac) = 0;
+    virtual void createAction(KActionMenu *menu, QActionGroup *actionGroup,KActionCollection *ac) = 0;
 
 Q_SIGNALS:
     void styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy);
@@ -43,6 +45,7 @@ protected Q_SLOTS:
     void slotStyleChanged();
 protected:
     void addHelpTextAction(QAction *act, const QString &text);
+    void addActionToMenu(KActionMenu *menu, QActionGroup *actionGroup);
     HeaderStyle *mHeaderStyle;
     HeaderStrategy *mHeaderStrategy;
     QList<KToggleAction *> mAction;

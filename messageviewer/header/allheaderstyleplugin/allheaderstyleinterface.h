@@ -30,7 +30,7 @@ public:
     explicit AllHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
     ~AllHeaderStyleInterface();
 
-    void createAction(KActionCollection *ac) Q_DECL_OVERRIDE;
+    void createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac) Q_DECL_OVERRIDE;
 };
 
 }

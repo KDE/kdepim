@@ -17,7 +17,9 @@
 
 #include "headerstyle.h"
 #include "headerstyleinterface.h"
+#include <KActionMenu>
 #include <QAction>
+#include <KToggleAction>
 using namespace MessageViewer;
 
 HeaderStyleInterface::HeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
@@ -43,6 +45,14 @@ void HeaderStyleInterface::addHelpTextAction(QAction *act, const QString &text)
     act->setToolTip(text);
     if (act->whatsThis().isEmpty()) {
         act->setWhatsThis(text);
+    }
+}
+
+void HeaderStyleInterface::addActionToMenu(KActionMenu *menu, QActionGroup *actionGroup)
+{
+    Q_FOREACH(KToggleAction *taction, mAction) {
+        menu->addAction(taction);
+        actionGroup->addAction(taction);
     }
 }
 

@@ -31,12 +31,13 @@ AllHeaderStyleInterface::~AllHeaderStyleInterface()
 
 }
 
-void AllHeaderStyleInterface::createAction(KActionCollection *ac)
+void AllHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac)
 {
     KToggleAction *act = new KToggleAction(i18nc("View->headers->", "&All Headers"), this);
     ac->addAction(QStringLiteral("view_headers_all"), act);
     connect(act, &KToggleAction::triggered, this, &AllHeaderStyleInterface::slotStyleChanged);
     addHelpTextAction(act, i18n("Show all message headers"));
     mAction.append(act);
+    addActionToMenu(menu, actionGroup);
 }
 

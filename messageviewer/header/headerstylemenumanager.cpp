@@ -64,10 +64,6 @@ void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
     Q_FOREACH(MessageViewer::HeaderStylePlugin *plugin, lstPlugin) {
         MessageViewer::HeaderStyleInterface *interface = plugin->createView(headerMenu, group, ac, q);
         lstInterface.append(interface);
-        Q_FOREACH(KToggleAction *taction, interface->action()) {
-            headerMenu->addAction(taction);
-            group->addAction(taction);
-        }
     }
 }
 

@@ -29,9 +29,10 @@ GrantleeHeaderStyleInterface::~GrantleeHeaderStyleInterface()
 
 }
 
-void GrantleeHeaderStyleInterface::createAction(KActionCollection *ac)
+void GrantleeHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac)
 {
     //connect(act, &KToggleAction::triggered, this, &BriefHeaderStyleInterface::slotStyleChanged);
+    //addActionToMenu(menu, actionGroup);
 
 }
 

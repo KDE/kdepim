@@ -31,7 +31,7 @@ public:
     explicit BriefHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
     ~BriefHeaderStyleInterface();
 
-    void createAction(KActionCollection *ac) Q_DECL_OVERRIDE;
+    void createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac) Q_DECL_OVERRIDE;
 };
 
 }

@@ -29,7 +29,7 @@ class CustomHeaderStyleInterface : public MessageViewer::HeaderStyleInterface
 public:
     explicit CustomHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
     ~CustomHeaderStyleInterface();
-    void createAction(KActionCollection *ac) Q_DECL_OVERRIDE;
+    void createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac) Q_DECL_OVERRIDE;
 
 };
 

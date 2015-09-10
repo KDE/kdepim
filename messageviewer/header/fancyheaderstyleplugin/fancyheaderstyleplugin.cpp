@@ -50,7 +50,7 @@ HeaderStrategy *FancyHeaderStylePlugin::headerStrategy() const
 HeaderStyleInterface *FancyHeaderStylePlugin::createView(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac, QObject *parent)
 {
     MessageViewer::HeaderStyleInterface *view = new MessageViewer::FancyHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
-    view->createAction(ac);
+    view->createAction(menu, actionGroup, ac);
     return view;
 }
 

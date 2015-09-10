@@ -32,12 +32,13 @@ CustomHeaderStyleInterface::~CustomHeaderStyleInterface()
 
 }
 
-void CustomHeaderStyleInterface::createAction(KActionCollection *ac)
+void CustomHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac)
 {
     KToggleAction *act = new KToggleAction(i18nc("View->headers->", "&Custom Headers"), this);
     ac->addAction(QStringLiteral("view_custom_headers"), act);
     connect(act, &KToggleAction::triggered, this, &CustomHeaderStyleInterface::slotStyleChanged);
     addHelpTextAction(act, i18n("Show custom headers"));
     mAction.append(act);
+    addActionToMenu(menu, actionGroup);
 }
 

@@ -50,7 +50,7 @@ HeaderStrategy *CustomHeaderStylePlugin::headerStrategy() const
 HeaderStyleInterface *CustomHeaderStylePlugin::createView(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac, QObject *parent)
 {
     MessageViewer::HeaderStyleInterface *view = new MessageViewer::CustomHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
-    view->createAction(ac);
+    view->createAction(menu, actionGroup, ac);
     return view;
 }
 

@@ -32,13 +32,14 @@ LongHeaderStyleInterface::~LongHeaderStyleInterface()
 
 }
 
-void LongHeaderStyleInterface::createAction(KActionCollection *ac)
+void LongHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac)
 {
     KToggleAction *act = new KToggleAction(i18nc("View->headers->", "&Long Headers"), this);
     ac->addAction(QStringLiteral("view_headers_long"), act);
     connect(act, &KToggleAction::triggered, this, &LongHeaderStyleInterface::slotStyleChanged);
     addHelpTextAction(act, i18n("Show long list of message headers"));
     mAction.append(act);
+    addActionToMenu(menu, actionGroup);
 
 }
 
