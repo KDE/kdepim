@@ -27,7 +27,7 @@
 #include <AkonadiCore/item.h>
 
 #include "qtest.h"
-#include <messagecore/autotests/util.h>
+#include <setupenv.h>
 
 using namespace MessageViewer;
 
@@ -35,7 +35,7 @@ QTEST_MAIN(ObjectTreeParserTester)
 
 void ObjectTreeParserTester::initTestCase()
 {
-    MessageCore::Test::setupEnv();
+    MessageViewer::Test::setupEnv();
 }
 
 void ObjectTreeParserTester::test_parsePlainMessage()
@@ -97,7 +97,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
     TestHtmlWriter testWriter;
     TestCSSHelper testCSSHelper;
     NodeHelper nodeHelper;
-    MessageCore::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
+    MessageViewer::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
     ObjectTreeParser otp(&emptySource, &nodeHelper);
     otp.parseObjectTree(msg.data());
 
@@ -132,7 +132,7 @@ void ObjectTreeParserTester::test_missingContentTypeHeader()
     TestHtmlWriter testWriter;
     TestCSSHelper testCSSHelper;
     NodeHelper nodeHelper;
-    MessageCore::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
+    MessageViewer::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
     ObjectTreeParser otp(&emptySource, &nodeHelper);
     otp.parseObjectTree(msg.data());
 
@@ -150,7 +150,7 @@ void ObjectTreeParserTester::test_inlinePGPDecryption()
     TestHtmlWriter testWriter;
     TestCSSHelper testCSSHelper;
     NodeHelper nodeHelper;
-    MessageCore::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
+    MessageViewer::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
     ObjectTreeParser otp(&emptySource, &nodeHelper);
 
     emptySource.setAllowDecryption(true);

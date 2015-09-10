@@ -21,7 +21,7 @@
 
 #include "viewer/objecttreeemptysource.h"
 
-#include <messagecore/autotests/util.h>
+#include <setupenv.h>
 
 #include <qtest.h>
 
@@ -46,7 +46,7 @@ QTEST_MAIN(UnencryptedMessageTest)
 
 void UnencryptedMessageTest::initTestCase()
 {
-    MessageCore::Test::setupEnv();
+    MessageViewer::Test::setupEnv();
 }
 
 void UnencryptedMessageTest::testMailWithoutEncryption()
@@ -66,7 +66,7 @@ void UnencryptedMessageTest::testSignedForwardedOpenPGPSignedEncrypted()
     NodeHelper nodeHelper;
     TestHtmlWriter testWriter;
     TestCSSHelper testCSSHelper;
-    MessageCore::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
+    MessageViewer::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
     ObjectTreeParser otp(&emptySource, &nodeHelper);
     otp.parseObjectTree(originalMessage.data());
 
@@ -85,7 +85,7 @@ void UnencryptedMessageTest::testForwardedOpenPGPSignedEncrypted()
     NodeHelper nodeHelper;
     TestHtmlWriter testWriter;
     TestCSSHelper testCSSHelper;
-    MessageCore::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
+    MessageViewer::Test::TestObjectTreeSource emptySource(&testWriter, &testCSSHelper);
     emptySource.setAllowDecryption(true);
     ObjectTreeParser otp(&emptySource, &nodeHelper);
     otp.parseObjectTree(originalMessage.data());

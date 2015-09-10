@@ -41,7 +41,7 @@
 #include <messageviewer/viewer/objecttreeparser.h>
 #include <messageviewer/viewer/objecttreeemptysource.h>
 #include <messageviewer/viewer/nodehelper.h>
-#include <messagecore/autotests/util.h>
+#include <setupenv.h>
 
 #include <stdlib.h>
 #include <KCharsets>
@@ -50,7 +50,7 @@ QTEST_MAIN(EncryptJobTest)
 
 void EncryptJobTest::initTestCase()
 {
-    MessageCore::Test::setupEnv();
+    MessageComposer::Test::setupEnv();
 }
 
 void EncryptJobTest::testContentDirect()
@@ -71,7 +71,7 @@ void EncryptJobTest::testContentDirect()
 
     VERIFYEXEC(mainTextJob);
 
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
     MessageComposer::EncryptJob *eJob = new MessageComposer::EncryptJob(composer);
 
@@ -106,7 +106,7 @@ void EncryptJobTest::testContentChained()
 
     VERIFYEXEC(mainTextJob);
 
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
     qDebug() << "done getting keys";
     MessageComposer::EncryptJob *eJob = new MessageComposer::EncryptJob(composer);
 
@@ -124,7 +124,7 @@ void EncryptJobTest::testContentChained()
 
 void EncryptJobTest::testHeaders()
 {
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
     MessageComposer::Composer *composer = new MessageComposer::Composer;
     MessageComposer::EncryptJob *eJob = new MessageComposer::EncryptJob(composer);

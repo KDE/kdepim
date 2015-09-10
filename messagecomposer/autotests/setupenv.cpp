@@ -18,23 +18,22 @@
   02110-1301, USA.
 */
 
-#include "util.h"
+#include "setupenv.h"
 
 #include <kleo/keylistjob.h>
 #include <gpgme++/keylistresult.h>
 #include <kleo/cryptobackendfactory.h>
 
 #include <QFile>
-#include "messagecore_debug.h"
 #include <QDir>
 
-void MessageCore::Test::setupEnv()
+void MessageComposer::Test::setupEnv()
 {
     setenv("LC_ALL", "C", 1);
     setenv("KDEHOME", QFile::encodeName(QDir::homePath() + QString::fromLatin1("/.kde-unit-test")), 1);
 }
 
-std::vector< GpgME::Key, std::allocator< GpgME::Key > > MessageCore::Test::getKeys(bool smime)
+std::vector< GpgME::Key, std::allocator< GpgME::Key > > MessageComposer::Test::getKeys(bool smime)
 {
     Kleo::KeyListJob *job = 0;
 
@@ -55,13 +54,13 @@ std::vector< GpgME::Key, std::allocator< GpgME::Key > > MessageCore::Test::getKe
     }
 
     Q_ASSERT(!res.error());
-    qCDebug(MESSAGECORE_LOG) << "got private keys:" << keys.size();
+    qDebug() << "got private keys:" << keys.size();
 
     for (std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i) {
-        qCDebug(MESSAGECORE_LOG) << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
-        qCDebug(MESSAGECORE_LOG) << "key numuserIds:" << i->numUserIDs();
+        qDebug() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
+        qDebug() << "key numuserIds:" << i->numUserIDs();
         for (uint k = 0; k < i->numUserIDs(); ++k) {
-            qCDebug(MESSAGECORE_LOG) << "userIDs:" << i->userID(k).email();
+            qDebug() << "userIDs:" << i->userID(k).email();
         }
     }
 

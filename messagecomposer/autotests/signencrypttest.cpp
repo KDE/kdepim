@@ -42,7 +42,7 @@
 #include <messagecomposer/part/textpart.h>
 
 #include <messageviewer/viewer/nodehelper.h>
-#include <messagecore/autotests/util.h>
+#include <setupenv.h>
 
 #include <messagecore/helpers/nodehelper.h>
 
@@ -50,13 +50,13 @@ QTEST_MAIN(SignEncryptTest)
 
 void SignEncryptTest::initTestCase()
 {
-    MessageCore::Test::setupEnv();
+    MessageComposer::Test::setupEnv();
 }
 
 void SignEncryptTest::testContent()
 {
 
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
     MessageComposer::Composer *composer = new MessageComposer::Composer;
     MessageComposer::SignJob *sJob = new MessageComposer::SignJob(composer);
@@ -109,7 +109,7 @@ void SignEncryptTest::testContent()
 
 void SignEncryptTest::testHeaders()
 {
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
     MessageComposer::Composer *composer = new MessageComposer::Composer;
     MessageComposer::SignJob *sJob = new MessageComposer::SignJob(composer);

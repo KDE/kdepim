@@ -39,7 +39,7 @@
 #include <QtTest>
 #include <stdlib.h>
 #include <gpgme++/keylistresult.h>
-#include <messagecore/autotests/util.h>
+#include <setupenv.h>
 
 void ComposerTestUtil::verify(bool sign, bool encrypt, KMime::Content *content, QByteArray origContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding)
 {
@@ -63,7 +63,7 @@ void ComposerTestUtil::verifySignature(KMime::Content *content, QByteArray signe
     // parse the result and make sure it is valid in various ways
     TestHtmlWriter testWriter;
     TestCSSHelper testCSSHelper;
-    MessageCore::Test::TestObjectTreeSource testSource(&testWriter, &testCSSHelper);
+    MessageComposer::Test::TestObjectTreeSource testSource(&testWriter, &testCSSHelper);
     MessageViewer::NodeHelper *nh = new MessageViewer::NodeHelper;
     MessageViewer::ObjectTreeParser otp(&testSource, nh);
     MessageViewer::ProcessResult pResult(nh);
@@ -137,7 +137,7 @@ void ComposerTestUtil::verifyEncryption(KMime::Content *content, QByteArray encr
     // parse the result and make sure it is valid in various ways
     TestHtmlWriter testWriter;
     TestCSSHelper testCSSHelper;
-    MessageCore::Test::TestObjectTreeSource testSource(&testWriter, &testCSSHelper);
+    MessageComposer::Test::TestObjectTreeSource testSource(&testWriter, &testCSSHelper);
     testSource.setAllowDecryption(true);
     MessageViewer::NodeHelper *nh = new MessageViewer::NodeHelper;
     MessageViewer::ObjectTreeParser otp(&testSource, nh);
@@ -196,7 +196,7 @@ void ComposerTestUtil::verifySignatureAndEncryption(KMime::Content *content, QBy
     // parse the result and make sure it is valid in various ways
     TestHtmlWriter testWriter;
     TestCSSHelper testCSSHelper;
-    MessageCore::Test::TestObjectTreeSource testSource(&testWriter, &testCSSHelper);
+    MessageComposer::Test::TestObjectTreeSource testSource(&testWriter, &testCSSHelper);
     testSource.setAllowDecryption(true);
     MessageViewer::NodeHelper *nh = new MessageViewer::NodeHelper;
     MessageViewer::ObjectTreeParser otp(&testSource, nh);

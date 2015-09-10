@@ -49,7 +49,7 @@ using namespace MessageComposer;
 
 #include <messagecore/attachment/attachmentpart.h>
 #include <messagecore/helpers/nodehelper.h>
-#include <messagecore/autotests/util.h>
+#include <setupenv.h>
 
 #include <messageviewer/viewer/objecttreeparser.h>
 
@@ -63,7 +63,7 @@ QTEST_MAIN(CryptoComposerTest)
 
 void CryptoComposerTest::initTestCase()
 {
-    MessageCore::Test::setupEnv();
+    MessageComposer::Test::setupEnv();
 }
 
 Q_DECLARE_METATYPE(Headers::contentEncoding)
@@ -157,7 +157,7 @@ void CryptoComposerTest::testEncryptSameAttachments()
 
     TestHtmlWriter testWriter;
     TestCSSHelper testCSSHelper;
-    MessageCore::Test::TestObjectTreeSource testSource(&testWriter, &testCSSHelper);
+    MessageComposer::Test::TestObjectTreeSource testSource(&testWriter, &testCSSHelper);
     testSource.setAllowDecryption(true);
     MessageViewer::NodeHelper *nh = new MessageViewer::NodeHelper;
     MessageViewer::ObjectTreeParser otp(&testSource, nh);
@@ -370,7 +370,7 @@ void CryptoComposerTest::testBCCEncrypt()
     fillComposerData(composer, data);
     composer->infoPart()->setBcc(QStringList(QString::fromLatin1("bcc@bcc.org")));
 
-    std::vector<GpgME::Key> keys = MessageCore::Test::getKeys();
+    std::vector<GpgME::Key> keys = MessageComposer::Test::getKeys();
 
     QStringList primRecipients;
     primRecipients << QString::fromLocal8Bit("you@you.you");
@@ -565,7 +565,7 @@ void CryptoComposerTest::fillComposerData(Composer *composer, QString data)
 
 void CryptoComposerTest::fillComposerCryptoData(Composer *composer)
 {
-    std::vector<GpgME::Key> keys = MessageCore::Test::getKeys();
+    std::vector<GpgME::Key> keys = MessageComposer::Test::getKeys();
 
     qDebug() << "got num of keys:" << keys.size();
 
@@ -589,7 +589,7 @@ void CryptoComposerTest::runSMIMETest(bool sign, bool enc, bool opaque)
     fillComposerData(composer, data);
     composer->infoPart()->setFrom(QString::fromLatin1("test@example.com"));
 
-    std::vector<GpgME::Key> keys = MessageCore::Test::getKeys(true);
+    std::vector<GpgME::Key> keys = MessageComposer::Test::getKeys(true);
     QStringList recipients;
     recipients << QString::fromLocal8Bit("you@you.you");
     QList<QPair<QStringList, std::vector<GpgME::Key> > > encKeys;

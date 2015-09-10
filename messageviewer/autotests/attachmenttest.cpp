@@ -21,7 +21,7 @@
 
 #include "viewer/objecttreeemptysource.h"
 
-#include <messagecore/autotests/util.h>
+#include "setupenv.h"
 
 #include <qtest.h>
 
@@ -40,7 +40,7 @@ QTEST_MAIN(AttachmentTest)
 
 void AttachmentTest::initTestCase()
 {
-    MessageCore::Test::setupEnv();
+    MessageViewer::Test::setupEnv();
 }
 
 void AttachmentTest::testEncryptedAttachment_data()

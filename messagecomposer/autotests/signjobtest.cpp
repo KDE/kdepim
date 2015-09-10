@@ -37,7 +37,7 @@
 #include <messagecomposer/job/transparentjob.h>
 
 #include <messagecore/helpers/nodehelper.h>
-#include <messagecore/autotests/util.h>
+#include <setupenv.h>
 
 #include <stdlib.h>
 
@@ -45,13 +45,13 @@ QTEST_MAIN(SignJobTest)
 
 void SignJobTest::initTestCase()
 {
-    MessageCore::Test::setupEnv();
+    MessageComposer::Test::setupEnv();
 }
 
 void SignJobTest::testContentDirect()
 {
 
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
     MessageComposer::Composer *composer = new MessageComposer::Composer;
     MessageComposer::SignJob *sJob = new MessageComposer::SignJob(composer);
@@ -72,7 +72,7 @@ void SignJobTest::testContentDirect()
 
 void SignJobTest::testContentChained()
 {
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
     QByteArray data(QString::fromLocal8Bit("one flew over the cuckoo's nest").toUtf8());
     KMime::Content *content = new KMime::Content;
@@ -94,7 +94,7 @@ void SignJobTest::testContentChained()
 
 void SignJobTest::testHeaders()
 {
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
     MessageComposer::Composer *composer = new MessageComposer::Composer;
     MessageComposer::SignJob *sJob = new MessageComposer::SignJob(composer);
@@ -129,7 +129,7 @@ void SignJobTest::testHeaders()
 
 void SignJobTest::testRecommentationRFC3156()
 {
-    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+    std::vector< GpgME::Key > keys = MessageComposer::Test::getKeys();
 
     QString data = QStringLiteral("=2D Magic foo\nFrom test\n\n-- quaak\nOhno");
     KMime::Headers::contentEncoding cte = KMime::Headers::CEquPr;

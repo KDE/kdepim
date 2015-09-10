@@ -20,7 +20,7 @@
 #include "htmlwriter/filehtmlwriter.h"
 #include "viewer/objecttreeparser.h"
 #include "testcsshelper.h"
-#include "messagecore/autotests/util.h"
+#include "setupenv.h"
 
 #include <KMime/Message>
 #include <qtest.h>
@@ -37,7 +37,7 @@ class RenderTest : public QObject
 private Q_SLOTS:
     void initTestCase()
     {
-        MessageCore::Test::setupEnv();
+        MessageViewer::Test::setupEnv();
     }
 
     void testRender_data()
@@ -77,7 +77,7 @@ private Q_SLOTS:
         QImage paintDevice;
         TestCSSHelper cssHelper(&paintDevice);
         NodeHelper nodeHelper;
-        MessageCore::Test::TestObjectTreeSource testSource(&fileWriter, &cssHelper);
+        MessageViewer::Test::TestObjectTreeSource testSource(&fileWriter, &cssHelper);
         testSource.setAllowDecryption(true);
         ObjectTreeParser otp(&testSource, &nodeHelper);
 

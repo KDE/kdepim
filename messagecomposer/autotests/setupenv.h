@@ -24,7 +24,7 @@
 #include <gpgme++/key.h>
 #include <messageviewer/viewer/objecttreeemptysource.h>
 
-namespace MessageCore
+namespace MessageComposer
 {
 
 namespace Test

@@ -36,7 +36,7 @@
 #include "testhtmlwriter.h"
 #include "testcsshelper.h"
 #include <messageviewer/viewer/nodehelper.h>
-#include <messagecore/autotests/util.h>
+#include <setupenv.h>
 
 #include <messageviewer/viewer/objecttreeparser.h>
 
