@@ -14,7 +14,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
   alarmpresets.cpp
   alarmdialog.cpp
-  globalsettings.cpp
+  incidenceeditorsettings.cpp
 
   ktimezonecombobox.cpp
 

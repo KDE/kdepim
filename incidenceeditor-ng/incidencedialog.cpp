@@ -37,7 +37,7 @@
 #include "templatemanagementdialog.h"
 #include "ui_dialogdesktop.h"
 
-#include <incidenceeditor-ng/globalsettings.h>
+#include <incidenceeditor-ng/incidenceeditorsettings.h>
 
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>

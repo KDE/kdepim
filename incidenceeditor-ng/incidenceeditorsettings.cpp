@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-#include "globalsettings.h"
+#include "incidenceeditorsettings.h"
 
 using namespace IncidenceEditorNG;
 
