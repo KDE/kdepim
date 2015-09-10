@@ -17,9 +17,12 @@
 
 #include "grantleeheaderstyleinterface.h"
 
+#include <grantleetheme/grantleethememanager.h>
+
 using namespace MessageViewer;
 GrantleeHeaderStyleInterface::GrantleeHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
-    : MessageViewer::HeaderStyleInterface(headerStyle, headerStrategy, parent)
+    : MessageViewer::HeaderStyleInterface(headerStyle, headerStrategy, parent),
+      mThemeManager(Q_NULLPTR)
 {
 
 }
@@ -31,8 +34,15 @@ GrantleeHeaderStyleInterface::~GrantleeHeaderStyleInterface()
 
 void GrantleeHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac)
 {
-    //connect(act, &KToggleAction::triggered, this, &BriefHeaderStyleInterface::slotStyleChanged);
-    //addActionToMenu(menu, actionGroup);
+    mThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Mail, QStringLiteral("header.desktop"), ac, QStringLiteral("messageviewer/themes/"));
+    mThemeManager->setDownloadNewStuffConfigFile(QStringLiteral("messageviewer_header_themes.knsrc"));
+    //TODO
+    //connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
+    connect(mThemeManager, &GrantleeTheme::GrantleeThemeManager::updateThemes, this, &HeaderStyleInterface::styleUpdated);
 
+    mThemeManager->setActionGroup(actionGroup);
+    mThemeManager->setThemeMenu(menu);
+
+    addActionToMenu(menu, actionGroup);
 }
 

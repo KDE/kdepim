@@ -20,6 +20,11 @@
 
 #include <header/headerstyleinterface.h>
 
+namespace GrantleeTheme
+{
+class GrantleeThemeManager;
+}
+
 namespace MessageViewer
 {
 
@@ -31,6 +36,8 @@ public:
     ~GrantleeHeaderStyleInterface();
 
     void createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac) Q_DECL_OVERRIDE;
+private:
+    GrantleeTheme::GrantleeThemeManager *mThemeManager;
 };
 
 }
