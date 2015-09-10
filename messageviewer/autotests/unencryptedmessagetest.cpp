@@ -41,6 +41,7 @@ private Q_SLOTS:
     void testOpenPGPEncryptedNotDecrypted();
     void testOpenPGPEncryptedAsync();
     void testInlinePGPEncryptedNotDecrypted();
+    void testInlinePGPSignedNotDecrypted();
 };
 
 QTEST_MAIN(UnencryptedMessageTest)
@@ -242,6 +243,23 @@ void UnencryptedMessageTest::testOpenPGPEncryptedAsync()
 void UnencryptedMessageTest::testInlinePGPEncryptedNotDecrypted()
 {
     KMime::Message::Ptr originalMessage = readAndParseMail(QStringLiteral("inlinepgpencrypted.mbox"));
+
+    NodeHelper nodeHelper;
+    EmptySource emptySource;
+    emptySource.setAllowDecryption(false);
+    ObjectTreeParser otp(&emptySource, &nodeHelper);
+    otp.parseObjectTree(originalMessage.data());
+
+    QCOMPARE(otp.plainTextContent().toLatin1().data(), "");
+    QCOMPARE(otp.htmlContent(), otp.writeDeferredDecryptionBlock());
+
+    KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage(originalMessage);
+    QCOMPARE((bool) unencryptedMessage, false);
+}
+
+void UnencryptedMessageTest::testInlinePGPSignedNotDecrypted()
+{
+    KMime::Message::Ptr originalMessage = readAndParseMail(QStringLiteral("inlinepgpsigend.mbox"));
 
     NodeHelper nodeHelper;
     EmptySource emptySource;
