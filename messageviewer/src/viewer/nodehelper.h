@@ -22,6 +22,7 @@
 #include "messageviewer_export.h"
 
 #include "partmetadata.h"
+#include "viewer/viewer.h"
 
 #include <KMime/Message>
 
@@ -70,8 +71,9 @@ typedef enum {
 /**
  * @author Andras Mantia <andras@kdab.net>
  */
-class MESSAGEVIEWER_EXPORT NodeHelper
+class MESSAGEVIEWER_EXPORT NodeHelper: public QObject
 {
+    Q_OBJECT
 public:
     NodeHelper();
 
@@ -265,6 +267,9 @@ public:
      * @see KMime::Content::attachments().
      */
     QVector<KMime::Content *> attachmentsOfExtraContents() const;
+
+Q_SIGNALS:
+    void update(MessageViewer::Viewer::UpdateMode);
 
 private:
     Q_DISABLE_COPY(NodeHelper)
