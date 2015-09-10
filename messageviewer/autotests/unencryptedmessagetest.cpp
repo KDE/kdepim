@@ -206,6 +206,7 @@ void UnencryptedMessageTest::testOpenPGPEncryptedNotDecrypted()
 
     QCOMPARE(nodeHelper.overallEncryptionState(originalMessage.data()), KMMsgFullyEncrypted);
     QCOMPARE(otp.plainTextContent().toLatin1().data(), "");
+    QCOMPARE(otp.htmlContent(), otp.writeDeferredDecryptionBlock());
 
     KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage(originalMessage);
     QCOMPARE((bool) unencryptedMessage, false);
@@ -222,6 +223,7 @@ void UnencryptedMessageTest::testInlinePGPEncryptedNotDecrypted()
     otp.parseObjectTree(originalMessage.data());
 
     QCOMPARE(otp.plainTextContent().toLatin1().data(), "");
+    QCOMPARE(otp.htmlContent(), otp.writeDeferredDecryptionBlock());
 
     KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage(originalMessage);
     QCOMPARE((bool) unencryptedMessage, false);

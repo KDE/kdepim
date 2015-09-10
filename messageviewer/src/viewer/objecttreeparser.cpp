@@ -5,6 +5,7 @@
     Copyright (c) 2003      Marc Mutz <mutz@kde.org>
     Copyright (C) 2002-2004 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
     Copyright (c) 2009 Andras Mantia <andras@kdab.net>
+    Copyright (c) 2015 Sandro Knauß <sknauss@kde.org>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
