@@ -24,6 +24,7 @@
 #include "settings/messagecomposersettings.h"
 
 #include <KColorScheme>
+#include <KMessageBox>
 #include <KLocalizedString>
 #include <QColorDialog>
 #include <QTextBlock>
@@ -806,7 +807,11 @@ void RichTextComposerControler::slotAddImage()
             imageWidth = dlg->imageWidth();
             imageHeight = dlg->imageHeight();
         }
-        d->richTextImages->addImage(url, imageWidth, imageHeight);
+        if (url.isLocalFile()) {
+            d->richTextImages->addImage(url, imageWidth, imageHeight);
+        } else {
+            KMessageBox::error(richTextComposer(), i18n("Only local files are supported."));
+        }
     }
     delete dlg;
 }
