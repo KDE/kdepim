@@ -28,7 +28,7 @@ K_PLUGIN_FACTORY_WITH_JSON(MessageViewerEnterpriseHeaderStylePluginFactory, "mes
 EnterpriseHeaderStylePlugin::EnterpriseHeaderStylePlugin(QObject *parent, const QList<QVariant> &)
     : MessageViewer::HeaderStylePlugin(parent),
       mHeaderStyle(new EnterpriseHeaderStyle),
-      mHeaderStrategy(new BriefHeaderStrategy)
+      mHeaderStrategy(new RichHeaderStrategy)
 {
 }
 

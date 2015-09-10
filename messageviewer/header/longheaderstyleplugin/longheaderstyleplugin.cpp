@@ -17,7 +17,7 @@
 
 #include "longheaderstyleinterface.h"
 #include "longheaderstyleplugin.h"
-#include "header/fancyheaderstyle.h"
+#include "header/plainheaderstyle.h"
 //Temporary
 #include "header/headerstrategy_p.h"
 #include <kpluginfactory.h>
@@ -27,7 +27,7 @@ K_PLUGIN_FACTORY_WITH_JSON(MessageViewerFancyHeaderStylePluginFactory, "messagev
 
 LongHeaderStylePlugin::LongHeaderStylePlugin(QObject *parent, const QList<QVariant> &)
     : MessageViewer::HeaderStylePlugin(parent),
-      mHeaderStyle(new FancyHeaderStyle),
+      mHeaderStyle(new PlainHeaderStyle),
       mHeaderStrategy(new RichHeaderStrategy)
 {
 }

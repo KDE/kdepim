@@ -138,10 +138,9 @@ private:
 //   BCC, CC, Date, From, Subject, To
 //
 
-class StandardHeaderStrategy : public HeaderStrategy
+class MESSAGEVIEWER_EXPORT StandardHeaderStrategy : public HeaderStrategy
 {
-    friend class HeaderStrategy;
-protected:
+public:
     StandardHeaderStrategy()
         : HeaderStrategy(),
           mHeadersToDisplay(stringList(standardHeaders, numStandardHeaders)) {}
