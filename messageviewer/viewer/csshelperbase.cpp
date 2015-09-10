@@ -77,28 +77,36 @@ CSSHelperBase::CSSHelperBase(const QPaintDevice *pd) :
     mShrinkQuotes(false),
     mPaintDevice(pd)
 {
+    const KColorScheme scheme(QPalette::Active, KColorScheme::View);
+
     // initialize with defaults - should match the corresponding application defaults
     mForegroundColor = QApplication::palette().color(QPalette::Text);
-    mLinkColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color();
-    mVisitedLinkColor = KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::VisitedText).color();
+    mLinkColor = scheme.foreground(KColorScheme::LinkText).color();
+    mVisitedLinkColor = scheme.foreground(KColorScheme::VisitedText).color();
     mBackgroundColor = QApplication::palette().color(QPalette::Base);
     cHtmlWarning = QColor(0xFF, 0x40, 0x40);   // warning frame color: light red
 
-    cPgpEncrH = QColor(0x00, 0x80, 0xFF);   // light blue
-    cPgpOk1H  = QColor(0x40, 0xFF, 0x40);   // light green
-    cPgpOk0H  = QColor(0xFF, 0xFF, 0x40);   // light yellow
-    cPgpWarnH = QColor(0xFF, 0xFF, 0x40);   // light yellow
-    cPgpErrH  = Qt::red;
+    cPgpEncrH  = MessageCore::Util::pgpEncryptedMessageColor();
+    cPgpEncrHT = MessageCore::Util::pgpEncryptedTextColor();
+    cPgpOk1H   = MessageCore::Util::pgpSignedTrustedMessageColor();
+    cPgpOk1HT  = MessageCore::Util::pgpSignedTrustedTextColor();
+    cPgpOk0H   = MessageCore::Util::pgpSignedUntrustedMessageColor();
+    cPgpOk0HT  = MessageCore::Util::pgpSignedUntrustedTextColor();
+    cPgpWarnH  = MessageCore::Util::pgpSignedUntrustedMessageColor();
+    cPgpWarnHT = MessageCore::Util::pgpSignedUntrustedTextColor();
+    cPgpErrH   = MessageCore::Util::pgpSignedBadMessageColor();
+    cPgpErrHT  = MessageCore::Util::pgpSignedBadTextColor();
 
     if (MessageCore::GlobalSettings::self()->useDefaultColors()) {
-        for (int i = 0 ; i < 3 ; ++i) {
-            mQuoteColor[i] = QColor(0x00, 0x80 - i * 0x10, 0x00);   // shades of green
-        }
+        mQuoteColor[0] = MessageCore::Util::quoteLevel1DefaultTextColor();
+        mQuoteColor[1] = MessageCore::Util::quoteLevel2DefaultTextColor();
+        mQuoteColor[2] = MessageCore::Util::quoteLevel3DefaultTextColor();
     } else {
         mQuoteColor[0] = MessageCore::GlobalSettings::self()->quotedText1();
         mQuoteColor[1] = MessageCore::GlobalSettings::self()->quotedText2();
         mQuoteColor[2] = MessageCore::GlobalSettings::self()->quotedText3();
     }
+
     mRecycleQuoteColors = false;
 
     QFont defaultFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
@@ -449,12 +457,14 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
 
                        "tr.encrH {\n"
                        "  background-color: %2 ! important;\n"
-                       "%3"
+                       "  color: %3 ! important;\n"
+                       "%4"
                        "}\n\n"
 
-                       "tr.encrB { background-color: %4 ! important; }\n\n")
+                       "tr.encrB { background-color: %5 ! important; }\n\n")
         .arg(cPgpEncrF.name(),
              cPgpEncrH.name(),
+             cPgpEncrHT.name(),
              headerFont,
              cPgpEncrB.name())
         +
@@ -464,12 +474,14 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
 
                        "tr.signOkKeyOkH {\n"
                        "  background-color: %2 ! important;\n"
-                       "%3"
+                       "  color: %3 ! important;\n"
+                       "%4"
                        "}\n\n"
 
-                       "tr.signOkKeyOkB { background-color: %4 ! important; }\n\n")
+                       "tr.signOkKeyOkB { background-color: %5 ! important; }\n\n")
         .arg(cPgpOk1F.name(),
              cPgpOk1H.name(),
+             cPgpOk1HT.name(),
              headerFont,
              cPgpOk1B.name())
         +
@@ -479,12 +491,14 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
 
                        "tr.signOkKeyBadH {\n"
                        "  background-color: %2 ! important;\n"
-                       "%3"
+                       "  color: %3 ! important;\n"
+                       "%4"
                        "}\n\n"
 
-                       "tr.signOkKeyBadB { background-color: %4 ! important; }\n\n")
+                       "tr.signOkKeyBadB { background-color: %5 ! important; }\n\n")
         .arg(cPgpOk0F.name(),
              cPgpOk0H.name(),
+             cPgpOk0HT.name(),
              headerFont,
              cPgpOk0B.name())
         +
@@ -494,12 +508,14 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
 
                        "tr.signWarnH {\n"
                        "  background-color: %2 ! important;\n"
-                       "%3"
+                       "  color: %3 ! important;\n"
+                       "%4"
                        "}\n\n"
 
-                       "tr.signWarnB { background-color: %4 ! important; }\n\n")
+                       "tr.signWarnB { background-color: %5 ! important; }\n\n")
         .arg(cPgpWarnF.name(),
              cPgpWarnH.name(),
+             cPgpWarnHT.name(),
              headerFont,
              cPgpWarnB.name())
         +
@@ -509,12 +525,14 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
 
                        "tr.signErrH {\n"
                        "  background-color: %2 ! important;\n"
-                       "%3"
+                       "  color: %3 ! important;\n"
+                       "%4"
                        "}\n\n"
 
-                       "tr.signErrB { background-color: %4 ! important; }\n\n")
+                       "tr.signErrB { background-color: %5 ! important; }\n\n")
         .arg(cPgpErrF.name(),
              cPgpErrH.name(),
+             cPgpErrHT.name(),
              headerFont,
              cPgpErrB.name())
         +

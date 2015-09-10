@@ -40,27 +40,19 @@
     </entry>
     <entry name="QuotedText3" type="Color">
       <label>This is the color used in the 3rd level of quoted text</label>
-      <default>#006000</default>
+      <default code="true">MessageCore::Util::quoteLevel3DefaultTextColor()</default>
     </entry>
     <entry name="QuotedText2" type="Color">
       <label>This is the color used in the 2nd level of quoted text</label>
-      <default>#007000</default>
+      <default code="true">MessageCore::Util::quoteLevel2DefaultTextColor()</default>
     </entry>
     <entry name="QuotedText1" type="Color">
       <label>This is the color used in the 1st level of quoted text</label>
-      <default>#008000</default>
+      <default code="true">MessageCore::Util::quoteLevel1DefaultTextColor()</default>
     </entry>
     <entry name="MisspelledColor" type="Color">
       <label>This is the color used to highlight misspelled words</label>
-      <default>red</default>
-    </entry>
-    <entry name="PgpSignedMessageColor" type="Color" key="PGPMessageOkKeyOk">
-      <label>This is the color used for highlighting all signed messages</label>
-      <default code="true">KColorScheme( QPalette::Active, KColorScheme::View ).background( KColorScheme::PositiveBackground ).color()</default>
-    </entry>
-    <entry name="PgpEncryptedMessageColor" type="Color" key="PGPMessageEncr">
-      <label>This is the color used for highlighting all encrypted messages</label>
-      <default>#0080FF</default>
+      <default code="true">MessageCore::Util::misspelledDefaultTextColor()</default>
     </entry>
   </group>
 

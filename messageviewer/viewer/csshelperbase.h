@@ -89,12 +89,12 @@ protected:
     bool mShrinkQuotes;
     QString mBackingPixmapStr;
     QColor mForegroundColor, mLinkColor, mVisitedLinkColor, mBackgroundColor;
-    // colors for PGP (Frame, Header, Body)
-    QColor cPgpOk1F, cPgpOk1H, cPgpOk1B,
-           cPgpOk0F, cPgpOk0H, cPgpOk0B,
-           cPgpWarnF, cPgpWarnH, cPgpWarnB,
-           cPgpErrF, cPgpErrH, cPgpErrB,
-           cPgpEncrF, cPgpEncrH, cPgpEncrB;
+    // colors for PGP (Frame, Header, HeaderText, Body)
+    QColor cPgpOk1F, cPgpOk1H, cPgpOk1HT, cPgpOk1B,
+           cPgpOk0F, cPgpOk0H, cPgpOk0HT, cPgpOk0B,
+           cPgpWarnF, cPgpWarnH, cPgpWarnHT, cPgpWarnB,
+           cPgpErrF, cPgpErrH, cPgpErrHT, cPgpErrB,
+           cPgpEncrF, cPgpEncrH, cPgpEncrHT, cPgpEncrB;
     // color of frame of warning preceding the source of HTML messages
     QColor cHtmlWarning;
 

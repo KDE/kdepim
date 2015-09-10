@@ -24,6 +24,7 @@
 #include <KLocalizedString>
 #include <KMime/Message>
 #include <Item>
+#include <KColorScheme>
 
 using namespace MessageList::Core;
 
@@ -102,17 +103,17 @@ void MessageList::Util::deleteConfig(const QString &collectionId)
 
 QColor MessageList::Util::unreadDefaultMessageColor()
 {
-    return QColor("blue");
+    return KColorScheme(QPalette::Active).decoration(KColorScheme::FocusColor).color();
 }
 
 QColor MessageList::Util::importantDefaultMessageColor()
 {
-    return QColor(0x98, 0x0, 0x0);
+    return KColorScheme(QPalette::Active).foreground(KColorScheme::NegativeText).color();
 }
 
 QColor MessageList::Util::todoDefaultMessageColor()
 {
-    return QColor(0x0, 0x98, 0x0);
+    return KColorScheme(QPalette::Active).foreground(KColorScheme::PositiveText).color();
 }
 
 void MessageList::Util::fillViewMenu(QMenu *menu, QObject *receiver)

@@ -42,6 +42,7 @@ set(messagecore_LIB_SRCS
    ${messagecore_helper_LIB_SRCS}
    settings/messagecoresettings.cpp
    utils/stringutil.cpp
+   messagecoreutil.cpp
 )
 
 kconfig_add_kcfg_files(messagecore_LIB_SRCS
