@@ -5,6 +5,7 @@
     Copyright (c) 2003      Marc Mutz <mutz@kde.org>
     Copyright (C) 2002-2004 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
     Copyright (c) 2009 Andras Mantia <andras@kdab.net>
+    Copyright (c) 2015 Sandro Knauß <sknauss@kde.org>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -603,155 +604,19 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
     GpgME::Key key;
 
     if (doCheck && cryptProto) {
-#ifdef DEBUG_SIGNATURE
-        qCDebug(MESSAGEVIEWER_LOG) << "tokoe: doCheck and cryptProto";
-#endif
         GpgME::VerificationResult result;
         if (data) {   // detached
-#ifdef DEBUG_SIGNATURE
-            qCDebug(MESSAGEVIEWER_LOG) << "tokoe: is detached signature";
-#endif
-            const VerifyDetachedBodyPartMemento *m
-                = dynamic_cast<VerifyDetachedBodyPartMemento *>(mNodeHelper->bodyPartMemento(&sign, "verifydetached"));
-            if (!m) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: no memento available";
-#endif
-                Kleo::VerifyDetachedJob *job = cryptProto->verifyDetachedJob();
-                if (!job) {
-                    cryptPlugError = CANT_VERIFY_SIGNATURES;
-                    // PENDING(marc) cryptProto = 0 here?
-                } else {
-                    QByteArray plainData = cleartext;
-                    VerifyDetachedBodyPartMemento *newM
-                        = new VerifyDetachedBodyPartMemento(job, cryptProto->keyListJob(), signaturetext, plainData);
-                    if (allowAsync()) {
-#ifdef DEBUG_SIGNATURE
-                        qCDebug(MESSAGEVIEWER_LOG) << "tokoe: allowAsync";
-#endif
-                        QObject::connect(newM, &CryptoBodyPartMemento::update,
-                                         mNodeHelper, &NodeHelper::update);
-                        QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
-                                         mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)));
-                        if (newM->start()) {
-#ifdef DEBUG_SIGNATURE
-                            qCDebug(MESSAGEVIEWER_LOG) << "tokoe: new memento started";
-#endif
-                            messagePart.inProgress = true;
-                            mHasPendingAsyncJobs = true;
-                        } else {
-                            m = newM;
-                        }
-                    } else {
-                        newM->exec();
-                        m = newM;
-                    }
-                    mNodeHelper->setBodyPartMemento(&sign, "verifydetached", newM);
-                }
-            } else if (m->isRunning()) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: memento is running";
-#endif
-                messagePart.inProgress = true;
-                mHasPendingAsyncJobs = true;
-                m = 0;
-            }
-
-            if (m) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: memento finished, assign result";
-#endif
-                result = m->verifyResult();
-                messagePart.auditLogError = m->auditLogError();
-                messagePart.auditLog = m->auditLogAsHtml();
-                key = m->signingKey();
-            }
+            okVerify(cleartext, cryptProto, messagePart, cleartext, signatures, signaturetext, &sign);
         } else { // opaque
-#ifdef DEBUG_SIGNATURE
-            qCDebug(MESSAGEVIEWER_LOG) << "tokoe: is opaque signature";
-#endif
-            const VerifyOpaqueBodyPartMemento *m
-                = dynamic_cast<VerifyOpaqueBodyPartMemento *>(mNodeHelper->bodyPartMemento(&sign, "verifyopaque"));
-            if (!m) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: no memento available";
-#endif
-                Kleo::VerifyOpaqueJob *job = cryptProto->verifyOpaqueJob();
-                if (!job) {
-                    cryptPlugError = CANT_VERIFY_SIGNATURES;
-                    // PENDING(marc) cryptProto = 0 here?
-                } else {
-                    VerifyOpaqueBodyPartMemento *newM
-                        = new VerifyOpaqueBodyPartMemento(job, cryptProto->keyListJob(), signaturetext);
-                    if (allowAsync()) {
-#ifdef DEBUG_SIGNATURE
-                        qCDebug(MESSAGEVIEWER_LOG) << "tokoe: allowAsync";
-#endif
-                        QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), mSource->sourceObject(),
-                                         SLOT(update(MessageViewer::Viewer::UpdateMode)));
-                        if (newM->start()) {
-#ifdef DEBUG_SIGNATURE
-                            qCDebug(MESSAGEVIEWER_LOG) << "tokoe: new memento started";
-#endif
-                            messagePart.inProgress = true;
-                            mHasPendingAsyncJobs = true;
-                        } else {
-                            m = newM;
-                        }
-                    } else {
-                        newM->exec();
-                        m = newM;
-                    }
-                    mNodeHelper->setBodyPartMemento(&sign, "verifyopaque", newM);
-                }
-            } else if (m->isRunning()) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: memento is running";
-#endif
-                messagePart.inProgress = true;
-                mHasPendingAsyncJobs = true;
-                m = 0;
-            }
-
-            if (m) {
-#ifdef DEBUG_SIGNATURE
-                qCDebug(MESSAGEVIEWER_LOG) << "tokoe: memento finished, assign result";
-#endif
-                result = m->verifyResult();
-                cleartext = m->plainText();
-                messagePart.auditLogError = m->auditLogError();
-                messagePart.auditLog = m->auditLogAsHtml();
-                key = m->signingKey();
-            }
+            okVerify(signaturetext, cryptProto, messagePart, cleartext, signatures, QByteArray(), &sign);
         }
-        std::stringstream ss;
-        ss << result;
-#ifdef DEBUG_SIGNATURE
-        qCDebug(MESSAGEVIEWER_LOG) << ss.str().c_str();
-#endif
-        signatures = result.signatures();
     } else {
         messagePart.auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
     }
 
-#ifdef DEBUG_SIGNATURE
-    if (doCheck) {
-        qCDebug(MESSAGEVIEWER_LOG) << "returned from CRYPTPLUG";
-    }
-#endif
-
     // ### only one signature supported
-    if (!signatures.empty()) {
-#ifdef DEBUG_SIGNATURE
-        qCDebug(MESSAGEVIEWER_LOG) << "\nFound signature";
-#endif
-        messagePart.isSigned = true;
+    if (messagePart.isSigned) {
         sigStatusToMetaData(signatures, cryptProto, messagePart, key);
-#ifdef DEBUG_SIGNATURE
-        qCDebug(MESSAGEVIEWER_LOG) << "\n  key id:" << messagePart.keyId
-                                   << "\n  key trust:" << messagePart.keyTrust
-                                   << "\n  signer:" << messagePart.signer;
-#endif
     } else {
         messagePart.creationTime = QDateTime();
     }
@@ -2897,7 +2762,7 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
     writeBodyStr(aStr, aCodec, fromAddress, dummy1, dummy2, false);
 }
 
-bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData &messagePart, QByteArray &verifiedText, std::vector <GpgME::Signature> &signatures)
+bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData &messagePart, QByteArray &verifiedText, std::vector <GpgME::Signature> &signatures, const QByteArray &signature, KMime::Content *sign)
 {
     //copied from ObjectTreeParser::writeOpaqueOrMultipartSignedData
     messagePart.isSigned = false;
@@ -2906,17 +2771,63 @@ bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBacken
     messagePart.status = i18n("Wrong Crypto Plug-In.");
     messagePart.status_code = GPGME_SIG_STAT_NONE;
 
-    Kleo::VerifyOpaqueJob *job = cryptProto->verifyOpaqueJob();
-    VerifyOpaqueBodyPartMemento *m
-        = new VerifyOpaqueBodyPartMemento(job, cryptProto->keyListJob(), data);
-    m->exec();
+    const QByteArray mementoName = "verification";
 
-    verifiedText = m->plainText();
-    messagePart.auditLogError = m->auditLogError();
-    messagePart.auditLog = m->auditLogAsHtml();
-    signatures = m->verifyResult().signatures();
-    messagePart.isSigned = !signatures.empty();
+    CryptoBodyPartMemento *m = dynamic_cast<CryptoBodyPartMemento *>(mNodeHelper->bodyPartMemento(sign, mementoName));
 
+    if (!m) {
+        if (!signature.isEmpty()) {
+            Kleo::VerifyDetachedJob *job = cryptProto->verifyDetachedJob();
+            if (job) {
+                m = new VerifyDetachedBodyPartMemento(job, cryptProto->keyListJob(), signature, data);
+            }
+        } else {
+            Kleo::VerifyOpaqueJob *job = cryptProto->verifyOpaqueJob();
+            if (job) {
+                m = new VerifyOpaqueBodyPartMemento(job, cryptProto->keyListJob(), data);
+            }
+        }
+        if (m) {
+            if (allowAsync()) {
+                QObject::connect(m, &CryptoBodyPartMemento::update,
+                                 mNodeHelper, &NodeHelper::update);
+                QObject::connect(m, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
+                                 mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)));
+
+                if (m->start()) {
+                    messagePart.inProgress = true;
+                    mHasPendingAsyncJobs = true;
+                }
+            } else {
+                m->exec();
+            }
+            if (sign) {
+                mNodeHelper->setBodyPartMemento(sign, mementoName, m);
+            }
+        }
+    } else if (m->isRunning()) {
+        messagePart.inProgress = true;
+        mHasPendingAsyncJobs = true;
+        m = 0;
+    } else {
+        messagePart.inProgress = false;
+        mHasPendingAsyncJobs = false;
+    }
+
+    if (m && !messagePart.inProgress) {
+        if (!signature.isEmpty()) {
+            VerifyDetachedBodyPartMemento *vm = dynamic_cast<VerifyDetachedBodyPartMemento *>(m);
+            verifiedText = data;
+            signatures = vm->verifyResult().signatures();
+        } else {
+            VerifyOpaqueBodyPartMemento *vm = dynamic_cast<VerifyOpaqueBodyPartMemento *>(m);
+            verifiedText = vm->plainText();
+            signatures = vm->verifyResult().signatures();
+        }
+        messagePart.auditLogError = m->auditLogError();
+        messagePart.auditLog = m->auditLogAsHtml();
+        messagePart.isSigned = !signatures.empty();
+    }
     return messagePart.isSigned;
 }
 
@@ -3096,7 +3007,7 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
                 messagePart.isDecryptable = false;
 
                 QByteArray verifiedText;
-                if (okVerify(block.text(), cryptoProtocol(), messagePart, verifiedText, signatures)) {
+                if (okVerify(block.text(), cryptoProtocol(), messagePart, verifiedText, signatures, QByteArray(), 0)) {
                     text = aCodec->toUnicode(verifiedText);
                 }
             }

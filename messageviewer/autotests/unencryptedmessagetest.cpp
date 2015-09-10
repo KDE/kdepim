@@ -39,7 +39,8 @@ private Q_SLOTS:
     void testSignedForwardedOpenPGPSignedEncrypted();
     void testOpenPGPEncrypted();
     void testOpenPGPEncryptedNotDecrypted();
-    void testOpenPGPEncryptedAsync();
+    void testAsync_data();
+    void testAsync();
     void testInlinePGPEncryptedNotDecrypted();
 };
 
@@ -212,9 +213,23 @@ void UnencryptedMessageTest::testOpenPGPEncryptedNotDecrypted()
     QCOMPARE((bool) unencryptedMessage, false);
 }
 
-void UnencryptedMessageTest::testOpenPGPEncryptedAsync()
+void UnencryptedMessageTest::testAsync_data()
 {
-    KMime::Message::Ptr originalMessage = readAndParseMail(QStringLiteral("openpgp-encrypted.mbox"));
+    QTest::addColumn<QString>("mailFileName");
+    QTest::addColumn<QString>("output");
+
+    QTest::newRow("openpgp-encrypt") << QStringLiteral("openpgp-encrypted.mbox") << QStringLiteral("encrypted message text");
+    QTest::newRow("smime-opaque-sign") << QStringLiteral("smime-opaque-sign.mbox") << QStringLiteral("A simple signed only test.");
+    QTest::newRow("smime-encrypt") << QStringLiteral("smime-encrypted.mbox") << QStringLiteral("The quick brown fox jumped over the lazy dog.");
+    QTest::newRow("openpgp-inline-encrypt") << QStringLiteral("openpgp-inline-charset-encrypted.mbox") << QStringLiteral("asdasd asd asd asdf sadf sdaf sadf \u00F6\u00E4\u00FC");
+}
+
+void UnencryptedMessageTest::testAsync()
+{
+    QFETCH(QString, mailFileName);
+    QFETCH(QString, output);
+
+    KMime::Message::Ptr originalMessage = readAndParseMail(mailFileName);
     NodeHelper nodeHelper;
     EmptySource emptySource;
     emptySource.setAllowDecryption(true);
@@ -225,16 +240,14 @@ void UnencryptedMessageTest::testOpenPGPEncryptedAsync()
         connect(&nodeHelper, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), &loop, SLOT(quit()));
         otp.setAllowAsync(true);
         otp.parseObjectTree(originalMessage.data());
-        QCOMPARE(otp.plainTextContent().toLatin1().data(), "");
         loop.exec();
     }
-    // Cryptjob ended
+    // Job ended
     {
         ObjectTreeParser otp(&emptySource, &nodeHelper);
         otp.setAllowAsync(true);
         otp.parseObjectTree(originalMessage.data());
-        QCOMPARE(otp.plainTextContent().toLatin1().data(), "encrypted message text");
-        QCOMPARE(nodeHelper.overallEncryptionState(originalMessage.data()), KMMsgFullyEncrypted);
+        QCOMPARE(otp.plainTextContent(), output);
     }
 }
 

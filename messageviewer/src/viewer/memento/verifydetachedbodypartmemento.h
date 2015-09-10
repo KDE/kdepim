@@ -52,8 +52,8 @@ public:
                                   const QByteArray &plainText);
     ~VerifyDetachedBodyPartMemento();
 
-    bool start();
-    void exec();
+    bool start() Q_DECL_OVERRIDE;
+    void exec() Q_DECL_OVERRIDE;
 
     const GpgME::VerificationResult &verifyResult() const
     {

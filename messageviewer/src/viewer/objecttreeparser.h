@@ -453,7 +453,7 @@ private:
                        bool &decryptionStarted,
                        PartMetaData &partMetaData);
 
-    bool okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, MessageViewer::PartMetaData &messagePart, QByteArray &verifiedText, std::vector< GpgME::Signature > &signatures);
+    bool okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, MessageViewer::PartMetaData &messagePart, QByteArray &verifiedText, std::vector<GpgME::Signature> &signatures, const QByteArray &signature, KMime::Content *sign);
     void sigStatusToMetaData(const std::vector<GpgME::Signature> &signatures, const Kleo::CryptoBackend::Protocol *cryptoProtocol, PartMetaData &messagePart, GpgME::Key key);
 
     bool processMailmanMessage(KMime::Content *node);

@@ -40,6 +40,8 @@ public:
     CryptoBodyPartMemento();
     ~CryptoBodyPartMemento();
 
+    virtual bool start() = 0;
+    virtual void exec() = 0;
     bool isRunning() const;
 
     const QString &auditLogAsHtml() const
