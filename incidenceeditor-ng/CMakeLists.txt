@@ -80,15 +80,15 @@ set(incidenceeditors_ng_desktop_LIB_SRCS
 )
 
 ki18n_wrap_ui(incidenceeditors_ng_desktop_LIB_SRCS
-  categoryeditdialog_base.ui
-  categoryselectdialog_base.ui
-  categorydialog_base.ui
-  template_management_dialog_base.ui
-  dialogdesktop.ui
-  alarmdialog.ui
-  attachmenteditdialog.ui
-  schedulingdialog.ui
-  resourcemanagement.ui
+  ui/categoryeditdialog_base.ui
+  ui/categoryselectdialog_base.ui
+  ui/categorydialog_base.ui
+  ui/template_management_dialog_base.ui
+  ui/dialogdesktop.ui
+  ui/alarmdialog.ui
+  ui/attachmenteditdialog.ui
+  ui/schedulingdialog.ui
+  ui/resourcemanagement.ui
 )
 
 add_library(incidenceeditorsng ${incidenceeditors_ng_desktop_LIB_SRCS})
