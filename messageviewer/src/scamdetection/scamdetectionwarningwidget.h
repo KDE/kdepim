@@ -18,7 +18,7 @@
 #ifndef SCAMDETECTIONWARNINGWIDGET_H
 #define SCAMDETECTIONWARNINGWIDGET_H
 
-#include "messageviewer/messageviewer_export.h"
+#include "messageviewer_export.h"
 
 #include <KMessageWidget>
 
