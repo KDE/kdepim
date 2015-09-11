@@ -19,7 +19,7 @@
 */
 
 #include "messagedisplayformatattributetest.h"
-#include "../viewer/messagedisplayformatattribute.h"
+#include "../src/viewer/messagedisplayformatattribute.h"
 #include <qtest.h>
 
 MessageDisplayFormatAttributeTest::MessageDisplayFormatAttributeTest(QObject *parent)

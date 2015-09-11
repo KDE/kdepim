@@ -16,7 +16,7 @@
 */
 
 #include "todoedittest.h"
-#include "messageviewer/globalsettings_messageviewer.h"
+#include "globalsettings_messageviewer.h"
 #include "widgets/todoedit.h"
 #include <AkonadiCore/Collection>
 #include <AkonadiWidgets/CollectionComboBox>

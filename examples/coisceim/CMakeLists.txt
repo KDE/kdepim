@@ -49,7 +49,7 @@ target_link_libraries(coisceim_widget
   KF5::AkonadiCore
   KF5::AkonadiContact
   KF5::CalendarCore
-  messageviewer calendarsupport
+  KF5::MessageViewer calendarsupport
 )
 
 set_target_properties(coisceim_widget

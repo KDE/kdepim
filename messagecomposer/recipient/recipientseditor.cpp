@@ -30,7 +30,7 @@
 
 #include "settings/messagecomposersettings.h"
 #include <messagecomposer/recipient/distributionlistdialog.h>
-#include "messageviewer/utils/autoqpointer.h"
+#include "utils/autoqpointer.h"
 #include "messagecomposer_debug.h"
 
 #include <KMime/Headers>

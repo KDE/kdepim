@@ -27,13 +27,13 @@
     your version.
 */
 
-#include <messageviewer/interfaces/bodypartformatter.h>
-#include <messageviewer/interfaces/bodypart.h>
-#include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <messageviewer/interfaces/htmlwriter.h>
-#include <messageviewer/viewer/nodehelper.h>
+#include <interfaces/bodypartformatter.h>
+#include <interfaces/bodypart.h>
+#include <interfaces/bodyparturlhandler.h>
+#include <interfaces/htmlwriter.h>
+#include <viewer/nodehelper.h>
 #include <utils/stringutil.h>
-#include <messageviewer/utils/util.h>
+#include <utils/messageviewerutil.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Incidence>

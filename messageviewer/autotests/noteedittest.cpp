@@ -16,7 +16,7 @@
 */
 
 #include "noteedittest.h"
-#include "messageviewer/globalsettings_messageviewer.h"
+#include "globalsettings_messageviewer.h"
 #include "widgets/noteedit.h"
 #include <AkonadiCore/Collection>
 #include <AkonadiWidgets/CollectionComboBox>

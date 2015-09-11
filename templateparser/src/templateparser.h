@@ -23,7 +23,7 @@
 
 #include "templateparser_export.h"
 
-#include <messageviewer/viewer/objecttreeemptysource.h>
+#include <viewer/objecttreeemptysource.h>
 
 #include <AkonadiCore/Collection>
 #include <KMime/KMimeMessage>

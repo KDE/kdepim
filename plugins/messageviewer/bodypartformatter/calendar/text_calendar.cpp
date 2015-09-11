@@ -36,12 +36,12 @@
 #include "memorycalendarmemento.h"
 #include "syncitiphandler.h"
 
-#include <messageviewer/settings/messageviewersettings.h>
-#include <messageviewer/viewer/viewer.h>
-#include <messageviewer/interfaces/bodypart.h>
-#include <messageviewer/interfaces/bodypartformatter.h>
-#include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
+#include <settings/messageviewersettings.h>
+#include <viewer/viewer.h>
+#include <interfaces/bodypart.h>
+#include <interfaces/bodypartformatter.h>
+#include <interfaces/bodyparturlhandler.h>
+#include <htmlwriter/webkitparthtmlwriter.h>
 using namespace MessageViewer;
 
 #include <KCalCore/ICalFormat>

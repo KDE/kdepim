@@ -7,7 +7,7 @@ include( ${CMAKE_SOURCE_DIR}/cmake/modules/kdepim_add_gpg_crypto_test.cmake )
 macro( add_messagecomposer_test _source )
     ecm_add_test(${_source}
         NAME_PREFIX "messagecomposer-"
-        LINK_LIBRARIES KF5::Mime messagecomposer messageviewer KF5::MessageCore KF5::TemplateParser
+        LINK_LIBRARIES KF5::Mime messagecomposer KF5::MessageViewer KF5::MessageCore KF5::TemplateParser
                        KF5::PimTextEdit Qt5::Test KF5::IdentityManagement KF5::Contacts KF5::AkonadiCore KF5::XmlGui kdepim KF5::IconThemes KF5::Completion
     )
 endmacro()
@@ -21,7 +21,7 @@ macro( add_messagecomposer_cryptotest _source )
         ${_name}
         KF5::Mime
         messagecomposer
-        messageviewer
+        KF5::MessageViewer
         KF5::MessageCore
         kleo
         kdepim

@@ -4,7 +4,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${kdepim_SOURCE_DIR}
-  ${kdepim_SOURCE_DIR}/messageviewer
 )
 
 set(etm_usage_SRCS
@@ -49,7 +48,7 @@ target_link_libraries(etm_usage
   kleo
   KF5::MessageCore
   messagelist
-  messageviewer
+  KF5::MessageViewer
 )
 
 install(TARGETS etm_usage ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

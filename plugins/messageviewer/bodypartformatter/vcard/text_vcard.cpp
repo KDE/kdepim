@@ -30,15 +30,15 @@
   you do not wish to do so, delete this exception statement from
   your version.
 */
-#include "messageviewer/interfaces/bodypartformatter.h"
-#include "messageviewer/interfaces/bodyparturlhandler.h"
-#include "messageviewer/interfaces/bodypart.h"
-#include <messageviewer/viewer/nodehelper.h>
+#include "interfaces/bodypartformatter.h"
+#include "interfaces/bodyparturlhandler.h"
+#include "interfaces/bodypart.h"
+#include <viewer/nodehelper.h>
 #include "updatecontactjob.h"
 #include "vcardmemento.h"
 
 using MessageViewer::Interface::BodyPart;
-#include "messageviewer/htmlwriter/webkitparthtmlwriter.h"
+#include "htmlwriter/webkitparthtmlwriter.h"
 
 #include <libkdepim/job/addcontactjob.h>
 

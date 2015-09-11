@@ -30,7 +30,7 @@
 
 #include <AkonadiCore/statisticsproxymodel.h>
 
-#include <messageviewer/settings/messageviewersettings.h>
+#include <settings/messageviewersettings.h>
 
 #include <settings/messagecoresettings.h>
 

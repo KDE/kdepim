@@ -16,8 +16,8 @@
 */
 
 #include "mailsourceviewtextbrowserwidgettest.h"
-#include "../widgets/mailsourceviewtextbrowserwidget.h"
-#include "../findbar/findbarsourceview.h"
+#include "../src/widgets/mailsourceviewtextbrowserwidget.h"
+#include "../src/findbar/findbarsourceview.h"
 #include "pimcommon/texttospeech/texttospeechwidget.h"
 #include <qtest.h>
 

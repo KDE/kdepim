@@ -103,7 +103,7 @@ target_link_libraries(importwizard
   mailcommon
   kdepim
   messagecomposer
-  messageviewer
+  KF5::MessageViewer
   KF5::Completion
 )
 

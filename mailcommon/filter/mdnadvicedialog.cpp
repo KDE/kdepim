@@ -26,11 +26,11 @@
 #include <messagecomposer/helper/messagefactory.h>
 using MessageComposer::MessageFactory;
 
-#include <messageviewer/settings/messageviewersettings.h>
+#include <settings/messageviewersettings.h>
 #ifndef QT_NO_CURSOR
 #include <mailcommon/util/kcursorsaver.h>
 #endif
-#include <messageviewer/viewer/objecttreeparser.h>
+#include <viewer/objecttreeparser.h>
 
 #include <ItemFetchJob>
 #include <ItemModifyJob>

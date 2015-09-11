@@ -14,7 +14,7 @@ macro(add_templateparser_unittest _source)
   target_link_libraries(${_name}
     kleo
     KF5::TemplateParser
-    messageviewer
+    KF5::MessageViewer
     KF5::QGpgme
     Qt5::Test
     Qt5::WebKitWidgets

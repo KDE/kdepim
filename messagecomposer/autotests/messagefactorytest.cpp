@@ -35,10 +35,10 @@
 
 #include "testhtmlwriter.h"
 #include "testcsshelper.h"
-#include <messageviewer/viewer/nodehelper.h>
+#include <viewer/nodehelper.h>
 #include <setupenv.h>
 
-#include <messageviewer/viewer/objecttreeparser.h>
+#include <viewer/objecttreeparser.h>
 
 #include "qtest_messagecomposer.h"
 #include <kmime/kmime_dateformatter.h>

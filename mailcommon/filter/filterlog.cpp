@@ -28,7 +28,7 @@
 
 #include "filterlog.h"
 
-#include "messageviewer/utils/util.h"
+#include "utils/util.h"
 #include "mailcommon_debug.h"
 
 #include <QFile>

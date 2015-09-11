@@ -25,7 +25,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   KF5::AkonadiMime
   calendarsupport
   kdepim
-  messageviewer
+  KF5::MessageViewer
 )
 
 target_link_libraries(messageviewer_bodypartformatter_text_calendar incidenceeditorsng)

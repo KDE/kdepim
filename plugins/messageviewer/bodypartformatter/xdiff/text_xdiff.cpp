@@ -29,10 +29,10 @@
     your version.
 */
 
-#include <messageviewer/interfaces/bodypartformatter.h>
-#include <messageviewer/interfaces/bodypart.h>
-#include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
+#include <interfaces/bodypartformatter.h>
+#include <interfaces/bodypart.h>
+#include <interfaces/bodyparturlhandler.h>
+#include <htmlwriter/webkitparthtmlwriter.h>
 
 #include <kstringhandler.h>
 #include <kiconloader.h>

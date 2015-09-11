@@ -208,7 +208,7 @@ PUBLIC
   pimcommon
 PRIVATE
   kdepim
-  messageviewer
+  KF5::MessageViewer
   KF5::MailImporter
   KF5::MessageCore
   KF5::TemplateParser

@@ -29,7 +29,7 @@
 
 #include "filterlogdialog.h"
 #include <mailcommon/filter/filterlog.h>
-#include <messageviewer/utils/autoqpointer.h>
+#include <utils/autoqpointer.h>
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 

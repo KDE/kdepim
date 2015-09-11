@@ -32,7 +32,7 @@
 #include <KJob>
 #include <KService>
 #include "messagecomposer_export.h"
-#include "messageviewer/viewer/editorwatcher.h"
+#include "viewer/editorwatcher.h"
 class KActionCollection;
 class QAction;
 

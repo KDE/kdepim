@@ -24,7 +24,7 @@
 #include "addressline/recentaddress/recentaddresses.h"
 #include "addressline/completionconfiguredialog/completionconfiguredialog.h"
 #include "settings/messagecomposersettings.h"
-#include "messageviewer/utils/autoqpointer.h"
+#include "utils/autoqpointer.h"
 
 #include <utils/stringutil.h>
 

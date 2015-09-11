@@ -29,9 +29,9 @@
 #include "messagecomposer/composer/composer.h"
 
 #include "messagecomposer/part/globalpart.h"
-#include "messageviewer/viewer/editorwatcher.h"
-#include "messageviewer/viewer/nodehelper.h"
-#include "messageviewer/utils/util.h"
+#include "viewer/editorwatcher.h"
+#include "viewer/nodehelper.h"
+#include "utils/messageviewerutil.h"
 #include "utils/stringutil.h"
 
 #include <AkonadiCore/itemfetchjob.h>

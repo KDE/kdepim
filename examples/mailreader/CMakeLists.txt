@@ -9,7 +9,6 @@ set(mailreader_SRCS
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_SOURCE_DIR}/messagelist
-  ${CMAKE_SOURCE_DIR}/messageviewer
 )
 
 ki18n_wrap_ui(mailreader_SRCS mailreaderview.ui prefs_base.ui prefs_messagelist.ui)
@@ -26,7 +25,7 @@ target_link_libraries(akonadimailreader
   kdepim
   kleo
   messagelist
-  messageviewer
+  KF5::MessageViewer
 )
 
 install(TARGETS akonadimailreader ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

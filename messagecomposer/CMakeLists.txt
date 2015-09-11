@@ -3,8 +3,6 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"libmessagecomposer\")
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/messageviewer
-    ${CMAKE_SOURCE_DIR}/messageviewer/viewer/
     ${CMAKE_SOURCE_DIR}/messagecomposer/recipient/
     ${CMAKE_SOURCE_DIR}/messagecomposer/job
     ${CMAKE_SOURCE_DIR}/messagecomposer/utils/
@@ -161,7 +159,7 @@ PRIVATE
   KF5::MailTransport
   KF5::PimTextEdit
   KF5::TemplateParser
-  messageviewer
+  KF5::MessageViewer
   KF5::AkonadiWidgets
   kdepim
   KF5::CalendarCore

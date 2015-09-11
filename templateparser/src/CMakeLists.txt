@@ -20,7 +20,6 @@ set(templateparser_LIB_SRCS
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo
-  ${CMAKE_SOURCE_DIR}/messageviewer
 )
 
 ecm_qt_declare_logging_category(templateparser_LIB_SRCS HEADER templateparser_debug.h IDENTIFIER TEMPLATEPARSER_LOG CATEGORY_NAME log_templateparser)
@@ -47,7 +46,7 @@ PUBLIC
 PRIVATE
   KF5::Mime
   KF5::AkonadiCore
-  messageviewer
+  KF5::MessageViewer
   KF5::IdentityManagement
   KF5::MessageCore
   Qt5::WebKitWidgets
