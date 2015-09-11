@@ -29,7 +29,7 @@
 #include <messagecomposer/sender/messagesender.h>
 #include <pimcommon/widgets/emailaddressrequester.h>
 #include <utils/stringutil.h>
-#include <customtemplates.h>
+#include <TemplateParser/CustomTemplates>
 #include <customtemplates_kfg.h>
 
 #include <KLocalizedString>

@@ -36,7 +36,7 @@
 #include <helpers/messagehelpers.h>
 #include <utils/stringutil.h>
 #include "helper/messagehelper.h"
-#include "templateparser.h"
+#include "TemplateParser/TemplateParser"
 #include <KLocalizedString>
 #include "messagecomposer_debug.h"
 #include <kcharsets.h>
