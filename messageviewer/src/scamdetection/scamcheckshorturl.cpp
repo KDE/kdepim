@@ -18,7 +18,7 @@
 
 #include "scamcheckshorturl.h"
 #include "messageviewer_debug.h"
-#include <libkdepim/misc/broadcaststatus.h>
+#include <Libkdepim/BroadcastStatus>
 
 #include <KLocalizedString>
 

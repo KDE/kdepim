@@ -19,7 +19,7 @@
 #define SIEVEGLOBALVARIABLEWIDGET_H
 
 #include "sievewidgetpageabstract.h"
-#include <libkdepim/widgets/kwidgetlister.h>
+#include <Libkdepim/KWidgetLister>
 
 class QPushButton;
 class QLineEdit;

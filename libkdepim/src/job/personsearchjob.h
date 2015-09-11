@@ -27,7 +27,7 @@
 
 #include <KJob>
 #include <AkonadiCore/Collection>
-#include <libkdepim/ldap/ldapclientsearch.h>
+#include <ldap/ldapclientsearch.h>
 #include "person.h"
 
 namespace KPIM

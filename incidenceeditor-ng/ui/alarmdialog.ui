@@ -437,7 +437,7 @@ default email configured in Kmail (Settings menu/Configure Kmail/Identities).</s
   <customwidget>
    <class>KPIM::AddresseeLineEdit</class>
    <extends>KLineEdit</extends>
-   <header>libkdepim/addressline/addresslineedit/addresseelineedit.h</header>
+   <header>Libkdepim/AddresseeLineEdit</header>
   </customwidget>
   <customwidget>
    <class>KComboBox</class>
@@ -456,7 +456,7 @@ default email configured in Kmail (Settings menu/Configure Kmail/Identities).</s
   </customwidget>
  </customwidgets>
  <includes>
-  <include location="global">libkdepim/addressline/addresslineedit/addresseelineedit.h</include>
+  <include location="global">Libkdepim/AddresseeLineEdit</include>
  </includes>
  <resources/>
  <connections>

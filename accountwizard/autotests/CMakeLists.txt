@@ -11,6 +11,6 @@ target_link_libraries(ldaptest
     KF5::Mime
     KF5::Ldap
     Qt5::Test
-    kdepim
+    KF5::Libkdepim
     KF5::I18n
   )

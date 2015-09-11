@@ -237,7 +237,7 @@ PUBLIC
 PRIVATE
   KF5::ItemViews
   ${_mailwebview_lib}
-  kdepim
+  KF5::Libkdepim
   kleo
   KF5::GrantleeTheme
   KF5::KaddressbookGrantlee
@@ -278,7 +278,6 @@ ecm_generate_headers(MessageViewer_CamelCase_HEADERS
   viewer/CSSHelper
   viewer/ObjectTreeParser
   viewer/AttachmentStrategy
-  viewer/MessageDisplayFormatAttribute
   viewer/NodeHelper
   viewer/EditorWatcher
   widgets/InvitationSettings

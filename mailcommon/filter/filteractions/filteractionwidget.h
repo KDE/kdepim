@@ -24,7 +24,7 @@
 
 #include "mailcommon_export.h"
 
-#include <libkdepim/widgets/kwidgetlister.h>
+#include <Libkdepim/KWidgetLister>
 
 namespace MailCommon
 {

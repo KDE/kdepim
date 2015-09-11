@@ -23,7 +23,7 @@
 #include "templatesconfiguration_kfg.h"
 #include "templatesconfiguration.h"
 
-#include <misc/imagecollector.h>
+#include <MessageCore/ImageCollector>
 #include <utils/stringutil.h>
 
 #include <viewer/objecttreeparser.h>

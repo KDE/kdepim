@@ -46,7 +46,7 @@ PUBLIC
 PRIVATE
   KF5::AkonadiCore
   KF5::AkonadiMime
-  kdepim
+  KF5::Libkdepim
   KF5::Archive
   KF5::I18n
   KF5::ConfigCore

@@ -105,7 +105,7 @@ PUBLIC
   eventviews
   kdgantt2             # For FreeBusy Editor
 PRIVATE
-  kdepim
+  KF5::Libkdepim
   kdepimdbusinterfaces # For UriHandler
   KF5::Codecs
   KF5::Ldap

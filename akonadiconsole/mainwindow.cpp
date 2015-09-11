@@ -21,7 +21,7 @@
 
 #include "mainwindow.h"
 
-#include <libkdepim/misc/uistatesaver.h>
+#include <Libkdepim/UiStateSaver>
 
 #include <KActionCollection>
 #include <KConfigGroup>

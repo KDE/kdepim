@@ -35,7 +35,7 @@
 
 #include "utils/progressmanager.h"
 
-#include <libkdepim/progresswidget/progressmanager.h>
+#include <Libkdepim/ProgressManager>
 
 #include <kleo/job.h>
 

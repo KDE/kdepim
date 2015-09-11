@@ -17,7 +17,7 @@
 
 #include "adblockblockableitemdialog_gui.h"
 #include "adblock/adblockblockableitemswidget.h"
-#include "libkdepim/widgets/progressindicatorlabel.h"
+#include "Libkdepim/ProgressIndicatorLabel"
 #include <QStandardPaths>
 #include <KLocalizedString>
 #include <QUrl>

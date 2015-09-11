@@ -207,7 +207,7 @@ PUBLIC
   messagecomposer
   pimcommon
 PRIVATE
-  kdepim
+  KF5::Libkdepim
   KF5::MessageViewer
   KF5::MailImporter
   KF5::MessageCore
@@ -246,7 +246,7 @@ if (Qt5Designer_FOUND)
  
     target_link_libraries(mailcommonwidgets
         mailcommon
-        kdepim
+        KF5::Libkdepim
     )
     if(NOT WIN32)
         # Since there are no libraries provided by this module,

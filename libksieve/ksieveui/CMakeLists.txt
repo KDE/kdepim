@@ -195,7 +195,7 @@ PUBLIC
   pimcommon
   Qt5::Xml
 PRIVATE
-  kdepim
+  KF5::Libkdepim
   KF5::Archive
   KF5::AkonadiCore
   KF5::Mime

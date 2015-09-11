@@ -19,7 +19,7 @@
 #define SIEVEINCLUDEWIDGET_H
 
 #include "sievewidgetpageabstract.h"
-#include <libkdepim/widgets/kwidgetlister.h>
+#include <Libkdepim/KWidgetLister>
 #include <KComboBox>
 
 class QPushButton;

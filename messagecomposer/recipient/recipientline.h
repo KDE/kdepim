@@ -25,7 +25,7 @@
 
 #include "messagecomposer/recipient/recipient.h"
 
-#include <libkdepim/multiplyingline/multiplyingline.h>
+#include <Libkdepim/MultiplyingLine>
 #include <messagecomposer/composer/composerlineedit.h>
 
 #include <KComboBox>

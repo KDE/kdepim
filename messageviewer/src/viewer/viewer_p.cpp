@@ -101,7 +101,7 @@
 #include <QMimeDatabase>
 
 //libkdepim
-#include "libkdepim/misc/broadcaststatus.h"
+#include "Libkdepim/BroadcastStatus"
 #include <attachment/attachmentpropertiesdialog.h>
 
 #include <AkonadiCore/collection.h>

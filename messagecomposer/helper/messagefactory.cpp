@@ -32,7 +32,7 @@
 #include <Akonadi/KMime/MessageStatus>
 #include <kmime/kmime_dateformatter.h>
 #include <KEmailAddress>
-#include <misc/mailinglist.h>
+#include <MessageCore/MailingList>
 #include <helpers/messagehelpers.h>
 #include <utils/stringutil.h>
 #include "helper/messagehelper.h"

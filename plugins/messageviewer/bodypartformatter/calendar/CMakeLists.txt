@@ -24,7 +24,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   KF5::MailTransport
   KF5::AkonadiMime
   calendarsupport
-  kdepim
+  KF5::Libkdepim
   KF5::MessageViewer
 )
 

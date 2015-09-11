@@ -32,7 +32,7 @@
 
 #include <ETMViewStateSaver>
 
-#include "libkdepim/proxy/kcolumnfilterproxymodel.h"
+#include "Libkdepim/KColumnFilterProxyModel"
 using namespace KPIM;
 
 #include <KCalCore/Event>

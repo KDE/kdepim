@@ -27,7 +27,7 @@
 
 #include "messagecomposer_export.h"
 
-#include <libkdepim/multiplyingline/multiplyingline.h>
+#include <Libkdepim/MultiplyingLine>
 
 #include <QString>
 #include <QSharedPointer>

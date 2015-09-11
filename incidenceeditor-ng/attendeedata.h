@@ -21,7 +21,7 @@
 #ifndef INCIDENCEEDITOR_ATTENDEEDATA_H
 #define INCIDENCEEDITOR_ATTENDEEDATA_H
 
-#include <libkdepim/multiplyingline/multiplyingline.h>
+#include <Libkdepim/MultiplyingLine>
 
 #include <KCalCore/Attendee>
 

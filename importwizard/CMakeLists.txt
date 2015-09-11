@@ -101,7 +101,7 @@ target_link_libraries(importwizard
   KF5::MailImporter
   pimcommon
   mailcommon
-  kdepim
+  KF5::Libkdepim
   messagecomposer
   KF5::MessageViewer
   KF5::Completion

@@ -5,7 +5,7 @@ set(messageviewer_bodypartformatter_text_vcard_PART_SRCS text_vcard.cpp vcardmem
 ecm_qt_declare_logging_category(messageviewer_bodypartformatter_text_vcard_PART_SRCS HEADER vcard_debug.h IDENTIFIER VCARD_LOG CATEGORY_NAME log_vcard)
 
 add_library(messageviewer_bodypartformatter_text_vcard MODULE ${messageviewer_bodypartformatter_text_vcard_PART_SRCS})
-target_link_libraries(messageviewer_bodypartformatter_text_vcard  KF5::Contacts kdepim KF5::MessageViewer KF5::IconThemes KF5::JobWidgets)
+target_link_libraries(messageviewer_bodypartformatter_text_vcard  KF5::Contacts KF5::Libkdepim KF5::MessageViewer KF5::IconThemes KF5::JobWidgets)
 install(TARGETS messageviewer_bodypartformatter_text_vcard DESTINATION ${KDE_INSTALL_PLUGINDIR})
 
 install(FILES text_vcard.desktop DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer/plugins/bodypartformatter)

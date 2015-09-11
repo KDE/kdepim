@@ -29,7 +29,7 @@
 #include <Collection>
 
 #include <Akonadi/KMime/MessageStatus>
-#include <misc/mdnstateattribute.h>
+#include <MessageCore/MDNStateAttribute>
 
 namespace KIdentityManagement
 {

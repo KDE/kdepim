@@ -336,7 +336,7 @@ if(KDEPIM_ONLY_KLEO)
   set(_kleopatra_libkdepim_LIBS)
 else()
   set(_kleopatra_libkdepim_SRCS)
-  set(_kleopatra_libkdepim_LIBS kdepim)
+  set(_kleopatra_libkdepim_LIBS KF5::Libkdepim)
 endif()
 
 set(_kleopatra_mainwindow_SRCS mainwindow_desktop.cpp)

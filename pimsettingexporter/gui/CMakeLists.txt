@@ -35,7 +35,7 @@ target_link_libraries(pimsettingexporter
   KF5::DBusAddons
   mailcommon
   pimcommon
-  kdepim
+  KF5::Libkdepim
   pimsettingexporterprivate
   KF5::Archive
 )

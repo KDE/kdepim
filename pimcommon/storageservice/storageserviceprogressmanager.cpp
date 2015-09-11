@@ -16,7 +16,7 @@
 */
 
 #include "storageserviceprogressmanager.h"
-#include "libkdepim/progresswidget/progressmanager.h"
+#include "Libkdepim/ProgressManager"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 namespace PimCommon

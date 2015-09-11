@@ -94,17 +94,28 @@ ecm_generate_headers(MessageCore_CamelCase_HEADERS
   attachment/AttachmentPart
   attachment/AttachmentPropertiesDialog
   attachment/AttachmentCompressJob
-  misc/ImageCollector
-  misc/MailingList
-  misc/MDNStateAttribute
-
-  REQUIRED_HEADERS MessageCore_HEADERS
+  
+  REQUIRED_HEADERS MessageCore_CamelCase_HEADERS
   PREFIX MessageCore
 )
+
+ecm_generate_headers(MessageCore_misc_HEADERS
+  HEADER_NAMES
+  ImageCollector
+  MailingList
+  MDNStateAttribute
+
+  REQUIRED_HEADERS MessageCore_misc_HEADERS
+  PREFIX MessageCore
+  RELATIVE misc
+)
+
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${messagecore_SOURCE_DIR})
 install(FILES
     ${MessageCore_CamelCase_HEADERS}
+    ${MessageCore_misc_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageCore
     COMPONENT Devel
 )
@@ -113,6 +124,7 @@ install(FILES
     ${MessageCore_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messagecore_export.h
     ${MessageCore_CamelCase_HEADERS}
+    ${MessageCore_misc_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messagecore
     COMPONENT Devel
 )

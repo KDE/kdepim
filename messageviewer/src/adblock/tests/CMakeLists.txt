@@ -18,7 +18,7 @@ add_executable(adblockblockableitemdialog_gui ${adblockblockableitemdialog_gui_S
 target_link_libraries(adblockblockableitemdialog_gui
   KF5::KIOCore
   KF5::MessageViewer
-  kdepim
+  KF5::Libkdepim
   Qt5::WebKitWidgets
   KF5::ItemViews 
 )

@@ -21,7 +21,7 @@
 
 #include "backupjob.h"
 
-#include <libkdepim/misc/broadcaststatus.h>
+#include <Libkdepim/BroadcastStatus>
 #include "mailcommon_debug.h"
 #include <CollectionDeleteJob>
 #include <CollectionFetchJob>

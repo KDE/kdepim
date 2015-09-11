@@ -24,7 +24,7 @@ add_executable(konsolekalendar ${konsolekalendar_SRCS})
 target_link_libraries(konsolekalendar
                       KF5::CalendarUtils
                       KF5::CalendarCore
-                      kdepim
+                      KF5::Libkdepim
                       calendarsupport
                       KF5::AkonadiCalendar)
 

@@ -47,9 +47,9 @@
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon/storageservice/storageserviceprogressmanager.h"
 
-#include "libkdepim/progresswidget/progressdialog.h"
-#include "libkdepim/progresswidget/statusbarprogresswidget.h"
-#include "libkdepim/progresswidget/progressstatusbarwidget.h"
+#include "Libkdepim/ProgressDialog"
+#include "Libkdepim/StatusbarProgressWidget"
+#include "Libkdepim/ProgressStatusBarWidget"
 
 #include <qtabwidget.h>
 #include <KStatusNotifierItem>

@@ -17,7 +17,7 @@ add_executable(calendarjanitor ${calendarjanitor_SRCS})
 target_link_libraries(calendarjanitor
                       KF5::CalendarUtils
                       KF5::CalendarCore
-                      kdepim
+                      KF5::Libkdepim
                       calendarsupport
                       KF5::AkonadiCalendar)
 

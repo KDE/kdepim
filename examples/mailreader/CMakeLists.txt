@@ -21,7 +21,7 @@ target_link_libraries(akonadimailreader
   KF5::AkonadiCore
   KF5::XmlGui
   KF5::IconThemes  
-  kdepim
+  KF5::Libkdepim
   kleo
   KF5::MessageList
   KF5::MessageViewer

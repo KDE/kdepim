@@ -23,7 +23,7 @@
 #define MESSAGECOMPOSER_COMPOSERLINEEDIT_H
 
 #include "messagecomposer_export.h"
-#include <libkdepim/addressline/addresslineedit/addresseelineedit.h>
+#include <Libkdepim/AddresseeLineEdit>
 #include <ldap/ldapclientsearch.h>
 #include <kcontacts/contactgroup.h>
 class KConfig;

@@ -21,7 +21,7 @@
 
 #include <QObject>
 
-#include "../ldap/ldapclient.h"
+#include "../src/ldap/ldapclient.h"
 
 namespace KLDAP
 {

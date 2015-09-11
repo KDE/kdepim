@@ -21,8 +21,8 @@
 
 #include "pimcommon/widgets/minimumcombobox.h"
 
-#include "libkdepim/job/addcontactjob.h"
-#include "libkdepim/widgets/tagwidgets.h"
+#include "Libkdepim/AddContactJob"
+#include "Libkdepim/TagWidgets"
 
 #include <CollectionComboBox>
 #include <KContacts/Addressee>

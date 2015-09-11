@@ -42,7 +42,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <libkdepim/widgets/kdatepickerpopup.h>
+#include <Libkdepim/KDatePickerPopup>
 
 #include <entitymimetypefiltermodel.h>
 #include <ETMViewStateSaver>

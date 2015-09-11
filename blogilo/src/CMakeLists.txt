@@ -69,7 +69,7 @@ target_link_libraries(blogilo
     pimcommon
     Qt5::Sql
     composereditorng
-    kdepim
+    KF5::Libkdepim
     KF5::TextEditor
     KF5::WebKit
     KF5::Wallet

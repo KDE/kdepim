@@ -20,7 +20,7 @@
 
 #include "mailcommon_export.h"
 
-#include <misc/mailinglist.h>
+#include <MessageCore/MailingList>
 using MessageCore::MailingList;
 
 #include <Collection>

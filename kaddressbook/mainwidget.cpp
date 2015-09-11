@@ -43,7 +43,7 @@
 #include "grantleetheme/grantleethememanager.h"
 #include "globalsettings_grantleetheme.h"
 
-#include "libkdepim/misc/uistatesaver.h"
+#include "Libkdepim/UiStateSaver"
 
 #include <pimcommon/acl/collectionaclpage.h>
 #include <pimcommon/acl/imapaclattribute.h>

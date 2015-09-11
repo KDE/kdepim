@@ -32,8 +32,8 @@
 #include <calendarsupport/categoryhierarchyreader.h>
 #include <widgets/tagselectioncombo.h>
 
-#include <libkdepim/widgets/kcheckcombobox.h>
-#include <libkdepim/widgets/tagwidgets.h>
+#include <Libkdepim/KCheckComboBox>
+#include <Libkdepim/TagWidgets>
 
 #include <KCalCore/CalFilter>
 

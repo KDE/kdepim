@@ -19,7 +19,7 @@
 #include "shorturlutils.h"
 #include "abstractshorturl.h"
 #include "shorturl/shorturlconfiguredialog.h"
-#include "libkdepim/widgets/progressindicatorlabel.h"
+#include "Libkdepim/ProgressIndicatorLabel"
 
 #include <KLineEdit>
 #include <KLocalizedString>

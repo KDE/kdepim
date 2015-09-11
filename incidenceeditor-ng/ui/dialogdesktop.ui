@@ -1711,12 +1711,12 @@
   <customwidget>
    <class>KPIM::KCheckComboBox</class>
    <extends>KComboBox</extends>
-   <header>libkdepim/widgets/kcheckcombobox.h</header>
+   <header>Libkdepim/KCheckComboBox</header>
   </customwidget>
   <customwidget>
    <class>KPIM::KWeekdayCheckCombo</class>
    <extends>KPIM::KCheckComboBox</extends>
-   <header>libkdepim/widgets/kweekdaycheckcombo.h</header>
+   <header>Libkdepim/KWeekdayCheckCombo</header>
   </customwidget>
   <customwidget>
    <class>IncidenceEditorNG::KTimeZoneComboBox</class>
@@ -1737,7 +1737,7 @@
   <customwidget>
    <class>KPIM::KCheckComboBox</class>
    <extends>KComboBox</extends>
-   <header>libkdepim/widgets/kcheckcombobox.h</header>
+   <header>Libkdepim/KCheckComboBox</header>
   </customwidget>
   <customwidget>
    <class>KRichTextEdit</class>
@@ -1762,7 +1762,7 @@
   <customwidget>
    <class>KPIM::KWeekdayCheckCombo</class>
    <extends>KPIM::KCheckComboBox</extends>
-   <header>libkdepim/widgets/kweekdaycheckcombo.h</header>
+   <header>Libkdepim/KWeekdayCheckCombo</header>
   </customwidget>
  </customwidgets>
  <tabstops>

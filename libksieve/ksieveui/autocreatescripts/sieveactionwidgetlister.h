@@ -18,7 +18,7 @@
 #ifndef SIEVEACTIONWIDGETLISTER_H
 #define SIEVEACTIONWIDGETLISTER_H
 
-#include <libkdepim/widgets/kwidgetlister.h>
+#include <Libkdepim/KWidgetLister>
 
 class QPushButton;
 

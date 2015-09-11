@@ -17,7 +17,7 @@
 
 #include "logwidget.h"
 
-#include "libkdepim/widgets/customlogwidget.h"
+#include "Libkdepim/CustomLogWidget"
 
 #include <QHBoxLayout>
 

@@ -21,7 +21,7 @@
 #include "translatorutil.h"
 #include "googletranslator.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
-#include "libkdepim/widgets/progressindicatorwidget.h"
+#include "Libkdepim/ProgressIndicatorWidget"
 
 #include <QPushButton>
 #include <KLocalizedString>

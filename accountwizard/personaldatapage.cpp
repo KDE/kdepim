@@ -28,7 +28,7 @@
 #include "resource.h"
 #include "ispdb/ispdb.h"
 
-#include <libkdepim/misc/emailvalidator.h>
+#include <Libkdepim/EmailValidator>
 #include <KEmailAddress>
 
 #include <mailtransport/transport.h>

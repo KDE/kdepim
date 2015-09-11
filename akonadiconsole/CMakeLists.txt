@@ -104,7 +104,7 @@ target_link_libraries(akonadiconsole_bin
   KF5::AkonadiContact
   calendarsupport
   KF5::CalendarCore
-  kdepim
+  KF5::Libkdepim
   KF5::MessageViewer
   KF5::DBusAddons
   Qt5::Sql

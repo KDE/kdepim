@@ -71,7 +71,7 @@ set(accountwizard_libs
   KF5::WidgetsAddons
   KF5::NewStuff
   Qt5::UiTools
-  kdepim
+  KF5::Libkdepim
   KF5::ItemViews
   KF5::I18n
   KF5::Ldap

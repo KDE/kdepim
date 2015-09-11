@@ -30,7 +30,7 @@
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 
-#include <libkdepim/misc/broadcaststatus.h>
+#include <Libkdepim/BroadcastStatus>
 using KPIM::BroadcastStatus;
 #include "mailcommon_debug.h"
 

@@ -20,7 +20,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 #include "messageviewer_debug.h"
-#include "libkdepim/widgets/progressindicatorlabel.h"
+#include "Libkdepim/ProgressIndicatorLabel"
 
 #include <KLocalizedString>
 #include <KIO/Job>

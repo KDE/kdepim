@@ -25,7 +25,7 @@
 
 #include "ldap_xxport.h"
 
-#include <libkdepim/ldap/ldapsearchdialog.h>
+#include <Libkdepim/LdapSearchDialog>
 
 #include <QPointer>
 

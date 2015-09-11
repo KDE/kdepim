@@ -44,8 +44,8 @@
 #include "stl_util.h"
 
 #include <utils/stringutil.h>
-#include <libkdepim/misc/broadcaststatus.h>
-#include <libkdepim/job/openemailaddressjob.h>
+#include <Libkdepim/BroadcastStatus>
+#include <Libkdepim/OpenEmailAddressJob>
 
 #include <Akonadi/Contact/ContactSearchJob>
 

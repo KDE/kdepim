@@ -313,7 +313,7 @@ PUBLIC
 PRIVATE
     Qt5::WebKitWidgets
     KF5::IMAP
-    kdepim
+    KF5::Libkdepim
     KF5::Archive
     KF5::Codecs
     KF5::NewStuff

@@ -161,7 +161,7 @@ PRIVATE
   KF5::TemplateParser
   KF5::MessageViewer
   KF5::AkonadiWidgets
-  kdepim
+  KF5::Libkdepim
   KF5::CalendarCore
   KF5::KIOCore
   Grantlee5::TextDocument

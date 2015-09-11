@@ -33,7 +33,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include "libkdepim/proxy/kcolumnfilterproxymodel.h"
+#include "Libkdepim/KColumnFilterProxyModel"
 using namespace KPIM;
 
 #include <EntityDisplayAttribute>

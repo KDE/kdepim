@@ -141,7 +141,7 @@ ecm_generate_headers(MessageList_CamelCase_HEADERS
   Pane
   StorageModel
   MessageListUtil
-  REQUIRED_HEADERS MessageList_HEADERS
+  REQUIRED_HEADERS MessageList_CamelCase_HEADERS
   PREFIX MessageList
 )
 

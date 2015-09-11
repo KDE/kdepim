@@ -23,7 +23,7 @@
 #include "editorconfig.h"
 
 #include "ui_dialogdesktop.h"
-#include <libkdepim/widgets/tagwidgets.h>
+#include <Libkdepim/TagWidgets>
 #include "incidenceeditor_debug.h"
 
 #include <TagCreateJob>

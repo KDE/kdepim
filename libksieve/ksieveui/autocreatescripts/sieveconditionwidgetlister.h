@@ -18,7 +18,7 @@
 #ifndef SIEVECONDITIONWIDGETLISTER_H
 #define SIEVECONDITIONWIDGETLISTER_H
 
-#include <libkdepim/widgets/kwidgetlister.h>
+#include <Libkdepim/KWidgetLister>
 
 class QPushButton;
 class QGridLayout;

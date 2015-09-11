@@ -26,7 +26,7 @@
 #include "pimcommon/acl/imapaclattribute.h"
 #include "pimcommon/util/pimutil.h"
 
-#include "libkdepim/proxy/quotacolorproxymodel.h"
+#include "Libkdepim/QuotaColorProxyModel"
 
 #include <AkonadiCore/statisticsproxymodel.h>
 

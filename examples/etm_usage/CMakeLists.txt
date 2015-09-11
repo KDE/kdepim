@@ -44,7 +44,7 @@ target_link_libraries(etm_usage
   KF5::Contacts
   KF5::Mime
   
-  kdepim
+  KF5::Libkdepim
   kleo
   KF5::MessageCore
   KF5::MessageList

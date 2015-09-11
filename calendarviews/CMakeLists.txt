@@ -93,7 +93,7 @@ PUBLIC
   KF5::CalendarUtils
   KF5::AkonadiCalendar
 PRIVATE
-  kdepim
+  KF5::Libkdepim
   KF5::Codecs
   kdgantt2
   KF5::AkonadiWidgets
