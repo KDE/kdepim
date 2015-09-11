@@ -19,7 +19,7 @@
 #ifndef MESSAGELISTUTIL_H
 #define MESSAGELISTUTIL_H
 
-#include <messagelist/messagelist_export.h>
+#include <messagelist_export.h>
 #include <QObject>
 #include <QString>
 #include <QColor>
