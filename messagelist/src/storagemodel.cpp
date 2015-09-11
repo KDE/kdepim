@@ -273,6 +273,18 @@ static QByteArray md5Encode(const QByteArray &str)
     return c.result();
 }
 
+static QByteArray md5Encode(const QString &str)
+{
+    auto trimmed = str.trimmed();
+    if (trimmed.isEmpty()) {
+        return QByteArray();
+    }
+
+    QCryptographicHash c(QCryptographicHash::Md5);
+    c.addData(reinterpret_cast<const char *>(trimmed.unicode()), sizeof(QChar) * trimmed.length());
+    return c.result();
+}
+
 void StorageModel::fillMessageItemThreadingData(MessageList::Core::MessageItem *mi,
         int row, ThreadingDataSubset subset) const
 {
@@ -283,7 +295,7 @@ void StorageModel::fillMessageItemThreadingData(MessageList::Core::MessageItem *
     case PerfectThreadingReferencesAndSubject: {
         const QString subject = mail->subject()->asUnicodeString();
         const QString strippedSubject = MessageCore::StringUtil::stripOffPrefixes(subject);
-        mi->setStrippedSubjectMD5(md5Encode(strippedSubject.toUtf8()));
+        mi->setStrippedSubjectMD5(md5Encode(strippedSubject));
         mi->setSubjectIsPrefixed(subject != strippedSubject);
         // fall through
     }
