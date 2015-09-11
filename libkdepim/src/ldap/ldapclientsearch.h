@@ -22,7 +22,7 @@
 #ifndef LDAPCLIENTSEARCH_H
 #define LDAPCLIENTSEARCH_H
 
-#include "libkdepim/kdepim_export.h"
+#include "kdepim_export.h"
 #include <kldap/ldapobject.h>
 #include <QObject>
 #include <QStringList>

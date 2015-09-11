@@ -21,7 +21,7 @@
 #ifndef FBMODEL_FREEBUSYITEMMODEL_H
 #define FBMODEL_FREEBUSYITEMMODEL_H
 
-#include "libkdepim/kdepim_export.h"
+#include "kdepim_export.h"
 
 #include "freebusyitem.h"
 

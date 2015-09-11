@@ -21,7 +21,7 @@
 #ifndef INCIDENCEEDITOR_FREEPERIODMODEL_H
 #define INCIDENCEEDITOR_FREEPERIODMODEL_H
 
-#include "libkdepim/kdepim_export.h"
+#include "kdepim_export.h"
 
 #include <KCalCore/Period>
 

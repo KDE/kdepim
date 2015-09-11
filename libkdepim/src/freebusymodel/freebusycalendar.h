@@ -22,7 +22,7 @@
 #ifndef FBMODEL_FBCALENDAR_H
 #define FBMODEL_FBCALENDAR_H
 
-#include "libkdepim/kdepim_export.h"
+#include "kdepim_export.h"
 
 #include "freebusyitemmodel.h"
 

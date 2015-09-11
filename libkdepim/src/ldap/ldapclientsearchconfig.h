@@ -20,7 +20,7 @@
 #ifndef LDAPCLIENTSEARCHCONFIG_H
 #define LDAPCLIENTSEARCHCONFIG_H
 
-#include "libkdepim/kdepim_export.h"
+#include "kdepim_export.h"
 
 #include <QObject>
 

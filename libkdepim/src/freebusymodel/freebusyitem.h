@@ -23,7 +23,7 @@
 #ifndef INCIDENCEEDITOR_FREEBUSYITEM_H
 #define INCIDENCEEDITOR_FREEBUSYITEM_H
 
-#include "libkdepim/kdepim_export.h"
+#include "kdepim_export.h"
 
 #include <KCalCore/FreeBusy>
 

@@ -22,7 +22,7 @@
 #ifndef ADDHOSTDIALOG_H
 #define ADDHOSTDIALOG_H
 
-#include "libkdepim/kdepim_export.h"
+#include "kdepim_export.h"
 #include <qdialog.h>
 
 namespace KLDAP
