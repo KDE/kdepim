@@ -274,6 +274,15 @@ install(TARGETS
 
 ecm_generate_headers(MessageViewer_CamelCase_HEADERS
   HEADER_NAMES
+  viewer/Viewer
+  viewer/CSSHelper
+  viewer/ObjectTreeParser
+  viewer/AttachmentStrategy
+  viewer/MessageDisplayFormatAttribute
+  viewer/NodeHelper
+  viewer/EditorWatcher
+  widgets/InvitationSettings
+  widgets/PrintingSettings
   widgets/ConfigureWidget
   REQUIRED_HEADERS MessageViewer_HEADERS
   PREFIX MessageViewer
