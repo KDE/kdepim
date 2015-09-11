@@ -179,12 +179,6 @@ install(TARGETS
     EXPORT KF5LibkdepimTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
-#ecm_generate_headers(libkdepim_CamelCase_HEADERS
-#  HEADER_NAMES
-#  REQUIRED_HEADERS libkdepim_CamelCase_HEADERS
-#  PREFIX Libkdepim
-#)
-
 ecm_generate_headers(libkdepim_ldap_HEADERS
   HEADER_NAMES
   LdapClientSearchConfig
@@ -310,6 +304,7 @@ install(FILES
     ${libkdepim_proxy_HEADERS}
     ${libkdepim_multiline_HEADERS}
     ${libkdepim_addressline_HEADERS}
+    ${libkdepim_recentaddress_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/Libkdepim
     COMPONENT Devel
 )
@@ -327,6 +322,7 @@ install(FILES
     ${libkdepim_proxy_HEADERS}
     ${libkdepim_multiline_HEADERS}
     ${libkdepim_addressline_HEADERS}
+    ${libkdepim_recentaddress_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/libkdepim
     COMPONENT Devel
 )

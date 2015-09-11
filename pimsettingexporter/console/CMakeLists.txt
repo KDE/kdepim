@@ -1,6 +1,5 @@
 
 include_directories(${AKONADI_INCLUDE_DIR} 
-                    ${CMAKE_SOURCE_DIR}/libkdepim
                     ${CMAKE_SOURCE_DIR}/mailcommon
                     ${CMAKE_SOURCE_DIR}/pimcommon
                     ${CMAKE_SOURCE_DIR}/messagecomposer/
