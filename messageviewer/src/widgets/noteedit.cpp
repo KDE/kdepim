@@ -16,7 +16,7 @@
 */
 
 #include "noteedit.h"
-#include "messageviewer/globalsettings_messageviewer.h"
+#include "globalsettings_messageviewer.h"
 
 #include <incidenceeditor-ng/incidencedialogfactory.h>
 #include <incidenceeditor-ng/incidencedialog.h>

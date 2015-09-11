@@ -17,7 +17,7 @@
 
 #include "eventedit.h"
 #include "messageviewer_debug.h"
-#include "messageviewer/globalsettings_messageviewer.h"
+#include "globalsettings_messageviewer.h"
 #include "eventdatetimewidget.h"
 
 #include <KLocalizedString>

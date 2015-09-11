@@ -24,7 +24,7 @@
 #ifndef MESSAGEVIEWER_GLOBALSETTINGS_H
 #define MESSAGEVIEWER_GLOBALSETTINGS_H
 
-#include "messageviewer/globalsettings_messageviewer.h"
+#include "globalsettings_messageviewer.h"
 
 class QTimer;
 
