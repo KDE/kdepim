@@ -396,5 +396,4 @@ if (Qt5Designer_FOUND)
     )
 endif()
 
-add_subdirectory(customtools/shorturlplugin)
-add_subdirectory(customtools/translatorplugin)
+add_subdirectory(customtools)
