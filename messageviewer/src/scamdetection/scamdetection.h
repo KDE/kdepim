@@ -18,7 +18,7 @@
 #ifndef SCAMDETECTION_H
 #define SCAMDETECTION_H
 
-#include "messageviewer/messageviewer_export.h"
+#include "messageviewer_export.h"
 #include <QObject>
 #include <QPointer>
 
