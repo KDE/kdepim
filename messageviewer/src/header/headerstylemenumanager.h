@@ -37,6 +37,7 @@ public:
 
     KActionMenu *menu() const;
 
+    void setPluginName(const QString &pluginName);
 Q_SIGNALS:
     void styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy);
     void styleUpdated();

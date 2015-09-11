@@ -38,7 +38,8 @@ public:
     }
     void initialize(KActionCollection *ac);
     void addHelpTextAction(QAction *act, const QString &text);
-    QList<MessageViewer::HeaderStyleInterface *> lstInterface;
+    void setPluginName(const QString &pluginName);
+    QHash<QString, MessageViewer::HeaderStyleInterface *> lstInterface;
     QActionGroup *group;
     KActionMenu *headerMenu;
     HeaderStyleMenuManager *q;
@@ -53,6 +54,14 @@ void HeaderStyleMenuManagerPrivate::addHelpTextAction(QAction *act, const QStrin
     }
 }
 
+void HeaderStyleMenuManagerPrivate::setPluginName(const QString &pluginName)
+{
+    MessageViewer::HeaderStyleInterface *interface = lstInterface.value(pluginName);
+    if (interface) {
+        //TODO activate menu.
+    }
+}
+
 void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
 {
     headerMenu = new KActionMenu(i18nc("View->", "&Headers"), q);
@@ -63,7 +72,7 @@ void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
     const QVector<MessageViewer::HeaderStylePlugin *>  lstPlugin = MessageViewer::HeaderStylePluginManager::self()->pluginsList();
     Q_FOREACH(MessageViewer::HeaderStylePlugin *plugin, lstPlugin) {
         MessageViewer::HeaderStyleInterface *interface = plugin->createView(headerMenu, group, ac, q);
-        lstInterface.append(interface);
+        lstInterface.insert(plugin->name(), interface);
         q->connect(interface, SIGNAL(styleChanged(MessageViewer::HeaderStyle*,MessageViewer::HeaderStrategy*)), q,
                    SIGNAL(styleChanged(MessageViewer::HeaderStyle*,MessageViewer::HeaderStrategy*)));
         q->connect(interface, SIGNAL(styleUpdated()), q, SIGNAL(styleUpdated()));
@@ -83,8 +92,12 @@ HeaderStyleMenuManager::~HeaderStyleMenuManager()
 }
 
 
-KActionMenu *MessageViewer::HeaderStyleMenuManager::menu() const
+KActionMenu *HeaderStyleMenuManager::menu() const
 {
     return d->headerMenu;
 }
 
+void MessageViewer::HeaderStyleMenuManager::setPluginName(const QString &pluginName)
+{
+    d->setPluginName(pluginName);
+}
