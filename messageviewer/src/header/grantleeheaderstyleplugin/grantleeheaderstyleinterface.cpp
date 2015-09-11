@@ -20,8 +20,8 @@
 #include <grantleetheme/grantleethememanager.h>
 
 using namespace MessageViewer;
-GrantleeHeaderStyleInterface::GrantleeHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
-    : MessageViewer::HeaderStyleInterface(headerStyle, headerStrategy, parent),
+GrantleeHeaderStyleInterface::GrantleeHeaderStyleInterface(MessageViewer::HeaderStylePlugin *plugin, QObject *parent)
+    : MessageViewer::HeaderStyleInterface(plugin, parent),
       mThemeManager(Q_NULLPTR)
 {
 

@@ -23,7 +23,6 @@
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KToggleAction>
-
 using namespace MessageViewer;
 
 class MessageViewer::HeaderStyleMenuManagerPrivate
@@ -34,7 +33,6 @@ public:
           headerMenu(Q_NULLPTR),
           q(qq)
     {
-
     }
     void initialize(KActionCollection *ac);
     void addHelpTextAction(QAction *act, const QString &text);

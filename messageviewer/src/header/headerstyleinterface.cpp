@@ -17,15 +17,15 @@
 
 #include "headerstyle.h"
 #include "headerstyleinterface.h"
+#include "headerstyleplugin.h"
 #include <KActionMenu>
 #include <QAction>
 #include <KToggleAction>
 using namespace MessageViewer;
 
-HeaderStyleInterface::HeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
+HeaderStyleInterface::HeaderStyleInterface(MessageViewer::HeaderStylePlugin *headerStylePlugin, QObject *parent)
     : QObject(parent),
-      mHeaderStyle(headerStyle),
-      mHeaderStrategy(headerStrategy)
+      mHeaderStylePlugin(headerStylePlugin)
 {
 
 }
@@ -59,5 +59,5 @@ void HeaderStyleInterface::addActionToMenu(KActionMenu *menu, QActionGroup *acti
 
 void MessageViewer::HeaderStyleInterface::slotStyleChanged()
 {
-    Q_EMIT styleChanged(mHeaderStyle, mHeaderStrategy);
+    Q_EMIT styleChanged(mHeaderStylePlugin->headerStyle(), mHeaderStylePlugin->headerStrategy());
 }

@@ -20,8 +20,8 @@
 #include <KLocalizedString>
 #include <KActionCollection>
 using namespace MessageViewer;
-AllHeaderStyleInterface::AllHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
-    : MessageViewer::HeaderStyleInterface(headerStyle, headerStrategy, parent)
+AllHeaderStyleInterface::AllHeaderStyleInterface(MessageViewer::HeaderStylePlugin *plugin, QObject *parent)
+    : MessageViewer::HeaderStyleInterface(plugin, parent)
 {
 
 }

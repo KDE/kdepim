@@ -29,11 +29,12 @@ namespace MessageViewer
 {
 class HeaderStyle;
 class HeaderStrategy;
+class HeaderStylePlugin;
 class MESSAGEVIEWER_EXPORT HeaderStyleInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit HeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
+    explicit HeaderStyleInterface(MessageViewer::HeaderStylePlugin *, QObject *parent = Q_NULLPTR);
     virtual ~HeaderStyleInterface();
     QList<KToggleAction * > action() const;
     virtual void createAction(KActionMenu *menu, QActionGroup *actionGroup,KActionCollection *ac) = 0;
@@ -47,9 +48,8 @@ protected Q_SLOTS:
 protected:
     void addHelpTextAction(QAction *act, const QString &text);
     void addActionToMenu(KActionMenu *menu, QActionGroup *actionGroup);
-    HeaderStyle *mHeaderStyle;
-    HeaderStrategy *mHeaderStrategy;
     QList<KToggleAction *> mAction;
+    HeaderStylePlugin *mHeaderStylePlugin;
 };
 }
 #endif // HEADERSTYLEINTERFACE_H

@@ -27,7 +27,7 @@ class CustomHeaderStyleInterface : public MessageViewer::HeaderStyleInterface
 {
     Q_OBJECT
 public:
-    explicit CustomHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent = Q_NULLPTR);
+    explicit CustomHeaderStyleInterface(MessageViewer::HeaderStylePlugin *plugin, QObject *parent = Q_NULLPTR);
     ~CustomHeaderStyleInterface();
     void createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac) Q_DECL_OVERRIDE;
 

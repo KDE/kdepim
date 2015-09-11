@@ -49,7 +49,7 @@ HeaderStrategy *LongHeaderStylePlugin::headerStrategy() const
 
 HeaderStyleInterface *LongHeaderStylePlugin::createView(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac, QObject *parent)
 {
-    MessageViewer::HeaderStyleInterface *view = new MessageViewer::LongHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
+    MessageViewer::HeaderStyleInterface *view = new MessageViewer::LongHeaderStyleInterface(this, parent);
     view->createAction(menu, actionGroup, ac);
     return view;
 }

@@ -49,7 +49,7 @@ HeaderStrategy *GrantleeHeaderStylePlugin::headerStrategy() const
 
 HeaderStyleInterface *GrantleeHeaderStylePlugin::createView(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac, QObject *parent)
 {
-    MessageViewer::HeaderStyleInterface *view = new MessageViewer::GrantleeHeaderStyleInterface(mHeaderStyle, mHeaderStrategy, parent);
+    MessageViewer::HeaderStyleInterface *view = new MessageViewer::GrantleeHeaderStyleInterface(this, parent);
     view->createAction(menu, actionGroup, ac);
     return view;
 }

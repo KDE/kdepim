@@ -21,8 +21,8 @@
 #include <KActionCollection>
 
 using namespace MessageViewer;
-BriefHeaderStyleInterface::BriefHeaderStyleInterface(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy, QObject *parent)
-    : MessageViewer::HeaderStyleInterface(headerStyle, headerStrategy, parent)
+BriefHeaderStyleInterface::BriefHeaderStyleInterface(MessageViewer::HeaderStylePlugin *plugin, QObject *parent)
+    : MessageViewer::HeaderStyleInterface(plugin, parent)
 {
 
 }
