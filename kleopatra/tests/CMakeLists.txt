@@ -1,3 +1,5 @@
+add_subdirectory(gnupg_home)
+
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 include_directories(
   ${CMAKE_SOURCE_DIR}/kleopatra
@@ -51,7 +53,7 @@ endif()
 
 set(test_verify_SRCS test_verify.cpp)
 
-add_definitions(-DKLEO_TEST_GNUPGHOME="${CMAKE_CURRENT_SOURCE_DIR}/gnupg_home")
+add_definitions(-DKLEO_TEST_GNUPGHOME="${CMAKE_CURRENT_BINARY_DIR}/gnupg_home")
 add_definitions(-DKLEO_TEST_DATADIR="${CMAKE_CURRENT_SOURCE_DIR}")
 
 
