@@ -21,14 +21,14 @@
 #ifndef __MESSAGELIST_CORE_MESSAGEITEM_H__
 #define __MESSAGELIST_CORE_MESSAGEITEM_H__
 
-#include <messagelist/core/item.h>
-#include <messagelist/core/modelinvariantindex.h>
+#include <core/item.h>
+#include <core/modelinvariantindex.h>
 
 #include <QPixmap>
 #include <QString>
 #include <QColor>
 
-#include <messagelist/messagelist_export.h>
+#include <messagelist_export.h>
 #include "theme.h"
 
 namespace Akonadi

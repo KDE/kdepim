@@ -27,8 +27,8 @@
 #include <QFont>
 #include <QColor>
 
-#include <messagelist/core/optionset.h>
-#include <messagelist/core/sortorder.h>
+#include <core/optionset.h>
+#include <core/sortorder.h>
 #include <QFontDatabase>
 
 

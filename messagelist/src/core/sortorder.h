@@ -20,7 +20,7 @@
 #ifndef __MESSAGELIST_CORE_SORTORDER_H__
 #define __MESSAGELIST_CORE_SORTORDER_H__
 
-#include <messagelist/core/aggregation.h>
+#include <core/aggregation.h>
 
 #include <KConfigGroup>
 

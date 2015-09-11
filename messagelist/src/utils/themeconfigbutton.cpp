@@ -16,13 +16,13 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "messagelist/utils/themeconfigbutton.h"
+#include "utils/themeconfigbutton.h"
 
-#include "messagelist/core/theme.h"
-#include "messagelist/utils/themecombobox.h"
-#include "messagelist/utils/themecombobox_p.h"
-#include "messagelist/utils/configurethemesdialog.h"
-#include "messagelist/core/manager.h"
+#include "core/theme.h"
+#include "utils/themecombobox.h"
+#include "utils/themecombobox_p.h"
+#include "utils/configurethemesdialog.h"
+#include "core/manager.h"
 
 #include <KLocalizedString>
 

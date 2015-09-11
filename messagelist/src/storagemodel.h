@@ -19,8 +19,8 @@
 #ifndef __MESSAGELIST_STORAGEMODEL_H__
 #define __MESSAGELIST_STORAGEMODEL_H__
 
-#include <messagelist/messagelist_export.h>
-#include <messagelist/core/storagemodelbase.h>
+#include <messagelist_export.h>
+#include <core/storagemodelbase.h>
 
 #include <collection.h>
 #include <item.h>

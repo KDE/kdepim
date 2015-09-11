@@ -25,9 +25,9 @@
 #include <QString>
 #include <QList>
 
-#include <messagelist/core/enums.h>
-#include <messagelist/core/sortorder.h>
-#include <messagelist/core/widgets/quicksearchline.h>
+#include <core/enums.h>
+#include <core/sortorder.h>
+#include <core/widgets/quicksearchline.h>
 
 class KLineEdit;
 class QActionGroup;

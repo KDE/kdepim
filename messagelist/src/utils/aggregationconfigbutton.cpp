@@ -16,12 +16,12 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "messagelist/utils/aggregationconfigbutton.h"
+#include "utils/aggregationconfigbutton.h"
 
-#include "messagelist/utils/aggregationcombobox.h"
-#include "messagelist/utils/aggregationcombobox_p.h"
-#include "messagelist/utils/configureaggregationsdialog.h"
-#include "messagelist/core/manager.h"
+#include "utils/aggregationcombobox.h"
+#include "utils/aggregationcombobox_p.h"
+#include "utils/configureaggregationsdialog.h"
+#include "core/manager.h"
 
 #include <KLocalizedString>
 

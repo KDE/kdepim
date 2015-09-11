@@ -30,8 +30,8 @@
 
 #include <Akonadi/KMime/MessageStatus>
 
-#include <messagelist/core/model.h>
-#include <messagelist/messagelist_export.h>
+#include <core/model.h>
+#include <messagelist_export.h>
 
 namespace MessageList
 {

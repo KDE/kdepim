@@ -16,67 +16,46 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef __MESSAGELIST_PANE_H__
-#define __MESSAGELIST_PANE_H__
+#ifndef __MESSAGELIST_WIDGET_H__
+#define __MESSAGELIST_WIDGET_H__
 
-#include <messagelist/core/enums.h>
-#include <messagelist/core/view.h>
-#include <QHash>
-#include <QTabWidget>
+#include <core/widgetbase.h>
+#include <core/view.h>
+#include <item.h>
+#include <core/widgets/quicksearchline.h>
 
 #include <kmime/kmime_message.h>
-#include <collection.h>
-#include <item.h>
-#include <messagelist/messagelist_export.h>
+#include <KJob>
+
+#include <messagelist_export.h>
 
 class KXMLGUIClient;
-class QAbstractItemModel;
-class QItemSelectionModel;
-class QItemSelection;
-
-namespace KPIM
-{
-class MessageStatus;
-}
-
-namespace Akonadi
-{
-class Item;
-}
+class QWidget;
 
 namespace MessageList
 {
 
-class Widget;
-class StorageModel;
-
 /**
- * This is the main MessageList panel for Akonadi applications.
- * It contains multiple MessageList::Widget tabs
- * so it can actually display multiple folder sets at once.
+ * The Akonadi specific implementation of the Core::Widget.
  *
  * When a KXmlGuiWindow is passed to setXmlGuiClient, the XMLGUI
  * defined context menu @c akonadi_messagelist_contextmenu is
  * used if available.
  *
  */
-class MESSAGELIST_EXPORT Pane : public QTabWidget
+class MESSAGELIST_EXPORT Widget : public MessageList::Core::Widget
 {
     Q_OBJECT
 
 public:
     /**
-    * Create a Pane wrapping the specified model and selection.
+    * Create a new message list widget.
     */
-    explicit Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent = Q_NULLPTR);
-    ~Pane();
-
-    virtual MessageList::StorageModel *createStorageModel(QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent);
-
-    virtual void writeConfig(bool restoreSession);
+    explicit Widget(QWidget *parent);
+    ~Widget();
 
     /**
-    * Sets the XML GUI client which the pane is used in.
+    * Sets the XML GUI client which the view is used in.
     *
     * This is needed if you want to use the built-in context menu.
     * Passing 0 is ok and will disable the builtin context menu.
@@ -98,57 +77,9 @@ public:
     KMime::Message::Ptr currentMessage() const;
 
     /**
-    * Returns the currently selected KMime::Message::Ptr (bound to current StorageModel).
-    * The list may be empty if there are no selected messages or no StorageModel.
-    *
-    * If includeCollapsedChildren is true then the children of the selected but
-    * collapsed items are also added to the list.
-    *
-    * The returned list is guaranteed to be valid only until you return control
-    * to the main even loop. Don't store it for any longer. If you need to reference
-    * this set of messages at a later stage then take a look at createPersistentSet().
+    * Returns true if this drag can be accepted by the underlying view
     */
-    QList<KMime::Message::Ptr > selectionAsMessageList(bool includeCollapsedChildren = true) const;
-
-    /**
-    * Returns the currently selected Items (bound to current StorageModel).
-    * The list may be empty if there are no selected messages or no StorageModel.
-    *
-    * If includeCollapsedChildren is true then the children of the selected but
-    * collapsed items are also added to the list.
-    *
-    * The returned list is guaranteed to be valid only until you return control
-    * to the main even loop. Don't store it for any longer. If you need to reference
-    * this set of messages at a later stage then take a look at createPersistentSet().
-    */
-    Akonadi::Item::List selectionAsMessageItemList(bool includeCollapsedChildren = true) const;
-
-    /**
-    * Returns the currently selected Items id(bound to current StorageModel).
-    * The list may be empty if there are no selected messages or no StorageModel.
-    *
-    * If includeCollapsedChildren is true then the children of the selected but
-    * collapsed items are also added to the list.
-    *
-    * The returned list is guaranteed to be valid only until you return control
-    * to the main even loop. Don't store it for any longer. If you need to reference
-    * this set of messages at a later stage then take a look at createPersistentSet().
-    */
-    QVector<qlonglong> selectionAsMessageItemListId(bool includeCollapsedChildren = true) const;
-
-    QList<Akonadi::Item::Id> selectionAsListMessageId(bool includeCollapsedChildren = true) const;
-
-    /**
-    * Returns the Akonadi::Item bound to the current StorageModel that
-    * are part of the current thread. The current thread is the thread
-    * that contains currentMessageItem().
-    * The list may be empty if there is no currentMessageItem() or no StorageModel.
-    *
-    * The returned list is guaranteed to be valid only until you return control
-    * to the main even loop. Don't store it for any longer. If you need to reference
-    * this set of messages at a later stage then take a look at createPersistentSet().
-    */
-    Akonadi::Item::List currentThreadAsMessageList() const;
+    bool canAcceptDrag(const QDropEvent *e);
 
     /**
     * Selects the next message item in the view.
@@ -245,6 +176,10 @@ public:
     bool selectLastMessageItem(MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem);
 
     /**
+    * Selects all the items in the current folder.
+    */
+    void selectAll();
+    /**
     * If expand is true then it expands the current thread, otherwise
     * collapses it.
     */
@@ -267,7 +202,60 @@ public:
     /**
     * Sets the focus on the quick search line of the currently active tab.
     */
-    void focusQuickSearch(const QString &selectedText = QString());
+    void focusQuickSearch(const QString &selectedText);
+
+    /**
+    * Returns the currently selected KMime::Message::Ptr (bound to current StorageModel).
+    * The list may be empty if there are no selected messages or no StorageModel.
+    *
+    * If includeCollapsedChildren is true then the children of the selected but
+    * collapsed items are also added to the list.
+    *
+    * The returned list is guaranteed to be valid only until you return control
+    * to the main even loop. Don't store it for any longer. If you need to reference
+    * this set of messages at a later stage then take a look at createPersistentSet().
+    */
+    QList<KMime::Message::Ptr > selectionAsMessageList(bool includeCollapsedChildren = true) const;
+
+    /**
+    * Returns the currently selected Items (bound to current StorageModel).
+    * The list may be empty if there are no selected messages or no StorageModel.
+    *
+    * If includeCollapsedChildren is true then the children of the selected but
+    * collapsed items are also added to the list.
+    *
+    * The returned list is guaranteed to be valid only until you return control
+    * to the main even loop. Don't store it for any longer. If you need to reference
+    * this set of messages at a later stage then take a look at createPersistentSet().
+    */
+    Akonadi::Item::List selectionAsMessageItemList(bool includeCollapsedChildren = true) const;
+
+    /**
+    * Returns the currently selected Items id (bound to current StorageModel).
+    * The list may be empty if there are no selected messages or no StorageModel.
+    *
+    * If includeCollapsedChildren is true then the children of the selected but
+    * collapsed items are also added to the list.
+    *
+    * The returned list is guaranteed to be valid only until you return control
+    * to the main even loop. Don't store it for any longer. If you need to reference
+    * this set of messages at a later stage then take a look at createPersistentSet().
+    */
+
+    QVector<qlonglong> selectionAsMessageItemListId(bool includeCollapsedChildren) const;
+    QList<Akonadi::Item::Id> selectionAsListMessageId(bool includeCollapsedChildren) const;
+
+    /**
+    * Returns the Akonadi::Item bound to the current StorageModel that
+    * are part of the current thread. The current thread is the thread
+    * that contains currentMessageItem().
+    * The list may be empty if there is no currentMessageItem() or no StorageModel.
+    *
+    * The returned list is guaranteed to be valid only until you return control
+    * to the main even loop. Don't store it for any longer. If you need to reference
+    * this set of messages at a later stage then take a look at createPersistentSet().
+    */
+    Akonadi::Item::List currentThreadAsMessageList() const;
 
     /**
     * Returns the Akonadi::MessageStatus in the current quicksearch field.
@@ -289,6 +277,7 @@ public:
     * Fast function that determines if the selection is empty
     */
     bool selectionEmpty() const;
+
     /**
     * Fills the lists of the selected message serial numbers and of the selected+visible ones.
     * Returns true if the returned stats are valid (there is a current folder after all)
@@ -298,8 +287,9 @@ public:
     * If includeCollapsedChildren is true then the children of the selected but
     * collapsed items are also included in the stats
     */
-    bool getSelectionStats(Akonadi::Item::List &selectedItems,
-                           Akonadi::Item::List &selectedVisibleItems,
+
+    bool getSelectionStats(Akonadi::Item::List &selectedSernums,
+                           Akonadi::Item::List &selectedVisibleSernums,
                            bool *allSelectedBelongToSameThread,
                            bool includeCollapsedChildren = true) const;
     /**
@@ -330,79 +320,71 @@ public:
     * Return a persistent set from current thread
     */
     MessageList::Core::MessageItemSetReference currentThreadAsPersistentSet() const;
-    /**
-    * Sets the focus on the view of the currently active tab.
-    */
-    void focusView();
-
-    /**
-    * Reloads global configuration and eventually reloads all the views.
-    */
-    void reloadGlobalConfiguration();
-
-    /**
-    * Returns the QItemSelectionModel for the currently displayed tab.
-    */
-    QItemSelectionModel *currentItemSelectionModel();
-
-    /**
-    * Sets the current folder to be displayed by this Pane.
-    * If the specified folder is already open in one of the tabs
-    * then that tab is made current (and no reloading happens).
-    * If the specified folder is not open yet then behaviour
-    * depends on the preferEmptyTab value as follows.
-    *
-    * If preferEmptyTab is set to false then the (new) folder is loaded
-    * in the current tab. If preferEmptyTab is set to true then the (new) folder is
-    * loaded in the first empty tab (or a new one if there are no empty ones).
-    *
-    * Pre-selection is the action of automatically selecting a message just after the folder
-    * has finished loading. See Model::setStorageModel() for more information.
-    *
-    * If overrideLabel is not empty then it's used as the tab text for the
-    * specified folder. This is useful to signal a particular folder state
-    * like "loading..."
-    */
-    void setCurrentFolder(
-        const Akonadi::Collection &fld,
-        bool preferEmptyTab = false,
-        MessageList::Core::PreSelectionMode preSelectionMode = MessageList::Core::PreSelectLastSelected,
-        const QString &overrideLabel = QString()
-    );
-
-    void resetModelStorage();
-
-    void setPreferEmptyTab(bool emptyTab);
-
-    void updateTabIconText(const Akonadi::Collection &collection, const QString &label, const QIcon &icon);
-
-    void saveCurrentSelection();
-
-    void updateTagComboBox();
-
-    bool searchEditHasFocus() const;
+    Akonadi::Collection currentCollection() const;
 
     void setQuickSearchClickMessage(const QString &msg);
-
-    void populateStatusFilterCombo();
-
-    Core::QuickSearchLine::SearchOptions currentOptions() const;
-public Q_SLOTS:
-    /**
-    * Selects all the items in the current folder.
-    */
-    void selectAll();
+    MessageList::Core::QuickSearchLine::SearchOptions currentOptions() const;
+protected:
 
     /**
-    * Add a new tab to the Pane and select it.
+    * Reimplemented from MessageList::Core::Widget
     */
-    QItemSelectionModel *createNewTab();
+    void fillMessageTagCombo() Q_DECL_OVERRIDE;
 
-    void sortOrderMenuAboutToShow();
+    /**
+    * Reimplemented from MessageList::Core::Widget
+    */
+    void viewMessageSelected(MessageList::Core::MessageItem *msg) Q_DECL_OVERRIDE;
 
-    void aggregationMenuAboutToShow();
+    /**
+    * Reimplemented from MessageList::Core::Widget
+    */
+    void viewMessageActivated(MessageList::Core::MessageItem *msg) Q_DECL_OVERRIDE;
 
-    void themeMenuAboutToShow();
+    /**
+    * Reimplemented from MessageList::Core::Widget
+    */
+    void viewSelectionChanged() Q_DECL_OVERRIDE;
+
+    /**
+    * Reimplemented from MessageList::Core::Widget
+    */
+    void viewMessageListContextPopupRequest(const QList< MessageList::Core::MessageItem * > &selectedItems, const QPoint &globalPos) Q_DECL_OVERRIDE;
+
+    /**
+    * Reimplemented from MessageList::Core::Widget
+    */
+    void viewGroupHeaderContextPopupRequest(MessageList::Core::GroupHeaderItem *group, const QPoint &globalPos) Q_DECL_OVERRIDE;
+
+    /**
+    * Reimplemented from MessageList::Core::Widget
+    */
+    void viewDragEnterEvent(QDragEnterEvent *e) Q_DECL_OVERRIDE;
+
+    /**
+    * Reimplemented from MessageList::Core::Widget
+    */
+    void viewDragMoveEvent(QDragMoveEvent *e) Q_DECL_OVERRIDE;
+
+    /**
+    * Reimplemented from MessageList::Core::Widget
+    */
+    void viewDropEvent(QDropEvent *e) Q_DECL_OVERRIDE;
+
+    /**
+    * Reimplemented from MessageList::Core::Widget
+    */
+    void viewStartDragRequest() Q_DECL_OVERRIDE;
+
+    /**
+    * Reimplemented from MessageList::Core::Widget
+    */
+    void viewMessageStatusChangeRequest(MessageList::Core::MessageItem *msg, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear) Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    void slotCollapseItem();
+    void slotExpandItem();
+    void slotTagsFetched(KJob *job);
 
 Q_SIGNALS:
     /**
@@ -432,44 +414,11 @@ Q_SIGNALS:
     */
     void messageStatusChangeRequest(const Akonadi::Item &item, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &clear);
 
-    /**
-    * Notify the outside when updating the status bar with a message
-    * could be useful
-    */
-    void statusMessage(const QString &message);
-
-    /**
-    * Emitted when the current tab has changed. Clients using the
-    *  selection model from currentItemSelectionModel() should
-    *  ask for it again, as it may be different now.
-    */
-    void currentTabChanged();
-
 private:
-    void restoreHeaderSettings(int index);
-    void readConfig(bool restoreSession);
-
-    Q_PRIVATE_SLOT(d, void onSelectionChanged(const QItemSelection &, const QItemSelection &))
-    Q_PRIVATE_SLOT(d, void onNewTabClicked())
-    Q_PRIVATE_SLOT(d, void onCloseTabClicked())
-    Q_PRIVATE_SLOT(d, void activateTab())
-    Q_PRIVATE_SLOT(d, void moveTabLeft())
-    Q_PRIVATE_SLOT(d, void moveTabRight())
-    Q_PRIVATE_SLOT(d, void activateNextTab())
-    Q_PRIVATE_SLOT(d, void activatePreviousTab())
-    Q_PRIVATE_SLOT(d, void closeTab(QWidget *))
-    Q_PRIVATE_SLOT(d, void onCurrentTabChanged())
-    Q_PRIVATE_SLOT(d, void onTabContextMenuRequest(const QPoint &))
-    Q_PRIVATE_SLOT(d, void updateTabControls())
-    Q_PRIVATE_SLOT(d, void changeQuicksearchVisibility(bool))
-    Q_PRIVATE_SLOT(d, void slotTabCloseRequested(int index))
-
-    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
-
     class Private;
     Private *const d;
 };
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_PANE_H__
+#endif //!__MESSAGELIST_WIDGET_H__

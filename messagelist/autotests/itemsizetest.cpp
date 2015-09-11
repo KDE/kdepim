@@ -17,8 +17,8 @@
   02110-1301, USA.
 */
 
-#include "../core/messageitem_p.h"
-#include "../messagelist_debug.h"
+#include "../src/core/messageitem_p.h"
+#include "messagelist_debug.h"
 #include <qtest.h>
 #include <QObject>
 

@@ -27,7 +27,7 @@ class QDataStream;
 #include <QPair>
 #include <QString>
 
-#include <messagelist/core/optionset.h>
+#include <core/optionset.h>
 
 namespace MessageList
 {

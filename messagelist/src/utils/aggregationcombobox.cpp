@@ -19,10 +19,10 @@
 #include "aggregationcombobox.h"
 #include "aggregationcombobox_p.h"
 
-#include "messagelist/core/aggregation.h"
-#include "messagelist/core/manager.h"
-#include "messagelist/core/settings.h"
-#include "messagelist/storagemodel.h"
+#include "core/aggregation.h"
+#include "core/manager.h"
+#include "core/settings.h"
+#include "storagemodel.h"
 
 using namespace MessageList::Core;
 using namespace MessageList::Utils;

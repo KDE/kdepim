@@ -26,9 +26,9 @@
 #include <QHash>
 #include <QMultiHash>
 
-#include <messagelist/core/aggregation.h>
-#include <messagelist/core/enums.h>
-#include <messagelist/core/sortorder.h>
+#include <core/aggregation.h>
+#include <core/enums.h>
+#include <core/sortorder.h>
 
 #include <time.h> // time_t
 

@@ -16,10 +16,10 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __MESSAGELIST_UTILS_AGGREGATIONCOMBOBOX_H__
-#define __MESSAGELIST_UTILS_AGGREGATIONCOMBOBOX_H__
+#ifndef __MESSAGELIST_UTILS_THEMECOMBOBOX_H__
+#define __MESSAGELIST_UTILS_THEMECOMBOBOX_H__
 
-#include <messagelist/messagelist_export.h>
+#include <messagelist_export.h>
 #include <KComboBox>
 #include <collection.h>
 namespace MessageList
@@ -28,50 +28,48 @@ namespace MessageList
 namespace Core
 {
 
-class Aggregation;
 class StorageModel;
+class Theme;
 
-}
+} // namespace Core
 
 namespace Utils
 {
 
-class AggregationComboBoxPrivate;
+class ThemeComboBoxPrivate;
+
 /**
- * A specialized KComboBox that lists all message list aggregations.
+ * A specialized KComboBox that lists all message list themes.
  */
-class MESSAGELIST_EXPORT AggregationComboBox : public KComboBox
+class MESSAGELIST_EXPORT ThemeComboBox : public KComboBox
 {
     Q_OBJECT
 
 public:
-    explicit AggregationComboBox(QWidget *parent);
-    ~AggregationComboBox();
+    explicit ThemeComboBox(QWidget *parent);
+    ~ThemeComboBox();
 
-    QString currentAggregation() const;
+    QString currentTheme() const;
 
     void writeDefaultConfig() const;
 
     void writeStorageModelConfig(MessageList::Core::StorageModel *storageModel, bool isPrivateSetting) const;
     void writeStorageModelConfig(const Akonadi::Collection &col, bool isPrivateSetting) const;
-    void writeStorageModelConfig(const QString &id, bool isPrivateSetting) const;
+    void writeStorageModelConfig(const QString &id, bool isPrivateSetting)const;
 
-    void readStorageModelConfig(MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting);
     void readStorageModelConfig(const Akonadi::Collection &col, bool &isPrivateSetting);
-    void readStorageModelConfig(const QString &id, bool &isPrivateSetting);
+    void readStorageModelConfig(MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting);
 
 public Q_SLOTS:
     void selectDefault();
 
 private:
-    Q_PRIVATE_SLOT(d, void slotLoadAggregations())
-
-    AggregationComboBoxPrivate *const d;
+    Q_PRIVATE_SLOT(d, void slotLoadThemes())
+    ThemeComboBoxPrivate *const d;
 };
 
 } // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_UTILS_AGGREGATIONCOMBOBOX_H__
-
+#endif //!__MESSAGELIST_UTILS_THEMECOMBOBOX_H__

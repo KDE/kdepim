@@ -25,8 +25,8 @@
 #include <QRect>
 #include <QColor>
 
-#include <messagelist/core/theme.h>
-#include <messagelist/core/item.h>
+#include <core/theme.h>
+#include <core/item.h>
 
 class QAbstractItemView;
 

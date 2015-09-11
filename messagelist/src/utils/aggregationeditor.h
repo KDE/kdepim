@@ -21,7 +21,7 @@
 #ifndef __MESSAGELIST_UTILS_AGGREGATIONEDITOR_H__
 #define __MESSAGELIST_UTILS_AGGREGATIONEDITOR_H__
 
-#include <messagelist/utils/optionseteditor.h>
+#include <utils/optionseteditor.h>
 
 class KComboBox;
 

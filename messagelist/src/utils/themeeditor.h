@@ -21,9 +21,9 @@
 #ifndef __MESSAGELIST_UTILS_THEMEEDITOR_H__
 #define __MESSAGELIST_UTILS_THEMEEDITOR_H__
 
-#include <messagelist/utils/optionseteditor.h>
-#include <messagelist/core/themedelegate.h>
-#include <messagelist/core/theme.h>
+#include <utils/optionseteditor.h>
+#include <core/themedelegate.h>
+#include <core/theme.h>
 
 #include <QTreeWidget>
 #include <QLabel>

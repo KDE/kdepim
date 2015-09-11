@@ -16,7 +16,7 @@
 */
 
 #include "quicksearchwarningtest.h"
-#include "../core/widgets/quicksearchwarning.h"
+#include "../src/core/widgets/quicksearchwarning.h"
 #include <qtest.h>
 QuickSearchWarningTest::QuickSearchWarningTest(QObject *parent)
     : QObject(parent)

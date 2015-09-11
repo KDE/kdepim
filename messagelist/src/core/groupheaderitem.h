@@ -18,10 +18,12 @@
  *
  *******************************************************************************/
 
-#ifndef __MESSAGELIST_CORE_DELEGATE_H__
-#define __MESSAGELIST_CORE_DELEGATE_H__
+#ifndef __MESSAGELIST_CORE_GROUPHEADERITEM_H__
+#define __MESSAGELIST_CORE_GROUPHEADERITEM_H__
 
-#include <messagelist/core/themedelegate.h>
+#include <QString>
+
+#include <core/item.h>
 
 namespace MessageList
 {
@@ -29,23 +31,21 @@ namespace MessageList
 namespace Core
 {
 
-class View;
-
-class Delegate : public ThemeDelegate
+class GroupHeaderItem : public Item
 {
 public:
-    explicit Delegate(View *pParent);
-    ~Delegate();
+    explicit GroupHeaderItem(const QString &label);
+    virtual ~GroupHeaderItem();
 
-protected:
-    /**
-    * Returns the Item for the specified model index. Reimplemented from ThemeDelegate.
-    */
-    Item *itemFromIndex(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    const QString &label() const;
+    void setLabel(const QString &label);
+
+private:
+    QString mLabel;
 };
 
 } // namespace Core
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_DELEGATE_H__
+#endif //!__MESSAGELIST_CORE_GROUPHEADERITEM_H__

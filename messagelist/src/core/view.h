@@ -25,8 +25,8 @@
 #include <QList>
 #include <QPoint>
 
-#include <messagelist/core/enums.h>
-#include <messagelist/core/widgets/quicksearchline.h>
+#include <core/enums.h>
+#include <core/widgets/quicksearchline.h>
 
 class QMenu;
 

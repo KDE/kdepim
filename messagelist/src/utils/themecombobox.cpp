@@ -18,12 +18,12 @@
 */
 #include "themecombobox.h"
 
-#include "messagelist/utils/themecombobox.h"
-#include "messagelist/utils/themecombobox_p.h"
-#include "messagelist/storagemodel.h"
-#include "messagelist/core/manager.h"
-#include "messagelist/core/theme.h"
-#include "messagelist/core/settings.h"
+#include "utils/themecombobox.h"
+#include "utils/themecombobox_p.h"
+#include "storagemodel.h"
+#include "core/manager.h"
+#include "core/theme.h"
+#include "core/settings.h"
 
 using namespace MessageList::Core;
 using namespace MessageList::Utils;

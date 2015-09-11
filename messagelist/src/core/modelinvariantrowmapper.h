@@ -25,7 +25,7 @@
 #include <QHash>
 #include <QList>
 
-#include <messagelist/core/modelinvariantindex.h>
+#include <core/modelinvariantindex.h>
 
 
 namespace MessageList

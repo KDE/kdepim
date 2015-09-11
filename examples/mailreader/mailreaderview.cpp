@@ -18,7 +18,7 @@
 #include <QUrl>
 
 #include <AkonadiCore/item.h>
-#include "messagelist/core/settings.h"
+#include "core/settings.h"
 #include "ui_prefs_messagelist.h"
 
 mailreaderView::mailreaderView(QWidget *parent)

@@ -297,7 +297,7 @@ install(FILES
 
 install(FILES
     ${MessageViewer_HEADERS}
-    ${CMAKE_CURRENT_BINARY_DIR}/messageviwer_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/messageviewer_export.h
     ${MessageViewer_CamelCase_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messageviewer
     COMPONENT Devel

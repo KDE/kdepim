@@ -19,7 +19,7 @@
 #ifndef __MESSAGELIST_UTILS_AGGREGATIONCONFIGBUTTON_H__
 #define __MESSAGELIST_UTILS_AGGREGATIONCONFIGBUTTON_H__
 
-#include <messagelist/messagelist_export.h>
+#include <messagelist_export.h>
 #include <QPushButton>
 
 namespace MessageList
