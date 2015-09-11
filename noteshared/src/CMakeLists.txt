@@ -92,10 +92,6 @@ ecm_generate_headers(NoteShared_CamelCase_HEADERS
   editor/NoteEditorUtils
   NoteUtils
   alarms/NoteAlarmDialog
-  attributes/NoteAlarmAttribute
-  attributes/ShowFolderNotesAttribute
-  attributes/NoteLockAttribute
-  attributes/NoteDisplayAttribute
   config/NoteActionConfig
   akonadi/NotesChangeRecorder
   akonadi/NotesAkonadiTreeModel
@@ -105,9 +101,22 @@ ecm_generate_headers(NoteShared_CamelCase_HEADERS
   PREFIX NoteShared
 )
 
+ecm_generate_headers(NoteShared_attributes_HEADERS
+  HEADER_NAMES
+  NoteAlarmAttribute
+  ShowFolderNotesAttribute
+  NoteLockAttribute
+  NoteDisplayAttribute
+  REQUIRED_HEADERS NoteShared_attributes_HEADERS
+  PREFIX NoteShared
+  RELATIVE attributes
+)
+
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${noteshared_SOURCE_DIR})
 install(FILES
     ${NoteShared_CamelCase_HEADERS}
+    ${NoteShared_attributes_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/NoteShared
     COMPONENT Devel
 )
@@ -116,6 +125,7 @@ install(FILES
     ${NoteShared_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/noteshared_export.h
     ${NoteShared_CamelCase_HEADERS}
+    ${NoteShared_attributes_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/noteshared
     COMPONENT Devel
 )

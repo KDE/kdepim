@@ -21,7 +21,7 @@
 #include "job/createnewnotejob.h"
 #include "akonadi/noteschangerecorder.h"
 #include "akonadi/notesakonaditreemodel.h"
-#include "attributes/notealarmattribute.h"
+#include "NoteShared/NoteAlarmAttribute"
 #include "notesagentalarmdialog.h"
 
 #include <AkonadiCore/Session>

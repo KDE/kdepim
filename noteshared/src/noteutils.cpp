@@ -18,7 +18,7 @@
 #include "noteutils.h"
 #include "network/notesnetworksender.h"
 #include "network/notehostdialog.h"
-#include "noteshared/attributes/notedisplayattribute.h"
+#include "attributes/notedisplayattribute.h"
 #include "notesharedglobalconfig.h"
 #include <KProcess>
 #include <ksocketfactory.h>

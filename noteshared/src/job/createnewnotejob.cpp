@@ -17,7 +17,7 @@
 
 #include "createnewnotejob.h"
 #include "notesharedglobalconfig.h"
-#include "noteshared/attributes/showfoldernotesattribute.h"
+#include "attributes/showfoldernotesattribute.h"
 #include "dialog/selectednotefolderdialog.h"
 #include "noteshared_debug.h"
 #include <Akonadi/Notes/NoteUtils>
