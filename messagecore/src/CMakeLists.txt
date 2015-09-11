@@ -72,7 +72,7 @@ PRIVATE
 )
 
 target_include_directories(KF5MessageCore INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/MessageCore/;${KDE_INSTALL_INCLUDEDIR_KF5}/messagecore>")
-target_include_directories(KF5MessageCore PUBLIC "$<BUILD_INTERFACE:${messagecore}/src;${messagecore}/src;>")
+target_include_directories(KF5MessageCore PUBLIC "$<BUILD_INTERFACE:${messagecore_SOURCE_DIR}/src;${messagecore_BINARY_DIR}/src;>")
 
 set_target_properties(KF5MessageCore PROPERTIES
     VERSION ${MESSAGECORE_VERSION_STRING}

@@ -61,9 +61,6 @@ set_target_properties(KF5TemplateParser PROPERTIES
 )
 
 target_include_directories(KF5TemplateParser PUBLIC "$<BUILD_INTERFACE:${templateparser_SOURCE_DIR};${templateparser_BINARY_DIR}>")
-target_include_directories(KF5TemplateParser PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR}/src;${pimcommon_BINARY_DIR}/src>")
-
-
 
 install(FILES
   settings/customtemplates_kfg.kcfg
