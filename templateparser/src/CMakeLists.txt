@@ -84,9 +84,9 @@ ecm_generate_headers(TemplateParser_CamelCase_HEADERS
   PREFIX TemplateParser
 )
 
+install(TARGETS KF5TemplateParser EXPORT KF5TemplateParserTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if(${CMAKE_SOURCE_DIR} STREQUAL ${TemplateParser_SOURCE_DIR})
 
-install(TARGETS KF5TemplateParser EXPORT KF5TemplateParserTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
     ${TemplateParser_CamelCase_HEADERS}
