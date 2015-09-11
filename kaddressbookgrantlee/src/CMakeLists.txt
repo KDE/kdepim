@@ -61,16 +61,20 @@ install(TARGETS
     EXPORT KF5KaddressbookGrantleeTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
-ecm_generate_headers(KaddressbookGrantlee_CamelCase_HEADERS
+
+ecm_generate_headers(KaddressbookGrantlee_formatter_HEADERS
   HEADER_NAMES
-  formatter/GrantleeContactFormatter
-  REQUIRED_HEADERS KaddressbookGrantlee_HEADERS
+  GrantleeContactFormatter
+  GrantleeContactGroupFormatter
+  REQUIRED_HEADERS KaddressbookGrantlee_formatter_HEADERS
+  RELATIVE formatter
   PREFIX KaddressbookGrantlee
 )
 
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbookgrantlee_SOURCE_DIR})
 install(FILES
-    ${KaddressbookGrantlee_CamelCase_HEADERS}
+    ${KaddressbookGrantlee_formatter_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KaddressbookGrantlee
     COMPONENT Devel
 )
@@ -78,7 +82,7 @@ install(FILES
 install(FILES
     ${KaddressbookGrantlee_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/kaddressbookgrantlee_export.h
-    ${KaddressbookGrantlee_CamelCase_HEADERS}
+    ${KaddressbookGrantlee_formatter_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kaddressbookgrantlee
     COMPONENT Devel
 )

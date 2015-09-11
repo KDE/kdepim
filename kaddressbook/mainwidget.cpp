@@ -38,8 +38,8 @@
 #include "sendvcards/sendvcardsjob.h"
 #include "gravatar/widgets/gravatarupdatedialog.h"
 
-#include "formatter/grantleecontactformatter.h"
-#include "formatter/grantleecontactgroupformatter.h"
+#include "KaddressbookGrantlee/GrantleeContactFormatter"
+#include "KaddressbookGrantlee/GrantleeContactGroupFormatter"
 #include "grantleetheme/grantleethememanager.h"
 #include "globalsettings_grantleetheme.h"
 

@@ -16,7 +16,7 @@
 */
 
 #include "grantleecontactviewer.h"
-#include "formatter/grantleecontactformatter.h"
+#include "KaddressbookGrantlee/GrantleeContactFormatter"
 #include <globalsettings_grantleetheme.h>
 #include <KSharedConfig>
 #include <grantleetheme/grantleethememanager.h>
