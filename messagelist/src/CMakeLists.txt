@@ -70,12 +70,6 @@ set(libmessagelist_utils_HEADERS
   utils/themeconfigbutton.h
 )
 
-set(libmessagelist_HEADERS
-  pane.h
-  storagemodel.h
-  widget.h
-)
-
 kconfig_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
   core/settings.kcfgc
 )
