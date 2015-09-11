@@ -34,8 +34,6 @@
 #include <kmime/kmime_headers.h>
 using namespace KMime;
 
-#include <MailTransport/TransportComboBox>
-
 #include <messagecomposer/composer/composer.h>
 #include <messagecomposer/composer/composerviewbase.h>
 #include <messagecomposer/composer-ng/richtextcomposer.h>
@@ -44,7 +42,6 @@ using namespace KMime;
 #include <messagecomposer/part/textpart.h>
 #include <attachment/attachmentmodel.h>
 #include <attachment/attachmentcontrollerbase.h>
-#include <recipientseditor.h>
 using namespace MessageComposer;
 
 #include <attachment/attachmentpart.h>
@@ -212,14 +209,10 @@ void CryptoComposerTest::testEditEncryptAttachments()
     ComposerViewBase view(this, 0);
     AttachmentModel model(this);
     AttachmentControllerBase controller(&model, 0, 0);
-    RecipientsEditor recipientEditor;
     MessageComposer::RichTextComposer editor;
-    MailTransport::TransportComboBox transportCombo;
     view.setAttachmentModel(&model);
     view.setAttachmentController(&controller);
-    view.setRecipientsEditor(&recipientEditor);
     view.setEditor(&editor);
-    view.setTransportCombo(&transportCombo);
 
     // Let's load the email to the viewer
     view.setMessage(message, true);
@@ -282,14 +275,10 @@ void CryptoComposerTest::testEditEncryptAndLateAttachments()
     ComposerViewBase view(this, 0);
     AttachmentModel model(this);
     AttachmentControllerBase controller(&model, 0, 0);
-    RecipientsEditor recipientEditor;
     MessageComposer::RichTextComposer editor;
-    MailTransport::TransportComboBox transportCombo;
     view.setAttachmentModel(&model);
     view.setAttachmentController(&controller);
-    view.setRecipientsEditor(&recipientEditor);
     view.setEditor(&editor);
-    view.setTransportCombo(&transportCombo);
 
     // Let's load the email to the viewer
     view.setMessage(message, true);

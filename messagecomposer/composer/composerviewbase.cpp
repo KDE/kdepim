@@ -147,29 +147,31 @@ void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &ms
         }
     }
     m_msg = msg;
-    m_recipientsEditor->clear();
-    m_recipientsEditor->setRecipientString(m_msg->to()->mailboxes(), MessageComposer::Recipient::To);
-    m_recipientsEditor->setRecipientString(m_msg->cc()->mailboxes(), MessageComposer::Recipient::Cc);
-    m_recipientsEditor->setRecipientString(m_msg->bcc()->mailboxes(), MessageComposer::Recipient::Bcc);
-    m_recipientsEditor->setFocusBottom();
+    if (m_recipientsEditor) {
+        m_recipientsEditor->clear();
+        m_recipientsEditor->setRecipientString(m_msg->to()->mailboxes(), MessageComposer::Recipient::To);
+        m_recipientsEditor->setRecipientString(m_msg->cc()->mailboxes(), MessageComposer::Recipient::Cc);
+        m_recipientsEditor->setRecipientString(m_msg->bcc()->mailboxes(), MessageComposer::Recipient::Bcc);
+        m_recipientsEditor->setFocusBottom();
 
-    // If we are loading from a draft, load unexpanded aliases as well
-    if (m_msg->hasHeader("X-KMail-UnExpanded-To")) {
-        const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-To")->asUnicodeString().split(QStringLiteral(","));
-        foreach (const QString &addr, spl) {
-            m_recipientsEditor->addRecipient(addr, MessageComposer::Recipient::To);
+        // If we are loading from a draft, load unexpanded aliases as well
+        if (m_msg->hasHeader("X-KMail-UnExpanded-To")) {
+            const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-To")->asUnicodeString().split(QStringLiteral(","));
+            foreach (const QString &addr, spl) {
+                m_recipientsEditor->addRecipient(addr, MessageComposer::Recipient::To);
+            }
         }
-    }
-    if (m_msg->hasHeader("X-KMail-UnExpanded-CC")) {
-        const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-CC")->asUnicodeString().split(QStringLiteral(","));
-        foreach (const QString &addr, spl) {
-            m_recipientsEditor->addRecipient(addr, MessageComposer::Recipient::Cc);
+        if (m_msg->hasHeader("X-KMail-UnExpanded-CC")) {
+            const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-CC")->asUnicodeString().split(QStringLiteral(","));
+            foreach (const QString &addr, spl) {
+                m_recipientsEditor->addRecipient(addr, MessageComposer::Recipient::Cc);
+            }
         }
-    }
-    if (m_msg->hasHeader("X-KMail-UnExpanded-BCC")) {
-        const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-BCC")->asUnicodeString().split(QStringLiteral(","));
-        foreach (const QString &addr, spl) {
-            m_recipientsEditor->addRecipient(addr, MessageComposer::Recipient::Bcc);
+        if (m_msg->hasHeader("X-KMail-UnExpanded-BCC")) {
+            const QStringList spl = m_msg->headerByType("X-KMail-UnExpanded-BCC")->asUnicodeString().split(QStringLiteral(","));
+            foreach (const QString &addr, spl) {
+                m_recipientsEditor->addRecipient(addr, MessageComposer::Recipient::Bcc);
+            }
         }
     }
 
@@ -197,9 +199,11 @@ void MessageComposer::ComposerViewBase::setMessage(const KMime::Message::Ptr &ms
         transportId = hdr->asUnicodeString().toInt();
     }
 
-    const MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById(transportId);
-    if (transport) {
-        m_transport->setCurrentTransport(transport->id());
+    if (m_transport) {
+        const MailTransport::Transport *transport = MailTransport::TransportManager::self()->transportById(transportId);
+        if (transport) {
+            m_transport->setCurrentTransport(transport->id());
+        }
     }
 
     // Set the HTML text and collect HTML images
