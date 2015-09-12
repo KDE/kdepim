@@ -116,6 +116,10 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
 void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId, Akonadi::Item::Id id)
 {
     Q_FOREACH (FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
+        qDebug() << "FollowUpReminderManager::slotCheckFollowUpFinished info:"<<info;
+        if (!info) {
+            continue;
+        }
         if (info->messageId() == messageId) {
             info->setAnswerMessageItemId(id);
             info->setAnswerWasReceived(true);
