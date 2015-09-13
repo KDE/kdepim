@@ -40,6 +40,7 @@
 #include "memento/verifyopaquebodypartmemento.h"
 #include "memento/cryptobodypartmemento.h"
 #include "memento/decryptverifybodypartmemento.h"
+#include "messagepart.h"
 #include "objecttreesourceif.h"
 #include "messageviewer/autoqpointer.h"
 #include "viewer/viewer_p.h"
@@ -2970,6 +2971,8 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
     bool updatePlainText = false;   // If there are encrypted or signed parts inside the node
     // we need to update mPlainTextContent
 
+    QVector<MessagePart::Ptr> mpl;
+
     if (!blocks.isEmpty()) {
 
         if (blocks.count() > 1 || blocks.at(0).type() != MessageViewer::NoPgpBlock) {
@@ -2991,12 +2994,9 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
         bool fullySignedOrEncryptedTmp = true;
 
         Q_FOREACH (const Block &block, blocks) {
-            std::vector<GpgME::Signature> signatures;       //write signature state
-            PartMetaData messagePart;
-            messagePart.isEncrypted = false;
-            messagePart.isSigned = false;
-
-            QString text;
+            PartMetaData *messagePart = new PartMetaData;
+            messagePart->isEncrypted = false;
+            messagePart->isSigned = false;
 
             if (!fullySignedOrEncryptedTmp) {
                 fullySignedOrEncrypted = false;
@@ -3004,84 +3004,37 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
 
             if (block.type() == NoPgpBlock && !block.text().trimmed().isEmpty()) {
                 fullySignedOrEncryptedTmp = false;
+                mpl.append(MessagePart::Ptr(new MessagePart(this, messagePart, aCodec->toUnicode(block.text()))));
             } else if (block.type() == PgpMessageBlock) {
                 updatePlainText = true;
+                CryptoMessagePart::Ptr mp(new CryptoMessagePart(this, messagePart, QString(), cryptoProtocol(), fromAddress, 0));
+                mpl.append(mp);
                 if (!mSource->decryptMessage()) {
-                    writeDeferredDecryptionBlock();
                     continue;
                 }
-
-                KMime::Content *content = new KMime::Content;
-                content->setBody(block.text());
-                content->parse();
-
-                bool passphraseError;                           //write error
-
-                QByteArray decryptedData;
-                bool signatureFound;
-                bool actuallyEncrypted = true;
-                bool decryptionStarted;
-                bool bOkDecrypt = okDecryptMIME(*content,
-                                                decryptedData,
-                                                signatureFound,
-                                                signatures,
-                                                true,
-                                                passphraseError,
-                                                actuallyEncrypted,
-                                                decryptionStarted,
-                                                messagePart);
-
-                if (decryptionStarted) {
-                    writeDecryptionInProgressBlock();
+                mp->startDecryption(block.text(), aCodec);
+                if (messagePart->inProgress) {
                     continue;
                 }
-
-                messagePart.isDecryptable = bOkDecrypt;
-                messagePart.isEncrypted = actuallyEncrypted;
-                messagePart.isSigned = signatureFound;
-
-                text = aCodec->toUnicode(decryptedData);
-
             } else if (block.type() == ClearsignedBlock) {
+                CryptoMessagePart::Ptr mp(new CryptoMessagePart(this, messagePart, QString(), cryptoProtocol(), fromAddress, 0));
+                mpl.append(mp);
                 updatePlainText = true;
-                messagePart.isEncrypted = false;
-                messagePart.isDecryptable = false;
-
-                QByteArray verifiedText;
-                if (okVerify(block.text(), cryptoProtocol(), messagePart, verifiedText, signatures, QByteArray(), 0)) {
-                    text = aCodec->toUnicode(verifiedText);
-                }
+                mp->startVerification(block.text(), aCodec);
+            } else {
+                continue;
             }
 
-            if (!messagePart.isEncrypted && !messagePart.isSigned && !block.text().trimmed().isEmpty()) {
-                text = aCodec->toUnicode(block.text());
+            if (!messagePart->isEncrypted && !messagePart->isSigned && !block.text().trimmed().isEmpty()) {
+                mpl.last()->setText(aCodec->toUnicode(block.text()));
             }
 
-            if (messagePart.isEncrypted) {
+            if (messagePart->isEncrypted) {
                 inlineEncryptionState = KMMsgPartiallyEncrypted;
             }
 
-            if (messagePart.isSigned) {
+            if (messagePart->isSigned) {
                 inlineSignatureState = KMMsgPartiallySigned;
-                sigStatusToMetaData(signatures, cryptoProtocol(), messagePart, GpgME::Key());
-            }
-
-            plainTextStr += text;
-
-            if (htmlWriter()) {
-                if (messagePart.isEncrypted || messagePart.isSigned) {
-                    htmlStr += writeSigstatHeader(messagePart, cryptoProtocol(), fromAddress);
-                }
-
-                if (messagePart.isEncrypted && !messagePart.isDecryptable) {
-                    htmlStr += text;    //Do not quote ErrorText
-                } else if (!text.trimmed().isEmpty()) {
-                    htmlStr += quotedHTML(text, decorate);
-                }
-
-                if (messagePart.isEncrypted || messagePart.isSigned) {
-                    htmlStr += writeSigstatFooter(messagePart);
-                }
             }
         }
 
@@ -3096,12 +3049,20 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
         }
 
         if (htmlWriter()) {
-            htmlWriter()->queue(htmlStr);
+            foreach(const MessagePart::Ptr &mp, mpl) {
+                mp->html(decorate);
+            }
         }
 
         if (updatePlainText || mPlainTextContent.isEmpty()) {
-            mPlainTextContent = plainTextStr;
+            mPlainTextContent.clear();
+            foreach(const MessagePart::Ptr &mp, mpl) {
+                mPlainTextContent += mp->text();
+            }
             mPlainTextContentCharset = aCodec->name();
+        }
+        foreach(const MessagePart::Ptr &mp, mpl) {
+            delete mp->partMetaData();
         }
     }
 }

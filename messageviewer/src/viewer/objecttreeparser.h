@@ -555,6 +555,9 @@ private:
     QString mExpandIcon;
     bool mDeleteNodeHelper;
     bool mPrinting;
+
+    friend class MessagePart;
+    friend class CryptoMessagePart;
 };
 
 }

@@ -84,6 +84,7 @@ set(libmessageviewer_viewer_SRCS
   viewer/objecttreeemptysource.cpp
   viewer/objecttreeparser.cpp
   viewer/objecttreeviewersource.cpp
+  viewer/messagepart.cpp
   viewer/partnodebodypart.cpp
   viewer/pluginloaderbase.cpp
   viewer/viewer.cpp
