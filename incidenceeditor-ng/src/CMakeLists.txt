@@ -102,7 +102,7 @@ PUBLIC
   KF5::CalendarUtils
   KF5::MailTransport
   KF5::CalendarSupport      # For KCalPrefs
-  eventviews
+  KF5::EventViews
   kdgantt2             # For FreeBusy Editor
 PRIVATE
   KF5::Libkdepim

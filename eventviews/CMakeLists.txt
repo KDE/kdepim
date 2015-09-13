@@ -1,109 +1,82 @@
-# The following macros can be defined to alter behavior.
-# (if desired, use add_definitions() to define them)
-#
-# EVENTVIEWS_NODECOS - turns-off decoration plugins in views.
-#                No idea why you would want to define this, perhaps to save
-#                screen real estate? But there are a config options for that.
+cmake_minimum_required(VERSION 2.8.12)
 
-project(calendarView)
+project(eventviews)
 
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
+if(${CMAKE_SOURCE_DIR} STREQUAL ${eventviews_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.14.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libeventviews\")
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
 
-if(KDEPIM_BUILD_EXAMPLES)
-  add_subdirectory(viewerapp)
+
+set(KF5_VERSION "5.14.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.42")
+set(KDEPIM_LIB_VERSION "5.43.0")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
+
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX EVENTVIEWS
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/eventviews_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5EventViewsConfigVersion.cmake"
+                        SOVERSION 5
+)
+
+########### Targets ###########
+
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5EventViews")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5EventViewsConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5EventViewsConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5EventViewsConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5EventViewsConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
+
+install(EXPORT KF5EventViewsTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5EventViewsTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/eventviews_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX EVENTVIEWS
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/eventviews_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5EventViewsConfigVersion.cmake"
+                        SOVERSION 5
+)
 endif()
 
-option(EVENTVIEWS_NODECOS "Turn-off decoration plugins in views." FALSE)
-
-if(EVENTVIEWS_NODECOS)
-  add_definitions(-DEVENTVIEWS_NODECOS)
-endif()
-
-
-########### next target ###############
-
-set(eventviews_LIB_SRCS
-  eventview_p.cpp
-  eventview.cpp
-  helper.cpp
-  prefs.cpp
-
-  # Agenda view specific code.
-  agenda/agenda.cpp
-  agenda/agendaitem.cpp
-  agenda/agendaview.cpp
-  agenda/alternatelabel.cpp
-  agenda/calendardecoration.cpp
-  agenda/decorationlabel.cpp
-  agenda/timelabels.cpp
-  agenda/timelabelszone.cpp
-  agenda/timescaleconfigdialog.cpp
-  agenda/viewcalendar.cpp
-
-  journal/journalframe.cpp
-  journal/journalview.cpp
-
-  list/listview.cpp
-
-  month/monthgraphicsitems.cpp
-  month/monthitem.cpp
-  month/monthscene.cpp
-  month/monthview.cpp
-
-  multiagenda/multiagendaview.cpp
-
-  todo/tododelegates.cpp
-  todo/todomodel.cpp
-  todo/incidencetreemodel.cpp
-
-  todo/todoviewquickaddline.cpp
-  todo/todoviewquicksearch.cpp
-  todo/todoviewsortfilterproxymodel.cpp
-  todo/todoviewview.cpp
-  todo/todoview.cpp
-
-  timeline/timelineview.cpp
-  timeline/timelineitem.cpp
-  timeline/timelineview_p.cpp
-
-  timespent/timespentview.cpp
-
-  whatsnext/whatsnextview.cpp
-)
-
-kconfig_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc)
-
-ecm_qt_declare_logging_category(eventviews_LIB_SRCS HEADER calendarview_debug.h IDENTIFIER CALENDARVIEW_LOG CATEGORY_NAME log_calendarview)
-ki18n_wrap_ui(eventviews_LIB_SRCS
-  agenda/timescaleedit_base.ui
-)
-
-add_library(eventviews ${eventviews_LIB_SRCS})
-generate_export_header(eventviews BASE_NAME eventviews)
-
-target_link_libraries(eventviews
-PUBLIC
-  KF5::AkonadiCore
-  KF5::CalendarSupport
-
-  KF5::CalendarCore
-  KF5::CalendarUtils
-  KF5::AkonadiCalendar
-PRIVATE
-  KF5::Libkdepim
-  KF5::Codecs
-  kdgantt2
-  KF5::AkonadiWidgets
-)
-
-target_include_directories(eventviews PUBLIC "$<BUILD_INTERFACE:${calendarView_SOURCE_DIR};${calendarView_BINARY_DIR}>")
-
-set_target_properties(eventviews PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
-install(TARGETS eventviews ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES agenda/calendardecoration.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
+add_subdirectory(src)
 if (BUILD_TESTING)
    add_subdirectory(tests)
 endif()
+

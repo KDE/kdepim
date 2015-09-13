@@ -31,7 +31,7 @@
 #include "freebusymodel/freebusycalendar.h"
 #include "resourceitem.h"
 
-#include <eventviews/agenda/viewcalendar.h>
+#include <EventViews/ViewCalendar>
 
 #include <QDialog>
 #include <QStringList>
