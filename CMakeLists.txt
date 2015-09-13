@@ -214,7 +214,7 @@ configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ente
 add_subdirectory(noteshared)
 add_subdirectory(libkdepim)
 add_subdirectory(calendarsupport)
-add_subdirectory(calendarviews)
+add_subdirectory(eventviews)
 add_subdirectory(incidenceeditor-ng)
 add_subdirectory(libkdepimdbusinterfaces)
 add_subdirectory(libkleo)

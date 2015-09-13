@@ -26,7 +26,7 @@
 #include "journalprint.h"
 #include "yearprint.h"
 
-//#include <calendarviews/prefs.h>
+//#include <eventviews/prefs.h>
 
 #include <KMessageBox>
 #include <KStandardGuiItem>

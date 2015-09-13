@@ -29,8 +29,8 @@
 
 #include "freebusyganttproxymodel.h"
 
-#include <calendarviews/agenda/agendaview.h>
-#include <calendarviews/agenda/viewcalendar.h>
+#include <eventviews/agenda/agendaview.h>
+#include <eventviews/agenda/viewcalendar.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/MemoryCalendar>
