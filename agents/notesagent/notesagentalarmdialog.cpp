@@ -17,7 +17,7 @@
 
 #include "notesagentalarmdialog.h"
 #include "notesagentnotedialog.h"
-#include "widget/notelistwidget.h"
+#include "NoteShared/NoteListWidget"
 #include "NoteShared/NoteAlarmAttribute"
 #include "NoteShared/NoteAlarmDialog"
 #include "notesagent_debug.h"

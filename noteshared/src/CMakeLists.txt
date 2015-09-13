@@ -90,11 +90,26 @@ ecm_generate_headers(NoteShared_CamelCase_HEADERS
   network/NotesNetworkReceiver
   resources/LocalResourceCreator
   NoteUtils
-  akonadi/NotesChangeRecorder
-  akonadi/NotesAkonadiTreeModel
-  widget/NoteListWidget
   REQUIRED_HEADERS NoteShared_HEADERS
   PREFIX NoteShared
+)
+
+ecm_generate_headers(NoteShared_akonadi_HEADERS
+  HEADER_NAMES
+  NotesChangeRecorder
+  NotesAkonadiTreeModel
+  REQUIRED_HEADERS NoteShared_attributes_HEADERS
+  PREFIX NoteShared
+  RELATIVE akonadi
+)
+
+
+ecm_generate_headers(NoteShared_widget_HEADERS
+  HEADER_NAMES
+  NoteListWidget
+  REQUIRED_HEADERS NoteShared_widget_HEADERS
+  PREFIX NoteShared
+  RELATIVE widget
 )
 
 ecm_generate_headers(NoteShared_attributes_HEADERS
