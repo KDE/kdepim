@@ -19,7 +19,7 @@
 #include "notesagentnotedialog.h"
 #include "widget/notelistwidget.h"
 #include "NoteShared/NoteAlarmAttribute"
-#include "alarms/notealarmdialog.h"
+#include "NoteShared/NoteAlarmDialog"
 #include "notesagent_debug.h"
 #include <KMime/KMimeMessage>
 

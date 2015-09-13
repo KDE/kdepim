@@ -89,14 +89,10 @@ ecm_generate_headers(NoteShared_CamelCase_HEADERS
   HEADER_NAMES
   network/NotesNetworkReceiver
   resources/LocalResourceCreator
-  editor/NoteEditorUtils
   NoteUtils
-  alarms/NoteAlarmDialog
-  config/NoteActionConfig
   akonadi/NotesChangeRecorder
   akonadi/NotesAkonadiTreeModel
   widget/NoteListWidget
-  job/CreateNewNoteJob
   REQUIRED_HEADERS NoteShared_HEADERS
   PREFIX NoteShared
 )
@@ -112,6 +108,37 @@ ecm_generate_headers(NoteShared_attributes_HEADERS
   RELATIVE attributes
 )
 
+ecm_generate_headers(NoteShared_editor_HEADERS
+  HEADER_NAMES
+  NoteEditorUtils
+  REQUIRED_HEADERS NoteShared_HEADERS
+  PREFIX NoteShared
+  RELATIVE editor
+)
+
+ecm_generate_headers(NoteShared_alarms_HEADERS
+  HEADER_NAMES
+  NoteAlarmDialog
+  REQUIRED_HEADERS NoteShared_HEADERS
+  PREFIX NoteShared
+  RELATIVE alarms
+)
+
+ecm_generate_headers(NoteShared_config_HEADERS
+  HEADER_NAMES
+  NoteActionConfig
+  REQUIRED_HEADERS NoteShared_HEADERS
+  PREFIX NoteShared
+  RELATIVE config
+)
+
+ecm_generate_headers(NoteShared_job_HEADERS
+  HEADER_NAMES
+  CreateNewNoteJob
+  REQUIRED_HEADERS NoteShared_HEADERS
+  PREFIX NoteShared
+  RELATIVE job
+)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${noteshared_SOURCE_DIR})
 install(FILES

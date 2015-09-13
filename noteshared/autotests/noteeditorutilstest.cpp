@@ -16,7 +16,7 @@
 */
 
 #include "noteeditorutilstest.h"
-#include "editor/noteeditorutils.h"
+#include "NoteShared/NoteEditorUtils"
 #include <QTextCursor>
 #include <QTextDocument>
 #include <qtest.h>

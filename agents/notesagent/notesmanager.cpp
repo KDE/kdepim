@@ -18,7 +18,7 @@
 #include "notesmanager.h"
 #include "notesharedglobalconfig.h"
 #include "network/notesnetworkreceiver.h"
-#include "job/createnewnotejob.h"
+#include "NoteShared/CreateNewNoteJob"
 #include "akonadi/noteschangerecorder.h"
 #include "akonadi/notesakonaditreemodel.h"
 #include "NoteShared/NoteAlarmAttribute"
