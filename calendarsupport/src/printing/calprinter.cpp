@@ -26,8 +26,6 @@
 #include "journalprint.h"
 #include "yearprint.h"
 
-//#include <eventviews/prefs.h>
-
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <QVBoxLayout>
