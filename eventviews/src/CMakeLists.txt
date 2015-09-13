@@ -200,6 +200,13 @@ install(FILES
     ${eventviews_CamelCase_HEADERS}
     ${eventviews_agenda_HEADERS}
     ${eventviews_todo_HEADERS}
+    ${eventviews_timespent_HEADERS}
+    ${eventviews_whatsnext_HEADERS}
+    ${eventviews_timeline_HEADERS}
+    ${eventviews_multiagenda_HEADERS}
+    ${eventviews_journal_HEADERS}
+    ${eventviews_list_HEADERS}
+    ${eventviews_month_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/EventViews
     COMPONENT Devel
 )
@@ -210,6 +217,13 @@ install(FILES
     ${eventviews_CamelCase_HEADERS}
     ${eventviews_agenda_HEADERS}
     ${eventviews_todo_HEADERS}
+    ${eventviews_timespent_HEADERS}
+    ${eventviews_whatsnext_HEADERS}
+    ${eventviews_timeline_HEADERS}
+    ${eventviews_multiagenda_HEADERS}
+    ${eventviews_journal_HEADERS}
+    ${eventviews_list_HEADERS}
+    ${eventviews_month_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/eventviews
     COMPONENT Devel
 )
