@@ -17,7 +17,7 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 02110-1301, USA.
  */
 
-#include "individualmaildialog.h"
+#include "../src/individualmaildialog.h"
 
 #include <QObject>
 #include <qtest.h>

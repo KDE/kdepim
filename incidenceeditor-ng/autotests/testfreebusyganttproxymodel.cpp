@@ -22,7 +22,7 @@
 #include "modeltest.h"
 #include "freebusymodel/freebusyitem.h"
 #include "freebusymodel/freebusyitemmodel.h"
-#include "../freebusyganttproxymodel.h"
+#include "../src/freebusyganttproxymodel.h"
 
 #include <kdgantt2/kdganttgraphicsview.h>
 

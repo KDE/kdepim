@@ -1,142 +1,81 @@
-project(incidenceeditorng)
+cmake_minimum_required(VERSION 2.8.12)
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libincidenceeditors\")
+project(incidenceeditorsng)
 
-set(incidenceeditors_ng_shared_LIB_SRCS
-  attachmenteditdialog.cpp
-  attachmenticonview.cpp
-  attendeedata.cpp
-  attendeeline.cpp
-  attendeecomboboxdelegate.cpp
-  attendeelineeditdelegate.cpp
-  attendeetablemodel.cpp
-  attendeeeditor.cpp
+if(${CMAKE_SOURCE_DIR} STREQUAL ${incidenceeditorsng_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.14.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-  alarmpresets.cpp
-  alarmdialog.cpp
-  incidenceeditorsettings.cpp
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
 
-  ktimezonecombobox.cpp
 
-  # TODO: Move the next two to akonadi libs when finished
-  editoritemmanager.cpp
+set(KF5_VERSION "5.14.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.42")
+set(KDEPIM_LIB_VERSION "5.43.0")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
 
-  freebusyurldialog.cpp
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 
-  # Shared incidence editors code
-  combinedincidenceeditor.cpp
-  incidenceeditor.cpp
-
-  # Specific editors
-  incidencealarm.cpp
-  incidenceattachment.cpp
-  incidenceattendee.cpp
-  incidencecategories.cpp
-  incidencecompletionpriority.cpp
-  incidencedescription.cpp
-  incidencewhatwhere.cpp
-  incidencedatetime.cpp
-  incidencerecurrence.cpp
-  incidenceresource.cpp
-  incidencesecrecy.cpp
-
-  freebusyganttproxymodel.cpp
-  conflictresolver.cpp
-  schedulingdialog.cpp
-  groupwareuidelegate.cpp
-
-  incidencedefaults.cpp
-  editorconfig.cpp
-  korganizereditorconfig.cpp
-
-  autochecktreewidget.cpp
-  categoryeditdialog.cpp
-  categoryselectdialog.cpp
-  categorydialog.cpp
-
-  # Individual mail
-  individualmailcomponentfactory.cpp
-  individualmaildialog.cpp
-  opencomposerjob.cpp
-
-  # Resourcemanagement
-  ldaputils.cpp
-  resourcemanagement.cpp
-  resourceitem.cpp
-  resourcemodel.cpp
-)
-ecm_qt_declare_logging_category(incidenceeditors_ng_shared_LIB_SRCS HEADER incidenceeditor_debug.h IDENTIFIER INCIDENCEEDITOR_LOG CATEGORY_NAME log_incidenceeditor)
-
-kconfig_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_incidenceeditor.kcfgc)
-
-### Build the desktop version
-
-set(incidenceeditors_ng_desktop_LIB_SRCS
-  ${incidenceeditors_ng_shared_LIB_SRCS}
-  templatemanagementdialog.cpp
-  incidencedialogfactory.cpp
-  incidencedialog.cpp
-  visualfreebusywidget.cpp
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX INCIDENCEEDITORSNG
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/incidenceeditorsng_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5IncidenceEditorsngConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-ki18n_wrap_ui(incidenceeditors_ng_desktop_LIB_SRCS
-  ui/categoryeditdialog_base.ui
-  ui/categoryselectdialog_base.ui
-  ui/categorydialog_base.ui
-  ui/template_management_dialog_base.ui
-  ui/dialogdesktop.ui
-  ui/alarmdialog.ui
-  ui/attachmenteditdialog.ui
-  ui/schedulingdialog.ui
-  ui/resourcemanagement.ui
+########### Targets ###########
+
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5IncidenceEditorsng")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5IncidenceEditorsngConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5IncidenceEditorsngConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
-add_library(incidenceeditorsng ${incidenceeditors_ng_desktop_LIB_SRCS})
-generate_export_header(incidenceeditorsng BASE_NAME incidenceeditors_ng)
-
-target_link_libraries(incidenceeditorsng
-PUBLIC
-  KF5::AkonadiCalendar
-  KF5::AkonadiMime
-  KF5::CalendarCore
-  KF5::CalendarUtils
-  KF5::MailTransport
-  KF5::CalendarSupport      # For KCalPrefs
-  eventviews
-  kdgantt2             # For FreeBusy Editor
-PRIVATE
-  KF5::Libkdepim
-  kdepimdbusinterfaces # For UriHandler
-  KF5::Codecs
-  KF5::Ldap
-  KF5::AkonadiWidgets
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5IncidenceEditorsngConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5IncidenceEditorsngConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
 )
 
-set_target_properties(incidenceeditorsng
-  PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
-  SOVERSION ${KDEPIM_LIB_SOVERSION}
+install(EXPORT KF5IncidenceEditorsngTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5IncidenceEditorsngTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/incidenceeditorsng_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
 )
 
-install(TARGETS incidenceeditorsng ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
-target_include_directories(incidenceeditorsng PUBLIC "$<BUILD_INTERFACE:${incidenceeditorng_SOURCE_DIR};${incidenceeditorng_BINARY_DIR}>")
-
-set(testincidenceeditor_SRCS main.cpp)
-
-add_executable(kincidenceeditor ${testincidenceeditor_SRCS})
-
-target_link_libraries(kincidenceeditor
-  KF5::AkonadiCalendar
-  KF5::AkonadiCore
-  KF5::CalendarCore
-  KF5::CalendarUtils
-  incidenceeditorsng
-  KF5::CalendarSupport
-  kdepimdbusinterfaces
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX INCIDENCEEDITORSNG
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/incidenceeditorsng_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5IncidenceEditorsngConfigVersion.cmake"
+                        SOVERSION 5
 )
+endif()
 
-install(TARGETS kincidenceeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
+add_subdirectory(src)
 if (BUILD_TESTING)
    add_subdirectory(autotests)
    add_subdirectory(tests)

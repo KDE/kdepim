@@ -241,7 +241,7 @@ PRIVATE
   kleo
   KF5::GrantleeTheme
   KF5::KaddressbookGrantlee
-  incidenceeditorsng
+  KF5::IncidenceEditorsng
   Grantlee5::TextDocument
   Grantlee5::Templates
   Qt5::WebKitWidgets

@@ -11,7 +11,7 @@ target_link_libraries(resourcemanagement_gui
   Qt5::Gui
   Qt5::WebKitWidgets
   KF5::Mime
-  incidenceeditorsng
+  KF5::IncidenceEditorsng
   KF5::Libkdepim
   KF5::Ldap
 )

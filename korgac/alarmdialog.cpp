@@ -35,8 +35,8 @@
 #include <CalendarSupport/IdentityManager>
 #include <CalendarSupport/Utils>
 
-#include <incidenceeditor-ng/incidencedialog.h>
-#include <incidenceeditor-ng/incidencedialogfactory.h>
+#include <IncidenceEditorsng/IncidenceDialog>
+#include <IncidenceEditorsng/IncidenceDialogFactory>
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>

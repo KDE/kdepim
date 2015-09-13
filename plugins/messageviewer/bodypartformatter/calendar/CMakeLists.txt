@@ -28,7 +28,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   KF5::MessageViewer
 )
 
-target_link_libraries(messageviewer_bodypartformatter_text_calendar incidenceeditorsng)
+target_link_libraries(messageviewer_bodypartformatter_text_calendar KF5::IncidenceEditorsng)
 
 install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${KDE_INSTALL_PLUGINDIR})
 
