@@ -4,6 +4,7 @@ ServiceTypes=MessageViewerHeaderStyle/Plugin
 X-KDE-Library=messageviewer_standardsheaderstyleplugin
 Name=Standards Header Style
 Name[ca]=Estil de capçalera estàndard
+Name[en_GB]=Standards Header Style
 Name[nl]=Stijl met standaard headers
 Name[pl]=Standardowe nagłówki
 Name[pt]=Estilo de Cabeçalho-Padrão

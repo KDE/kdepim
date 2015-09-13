@@ -4,6 +4,7 @@ ServiceTypes=MessageViewerHeaderStyle/Plugin
 X-KDE-Library=messageviewer_grantleeheaderstyleplugin
 Name=Grantlee Header Style
 Name[ca]=Estil de capçalera «Grantlee»
+Name[en_GB]=Grantlee Header Style
 Name[nl]=Stijl met Grantlee headers
 Name[pl]=Nagłówki Grantlee
 Name[pt]=Estilo de Cabeçalho do Grantlee
