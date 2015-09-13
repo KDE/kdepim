@@ -102,7 +102,7 @@ target_link_libraries(akonadiconsole_bin
   KF5::AkonadiCore
   KF5::AkonadiPrivate
   KF5::AkonadiContact
-  calendarsupport
+  KF5::CalendarSupport
   KF5::CalendarCore
   KF5::Libkdepim
   KF5::MessageViewer

@@ -35,9 +35,9 @@
 #include <kdgantt2/kdganttstyleoptionganttitem.h>
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <calendarsupport/collectionselection.h>
-#include <calendarsupport/utils.h>
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/CollectionSelection>
+#include <CalendarSupport/Utils>
+#include <CalendarSupport/KCalPrefs>
 #include <Akonadi/Calendar/IncidenceChanger>
 
 #include "calendarview_debug.h"

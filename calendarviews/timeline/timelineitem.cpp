@@ -22,9 +22,9 @@
 
 #include <kdgantt2/kdganttglobal.h>
 
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/KCalPrefs>
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 #include <KCalCore/Incidence>
 #include <KCalUtils/IncidenceFormatter>

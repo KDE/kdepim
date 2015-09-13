@@ -29,9 +29,9 @@
 
 #include <EntityTreeModel>
 
-#include <calendarsupport/collectionselection.h>
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/CollectionSelection>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/Utils>
 
 #include "Libkdepim/KColumnFilterProxyModel"
 using namespace KPIM;

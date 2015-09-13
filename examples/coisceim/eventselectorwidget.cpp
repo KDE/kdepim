@@ -27,7 +27,7 @@
 #include <QTreeView>
 #include <KLocalizedString>
 
-#include <calendarsupport/next/incidenceviewer.h>
+#include <CalendarSupport/IncidenceViewer>
 
 #include <AkonadiCore/ChangeRecorder>
 #include <AkonadiCore/ItemFetchScope>

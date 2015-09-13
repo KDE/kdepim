@@ -30,10 +30,10 @@
 #include "mailclient.h"
 #include "koalarmclient_debug.h"
 
-#include <calendarsupport/next/incidenceviewer.h>
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/identitymanager.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/IncidenceViewer>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/IdentityManager>
+#include <CalendarSupport/Utils>
 
 #include <incidenceeditor-ng/incidencedialog.h>
 #include <incidenceeditor-ng/incidencedialogfactory.h>

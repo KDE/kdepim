@@ -23,7 +23,7 @@
 #include "calendarjanitor.h"
 #include "collectionloader.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 #include <KCalCore/Attachment>
 #include <KCalCore/Alarm>

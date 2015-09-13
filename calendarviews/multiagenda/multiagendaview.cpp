@@ -27,8 +27,8 @@
 
 #include <entitytreemodel.h>
 #include <Akonadi/Calendar/ETMCalendar>
-#include <calendarsupport/collectionselection.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/CollectionSelection>
+#include <CalendarSupport/Utils>
 
 #include <ETMViewStateSaver>
 

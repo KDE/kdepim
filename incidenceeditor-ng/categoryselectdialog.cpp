@@ -22,7 +22,7 @@
 #include "categoryhierarchyreader.h"
 #include "ui_categoryselectdialog_base.h"
 
-#include <calendarsupport/categoryconfig.h>
+#include <CalendarSupport/CategoryConfig>
 
 #include <QIcon>
 #include <KLocalizedString>

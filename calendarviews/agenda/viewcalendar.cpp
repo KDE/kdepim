@@ -25,7 +25,7 @@
 #include "helper.h"
 #include "calendarview_debug.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 using namespace EventViews;
 

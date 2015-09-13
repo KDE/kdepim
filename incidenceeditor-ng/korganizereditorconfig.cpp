@@ -18,7 +18,7 @@
 
 #include "korganizereditorconfig.h"
 
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/KCalPrefs>
 
 using namespace IncidenceEditorNG;
 

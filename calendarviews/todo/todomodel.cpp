@@ -24,8 +24,8 @@
 #include "todomodel_p.h"
 #include "incidencetreemodel.h"
 
-#include <calendarsupport/utils.h>
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/Utils>
+#include <CalendarSupport/KCalPrefs>
 #include <KLocalizedString>
 #include <KCalCore/Todo>
 #include <KCalCore/Event>

@@ -18,7 +18,7 @@ target_link_libraries(calendarjanitor
                       KF5::CalendarUtils
                       KF5::CalendarCore
                       KF5::Libkdepim
-                      calendarsupport
+                      KF5::CalendarSupport
                       KF5::AkonadiCalendar)
 
 install(TARGETS calendarjanitor  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

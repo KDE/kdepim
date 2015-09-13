@@ -34,7 +34,7 @@
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <Akonadi/Calendar/IncidenceChanger>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 #include <KCalCore/Incidence>
 #include <KCalCore/Todo>

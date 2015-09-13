@@ -26,15 +26,15 @@
 */
 
 #include "todoviewquicksearch.h"
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/KCalPrefs>
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <calendarsupport/categoryconfig.h>
+#include <CalendarSupport/CategoryConfig>
 
 #include <Libkdepim/KCheckComboBox>
 #include <Libkdepim/TagSelectionCombo>
 
-#include <calendarsupport/categoryhierarchyreader.h>
+#include <CalendarSupport/CategoryHierarchyReader>
 
 #include <KCalCore/CalFilter>
 

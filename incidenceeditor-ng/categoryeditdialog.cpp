@@ -24,8 +24,8 @@
 
 #include "ui_categoryeditdialog_base.h"
 
-#include <calendarsupport/categoryhierarchyreader.h>
-#include <calendarsupport/categoryconfig.h>
+#include <CalendarSupport/CategoryHierarchyReader>
+#include <CalendarSupport/CategoryConfig>
 
 #include <KLocalizedString>
 #include <QIcon>

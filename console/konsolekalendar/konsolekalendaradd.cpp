@@ -32,7 +32,7 @@
  */
 #include "konsolekalendaradd.h"
 
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/KCalPrefs>
 
 #include "konsolekalendar_debug.h"
 

@@ -27,7 +27,7 @@
 #include "alarmdockwindow.h"
 #include "korgacadaptor.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 #include <AkonadiCore/ChangeRecorder>
 #include <AkonadiCore/Collection>
 #include <kdbusconnectionpool.h>

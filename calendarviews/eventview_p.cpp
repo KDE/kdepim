@@ -27,8 +27,8 @@
 #include "eventview_p.h"
 #include "prefs.h"
 
-#include <calendarsupport/collectionselection.h>
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/CollectionSelection>
+#include <CalendarSupport/KCalPrefs>
 
 #include <KCheckableProxyModel>
 

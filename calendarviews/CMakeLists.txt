@@ -87,7 +87,7 @@ generate_export_header(eventviews BASE_NAME eventviews)
 target_link_libraries(eventviews
 PUBLIC
   KF5::AkonadiCore
-  calendarsupport
+  KF5::CalendarSupport
 
   KF5::CalendarCore
   KF5::CalendarUtils

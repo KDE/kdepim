@@ -101,7 +101,7 @@ PUBLIC
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::MailTransport
-  calendarsupport      # For KCalPrefs
+  KF5::CalendarSupport      # For KCalPrefs
   eventviews
   kdgantt2             # For FreeBusy Editor
 PRIVATE
@@ -131,7 +131,7 @@ target_link_libraries(kincidenceeditor
   KF5::CalendarCore
   KF5::CalendarUtils
   incidenceeditorsng
-  calendarsupport
+  KF5::CalendarSupport
   kdepimdbusinterfaces
 )
 

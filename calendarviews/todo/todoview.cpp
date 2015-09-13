@@ -37,10 +37,10 @@
 #include "todoviewview.h"
 #include "helper.h"
 
-#include <calendarsupport/categoryconfig.h>
-#include <calendarsupport/collectionselection.h>
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/CategoryConfig>
+#include <CalendarSupport/CollectionSelection>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/Utils>
 
 #include <Libkdepim/KDatePickerPopup>
 

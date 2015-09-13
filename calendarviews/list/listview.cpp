@@ -29,8 +29,8 @@
 #include "listview.h"
 #include "helper.h"
 
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/Utils>
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <Akonadi/Calendar/IncidenceChanger>

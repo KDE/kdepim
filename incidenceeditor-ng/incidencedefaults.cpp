@@ -23,7 +23,7 @@
 #include "incidencedefaults.h"
 #include "alarmpresets.h"
 
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/KCalPrefs>
 #include <akonadi/calendar/calendarsettings.h>
 
 #include <KContacts/Addressee>

@@ -28,7 +28,7 @@
 #include "journalview.h"
 #include "journalframe.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 #include <QVBoxLayout>
 #include "calendarview_debug.h"

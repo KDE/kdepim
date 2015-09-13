@@ -21,8 +21,8 @@
 #include "editoritemmanager.h"
 #include "individualmailcomponentfactory.h"
 
-#include <calendarsupport/utils.h>
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/Utils>
+#include <CalendarSupport/KCalPrefs>
 
 #include <Item>
 #include <ItemDeleteJob>

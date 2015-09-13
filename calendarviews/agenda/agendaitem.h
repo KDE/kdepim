@@ -25,7 +25,7 @@
 
 #include "viewcalendar.h"
 
-#include <calendarsupport/cellitem.h>
+#include <CalendarSupport/CellItem>
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <Item>

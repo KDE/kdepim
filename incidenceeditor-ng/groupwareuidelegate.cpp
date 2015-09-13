@@ -20,7 +20,7 @@
 #include "incidencedialog.h"
 #include "incidencedialogfactory.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 #include <Item>
 #include "incidenceeditor_debug.h"

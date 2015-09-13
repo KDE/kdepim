@@ -23,7 +23,7 @@
 #include <KApplication>
 #include <KCmdLineArgs>
 
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/KCalPrefs>
 #include <akonadi/calendar/calendarsettings.h>
 
 #include <Item>

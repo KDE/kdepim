@@ -26,7 +26,7 @@
 #include "monthview.h"
 #include "prefs.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 #include <KIconLoader>
 

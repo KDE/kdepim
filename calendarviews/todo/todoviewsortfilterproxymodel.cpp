@@ -26,7 +26,7 @@
 #include "todoviewsortfilterproxymodel.h"
 #include "todomodel.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 #include <KLocalizedString>
 

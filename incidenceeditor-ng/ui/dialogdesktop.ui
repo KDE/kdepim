@@ -1726,7 +1726,7 @@
   <customwidget>
    <class>CalendarSupport::MessageWidget</class>
    <extends>QWidget</extends>
-   <header>calendarsupport/messagewidget.h</header>
+   <header>CalendarSupport/MessageWidget</header>
   </customwidget>
   <customwidget>
    <class>Akonadi::TagWidget</class>

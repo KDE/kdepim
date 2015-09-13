@@ -21,7 +21,7 @@
 #include "incidencedatetime.h"
 #include "ui_dialogdesktop.h"
 
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/KCalPrefs>
 
 #include <KCalCore/ICalTimeZones>
 #include <KCalUtils/IncidenceFormatter>

@@ -1,107 +1,79 @@
+cmake_minimum_required(VERSION 2.8.12)
+
 project(calendarsupport)
 
-add_definitions(-DQT_NO_CAST_FROM_ASCII)
-add_definitions(-DQT_NO_CAST_TO_ASCII)
+if(${CMAKE_SOURCE_DIR} STREQUAL ${calendarsupport_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.14.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-add_definitions(-DTRANSLATION_DOMAIN=\"calendarsupport\")
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
 
-########### next target ###############
 
-set(calendarsupport_LIB_SRCS
-  archivedialog.cpp
-  attachmenthandler.cpp
-  calendarsingleton.cpp
-  calendarutils.cpp
-  categoryconfig.cpp
-  categoryhierarchyreader.cpp
-  cellitem.cpp
-  collectionselection.cpp
-  eventarchiver.cpp
-  identitymanager.cpp
-  incidenceattachmentmodel.cpp
-  kcalmodel.cpp
-  kcalprefs.cpp
-  messagewidget.cpp
-  utils.cpp
-  tagcache.cpp
+set(KF5_VERSION "5.14.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.42")
+set(KDEPIM_LIB_VERSION "5.43.0")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
 
-  printing/calprintpluginbase.cpp
-  printing/calprintdefaultplugins.cpp
-  printing/calprinter.cpp
-  printing/journalprint.cpp
-  printing/yearprint.cpp
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 
-  next/incidenceviewer.cpp
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX CALENDARSUPPORT
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/calendarsupport_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5CalendarSupportConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-ki18n_wrap_ui(calendarsupport_LIB_SRCS
-  printing/calprintdayconfig_base.ui
-  printing/calprintincidenceconfig_base.ui
-  printing/calprintjournalconfig_base.ui
-  printing/calprintmonthconfig_base.ui
-  printing/calprinttodoconfig_base.ui
-  printing/calprintweekconfig_base.ui
-  printing/calprintyearconfig_base.ui
-)
-ecm_qt_declare_logging_category(calendarsupport_LIB_SRCS HEADER calendarsupport_debug.h IDENTIFIER CALENDARSUPPORT_LOG CATEGORY_NAME log_calendarsupport)
+########### Targets ###########
 
-kconfig_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
-add_library(calendarsupport ${calendarsupport_LIB_SRCS})
-generate_export_header(calendarsupport BASE_NAME calendarsupport)
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5CalendarSupport")
 
-target_link_libraries(
-  calendarsupport
-PUBLIC
-  KF5::Mime
-  KF5::IdentityManagement
-  KF5::AkonadiCalendar
-PRIVATE
-  KF5::AkonadiWidgets
-  KF5::Holidays
-  KF5::Codecs
-  KF5::AkonadiCore
-  KF5::CalendarCore
-  KF5::CalendarUtils
-  kdepimdbusinterfaces
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5CalendarSupportConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5CalendarSupportConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
-target_include_directories(calendarsupport PUBLIC "$<BUILD_INTERFACE:${calendarsupport_SOURCE_DIR};${calendarsupport_BINARY_DIR};${Boost_INCLUDE_DIRS}>")
-
-set_target_properties(calendarsupport
-  PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
-  SOVERSION ${KDEPIM_LIB_SOVERSION}
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5CalendarSupportConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5CalendarSupportConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
 )
 
-install(TARGETS calendarsupport ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(EXPORT KF5CalendarSupportTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5CalendarSupportTargets.cmake NAMESPACE KF5::)
 
-
-############# Next target #######################
-
-set(calendarsupportcollectionpage_LIB_SRCS
-    collectiongeneralpage.cpp
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/calendarsupport_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
 )
 
-add_library(calendarsupportcollectionpage ${calendarsupportcollectionpage_LIB_SRCS})
-add_dependencies(calendarsupportcollectionpage mailcommon)
-generate_export_header(calendarsupportcollectionpage BASE_NAME calendarsupportcollectionpage)
-target_link_libraries(
-  calendarsupportcollectionpage
-PUBLIC
-  KF5::AkonadiCore
-  mailcommon
-PRIVATE
-  KF5::CalendarCore
-  pimcommon
-  KF5::AkonadiCalendar
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX CALENDARSUPPORT
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/calendarsupport_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5CalendarSupportConfigVersion.cmake"
+                        SOVERSION 5
 )
+endif()
 
-target_include_directories(calendarsupportcollectionpage PUBLIC "$<BUILD_INTERFACE:${calendarsupport_SOURCE_DIR};${calendarsupport_BINARY_DIR};${Boost_INCLUDE_DIRS}>")
+add_subdirectory(src)
 
-set_target_properties(calendarsupportcollectionpage
-  PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
-  SOVERSION ${KDEPIM_LIB_VERSION}
-)
-
-install(TARGETS calendarsupportcollectionpage ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
-install(FILES calendarplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})

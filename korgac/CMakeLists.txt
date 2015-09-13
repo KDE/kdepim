@@ -58,7 +58,7 @@ endif()
 target_link_libraries(korgac
   KF5::AkonadiCalendar
   KF5::AkonadiMime
-  calendarsupport
+  KF5::CalendarSupport
   incidenceeditorsng
   KF5::AkonadiCore
   KF5::CalendarCore

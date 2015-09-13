@@ -21,7 +21,7 @@
 
 #include "eventviews_export.h"
 
-#include <calendarsupport/plugin.h>
+#include <CalendarSupport/Plugin>
 
 #include <QUrl>
 

@@ -24,7 +24,7 @@
 #include "incidencedatetime.h"
 #include "ui_dialogdesktop.h"
 
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/KCalPrefs>
 
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;

@@ -27,9 +27,9 @@
 #include "todoviewview.h"
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <calendarsupport/categoryconfig.h>
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/categoryhierarchyreader.h>
+#include <CalendarSupport/CategoryConfig>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/CategoryHierarchyReader>
 #include <widgets/tagselectioncombo.h>
 
 #include <Libkdepim/KCheckComboBox>

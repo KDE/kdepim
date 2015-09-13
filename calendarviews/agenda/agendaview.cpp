@@ -37,10 +37,10 @@
 #include "calendarview_debug.h"
 
 #include <Akonadi/Calendar/ETMCalendar>
-#include <calendarsupport/collectionselection.h>
+#include <CalendarSupport/CollectionSelection>
 #include <Akonadi/Calendar/IncidenceChanger>
-#include <calendarsupport/utils.h>
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/Utils>
+#include <CalendarSupport/KCalPrefs>
 
 #include <KCalCore/CalFilter>
 #include <KCalCore/CalFormat>

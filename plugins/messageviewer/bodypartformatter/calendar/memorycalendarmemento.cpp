@@ -18,7 +18,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "memorycalendarmemento.h"
-#include <calendarsupport/calendarsingleton.h>
+#include <CalendarSupport/CalendarSingleton>
 #include <Akonadi/Calendar/FetchJobCalendar>
 #include <Akonadi/Calendar/ETMCalendar>
 #include "text_calendar_debug.h"

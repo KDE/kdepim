@@ -29,8 +29,8 @@
 #include "prefs_base.h" // Ugly, but needed for the Enums
 
 #include <Akonadi/Calendar/IncidenceChanger>
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/Utils>
 
 #include <KCalUtils/IncidenceFormatter>
 #include <KCalUtils/RecurrenceActions>

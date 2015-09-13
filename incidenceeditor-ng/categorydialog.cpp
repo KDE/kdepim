@@ -25,8 +25,8 @@
 #include "categoryhierarchyreader.h"
 #include "ui_categorydialog_base.h"
 
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/categoryconfig.h>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/CategoryConfig>
 
 #include <QIcon>
 #include <KConfigGroup>

@@ -27,8 +27,8 @@
 #include <KCalCore/Event>
 #include <Akonadi/Calendar/ETMCalendar>
 
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/Utils>
 
 #include <QBoxLayout>
 #include <QPainter>

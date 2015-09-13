@@ -23,7 +23,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   KF5::IdentityManagement
   KF5::MailTransport
   KF5::AkonadiMime
-  calendarsupport
+  KF5::CalendarSupport
   KF5::Libkdepim
   KF5::MessageViewer
 )

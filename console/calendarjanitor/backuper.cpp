@@ -22,7 +22,7 @@
 
 #include "backuper.h"
 
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/Utils>
 
 #include <KCalCore/Incidence>
 #include <KCalCore/FileStorage>

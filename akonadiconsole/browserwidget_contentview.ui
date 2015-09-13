@@ -382,7 +382,7 @@
   <customwidget>
    <class>CalendarSupport::IncidenceViewer</class>
    <extends>QWidget</extends>
-   <header location="global">calendarsupport/next/incidenceviewer.h</header>
+   <header location="global">CalendarSupport/IncidenceViewer</header>
   </customwidget>
   <customwidget>
    <class>MessageViewer::Viewer</class>

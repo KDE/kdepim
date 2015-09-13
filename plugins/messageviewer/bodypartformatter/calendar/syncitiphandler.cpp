@@ -30,7 +30,7 @@
 */
 
 #include "syncitiphandler.h"
-#include <calendarsupport/calendarsingleton.h>
+#include <CalendarSupport/CalendarSingleton>
 #include "text_calendar_debug.h"
 
 using namespace Akonadi;

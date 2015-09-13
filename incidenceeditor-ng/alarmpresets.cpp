@@ -20,7 +20,7 @@
 
 #include "alarmpresets.h"
 
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/KCalPrefs>
 
 #include <KCalCore/Alarm>
 

@@ -27,8 +27,8 @@
 #include "prefs.h"
 #include "prefs_base.h" // for enums
 
-#include <calendarsupport/kcalprefs.h>
-#include <calendarsupport/utils.h>
+#include <CalendarSupport/KCalPrefs>
+#include <CalendarSupport/Utils>
 
 #include <KContacts/VCardDrag>
 

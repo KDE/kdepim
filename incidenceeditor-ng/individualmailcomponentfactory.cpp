@@ -23,7 +23,7 @@
 #include "individualmailcomponentfactory.h"
 #include "individualmaildialog.h"
 
-#include <calendarsupport/kcalprefs.h>
+#include <CalendarSupport/KCalPrefs>
 #include <KEmailAddress>
 
 #include <KMessageBox>

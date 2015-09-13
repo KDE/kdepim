@@ -15,7 +15,7 @@ ki18n_wrap_ui(viewerapp_SRCS
 add_executable(viewerapp ${viewerapp_SRCS})
 
 target_link_libraries(viewerapp
-  calendarsupport
+  KF5::CalendarSupport
   eventviews
   KF5::AkonadiWidgets
   KF5::CalendarCore
