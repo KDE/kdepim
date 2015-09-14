@@ -41,7 +41,7 @@
 
 #include <utils/headerview.h>
 
-#include <kleo/stl_util.h>
+#include <libkleo/kleo/stl_util.h>
 #include <KConfigGroup>
 #include <gpgme++/key.h>
 

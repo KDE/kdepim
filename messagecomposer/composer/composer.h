@@ -21,7 +21,7 @@
 #define MESSAGECOMPOSER_COMPOSER_H
 
 #include "messagecomposer/job/jobbase.h"
-#include "kleo/enum.h"
+#include "libkleo/kleo/enum.h"
 
 #include "messagecomposer_export.h"
 #include <QByteArray>

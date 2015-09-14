@@ -38,7 +38,7 @@
 
 #include <utils/archivedefinition.h>
 
-#include <kleo/checksumdefinition.h>
+#include <libkleo/kleo/checksumdefinition.h>
 
 #include <KLocalizedString>
 

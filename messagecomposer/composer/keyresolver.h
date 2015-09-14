@@ -39,7 +39,7 @@
 
 #include "messagecomposer_export.h"
 #include "libkleo/ui/keyapprovaldialog.h"
-#include "kleo/enum.h"
+#include "libkleo/kleo/enum.h"
 
 #include <gpgme++/key.h>
 

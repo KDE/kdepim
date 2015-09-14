@@ -38,7 +38,7 @@
 
 #include <utils/validation.h>
 
-#include <kleo/stl_util.h>
+#include <libkleo/kleo/stl_util.h>
 
 #include <QString>
 #include <QStringList>

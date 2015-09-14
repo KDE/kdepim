@@ -45,7 +45,7 @@
 
 #include <utils/kleo_assert.h>
 
-#include <kleo/stl_util.h>
+#include <libkleo/kleo/stl_util.h>
 
 #include <gpgme++/key.h>
 

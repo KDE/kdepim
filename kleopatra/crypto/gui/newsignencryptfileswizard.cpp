@@ -50,7 +50,7 @@
 #include <utils/path-helper.h>
 #include <utils/gui-helper.h>
 
-#include <kleo/stl_util.h>
+#include <libkleo/kleo/stl_util.h>
 #include <ui/filenamerequester.h>
 
 #include <KLocalizedString>

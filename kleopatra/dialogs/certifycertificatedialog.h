@@ -35,7 +35,7 @@
 
 #include <QWizard>
 
-#include <kleo/signkeyjob.h>
+#include <libkleo/kleo/signkeyjob.h>
 
 #include <gpgme++/key.h>
 

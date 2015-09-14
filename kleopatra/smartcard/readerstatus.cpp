@@ -38,7 +38,7 @@
 #include <utils/kdsignalblocker.h>
 #include <utils/filesystemwatcher.h>
 
-#include <kleo/stl_util.h>
+#include <libkleo/kleo/stl_util.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/assuanresult.h>

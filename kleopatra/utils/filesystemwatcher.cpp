@@ -42,7 +42,7 @@
 #include <QTimer>
 #include <QDir>
 
-#include <kleo/stl_util.h>
+#include <libkleo/kleo/stl_util.h>
 
 #include <boost/bind.hpp>
 

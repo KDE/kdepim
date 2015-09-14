@@ -82,8 +82,8 @@
 #include <AkonadiCore/ItemModifyJob>
 #include <AkonadiCore/ItemCreateJob>
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptobackend.h>
+#include <libkleo/kleo/cryptobackendfactory.h>
+#include <libkleo/kleo/cryptobackend.h>
 
 #include <MailTransport/mailtransport/errorattribute.h>
 

@@ -38,7 +38,7 @@
 #include "emailoperationspreferences.h"
 #include "fileoperationspreferences.h"
 
-#include <kleo/checksumdefinition.h>
+#include <libkleo/kleo/checksumdefinition.h>
 
 #include <kconfig.h>
 #include <kconfiggroup.h>

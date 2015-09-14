@@ -45,7 +45,7 @@
 #include <utils/scrollarea.h>
 #include <utils/kleo_assert.h>
 
-#include <kleo/stl_util.h>
+#include <libkleo/kleo/stl_util.h>
 #include "libkleo/ui/filenamerequester.h"
 
 #include <KLocalizedString>

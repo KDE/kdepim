@@ -23,9 +23,9 @@
 #include "testhtmlwriter.h"
 #include "testcsshelper.h"
 
-#include <kleo/enum.h>
-#include <kleo/keylistjob.h>
-#include <kleo/cryptobackendfactory.h>
+#include <libkleo/kleo/enum.h>
+#include <libkleo/kleo/keylistjob.h>
+#include <libkleo/kleo/cryptobackendfactory.h>
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
 

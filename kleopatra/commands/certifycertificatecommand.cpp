@@ -43,9 +43,9 @@
 
 #include <utils/formatting.h>
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptobackend.h>
-#include <kleo/signkeyjob.h>
+#include <libkleo/kleo/cryptobackendfactory.h>
+#include <libkleo/kleo/cryptobackend.h>
+#include <libkleo/kleo/signkeyjob.h>
 
 #include <gpgme++/key.h>
 

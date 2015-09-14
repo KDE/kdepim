@@ -21,10 +21,10 @@
 #include "encryptjob.h"
 
 #include "contentjobbase_p.h"
-#include "kleo/cryptobackendfactory.h"
-#include "kleo/cryptobackend.h"
-#include "kleo/encryptjob.h"
-#include "kleo/enum.h"
+#include "libkleo/kleo/cryptobackendfactory.h"
+#include "libkleo/kleo/cryptobackend.h"
+#include "libkleo/kleo/encryptjob.h"
+#include "libkleo/kleo/enum.h"
 #include "util.h"
 
 #include "messagecomposer_debug.h"

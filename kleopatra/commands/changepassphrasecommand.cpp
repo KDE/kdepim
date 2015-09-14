@@ -38,9 +38,9 @@
 
 #include <utils/formatting.h>
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptobackend.h>
-#include <kleo/changepasswdjob.h>
+#include <libkleo/kleo/cryptobackendfactory.h>
+#include <libkleo/kleo/cryptobackend.h>
+#include <libkleo/kleo/changepasswdjob.h>
 
 #include <gpgme++/key.h>
 

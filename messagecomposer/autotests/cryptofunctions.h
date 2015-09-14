@@ -21,7 +21,7 @@
 #ifndef CRYPTO_FUNCTIONS_H
 #define CRYPTO_FUNCTIONS_H
 
-#include <kleo/enum.h>
+#include <libkleo/kleo/enum.h>
 #include <kmime/kmime_headers.h>
 #include <QByteArray>
 

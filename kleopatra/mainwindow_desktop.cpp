@@ -85,10 +85,10 @@
 #include <QVBoxLayout>
 #include <QMimeData>
 
-#include <kleo/cryptobackendfactory.h>
+#include <libkleo/kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
-#include <kleo/cryptoconfig.h>
-#include <kleo/stl_util.h>
+#include <libkleo/kleo/cryptoconfig.h>
+#include <libkleo/kleo/stl_util.h>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>

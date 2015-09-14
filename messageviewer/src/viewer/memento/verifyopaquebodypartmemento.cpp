@@ -18,8 +18,8 @@
 #include "verifyopaquebodypartmemento.h"
 #include "messageviewer_debug.h"
 
-#include <kleo/verifyopaquejob.h>
-#include <kleo/keylistjob.h>
+#include <libkleo/kleo/verifyopaquejob.h>
+#include <libkleo/kleo/keylistjob.h>
 
 #include <gpgme++/keylistresult.h>
 

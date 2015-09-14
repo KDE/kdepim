@@ -29,9 +29,9 @@
 #include <QFileDialog>
 #include <KJobWidgets>
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptobackend.h>
-#include <kleo/specialjob.h>
+#include <libkleo/kleo/cryptobackendfactory.h>
+#include <libkleo/kleo/cryptobackend.h>
+#include <libkleo/kleo/specialjob.h>
 
 using namespace MessageViewer;
 

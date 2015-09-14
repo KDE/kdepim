@@ -30,7 +30,7 @@
 
 #include <QObject>
 #include <QUrl>
-#include <kleo/enum.h>
+#include <libkleo/kleo/enum.h>
 
 class QTimer;
 class KJob;

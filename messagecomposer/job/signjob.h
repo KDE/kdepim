@@ -24,7 +24,7 @@
 #include "contentjobbase.h"
 #include "part/infopart.h"
 #include "messagecomposer_export.h"
-#include "kleo/enum.h"
+#include "libkleo/kleo/enum.h"
 
 #include <gpgme++/key.h>
 #include <vector>

@@ -40,10 +40,10 @@
 
 #include <utils/formatting.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/importjob.h>
-#include <kleo/importfromkeyserverjob.h>
+#include <libkleo/kleo/stl_util.h>
+#include <libkleo/kleo/cryptobackendfactory.h>
+#include <libkleo/kleo/importjob.h>
+#include <libkleo/kleo/importfromkeyserverjob.h>
 
 #include <gpgme++/global.h>
 #include <gpgme++/importresult.h>

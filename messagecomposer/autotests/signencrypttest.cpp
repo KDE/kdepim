@@ -29,9 +29,9 @@
 
 #include <kmime/kmime_content.h>
 
-#include <kleo/enum.h>
-#include <kleo/keylistjob.h>
-#include <kleo/cryptobackendfactory.h>
+#include <libkleo/kleo/enum.h>
+#include <libkleo/kleo/keylistjob.h>
+#include <libkleo/kleo/cryptobackendfactory.h>
 #include <kjob.h>
 
 #include <messagecomposer/composer/composer.h>

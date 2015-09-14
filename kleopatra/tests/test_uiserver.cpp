@@ -39,7 +39,7 @@
 #include <kleo-assuan.h>
 #include <gpg-error.h>
 
-#include <kleo/exception.h>
+#include <libkleo/kleo/exception.h>
 
 #include "../utils/wsastarter.h"
 #include "../utils/hex.h"

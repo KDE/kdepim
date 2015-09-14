@@ -34,9 +34,9 @@
 
 #include "path-helper.h"
 
-#include <kleo/stl_util.h>
+#include <libkleo/kleo/stl_util.h>
 
-#include <kleo/exception.h>
+#include <libkleo/kleo/exception.h>
 
 #include "kleopatra_debug.h"
 #include <KLocalizedString>

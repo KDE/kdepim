@@ -26,8 +26,8 @@
 #include <KDialogJobUiDelegate>
 #include <KLocalizedString>
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/exportjob.h>
+#include <libkleo/kleo/cryptobackendfactory.h>
+#include <libkleo/kleo/exportjob.h>
 #include <libkleo/ui/progressdialog.h>
 
 using namespace MessageComposer;

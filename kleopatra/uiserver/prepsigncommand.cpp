@@ -38,7 +38,7 @@
 
 #include <utils/kleo_assert.h>
 
-#include <kleo/exception.h>
+#include <libkleo/kleo/exception.h>
 
 #include <KLocalizedString>
 

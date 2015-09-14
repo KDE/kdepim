@@ -46,8 +46,8 @@
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/exception.h>
+#include <libkleo/kleo/stl_util.h>
+#include <libkleo/kleo/exception.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>

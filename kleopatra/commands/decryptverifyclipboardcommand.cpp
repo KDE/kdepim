@@ -46,7 +46,7 @@
 #include <utils/classify.h>
 #include <utils/types.h>
 
-#include <kleo/stl_util.h>
+#include <libkleo/kleo/stl_util.h>
 
 #include <KLocalizedString>
 #include "kleopatra_debug.h"

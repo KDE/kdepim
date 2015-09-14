@@ -41,7 +41,7 @@
 #include "kleo_assert.h"
 #include "cached.h"
 
-#include <kleo/exception.h>
+#include <libkleo/kleo/exception.h>
 
 #include "kleopatra_debug.h"
 #include <KLocalizedString>

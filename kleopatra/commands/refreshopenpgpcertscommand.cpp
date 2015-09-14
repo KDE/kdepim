@@ -36,8 +36,8 @@
 
 #include <utils/gnupg-helper.h>
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptoconfig.h>
+#include <libkleo/kleo/cryptobackendfactory.h>
+#include <libkleo/kleo/cryptoconfig.h>
 
 #include <KLocalizedString>
 #include <KMessageBox>

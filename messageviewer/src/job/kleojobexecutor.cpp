@@ -18,10 +18,10 @@
 
 #include "kleojobexecutor.h"
 #include "messageviewer_debug.h"
-#include <kleo/decryptverifyjob.h>
-#include <kleo/importjob.h>
-#include <kleo/verifydetachedjob.h>
-#include <kleo/verifyopaquejob.h>
+#include <libkleo/kleo/decryptverifyjob.h>
+#include <libkleo/kleo/importjob.h>
+#include <libkleo/kleo/verifydetachedjob.h>
+#include <libkleo/kleo/verifyopaquejob.h>
 
 #include <QBuffer>
 #include <QEventLoop>

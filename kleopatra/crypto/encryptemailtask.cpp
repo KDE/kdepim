@@ -39,10 +39,10 @@
 #include <utils/kleo_assert.h>
 #include <utils/auditlog.h>
 
-#include <kleo/stl_util.h>
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/cryptobackend.h>
-#include <kleo/encryptjob.h>
+#include <libkleo/kleo/stl_util.h>
+#include <libkleo/kleo/cryptobackendfactory.h>
+#include <libkleo/kleo/cryptobackend.h>
+#include <libkleo/kleo/encryptjob.h>
 
 #include <gpgme++/encryptionresult.h>
 #include <gpgme++/key.h>

@@ -36,7 +36,7 @@
 
 #include <utils/kleo_assert.h>
 
-#include <kleo/dn.h>
+#include <libkleo/kleo/dn.h>
 
 #include <kmime/kmime_header_parsing.h>
 
