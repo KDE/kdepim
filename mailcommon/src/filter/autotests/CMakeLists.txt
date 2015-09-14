@@ -1,5 +1,6 @@
 macro(add_mailcommon_filter_test _name)
-    ecm_add_test(${ARGN} ${mailcommon_BINARY_DIR}/mailcommon_debug.cpp
+    ecm_qt_declare_logging_category(_name HEADER mailcommon_debug.h IDENTIFIER MAILCOMMON_LOG CATEGORY_NAME log_mailcommon)
+    ecm_add_test(${ARGN} 
         TEST_NAME ${_name}
         NAME_PREFIX "mailcommon-filter-"
         LINK_LIBRARIES Qt5::Test Qt5::Gui KF5::AkonadiCore KF5::AkonadiMime
