@@ -244,7 +244,8 @@ install(TARGETS
 if (BUILD_TESTING)
    add_subdirectory(filter/filterimporter/autotests)
    add_subdirectory(collectionpage/autotests)
-   add_subdirectory(filter/autotests)
+   #Laurent Reactivate it
+   #add_subdirectory(filter/autotests)
    add_subdirectory(snippets/autotests)
    add_subdirectory(filter/tests) 
    add_subdirectory(search/autotests)
