@@ -102,7 +102,7 @@
 
 //libkdepim
 #include "Libkdepim/BroadcastStatus"
-#include <attachment/attachmentpropertiesdialog.h>
+#include <MessageCore/AttachmentPropertiesDialog>
 
 #include <AkonadiCore/collection.h>
 #include <AkonadiCore/itemfetchjob.h>

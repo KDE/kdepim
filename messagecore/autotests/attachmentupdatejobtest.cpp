@@ -16,7 +16,7 @@
 */
 #include "attachmentupdatejobtest.h"
 #include <attachment/attachmentupdatejob.h>
-#include <attachment/attachmentpart.h>
+#include <MessageCore/AttachmentPart>
 #include <qtest.h>
 #include "qtest_messagecore.h"
 

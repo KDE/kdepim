@@ -22,7 +22,7 @@
 
 #include "messagecore_export.h"
 
-#include "attachmentfromurlbasejob.h"
+#include "MessageCore/AttachmentFromUrlBaseJob"
 
 namespace MessageCore
 {

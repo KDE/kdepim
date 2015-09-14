@@ -44,7 +44,7 @@ using namespace KMime;
 #include <attachment/attachmentcontrollerbase.h>
 using namespace MessageComposer;
 
-#include <attachment/attachmentpart.h>
+#include <MessageCore/AttachmentPart>
 #include <helpers/nodehelper.h>
 #include <setupenv.h>
 

@@ -85,19 +85,6 @@ install(TARGETS
     EXPORT KF5MessageCoreTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
-ecm_generate_headers(MessageCore_CamelCase_HEADERS
-  HEADER_NAMES
-  attachment/AttachmentFromMimeContentJob
-  attachment/AttachmentFromUrlBaseJob
-  attachment/AttachmentFromUrlJob
-  attachment/AttachmentLoadJob
-  attachment/AttachmentPart
-  attachment/AttachmentPropertiesDialog
-  attachment/AttachmentCompressJob
-  
-  REQUIRED_HEADERS MessageCore_CamelCase_HEADERS
-  PREFIX MessageCore
-)
 
 ecm_generate_headers(MessageCore_misc_HEADERS
   HEADER_NAMES
@@ -111,10 +98,25 @@ ecm_generate_headers(MessageCore_misc_HEADERS
 )
 
 
+ecm_generate_headers(MessageCore_attachment_HEADERS
+  HEADER_NAMES
+  AttachmentFromMimeContentJob
+  AttachmentFromUrlBaseJob
+  AttachmentFromUrlJob
+  AttachmentLoadJob
+  AttachmentPart
+  AttachmentPropertiesDialog
+  AttachmentCompressJob
+
+  REQUIRED_HEADERS MessageCore_attachment_HEADERS
+  PREFIX MessageCore
+  RELATIVE attachment
+)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${messagecore_SOURCE_DIR})
 install(FILES
-    ${MessageCore_CamelCase_HEADERS}
+    ${MessageCore_attachment_HEADERS}
     ${MessageCore_misc_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageCore
     COMPONENT Devel
@@ -123,7 +125,7 @@ install(FILES
 install(FILES
     ${MessageCore_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messagecore_export.h
-    ${MessageCore_CamelCase_HEADERS}
+    ${MessageCore_attachment_HEADERS}
     ${MessageCore_misc_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messagecore
     COMPONENT Devel

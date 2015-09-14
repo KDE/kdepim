@@ -18,7 +18,7 @@
 #ifndef ATTACHMENTVCARDFROMADDRESSBOOKJOB_H
 #define ATTACHMENTVCARDFROMADDRESSBOOKJOB_H
 
-#include "attachment/attachmentloadjob.h"
+#include "MessageCore/AttachmentLoadJob"
 #include <AkonadiCore/Item>
 #include "messagecomposer_export.h"
 namespace MessageComposer

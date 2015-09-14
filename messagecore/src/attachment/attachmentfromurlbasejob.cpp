@@ -16,7 +16,7 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "attachmentfromurlbasejob.h"
+#include "MessageCore/AttachmentFromUrlBaseJob"
 
 using namespace MessageCore;
 

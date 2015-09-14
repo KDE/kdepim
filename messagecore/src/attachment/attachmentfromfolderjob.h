@@ -19,7 +19,7 @@
 #ifndef MESSAGECORE_ATTACHMENTFROMFOLDERJOB_H
 #define MESSAGECORE_ATTACHMENTFROMFOLDERJOB_H
 
-#include "attachmentfromurlbasejob.h"
+#include "MessageCore/AttachmentFromUrlBaseJob"
 
 #include <KZip>
 

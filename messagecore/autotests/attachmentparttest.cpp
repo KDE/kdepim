@@ -25,7 +25,7 @@
 #include "messagecore_debug.h"
 #include <qtest.h>
 
-#include <attachment/attachmentpart.h>
+#include <MessageCore/AttachmentPart>
 using namespace MessageCore;
 
 QTEST_MAIN(AttachmentPartTest)

@@ -32,8 +32,8 @@ using namespace KMime;
 #include <messagecomposer/job/attachmentjob.h>
 using namespace MessageComposer;
 
-#include <attachment/attachmentfromurljob.h>
-#include <attachment/attachmentpart.h>
+#include <MessageCore/AttachmentFromUrlJob>
+#include <MessageCore/AttachmentPart>
 using namespace MessageCore;
 
 #define PATH_ATTACHMENTS QLatin1String( KDESRCDIR "/attachments/" )
