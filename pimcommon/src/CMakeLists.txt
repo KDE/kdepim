@@ -648,7 +648,34 @@ ecm_generate_headers(PimCommon_widgets_HEADERS
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${pimcommon_SOURCE_DIR})
 install(FILES
-    ${PimCommon_CamelCase_HEADERS}
+    ${PimCommon_CamelCase_HEADERS}}
+    ${PimCommon_storageservice_HEADERS}
+    ${PimCommon_settings_HEADERS}
+    ${PimCommon_storageservicewidgets_HEADERS}
+    ${PimCommon_storageservicedialog_HEADERS}
+    ${PimCommon_storageservicedialog_HEADERS}
+    ${PimCommon_webshortcut_HEADERS}
+    ${PimCommon_shareserviceurl_HEADERS}
+    ${PimCommon_translator_HEADERS}
+    ${PimCommon_customtools_HEADERS}
+    ${PimCommon_storageserviceinterface_HEADERS}
+    ${PimCommon_temporaryfile_HEADERS}
+    ${PimCommon_sievehighlighter_HEADERS}
+    ${PimCommon_acl_HEADERS}
+    ${PimCommon_gravatar_HEADERS}
+    ${PimCommon_migrate_HEADERS}
+    ${PimCommon_autocorrectionwidgets_HEADERS}
+    ${PimCommon_managerserversidesubscription_HEADERS}
+    ${PimCommon_autocorrection_HEADERS}
+    ${PimCommon_baloodebug_HEADERS}
+    ${PimCommon_richtexteditor_HEADERS}
+    ${PimCommon_folderdialog_HEADERS}
+    ${PimCommon_texttospeechs_HEADERS}
+    ${PimCommon_templatelist_HEADERS}
+    ${PimCommon_plaintexteditor_HEADERS}
+    ${PimCommon_texteditor_commonwidget_HEADERS}
+    ${PimCommon_widgets_HEADERS}
+
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/PimCommon
     COMPONENT Devel
 )
@@ -656,7 +683,34 @@ install(FILES
 install(FILES
     ${PimCommon_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/pimcommon_export.h
-    ${PimCommon_CamelCase_HEADERS}
+    ${PimCommon_CamelCase_HEADERS}}
+    ${PimCommon_storageservice_HEADERS}
+    ${PimCommon_settings_HEADERS}
+    ${PimCommon_storageservicewidgets_HEADERS}
+    ${PimCommon_storageservicedialog_HEADERS}
+    ${PimCommon_storageservicedialog_HEADERS}
+    ${PimCommon_webshortcut_HEADERS}
+    ${PimCommon_shareserviceurl_HEADERS}
+    ${PimCommon_translator_HEADERS}
+    ${PimCommon_customtools_HEADERS}
+    ${PimCommon_storageserviceinterface_HEADERS}
+    ${PimCommon_temporaryfile_HEADERS}
+    ${PimCommon_sievehighlighter_HEADERS}
+    ${PimCommon_acl_HEADERS}
+    ${PimCommon_gravatar_HEADERS}
+    ${PimCommon_migrate_HEADERS}
+    ${PimCommon_autocorrectionwidgets_HEADERS}
+    ${PimCommon_managerserversidesubscription_HEADERS}
+    ${PimCommon_autocorrection_HEADERS}
+    ${PimCommon_baloodebug_HEADERS}
+    ${PimCommon_richtexteditor_HEADERS}
+    ${PimCommon_folderdialog_HEADERS}
+    ${PimCommon_texttospeechs_HEADERS}
+    ${PimCommon_templatelist_HEADERS}
+    ${PimCommon_plaintexteditor_HEADERS}
+    ${PimCommon_texteditor_commonwidget_HEADERS}
+    ${PimCommon_widgets_HEADERS}
+
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/pimcommon
     COMPONENT Devel
 )
