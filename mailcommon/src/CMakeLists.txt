@@ -407,6 +407,21 @@ ecm_generate_headers(MailCommon_widgets_HEADERS
 if(${CMAKE_SOURCE_DIR} STREQUAL ${mailcommon_SOURCE_DIR})
 install(FILES
     ${MailCommon_CamelCase_HEADERS}
+    ${MailCommon_top_HEADERS}
+    ${MailCommon_tag_HEADERS}
+    ${MailCommon_folder_HEADERS}
+    ${MailCommon_kernel_HEADERS}
+    ${MailCommon_interfaces_HEADERS}
+    ${MailCommon_filter_HEADERS}
+    ${MailCommon_job_HEADERS}
+    ${MailCommon_filteraction_HEADERS}
+    ${MailCommon_mdn_HEADERS}
+    ${MailCommon_collectionpage_HEADERS}
+    ${MailCommon_collectionpageattributes_HEADERS}
+    ${MailCommon_filterimporter_HEADERS}
+    ${MailCommon_snippets_HEADERS}
+    ${MailCommon_kernel_HEADERS}
+    ${MailCommon_widgets_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MailCommon
     COMPONENT Devel
 )
@@ -415,6 +430,21 @@ install(FILES
     ${MailCommon_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/mailcommon_export.h
     ${MailCommon_CamelCase_HEADERS}
+    ${MailCommon_top_HEADERS}
+    ${MailCommon_tag_HEADERS}
+    ${MailCommon_folder_HEADERS}
+    ${MailCommon_kernel_HEADERS}
+    ${MailCommon_interfaces_HEADERS}
+    ${MailCommon_filter_HEADERS}
+    ${MailCommon_job_HEADERS}
+    ${MailCommon_filteraction_HEADERS}
+    ${MailCommon_mdn_HEADERS}
+    ${MailCommon_collectionpage_HEADERS}
+    ${MailCommon_collectionpageattributes_HEADERS}
+    ${MailCommon_filterimporter_HEADERS}
+    ${MailCommon_snippets_HEADERS}
+    ${MailCommon_kernel_HEADERS}
+    ${MailCommon_widgets_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/mailcommon
     COMPONENT Devel
 )
@@ -422,26 +452,4 @@ endif()
 
 
 
-if (Qt5Designer_FOUND)
-    kf5designerplugin_add_plugin(mailcommonwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
- 
-    target_link_libraries(mailcommonwidgets
-        KF5::MailCommon
-        KF5::Libkdepim
-    )
-    if(NOT WIN32)
-        # Since there are no libraries provided by this module,
-        # there is no point including the build tree in RPath,
-        # and then having to edit it at install time.
-        set_target_properties(mailcommonwidgets PROPERTIES
-            SKIP_BUILD_RPATH TRUE
-            BUILD_WITH_INSTALL_RPATH TRUE
-        )
-    endif()
-
-    install(TARGETS
-        mailcommonwidgets
-        DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/designer
-    )
-endif()
-
+add_subdirectory(designer)
