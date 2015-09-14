@@ -22,7 +22,7 @@
 #ifndef FBMODEL_FBCALENDAR_H
 #define FBMODEL_FBCALENDAR_H
 
-#include "kdepim_export.h"
+#include "calendarsupport_export.h"
 
 #include "freebusyitemmodel.h"
 
@@ -32,7 +32,7 @@
 namespace KPIM
 {
 class FreeBusyCalendarPrivate;
-class KDEPIM_EXPORT FreeBusyCalendar : QObject
+class CALENDARSUPPORT_EXPORT FreeBusyCalendar : QObject
 {
     Q_OBJECT
 public:

@@ -20,7 +20,7 @@
  */
 
 #include "freebusycalendar.h"
-#include "libkdepim_debug.h"
+#include "calendarsupport_debug.h"
 
 #include <KCalCore/Event>
 #include <KCalCore/FreeBusyPeriod>
@@ -53,12 +53,12 @@ FreeBusyCalendar::FreeBusyCalendar(QObject *parent)
     , d(new KPIM::FreeBusyCalendarPrivate)
 {
     d->mCalendar = KCalCore::Calendar::Ptr(new KCalCore::MemoryCalendar(KSystemTimeZones::local()));
-    qCDebug(LIBKDEPIM_LOG) << "creating" << this;
+    qCDebug(CALENDARSUPPORT_LOG) << "creating" << this;
 }
 
 FreeBusyCalendar::~FreeBusyCalendar()
 {
-    qCDebug(LIBKDEPIM_LOG) << "deleting" << this;
+    qCDebug(CALENDARSUPPORT_LOG) << "deleting" << this;
     delete d;
 }
 

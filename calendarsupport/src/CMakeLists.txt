@@ -31,6 +31,11 @@ set(calendarsupport_LIB_SRCS
   printing/yearprint.cpp
 
   next/incidenceviewer.cpp
+
+  freebusymodel/freeperiodmodel.cpp
+  freebusymodel/freebusyitem.cpp
+  freebusymodel/freebusyitemmodel.cpp
+  freebusymodel/freebusycalendar.cpp
 )
 
 ki18n_wrap_ui(calendarsupport_LIB_SRCS
@@ -170,3 +175,8 @@ set_target_properties(calendarsupportcollectionpage
 
 install(TARGETS calendarsupportcollectionpage ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(FILES calendarplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
+
+
+if(BUILD_TESTING)
+   add_subdirectory(freebusymodel/autotests)
+endif()

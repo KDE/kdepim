@@ -21,7 +21,7 @@
 #ifndef FBMODEL_FREEBUSYITEMMODEL_H
 #define FBMODEL_FREEBUSYITEMMODEL_H
 
-#include "kdepim_export.h"
+#include "calendarsupport_export.h"
 
 #include "freebusyitem.h"
 
@@ -41,7 +41,7 @@ namespace KPIM
  * freebusy item.
  */
 class FreeBusyItemModelPrivate;
-class KDEPIM_EXPORT FreeBusyItemModel : public QAbstractItemModel
+class CALENDARSUPPORT_EXPORT FreeBusyItemModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:

@@ -5,7 +5,6 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 if(BUILD_TESTING)
    add_subdirectory(addressline/blacklistbaloocompletion/autotests)
    add_subdirectory(addressline/autotests/)
-   add_subdirectory(freebusymodel/autotests)
 endif()
 
 add_subdirectory(pics)
@@ -57,13 +56,6 @@ set(kdepim_widgets_LIB_SRCS
    widgets/progressindicatorlabel.cpp
    widgets/progressindicatorwidget.cpp
    widgets/tagselectioncombo.cpp
-)
-
-set(kdepim_freebusy_LIB_SRCS
-   freebusymodel/freeperiodmodel.cpp
-   freebusymodel/freebusyitem.cpp
-   freebusymodel/freebusyitemmodel.cpp
-   freebusymodel/freebusycalendar.cpp
 )
 
 set(kdepim_ldap_LIB_SRCS
@@ -121,7 +113,6 @@ set(kdepim_LIB_SRCS
    ${kdepim_ldap_LIB_SRCS}
    ${kdepim_misc_LIB_SRCS}
    ${kdepim_addressline_LIB_SRCS}
-   ${kdepim_freebusy_LIB_SRCS}
    ${kdepim_multiplyingline_LIB_SRCS}
    prefs/kprefsdialog.cpp
 )

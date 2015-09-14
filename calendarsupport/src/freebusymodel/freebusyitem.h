@@ -23,7 +23,7 @@
 #ifndef INCIDENCEEDITOR_FREEBUSYITEM_H
 #define INCIDENCEEDITOR_FREEBUSYITEM_H
 
-#include "kdepim_export.h"
+#include "calendarsupport_export.h"
 
 #include <KCalCore/FreeBusy>
 
@@ -33,7 +33,7 @@ namespace KPIM
 /**
  * The FreeBusyItem is the whole line for a given attendee..
  */
-class KDEPIM_EXPORT FreeBusyItem
+class CALENDARSUPPORT_EXPORT FreeBusyItem
 {
 public:
     typedef QSharedPointer<FreeBusyItem> Ptr;

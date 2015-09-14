@@ -21,7 +21,7 @@
 #ifndef INCIDENCEEDITOR_FREEPERIODMODEL_H
 #define INCIDENCEEDITOR_FREEPERIODMODEL_H
 
-#include "kdepim_export.h"
+#include "calendarsupport_export.h"
 
 #include <KCalCore/Period>
 
@@ -30,7 +30,7 @@
 namespace KPIM
 {
 
-class KDEPIM_EXPORT FreePeriodModel : public QAbstractTableModel
+class CALENDARSUPPORT_EXPORT FreePeriodModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
