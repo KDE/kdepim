@@ -43,3 +43,8 @@ void LongHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup *act
 
 }
 
+void LongHeaderStyleInterface::activateAction()
+{
+    mAction.at(0)->setChecked(true);
+}
+

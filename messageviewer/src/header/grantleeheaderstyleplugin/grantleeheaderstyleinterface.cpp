@@ -18,6 +18,7 @@
 #include "grantleeheaderstyleinterface.h"
 
 #include <grantleetheme/grantleethememanager.h>
+#include <KToggleAction>
 
 using namespace MessageViewer;
 GrantleeHeaderStyleInterface::GrantleeHeaderStyleInterface(MessageViewer::HeaderStylePlugin *plugin, QObject *parent)
@@ -44,5 +45,10 @@ void GrantleeHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup 
     mThemeManager->setThemeMenu(menu);
 
     addActionToMenu(menu, actionGroup);
+}
+
+void GrantleeHeaderStyleInterface::activateAction()
+{
+
 }
 

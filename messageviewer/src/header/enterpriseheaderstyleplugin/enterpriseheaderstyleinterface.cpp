@@ -41,3 +41,8 @@ void EnterpriseHeaderStyleInterface::createAction(KActionMenu *menu, QActionGrou
     addActionToMenu(menu, actionGroup);
 }
 
+void EnterpriseHeaderStyleInterface::activateAction()
+{
+    mAction.at(0)->setChecked(true);
+}
+

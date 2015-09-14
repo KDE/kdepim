@@ -42,3 +42,8 @@ void FancyHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup *ac
     addActionToMenu(menu, actionGroup);
 }
 
+void FancyHeaderStyleInterface::activateAction()
+{
+    mAction.at(0)->setChecked(true);
+}
+

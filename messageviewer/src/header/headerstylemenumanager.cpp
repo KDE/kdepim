@@ -56,7 +56,14 @@ void HeaderStyleMenuManagerPrivate::setPluginName(const QString &pluginName)
 {
     MessageViewer::HeaderStyleInterface *interface = lstInterface.value(pluginName);
     if (interface) {
-        //TODO activate menu.
+        interface->activateAction();
+    } else {
+        if (lstInterface.isEmpty()) {
+            //TODO
+        } else {
+            interface = lstInterface.cbegin().value();
+            interface->activateAction();
+        }
     }
 }
 

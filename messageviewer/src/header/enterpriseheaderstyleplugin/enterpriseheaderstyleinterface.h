@@ -31,6 +31,7 @@ public:
     ~EnterpriseHeaderStyleInterface();
 
     void createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac) Q_DECL_OVERRIDE;
+    void activateAction() Q_DECL_OVERRIDE;
 };
 
 }

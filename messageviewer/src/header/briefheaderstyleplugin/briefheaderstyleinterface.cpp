@@ -42,3 +42,8 @@ void BriefHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup *ac
     addActionToMenu(menu, actionGroup);
 }
 
+void BriefHeaderStyleInterface::activateAction()
+{
+    mAction.at(0)->setChecked(true);
+}
+
