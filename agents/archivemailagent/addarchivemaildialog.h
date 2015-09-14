@@ -18,7 +18,7 @@
 #ifndef ADDARCHIVEMAILDIALOG_H
 #define ADDARCHIVEMAILDIALOG_H
 
-#include "mailcommon/job/backupjob.h"
+#include "MailCommon/BackupJob"
 #include "archivemailinfo.h"
 #include <QDialog>
 #include <Collection>

@@ -22,7 +22,7 @@ PRIVATE
   KF5::AkonadiCore
   KF5::IdentityManagement
   KF5::MailImporter
-  mailcommon
+  KF5::MailCommon
   KF5::Completion
 )
 

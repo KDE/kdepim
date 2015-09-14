@@ -21,8 +21,8 @@
 #include "archivemailkernel.h"
 #include "archivemailagentutil.h"
 
-#include <mailcommon/kernel/mailkernel.h>
-#include <mailcommon/util/mailutil.h>
+#include <MailCommon/MailKernel>
+#include <MailCommon/MailUtil>
 
 #include <KConfigGroup>
 #include <KSharedConfig>

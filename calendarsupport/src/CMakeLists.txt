@@ -148,13 +148,13 @@ set(calendarsupportcollectionpage_LIB_SRCS
 )
 
 add_library(calendarsupportcollectionpage ${calendarsupportcollectionpage_LIB_SRCS})
-add_dependencies(calendarsupportcollectionpage mailcommon)
+add_dependencies(calendarsupportcollectionpage KF5::MailCommon)
 generate_export_header(calendarsupportcollectionpage BASE_NAME calendarsupportcollectionpage)
 target_link_libraries(
   calendarsupportcollectionpage
 PUBLIC
   KF5::AkonadiCore
-  mailcommon
+  KF5::MailCommon
 PRIVATE
   KF5::CalendarCore
   pimcommon

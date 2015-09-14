@@ -34,7 +34,7 @@
 #include <Akonadi/KMime/MessageParts>
 #include <Akonadi/KMime/MessageStatus>
 #include <AkonadiCore/session.h>
-#include <mailcommon/kernel/mailkernel.h>
+#include <MailCommon/MailKernel>
 #include <KLocalizedString>
 #include <QIcon>
 #include "mailfilteragent_debug.h"

@@ -17,7 +17,7 @@
 
 #include "utils.h"
 
-#include "mailcommon/util/mailutil.h"
+#include "MailCommon/MailUtil"
 #include "pimcommon/util/pimutil.h"
 
 #include <akonadi/private/xdgbasedirs_p.h>

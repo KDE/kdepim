@@ -25,7 +25,7 @@ endif ()
 
 
 target_link_libraries(akonadi_mailfilter_agent
-  mailcommon
+  KF5::MailCommon
   messagecomposer
   pimcommon
   KF5::AkonadiCore

@@ -28,7 +28,7 @@
 */
 
 #include "filterlogdialog.h"
-#include <mailcommon/filter/filterlog.h>
+#include <MailCommon/FilterLog>
 #include <utils/autoqpointer.h>
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"

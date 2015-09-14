@@ -19,9 +19,9 @@
 #include "archivemailinfo.h"
 #include "archivemailmanager.h"
 #include "archivemailagent_debug.h"
-#include "mailcommon/util/mailutil.h"
+#include "MailCommon/MailUtil"
 
-#include <mailcommon/job/backupjob.h>
+#include <MailCommon/BackupJob>
 
 #include <KNotification>
 #include <KLocalizedString>

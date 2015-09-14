@@ -1,7 +1,7 @@
 #ifndef DUMMYKERNEL_H
 #define DUMMYKERNEL_H
 
-#include <mailcommon/interfaces/mailinterfaces.h>
+#include <MailCommon/MailInterfaces>
 
 namespace Akonadi
 {

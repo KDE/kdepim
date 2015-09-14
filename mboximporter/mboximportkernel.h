@@ -18,7 +18,7 @@
 #ifndef MBOXIMPORTERKERNEL_H
 #define MBOXIMPORTERKERNEL_H
 
-#include <mailcommon/interfaces/mailinterfaces.h>
+#include <MailCommon/MailInterfaces>
 
 namespace Akonadi
 {

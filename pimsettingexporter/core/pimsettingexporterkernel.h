@@ -17,7 +17,7 @@
 #ifndef PIMSETTINGEXPORTERKERNEL_H
 #define PIMSETTINGEXPORTERKERNEL_H
 
-#include <mailcommon/interfaces/mailinterfaces.h>
+#include <MailCommon/MailInterfaces>
 #include "pimsettingexporter_export.h"
 
 namespace Akonadi

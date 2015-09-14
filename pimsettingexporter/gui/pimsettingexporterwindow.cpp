@@ -28,8 +28,8 @@
 
 #include "dialog/backupfilestructureinfodialog.h"
 
-#include <mailcommon/kernel/mailkernel.h>
-#include <mailcommon/filter/filtermanager.h>
+#include <MailCommon/MailKernel>
+#include <MailCommon/FilterManager>
 
 #include "pimcommon/util/pimutil.h"
 

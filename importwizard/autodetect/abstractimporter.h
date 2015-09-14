@@ -17,7 +17,7 @@
 
 #ifndef AbstractImporter_H
 #define AbstractImporter_H
-#include "mailcommon/filter/filterimporterexporter.h"
+#include "MailCommon/FilterImporterExporter"
 
 class ImportWizard;
 

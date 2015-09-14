@@ -18,7 +18,7 @@
 #include "sylpheedsettings.h"
 #include "sylpheedsettingsutils.h"
 #include <MailTransport/mailtransport/transportmanager.h>
-#include "mailcommon/util/mailutil.h"
+#include "MailCommon/MailUtil"
 
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KIdentityManagement/kidentitymanagement/signature.h>

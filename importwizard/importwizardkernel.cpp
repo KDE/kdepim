@@ -19,7 +19,7 @@
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <messagecomposer/sender/akonadisender.h>
-#include <mailcommon/folder/foldercollectionmonitor.h>
+#include <MailCommon/FolderCollectionMonitor>
 #include <AkonadiCore/session.h>
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>

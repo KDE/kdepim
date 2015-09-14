@@ -22,7 +22,7 @@
 #include "archivemailagentsettings.h"
 
 #include <KLocalizedString>
-#include <mailcommon/kernel/mailkernel.h>
+#include <MailCommon/MailKernel>
 #include <kdbusconnectionpool.h>
 #include <Monitor>
 #include <Session>

@@ -17,7 +17,7 @@
 
 #ifndef FORMATCOMBOBOX_H
 #define FORMATCOMBOBOX_H
-#include "mailcommon/job/backupjob.h"
+#include "MailCommon/BackupJob"
 
 #include <KComboBox>
 

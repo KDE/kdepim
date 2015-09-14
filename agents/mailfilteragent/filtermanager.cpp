@@ -37,10 +37,10 @@
 #include <QIcon>
 #include <KIconLoader>
 #include <kmime/kmime_message.h>
-#include <mailcommon/filter/filterimporterexporter.h>
-#include <mailcommon/filter/filterlog.h>
-#include <mailcommon/filter/mailfilter.h>
-#include <mailcommon/util/mailutil.h>
+#include <MailCommon/FilterImporterExporter>
+#include <MailCommon/FilterLog>
+#include <MailCommon/MailFilter>
+#include <MailCommon/MailUtil>
 
 #include <QTimer>
 

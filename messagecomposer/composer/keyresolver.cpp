@@ -38,7 +38,7 @@
 #include "job/savecontactpreferencejob.h"
 
 #ifndef QT_NO_CURSOR
-#include "mailcommon/util/kcursorsaver.h"
+#include "MailCommon/KCursorSaver"
 #endif
 #include "kleo_util.h"
 

@@ -78,7 +78,7 @@ PRIVATE
   KF5::Mime
   KF5::MailTransport
   KF5::AlarmCalendar
-  mailcommon
+  KF5::MailCommon
   KF5::Archive
 )
 

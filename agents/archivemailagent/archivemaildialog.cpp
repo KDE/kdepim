@@ -20,7 +20,7 @@
 #include "archivemailwidget.h"
 #include "kdepim-version.h"
 
-#include <mailcommon/util/mailutil.h>
+#include <MailCommon/MailUtil>
 
 #include <QMenu>
 #include <KHelpMenu>

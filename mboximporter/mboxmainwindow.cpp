@@ -23,7 +23,7 @@
 #include <mailimporter/filtermbox.h>
 #include <mailimporter/importmailswidget.h>
 
-#include <mailcommon/kernel/mailkernel.h>
+#include <MailCommon/MailKernel>
 
 #include <KLocalizedString>
 #include <QDialogButtonBox>

@@ -48,7 +48,7 @@
 #include <viewer/objecttreeemptysource.h>
 #include <viewer/objecttreeparser.h>
 #ifndef QT_NO_CURSOR
-#include <mailcommon/util/kcursorsaver.h>
+#include <MailCommon/KCursorSaver>
 #endif
 
 #include <sonnet/dictionarycombobox.h>

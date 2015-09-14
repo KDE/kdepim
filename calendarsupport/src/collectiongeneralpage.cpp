@@ -39,9 +39,9 @@
 #include <QVBoxLayout>
 #include <KConfigGroup>
 
-#include <mailcommon/collectionpage/attributes/collectionannotationsattribute.h>
-#include <mailcommon/collectionpage/collectiontypeutil.h>
-#include <mailcommon/collectionpage/incidencesforwidget.h>
+#include <MailCommon/CollectionAnnotationsAttribute>
+#include <MailCommon/CollectionTypeUtil>
+#include <MailCommon/IncidencesForWidget>
 
 using namespace Akonadi;
 using namespace CalendarSupport;

@@ -24,7 +24,7 @@
 #include "importcalendarpage.h"
 
 #include "mailimporter/filterinfo.h"
-#include "mailcommon/filter/filtermanager.h"
+#include "MailCommon/FilterManager"
 
 #include <QFile>
 

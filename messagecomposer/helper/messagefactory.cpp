@@ -24,7 +24,7 @@
 
 #include <AkonadiCore/item.h>
 #ifndef QT_NO_CURSOR
-#include <mailcommon/util/kcursorsaver.h>
+#include <MailCommon/KCursorSaver>
 #endif
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <KIdentityManagement/kidentitymanagement/identity.h>

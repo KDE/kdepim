@@ -20,7 +20,7 @@
 #include "importexportprogressindicatorbase.h"
 #include "synchronizeresourcejob.h"
 
-#include "mailcommon/util/mailutil.h"
+#include "MailCommon/MailUtil"
 
 #include "pimcommon/util/createresource.h"
 

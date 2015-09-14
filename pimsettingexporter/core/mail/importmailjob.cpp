@@ -19,12 +19,12 @@
 #include "akonadidatabase.h"
 #include "archivestorage.h"
 
-#include "mailcommon/filter/filtermanager.h"
-#include "mailcommon/filter/filterimporterexporter.h"
-#include "mailcommon/util/mailutil.h"
+#include "MailCommon/FilterManager"
+#include "MailCommon/FilterImporterExporter"
+#include "MailCommon/MailUtil"
 #include "pimcommon/util/createresource.h"
 
-#include "mailcommon/util/kcursorsaver.h"
+#include "MailCommon/KCursorSaver"
 
 #include <MailTransport/mailtransport/transportmanager.h>
 

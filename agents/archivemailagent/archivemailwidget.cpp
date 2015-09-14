@@ -21,7 +21,7 @@
 
 #include "kdepim-version.h"
 
-#include <mailcommon/util/mailutil.h>
+#include <MailCommon/MailUtil>
 
 #include <QLocale>
 #include <KLocalizedString>

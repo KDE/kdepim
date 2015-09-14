@@ -17,10 +17,10 @@
 
 #include "exportmailjob.h"
 #include "akonadidatabase.h"
-#include "mailcommon/util/kcursorsaver.h"
-#include "mailcommon/util/mailutil.h"
-#include "mailcommon/filter/filtermanager.h"
-#include "mailcommon/filter/filterimporterexporter.h"
+#include "MailCommon/KCursorSaver"
+#include "MailCommon/MailUtil"
+#include "MailCommon/FilterManager"
+#include "MailCommon/FilterImporterExporter"
 
 #include <AkonadiCore/AgentManager>
 #include <AkonadiCore/Collection>

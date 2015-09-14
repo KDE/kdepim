@@ -172,6 +172,7 @@ PRIVATE
 )
 
 target_include_directories(messagecomposer PUBLIC "$<BUILD_INTERFACE:${messagecomposer_SOURCE_DIR};${messagecomposer_BINARY_DIR}>")
+target_include_directories(messagecomposer PUBLIC $<TARGET_PROPERTY:KF5::MailCommon,INTERFACE_INCLUDE_DIRECTORIES>)
 
 set_target_properties( messagecomposer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 

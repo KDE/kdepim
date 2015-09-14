@@ -19,7 +19,7 @@
 #include "mailimporter/filtersylpheed.h"
 #include "mailimporter/filterinfo.h"
 #include "importfilterinfogui.h"
-#include "mailcommon/filter/filterimporterexporter.h"
+#include "MailCommon/FilterImporterExporter"
 #include "importwizard.h"
 #include "sylpheed/sylpheedsettings.h"
 #include "sylpheed/sylpheedaddressbook.h"

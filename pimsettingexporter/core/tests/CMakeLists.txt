@@ -4,7 +4,7 @@ add_executable(selectiontreewidget_gui ${selectiontreewidget_gui_SRCS})
 target_link_libraries(selectiontreewidget_gui
   KF5::AkonadiCore
   KF5::AkonadiPrivate
-  mailcommon
+  KF5::MailCommon
   pimcommon
   KF5::Archive
 )
@@ -14,7 +14,7 @@ add_executable(showarchivestructuredialog_gui ${showarchivestructuredialog_gui_S
 target_link_libraries(showarchivestructuredialog_gui
   KF5::AkonadiCore
   KF5::AkonadiPrivate
-  mailcommon
+  KF5::MailCommon
   pimcommon
   KF5::Archive
 )

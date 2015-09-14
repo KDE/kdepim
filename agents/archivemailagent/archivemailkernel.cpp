@@ -18,8 +18,8 @@
 #include "archivemailkernel.h"
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
-#include <mailcommon/folder/foldercollectionmonitor.h>
-#include <mailcommon/job/jobscheduler.h>
+#include <MailCommon/FolderCollectionMonitor>
+#include <MailCommon/JobScheduler>
 #include <AkonadiCore/session.h>
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>

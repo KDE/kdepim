@@ -16,7 +16,7 @@
 */
 
 #include "exportaddressbookjob.h"
-#include "mailcommon/util/kcursorsaver.h"
+#include "MailCommon/KCursorSaver"
 
 #include <AkonadiCore/AgentManager>
 

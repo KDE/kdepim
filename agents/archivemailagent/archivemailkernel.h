@@ -18,7 +18,7 @@
 #ifndef ARCHIVEMAILKERNEL_H
 #define ARCHIVEMAILKERNEL_H
 
-#include <mailcommon/interfaces/mailinterfaces.h>
+#include <MailCommon/MailInterfaces>
 
 namespace Akonadi
 {

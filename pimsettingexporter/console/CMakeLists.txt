@@ -1,6 +1,6 @@
 
 include_directories(${AKONADI_INCLUDE_DIR} 
-                    ${CMAKE_SOURCE_DIR}/mailcommon
+                    ${CMAKE_SOURCE_DIR}/KF5::MailCommon
                     ${CMAKE_SOURCE_DIR}/pimcommon
                     ${CMAKE_SOURCE_DIR}/messagecomposer/
                     ${CMAKE_SOURCE_DIR}/pimsettingexporter/core/ 
