@@ -245,7 +245,6 @@ ecm_generate_headers(libkdepim_job_HEADERS
   RELATIVE job
 )
 
-
 ecm_generate_headers(libkdepim_pref_HEADERS
   HEADER_NAMES
   KPrefsDialog 
@@ -253,7 +252,6 @@ ecm_generate_headers(libkdepim_pref_HEADERS
   PREFIX Libkdepim
   RELATIVE prefs
 )
-
 
 ecm_generate_headers(libkdepim_multiline_HEADERS
   HEADER_NAMES
@@ -263,8 +261,6 @@ ecm_generate_headers(libkdepim_multiline_HEADERS
   PREFIX Libkdepim
   RELATIVE  multiplyingline
 )
-
-
 
 ecm_generate_headers(libkdepim_proxy_HEADERS
   HEADER_NAMES
