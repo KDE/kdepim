@@ -16,7 +16,7 @@
 */
 
 #include "accountconfigorderdialog.h"
-#include "mailcommon/mailcommonsettings_base.h"
+#include "mailcommonsettings_base.h"
 #include "pimcommon/util/pimutil.h"
 #include "util/mailutil.h"
 #include "mailcommon_debug.h"
