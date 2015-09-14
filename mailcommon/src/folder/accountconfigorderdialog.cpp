@@ -17,7 +17,7 @@
 
 #include "accountconfigorderdialog.h"
 #include "mailcommonsettings_base.h"
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/PimUtil"
 #include "util/mailutil.h"
 #include "mailcommon_debug.h"
 #include <KLocalizedString>

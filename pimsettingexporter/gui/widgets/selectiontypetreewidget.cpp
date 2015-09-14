@@ -19,7 +19,7 @@
 #include "pimsettingexporter/core/utils.h"
 #include "pimsettingexporter/core/xml/templateselection.h"
 
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/PimUtil"
 
 #include <QFileDialog>
 

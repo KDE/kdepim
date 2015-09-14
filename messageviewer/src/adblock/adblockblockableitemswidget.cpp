@@ -19,7 +19,7 @@
 #include "adblockcreatefilterdialog.h"
 #include "settings/messageviewersettings.h"
 #include "adblock/adblockmanager.h"
-#include "pimcommon/widgets/customtreeview.h"
+#include "PimCommon/CustomTreeView"
 #include "messageviewer_debug.h"
 #include <KLocalizedString>
 #include <KTreeWidgetSearchLine>

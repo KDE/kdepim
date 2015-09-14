@@ -42,7 +42,7 @@ add_library(KF5::TemplateParser ALIAS KF5TemplateParser)
 
 target_link_libraries(KF5TemplateParser
 PUBLIC
-  pimcommon
+  KF5::PimCommon
 PRIVATE
   KF5::Mime
   KF5::AkonadiCore

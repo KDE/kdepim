@@ -54,7 +54,7 @@ macro(add_messageviewer_mailsourceviewbrowserwidget_unittest _source)
     ecm_add_test(${_source} util.cpp ../src/widgets/mailsourceviewtextbrowserwidget.cpp ../src/findbar/findbarbase.cpp ../src/findbar/findbarsourceview.cpp
         TEST_NAME ${_name}
         NAME_PREFIX "KF5::MessageViewer-"
-        LINK_LIBRARIES Qt5::Test Qt5::Gui Qt5::Widgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::CalendarCore KF5::PimTextEdit pimcommon KF5::MessageViewer
+        LINK_LIBRARIES Qt5::Test Qt5::Gui Qt5::Widgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::CalendarCore KF5::PimTextEdit KF5::PimCommon KF5::MessageViewer
     )
 endmacro ()
 

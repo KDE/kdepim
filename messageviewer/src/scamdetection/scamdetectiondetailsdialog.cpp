@@ -19,7 +19,7 @@
 #include "messageviewer_debug.h"
 #include "settings/messageviewersettings.h"
 #include "utils/autoqpointer.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "PimCommon/RichTextEditorWidget"
 
 #include <KLocalizedString>
 

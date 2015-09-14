@@ -157,7 +157,7 @@ PUBLIC
   KF5::MailCommon
 PRIVATE
   KF5::CalendarCore
-  pimcommon
+  KF5::PimCommon
   KF5::AkonadiCalendar
 )
 

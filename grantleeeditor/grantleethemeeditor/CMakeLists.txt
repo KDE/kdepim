@@ -37,7 +37,7 @@ PUBLIC
 PRIVATE
   KF5::KIOWidgets 
   KF5::PimTextEdit 
-  pimcommon 
+  KF5::PimCommon 
   KF5::ConfigWidgets
 )
 

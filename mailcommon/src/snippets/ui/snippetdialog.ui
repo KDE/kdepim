@@ -148,7 +148,7 @@
   <customwidget>
    <class>PimCommon::PlainTextEditorWidget</class>
    <extends>QTextEdit</extends>
-   <header>pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h</header>
+   <header>PimCommon/PlainTextEditorWidget</header>
   </customwidget>
  </customwidgets>
  <resources/>

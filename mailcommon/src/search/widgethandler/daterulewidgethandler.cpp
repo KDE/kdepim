@@ -18,7 +18,7 @@
 #include "daterulewidgethandler.h"
 #include "search/searchpattern.h"
 
-#include <pimcommon/widgets/minimumcombobox.h>
+#include <PimCommon/MinimumComboBox>
 
 #include <KDateComboBox>
 #include <KLocalizedString>

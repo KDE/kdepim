@@ -21,7 +21,7 @@
 #include "contactfields.h"
 #include "csvimportdialog.h"
 
-#include "pimcommon/widgets/renamefiledialog.h"
+#include "PimCommon/RenameFileDialog"
 
 #include <QFileDialog>
 #include <KLocalizedString>

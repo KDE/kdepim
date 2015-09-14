@@ -16,11 +16,11 @@
 */
 
 #include "filterconverttosieveresultdialog.h"
-#include "pimcommon/sievehighlighter/sievesyntaxhighlighter.h"
-#include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/SieveSyntaxHighlighter"
+#include "PimCommon/SieveSyntaxHighlighterUtil"
+#include "PimCommon/PlainTextEditor"
+#include "PimCommon/PlainTextEditorWidget"
+#include "PimCommon/PimUtil"
 
 #include <KLocalizedString>
 

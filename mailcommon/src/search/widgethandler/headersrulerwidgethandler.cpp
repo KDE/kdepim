@@ -16,7 +16,7 @@
 */
 
 #include "headersrulerwidgethandler.h"
-#include <pimcommon/widgets/minimumcombobox.h>
+#include <PimCommon/MinimumComboBox>
 
 #include "search/searchpattern.h"
 

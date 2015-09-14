@@ -26,7 +26,7 @@
 #include <AkonadiCore/ItemFetchScope>
 #include <util/vcardutil.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
-#include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"
+#include "PimCommon/AttachmentTemporaryFilesDirs"
 #include "kaddressbook_debug.h"
 #include <QTemporaryDir>
 #include <QFile>

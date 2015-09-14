@@ -18,7 +18,7 @@
 #ifndef MANAGESIEVETREEVIEW_H
 #define MANAGESIEVETREEVIEW_H
 
-#include "pimcommon/widgets/customtreeview.h"
+#include "PimCommon/CustomTreeView"
 #include "ksieveui_export.h"
 
 namespace KSieveUi

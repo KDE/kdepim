@@ -17,7 +17,7 @@
 
 #include "themeconfiguredialog.h"
 #include "themeeditorutil.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "PimCommon/PlainTextEditorWidget"
 
 #include "configurewidget.h"
 

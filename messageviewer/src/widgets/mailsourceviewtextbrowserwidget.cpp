@@ -34,10 +34,10 @@
 #include "utils/messageviewerutil.h"
 #include "findbar/findbarsourceview.h"
 #include <kpimtextedit/htmlhighlighter.h>
-#include "pimcommon/widgets/slidecontainer.h"
-#include "pimcommon/util/pimutil.h"
-#include "pimcommon/texttospeech/texttospeechwidget.h"
-#include "pimcommon/texttospeech/texttospeechinterface.h"
+#include "PimCommon/SlideContainer"
+#include "PimCommon/PimUtil"
+#include "PimCommon/TextToSpeechWidget"
+#include "PimCommon/TextToSpeechInterface"
 
 #include <kiconloader.h>
 #include <KLocalizedString>

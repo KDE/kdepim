@@ -19,9 +19,9 @@
 */
 
 #include "storageservicelogdialog.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/RichTextEditorWidget"
+#include "PimCommon/RichTextEditor"
+#include "PimCommon/PimUtil"
 
 #include <KLocalizedString>
 #include <KConfigGroup>

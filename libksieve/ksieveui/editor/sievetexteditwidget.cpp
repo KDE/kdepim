@@ -19,8 +19,8 @@
 #include <QVBoxLayout>
 #include "editor/sievetextedit.h"
 
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditfindbar.h"
-#include "pimcommon/widgets/slidecontainer.h"
+#include "PimCommon/PlainTextEditFindBar"
+#include "PimCommon/SlideContainer"
 #include <QDebug>
 using namespace KSieveUi;
 

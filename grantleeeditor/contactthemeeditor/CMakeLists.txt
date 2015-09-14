@@ -22,7 +22,7 @@ PRIVATE
                        KF5::DBusAddons
                        KF5::NewStuff
                        KF5::AkonadiContact
-                       pimcommon
+                       KF5::PimCommon
                        grantleethemeeditor
                        KF5::KaddressbookGrantlee
 )

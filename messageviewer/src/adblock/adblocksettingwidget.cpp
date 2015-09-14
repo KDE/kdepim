@@ -33,10 +33,10 @@
 #include "adblockmanager.h"
 #include "adblockshowlistdialog.h"
 #include "adblock/adblockutil.h"
-#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+#include "PimCommon/ConfigureImmutableWidgetUtils"
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/PimUtil"
 
 // KDE Includes
 #include <KSharedConfig>

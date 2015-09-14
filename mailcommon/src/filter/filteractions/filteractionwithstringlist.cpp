@@ -19,7 +19,7 @@
 
 #include "filteractionwithstringlist.h"
 
-#include <pimcommon/widgets/minimumcombobox.h>
+#include <PimCommon/MinimumComboBox>
 
 using namespace MailCommon;
 

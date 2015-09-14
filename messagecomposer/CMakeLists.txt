@@ -150,7 +150,7 @@ target_link_libraries(messagecomposer
 PUBLIC
   KF5::Mime
   KF5::MessageCore
-  pimcommon
+  KF5::PimCommon
   KF5::AkonadiCore
   KF5::IdentityManagement
   KF5::AkonadiMime

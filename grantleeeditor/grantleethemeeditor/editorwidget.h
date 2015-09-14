@@ -19,7 +19,7 @@
 #define EDITORWIDGET_H
 
 #include "grantleethemeeditor_export.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "PimCommon/PlainTextEditorWidget"
 
 namespace GrantleeThemeEditor
 {

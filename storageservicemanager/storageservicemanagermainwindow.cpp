@@ -24,12 +24,12 @@
 #include "storageservicemanagermainwidget.h"
 #include "storageservicemanagersettingsjob.h"
 #include "storageservicemanagerglobalconfig.h"
-#include "pimcommon/storageservice/storageservicemanager.h"
-#include "pimcommon/storageservice/storageserviceprogressmanager.h"
-#include "pimcommon/storageservice/storageservicejobconfig.h"
-#include "pimcommon/storageservice/storageserviceabstract.h"
+#include "PimCommon/StorageServiceManager"
+#include "PimCommon/StorageServiceProgressManager"
+#include "PimCommon/StorageServiceJobConfig"
+#include "PimCommon/StorageServiceAbstract"
 
-#include "pimcommon/storageservice/settings/storageservicesettings.h"
+#include "PimCommon/StorageServiceSettings"
 
 #include "Libkdepim/ProgressStatusBarWidget"
 #include "Libkdepim/StatusbarProgressWidget"

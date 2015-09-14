@@ -24,7 +24,7 @@
 #include <KTextEdit>
 #include <QDialog>
 
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include "PimCommon/PlainTextEditor"
 
 namespace KPIMTextEdit
 {

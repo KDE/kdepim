@@ -17,7 +17,7 @@
 
 #ifndef TEMPLATESTEXTEDITOR_H
 #define TEMPLATESTEXTEDITOR_H
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include "PimCommon/PlainTextEditor"
 class QKeyEvent;
 namespace KPIMTextEdit
 {

@@ -35,7 +35,7 @@ using KSieve::Parser;
 
 #include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
 #include "libksieve/ksieveui/autocreatescripts/sievescriptparsingerrordialog.h"
-#include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
+#include "PimCommon/SieveSyntaxHighlighterUtil"
 
 int main(int argc, char **argv)
 {

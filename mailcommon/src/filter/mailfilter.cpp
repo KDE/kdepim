@@ -30,7 +30,7 @@
 #include "dialog/filteractionmissingargumentdialog.h"
 using MailCommon::FilterLog;
 
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/PimUtil"
 
 // KDEPIMLIBS headers
 #include <AgentManager>

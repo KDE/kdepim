@@ -25,7 +25,7 @@
 #include "globalsetting_composereditorng.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
-#include "pimcommon/texttospeech/texttospeech.h"
+#include "PimCommon/TextToSpeech"
 
 #include <KLocalizedString>
 #include <QAction>

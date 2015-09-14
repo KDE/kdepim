@@ -16,7 +16,7 @@
 */
 
 #include "attachmentvcardfromaddressbookjob.h"
-#include "pimcommon/util/vcardutil.h"
+#include "PimCommon/VCardUtil"
 #include <KLocalizedString>
 #include <KContacts/Addressee>
 #include <KContacts/ContactGroup>

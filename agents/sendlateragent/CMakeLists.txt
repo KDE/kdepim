@@ -68,7 +68,7 @@ target_link_libraries(akonadi_sendlater_agent
   KF5::Mime
   messagecomposer
   KF5::MessageCore
-  pimcommon
+  KF5::PimCommon
   KF5::AkonadiAgentBase
   KF5::DBusAddons
   KF5::WindowSystem

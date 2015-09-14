@@ -16,7 +16,7 @@
 */
 
 #include "gravatarconfigwidget.h"
-#include "pimcommon/gravatar/gravatarcache.h"
+#include "PimCommon/GravatarCache"
 #include "gravatarconfiguresettingsdialog.h"
 #include <QVBoxLayout>
 #include <KLocalizedString>
@@ -24,7 +24,7 @@
 #include <QPushButton>
 #include <QPointer>
 #include "settings/messageviewersettings.h"
-#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+#include "PimCommon/ConfigureImmutableWidgetUtils"
 
 using namespace MessageViewer;
 using namespace PimCommon::ConfigureImmutableWidgetUtils;

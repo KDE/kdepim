@@ -30,8 +30,8 @@
 #include "filterlogdialog.h"
 #include <MailCommon/FilterLog>
 #include <utils/autoqpointer.h>
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include "PimCommon/PlainTextEditorWidget"
+#include "PimCommon/PlainTextEditor"
 
 #include "mailfilteragent_debug.h"
 #include <QFileDialog>

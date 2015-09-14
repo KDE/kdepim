@@ -24,10 +24,10 @@
 #include "util/mailutil.h"
 #include "filter/dialog/filteractionmissingargumentdialog.h"
 
-#include <pimcommon/widgets/minimumcombobox.h>
+#include <PimCommon/MinimumComboBox>
 #include <messagecomposer/helper/messagefactory.h>
 #include <messagecomposer/sender/messagesender.h>
-#include <pimcommon/widgets/emailaddressrequester.h>
+#include <PimCommon/EmailAddressRequester>
 #include <utils/stringutil.h>
 #include <TemplateParser/CustomTemplates>
 #include <customtemplates_kfg.h>

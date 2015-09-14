@@ -35,7 +35,7 @@
 
 #include "ldif_xxport.h"
 
-#include "pimcommon/widgets/renamefiledialog.h"
+#include "PimCommon/RenameFileDialog"
 
 #include <KContacts/LDIFConverter>
 

@@ -23,7 +23,7 @@
 
 #include "viewer/nodehelper.h"
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
-#include "pimcommon/shareserviceurl/shareserviceurlmanager.h"
+#include "PimCommon/ShareServiceUrlManager"
 
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/monitor.h>

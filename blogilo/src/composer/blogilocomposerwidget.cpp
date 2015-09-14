@@ -21,7 +21,7 @@
 #include "blogilocomposerwidget.h"
 #include "blogilocomposereditor.h"
 #include "blogilocomposerview.h"
-#include "pimcommon/customtools/customtoolswidgetng.h"
+#include "PimCommon/CustomToolsWidgetng"
 #include <QVBoxLayout>
 
 BlogiloComposerWidget::BlogiloComposerWidget(BlogiloComposerView *view, QWidget *parent)

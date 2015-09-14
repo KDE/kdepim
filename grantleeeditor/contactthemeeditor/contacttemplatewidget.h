@@ -19,7 +19,7 @@
 #define CONTACTTEMPLATEWIDGET_H
 
 #include <QWidget>
-#include "pimcommon/templatewidgets/templatelistwidget.h"
+#include "PimCommon/TemplateListWidget"
 
 class ContactTemplateListWidget : public PimCommon::TemplateListWidget
 {

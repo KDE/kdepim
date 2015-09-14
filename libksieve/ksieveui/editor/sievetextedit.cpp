@@ -22,7 +22,7 @@
 #include "editor/sieveeditorutil.h"
 #include "util/editorutil.h"
 #include "editor/sievetexteditorspellcheckdecorator.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintextsyntaxspellcheckinghighlighter.h"
+#include "PimCommon/PlainTextSyntaxSpellCheckingHighlighter"
 #include <KLocalizedString>
 #include <QAction>
 #include <QIcon>

@@ -19,7 +19,7 @@
 */
 
 #include "storageserviceaccountinfodialog.h"
-#include "pimcommon/storageservice/storageserviceabstract.h"
+#include "PimCommon/StorageServiceAbstract"
 
 #include <KLocalizedString>
 

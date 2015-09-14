@@ -18,7 +18,7 @@
 #ifndef NOTEEDITOR_H
 #define NOTEEDITOR_H
 
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "PimCommon/RichTextEditorWidget"
 
 namespace NoteShared
 {

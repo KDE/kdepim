@@ -18,8 +18,8 @@
 
 #include "contactdisplaymessagememento.h"
 #include "messageviewer_debug.h"
-#include "pimcommon/gravatar/gravatarresolvurljob.h"
-#include "pimcommon/util/networkutil.h"
+#include "PimCommon/GravatarResolvUrlJob"
+#include "PimCommon/NetworkUtil"
 #include "settings/messageviewersettings.h"
 #include <Akonadi/Contact/ContactSearchJob>
 #include <kio/transferjob.h>

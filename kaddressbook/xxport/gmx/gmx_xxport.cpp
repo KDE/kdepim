@@ -78,7 +78,7 @@
 */
 
 #include "gmx_xxport.h"
-#include "pimcommon/widgets/renamefiledialog.h"
+#include "PimCommon/RenameFileDialog"
 
 #include "kaddressbook_debug.h"
 #include <QFileDialog>

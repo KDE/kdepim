@@ -22,7 +22,7 @@
 #include "vcardviewerdialog.h"
 #include "vcardexportselectionwidget.h"
 
-#include "pimcommon/widgets/renamefiledialog.h"
+#include "PimCommon/RenameFileDialog"
 
 #include <widget/grantleecontactviewer.h>
 

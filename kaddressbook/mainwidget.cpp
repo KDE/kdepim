@@ -45,8 +45,8 @@
 
 #include "Libkdepim/UiStateSaver"
 
-#include <pimcommon/acl/collectionaclpage.h>
-#include <pimcommon/acl/imapaclattribute.h>
+#include <PimCommon/CollectionAclPage>
+#include <PimCommon/ImapAclAttribute>
 
 #include <AkonadiWidgets/ETMViewStateSaver>
 #include <AkonadiCore/CollectionFilterProxyModel>
@@ -57,11 +57,11 @@
 #include <AkonadiCore/MimeTypeChecker>
 #include <AkonadiCore/AttributeFactory>
 #include <AkonadiWidgets/CollectionPropertiesDialog>
-#include <pimcommon/baloodebug/baloodebugdialog.h>
+#include <PimCommon/BalooDebugDialog>
 #include <KContacts/Addressee>
 #include <QPointer>
-#include "pimcommon/manageserversidesubscription/manageserversidesubscriptionjob.h"
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/ManageServerSideSubscriptionJob"
+#include "PimCommon/PimUtil"
 
 #include <Akonadi/Contact/ContactDefaultActions>
 #include <Akonadi/Contact/ContactGroupEditorDialog>

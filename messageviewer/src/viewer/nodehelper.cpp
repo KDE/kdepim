@@ -24,7 +24,7 @@
 #include "partmetadata.h"
 #include "interfaces/bodypart.h"
 #include "utils/messageviewerutil.h"
-#include "pimcommon/temporaryfile/attachmenttemporaryfilesdirs.h"
+#include "PimCommon/AttachmentTemporaryFilesDirs"
 
 #include <helpers/nodehelper.h>
 #include <utils/stringutil.h>

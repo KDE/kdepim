@@ -31,7 +31,7 @@ ecm_qt_declare_logging_category(storageservicemanager_SRCS HEADER storageservice
 add_executable(storageservicemanager ${storageservicemanager_SRCS} )
 target_link_libraries(storageservicemanager 
                        KF5::NotifyConfig
-                       pimcommon
+                       KF5::PimCommon
                        KF5::Libkdepim
                        KF5::DBusAddons
                        KF5::XmlGui

@@ -12,8 +12,8 @@
 */
 
 #include "sievedebugdialog.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include "PimCommon/PlainTextEditorWidget"
+#include "PimCommon/PlainTextEditor"
 
 #include <agentinstance.h>
 #include "libksieve_debug.h"

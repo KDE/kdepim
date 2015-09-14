@@ -22,7 +22,7 @@
 #include "sieveeditorgraphicalmodewidget.h"
 #include "sieveconditions/sieveconditionlist.h"
 #include "sieveconditions/sievecondition.h"
-#include "pimcommon/widgets/minimumcombobox.h"
+#include "PimCommon/MinimumComboBox"
 
 #include <QPushButton>
 #include <KLocalizedString>

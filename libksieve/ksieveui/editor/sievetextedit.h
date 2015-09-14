@@ -21,9 +21,9 @@
 
 #include "ksieveui_export.h"
 
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include "PimCommon/PlainTextEditor"
 
-#include "pimcommon/sievehighlighter/sievesyntaxhighlighterrules.h"
+#include "PimCommon/SieveSyntaxHighlighterRules"
 
 class QMenu;
 namespace KPIMTextEdit

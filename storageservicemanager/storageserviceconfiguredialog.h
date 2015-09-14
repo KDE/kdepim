@@ -21,7 +21,7 @@
 #ifndef STORAGESERVICECONFIGUREDIALOG_H
 #define STORAGESERVICECONFIGUREDIALOG_H
 
-#include "pimcommon/storageservice/dialog/storageserviceconfiguredialog.h"
+#include "PimCommon/StorageServiceConfigureDialog"
 
 class QCheckBox;
 

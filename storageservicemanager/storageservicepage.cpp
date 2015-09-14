@@ -23,9 +23,9 @@
 #include "storageservicewarning.h"
 #include "storageserviceaccountinfodialog.h"
 #include "storageservicenavigationbuttons.h"
-#include "pimcommon/storageservice/storageserviceabstract.h"
-#include "pimcommon/storageservice/widgets/storageserviceprogresswidget.h"
-#include "pimcommon/storageservice/widgets/storageserviceprogressindicator.h"
+#include "PimCommon/StorageServiceAbstract"
+#include "PimCommon/StorageServiceProgressWidget"
+#include "PimCommon/StorageServiceProgressIndicator"
 
 #include <KLocalizedString>
 #include <KMessageBox>

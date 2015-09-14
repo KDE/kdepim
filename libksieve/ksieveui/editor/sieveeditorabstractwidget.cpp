@@ -17,7 +17,7 @@
  */
 
 #include "sieveeditorabstractwidget.h"
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/PimUtil"
 
 #include <KLocalizedString>
 #include <KMessageBox>

@@ -22,7 +22,7 @@
 #include "core/settings.h"
 #include <Akonadi/KMime/MessageStatus>
 
-#include "pimcommon/widgets/lineeditwithcompleter.h"
+#include "PimCommon/LineEditWithCompleter"
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <KComboBox>

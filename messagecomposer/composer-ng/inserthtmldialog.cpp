@@ -25,7 +25,7 @@
 
 #include <KPIMTextEdit/TextEditorCompleter>
 #include <kpimtextedit/htmlhighlighter.h>
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "PimCommon/PlainTextEditorWidget"
 
 #include <QCompleter>
 #include <QAbstractItemView>

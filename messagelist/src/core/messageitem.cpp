@@ -22,7 +22,7 @@
 #include "messageitem.h"
 #include "messageitem_p.h"
 
-#include "pimcommon/widgets/annotationdialog.h"
+#include "PimCommon/AnnotationDialog"
 #include "theme.h"
 
 #include <item.h>

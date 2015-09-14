@@ -46,7 +46,7 @@ target_link_libraries(sieveeditor
                        KF5::I18n
                        KF5::IconThemes
                        KF5::XmlGui
-                       pimcommon
+                       KF5::PimCommon
                        ksieveui
                        kmanagesieve
 )

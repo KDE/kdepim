@@ -329,7 +329,7 @@
   <customwidget>
    <class>PimCommon::EmailAddressRequester</class>
    <extends>QWidget</extends>
-   <header>pimcommon/widgets/emailaddressrequester.h</header>
+   <header>PimCommon/EmailAddressRequester</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

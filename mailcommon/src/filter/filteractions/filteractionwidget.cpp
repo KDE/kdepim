@@ -23,7 +23,7 @@
 #include "filter/filteractions/filteractiondict.h"
 #include "filter/filtermanager.h"
 #include "filter/mailfilter.h"
-#include <pimcommon/widgets/minimumcombobox.h>
+#include <PimCommon/MinimumComboBox>
 
 #include <KLocalizedString>
 #include <QPushButton>

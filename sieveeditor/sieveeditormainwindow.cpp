@@ -26,7 +26,7 @@
 #include "sieveeditorcentralwidget.h"
 #include "sieveeditorglobalconfig.h"
 #include "sieveeditorbookmarks.h"
-#include "pimcommon/widgets/kactionmenuchangecase.h"
+#include "PimCommon/KActionMenuChangeCase"
 
 #include <KStandardGuiItem>
 #include <KSharedConfig>

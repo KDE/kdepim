@@ -230,7 +230,7 @@ target_include_directories(KF5MessageViewer PUBLIC "$<BUILD_INTERFACE:${MessageV
 target_link_libraries(KF5MessageViewer
 PUBLIC
   KF5::MessageCore
-  pimcommon
+  KF5::PimCommon
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Contacts

@@ -37,7 +37,7 @@
 *******************************************************************************/
 
 #include "util.h"
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/PimUtil"
 #include "imapresourcesettings.h"
 #include "sieve-vacation.h"
 

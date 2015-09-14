@@ -18,7 +18,7 @@
 #include "desktopfilepage.h"
 #include "globalsettings_base.h"
 
-#include "pimcommon/widgets/simplestringlisteditor.h"
+#include "PimCommon/SimpleStringlistEditor"
 
 #include <QLineEdit>
 #include <KLocalizedString>

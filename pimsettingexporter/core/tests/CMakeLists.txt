@@ -5,7 +5,7 @@ target_link_libraries(selectiontreewidget_gui
   KF5::AkonadiCore
   KF5::AkonadiPrivate
   KF5::MailCommon
-  pimcommon
+  KF5::PimCommon
   KF5::Archive
 )
 
@@ -15,6 +15,6 @@ target_link_libraries(showarchivestructuredialog_gui
   KF5::AkonadiCore
   KF5::AkonadiPrivate
   KF5::MailCommon
-  pimcommon
+  KF5::PimCommon
   KF5::Archive
 )

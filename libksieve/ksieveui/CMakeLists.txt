@@ -192,7 +192,7 @@ target_link_libraries(ksieveui
 PUBLIC
   kmanagesieve
   ksieve
-  pimcommon
+  KF5::PimCommon
   Qt5::Xml
 PRIVATE
   KF5::Libkdepim

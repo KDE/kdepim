@@ -22,7 +22,7 @@
 #define AUDITLOGVIEWER_H
 
 #include <QDialog>
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "PimCommon/RichTextEditorWidget"
 
 namespace PimCommon
 {

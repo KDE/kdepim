@@ -20,7 +20,7 @@
 #include "filteractionaddtag.h"
 #include "filter/filtermanager.h"
 #include "filter/dialog/filteractionmissingargumentdialog.h"
-#include "pimcommon/widgets/minimumcombobox.h"
+#include "PimCommon/MinimumComboBox"
 
 #include <QTextDocument>
 #include <QPointer>

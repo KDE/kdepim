@@ -18,7 +18,7 @@
 #ifndef GRANTLEEPLAINTEXTEDITOR_H
 #define GRANTLEEPLAINTEXTEDITOR_H
 
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include "PimCommon/PlainTextEditor"
 
 namespace KPIMTextEdit
 {

@@ -16,7 +16,7 @@
 */
 
 #include "noteeditor.h"
-#include "pimcommon/autocorrection/widgets/richtexteditwithautocorrection.h"
+#include "PimCommon/RichTexteditWithAutoCorrection"
 
 using namespace NoteShared;
 

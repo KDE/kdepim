@@ -8,6 +8,6 @@ add_executable(editorsieve_gui ${editorsieve_gui_SRCS})
 target_link_libraries(editorsieve_gui
   Qt5::Test
   ksieveui
-  pimcommon
+  KF5::PimCommon
 )
 

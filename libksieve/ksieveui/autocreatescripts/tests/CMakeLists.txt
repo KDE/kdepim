@@ -7,7 +7,7 @@ set(autocreatescripts_gui_SRCS autocreatescripts_gui.cpp)
 add_executable(autocreatescripts_gui ${autocreatescripts_gui_SRCS})
 target_link_libraries(autocreatescripts_gui
   ksieveui
-  pimcommon
+  KF5::PimCommon
 )
 
 set(parsingscript_gui_SRCS parsingscript_gui.cpp)
@@ -16,7 +16,7 @@ target_link_libraries(parsingscript_gui
   KF5::KIOCore
   ksieveui
   ksieve
-  pimcommon
+  KF5::PimCommon
 )
 
 

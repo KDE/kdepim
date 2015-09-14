@@ -615,7 +615,7 @@
   <customwidget>
    <class>PimCommon::CustomTextEdit</class>
    <extends>KTextEdit</extends>
-   <header>pimcommon/widgets/customtextedit.h</header>
+   <header>PimCommon/CustomTextEdit</header>
   </customwidget>
  </customwidgets>
  <tabstops>

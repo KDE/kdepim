@@ -17,7 +17,7 @@
  */
 
 #include "findbarmailwebview.h"
-#include "pimcommon/widgets/lineeditwithcompleter.h"
+#include "PimCommon/LineEditWithCompleter"
 #include "viewer/mailwebview.h"
 
 #include <KLocalizedString>

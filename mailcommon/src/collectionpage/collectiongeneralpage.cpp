@@ -25,7 +25,7 @@
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/PimUtil"
 #include <AgentManager>
 #include <AttributeFactory>
 #include <Collection>
@@ -33,7 +33,7 @@
 #include <EntityDisplayAttribute>
 #include <AkonadiCore/NewMailNotifierAttribute>
 #include <KIdentityManagement/IdentityCombo>
-#include "pimcommon/util/imapresourcecapabilitiesmanager.h"
+#include "PimCommon/ImapResourceCapabilitiesManager"
 
 #include <KColorScheme>
 #include <KComboBox>

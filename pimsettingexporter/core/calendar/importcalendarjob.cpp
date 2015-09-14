@@ -18,7 +18,7 @@
 #include "importcalendarjob.h"
 #include "archivestorage.h"
 
-#include "pimcommon/util/createresource.h"
+#include "PimCommon/CreateResource"
 
 #include <KLocalizedString>
 #include <KConfigGroup>

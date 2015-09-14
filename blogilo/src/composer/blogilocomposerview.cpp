@@ -18,7 +18,7 @@
 */
 
 #include "blogilocomposerview.h"
-#include "pimcommon/customtools/customtoolswidgetng.h"
+#include "PimCommon/CustomToolsWidgetng"
 
 #include <KToggleAction>
 

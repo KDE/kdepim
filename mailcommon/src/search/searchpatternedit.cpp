@@ -21,7 +21,7 @@
 #include "widgethandler/rulewidgethandlermanager.h"
 using MailCommon::RuleWidgetHandlerManager;
 #include "mailcommon_debug.h"
-#include <pimcommon/widgets/minimumcombobox.h>
+#include <PimCommon/MinimumComboBox>
 
 #include <QDialog>
 #include <KLocalizedString>

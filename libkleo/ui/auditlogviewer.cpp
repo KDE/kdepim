@@ -19,7 +19,7 @@
 */
 #include "auditlogviewer.h"
 
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
+#include "PimCommon/RichTextEditor"
 #include <QSaveFile>
 #include <QFileDialog>
 #include <KConfigGroup>

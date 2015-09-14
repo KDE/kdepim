@@ -18,7 +18,7 @@
 #ifndef MULTILINEEDIT_H
 #define MULTILINEEDIT_H
 
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include "PimCommon/PlainTextEditor"
 
 namespace KSieveUi
 {

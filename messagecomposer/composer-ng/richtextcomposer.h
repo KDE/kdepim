@@ -18,7 +18,7 @@
 #ifndef RICHTEXTCOMPOSER_H
 #define RICHTEXTCOMPOSER_H
 
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
+#include "PimCommon/RichTextEditor"
 #include "messagecomposer_export.h"
 #include <KIdentityManagement/Signature>
 class KActionCollection;

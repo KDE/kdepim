@@ -38,7 +38,7 @@
 #include "composer/htmleditor.h"
 #include "composer/blogilocomposerwidget.h"
 
-#include <pimcommon/widgets/spellchecklineedit.h>
+#include <PimCommon/SpellCheckLineEdit>
 
 #include "blogilo_debug.h"
 #include <klocalizedstring.h>

@@ -19,7 +19,7 @@
 
 #include "filteractionwithaddress.h"
 
-#include <pimcommon/widgets/emailaddressrequester.h>
+#include <PimCommon/EmailAddressRequester>
 
 using namespace MailCommon;
 

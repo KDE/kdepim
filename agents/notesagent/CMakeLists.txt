@@ -28,7 +28,7 @@ target_link_libraries(akonadi_notes_agent
   KF5::DBusAddons
   KF5::KDELibs4Support
   KF5::NoteShared
-  pimcommon
+  KF5::PimCommon
 )
 
 if( APPLE )

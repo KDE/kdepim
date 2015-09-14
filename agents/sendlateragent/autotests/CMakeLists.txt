@@ -8,7 +8,7 @@ macro(add_sendlater_agent_test _source )
     ecm_add_test(${_test}
         TEST_NAME ${_name}
         NAME_PREFIX "sendlateragent-"
-        LINK_LIBRARIES Qt5::Test KF5::XmlGui KF5::AkonadiCore sendlater pimcommon
+        LINK_LIBRARIES Qt5::Test KF5::XmlGui KF5::AkonadiCore sendlater KF5::PimCommon
     )
 endmacro()
 

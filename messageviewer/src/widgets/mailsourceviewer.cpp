@@ -35,8 +35,8 @@
 #include "utils/messageviewerutil.h"
 #include "findbar/findbarsourceview.h"
 #include <kpimtextedit/htmlhighlighter.h>
-#include "pimcommon/widgets/slidecontainer.h"
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/SlideContainer"
+#include "PimCommon/PimUtil"
 #include <kiconloader.h>
 #include <KLocalizedString>
 #include <KStandardAction>

@@ -33,7 +33,7 @@
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
 #include <kpimtextedit/selectspecialchardialog.h>
-#include "pimcommon/texttospeech/texttospeech.h"
+#include "PimCommon/TextToSpeech"
 
 #include <Sonnet/Dialog>
 #include <sonnet/backgroundchecker.h>

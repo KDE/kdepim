@@ -22,8 +22,8 @@
 #include "mailcommon_debug.h"
 #include "pop3settings.h"
 #include "mailcommon_debug.h"
-#include "pimcommon/util/pimutil.h"
-#include "pimcommon/util/imapresourcecapabilitiesmanager.h"
+#include "PimCommon/PimUtil"
+#include "PimCommon/ImapResourceCapabilitiesManager"
 
 #include <AgentInstance>
 #include <AgentManager>

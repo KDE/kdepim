@@ -29,11 +29,11 @@
 #include "scriptsparsing/xmlprintingscriptbuilder.h"
 #include "scriptsparsing/parsingresultdialog.h"
 
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditfindbar.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
-#include "pimcommon/texteditor/commonwidget/textgotolinewidget.h"
+#include "PimCommon/PlainTextEditFindBar"
+#include "PimCommon/PlainTextEditorWidget"
+#include "PimCommon/TextGotoLineWidget"
 #include "KSplitterCollapserButton"
-#include "pimcommon/widgets/slidecontainer.h"
+#include "PimCommon/SlideContainer"
 
 #include <ksieve/parser.h>
 #include <ksieve/error.h>

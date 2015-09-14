@@ -42,10 +42,10 @@
 #include "ui_settingsbase.h"
 #include "ui_editorsettingsbase.h"
 
-#include "pimcommon/storageservice/storageservicemanager.h"
-#include "pimcommon/storageservice/storageservicejobconfig.h"
-#include "pimcommon/storageservice/storageserviceabstract.h"
-#include "pimcommon/storageservice/storageserviceprogressmanager.h"
+#include "PimCommon/StorageServiceManager"
+#include "PimCommon/StorageServiceJobConfig"
+#include "PimCommon/StorageServiceAbstract"
+#include "PimCommon/StorageServiceProgressManager"
 
 #include "Libkdepim/ProgressDialog"
 #include "Libkdepim/StatusbarProgressWidget"

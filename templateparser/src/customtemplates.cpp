@@ -21,7 +21,7 @@
 #include "customtemplates_kfg.h"
 #include "globalsettings_templateparser.h"
 #include "ui_customtemplates_base.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include "PimCommon/PlainTextEditor"
 
 #include <KIconLoader>
 #include <KLocalizedString>

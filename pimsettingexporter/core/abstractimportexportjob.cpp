@@ -22,7 +22,7 @@
 
 #include "MailCommon/MailUtil"
 
-#include "pimcommon/util/createresource.h"
+#include "PimCommon/CreateResource"
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <KZip>

@@ -23,8 +23,8 @@
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 
-#include "pimcommon/acl/imapaclattribute.h"
-#include "pimcommon/util/pimutil.h"
+#include "PimCommon/ImapAclAttribute"
+#include "PimCommon/PimUtil"
 
 #include "Libkdepim/QuotaColorProxyModel"
 

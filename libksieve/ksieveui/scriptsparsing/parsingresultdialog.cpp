@@ -17,9 +17,9 @@
 
 #include "parsingresultdialog.h"
 #include "xmlprintingsyntaxhighlighter.h"
-#include "pimcommon/util/pimutil.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include "PimCommon/PimUtil"
+#include "PimCommon/PlainTextEditorWidget"
+#include "PimCommon/PlainTextEditor"
 
 #include <KLocalizedString>
 #include <KSharedConfig>

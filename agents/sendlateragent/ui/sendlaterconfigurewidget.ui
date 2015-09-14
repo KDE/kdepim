@@ -57,7 +57,7 @@
   <customwidget>
    <class>PimCommon::CustomTreeView</class>
    <extends>QTreeWidget</extends>
-   <header>pimcommon/widgets/customtreeview.h</header>
+   <header>PimCommon/CustomTreeView</header>
   </customwidget>
  </customwidgets>
  <resources/>

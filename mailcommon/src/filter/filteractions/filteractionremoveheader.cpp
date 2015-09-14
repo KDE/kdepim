@@ -19,7 +19,7 @@
 
 #include "filteractionremoveheader.h"
 
-#include "pimcommon/widgets/minimumcombobox.h"
+#include "PimCommon/MinimumComboBox"
 
 #include <KLocalizedString>
 #include <QLineEdit>

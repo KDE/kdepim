@@ -22,7 +22,7 @@
 #include "agentwidget.h"
 #include "agentconfigdialog.h"
 #include "akonadiconsole_debug.h"
-#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "PimCommon/PlainTextEditorWidget"
 #include <AkonadiWidgets/agenttypedialog.h>
 #include <AkonadiWidgets/agentinstancewidget.h>
 #include <AkonadiCore/agentmanager.h>

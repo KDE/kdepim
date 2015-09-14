@@ -51,7 +51,7 @@ generate_export_header(composereditorng BASE_NAME composereditorng)
 
 target_link_libraries(composereditorng 
  PRIVATE
-   KF5::WebKit Qt5::WebKitWidgets KF5::PimTextEdit KF5::SonnetCore pimcommon KF5::KIOWidgets KF5::XmlGui KF5::Completion Qt5::PrintSupport
+   KF5::WebKit Qt5::WebKitWidgets KF5::PimTextEdit KF5::SonnetCore KF5::PimCommon KF5::KIOWidgets KF5::XmlGui KF5::Completion Qt5::PrintSupport
 )
 
 

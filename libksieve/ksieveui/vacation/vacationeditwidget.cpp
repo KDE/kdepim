@@ -23,7 +23,7 @@
 #include <QSpinBox>
 #include <QLineEdit>
 
-#include <pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h>
+#include <PimCommon/PlainTextEditorWidget>
 
 #include <kmime/kmime_header_parsing.h>
 

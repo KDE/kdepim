@@ -37,7 +37,7 @@
 *******************************************************************************/
 
 #include "utils/messageviewerutil.h"
-#include "pimcommon/texttospeech/texttospeech.h"
+#include "PimCommon/TextToSpeech"
 #include "utils/iconnamecache.h"
 #include "viewer/nodehelper.h"
 #include "messageviewer_debug.h"
@@ -45,7 +45,7 @@
 #include "helpers/nodehelper.h"
 #include "utils/stringutil.h"
 
-#include "pimcommon/widgets/renamefiledialog.h"
+#include "PimCommon/RenameFileDialog"
 
 #include <AkonadiCore/item.h>
 

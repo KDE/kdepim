@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "PimCommon/RichTextEditorWidget"
 #include "messagecomposer/composer-ng/richtextcomposer.h"
 
 #include <KLocalizedString>

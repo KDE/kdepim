@@ -66,7 +66,7 @@ add_executable( blogilo ${blogilo_SRCS})
 
 target_link_libraries(blogilo
     KF5::Blog
-    pimcommon
+    KF5::PimCommon
     Qt5::Sql
     composereditorng
     KF5::Libkdepim

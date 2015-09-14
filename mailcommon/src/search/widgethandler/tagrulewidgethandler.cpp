@@ -18,7 +18,7 @@
 #include "tagrulewidgethandler.h"
 #include "search/searchpattern.h"
 #include "mailcommon_debug.h"
-#include <pimcommon/widgets/minimumcombobox.h>
+#include <PimCommon/MinimumComboBox>
 
 #include <QIcon>
 #include <KLocalizedString>

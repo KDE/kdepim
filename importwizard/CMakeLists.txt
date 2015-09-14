@@ -99,7 +99,7 @@ target_link_libraries(importwizard
   KF5::DBusAddons
   KF5::XmlGui
   KF5::MailImporter
-  pimcommon
+  KF5::PimCommon
   KF5::MailCommon
   KF5::Libkdepim
   messagecomposer

@@ -19,8 +19,8 @@
 */
 
 #include "storageserviceconfiguredialog.h"
-#include "pimcommon/widgets/configureimmutablewidgetutils.h"
-#include "pimcommon/storageservice/widgets/storageserviceconfigurewidget.h"
+#include "PimCommon/ConfigureImmutableWidgetUtils"
+#include "PimCommon/StorageServiceConfigureWidget"
 #include "storageservicemanagerglobalconfig.h"
 
 #include <KLocalizedString>
