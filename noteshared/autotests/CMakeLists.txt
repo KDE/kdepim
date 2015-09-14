@@ -1,7 +1,3 @@
-include_directories(
-    ${CMAKE_SOURCE_DIR}/KF5::NoteShared/
-)
-
 add_executable(noteeditorutilstest noteeditorutilstest.cpp )
 add_test(noteeditorutilstest noteeditorutilstest)
 ecm_mark_as_test(noteeditorutilstest)

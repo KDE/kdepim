@@ -51,7 +51,7 @@ generate_export_header(KF5CalendarSupport BASE_NAME calendarsupport)
 add_library(KF5::CalendarSupport ALIAS KF5CalendarSupport)
 
 target_include_directories(KF5CalendarSupport INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/CalendarSupport/;${KDE_INSTALL_INCLUDEDIR_KF5}/calendarsupport>")
-target_include_directories(KF5CalendarSupport PUBLIC "$<BUILD_INTERFACE:${CalendarSupport_SOURCE_DIR}/src;${CalendarSupport_BINARY_DIR}/src;${Boost_INCLUDE_DIRS}>")
+target_include_directories(KF5CalendarSupport PUBLIC "$<BUILD_INTERFACE:${calendarsupport_SOURCE_DIR}/src;${calendarsupport_BINARY_DIR}/src;${Boost_INCLUDE_DIRS}>")
 
 target_link_libraries(
   KF5CalendarSupport
