@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "grantleeheaderstyleplugintest.h"
 #include "header/grantleeheaderstyleplugin/grantleeheaderstyleplugin.h"
 #include "header/grantleeheaderstyleplugin/grantleeheaderstyleinterface.h"

@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "briefheaderstyleplugintest.h"
 #include "header/briefheaderstyleplugin/briefheaderstyleplugin.h"
 #include "header/briefheaderstyleplugin/briefheaderstyleinterface.h"

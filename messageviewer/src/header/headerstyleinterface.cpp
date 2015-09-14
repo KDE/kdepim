@@ -50,12 +50,11 @@ void HeaderStyleInterface::addHelpTextAction(QAction *act, const QString &text)
 
 void HeaderStyleInterface::addActionToMenu(KActionMenu *menu, QActionGroup *actionGroup)
 {
-    Q_FOREACH(KToggleAction *taction, mAction) {
+    Q_FOREACH (KToggleAction *taction, mAction) {
         menu->addAction(taction);
         actionGroup->addAction(taction);
     }
 }
-
 
 void MessageViewer::HeaderStyleInterface::slotStyleChanged()
 {
