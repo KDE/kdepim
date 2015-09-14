@@ -745,7 +745,6 @@ void ViewerPrivate::attachmentOpenWith(KMime::Content *node, const KService::Ptr
     QString name = mNodeHelper->writeNodeToTempFile(node);
     QString linkName = createAtmFileLink(name);
     QList<QUrl> lst;
-    QUrl url;
     bool autoDelete = true;
 
     if (linkName.isEmpty()) {
@@ -755,8 +754,7 @@ void ViewerPrivate::attachmentOpenWith(KMime::Content *node, const KService::Ptr
 
     const QFileDevice::Permissions perms = QFile::permissions(linkName);
     QFile::setPermissions(linkName, perms | QFileDevice::ReadUser | QFileDevice::WriteUser);
-
-    url.setPath(linkName);
+    const QUrl url = QUrl::fromLocalFile(linkName);
     lst.append(url);
     if (offer) {
         if ((!KRun::runService(*offer, lst, 0, autoDelete)) && autoDelete) {
