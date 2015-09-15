@@ -20,7 +20,7 @@
 #ifndef BLOGILOCOMPOSERVIEW_H
 #define BLOGILOCOMPOSERVIEW_H
 
-#include <composereditor-ng/composerview.h>
+#include <composereditor-ng/src/composerview.h>
 namespace PimCommon
 {
 class CustomToolsWidgetNg;

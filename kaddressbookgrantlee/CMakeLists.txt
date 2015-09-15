@@ -30,8 +30,10 @@ set(KMIME_LIB_VERSION "4.87.0")
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
-find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Service ${KF5_VERSION} CONFIG REQUIRED)
+find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX KADDRESSBOOKGRANTLEE
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kaddressbookgrantlee_version.h"
