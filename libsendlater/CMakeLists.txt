@@ -25,19 +25,21 @@ set(KF5_VERSION "5.14.0")
 set(KDEPIMLIBS_LIB_VERSION "5.0.42")
 set(KDEPIM_LIB_VERSION "5.43.0")
 set(QT_REQUIRED_VERSION "5.4.0")
-set(KMIME_LIB_VERSION "4.87.0")
 
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
-find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools DBus)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
-find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WidgetsAddons ${KF5_VERSION} CONFIG REQUIRED)
+
+
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX SENDLATER
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/sendlater_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5SendLaterConfigVersion.cmake"
                         SOVERSION 5
 )
+
 
 ########### Targets ###########
 
@@ -62,7 +64,7 @@ install(FILES
 install(EXPORT KF5SendLaterTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5SendLaterTargets.cmake NAMESPACE KF5::)
 
 install(FILES
-   ${CMAKE_CURRENT_BINARY_DIR}/libsendlater_version.h
+   ${CMAKE_CURRENT_BINARY_DIR}/sendlater_version.h
   DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
 )
 
