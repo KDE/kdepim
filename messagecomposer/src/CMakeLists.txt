@@ -158,7 +158,7 @@ PRIVATE
   KF5::CalendarCore
   KF5::KIOCore
   Grantlee5::TextDocument
-  sendlater
+  KF5::SendLater
   followupreminder
   KF5::Archive
   KF5::Ldap

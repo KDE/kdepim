@@ -1,39 +1,79 @@
-project(libsendlater)
+cmake_minimum_required(VERSION 2.8.12)
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libsendlater\")
+project(sendlater)
 
-set(sendlater_common_SRCS)
-ecm_qt_declare_logging_category(sendlater_common_SRCS HEADER libsendlater_debug.h IDENTIFIER LIBSENDLATER_LOG CATEGORY_NAME log_libsendlater)
+if(${CMAKE_SOURCE_DIR} STREQUAL ${libsendlater_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.14.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-set(sendlaterlib_SRCS 
-    ${sendlater_common_SRCS}
-    sendlaterinfo.cpp
-    sendlaterdialog.cpp
-    sendlaterutil.cpp
-    sendlatertimedatewidget.cpp
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
+
+
+set(KF5_VERSION "5.14.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.42")
+set(KDEPIM_LIB_VERSION "5.43.0")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
+
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX SENDLATER
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/sendlater_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5SendLaterConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-kconfig_add_kcfg_files(sendlaterlib_SRCS
-    settings/sendlateragentsettings.kcfgc 
-  )
+########### Targets ###########
 
-ki18n_wrap_ui(sendlaterlib_SRCS ui/sendlaterwidget.ui)
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
-add_library( sendlater ${sendlaterlib_SRCS} )
-generate_export_header(sendlater BASE_NAME sendlater)
-target_link_libraries(sendlater
-  PUBLIC
-    KF5::AkonadiCore
-  PRIVATE
-    KF5::ConfigCore
-    KF5::I18n
-    KF5::WidgetsAddons
-    KF5::ConfigGui
-    Qt5::DBus
-    Qt5::Widgets
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5SendLater")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5SendLaterConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5SendLaterConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
-target_include_directories(sendlater PUBLIC "$<BUILD_INTERFACE:${sendlateragent_SOURCE_DIR};${sendlateragent_BINARY_DIR}>")
-set_target_properties( sendlater PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
-install( TARGETS sendlater ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5SendLaterConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5SendLaterConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
+
+install(EXPORT KF5SendLaterTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5SendLaterTargets.cmake NAMESPACE KF5::)
+
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/libsendlater_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX SENDLATER
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/sendlater_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5SendLaterConfigVersion.cmake"
+                        SOVERSION 5
+)
+endif()
+
+add_subdirectory(src)
 

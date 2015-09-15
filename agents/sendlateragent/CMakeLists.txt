@@ -27,7 +27,7 @@ ki18n_wrap_ui(sendlateragent_SRCS ui/sendlaterconfigurewidget.ui)
 add_executable(akonadi_sendlater_agent ${sendlateragent_SRCS})
 
 target_link_libraries(akonadi_sendlater_agent
-  sendlater
+  KF5::SendLater
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::MailTransport
@@ -45,7 +45,7 @@ target_link_libraries(akonadi_sendlater_agent
 
 if( APPLE )
   set_target_properties(akonadi_sendlater_agent PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist.template)
-  set_target_properties(akonadi_sendlater_agent PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.sendlater")
+  set_target_properties(akonadi_sendlater_agent PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.KF5::SendLater")
   set_target_properties(akonadi_sendlater_agent PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Akonadi Send Later")
 endif ()
 
