@@ -19,6 +19,7 @@
 #include "headerstylemenumanager.h"
 #include "headerstyleplugin.h"
 #include "headerstylepluginmanager.h"
+#include "messageviewer_debug.h"
 #include <KActionMenu>
 #include <KActionCollection>
 #include <KLocalizedString>
@@ -59,7 +60,7 @@ void HeaderStyleMenuManagerPrivate::setPluginName(const QString &pluginName)
         interface->activateAction();
     } else {
         if (lstInterface.isEmpty()) {
-            //TODO
+            qCCritical(MESSAGEVIEWER_LOG) << "No plugin found !";
         } else {
             interface = lstInterface.cbegin().value();
             interface->activateAction();
