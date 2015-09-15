@@ -152,9 +152,6 @@ ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
 {
     KConfigGroup group(KSharedConfig::openConfig(), "ManageSieveScriptsDialog");
     group.writeEntry("Size", size());
-    // prevent QTreeWidget signals triggered by it's desctructor from calling our slots
-    d->mTreeView->disconnect(this);
-    delete d;
 }
 
 void ManageSieveScriptsDialog::hideEvent(QHideEvent *event)
