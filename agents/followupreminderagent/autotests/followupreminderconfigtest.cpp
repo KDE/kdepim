@@ -16,8 +16,8 @@
 */
 
 #include "followupreminderconfigtest.h"
-#include "../followupreminderutil.h"
-#include "../followupreminderinfo.h"
+#include "followupreminderutil.h"
+#include "followupreminderinfo.h"
 #include <qtest.h>
 #include <KSharedConfig>
 

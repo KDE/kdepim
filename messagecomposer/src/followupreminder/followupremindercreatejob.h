@@ -22,7 +22,7 @@
 #include <QDate>
 #include <AkonadiCore/Item>
 #include <AkonadiCore/Collection>
-#include "agents/followupreminderagent/followupreminderinfo.h"
+#include "libfollowupreminder/followupreminderinfo.h"
 #include <KJob>
 #include "messagecomposer_export.h"
 namespace MessageComposer

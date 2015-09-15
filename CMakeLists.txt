@@ -211,6 +211,7 @@ endif()
 # config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
 configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
 
+add_subdirectory(libfollowupreminder)
 add_subdirectory(noteshared)
 add_subdirectory(libkdepim)
 add_subdirectory(calendarsupport)
