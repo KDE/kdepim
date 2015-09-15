@@ -307,16 +307,36 @@ ecm_generate_headers(MessageComposer_job_HEADERS
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${messagecomposer_SOURCE_DIR})
 install(FILES
-    ${PimCommon_CamelCase_HEADERS}}
+    ${MessageComposer_composer_HEADERS}
+    ${MessageComposer_composerng_HEADERS}
+    ${MessageComposer_sender_HEADERS}
+    ${MessageComposer_utils_HEADERS}
+    ${MessageComposer_helper_HEADERS}
+    ${MessageComposer_settings_HEADERS}
+    ${MessageComposer_part_HEADERS}
+    ${MessageComposer_followupreminder_HEADERS}
+    ${MessageComposer_recipient_HEADERS}
+    ${MessageComposer_imagescaling_HEADERS}
+    ${MessageComposer_job_HEADERS}
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageComposer
     COMPONENT Devel
 )
 
 install(FILES
-    ${PimCommon_HEADERS}
+    ${MessageComposer_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer_attachement_export.h
-    ${PimCommon_CamelCase_HEADERS}}
+    ${MessageComposer_composer_HEADERS}
+    ${MessageComposer_composerng_HEADERS}
+    ${MessageComposer_sender_HEADERS}
+    ${MessageComposer_utils_HEADERS}
+    ${MessageComposer_helper_HEADERS}
+    ${MessageComposer_settings_HEADERS}
+    ${MessageComposer_part_HEADERS}
+    ${MessageComposer_followupreminder_HEADERS}
+    ${MessageComposer_recipient_HEADERS}
+    ${MessageComposer_imagescaling_HEADERS}
+    ${MessageComposer_job_HEADERS}
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messagecomposer
     COMPONENT Devel
