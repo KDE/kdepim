@@ -79,14 +79,14 @@ void FreeBusyCalendar::setModel(FreeBusyItemModel *model)
             disconnect(d->mModel, 0, 0, 0);
         }
         d->mModel = model;
-        connect(d->mModel, SIGNAL(layoutChanged()), SLOT(onLayoutChanged()));
-        connect(d->mModel, SIGNAL(modelReset()), SLOT(onLayoutChanged()));
-        connect(d->mModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-                SLOT(onRowsRemoved(QModelIndex,int,int)));
-        connect(d->mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-                SLOT(onRowsInserted(QModelIndex,int,int)));
-        connect(d->mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                SLOT(onRowsChanged(QModelIndex,QModelIndex)));
+        connect(d->mModel, &QAbstractItemModel::layoutChanged, this, &FreeBusyCalendar::onLayoutChanged);
+        connect(d->mModel, &QAbstractItemModel::modelReset, this, &FreeBusyCalendar::onLayoutChanged);
+        connect(d->mModel, &QAbstractItemModel::rowsAboutToBeRemoved,
+                this, &FreeBusyCalendar::onRowsRemoved);
+        connect(d->mModel, &QAbstractItemModel::rowsInserted,
+                this, &FreeBusyCalendar::onRowsInserted);
+        connect(d->mModel, &QAbstractItemModel::dataChanged,
+                this, &FreeBusyCalendar::onRowsChanged);
     }
 }
 

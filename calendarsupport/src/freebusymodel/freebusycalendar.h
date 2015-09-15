@@ -32,7 +32,7 @@
 namespace KPIM
 {
 class FreeBusyCalendarPrivate;
-class CALENDARSUPPORT_EXPORT FreeBusyCalendar : QObject
+class CALENDARSUPPORT_EXPORT FreeBusyCalendar : public QObject
 {
     Q_OBJECT
 public:
