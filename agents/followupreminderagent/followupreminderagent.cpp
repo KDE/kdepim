@@ -17,7 +17,7 @@
 
 #include "followupreminderagent.h"
 #include "followupremindermanager.h"
-#include "followupreminderutil.h"
+#include "FollowupReminder/FollowUpReminderUtil"
 #include "followupreminderadaptor.h"
 #include "followupreminderinfodialog.h"
 #include "followupreminderagentsettings.h"

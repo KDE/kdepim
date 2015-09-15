@@ -1,27 +1,79 @@
+cmake_minimum_required(VERSION 2.8.12)
+
 project(followupreminder)
 
-add_definitions(-DTRANSLATION_DOMAIN=\"libfollowupreminder\")
+if(${CMAKE_SOURCE_DIR} STREQUAL ${followupreminder_SOURCE_DIR})
+# ECM setup
+find_package(ECM 5.14.0 CONFIG REQUIRED)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-set(followupreminderlib_SRCS 
-    followupreminderinfo.cpp
-    followupreminderutil.cpp
+include(GenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(ECMGeneratePriFile)
+include(ECMPackageConfigHelpers)
+include(ECMSetupVersion)
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
+include(ECMAddTests)
+
+
+set(KF5_VERSION "5.14.0")
+set(KDEPIMLIBS_LIB_VERSION "5.0.42")
+set(KDEPIM_LIB_VERSION "5.43.0")
+set(QT_REQUIRED_VERSION "5.4.0")
+set(KMIME_LIB_VERSION "4.87.0")
+
+find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX FOLLOWUPREMINDER
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/followupreminder_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5FollowupReminderConfigVersion.cmake"
+                        SOVERSION 5
 )
 
-kconfig_add_kcfg_files(followupreminderlib_SRCS
-    settings/followupreminderagentsettings.kcfgc
+########### Targets ###########
+
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+
+########### CMake Config Files ###########
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5FollowupReminder")
+
+ecm_configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5FollowupReminderConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5FollowupReminderConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
-
-add_library( followupreminder ${followupreminderlib_SRCS} )
-generate_export_header(followupreminder BASE_NAME followupreminder)
-target_link_libraries( followupreminder 
-PRIVATE
-   KF5::ConfigGui 
-   Qt5::DBus 
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5FollowupReminderConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5FollowupReminderConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
 )
-target_include_directories(followupreminder PUBLIC "$<BUILD_INTERFACE:${followupreminderagent_SOURCE_DIR};${followupreminderagent_BINARY_DIR}>")
-target_include_directories(followupreminder PUBLIC $<TARGET_PROPERTY:KF5::AkonadiCore,INTERFACE_INCLUDE_DIRECTORIES>)
-set_target_properties( followupreminder PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
+install(EXPORT KF5FollowupReminderTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KF5FollowupReminderTargets.cmake NAMESPACE KF5::)
 
-install( TARGETS followupreminder ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
+install(FILES
+   ${CMAKE_CURRENT_BINARY_DIR}/followupreminder_version.h
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+else()
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX FOLLOWUPREMINDER
+                        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/followupreminder_version.h"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5FollowupReminderConfigVersion.cmake"
+                        SOVERSION 5
+)
+endif()
+
+add_subdirectory(src)
+

@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "followupreminderinfowidget.h"
-#include "followupreminderinfo.h"
-#include "followupreminderutil.h"
+#include "FollowupReminder/FollowUpReminderInfo"
+#include "FollowupReminder/FollowUpReminderUtil"
 #include "jobs/followupremindershowmessagejob.h"
 #include "followupreminderagent_debug.h"
 

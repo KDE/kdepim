@@ -159,7 +159,7 @@ PRIVATE
   KF5::KIOCore
   Grantlee5::TextDocument
   KF5::SendLater
-  followupreminder
+  KF5::FollowupReminder
   KF5::Archive
   KF5::Ldap
 )

@@ -17,7 +17,7 @@
 
 #include "followupremindercreatejob.h"
 #include "messagecomposer_debug.h"
-#include "libfollowupreminder/followupreminderutil.h"
+#include "FollowupReminder/FollowUpReminderUtil"
 #include <KCalCore/Todo>
 #include <KLocalizedString>
 #include <AkonadiCore/ItemCreateJob>

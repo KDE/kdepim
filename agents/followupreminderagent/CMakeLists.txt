@@ -29,7 +29,7 @@ target_link_libraries(akonadi_followupreminder_agent
   KF5::Mime
   KF5::CalendarCore
   KF5::DBusAddons
-  followupreminder
+  KF5::FollowupReminder
   Qt5::Widgets
 )
 
