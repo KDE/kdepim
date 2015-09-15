@@ -122,7 +122,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
     switch (m_replyStrategy) {
     case MessageComposer::ReplySmart: {
         if (auto hdr = m_origMsg->headerByType("Mail-Followup-To")) {
-            toList << MessageCore::StringUtil::mailboxListFrom7BitString(hdr->as7BitString(false));
+            toList << KMime::Types::Mailbox::listFrom7BitString(hdr->as7BitString(false));
         } else if (!replyToList.isEmpty()) {
             toList = replyToList;
             // use the ReplyAll template only when it's a reply to a mailing list

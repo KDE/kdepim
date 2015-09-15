@@ -223,19 +223,6 @@ MESSAGECORE_EXPORT QString cleanFileName(const QString &fileName);
    */
 MESSAGECORE_EXPORT QString stripOffPrefixes(const QString &subject);
 
-/**
-   * Converts an unicode string that contains a comma separated list of email addresses into a list of mailbox objects.
-   */
-MESSAGECORE_EXPORT KMime::Types::Mailbox::List mailboxListFromUnicodeString(const QString &addresses);
-
-/**
-   * Converts a 7bit string that contains a comma separated list of email addresses into a list of mailbox objects.
-   */
-MESSAGECORE_EXPORT KMime::Types::Mailbox::List mailboxListFrom7BitString(const QByteArray &addresses);
-
-/**
-   * Converts a list of mailbox objects to a unicode string that contains the comma separated list of email addresses.
-   */
 MESSAGECORE_EXPORT QString mailboxListToUnicodeString(const KMime::Types::Mailbox::List &addresses);
 
 MESSAGECORE_EXPORT void setEncodingFile(QUrl &url, const QString &encoding);

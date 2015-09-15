@@ -77,7 +77,7 @@ FilterAction::ReturnCode FilterActionSetIdentity::process(ItemContext &context ,
         if (applyOnOutbound) {
             msg->from()->fromUnicodeString(ident.fullEmailAddr(), "utf-8");
             if (!ident.bcc().isEmpty()) {
-                const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString(ident.bcc());
+                const auto mailboxes = KMime::Types::Mailbox::listFromUnicodeString(ident.bcc());
                 foreach (const KMime::Types::Mailbox &mailbox, mailboxes) {
                     msg->bcc()->addAddress(mailbox);
                 }

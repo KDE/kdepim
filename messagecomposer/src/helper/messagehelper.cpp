@@ -92,7 +92,7 @@ void applyIdentity(const KMime::Message::Ptr &message, const KIdentityManagement
     if (ident.bcc().isEmpty()) {
         message->removeHeader<KMime::Headers::Bcc>();
     } else {
-        const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString(ident.bcc());
+        const auto mailboxes = KMime::Types::Mailbox::listFromUnicodeString(ident.bcc());
         foreach (const KMime::Types::Mailbox &mailbox, mailboxes) {
             message->bcc()->addAddress(mailbox);
         }
@@ -101,7 +101,7 @@ void applyIdentity(const KMime::Message::Ptr &message, const KIdentityManagement
     if (ident.cc().isEmpty()) {
         message->removeHeader<KMime::Headers::Cc>();
     } else {
-        const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString(ident.cc());
+        const auto mailboxes = KMime::Types::Mailbox::listFromUnicodeString(ident.cc());
         foreach (const KMime::Types::Mailbox &mailbox, mailboxes) {
             message->cc()->addAddress(mailbox);
         }

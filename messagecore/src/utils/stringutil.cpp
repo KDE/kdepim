@@ -867,20 +867,6 @@ public:
     }
 };
 
-KMime::Types::Mailbox::List mailboxListFromUnicodeString(const QString &addresses)
-{
-    DummyHeader header;
-    header.fromUnicodeString(addresses, "utf-8");
-    return header.mailboxes();
-}
-
-KMime::Types::Mailbox::List mailboxListFrom7BitString(const QByteArray &addresses)
-{
-    DummyHeader header;
-    header.from7BitString(addresses);
-    return header.mailboxes();
-}
-
 QString mailboxListToUnicodeString(const KMime::Types::Mailbox::List &addresses)
 {
     DummyHeader header;

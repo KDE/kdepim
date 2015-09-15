@@ -1484,13 +1484,13 @@ void MessageComposer::ComposerViewBase::updateRecipients(const KIdentityManageme
     }
 
     if (oldIdentList != newIdentList) {
-        const KMime::Types::Mailbox::List oldRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString(oldIdentList);
+        const auto oldRecipients = KMime::Types::Mailbox::listFromUnicodeString(oldIdentList);
         foreach (const KMime::Types::Mailbox &recipient, oldRecipients) {
             m_recipientsEditor->removeRecipient(MessageCore::StringUtil::mailboxListToUnicodeString(KMime::Types::Mailbox::List() << recipient),
                                                 type);
         }
 
-        const KMime::Types::Mailbox::List newRecipients = MessageCore::StringUtil::mailboxListFromUnicodeString(newIdentList);
+        const auto newRecipients = KMime::Types::Mailbox::listFromUnicodeString(newIdentList);
         foreach (const KMime::Types::Mailbox &recipient, newRecipients) {
             m_recipientsEditor->addRecipient(MessageCore::StringUtil::mailboxListToUnicodeString(KMime::Types::Mailbox::List() << recipient),
                                              type);
