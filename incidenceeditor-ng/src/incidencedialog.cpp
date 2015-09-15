@@ -707,14 +707,14 @@ IncidenceDialog::IncidenceDialog(Akonadi::IncidenceChanger *changer,
     setModal(false);
     showButtonSeparator(false);
 
-    connect(d->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
-            d->mIeAttendee, SLOT(acceptForMe()));
-    connect(d->mUi->mAcceptInvitationButton, SIGNAL(clicked()),
-            d->mUi->mInvitationBar, SLOT(hide()));
-    connect(d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
-            d->mIeAttendee, SLOT(declineForMe()));
-    connect(d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
-            d->mUi->mInvitationBar, SLOT(hide()));
+    connect(d->mUi->mAcceptInvitationButton, &QAbstractButton::clicked,
+            d->mIeAttendee, &IncidenceAttendee::acceptForMe);
+    connect(d->mUi->mAcceptInvitationButton, &QAbstractButton::clicked,
+            d->mUi->mInvitationBar, &QWidget::hide);
+    connect(d->mUi->mDeclineInvitationButton, &QAbstractButton::clicked,
+            d->mIeAttendee, &IncidenceAttendee::declineForMe);
+    connect(d->mUi->mDeclineInvitationButton, &QAbstractButton::clicked,
+            d->mUi->mInvitationBar, &QWidget::hide);
     connect(this, SIGNAL(invalidCollection()),
             this, SLOT(slotInvalidCollection()));
     readConfig();

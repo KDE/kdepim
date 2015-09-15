@@ -39,8 +39,8 @@ OpenComposerJob::OpenComposerJob(QObject *parent,
     , mIdentity(identity)
     , mSuccess(false)
 {
-    connect(QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-            SLOT(slotServiceOwnerChanged(QString,QString,QString)));
+    connect(QDBusConnection::sessionBus().interface(), &QDBusConnectionInterface::serviceOwnerChanged,
+            this, &OpenComposerJob::slotServiceOwnerChanged);
 }
 
 OpenComposerJob::~OpenComposerJob()
@@ -72,7 +72,7 @@ void OpenComposerJob::start()
         }
     }
 
-    QTimer::singleShot(10000, this, SLOT(timeout()));
+    QTimer::singleShot(10000, this, &OpenComposerJob::timeout);
 }
 
 void OpenComposerJob::timeout()

@@ -119,7 +119,7 @@ void TemplateManagementDialog::slotAddTemplate()
                      i18n("A template with that name already exists, do you want to overwrite it?"),
                      i18n("Duplicate Template Name"), KGuiItem(i18n("Overwrite")));
         if (rc == KMessageBox::Cancel) {
-            QTimer::singleShot(0, this, SLOT(slotAddTemplate()));
+            QTimer::singleShot(0, this, &TemplateManagementDialog::slotAddTemplate);
             return;
         }
         duplicate = true;

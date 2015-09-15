@@ -210,7 +210,7 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj, const KLDAP::
                   << QStringLiteral("kolabDescAttribute") << QStringLiteral("description");
             mOwnerItem = ResourceItem::Ptr(new ResourceItem(KLDAP::LdapDN(QString::fromUtf8(it.value().at(0))),
                                            attrs,  client));
-            connect(mOwnerItem.data(),  SIGNAL(searchFinished()), SLOT(slotOwnerSearchFinished()));
+            connect(mOwnerItem.data(),  &ResourceItem::searchFinished, this, &ResourceManagement::slotOwnerSearchFinished);
             mOwnerItem->startSearch();
             continue;
         }
