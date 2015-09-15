@@ -35,7 +35,6 @@
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kglobal.h>
 
 #include <QCoreApplication>
 
@@ -48,7 +47,7 @@ public:
     AntiSpamConfig instance;
 };
 
-K_GLOBAL_STATIC(AntiSpamConfigSingletonProvider, theAntiSpamConfigSingletonProvider)
+Q_GLOBAL_STATIC(AntiSpamConfigSingletonProvider, theAntiSpamConfigSingletonProvider)
 
 AntiSpamConfig *AntiSpamConfig::instance()
 {
@@ -66,17 +65,11 @@ const SpamAgents AntiSpamConfig::agents() const
 
 AntiSpamConfig::AntiSpamConfig()
 {
-    // A post routine can be used to delete the object when QCoreApplication destructs,
-    // not adding such a post routine will delete the object normally at program unload
-    qAddPostRoutine(theAntiSpamConfigSingletonProvider.destroy);
     readConfig();
 }
 
 AntiSpamConfig::~AntiSpamConfig()
 {
-    // When you install a post routine you have to remove the post routine from the destructor of
-    // the class used as global static!
-    qRemovePostRoutine(theAntiSpamConfigSingletonProvider.destroy);
 }
 
 void AntiSpamConfig::readConfig()
