@@ -57,7 +57,7 @@ install(FILES
 )
 
 install(FILES
-    ${FollowupReminder_Camelcase_HEADERS}
+    ${FollowupReminder_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/followupreminder_export.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/followupreminder
     COMPONENT Devel

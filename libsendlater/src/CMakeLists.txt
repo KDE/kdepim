@@ -66,7 +66,7 @@ install(FILES
 )
 
 install(FILES
-    ${SendLater_Camelcase_HEADERS}
+    ${SendLater_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/senlater_export.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/sendlater
     COMPONENT Devel
