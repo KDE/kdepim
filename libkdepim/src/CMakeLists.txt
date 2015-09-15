@@ -150,7 +150,11 @@ target_link_libraries(KF5Libkdepim
   KF5::AkonadiContact
   KF5::ItemViews
   KF5::AkonadiSearchPIM
-  KF5::AkonadiCalendar
+  KF5::IconThemes
+  KF5::KIOCore
+  KF5::KIOWidgets
+  Qt5::DBus
+  Qt5::Network
 )
 
 

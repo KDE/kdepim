@@ -24,7 +24,6 @@
 #include <KConfigGroup>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <kwallet.h>
 
 using namespace KLDAP;
@@ -51,7 +50,7 @@ public:
     KWallet::Wallet *wallet;
 };
 
-K_GLOBAL_STATIC_WITH_ARGS(KConfig, s_config, (QStringLiteral("kabldaprc"), KConfig::NoGlobals))
+Q_GLOBAL_STATIC_WITH_ARGS(KConfig, s_config, (QLatin1String("kabldaprc"), KConfig::NoGlobals))
 
 KConfig *LdapClientSearchConfig::config()
 {
