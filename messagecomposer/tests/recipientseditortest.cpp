@@ -23,7 +23,7 @@
 */
 
 #include "recipientseditortest.h"
-#include <messagecomposer/recipient/recipientseditor.h>
+#include <MessageComposer/RecipientsEditor>
 
 #include <qdebug.h>
 #include <KLocalizedString>

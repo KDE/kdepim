@@ -18,7 +18,7 @@
 #include "filtertestkernel.h"
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
-#include <messagecomposer/sender/akonadisender.h>
+#include <MessageComposer/AkonadiSender>
 #include <mailcommon/foldercollectionmonitor.h>
 #include <AkonadiCore/session.h>
 #include <AkonadiCore/entitytreemodel.h>

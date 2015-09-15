@@ -18,8 +18,8 @@
 #include "sendlaterjob.h"
 #include "sendlaterinfo.h"
 
-#include "messagecomposer/sender/akonadisender.h"
-#include "messagecomposer/utils/util.h"
+#include "MessageComposer/AkonadiSender"
+#include "MessageComposer/Util"
 #include "helpers/messagehelpers.h"
 #include "utils/stringutil.h"
 

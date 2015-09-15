@@ -21,7 +21,7 @@
 
 #include <qtest.h>
 
-#include <messagecomposer/utils/util.h>
+#include <MessageComposer/Util>
 using namespace MessageComposer;
 
 QTEST_MAIN(UtilTest)

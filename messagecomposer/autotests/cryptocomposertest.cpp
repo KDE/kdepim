@@ -34,12 +34,12 @@
 #include <kmime/kmime_headers.h>
 using namespace KMime;
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/composer/composerviewbase.h>
-#include <messagecomposer/composer-ng/richtextcomposer.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/part/infopart.h>
-#include <messagecomposer/part/textpart.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/ComposerViewBase>
+#include <MessageComposer/RichTextComposer>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/InfoPart>
+#include <MessageComposer/TextPart>
 #include <attachment/attachmentmodel.h>
 #include <attachment/attachmentcontrollerbase.h>
 using namespace MessageComposer;

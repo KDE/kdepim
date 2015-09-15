@@ -1,7 +1,7 @@
 #include "dummykernel.h"
 
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
-#include <messagecomposer/sender/akonadisender.h>
+#include <MessageComposer/AkonadiSender>
 #include <MailCommon/FolderCollectionMonitor>
 #include <AkonadiCore/session.h>
 #include <AkonadiCore/entitytreemodel.h>

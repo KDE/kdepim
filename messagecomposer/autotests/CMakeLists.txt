@@ -7,7 +7,7 @@ include( ${CMAKE_SOURCE_DIR}/cmake/modules/kdepim_add_gpg_crypto_test.cmake )
 macro( add_messagecomposer_test _source )
     ecm_add_test(${_source}
         NAME_PREFIX "messagecomposer-"
-        LINK_LIBRARIES KF5::Mime messagecomposer KF5::MessageViewer KF5::MessageCore KF5::TemplateParser
+        LINK_LIBRARIES KF5::Mime KF5::MessageComposer KF5::MessageViewer KF5::MessageCore KF5::TemplateParser
                        KF5::PimTextEdit Qt5::Test KF5::IdentityManagement KF5::Contacts KF5::AkonadiCore KF5::XmlGui KF5::Libkdepim KF5::IconThemes KF5::Completion
     )
 endmacro()
@@ -20,7 +20,7 @@ macro( add_messagecomposer_cryptotest _source )
     target_link_libraries(
         ${_name}
         KF5::Mime
-        messagecomposer
+        KF5::MessageComposer
         KF5::MessageViewer
         KF5::MessageCore
         kleo
@@ -71,5 +71,5 @@ add_messagecomposer_cryptotest( signencrypttest.cpp )
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
-add_akonadi_isolated_test_advanced( followupreminderselectdatedialogtest.cpp  "../followupreminder/followupreminderselectdatedialog.cpp" "KF5::CalendarCore;KF5::AkonadiCore;KF5::AkonadiWidgets;messagecomposer")
+add_akonadi_isolated_test_advanced( followupreminderselectdatedialogtest.cpp  "../src/followupreminder/followupreminderselectdatedialog.cpp" "KF5::CalendarCore;KF5::AkonadiCore;KF5::AkonadiWidgets;KF5::MessageComposer")
 

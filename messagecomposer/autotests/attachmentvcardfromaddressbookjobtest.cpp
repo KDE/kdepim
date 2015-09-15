@@ -19,7 +19,7 @@
 */
 
 #include "attachmentvcardfromaddressbookjobtest.h"
-#include "messagecomposer/job/attachmentvcardfromaddressbookjob.h"
+#include "MessageComposer/AttachmentVcardFromAddressBookJob"
 #include <qtest.h>
 #include <KContacts/Addressee>
 

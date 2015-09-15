@@ -25,13 +25,13 @@
 #include <utils/stringutil.h>
 #include <helpers/nodehelper.h>
 
-#include "messagecomposer/composer/composer.h"
-#include "messagecomposer/helper/messagefactory.h"
-#include "messagecomposer/part/globalpart.h"
-#include "messagecomposer/settings/messagecomposersettings.h"
+#include "MessageComposer/Composer"
+#include "MessageComposer/MessageFactory"
+#include "MessageComposer/GlobalPart"
+#include "MessageComposer/MessageComposerSettings"
 
-#include "messagecomposer/part/infopart.h"
-#include "messagecomposer/part/textpart.h"
+#include "MessageComposer/InfoPart"
+#include "MessageComposer/TextPart"
 
 #include "testhtmlwriter.h"
 #include "testcsshelper.h"

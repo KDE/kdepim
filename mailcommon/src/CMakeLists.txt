@@ -206,7 +206,7 @@ target_link_libraries(KF5MailCommon
 PUBLIC
   KF5::AkonadiCore
   KF5::AkonadiMime
-  messagecomposer
+  KF5::MessageComposer
   KF5::PimCommon
 PRIVATE
   KF5::Libkdepim

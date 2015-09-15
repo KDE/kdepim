@@ -66,7 +66,7 @@ target_link_libraries(akonadi_sendlater_agent
   KF5::AkonadiMime
   KF5::MailTransport
   KF5::Mime
-  messagecomposer
+  KF5::MessageComposer
   KF5::MessageCore
   KF5::PimCommon
   KF5::AkonadiAgentBase

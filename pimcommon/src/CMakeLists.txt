@@ -328,8 +328,6 @@ PRIVATE
 target_include_directories(KF5PimCommon INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/PimCommon/;${KDE_INSTALL_INCLUDEDIR_KF5}/pimcommon>")
 
 target_include_directories(KF5PimCommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR}/src;${pimcommon_BINARY_DIR}/src>")
-#target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR}/shorturl;${pimcommon_BINARY_DIR}/shorturl>")
-#target_include_directories(pimcommon PUBLIC "$<BUILD_INTERFACE:${pimcommon_SOURCE_DIR}/util;${pimcommon_BINARY_DIR}/util>")
 target_include_directories(KF5PimCommon PUBLIC $<TARGET_PROPERTY:KF5::IMAP,INTERFACE_INCLUDE_DIRECTORIES>)
 
 set_target_properties(KF5PimCommon PROPERTIES

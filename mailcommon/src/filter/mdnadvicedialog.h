@@ -21,7 +21,7 @@
 
 #include "mailcommon_export.h"
 
-#include <messagecomposer/helper/messagefactory.h>
+#include <MessageComposer/MessageFactory>
 
 #include <KMime/KMimeMessage>
 

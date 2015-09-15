@@ -102,7 +102,7 @@ target_link_libraries(importwizard
   KF5::PimCommon
   KF5::MailCommon
   KF5::Libkdepim
-  messagecomposer
+  KF5::MessageComposer
   KF5::MessageViewer
   KF5::Completion
 )

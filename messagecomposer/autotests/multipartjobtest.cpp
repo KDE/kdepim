@@ -25,10 +25,10 @@
 #include <kmime/kmime_content.h>
 using namespace KMime;
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/job/singlepartjob.h>
-#include <messagecomposer/job/multipartjob.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/SinglepartJob>
+#include <MessageComposer/MultipartJob>
 using namespace MessageComposer;
 
 QTEST_MAIN(MultipartJobTest)

@@ -34,12 +34,12 @@
 #include <libkleo/kleo/cryptobackendfactory.h>
 #include <kjob.h>
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/job/encryptjob.h>
-#include <messagecomposer/job/maintextjob.h>
-#include <messagecomposer/job/signjob.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/part/textpart.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/EncryptJob>
+#include <MessageComposer/MainTextJob>
+#include <MessageComposer/SignJob>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/TextPart>
 
 #include <viewer/nodehelper.h>
 #include <setupenv.h>

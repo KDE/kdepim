@@ -23,7 +23,7 @@
 #include <helpers/messagehelpers.h>
 #include <MessageCore/MDNStateAttribute>
 
-#include <messagecomposer/helper/messagefactory.h>
+#include <MessageComposer/MessageFactory>
 using MessageComposer::MessageFactory;
 
 #include <settings/messageviewersettings.h>

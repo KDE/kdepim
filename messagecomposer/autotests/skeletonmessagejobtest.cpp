@@ -24,10 +24,10 @@
 
 #include <kmime/kmime_message.h>
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/part/infopart.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/job/skeletonmessagejob.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/InfoPart>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/SkeletonMessageJob>
 using namespace MessageComposer;
 
 QTEST_MAIN(SkeletonMessageJobTest)

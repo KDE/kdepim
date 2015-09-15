@@ -27,9 +27,9 @@
 #include <kmime/kmime_headers.h>
 using namespace KMime;
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/job/attachmentjob.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/AttachmentJob>
 using namespace MessageComposer;
 
 #include <MessageCore/AttachmentFromUrlJob>

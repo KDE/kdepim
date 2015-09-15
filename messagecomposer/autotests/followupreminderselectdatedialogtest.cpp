@@ -16,7 +16,7 @@
 */
 
 #include "followupreminderselectdatedialogtest.h"
-#include "../followupreminder/followupreminderselectdatedialog.h"
+#include "../src/followupreminder/followupreminderselectdatedialog.h"
 #include <qtest.h>
 #include <KDateComboBox>
 #include <AkonadiWidgets/CollectionComboBox>

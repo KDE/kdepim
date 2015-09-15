@@ -32,11 +32,11 @@
 #include <libkleo/kleo/cryptobackendfactory.h>
 #include <kjob.h>
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/job/encryptjob.h>
-#include <messagecomposer/job/maintextjob.h>
-#include <messagecomposer/part/textpart.h>
-#include <messagecomposer/part/globalpart.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/EncryptJob>
+#include <MessageComposer/MainTextJob>
+#include <MessageComposer/TextPart>
+#include <MessageComposer/GlobalPart>
 
 #include <viewer/objecttreeparser.h>
 #include <viewer/objecttreeemptysource.h>

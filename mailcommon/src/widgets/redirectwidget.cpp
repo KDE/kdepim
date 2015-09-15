@@ -23,7 +23,7 @@
 
 #include <QTreeView>
 #include <KIconLoader>
-#include <messagecomposer/composer/composerlineedit.h>
+#include <MessageComposer/ComposerLineEdit>
 
 #include <utils/autoqpointer.h>
 

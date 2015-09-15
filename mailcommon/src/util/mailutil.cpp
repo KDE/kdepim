@@ -60,7 +60,7 @@
 #include <utils/stringutil.h>
 #include <helpers/messagehelpers.h>
 
-#include <messagecomposer/helper/messagehelper.h>
+#include <MessageComposer/MessageHelper>
 
 #include <AgentManager>
 #include <entitymimetypefiltermodel.h>

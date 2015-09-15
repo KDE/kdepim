@@ -17,7 +17,7 @@
 
 #include "composerviewbasetest.h"
 #include <qtest.h>
-#include "../composer/composerviewbase.h"
+#include "../src/composer/composerviewbase.h"
 
 ComposerViewBaseTest::ComposerViewBaseTest(QObject *parent)
     : QObject(parent)

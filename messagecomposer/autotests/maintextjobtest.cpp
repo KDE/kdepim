@@ -28,13 +28,13 @@
 #include <kmime/kmime_content.h>
 using namespace KMime;
 
-#include <messagecomposer/composer/composer.h>
-#include <messagecomposer/part/globalpart.h>
-#include <messagecomposer/job/maintextjob.h>
-#include <messagecomposer/part/textpart.h>
-#include <messagecomposer/composer-ng/richtextcomposer.h>
-#include <messagecomposer/composer-ng/richtextcomposerimages.h>
-#include <messagecomposer/composer-ng/richtextcomposercontroler.h>
+#include <MessageComposer/Composer>
+#include <MessageComposer/GlobalPart>
+#include <MessageComposer/MainTextJob>
+#include <MessageComposer/TextPart>
+#include <MessageComposer/RichTextComposer>
+#include <MessageComposer/RichTextComposerImages>
+#include <MessageComposer/RichTextComposerControler>
 
 #include <KActionCollection>
 
