@@ -322,8 +322,8 @@ IncidenceMonthItem::IncidenceMonthItem(MonthScene *monthScene,
         }
     }
 
-    connect(monthScene, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-            this, SLOT(updateSelection(Akonadi::Item,QDate)));
+    connect(monthScene, &MonthScene::incidenceSelected,
+            this, &IncidenceMonthItem::updateSelection);
 
     // first set to 0, because it's used in startDate()
     mRecurDayOffset = 0;

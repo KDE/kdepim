@@ -106,7 +106,7 @@ MarcusBains::MarcusBains(EventView *eventView, Agenda *agenda)
 
     d->mTimer = new QTimer(this);
     d->mTimer->setSingleShot(true);
-    connect(d->mTimer, SIGNAL(timeout()), this, SLOT(updateLocation()));
+    connect(d->mTimer, &QTimer::timeout, this, &MarcusBains::updateLocation);
     d->mTimer->start(0);
 }
 
@@ -388,8 +388,8 @@ void Agenda::init()
     // effect. Has to be fixed.
     setFocusPolicy(Qt::WheelFocus);
 
-    connect(&d->mScrollUpTimer, SIGNAL(timeout()), SLOT(scrollUp()));
-    connect(&d->mScrollDownTimer, SIGNAL(timeout()), SLOT(scrollDown()));
+    connect(&d->mScrollUpTimer, &QTimer::timeout, this, &Agenda::scrollUp);
+    connect(&d->mScrollDownTimer, &QTimer::timeout, this, &Agenda::scrollDown);
 
     d->mStartCell = QPoint(0, 0);
     d->mEndCell = QPoint(0, 0);
@@ -1819,8 +1819,8 @@ AgendaItem::QPtr Agenda::createAgendaItem(const KCalCore::Incidence::Ptr &incide
     AgendaItem::QPtr agendaItem = new AgendaItem(d->mAgendaView, d->mCalendar, incidence,
             itemPos, itemCount, recurrenceId, isSelected, this);
 
-    connect(agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)), SLOT(removeAgendaItem(AgendaItem::QPtr)));
-    connect(agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)), SLOT(showAgendaItem(AgendaItem::QPtr)));
+    connect(agendaItem, &AgendaItem::removeAgendaItem, this, &Agenda::removeAgendaItem);
+    connect(agendaItem, &AgendaItem::showAgendaItem, this, &Agenda::showAgendaItem);
 
     d->mAgendaItemsById.insert(incidence->uid(), agendaItem);
 
@@ -1968,7 +1968,7 @@ bool Agenda::removeAgendaItem(const AgendaItem::QPtr &agendaItem)
     d->mItemsToDelete.append(agendaItem);
     d->mItemsQueuedForDeletion.insert(agendaItem->incidence()->uid());
     agendaItem->setVisible(false);
-    QTimer::singleShot(0, this, SLOT(deleteItemsToDelete()));
+    QTimer::singleShot(0, this, &Agenda::deleteItemsToDelete);
     return taken;
 }
 
@@ -2013,7 +2013,7 @@ void Agenda::resizeEvent(QResizeEvent *ev)
     }
     calculateWorkingHours();
 
-    QTimer::singleShot(0, this, SLOT(resizeAllContents()));
+    QTimer::singleShot(0, this, &Agenda::resizeAllContents);
     Q_EMIT gridSpacingYChanged(d->mGridSpacingY * 4);
 
     QWidget::resizeEvent(ev);

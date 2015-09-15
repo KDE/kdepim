@@ -235,8 +235,8 @@ void MultiAgendaView::setCalendar(const Akonadi::ETMCalendar::Ptr &calendar)
     disconnect(Q_NULLPTR, SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
                this, SLOT(forceRecreateViews()));
 
-    connect(collectionSelection(), SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
-            SLOT(forceRecreateViews()));
+    connect(collectionSelection(), &CalendarSupport::CollectionSelection::selectionChanged,
+            this, &MultiAgendaView::forceRecreateViews);
 
     recreateViews();
 }
@@ -269,17 +269,17 @@ void MultiAgendaView::recreateViews()
     }
 
     d->setupViews();
-    QTimer::singleShot(0, this, SLOT(slotResizeScrollView()));
+    QTimer::singleShot(0, this, &MultiAgendaView::slotResizeScrollView);
     d->mTimeLabelsZone->updateAll();
 
     QScrollArea *timeLabel = d->mTimeLabelsZone->timeLabels().first();
-    connect(timeLabel->verticalScrollBar(), SIGNAL(valueChanged(int)),
-            d->mScrollBar, SLOT(setValue(int)));
-    connect(d->mScrollBar, SIGNAL(valueChanged(int)),
-            timeLabel->verticalScrollBar(), SLOT(setValue(int)));
+    connect(timeLabel->verticalScrollBar(), &QAbstractSlider::valueChanged,
+            d->mScrollBar, &QAbstractSlider::setValue);
+    connect(d->mScrollBar, &QAbstractSlider::valueChanged,
+            timeLabel->verticalScrollBar(), &QAbstractSlider::setValue);
 
     resizeSplitters();
-    QTimer::singleShot(0, this, SLOT(setupScrollBar()));
+    QTimer::singleShot(0, this, &MultiAgendaView::setupScrollBar);
 
     d->mTimeLabelsZone->updateTimeLabelsPosition();
 }
@@ -319,49 +319,49 @@ void MultiAgendaView::Private::setupViews()
                    SIGNAL(newEventSignal(QDateTime,QDateTime)),
                    q, SIGNAL(newEventSignal(QDateTime,QDateTime)));
 
-        q->connect(agenda, SIGNAL(editIncidenceSignal(Akonadi::Item)),
-                   q, SIGNAL(editIncidenceSignal(Akonadi::Item)));
-        q->connect(agenda, SIGNAL(showIncidenceSignal(Akonadi::Item)),
-                   q, SIGNAL(showIncidenceSignal(Akonadi::Item)));
-        q->connect(agenda, SIGNAL(deleteIncidenceSignal(Akonadi::Item)),
-                   q, SIGNAL(deleteIncidenceSignal(Akonadi::Item)));
+        q->connect(agenda, &EventView::editIncidenceSignal,
+                   q, &EventView::editIncidenceSignal);
+        q->connect(agenda, &EventView::showIncidenceSignal,
+                   q, &EventView::showIncidenceSignal);
+        q->connect(agenda, &EventView::deleteIncidenceSignal,
+                   q, &EventView::deleteIncidenceSignal);
 
-        q->connect(agenda, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-                   q, SIGNAL(incidenceSelected(Akonadi::Item,QDate)));
+        q->connect(agenda, &EventView::incidenceSelected,
+                   q, &EventView::incidenceSelected);
 
-        q->connect(agenda, SIGNAL(cutIncidenceSignal(Akonadi::Item)),
-                   q, SIGNAL(cutIncidenceSignal(Akonadi::Item)));
-        q->connect(agenda, SIGNAL(copyIncidenceSignal(Akonadi::Item)),
-                   q, SIGNAL(copyIncidenceSignal(Akonadi::Item)));
-        q->connect(agenda, SIGNAL(pasteIncidenceSignal()),
-                   q, SIGNAL(pasteIncidenceSignal()));
-        q->connect(agenda, SIGNAL(toggleAlarmSignal(Akonadi::Item)),
-                   q, SIGNAL(toggleAlarmSignal(Akonadi::Item)));
-        q->connect(agenda, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)),
-                   q, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)));
+        q->connect(agenda, &EventView::cutIncidenceSignal,
+                   q, &EventView::cutIncidenceSignal);
+        q->connect(agenda, &EventView::copyIncidenceSignal,
+                   q, &EventView::copyIncidenceSignal);
+        q->connect(agenda, &EventView::pasteIncidenceSignal,
+                   q, &EventView::pasteIncidenceSignal);
+        q->connect(agenda, &EventView::toggleAlarmSignal,
+                   q, &EventView::toggleAlarmSignal);
+        q->connect(agenda, &EventView::dissociateOccurrencesSignal,
+                   q, &EventView::dissociateOccurrencesSignal);
 
-        q->connect(agenda, SIGNAL(newTodoSignal(QDate)),
-                   q, SIGNAL(newTodoSignal(QDate)));
+        q->connect(agenda, &EventView::newTodoSignal,
+                   q, &EventView::newTodoSignal);
 
-        q->connect(agenda, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-                   q, SLOT(slotSelectionChanged()));
+        q->connect(agenda, &EventView::incidenceSelected,
+                   q, &MultiAgendaView::slotSelectionChanged);
 
-        q->connect(agenda, SIGNAL(timeSpanSelectionChanged()),
-                   q, SLOT(slotClearTimeSpanSelection()));
+        q->connect(agenda, &AgendaView::timeSpanSelectionChanged,
+                   q, &MultiAgendaView::slotClearTimeSpanSelection);
 
         q->disconnect(agenda->agenda(),
                       SIGNAL(zoomView(int,QPoint,Qt::Orientation)),
                       agenda, Q_NULLPTR);
         q->connect(agenda->agenda(),
-                   SIGNAL(zoomView(int,QPoint,Qt::Orientation)),
-                   q, SLOT(zoomView(int,QPoint,Qt::Orientation)));
+                   &Agenda::zoomView,
+                   q, &MultiAgendaView::zoomView);
     }
 
     AgendaView *lastView = mAgendaViews.last();
     foreach (AgendaView *agenda, mAgendaViews) {
         if (agenda != lastView) {
-            connect(agenda->agenda()->verticalScrollBar(), SIGNAL(valueChanged(int)),
-                    lastView->agenda()->verticalScrollBar(), SLOT(setValue(int)));
+            connect(agenda->agenda()->verticalScrollBar(), &QAbstractSlider::valueChanged,
+                    lastView->agenda()->verticalScrollBar(), &QAbstractSlider::setValue);
         }
     }
 
@@ -497,16 +497,16 @@ AgendaView *MultiAgendaView::Private::createView(const QString &title)
     box->show();
     mTimeLabelsZone->setAgendaView(av);
 
-    q->connect(mScrollBar, SIGNAL(valueChanged(int)),
-               av->agenda()->verticalScrollBar(), SLOT(setValue(int)));
+    q->connect(mScrollBar, &QAbstractSlider::valueChanged,
+               av->agenda()->verticalScrollBar(), &QAbstractSlider::setValue);
 
-    q->connect(av->splitter(), SIGNAL(splitterMoved(int,int)),
-               q, SLOT(resizeSplitters()));
-    q->connect(av, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
-               q, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)));
+    q->connect(av->splitter(), &QSplitter::splitterMoved,
+               q, &MultiAgendaView::resizeSplitters);
+    q->connect(av, &AgendaView::showIncidencePopupSignal,
+               q, &MultiAgendaView::showIncidencePopupSignal);
 
-    q->connect(av, SIGNAL(showNewEventPopupSignal()),
-               q, SIGNAL(showNewEventPopupSignal()));
+    q->connect(av, &AgendaView::showNewEventPopupSignal,
+               q, &MultiAgendaView::showNewEventPopupSignal);
 
     const QSize minHint = av->allDayAgenda()->scrollArea()->minimumSizeHint();
 

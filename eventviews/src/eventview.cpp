@@ -81,8 +81,8 @@ EventView::EventView(QWidget *parent)
     //editor, for each keypress.
     //Thus, listen to the global focusChanged() signal (seen in Qt 4.6-stable-patched 20091112 -Frank)
     connect(qobject_cast<QApplication *>(QApplication::instance()),
-            SIGNAL(focusChanged(QWidget*,QWidget*)),
-            this, SLOT(focusChanged(QWidget*,QWidget*)));
+            &QApplication::focusChanged,
+            this, &EventView::focusChanged);
 
     d_ptr->setUpModels();
 }
@@ -176,8 +176,8 @@ void EventView::setCalendar(const Akonadi::ETMCalendar::Ptr &calendar)
                 d->collectionSelectionModel->setSourceModel(calendar->model());
             }
 
-            connect(calendar.data(), SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
-                    SLOT(onCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
+            connect(calendar.data(), &ETMCalendar::collectionChanged,
+                    this, &EventView::onCollectionChanged);
         }
     }
 }

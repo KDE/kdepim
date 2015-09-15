@@ -128,8 +128,8 @@ public:
             delete todoTreeModel;
             todoTreeModel = new IncidenceTreeModel(QStringList() << todoMimeType, parent);
             foreach (TodoView *view, views) {
-                QObject::connect(todoTreeModel, SIGNAL(indexChangedParent(QModelIndex)), view, SLOT(expandIndex(QModelIndex)));
-                QObject::connect(todoTreeModel, SIGNAL(batchInsertionFinished()), view, SLOT(restoreViewState()));
+                QObject::connect(todoTreeModel, &IncidenceTreeModel::indexChangedParent, view, &TodoView::expandIndex);
+                QObject::connect(todoTreeModel, &IncidenceTreeModel::batchInsertionFinished, view, &TodoView::restoreViewState);
                 view->mView->setDragDropMode(QAbstractItemView::DragDrop);
                 view->setFlatView(flat, /**propagate=*/false);   // So other views update their toggle icon
             }
@@ -234,7 +234,7 @@ TodoView::TodoView(const EventViews::PrefsPtr &prefs,
     mView->setEditTriggers(QAbstractItemView::SelectedClicked |
                            QAbstractItemView::EditKeyPressed);
 
-    connect(mView->header(), SIGNAL(geometriesChanged()), SLOT(scheduleResizeColumns()));
+    connect(mView->header(), &QHeaderView::geometriesChanged, this, &TodoView::scheduleResizeColumns);
     connect(mView, &TodoViewView::visibleColumnCountChanged, this, &TodoView::resizeColumns);
 
     TodoRichTextDelegate *richTextDelegate = new TodoRichTextDelegate(mView);
@@ -259,7 +259,7 @@ TodoView::TodoView(const EventViews::PrefsPtr &prefs,
     connect(mView, &TodoViewView::customContextMenuRequested, this, &TodoView::contextMenu);
     connect(mView, &TodoViewView::doubleClicked, this, &TodoView::itemDoubleClicked);
 
-    connect(mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
+    connect(mView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &TodoView::selectionChanged);
 
     mQuickAdd = new TodoViewQuickAddLine(this);
     mQuickAdd->setClearButtonEnabled(true);
@@ -581,7 +581,7 @@ void TodoView::restoreLayout(KConfig *config, const QString &group, bool minimal
         }
 
         // We don't have any incidences (content) yet, so we delay resizing
-        QTimer::singleShot(0, this, SLOT(resizeColumns()));
+        QTimer::singleShot(0, this, &TodoView::resizeColumns);
 
     } else {
         for (int i = 0;

@@ -871,37 +871,37 @@ void AgendaView::addCalendar(const ViewCalendar::Ptr &cal)
 
 void AgendaView::connectAgenda(Agenda *agenda, Agenda *otherAgenda)
 {
-    connect(agenda, SIGNAL(showNewEventPopupSignal()),
-            SIGNAL(showNewEventPopupSignal()));
+    connect(agenda, &Agenda::showNewEventPopupSignal,
+            this, &AgendaView::showNewEventPopupSignal);
 
-    connect(agenda, SIGNAL(showIncidencePopupSignal(KCalCore::Incidence::Ptr,QDate)),
-            SLOT(slotShowIncidencePopup(KCalCore::Incidence::Ptr,QDate)));
+    connect(agenda, &Agenda::showIncidencePopupSignal,
+            this, &AgendaView::slotShowIncidencePopup);
 
     agenda->setCalendar(d->mViewCalendar);
 
     connect(agenda, SIGNAL(newEventSignal()), SIGNAL(newEventSignal()));
 
-    connect(agenda, SIGNAL(newStartSelectSignal()),
-            otherAgenda, SLOT(clearSelection()));
-    connect(agenda, SIGNAL(newStartSelectSignal()),
-            SIGNAL(timeSpanSelectionChanged()));
+    connect(agenda, &Agenda::newStartSelectSignal,
+            otherAgenda, &Agenda::clearSelection);
+    connect(agenda, &Agenda::newStartSelectSignal,
+            this, &AgendaView::timeSpanSelectionChanged);
 
-    connect(agenda, SIGNAL(editIncidenceSignal(KCalCore::Incidence::Ptr)),
-            SLOT(slotEditIncidence(KCalCore::Incidence::Ptr)));
-    connect(agenda, SIGNAL(showIncidenceSignal(KCalCore::Incidence::Ptr)),
-            SLOT(slotShowIncidence(KCalCore::Incidence::Ptr)));
-    connect(agenda, SIGNAL(deleteIncidenceSignal(KCalCore::Incidence::Ptr)),
-            SLOT(slotDeleteIncidence(KCalCore::Incidence::Ptr)));
+    connect(agenda, &Agenda::editIncidenceSignal,
+            this, &AgendaView::slotEditIncidence);
+    connect(agenda, &Agenda::showIncidenceSignal,
+            this, &AgendaView::slotShowIncidence);
+    connect(agenda, &Agenda::deleteIncidenceSignal,
+            this, &AgendaView::slotDeleteIncidence);
 
     // drag signals
     connect(agenda, SIGNAL(startDragSignal(KCalCore::Incidence::Ptr)),
             SLOT(startDrag(KCalCore::Incidence::Ptr)));
 
     // synchronize selections
-    connect(agenda, SIGNAL(incidenceSelected(KCalCore::Incidence::Ptr,QDate)),
-            otherAgenda, SLOT(deselectItem()));
-    connect(agenda, SIGNAL(incidenceSelected(KCalCore::Incidence::Ptr,QDate)),
-            SLOT(slotIncidenceSelected(KCalCore::Incidence::Ptr,QDate)));
+    connect(agenda, &Agenda::incidenceSelected,
+            otherAgenda, &Agenda::deselectItem);
+    connect(agenda, &Agenda::incidenceSelected,
+            this, &AgendaView::slotIncidenceSelected);
 
     // rescheduling of todos by d'n'd
     connect(agenda, SIGNAL(droppedIncidences(KCalCore::Incidence::List,QPoint,bool)),
@@ -2308,6 +2308,6 @@ void AgendaView::scheduleUpdateEventIndicators()
 {
     if (!d->mUpdateEventIndicatorsScheduled) {
         d->mUpdateEventIndicatorsScheduled = true;
-        QTimer::singleShot(0, this, SLOT(updateEventIndicators()));
+        QTimer::singleShot(0, this, &AgendaView::updateEventIndicators);
     }
 }

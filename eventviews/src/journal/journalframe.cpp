@@ -88,16 +88,16 @@ void JournalDateView::addJournal(const Akonadi::Item &j)
     entry->setIncidenceChanger(mChanger);
 
     mEntries.insert(j.id(), entry);
-    connect(this, SIGNAL(setIncidenceChangerSignal(Akonadi::IncidenceChanger*)),
-            entry, SLOT(setIncidenceChanger(Akonadi::IncidenceChanger*)));
-    connect(this, SIGNAL(setDateSignal(QDate)),
-            entry, SLOT(setDate(QDate)));
-    connect(entry, SIGNAL(deleteIncidence(Akonadi::Item)),
-            this, SIGNAL(deleteIncidence(Akonadi::Item)));
-    connect(entry, SIGNAL(editIncidence(Akonadi::Item)),
-            this, SIGNAL(editIncidence(Akonadi::Item)));
-    connect(entry, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-            SIGNAL(incidenceSelected(Akonadi::Item,QDate)));
+    connect(this, &JournalDateView::setIncidenceChangerSignal,
+            entry, &JournalFrame::setIncidenceChanger);
+    connect(this, &JournalDateView::setDateSignal,
+            entry, &JournalFrame::setDate);
+    connect(entry, &JournalFrame::deleteIncidence,
+            this, &JournalDateView::deleteIncidence);
+    connect(entry, &JournalFrame::editIncidence,
+            this, &JournalDateView::editIncidence);
+    connect(entry, &JournalFrame::incidenceSelected,
+            this, &JournalDateView::incidenceSelected);
     connect(entry, SIGNAL(printJournal(KCalCore::Journal::Ptr,bool)),
             SIGNAL(printJournal(KCalCore::Journal::Ptr,bool)));
 }
@@ -201,7 +201,7 @@ JournalFrame::JournalFrame(const Akonadi::Item &j,
     mPrintPreviewButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     mPrintPreviewButton->setToolTip(i18n("Print preview this journal entry"));
     buttonsLayout->addWidget(mPrintPreviewButton);
-    connect(mPrintPreviewButton, SIGNAL(clicked()), this, SLOT(printPreviewJournal()));
+    connect(mPrintPreviewButton, &QAbstractButton::clicked, this, &JournalFrame::printPreviewJournal);
 
     readJournal(mJournal);
     mDirty = false;

@@ -69,23 +69,23 @@ void JournalView::appendJournal(const Akonadi::Item &journal, const QDate &dt)
         entry->setIncidenceChanger(mChanger);
         entry->show();
         connect(this, &JournalView::flushEntries, entry, &JournalDateView::flushEntries);
-        connect(this, SIGNAL(setIncidenceChangerSignal(Akonadi::IncidenceChanger*)),
-                entry, SLOT(setIncidenceChanger(Akonadi::IncidenceChanger*)));
-        connect(this, SIGNAL(journalEdited(Akonadi::Item)),
-                entry, SLOT(journalEdited(Akonadi::Item)));
-        connect(this, SIGNAL(journalDeleted(Akonadi::Item)),
-                entry, SLOT(journalDeleted(Akonadi::Item)));
+        connect(this, &JournalView::setIncidenceChangerSignal,
+                entry, &JournalDateView::setIncidenceChanger);
+        connect(this, &JournalView::journalEdited,
+                entry, &JournalDateView::journalEdited);
+        connect(this, &JournalView::journalDeleted,
+                entry, &JournalDateView::journalDeleted);
 
-        connect(entry, SIGNAL(editIncidence(Akonadi::Item)),
-                this, SIGNAL(editIncidenceSignal(Akonadi::Item)));
-        connect(entry, SIGNAL(deleteIncidence(Akonadi::Item)),
-                this, SIGNAL(deleteIncidenceSignal(Akonadi::Item)));
-        connect(entry, SIGNAL(newJournal(QDate)),
-                this, SIGNAL(newJournalSignal(QDate)));
-        connect(entry, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-                SIGNAL(incidenceSelected(Akonadi::Item,QDate)));
-        connect(entry, SIGNAL(printJournal(KCalCore::Journal::Ptr,bool)),
-                SIGNAL(printJournal(KCalCore::Journal::Ptr,bool)));
+        connect(entry, &JournalDateView::editIncidence,
+                this, &EventView::editIncidenceSignal);
+        connect(entry, &JournalDateView::deleteIncidence,
+                this, &EventView::deleteIncidenceSignal);
+        connect(entry, &JournalDateView::newJournal,
+                this, &EventView::newJournalSignal);
+        connect(entry, &JournalDateView::incidenceSelected,
+                this, &EventView::incidenceSelected);
+        connect(entry, &JournalDateView::printJournal,
+                this, &JournalView::printJournal);
         mEntries.insert(dt, entry);
     }
 

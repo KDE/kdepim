@@ -234,8 +234,8 @@ TimelineView::TimelineView(QWidget *parent)
     d->mGantt = new KDGantt::GraphicsView();
     splitter->addWidget(d->mLeftView);
     splitter->addWidget(d->mGantt);
-    connect(splitter, SIGNAL(splitterMoved(int,int)),
-            d, SLOT(splitterMoved()));
+    connect(splitter, &QSplitter::splitterMoved,
+            d, &Private::splitterMoved);
     QStandardItemModel *model = new QStandardItemModel(this);
 
     d->mRowController = new RowController;
@@ -279,15 +279,15 @@ TimelineView::TimelineView(QWidget *parent)
 #else
     qCDebug(CALENDARVIEW_LOG) << "Disabled code, port to KDGantt2";
 #endif
-    connect(model, SIGNAL(itemChanged(QStandardItem*)),
-            d, SLOT(itemChanged(QStandardItem*)));
-    connect(d->mGantt, SIGNAL(doubleClicked(QModelIndex)),
-            d, SLOT(itemDoubleClicked(QModelIndex)));
-    connect(d->mGantt, SIGNAL(activated(QModelIndex)),
-            d, SLOT(itemSelected(QModelIndex)));
+    connect(model, &QStandardItemModel::itemChanged,
+            d, &Private::itemChanged);
+    connect(d->mGantt, &KDGantt::GraphicsView::doubleClicked,
+            d, &Private::itemDoubleClicked);
+    connect(d->mGantt, &KDGantt::GraphicsView::activated,
+            d, &Private::itemSelected);
     d->mGantt->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(d->mGantt, SIGNAL(customContextMenuRequested(QPoint)),
-            d, SLOT(contextMenuRequested(QPoint)));
+    connect(d->mGantt, &QWidget::customContextMenuRequested,
+            d, &Private::contextMenuRequested);
 
 #if 0
     connect(d->mGantt, SIGNAL(dateTimeDoubleClicked(QDateTime)),

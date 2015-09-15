@@ -100,11 +100,11 @@ void TimeLabelsZone::setupTimeLabel(QScrollArea *area)
 {
     if (mAgenda && mAgenda->verticalScrollBar()) {
         // Scrolling the agenda will scroll the timelabel
-        connect(mAgenda->verticalScrollBar(), SIGNAL(valueChanged(int)),
-                area->verticalScrollBar(), SLOT(setValue(int)));
+        connect(mAgenda->verticalScrollBar(), &QAbstractSlider::valueChanged,
+                area->verticalScrollBar(), &QAbstractSlider::setValue);
         // and vice-versa. ( this won't loop )
-        connect(area->verticalScrollBar(), SIGNAL(valueChanged(int)),
-                mAgenda->verticalScrollBar(), SLOT(setValue(int)));
+        connect(area->verticalScrollBar(), &QAbstractSlider::valueChanged,
+                mAgenda->verticalScrollBar(), &QAbstractSlider::setValue);
 
         area->verticalScrollBar()->setValue(mAgenda->verticalScrollBar()->value());
 

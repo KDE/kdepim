@@ -183,8 +183,8 @@ MonthView::MonthView(NavButtonsVisibility visibility, QWidget *parent)
             i18nc("@info:whatsthis",
                   "Click this button and the month view will be enlarged to fill the "
                   "maximum available window space / or shrunk back to its normal size."));
-        connect(d->fullView, SIGNAL(clicked()),
-                this, SLOT(changeFullView()));
+        connect(d->fullView, &QAbstractButton::clicked,
+                this, &MonthView::changeFullView);
 
         QToolButton *minusMonth = new QToolButton(this);
         minusMonth->setIcon(QIcon::fromTheme(QStringLiteral("arrow-up-double")));
@@ -193,8 +193,8 @@ MonthView::MonthView(NavButtonsVisibility visibility, QWidget *parent)
         minusMonth->setWhatsThis(
             i18nc("@info:whatsthis",
                   "Click this button and the view will be scrolled back in time by 1 month."));
-        connect(minusMonth, SIGNAL(clicked()),
-                this, SLOT(moveBackMonth()));
+        connect(minusMonth, &QAbstractButton::clicked,
+                this, &MonthView::moveBackMonth);
 
         QToolButton *minusWeek = new QToolButton(this);
         minusWeek->setIcon(QIcon::fromTheme(QStringLiteral("arrow-up")));
@@ -203,8 +203,8 @@ MonthView::MonthView(NavButtonsVisibility visibility, QWidget *parent)
         minusWeek->setWhatsThis(
             i18nc("@info:whatsthis",
                   "Click this button and the view will be scrolled back in time by 1 week."));
-        connect(minusWeek, SIGNAL(clicked()),
-                this, SLOT(moveBackWeek()));
+        connect(minusWeek, &QAbstractButton::clicked,
+                this, &MonthView::moveBackWeek);
 
         QToolButton *plusWeek = new QToolButton(this);
         plusWeek->setIcon(QIcon::fromTheme(QStringLiteral("arrow-down")));
@@ -213,8 +213,8 @@ MonthView::MonthView(NavButtonsVisibility visibility, QWidget *parent)
         plusWeek->setWhatsThis(
             i18nc("@info:whatsthis",
                   "Click this button and the view will be scrolled forward in time by 1 week."));
-        connect(plusWeek, SIGNAL(clicked()),
-                this, SLOT(moveFwdWeek()));
+        connect(plusWeek, &QAbstractButton::clicked,
+                this, &MonthView::moveFwdWeek);
 
         QToolButton *plusMonth = new QToolButton(this);
         plusMonth->setIcon(QIcon::fromTheme(QStringLiteral("arrow-down-double")));
@@ -223,8 +223,8 @@ MonthView::MonthView(NavButtonsVisibility visibility, QWidget *parent)
         plusMonth->setWhatsThis(
             i18nc("@info:whatsthis",
                   "Click this button and the view will be scrolled forward in time by 1 month."));
-        connect(plusMonth, SIGNAL(clicked()),
-                this, SLOT(moveFwdMonth()));
+        connect(plusMonth, &QAbstractButton::clicked,
+                this, &MonthView::moveFwdMonth);
 
         rightLayout->addWidget(d->fullView);
         rightLayout->addWidget(minusMonth);
@@ -237,17 +237,17 @@ MonthView::MonthView(NavButtonsVisibility visibility, QWidget *parent)
         d->view->setFrameStyle(QFrame::NoFrame);
     }
 
-    connect(d->scene, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
-            SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)));
+    connect(d->scene, &MonthScene::showIncidencePopupSignal,
+            this, &MonthView::showIncidencePopupSignal);
 
-    connect(d->scene, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
-            SIGNAL(incidenceSelected(Akonadi::Item,QDate)));
+    connect(d->scene, &MonthScene::incidenceSelected,
+            this, &EventView::incidenceSelected);
 
     connect(d->scene, SIGNAL(newEventSignal()),
             SIGNAL(newEventSignal()));
 
-    connect(d->scene, SIGNAL(showNewEventPopupSignal()),
-            SIGNAL(showNewEventPopupSignal()));
+    connect(d->scene, &MonthScene::showNewEventPopupSignal,
+            this, &MonthView::showNewEventPopupSignal);
 
     connect(&d->reloadTimer, &QTimer::timeout, this, &MonthView::reloadIncidences);
     updateConfig();
