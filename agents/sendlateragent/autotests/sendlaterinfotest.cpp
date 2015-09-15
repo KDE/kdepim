@@ -16,7 +16,7 @@
 */
 
 #include "sendlaterinfotest.h"
-#include "../sendlaterinfo.h"
+#include "sendlaterinfo.h"
 #include <qtest.h>
 #include <QDateTime>
 #include <KConfigGroup>

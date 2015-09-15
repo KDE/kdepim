@@ -212,6 +212,7 @@ endif()
 configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
 
 add_subdirectory(libfollowupreminder)
+add_subdirectory(libsendlater)
 add_subdirectory(noteshared)
 add_subdirectory(libkdepim)
 add_subdirectory(calendarsupport)

@@ -22,7 +22,7 @@
 #include <KLocalizedString>
 #include <QCommandLineParser>
 #include <QStandardPaths>
-#include "../sendlaterdialog.h"
+#include "sendlaterdialog.h"
 
 int main(int argc, char **argv)
 {

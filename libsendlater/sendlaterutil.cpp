@@ -18,7 +18,7 @@
 #include "sendlaterutil.h"
 #include "sendlaterinfo.h"
 #include "sendlateragentsettings.h"
-#include "sendlateragent_debug.h"
+#include "libsendlater_debug.h"
 #include <KConfigGroup>
 
 #include <QDBusInterface>
@@ -38,15 +38,15 @@ bool SendLater::SendLaterUtil::compareSendLaterInfo(SendLater::SendLaterInfo *le
 void SendLater::SendLaterUtil::changeRecurrentDate(SendLater::SendLaterInfo *info)
 {
     if (info && info->isRecurrence()) {
-        qCDebug(SENDLATERAGENT_LOG) << "BEFORE SendLater::SendLaterUtil::changeRecurrentDate " << info->dateTime().toString();
+        qCDebug(LIBSENDLATER_LOG) << "BEFORE SendLater::SendLaterUtil::changeRecurrentDate " << info->dateTime().toString();
         QDateTime newInfoDateTime = info->dateTime();
         newInfoDateTime = updateRecurence(info, newInfoDateTime);
-        qCDebug(SENDLATERAGENT_LOG) << " QDateTime::currentDateTime()" << QDateTime::currentDateTime().toString();
+        qCDebug(LIBSENDLATER_LOG) << " QDateTime::currentDateTime()" << QDateTime::currentDateTime().toString();
         while (newInfoDateTime <= QDateTime::currentDateTime()) {
             newInfoDateTime = updateRecurence(info, newInfoDateTime);
         }
         info->setDateTime(newInfoDateTime);
-        qCDebug(SENDLATERAGENT_LOG) << "AFTER SendLater::SendLaterUtil::changeRecurrentDate " << info->dateTime().toString() << " info" << info << "New date" << newInfoDateTime;
+        qCDebug(LIBSENDLATER_LOG) << "AFTER SendLater::SendLaterUtil::changeRecurrentDate " << info->dateTime().toString() << " info" << info << "New date" << newInfoDateTime;
         writeSendLaterInfo(defaultConfig(), info, true);
     }
 }
@@ -93,7 +93,7 @@ void SendLater::SendLaterUtil::writeSendLaterInfo(KSharedConfig::Ptr config, Sen
     info->writeConfig(group);
     config->sync();
     config->reparseConfiguration();
-    qCDebug(SENDLATERAGENT_LOG) << " reparse config";
+    qCDebug(LIBSENDLATER_LOG) << " reparse config";
     if (forceReload) {
         reload();
     }
@@ -118,12 +118,12 @@ bool SendLater::SendLaterUtil::sentLaterAgentEnabled()
 
 void SendLater::SendLaterUtil::reload()
 {
-    qCDebug(SENDLATERAGENT_LOG) << " void SendLater::SendLaterUtil::reload()";
+    qCDebug(LIBSENDLATER_LOG) << " void SendLater::SendLaterUtil::reload()";
     QDBusInterface interface(QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_sendlater_agent"), QStringLiteral("/SendLaterAgent"));
     if (interface.isValid()) {
         interface.call(QStringLiteral("reload"));
     } else {
-        qCDebug(SENDLATERAGENT_LOG) << " Can not reload list";
+        qCDebug(LIBSENDLATER_LOG) << " Can not reload list";
     }
 }
 

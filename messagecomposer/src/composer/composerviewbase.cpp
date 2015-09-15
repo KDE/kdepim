@@ -36,8 +36,8 @@
 #include "utils/util.h"
 #include "imagescaling/imagescalingutils.h"
 
-#include "agents/sendlateragent/sendlaterinfo.h"
-#include "agents/sendlateragent/sendlaterutil.h"
+#include "libsendlater/sendlaterinfo.h"
+#include "libsendlater/sendlaterutil.h"
 
 #include <addressline/recentaddress/recentaddresses.h>
 #include "helper/messagehelper.h"
