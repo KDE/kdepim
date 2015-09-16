@@ -33,6 +33,13 @@ find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageCore ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimCommon ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiSearch "5.0.4" CONFIG REQUIRED)
+set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGELIST
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/messagelist_version.h"

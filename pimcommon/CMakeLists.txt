@@ -46,16 +46,16 @@ find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Sonnet ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
+
+find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 
 #target_link_libraries(KF5PimCommon
 #PUBLIC
 #    KF5::TextWidgets
 #    KF5::KIOCore
 #PRIVATE
-#    KF5::IMAP
-#    KF5::Libkdepim
 #    KF5::PimTextEdit
-#    KF5::KDELibs4Support
 
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX PIMCOMMON
