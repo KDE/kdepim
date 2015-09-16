@@ -34,7 +34,7 @@
 
 #include "exportcertificatesdialog.h"
 
-#include "libkleo/ui/filenamerequester.h"
+#include "Libkleo/FileNameRequester"
 
 #include <KGuiItem>
 #include <KLocalizedString>

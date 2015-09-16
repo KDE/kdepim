@@ -43,10 +43,10 @@
 #include "utils/kleo_util.h"
 
 #include <KEmailAddress>
-#include "libkleo/ui/keyselectiondialog.h"
-#include "libkleo/kleo/cryptobackendfactory.h"
-#include "libkleo/kleo/keylistjob.h"
-#include "libkleo/kleo/dn.h"
+#include "Libkleo/KeySelectionDialog"
+#include "Libkleo/CryptoBackendFactory"
+#include "Libkleo/KeyListJob"
+#include "Libkleo/Dn"
 
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>

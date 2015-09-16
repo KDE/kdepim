@@ -18,9 +18,6 @@ set(templateparser_LIB_SRCS
   templatessyntaxhighlighterrules.cpp
 )
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/libkleo
-)
 
 ecm_qt_declare_logging_category(templateparser_LIB_SRCS HEADER templateparser_debug.h IDENTIFIER TEMPLATEPARSER_LOG CATEGORY_NAME log_templateparser)
 
@@ -53,6 +50,7 @@ PRIVATE
   KF5::XmlGui
   KF5::IconThemes
   KF5::Completion
+  KF5::Libkleo
 )
 set_target_properties(KF5TemplateParser PROPERTIES
   VERSION ${KDEPIM_LIB_VERSION}

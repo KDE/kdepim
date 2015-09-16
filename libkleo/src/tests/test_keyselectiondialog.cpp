@@ -29,7 +29,7 @@
     your version.
 */
 
-#include "libkleo/ui/keyselectiondialog.h"
+#include "ui/keyselectiondialog.h"
 #include <gpgme++/key.h>
 
 #include <KAboutData>

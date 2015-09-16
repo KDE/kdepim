@@ -46,7 +46,7 @@
 #include <utils/kleo_assert.h>
 #include <utils/kdsignalblocker.h>
 
-#include <libkleo/kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <gpgme++/key.h>
 

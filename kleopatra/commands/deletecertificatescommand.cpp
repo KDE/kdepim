@@ -41,11 +41,11 @@
 #include <models/keycache.h>
 #include <models/predicates.h>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/cryptobackend.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/multideletejob.h>
-#include <libkleo/kleo/deletejob.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/CryptoBackendFactory>
+#include <libkleo/src/kleo/multideletejob.h>
+#include <libkleo/src/kleo/deletejob.h>
 
 #include <gpgme++/key.h>
 

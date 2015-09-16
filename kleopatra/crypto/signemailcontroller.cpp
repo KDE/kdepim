@@ -46,7 +46,7 @@
 
 #include "emailoperationspreferences.h"
 
-#include <libkleo/kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <kmime/kmime_header_parsing.h>
 

@@ -4,7 +4,6 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 include_directories(
   ${CMAKE_SOURCE_DIR}/kleopatra
   ${CMAKE_BINARY_DIR}/kleopatra
-  ${CMAKE_SOURCE_DIR}/libkleo
   ${Boost_INCLUDE_DIR}
   ${GPGME_INCLUDES}
 )
@@ -27,7 +26,7 @@ if(PORT_ME_AWAY_FROM_EVENT_LOOPS)
 
   add_executable(test_keylistmodels TEST ${test_keylistmodels_SRCS})
 
-  target_link_libraries(test_keylistmodels kleo )
+  target_link_libraries(test_keylistmodels KF5::Libkleo )
 
 ########### next target ###############
 
@@ -45,7 +44,7 @@ if(PORT_ME_AWAY_FROM_EVENT_LOOPS)
 
   add_executable(test_useridlistmodels TEST ${test_useridlistmodels_SRCS})
 
-  target_link_libraries(test_useridlistmodels kleo )
+  target_link_libraries(test_useridlistmodels KF5::Libkleo )
 
 endif()
 
@@ -62,7 +61,7 @@ add_test(test_verify test_verify)
 ecm_mark_as_test(test_verify)
 
 target_link_libraries(test_verify
-  kleo
+  KF5::Libkleo
   Qt5::Test
   KF5::QGpgme
   KF5::CoreAddons
@@ -91,12 +90,12 @@ if(USABLE_ASSUAN_FOUND)
 
   if(ASSUAN2_FOUND)
     target_link_libraries(test_uiserver
-      kleo
+      KF5::Libkleo
       ${ASSUAN2_LIBRARIES}
     )
   else()
     target_link_libraries(test_uiserver
-      kleo
+      KF5::Libkleo
       ${ASSUAN_LIBRARIES}
     )
   endif()

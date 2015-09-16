@@ -38,7 +38,7 @@
 
 #include "oidmap.h"
 
-#include "libkleo/ui/dnattributeorderconfigwidget.h"
+#include "ui/dnattributeorderconfigwidget.h"
 
 #include <kconfig.h>
 #include <KLocalizedString>

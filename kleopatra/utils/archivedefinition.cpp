@@ -39,8 +39,8 @@
 #include <utils/path-helper.h>
 #include <utils/kleo_assert.h>
 
-#include <libkleo/kleo/exception.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
+#include <Libkleo/Exception>
+#include <Libkleo/CryptoBackendFactory>
 
 #include <KConfigGroup>
 #include "kleopatra_debug.h"

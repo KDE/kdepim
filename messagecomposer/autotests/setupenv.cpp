@@ -20,9 +20,9 @@
 
 #include "setupenv.h"
 
-#include <libkleo/kleo/keylistjob.h>
+#include <Libkleo/KeyListJob>
 #include <gpgme++/keylistresult.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
+#include <Libkleo/CryptoBackendFactory>
 
 #include <QFile>
 #include <QDir>

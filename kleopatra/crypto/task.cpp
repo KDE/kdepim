@@ -35,7 +35,7 @@
 #include "task.h"
 #include "task_p.h"
 
-#include <libkleo/kleo/exception.h>
+#include <Libkleo/Exception>
 
 #include <utils/gnupg-helper.h>
 #include <utils/auditlog.h>

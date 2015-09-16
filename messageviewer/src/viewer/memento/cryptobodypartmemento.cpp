@@ -17,10 +17,10 @@
 
 #include "cryptobodypartmemento.h"
 
-#include <libkleo/kleo/decryptverifyjob.h>
-#include <libkleo/kleo/verifydetachedjob.h>
-#include <libkleo/kleo/verifyopaquejob.h>
-#include <libkleo/kleo/keylistjob.h>
+#include <Libkleo/DecryptVerifyJob>
+#include <Libkleo/VerifyDetachedJob>
+#include <Libkleo/VerifyOpaqueJob>
+#include <Libkleo/KeyListJob>
 
 #include <gpgme++/keylistresult.h>
 

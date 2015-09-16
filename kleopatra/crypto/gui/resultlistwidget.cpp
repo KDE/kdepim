@@ -41,7 +41,7 @@
 
 #include <utils/scrollarea.h>
 
-#include <libkleo/kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <KLocalizedString>
 #include <QPushButton>

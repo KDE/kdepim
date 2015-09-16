@@ -34,14 +34,14 @@
 
 #include "decryptverifytask.h"
 
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/verifyopaquejob.h>
-#include <libkleo/kleo/verifydetachedjob.h>
-#include <libkleo/kleo/decryptjob.h>
-#include <libkleo/kleo/decryptverifyjob.h>
-#include <libkleo/kleo/dn.h>
-#include <libkleo/kleo/exception.h>
-#include <libkleo/kleo/stl_util.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/VerifyOpaqueJob>
+#include <Libkleo/VerifyDetachedJob>
+#include <libkleo/src/kleo/decryptjob.h>
+#include <Libkleo/DecryptVerifyJob>
+#include <Libkleo/Dn>
+#include <Libkleo/Exception>
+#include <Libkleo/Stl_Util>
 
 #include <models/keycache.h>
 #include <models/predicates.h>

@@ -41,8 +41,8 @@
 
 #include <utils/formatting.h>
 
-#include <libkleo/kleo/keyfiltermanager.h>
-#include <libkleo/kleo/keyfilter.h>
+#include <Libkleo/KeyFilterManager>
+#include <Libkleo/KeyFilter>
 
 #include <KLocalizedString>
 

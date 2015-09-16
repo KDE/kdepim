@@ -29,8 +29,8 @@
     your version.
 */
 
-#include "libkleo/backends/qgpgme/qgpgmecryptoconfig.h"
-#include "libkleo/backends/qgpgme/qgpgmenewcryptoconfig.h"
+#include "backends/qgpgme/qgpgmecryptoconfig.h"
+#include "backends/qgpgme/qgpgmenewcryptoconfig.h"
 
 #include <QCoreApplication>
 #include <iostream>

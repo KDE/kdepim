@@ -46,8 +46,8 @@
 #include <utils/kleo_assert.h>
 #include <utils/archivedefinition.h>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/exception.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Exception>
 
 #include <kmime/kmime_header_parsing.h>
 

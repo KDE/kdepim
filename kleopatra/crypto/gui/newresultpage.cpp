@@ -39,7 +39,7 @@
 
 #include <crypto/taskcollection.h>
 
-#include <libkleo/kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <boost/mem_fn.hpp>
 

@@ -20,12 +20,13 @@ include(KDEFrameworkCompilerSettings)
 include(ECMQtDeclareLoggingCategory)
 include(ECMAddTests)
 
-
 set(KF5_VERSION "5.14.0")
 set(KDEPIMLIBS_LIB_VERSION "5.0.42")
 set(KDEPIM_LIB_VERSION "5.43.0")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIME_LIB_VERSION "4.87.0")
+set(KLDAP_LIB_VERSION "4.80.0")
+set(KCONTACTS_LIB_VERSION "4.91.0")
 
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools DBus Network)
@@ -38,6 +39,12 @@ find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Ldap ${KLDAP_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Contacts ${KCONTACTS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiContact ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+
+find_package(KF5AkonadiSearch "5.0.4" CONFIG REQUIRED)
+set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Search libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Provides search capabilities in KMail and Akonadi")
 
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX LIBKDEPIM
@@ -45,10 +52,7 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX LIBKDEPIM
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5LibKdepimConfigVersion.cmake"
                         SOVERSION 5
 )
-
-########### Targets ###########
-
-add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Libkdepim")
@@ -74,6 +78,7 @@ install(FILES
 )
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+
 else()
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX LIBKDEPIM
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/libkdepim_version.h"

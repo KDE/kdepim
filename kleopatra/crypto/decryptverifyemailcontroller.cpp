@@ -47,7 +47,7 @@
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
 
-#include <libkleo/kleo/cryptobackendfactory.h>
+#include <Libkleo/CryptoBackendFactory>
 
 #include <kmime/kmime_header_parsing.h>
 

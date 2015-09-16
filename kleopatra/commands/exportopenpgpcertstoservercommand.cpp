@@ -38,8 +38,8 @@
 
 #include <utils/gnupg-helper.h>
 
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/cryptoconfig.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoConfig>
 
 #include <gpgme++/key.h>
 

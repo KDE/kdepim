@@ -50,10 +50,10 @@
 #include <utils/formatting.h>
 #include <utils/gnupg-helper.h>
 
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/cryptobackend.h>
-#include <libkleo/kleo/keylistjob.h>
-#include <libkleo/kleo/dn.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/KeyListJob>
+#include <Libkleo/Dn>
 
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>

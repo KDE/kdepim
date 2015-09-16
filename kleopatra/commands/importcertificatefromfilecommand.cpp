@@ -38,8 +38,8 @@
 #include "utils/classify.h"
 #include "utils/filedialog.h"
 
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/importjob.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/ImportJob>
 
 #include <gpgme++/global.h>
 #include <gpgme++/importresult.h>

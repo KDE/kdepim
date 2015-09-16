@@ -29,7 +29,7 @@
     your version.
 */
 
-#include "libkleo/ui/kdhorizontalline.h"
+#include "ui/kdhorizontalline.h"
 
 #include <QApplication>
 #include <QGridLayout>

@@ -41,8 +41,8 @@
 #include "gpgme++/data.h"
 #include "gpgme++/key.h"
 
-#include "libkleo/ui/keyrequester.h"
-#include "libkleo/kleo/enum.h"
+#include "Libkleo/KeyRequester"
+#include "Libkleo/Enum"
 
 using namespace Akonadi;
 

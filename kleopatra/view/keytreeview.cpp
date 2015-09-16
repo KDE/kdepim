@@ -40,8 +40,8 @@
 
 #include <utils/headerview.h>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/keyfilter.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/KeyFilter>
 
 #include "kleopatra_debug.h"
 #include <QTreeView>

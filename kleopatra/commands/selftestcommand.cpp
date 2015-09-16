@@ -49,7 +49,7 @@
 #include <selftest/gpgagentcheck.h>
 #include <selftest/libkleopatrarccheck.h>
 
-#include <libkleo/kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <KLocalizedString>
 #include <KConfigGroup>

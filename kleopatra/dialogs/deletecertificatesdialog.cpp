@@ -37,7 +37,7 @@
 #include <view/keytreeview.h>
 #include <models/keylistmodel.h>
 
-#include <libkleo/kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <KLocalizedString>
 #include <KMessageBox>

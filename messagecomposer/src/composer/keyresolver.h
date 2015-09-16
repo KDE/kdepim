@@ -38,8 +38,8 @@
 #define __KLEO_KEYRESOLVER_H__
 
 #include "messagecomposer_export.h"
-#include "libkleo/ui/keyapprovaldialog.h"
-#include "libkleo/kleo/enum.h"
+#include "Libkleo/KeyApprovalDialog"
+#include "Libkleo/Enum"
 
 #include <gpgme++/key.h>
 

@@ -34,7 +34,7 @@
 
 #include "hex.h"
 
-#include <libkleo/kleo/exception.h>
+#include <Libkleo/Exception>
 
 #include <KLocalizedString>
 

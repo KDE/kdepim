@@ -32,7 +32,7 @@
 #ifndef __KLEO_TEST_KEYLISTER_H__
 #define __KLEO_TEST_KEYLISTER_H__
 
-#include "libkleo/ui/keylistview.h"
+#include "ui/keylistview.h"
 
 namespace GpgME
 {

@@ -34,8 +34,8 @@
 
 #include "searchbar.h"
 
-#include <libkleo/kleo/keyfilter.h>
-#include <libkleo/kleo/keyfiltermanager.h>
+#include <Libkleo/KeyFilter>
+#include <Libkleo/KeyFilterManager>
 
 #include <KLocalizedString>
 #include <QLineEdit>

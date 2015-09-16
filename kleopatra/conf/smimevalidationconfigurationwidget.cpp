@@ -38,8 +38,8 @@
 
 #include "smimevalidationpreferences.h"
 
-#include <libkleo/kleo/cryptoconfig.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
+#include <Libkleo/CryptoConfig>
+#include <Libkleo/CryptoBackendFactory>
 
 #include <KLocalizedString>
 #include "kleopatra_debug.h"

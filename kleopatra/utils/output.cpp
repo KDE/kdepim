@@ -40,7 +40,7 @@
 #include "log.h"
 #include "cached.h"
 
-#include <libkleo/kleo/exception.h>
+#include <Libkleo/Exception>
 
 #include <KLocalizedString>
 #include <KMessageBox>

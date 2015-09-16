@@ -36,11 +36,11 @@
 
 #include "keylistmodel.h"
 
-#include <libkleo/kleo/keyfilter.h>
+#include <Libkleo/KeyFilter>
 
 #include <gpgme++/key.h>
 
-#include <libkleo/kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <boost/bind.hpp>
 

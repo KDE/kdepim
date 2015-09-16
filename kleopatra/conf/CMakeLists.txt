@@ -67,7 +67,7 @@ else()
 endif()
 
 target_link_libraries(kcm_kleopatra
-  kleo
+  KF5::Libkleo
   KF5::KCMUtils
   KF5::IconThemes
   Qt5::DBus

@@ -27,12 +27,20 @@ set(KDEPIMLIBS_LIB_VERSION "5.0.42")
 set(KDEPIM_LIB_VERSION "5.43.0")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIME_LIB_VERSION "4.87.0")
+set(IDENTITYMANAGEMENT_LIB_VERSION "4.80.0")
 
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
-find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools WebKitWidgets)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
+#find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+#find_package(KF5MessageViewer ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+#find_package(KF5MessageCore ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5IdentityManagement ${IDENTITYMANAGEMENT_LIB_VERSION} CONFIG REQUIRED)
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX TEMPLATEPARSER
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/templateparser_version.h"
@@ -40,9 +48,6 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX TEMPLATEPARSER
                         SOVERSION 5
 )
 
-########### Targets ###########
-
-#add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5TemplateParser")

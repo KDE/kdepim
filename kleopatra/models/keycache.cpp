@@ -42,11 +42,11 @@
 #include <utils/filesystemwatcher.h>
 #include <utils/progressmanager.h>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/dn.h>
-#include <libkleo/kleo/keylistjob.h>
-#include <libkleo/kleo/listallkeysjob.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/Dn>
+#include <Libkleo/KeyListJob>
+#include <libkleo/src/kleo/listallkeysjob.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>

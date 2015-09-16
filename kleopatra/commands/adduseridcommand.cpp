@@ -40,9 +40,9 @@
 
 #include <utils/formatting.h>
 
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/cryptobackend.h>
-#include <libkleo/kleo/adduseridjob.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoBackend>
+#include <libkleo/src/kleo/adduseridjob.h>
 
 #include <gpgme++/key.h>
 

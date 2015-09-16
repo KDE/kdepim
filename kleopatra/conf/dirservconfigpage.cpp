@@ -33,9 +33,9 @@
 #include <config-kleopatra.h>
 
 #include "dirservconfigpage.h"
-#include "libkleo/ui/directoryserviceswidget.h"
-#include "libkleo/ui/cryptoconfigmodule.h"
-#include "libkleo/kleo/cryptobackendfactory.h"
+#include "libkleo/src/ui/directoryserviceswidget.h"
+#include "libkleo/src/ui/cryptoconfigmodule.h"
+#include "Libkleo/CryptoBackendFactory"
 
 #include <kmessagebox.h>
 #include <KLocalizedString>

@@ -40,8 +40,8 @@
 
 #include <boost/mem_fn.hpp>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/exception.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Exception>
 
 #include <gpgme++/key.h>
 

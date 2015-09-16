@@ -32,7 +32,7 @@
 
 #include "gnupgviewer.h"
 
-#include "libkleo/backends/qgpgme/gnupgprocessbase.h"
+#include "backends/qgpgme/gnupgprocessbase.h"
 
 #include <KAboutData>
 

@@ -41,13 +41,13 @@
 #include <utils/kleo_assert.h>
 #include <utils/auditlog.h>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/exception.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/cryptobackend.h>
-#include <libkleo/kleo/signjob.h>
-#include <libkleo/kleo/signencryptjob.h>
-#include <libkleo/kleo/encryptjob.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Exception>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/SignJob>
+#include <Libkleo/SignEncryptJob>
+#include <Libkleo/EncryptJob>
 
 #include <gpgme++/signingresult.h>
 #include <gpgme++/encryptionresult.h>

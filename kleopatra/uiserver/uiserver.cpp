@@ -40,8 +40,8 @@
 #include <utils/detail_p.h>
 #include <utils/gnupg-helper.h>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/exception.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Exception>
 
 #include "kleopatra_debug.h"
 #include <KLocalizedString>

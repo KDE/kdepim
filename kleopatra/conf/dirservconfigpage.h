@@ -35,7 +35,7 @@
 
 #include <kcmodule.h>
 
-#include "libkleo/kleo/cryptoconfig.h"
+#include "Libkleo/CryptoConfig"
 
 class QCheckBox;
 class QLabel;

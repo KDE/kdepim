@@ -36,7 +36,7 @@
 
 #include <utils/archivedefinition.h>
 
-#include "libkleo/ui/filenamerequester.h"
+#include "Libkleo/FileNameRequester"
 
 #include <KLocalizedString>
 

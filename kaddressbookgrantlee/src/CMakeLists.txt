@@ -46,7 +46,7 @@ PRIVATE
   KF5::Contacts
   KF5::AkonadiContact
   KF5::IconThemes
-  kleo
+  KF5::Libkleo
   KF5::I18n
 )
 

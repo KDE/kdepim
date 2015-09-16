@@ -238,7 +238,7 @@ PRIVATE
   KF5::ItemViews
   ${_mailwebview_lib}
   KF5::Libkdepim
-  kleo
+  KF5::Libkleo
   KF5::GrantleeTheme
   KF5::KaddressbookGrantlee
   KF5::IncidenceEditorsng

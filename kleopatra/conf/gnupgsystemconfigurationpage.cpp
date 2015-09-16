@@ -35,8 +35,8 @@
 #include "gnupgsystemconfigurationpage.h"
 
 #include <ui/cryptoconfigmodule.h>
-#include <libkleo/kleo/cryptoconfig.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
+#include <Libkleo/CryptoConfig>
+#include <Libkleo/CryptoBackendFactory>
 
 #include <QVBoxLayout>
 

@@ -40,9 +40,9 @@
 
 #include <utils/action_data.h>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/keyfilter.h>
-#include <libkleo/kleo/keyfiltermanager.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/KeyFilter>
+#include <Libkleo/KeyFilterManager>
 
 #include <gpgme++/key.h>
 

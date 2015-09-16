@@ -39,10 +39,10 @@
 #include <utils/kleo_assert.h>
 #include <utils/auditlog.h>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/cryptobackend.h>
-#include <libkleo/kleo/signjob.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/SignJob>
 
 #include <gpgme++/signingresult.h>
 #include <gpgme++/key.h>

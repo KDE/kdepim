@@ -26,9 +26,9 @@
 #include <KDialogJobUiDelegate>
 #include <KLocalizedString>
 
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/exportjob.h>
-#include <libkleo/ui/progressdialog.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/ExportJob>
+#include <Libkleo/ProgressDialog>
 
 using namespace MessageComposer;
 using MessageCore::AttachmentPart;

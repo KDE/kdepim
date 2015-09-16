@@ -43,8 +43,8 @@
 #include <utils/classify.h>
 #include <utils/kleo_assert.h>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/checksumdefinition.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/ChecksumDefinition>
 
 #include <KLocalizedString>
 

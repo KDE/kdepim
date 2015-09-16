@@ -11,7 +11,7 @@ macro(add_messageviewer_unittest _source)
     ecm_add_test(${_source} util.cpp setupenv.cpp testcsshelper.cpp ${CMAKE_SOURCE_DIR}/messageviewer/src/viewer/cryptohelper.cpp
         TEST_NAME ${_name}
         NAME_PREFIX "KF5::MessageViewer-"
-        LINK_LIBRARIES KF5::MessageViewer kleo KF5::QGpgme Qt5::Test Qt5::WebKitWidgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::AkonadiNotes KF5::CalendarCore
+        LINK_LIBRARIES KF5::MessageViewer KF5::Libkleo KF5::QGpgme Qt5::Test Qt5::WebKitWidgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::AkonadiNotes KF5::CalendarCore
     )
 endmacro ()
 
@@ -22,7 +22,7 @@ macro(add_messageviewer_crypto_unittest _source)
     ecm_mark_as_test(KF5::MessageViewer-${_name})
     target_link_libraries( ${_name}
         KF5::MessageViewer
-        kleo
+        KF5::Libkleo
         KF5::QGpgme
         Qt5::Test
         Qt5::WebKitWidgets

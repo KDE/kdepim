@@ -18,8 +18,8 @@
 #include "verifydetachedbodypartmemento.h"
 #include "messageviewer_debug.h"
 
-#include <libkleo/kleo/verifydetachedjob.h>
-#include <libkleo/kleo/keylistjob.h>
+#include <Libkleo/VerifyDetachedJob>
+#include <Libkleo/KeyListJob>
 
 #include <gpgme++/keylistresult.h>
 

@@ -40,7 +40,7 @@
 #include <utils/input.h>
 #include <utils/output.h>
 
-#include <libkleo/kleo/exception.h>
+#include <Libkleo/Exception>
 
 #include <KLocalizedString>
 

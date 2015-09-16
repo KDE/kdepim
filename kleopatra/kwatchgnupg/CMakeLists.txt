@@ -26,7 +26,7 @@ target_link_libraries(kwatchgnupg
   KF5::Notifications
   KF5::TextWidgets
   KF5::IconThemes
-  kleo
+  KF5::Libkleo
 )
 
 install(TARGETS kwatchgnupg ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

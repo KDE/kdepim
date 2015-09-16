@@ -38,10 +38,10 @@
 
 #include "tooltippreferences.h"
 
-#include "libkleo/kleo/cryptobackendfactory.h"
-#include "libkleo/kleo/keyfiltermanager.h"
-#include "libkleo/kleo/dn.h"
-#include "libkleo/ui/dnattributeorderconfigwidget.h"
+#include "Libkleo/CryptoBackendFactory"
+#include "Libkleo/KeyFilterManager"
+#include "Libkleo/Dn"
+#include "libkleo/src/ui/dnattributeorderconfigwidget.h"
 
 #ifdef KDEPIM_ONLY_KLEO
 # include <utils/kleo_kicondialog.h>

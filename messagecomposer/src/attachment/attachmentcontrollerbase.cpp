@@ -56,8 +56,8 @@
 #include <KFileItemActions>
 #include <KActionMenu>
 
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/ui/keyselectiondialog.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/KeySelectionDialog>
 
 #include <MessageCore/AttachmentCompressJob>
 #include <attachment/attachmentfromfolderjob.h>

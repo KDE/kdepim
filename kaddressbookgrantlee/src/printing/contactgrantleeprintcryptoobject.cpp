@@ -16,7 +16,7 @@
 */
 
 #include "contactgrantleeprintcryptoobject.h"
-#include "libkleo/kleo/enum.h"
+#include "Libkleo/Enum"
 
 using namespace KAddressBookGrantlee;
 inline QString loadCustom(const KContacts::Addressee &contact, const QString &key)

@@ -23,7 +23,7 @@ macro( add_messagecomposer_cryptotest _source )
         KF5::MessageComposer
         KF5::MessageViewer
         KF5::MessageCore
-        kleo
+        KF5::Libkleo
         KF5::Libkdepim
         KF5::PimTextEdit
         KF5::AkonadiCore

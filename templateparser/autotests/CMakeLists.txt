@@ -12,7 +12,7 @@ macro(add_templateparser_unittest _source)
   add_executable( ${_name} ${_test} )
   ecm_mark_as_test(templateparser-${_name})
   target_link_libraries(${_name}
-    kleo
+    KF5::Libkleo
     KF5::TemplateParser
     KF5::MessageViewer
     KF5::QGpgme

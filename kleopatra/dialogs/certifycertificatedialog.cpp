@@ -39,7 +39,7 @@
 #include <utils/formatting.h>
 #include <utils/kleo_assert.h>
 
-#include <libkleo/kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <KLocalizedString>
 

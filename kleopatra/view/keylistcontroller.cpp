@@ -71,7 +71,7 @@
 #include "commands/checksumverifyfilescommand.h"
 #include "commands/checksumcreatefilescommand.h"
 
-#include <libkleo/kleo/stl_util.h>
+#include <Libkleo/Stl_Util>
 
 #include <gpgme++/key.h>
 

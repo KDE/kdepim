@@ -52,12 +52,12 @@
 #include <utils/validation.h>
 #include <utils/filedialog.h>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/dn.h>
-#include <libkleo/kleo/oidmap.h>
-#include <libkleo/kleo/keygenerationjob.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/cryptobackend.h>
+#include <Libkleo/Stl_Util>
+#include <Libkleo/Dn>
+#include <libkleo/src/kleo/oidmap.h>
+#include <libkleo/src/kleo/keygenerationjob.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoBackend>
 
 #include <gpgme++/global.h>
 #include <gpgme++/keygenerationresult.h>

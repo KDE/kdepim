@@ -41,9 +41,9 @@
 #include <utils/classify.h>
 #include <utils/filedialog.h>
 
-#include <libkleo/kleo/cryptobackend.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/exportjob.h>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/ExportJob>
 
 #include <gpgme++/key.h>
 

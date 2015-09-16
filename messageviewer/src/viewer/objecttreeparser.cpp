@@ -63,14 +63,14 @@
 
 // KDEPIM includes
 #include <utils/stringutil.h>
-#include <libkleo/kleo/specialjob.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/decryptverifyjob.h>
-#include <libkleo/kleo/verifydetachedjob.h>
-#include <libkleo/kleo/verifyopaquejob.h>
-#include <libkleo/kleo/keylistjob.h>
-#include <libkleo/kleo/importjob.h>
-#include <libkleo/kleo/dn.h>
+#include <Libkleo/SpecialJob>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/DecryptVerifyJob>
+#include <Libkleo/VerifyDetachedJob>
+#include <Libkleo/VerifyOpaqueJob>
+#include <Libkleo/KeyListJob>
+#include <Libkleo/ImportJob>
+#include <Libkleo/Dn>
 #include "cryptohelper.h"
 
 // KDEPIMLIBS includes

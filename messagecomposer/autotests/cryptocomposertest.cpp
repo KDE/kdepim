@@ -29,7 +29,7 @@
 #include <QDebug>
 #include <qtest.h>
 
-#include <libkleo/kleo/enum.h>
+#include <Libkleo/Enum>
 
 #include <kmime/kmime_headers.h>
 using namespace KMime;

@@ -69,7 +69,7 @@ class UiServer;
 }
 #endif
 
-#include <libkleo/kleo/checksumdefinition.h>
+#include <Libkleo/ChecksumDefinition>
 
 #include "kleopatra_debug.h"
 #include "kleopatra_options.h"

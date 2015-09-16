@@ -26,6 +26,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   KF5::CalendarSupport
   KF5::Libkdepim
   KF5::MessageViewer
+  KF5::Libkleo
 )
 
 target_link_libraries(messageviewer_bodypartformatter_text_calendar KF5::IncidenceEditorsng)

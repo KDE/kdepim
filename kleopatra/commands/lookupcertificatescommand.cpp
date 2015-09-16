@@ -42,12 +42,12 @@
 
 #include <utils/formatting.h>
 
-#include <libkleo/kleo/stl_util.h>
-#include <libkleo/kleo/importfromkeyserverjob.h>
-#include <libkleo/kleo/keylistjob.h>
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/cryptobackend.h>
-#include <libkleo/kleo/cryptoconfig.h>
+#include <Libkleo/Stl_Util>
+#include <libkleo/src/kleo/importfromkeyserverjob.h>
+#include <Libkleo/KeyListJob>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/CryptoBackend>
+#include <Libkleo/CryptoConfig>
 
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>

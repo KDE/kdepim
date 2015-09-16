@@ -32,9 +32,9 @@
 
 #include "kleo_test.h"
 
-#include <libkleo/kleo/cryptobackendfactory.h>
-#include <libkleo/kleo/verifydetachedjob.h>
-#include <libkleo/kleo/keylistjob.h>
+#include <Libkleo/CryptoBackendFactory>
+#include <Libkleo/VerifyDetachedJob>
+#include <Libkleo/KeyListJob>
 #include <KAboutData>
 
 #include <gpgme++/error.h>

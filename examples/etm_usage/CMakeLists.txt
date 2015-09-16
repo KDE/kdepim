@@ -45,7 +45,7 @@ target_link_libraries(etm_usage
   KF5::Mime
   
   KF5::Libkdepim
-  kleo
+  KF5::Libkleo
   KF5::MessageCore
   KF5::MessageList
   KF5::MessageViewer

@@ -29,9 +29,9 @@
     your version.
 */
 
-#include "libkleo/kleo/cryptobackendfactory.h"
-#include "libkleo/kleo/signjob.h"
-#include "libkleo/kleo/keylistjob.h"
+#include "kleo/cryptobackendfactory.h"
+#include "kleo/signjob.h"
+#include "kleo/keylistjob.h"
 
 #include <gpgme++/key.h>
 #include <gpgme++/signingresult.h>
