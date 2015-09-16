@@ -15,17 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "xmlprintingscriptbuilder.h"
-#include "parsingresultdialog.h"
+#include <qdebug.h>
+
+#include <QPointer>
+#include "../src/ksieveui/scriptsparsing/xmlprintingscriptbuilder.h"
+#include "../src/ksieveui/scriptsparsing/parsingresultdialog.h"
 
 #include <ksieve/parser.h>
 using KSieve::Parser;
 
 #include <ksieve/error.h>
 #include <ksieve/scriptbuilder.h>
-
-#include <QDebug>
-#include <QStandardPaths>
 #include <QFileDialog>
 #include <QApplication>
 #include <KAboutData>
@@ -33,12 +33,15 @@ using KSieve::Parser;
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
+#include "../autocreatescriptdialog.h"
+#include "../sievescriptparsingerrordialog.h"
+#include "PimCommon/SieveSyntaxHighlighterUtil"
+
 int main(int argc, char **argv)
 {
-    KAboutData aboutData(QStringLiteral("scriptsieveparsing"), i18n("ScriptSieveParsingTest_Gui"), QStringLiteral("1.0"));
-    aboutData.setShortDescription(i18n("Test for script sieve parsing"));
-    QStandardPaths::setTestModeEnabled(true);
     QApplication app(argc, argv);
+    KAboutData aboutData(QStringLiteral("parsingscript_gui"), i18n("ParsingScriptTest_Gui"), QStringLiteral("1.0"));
+    aboutData.setShortDescription(i18n("Test for parsing script dialog"));
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
@@ -78,8 +81,25 @@ int main(int argc, char **argv)
     }
     KSieveUi::ParsingResultDialog dlg;
     dlg.setResultParsing(psb.toDom().toString());
-
     dlg.show();
+
+    KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
+    PimCommon::SieveSyntaxHighlighterUtil sieveHighlighterutil;
+    const QStringList capabilities = sieveHighlighterutil.fullCapabilities();
+    //Add all capabilities for testing
+    dialog->setSieveCapabilities(capabilities);
+    QString error;
+    dialog->loadScript(psb.toDom(), error);
+    if (!error.isEmpty()) {
+        QPointer<KSieveUi::SieveScriptParsingErrorDialog> dlg = new KSieveUi::SieveScriptParsingErrorDialog;
+        dlg->setError(QString::fromLatin1(script), error);
+        dlg->exec();
+        delete dlg;
+    }
+
+    dialog->show();
     app.exec();
+    delete dialog;
     return 0;
 }
+

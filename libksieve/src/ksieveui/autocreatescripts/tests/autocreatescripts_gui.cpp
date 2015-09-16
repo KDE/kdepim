@@ -21,7 +21,7 @@
 #include <KLocalizedString>
 #include <QCommandLineParser>
 
-#include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
+#include "../autocreatescriptdialog.h"
 #include "PimCommon/SieveSyntaxHighlighterUtil"
 
 int main(int argc, char **argv)

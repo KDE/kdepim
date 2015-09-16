@@ -19,7 +19,7 @@
 */
 
 #include "sieveeditorscriptwidget.h"
-#include "ksieveui/editor/sieveeditor.h"
+#include "libksieve/src/ksieveui/editor/sieveeditor.h"
 
 #include <QHBoxLayout>
 

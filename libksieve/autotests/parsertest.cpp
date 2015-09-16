@@ -30,11 +30,11 @@
     your version.
 */
 #include <config-libksieve.h> // SIZEOF_UNSIGNED_LONG
-#include <ksieve/parser.h>
+#include <../src/ksieve/parser.h>
 using KSieve::Parser;
 
-#include <ksieve/error.h>
-#include <ksieve/scriptbuilder.h>
+#include <../src/ksieve/error.h>
+#include <../src/ksieve/scriptbuilder.h>
 
 #include <QString>
 

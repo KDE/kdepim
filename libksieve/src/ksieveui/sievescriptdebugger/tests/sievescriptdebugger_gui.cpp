@@ -21,7 +21,7 @@
 #include <QCommandLineParser>
 #include <QStandardPaths>
 
-#include "libksieve/ksieveui/sievescriptdebugger/sievescriptdebuggerdialog.h"
+#include "../sievescriptdebuggerdialog.h"
 
 int main(int argc, char **argv)
 {
