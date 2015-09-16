@@ -94,7 +94,7 @@ PUBLIC
 PRIVATE
   KF5::Libkdepim
   KF5::Codecs
-  kdgantt2
+  KF5::KDGantt2
   KF5::AkonadiWidgets
 )
 

@@ -24,7 +24,7 @@
 #include "freebusymodel/freebusyitemmodel.h"
 #include "../src/freebusyganttproxymodel.h"
 
-#include <kdgantt2/kdganttgraphicsview.h>
+#include <KDGantt2/KDGanttGraphicsView>
 
 #include <KCalCore/Attendee>
 

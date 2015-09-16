@@ -20,7 +20,7 @@
 
 #include "timelineitem.h"
 
-#include <kdgantt2/kdganttglobal.h>
+#include <KDGantt2/KDGanttGlobal>
 
 #include <CalendarSupport/KCalPrefs>
 

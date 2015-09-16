@@ -27,12 +27,12 @@
 #include "timelineitem.h"
 #include "helper.h"
 
-#include <kdgantt2/kdganttgraphicsitem.h>
-#include <kdgantt2/kdganttgraphicsview.h>
-#include <kdgantt2/kdganttabstractrowcontroller.h>
-#include <kdgantt2/kdganttdatetimegrid.h>
-#include <kdgantt2/kdganttitemdelegate.h>
-#include <kdgantt2/kdganttstyleoptionganttitem.h>
+#include <KDGantt2/KDGanttGraphicsItem>
+#include <KDGantt2/KDGanttGraphicsView>
+#include <KDGantt2/KDGanttAbstractRowController>
+#include <KDGantt2/KDGanttDateTimeGrid>
+#include <KDGantt2/KDGanttItemDelegate>
+#include <KDGantt2/KDGanttStyleOptionGanttItem>
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <CalendarSupport/CollectionSelection>

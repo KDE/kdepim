@@ -103,7 +103,7 @@ PUBLIC
   KF5::MailTransport
   KF5::CalendarSupport      # For KCalPrefs
   KF5::EventViews
-  kdgantt2             # For FreeBusy Editor
+  KF5::KDGantt2             # For FreeBusy Editor
 PRIVATE
   KF5::Libkdepim
   kdepimdbusinterfaces # For UriHandler

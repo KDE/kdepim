@@ -21,7 +21,7 @@
 #include "freebusyganttproxymodel.h"
 #include "freebusymodel/freebusyitemmodel.h"
 
-#include <kdgantt2/kdganttgraphicsview.h>
+#include <KDGantt2/KDGanttGraphicsView>
 
 #include <KCalCore/FreeBusyPeriod>
 

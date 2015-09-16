@@ -35,10 +35,10 @@
 #include <KCalCore/Event>
 #include <KCalCore/MemoryCalendar>
 
-#include <kdgantt2/kdganttgraphicsview.h>
-#include <kdgantt2/kdganttview.h>
-#include <kdgantt2/kdganttdatetimegrid.h>
-#include <kdgantt2/kdganttabstractrowcontroller.h>
+#include <KDGantt2/KDGanttGraphicsView>
+#include <KDGantt2/KDGanttView>
+#include <KDGantt2/KDGanttDateTimeGrid>
+#include <KDGantt2/KDGanttAbstractRowController>
 
 #include <akonadi/calendar/freebusymanager.h>
 #include <kldap/ldapobject.h>

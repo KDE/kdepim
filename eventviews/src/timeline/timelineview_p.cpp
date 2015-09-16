@@ -25,7 +25,7 @@
 #include "timelineview_p.h"
 #include "timelineitem.h"
 
-#include <kdgantt2/kdganttgraphicsview.h>
+#include <KDGantt2/KDGanttGraphicsView>
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <CalendarSupport/CollectionSelection>
