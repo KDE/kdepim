@@ -176,13 +176,13 @@ private:
 
 bool ListView::Private::ListItemVisitor::visit(const Event::Ptr &e)
 {
-    QPixmap eventPxmp;
+    QIcon eventPxmp;
     if (e->customProperty("KABC", "ANNIVERSARY") == QLatin1String("YES")) {
-        eventPxmp = cachedSmallIcon(QStringLiteral("view-calendar-wedding-anniversary"));
+        eventPxmp = QIcon::fromTheme(QStringLiteral("view-calendar-wedding-anniversary"));
     } else if (e->customProperty("KABC", "BIRTHDAY") == QLatin1String("YES")) {
-        eventPxmp = cachedSmallIcon(QStringLiteral("view-calendar-birthday"));
+        eventPxmp = QIcon::fromTheme(QStringLiteral("view-calendar-birthday"));
     } else {
-        eventPxmp = cachedSmallIcon(e->iconName());
+        eventPxmp = QIcon::fromTheme(e->iconName());
     }
     mItem->setIcon(Summary_Column, eventPxmp);
 
@@ -216,7 +216,7 @@ bool ListView::Private::ListItemVisitor::visit(const Event::Ptr &e)
 
 bool ListView::Private::ListItemVisitor::visit(const Todo::Ptr &t)
 {
-    mItem->setIcon(Summary_Column, cachedSmallIcon(t->iconName()));
+    mItem->setIcon(Summary_Column, QIcon::fromTheme(t->iconName()));
 
     mItem->setText(Summary_Column, cleanSummary(t->summary(), KDateTime()));
 

@@ -337,12 +337,12 @@ TodoView::TodoView(const EventViews::PrefsPtr &prefs,
 
     mItemPopupMenu->addSeparator();
     mItemPopupMenuItemOnlyEntries << mItemPopupMenu->addAction(
-                                      cachedSmallIcon(QStringLiteral("document-print")),
+                                      QIcon::fromTheme(QStringLiteral("document-print")),
                                       i18nc("@action:inmenu print the to-do", "&Print..."),
                                       this, SIGNAL(printTodo()));
 
     mItemPopupMenuItemOnlyEntries << mItemPopupMenu->addAction(
-                                         cachedSmallIcon(QStringLiteral("document-print-preview")),
+                                         QIcon::fromTheme(QStringLiteral("document-print-preview")),
                                          i18nc("@action:inmenu print preview the to-do", "Print Previe&w..."),
                                          this, SIGNAL(printPreviewTodo()));
     mItemPopupMenu->addSeparator();
