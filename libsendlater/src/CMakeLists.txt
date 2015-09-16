@@ -34,7 +34,7 @@ target_link_libraries(KF5SendLater
 )
 target_include_directories(KF5SendLater INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/SendLater/;${KDE_INSTALL_INCLUDEDIR_KF5}/sendlater>")
 
-target_include_directories(KF5SendLater PUBLIC "$<BUILD_INTERFACE:${sendlateragent_SOURCE_DIR}/src;${sendlateragent_BINARY_DIR}/src>")
+target_include_directories(KF5SendLater PUBLIC "$<BUILD_INTERFACE:${sendlater_SOURCE_DIR}/src;${sendlater_BINARY_DIR}/src>")
 
 
 set_target_properties(KF5SendLater PROPERTIES

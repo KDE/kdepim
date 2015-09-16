@@ -25,7 +25,7 @@ PRIVATE
 
 target_include_directories(KF5FollowupReminder INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/FollowupReminder/;${KDE_INSTALL_INCLUDEDIR_KF5}/followupreminder>")
 
-target_include_directories(KF5FollowupReminder PUBLIC "$<BUILD_INTERFACE:${sendlateragent_SOURCE_DIR}/src;${followupreminder_BINARY_DIR}/src>")
+target_include_directories(KF5FollowupReminder PUBLIC "$<BUILD_INTERFACE:${followupreminder_SOURCE_DIR}/src;${followupreminder_BINARY_DIR}/src>")
 target_include_directories(KF5FollowupReminder PUBLIC $<TARGET_PROPERTY:KF5::AkonadiCore,INTERFACE_INCLUDE_DIRECTORIES>)
 
 

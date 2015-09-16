@@ -1,8 +1,8 @@
 project(xmlsieveparsing)
 
-include_directories(${CMAKE_SOURCE_DIR}/libksieve
-        ${CMAKE_SOURCE_DIR}/libksieve/ksieveui
-        ${CMAKE_SOURCE_DIR}/libksieve/ksieveui/scriptsparsing/
+include_directories(${libksieveui_SOURCE_DIR}
+        ${libksieve_SOURCE_DIR}/ksieveui
+        ${libksieve_SOURCE_DIR}/ksieveui/scriptsparsing/
         )
 
 

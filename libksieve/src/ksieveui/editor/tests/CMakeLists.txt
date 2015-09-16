@@ -1,5 +1,5 @@
-include_directories(${CMAKE_SOURCE_DIR}/libksieve
-        ${CMAKE_SOURCE_DIR}/libksieve/ksieveui/scriptsparsing
+include_directories(${libksieve_SOURCE_DIR}
+        ${libksieve_SOURCE_DIR}/ksieveui/scriptsparsing
         )
 
 
