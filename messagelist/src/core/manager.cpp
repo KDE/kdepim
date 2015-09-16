@@ -47,7 +47,6 @@
 #include <KIconLoader>
 #include <KLocalizedString>
 
-#include <QFontDatabase>
 #include <QStandardPaths>
 
 using namespace MessageList::Core;
@@ -625,7 +624,6 @@ static Theme::Column *add_theme_simple_text_column(Theme *s, const QString &name
     Theme::Row *r = new Theme::Row();
 
     Theme::ContentItem *i = new Theme::ContentItem(type);
-    i->setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
 
     if (alignRight) {
         r->addRightItem(i);
@@ -639,7 +637,6 @@ static Theme::Column *add_theme_simple_text_column(Theme *s, const QString &name
         Theme::Row *r = new Theme::Row();
 
         Theme::ContentItem *i = new Theme::ContentItem(type);
-        i->setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
 
         if (alignRight) {
             r->addRightItem(i);
@@ -699,10 +696,7 @@ void Manager::createDefaultThemes()
     i = new Theme::ContentItem(Theme::ContentItem::ExpandedStateIcon);
     r->addLeftItem(i);
     i = new Theme::ContentItem(Theme::ContentItem::GroupHeaderLabel);
-    QFont bigFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
-    bigFont.setBold(true);
-    i->setFont(bigFont);
-    i->setUseCustomFont(true);
+    i->setBold(true);
     r->addLeftItem(i);
     c->addGroupHeaderRow(r);
 
@@ -766,10 +760,7 @@ void Manager::createDefaultThemes()
     i = new Theme::ContentItem(Theme::ContentItem::ExpandedStateIcon);
     r->addLeftItem(i);
     i = new Theme::ContentItem(Theme::ContentItem::GroupHeaderLabel);
-    QFont aBigFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
-    aBigFont.setBold(true);
-    i->setFont(aBigFont);
-    i->setUseCustomFont(true);
+    i->setBold(true);
     r->addLeftItem(i);
     c->addGroupHeaderRow(r);
 
@@ -806,15 +797,11 @@ void Manager::createDefaultThemes()
     r = new Theme::Row();
     i = new Theme::ContentItem(Theme::ContentItem::SenderOrReceiver);
     i->setSoftenByBlending(true);
-    QFont aItalicFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
-    aItalicFont.setItalic(true);
-    i->setFont(aItalicFont);
-    i->setUseCustomFont(true);
+    i->setItalic(true);
     r->addLeftItem(i);
     i = new Theme::ContentItem(Theme::ContentItem::Date);
     i->setSoftenByBlending(true);
-    i->setFont(aItalicFont);
-    i->setUseCustomFont(true);
+    i->setItalic(true);
     r->addRightItem(i);
     c->addMessageRow(r);
 

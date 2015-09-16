@@ -68,32 +68,32 @@ MessageItem::Tag::~Tag()
     delete d;
 }
 
-QPixmap MessageItem::Tag::pixmap() const
+const QPixmap &MessageItem::Tag::pixmap() const
 {
     return d->mPixmap;
 }
 
-QString MessageItem::Tag::name() const
+const QString &MessageItem::Tag::name() const
 {
     return d->mName;
 }
 
-QString MessageItem::Tag::id() const
+const QString &MessageItem::Tag::id() const
 {
     return d->mId;
 }
 
-QColor MessageItem::Tag::textColor() const
+const QColor &MessageItem::Tag::textColor() const
 {
     return d->mTextColor;
 }
 
-QColor MessageItem::Tag::backgroundColor() const
+const QColor &MessageItem::Tag::backgroundColor() const
 {
     return d->mBackgroundColor;
 }
 
-QFont MessageItem::Tag::font() const
+const QFont &MessageItem::Tag::font() const
 {
     return d->mFont;
 }
@@ -133,10 +133,12 @@ public:
     QFont mFontUnreadMessage;
     QFont mFontImportantMessage;
     QFont mFontToDoMessage;
-    QString mFontKey;
-    QString mFontUnreadMessageKey;
-    QString mFontImportantMessageKey;
-    QString mFontToDoMessageKey;
+
+    // Keep those two invalid. They are here purely so that MessageItem can return
+    // const reference to them
+    QColor mColor;
+    QColor mBackgroundColor;
+
 };
 
 Q_GLOBAL_STATIC(MessageItemPrivateSettings, s_settings)
@@ -339,38 +341,38 @@ void MessageItem::invalidateAnnotationCache()
     d->invalidateAnnotationCache();
 }
 
-QColor MessageItem::textColor() const
+const QColor &MessageItem::textColor() const
 {
     Q_D(const MessageItem);
     const Tag *bestTag = d->bestTag();
     if (bestTag != Q_NULLPTR && bestTag->textColor().isValid()) {
         return bestTag->textColor();
     }
-    QColor clr;
+
     Akonadi::MessageStatus messageStatus = status();
     if (!messageStatus.isRead()) {
-        clr = s_settings->mColorUnreadMessage;
+        return s_settings->mColorUnreadMessage;
     } else if (messageStatus.isImportant()) {
-        clr = s_settings->mColorImportantMessage;
+        return s_settings->mColorImportantMessage;
     } else if (messageStatus.isToAct()) {
-        clr = s_settings->mColorToDoMessage;
+        return s_settings->mColorToDoMessage;
+    } else {
+        return s_settings->mColor;
     }
-
-    return clr;
 }
 
-QColor MessageItem::backgroundColor() const
+const QColor &MessageItem::backgroundColor() const
 {
     Q_D(const MessageItem);
     const Tag *bestTag = d->bestTag();
     if (bestTag) {
         return bestTag->backgroundColor();
     } else {
-        return QColor();
+        return s_settings->mBackgroundColor;
     }
 }
 
-QFont MessageItem::font() const
+const QFont &MessageItem::font() const
 {
     Q_D(const MessageItem);
     // for performance reasons we don't want font retrieval to trigger
@@ -383,49 +385,17 @@ QFont MessageItem::font() const
         }
     }
 
-    QFont font;
-
     // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
     Akonadi::MessageStatus messageStatus = status();
     if (messageStatus.isImportant()) {
-        font = s_settings->mFontImportantMessage;
+        return s_settings->mFontImportantMessage;
     } else if (!messageStatus.isRead()) {
-        font = s_settings->mFontUnreadMessage;
+        return s_settings->mFontUnreadMessage;
     } else if (messageStatus.isToAct()) {
-        font = s_settings->mFontToDoMessage;
+        return s_settings->mFontToDoMessage;
     } else {
-        font = s_settings->mFont;
+        return s_settings->mFont;
     }
-
-    return font;
-}
-
-QString MessageItem::fontKey() const
-{
-    Q_D(const MessageItem);
-
-    // for performance reasons we don't want font retrieval to trigger
-    // full tags loading, as the font is used for geometry calculation
-    // and thus this method called for each item
-    if (d->tagListInitialized()) {
-        const Tag *bestTag = d->bestTag();
-        if (bestTag  && bestTag->font() != QFont()) {
-            return bestTag->font().key();
-        }
-    }
-
-    // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
-    Akonadi::MessageStatus messageStatus = status();
-    if (messageStatus.isImportant()) {
-        return s_settings->mFontImportantMessageKey;
-    } else if (!messageStatus.isRead()) {
-        return s_settings->mFontUnreadMessageKey;
-    } else if (messageStatus.isToAct()) {
-        return s_settings->mFontToDoMessageKey;
-    } else {
-        return s_settings->mFontKey;
-    }
-
 }
 
 MessageItem::SignatureState MessageItem::signatureState() const
@@ -648,25 +618,21 @@ void MessageItem::setToDoMessageColor(const QColor &color)
 void MessageItem::setGeneralFont(const QFont &font)
 {
     s_settings->mFont = font;
-    s_settings->mFontKey = font.key();
 }
 
 void MessageItem::setUnreadMessageFont(const QFont &font)
 {
     s_settings->mFontUnreadMessage = font;
-    s_settings->mFontUnreadMessageKey = font.key();
 }
 
 void MessageItem::setImportantMessageFont(const QFont &font)
 {
     s_settings->mFontImportantMessage = font;
-    s_settings->mFontImportantMessageKey = font.key();
 }
 
 void MessageItem::setToDoMessageFont(const QFont &font)
 {
     s_settings->mFontToDoMessage = font;
-    s_settings->mFontToDoMessageKey = font.key();
 }
 
 FakeItemPrivate::FakeItemPrivate(FakeItem *qq) : MessageItemPrivate(qq)

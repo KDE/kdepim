@@ -52,12 +52,12 @@ public:
     public:
         explicit Tag(const QPixmap &pix, const QString &tagName, const QString &tagId);
         ~Tag();
-        QPixmap pixmap() const;
-        QString name() const;
-        QString id() const;
-        QColor textColor() const;
-        QColor backgroundColor() const;
-        QFont font() const;
+        const QPixmap &pixmap() const;
+        const QString &name() const;
+        const QString &id() const;
+        const QColor &textColor() const;
+        const QColor &backgroundColor() const;
+        const QFont &font() const;
         int priority() const;
 
         void setTextColor(const QColor &textColor);
@@ -123,13 +123,19 @@ public:
     /// Same as invalidateTagCache(), only for the annotation
     void invalidateAnnotationCache();
 
-    QColor textColor() const;
+    const QColor &textColor() const;
 
-    QColor backgroundColor() const;
+    const QColor &backgroundColor() const;
 
-    QFont font() const;
+    bool isBold() const
+    {
+        return font().bold();
+    }
 
-    QString fontKey() const;
+    bool isItalic() const
+    {
+        return font().italic();
+    }
 
     SignatureState signatureState() const;
 
@@ -199,6 +205,7 @@ public:
 protected:
     explicit MessageItem(MessageItemPrivate *dd);
 private:
+    const QFont &font() const;
 
     QString accessibleTextForField(Theme::ContentItem::Type field);
 

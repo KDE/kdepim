@@ -21,6 +21,8 @@
 
 #include <Tag>
 #include <TagAttribute>
+#include <QFont>
+#include <QGuiApplication>
 
 #include <QUuid>
 using namespace MailCommon;
@@ -34,6 +36,8 @@ Tag::Ptr Tag::createDefaultTag(const QString &name)
     tag->priority = -1;
     tag->inToolbar = false;
     tag->isImmutable = false;
+    tag->isBold = false;
+    tag->isItalic = false;
     return tag;
 }
 
@@ -56,7 +60,10 @@ Tag::Ptr Tag::fromAkonadi(const Akonadi::Tag &akonadiTag)
         tag->textColor = attr->textColor();
         tag->backgroundColor = attr->backgroundColor();
         if (!attr->font().isEmpty()) {
-            tag->textFont.fromString(attr->font());
+            QFont font;
+            font.fromString(attr->font());
+            tag->isBold = font.bold();
+            tag->isItalic = font.italic();
         }
         tag->priority = attr->priority();
     }
@@ -93,10 +100,11 @@ Akonadi::Tag Tag::saveToAkonadi(Tag::SaveFlags saveFlags) const
         attr->setBackgroundColor(QColor());
     }
 
-    if ((textFont != QFont()) && (saveFlags & Font)) {
-        attr->setFont(textFont.toString());
-    } else {
-        attr->setFont(QString());
+    if (saveFlags & Font) {
+        QFont font = QGuiApplication::font();
+        font.setBold(isBold);
+        font.setItalic(isItalic);
+        attr->setFont(font.toString());
     }
 
     tag.addAttribute(attr);
@@ -129,7 +137,8 @@ bool Tag::operator==(const Tag &other) const
     return tagName == other.tagName &&
            textColor == other.textColor &&
            backgroundColor == other.backgroundColor &&
-           textFont == other.textFont &&
+           isBold == other.isBold &&
+           isItalic == other.isItalic &&
            iconName == other.iconName &&
            inToolbar == other.inToolbar &&
            shortcut.toString() == other.shortcut.toString() &&

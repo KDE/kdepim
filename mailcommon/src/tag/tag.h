@@ -24,7 +24,6 @@
 #include <QKeySequence>
 
 #include <QColor>
-#include <QFont>
 #include <QSharedPointer>
 #include <AkonadiCore/tag.h>
 
@@ -57,7 +56,7 @@ public:
     // expects a tag with all attributes fetched
     static Ptr fromAkonadi(const Akonadi::Tag &tag);
 
-    Akonadi::Tag saveToAkonadi(SaveFlags saveFlags) const;
+    Akonadi::Tag saveToAkonadi(SaveFlags saveFlags = SaveFlags(TextColor | BackgroundColor | Font)) const;
 
     // Compare, based on priority
     static bool compare(Ptr &tag1, Ptr &tag2);
@@ -71,9 +70,10 @@ public:
     QString tagName;
     QColor textColor;
     QColor backgroundColor;
-    QFont textFont;
     QString iconName;
     QKeySequence shortcut;
+    bool isBold;
+    bool isItalic;
     bool inToolbar;
     bool isImmutable;
     // Priority, i.e. sort order of the tag. Only used when loading the tag, when saving
@@ -82,7 +82,9 @@ public:
 
 private:
     Tag()
-        : inToolbar(false),
+        : isBold(false),
+          isItalic(false),
+          inToolbar(false),
           isImmutable(false),
           priority(0)
     {

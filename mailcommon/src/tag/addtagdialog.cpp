@@ -103,8 +103,7 @@ void AddTagDialog::slotSave()
 
     MailCommon::Tag::Ptr tag(Tag::createDefaultTag(name));
     d->mTagWidget->recordTagSettings(tag);
-    MailCommon::Tag::SaveFlags saveFlags = d->mTagWidget->saveFlags();
-    const Akonadi::Tag akonadiTag = tag->saveToAkonadi(saveFlags);
+    const Akonadi::Tag akonadiTag = tag->saveToAkonadi();
     Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(akonadiTag, this);
     connect(createJob, &Akonadi::TagCreateJob::result, this, &AddTagDialog::onTagCreated);
 

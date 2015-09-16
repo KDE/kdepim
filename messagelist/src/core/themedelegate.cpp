@@ -22,8 +22,10 @@
 #include "core/messageitem.h"
 #include "core/groupheaderitem.h"
 #include "core/manager.h"
+#include "core/settings.h"
 
-#include "utils/stringutil.h"
+#include "messagecore/src/utils/stringutil.h"
+#include "messagecore/src/settings/messagecoresettings.h"
 
 #include <QStyle>
 #include <QPainter>
@@ -84,46 +86,67 @@ void ThemeDelegate::setTheme(const Theme *theme)
     }
     break;
     }
+
+    generalFontChanged();
+
     mItemView->reset();
 
 }
 
-static QFontMetrics cachedFontMetrics(const QFont &font)
+
+
+enum FontType {
+    Normal,
+    Bold,
+    Italic,
+    BoldItalic,
+
+    FontTypesCount
+};
+
+static QFont sFontCache[FontTypesCount];
+static QFontMetrics sFontMetricsCache[FontTypesCount] = { QFontMetrics(QFont()), QFontMetrics(QFont()), QFontMetrics(QFont()), QFontMetrics(QFont()) };
+static int sFontHeightCache = 0;
+
+static inline const QFontMetrics &cachedFontMetrics(const Theme::ContentItem *ci)
 {
-    static QHash<QString, QFontMetrics *> fontMetricsCache;
-    const QString fontKey = font.key();
+    return (!ci->isBold() && !ci->isItalic()) ? sFontMetricsCache[Normal] :
+            (ci->isBold() && !ci->isItalic()) ? sFontMetricsCache[Bold] :
+            (!ci->isBold() && ci->isItalic()) ? sFontMetricsCache[Italic] :
+                                                sFontMetricsCache[BoldItalic];
 
-    const auto it = fontMetricsCache.constFind(fontKey);
-    if (it == fontMetricsCache.constEnd()) {
-        QFontMetrics *metrics = new QFontMetrics(font);
-        fontMetricsCache.insert(fontKey, metrics);
-        return *metrics;
-    }
-
-    return *it.value();
 }
 
-static int cachedFontHeightKey(const QFont &font, const QString &fontKey)
+static inline const QFont &cachedFont(const Theme::ContentItem *ci)
 {
-    static QHash<QString, int> fontHeightCache;
+    return (!ci->isBold() && !ci->isItalic()) ? sFontCache[Normal] :
+            (ci->isBold() && !ci->isItalic()) ? sFontCache[Bold] :
+            (!ci->isBold() && ci->isItalic()) ? sFontCache[Italic] :
+                                                sFontCache[BoldItalic];
+}
 
-    const auto it = fontHeightCache.constFind(fontKey);
-    if (it == fontHeightCache.constEnd()) {
-        auto height = cachedFontMetrics(font).height();
-        fontHeightCache.insert(fontKey, height);
-        return height;
+static inline const QFont &cachedFont(const Theme::ContentItem *ci, const Item *i)
+{
+    if (i->type() != Item::Message) {
+        return cachedFont(ci);
     }
 
-    return it.value();
+    const MessageItem *mi = static_cast<const MessageItem *>(i);
+    const bool bold = ci->isBold() || mi->isBold();
+    const bool italic = ci->isItalic() || mi->isItalic();
+    return (!bold && !italic) ? sFontCache[Normal] :
+            (bold && !italic) ? sFontCache[Bold] :
+            (!bold && italic) ? sFontCache[Italic] :
+                                sFontCache[BoldItalic];
 }
 
 static inline void paint_right_aligned_elided_text(const QString &text, Theme::ContentItem *ci, QPainter *painter, int &left, int top, int &right, Qt::LayoutDirection layoutDir, const QFont &font)
 {
     painter->setFont(font);
-    const QFontMetrics fontMetrics = cachedFontMetrics(font);
+    const QFontMetrics &fontMetrics = cachedFontMetrics(ci);
     const int w = right - left;
     const QString elidedText = fontMetrics.elidedText(text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w);
-    const QRect rct(left, top, w, fontMetrics.height());
+    const QRect rct(left, top, w, sFontHeightCache);
     QRect outRct;
 
     if (ci->softenByBlending()) {
@@ -141,12 +164,12 @@ static inline void paint_right_aligned_elided_text(const QString &text, Theme::C
     }
 }
 
-static inline void compute_bounding_rect_for_right_aligned_elided_text(const QString &text, int &left, int top, int &right, QRect &outRect, Qt::LayoutDirection layoutDir, const QFont &font)
+static inline void compute_bounding_rect_for_right_aligned_elided_text(const QString &text, Theme::ContentItem *ci, int &left, int top, int &right, QRect &outRect, Qt::LayoutDirection layoutDir, const QFont &font)
 {
-    const QFontMetrics fontMetrics = cachedFontMetrics(font);
+    const QFontMetrics &fontMetrics = cachedFontMetrics(ci);
     const int w = right - left;
     const QString elidedText = fontMetrics.elidedText(text, layoutDir == Qt::LeftToRight ? Qt::ElideLeft : Qt::ElideRight, w);
-    const QRect rct(left, top, w, fontMetrics.height());
+    const QRect rct(left, top, w, sFontHeightCache);
     const Qt::AlignmentFlag af = layoutDir == Qt::LeftToRight ? Qt::AlignRight : Qt::AlignLeft;
     outRect = fontMetrics.boundingRect(rct, Qt::AlignTop | af | Qt::TextSingleLine, elidedText);
     if (layoutDir == Qt::LeftToRight) {
@@ -159,10 +182,10 @@ static inline void compute_bounding_rect_for_right_aligned_elided_text(const QSt
 static inline void paint_left_aligned_elided_text(const QString &text, Theme::ContentItem *ci, QPainter *painter, int &left, int top, int &right, Qt::LayoutDirection layoutDir, const QFont &font)
 {
     painter->setFont(font);
-    const QFontMetrics fontMetrics = cachedFontMetrics(font);
+    const QFontMetrics &fontMetrics = cachedFontMetrics(ci);
     const int w = right - left;
     const QString elidedText = fontMetrics.elidedText(text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w);
-    const QRect rct(left, top, w, fontMetrics.height());
+    const QRect rct(left, top, w, sFontHeightCache);
     QRect outRct;
     if (ci->softenByBlending()) {
         qreal oldOpacity = painter->opacity();
@@ -179,12 +202,12 @@ static inline void paint_left_aligned_elided_text(const QString &text, Theme::Co
     }
 }
 
-static inline void compute_bounding_rect_for_left_aligned_elided_text(const QString &text, int &left, int top, int &right, QRect &outRect, Qt::LayoutDirection layoutDir, const QFont &font)
+static inline void compute_bounding_rect_for_left_aligned_elided_text(const QString &text, Theme::ContentItem *ci, int &left, int top, int &right, QRect &outRect, Qt::LayoutDirection layoutDir, const QFont &font)
 {
-    const QFontMetrics fontMetrics = cachedFontMetrics(font);
+    const QFontMetrics &fontMetrics = cachedFontMetrics(ci);
     const int w = right - left;
     const QString elidedText = fontMetrics.elidedText(text, layoutDir == Qt::LeftToRight ? Qt::ElideRight : Qt::ElideLeft, w);
-    const QRect rct(left, top, w, fontMetrics.height());
+    const QRect rct(left, top, w, sFontHeightCache);
     const Qt::AlignmentFlag af = layoutDir == Qt::LeftToRight ? Qt::AlignLeft : Qt::AlignRight;
     outRect = fontMetrics.boundingRect(rct, Qt::AlignTop | af | Qt::TextSingleLine, elidedText);
     if (layoutDir == Qt::LeftToRight) {
@@ -496,11 +519,8 @@ static inline void compute_size_hint_for_item(Theme::ContentItem *ci,
         int &maxh, int &totalw, int iconSize, const Item *item)
 {
     if (ci->displaysText()) {
-        const QFont font = ThemeDelegate::itemFont(ci, item);
-        const QString fontKey = ThemeDelegate::itemFontKey(ci, item);
-        const int fontHeight = cachedFontHeightKey(font, fontKey);
-        if (fontHeight > maxh) {
-            maxh = fontHeight;
+        if (sFontHeightCache > maxh) {
+            maxh = sFontHeightCache;
         }
         totalw += ci->displaysLongText() ? 128 : 64;
         return;
@@ -845,7 +865,7 @@ void ThemeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                 }
             } // otherwise setting a pen is useless at this time
 
-            QFont font = itemFont(ci, item);
+            const QFont &font = cachedFont(ci, item);
 
             switch (ci->type()) {
             case Theme::ContentItem::Subject:
@@ -1004,7 +1024,7 @@ void ThemeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                 }
             } // otherwise setting a pen is useless at this time
 
-            QFont font = itemFont(ci, item);
+            const QFont &font = cachedFont(ci, item);
 
             switch (ci->type()) {
             case Theme::ContentItem::Subject:
@@ -1256,36 +1276,36 @@ bool ThemeDelegate::hitTest(const QPoint &viewportPoint, bool exact)
 
             mHitContentItemRect = QRect();
 
-            QFont font = itemFont(ci, mHitItem);
+            const QFont &font = cachedFont(ci, mHitItem);
 
             switch (ci->type()) {
             case Theme::ContentItem::Subject:
-                compute_bounding_rect_for_right_aligned_elided_text(mHitItem->subject(), l, top, r, mHitContentItemRect, layoutDir, font);
+                compute_bounding_rect_for_right_aligned_elided_text(mHitItem->subject(), ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::SenderOrReceiver:
                 compute_bounding_rect_for_right_aligned_elided_text(MessageCore::StringUtil::stripEmailAddr(mHitItem->senderOrReceiver()),
-                        l, top, r, mHitContentItemRect, layoutDir, font);
+                        ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::Receiver:
                 compute_bounding_rect_for_right_aligned_elided_text(MessageCore::StringUtil::stripEmailAddr(mHitItem->receiver()),
-                        l, top, r, mHitContentItemRect, layoutDir, font);
+                        ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::Sender:
                 compute_bounding_rect_for_right_aligned_elided_text(MessageCore::StringUtil::stripEmailAddr(mHitItem->sender()),
-                        l, top, r, mHitContentItemRect, layoutDir, font);
+                        ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::Date:
-                compute_bounding_rect_for_right_aligned_elided_text(mHitItem->formattedDate(), l, top, r, mHitContentItemRect, layoutDir, font);
+                compute_bounding_rect_for_right_aligned_elided_text(mHitItem->formattedDate(), ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::MostRecentDate:
-                compute_bounding_rect_for_right_aligned_elided_text(mHitItem->formattedMaxDate(), l, top, r, mHitContentItemRect, layoutDir, font);
+                compute_bounding_rect_for_right_aligned_elided_text(mHitItem->formattedMaxDate(), ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::Size:
-                compute_bounding_rect_for_right_aligned_elided_text(mHitItem->formattedSize(), l, top, r, mHitContentItemRect, layoutDir, font);
+                compute_bounding_rect_for_right_aligned_elided_text(mHitItem->formattedSize(), ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::GroupHeaderLabel:
                 if (groupHeaderItem) {
-                    compute_bounding_rect_for_right_aligned_elided_text(groupHeaderItem->label(), l, top, r, mHitContentItemRect, layoutDir, font);
+                    compute_bounding_rect_for_right_aligned_elided_text(groupHeaderItem->label(), ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 }
                 break;
             case Theme::ContentItem::ReadStateIcon:
@@ -1402,36 +1422,36 @@ bool ThemeDelegate::hitTest(const QPoint &viewportPoint, bool exact)
 
             mHitContentItemRect = QRect();
 
-            QFont font = itemFont(ci, mHitItem);
+            const QFont &font = cachedFont(ci, mHitItem);
 
             switch (ci->type()) {
             case Theme::ContentItem::Subject:
-                compute_bounding_rect_for_left_aligned_elided_text(mHitItem->subject(), l, top, r, mHitContentItemRect, layoutDir, font);
+                compute_bounding_rect_for_left_aligned_elided_text(mHitItem->subject(), ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::SenderOrReceiver:
                 compute_bounding_rect_for_left_aligned_elided_text(MessageCore::StringUtil::stripEmailAddr(mHitItem->senderOrReceiver()),
-                        l, top, r, mHitContentItemRect, layoutDir, font);
+                        ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::Receiver:
                 compute_bounding_rect_for_left_aligned_elided_text(MessageCore::StringUtil::stripEmailAddr(mHitItem->receiver()),
-                        l, top, r, mHitContentItemRect, layoutDir, font);
+                        ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::Sender:
                 compute_bounding_rect_for_left_aligned_elided_text(MessageCore::StringUtil::stripEmailAddr(mHitItem->sender()),
-                        l, top, r, mHitContentItemRect, layoutDir, font);
+                        ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::Date:
-                compute_bounding_rect_for_left_aligned_elided_text(mHitItem->formattedDate(), l, top, r, mHitContentItemRect, layoutDir, font);
+                compute_bounding_rect_for_left_aligned_elided_text(mHitItem->formattedDate(), ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::MostRecentDate:
-                compute_bounding_rect_for_left_aligned_elided_text(mHitItem->formattedMaxDate(), l, top, r, mHitContentItemRect, layoutDir, font);
+                compute_bounding_rect_for_left_aligned_elided_text(mHitItem->formattedMaxDate(), ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::Size:
-                compute_bounding_rect_for_left_aligned_elided_text(mHitItem->formattedSize(), l, top, r, mHitContentItemRect, layoutDir, font);
+                compute_bounding_rect_for_left_aligned_elided_text(mHitItem->formattedSize(), ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 break;
             case Theme::ContentItem::GroupHeaderLabel:
                 if (groupHeaderItem) {
-                    compute_bounding_rect_for_left_aligned_elided_text(groupHeaderItem->label(), l, top, r, mHitContentItemRect, layoutDir, font);
+                    compute_bounding_rect_for_left_aligned_elided_text(groupHeaderItem->label(), ci, l, top, r, mHitContentItemRect, layoutDir, font);
                 }
                 break;
             case Theme::ContentItem::ReadStateIcon:
@@ -1590,7 +1610,7 @@ QSize ThemeDelegate::sizeHintForItemTypeAndColumn(Item::Type type, int column, c
     int maxw = 0;
 
     for (QList< Theme::Row * >::ConstIterator rowit = rows->constBegin(), endRowIt = rows->constEnd(); rowit != endRowIt; ++rowit) {
-        QSize sh = compute_size_hint_for_row((*rowit), mTheme->iconSize(), item);
+        const QSize sh = compute_size_hint_for_row((*rowit), mTheme->iconSize(), item);
         totalh += sh.height();
         if (sh.width() > maxw) {
             maxw = sh.width();
@@ -1615,50 +1635,44 @@ QSize ThemeDelegate::sizeHint(const QStyleOptionViewItem &, const QModelIndex &i
         return QSize(16, 16);    // hm...
     }
 
-    //Item::Type type = item->type();
-
-    return sizeHintForItemTypeAndColumn(item->type(), index.column(), item);
+    const Item::Type type = item->type();
+    if (type == Item::Message) {
+        if (!mCachedMessageItemSizeHint.isValid()) {
+            mCachedMessageItemSizeHint= sizeHintForItemTypeAndColumn(Item::Message, index.column(), item);
+        }
+        return mCachedMessageItemSizeHint;
+    } else if (type == Item::GroupHeader) {
+        if (!mCachedGroupHeaderItemSizeHint.isValid()) {
+            mCachedGroupHeaderItemSizeHint = sizeHintForItemTypeAndColumn(Item::GroupHeader, index.column(), item);
+        }
+        return mCachedGroupHeaderItemSizeHint;
+    } else {
+        Q_ASSERT(false);
+        return QSize();
+    }
 }
 
-QFont ThemeDelegate::itemFont(const Theme::ContentItem *ci, const Item *item)
-{
-    if (ci && ci->useCustomFont()) {
-        return ci->font();
-    }
-
-    if (item && (item->type() == Item::Message)) {
-        return static_cast< const MessageItem * >(item)->font();
-    }
-
-    return QFontDatabase::systemFont(QFontDatabase::GeneralFont);
-}
-
-class ThemeDelegateStaticData
-{
-public:
-    ThemeDelegateStaticData()
-        : mGeneralFontKey(QFontDatabase::systemFont(QFontDatabase::GeneralFont).key()) {}
-    QString mGeneralFontKey;
-};
-
-Q_GLOBAL_STATIC(ThemeDelegateStaticData, s_static)
-
-QString ThemeDelegate::itemFontKey(const Theme::ContentItem *ci, const Item *item)
-{
-    if (ci && ci->useCustomFont()) {
-        return ci->fontKey();
-    }
-
-    if (item && (item->type() == Item::Message)) {
-        return static_cast< const MessageItem * >(item)->fontKey();
-    }
-
-    return s_static->mGeneralFontKey;
-}
-
-// Store the new fontKey when the generalFont changes.
+// Store the new fonts when the generalFont changes and flush sizeHint cache
 void ThemeDelegate::generalFontChanged()
 {
-    s_static->mGeneralFontKey = QFontDatabase::systemFont(QFontDatabase::GeneralFont).key();
+    mCachedMessageItemSizeHint = QSize();
+    mCachedGroupHeaderItemSizeHint = QSize();
+
+    QFont font = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
+    sFontCache[Normal] = font;
+    sFontMetricsCache[Normal] = QFontMetrics(font);
+    font.setBold(true);
+    sFontCache[Bold] = font;
+    sFontMetricsCache[Bold] = QFontMetrics(font);
+    font.setBold(false);
+    font.setItalic(true);
+    sFontCache[Italic] = font;
+    sFontMetricsCache[Italic] = QFontMetrics(font);
+    font.setBold(true);
+    font.setItalic(true);
+    sFontCache[BoldItalic] = font;
+    sFontMetricsCache[BoldItalic] = QFontMetrics(font);
+
+    sFontHeightCache = sFontMetricsCache[Normal].height();
 }
 

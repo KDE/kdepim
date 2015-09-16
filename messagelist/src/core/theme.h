@@ -228,16 +228,15 @@ public:
             HideWhenDisabled = 1,                    ///< In disabled state the icon should take no space (overrides SoftenByBlendingWhenDisabled)
             SoftenByBlendingWhenDisabled = (1 << 1), ///< In disabled state the icon should be still shown, but made very soft by alpha blending
             UseCustomColor = (1 << 2),               ///< For text and vertical line. If set then always use a custom color, otherwise use default text color
-            UseCustomFont = (1 << 3),                ///< For text items. If set then always use a custom font, otherwise default to the global font.
-            SoftenByBlending = (1 << 4)              ///< For text items: use 60% opacity.
+            IsBold = (1 << 3),                       ///< For text items. If set then always show as bold, otherwise use the default font weight
+            IsItalic = (1 << 4),                     ///< Fot text items. If set then always show as italic, otherwise use the default font style
+            SoftenByBlending = (1 << 5)              ///< For text items: use 60% opacity.
         };
 
     private:
         Type mType;                      ///< The type of item
         unsigned int mFlags;             ///< The flags of the item
 
-        QFont mFont;                     ///< The font to use with this content item, meaningful only if displaysText() returns true.
-        QString mFontKey;                ///< The font key to speedup theme positioning. QFont.key() is called too many times otherwise.
         QColor mCustomColor;             ///< The color to use with this content item, meaningful only if canUseCustomColor() return true.
 
     public:
@@ -361,24 +360,44 @@ public:
         }
 
         /**
-        * Returns true if this item uses a custom font.
+        * Returns true if this item uses a bold text.
         * The return value of this function is valid only if displaysText() returns true.
         */
-        bool useCustomFont() const
+        bool isBold() const
         {
-            return mFlags & UseCustomFont;
+            return mFlags & IsBold;
         }
 
         /**
-        * Makes this item use the custom font that can be set by setCustomFont().
-        * The custom font is meaningful only if canUseCustomFont() returns true.
-        */
-        void setUseCustomFont(bool useCustomFont)
+         * Makes this item use a bold font.
+         */
+        void setBold(bool isBold)
         {
-            if (useCustomFont) {
-                mFlags |= UseCustomFont;
+            if (isBold) {
+                mFlags |= IsBold;
             } else {
-                mFlags &= ~UseCustomFont;
+                mFlags &= !IsBold;
+            }
+        }
+
+        /**
+        * Returns true if this item uses an italic text.
+        * The return value of this function is valid only if displaysText() returns true.
+        */
+        bool isItalic() const
+        {
+            return mFlags & IsItalic;
+        }
+
+        /**
+         * Makes this item use italic font.
+         */
+        void setItalic(bool isItalic)
+        {
+            if (isItalic) {
+                mFlags |= IsItalic;
+            } else {
+                mFlags &= ~IsItalic;
             }
         }
 
@@ -452,36 +471,6 @@ public:
             } else {
                 mFlags &= ~SoftenByBlending;
             }
-        }
-
-        /**
-        * Sets the custom font to be used with this item.
-        * The font is meaningful only for items for that displaysText() returns true.
-        * You must also call setUseCustomFont() in order for this setting to be effective.
-        */
-        void setFont(const QFont &font);
-
-        /**
-        * Returns the font used by this item. It may be a custom font set by setFont()
-        * or the default application font (returned by QFontDatabase::systemFont(QFontDatabase::GeneralFont)).
-        * This setting is valid as long as you have called updateFontMetrics()
-        * with the appropriate paint device.
-        */
-        const QFont &font() const
-        {
-            return mFont;
-        }
-
-        /**
-        * Returns the font key used by this item. It may be a custom font key set by setFont()
-        * or the default application font (returned by QFontDatabase::systemFont(QFontDatabase::GeneralFont)).
-        * This setting is valid as long as you have called updateFontMetrics()
-        * with the appropriate paint device.
-        * It is primary used to avoid to calculate the key every time an item is displayed.
-        */
-        const QString &fontKey() const
-        {
-            return mFontKey;
         }
 
         /**

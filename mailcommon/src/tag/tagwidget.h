@@ -42,7 +42,6 @@ public:
     explicit TagWidget(const QList<KActionCollection *> &actionCollections, QWidget *parent = Q_NULLPTR);
     ~TagWidget();
 
-    MailCommon::Tag::SaveFlags saveFlags() const;
     void recordTagSettings(MailCommon::Tag::Ptr tag);
 
     KLineEdit *tagNameLineEdit() const;
@@ -54,7 +53,8 @@ public:
     KColorCombo *textColorCombo() const;
     KColorCombo *backgroundColorCombo() const;
 
-    KFontRequester *fontRequester() const;
+    QCheckBox *textBoldCheck() const;
+    QCheckBox *textItalicCheck() const;
 
     KIconButton *iconButton() const;
 
@@ -62,7 +62,7 @@ public:
 
     void setTagTextColor(const QColor &color);
     void setTagBackgroundColor(const QColor &color);
-    void setTagTextFont(const QFont &font);
+    void setTagTextFormat(bool bold, bool italic);
 
 Q_SIGNALS:
     void changed();

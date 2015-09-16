@@ -888,18 +888,14 @@ void ThemePreviewWidget::mousePressEvent(QMouseEvent *e)
 
                 QMenu *childmenu = new QMenu(&menu);
 
-                QActionGroup *grp = new QActionGroup(childmenu);
-
-                act = childmenu->addAction(i18nc("@action:inmenu Font setting", "Default"));
-                act->setData(QVariant(static_cast< int >(0)));
+                act = childmenu->addAction(i18nc("@action:inmenu Font setting", "Bold"));
+                act->setData(QVariant(static_cast<int>(Theme::ContentItem::IsBold)));
                 act->setCheckable(true);
-                act->setChecked(!mSelectedThemeContentItem->useCustomFont());
-                grp->addAction(act);
-                act = childmenu->addAction(i18nc("@action:inmenu Font setting", "Custom..."));
-                act->setData(QVariant(static_cast< int >(Theme::ContentItem::UseCustomFont)));
+                act->setChecked(mSelectedThemeContentItem->isBold());
+                act = childmenu->addAction(i18nc("@action:inmenu Font setting", "Italic"));
+                act->setData(QVariant(static_cast<int>(Theme::ContentItem::IsItalic)));
                 act->setCheckable(true);
-                act->setChecked(mSelectedThemeContentItem->useCustomFont());
-                grp->addAction(act);
+                act->setChecked(mSelectedThemeContentItem->isItalic());
 
                 connect(childmenu, &QMenu::triggered, this, &ThemePreviewWidget::slotFontMenuTriggered);
 
@@ -1092,21 +1088,13 @@ void ThemePreviewWidget::slotFontMenuTriggered(QAction *act)
         return;
     }
 
-    if (flag == 0) {
-        mSelectedThemeContentItem->setUseCustomFont(false);
-        setTheme(mTheme);   // this will reset theme cache and trigger a global update
-        return;
+    if (flag == Theme::ContentItem::IsBold && mSelectedThemeContentItem->isBold() != act->isChecked()) {
+        mSelectedThemeContentItem->setBold(act->isChecked());
+        setTheme(mTheme);
+    } else if (flag == Theme::ContentItem::IsItalic && mSelectedThemeContentItem->isItalic() != act->isChecked()) {
+        mSelectedThemeContentItem->setItalic(act->isChecked());
+        setTheme(mTheme);
     }
-
-    QFont f = QFontDialog::getFont(&ok, mSelectedThemeContentItem->font(), this);
-    if (!ok) {
-        return;
-    }
-
-    mSelectedThemeContentItem->setFont(f);
-    mSelectedThemeContentItem->setUseCustomFont(true);
-
-    setTheme(mTheme);   // this will reset theme cache and trigger a global update
 }
 
 void ThemePreviewWidget::slotGroupHeaderBackgroundModeMenuTriggered(QAction *act)

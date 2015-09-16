@@ -66,7 +66,6 @@ Theme::ContentItem::ContentItem(Type type)
 Theme::ContentItem::ContentItem(const ContentItem &src)
     : mType(src.mType),
       mFlags(src.mFlags),
-      mFont(src.mFont),
       mCustomColor(src.mCustomColor)
 {
 }
@@ -160,17 +159,10 @@ bool Theme::ContentItem::applicableToGroupHeaderItems(Type type)
     return (static_cast< int >(type) & ApplicableToGroupHeaderItems);
 }
 
-void Theme::ContentItem::setFont(const QFont &font)
-{
-    mFont = font;
-    mFontKey = font.key();
-}
-
 void Theme::ContentItem::save(QDataStream &stream) const
 {
     stream << (int)mType;
     stream << mFlags;
-    stream << mFont;
     stream << mCustomColor;
 }
 
@@ -214,7 +206,6 @@ bool Theme::ContentItem::load(QDataStream &stream, int /*themeVersion*/)
     }
 
     stream >> mFlags;
-    stream >> mFont;
     stream >> mCustomColor;
     if (mFlags & UseCustomColor) {
         if (!mCustomColor.isValid()) {

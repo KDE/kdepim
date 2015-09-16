@@ -73,6 +73,9 @@ private:
     const Theme::ContentItem *mHitContentItem;
     QRect mHitContentItemRect;
 
+    mutable QSize mCachedMessageItemSizeHint;
+    mutable QSize mCachedGroupHeaderItemSizeHint;
+
 public:
     const Theme *theme() const
     {
@@ -222,12 +225,6 @@ public:
     {
         return mHitContentItemRect;
     }
-
-    /// return the font to paint given item with, checking global kmail settings and theme settings
-    static QFont itemFont(const Theme::ContentItem *ci, const Item *item);
-
-    /// return the font key to paint given item with, checking global kmail settings and theme settings
-    static QString itemFontKey(const Theme::ContentItem *ci, const Item *item);
 
 protected:
     /**

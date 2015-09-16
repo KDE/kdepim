@@ -43,7 +43,8 @@ public:
           mInToolbarCheck(Q_NULLPTR),
           mTextColorCombo(Q_NULLPTR),
           mBackgroundColorCombo(Q_NULLPTR),
-          mFontRequester(Q_NULLPTR),
+          mBoldCheckBox(Q_NULLPTR),
+          mItalicCheckBox(Q_NULLPTR),
           mIconButton(Q_NULLPTR),
           mKeySequenceWidget(Q_NULLPTR)
     {
@@ -60,7 +61,8 @@ public:
     KColorCombo *mTextColorCombo;
     KColorCombo *mBackgroundColorCombo;
 
-    KFontRequester *mFontRequester;
+    QCheckBox *mBoldCheckBox;
+    QCheckBox *mItalicCheckBox;
 
     KIconButton *mIconButton;
 
@@ -126,15 +128,27 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     d->mTextFontCheck = new QCheckBox(i18n("Change fo&nt:"), this);
     settings->addWidget(d->mTextFontCheck, 4, 0);
 
-    d->mFontRequester = new KFontRequester(this);
-    settings->addWidget(d->mFontRequester, 4, 1);
-    d->mFontRequester->setEnabled(false);
+    QVBoxLayout *fontLayout = new QVBoxLayout;
+    settings->addLayout(fontLayout, 4, 1);
+
+    d->mBoldCheckBox = new QCheckBox(i18n("&Bold"));
+    d->mBoldCheckBox->setEnabled(false);
+    fontLayout->addWidget(d->mBoldCheckBox);
+
+    d->mItalicCheckBox = new QCheckBox(i18n("&Italics"));
+    d->mItalicCheckBox->setEnabled(false);
+    fontLayout->addWidget(d->mItalicCheckBox);
+
 
     connect(d->mTextFontCheck, &QAbstractButton::toggled,
-            d->mFontRequester, &QWidget::setEnabled);
+            d->mBoldCheckBox, &QWidget::setEnabled);
+    connect(d->mTextFontCheck, &QAbstractButton::toggled,
+            d->mItalicCheckBox, &QWidget::setEnabled);
     connect(d->mTextFontCheck, &QCheckBox::stateChanged,
             this, &TagWidget::slotEmitChangeCheck);
-    connect(d->mFontRequester, &KFontRequester::fontSelected,
+    connect(d->mBoldCheckBox, &QAbstractButton::toggled,
+            this, &TagWidget::slotEmitChangeCheck);
+    connect(d->mItalicCheckBox, &QAbstractButton::toggled,
             this, &TagWidget::slotEmitChangeCheck);
 
     //Fifth for toolbar icon
@@ -215,28 +229,12 @@ void TagWidget::setTagBackgroundColor(const QColor &color)
     d->mBackgroundColorCombo->setEnabled(d->mBackgroundColorCheck->isChecked());
 }
 
-void TagWidget::setTagTextFont(const QFont &font)
+void TagWidget::setTagTextFormat(bool isBold, bool isItalic)
 {
     d->mTextFontCheck->setEnabled(true);
-    d->mTextFontCheck->setChecked((font != QFont()));
-    d->mFontRequester->setFont(font);
-    d->mFontRequester->setEnabled(d->mTextFontCheck->isChecked());
-}
-
-MailCommon::Tag::SaveFlags TagWidget::saveFlags() const
-{
-    MailCommon::Tag::SaveFlags saveFlags = 0;
-    if (d->mTextColorCheck->isChecked()) {
-        saveFlags |= MailCommon::Tag::TextColor;
-    }
-    if (d->mBackgroundColorCheck->isChecked()) {
-        saveFlags |= MailCommon::Tag::BackgroundColor;
-    }
-    if (d->mTextFontCheck->isChecked()) {
-        saveFlags |= MailCommon::Tag::Font;
-    }
-
-    return saveFlags;
+    d->mTextFontCheck->setChecked(isBold || isItalic);
+    d->mBoldCheckBox->setChecked(isBold);
+    d->mItalicCheckBox->setChecked(isItalic);
 }
 
 void TagWidget::recordTagSettings(MailCommon::Tag::Ptr tag)
@@ -245,7 +243,8 @@ void TagWidget::recordTagSettings(MailCommon::Tag::Ptr tag)
 
     tag->backgroundColor = d->mBackgroundColorCheck->isChecked() ? d->mBackgroundColorCombo->color() : QColor();
 
-    tag->textFont = d->mTextFontCheck->isChecked() ? d->mFontRequester->font() : QFont();
+    tag->isBold = d->mTextFontCheck->isChecked() ? d->mBoldCheckBox->isChecked() : false;
+    tag->isItalic = d->mTextFontCheck->isChecked() ? d->mItalicCheckBox->isChecked() : false;
 
     tag->iconName = iconButton()->icon();
     if (d->mKeySequenceWidget->isEnabled()) {
@@ -291,9 +290,14 @@ KColorCombo *TagWidget::backgroundColorCombo() const
     return d->mBackgroundColorCombo;
 }
 
-KFontRequester *TagWidget::fontRequester() const
+QCheckBox *TagWidget::textBoldCheck() const
 {
-    return d->mFontRequester;
+    return d->mBoldCheckBox;
+}
+
+QCheckBox *TagWidget::textItalicCheck() const
+{
+    return d->mItalicCheckBox;
 }
 
 KIconButton *TagWidget::iconButton() const
