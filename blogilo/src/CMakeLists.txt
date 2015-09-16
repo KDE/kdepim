@@ -68,7 +68,7 @@ target_link_libraries(blogilo
     KF5::Blog
     KF5::PimCommon
     Qt5::Sql
-    composereditorng
+    KF5::ComposerEditorNG
     KF5::Libkdepim
     KF5::TextEditor
     KF5::WebKit

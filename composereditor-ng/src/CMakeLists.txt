@@ -46,17 +46,56 @@ ki18n_wrap_ui(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
 ecm_qt_declare_logging_category(libcomposereditor_ng_SRCS HEADER composereditorng_debug.h IDENTIFIER COMPOSEREDITORNG_LOG CATEGORY_NAME log_composereditorng)
 
 
-add_library(composereditorng ${libcomposereditor_ng_SRCS})
-generate_export_header(composereditorng BASE_NAME composereditorng)
+add_library(KF5ComposerEditorNG ${libcomposereditor_ng_SRCS})
+generate_export_header(KF5ComposerEditorNG BASE_NAME composereditorng)
+add_library(KF5::ComposerEditorNG ALIAS KF5ComposerEditorNG)
 
-target_link_libraries(composereditorng 
+target_link_libraries(KF5ComposerEditorNG
  PRIVATE
    KF5::WebKit Qt5::WebKitWidgets KF5::PimTextEdit KF5::SonnetCore KF5::PimCommon KF5::KIOWidgets KF5::XmlGui KF5::Completion Qt5::PrintSupport
 )
 
+target_include_directories(KF5ComposerEditorNG INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/ComposerEditorNG/;${KDE_INSTALL_INCLUDEDIR_KF5}/composereditorng>")
+target_include_directories(KF5ComposerEditorNG PUBLIC "$<BUILD_INTERFACE:${composereditorng_SOURCE_DIR}/src;${composereditorng_BINARY_DIR}/src>")
 
-set_target_properties( composereditorng PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
-install(TARGETS composereditorng ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
+
+set_target_properties(KF5ComposerEditorNG PROPERTIES
+    VERSION ${COMPOSEREDITORNG_VERSION_STRING}
+    SOVERSION ${COMPOSEREDITORNG_SOVERSION}
+    EXPORT_NAME ComposerEditorNG
+)
+
+install(TARGETS
+    KF5ComposerEditorNG
+    EXPORT KF5ComposerEditorNGTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
+ecm_generate_headers(composereditorng_CamelCase_HEADERS
+  HEADER_NAMES
+  ComposerEditor
+  ComposerView
+  REQUIRED_HEADERS composereditor_HEADERS
+  PREFIX ComposerEditorNG
+)
+
+
+if(${CMAKE_SOURCE_DIR} STREQUAL ${composereditorng_SOURCE_DIR})
+install(FILES
+    ${composereditorng_CamelCase_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/ComposerEditorNG
+    COMPONENT Devel
+)
+
+install(FILES
+    ${composereditorng_HEADERS}
+    ${CMAKE_CURRENT_BINARY_DIR}/composereditorng_export.h
+    ${composereditorng_CamelCase_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/composereditorng
+    COMPONENT Devel
+)
+endif()
+
+
 install( FILES data/composereditorinitialhtml DESTINATION  ${KDE_INSTALL_DATADIR}/composereditor )
 
 #install( FILES

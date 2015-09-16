@@ -22,7 +22,7 @@
 
 #include "blogilocomposerview.h"
 
-#include <composereditor-ng/src/composereditor.h>
+#include <ComposerEditorNG/ComposerEditor>
 
 class BilboMedia;
 class QAction;
