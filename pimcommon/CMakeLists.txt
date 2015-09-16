@@ -32,12 +32,31 @@ set(KCONTACTS_LIB_VERSION "4.91.0")
 
 find_package(KF5AkonadiContact ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
-find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools WebKitWidgets)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools Network WebKitWidgets)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5IMAP ${KIMAP_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Contacts ${KCONTACTS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Sonnet ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
+
+#target_link_libraries(KF5PimCommon
+#PUBLIC
+#    KF5::TextWidgets
+#    KF5::KIOCore
+#PRIVATE
+#    KF5::IMAP
+#    KF5::Libkdepim
+#    KF5::PimTextEdit
+#    KF5::KDELibs4Support
+
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX PIMCOMMON
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/pimcommon_version.h"

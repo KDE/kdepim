@@ -32,6 +32,29 @@ find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5ItemView ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
+
+#target_link_libraries(KF5MailCommon
+#PUBLIC
+#  KF5::MessageComposer
+#  KF5::PimCommon
+#PRIVATE
+#  KF5::Libkdepim
+#  KF5::MessageViewer
+#  KF5::MailImporter
+#  KF5::MessageCore
+#  KF5::TemplateParser
+#  KF5::MailTransport
+#  Phonon::phonon4qt5
+#  KF5::KIOWidgets
+#  KF5::Ldap
+#)
+
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MAILCOMMON
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/mailcommon_version.h"
