@@ -147,7 +147,6 @@ target_link_libraries(KF5Libkdepim
   KF5::I18n
   KF5::KCMUtils
   KF5::Wallet
-  KF5::AkonadiContact
   KF5::ItemViews
   KF5::AkonadiSearchPIM
   KF5::IconThemes
@@ -302,7 +301,7 @@ install(FILES
 
 install(FILES
     ${MessageList_HEADERS}
-    ${CMAKE_CURRENT_BINARY_DIR}/libkdepim_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kdepim_export.h
     ${libkdepim_CamelCase_HEADERS}
     ${libkdepim_ldap_HEADERS}
     ${libkdepim_progresswidget_HEADERS}
