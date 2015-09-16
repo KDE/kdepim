@@ -26,10 +26,8 @@
 #include <Collection>
 #include <Item>
 
-#include <KIconLoader>
 #include <QIcon>
 #include <QPixmap>
-#include <QPixmapCache>
 
 QColor EventViews::getTextColor(const QColor &c)
 {
@@ -62,10 +60,5 @@ int EventViews::yearDiff(const QDate &start, const QDate &end)
 
 QPixmap EventViews::cachedSmallIcon(const QString &name)
 {
-    QPixmap p;
-    if (!QPixmapCache::find(name, &p)) {
-        p = QIcon::fromTheme(name).pixmap(16,16);
-    }
-
-    return p;
+    return QIcon::fromTheme(name).pixmap(16,16);
 }
