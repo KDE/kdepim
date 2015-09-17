@@ -29,8 +29,6 @@
 
 #include "kdepim_export.h"
 
-#include "ldap/ldapclient.h"
-
 #include <KLineEdit>
 
 class QDropEvent;
