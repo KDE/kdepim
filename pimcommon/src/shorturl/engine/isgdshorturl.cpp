@@ -38,7 +38,8 @@ IsGdShortUrl::~IsGdShortUrl()
 void IsGdShortUrl::start()
 {
     const QString requestUrl = QStringLiteral("http://is.gd/create.php?%1&url=%2").arg(QStringLiteral("format=json")).arg(mOriginalUrl);
-    QNetworkRequest request(requestUrl);
+    QNetworkRequest request = QNetworkRequest(QUrl(requestUrl));
+
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &IsGdShortUrl::slotErrorFound);

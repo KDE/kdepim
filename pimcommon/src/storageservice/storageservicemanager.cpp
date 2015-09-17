@@ -431,9 +431,9 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
 #endif
     case EndListService:
     case Unknown:
-        return QString();
+        return QUrl();
     }
-    return QString();
+    return QUrl();
 }
 
 QString StorageServiceManager::serviceName(ServiceType type)

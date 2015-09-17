@@ -31,7 +31,7 @@ QNetworkReply *WebDavJob::accountInfo(const QString &dir)
     props << QStringLiteral("quotaused");
     query[QStringLiteral("DAV:")] = props;
 
-    return propfind(dir, query, 0);
+    return propfind(QUrl(dir), query, 0);
 }
 
 QNetworkReply *WebDavJob::list(const QString &dir)
@@ -51,7 +51,7 @@ QNetworkReply *WebDavJob::list(const QString &dir)
     props << QStringLiteral("resourcetype");
     query[QStringLiteral("DAV:")] = props;
 
-    return propfind(dir, query, 1);
+    return propfind(QUrl(dir), query, 1);
 }
 
 QNetworkReply *WebDavJob::search(const QString &path, const QString &q)
@@ -63,7 +63,8 @@ QNetworkReply *WebDavJob::search(const QString &path, const QString &q)
     query.append("</D:searchrequest>\r\n");
 
     QNetworkRequest req;
-    req.setUrl(path);
+    //Verify it
+    req.setUrl(QUrl(path));
 
     return davRequest(QStringLiteral("SEARCH"), req);
 }
