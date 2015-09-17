@@ -353,14 +353,7 @@ void ResolveRecipientsPage::ItemWidget::setCertificates(const std::vector<Key> &
 
 Key ResolveRecipientsPage::ItemWidget::selectedCertificate() const
 {
-#ifdef QT_STL
     return KeyCache::instance()->findByKeyIDOrFingerprint(m_certCombo->itemData(m_certCombo->currentIndex(), ListWidget::IdRole).toString().toStdString());
-#else
-    const QString tmpStr = m_certCombo->itemData(m_certCombo->currentIndex(), ListWidget::IdRole).toString();
-    const QByteArray asc = tmpStr.toLatin1();
-    std::string tmpstdstring = std::string(asc.constData(), asc.length());
-    return KeyCache::instance()->findByKeyIDOrFingerprint(tmpstdstring);
-#endif
 }
 
 GpgME::Key ResolveRecipientsPage::ItemWidget::selectedCertificate(GpgME::Protocol prot) const
@@ -372,14 +365,7 @@ std::vector<Key> ResolveRecipientsPage::ItemWidget::certificates() const
 {
     std::vector<Key> certs;
     for (int i = 0; i < m_certCombo->count(); ++i) {
-#ifdef QT_STL
         certs.push_back(KeyCache::instance()->findByKeyIDOrFingerprint(m_certCombo->itemData(i, ListWidget::IdRole).toString().toStdString()));
-#else
-        const QString tmpStr = m_certCombo->itemData(i, ListWidget::IdRole).toString();
-        const QByteArray asc = tmpStr.toLatin1();
-        std::string tmpstdstring = std::string(asc.constData(), asc.length());
-        certs.push_back(KeyCache::instance()->findByKeyIDOrFingerprint(tmpstdstring));
-#endif
     }
     return certs;
 }
