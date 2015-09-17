@@ -39,7 +39,7 @@ find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
-
+find_package(KF5Libkleo ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGECORE
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/messagecore_version.h"
