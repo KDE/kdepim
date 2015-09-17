@@ -26,6 +26,8 @@ set(KDEPIMLIBS_LIB_VERSION "5.0.42")
 set(KDEPIM_LIB_VERSION "5.43.0")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIME_LIB_VERSION "4.87.0")
+set(KMAILTRANSPORT_LIB_VERSION "4.78.0")
+set(KLDAP_LIB_VERSION "4.80.0")
 
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
@@ -46,14 +48,9 @@ find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5MessageComposer ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5MessageCore ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5MailImporter ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
-
-#PRIVATE
-#  KF5::MailTransport
-#  Phonon::phonon4qt5
-#  KF5::KIOWidgets
-#  KF5::Ldap
-#)
-
+find_package(KF5MailTransport ${KMAILTRANSPORT_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Ldap ${KLDAP_LIB_VERSION} CONFIG REQUIRED)
+find_package(Phonon4Qt5 CONFIG REQUIRED)
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MAILCOMMON
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/mailcommon_version.h"
