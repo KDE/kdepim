@@ -29,6 +29,7 @@ set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIME_LIB_VERSION "4.87.0")
 set(KIMAP_LIB_VERSION "4.78.0")
 set(KCONTACTS_LIB_VERSION "4.91.0")
+set(KPIMTEXTEDIT_LIB_VERSION "4.84.0")
 
 find_package(KF5AkonadiContact ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
@@ -47,15 +48,9 @@ find_package(KF5Sonnet ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
-
+find_package(KF5TextWidgets ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
-
-#target_link_libraries(KF5PimCommon
-#PUBLIC
-#    KF5::TextWidgets
-#    KF5::KIOCore
-#PRIVATE
-#    KF5::PimTextEdit
+find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
 
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX PIMCOMMON

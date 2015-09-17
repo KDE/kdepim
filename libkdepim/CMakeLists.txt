@@ -58,14 +58,14 @@ remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Libkdepim")
 
 ecm_configure_package_config_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/KF5LibKdepimConfig.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5LibKdepimConfig.cmake"
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5LibkdepimConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5LibkdepimConfig.cmake"
   INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
 
 install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5LibKdepimConfig.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/KF5LibKdepimConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5LibkdepimConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5LibkdepimConfigVersion.cmake"
   DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
   COMPONENT Devel
 )
