@@ -19,7 +19,7 @@
 #define RICHTEXTEDITWITHAUTOCORRECTION_H
 
 #include "pimcommon_export.h"
-#include "texteditor/richtexteditor/richtexteditor.h"
+#include "pimcommon/richtexteditor.h"
 
 namespace PimCommon
 {
