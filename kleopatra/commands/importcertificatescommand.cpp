@@ -36,7 +36,7 @@
 #include "importcertificatescommand_p.h"
 
 #include <models/keylistsortfilterproxymodel.h>
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 
 #include <utils/formatting.h>
 

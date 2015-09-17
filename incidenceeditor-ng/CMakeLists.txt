@@ -33,6 +33,21 @@ find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 
+find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5CalendarSupport ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5EventViews ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+
+#  KF5::AkonadiCalendar
+#  KF5::CalendarCore
+#  KF5::CalendarUtils
+#  KF5::MailTransport
+#  KF5::KDGantt2             # For FreeBusy Editor
+#  kdepimdbusinterfaces # For UriHandler
+#  KF5::Ldap
+#  KF5::AkonadiWidgets
+
+
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX INCIDENCEEDITORSNG
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/incidenceeditorsng_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5IncidenceEditorsngConfigVersion.cmake"

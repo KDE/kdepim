@@ -32,7 +32,7 @@
 
 #include "qgpgmelistallkeysjob.h"
 
-#include "kleopatra/models/predicates.h"
+#include "kleo/predicates.h"
 
 #include <gpgme++/key.h>
 #include <gpgme++/context.h>

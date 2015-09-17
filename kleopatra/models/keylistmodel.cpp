@@ -33,7 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "keylistmodel.h"
-#include "predicates.h"
+#include "Libkleo/Predicates"
 
 #ifdef KLEO_MODEL_TEST
 # include "modeltest.h"

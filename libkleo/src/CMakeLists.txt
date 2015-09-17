@@ -110,7 +110,7 @@ set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backe
 set(kleo_LIB_LIBS PUBLIC KF5::QGpgme PRIVATE KF5::PimCommon KF5::ConfigCore KF5::CoreAddons)
 if ( NOT KDEPIM_ONLY_KLEO )
    set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_chiasmus_SRCS} ${libkleo_ui_SRCS})
-   set( kleo_LIB_LIBS ${kleo_LIB_LIBS} PRIVATE KF5::WidgetsAddons KF5::Completion KF5::I18n KF5::IconThemes KF5::WindowSystem)
+   set( kleo_LIB_LIBS ${kleo_LIB_LIBS} PRIVATE KF5::WidgetsAddons KF5::Completion KF5::I18n KF5::IconThemes KF5::WindowSystem KF5::TextWidgets)
    if (WIN32)
      set(kleo_LIB_LIBS ${kleo_LIB_LIBS} PUBLIC KF5::Gpgmepp)
    else()
@@ -130,7 +130,7 @@ endif()
 set_target_properties(KF5Libkleo PROPERTIES
     VERSION ${LIBKLEO_VERSION_STRING}
     SOVERSION ${LIBKLEO_SOVERSION}
-    EXPORT_NAME MailImporter
+    EXPORT_NAME Libkleo
 )
 
 install(TARGETS
@@ -180,6 +180,7 @@ ecm_generate_headers(libkeo_CamelCase_HEADERS
   Job
   OidMap
   ListAllKeysJob
+  Predicates
   REQUIRED_HEADERS libkleo_HEADERS
   PREFIX Libkleo
   RELATIVE kleo
@@ -210,7 +211,7 @@ install(FILES
 
 install(FILES
     ${libkleo_HEADERS}
-    ${CMAKE_CURRENT_BINARY_DIR}/libkleo_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kleo_export.h
     ${libkleo_CamelCase_HEADERS}
     ${libkeo_ui_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/libkleo

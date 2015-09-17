@@ -35,6 +35,7 @@ find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Service ${KF5_VERSION} CONFIG REQUIRED)
 find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 find_package(KF5Libkleo ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5GrantleeTheme ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX KADDRESSBOOKGRANTLEE
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kaddressbookgrantlee_version.h"

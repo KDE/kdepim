@@ -39,7 +39,7 @@
 
 #include <dialogs/certificateselectiondialog.h>
 
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 
 #include <utils/gui-helper.h>
 #include <utils/formatting.h>

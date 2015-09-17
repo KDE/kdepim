@@ -36,7 +36,7 @@
 
 #include <models/keylistmodel.h>
 #include <models/keylistsortfilterproxymodel.h>
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 
 #include <utils/headerview.h>
 

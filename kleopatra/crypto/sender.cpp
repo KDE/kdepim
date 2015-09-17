@@ -34,7 +34,7 @@
 
 #include "sender.h"
 
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 #include <models/keycache.h>
 
 #include <utils/kleo_assert.h>

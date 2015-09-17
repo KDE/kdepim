@@ -43,7 +43,7 @@
 #include <view/searchbar.h>
 
 #include <models/keycache.h>
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 #include <models/keylistmodel.h>
 
 #include <utils/archivedefinition.h>

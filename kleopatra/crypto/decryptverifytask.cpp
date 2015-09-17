@@ -44,7 +44,7 @@
 #include <Libkleo/Stl_Util>
 
 #include <models/keycache.h>
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 
 #include <utils/detail_p.h>
 #include <utils/input.h>

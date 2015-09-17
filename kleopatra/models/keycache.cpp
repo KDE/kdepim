@@ -35,7 +35,7 @@
 #include "keycache.h"
 #include "keycache_p.h"
 
-#include "predicates.h"
+#include "Libkleo/Predicates"
 
 #include "smimevalidationpreferences.h"
 

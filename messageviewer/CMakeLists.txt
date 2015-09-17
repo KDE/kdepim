@@ -28,10 +28,26 @@ set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIME_LIB_VERSION "4.87.0")
 
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
-find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools WebKitWidgets)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5KaddressbookGrantlee ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5GrantleeTheme ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Libkleo ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageCore ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5IncidenceEditorsng ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
+
+  #KF5::Contacts
+  #${_mailwebview_lib}
+  #KF5::MailTransport
+  #KF5::Mbox
+  #KF5::AkonadiNotes
+
 
 find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGEVIEWER

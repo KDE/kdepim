@@ -25,6 +25,7 @@ set(KF5_VERSION "5.14.0")
 set(KDEPIMLIBS_LIB_VERSION "5.0.42")
 set(KDEPIM_LIB_VERSION "5.43.0")
 set(QT_REQUIRED_VERSION "5.4.0")
+set(GPGMEPP_LIB_VERSION "4.80.0")
 
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools Xml)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
@@ -35,7 +36,9 @@ find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5CoreAddons ${KF5_VERSION} CONFIG REQUIRED)
-
+find_package(KF5TextWidgets ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Gpgmepp ${GPGMEPP_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX LIBKLEO
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/libkleo_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5LibkleoConfigVersion.cmake"
@@ -43,8 +46,10 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX LIBKLEO
 )
 
 ########### Targets ###########
-
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
+remove_definitions( -DQT_NO_CAST_FROM_ASCII )
+remove_definitions( -DQT_NO_CAST_TO_ASCII )
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Libkleo")

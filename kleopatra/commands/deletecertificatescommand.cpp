@@ -39,7 +39,7 @@
 #include <dialogs/deletecertificatesdialog.h>
 
 #include <models/keycache.h>
-#include <models/predicates.h>
+#include <Libkleo/Predicates>
 
 #include <Libkleo/Stl_Util>
 #include <Libkleo/CryptoBackend>

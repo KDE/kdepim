@@ -23,7 +23,7 @@
 #include "attachmenticonview.h"
 #include "ui_dialogdesktop.h"
 
-#include <libkdepimdbusinterfaces/urihandler.h>
+#include <libkdepimdbusinterfaces/src/urihandler.h>
 
 #include <KContacts/VCardDrag>
 

@@ -23,7 +23,7 @@
 #include "attachmenthandler.h"
 #include "utils.h"
 
-#include "libkdepimdbusinterfaces/urihandler.h"
+#include "libkdepimdbusinterfaces/src/urihandler.h"
 #include "incidenceattachmentmodel.h"
 
 #include <CollectionFetchJob>
