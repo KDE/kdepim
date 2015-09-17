@@ -30,6 +30,11 @@ find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools Xml
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WidgetsAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5CoreAddons ${KF5_VERSION} CONFIG REQUIRED)
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX LIBKLEO
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/libkleo_version.h"
