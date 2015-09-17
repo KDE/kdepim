@@ -52,6 +52,22 @@ find_package(KF5TextWidgets ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
 
+option(KDEPIM_NO_TEXTTOSPEECH "Do not use TextToSpeech in the kdepim applications" FALSE)
+
+if (NOT KDEPIM_NO_TEXTTOSPEECH)
+   find_package(Qt5 OPTIONAL_COMPONENTS TextToSpeech)
+endif()
+
+if (KDEPIM_NO_TEXTTOSPEECH)
+  set(KDEPIM_HAVE_TEXTTOSPEECH FALSE)
+else()
+  if (${Qt5TextToSpeech_FOUND})
+    set(KDEPIM_HAVE_TEXTTOSPEECH TRUE)
+  endif()
+endif()
+configure_file(config-kdepim.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/config-kdepim.h )
+
+
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX PIMCOMMON
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/pimcommon_version.h"
@@ -65,6 +81,7 @@ set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libx
 ########### Targets ###########
 
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5PimCommon")

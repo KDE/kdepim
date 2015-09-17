@@ -98,6 +98,7 @@ set_package_properties(Qt5Designer PROPERTIES
 
 find_package(Gpgme REQUIRED)
 
+
 # Find KF5 package
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)

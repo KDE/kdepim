@@ -43,7 +43,7 @@ bool TinyurlShortUrl::isUp() const
 void TinyurlShortUrl::start()
 {
     const QString requestUrl = QStringLiteral("http://tinyurl.com/api-create.php?url=%1").arg(mOriginalUrl);
-    QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(requestUrl));
+    QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(QUrl(requestUrl)));
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &TinyurlShortUrl::slotErrorFound);
 }
 

@@ -224,6 +224,6 @@ void ShortUrlWidget::slotOpenShortUrl()
 {
     const QString shortUrl = mShortUrl->text();
     if (!shortUrl.isEmpty()) {
-        new KRun(shortUrl, this);
+        new KRun(QUrl(shortUrl), this);
     }
 }
