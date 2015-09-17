@@ -169,6 +169,17 @@ ecm_generate_headers(libkeo_CamelCase_HEADERS
   KeyFilterManager
   EncryptJob
   VerifyDetachedJob
+  ImportFromKeyserverJob
+  AddUserIDJob
+  ChangeExpiryJob
+  ChangePasswdJob
+  MultiDeleteJob
+  DeleteJob
+  DecryptJob
+  KeyGenerationJob
+  Job
+  OidMap
+  ListAllKeysJob
   REQUIRED_HEADERS libkleo_HEADERS
   PREFIX Libkleo
   RELATIVE kleo
@@ -181,6 +192,9 @@ ecm_generate_headers(libkeo_ui_HEADERS
   KeySelectionDialog
   FileNameRequester
   KeyRequester
+  CryptoConfigModule
+  DirectoryServicesWidget
+  DNAttributeOrderConfigWidget
   REQUIRED_HEADERS libkleo_HEADERS
   PREFIX Libkleo
   RELATIVE ui

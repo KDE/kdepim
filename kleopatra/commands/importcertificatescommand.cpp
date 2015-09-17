@@ -43,7 +43,7 @@
 #include <Libkleo/Stl_Util>
 #include <Libkleo/CryptoBackendFactory>
 #include <Libkleo/ImportJob>
-#include <libkleo/src/kleo/importfromkeyserverjob.h>
+#include <LibKleo/ImportFromKeyserverJob>
 
 #include <gpgme++/global.h>
 #include <gpgme++/importresult.h>

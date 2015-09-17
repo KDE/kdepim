@@ -46,7 +46,7 @@
 #include <Libkleo/CryptoBackendFactory>
 #include <Libkleo/Dn>
 #include <Libkleo/KeyListJob>
-#include <libkleo/src/kleo/listallkeysjob.h>
+#include <Libkleo/ListAllKeysJob>
 
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>

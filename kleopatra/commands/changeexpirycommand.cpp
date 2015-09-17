@@ -42,7 +42,7 @@
 
 #include <Libkleo/CryptoBackendFactory>
 #include <Libkleo/CryptoBackend>
-#include <libkleo/src/kleo/changeexpiryjob.h>
+#include <Libkleo/ChangeExpiryJob>
 
 #include <gpgme++/key.h>
 

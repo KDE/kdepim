@@ -33,8 +33,8 @@
 #include <config-kleopatra.h>
 
 #include "dirservconfigpage.h"
-#include "libkleo/src/ui/directoryserviceswidget.h"
-#include "libkleo/src/ui/cryptoconfigmodule.h"
+#include "Libkleo/DirectoryServicesWidget"
+#include "Libkleo/CryptoConfigModule"
 #include "Libkleo/CryptoBackendFactory"
 
 #include <kmessagebox.h>

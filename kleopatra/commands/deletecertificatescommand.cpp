@@ -44,8 +44,8 @@
 #include <Libkleo/Stl_Util>
 #include <Libkleo/CryptoBackend>
 #include <Libkleo/CryptoBackendFactory>
-#include <libkleo/src/kleo/multideletejob.h>
-#include <libkleo/src/kleo/deletejob.h>
+#include <Libkleo/MultiDeleteJob>
+#include <Libkleo/DeleteJob>
 
 #include <gpgme++/key.h>
 

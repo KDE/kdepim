@@ -42,7 +42,7 @@
 
 #include <Libkleo/CryptoBackendFactory>
 #include <Libkleo/CryptoBackend>
-#include <libkleo/src/kleo/adduseridjob.h>
+#include <Libkleo/AddUserIDJob>
 
 #include <gpgme++/key.h>
 

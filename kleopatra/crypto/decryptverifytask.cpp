@@ -37,7 +37,7 @@
 #include <Libkleo/CryptoBackendFactory>
 #include <Libkleo/VerifyOpaqueJob>
 #include <Libkleo/VerifyDetachedJob>
-#include <libkleo/src/kleo/decryptjob.h>
+#include <Libkleo/DecryptJob>
 #include <Libkleo/DecryptVerifyJob>
 #include <Libkleo/Dn>
 #include <Libkleo/Exception>

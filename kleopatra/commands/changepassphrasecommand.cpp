@@ -40,7 +40,7 @@
 
 #include <Libkleo/CryptoBackendFactory>
 #include <Libkleo/CryptoBackend>
-#include <libkleo/src/kleo/changepasswdjob.h>
+#include <Libkleo/ChangePasswdJob>
 
 #include <gpgme++/key.h>
 

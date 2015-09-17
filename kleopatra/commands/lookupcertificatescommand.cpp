@@ -43,7 +43,7 @@
 #include <utils/formatting.h>
 
 #include <Libkleo/Stl_Util>
-#include <libkleo/src/kleo/importfromkeyserverjob.h>
+#include <LibKleo/ImportFromKeyserverJob>
 #include <Libkleo/KeyListJob>
 #include <Libkleo/CryptoBackendFactory>
 #include <Libkleo/CryptoBackend>

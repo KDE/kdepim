@@ -54,8 +54,8 @@
 
 #include <Libkleo/Stl_Util>
 #include <Libkleo/Dn>
-#include <libkleo/src/kleo/oidmap.h>
-#include <libkleo/src/kleo/keygenerationjob.h>
+#include <Libkleo/OidMap>
+#include <Libkleo/KeyGenerationJob>
 #include <Libkleo/CryptoBackendFactory>
 #include <Libkleo/CryptoBackend>
 

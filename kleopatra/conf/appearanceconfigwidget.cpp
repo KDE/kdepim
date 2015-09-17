@@ -41,7 +41,7 @@
 #include "Libkleo/CryptoBackendFactory"
 #include "Libkleo/KeyFilterManager"
 #include "Libkleo/Dn"
-#include "libkleo/src/ui/dnattributeorderconfigwidget.h"
+#include "Libkleo/DNAttributeOrderConfigWidget"
 
 #ifdef KDEPIM_ONLY_KLEO
 # include <utils/kleo_kicondialog.h>
