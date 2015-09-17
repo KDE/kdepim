@@ -36,6 +36,7 @@ find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiContact ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MAILIMPORTER
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/mailimporter_version.h"
@@ -46,7 +47,7 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MAILIMPORTER
 ########### Targets ###########
 
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
-
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5MailImporter")
 

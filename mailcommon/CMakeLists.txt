@@ -38,17 +38,16 @@ find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5ItemView ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5TemplateParser ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageViewer ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5TemplateParser ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageComposer ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageCore ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MailImporter ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 
-#target_link_libraries(KF5MailCommon
-#PUBLIC
-#  KF5::MessageComposer
-#  KF5::PimCommon
 #PRIVATE
-#  KF5::Libkdepim
-#  KF5::MessageViewer
-#  KF5::MailImporter
-#  KF5::MessageCore
-#  KF5::TemplateParser
 #  KF5::MailTransport
 #  Phonon::phonon4qt5
 #  KF5::KIOWidgets
