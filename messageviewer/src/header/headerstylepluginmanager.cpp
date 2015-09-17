@@ -22,6 +22,7 @@
 #include <kpluginmetadata.h>
 #include <QFileInfo>
 #include <QSet>
+#include <QDebug>
 
 using namespace MessageViewer;
 
@@ -94,6 +95,12 @@ void HeaderStylePluginManagerPrivate::initializePluginList()
         if (unique.contains(info.saveName())) {
             continue;
         }
+        QVariant p = info.metaData.rawData().value(QStringLiteral("X-KDE-MessageViewer-Header-Order")).toVariant();
+        qDebug()<<" info.metaData.rawData()"<<info.metaData.rawData() << "info.saveName()"<<info.saveName();
+        int order = -1;
+        if (p.isValid())
+            order = p.toInt();
+        qDebug() << "order"<<order;
         info.plugin = Q_NULLPTR;
         mPluginList.push_back(info);
         unique.insert(info.saveName());

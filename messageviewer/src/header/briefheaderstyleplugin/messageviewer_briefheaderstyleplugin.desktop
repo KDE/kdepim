@@ -2,6 +2,7 @@
 Type=Service
 ServiceTypes=MessageViewerHeaderStyle/Plugin
 X-KDE-Library=messageviewer_briefheaderstyleplugin
+X-KDE-MessageViewer-Header-Order=5
 Name=Brief Header Style
 Name[ca]=Estil de capçalera breu
 Name[en_GB]=Brief Header Style
