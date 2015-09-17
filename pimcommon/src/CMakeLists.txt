@@ -646,7 +646,7 @@ ecm_generate_headers(PimCommon_widgets_HEADERS
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${pimcommon_SOURCE_DIR})
 install(FILES
-    ${PimCommon_CamelCase_HEADERS}}
+    ${PimCommon_CamelCase_HEADERS}
     ${PimCommon_storageservice_HEADERS}
     ${PimCommon_settings_HEADERS}
     ${PimCommon_storageservicewidgets_HEADERS}
@@ -681,7 +681,7 @@ install(FILES
 install(FILES
     ${PimCommon_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/pimcommon_export.h
-    ${PimCommon_CamelCase_HEADERS}}
+    ${PimCommon_CamelCase_HEADERS}
     ${PimCommon_storageservice_HEADERS}
     ${PimCommon_settings_HEADERS}
     ${PimCommon_storageservicewidgets_HEADERS}
