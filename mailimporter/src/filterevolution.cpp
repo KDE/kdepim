@@ -28,7 +28,7 @@ using namespace MailImporter;
 /** Default constructor. */
 FilterEvolution::FilterEvolution() :
     Filter(i18n("Import Evolution 1.x Local Mails and Folder Structure"),
-           "Simon MARTIN<br /><br />( Filter accelerated by Danny Kukawka )",
+           i18n("Simon MARTIN<br /><br />( Filter accelerated by Danny Kukawka )"),
            i18n("<p><b>Evolution 1.x import filter</b></p>"
                 "<p>Select the base directory of Evolution's mails (usually ~/evolution/local).</p>"
                 "<p>Since it is possible to recreate the folder structure, the folders "
@@ -76,7 +76,7 @@ void FilterEvolution::importMails(const QString &maildir)
         filterInfo()->setOverall(0);
         // Recursive import of the MBoxes.
         QDir dir(mailDir());
-        const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
+        const QStringList rootSubDirs = dir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
         QStringList::ConstIterator end(rootSubDirs.constEnd());
         for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename, ++currentDir) {
@@ -104,9 +104,9 @@ void FilterEvolution::importDirContents(const QString &dirName, const QString &K
         importMBox(dirName + QLatin1String("/mbox"), KMailRootDir, KMailSubDir);
     }
     // If there are subfolders, we import them one by one
-    if (dir.exists("subfolders")) {
+    if (dir.exists(QStringLiteral("subfolders"))) {
         QDir subfolders(dirName + QLatin1String("/subfolders"));
-        const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
+        const QStringList subDirs = subfolders.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Dirs, QDir::Name);
         QStringList::ConstIterator end(subDirs.constEnd());
 
         for (QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
@@ -141,18 +141,18 @@ void FilterEvolution::importMBox(const QString &mboxName, const QString &rootDir
         filterInfo()->setCurrent(0);
         if (mboxName.length() > 20) {
             QString tmp_info = mboxName;
-            tmp_info = tmp_info.replace(mailDir(), "..");
-            if (tmp_info.contains("subfolders/")) {
-                tmp_info.remove("subfolders/");
+            tmp_info = tmp_info.replace(mailDir(), QStringLiteral(".."));
+            if (tmp_info.contains(QStringLiteral("subfolders/"))) {
+                tmp_info.remove(QStringLiteral("subfolders/"));
             }
             filterInfo()->setFrom(tmp_info);
             tmp_from = tmp_info;
         } else {
             filterInfo()->setFrom(mboxName);
         }
-        if (targetDir.contains("subfolders/")) {
+        if (targetDir.contains(QStringLiteral("subfolders/"))) {
             QString tmp_info = targetDir;
-            tmp_info.remove("subfolders/");
+            tmp_info.remove(QStringLiteral("subfolders/"));
             filterInfo()->setTo(tmp_info);
         } else {
             filterInfo()->setTo(targetDir);

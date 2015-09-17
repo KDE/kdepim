@@ -27,7 +27,7 @@ using namespace MailImporter;
 
 FilterOpera::FilterOpera() :
     Filter(i18n("Import Opera Emails"),
-           "Danny Kukawka",
+           QStringLiteral("Danny Kukawka"),
            i18n("<p><b>Opera email import filter</b></p>"
                 "<p>This filter will import mails from Opera mail folder. Use this filter "
                 "if you want to import all mails within a account in the Opera maildir.</p>"
@@ -49,14 +49,14 @@ QString FilterOpera::defaultSettingsPath()
 void FilterOpera::importRecursive(const QDir &mailDir, const QString &accountName)
 {
     // Recursive import of the MBoxes.
-    const QStringList rootSubDirs = mailDir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
+    const QStringList rootSubDirs = mailDir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Dirs, QDir::Name); // Removal of . and ..
     int currentDir = 1;
     int numSubDirs = rootSubDirs.size();
     if (numSubDirs > 0) {
         QStringList::ConstIterator end(rootSubDirs.constEnd());
         for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename, ++currentDir) {
             QDir importDir(mailDir.path() + QDir::separator() + *filename);
-            const QStringList files = importDir.entryList(QStringList("*.[mM][bB][sS]"), QDir::Files, QDir::Name);
+            const QStringList files = importDir.entryList(QStringList(QStringLiteral("*.[mM][bB][sS]")), QDir::Files, QDir::Name);
             if (files.isEmpty()) {
                 importRecursive(importDir, accountName.isEmpty() ?  *filename : accountName);
             } else {
@@ -83,9 +83,9 @@ void FilterOpera::importBox(const QDir &importDir, const QStringList &files, con
             QFileInfo filenameInfo(importDir.filePath(*mailFile));
             QString folderName;
             if (accountName.isEmpty()) {
-                folderName = QString("OPERA-" + importDir.dirName());
+                folderName = QString(QLatin1String("OPERA-") + importDir.dirName());
             } else {
-                folderName = QString("OPERA-" + accountName);
+                folderName = QString(QLatin1String("OPERA-") + accountName);
             }
 
             filterInfo()->setFrom(*mailFile);
@@ -189,7 +189,7 @@ void FilterOpera::importMails(const QString &maildir)
         filterInfo()->setOverall(0);
 
         QDir importDir(mailDir());
-        const QStringList files = importDir.entryList(QStringList("*.[mM][bB][sS]"), QDir::Files, QDir::Name);
+        const QStringList files = importDir.entryList(QStringList(QStringLiteral("*.[mM][bB][sS]")), QDir::Files, QDir::Name);
 
         // Count total number of files to be processed
         filterInfo()->addInfoLogEntry(i18n("Counting files..."));

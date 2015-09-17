@@ -42,7 +42,7 @@ public:
 /** Default constructor. */
 FilterSylpheed::FilterSylpheed() :
     Filter(i18n("Import Sylpheed Maildirs and Folder Structure"),
-           "Danny Kukawka",
+           QStringLiteral("Danny Kukawka"),
            i18n("<p><b>Sylpheed import filter</b></p>"
                 "<p>Select the base directory of the Sylpheed mailfolder you want to import "
                 "(usually: ~/Mail ).</p>"
@@ -85,9 +85,9 @@ QString FilterSylpheed::localMailDirPath()
 
         for (QDomElement e = settings.firstChildElement(); !e.isNull(); e = e.nextSiblingElement()) {
             if (e.tagName() == QLatin1String("folder")) {
-                if (e.hasAttribute("type")) {
-                    if (e.attribute("type") == QLatin1String("mh")) {
-                        return e.attribute("path");
+                if (e.hasAttribute(QStringLiteral("type"))) {
+                    if (e.attribute(QStringLiteral("type")) == QLatin1String("mh")) {
+                        return e.attribute(QStringLiteral("path"));
                     }
                 }
             }
@@ -113,7 +113,7 @@ void FilterSylpheed::import()
 void FilterSylpheed::processDirectory(const QString &path)
 {
     QDir dir(path);
-    const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
+    const QStringList rootSubDirs = dir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Dirs , QDir::Name);
     QStringList::ConstIterator end = rootSubDirs.constEnd();
     for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename) {
         if (filterInfo()->shouldTerminate()) {
@@ -216,7 +216,7 @@ void FilterSylpheed::importFiles(const QString &dirName)
     QDir importDir(dirName);
     const QString defaultInstallPath = defaultInstallFolder();
 
-    const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
+    const QStringList files = importDir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Files, QDir::Name);
     int currentFile = 1, numFiles = files.size();
 
     readMarkFile(dir.filePath(markFile()), msgflags);

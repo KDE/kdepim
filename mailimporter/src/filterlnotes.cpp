@@ -44,7 +44,7 @@ public:
 /** Default constructor. */
 FilterLNotes::FilterLNotes() :
     Filter(i18n("Import Lotus Notes Emails"),
-           "Robert Rockers",
+           QStringLiteral("Robert Rockers"),
            i18n("<p><b>Lotus Notes Structured Text mail import filter</b></p>"
                 "<p>This filter will import Structure Text files from an exported Lotus Notes email "
                 "client into KMail. Use this filter if you want to import mails from Lotus or other "

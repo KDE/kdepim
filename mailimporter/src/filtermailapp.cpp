@@ -41,7 +41,7 @@ public:
 
 FilterMailApp::FilterMailApp() :
     Filter(i18n("Import From OS X Mail"),
-           "Chris Howells<br /><br />Filter accelerated by Danny Kukawka )",
+           i18n("Chris Howells<br /><br />Filter accelerated by Danny Kukawka )"),
            i18n("<p><b>OS X Mail Import Filter</b></p>"
                 "<p>This filter imports e-mails from the Mail client in Apple Mac OS X.</p>")),
     d(new MailImporter::FilterMailAppPrivate)
@@ -87,7 +87,7 @@ void FilterMailApp::importMails(const QString  &maildir)
         } else {
             QFileInfo filenameInfo(*filename);
             qCDebug(MAILIMPORTER_LOG) << "importing filename" << *filename;
-            QStringList name = (*filename).split('/', QString::SkipEmptyParts);
+            QStringList name = (*filename).split(QLatin1Char('/'), QString::SkipEmptyParts);
             QString folderName(name[name.count() - 2]);
 
             filterInfo()->setCurrent(0);

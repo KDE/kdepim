@@ -30,7 +30,7 @@ using namespace MailImporter;
 FilterClawsMail::FilterClawsMail() : FilterSylpheed()
 {
     setName(i18n("Import Claws-mail Maildirs and Folder Structure"));
-    setAuthor("Laurent Montel");
+    setAuthor(QStringLiteral("Laurent Montel"));
     setInfo(i18n("<p><b>Claws-mail import filter</b></p>"
                  "<p>Select the base directory of the Claws-mail mailfolder you want to import "
                  "(usually: ~/Mail ).</p>"
@@ -70,9 +70,9 @@ QString FilterClawsMail::localMailDirPath()
 
         for (QDomElement e = settings.firstChildElement(); !e.isNull(); e = e.nextSiblingElement()) {
             if (e.tagName() == QLatin1String("folder")) {
-                if (e.hasAttribute("type")) {
-                    if (e.attribute("type") == QLatin1String("mh")) {
-                        return QDir::homePath() + QDir::separator() + e.attribute("path");
+                if (e.hasAttribute(QStringLiteral("type"))) {
+                    if (e.attribute(QStringLiteral("type")) == QLatin1String("mh")) {
+                        return QDir::homePath() + QDir::separator() + e.attribute(QStringLiteral("path"));
                     }
                 }
             }

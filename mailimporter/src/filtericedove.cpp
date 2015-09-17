@@ -23,7 +23,7 @@ FilterIcedove::FilterIcedove()
     : FilterThunderbird()
 {
     setName(i18n("Import Icedove Mails and Folder Structure"));
-    setAuthor("Laurent Montel");
+    setAuthor(QStringLiteral("Laurent Montel"));
     setInfo(i18n("<p><b>Icedove import filter</b></p>"
                  "<p>Select your base Icedove mailfolder"
                  " (usually ~/.icedove/*.default/Mail/Local Folders/).</p>"

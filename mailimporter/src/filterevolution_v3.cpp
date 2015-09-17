@@ -39,7 +39,7 @@ public:
 /** Default constructor. */
 FilterEvolution_v3::FilterEvolution_v3()
     : Filter(i18n("Import Evolution 3.x Local Mails and Folder Structure"),
-             "Laurent Montel",
+             QStringLiteral("Laurent Montel"),
              i18n("<p><b>Evolution 3.x import filter</b></p>"
                   "<p>Select the base directory of your local Evolution mailfolder (usually ~/.local/share/evolution/mail/local/).</p>"
                   "<p>Since it is possible to recreate the folder structure, the folders "
@@ -78,7 +78,7 @@ void FilterEvolution_v3::import()
 void FilterEvolution_v3::processDirectory(const QString &path)
 {
     QDir dir(path);
-    const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
+    const QStringList rootSubDirs = dir.entryList(QStringList(QStringLiteral("*")), QDir::Dirs | QDir::Hidden, QDir::Name);
     QStringList::ConstIterator end = rootSubDirs.constEnd();
     for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename) {
         if (filterInfo()->shouldTerminate()) {
@@ -159,7 +159,7 @@ void FilterEvolution_v3::importFiles(const QString &dirName)
     bool generatedPath = false;
 
     QDir importDir(dirName);
-    const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
+    const QStringList files = importDir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Files, QDir::Name);
     int currentFile = 1, numFiles = files.size();
     QStringList::ConstIterator filesEnd(files.constEnd());
 
@@ -223,7 +223,7 @@ void FilterEvolution_v3::importFiles(const QString &dirName)
 Akonadi::MessageStatus FilterEvolution_v3::statusFromFile(const QString &filename)
 {
     Akonadi::MessageStatus status;
-    const int statusIndex = filename.indexOf(":2,");
+    const int statusIndex = filename.indexOf(QStringLiteral(":2,"));
     if (statusIndex != -1) {
         const QString statusStr = filename.right(filename.length() - statusIndex - 3);
         if (statusStr.contains(QLatin1Char('S'))) {

@@ -26,7 +26,7 @@ using namespace MailImporter;
 
 FilterMBox::FilterMBox() :
     Filter(i18n("Import mbox Files (UNIX, Evolution)"),
-           "Laurence Anderson <p>( Filter accelerated by Danny Kukawka )</p>",
+           i18n("Laurence Anderson <p>( Filter accelerated by Danny Kukawka )</p>"),
            i18n("<p><b>mbox import filter</b></p>"
                 "<p>This filter will import mbox files into KMail. Use this filter "
                 "if you want to import mails from Ximian Evolution or other mailers "
@@ -65,7 +65,7 @@ void FilterMBox::importMails(const QStringList &filenames)
             filterInfo()->alert(i18n("Unable to open %1, skipping", *filename));
         } else {
             QFileInfo filenameInfo(*filename);
-            QString folderName("MBOX-" + filenameInfo.completeBaseName());
+            QString folderName(QStringLiteral("MBOX-%1").arg(filenameInfo.completeBaseName()));
 
             filterInfo()->setCurrent(0);
             filterInfo()->addInfoLogEntry(i18n("Importing emails from %1...", *filename));

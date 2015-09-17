@@ -43,7 +43,7 @@ public:
 /** Default constructor. */
 FilterTheBat::FilterTheBat() :
     Filter(i18n("Import The Bat! Mails and Folder Structure"),
-           "Danny Kukawka",
+           QStringLiteral("Danny Kukawka"),
            i18n("<p><b>The Bat! import filter</b></p>"
                 "<p>Select the base directory of the \'The Bat!\' local mailfolder you "
                 "want to import.</p>"
@@ -75,7 +75,7 @@ void FilterTheBat::import()
 void FilterTheBat::processDirectory(const QString &path)
 {
     QDir dir(path);
-    const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
+    const QStringList rootSubDirs = dir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Dirs , QDir::Name);
     QStringList::ConstIterator end = rootSubDirs.constEnd();
     for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename) {
         if (filterInfo()->shouldTerminate()) {
@@ -137,7 +137,7 @@ void FilterTheBat::importDirContents(const QString &dirName)
 
     /** Here Import all archives in the current dir */
     QDir importDir(dirName);
-    const QStringList files = importDir.entryList(QStringList("*.[tT][bB][bB]"), QDir::Files, QDir::Name);
+    const QStringList files = importDir.entryList(QStringList(QStringLiteral("*.[tT][bB][bB]")), QDir::Files, QDir::Name);
     QStringList::ConstIterator end = files.constEnd();
     for (QStringList::ConstIterator mailFile = files.constBegin(); mailFile != end; ++mailFile) {
         QString temp_mailfile = *mailFile;
@@ -171,7 +171,7 @@ void FilterTheBat::importFiles(const QString &FileName)
 
     long l = 0;
     QByteArray input(50, '\0');
-    QRegExp regexp("!.p.0");
+    QRegExp regexp(QStringLiteral("!.p.0"));
     QFile tbb(FileName);
     int iFound = 0;
     int count = 0;
@@ -195,7 +195,7 @@ void FilterTheBat::importFiles(const QString &FileName)
                 tbb.close();
                 return;
             }
-            QString _tmp = input.data();
+            QString _tmp = QString::fromUtf8(input.data());
 
             if (tbb.atEnd()) {
                 break;
@@ -203,7 +203,7 @@ void FilterTheBat::importFiles(const QString &FileName)
 
             iFound = _tmp.count(regexp);
             if (!iFound) {
-                iFound = _tmp.lastIndexOf("!");
+                iFound = _tmp.lastIndexOf(QStringLiteral("!"));
                 if (iFound >= 0 && ((l - iFound) < 5)) {
                     int _i = tbb.pos();
                     tbb.seek((_i - iFound));
@@ -230,7 +230,7 @@ void FilterTheBat::importFiles(const QString &FileName)
             QString _info = _path;
             filterInfo()->addInfoLogEntry(i18n("Import folder %1...", _info.remove(0, 14)));
             filterInfo()->setTo(_path);
-            filterInfo()->setFrom("../" + _info + "/messages.tbb");
+            filterInfo()->setFrom(QLatin1String("../") + _info + QLatin1String("/messages.tbb"));
 
             QList<long>::Iterator end = offsets.end();
             for (QList<long>::Iterator it = offsets.begin() ; it != end ; ++it) {

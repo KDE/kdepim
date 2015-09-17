@@ -40,7 +40,7 @@ public:
 /** Default constructor. */
 FilterKMail_maildir::FilterKMail_maildir() :
     Filter(i18n("Import KMail Maildirs and Folder Structure"),
-           "Danny Kukawka",
+           QStringLiteral("Danny Kukawka"),
            i18n("<p><b>KMail import filter</b></p>"
                 "<p>Select the base directory of the KMail mailfolder you want to import.</p>"
                 "<p><b>Note:</b> Never select your current local KMail maildir (usually "
@@ -73,7 +73,7 @@ void FilterKMail_maildir::import()
 void FilterKMail_maildir::processDirectory(const QString &path)
 {
     QDir dir(path);
-    const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
+    const QStringList rootSubDirs = dir.entryList(QStringList(QStringLiteral("*")), QDir::Dirs | QDir::Hidden, QDir::Name);
     QStringList::ConstIterator end = rootSubDirs.constEnd();
     for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename) {
         if (filterInfo()->shouldTerminate()) {
@@ -152,7 +152,7 @@ void FilterKMail_maildir::importFiles(const QString &dirName)
     bool generatedPath = false;
 
     QDir importDir(dirName);
-    const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
+    const QStringList files = importDir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Files, QDir::Name);
     int currentFile = 1, numFiles = files.size();
     QStringList::ConstIterator filesEnd(files.constEnd());
 
@@ -165,7 +165,7 @@ void FilterKMail_maildir::importFiles(const QString &dirName)
         if (!(temp_mailfile.endsWith(QLatin1String(".index")) || temp_mailfile.endsWith(QLatin1String(".index.ids")) ||
                 temp_mailfile.endsWith(QLatin1String(".index.sorted")) || temp_mailfile.endsWith(QLatin1String(".uidcache")))) {
             if (!generatedPath) {
-                _path = "KMail-Import";
+                _path = QStringLiteral("KMail-Import");
                 QString _tmp = dir.filePath(*mailFile);
                 _tmp = _tmp.remove(mailDir(), Qt::CaseSensitive);
                 const QStringList subFList = _tmp.split(QLatin1Char('/'), QString::SkipEmptyParts);
@@ -173,16 +173,16 @@ void FilterKMail_maildir::importFiles(const QString &dirName)
                 for (QStringList::ConstIterator it = subFList.constBegin(); it != end; ++it) {
                     QString _cat = *it;
                     if (!(_cat == *mailFile)) {
-                        if (_cat.startsWith('.') && _cat.endsWith(".directory")) {
+                        if (_cat.startsWith(QLatin1Char('.')) && _cat.endsWith(QStringLiteral(".directory"))) {
                             _cat.remove(0, 1);
                             _cat.remove((_cat.length() - 10), 10);
-                        } else if (_cat.startsWith('.')) {
+                        } else if (_cat.startsWith(QLatin1Char('.'))) {
                             _cat = _cat.remove(0 , 1);
                         }
                         _path += QLatin1Char('/') + _cat;
                     }
                 }
-                if (_path.endsWith("cur")) {
+                if (_path.endsWith(QStringLiteral("cur"))) {
                     _path.remove(_path.length() - 4 , 4);
                 }
                 QString _info = _path;

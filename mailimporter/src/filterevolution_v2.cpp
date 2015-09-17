@@ -27,7 +27,7 @@ using namespace MailImporter;
 /** Default constructor. */
 FilterEvolution_v2::FilterEvolution_v2() :
     Filter(i18n("Import Evolution 2.x Local Mails and Folder Structure"),
-           "Danny Kukawka",
+           QStringLiteral("Danny Kukawka"),
            i18n("<p><b>Evolution 2.x import filter</b></p>"
                 "<p>Select the base directory of your local Evolution mailfolder (usually ~/.evolution/mail/local/).</p>"
                 "<p><b>Note:</b> Never choose a Folder which <u>does not</u> contain mbox-files (for example "
@@ -98,7 +98,7 @@ void FilterEvolution_v2::importMails(const QString &maildir)
 
         /** Recursive import of the MailArchives */
         QDir dir(mailDir());
-        const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
+        const QStringList rootSubDirs = dir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
         QStringList::ConstIterator endFilename(rootSubDirs.constEnd());
         for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != endFilename ; ++filename, ++currentDir) {
@@ -111,7 +111,7 @@ void FilterEvolution_v2::importMails(const QString &maildir)
 
         /** import last but not least all archives from the root-dir */
         QDir importDir(mailDir());
-        const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
+        const QStringList files = importDir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Files, QDir::Name);
         endFilename = files.constEnd();
         for (QStringList::ConstIterator mailFile = files.constBegin(); mailFile != endFilename; ++mailFile) {
             if (filterInfo()->shouldTerminate()) {
@@ -153,7 +153,7 @@ void FilterEvolution_v2::importDirContents(const QString &dirName, const QString
     QDir dir(dirName);
 
     QDir importDir(dirName);
-    const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
+    const QStringList files = importDir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Files, QDir::Name);
     QStringList::ConstIterator mailFileEnd(files.constEnd());
     for (QStringList::ConstIterator mailFile = files.constBegin(); mailFile != mailFileEnd; ++mailFile) {
         QString temp_mailfile = *mailFile;
@@ -165,7 +165,7 @@ void FilterEvolution_v2::importDirContents(const QString &dirName, const QString
 
     /** If there are subfolders, we import them one by one */
     QDir subfolders(dirName);
-    const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
+    const QStringList subDirs = subfolders.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Dirs, QDir::Name);
     QStringList::ConstIterator end(subDirs.constEnd());
     for (QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
         QString kSubDir;
@@ -197,9 +197,9 @@ void FilterEvolution_v2::importMBox(const QString &mboxName, const QString &root
         filterInfo()->setCurrent(0);
         if (mboxName.length() > 20) {
             QString tmp_info = mboxName;
-            tmp_info = tmp_info.replace(mailDir(), "../");
-            if (tmp_info.contains(".sbd")) {
-                tmp_info.remove(".sbd");
+            tmp_info = tmp_info.replace(mailDir(), QStringLiteral("../"));
+            if (tmp_info.contains(QStringLiteral(".sbd"))) {
+                tmp_info.remove(QStringLiteral(".sbd"));
             }
             filterInfo()->setFrom(tmp_info);
         } else {
@@ -248,9 +248,9 @@ void FilterEvolution_v2::importMBox(const QString &mboxName, const QString &root
                 if (_targetDir.contains(QStringLiteral(".sbd"))) {
                     _targetDir.remove(QStringLiteral(".sbd"));
                 }
-                destFolder += "Evolution-Import/" + _targetDir + QLatin1Char('/') + filenameInfo.completeBaseName(); // mboxName;
+                destFolder += QStringLiteral("Evolution-Import/") + _targetDir + QLatin1Char('/') + filenameInfo.completeBaseName(); // mboxName;
             } else {
-                destFolder = "Evolution-Import/" + rootDir;
+                destFolder = QStringLiteral("Evolution-Import/") + rootDir;
                 if (destFolder.contains(QStringLiteral(".sbd"))) {
                     destFolder.remove(QStringLiteral(".sbd"));
                 }
