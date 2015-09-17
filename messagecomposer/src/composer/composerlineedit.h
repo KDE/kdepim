@@ -26,6 +26,7 @@
 #include <Libkdepim/AddresseeLineEdit>
 #include <ldap/ldapclientsearch.h>
 #include <kcontacts/contactgroup.h>
+class KJob;
 class KConfig;
 namespace MessageComposer
 {

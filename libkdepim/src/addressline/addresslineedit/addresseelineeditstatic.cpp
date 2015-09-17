@@ -18,7 +18,7 @@
 #include "addresseelineeditstatic.h"
 #include "kmailcompletion.h"
 
-#include <ldap/ldapclient.h>
+#include <Libkdepim/LdapClient>
 #include <KLocalizedString>
 #include <QTimer>
 #include <addressline/completionorder/completionordereditor.h>

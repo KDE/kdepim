@@ -30,7 +30,7 @@
 #include <QVariant>
 #include <QVector>
 
-#include <ldap/ldapclient.h>
+#include <Libkdepim/LdapClient>
 #include <kldap/ldapobject.h>
 
 namespace IncidenceEditorNG

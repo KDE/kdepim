@@ -25,7 +25,7 @@
 
 #include "incidenceeditors_ng_export.h"
 
-#include <ldap/ldapclient.h>
+#include <Libkdepim/LdapClient>
 #include <ldap/ldapclientsearch.h>
 
 #include "freebusymodel/freebusycalendar.h"

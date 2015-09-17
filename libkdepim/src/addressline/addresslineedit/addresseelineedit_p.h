@@ -22,7 +22,7 @@
 #include <QTimer>
 #include <QList>
 #include <QColor>
-#include "ldap/ldapclient.h"
+#include "Libkdepim/LdapClient"
 #include "ldap/ldapclientsearch.h"
 #include <AkonadiCore/Item>
 #include <AkonadiCore/Collection>

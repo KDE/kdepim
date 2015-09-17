@@ -179,6 +179,7 @@ ecm_generate_headers(libkdepim_ldap_HEADERS
   LdapClientSearch
   AddHostDialog
   LdapSearchDialog
+  LdapClient 
   REQUIRED_HEADERS libkdepim_ldap_HEADERS
   PREFIX Libkdepim
   RELATIVE ldap

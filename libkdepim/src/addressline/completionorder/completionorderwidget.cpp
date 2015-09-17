@@ -21,7 +21,7 @@
 #include "completionorderwidget.h"
 
 #include <kdescendantsproxymodel.h>
-#include "ldap/ldapclient.h"
+#include "Libkdepim/LdapClient"
 #include "ldap/ldapclientsearch.h"
 #include "ldap/ldapclientsearchconfig.h"
 
