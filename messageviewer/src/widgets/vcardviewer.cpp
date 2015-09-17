@@ -35,10 +35,6 @@ using KContacts::Addressee;
 #include <KGuiItem>
 #include <QVBoxLayout>
 
-#ifndef KCONTACTS_ADDRESSEE_METATYPE_DEFINED
-Q_DECLARE_METATYPE(KContacts::Addressee)
-#endif
-
 using namespace MessageViewer;
 
 VCardViewer::VCardViewer(QWidget *parent, const QByteArray &vCard)
