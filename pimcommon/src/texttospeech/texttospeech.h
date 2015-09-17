@@ -19,7 +19,7 @@
 #define TEXTTOSPEECH_H
 
 #include "pimcommon_export.h"
-#include "config-kdepim.h"
+#include "config-pimcommon.h"
 #include <QObject>
 
 #if KDEPIM_HAVE_TEXTTOSPEECH

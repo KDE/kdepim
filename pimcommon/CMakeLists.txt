@@ -65,7 +65,6 @@ else()
     set(KDEPIM_HAVE_TEXTTOSPEECH TRUE)
   endif()
 endif()
-configure_file(config-kdepim.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/config-kdepim.h )
 
 
 
@@ -114,6 +113,8 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX PIMCOMMON
                         SOVERSION 5
 )
 endif()
+
+configure_file(config-pimcommon.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/config-pimcommon.h )
 
 add_subdirectory(src)
 
