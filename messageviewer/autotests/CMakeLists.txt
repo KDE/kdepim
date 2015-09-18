@@ -8,7 +8,7 @@ add_definitions(-DKMAIL_UNITTESTS=YES)
 # convenience macro to add qtest unit tests
 macro(add_messageviewer_unittest _source)
     get_filename_component(_name ${_source} NAME_WE)
-    ecm_add_test(${_source} util.cpp setupenv.cpp testcsshelper.cpp ${CMAKE_SOURCE_DIR}/messageviewer/src/viewer/cryptohelper.cpp
+    ecm_add_test(${_source} util.cpp setupenv.cpp testcsshelper.cpp ../src/viewer/cryptohelper.cpp
         TEST_NAME ${_name}
         NAME_PREFIX "KF5::MessageViewer-"
         LINK_LIBRARIES KF5::MessageViewer KF5::Libkleo KF5::QGpgme Qt5::Test Qt5::WebKitWidgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::AkonadiNotes KF5::CalendarCore

@@ -5,7 +5,7 @@ project(MessageViewer)
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
 # ECM setup
 find_package(ECM 5.14.0 CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${MessageViewer_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
 include(ECMSetupVersion)
