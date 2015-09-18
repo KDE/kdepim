@@ -597,7 +597,7 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &_rect)
 
         QStyleOptionHeader opt;
         opt.rect = labelsTabRect.toRect();
-        opt.text = "";
+        opt.text = QString();
         opt.textAlignment = Qt::AlignCenter;
         style()->drawControl(QStyle::CE_Header, &opt, painter, 0);
         scn.setTop(headerRect.bottom());

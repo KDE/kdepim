@@ -91,7 +91,7 @@ install(FILES
 
 install(FILES
     ${kdgantt2_HEADERS}
-    ${CMAKE_CURRENT_BINARY_DIR}/kdgantt2_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kdgantt_export.h
     ${kdgantt2_CamelCase_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kdgantt2
     COMPONENT Devel
