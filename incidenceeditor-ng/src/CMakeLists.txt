@@ -106,7 +106,7 @@ PUBLIC
   KF5::KDGantt2             # For FreeBusy Editor
 PRIVATE
   KF5::Libkdepim
-  kdepimdbusinterfaces # For UriHandler
+  KF5::KdepimDBusInterfaces # For UriHandler
   KF5::Codecs
   KF5::Ldap
   KF5::AkonadiWidgets
@@ -170,7 +170,7 @@ if (BUILD_TESTING)
     KF5::CalendarUtils
     KF5::IncidenceEditorsng
     KF5::CalendarSupport
-    kdepimdbusinterfaces
+    KF5::KdepimDBusInterfaces
   )
 
   install(TARGETS kincidenceeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

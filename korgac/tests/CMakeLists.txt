@@ -23,7 +23,7 @@ target_link_libraries(testalarmdlg
   KF5::AkonadiMime
   KF5::CalendarSupport
   KF5::IncidenceEditorsng
-  kdepimdbusinterfaces
+  KF5::KdepimDBusInterfaces
   KF5::KIOCore
   KF5::Mime
   korganizer_core

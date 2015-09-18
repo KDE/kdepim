@@ -44,7 +44,7 @@ void WhatsNextTextBrowser::setSource(const QUrl &name)
     } else if (uri.startsWith(QStringLiteral("todo:"))) {
         Q_EMIT showIncidence(uri);
     } else {
-        QTextBrowser::setSource(uri);
+        QTextBrowser::setSource(QUrl(uri));
     }
 }
 
