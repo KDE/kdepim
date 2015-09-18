@@ -20,7 +20,7 @@
 #define CONTACTDISPLAYMESSAGEMEMENTO_H
 
 #include "interfaces/bodypart.h"
-#include "viewer/viewer.h"
+#include "messageviewer/viewer.h"
 
 #include <KContacts/Picture>
 #include <KContacts/Addressee>

@@ -37,7 +37,7 @@
 #include "syncitiphandler.h"
 
 #include <settings/messageviewersettings.h>
-#include <viewer/viewer.h>
+#include <messageviewer/viewer.h>
 #include <interfaces/bodypart.h>
 #include <interfaces/bodypartformatter.h>
 #include <interfaces/bodyparturlhandler.h>
@@ -193,7 +193,7 @@ public:
 
             When the memento finishes, this is called a second time, and we can proceed.
 
-            BodyPartMementos are documented in viewer/objecttreeparser.h
+            BodyPartMementos are documented in MessageViewer/ObjectTreeParser
         */
         MemoryCalendarMemento *memento = dynamic_cast<MemoryCalendarMemento *>(bodyPart->memento());
 

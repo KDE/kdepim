@@ -24,7 +24,7 @@
 
 #include "PimCommon/RenameFileDialog"
 
-#include <widget/grantleecontactviewer.h>
+#include <KaddressbookGrantlee/GrantleeContactViewer>
 
 #ifdef QGPGME_FOUND
 #include <gpgme++/context.h>

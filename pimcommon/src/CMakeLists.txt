@@ -590,6 +590,7 @@ ecm_generate_headers(PimCommon_texttospeechs_HEADERS
   TextToSpeechActions
   TextToSpeechInterface
   TextToSpeechWidget
+  AbstractTextToSpeechInterface
   REQUIRED_HEADERS PimCommon_HEADERS
   PREFIX PimCommon
   RELATIVE texttospeech

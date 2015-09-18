@@ -18,7 +18,7 @@
 */
 #include "nodehelpertest.h"
 
-#include "viewer/nodehelper.h"
+#include "messageviewer/nodehelper.h"
 
 #include <qtest.h>
 

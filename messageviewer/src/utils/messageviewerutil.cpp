@@ -36,10 +36,10 @@
 **
 *******************************************************************************/
 
-#include "utils/messageviewerutil.h"
+#include "messageviewer/messageviewerutil.h"
 #include "PimCommon/TextToSpeech"
 #include "utils/iconnamecache.h"
-#include "viewer/nodehelper.h"
+#include "messageviewer/nodehelper.h"
 #include "messageviewer_debug.h"
 #include "MessageCore/MessageCoreSettings"
 #include "MessageCore/NodeHelper"

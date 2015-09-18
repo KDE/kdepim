@@ -24,7 +24,7 @@
 
 #include "messageviewer_export.h"
 
-#include "viewer/viewer.h"
+#include "messageviewer/viewer.h"
 
 #include <QObject>
 

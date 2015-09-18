@@ -20,7 +20,7 @@
 
 #include "header/headerstrategy.h"
 #include "settings/messageviewersettings.h"
-#include "viewer/nodehelper.h"
+#include "messageviewer/nodehelper.h"
 
 #include <MessageCore/StringUtil>
 

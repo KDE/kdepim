@@ -17,7 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "viewer/viewer.h"
+#include "messageviewer/viewer.h"
 #include "header/headerstyle.h"
 #include "header/headerstrategy.h"
 

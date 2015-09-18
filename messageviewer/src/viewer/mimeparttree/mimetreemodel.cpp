@@ -17,10 +17,10 @@
     02110-1301, USA.
 */
 
-#include "utils/messageviewerutil.h"
+#include "messageviewer/messageviewerutil.h"
 #include "mimetreemodel.h"
 
-#include "viewer/nodehelper.h"
+#include "messageviewer/nodehelper.h"
 
 #include <kmime/kmime_content.h>
 #include <KMime/Message>

@@ -32,7 +32,7 @@
 */
 
 #include "partnodebodypart.h"
-#include "viewer/nodehelper.h"
+#include "messageviewer/nodehelper.h"
 #include "messageviewer_debug.h"
 #include <kmime/kmime_content.h>
 

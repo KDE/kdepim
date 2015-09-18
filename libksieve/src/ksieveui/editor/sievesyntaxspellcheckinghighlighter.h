@@ -18,7 +18,7 @@
 #ifndef SIEVESYNTAXSPELLCHECKINGHIGHLIGHTER_H
 #define SIEVESYNTAXSPELLCHECKINGHIGHLIGHTER_H
 
-#include <texteditor/plaintexteditor/plaintextsyntaxspellcheckinghighlighter.h>
+#include <PimCommon/PlainTextSyntaxSpellCheckingHighlighter>
 
 namespace KSieveUi
 {

@@ -28,6 +28,7 @@ set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIME_LIB_VERSION "4.87.0")
 set(KCONTACTS_LIB_VERSION "4.91.0")
 set(KMBOX_LIB_VERSION "4.78.0")
+set(AKONADINOTES_LIB_VERSION "4.78.0")
 
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools WebKitWidgets)
@@ -45,9 +46,9 @@ find_package(KF5IncidenceEditorsng ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Contacts ${KCONTACTS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Mbox ${KMBOX_LIB_VERSION} CONFIG REQUIRED)
-  #${_mailwebview_lib}
-  #KF5::MailTransport
-  #KF5::AkonadiNotes
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WebKit ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiNotes ${AKONADINOTES_LIB_VERSION} CONFIG REQUIRED)
 
 
 find_package(Grantlee5 "5.0" CONFIG REQUIRED)
@@ -60,6 +61,9 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGEVIEWER
 ########### Targets ###########
 
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+#verify
+remove_definitions("-DQT_NO_URL_CAST_FROM_STRING")
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5MessageViewer")

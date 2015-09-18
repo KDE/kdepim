@@ -21,7 +21,7 @@
 #include <QPointer>
 #include <QWidget>
 #include "pimcommon_export.h"
-#include "texttospeech/texttospeech.h"
+#include "pimcommon/texttospeech.h"
 namespace PimCommon
 {
 class AbstractTextToSpeechInterface;

@@ -31,7 +31,7 @@
  */
 
 #include "mailsourceviewtextbrowserwidget.h"
-#include "utils/messageviewerutil.h"
+#include "messageviewer/messageviewerutil.h"
 #include "findbar/findbarsourceview.h"
 #include <kpimtextedit/htmlhighlighter.h>
 #include "PimCommon/SlideContainer"

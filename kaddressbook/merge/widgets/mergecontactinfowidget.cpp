@@ -16,7 +16,7 @@
 */
 #include "mergecontactinfowidget.h"
 
-#include "widget/grantleecontactviewer.h"
+#include "KaddressbookGrantlee/GrantleeContactViewer"
 
 #include <AkonadiCore/Item>
 

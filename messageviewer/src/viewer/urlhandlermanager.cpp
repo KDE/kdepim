@@ -39,8 +39,8 @@
 #include "partnodebodypart.h"
 #include "viewer/viewer_p.h"
 #include "viewer/mailwebview.h"
-#include "viewer/nodehelper.h"
-#include "utils/messageviewerutil.h"
+#include "messageviewer/nodehelper.h"
+#include "messageviewer/messageviewerutil.h"
 #include "stl_util.h"
 
 #include <MessageCore/StringUtil>
@@ -70,7 +70,7 @@
 
 #include <algorithm>
 
-#include <ui/messagebox.h>
+#include <Libkleo/MessageBox>
 
 using std::for_each;
 using std::remove;

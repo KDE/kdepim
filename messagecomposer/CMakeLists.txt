@@ -26,6 +26,8 @@ set(KDEPIMLIBS_LIB_VERSION "5.0.42")
 set(KDEPIM_LIB_VERSION "5.43.0")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIME_LIB_VERSION "4.87.0")
+set(KLDAP_LIB_VERSION "4.80.0")
+
 
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
@@ -36,20 +38,20 @@ find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5MessageCore ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5TemplateParser ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5MessageViewer ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
-find_package(KF5Sendlater ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5SendLater ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5FollowupReminder ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Libkleo ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MailCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(Grantlee5 "5.0" CONFIG REQUIRED)
+find_package(KF5Ldap ${KLDAP_LIB_VERSION} CONFIG REQUIRED)
 
 #  KF5::IdentityManagement
 #  KF5::AkonadiMime
 #  KF5::MailTransport
 #  KF5::PimTextEdit
 #  KF5::CalendarCore
-#  KF5::KIOCore
-#  Grantlee5::TextDocument
-#  KF5::Ldap
 
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGECOMPOSER

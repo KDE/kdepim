@@ -21,9 +21,9 @@
 #include "customheadersettingdialog.h"
 #include "messageviewer_debug.h"
 #include "ui_settings.h"
-#include "utils/messageviewerutil.h"
+#include "messageviewer/messageviewerutil.h"
 #include "settings/messageviewersettings.h"
-#include "viewer/nodehelper.h"
+#include "messageviewer/nodehelper.h"
 
 #include "MessageCore/MessageCoreSettings"
 

@@ -33,7 +33,7 @@
 #include "interfaces/bodypartformatter.h"
 #include "interfaces/bodyparturlhandler.h"
 #include "interfaces/bodypart.h"
-#include <viewer/nodehelper.h>
+#include <messageviewer/nodehelper.h>
 #include "updatecontactjob.h"
 #include "vcardmemento.h"
 

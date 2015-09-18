@@ -18,7 +18,7 @@
  */
 
 #include "findbarbase.h"
-#include "widgets/lineeditwithcompleter.h"
+#include "PimCommon/LineEditWithCompleter"
 
 #include <qicon.h>
 #include <KLocalizedString>

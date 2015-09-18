@@ -31,7 +31,7 @@ generate_export_header(KF5KaddressbookGrantlee BASE_NAME kaddressbook_grantlee)
 
 add_library(KF5::KaddressbookGrantlee ALIAS KF5KaddressbookGrantlee)
 
-target_include_directories(KF5KaddressbookGrantlee INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KaddessbookGrantlee/;${KDE_INSTALL_INCLUDEDIR_KF5}/kaddressbookgrantlee>")
+target_include_directories(KF5KaddressbookGrantlee INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KaddressbookGrantlee/;${KDE_INSTALL_INCLUDEDIR_KF5}/kaddressbookgrantlee>")
 target_include_directories(KF5KaddressbookGrantlee PUBLIC "$<BUILD_INTERFACE:${kaddressbookgrantlee_SOURCE_DIR}/src;${kaddressbookgrantlee_BINARY_DIR}/src;${Grantlee_INCLUDE_DIRS}>")
 
 
@@ -71,9 +71,18 @@ ecm_generate_headers(KaddressbookGrantlee_formatter_HEADERS
   PREFIX KaddressbookGrantlee
 )
 
+ecm_generate_headers(KaddressbookGrantlee_widgets_HEADERS
+  HEADER_NAMES
+  GrantleeContactViewer
+  REQUIRED_HEADERS KaddressbookGrantlee_widgets_HEADERS
+  RELATIVE widget
+  PREFIX KaddressbookGrantlee
+)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbookgrantlee_SOURCE_DIR})
 install(FILES
+    ${KaddressbookGrantlee_widgets_HEADERS}
     ${KaddressbookGrantlee_formatter_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KaddressbookGrantlee
     COMPONENT Devel
@@ -81,6 +90,7 @@ install(FILES
 
 install(FILES
     ${KaddressbookGrantlee_HEADERS}
+    ${KaddressbookGrantlee_widgets_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook_grantlee_export.h
     ${KaddressbookGrantlee_formatter_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kaddressbookgrantlee

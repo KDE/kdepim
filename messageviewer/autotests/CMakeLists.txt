@@ -10,7 +10,7 @@ macro(add_messageviewer_unittest _source)
     get_filename_component(_name ${_source} NAME_WE)
     ecm_add_test(${_source} util.cpp setupenv.cpp testcsshelper.cpp ../src/viewer/cryptohelper.cpp
         TEST_NAME ${_name}
-        NAME_PREFIX "KF5::MessageViewer-"
+        NAME_PREFIX "messageviewer-"
         LINK_LIBRARIES KF5::MessageViewer KF5::Libkleo KF5::QGpgme Qt5::Test Qt5::WebKitWidgets KF5::KIOCore KF5::Mime KF5::AkonadiCore KF5::AkonadiNotes KF5::CalendarCore
     )
 endmacro ()
@@ -19,7 +19,7 @@ macro(add_messageviewer_crypto_unittest _source)
     set(_test ${_source} util.cpp)
     get_filename_component(_name ${_source} NAME_WE)
     add_executable( ${_name} ${_test} setupenv.cpp  testcsshelper.cpp )
-    ecm_mark_as_test(KF5::MessageViewer-${_name})
+    ecm_mark_as_test(messageviewer-${_name})
     target_link_libraries( ${_name}
         KF5::MessageViewer
         KF5::Libkleo
@@ -32,7 +32,7 @@ macro(add_messageviewer_crypto_unittest _source)
         KF5::AkonadiNotes
         KF5::CalendarCore
     )
-    add_gpg_crypto_test(${_name} KF5::MessageViewer-${_name})
+    add_gpg_crypto_test(${_name} messageviewer-${_name})
 endmacro ()
 
 add_messageviewer_unittest( htmlquotecolorertest.cpp )

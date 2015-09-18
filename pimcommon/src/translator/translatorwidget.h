@@ -20,9 +20,9 @@
 #define TRANSLATORWIDGET_H
 
 #include "pimcommon_export.h"
-#include "texteditor/plaintexteditor/plaintexteditor.h"
+#include "pimcommon/plaintexteditor.h"
 #include <kio/job.h>
-#include <texteditor/plaintexteditor/plaintexteditorwidget.h>
+#include "pimcommon/plaintexteditorwidget.h"
 class KToggleAction;
 class KActionCollection;
 namespace PimCommon

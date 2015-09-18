@@ -2,6 +2,46 @@ project(kdepim)
 
 cmake_minimum_required(VERSION 2.8.12)
 
+#Laurent option just for me it will not work for the moment don't use it
+#option(KDEPIM_SUPERBUILD "Build standalone lib but not application" FALSE)
+if (KDEPIM_SUPERBUILD)
+
+# Remove it when splitted
+# This CMakeLists.txt is a "superbuild" for the frameworks.
+# This means it can be used to build them all standalone one-by-one.
+# This is useful to compile all them with one command.
+# use mkdir build-superbuild && cd build-superbuild && cmake -DKDEPIM_SUPERBUILD=TRUE ../ && make -j8 sb_all
+
+include(SuperBuild.cmake)
+
+sb_add_project(libfollowupreminder)
+sb_add_project(libsendlater)
+sb_add_project(grantleetheme)
+sb_add_project(libkdepim)
+sb_add_project(libkdepimdbusinterfaces)
+sb_add_project(kdgantt2)
+sb_add_project(mailimporter)
+sb_add_project(pimcommon)
+sb_add_project(composereditor-ng)
+sb_add_project(noteshared)
+sb_add_project(libkleo)
+
+sb_add_project(calendarsupport)
+sb_add_project(eventviews)
+sb_add_project(incidenceeditor-ng)
+#Laurent need to port it
+#sb_add_project(libksieve)
+sb_add_project(messagecore)
+sb_add_project(messagelist)
+sb_add_project(messageviewer)
+#fix compile
+sb_add_project(templateparser)
+sb_add_project(messagecomposer)
+sb_add_project(mailcommon)
+sb_end()
+
+else()
+
 # we need some parts of the ECM CMake helpers
 find_package(ECM 5.14.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${kdepim_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
@@ -284,4 +324,4 @@ feature_summary(WHAT ALL
                 INCLUDE_QUIET_PACKAGES
                 FATAL_ON_MISSING_REQUIRED_PACKAGES
 )
-
+endif()

@@ -16,7 +16,7 @@
 */
 
 #include "findbarbasetest.h"
-#include "src/findbar/findbarbase.h"
+#include "../findbarbase.h"
 
 #include <KLineEdit>
 #include <QLabel>

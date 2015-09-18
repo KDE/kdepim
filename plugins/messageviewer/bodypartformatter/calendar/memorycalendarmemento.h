@@ -22,7 +22,7 @@
 
 #include <interfaces/bodypart.h>
 
-#include <viewer/viewer.h>
+#include <messageviewer/viewer.h>
 
 #include <KCalCore/MemoryCalendar>
 #include <QObject>

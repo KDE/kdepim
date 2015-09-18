@@ -28,7 +28,7 @@
 #include <QAbstractItemView>
 #include <QFontDatabase>
 
-#include <texteditor/plaintexteditor/plaintextsyntaxspellcheckinghighlighter.h>
+#include <PimCommon/PlainTextSyntaxSpellCheckingHighlighter>
 
 using namespace TemplateParser;
 

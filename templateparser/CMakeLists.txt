@@ -41,13 +41,14 @@ find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5MessageViewer ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5MessageCore ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5IdentityManagement ${IDENTITYMANAGEMENT_LIB_VERSION} CONFIG REQUIRED)
-
+find_package(KF5Libkleo ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX TEMPLATEPARSER
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/templateparser_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5TemplateParserConfigVersion.cmake"
                         SOVERSION 5
 )
 
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5TemplateParser")

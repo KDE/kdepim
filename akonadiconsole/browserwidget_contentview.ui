@@ -387,7 +387,7 @@
   <customwidget>
    <class>MessageViewer::Viewer</class>
    <extends>QTextBrowser</extends>
-   <header location="global">viewer/viewer.h</header>
+   <header location="global">messageviewer/viewer.h</header>
   </customwidget>
   <customwidget>
    <class>Akonadi::ContactViewer</class>

@@ -23,7 +23,7 @@
 #include "settings/messageviewersettings.h"
 #include "partmetadata.h"
 #include "interfaces/bodypart.h"
-#include "utils/messageviewerutil.h"
+#include "messageviewer/messageviewerutil.h"
 #include "PimCommon/AttachmentTemporaryFilesDirs"
 
 #include <MessageCore/NodeHelper>

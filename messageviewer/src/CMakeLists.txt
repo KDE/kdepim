@@ -274,28 +274,62 @@ install(TARGETS
 
 ecm_generate_headers(MessageViewer_CamelCase_HEADERS
   HEADER_NAMES
-  viewer/Viewer
   viewer/CSSHelper
   viewer/ObjectTreeParser
   viewer/AttachmentStrategy
-  viewer/NodeHelper
-  viewer/EditorWatcher
-  widgets/InvitationSettings
-  widgets/PrintingSettings
-  widgets/ConfigureWidget
+  ObjectTreeSourceIf
   REQUIRED_HEADERS MessageViewer_HEADERS
   PREFIX MessageViewer
 )
 
+ecm_generate_headers(MessageViewer_viewer_HEADERS
+  HEADER_NAMES
+  Viewer
+  CSSHelper
+  PartMetaData
+  ObjectTreeParser
+  ObjectTreeEmptySource
+  AttachmentStrategy
+  NodeHelper
+  EditorWatcher
+  REQUIRED_HEADERS MessageViewer_HEADERS
+  PREFIX MessageViewer
+  RELATIVE viewer
+)
+
+ecm_generate_headers(MessageViewer_widgets_HEADERS
+  HEADER_NAMES
+  InvitationSettings
+  PrintingSettings
+  ConfigureWidget
+  REQUIRED_HEADERS MessageViewer_HEADERS
+  PREFIX MessageViewer
+  RELATIVE widgets
+)
+
+ecm_generate_headers(MessageViewer_utils_HEADERS
+  HEADER_NAMES
+  MessageViewerUtil
+  REQUIRED_HEADERS MessageViewer_HEADERS
+  PREFIX MessageViewer
+  RELATIVE utils
+)
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
 install(FILES
+    ${MessageViewer_utils_HEADERS}
     ${MessageViewer_CamelCase_HEADERS}
+    ${MessageViewer_viewer_HEADERS}
+    ${MessageViewer_widgets_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageViewer
     COMPONENT Devel
 )
 
 install(FILES
+    ${MessageViewer_utils_HEADERS}
     ${MessageViewer_HEADERS}
+    ${MessageViewer_viewer_HEADERS}
+    ${MessageViewer_widgets_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messageviewer_export.h
     ${MessageViewer_CamelCase_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messageviewer

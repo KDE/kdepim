@@ -49,7 +49,7 @@ set_package_properties(KF5AkonadiSearch PROPERTIES DESCRIPTION "The Akonadi Sear
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX LIBKDEPIM
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/libkdepim_version.h"
-                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5LibKdepimConfigVersion.cmake"
+                        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5LibkdepimConfigVersion.cmake"
                         SOVERSION 5
 )
 remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )

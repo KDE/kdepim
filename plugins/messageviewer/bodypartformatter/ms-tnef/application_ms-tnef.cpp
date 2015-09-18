@@ -31,9 +31,9 @@
 #include <interfaces/bodypart.h>
 #include <interfaces/bodyparturlhandler.h>
 #include <interfaces/htmlwriter.h>
-#include <viewer/nodehelper.h>
+#include <messageviewer/nodehelper.h>
 #include <MessageCore/StringUtil>
-#include <utils/messageviewerutil.h>
+#include <MessageViewer/MessageViewerUtil>
 
 #include <KCalCore/Event>
 #include <KCalCore/Incidence>

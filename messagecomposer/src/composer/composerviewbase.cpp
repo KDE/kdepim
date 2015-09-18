@@ -45,8 +45,8 @@
 #include <MessageComposer/RecipientsEditor>
 #include "settings/messagecomposersettings.h"
 
-#include <viewer/objecttreeemptysource.h>
-#include <viewer/objecttreeparser.h>
+#include <MessageViewer/ObjectTreeEmptySource>
+#include <MessageViewer/ObjectTreeParser>
 #ifndef QT_NO_CURSOR
 #include <MailCommon/KCursorSaver>
 #endif

@@ -41,7 +41,7 @@
 #include <MessageComposer/GlobalPart>
 #include <MessageComposer/TextPart>
 
-#include <viewer/nodehelper.h>
+#include <messageviewer/nodehelper.h>
 #include <setupenv.h>
 
 #include <MessageCore/NodeHelper>

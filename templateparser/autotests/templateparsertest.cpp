@@ -21,8 +21,8 @@
 #define protected public
 #include "templateparser.h"
 #undef protected
-#include "viewer/objecttreeparser.h"
-#include "viewer/objecttreeemptysource.h"
+#include "MessageViewer/ObjectTreeParser"
+#include "MessageViewer/ObjectTreeEmptySource"
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include "qwebpage.h"

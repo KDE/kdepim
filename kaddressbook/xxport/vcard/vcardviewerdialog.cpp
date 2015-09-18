@@ -22,7 +22,7 @@
 #include <KConfigGroup>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <widget/grantleecontactviewer.h>
+#include <KaddressbookGrantlee/GrantleeContactViewer>
 #include <QPushButton>
 #include <QDialogButtonBox>
 

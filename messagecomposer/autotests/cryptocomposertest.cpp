@@ -48,7 +48,7 @@ using namespace MessageComposer;
 #include <MessageCore/NodeHelper>
 #include <setupenv.h>
 
-#include <viewer/objecttreeparser.h>
+#include <MessageViewer/ObjectTreeParser>
 
 using MessageCore::AttachmentPart;
 

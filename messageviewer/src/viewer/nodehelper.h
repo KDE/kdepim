@@ -22,7 +22,7 @@
 #include "messageviewer_export.h"
 
 #include "partmetadata.h"
-#include "viewer/viewer.h"
+#include "messageviewer/viewer.h"
 
 #include <KMime/Message>
 

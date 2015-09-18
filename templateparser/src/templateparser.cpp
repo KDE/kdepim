@@ -26,7 +26,7 @@
 #include <MessageCore/ImageCollector>
 #include <MessageCore/StringUtil>
 
-#include <viewer/objecttreeparser.h>
+#include <MessageViewer/ObjectTreeParser>
 
 #include <KIdentityManagement/Identity>
 #include <KIdentityManagement/IdentityManager>

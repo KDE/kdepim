@@ -42,7 +42,7 @@
 #include "dialog/selectthunderbirdfilterfilesdialog.h"
 
 #include <utils/autoqpointer.h>
-#include <utils/messageviewerutil.h>
+#include <MessageViewer/MessageViewerUtil>
 
 #include <KConfig>
 

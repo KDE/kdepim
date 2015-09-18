@@ -29,9 +29,9 @@
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
 
-#include <viewer/objecttreeparser.h>
-#include <viewer/objecttreeemptysource.h>
-#include <viewer/csshelper.h>
+#include <MessageViewer/ObjectTreeParser>
+#include <MessageViewer/ObjectTreeEmptySource>
+#include <MessageViewer/CSSHelper>
 
 #include <MessageCore/NodeHelper>
 
