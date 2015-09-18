@@ -97,7 +97,6 @@ ecm_generate_headers(CalendarSupport_CamelCase_HEADERS
   Plugin
   CategoryHierarchyReader
   CalendarSingleton
-  CollectionGeneralPage
   MessageWidget
   ArchiveDialog
   REQUIRED_HEADERS CalendarSupport_HEADERS
@@ -142,38 +141,6 @@ install(FILES
 )
 endif()
 
-
-
-
-
-############# Next target #######################
-
-set(calendarsupportcollectionpage_LIB_SRCS
-    collectiongeneralpage.cpp
-)
-
-add_library(calendarsupportcollectionpage ${calendarsupportcollectionpage_LIB_SRCS})
-add_dependencies(calendarsupportcollectionpage KF5::MailCommon)
-generate_export_header(calendarsupportcollectionpage BASE_NAME calendarsupportcollectionpage)
-target_link_libraries(
-  calendarsupportcollectionpage
-PUBLIC
-  KF5::AkonadiCore
-  KF5::MailCommon
-PRIVATE
-  KF5::CalendarCore
-  KF5::PimCommon
-  KF5::AkonadiCalendar
-)
-
-target_include_directories(calendarsupportcollectionpage PUBLIC "$<BUILD_INTERFACE:${calendarsupport_SOURCE_DIR};${calendarsupport_BINARY_DIR};${Boost_INCLUDE_DIRS}>")
-
-set_target_properties(calendarsupportcollectionpage
-  PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
-  SOVERSION ${KDEPIM_LIB_VERSION}
-)
-
-install(TARGETS calendarsupportcollectionpage ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(FILES calendarplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
 
 

@@ -20,7 +20,7 @@
 #ifndef CALENDARSUPPORT_COLLECTIONGENERALPAGE_H
 #define CALENDARSUPPORT_COLLECTIONGENERALPAGE_H
 
-#include "calendarsupportcollectionpage_export.h"
+#include "korganizerprivate_export.h"
 
 #include <CollectionPropertiesPage>
 
@@ -35,7 +35,7 @@ class IncidencesForWidget;
 namespace CalendarSupport
 {
 
-class CALENDARSUPPORTCOLLECTIONPAGE_EXPORT CollectionGeneralPage : public Akonadi::CollectionPropertiesPage
+class KORGANIZERPRIVATE_EXPORT CollectionGeneralPage : public Akonadi::CollectionPropertiesPage
 {
     Q_OBJECT
 
