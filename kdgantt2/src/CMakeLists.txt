@@ -77,6 +77,8 @@ ecm_generate_headers(kdgantt2_CamelCase_HEADERS
   KDGanttDateTimeGrid
   KDGanttItemDelegate
   KDGanttStyleOptionGanttItem
+  KDGanttAbstractGrid
+  KDGanttConstraint
   REQUIRED_HEADERS kdgantt2_HEADERS
   PREFIX KDGantt2
 )
