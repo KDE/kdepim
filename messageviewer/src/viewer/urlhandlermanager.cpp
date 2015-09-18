@@ -43,7 +43,7 @@
 #include "utils/messageviewerutil.h"
 #include "stl_util.h"
 
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 #include <Libkdepim/BroadcastStatus>
 #include <Libkdepim/OpenEmailAddressJob>
 

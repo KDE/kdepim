@@ -24,8 +24,8 @@
 #include "core/manager.h"
 #include "core/settings.h"
 
-#include "messagecore/src/utils/stringutil.h"
-#include "messagecore/src/settings/messagecoresettings.h"
+#include "MessageCore/StringUtil"
+#include "MessageCore/MessageCoreSettings"
 
 #include <QStyle>
 #include <QPainter>

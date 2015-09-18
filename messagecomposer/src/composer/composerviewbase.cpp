@@ -55,8 +55,8 @@
 #include <KIdentityManagement/Identity>
 
 #include <helpers/messagehelpers.h>
-#include <utils/stringutil.h>
-#include <helpers/nodehelper.h>
+#include <MessageCore/StringUtil>
+#include <MessageCore/NodeHelper>
 
 #include <MailTransport/mailtransport/transportcombobox.h>
 #include <MailTransport/mailtransport/messagequeuejob.h>

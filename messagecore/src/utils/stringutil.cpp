@@ -19,7 +19,7 @@
 #include "stringutil.h"
 
 #include "config-enterprise.h"
-#include "settings/messagecoresettings.h"
+#include "MessageCore/MessageCoreSettings"
 
 #include <kmime/kmime_header_parsing.h>
 #include <kmime/kmime_headers.h>

@@ -32,7 +32,7 @@
 #include "viewer/editorwatcher.h"
 #include "viewer/nodehelper.h"
 #include "utils/messageviewerutil.h"
-#include "utils/stringutil.h"
+#include "MessageCore/StringUtil"
 
 #include <AkonadiCore/itemfetchjob.h>
 #include <kio/jobuidelegate.h>

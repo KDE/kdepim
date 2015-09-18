@@ -25,7 +25,7 @@
 #include "settings/messageviewersettings.h"
 #include "viewer/nodehelper.h"
 
-#include "settings/messagecoresettings.h"
+#include "MessageCore/MessageCoreSettings"
 
 #include <KConfigDialogManager>
 #include <KLocalizedString>

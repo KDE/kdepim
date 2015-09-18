@@ -32,7 +32,7 @@
 #include "csshelper.h"
 #include "settings/messageviewersettings.h"
 
-#include "settings/messagecoresettings.h"
+#include "MessageCore/MessageCoreSettings"
 
 #include <kconfig.h>
 #include <kconfiggroup.h>

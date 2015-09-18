@@ -19,9 +19,9 @@
 #include "viewer/nodehelper.h"
 #include "header/headerstyle.h"
 #include "messageviewer_debug.h"
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 
-#include "settings/messagecoresettings.h"
+#include "MessageCore/MessageCoreSettings"
 #include "settings/messageviewersettings.h"
 
 #include <KLocalizedString>

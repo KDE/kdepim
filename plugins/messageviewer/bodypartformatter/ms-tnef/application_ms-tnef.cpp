@@ -32,7 +32,7 @@
 #include <interfaces/bodyparturlhandler.h>
 #include <interfaces/htmlwriter.h>
 #include <viewer/nodehelper.h>
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 #include <utils/messageviewerutil.h>
 
 #include <KCalCore/Event>

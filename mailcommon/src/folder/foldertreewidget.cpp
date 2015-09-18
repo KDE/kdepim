@@ -32,7 +32,7 @@
 
 #include <settings/messageviewersettings.h>
 
-#include <settings/messagecoresettings.h>
+#include <MessageCore/MessageCoreSettings>
 
 #include <AttributeFactory>
 #include <ChangeRecorder>

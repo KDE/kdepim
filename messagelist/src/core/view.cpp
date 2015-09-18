@@ -32,7 +32,7 @@
 #include "core/widgetbase.h"
 #include "messagelistutil.h"
 
-#include "utils/stringutil.h"
+#include "MessageCore/StringUtil"
 
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 

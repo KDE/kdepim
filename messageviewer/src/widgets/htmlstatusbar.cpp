@@ -34,7 +34,7 @@
 #include "htmlstatusbar.h"
 #include "settings/messageviewersettings.h"
 
-#include "settings/messagecoresettings.h"
+#include "MessageCore/MessageCoreSettings"
 
 #include <KLocalizedString>
 #include <kconfiggroup.h>

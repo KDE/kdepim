@@ -27,7 +27,7 @@
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <KEmailAddress>
 
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 
 using namespace MessageComposer;
 

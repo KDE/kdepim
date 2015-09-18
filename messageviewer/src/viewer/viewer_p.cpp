@@ -140,10 +140,10 @@
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
 
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 
-#include <helpers/nodehelper.h>
-#include "settings/messagecoresettings.h"
+#include <MessageCore/NodeHelper>
+#include "MessageCore/MessageCoreSettings"
 #include <AkonadiCore/agentinstance.h>
 #include <AkonadiCore/agentmanager.h>
 #include <AkonadiCore/CollectionFetchJob>

@@ -34,7 +34,7 @@
 #include <KEmailAddress>
 #include <MessageCore/MailingList>
 #include <helpers/messagehelpers.h>
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 #include "helper/messagehelper.h"
 #include "TemplateParser/TemplateParser"
 #include <KLocalizedString>

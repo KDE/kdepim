@@ -32,7 +32,7 @@
 
 #include "imagecollector.h"
 
-#include "helpers/nodehelper.h"
+#include "MessageCore/NodeHelper"
 
 #include "messagecore_debug.h"
 #include <kmime/kmime_content.h>

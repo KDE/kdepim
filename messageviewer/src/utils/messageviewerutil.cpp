@@ -41,9 +41,9 @@
 #include "utils/iconnamecache.h"
 #include "viewer/nodehelper.h"
 #include "messageviewer_debug.h"
-#include "settings/messagecoresettings.h"
-#include "helpers/nodehelper.h"
-#include "utils/stringutil.h"
+#include "MessageCore/MessageCoreSettings"
+#include "MessageCore/NodeHelper"
+#include "MessageCore/StringUtil"
 
 #include "PimCommon/RenameFileDialog"
 

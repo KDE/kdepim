@@ -26,7 +26,7 @@
 #include "settings/messagecomposersettings.h"
 #include "utils/autoqpointer.h"
 
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 
 #include <KEmailAddress>
 #include <kcontacts/vcarddrag.h>

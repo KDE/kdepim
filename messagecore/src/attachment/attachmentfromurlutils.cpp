@@ -18,7 +18,7 @@
 #include "attachmentfromfolderjob.h"
 #include "attachmentfromurljob.h"
 #include "attachmentfromurlutils.h"
-#include "settings/messagecoresettings.h"
+#include "MessageCore/MessageCoreSettings"
 #include "messagecore_debug.h"
 
 #include <QMimeDatabase>

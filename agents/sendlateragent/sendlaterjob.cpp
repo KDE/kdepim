@@ -21,7 +21,7 @@
 #include "MessageComposer/AkonadiSender"
 #include "MessageComposer/Util"
 #include "helpers/messagehelpers.h"
-#include "utils/stringutil.h"
+#include "MessageCore/StringUtil"
 
 #include <MailTransport/mailtransport/transportattribute.h>
 #include <MailTransport/mailtransport/sentbehaviourattribute.h>

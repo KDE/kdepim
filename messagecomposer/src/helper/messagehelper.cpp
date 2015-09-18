@@ -23,7 +23,7 @@
 #include "settings/messagecomposersettings.h"
 
 #include "misc/mailinglist.h"
-#include "utils/stringutil.h"
+#include "MessageCore/StringUtil"
 
 #include <KProtocolManager>
 #include <KMime/Message>

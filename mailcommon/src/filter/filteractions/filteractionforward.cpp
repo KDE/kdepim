@@ -28,7 +28,7 @@
 #include <MessageComposer/MessageFactory>
 #include <MessageComposer/MessageSender>
 #include <PimCommon/EmailAddressRequester>
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 #include <TemplateParser/CustomTemplates>
 #include <customtemplates_kfg.h>
 

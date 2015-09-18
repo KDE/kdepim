@@ -24,7 +24,7 @@
 #include "templatesconfiguration.h"
 
 #include <MessageCore/ImageCollector>
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 
 #include <viewer/objecttreeparser.h>
 

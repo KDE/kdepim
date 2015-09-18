@@ -62,7 +62,7 @@
 #include "converthtmltoplaintext.h"
 
 // KDEPIM includes
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 #include <Libkleo/SpecialJob>
 #include <Libkleo/CryptoBackendFactory>
 #include <Libkleo/DecryptVerifyJob>
@@ -119,7 +119,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <memory>
-#include <helpers/nodehelper.h>
+#include <MessageCore/NodeHelper>
 #include <qtextdocument.h>
 
 using namespace MessageViewer;

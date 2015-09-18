@@ -32,7 +32,7 @@
 #include <MailTransport/mailtransport/messagequeuejob.h>
 #include <MailTransport/mailtransport/transport.h>
 #include <MailTransport/mailtransport/transportmanager.h>
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 #include <helpers/messagehelpers.h>
 
 using namespace KMime::Types;

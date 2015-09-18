@@ -21,7 +21,7 @@
 #include "settings/messageviewersettings.h"
 #include "config-messageviewer.h"
 
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>

@@ -34,7 +34,7 @@
 #include "utils/configurethemesdialog.h"
 #include "utils/configurethemesdialog_p.h"
 
-#include "settings/messagecoresettings.h"
+#include "MessageCore/MessageCoreSettings"
 
 #include "messagelistutil.h"
 

@@ -36,7 +36,7 @@
 #include <MessageComposer/SignJob>
 #include <MessageComposer/TransparentJob>
 
-#include <helpers/nodehelper.h>
+#include <MessageCore/NodeHelper>
 #include <setupenv.h>
 
 #include <stdlib.h>

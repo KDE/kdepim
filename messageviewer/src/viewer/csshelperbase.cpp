@@ -29,7 +29,7 @@
     your version.
 */
 
-#include <settings/messagecoresettings.h>
+#include <MessageCore/MessageCoreSettings>
 #include "csshelperbase.h"
 
 #include <KColorScheme>

@@ -22,8 +22,8 @@
 
 #include "cryptofunctions.h"
 
-#include <utils/stringutil.h>
-#include <helpers/nodehelper.h>
+#include <MessageCore/StringUtil>
+#include <MessageCore/NodeHelper>
 
 #include "MessageComposer/Composer"
 #include "MessageComposer/MessageFactory"

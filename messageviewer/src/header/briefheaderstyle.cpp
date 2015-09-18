@@ -37,7 +37,7 @@
 
 #include "header/headerstrategy.h"
 
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 
 #include <KLocalizedString>
 

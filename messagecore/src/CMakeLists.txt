@@ -86,6 +86,15 @@ install(TARGETS
 )
 
 
+ecm_generate_headers(MessageCore_main_HEADERS
+  HEADER_NAMES
+  MessageCoreUtil
+
+  REQUIRED_HEADERS MessageCore_main_HEADERS
+  PREFIX MessageCore
+)
+
+
 ecm_generate_headers(MessageCore_misc_HEADERS
   HEADER_NAMES
   ImageCollector
@@ -95,6 +104,23 @@ ecm_generate_headers(MessageCore_misc_HEADERS
   REQUIRED_HEADERS MessageCore_misc_HEADERS
   PREFIX MessageCore
   RELATIVE misc
+)
+
+ecm_generate_headers(MessageCore_utils_HEADERS
+  HEADER_NAMES
+  StringUtil
+
+  REQUIRED_HEADERS MessageCore_utils_HEADERS
+  PREFIX MessageCore
+  RELATIVE utils
+)
+
+ecm_generate_headers(MessageCore_settings_HEADERS
+  HEADER_NAMES
+  MessageCoreSettings
+  REQUIRED_HEADERS MessageCore_settings_HEADERS
+  PREFIX MessageCore
+  RELATIVE settings
 )
 
 
@@ -113,18 +139,35 @@ ecm_generate_headers(MessageCore_attachment_HEADERS
   RELATIVE attachment
 )
 
+ecm_generate_headers(MessageCore_helpers_HEADERS
+  HEADER_NAMES
+  NodeHelper
+  REQUIRED_HEADERS MessageCore_helpers_HEADERS
+  PREFIX MessageCore
+  RELATIVE helpers
+)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${messagecore_SOURCE_DIR})
 install(FILES
+    ${MessageCore_helpers_HEADERS}
+    ${MessageCore_settings_HEADERS}
+    ${MessageCore_utils_HEADERS}
     ${MessageCore_attachment_HEADERS}
     ${MessageCore_misc_HEADERS}
+    ${MessageCore_main_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageCore
     COMPONENT Devel
 )
 
 install(FILES
     ${MessageCore_HEADERS}
+    ${MessageCore_helpers_HEADERS}
+    ${MessageCore_settings_HEADERS}
+    ${MessageCore_utils_HEADERS}
+    ${MessageCore_main_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messagecore_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/globalsettings_messagecore.h
     ${MessageCore_attachment_HEADERS}
     ${MessageCore_misc_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messagecore

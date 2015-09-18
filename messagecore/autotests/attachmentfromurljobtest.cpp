@@ -23,7 +23,7 @@
 #include <qtest.h>
 
 #include <MessageCore/AttachmentFromUrlJob>
-#include <utils/stringutil.h>
+#include <MessageCore/StringUtil>
 using namespace MessageCore;
 
 QTEST_MAIN(AttachmentFromUrlJobTest)
