@@ -26,7 +26,6 @@
 #define KDGANTTCONSTRAINTMODEL_H
 
 #include <QModelIndex>
-#include "kdgantt_debug.h"
 
 #include "kdganttglobal.h"
 #include "kdganttconstraint.h"
@@ -78,7 +77,7 @@ inline bool ConstraintModel::hasConstraint(const QModelIndex &s, const QModelInd
 }
 
 #ifndef QT_NO_DEBUG_STREAM
-#include "kdgantt_debug.h"
+#include <QDebug>
 
 QDebug operator<<(QDebug dbg, const KDGantt::ConstraintModel &model);
 inline QDebug operator<<(QDebug dbg, KDGantt::ConstraintModel *model)

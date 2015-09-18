@@ -28,7 +28,7 @@
 #include <QItemDelegate>
 #include <QBrush>
 #include <QPen>
-#include "kdgantt_debug.h"
+#include <QDebug>
 
 #include "kdgantt_export.h"
 #include "kdganttglobal.h"
