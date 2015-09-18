@@ -26,6 +26,8 @@ set(KDEPIMLIBS_LIB_VERSION "5.0.42")
 set(KDEPIM_LIB_VERSION "5.43.0")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIME_LIB_VERSION "4.87.0")
+set(KCONTACTS_LIB_VERSION "4.91.0")
+set(KMBOX_LIB_VERSION "4.78.0")
 
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools WebKitWidgets)
@@ -41,11 +43,10 @@ find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5MessageCore ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5IncidenceEditorsng ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
-
-  #KF5::Contacts
+find_package(KF5Contacts ${KCONTACTS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Mbox ${KMBOX_LIB_VERSION} CONFIG REQUIRED)
   #${_mailwebview_lib}
   #KF5::MailTransport
-  #KF5::Mbox
   #KF5::AkonadiNotes
 
 
