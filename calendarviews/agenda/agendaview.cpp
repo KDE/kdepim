@@ -744,10 +744,10 @@ void AgendaView::init( const QDate &start, const QDate &end )
   // Alignment and description widgets
   if ( !d->mIsSideBySide ) {
     d->mTimeBarHeaderFrame = new KHBox( d->mAllDayFrame );
+    d->mDummyAllDayLeft = new QWidget( d->mAllDayFrame );
   }
 
   // The widget itself
-  d->mDummyAllDayLeft = new QWidget( d->mAllDayFrame );
   AgendaScrollArea *allDayScrollArea = new AgendaScrollArea( true, this,
                                                              d->mIsInteractive, d->mAllDayFrame );
   d->mAllDayAgenda = allDayScrollArea->agenda();
@@ -1382,7 +1382,9 @@ void AgendaView::updateTimeBarWidth()
 
   d->mTimeBarHeaderFrame->setFixedWidth( timeBarWidth - SPACING );
   d->mTimeLabelsZone->setFixedWidth( timeBarWidth );
-  d->mDummyAllDayLeft->setFixedWidth( 0 );
+  if (d->mDummyAllDayLeft) {
+    d->mDummyAllDayLeft->setFixedWidth( 0 );
+  }
 }
 
 void AgendaView::updateEventDates( AgendaItem *item, bool addIncidence,
@@ -2182,8 +2184,10 @@ bool AgendaView::filterByCollectionSelection( const Akonadi::Item &incidence )
 void AgendaView::alignAgendas()
 {
   // resize dummy widget so the allday agenda lines up with the hourly agenda.
-  d->mDummyAllDayLeft->setFixedWidth( -SPACING + d->mTimeLabelsZone->width() -
-                                      ( d->mIsSideBySide ? 0 : d->mTimeBarHeaderFrame->width() ) );
+  if (d->mDummyAllDayLeft) {
+      d->mDummyAllDayLeft->setFixedWidth( -SPACING + d->mTimeLabelsZone->width() -
+                                          d->mTimeBarHeaderFrame->width() );
+  }
 
   // Must be async, so they are centered
   createDayLabels( true );
