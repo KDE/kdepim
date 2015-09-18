@@ -26,25 +26,27 @@ set(KDEPIMLIBS_LIB_VERSION "5.0.42")
 set(KDEPIM_LIB_VERSION "5.43.0")
 set(QT_REQUIRED_VERSION "5.4.0")
 set(KMIME_LIB_VERSION "4.87.0")
+set(KMAILTRANSPORT_LIB_VERSION "4.78.0")
+set(KLDAP_LIB_VERSION "4.80.0")
 
 find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
-find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools WebKitWidgets)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 
+find_package(KF5Ldap ${KLDAP_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Codecs ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5CalendarSupport ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5EventViews ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
-find_package(KF5KdepimDBusInteraces ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5KdepimDBusInterfaces ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5KDGantt2 ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5CalendarUtils ${CALENDARUTILS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5CalendarCore ${KCALENDARCORE_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MailTransport ${KMAILTRANSPORT_LIB_VERSION} CONFIG REQUIRED)
+
 #  KF5::AkonadiCalendar
-#  KF5::CalendarCore
-#  KF5::CalendarUtils
-#  KF5::MailTransport
-#  KF5::KDGantt2             # For FreeBusy Editor
-#  KF5::Ldap
-#  KF5::AkonadiWidgets
 
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX INCIDENCEEDITORSNG
@@ -53,10 +55,19 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX INCIDENCEEDITORSNG
                         SOVERSION 5
 )
 
+option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
+
+
+# config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
+configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/config-enterprise.h )
+
 ########### Targets ###########
 
-add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
-
+#REACTIVE IT
+#add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+#TODO verify it
+remove_definitions("-DQT_NO_URL_CAST_FROM_STRING")
+remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5IncidenceEditorsng")
 

@@ -24,7 +24,7 @@
 
 #include "messagecomposer_export.h"
 #include <Libkdepim/AddresseeLineEdit>
-#include <ldap/ldapclientsearch.h>
+#include <Libkdepim/LdapClientSearch>
 #include <kcontacts/contactgroup.h>
 class KJob;
 class KConfig;

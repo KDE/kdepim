@@ -21,7 +21,7 @@
 */
 
 #include "conflictresolver.h"
-#include "freebusymodel/freebusyitemmodel.h"
+#include "CalendarSupport/FreeBusyItemModel"
 #include "incidenceeditor_debug.h"
 
 #include <QDate>

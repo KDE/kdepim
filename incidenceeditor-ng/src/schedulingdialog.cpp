@@ -20,7 +20,7 @@
 
 #include "schedulingdialog.h"
 #include "conflictresolver.h"
-#include "freebusymodel/freeperiodmodel.h"
+#include "CalendarSupport/FreePeriodModel"
 #include "visualfreebusywidget.h"
 #include <KCalUtils/Stringify>
 

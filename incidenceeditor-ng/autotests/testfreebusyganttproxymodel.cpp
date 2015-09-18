@@ -20,8 +20,8 @@
 
 #include "testfreebusyganttproxymodel.h"
 #include "modeltest.h"
-#include "freebusymodel/freebusyitem.h"
-#include "freebusymodel/freebusyitemmodel.h"
+#include "CalendarSupport/FreeBusyItem"
+#include "CalendarSupport/FreeBusyItemModel"
 #include "../src/freebusyganttproxymodel.h"
 
 #include <KDGantt2/KDGanttGraphicsView>

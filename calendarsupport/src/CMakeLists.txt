@@ -121,11 +121,24 @@ ecm_generate_headers(CalendarSupport_next_HEADERS
   RELATIVE next
 )
 
+ecm_generate_headers(CalendarSupport_freebusy_HEADERS
+  HEADER_NAMES
+  FreeBusyItem
+  FreeBusyItemModel
+  FreeBusyCalendar
+  FreePeriodModel
+  REQUIRED_HEADERS CalendarSupport_HEADERS
+  PREFIX CalendarSupport
+  RELATIVE freebusymodel
+)
+
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${calendarsupport_SOURCE_DIR})
 install(FILES
     ${CalendarSupport_CamelCase_HEADERS}
     ${CalendarSupport_printer_HEADERS}
     ${CalendarSupport_next_HEADERS}
+    ${CalendarSupport_freebusy_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/CalendarSupport
     COMPONENT Devel
 )
@@ -137,6 +150,7 @@ install(FILES
     ${CalendarSupport_CamelCase_HEADERS}
     ${CalendarSupport_printer_HEADERS}
     ${CalendarSupport_next_HEADERS}
+    ${CalendarSupport_freebusy_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/calendarsupport
     COMPONENT Devel
 )

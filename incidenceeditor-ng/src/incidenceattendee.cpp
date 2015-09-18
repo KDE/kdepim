@@ -32,7 +32,7 @@
 #include "editorconfig.h"
 #include "incidencedatetime.h"
 #include "schedulingdialog.h"
-#include "freebusymodel/freebusyitemmodel.h"
+#include "CalendarSupport/FreeBusyItemModel"
 #include "ui_dialogdesktop.h"
 
 #include <Akonadi/Contact/ContactGroupExpandJob>

@@ -148,7 +148,7 @@ install(FILES
 
 install(FILES
     ${IncidenceEditorsng_HEADERS}
-    ${CMAKE_CURRENT_BINARY_DIR}/incidenceeditorsng_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/incidenceeditors_ng_export.h
     ${IncidenceEditorsng_CamelCase_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/incidenceeditorsng
     COMPONENT Devel

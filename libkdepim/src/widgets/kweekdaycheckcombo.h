@@ -22,7 +22,7 @@
 #ifndef KWEEKDAYCHECKCOMBO_H
 #define KWEEKDAYCHECKCOMBO_H
 
-#include "widgets/kcheckcombobox.h"
+#include "kcheckcombobox.h"
 
 #include "kdepim_export.h"
 

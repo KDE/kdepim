@@ -23,8 +23,8 @@
 #include "resourcemanagement.h"
 #include "ui_resourcemanagement.h"
 #include "resourcemodel.h"
-#include "freebusymodel/freebusyitem.h"
-#include "freebusymodel/freebusycalendar.h"
+#include "CalendarSupport/FreeBusyItem"
+#include "CalendarSupport/FreeBusyCalendar"
 #include "ldaputils.h"
 
 #include "freebusyganttproxymodel.h"

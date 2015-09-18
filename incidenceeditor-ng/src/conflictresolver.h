@@ -24,7 +24,7 @@
 #define INCIDENCEEDITOR_CONFLICTRESOLVER_H
 
 #include "incidenceeditors_ng_export.h"
-#include "freebusymodel/freebusyitem.h"
+#include "CalendarSupport/FreeBusyItem"
 
 #include <QBitArray>
 #include <QSet>
