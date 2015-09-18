@@ -50,9 +50,8 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
         QString serialNumberStr = uri.mid(colon + 1);
         serialNumberStr = serialNumberStr.left(serialNumberStr.indexOf(QLatin1Char('/')));
 
-        org::kde::kmail::kmail kmail(
-            QStringLiteral("org.kde.kmail"), QStringLiteral("/KMail"), QDBusConnection::sessionBus());
-        kmail.showMail(serialNumberStr.toLongLong());
+        OrgKdeKmailKmailInterface kmailInterface(QStringLiteral("org.kde.kmail"), QStringLiteral("/KMail"), QDBusConnection::sessionBus());
+        kmailInterface.showMail(serialNumberStr.toLongLong());
         return true;
     } else if (uri.startsWith(QStringLiteral("mailto:"))) {
         QDesktopServices::openUrl(QUrl(uri));
@@ -84,10 +83,8 @@ bool UriHandler::process(const QString &uri, const Akonadi::Item &item)
         if (mimeType.toLower() == QLatin1String("message/rfc822")) {
             // make sure kmail is running or the part is shown
             KToolInvocation::startServiceByDesktopPath(QStringLiteral("kmail"));
-
-            org::kde::kmail::kmail kmail(
-                QStringLiteral("org.kde.kmail"), QStringLiteral("/KMail"), QDBusConnection::sessionBus());
-            kmail.viewMessage(uri);
+            OrgKdeKmailKmailInterface kmailInterface(QStringLiteral("org.kde.kmail"), QStringLiteral("/KMail"), QDBusConnection::sessionBus());
+            kmailInterface.viewMessage(uri);
             return true;
         }
     } else {  // no special URI, let KDE handle it
