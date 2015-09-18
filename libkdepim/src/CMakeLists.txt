@@ -197,6 +197,7 @@ ecm_generate_headers(libkdepim_widgets_HEADERS
   KWidgetLister
   KWeekdayCheckCombo
   PIMMessageBox
+  TagSelectionCombo
 
   REQUIRED_HEADERS libkdepim_widgets_HEADERS
   PREFIX Libkdepim

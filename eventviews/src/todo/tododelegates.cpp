@@ -30,7 +30,7 @@
 #include <CalendarSupport/CategoryConfig>
 #include <CalendarSupport/KCalPrefs>
 #include <CalendarSupport/CategoryHierarchyReader>
-#include <widgets/tagselectioncombo.h>
+#include <Libkdepim/TagSelectionCombo>
 
 #include <Libkdepim/KCheckComboBox>
 #include <Libkdepim/TagWidgets>
