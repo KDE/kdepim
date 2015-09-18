@@ -111,7 +111,7 @@ PRIVATE
   KF5::Ldap
   KF5::AkonadiWidgets
 )
-target_include_directories(KF5IncidenceEditorsng INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/IncidenceEditorsng/;${KDE_INSTALL_INCLUDEDIR_KF5}/incidenceeditorng>")
+target_include_directories(KF5IncidenceEditorsng INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/IncidenceEditorsng/;${KDE_INSTALL_INCLUDEDIR_KF5}/incidenceeditorsng>")
 target_include_directories(KF5IncidenceEditorsng PUBLIC "$<BUILD_INTERFACE:${incidenceeditorsng_SOURCE_DIR}/src;${incidenceeditorsng_BINARY_DIR}/src;>")
 
 set_target_properties(KF5IncidenceEditorsng PROPERTIES
@@ -135,6 +135,7 @@ ecm_generate_headers(IncidenceEditorsng_CamelCase_HEADERS
   IncidenceDefaults
   IndividualMailComponentFactory
   GroupwareUiDelegate
+  EditorItemManager
   REQUIRED_HEADERS IncidenceEditorsng_HEADERS
   PREFIX IncidenceEditorsng
 )
