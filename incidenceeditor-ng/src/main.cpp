@@ -17,54 +17,42 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include <iostream>
-
-#include <k4aboutdata.h>
-#include <KApplication>
-#include <KCmdLineArgs>
+#include "korganizereditorconfig.h"
+#include "incidencedialog.h"
+#include "incidencedefaults.h"
 
 #include <CalendarSupport/KCalPrefs>
 #include <akonadi/calendar/calendarsettings.h>
-
 #include <Item>
+
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <KCalCore/Journal>
 
-#include "korganizereditorconfig.h"
-#include "incidencedialog.h"
-#include "incidencedefaults.h"
+#include <QApplication>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
+
+#include <iostream>
 
 using namespace IncidenceEditorNG;
 
 int main(int argc, char **argv)
 {
-    K4AboutData about("IncidenceEditorNGApp",
-                      "korganizer",
-                      ki18n("KOrganizer"),
-                      "0.1",
-                      ki18n("KDE application to run the KOrganizer incidenceeditor."),
-                      K4AboutData::License_LGPL,
-                      ki18n("(C) 2010 Bertjan Broeksema"),
-                      ki18n("Run the KOrganizer incidenceeditor ng."),
-                      "http://kdepim.kde.org",
-                      "kdepim@kde.org");
-    about.addAuthor(ki18n("Bertjan Broeksema"), ki18n("Author"), "broeksema@kde.org");
-    about.setProgramIconName("korganizer");
+    QCoreApplication::setApplicationName("IncidenceEditorNGApp");
+    QCoreApplication::setApplicationVersion("0.1");
 
-    KCmdLineOptions options;
-    options.add("new-event", ki18n("Creates a new event"));
-    options.add("new-todo", ki18n("Creates a new todo"));
-    options.add("new-journal", ki18n("Creates a new journal"));
-    options.add("+item",
-                ki18n("Loads an existing item, or returns without doing anything "
-                      "when the item is not an event or todo."));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addOption(QCommandLineOption("new-event", i18n("Creates a new event")));
+    parser.addOption(QCommandLineOption("new-todo", i18n("Creates a new todo")));
+    parser.addOption(QCommandLineOption("new-journal", i18n("Creates a new journal")));
+    parser.addOption(QCommandLineOption("item", i18n("Loads an existing item, or returns without doing anything "
+                    "when the item is not an event or todo."), "id"));
+    parser.process(app);
 
-    KCmdLineArgs::addCmdLineOptions(options);
-    KCmdLineArgs::init(argc, argv, &about);
-    KApplication app;
-
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     Akonadi::Item item(-1);
 
     IncidenceDefaults defaults;
@@ -81,37 +69,32 @@ int main(int argc, char **argv)
             QUrl(Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl()).host());
     }
 
-    if (args->isSet("new-event")) {
+    if (parser.isSet("new-event")) {
         std::cout << "Creating new event..." << std::endl;
         KCalCore::Event::Ptr event(new KCalCore::Event);
         defaults.setDefaults(event);
         item.setPayload<KCalCore::Event::Ptr>(event);
-    } else if (args->isSet("new-todo")) {
+    } else if (parser.isSet("new-todo")) {
         std::cout << "Creating new todo..." << std::endl;
         KCalCore::Todo::Ptr todo(new KCalCore::Todo);
         defaults.setDefaults(todo);
         item.setPayload<KCalCore::Todo::Ptr>(todo);
-    } else if (args->isSet("new-journal")) {
+    } else if (parser.isSet("new-journal")) {
         std::cout << "Creating new journal..." << std::endl;
         KCalCore::Journal::Ptr journal(new KCalCore::Journal);
         defaults.setDefaults(journal);
         item.setPayload<KCalCore::Journal::Ptr>(journal);
-    } else if (args->count() == 1) {
-        if (argc == 2) {
-            bool ok = false;
-            qint64 id = QString(argv[1]).toLongLong(&ok);
-            if (!ok) {
-                std::cerr << "Invalid akonadi item id given." << std::endl;
-                return 1;
-            }
-
-            item.setId(id);
-            std::cout << "Trying to load Akonadi Item " << QString::number(id).toLatin1().data();
-            std::cout << "..." << std::endl;
-        } else {
-            std::cerr << "Invalid argument count." << std::endl << std::endl;
+    } else if (parser.isSet("item")) {
+        bool ok = false;
+        qint64 id = parser.value("item").toLongLong(&ok);
+        if (!ok) {
+            std::cerr << "Invalid akonadi item id given." << std::endl;
             return 1;
         }
+
+        item.setId(id);
+        std::cout << "Trying to load Akonadi Item " << QString::number(id).toLatin1().data();
+        std::cout << "..." << std::endl;
     } else {
         std::cerr << "Invalid usage." << std::endl << std::endl;
         return 1;
