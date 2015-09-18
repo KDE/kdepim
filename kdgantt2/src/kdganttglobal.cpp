@@ -23,7 +23,7 @@
  **
  **********************************************************************/
 #include "kdganttglobal.h"
-
+#include "kdgantt_debug.h"
 using namespace KDGantt;
 
 /*!\enum KDGantt::ItemDataRole
