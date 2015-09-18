@@ -71,7 +71,7 @@ PRIVATE
   KF5::AkonadiCore
   KF5::CalendarCore
   KF5::CalendarUtils
-  kdepimdbusinterfaces
+  KF5::KdepimDBusInterfaces
 )
 
 set_target_properties(KF5CalendarSupport PROPERTIES
@@ -133,6 +133,7 @@ install(FILES
 install(FILES
     ${CalendarSupport_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/calendarsupport_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kcalprefs_base.h
     ${CalendarSupport_CamelCase_HEADERS}
     ${CalendarSupport_printer_HEADERS}
     ${CalendarSupport_next_HEADERS}
