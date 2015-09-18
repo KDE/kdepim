@@ -29,7 +29,7 @@ find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Network)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
 
-ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX GRANTHEETHEME
+ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX GRANTLEETHEME
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/grantleetheme_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5GrantleeThemeConfigVersion.cmake"
                         SOVERSION 5
