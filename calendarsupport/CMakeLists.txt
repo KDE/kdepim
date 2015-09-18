@@ -44,7 +44,7 @@ find_package(KF5IdentityManagement ${IDENTITYMANAGEMENT_LIB_VERSION} CONFIG REQU
 find_package(KF5Holidays ${KHOLIDAYS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiCalendar ${AKONADICALENDAR_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
-find_package(KF5MailCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+#find_package(KF5MailCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX CALENDARSUPPORT
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/calendarsupport_version.h"
@@ -59,7 +59,7 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX CALENDARSUPPORT
 ########### Targets ###########
 
 add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
-
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5CalendarSupport")
 

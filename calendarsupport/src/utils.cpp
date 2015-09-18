@@ -748,9 +748,9 @@ void CalendarSupport::saveAttachments(const Akonadi::Item &item, QWidget *parent
         targetFile = targetDir + attachment->label();
         QUrl sourceUrl;
         if (attachment->isUri()) {
-            sourceUrl = attachment->uri();
+            sourceUrl = QUrl(attachment->uri());
         } else {
-            sourceUrl = incidence->writeAttachmentToTempFile(attachment);
+            sourceUrl = QUrl::fromLocalFile(incidence->writeAttachmentToTempFile(attachment));
         }
         // save the attachment url
         auto job = KIO::file_copy(sourceUrl, QUrl::fromLocalFile(targetFile));

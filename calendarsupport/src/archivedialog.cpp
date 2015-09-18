@@ -185,7 +185,7 @@ ArchiveDialog::ArchiveDialog(const Akonadi::ETMCalendar::Ptr &cal,
     fileLayout->setMargin(0);
     QLabel *l = new QLabel(i18nc("@label", "Archive &file:"), topFrame);
     fileLayout->addWidget(l);
-    mArchiveFile = new KUrlRequester(KCalPrefs::instance()->mArchiveFile, topFrame);
+    mArchiveFile = new KUrlRequester(QUrl::fromLocalFile(KCalPrefs::instance()->mArchiveFile), topFrame);
     mArchiveFile->setMode(KFile::File);
     mArchiveFile->setFilter(i18nc("@label filter for KUrlRequester", "*.ics|iCalendar Files"));
     mArchiveFile->setToolTip(

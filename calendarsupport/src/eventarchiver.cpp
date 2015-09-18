@@ -295,10 +295,9 @@ void EventArchiver::archiveIncidences(const Akonadi::ETMCalendar::Ptr &calendar,
     }
 
     // Upload if necessary
-    QUrl srcUrl;
-    srcUrl.setPath(archiveFile);
+    QUrl srcUrl = QUrl::fromLocalFile(archiveFile);
     if (srcUrl != archiveURL) {
-        auto job = KIO::file_copy(archiveFile, archiveURL);
+        auto job = KIO::file_copy(QUrl::fromLocalFile(archiveFile), archiveURL);
         KJobWidgets::setWindow(job, widget);
         if (!job->exec()) {
             KMessageBox::error(widget, i18n("Cannot write archive. %1", job->errorString()));

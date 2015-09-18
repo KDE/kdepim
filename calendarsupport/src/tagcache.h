@@ -27,7 +27,7 @@
 namespace Akonadi
 {
 class Monitor;
-};
+}
 class KJob;
 
 namespace CalendarSupport

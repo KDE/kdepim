@@ -111,7 +111,7 @@ Attachment::Ptr AttachmentHandler::find(const QString &attachmentName,
     }
 
     if (a->isUri()) {
-        auto job = KIO::stat(a->uri(), KIO::StatJob::SourceSide, 0);
+        auto job = KIO::stat(QUrl(a->uri()), KIO::StatJob::SourceSide, 0);
         KJobWidgets::setWindow(job, d->mParent);
         if (!job->exec()) {
             KMessageBox::sorry(
@@ -181,7 +181,7 @@ bool AttachmentHandler::view(const Attachment::Ptr &attachment)
 
     bool stat = true;
     if (attachment->isUri()) {
-        QDesktopServices::openUrl(attachment->uri());
+        QDesktopServices::openUrl(QUrl(attachment->uri()));
     } else {
         // put the attachment in a temporary file and launch it
         QUrl tempUrl = tempFileForAttachment(attachment);
@@ -239,7 +239,7 @@ bool AttachmentHandler::saveAs(const Attachment::Ptr &attachment)
     bool stat = false;
     if (attachment->isUri()) {
         // save the attachment url
-        auto job = KIO::file_copy(attachment->uri(), QUrl::fromLocalFile(saveAsFile));
+        auto job = KIO::file_copy(QUrl(attachment->uri()), QUrl::fromLocalFile(saveAsFile));
         stat = job->exec();
     } else {
         // put the attachment in a temporary file and save it
