@@ -81,7 +81,7 @@ install(FILES
 
 install(FILES
     ${KaddressbookGrantlee_HEADERS}
-    ${CMAKE_CURRENT_BINARY_DIR}/kaddressbookgrantlee_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook_grantlee_export.h
     ${KaddressbookGrantlee_formatter_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kaddressbookgrantlee
     COMPONENT Devel

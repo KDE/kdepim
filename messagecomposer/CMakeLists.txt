@@ -5,7 +5,7 @@ project(messagecomposer)
 if(${CMAKE_SOURCE_DIR} STREQUAL ${messagecomposer_SOURCE_DIR})
 # ECM setup
 find_package(ECM 5.14.0 CONFIG REQUIRED)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${messagecomposer_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)
 include(ECMSetupVersion)
@@ -32,6 +32,25 @@ find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test UiTools)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiMime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5PimCommon ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageCore ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5TemplateParser ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5MessageViewer ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Sendlater ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5FollowupReminder ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Libkleo ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
+
+#  KF5::IdentityManagement
+#  KF5::AkonadiMime
+#  KF5::MailTransport
+#  KF5::PimTextEdit
+#  KF5::CalendarCore
+#  KF5::KIOCore
+#  Grantlee5::TextDocument
+#  KF5::Ldap
+
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGECOMPOSER
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/messagecomposer_version.h"

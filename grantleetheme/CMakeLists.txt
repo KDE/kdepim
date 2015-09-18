@@ -37,6 +37,7 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX GRANTHEETHEME
 
 ########### Targets ###########
 
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5GrantleeTheme")

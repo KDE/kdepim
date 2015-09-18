@@ -143,7 +143,7 @@ install(TARGETS
 target_include_directories(KF5Libkleo PUBLIC "$<BUILD_INTERFACE:${libkleo_SOURCE_DIR}/src;${libkleo_BINARY_DIR}/src;${Boost_INCLUDE_DIR}>")
 target_include_directories(KF5Libkleo INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/Libkleo/;${KDE_INSTALL_INCLUDEDIR_KF5}/libkleo>")
 
-ecm_generate_headers(libkeo_CamelCase_HEADERS
+ecm_generate_headers(libkleo_CamelCase_HEADERS
   HEADER_NAMES
   DecryptJob
   CryptoBackendFactory
