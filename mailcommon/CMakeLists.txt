@@ -67,7 +67,7 @@ set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libx
 remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
 remove_definitions( -DQT_NO_CAST_FROM_ASCII )
 remove_definitions( -DQT_NO_CAST_TO_ASCII )
-
+remove_definitions("-DQT_NO_URL_CAST_FROM_STRING")
 ########### CMake Config Files ###########
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5MailCommon")
 

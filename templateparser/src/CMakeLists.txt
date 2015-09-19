@@ -93,6 +93,7 @@ install(FILES
     ${TemplateParser_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/templateparser_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/globalsettings_templateparser.h
+    ${CMAKE_CURRENT_BINARY_DIR}/customtemplates_kfg.h
     ${TemplateParser_CamelCase_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/templateparser
     COMPONENT Devel

@@ -26,7 +26,7 @@
 #include <MessageComposer/MessageFactory>
 using MessageComposer::MessageFactory;
 
-#include <settings/messageviewersettings.h>
+#include <messageviewer/messageviewersettings.h>
 #ifndef QT_NO_CURSOR
 #include <libkdepim/kcursorsaver.h>
 #endif
