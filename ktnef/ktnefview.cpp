@@ -80,7 +80,7 @@ KTNEFView::KTNEFView(QWidget *parent)
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setDragEnabled(true);
     setSortingEnabled(true);
-    QTimer::singleShot(0, this, SLOT(adjustColumnWidth()));
+    QTimer::singleShot(0, this, &KTNEFView::adjustColumnWidth);
 }
 
 KTNEFView::~KTNEFView()

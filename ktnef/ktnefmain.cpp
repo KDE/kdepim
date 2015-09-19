@@ -184,11 +184,11 @@ void KTNEFMain::setupTNEF()
 
     setCentralWidget(mView);
 
-    connect(mView, SIGNAL(itemSelectionChanged()),
-            SLOT(viewSelectionChanged()));
+    connect(mView, &QTreeWidget::itemSelectionChanged,
+            this, &KTNEFMain::viewSelectionChanged);
 
-    connect(mView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-            SLOT(viewDoubleClicked(QTreeWidgetItem*)));
+    connect(mView, &QTreeWidget::itemDoubleClicked,
+            this, &KTNEFMain::viewDoubleClicked);
 
 //PORTME:  connect( mView, SIGNAL(dragRequested(QList<KTNEFAttach*>)),
 //PORTME:           SLOT(viewDragRequested(QList<KTNEFAttach*>)) );
@@ -588,7 +588,7 @@ void KTNEFMain::createOpenWithMenu(QMenu *topMenu)
     if (!offers.isEmpty()) {
         QMenu *menu = topMenu;
         QActionGroup *actionGroup = new QActionGroup(menu);
-        connect(actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithAction(QAction*)));
+        connect(actionGroup, &QActionGroup::triggered, this, &KTNEFMain::slotOpenWithAction);
 
         if (offers.count() > 1) { // submenu 'open with'
             menu = new QMenu(i18nc("@title:menu", "&Open With"), topMenu);
@@ -614,12 +614,12 @@ void KTNEFMain::createOpenWithMenu(QMenu *topMenu)
         }
         QAction *openWithAct = new QAction(menu);
         openWithAct->setText(openWithActionName);
-        connect(openWithAct, SIGNAL(triggered()), this, SLOT(viewFileAs()));
+        connect(openWithAct, &QAction::triggered, this, &KTNEFMain::viewFileAs);
         menu->addAction(openWithAct);
     } else { // no app offers -> Open With...
         QAction *act = new QAction(topMenu);
         act->setText(i18nc("@title:menu", "&Open With..."));
-        connect(act, SIGNAL(triggered()), this, SLOT(viewFileAs()));
+        connect(act, &QAction::triggered, this, &KTNEFMain::viewFileAs);
         topMenu->addAction(act);
     }
 }
