@@ -57,9 +57,9 @@ public:
         findReplaceBar = new FindReplaceBar(view);
         vlay->addWidget(findReplaceBar);
         q->setLayout(vlay);
-        q->connect(view, SIGNAL(showFindBar()), findReplaceBar, SLOT(showAndFocus()));
-        q->connect(view, SIGNAL(openLink(QUrl)), SIGNAL(openLink(QUrl)));
-        q->connect(view->page(), SIGNAL(contentsChanged()), q, SIGNAL(textChanged()));
+        q->connect(view, &ComposerView::showFindBar, findReplaceBar, &FindReplaceBar::showAndFocus);
+        q->connect(view, &ComposerView::openLink, q, &ComposerEditor::openLink);
+        q->connect(view->page(), &QWebPage::contentsChanged, q, &ComposerEditor::textChanged);
     }
 
     KToolBar *createToolBar(const QList<ComposerView::ComposerViewAction> &lstActions)

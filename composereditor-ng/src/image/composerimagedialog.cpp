@@ -137,7 +137,7 @@ void ComposerImageDialogPrivate::initialize()
     QVBoxLayout *mainLayout = new QVBoxLayout;
     q->setLayout(mainLayout);
     q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(_k_slotOkClicked()));
-    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    q->connect(buttonBox, &QDialogButtonBox::rejected, q, &QDialog::reject);
     okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setText(i18n("Insert"));
 
