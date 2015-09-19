@@ -39,7 +39,7 @@
 #include "headersrulerwidgethandler.h"
 #include "interfaces/rulewidgethandler.h"
 
-#include <viewer/stl_util.h>
+#include <messageviewer/stl_util.h>
 
 #include <QObject>
 #include <QStackedWidget>

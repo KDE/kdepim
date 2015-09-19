@@ -190,7 +190,7 @@ void SearchPattern::importLegacyConfig(const KConfigGroup &config)
     append(rule);
 
     const QString sOperator = config.readEntry("operator");
-    if (sOperator == "ignore") {
+    if (sOperator == QLatin1String("ignore")) {
         return;
     }
 

@@ -282,6 +282,7 @@ ecm_generate_headers(MessageViewer_viewer_HEADERS
   AttachmentStrategy
   NodeHelper
   EditorWatcher
+  Stl_Util
   CSSHelperBase
   REQUIRED_HEADERS MessageViewer_HEADERS
   PREFIX MessageViewer
@@ -345,6 +346,9 @@ install(FILES
     ${MessageViewer_viewer_HEADERS}
     ${MessageViewer_widgets_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messageviewer_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/globalsettings_messageviewer.h
+    ${CMAKE_CURRENT_BINARY_DIR}/messageviewer_debug.h
+
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messageviewer
     COMPONENT Devel
 )

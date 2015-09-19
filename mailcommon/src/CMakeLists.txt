@@ -253,6 +253,7 @@ endif()
 ecm_generate_headers(MailCommon_CamelCase_HEADERS
   HEADER_NAMES
   MailUtil
+  MetaType
   REQUIRED_HEADERS MailCommon_HEADERS
   PREFIX MailCommon
   RELATIVE util
