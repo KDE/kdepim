@@ -146,7 +146,7 @@ SelectUserIDsPage::SelectUserIDsPage(QWidget *parent) : QWizardPage(parent), m_u
     m_checkbox->setText(i18n("I have verified the fingerprint"));
     layout->addWidget(m_checkbox);
     connect(m_checkbox, &QCheckBox::toggled, this, &SelectUserIDsPage::completeChanged);
-    connect(&m_userIDModel, SIGNAL(itemChanged(QStandardItem*)), this, SIGNAL(completeChanged()));
+    connect(&m_userIDModel, &QStandardItemModel::itemChanged, this, &QWizardPage::completeChanged);
 }
 
 bool SelectUserIDsPage::isComplete() const
@@ -197,7 +197,7 @@ OptionsPage::OptionsPage(QWidget *parent) : QWizardPage(parent), m_ui()
 {
     m_ui.setupUi(this);
     m_ui.keyListView->setModel(&m_model);
-    connect(m_ui.keyListView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SIGNAL(completeChanged()));
+    connect(m_ui.keyListView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &QWizardPage::completeChanged);
     setCommitPage(true);
     setButtonText(QWizard::CommitButton, i18n("Certify"));
 }

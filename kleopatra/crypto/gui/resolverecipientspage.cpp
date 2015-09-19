@@ -80,7 +80,7 @@ ResolveRecipientsPage::ListWidget::ListWidget(QWidget *parent, Qt::WindowFlags f
     m_listWidget->setSelectionMode(QAbstractItemView::MultiSelection);
     QVBoxLayout *const layout = new QVBoxLayout(this);
     layout->addWidget(m_listWidget);
-    connect(m_listWidget, SIGNAL(itemSelectionChanged()), this, SLOT(onSelectionChange()));
+    connect(m_listWidget, &QListWidget::itemSelectionChanged, this, &ListWidget::onSelectionChange);
 }
 
 ResolveRecipientsPage::ListWidget::~ListWidget()
@@ -112,7 +112,7 @@ void ResolveRecipientsPage::ListWidget::addEntry(const QString &id, const QStrin
     QListWidgetItem *item = new QListWidgetItem;
     item->setData(IdRole, id);
     ItemWidget *wid = new ItemWidget(id, name, mbox, this);
-    connect(wid, SIGNAL(changed()), this, SIGNAL(completeChanged()));
+    connect(wid, &ItemWidget::changed, this, &ListWidget::completeChanged);
     wid->setProtocol(m_protocol);
     item->setSizeHint(wid->sizeHint());
     m_listWidget->addItem(item);
@@ -208,8 +208,8 @@ ResolveRecipientsPage::ItemWidget::ItemWidget(const QString &id, const QString &
     layout->addWidget(m_certCombo);
     m_selectButton = new QToolButton;
     m_selectButton->setText(i18n("..."));
-    connect(m_selectButton, SIGNAL(clicked()),
-            this, SLOT(showSelectionDialog()));
+    connect(m_selectButton, &QAbstractButton::clicked,
+            this, &ItemWidget::showSelectionDialog);
     layout->addWidget(m_selectButton);
     layout->addSpacing(15);
     setCertificates(std::vector<Key>(), std::vector<Key>());
@@ -410,7 +410,7 @@ ResolveRecipientsPage::Private::Private(ResolveRecipientsPage *qq)
     QVBoxLayout *const layout = new QVBoxLayout(q);
     m_listWidget = new ListWidget;
     connect(m_listWidget, SIGNAL(selectionChanged()), q, SLOT(selectionChanged()));
-    connect(m_listWidget, SIGNAL(completeChanged()), q, SIGNAL(completeChanged()));
+    connect(m_listWidget, &ListWidget::completeChanged, q, &WizardPage::completeChanged);
     layout->addWidget(m_listWidget);
     m_additionalRecipientsLabel = new QLabel;
     m_additionalRecipientsLabel->setWordWrap(true);

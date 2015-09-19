@@ -160,7 +160,7 @@ private:
 
             closePB()->setEnabled(false);
 
-            connect(closePB(), SIGNAL(clicked()), qq, SLOT(accept()));
+            connect(closePB(), &QAbstractButton::clicked, qq, &QDialog::accept);
         }
 
         QAbstractButton *closePB() const

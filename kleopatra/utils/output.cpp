@@ -335,7 +335,7 @@ public:
     void doCancel() Q_DECL_OVERRIDE
     {
         m_proc->terminate();
-        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, m_proc.get(), SLOT(kill()));
+        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, m_proc.get(), &QProcess::kill);
     }
     QString label() const Q_DECL_OVERRIDE;
 

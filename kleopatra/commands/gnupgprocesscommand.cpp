@@ -81,8 +81,8 @@ public:
         vlay.addWidget(&logTextWidget, 1);
         vlay.addWidget(&buttonBox);
 
-        connect(closeButton(), SIGNAL(clicked()), this, SLOT(close()));
-        connect(cancelButton(), SIGNAL(clicked()), this, SLOT(slotCancelClicked()));
+        connect(closeButton(), &QAbstractButton::clicked, this, &QWidget::close);
+        connect(cancelButton(), &QAbstractButton::clicked, this, &OutputDialog::slotCancelClicked);
     }
 
 Q_SIGNALS:
@@ -145,7 +145,7 @@ private:
             dialog = new OutputDialog;
             dialog->setAttribute(Qt::WA_DeleteOnClose);
             applyWindowID(dialog);
-            connect(dialog, SIGNAL(cancelRequested()), q, SLOT(cancel()));
+            connect(dialog.data(), &OutputDialog::cancelRequested, q, &Command::cancel);
             dialog->setWindowTitle(i18n("Subprocess Diagnostics"));
         }
     }
@@ -287,7 +287,7 @@ void GnuPGProcessCommand::doCancel()
     d->canceled = true;
     if (d->process.state() != QProcess::NotRunning) {
         d->process.terminate();
-        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, &d->process, SLOT(kill()));
+        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, &d->process, &QProcess::kill);
     }
 }
 

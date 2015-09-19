@@ -53,8 +53,8 @@ LearnCardKeysCommand::LearnCardKeysCommand(GpgME::Protocol proto)
 {
     setIgnoresSuccessOrFailure(true);
     setShowsOutputWindow(true);
-    connect(this, SIGNAL(finished()),
-            SmartCard::ReaderStatus::mutableInstance(), SLOT(updateStatus()));
+    connect(this, &Command::finished,
+            SmartCard::ReaderStatus::mutableInstance(), &SmartCard::ReaderStatus::updateStatus);
 }
 
 LearnCardKeysCommand::~LearnCardKeysCommand() {}

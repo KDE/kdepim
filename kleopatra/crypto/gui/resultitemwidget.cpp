@@ -160,7 +160,7 @@ ResultItemWidget::ResultItemWidget(const shared_ptr<const Task::Result> &result,
     d->m_closeButton = new QPushButton;
     KGuiItem::assign(d->m_closeButton, KStandardGuiItem::close());
     d->m_closeButton->setFixedSize(d->m_closeButton->sizeHint());
-    connect(d->m_closeButton, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()));
+    connect(d->m_closeButton, &QAbstractButton::clicked, this, &ResultItemWidget::closeButtonClicked);
     layout->addWidget(d->m_closeButton, 0, Qt::AlignRight);
     d->m_closeButton->setVisible(false);
 

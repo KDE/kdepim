@@ -56,7 +56,7 @@ void MultiValidator::addValidator(QValidator *vali)
     if (!vali->parent()) {
         vali->setParent(this);
     }
-    connect(vali, SIGNAL(destroyed(QObject*)), this, SLOT(_kdmv_slotDestroyed(QObject*)));
+    connect(vali, &QObject::destroyed, this, &MultiValidator::_kdmv_slotDestroyed);
     m_validators.push_back(vali);
 }
 
@@ -74,7 +74,7 @@ void MultiValidator::removeValidator(QValidator *vali)
     if (vali->parent() == this) {
         delete vali;
     } else {
-        disconnect(vali, SIGNAL(destroyed(QObject*)), this, SLOT(_kdmv_slotDestroyed(QObject*)));
+        disconnect(vali, &QObject::destroyed, this, &MultiValidator::_kdmv_slotDestroyed);
     }
 }
 

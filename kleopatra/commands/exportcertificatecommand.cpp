@@ -244,8 +244,8 @@ void ExportCertificateCommand::Private::startExportJob(GpgME::Protocol protocol,
     connect(job.get(), SIGNAL(result(GpgME::Error,QByteArray)),
             q, SLOT(exportResult(GpgME::Error,QByteArray)));
 
-    connect(job.get(), SIGNAL(progress(QString,int,int)),
-            q, SIGNAL(progress(QString,int,int)));
+    connect(job.get(), &Job::progress,
+            q, &Command::progress);
 
     QStringList fingerprints;
     Q_FOREACH (const Key &i, keys) {

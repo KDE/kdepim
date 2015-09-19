@@ -183,8 +183,8 @@ VerifyChecksumsController::Private::Private(VerifyChecksumsController *qq)
       errors(),
       canceled(false)
 {
-    connect(this, SIGNAL(progress(int,int,QString)),
-            q, SIGNAL(progress(int,int,QString)));
+    connect(this, &Private::progress,
+            q, &Controller::progress);
     connect(this, SIGNAL(finished()),
             q, SLOT(slotOperationFinished()));
 }
@@ -229,14 +229,14 @@ void VerifyChecksumsController::start()
         d->dialog->setAttribute(Qt::WA_DeleteOnClose);
         d->dialog->setWindowTitle(i18nc("@title:window", "Verify Checksum Results"));
 
-        connect(d->dialog, SIGNAL(canceled()),
-                this, SLOT(cancel()));
-        connect(d.get(), SIGNAL(baseDirectories(QStringList)),
-                d->dialog, SLOT(setBaseDirectories(QStringList)));
-        connect(d.get(), SIGNAL(progress(int,int,QString)),
-                d->dialog, SLOT(setProgress(int,int)));
-        connect(d.get(), SIGNAL(status(QString,Kleo::Crypto::Gui::VerifyChecksumsDialog::Status)),
-                d->dialog, SLOT(setStatus(QString,Kleo::Crypto::Gui::VerifyChecksumsDialog::Status)));
+        connect(d->dialog.data(), &VerifyChecksumsDialog::canceled,
+                this, &VerifyChecksumsController::cancel);
+        connect(d.get(), &Private::baseDirectories,
+                d->dialog.data(), &VerifyChecksumsDialog::setBaseDirectories);
+        connect(d.get(), &Private::progress,
+                d->dialog.data(), &VerifyChecksumsDialog::setProgress);
+        connect(d.get(), &Private::status,
+                d->dialog.data(), &VerifyChecksumsDialog::setStatus);
 
         d->canceled = false;
         d->errors.clear();

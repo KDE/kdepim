@@ -129,7 +129,7 @@ int PrepSignCommand::doStart()
         connectController(seec.get(), d.get());
         seec->setExecutionContext(shared_from_this());
         if (seec->areCertificatesResolved()) {
-            QTimer::singleShot(0, d.get(), SLOT(slotSignersResolved()));
+            QTimer::singleShot(0, d.get(), &Private::slotSignersResolved);
         } else {
             kleo_assert(seec->isResolvingInProgress());
         }

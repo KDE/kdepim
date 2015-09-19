@@ -160,7 +160,7 @@ int EncryptCommand::doStart()
         removeMemento(NewSignEncryptEMailController::mementoName());
         d->controller->setExecutionContext(shared_from_this());
         if (seec->areCertificatesResolved()) {
-            QTimer::singleShot(0, d.get(), SLOT(slotRecipientsResolved()));
+            QTimer::singleShot(0, d.get(), &Private::slotRecipientsResolved);
         } else {
             kleo_assert(seec->isResolvingInProgress());
         }

@@ -1054,8 +1054,8 @@ Error KeyCache::RefreshKeysJob::Private::startKeyListing(const char *backend)
                           : i18n("Listing OpenPGP certificates") ;
     (void)ProgressManager::createForJob(job, label);
 
-    connect(q, SIGNAL(canceled()),
-            job, SLOT(slotCancel()));
+    connect(q, &RefreshKeysJob::canceled,
+            job, &Job::slotCancel);
 
     const Error error = job->start(true);
 

@@ -964,14 +964,14 @@ AssuanServerConnection::Private::Private(assuan_fd_t fd_, const std::vector< sha
 
     if (!numFDs || fds[0] != fd) {
         const shared_ptr<QSocketNotifier> sn(new QSocketNotifier((intptr_t)fd, QSocketNotifier::Read), mem_fn(&QObject::deleteLater));
-        connect(sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)));
+        connect(sn.get(), &QSocketNotifier::activated, this, &Private::slotReadActivity);
         notifiers.push_back(sn);
     }
 
     notifiers.reserve(notifiers.size() + numFDs);
     for (int i = 0 ; i < numFDs ; ++i) {
         const shared_ptr<QSocketNotifier> sn(new QSocketNotifier((intptr_t)fds[i], QSocketNotifier::Read), mem_fn(&QObject::deleteLater));
-        connect(sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)));
+        connect(sn.get(), &QSocketNotifier::activated, this, &Private::slotReadActivity);
         notifiers.push_back(sn);
     }
 
@@ -1092,7 +1092,7 @@ void AssuanServerConnection::enableCryptoCommands(bool on)
     }
     d->cryptoCommandsEnabled = on;
     if (d->commandWaitingForCryptoCommandsEnabled) {
-        QTimer::singleShot(0, d.get(), SLOT(startCommandBottomHalf()));
+        QTimer::singleShot(0, d.get(), &Private::startCommandBottomHalf);
     }
 }
 
@@ -1579,7 +1579,7 @@ gpg_error_t AssuanCommandFactory::_handle(assuan_context_t ctx, char *line, cons
         conn.currentCommand = cmd;
         conn.currentCommandIsNohup = nohup;
 
-        QTimer::singleShot(0, &conn, SLOT(startCommandBottomHalf()));
+        QTimer::singleShot(0, &conn, &AssuanServerConnection::Private::startCommandBottomHalf);
 
         return 0;
 

@@ -429,8 +429,8 @@ void MainWindow::closeEvent(QCloseEvent *e)
             // wait for them to be finished:
             setEnabled(false);
             QEventLoop ev;
-            QTimer::singleShot(100, &ev, SLOT(quit()));
-            connect(&d->controller, SIGNAL(commandsExecuting(bool)), &ev, SLOT(quit()));
+            QTimer::singleShot(100, &ev, &QEventLoop::quit);
+            connect(&d->controller, &KeyListController::commandsExecuting, &ev, &QEventLoop::quit);
             ev.exec();
             if (d->controller.hasRunningCommands())
                 qCWarning(KLEOPATRA_LOG)

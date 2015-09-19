@@ -180,7 +180,7 @@ DecryptVerifyOperationWidget *DecryptVerifyFilesWizard::operationWidget(unsigned
 void DecryptVerifyFilesWizard::onNext(int id)
 {
     if (id == OperationsPage) {
-        QTimer::singleShot(0, this, SIGNAL(operationPrepared()));
+        QTimer::singleShot(0, this, &DecryptVerifyFilesWizard::operationPrepared);
     }
     Wizard::onNext(id);
 }

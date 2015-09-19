@@ -342,7 +342,7 @@ public:
 
         tabWidget->addTab(w, i18n("DN-Attribute Order"));
 
-        connect(dnOrderWidget, SIGNAL(changed()), q, SIGNAL(changed()));
+        connect(dnOrderWidget, &DNAttributeOrderConfigWidget::changed, q, &AppearanceConfigWidget::changed);
 
         connect(iconButton, SIGNAL(clicked()), q, SLOT(slotIconClicked()));
 #ifndef QT_NO_COLORDIALOG

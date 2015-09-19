@@ -461,8 +461,8 @@ public:
           m_gnupgHomePath(Kleo::gnupgHomeDirectory()),
           m_transactions(1, updateTransaction)   // force initial scan
     {
-        connect(this, SIGNAL(oneTransactionFinished()),
-                this, SLOT(slotOneTransactionFinished()));
+        connect(this, &ReaderStatusThread::oneTransactionFinished,
+                this, &ReaderStatusThread::slotOneTransactionFinished);
     }
 
     std::vector<CardInfo> cardInfos() const
@@ -730,14 +730,14 @@ public:
         watcher.addPath(Kleo::gnupgHomeDirectory());
         watcher.setDelay(100);
 
-        connect(this, SIGNAL(cardStatusChanged(uint,Kleo::SmartCard::ReaderStatus::Status)),
-                q, SIGNAL(cardStatusChanged(uint,Kleo::SmartCard::ReaderStatus::Status)));
-        connect(this, SIGNAL(anyCardHasNullPinChanged(bool)),
-                q, SIGNAL(anyCardHasNullPinChanged(bool)));
-        connect(this, SIGNAL(anyCardCanLearnKeysChanged(bool)),
-                q, SIGNAL(anyCardCanLearnKeysChanged(bool)));
+        connect(this, &::ReaderStatusThread::cardStatusChanged,
+                q, &ReaderStatus::cardStatusChanged);
+        connect(this, &::ReaderStatusThread::anyCardHasNullPinChanged,
+                q, &ReaderStatus::anyCardHasNullPinChanged);
+        connect(this, &::ReaderStatusThread::anyCardCanLearnKeysChanged,
+                q, &ReaderStatus::anyCardCanLearnKeysChanged);
 
-        connect(&watcher, SIGNAL(triggered()), this, SLOT(slotReaderStatusFileChanged()));
+        connect(&watcher, &FileSystemWatcher::triggered, this, &::ReaderStatusThread::slotReaderStatusFileChanged);
 
     }
     ~Private()

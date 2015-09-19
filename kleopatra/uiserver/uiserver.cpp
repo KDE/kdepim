@@ -218,12 +218,12 @@ void UiServer::Private::incomingConnection(qintptr fd)
         }
 #endif
         const shared_ptr<AssuanServerConnection> c(new AssuanServerConnection((assuan_fd_t)fd, factories));
-        connect(c.get(), SIGNAL(closed(Kleo::AssuanServerConnection*)),
-                this, SLOT(slotConnectionClosed(Kleo::AssuanServerConnection*)));
-        connect(c.get(), SIGNAL(startKeyManagerRequested()),
-                q, SIGNAL(startKeyManagerRequested()), Qt::QueuedConnection);
-        connect(c.get(), SIGNAL(startConfigDialogRequested()),
-                q, SIGNAL(startConfigDialogRequested()), Qt::QueuedConnection);
+        connect(c.get(), &AssuanServerConnection::closed,
+                this, &Private::slotConnectionClosed);
+        connect(c.get(), &AssuanServerConnection::startKeyManagerRequested,
+                q, &UiServer::startKeyManagerRequested, Qt::QueuedConnection);
+        connect(c.get(), &AssuanServerConnection::startConfigDialogRequested,
+                q, &UiServer::startConfigDialogRequested, Qt::QueuedConnection);
         c->enableCryptoCommands(cryptoCommandsEnabled);
         connections.push_back(c);
         qCDebug(KLEOPATRA_LOG) << "UiServer: client connection " << (void *)c.get() << " established successfully";

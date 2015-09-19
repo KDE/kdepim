@@ -376,8 +376,8 @@ void DeleteCertificatesCommand::Private::startDeleteJob(GpgME::Protocol protocol
         connect(job.get(), SIGNAL(result(GpgME::Error,GpgME::Key)),
                 q_func(), SLOT(pgpDeleteResult(GpgME::Error)));
 
-    connect(job.get(), SIGNAL(progress(QString,int,int)),
-            q, SIGNAL(progress(QString,int,int)));
+    connect(job.get(), &Job::progress,
+            q, &Command::progress);
 
     if (const Error err = job->start(keys, true /*allowSecretKeyDeletion*/)) {
         (protocol == CMS ? cmsError : pgpError) = err;

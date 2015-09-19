@@ -437,8 +437,8 @@ void ImportCertificatesCommand::Private::startImport(GpgME::Protocol protocol, c
 
     connect(job.get(), SIGNAL(result(GpgME::ImportResult)),
             q, SLOT(importResult(GpgME::ImportResult)));
-    connect(job.get(), SIGNAL(progress(QString,int,int)),
-            q, SIGNAL(progress(QString,int,int)));
+    connect(job.get(), &Job::progress,
+            q, &Command::progress);
     const GpgME::Error err = job->start(data);
     if (err.code()) {
         importResult(ImportResult(err), id);
@@ -478,8 +478,8 @@ void ImportCertificatesCommand::Private::startImport(GpgME::Protocol protocol, c
 
     connect(job.get(), SIGNAL(result(GpgME::ImportResult)),
             q, SLOT(importResult(GpgME::ImportResult)));
-    connect(job.get(), SIGNAL(progress(QString,int,int)),
-            q, SIGNAL(progress(QString,int,int)));
+    connect(job.get(), &Job::progress,
+            q, &Command::progress);
     const GpgME::Error err = job->start(keys);
     if (err.code()) {
         importResult(ImportResult(err), id);

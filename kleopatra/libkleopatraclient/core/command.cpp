@@ -129,8 +129,8 @@ Command::~Command()
 
 void Command::Private::init()
 {
-    connect(this, SIGNAL(started()),  q, SIGNAL(started()));
-    connect(this, SIGNAL(finished()), q, SIGNAL(finished()));
+    connect(this, &QThread::started,  q, &Command::started);
+    connect(this, &QThread::finished, q, &Command::finished);
 }
 
 void Command::setParentWId(WId wid)

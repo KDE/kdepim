@@ -118,8 +118,8 @@ int EchoCommand::doStart()
 
         ++d->operationsInFlight;
 
-        connect(i.get(), SIGNAL(readyRead()), this, SLOT(slotInputReadyRead()));
-        connect(o.get(), SIGNAL(bytesWritten(qint64)), this, SLOT(slotOutputBytesWritten()));
+        connect(i.get(), &QIODevice::readyRead, this, &EchoCommand::slotInputReadyRead);
+        connect(o.get(), &QIODevice::bytesWritten, this, &EchoCommand::slotOutputBytesWritten);
 
         if (i->bytesAvailable()) {
             slotInputReadyRead();

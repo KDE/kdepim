@@ -174,8 +174,8 @@ public:
     explicit ObjectsLabel(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0)
         : QLabel(parent, f), m_dialog(), m_files(dummyFiles())
     {
-        connect(this, SIGNAL(linkActivated(QString)),
-                this, SLOT(slotLinkActivated()));
+        connect(this, &QLabel::linkActivated,
+                this, &ObjectsLabel::slotLinkActivated);
         updateText();
         // updateGeometry() doesn't seem to reset the
         // minimumSizeHint(), using max-height dummy text here
@@ -185,8 +185,8 @@ public:
     explicit ObjectsLabel(const QStringList &files, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = 0)
         : QLabel(parent, f), m_dialog(), m_files(files)
     {
-        connect(this, SIGNAL(linkActivated(QString)),
-                this, SLOT(slotLinkActivated()));
+        connect(this, &QLabel::linkActivated,
+                this, &ObjectsLabel::slotLinkActivated);
         updateText();
     }
 
@@ -480,25 +480,25 @@ public:
         connect(&m_archive, SIGNAL(currentIndexChanged(int)),
                 this, SLOT(slotArchiveDefinitionChanged()));
 
-        connect(&m_signencrypt, SIGNAL(clicked()), this, SIGNAL(completeChanged()));
-        connect(&m_encrypt,     SIGNAL(clicked()), this, SIGNAL(completeChanged()));
-        connect(&m_sign,        SIGNAL(clicked()), this, SIGNAL(completeChanged()));
-        connect(&m_archiveCB,   SIGNAL(clicked()), this, SIGNAL(completeChanged()));
-        connect(&m_archiveNamePgp, SIGNAL(fileNameChanged(QString)), this, SIGNAL(completeChanged()));
-        connect(&m_archiveNameCms, SIGNAL(fileNameChanged(QString)), this, SIGNAL(completeChanged()));
+        connect(&m_signencrypt, &QAbstractButton::clicked, this, &QWizardPage::completeChanged);
+        connect(&m_encrypt,     &QAbstractButton::clicked, this, &QWizardPage::completeChanged);
+        connect(&m_sign,        &QAbstractButton::clicked, this, &QWizardPage::completeChanged);
+        connect(&m_archiveCB,   &QAbstractButton::clicked, this, &QWizardPage::completeChanged);
+        connect(&m_archiveNamePgp, &FileNameRequester::fileNameChanged, this, &QWizardPage::completeChanged);
+        connect(&m_archiveNameCms, &FileNameRequester::fileNameChanged, this, &QWizardPage::completeChanged);
 
-        connect(&m_sign, SIGNAL(toggled(bool)),
-                &m_removeSource, SLOT(setDisabled(bool)));
-        connect(&m_archiveCB, SIGNAL(toggled(bool)),
-                &m_archive, SLOT(setEnabled(bool)));
-        connect(&m_archiveCB, SIGNAL(toggled(bool)),
-                &m_archiveNamePgpLB, SLOT(setEnabled(bool)));
-        connect(&m_archiveCB, SIGNAL(toggled(bool)),
-                &m_archiveNamePgp, SLOT(setEnabled(bool)));
-        connect(&m_archiveCB, SIGNAL(toggled(bool)),
-                &m_archiveNameCmsLB, SLOT(setEnabled(bool)));
-        connect(&m_archiveCB, SIGNAL(toggled(bool)),
-                &m_archiveNameCms, SLOT(setEnabled(bool)));
+        connect(&m_sign, &QAbstractButton::toggled,
+                &m_removeSource, &QWidget::setDisabled);
+        connect(&m_archiveCB, &QAbstractButton::toggled,
+                &m_archive, &QWidget::setEnabled);
+        connect(&m_archiveCB, &QAbstractButton::toggled,
+                &m_archiveNamePgpLB, &QWidget::setEnabled);
+        connect(&m_archiveCB, &QAbstractButton::toggled,
+                &m_archiveNamePgp, &QWidget::setEnabled);
+        connect(&m_archiveCB, &QAbstractButton::toggled,
+                &m_archiveNameCmsLB, &QWidget::setEnabled);
+        connect(&m_archiveCB, &QAbstractButton::toggled,
+                &m_archiveNameCms, &QWidget::setEnabled);
 
         const shared_ptr<ArchiveDefinition> ad = archiveDefinition();
         m_archiveNamePgp.setArchiveDefinition(ad);
@@ -743,13 +743,13 @@ public:
         xconnect(&m_searchbar, SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)),
                  &m_unselectedKTV, SLOT(setKeyFilter(boost::shared_ptr<Kleo::KeyFilter>)));
 
-        connect(m_unselectedKTV.view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                this, SLOT(slotUnselectedSelectionChanged()));
-        connect(m_selectedKTV.view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                this, SLOT(slotSelectedSelectionChanged()));
+        connect(m_unselectedKTV.view()->selectionModel(), &QItemSelectionModel::selectionChanged,
+                this, &RecipientsPage::slotUnselectedSelectionChanged);
+        connect(m_selectedKTV.view()->selectionModel(), &QItemSelectionModel::selectionChanged,
+                this, &RecipientsPage::slotSelectedSelectionChanged);
 
-        connect(&m_selectPB, SIGNAL(clicked()), this, SLOT(select()));
-        connect(&m_unselectPB, SIGNAL(clicked()), this, SLOT(unselect()));
+        connect(&m_selectPB, &QAbstractButton::clicked, this, &RecipientsPage::select);
+        connect(&m_unselectPB, &QAbstractButton::clicked, this, &RecipientsPage::unselect);
     }
 
     bool isComplete() const Q_DECL_OVERRIDE
@@ -902,8 +902,8 @@ public:
         // ### connect something to completeChanged()
         // ### deal with widget.rememberAsDefault()
 
-        connect(&pgpCB, SIGNAL(toggled(bool)), this, SLOT(slotSignProtocolToggled()));
-        connect(&cmsCB, SIGNAL(toggled(bool)), this, SLOT(slotSignProtocolToggled()));
+        connect(&pgpCB, &QAbstractButton::toggled, this, &SignerPage::slotSignProtocolToggled);
+        connect(&cmsCB, &QAbstractButton::toggled, this, &SignerPage::slotSignProtocolToggled);
     }
 
     std::vector<Key> keys() const
@@ -944,8 +944,8 @@ public:
         if (QWizard *wiz = wizard()) {
             // need to do this here, since wizard() == 0 in the ctor
             const NewSignEncryptFilesWizard *filesWizard = qobject_cast<NewSignEncryptFilesWizard *>(wiz);
-            disconnect(filesWizard, SIGNAL(operationPrepared()), this, SLOT(slotCommitSigningPreferences()));
-            connect(filesWizard, SIGNAL(operationPrepared()), this, SLOT(slotCommitSigningPreferences()));
+            disconnect(filesWizard, &NewSignEncryptFilesWizard::operationPrepared, this, &SignerPage::slotCommitSigningPreferences);
+            connect(filesWizard, &NewSignEncryptFilesWizard::operationPrepared, this, &SignerPage::slotCommitSigningPreferences);
         }
 
         bool pgp = effectiveProtocol() == OpenPGP;

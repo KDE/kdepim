@@ -284,8 +284,8 @@ CreateChecksumsController::Private::Private(CreateChecksumsController *qq)
 {
     connect(this, SIGNAL(progress(int,int,QString)),
             q, SLOT(slotProgress(int,int,QString)));
-    connect(this, SIGNAL(progress(int,int,QString)),
-            q, SIGNAL(progress(int,int,QString)));
+    connect(this, &Private::progress,
+            q, &Controller::progress);
     connect(this, SIGNAL(finished()),
             q, SLOT(slotOperationFinished()));
 }
@@ -350,7 +350,7 @@ void CreateChecksumsController::start()
         d->progressDialog->setAttribute(Qt::WA_DeleteOnClose);
         d->progressDialog->setMinimumDuration(1000);
         d->progressDialog->setWindowTitle(i18nc("@title:window", "Create Checksum Progress"));
-        connect(d->progressDialog, SIGNAL(canceled()), this, SLOT(cancel()));
+        connect(d->progressDialog.data(), &QProgressDialog::canceled, this, &CreateChecksumsController::cancel);
 #endif // QT_NO_PROGRESSDIALOG
 
         d->canceled = false;

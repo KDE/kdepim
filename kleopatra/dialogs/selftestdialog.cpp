@@ -257,8 +257,8 @@ public:
 
         connect(ui.resultsTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                 q, SLOT(slotSelectionChanged()));
-        connect(ui.showAllCB, SIGNAL(toggled(bool)),
-                &proxy, SLOT(setShowAll(bool)));
+        connect(ui.showAllCB, &QAbstractButton::toggled,
+                &proxy, &Proxy::setShowAll);
     }
 
 private:
@@ -325,8 +325,8 @@ private:
             buttonBox->addButton(rerunPB, QDialogButtonBox::ActionRole);
             buttonBox->button(QDialogButtonBox::Ok)->setText(i18n("Continue"));
 
-            connect(rerunPB, SIGNAL(clicked()),
-                    qq, SIGNAL(updateRequested()));
+            connect(rerunPB, &QAbstractButton::clicked,
+                    qq, &SelfTestDialog::updateRequested);
         }
     } ui;
 };

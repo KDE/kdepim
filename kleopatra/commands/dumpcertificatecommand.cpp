@@ -114,10 +114,10 @@ private:
             hlay.addStretch(1);
             hlay.addWidget(&closeButton);
 
-            connect(&updateButton, SIGNAL(clicked()),
-                    q, SIGNAL(updateRequested()));
-            connect(&closeButton, SIGNAL(clicked()),
-                    q, SLOT(close()));
+            connect(&updateButton, &QAbstractButton::clicked,
+                    q, &DumpCertificateDialog::updateRequested);
+            connect(&closeButton, &QAbstractButton::clicked,
+                    q, &QWidget::close);
         }
     } ui;
 };
@@ -330,7 +330,7 @@ void DumpCertificateCommand::doCancel()
     d->canceled = true;
     if (d->process.state() != QProcess::NotRunning) {
         d->process.terminate();
-        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, &d->process, SLOT(kill()));
+        QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, &d->process, &QProcess::kill);
     }
     if (d->dialog) {
         d->dialog->close();

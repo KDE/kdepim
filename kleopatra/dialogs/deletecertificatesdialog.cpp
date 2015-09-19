@@ -160,7 +160,7 @@ private:
             unselectedKTV.view()->setSelectionMode(QAbstractItemView::NoSelection);
 
             connect(&buttonBox, SIGNAL(accepted()), qq, SLOT(accept()));
-            connect(&buttonBox, SIGNAL(rejected()), qq, SLOT(reject()));
+            connect(&buttonBox, &QDialogButtonBox::rejected, qq, &QDialog::reject);
         }
     } ui;
 };

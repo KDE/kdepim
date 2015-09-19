@@ -138,8 +138,8 @@ int DecryptVerifyCommandEMailBase::doStart()
                      d.get(), SLOT(slotDone()), Qt::QueuedConnection);
     QObject::connect(d->controller.get(), SIGNAL(error(int,QString)),
                      d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection);
-    QObject::connect(d->controller.get(), SIGNAL(verificationResult(GpgME::VerificationResult)),
-                     d.get(), SLOT(verificationResult(GpgME::VerificationResult)), Qt::QueuedConnection);
+    QObject::connect(d->controller.get(), &DecryptVerifyEMailController::verificationResult,
+                     d.get(), &Private::verificationResult, Qt::QueuedConnection);
 
     d->controller->start();
 

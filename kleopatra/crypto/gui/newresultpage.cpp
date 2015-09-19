@@ -101,7 +101,7 @@ NewResultPage::Private::Private(NewResultPage *qq) : q(qq), m_lastErrorItemIndex
     m_keepOpenCB = new QCheckBox;
     m_keepOpenCB->setText(i18n("Keep open after operation completed"));
     m_keepOpenCB->setChecked(true);
-    connect(m_keepOpenCB, SIGNAL(toggled(bool)), q, SLOT(keepOpenWhenDone(bool)));
+    connect(m_keepOpenCB, &QAbstractButton::toggled, q, &NewResultPage::keepOpenWhenDone);
     layout->addWidget(m_keepOpenCB);
 
     connect(&m_hideProgressTimer, &QTimer::timeout, m_progressBar, &QProgressBar::hide);

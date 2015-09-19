@@ -486,7 +486,7 @@ void KeyListController::createActions(KActionCollection *coll)
     make_actions_from_data(action_data, coll);
 
     if (QAction *action = coll->action(QStringLiteral("view_stop_operations"))) {
-        connect(this, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)));
+        connect(this, &KeyListController::commandsExecuting, action, &QAction::setEnabled);
     }
 
     // ### somehow make this better...
@@ -600,7 +600,7 @@ void KeyListController::Private::connectCommand(Command *cmd)
     connect(cmd, SIGNAL(destroyed(QObject*)), q, SLOT(slotDestroyed(QObject*)));
     connect(cmd, SIGNAL(finished()), q, SLOT(slotCommandFinished()));
     //connect( cmd, SIGNAL(canceled()), q, SLOT(slotCommandCanceled()) );
-    connect(cmd, SIGNAL(info(QString,int)), q, SIGNAL(message(QString,int)));
+    connect(cmd, &Command::info, q, &KeyListController::message);
     connect(cmd, SIGNAL(progress(QString,int,int)), q, SLOT(slotProgress(QString,int,int)));
 }
 

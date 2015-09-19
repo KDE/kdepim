@@ -412,14 +412,14 @@ bool KDPipeIODevice::Private::doOpen(int fd_, Qt::HANDLE handle_, OpenMode mode_
         reader_.reset(new Reader(fd_, handle_));
         QDebug("KDPipeIODevice::doOpen (%p): created reader (%p) for fd %d", (void *)this,
                (void *)reader_.get(), fd_);
-        connect(reader_.get(), SIGNAL(readyRead()), this, SLOT(emitReadyRead()),
+        connect(reader_.get(), &Reader::readyRead, this, &Private::emitReadyRead,
                 Qt::QueuedConnection);
     }
     if (mode_ & WriteOnly) {
         writer_.reset(new Writer(fd_, handle_));
         QDebug("KDPipeIODevice::doOpen (%p): created writer (%p) for fd %d",
                (void *)this, (void *)writer_.get(), fd_);
-        connect(writer_.get(), SIGNAL(bytesWritten(qint64)), q, SIGNAL(bytesWritten(qint64)),
+        connect(writer_.get(), &Writer::bytesWritten, q, &QIODevice::bytesWritten,
                 Qt::QueuedConnection);
     }
 
@@ -723,7 +723,7 @@ void KDPipeIODevice::Private::stopThreads()
         assert(q->bytesToWrite() == 0);
     }
     if (Reader *&r = reader) {
-        disconnect(r, SIGNAL(readyRead()), this, SLOT(emitReadyRead()));
+        disconnect(r, &Reader::readyRead, this, &Private::emitReadyRead);
         synchronized(r) {
             // tell thread to cancel:
             r->cancel = true;

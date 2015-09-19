@@ -96,12 +96,12 @@ public:
         ui.listView->setItemDelegate(&delegate);
         connect(ui.listView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                 q, SLOT(slotSelectionChanged()));
-        connect(&stringListModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                q, SIGNAL(itemsChanged()));
-        connect(&stringListModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-                q, SIGNAL(itemsChanged()));
-        connect(&stringListModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-                q, SIGNAL(itemsChanged()));
+        connect(&stringListModel, &QAbstractItemModel::dataChanged,
+                q, &ListWidget::itemsChanged);
+        connect(&stringListModel, &QAbstractItemModel::rowsInserted,
+                q, &ListWidget::itemsChanged);
+        connect(&stringListModel, &QAbstractItemModel::rowsRemoved,
+                q, &ListWidget::itemsChanged);
     }
 
 private:
