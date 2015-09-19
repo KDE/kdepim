@@ -145,13 +145,13 @@ void StorageServiceDeleteDialog::slotRefreshList()
 void StorageServiceDeleteDialog::slotDeleteFolderDone(const QString &serviceName, const QString &filename)
 {
     Q_EMIT deleteFolderDone(serviceName, filename);
-    QTimer::singleShot(0, this, SLOT(slotRefreshList()));
+    QTimer::singleShot(0, this, &StorageServiceDeleteDialog::slotRefreshList);
 }
 
 void StorageServiceDeleteDialog::slotDeleteFileDone(const QString &serviceName, const QString &filename)
 {
     Q_EMIT deleteFileDone(serviceName, filename);
-    QTimer::singleShot(0, this, SLOT(slotRefreshList()));
+    QTimer::singleShot(0, this, &StorageServiceDeleteDialog::slotRefreshList);
 }
 
 void StorageServiceDeleteDialog::slotActionFailed(const QString &serviceName, const QString &data)

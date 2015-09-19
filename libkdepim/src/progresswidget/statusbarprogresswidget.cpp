@@ -107,15 +107,15 @@ StatusbarProgressWidget::StatusbarProgressWidget(ProgressDialog *progressDialog,
     connect(m_pButton, &QAbstractButton::clicked,
             progressDialog, &ProgressDialog::slotToggleVisibility);
 
-    connect(ProgressManager::instance(), SIGNAL(progressItemAdded(KPIM::ProgressItem*)),
-            this, SLOT(slotProgressItemAdded(KPIM::ProgressItem*)));
-    connect(ProgressManager::instance(), SIGNAL(progressItemCompleted(KPIM::ProgressItem*)),
-            this, SLOT(slotProgressItemCompleted(KPIM::ProgressItem*)));
-    connect(ProgressManager::instance(), SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)),
-            this, SLOT(updateBusyMode(KPIM::ProgressItem*)));
+    connect(ProgressManager::instance(), &ProgressManager::progressItemAdded,
+            this, &StatusbarProgressWidget::slotProgressItemAdded);
+    connect(ProgressManager::instance(), &ProgressManager::progressItemCompleted,
+            this, &StatusbarProgressWidget::slotProgressItemCompleted);
+    connect(ProgressManager::instance(), &ProgressManager::progressItemUsesBusyIndicator,
+            this, &StatusbarProgressWidget::updateBusyMode);
 
-    connect(progressDialog, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(slotProgressDialogVisible(bool)));
+    connect(progressDialog, &ProgressDialog::visibilityChanged,
+            this, &StatusbarProgressWidget::slotProgressDialogVisible);
 
     mDelayTimer = new QTimer(this);
     mDelayTimer->setSingleShot(true);
@@ -149,8 +149,8 @@ void StatusbarProgressWidget::updateBusyMode(KPIM::ProgressItem *item)
         } else { // N items
             if (!mBusyTimer) {
                 mBusyTimer = new QTimer(this);
-                connect(mBusyTimer, SIGNAL(timeout()),
-                        this, SLOT(slotBusyIndicator()));
+                connect(mBusyTimer, &QTimer::timeout,
+                        this, &StatusbarProgressWidget::slotBusyIndicator);
                 mDelayTimer->start(1000);
             }
         }
@@ -189,14 +189,14 @@ void StatusbarProgressWidget::slotProgressItemCompleted(ProgressItem *item)
 void StatusbarProgressWidget::connectSingleItem()
 {
     if (mCurrentItem) {
-        disconnect(mCurrentItem, SIGNAL(progressItemProgress(KPIM::ProgressItem*,uint)),
-                   this, SLOT(slotProgressItemProgress(KPIM::ProgressItem*,uint)));
+        disconnect(mCurrentItem, &ProgressItem::progressItemProgress,
+                   this, &StatusbarProgressWidget::slotProgressItemProgress);
         mCurrentItem = Q_NULLPTR;
     }
     mCurrentItem = ProgressManager::instance()->singleItem();
     if (mCurrentItem) {
-        connect(mCurrentItem, SIGNAL(progressItemProgress(KPIM::ProgressItem*,uint)),
-                this, SLOT(slotProgressItemProgress(KPIM::ProgressItem*,uint)));
+        connect(mCurrentItem, &ProgressItem::progressItemProgress,
+                this, &StatusbarProgressWidget::slotProgressItemProgress);
     }
 }
 

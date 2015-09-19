@@ -65,7 +65,7 @@ void StorageServiceTreeWidget::slotMoveUp()
         return;
     }
     setCurrentFolder(parentFolder());
-    QTimer::singleShot(0, this, SLOT(refreshList()));
+    QTimer::singleShot(0, this, &StorageServiceTreeWidget::refreshList);
 }
 
 void StorageServiceTreeWidget::createUpAction(QMenu *menu)
@@ -214,7 +214,7 @@ void StorageServiceTreeWidget::goToFolder(const QString &folder, bool addToHisto
         Q_EMIT changeFolder(currentFolder(), parentFolder());
     }
     setCurrentFolder(folder);
-    QTimer::singleShot(0, this, SLOT(refreshList()));
+    QTimer::singleShot(0, this, &StorageServiceTreeWidget::refreshList);
 }
 
 void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int column)

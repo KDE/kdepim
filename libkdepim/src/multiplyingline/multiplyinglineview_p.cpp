@@ -82,17 +82,17 @@ MultiplyingLine *MultiplyingLineView::addLine()
     mTopLayout->addWidget(line);
     line->setCompletionMode(mCompletionMode);
     line->show();
-    connect(line, SIGNAL(returnPressed(KPIM::MultiplyingLine*)),
-            SLOT(slotReturnPressed(KPIM::MultiplyingLine*)));
-    connect(line, SIGNAL(upPressed(KPIM::MultiplyingLine*)),
-            SLOT(slotUpPressed(KPIM::MultiplyingLine*)));
-    connect(line, SIGNAL(downPressed(KPIM::MultiplyingLine*)),
-            SLOT(slotDownPressed(KPIM::MultiplyingLine*)));
+    connect(line, &MultiplyingLine::returnPressed,
+            this, &MultiplyingLineView::slotReturnPressed);
+    connect(line, &MultiplyingLine::upPressed,
+            this, &MultiplyingLineView::slotUpPressed);
+    connect(line, &MultiplyingLine::downPressed,
+            this, &MultiplyingLineView::slotDownPressed);
     connect(line, &MultiplyingLine::rightPressed, this, &MultiplyingLineView::focusRight);
-    connect(line, SIGNAL(deleteLine(KPIM::MultiplyingLine*)),
-            SLOT(slotDecideLineDeletion(KPIM::MultiplyingLine*)));
-    connect(line, SIGNAL(completionModeChanged(KCompletion::CompletionMode)),
-            SLOT(setCompletionMode(KCompletion::CompletionMode)));
+    connect(line, &MultiplyingLine::deleteLine,
+            this, &MultiplyingLineView::slotDecideLineDeletion);
+    connect(line, &MultiplyingLine::completionModeChanged,
+            this, &MultiplyingLineView::setCompletionMode);
 
     if (!mLines.isEmpty()) {
         line->fixTabOrder(mLines.last()->tabOut());
@@ -104,7 +104,7 @@ MultiplyingLine *MultiplyingLineView::addLine()
     resizeView();
     ensureVisible(0, mLines.count() * mLineHeight, 0, 0);
 
-    QTimer::singleShot(0, this, SLOT(moveScrollBarToEnd()));
+    QTimer::singleShot(0, this, &MultiplyingLineView::moveScrollBarToEnd);
 
     Q_EMIT lineAdded(line);
     return line;
@@ -213,7 +213,7 @@ void MultiplyingLineView::resizeView()
 
     parentWidget()->layout()->activate();
     Q_EMIT sizeHintChanged();
-    QTimer::singleShot(0, this, SLOT(moveCompletionPopup()));
+    QTimer::singleShot(0, this, &MultiplyingLineView::moveCompletionPopup);
 }
 
 void MultiplyingLineView::activateLine(MultiplyingLine *line)

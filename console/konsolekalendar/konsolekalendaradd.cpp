@@ -97,8 +97,8 @@ bool KonsoleKalendarAdd::addEvent()
 
         Akonadi::CalendarBase::Ptr calendar = m_variables->getCalendar();
         QEventLoop loop;
-        QObject::connect(calendar.data(), SIGNAL(createFinished(bool,QString)),
-                         &loop, SLOT(quit()));
+        QObject::connect(calendar.data(), &Akonadi::CalendarBase::createFinished,
+                         &loop, &QEventLoop::quit);
         QElapsedTimer t;
         t.start();
         Q_ASSERT(calendar->incidence(event->uid()) == 0);  // can't exist yet

@@ -104,7 +104,7 @@ BlackListBalooEmailCompletionWidget::BlackListBalooEmailCompletionWidget(QWidget
     selectElementLayout->addWidget(mMoreResult);
 
     mMoreResult->setContextMenuPolicy(Qt::NoContextMenu);
-    connect(mMoreResult, SIGNAL(linkActivated(QString)), SLOT(slotLinkClicked(QString)));
+    connect(mMoreResult, &QLabel::linkActivated, this, &BlackListBalooEmailCompletionWidget::slotLinkClicked);
     mMoreResult->setVisible(false);
     selectElementLayout->addStretch(1);
 

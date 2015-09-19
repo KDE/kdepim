@@ -65,7 +65,7 @@ AddresseeLineEditPrivate::AddresseeLineEditPrivate(KPIM::AddresseeLineEdit *qq, 
     }
 
     m_delayedQueryTimer.setSingleShot(true);
-    connect(&m_delayedQueryTimer, SIGNAL(timeout()), this, SLOT(slotTriggerDelayedQueries()));
+    connect(&m_delayedQueryTimer, &QTimer::timeout, this, &AddresseeLineEditPrivate::slotTriggerDelayedQueries);
 
 }
 
@@ -148,17 +148,17 @@ void AddresseeLineEditPrivate::init()
         s_static->updateLDAPWeights();
         if (!m_completionInitialized) {
             q->setCompletionObject(s_static->completion, false);
-            connect(q, SIGNAL(completion(QString)),
-                    this, SLOT(slotCompletion()));
+            connect(q, &KLineEdit::completion,
+                    this, &AddresseeLineEditPrivate::slotCompletion);
             connect(q, SIGNAL(returnPressed(QString)),
                     this, SLOT(slotReturnPressed(QString)));
 
             KCompletionBox *box = q->completionBox();
             connect(box, SIGNAL(activated(QString)),
                     this, SLOT(slotPopupCompletion(QString)));
-            connect(box, SIGNAL(userCancelled(QString)),
-                    this, SLOT(slotUserCancelled(QString)));
-            connect(s_static->ldapTimer, SIGNAL(timeout()), SLOT(slotStartLDAPLookup()));
+            connect(box, &KCompletionBox::userCancelled,
+                    this, &AddresseeLineEditPrivate::slotUserCancelled);
+            connect(s_static->ldapTimer, &QTimer::timeout, this, &AddresseeLineEditPrivate::slotStartLDAPLookup);
             connect(s_static->ldapSearch, SIGNAL(searchData(KLDAP::LdapResult::List)),
                     SLOT(slotLDAPSearchData(KLDAP::LdapResult::List)));
 
@@ -481,19 +481,19 @@ void AddresseeLineEditPrivate::akonadiPerformSearch()
     contactJob->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
     contactJob->setQuery(Akonadi::ContactSearchJob::NameOrEmail, m_searchString,
                          Akonadi::ContactSearchJob::ContainsWordBoundaryMatch);
-    connect(contactJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
-            this, SLOT(slotAkonadiHandleItems(Akonadi::Item::List)));
-    connect(contactJob, SIGNAL(result(KJob*)),
-            this, SLOT(slotAkonadiSearchResult(KJob*)));
+    connect(contactJob, &Akonadi::ItemSearchJob::itemsReceived,
+            this, &AddresseeLineEditPrivate::slotAkonadiHandleItems);
+    connect(contactJob, &KJob::result,
+            this, &AddresseeLineEditPrivate::slotAkonadiSearchResult);
 
     Akonadi::ContactGroupSearchJob *groupJob = new Akonadi::ContactGroupSearchJob(s_static->akonadiSession);
     groupJob->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
     groupJob->setQuery(Akonadi::ContactGroupSearchJob::Name, m_searchString,
                        Akonadi::ContactGroupSearchJob::ContainsMatch);
-    connect(contactJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
-            this, SLOT(slotAkonadiHandleItems(Akonadi::Item::List)));
-    connect(groupJob, SIGNAL(result(KJob*)),
-            this, SLOT(slotAkonadiSearchResult(KJob*)));
+    connect(contactJob, &Akonadi::ItemSearchJob::itemsReceived,
+            this, &AddresseeLineEditPrivate::slotAkonadiHandleItems);
+    connect(groupJob, &KJob::result,
+            this, &AddresseeLineEditPrivate::slotAkonadiSearchResult);
 
     s_static->akonadiJobsInFlight.append(contactJob);
     s_static->akonadiJobsInFlight.append(groupJob);
@@ -768,8 +768,8 @@ void AddresseeLineEditPrivate::slotAkonadiHandleItems(const Akonadi::Item::List 
                 new Akonadi::CollectionFetchJob(item.parentCollection(),
                                                 Akonadi::CollectionFetchJob::Base,
                                                 s_static->akonadiSession);
-            connect(collectionJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                    this, SLOT(slotAkonadiCollectionsReceived(Akonadi::Collection::List)));
+            connect(collectionJob, &Akonadi::CollectionFetchJob::collectionsReceived,
+                    this, &AddresseeLineEditPrivate::slotAkonadiCollectionsReceived);
             /* we don't want to start multiple fetch jobs for the same collection,
             so insert the collection with an index value of -2 */
             AddresseeLineEditStatic::collectionInfo info;

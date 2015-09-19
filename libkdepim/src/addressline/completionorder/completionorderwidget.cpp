@@ -363,8 +363,8 @@ void CompletionOrderWidget::loadCompletionItems()
 
     mCollectionModel = mimeTypeProxy;
 
-    connect(mimeTypeProxy, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(rowsInserted(QModelIndex,int,int)));
+    connect(mimeTypeProxy, &QAbstractItemModel::rowsInserted,
+            this, &CompletionOrderWidget::rowsInserted);
 
     for (int row = 0; row < mCollectionModel->rowCount(); ++row) {
         addCompletionItemForCollection(mCollectionModel->index(row, 0));

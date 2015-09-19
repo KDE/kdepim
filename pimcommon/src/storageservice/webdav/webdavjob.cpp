@@ -40,8 +40,8 @@ WebDavJob::WebDavJob(QObject *parent)
       mNbAuthCheck(0)
 {
     mShareApi = QStringLiteral("/ocs/v1.php/apps/files_sharing/api/v1/shares");
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
-    connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &WebDavJob::slotSendDataFinished);
+    connect(mNetworkAccessManager, &QNetworkAccessManager::authenticationRequired, this, &WebDavJob::slotAuthenticationRequired);
 }
 
 WebDavJob::~WebDavJob()

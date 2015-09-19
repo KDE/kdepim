@@ -633,7 +633,7 @@ int main(int argc, char *argv[])
 
     QEventLoop loop;
     Akonadi::FetchJobCalendar::Ptr calendar = Akonadi::FetchJobCalendar::Ptr(new Akonadi::FetchJobCalendar());
-    QObject::connect(calendar.data(), SIGNAL(loadFinished(bool,QString)), &loop, SLOT(quit()));
+    QObject::connect(calendar.data(), &Akonadi::FetchJobCalendar::loadFinished, &loop, &QEventLoop::quit);
     qCDebug(KONSOLEKALENDAR_LOG) << "Starting to load calendar";
     QElapsedTimer t;
     t.start();

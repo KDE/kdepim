@@ -57,7 +57,7 @@ void AttachmentTemporaryFilesDirs::setDelayRemoveAllInMs(int ms)
 
 void AttachmentTemporaryFilesDirs::removeTempFiles()
 {
-    QTimer::singleShot(d->mDelayRemoveAll, this, SLOT(slotRemoveTempFiles()));
+    QTimer::singleShot(d->mDelayRemoveAll, this, &AttachmentTemporaryFilesDirs::slotRemoveTempFiles);
 }
 
 void AttachmentTemporaryFilesDirs::forceCleanTempFiles()

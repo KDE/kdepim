@@ -304,22 +304,22 @@ ProgressItem *ProgressManager::createProgressItemImpl(ProgressItem *parent,
             }
         }
         // connect all signals
-        connect(t, SIGNAL(progressItemCompleted(KPIM::ProgressItem*)),
-                this, SLOT(slotTransactionCompleted(KPIM::ProgressItem*)));
-        connect(t, SIGNAL(progressItemProgress(KPIM::ProgressItem*,uint)),
-                this, SIGNAL(progressItemProgress(KPIM::ProgressItem*,uint)));
-        connect(t, SIGNAL(progressItemAdded(KPIM::ProgressItem*)),
-                this, SIGNAL(progressItemAdded(KPIM::ProgressItem*)));
-        connect(t, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)),
-                this, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)));
-        connect(t, SIGNAL(progressItemStatus(KPIM::ProgressItem*,QString)),
-                this, SIGNAL(progressItemStatus(KPIM::ProgressItem*,QString)));
-        connect(t, SIGNAL(progressItemLabel(KPIM::ProgressItem*,QString)),
-                this, SIGNAL(progressItemLabel(KPIM::ProgressItem*,QString)));
-        connect(t, SIGNAL(progressItemCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)),
-                this, SIGNAL(progressItemCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)));
-        connect(t, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)),
-                this, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)));
+        connect(t, &ProgressItem::progressItemCompleted,
+                this, &ProgressManager::slotTransactionCompleted);
+        connect(t, &ProgressItem::progressItemProgress,
+                this, &ProgressManager::progressItemProgress);
+        connect(t, &ProgressItem::progressItemAdded,
+                this, &ProgressManager::progressItemAdded);
+        connect(t, &ProgressItem::progressItemCanceled,
+                this, &ProgressManager::progressItemCanceled);
+        connect(t, &ProgressItem::progressItemStatus,
+                this, &ProgressManager::progressItemStatus);
+        connect(t, &ProgressItem::progressItemLabel,
+                this, &ProgressManager::progressItemLabel);
+        connect(t, &ProgressItem::progressItemCryptoStatus,
+                this, &ProgressManager::progressItemCryptoStatus);
+        connect(t, &ProgressItem::progressItemUsesBusyIndicator,
+                this, &ProgressManager::progressItemUsesBusyIndicator);
 
         Q_EMIT progressItemAdded(t);
     } else {

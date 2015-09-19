@@ -430,7 +430,7 @@ void StorageServiceAbstract::slotCopyFolderDone(const QString &filename)
 void StorageServiceAbstract::emitAuthentificationDone()
 {
     Q_EMIT authenticationDone(storageServiceName());
-    QTimer::singleShot(0, this, SLOT(slotNextAction()));
+    QTimer::singleShot(0, this, &StorageServiceAbstract::slotNextAction);
 }
 
 void StorageServiceAbstract::slotNextAction()

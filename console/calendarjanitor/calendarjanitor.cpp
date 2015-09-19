@@ -120,7 +120,7 @@ void CalendarJanitor::onCollectionsFetched(bool success)
 
     // Load all items:
     m_calendar = Akonadi::FetchJobCalendar::Ptr(new Akonadi::FetchJobCalendar());
-    connect(m_calendar.data(), SIGNAL(loadFinished(bool,QString)), SLOT(onItemsFetched(bool,QString)));
+    connect(m_calendar.data(), &Akonadi::FetchJobCalendar::loadFinished, this, &CalendarJanitor::onItemsFetched);
 }
 
 void CalendarJanitor::onItemsFetched(bool success, const QString &errorMessage)

@@ -26,7 +26,7 @@ using namespace PimCommon;
 GoogleShortUrl::GoogleShortUrl(QObject *parent)
     : PimCommon::AbstractShortUrl(parent)
 {
-    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(slotSslErrors(QNetworkReply*,QList<QSslError>)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::sslErrors, this, &GoogleShortUrl::slotSslErrors);
 }
 
 GoogleShortUrl::~GoogleShortUrl()

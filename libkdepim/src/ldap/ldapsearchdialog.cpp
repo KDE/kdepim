@@ -625,7 +625,7 @@ LdapSearchDialog::LdapSearchDialog(QWidget *parent)
     d->sortproxy->setFilterKeyColumn(-1); //Search in all column
     d->sortproxy->setSourceModel(d->mModel);
     d->sortproxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    connect(d->searchLine, SIGNAL(textChanged(QString)), d->sortproxy, SLOT(setFilterFixedString(QString)));
+    connect(d->searchLine, &QLineEdit::textChanged, d->sortproxy, &QSortFilterProxyModel::setFilterFixedString);
 
     d->mResultView->setModel(d->sortproxy);
     d->mResultView->verticalHeader()->hide();
