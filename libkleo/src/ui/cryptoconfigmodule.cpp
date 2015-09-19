@@ -35,7 +35,7 @@
 #include "kdhorizontalline.h"
 #include "filenamerequester.h"
 
-#include "kleo/cryptoconfig.h"
+#include "libkleo/cryptoconfig.h"
 
 #include <klineedit.h>
 #include <KLocalizedString>

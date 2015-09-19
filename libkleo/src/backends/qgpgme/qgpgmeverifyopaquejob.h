@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEVERIFYOPAQUEJOB_H__
 #define __KLEO_QGPGMEVERIFYOPAQUEJOB_H__
 
-#include "kleo/verifyopaquejob.h"
+#include "libkleo/verifyopaquejob.h"
 
 #include "threadedjobmixin.h"
 

@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMESIGNJOB_H__
 #define __KLEO_QGPGMESIGNJOB_H__
 
-#include "kleo/signjob.h"
+#include "libkleo/signjob.h"
 
 #include "threadedjobmixin.h"
 

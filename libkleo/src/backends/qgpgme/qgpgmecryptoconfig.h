@@ -34,7 +34,7 @@
 #define KLEO_QGPGMECRYPTOCONFIG_H
 
 #include "kleo_export.h"
-#include "kleo/cryptoconfig.h"
+#include "libkleo/cryptoconfig.h"
 
 #include <QHash>
 #include <QStringList>

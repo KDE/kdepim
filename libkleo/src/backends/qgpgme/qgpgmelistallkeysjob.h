@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMELISTALLKEYSJOB_H__
 #define __KLEO_QGPGMELISTALLKEYSJOB_H__
 
-#include "kleo/listallkeysjob.h"
+#include "libkleo/listallkeysjob.h"
 
 #include "threadedjobmixin.h"
 

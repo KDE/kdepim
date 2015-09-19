@@ -32,7 +32,7 @@
 
 #include "dnattributeorderconfigwidget.h"
 
-#include "kleo/dn.h"
+#include "libkleo/dn.h"
 
 #include <KLocalizedString>
 #include <qdebug.h>

@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEKEYGENERATIONJOB_H__
 #define __KLEO_QGPGMEKEYGENERATIONJOB_H__
 
-#include "kleo/keygenerationjob.h"
+#include "libkleo/keygenerationjob.h"
 
 #include "threadedjobmixin.h"
 

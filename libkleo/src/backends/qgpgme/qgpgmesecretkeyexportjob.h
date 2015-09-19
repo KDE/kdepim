@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMESECRETKEYEXPORTJOB_H__
 #define __KLEO_QGPGMESECRETKEYEXPORTJOB_H__
 
-#include "kleo/exportjob.h"
+#include "libkleo/exportjob.h"
 #include "gpgme++/context.h"
 #include <QProcess>
 

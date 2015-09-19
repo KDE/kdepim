@@ -39,9 +39,9 @@
 #include "keylistview.h"
 #include "progressdialog.h"
 
-#include "kleo/dn.h"
-#include "kleo/keylistjob.h"
-#include "kleo/cryptobackendfactory.h"
+#include "libkleo/dn.h"
+#include "libkleo/keylistjob.h"
+#include "libkleo/cryptobackendfactory.h"
 #include <QDebug>
 #include "kleo_ui_debug.h"
 

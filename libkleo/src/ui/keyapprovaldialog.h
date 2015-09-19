@@ -38,7 +38,7 @@
 #define __KLEO_KEYAPPROVALDIALOG_H__
 
 #include "kleo_export.h"
-#include "kleo/enum.h"
+#include "libkleo/enum.h"
 
 #include <QDialog>
 

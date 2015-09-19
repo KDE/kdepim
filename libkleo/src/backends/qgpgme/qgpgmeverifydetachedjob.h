@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEVERIFYDETACHEDJOB_H__
 #define __KLEO_QGPGMEVERIFYDETACHEDJOB_H__
 
-#include "kleo/verifydetachedjob.h"
+#include "libkleo/verifydetachedjob.h"
 
 #include "threadedjobmixin.h"
 

@@ -34,7 +34,7 @@
 
 #include "chiasmusbackend.h"
 
-#include "kleo/cryptoconfig.h"
+#include "libkleo/cryptoconfig.h"
 
 #include <QDebug>
 #include <KLocalizedString>

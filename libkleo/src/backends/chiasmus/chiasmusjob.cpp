@@ -34,7 +34,7 @@
 #include "chiasmusbackend.h"
 #include "symcryptrunprocessbase.h"
 
-#include "kleo/cryptoconfig.h"
+#include "libkleo/cryptoconfig.h"
 
 #include <gpgme++/error.h>
 

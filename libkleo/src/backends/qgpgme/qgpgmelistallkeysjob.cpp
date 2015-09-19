@@ -32,7 +32,7 @@
 
 #include "qgpgmelistallkeysjob.h"
 
-#include "kleo/predicates.h"
+#include "libkleo/predicates.h"
 
 #include <gpgme++/key.h>
 #include <gpgme++/context.h>

@@ -36,7 +36,7 @@
 #include "obtainkeysjob.h"
 #include "chiasmusjob.h"
 
-#include "kleo/cryptoconfig.h"
+#include "libkleo/cryptoconfig.h"
 
 #include <KLocalizedString>
 #include <kconfig.h>

@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEADDUSERIDJOB_H__
 #define __KLEO_QGPGMEADDUSERIDJOB_H__
 
-#include "kleo/adduseridjob.h"
+#include "libkleo/adduseridjob.h"
 
 #include "threadedjobmixin.h"
 

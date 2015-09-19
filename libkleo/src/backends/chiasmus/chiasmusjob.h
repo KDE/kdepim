@@ -33,7 +33,7 @@
 #ifndef __KLEO_CHIASMUSJOB_H__
 #define __KLEO_CHIASMUSJOB_H__
 
-#include "kleo/specialjob.h"
+#include "libkleo/specialjob.h"
 
 #include <gpgme++/context.h>
 

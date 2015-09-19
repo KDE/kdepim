@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMECHANGEEXPIRYJOB_H__
 #define __KLEO_QGPGMECHANGEEXPIRYJOB_H__
 
-#include "kleo/changeexpiryjob.h"
+#include "libkleo/changeexpiryjob.h"
 
 #include "threadedjobmixin.h"
 

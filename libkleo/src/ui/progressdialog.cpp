@@ -38,7 +38,7 @@
 
 #include "progressbar.h"
 
-#include "kleo/job.h"
+#include "libkleo/job.h"
 
 #include <KLocalizedString>
 

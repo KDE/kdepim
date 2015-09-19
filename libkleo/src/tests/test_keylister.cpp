@@ -31,8 +31,8 @@
 
 #include "test_keylister.h"
 
-#include "kleo/keylistjob.h"
-#include "kleo/cryptobackendfactory.h"
+#include "libkleo/keylistjob.h"
+#include "libkleo/cryptobackendfactory.h"
 
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/key.h>

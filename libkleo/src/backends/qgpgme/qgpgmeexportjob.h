@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEEXPORTJOB_H__
 #define __KLEO_QGPGMEEXPORTJOB_H__
 
-#include "kleo/exportjob.h"
+#include "libkleo/exportjob.h"
 
 #include "threadedjobmixin.h"
 

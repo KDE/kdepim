@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMECHANGEOWNERTRUSTJOB_H__
 #define __KLEO_QGPGMECHANGEOWNERTRUSTJOB_H__
 
-#include "kleo/changeownertrustjob.h"
+#include "libkleo/changeownertrustjob.h"
 
 #include "threadedjobmixin.h"
 

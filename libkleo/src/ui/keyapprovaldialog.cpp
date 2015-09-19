@@ -38,7 +38,7 @@
 
 #include "keyrequester.h"
 
-#include "kleo/cryptobackend.h"
+#include "libkleo/cryptobackend.h"
 #include <qpushbutton.h>
 #include <KLocalizedString>
 #include <kseparator.h>

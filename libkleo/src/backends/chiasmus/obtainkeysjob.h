@@ -33,7 +33,7 @@
 #ifndef __KLEO_OBTAINKEYSJOB_H__
 #define __KLEO_OBTAINKEYSJOB_H__
 
-#include "kleo/specialjob.h"
+#include "libkleo/specialjob.h"
 
 #include <QStringList>
 

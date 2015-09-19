@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEDELETEJOB_H__
 #define __KLEO_QGPGMEDELETEJOB_H__
 
-#include "kleo/deletejob.h"
+#include "libkleo/deletejob.h"
 
 #include "threadedjobmixin.h"
 

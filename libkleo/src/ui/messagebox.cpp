@@ -35,7 +35,7 @@
 
 #include <QDebug>
 #include "kleo_ui_debug.h"
-#include "kleo/job.h"
+#include "libkleo/job.h"
 
 #include <gpgme++/signingresult.h>
 #include <gpgme++/encryptionresult.h>

@@ -34,8 +34,8 @@
 #define __KLEO_HIERARCHICALKEYLISTJOB_H__
 
 #include "kleo_export.h"
-#include "kleo/keylistjob.h"
-#include "kleo/cryptobackend.h"
+#include "libkleo/keylistjob.h"
+#include "libkleo/cryptobackend.h"
 
 #include <gpgme++/keylistresult.h>
 

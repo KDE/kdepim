@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
 #define __KLEO_QGPGMEDECRYPTVERIFYJOB_H__
 
-#include "kleo/decryptverifyjob.h"
+#include "libkleo/decryptverifyjob.h"
 
 #include "threadedjobmixin.h"
 

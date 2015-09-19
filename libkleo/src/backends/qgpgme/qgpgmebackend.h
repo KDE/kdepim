@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMEBACKEND_H__
 #define __KLEO_QGPGMEBACKEND_H__
 
-#include "kleo/cryptobackend.h"
+#include "libkleo/cryptobackend.h"
 
 namespace Kleo
 {

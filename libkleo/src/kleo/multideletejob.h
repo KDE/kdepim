@@ -34,8 +34,8 @@
 #define __KLEO_MULTIDELETEJOB_H__
 
 #include "kleo_export.h"
-#include "kleo/job.h"
-#include "kleo/cryptobackend.h"
+#include "libkleo/job.h"
+#include "libkleo/cryptobackend.h"
 
 #include <QPointer>
 

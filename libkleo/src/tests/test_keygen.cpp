@@ -31,9 +31,9 @@
 
 #include "test_keygen.h"
 
-#include "kleo/keylistjob.h"
-#include "kleo/keygenerationjob.h"
-#include "kleo/cryptobackendfactory.h"
+#include "libkleo/keylistjob.h"
+#include "libkleo/keygenerationjob.h"
+#include "libkleo/cryptobackendfactory.h"
 #include "ui/progressdialog.h"
 
 #include <gpgme++/keygenerationresult.h>

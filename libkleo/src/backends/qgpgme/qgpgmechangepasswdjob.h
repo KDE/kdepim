@@ -33,7 +33,7 @@
 #ifndef __KLEO_QGPGMECHANGEPASSWDJOB_H__
 #define __KLEO_QGPGMECHANGEPASSWDJOB_H__
 
-#include "kleo/changepasswdjob.h"
+#include "libkleo/changepasswdjob.h"
 
 #include "threadedjobmixin.h"
 
