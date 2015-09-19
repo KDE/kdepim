@@ -50,16 +50,16 @@ TemplatesConfiguration::TemplatesConfiguration(QWidget *parent, const QString &n
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     sizeHint();
 
-    connect(textEdit_new->editor(), SIGNAL(textChanged()),
-            this, SLOT(slotTextChanged()));
-    connect(textEdit_reply->editor(), SIGNAL(textChanged()),
-            this, SLOT(slotTextChanged()));
-    connect(textEdit_reply_all->editor(), SIGNAL(textChanged()),
-            this, SLOT(slotTextChanged()));
-    connect(textEdit_forward->editor(), SIGNAL(textChanged()),
-            this, SLOT(slotTextChanged()));
-    connect(lineEdit_quote, SIGNAL(textChanged(QString)),
-            this, SLOT(slotTextChanged()));
+    connect(textEdit_new->editor(), &QPlainTextEdit::textChanged,
+            this, &TemplatesConfiguration::slotTextChanged);
+    connect(textEdit_reply->editor(), &QPlainTextEdit::textChanged,
+            this, &TemplatesConfiguration::slotTextChanged);
+    connect(textEdit_reply_all->editor(), &QPlainTextEdit::textChanged,
+            this, &TemplatesConfiguration::slotTextChanged);
+    connect(textEdit_forward->editor(), &QPlainTextEdit::textChanged,
+            this, &TemplatesConfiguration::slotTextChanged);
+    connect(lineEdit_quote, &QLineEdit::textChanged,
+            this, &TemplatesConfiguration::slotTextChanged);
 
     connect(mInsertCommand, SIGNAL(insertCommand(QString,int)),
             this, SLOT(slotInsertCommand(QString,int)));
@@ -89,8 +89,8 @@ TemplatesConfiguration::TemplatesConfiguration(QWidget *parent, const QString &n
     }
 
     mHelp->setText(i18n("<a href=\"whatsthis\">How does this work?</a>"));
-    connect(mHelp, SIGNAL(linkActivated(QString)),
-            this, SLOT(slotHelpLinkClicked(QString)));
+    connect(mHelp, &QLabel::linkActivated,
+            this, &TemplatesConfiguration::slotHelpLinkClicked);
     mHelp->setContextMenuPolicy(Qt::NoContextMenu);
 }
 

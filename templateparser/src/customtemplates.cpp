@@ -52,8 +52,8 @@ CustomTemplates::CustomTemplates(const QList<KActionCollection *> &actionCollect
     mUi->mEditFrame->setEnabled(false);
 
     mUi->mName->setTrapReturnKey(true);
-    connect(mUi->mEdit->editor(), SIGNAL(textChanged()),
-            this, SLOT(slotTextChanged()));
+    connect(mUi->mEdit->editor(), &QPlainTextEdit::textChanged,
+            this, &CustomTemplates::slotTextChanged);
     connect(mUi->mToEdit, &PimCommon::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
     connect(mUi->mCCEdit, &PimCommon::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
 
