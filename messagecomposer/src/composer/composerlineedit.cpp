@@ -21,8 +21,8 @@
 
 #include "composerlineedit.h"
 
-#include "addressline/recentaddress/recentaddresses.h"
-#include "addressline/completionconfiguredialog/completionconfiguredialog.h"
+#include "libkdepim/recentaddresses.h"
+#include "libkdepim/completionconfiguredialog.h"
 #include "settings/messagecomposersettings.h"
 #include "utils/autoqpointer.h"
 

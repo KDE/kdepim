@@ -284,9 +284,26 @@ ecm_generate_headers(libkdepim_recentaddress_HEADERS
   RELATIVE addressline/recentaddress/
 )
 
+ecm_generate_headers(libkdepim_completionorder_HEADERS
+  HEADER_NAMES
+  CompletionOrderEditor
+  REQUIRED_HEADERS libkdepim_completionorder_HEADERS
+  PREFIX Libkdepim
+  RELATIVE addressline/completionorder
+)
+
+ecm_generate_headers(libkdepim_completionconfiguredialog_HEADERS
+  HEADER_NAMES
+  CompletionConfigureDialog
+  REQUIRED_HEADERS libkdepim_completionconfiguredialog_HEADERS
+  PREFIX Libkdepim
+  RELATIVE addressline/completionconfiguredialog/
+)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libkdepim_SOURCE_DIR})
 install(FILES
+    ${libkdepim_completionconfiguredialog_HEADERS}
+    ${libkdepim_completionorder_HEADERS}
     ${libkdepim_CamelCase_HEADERS}
     ${libkdepim_ldap_HEADERS}
     ${libkdepim_widgets_HEADERS}
@@ -304,6 +321,8 @@ install(FILES
 
 install(FILES
     ${MessageList_HEADERS}
+    ${libkdepim_completionconfiguredialog_HEADERS}
+    ${libkdepim_completionorder_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/kdepim_export.h
     ${libkdepim_CamelCase_HEADERS}
     ${libkdepim_ldap_HEADERS}

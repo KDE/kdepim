@@ -39,7 +39,7 @@
 #include "SendLater/SendLaterInfo"
 #include "SendLater/SendLaterUtil"
 
-#include <addressline/recentaddress/recentaddresses.h>
+#include <libkdepim/recentaddresses.h>
 #include "helper/messagehelper.h"
 
 #include <MessageComposer/RecipientsEditor>
