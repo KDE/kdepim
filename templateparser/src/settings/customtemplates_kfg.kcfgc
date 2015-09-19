@@ -5,6 +5,6 @@ Mutators=true
 ItemAccessors=true
 SetUserTexts=true
 Visibility=TEMPLATEPARSER_EXPORT
-IncludeFiles=templateparser/templateparser_export.h
+IncludeFiles=templateparser_export.h
 TranslationDomain=libtemplateparser
 TranslationSystem=kde

@@ -30,7 +30,7 @@
 #include <PimCommon/EmailAddressRequester>
 #include <MessageCore/StringUtil>
 #include <TemplateParser/CustomTemplates>
-#include <templateparser/customtemplates_kfg.h>
+#include <customtemplates_kfg.h>
 
 #include <KLocalizedString>
 #include <KLineEdit>
