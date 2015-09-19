@@ -29,7 +29,7 @@
 #include <QFormLayout>
 #include "editor/sievetexteditwidget.h"
 #include "editor/sievetextedit.h"
-#include <texteditor/plaintexteditor/plaintexteditorwidget.h>
+#include <pimcommon/plaintexteditorwidget.h>
 #include <QLabel>
 #include <KUrlRequester>
 #include <KLineEdit>

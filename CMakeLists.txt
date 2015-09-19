@@ -34,10 +34,9 @@ sb_add_project(incidenceeditor-ng)
 sb_add_project(messagecore)
 sb_add_project(messagelist)
 sb_add_project(messageviewer)
-#fix compile
 sb_add_project(templateparser)
 sb_add_project(messagecomposer)
-sb_add_project(mailcommon)
+#sb_add_project(mailcommon)
 sb_end()
 
 else()

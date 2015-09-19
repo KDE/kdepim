@@ -319,6 +319,14 @@ ecm_generate_headers(MessageViewer_interfaces_HEADERS
   RELATIVE interfaces
 )
 
+ecm_generate_headers(MessageViewer_settings_HEADERS
+  HEADER_NAMES
+  MessageViewerSettings
+  REQUIRED_HEADERS MessageViewer_HEADERS
+  PREFIX MessageViewer
+  RELATIVE settings
+)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
 install(FILES

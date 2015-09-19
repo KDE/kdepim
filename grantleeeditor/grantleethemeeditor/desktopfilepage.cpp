@@ -31,7 +31,7 @@
 #include <QLabel>
 #include <QDir>
 
-#include <texteditor/plaintexteditor/plaintexteditorwidget.h>
+#include <pimcommon/plaintexteditorwidget.h>
 #include <texteditor/plaintexteditor/plaintexteditor.h>
 
 using namespace GrantleeThemeEditor;

@@ -29,7 +29,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-#include <texteditor/plaintexteditor/plaintexteditorwidget.h>
+#include <pimcommon/plaintexteditorwidget.h>
 
 using namespace MailCommon;
 

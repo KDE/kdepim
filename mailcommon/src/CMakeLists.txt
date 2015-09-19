@@ -171,10 +171,10 @@ kconfig_add_kcfg_files(libmailcommon_SRCS
 
 ecm_qt_declare_logging_category(libmailcommon_SRCS HEADER mailcommon_debug.h IDENTIFIER MAILCOMMON_LOG CATEGORY_NAME log_mailcommon)
 
-set_source_files_properties(${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "dbusoperators.h")
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/dbusinterfaces/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "dbusoperators.h")
 
 qt5_add_dbus_interfaces(libmailcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/dbusinterfaces/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
 ki18n_wrap_ui(libmailcommon_SRCS filter/ui/filterconfigwidget.ui snippets/ui/snippetdialog.ui filter/ui/selectthunderbirdfilterfileswidget.ui)
@@ -192,8 +192,7 @@ endmacro()
 
 add_resource_iface(settings.kcfg org.kde.Akonadi.POP3.Settings Pop3Settings)
 
-qt5_add_dbus_interfaces(libmailcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/korganizer/data/org.kde.Korganizer.Calendar.xml
+qt5_add_dbus_interfaces(libmailcommon_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/dbusinterfaces/org.kde.Korganizer.Calendar.xml
 )
 
 add_library(KF5MailCommon ${libmailcommon_SRCS})
