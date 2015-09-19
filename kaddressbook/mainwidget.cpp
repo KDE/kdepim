@@ -394,10 +394,10 @@ void MainWidget::delayedInit()
     action(QStringLiteral("options_show_qrcodes"))->setChecked(showQRCodes());
 #endif
 
-    connect(GlobalContactModel::instance()->model(), SIGNAL(modelAboutToBeReset()),
-            SLOT(saveState()));
-    connect(GlobalContactModel::instance()->model(), SIGNAL(modelReset()),
-            SLOT(restoreState()));
+    connect(GlobalContactModel::instance()->model(), &QAbstractItemModel::modelAboutToBeReset,
+            this, &MainWidget::saveState);
+    connect(GlobalContactModel::instance()->model(), &QAbstractItemModel::modelReset,
+            this, &MainWidget::restoreState);
     connect(qApp, &QApplication::aboutToQuit, this, &MainWidget::saveState);
 
     restoreState();

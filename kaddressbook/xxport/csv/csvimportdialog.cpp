@@ -278,9 +278,9 @@ void CSVImportDialog::initGUI()
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     mUser1Button = new QPushButton;
     buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
-    connect(mUser1Button, SIGNAL(clicked()), this, SLOT(slotApplyTemplate()));
+    connect(mUser1Button, &QAbstractButton::clicked, this, &CSVImportDialog::slotApplyTemplate);
     mUser2Button = new QPushButton;
-    connect(mUser2Button, SIGNAL(clicked()), this, SLOT(slotSaveTemplate()));
+    connect(mUser2Button, &QAbstractButton::clicked, this, &CSVImportDialog::slotSaveTemplate);
     buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &CSVImportDialog::slotOk);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
