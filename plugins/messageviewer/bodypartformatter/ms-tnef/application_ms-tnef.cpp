@@ -27,10 +27,10 @@
     your version.
 */
 
-#include <interfaces/bodypartformatter.h>
-#include <interfaces/bodypart.h>
-#include <interfaces/bodyparturlhandler.h>
-#include <interfaces/htmlwriter.h>
+#include <messageviewer/bodypartformatter.h>
+#include <messageviewer/bodypart.h>
+#include <messageviewer/bodyparturlhandler.h>
+#include <messageviewer/htmlwriter.h>
 #include <messageviewer/nodehelper.h>
 #include <MessageCore/StringUtil>
 #include <MessageViewer/MessageViewerUtil>

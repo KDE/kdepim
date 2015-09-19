@@ -20,7 +20,7 @@
 #ifndef MEMORYCALENDARMEMENTO_H
 #define MEMORYCALENDARMEMENTO_H
 
-#include <interfaces/bodypart.h>
+#include <messageviewer/bodypart.h>
 
 #include <messageviewer/viewer.h>
 

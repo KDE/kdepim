@@ -29,9 +29,9 @@
     your version.
 */
 
-#include <interfaces/bodypartformatter.h>
-#include <interfaces/bodypart.h>
-#include <interfaces/bodyparturlhandler.h>
+#include <messageviewer/bodypartformatter.h>
+#include <messageviewer/bodypart.h>
+#include <messageviewer/bodyparturlhandler.h>
 #include <htmlwriter/webkitparthtmlwriter.h>
 
 #include <kstringhandler.h>

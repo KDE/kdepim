@@ -22,7 +22,7 @@
 #define MAILCOMMON_BACKUPJOB_H
 
 #include "mailcommon_export.h"
-#include "progresswidget/progressmanager.h"
+#include "libkdepim/progressmanager.h"
 
 #include <Collection>
 #include <Item>

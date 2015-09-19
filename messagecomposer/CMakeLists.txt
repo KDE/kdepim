@@ -53,7 +53,7 @@ find_package(KF5IdentityManagement ${IDENTITYMANAGEMENT_LIB_VERSION} CONFIG REQU
 
 
 remove_definitions( -DQT_NO_CAST_FROM_BYTEARRAY )
-
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX MESSAGECOMPOSER
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/messagecomposer_version.h"

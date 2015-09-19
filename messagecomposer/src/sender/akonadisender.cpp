@@ -26,7 +26,7 @@
 #include "MessageComposer/Util"
 
 #include <kmime/kmime_message.h>
-#include <progresswidget/progressmanager.h>
+#include <libkdepim/progressmanager.h>
 
 #include <MailTransport/mailtransport/dispatcherinterface.h>
 #include <MailTransport/mailtransport/messagequeuejob.h>

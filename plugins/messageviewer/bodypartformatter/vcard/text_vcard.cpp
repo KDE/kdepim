@@ -30,9 +30,9 @@
   you do not wish to do so, delete this exception statement from
   your version.
 */
-#include "interfaces/bodypartformatter.h"
-#include "interfaces/bodyparturlhandler.h"
-#include "interfaces/bodypart.h"
+#include "messageviewer/bodypartformatter.h"
+#include "messageviewer/bodyparturlhandler.h"
+#include "messageviewer/bodypart.h"
 #include <messageviewer/nodehelper.h>
 #include "updatecontactjob.h"
 #include "vcardmemento.h"

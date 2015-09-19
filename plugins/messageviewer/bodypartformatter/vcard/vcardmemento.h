@@ -18,7 +18,7 @@
 #ifndef VCARDMEMENTO_H
 #define VCARDMEMENTO_H
 
-#include <interfaces/bodypart.h>
+#include <messageviewer/bodypart.h>
 
 #include <messageviewer/viewer.h>
 

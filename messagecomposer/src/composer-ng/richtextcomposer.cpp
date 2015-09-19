@@ -30,7 +30,7 @@
 #include <QClipboard>
 
 #include "richtextcomposeremailquotedecorator.h"
-#include <autocorrection/autocorrection.h>
+#include <pimcommon/autocorrection.h>
 
 #include <grantlee/plaintextmarkupbuilder.h>
 

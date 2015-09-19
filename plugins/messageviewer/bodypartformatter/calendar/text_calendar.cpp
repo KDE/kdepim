@@ -38,9 +38,9 @@
 
 #include <settings/messageviewersettings.h>
 #include <messageviewer/viewer.h>
-#include <interfaces/bodypart.h>
-#include <interfaces/bodypartformatter.h>
-#include <interfaces/bodyparturlhandler.h>
+#include <messageviewer/bodypart.h>
+#include <messageviewer/bodypartformatter.h>
+#include <messageviewer/bodyparturlhandler.h>
 #include <htmlwriter/webkitparthtmlwriter.h>
 using namespace MessageViewer;
 

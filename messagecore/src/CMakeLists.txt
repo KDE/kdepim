@@ -132,6 +132,9 @@ ecm_generate_headers(MessageCore_attachment_HEADERS
   AttachmentPart
   AttachmentPropertiesDialog
   AttachmentCompressJob
+  AttachmentFromFolderJob
+  AttachmentUpdateJob
+  AttachmentFromUrlUtils
 
   REQUIRED_HEADERS MessageCore_attachment_HEADERS
   PREFIX MessageCore

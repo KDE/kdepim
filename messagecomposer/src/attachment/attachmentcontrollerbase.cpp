@@ -60,12 +60,12 @@
 #include <Libkleo/KeySelectionDialog>
 
 #include <MessageCore/AttachmentCompressJob>
-#include <attachment/attachmentfromfolderjob.h>
+#include <MessageCore/AttachmentFromFolderJob>
 #include <MessageCore/AttachmentFromMimeContentJob>
 #include <MessageCore/AttachmentFromUrlJob>
 #include <MessageCore/AttachmentPropertiesDialog>
-#include <attachment/attachmentupdatejob.h>
-#include <attachment/attachmentfromurlutils.h>
+#include <MessageCore/AttachmentUpdateJob>
+#include <MessageCore/AttachmentFromUrlUtils>
 #include <settings/messagecomposersettings.h>
 #include <KIO/Job>
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
@@ -809,7 +809,7 @@ void AttachmentControllerBase::saveAttachmentAs(AttachmentPart::Ptr part)
         pname = i18n("unnamed");
     }
 
-    QUrl url = QFileDialog::getSaveFileUrl(d->wParent, pname, i18n("Save Attachment As"));
+    QUrl url = QFileDialog::getSaveFileUrl(d->wParent, i18n("Save Attachment As"), QUrl::fromLocalFile(pname) );
 
     if (url.isEmpty()) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Save Attachment As dialog canceled.";

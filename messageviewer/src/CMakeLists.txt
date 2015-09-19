@@ -316,9 +316,23 @@ ecm_generate_headers(MessageViewer_utils_HEADERS
   RELATIVE utils
 )
 
+ecm_generate_headers(MessageViewer_interfaces_HEADERS
+  HEADER_NAMES
+  BodyPartFormatter
+  BodyPart
+  BodyPartURLHandler
+  HtmlWriter
+  URLHandler
+  REQUIRED_HEADERS MessageViewer_HEADERS
+  PREFIX MessageViewer
+  RELATIVE interfaces
+)
+
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
 install(FILES
     ${MessageViewer_utils_HEADERS}
+    ${MessageViewer_interfaces_HEADERS}
     ${MessageViewer_CamelCase_HEADERS}
     ${MessageViewer_viewer_HEADERS}
     ${MessageViewer_widgets_HEADERS}
@@ -328,6 +342,7 @@ install(FILES
 
 install(FILES
     ${MessageViewer_utils_HEADERS}
+    ${MessageViewer_interfaces_HEADERS}
     ${MessageViewer_HEADERS}
     ${MessageViewer_viewer_HEADERS}
     ${MessageViewer_widgets_HEADERS}

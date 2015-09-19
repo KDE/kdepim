@@ -137,7 +137,7 @@
 #include "job/createeventjob.h"
 #include "job/createnotejob.h"
 
-#include "interfaces/bodypart.h"
+#include "messageviewer/bodypart.h"
 #include "interfaces/htmlwriter.h"
 
 #include <MessageCore/StringUtil>

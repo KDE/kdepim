@@ -34,7 +34,7 @@
 
 #include "urlhandlermanager.h"
 #include "messageviewer_debug.h"
-#include "interfaces/urlhandler.h"
+#include "messageviewer/urlhandler.h"
 #include "interfaces/bodyparturlhandler.h"
 #include "partnodebodypart.h"
 #include "viewer/viewer_p.h"
