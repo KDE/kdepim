@@ -33,7 +33,7 @@
 #include <kmime/kmime_dateformatter.h>
 #include <KEmailAddress>
 #include <MessageCore/MailingList>
-#include <helpers/messagehelpers.h>
+#include <messagecore/messagehelpers.h>
 #include <MessageCore/StringUtil>
 #include "helper/messagehelper.h"
 #include "TemplateParser/TemplateParser"

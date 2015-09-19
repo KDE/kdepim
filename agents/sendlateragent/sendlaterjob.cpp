@@ -20,7 +20,7 @@
 
 #include "MessageComposer/AkonadiSender"
 #include "MessageComposer/Util"
-#include "helpers/messagehelpers.h"
+#include "messagecore/messagehelpers.h"
 #include "MessageCore/StringUtil"
 
 #include <MailTransport/mailtransport/transportattribute.h>

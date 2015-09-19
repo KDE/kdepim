@@ -310,6 +310,7 @@ ecm_generate_headers(MessageViewer_widgets_HEADERS
 ecm_generate_headers(MessageViewer_utils_HEADERS
   HEADER_NAMES
   MessageViewerUtil
+  AutoQPointer
   REQUIRED_HEADERS MessageViewer_HEADERS
   PREFIX MessageViewer
   RELATIVE utils

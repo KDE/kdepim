@@ -19,7 +19,7 @@
 #include "viewer/chiasmuskeyselector.h"
 #include "messageviewer/messageviewerutil.h"
 #include "settings/messageviewersettings.h"
-#include "utils/autoqpointer.h"
+#include "messageviewer/autoqpointer.h"
 #include <gpgme++/error.h>
 
 #include <kio/jobuidelegate.h>

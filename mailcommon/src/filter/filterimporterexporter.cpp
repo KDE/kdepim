@@ -41,7 +41,7 @@
 #include "filterimporter/filterimportergmail.h"
 #include "dialog/selectthunderbirdfilterfilesdialog.h"
 
-#include <utils/autoqpointer.h>
+#include <messageviewer/autoqpointer.h>
 #include <MessageViewer/MessageViewerUtil>
 
 #include <KConfig>

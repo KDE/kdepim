@@ -112,7 +112,7 @@
 #include <AkonadiCore/attributefactory.h>
 #include <Akonadi/KMime/MessageParts>
 
-#include "utils/autoqpointer.h"
+#include "messageviewer/autoqpointer.h"
 
 //own includes
 #include "widgets/attachmentdialog.h"

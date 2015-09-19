@@ -33,7 +33,7 @@
 #include <MailTransport/mailtransport/transport.h>
 #include <MailTransport/mailtransport/transportmanager.h>
 #include <MessageCore/StringUtil>
-#include <helpers/messagehelpers.h>
+#include <messagecore/messagehelpers.h>
 
 using namespace KMime::Types;
 using namespace KPIM;

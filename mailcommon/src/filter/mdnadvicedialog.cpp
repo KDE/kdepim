@@ -20,7 +20,7 @@
 #include "kernel/mailkernel.h"
 #include "mailcommon_debug.h"
 
-#include <helpers/messagehelpers.h>
+#include <messagecore/messagehelpers.h>
 #include <MessageCore/MDNStateAttribute>
 
 #include <MessageComposer/MessageFactory>

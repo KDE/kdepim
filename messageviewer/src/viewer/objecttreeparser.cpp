@@ -40,7 +40,7 @@
 #include "memento/cryptobodypartmemento.h"
 #include "memento/decryptverifybodypartmemento.h"
 #include "objecttreesourceif.h"
-#include "utils/autoqpointer.h"
+#include "messageviewer/autoqpointer.h"
 #include "viewer/viewer_p.h"
 #include "partmetadata.h"
 #include "attachmentstrategy.h"

@@ -24,7 +24,7 @@
 #include "libkdepim/recentaddresses.h"
 #include "libkdepim/completionconfiguredialog.h"
 #include "settings/messagecomposersettings.h"
-#include "utils/autoqpointer.h"
+#include "messageviewer/autoqpointer.h"
 
 #include <MessageCore/StringUtil>
 

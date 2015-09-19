@@ -25,7 +25,7 @@
 #include <KIconLoader>
 #include <MessageComposer/ComposerLineEdit>
 
-#include <utils/autoqpointer.h>
+#include <messageviewer/autoqpointer.h>
 
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 

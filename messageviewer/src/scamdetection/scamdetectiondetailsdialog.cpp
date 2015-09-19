@@ -18,7 +18,7 @@
 #include "scamdetectiondetailsdialog.h"
 #include "messageviewer_debug.h"
 #include "settings/messageviewersettings.h"
-#include "utils/autoqpointer.h"
+#include "messageviewer/autoqpointer.h"
 #include "PimCommon/RichTextEditorWidget"
 
 #include <KLocalizedString>

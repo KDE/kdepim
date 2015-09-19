@@ -54,7 +54,7 @@
 #include <sonnet/dictionarycombobox.h>
 #include <KIdentityManagement/Identity>
 
-#include <helpers/messagehelpers.h>
+#include <messagecore/messagehelpers.h>
 #include <MessageCore/StringUtil>
 #include <MessageCore/NodeHelper>
 

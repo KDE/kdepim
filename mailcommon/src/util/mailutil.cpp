@@ -58,7 +58,7 @@
 #include "mailimporter/othermailerutil.h"
 
 #include <MessageCore/StringUtil>
-#include <helpers/messagehelpers.h>
+#include <messagecore/messagehelpers.h>
 
 #include <MessageComposer/MessageHelper>
 

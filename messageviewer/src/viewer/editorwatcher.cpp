@@ -18,7 +18,7 @@
 
 #include <config-messageviewer.h>
 #include "editorwatcher.h"
-#include "utils/autoqpointer.h"
+#include "messageviewer/autoqpointer.h"
 #include "messageviewer_debug.h"
 
 #include <KLocalizedString>

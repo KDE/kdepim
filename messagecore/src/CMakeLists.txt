@@ -109,7 +109,6 @@ ecm_generate_headers(MessageCore_misc_HEADERS
 ecm_generate_headers(MessageCore_utils_HEADERS
   HEADER_NAMES
   StringUtil
-
   REQUIRED_HEADERS MessageCore_utils_HEADERS
   PREFIX MessageCore
   RELATIVE utils
@@ -142,6 +141,7 @@ ecm_generate_headers(MessageCore_attachment_HEADERS
 ecm_generate_headers(MessageCore_helpers_HEADERS
   HEADER_NAMES
   NodeHelper
+  MessageHelpers
   REQUIRED_HEADERS MessageCore_helpers_HEADERS
   PREFIX MessageCore
   RELATIVE helpers
