@@ -54,8 +54,8 @@ void VacationManager::checkVacation()
     delete d->mCheckVacation;
 
     d->mCheckVacation = new KSieveUi::MultiImapVacationManager(this);
-    connect(d->mCheckVacation, &MultiImapVacationManager::scriptActive, this, &VacationManager::updateVacationScriptStatus);
-    connect(d->mCheckVacation, &MultiImapVacationManager::requestEditVacation, this, &VacationManager::editVacation);
+    connect(d->mCheckVacation.data(), &MultiImapVacationManager::scriptActive, this, &VacationManager::updateVacationScriptStatus);
+    connect(d->mCheckVacation.data(), &MultiImapVacationManager::requestEditVacation, this, &VacationManager::editVacation);
     d->mCheckVacation->checkVacation();
 }
 
