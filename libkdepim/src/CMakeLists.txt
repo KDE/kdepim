@@ -210,6 +210,7 @@ ecm_generate_headers(libkdepim_misc_HEADERS
   BroadcastStatus
   MaillistDrag
   UiStateSaver
+  KCursorSaver
   REQUIRED_HEADERS libkdepim_misc_HEADERS
   PREFIX Libkdepim
   RELATIVE misc

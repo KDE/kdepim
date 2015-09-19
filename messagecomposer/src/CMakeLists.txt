@@ -168,7 +168,6 @@ target_include_directories(KF5MessageComposer INTERFACE "$<INSTALL_INTERFACE:${K
 
 target_include_directories(KF5MessageComposer PUBLIC "$<BUILD_INTERFACE:${messagecomposer_SOURCE_DIR}/src;${messagecomposer_BINARY_DIR}/src>")
 
-target_include_directories(KF5MessageComposer PUBLIC $<TARGET_PROPERTY:KF5::MailCommon,INTERFACE_INCLUDE_DIRECTORIES>)
 
 set_target_properties(KF5MessageComposer PROPERTIES
     VERSION ${MESSAGECOMPOSER_VERSION_STRING}

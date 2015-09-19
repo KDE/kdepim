@@ -17,7 +17,7 @@
 
 #include "exportcalendarjob.h"
 
-#include "MailCommon/KCursorSaver"
+#include "Libkdepim/KCursorSaver"
 
 #include <AkonadiCore/AgentManager>
 
@@ -70,7 +70,7 @@ void ExportCalendarJob::start()
 void ExportCalendarJob::backupResources()
 {
     showInfo(i18n("Backing up resources..."));
-    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
@@ -113,7 +113,7 @@ void ExportCalendarJob::backupResources()
 void ExportCalendarJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
-    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 
     const QString korganizerStr(QStringLiteral("korganizerrc"));
     const QString korganizerrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korganizerStr;

@@ -17,7 +17,7 @@
 
 #include "exportakregatorjob.h"
 
-#include "MailCommon/KCursorSaver"
+#include "Libkdepim/KCursorSaver"
 
 #include <AkonadiCore/AgentManager>
 
@@ -64,7 +64,7 @@ void ExportAkregatorJob::start()
 void ExportAkregatorJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
-    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     const QString akregatorStr(QStringLiteral("akregatorrc"));
     const QString akregatorsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + akregatorStr;
     backupFile(akregatorsrc, Utils::configsPath(), akregatorStr);
@@ -74,7 +74,7 @@ void ExportAkregatorJob::backupConfig()
 void ExportAkregatorJob::backupData()
 {
     showInfo(i18n("Backing up data..."));
-    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/akregator") ;
     QDir akregatorDirectory(akregatorDir);
     if (akregatorDirectory.exists()) {

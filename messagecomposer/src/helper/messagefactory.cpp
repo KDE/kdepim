@@ -24,7 +24,7 @@
 
 #include <AkonadiCore/item.h>
 #ifndef QT_NO_CURSOR
-#include <MailCommon/KCursorSaver>
+#include <Libkdepim/KCursorSaver>
 #endif
 #include <KIdentityManagement/kidentitymanagement/identitymanager.h>
 #include <KIdentityManagement/kidentitymanagement/identity.h>
@@ -434,7 +434,7 @@ QPair< KMime::Message::Ptr, QList< KMime::Content * > > MessageFactory::createAt
 
     MessageHelper::setAutomaticFields(msg, true);
 #ifndef QT_NO_CURSOR
-    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 #endif
     if (numberOfItems == 0) {
         attachments << createForwardAttachmentMessage(m_origMsg);

@@ -38,7 +38,7 @@
 #include "job/savecontactpreferencejob.h"
 
 #ifndef QT_NO_CURSOR
-#include "MailCommon/KCursorSaver"
+#include "Libkdepim/KCursorSaver"
 #endif
 #include "utils/kleo_util.h"
 
@@ -1603,7 +1603,7 @@ Kleo::Result Kleo::KeyResolver::showKeyApprovalDialog(bool &finalySendUnencrypte
               std::back_inserter(senderKeys));
 
 #ifndef QT_NO_CURSOR
-    const MailCommon::KCursorSaver idle(MailCommon::KBusyPtr::idle());
+    const KPIM::KCursorSaver idle(KPIM::KBusyPtr::idle());
 #endif
 
     QPointer<Kleo::KeyApprovalDialog> dlg = new Kleo::KeyApprovalDialog(items, senderKeys);
@@ -1687,7 +1687,7 @@ Kleo::Result Kleo::KeyResolver::showKeyApprovalDialog(bool &finalySendUnencrypte
                                    "the recipients: these persons will not be able to "
                                    "decrypt the message if you encrypt it.");
 #ifndef QT_NO_CURSOR
-        MailCommon::KCursorSaver idle(MailCommon::KBusyPtr::idle());
+        KPIM::KCursorSaver idle(KPIM::KBusyPtr::idle());
 #endif
         if (KMessageBox::warningContinueCancel(Q_NULLPTR, msg,
                                                i18n("Missing Key Warning"),

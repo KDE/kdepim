@@ -253,7 +253,6 @@ endif()
 
 ecm_generate_headers(MailCommon_CamelCase_HEADERS
   HEADER_NAMES
-  KCursorSaver
   MailUtil
   REQUIRED_HEADERS MailCommon_HEADERS
   PREFIX MailCommon

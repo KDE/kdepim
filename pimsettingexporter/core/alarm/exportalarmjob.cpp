@@ -17,7 +17,7 @@
 
 #include "exportalarmjob.h"
 
-#include "MailCommon/KCursorSaver"
+#include "Libkdepim/KCursorSaver"
 
 #include <AkonadiCore/AgentManager>
 
@@ -68,7 +68,7 @@ void ExportAlarmJob::start()
 void ExportAlarmJob::backupResources()
 {
     showInfo(i18n("Backing up resources..."));
-    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
@@ -108,7 +108,7 @@ void ExportAlarmJob::backupResources()
 void ExportAlarmJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
-    MailCommon::KCursorSaver busy(MailCommon::KBusyPtr::busy());
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     const QString kalarmStr(QStringLiteral("kalarmrc"));
     const QString kalarmrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kalarmStr;
     if (QFile(kalarmrc).exists()) {
