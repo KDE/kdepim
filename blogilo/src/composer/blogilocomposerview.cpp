@@ -51,7 +51,7 @@ void BlogiloComposerView::startEditing()
     this -> setFocus();
     QMouseEvent mouseEventPress(QEvent::MouseButtonPress, QPoint(10, 10), Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
     QApplication::sendEvent(this, &mouseEventPress);
-    QTimer::singleShot(50, this, SLOT(slotSendMouseReleaseEvent()));
+    QTimer::singleShot(50, this, &BlogiloComposerView::slotSendMouseReleaseEvent);
 }
 
 void BlogiloComposerView::slotSendMouseReleaseEvent()

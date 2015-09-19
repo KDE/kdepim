@@ -92,8 +92,8 @@ PostEntry::PostEntry(QWidget *parent)
 {
     createUi();
     connect(d->wysiwygEditor->editor(), &ComposerEditorNG::ComposerEditor::textChanged, this, &PostEntry::textChanged);
-    connect(d->htmlEditor->document(), SIGNAL(textChanged(KTextEditor::Document*)),
-            this, SIGNAL(textChanged()));
+    connect(d->htmlEditor->document(), &KTextEditor::Document::textChanged,
+            this, &PostEntry::textChanged);
     layout()->addWidget(d->tabWidget);
     d->mTimer = new QTimer(this);
     d->mTimer->start(Settings::autosaveInterval() * MINUTE);

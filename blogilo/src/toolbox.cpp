@@ -85,7 +85,7 @@ Toolbox::Toolbox(QWidget *parent)
     lstEntriesList->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(lstEntriesList, &QListWidget::customContextMenuRequested, this, &Toolbox::requestEntriesListContextMenu);
 
-    QTimer::singleShot(1000, this, SLOT(reloadLocalPosts()));
+    QTimer::singleShot(1000, this, &Toolbox::reloadLocalPosts);
 }
 
 Toolbox::~Toolbox()

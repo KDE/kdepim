@@ -202,8 +202,8 @@ void StyleGetter::slotHtmlCopied(KJob *job)
 //     Q_EMIT sigStyleFetched();
 
     //Remove temp post from the server.
-    connect(b, SIGNAL(sigPostRemoved(int,BilboPost)), this,
-            SLOT(slotTempPostRemoved(int,BilboPost)));
+    connect(b, &Backend::sigPostRemoved, this,
+            &StyleGetter::slotTempPostRemoved);
     b->removePost(mTempPost);
 }
 
