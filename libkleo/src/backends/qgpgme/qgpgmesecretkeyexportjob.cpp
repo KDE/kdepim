@@ -90,13 +90,13 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start(const QStringList &patterns)
 
     connect(mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
             SLOT(slotProcessExited(int,QProcess::ExitStatus)));
-    connect(mProcess, SIGNAL(readyReadStandardOutput()),
-            SLOT(slotStdout()));
-    connect(mProcess, SIGNAL(readyReadStandardError()),
-            SLOT(slotStderr()));
+    connect(mProcess, &QProcess::readyReadStandardOutput,
+            this, &QGpgMESecretKeyExportJob::slotStdout);
+    connect(mProcess, &QProcess::readyReadStandardError,
+            this, &QGpgMESecretKeyExportJob::slotStderr);
 
-    connect(mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
-            SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)));
+    connect(mProcess, &GnuPGProcessBase::status,
+            this, &QGpgMESecretKeyExportJob::slotStatus);
 
     mProcess->setOutputChannelMode(KProcess::SeparateChannels);
     mProcess->start();

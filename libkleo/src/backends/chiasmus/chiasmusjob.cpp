@@ -90,7 +90,7 @@ GpgME::Error Kleo::ChiasmusJob::setup()
             this);
     mSymCryptRun->setObjectName(QStringLiteral("symcryptrun"));
     QTimer::singleShot(timeoutEntry->uintValue() * 1000, this,
-                       SLOT(slotTimeout()));
+                       &ChiasmusJob::slotTimeout);
     return GpgME::Error();
 }
 

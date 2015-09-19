@@ -117,11 +117,11 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess()
             SLOT(slotProcessExited(int,QProcess::ExitStatus)));
     connect(mProcess, SIGNAL(readyReadStandardOutput()),
             SLOT(slotStdout()));
-    connect(mProcess, SIGNAL(readyReadStandardError()),
-            SLOT(slotStderr()));
+    connect(mProcess, &QProcess::readyReadStandardError,
+            this, &QGpgMERefreshKeysJob::slotStderr);
 
-    connect(mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
-            SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)));
+    connect(mProcess, &GnuPGProcessBase::status,
+            this, &QGpgMERefreshKeysJob::slotStatus);
 
     mProcess->setOutputChannelMode(KProcess::SeparateChannels);
     mProcess->start();

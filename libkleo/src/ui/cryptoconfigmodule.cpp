@@ -474,7 +474,7 @@ Kleo::CryptoConfigEntryGUI::CryptoConfigEntryGUI(
     const QString &entryName)
     : QObject(module), mEntry(entry), mName(entryName), mChanged(false)
 {
-    connect(this, SIGNAL(changed()), module, SIGNAL(changed()));
+    connect(this, &CryptoConfigEntryGUI::changed, module, &CryptoConfigModule::changed);
 }
 
 QString Kleo::CryptoConfigEntryGUI::description() const
@@ -617,8 +617,8 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
         }
     } else {
         if (mFileNameRequester)
-            connect(mFileNameRequester, SIGNAL(fileNameChanged(QString)),
-                    this, SLOT(slotChanged()));
+            connect(mFileNameRequester, &FileNameRequester::fileNameChanged,
+                    this, &CryptoConfigEntryPath::slotChanged);
     }
 }
 
@@ -661,8 +661,8 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
         }
     } else {
         if (mFileNameRequester)
-            connect(mFileNameRequester, SIGNAL(fileNameChanged(QString)),
-                    this, SLOT(slotChanged()));
+            connect(mFileNameRequester, &FileNameRequester::fileNameChanged,
+                    this, &CryptoConfigEntryDirPath::slotChanged);
     }
 }
 

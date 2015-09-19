@@ -66,7 +66,7 @@ Kleo::Job::Job(QObject *parent)
     : QObject(parent)
 {
     if (QCoreApplication *app = QCoreApplication::instance()) {
-        connect(app, SIGNAL(aboutToQuit()), SLOT(slotCancel()));
+        connect(app, &QCoreApplication::aboutToQuit, this, &Job::slotCancel);
     }
 }
 

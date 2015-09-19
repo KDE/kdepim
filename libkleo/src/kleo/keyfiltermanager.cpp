@@ -171,7 +171,7 @@ KeyFilterManager::KeyFilterManager(QObject *parent)
     mSelf = this;
     // ### DF: doesn't a KStaticDeleter work more reliably?
     if (QCoreApplication *app = QCoreApplication::instance()) {
-        connect(app, SIGNAL(aboutToQuit()), SLOT(deleteLater()));
+        connect(app, &QCoreApplication::aboutToQuit, this, &QObject::deleteLater);
     }
     reload();
 }
