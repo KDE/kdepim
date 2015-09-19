@@ -6,6 +6,6 @@ Mutators=true
 Singleton=true
 ItemAccessors=true
 SetUserTexts=true
-IncludeFiles=templateparser_export.h,defaulttemplates.h
+IncludeFiles=templateparser/templateparser_export.h,templateparser/defaulttemplates.h
 TranslationDomain=libtemplateparser
 TranslationSystem=kde

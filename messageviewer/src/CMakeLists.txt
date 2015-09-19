@@ -272,16 +272,6 @@ install(TARGETS
     EXPORT KF5MessageViewerTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
-ecm_generate_headers(MessageViewer_CamelCase_HEADERS
-  HEADER_NAMES
-  viewer/CSSHelper
-  viewer/ObjectTreeParser
-  viewer/AttachmentStrategy
-  ObjectTreeSourceIf
-  REQUIRED_HEADERS MessageViewer_HEADERS
-  PREFIX MessageViewer
-)
-
 ecm_generate_headers(MessageViewer_viewer_HEADERS
   HEADER_NAMES
   Viewer
@@ -292,6 +282,7 @@ ecm_generate_headers(MessageViewer_viewer_HEADERS
   AttachmentStrategy
   NodeHelper
   EditorWatcher
+  CSSHelperBase
   REQUIRED_HEADERS MessageViewer_HEADERS
   PREFIX MessageViewer
   RELATIVE viewer
@@ -333,7 +324,6 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
 install(FILES
     ${MessageViewer_utils_HEADERS}
     ${MessageViewer_interfaces_HEADERS}
-    ${MessageViewer_CamelCase_HEADERS}
     ${MessageViewer_viewer_HEADERS}
     ${MessageViewer_widgets_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageViewer
@@ -347,7 +337,6 @@ install(FILES
     ${MessageViewer_viewer_HEADERS}
     ${MessageViewer_widgets_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messageviewer_export.h
-    ${MessageViewer_CamelCase_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messageviewer
     COMPONENT Devel
 )

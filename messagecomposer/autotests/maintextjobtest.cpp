@@ -219,10 +219,10 @@ void MainTextJobTest::testHtmlWithImages()
     QString image2 = KIconLoader::global()->iconPath(QLatin1String("message"), KIconLoader::Small, false);
     QString data = QStringLiteral("dust in the wind");
     editor.setTextOrHtml(data);
-    editor.addImage(image1);
-    controler.composerImages()->addImage(image1);
-    editor.addImage(image2);
-    controler.composerImages()->addImage(image2);
+    editor.addImage(QUrl::fromLocalFile(image1));
+    controler.composerImages()->addImage(QUrl::fromLocalFile(image1));
+    editor.addImage(QUrl::fromLocalFile(image2));
+    controler.composerImages()->addImage(QUrl::fromLocalFile(image2));
     MessageComposer::ImageList images = controler.composerImages()->embeddedImages();
     QCOMPARE(images.count(), 2);
     QString cid1 = images[0]->contentID;
