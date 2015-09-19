@@ -52,7 +52,7 @@ StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     mainLayout->addWidget(buttonBox);
     connect(mUser1Button, &QPushButton::clicked, this, &StorageServiceLogDialog::slotClearLog);
     connect(mUser2Button, &QPushButton::clicked, this, &StorageServiceLogDialog::slotSaveAs);
-    connect(mLog->editor(), SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
+    connect(mLog->editor(), &QTextEdit::textChanged, this, &StorageServiceLogDialog::slotTextChanged);
 }
 
 StorageServiceLogDialog::~StorageServiceLogDialog()

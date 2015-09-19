@@ -369,7 +369,7 @@ void StorageServicePage::updateList(const QString &serviceName)
 
 void StorageServicePage::refreshList()
 {
-    QTimer::singleShot(0, mTreeWidget, SLOT(refreshList()));
+    QTimer::singleShot(0, mTreeWidget, &PimCommon::StorageServiceTreeWidget::refreshList);
 }
 
 void StorageServicePage::slotDownloadFileFailed(const QString &serviceName, const QString &filename)
