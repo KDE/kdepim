@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 2.8.12)
 
 #Laurent option just for me it will not work for the moment don't use it
 #option(KDEPIM_SUPERBUILD "Build standalone lib but not application" FALSE)
+#option(KDEPIM_BUILD_WITH_INSTALLED_LIB "Build kdepim application against installed lib" FALSE)
 if (KDEPIM_SUPERBUILD)
 
 # Remove it when splitted
@@ -36,7 +37,7 @@ sb_add_project(messagelist)
 sb_add_project(messageviewer)
 sb_add_project(templateparser)
 sb_add_project(messagecomposer)
-#sb_add_project(mailcommon)
+sb_add_project(mailcommon)
 sb_end()
 
 else()
