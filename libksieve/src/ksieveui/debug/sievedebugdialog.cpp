@@ -54,7 +54,7 @@ SieveDebugDialog::SieveDebugDialog(QWidget *parent)
 
     if (!mResourceIdentifier.isEmpty()) {
         mEdit->editor()->setPlainText(i18n("Collecting diagnostic information about Sieve support...\n\n"));
-        QTimer::singleShot(0, this, SLOT(slotDiagNextAccount()));
+        QTimer::singleShot(0, this, &SieveDebugDialog::slotDiagNextAccount);
     } else {
         mEdit->editor()->setPlainText(i18n("No Imap Resource found."));
     }
@@ -113,7 +113,7 @@ void SieveDebugDialog::slotDiagNextAccount()
 
     // Handle next account async
     mResourceIdentifier.pop_front();
-    QTimer::singleShot(0, this, SLOT(slotDiagNextAccount()));
+    QTimer::singleShot(0, this, &SieveDebugDialog::slotDiagNextAccount);
 }
 
 void SieveDebugDialog::slotDiagNextScript()
@@ -122,7 +122,7 @@ void SieveDebugDialog::slotDiagNextScript()
         // Continue handling accounts instead
         mScriptList.clear();
         mResourceIdentifier.pop_front();
-        QTimer::singleShot(0, this, SLOT(slotDiagNextAccount()));
+        QTimer::singleShot(0, this, &SieveDebugDialog::slotDiagNextAccount);
         return;
     }
 
@@ -160,7 +160,7 @@ void SieveDebugDialog::slotGetScript(KManageSieve::SieveJob * /* job */, bool su
     }
 
     // Fetch next script
-    QTimer::singleShot(0, this, SLOT(slotDiagNextScript()));
+    QTimer::singleShot(0, this, &SieveDebugDialog::slotDiagNextScript);
 }
 
 void SieveDebugDialog::slotGetScriptList(KManageSieve::SieveJob *job, bool success,
@@ -197,6 +197,6 @@ void SieveDebugDialog::slotGetScriptList(KManageSieve::SieveJob *job, bool succe
     }
 
     // Handle next job: dump scripts for this server
-    QTimer::singleShot(0, this, SLOT(slotDiagNextScript()));
+    QTimer::singleShot(0, this, &SieveDebugDialog::slotDiagNextScript);
 }
 

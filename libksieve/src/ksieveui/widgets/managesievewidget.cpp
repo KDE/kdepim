@@ -78,7 +78,7 @@ ManageSieveWidget::ManageSieveWidget(QWidget *parent)
 
     lay->addWidget(d->mTreeView);
     setLayout(lay);
-    QTimer::singleShot(0, this, SLOT(slotCheckNetworkStatus()));
+    QTimer::singleShot(0, this, &ManageSieveWidget::slotCheckNetworkStatus);
 }
 
 ManageSieveWidget::~ManageSieveWidget()

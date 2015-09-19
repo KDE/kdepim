@@ -97,7 +97,7 @@ void SieveConditionWidget::initWidget()
             if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
                 mConditionList.append(*it);
-                connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+                connect(*it, &SieveCondition::valueChanged, this, &SieveConditionWidget::valueChanged);
                 // add (i18n-ized) name to combo box
                 mComboBox->addItem((*it)->label(), (*it)->name());
             } else {
@@ -106,7 +106,7 @@ void SieveConditionWidget::initWidget()
         } else {
             // append to the list of actions:
             mConditionList.append(*it);
-            connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+            connect(*it, &SieveCondition::valueChanged, this, &SieveConditionWidget::valueChanged);
             // add (i18n-ized) name to combo box
             mComboBox->addItem((*it)->label(), (*it)->name());
         }

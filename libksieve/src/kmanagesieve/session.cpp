@@ -59,9 +59,9 @@ Session::Session(QObject *parent) :
     m_supportsStartTls(false)
 {
     qCDebug(KMANAGERSIEVE_LOG);
-    connect(m_socket, SIGNAL(readyRead()), SLOT(dataReceived()));
+    connect(m_socket, &QIODevice::readyRead, this, &Session::dataReceived);
     connect(m_socket, SIGNAL(error(KTcpSocket::Error)), SLOT(socketError()));
-    connect(m_socket, SIGNAL(disconnected()), SLOT(socketError()));
+    connect(m_socket, &KTcpSocket::disconnected, this, &Session::socketError);
 
     static bool saslInitialized = false;
     if (!saslInitialized) {
@@ -360,7 +360,7 @@ void Session::sslResult(bool encrypted)
 
 void Session::slotSslTimeout()
 {
-    disconnect(m_socket, SIGNAL(encrypted()), this, SLOT(slotEncryptedDone()));
+    disconnect(m_socket, &KTcpSocket::encrypted, this, &Session::slotEncryptedDone);
     sslResult(false);
 }
 
@@ -370,11 +370,11 @@ void Session::startSsl()
     if (!m_sslCheck) {
         m_sslCheck = new QTimer;
         m_sslCheck->setInterval(60 * 1000);
-        connect(m_sslCheck, SIGNAL(timeout()), this, SLOT(slotSslTimeout()));
+        connect(m_sslCheck, &QTimer::timeout, this, &Session::slotSslTimeout);
     }
     m_socket->setAdvertisedSslVersion(KTcpSocket::TlsV1);
     m_socket->ignoreSslErrors();
-    connect(m_socket, SIGNAL(encrypted()), SLOT(slotEncryptedDone()));
+    connect(m_socket, &KTcpSocket::encrypted, this, &Session::slotEncryptedDone);
     m_sslCheck->start();
     m_socket->startClientEncryption();
 }
