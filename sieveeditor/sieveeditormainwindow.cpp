@@ -232,7 +232,7 @@ void SieveEditorMainWindow::setupActions()
     mWrapTextAction = new QAction(i18n("Wordwarp"), this);
     mWrapTextAction->setCheckable(true);
     ac->addAction(QStringLiteral("wordwrap"), mWrapTextAction);
-    connect(mWrapTextAction, SIGNAL(triggered(bool)), mMainWidget->sieveEditorMainWidget(), SLOT(slotWordWrap(bool)));
+    connect(mWrapTextAction, &QAction::triggered, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotWordWrap);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
