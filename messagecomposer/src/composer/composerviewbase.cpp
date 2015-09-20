@@ -1071,8 +1071,8 @@ void MessageComposer::ComposerViewBase::updateAutoSave()
                 connect(m_autoSaveTimer, SIGNAL(timeout()),
                         m_parentWidget, SLOT(autoSaveMessage()));
             else
-                connect(m_autoSaveTimer, SIGNAL(timeout()),
-                        this, SLOT(autoSaveMessage()));
+                connect(m_autoSaveTimer, &QTimer::timeout,
+                        this, &ComposerViewBase::autoSaveMessage);
 
         }
         m_autoSaveTimer->start(m_autoSaveInterval);
@@ -1562,7 +1562,7 @@ void MessageComposer::ComposerViewBase::setFcc(const Akonadi::Collection &fccCol
     }
     Akonadi::CollectionFetchJob *const checkFccCollectionJob =
         new Akonadi::CollectionFetchJob(fccCollection, Akonadi::CollectionFetchJob::Base);
-    connect(checkFccCollectionJob, SIGNAL(result(KJob*)), SLOT(slotFccCollectionCheckResult(KJob*)));
+    connect(checkFccCollectionJob, &KJob::result, this, &ComposerViewBase::slotFccCollectionCheckResult);
 }
 
 void MessageComposer::ComposerViewBase::slotFccCollectionCheckResult(KJob *job)

@@ -451,8 +451,8 @@ AttachmentControllerBase::AttachmentControllerBase(MessageComposer::AttachmentMo
     connect(model, &MessageComposer::AttachmentModel::attachUrlsRequested, this, &AttachmentControllerBase::addAttachments);
     connect(model, SIGNAL(attachmentRemoved(MessageCore::AttachmentPart::Ptr)),
             this, SLOT(attachmentRemoved(MessageCore::AttachmentPart::Ptr)));
-    connect(model, SIGNAL(attachmentCompressRequested(MessageCore::AttachmentPart::Ptr,bool)),
-            this, SLOT(compressAttachment(MessageCore::AttachmentPart::Ptr,bool)));
+    connect(model, &AttachmentModel::attachmentCompressRequested,
+            this, &AttachmentControllerBase::compressAttachment);
     connect(model, &MessageComposer::AttachmentModel::encryptEnabled, this, &AttachmentControllerBase::setEncryptEnabled);
     connect(model, &MessageComposer::AttachmentModel::signEnabled, this, &AttachmentControllerBase::setSignEnabled);
 
@@ -469,8 +469,8 @@ void AttachmentControllerBase::createActions()
 {
     // Create the actions.
     d->attachPublicKeyAction = new QAction(i18n("Attach &Public Key..."), this);
-    connect(d->attachPublicKeyAction, SIGNAL(triggered(bool)),
-            this, SLOT(showAttachPublicKeyDialog()));
+    connect(d->attachPublicKeyAction, &QAction::triggered,
+            this, &AttachmentControllerBase::showAttachPublicKeyDialog);
 
     d->attachMyPublicKeyAction = new QAction(i18n("Attach &My Public Key"), this);
     connect(d->attachMyPublicKeyAction, &QAction::triggered, this, &AttachmentControllerBase::attachMyPublicKey);

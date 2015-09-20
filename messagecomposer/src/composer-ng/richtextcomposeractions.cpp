@@ -282,7 +282,7 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     d->richTextActionList.append((d->action_font_size));
     d->action_font_size->setObjectName(QStringLiteral("format_font_size"));
     ac->addAction(QStringLiteral("format_font_size"), d->action_font_size);
-    connect(d->action_font_size, SIGNAL(fontSizeChanged(int)), d->composerControler, SLOT(setFontSize(int)));
+    connect(d->action_font_size, &KFontSizeAction::fontSizeChanged, d->composerControler, &RichTextComposerControler::setFontSize);
 
     d->action_insert_horizontal_rule = new QAction(QIcon::fromTheme(QStringLiteral("insert-horizontal-rule")),
             i18nc("@action", "Insert Rule Line"), this);
@@ -431,15 +431,15 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     connect(d->action_format_painter, &QAction::toggled,
             d->composerControler, &RichTextComposerControler::slotFormatPainter);
 
-    disconnect(d->composerControler->richTextComposer(), SIGNAL(currentCharFormatChanged(QTextCharFormat)),
-               this, SLOT(slotUpdateCharFormatActions(QTextCharFormat)));
-    disconnect(d->composerControler->richTextComposer(), SIGNAL(cursorPositionChanged()),
-               this, SLOT(slotUpdateMiscActions()));
+    disconnect(d->composerControler->richTextComposer(), &QTextEdit::currentCharFormatChanged,
+               this, &RichTextComposerActions::slotUpdateCharFormatActions);
+    disconnect(d->composerControler->richTextComposer(), &QTextEdit::cursorPositionChanged,
+               this, &RichTextComposerActions::slotUpdateMiscActions);
 
-    connect(d->composerControler->richTextComposer(), SIGNAL(currentCharFormatChanged(QTextCharFormat)),
-            this, SLOT(slotUpdateCharFormatActions(QTextCharFormat)));
-    connect(d->composerControler->richTextComposer(), SIGNAL(cursorPositionChanged()),
-            this, SLOT(slotUpdateMiscActions()));
+    connect(d->composerControler->richTextComposer(), &QTextEdit::currentCharFormatChanged,
+            this, &RichTextComposerActions::slotUpdateCharFormatActions);
+    connect(d->composerControler->richTextComposer(), &QTextEdit::cursorPositionChanged,
+            this, &RichTextComposerActions::slotUpdateMiscActions);
 
     updateActionStates();
 }

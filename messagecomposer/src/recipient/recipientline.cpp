@@ -89,8 +89,8 @@ RecipientLineNG::RecipientLineNG(QWidget *parent)
 
     connect(mEdit, &RecipientLineEdit::returnPressed, this, &RecipientLineNG::slotReturnPressed);
     connect(mEdit, &RecipientLineEdit::deleteMe, this, &RecipientLineNG::slotPropagateDeletion);
-    connect(mEdit, SIGNAL(textChanged(QString)),
-            SLOT(analyzeLine(QString)));
+    connect(mEdit, &QLineEdit::textChanged,
+            this, &RecipientLineNG::analyzeLine);
     connect(mEdit, &RecipientLineEdit::focusUp, this, &RecipientLineNG::slotFocusUp);
     connect(mEdit, &RecipientLineEdit::focusDown, this, &RecipientLineNG::slotFocusDown);
     connect(mEdit, &RecipientLineEdit::rightPressed, this, &RecipientLineNG::rightPressed);
