@@ -137,7 +137,7 @@ AlarmDialog::AlarmDialog(const Akonadi::ETMCalendar::Ptr &calendar, QWidget *par
     // User3 => Dismiss Selected
     //    Ok => Suspend
 
-    connect(calendar.data(), SIGNAL(calendarChanged()), SLOT(slotCalendarChanged()));
+    connect(calendar.data(), &Akonadi::ETMCalendar::calendarChanged, this, &AlarmDialog::slotCalendarChanged);
 
     KIconLoader::global()->addAppDir(QStringLiteral("korgac"));
 
