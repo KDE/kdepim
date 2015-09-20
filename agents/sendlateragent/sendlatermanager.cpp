@@ -203,7 +203,7 @@ void SendLaterManager::recreateSendList()
 {
     mCurrentJob = Q_NULLPTR;
     Q_EMIT needUpdateConfigDialogBox();
-    QTimer::singleShot(1000 * 60, this, SLOT(createSendInfoList()));
+    QTimer::singleShot(1000 * 60, this, &SendLaterManager::createSendInfoList);
 }
 
 void SendLaterManager::sendDone(SendLater::SendLaterInfo *info)

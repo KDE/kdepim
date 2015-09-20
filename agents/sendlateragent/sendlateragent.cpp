@@ -67,7 +67,7 @@ SendLaterAgent::SendLaterAgent(const QString &id)
 #ifdef DEBUG_SENDLATERAGENT
         QTimer::singleShot(1000, this, SLOT(slotStartAgent()));
 #else
-        QTimer::singleShot(1000 * 60 * 4, this, SLOT(slotStartAgent()));
+        QTimer::singleShot(1000 * 60 * 4, this, &SendLaterAgent::slotStartAgent);
 #endif
     }
 }

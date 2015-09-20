@@ -90,7 +90,7 @@ MailFilterAgent::MailFilterAgent(const QString &id)
 
     connect(collectionMonitor, &Akonadi::Monitor::collectionRemoved, this, &MailFilterAgent::mailCollectionRemoved);
 
-    QTimer::singleShot(0, this, SLOT(initializeCollections()));
+    QTimer::singleShot(0, this, &MailFilterAgent::initializeCollections);
 
     qDBusRegisterMetaType<QList<qint64> >();
 
@@ -155,7 +155,7 @@ void MailFilterAgent::initialCollectionFetchingDone(KJob *job)
     }
     Q_EMIT status(AgentBase::Idle, i18n("Ready"));
     Q_EMIT percent(100);
-    QTimer::singleShot(2000, this, SLOT(clearMessage()));
+    QTimer::singleShot(2000, this, &MailFilterAgent::clearMessage);
 }
 
 void MailFilterAgent::clearMessage()
