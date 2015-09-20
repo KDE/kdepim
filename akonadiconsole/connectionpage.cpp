@@ -41,10 +41,10 @@ ConnectionPage::ConnectionPage(const QString &identifier, QWidget *parent)
 
     org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification(QString(), QStringLiteral("/tracing/notifications"), QDBusConnection::sessionBus(), this);
 
-    connect(iface, SIGNAL(connectionDataInput(QString,QString)),
-            this, SLOT(connectionDataInput(QString,QString)));
-    connect(iface, SIGNAL(connectionDataOutput(QString,QString)),
-            this, SLOT(connectionDataOutput(QString,QString)));
+    connect(iface, &OrgFreedesktopAkonadiTracerNotificationInterface::connectionDataInput,
+            this, &ConnectionPage::connectionDataInput);
+    connect(iface, &OrgFreedesktopAkonadiTracerNotificationInterface::connectionDataOutput,
+            this, &ConnectionPage::connectionDataOutput);
 }
 
 void ConnectionPage::connectionDataInput(const QString &identifier, const QString &msg)

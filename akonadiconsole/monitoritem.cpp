@@ -58,7 +58,7 @@ MonitorItem::MonitorItem(const QDBusObjectPath &identifier_, MonitorsModel *mode
     connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::isAllMonitoredChanged, this, &MonitorItem::isAllMonitoredChanged);
     connect(mInterface, &org::freedesktop::Akonadi::NotificationSource::ignoredSessionsChanged, this, &MonitorItem::ignoredSessionsChanged);
 
-    QTimer::singleShot(0, this, SLOT(init()));
+    QTimer::singleShot(0, this, &MonitorItem::init);
 }
 
 MonitorItem::~MonitorItem()

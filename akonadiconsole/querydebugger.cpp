@@ -211,8 +211,8 @@ QueryDebugger::QueryDebugger(QWidget *parent):
     mDebugger = new org::freedesktop::Akonadi::StorageDebugger(service,
             QStringLiteral("/storageDebug"), QDBusConnection::sessionBus(), this);
 
-    connect(mDebugger, SIGNAL(queryExecuted(double,uint,QString,QMap<QString,QVariant>,int,QList<QList<QVariant> >,QString)),
-            this, SLOT(addQuery(double,uint,QString,QMap<QString,QVariant>,int,QList<QList<QVariant> >,QString)));
+    connect(mDebugger, &OrgFreedesktopAkonadiStorageDebuggerInterface::queryExecuted,
+            this, &QueryDebugger::addQuery);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -221,7 +221,7 @@ QueryDebugger::QueryDebugger(QWidget *parent):
     QCheckBox *enableCB = new QCheckBox(this);
     enableCB->setText(QStringLiteral("Enable query debugger (slows down server!)"));
     enableCB->setChecked(mDebugger->isSQLDebuggingEnabled());
-    connect(enableCB, SIGNAL(toggled(bool)), mDebugger, SLOT(enableSQLDebugging(bool)));
+    connect(enableCB, &QAbstractButton::toggled, mDebugger, &OrgFreedesktopAkonadiStorageDebuggerInterface::enableSQLDebugging);
     checkBoxLayout->addWidget(enableCB);
 
     mOnlyAggregate = new QCheckBox(this);
