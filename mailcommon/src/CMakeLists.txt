@@ -325,6 +325,7 @@ ecm_generate_headers(MailCommon_job_HEADERS
   HEADER_NAMES
   BackupJob
   JobScheduler
+  FolderJob
   REQUIRED_HEADERS MailCommon_HEADERS
   PREFIX MailCommon
   RELATIVE job

@@ -25,7 +25,7 @@
 #include "messagecomposer_export.h"
 #include "messagepart.h"
 
-#include "composer-ng/richtextcomposerimages.h"
+#include "messagecomposer/richtextcomposerimages.h"
 #include <kpimtextedit/textedit.h>
 
 namespace MessageComposer

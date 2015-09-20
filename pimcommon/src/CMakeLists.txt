@@ -409,6 +409,15 @@ ecm_generate_headers(PimCommon_storageservice_HEADERS
   RELATIVE storageservice
 )
 
+ecm_generate_headers(PimCommon_storageservice_dialog_HEADERS
+  HEADER_NAMES
+  StorageServiceCheckNameDialog
+  REQUIRED_HEADERS PimCommon_HEADERS
+  PREFIX PimCommon
+  RELATIVE storageservice/dialog/
+)
+
+
 ecm_generate_headers(PimCommon_settings_HEADERS
   HEADER_NAMES
   PimCommonSettings
@@ -649,6 +658,7 @@ ecm_generate_headers(PimCommon_widgets_HEADERS
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${pimcommon_SOURCE_DIR})
 install(FILES
+    ${PimCommon_storageservice_dialog_HEADERS}
     ${PimCommon_CamelCase_HEADERS}
     ${PimCommon_storageservice_HEADERS}
     ${PimCommon_settings_HEADERS}
@@ -686,6 +696,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/pimcommon_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/imapresourcesettings.h
     ${CMAKE_CURRENT_BINARY_DIR}/config-pimcommon.h
+    ${PimCommon_storageservice_dialog_HEADERS}
     ${PimCommon_CamelCase_HEADERS}
     ${PimCommon_storageservice_HEADERS}
     ${PimCommon_settings_HEADERS}

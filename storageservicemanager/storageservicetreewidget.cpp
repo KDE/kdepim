@@ -20,9 +20,9 @@
 
 #include "storageservicetreewidget.h"
 #include "pimcommon/storageserviceabstract.h"
-#include "storageservice/dialog/storageservicechecknamedialog.h"
+#include "pimcommon/storageservicechecknamedialog.h"
 #include "storageservicemanagerglobalconfig.h"
-#include "storageservice/storageserviceprogressmanager.h"
+#include "pimcommon/storageserviceprogressmanager.h"
 #include "storageservicemanager_debug.h"
 
 #include <QMenu>

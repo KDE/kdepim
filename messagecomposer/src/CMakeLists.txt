@@ -253,6 +253,7 @@ ecm_generate_headers(MessageComposer_part_HEADERS
   TextPart
   GlobalPart
   InfoPart
+  MessagePart
   REQUIRED_HEADERS MessageComposer_HEADERS
   PREFIX MessageComposer
   RELATIVE part

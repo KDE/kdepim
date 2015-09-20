@@ -59,6 +59,7 @@ install(FILES
 install(FILES
     ${FollowupReminder_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/followupreminder_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/followupreminderagentsettings.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/followupreminder
     COMPONENT Devel
 )
