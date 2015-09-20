@@ -110,7 +110,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     mEmail->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::authorEmail());
     mAuthor->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::author());
 
-    connect(mDescription->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
+    connect(mDescription->editor(), &QPlainTextEdit::textChanged, this, &DesktopFilePage::changed);
     connect(mEmail, &QLineEdit::textChanged, this, &DesktopFilePage::changed);
     connect(mAuthor, &QLineEdit::textChanged, this, &DesktopFilePage::changed);
     connect(mVersion, &QLineEdit::textChanged, this, &DesktopFilePage::changed);

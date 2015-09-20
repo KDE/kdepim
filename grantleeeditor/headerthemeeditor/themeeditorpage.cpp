@@ -61,7 +61,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
-    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
+    connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::mainFileNameChanged, mEditorPage->preview(), &GrantleeThemeEditor::PreviewWidget::slotMainFileNameChanged);
     connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::mainFileNameChanged, mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::slotMainFileNameChanged);
     connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::extraDisplayHeaderChanged, this, &ThemeEditorPage::slotExtraHeaderDisplayChanged);
     connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::changed, this, &ThemeEditorPage::slotChanged);

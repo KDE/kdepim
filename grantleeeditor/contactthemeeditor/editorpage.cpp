@@ -62,12 +62,12 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
     }
     mMainSplitter->addWidget(mEditor);
     mContactTemplate = new ContactTemplateWidget(i18n("Theme Templates:"));
-    connect(mContactTemplate, SIGNAL(insertTemplate(QString)), mEditor->editor(), SLOT(insertPlainText(QString)));
+    connect(mContactTemplate, &ContactTemplateWidget::insertTemplate, mEditor->editor(), &QPlainTextEdit::insertPlainText);
     mMainSplitter->addWidget(mContactTemplate);
     mMainSplitter->setCollapsible(0, false);
     new KSplitterCollapserButton(mContactTemplate, mMainSplitter);
 
-    connect(mEditor->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
+    connect(mEditor->editor(), &QPlainTextEdit::textChanged, this, &GrantleeThemeEditor::EditorPage::changed);
 
     if (mType == MainPage) {
         KConfigGroup group(KSharedConfig::openConfig(), "EditorPage");
