@@ -212,8 +212,8 @@ void AttachmentEncryptWithChiasmusJob::slotAtmDecryptWithChiasmusResult(const Gp
 
     KIO::Job *uploadJob = KIO::storedPut(result.toByteArray(), url, -1, KIO::Overwrite);
     KJobWidgets::setWindow(uploadJob, mMainWindow);
-    connect(uploadJob, SIGNAL(result(KJob*)),
-            this, SLOT(slotAtmDecryptWithChiasmusUploadResult(KJob*)));
+    connect(uploadJob, &KJob::result,
+            this, &AttachmentEncryptWithChiasmusJob::slotAtmDecryptWithChiasmusUploadResult);
 }
 
 void AttachmentEncryptWithChiasmusJob::slotAtmDecryptWithChiasmusUploadResult(KJob *job)

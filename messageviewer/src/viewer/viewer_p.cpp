@@ -231,8 +231,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
 
     mThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Mail, QStringLiteral("header.desktop"), mActionCollection, QStringLiteral("messageviewer/themes/"));
     mThemeManager->setDownloadNewStuffConfigFile(QStringLiteral("messageviewer_header_themes.knsrc"));
-    connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
-    connect(mThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
+    connect(mThemeManager, &GrantleeTheme::GrantleeThemeManager::grantleeThemeSelected, this, &ViewerPrivate::slotGrantleeHeaders);
+    connect(mThemeManager, &GrantleeTheme::GrantleeThemeManager::updateThemes, this, &ViewerPrivate::slotGrantleeThemesUpdated);
 
     mDisplayFormatMessageOverwrite = MessageViewer::Viewer::UseGlobalSetting;
     mHtmlLoadExtOverride = false;
@@ -256,15 +256,15 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
 
     mResizeTimer.setSingleShot(true);
-    connect(&mResizeTimer, SIGNAL(timeout()),
-            this, SLOT(slotDelayedResize()));
+    connect(&mResizeTimer, &QTimer::timeout,
+            this, &ViewerPrivate::slotDelayedResize);
 
     mUpdateReaderWinTimer.setSingleShot(true);
-    connect(&mUpdateReaderWinTimer, SIGNAL(timeout()),
-            this, SLOT(updateReaderWin()));
+    connect(&mUpdateReaderWinTimer, &QTimer::timeout,
+            this, &ViewerPrivate::updateReaderWin);
 
-    connect(mColorBar, SIGNAL(clicked()),
-            this, SLOT(slotToggleHtmlMode()));
+    connect(mColorBar, &HtmlStatusBar::clicked,
+            this, &ViewerPrivate::slotToggleHtmlMode);
 
     // FIXME: Don't use the full payload here when attachment loading on demand is used, just
     //        like in KMMainWidget::slotMessageActivated().
@@ -274,12 +274,12 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     fs.fetchAttribute<MessageViewer::MessageDisplayFormatAttribute>();
     fs.fetchAttribute<MessageViewer::ScamAttribute>();
     mMonitor.setItemFetchScope(fs);
-    connect(&mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
-            this, SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
-    connect(&mMonitor, SIGNAL(itemRemoved(Akonadi::Item)),
-            this, SLOT(slotClear()));
-    connect(&mMonitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-            this, SLOT(slotItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
+    connect(&mMonitor, &Akonadi::Monitor::itemChanged,
+            this, &ViewerPrivate::slotItemChanged);
+    connect(&mMonitor, &Akonadi::Monitor::itemRemoved,
+            this, &ViewerPrivate::slotClear);
+    connect(&mMonitor, &Akonadi::Monitor::itemMoved,
+            this, &ViewerPrivate::slotItemMoved);
 }
 
 ViewerPrivate::~ViewerPrivate()
@@ -444,7 +444,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content *node, bool showWarning)
     mMessageItem.setPayloadFromData(modifiedMessage->encodedContent());
     Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mMessageItem);
     job->disableRevisionCheck();
-    connect(job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)));
+    connect(job, &KJob::result, this, &ViewerPrivate::itemModifiedResult);
     return true;
 }
 
@@ -460,7 +460,7 @@ void ViewerPrivate::itemModifiedResult(KJob *job)
 void ViewerPrivate::editAttachment(KMime::Content *node, bool showWarning)
 {
     MessageViewer::AttachmentEditJob *job = new MessageViewer::AttachmentEditJob(this);
-    connect(job, SIGNAL(refreshMessage(Akonadi::Item)), this, SLOT(slotRefreshMessage(Akonadi::Item)));
+    connect(job, &AttachmentEditJob::refreshMessage, this, &ViewerPrivate::slotRefreshMessage);
     job->setMainWindow(mMainWindow);
     job->setMessageItem(mMessageItem);
     job->setMessage(mMessage);
@@ -476,9 +476,9 @@ void ViewerPrivate::createOpenWithMenu(QMenu *topMenu, const QString &contentTyp
         QActionGroup *actionGroup = new QActionGroup(menu);
 
         if (fromCurrentContent) {
-            connect(actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithActionCurrentContent(QAction*)));
+            connect(actionGroup, &QActionGroup::triggered, this, &ViewerPrivate::slotOpenWithActionCurrentContent);
         } else {
-            connect(actionGroup, SIGNAL(triggered(QAction*)), this, SLOT(slotOpenWithAction(QAction*)));
+            connect(actionGroup, &QActionGroup::triggered, this, &ViewerPrivate::slotOpenWithAction);
         }
 
         if (offers.count() > 1) { // submenu 'open with'
@@ -831,9 +831,9 @@ void ViewerPrivate::displayMessage()
     mColorBar->update();
 
     htmlWriter()->queue(QStringLiteral("</body></html>"));
-    connect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(injectAttachments()), Qt::UniqueConnection);
+    connect(mPartHtmlWriter.data(), &WebKitPartHtmlWriter::finished, this, &ViewerPrivate::injectAttachments, Qt::UniqueConnection);
     connect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(toggleFullAddressList()), Qt::UniqueConnection);
-    connect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotMessageRendered()), Qt::UniqueConnection);
+    connect(mPartHtmlWriter.data(), &WebKitPartHtmlWriter::finished, this, &ViewerPrivate::slotMessageRendered, Qt::UniqueConnection);
     htmlWriter()->flush();
 }
 
@@ -875,7 +875,7 @@ void ViewerPrivate::collectionFetchedForStoringDecryptedMessage(KJob *job)
         if (unencryptedMessage) {
             mMessageItem.setPayload<KMime::Message::Ptr>(unencryptedMessage);
             Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mMessageItem);
-            connect(job, SIGNAL(result(KJob*)), SLOT(itemModifiedResult(KJob*)));
+            connect(job, &KJob::result, this, &ViewerPrivate::itemModifiedResult);
         }
     }
 }
@@ -910,8 +910,8 @@ void ViewerPrivate::postProcessMessage(ObjectTreeParser *otp, KMMsgEncryptionSta
             //       on the wrong item!
             Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(Akonadi::Collection::root(),
                     Akonadi::CollectionFetchJob::Recursive);
-            connect(job, SIGNAL(result(KJob*)),
-                    this, SLOT(collectionFetchedForStoringDecryptedMessage(KJob*)));
+            connect(job, &KJob::result,
+                    this, &ViewerPrivate::collectionFetchedForStoringDecryptedMessage);
         }
     }
 }
@@ -1030,17 +1030,17 @@ void ViewerPrivate::initHtmlWidget()
 #endif
     }
 
-    connect(mViewer, SIGNAL(linkHovered(QString,QString,QString)),
-            this, SLOT(slotUrlOn(QString,QString,QString)));
-    connect(mViewer, SIGNAL(linkClicked(QUrl)),
-            this, SLOT(slotUrlOpen(QUrl)), Qt::QueuedConnection);
-    connect(mViewer, SIGNAL(popupMenu(QUrl,QUrl,QPoint)),
-            SLOT(slotUrlPopup(QUrl,QUrl,QPoint)));
-    connect(mViewer, SIGNAL(messageMayBeAScam()), this, SLOT(slotMessageMayBeAScam()));
-    connect(mScamDetectionWarning, SIGNAL(showDetails()), mViewer, SLOT(slotShowDetails()));
-    connect(mScamDetectionWarning, SIGNAL(moveMessageToTrash()), this, SIGNAL(moveMessageToTrash()));
-    connect(mScamDetectionWarning, SIGNAL(messageIsNotAScam()), this, SLOT(slotMessageIsNotAScam()));
-    connect(mScamDetectionWarning, SIGNAL(addToWhiteList()), this, SLOT(slotAddToWhiteList()));
+    connect(mViewer, &MailWebView::linkHovered,
+            this, &ViewerPrivate::slotUrlOn);
+    connect(mViewer, &QWebView::linkClicked,
+            this, &ViewerPrivate::slotUrlOpen, Qt::QueuedConnection);
+    connect(mViewer, &MailWebView::popupMenu,
+            this, &ViewerPrivate::slotUrlPopup);
+    connect(mViewer, &MailWebView::messageMayBeAScam, this, &ViewerPrivate::slotMessageMayBeAScam);
+    connect(mScamDetectionWarning, &ScamDetectionWarningWidget::showDetails, mViewer, &MailWebView::slotShowDetails);
+    connect(mScamDetectionWarning, &ScamDetectionWarningWidget::moveMessageToTrash, this, &ViewerPrivate::moveMessageToTrash);
+    connect(mScamDetectionWarning, &ScamDetectionWarningWidget::messageIsNotAScam, this, &ViewerPrivate::slotMessageIsNotAScam);
+    connect(mScamDetectionWarning, &ScamDetectionWarningWidget::addToWhiteList, this, &ViewerPrivate::slotAddToWhiteList);
 }
 
 bool ViewerPrivate::eventFilter(QObject *, QEvent *e)
@@ -1260,15 +1260,15 @@ void ViewerPrivate::setOverrideEncoding(const QString &encoding)
 
 void ViewerPrivate::printMessage(const Akonadi::Item &message)
 {
-    disconnect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()));
-    connect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()));
+    disconnect(mPartHtmlWriter.data(), &WebKitPartHtmlWriter::finished, this, &ViewerPrivate::slotPrintMsg);
+    connect(mPartHtmlWriter.data(), &WebKitPartHtmlWriter::finished, this, &ViewerPrivate::slotPrintMsg);
     setMessageItem(message, Viewer::Force);
 }
 
 void ViewerPrivate::printPreviewMessage(const Akonadi::Item &message)
 {
-    disconnect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()));
-    connect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()));
+    disconnect(mPartHtmlWriter.data(), &WebKitPartHtmlWriter::finished, this, &ViewerPrivate::slotPrintPreview);
+    connect(mPartHtmlWriter.data(), &WebKitPartHtmlWriter::finished, this, &ViewerPrivate::slotPrintPreview);
     setMessageItem(message, Viewer::Force);
 }
 
@@ -1475,7 +1475,7 @@ void ViewerPrivate::createWidgets()
     QVBoxLayout *vlay = new QVBoxLayout(q);
     vlay->setMargin(0);
     mSplitter = new QSplitter(Qt::Vertical, q);
-    connect(mSplitter, SIGNAL(splitterMoved(int,int)), this, SLOT(saveSplitterSizes()));
+    connect(mSplitter, &QSplitter::splitterMoved, this, &ViewerPrivate::saveSplitterSizes);
     mSplitter->setObjectName(QStringLiteral("mSplitter"));
     mSplitter->setChildrenCollapsible(false);
     vlay->addWidget(mSplitter);
@@ -1670,14 +1670,14 @@ void ViewerPrivate::createActions()
     mCopyAction = ac->addAction(KStandardAction::Copy, QStringLiteral("kmail_copy"), this,
                                 SLOT(slotCopySelectedText()));
 
-    connect(mViewer, SIGNAL(selectionChanged()),
-            this, SLOT(viewerSelectionChanged()));
+    connect(mViewer, &QWebView::selectionChanged,
+            this, &ViewerPrivate::viewerSelectionChanged);
     viewerSelectionChanged();
 
     // copy all text to clipboard
     mSelectAllAction  = new QAction(i18n("Select All Text"), this);
     ac->addAction(QStringLiteral("mark_all_text"), mSelectAllAction);
-    connect(mSelectAllAction, SIGNAL(triggered(bool)), SLOT(selectAll()));
+    connect(mSelectAllAction, &QAction::triggered, this, &ViewerPrivate::selectAll);
     ac->setDefaultShortcut(mSelectAllAction, QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_A));
 
     // copy Email address to clipboard
@@ -1724,22 +1724,22 @@ void ViewerPrivate::createActions()
 
     mViewSourceAction  = new QAction(i18n("&View Source"), this);
     ac->addAction(QStringLiteral("view_source"), mViewSourceAction);
-    connect(mViewSourceAction, SIGNAL(triggered(bool)), SLOT(slotShowMessageSource()));
+    connect(mViewSourceAction, &QAction::triggered, this, &ViewerPrivate::slotShowMessageSource);
     ac->setDefaultShortcut(mViewSourceAction, QKeySequence(Qt::Key_V));
 
     mSaveMessageAction = new QAction(QIcon::fromTheme(QStringLiteral("document-save-as")), i18n("&Save message..."), this);
     ac->addAction(QStringLiteral("save_message"), mSaveMessageAction);
-    connect(mSaveMessageAction, SIGNAL(triggered(bool)), SLOT(slotSaveMessage()));
+    connect(mSaveMessageAction, &QAction::triggered, this, &ViewerPrivate::slotSaveMessage);
     //Laurent: conflict with kmail shortcut
     //mSaveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
     mSaveMessageDisplayFormat = new QAction(i18n("&Save Display Format"), this);
     ac->addAction(QStringLiteral("save_message_display_format"), mSaveMessageDisplayFormat);
-    connect(mSaveMessageDisplayFormat, SIGNAL(triggered(bool)), SLOT(slotSaveMessageDisplayFormat()));
+    connect(mSaveMessageDisplayFormat, &QAction::triggered, this, &ViewerPrivate::slotSaveMessageDisplayFormat);
 
     mResetMessageDisplayFormat = new QAction(i18n("&Reset Display Format"), this);
     ac->addAction(QStringLiteral("reset_message_display_format"), mResetMessageDisplayFormat);
-    connect(mResetMessageDisplayFormat, SIGNAL(triggered(bool)), SLOT(slotResetMessageDisplayFormat()));
+    connect(mResetMessageDisplayFormat, &QAction::triggered, this, &ViewerPrivate::slotResetMessageDisplayFormat);
 
     //
     // Scroll actions
@@ -1784,8 +1784,8 @@ void ViewerPrivate::createActions()
     QAction *loadExternalReferenceAction = new QAction(i18n("Load external references"), this);
     ac->addAction(QStringLiteral("load_external_reference"), loadExternalReferenceAction);
     ac->setDefaultShortcut(loadExternalReferenceAction, QKeySequence(Qt::SHIFT + Qt::CTRL + Qt::Key_R));
-    connect(loadExternalReferenceAction, SIGNAL(triggered(bool)),
-            SLOT(slotLoadExternalReference()));
+    connect(loadExternalReferenceAction, &QAction::triggered,
+            this, &ViewerPrivate::slotLoadExternalReference);
     addHelpTextAction(loadExternalReferenceAction, i18n("Load external references from the Internet for this message."));
 
     mSpeakTextAction = new QAction(i18n("Speak Text"), this);
@@ -2462,7 +2462,7 @@ void ViewerPrivate::slotDelayedResize()
 
 void ViewerPrivate::slotPrintPreview()
 {
-    disconnect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()));
+    disconnect(mPartHtmlWriter.data(), &WebKitPartHtmlWriter::finished, this, &ViewerPrivate::slotPrintPreview);
     if (!mMessage) {
         return;
     }
@@ -2475,7 +2475,7 @@ void ViewerPrivate::slotPrintPreview()
 
 void ViewerPrivate::slotPrintMsg()
 {
-    disconnect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()));
+    disconnect(mPartHtmlWriter.data(), &WebKitPartHtmlWriter::finished, this, &ViewerPrivate::slotPrintMsg);
 
     if (!mMessage) {
         return;
@@ -2540,7 +2540,7 @@ QString ViewerPrivate::attachmentInjectionHtml()
 
 void ViewerPrivate::injectAttachments()
 {
-    disconnect(mPartHtmlWriter, SIGNAL(finished()), this, SLOT(injectAttachments()));
+    disconnect(mPartHtmlWriter.data(), &WebKitPartHtmlWriter::finished, this, &ViewerPrivate::injectAttachments);
     // inject attachments in header view
     // we have to do that after the otp has run so we also see encrypted parts
 
@@ -2710,7 +2710,7 @@ void ViewerPrivate::slotAttachmentEdit()
     }
 
     MessageViewer::AttachmentEditJob *job = new MessageViewer::AttachmentEditJob(this);
-    connect(job, SIGNAL(refreshMessage(Akonadi::Item)), this, SLOT(slotRefreshMessage(Akonadi::Item)));
+    connect(job, &AttachmentEditJob::refreshMessage, this, &ViewerPrivate::slotRefreshMessage);
     job->setMainWindow(mMainWindow);
     job->setMessageItem(mMessageItem);
     job->setMessage(mMessage);
@@ -3216,7 +3216,7 @@ void ViewerPrivate::slotMessageIsNotAScam()
         Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(mMessageItem);
         modify->setIgnorePayload(true);
         modify->disableRevisionCheck();
-        connect(modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)));
+        connect(modify, &KJob::result, this, &ViewerPrivate::slotModifyItemDone);
     }
 }
 

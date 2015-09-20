@@ -77,7 +77,7 @@ std::pair< GpgME::DecryptionResult, GpgME::VerificationResult > KleoJobExecutor:
     QByteArray &plainText)
 {
     qCDebug(MESSAGEVIEWER_LOG) << "Starting decryption job";
-    connect(job, SIGNAL(result(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)), SLOT(decryptResult(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)));
+    connect(job, &DecryptVerifyJob::result, this, &KleoJobExecutor::decryptResult);
     GpgME::Error err = job->start(cipherText);
     if (err) {
         plainText.clear();

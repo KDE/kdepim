@@ -77,7 +77,7 @@ void ModifyMessageDisplayFormatJob::resetDisplayFormat()
     Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(mMessageItem);
     modify->setIgnorePayload(true);
     modify->disableRevisionCheck();
-    connect(modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)));
+    connect(modify, &KJob::result, this, &ModifyMessageDisplayFormatJob::slotModifyItemDone);
 }
 
 void ModifyMessageDisplayFormatJob::modifyDisplayFormat()
@@ -88,7 +88,7 @@ void ModifyMessageDisplayFormatJob::modifyDisplayFormat()
     Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(mMessageItem);
     modify->setIgnorePayload(true);
     modify->disableRevisionCheck();
-    connect(modify, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)));
+    connect(modify, &KJob::result, this, &ModifyMessageDisplayFormatJob::slotModifyItemDone);
 }
 
 void ModifyMessageDisplayFormatJob::slotModifyItemDone(KJob *job)

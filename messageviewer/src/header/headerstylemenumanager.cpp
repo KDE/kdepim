@@ -19,6 +19,8 @@
 #include "headerstylemenumanager.h"
 #include "headerstyleplugin.h"
 #include "headerstylepluginmanager.h"
+#include "header/headerstyle.h"
+#include "header/headerstrategy.h"
 #include "messageviewer_debug.h"
 #include <KActionMenu>
 #include <KActionCollection>
@@ -79,9 +81,9 @@ void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
     Q_FOREACH (MessageViewer::HeaderStylePlugin *plugin, lstPlugin) {
         MessageViewer::HeaderStyleInterface *interface = plugin->createView(headerMenu, group, ac, q);
         lstInterface.insert(plugin->name(), interface);
-        q->connect(interface, SIGNAL(styleChanged(MessageViewer::HeaderStyle*,MessageViewer::HeaderStrategy*)), q,
-                   SIGNAL(styleChanged(MessageViewer::HeaderStyle*,MessageViewer::HeaderStrategy*)));
-        q->connect(interface, SIGNAL(styleUpdated()), q, SIGNAL(styleUpdated()));
+        q->connect(interface, &HeaderStyleInterface::styleChanged, q,
+                   &HeaderStyleMenuManager::styleChanged);
+        q->connect(interface, &HeaderStyleInterface::styleUpdated, q, &HeaderStyleMenuManager::styleUpdated);
     }
 }
 

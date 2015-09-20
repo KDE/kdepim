@@ -629,8 +629,8 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
 #ifdef DEBUG_SIGNATURE
                         qCDebug(MESSAGEVIEWER_LOG) << "tokoe: allowAsync";
 #endif
-                        QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
-                                         mNodeHelper, SLOT(update(MessageViewer::Viewer::UpdateMode)));
+                        QObject::connect(newM, &CryptoBodyPartMemento::update,
+                                         mNodeHelper, &NodeHelper::update);
                         QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
                                          mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)));
                         if (newM->start()) {
@@ -1012,8 +1012,8 @@ bool ObjectTreeParser::okDecryptMIME(KMime::Content &data,
                 DecryptVerifyBodyPartMemento *newM
                     = new DecryptVerifyBodyPartMemento(job, ciphertext);
                 if (allowAsync()) {
-                    QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
-                                     nodeHelper(), SIGNAL(update(MessageViewer::Viewer::UpdateMode)));
+                    QObject::connect(newM, &CryptoBodyPartMemento::update,
+                                     nodeHelper(), &NodeHelper::update);
                     QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), mSource->sourceObject(),
                                      SLOT(update(MessageViewer::Viewer::UpdateMode)));
                     if (newM->start()) {

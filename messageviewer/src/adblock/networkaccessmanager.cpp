@@ -48,7 +48,7 @@ public:
         setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("text/plain"));
         setError(QNetworkReply::ContentAccessDenied, i18n("Blocked by ad filter"));
         setAttribute(QNetworkRequest::User, QNetworkReply::ContentAccessDenied);
-        QTimer::singleShot(0, this, SIGNAL(finished()));
+        QTimer::singleShot(0, this, &QNetworkReply::finished);
     }
 
     void abort() Q_DECL_OVERRIDE {}

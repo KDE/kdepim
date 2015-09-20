@@ -64,21 +64,21 @@ Viewer::~Viewer()
 
 void Viewer::initialize()
 {
-    connect(d_ptr, SIGNAL(replaceMsgByUnencryptedVersion()),
-            SIGNAL(replaceMsgByUnencryptedVersion()));
-    connect(d_ptr, SIGNAL(popupMenu(Akonadi::Item,QUrl,QUrl,QPoint)),
-            SIGNAL(popupMenu(Akonadi::Item,QUrl,QUrl,QPoint)));
+    connect(d_ptr, &ViewerPrivate::replaceMsgByUnencryptedVersion,
+            this, &Viewer::replaceMsgByUnencryptedVersion);
+    connect(d_ptr, &ViewerPrivate::popupMenu,
+            this, &Viewer::popupMenu);
     connect(d_ptr, SIGNAL(urlClicked(Akonadi::Item,QUrl)),
             SIGNAL(urlClicked(Akonadi::Item,QUrl)));
     connect(d_ptr, &ViewerPrivate::requestConfigSync, this, &Viewer::requestConfigSync);
     connect(d_ptr, &ViewerPrivate::makeResourceOnline, this, &Viewer::makeResourceOnline);
-    connect(d_ptr, SIGNAL(showReader(KMime::Content*,bool,QString)),
-            SIGNAL(showReader(KMime::Content*,bool,QString)));
+    connect(d_ptr, &ViewerPrivate::showReader,
+            this, &Viewer::showReader);
     connect(d_ptr, &ViewerPrivate::showMessage, this, &Viewer::showMessage);
-    connect(d_ptr, SIGNAL(showStatusBarMessage(QString)),
-            this, SIGNAL(showStatusBarMessage(QString)));
-    connect(d_ptr, SIGNAL(itemRemoved()),
-            this, SIGNAL(itemRemoved()));
+    connect(d_ptr, &ViewerPrivate::showStatusBarMessage,
+            this, &Viewer::showStatusBarMessage);
+    connect(d_ptr, &ViewerPrivate::itemRemoved,
+            this, &Viewer::itemRemoved);
     connect(d_ptr, &ViewerPrivate::changeDisplayMail, this, &Viewer::slotChangeDisplayMail);
     connect(d_ptr, &ViewerPrivate::moveMessageToTrash, this, &Viewer::moveMessageToTrash);
 
@@ -316,7 +316,7 @@ QWidget *Viewer::configWidget()
 {
     Q_D(Viewer);
     ConfigureWidget *w = new ConfigureWidget();
-    connect(w, SIGNAL(settingsChanged()), d, SLOT(slotSettingsChanged()));
+    connect(w, &ConfigureWidget::settingsChanged, d, &ViewerPrivate::slotSettingsChanged);
     return w;
 }
 

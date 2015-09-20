@@ -1017,7 +1017,7 @@ bool KRunURLHandler::handleClick(const QUrl &url, ViewerPrivate *w) const
             (scheme == QLatin1String("smb"))  || (scheme == QLatin1String("fish"))  ||
             (scheme == QLatin1String("news"))) {
         KPIM::BroadcastStatus::instance()->setTransientStatusMsg(i18n("Opening URL..."));
-        QTimer::singleShot(2000, KPIM::BroadcastStatus::instance(), SLOT(reset()));
+        QTimer::singleShot(2000, KPIM::BroadcastStatus::instance(), &KPIM::BroadcastStatus::reset);
 
         QMimeDatabase mimeDb;
         auto mime = mimeDb.mimeTypeForUrl(url);
