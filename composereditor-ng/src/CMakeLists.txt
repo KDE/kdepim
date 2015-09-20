@@ -79,6 +79,11 @@ ecm_generate_headers(composereditorng_CamelCase_HEADERS
 )
 
 
+ecm_generate_pri_file(BASE_NAME ComposerEditorNG
+    LIB_NAME KF5ComposerEditorNG
+    DEPS "" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/ComposerEditorNG
+)
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${composereditorng_SOURCE_DIR})
 install(FILES
     ${composereditorng_CamelCase_HEADERS}
@@ -93,13 +98,14 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/composereditorng
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
+
 endif()
 
 
 install( FILES data/composereditorinitialhtml DESTINATION  ${KDE_INSTALL_DATADIR}/composereditor )
 
-#install( FILES
-#         composereditorng_export.h
-#         composereditor.h
-#         DESTINATION ${KDE_INSTALL_INCLUDEDIR}/composereditorng COMPONENT Devel )
 

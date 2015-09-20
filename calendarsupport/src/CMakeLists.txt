@@ -132,6 +132,12 @@ ecm_generate_headers(CalendarSupport_freebusy_HEADERS
   RELATIVE freebusymodel
 )
 
+ecm_generate_pri_file(BASE_NAME CalendarSupport
+    LIB_NAME KF5CalendarSupport
+    DEPS "Mime IdentityManagement AkonadiCalendar" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/CalendarSupport
+)
+
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${calendarsupport_SOURCE_DIR})
 install(FILES
@@ -154,6 +160,10 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/calendarsupport
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()
 
 install(FILES calendarplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
@@ -162,3 +172,5 @@ install(FILES calendarplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR
 if(BUILD_TESTING)
    add_subdirectory(freebusymodel/autotests)
 endif()
+
+
