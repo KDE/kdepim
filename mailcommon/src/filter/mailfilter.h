@@ -23,7 +23,7 @@
 #include "mailcommon_export.h"
 
 #include "mailcommon/filteraction.h"
-#include "../search/searchpattern.h"
+#include "mailcommon/searchpattern.h"
 
 #include <QKeySequence>
 #include <AkonadiCore/collection.h>

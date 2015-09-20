@@ -315,6 +315,7 @@ ecm_generate_headers(MailCommon_filter_HEADERS
   FilterImporterExporter
   FilterManager
   KMFilterDialog
+  ItemContext
   REQUIRED_HEADERS MailCommon_HEADERS
   PREFIX MailCommon
   RELATIVE filter
@@ -402,9 +403,18 @@ ecm_generate_headers(MailCommon_widgets_HEADERS
   RELATIVE widgets
 )
 
+ecm_generate_headers(MailCommon_searchrule_HEADERS
+  HEADER_NAMES
+  SearchRule
+  REQUIRED_HEADERS MailCommon_HEADERS
+  PREFIX MailCommon
+  RELATIVE search/searchrule
+)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${mailcommon_SOURCE_DIR})
 install(FILES
+    ${MailCommon_searchrule_HEADERS}
     ${MailCommon_CamelCase_HEADERS}
     ${MailCommon_top_HEADERS}
     ${MailCommon_tag_HEADERS}
@@ -427,6 +437,7 @@ install(FILES
 
 install(FILES
     ${MailCommon_HEADERS}
+    ${MailCommon_searchrule_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/mailcommon_export.h
     ${MailCommon_CamelCase_HEADERS}
     ${MailCommon_top_HEADERS}

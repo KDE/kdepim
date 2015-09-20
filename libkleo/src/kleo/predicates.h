@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_MODELS_PREDICATES_H__
 #define __KLEOPATRA_MODELS_PREDICATES_H__
 
-#include <kleo/stl_util.h>
+#include <libkleo/stl_util.h>
 
 #include <string>
 

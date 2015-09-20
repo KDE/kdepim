@@ -32,7 +32,7 @@
 #include <messageviewer/bodypartformatter.h>
 #include <messageviewer/bodypart.h>
 #include <messageviewer/bodyparturlhandler.h>
-#include <htmlwriter/webkitparthtmlwriter.h>
+#include <messageviewer/webkitparthtmlwriter.h>
 
 #include <kstringhandler.h>
 #include <kiconloader.h>

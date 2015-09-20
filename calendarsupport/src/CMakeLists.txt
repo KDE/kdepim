@@ -108,6 +108,7 @@ ecm_generate_headers(CalendarSupport_printer_HEADERS
   PrintPlugin
   CalPrinter
   CalPrintDefaultPlugins
+  CalPrintPluginBase
   REQUIRED_HEADERS CalendarSupport_HEADERS
   PREFIX CalendarSupport
   RELATIVE printing

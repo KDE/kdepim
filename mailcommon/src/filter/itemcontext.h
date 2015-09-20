@@ -21,7 +21,7 @@
 #define MAILCOMMON_ITEMCONTEXT_H
 
 #include "mailcommon_export.h"
-#include "../search/searchpattern.h"
+#include "mailcommon/searchpattern.h"
 
 #include <Collection>
 #include <Item>

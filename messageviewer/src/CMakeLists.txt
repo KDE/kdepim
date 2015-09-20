@@ -339,8 +339,18 @@ ecm_generate_headers(MessageViewer_header_HEADERS
   RELATIVE header
 )
 
+ecm_generate_headers(MessageViewer_htmlwriter_HEADERS
+  HEADER_NAMES
+  WebKitPartHtmlWriter
+  REQUIRED_HEADERS MessageViewer_htmlwriter_HEADERS
+  PREFIX MessageViewer
+  RELATIVE htmlwriter
+)
+
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
 install(FILES
+    ${MessageViewer_htmlwriter_HEADERS}
     ${MessageViewer_header_HEADERS}
     ${MessageViewer_utils_HEADERS}
     ${MessageViewer_interfaces_HEADERS}
@@ -351,6 +361,7 @@ install(FILES
 )
 
 install(FILES
+    ${MessageViewer_htmlwriter_HEADERS}
     ${MessageViewer_header_HEADERS}
     ${MessageViewer_utils_HEADERS}
     ${MessageViewer_interfaces_HEADERS}

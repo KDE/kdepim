@@ -22,7 +22,7 @@
 
 #include "mailcommon_export.h"
 #include <KLocalizedString>
-#include "searchrule/searchrule.h"
+#include "mailcommon/searchrule.h"
 
 #include <QList>
 #include <QString>

@@ -36,7 +36,7 @@
 #include "ui_selectchecklevelwidget.h"
 #include "ui_certificationoptionswidget.h"
 
-#include <kleo/signkeyjob.h>
+#include <libkleo/signkeyjob.h>
 
 #include <gpgme++/key.h>
 

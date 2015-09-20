@@ -136,9 +136,11 @@ ecm_generate_headers(IncidenceEditorsng_CamelCase_HEADERS
   IndividualMailComponentFactory
   GroupwareUiDelegate
   EditorItemManager
+  OpenComposerJob
   REQUIRED_HEADERS IncidenceEditorsng_HEADERS
   PREFIX IncidenceEditorsng
 )
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${incidenceeditorsng_SOURCE_DIR})
 install(FILES
@@ -149,6 +151,7 @@ install(FILES
 
 install(FILES
     ${IncidenceEditorsng_HEADERS}
+    ${CMAKE_CURRENT_BINARY_DIR}/globalsettings_incidenceeditor.h
     ${CMAKE_CURRENT_BINARY_DIR}/incidenceeditors_ng_export.h
     ${IncidenceEditorsng_CamelCase_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/incidenceeditorsng
