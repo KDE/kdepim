@@ -546,8 +546,8 @@ public:
     void initializePage() Q_DECL_OVERRIDE
     {
         if (!initialized) {
-            connect(ui.pgpCLB,  SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection);
-            connect(ui.x509CLB, SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection);
+            connect(ui.pgpCLB,  &QAbstractButton::clicked, wizard(), &QWizard::next, Qt::QueuedConnection);
+            connect(ui.x509CLB, &QAbstractButton::clicked, wizard(), &QWizard::next, Qt::QueuedConnection);
         }
         initialized = true;
     }
@@ -583,13 +583,13 @@ public:
         ui.errorLB->setFixedHeight(ui.errorLB->minimumSizeHint().height());
         ui.errorLB->clear();
 
-        connect(ui.resultLE, SIGNAL(textChanged(QString)),
-                SIGNAL(completeChanged()));
+        connect(ui.resultLE, &QLineEdit::textChanged,
+                this, &QWizardPage::completeChanged);
         // The email doesn't necessarily show up in ui.resultLE:
-        connect(ui.emailLE, SIGNAL(textChanged(QString)),
-                SIGNAL(completeChanged()));
-        connect(ui.addEmailToDnCB, SIGNAL(toggled(bool)),
-                SLOT(slotUpdateResultLabel()));
+        connect(ui.emailLE, &QLineEdit::textChanged,
+                this, &QWizardPage::completeChanged);
+        connect(ui.addEmailToDnCB, &QAbstractButton::toggled,
+                this, &EnterDetailsPage::slotUpdateResultLabel);
         registerDialogPropertiesAsFields();
         registerField(QStringLiteral("dn"), ui.resultLE);
         registerField(QStringLiteral("name"), ui.nameLE);
@@ -817,8 +817,8 @@ public:
         setButtonVisible(QWizard::CancelButton, error);
 
         if (!initialized)
-            connect(ui.restartWizardPB, SIGNAL(clicked()),
-                    wizard(), SLOT(restart()));
+            connect(ui.restartWizardPB, &QAbstractButton::clicked,
+                    wizard(), &QWizard::restart);
         initialized = true;
     }
 
