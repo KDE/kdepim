@@ -111,6 +111,8 @@ install(TARGETS
 ecm_generate_headers(MessageList_core_HEADERS
   HEADER_NAMES
   View
+  Enums
+  StorageModelBase
   REQUIRED_HEADERS MessageList_core_HEADERS
   RELATIVE core
   PREFIX MessageList
@@ -129,6 +131,15 @@ ecm_generate_headers(MessageList_util_HEADERS
 
 )
 
+ecm_generate_headers(MessageList_widgets_HEADERS
+  HEADER_NAMES
+  QuickSearchLine
+  REQUIRED_HEADERS MessageList_widgets_HEADERS
+  RELATIVE core/widgets
+  PREFIX MessageList
+
+)
+
 
 ecm_generate_headers(MessageList_CamelCase_HEADERS
   HEADER_NAMES
@@ -141,6 +152,7 @@ ecm_generate_headers(MessageList_CamelCase_HEADERS
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageList_SOURCE_DIR})
 install(FILES
+    ${MessageList_widgets_HEADERS}
     ${MessageList_CamelCase_HEADERS}
     ${MessageList_core_HEADERS}
     ${MessageList_util_HEADERS}
@@ -150,6 +162,7 @@ install(FILES
 
 install(FILES
     ${MessageList_HEADERS}
+    ${MessageList_widgets_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messagelist_export.h
     ${MessageList_CamelCase_HEADERS}
     ${MessageList_core_HEADERS}

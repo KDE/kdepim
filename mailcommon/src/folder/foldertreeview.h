@@ -21,7 +21,7 @@
 
 #include "mailcommon_export.h"
 #include "foldertreewidget.h"
-#include "util/mailutil.h"
+#include "mailcommon/mailutil.h"
 
 #include <EntityTreeView>
 #include <Collection>

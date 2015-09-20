@@ -562,6 +562,7 @@ ecm_generate_headers(PimCommon_autocorrection_HEADERS
 ecm_generate_headers(PimCommon_baloodebug_HEADERS
   HEADER_NAMES
   BalooDebugDialog
+  BalooDebugSearchPathComboBox
   REQUIRED_HEADERS PimCommon_HEADERS
   PREFIX PimCommon
   RELATIVE baloodebug

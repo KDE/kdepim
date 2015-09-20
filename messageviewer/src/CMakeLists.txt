@@ -284,6 +284,7 @@ ecm_generate_headers(MessageViewer_viewer_HEADERS
   EditorWatcher
   Stl_Util
   CSSHelperBase
+  MailWebView
   REQUIRED_HEADERS MessageViewer_HEADERS
   PREFIX MessageViewer
   RELATIVE viewer
@@ -334,6 +335,7 @@ ecm_generate_headers(MessageViewer_header_HEADERS
   HeaderStrategy
   GrantleeHeaderTestStyle
   HeaderStyle
+  KXFace
   REQUIRED_HEADERS MessageViewer_header_HEADERS
   PREFIX MessageViewer
   RELATIVE header

@@ -19,8 +19,8 @@
 #ifndef __MESSAGELIST_PANE_H__
 #define __MESSAGELIST_PANE_H__
 
-#include <core/enums.h>
-#include <core/view.h>
+#include <messagelist/enums.h>
+#include <messagelist/view.h>
 #include <QHash>
 #include <QTabWidget>
 

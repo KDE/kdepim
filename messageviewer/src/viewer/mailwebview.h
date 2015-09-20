@@ -20,7 +20,7 @@
 #ifndef MESSAGEVIEWER_MAILWEBVIEW_H
 #define MESSAGEVIEWER_MAILWEBVIEW_H
 
-#include "settings/messageviewersettings.h"
+#include "messageviewer/messageviewersettings.h"
 
 #ifdef KDEPIM_NO_WEBKIT
 # include <QTextBrowser>

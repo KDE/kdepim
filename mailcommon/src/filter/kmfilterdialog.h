@@ -27,7 +27,7 @@
 #include "mailcommon/filteraction.h"
 #include "filterimporterexporter.h"
 #include "mailfilter.h"
-#include "search/searchpattern.h"
+#include "mailcommon/searchpattern.h"
 
 #include <QDialog>
 

@@ -20,7 +20,7 @@
 #define __MESSAGELIST_STORAGEMODEL_H__
 
 #include <messagelist_export.h>
-#include <core/storagemodelbase.h>
+#include <messagelist/storagemodelbase.h>
 
 #include <collection.h>
 #include <item.h>

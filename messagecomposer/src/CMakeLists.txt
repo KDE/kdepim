@@ -325,6 +325,8 @@ install(FILES
 install(FILES
     ${MessageComposer_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/messagecomposersettings_base.h
+    ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer_debug.h
     ${MessageComposer_composer_HEADERS}
     ${MessageComposer_composerng_HEADERS}
     ${MessageComposer_sender_HEADERS}

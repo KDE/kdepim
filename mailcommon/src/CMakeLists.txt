@@ -439,6 +439,8 @@ install(FILES
     ${MailCommon_HEADERS}
     ${MailCommon_searchrule_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/mailcommon_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/pop3settings.h
+    ${CMAKE_CURRENT_BINARY_DIR}/mailcommonsettings_base.h
     ${MailCommon_CamelCase_HEADERS}
     ${MailCommon_top_HEADERS}
     ${MailCommon_tag_HEADERS}
