@@ -365,12 +365,12 @@ void Widget::viewGroupHeaderContextPopupRequest(MessageList::Core::GroupHeaderIt
     menu.addSeparator();
 
     act = menu.addAction(i18n("Expand All Groups"));
-    connect(act, SIGNAL(triggered(bool)),
-            view(), SLOT(slotExpandAllGroups()));
+    connect(act, &QAction::triggered,
+            view(), &Core::View::slotExpandAllGroups);
 
     act = menu.addAction(i18n("Collapse All Groups"));
-    connect(act, SIGNAL(triggered(bool)),
-            view(), SLOT(slotCollapseAllGroups()));
+    connect(act, &QAction::triggered,
+            view(), &Core::View::slotCollapseAllGroups);
 
     menu.exec(globalPos);
 }

@@ -672,9 +672,9 @@ TagCache::TagCache()
     mCache.setMaxCost(100);
     mMonitor->setTypeMonitored(Akonadi::Monitor::Tags);
     mMonitor->tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
-    connect(mMonitor, SIGNAL(tagAdded(Akonadi::Tag)), this, SLOT(onTagAdded(Akonadi::Tag)));
-    connect(mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)), this, SLOT(onTagRemoved(Akonadi::Tag)));
-    connect(mMonitor, SIGNAL(tagChanged(Akonadi::Tag)), this, SLOT(onTagChanged(Akonadi::Tag)));
+    connect(mMonitor, &Akonadi::Monitor::tagAdded, this, &TagCache::onTagAdded);
+    connect(mMonitor, &Akonadi::Monitor::tagRemoved, this, &TagCache::onTagRemoved);
+    connect(mMonitor, &Akonadi::Monitor::tagChanged, this, &TagCache::onTagChanged);
 }
 
 void TagCache::onTagAdded(const Akonadi::Tag &tag)

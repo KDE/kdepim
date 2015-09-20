@@ -758,17 +758,17 @@ QItemSelectionModel *Pane::createNewTab()
 
     d->mWidgetSelectionHash[w] = s;
 
-    connect(w, SIGNAL(messageSelected(Akonadi::Item)),
-            this, SIGNAL(messageSelected(Akonadi::Item)));
-    connect(w, SIGNAL(messageActivated(Akonadi::Item)),
-            this, SIGNAL(messageActivated(Akonadi::Item)));
-    connect(w, SIGNAL(selectionChanged()),
-            this, SIGNAL(selectionChanged()));
-    connect(w, SIGNAL(messageStatusChangeRequest(Akonadi::Item,Akonadi::MessageStatus,Akonadi::MessageStatus)),
-            this, SIGNAL(messageStatusChangeRequest(Akonadi::Item,Akonadi::MessageStatus,Akonadi::MessageStatus)));
+    connect(w, &Widget::messageSelected,
+            this, &Pane::messageSelected);
+    connect(w, &Widget::messageActivated,
+            this, &Pane::messageActivated);
+    connect(w, &Widget::selectionChanged,
+            this, &Pane::selectionChanged);
+    connect(w, &Widget::messageStatusChangeRequest,
+            this, &Pane::messageStatusChangeRequest);
 
-    connect(w, SIGNAL(statusMessage(QString)),
-            this, SIGNAL(statusMessage(QString)));
+    connect(w, &Core::Widget::statusMessage,
+            this, &Pane::statusMessage);
 
     d->updateTabControls();
     setCurrentWidget(w);

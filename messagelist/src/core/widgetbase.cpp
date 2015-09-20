@@ -121,10 +121,10 @@ Widget::Widget(QWidget *pParent)
     : QWidget(pParent), d(new Private(this))
 {
     Manager::registerWidget(this);
-    connect(Manager::instance(), SIGNAL(aggregationsChanged()),
-            this, SLOT(aggregationsChanged()));
-    connect(Manager::instance(), SIGNAL(themesChanged()),
-            this, SLOT(themesChanged()));
+    connect(Manager::instance(), &Manager::aggregationsChanged,
+            this, &Widget::aggregationsChanged);
+    connect(Manager::instance(), &Manager::themesChanged,
+            this, &Widget::themesChanged);
 
     setAutoFillBackground(true);
     setObjectName(QStringLiteral("messagelistwidget"));
@@ -151,8 +151,8 @@ Widget::Widget(QWidget *pParent)
     d->mView->setObjectName(QStringLiteral("messagealistview"));
     g->addWidget(d->mView, 1);
 
-    connect(d->mView->header(), SIGNAL(sectionClicked(int)),
-            SLOT(slotViewHeaderSectionClicked(int)));
+    connect(d->mView->header(), &QHeaderView::sectionClicked,
+            this, &Widget::slotViewHeaderSectionClicked);
     d->mSearchTimer = Q_NULLPTR;
 }
 
@@ -410,15 +410,15 @@ void Widget::themeMenuAboutToShow(QMenu *menu)
         grp->addAction(act);
         act->setChecked(d->mLastThemeId == (*it)->id());
         act->setData(QVariant((*it)->id()));
-        connect(act, SIGNAL(triggered(bool)),
-                SLOT(themeSelected(bool)));
+        connect(act, &QAction::triggered,
+                this, &Widget::themeSelected);
     }
 
     menu->addSeparator();
 
     act = menu->addAction(i18n("Configure..."));
-    connect(act, SIGNAL(triggered(bool)),
-            SLOT(configureThemes()));
+    connect(act, &QAction::triggered,
+            this, &Widget::configureThemes);
 }
 
 void Widget::setPrivateSortOrderForStorage()
@@ -506,16 +506,16 @@ void Widget::aggregationMenuAboutToShow(QMenu *menu)
         grp->addAction(act);
         act->setChecked(d->mLastAggregationId == (*it)->id());
         act->setData(QVariant((*it)->id()));
-        connect(act, SIGNAL(triggered(bool)),
-                SLOT(aggregationSelected(bool)));
+        connect(act, &QAction::triggered,
+                this, &Widget::aggregationSelected);
     }
 
     menu->addSeparator();
 
     act = menu->addAction(i18n("Configure..."));
     act->setData(QVariant(QString()));
-    connect(act, SIGNAL(triggered(bool)),
-            SLOT(aggregationSelected(bool)));
+    connect(act, &QAction::triggered,
+            this, &Widget::aggregationSelected);
 }
 
 void Widget::aggregationSelected(bool)
@@ -595,8 +595,8 @@ void Widget::sortOrderMenuAboutToShow(QMenu *menu)
         act->setData(QVariant((*it).second));
     }
 
-    connect(grp, SIGNAL(triggered(QAction*)),
-            SLOT(messageSortingSelected(QAction*)));
+    connect(grp, &QActionGroup::triggered,
+            this, &Widget::messageSortingSelected);
 
     options = SortOrder::enumerateMessageSortDirectionOptions(d->mSortOrder.messageSorting());
 
@@ -633,8 +633,8 @@ void Widget::sortOrderMenuAboutToShow(QMenu *menu)
             act->setData(QVariant((*it).second));
         }
 
-        connect(grp, SIGNAL(triggered(QAction*)),
-                SLOT(groupSortingSelected(QAction*)));
+        connect(grp, &QActionGroup::triggered,
+                this, &Widget::groupSortingSelected);
     }
 
     options = SortOrder::enumerateGroupSortDirectionOptions(d->mAggregation->grouping(),
@@ -653,16 +653,16 @@ void Widget::sortOrderMenuAboutToShow(QMenu *menu)
             act->setData(QVariant((*it).second));
         }
 
-        connect(grp, SIGNAL(triggered(QAction*)),
-                SLOT(groupSortDirectionSelected(QAction*)));
+        connect(grp, &QActionGroup::triggered,
+                this, &Widget::groupSortDirectionSelected);
     }
 
     menu->addSeparator();
     act = menu->addAction(i18n("Folder Always Uses This Sort Order"));
     act->setCheckable(true);
     act->setChecked(d->mStorageUsesPrivateSortOrder);
-    connect(act, SIGNAL(triggered(bool)),
-            SLOT(setPrivateSortOrderForStorage()));
+    connect(act, &QAction::triggered,
+            this, &Widget::setPrivateSortOrderForStorage);
 }
 
 void Widget::Private::switchMessageSorting(SortOrder::MessageSorting messageSorting,
@@ -961,8 +961,8 @@ void Widget::searchEditTextEdited()
 
     if (!d->mSearchTimer) {
         d->mSearchTimer = new QTimer(this);
-        connect(d->mSearchTimer, SIGNAL(timeout()),
-                SLOT(searchTimerFired()));
+        connect(d->mSearchTimer, &QTimer::timeout,
+                this, &Widget::searchTimerFired);
     } else {
         d->mSearchTimer->stop(); // eventually
     }

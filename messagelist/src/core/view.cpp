@@ -159,12 +159,12 @@ Delegate *View::delegate() const
 void View::ignoreCurrentChanges(bool ignore)
 {
     if (ignore) {
-        disconnect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                   this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
+        disconnect(selectionModel(), &QItemSelectionModel::selectionChanged,
+                   this, &View::slotSelectionChanged);
         viewport()->setUpdatesEnabled(false);
     } else {
-        connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)),
+        connect(selectionModel(), &QItemSelectionModel::selectionChanged,
+                this, &View::slotSelectionChanged,
                 Qt::UniqueConnection);
         viewport()->setUpdatesEnabled(true);
     }
@@ -775,18 +775,18 @@ void View::slotHeaderContextMenuRequested(const QPoint &pnt)
     menu.addSeparator();
     {
         QAction *act = menu.addAction(i18n("Adjust Column Sizes"));
-        QObject::connect(act, SIGNAL(triggered()), this, SLOT(slotAdjustColumnSizes()));
+        QObject::connect(act, &QAction::triggered, this, &View::slotAdjustColumnSizes);
     }
     {
         QAction *act = menu.addAction(i18n("Show Default Columns"));
-        QObject::connect(act, SIGNAL(triggered()), this, SLOT(slotShowDefaultColumns()));
+        QObject::connect(act, &QAction::triggered, this, &View::slotShowDefaultColumns);
     }
     menu.addSeparator();
     {
         QAction *act = menu.addAction(i18n("Display Tooltips"));
         act->setCheckable(true);
         act->setChecked(Settings::self()->messageToolTipEnabled());
-        QObject::connect(act, SIGNAL(triggered(bool)), this, SLOT(slotDisplayTooltips(bool)));
+        QObject::connect(act, &QAction::triggered, this, &View::slotDisplayTooltips);
     }
     menu.addSeparator();
 
