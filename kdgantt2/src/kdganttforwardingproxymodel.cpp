@@ -99,31 +99,31 @@ void ForwardingProxyModel::setSourceModel(QAbstractItemModel *model)
         return;
     }
 
-    connect(model, SIGNAL(modelAboutToBeReset()), this, SLOT(sourceModelAboutToBeReset()));
-    connect(model, SIGNAL(modelReset()), this, SLOT(sourceModelReset()));
-    connect(model, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
-    connect(model, SIGNAL(layoutChanged()), this, SLOT(sourceLayoutChanged()));
+    connect(model, &QAbstractItemModel::modelAboutToBeReset, this, &ForwardingProxyModel::sourceModelAboutToBeReset);
+    connect(model, &QAbstractItemModel::modelReset, this, &ForwardingProxyModel::sourceModelReset);
+    connect(model, &QAbstractItemModel::layoutAboutToBeChanged, this, &ForwardingProxyModel::sourceLayoutAboutToBeChanged);
+    connect(model, &QAbstractItemModel::layoutChanged, this, &ForwardingProxyModel::sourceLayoutChanged);
 
-    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(sourceDataChanged(QModelIndex,QModelIndex)));
+    connect(model, &QAbstractItemModel::dataChanged,
+            this, &ForwardingProxyModel::sourceDataChanged);
 
-    connect(model,  SIGNAL(columnsAboutToBeInserted(QModelIndex,int,int)),
-            this, SLOT(sourceColumnsAboutToBeInserted(QModelIndex,int,int)));
-    connect(model,  SIGNAL(columnsInserted(QModelIndex,int,int)),
-            this, SLOT(sourceColumnsInserted(QModelIndex,int,int)));
-    connect(model,  SIGNAL(columnsAboutToBeRemoved(QModelIndex,int,int)),
-            this, SLOT(sourceColumnsAboutToBeRemoved(QModelIndex,int,int)));
-    connect(model,  SIGNAL(columnsRemoved(QModelIndex,int,int)),
-            this, SLOT(sourceColumnsRemoved(QModelIndex,int,int)));
+    connect(model,  &QAbstractItemModel::columnsAboutToBeInserted,
+            this, &ForwardingProxyModel::sourceColumnsAboutToBeInserted);
+    connect(model,  &QAbstractItemModel::columnsInserted,
+            this, &ForwardingProxyModel::sourceColumnsInserted);
+    connect(model,  &QAbstractItemModel::columnsAboutToBeRemoved,
+            this, &ForwardingProxyModel::sourceColumnsAboutToBeRemoved);
+    connect(model,  &QAbstractItemModel::columnsRemoved,
+            this, &ForwardingProxyModel::sourceColumnsRemoved);
 
-    connect(model,  SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-            this, SLOT(sourceRowsAboutToBeInserted(QModelIndex,int,int)));
-    connect(model,  SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(sourceRowsInserted(QModelIndex,int,int)));
-    connect(model,  SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-            this, SLOT(sourceRowsAboutToBeRemoved(QModelIndex,int,int)));
-    connect(model,  SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            this, SLOT(sourceRowsRemoved(QModelIndex,int,int)));
+    connect(model,  &QAbstractItemModel::rowsAboutToBeInserted,
+            this, &ForwardingProxyModel::sourceRowsAboutToBeInserted);
+    connect(model,  &QAbstractItemModel::rowsInserted,
+            this, &ForwardingProxyModel::sourceRowsInserted);
+    connect(model,  &QAbstractItemModel::rowsAboutToBeRemoved,
+            this, &ForwardingProxyModel::sourceRowsAboutToBeRemoved);
+    connect(model,  &QAbstractItemModel::rowsRemoved,
+            this, &ForwardingProxyModel::sourceRowsRemoved);
 }
 
 /*! Called when the source model is about to be reset.

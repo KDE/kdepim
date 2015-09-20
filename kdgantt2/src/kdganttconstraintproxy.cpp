@@ -51,10 +51,10 @@ void ConstraintProxy::setSourceModel(ConstraintModel *src)
 
     copyFromSource();
 
-    connect(m_source, SIGNAL(constraintAdded(Constraint)),
-            this, SLOT(slotSourceConstraintAdded(Constraint)));
-    connect(m_source, SIGNAL(constraintRemoved(Constraint)),
-            this, SLOT(slotSourceConstraintRemoved(Constraint)));
+    connect(m_source.data(), &ConstraintModel::constraintAdded,
+            this, &ConstraintProxy::slotSourceConstraintAdded);
+    connect(m_source.data(), &ConstraintModel::constraintRemoved,
+            this, &ConstraintProxy::slotSourceConstraintRemoved);
 }
 
 void ConstraintProxy::setDestinationModel(ConstraintModel *dest)
@@ -66,10 +66,10 @@ void ConstraintProxy::setDestinationModel(ConstraintModel *dest)
 
     copyFromSource();
 
-    connect(m_destination, SIGNAL(constraintAdded(Constraint)),
-            this, SLOT(slotDestinationConstraintAdded(Constraint)));
-    connect(m_destination, SIGNAL(constraintRemoved(Constraint)),
-            this, SLOT(slotDestinationConstraintRemoved(Constraint)));
+    connect(m_destination.data(), &ConstraintModel::constraintAdded,
+            this, &ConstraintProxy::slotDestinationConstraintAdded);
+    connect(m_destination.data(), &ConstraintModel::constraintRemoved,
+            this, &ConstraintProxy::slotDestinationConstraintRemoved);
 }
 
 void ConstraintProxy::setProxyModel(QAbstractProxyModel *proxy)

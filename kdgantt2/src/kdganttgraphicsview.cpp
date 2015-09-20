@@ -299,10 +299,10 @@ GraphicsView::GraphicsView(QWidget *parent)
             this, SLOT(slotHorizontalScrollValueChanged(int)));
     connect(&_d->scene, SIGNAL(gridChanged()),
             this, SLOT(slotGridChanged()));
-    connect(&_d->scene, SIGNAL(entered(QModelIndex)),
-            this, SIGNAL(entered(QModelIndex)));
-    connect(&_d->scene, SIGNAL(pressed(QModelIndex)),
-            this, SIGNAL(pressed(QModelIndex)));
+    connect(&_d->scene, &GraphicsScene::entered,
+            this, &GraphicsView::entered);
+    connect(&_d->scene, &GraphicsScene::pressed,
+            this, &GraphicsView::pressed);
     connect(&_d->scene, SIGNAL(clicked(QModelIndex)),
             this, SLOT(slotItemClicked(QModelIndex)));
     connect(&_d->scene, SIGNAL(doubleClicked(QModelIndex)),

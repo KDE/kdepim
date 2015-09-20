@@ -85,18 +85,18 @@ QSize Legend::minimumSizeHint() const
 void Legend::setModel(QAbstractItemModel *model)
 {
     if (this->model() != 0) {
-        disconnect(this->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(modelDataChanged()));
-        disconnect(this->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(modelDataChanged()));
-        disconnect(this->model(), SIGNAL(columnsRemoved(QModelIndex,int,int)), this, SLOT(modelDataChanged()));
+        disconnect(this->model(), &QAbstractItemModel::dataChanged, this, &Legend::modelDataChanged);
+        disconnect(this->model(), &QAbstractItemModel::rowsRemoved, this, &Legend::modelDataChanged);
+        disconnect(this->model(), &QAbstractItemModel::columnsRemoved, this, &Legend::modelDataChanged);
     }
 
     QAbstractItemView::setModel(model);
     d->proxyModel.setSourceModel(model);
 
     if (this->model() != 0) {
-        connect(this->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(modelDataChanged()));
-        connect(this->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(modelDataChanged()));
-        connect(this->model(), SIGNAL(columnsRemoved(QModelIndex,int,int)), this, SLOT(modelDataChanged()));
+        connect(this->model(), &QAbstractItemModel::dataChanged, this, &Legend::modelDataChanged);
+        connect(this->model(), &QAbstractItemModel::rowsRemoved, this, &Legend::modelDataChanged);
+        connect(this->model(), &QAbstractItemModel::columnsRemoved, this, &Legend::modelDataChanged);
     }
 
 }

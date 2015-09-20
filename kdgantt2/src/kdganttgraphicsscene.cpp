@@ -172,7 +172,7 @@ void GraphicsScene::init()
 {
     setItemIndexMethod(QGraphicsScene::NoIndex);
     setConstraintModel(new ConstraintModel(this));
-    connect(d->grid, SIGNAL(gridChanged()), this, SLOT(slotGridChanged()));
+    connect(d->grid, &AbstractGrid::gridChanged, this, &GraphicsScene::slotGridChanged);
 }
 
 /* NOTE: The delegate should really be a property
@@ -240,8 +240,8 @@ void GraphicsScene::setConstraintModel(ConstraintModel *cm)
     }
     d->constraintModel = cm;
 
-    connect(cm, SIGNAL(constraintAdded(Constraint)), this, SLOT(slotConstraintAdded(Constraint)));
-    connect(cm, SIGNAL(constraintRemoved(Constraint)), this, SLOT(slotConstraintRemoved(Constraint)));
+    connect(cm, &ConstraintModel::constraintAdded, this, &GraphicsScene::slotConstraintAdded);
+    connect(cm, &ConstraintModel::constraintRemoved, this, &GraphicsScene::slotConstraintRemoved);
     d->resetConstraintItems();
 }
 
@@ -276,7 +276,7 @@ void GraphicsScene::setGrid(AbstractGrid *grid)
         disconnect(d->grid);
     }
     d->grid = grid;
-    connect(d->grid, SIGNAL(gridChanged()), this, SLOT(slotGridChanged()));
+    connect(d->grid, &AbstractGrid::gridChanged, this, &GraphicsScene::slotGridChanged);
     d->grid->setModel(model);
     slotGridChanged();
 }

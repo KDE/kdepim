@@ -270,10 +270,10 @@ void View::setLeftView(QAbstractItemView *aiv)
                 this, SLOT(slotExpanded(QModelIndex)));
     }
 
-    connect(d->gfxview.verticalScrollBar(), SIGNAL(valueChanged(int)),
-            d->leftWidget->verticalScrollBar(), SLOT(setValue(int)));
-    connect(d->leftWidget->verticalScrollBar(), SIGNAL(valueChanged(int)),
-            d->gfxview.verticalScrollBar(), SLOT(setValue(int)));
+    connect(d->gfxview.verticalScrollBar(), &QAbstractSlider::valueChanged,
+            d->leftWidget->verticalScrollBar(), &QAbstractSlider::setValue);
+    connect(d->leftWidget->verticalScrollBar(), &QAbstractSlider::valueChanged,
+            d->gfxview.verticalScrollBar(), &QAbstractSlider::setValue);
     connect(d->leftWidget->verticalScrollBar(), SIGNAL(rangeChanged(int,int)),
             this, SLOT(slotLeftWidgetVerticalRangeChanged(int,int)));
     connect(d->gfxview.verticalScrollBar(), SIGNAL(rangeChanged(int,int)),
