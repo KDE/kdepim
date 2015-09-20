@@ -503,10 +503,10 @@ void SearchRuleWidgetLister::slotRemoveWidget(QWidget *w)
 
 void SearchRuleWidgetLister::reconnectWidget(SearchRuleWidget *w)
 {
-    connect(w, SIGNAL(addWidget(QWidget*)),
-            this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection);
-    connect(w, SIGNAL(removeWidget(QWidget*)),
-            this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection);
+    connect(w, &SearchRuleWidget::addWidget,
+            this, &SearchRuleWidgetLister::slotAddWidget, Qt::UniqueConnection);
+    connect(w, &SearchRuleWidget::removeWidget,
+            this, &SearchRuleWidgetLister::slotRemoveWidget, Qt::UniqueConnection);
 }
 
 void SearchRuleWidgetLister::updateAddRemoveButton()
@@ -656,12 +656,12 @@ void SearchPatternEdit::initLayout(SearchPatternEditOptions options, SearchModeT
         const int numberOfWidget(mRuleLister->widgets().count());
         for (int i = 0; i < numberOfWidget; ++i) {
             SearchRuleWidget *srw = static_cast<SearchRuleWidget *>(mRuleLister->widgets().at(i));
-            connect(srw, SIGNAL(fieldChanged(QString)),
-                    this, SLOT(slotAutoNameHack()));
-            connect(srw, SIGNAL(contentsChanged(QString)),
-                    this, SLOT(slotAutoNameHack()));
-            connect(srw, SIGNAL(returnPressed()),
-                    this, SIGNAL(returnPressed()));
+            connect(srw, &SearchRuleWidget::fieldChanged,
+                    this, &SearchPatternEdit::slotAutoNameHack);
+            connect(srw, &SearchRuleWidget::contentsChanged,
+                    this, &SearchPatternEdit::slotAutoNameHack);
+            connect(srw, &SearchRuleWidget::returnPressed,
+                    this, &SearchPatternEdit::returnPressed);
         }
     } else {
         qCDebug(MAILCOMMON_LOG) << "No first SearchRuleWidget, though slotClear() has been called!";
@@ -670,7 +670,7 @@ void SearchPatternEdit::initLayout(SearchPatternEditOptions options, SearchModeT
     connect(mRuleLister, SIGNAL(widgetAdded(QWidget*)),
             this, SLOT(slotRuleAdded(QWidget*)));
     connect(mRuleLister, SIGNAL(widgetRemoved()), this, SIGNAL(patternChanged()));
-    connect(mRuleLister, SIGNAL(clearWidgets()), this, SIGNAL(patternChanged()));
+    connect(mRuleLister, &KPIM::KWidgetLister::clearWidgets, this, &SearchPatternEdit::patternChanged);
 
     layout->addWidget(mRuleLister);
 }
@@ -735,8 +735,8 @@ void SearchPatternEdit::slotAutoNameHack()
 void SearchPatternEdit::slotRuleAdded(QWidget *newRuleWidget)
 {
     SearchRuleWidget *srw = static_cast<SearchRuleWidget *>(newRuleWidget);
-    connect(srw, SIGNAL(fieldChanged(QString)), this, SLOT(slotAutoNameHack()));
-    connect(srw, SIGNAL(contentsChanged(QString)), this, SLOT(slotAutoNameHack()));
-    connect(srw, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+    connect(srw, &SearchRuleWidget::fieldChanged, this, &SearchPatternEdit::slotAutoNameHack);
+    connect(srw, &SearchRuleWidget::contentsChanged, this, &SearchPatternEdit::slotAutoNameHack);
+    connect(srw, &SearchRuleWidget::returnPressed, this, &SearchPatternEdit::returnPressed);
     Q_EMIT patternChanged();
 }

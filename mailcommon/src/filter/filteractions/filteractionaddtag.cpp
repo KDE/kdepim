@@ -38,7 +38,7 @@ FilterActionAddTag::FilterActionAddTag(QObject *parent)
       mComboBox(0)
 {
     mList = FilterManager::instance()->tagList();
-    connect(FilterManager::instance(), SIGNAL(tagListingFinished()), SLOT(slotTagListingFinished()));
+    connect(FilterManager::instance(), &FilterManager::tagListingFinished, this, &FilterActionAddTag::slotTagListingFinished);
 }
 
 QWidget *FilterActionAddTag::createParamWidget(QWidget *parent) const

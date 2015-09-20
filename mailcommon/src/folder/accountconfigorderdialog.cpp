@@ -119,7 +119,7 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     connect(d->mUpButton, &QPushButton::clicked, this, &AccountConfigOrderDialog::slotMoveUp);
     connect(d->mDownButton, &QPushButton::clicked, this, &AccountConfigOrderDialog::slotMoveDown);
     connect(d->mListAccount, &QListWidget::itemSelectionChanged, this, &AccountConfigOrderDialog::slotEnableControls);
-    connect(d->mListAccount->model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), SLOT(slotEnableControls()));
+    connect(d->mListAccount->model(), &QAbstractItemModel::rowsMoved, this, &AccountConfigOrderDialog::slotEnableControls);
 
     connect(okButton, &QPushButton::clicked, this, &AccountConfigOrderDialog::slotOk);
     readConfig();

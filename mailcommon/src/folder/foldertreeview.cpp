@@ -88,8 +88,8 @@ void FolderTreeView::init(bool showUnreadCount)
     mToolTipDisplayPolicy = FolderTreeWidget::DisplayAlways;
 
     header()->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(header(), SIGNAL(customContextMenuRequested(QPoint)),
-            SLOT(slotHeaderContextMenuRequested(QPoint)));
+    connect(header(), &QWidget::customContextMenuRequested,
+            this, &FolderTreeView::slotHeaderContextMenuRequested);
 
     mCollectionStatisticsDelegate = new Akonadi::CollectionStatisticsDelegate(this);
     mCollectionStatisticsDelegate->setProgressAnimationEnabled(true);

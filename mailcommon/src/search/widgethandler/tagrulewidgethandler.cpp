@@ -53,7 +53,7 @@ FillTagComboJob::FillTagComboJob(KComboBox *combo, QObject *parent)
     : KJob(parent),
       mComboBox(combo)
 {
-    connect(combo, SIGNAL(destroyed(QObject*)), this, SLOT(onDestroyed()));
+    connect(combo, &QObject::destroyed, this, &FillTagComboJob::onDestroyed);
 }
 
 void FillTagComboJob::onDestroyed()

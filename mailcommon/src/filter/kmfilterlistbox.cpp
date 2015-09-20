@@ -128,8 +128,8 @@ KMFilterListBox::KMFilterListBox(const QString &title, QWidget *parent)
     mListWidget->setWhatsThis(i18n(_wt_filterlist));
     mListWidget->setDragDropMode(QAbstractItemView::InternalMove);
     mListWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    connect(mListWidget->model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-            SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)));
+    connect(mListWidget->model(), &QAbstractItemModel::rowsMoved,
+            this, &KMFilterListBox::slotRowsMoved);
 
     mSearchListWidget = new KListWidgetSearchLine(this, mListWidget);
     mSearchListWidget->setPlaceholderText(

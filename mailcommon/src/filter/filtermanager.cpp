@@ -129,7 +129,7 @@ FilterManager::FilterManager()
     qDBusRegisterMetaType<QList<qint64> >();
     Akonadi::ServerManager::State state = Akonadi::ServerManager::self()->state();
     if (state == Akonadi::ServerManager::Running) {
-        QTimer::singleShot(0, this, SLOT(slotReadConfig()));
+        QTimer::singleShot(0, this, &FilterManager::slotReadConfig);
     } else {
         connect(Akonadi::ServerManager::self(), &Akonadi::ServerManager::stateChanged, this, &FilterManager::slotServerStateChanged);
     }

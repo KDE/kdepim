@@ -347,8 +347,8 @@ void FilterActionWidgetLister::connectWidget(QWidget *widget, FilterAction *filt
     if (filterAction) {
         w->setAction(filterAction);
     }
-    connect(w, SIGNAL(filterModified()),
-            this, SIGNAL(filterModified()), Qt::UniqueConnection);
+    connect(w, &FilterActionWidget::filterModified,
+            this, &FilterActionWidgetLister::filterModified, Qt::UniqueConnection);
     reconnectWidget(w);
 }
 

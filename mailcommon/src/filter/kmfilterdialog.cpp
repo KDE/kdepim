@@ -314,8 +314,8 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
     mFolderRequester = new MailCommon::FolderRequester;
     mFolderRequester->setNotAllowToCreateNewFolder(true);
     applySpecificFiltersLayout->addWidget(mFolderRequester);
-    connect(mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)),
-            this, SLOT(slotFolderChanged(Akonadi::Collection)));
+    connect(mFolderRequester, &FolderRequester::folderChanged,
+            this, &KMFilterDialog::slotFolderChanged);
     mRunNow = new QPushButton(i18n("Run Now"));
     mRunNow->setEnabled(false);
     applySpecificFiltersLayout->addWidget(mRunNow);
@@ -363,8 +363,8 @@ KMFilterDialog::KMFilterDialog(const QList<KActionCollection *> &actionCollectio
             this, &KMFilterDialog::slotApply);
 
     // save dialog size on 'OK'
-    connect(okButton, SIGNAL(clicked()),
-            this, SLOT(slotSaveSize()));
+    connect(okButton, &QAbstractButton::clicked,
+            this, &KMFilterDialog::slotSaveSize);
 
     // destruct the dialog on close and Cancel
     connect(buttonBox->button(QDialogButtonBox::Cancel), &QAbstractButton::clicked,
@@ -480,8 +480,8 @@ void KMFilterDialog::slotRunFilters()
     job->setProperty("requiredPart", QVariant::fromValue(requiredPart));
     job->setProperty("listFilters", QVariant::fromValue(selectedFiltersId));
 
-    connect(job, SIGNAL(result(KJob*)),
-            this, SLOT(slotFetchItemsForFolderDone(KJob*)));
+    connect(job, &KJob::result,
+            this, &KMFilterDialog::slotFetchItemsForFolderDone);
 
     mRunNow->setEnabled(false);   //Disable it
 }
