@@ -24,7 +24,7 @@
 #define MAILCOMMON_KMFILTERDIALOG_H
 
 #include "mailcommon_export.h"
-#include "filteractions/filteraction.h"
+#include "mailcommon/filteraction.h"
 #include "filterimporterexporter.h"
 #include "mailfilter.h"
 #include "search/searchpattern.h"

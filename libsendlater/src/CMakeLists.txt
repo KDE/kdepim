@@ -68,6 +68,7 @@ install(FILES
 install(FILES
     ${SendLater_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/sendlater_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/sendlateragentsettings.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/sendlater
     COMPONENT Devel
 )

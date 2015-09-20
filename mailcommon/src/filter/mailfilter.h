@@ -22,7 +22,7 @@
 
 #include "mailcommon_export.h"
 
-#include "filteractions/filteraction.h"
+#include "mailcommon/filteraction.h"
 #include "../search/searchpattern.h"
 
 #include <QKeySequence>

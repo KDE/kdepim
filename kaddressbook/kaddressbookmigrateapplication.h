@@ -20,7 +20,7 @@
 #ifndef KADDRESSBOOKMIGRATEAPPLICATION_H
 #define KADDRESSBOOKMIGRATEAPPLICATION_H
 
-#include <migration/migrateapplicationfiles.h>
+#include <pimcommon/migrateapplicationfiles.h>
 #include "kaddressbook_export.h"
 
 class KADDRESSBOOK_EXPORT KAddressBookMigrateApplication

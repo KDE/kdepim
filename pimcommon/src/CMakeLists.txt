@@ -526,6 +526,7 @@ ecm_generate_headers(PimCommon_gravatar_HEADERS
 ecm_generate_headers(PimCommon_migrate_HEADERS
   HEADER_NAMES
   MigrateApplicationFiles
+  MigrateFileInfo
   REQUIRED_HEADERS PimCommon_HEADERS
   PREFIX PimCommon
   RELATIVE migration
