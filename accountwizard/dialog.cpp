@@ -57,7 +57,7 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags flags) :
 
     if (Global::assistant().isEmpty()) {
         TypePage *typePage = new TypePage(this);
-        connect(typePage->treeview(), SIGNAL(doubleClicked(QModelIndex)), SLOT(slotNextPage()));
+        connect(typePage->treeview(), &QAbstractItemView::doubleClicked, this, &Dialog::slotNextPage);
 #ifndef ACCOUNTWIZARD_NO_GHNS
         connect(typePage, &TypePage::ghnsWanted, this, &Dialog::slotGhnsWanted);
 #endif
@@ -67,7 +67,7 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags flags) :
 #ifndef ACCOUNTWIZARD_NO_GHNS
         ProviderPage *ppage = new ProviderPage(this);
         connect(typePage, &TypePage::ghnsWanted, ppage, &ProviderPage::startFetchingData);
-        connect(ppage->treeview(), SIGNAL(doubleClicked(QModelIndex)), SLOT(slotNextPage()));
+        connect(ppage->treeview(), &QAbstractItemView::doubleClicked, this, &Dialog::slotNextPage);
         connect(ppage, &ProviderPage::ghnsNotWanted, this, &Dialog::slotGhnsNotWanted);
         mProviderPage = addPage(ppage, i18n("Select Provider"));
         setAppropriate(mProviderPage, false);
