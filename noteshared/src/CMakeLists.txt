@@ -87,12 +87,20 @@ install(TARGETS
 
 ecm_generate_headers(NoteShared_CamelCase_HEADERS
   HEADER_NAMES
-  network/NotesNetworkReceiver
   resources/LocalResourceCreator
   NoteUtils
   REQUIRED_HEADERS NoteShared_HEADERS
   PREFIX NoteShared
 )
+
+ecm_generate_headers(NoteShared_network_HEADERS
+  HEADER_NAMES
+  NotesNetworkReceiver
+  REQUIRED_HEADERS NoteShared_network_HEADERS
+  PREFIX NoteShared
+  RELATIVE network/
+)
+
 
 ecm_generate_headers(NoteShared_akonadi_HEADERS
   HEADER_NAMES
@@ -158,17 +166,30 @@ ecm_generate_headers(NoteShared_job_HEADERS
 if(${CMAKE_SOURCE_DIR} STREQUAL ${noteshared_SOURCE_DIR})
 install(FILES
     ${NoteShared_CamelCase_HEADERS}
+    ${NoteShared_network_HEADERS}
+    ${NoteShared_akonadi_HEADERS}
+    ${NoteShared_widget_HEADERS}
     ${NoteShared_attributes_HEADERS}
+    ${NoteShared_editor_HEADERS}
+    ${NoteShared_alarms_HEADERS}
+    ${NoteShared_config_HEADERS}
+    ${NoteShared_job_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/NoteShared
     COMPONENT Devel
 )
 
 install(FILES
-    ${NoteShared_HEADERS}
+    ${NoteShared_CamelCase_HEADERS}
+    ${NoteShared_network_HEADERS}
+    ${NoteShared_akonadi_HEADERS}
+    ${NoteShared_widget_HEADERS}
+    ${NoteShared_attributes_HEADERS}
+    ${NoteShared_editor_HEADERS}
+    ${NoteShared_alarms_HEADERS}
+    ${NoteShared_config_HEADERS}
+    ${NoteShared_job_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/noteshared_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/notesharedglobalconfig.h
-    ${NoteShared_CamelCase_HEADERS}
-    ${NoteShared_attributes_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/noteshared
     COMPONENT Devel
 )

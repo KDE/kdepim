@@ -17,7 +17,7 @@
 
 #include "notesmanager.h"
 #include "notesharedglobalconfig.h"
-#include "NoteShared/network/NotesNetworkReceiver"
+#include "NoteShared/NotesNetworkReceiver"
 #include "NoteShared/CreateNewNoteJob"
 #include "NoteShared/NotesChangeRecorder"
 #include "NoteShared/NotesAkonadiTreeModel"
