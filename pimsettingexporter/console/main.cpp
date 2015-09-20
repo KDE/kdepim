@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
         console->setTemplateFileName(templateFile);
     }
     console->start();
-    QObject::connect(console, SIGNAL(finished()), &app, SLOT(quit()));
+    QObject::connect(console, &PimSettingExporterConsole::finished, &app, &QCoreApplication::quit);
 
     return app.exec();
 }

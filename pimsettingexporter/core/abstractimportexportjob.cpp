@@ -50,7 +50,7 @@ AbstractImportExportJob::AbstractImportExportJob(QObject *parent, ArchiveStorage
       mImportExportProgressIndicator(new ImportExportProgressIndicatorBase(this))
 {
     mImportExportProgressIndicator->setNumberOfStep(numberOfStep);
-    connect(mImportExportProgressIndicator, SIGNAL(info(QString)), this, SIGNAL(info(QString)));
+    connect(mImportExportProgressIndicator, &ImportExportProgressIndicatorBase::info, this, &AbstractImportExportJob::info);
 }
 
 AbstractImportExportJob::~AbstractImportExportJob()

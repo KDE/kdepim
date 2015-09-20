@@ -42,8 +42,8 @@ int main(int argc, char *argv[])
 
     PimSettingExporterWindow *backupMailWin = new PimSettingExporterWindow();
     parser.setExportWindow(backupMailWin);
-    QObject::connect(&service, SIGNAL(activateRequested(QStringList,QString)),
-                     &parser, SLOT(slotActivateRequested(QStringList,QString)));
+    QObject::connect(&service, &KDBusService::activateRequested,
+                     &parser, &PimSettingCommandLineOption::slotActivateRequested);
     backupMailWin->show();
     parser.handleCommandLine();
 
