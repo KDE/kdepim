@@ -1,4 +1,3 @@
-project(libksieve)
 
 include(CheckTypeSize)
 check_type_size("unsigned long" SIZEOF_UNSIGNED_LONG)
@@ -12,7 +11,6 @@ set(libksieve_parser_SRCS
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libksieve\")
 
-add_subdirectory(ksieve)
 add_subdirectory(kmanagesieve)
 add_subdirectory(ksieveui)
 
