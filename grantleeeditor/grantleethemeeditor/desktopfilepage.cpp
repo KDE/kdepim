@@ -32,7 +32,7 @@
 #include <QDir>
 
 #include <pimcommon/plaintexteditorwidget.h>
-#include <texteditor/plaintexteditor/plaintexteditor.h>
+#include <pimcommon/plaintexteditor.h>
 
 using namespace GrantleeThemeEditor;
 

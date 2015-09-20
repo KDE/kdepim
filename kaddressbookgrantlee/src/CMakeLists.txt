@@ -79,11 +79,19 @@ ecm_generate_headers(KaddressbookGrantlee_widgets_HEADERS
   PREFIX KaddressbookGrantlee
 )
 
+ecm_generate_headers(KaddressbookGrantlee_printing_HEADERS
+  HEADER_NAMES
+  GrantleePrint
+  REQUIRED_HEADERS KaddressbookGrantlee_printing_HEADERS
+  RELATIVE printing
+  PREFIX KaddressbookGrantlee
+)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbookgrantlee_SOURCE_DIR})
 install(FILES
     ${KaddressbookGrantlee_widgets_HEADERS}
     ${KaddressbookGrantlee_formatter_HEADERS}
+    ${KaddressbookGrantlee_printing_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KaddressbookGrantlee
     COMPONENT Devel
 )
@@ -93,6 +101,7 @@ install(FILES
     ${KaddressbookGrantlee_widgets_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/kaddressbook_grantlee_export.h
     ${KaddressbookGrantlee_formatter_HEADERS}
+    ${KaddressbookGrantlee_printing_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kaddressbookgrantlee
     COMPONENT Devel
 )

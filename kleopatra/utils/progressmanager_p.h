@@ -37,7 +37,7 @@
 
 #include <Libkdepim/ProgressManager>
 
-#include <kleo/job.h>
+#include <libkleo/job.h>
 
 #include <QPointer>
 

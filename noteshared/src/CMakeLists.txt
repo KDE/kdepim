@@ -166,6 +166,7 @@ install(FILES
 install(FILES
     ${NoteShared_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/noteshared_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/notesharedglobalconfig.h
     ${NoteShared_CamelCase_HEADERS}
     ${NoteShared_attributes_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/noteshared

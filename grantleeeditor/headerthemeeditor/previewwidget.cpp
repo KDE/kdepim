@@ -18,8 +18,8 @@
 #include "previewwidget.h"
 #include "themeeditorutil.h"
 #include "messageviewer/viewer.h"
-#include "header/headerstrategy.h"
-#include "header/grantleeheaderteststyle.h"
+#include "messageviewer/headerstrategy.h"
+#include "messageviewer/grantleeheaderteststyle.h"
 
 #include <QPushButton>
 #include <KLocalizedString>

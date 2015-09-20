@@ -20,7 +20,7 @@
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
-#include "printing/grantleeprint.h"
+#include "kaddressbookgrantlee/grantleeprint.h"
 
 #include <KContacts/Addressee>
 

@@ -19,7 +19,7 @@
 */
 
 #include "storageservicetreewidget.h"
-#include "storageservice/storageserviceabstract.h"
+#include "pimcommon/storageserviceabstract.h"
 #include "storageservice/dialog/storageservicechecknamedialog.h"
 #include "storageservicemanagerglobalconfig.h"
 #include "storageservice/storageserviceprogressmanager.h"

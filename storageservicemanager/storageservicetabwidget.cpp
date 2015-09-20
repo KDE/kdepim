@@ -20,7 +20,7 @@
 
 #include "storageservicetabwidget.h"
 #include "storageservicepage.h"
-#include "storageservice/storageserviceabstract.h"
+#include "pimcommon/storageserviceabstract.h"
 
 #include <QMap>
 

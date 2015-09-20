@@ -329,8 +329,19 @@ ecm_generate_headers(MessageViewer_settings_HEADERS
 )
 
 
+ecm_generate_headers(MessageViewer_header_HEADERS
+  HEADER_NAMES
+  HeaderStrategy
+  GrantleeHeaderTestStyle
+  HeaderStyle
+  REQUIRED_HEADERS MessageViewer_header_HEADERS
+  PREFIX MessageViewer
+  RELATIVE header
+)
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
 install(FILES
+    ${MessageViewer_header_HEADERS}
     ${MessageViewer_utils_HEADERS}
     ${MessageViewer_interfaces_HEADERS}
     ${MessageViewer_viewer_HEADERS}
@@ -340,6 +351,7 @@ install(FILES
 )
 
 install(FILES
+    ${MessageViewer_header_HEADERS}
     ${MessageViewer_utils_HEADERS}
     ${MessageViewer_interfaces_HEADERS}
     ${MessageViewer_HEADERS}

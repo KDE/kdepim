@@ -38,7 +38,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <kleo/keyfilter.h>
+#include <libkleo/keyfilter.h>
 
 #include <vector>
 
