@@ -20,7 +20,7 @@
 #include "sievetextedit.h"
 #include "editor/sievelinenumberarea.h"
 #include "editor/sieveeditorutil.h"
-#include "util/editorutil.h"
+#include "pimcommon/editorutil.h"
 #include "editor/sievetexteditorspellcheckdecorator.h"
 #include "PimCommon/PlainTextSyntaxSpellCheckingHighlighter"
 #include <KLocalizedString>

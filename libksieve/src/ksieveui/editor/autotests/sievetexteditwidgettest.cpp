@@ -19,8 +19,8 @@
 #include "../sievetexteditwidget.h"
 #include <QTest>
 #include <editor/sievetextedit.h>
-#include <texteditor/plaintexteditor/plaintexteditfindbar.h>
-#include <widgets/slidecontainer.h>
+#include <pimcommon/plaintexteditfindbar.h>
+#include <pimcommon/slidecontainer.h>
 
 SieveTextEditWidgetTest::SieveTextEditWidgetTest(QObject *parent)
     : QObject(parent)

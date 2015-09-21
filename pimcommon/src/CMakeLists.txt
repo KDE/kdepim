@@ -631,6 +631,7 @@ ecm_generate_headers(PimCommon_plaintexteditor_HEADERS
 ecm_generate_headers(PimCommon_texteditor_commonwidget_HEADERS
   HEADER_NAMES
   TextGotoLineWidget
+  TextEditFindBarBase 
   REQUIRED_HEADERS PimCommon_HEADERS
   PREFIX PimCommon
   RELATIVE texteditor/commonwidget

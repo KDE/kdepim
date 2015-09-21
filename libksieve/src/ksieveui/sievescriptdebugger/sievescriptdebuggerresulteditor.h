@@ -18,7 +18,7 @@
 #ifndef SIEVESCRIPTDEBUGGERRESULTEDITOR_H
 #define SIEVESCRIPTDEBUGGERRESULTEDITOR_H
 
-#include <texteditor/plaintexteditor/plaintexteditor.h>
+#include <pimcommon/plaintexteditor.h>
 
 namespace KSieveUi
 {
