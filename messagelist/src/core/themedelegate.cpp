@@ -22,7 +22,7 @@
 #include "core/messageitem.h"
 #include "core/groupheaderitem.h"
 #include "core/manager.h"
-#include "core/settings.h"
+#include "settings.h"
 
 #include "MessageCore/StringUtil"
 #include "MessageCore/MessageCoreSettings"

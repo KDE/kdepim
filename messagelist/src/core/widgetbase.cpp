@@ -29,7 +29,7 @@
 #include "core/model.h"
 #include "core/messageitem.h"
 #include "core/storagemodelbase.h"
-#include "core/settings.h"
+#include "settings.h"
 
 #include "utils/configureaggregationsdialog.h"
 #include "utils/configurethemesdialog.h"

@@ -27,7 +27,7 @@
 #include "core/messageitem.h"
 #include "core/model.h"
 #include "core/theme.h"
-#include "core/settings.h"
+#include "settings.h"
 #include "core/storagemodelbase.h"
 #include "core/widgetbase.h"
 #include "messagelistutil.h"

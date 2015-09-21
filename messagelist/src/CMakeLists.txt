@@ -55,7 +55,7 @@ set(libmessagelist_core_HEADERS
   core/model.h
   core/modelinvariantindex.h
   core/modelinvariantrowmapper.h
-  ${CMAKE_CURRENT_BINARY_DIR}/core/settings.h
+  ${CMAKE_CURRENT_BINARY_DIR}/settings.h
   core/storagemodelbase.h
   core/view.h
   core/widgetbase.h
@@ -70,7 +70,7 @@ set(libmessagelist_utils_HEADERS
   utils/themeconfigbutton.h
 )
 
-kconfig_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
+kconfig_add_kcfg_files(libmessagelist_SRCS
   core/settings.kcfgc
 )
 
@@ -79,7 +79,7 @@ generate_export_header(KF5MessageList BASE_NAME messagelist)
 add_library(KF5::MessageList ALIAS KF5MessageList)
 
 target_include_directories(KF5MessageList INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/MessageList/;${KDE_INSTALL_INCLUDEDIR_KF5}/messagelist>")
-target_include_directories(KF5MessageList PUBLIC "$<BUILD_INTERFACE:${MessageList_SOURCE_DIR}/src;${MessageList_BINARY_DIR}/src;>")
+target_include_directories(KF5MessageList PUBLIC "$<BUILD_INTERFACE:${MessageList_SOURCE_DIR}/src;${MessageList_BINARY_DIR}/src;${MessageList_BINARY_DIR}/src/core/>")
 
 
 target_link_libraries(KF5MessageList
@@ -164,7 +164,7 @@ install(FILES
     ${MessageList_HEADERS}
     ${MessageList_widgets_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messagelist_export.h
-    ${CMAKE_CURRENT_BINARY_DIR}/core/settings.h
+    ${CMAKE_CURRENT_BINARY_DIR}/settings.h
     ${MessageList_CamelCase_HEADERS}
     ${MessageList_core_HEADERS}
     ${MessageList_util_HEADERS}
