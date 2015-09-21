@@ -58,5 +58,5 @@ void HeaderStyleInterface::addActionToMenu(KActionMenu *menu, QActionGroup *acti
 
 void MessageViewer::HeaderStyleInterface::slotStyleChanged()
 {
-    Q_EMIT styleChanged(mHeaderStylePlugin->headerStyle(), mHeaderStylePlugin->headerStrategy());
+    Q_EMIT styleChanged(mHeaderStylePlugin);
 }

@@ -40,7 +40,7 @@ public:
     virtual void createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac) = 0;
     virtual void activateAction() = 0;
 Q_SIGNALS:
-    void styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy);
+    void styleChanged(MessageViewer::HeaderStylePlugin *plugin);
     void styleUpdated();
 
 protected Q_SLOTS:

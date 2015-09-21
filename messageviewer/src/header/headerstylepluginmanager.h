@@ -34,6 +34,8 @@ public:
     ~HeaderStylePluginManager();
 
     QVector<MessageViewer::HeaderStylePlugin *> pluginsList() const;
+    QStringList pluginListName() const;
+
 private:
     HeaderStylePluginManagerPrivate *const d;
 };

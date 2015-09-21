@@ -158,3 +158,12 @@ QVector<MessageViewer::HeaderStylePlugin *> HeaderStylePluginManager::pluginsLis
 {
     return d->pluginsList();
 }
+
+QStringList HeaderStylePluginManager::pluginListName() const
+{
+    QStringList lst;
+    Q_FOREACH(MessageViewer::HeaderStylePlugin *plugin, d->pluginsList()) {
+        lst << plugin->name();
+    }
+    return lst;
+}

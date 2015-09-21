@@ -25,8 +25,7 @@ class KActionMenu;
 class KActionCollection;
 namespace MessageViewer
 {
-class HeaderStyle;
-class HeaderStrategy;
+class HeaderStylePlugin;
 class HeaderStyleMenuManagerPrivate;
 class MESSAGEVIEWER_EXPORT HeaderStyleMenuManager : public QObject
 {
@@ -39,7 +38,7 @@ public:
 
     void setPluginName(const QString &pluginName);
 Q_SIGNALS:
-    void styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy);
+    void styleChanged(MessageViewer::HeaderStylePlugin *plugin);
     void styleUpdated();
 
 private:

@@ -22,8 +22,7 @@
 class QTextEdit;
 namespace MessageViewer
 {
-class HeaderStyle;
-class HeaderStrategy;
+class HeaderStylePlugin;
 }
 
 class HeaderStyleMenuTest : public QWidget
@@ -33,7 +32,7 @@ public:
     explicit HeaderStyleMenuTest(QWidget *parent = Q_NULLPTR);
     ~HeaderStyleMenuTest();
 private Q_SLOTS:
-    void styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy);
+    void styleChanged(MessageViewer::HeaderStylePlugin *plugin);
 private:
     QTextEdit *mTextEdit;
 };

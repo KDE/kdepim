@@ -34,6 +34,7 @@
 
 #include <header/headerstrategy.h>
 #include <header/headerstyle.h>
+#include <header/headerstyleplugin.h>
 
 HeaderStyleMenuTest::HeaderStyleMenuTest(QWidget *parent)
     : QWidget(parent)
@@ -54,9 +55,10 @@ HeaderStyleMenuTest::~HeaderStyleMenuTest()
 
 }
 
-void HeaderStyleMenuTest::styleChanged(MessageViewer::HeaderStyle *headerStyle, MessageViewer::HeaderStrategy *headerStrategy)
+void HeaderStyleMenuTest::styleChanged(MessageViewer::HeaderStylePlugin *plugin)
 {
-    mTextEdit->append(QStringLiteral("strategy: %1, headerstyle: %2").arg(QLatin1String(headerStrategy->name())).arg(QLatin1String(headerStyle->name())));
+    mTextEdit->append(QStringLiteral("strategy: %1, headerstyle: %2").arg(QLatin1String(plugin->headerStrategy()->name()))
+                      .arg(QLatin1String(plugin->headerStyle()->name())));
 }
 
 int main(int argc, char **argv)
