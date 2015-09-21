@@ -98,10 +98,11 @@ void HeaderStylePluginManagerPrivate::initializePluginList()
         }
         const QVariant p = info.metaData.rawData().value(QStringLiteral("X-KDE-MessageViewer-Header-Order")).toVariant();
         int order = -1;
-        if (p.isValid())
+        if (p.isValid()) {
             order = p.toInt();
+        }
         int pos = 0;
-        for(; pos < listOrder.count(); ++pos) {
+        for (; pos < listOrder.count(); ++pos) {
             if (listOrder.at(pos) > order) {
                 pos--;
                 break;

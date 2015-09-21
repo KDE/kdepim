@@ -23,11 +23,12 @@
 
 #include <KMime/Message>
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 
 class NodeHelperTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
     NodeHelperTest();

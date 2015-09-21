@@ -48,7 +48,6 @@ BroadcastStatus *BroadcastStatus::instance()
     return instance_;
 }
 
-
 class BroadcastStatusPrivate
 {
 public:

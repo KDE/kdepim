@@ -2078,7 +2078,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
         }
     }
 
-    Q_FOREACH(KMime::Content* extraNode, mNodeHelper->extraContents(node)) {
+    Q_FOREACH (KMime::Content *extraNode, mNodeHelper->extraContents(node)) {
         html += renderAttachments(extraNode, bgColor);
     }
 

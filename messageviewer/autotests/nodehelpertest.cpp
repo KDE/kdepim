@@ -46,10 +46,10 @@ void NodeHelperTest::testPersistentIndex()
     subNode->addContent(subsubNode2);
     node->addContent(subNode);
     subsubExtra->addContent(subsubExtraNode);
-    helper.attachExtraContent(node,extra);
-    helper.attachExtraContent(node,extra2);
-    helper.attachExtraContent(subNode,subExtra);
-    helper.attachExtraContent(subsubNode2,subsubExtra);
+    helper.attachExtraContent(node, extra);
+    helper.attachExtraContent(node, extra2);
+    helper.attachExtraContent(subNode, subExtra);
+    helper.attachExtraContent(subsubNode2, subsubExtra);
 
     /*  all content has a internal first child, so indexes starts at 2
      * node                 ""
@@ -121,10 +121,10 @@ void NodeHelperTest::testHREF()
     subNode->addContent(subsubNode2);
     node->addContent(subNode);
     subsubExtra->addContent(subsubExtraNode);
-    helper.attachExtraContent(node,extra);
-    helper.attachExtraContent(node,extra2);
-    helper.attachExtraContent(subNode,subExtra);
-    helper.attachExtraContent(subsubNode2,subsubExtra);
+    helper.attachExtraContent(node, extra);
+    helper.attachExtraContent(node, extra2);
+    helper.attachExtraContent(subNode, subExtra);
+    helper.attachExtraContent(subsubNode2, subsubExtra);
 
     url = QUrl(QStringLiteral(""));
     QCOMPARE(helper.fromHREF(msg, url), node);
@@ -138,12 +138,11 @@ void NodeHelperTest::testHREF()
     url = QUrl(QStringLiteral("attachment:2.3:0:2?place=body"));
     QCOMPARE(helper.fromHREF(msg, url), subsubExtraNode);
 
-    QCOMPARE(helper.asHREF(node,QStringLiteral("body")), QStringLiteral("attachment:?place=body"));
-    QCOMPARE(helper.asHREF(extra,QStringLiteral("body")), QStringLiteral("attachment:0:?place=body"));
-    QCOMPARE(helper.asHREF(subsubNode,QStringLiteral("body")), QStringLiteral("attachment:2.2?place=body"));
-    QCOMPARE(helper.asHREF(subsubExtraNode,QStringLiteral("body")), QStringLiteral("attachment:2.3:0:2?place=body"));
+    QCOMPARE(helper.asHREF(node, QStringLiteral("body")), QStringLiteral("attachment:?place=body"));
+    QCOMPARE(helper.asHREF(extra, QStringLiteral("body")), QStringLiteral("attachment:0:?place=body"));
+    QCOMPARE(helper.asHREF(subsubNode, QStringLiteral("body")), QStringLiteral("attachment:2.2?place=body"));
+    QCOMPARE(helper.asHREF(subsubExtraNode, QStringLiteral("body")), QStringLiteral("attachment:2.3:0:2?place=body"));
 }
-
 
 void NodeHelperTest::testLocalFiles()
 {
@@ -162,10 +161,10 @@ void NodeHelperTest::testLocalFiles()
     subNode->addContent(subsubNode2);
     node->addContent(subNode);
     subsubExtra->addContent(subsubExtraNode);
-    helper.attachExtraContent(node,extra);
-    helper.attachExtraContent(node,extra2);
-    helper.attachExtraContent(subNode,subExtra);
-    helper.attachExtraContent(subsubNode2,subsubExtra);
+    helper.attachExtraContent(node, extra);
+    helper.attachExtraContent(node, extra2);
+    helper.attachExtraContent(subNode, subExtra);
+    helper.attachExtraContent(subsubNode2, subsubExtra);
 
     helper.writeNodeToTempFile(node);
     QCOMPARE(helper.fromHREF(msg, helper.tempFileUrlFromNode(node)), node);
@@ -188,3 +187,4 @@ void NodeHelperTest::testLocalFiles()
 }
 
 QTEST_MAIN(NodeHelperTest)
+

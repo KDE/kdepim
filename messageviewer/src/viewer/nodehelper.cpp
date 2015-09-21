@@ -661,8 +661,8 @@ QString NodeHelper::persistentIndex(const KMime::Content *node) const
     QString indexStr = node->index().toString();
     const KMime::Content *const topLevel = node->topLevel();
     //if the node is an extra node, prepend the index of the extra node to the url
-    Q_FOREACH(KMime::Content* realNode, mExtraContents.keys()) {
-        const QList<KMime::Content*> &extraNodes = extraContents(realNode);
+    Q_FOREACH (KMime::Content *realNode, mExtraContents.keys()) {
+        const QList<KMime::Content *> &extraNodes = extraContents(realNode);
         const int extraNodesSize(extraNodes.size());
         for (int i = 0; i < extraNodesSize; ++i) {
             if (topLevel == extraNodes[i]) {
@@ -677,7 +677,7 @@ QString NodeHelper::persistentIndex(const KMime::Content *node) const
     return indexStr;
 }
 
-KMime::Content* NodeHelper::contentFromIndex(KMime::Content *node, const QString &persistentIndex) const
+KMime::Content *NodeHelper::contentFromIndex(KMime::Content *node, const QString &persistentIndex) const
 {
     KMime::Content *topLevel = node->topLevel();
     if (persistentIndex.contains(QLatin1Char(':'))) {
@@ -686,7 +686,7 @@ KMime::Content* NodeHelper::contentFromIndex(KMime::Content *node, const QString
         QString left = persistentIndex.left(persistentIndex.indexOf(QLatin1Char(':')));
         QString index = persistentIndex.mid(persistentIndex.indexOf(QLatin1Char(':')) + 1);
 
-        QList<KMime::Content*> extras = extraContents(topLevel);
+        QList<KMime::Content *> extras = extraContents(topLevel);
 
         if (index.contains(QLatin1Char(':'))) {
             extras = extraContents(topLevel->content(KMime::ContentIndex(left)));
@@ -696,7 +696,7 @@ KMime::Content* NodeHelper::contentFromIndex(KMime::Content *node, const QString
         const KMime::ContentIndex idx(index);
         const int i = left.toInt();
         if (i >= 0 && i < extras.size()) {
-            const KMime::Content* c = extras[i];
+            const KMime::Content *c = extras[i];
             return c->content(idx);
         }
     } else {
