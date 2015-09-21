@@ -265,7 +265,7 @@ ecm_generate_headers(ksieveui_debug_HEADERS
 
 
 
-install(TARGETS KF5KSieveUi EXPORT KF5SieveUiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5KSieveUi EXPORT KF5KSieveTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libksieve_SOURCE_DIR})
 
 

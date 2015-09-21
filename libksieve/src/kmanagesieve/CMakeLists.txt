@@ -40,7 +40,7 @@ ecm_generate_headers(kmanagesieve_CamelCase_HEADERS
   PREFIX KManageSieve
 )
 
-install(TARGETS KF5KManageSieve EXPORT KF5KManageSieveTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5KManageSieve EXPORT KF5KSieveTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libksieve_SOURCE_DIR})
 install(FILES
     ${kmanagesieve_CamelCase_HEADERS}
