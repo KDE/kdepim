@@ -18,14 +18,6 @@ enterprise_top_left.png
 enterprise_top.png
 enterprise_top_right.png
 enterprise_w.png
-mobile_bg.png
-mobile_status_actionitem.png
-mobile_status_attachment.png
-mobile_status_encrypted.png
-mobile_status_forwarded.png
-mobile_status_important.png
-mobile_status_replied.png
-mobile_status_signed.png
 )
 
 install( FILES ${pics} DESTINATION ${KDE_INSTALL_DATADIR}/libmessageviewer/pics)
