@@ -48,7 +48,10 @@ void GrantleeHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup 
 
 void GrantleeHeaderStyleInterface::activateAction()
 {
-
+    KToggleAction *act = mThemeManager->actionForTheme();
+    if (act) {
+        act->setChecked(true);
+    }
 }
 
 void GrantleeHeaderStyleInterface::slotGrantleeHeaders()
