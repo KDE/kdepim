@@ -51,7 +51,7 @@
 #include <utils/gui-helper.h>
 
 #include <Libkleo/Stl_Util>
-#include <ui/filenamerequester.h>
+#include <libkleo/filenamerequester.h>
 
 #include <KLocalizedString>
 #include <QIcon>

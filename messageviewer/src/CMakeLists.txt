@@ -285,17 +285,25 @@ ecm_generate_headers(MessageViewer_viewer_HEADERS
   Stl_Util
   CSSHelperBase
   MailWebView
-  REQUIRED_HEADERS MessageViewer_HEADERS
+  REQUIRED_HEADERS MessageViewer_viewer_HEADERS
   PREFIX MessageViewer
   RELATIVE viewer
 )
+
+ecm_generate_headers(MessageViewer_main_HEADERS
+  HEADER_NAMES
+  ObjectTreeSourceIf
+  REQUIRED_HEADERS MessageViewer_main_HEADERS
+  PREFIX MessageViewer
+)
+
 
 ecm_generate_headers(MessageViewer_widgets_HEADERS
   HEADER_NAMES
   InvitationSettings
   PrintingSettings
   ConfigureWidget
-  REQUIRED_HEADERS MessageViewer_HEADERS
+  REQUIRED_HEADERS MessageViewer_widgets_HEADERS
   PREFIX MessageViewer
   RELATIVE widgets
 )
@@ -305,7 +313,7 @@ ecm_generate_headers(MessageViewer_utils_HEADERS
   MessageViewerUtil
   AutoQPointer
   MarkMessageReadHandler
-  REQUIRED_HEADERS MessageViewer_HEADERS
+  REQUIRED_HEADERS MessageViewer_utils_HEADERS
   PREFIX MessageViewer
   RELATIVE utils
 )
@@ -317,7 +325,7 @@ ecm_generate_headers(MessageViewer_interfaces_HEADERS
   BodyPartURLHandler
   HtmlWriter
   URLHandler
-  REQUIRED_HEADERS MessageViewer_HEADERS
+  REQUIRED_HEADERS MessageViewer_interfaces_HEADERS
   PREFIX MessageViewer
   RELATIVE interfaces
 )
@@ -325,7 +333,7 @@ ecm_generate_headers(MessageViewer_interfaces_HEADERS
 ecm_generate_headers(MessageViewer_settings_HEADERS
   HEADER_NAMES
   MessageViewerSettings
-  REQUIRED_HEADERS MessageViewer_HEADERS
+  REQUIRED_HEADERS MessageViewer_settings_HEADERS
   PREFIX MessageViewer
   RELATIVE settings
 )
@@ -350,30 +358,56 @@ ecm_generate_headers(MessageViewer_htmlwriter_HEADERS
   RELATIVE htmlwriter
 )
 
+ecm_generate_headers(MessageViewer_adblock_HEADERS
+  HEADER_NAMES
+  AdBlockSettingWidget  
+  AdBlockListWidget
+  REQUIRED_HEADERS MessageViewer_adblock_HEADERS
+  PREFIX MessageViewer
+  RELATIVE adblock
+)
+
+ecm_generate_headers(MessageViewer_gravatar_HEADERS
+  HEADER_NAMES
+  GravatarConfigWidget
+  REQUIRED_HEADERS MessageViewer_gravatar_HEADERS
+  PREFIX MessageViewer
+  RELATIVE gravatar
+)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
 install(FILES
+    ${MessageViewer_settings_HEADERS}
+    ${MessageViewer_gravatar_HEADERS}
+    ${MessageViewer_adblock_HEADERS}
     ${MessageViewer_htmlwriter_HEADERS}
     ${MessageViewer_header_HEADERS}
     ${MessageViewer_utils_HEADERS}
     ${MessageViewer_interfaces_HEADERS}
     ${MessageViewer_viewer_HEADERS}
     ${MessageViewer_widgets_HEADERS}
+    ${MessageViewer_main_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageViewer
     COMPONENT Devel
 )
 
 install(FILES
+    ${MessageViewer_settings_HEADERS}
+    ${MessageViewer_gravatar_HEADERS}
+    ${MessageViewer_adblock_HEADERS}
     ${MessageViewer_htmlwriter_HEADERS}
     ${MessageViewer_header_HEADERS}
     ${MessageViewer_utils_HEADERS}
     ${MessageViewer_interfaces_HEADERS}
     ${MessageViewer_HEADERS}
     ${MessageViewer_viewer_HEADERS}
+    ${MessageViewer_main_HEADERS}
     ${MessageViewer_widgets_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messageviewer_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/globalsettings_messageviewer.h
     ${CMAKE_CURRENT_BINARY_DIR}/messageviewer_debug.h
+    ${CMAKE_CURRENT_BINARY_DIR}/ui_settings_adblock.h
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messageviewer
     COMPONENT Devel

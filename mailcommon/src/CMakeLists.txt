@@ -254,7 +254,7 @@ ecm_generate_headers(MailCommon_CamelCase_HEADERS
   HEADER_NAMES
   MailUtil
   MetaType
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_CamelCase_HEADERS
   PREFIX MailCommon
   RELATIVE util
 )
@@ -262,7 +262,7 @@ ecm_generate_headers(MailCommon_CamelCase_HEADERS
 ecm_generate_headers(MailCommon_top_HEADERS
   HEADER_NAMES
   DBusOperators
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_top_HEADERS
   PREFIX MailCommon
 )
 
@@ -271,7 +271,7 @@ ecm_generate_headers(MailCommon_tag_HEADERS
   TagWidget
   Tag
   AddTagDialog
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_tag_HEADERS
   PREFIX MailCommon
   RELATIVE tag
 )
@@ -286,7 +286,7 @@ ecm_generate_headers(MailCommon_folder_HEADERS
   FolderTreeWidget
   FolderSelectionDialog
   FolderTreeWidgetProxyModel
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_folder_HEADERS
   PREFIX MailCommon
   RELATIVE folder
 )
@@ -294,7 +294,7 @@ ecm_generate_headers(MailCommon_folder_HEADERS
 ecm_generate_headers(MailCommon_kernel_HEADERS
   HEADER_NAMES
   MailKernel
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_kernel_HEADERS
   PREFIX MailCommon
   RELATIVE kernel
 )
@@ -302,7 +302,7 @@ ecm_generate_headers(MailCommon_kernel_HEADERS
 ecm_generate_headers(MailCommon_interfaces_HEADERS
   HEADER_NAMES
   MailInterfaces
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_interfaces_HEADERS
   PREFIX MailCommon
   RELATIVE interfaces
 )
@@ -316,7 +316,7 @@ ecm_generate_headers(MailCommon_filter_HEADERS
   FilterManager
   KMFilterDialog
   ItemContext
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_filter_HEADERS
   PREFIX MailCommon
   RELATIVE filter
 )
@@ -326,7 +326,7 @@ ecm_generate_headers(MailCommon_job_HEADERS
   BackupJob
   JobScheduler
   FolderJob
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_job_HEADERS
   PREFIX MailCommon
   RELATIVE job
 )
@@ -335,7 +335,7 @@ ecm_generate_headers(MailCommon_filteraction_HEADERS
   HEADER_NAMES
   FilterAction
   FilterActionDict
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_filteraction_HEADERS
   PREFIX MailCommon
   RELATIVE filter/filteractions/
 )
@@ -343,7 +343,7 @@ ecm_generate_headers(MailCommon_filteraction_HEADERS
 ecm_generate_headers(MailCommon_mdn_HEADERS
   HEADER_NAMES
   SendMdnHandler
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_mdn_HEADERS
   PREFIX MailCommon
   RELATIVE mdn
 )
@@ -355,7 +355,7 @@ ecm_generate_headers(MailCommon_collectionpage_HEADERS
   CollectionTypeUtil
   CollectionGeneralPage
   CollectionExpiryPage
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_collectionpage_HEADERS
   PREFIX MailCommon
   RELATIVE collectionpage
 )
@@ -364,7 +364,7 @@ ecm_generate_headers(MailCommon_collectionpageattributes_HEADERS
   HEADER_NAMES
   CollectionAnnotationsAttribute
   ExpireCollectionAttribute
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_collectionpageattributes_HEADERS
   PREFIX MailCommon
   RELATIVE collectionpage/attributes
 )
@@ -373,7 +373,8 @@ ecm_generate_headers(MailCommon_filterimporter_HEADERS
   HEADER_NAMES
   FilterImporterBalsa
   FilterImporterClawsMail
-  REQUIRED_HEADERS MailCommon_HEADERS
+  FilterImporterAbstract
+  REQUIRED_HEADERS MailCommon_filterimporter_HEADERS
   PREFIX MailCommon
   RELATIVE filter/filterimporter/
 )
@@ -381,7 +382,7 @@ ecm_generate_headers(MailCommon_filterimporter_HEADERS
 ecm_generate_headers(MailCommon_snippets_HEADERS
   HEADER_NAMES
   SnippetsManager
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_snippets_HEADERS
   PREFIX MailCommon
   RELATIVE snippets
 )
@@ -390,7 +391,7 @@ ecm_generate_headers(MailCommon_kernel_HEADERS
   HEADER_NAMES
   SearchPattern
   SearchPatternEdit
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_kernel_HEADERS
   PREFIX MailCommon
   RELATIVE search
 )
@@ -399,7 +400,7 @@ ecm_generate_headers(MailCommon_widgets_HEADERS
   HEADER_NAMES
   RedirectDialog
   FavoriteCollectionWidget
-  REQUIRED_HEADERS MailCommon_HEADERS
+  REQUIRED_HEADERS MailCommon_widgets_HEADERS
   PREFIX MailCommon
   RELATIVE widgets
 )
@@ -407,7 +408,8 @@ ecm_generate_headers(MailCommon_widgets_HEADERS
 ecm_generate_headers(MailCommon_searchrule_HEADERS
   HEADER_NAMES
   SearchRule
-  REQUIRED_HEADERS MailCommon_HEADERS
+  SearchRuleStatus
+  REQUIRED_HEADERS MailCommon_searchrule_HEADERS
   PREFIX MailCommon
   RELATIVE search/searchrule
 )

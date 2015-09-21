@@ -20,7 +20,7 @@
 
 #include "gravatarupdatejob.h"
 
-#include <gravatar/gravatarresolvurljob.h>
+#include <pimcommon/gravatarresolvurljob.h>
 
 #include <KContacts/Addressee>
 #include <AkonadiCore/ItemModifyJob>

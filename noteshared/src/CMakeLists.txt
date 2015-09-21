@@ -87,11 +87,29 @@ install(TARGETS
 
 ecm_generate_headers(NoteShared_CamelCase_HEADERS
   HEADER_NAMES
-  resources/LocalResourceCreator
   NoteUtils
-  REQUIRED_HEADERS NoteShared_HEADERS
+  REQUIRED_HEADERS NoteShared_CamelCase_HEADERS
   PREFIX NoteShared
 )
+
+ecm_generate_headers(NoteShared_dialog_HEADERS
+  HEADER_NAMES
+  SelectedNotefolderDialog
+  REQUIRED_HEADERS NoteShared_dialog_HEADERS
+  PREFIX NoteShared
+  RELATIVE dialog
+)
+
+
+
+ecm_generate_headers(NoteShared_resources_HEADERS
+  HEADER_NAMES
+  LocalResourceCreator
+  REQUIRED_HEADERS NoteShared_resources_HEADERS
+  PREFIX NoteShared
+  RELATIVE resources
+)
+
 
 ecm_generate_headers(NoteShared_network_HEADERS
   HEADER_NAMES
@@ -134,7 +152,7 @@ ecm_generate_headers(NoteShared_attributes_HEADERS
 ecm_generate_headers(NoteShared_editor_HEADERS
   HEADER_NAMES
   NoteEditorUtils
-  REQUIRED_HEADERS NoteShared_HEADERS
+  REQUIRED_HEADERS NoteShared_editor_HEADERS
   PREFIX NoteShared
   RELATIVE editor
 )
@@ -142,7 +160,7 @@ ecm_generate_headers(NoteShared_editor_HEADERS
 ecm_generate_headers(NoteShared_alarms_HEADERS
   HEADER_NAMES
   NoteAlarmDialog
-  REQUIRED_HEADERS NoteShared_HEADERS
+  REQUIRED_HEADERS NoteShared_alarms_HEADERS
   PREFIX NoteShared
   RELATIVE alarms
 )
@@ -150,7 +168,8 @@ ecm_generate_headers(NoteShared_alarms_HEADERS
 ecm_generate_headers(NoteShared_config_HEADERS
   HEADER_NAMES
   NoteActionConfig
-  REQUIRED_HEADERS NoteShared_HEADERS
+  NoteNetworkConfig
+  REQUIRED_HEADERS NoteShared_config_HEADERS
   PREFIX NoteShared
   RELATIVE config
 )
@@ -158,7 +177,7 @@ ecm_generate_headers(NoteShared_config_HEADERS
 ecm_generate_headers(NoteShared_job_HEADERS
   HEADER_NAMES
   CreateNewNoteJob
-  REQUIRED_HEADERS NoteShared_HEADERS
+  REQUIRED_HEADERS NoteShared_job_HEADERS
   PREFIX NoteShared
   RELATIVE job
 )
@@ -174,11 +193,14 @@ install(FILES
     ${NoteShared_alarms_HEADERS}
     ${NoteShared_config_HEADERS}
     ${NoteShared_job_HEADERS}
+    ${NoteShared_dialog_HEADERS}
+    ${NoteShared_resources_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/NoteShared
     COMPONENT Devel
 )
 
 install(FILES
+    ${NoteShared_dialog_HEADERS}
     ${NoteShared_CamelCase_HEADERS}
     ${NoteShared_network_HEADERS}
     ${NoteShared_akonadi_HEADERS}
@@ -188,6 +210,8 @@ install(FILES
     ${NoteShared_alarms_HEADERS}
     ${NoteShared_config_HEADERS}
     ${NoteShared_job_HEADERS}
+    ${NoteShared_resources_HEADERS}
+
     ${CMAKE_CURRENT_BINARY_DIR}/noteshared_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/notesharedglobalconfig.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/noteshared

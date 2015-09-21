@@ -137,6 +137,7 @@ ecm_generate_headers(IncidenceEditorsng_CamelCase_HEADERS
   GroupwareUiDelegate
   EditorItemManager
   OpenComposerJob
+  IncidenceEditor-Ng
   REQUIRED_HEADERS IncidenceEditorsng_HEADERS
   PREFIX IncidenceEditorsng
 )

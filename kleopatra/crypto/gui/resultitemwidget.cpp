@@ -36,7 +36,7 @@
 
 #include <utils/auditlog.h>
 
-#include <ui/messagebox.h>
+#include <libkleo/messagebox.h>
 
 #include <KLocalizedString>
 #include <QPushButton>

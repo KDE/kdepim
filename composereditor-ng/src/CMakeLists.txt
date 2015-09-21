@@ -74,7 +74,7 @@ ecm_generate_headers(composereditorng_CamelCase_HEADERS
   HEADER_NAMES
   ComposerEditor
   ComposerView
-  REQUIRED_HEADERS composereditor_HEADERS
+  REQUIRED_HEADERS composereditorng_CamelCase_HEADERS
   PREFIX ComposerEditorNG
 )
 

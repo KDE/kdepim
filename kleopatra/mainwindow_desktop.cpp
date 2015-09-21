@@ -56,8 +56,8 @@
 #include "utils/clipboardmenu.h"
 
 // from libkdepim
-#include "progresswidget/statusbarprogresswidget.h"
-#include "progresswidget/progressdialog.h"
+#include "libkdepim/statusbarprogresswidget.h"
+#include "libkdepim/progressdialog.h"
 #include <QStatusBar>
 #include <KXMLGUIFactory>
 #include <QApplication>
@@ -86,7 +86,7 @@
 #include <QMimeData>
 
 #include <Libkleo/CryptoBackendFactory>
-#include <ui/cryptoconfigdialog.h>
+#include <libkleo/cryptoconfigdialog.h>
 #include <Libkleo/CryptoConfig>
 #include <Libkleo/Stl_Util>
 

@@ -393,7 +393,7 @@ ecm_generate_headers(PimCommon_CamelCase_HEADERS
   VCardUtil
   MetaType
   ImapResourceCapabilitiesManager
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_CamelCase_HEADERS
   PREFIX PimCommon
   RELATIVE util
 )
@@ -404,7 +404,7 @@ ecm_generate_headers(PimCommon_storageservice_HEADERS
   StorageServiceManager
   StorageServiceProgressManager
   StorageServiceJobConfig
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_storageservice_HEADERS
   PREFIX PimCommon
   RELATIVE storageservice
 )
@@ -412,7 +412,7 @@ ecm_generate_headers(PimCommon_storageservice_HEADERS
 ecm_generate_headers(PimCommon_storageservice_dialog_HEADERS
   HEADER_NAMES
   StorageServiceCheckNameDialog
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_storageservice_dialog_HEADERS
   PREFIX PimCommon
   RELATIVE storageservice/dialog/
 )
@@ -421,7 +421,7 @@ ecm_generate_headers(PimCommon_storageservice_dialog_HEADERS
 ecm_generate_headers(PimCommon_settings_HEADERS
   HEADER_NAMES
   PimCommonSettings
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_settings_HEADERS
   PREFIX PimCommon
   RELATIVE settings
 )
@@ -432,7 +432,7 @@ ecm_generate_headers(PimCommon_storageservicewidgets_HEADERS
   StorageServiceTreeWidget
   StorageServiceConfigureWidget
   StorageServiceProgressIndicator
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_storageservicewidgets_HEADERS
   PREFIX PimCommon
   RELATIVE storageservice/widgets
 )
@@ -440,16 +440,16 @@ ecm_generate_headers(PimCommon_storageservicewidgets_HEADERS
 ecm_generate_headers(PimCommon_storageservicedialog_HEADERS
   HEADER_NAMES
   StorageServiceConfigureDialog
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_storageservicedialog_HEADERS
   PREFIX PimCommon
   RELATIVE storageservice/dialog
 )
 
-ecm_generate_headers(PimCommon_storageservicedialog_HEADERS
+ecm_generate_headers(PimCommon_storageservicesettings_HEADERS
   HEADER_NAMES
   StorageServiceSettings
   StorageServiceSettingsWidget
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_storageservicesettings_HEADERS
   PREFIX PimCommon
   RELATIVE storageservice/settings
 )
@@ -457,7 +457,7 @@ ecm_generate_headers(PimCommon_storageservicedialog_HEADERS
 ecm_generate_headers(PimCommon_webshortcut_HEADERS
   HEADER_NAMES
   WebShortCutMenuManager
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_webshortcut_HEADERS
   PREFIX PimCommon
   RELATIVE webshortcut
 )
@@ -465,7 +465,7 @@ ecm_generate_headers(PimCommon_webshortcut_HEADERS
 ecm_generate_headers(PimCommon_shareserviceurl_HEADERS
   HEADER_NAMES
   ShareServiceUrlManager
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_shareserviceurl_HEADERS
   PREFIX PimCommon
   RELATIVE shareserviceurl
 )
@@ -473,7 +473,7 @@ ecm_generate_headers(PimCommon_shareserviceurl_HEADERS
 ecm_generate_headers(PimCommon_translator_HEADERS
   HEADER_NAMES
   TranslatorWidget
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_translator_HEADERS
   PREFIX PimCommon
   RELATIVE translator
 )
@@ -481,7 +481,7 @@ ecm_generate_headers(PimCommon_translator_HEADERS
 ecm_generate_headers(PimCommon_customtools_HEADERS
   HEADER_NAMES
   CustomToolsWidgetng
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_customtools_HEADERS
   PREFIX PimCommon
   RELATIVE customtools
 )
@@ -489,7 +489,7 @@ ecm_generate_headers(PimCommon_customtools_HEADERS
 ecm_generate_headers(PimCommon_storageserviceinterface_HEADERS
   HEADER_NAMES
   StorageServiceInterface
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_storageserviceinterface_HEADERS
   PREFIX PimCommon
   RELATIVE storageservice/interface
 )
@@ -497,7 +497,7 @@ ecm_generate_headers(PimCommon_storageserviceinterface_HEADERS
 ecm_generate_headers(PimCommon_temporaryfile_HEADERS
   HEADER_NAMES
   AttachmentTemporaryFilesDirs
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_temporaryfile_HEADERS
   PREFIX PimCommon
   RELATIVE temporaryfile
 )
@@ -507,7 +507,7 @@ ecm_generate_headers(PimCommon_sievehighlighter_HEADERS
   SieveSyntaxHighlighterUtil
   SieveSyntaxHighlighter
   SieveSyntaxHighlighterRules
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_sievehighlighter_HEADERS
   PREFIX PimCommon
   RELATIVE sievehighlighter
 )
@@ -518,7 +518,7 @@ ecm_generate_headers(PimCommon_acl_HEADERS
   CollectionAclPage
   ImapAclAttribute
   CollectionAclPage
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_acl_HEADERS
   PREFIX PimCommon
   RELATIVE acl
 )
@@ -527,7 +527,7 @@ ecm_generate_headers(PimCommon_gravatar_HEADERS
   HEADER_NAMES
   GravatarCache
   GravatarResolvUrlJob
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_gravatar_HEADERS
   PREFIX PimCommon
   RELATIVE gravatar
 )
@@ -536,7 +536,7 @@ ecm_generate_headers(PimCommon_migrate_HEADERS
   HEADER_NAMES
   MigrateApplicationFiles
   MigrateFileInfo
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_migrate_HEADERS
   PREFIX PimCommon
   RELATIVE migration
 )
@@ -545,7 +545,7 @@ ecm_generate_headers(PimCommon_autocorrectionwidgets_HEADERS
   HEADER_NAMES
   RichTexteditWithAutoCorrection
   LineEditWithAutoCorrection
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_autocorrectionwidgets_HEADERS
   PREFIX PimCommon
   RELATIVE autocorrection/widgets/
 )
@@ -553,7 +553,7 @@ ecm_generate_headers(PimCommon_autocorrectionwidgets_HEADERS
 ecm_generate_headers(PimCommon_managerserversidesubscription_HEADERS
   HEADER_NAMES
   ManageServerSideSubscriptionJob
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_managerserversidesubscription_HEADERS
   PREFIX PimCommon
   RELATIVE manageserversidesubscription
 )
@@ -563,7 +563,7 @@ ecm_generate_headers(PimCommon_autocorrection_HEADERS
   AutoCorrectionWidget
   AutoCorrectionLanguage
   AutoCorrection
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_autocorrection_HEADERS
   PREFIX PimCommon
   RELATIVE autocorrection/
 )
@@ -572,7 +572,7 @@ ecm_generate_headers(PimCommon_baloodebug_HEADERS
   HEADER_NAMES
   BalooDebugDialog
   BalooDebugSearchPathComboBox
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_baloodebug_HEADERS
   PREFIX PimCommon
   RELATIVE baloodebug
 )
@@ -581,7 +581,7 @@ ecm_generate_headers(PimCommon_richtexteditor_HEADERS
   HEADER_NAMES
   RichTextEditorWidget
   RichTextEditor
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_richtexteditor_HEADERS
   PREFIX PimCommon
   RELATIVE texteditor/richtexteditor
 )
@@ -590,7 +590,7 @@ ecm_generate_headers(PimCommon_folderdialog_HEADERS
   HEADER_NAMES
   CheckedCollectionWidget
   SelectMultiCollectionDialog
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_folderdialog_HEADERS
   PREFIX PimCommon
   RELATIVE folderdialog
 )
@@ -602,7 +602,7 @@ ecm_generate_headers(PimCommon_texttospeechs_HEADERS
   TextToSpeechInterface
   TextToSpeechWidget
   AbstractTextToSpeechInterface
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_texttospeechs_HEADERS
   PREFIX PimCommon
   RELATIVE texttospeech
 )
@@ -611,7 +611,7 @@ ecm_generate_headers(PimCommon_templatelist_HEADERS
   HEADER_NAMES
   TemplateListWidget
   TemplateManager
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_templatelist_HEADERS
   PREFIX PimCommon
   RELATIVE templatewidgets
 )
@@ -623,7 +623,7 @@ ecm_generate_headers(PimCommon_plaintexteditor_HEADERS
   PlainTextEditorWidget
   PlainTextEditFindBar
   PlainTextSyntaxSpellCheckingHighlighter
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_plaintexteditor_HEADERS
   PREFIX PimCommon
   RELATIVE texteditor/plaintexteditor
 )
@@ -632,7 +632,7 @@ ecm_generate_headers(PimCommon_texteditor_commonwidget_HEADERS
   HEADER_NAMES
   TextGotoLineWidget
   TextEditFindBarBase 
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_texteditor_commonwidget_HEADERS
   PREFIX PimCommon
   RELATIVE texteditor/commonwidget
 )
@@ -652,13 +652,14 @@ ecm_generate_headers(PimCommon_widgets_HEADERS
   KActionMenuChangeCase
   AnnotationDialog
   CustomTextEdit
-  REQUIRED_HEADERS PimCommon_HEADERS
+  REQUIRED_HEADERS PimCommon_widgets_HEADERS
   PREFIX PimCommon
   RELATIVE widgets
 )
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${pimcommon_SOURCE_DIR})
 install(FILES
+    ${PimCommon_storageservicesettings_HEADERS}
     ${PimCommon_storageservice_dialog_HEADERS}
     ${PimCommon_CamelCase_HEADERS}
     ${PimCommon_storageservice_HEADERS}
@@ -696,8 +697,10 @@ install(FILES
     ${PimCommon_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/pimcommon_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/pimcommon_debug.h
+    ${CMAKE_CURRENT_BINARY_DIR}/pimcommonsetting_base.h
     ${CMAKE_CURRENT_BINARY_DIR}/imapresourcesettings.h
     ${CMAKE_CURRENT_BINARY_DIR}/config-pimcommon.h
+    ${PimCommon_storageservicesettings_HEADERS}
     ${PimCommon_storageservice_dialog_HEADERS}
     ${PimCommon_CamelCase_HEADERS}
     ${PimCommon_storageservice_HEADERS}

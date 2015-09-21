@@ -229,7 +229,7 @@ ecm_generate_headers(ksieveui_CamelCase_HEADERS
 ecm_generate_headers(ksieveui_util_HEADERS
   HEADER_NAMES
   Util
-  REQUIRED_HEADERS ksieveui_Util_HEADERS
+  REQUIRED_HEADERS ksieveui_util_HEADERS
   PREFIX KSieveUi
   RELATIVE util
 

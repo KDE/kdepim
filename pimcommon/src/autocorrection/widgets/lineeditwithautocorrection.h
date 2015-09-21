@@ -20,7 +20,7 @@
 
 #include "pimcommon_export.h"
 
-#include "widgets/spellchecklineedit.h"
+#include "pimcommon/spellchecklineedit.h"
 
 namespace PimCommon
 {

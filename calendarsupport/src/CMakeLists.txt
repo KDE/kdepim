@@ -99,7 +99,7 @@ ecm_generate_headers(CalendarSupport_CamelCase_HEADERS
   CalendarSingleton
   MessageWidget
   ArchiveDialog
-  REQUIRED_HEADERS CalendarSupport_HEADERS
+  REQUIRED_HEADERS CalendarSupport_CamelCase_HEADERS
   PREFIX CalendarSupport
 )
 
@@ -109,7 +109,7 @@ ecm_generate_headers(CalendarSupport_printer_HEADERS
   CalPrinter
   CalPrintDefaultPlugins
   CalPrintPluginBase
-  REQUIRED_HEADERS CalendarSupport_HEADERS
+  REQUIRED_HEADERS CalendarSupport_printer_HEADERS
   PREFIX CalendarSupport
   RELATIVE printing
 )
@@ -117,7 +117,7 @@ ecm_generate_headers(CalendarSupport_printer_HEADERS
 ecm_generate_headers(CalendarSupport_next_HEADERS
   HEADER_NAMES
   IncidenceViewer
-  REQUIRED_HEADERS CalendarSupport_HEADERS
+  REQUIRED_HEADERS CalendarSupport_next_HEADERS
   PREFIX CalendarSupport
   RELATIVE next
 )
@@ -128,7 +128,7 @@ ecm_generate_headers(CalendarSupport_freebusy_HEADERS
   FreeBusyItemModel
   FreeBusyCalendar
   FreePeriodModel
-  REQUIRED_HEADERS CalendarSupport_HEADERS
+  REQUIRED_HEADERS CalendarSupport_freebusy_HEADERS
   PREFIX CalendarSupport
   RELATIVE freebusymodel
 )
@@ -153,6 +153,12 @@ install(FILES
 install(FILES
     ${CalendarSupport_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/calendarsupport_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/ui_calprintincidenceconfig_base.h
+    ${CMAKE_CURRENT_BINARY_DIR}/ui_calprintdayconfig_base.h
+    ${CMAKE_CURRENT_BINARY_DIR}/ui_calprintweekconfig_base.h
+    ${CMAKE_CURRENT_BINARY_DIR}/ui_calprintmonthconfig_base.h
+    ${CMAKE_CURRENT_BINARY_DIR}/ui_calprinttodoconfig_base.h
+
     ${CMAKE_CURRENT_BINARY_DIR}/kcalprefs_base.h
     ${CalendarSupport_CamelCase_HEADERS}
     ${CalendarSupport_printer_HEADERS}

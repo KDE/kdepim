@@ -18,7 +18,7 @@
 #ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERBALSA_P_H
 #define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERBALSA_P_H
 
-#include "filter/filterimporter/filterimporterabstract.h"
+#include "filterimporterabstract.h"
 
 class QFile;
 class KConfigGroup;

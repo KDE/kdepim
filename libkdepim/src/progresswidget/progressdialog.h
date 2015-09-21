@@ -33,7 +33,7 @@
 #ifndef KDEPIM_PROGRESSDIALOG_H
 #define KDEPIM_PROGRESSDIALOG_H
 
-#include "widgets/overlaywidget.h"
+#include "libkdepim/overlaywidget.h"
 #include "kdepim_export.h"
 
 #include "progressmanager.h"

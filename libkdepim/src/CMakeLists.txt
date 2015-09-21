@@ -198,7 +198,7 @@ ecm_generate_headers(libkdepim_widgets_HEADERS
   KWeekdayCheckCombo
   PIMMessageBox
   TagSelectionCombo
-
+  OverlayWidget
   REQUIRED_HEADERS libkdepim_widgets_HEADERS
   PREFIX Libkdepim
   RELATIVE widgets
@@ -300,8 +300,18 @@ ecm_generate_headers(libkdepim_completionconfiguredialog_HEADERS
   RELATIVE addressline/completionconfiguredialog/
 )
 
+ecm_generate_headers(libkdepim_blacklistbaloocompletion_HEADERS
+  HEADER_NAMES
+  BlackListBalooEmailCompletionDialog
+  REQUIRED_HEADERS libkdepim_blacklistbaloocompletion_HEADERS
+  PREFIX Libkdepim
+  RELATIVE addressline/blacklistbaloocompletion/
+)
+
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libkdepim_SOURCE_DIR})
 install(FILES
+    ${libkdepim_blacklistbaloocompletion_HEADERS}
     ${libkdepim_completionconfiguredialog_HEADERS}
     ${libkdepim_completionorder_HEADERS}
     ${libkdepim_CamelCase_HEADERS}
@@ -320,7 +330,7 @@ install(FILES
 )
 
 install(FILES
-    ${MessageList_HEADERS}
+    ${libkdepim_blacklistbaloocompletion_HEADERS}
     ${libkdepim_completionconfiguredialog_HEADERS}
     ${libkdepim_completionorder_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/kdepim_export.h

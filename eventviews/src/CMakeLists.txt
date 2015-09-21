@@ -116,7 +116,7 @@ ecm_generate_headers(eventviews_CamelCase_HEADERS
   HEADER_NAMES
   Prefs
   EventView
-  REQUIRED_HEADERS eventviews_HEADERS
+  REQUIRED_HEADERS eventviews_CamelCase_HEADERS
   PREFIX EventViews
 )
 
@@ -125,7 +125,7 @@ ecm_generate_headers(eventviews_agenda_HEADERS
   CalendarDecoration
   AgendaView
   ViewCalendar
-  REQUIRED_HEADERS eventviews_HEADERS
+  REQUIRED_HEADERS eventviews_agenda_HEADERS
   PREFIX EventViews
   RELATIVE agenda
 )
@@ -133,7 +133,7 @@ ecm_generate_headers(eventviews_agenda_HEADERS
 ecm_generate_headers(eventviews_todo_HEADERS
   HEADER_NAMES
   TodoView
-  REQUIRED_HEADERS eventviews_HEADERS
+  REQUIRED_HEADERS eventviews_todo_HEADERS
   PREFIX EventViews
   RELATIVE todo
 )
@@ -141,7 +141,7 @@ ecm_generate_headers(eventviews_todo_HEADERS
 ecm_generate_headers(eventviews_month_HEADERS
   HEADER_NAMES
   MonthView
-  REQUIRED_HEADERS eventviews_HEADERS
+  REQUIRED_HEADERS eventviews_month_HEADERS
   PREFIX EventViews
   RELATIVE month
 )
@@ -149,7 +149,7 @@ ecm_generate_headers(eventviews_month_HEADERS
 ecm_generate_headers(eventviews_list_HEADERS
   HEADER_NAMES
   ListView
-  REQUIRED_HEADERS eventviews_HEADERS
+  REQUIRED_HEADERS eventviews_list_HEADERS
   PREFIX EventViews
   RELATIVE list
 )
@@ -157,7 +157,7 @@ ecm_generate_headers(eventviews_list_HEADERS
 ecm_generate_headers(eventviews_journal_HEADERS
   HEADER_NAMES
   JournalView
-  REQUIRED_HEADERS eventviews_HEADERS
+  REQUIRED_HEADERS eventviews_journal_HEADERS
   PREFIX EventViews
   RELATIVE journal
 )
@@ -166,7 +166,7 @@ ecm_generate_headers(eventviews_multiagenda_HEADERS
   HEADER_NAMES
   MultiAgendaView
   ConfigDialogInterface
-  REQUIRED_HEADERS eventviews_HEADERS
+  REQUIRED_HEADERS eventviews_multiagenda_HEADERS
   PREFIX EventViews
   RELATIVE multiagenda
 )
@@ -174,7 +174,7 @@ ecm_generate_headers(eventviews_multiagenda_HEADERS
 ecm_generate_headers(eventviews_timeline_HEADERS
   HEADER_NAMES
   TimeLineView
-  REQUIRED_HEADERS eventviews_HEADERS
+  REQUIRED_HEADERS eventviews_timeline_HEADERS
   PREFIX EventViews
   RELATIVE timeline
 )
@@ -182,7 +182,7 @@ ecm_generate_headers(eventviews_timeline_HEADERS
 ecm_generate_headers(eventviews_timespent_HEADERS
   HEADER_NAMES
   TimeSpentView
-  REQUIRED_HEADERS eventviews_HEADERS
+  REQUIRED_HEADERS eventviews_timespent_HEADERS
   PREFIX EventViews
   RELATIVE timespent
 )
@@ -190,7 +190,7 @@ ecm_generate_headers(eventviews_timespent_HEADERS
 ecm_generate_headers(eventviews_whatsnext_HEADERS
   HEADER_NAMES
   WhatsNextView
-  REQUIRED_HEADERS eventviews_HEADERS
+  REQUIRED_HEADERS eventviews_whatsnext_HEADERS
   PREFIX EventViews
   RELATIVE whatsnext
 )

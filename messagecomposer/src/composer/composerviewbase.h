@@ -22,7 +22,7 @@
 #define COMPOSER_VIEW_BASE_H
 
 #include "messagecomposer_export.h"
-#include "sender/messagesender.h"
+#include "messagecomposer/messagesender.h"
 #include "MessageComposer/Recipient"
 
 #include <AkonadiCore/collection.h>

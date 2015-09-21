@@ -196,6 +196,7 @@ ecm_generate_headers(libkeo_ui_HEADERS
   KeyRequester
   MessageBox
   KDHorizontalLine
+  CryptoConfigDialog
   CryptoConfigModule
   DirectoryServicesWidget
   DNAttributeOrderConfigWidget

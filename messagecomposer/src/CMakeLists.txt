@@ -184,7 +184,8 @@ install(TARGETS
 ecm_generate_headers(MessageComposer_attachement_HEADERS
   HEADER_NAMES
   AttachmentModel
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  AttachmentControllerBase
+  REQUIRED_HEADERS MessageComposer_attachement_HEADERS
   PREFIX MessageComposer
   RELATIVE attachment
 )
@@ -195,7 +196,7 @@ ecm_generate_headers(MessageComposer_composer_HEADERS
   ComposerLineEdit
   ComposerViewBase
   SignatureController
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  REQUIRED_HEADERS MessageComposer_composer_HEADERS
   PREFIX MessageComposer
   RELATIVE composer
 )
@@ -208,7 +209,8 @@ ecm_generate_headers(MessageComposer_composerng_HEADERS
   RichTextExternalComposer
   RichTextComposerActions
   RichTextComposerSignatures
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  RichTextComposerEmailQuoteHighlighter
+  REQUIRED_HEADERS MessageComposer_composerng_HEADERS
   PREFIX MessageComposer
   RELATIVE composer-ng
 )
@@ -217,7 +219,7 @@ ecm_generate_headers(MessageComposer_sender_HEADERS
   HEADER_NAMES
   AkonadiSender
   MessageSender
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  REQUIRED_HEADERS MessageComposer_sender_HEADERS
   PREFIX MessageComposer
   RELATIVE sender
 )
@@ -226,7 +228,7 @@ ecm_generate_headers(MessageComposer_utils_HEADERS
   HEADER_NAMES
   Util
   Kleo_Util
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  REQUIRED_HEADERS MessageComposer_utils_HEADERS
   PREFIX MessageComposer
   RELATIVE utils
 )
@@ -235,7 +237,7 @@ ecm_generate_headers(MessageComposer_helper_HEADERS
   HEADER_NAMES
   MessageFactory
   MessageHelper
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  REQUIRED_HEADERS MessageComposer_helper_HEADERS
   PREFIX MessageComposer
   RELATIVE helper
 )
@@ -243,7 +245,7 @@ ecm_generate_headers(MessageComposer_helper_HEADERS
 ecm_generate_headers(MessageComposer_settings_HEADERS
   HEADER_NAMES
   MessageComposerSettings
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  REQUIRED_HEADERS MessageComposer_settings_HEADERS
   PREFIX MessageComposer
   RELATIVE settings
 )
@@ -254,7 +256,7 @@ ecm_generate_headers(MessageComposer_part_HEADERS
   GlobalPart
   InfoPart
   MessagePart
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  REQUIRED_HEADERS MessageComposer_part_HEADERS
   PREFIX MessageComposer
   RELATIVE part
 )
@@ -262,7 +264,8 @@ ecm_generate_headers(MessageComposer_part_HEADERS
 ecm_generate_headers(MessageComposer_followupreminder_HEADERS
   HEADER_NAMES
   FollowupReminderCreateJob
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  FollowUpReminderSelectDateDialog
+  REQUIRED_HEADERS MessageComposer_followupreminder_HEADERS
   PREFIX MessageComposer
   RELATIVE followupreminder
 )
@@ -272,7 +275,8 @@ ecm_generate_headers(MessageComposer_recipient_HEADERS
   Recipient
   RecipientsEditor
   DistributionListDialog
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  RecipientLine
+  REQUIRED_HEADERS MessageComposer_recipient_HEADERS
   PREFIX MessageComposer
   RELATIVE recipient
 )
@@ -280,7 +284,7 @@ ecm_generate_headers(MessageComposer_recipient_HEADERS
 ecm_generate_headers(MessageComposer_imagescaling_HEADERS
   HEADER_NAMES
   ImageScalingWidget
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  REQUIRED_HEADERS MessageComposer_imagescaling_HEADERS
   PREFIX MessageComposer
   RELATIVE imagescaling
 )
@@ -300,7 +304,7 @@ ecm_generate_headers(MessageComposer_job_HEADERS
   JobBase
   AliasesExpandJob
   SkeletonMessageJob
-  REQUIRED_HEADERS MessageComposer_HEADERS
+  REQUIRED_HEADERS MessageComposer_job_HEADERS
   PREFIX MessageComposer
   RELATIVE job
 )
@@ -318,6 +322,7 @@ install(FILES
     ${MessageComposer_recipient_HEADERS}
     ${MessageComposer_imagescaling_HEADERS}
     ${MessageComposer_job_HEADERS}
+    ${MessageComposer_attachement_HEADERS}
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageComposer
     COMPONENT Devel
@@ -338,6 +343,7 @@ install(FILES
     ${MessageComposer_followupreminder_HEADERS}
     ${MessageComposer_recipient_HEADERS}
     ${MessageComposer_imagescaling_HEADERS}
+    ${MessageComposer_attachement_HEADERS}
     ${MessageComposer_job_HEADERS}
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messagecomposer

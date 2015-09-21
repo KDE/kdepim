@@ -242,7 +242,7 @@
   <customwidget>
    <class>MessageViewer::AdBlockListWidget</class>
    <extends>QListWidget</extends>
-   <header>adblock/adblocklistwidget.h</header>
+   <header>messageviewer/adblocklistwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

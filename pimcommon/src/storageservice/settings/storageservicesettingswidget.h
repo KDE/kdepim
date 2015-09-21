@@ -21,8 +21,8 @@
 #include <QWidget>
 #include <QMap>
 #include "pimcommon_export.h"
-#include "storageservice/storageserviceabstract.h"
-#include "storageservice/storageservicemanager.h"
+#include "pimcommon/storageserviceabstract.h"
+#include "pimcommon/storageservicemanager.h"
 class QListWidget;
 class QPushButton;
 class QLabel;

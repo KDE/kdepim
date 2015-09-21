@@ -29,7 +29,7 @@
 #ifndef SpellCheckLineEdit_H
 #define SpellCheckLineEdit_H
 #include "pimcommon_export.h"
-#include "texteditor/richtexteditor/richtexteditor.h"
+#include "pimcommon/richtexteditor.h"
 
 class QMimeData;
 namespace PimCommon

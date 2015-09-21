@@ -19,7 +19,7 @@
 #include "importwizard_debug.h"
 #include <MailTransport/mailtransport/transportmanager.h>
 #include "MailCommon/MailUtil"
-#include "header/kxface.h"
+#include "messageviewer/kxface.h"
 
 #include <KIdentityManagement/kidentitymanagement/identity.h>
 #include <KIdentityManagement/kidentitymanagement/signature.h>

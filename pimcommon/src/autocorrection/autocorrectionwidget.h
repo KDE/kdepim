@@ -19,7 +19,7 @@
 #define AutoCorrectionWidget_H
 
 #include "pimcommon_export.h"
-#include "autocorrection/autocorrection.h"
+#include "pimcommon/autocorrection.h"
 #include <QWidget>
 
 class QTreeWidgetItem;

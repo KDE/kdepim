@@ -24,7 +24,7 @@
 #include <AkonadiCore/Item>
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
-#include <util/vcardutil.h>
+#include <pimcommon/vcardutil.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include "PimCommon/AttachmentTemporaryFilesDirs"
 #include "kaddressbook_debug.h"

@@ -19,7 +19,7 @@
 #define KSIEVE_KSIEVEUI_MANAGESIEVESCRIPTSDIALOG_H
 
 #include "ksieveui_export.h"
-#include "widgets/managesievewidget.h"
+#include "ksieveui/managesievewidget.h"
 
 #include <qdialog.h>
 #include <QUrl>

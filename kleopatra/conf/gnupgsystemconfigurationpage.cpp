@@ -34,7 +34,7 @@
 
 #include "gnupgsystemconfigurationpage.h"
 
-#include <ui/cryptoconfigmodule.h>
+#include <libkleo/cryptoconfigmodule.h>
 #include <Libkleo/CryptoConfig>
 #include <Libkleo/CryptoBackendFactory>
 
