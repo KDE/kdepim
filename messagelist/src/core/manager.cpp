@@ -27,7 +27,7 @@
 #include "core/storagemodelbase.h"
 #include "core/model.h"
 #include "core/model_p.h"
-#include "settings.h"
+#include "messagelistsettings.h"
 
 #include "utils/configureaggregationsdialog.h"
 #include "utils/configureaggregationsdialog_p.h"

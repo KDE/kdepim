@@ -55,7 +55,7 @@ set(libmessagelist_core_HEADERS
   core/model.h
   core/modelinvariantindex.h
   core/modelinvariantrowmapper.h
-  ${CMAKE_CURRENT_BINARY_DIR}/settings.h
+  ${CMAKE_CURRENT_BINARY_DIR}/messagelistsettings.h
   core/storagemodelbase.h
   core/view.h
   core/widgetbase.h
@@ -71,7 +71,7 @@ set(libmessagelist_utils_HEADERS
 )
 
 kconfig_add_kcfg_files(libmessagelist_SRCS
-  core/settings.kcfgc
+  core/messagelistsettings.kcfgc
 )
 
 add_library(KF5MessageList ${libmessagelist_SRCS})

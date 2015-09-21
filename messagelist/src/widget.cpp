@@ -26,7 +26,7 @@
 #include "storagemodel.h"
 #include "core/messageitem.h"
 #include "core/view.h"
-#include <settings.h>
+#include <messagelistsettings.h>
 
 #include <QTimer>
 #include <QAction>

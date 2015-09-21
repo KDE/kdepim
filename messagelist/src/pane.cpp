@@ -38,7 +38,7 @@
 #include "storagemodel.h"
 #include "core/widgets/quicksearchline.h"
 #include "widget.h"
-#include "settings.h"
+#include "messagelistsettings.h"
 #include "core/manager.h"
 #include <Akonadi/KMime/MessageStatus>
 #include "core/model.h"

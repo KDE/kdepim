@@ -35,7 +35,7 @@
 #include "messagelist_debug.h"
 #include <KLocalizedString>
 #include "core/messageitem.h"
-#include "settings.h"
+#include "messagelistsettings.h"
 #include "messagelistutil.h"
 #include <QUrl>
 

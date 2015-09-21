@@ -23,7 +23,7 @@
 #include "storagemodel.h"
 #include "core/manager.h"
 #include "core/theme.h"
-#include "settings.h"
+#include "messagelistsettings.h"
 
 using namespace MessageList::Core;
 using namespace MessageList::Utils;

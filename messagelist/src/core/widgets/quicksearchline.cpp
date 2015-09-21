@@ -19,7 +19,7 @@
 */
 
 #include "quicksearchline.h"
-#include "settings.h"
+#include "messagelistsettings.h"
 #include <Akonadi/KMime/MessageStatus>
 
 #include "PimCommon/LineEditWithCompleter"

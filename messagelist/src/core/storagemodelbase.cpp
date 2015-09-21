@@ -20,7 +20,7 @@
 
 #include "core/storagemodelbase.h"
 
-#include "settings.h"
+#include "messagelistsettings.h"
 
 using namespace MessageList::Core;
 

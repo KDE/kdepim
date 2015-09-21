@@ -21,7 +21,7 @@
 
 #include "core/aggregation.h"
 #include "core/manager.h"
-#include "settings.h"
+#include "messagelistsettings.h"
 #include "storagemodel.h"
 
 using namespace MessageList::Core;

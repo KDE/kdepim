@@ -16,7 +16,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "messagelistutil.h"
-#include "settings.h"
+#include "messagelistsettings.h"
 
 #include <KConfigGroup>
 #include <QMenu>
