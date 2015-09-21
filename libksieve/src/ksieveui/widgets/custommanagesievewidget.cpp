@@ -17,7 +17,7 @@
 
 #include "custommanagesievewidget.h"
 #include "widgets/managesievetreeview.h"
-#include <ksieveui/util/util.h>
+#include <ksieveui/util.h>
 
 #include <AkonadiCore/AgentInstance>
 #include <KLocalizedString>

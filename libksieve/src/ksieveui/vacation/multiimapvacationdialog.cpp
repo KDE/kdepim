@@ -17,7 +17,7 @@
 
 #include "multiimapvacationdialog.h"
 #include "vacationpagewidget.h"
-#include "ksieveui/util/util.h"
+#include "ksieveui/util.h"
 
 #include <AgentInstance>
 

@@ -185,13 +185,14 @@ ecm_qt_declare_logging_category(ksieveui_LIB_SRCS HEADER libksieve_debug.h IDENT
 
 kconfig_add_kcfg_files(ksieveui_LIB_SRCS settings/sieve-vacation.kcfgc settings/sieve-editor.kcfgc)
 
-add_library(ksieveui ${ksieveui_LIB_SRCS})
-generate_export_header(ksieveui BASE_NAME ksieveui)
+add_library(KF5KSieveUi ${ksieveui_LIB_SRCS})
+generate_export_header(KF5KSieveUi BASE_NAME ksieveui)
+add_library(KF5::KSieveUi ALIAS KF5KSieveUi)
 
-target_link_libraries(ksieveui
+target_link_libraries(KF5KSieveUi
 PUBLIC
-  kmanagesieve
-  ksieve
+  KF5::KManageSieve
+  KF5::KSieve
   KF5::PimCommon
   Qt5::Xml
 PRIVATE
@@ -209,14 +210,88 @@ PRIVATE
   KF5::PimTextEdit
 )
 
-target_include_directories(ksieveui PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/ksieveui;${libksieve_BINARY_DIR}/ksieveui>")
-
-set_target_properties(
-  ksieveui PROPERTIES
-  VERSION ${KDEPIM_LIB_VERSION}
-  SOVERSION ${KDEPIM_LIB_SOVERSION}
+set_target_properties(KF5KSieveUi PROPERTIES
+  VERSION ${LIBKSIEVE_VERSION_STRING}
+  SOVERSION ${LIBKSIEVE_SOVERSION}
+  EXPORT_NAME KSieveUi
 )
 
-install(TARGETS ksieveui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+target_include_directories(KF5KSieveUi INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KSieveUi/;${KDE_INSTALL_INCLUDEDIR_KF5}/ksieveui>")
+target_include_directories(KF5KSieveUi PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/src/ksieveui;${libksieve_BINARY_DIR}/src/ksieveui>")
+
+ecm_generate_headers(ksieveui_CamelCase_HEADERS
+  HEADER_NAMES
+  ManageSieveScriptsDialog
+  REQUIRED_HEADERS ksieveui_CamelCase_HEADERS
+  PREFIX KSieveUi
+)
+
+ecm_generate_headers(ksieveui_util_HEADERS
+  HEADER_NAMES
+  Util
+  REQUIRED_HEADERS ksieveui_Util_HEADERS
+  PREFIX KSieveUi
+  RELATIVE util
+
+)
+
+ecm_generate_headers(ksieveui_editor_HEADERS
+  HEADER_NAMES
+  SieveEditor
+  SieveEditorWidget
+  REQUIRED_HEADERS ksieveui_editor_HEADERS
+  PREFIX KSieveUi
+  RELATIVE editor
+
+)
+
+ecm_generate_headers(ksieveui_vacation_HEADERS
+  HEADER_NAMES
+  VacationManager
+  REQUIRED_HEADERS ksieveui_vacation_HEADERS
+  PREFIX KSieveUi
+  RELATIVE vacation
+
+)
+
+ecm_generate_headers(ksieveui_debug_HEADERS
+  HEADER_NAMES
+  SieveDebugDialog
+  REQUIRED_HEADERS ksieveui_debug_HEADERS
+  PREFIX KSieveUi
+  RELATIVE debug
+
+)
+
+
+
+install(TARGETS KF5KSieveUi EXPORT KF5SieveUiTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+if(${CMAKE_SOURCE_DIR} STREQUAL ${libksieve_SOURCE_DIR})
+
+
+install(FILES
+    ${ksieveui_debug_HEADERS}
+    ${ksieveui_vacation_HEADERS}
+    ${ksieveui_CamelCase_HEADERS}
+    ${ksieveui_editor_HEADERS}
+    ${ksieveui_util_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KSieveUi
+    COMPONENT Devel
+)
+
+install(FILES
+    ${ksieveui_debug_HEADERS}
+    ${ksieveui_vacation_HEADERS}
+    ${ksieveui_CamelCase_HEADERS}
+    ${ksieveui_editor_HEADERS}
+    ${ksieveui_util_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/ksieveui
+    COMPONENT Devel
+)
+
+endif()
+
+
+
 install(FILES data/ksieve_script.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
 install(DIRECTORY data/scripts/ DESTINATION ${KDE_INSTALL_DATADIR}/sieve/scripts/ )

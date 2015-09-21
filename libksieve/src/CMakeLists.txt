@@ -22,22 +22,44 @@ set(ksieve_LIB_SRCS
   ${libksieve_parser_SRCS}
 )
 
-add_library(ksieve ${ksieve_LIB_SRCS})
-generate_export_header(ksieve BASE_NAME ksieve)
+add_library(KF5KSieve ${ksieve_LIB_SRCS})
+generate_export_header(KF5KSieve BASE_NAME ksieve)
+add_library(KF5::KSieve ALIAS KF5KSieve)
 
-
-target_link_libraries(ksieve 
+target_link_libraries(KF5KSieve
 PRIVATE
   Qt5::Core KF5::I18n
 )
 
-target_include_directories(ksieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/parser>")
-
-set_target_properties(
-  ksieve PROPERTIES
-  VERSION ${KDEPIM_LIB_VERSION}
-  SOVERSION ${KDEPIM_LIB_SOVERSION}
+set_target_properties(KF5KSieve PROPERTIES
+  VERSION ${LIBKSIEVE_VERSION_STRING}
+  SOVERSION ${LIBKSIEVE_SOVERSION}
+  EXPORT_NAME KSieve
 )
 
-install(TARGETS ksieve ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+target_include_directories(KF5KSieve INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KSieve/;${KDE_INSTALL_INCLUDEDIR_KF5}/ksieve>")
+target_include_directories(KF5KSieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/src;${libksieve_BINARY_DIR}/src>")
+target_include_directories(KF5KSieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/parser>")
 
+
+#ecm_generate_headers(ksieve_CamelCase_HEADERS
+#  HEADER_NAMES
+#  REQUIRED_HEADERS ksieve_CamelCase_HEADERS
+#  PREFIX KSieve
+#)
+
+install(TARGETS KF5KSieve EXPORT KF5KSieveTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+if(${CMAKE_SOURCE_DIR} STREQUAL ${libksieve_SOURCE_DIR})
+install(FILES
+    ${ksieve_CamelCase_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KSieve
+    COMPONENT Devel
+)
+
+install(FILES
+    ${ksieve_CamelCase_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/ksieve
+    COMPONENT Devel
+)
+
+endif()

@@ -20,7 +20,7 @@
 #include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kmanagesieve/sievejob.h>
-#include <ksieveui/util/util.h>
+#include <ksieveui/util.h>
 
 #include <QTimer>
 #include <KSharedConfig>

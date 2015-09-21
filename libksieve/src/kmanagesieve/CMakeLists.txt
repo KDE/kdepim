@@ -10,10 +10,11 @@ set(kmanagesieve_LIB_SRCS
 )
 ecm_qt_declare_logging_category(kmanagesieve_LIB_SRCS HEADER kmanagersieve_debug.h IDENTIFIER KMANAGERSIEVE_LOG CATEGORY_NAME log_kmanagersieve)
 
-add_library(kmanagesieve ${kmanagesieve_LIB_SRCS})
-generate_export_header(kmanagesieve BASE_NAME kmanagesieve)
+add_library(KF5KManageSieve ${kmanagesieve_LIB_SRCS})
+generate_export_header(KF5KManageSieve BASE_NAME kmanagesieve)
+add_library(KF5::KManageSieve ALIAS KF5KManageSieve)
 
-target_link_libraries(kmanagesieve
+target_link_libraries(KF5KManageSieve
 PRIVATE
   KF5::I18n 
   KF5::KIOCore
@@ -21,12 +22,38 @@ PRIVATE
   ${Sasl2_LIBRARIES}
 )
 
-target_include_directories(kmanagesieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/kmanagesieve;${libksieve_BINARY_DIR}/kmanagesieve>")
-
-set_target_properties(
-  kmanagesieve PROPERTIES
-  VERSION ${KDEPIM_LIB_VERSION}
-  SOVERSION ${KDEPIM_LIB_SOVERSION}
+set_target_properties(KF5KManageSieve PROPERTIES
+  VERSION ${LIBKSIEVE_VERSION_STRING}
+  SOVERSION ${LIBKSIEVE_SOVERSION}
+  EXPORT_NAME KManageSieve
 )
 
-install(TARGETS kmanagesieve ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+target_include_directories(KF5KManageSieve INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KManageSieve/;${KDE_INSTALL_INCLUDEDIR_KF5}/kmanagesieve>")
+target_include_directories(KF5KManageSieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/src/kmanagesieve;${libksieve_BINARY_DIR}/src/kmanagesieve>")
+
+
+
+ecm_generate_headers(kmanagesieve_CamelCase_HEADERS
+  HEADER_NAMES
+  SieveJob
+  REQUIRED_HEADERS kmanagesieve_CamelCase_HEADERS
+  PREFIX KManageSieve
+)
+
+install(TARGETS KF5KManageSieve EXPORT KF5KManageSieveTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+if(${CMAKE_SOURCE_DIR} STREQUAL ${libksieve_SOURCE_DIR})
+install(FILES
+    ${kmanagesieve_CamelCase_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KManageSieve
+    COMPONENT Devel
+)
+
+install(FILES
+    ${kmanagesieve_CamelCase_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kmanagesieve
+    COMPONENT Devel
+)
+
+endif()
+
+
