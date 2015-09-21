@@ -212,9 +212,7 @@ find_package(KF5SendLater ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5KDGantt2 ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5ComposerEditorNG ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 find_package(KF5KdepimDBusInterfaces ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
-
-#Laurent need to port it
-#sb_add_project(libksieve)
+find_package(KF5LibKSieve ${KDEPIM_LIB_INSTALLED_VERSION} CONFIG REQUIRED)
 
 endif()
 
