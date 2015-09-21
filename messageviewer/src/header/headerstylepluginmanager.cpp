@@ -87,6 +87,7 @@ void HeaderStylePluginManagerPrivate::initializePluginList()
     QVectorIterator<KPluginMetaData> i(plugins);
     i.toBack();
     QSet<QString> unique;
+    QList<int> listOrder;
     while (i.hasPrevious()) {
         HeaderStylePluginInfo info;
         info.metaData = i.previous();
@@ -95,14 +96,21 @@ void HeaderStylePluginManagerPrivate::initializePluginList()
         if (unique.contains(info.saveName())) {
             continue;
         }
-        QVariant p = info.metaData.rawData().value(QStringLiteral("X-KDE-MessageViewer-Header-Order")).toVariant();
-        qDebug()<<" info.metaData.rawData()"<<info.metaData.rawData() << "info.saveName()"<<info.saveName();
+        const QVariant p = info.metaData.rawData().value(QStringLiteral("X-KDE-MessageViewer-Header-Order")).toVariant();
         int order = -1;
         if (p.isValid())
             order = p.toInt();
-        qDebug() << "order"<<order;
+        int pos = 0;
+        for(; pos < listOrder.count(); ++pos) {
+            if (listOrder.at(pos) > order) {
+                pos--;
+                break;
+            }
+        }
+        pos = qMax(0, pos);
+        listOrder.insert(pos, order);
         info.plugin = Q_NULLPTR;
-        mPluginList.push_back(info);
+        mPluginList.insert(pos, info);
         unique.insert(info.saveName());
     }
     QVector<HeaderStylePluginInfo>::iterator end(mPluginList.end());
