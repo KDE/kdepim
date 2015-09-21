@@ -48,6 +48,10 @@ ecm_generate_headers(FollowupReminder_Camelcase_HEADERS
   PREFIX FollowupReminder
 )
 
+ecm_generate_pri_file(BASE_NAME FollowupReminder
+    LIB_NAME KF5FollowupReminder
+    DEPS "" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/FollowupReminder
+)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${followupreminder_SOURCE_DIR})
 install(FILES
@@ -63,4 +67,8 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/followupreminder
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()

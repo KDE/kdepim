@@ -87,6 +87,12 @@ ecm_generate_headers(KaddressbookGrantlee_printing_HEADERS
   PREFIX KaddressbookGrantlee
 )
 
+ecm_generate_pri_file(BASE_NAME KaddressbookGrantlee
+    LIB_NAME KF5KaddressbookGrantlee
+    DEPS "Grantlee5" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/KaddressbookGrantlee
+)
+
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbookgrantlee_SOURCE_DIR})
 install(FILES
     ${KaddressbookGrantlee_widgets_HEADERS}
@@ -105,6 +111,11 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kaddressbookgrantlee
     COMPONENT Devel
 )
+
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()
 
 if (BUILD_TESTING)

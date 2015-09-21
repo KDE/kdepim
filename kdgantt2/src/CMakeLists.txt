@@ -83,6 +83,10 @@ ecm_generate_headers(kdgantt2_CamelCase_HEADERS
   PREFIX KDGantt2
 )
 
+ecm_generate_pri_file(BASE_NAME KDGantt2
+    LIB_NAME KF5KDGantt2
+    DEPS "" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/KDGantt2
+)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${kdgantt2_SOURCE_DIR})
 install(FILES
@@ -98,4 +102,8 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kdgantt2
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()

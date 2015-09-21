@@ -142,6 +142,10 @@ ecm_generate_headers(IncidenceEditorsng_CamelCase_HEADERS
   PREFIX IncidenceEditorsng
 )
 
+ecm_generate_pri_file(BASE_NAME IncidenceEditorsng
+    LIB_NAME KF5IncidenceEditorsng
+    DEPS "AkonadiCalendar AkonadiMime CalendarCore CalendarUtils MailTransport CalendarSupport EventViews KDGantt2" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/IncidenceEditorsng
+)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${incidenceeditorsng_SOURCE_DIR})
 install(FILES
@@ -158,6 +162,10 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/incidenceeditorsng
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()
 
 
