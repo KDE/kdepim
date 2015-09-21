@@ -19,7 +19,7 @@
 */
 
 #include "sieveeditorpagewidget.h"
-#include "editor/sieveeditorwidget.h"
+#include "ksieveui/sieveeditorwidget.h"
 
 #include <kmanagesieve/sievejob.h>
 

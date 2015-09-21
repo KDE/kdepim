@@ -20,8 +20,8 @@
 
 #include "sieveeditormanagesievewidget.h"
 #include "sieveeditorutil.h"
-#include "widgets/sievetreewidgetitem.h"
-#include "widgets/managesievetreeview.h"
+#include "ksieveui/sievetreewidgetitem.h"
+#include "ksieveui/managesievetreeview.h"
 
 #include <kmanagesieve/sievejob.h>
 

@@ -23,7 +23,7 @@
 #include "sieveeditorpagewidget.h"
 #include "sieveeditortabwidget.h"
 #include "sieveeditoremptytabwidgetlabel.h"
-#include "editor/sieveeditor.h"
+#include "ksieveui/sieveeditor.h"
 
 #include <KLocalizedString>
 #include <KConfigGroup>

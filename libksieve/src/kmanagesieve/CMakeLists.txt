@@ -50,6 +50,7 @@ install(FILES
 
 install(FILES
     ${kmanagesieve_CamelCase_HEADERS}
+    ${CMAKE_CURRENT_BINARY_DIR}/kmanagesieve_export.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kmanagesieve
     COMPONENT Devel
 )

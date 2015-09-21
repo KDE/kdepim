@@ -352,7 +352,7 @@
   <customwidget>
    <class>KDHorizontalLine</class>
    <extends>QFrame</extends>
-   <header>ui/kdhorizontalline.h</header>
+   <header>libkleo/kdhorizontalline.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

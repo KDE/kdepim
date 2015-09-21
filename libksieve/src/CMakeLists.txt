@@ -37,7 +37,7 @@ set_target_properties(KF5KSieve PROPERTIES
   EXPORT_NAME KSieve
 )
 
-target_include_directories(KF5KSieve INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KSieve/;${KDE_INSTALL_INCLUDEDIR_KF5}/ksieve>")
+#target_include_directories(KF5KSieve INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KSieve/;${KDE_INSTALL_INCLUDEDIR_KF5}/ksieve>")
 target_include_directories(KF5KSieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/src;${libksieve_BINARY_DIR}/src>")
 target_include_directories(KF5KSieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/parser>")
 

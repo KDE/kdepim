@@ -263,6 +263,16 @@ ecm_generate_headers(ksieveui_debug_HEADERS
 
 )
 
+ecm_generate_headers(ksieveui_widgets_HEADERS
+  HEADER_NAMES
+  ManageSieveWidget
+  SieveTreeWidgetItem
+  ManageSieveTreeView
+  REQUIRED_HEADERS ksieveui_widgets_HEADERS
+  PREFIX KSieveUi
+  RELATIVE widgets
+)
+
 
 
 install(TARGETS KF5KSieveUi EXPORT KF5KSieveTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
@@ -270,6 +280,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${libksieve_SOURCE_DIR})
 
 
 install(FILES
+    ${ksieveui_widgets_HEADERS}
     ${ksieveui_debug_HEADERS}
     ${ksieveui_vacation_HEADERS}
     ${ksieveui_CamelCase_HEADERS}
@@ -280,6 +291,8 @@ install(FILES
 )
 
 install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/ksieveui_export.h
+    ${ksieveui_widgets_HEADERS}
     ${ksieveui_debug_HEADERS}
     ${ksieveui_vacation_HEADERS}
     ${ksieveui_CamelCase_HEADERS}
