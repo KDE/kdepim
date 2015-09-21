@@ -81,8 +81,7 @@ void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
     Q_FOREACH (MessageViewer::HeaderStylePlugin *plugin, lstPlugin) {
         MessageViewer::HeaderStyleInterface *interface = plugin->createView(headerMenu, group, ac, q);
         lstInterface.insert(plugin->name(), interface);
-        q->connect(interface, &HeaderStyleInterface::styleChanged, q,
-                   &HeaderStyleMenuManager::styleChanged);
+        q->connect(interface, &HeaderStyleInterface::styleChanged, q, &HeaderStyleMenuManager::styleChanged);
         q->connect(interface, &HeaderStyleInterface::styleUpdated, q, &HeaderStyleMenuManager::styleUpdated);
     }
 }

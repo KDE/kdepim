@@ -37,8 +37,7 @@ void GrantleeHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup 
 {
     mThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Mail, QStringLiteral("header.desktop"), ac, QStringLiteral("messageviewer/themes/"));
     mThemeManager->setDownloadNewStuffConfigFile(QStringLiteral("messageviewer_header_themes.knsrc"));
-    //TODO
-    //connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
+    connect(mThemeManager, &GrantleeTheme::GrantleeThemeManager::grantleeThemeSelected, this, &GrantleeHeaderStyleInterface::slotGrantleeHeaders);
     connect(mThemeManager, &GrantleeTheme::GrantleeThemeManager::updateThemes, this, &HeaderStyleInterface::styleUpdated);
 
     mThemeManager->setActionGroup(actionGroup);
@@ -52,3 +51,7 @@ void GrantleeHeaderStyleInterface::activateAction()
 
 }
 
+void GrantleeHeaderStyleInterface::slotGrantleeHeaders()
+{
+    slotStyleChanged();
+}
