@@ -40,7 +40,7 @@ QString SieveActionDiscard::help() const
     return i18n("Discard is used to silently throw away the message.");
 }
 
-QString SieveActionDiscard::href() const
+QUrl SieveActionDiscard::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

@@ -19,6 +19,7 @@
 #define SIEVEACTION_H
 
 #include <QObject>
+#include <QUrl>
 class QDomElement;
 namespace KSieveUi
 {
@@ -50,7 +51,7 @@ public:
     virtual QString serverNeedsCapability() const;
 
     virtual QString help() const;
-    virtual QString href() const;
+    virtual QUrl href() const;
 
     QString comment() const;
 

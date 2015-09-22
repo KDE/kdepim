@@ -105,7 +105,7 @@ bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
     return true;
 }
 
-QString SieveConditionMailboxExists::href() const
+QUrl SieveConditionMailboxExists::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

@@ -74,8 +74,8 @@ SieveForEveryPartWidget::~SieveForEveryPartWidget()
 void SieveForEveryPartWidget::slotHelp()
 {
     const QString help = i18n("\"foreverypart\", which is an iterator that walks though every MIME part of a message, including nested parts, depth first, and applies the commands in the specified block to each of them.");
-    const QString href = KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::ForEveryPart);
-    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help, href);
+    const QUrl href = KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::ForEveryPart);
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help, href.toString());
     QWhatsThis::showText(QCursor::pos(), fullWhatsThis, mHelpButton);
 }
 

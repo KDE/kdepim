@@ -62,7 +62,7 @@ bool SieveConditionTrue::setParamWidgetValue(const QDomElement &, QWidget *, boo
     return true;
 }
 
-QString SieveConditionTrue::href() const
+QUrl SieveConditionTrue::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

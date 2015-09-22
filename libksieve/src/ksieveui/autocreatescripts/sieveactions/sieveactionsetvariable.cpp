@@ -80,7 +80,7 @@ QWidget *SieveActionSetVariable::createParamWidget(QWidget *parent) const
     return w;
 }
 
-QString SieveActionSetVariable::href() const
+QUrl SieveActionSetVariable::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

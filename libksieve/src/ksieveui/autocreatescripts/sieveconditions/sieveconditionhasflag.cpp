@@ -182,7 +182,7 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
     return true;
 }
 
-QString SieveConditionHasFlag::href() const
+QUrl SieveConditionHasFlag::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

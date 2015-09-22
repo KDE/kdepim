@@ -80,7 +80,7 @@ protected:
     void clearDecorator() Q_DECL_OVERRIDE;
     void createHighlighter() Q_DECL_OVERRIDE;
 Q_SIGNALS:
-    void openHelp(const QString &url);
+    void openHelp(const QUrl &url);
 
 private:
     bool openVariableHelp();

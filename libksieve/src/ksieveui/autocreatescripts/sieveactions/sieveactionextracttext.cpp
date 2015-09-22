@@ -127,7 +127,7 @@ QString SieveActionExtractText::help() const
     return i18n("The \"extracttext\" action may be used within the context of a \"foreverypart\" loop and is used to store text into a variable");
 }
 
-QString SieveActionExtractText::href() const
+QUrl SieveActionExtractText::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

@@ -213,7 +213,7 @@ bool SieveTextEdit::openVariableHelp()
         const QString word = selectedWord();
         const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(word);
         if (type != KSieveUi::SieveEditorUtil::UnknownHelp) {
-            const QString url = KSieveUi::SieveEditorUtil::helpUrl(type);
+            const QUrl url = KSieveUi::SieveEditorUtil::helpUrl(type);
             if (!url.isEmpty()) {
                 return true;
             }
@@ -244,7 +244,7 @@ void SieveTextEdit::keyPressEvent(QKeyEvent *e)
         const QString word = selectedWord();
         const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(word);
         if (type != KSieveUi::SieveEditorUtil::UnknownHelp) {
-            const QString url = KSieveUi::SieveEditorUtil::helpUrl(type);
+            const QUrl url = KSieveUi::SieveEditorUtil::helpUrl(type);
             if (!url.isEmpty()) {
                 Q_EMIT openHelp(url);
             }
@@ -309,7 +309,7 @@ void SieveTextEdit::slotHelp()
     if (act) {
         const QString word = act->data().toString();
         const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(word);
-        const QString url = KSieveUi::SieveEditorUtil::helpUrl(type);
+        const QUrl url = KSieveUi::SieveEditorUtil::helpUrl(type);
         if (!url.isEmpty()) {
             Q_EMIT openHelp(url);
         }

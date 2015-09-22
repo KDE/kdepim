@@ -131,7 +131,7 @@ QString SieveActionDeleteHeader::help() const
     return i18n("By default, the deleteheader action deletes all occurrences of the named header field.");
 }
 
-QString SieveActionDeleteHeader::href() const
+QUrl SieveActionDeleteHeader::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

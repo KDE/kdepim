@@ -18,7 +18,7 @@
 #ifndef SIEVEEDITORUTIL_H
 #define SIEVEEDITORUTIL_H
 
-#include <QString>
+#include <QUrl>
 
 namespace KSieveUi
 {
@@ -79,7 +79,7 @@ enum HelpVariableName {
 };
 KSieveUi::SieveEditorUtil::HelpVariableName strToVariableName(const QString &str);
 
-QString helpUrl(KSieveUi::SieveEditorUtil::HelpVariableName type);
+QUrl helpUrl(KSieveUi::SieveEditorUtil::HelpVariableName type);
 }
 }
 

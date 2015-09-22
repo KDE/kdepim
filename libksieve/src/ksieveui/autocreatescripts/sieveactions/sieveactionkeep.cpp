@@ -124,7 +124,7 @@ QStringList SieveActionKeep::needRequires(QWidget *) const
     return requiresLst;
 }
 
-QString SieveActionKeep::href() const
+QUrl SieveActionKeep::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

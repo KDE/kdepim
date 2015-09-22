@@ -128,7 +128,7 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
     return true;
 }
 
-QString SieveConditionMetaDataExists::href() const
+QUrl SieveConditionMetaDataExists::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

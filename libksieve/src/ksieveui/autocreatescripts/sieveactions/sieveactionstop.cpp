@@ -42,7 +42,7 @@ QString SieveActionStop::help() const
     return i18n("The \"stop\" action ends all processing.  If the implicit keep has not been cancelled, then it is taken.");
 }
 
-QString SieveActionStop::href() const
+QUrl SieveActionStop::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

@@ -112,7 +112,7 @@ void SieveAction::serverDoesNotSupportFeatures(const QString &feature, QString &
     error += i18n("A feature \"%1\" in condition \"%2\" is not supported by server", feature, name()) + QLatin1Char('\n');
 }
 
-QString SieveAction::href() const
+QUrl SieveAction::href() const
 {
-    return QString();
+    return QUrl();
 }

@@ -214,7 +214,7 @@ QString SieveActionVacation::help() const
     return helpStr;
 }
 
-QString SieveActionVacation::href() const
+QUrl SieveActionVacation::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

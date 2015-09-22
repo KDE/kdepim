@@ -159,7 +159,7 @@ QString SieveActionReplace::help() const
     return i18n("The \"replace\" command is defined to allow a MIME part to be replaced with the text supplied in the command.");
 }
 
-QString SieveActionReplace::href() const
+QUrl SieveActionReplace::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

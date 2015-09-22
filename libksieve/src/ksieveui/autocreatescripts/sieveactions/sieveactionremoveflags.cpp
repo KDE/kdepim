@@ -42,7 +42,7 @@ QString SieveActionRemoveFlags::help() const
     return i18n("Removeflag is used to remove flags from a list of [IMAP] flags. Removeflag clears flags previously set by \"set\"/\"addflag\". Calling removeflag with a flag that wasn't set before is not an error and is ignored.");
 }
 
-QString SieveActionRemoveFlags::href() const
+QUrl SieveActionRemoveFlags::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

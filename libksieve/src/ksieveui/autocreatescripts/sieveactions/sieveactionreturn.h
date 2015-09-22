@@ -32,7 +32,7 @@ public:
     bool needCheckIfServerHasCapability() const Q_DECL_OVERRIDE;
     QString serverNeedsCapability() const Q_DECL_OVERRIDE;
     QString code(QWidget *) const Q_DECL_OVERRIDE;
-    QString href() const Q_DECL_OVERRIDE;
+    QUrl href() const Q_DECL_OVERRIDE;
 };
 }
 

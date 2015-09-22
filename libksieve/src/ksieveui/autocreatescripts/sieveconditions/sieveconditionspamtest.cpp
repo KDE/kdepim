@@ -182,7 +182,7 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
     return true;
 }
 
-QString SieveConditionSpamTest::href() const
+QUrl SieveConditionSpamTest::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

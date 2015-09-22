@@ -150,7 +150,7 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
     return true;
 }
 
-QString SieveConditionDate::href() const
+QUrl SieveConditionDate::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

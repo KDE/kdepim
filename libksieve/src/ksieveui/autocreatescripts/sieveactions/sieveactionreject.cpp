@@ -107,7 +107,7 @@ QString SieveActionReject::help() const
     return i18n(" The \"reject\" action cancels the implicit keep and refuses delivery of a message.");
 }
 
-QString SieveActionReject::href() const
+QUrl SieveActionReject::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

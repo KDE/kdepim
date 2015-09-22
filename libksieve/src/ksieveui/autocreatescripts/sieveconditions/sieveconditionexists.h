@@ -35,7 +35,7 @@ public:
     QString code(QWidget *parent) const Q_DECL_OVERRIDE;
     QString help() const Q_DECL_OVERRIDE;
     bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error) Q_DECL_OVERRIDE;
-    QString href() const Q_DECL_OVERRIDE;
+    QUrl href() const Q_DECL_OVERRIDE;
 };
 }
 

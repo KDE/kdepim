@@ -152,8 +152,8 @@ void SieveConditionWidget::slotHelp()
     if (index < mConditionList.count()) {
         KSieveUi::SieveCondition *condition = mConditionList.at(index);
         const QString help = condition->help();
-        const QString href = condition->href();
-        const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help, href);
+        const QUrl href = condition->href();
+        const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help, href.toString());
         QWhatsThis::showText(QCursor::pos(), fullWhatsThis, mHelpButton);
     }
 }

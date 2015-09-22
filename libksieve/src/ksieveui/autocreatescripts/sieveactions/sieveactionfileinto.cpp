@@ -173,7 +173,7 @@ QString SieveActionFileInto::help() const
     return helpStr;
 }
 
-QString KSieveUi::SieveActionFileInto::href() const
+QUrl KSieveUi::SieveActionFileInto::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

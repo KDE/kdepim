@@ -87,7 +87,7 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
     return true;
 }
 
-QString SieveActionBreak::href() const
+QUrl SieveActionBreak::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

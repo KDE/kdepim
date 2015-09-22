@@ -32,7 +32,7 @@ public:
     QWidget *createParamWidget(QWidget *parent) const Q_DECL_OVERRIDE;
     bool setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error) Q_DECL_OVERRIDE;
     QStringList needRequires(QWidget *) const Q_DECL_OVERRIDE;
-    QString href() const Q_DECL_OVERRIDE;
+    QUrl href() const Q_DECL_OVERRIDE;
 
 private:
     bool mHasFlagSupport;

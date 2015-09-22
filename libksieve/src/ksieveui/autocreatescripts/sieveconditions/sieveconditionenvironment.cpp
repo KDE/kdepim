@@ -143,7 +143,7 @@ bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
     return true;
 }
 
-QString KSieveUi::SieveConditionEnvironment::href() const
+QUrl KSieveUi::SieveConditionEnvironment::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

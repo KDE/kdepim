@@ -153,7 +153,7 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
     return true;
 }
 
-QString SieveConditionVirusTest::href() const
+QUrl SieveConditionVirusTest::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

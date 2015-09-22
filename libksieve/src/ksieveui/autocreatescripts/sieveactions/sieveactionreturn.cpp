@@ -36,7 +36,7 @@ QString SieveActionReturn::code(QWidget *) const
     return QStringLiteral("return;");
 }
 
-QString SieveActionReturn::href() const
+QUrl SieveActionReturn::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

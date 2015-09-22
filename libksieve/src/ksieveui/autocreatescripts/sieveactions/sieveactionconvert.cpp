@@ -149,8 +149,8 @@ QString SieveActionConvert::help() const
     return i18n("The \"convert\" action specifies that all body parts with a media type equal to \"media-type\" be converted to the media type in \"media-type\" using conversion parameters.");
 }
 
-QString SieveActionConvert::href() const
+QUrl SieveActionConvert::href() const
 {
-    return QStringLiteral("http://tools.ietf.org/html/draft-ietf-sieve-convert-06");
+    return QUrl(QStringLiteral("http://tools.ietf.org/html/draft-ietf-sieve-convert-06"));
 }
 
