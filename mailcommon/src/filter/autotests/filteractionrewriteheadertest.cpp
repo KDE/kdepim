@@ -21,7 +21,7 @@
 #include <KLineEdit>
 #include <QLabel>
 #include <QWidget>
-#include <widgets/minimumcombobox.h>
+#include <pimcommon/minimumcombobox.h>
 FilterActionRewriteHeaderTest::FilterActionRewriteHeaderTest(QObject *parent)
     : QObject(parent)
 {

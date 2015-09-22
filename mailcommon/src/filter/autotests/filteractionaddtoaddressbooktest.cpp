@@ -21,8 +21,8 @@
 #include <QWidget>
 #include <QLabel>
 #include <klineedit.h>
-#include <widgets/minimumcombobox.h>
-#include <widgets/tagwidgets.h>
+#include <pimcommon/minimumcombobox.h>
+#include <libkdepim/tagwidgets.h>
 #include <AkonadiWidgets/CollectionComboBox>
 
 FilterActionAddToAddressBookTest::FilterActionAddToAddressBookTest(QObject *parent)

@@ -18,7 +18,7 @@
 #include "filteractionsendfakedispositiontest.h"
 #include "../filteractions/filteractionsendfakedisposition.h"
 #include <qtest.h>
-#include <widgets/minimumcombobox.h>
+#include <pimcommon/minimumcombobox.h>
 
 FilterActionSendFakeDispositionTest::FilterActionSendFakeDispositionTest(QObject *parent)
     : QObject(parent)

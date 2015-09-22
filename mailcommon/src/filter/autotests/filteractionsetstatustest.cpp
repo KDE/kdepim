@@ -19,7 +19,7 @@
 #include "../filteractions/filteractionsetstatus.h"
 #include <qtest.h>
 #include <QWidget>
-#include <widgets/minimumcombobox.h>
+#include <pimcommon/minimumcombobox.h>
 
 FilterActionSetStatusTest::FilterActionSetStatusTest(QObject *parent)
     : QObject(parent)

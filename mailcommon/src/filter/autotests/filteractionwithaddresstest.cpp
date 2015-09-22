@@ -18,7 +18,7 @@
 #include "../filteractions/filteractionwithaddress.h"
 #include <qtest.h>
 #include <QWidget>
-#include <widgets/emailaddressrequester.h>
+#include <pimcommon/emailaddressrequester.h>
 
 class TestFilterActionWithAddress : public MailCommon::FilterActionWithAddress
 {

@@ -20,7 +20,7 @@
 #include <QDialogButtonBox>
 #include <qtest.h>
 #include <QPushButton>
-#include <texteditor/plaintexteditor/plaintexteditorwidget.h>
+#include <pimcommon/plaintexteditorwidget.h>
 FilterConvertToSieveResultDialogTest::FilterConvertToSieveResultDialogTest(QObject *parent)
     : QObject(parent)
 {
