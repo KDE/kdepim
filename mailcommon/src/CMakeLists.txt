@@ -413,6 +413,10 @@ ecm_generate_headers(MailCommon_searchrule_HEADERS
   RELATIVE search/searchrule
 )
 
+ecm_generate_pri_file(BASE_NAME MailCommon
+    LIB_NAME KF5MailCommon
+    DEPS "AkonadiCore AkonadiMime MessageComposer PimCommon" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/MailCommon
+)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${mailcommon_SOURCE_DIR})
 install(FILES
@@ -462,6 +466,11 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/mailcommon
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
+
 endif()
 
 

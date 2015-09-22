@@ -657,6 +657,12 @@ ecm_generate_headers(PimCommon_widgets_HEADERS
   RELATIVE widgets
 )
 
+ecm_generate_pri_file(BASE_NAME PimCommon
+    LIB_NAME KF5PimCommon
+    DEPS "AkonadiCore TextWidgets AkonadiWidgets Contacts AkonadiContact Network KIOCore ConfigWidgets" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/PimCommon
+)
+
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${pimcommon_SOURCE_DIR})
 install(FILES
     ${PimCommon_storageservicesettings_HEADERS}
@@ -733,6 +739,11 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/pimcommon
     COMPONENT Devel
 )
+
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()
 
 add_subdirectory(designer)
