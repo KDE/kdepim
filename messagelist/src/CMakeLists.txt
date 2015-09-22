@@ -128,6 +128,11 @@ ecm_generate_headers(MessageList_CamelCase_HEADERS
   PREFIX MessageList
 )
 
+ecm_generate_pri_file(BASE_NAME MessageList
+    LIB_NAME KF5MessageList
+    DEPS "AkonadiCore AkonadiMime Mime" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageList
+)
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageList_SOURCE_DIR})
 install(FILES
     ${MessageList_widgets_HEADERS}
@@ -149,5 +154,9 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messagelist
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()
 
