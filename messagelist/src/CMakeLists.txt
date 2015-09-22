@@ -48,28 +48,6 @@ set(libmessagelist_SRCS
 )
 ecm_qt_declare_logging_category(libmessagelist_SRCS HEADER messagelist_debug.h IDENTIFIER MESSAGELIST_LOG CATEGORY_NAME log_messagelist)
 
-set(libmessagelist_core_HEADERS
-  core/enums.h
-  core/item.h
-  core/messageitem.h
-  core/model.h
-  core/modelinvariantindex.h
-  core/modelinvariantrowmapper.h
-  ${CMAKE_CURRENT_BINARY_DIR}/messagelistsettings.h
-  core/storagemodelbase.h
-  core/view.h
-  core/widgetbase.h
-)
-
-set(libmessagelist_utils_HEADERS
-  utils/aggregationcombobox.h
-  utils/aggregationconfigbutton.h
-  utils/configureaggregationsdialog.h
-  utils/configurethemesdialog.h
-  utils/themecombobox.h
-  utils/themeconfigbutton.h
-)
-
 kconfig_add_kcfg_files(libmessagelist_SRCS
   core/messagelistsettings.kcfgc
 )
