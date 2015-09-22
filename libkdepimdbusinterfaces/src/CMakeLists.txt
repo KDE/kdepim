@@ -58,6 +58,11 @@ ecm_generate_headers(kdepimdbusinterfaces_Camelcase_HEADERS
   PREFIX KdepimDBusInterfaces
 )
 
+ecm_generate_pri_file(BASE_NAME KdepimDBusInterfaces
+    LIB_NAME KF5KdepimDBusInterfaces
+    DEPS "AkonadiCore" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/KdepimDBusInterfaces
+)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${kdepimdbusinterfaces_SOURCE_DIR})
 install(FILES
@@ -73,5 +78,10 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kdepimdbusinterfaces
     COMPONENT Devel
 )
+
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()
 

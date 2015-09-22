@@ -57,6 +57,10 @@ ecm_generate_headers(SendLater_Camelcase_HEADERS
   PREFIX SendLater
 )
 
+ecm_generate_pri_file(BASE_NAME SendLater
+    LIB_NAME KF5SendLater
+    DEPS "AkonadiCore" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/SendLater
+)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${sendlater_SOURCE_DIR})
 install(FILES
@@ -72,4 +76,8 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/sendlater
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()

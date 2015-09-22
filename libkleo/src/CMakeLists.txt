@@ -205,6 +205,12 @@ ecm_generate_headers(libkeo_ui_HEADERS
   RELATIVE ui
 )
 
+ecm_generate_pri_file(BASE_NAME Libkleo
+    LIB_NAME KF5Libkleo
+    DEPS "QGpgme" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/Libkleo
+)
+
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libkleo_SOURCE_DIR})
 install(FILES
     ${libkleo_CamelCase_HEADERS}
@@ -221,6 +227,10 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/libkleo
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()
 
 
