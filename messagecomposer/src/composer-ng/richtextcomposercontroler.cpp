@@ -649,7 +649,7 @@ void RichTextComposerControler::ensureCursorVisible()
     //
     //       Delay the actual call to ensureCursorVisible() a bit to work around
     //       the problem.
-    QTimer::singleShot(500, richTextComposer(), SLOT(ensureCursorVisibleDelayed()));
+    QTimer::singleShot(500, richTextComposer()->composerControler(), SLOT(ensureCursorVisibleDelayed()));
 }
 
 void RichTextComposerControler::RichTextComposerControlerPrivate::fixupTextEditString(QString &text) const
