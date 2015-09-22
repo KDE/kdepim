@@ -21,8 +21,10 @@
 #include "mailcommon_export.h"
 #include "tag.h"
 #include <QDialog>
-#include <AkonadiCore/tag.h>
+#include <AkonadiCore/Tag>
+#include <AkonadiCore/TagCreateJob>
 #include <KConfigGroup>
+
 class QPushButton;
 class KActionCollection;
 

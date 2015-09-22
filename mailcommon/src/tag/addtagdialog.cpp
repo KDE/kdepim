@@ -18,7 +18,6 @@
 #include "addtagdialog.h"
 #include "tag/tagwidget.h"
 #include "mailcommon_debug.h"
-#include <AkonadiCore/tagcreatejob.h>
 
 #include <KLocalizedString>
 #include <KLineEdit>
