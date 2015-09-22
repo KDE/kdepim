@@ -1,5 +1,5 @@
 include_directories(${libksieve_SOURCE_DIR}
-        ${libksieve_SOURCE_DIR}/ksieveui/scriptsparsing
+        ${libksieve_SOURCE_DIR}/src/ksieveui/scriptsparsing
         )
 
 
