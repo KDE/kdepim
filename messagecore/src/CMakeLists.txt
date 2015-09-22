@@ -150,6 +150,11 @@ ecm_generate_headers(MessageCore_helpers_HEADERS
   RELATIVE helpers
 )
 
+ecm_generate_pri_file(BASE_NAME MessageCore
+    LIB_NAME KF5MessageCore
+    DEPS "Mime" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageCore
+)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${messagecore_SOURCE_DIR})
 install(FILES
@@ -176,4 +181,8 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messagecore
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()

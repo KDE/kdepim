@@ -308,6 +308,11 @@ ecm_generate_headers(MessageComposer_job_HEADERS
   PREFIX MessageComposer
   RELATIVE job
 )
+ecm_generate_pri_file(BASE_NAME MessageComposer
+    LIB_NAME KF5MessageComposer
+    DEPS "Mime MessageCore PimCommon Akonadi IdentityManagement AkonadiMime Libkleo" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageComposer
+)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${messagecomposer_SOURCE_DIR})
 install(FILES
@@ -349,4 +354,9 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messagecomposer
     COMPONENT Devel
 )
+
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()

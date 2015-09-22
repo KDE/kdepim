@@ -95,6 +95,11 @@ ecm_generate_headers(MailImporter_CamelCase_HEADERS
   REQUIRED_HEADERS MailImporter_CamelCase_HEADERS
   PREFIX MailImporter
 )
+ecm_generate_pri_file(BASE_NAME MailImporter
+    LIB_NAME KF5MailImpoter
+    DEPS "Mime" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/MailImporter
+)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MailImporter_SOURCE_DIR})
 install(FILES
@@ -110,4 +115,8 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/mailimporter
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()
