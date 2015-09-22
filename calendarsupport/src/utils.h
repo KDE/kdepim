@@ -140,7 +140,7 @@ CALENDARSUPPORT_EXPORT bool hasJournal(const KCalCore::Incidence::Ptr &incidence
  * returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
  */
 bool isValidIncidenceItemUrl(const QUrl &url,
-        const QStringList &supportedMimeTypes);
+                             const QStringList &supportedMimeTypes);
 
 bool isValidIncidenceItemUrl(const QUrl &url);
 

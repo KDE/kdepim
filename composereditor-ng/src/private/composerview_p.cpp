@@ -792,7 +792,7 @@ void ComposerViewPrivate::_k_slotPrint()
 void ComposerViewPrivate::_k_slotPrintPreview()
 {
     QPrintPreviewDialog previewdlg(q);
-    q->connect(&previewdlg, &QPrintPreviewDialog::paintRequested, q, [this](QPrinter *printer) {
+    q->connect(&previewdlg, &QPrintPreviewDialog::paintRequested, q, [this](QPrinter * printer) {
         q->print(printer);
     });
     previewdlg.exec();

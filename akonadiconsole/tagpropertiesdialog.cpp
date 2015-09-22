@@ -280,10 +280,10 @@ void TagPropertiesDialog::slotAccept()
     if (mTag.isValid() && !mRemovedRIDs.isEmpty()) {
         QSqlQuery query(DbAccess::database());
         QString queryStr = QStringLiteral("DELETE FROM TagRemoteIdResourceRelationTable "
-                                         "WHERE tagId = ? AND "
-                                         "resourceId IN (SELECT id "
-                                         "FROM ResourceTable "
-                                         "WHERE ");
+                                          "WHERE tagId = ? AND "
+                                          "resourceId IN (SELECT id "
+                                          "FROM ResourceTable "
+                                          "WHERE ");
         QStringList conds;
         for (int i = 0; i < mRemovedRIDs.count(); ++i) {
             conds << QStringLiteral("name = ?");

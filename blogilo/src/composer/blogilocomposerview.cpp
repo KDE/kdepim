@@ -65,7 +65,7 @@ void BlogiloComposerView::addExtraAction(QMenu *menu)
 {
     if (mCustomTools) {
         menu->addSeparator();
-        Q_FOREACH(KToggleAction *ta, mCustomTools->actionList()) {
+        Q_FOREACH (KToggleAction *ta, mCustomTools->actionList()) {
             menu->addAction(ta);
         }
     }

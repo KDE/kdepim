@@ -39,7 +39,7 @@ public:
     BlogiloComposerEditor *editor() const;
 
 private Q_SLOTS:
-    void slotInsertShortUrl(const QString &shortUrl);    
+    void slotInsertShortUrl(const QString &shortUrl);
     void slotInsertText();
 private:
     BlogiloComposerEditor *mEditor;

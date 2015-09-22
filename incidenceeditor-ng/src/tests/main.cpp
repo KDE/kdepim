@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     parser.addOption(QCommandLineOption("new-todo", i18n("Creates a new todo")));
     parser.addOption(QCommandLineOption("new-journal", i18n("Creates a new journal")));
     parser.addOption(QCommandLineOption("item", i18n("Loads an existing item, or returns without doing anything "
-                    "when the item is not an event or todo."), "id"));
+                                        "when the item is not an event or todo."), "id"));
     parser.process(app);
 
     Akonadi::Item item(-1);

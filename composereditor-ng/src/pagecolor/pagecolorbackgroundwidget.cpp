@@ -33,8 +33,8 @@ PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
     ui->setupUi(this);
     QList<QByteArray> lstImages = QImageReader::supportedImageFormats();
     QStringList mimetypes;
-    Q_FOREACH( const QByteArray &format, lstImages) {
-      mimetypes.append(QString::fromLatin1(format));
+    Q_FOREACH (const QByteArray &format, lstImages) {
+        mimetypes.append(QString::fromLatin1(format));
     }
     ui->backgroundImage->setFilter(mimetypes.join(QStringLiteral(" ")));
     ui->groupBox->setEnabled(false);
