@@ -138,7 +138,7 @@ ecm_generate_headers(IncidenceEditorsng_CamelCase_HEADERS
   EditorItemManager
   OpenComposerJob
   IncidenceEditor-Ng
-  REQUIRED_HEADERS IncidenceEditorsng_HEADERS
+  REQUIRED_HEADERS IncidenceEditorsng_CamelCase_HEADERS
   PREFIX IncidenceEditorsng
 )
 

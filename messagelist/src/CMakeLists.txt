@@ -147,7 +147,7 @@ install(FILES
     ${MessageList_HEADERS}
     ${MessageList_widgets_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messagelist_export.h
-    ${CMAKE_CURRENT_BINARY_DIR}/settings.h
+    ${CMAKE_CURRENT_BINARY_DIR}/messagelistsettings.h
     ${MessageList_CamelCase_HEADERS}
     ${MessageList_core_HEADERS}
     ${MessageList_util_HEADERS}

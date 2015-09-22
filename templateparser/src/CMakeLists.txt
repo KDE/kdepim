@@ -77,7 +77,7 @@ ecm_generate_headers(TemplateParser_CamelCase_HEADERS
   TemplatesTextEdit
   TemplatesUtil
   TemplatesInsertCommand
-  REQUIRED_HEADERS TemplateParser_HEADERS
+  REQUIRED_HEADERS TemplateParser_CamelCase_HEADERS
   PREFIX TemplateParser
 )
 

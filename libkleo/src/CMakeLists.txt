@@ -182,7 +182,7 @@ ecm_generate_headers(libkleo_CamelCase_HEADERS
   ListAllKeysJob
   Predicates
   AbstractImportJob
-  REQUIRED_HEADERS libkleo_HEADERS
+  REQUIRED_HEADERS libkleo_CamelCase_HEADERS
   PREFIX Libkleo
   RELATIVE kleo
 )
@@ -200,7 +200,7 @@ ecm_generate_headers(libkeo_ui_HEADERS
   CryptoConfigModule
   DirectoryServicesWidget
   DNAttributeOrderConfigWidget
-  REQUIRED_HEADERS libkleo_HEADERS
+  REQUIRED_HEADERS libkeo_ui_HEADERS
   PREFIX Libkleo
   RELATIVE ui
 )

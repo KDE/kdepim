@@ -79,7 +79,7 @@ ecm_generate_headers(kdgantt2_CamelCase_HEADERS
   KDGanttStyleOptionGanttItem
   KDGanttAbstractGrid
   KDGanttConstraint
-  REQUIRED_HEADERS kdgantt2_HEADERS
+  REQUIRED_HEADERS kdgantt2_CamelCase_HEADERS
   PREFIX KDGantt2
 )
 
