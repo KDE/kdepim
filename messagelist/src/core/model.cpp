@@ -1295,7 +1295,7 @@ void ModelPrivate::attachMessageToGroupHeader(MessageItem *mi)
         } else if (daysAgo == 1) { // Yesterday
             groupLabel = mCachedYesterdayLabel;
         } else if (daysAgo > 1 && daysAgo < daysInWeek) {   // Within last seven days
-            groupLabel = QLocale::system().dayName(dDate.dayOfWeek());
+            groupLabel = QLocale::system().standaloneDayName(dDate.dayOfWeek());
         } else if (mAggregation->grouping() == Aggregation::GroupByDate) {   // GroupByDate seven days or more ago
             groupLabel = QLocale::system().toString(dDate, QLocale::ShortFormat);
         } else if (dDate.month() == mTodayDate.month() &&       // GroupByDateRange within this month
@@ -1304,7 +1304,7 @@ void ModelPrivate::attachMessageToGroupHeader(MessageItem *mi)
             int weeksAgo = ((daysAgo - startOfWeekDaysAgo) / daysInWeek) + 1;
             switch (weeksAgo) {
             case 0: // This week
-                groupLabel = QLocale::system().dayName(dDate.dayOfWeek());
+                groupLabel = QLocale::system().standaloneDayName(dDate.dayOfWeek());
                 break;
             case 1: // 1 week ago
                 groupLabel = mCachedLastWeekLabel;
@@ -1325,9 +1325,9 @@ void ModelPrivate::attachMessageToGroupHeader(MessageItem *mi)
                 groupLabel = mCachedUnknownLabel;
             }
         } else if (dDate.year() == mTodayDate.year()) {       // GroupByDateRange within this year
-            groupLabel = QLocale::system().monthName(dDate.month());
+            groupLabel = QLocale::system().standaloneMonthName(dDate.month());
         } else { // GroupByDateRange in previous years
-            groupLabel = i18nc("Message Aggregation Group Header: Month name and Year number", "%1 %2", QLocale::system().monthName(dDate.month()),
+            groupLabel = i18nc("Message Aggregation Group Header: Month name and Year number", "%1 %2", QLocale::system().standaloneMonthName(dDate.month()),
                                QLocale::system().toString(dDate, QLatin1Literal("yyyy")));
         }
         break;
