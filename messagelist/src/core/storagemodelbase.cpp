@@ -43,7 +43,7 @@ unsigned long StorageModel::preSelectedMessage() const
     const QString storageModelId = id();
     Q_ASSERT(!storageModelId.isEmpty());
 
-    KConfigGroup conf(Settings::self()->config(),
+    KConfigGroup conf(MessageListSettings::self()->config(),
                       MessageList::Util::storageModelSelectedMessageGroup());
 
     // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
@@ -57,7 +57,7 @@ void StorageModel::savePreSelectedMessage(unsigned long uniqueIdOfMessage)
     const QString storageModelId = id();
     Q_ASSERT(!storageModelId.isEmpty());
 
-    KConfigGroup conf(Settings::self()->config(),
+    KConfigGroup conf(MessageListSettings::self()->config(),
                       MessageList::Util::storageModelSelectedMessageGroup());
 
     if (uniqueIdOfMessage) {

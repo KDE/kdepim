@@ -190,7 +190,7 @@ void Widget::changeQuicksearchVisibility(bool show)
         }
     }
     d->quickSearchLine->changeQuicksearchVisibility(show);
-    Settings::self()->setShowQuickSearch(show);
+    MessageListSettings::self()->setShowQuickSearch(show);
 }
 
 void Widget::populateStatusFilterCombo()

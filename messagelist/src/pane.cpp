@@ -163,7 +163,7 @@ Pane::Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *
     connect(d->mCloseTabButton, SIGNAL(clicked()),
             SLOT(onCloseTabClicked()));
 
-    setTabsClosable(Core::Settings::self()->tabsHaveCloseButton());
+    setTabsClosable(MessageListSettings::self()->tabsHaveCloseButton());
     connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(slotTabCloseRequested(int)));
 
     readConfig(restoreSession);
@@ -178,7 +178,7 @@ Pane::Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *
     connect(this, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(onTabContextMenuRequest(QPoint)));
 
-    connect(Core::Settings::self(), SIGNAL(configChanged()),
+    connect(MessageListSettings::self(), SIGNAL(configChanged()),
             this, SLOT(updateTabControls()));
 
     connect(this, &QTabWidget::tabBarDoubleClicked,
@@ -217,7 +217,7 @@ void Pane::setXmlGuiClient(KXMLGUIClient *xmlGuiClient)
 
     KToggleAction *const showHideQuicksearch = new KToggleAction(i18n("Show Quick Search Bar"), this);
     d->mXmlGuiClient->actionCollection()->setDefaultShortcut(showHideQuicksearch, Qt::CTRL + Qt::Key_H);
-    showHideQuicksearch->setChecked(Core::Settings::showQuickSearch());
+    showHideQuicksearch->setChecked(MessageListSettings::showQuickSearch());
 
     d->mXmlGuiClient->actionCollection()->addAction(QStringLiteral("show_quick_search"), showHideQuicksearch);
     connect(showHideQuicksearch, SIGNAL(triggered(bool)), this, SLOT(changeQuicksearchVisibility(bool)));
@@ -822,13 +822,13 @@ void Pane::Private::updateTabControls()
         mMoveTabLeftAction->setEnabled(enableAction);
     }
 
-    if (Core::Settings::self()->autoHideTabBarWithSingleTab()) {
+    if (MessageListSettings::self()->autoHideTabBarWithSingleTab()) {
         q->tabBar()->setVisible(enableAction);
     } else {
         q->tabBar()->setVisible(true);
     }
 
-    const bool hasCloseButton(Core::Settings::self()->tabsHaveCloseButton());
+    const bool hasCloseButton(MessageListSettings::self()->tabsHaveCloseButton());
     q->setTabsClosable(hasCloseButton);
     if (hasCloseButton) {
         const int numberOfTab(q->count());
@@ -1070,12 +1070,12 @@ void Pane::updateTagComboBox()
 
 void Pane::writeConfig(bool restoreSession)
 {
-    KConfigGroup conf(MessageList::Core::Settings::self()->config(), "MessageListPane");
+    KConfigGroup conf(MessageList::MessageListSettings::self()->config(), "MessageListPane");
 
     // Delete list before
-    const QStringList list = MessageList::Core::Settings::self()->config()->groupList().filter(QRegExp(QStringLiteral("MessageListTab\\d+")));
+    const QStringList list = MessageList::MessageListSettings::self()->config()->groupList().filter(QRegExp(QStringLiteral("MessageListTab\\d+")));
     foreach (const QString &group, list) {
-        MessageList::Core::Settings::self()->config()->deleteGroup(group);
+        MessageList::MessageListSettings::self()->config()->deleteGroup(group);
     }
 
     if (restoreSession) {
@@ -1084,7 +1084,7 @@ void Pane::writeConfig(bool restoreSession)
 
         for (int i = 0; i < count(); ++i) {
             Widget *w = qobject_cast<Widget *>(widget(i));
-            KConfigGroup grp(MessageList::Core::Settings::self()->config(), QStringLiteral("MessageListTab%1").arg(i));
+            KConfigGroup grp(MessageList::MessageListSettings::self()->config(), QStringLiteral("MessageListTab%1").arg(i));
             grp.writeEntry(QStringLiteral("collectionId"), w->currentCollection().id());
             grp.writeEntry(QStringLiteral("HeaderState"), w->view()->header()->saveState());
         }
@@ -1094,8 +1094,8 @@ void Pane::writeConfig(bool restoreSession)
 
 void Pane::readConfig(bool restoreSession)
 {
-    if (MessageList::Core::Settings::self()->config()->hasGroup(QStringLiteral("MessageListPane"))) {
-        KConfigGroup conf(MessageList::Core::Settings::self()->config(), "MessageListPane");
+    if (MessageList::MessageListSettings::self()->config()->hasGroup(QStringLiteral("MessageListPane"))) {
+        KConfigGroup conf(MessageList::MessageListSettings::self()->config(), "MessageListPane");
         const int numberOfTab = conf.readEntry(QStringLiteral("tabNumber"), 0);
         if (numberOfTab == 0) {
             createNewTab();
@@ -1129,7 +1129,7 @@ void Pane::readConfig(bool restoreSession)
 
 void Pane::restoreHeaderSettings(int index)
 {
-    KConfigGroup grp(MessageList::Core::Settings::self()->config(), QStringLiteral("MessageListTab%1").arg(index));
+    KConfigGroup grp(MessageList::MessageListSettings::self()->config(), QStringLiteral("MessageListTab%1").arg(index));
     if (grp.exists()) {
         Widget *w = qobject_cast<Widget *>(widget(index));
         w->view()->header()->restoreState(grp.readEntry(QStringLiteral("HeaderState"), QByteArray()));

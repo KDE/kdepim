@@ -169,7 +169,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchAgainstBcc->installEventFilter(this);
     mQuickSearchFilterWidget->installEventFilter(this);
     mExtraOption->installEventFilter(this);
-    changeQuicksearchVisibility(Settings::self()->showQuickSearch());
+    changeQuicksearchVisibility(MessageListSettings::self()->showQuickSearch());
 }
 
 QuickSearchLine::~QuickSearchLine()

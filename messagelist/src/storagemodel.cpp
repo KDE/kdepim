@@ -132,7 +132,7 @@ StorageModel::StorageModel(QAbstractItemModel *model, QItemSelectionModel *selec
             this, SLOT(onSelectionChanged()));
 
     d->loadSettings();
-    connect(Core::Settings::self(), SIGNAL(configChanged()),
+    connect(MessageListSettings::self(), SIGNAL(configChanged()),
             this, SLOT(loadSettings()));
 }
 
@@ -440,7 +440,7 @@ void StorageModel::Private::onSelectionChanged()
 void StorageModel::Private::loadSettings()
 {
     // Custom/System colors
-    Core::Settings *settings = Core::Settings::self();
+    MessageListSettings *settings = MessageListSettings::self();
 
     if (MessageCore::GlobalSettings::self()->useDefaultColors()) {
         Core::MessageItem::setUnreadMessageColor(MessageList::Util::unreadDefaultMessageColor());

@@ -1,7 +1,7 @@
 File=settings.kcfg
-ClassName=Settings
+ClassName=MessageListSettings
 Visibility=MESSAGELIST_EXPORT
-NameSpace=MessageList::Core
+NameSpace=MessageList
 MemberVariables=dpointer
 Mutators=true
 Singleton=true

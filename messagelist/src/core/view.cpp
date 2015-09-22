@@ -785,7 +785,7 @@ void View::slotHeaderContextMenuRequested(const QPoint &pnt)
     {
         QAction *act = menu.addAction(i18n("Display Tooltips"));
         act->setCheckable(true);
-        act->setChecked(Settings::self()->messageToolTipEnabled());
+        act->setChecked(MessageListSettings::self()->messageToolTipEnabled());
         QObject::connect(act, &QAction::triggered, this, &View::slotDisplayTooltips);
     }
     menu.addSeparator();
@@ -817,7 +817,7 @@ void View::slotShowDefaultColumns()
 
 void View::slotDisplayTooltips(bool showTooltips)
 {
-    Settings::self()->setMessageToolTipEnabled(showTooltips);
+    MessageListSettings::self()->setMessageToolTipEnabled(showTooltips);
 }
 
 void View::slotShowHideColumn(int columnIdx)
@@ -2324,7 +2324,7 @@ bool View::event(QEvent *e)
         return QTreeView::event(e);
     }
 
-    if (!Settings::self()->messageToolTipEnabled()) {
+    if (!MessageListSettings::self()->messageToolTipEnabled()) {
         return true;    // don't display tooltips
     }
 

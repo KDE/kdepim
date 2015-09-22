@@ -98,7 +98,7 @@ Manager::Manager()
     mCachedLocalizedUnknownText = i18nc("Unknown date", "Unknown") ;
 
     loadConfiguration();
-    connect(Settings::self(), &Settings::configChanged, this, &Manager::reloadGlobalConfiguration);
+    connect(MessageListSettings::self(), &MessageListSettings::configChanged, this, &Manager::reloadGlobalConfiguration);
 }
 
 Manager::~Manager()
@@ -179,7 +179,7 @@ const Aggregation *Manager::aggregation(const QString &id)
 
 const Aggregation *Manager::defaultAggregation()
 {
-    KConfigGroup conf(Settings::self()->config(),
+    KConfigGroup conf(MessageListSettings::self()->config(),
                       MessageList::Util::storageModelAggregationsGroup());
 
     const QString aggregationId = conf.readEntry(QStringLiteral("DefaultSet"), "");
@@ -221,7 +221,7 @@ void Manager::saveAggregationForStorageModel(const StorageModel *storageModel, c
 
 void Manager::saveAggregationForStorageModel(const QString &modelId, const QString &id, bool storageUsesPrivateAggregation)
 {
-    KConfigGroup conf(Settings::self()->config(),
+    KConfigGroup conf(MessageListSettings::self()->config(),
                       MessageList::Util::storageModelAggregationsGroup());
 
     if (storageUsesPrivateAggregation) {
@@ -261,7 +261,7 @@ const Aggregation *Manager::aggregationForStorageModel(const StorageModel *stora
 
 const Aggregation *Manager::aggregationForStorageModel(const QString &storageId, bool *storageUsesPrivateAggregation)
 {
-    KConfigGroup conf(Settings::self()->config(),
+    KConfigGroup conf(MessageListSettings::self()->config(),
                       MessageList::Util::storageModelAggregationsGroup());
 
     const QString aggregationId = conf.readEntry(MessageList::Util::setForStorageModelConfigName().arg(storageId), "");
@@ -476,7 +476,7 @@ const SortOrder Manager::sortOrderForStorageModel(const StorageModel *storageMod
         return SortOrder();
     }
 
-    KConfigGroup conf(Settings::self()->config(), MessageList::Util::storageModelSortOrderGroup());
+    KConfigGroup conf(MessageListSettings::self()->config(), MessageList::Util::storageModelSortOrderGroup());
     SortOrder ret;
     ret.readConfig(conf, storageModel->id(), storageUsesPrivateSortOrder);
     return ret;
@@ -485,7 +485,7 @@ const SortOrder Manager::sortOrderForStorageModel(const StorageModel *storageMod
 void Manager::saveSortOrderForStorageModel(const StorageModel *storageModel,
         const SortOrder &order, bool storageUsesPrivateSortOrder)
 {
-    KConfigGroup conf(Settings::self()->config(), MessageList::Util::storageModelSortOrderGroup());
+    KConfigGroup conf(MessageListSettings::self()->config(), MessageList::Util::storageModelSortOrderGroup());
     order.writeConfig(conf, storageModel->id(), storageUsesPrivateSortOrder);
 }
 
@@ -501,7 +501,7 @@ const Theme *Manager::theme(const QString &id)
 
 const Theme *Manager::defaultTheme()
 {
-    KConfigGroup conf(Settings::self()->config(), MessageList::Util::storageModelThemesGroup());
+    KConfigGroup conf(MessageListSettings::self()->config(), MessageList::Util::storageModelThemesGroup());
 
     const QString themeId = conf.readEntry(QStringLiteral("DefaultSet"), "");
 
@@ -543,7 +543,7 @@ void Manager::saveThemeForStorageModel(const StorageModel *storageModel, const Q
 
 void Manager::saveThemeForStorageModel(const QString &storageModelIndex, const QString &id, bool storageUsesPrivateTheme)
 {
-    KConfigGroup conf(Settings::self()->config(), MessageList::Util::storageModelThemesGroup());
+    KConfigGroup conf(MessageListSettings::self()->config(), MessageList::Util::storageModelThemesGroup());
 
     if (storageUsesPrivateTheme) {
         conf.writeEntry(MessageList::Util::setForStorageModelConfigName().arg(storageModelIndex), id);
@@ -584,7 +584,7 @@ const Theme *Manager::themeForStorageModel(const StorageModel *storageModel, boo
 
 const Theme *Manager::themeForStorageModel(const QString &id, bool *storageUsesPrivateTheme)
 {
-    KConfigGroup conf(Settings::self()->config(), MessageList::Util::storageModelThemesGroup());
+    KConfigGroup conf(MessageListSettings::self()->config(), MessageList::Util::storageModelThemesGroup());
     const QString themeId = conf.readEntry(MessageList::Util::setForStorageModelConfigName().arg(id), "");
 
     Theme *opt = Q_NULLPTR;
@@ -936,7 +936,7 @@ void Manager::loadConfiguration()
     {
         // load Aggregations
 
-        KConfigGroup conf(Settings::self()->config(), "MessageListView::Aggregations");
+        KConfigGroup conf(MessageListSettings::self()->config(), "MessageListView::Aggregations");
 
         mAggregations.clear();
 
@@ -968,7 +968,7 @@ void Manager::loadConfiguration()
     {
         // load Themes
 
-        KConfigGroup conf(Settings::self()->config(), "MessageListView::Themes");
+        KConfigGroup conf(MessageListSettings::self()->config(), "MessageListView::Themes");
 
         mThemes.clear();
 
@@ -1002,7 +1002,7 @@ void Manager::loadConfiguration()
 
 void Manager::saveGlobalConfiguration()
 {
-    Settings::self()->save();
+    MessageListSettings::self()->save();
 }
 
 void Manager::saveConfiguration()
@@ -1012,7 +1012,7 @@ void Manager::saveConfiguration()
     {
         // store aggregations
 
-        KConfigGroup conf(Settings::self()->config(), "MessageListView::Aggregations");
+        KConfigGroup conf(MessageListSettings::self()->config(), "MessageListView::Aggregations");
         //conf.clear();
 
         conf.writeEntry("Count", mAggregations.count());
@@ -1028,7 +1028,7 @@ void Manager::saveConfiguration()
     {
         // store themes
 
-        KConfigGroup conf(Settings::self()->config(), "MessageListView::Themes");
+        KConfigGroup conf(MessageListSettings::self()->config(), "MessageListView::Themes");
         //conf.clear();
 
         conf.writeEntry("Count", mThemes.count());
@@ -1041,6 +1041,6 @@ void Manager::saveConfiguration()
         }
     }
 
-    Settings::self()->config()->sync();
+    MessageListSettings::self()->config()->sync();
 }
 

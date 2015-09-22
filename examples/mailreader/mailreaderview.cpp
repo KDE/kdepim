@@ -100,7 +100,7 @@ void mailreaderView::slotConfigure()
     Ui::MessageListConfig ui;
     ui.setupUi(messageListConfig);
     dialog->addPage(messageListConfig,
-                    MessageList::Core::Settings::self(),
+                    MessageList::MessageListSettings::self(),
                     i18n("Message List"),
                     QLatin1String("kmail"));
 

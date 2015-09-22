@@ -26,8 +26,6 @@
 #include <Item>
 #include <KColorScheme>
 
-using namespace MessageList::Core;
-
 QString MessageList::Util::messageSortingConfigName()
 {
     return QStringLiteral("MessageSorting");
@@ -80,22 +78,22 @@ QString MessageList::Util::storageModelSelectedMessageGroup()
 
 void MessageList::Util::deleteConfig(const QString &collectionId)
 {
-    KConfigGroup confselectedMessage(Settings::self()->config(),
+    KConfigGroup confselectedMessage(MessageList::MessageListSettings::self()->config(),
                                      MessageList::Util::storageModelSelectedMessageGroup());
     confselectedMessage.deleteEntry(MessageList::Util::messageUniqueIdConfigName().arg(collectionId));
 
-    KConfigGroup storageModelOrder(Settings::self()->config(),
+    KConfigGroup storageModelOrder(MessageListSettings::self()->config(),
                                    MessageList::Util::storageModelSortOrderGroup());
     storageModelOrder.deleteEntry(collectionId + groupSortDirectionConfigName());
     storageModelOrder.deleteEntry(collectionId + groupSortingConfigName());
     storageModelOrder.deleteEntry(collectionId + messageSortDirectionConfigName());
     storageModelOrder.deleteEntry(collectionId + messageSortingConfigName());
 
-    KConfigGroup storageModelTheme(Settings::self()->config(),
+    KConfigGroup storageModelTheme(MessageListSettings::self()->config(),
                                    MessageList::Util::storageModelThemesGroup());
     storageModelTheme.deleteEntry(collectionId + setForStorageModelConfigName());
 
-    KConfigGroup storageModelAggregation(Settings::self()->config(),
+    KConfigGroup storageModelAggregation(MessageListSettings::self()->config(),
                                          MessageList::Util::storageModelAggregationsGroup());
     storageModelAggregation.deleteEntry(collectionId + setForStorageModelConfigName());
 
