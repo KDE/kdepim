@@ -81,6 +81,12 @@ ecm_generate_headers(TemplateParser_CamelCase_HEADERS
   PREFIX TemplateParser
 )
 
+ecm_generate_pri_file(BASE_NAME TemplateParser
+    LIB_NAME KF5TemplateParser
+    DEPS "PimCommon" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/TemplateParser
+)
+
+
 install(TARGETS KF5TemplateParser EXPORT KF5TemplateParserTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if(${CMAKE_SOURCE_DIR} STREQUAL ${TemplateParser_SOURCE_DIR})
 
@@ -102,5 +108,9 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/templateparser
     COMPONENT Devel
 )
+
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
 
 endif()

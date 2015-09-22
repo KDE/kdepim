@@ -182,6 +182,12 @@ ecm_generate_headers(NoteShared_job_HEADERS
   RELATIVE job
 )
 
+ecm_generate_pri_file(BASE_NAME NoteShared
+    LIB_NAME KF5NoteShared
+    DEPS "AkonadiCore" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/NoteShared
+)
+
+
 if(${CMAKE_SOURCE_DIR} STREQUAL ${noteshared_SOURCE_DIR})
 install(FILES
     ${NoteShared_CamelCase_HEADERS}
@@ -217,4 +223,8 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/noteshared
     COMPONENT Devel
 )
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 endif()
