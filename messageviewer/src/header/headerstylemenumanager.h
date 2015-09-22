@@ -37,6 +37,8 @@ public:
     KActionMenu *menu() const;
 
     void setPluginName(const QString &pluginName);
+public Q_SLOTS:
+    void slotStyleChanged(MessageViewer::HeaderStylePlugin *plugin);
 Q_SIGNALS:
     void styleChanged(MessageViewer::HeaderStylePlugin *plugin);
     void styleUpdated();

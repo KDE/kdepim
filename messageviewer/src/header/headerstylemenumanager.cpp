@@ -22,10 +22,13 @@
 #include "header/headerstyle.h"
 #include "header/headerstrategy.h"
 #include "messageviewer_debug.h"
+#include "messageviewer/messageviewersettings.h"
+
 #include <KActionMenu>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KToggleAction>
+
 using namespace MessageViewer;
 
 class MessageViewer::HeaderStyleMenuManagerPrivate
@@ -37,6 +40,8 @@ public:
           q(qq)
     {
     }
+    void readSettings();
+    void writeSettings(const QString &pluginName);
     void initialize(KActionCollection *ac);
     void addHelpTextAction(QAction *act, const QString &text);
     void setPluginName(const QString &pluginName);
@@ -70,6 +75,28 @@ void HeaderStyleMenuManagerPrivate::setPluginName(const QString &pluginName)
     }
 }
 
+void HeaderStyleMenuManagerPrivate::readSettings()
+{
+    QString headerStyleName = MessageViewer::GlobalSettings::self()->headerPluginStyleName();
+    if (headerStyleName.isEmpty()) {
+        //TODO read old settings
+        const QString headerStyle = MessageViewer::GlobalSettings::self()->headerStyle();
+        const QString headerSetDisplayed = MessageViewer::GlobalSettings::self()->headerSetDisplayed();
+        //if (headerStyle == )
+    }
+    if (headerStyleName.isEmpty()) {
+        headerStyleName = QStringLiteral("fancy");
+    }
+    setPluginName(headerStyleName);
+}
+
+void HeaderStyleMenuManagerPrivate::writeSettings(const QString &pluginName)
+{
+    MessageViewer::GlobalSettings::self()->setHeaderPluginStyleName(pluginName);
+    MessageViewer::GlobalSettingsBase::self()->save();
+}
+
+
 void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
 {
     headerMenu = new KActionMenu(i18nc("View->", "&Headers"), q);
@@ -81,7 +108,7 @@ void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
     Q_FOREACH (MessageViewer::HeaderStylePlugin *plugin, lstPlugin) {
         MessageViewer::HeaderStyleInterface *interface = plugin->createView(headerMenu, group, ac, q);
         lstInterface.insert(plugin->name(), interface);
-        q->connect(interface, &HeaderStyleInterface::styleChanged, q, &HeaderStyleMenuManager::styleChanged);
+        q->connect(interface, &HeaderStyleInterface::styleChanged, q, &HeaderStyleMenuManager::slotStyleChanged);
         q->connect(interface, &HeaderStyleInterface::styleUpdated, q, &HeaderStyleMenuManager::styleUpdated);
     }
 }
@@ -91,6 +118,7 @@ HeaderStyleMenuManager::HeaderStyleMenuManager(KActionCollection *ac, QObject *p
       d(new MessageViewer::HeaderStyleMenuManagerPrivate(this))
 {
     d->initialize(ac);
+    d->readSettings();
 }
 
 HeaderStyleMenuManager::~HeaderStyleMenuManager()
@@ -106,4 +134,10 @@ KActionMenu *HeaderStyleMenuManager::menu() const
 void MessageViewer::HeaderStyleMenuManager::setPluginName(const QString &pluginName)
 {
     d->setPluginName(pluginName);
+}
+
+void HeaderStyleMenuManager::slotStyleChanged(MessageViewer::HeaderStylePlugin *plugin)
+{
+    d->writeSettings(plugin->name());
+    Q_EMIT styleChanged(plugin);
 }

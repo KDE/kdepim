@@ -104,7 +104,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
     <entry name="headerPluginStyleName" type="String" key="header-plugin-style-name">
       <label>What style of headers should be displayed</label>
-      <default>fancy</default>
+      <default></default>
     </entry>
 
 
