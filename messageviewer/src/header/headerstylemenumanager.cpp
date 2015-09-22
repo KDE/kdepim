@@ -29,6 +29,8 @@
 #include <KLocalizedString>
 #include <KToggleAction>
 
+#include <QDebug>
+
 using namespace MessageViewer;
 
 class MessageViewer::HeaderStyleMenuManagerPrivate
@@ -73,16 +75,35 @@ void HeaderStyleMenuManagerPrivate::setPluginName(const QString &pluginName)
             interface->activateAction();
         }
     }
+    Q_EMIT q->styleChanged(interface->headerStylePlugin());
 }
 
 void HeaderStyleMenuManagerPrivate::readSettings()
 {
     QString headerStyleName = MessageViewer::GlobalSettings::self()->headerPluginStyleName();
     if (headerStyleName.isEmpty()) {
-        //TODO read old settings
         const QString headerStyle = MessageViewer::GlobalSettings::self()->headerStyle();
         const QString headerSetDisplayed = MessageViewer::GlobalSettings::self()->headerSetDisplayed();
-        //if (headerStyle == )
+
+        if ((headerStyle == QLatin1String("custom")) && (headerSetDisplayed == QLatin1String("custom"))) { //Custom
+            headerStyleName = QStringLiteral("custom");
+        } else if ((headerStyle == QLatin1String("plain")) && (headerSetDisplayed == QLatin1String("all"))) { //all
+            headerStyleName = QStringLiteral("all-headers");
+        } else if ((headerStyle == QLatin1String("brief")) && (headerSetDisplayed == QLatin1String("brief"))) { //brief
+            headerStyleName = QStringLiteral("brief");
+        } else if ((headerStyle == QLatin1String("enterprise")) && (headerSetDisplayed == QLatin1String("rich"))) {  //enterprise
+            headerStyleName = QStringLiteral("enterprise");
+        } else if ((headerStyle == QLatin1String("fancy")) && (headerSetDisplayed == QLatin1String("rich"))) { //fancy
+            headerStyleName = QStringLiteral("fancy");
+        } else if ((headerStyle == QLatin1String("grantlee")) && (headerSetDisplayed == QLatin1String("grantlee"))) { //grantlee
+            headerStyleName = QStringLiteral("grantlee");
+        } else if ((headerStyle == QLatin1String("plain")) && (headerSetDisplayed == QLatin1String("rich"))) { //longheader
+            headerStyleName = QStringLiteral("long-header");
+        } else if ((headerStyle == QLatin1String("plain")) && (headerSetDisplayed == QLatin1String("standard"))) { //Standard
+            headerStyleName = QStringLiteral("standards-header");
+        } else {
+            qDebug() << "unknown style : headerstyle "<< headerStyle << " headerstrategy :"<<headerSetDisplayed;
+        }
     }
     if (headerStyleName.isEmpty()) {
         headerStyleName = QStringLiteral("fancy");
@@ -118,7 +139,6 @@ HeaderStyleMenuManager::HeaderStyleMenuManager(KActionCollection *ac, QObject *p
       d(new MessageViewer::HeaderStyleMenuManagerPrivate(this))
 {
     d->initialize(ac);
-    d->readSettings();
 }
 
 HeaderStyleMenuManager::~HeaderStyleMenuManager()
@@ -140,4 +160,9 @@ void HeaderStyleMenuManager::slotStyleChanged(MessageViewer::HeaderStylePlugin *
 {
     d->writeSettings(plugin->name());
     Q_EMIT styleChanged(plugin);
+}
+
+void HeaderStyleMenuManager::readConfig()
+{
+    d->readSettings();
 }

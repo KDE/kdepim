@@ -43,11 +43,12 @@ HeaderStyleMenuTest::HeaderStyleMenuTest(QWidget *parent)
     QVBoxLayout *hbox = new QVBoxLayout(this);
     hbox->addWidget(menu);
     MessageViewer::HeaderStyleMenuManager *manager = new MessageViewer::HeaderStyleMenuManager(new KActionCollection(this), this);
-    connect(manager, &MessageViewer::HeaderStyleMenuManager::styleChanged, this, &HeaderStyleMenuTest::styleChanged);
     menu->addAction(manager->menu());
     mTextEdit = new QTextEdit(this);
     mTextEdit->setReadOnly(true);
     hbox->addWidget(mTextEdit);
+    connect(manager, &MessageViewer::HeaderStyleMenuManager::styleChanged, this, &HeaderStyleMenuTest::styleChanged);
+    manager->readConfig();
 }
 
 HeaderStyleMenuTest::~HeaderStyleMenuTest()

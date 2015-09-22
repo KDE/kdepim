@@ -39,6 +39,8 @@ public:
     QList<KToggleAction * > action() const;
     virtual void createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac) = 0;
     virtual void activateAction() = 0;
+    HeaderStylePlugin *headerStylePlugin() const;
+
 Q_SIGNALS:
     void styleChanged(MessageViewer::HeaderStylePlugin *plugin);
     void styleUpdated();
