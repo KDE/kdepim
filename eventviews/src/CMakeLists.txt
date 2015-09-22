@@ -194,6 +194,11 @@ ecm_generate_headers(eventviews_whatsnext_HEADERS
   PREFIX EventViews
   RELATIVE whatsnext
 )
+ecm_generate_pri_file(BASE_NAME EventViews
+    LIB_NAME KF5EventViews
+    DEPS "Mime IdentityManagement AkonadiCalendar" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/EventViews
+)
+
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${eventviews_SOURCE_DIR})
 install(FILES
@@ -227,17 +232,13 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/eventviews
     COMPONENT Devel
 )
-endif()
-
-install(FILES agenda/calendardecoration.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
-
-ecm_generate_pri_file(BASE_NAME EventViews
-    LIB_NAME KF5EventViews
-    DEPS "Mime IdentityManagement AkonadiCalendar" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/EventViews
-)
-
 install(FILES
     ${PRI_FILENAME}
     DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
+
+endif()
+
+install(FILES agenda/calendardecoration.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
 
 
