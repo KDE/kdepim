@@ -107,13 +107,13 @@ bool MBoxImporterKernel::excludeImportantMailFromExpiry()
     return true;
 }
 
-Akonadi::Entity::Id MBoxImporterKernel::lastSelectedFolder()
+Akonadi::Collection::Id MBoxImporterKernel::lastSelectedFolder()
 {
     Q_ASSERT(false);
-    return Akonadi::Entity::Id();
+    return Akonadi::Collection::Id();
 }
 
-void MBoxImporterKernel::setLastSelectedFolder(const Akonadi::Entity::Id &col)
+void MBoxImporterKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
 {
     Q_UNUSED(col);
 }

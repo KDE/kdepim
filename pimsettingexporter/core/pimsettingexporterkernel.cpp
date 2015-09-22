@@ -119,13 +119,13 @@ bool PimSettingExporterKernel::excludeImportantMailFromExpiry()
     return true;
 }
 
-Akonadi::Entity::Id PimSettingExporterKernel::lastSelectedFolder()
+Akonadi::Collection::Id PimSettingExporterKernel::lastSelectedFolder()
 {
     Q_ASSERT(false);
-    return Akonadi::Entity::Id();
+    return Akonadi::Collection::Id();
 }
 
-void PimSettingExporterKernel::setLastSelectedFolder(const Akonadi::Entity::Id &col)
+void PimSettingExporterKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
 {
     Q_UNUSED(col);
 }

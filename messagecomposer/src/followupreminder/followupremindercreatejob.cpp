@@ -57,7 +57,7 @@ void FollowupReminderCreateJob::setFollowUpReminderDate(const QDate &date)
     d->mInfo->setFollowUpReminderDate(date);
 }
 
-void FollowupReminderCreateJob::setOriginalMessageItemId(Akonadi::Entity::Id value)
+void FollowupReminderCreateJob::setOriginalMessageItemId(Akonadi::Item::Id value)
 {
     d->mInfo->setOriginalMessageItemId(value);
 }

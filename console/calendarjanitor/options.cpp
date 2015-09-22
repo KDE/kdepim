@@ -36,7 +36,7 @@ Options::Action Options::action() const
     return m_action;
 }
 
-QList<Akonadi::Entity::Id> Options::collections() const
+QList<Akonadi::Collection::Id> Options::collections() const
 {
     return m_collectionIds;
 }
@@ -46,7 +46,7 @@ void Options::setCollections(const QList<Akonadi::Collection::Id> &collections)
     m_collectionIds = collections;
 }
 
-bool Options::testCollection(Akonadi::Entity::Id id) const
+bool Options::testCollection(Akonadi::Collection::Id id) const
 {
     return m_collectionIds.isEmpty() || m_collectionIds.contains(id);
 }

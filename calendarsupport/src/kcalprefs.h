@@ -25,7 +25,7 @@
 #include "calendarsupport_export.h"
 #include "kcalprefs_base.h"
 
-#include <Entity>
+#include <Collection>
 
 #include <KDateTime>
 
@@ -77,8 +77,8 @@ public:
 
     QString mailTransport() const;
 
-    Akonadi::Entity::Id defaultCalendarId() const;
-    void setDefaultCalendarId(const Akonadi::Entity::Id);
+    Akonadi::Collection::Id defaultCalendarId() const;
+    void setDefaultCalendarId(const Akonadi::Collection::Id);
 
     void setCategoryColor(const QString &cat, const QColor &color);
     QColor categoryColor(const QString &cat) const;

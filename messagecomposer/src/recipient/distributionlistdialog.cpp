@@ -86,12 +86,12 @@ public:
         return mId == -1;
     }
 
-    void setId(Akonadi::Entity::Id id)
+    void setId(Akonadi::Item::Id id)
     {
         mId = id;
     }
 
-    Akonadi::Entity::Id id() const
+    Akonadi::Item::Id id() const
     {
         return mId;
     }
@@ -99,7 +99,7 @@ public:
 private:
     KContacts::Addressee mAddressee;
     QString mEmail;
-    Akonadi::Entity::Id mId;
+    Akonadi::Item::Id mId;
 };
 }
 

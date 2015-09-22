@@ -191,10 +191,10 @@ void PersonSearchJob::onCollectionsReceived(const Akonadi::Collection::List &lis
 void PersonSearchJob::updatePersonCollection(const Person &person)
 {
     Akonadi::Collection c(person.rootCollection);
-    Akonadi::CollectionIdentificationAttribute *identification = c.attribute<Akonadi::CollectionIdentificationAttribute>(Akonadi::Entity::AddIfMissing);
+    Akonadi::CollectionIdentificationAttribute *identification = c.attribute<Akonadi::CollectionIdentificationAttribute>(Akonadi::Collection::AddIfMissing);
 
     if (person.updateDisplayName) {
-        Akonadi::EntityDisplayAttribute *displayname  = c.attribute<Akonadi::EntityDisplayAttribute >(Akonadi::Entity::AddIfMissing);
+        Akonadi::EntityDisplayAttribute *displayname  = c.attribute<Akonadi::EntityDisplayAttribute >(Akonadi::Collection::AddIfMissing);
         displayname->setDisplayName(person.name);
     }
 

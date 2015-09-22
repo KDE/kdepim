@@ -1335,7 +1335,7 @@ void ViewerPrivate::setMessageInternal(const KMime::Message::Ptr message,
 void ViewerPrivate::setMessageItem(const Akonadi::Item &item, Viewer::UpdateMode updateMode)
 {
     resetStateForNewMessage();
-    foreach (const Akonadi::Entity::Id monitoredId, mMonitor.itemsMonitoredEx()) {
+    foreach (const Akonadi::Item::Id monitoredId, mMonitor.itemsMonitoredEx()) {
         mMonitor.setItemMonitored(Akonadi::Item(monitoredId), false);
     }
     Q_ASSERT(mMonitor.itemsMonitoredEx().isEmpty());
@@ -3211,7 +3211,7 @@ void ViewerPrivate::slotMessageMayBeAScam()
 void ViewerPrivate::slotMessageIsNotAScam()
 {
     if (mMessageItem.isValid()) {
-        MessageViewer::ScamAttribute *attr  = mMessageItem.attribute<MessageViewer::ScamAttribute>(Akonadi::Entity::AddIfMissing);
+        MessageViewer::ScamAttribute *attr  = mMessageItem.attribute<MessageViewer::ScamAttribute>(Akonadi::Item::AddIfMissing);
         attr->setIsAScam(false);
         Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(mMessageItem);
         modify->setIgnorePayload(true);

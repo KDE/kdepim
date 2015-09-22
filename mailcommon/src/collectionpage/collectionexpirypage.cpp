@@ -200,12 +200,12 @@ void CollectionExpiryPage::saveAndExpire(Akonadi::Collection &collection, bool s
             deletePermanentlyRB->setChecked(true);
             expireNow = false;                                // settings are not valid
         } else {
-            attribute = collection.attribute<MailCommon::ExpireCollectionAttribute>(Akonadi::Entity::AddIfMissing);
+            attribute = collection.attribute<MailCommon::ExpireCollectionAttribute>(Akonadi::Collection::AddIfMissing);
             attribute->setExpireToFolderId(expireToFolder.id());
         }
     }
     if (!attribute) {
-        attribute =  collection.attribute<MailCommon::ExpireCollectionAttribute>(Akonadi::Entity::AddIfMissing);
+        attribute =  collection.attribute<MailCommon::ExpireCollectionAttribute>(Akonadi::Collection::AddIfMissing);
     }
 
     attribute->setAutoExpire(enableGlobally);

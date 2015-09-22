@@ -155,7 +155,7 @@ void CalendarJanitor::onModifyFinished(int changeId, const Akonadi::Item &item,
     }
 }
 
-void CalendarJanitor::onDeleteFinished(int changeId, const QVector<Akonadi::Entity::Id> &items,
+void CalendarJanitor::onDeleteFinished(int changeId, const QVector<Akonadi::Item::Id> &items,
                                        Akonadi::IncidenceChanger::ResultCode resultCode, const QString &errorMessage)
 {
     Q_UNUSED(changeId);

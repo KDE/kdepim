@@ -62,7 +62,7 @@ Backuper::Backuper(QObject *parent) : QObject(parent), m_backupInProgress(false)
 {
 }
 
-void Backuper::backup(const QString &filename, const QList<Akonadi::Entity::Id> &collectionIds)
+void Backuper::backup(const QString &filename, const QList<Akonadi::Collection::Id> &collectionIds)
 {
     if (filename.isEmpty()) {
         emitFinished(false, i18n("File is empty."));

@@ -56,7 +56,7 @@ public:
     }
 
     KDateTime::Spec mTimeSpec;
-    Akonadi::Entity::Id mDefaultCalendarId;
+    Akonadi::Collection::Id mDefaultCalendarId;
 
     TagCache mTagCache;
     QColor mDefaultCategoryColor;
@@ -115,12 +115,12 @@ void KCalPrefs::setTimeSpec(const KDateTime::Spec &spec)
     d->mTimeSpec = spec;
 }
 
-Akonadi::Entity::Id KCalPrefs::defaultCalendarId() const
+Akonadi::Collection::Id KCalPrefs::defaultCalendarId() const
 {
     return d->mDefaultCalendarId;
 }
 
-void KCalPrefs::setDefaultCalendarId(const Akonadi::Entity::Id id)
+void KCalPrefs::setDefaultCalendarId(const Akonadi::Collection::Id id)
 {
     d->mDefaultCalendarId = id;
 }
@@ -311,7 +311,7 @@ bool KCalPrefs::thatIsMe(const QString &_email)
 void KCalPrefs::setCategoryColor(const QString &cat, const QColor &color)
 {
     Akonadi::Tag tag = d->mTagCache.getTagByGid(cat.toUtf8());
-    Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::AttributeEntity::AddIfMissing);
+    Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::Tag::AddIfMissing);
     attr->setBackgroundColor(color);
     new Akonadi::TagModifyJob(tag);
 }

@@ -110,12 +110,12 @@ bool ArchiveMailKernel::excludeImportantMailFromExpiry()
     return true;
 }
 
-Akonadi::Entity::Id ArchiveMailKernel::lastSelectedFolder()
+Akonadi::Collection::Id ArchiveMailKernel::lastSelectedFolder()
 {
-    return Akonadi::Entity::Id();
+    return Akonadi::Collection::Id();
 }
 
-void ArchiveMailKernel::setLastSelectedFolder(const Akonadi::Entity::Id &col)
+void ArchiveMailKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
 {
     Q_UNUSED(col);
 }

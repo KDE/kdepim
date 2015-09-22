@@ -104,7 +104,7 @@ void EntityFindingWidget::initWidget()
 void EntityFindingWidget::findCollection()
 {
     bool ok;
-    Akonadi::Entity::Id id =  m_collectionIdInput->text().toULongLong(&ok);
+    Akonadi::Collection::Id id =  m_collectionIdInput->text().toULongLong(&ok);
     if (!ok) {
         return;
     }
@@ -122,7 +122,7 @@ void EntityFindingWidget::findCollection()
 void EntityFindingWidget::findItem()
 {
     bool ok;
-    Akonadi::Entity::Id id =  m_itemIdInput->text().toULongLong(&ok);
+    Akonadi::Item::Id id =  m_itemIdInput->text().toULongLong(&ok);
     if (!ok) {
         return;
     }

@@ -24,8 +24,8 @@
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_mdn.h>
-#include <entity.h>
-#include <item.h>
+
+#include <Item>
 #include <Collection>
 
 #include <Akonadi/KMime/MessageStatus>

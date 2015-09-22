@@ -109,13 +109,13 @@ bool FilterTestKernel::excludeImportantMailFromExpiry()
     return true;
 }
 
-Akonadi::Entity::Id FilterTestKernel::lastSelectedFolder()
+Akonadi::Collection::Id FilterTestKernel::lastSelectedFolder()
 {
     Q_ASSERT(false);
-    return Akonadi::Entity::Id();
+    return Akonadi::Collection::Id();
 }
 
-void FilterTestKernel::setLastSelectedFolder(const Akonadi::Entity::Id &col)
+void FilterTestKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
 {
     Q_UNUSED(col);
 }

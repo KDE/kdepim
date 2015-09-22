@@ -106,7 +106,7 @@ Akonadi::Item::List NoteListWidget::selectedNotes() const
     return lst;
 }
 
-Akonadi::Entity::Id NoteListWidget::itemId(QListWidgetItem *item) const
+Akonadi::Item::Id NoteListWidget::itemId(QListWidgetItem *item) const
 {
     if (item) {
         return item->data(AkonadiId).toLongLong();
@@ -114,7 +114,7 @@ Akonadi::Entity::Id NoteListWidget::itemId(QListWidgetItem *item) const
     return -1;
 }
 
-Akonadi::Entity::Id NoteListWidget::currentItemId() const
+Akonadi::Item::Id NoteListWidget::currentItemId() const
 {
     QListWidgetItem *item = currentItem();
     return itemId(item);

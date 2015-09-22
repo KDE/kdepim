@@ -109,13 +109,13 @@ bool ImportWizardKernel::excludeImportantMailFromExpiry()
     return true;
 }
 
-Akonadi::Entity::Id ImportWizardKernel::lastSelectedFolder()
+Akonadi::Collection::Id ImportWizardKernel::lastSelectedFolder()
 {
     Q_ASSERT(false);
-    return Akonadi::Entity::Id();
+    return Akonadi::Collection::Id();
 }
 
-void ImportWizardKernel::setLastSelectedFolder(const Akonadi::Entity::Id &col)
+void ImportWizardKernel::setLastSelectedFolder(const Akonadi::Collection::Id &col)
 {
     Q_UNUSED(col);
 }

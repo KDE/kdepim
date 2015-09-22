@@ -81,7 +81,7 @@ Akonadi::Tag Tag::saveToAkonadi(Tag::SaveFlags saveFlags) const
     } else {
         tag.setType(Akonadi::Tag::GENERIC);
     }
-    Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::AttributeEntity::AddIfMissing);
+    Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::Tag::AddIfMissing);
     attr->setDisplayName(tagName);
     attr->setIconName(iconName);
     attr->setInToolbar(inToolbar);

@@ -814,12 +814,12 @@ void MessageFactory::setMailingListAddresses(const KMime::Types::Mailbox::List &
     m_mailingListAddresses << listAddresses;
 }
 
-void MessageFactory::setFolderIdentity(Akonadi::Entity::Id folderIdentityId)
+void MessageFactory::setFolderIdentity(Akonadi::Collection::Id folderIdentityId)
 {
     m_folderId = folderIdentityId;
 }
 
-void MessageFactory::putRepliesInSameFolder(Akonadi::Entity::Id parentColId)
+void MessageFactory::putRepliesInSameFolder(Akonadi::Collection::Id parentColId)
 {
     m_parentFolderId = parentColId;
 }

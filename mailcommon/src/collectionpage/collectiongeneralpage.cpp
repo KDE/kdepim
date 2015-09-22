@@ -298,14 +298,14 @@ void CollectionGeneralPage::save(Collection &collection)
     }
 
     if (!mNotifyOnNewMailCheckBox->isChecked()) {
-        Akonadi::NewMailNotifierAttribute *newMailNotifierAttr = collection.attribute<Akonadi::NewMailNotifierAttribute>(Akonadi::Entity::AddIfMissing);
+        Akonadi::NewMailNotifierAttribute *newMailNotifierAttr = collection.attribute<Akonadi::NewMailNotifierAttribute>(Akonadi::Collection::AddIfMissing);
         newMailNotifierAttr->setIgnoreNewMail(true);
     } else {
         collection.removeAttribute<Akonadi::NewMailNotifierAttribute>();
     }
 
     CollectionAnnotationsAttribute *annotationsAttribute =
-        collection.attribute<CollectionAnnotationsAttribute>(Entity::AddIfMissing);
+        collection.attribute<CollectionAnnotationsAttribute>(Collection::AddIfMissing);
 
     QMap<QByteArray, QByteArray> annotations = annotationsAttribute->annotations();
     if (mSharedSeenFlagsCheckBox && mSharedSeenFlagsCheckBox->isEnabled()) {
@@ -327,7 +327,7 @@ void CollectionGeneralPage::save(Collection &collection)
         if (!kolabName.isEmpty()) {
             const QString iconName = collectionUtil.iconNameFromContentsType(type);
             Akonadi::EntityDisplayAttribute *attribute =
-                collection.attribute<Akonadi::EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+                collection.attribute<Akonadi::EntityDisplayAttribute>(Akonadi::Collection::AddIfMissing);
             attribute->setIconName(iconName);
             new Akonadi::CollectionModifyJob(collection);
             annotations[ CollectionTypeUtil::kolabFolderType() ] = kolabName;
