@@ -16,7 +16,6 @@
 */
 
 #include "grantleeheaderformatter.h"
-#include "grantleeheaderstyle.h"
 #include "headerstyle_util.h"
 #include "settings/messageviewersettings.h"
 #include "config-messageviewer.h"

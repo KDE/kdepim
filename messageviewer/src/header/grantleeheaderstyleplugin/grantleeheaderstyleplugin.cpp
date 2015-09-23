@@ -17,7 +17,7 @@
 
 #include "grantleeheaderstyleinterface.h"
 #include "grantleeheaderstyleplugin.h"
-#include "header/grantleeheaderstyle.h"
+#include "grantleeheaderstyle.h"
 //Temporary
 #include "header/headerstrategy_p.h"
 #include <kpluginfactory.h>

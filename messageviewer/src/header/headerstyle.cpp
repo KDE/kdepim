@@ -33,8 +33,8 @@
 
 #include "headerstyle.h"
 #include "header/briefheaderstyle.h"
-#include "header/grantleeheaderstyle.h"
-#include "header/customheaderstyle.h"
+#include "header/grantleeheaderstyleplugin/grantleeheaderstyle.h"
+#include "header/customheaderstyleplugin/customheaderstyle.h"
 #include "header/plainheaderstyle.h"
 #include "header/enterpriseheaderstyleplugin/enterpriseheaderstyle.h"
 #include "header/fancyheaderstyle.h"

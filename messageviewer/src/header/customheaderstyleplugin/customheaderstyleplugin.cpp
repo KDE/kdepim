@@ -17,7 +17,7 @@
 
 #include "customheaderstyleplugin.h"
 #include "customheaderstyleinterface.h"
-#include "header/customheaderstyle.h"
+#include "customheaderstyle.h"
 //Temporary
 #include "header/headerstrategy_p.h"
 #include <kpluginfactory.h>
