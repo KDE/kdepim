@@ -15,27 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VIEWERPLUGINMANAGER_H
-#define VIEWERPLUGINMANAGER_H
+#include "viewerplugin.h"
 
-#include <QObject>
-#include "messageviewer_export.h"
+using namespace MessageViewer;
 
-namespace MessageViewer
+class MessageViewer::ViewerPluginPrivate
 {
-class ViewerPluginManagerPrivate;
-
-class MESSAGEVIEWER_EXPORT ViewerPluginManager : public QObject
-{
-    Q_OBJECT
 public:
-    explicit ViewerPluginManager(QObject *parent = Q_NULLPTR);
-    ~ViewerPluginManager();
-    ViewerPluginManager *self();
+    ViewerPluginPrivate()
+    {
 
-private:
-    ViewerPluginManagerPrivate *const d;
+    }
 };
+
+ViewerPlugin::ViewerPlugin(QObject *parent)
+    : QObject(parent),
+      d(new MessageViewer::ViewerPluginPrivate)
+{
+
 }
 
-#endif // VIEWERPLUGINMANAGER_H
+ViewerPlugin::~ViewerPlugin()
+{
+    delete d;
+}
+

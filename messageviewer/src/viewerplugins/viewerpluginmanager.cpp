@@ -16,8 +16,51 @@
 */
 
 #include "viewerpluginmanager.h"
+#include "viewerplugin.h"
+
+#include <kpluginmetadata.h>
+#include <KPluginLoader>
+#include <QFileInfo>
 
 using namespace MessageViewer;
+
+class ViewerPluginManagerPrivateInstancePrivate
+{
+public:
+    ViewerPluginManagerPrivateInstancePrivate()
+        : viewerPluginManager(new ViewerPluginManager)
+    {
+    }
+
+    ~ViewerPluginManagerPrivateInstancePrivate()
+    {
+        delete viewerPluginManager;
+    }
+
+    ViewerPluginManager *viewerPluginManager;
+};
+
+Q_GLOBAL_STATIC(ViewerPluginManagerPrivateInstancePrivate, sInstance)
+
+class ViewerPluginInfo
+{
+public:
+    ViewerPluginInfo()
+        : plugin(Q_NULLPTR)
+    {
+
+    }
+    QString saveName() const;
+
+    KPluginMetaData metaData;
+    MessageViewer::ViewerPlugin *plugin;
+};
+
+QString ViewerPluginInfo::saveName() const
+{
+    return QFileInfo(metaData.fileName()).baseName();
+}
+
 
 class MessageViewer::ViewerPluginManagerPrivate
 {
@@ -26,17 +69,32 @@ public:
     {
 
     }
+    void initializePluginList();
 };
+
+void ViewerPluginManagerPrivate::initializePluginList()
+{
+    const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("messageviewer"), [](const KPluginMetaData & md) {
+        return md.serviceTypes().contains(QStringLiteral("MessageViewerHeaderStyle/ViewerPlugin"));
+    });
+
+}
+
 
 ViewerPluginManager::ViewerPluginManager(QObject *parent)
     : QObject(parent),
       d(new MessageViewer::ViewerPluginManagerPrivate)
 {
-
+    d->initializePluginList();
 }
 
 
 MessageViewer::ViewerPluginManager::~ViewerPluginManager()
 {
     delete d;
+}
+
+ViewerPluginManager *ViewerPluginManager::self()
+{
+    return sInstance->viewerPluginManager;
 }
