@@ -28,8 +28,6 @@
 #include "ldapclient_debug.h"
 
 #include "ldapclient.h"
-#include "ldapsession.h"
-#include "ldapqueryjob.h"
 
 #include <kldap/ldapobject.h>
 #include <kldap/ldapserver.h>

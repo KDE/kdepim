@@ -12,11 +12,6 @@ add_subdirectory(pics)
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libkdepim\")
 
-option(KDEPIM_INPROCESS_LDAP "Use in-process rather than KIO slave LDAP" FALSE)
-if (KDEPIM_INPROCESS_LDAP)
-  add_definitions( -DKDEPIM_INPROCESS_LDAP )
-endif ()
-
 ########### next target ###############
 
 set(kdepim_proxy_LIB_SRCS
@@ -117,13 +112,6 @@ set(kdepim_LIB_SRCS
    prefs/kprefsdialog.cpp
 )
 ecm_qt_declare_logging_category(kdepim_LIB_SRCS HEADER libkdepim_debug.h IDENTIFIER LIBKDEPIM_LOG CATEGORY_NAME log_libkdepim)
-
-if (KDEPIM_INPROCESS_LDAP)
-  set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
-    ldap/ldapsession.cpp
-    ldap/ldapqueryjob.cpp
-  )
-endif ()
 
 
 add_library(KF5Libkdepim ${kdepim_LIB_SRCS})

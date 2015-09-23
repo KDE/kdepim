@@ -22,8 +22,6 @@
  */
 
 #include "ldapclient.h"
-#include "ldapsession.h"
-#include "ldapqueryjob.h"
 #include "ldapclient_debug.h"
 
 #include <kldap/ldapobject.h>
@@ -45,18 +43,13 @@ public:
         : q(qq),
           mJob(Q_NULLPTR),
           mActive(false),
-          mClientNumber(0),
-          mSession(Q_NULLPTR)
+          mClientNumber(0)
     {
     }
 
     ~Private()
     {
         q->cancelQuery();
-#ifdef KDEPIM_INPROCESS_LDAP
-        mSession->disconnectAndDelete();
-        mSession = 0;
-#endif
     }
 
     void startParseLDIF();
@@ -83,7 +76,6 @@ public:
     int mClientNumber;
     int mCompletionWeight;
 
-    KLDAP::LdapSession *mSession;
 };
 
 LdapClient::LdapClient(int clientNumber, QObject *parent)
@@ -106,12 +98,6 @@ bool LdapClient::isActive() const
 void LdapClient::setServer(const KLDAP::LdapServer &server)
 {
     d->mServer = server;
-#ifdef KDEPIM_INPROCESS_LDAP
-    if (!d->mSession) {
-        d->mSession = new LdapSession(this);
-    }
-    d->mSession->connectToServer(server);
-#endif
 }
 
 const KLDAP::LdapServer LdapClient::server() const
@@ -156,18 +142,9 @@ void LdapClient::startQuery(const QString &filter)
 
     d->startParseLDIF();
     d->mActive = true;
-#ifndef KDEPIM_INPROCESS_LDAP
     d->mJob = KIO::get(url, KIO::NoReload, KIO::HideProgressInfo);
     connect(d->mJob, SIGNAL(data(KIO::Job*,QByteArray)),
             this, SLOT(slotData(KIO::Job*,QByteArray)));
-#else
-    if (!d->mSession) {
-        return;
-    }
-    d->mJob = d->mSession->get(url);
-    connect(d->mJob, SIGNAL(data(QByteArray)),
-            this, SLOT(slotData(QByteArray)));
-#endif
     connect(d->mJob, SIGNAL(infoMessage(KJob*,QString,QString)),
             this, SLOT(slotInfoMessage(KJob*,QString,QString)));
     connect(d->mJob, SIGNAL(result(KJob*)),
@@ -210,9 +187,6 @@ void LdapClient::Private::slotDone()
     if (err && err != KIO::ERR_USER_CANCELED) {
         Q_EMIT q->error(mJob->errorString());
     }
-#ifdef KDEPIM_INPROCESS_LDAP
-    QMetaObject::invokeMethod(mJob, "deleteLater", Qt::QueuedConnection);   // it's in a different thread
-#endif
     Q_EMIT q->done();
 }
 
