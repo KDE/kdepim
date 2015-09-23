@@ -190,6 +190,10 @@ set(libmessageviewer_job_SRCS
   job/kleojobexecutor.cpp
 )
 
+set(libmessageviewer_viewerplugins_SRCS
+   viewerplugins/viewerpluginmanager.cpp
+)
+
 set(libmessageviewer_SRCS
   ${libmessageviewer_viewer_SRCS}
   ${libmessageviewer_widgets_SRCS}
@@ -200,6 +204,7 @@ set(libmessageviewer_SRCS
   ${libmessageviewer_htmlwriter_SRCS}
   ${libmessageviewer_antispam_SRCS}
   ${libmessageviewer_job_SRCS}
+  ${libmessageviewer_viewerplugins_SRCS}
   settings/messageviewersettings.cpp
   ${_mailwebview_cpp}
   ${libmessageviewer_gravatar_SRCS}
@@ -375,6 +380,15 @@ ecm_generate_headers(MessageViewer_gravatar_HEADERS
   RELATIVE gravatar
 )
 
+ecm_generate_headers(MessageViewer_viewerplugin_HEADERS
+  HEADER_NAMES
+  ViewerPluginManager
+  REQUIRED_HEADERS MessageViewer_viewerplugin_HEADERS
+  PREFIX MessageViewer
+  RELATIVE viewerplugins 
+)
+
+
 ecm_generate_pri_file(BASE_NAME MessageViewer
     LIB_NAME KF5MessageViewer
     DEPS "PimCommon MessageCore AkonadiCore AkonadiMime Contacts" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageViewer
@@ -382,6 +396,7 @@ ecm_generate_pri_file(BASE_NAME MessageViewer
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
 install(FILES
+    ${MessageViewer_viewerplugin_HEADERS}
     ${MessageViewer_settings_HEADERS}
     ${MessageViewer_gravatar_HEADERS}
     ${MessageViewer_adblock_HEADERS}
@@ -397,6 +412,7 @@ install(FILES
 )
 
 install(FILES
+    ${MessageViewer_viewerplugin_HEADERS}
     ${MessageViewer_settings_HEADERS}
     ${MessageViewer_gravatar_HEADERS}
     ${MessageViewer_adblock_HEADERS}
