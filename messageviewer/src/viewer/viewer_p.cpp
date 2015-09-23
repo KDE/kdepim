@@ -2520,7 +2520,7 @@ QString ViewerPrivate::attachmentInjectionHtml()
         imgSrc.append(QStringLiteral("quicklistOpened.png"));
     }
 
-    QColor background = KColorScheme(QPalette::Active, KColorScheme::View).background().color();
+    const QColor background = KColorScheme(QPalette::Active, KColorScheme::View).background().color();
     QString html = renderAttachments(mMessage.data(), background);
     if (html.isEmpty()) {
         return QString();
