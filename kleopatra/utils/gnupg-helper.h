@@ -45,6 +45,7 @@ namespace Kleo {
     QString gpgPath();
 
     QString gpgConfListDir( const char * which );
+    QString gnupgInstallPath();
     QString gpg4winInstallPath();
 
     QStringList gnupgFileBlacklist();

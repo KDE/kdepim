@@ -46,6 +46,7 @@
 #include <QString>
 #include <QProcess>
 #include <QByteArray>
+#include <QCoreApplication>
 
 #include <gpg-error.h>
 
@@ -102,6 +103,10 @@ QStringList Kleo::gnupgFileBlacklist() {
 }
 
 QString Kleo::gpg4winInstallPath() {
+    return QCoreApplication::applicationDirPath() + QLatin1String("/..");
+}
+
+QString Kleo::gnupgInstallPath() {
     return gpgConfListDir( "bindir" );
 }
 
