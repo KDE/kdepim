@@ -308,6 +308,10 @@ ecm_generate_headers(libkdepim_blacklistbaloocompletion_HEADERS
   RELATIVE addressline/blacklistbaloocompletion/
 )
 
+ecm_generate_pri_file(BASE_NAME Libkdepim
+    LIB_NAME KF5Libkdepim
+    DEPS "AkonadiCore AkonadiContact" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/Libkdepim
+)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libkdepim_SOURCE_DIR})
 install(FILES
@@ -348,6 +352,12 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/libkdepim
     COMPONENT Devel
 )
+
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
+
 endif()
 add_subdirectory(designer)
 ########### next target ###############
