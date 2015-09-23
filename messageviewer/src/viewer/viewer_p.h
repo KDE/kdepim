@@ -70,6 +70,7 @@ class ShareServiceUrlManager;
 
 namespace MessageViewer
 {
+class HeaderStylePlugin;
 class TodoEdit;
 class EventEdit;
 class NoteEdit;
@@ -761,6 +762,7 @@ public:
     PimCommon::SlideContainer *mSliderContainer;
     PimCommon::ShareServiceUrlManager *mShareServiceManager;
     KActionMenu *mShareServiceUrlMenu;
+    HeaderStylePlugin *mHeaderStylePlugin;
 };
 
 }

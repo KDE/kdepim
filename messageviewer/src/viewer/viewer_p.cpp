@@ -214,10 +214,11 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mShowFullCcAddressList(true),
       mPreviouslyViewedItem(-1),
       mScamDetectionWarning(0),
-      mOpenAttachmentFolderWidget(0),
+      mOpenAttachmentFolderWidget(Q_NULLPTR),
       mZoomFactor(100),
       mSliderContainer(0),
-      mShareServiceManager(Q_NULLPTR)
+      mShareServiceManager(Q_NULLPTR),
+      mHeaderStylePlugin(Q_NULLPTR)
 {
     mMimePartTree = 0;
     if (!mainWindow) {

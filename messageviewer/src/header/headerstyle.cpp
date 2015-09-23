@@ -36,7 +36,7 @@
 #include "header/grantleeheaderstyle.h"
 #include "header/customheaderstyle.h"
 #include "header/plainheaderstyle.h"
-#include "header/enterpriseheaderstyle.h"
+#include "header/enterpriseheaderstyleplugin/enterpriseheaderstyle.h"
 #include "header/fancyheaderstyle.h"
 #include "messageviewer_debug.h"
 

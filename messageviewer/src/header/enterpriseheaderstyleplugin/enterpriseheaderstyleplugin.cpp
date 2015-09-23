@@ -16,7 +16,7 @@
 */
 
 #include "enterpriseheaderstyleplugin.h"
-#include "header/enterpriseheaderstyle.h"
+#include "enterpriseheaderstyle.h"
 #include "enterpriseheaderstyleinterface.h"
 //Temporary
 #include "header/headerstrategy_p.h"
