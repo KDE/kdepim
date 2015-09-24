@@ -1521,97 +1521,58 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
 
     mNodeHelper->setEncryptionState(node, KMMsgFullyEncrypted);
 
-    if (!mSource->decryptMessage()) {
-        writeDeferredDecryptionBlock();
-        mNodeHelper->setNodeProcessed(data, false);  // Set the data node to done to prevent it from being processed
-        return true;
-    }
-
     PartMetaData messagePart;
-    // if we already have a decrypted node for this encrypted node, don't do the decryption again
-    if (KMime::Content *newNode = mNodeHelper->decryptedNodeForContent(data)) {
-        //     if( NodeHelper::nodeProcessed( data ) )
+
+    CryptoMessagePart mp(this, &messagePart,
+                         data->decodedText(), Kleo::CryptoBackendFactory::instance()->openpgp(),
+                         NodeHelper::fromAsString(data), node);
+
+
+    if (!mSource->decryptMessage()) {
+        mNodeHelper->setNodeProcessed(data, false);  // Set the data node to done to prevent it from being processed
+    } else if (KMime::Content *newNode = mNodeHelper->decryptedNodeForContent(data)) {
+        // if we already have a decrypted node for this encrypted node, don't do the decryption again
         ObjectTreeParser otp(this);
         otp.parseObjectTreeInternal(newNode);
         copyContentFrom(&otp);
         messagePart = mNodeHelper->partMetaData(node);
+        return true;
     } else {
-        QByteArray decryptedData;
-        bool signatureFound;
-        std::vector<GpgME::Signature> signatures;
-        bool passphraseError;
-        bool actuallyEncrypted = true;
-        bool decryptionStarted;
+        mp.startDecryption(data);
 
-        bool bOkDecrypt = okDecryptMIME(*data,
-                                        decryptedData,
-                                        signatureFound,
-                                        signatures,
-                                        true,
-                                        passphraseError,
-                                        actuallyEncrypted,
-                                        decryptionStarted,
-                                        messagePart);
-        qCDebug(MESSAGEVIEWER_LOG) << "decrypted, signed?:" << signatureFound;
+        qCDebug(MESSAGEVIEWER_LOG) << "decrypted, signed?:" << messagePart.isSigned;
 
-        if (decryptionStarted) {
-            writeDecryptionInProgressBlock();
-            return true;
-        }
+        if (!messagePart.inProgress) {
+            mNodeHelper->setNodeProcessed(data, false);   // Set the data node to done to prevent it from being processed
+            if (messagePart.isDecryptable && messagePart.isSigned) {
+                // Note: Multipart/Encrypted might also be signed
+                //       without encapsulating a nicely formatted
+                //       ~~~~~~~                 Multipart/Signed part.
+                //                               (see RFC 3156 --> 6.2)
+                // In this case we paint a _2nd_ frame inside the
+                // encryption frame, but we do _not_ show a respective
+                // encapsulated MIME part in the Mime Tree Viewer
+                // since we do want to show the _true_ structure of the
+                // message there - not the structure that the sender's
+                // MUA 'should' have sent.  :-D       (khz, 12.09.2002)
+                //
+                Q_ASSERT(false);
 
-        mNodeHelper->setNodeProcessed(data, false);   // Set the data node to done to prevent it from being processed
-
-        // paint the frame
-        if (htmlWriter()) {
-            messagePart.isDecryptable = bOkDecrypt;
-            messagePart.isEncrypted = true;
-            messagePart.isSigned = false;
-            htmlWriter()->queue(writeSigstatHeader(messagePart,
-                                                   cryptoProtocol(),
-                                                   NodeHelper::fromAsString(node)));
-        }
-
-        if (bOkDecrypt) {
-            // Note: Multipart/Encrypted might also be signed
-            //       without encapsulating a nicely formatted
-            //       ~~~~~~~                 Multipart/Signed part.
-            //                               (see RFC 3156 --> 6.2)
-            // In this case we paint a _2nd_ frame inside the
-            // encryption frame, but we do _not_ show a respective
-            // encapsulated MIME part in the Mime Tree Viewer
-            // since we do want to show the _true_ structure of the
-            // message there - not the structure that the sender's
-            // MUA 'should' have sent.  :-D       (khz, 12.09.2002)
-            //
-            if (signatureFound) {
+                const CryptoBlock block(this, &messagePart, cryptoProtocol(), NodeHelper::fromAsString(node), node);
                 writeOpaqueOrMultipartSignedData(0,
-                                                 *node,
-                                                 NodeHelper::fromAsString(node),
-                                                 false,
-                                                 &decryptedData,
-                                                 signatures,
-                                                 false);
+                                                *node,
+                                                NodeHelper::fromAsString(node),
+                                                false,
+                                                &mp.mDecryptedData,
+                                                mp.mSignatures,
+                                                false);
                 mNodeHelper->setSignatureState(node, KMMsgFullySigned);
                 qCDebug(MESSAGEVIEWER_LOG) << "setting FULLY SIGNED to:" << node;
-            } else {
-                decryptedData = KMime::CRLFtoLF(decryptedData);   //KMime works with LF only inside insertAndParseNewChildNode
-
-                createAndParseTempNode(node, decryptedData.constData(), "encrypted data");
-            }
-        } else {
-            if (htmlWriter()) {
-                // print the error message that was returned in decryptedData
-                // (utf8-encoded)
-                htmlWriter()->queue(QString::fromUtf8(decryptedData.data()));
+                return true;
             }
         }
-
-        mNodeHelper->setPartMetaData(node, messagePart);
     }
-
-    if (htmlWriter()) {
-        htmlWriter()->queue(writeSigstatFooter(messagePart));
-    }
+    mp.html(false);
     return true;
 }
 
@@ -1723,79 +1684,49 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
         } else {
             qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  type unknown  -  enveloped (encrypted) data ?";
         }
-        QByteArray decryptedData;
         PartMetaData messagePart;
-        messagePart.isEncrypted = true;
-        messagePart.isSigned = false;
-        bool signatureFound;
-        std::vector<GpgME::Signature> signatures;
-        bool passphraseError;
-        bool actuallyEncrypted = true;
-        bool decryptionStarted;
+
+        CryptoMessagePart mp(this, &messagePart,
+                             node->decodedText(), cryptoProtocol(),
+                             NodeHelper::fromAsString(node), node);
+
 
         if (!mSource->decryptMessage()) {
-            writeDeferredDecryptionBlock();
             isEncrypted = true;
             signTestNode = 0; // PENDING(marc) to be abs. sure, we'd need to have to look at the content
         } else {
-            const bool bOkDecrypt = okDecryptMIME(*node, decryptedData, signatureFound, signatures,
-                                                  false, passphraseError, actuallyEncrypted,
-                                                  decryptionStarted, messagePart);
-            qCDebug(MESSAGEVIEWER_LOG) << "PKCS7 found signature?" << signatureFound;
-            if (decryptionStarted) {
-                writeDecryptionInProgressBlock();
-                return true;
-            }
-
-            if (bOkDecrypt) {
+            mp.startDecryption();
+            if (messagePart.isDecryptable) {
                 qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  encryption found  -  enveloped (encrypted) data !";
                 isEncrypted = true;
                 mNodeHelper->setEncryptionState(node, KMMsgFullyEncrypted);
-                if (signatureFound) {
+                if (messagePart.isSigned) {
                     mNodeHelper->setSignatureState(node, KMMsgFullySigned);
                 }
                 signTestNode = 0;
-                // paint the frame
-                messagePart.isDecryptable = true;
-                if (htmlWriter())
-                    htmlWriter()->queue(writeSigstatHeader(messagePart,
-                                                           cryptoProtocol(),
-                                                           NodeHelper::fromAsString(node)));
-                createAndParseTempNode(node, decryptedData.constData(), "encrypted data");
-                if (htmlWriter()) {
-                    htmlWriter()->queue(writeSigstatFooter(messagePart));
-                }
+
             } else {
                 // decryption failed, which could be because the part was encrypted but
                 // decryption failed, or because we didn't know if it was encrypted, tried,
                 // and failed. If the message was not actually encrypted, we continue
                 // assuming it's signed
-                if (passphraseError || (smimeType.isEmpty() && actuallyEncrypted)) {
+                if (mp.mPassphraseError || (smimeType.isEmpty() && messagePart.isEncrypted)) {
                     isEncrypted = true;
                     signTestNode = 0;
                 }
 
                 if (isEncrypted) {
                     qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  ERROR: COULD NOT DECRYPT enveloped data !";
-                    // paint the frame
-                    messagePart.isDecryptable = false;
-                    if (htmlWriter()) {
-                        htmlWriter()->queue(writeSigstatHeader(messagePart,
-                                                               cryptoProtocol(),
-                                                               NodeHelper::fromAsString(node)));
-                        assert(mSource->decryptMessage());   // handled above
-                        writePartIcon(node);
-                        htmlWriter()->queue(writeSigstatFooter(messagePart));
-                    }
                 } else {
                     qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  NO encryption found";
                 }
             }
         }
+        mp.html(false);
+
         if (isEncrypted) {
             mNodeHelper->setEncryptionState(node, KMMsgFullyEncrypted);
         }
-        mNodeHelper->setPartMetaData(node, messagePart);
     }
 
     // We now try signature verification if necessarry.

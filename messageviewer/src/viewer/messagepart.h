@@ -93,15 +93,18 @@ public:
                 KMime::Content *node);
 
     void startDecryption(const QByteArray &text, const QTextCodec *aCodec);
+    void startDecryption(KMime::Content *data = 0);
     void startVerification(const QByteArray &text, const QTextCodec *aCodec);
     void html(bool decorate) const Q_DECL_OVERRIDE;
 
+    bool mPassphraseError;
+    QByteArray mDecryptedData;
+    std::vector<GpgME::Signature> mSignatures;
 protected:
     const Kleo::CryptoBackend::Protocol *mCryptoProto;
     QString mFromAddress;
     KMime::Content *mNode;
     bool mDecryptMessage;
-    std::vector<GpgME::Signature> mSignatures;
 };
 
 }

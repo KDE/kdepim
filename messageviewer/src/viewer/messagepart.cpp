@@ -131,18 +131,35 @@ void CryptoMessagePart::startDecryption(const QByteArray &text, const QTextCodec
     content->setBody(text);
     content->parse();
 
-    bool passphraseError;                           //write error
+    startDecryption(content);
+
+    if (!mMetaData->inProgress && mMetaData->isDecryptable) {
+        setText(aCodec->toUnicode(mDecryptedData));
+    }
+}
+
+void CryptoMessagePart::startDecryption(KMime::Content *data)
+{
+    if (!mNode && !data) {
+        return;
+    }
+
+    if (!data) {
+        data = mNode;
+    }
+
+    mDecryptMessage = true;
+
     bool signatureFound;
     bool actuallyEncrypted = true;
     bool decryptionStarted;
 
-    QByteArray decryptedData;
-    bool bOkDecrypt = mOtp->okDecryptMIME(*content,
-                                    decryptedData,
+    bool bOkDecrypt = mOtp->okDecryptMIME(*data,
+                                    mDecryptedData,
                                     signatureFound,
                                     mSignatures,
                                     true,
-                                    passphraseError,
+                                    mPassphraseError,
                                     actuallyEncrypted,
                                     decryptionStarted,
                                     *mMetaData);
@@ -153,8 +170,18 @@ void CryptoMessagePart::startDecryption(const QByteArray &text, const QTextCodec
     mMetaData->isDecryptable = bOkDecrypt;
     mMetaData->isEncrypted = actuallyEncrypted;
     mMetaData->isSigned = signatureFound;
-    setText(aCodec->toUnicode(decryptedData));
-    mOtp->sigStatusToMetaData(mSignatures, mCryptoProto, *mMetaData, GpgME::Key());
+
+    if (!mMetaData->isDecryptable) {
+        setText(QString::fromUtf8(mDecryptedData.constData()));
+    }
+
+    if (mMetaData->isSigned) {
+        mOtp->sigStatusToMetaData(mSignatures, mCryptoProto, *mMetaData, GpgME::Key());
+    }
+
+    if (mNode) {
+        mOtp->mNodeHelper->setPartMetaData(mNode, *mMetaData);
+    }
 }
 
 void CryptoMessagePart::startVerification(const QByteArray &text, const QTextCodec *aCodec)
@@ -173,6 +200,11 @@ void CryptoMessagePart::html(bool decorate) const
 {
     MessageViewer::HtmlWriter* writer = mOtp->htmlWriter();
     if (!writer) {
+        if (mNode && mDecryptMessage) {
+            //TODO: Bad hack, we need the TempNodeParsing anycase
+            // but till we not make sure that the nodeparsing also creates html directly we need to have this hack.
+            mOtp->createAndParseTempNode(mNode, mDecryptedData.constData(), "encrypted node");
+        }
         return;
     }
 
@@ -180,10 +212,15 @@ void CryptoMessagePart::html(bool decorate) const
         mOtp->writeDeferredDecryptionBlock();
     } else if (mMetaData->inProgress) {
         mOtp->writeDecryptionInProgressBlock();
-    } else if (mMetaData->isEncrypted && !mMetaData->isDecryptable){
+    } else if (mMetaData->isEncrypted && !mMetaData->isDecryptable) {
         const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
         writer->queue(text());           //Do not quote ErrorText
     } else {
-        MessagePart::html(decorate);
+        if (mNode) {
+            const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
+            mOtp->createAndParseTempNode(mNode, mDecryptedData.constData(), "encrypted node");
+        } else {
+            MessagePart::html(decorate);
+        }
     }
 }
