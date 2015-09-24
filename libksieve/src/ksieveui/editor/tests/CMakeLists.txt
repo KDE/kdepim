@@ -6,7 +6,6 @@ include_directories(${libksieve_SOURCE_DIR}
 set(editorsieve_gui_SRCS editorsieve_gui.cpp)
 add_executable(editorsieve_gui ${editorsieve_gui_SRCS})
 target_link_libraries(editorsieve_gui
-  Qt5::Test
   KF5::KSieveUi
   KF5::PimCommon
 )
