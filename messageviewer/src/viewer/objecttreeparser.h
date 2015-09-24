@@ -451,7 +451,6 @@ public:// (during refactoring)
 
     bool processMessageRfc822Subtype(KMime::Content *node, ProcessResult &result);
 
-    bool processApplicationOctetStreamSubtype(KMime::Content *node, ProcessResult &result);
     bool processApplicationPkcs7MimeSubtype(KMime::Content *node, ProcessResult &result);
     bool processApplicationChiasmusTextSubtype(KMime::Content *node, ProcessResult &result);
 
