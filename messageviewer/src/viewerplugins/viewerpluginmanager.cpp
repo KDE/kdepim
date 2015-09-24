@@ -20,7 +20,9 @@
 
 #include <kpluginmetadata.h>
 #include <KPluginLoader>
+#include <KPluginFactory>
 #include <QFileInfo>
+#include <QSet>
 
 using namespace MessageViewer;
 
@@ -65,11 +67,15 @@ QString ViewerPluginInfo::saveName() const
 class MessageViewer::ViewerPluginManagerPrivate
 {
 public:
-    ViewerPluginManagerPrivate()
+    ViewerPluginManagerPrivate(ViewerPluginManager *qq)
+        : q(qq)
     {
 
     }
     void initializePluginList();
+    void loadPlugin(ViewerPluginInfo *item);
+    QVector<ViewerPluginInfo> mPluginList;
+    ViewerPluginManager *q;
 };
 
 void ViewerPluginManagerPrivate::initializePluginList()
@@ -78,12 +84,37 @@ void ViewerPluginManagerPrivate::initializePluginList()
         return md.serviceTypes().contains(QStringLiteral("MessageViewerHeaderStyle/ViewerPlugin"));
     });
 
+    QVectorIterator<KPluginMetaData> i(plugins);
+    i.toBack();
+    QSet<QString> unique;
+    while (i.hasPrevious()) {
+        ViewerPluginInfo info;
+        info.metaData = i.previous();
+
+        // only load plugins once, even if found multiple times!
+        if (unique.contains(info.saveName())) {
+            continue;
+        }
+        info.plugin = Q_NULLPTR;
+        mPluginList.push_back(info);
+        unique.insert(info.saveName());
+    }
+    QVector<ViewerPluginInfo>::iterator end(mPluginList.end());
+    for (QVector<ViewerPluginInfo>::iterator it = mPluginList.begin(); it != end; ++it) {
+        loadPlugin(&(*it));
+    }
+
+}
+
+void ViewerPluginManagerPrivate::loadPlugin(ViewerPluginInfo *item)
+{
+    item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<MessageViewer::ViewerPlugin>(q, QVariantList() << item->saveName());
 }
 
 
 ViewerPluginManager::ViewerPluginManager(QObject *parent)
     : QObject(parent),
-      d(new MessageViewer::ViewerPluginManagerPrivate)
+      d(new MessageViewer::ViewerPluginManagerPrivate(this))
 {
     d->initializePluginList();
 }
