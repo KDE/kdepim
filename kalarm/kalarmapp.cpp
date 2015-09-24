@@ -183,6 +183,9 @@ KAlarmApp::KAlarmApp()
     const QString korg = QLatin1String("korganizer");
     mKOrganizerEnabled = !KStandardDirs::locate("exe", korg).isNull()  ||  !KStandardDirs::findExe(korg).isNull();
     if (!mKOrganizerEnabled) { kDebug() << "KOrganizer options disabled (KOrganizer not found)"; }
+    // Check if the window manager can't handle keyboard focus transfer between windows
+    mWindowFocusBroken = (QProcessEnvironment::systemEnvironment().value(QLatin1String("XDG_CURRENT_DESKTOP")) == QLatin1String("Unity"));
+    if (mWindowFocusBroken) kDebug() << "Window keyboard focus broken";
 }
 
 /******************************************************************************
@@ -1342,6 +1345,27 @@ void KAlarmApp::spreadWindows(bool spread)
 void KAlarmApp::setSpreadWindowsState(bool spread)
 {
     emit spreadWindowsToggled(spread);
+}
+
+/******************************************************************************
+* Check whether the window manager's handling of keyboard focus transfer
+* between application windows is broken. This is true for Ubuntu's Unity
+* desktop, where MessageWin windows steal keyboard focus from EditAlarmDlg
+* windows.
+*/
+bool KAlarmApp::windowFocusBroken() const
+{
+    return mWindowFocusBroken;
+}
+
+/******************************************************************************
+* Check whether window/keyboard focus currently needs to be fixed manually due
+* to the window manager not handling it correctly. This will occur if there are
+* both EditAlarmDlg and MessageWin windows currently active.
+*/
+bool KAlarmApp::needWindowFocusFix() const
+{
+    return mWindowFocusBroken && MessageWin::instanceCount(true) && EditAlarmDlg::instanceCount();
 }
 
 /******************************************************************************

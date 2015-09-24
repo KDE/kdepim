@@ -1,7 +1,7 @@
 /*
  *  mainwindowbase.cpp  -  base class for main application windows
  *  Program:  kalarm
- *  Copyright © 2002,2003,2007 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2002,2003,2007,2015 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,20 @@ MainWindowBase::MainWindowBase(QWidget* parent, Qt::WindowFlags f)
     : KXmlGuiWindow(parent, f)
 {
     setWindowModality(Qt::WindowModal);
+}
+
+/******************************************************************************
+* Called when the mouse cursor enters the window.
+* Activates this window if an Edit Alarm Dialog has activated itself.
+* This is only required on Ubuntu's Unity desktop, which doesn't transfer
+* keyboard focus properly between Edit Alarm Dialog windows and MessageWin
+* windows.
+*/
+void MainWindowBase::enterEvent(QEvent* e)
+{
+    if (theApp()->needWindowFocusFix())
+        QApplication::setActiveWindow(this);
+    KXmlGuiWindow::enterEvent(e);
 }
 
 #include "moc_mainwindowbase.cpp"

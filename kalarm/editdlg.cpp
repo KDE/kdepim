@@ -1,7 +1,7 @@
 /*
  *  editdlg.cpp  -  dialog to create or modify an alarm or alarm template
  *  Program:  kalarm
- *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2015 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -74,6 +74,7 @@
 #include <QShowEvent>
 #include <QScrollBar>
 #include <QTimer>
+#include <QCursor>
 
 using namespace KCal;
 using namespace KAlarmCal;
@@ -93,6 +94,8 @@ inline QString recurText(const KAEvent& event)
         r = event.recurrenceText();
     return i18nc("@title:tab", "Recurrence - [%1]", r);
 }
+
+QList<EditAlarmDlg*> EditAlarmDlg::mWindowList;
 
 // Collect these widget labels together to ensure consistent wording and
 // translations across different modules.
@@ -160,6 +163,7 @@ EditAlarmDlg::EditAlarmDlg(bool Template, KAEvent::SubAction action, QWidget* pa
       mSavedEvent(0)
 {
     init(0, getResource);
+    mWindowList.append(this);
 }
 
 EditAlarmDlg::EditAlarmDlg(bool Template, const KAEvent* event, bool newAlarm, QWidget* parent,
@@ -187,6 +191,7 @@ EditAlarmDlg::EditAlarmDlg(bool Template, const KAEvent* event, bool newAlarm, Q
       mSavedEvent(0)
 {
     init(event, getResource);
+    mWindowList.append(this);
 }
 
 void EditAlarmDlg::init(const KAEvent* event, GetResourceType getResource)
@@ -471,11 +476,27 @@ void EditAlarmDlg::init(const KAEvent* event)
     // desktop. If the user invokes the dialog via the system tray on a different desktop,
     // that can cause confusion.
     mDesktop = KWindowSystem::currentDesktop();
+
+    if (theApp()->windowFocusBroken())
+    {
+        const QList<QWidget*> children = findChildren<QWidget*>();
+        foreach (QWidget* w, children)
+            w->installEventFilter(this);
+    }
 }
 
 EditAlarmDlg::~EditAlarmDlg()
 {
     delete mSavedEvent;
+    mWindowList.removeAll(this);
+}
+
+/******************************************************************************
+* Return the number of instances.
+*/
+int EditAlarmDlg::instanceCount()
+{
+    return mWindowList.count();
 }
 
 /******************************************************************************
@@ -867,6 +888,46 @@ void EditAlarmDlg::showEvent(QShowEvent* se)
     }
     slotResize();
     KWindowSystem::setOnDesktop(winId(), mDesktop);    // ensure it displays on the desktop expected by the user
+
+    if (theApp()->needWindowFocusFix())
+    {
+        QApplication::setActiveWindow(this);
+        QTimer::singleShot(0, this, SLOT(focusFixTimer()));
+    }
+}
+
+/******************************************************************************
+* Called when the window is first shown, to ensure that it initially becomes
+* the active window.
+* This is only required on Ubuntu's Unity desktop, which doesn't transfer
+* keyboard focus properly between Edit Alarm Dialog windows and MessageWin
+* windows.
+*/
+void EditAlarmDlg::focusFixTimer()
+{
+    if (theApp()->needWindowFocusFix()
+    &&  QApplication::focusWidget()->window() != this)
+    {
+        QApplication::setActiveWindow(this);
+        QTimer::singleShot(0, this, SLOT(focusFixTimer()));
+    }
+}
+
+/******************************************************************************
+* Called to detect when the mouse is pressed anywhere inside the window.
+* Activates this window if a MessageWin window is also active.
+* This is only required on Ubuntu's Unity desktop, which doesn't transfer
+* keyboard focus properly between Edit Alarm Dialog windows and MessageWin
+* windows.
+*/
+bool EditAlarmDlg::eventFilter(QObject*, QEvent* e)
+{
+    if (theApp()->needWindowFocusFix())
+    {
+        if (e->type() == QEvent::MouseButtonPress)
+            QApplication::setActiveWindow(this);
+    }
+    return false;
 }
 
 /******************************************************************************
@@ -1459,6 +1520,7 @@ void EditAlarmDlg::showMainPage()
 {
     mTabs->setCurrentIndex(mMainPageIndex);
 }
+
 #include "moc_editdlg.cpp"
 #include "moc_editdlg_p.cpp"
 
