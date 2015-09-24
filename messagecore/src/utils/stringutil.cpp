@@ -854,29 +854,6 @@ QString stripOffPrefixes(const QString &subject)
     return subject;
 }
 
-/**
- * Inherit from MailboxList to access the protected parse() method.
- */
-class DummyHeader : public KMime::Headers::Generics::MailboxList
-{
-public:
-    void parseData(const QByteArray &data)
-    {
-        const char *cursor = data.constData();
-        KMime::Headers::Generics::MailboxList::parse(cursor, cursor + data.length());
-    }
-};
-
-QString mailboxListToUnicodeString(const KMime::Types::Mailbox::List &addresses)
-{
-    DummyHeader header;
-    foreach (const KMime::Types::Mailbox &mailbox, addresses) {
-        header.addAddress(mailbox);
-    }
-
-    return header.asUnicodeString();
-}
-
 void setEncodingFile(QUrl &url, const QString &encoding)
 {
     url.addQueryItem(QStringLiteral("charset"), encoding);

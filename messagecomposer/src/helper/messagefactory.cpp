@@ -64,7 +64,7 @@ static KMime::Types::Mailbox::List stripMyAddressesFromAddressList(const KMime::
 {
     KMime::Types::Mailbox::List addresses(list);
     for (KMime::Types::Mailbox::List::Iterator it = addresses.begin(); it != addresses.end();) {
-        if (manager->thatIsMe(MessageCore::StringUtil::mailboxListToUnicodeString(KMime::Types::Mailbox::List() << *it))) {
+        if (manager->thatIsMe(KMime::Types::Mailbox::listToUnicodeString(KMime::Types::Mailbox::List() << *it))) {
             it = addresses.erase(it);
         } else {
             ++it;
@@ -136,7 +136,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
             // doesn't seem to be a mailing list, reply to From: address
             toList = m_origMsg->from()->mailboxes();
 
-            if (m_identityManager->thatIsMe(MessageCore::StringUtil::mailboxListToUnicodeString(toList))) {
+            if (m_identityManager->thatIsMe(KMime::Types::Mailbox::listToUnicodeString(toList))) {
                 // sender seems to be one of our own identities, so we assume that this
                 // is a reply to a "sent" mail where the users wants to add additional
                 // information for the recipient.

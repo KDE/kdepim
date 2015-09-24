@@ -223,8 +223,6 @@ MESSAGECORE_EXPORT QString cleanFileName(const QString &fileName);
    */
 MESSAGECORE_EXPORT QString stripOffPrefixes(const QString &subject);
 
-MESSAGECORE_EXPORT QString mailboxListToUnicodeString(const KMime::Types::Mailbox::List &addresses);
-
 MESSAGECORE_EXPORT void setEncodingFile(QUrl &url, const QString &encoding);
 
 }
