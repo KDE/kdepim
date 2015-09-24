@@ -26,6 +26,7 @@
 
 #include <kmime/kmime_message.h>
 #include <KJob>
+#include <AkonadiCore/Item>
 
 #include <messagelist_export.h>
 

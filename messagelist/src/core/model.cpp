@@ -55,6 +55,7 @@
 
 #include <item.h>
 #include <Akonadi/KMime/MessageStatus>
+#include <AkonadiCore/Item>
 #include "MessageCore/StringUtil"
 
 #include <KLocalizedString>

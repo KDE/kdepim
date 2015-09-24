@@ -28,6 +28,7 @@
 #include <collection.h>
 #include <item.h>
 #include <messagelist_export.h>
+#include <AkonadiCore/Item>
 
 class KXMLGUIClient;
 class QAbstractItemModel;
@@ -37,11 +38,6 @@ class QItemSelection;
 namespace KPIM
 {
 class MessageStatus;
-}
-
-namespace Akonadi
-{
-class Item;
 }
 
 namespace MessageList
