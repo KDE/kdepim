@@ -63,7 +63,6 @@ QString ViewerPluginInfo::saveName() const
     return QFileInfo(metaData.fileName()).baseName();
 }
 
-
 class MessageViewer::ViewerPluginManagerPrivate
 {
 public:
@@ -111,14 +110,12 @@ void ViewerPluginManagerPrivate::loadPlugin(ViewerPluginInfo *item)
     item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<MessageViewer::ViewerPlugin>(q, QVariantList() << item->saveName());
 }
 
-
 ViewerPluginManager::ViewerPluginManager(QObject *parent)
     : QObject(parent),
       d(new MessageViewer::ViewerPluginManagerPrivate(this))
 {
     d->initializePluginList();
 }
-
 
 MessageViewer::ViewerPluginManager::~ViewerPluginManager()
 {

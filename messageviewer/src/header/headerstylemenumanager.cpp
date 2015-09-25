@@ -102,7 +102,7 @@ void HeaderStyleMenuManagerPrivate::readSettings()
         } else if ((headerStyle == QLatin1String("plain")) && (headerSetDisplayed == QLatin1String("standard"))) { //Standard
             headerStyleName = QStringLiteral("standards-header");
         } else {
-            qDebug() << "unknown style : headerstyle "<< headerStyle << " headerstrategy :"<<headerSetDisplayed;
+            qDebug() << "unknown style : headerstyle " << headerStyle << " headerstrategy :" << headerSetDisplayed;
         }
     }
     if (headerStyleName.isEmpty()) {
@@ -116,7 +116,6 @@ void HeaderStyleMenuManagerPrivate::writeSettings(const QString &pluginName)
     MessageViewer::GlobalSettings::self()->setHeaderPluginStyleName(pluginName);
     MessageViewer::GlobalSettingsBase::self()->save();
 }
-
 
 void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
 {

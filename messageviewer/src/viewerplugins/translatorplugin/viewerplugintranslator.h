@@ -20,7 +20,6 @@
 
 #include <viewerplugins/viewerplugin.h>
 
-
 namespace MessageViewer
 {
 class ViewerPluginTranslator : public MessageViewer::ViewerPlugin

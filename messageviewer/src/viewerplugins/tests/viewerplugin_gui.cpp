@@ -24,7 +24,6 @@
 #include <QCommandLineParser>
 #include <QVBoxLayout>
 
-
 ViewerPluginTest::ViewerPluginTest(QWidget *parent)
     : QWidget(parent)
 {
