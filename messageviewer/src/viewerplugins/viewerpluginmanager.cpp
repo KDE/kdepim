@@ -81,7 +81,7 @@ public:
 void ViewerPluginManagerPrivate::initializePluginList()
 {
     const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("messageviewer"), [](const KPluginMetaData & md) {
-        return md.serviceTypes().contains(QStringLiteral("MessageViewerHeaderStyle/ViewerPlugin"));
+        return md.serviceTypes().contains(QStringLiteral("MessageViewer/ViewerPlugin"));
     });
 
     QVectorIterator<KPluginMetaData> i(plugins);

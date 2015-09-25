@@ -18,8 +18,11 @@
 #include "viewerplugintranslator.h"
 
 #include <KActionCollection>
+#include <KToggleAction>
+#include <kpluginfactory.h>
 
 using namespace MessageViewer;
+K_PLUGIN_FACTORY_WITH_JSON(ViewerPluginTranslatorFactory, "messageviewer_translatorplugin.json", registerPlugin<ViewerPluginTranslator>();)
 
 ViewerPluginTranslator::ViewerPluginTranslator(QObject *parent)
     : MessageViewer::ViewerPlugin(parent)
