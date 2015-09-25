@@ -33,8 +33,9 @@ public:
     explicit ViewerPlugin(QObject *parent = Q_NULLPTR);
     ~ViewerPlugin();
 
-    virtual MessageViewer::ViewerPluginInterface *createView(KActionCollection *ac) = 0;
+    virtual MessageViewer::ViewerPluginInterface *createView(QWidget *parent, KActionCollection *ac) = 0;
     virtual QString viewerPluginName() const = 0;
+    virtual void showWidget() = 0;
 
 private:
     ViewerPluginPrivate *const d;

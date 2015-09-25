@@ -16,7 +16,7 @@
 */
 
 #include "viewerplugintranslator.h"
-
+#include "viewerplugintranslatorinterface.h"
 #include <KActionCollection>
 #include <KToggleAction>
 #include <kpluginfactory.h>
@@ -30,15 +30,21 @@ ViewerPluginTranslator::ViewerPluginTranslator(QObject *parent, const QList<QVar
 
 }
 
-ViewerPluginInterface *ViewerPluginTranslator::createView(KActionCollection *ac)
+ViewerPluginInterface *ViewerPluginTranslator::createView(QWidget *parent, KActionCollection *ac)
 {
+    MessageViewer::ViewerPluginInterface *view = new MessageViewer::ViewerPluginInterface(parent);
     //TODO
-    return Q_NULLPTR;
+    return view;
 }
 
 QString ViewerPluginTranslator::viewerPluginName() const
 {
     return QStringLiteral("translator");
+}
+
+void ViewerPluginTranslator::showWidget()
+{
+    //TODO
 }
 
 #include "viewerplugintranslator.moc"

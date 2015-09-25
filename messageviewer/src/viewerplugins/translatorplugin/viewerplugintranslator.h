@@ -28,8 +28,9 @@ class ViewerPluginTranslator : public MessageViewer::ViewerPlugin
 public:
     explicit ViewerPluginTranslator(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
 
-    ViewerPluginInterface *createView(KActionCollection *ac) Q_DECL_OVERRIDE;
+    ViewerPluginInterface *createView(QWidget *parent, KActionCollection *ac) Q_DECL_OVERRIDE;
     QString viewerPluginName() const Q_DECL_OVERRIDE;
+    void showWidget() Q_DECL_OVERRIDE;
 };
 }
 #endif // VIEWERPLUGINTRANSLATOR_H
