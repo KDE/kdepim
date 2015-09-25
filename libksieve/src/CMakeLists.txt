@@ -48,6 +48,12 @@ target_include_directories(KF5KSieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURC
 #  PREFIX KSieve
 #)
 
+ecm_generate_pri_file(BASE_NAME KSieve
+    LIB_NAME KF5KSieve
+    DEPS "" FILENAME_VAR PRI_FILENAME
+)
+
+
 install(TARGETS KF5KSieve EXPORT KF5KSieveTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libksieve_SOURCE_DIR})
 install(FILES
@@ -60,6 +66,10 @@ install(FILES
     ${ksieve_CamelCase_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/ksieve
     COMPONENT Devel
+)
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
 )
 
 endif()

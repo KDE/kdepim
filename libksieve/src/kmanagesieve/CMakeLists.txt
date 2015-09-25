@@ -40,6 +40,11 @@ ecm_generate_headers(kmanagesieve_CamelCase_HEADERS
   PREFIX KManageSieve
 )
 
+ecm_generate_pri_file(BASE_NAME KManageSieve
+    LIB_NAME KF5KManageSieve
+    DEPS "" FILENAME_VAR PRI_FILENAME
+)
+
 install(TARGETS KF5KManageSieve EXPORT KF5KSieveTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libksieve_SOURCE_DIR})
 install(FILES
@@ -53,6 +58,10 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kmanagesieve_export.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kmanagesieve
     COMPONENT Devel
+)
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
 )
 
 endif()

@@ -274,6 +274,11 @@ ecm_generate_headers(ksieveui_widgets_HEADERS
 )
 
 
+ecm_generate_pri_file(BASE_NAME KSieveUi
+    LIB_NAME KF5KSieveUi
+    DEPS "KManageSieve KSieve PimCommon Xml" FILENAME_VAR PRI_FILENAME
+)
+
 
 install(TARGETS KF5KSieveUi EXPORT KF5KSieveTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libksieve_SOURCE_DIR})
@@ -300,6 +305,10 @@ install(FILES
     ${ksieveui_util_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/ksieveui
     COMPONENT Devel
+)
+install(FILES
+    ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
 )
 
 endif()
