@@ -189,6 +189,17 @@ QString decodeRFC2047String(const QCString &src, const char **usedCS,
             // decode quoted printable text
             for (i=str.length()-1; i>=0; i--)
               if (str[i]=='_') str[i]=' ';
+            for (i=0; i < (int)str.length() - 2; i++) {
+              // Fun fact. RFC2047 allows lower case hex characters in
+              // quoted printable (but they should not be).
+              // In RFC2045 (which KCodecs implements) they must be uppercase.
+              // So we convert here.
+              if (str[i] == '=') {
+                  str[i+1] = toupper(str[i+1]);
+                  str[i+2] = toupper(str[i+2]);
+                  i += 2;
+              }
+            }
             str = KCodecs::quotedPrintableDecode(str);
           }
           else
