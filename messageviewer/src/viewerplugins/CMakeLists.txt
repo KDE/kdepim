@@ -1,2 +1,4 @@
 
 add_subdirectory(translatorplugin)
+add_subdirectory(createtaskplugin)
+add_subdirectory(createtodoplugin)
