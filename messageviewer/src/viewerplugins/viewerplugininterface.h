@@ -20,6 +20,9 @@
 
 #include <QWidget>
 #include "messageviewer_export.h"
+
+class KToggleAction;
+
 namespace MessageViewer
 {
 class ViewerPluginInterfacePrivate;
@@ -29,6 +32,10 @@ class MESSAGEVIEWER_EXPORT ViewerPluginInterface : public QWidget
 public:
     explicit ViewerPluginInterface(QWidget *parent = Q_NULLPTR);
     ~ViewerPluginInterface();
+
+    virtual void setText(const QString &text);
+    virtual KToggleAction *action() const;
+
 private:
     ViewerPluginInterfacePrivate *const d;
 };

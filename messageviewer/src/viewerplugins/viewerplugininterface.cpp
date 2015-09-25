@@ -16,6 +16,8 @@
 */
 
 #include "viewerplugininterface.h"
+
+#include <KToggleAction>
 using namespace MessageViewer;
 
 class MessageViewer::ViewerPluginInterfacePrivate
@@ -39,3 +41,13 @@ ViewerPluginInterface::~ViewerPluginInterface()
     delete d;
 }
 
+void ViewerPluginInterface::setText(const QString &text)
+{
+    // Reimplement in subclass.
+}
+
+KToggleAction *ViewerPluginInterface::action() const
+{
+    // Reimplement in subclass
+    return Q_NULLPTR;
+}

@@ -453,3 +453,4 @@ install(FILES notify/messageviewer.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RC
 install(FILES scamdetection/data/longurlServices.json DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )
 
 add_subdirectory(header)
+add_subdirectory(viewerplugins)

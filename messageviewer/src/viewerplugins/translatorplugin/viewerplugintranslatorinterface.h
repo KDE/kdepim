@@ -15,29 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VIEWERPLUGIN_H
-#define VIEWERPLUGIN_H
 
-#include <QObject>
-#include "messageviewer_export.h"
-class KActionCollection;
+#ifndef VIEWERPLUGINTRANSLATORINTERFACE_H
+#define VIEWERPLUGINTRANSLATORINTERFACE_H
+
+#include <viewerplugins/viewerplugininterface.h>
 
 namespace MessageViewer
 {
-class ViewerPluginPrivate;
-class ViewerPluginInterface;
-class MESSAGEVIEWER_EXPORT ViewerPlugin : public QObject
+class ViewerPluginTranslatorInterface : public ViewerPluginInterface
 {
     Q_OBJECT
 public:
-    explicit ViewerPlugin(QObject *parent = Q_NULLPTR);
-    ~ViewerPlugin();
+    explicit ViewerPluginTranslatorInterface(QWidget *parent = Q_NULLPTR);
+    ~ViewerPluginTranslatorInterface();
 
-    virtual MessageViewer::ViewerPluginInterface *createView(KActionCollection *ac) = 0;
-    virtual QString viewerPluginName() const = 0;
-
-private:
-    ViewerPluginPrivate *const d;
+    void setText(const QString &text) Q_DECL_OVERRIDE;
+    KToggleAction *action() const Q_DECL_OVERRIDE;
 };
 }
-#endif // VIEWERPLUGIN_H
+#endif // VIEWERPLUGINTRANSLATORINTERFACE_H
