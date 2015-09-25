@@ -1,6 +1,6 @@
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_BINARY_DIR}/accountwizard )
 add_definitions (-DTEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
-add_definitions (-DCURRENT_SOURCE_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}\\"")
+add_definitions (-DCURRENT_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_executable(ldaptest ldaptest.cpp ../ldap.cpp ../setupobject.cpp)
 add_test(ldaptest ldaptest)
