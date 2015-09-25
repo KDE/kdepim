@@ -52,7 +52,6 @@
 #include <KServiceTypeTrader>
 #include <KVBox>
 #include <KWordWrap>
-#include <KComponentData>
 
 #include <QApplication>
 #include <QDrag>
@@ -2049,7 +2048,8 @@ void AgendaView::startDrag(const Akonadi::Item &incidence)
 
 void AgendaView::readSettings()
 {
-    readSettings(KComponentData::activeComponent().config().data());
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
+    readSettings(config.data());
 }
 
 void AgendaView::readSettings(const KConfig *config)

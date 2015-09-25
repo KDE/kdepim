@@ -52,7 +52,6 @@
 #include <KCalCore/CalFormat>
 #include <QIcon>
 #include <KIconLoader>
-#include <KComponentData>
 #include <KJob>
 #include "calendarview_debug.h"
 
@@ -1223,7 +1222,8 @@ void TodoView::restoreViewState()
     //timer.start();
     delete mTreeStateRestorer;
     mTreeStateRestorer = new Akonadi::ETMViewStateSaver();
-    KConfigGroup group(KComponentData::activeComponent().config().data(), stateSaverGroup());
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
+    KConfigGroup group(config, stateSaverGroup());
     mTreeStateRestorer->setView(mView);
     mTreeStateRestorer->restoreState(group);
     //qCDebug(CALENDARVIEW_LOG) << "Took " << timer.elapsed();
