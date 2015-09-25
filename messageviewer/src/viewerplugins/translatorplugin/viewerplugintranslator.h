@@ -19,14 +19,14 @@
 #define VIEWERPLUGINTRANSLATOR_H
 
 #include <viewerplugins/viewerplugin.h>
-
+#include <QVariant>
 namespace MessageViewer
 {
 class ViewerPluginTranslator : public MessageViewer::ViewerPlugin
 {
     Q_OBJECT
 public:
-    explicit ViewerPluginTranslator(QObject *parent = Q_NULLPTR);
+    explicit ViewerPluginTranslator(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
 
     ViewerPluginInterface *createView(KActionCollection *ac) Q_DECL_OVERRIDE;
     QString viewerPluginName() const Q_DECL_OVERRIDE;

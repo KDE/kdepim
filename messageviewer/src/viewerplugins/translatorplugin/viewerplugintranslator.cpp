@@ -24,7 +24,7 @@
 using namespace MessageViewer;
 K_PLUGIN_FACTORY_WITH_JSON(ViewerPluginTranslatorFactory, "messageviewer_translatorplugin.json", registerPlugin<ViewerPluginTranslator>();)
 
-ViewerPluginTranslator::ViewerPluginTranslator(QObject *parent)
+ViewerPluginTranslator::ViewerPluginTranslator(QObject *parent, const QList<QVariant> &)
     : MessageViewer::ViewerPlugin(parent)
 {
 
@@ -41,3 +41,4 @@ QString ViewerPluginTranslator::viewerPluginName() const
     return QStringLiteral("translator");
 }
 
+#include "viewerplugintranslator.moc"

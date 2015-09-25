@@ -1,4 +1,6 @@
 set(messageviewer_translatorplugin_SRCS
+    viewerplugintranslator.cpp
+    viewerplugintranslatorinterface.cpp
 )
 
 add_library(messageviewer_translatorplugin MODULE ${messageviewer_translatorplugin_SRCS})
