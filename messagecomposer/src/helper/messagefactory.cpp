@@ -64,7 +64,7 @@ static KMime::Types::Mailbox::List stripMyAddressesFromAddressList(const KMime::
 {
     KMime::Types::Mailbox::List addresses(list);
     for (KMime::Types::Mailbox::List::Iterator it = addresses.begin(); it != addresses.end();) {
-        if (manager->thatIsMe(KMime::Types::Mailbox::listToUnicodeString(KMime::Types::Mailbox::List() << *it))) {
+        if (manager->thatIsMe(it->prettyAddress())) {
             it = addresses.erase(it);
         } else {
             ++it;
