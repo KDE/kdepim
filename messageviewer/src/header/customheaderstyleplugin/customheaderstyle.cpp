@@ -46,9 +46,6 @@ QString CustomHeaderStyle::format(KMime::Message *message) const
         return QString();
     }
     const HeaderStrategy *strategy = headerStrategy();
-    if (!strategy) {
-        strategy = HeaderStrategy::custom();
-    }
 
     // The direction of the header is determined according to the direction
     // of the application layout.

@@ -48,27 +48,6 @@ protected:
 
 public:
     //
-    // Factory methods:
-    //
-    enum Type { All,
-                Rich,
-                Standard,
-                Brief,
-                Custom,
-                Grantlee
-              };
-
-    static HeaderStrategy *create(Type type);
-    static HeaderStrategy *create(const QString &type);
-
-    static HeaderStrategy *all();
-    static HeaderStrategy *rich();
-    static HeaderStrategy *standard();
-    static HeaderStrategy *brief();
-    static HeaderStrategy *custom();
-    static HeaderStrategy *grantlee();
-
-    //
     // Methods for handling the strategies:
     //
     virtual const char *name() const = 0;
