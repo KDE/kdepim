@@ -35,6 +35,8 @@
 #include "widgets/noteedit.h"
 #include "viewer/mimeparttree/mimeparttreeview.h"
 #include "widgets/openattachmentfolderwidget.h"
+#include "messageviewer/headerstyle.h"
+#include "messageviewer/headerstrategy.h"
 #include "PimCommon/SlideContainer"
 #include "PimCommon/GravatarCache"
 #include "job/attachmentencryptwithchiasmusjob.h"
@@ -968,35 +970,29 @@ void ViewerPrivate::parseContent(KMime::Content *content)
 QString ViewerPrivate::writeMsgHeader(KMime::Message *aMsg, KMime::Content *vCardNode,
                                       bool topLevel)
 {
-#if 0
-    if (!headerStyle()) {
+    if (!headerStylePlugin()) {
         qCCritical(MESSAGEVIEWER_LOG) << "trying to writeMsgHeader() without a header style set!";
-    }
-    if (!headerStrategy()) {
-        qCCritical(MESSAGEVIEWER_LOG) << "trying to writeMsgHeader() without a header strategy set!";
     }
     QString href;
     if (vCardNode) {
         href = mNodeHelper->asHREF(vCardNode, QStringLiteral("body"));
     }
-    headerStyle()->setHeaderStrategy(headerStrategy());
-    headerStyle()->setVCardName(href);
-    headerStyle()->setPrinting(mPrinting);
-    headerStyle()->setTopLevel(topLevel);
-    headerStyle()->setAllowAsync(true);
-    headerStyle()->setSourceObject(this);
-    headerStyle()->setNodeHelper(mNodeHelper);
-    headerStyle()->setMessagePath(mMessagePath);
+    headerStylePlugin()->headerStyle()->setHeaderStrategy(headerStylePlugin()->headerStrategy());
+    headerStylePlugin()->headerStyle()->setVCardName(href);
+    headerStylePlugin()->headerStyle()->setPrinting(mPrinting);
+    headerStylePlugin()->headerStyle()->setTopLevel(topLevel);
+    headerStylePlugin()->headerStyle()->setAllowAsync(true);
+    headerStylePlugin()->headerStyle()->setSourceObject(this);
+    headerStylePlugin()->headerStyle()->setNodeHelper(mNodeHelper);
+    headerStylePlugin()->headerStyle()->setMessagePath(mMessagePath);
     if (mMessageItem.isValid()) {
         Akonadi::MessageStatus status;
         status.setStatusFromFlags(mMessageItem.flags());
 
-        headerStyle()->setMessageStatus(status);
+        headerStylePlugin()->headerStyle()->setMessageStatus(status);
     }
 
-    return headerStyle()->format(aMsg);
-#endif
-    return QString();
+    return headerStylePlugin()->headerStyle()->format(aMsg);
 }
 
 void ViewerPrivate::showVCard(KMime::Content *msgPart)
