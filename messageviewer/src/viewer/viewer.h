@@ -288,6 +288,7 @@ public:
     QAction *createNoteAction();
     KActionMenu *shareServiceUrlMenu();
     HeaderStylePlugin *headerStylePlugin() const;
+    void setPluginName(const QString &pluginName);
 
     void writeConfig(bool withSync = true);
 

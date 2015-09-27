@@ -711,6 +711,12 @@ HeaderStylePlugin *Viewer::headerStylePlugin() const
     return d->mHeaderStylePlugin;
 }
 
+void Viewer::setPluginName(const QString &pluginName)
+{
+    Q_D(Viewer);
+    return d->setPluginName(pluginName);
+}
+
 void Viewer::showOpenAttachmentFolderWidget(const QUrl &url)
 {
     Q_D(Viewer);

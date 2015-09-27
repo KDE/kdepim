@@ -1169,6 +1169,11 @@ void ViewerPrivate::setAttachmentStrategy(const AttachmentStrategy *strategy)
     update(Viewer::Force);
 }
 
+QString ViewerPrivate::overrideEncoding() const
+{
+    return mOverrideEncoding;
+}
+
 void ViewerPrivate::setOverrideEncoding(const QString &encoding)
 {
     if (encoding == mOverrideEncoding) {
@@ -1198,6 +1203,11 @@ void ViewerPrivate::setOverrideEncoding(const QString &encoding)
         }
     }
     update(Viewer::Force);
+}
+
+void ViewerPrivate::setPrinting(bool enable)
+{
+    mPrinting = enable;
 }
 
 void ViewerPrivate::printMessage(const Akonadi::Item &message)
@@ -1926,19 +1936,14 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
                 }
             }
             html += QStringLiteral("<img %1 style=\"vertical-align:middle;\" src=\"").arg(imageMaxSize) + info.icon + QLatin1String("\"/>&nbsp;");
-#if 0 //PORT_PLUGIN
-            if (headerStyle() == HeaderStyle::enterprise()) {
-                QFont bodyFont = mCSSHelper->bodyFont(mUseFixedFont);
-                QFontMetrics fm(bodyFont);
-                html += fm.elidedText(info.label, Qt::ElideRight, 180);
-            } else if (headerStyle() == HeaderStyle::fancy()) {
-                QFont bodyFont = mCSSHelper->bodyFont(mUseFixedFont);
-                QFontMetrics fm(bodyFont);
-                html += fm.elidedText(info.label, Qt::ElideRight, 1000);
-            } else {
+            const int elidedTextSize = headerStylePlugin()->elidedTextSize();
+            if (elidedTextSize == -1) {
                 html += info.label;
+            } else {
+                QFont bodyFont = mCSSHelper->bodyFont(mUseFixedFont);
+                QFontMetrics fm(bodyFont);
+                html += fm.elidedText(info.label, Qt::ElideRight, elidedTextSize);
             }
-#endif
             html += QLatin1String("</a></span></div> ");
         }
     }
@@ -2340,8 +2345,8 @@ QString ViewerPrivate::attachmentInjectionHtml()
     }
 
     QString link;
-#if 0 //PORT_PLUGIN
-    if (headerStyle() == HeaderStyle::fancy()) {
+    //TODO make it as a virtual method
+    if (headerStylePlugin()->name() == QStringLiteral("fancy")) {
         link += QLatin1String("<div style=\"text-align: left;\"><a href=\"") + urlHandle + QLatin1String("\"><img src=\"file:///") + imgpath + imgSrc + QLatin1String("\"/></a></div>");
         html.prepend(link);
         html.prepend(QStringLiteral("<div style=\"float:left;\">%1&nbsp;</div>").arg(i18n("Attachments:")));
@@ -2349,7 +2354,6 @@ QString ViewerPrivate::attachmentInjectionHtml()
         link += QLatin1String("<div style=\"text-align: right;\"><a href=\"") + urlHandle + QLatin1String("\"><img src=\"file:///") + imgpath + imgSrc + QLatin1String("\"/></a></div>");
         html.prepend(link);
     }
-#endif
     return html;
 }
 
@@ -2417,6 +2421,11 @@ bool ViewerPrivate::mimePartTreeIsEmpty() const
 #else
     return false;
 #endif
+}
+
+void ViewerPrivate::setPluginName(const QString &pluginName)
+{
+    mHeaderStyleMenuManager->setPluginName(pluginName);
 }
 
 void ViewerPrivate::slotAttachmentSaveAs()

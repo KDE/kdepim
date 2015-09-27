@@ -44,6 +44,7 @@ public:
     virtual QString name() const = 0;
     virtual bool hasMargin() const;
     virtual QString alignment() const;
+    virtual int elidedTextSize() const;
 
 private:
     HeaderStylePluginPrivate *const d;

@@ -321,19 +321,13 @@ public:
     /** Get selected override character encoding.
       @return The encoding selected by the user or an empty string if auto-detection
       is selected. */
-    QString overrideEncoding() const
-    {
-        return mOverrideEncoding;
-    }
+    QString overrideEncoding() const;
 
     /** Set the override character encoding. */
     void setOverrideEncoding(const QString &encoding);
 
     /** Set printing mode */
-    virtual void setPrinting(bool enable)
-    {
-        mPrinting = enable;
-    }
+    virtual void setPrinting(bool enable);
 
     /** Print message. */
     void printMessage(const Akonadi::Item &msg);
@@ -456,6 +450,8 @@ public:
     void showOpenAttachmentFolderWidget(const QUrl &url);
 
     bool mimePartTreeIsEmpty() const;
+
+    void setPluginName(const QString &pluginName);
 
 private Q_SLOTS:
     void slotModifyItemDone(KJob *job);

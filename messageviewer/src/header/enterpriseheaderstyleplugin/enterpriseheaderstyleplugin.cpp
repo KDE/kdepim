@@ -69,4 +69,9 @@ QString EnterpriseHeaderStylePlugin::alignment() const
     return QStringLiteral("right");
 }
 
+int EnterpriseHeaderStylePlugin::elidedTextSize() const
+{
+    return 180;
+}
+
 #include "enterpriseheaderstyleplugin.moc"

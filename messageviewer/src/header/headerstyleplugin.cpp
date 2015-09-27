@@ -48,3 +48,8 @@ QString HeaderStylePlugin::alignment() const
 {
     return QStringLiteral("left");
 }
+
+int HeaderStylePlugin::elidedTextSize() const
+{
+    return -1;
+}

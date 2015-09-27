@@ -59,4 +59,9 @@ QString FancyHeaderStylePlugin::name() const
     return QStringLiteral("fancy");
 }
 
+int FancyHeaderStylePlugin::elidedTextSize() const
+{
+    return 1000;
+}
+
 #include "fancyheaderstyleplugin.moc"

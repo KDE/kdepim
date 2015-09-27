@@ -37,6 +37,7 @@ public:
     QString name() const Q_DECL_OVERRIDE;
     bool hasMargin() const Q_DECL_OVERRIDE;
     QString alignment() const Q_DECL_OVERRIDE;
+    int elidedTextSize() const Q_DECL_OVERRIDE;
 private:
     HeaderStyle *mHeaderStyle;
     HeaderStrategy *mHeaderStrategy;
