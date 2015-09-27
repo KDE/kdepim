@@ -117,8 +117,6 @@
 #include "viewer/attachmentstrategy.h"
 #include "csshelper.h"
 #include "settings/messageviewersettings.h"
-#include "header/headerstyle.h"
-#include "header/headerstrategy.h"
 #include "widgets/htmlstatusbar.h"
 #include "htmlwriter/webkitparthtmlwriter.h"
 #include "widgets/mailsourceviewer.h"
@@ -152,6 +150,7 @@
 #include <KJobWidgets/KJobWidgets>
 #include <QApplication>
 #include <QStandardPaths>
+#include <header/headerstyleplugin.h>
 
 using namespace boost;
 using namespace MailTransport;
@@ -1491,6 +1490,17 @@ void ViewerPrivate::createWidgets()
 #endif
 }
 
+void ViewerPrivate::slotStyleChanged(MessageViewer::HeaderStylePlugin *plugin)
+{
+    mHeaderStylePlugin = plugin;
+    update(Viewer::Force);
+}
+
+void ViewerPrivate::slotStyleUpdated()
+{
+    update(Viewer::Force);
+}
+
 void ViewerPrivate::createActions()
 {
     KActionCollection *ac = mActionCollection;
@@ -1499,6 +1509,8 @@ void ViewerPrivate::createActions()
     }
 
     mHeaderStyleMenuManager = new MessageViewer::HeaderStyleMenuManager(ac, this);
+    connect(mHeaderStyleMenuManager, &MessageViewer::HeaderStyleMenuManager::styleChanged, this, &ViewerPrivate::slotStyleChanged);
+    connect(mHeaderStyleMenuManager, &MessageViewer::HeaderStyleMenuManager::styleUpdated, this, &ViewerPrivate::slotStyleUpdated);
 
     // attachment style
     KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
@@ -2313,6 +2325,11 @@ QString ViewerPrivate::picsPath()
         mPicsPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/libmessageviewer/pics/"), QStandardPaths::LocateDirectory);
     }
     return mPicsPath;
+}
+
+HeaderStylePlugin *ViewerPrivate::headerStylePlugin() const
+{
+    return mHeaderStylePlugin;
 }
 
 QString ViewerPrivate::attachmentInjectionHtml()

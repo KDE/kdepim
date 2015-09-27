@@ -705,6 +705,12 @@ KActionMenu *Viewer::shareServiceUrlMenu()
     return d->mShareServiceUrlMenu;
 }
 
+HeaderStylePlugin *Viewer::headerStylePlugin() const
+{
+    Q_D(const Viewer);
+    return d->mHeaderStylePlugin;
+}
+
 void Viewer::showOpenAttachmentFolderWidget(const QUrl &url)
 {
     Q_D(Viewer);

@@ -240,6 +240,8 @@ public:
         return mHtmlWriter;
     }
 
+    HeaderStylePlugin *headerStylePlugin() const;
+
     CSSHelper *cssHelper() const;
 
     NodeHelper *nodeHelper() const
@@ -496,6 +498,8 @@ private Q_SLOTS:
 
     void slotRefreshMessage(const Akonadi::Item &item);
     void slotServiceUrlSelected(PimCommon::ShareServiceUrlManager::ServiceType serviceType);
+    void slotStyleChanged(MessageViewer::HeaderStylePlugin *plugin);
+    void slotStyleUpdated();
 public Q_SLOTS:
     /** An URL has been activate with a click. */
     void slotUrlOpen(const QUrl &url = QUrl());

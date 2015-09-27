@@ -46,7 +46,7 @@ class QResizeEvent;
 
 namespace MessageViewer
 {
-
+class HeaderStylePlugin;
 class AttachmentStrategy;
 class CSSHelper;
 class ViewerPrivate;
@@ -287,6 +287,7 @@ public:
     QAction *createEventAction();
     QAction *createNoteAction();
     KActionMenu *shareServiceUrlMenu();
+    HeaderStylePlugin *headerStylePlugin() const;
 
     void writeConfig(bool withSync = true);
 
