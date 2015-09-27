@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=MessageViewer/ViewerPlugin
+X-KDE-Library=messageviewer_createeventplugin
+Name=Create Event
