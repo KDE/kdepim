@@ -32,7 +32,7 @@ ViewerPluginCreatetask::ViewerPluginCreatetask(QObject *parent, const QList<QVar
 
 ViewerPluginInterface *ViewerPluginCreatetask::createView(QWidget *parent, KActionCollection *ac)
 {
-    MessageViewer::ViewerPluginInterface *view = new MessageViewer::ViewerPluginInterface(parent);
+    MessageViewer::ViewerPluginInterface *view = new MessageViewer::ViewerPluginCreatetaskInterface(parent);
     //TODO
     return view;
 }
