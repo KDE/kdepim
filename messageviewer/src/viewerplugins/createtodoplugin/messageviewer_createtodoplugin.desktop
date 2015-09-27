@@ -3,3 +3,7 @@ Type=Service
 ServiceTypes=MessageViewer/ViewerPlugin
 X-KDE-Library=messageviewer_createtodoplugin
 Name=Create Todo
+Name[pt]=Criar um Item Por-Fazer
+Name[pt_BR]=Criar tarefa
+Name[uk]=Створення запису завдання
+Name[x-test]=xxCreate Todoxx
