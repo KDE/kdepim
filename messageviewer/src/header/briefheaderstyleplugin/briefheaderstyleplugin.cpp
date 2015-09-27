@@ -17,7 +17,7 @@
 
 #include "briefheaderstyleplugin.h"
 #include "briefheaderstyleinterface.h"
-#include "header/briefheaderstyle.h"
+#include "briefheaderstyle.h"
 //Temporary
 #include "header/headerstrategy_p.h"
 #include <kpluginfactory.h>
