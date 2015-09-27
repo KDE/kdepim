@@ -24,14 +24,16 @@
 namespace MessageViewer
 {
 class ViewerPluginManagerPrivate;
-
+class ViewerPlugin;
 class MESSAGEVIEWER_EXPORT ViewerPluginManager : public QObject
 {
     Q_OBJECT
 public:
     explicit ViewerPluginManager(QObject *parent = Q_NULLPTR);
     ~ViewerPluginManager();
-    ViewerPluginManager *self();
+    static ViewerPluginManager *self();
+
+    QVector<MessageViewer::ViewerPlugin *> pluginsList() const;
 
 private:
     ViewerPluginManagerPrivate *const d;

@@ -73,6 +73,7 @@ public:
     }
     void initializePluginList();
     void loadPlugin(ViewerPluginInfo *item);
+    QVector<MessageViewer::ViewerPlugin *> pluginsList() const;
     QVector<ViewerPluginInfo> mPluginList;
     ViewerPluginManager *q;
 };
@@ -110,6 +111,19 @@ void ViewerPluginManagerPrivate::loadPlugin(ViewerPluginInfo *item)
     item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<MessageViewer::ViewerPlugin>(q, QVariantList() << item->saveName());
 }
 
+QVector<ViewerPlugin *> ViewerPluginManagerPrivate::pluginsList() const
+{
+    QVector<MessageViewer::ViewerPlugin *> lst;
+    QVector<ViewerPluginInfo>::ConstIterator end(mPluginList.constEnd());
+    for (QVector<ViewerPluginInfo>::ConstIterator it = mPluginList.constBegin(); it != end; ++it) {
+        if ((*it).plugin) {
+            lst << (*it).plugin;
+        }
+    }
+    return lst;
+}
+
+
 ViewerPluginManager::ViewerPluginManager(QObject *parent)
     : QObject(parent),
       d(new MessageViewer::ViewerPluginManagerPrivate(this))
@@ -125,4 +139,9 @@ MessageViewer::ViewerPluginManager::~ViewerPluginManager()
 ViewerPluginManager *ViewerPluginManager::self()
 {
     return sInstance->viewerPluginManager;
+}
+
+QVector<MessageViewer::ViewerPlugin *> ViewerPluginManager::pluginsList() const
+{
+    return d->pluginsList();
 }
