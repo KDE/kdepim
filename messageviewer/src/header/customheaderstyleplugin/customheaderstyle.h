@@ -19,12 +19,11 @@
 #define CUSTOMHEADERSTYLE_H
 
 #include "header/headerstyle.h"
-#include "messageviewer_export.h"
 
 namespace MessageViewer
 {
 
-class MESSAGEVIEWER_EXPORT CustomHeaderStyle : public HeaderStyle
+class CustomHeaderStyle : public HeaderStyle
 {
 public:
     CustomHeaderStyle() : HeaderStyle() {}

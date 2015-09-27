@@ -135,7 +135,6 @@ set(libmessageviewer_header_SRCS
   header/headerstrategy_p.cpp
   header/headerstyle.cpp
   header/grantleeheaderstyleplugin/grantleeheaderstyle.cpp
-  header/customheaderstyleplugin/customheaderstyle.cpp
   header/plainheaderstyle.cpp
   header/enterpriseheaderstyleplugin/enterpriseheaderstyle.cpp
   header/headerstyle_util.cpp
