@@ -66,28 +66,6 @@ protected:
 
 public:
     //
-    // Factory methods:
-    //
-    enum Type {
-        Brief,
-        Plain,
-        Fancy,
-        Enterprise,
-        Custom,
-        Grantlee
-    };
-
-    static HeaderStyle *create(Type type);
-    static HeaderStyle *create(const QString &type);
-
-    static HeaderStyle *brief();
-    static HeaderStyle *plain();
-    static HeaderStyle *fancy();
-    static HeaderStyle *enterprise();
-    static HeaderStyle *custom();
-    static HeaderStyle *grantlee();
-
-    //
     // Methods for handling the styles:
     //
     virtual const char *name() const = 0;
