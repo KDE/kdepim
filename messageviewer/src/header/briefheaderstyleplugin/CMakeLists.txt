@@ -1,6 +1,7 @@
 set(messageviewer_briefheaderstyleplugin_SRCS
    briefheaderstyleplugin.cpp
    briefheaderstyleinterface.cpp 
+   briefheaderstyle.cpp
 )
 
 add_library(messageviewer_briefheaderstyleplugin MODULE ${messageviewer_briefheaderstyleplugin_SRCS})

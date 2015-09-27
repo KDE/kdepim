@@ -23,7 +23,7 @@ macro(add_messageviewer_header_class_unittest _source )
 endmacro ()
 
 
-add_messageviewer_header_unittest( briefheaderstyleplugintest.cpp "../briefheaderstyleplugin/briefheaderstyleplugin.cpp;../briefheaderstyleplugin/briefheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../briefheaderstyleplugin/messageviewer_briefheaderstyleplugin.desktop")
+add_messageviewer_header_unittest( briefheaderstyleplugintest.cpp "../briefheaderstyleplugin/briefheaderstyle.cpp;../briefheaderstyleplugin/briefheaderstyleplugin.cpp;../briefheaderstyleplugin/briefheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../briefheaderstyleplugin/messageviewer_briefheaderstyleplugin.desktop")
 
 add_messageviewer_header_unittest( allheaderstyleplugintest.cpp "../allheaderstyleplugin/allheaderstyleplugin.cpp;../allheaderstyleplugin/allheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../allheaderstyleplugin/messageviewer_allheaderstyleplugin.desktop")
 add_messageviewer_header_unittest( customheaderstyleplugintest.cpp "../customheaderstyleplugin/customheaderstyleplugin.cpp;../customheaderstyleplugin/customheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../customheaderstyleplugin/messageviewer_customheaderstyleplugin.desktop")

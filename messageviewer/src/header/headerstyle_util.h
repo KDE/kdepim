@@ -26,7 +26,7 @@
 #include "antispam/spamheaderanalyzer.h"
 
 #include "header/headerstyle.h"
-
+#include "messageviewer_export.h"
 namespace MessageViewer
 {
 namespace HeaderStyleUtil
@@ -36,13 +36,13 @@ namespace HeaderStyleUtil
 //
 QString directionOf(const QString &str);
 
-QString strToHtml(const QString &str, KTextToHTML::Options flags = KTextToHTML::PreserveSpaces);
+MESSAGEVIEWER_EXPORT QString strToHtml(const QString &str, KTextToHTML::Options flags = KTextToHTML::PreserveSpaces);
 
-QString dateString(KMime::Message *message, bool printing, bool shortDate);
+MESSAGEVIEWER_EXPORT QString dateString(KMime::Message *message, bool printing, bool shortDate);
 
-QString subjectString(KMime::Message *message, KTextToHTML::Options flags = KTextToHTML::PreserveSpaces);
+MESSAGEVIEWER_EXPORT QString subjectString(KMime::Message *message, KTextToHTML::Options flags = KTextToHTML::PreserveSpaces);
 
-QString subjectDirectionString(KMime::Message *message);
+MESSAGEVIEWER_EXPORT QString subjectDirectionString(KMime::Message *message);
 
 QString drawSpamMeter(SpamError spamError, double percent, double confidence,
                       const QString &filterHeader, const QString &confidenceHeader);
