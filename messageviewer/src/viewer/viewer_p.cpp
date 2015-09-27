@@ -27,8 +27,6 @@
 #include "viewer/objecttreeemptysource.h"
 #include "viewer/objecttreeviewersource.h"
 #include "messagedisplayformatattribute.h"
-#include "grantleethememanager.h"
-#include "globalsettings_grantleetheme.h"
 #include "scamdetection/scamdetectionwarningwidget.h"
 #include "scamdetection/scamattribute.h"
 #include "adblock/adblockmanager.h"
@@ -136,6 +134,7 @@
 #include "job/createtodojob.h"
 #include "job/createeventjob.h"
 #include "job/createnotejob.h"
+#include "header/headerstylemenumanager.h"
 
 #include "messageviewer/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -172,8 +171,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mFindBar(0),
       mTranslatorWidget(0),
       mAttachmentStrategy(0),
-      mHeaderStrategy(0),
-      mHeaderStyle(0),
       mUpdateReaderWinTimer(0),
       mResizeTimer(0),
       mOldGlobalOverrideEncoding(QStringLiteral("---")),   // init with dummy value
@@ -218,7 +215,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mZoomFactor(100),
       mSliderContainer(0),
       mShareServiceManager(Q_NULLPTR),
-      mHeaderStylePlugin(Q_NULLPTR)
+      mHeaderStylePlugin(Q_NULLPTR),
+      mHeaderStyleMenuManager(Q_NULLPTR)
 {
     mMimePartTree = 0;
     if (!mainWindow) {
@@ -229,11 +227,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
         Akonadi::AttributeFactory::registerAttribute<MessageViewer::ScamAttribute>();
     }
     mShareServiceManager = new PimCommon::ShareServiceUrlManager(this);
-
-    mThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Mail, QStringLiteral("header.desktop"), mActionCollection, QStringLiteral("messageviewer/themes/"));
-    mThemeManager->setDownloadNewStuffConfigFile(QStringLiteral("messageviewer_header_themes.knsrc"));
-    connect(mThemeManager, &GrantleeTheme::GrantleeThemeManager::grantleeThemeSelected, this, &ViewerPrivate::slotGrantleeHeaders);
-    connect(mThemeManager, &GrantleeTheme::GrantleeThemeManager::updateThemes, this, &ViewerPrivate::slotGrantleeThemesUpdated);
 
     mDisplayFormatMessageOverwrite = MessageViewer::Viewer::UseGlobalSetting;
     mHtmlLoadExtOverride = false;
@@ -291,7 +284,6 @@ ViewerPrivate::~ViewerPrivate()
     delete mCSSHelper;
     mNodeHelper->forceCleanTempFiles();
     delete mNodeHelper;
-    delete mThemeManager;
 }
 
 //-----------------------------------------------------------------------------
@@ -977,6 +969,7 @@ void ViewerPrivate::parseContent(KMime::Content *content)
 QString ViewerPrivate::writeMsgHeader(KMime::Message *aMsg, KMime::Content *vCardNode,
                                       bool topLevel)
 {
+#if 0
     if (!headerStyle()) {
         qCCritical(MESSAGEVIEWER_LOG) << "trying to writeMsgHeader() without a header style set!";
     }
@@ -987,7 +980,6 @@ QString ViewerPrivate::writeMsgHeader(KMime::Message *aMsg, KMime::Content *vCar
     if (vCardNode) {
         href = mNodeHelper->asHREF(vCardNode, QStringLiteral("body"));
     }
-
     headerStyle()->setHeaderStrategy(headerStrategy());
     headerStyle()->setVCardName(href);
     headerStyle()->setPrinting(mPrinting);
@@ -996,7 +988,6 @@ QString ViewerPrivate::writeMsgHeader(KMime::Message *aMsg, KMime::Content *vCar
     headerStyle()->setSourceObject(this);
     headerStyle()->setNodeHelper(mNodeHelper);
     headerStyle()->setMessagePath(mMessagePath);
-
     if (mMessageItem.isValid()) {
         Akonadi::MessageStatus status;
         status.setStatusFromFlags(mMessageItem.flags());
@@ -1005,6 +996,8 @@ QString ViewerPrivate::writeMsgHeader(KMime::Message *aMsg, KMime::Content *vCar
     }
 
     return headerStyle()->format(aMsg);
+#endif
+    return QString();
 }
 
 void ViewerPrivate::showVCard(KMime::Content *msgPart)
@@ -1116,17 +1109,10 @@ void ViewerPrivate::readConfig()
     mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
     setZoomTextOnly(mZoomTextOnly);
     readGravatarConfig();
-
-    if (headerStrategy()) {
-        headerStrategy()->readConfig();
-    }
-    KToggleAction *raction = actionForHeaderStyle(headerStyle(), headerStrategy());
-    if (raction) {
-        raction->setChecked(true);
-    }
+    mHeaderStyleMenuManager->readConfig();
 
     setAttachmentStrategy(AttachmentStrategy::create(GlobalSettings::self()->attachmentStrategy()));
-    raction = actionForAttachmentStrategy(attachmentStrategy());
+    KToggleAction *raction = actionForAttachmentStrategy(attachmentStrategy());
     if (raction) {
         raction->setChecked(true);
     }
@@ -1135,11 +1121,6 @@ void ViewerPrivate::readConfig()
 
     readGlobalOverrideCodec();
 
-    // Note that this call triggers an update, see this call has to be at the
-    // bottom when all settings are already est.
-    setHeaderStyleAndStrategy(HeaderStyle::create(GlobalSettings::self()->headerStyle()),
-                              HeaderStrategy::create(GlobalSettings::self()->headerSetDisplayed()));
-    initGrantleeThemeName();
 
 #ifndef KDEPIM_NO_WEBKIT
     mViewer->settings()->setFontSize(QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize());
@@ -1173,13 +1154,6 @@ void ViewerPrivate::slotGeneralFontChanged()
 void ViewerPrivate::writeConfig(bool sync)
 {
     GlobalSettings::self()->setUseFixedFont(mUseFixedFont);
-    if (headerStyle()) {
-        GlobalSettings::self()->setHeaderStyle(QLatin1String(headerStyle()->name()));
-        GrantleeTheme::GrantleeSettings::self()->setGrantleeMailThemeName(headerStyle()->theme().dirName());
-    }
-    if (headerStrategy()) {
-        GlobalSettings::self()->setHeaderSetDisplayed(QLatin1String(headerStrategy()->name()));
-    }
     if (attachmentStrategy()) {
         GlobalSettings::self()->setAttachmentStrategy(QLatin1String(attachmentStrategy()->name()));
     }
@@ -1189,34 +1163,6 @@ void ViewerPrivate::writeConfig(bool sync)
     if (sync) {
         Q_EMIT requestConfigSync();
     }
-}
-
-void ViewerPrivate::setHeaderStyleAndStrategy(HeaderStyle *style,
-        HeaderStrategy *strategy , bool writeInConfigFile)
-{
-
-    if (mHeaderStyle == style && mHeaderStrategy == strategy) {
-        return;
-    }
-
-    mHeaderStyle = style ? style : HeaderStyle::fancy();
-    mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
-    if (mHeaderOnlyAttachmentsAction) {
-        mHeaderOnlyAttachmentsAction->setEnabled(mHeaderStyle->hasAttachmentQuickList());
-        if (!mHeaderStyle->hasAttachmentQuickList() &&
-                mAttachmentStrategy->requiresAttachmentListInHeader()) {
-            // Style changed to something without an attachment quick list, need to change attachment
-            // strategy
-            setAttachmentStrategy(AttachmentStrategy::smart());
-            actionForAttachmentStrategy(mAttachmentStrategy)->setChecked(true);
-        }
-    }
-    update(Viewer::Force);
-
-    if (!mExternalWindow && writeInConfigFile) {
-        writeConfig();
-    }
-
 }
 
 void ViewerPrivate::setAttachmentStrategy(const AttachmentStrategy *strategy)
@@ -1552,71 +1498,15 @@ void ViewerPrivate::createActions()
         return;
     }
 
-    // header style
-    KActionMenu *headerMenu = new KActionMenu(i18nc("View->", "&Headers"), this);
-    ac->addAction(QStringLiteral("view_headers"), headerMenu);
-    addHelpTextAction(headerMenu, i18n("Choose display style of message headers"));
-
-    QActionGroup *group = new QActionGroup(this);
-    KToggleAction *raction = new KToggleAction(i18nc("View->headers->", "&Enterprise Headers"), this);
-    ac->addAction(QStringLiteral("view_headers_enterprise"), raction);
-    connect(raction, &QAction::triggered, this, &ViewerPrivate::slotEnterpriseHeaders);
-    addHelpTextAction(raction, i18n("Show the list of headers in Enterprise style"));
-    group->addAction(raction);
-    headerMenu->addAction(raction);
-
-    raction  = new KToggleAction(i18nc("View->headers->", "&Fancy Headers"), this);
-    ac->addAction(QStringLiteral("view_headers_fancy"), raction);
-    connect(raction, &QAction::triggered, this, &ViewerPrivate::slotFancyHeaders);
-    addHelpTextAction(raction, i18n("Show the list of headers in a fancy format"));
-    group->addAction(raction);
-    headerMenu->addAction(raction);
-
-    raction  = new KToggleAction(i18nc("View->headers->", "&Brief Headers"), this);
-    ac->addAction(QStringLiteral("view_headers_brief"), raction);
-    connect(raction, &QAction::triggered, this, &ViewerPrivate::slotBriefHeaders);
-    addHelpTextAction(raction, i18n("Show brief list of message headers"));
-    group->addAction(raction);
-    headerMenu->addAction(raction);
-
-    raction  = new KToggleAction(i18nc("View->headers->", "&Standard Headers"), this);
-    ac->addAction(QStringLiteral("view_headers_standard"), raction);
-    connect(raction, &QAction::triggered, this, &ViewerPrivate::slotStandardHeaders);
-    addHelpTextAction(raction, i18n("Show standard list of message headers"));
-    group->addAction(raction);
-    headerMenu->addAction(raction);
-
-    raction  = new KToggleAction(i18nc("View->headers->", "&Long Headers"), this);
-    ac->addAction(QStringLiteral("view_headers_long"), raction);
-    connect(raction, &QAction::triggered, this, &ViewerPrivate::slotLongHeaders);
-    addHelpTextAction(raction, i18n("Show long list of message headers"));
-    group->addAction(raction);
-    headerMenu->addAction(raction);
-
-    raction  = new KToggleAction(i18nc("View->headers->", "&All Headers"), this);
-    ac->addAction(QStringLiteral("view_headers_all"), raction);
-    connect(raction, &QAction::triggered, this, &ViewerPrivate::slotAllHeaders);
-    addHelpTextAction(raction, i18n("Show all message headers"));
-    group->addAction(raction);
-    headerMenu->addAction(raction);
-
-    raction  = new KToggleAction(i18nc("View->headers->", "&Custom Headers"), this);
-    ac->addAction(QStringLiteral("view_custom_headers"), raction);
-    connect(raction, &QAction::triggered, this, &ViewerPrivate::slotCustomHeaders);
-    addHelpTextAction(raction, i18n("Show custom headers"));
-    group->addAction(raction);
-    headerMenu->addAction(raction);
-    //Same action group
-    mThemeManager->setActionGroup(group);
-    mThemeManager->setThemeMenu(headerMenu);
+    mHeaderStyleMenuManager = new MessageViewer::HeaderStyleMenuManager(ac, this);
 
     // attachment style
     KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
     ac->addAction(QStringLiteral("view_attachments"), attachmentMenu);
     addHelpTextAction(attachmentMenu, i18n("Choose display style of attachments"));
 
-    group = new QActionGroup(this);
-    raction  = new KToggleAction(i18nc("View->attachments->", "&As Icons"), this);
+    QActionGroup *group = new QActionGroup(this);
+    KToggleAction *raction  = new KToggleAction(i18nc("View->attachments->", "&As Icons"), this);
     ac->addAction(QStringLiteral("view_attachments_as_icons"), raction);
     connect(raction, &QAction::triggered, this, &ViewerPrivate::slotIconicAttachments);
     addHelpTextAction(raction, i18n("Show all attachments as icons. Click to see them."));
@@ -1925,39 +1815,6 @@ void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
 
 }
 
-KToggleAction *ViewerPrivate::actionForHeaderStyle(const HeaderStyle *style, const HeaderStrategy *strategy)
-{
-    if (!mActionCollection) {
-        return 0;
-    }
-    QString actionName;
-    if (style == HeaderStyle::enterprise()) {
-        actionName = QStringLiteral("view_headers_enterprise");
-    } else if (style == HeaderStyle::fancy()) {
-        actionName = QStringLiteral("view_headers_fancy");
-    } else if (style == HeaderStyle::brief()) {
-        actionName = QStringLiteral("view_headers_brief");
-    } else if (style == HeaderStyle::plain()) {
-        if (strategy == HeaderStrategy::standard()) {
-            actionName = QStringLiteral("view_headers_standard");
-        } else if (strategy == HeaderStrategy::rich()) {
-            actionName = QStringLiteral("view_headers_long");
-        } else if (strategy == HeaderStrategy::all()) {
-            actionName = QStringLiteral("view_headers_all");
-        }
-    } else if (style == HeaderStyle::custom()) {
-        actionName = QStringLiteral("view_custom_headers");
-    } else if (style == HeaderStyle::grantlee()) {
-        return mThemeManager->actionForTheme();
-    }
-
-    if (actionName.isEmpty()) {
-        return 0;
-    } else {
-        return static_cast<KToggleAction *>(mActionCollection->action(actionName));
-    }
-}
-
 KToggleAction *ViewerPrivate::actionForAttachmentStrategy(const AttachmentStrategy *as)
 {
     if (!mActionCollection) {
@@ -2030,13 +1887,18 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
             }
 
             QString margin;
+#if 0 //PORT_PLUGIN
             if (node != mMessage.data() || headerStyle() != HeaderStyle::enterprise()) {
                 margin = QStringLiteral("padding:2px; margin:2px; ");
             }
+
             QString align = QStringLiteral("left");
             if (headerStyle() == HeaderStyle::enterprise()) {
                 align = QStringLiteral("right");
             }
+#else
+            QString align = QStringLiteral("left");
+#endif
             const bool result = (node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.data());
             if (result)
                 html += QStringLiteral("<div style=\"background:%1; %2"
@@ -2064,6 +1926,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
                 }
             }
             html += QStringLiteral("<img %1 style=\"vertical-align:middle;\" src=\"").arg(imageMaxSize) + info.icon + QLatin1String("\"/>&nbsp;");
+#if 0 //PORT_PLUGIN
             if (headerStyle() == HeaderStyle::enterprise()) {
                 QFont bodyFont = mCSSHelper->bodyFont(mUseFixedFont);
                 QFontMetrics fm(bodyFont);
@@ -2075,6 +1938,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
             } else {
                 html += info.label;
             }
+#endif
             html += QLatin1String("</a></span></div> ");
         }
     }
@@ -2357,63 +2221,6 @@ void ViewerPrivate::slotMimePartSelected(const QModelIndex &index)
 #endif
 }
 
-void ViewerPrivate::slotBriefHeaders()
-{
-    setHeaderStyleAndStrategy(HeaderStyle::brief(),
-                              HeaderStrategy::brief(), true);
-}
-
-void ViewerPrivate::slotFancyHeaders()
-{
-
-    setHeaderStyleAndStrategy(HeaderStyle::fancy(),
-                              HeaderStrategy::rich(), true);
-}
-
-void ViewerPrivate::slotEnterpriseHeaders()
-{
-    setHeaderStyleAndStrategy(HeaderStyle::enterprise(),
-                              HeaderStrategy::rich(), true);
-}
-
-void ViewerPrivate::slotStandardHeaders()
-{
-    setHeaderStyleAndStrategy(HeaderStyle::plain(),
-                              HeaderStrategy::standard(), true);
-}
-
-void ViewerPrivate::slotLongHeaders()
-{
-    setHeaderStyleAndStrategy(HeaderStyle::plain(),
-                              HeaderStrategy::rich(), true);
-}
-
-void ViewerPrivate::slotAllHeaders()
-{
-    setHeaderStyleAndStrategy(HeaderStyle::plain(),
-                              HeaderStrategy::all(), true);
-}
-
-void ViewerPrivate::slotCustomHeaders()
-{
-    setHeaderStyleAndStrategy(HeaderStyle::custom(),
-                              HeaderStrategy::custom(), true);
-}
-
-void ViewerPrivate::slotGrantleeHeaders()
-{
-    setHeaderStyleAndStrategy(HeaderStyle::grantlee(),
-                              HeaderStrategy::grantlee(), true);
-    initGrantleeThemeName();
-    update(Viewer::Force);
-}
-
-void ViewerPrivate::initGrantleeThemeName()
-{
-    const QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeMailThemeName();
-    headerStyle()->setTheme(mThemeManager->theme(themeName));
-}
-
 void ViewerPrivate::slotIconicAttachments()
 {
     setAttachmentStrategy(AttachmentStrategy::iconic());
@@ -2528,6 +2335,7 @@ QString ViewerPrivate::attachmentInjectionHtml()
     }
 
     QString link;
+#if 0 //PORT_PLUGIN
     if (headerStyle() == HeaderStyle::fancy()) {
         link += QLatin1String("<div style=\"text-align: left;\"><a href=\"") + urlHandle + QLatin1String("\"><img src=\"file:///") + imgpath + imgSrc + QLatin1String("\"/></a></div>");
         html.prepend(link);
@@ -2536,6 +2344,7 @@ QString ViewerPrivate::attachmentInjectionHtml()
         link += QLatin1String("<div style=\"text-align: right;\"><a href=\"") + urlHandle + QLatin1String("\"><img src=\"file:///") + imgpath + imgSrc + QLatin1String("\"/></a></div>");
         html.prepend(link);
     }
+#endif
     return html;
 }
 
@@ -3226,11 +3035,6 @@ void ViewerPrivate::slotModifyItemDone(KJob *job)
     if (job && job->error()) {
         qCWarning(MESSAGEVIEWER_LOG) << " Error trying to change attribute:" << job->errorText();
     }
-}
-
-void ViewerPrivate::slotGrantleeThemesUpdated()
-{
-    update(Viewer::Force);
 }
 
 void ViewerPrivate::saveMainFrameScreenshotInFile(const QString &filename)

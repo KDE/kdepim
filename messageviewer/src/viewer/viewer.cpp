@@ -411,25 +411,6 @@ QAction *Viewer::selectAllAction()
     return d->mSelectAllAction;
 }
 
-HeaderStrategy *Viewer::headerStrategy() const
-{
-    Q_D(const Viewer);
-    return d->headerStrategy();
-}
-
-HeaderStyle *Viewer::headerStyle() const
-{
-    Q_D(const Viewer);
-    return d->headerStyle();
-}
-
-void Viewer::setHeaderStyleAndStrategy(HeaderStyle *style,
-                                       HeaderStrategy *strategy)
-{
-    Q_D(Viewer);
-    d->setHeaderStyleAndStrategy(style, strategy);
-}
-
 void Viewer::setExternalWindow(bool b)
 {
     Q_D(Viewer);

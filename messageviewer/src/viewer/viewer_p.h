@@ -56,11 +56,6 @@ class QPoint;
 class QSplitter;
 class QModelIndex;
 
-namespace GrantleeTheme
-{
-class GrantleeThemeManager;
-}
-
 namespace PimCommon
 {
 class TranslatorWidget;
@@ -78,8 +73,6 @@ class HtmlWriter;
 class CSSHelper;
 class AttachmentStrategy;
 class ObjectTreeParser;
-class HeaderStrategy;
-class HeaderStyle;
 class FindBarMailWebView;
 class WebKitPartHtmlWriter;
 class HtmlStatusBar;
@@ -87,6 +80,7 @@ class MailWebView;
 class ScamDetectionWarningWidget;
 class MimePartTreeView;
 class OpenAttachmentFolderWidget;
+class HeaderStyleMenuManager;
 
 /**
 \brief Private class for the Viewer, the main widget in the messageviewer library.
@@ -315,23 +309,6 @@ public:
     /** Write settings to app's config file. Calls sync() if withSync is true. */
     void writeConfig(bool withSync = true);
 
-    /** Get the message header style. */
-    HeaderStyle *headerStyle() const
-    {
-        return mHeaderStyle;
-    }
-
-    /** Set the header style and strategy. We only want them to be set
-      together. */
-    void setHeaderStyleAndStrategy(HeaderStyle *style,
-                                   HeaderStrategy *strategy, bool writeInConfigFile = false);
-
-    /** Get the message header strategy. */
-    HeaderStrategy *headerStrategy() const
-    {
-        return mHeaderStrategy;
-    }
-
     /** Get/set the message attachment strategy. */
     const AttachmentStrategy *attachmentStrategy() const
     {
@@ -396,8 +373,6 @@ public:
 
     void showContextMenu(KMime::Content *content, const QPoint &point);
 
-    KToggleAction *actionForHeaderStyle(const HeaderStyle *,
-                                        const HeaderStrategy *);
     KToggleAction *actionForAttachmentStrategy(const AttachmentStrategy *);
     /** Read override codec from configuration */
     void readGlobalOverrideCodec();
@@ -512,7 +487,6 @@ private Q_SLOTS:
     void slotOpenWithDialogCurrentContent();
 
     void saveSplitterSizes() const;
-    void slotGrantleeThemesUpdated();
 
     void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection);
 
@@ -548,15 +522,6 @@ public Q_SLOTS:
     void updateReaderWin();
 
     void slotMimePartSelected(const QModelIndex &index);
-
-    void slotBriefHeaders();
-    void slotFancyHeaders();
-    void slotEnterpriseHeaders();
-    void slotStandardHeaders();
-    void slotLongHeaders();
-    void slotAllHeaders();
-    void slotCustomHeaders();
-    void slotGrantleeHeaders();
 
     void slotIconicAttachments();
     void slotSmartAttachments();
@@ -654,7 +619,6 @@ private:
     void showCreateNewNoteWidget();
     QString attachmentInjectionHtml();
     QString recipientsQuickListLinkHtml(bool, const QString &);
-    void initGrantleeThemeName();
 
     Akonadi::Relation relatedNoteRelation() const;
     void addHelpTextAction(QAction *act, const QString &text);
@@ -678,8 +642,6 @@ public:
     PimCommon::TranslatorWidget *mTranslatorWidget;
 
     const AttachmentStrategy *mAttachmentStrategy;
-    HeaderStrategy *mHeaderStrategy;
-    HeaderStyle *mHeaderStyle;
     static const int delay;
     QTimer mUpdateReaderWinTimer;
     QTimer mResizeTimer;
@@ -749,7 +711,6 @@ public:
     QSet<AbstractMessageLoadedHandler *> mMessageLoadedHandlers;
     Akonadi::Item::Id mPreviouslyViewedItem;
 
-    GrantleeTheme::GrantleeThemeManager *mThemeManager;
     ScamDetectionWarningWidget *mScamDetectionWarning;
     MessageViewer::TodoEdit *mCreateTodo;
     MessageViewer::EventEdit *mCreateEvent;
@@ -763,6 +724,7 @@ public:
     PimCommon::ShareServiceUrlManager *mShareServiceManager;
     KActionMenu *mShareServiceUrlMenu;
     HeaderStylePlugin *mHeaderStylePlugin;
+    HeaderStyleMenuManager *mHeaderStyleMenuManager;
 };
 
 }

@@ -83,9 +83,10 @@ int main(int argc, char **argv)
 
     const QString headerStrategy = parser.value(QStringLiteral("headerstrategy"));
     const QString headerStyle = parser.value(QStringLiteral("headerstyle"));
+#if 0 //PORT_PLUGIN
     viewer->setHeaderStyleAndStrategy(HeaderStyle::create(headerStyle),
                                       HeaderStrategy::create(headerStrategy));
-
+#endif
     viewer->show();
 
     return app.exec();

@@ -37,8 +37,10 @@ PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
     mGrantleeHeaderStyle->setAbsolutePath(projectDirectory);
     //Default
     mGrantleeHeaderStyle->setMainFilename(QStringLiteral("header.html"));
+#if 0 //TODO_PORT_PLUGIN
     mViewer->setHeaderStyleAndStrategy(mGrantleeHeaderStyle,
                                        MessageViewer::HeaderStrategy::create(QString()));
+#endif
     lay->addWidget(mViewer);
     QPushButton *update = new QPushButton(i18n("Update view"));
     connect(update, &QPushButton::clicked, this, &PreviewWidget::needUpdateViewer);

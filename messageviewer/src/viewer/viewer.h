@@ -49,8 +49,6 @@ namespace MessageViewer
 
 class AttachmentStrategy;
 class CSSHelper;
-class HeaderStrategy;
-class HeaderStyle;
 class ViewerPrivate;
 
 /**
@@ -290,12 +288,6 @@ public:
     QAction *createNoteAction();
     KActionMenu *shareServiceUrlMenu();
 
-    HeaderStrategy *headerStrategy() const;
-
-    HeaderStyle *headerStyle() const;
-
-    void setHeaderStyleAndStrategy(HeaderStyle *style,
-                                   HeaderStrategy *strategy);
     void writeConfig(bool withSync = true);
 
     QUrl urlClicked() const;
