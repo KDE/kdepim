@@ -394,6 +394,13 @@ ecm_generate_headers(MessageViewer_viewerplugin_HEADERS
   RELATIVE viewerplugins 
 )
 
+ecm_generate_headers(MessageViewer_header_HEADERS
+  HEADER_NAMES
+  HeaderStylePlugin
+  REQUIRED_HEADERS MessageViewer_header_HEADERS
+  PREFIX MessageViewer
+  RELATIVE header
+)
 
 ecm_generate_pri_file(BASE_NAME MessageViewer
     LIB_NAME KF5MessageViewer
@@ -402,6 +409,7 @@ ecm_generate_pri_file(BASE_NAME MessageViewer
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
 install(FILES
+    ${MessageViewer_header_HEADERS}
     ${MessageViewer_viewerplugin_HEADERS}
     ${MessageViewer_settings_HEADERS}
     ${MessageViewer_gravatar_HEADERS}
@@ -418,6 +426,7 @@ install(FILES
 )
 
 install(FILES
+    ${MessageViewer_header_HEADERS}
     ${MessageViewer_viewerplugin_HEADERS}
     ${MessageViewer_settings_HEADERS}
     ${MessageViewer_gravatar_HEADERS}
