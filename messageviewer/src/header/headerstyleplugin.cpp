@@ -38,3 +38,13 @@ HeaderStylePlugin::~HeaderStylePlugin()
 {
     delete d;
 }
+
+bool HeaderStylePlugin::hasMargin() const
+{
+    return true;
+}
+
+QString HeaderStylePlugin::alignment() const
+{
+    return QStringLiteral("left");
+}

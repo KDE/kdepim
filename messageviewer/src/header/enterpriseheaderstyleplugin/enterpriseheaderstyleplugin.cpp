@@ -59,4 +59,14 @@ QString EnterpriseHeaderStylePlugin::name() const
     return QStringLiteral("enterprise");
 }
 
+bool EnterpriseHeaderStylePlugin::hasMargin() const
+{
+    return false;
+}
+
+QString EnterpriseHeaderStylePlugin::alignment() const
+{
+    return QStringLiteral("right");
+}
+
 #include "enterpriseheaderstyleplugin.moc"

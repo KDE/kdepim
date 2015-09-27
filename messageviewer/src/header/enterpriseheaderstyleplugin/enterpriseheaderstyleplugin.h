@@ -35,6 +35,8 @@ public:
     HeaderStrategy *headerStrategy() const Q_DECL_OVERRIDE;
     HeaderStyleInterface *createView(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac, QObject *parent = Q_NULLPTR) Q_DECL_OVERRIDE;
     QString name() const Q_DECL_OVERRIDE;
+    bool hasMargin() const Q_DECL_OVERRIDE;
+    QString alignment() const Q_DECL_OVERRIDE;
 private:
     HeaderStyle *mHeaderStyle;
     HeaderStrategy *mHeaderStrategy;

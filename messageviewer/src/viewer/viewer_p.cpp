@@ -1895,18 +1895,10 @@ QString ViewerPrivate::renderAttachments(KMime::Content *node, const QColor &bgC
             }
 
             QString margin;
-#if 0 //PORT_PLUGIN
-            if (node != mMessage.data() || headerStyle() != HeaderStyle::enterprise()) {
+            if (node != mMessage.data() || headerStylePlugin()->hasMargin()) {
                 margin = QStringLiteral("padding:2px; margin:2px; ");
             }
-
-            QString align = QStringLiteral("left");
-            if (headerStyle() == HeaderStyle::enterprise()) {
-                align = QStringLiteral("right");
-            }
-#else
-            QString align = QStringLiteral("left");
-#endif
+            QString align = headerStylePlugin()->alignment();
             const bool result = (node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.data());
             if (result)
                 html += QStringLiteral("<div style=\"background:%1; %2"
