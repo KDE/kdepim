@@ -6,7 +6,7 @@ set(messageviewer_createtodoplugin_SRCS
 add_library(messageviewer_createtodoplugin MODULE ${messageviewer_createtodoplugin_SRCS})
 
 target_link_libraries(messageviewer_createtodoplugin
-  KF5::MessageViewer KF5::XmlGui
+  KF5::MessageViewer KF5::XmlGui KF5::CalendarCore
 )
 
 install(TARGETS messageviewer_createtodoplugin DESTINATION ${PLUGIN_INSTALL_DIR}/messageviewer)

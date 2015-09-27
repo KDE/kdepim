@@ -16,13 +16,22 @@
 */
 
 #include "viewerplugincreatetaskinterface.h"
+#include "widgets/noteedit.h"
+#include <KLocalizedString>
+
+#include <QHBoxLayout>
 
 using namespace MessageViewer;
 
 ViewerPluginCreatetaskInterface::ViewerPluginCreatetaskInterface(QWidget *parent)
     : ViewerPluginInterface(parent)
 {
-
+    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->setMargin(0);
+    setLayout(hbox);
+    NoteEdit *edit = new NoteEdit(this);
+    edit->setObjectName(QStringLiteral("noteedit"));
+    hbox->addWidget(edit);
 }
 
 ViewerPluginCreatetaskInterface::~ViewerPluginCreatetaskInterface()
@@ -32,7 +41,8 @@ ViewerPluginCreatetaskInterface::~ViewerPluginCreatetaskInterface()
 
 void ViewerPluginCreatetaskInterface::setText(const QString &text)
 {
-
+    Q_UNUSED(text);
+    //Nothing
 }
 
 KToggleAction *ViewerPluginCreatetaskInterface::action() const

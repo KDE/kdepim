@@ -16,13 +16,22 @@
 */
 
 #include "viewerplugincreateeventinterface.h"
+#include "widgets/eventedit.h"
+#include <KLocalizedString>
+
+#include <QHBoxLayout>
 
 using namespace MessageViewer;
 
 ViewerPluginCreateEventInterface::ViewerPluginCreateEventInterface(QWidget *parent)
     : ViewerPluginInterface(parent)
 {
-
+    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->setMargin(0);
+    setLayout(hbox);
+    EventEdit *edit = new EventEdit(this);
+    edit->setObjectName(QStringLiteral("eventedit"));
+    hbox->addWidget(edit);
 }
 
 ViewerPluginCreateEventInterface::~ViewerPluginCreateEventInterface()
@@ -32,7 +41,8 @@ ViewerPluginCreateEventInterface::~ViewerPluginCreateEventInterface()
 
 void ViewerPluginCreateEventInterface::setText(const QString &text)
 {
-
+    Q_UNUSED(text);
+    //Nothing
 }
 
 KToggleAction *ViewerPluginCreateEventInterface::action() const

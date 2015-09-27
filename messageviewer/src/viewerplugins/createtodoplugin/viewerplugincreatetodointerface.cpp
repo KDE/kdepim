@@ -16,13 +16,23 @@
 */
 
 #include "viewerplugincreatetodointerface.h"
+#include "widgets/todoedit.h"
+
+#include <KLocalizedString>
+
+#include <QHBoxLayout>
 
 using namespace MessageViewer;
 
 ViewerPluginCreateTodoInterface::ViewerPluginCreateTodoInterface(QWidget *parent)
     : ViewerPluginInterface(parent)
 {
-
+    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->setMargin(0);
+    setLayout(hbox);
+    TodoEdit *edit = new TodoEdit(this);
+    edit->setObjectName(QStringLiteral("todoedit"));
+    hbox->addWidget(edit);
 }
 
 ViewerPluginCreateTodoInterface::~ViewerPluginCreateTodoInterface()
@@ -32,7 +42,8 @@ ViewerPluginCreateTodoInterface::~ViewerPluginCreateTodoInterface()
 
 void ViewerPluginCreateTodoInterface::setText(const QString &text)
 {
-
+    Q_UNUSED(text);
+    //Nothing
 }
 
 KToggleAction *ViewerPluginCreateTodoInterface::action() const
