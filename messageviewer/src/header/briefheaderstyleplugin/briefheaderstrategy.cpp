@@ -16,7 +16,6 @@
 */
 
 #include "briefheaderstrategy.h"
-#include "../headerstrategy_p.h"
 using namespace MessageViewer;
 
 
