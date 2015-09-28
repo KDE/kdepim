@@ -37,16 +37,8 @@
 #include "messageviewer_export.h"
 #include <QStringList>
 //
-// AllHeaderStrategy:
-//   show everything
-//
-//
-// Header tables:
-//
 namespace MessageViewer
 {
-
-
 //
 // RichHeaderStrategy:
 //   Date, Subject, From, To, CC, ### what exactly?
