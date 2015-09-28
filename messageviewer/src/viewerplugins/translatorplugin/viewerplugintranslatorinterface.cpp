@@ -16,6 +16,9 @@
 */
 
 #include "viewerplugintranslatorinterface.h"
+#include "pimcommon/translatorwidget.h"
+
+#include <QHBoxLayout>
 
 #include <KActionCollection>
 
@@ -25,6 +28,10 @@ ViewerPluginTranslatorInterface::ViewerPluginTranslatorInterface(KActionCollecti
     : ViewerPluginInterface(parent),
       mAction(Q_NULLPTR)
 {
+    QHBoxLayout *layout = new QHBoxLayout;
+    setLayout(layout);
+    mTranslatorWidget = new PimCommon::TranslatorWidget(this);
+    layout->addWidget(mTranslatorWidget);
     createAction(ac);
 }
 
@@ -35,7 +42,7 @@ ViewerPluginTranslatorInterface::~ViewerPluginTranslatorInterface()
 
 void ViewerPluginTranslatorInterface::setText(const QString &text)
 {
-
+    mTranslatorWidget->setTextToTranslate(text);
 }
 
 QAction *ViewerPluginTranslatorInterface::action() const

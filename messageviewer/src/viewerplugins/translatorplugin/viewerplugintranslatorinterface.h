@@ -20,6 +20,10 @@
 
 #include <viewerplugins/viewerplugininterface.h>
 class KActionCollection;
+namespace PimCommon
+{
+class TranslatorWidget;
+}
 namespace MessageViewer
 {
 class ViewerPluginTranslatorInterface : public ViewerPluginInterface
@@ -34,6 +38,7 @@ public:
 private:
     void createAction(KActionCollection *ac);
     QAction *mAction;
+    PimCommon::TranslatorWidget *mTranslatorWidget;
 };
 }
 #endif // VIEWERPLUGINTRANSLATORINTERFACE_H
