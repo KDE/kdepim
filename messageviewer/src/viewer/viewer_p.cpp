@@ -1116,7 +1116,6 @@ void ViewerPrivate::readConfig()
 
     readGlobalOverrideCodec();
 
-
 #ifndef KDEPIM_NO_WEBKIT
     mViewer->settings()->setFontSize(QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize());
     mViewer->settings()->setFontSize(QWebSettings::MinimumLogicalFontSize, GlobalSettings::self()->minimumFontSize());

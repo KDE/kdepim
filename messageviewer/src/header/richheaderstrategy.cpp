@@ -41,3 +41,8 @@ RichHeaderStrategy::RichHeaderStrategy()
 {
 
 }
+
+RichHeaderStrategy::~RichHeaderStrategy()
+{
+
+}

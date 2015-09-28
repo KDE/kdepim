@@ -19,7 +19,6 @@
 
 using namespace MessageViewer;
 
-
 GrantleeHeaderStrategy::GrantleeHeaderStrategy()
 {
 

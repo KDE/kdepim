@@ -71,8 +71,7 @@ bool HeaderStrategy::showHeader(const QString &header) const
     return defaultPolicy() == Display;
 }
 
-
-QStringList HeaderStrategy::stringList(const char * const headers[], int numHeaders)
+QStringList HeaderStrategy::stringList(const char *const headers[], int numHeaders)
 {
     QStringList sl;
     sl.reserve(numHeaders);

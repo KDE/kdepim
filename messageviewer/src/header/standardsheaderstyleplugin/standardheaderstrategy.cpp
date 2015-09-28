@@ -21,7 +21,7 @@ using namespace MessageViewer;
 static const char *const standardHeaders[] = {
     "subject", "from", "cc", "bcc", "to"
 };
-static const int numStandardHeaders = sizeof standardHeaders / sizeof *standardHeaders;
+static const int numStandardHeaders = sizeof standardHeaders / sizeof * standardHeaders;
 
 StandardHeaderStrategy::StandardHeaderStrategy()
     : HeaderStrategy(),

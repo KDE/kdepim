@@ -38,7 +38,6 @@
 namespace MessageViewer
 {
 
-
 static const char *const richHeaders[] = {
     "subject", "date", "from", "cc", "bcc", "to",
     "organization", "organisation", "reply-to",

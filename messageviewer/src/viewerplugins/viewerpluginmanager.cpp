@@ -123,7 +123,6 @@ QVector<ViewerPlugin *> ViewerPluginManagerPrivate::pluginsList() const
     return lst;
 }
 
-
 ViewerPluginManager::ViewerPluginManager(QObject *parent)
     : QObject(parent),
       d(new MessageViewer::ViewerPluginManagerPrivate(this))
