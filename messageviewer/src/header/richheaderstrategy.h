@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef HEADERSTRATEGY_P_H
-#define HEADERSTRATEGY_P_H
+#ifndef RICHHEADERSTRATEGY_H
+#define RICHHEADERSTRATEGY_H
 #include "header/headerstrategy.h"
 #include "messageviewer_export.h"
 #include <QStringList>
@@ -46,11 +46,8 @@ namespace MessageViewer
 
 class MESSAGEVIEWER_EXPORT RichHeaderStrategy : public HeaderStrategy
 {
-    friend class HeaderStrategy;
 public:
-    RichHeaderStrategy()
-        : HeaderStrategy(),
-          mHeadersToDisplay(stringList(richHeaders, numRichHeaders)) {}
+    RichHeaderStrategy();
     ~RichHeaderStrategy() {}
 
 public:
@@ -74,4 +71,4 @@ private:
 
 }
 
-#endif // HEADERSTRATEGY_P_H
+#endif

@@ -19,7 +19,6 @@
 #define STANDARDHEADERSTRATEGY_H
 
 #include <messageviewer/headerstrategy.h>
-#include "../headerstrategy_p.h"
 #include <QStringList>
 
 namespace MessageViewer

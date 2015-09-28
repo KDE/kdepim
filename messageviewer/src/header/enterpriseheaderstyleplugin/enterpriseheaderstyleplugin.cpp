@@ -18,8 +18,8 @@
 #include "enterpriseheaderstyleplugin.h"
 #include "enterpriseheaderstyle.h"
 #include "enterpriseheaderstyleinterface.h"
-//Temporary
-#include "header/headerstrategy_p.h"
+
+#include "messageviewer/richheaderstrategy.h"
 #include <kpluginfactory.h>
 using namespace MessageViewer;
 

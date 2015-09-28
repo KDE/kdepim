@@ -31,5 +31,13 @@
     your version.
 */
 
-#include "headerstrategy_p.h"
+#include "richheaderstrategy.h"
 
+using namespace MessageViewer;
+
+RichHeaderStrategy::RichHeaderStrategy()
+    : HeaderStrategy(),
+      mHeadersToDisplay(stringList(richHeaders, numRichHeaders))
+{
+
+}

@@ -132,7 +132,7 @@ set(libmessageviewer_gravatar_SRCS
 set(libmessageviewer_header_SRCS
   header/contactdisplaymessagememento.cpp
   header/headerstrategy.cpp
-  header/headerstrategy_p.cpp
+  header/richheaderstrategy.cpp
   header/headerstyle.cpp
   header/grantleeheaderstyleplugin/grantleeheaderstyle.cpp
   header/plainheaderstyle.cpp
@@ -395,6 +395,7 @@ ecm_generate_headers(MessageViewer_viewerplugin_HEADERS
 ecm_generate_headers(MessageViewer_header_HEADERS
   HEADER_NAMES
   HeaderStylePlugin
+  RichHeaderStrategy
   REQUIRED_HEADERS MessageViewer_header_HEADERS
   PREFIX MessageViewer
   RELATIVE header

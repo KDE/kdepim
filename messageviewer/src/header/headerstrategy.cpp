@@ -32,7 +32,6 @@
 */
 
 #include "headerstrategy.h"
-#include "header/headerstrategy_p.h"
 
 #include <qdebug.h>
 
