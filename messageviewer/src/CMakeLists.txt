@@ -396,6 +396,7 @@ ecm_generate_headers(MessageViewer_header_HEADERS
   HEADER_NAMES
   HeaderStylePlugin
   RichHeaderStrategy
+  HeaderStylePluginManager
   REQUIRED_HEADERS MessageViewer_header_HEADERS
   PREFIX MessageViewer
   RELATIVE header
