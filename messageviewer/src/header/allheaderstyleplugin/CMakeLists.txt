@@ -9,6 +9,7 @@ add_library(messageviewer_allheaderstyleplugin MODULE ${messageviewer_allheaders
 target_link_libraries(messageviewer_allheaderstyleplugin
   KF5::MessageViewer
   KF5::XmlGui
+  KF5::GrantleeTheme
 )
 
 install(TARGETS messageviewer_allheaderstyleplugin DESTINATION ${PLUGIN_INSTALL_DIR}/messageviewer)

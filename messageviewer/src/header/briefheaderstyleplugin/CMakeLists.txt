@@ -10,6 +10,7 @@ add_library(messageviewer_briefheaderstyleplugin MODULE ${messageviewer_briefhea
 target_link_libraries(messageviewer_briefheaderstyleplugin
   KF5::MessageViewer
   KF5::XmlGui
+  KF5::GrantleeTheme
 )
 
 install(TARGETS messageviewer_briefheaderstyleplugin DESTINATION ${PLUGIN_INSTALL_DIR}/messageviewer)
