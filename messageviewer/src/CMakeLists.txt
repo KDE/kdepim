@@ -241,11 +241,11 @@ PUBLIC
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Contacts
+  KF5::Libkleo
 PRIVATE
   KF5::ItemViews
   ${_mailwebview_lib}
   KF5::Libkdepim
-  KF5::Libkleo
   KF5::GrantleeTheme
   KF5::KaddressbookGrantlee
   KF5::IncidenceEditorsng
