@@ -36,6 +36,6 @@ add_messageviewer_header_unittest( grantleeheaderstyleplugintest.cpp "../grantle
 
 add_messageviewer_header_unittest( longheaderstyleplugintest.cpp "../longheaderstyleplugin/longheaderstyleplugin.cpp;../longheaderstyleplugin/longheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../longheaderstyleplugin/messageviewer_longheaderstyleplugin.desktop")
 
-add_messageviewer_header_unittest( standardsheaderstyleplugintest.cpp "../standardsheaderstyleplugin/standardsheaderstyleplugin.cpp;../standardsheaderstyleplugin/standardsheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../standardsheaderstyleplugin/messageviewer_standardsheaderstyleplugin.desktop")
+add_messageviewer_header_unittest( standardsheaderstyleplugintest.cpp "../standardsheaderstyleplugin/standardheaderstrategy.cpp;../standardsheaderstyleplugin/standardsheaderstyleplugin.cpp;../standardsheaderstyleplugin/standardsheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../standardsheaderstyleplugin/messageviewer_standardsheaderstyleplugin.desktop")
 
 add_messageviewer_header_class_unittest( headerstylepluginmanagertest.cpp)

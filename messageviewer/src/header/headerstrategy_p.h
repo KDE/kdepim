@@ -110,38 +110,6 @@ private:
 };
 
 //
-// StandardHeaderStrategy:
-//   BCC, CC, Date, From, Subject, To
-//
-
-class MESSAGEVIEWER_EXPORT StandardHeaderStrategy : public HeaderStrategy
-{
-public:
-    StandardHeaderStrategy()
-        : HeaderStrategy(),
-          mHeadersToDisplay(stringList(standardHeaders, numStandardHeaders)) {}
-    ~StandardHeaderStrategy() {}
-
-public:
-    const char *name() const Q_DECL_OVERRIDE
-    {
-        return "standard";
-    }
-
-    QStringList headersToDisplay() const Q_DECL_OVERRIDE
-    {
-        return mHeadersToDisplay;
-    }
-    DefaultPolicy defaultPolicy() const Q_DECL_OVERRIDE
-    {
-        return Hide;
-    }
-
-private:
-    const QStringList mHeadersToDisplay;
-};
-
-//
 // BriefHeaderStrategy
 //   From, Subject, Date
 //

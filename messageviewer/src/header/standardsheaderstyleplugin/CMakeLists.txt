@@ -1,14 +1,13 @@
 set(messageviewer_standardsheaderstyleplugin_SRCS
    standardsheaderstyleplugin.cpp
    standardsheaderstyleinterface.cpp
+   standardheaderstrategy.cpp
 )
 
 add_library(messageviewer_standardsheaderstyleplugin MODULE ${messageviewer_standardsheaderstyleplugin_SRCS})
 
 target_link_libraries(messageviewer_standardsheaderstyleplugin
   KF5::MessageViewer
-  #Temporary
-  KF5::GrantleeTheme
   KF5::XmlGui
 )
 
