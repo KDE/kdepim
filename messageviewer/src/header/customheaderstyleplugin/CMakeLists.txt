@@ -2,14 +2,13 @@ set(messageviewer_customheaderstyleplugin_SRCS
    customheaderstyleplugin.cpp   
    customheaderstyleinterface.cpp
    customheaderstyle.cpp
+   customheaderstrategy.cpp
 )
 
 add_library(messageviewer_customheaderstyleplugin MODULE ${messageviewer_customheaderstyleplugin_SRCS})
 
 target_link_libraries(messageviewer_customheaderstyleplugin
   KF5::MessageViewer
-  #Temporary
-  KF5::GrantleeTheme
   KF5::XmlGui
   KF5::IconThemes
 )

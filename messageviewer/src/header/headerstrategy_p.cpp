@@ -32,24 +32,4 @@
 */
 
 #include "headerstrategy_p.h"
-#include "settings/messageviewersettings.h"
 
-namespace MessageViewer
-{
-
-CustomHeaderStrategy::CustomHeaderStrategy()
-    : HeaderStrategy()
-{
-    loadConfig();
-}
-
-void CustomHeaderStrategy::loadConfig()
-{
-    mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
-
-    mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
-
-    mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
-}
-
-}

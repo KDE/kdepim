@@ -199,45 +199,6 @@ private:
 };
 
 //
-// CustomHeaderStrategy
-//   Determined by user
-//
-
-class MESSAGEVIEWER_EXPORT CustomHeaderStrategy : public HeaderStrategy
-{
-    friend class HeaderStrategy;
-public:
-    CustomHeaderStrategy();
-    ~CustomHeaderStrategy() {}
-
-public:
-    const char *name() const Q_DECL_OVERRIDE
-    {
-        return "custom";
-    }
-
-    void loadConfig();
-    QStringList headersToDisplay() const Q_DECL_OVERRIDE
-    {
-        return mHeadersToDisplay;
-    }
-    QStringList headersToHide() const Q_DECL_OVERRIDE
-    {
-        return mHeadersToHide;
-    }
-    DefaultPolicy defaultPolicy() const Q_DECL_OVERRIDE
-    {
-        return mDefaultPolicy;
-    }
-
-private:
-    QStringList mHeadersToDisplay;
-    QStringList mHeadersToHide;
-    DefaultPolicy mDefaultPolicy;
-};
-
-//
-// CustomHeaderStrategy
 //   Determined by grantlee theme.
 //
 class MESSAGEVIEWER_EXPORT GrantleeHeaderStrategy : public HeaderStrategy
