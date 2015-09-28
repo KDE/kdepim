@@ -21,6 +21,8 @@
 
 #include <KActionCollection>
 #include <QHBoxLayout>
+#include <QIcon>
+#include <QAction>
 
 using namespace MessageViewer;
 
@@ -34,6 +36,7 @@ ViewerPluginCreateEventInterface::ViewerPluginCreateEventInterface(KActionCollec
     mEventEdit = new EventEdit(this);
     mEventEdit->setObjectName(QStringLiteral("eventedit"));
     hbox->addWidget(mEventEdit);
+    mEventEdit->hide();
     createAction(ac);
 }
 
@@ -55,5 +58,10 @@ QAction *ViewerPluginCreateEventInterface::action() const
 
 void ViewerPluginCreateEventInterface::createAction(KActionCollection *ac)
 {
-
+    mAction = new QAction(QIcon::fromTheme(QStringLiteral("appointment-new")), i18n("Create Event..."), this);
+    mAction->setIconText(i18n("Create Event"));
+    addHelpTextAction(mAction, i18n("Allows you to create a calendar Event"));
+    ac->addAction(QStringLiteral("create_event"), mAction);
+    ac->setDefaultShortcut(mAction, QKeySequence(Qt::CTRL + Qt::Key_E));
+    //connect(mAction, &QAction::triggered, this, &ViewerPluginCreateEventInterface::)
 }

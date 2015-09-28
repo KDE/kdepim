@@ -20,6 +20,7 @@
 
 #include <QWidget>
 #include "messageviewer_export.h"
+#include <kmime/kmime_message.h>
 
 class QAction;
 namespace MessageViewer
@@ -34,6 +35,10 @@ public:
 
     virtual void setText(const QString &text);
     virtual QAction *action() const;
+    virtual void setMessage(const KMime::Message::Ptr &value);
+
+protected:
+    void addHelpTextAction(QAction *act, const QString &text);
 
 private:
     ViewerPluginInterfacePrivate *const d;

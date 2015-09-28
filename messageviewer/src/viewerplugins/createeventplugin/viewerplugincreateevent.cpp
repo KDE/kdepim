@@ -42,9 +42,4 @@ QString ViewerPluginCreateevent::viewerPluginName() const
     return QStringLiteral("create-task");
 }
 
-void ViewerPluginCreateevent::showWidget()
-{
-    //TODO
-}
-
 #include "viewerplugincreateevent.moc"

@@ -42,9 +42,5 @@ QString ViewerPluginCreatenote::viewerPluginName() const
     return QStringLiteral("create-task");
 }
 
-void ViewerPluginCreatenote::showWidget()
-{
-    //TODO
-}
 
 #include "viewerplugincreatenote.moc"

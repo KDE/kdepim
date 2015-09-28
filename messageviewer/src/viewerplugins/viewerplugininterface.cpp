@@ -43,6 +43,7 @@ ViewerPluginInterface::~ViewerPluginInterface()
 
 void ViewerPluginInterface::setText(const QString &text)
 {
+    Q_UNUSED(text);
     // Reimplement in subclass.
 }
 
@@ -50,4 +51,18 @@ QAction *ViewerPluginInterface::action() const
 {
     // Reimplement in subclass
     return Q_NULLPTR;
+}
+
+void ViewerPluginInterface::setMessage(const KMime::Message::Ptr &value)
+{
+    // Reimplement in subclass
+}
+
+void ViewerPluginInterface::addHelpTextAction(QAction *act, const QString &text)
+{
+    act->setStatusTip(text);
+    act->setToolTip(text);
+    if (act->whatsThis().isEmpty()) {
+        act->setWhatsThis(text);
+    }
 }

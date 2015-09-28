@@ -42,9 +42,4 @@ QString ViewerPluginTranslator::viewerPluginName() const
     return QStringLiteral("translator");
 }
 
-void ViewerPluginTranslator::showWidget()
-{
-    //TODO
-}
-
 #include "viewerplugintranslator.moc"

@@ -42,9 +42,4 @@ QString ViewerPluginCreatetodo::viewerPluginName() const
     return QStringLiteral("create-todo");
 }
 
-void ViewerPluginCreatetodo::showWidget()
-{
-    //TODO
-}
-
 #include "viewerplugincreatetodo.moc"

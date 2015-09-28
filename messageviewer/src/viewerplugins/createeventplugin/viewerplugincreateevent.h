@@ -30,7 +30,6 @@ public:
 
     ViewerPluginInterface *createView(QWidget *parent, KActionCollection *ac) Q_DECL_OVERRIDE;
     QString viewerPluginName() const Q_DECL_OVERRIDE;
-    void showWidget() Q_DECL_OVERRIDE;
 };
 }
 #endif // VIEWERPLUGINCREATEEVENT_H
