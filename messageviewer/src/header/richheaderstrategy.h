@@ -43,6 +43,12 @@ namespace MessageViewer
 // RichHeaderStrategy:
 //   Date, Subject, From, To, CC, ### what exactly?
 //
+static const char *const richHeaders[] = {
+    "subject", "date", "from", "cc", "bcc", "to",
+    "organization", "organisation", "reply-to",
+    "user-agent", "x-mailer", "x-bugzilla-url", "disposition-notification-to"
+};
+static const int numRichHeaders = sizeof richHeaders / sizeof *richHeaders;
 
 class MESSAGEVIEWER_EXPORT RichHeaderStrategy : public HeaderStrategy
 {
