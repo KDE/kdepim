@@ -15,22 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VIEWERPLUGINCREATETASKINTERFACE_H
-#define VIEWERPLUGINCREATETASKINTERFACE_H
+#ifndef VIEWERPLUGINCREATENOTEINTERFACE_H
+#define VIEWERPLUGINCREATENOTEINTERFACE_H
 
 #include <viewerplugins/viewerplugininterface.h>
 
 namespace MessageViewer
 {
-class ViewerPluginCreatetaskInterface : public ViewerPluginInterface
+class ViewerPluginCreatenoteInterface : public ViewerPluginInterface
 {
     Q_OBJECT
 public:
-    explicit ViewerPluginCreatetaskInterface(QWidget *parent = Q_NULLPTR);
-    ~ViewerPluginCreatetaskInterface();
+    explicit ViewerPluginCreatenoteInterface(QWidget *parent = Q_NULLPTR);
+    ~ViewerPluginCreatenoteInterface();
 
     void setText(const QString &text) Q_DECL_OVERRIDE;
     KToggleAction *action() const Q_DECL_OVERRIDE;
 };
 }
-#endif // VIEWERPLUGINCREATETASKINTERFACE_H
+#endif // VIEWERPLUGINCREATENOTEINTERFACE_H

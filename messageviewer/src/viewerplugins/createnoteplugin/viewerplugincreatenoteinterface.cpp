@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "viewerplugincreatetaskinterface.h"
+#include "viewerplugincreatenoteinterface.h"
 #include "widgets/noteedit.h"
 #include <KLocalizedString>
 
@@ -23,7 +23,7 @@
 
 using namespace MessageViewer;
 
-ViewerPluginCreatetaskInterface::ViewerPluginCreatetaskInterface(QWidget *parent)
+ViewerPluginCreatenoteInterface::ViewerPluginCreatenoteInterface(QWidget *parent)
     : ViewerPluginInterface(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -34,18 +34,18 @@ ViewerPluginCreatetaskInterface::ViewerPluginCreatetaskInterface(QWidget *parent
     hbox->addWidget(edit);
 }
 
-ViewerPluginCreatetaskInterface::~ViewerPluginCreatetaskInterface()
+ViewerPluginCreatenoteInterface::~ViewerPluginCreatenoteInterface()
 {
 
 }
 
-void ViewerPluginCreatetaskInterface::setText(const QString &text)
+void ViewerPluginCreatenoteInterface::setText(const QString &text)
 {
     Q_UNUSED(text);
     //Nothing
 }
 
-KToggleAction *ViewerPluginCreatetaskInterface::action() const
+KToggleAction *ViewerPluginCreatenoteInterface::action() const
 {
     //TODO
     return Q_NULLPTR;

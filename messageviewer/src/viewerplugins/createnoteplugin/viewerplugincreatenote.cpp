@@ -15,36 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "viewerplugincreatetask.h"
-#include "viewerplugincreatetaskinterface.h"
+#include "viewerplugincreatenote.h"
+#include "viewerplugincreatenoteinterface.h"
 #include <KActionCollection>
 #include <KToggleAction>
 #include <kpluginfactory.h>
 
 using namespace MessageViewer;
-K_PLUGIN_FACTORY_WITH_JSON(ViewerPluginCreatetaskFactory, "messageviewer_createtaskplugin.json", registerPlugin<ViewerPluginCreatetask>();)
+K_PLUGIN_FACTORY_WITH_JSON(ViewerPluginCreatenoteFactory, "messageviewer_createnoteplugin.json", registerPlugin<ViewerPluginCreatenote>();)
 
-ViewerPluginCreatetask::ViewerPluginCreatetask(QObject *parent, const QList<QVariant> &)
+ViewerPluginCreatenote::ViewerPluginCreatenote(QObject *parent, const QList<QVariant> &)
     : MessageViewer::ViewerPlugin(parent)
 {
 
 }
 
-ViewerPluginInterface *ViewerPluginCreatetask::createView(QWidget *parent, KActionCollection *ac)
+ViewerPluginInterface *ViewerPluginCreatenote::createView(QWidget *parent, KActionCollection *ac)
 {
-    MessageViewer::ViewerPluginInterface *view = new MessageViewer::ViewerPluginCreatetaskInterface(parent);
+    MessageViewer::ViewerPluginInterface *view = new MessageViewer::ViewerPluginCreatenoteInterface(parent);
     //TODO
     return view;
 }
 
-QString ViewerPluginCreatetask::viewerPluginName() const
+QString ViewerPluginCreatenote::viewerPluginName() const
 {
     return QStringLiteral("create-task");
 }
 
-void ViewerPluginCreatetask::showWidget()
+void ViewerPluginCreatenote::showWidget()
 {
     //TODO
 }
 
-#include "viewerplugincreatetask.moc"
+#include "viewerplugincreatenote.moc"

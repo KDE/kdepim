@@ -1,5 +1,5 @@
 
 add_subdirectory(translatorplugin)
-add_subdirectory(createtaskplugin)
+add_subdirectory(createnoteplugin)
 add_subdirectory(createtodoplugin)
 add_subdirectory(createeventplugin)

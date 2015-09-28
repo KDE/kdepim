@@ -15,22 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VIEWERPLUGINCREATETASK_H
-#define VIEWERPLUGINCREATETASK_H
+#ifndef VIEWERPLUGINCREATENOTE_H
+#define VIEWERPLUGINCREATENOTE_H
 
 #include <viewerplugins/viewerplugin.h>
 #include <QVariant>
 namespace MessageViewer
 {
-class ViewerPluginCreatetask : public MessageViewer::ViewerPlugin
+class ViewerPluginCreatenote : public MessageViewer::ViewerPlugin
 {
     Q_OBJECT
 public:
-    explicit ViewerPluginCreatetask(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
+    explicit ViewerPluginCreatenote(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
 
     ViewerPluginInterface *createView(QWidget *parent, KActionCollection *ac) Q_DECL_OVERRIDE;
     QString viewerPluginName() const Q_DECL_OVERRIDE;
     void showWidget() Q_DECL_OVERRIDE;
 };
 }
-#endif // VIEWERPLUGINCREATETASK_H
+#endif // VIEWERPLUGINCREATENOTE_H
