@@ -1104,7 +1104,8 @@ void ViewerPrivate::readConfig()
     mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
     setZoomTextOnly(mZoomTextOnly);
     readGravatarConfig();
-    mHeaderStyleMenuManager->readConfig();
+    if (mHeaderStyleMenuManager)
+        mHeaderStyleMenuManager->readConfig();
 
     setAttachmentStrategy(AttachmentStrategy::create(GlobalSettings::self()->attachmentStrategy()));
     KToggleAction *raction = actionForAttachmentStrategy(attachmentStrategy());
@@ -1509,13 +1510,13 @@ void ViewerPrivate::slotStyleUpdated()
 void ViewerPrivate::createActions()
 {
     KActionCollection *ac = mActionCollection;
+    mHeaderStyleMenuManager = new MessageViewer::HeaderStyleMenuManager(ac, this);
+    connect(mHeaderStyleMenuManager, &MessageViewer::HeaderStyleMenuManager::styleChanged, this, &ViewerPrivate::slotStyleChanged);
+    connect(mHeaderStyleMenuManager, &MessageViewer::HeaderStyleMenuManager::styleUpdated, this, &ViewerPrivate::slotStyleUpdated);
     if (!ac) {
         return;
     }
 
-    mHeaderStyleMenuManager = new MessageViewer::HeaderStyleMenuManager(ac, this);
-    connect(mHeaderStyleMenuManager, &MessageViewer::HeaderStyleMenuManager::styleChanged, this, &ViewerPrivate::slotStyleChanged);
-    connect(mHeaderStyleMenuManager, &MessageViewer::HeaderStyleMenuManager::styleUpdated, this, &ViewerPrivate::slotStyleUpdated);
 
     // attachment style
     KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);

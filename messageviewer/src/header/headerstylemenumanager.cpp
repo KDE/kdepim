@@ -66,13 +66,17 @@ void HeaderStyleMenuManagerPrivate::setPluginName(const QString &pluginName)
 {
     MessageViewer::HeaderStyleInterface *interface = lstInterface.value(pluginName);
     if (interface) {
-        interface->activateAction();
+        if (!interface->action().isEmpty()) {
+            interface->activateAction();
+        }
     } else {
         if (lstInterface.isEmpty()) {
             qCCritical(MESSAGEVIEWER_LOG) << "No plugin found !";
         } else {
             interface = lstInterface.cbegin().value();
-            interface->activateAction();
+            if (!interface->action().isEmpty()) {
+                interface->activateAction();
+            }
         }
     }
     Q_EMIT q->styleChanged(interface->headerStylePlugin());
@@ -120,7 +124,8 @@ void HeaderStyleMenuManagerPrivate::writeSettings(const QString &pluginName)
 void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
 {
     headerMenu = new KActionMenu(i18nc("View->", "&Headers"), q);
-    ac->addAction(QStringLiteral("view_headers"), headerMenu);
+    if (ac)
+        ac->addAction(QStringLiteral("view_headers"), headerMenu);
     addHelpTextAction(headerMenu, i18n("Choose display style of message headers"));
     group = new QActionGroup(q);
 
