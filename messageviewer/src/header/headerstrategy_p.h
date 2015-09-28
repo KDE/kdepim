@@ -76,29 +76,6 @@ static QStringList stringList(const char *const headers[], int numHeaders)
     return sl;
 }
 
-class MESSAGEVIEWER_EXPORT AllHeaderStrategy : public HeaderStrategy
-{
-public:
-    AllHeaderStrategy() : HeaderStrategy() {}
-    ~AllHeaderStrategy() {}
-
-public:
-    const char *name() const Q_DECL_OVERRIDE
-    {
-        return "all";
-    }
-
-    DefaultPolicy defaultPolicy() const Q_DECL_OVERRIDE
-    {
-        return Display;
-    }
-
-    bool showHeader(const QString &) const Q_DECL_OVERRIDE
-    {
-        return true; // more efficient than default impl
-    }
-};
-
 //
 // RichHeaderStrategy:
 //   Date, Subject, From, To, CC, ### what exactly?
@@ -196,26 +173,6 @@ public:
 
 private:
     const QStringList mHeadersToDisplay;
-};
-
-//
-//   Determined by grantlee theme.
-//
-class MESSAGEVIEWER_EXPORT GrantleeHeaderStrategy : public HeaderStrategy
-{
-public:
-    GrantleeHeaderStrategy() {}
-    ~GrantleeHeaderStrategy() {}
-
-public:
-    const char *name() const Q_DECL_OVERRIDE
-    {
-        return "grantlee";
-    }
-    DefaultPolicy defaultPolicy() const Q_DECL_OVERRIDE
-    {
-        return Hide;
-    }
 };
 
 }

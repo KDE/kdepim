@@ -18,8 +18,7 @@
 #include "grantleeheaderstyleinterface.h"
 #include "grantleeheaderstyleplugin.h"
 #include "grantleeheaderstyle.h"
-//Temporary
-#include "header/headerstrategy_p.h"
+#include "grantleeheaderstrategy.h"
 #include <kpluginfactory.h>
 using namespace MessageViewer;
 

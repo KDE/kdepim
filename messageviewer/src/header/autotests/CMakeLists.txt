@@ -25,14 +25,14 @@ endmacro ()
 
 add_messageviewer_header_unittest( briefheaderstyleplugintest.cpp "../briefheaderstyleplugin/briefheaderstyle.cpp;../briefheaderstyleplugin/briefheaderstyleplugin.cpp;../briefheaderstyleplugin/briefheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../briefheaderstyleplugin/messageviewer_briefheaderstyleplugin.desktop")
 
-add_messageviewer_header_unittest( allheaderstyleplugintest.cpp "../allheaderstyleplugin/allheaderstyleplugin.cpp;../allheaderstyleplugin/allheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../allheaderstyleplugin/messageviewer_allheaderstyleplugin.desktop")
+add_messageviewer_header_unittest( allheaderstyleplugintest.cpp "../allheaderstyleplugin/allheaderstrategy.cpp;../allheaderstyleplugin/allheaderstyleplugin.cpp;../allheaderstyleplugin/allheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../allheaderstyleplugin/messageviewer_allheaderstyleplugin.desktop")
 add_messageviewer_header_unittest( customheaderstyleplugintest.cpp "../customheaderstyleplugin/customheaderstrategy.cpp;../customheaderstyleplugin/customheaderstyle.cpp;../customheaderstyleplugin/customheaderstyleplugin.cpp;../customheaderstyleplugin/customheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../customheaderstyleplugin/messageviewer_customheaderstyleplugin.desktop")
 
 add_messageviewer_header_unittest( enterpriseheaderstyleplugintest.cpp "../enterpriseheaderstyleplugin/enterpriseheaderstyle.cpp;../enterpriseheaderstyleplugin/enterpriseheaderstyleplugin.cpp;../enterpriseheaderstyleplugin/enterpriseheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../enterpriseheaderstyleplugin/messageviewer_enterpriseheaderstyleplugin.desktop")
 
 add_messageviewer_header_unittest( fancyheaderstyleplugintest.cpp "../fancyheaderstyleplugin/fancyheaderstyleplugin.cpp;../fancyheaderstyleplugin/fancyheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../fancyheaderstyleplugin/messageviewer_fancyheaderstyleplugin.desktop")
 
-add_messageviewer_header_unittest( grantleeheaderstyleplugintest.cpp "../grantleeheaderstyleplugin/grantleeheaderstyleplugin.cpp;../grantleeheaderstyleplugin/grantleeheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../grantleeheaderstyleplugin/messageviewer_grantleeheaderstyleplugin.desktop")
+add_messageviewer_header_unittest( grantleeheaderstyleplugintest.cpp "../grantleeheaderstyleplugin/grantleeheaderstrategy.cpp;../grantleeheaderstyleplugin/grantleeheaderstyleplugin.cpp;../grantleeheaderstyleplugin/grantleeheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../grantleeheaderstyleplugin/messageviewer_grantleeheaderstyleplugin.desktop")
 
 add_messageviewer_header_unittest( longheaderstyleplugintest.cpp "../longheaderstyleplugin/longheaderstyleplugin.cpp;../longheaderstyleplugin/longheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../longheaderstyleplugin/messageviewer_longheaderstyleplugin.desktop")
 

@@ -18,8 +18,7 @@
 #include "allheaderstyleplugin.h"
 #include "header/plainheaderstyle.h"
 #include "allheaderstyleinterface.h"
-//Temporary
-#include "header/headerstrategy_p.h"
+#include "allheaderstrategy.h"
 #include <kpluginfactory.h>
 using namespace MessageViewer;
 
