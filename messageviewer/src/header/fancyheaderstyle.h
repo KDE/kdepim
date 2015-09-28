@@ -25,10 +25,9 @@ namespace MessageViewer
 
 class MESSAGEVIEWER_EXPORT FancyHeaderStyle : public HeaderStyle
 {
-    friend class HeaderStyle;
 public:
-    FancyHeaderStyle() : HeaderStyle() {}
-    virtual ~FancyHeaderStyle() {}
+    FancyHeaderStyle();
+    virtual ~FancyHeaderStyle();
 
 public:
     const char *name() const Q_DECL_OVERRIDE;

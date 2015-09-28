@@ -26,7 +26,7 @@ namespace MessageViewer
 class MESSAGEVIEWER_EXPORT PlainHeaderStyle : public HeaderStyle
 {
 public:
-    PlainHeaderStyle() : HeaderStyle() {}
+    PlainHeaderStyle();
     ~PlainHeaderStyle() {}
 
 public:

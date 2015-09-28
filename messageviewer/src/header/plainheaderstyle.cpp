@@ -29,8 +29,15 @@
 
 using namespace MessageCore;
 
-namespace MessageViewer
+using namespace MessageViewer;
+
+PlainHeaderStyle::PlainHeaderStyle()
+    : HeaderStyle()
 {
+
+}
+
+
 //
 // PlainHeaderStyle:
 //   show every header field on a line by itself,
@@ -77,10 +84,6 @@ QString PlainHeaderStyle::format(KMime::Message *message) const
     }
 
     if (strategy->showHeader(QStringLiteral("from"))) {
-        /*FIXME(Andras) review if it is still needed
-        if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
-        fromStr = message->fromStrip(); // let's use that
-        */
         headerStr.append(i18n("From: ") +
                          StringUtil::emailAddrAsAnchor(message->from(), StringUtil::DisplayFullAddress, QString(), StringUtil::ShowLink));
         if (!vCardName().isEmpty())
@@ -135,4 +138,3 @@ const char *MessageViewer::PlainHeaderStyle::name() const
     return "plain";
 }
 
-}

@@ -50,6 +50,17 @@ using namespace MessageViewer;
 //   Like PlainHeaderStyle, but with slick frames and background colours.
 //
 
+FancyHeaderStyle::FancyHeaderStyle()
+    : HeaderStyle()
+{
+
+}
+
+FancyHeaderStyle::~FancyHeaderStyle()
+{
+
+}
+
 const char *FancyHeaderStyle::name() const
 {
     return "fancy";
