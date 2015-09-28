@@ -109,40 +109,6 @@ private:
     const QStringList mHeadersToDisplay;
 };
 
-//
-// BriefHeaderStrategy
-//   From, Subject, Date
-//
-
-//Temporary
-class MESSAGEVIEWER_EXPORT BriefHeaderStrategy : public HeaderStrategy
-{
-    friend class HeaderStrategy;
-public:
-    BriefHeaderStrategy()
-        : HeaderStrategy(),
-          mHeadersToDisplay(stringList(briefHeaders, numBriefHeaders)) {}
-    ~BriefHeaderStrategy() {}
-
-public:
-    const char *name() const Q_DECL_OVERRIDE
-    {
-        return "brief";
-    }
-
-    QStringList headersToDisplay() const Q_DECL_OVERRIDE
-    {
-        return mHeadersToDisplay;
-    }
-    DefaultPolicy defaultPolicy() const Q_DECL_OVERRIDE
-    {
-        return Hide;
-    }
-
-private:
-    const QStringList mHeadersToDisplay;
-};
-
 }
 
 #endif // HEADERSTRATEGY_P_H

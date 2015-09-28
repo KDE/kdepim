@@ -18,8 +18,7 @@
 #include "briefheaderstyleplugin.h"
 #include "briefheaderstyleinterface.h"
 #include "briefheaderstyle.h"
-//Temporary
-#include "header/headerstrategy_p.h"
+#include "briefheaderstrategy.h"
 #include <kpluginfactory.h>
 using namespace MessageViewer;
 

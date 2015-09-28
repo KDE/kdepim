@@ -2,14 +2,13 @@ set(messageviewer_briefheaderstyleplugin_SRCS
    briefheaderstyleplugin.cpp
    briefheaderstyleinterface.cpp 
    briefheaderstyle.cpp
+   briefheaderstrategy.cpp
 )
 
 add_library(messageviewer_briefheaderstyleplugin MODULE ${messageviewer_briefheaderstyleplugin_SRCS})
 
 target_link_libraries(messageviewer_briefheaderstyleplugin
   KF5::MessageViewer
-  #Temporary
-  KF5::GrantleeTheme
   KF5::XmlGui
 )
 
