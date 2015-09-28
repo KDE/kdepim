@@ -46,7 +46,7 @@ void ViewerPluginInterface::setText(const QString &text)
     // Reimplement in subclass.
 }
 
-KToggleAction *ViewerPluginInterface::action() const
+QAction *ViewerPluginInterface::action() const
 {
     // Reimplement in subclass
     return Q_NULLPTR;

@@ -19,18 +19,24 @@
 #define VIEWERPLUGINCREATENOTEINTERFACE_H
 
 #include <viewerplugins/viewerplugininterface.h>
+class KActionCollection;
 
 namespace MessageViewer
 {
+class NoteEdit;
 class ViewerPluginCreatenoteInterface : public ViewerPluginInterface
 {
     Q_OBJECT
 public:
-    explicit ViewerPluginCreatenoteInterface(QWidget *parent = Q_NULLPTR);
+    explicit ViewerPluginCreatenoteInterface(KActionCollection *ac, QWidget *parent = Q_NULLPTR);
     ~ViewerPluginCreatenoteInterface();
 
     void setText(const QString &text) Q_DECL_OVERRIDE;
-    KToggleAction *action() const Q_DECL_OVERRIDE;
+    QAction *action() const Q_DECL_OVERRIDE;
+private:
+    void createAction(KActionCollection *ac);
+    NoteEdit *mNoteEdit;
+    QAction *mAction;
 };
 }
 #endif // VIEWERPLUGINCREATENOTEINTERFACE_H

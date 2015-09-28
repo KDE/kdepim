@@ -17,12 +17,15 @@
 
 #include "viewerplugintranslatorinterface.h"
 
+#include <KActionCollection>
+
 using namespace MessageViewer;
 
-ViewerPluginTranslatorInterface::ViewerPluginTranslatorInterface(QWidget *parent)
-    : ViewerPluginInterface(parent)
+ViewerPluginTranslatorInterface::ViewerPluginTranslatorInterface(KActionCollection *ac, QWidget *parent)
+    : ViewerPluginInterface(parent),
+      mAction(Q_NULLPTR)
 {
-
+    createAction(ac);
 }
 
 ViewerPluginTranslatorInterface::~ViewerPluginTranslatorInterface()
@@ -35,9 +38,12 @@ void ViewerPluginTranslatorInterface::setText(const QString &text)
 
 }
 
-KToggleAction *ViewerPluginTranslatorInterface::action() const
+QAction *ViewerPluginTranslatorInterface::action() const
 {
-    //TODO
-    return Q_NULLPTR;
+    return mAction;
 }
 
+void ViewerPluginTranslatorInterface::createAction(KActionCollection *ac)
+{
+
+}

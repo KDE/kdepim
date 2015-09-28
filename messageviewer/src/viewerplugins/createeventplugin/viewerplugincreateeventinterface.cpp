@@ -19,19 +19,22 @@
 #include "widgets/eventedit.h"
 #include <KLocalizedString>
 
+#include <KActionCollection>
 #include <QHBoxLayout>
 
 using namespace MessageViewer;
 
-ViewerPluginCreateEventInterface::ViewerPluginCreateEventInterface(QWidget *parent)
-    : ViewerPluginInterface(parent)
+ViewerPluginCreateEventInterface::ViewerPluginCreateEventInterface(KActionCollection *ac, QWidget *parent)
+    : ViewerPluginInterface(parent),
+      mAction(Q_NULLPTR)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->setMargin(0);
     setLayout(hbox);
-    EventEdit *edit = new EventEdit(this);
-    edit->setObjectName(QStringLiteral("eventedit"));
-    hbox->addWidget(edit);
+    mEventEdit = new EventEdit(this);
+    mEventEdit->setObjectName(QStringLiteral("eventedit"));
+    hbox->addWidget(mEventEdit);
+    createAction(ac);
 }
 
 ViewerPluginCreateEventInterface::~ViewerPluginCreateEventInterface()
@@ -45,9 +48,12 @@ void ViewerPluginCreateEventInterface::setText(const QString &text)
     //Nothing
 }
 
-KToggleAction *ViewerPluginCreateEventInterface::action() const
+QAction *ViewerPluginCreateEventInterface::action() const
 {
-    //TODO
-    return Q_NULLPTR;
+    return mAction;
 }
 
+void ViewerPluginCreateEventInterface::createAction(KActionCollection *ac)
+{
+
+}

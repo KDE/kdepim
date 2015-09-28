@@ -19,18 +19,24 @@
 #define VIEWERPLUGINCREATEEVENTINTERFACE_H
 
 #include <viewerplugins/viewerplugininterface.h>
-
+class KActionCollection;
 namespace MessageViewer
 {
+class EventEdit;
 class ViewerPluginCreateEventInterface : public ViewerPluginInterface
 {
     Q_OBJECT
 public:
-    explicit ViewerPluginCreateEventInterface(QWidget *parent = Q_NULLPTR);
+    explicit ViewerPluginCreateEventInterface(KActionCollection *ac, QWidget *parent = Q_NULLPTR);
     ~ViewerPluginCreateEventInterface();
 
     void setText(const QString &text) Q_DECL_OVERRIDE;
-    KToggleAction *action() const Q_DECL_OVERRIDE;
+    QAction *action() const Q_DECL_OVERRIDE;
+
+private:
+    void createAction(KActionCollection *ac);
+    EventEdit *mEventEdit;
+    QAction *mAction;
 };
 }
 #endif // VIEWERPLUGINCREATEEVENTINTERFACE_H

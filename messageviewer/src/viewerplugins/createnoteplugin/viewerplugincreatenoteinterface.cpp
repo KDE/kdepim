@@ -18,20 +18,23 @@
 #include "viewerplugincreatenoteinterface.h"
 #include "widgets/noteedit.h"
 #include <KLocalizedString>
+#include <KActionCollection>
 
 #include <QHBoxLayout>
 
 using namespace MessageViewer;
 
-ViewerPluginCreatenoteInterface::ViewerPluginCreatenoteInterface(QWidget *parent)
-    : ViewerPluginInterface(parent)
+ViewerPluginCreatenoteInterface::ViewerPluginCreatenoteInterface(KActionCollection *ac, QWidget *parent)
+    : ViewerPluginInterface(parent),
+      mAction(Q_NULLPTR)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->setMargin(0);
     setLayout(hbox);
-    NoteEdit *edit = new NoteEdit(this);
-    edit->setObjectName(QStringLiteral("noteedit"));
-    hbox->addWidget(edit);
+    createAction(ac);
+    mNoteEdit = new NoteEdit(this);
+    mNoteEdit->setObjectName(QStringLiteral("noteedit"));
+    hbox->addWidget(mNoteEdit);
 }
 
 ViewerPluginCreatenoteInterface::~ViewerPluginCreatenoteInterface()
@@ -45,9 +48,12 @@ void ViewerPluginCreatenoteInterface::setText(const QString &text)
     //Nothing
 }
 
-KToggleAction *ViewerPluginCreatenoteInterface::action() const
+QAction *ViewerPluginCreatenoteInterface::action() const
 {
-    //TODO
-    return Q_NULLPTR;
+    return mAction;
 }
 
+void ViewerPluginCreatenoteInterface::createAction(KActionCollection *ac)
+{
+
+}

@@ -19,18 +19,23 @@
 #define VIEWERPLUGINCREATETODOINTERFACE_H
 
 #include <viewerplugins/viewerplugininterface.h>
-
+class KActionCollection;
 namespace MessageViewer
 {
+class TodoEdit;
 class ViewerPluginCreateTodoInterface : public ViewerPluginInterface
 {
     Q_OBJECT
 public:
-    explicit ViewerPluginCreateTodoInterface(QWidget *parent = Q_NULLPTR);
+    explicit ViewerPluginCreateTodoInterface(KActionCollection *ac, QWidget *parent = Q_NULLPTR);
     ~ViewerPluginCreateTodoInterface();
 
     void setText(const QString &text) Q_DECL_OVERRIDE;
-    KToggleAction *action() const Q_DECL_OVERRIDE;
+    QAction *action() const Q_DECL_OVERRIDE;
+private:
+    void createAction(KActionCollection *ac);
+    TodoEdit *mTodoEdit;
+    QAction *mAction;
 };
 }
 #endif // VIEWERPLUGINCREATETODOINTERFACE_H

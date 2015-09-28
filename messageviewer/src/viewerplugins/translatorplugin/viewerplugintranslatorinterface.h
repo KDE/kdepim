@@ -19,18 +19,21 @@
 #define VIEWERPLUGINTRANSLATORINTERFACE_H
 
 #include <viewerplugins/viewerplugininterface.h>
-
+class KActionCollection;
 namespace MessageViewer
 {
 class ViewerPluginTranslatorInterface : public ViewerPluginInterface
 {
     Q_OBJECT
 public:
-    explicit ViewerPluginTranslatorInterface(QWidget *parent = Q_NULLPTR);
+    explicit ViewerPluginTranslatorInterface(KActionCollection *ac, QWidget *parent = Q_NULLPTR);
     ~ViewerPluginTranslatorInterface();
 
     void setText(const QString &text) Q_DECL_OVERRIDE;
-    KToggleAction *action() const Q_DECL_OVERRIDE;
+    QAction *action() const Q_DECL_OVERRIDE;
+private:
+    void createAction(KActionCollection *ac);
+    QAction *mAction;
 };
 }
 #endif // VIEWERPLUGINTRANSLATORINTERFACE_H

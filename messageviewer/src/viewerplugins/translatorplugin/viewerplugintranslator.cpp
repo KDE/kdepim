@@ -32,7 +32,7 @@ ViewerPluginTranslator::ViewerPluginTranslator(QObject *parent, const QList<QVar
 
 ViewerPluginInterface *ViewerPluginTranslator::createView(QWidget *parent, KActionCollection *ac)
 {
-    MessageViewer::ViewerPluginInterface *view = new MessageViewer::ViewerPluginInterface(parent);
+    MessageViewer::ViewerPluginInterface *view = new MessageViewer::ViewerPluginTranslatorInterface(ac, parent);
     //TODO
     return view;
 }

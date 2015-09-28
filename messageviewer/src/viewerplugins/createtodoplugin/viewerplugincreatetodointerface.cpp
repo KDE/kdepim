@@ -20,19 +20,22 @@
 
 #include <KLocalizedString>
 
+#include <KActionCollection>
 #include <QHBoxLayout>
 
 using namespace MessageViewer;
 
-ViewerPluginCreateTodoInterface::ViewerPluginCreateTodoInterface(QWidget *parent)
-    : ViewerPluginInterface(parent)
+ViewerPluginCreateTodoInterface::ViewerPluginCreateTodoInterface(KActionCollection *ac, QWidget *parent)
+    : ViewerPluginInterface(parent),
+      mAction(Q_NULLPTR)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->setMargin(0);
     setLayout(hbox);
-    TodoEdit *edit = new TodoEdit(this);
-    edit->setObjectName(QStringLiteral("todoedit"));
-    hbox->addWidget(edit);
+    mTodoEdit = new TodoEdit(this);
+    mTodoEdit->setObjectName(QStringLiteral("todoedit"));
+    hbox->addWidget(mTodoEdit);
+    createAction(ac);
 }
 
 ViewerPluginCreateTodoInterface::~ViewerPluginCreateTodoInterface()
@@ -46,9 +49,12 @@ void ViewerPluginCreateTodoInterface::setText(const QString &text)
     //Nothing
 }
 
-KToggleAction *ViewerPluginCreateTodoInterface::action() const
+QAction *ViewerPluginCreateTodoInterface::action() const
 {
-    //TODO
-    return Q_NULLPTR;
+    return mAction;
 }
 
+void ViewerPluginCreateTodoInterface::createAction(KActionCollection *ac)
+{
+
+}
