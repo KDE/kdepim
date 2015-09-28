@@ -19,8 +19,11 @@
 #include "pimcommon/translatorwidget.h"
 
 #include <QHBoxLayout>
+#include <QIcon>
+#include <QAction>
 
 #include <KActionCollection>
+#include <KLocalizedString>
 
 using namespace MessageViewer;
 
@@ -52,5 +55,8 @@ QAction *ViewerPluginTranslatorInterface::action() const
 
 void ViewerPluginTranslatorInterface::createAction(KActionCollection *ac)
 {
-
+    mAction = new QAction(i18n("Translate..."), this);
+    ac->setDefaultShortcut(mAction, QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
+    mAction->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-locale")));
+    ac->addAction(QStringLiteral("translate_text"), mAction);
 }
