@@ -16,6 +16,8 @@
 */
 
 #include "viewerplugincreateeventtest.h"
+#include "../createeventplugin/viewerplugincreateevent.h"
+#include <KActionCollection>
 #include <QTest>
 
 ViewerPluginCreateeventTest::ViewerPluginCreateeventTest(QObject *parent)
@@ -27,6 +29,13 @@ ViewerPluginCreateeventTest::ViewerPluginCreateeventTest(QObject *parent)
 ViewerPluginCreateeventTest::~ViewerPluginCreateeventTest()
 {
 
+}
+
+void ViewerPluginCreateeventTest::shouldHaveDefaultValue()
+{
+    MessageViewer::ViewerPluginCreateevent *event = new MessageViewer::ViewerPluginCreateevent(this);
+    QVERIFY(!event->viewerPluginName().isEmpty());
+    QVERIFY(event->createView(new QWidget(0), new KActionCollection(this)));
 }
 
 QTEST_MAIN(ViewerPluginCreateeventTest)

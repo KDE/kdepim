@@ -26,6 +26,9 @@ class ViewerPluginCreateeventTest : public QObject
 public:
     explicit ViewerPluginCreateeventTest(QObject *parent = Q_NULLPTR);
     ~ViewerPluginCreateeventTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // VIEWERPLUGINCREATEEVENTTEST_H

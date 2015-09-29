@@ -26,6 +26,9 @@ class ViewerPluginCreateNoteTest : public QObject
 public:
     explicit ViewerPluginCreateNoteTest(QObject *parent = Q_NULLPTR);
     ~ViewerPluginCreateNoteTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // VIEWERPLUGINCREATENOTETEST_H
