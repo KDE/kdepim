@@ -563,61 +563,30 @@ static int signatureToStatus(const GpgME::Signature &sig)
 bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
         KMime::Content &sign,
         const QString &fromAddress,
-        bool doCheck,
-        QByteArray *cleartextData,
-        const std::vector<GpgME::Signature> &paramSignatures,
         bool hideErrors)
 {
-    //  qCDebug(MESSAGEVIEWER_LOG) << "DECRYPT" << data;
     bool bIsOpaqueSigned = false;
-    enum { NO_PLUGIN, NOT_INITIALIZED, CANT_VERIFY_SIGNATURES }
-    cryptPlugError = NO_PLUGIN;
 
     const Kleo::CryptoBackend::Protocol *cryptProto = cryptoProtocol();
 
-    QString cryptPlugLibName;
-    QString cryptPlugDisplayName;
-    if (cryptProto) {
-        cryptPlugLibName = cryptProto->name();
-        cryptPlugDisplayName = cryptProto->displayName();
-    }
-
 #ifdef DEBUG_SIGNATURE
 #ifndef NDEBUG
-    if (!doCheck) {
-        qCDebug(MESSAGEVIEWER_LOG) << "showing OpenPGP (Encrypted+Signed) data";
-    } else if (data) {
+    if (data) {
         qCDebug(MESSAGEVIEWER_LOG) << "processing Multipart Signed data";
     } else {
         qCDebug(MESSAGEVIEWER_LOG) << "processing Opaque Signed data";
     }
 #endif
-
-    if (doCheck && cryptProto) {
-        qCDebug(MESSAGEVIEWER_LOG) << "going to call CRYPTPLUG" << cryptPlugLibName;
-    }
 #endif
 
     QByteArray cleartext;
     QByteArray signaturetext;
+    const QTextCodec *aCodec(data ? codecFor(data) : codecFor(&sign));
 
-    if (doCheck && cryptProto) {
+    if (cryptProto) {
         if (data) {
             cleartext = data->encodedContent();
-#ifdef DEBUG_SIGNATURE
-            qCDebug(MESSAGEVIEWER_LOG) << "ClearText : " << cleartext;
-
-            dumpToFile("dat_01_reader_signedtext_before_canonicalization",
-                       cleartext.data(), cleartext.length());
-
-            // replace simple LFs by CRLSs
-            // according to RfC 2633, 3.1.1 Canonicalization
-            qCDebug(MESSAGEVIEWER_LOG) << "Converting LF to CRLF (see RfC 2633, 3.1.1 Canonicalization)";
-#endif
             cleartext = KMime::LFtoCRLF(cleartext);
-#ifdef DEBUG_SIGNATURE
-            qCDebug(MESSAGEVIEWER_LOG) << "                                                       done.";
-#endif
         }
 
         dumpToFile("dat_02_reader_signedtext_after_canonicalization",
@@ -628,122 +597,27 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
                    signaturetext.size());
     }
 
-    std::vector<GpgME::Signature> signatures;
-    if (!doCheck) {
-        signatures = paramSignatures;
-    }
-
     PartMetaData messagePart;
+
+    CryptoMessagePart mp(this, &messagePart,
+                         aCodec->toUnicode(data ? cleartext : signaturetext), cryptProto,
+                         fromAddress, &sign);
+
     messagePart.isSigned = true;
-    messagePart.technicalProblem = (cryptProto == 0);
-    messagePart.isGoodSignature = false;
-    messagePart.isEncrypted = false;
-    messagePart.isDecryptable = false;
-    messagePart.keyTrust = GpgME::Signature::Unknown;
-    messagePart.status = i18n("Wrong Crypto Plug-In.");
-    messagePart.status_code = GPGME_SIG_STAT_NONE;
 
-    GpgME::Key key;
-
-    if (doCheck && cryptProto) {
-        GpgME::VerificationResult result;
+    if (cryptProto) {
         if (data) {   // detached
-            okVerify(cleartext, cryptProto, messagePart, cleartext, signatures, signaturetext, &sign);
+            mp.startVerificationDetached(cleartext, data, signaturetext);
         } else { // opaque
-            okVerify(signaturetext, cryptProto, messagePart, cleartext, signatures, QByteArray(), &sign);
+            mp.startVerificationDetached(signaturetext, Q_NULLPTR, QByteArray());
+            bIsOpaqueSigned = true;
         }
     } else {
         messagePart.auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
     }
 
-    // ### only one signature supported
-    if (messagePart.isSigned) {
-        sigStatusToMetaData(signatures, cryptProto, messagePart, key);
-    } else {
-        messagePart.creationTime = QDateTime();
-    }
+    mp.html(false);
 
-    if (!doCheck || !data) {
-        if (cleartextData || !cleartext.isEmpty()) {
-            if (htmlWriter())
-                htmlWriter()->queue(writeSigstatHeader(messagePart,
-                                                       cryptProto,
-                                                       fromAddress));
-            bIsOpaqueSigned = true;
-
-            CryptoProtocolSaver cpws(this, cryptProto);
-            createAndParseTempNode(&sign, doCheck ? cleartext.data() : cleartextData->data(),
-                                   "opaque signed data");
-
-            if (htmlWriter()) {
-                htmlWriter()->queue(writeSigstatFooter(messagePart));
-            }
-
-        } else if (!hideErrors) {
-            QString txt;
-            txt = QStringLiteral("<hr><b><h2>");
-            txt.append(i18n("The crypto engine returned no cleartext data."));
-            txt.append(QLatin1String("</h2></b>"));
-            txt.append(QLatin1String("<br/>&nbsp;<br/>"));
-            txt.append(i18n("Status: "));
-            if (!messagePart.status.isEmpty()) {
-                txt.append(QLatin1String("<i>"));
-                txt.append(messagePart.status);
-                txt.append(QLatin1String("</i>"));
-            } else {
-                txt.append(i18nc("Status of message unknown.", "(unknown)"));
-            }
-            if (htmlWriter()) {
-                htmlWriter()->queue(txt);
-            }
-        }
-    } else {
-        if (htmlWriter()) {
-            if (!cryptProto) {
-                QString errorMsg;
-                switch (cryptPlugError) {
-                case NOT_INITIALIZED:
-                    errorMsg = i18n("Crypto plug-in \"%1\" is not initialized.",
-                                    cryptPlugLibName);
-                    break;
-                case CANT_VERIFY_SIGNATURES:
-                    errorMsg = i18n("Crypto plug-in \"%1\" cannot verify signatures.",
-                                    cryptPlugLibName);
-                    break;
-                case NO_PLUGIN:
-                    if (cryptPlugDisplayName.isEmpty()) {
-                        errorMsg = i18n("No appropriate crypto plug-in was found.");
-                    } else
-                        errorMsg = i18nc("%1 is either 'OpenPGP' or 'S/MIME'",
-                                         "No %1 plug-in was found.",
-                                         cryptPlugDisplayName);
-                    break;
-                }
-                messagePart.errorText = i18n("The message is signed, but the "
-                                             "validity of the signature cannot be "
-                                             "verified.<br />"
-                                             "Reason: %1",
-                                             errorMsg);
-            }
-
-            htmlWriter()->queue(writeSigstatHeader(messagePart,
-                                                   cryptProto,
-                                                   fromAddress));
-        }
-
-        ObjectTreeParser otp(this, true);
-        otp.setAllowAsync(allowAsync());
-        otp.parseObjectTreeInternal(data);
-        copyContentFrom(&otp);
-
-        if (htmlWriter()) {
-            htmlWriter()->queue(writeSigstatFooter(messagePart));
-        }
-    }
-#ifdef DEBUG_SIGNATURE
-    qCDebug(MESSAGEVIEWER_LOG) << "done, returning" << (bIsOpaqueSigned ? "TRUE" : "FALSE");
-#endif
-    qCDebug(MESSAGEVIEWER_LOG) << "DECRYPTED" << data;
     return bIsOpaqueSigned;
 }
 
@@ -1555,20 +1429,9 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
                 // since we do want to show the _true_ structure of the
                 // message there - not the structure that the sender's
                 // MUA 'should' have sent.  :-D       (khz, 12.09.2002)
-                //
-                Q_ASSERT(false);
 
-                const CryptoBlock block(this, &messagePart, cryptoProtocol(), NodeHelper::fromAsString(node), node);
-                writeOpaqueOrMultipartSignedData(0,
-                                                *node,
-                                                NodeHelper::fromAsString(node),
-                                                false,
-                                                &mp.mDecryptedData,
-                                                mp.mSignatures,
-                                                false);
                 mNodeHelper->setSignatureState(node, KMMsgFullySigned);
                 qCDebug(MESSAGEVIEWER_LOG) << "setting FULLY SIGNED to:" << node;
-                return true;
             }
         }
     }
@@ -1740,9 +1603,6 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
         bool sigFound = writeOpaqueOrMultipartSignedData(0,
                         *signTestNode,
                         NodeHelper::fromAsString(node),
-                        true,
-                        0,
-                        std::vector<GpgME::Signature>(),
                         isEncrypted);
         if (sigFound) {
             if (!isSigned) {
@@ -2656,7 +2516,16 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
 
 bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData &messagePart, QByteArray &verifiedText, std::vector <GpgME::Signature> &signatures, const QByteArray &signature, KMime::Content *sign)
 {
-    //copied from ObjectTreeParser::writeOpaqueOrMultipartSignedData
+    enum { NO_PLUGIN, NOT_INITIALIZED, CANT_VERIFY_SIGNATURES }
+    cryptPlugError = NO_PLUGIN;
+
+    QString cryptPlugLibName;
+    QString cryptPlugDisplayName;
+    if (cryptProto) {
+        cryptPlugLibName = cryptProto->name();
+        cryptPlugDisplayName = cryptProto->displayName();
+    }
+
     messagePart.isSigned = false;
     messagePart.technicalProblem = (cryptProto == 0);
     messagePart.keyTrust = GpgME::Signature::Unknown;
@@ -2672,11 +2541,17 @@ bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBacken
             Kleo::VerifyDetachedJob *job = cryptProto->verifyDetachedJob();
             if (job) {
                 m = new VerifyDetachedBodyPartMemento(job, cryptProto->keyListJob(), signature, data);
+            } else {
+                cryptPlugError = CANT_VERIFY_SIGNATURES;
+                cryptProto = 0;
             }
         } else {
             Kleo::VerifyOpaqueJob *job = cryptProto->verifyOpaqueJob();
             if (job) {
                 m = new VerifyOpaqueBodyPartMemento(job, cryptProto->keyListJob(), data);
+            } else {
+                cryptPlugError = CANT_VERIFY_SIGNATURES;
+                cryptProto = 0;
             }
         }
         if (m) {
@@ -2720,6 +2595,35 @@ bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBacken
         messagePart.auditLog = m->auditLogAsHtml();
         messagePart.isSigned = !signatures.empty();
     }
+
+    if (!cryptProto) {
+        QString errorMsg;
+        switch (cryptPlugError) {
+            case NOT_INITIALIZED:
+                errorMsg = i18n("Crypto plug-in \"%1\" is not initialized.",
+                                cryptPlugLibName);
+                break;
+            case CANT_VERIFY_SIGNATURES:
+                errorMsg = i18n("Crypto plug-in \"%1\" cannot verify signatures.",
+                                cryptPlugLibName);
+                break;
+            case NO_PLUGIN:
+                if (cryptPlugDisplayName.isEmpty()) {
+                    errorMsg = i18n("No appropriate crypto plug-in was found.");
+                } else {
+                    errorMsg = i18nc("%1 is either 'OpenPGP' or 'S/MIME'",
+                                     "No %1 plug-in was found.",
+                                     cryptPlugDisplayName);
+                }
+                break;
+        }
+        messagePart.errorText = i18n("The message is signed, but the "
+                                     "validity of the signature cannot be "
+                                     "verified.<br />"
+                                     "Reason: %1",
+                                     errorMsg);
+    }
+
     return messagePart.isSigned;
 }
 

@@ -23,6 +23,8 @@
 #include <interfaces/htmlwriter.h>
 #include <kmime/kmime_content.h>
 #include <gpgme++/key.h>
+#include <gpgme.h>
+#include <KLocalizedString>
 
 #include <QTextCodec>
 
@@ -102,7 +104,7 @@ void MessagePart::html(bool decorate) const
         return;
     }
 
-    const CryptoBlock block(mOtp, mMetaData, 0, QString(), 0);
+    const CryptoBlock block(mOtp, mMetaData, Q_NULLPTR, QString(), Q_NULLPTR);
     writer->queue(mOtp->quotedHTML(text(), decorate));
 }
 
@@ -119,8 +121,16 @@ CryptoMessagePart::CryptoMessagePart(ObjectTreeParser *otp,
     , mDecryptMessage(false)
     , mFromAddress(fromAddress)
     , mNode(node)
+    , mTextNode(Q_NULLPTR)
 {
-
+    mMetaData->technicalProblem = (mCryptoProto == 0);
+    mMetaData->isSigned = false;
+    mMetaData->isGoodSignature = false;
+    mMetaData->isEncrypted = false;
+    mMetaData->isDecryptable = false;
+    mMetaData->keyTrust = GpgME::Signature::Unknown;
+    mMetaData->status = i18n("Wrong Crypto Plug-In.");
+    mMetaData->status_code = GPGME_SIG_STAT_NONE;
 }
 
 void CryptoMessagePart::startDecryption(const QByteArray &text, const QTextCodec *aCodec)
@@ -177,6 +187,7 @@ void CryptoMessagePart::startDecryption(KMime::Content *data)
 
     if (mMetaData->isSigned) {
         mOtp->sigStatusToMetaData(mSignatures, mCryptoProto, *mMetaData, GpgME::Key());
+        mVerifiedText = mDecryptedData;
     }
 
     if (mNode) {
@@ -186,24 +197,54 @@ void CryptoMessagePart::startDecryption(KMime::Content *data)
 
 void CryptoMessagePart::startVerification(const QByteArray &text, const QTextCodec *aCodec)
 {
+    startVerificationDetached(text, 0, QByteArray());
+
+    if (!mNode && mMetaData->isSigned) {
+        setText(aCodec->toUnicode(mVerifiedText));
+    }
+}
+
+void CryptoMessagePart::startVerificationDetached(const QByteArray &text, KMime::Content *textNode, const QByteArray& signature)
+{
     mMetaData->isEncrypted = false;
     mMetaData->isDecryptable = false;
 
-    QByteArray verifiedText;
-    if (mOtp->okVerify(text, mCryptoProto, *mMetaData, verifiedText, mSignatures, QByteArray(), mNode)) {
-        setText(aCodec->toUnicode(verifiedText));
+    mOtp->okVerify(text, mCryptoProto, *mMetaData, mVerifiedText, mSignatures, signature, mNode);
+
+    if (mMetaData->isSigned) {
+        mOtp->sigStatusToMetaData(mSignatures, mCryptoProto, *mMetaData, GpgME::Key());
+    } else {
+        mMetaData->creationTime = QDateTime();
     }
-    mOtp->sigStatusToMetaData(mSignatures, mCryptoProto, *mMetaData, GpgME::Key());
+
+    if (mNode) {
+        if (textNode && !signature.isEmpty()) {
+            mTextNode = textNode;
+            mVerifiedText = text;
+        }
+    }
+
 }
 
 void CryptoMessagePart::html(bool decorate) const
 {
+
+    bool hideErrors = false;
     MessageViewer::HtmlWriter* writer = mOtp->htmlWriter();
     if (!writer) {
-        if (mNode && mDecryptMessage) {
+        if (mNode && (mDecryptMessage || !mVerifiedText.isEmpty())) {
             //TODO: Bad hack, we need the TempNodeParsing anycase
             // but till we not make sure that the nodeparsing also creates html directly we need to have this hack.
-            mOtp->createAndParseTempNode(mNode, mDecryptedData.constData(), "encrypted node");
+            if (!mVerifiedText.isEmpty() && mTextNode) {
+                auto otp = new ObjectTreeParser(mOtp, true);
+                otp->setAllowAsync(mOtp->allowAsync());
+                otp->parseObjectTreeInternal(mTextNode);
+                mOtp->copyContentFrom(otp);
+            } else if (!mVerifiedText.isEmpty()) {
+                mOtp->createAndParseTempNode(mNode, mVerifiedText.constData(), "opaque signed data");
+            } else {
+                mOtp->createAndParseTempNode(mNode, mDecryptedData.constData(), "encrypted node");
+            }
         }
         return;
     }
@@ -216,9 +257,31 @@ void CryptoMessagePart::html(bool decorate) const
         const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
         writer->queue(text());           //Do not quote ErrorText
     } else {
-        if (mNode) {
+        if (mMetaData->isSigned && mVerifiedText.isEmpty() && !hideErrors) {
+            writer->queue(QStringLiteral("<hr><b><h2>"));
+            writer->queue(i18n("The crypto engine returned no cleartext data."));
+            writer->queue(QStringLiteral("</h2></b>"));
+            writer->queue(QStringLiteral("<br/>&nbsp;<br/>"));
+            writer->queue(i18n("Status: "));
+            if (!mMetaData->status.isEmpty()) {
+                writer->queue(QStringLiteral("<i>"));
+                writer->queue(mMetaData->status);
+                writer->queue(QStringLiteral("</i>"));
+            } else {
+                writer->queue(i18nc("Status of message unknown.", "(unknown)"));
+            }
+        } else if (mNode) {
             const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
-            mOtp->createAndParseTempNode(mNode, mDecryptedData.constData(), "encrypted node");
+            if (!mVerifiedText.isEmpty() && mTextNode) {
+                auto otp = new ObjectTreeParser(mOtp, true);
+                otp->setAllowAsync(mOtp->allowAsync());
+                otp->parseObjectTreeInternal(mTextNode);
+                mOtp->copyContentFrom(otp);
+            } else if (!mVerifiedText.isEmpty()) {
+                mOtp->createAndParseTempNode(mNode, mVerifiedText.constData(), "opaque signed data");
+            } else {
+                mOtp->createAndParseTempNode(mNode, mDecryptedData.constData(), "encrypted node");
+            }
         } else {
             MessagePart::html(decorate);
         }

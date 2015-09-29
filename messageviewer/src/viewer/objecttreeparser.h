@@ -395,13 +395,7 @@ private:
 
       Returns whether a signature was found or not: use this to
       find out if opaque data is signed or not. */
-    bool writeOpaqueOrMultipartSignedData(KMime::Content *data,
-                                          KMime::Content &sign,
-                                          const QString &fromAddress,
-                                          bool doCheck = true,
-                                          QByteArray *cleartextData = 0,
-                                          const std::vector<GpgME::Signature> &paramSignatures = std::vector<GpgME::Signature>(),
-                                          bool hideErrors = false);
+    bool writeOpaqueOrMultipartSignedData(KMime::Content* data, KMime::Content& sign, const QString& fromAddress, bool hideErrors = false);
 
     /** Writes out the block that we use when the node is encrypted,
       but we're deferring decryption for later. */

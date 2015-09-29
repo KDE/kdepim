@@ -95,6 +95,7 @@ public:
     void startDecryption(const QByteArray &text, const QTextCodec *aCodec);
     void startDecryption(KMime::Content *data = 0);
     void startVerification(const QByteArray &text, const QTextCodec *aCodec);
+    void startVerificationDetached(const QByteArray& text, KMime::Content* textNode, const QByteArray& signature );
     void html(bool decorate) const Q_DECL_OVERRIDE;
 
     bool mPassphraseError;
@@ -103,8 +104,9 @@ public:
 protected:
     const Kleo::CryptoBackend::Protocol *mCryptoProto;
     QString mFromAddress;
-    KMime::Content *mNode;
+    KMime::Content *mNode, *mTextNode;
     bool mDecryptMessage;
+    QByteArray mVerifiedText;
 };
 
 }
