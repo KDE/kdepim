@@ -21,27 +21,28 @@
 #include <QObject>
 #include "messageviewer_export.h"
 class KActionCollection;
+class QAction;
 namespace MessageViewer
 {
 class ViewerPluginToolManagerPrivate;
+class ViewerPluginInterface;
 class MESSAGEVIEWER_EXPORT ViewerPluginToolManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit ViewerPluginToolManager(QObject *parent = Q_NULLPTR);
+    explicit ViewerPluginToolManager(QWidget *parentWidget, QObject *parent = Q_NULLPTR);
     ~ViewerPluginToolManager();
-
-    enum WidgetPosition {
-        Top = 0,
-        Bottom = 1,
-        Left = 2,
-        Right = 3
-    };
 
     void closeAllTools();
 
     void createView();
     void setActionCollection(KActionCollection *ac);
+
+    QList<QAction *> actionList() const;
+
+Q_SIGNALS:
+    void activatePlugin(MessageViewer::ViewerPluginInterface *);
+
 private:
     ViewerPluginToolManagerPrivate *const d;
 };

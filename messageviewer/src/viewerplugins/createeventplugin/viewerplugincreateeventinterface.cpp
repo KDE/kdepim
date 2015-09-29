@@ -30,12 +30,9 @@ ViewerPluginCreateEventInterface::ViewerPluginCreateEventInterface(KActionCollec
     : ViewerPluginInterface(parent),
       mAction(Q_NULLPTR)
 {
-    QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setMargin(0);
-    setLayout(hbox);
-    mEventEdit = new EventEdit(this);
+    mEventEdit = new EventEdit(parent);
     mEventEdit->setObjectName(QStringLiteral("eventedit"));
-    hbox->addWidget(mEventEdit);
+    parent->layout()->addWidget(mEventEdit);
     mEventEdit->hide();
     createAction(ac);
 }

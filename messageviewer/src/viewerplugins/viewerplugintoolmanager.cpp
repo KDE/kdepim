@@ -18,6 +18,7 @@
 #include "viewerplugintoolmanager.h"
 #include "viewerpluginmanager.h"
 #include "viewerplugin.h"
+#include "viewerplugininterface.h"
 
 #include <QVector>
 
@@ -27,28 +28,38 @@ using namespace MessageViewer;
 class MessageViewer::ViewerPluginToolManagerPrivate
 {
 public:
-    ViewerPluginToolManagerPrivate()
-        : mActionCollection(Q_NULLPTR)
+    ViewerPluginToolManagerPrivate(ViewerPluginToolManager *qq, QWidget *parentWidget)
+        : mActionCollection(Q_NULLPTR),
+          mParentWidget(parentWidget),
+          q(qq)
     {
 
     }
     void createView();
     void closeAllTools();
     void setActionCollection(KActionCollection *ac);
+    QList<QAction *> actionList() const;
+    QList<MessageViewer::ViewerPluginInterface *> mListInterface;
     KActionCollection *mActionCollection;
+    QWidget *mParentWidget;
+    ViewerPluginToolManager *q;
 };
 
 void ViewerPluginToolManagerPrivate::createView()
 {
     QVector<MessageViewer::ViewerPlugin *> listPlugin = MessageViewer::ViewerPluginManager::self()->pluginsList();
     Q_FOREACH(MessageViewer::ViewerPlugin *plugin, listPlugin) {
-        //plugin->createView()
+        MessageViewer::ViewerPluginInterface *interface = plugin->createView(mParentWidget, mActionCollection);
+        q->connect(interface, &MessageViewer::ViewerPluginInterface::activatePlugin, q, &ViewerPluginToolManager::activatePlugin);
+        mListInterface.append(interface);
     }
 }
 
 void ViewerPluginToolManagerPrivate::closeAllTools()
 {
-    //TODO
+    Q_FOREACH(MessageViewer::ViewerPluginInterface *interface, mListInterface) {
+        interface->closePlugin();
+    }
 }
 
 void ViewerPluginToolManagerPrivate::setActionCollection(KActionCollection *ac)
@@ -56,10 +67,19 @@ void ViewerPluginToolManagerPrivate::setActionCollection(KActionCollection *ac)
     mActionCollection = ac;
 }
 
+QList<QAction *> ViewerPluginToolManagerPrivate::actionList() const
+{
+    QList<QAction *> lstAction;
+    Q_FOREACH(MessageViewer::ViewerPluginInterface *interface, mListInterface) {
+        lstAction.append(interface->action());
+    }
+    return lstAction;
+}
 
-ViewerPluginToolManager::ViewerPluginToolManager(QObject *parent)
+
+ViewerPluginToolManager::ViewerPluginToolManager(QWidget *parentWidget, QObject *parent)
     : QObject(parent),
-      d(new MessageViewer::ViewerPluginToolManagerPrivate)
+      d(new MessageViewer::ViewerPluginToolManagerPrivate(this, parentWidget))
 {
 }
 
@@ -81,4 +101,9 @@ void ViewerPluginToolManager::createView()
 void ViewerPluginToolManager::setActionCollection(KActionCollection *ac)
 {
     d->setActionCollection(ac);
+}
+
+QList<QAction *> ViewerPluginToolManager::actionList() const
+{
+    return d->actionList();
 }

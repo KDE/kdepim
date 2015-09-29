@@ -30,12 +30,9 @@ ViewerPluginCreateTodoInterface::ViewerPluginCreateTodoInterface(KActionCollecti
     : ViewerPluginInterface(parent),
       mAction(Q_NULLPTR)
 {
-    QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setMargin(0);
-    setLayout(hbox);
-    mTodoEdit = new TodoEdit(this);
+    mTodoEdit = new TodoEdit(parent);
     mTodoEdit->setObjectName(QStringLiteral("todoedit"));
-    hbox->addWidget(mTodoEdit);
+    parent->layout()->addWidget(mTodoEdit);
     mTodoEdit->hide();
     createAction(ac);
 }

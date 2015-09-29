@@ -30,14 +30,11 @@ ViewerPluginCreatenoteInterface::ViewerPluginCreatenoteInterface(KActionCollecti
     : ViewerPluginInterface(parent),
       mAction(Q_NULLPTR)
 {
-    QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setMargin(0);
-    setLayout(hbox);
     createAction(ac);
-    mNoteEdit = new NoteEdit(this);
+    mNoteEdit = new NoteEdit(parent);
     mNoteEdit->setObjectName(QStringLiteral("noteedit"));
     mNoteEdit->hide();
-    hbox->addWidget(mNoteEdit);
+    parent->layout()->addWidget(mNoteEdit);
 }
 
 ViewerPluginCreatenoteInterface::~ViewerPluginCreatenoteInterface()

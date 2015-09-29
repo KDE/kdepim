@@ -18,7 +18,7 @@
 #ifndef VIEWERPLUGININTERFACE_H
 #define VIEWERPLUGININTERFACE_H
 
-#include <QWidget>
+#include <QObject>
 #include "messageviewer_export.h"
 #include <kmime/kmime_message.h>
 
@@ -26,11 +26,11 @@ class QAction;
 namespace MessageViewer
 {
 class ViewerPluginInterfacePrivate;
-class MESSAGEVIEWER_EXPORT ViewerPluginInterface : public QWidget
+class MESSAGEVIEWER_EXPORT ViewerPluginInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit ViewerPluginInterface(QWidget *parent = Q_NULLPTR);
+    explicit ViewerPluginInterface(QObject *parent = Q_NULLPTR);
     ~ViewerPluginInterface();
 
     virtual void setText(const QString &text);
@@ -45,7 +45,7 @@ protected Q_SLOTS:
     void slotActivatePlugin();
 
 Q_SIGNALS:
-    void activatePlugin(ViewerPluginInterface *);
+    void activatePlugin(MessageViewer::ViewerPluginInterface *);
 
 private:
     ViewerPluginInterfacePrivate *const d;

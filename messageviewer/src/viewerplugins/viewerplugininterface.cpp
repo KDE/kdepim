@@ -29,8 +29,8 @@ public:
     }
 };
 
-ViewerPluginInterface::ViewerPluginInterface(QWidget *parent)
-    : QWidget(parent),
+ViewerPluginInterface::ViewerPluginInterface(QObject *parent)
+    : QObject(parent),
       d(new MessageViewer::ViewerPluginInterfacePrivate)
 {
 

@@ -16,10 +16,13 @@
 */
 
 #include "viewerplugin_gui.h"
+#include "viewerplugins/viewerplugintoolmanager.h"
 #include <QStandardPaths>
+#include <KActionCollection>
 #include <KLocalizedString>
 
 #include <QApplication>
+#include <QTextEdit>
 #include <KAboutData>
 #include <QCommandLineParser>
 #include <QVBoxLayout>
@@ -27,12 +30,28 @@
 ViewerPluginTest::ViewerPluginTest(QWidget *parent)
     : QWidget(parent)
 {
+    QVBoxLayout *vbox = new QVBoxLayout;
+    setLayout(vbox);
+    QTextEdit *textEdit = new QTextEdit;
+    vbox->addWidget(textEdit);
+
+    QWidget *toolManagerWidget = new QWidget;
+    vbox->addWidget(toolManagerWidget);
+    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->setMargin(0);
+    hbox->setSpacing(0);
+    toolManagerWidget->setLayout(hbox);
+    MessageViewer::ViewerPluginToolManager *toolManager = new MessageViewer::ViewerPluginToolManager(toolManagerWidget, this);
+    toolManager->setActionCollection(new KActionCollection(this));
+    toolManager->createView();
 }
 
 ViewerPluginTest::~ViewerPluginTest()
 {
 
 }
+
+
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
