@@ -40,6 +40,12 @@ public:
 protected:
     void addHelpTextAction(QAction *act, const QString &text);
 
+protected Q_SLOTS:
+    void slotActivatePlugin();
+
+Q_SIGNALS:
+    void activatePlugin(ViewerPluginInterface *);
+
 private:
     ViewerPluginInterfacePrivate *const d;
 };

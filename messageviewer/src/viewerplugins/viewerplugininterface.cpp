@@ -66,3 +66,8 @@ void ViewerPluginInterface::addHelpTextAction(QAction *act, const QString &text)
         act->setWhatsThis(text);
     }
 }
+
+void ViewerPluginInterface::slotActivatePlugin()
+{
+    Q_EMIT activatePlugin(this);
+}

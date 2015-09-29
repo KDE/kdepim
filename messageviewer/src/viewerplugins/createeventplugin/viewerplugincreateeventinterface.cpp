@@ -63,5 +63,5 @@ void ViewerPluginCreateEventInterface::createAction(KActionCollection *ac)
     addHelpTextAction(mAction, i18n("Allows you to create a calendar Event"));
     ac->addAction(QStringLiteral("create_event"), mAction);
     ac->setDefaultShortcut(mAction, QKeySequence(Qt::CTRL + Qt::Key_E));
-    //connect(mAction, &QAction::triggered, this, &ViewerPluginCreateEventInterface::)
+    connect(mAction, &QAction::triggered, this, &ViewerPluginCreateEventInterface::slotActivatePlugin);
 }
