@@ -37,6 +37,7 @@ public:
     virtual QAction *action() const;
     virtual void setMessage(const KMime::Message::Ptr &value);
     virtual void closePlugin();
+    virtual void showWidget() = 0;
 
 protected:
     void addHelpTextAction(QAction *act, const QString &text);

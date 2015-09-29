@@ -21,6 +21,7 @@
 #include "viewerplugininterface.h"
 
 #include <QVector>
+#include <QDebug>
 
 
 using namespace MessageViewer;

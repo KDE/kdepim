@@ -63,6 +63,11 @@ void ViewerPluginCreatenoteInterface::closePlugin()
     mNoteEdit->slotCloseWidget();
 }
 
+void ViewerPluginCreatenoteInterface::showWidget()
+{
+    mNoteEdit->showNoteEdit();
+}
+
 void ViewerPluginCreatenoteInterface::createAction(KActionCollection *ac)
 {
     if (ac) {
@@ -71,5 +76,6 @@ void ViewerPluginCreatenoteInterface::createAction(KActionCollection *ac)
         addHelpTextAction(mAction, i18n("Allows you to create a note from this message"));
         mAction->setWhatsThis(i18n("This option starts an editor to create a note. Then you can edit the note to your liking before saving it."));
         ac->addAction(QStringLiteral("create_note"), mAction);
+        connect(mAction, &QAction::triggered, this, &ViewerPluginCreatenoteInterface::slotActivatePlugin);
     }
 }

@@ -55,12 +55,17 @@ QAction *ViewerPluginCreateTodoInterface::action() const
 
 void ViewerPluginCreateTodoInterface::setMessage(const KMime::Message::Ptr &value)
 {
-    //TODO
+    mTodoEdit->setMessage(value);
 }
 
 void ViewerPluginCreateTodoInterface::closePlugin()
 {
-    //TODO
+    mTodoEdit->slotCloseWidget();
+}
+
+void ViewerPluginCreateTodoInterface::showWidget()
+{
+    mTodoEdit->showToDoWidget();
 }
 
 void ViewerPluginCreateTodoInterface::createAction(KActionCollection *ac)
@@ -72,5 +77,6 @@ void ViewerPluginCreateTodoInterface::createAction(KActionCollection *ac)
         mAction->setWhatsThis(i18n("This option starts the KOrganizer to-do editor with initial values taken from the currently selected message. Then you can edit the to-do to your liking before saving it to your calendar."));
         ac->addAction(QStringLiteral("create_todo"), mAction);
         ac->setDefaultShortcut(mAction, QKeySequence(Qt::CTRL + Qt::Key_T));
+        connect(mAction, &QAction::triggered, this, &ViewerPluginCreateTodoInterface::slotActivatePlugin);
     }
 }

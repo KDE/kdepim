@@ -34,6 +34,7 @@ public:
     QAction *action() const Q_DECL_OVERRIDE;
     void setMessage(const KMime::Message::Ptr &value) Q_DECL_OVERRIDE;
     void closePlugin() Q_DECL_OVERRIDE;
+    void showWidget() Q_DECL_OVERRIDE;
 
 private:
     void createAction(KActionCollection *ac);

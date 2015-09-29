@@ -19,6 +19,10 @@
 #define TEST_VIEWVERPLUGIN_GUI_H
 
 #include <QWidget>
+namespace MessageViewer
+{
+class ViewerPluginInterface;
+}
 
 class ViewerPluginTest : public QWidget
 {
@@ -26,6 +30,9 @@ class ViewerPluginTest : public QWidget
 public:
     explicit ViewerPluginTest(QWidget *parent = Q_NULLPTR);
     ~ViewerPluginTest();
+
+private slots:
+    void slotActivatePlugin(MessageViewer::ViewerPluginInterface *interface);
 };
 
 #endif

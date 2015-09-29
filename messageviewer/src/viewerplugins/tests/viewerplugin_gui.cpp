@@ -26,24 +26,35 @@
 #include <KAboutData>
 #include <QCommandLineParser>
 #include <QVBoxLayout>
+#include <QMenuBar>
+
+#include <viewerplugins/viewerplugininterface.h>
 
 ViewerPluginTest::ViewerPluginTest(QWidget *parent)
     : QWidget(parent)
 {
+    QMenuBar *menuBar = new QMenuBar(this);
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
+    vbox->addWidget(menuBar);
     QTextEdit *textEdit = new QTextEdit;
     vbox->addWidget(textEdit);
 
     QWidget *toolManagerWidget = new QWidget;
     vbox->addWidget(toolManagerWidget);
-    QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setMargin(0);
-    hbox->setSpacing(0);
-    toolManagerWidget->setLayout(hbox);
+    vbox = new QVBoxLayout;
+    vbox->setMargin(0);
+    vbox->setSpacing(0);
+    toolManagerWidget->setLayout(vbox);
     MessageViewer::ViewerPluginToolManager *toolManager = new MessageViewer::ViewerPluginToolManager(toolManagerWidget, this);
+    connect(toolManager, &MessageViewer::ViewerPluginToolManager::activatePlugin, this, &ViewerPluginTest::slotActivatePlugin);
+
     toolManager->setActionCollection(new KActionCollection(this));
     toolManager->createView();
+    QMenu *menu = new QMenu(this);
+    menu->setTitle(QStringLiteral("tools"));
+    menu->addActions(toolManager->actionList());
+    menuBar->addMenu(menu);
 }
 
 ViewerPluginTest::~ViewerPluginTest()
@@ -51,6 +62,10 @@ ViewerPluginTest::~ViewerPluginTest()
 
 }
 
+void ViewerPluginTest::slotActivatePlugin(MessageViewer::ViewerPluginInterface *interface)
+{
+    interface->showWidget();
+}
 
 int main(int argc, char **argv)
 {

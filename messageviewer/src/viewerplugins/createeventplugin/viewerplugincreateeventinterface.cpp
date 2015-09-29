@@ -63,6 +63,11 @@ void ViewerPluginCreateEventInterface::closePlugin()
     mEventEdit->slotCloseWidget();
 }
 
+void ViewerPluginCreateEventInterface::showWidget()
+{
+    mEventEdit->showEventEdit();
+}
+
 void ViewerPluginCreateEventInterface::createAction(KActionCollection *ac)
 {
     if (ac) {

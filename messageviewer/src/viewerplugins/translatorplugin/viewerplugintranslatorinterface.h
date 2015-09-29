@@ -35,10 +35,12 @@ public:
 
     void setText(const QString &text) Q_DECL_OVERRIDE;
     QAction *action() const Q_DECL_OVERRIDE;
+    void showWidget() Q_DECL_OVERRIDE;
 private:
     void createAction(KActionCollection *ac);
     QAction *mAction;
     PimCommon::TranslatorWidget *mTranslatorWidget;
+
 };
 }
 #endif // VIEWERPLUGINTRANSLATORINTERFACE_H

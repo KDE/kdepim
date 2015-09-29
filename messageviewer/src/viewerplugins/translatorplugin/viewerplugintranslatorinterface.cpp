@@ -51,6 +51,11 @@ QAction *ViewerPluginTranslatorInterface::action() const
     return mAction;
 }
 
+void ViewerPluginTranslatorInterface::showWidget()
+{
+    mTranslatorWidget->show();
+}
+
 void ViewerPluginTranslatorInterface::createAction(KActionCollection *ac)
 {
     if (ac) {
@@ -58,5 +63,6 @@ void ViewerPluginTranslatorInterface::createAction(KActionCollection *ac)
         ac->setDefaultShortcut(mAction, QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
         mAction->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-locale")));
         ac->addAction(QStringLiteral("translate_text"), mAction);
+        connect(mAction, &QAction::triggered, this, &ViewerPluginTranslatorInterface::slotActivatePlugin);
     }
 }
