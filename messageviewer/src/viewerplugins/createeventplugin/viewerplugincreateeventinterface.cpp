@@ -68,6 +68,16 @@ void ViewerPluginCreateEventInterface::showWidget()
     mEventEdit->showEventEdit();
 }
 
+void ViewerPluginCreateEventInterface::setMessageItem(const Akonadi::Item &item)
+{
+    mMessageItem = item;
+}
+
+bool ViewerPluginCreateEventInterface::needValidMessage() const
+{
+    return true;
+}
+
 void ViewerPluginCreateEventInterface::createAction(KActionCollection *ac)
 {
     if (ac) {

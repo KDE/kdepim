@@ -58,6 +58,11 @@ void ViewerPluginInterface::setMessage(const KMime::Message::Ptr &value)
     // Reimplement in subclass
 }
 
+void ViewerPluginInterface::setMessageItem(const Akonadi::Item &item)
+{
+    // Reimplement in subclass
+}
+
 void ViewerPluginInterface::closePlugin()
 {
     // Reimplement in subclass

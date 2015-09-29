@@ -264,9 +264,9 @@ public:
     void setZoomTextOnly(bool textOnly);
     bool zoomTextOnly() const;
 
-    KToggleAction *toggleFixFontAction();
+    KToggleAction *toggleFixFontAction() const;
 
-    KToggleAction *toggleMimePartTreeAction();
+    KToggleAction *toggleMimePartTreeAction() const;
 
     QAction *selectAllAction();
     QAction *copyURLAction();
@@ -283,7 +283,7 @@ public:
     QAction *blockImage();
     QAction *openBlockableItems();
     QAction *expandShortUrlAction();
-    QAction *createTodoAction();
+    QAction *createTodoAction() const;
     QAction *createEventAction();
     QAction *createNoteAction();
     KActionMenu *shareServiceUrlMenu();

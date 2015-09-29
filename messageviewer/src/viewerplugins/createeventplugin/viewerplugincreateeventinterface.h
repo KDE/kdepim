@@ -35,9 +35,12 @@ public:
     void setMessage(const KMime::Message::Ptr &value) Q_DECL_OVERRIDE;
     void closePlugin() Q_DECL_OVERRIDE;
     void showWidget() Q_DECL_OVERRIDE;
+    void setMessageItem(const Akonadi::Item &item) Q_DECL_OVERRIDE;
+    bool needValidMessage() const Q_DECL_OVERRIDE;
 
 private:
     void createAction(KActionCollection *ac);
+    Akonadi::Item mMessageItem;
     EventEdit *mEventEdit;
     QAction *mAction;    
 };

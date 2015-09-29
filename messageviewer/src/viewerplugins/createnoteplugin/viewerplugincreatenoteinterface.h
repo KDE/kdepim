@@ -36,10 +36,17 @@ public:
     void setMessage(const KMime::Message::Ptr &value) Q_DECL_OVERRIDE;
     void closePlugin() Q_DECL_OVERRIDE;
     void showWidget() Q_DECL_OVERRIDE;
+    void setMessageItem(const Akonadi::Item &item) Q_DECL_OVERRIDE;
+    bool needValidMessage() const Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    void slotCreateNote(const KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection);
+
 private:
     void createAction(KActionCollection *ac);
+    Akonadi::Item mMessageItem;
     NoteEdit *mNoteEdit;
-    QAction *mAction;
+    QAction *mAction;    
 };
 }
 #endif // VIEWERPLUGINCREATENOTEINTERFACE_H

@@ -33,7 +33,6 @@ ViewerPluginCreatenote::ViewerPluginCreatenote(QObject *parent, const QList<QVar
 ViewerPluginInterface *ViewerPluginCreatenote::createView(QWidget *parent, KActionCollection *ac)
 {
     MessageViewer::ViewerPluginInterface *view = new MessageViewer::ViewerPluginCreatenoteInterface(ac, parent);
-    //TODO
     return view;
 }
 

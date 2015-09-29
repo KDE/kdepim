@@ -39,7 +39,7 @@ public:
     void createView();
     void closeAllTools();
     void setActionCollection(KActionCollection *ac);
-    QList<QAction *> actionList() const;
+    QList<QAction *> actionList(bool needValidMessage) const;
     QList<MessageViewer::ViewerPluginInterface *> mListInterface;
     KActionCollection *mActionCollection;
     QWidget *mParentWidget;
@@ -68,11 +68,17 @@ void ViewerPluginToolManagerPrivate::setActionCollection(KActionCollection *ac)
     mActionCollection = ac;
 }
 
-QList<QAction *> ViewerPluginToolManagerPrivate::actionList() const
+QList<QAction *> ViewerPluginToolManagerPrivate::actionList(bool needValidMessage) const
 {
     QList<QAction *> lstAction;
     Q_FOREACH(MessageViewer::ViewerPluginInterface *interface, mListInterface) {
-        lstAction.append(interface->action());
+        if (needValidMessage) {
+            if(interface->needValidMessage()) {
+                lstAction.append(interface->action());
+            }
+        } else {
+            lstAction.append(interface->action());
+        }
     }
     return lstAction;
 }
@@ -104,7 +110,7 @@ void ViewerPluginToolManager::setActionCollection(KActionCollection *ac)
     d->setActionCollection(ac);
 }
 
-QList<QAction *> ViewerPluginToolManager::actionList() const
+QList<QAction *> ViewerPluginToolManager::actionList(bool needValidMessage) const
 {
-    return d->actionList();
+    return d->actionList(needValidMessage);
 }

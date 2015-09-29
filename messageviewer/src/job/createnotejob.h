@@ -18,6 +18,7 @@
 #ifndef CREATENOTEJOB_H
 #define CREATENOTEJOB_H
 
+#include "messageviewer_export.h"
 #include <KJob>
 #include <AkonadiCore/Item>
 #include <AkonadiCore/Collection>
@@ -29,7 +30,7 @@
 
 namespace MessageViewer
 {
-class CreateNoteJob : public KJob
+class MESSAGEVIEWER_EXPORT CreateNoteJob : public KJob
 {
     Q_OBJECT
 public:

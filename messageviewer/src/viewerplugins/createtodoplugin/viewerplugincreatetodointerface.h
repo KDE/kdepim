@@ -19,6 +19,8 @@
 #define VIEWERPLUGINCREATETODOINTERFACE_H
 
 #include <viewerplugins/viewerplugininterface.h>
+#include <KCalCore/Todo>
+#include <AkonadiCore/Collection>
 class KActionCollection;
 namespace MessageViewer
 {
@@ -35,10 +37,16 @@ public:
     void setMessage(const KMime::Message::Ptr &value) Q_DECL_OVERRIDE;
     void closePlugin() Q_DECL_OVERRIDE;
     void showWidget() Q_DECL_OVERRIDE;
+    void setMessageItem(const Akonadi::Item &item) Q_DECL_OVERRIDE;
+    bool needValidMessage() const Q_DECL_OVERRIDE;
+private Q_SLOTS:
+    void slotCreateTodo(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection);
+
 private:
     void createAction(KActionCollection *ac);
     TodoEdit *mTodoEdit;
     QAction *mAction;
+    Akonadi::Item mMessageItem;
 };
 }
 #endif // VIEWERPLUGINCREATETODOINTERFACE_H

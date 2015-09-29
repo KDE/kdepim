@@ -21,6 +21,7 @@
 #include <QObject>
 #include "messageviewer_export.h"
 #include <kmime/kmime_message.h>
+#include <AkonadiCore/Item>
 
 class QAction;
 namespace MessageViewer
@@ -36,8 +37,10 @@ public:
     virtual void setText(const QString &text);
     virtual QAction *action() const;
     virtual void setMessage(const KMime::Message::Ptr &value);
+    virtual void setMessageItem(const Akonadi::Item &item);
     virtual void closePlugin();
     virtual void showWidget() = 0;
+    virtual bool needValidMessage() const = 0;
 
 protected:
     void addHelpTextAction(QAction *act, const QString &text);

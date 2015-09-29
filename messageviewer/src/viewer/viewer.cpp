@@ -387,9 +387,9 @@ CSSHelper *Viewer::cssHelper() const
     return d->cssHelper();
 }
 
-KToggleAction *Viewer::toggleFixFontAction()
+KToggleAction *Viewer::toggleFixFontAction() const
 {
-    Q_D(Viewer);
+    Q_D(const Viewer);
     return d->mToggleFixFontAction;
 }
 
@@ -399,9 +399,9 @@ bool Viewer::mimePartTreeIsEmpty() const
     return d->mimePartTreeIsEmpty();
 }
 
-KToggleAction *Viewer::toggleMimePartTreeAction()
+KToggleAction *Viewer::toggleMimePartTreeAction() const
 {
-    Q_D(Viewer);
+    Q_D(const Viewer);
     return d->mToggleMimePartTreeAction;
 }
 
@@ -681,9 +681,9 @@ QAction *Viewer::expandShortUrlAction()
     return d->mExpandUrlAction;
 }
 
-QAction *Viewer::createTodoAction()
+QAction *Viewer::createTodoAction() const
 {
-    Q_D(Viewer);
+    Q_D(const Viewer);
     return d->mCreateTodoAction;
 }
 

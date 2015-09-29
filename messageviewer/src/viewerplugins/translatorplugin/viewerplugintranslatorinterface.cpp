@@ -56,6 +56,11 @@ void ViewerPluginTranslatorInterface::showWidget()
     mTranslatorWidget->show();
 }
 
+bool ViewerPluginTranslatorInterface::needValidMessage() const
+{
+    return false;
+}
+
 void ViewerPluginTranslatorInterface::createAction(KActionCollection *ac)
 {
     if (ac) {

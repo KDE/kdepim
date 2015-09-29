@@ -33,7 +33,6 @@ ViewerPluginCreateevent::ViewerPluginCreateevent(QObject *parent, const QList<QV
 ViewerPluginInterface *ViewerPluginCreateevent::createView(QWidget *parent, KActionCollection *ac)
 {
     MessageViewer::ViewerPluginInterface *view = new MessageViewer::ViewerPluginCreateEventInterface(ac, parent);
-    //TODO
     return view;
 }
 

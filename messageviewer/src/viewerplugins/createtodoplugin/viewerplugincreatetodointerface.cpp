@@ -24,6 +24,8 @@
 #include <QHBoxLayout>
 #include <QAction>
 
+#include <job/createtodojob.h>
+
 using namespace MessageViewer;
 
 ViewerPluginCreateTodoInterface::ViewerPluginCreateTodoInterface(KActionCollection *ac, QWidget *parent)
@@ -32,6 +34,7 @@ ViewerPluginCreateTodoInterface::ViewerPluginCreateTodoInterface(KActionCollecti
 {
     mTodoEdit = new TodoEdit(parent);
     mTodoEdit->setObjectName(QStringLiteral("todoedit"));
+    connect(mTodoEdit, &TodoEdit::createTodo, this, &ViewerPluginCreateTodoInterface::slotCreateTodo);
     parent->layout()->addWidget(mTodoEdit);
     mTodoEdit->hide();
     createAction(ac);
@@ -68,6 +71,16 @@ void ViewerPluginCreateTodoInterface::showWidget()
     mTodoEdit->showToDoWidget();
 }
 
+void ViewerPluginCreateTodoInterface::setMessageItem(const Akonadi::Item &item)
+{
+    mMessageItem = item;
+}
+
+bool ViewerPluginCreateTodoInterface::needValidMessage() const
+{
+    return true;
+}
+
 void ViewerPluginCreateTodoInterface::createAction(KActionCollection *ac)
 {
     if (ac) {
@@ -79,4 +92,10 @@ void ViewerPluginCreateTodoInterface::createAction(KActionCollection *ac)
         ac->setDefaultShortcut(mAction, QKeySequence(Qt::CTRL + Qt::Key_T));
         connect(mAction, &QAction::triggered, this, &ViewerPluginCreateTodoInterface::slotActivatePlugin);
     }
+}
+
+void ViewerPluginCreateTodoInterface::slotCreateTodo(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection)
+{
+    CreateTodoJob *createJob = new CreateTodoJob(todoPtr, collection, mMessageItem, this);
+    createJob->start();
 }

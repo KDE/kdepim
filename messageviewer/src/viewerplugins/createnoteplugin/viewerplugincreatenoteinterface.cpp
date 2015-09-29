@@ -24,6 +24,8 @@
 #include <QIcon>
 #include <QAction>
 
+#include <job/createnotejob.h>
+
 using namespace MessageViewer;
 
 ViewerPluginCreatenoteInterface::ViewerPluginCreatenoteInterface(KActionCollection *ac, QWidget *parent)
@@ -68,6 +70,16 @@ void ViewerPluginCreatenoteInterface::showWidget()
     mNoteEdit->showNoteEdit();
 }
 
+void ViewerPluginCreatenoteInterface::setMessageItem(const Akonadi::Item &item)
+{
+    mMessageItem = item;
+}
+
+bool ViewerPluginCreatenoteInterface::needValidMessage() const
+{
+    return true;
+}
+
 void ViewerPluginCreatenoteInterface::createAction(KActionCollection *ac)
 {
     if (ac) {
@@ -78,4 +90,10 @@ void ViewerPluginCreatenoteInterface::createAction(KActionCollection *ac)
         ac->addAction(QStringLiteral("create_note"), mAction);
         connect(mAction, &QAction::triggered, this, &ViewerPluginCreatenoteInterface::slotActivatePlugin);
     }
+}
+
+void ViewerPluginCreatenoteInterface::slotCreateNote(const KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection)
+{
+    CreateNoteJob *createJob = new CreateNoteJob(notePtr, collection, mMessageItem, this);
+    createJob->start();
 }

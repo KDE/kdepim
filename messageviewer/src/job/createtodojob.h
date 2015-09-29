@@ -17,6 +17,7 @@
 
 #ifndef CREATETODOJOB_H
 #define CREATETODOJOB_H
+#include "messageviewer_export.h"
 #include <KJob>
 #include <AkonadiCore/Item>
 #include <AkonadiCore/Collection>
@@ -25,7 +26,7 @@
 #include <QObject>
 namespace MessageViewer
 {
-class CreateTodoJob : public KJob
+class MESSAGEVIEWER_EXPORT CreateTodoJob : public KJob
 {
     Q_OBJECT
 public:
