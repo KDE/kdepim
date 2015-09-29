@@ -16,7 +16,9 @@
 */
 
 #include "grantleeheaderstyleinterface.h"
-
+#include "header/headerstyleplugin.h"
+#include "header/headerstyle.h"
+#include "globalsettings_grantleetheme.h"
 #include <grantleetheme/grantleethememanager.h>
 #include <KToggleAction>
 
@@ -42,7 +44,8 @@ void GrantleeHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup 
 
     mThemeManager->setActionGroup(actionGroup);
     mThemeManager->setThemeMenu(menu);
-
+    const QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeMailThemeName();
+    mHeaderStylePlugin->headerStyle()->setTheme(mThemeManager->theme(themeName));
     addActionToMenu(menu, actionGroup);
 }
 
@@ -56,5 +59,7 @@ void GrantleeHeaderStyleInterface::activateAction()
 
 void GrantleeHeaderStyleInterface::slotGrantleeHeaders()
 {
+    const QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeMailThemeName();
+    mHeaderStylePlugin->headerStyle()->setTheme(mThemeManager->theme(themeName));
     slotStyleChanged();
 }
