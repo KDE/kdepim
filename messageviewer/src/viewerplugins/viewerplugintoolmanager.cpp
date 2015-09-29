@@ -28,13 +28,17 @@ class MessageViewer::ViewerPluginToolManagerPrivate
 {
 public:
     ViewerPluginToolManagerPrivate()
+        : mActionCollection(Q_NULLPTR)
     {
 
     }
-    void initialize();
+    void createView();
+    void closeAllTools();
+    void setActionCollection(KActionCollection *ac);
+    KActionCollection *mActionCollection;
 };
 
-void ViewerPluginToolManagerPrivate::initialize()
+void ViewerPluginToolManagerPrivate::createView()
 {
     QVector<MessageViewer::ViewerPlugin *> listPlugin = MessageViewer::ViewerPluginManager::self()->pluginsList();
     Q_FOREACH(MessageViewer::ViewerPlugin *plugin, listPlugin) {
@@ -42,12 +46,21 @@ void ViewerPluginToolManagerPrivate::initialize()
     }
 }
 
+void ViewerPluginToolManagerPrivate::closeAllTools()
+{
+    //TODO
+}
+
+void ViewerPluginToolManagerPrivate::setActionCollection(KActionCollection *ac)
+{
+    mActionCollection = ac;
+}
+
 
 ViewerPluginToolManager::ViewerPluginToolManager(QObject *parent)
     : QObject(parent),
       d(new MessageViewer::ViewerPluginToolManagerPrivate)
 {
-    d->initialize();
 }
 
 ViewerPluginToolManager::~ViewerPluginToolManager()
@@ -55,4 +68,17 @@ ViewerPluginToolManager::~ViewerPluginToolManager()
     delete d;
 }
 
+void ViewerPluginToolManager::closeAllTools()
+{
+    d->closeAllTools();
+}
 
+void ViewerPluginToolManager::createView()
+{
+    d->createView();
+}
+
+void ViewerPluginToolManager::setActionCollection(KActionCollection *ac)
+{
+    d->setActionCollection(ac);
+}

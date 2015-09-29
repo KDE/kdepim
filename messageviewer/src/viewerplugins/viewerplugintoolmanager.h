@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include "messageviewer_export.h"
+class KActionCollection;
 namespace MessageViewer
 {
 class ViewerPluginToolManagerPrivate;
@@ -29,6 +30,18 @@ class MESSAGEVIEWER_EXPORT ViewerPluginToolManager : public QObject
 public:
     explicit ViewerPluginToolManager(QObject *parent = Q_NULLPTR);
     ~ViewerPluginToolManager();
+
+    enum WidgetPosition {
+        Top = 0,
+        Bottom = 1,
+        Left = 2,
+        Right = 3
+    };
+
+    void closeAllTools();
+
+    void createView();
+    void setActionCollection(KActionCollection *ac);
 private:
     ViewerPluginToolManagerPrivate *const d;
 };
