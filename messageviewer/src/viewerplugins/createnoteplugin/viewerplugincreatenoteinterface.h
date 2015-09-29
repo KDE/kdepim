@@ -33,10 +33,13 @@ public:
 
     void setText(const QString &text) Q_DECL_OVERRIDE;
     QAction *action() const Q_DECL_OVERRIDE;
+    void setMessage(const KMime::Message::Ptr &value) Q_DECL_OVERRIDE;
+    void closePlugin() Q_DECL_OVERRIDE;
 private:
     void createAction(KActionCollection *ac);
     NoteEdit *mNoteEdit;
     QAction *mAction;
+
 };
 }
 #endif // VIEWERPLUGINCREATENOTEINTERFACE_H

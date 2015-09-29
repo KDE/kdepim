@@ -56,12 +56,24 @@ QAction *ViewerPluginCreateEventInterface::action() const
     return mAction;
 }
 
+void ViewerPluginCreateEventInterface::setMessage(const KMime::Message::Ptr &value)
+{
+    mEventEdit->setMessage(value);
+}
+
+void ViewerPluginCreateEventInterface::closePlugin()
+{
+    mEventEdit->slotCloseWidget();
+}
+
 void ViewerPluginCreateEventInterface::createAction(KActionCollection *ac)
 {
-    mAction = new QAction(QIcon::fromTheme(QStringLiteral("appointment-new")), i18n("Create Event..."), this);
-    mAction->setIconText(i18n("Create Event"));
-    addHelpTextAction(mAction, i18n("Allows you to create a calendar Event"));
-    ac->addAction(QStringLiteral("create_event"), mAction);
-    ac->setDefaultShortcut(mAction, QKeySequence(Qt::CTRL + Qt::Key_E));
-    connect(mAction, &QAction::triggered, this, &ViewerPluginCreateEventInterface::slotActivatePlugin);
+    if (ac) {
+        mAction = new QAction(QIcon::fromTheme(QStringLiteral("appointment-new")), i18n("Create Event..."), this);
+        mAction->setIconText(i18n("Create Event"));
+        addHelpTextAction(mAction, i18n("Allows you to create a calendar Event"));
+        ac->addAction(QStringLiteral("create_event"), mAction);
+        ac->setDefaultShortcut(mAction, QKeySequence(Qt::CTRL + Qt::Key_E));
+        connect(mAction, &QAction::triggered, this, &ViewerPluginCreateEventInterface::slotActivatePlugin);
+    }
 }

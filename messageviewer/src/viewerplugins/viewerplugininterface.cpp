@@ -58,6 +58,11 @@ void ViewerPluginInterface::setMessage(const KMime::Message::Ptr &value)
     // Reimplement in subclass
 }
 
+void ViewerPluginInterface::closePlugin()
+{
+    // Reimplement in subclass
+}
+
 void ViewerPluginInterface::addHelpTextAction(QAction *act, const QString &text)
 {
     act->setStatusTip(text);

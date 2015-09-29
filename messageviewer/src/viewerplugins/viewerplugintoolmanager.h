@@ -15,41 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VIEWERPLUGININTERFACE_H
-#define VIEWERPLUGININTERFACE_H
+#ifndef VIEWERPLUGINTOOLMANAGER_H
+#define VIEWERPLUGINTOOLMANAGER_H
 
-#include <QWidget>
+#include <QObject>
 #include "messageviewer_export.h"
-#include <kmime/kmime_message.h>
-
-class QAction;
 namespace MessageViewer
 {
-class ViewerPluginInterfacePrivate;
-class MESSAGEVIEWER_EXPORT ViewerPluginInterface : public QWidget
+class ViewerPluginToolManagerPrivate;
+class MESSAGEVIEWER_EXPORT ViewerPluginToolManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit ViewerPluginInterface(QWidget *parent = Q_NULLPTR);
-    ~ViewerPluginInterface();
-
-    virtual void setText(const QString &text);
-    virtual QAction *action() const;
-    virtual void setMessage(const KMime::Message::Ptr &value);
-    virtual void closePlugin();
-
-protected:
-    void addHelpTextAction(QAction *act, const QString &text);
-
-protected Q_SLOTS:
-    void slotActivatePlugin();
-
-Q_SIGNALS:
-    void activatePlugin(ViewerPluginInterface *);
-
+    explicit ViewerPluginToolManager(QObject *parent = Q_NULLPTR);
+    ~ViewerPluginToolManager();
 private:
-    ViewerPluginInterfacePrivate *const d;
+    ViewerPluginToolManagerPrivate *const d;
 };
 }
-
-#endif // VIEWERPLUGININTERFACE_H
+#endif // VIEWERPLUGINTOOLMANAGER_H

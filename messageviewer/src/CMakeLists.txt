@@ -194,6 +194,7 @@ set(libmessageviewer_viewerplugins_SRCS
    viewerplugins/viewerpluginmanager.cpp
    viewerplugins/viewerplugin.cpp
    viewerplugins/viewerplugininterface.cpp
+   viewerplugins/viewerplugintoolmanager.cpp
 )
 
 set(libmessageviewer_SRCS
@@ -387,6 +388,7 @@ ecm_generate_headers(MessageViewer_viewerplugin_HEADERS
   ViewerPluginManager
   ViewerPlugin
   ViewerPluginInterface
+  ViewerPluginToolManager
   REQUIRED_HEADERS MessageViewer_viewerplugin_HEADERS
   PREFIX MessageViewer
   RELATIVE viewerplugins 
