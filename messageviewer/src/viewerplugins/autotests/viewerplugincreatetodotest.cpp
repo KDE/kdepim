@@ -16,7 +16,9 @@
 */
 
 #include "viewerplugincreatetodotest.h"
+#include "../createtodoplugin/viewerplugincreatetodo.h"
 #include <QTest>
+#include <KActionCollection>
 ViewerPluginCreateTodoTest::ViewerPluginCreateTodoTest(QObject *parent)
     : QObject(parent)
 {
@@ -26,6 +28,13 @@ ViewerPluginCreateTodoTest::ViewerPluginCreateTodoTest(QObject *parent)
 ViewerPluginCreateTodoTest::~ViewerPluginCreateTodoTest()
 {
 
+}
+
+void ViewerPluginCreateTodoTest::shouldHaveDefaultValue()
+{
+    MessageViewer::ViewerPluginCreatetodo *todo = new MessageViewer::ViewerPluginCreatetodo(this);
+    QVERIFY(!todo->viewerPluginName().isEmpty());
+    QVERIFY(todo->createView(new QWidget(0), new KActionCollection(this)));
 }
 
 QTEST_MAIN(ViewerPluginCreateTodoTest)

@@ -26,6 +26,9 @@ class ViewerPluginCreateTodoTest : public QObject
 public:
     explicit ViewerPluginCreateTodoTest(QObject *parent = Q_NULLPTR);
     ~ViewerPluginCreateTodoTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // VIEWERPLUGINCREATETODOTEST_H
