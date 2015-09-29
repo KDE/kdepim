@@ -37,8 +37,6 @@ public:
                    const QString &extensivelabel = QString(), QWidget *parent = Q_NULLPTR);
     ~AlternateLabel();
 
-    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
-
     enum TextType {
         Short = 0,
         Long = 1,
@@ -59,6 +57,9 @@ protected:
     virtual void squeezeTextToLabel();
     bool mTextTypeFixed;
     QString mShortText, mLongText, mExtensiveText;
+
+private:
+    int getIndent() const;
 };
 
 }
