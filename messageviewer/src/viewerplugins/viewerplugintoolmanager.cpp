@@ -23,7 +23,6 @@
 #include <QVector>
 #include <QDebug>
 
-
 using namespace MessageViewer;
 
 class MessageViewer::ViewerPluginToolManagerPrivate
@@ -50,7 +49,7 @@ public:
 void ViewerPluginToolManagerPrivate::createView()
 {
     QVector<MessageViewer::ViewerPlugin *> listPlugin = MessageViewer::ViewerPluginManager::self()->pluginsList();
-    Q_FOREACH(MessageViewer::ViewerPlugin *plugin, listPlugin) {
+    Q_FOREACH (MessageViewer::ViewerPlugin *plugin, listPlugin) {
         MessageViewer::ViewerPluginInterface *interface = plugin->createView(mParentWidget, mActionCollection);
         q->connect(interface, &MessageViewer::ViewerPluginInterface::activatePlugin, q, &ViewerPluginToolManager::activatePlugin);
         mListInterface.append(interface);
@@ -59,7 +58,7 @@ void ViewerPluginToolManagerPrivate::createView()
 
 void ViewerPluginToolManagerPrivate::closeAllTools()
 {
-    Q_FOREACH(MessageViewer::ViewerPluginInterface *interface, mListInterface) {
+    Q_FOREACH (MessageViewer::ViewerPluginInterface *interface, mListInterface) {
         interface->closePlugin();
     }
 }
@@ -72,9 +71,9 @@ void ViewerPluginToolManagerPrivate::setActionCollection(KActionCollection *ac)
 QList<QAction *> ViewerPluginToolManagerPrivate::actionList(bool needValidMessage) const
 {
     QList<QAction *> lstAction;
-    Q_FOREACH(MessageViewer::ViewerPluginInterface *interface, mListInterface) {
+    Q_FOREACH (MessageViewer::ViewerPluginInterface *interface, mListInterface) {
         if (needValidMessage) {
-            if(interface->needValidMessageItem()) {
+            if (interface->needValidMessageItem()) {
                 lstAction.append(interface->action());
             }
         } else {
@@ -86,7 +85,7 @@ QList<QAction *> ViewerPluginToolManagerPrivate::actionList(bool needValidMessag
 
 void ViewerPluginToolManagerPrivate::updateActions(const Akonadi::Item &messageItem)
 {
-    Q_FOREACH(MessageViewer::ViewerPluginInterface *interface, mListInterface) {
+    Q_FOREACH (MessageViewer::ViewerPluginInterface *interface, mListInterface) {
         interface->updateAction(messageItem);
     }
 }

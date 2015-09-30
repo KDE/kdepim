@@ -484,7 +484,6 @@ private Q_SLOTS:
 
     void saveSplitterSizes() const;
 
-
     void slotRefreshMessage(const Akonadi::Item &item);
     void slotServiceUrlSelected(PimCommon::ShareServiceUrlManager::ServiceType serviceType);
     void slotStyleChanged(MessageViewer::HeaderStylePlugin *plugin);

@@ -46,7 +46,7 @@ private:
     void createAction(KActionCollection *ac);
     Akonadi::Item mMessageItem;
     EventEdit *mEventEdit;
-    QAction *mAction;    
+    QAction *mAction;
 };
 }
 #endif // VIEWERPLUGINCREATEEVENTINTERFACE_H

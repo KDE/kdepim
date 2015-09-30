@@ -1098,8 +1098,9 @@ void ViewerPrivate::readConfig()
     mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
     setZoomTextOnly(mZoomTextOnly);
     readGravatarConfig();
-    if (mHeaderStyleMenuManager)
+    if (mHeaderStyleMenuManager) {
         mHeaderStyleMenuManager->readConfig();
+    }
 
     setAttachmentStrategy(AttachmentStrategy::create(GlobalSettings::self()->attachmentStrategy()));
     KToggleAction *raction = actionForAttachmentStrategy(attachmentStrategy());
@@ -1481,7 +1482,6 @@ void ViewerPrivate::createActions()
     if (!ac) {
         return;
     }
-
 
     // attachment style
     KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
@@ -2357,8 +2357,9 @@ void ViewerPrivate::setPluginName(const QString &pluginName)
 
 QList<QAction *> ViewerPrivate::viewerPluginActionList(bool needValidMessage)
 {
-    if (mViewerPluginToolManager)
+    if (mViewerPluginToolManager) {
         return mViewerPluginToolManager->viewerPluginActionList(needValidMessage);
+    }
     return QList<QAction *>();
 }
 
@@ -2367,8 +2368,9 @@ void ViewerPrivate::slotActivatePlugin(ViewerPluginInterface *interface)
     interface->setMessage(mMessage);
     interface->setMessageItem(mMessageItem);
     const QString text = mViewer->selectedText();
-    if(!text.isEmpty())
+    if (!text.isEmpty()) {
         interface->setText(text);
+    }
     interface->showWidget();
 }
 
@@ -3047,7 +3049,6 @@ void ViewerPrivate::slotExpandShortUrl()
         mViewer->expandUrl(mClickedUrl);
     }
 }
-
 
 void ViewerPrivate::addHelpTextAction(QAction *act, const QString &text)
 {

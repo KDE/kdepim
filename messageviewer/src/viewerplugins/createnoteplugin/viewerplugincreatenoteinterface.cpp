@@ -118,7 +118,6 @@ void ViewerPluginCreatenoteInterface::slotNoteItemFetched(KJob *job)
     }
 }
 
-
 void ViewerPluginCreatenoteInterface::setMessageItem(const Akonadi::Item &item)
 {
     mMessageItem = item;

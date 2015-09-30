@@ -37,7 +37,6 @@ PlainHeaderStyle::PlainHeaderStyle()
 
 }
 
-
 //
 // PlainHeaderStyle:
 //   show every header field on a line by itself,

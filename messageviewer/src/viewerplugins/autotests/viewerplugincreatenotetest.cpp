@@ -52,5 +52,4 @@ void ViewerPluginCreateNoteTest::shouldCreateAction()
     QVERIFY(interface->action());
 }
 
-
 QTEST_MAIN(ViewerPluginCreateNoteTest)

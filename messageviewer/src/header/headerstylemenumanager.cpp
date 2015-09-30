@@ -124,8 +124,9 @@ void HeaderStyleMenuManagerPrivate::writeSettings(const QString &pluginName)
 void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)
 {
     headerMenu = new KActionMenu(i18nc("View->", "&Headers"), q);
-    if (ac)
+    if (ac) {
         ac->addAction(QStringLiteral("view_headers"), headerMenu);
+    }
     addHelpTextAction(headerMenu, i18n("Choose display style of message headers"));
     group = new QActionGroup(q);
 

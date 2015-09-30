@@ -49,8 +49,9 @@ HeaderStrategy *AllHeaderStylePlugin::headerStrategy() const
 HeaderStyleInterface *AllHeaderStylePlugin::createView(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac, QObject *parent)
 {
     MessageViewer::AllHeaderStyleInterface *view = new MessageViewer::AllHeaderStyleInterface(this, parent);
-    if (ac)
+    if (ac) {
         view->createAction(menu, actionGroup, ac);
+    }
     return view;
 }
 
