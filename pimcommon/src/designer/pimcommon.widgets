@@ -4,31 +4,31 @@ PluginName=PimCommonWidgets
 [PimCommon::SimpleStringListEditor]
 ToolTip=A listbox with add/remove/move up/down button (KDE-PIM)
 WhatsThis=A listbox which lets organize list order.
-IncludeFile=widgets/simplestringlisteditor.h
+IncludeFile=pimcommon/simplestringlisteditor.h
 Group=Input (KDE-PIM)
 
 [PimCommon::PlainTextEditorWidget]
 ToolTip=A QPlaintEditor with integrate search/replace function (KDE-PIM)
 WhatsThis=QPlaintEditor with integrate search/replace function
-IncludeFile=texteditor/plaintexteditor/plaintexteditorwidget.h
+IncludeFile=pimcommon/plaintexteditorwidget.h
 Group=Input (KDE-PIM)
 
 [PimCommon::RichTextEditorWidget]
 ToolTip=A RichTextEditor with integrate search/replace function (KDE-PIM)
 WhatsThis=RichTextEditor with integrate search/replace function
-IncludeFile=texteditor/richtexteditor/richtexteditorwidget.h
+IncludeFile=pimcommon/richtexteditorwidget.h
 Group=Input (KDE-PIM)
 
 
 [PimCommon::TranslatorWidget]
 ToolTip=A widget to make translate string (KDE-PIM)
 WhatsThis=A widget to make translate string
-IncludeFile=translator/translatorwidget.h
+IncludeFile=pimcommon/translatorwidget.h
 Group=Input (KDE-PIM)
 
 [PimCommon::ManageAccountWidget]
 ToolTip=A Widget to Manage Akonadi Account (KDE-PIM)
 WhatsThis=A Widget to Manage Akonadi Account
-IncludeFile=widgets/manageaccountwidget.h
+IncludeFile=pimcommon/manageaccountwidget.h
 Group=Input (KDE-PIM)
 

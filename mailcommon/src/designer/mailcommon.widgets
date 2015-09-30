@@ -4,6 +4,6 @@ PluginName=KDEPimMailCommonWidgets
 [MailCommon::SearchPatternEdit]
 ToolTip=Search pattern editor (KDE-PIM)
 WhatsThis=This widget is intended to be used in the filter configuration as well as in the message search dialogs.
-IncludeFile=search/searchpatternedit.h
+IncludeFile=mailcommon/searchpatternedit.h
 Group=Input (KDE-PIM)
 
