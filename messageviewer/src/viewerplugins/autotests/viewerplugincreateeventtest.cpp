@@ -18,7 +18,9 @@
 #include "viewerplugincreateeventtest.h"
 #include "../createeventplugin/viewerplugincreateevent.h"
 #include <KActionCollection>
+#include <QBoxLayout>
 #include <QTest>
+#include <viewerplugins/viewerplugininterface.h>
 
 ViewerPluginCreateeventTest::ViewerPluginCreateeventTest(QObject *parent)
     : QObject(parent)
@@ -35,7 +37,18 @@ void ViewerPluginCreateeventTest::shouldHaveDefaultValue()
 {
     MessageViewer::ViewerPluginCreateevent *event = new MessageViewer::ViewerPluginCreateevent(this);
     QVERIFY(!event->viewerPluginName().isEmpty());
-    QVERIFY(event->createView(new QWidget(0), new KActionCollection(this)));
+    QWidget *parent = new QWidget(0);
+    parent->setLayout(new QHBoxLayout);
+    QVERIFY(event->createView(parent, new KActionCollection(this)));
+}
+
+void ViewerPluginCreateeventTest::shouldCreateAction()
+{
+    MessageViewer::ViewerPluginCreateevent *event = new MessageViewer::ViewerPluginCreateevent(this);
+    QWidget *parent = new QWidget(0);
+    parent->setLayout(new QHBoxLayout);
+    MessageViewer::ViewerPluginInterface *interface = event->createView(parent, new KActionCollection(this));
+    QVERIFY(interface->action());
 }
 
 QTEST_MAIN(ViewerPluginCreateeventTest)

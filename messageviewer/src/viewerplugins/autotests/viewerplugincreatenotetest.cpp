@@ -18,7 +18,9 @@
 #include "viewerplugincreatenotetest.h"
 #include "../createnoteplugin/viewerplugincreatenote.h"
 #include <KActionCollection>
+#include <QHBoxLayout>
 #include <QTest>
+#include <viewerplugins/viewerplugininterface.h>
 
 ViewerPluginCreateNoteTest::ViewerPluginCreateNoteTest(QObject *parent)
     : QObject(parent)
@@ -35,7 +37,20 @@ void ViewerPluginCreateNoteTest::shouldHaveDefaultValue()
 {
     MessageViewer::ViewerPluginCreatenote *note = new MessageViewer::ViewerPluginCreatenote(this);
     QVERIFY(!note->viewerPluginName().isEmpty());
-    QVERIFY(note->createView(new QWidget(0), new KActionCollection(this)));
+    QWidget *parent = new QWidget(0);
+    parent->setLayout(new QHBoxLayout);
+
+    QVERIFY(note->createView(parent, new KActionCollection(this)));
 }
+
+void ViewerPluginCreateNoteTest::shouldCreateAction()
+{
+    MessageViewer::ViewerPluginCreatenote *event = new MessageViewer::ViewerPluginCreatenote(this);
+    QWidget *parent = new QWidget(0);
+    parent->setLayout(new QHBoxLayout);
+    MessageViewer::ViewerPluginInterface *interface = event->createView(parent, new KActionCollection(this));
+    QVERIFY(interface->action());
+}
+
 
 QTEST_MAIN(ViewerPluginCreateNoteTest)

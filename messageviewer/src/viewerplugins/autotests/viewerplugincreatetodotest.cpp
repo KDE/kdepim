@@ -19,6 +19,8 @@
 #include "../createtodoplugin/viewerplugincreatetodo.h"
 #include <QTest>
 #include <KActionCollection>
+#include <QHBoxLayout>
+#include <viewerplugins/viewerplugininterface.h>
 ViewerPluginCreateTodoTest::ViewerPluginCreateTodoTest(QObject *parent)
     : QObject(parent)
 {
@@ -34,7 +36,19 @@ void ViewerPluginCreateTodoTest::shouldHaveDefaultValue()
 {
     MessageViewer::ViewerPluginCreatetodo *todo = new MessageViewer::ViewerPluginCreatetodo(this);
     QVERIFY(!todo->viewerPluginName().isEmpty());
-    QVERIFY(todo->createView(new QWidget(0), new KActionCollection(this)));
+    QWidget *parent = new QWidget(0);
+    parent->setLayout(new QHBoxLayout);
+
+    QVERIFY(todo->createView(parent, new KActionCollection(this)));
+}
+
+void ViewerPluginCreateTodoTest::shouldCreateAction()
+{
+    MessageViewer::ViewerPluginCreatetodo *event = new MessageViewer::ViewerPluginCreatetodo(this);
+    QWidget *parent = new QWidget(0);
+    parent->setLayout(new QHBoxLayout);
+    MessageViewer::ViewerPluginInterface *interface = event->createView(parent, new KActionCollection(this));
+    QVERIFY(interface->action());
 }
 
 QTEST_MAIN(ViewerPluginCreateTodoTest)
