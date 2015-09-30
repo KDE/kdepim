@@ -27,14 +27,11 @@
 
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/monitor.h>
-#include <Akonadi/Notes/NoteUtils>
 #include <kio/job.h>
 #include <kmime/kmime_message.h>
 #include <kservice.h>
 #include <ksharedconfig.h>
 #include <QUrl>
-#include <KCalCore/Todo>
-#include <KCalCore/Event>
 
 #include <QObject>
 #include <QTimer>
@@ -58,7 +55,6 @@ class QModelIndex;
 
 namespace PimCommon
 {
-class TranslatorWidget;
 class SlideContainer;
 class ShareServiceUrlManager;
 }
@@ -66,9 +62,6 @@ class ShareServiceUrlManager;
 namespace MessageViewer
 {
 class HeaderStylePlugin;
-class TodoEdit;
-class EventEdit;
-class NoteEdit;
 class HtmlWriter;
 class CSSHelper;
 class AttachmentStrategy;
@@ -81,6 +74,7 @@ class ScamDetectionWarningWidget;
 class MimePartTreeView;
 class OpenAttachmentFolderWidget;
 class HeaderStyleMenuManager;
+class ViewerPluginToolManager;
 
 /**
 \brief Private class for the Viewer, the main widget in the messageviewer library.
@@ -486,11 +480,6 @@ private Q_SLOTS:
 
     void saveSplitterSizes() const;
 
-    void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection);
-
-    void slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection);
-
-    void slotCreateNote(const  KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection);
 
     void slotRefreshMessage(const Akonadi::Item &item);
     void slotServiceUrlSelected(PimCommon::ShareServiceUrlManager::ServiceType serviceType);
@@ -508,8 +497,6 @@ public Q_SLOTS:
 
     /** The user selected "Find" from the menu. */
     void slotFind();
-
-    void slotTranslate();
 
     /** The user toggled the "Fixed Font" flag from the view menu. */
     void slotToggleFixedFont();
@@ -594,10 +581,6 @@ public Q_SLOTS:
     void slotBlockImage();
     void slotOpenBlockableItems();
     void slotExpandShortUrl();
-    void slotShowCreateTodoWidget();
-    void slotShowCreateEventWidget();
-    void slotShowCreateNoteWidget();
-    void slotNoteItemFetched(KJob *);
 
     void slotGeneralFontChanged();
 
@@ -616,7 +599,6 @@ Q_SIGNALS:
     void moveMessageToTrash();
 
 private:
-    void showCreateNewNoteWidget();
     QString attachmentInjectionHtml();
     QString recipientsQuickListLinkHtml(bool, const QString &);
 
@@ -639,7 +621,6 @@ public:
 #endif
     MailWebView *mViewer;
     FindBarMailWebView *mFindBar;
-    PimCommon::TranslatorWidget *mTranslatorWidget;
 
     const AttachmentStrategy *mAttachmentStrategy;
     static const int delay;
@@ -674,13 +655,9 @@ public:
     KToggleAction *mToggleMimePartTreeAction;
     QAction *mSpeakTextAction;
     QAction *mCopyImageLocation;
-    QAction *mTranslateAction;
     QAction *mBlockImage;
     QAction *mBlockableItems;
     QAction *mExpandUrlAction;
-    QAction *mCreateTodoAction;
-    QAction *mCreateEventAction;
-    QAction *mCreateNoteAction;
     QUrl mHoveredUrl;
     QUrl mClickedUrl;
     QUrl mImageUrl;
@@ -712,9 +689,6 @@ public:
     Akonadi::Item::Id mPreviouslyViewedItem;
 
     ScamDetectionWarningWidget *mScamDetectionWarning;
-    MessageViewer::TodoEdit *mCreateTodo;
-    MessageViewer::EventEdit *mCreateEvent;
-    MessageViewer::NoteEdit *mCreateNote;
     MessageViewer::OpenAttachmentFolderWidget *mOpenAttachmentFolderWidget;
     // zoom Factor
     static const qreal zoomBy;
@@ -725,6 +699,7 @@ public:
     KActionMenu *mShareServiceUrlMenu;
     HeaderStylePlugin *mHeaderStylePlugin;
     HeaderStyleMenuManager *mHeaderStyleMenuManager;
+    ViewerPluginToolManager *mViewerPluginToolManager;
 };
 
 }

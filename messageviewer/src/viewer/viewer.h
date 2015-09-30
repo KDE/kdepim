@@ -274,7 +274,6 @@ public:
     QAction *urlOpenAction();
     QAction *speakTextAction();
     QAction *copyImageLocation();
-    QAction *translateAction();
     QAction *viewSourceAction();
     QAction *findInMessageAction();
     QAction *saveAsAction();
@@ -283,9 +282,6 @@ public:
     QAction *blockImage();
     QAction *openBlockableItems();
     QAction *expandShortUrlAction();
-    QAction *createTodoAction() const;
-    QAction *createEventAction();
-    QAction *createNoteAction();
     KActionMenu *shareServiceUrlMenu();
     HeaderStylePlugin *headerStylePlugin() const;
     void setPluginName(const QString &pluginName);
@@ -399,7 +395,6 @@ public Q_SLOTS:
     void slotScrollNext();
     void slotJumpDown();
     void slotFind();
-    void slotTranslate();
     void slotSaveMessage();
     void slotAttachmentSaveAs();
     void slotAttachmentSaveAll();

@@ -42,6 +42,7 @@
 #include "job/attachmentencryptwithchiasmusjob.h"
 #include "job/attachmenteditjob.h"
 #include "job/modifymessagedisplayformatjob.h"
+#include "viewerplugins/viewerplugintoolmanager.h"
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "htmlwriter/filehtmlwriter.h"
 #include "htmlwriter/teehtmlwriter.h"
@@ -170,7 +171,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mNodeHelper(new NodeHelper),
       mViewer(0),
       mFindBar(0),
-      mTranslatorWidget(0),
       mAttachmentStrategy(0),
       mUpdateReaderWinTimer(0),
       mResizeTimer(0),
@@ -197,7 +197,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mZoomResetAction(0),
       mToggleMimePartTreeAction(0),
       mSpeakTextAction(0),
-      mCreateNoteAction(0),
       mCanStartDrag(false),
       mHtmlWriter(0),
       mSavedRelativePosition(0),
@@ -217,7 +216,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mSliderContainer(0),
       mShareServiceManager(Q_NULLPTR),
       mHeaderStylePlugin(Q_NULLPTR),
-      mHeaderStyleMenuManager(Q_NULLPTR)
+      mHeaderStyleMenuManager(Q_NULLPTR),
+      mViewerPluginToolManager(Q_NULLPTR)
 {
     mMimePartTree = 0;
     if (!mainWindow) {
@@ -1238,9 +1238,6 @@ void ViewerPrivate::resetStateForNewMessage()
     mSavedRelativePosition = 0;
     setShowSignatureDetails(false);
     mFindBar->closeBar();
-    mTranslatorWidget->slotCloseWidget();
-    mCreateTodo->slotCloseWidget();
-    mCreateEvent->slotCloseWidget();
     mScamDetectionWarning->setVisible(false);
     mOpenAttachmentFolderWidget->setVisible(false);
 
@@ -1260,6 +1257,7 @@ void ViewerPrivate::resetStateForNewMessage()
 void ViewerPrivate::setMessageInternal(const KMime::Message::Ptr message,
                                        Viewer::UpdateMode updateMode)
 {
+#if 0 //PORT VIEWER_PLUGIN
     if (mCreateNoteAction) {
         QString createNoteText;
         if (relatedNoteRelation().isValid()) {
@@ -1271,7 +1269,7 @@ void ViewerPrivate::setMessageInternal(const KMime::Message::Ptr message,
         mCreateNoteAction->setText(createNoteText);
         mCreateNoteAction->setIconText(createNoteText);
     }
-
+#endif
     mMessage = message;
     if (message) {
         mNodeHelper->setOverrideCodec(mMessage.data(), overrideCodec());
@@ -1463,23 +1461,7 @@ void ViewerPrivate::createWidgets()
     readerBoxVBoxLayout->addWidget(mViewer);
     mViewer->setObjectName(QStringLiteral("mViewer"));
 
-    mCreateTodo = new MessageViewer::TodoEdit(readerBox);
-    readerBoxVBoxLayout->addWidget(mCreateTodo);
-    connect(mCreateTodo, &TodoEdit::createTodo, this, &ViewerPrivate::slotCreateTodo);
-    mCreateTodo->setObjectName(QStringLiteral("createtodowidget"));
-    mCreateTodo->hide();
-
-    mCreateEvent = new MessageViewer::EventEdit(readerBox);
-    readerBoxVBoxLayout->addWidget(mCreateEvent);
-    connect(mCreateEvent, &EventEdit::createEvent, this, &ViewerPrivate::slotCreateEvent);
-    mCreateEvent->setObjectName(QStringLiteral("createeventwidget"));
-    mCreateEvent->hide();
-
-    mCreateNote = new MessageViewer::NoteEdit(readerBox);
-    readerBoxVBoxLayout->addWidget(mCreateNote);
-    connect(mCreateNote, &NoteEdit::createNote, this, &ViewerPrivate::slotCreateNote);
-    mCreateNote->setObjectName(QStringLiteral("createnotewidget"));
-    mCreateNote->hide();
+    mViewerPluginToolManager = new MessageViewer::ViewerPluginToolManager(readerBox, mActionCollection);
 
     mSliderContainer = new PimCommon::SlideContainer(readerBox);
     mSliderContainer->setObjectName(QStringLiteral("slidercontainer"));
@@ -1488,9 +1470,6 @@ void ViewerPrivate::createWidgets()
     connect(mFindBar, &FindBarBase::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
     mSliderContainer->setContent(mFindBar);
 
-    mTranslatorWidget = new PimCommon::TranslatorWidget(readerBox);
-    mTranslatorWidget->setObjectName(QStringLiteral("translatorwidget"));
-    readerBoxVBoxLayout->addWidget(mTranslatorWidget);
 #ifndef QT_NO_TREEVIEW
     mSplitter->setStretchFactor(mSplitter->indexOf(mMimePartTree), 0);
 #endif
@@ -1710,13 +1689,6 @@ void ViewerPrivate::createActions()
     connect(mCopyImageLocation, &QAction::triggered,
             this, &ViewerPrivate::slotCopyImageLocation);
 
-    mTranslateAction = new QAction(i18n("Translate..."), this);
-    ac->setDefaultShortcut(mTranslateAction, QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
-    mTranslateAction->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-locale")));
-    ac->addAction(QStringLiteral("translate_text"), mTranslateAction);
-    connect(mTranslateAction, &QAction::triggered,
-            this, &ViewerPrivate::slotTranslate);
-
     mFindInMessageAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-find")), i18n("&Find in Message..."), this);
     ac->addAction(QStringLiteral("find_in_messages"), mFindInMessageAction);
     connect(mFindInMessageAction, &QAction::triggered, this, &ViewerPrivate::slotFind);
@@ -1742,28 +1714,6 @@ void ViewerPrivate::createActions()
     ac->addAction(QStringLiteral("expand_short_url"), mExpandUrlAction);
     ac->setShortcutsConfigurable(mExpandUrlAction, false);
     connect(mExpandUrlAction, &QAction::triggered, this, &ViewerPrivate::slotExpandShortUrl);
-
-    mCreateTodoAction = new QAction(QIcon::fromTheme(QStringLiteral("task-new")), i18n("Create Todo"), this);
-    mCreateTodoAction->setIconText(i18n("Create To-do"));
-    addHelpTextAction(mCreateTodoAction, i18n("Allows you to create a calendar to-do or reminder from this message"));
-    mCreateTodoAction->setWhatsThis(i18n("This option starts the KOrganizer to-do editor with initial values taken from the currently selected message. Then you can edit the to-do to your liking before saving it to your calendar."));
-    ac->addAction(QStringLiteral("create_todo"), mCreateTodoAction);
-    ac->setDefaultShortcut(mCreateTodoAction, QKeySequence(Qt::CTRL + Qt::Key_T));
-    connect(mCreateTodoAction, &QAction::triggered, this, &ViewerPrivate::slotShowCreateTodoWidget);
-
-    mCreateNoteAction = new QAction(QIcon::fromTheme(QStringLiteral("view-pim-notes")), i18nc("create a new note out of this message", "Create Note"), this);
-    mCreateNoteAction->setIconText(i18nc("create a new note out of this message", "Create Note"));
-    addHelpTextAction(mCreateNoteAction, i18n("Allows you to create a note from this message"));
-    mCreateNoteAction->setWhatsThis(i18n("This option starts an editor to create a note. Then you can edit the note to your liking before saving it."));
-    ac->addAction(QStringLiteral("create_note"), mCreateNoteAction);
-    connect(mCreateNoteAction, &QAction::triggered, this, &ViewerPrivate::slotShowCreateNoteWidget);
-
-    mCreateEventAction = new QAction(QIcon::fromTheme(QStringLiteral("appointment-new")), i18n("Create Event..."), this);
-    mCreateEventAction->setIconText(i18n("Create Event"));
-    addHelpTextAction(mCreateEventAction, i18n("Allows you to create a calendar Event"));
-    ac->addAction(QStringLiteral("create_event"), mCreateEventAction);
-    ac->setDefaultShortcut(mCreateEventAction, QKeySequence(Qt::CTRL + Qt::Key_E));
-    connect(mCreateEventAction, &QAction::triggered, this, &ViewerPrivate::slotShowCreateEventWidget);
 
     mShareServiceUrlMenu = mShareServiceManager->menu();
     ac->addAction(QStringLiteral("shareservice_menu"), mShareServiceUrlMenu);
@@ -2102,15 +2052,6 @@ void ViewerPrivate::slotFind()
 #endif
     mSliderContainer->slideIn();
     mFindBar->focusAndSetCursor();
-}
-
-void ViewerPrivate::slotTranslate()
-{
-    const QString text = mViewer->selectedText();
-    mTranslatorWidget->show();
-    if (!text.isEmpty()) {
-        mTranslatorWidget->setTextToTranslate(text);
-    }
 }
 
 void ViewerPrivate::slotToggleFixedFont()
@@ -3104,99 +3045,6 @@ void ViewerPrivate::slotExpandShortUrl()
     }
 }
 
-void ViewerPrivate::slotShowCreateTodoWidget()
-{
-    if (mMessage) {
-        mCreateTodo->setMessage(mMessage);
-        mCreateTodo->showToDoWidget();
-    } else {
-        qCDebug(MESSAGEVIEWER_LOG) << " There is not valid message";
-    }
-}
-
-void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection)
-{
-    CreateTodoJob *createJob = new CreateTodoJob(todoPtr, collection, mMessageItem, this);
-    createJob->start();
-}
-
-Akonadi::Relation ViewerPrivate::relatedNoteRelation() const
-{
-    Akonadi::Relation relation;
-    foreach (const Akonadi::Relation &r, mMessageItem.relations()) {
-        // assuming that GENERIC relations to emails are notes is a pretty horirific hack imo - aseigo
-        if (r.type() == Akonadi::Relation::GENERIC && r.right().mimeType() == Akonadi::NoteUtils::noteMimeType()) {
-            relation = r;
-            break;
-        }
-    }
-    return relation;
-}
-
-void ViewerPrivate::slotShowCreateNoteWidget()
-{
-    if (!mMessageItem.relations().isEmpty())  {
-        Akonadi::Relation relation = relatedNoteRelation();
-        if (relation.isValid()) {
-            Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(relation.right());
-            job->fetchScope().fetchFullPayload(true);
-            connect(job, &Akonadi::ItemFetchJob::result, this, &ViewerPrivate::slotNoteItemFetched);
-            return;
-        }
-    }
-
-    showCreateNewNoteWidget();
-}
-
-void ViewerPrivate::showCreateNewNoteWidget()
-{
-    if (mMessage) {
-        mCreateNote->setMessage(mMessage);
-        mCreateNote->showNoteEdit();
-    } else {
-        qCDebug(MESSAGEVIEWER_LOG) << "There is not valid message";
-    }
-}
-
-void ViewerPrivate::slotNoteItemFetched(KJob *job)
-{
-    if (job->error()) {
-        qCDebug(MESSAGEVIEWER_LOG) << "There is not valid note:" << job->errorString();
-        showCreateNewNoteWidget();
-    } else {
-        Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob *>(job);
-        Q_ASSERT(fetch);
-        if (fetch->items().isEmpty() || !fetch->items().first().hasPayload<KMime::Message::Ptr>()) {
-            showCreateNewNoteWidget();
-        } else {
-            Akonadi::NoteUtils::NoteMessageWrapper note(fetch->items().first().payload<KMime::Message::Ptr>());
-            mCreateNote->setMessage(note.message());
-            mCreateNote->showNoteEdit();
-        }
-    }
-}
-
-void ViewerPrivate::slotCreateNote(const KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection)
-{
-    CreateNoteJob *createJob = new CreateNoteJob(notePtr, collection, mMessageItem, this);
-    createJob->start();
-}
-
-void ViewerPrivate::slotShowCreateEventWidget()
-{
-    if (mMessage) {
-        mCreateEvent->setMessage(mMessage);
-        mCreateEvent->showEventEdit();
-    } else {
-        qCDebug(MESSAGEVIEWER_LOG) << " There is not valid message";
-    }
-}
-
-void ViewerPrivate::slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection)
-{
-    CreateEventJob *createJob = new CreateEventJob(eventPtr, collection, mMessageItem, this);
-    createJob->start();
-}
 
 void ViewerPrivate::addHelpTextAction(QAction *act, const QString &text)
 {

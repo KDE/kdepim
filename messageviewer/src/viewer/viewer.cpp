@@ -350,12 +350,6 @@ void Viewer::slotFind()
     d->slotFind();
 }
 
-void Viewer::slotTranslate()
-{
-    Q_D(Viewer);
-    d->slotTranslate();
-}
-
 const AttachmentStrategy *Viewer::attachmentStrategy() const
 {
     Q_D(const Viewer);
@@ -445,12 +439,6 @@ QAction *Viewer::copyImageLocation()
 {
     Q_D(Viewer);
     return d->mCopyImageLocation;
-}
-
-QAction *Viewer::translateAction()
-{
-    Q_D(Viewer);
-    return d->mTranslateAction;
 }
 
 QAction *Viewer::saveAsAction()
@@ -679,24 +667,6 @@ QAction *Viewer::expandShortUrlAction()
 {
     Q_D(Viewer);
     return d->mExpandUrlAction;
-}
-
-QAction *Viewer::createTodoAction() const
-{
-    Q_D(const Viewer);
-    return d->mCreateTodoAction;
-}
-
-QAction *Viewer::createEventAction()
-{
-    Q_D(Viewer);
-    return d->mCreateEventAction;
-}
-
-QAction *Viewer::createNoteAction()
-{
-    Q_D(Viewer);
-    return d->mCreateNoteAction;
 }
 
 KActionMenu *Viewer::shareServiceUrlMenu()
