@@ -39,6 +39,7 @@ public:
     void createView();
     void closeAllTools();
     void setActionCollection(KActionCollection *ac);
+    void updateActions(const Akonadi::Item &messageItem);
     QList<QAction *> actionList(bool needValidMessage) const;
     QList<MessageViewer::ViewerPluginInterface *> mListInterface;
     KActionCollection *mActionCollection;
@@ -83,6 +84,12 @@ QList<QAction *> ViewerPluginToolManagerPrivate::actionList(bool needValidMessag
     return lstAction;
 }
 
+void ViewerPluginToolManagerPrivate::updateActions(const Akonadi::Item &messageItem)
+{
+    Q_FOREACH(MessageViewer::ViewerPluginInterface *interface, mListInterface) {
+        interface->updateAction(messageItem);
+    }
+}
 
 ViewerPluginToolManager::ViewerPluginToolManager(QWidget *parentWidget, QObject *parent)
     : QObject(parent),
@@ -113,4 +120,9 @@ void ViewerPluginToolManager::setActionCollection(KActionCollection *ac)
 QList<QAction *> ViewerPluginToolManager::viewerPluginActionList(bool needValidMessage) const
 {
     return d->actionList(needValidMessage);
+}
+
+void ViewerPluginToolManager::updateActions(const Akonadi::Item &messageItem)
+{
+    d->updateActions(messageItem);
 }

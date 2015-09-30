@@ -1259,19 +1259,7 @@ void ViewerPrivate::resetStateForNewMessage()
 void ViewerPrivate::setMessageInternal(const KMime::Message::Ptr message,
                                        Viewer::UpdateMode updateMode)
 {
-#if 0 //PORT VIEWER_PLUGIN
-    if (mCreateNoteAction) {
-        QString createNoteText;
-        if (relatedNoteRelation().isValid()) {
-            createNoteText = i18nc("edit a note on this message", "Edit Note");
-        } else {
-            createNoteText = i18nc("create a new note out of this message", "Create Note");
-        }
-
-        mCreateNoteAction->setText(createNoteText);
-        mCreateNoteAction->setIconText(createNoteText);
-    }
-#endif
+    mViewerPluginToolManager->updateActions(mMessageItem);
     mMessage = message;
     if (message) {
         mNodeHelper->setOverrideCodec(mMessage.data(), overrideCodec());

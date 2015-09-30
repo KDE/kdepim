@@ -41,6 +41,7 @@ public:
     virtual void closePlugin();
     virtual void showWidget() = 0;
     virtual bool needValidMessage() const = 0;
+    virtual void updateAction(const Akonadi::Item &item);
 
 protected:
     void addHelpTextAction(QAction *act, const QString &text);

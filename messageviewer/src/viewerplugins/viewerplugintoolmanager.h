@@ -18,6 +18,7 @@
 #ifndef VIEWERPLUGINTOOLMANAGER_H
 #define VIEWERPLUGINTOOLMANAGER_H
 
+#include <Item>
 #include <QObject>
 #include "messageviewer_export.h"
 class KActionCollection;
@@ -40,6 +41,7 @@ public:
 
     QList<QAction *> viewerPluginActionList(bool needValidMessage = false) const;
 
+    void updateActions(const Akonadi::Item &messageItem);
 Q_SIGNALS:
     void activatePlugin(MessageViewer::ViewerPluginInterface *);
 
