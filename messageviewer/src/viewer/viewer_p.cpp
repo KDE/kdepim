@@ -2369,6 +2369,11 @@ void ViewerPrivate::setPluginName(const QString &pluginName)
     mHeaderStyleMenuManager->setPluginName(pluginName);
 }
 
+QList<QAction *> ViewerPrivate::viewerPluginActionList(bool needValidMessage)
+{
+    return mViewerPluginToolManager->viewerPluginActionList(needValidMessage);
+}
+
 void ViewerPrivate::slotAttachmentSaveAs()
 {
     const auto contents = selectedContents();

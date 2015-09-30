@@ -38,7 +38,7 @@ public:
     void createView();
     void setActionCollection(KActionCollection *ac);
 
-    QList<QAction *> actionList(bool needValidMessage = false) const;
+    QList<QAction *> viewerPluginActionList(bool needValidMessage = false) const;
 
 Q_SIGNALS:
     void activatePlugin(MessageViewer::ViewerPluginInterface *);

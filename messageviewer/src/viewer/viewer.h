@@ -339,6 +339,8 @@ public:
     bool mimePartTreeIsEmpty() const;
 
     void showOpenAttachmentFolderWidget(const QUrl &url);
+    QList<QAction *> viewerPluginActionList(bool needValidMessage = false);
+
 Q_SIGNALS:
     void moveMessageToTrash();
 

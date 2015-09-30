@@ -46,6 +46,7 @@
 #include <QWebView>
 #include <QWebPage>
 #include <QWebFrame>
+#include <QAction>
 
 namespace MessageViewer
 {
@@ -691,6 +692,12 @@ void Viewer::showOpenAttachmentFolderWidget(const QUrl &url)
 {
     Q_D(Viewer);
     d->showOpenAttachmentFolderWidget(url);
+}
+
+QList<QAction *> Viewer::viewerPluginActionList(bool needValidMessage)
+{
+    Q_D(Viewer);
+    return d->viewerPluginActionList(needValidMessage);
 }
 
 }

@@ -53,7 +53,7 @@ ViewerPluginTest::ViewerPluginTest(QWidget *parent)
     toolManager->createView();
     QMenu *menu = new QMenu(this);
     menu->setTitle(QStringLiteral("tools"));
-    menu->addActions(toolManager->actionList());
+    menu->addActions(toolManager->viewerPluginActionList());
     menuBar->addMenu(menu);
 }
 

@@ -110,7 +110,7 @@ void ViewerPluginToolManager::setActionCollection(KActionCollection *ac)
     d->setActionCollection(ac);
 }
 
-QList<QAction *> ViewerPluginToolManager::actionList(bool needValidMessage) const
+QList<QAction *> ViewerPluginToolManager::viewerPluginActionList(bool needValidMessage) const
 {
     return d->actionList(needValidMessage);
 }

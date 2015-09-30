@@ -447,6 +447,8 @@ public:
 
     void setPluginName(const QString &pluginName);
 
+    QList<QAction *> viewerPluginActionList(bool needValidMessage = false);
+
 private Q_SLOTS:
     void slotModifyItemDone(KJob *job);
     void slotMessageMayBeAScam();
