@@ -15,25 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "viewerpluginmanagertest.h"
-#include "../viewerpluginmanager.h"
-#include <QTest>
+#ifndef VIEWERPLUGINTRANSLATORTEST_H
+#define VIEWERPLUGINTRANSLATORTEST_H
 
-ViewerPluginManagerTest::ViewerPluginManagerTest(QObject *parent)
-    : QObject(parent)
+#include <QObject>
+
+class ViewerPluginTranslatorTest : public QObject
 {
+    Q_OBJECT
+public:
+    explicit ViewerPluginTranslatorTest(QObject *parent = Q_NULLPTR);
+    ~ViewerPluginTranslatorTest();
 
-}
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shouldCreateAction();
+};
 
-ViewerPluginManagerTest::~ViewerPluginManagerTest()
-{
-
-}
-
-void ViewerPluginManagerTest::shouldHaveDefaultValue()
-{
-    MessageViewer::ViewerPluginManager *manager = new MessageViewer::ViewerPluginManager(this);
-    QVERIFY(!manager->pluginsList().isEmpty());
-}
-
-QTEST_MAIN(ViewerPluginManagerTest)
+#endif // VIEWERPLUGINTRANSLATORTEST_H

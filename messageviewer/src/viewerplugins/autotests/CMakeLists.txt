@@ -22,6 +22,8 @@ macro(add_messageviewer_viewerplugin_class_unittest _source )
 endmacro ()
 
 add_messageviewer_viewerplugin_class_unittest(viewerpluginmanagertest.cpp)
+add_messageviewer_viewerplugin_class_unittest(viewerplugintoolmanagertest.cpp)
 add_messageviewer_viewerplugin_unittest(viewerplugincreateeventtest.cpp "../createeventplugin/viewerplugincreateevent.cpp;../createeventplugin/viewerplugincreateeventinterface.cpp" "../createeventplugin/messageviewer_createeventplugin.desktop")
 add_messageviewer_viewerplugin_unittest(viewerplugincreatetodotest.cpp "../createtodoplugin/viewerplugincreatetodo.cpp;../createtodoplugin/viewerplugincreatetodointerface.cpp" "../createtodoplugin/messageviewer_createtodoplugin.desktop")
 add_messageviewer_viewerplugin_unittest(viewerplugincreatenotetest.cpp "../createnoteplugin/viewerplugincreatenote.cpp;../createnoteplugin/viewerplugincreatenoteinterface.cpp" "../createnoteplugin/messageviewer_createnoteplugin.desktop")
+add_messageviewer_viewerplugin_unittest(viewerplugintranslatortest.cpp "../translatorplugin/viewerplugintranslator.cpp;../translatorplugin/viewerplugintranslatorinterface.cpp" "../translatorplugin/messageviewer_translatorplugin.desktop")

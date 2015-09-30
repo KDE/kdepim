@@ -15,25 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "viewerpluginmanagertest.h"
-#include "../viewerpluginmanager.h"
+#include "viewerplugintoolmanagertest.h"
+#include "../viewerplugintoolmanager.h"
 #include <QTest>
 
-ViewerPluginManagerTest::ViewerPluginManagerTest(QObject *parent)
+ViewerPluginToolManagerTest::ViewerPluginToolManagerTest(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-ViewerPluginManagerTest::~ViewerPluginManagerTest()
+ViewerPluginToolManagerTest::~ViewerPluginToolManagerTest()
 {
 
 }
 
-void ViewerPluginManagerTest::shouldHaveDefaultValue()
+void ViewerPluginToolManagerTest::shouldHaveDefaultValue()
 {
-    MessageViewer::ViewerPluginManager *manager = new MessageViewer::ViewerPluginManager(this);
-    QVERIFY(!manager->pluginsList().isEmpty());
+    //TODO
 }
 
-QTEST_MAIN(ViewerPluginManagerTest)
+QTEST_MAIN(ViewerPluginToolManagerTest)
