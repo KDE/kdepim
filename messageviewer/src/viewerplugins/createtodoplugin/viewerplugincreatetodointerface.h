@@ -39,6 +39,7 @@ public:
     void showWidget() Q_DECL_OVERRIDE;
     void setMessageItem(const Akonadi::Item &item) Q_DECL_OVERRIDE;
     bool needValidMessage() const Q_DECL_OVERRIDE;
+
 private Q_SLOTS:
     void slotCreateTodo(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection);
 

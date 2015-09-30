@@ -2373,6 +2373,9 @@ void ViewerPrivate::slotActivatePlugin(ViewerPluginInterface *interface)
 {
     interface->setMessage(mMessage);
     interface->setMessageItem(mMessageItem);
+    const QString text = mViewer->selectedText();
+    if(!text.isEmpty())
+        interface->setText(text);
     interface->showWidget();
 }
 

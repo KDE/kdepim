@@ -55,11 +55,13 @@ QAction *ViewerPluginInterface::action() const
 
 void ViewerPluginInterface::setMessage(const KMime::Message::Ptr &value)
 {
+    Q_UNUSED(value);
     // Reimplement in subclass
 }
 
 void ViewerPluginInterface::setMessageItem(const Akonadi::Item &item)
 {
+    Q_UNUSED(item);
     // Reimplement in subclass
 }
 
