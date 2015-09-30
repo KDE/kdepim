@@ -1151,7 +1151,6 @@ void AgendaView::createDayLabels( bool force )
     AlternateLabel *dayLabel =
       new AlternateLabel( shortstr, longstr, veryLongStr, topDayLabelBox );
     dayLabel->useShortText(); // will be recalculated in updateDayLabelSizes() anyway
-    dayLabel->setMinimumWidth( 1 );
     dayLabel->setAlignment( Qt::AlignHCenter );
     if ( date == QDate::currentDate() ) {
       QFont font = dayLabel->font();
@@ -1166,7 +1165,6 @@ void AgendaView::createDayLabels( bool force )
       const KWordWrap *ww = KWordWrap::formatText( fm, topDayLabelBox->rect(), 0, text, -1 );
       AlternateLabel *label =
         new AlternateLabel( ww->truncatedString(), text, text, topDayLabelBox );
-      label->setMinimumWidth( 1 );
       label->setAlignment( Qt::AlignCenter );
       delete ww;
     }

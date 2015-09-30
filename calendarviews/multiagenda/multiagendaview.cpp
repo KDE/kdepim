@@ -52,6 +52,7 @@ using namespace Future;
 #include <QSplitter>
 #include <QSortFilterProxyModel>
 #include <QTimer>
+#include <QPainter>
 
 using namespace Akonadi;
 using namespace EventViews;
@@ -97,6 +98,22 @@ static QString generateColumnLabel( int c )
 
 class MultiAgendaView::Private
 {
+  private:
+    class ElidedLabel: public QFrame
+    {
+    public:
+      ElidedLabel(const QString & text): mText(text) {}
+
+      virtual QSize minimumSizeHint() const;
+
+    protected:
+      virtual void paintEvent(QPaintEvent *event);
+
+    private:
+      QString mText;
+    };
+
+
   public:
     Private( MultiAgendaView *qq ) :
       q( qq ),
@@ -354,14 +371,6 @@ void MultiAgendaView::Private::setupViews()
   foreach ( AgendaView *agenda, mAgendaViews ) {
     agenda->readSettings();
   }
-
-  int minWidth = 0;
-  foreach ( QWidget *widget, mAgendaWidgets ) {
-    minWidth = qMax( minWidth, widget->minimumSizeHint().width() );
-  }
-  foreach ( QWidget *widget, mAgendaWidgets ) {
-    widget->setMinimumWidth( minWidth );
-  }
 }
 
 MultiAgendaView::~MultiAgendaView()
@@ -465,9 +474,7 @@ AgendaView *MultiAgendaView::Private::createView( const QString &title )
   QWidget *box = new QWidget( mTopBox );
   QVBoxLayout *layout = new QVBoxLayout( box );
   layout->setMargin( 0 );
-  QLabel *l = new QLabel( title );
-  layout->addWidget( l );
-  l->setAlignment( Qt::AlignVCenter | Qt::AlignHCenter );
+  layout->addWidget(new ElidedLabel(title));
   AgendaView *av = new AgendaView( q->preferences(),
                                    q->startDateTime().date(),
                                    q->endDateTime().date(),
@@ -528,7 +535,6 @@ void MultiAgendaView::Private::resizeScrollView( const QSize &size )
 
   int height = size.height();
   if ( mScrollArea->horizontalScrollBar()->isVisible() ) {
-    // this should never happen, you can't get horizontalScrollBars
     const int sbHeight = mScrollArea->horizontalScrollBar()->height();
     height -= sbHeight;
     mLeftBottomSpacer->setFixedHeight( sbHeight );
@@ -537,8 +543,6 @@ void MultiAgendaView::Private::resizeScrollView( const QSize &size )
     mLeftBottomSpacer->setFixedHeight( 0 );
     mRightBottomSpacer->setFixedHeight( 0 );
   }
-
-  mScrollArea->widget()->setFixedSize( widgetWidth, height );
 
   mTopBox->resize( widgetWidth, height );
 }
@@ -791,3 +795,17 @@ QVector<QString> MultiAgendaView::customColumnTitles() const
   return d->mCustomColumnTitles;
 }
 
+void MultiAgendaView::Private::ElidedLabel::paintEvent(QPaintEvent *event)
+{
+    QFrame::paintEvent(event);
+    QPainter p(this);
+    QRect r = contentsRect();
+    const QString elidedText = fontMetrics().elidedText(mText, Qt::ElideMiddle, r.width());
+    p.drawText(r, Qt::AlignHCenter | Qt::AlignVCenter, elidedText);
+}
+
+QSize MultiAgendaView::Private::ElidedLabel::minimumSizeHint() const
+{
+    const QFontMetrics& fm = fontMetrics();
+    return QSize(fm.width(QLatin1String("...")), fm.height());
+}

@@ -37,8 +37,6 @@ class EVENTVIEWS_EXPORT AlternateLabel : public QLabel
                     const QString &extensivelabel = QString(), QWidget *parent = 0 );
     ~AlternateLabel();
 
-    virtual QSize minimumSizeHint() const;
-
     enum TextType {
       Short = 0,
       Long = 1,
@@ -59,6 +57,10 @@ class EVENTVIEWS_EXPORT AlternateLabel : public QLabel
     virtual void squeezeTextToLabel();
     bool mTextTypeFixed;
     QString mShortText, mLongText, mExtensiveText;
+
+
+  private:
+    int getIndent() const;
 };
 
 }

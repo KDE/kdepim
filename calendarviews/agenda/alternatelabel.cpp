@@ -33,6 +33,11 @@ AlternateLabel::AlternateLabel( const QString &shortlabel, const QString &longla
   if ( mExtensiveText.isEmpty() ) {
     mExtensiveText = mLongText;
   }
+  const QFontMetrics& fm = fontMetrics();
+  // We use at least averageCharWidth * 2 here to avoid misalignment
+  // for single char labels.
+  setMinimumWidth(qMax(fm.averageCharWidth() * 2, fm.width(shortlabel)) + getIndent());
+
   squeezeTextToLabel();
 }
 
@@ -74,7 +79,7 @@ void AlternateLabel::squeezeTextToLabel()
   }
 
   QFontMetrics fm( fontMetrics() );
-  int labelWidth = size().width();
+  int labelWidth = size().width() - getIndent();
   int textWidth = fm.width( mLongText );
   int longTextWidth = fm.width( mExtensiveText );
   if ( longTextWidth <= labelWidth ) {
@@ -94,17 +99,10 @@ void AlternateLabel::resizeEvent( QResizeEvent * )
   squeezeTextToLabel();
 }
 
-QSize AlternateLabel::minimumSizeHint() const
-{
-  QSize sh = QLabel::minimumSizeHint();
-  sh.setWidth( -1 );
-  return sh;
-}
-
 AlternateLabel::TextType AlternateLabel::largestFittingTextType() const
 {
   QFontMetrics fm( fontMetrics() );
-  const int labelWidth = size().width();
+  const int labelWidth = size().width() - getIndent();
   const int longTextWidth = fm.width( mLongText );
   const int extensiveTextWidth = fm.width( mExtensiveText );
   if ( extensiveTextWidth <= labelWidth ) {
@@ -131,3 +129,7 @@ void AlternateLabel::setFixedType( TextType type )
   }
 }
 
+int AlternateLabel::getIndent() const
+{
+  return indent() == -1 ? fontMetrics().width(QLatin1String("x")) / 2 : indent();
+}
