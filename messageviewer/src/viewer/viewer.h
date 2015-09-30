@@ -174,10 +174,7 @@ public:
     * returned by message() to 0.
     * @param updateMode - update the display immediately or not. See UpdateMode.
     */
-    void clear(UpdateMode updateMode = Delayed)
-    {
-        setMessage(KMime::Message::Ptr(), updateMode);
-    }
+    void clear(UpdateMode updateMode = Delayed);
 
     void update(UpdateMode updateMode = Delayed);
 
@@ -268,21 +265,21 @@ public:
 
     KToggleAction *toggleMimePartTreeAction() const;
 
-    QAction *selectAllAction();
-    QAction *copyURLAction();
-    QAction *copyAction();
-    QAction *urlOpenAction();
-    QAction *speakTextAction();
-    QAction *copyImageLocation();
-    QAction *viewSourceAction();
-    QAction *findInMessageAction();
-    QAction *saveAsAction();
-    QAction *saveMessageDisplayFormatAction();
-    QAction *resetMessageDisplayFormatAction();
-    QAction *blockImage();
-    QAction *openBlockableItems();
-    QAction *expandShortUrlAction();
-    KActionMenu *shareServiceUrlMenu();
+    QAction *selectAllAction() const;
+    QAction *copyURLAction() const;
+    QAction *copyAction() const;
+    QAction *urlOpenAction() const;
+    QAction *speakTextAction() const;
+    QAction *copyImageLocation() const;
+    QAction *viewSourceAction() const;
+    QAction *findInMessageAction() const;
+    QAction *saveAsAction() const;
+    QAction *saveMessageDisplayFormatAction() const;
+    QAction *resetMessageDisplayFormatAction() const;
+    QAction *blockImage() const;
+    QAction *openBlockableItems() const;
+    QAction *expandShortUrlAction() const;
+    KActionMenu *shareServiceUrlMenu() const;
     HeaderStylePlugin *headerStylePlugin() const;
     void setPluginName(const QString &pluginName);
 
