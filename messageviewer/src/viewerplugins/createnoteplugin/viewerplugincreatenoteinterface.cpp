@@ -23,6 +23,8 @@
 #include <QHBoxLayout>
 #include <QIcon>
 #include <QAction>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
 
 #include <job/createnotejob.h>
 
@@ -66,10 +68,56 @@ void ViewerPluginCreatenoteInterface::closePlugin()
     mNoteEdit->slotCloseWidget();
 }
 
+Akonadi::Relation ViewerPluginCreatenoteInterface::relatedNoteRelation() const
+{
+    Akonadi::Relation relation;
+    foreach (const Akonadi::Relation &r, mMessageItem.relations()) {
+        // assuming that GENERIC relations to emails are notes is a pretty horirific hack imo - aseigo
+        if (r.type() == Akonadi::Relation::GENERIC && r.right().mimeType() == Akonadi::NoteUtils::noteMimeType()) {
+            relation = r;
+            break;
+        }
+    }
+    return relation;
+}
+
 void ViewerPluginCreatenoteInterface::showWidget()
+{
+    if (!mMessageItem.relations().isEmpty())  {
+        Akonadi::Relation relation = relatedNoteRelation();
+        if (relation.isValid()) {
+            Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(relation.right());
+            job->fetchScope().fetchFullPayload(true);
+            connect(job, &Akonadi::ItemFetchJob::result, this, &ViewerPluginCreatenoteInterface::slotNoteItemFetched);
+            return;
+        }
+    }
+    showCreateNewNoteWidget();
+}
+
+void ViewerPluginCreatenoteInterface::showCreateNewNoteWidget()
 {
     mNoteEdit->showNoteEdit();
 }
+
+void ViewerPluginCreatenoteInterface::slotNoteItemFetched(KJob *job)
+{
+    if (job->error()) {
+        //qCDebug(MESSAGEVIEWER_LOG) << "There is not valid note:" << job->errorString();
+        showCreateNewNoteWidget();
+    } else {
+        Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob *>(job);
+        Q_ASSERT(fetch);
+        if (fetch->items().isEmpty() || !fetch->items().first().hasPayload<KMime::Message::Ptr>()) {
+            showCreateNewNoteWidget();
+        } else {
+            Akonadi::NoteUtils::NoteMessageWrapper note(fetch->items().first().payload<KMime::Message::Ptr>());
+            mNoteEdit->setMessage(note.message());
+            showCreateNewNoteWidget();
+        }
+    }
+}
+
 
 void ViewerPluginCreatenoteInterface::setMessageItem(const Akonadi::Item &item)
 {

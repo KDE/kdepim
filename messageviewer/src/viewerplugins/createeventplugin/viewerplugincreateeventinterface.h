@@ -19,6 +19,7 @@
 #define VIEWERPLUGINCREATEEVENTINTERFACE_H
 
 #include <viewerplugins/viewerplugininterface.h>
+#include <KCalCore/Event>
 class KActionCollection;
 namespace MessageViewer
 {
@@ -37,6 +38,9 @@ public:
     void showWidget() Q_DECL_OVERRIDE;
     void setMessageItem(const Akonadi::Item &item) Q_DECL_OVERRIDE;
     bool needValidMessage() const Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    void slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection);
 
 private:
     void createAction(KActionCollection *ac);

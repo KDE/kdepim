@@ -42,11 +42,14 @@ public:
 private Q_SLOTS:
     void slotCreateNote(const KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection);
 
+    void slotNoteItemFetched(KJob *job);
 private:
+    Akonadi::Relation relatedNoteRelation() const;
+    void showCreateNewNoteWidget();
     void createAction(KActionCollection *ac);
     Akonadi::Item mMessageItem;
     NoteEdit *mNoteEdit;
-    QAction *mAction;    
+    QAction *mAction;
 };
 }
 #endif // VIEWERPLUGINCREATENOTEINTERFACE_H

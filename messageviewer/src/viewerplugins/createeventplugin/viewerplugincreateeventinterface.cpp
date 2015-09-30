@@ -24,6 +24,8 @@
 #include <QIcon>
 #include <QAction>
 
+#include <job/createeventjob.h>
+
 using namespace MessageViewer;
 
 ViewerPluginCreateEventInterface::ViewerPluginCreateEventInterface(KActionCollection *ac, QWidget *parent)
@@ -31,6 +33,7 @@ ViewerPluginCreateEventInterface::ViewerPluginCreateEventInterface(KActionCollec
       mAction(Q_NULLPTR)
 {
     mEventEdit = new EventEdit(parent);
+    connect(mEventEdit, &EventEdit::createEvent, this, &ViewerPluginCreateEventInterface::slotCreateEvent);
     mEventEdit->setObjectName(QStringLiteral("eventedit"));
     parent->layout()->addWidget(mEventEdit);
     mEventEdit->hide();
@@ -88,4 +91,10 @@ void ViewerPluginCreateEventInterface::createAction(KActionCollection *ac)
         ac->setDefaultShortcut(mAction, QKeySequence(Qt::CTRL + Qt::Key_E));
         connect(mAction, &QAction::triggered, this, &ViewerPluginCreateEventInterface::slotActivatePlugin);
     }
+}
+
+void ViewerPluginCreateEventInterface::slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection)
+{
+    CreateEventJob *createJob = new CreateEventJob(eventPtr, collection, mMessageItem, this);
+    createJob->start();
 }
