@@ -353,6 +353,9 @@ ecm_generate_headers(MessageViewer_header_HEADERS
   GrantleeHeaderTestStyle
   HeaderStyle
   KXFace
+  HeaderStylePlugin
+  RichHeaderStrategy
+  HeaderStylePluginManager
   REQUIRED_HEADERS MessageViewer_header_HEADERS
   PREFIX MessageViewer
   RELATIVE header
@@ -394,19 +397,9 @@ ecm_generate_headers(MessageViewer_viewerplugin_HEADERS
   RELATIVE viewerplugins 
 )
 
-ecm_generate_headers(MessageViewer_header_HEADERS
-  HEADER_NAMES
-  HeaderStylePlugin
-  RichHeaderStrategy
-  HeaderStylePluginManager
-  REQUIRED_HEADERS MessageViewer_header_HEADERS
-  PREFIX MessageViewer
-  RELATIVE header
-)
-
 ecm_generate_pri_file(BASE_NAME MessageViewer
     LIB_NAME KF5MessageViewer
-    DEPS "PimCommon MessageCore AkonadiCore AkonadiMime Contacts" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageViewer
+    DEPS "PimCommon MessageCore AkonadiCore AkonadiMime Contacts Libkleo" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageViewer
 )
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
@@ -417,7 +410,6 @@ install(FILES
     ${MessageViewer_gravatar_HEADERS}
     ${MessageViewer_adblock_HEADERS}
     ${MessageViewer_htmlwriter_HEADERS}
-    ${MessageViewer_header_HEADERS}
     ${MessageViewer_utils_HEADERS}
     ${MessageViewer_interfaces_HEADERS}
     ${MessageViewer_viewer_HEADERS}
@@ -428,7 +420,6 @@ install(FILES
 )
 
 install(FILES
-    ${MessageViewer_header_HEADERS}
     ${MessageViewer_viewerplugin_HEADERS}
     ${MessageViewer_settings_HEADERS}
     ${MessageViewer_gravatar_HEADERS}
