@@ -40,7 +40,7 @@ public:
     virtual void setMessageItem(const Akonadi::Item &item);
     virtual void closePlugin();
     virtual void showWidget() = 0;
-    virtual bool needValidMessage() const = 0;
+    virtual bool needValidMessageItem() const = 0;
     virtual void updateAction(const Akonadi::Item &item);
 
 protected:

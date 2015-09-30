@@ -76,7 +76,7 @@ void ViewerPluginCreateEventInterface::setMessageItem(const Akonadi::Item &item)
     mMessageItem = item;
 }
 
-bool ViewerPluginCreateEventInterface::needValidMessage() const
+bool ViewerPluginCreateEventInterface::needValidMessageItem() const
 {
     return true;
 }

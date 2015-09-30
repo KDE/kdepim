@@ -74,7 +74,7 @@ QList<QAction *> ViewerPluginToolManagerPrivate::actionList(bool needValidMessag
     QList<QAction *> lstAction;
     Q_FOREACH(MessageViewer::ViewerPluginInterface *interface, mListInterface) {
         if (needValidMessage) {
-            if(interface->needValidMessage()) {
+            if(interface->needValidMessageItem()) {
                 lstAction.append(interface->action());
             }
         } else {

@@ -76,7 +76,7 @@ void ViewerPluginCreateTodoInterface::setMessageItem(const Akonadi::Item &item)
     mMessageItem = item;
 }
 
-bool ViewerPluginCreateTodoInterface::needValidMessage() const
+bool ViewerPluginCreateTodoInterface::needValidMessageItem() const
 {
     return true;
 }

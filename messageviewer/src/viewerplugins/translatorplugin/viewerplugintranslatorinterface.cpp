@@ -56,7 +56,7 @@ void ViewerPluginTranslatorInterface::showWidget()
     mTranslatorWidget->show();
 }
 
-bool ViewerPluginTranslatorInterface::needValidMessage() const
+bool ViewerPluginTranslatorInterface::needValidMessageItem() const
 {
     return false;
 }

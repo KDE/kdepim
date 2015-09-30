@@ -37,7 +37,7 @@ public:
     void closePlugin() Q_DECL_OVERRIDE;
     void showWidget() Q_DECL_OVERRIDE;
     void setMessageItem(const Akonadi::Item &item) Q_DECL_OVERRIDE;
-    bool needValidMessage() const Q_DECL_OVERRIDE;
+    bool needValidMessageItem() const Q_DECL_OVERRIDE;
     void updateAction(const Akonadi::Item &item) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
