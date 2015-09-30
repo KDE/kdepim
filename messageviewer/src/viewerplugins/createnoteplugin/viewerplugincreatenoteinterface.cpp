@@ -36,6 +36,7 @@ ViewerPluginCreatenoteInterface::ViewerPluginCreatenoteInterface(KActionCollecti
     mNoteEdit = new NoteEdit(parent);
     mNoteEdit->setObjectName(QStringLiteral("noteedit"));
     mNoteEdit->hide();
+    connect(mNoteEdit, &NoteEdit::createNote, this, &ViewerPluginCreatenoteInterface::slotCreateNote);
     parent->layout()->addWidget(mNoteEdit);
 }
 
