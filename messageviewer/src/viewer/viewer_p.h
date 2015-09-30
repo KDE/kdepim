@@ -75,6 +75,7 @@ class MimePartTreeView;
 class OpenAttachmentFolderWidget;
 class HeaderStyleMenuManager;
 class ViewerPluginToolManager;
+class ViewerPluginInterface;
 
 /**
 \brief Private class for the Viewer, the main widget in the messageviewer library.
@@ -450,6 +451,7 @@ public:
     QList<QAction *> viewerPluginActionList(bool needValidMessage = false);
 
 private Q_SLOTS:
+    void slotActivatePlugin(MessageViewer::ViewerPluginInterface *interface);
     void slotModifyItemDone(KJob *job);
     void slotMessageMayBeAScam();
     void slotMessageIsNotAScam();

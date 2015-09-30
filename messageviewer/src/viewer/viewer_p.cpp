@@ -154,6 +154,7 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <header/headerstyleplugin.h>
+#include <viewerplugins/viewerplugininterface.h>
 
 using namespace boost;
 using namespace MailTransport;
@@ -1238,6 +1239,7 @@ void ViewerPrivate::resetStateForNewMessage()
     mSavedRelativePosition = 0;
     setShowSignatureDetails(false);
     mFindBar->closeBar();
+    mViewerPluginToolManager->closeAllTools();
     mScamDetectionWarning->setVisible(false);
     mOpenAttachmentFolderWidget->setVisible(false);
 
@@ -1461,7 +1463,10 @@ void ViewerPrivate::createWidgets()
     readerBoxVBoxLayout->addWidget(mViewer);
     mViewer->setObjectName(QStringLiteral("mViewer"));
 
-    mViewerPluginToolManager = new MessageViewer::ViewerPluginToolManager(readerBox, mActionCollection);
+    mViewerPluginToolManager = new MessageViewer::ViewerPluginToolManager(readerBox, this);
+    mViewerPluginToolManager->setActionCollection(mActionCollection);
+    mViewerPluginToolManager->createView();
+    connect(mViewerPluginToolManager, &MessageViewer::ViewerPluginToolManager::activatePlugin, this, &ViewerPrivate::slotActivatePlugin);
 
     mSliderContainer = new PimCommon::SlideContainer(readerBox);
     mSliderContainer->setObjectName(QStringLiteral("slidercontainer"));
@@ -2371,7 +2376,16 @@ void ViewerPrivate::setPluginName(const QString &pluginName)
 
 QList<QAction *> ViewerPrivate::viewerPluginActionList(bool needValidMessage)
 {
-    return mViewerPluginToolManager->viewerPluginActionList(needValidMessage);
+    if (mViewerPluginToolManager)
+        return mViewerPluginToolManager->viewerPluginActionList(needValidMessage);
+    return QList<QAction *>();
+}
+
+void ViewerPrivate::slotActivatePlugin(ViewerPluginInterface *interface)
+{
+    interface->setMessage(mMessage);
+    interface->setMessageItem(mMessageItem);
+    interface->showWidget();
 }
 
 void ViewerPrivate::slotAttachmentSaveAs()
