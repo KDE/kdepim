@@ -29,6 +29,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldAssignSelectedText();
+    void shouldAddActionToMenu();
 };
 
 #endif // WEBSHORTCUTMENUMANAGERTEST_H

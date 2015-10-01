@@ -17,6 +17,7 @@
 
 #include "webshortcutmenumanagertest.h"
 #include "../webshortcutmenumanager.h"
+#include <QMenu>
 #include <qtest.h>
 
 WebShortcutMenuManagerTest::WebShortcutMenuManagerTest(QObject *parent)
@@ -42,6 +43,22 @@ void WebShortcutMenuManagerTest::shouldAssignSelectedText()
     const QString selectText = QStringLiteral("foo");
     shortcutManager.setSelectedText(selectText);
     QCOMPARE(shortcutManager.selectedText(), selectText);
+}
+
+void WebShortcutMenuManagerTest::shouldAddActionToMenu()
+{
+    PimCommon::WebShortcutMenuManager shortcutManager;
+    QMenu *menu = new QMenu(0);
+    shortcutManager.addWebShortcutsMenu(menu);
+    //Empty when we don't have selected text
+    QVERIFY(menu->actions().isEmpty());
+
+
+    const QString selectText = QStringLiteral("foo");
+    shortcutManager.setSelectedText(selectText);
+    shortcutManager.addWebShortcutsMenu(menu);
+    QVERIFY(!menu->actions().isEmpty());
+    delete menu;
 }
 
 QTEST_MAIN(WebShortcutMenuManagerTest)
