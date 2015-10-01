@@ -607,7 +607,6 @@ public:
     FindBarMailWebView *mFindBar;
 
     const AttachmentStrategy *mAttachmentStrategy;
-    static const int delay;
     QTimer mUpdateReaderWinTimer;
     QTimer mResizeTimer;
     QString mOverrideEncoding;
@@ -686,8 +685,6 @@ public:
 
     ScamDetectionWarningWidget *mScamDetectionWarning;
     MessageViewer::OpenAttachmentFolderWidget *mOpenAttachmentFolderWidget;
-    // zoom Factor
-    static const qreal zoomBy;
     qreal mZoomFactor;
     Viewer::DisplayFormatMessage mDisplayFormatMessageOverwrite;
     PimCommon::SlideContainer *mSliderContainer;

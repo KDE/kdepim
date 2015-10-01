@@ -154,9 +154,11 @@ using namespace MailTransport;
 using namespace MessageViewer;
 using namespace MessageCore;
 
-const int ViewerPrivate::delay = 150;
-const qreal ViewerPrivate::zoomBy = 20;
-
+namespace {
+qreal zoomBy() {
+    return 20;
+}
+}
 static QAtomicInt _k_attributeInitialized;
 
 ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
@@ -1962,7 +1964,7 @@ void ViewerPrivate::update(MessageViewer::Viewer::UpdateMode updateMode)
         saveRelativePosition();
         updateReaderWin();
     } else if (mUpdateReaderWinTimer.isActive()) {
-        mUpdateReaderWinTimer.setInterval(delay);
+        mUpdateReaderWinTimer.setInterval(150);
     } else {
         mUpdateReaderWinTimer.start(0);
     }
@@ -2900,7 +2902,7 @@ void ViewerPrivate::slotZoomIn()
     if (mZoomFactor >= 300) {
         return;
     }
-    mZoomFactor += zoomBy;
+    mZoomFactor += zoomBy();
     if (mZoomFactor > 300) {
         mZoomFactor = 300;
     }
@@ -2914,7 +2916,7 @@ void ViewerPrivate::slotZoomOut()
     if (mZoomFactor <= 10) {
         return;
     }
-    mZoomFactor -= zoomBy;
+    mZoomFactor -= zoomBy();
     if (mZoomFactor < 10) {
         mZoomFactor = 10;
     }
