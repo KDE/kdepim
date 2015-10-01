@@ -22,7 +22,6 @@
 #include <AkonadiCore/Collection>
 #include <KMime/Message>
 #include <KCalCore/Todo>
-#include "messageviewer_export.h"
 
 class KMessageWidget;
 class QLineEdit;
@@ -34,7 +33,7 @@ class CollectionComboBox;
 
 namespace MessageViewer
 {
-class MESSAGEVIEWER_EXPORT TodoEdit : public QWidget
+class TodoEdit : public QWidget
 {
     Q_OBJECT
 public:

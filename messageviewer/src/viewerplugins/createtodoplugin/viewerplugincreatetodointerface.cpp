@@ -16,7 +16,7 @@
 */
 
 #include "viewerplugincreatetodointerface.h"
-#include "widgets/todoedit.h"
+#include "todoedit.h"
 
 #include <KLocalizedString>
 

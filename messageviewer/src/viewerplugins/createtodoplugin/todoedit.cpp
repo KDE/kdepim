@@ -38,7 +38,7 @@
 
 namespace MessageViewer
 {
-MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_todoEditStubModel = 0;
+QAbstractItemModel *_k_todoEditStubModel = 0;
 }
 
 using namespace MessageViewer;
@@ -219,12 +219,12 @@ void TodoEdit::slotCloseWidget()
 void TodoEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        qCDebug(MESSAGEVIEWER_LOG) << " Message is null";
+        //qCDebug(MESSAGEVIEWER_LOG) << " Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        qCDebug(MESSAGEVIEWER_LOG) << " Collection is not valid";
+        //qCDebug(MESSAGEVIEWER_LOG) << " Collection is not valid";
         return;
     }
 

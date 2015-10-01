@@ -17,7 +17,7 @@
 
 #include "todoedittest.h"
 #include "globalsettings_messageviewer.h"
-#include "widgets/todoedit.h"
+#include "../createtodoplugin/todoedit.h"
 #include <AkonadiCore/Collection>
 #include <AkonadiWidgets/CollectionComboBox>
 #include <AkonadiCore/EntityTreeModel>
