@@ -18,7 +18,7 @@
 #include "eventedit.h"
 #include "messageviewer_debug.h"
 #include "globalsettings_messageviewer.h"
-#include "widgets/eventdatetimewidget.h"
+#include "eventdatetimewidget.h"
 
 #include <KLocalizedString>
 #include <QLineEdit>

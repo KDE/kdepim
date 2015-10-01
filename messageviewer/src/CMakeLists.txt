@@ -117,7 +117,6 @@ set(libmessageviewer_widgets_SRCS
   widgets/invitationsettings.cpp
   widgets/noteedit.cpp
   widgets/openattachmentfolderwidget.cpp
-  widgets/eventdatetimewidget.cpp
   widgets/mailsourceviewer.cpp
   widgets/mailsourceviewtextbrowserwidget.cpp
 )

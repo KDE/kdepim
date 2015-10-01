@@ -17,7 +17,7 @@
 
 #include "eventedittest.h"
 #include "../createeventplugin/eventedit.h"
-#include "widgets/eventdatetimewidget.h"
+#include "../createeventplugin/eventdatetimewidget.h"
 #include "globalsettings_messageviewer.h"
 
 #include <AkonadiCore/Collection>

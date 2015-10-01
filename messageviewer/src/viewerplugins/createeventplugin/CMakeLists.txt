@@ -2,6 +2,7 @@ set(messageviewer_createeventplugin_SRCS
     viewerplugincreateevent.cpp
     viewerplugincreateeventinterface.cpp
     eventedit.cpp
+    eventdatetimewidget.cpp
 )
 
 add_library(messageviewer_createeventplugin MODULE ${messageviewer_createeventplugin_SRCS})

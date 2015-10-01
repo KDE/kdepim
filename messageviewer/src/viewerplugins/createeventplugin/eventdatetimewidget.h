@@ -20,12 +20,11 @@
 
 #include <QWidget>
 #include <QDateTime>
-#include "messageviewer_export.h"
 
 namespace MessageViewer
 {
 class EventDateTimeWidgetPrivate;
-class MESSAGEVIEWER_EXPORT EventDateTimeWidget : public QWidget
+class EventDateTimeWidget : public QWidget
 {
     Q_OBJECT
 public:

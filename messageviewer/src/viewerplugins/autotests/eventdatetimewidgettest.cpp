@@ -16,7 +16,7 @@
 */
 
 #include "eventdatetimewidgettest.h"
-#include "widgets/eventdatetimewidget.h"
+#include "../createeventplugin/eventdatetimewidget.h"
 #include <KDateComboBox>
 #include <KTimeComboBox>
 #include <qtest.h>
