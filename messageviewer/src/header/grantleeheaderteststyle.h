@@ -23,7 +23,6 @@
 
 namespace MessageViewer
 {
-class GrantleeHeaderFormatter;
 class GrantleeHeaderTestStylePrivate;
 class MESSAGEVIEWER_EXPORT GrantleeHeaderTestStyle : public HeaderStyle
 {

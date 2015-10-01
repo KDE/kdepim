@@ -28,7 +28,6 @@ class KActionMenu;
 namespace MessageViewer
 {
 class HeaderStyle;
-class HeaderStrategy;
 class HeaderStylePlugin;
 class MESSAGEVIEWER_EXPORT HeaderStyleInterface : public QObject
 {

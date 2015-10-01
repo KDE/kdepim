@@ -21,7 +21,6 @@
 #include <QObject>
 
 #include "messageviewer_export.h"
-class KToggleAction;
 class KActionCollection;
 class QActionGroup;
 class KActionMenu;
