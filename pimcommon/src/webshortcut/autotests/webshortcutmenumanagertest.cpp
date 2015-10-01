@@ -16,7 +16,7 @@
 */
 
 #include "webshortcutmenumanagertest.h"
-#include "../webshortcutmenumanager.h"
+#include "../webshortcutsmenumanager.h"
 #include <QMenu>
 #include <qtest.h>
 

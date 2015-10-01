@@ -18,7 +18,7 @@
 #include "richtexteditor.h"
 #include "texteditor/commonwidget/textmessageindicator.h"
 #include "texteditor/richtexteditor/richtextdecorator.h"
-#include "webshortcut/webshortcutmenumanager.h"
+#include "webshortcut/webshortcutsmenumanager.h"
 #include <KLocalizedString>
 #include <KStandardAction>
 #include <KCursor>

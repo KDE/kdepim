@@ -230,8 +230,8 @@ set(libpimcommon_shareserviceurl_SRCS
    shareserviceurl/shareserviceurlmanager.cpp
 )
 
-set(libpimcommon_webshortcut_SRCS
-   webshortcut/webshortcutmenumanager.cpp
+set(libpimcommon_webshortscut_SRCS
+   webshortcut/webshortcutsmenumanager.cpp
 )
 
 set(libpimcommon_manageserversidesubscription_SRCS
@@ -241,7 +241,7 @@ set(libpimcommon_manageserversidesubscription_SRCS
 set(libpimcommon_SRCS
   settings/pimcommonsettings.cpp
   ${libpimcommon_manageserversidesubscription_SRCS}
-  ${libpimcommon_webshortcut_SRCS}
+  ${libpimcommon_webshortscut_SRCS}
   ${libpimcommon_shareserviceurl_SRCS}
   ${libpimcommon_migrate_SRCS}
   ${libpimcommon_util_SRCS}
@@ -456,7 +456,7 @@ ecm_generate_headers(PimCommon_storageservicesettings_HEADERS
 
 ecm_generate_headers(PimCommon_webshortcut_HEADERS
   HEADER_NAMES
-  WebShortCutMenuManager
+  WebShortCutsMenuManager
   REQUIRED_HEADERS PimCommon_webshortcut_HEADERS
   PREFIX PimCommon
   RELATIVE webshortcut

@@ -17,7 +17,7 @@
 
 #include "plaintexteditor.h"
 #include "texteditor/commonwidget/textmessageindicator.h"
-#include "webshortcut/webshortcutmenumanager.h"
+#include "webshortcut/webshortcutsmenumanager.h"
 
 #include <KLocalizedString>
 #include <KIconTheme>

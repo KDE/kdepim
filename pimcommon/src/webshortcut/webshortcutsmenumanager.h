@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef WEBSHORTCUTMENUMANAGER_H
-#define WEBSHORTCUTMENUMANAGER_H
+#ifndef WEBSHORTCUTSMENUMANAGER_H
+#define WEBSHORTCUTSMENUMANAGER_H
 
 #include <QObject>
 #include "pimcommon_export.h"
@@ -45,4 +45,4 @@ private:
 };
 }
 
-#endif // WEBSHORTCUTMENUMANAGER_H
+#endif // WEBSHORTCUTSMENUMANAGER_H
