@@ -118,6 +118,7 @@ set(libmessageviewer_widgets_SRCS
   widgets/openattachmentfolderwidget.cpp
   widgets/mailsourceviewer.cpp
   widgets/mailsourceviewtextbrowserwidget.cpp
+  widgets/zoomactionmenu.cpp
 )
 
 set(libmessageviewer_gravatar_SRCS
