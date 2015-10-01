@@ -1,6 +1,7 @@
 set(messageviewer_createnoteplugin_SRCS
     viewerplugincreatenote.cpp
     viewerplugincreatenoteinterface.cpp
+    noteedit.cpp
 )
 
 add_library(messageviewer_createnoteplugin MODULE ${messageviewer_createnoteplugin_SRCS})

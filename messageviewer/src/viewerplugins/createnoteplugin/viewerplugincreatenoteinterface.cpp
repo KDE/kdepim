@@ -16,7 +16,7 @@
 */
 
 #include "viewerplugincreatenoteinterface.h"
-#include "widgets/noteedit.h"
+#include "noteedit.h"
 #include <KLocalizedString>
 #include <KActionCollection>
 

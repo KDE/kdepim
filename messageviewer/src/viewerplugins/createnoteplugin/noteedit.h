@@ -19,7 +19,6 @@
 #define NOTEEDIT_H
 
 #include <QWidget>
-#include "messageviewer_export.h"
 
 #include <AkonadiCore/Collection>
 #include <Akonadi/Notes/NoteUtils>
@@ -34,7 +33,7 @@ class CollectionComboBox;
 
 namespace MessageViewer
 {
-class MESSAGEVIEWER_EXPORT NoteEdit : public QWidget
+class NoteEdit : public QWidget
 {
     Q_OBJECT
 public:

@@ -27,7 +27,6 @@
 #include <KLocalizedString>
 #include <KStandardGuiItem>
 
-#include "messageviewer_debug.h"
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QIcon>
@@ -38,7 +37,7 @@
 
 namespace MessageViewer
 {
-MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_noteEditStubModel = Q_NULLPTR;
+QAbstractItemModel *_k_noteEditStubModel = Q_NULLPTR;
 }
 
 using namespace MessageViewer;

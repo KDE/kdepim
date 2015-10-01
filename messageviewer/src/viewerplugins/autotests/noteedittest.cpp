@@ -17,7 +17,7 @@
 
 #include "noteedittest.h"
 #include "globalsettings_messageviewer.h"
-#include "widgets/noteedit.h"
+#include "../createnoteplugin/noteedit.h"
 #include <AkonadiCore/Collection>
 #include <AkonadiWidgets/CollectionComboBox>
 #include <AkonadiCore/EntityTreeModel>
