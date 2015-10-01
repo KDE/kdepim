@@ -207,10 +207,7 @@ public:
 
     /** Access to the MailWebView used for the viewer. Use with
       care! */
-    MailWebView *htmlPart() const
-    {
-        return mViewer;
-    }
+    MailWebView *htmlPart() const;
 
     void showAttachmentPopup(KMime::Content *node, const QString &name, const QPoint &p);
 
@@ -230,34 +227,19 @@ public:
     void attachmentOpen(KMime::Content *node);
 
     /** Return the HtmlWriter connected to the MailWebView we use */
-    HtmlWriter *htmlWriter() const
-    {
-        return mHtmlWriter;
-    }
+    HtmlWriter *htmlWriter() const;
 
     HeaderStylePlugin *headerStylePlugin() const;
 
     CSSHelper *cssHelper() const;
 
-    NodeHelper *nodeHelper() const
-    {
-        return mNodeHelper;
-    }
+    NodeHelper *nodeHelper() const;
 
-    Viewer *viewer() const
-    {
-        return q;
-    }
+    Viewer *viewer() const;
 
-    Akonadi::Item messageItem() const
-    {
-        return mMessageItem;
-    }
+    Akonadi::Item messageItem() const;
 
-    KMime::Message::Ptr message() const
-    {
-        return mMessage;
-    }
+    KMime::Message::Ptr message() const;
 
     /** Returns whether the message should be decryted. */
     bool decryptMessage() const;
@@ -307,10 +289,7 @@ public:
     void writeConfig(bool withSync = true);
 
     /** Get/set the message attachment strategy. */
-    const AttachmentStrategy *attachmentStrategy() const
-    {
-        return mAttachmentStrategy;
-    }
+    const AttachmentStrategy *attachmentStrategy() const;
     void setAttachmentStrategy(const AttachmentStrategy *strategy);
 
     /** Get selected override character encoding.
@@ -612,7 +591,9 @@ private:
     QString picsPath();
 public:
     NodeHelper *mNodeHelper;
-    bool mHtmlMailGlobalSetting, mHtmlLoadExternalGlobalSetting, mHtmlLoadExtOverride;
+    bool mHtmlMailGlobalSetting;
+    bool mHtmlLoadExternalGlobalSetting;
+    bool mHtmlLoadExtOverride;
     KMime::Message::Ptr mMessage; //the current message, if it was set manually
     Akonadi::Item mMessageItem; //the message item from Akonadi
     // widgets:
@@ -643,18 +624,30 @@ public:
     QString mIdOfLastViewedMessage;
     QWidget *mMainWindow;
     KActionCollection *mActionCollection;
-    QAction *mCopyAction, *mCopyURLAction,
-            *mUrlOpenAction, *mSelectAllAction,
-            *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
-            *mViewSourceAction, *mSaveMessageAction, *mFindInMessageAction, *mSaveMessageDisplayFormat, *mResetMessageDisplayFormat;
+    QAction *mCopyAction;
+    QAction *mCopyURLAction;
+    QAction *mUrlOpenAction;
+    QAction *mSelectAllAction;
+    QAction *mScrollUpAction;
+    QAction *mScrollDownAction;
+    QAction *mScrollUpMoreAction;
+    QAction *mScrollDownMoreAction;
+    QAction *mViewSourceAction;
+    QAction *mSaveMessageAction;
+    QAction *mFindInMessageAction;
+    QAction *mSaveMessageDisplayFormat;
+    QAction *mResetMessageDisplayFormat;
     KToggleAction *mHeaderOnlyAttachmentsAction;
     KSelectAction *mSelectEncodingAction;
-    KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
+    KToggleAction *mToggleFixFontAction;
+    KToggleAction *mToggleDisplayModeAction;
 #ifndef KDEPIM_NO_WEBKIT
     KToggleAction *mCaretBrowsing;
 #endif
     KToggleAction *mZoomTextOnlyAction;
-    QAction *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
+    QAction *mZoomInAction;
+    QAction *mZoomOutAction;
+    QAction *mZoomResetAction;
     KToggleAction *mToggleMimePartTreeAction;
     QAction *mSpeakTextAction;
     QAction *mCopyImageLocation;

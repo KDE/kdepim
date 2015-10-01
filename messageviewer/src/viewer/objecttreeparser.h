@@ -332,10 +332,7 @@ public:
     * composer's text editor if this was edited or replied to.
     * This is usually the content of the first text/plain MIME part.
     */
-    QString plainTextContent() const
-    {
-        return mPlainTextContent;
-    }
+    QString plainTextContent() const;
 
     /**
     * Similar to plainTextContent(), but returns the HTML source of the first text/html MIME part.

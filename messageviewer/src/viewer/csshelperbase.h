@@ -81,20 +81,41 @@ protected:
     void recalculatePGPColors();
 
 protected:
-    QFont mBodyFont, mPrintFont, mFixedFont, mFixedPrintFont;
+    QFont mBodyFont;
+    QFont mPrintFont;
+    QFont mFixedFont;
+    QFont mFixedPrintFont;
     QFont mQuoteFont[3];
     QColor mQuoteColor[3];
     bool mRecycleQuoteColors;
     bool mBackingPixmapOn;
     bool mShrinkQuotes;
     QString mBackingPixmapStr;
-    QColor mForegroundColor, mLinkColor, mVisitedLinkColor, mBackgroundColor;
+    QColor mForegroundColor;
+    QColor mLinkColor;
+    QColor mVisitedLinkColor;
+    QColor mBackgroundColor;
     // colors for PGP (Frame, Header, HeaderText, Body)
-    QColor cPgpOk1F, cPgpOk1H, cPgpOk1HT, cPgpOk1B,
-           cPgpOk0F, cPgpOk0H, cPgpOk0HT, cPgpOk0B,
-           cPgpWarnF, cPgpWarnH, cPgpWarnHT, cPgpWarnB,
-           cPgpErrF, cPgpErrH, cPgpErrHT, cPgpErrB,
-           cPgpEncrF, cPgpEncrH, cPgpEncrHT, cPgpEncrB;
+    QColor cPgpOk1F;
+    QColor cPgpOk1H;
+    QColor cPgpOk1HT;
+    QColor cPgpOk1B;
+    QColor cPgpOk0F;
+    QColor cPgpOk0H;
+    QColor cPgpOk0HT;
+    QColor cPgpOk0B;
+    QColor cPgpWarnF;
+    QColor cPgpWarnH;
+    QColor cPgpWarnHT;
+    QColor cPgpWarnB;
+    QColor cPgpErrF;
+    QColor cPgpErrH;
+    QColor cPgpErrHT;
+    QColor cPgpErrB;
+    QColor cPgpEncrF;
+    QColor cPgpEncrH;
+    QColor cPgpEncrHT;
+    QColor cPgpEncrB;
     // color of frame of warning preceding the source of HTML messages
     QColor cHtmlWarning;
 

@@ -456,6 +456,11 @@ void ViewerPrivate::editAttachment(KMime::Content *node, bool showWarning)
     job->canDeleteJob();
 }
 
+MailWebView *ViewerPrivate::htmlPart() const
+{
+    return mViewer;
+}
+
 void ViewerPrivate::createOpenWithMenu(QMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent)
 {
     const KService::List offers = KFileItemActions::associatedApplications(QStringList() << contentTypeStr, QString());
@@ -726,9 +731,34 @@ void ViewerPrivate::attachmentOpen(KMime::Content *node)
     attachmentOpenWith(node, offer);
 }
 
+HtmlWriter *ViewerPrivate::htmlWriter() const
+{
+    return mHtmlWriter;
+}
+
 CSSHelper *ViewerPrivate::cssHelper() const
 {
     return mCSSHelper;
+}
+
+MessageViewer::NodeHelper *ViewerPrivate::nodeHelper() const
+{
+    return mNodeHelper;
+}
+
+Viewer *ViewerPrivate::viewer() const
+{
+    return q;
+}
+
+Akonadi::Item ViewerPrivate::messageItem() const
+{
+    return mMessageItem;
+}
+
+KMime::Message::Ptr ViewerPrivate::message() const
+{
+    return mMessage;
 }
 
 bool ViewerPrivate::decryptMessage() const
@@ -1153,6 +1183,11 @@ void ViewerPrivate::writeConfig(bool sync)
     if (sync) {
         Q_EMIT requestConfigSync();
     }
+}
+
+const AttachmentStrategy *ViewerPrivate::attachmentStrategy() const
+{
+    return mAttachmentStrategy;
 }
 
 void ViewerPrivate::setAttachmentStrategy(const AttachmentStrategy *strategy)

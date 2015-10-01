@@ -66,13 +66,7 @@ class URLHandlerManager
 public:
     ~URLHandlerManager();
 
-    static URLHandlerManager *instance()
-    {
-        if (!self) {
-            self = new URLHandlerManager();
-        }
-        return self;
-    }
+    static URLHandlerManager *instance();
 
     void registerHandler(const URLHandler *handler);
     void unregisterHandler(const URLHandler *handler);

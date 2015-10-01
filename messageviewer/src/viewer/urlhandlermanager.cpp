@@ -397,6 +397,14 @@ URLHandlerManager::~URLHandlerManager()
              DeleteAndSetToZero<URLHandler>());
 }
 
+URLHandlerManager *URLHandlerManager::instance()
+{
+    if (!self) {
+        self = new URLHandlerManager();
+    }
+    return self;
+}
+
 void URLHandlerManager::registerHandler(const URLHandler *handler)
 {
     if (!handler) {

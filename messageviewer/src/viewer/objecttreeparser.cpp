@@ -243,6 +243,11 @@ bool ObjectTreeParser::hasPendingAsyncJobs() const
     return mHasPendingAsyncJobs;
 }
 
+QString ObjectTreeParser::plainTextContent() const
+{
+    return mPlainTextContent;
+}
+
 QString ObjectTreeParser::htmlContent() const
 {
     return mHtmlContent;
