@@ -28,12 +28,29 @@ class PIMCOMMON_EXPORT WebShortcutsMenuManager : public QObject
 {
     Q_OBJECT
 public:
+    /**
+     * Constructs a webshorts menu manager.
+     *
+     * @param parent The QObject parent.
+     */
+
     explicit WebShortcutsMenuManager(QObject *parent = Q_NULLPTR);
     ~WebShortcutsMenuManager();
 
+    /**
+     * @brief return the selected text
+     */
     QString selectedText() const;
+    /**
+     * @brief Set selected text
+     * @param selectedText
+     */
     void setSelectedText(const QString &selectedText);
 
+    /**
+     * @brief addWebShortcutsToMenu Manage to add WebShortCut action to existing menu.
+     * @param menu
+     */
     void addWebShortcutsToMenu(QMenu *menu);
 
 private Q_SLOTS:
