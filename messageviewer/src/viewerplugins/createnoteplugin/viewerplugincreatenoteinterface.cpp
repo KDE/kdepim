@@ -131,15 +131,17 @@ bool ViewerPluginCreatenoteInterface::needValidMessageItem() const
 void ViewerPluginCreatenoteInterface::updateAction(const Akonadi::Item &item)
 {
     mMessageItem = item;
-    QString createNoteText;
-    if (relatedNoteRelation().isValid()) {
-        createNoteText = i18nc("edit a note on this message", "Edit Note");
-    } else {
-        createNoteText = i18nc("create a new note out of this message", "Create Note");
-    }
+    if (mAction) {
+        QString createNoteText;
+        if (relatedNoteRelation().isValid()) {
+            createNoteText = i18nc("edit a note on this message", "Edit Note");
+        } else {
+            createNoteText = i18nc("create a new note out of this message", "Create Note");
+        }
 
-    mAction->setText(createNoteText);
-    mAction->setIconText(createNoteText);
+        mAction->setText(createNoteText);
+        mAction->setIconText(createNoteText);
+    }
 }
 
 void ViewerPluginCreatenoteInterface::createAction(KActionCollection *ac)
