@@ -435,7 +435,6 @@ private Q_SLOTS:
     void slotMessageMayBeAScam();
     void slotMessageIsNotAScam();
     void slotAddToWhiteList();
-    void slotToggleCaretBrowsing(bool);
 
     /** Show hide all fields specified inside this function */
     void toggleFullAddressList();
@@ -640,9 +639,6 @@ public:
     KSelectAction *mSelectEncodingAction;
     KToggleAction *mToggleFixFontAction;
     KToggleAction *mToggleDisplayModeAction;
-#ifndef KDEPIM_NO_WEBKIT
-    KToggleAction *mCaretBrowsing;
-#endif
     KToggleAction *mZoomTextOnlyAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
