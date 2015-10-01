@@ -23,25 +23,25 @@
 class QMenu;
 namespace PimCommon
 {
-class WebShortcutMenuManagerPrivate;
-class PIMCOMMON_EXPORT WebShortcutMenuManager : public QObject
+class WebShortcutsMenuManagerPrivate;
+class PIMCOMMON_EXPORT WebShortcutsMenuManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit WebShortcutMenuManager(QObject *parent = Q_NULLPTR);
-    ~WebShortcutMenuManager();
+    explicit WebShortcutsMenuManager(QObject *parent = Q_NULLPTR);
+    ~WebShortcutsMenuManager();
 
     QString selectedText() const;
     void setSelectedText(const QString &selectedText);
 
-    void addWebShortcutsMenu(QMenu *menu);
+    void addWebShortcutsToMenu(QMenu *menu);
 
 private Q_SLOTS:
     void slotConfigureWebShortcuts();
     void slotHandleWebShortcutAction();
 
 private:
-    WebShortcutMenuManagerPrivate *const d;
+    WebShortcutsMenuManagerPrivate *const d;
 };
 }
 

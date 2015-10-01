@@ -33,13 +33,13 @@ WebShortcutMenuManagerTest::~WebShortcutMenuManagerTest()
 
 void WebShortcutMenuManagerTest::shouldHaveDefaultValue()
 {
-    PimCommon::WebShortcutMenuManager shortcutManager;
+    PimCommon::WebShortcutsMenuManager shortcutManager;
     QVERIFY(shortcutManager.selectedText().isEmpty());
 }
 
 void WebShortcutMenuManagerTest::shouldAssignSelectedText()
 {
-    PimCommon::WebShortcutMenuManager shortcutManager;
+    PimCommon::WebShortcutsMenuManager shortcutManager;
     const QString selectText = QStringLiteral("foo");
     shortcutManager.setSelectedText(selectText);
     QCOMPARE(shortcutManager.selectedText(), selectText);
@@ -47,16 +47,16 @@ void WebShortcutMenuManagerTest::shouldAssignSelectedText()
 
 void WebShortcutMenuManagerTest::shouldAddActionToMenu()
 {
-    PimCommon::WebShortcutMenuManager shortcutManager;
+    PimCommon::WebShortcutsMenuManager shortcutManager;
     QMenu *menu = new QMenu(0);
-    shortcutManager.addWebShortcutsMenu(menu);
+    shortcutManager.addWebShortcutsToMenu(menu);
     //Empty when we don't have selected text
     QVERIFY(menu->actions().isEmpty());
 
 
     const QString selectText = QStringLiteral("foo");
     shortcutManager.setSelectedText(selectText);
-    shortcutManager.addWebShortcutsMenu(menu);
+    shortcutManager.addWebShortcutsToMenu(menu);
     QVERIFY(!menu->actions().isEmpty());
     delete menu;
 }

@@ -59,7 +59,7 @@ public:
     PlainTextEditorPrivate(PlainTextEditor *qq)
         : q(qq),
           mTextIndicator(new PimCommon::TextMessageIndicator(q)),
-          webshortcutMenuManager(new PimCommon::WebShortcutMenuManager(q)),
+          webshortcutMenuManager(new PimCommon::WebShortcutsMenuManager(q)),
           richTextDecorator(Q_NULLPTR),
           speller(Q_NULLPTR),
           customPalette(false),
@@ -82,7 +82,7 @@ public:
     QStringList ignoreSpellCheckingWords;
     PlainTextEditor *q;
     PimCommon::TextMessageIndicator *mTextIndicator;
-    PimCommon::WebShortcutMenuManager *webshortcutMenuManager;
+    PimCommon::WebShortcutsMenuManager *webshortcutMenuManager;
     Sonnet::SpellCheckDecorator *richTextDecorator;
     Sonnet::Speller *speller;
 
@@ -209,7 +209,7 @@ void PlainTextEditor::contextMenuEvent(QContextMenuEvent *event)
             popup->addSeparator();
             const QString selectedText = textCursor().selectedText();
             d->webshortcutMenuManager->setSelectedText(selectedText);
-            d->webshortcutMenuManager->addWebShortcutsMenu(popup);
+            d->webshortcutMenuManager->addWebShortcutsToMenu(popup);
         }
         addExtraMenuEntry(popup, event->pos());
         popup->exec(event->globalPos());

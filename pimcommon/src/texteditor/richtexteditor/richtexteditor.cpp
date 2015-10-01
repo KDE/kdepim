@@ -56,7 +56,7 @@ public:
           textIndicator(new PimCommon::TextMessageIndicator(q)),
           richTextDecorator(Q_NULLPTR),
           speller(Q_NULLPTR),
-          webshortcutMenuManager(new PimCommon::WebShortcutMenuManager(q)),
+          webshortcutMenuManager(new PimCommon::WebShortcutsMenuManager(q)),
           customPalette(false),
           activateLanguageMenu(true),
           showAutoCorrectionButton(false)
@@ -84,7 +84,7 @@ public:
     QTextDocumentFragment originalDoc;
     Sonnet::SpellCheckDecorator *richTextDecorator;
     Sonnet::Speller *speller;
-    WebShortcutMenuManager *webshortcutMenuManager;
+    WebShortcutsMenuManager *webshortcutMenuManager;
     RichTextEditor::SupportFeatures supportFeatures;
     bool customPalette;
     bool checkSpellingEnabled;
@@ -235,7 +235,7 @@ QMenu *RichTextEditor::mousePopupMenu(const QPoint &pos)
             popup->addSeparator();
             const QString selectedText = textCursor().selectedText();
             d->webshortcutMenuManager->setSelectedText(selectedText);
-            d->webshortcutMenuManager->addWebShortcutsMenu(popup);
+            d->webshortcutMenuManager->addWebShortcutsToMenu(popup);
         }
         addExtraMenuEntry(popup, pos);
         return popup;

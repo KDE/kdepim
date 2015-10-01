@@ -26,10 +26,10 @@
 
 using namespace PimCommon;
 
-class PimCommon::WebShortcutMenuManagerPrivate
+class PimCommon::WebShortcutsMenuManagerPrivate
 {
 public:
-    WebShortcutMenuManagerPrivate()
+    WebShortcutsMenuManagerPrivate()
     {
 
     }
@@ -37,34 +37,34 @@ public:
     QString mSelectedText;
 };
 
-WebShortcutMenuManager::WebShortcutMenuManager(QObject *parent)
+WebShortcutsMenuManager::WebShortcutsMenuManager(QObject *parent)
     : QObject(parent),
-      d(new PimCommon::WebShortcutMenuManagerPrivate)
+      d(new PimCommon::WebShortcutsMenuManagerPrivate)
 {
 
 }
 
-WebShortcutMenuManager::~WebShortcutMenuManager()
+WebShortcutsMenuManager::~WebShortcutsMenuManager()
 {
     delete d;
 }
 
-QString WebShortcutMenuManager::selectedText() const
+QString WebShortcutsMenuManager::selectedText() const
 {
     return d->mSelectedText;
 }
 
-void WebShortcutMenuManager::setSelectedText(const QString &selectedText)
+void WebShortcutsMenuManager::setSelectedText(const QString &selectedText)
 {
     d->mSelectedText = selectedText;
 }
 
-void WebShortcutMenuManager::slotConfigureWebShortcuts()
+void WebShortcutsMenuManager::slotConfigureWebShortcuts()
 {
     KToolInvocation::kdeinitExec(QStringLiteral("kcmshell5"), QStringList() << QStringLiteral("webshortcuts"));
 }
 
-void WebShortcutMenuManager::addWebShortcutsMenu(QMenu *menu)
+void WebShortcutsMenuManager::addWebShortcutsToMenu(QMenu *menu)
 {
     if (d->mSelectedText.isEmpty()) {
         return;
@@ -97,7 +97,7 @@ void WebShortcutMenuManager::addWebShortcutsMenu(QMenu *menu)
                 action = new QAction(i18nc("@action:inmenu Search for <text> with", "%1", searchProvider), webShortcutsMenu);
                 action->setIcon(QIcon::fromTheme(filterData.iconNameForPreferredSearchProvider(searchProvider)));
                 action->setData(filterData.queryForPreferredSearchProvider(searchProvider));
-                connect(action, &QAction::triggered, this, &WebShortcutMenuManager::slotHandleWebShortcutAction);
+                connect(action, &QAction::triggered, this, &WebShortcutsMenuManager::slotHandleWebShortcutAction);
                 webShortcutsMenu->addAction(action);
             }
 
@@ -105,7 +105,7 @@ void WebShortcutMenuManager::addWebShortcutsMenu(QMenu *menu)
 
             action = new QAction(i18n("Configure Web Shortcuts..."), webShortcutsMenu);
             action->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
-            connect(action, &QAction::triggered, this, &WebShortcutMenuManager::slotConfigureWebShortcuts);
+            connect(action, &QAction::triggered, this, &WebShortcutsMenuManager::slotConfigureWebShortcuts);
             webShortcutsMenu->addAction(action);
 
             menu->addMenu(webShortcutsMenu);
@@ -113,7 +113,7 @@ void WebShortcutMenuManager::addWebShortcutsMenu(QMenu *menu)
     }
 }
 
-void WebShortcutMenuManager::slotHandleWebShortcutAction()
+void WebShortcutsMenuManager::slotHandleWebShortcutAction()
 {
     QAction *action = qobject_cast<QAction *>(sender());
 
