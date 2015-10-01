@@ -1044,7 +1044,7 @@ void ImportMailJob::copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveCo
                 newGroup.writeEntry(QLatin1String("saveCollectionId"), id);
                 QUrl path = newGroup.readEntry("storePath", QUrl());
                 if (!QDir(path.path()).exists()) {
-                    newGroup.writeEntry(QLatin1String("storePath"), QUrl(QDir::homePath()));
+                    newGroup.writeEntry(QStringLiteral("storePath"), QUrl::fromLocalFile(QDir::homePath()));
                 }
             }
             oldGroup.deleteGroup();
