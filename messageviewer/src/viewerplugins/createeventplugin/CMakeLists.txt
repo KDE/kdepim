@@ -1,12 +1,13 @@
 set(messageviewer_createeventplugin_SRCS
     viewerplugincreateevent.cpp
     viewerplugincreateeventinterface.cpp
+    eventedit.cpp
 )
 
 add_library(messageviewer_createeventplugin MODULE ${messageviewer_createeventplugin_SRCS})
 
 target_link_libraries(messageviewer_createeventplugin
-  KF5::MessageViewer KF5::XmlGui KF5::CalendarCore
+  KF5::MessageViewer KF5::XmlGui KF5::CalendarCore KF5::IncidenceEditorsng
 )
 
 install(TARGETS messageviewer_createeventplugin DESTINATION ${PLUGIN_INSTALL_DIR}/messageviewer)

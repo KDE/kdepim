@@ -16,7 +16,7 @@
 */
 
 #include "eventedittest.h"
-#include "widgets/eventedit.h"
+#include "../createeventplugin/eventedit.h"
 #include "widgets/eventdatetimewidget.h"
 #include "globalsettings_messageviewer.h"
 

@@ -16,7 +16,7 @@
 */
 
 #include "viewerplugincreateeventinterface.h"
-#include "widgets/eventedit.h"
+#include "eventedit.h"
 #include <KLocalizedString>
 
 #include <KActionCollection>

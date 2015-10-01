@@ -19,7 +19,6 @@
 #define EVENTEDIT_H
 
 #include <QWidget>
-#include "messageviewer_export.h"
 
 #include <AkonadiCore/Collection>
 #include <KMime/Message>
@@ -35,7 +34,7 @@ class CollectionComboBox;
 namespace MessageViewer
 {
 class EventDateTimeWidget;
-class MESSAGEVIEWER_EXPORT EventEdit : public QWidget
+class EventEdit : public QWidget
 {
     Q_OBJECT
 public:

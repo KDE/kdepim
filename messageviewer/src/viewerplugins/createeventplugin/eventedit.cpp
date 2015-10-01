@@ -18,7 +18,7 @@
 #include "eventedit.h"
 #include "messageviewer_debug.h"
 #include "globalsettings_messageviewer.h"
-#include "eventdatetimewidget.h"
+#include "widgets/eventdatetimewidget.h"
 
 #include <KLocalizedString>
 #include <QLineEdit>
@@ -42,7 +42,7 @@
 
 namespace MessageViewer
 {
-MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_eventEditStubModel = 0;
+QAbstractItemModel *_k_eventEditStubModel = 0;
 }
 
 using namespace MessageViewer;
@@ -253,19 +253,19 @@ void EventEdit::slotCloseWidget()
 void EventEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        qCDebug(MESSAGEVIEWER_LOG) << " Message is null";
+        //qCDebug(MESSAGEVIEWER_LOG) << " Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        qCDebug(MESSAGEVIEWER_LOG) << " Collection is not valid";
+        //qCDebug(MESSAGEVIEWER_LOG) << " Collection is not valid";
         return;
     }
 
     const QDateTime dtstart = mStartDateTimeEdit->dateTime();
     const QDateTime dtend = mEndDateTimeEdit->dateTime();
     if (!dtstart.isValid() || !dtend.isValid()) {
-        qCDebug(MESSAGEVIEWER_LOG) << " date is not valid !";
+        //qCDebug(MESSAGEVIEWER_LOG) << " date is not valid !";
         return;
     }
 
