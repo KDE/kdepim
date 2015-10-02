@@ -245,7 +245,6 @@ PRIVATE
   KF5::Libkdepim
   KF5::GrantleeTheme
   KF5::KaddressbookGrantlee
-  KF5::IncidenceEditorsng
   Grantlee5::TextDocument
   Grantlee5::Templates
   Qt5::WebKitWidgets
@@ -254,6 +253,8 @@ PRIVATE
   KF5::Mbox
   KF5::KDELibs4Support
   KF5::AkonadiNotes
+  KF5::PimTextEdit
+  KF5::CalendarCore
 )
 if (WIN32)
   target_link_libraries(KF5MessageViewer PUBLIC KF5::Gpgmepp)
