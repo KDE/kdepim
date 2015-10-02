@@ -7,7 +7,7 @@ set(messageviewer_createnoteplugin_SRCS
 add_library(messageviewer_createnoteplugin MODULE ${messageviewer_createnoteplugin_SRCS})
 
 target_link_libraries(messageviewer_createnoteplugin
-  KF5::MessageViewer KF5::XmlGui KF5::CalendarCore KF5::AkonadiNotes
+  KF5::MessageViewer KF5::XmlGui KF5::CalendarCore KF5::AkonadiNotes KF5::IncidenceEditorsng
 )
 
 install(TARGETS messageviewer_createnoteplugin DESTINATION ${PLUGIN_INSTALL_DIR}/messageviewer)
