@@ -63,6 +63,7 @@ int main(int argc, char **argv)
 
     AboutData about;
     app.setAboutData(about);
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("kcontact")));
     QCommandLineParser *cmdArgs = app.cmdArgs();
     kaddressbook_options(cmdArgs);
 
