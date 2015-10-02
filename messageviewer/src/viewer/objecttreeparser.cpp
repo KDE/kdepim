@@ -106,13 +106,9 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QPointer>
-#ifdef KDEPIM_NO_WEBKIT
-# include <QTextBrowser>
-#else
-# include <QWebPage>
-# include <QWebFrame>
+#include <QWebPage>
+#include <QWebFrame>
 #include <QUrlQuery>
-#endif
 
 // other includes
 #include <sstream>
@@ -3409,15 +3405,9 @@ QString ObjectTreeParser::convertedTextContent() const
 {
     QString plainTextContent = mPlainTextContent;
     if (plainTextContent.isEmpty()) {
-#ifdef KDEPIM_NO_WEBKIT
-        QTextDocument doc;
-        doc.setHtml(mHtmlContent);
-        plainTextContent = doc.toPlainText();
-#else
         QWebPage doc;
         doc.mainFrame()->setHtml(mHtmlContent);
         plainTextContent = doc.mainFrame()->toPlainText();
-#endif
     }
     return plainTextContent.append(QLatin1Char('\n'));
 }

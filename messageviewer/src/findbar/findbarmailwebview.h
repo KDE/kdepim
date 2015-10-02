@@ -21,10 +21,6 @@
 
 #include "findbarbase.h"
 
-#ifdef KDEPIM_NO_WEBKIT
-# define MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
-#endif
-
 namespace MessageViewer
 {
 class MailWebView;
@@ -52,9 +48,7 @@ private:
 
 private:
     MailWebView *mView;
-#ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
     QAction *mHighlightAll;
-#endif
 };
 
 }

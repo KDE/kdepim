@@ -21,11 +21,9 @@
 #include "htmlquotecolorer.h"
 #include "settings/messageviewersettings.h"
 
-#ifndef KDEPIM_NO_WEBKIT
 #include <QWebPage>
 #include <QWebFrame>
 #include <QWebElement>
-#endif
 
 using namespace MessageViewer;
 
@@ -41,7 +39,6 @@ void HTMLQuoteColorer::setEnableHtmlQuoteColorer(bool enabled)
 
 QString HTMLQuoteColorer::process(const QString &htmlSource, QString &extraHead)
 {
-#ifndef KDEPIM_NO_WEBKIT
     // Create a DOM Document from the HTML source
     QWebPage page(0);
     page.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
@@ -144,9 +141,6 @@ QString HTMLQuoteColorer::process(const QString &htmlSource, QString &extraHead)
 
     extraHead = header.toInnerXml();
     return body.toInnerXml();
-#else
-    return htmlSource;
-#endif
 }
 
 void HTMLQuoteColorer::setQuoteColor(unsigned int level, const QColor &color)

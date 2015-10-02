@@ -1,4 +1,3 @@
-if(NOT KDEPIM_NO_WEBKIT)
 set(adblocksettings_gui_SRCS adblocksettings_gui.cpp)
 add_executable(adblocksettings_gui ${adblocksettings_gui_SRCS})
 target_link_libraries(adblocksettings_gui
@@ -22,4 +21,3 @@ target_link_libraries(adblockblockableitemdialog_gui
   Qt5::WebKitWidgets
   KF5::ItemViews 
 )
-endif()

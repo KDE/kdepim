@@ -1134,11 +1134,9 @@ void ViewerPrivate::readConfig()
 
     readGlobalOverrideCodec();
 
-#ifndef KDEPIM_NO_WEBKIT
     mViewer->settings()->setFontSize(QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize());
     mViewer->settings()->setFontSize(QWebSettings::MinimumLogicalFontSize, GlobalSettings::self()->minimumFontSize());
     mViewer->settings()->setAttribute(QWebSettings::PrintElementBackgrounds, GlobalSettings::self()->printBackgroundColorImages());
-#endif
 
     if (mMessage) {
         update();
@@ -2036,11 +2034,9 @@ void ViewerPrivate::slotToggleHtmlMode()
 
 void ViewerPrivate::slotFind()
 {
-#ifndef KDEPIM_NO_WEBKIT
     if (mViewer->hasSelection()) {
         mFindBar->setText(mViewer->selectedText());
     }
-#endif
     mSliderContainer->slideIn();
     mFindBar->focusAndSetCursor();
 }
@@ -2937,9 +2933,7 @@ void ViewerPrivate::slotModifyItemDone(KJob *job)
 
 void ViewerPrivate::saveMainFrameScreenshotInFile(const QString &filename)
 {
-#ifndef KDEPIM_NO_WEBKIT
     mViewer->saveMainFrameScreenshotInFile(filename);
-#endif
 }
 
 void ViewerPrivate::slotAddToWhiteList()
@@ -2964,16 +2958,12 @@ void ViewerPrivate::slotBlockImage()
     if (mImageUrl.isEmpty()) {
         return;
     }
-#ifndef KDEPIM_NO_WEBKIT
     MessageViewer::AdBlockManager::self()->addCustomRule(mImageUrl.url(), true);
-#endif
 }
 
 void ViewerPrivate::slotOpenBlockableItems()
 {
-#ifndef KDEPIM_NO_WEBKIT
     mViewer->openBlockableItemsDialog();
-#endif
 }
 
 bool ViewerPrivate::isAShortUrl(const QUrl &url) const

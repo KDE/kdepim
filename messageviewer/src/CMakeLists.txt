@@ -49,10 +49,6 @@ if(DEBUG_SIGNATURE)
    add_definitions(-DDEBUG_SIGNATURE)
 endif()
 
-if(KDEPIM_NO_WEBKIT)
-  set(_mailwebview_cpp viewer/mailwebview_textbrowser.cpp )
-  set(_mailwebview_lib )
-else()
   set(_mailwebview_cpp viewer/mailwebview_webkit.cpp 
                        adblock/networkaccessmanager.cpp 
                        adblock/webpage.cpp
@@ -74,7 +70,6 @@ else()
                        adblock/adblockblockableitemswidget.cpp
                        )
   set(_mailwebview_lib KF5::WebKit Qt5::WebKitWidgets)
-endif()
 
 set(libmessageviewer_viewer_SRCS
   viewer/attachmentstrategy.cpp
@@ -260,9 +255,7 @@ else()
   target_link_libraries(KF5MessageViewer PUBLIC KF5::Gpgmepp-pthread)
 endif()
 
-if(NOT KDEPIM_NO_WEBKIT)
-  target_include_directories(KF5MessageViewer PUBLIC $<TARGET_PROPERTY:KF5::WebKit,INTERFACE_INCLUDE_DIRECTORIES>)
-endif()
+target_include_directories(KF5MessageViewer PUBLIC $<TARGET_PROPERTY:KF5::WebKit,INTERFACE_INCLUDE_DIRECTORIES>)
 
 set_target_properties(KF5MessageViewer PROPERTIES
     VERSION ${MESSAGEVIEWER_VERSION_STRING}

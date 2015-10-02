@@ -651,11 +651,7 @@ QAction *Viewer::blockImage() const
 
 bool Viewer::adblockEnabled() const
 {
-#ifndef KDEPIM_NO_WEBKIT
     return MessageViewer::AdBlockManager::self()->isEnabled();
-#else
-    return false;
-#endif
 }
 
 QAction *Viewer::openBlockableItems() const

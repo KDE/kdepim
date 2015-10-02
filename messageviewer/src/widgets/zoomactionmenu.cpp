@@ -102,14 +102,11 @@ void ZoomActionMenu::setZoomFactor(qreal zoomFactor)
 
 void ZoomActionMenu::setWebViewerZoomFactor(qreal zoomFactor)
 {
-#ifndef KDEPIM_NO_WEBKIT
     mMailWebViewer->setZoomFactor(zoomFactor);
-#endif
 }
 
 void ZoomActionMenu::slotZoomIn()
 {
-#ifndef KDEPIM_NO_WEBKIT
     if (mZoomFactor >= 300) {
         return;
     }
@@ -118,12 +115,10 @@ void ZoomActionMenu::slotZoomIn()
         mZoomFactor = 300;
     }
     mMailWebViewer->setZoomFactor(mZoomFactor / 100.0);
-#endif
 }
 
 void ZoomActionMenu::slotZoomOut()
 {
-#ifndef KDEPIM_NO_WEBKIT
     if (mZoomFactor <= 10) {
         return;
     }
@@ -132,7 +127,6 @@ void ZoomActionMenu::slotZoomOut()
         mZoomFactor = 10;
     }
     mMailWebViewer->setZoomFactor(mZoomFactor / 100.0);
-#endif
 }
 
 void ZoomActionMenu::setZoomTextOnly(bool textOnly)
@@ -141,9 +135,7 @@ void ZoomActionMenu::setZoomTextOnly(bool textOnly)
     if (mZoomTextOnlyAction) {
         mZoomTextOnlyAction->setChecked(mZoomTextOnly);
     }
-#ifndef KDEPIM_NO_WEBKIT
     mMailWebViewer->settings()->setAttribute(QWebSettings::ZoomTextOnly, mZoomTextOnly);
-#endif
 }
 
 void ZoomActionMenu::slotZoomTextOnly()
@@ -153,10 +145,8 @@ void ZoomActionMenu::slotZoomTextOnly()
 
 void ZoomActionMenu::slotZoomReset()
 {
-#ifndef KDEPIM_NO_WEBKIT
     mZoomFactor = 100;
     mMailWebViewer->setZoomFactor(1.0);
-#endif
 }
 
 bool ZoomActionMenu::zoomTextOnly() const

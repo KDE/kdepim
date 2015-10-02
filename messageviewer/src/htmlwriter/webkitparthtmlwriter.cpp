@@ -70,10 +70,8 @@ void WebKitPartHtmlWriter::begin(const QString &css)
     // clear the widget:
     mHtmlView->setUpdatesEnabled(false);
     mHtmlView->scrollUp(10);
-#ifndef KDEPIM_NO_WEBKIT
     // PENDING(marc) push into MailWebView
     mHtmlView->load(QUrl());
-#endif
     mState = Begun;
 }
 
@@ -90,10 +88,8 @@ void WebKitPartHtmlWriter::end()
     mHtmlView->show();
     mHtml.clear();
 
-#ifndef KDEPIM_NO_WEBKIT
     resolveCidUrls();
     mHtmlView->scamCheck();
-#endif
     mHtmlView->setUpdatesEnabled(true);
     mHtmlView->update();
     mState = Ended;
@@ -140,7 +136,6 @@ void WebKitPartHtmlWriter::resolveCidUrls()
     // FIXME: instead of patching around in the HTML source, this should
     // be replaced by a custom QNetworkAccessManager (for QWebView), or
     // virtual loadResource() (for QTextBrowser)
-#ifndef KDEPIM_NO_WEBKIT
     QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
     QWebElementCollection images = root.findAll(QStringLiteral("img"));
     QWebElementCollection::iterator end(images.end());
@@ -154,7 +149,6 @@ void WebKitPartHtmlWriter::resolveCidUrls()
             }
         }
     }
-#endif
 }
 
 void WebKitPartHtmlWriter::insertExtraHead()
