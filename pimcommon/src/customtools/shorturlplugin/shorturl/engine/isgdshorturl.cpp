@@ -21,7 +21,6 @@
 #include <QNetworkRequest>
 #include <QUrl>
 #include <qregexp.h>
-#include "pimcommon_debug.h"
 
 using namespace PimCommon;
 IsGdShortUrl::IsGdShortUrl(QObject *parent)
@@ -74,7 +73,7 @@ void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     reply->deleteLater();
 
     if (error.error != QJsonParseError::NoError || json.isNull()) {
-        qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
+        //qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
         Q_EMIT shortUrlFailed(error.errorString());
         return;
     }

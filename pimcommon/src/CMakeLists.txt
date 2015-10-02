@@ -5,20 +5,6 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libpimcommon\")
 
-set(libpimcommon_shorturl_SRCS
-  shorturl/abstractshorturl.cpp
-  shorturl/shorturlwidget.cpp
-  shorturl/engine/tinyurlshorturl.cpp
-  shorturl/engine/googleshorturl.cpp
-  shorturl/shorturlconfigurewidget.cpp
-  shorturl/shorturlutils.cpp
-  shorturl/shorturlconfiguredialog.cpp
-  shorturl/engine/migremeshorturl.cpp
-  shorturl/engine/triopabshorturl.cpp
-  shorturl/engine/ur1cashorturl.cpp
-  shorturl/engine/isgdshorturl.cpp
-)
-
 set(libpimcommon_sieve_SRCS
   sievehighlighter/sievesyntaxhighlighter.cpp
   sievehighlighter/sievesyntaxhighlighterrules.cpp
@@ -246,7 +232,6 @@ set(libpimcommon_SRCS
   ${libpimcommon_migrate_SRCS}
   ${libpimcommon_util_SRCS}
   ${libpimcommon_texteditor_SRCS}
-  ${libpimcommon_shorturl_SRCS}
   ${libpimcommon_storageservice_SRCS}
   ${libpimcommon_autocorrection_SRCS}
   ${libpimcommon_translator_SRCS}
@@ -351,7 +336,6 @@ if (BUILD_TESTING)
    add_subdirectory(texttospeech/autotests)
    add_subdirectory(baloodebug/autotests)
    add_subdirectory(baloodebug/tests)
-   add_subdirectory(shorturl/autotests)
    add_subdirectory(acl/autotests)
    add_subdirectory(temporaryfile/autotests)
    add_subdirectory(migration/autotests)
@@ -363,7 +347,6 @@ if (BUILD_TESTING)
    add_subdirectory(texteditor/plaintexteditor/tests)
    add_subdirectory(texteditor/richtexteditor/tests)
    add_subdirectory(widgets/tests)
-   add_subdirectory(shorturl/tests)
    add_subdirectory(autocorrection/tests)
    add_subdirectory(folderdialog/tests/)
    add_subdirectory(storageservice/dropbox/tests)

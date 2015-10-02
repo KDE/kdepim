@@ -19,7 +19,6 @@
 
 #include <QNetworkRequest>
 #include <QUrl>
-#include "pimcommon_debug.h"
 #include <QJsonDocument>
 
 using namespace PimCommon;
@@ -64,12 +63,12 @@ void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
     if (!mErrorFound) {
         const QByteArray data = reply->readAll();
-        qCDebug(PIMCOMMON_LOG) << "void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply) " <<  data;
+        //qCDebug(PIMCOMMON_LOG) << "void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply) " <<  data;
         QJsonParseError error;
         reply->deleteLater();
         const QJsonDocument json = QJsonDocument::fromJson(data, &error);
         if (error.error != QJsonParseError::NoError || json.isNull()) {
-            qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
+            //qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
             Q_EMIT shortUrlFailed(error.errorString());
             return;
         }

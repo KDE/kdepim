@@ -16,7 +16,6 @@
 */
 
 #include "ur1cashorturl.h"
-#include "pimcommon_debug.h"
 #include <QNetworkRequest>
 #include <QUrl>
 #include <qregexp.h>
@@ -65,14 +64,14 @@ void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     }
 
     QString output = QLatin1String(reply->readAll());
-    qCDebug(PIMCOMMON_LOG) << "void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << output;
+    //qCDebug(PIMCOMMON_LOG) << "void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << output;
     QRegExp rx(QStringLiteral("<p class=[\'\"]success[\'\"]>(.*)</p>"));
     rx.setMinimal(true);
     output = rx.cap(1);
     rx.setPattern(QStringLiteral("href=[\'\"](.*)[\'\"]"));
     rx.indexIn(output);
     output = rx.cap(1);
-    qCDebug(PIMCOMMON_LOG) << "Short url is: " << output;
+    //qCDebug(PIMCOMMON_LOG) << "Short url is: " << output;
     if (!output.isEmpty()) {
         Q_EMIT shortUrlDone(output);
     } else {

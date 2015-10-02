@@ -28,14 +28,12 @@
 #include <KSharedConfig>
 #include <KLocalizedString>
 
-#include "pimcommon_debug.h"
-
 PimCommon::AbstractShortUrl *PimCommon::ShortUrlUtils::loadEngine(QObject *parent)
 {
     PimCommon::ShortUrlUtils::EngineType type = static_cast<PimCommon::ShortUrlUtils::EngineType>(readEngineSettings());
     PimCommon::AbstractShortUrl *engine = PimCommon::ShortUrlUtils::loadEngine(type, parent);
     if (!engine) {
-        qCDebug(PIMCOMMON_LOG) << " Engine type undefined " << type;
+        //qCDebug(PIMCOMMON_LOG) << " Engine type undefined " << type;
         engine = new PimCommon::TinyurlShortUrl(parent);
     }
     return engine;
@@ -94,7 +92,8 @@ QString PimCommon::ShortUrlUtils::stringFromEngineType(EngineType type)
         break;
     case EndListEngine:
     default:
-        qCDebug(PIMCOMMON_LOG) << " not supported engine type " << type;
+        //qCDebug(PIMCOMMON_LOG) << " not supported engine type " << type;
+        ;
     }
     return name;
 }
