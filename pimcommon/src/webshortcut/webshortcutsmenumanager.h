@@ -21,6 +21,7 @@
 #include <QObject>
 #include "pimcommon_export.h"
 class QMenu;
+class QAction;
 namespace PimCommon
 {
 class WebShortcutsMenuManagerPrivate;
@@ -55,7 +56,7 @@ public:
 
 private Q_SLOTS:
     void slotConfigureWebShortcuts();
-    void slotHandleWebShortcutAction();
+    void slotHandleWebShortcutAction(QAction *action);
 
 private:
     WebShortcutsMenuManagerPrivate *const d;

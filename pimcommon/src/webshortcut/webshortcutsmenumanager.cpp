@@ -92,13 +92,14 @@ void WebShortcutsMenuManager::addWebShortcutsToMenu(QMenu *menu)
             webShortcutsMenu->setTitle(i18n("Search for '%1' with", squeezedText));
 
             QAction *action = Q_NULLPTR;
-
+            QActionGroup *actionGroup = new QActionGroup(this);
+            connect(actionGroup, &QActionGroup::triggered, this, &WebShortcutsMenuManager::slotHandleWebShortcutAction);
             Q_FOREACH (const QString &searchProvider, searchProviders) {
                 action = new QAction(i18nc("@action:inmenu Search for <text> with", "%1", searchProvider), webShortcutsMenu);
                 action->setIcon(QIcon::fromTheme(filterData.iconNameForPreferredSearchProvider(searchProvider)));
                 action->setData(filterData.queryForPreferredSearchProvider(searchProvider));
-                connect(action, &QAction::triggered, this, &WebShortcutsMenuManager::slotHandleWebShortcutAction);
                 webShortcutsMenu->addAction(action);
+                actionGroup->addAction(action);
             }
 
             webShortcutsMenu->addSeparator();
@@ -113,14 +114,10 @@ void WebShortcutsMenuManager::addWebShortcutsToMenu(QMenu *menu)
     }
 }
 
-void WebShortcutsMenuManager::slotHandleWebShortcutAction()
+void WebShortcutsMenuManager::slotHandleWebShortcutAction(QAction *action)
 {
-    QAction *action = qobject_cast<QAction *>(sender());
-
-    if (action) {
-        KUriFilterData filterData(action->data().toString());
-        if (KUriFilter::self()->filterSearchUri(filterData, KUriFilter::WebShortcutFilter)) {
-            QDesktopServices::openUrl(filterData.uri());
-        }
+    KUriFilterData filterData(action->data().toString());
+    if (KUriFilter::self()->filterSearchUri(filterData, KUriFilter::WebShortcutFilter)) {
+        QDesktopServices::openUrl(filterData.uri());
     }
 }
