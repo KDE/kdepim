@@ -49,13 +49,13 @@ RecipientLineFactory::RecipientLineFactory(QObject *parent)
 
 }
 
-KPIM::MultiplyingLine *RecipientLineFactory::newLine(QWidget *parent)
+KPIM::MultiplyingLine *RecipientLineFactory::newLine(QWidget *p)
 {
-    RecipientLineNG *line = new RecipientLineNG(parent);
-    if (qobject_cast<RecipientsEditor *>(parent)) {
-        connect(line, SIGNAL(addRecipient(RecipientLineNG*,QString)), qobject_cast<RecipientsEditor *>(parent), SLOT(addRecipient(RecipientLineNG*,QString)));
+    RecipientLineNG *line = new RecipientLineNG(p);
+    if (qobject_cast<RecipientsEditor *>(parent())) {
+        connect(line, SIGNAL(addRecipient(RecipientLineNG*,QString)), qobject_cast<RecipientsEditor *>(parent()), SLOT(addRecipient(RecipientLineNG*,QString)));
     } else {
-        qCWarning(MESSAGECOMPOSER_LOG) << "RecipientLineFactory::newLine: We can't connect to new line" << parent;
+        qCWarning(MESSAGECOMPOSER_LOG) << "RecipientLineFactory::newLine: We can't connect to new line" << parent();
     }
     return line;
 }
