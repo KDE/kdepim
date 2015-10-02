@@ -16,8 +16,8 @@
 */
 
 #include "shorturlmainwidget.h"
-#include "shorturl/shorturlwidget.h"
-#include "shorturl/shorturlconfigurewidget.h"
+#include "../shorturlwidget.h"
+#include "../shorturlconfigurewidget.h"
 
 #include <QVBoxLayout>
 #include <QPushButton>

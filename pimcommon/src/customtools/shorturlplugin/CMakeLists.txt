@@ -25,3 +25,8 @@ target_link_libraries(pimcommon_shorturlplugin
 
 install(TARGETS pimcommon_shorturlplugin DESTINATION ${PLUGIN_INSTALL_DIR}/pimcommon)
 kcoreaddons_desktop_to_json(pimcommon_shorturlplugin pimcommon_shorturlplugin.desktop)
+
+if (BUILD_TESTING)
+   add_subdirectory(shorturl/tests)
+   add_subdirectory(shorturl/autotests)
+endif()

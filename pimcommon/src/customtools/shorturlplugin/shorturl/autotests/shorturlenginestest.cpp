@@ -16,8 +16,8 @@
 */
 
 #include "shorturlenginestest.h"
-#include "shorturl/shorturlutils.h"
-#include "shorturl/abstractshorturl.h"
+#include "../shorturlutils.h"
+#include "../abstractshorturl.h"
 #include <qtest.h>
 #include <QSignalSpy>
 
