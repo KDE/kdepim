@@ -23,7 +23,7 @@
 #include <kpluginfactory.h>
 using namespace MessageViewer;
 
-K_PLUGIN_FACTORY_WITH_JSON(MessageViewerFancyHeaderStylePluginFactory, "messageviewer_longheaderstyleplugin.json", registerPlugin<LongHeaderStylePlugin>();)
+K_PLUGIN_FACTORY_WITH_JSON(MessageViewerLongHeaderStylePluginFactory, "messageviewer_longheaderstyleplugin.json", registerPlugin<LongHeaderStylePlugin>();)
 
 LongHeaderStylePlugin::LongHeaderStylePlugin(QObject *parent, const QList<QVariant> &)
     : MessageViewer::HeaderStylePlugin(parent),

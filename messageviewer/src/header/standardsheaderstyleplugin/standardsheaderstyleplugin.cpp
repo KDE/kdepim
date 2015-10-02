@@ -22,7 +22,7 @@
 #include <kpluginfactory.h>
 using namespace MessageViewer;
 
-K_PLUGIN_FACTORY_WITH_JSON(MessageViewerFancyHeaderStylePluginFactory, "messageviewer_standardsheaderstyleplugin.json", registerPlugin<StandardsHeaderStylePlugin>();)
+K_PLUGIN_FACTORY_WITH_JSON(MessageViewerStandardsHeaderStylePluginFactory, "messageviewer_standardsheaderstyleplugin.json", registerPlugin<StandardsHeaderStylePlugin>();)
 
 StandardsHeaderStylePlugin::StandardsHeaderStylePlugin(QObject *parent, const QList<QVariant> &)
     : MessageViewer::HeaderStylePlugin(parent),
