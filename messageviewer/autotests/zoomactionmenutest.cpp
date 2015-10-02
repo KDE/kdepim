@@ -16,7 +16,10 @@
 */
 
 #include "zoomactionmenutest.h"
+#include "../src/widgets/zoomactionmenu.h"
 #include <QTest>
+#include <viewer/mailwebview.h>
+#include <KActionCollection>
 
 ZoomActionMenuTest::ZoomActionMenuTest(QObject *parent)
     : QObject(parent)
@@ -27,6 +30,28 @@ ZoomActionMenuTest::ZoomActionMenuTest(QObject *parent)
 ZoomActionMenuTest::~ZoomActionMenuTest()
 {
 
+}
+
+void ZoomActionMenuTest::shouldHaveDefaultValue()
+{
+    MessageViewer::ZoomActionMenu menu(new MessageViewer::MailWebView(), this);
+    menu.setActionCollection(new KActionCollection(this));
+    menu.createZoomActions();
+
+    QVERIFY(menu.zoomTextOnlyAction());
+    QVERIFY(menu.zoomInAction());
+    QVERIFY(menu.zoomOutAction());
+    QVERIFY(menu.zoomResetAction());
+}
+
+void ZoomActionMenuTest::shouldAssignZoomFactor()
+{
+    MessageViewer::ZoomActionMenu menu(new MessageViewer::MailWebView(), this);
+    menu.setActionCollection(new KActionCollection(this));
+    menu.createZoomActions();
+    qreal initialValue = 50;
+    menu.setZoomFactor(initialValue);
+    QCOMPARE(menu.zoomFactor(), initialValue);
 }
 
 QTEST_MAIN(ZoomActionMenuTest)

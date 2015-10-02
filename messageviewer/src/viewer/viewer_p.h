@@ -76,7 +76,7 @@ class OpenAttachmentFolderWidget;
 class HeaderStyleMenuManager;
 class ViewerPluginToolManager;
 class ViewerPluginInterface;
-
+class ZoomActionMenu;
 /**
 \brief Private class for the Viewer, the main widget in the messageviewer library.
 
@@ -269,8 +269,6 @@ public:
 
     /** show window containing information about a vCard. */
     void showVCard(KMime::Content *msgPart);
-
-    void setZoomTextOnly(bool textOnly);
 
     void saveMainFrameScreenshotInFile(const QString &filename);
 
@@ -524,7 +522,6 @@ public Q_SLOTS:
 
     /** Toggle display mode between HTML and plain text. */
     void slotToggleHtmlMode();
-    void slotZoomTextOnly();
     void slotLoadExternalReference();
 
     /**
@@ -552,9 +549,6 @@ public Q_SLOTS:
     /** Re-parse the current message. */
     void update(MessageViewer::Viewer::UpdateMode updateMode = Viewer::Delayed);
 
-    void slotZoomIn();
-    void slotZoomOut();
-    void slotZoomReset();
     void slotSpeakText();
     void slotCopyImageLocation();
     void slotSaveMessageDisplayFormat();
@@ -639,10 +633,6 @@ public:
     KSelectAction *mSelectEncodingAction;
     KToggleAction *mToggleFixFontAction;
     KToggleAction *mToggleDisplayModeAction;
-    KToggleAction *mZoomTextOnlyAction;
-    QAction *mZoomInAction;
-    QAction *mZoomOutAction;
-    QAction *mZoomResetAction;
     KToggleAction *mToggleMimePartTreeAction;
     QAction *mSpeakTextAction;
     QAction *mCopyImageLocation;
@@ -681,7 +671,6 @@ public:
 
     ScamDetectionWarningWidget *mScamDetectionWarning;
     MessageViewer::OpenAttachmentFolderWidget *mOpenAttachmentFolderWidget;
-    qreal mZoomFactor;
     Viewer::DisplayFormatMessage mDisplayFormatMessageOverwrite;
     PimCommon::SlideContainer *mSliderContainer;
     PimCommon::ShareServiceUrlManager *mShareServiceManager;
@@ -689,6 +678,7 @@ public:
     HeaderStylePlugin *mHeaderStylePlugin;
     HeaderStyleMenuManager *mHeaderStyleMenuManager;
     ViewerPluginToolManager *mViewerPluginToolManager;
+    ZoomActionMenu *mZoomActionMenu;
 };
 
 }

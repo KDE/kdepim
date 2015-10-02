@@ -19,15 +19,52 @@
 #define ZOOMACTIONMENU_H
 
 #include <KActionMenu>
-
+class KToggleAction;
+class KActionCollection;
 namespace MessageViewer
 {
+class MailWebView;
 class ZoomActionMenu : public KActionMenu
 {
     Q_OBJECT
 public:
-    explicit ZoomActionMenu(QObject *parent = Q_NULLPTR);
+    explicit ZoomActionMenu(MessageViewer::MailWebView *mailViewer, QObject *parent = Q_NULLPTR);
     ~ZoomActionMenu();
+
+    void createZoomActions();
+    KToggleAction *zoomTextOnlyAction() const;
+
+    QAction *zoomInAction() const;
+
+    QAction *zoomOutAction() const;
+
+    QAction *zoomResetAction() const;
+
+    void setActionCollection(KActionCollection *ac);
+
+    void setZoomFactor(qreal zoomFactor);
+    qreal zoomFactor() const;
+
+    void setWebViewerZoomFactor(qreal zoomFactor);
+    bool zoomTextOnly() const;
+
+public Q_SLOTS:
+    void slotZoomIn();
+    void slotZoomOut();
+    void setZoomTextOnly(bool textOnly);
+    void slotZoomTextOnly();
+    void slotZoomReset();
+
+private:
+
+    qreal mZoomFactor;
+    KToggleAction *mZoomTextOnlyAction;
+    QAction *mZoomInAction;
+    QAction *mZoomOutAction;
+    QAction *mZoomResetAction;
+    KActionCollection *mActionCollection;
+    MessageViewer::MailWebView *mMailWebViewer;
+    bool mZoomTextOnly;
 };
 }
 

@@ -74,8 +74,6 @@ else()
                        adblock/adblockblockableitemswidget.cpp
                        )
   set(_mailwebview_lib KF5::WebKit Qt5::WebKitWidgets)
-  #reactivate
-  #add_subdirectory(a11y)
 endif()
 
 set(libmessageviewer_viewer_SRCS

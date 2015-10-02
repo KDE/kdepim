@@ -21,7 +21,7 @@
 #define MESSAGEVIEWER_MAILWEBVIEW_H
 
 #include "messageviewer/messageviewersettings.h"
-
+#include "messageviewer_export.h"
 #ifdef KDEPIM_NO_WEBKIT
 # include <QTextBrowser>
 #else
@@ -41,9 +41,9 @@ class ScamDetection;
 
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
 #ifdef KDEPIM_NO_WEBKIT
-class MailWebView : public QTextBrowser // krazy:exclude=qclasses
+class MESSAGEVIEWER_EXPORT MailWebView : public QTextBrowser // krazy:exclude=qclasses
 #else
-class MailWebView : public KWebView
+class MESSAGEVIEWER_EXPORT MailWebView : public KWebView
 #endif
 {
     Q_OBJECT

@@ -15,6 +15,15 @@ macro(add_messageviewer_unittest _source)
     )
 endmacro ()
 
+macro(add_messageviewer_class_unittest _source _additionalSource)
+    get_filename_component(_name ${_source} NAME_WE)
+    ecm_add_test(${_source} ${_additionalSource}
+        TEST_NAME ${_name}
+        NAME_PREFIX "messageviewer-"
+        LINK_LIBRARIES KF5::MessageViewer Qt5::Test KF5::IconThemes KF5::XmlGui Qt5::WebKitWidgets
+    )
+endmacro ()
+
 macro(add_messageviewer_crypto_unittest _source)
     set(_test ${_source} util.cpp)
     get_filename_component(_name ${_source} NAME_WE)
@@ -43,6 +52,7 @@ add_messageviewer_crypto_unittest( attachmenttest.cpp )
 add_messageviewer_unittest( cryptohelpertest.cpp )
 add_messageviewer_unittest( messagedisplayformatattributetest.cpp )
 add_messageviewer_unittest( nodehelpertest.cpp )
+add_messageviewer_class_unittest(zoomactionmenutest.cpp "../src/widgets/zoomactionmenu.cpp")
 
 # convenience macro to add qtest unit tests
 macro(add_messageviewer_mailsourceviewbrowserwidget_unittest _source)

@@ -32,6 +32,7 @@
 #include "viewer/mailwebview.h"
 #include "viewer/mimeparttree/mimetreemodel.h"
 #include "viewer/mimeparttree/mimeparttreeview.h"
+#include "widgets/zoomactionmenu.h"
 #include "adblock/adblockmanager.h"
 
 #include <Akonadi/KMime/MessageParts>
@@ -578,31 +579,31 @@ void Viewer::copySelectionToClipboard()
 void Viewer::setZoomFactor(qreal zoomFactor)
 {
     Q_D(Viewer);
-    d->setZoomFactor(zoomFactor);
+    d->mZoomActionMenu->setZoomFactor(zoomFactor);
 }
 
 void Viewer::slotZoomReset()
 {
     Q_D(Viewer);
-    d->slotZoomReset();
+    d->mZoomActionMenu->slotZoomReset();
 }
 
 void Viewer::slotZoomIn()
 {
     Q_D(Viewer);
-    d->slotZoomIn();
+    d->mZoomActionMenu->slotZoomIn();
 }
 
 void Viewer::slotZoomOut()
 {
     Q_D(Viewer);
-    d->slotZoomOut();
+    d->mZoomActionMenu->slotZoomOut();
 }
 
 void Viewer::setZoomTextOnly(bool textOnly)
 {
     Q_D(Viewer);
-    d->setZoomTextOnly(textOnly);
+    d->mZoomActionMenu->setZoomTextOnly(textOnly);
 }
 
 bool Viewer::zoomTextOnly() const
