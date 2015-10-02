@@ -47,10 +47,10 @@ RecipientLineFactory::RecipientLineFactory(QObject *parent)
 
 }
 
-KPIM::MultiplyingLine *RecipientLineFactory::newLine(QWidget *parent)
+KPIM::MultiplyingLine *RecipientLineFactory::newLine(QWidget *p)
 {
-    RecipientLineNG *line = new RecipientLineNG(parent);
-    connect(line, SIGNAL(addRecipient(RecipientLineNG*,QString)), qobject_cast<RecipientsEditor *>(parent), SLOT(addRecipient(RecipientLineNG*,QString)));
+    RecipientLineNG *line = new RecipientLineNG(p);
+    connect(line, SIGNAL(addRecipient(RecipientLineNG*,QString)), qobject_cast<RecipientsEditor *>(parent()), SLOT(addRecipient(RecipientLineNG*,QString)));
     return line;
 }
 
