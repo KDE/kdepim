@@ -19,7 +19,6 @@
 #define SHORTURLUTILS_H
 
 #include <QObject>
-#include "pimcommon_export.h"
 
 namespace PimCommon
 {
@@ -39,7 +38,7 @@ enum EngineType {
 };
 QString stringFromEngineType(EngineType type);
 AbstractShortUrl *loadEngine(QObject *parent);
-PIMCOMMON_EXPORT PimCommon::AbstractShortUrl *loadEngine(PimCommon::ShortUrlUtils::EngineType type, QObject *parent);
+PimCommon::AbstractShortUrl *loadEngine(PimCommon::ShortUrlUtils::EngineType type, QObject *parent);
 
 int readEngineSettings();
 void writeEngineSettings(int value);

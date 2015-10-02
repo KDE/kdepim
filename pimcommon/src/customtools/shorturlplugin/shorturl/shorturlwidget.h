@@ -19,7 +19,6 @@
 #define SHORTURLWIDGET_H
 
 #include <QWidget>
-#include "pimcommon_export.h"
 
 class KLineEdit;
 class QPushButton;
@@ -35,7 +34,7 @@ class ProgressIndicatorLabel;
 namespace PimCommon
 {
 class AbstractShortUrl;
-class PIMCOMMON_EXPORT ShortUrlWidget : public QWidget
+class ShortUrlWidget : public QWidget
 {
     Q_OBJECT
 public:

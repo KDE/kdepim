@@ -18,14 +18,12 @@
 #ifndef ABSTRACTSHORTURL_H
 #define ABSTRACTSHORTURL_H
 
-#include "pimcommon_export.h"
-
 #include <QObject>
 #include <QNetworkReply>
 
 namespace PimCommon
 {
-class PIMCOMMON_EXPORT AbstractShortUrl : public QObject
+class AbstractShortUrl : public QObject
 {
     Q_OBJECT
 public:

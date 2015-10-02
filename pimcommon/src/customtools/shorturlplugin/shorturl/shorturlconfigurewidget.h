@@ -18,14 +18,12 @@
 #ifndef SHORTURLCONFIGUREWIDGET_H
 #define SHORTURLCONFIGUREWIDGET_H
 
-#include "pimcommon_export.h"
-
 #include <QWidget>
 
 namespace PimCommon
 {
 class ShortUrlConfigureWidgetPrivate;
-class PIMCOMMON_EXPORT ShortUrlConfigureWidget : public QWidget
+class ShortUrlConfigureWidget : public QWidget
 {
     Q_OBJECT
 public:
