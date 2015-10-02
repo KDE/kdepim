@@ -150,7 +150,6 @@ set(libpimcommon_widgets_SRCS
   widgets/customtreeview.cpp
   widgets/configureimmutablewidgetutils.cpp
   widgets/slidecontainer.cpp
-  widgets/emailaddressrequester.cpp
   widgets/annotationdialog.cpp
   widgets/manageaccountwidget.cpp
   widgets/kactionmenuchangecase.cpp
@@ -628,7 +627,6 @@ ecm_generate_headers(PimCommon_widgets_HEADERS
   SlideContainer
   ConfigureImmutableWidgetUtils
   LineEditWithCompleter
-  EmailAddressRequester
   RenameFileDialog
   SimpleStringlistEditor
   ManageAccountWidget

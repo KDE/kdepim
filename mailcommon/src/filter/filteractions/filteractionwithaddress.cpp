@@ -19,7 +19,7 @@
 
 #include "filteractionwithaddress.h"
 
-#include <PimCommon/EmailAddressRequester>
+#include <Akonadi/Contact/EmailAddressRequester>
 
 using namespace MailCommon;
 
@@ -30,28 +30,28 @@ FilterActionWithAddress::FilterActionWithAddress(const QString &name, const QStr
 
 QWidget *FilterActionWithAddress::createParamWidget(QWidget *parent) const
 {
-    PimCommon::EmailAddressRequester *requester = new PimCommon::EmailAddressRequester(parent);
+    Akonadi::EmailAddressRequester *requester = new Akonadi::EmailAddressRequester(parent);
     requester->setText(mParameter);
     requester->setObjectName(QStringLiteral("emailaddressrequester"));
     requester->setText(mParameter);
 
-    connect(requester, &PimCommon::EmailAddressRequester::textChanged, this, &FilterActionWithAddress::filterActionModified);
+    connect(requester, &Akonadi::EmailAddressRequester::textChanged, this, &FilterActionWithAddress::filterActionModified);
 
     return requester;
 }
 
 void FilterActionWithAddress::applyParamWidgetValue(QWidget *paramWidget)
 {
-    mParameter = qobject_cast<PimCommon::EmailAddressRequester *>(paramWidget)->text();
+    mParameter = qobject_cast<Akonadi::EmailAddressRequester *>(paramWidget)->text();
 }
 
 void FilterActionWithAddress::setParamWidgetValue(QWidget *paramWidget) const
 {
-    qobject_cast<PimCommon::EmailAddressRequester *>(paramWidget)->setText(mParameter);
+    qobject_cast<Akonadi::EmailAddressRequester *>(paramWidget)->setText(mParameter);
 }
 
 void FilterActionWithAddress::clearParamWidget(QWidget *paramWidget) const
 {
-    qobject_cast<PimCommon::EmailAddressRequester *>(paramWidget)->clear();
+    qobject_cast<Akonadi::EmailAddressRequester *>(paramWidget)->clear();
 }
 

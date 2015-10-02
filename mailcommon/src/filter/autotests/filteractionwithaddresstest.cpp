@@ -18,7 +18,7 @@
 #include "../filteractions/filteractionwithaddress.h"
 #include <qtest.h>
 #include <QWidget>
-#include <pimcommon/emailaddressrequester.h>
+#include <Akonadi/Contact/EmailAddressRequester>
 
 class TestFilterActionWithAddress : public MailCommon::FilterActionWithAddress
 {
@@ -56,7 +56,7 @@ void FilterActionWithAddressTest::shouldHaveDefaultValue()
     TestFilterActionWithAddress filter;
     QWidget *w = filter.createParamWidget(0);
     QCOMPARE(w->objectName(), QStringLiteral("emailaddressrequester"));
-    PimCommon::EmailAddressRequester *requester = dynamic_cast<PimCommon::EmailAddressRequester *>(w);
+    Akonadi::EmailAddressRequester *requester = dynamic_cast<Akonadi::EmailAddressRequester *>(w);
     QVERIFY(requester);
     QVERIFY(filter.isEmpty());
 }
@@ -65,7 +65,7 @@ void FilterActionWithAddressTest::shouldAssignValue()
 {
     TestFilterActionWithAddress filter;
     QWidget *w = filter.createParamWidget(0);
-    PimCommon::EmailAddressRequester *requester = dynamic_cast<PimCommon::EmailAddressRequester *>(w);
+    Akonadi::EmailAddressRequester *requester = dynamic_cast<Akonadi::EmailAddressRequester *>(w);
     filter.argsFromString(QStringLiteral("foo"));
     filter.setParamWidgetValue(w);
     QVERIFY(!filter.isEmpty());

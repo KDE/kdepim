@@ -54,8 +54,8 @@ CustomTemplates::CustomTemplates(const QList<KActionCollection *> &actionCollect
     mUi->mName->setTrapReturnKey(true);
     connect(mUi->mEdit->editor(), &QPlainTextEdit::textChanged,
             this, &CustomTemplates::slotTextChanged);
-    connect(mUi->mToEdit, &PimCommon::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
-    connect(mUi->mCCEdit, &PimCommon::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
+    connect(mUi->mToEdit, &Akonadi::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
+    connect(mUi->mCCEdit, &Akonadi::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
 
     connect(mUi->mName, &KLineEdit::textChanged, this, &CustomTemplates::slotNameChanged);
 
@@ -117,8 +117,8 @@ CustomTemplates::~CustomTemplates()
 {
     disconnect(mUi->mEdit->editor(), &QPlainTextEdit::textChanged,
             this, &CustomTemplates::slotTextChanged);
-    disconnect(mUi->mToEdit, &PimCommon::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
-    disconnect(mUi->mCCEdit, &PimCommon::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
+    disconnect(mUi->mToEdit, &Akonadi::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
+    disconnect(mUi->mCCEdit, &Akonadi::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
     delete mUi;
     mUi = Q_NULLPTR;
 }
