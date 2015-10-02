@@ -34,7 +34,7 @@ namespace HeaderStyleUtil
 //
 // Convenience functions:
 //
-QString directionOf(const QString &str);
+MESSAGEVIEWER_EXPORT QString directionOf(const QString &str);
 
 MESSAGEVIEWER_EXPORT QString strToHtml(const QString &str, KTextToHTML::Options flags = KTextToHTML::PreserveSpaces);
 
@@ -49,14 +49,14 @@ QString drawSpamMeter(SpamError spamError, double percent, double confidence,
 
 QString imgToDataUrl(const QImage &image);
 
-QString spamStatus(KMime::Message *message);
+MESSAGEVIEWER_EXPORT QString spamStatus(KMime::Message *message);
 
-QString dateStr(const QDateTime &dateTime);
+MESSAGEVIEWER_EXPORT QString dateStr(const QDateTime &dateTime);
 
 QString dateShortStr(const QDateTime &dateTime);
 
-QVector<KMime::Types::Mailbox> resentFromList(KMime::Message *message);
-QVector<KMime::Types::Mailbox> resentToList(KMime::Message *message);
+MESSAGEVIEWER_EXPORT QVector<KMime::Types::Mailbox> resentFromList(KMime::Message *message);
+MESSAGEVIEWER_EXPORT QVector<KMime::Types::Mailbox> resentToList(KMime::Message *message);
 
 struct xfaceSettings {
     xfaceSettings()
@@ -70,7 +70,7 @@ struct xfaceSettings {
     int photoHeight;
 };
 
-xfaceSettings xface(const HeaderStyle *style, KMime::Message *message);
+MESSAGEVIEWER_EXPORT xfaceSettings xface(const HeaderStyle *style, KMime::Message *message);
 void updateXFaceSettings(QImage photo, xfaceSettings &settings);
 
 }

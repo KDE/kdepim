@@ -30,7 +30,7 @@ add_messageviewer_header_unittest( customheaderstyleplugintest.cpp "../customhea
 
 add_messageviewer_header_unittest( enterpriseheaderstyleplugintest.cpp "../enterpriseheaderstyleplugin/enterpriseheaderstyle.cpp;../enterpriseheaderstyleplugin/enterpriseheaderstyleplugin.cpp;../enterpriseheaderstyleplugin/enterpriseheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../enterpriseheaderstyleplugin/messageviewer_enterpriseheaderstyleplugin.desktop")
 
-add_messageviewer_header_unittest( fancyheaderstyleplugintest.cpp "../fancyheaderstyleplugin/fancyheaderstyleplugin.cpp;../fancyheaderstyleplugin/fancyheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../fancyheaderstyleplugin/messageviewer_fancyheaderstyleplugin.desktop")
+add_messageviewer_header_unittest( fancyheaderstyleplugintest.cpp "../fancyheaderstyleplugin/fancyheaderstyle.cpp;../fancyheaderstyleplugin/fancyheaderstyleplugin.cpp;../fancyheaderstyleplugin/fancyheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../fancyheaderstyleplugin/messageviewer_fancyheaderstyleplugin.desktop")
 
 add_messageviewer_header_unittest( grantleeheaderstyleplugintest.cpp "../grantleeheaderstyleplugin/grantleeheaderstrategy.cpp;../grantleeheaderstyleplugin/grantleeheaderstyleplugin.cpp;../grantleeheaderstyleplugin/grantleeheaderstyleinterface.cpp;../headerstyleinterface.cpp" "../grantleeheaderstyleplugin/messageviewer_grantleeheaderstyleplugin.desktop")
 

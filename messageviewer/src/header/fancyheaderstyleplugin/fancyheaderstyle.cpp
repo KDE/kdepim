@@ -97,7 +97,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     QString userHTML;
     MessageViewer::HeaderStyleUtil::xfaceSettings xface = MessageViewer::HeaderStyleUtil::xface(this, message);
     if (!xface.photoURL.isEmpty()) {
-        qCDebug(MESSAGEVIEWER_LOG) << "Got a photo:" << xface.photoURL;
+        //qCDebug(MESSAGEVIEWER_LOG) << "Got a photo:" << xface.photoURL;
         userHTML = QStringLiteral("<img src=\"%1\" width=\"%2\" height=\"%3\">")
                    .arg(xface.photoURL).arg(xface.photoWidth).arg(xface.photoHeight);
         userHTML = QLatin1String("<div class=\"senderpic\">") + userHTML + QLatin1String("</div>");

@@ -17,7 +17,7 @@
 
 #include "fancyheaderstyleinterface.h"
 #include "fancyheaderstyleplugin.h"
-#include "header/fancyheaderstyle.h"
+#include "fancyheaderstyle.h"
 #include "messageviewer/richheaderstrategy.h"
 #include <kpluginfactory.h>
 using namespace MessageViewer;

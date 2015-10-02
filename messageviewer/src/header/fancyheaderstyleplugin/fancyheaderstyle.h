@@ -19,11 +19,10 @@
 #define FANCYHEADERSTYLE_H
 
 #include "header/headerstyle.h"
-#include "messageviewer_export.h"
 namespace MessageViewer
 {
 
-class MESSAGEVIEWER_EXPORT FancyHeaderStyle : public HeaderStyle
+class FancyHeaderStyle : public HeaderStyle
 {
 public:
     FancyHeaderStyle();
