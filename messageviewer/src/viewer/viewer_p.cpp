@@ -1118,7 +1118,9 @@ void ViewerPrivate::readConfig()
     mHtmlMailGlobalSetting = GlobalSettings::self()->htmlMail();
     mHtmlLoadExternalGlobalSetting = GlobalSettings::self()->htmlLoadExternal();
 
-    mZoomActionMenu->setZoomTextOnly(GlobalSettings::self()->zoomTextOnly());
+    if (mZoomActionMenu) {
+        mZoomActionMenu->setZoomTextOnly(GlobalSettings::self()->zoomTextOnly());
+    }
     readGravatarConfig();
     if (mHeaderStyleMenuManager) {
         mHeaderStyleMenuManager->readConfig();
