@@ -22,6 +22,7 @@
 #include "mailcommon_export.h"
 
 #include <MessageComposer/MessageFactory>
+#include <MessageCore/MDNStateAttribute>
 
 #include <KMime/KMimeMessage>
 

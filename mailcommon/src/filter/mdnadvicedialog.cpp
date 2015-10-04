@@ -21,7 +21,6 @@
 #include "mailcommon_debug.h"
 
 #include <messagecore/messagehelpers.h>
-#include <MessageCore/MDNStateAttribute>
 
 #include <MessageComposer/MessageFactory>
 using MessageComposer::MessageFactory;

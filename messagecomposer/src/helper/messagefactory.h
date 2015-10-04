@@ -29,7 +29,6 @@
 #include <Collection>
 
 #include <Akonadi/KMime/MessageStatus>
-#include <MessageCore/MDNStateAttribute>
 
 namespace KIdentityManagement
 {
