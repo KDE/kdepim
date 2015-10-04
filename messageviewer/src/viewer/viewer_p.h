@@ -669,16 +669,16 @@ public:
     QSet<AbstractMessageLoadedHandler *> mMessageLoadedHandlers;
     Akonadi::Item::Id mPreviouslyViewedItem;
 
-    ScamDetectionWarningWidget *mScamDetectionWarning;
+    MessageViewer::ScamDetectionWarningWidget *mScamDetectionWarning;
     MessageViewer::OpenAttachmentFolderWidget *mOpenAttachmentFolderWidget;
     Viewer::DisplayFormatMessage mDisplayFormatMessageOverwrite;
     PimCommon::SlideContainer *mSliderContainer;
     PimCommon::ShareServiceUrlManager *mShareServiceManager;
     KActionMenu *mShareServiceUrlMenu;
-    HeaderStylePlugin *mHeaderStylePlugin;
-    HeaderStyleMenuManager *mHeaderStyleMenuManager;
-    ViewerPluginToolManager *mViewerPluginToolManager;
-    ZoomActionMenu *mZoomActionMenu;
+    MessageViewer::HeaderStylePlugin *mHeaderStylePlugin;
+    MessageViewer::HeaderStyleMenuManager *mHeaderStyleMenuManager;
+    MessageViewer::ViewerPluginToolManager *mViewerPluginToolManager;
+    MessageViewer::ZoomActionMenu *mZoomActionMenu;
 };
 
 }
