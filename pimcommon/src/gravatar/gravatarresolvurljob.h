@@ -23,7 +23,6 @@
 #include <QUrl>
 #include <QPixmap>
 #include <QNetworkReply>
-class QNetworkAccessManager;
 namespace PimCommon
 {
 class GravatarResolvUrlJobPrivate;

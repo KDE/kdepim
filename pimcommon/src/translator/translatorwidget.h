@@ -23,8 +23,6 @@
 #include "pimcommon/plaintexteditor.h"
 #include <kio/job.h>
 #include "pimcommon/plaintexteditorwidget.h"
-class KToggleAction;
-class KActionCollection;
 namespace PimCommon
 {
 

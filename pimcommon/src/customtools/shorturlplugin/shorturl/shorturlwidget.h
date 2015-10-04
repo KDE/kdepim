@@ -25,7 +25,6 @@ class QPushButton;
 class QLabel;
 class QLineEdit;
 class QNetworkConfigurationManager;
-class KActionCollection;
 namespace KPIM
 {
 class ProgressIndicatorLabel;

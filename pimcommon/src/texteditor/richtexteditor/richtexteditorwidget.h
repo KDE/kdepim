@@ -25,9 +25,6 @@
 namespace PimCommon
 {
 class RichTextEditor;
-class RichTextEditFindBar;
-class TextToSpeechWidget;
-class SlideContainer;
 class RichTextEditorWidgetPrivate;
 class PIMCOMMON_EXPORT RichTextEditorWidget : public QWidget
 {

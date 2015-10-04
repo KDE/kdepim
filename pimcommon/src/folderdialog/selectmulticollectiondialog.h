@@ -24,7 +24,6 @@
 
 namespace PimCommon
 {
-class SelectMultiCollectionWidget;
 class SelectMultiCollectionDialogPrivate;
 class PIMCOMMON_EXPORT SelectMultiCollectionDialog : public QDialog
 {

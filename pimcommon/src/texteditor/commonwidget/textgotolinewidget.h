@@ -21,8 +21,6 @@
 #include "pimcommon_export.h"
 #include <QWidget>
 
-class QSpinBox;
-class QPushButton;
 namespace PimCommon
 {
 class TextGoToLineWidgetPrivate;
