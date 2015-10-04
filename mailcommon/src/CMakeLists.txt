@@ -145,6 +145,7 @@ set(libmailcommon_widget_SRCS
 
 set(libmailcommon_mdn_SRCS
   mdn/sendmdnhandler.cpp
+  mdn/mdnstateattribute.cpp
 )
 
 set(libmailcommon_util_SRCS
@@ -247,6 +248,7 @@ if (BUILD_TESTING)
    add_subdirectory(snippets/autotests)
    add_subdirectory(filter/tests) 
    add_subdirectory(search/autotests)
+   add_subdirectory(mdn/autotests/)
 endif()
 
 ecm_generate_headers(MailCommon_CamelCase_HEADERS
@@ -342,6 +344,7 @@ ecm_generate_headers(MailCommon_filteraction_HEADERS
 ecm_generate_headers(MailCommon_mdn_HEADERS
   HEADER_NAMES
   SendMdnHandler
+  MDNStateAttribute
   REQUIRED_HEADERS MailCommon_mdn_HEADERS
   PREFIX MailCommon
   RELATIVE mdn

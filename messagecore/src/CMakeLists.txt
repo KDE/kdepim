@@ -21,7 +21,6 @@ set(messagecore_attachment_LIB_SRCS
 set(messagecore_misc_LIB_SRCS
    misc/imagecollector.cpp
    misc/mailinglist.cpp
-   misc/mdnstateattribute.cpp
 )
 
 
@@ -99,7 +98,6 @@ ecm_generate_headers(MessageCore_misc_HEADERS
   HEADER_NAMES
   ImageCollector
   MailingList
-  MDNStateAttribute
 
   REQUIRED_HEADERS MessageCore_misc_HEADERS
   PREFIX MessageCore

@@ -20,9 +20,3 @@ add_messagecore_test( attachmentupdatejobtest.cpp )
 # Other tests
 add_messagecore_test( stringutiltest.cpp )
 add_messagecore_test( mailinglisttest.cpp )
-
-ecm_add_test(mdnstateattributetest.cpp ../src/misc/mdnstateattribute.cpp
-    TEST_NAME msdnattributetest
-    NAME_PREFIX "messagecore-"
-    LINK_LIBRARIES Qt5::Test Qt5::Gui KF5::AkonadiCore KF5::MessageCore
-)

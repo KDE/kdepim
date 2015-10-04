@@ -16,7 +16,7 @@
 */
 
 #include "mdnstateattributetest.h"
-#include "../src/misc/mdnstateattribute.h"
+#include "../mdnstateattribute.h"
 #include <qtest.h>
 
 MDNStateAttributeTest::MDNStateAttributeTest(QObject *parent)
@@ -32,34 +32,34 @@ MDNStateAttributeTest::~MDNStateAttributeTest()
 
 void MDNStateAttributeTest::shouldHaveDefaultValue()
 {
-    MessageCore::MDNStateAttribute attr;
-    QCOMPARE(attr.mdnState(), MessageCore::MDNStateAttribute::MDNStateUnknown);
+    MailCommon::MDNStateAttribute attr;
+    QCOMPARE(attr.mdnState(), MailCommon::MDNStateAttribute::MDNStateUnknown);
 }
 
 void MDNStateAttributeTest::shouldHaveType()
 {
-    MessageCore::MDNStateAttribute attr;
+    MailCommon::MDNStateAttribute attr;
     QCOMPARE(attr.type(), QByteArray("MDNStateAttribute"));
 }
 
 void MDNStateAttributeTest::shouldSerializedAttribute()
 {
-    MessageCore::MDNStateAttribute attr;
+    MailCommon::MDNStateAttribute attr;
 
-    attr.setMDNState(MessageCore::MDNStateAttribute::MDNDenied);
-    QCOMPARE(attr.mdnState(), MessageCore::MDNStateAttribute::MDNDenied);
+    attr.setMDNState(MailCommon::MDNStateAttribute::MDNDenied);
+    QCOMPARE(attr.mdnState(), MailCommon::MDNStateAttribute::MDNDenied);
     const QByteArray ba = attr.serialized();
-    MessageCore::MDNStateAttribute result;
+    MailCommon::MDNStateAttribute result;
     result.deserialize(ba);
     QVERIFY(attr == result);
 }
 
 void MDNStateAttributeTest::shouldCloneAttribute()
 {
-    MessageCore::MDNStateAttribute attr;
-    attr.setMDNState(MessageCore::MDNStateAttribute::MDNDenied);
+    MailCommon::MDNStateAttribute attr;
+    attr.setMDNState(MailCommon::MDNStateAttribute::MDNDenied);
 
-    MessageCore::MDNStateAttribute *result = attr.clone();
+    MailCommon::MDNStateAttribute *result = attr.clone();
     QVERIFY(attr == *result);
     delete result;
 }

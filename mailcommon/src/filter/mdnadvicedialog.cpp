@@ -171,13 +171,13 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo(
     // has been issued on behalf of a recipient, no further MDNs may be
     // issued on behalf of that recipient, even if another disposition
     // is performed on the message.
-    if (item.hasAttribute< MessageCore::MDNStateAttribute >() &&
-            item.attribute< MessageCore::MDNStateAttribute >()->mdnState() != MessageCore::MDNStateAttribute::MDNStateUnknown) {
+    if (item.hasAttribute< MailCommon::MDNStateAttribute >() &&
+            item.attribute< MailCommon::MDNStateAttribute >()->mdnState() != MailCommon::MDNStateAttribute::MDNStateUnknown) {
         // if already dealt with, don't do it again.
         return QPair< bool, KMime::MDN::SendingMode >(false, KMime::MDN::SentAutomatically);
     }
-    MessageCore::MDNStateAttribute *mdnStateAttr =
-        new MessageCore::MDNStateAttribute(MessageCore::MDNStateAttribute::MDNStateUnknown);
+    MailCommon::MDNStateAttribute *mdnStateAttr =
+        new MailCommon::MDNStateAttribute(MailCommon::MDNStateAttribute::MDNStateUnknown);
 
     KMime::MDN::SendingMode s = KMime::MDN::SentAutomatically; // set to manual if asked user
     bool doSend = false;
@@ -188,7 +188,7 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo(
     } else {
         if (!mode || mode < 0 || mode > 3) {
             // early out for ignore:
-            mdnStateAttr->setMDNState(MessageCore::MDNStateAttribute::MDNIgnore);
+            mdnStateAttr->setMDNState(MailCommon::MDNStateAttribute::MDNIgnore);
             s = KMime::MDN::SentManually;
         } else {
 
@@ -232,13 +232,13 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo(
             "message",
             "disposition-notification",
             true, true)) {
-        mdnStateAttr->setMDNState(MessageCore::MDNStateAttribute::MDNIgnore);
+        mdnStateAttr->setMDNState(MailCommon::MDNStateAttribute::MDNIgnore);
     } else if (mode == 0) {   // ignore
         doSend = false;
-        mdnStateAttr->setMDNState(MessageCore::MDNStateAttribute::MDNIgnore);
+        mdnStateAttr->setMDNState(MailCommon::MDNStateAttribute::MDNIgnore);
     } else if (mode == 2) {   // denied
         doSend = true;
-        mdnStateAttr->setMDNState(MessageCore::MDNStateAttribute::MDNDenied);
+        mdnStateAttr->setMDNState(MailCommon::MDNStateAttribute::MDNDenied);
     } else if (mode == 3) {   // the user wants to send. let's make sure we can, according to the RFC.
         doSend = true;
         mdnStateAttr->setMDNState(dispositionToSentState(d));
@@ -255,24 +255,24 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo(
     return QPair< bool, KMime::MDN::SendingMode >(doSend, s);
 }
 
-MessageCore::MDNStateAttribute::MDNSentState MDNAdviceHelper::dispositionToSentState(
+MailCommon::MDNStateAttribute::MDNSentState MDNAdviceHelper::dispositionToSentState(
     KMime::MDN::DispositionType d)
 {
     switch (d) {
     case KMime::MDN::Displayed:
-        return MessageCore::MDNStateAttribute::MDNDisplayed;
+        return MailCommon::MDNStateAttribute::MDNDisplayed;
     case KMime::MDN::Deleted:
-        return MessageCore::MDNStateAttribute::MDNDeleted;
+        return MailCommon::MDNStateAttribute::MDNDeleted;
     case KMime::MDN::Dispatched:
-        return MessageCore::MDNStateAttribute::MDNDispatched;
+        return MailCommon::MDNStateAttribute::MDNDispatched;
     case KMime::MDN::Processed:
-        return MessageCore::MDNStateAttribute::MDNProcessed;
+        return MailCommon::MDNStateAttribute::MDNProcessed;
     case KMime::MDN::Denied:
-        return MessageCore::MDNStateAttribute::MDNDenied;
+        return MailCommon::MDNStateAttribute::MDNDenied;
     case KMime::MDN::Failed:
-        return MessageCore::MDNStateAttribute::MDNFailed;
+        return MailCommon::MDNStateAttribute::MDNFailed;
     default:
-        return MessageCore::MDNStateAttribute::MDNStateUnknown;
+        return MailCommon::MDNStateAttribute::MDNStateUnknown;
     };
 }
 

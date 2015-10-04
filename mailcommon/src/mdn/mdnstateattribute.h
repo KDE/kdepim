@@ -20,14 +20,14 @@
  *
  *****************************************************************************/
 
-#ifndef MESSAGECORE_MDNSTATEATTRIBUTE_H
-#define MESSAGECORE_MDNSTATEATTRIBUTE_H
+#ifndef MailCommon_MDNSTATEATTRIBUTE_H
+#define MailCommon_MDNSTATEATTRIBUTE_H
 
-#include "messagecore_export.h"
+#include "mailcommon_export.h"
 
 #include <attribute.h>
 
-namespace MessageCore
+namespace MailCommon
 {
 
 /**
@@ -40,7 +40,7 @@ namespace MessageCore
  * @see Akonadi::Attribute
  * @since 4.6
  */
-class MESSAGECORE_EXPORT MDNStateAttribute : public Akonadi::Attribute
+class MAILCOMMON_EXPORT MDNStateAttribute : public Akonadi::Attribute
 {
 public:
     /**

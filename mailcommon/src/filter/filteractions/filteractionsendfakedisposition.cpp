@@ -19,9 +19,9 @@
 
 #include "filteractionsendfakedisposition.h"
 
-#include <MessageCore/MDNStateAttribute>
 
 #include <KLocalizedString>
+#include "mailcommon/mdnstateattribute.h"
 
 using namespace MailCommon;
 
@@ -73,8 +73,8 @@ FilterAction::ReturnCode FilterActionSendFakeDisposition::process(ItemContext &c
     }
 
     if (index == 1) {   // ignore
-        if (context.item().hasAttribute<MessageCore::MDNStateAttribute>()) {
-            context.item().attribute<MessageCore::MDNStateAttribute>()->setMDNState(MessageCore::MDNStateAttribute::MDNIgnore);
+        if (context.item().hasAttribute<MailCommon::MDNStateAttribute>()) {
+            context.item().attribute<MailCommon::MDNStateAttribute>()->setMDNState(MailCommon::MDNStateAttribute::MDNIgnore);
             context.setNeedsFlagStore();
         }
     } else { // send
