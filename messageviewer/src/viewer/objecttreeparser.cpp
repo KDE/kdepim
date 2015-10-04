@@ -486,6 +486,46 @@ void ObjectTreeParser::defaultHandling(KMime::Content *node, ProcessResult &resu
     // end of ###
 }
 
+KMMsgSignatureState ProcessResult::inlineSignatureState() const
+{
+    return mInlineSignatureState;
+}
+
+void ProcessResult::setInlineSignatureState(KMMsgSignatureState state)
+{
+    mInlineSignatureState = state;
+}
+
+KMMsgEncryptionState ProcessResult::inlineEncryptionState() const
+{
+    return mInlineEncryptionState;
+}
+
+void ProcessResult::setInlineEncryptionState(KMMsgEncryptionState state)
+{
+    mInlineEncryptionState = state;
+}
+
+bool ProcessResult::neverDisplayInline() const
+{
+    return mNeverDisplayInline;
+}
+
+void ProcessResult::setNeverDisplayInline(bool display)
+{
+    mNeverDisplayInline = display;
+}
+
+bool ProcessResult::isImage() const
+{
+    return mIsImage;
+}
+
+void ProcessResult::setIsImage(bool image)
+{
+    mIsImage = image;
+}
+
 void ProcessResult::adjustCryptoStatesOfNode(KMime::Content *node) const
 {
     if ((inlineSignatureState()  != KMMsgNotSigned) ||

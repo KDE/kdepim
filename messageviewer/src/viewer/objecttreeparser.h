@@ -81,41 +81,17 @@ public:
           mIsImage(isImage),
           mNodeHelper(nodeHelper) {}
 
-    KMMsgSignatureState inlineSignatureState() const
-    {
-        return mInlineSignatureState;
-    }
-    void setInlineSignatureState(KMMsgSignatureState state)
-    {
-        mInlineSignatureState = state;
-    }
+    KMMsgSignatureState inlineSignatureState() const;
+    void setInlineSignatureState(KMMsgSignatureState state);
 
-    KMMsgEncryptionState inlineEncryptionState() const
-    {
-        return mInlineEncryptionState;
-    }
-    void setInlineEncryptionState(KMMsgEncryptionState state)
-    {
-        mInlineEncryptionState = state;
-    }
+    KMMsgEncryptionState inlineEncryptionState() const;
+    void setInlineEncryptionState(KMMsgEncryptionState state);
 
-    bool neverDisplayInline() const
-    {
-        return mNeverDisplayInline;
-    }
-    void setNeverDisplayInline(bool display)
-    {
-        mNeverDisplayInline = display;
-    }
+    bool neverDisplayInline() const;
+    void setNeverDisplayInline(bool display);
 
-    bool isImage() const
-    {
-        return mIsImage;
-    }
-    void setIsImage(bool image)
-    {
-        mIsImage = image;
-    }
+    bool isImage() const;
+    void setIsImage(bool image);
 
     void adjustCryptoStatesOfNode(KMime::Content *node) const;
 
