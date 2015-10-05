@@ -34,6 +34,7 @@ public:
 
     QString engineName() const Q_DECL_OVERRIDE;
     void setShortUrl(const QString &url) Q_DECL_OVERRIDE;
+    void generateShortUrl() Q_DECL_OVERRIDE;
 };
 }
 

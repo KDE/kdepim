@@ -16,8 +16,8 @@
 */
 
 
-#ifndef TINYURLENGINEPLUGIN_H
-#define TINYURLENGINEPLUGIN_H
+#ifndef GOOGLeSHORTURLENGINEPLUGIN_H
+#define GOOGLeSHORTURLENGINEPLUGIN_H
 
 #include "../shorturlengineplugin.h"
 
@@ -25,16 +25,17 @@
 
 namespace PimCommon
 {
-class TinyUrlEnginePlugin : public PimCommon::ShortUrlEnginePlugin
+class GoogleShortUrlEnginePlugin : public PimCommon::ShortUrlEnginePlugin
 {
     Q_OBJECT
 public:
-    explicit TinyUrlEnginePlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
-    ~TinyUrlEnginePlugin();
+    explicit GoogleShortUrlEnginePlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
+    ~GoogleShortUrlEnginePlugin();
 
     QString engineName() const Q_DECL_OVERRIDE;
     void setShortUrl(const QString &url) Q_DECL_OVERRIDE;
+    void generateShortUrl() Q_DECL_OVERRIDE;
 };
 }
 
-#endif // TINYURLENGINEPLUGIN_H
+#endif // GOOGLeSHORTURLENGINEPLUGIN_H

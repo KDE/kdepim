@@ -43,4 +43,9 @@ void TinyUrlEnginePlugin::setShortUrl(const QString &url)
     //TODO
 }
 
+void TinyUrlEnginePlugin::generateShortUrl()
+{
+    //TODO
+}
+
 #include "tinyurlengineplugin.moc"

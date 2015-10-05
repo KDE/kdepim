@@ -1,13 +1,13 @@
-set(pimcommon_tinyplugin_SRCS
-    tinyurlengineplugin.cpp
+set(pimcommon_googleshorturlengineplugin_SRCS
+    googleshorturlengineplugin.cpp
 )
 
-add_library(pimcommon_tinyurlengineplugin MODULE ${pimcommon_tinyplugin_SRCS})
+add_library(pimcommon_googleshorturlengineplugin MODULE ${pimcommon_googleshorturlengineplugin_SRCS})
 
-target_link_libraries(pimcommon_tinyurlengineplugin
+target_link_libraries(pimcommon_googleshorturlengineplugin
   KF5::PimCommon
 )
 
-install(TARGETS pimcommon_tinyurlengineplugin DESTINATION ${PLUGIN_INSTALL_DIR}/pimcommon)
-kcoreaddons_desktop_to_json(pimcommon_tinyurlengineplugin pimcommon_tinyurlengineplugin.desktop)
+install(TARGETS pimcommon_googleshorturlengineplugin DESTINATION ${PLUGIN_INSTALL_DIR}/pimcommon)
+kcoreaddons_desktop_to_json(pimcommon_googleshorturlengineplugin pimcommon_googleshorturlengineplugin.desktop)
 

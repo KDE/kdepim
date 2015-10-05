@@ -32,6 +32,7 @@ public:
     ~ShortUrlEnginePlugin();
     virtual QString engineName() const = 0;
     virtual void setShortUrl(const QString &url) = 0;
+    virtual void generateShortUrl() = 0;
 
 Q_SIGNALS:
     void shortUrlGenerated(const QString &url);
