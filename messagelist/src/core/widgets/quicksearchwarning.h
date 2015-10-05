@@ -31,6 +31,9 @@ public:
     explicit QuickSearchWarning(QWidget *parent = Q_NULLPTR);
     ~QuickSearchWarning();
     void setSearchText(const QString &text);
+
+private slots:
+    void slotDoNotRememberIt();
 };
 }
 }

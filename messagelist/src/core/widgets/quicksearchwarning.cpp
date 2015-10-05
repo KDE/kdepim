@@ -16,7 +16,9 @@
 */
 
 #include "quicksearchwarning.h"
+#include "messagelistsettings.h"
 #include <KLocalizedString>
+#include <QAction>
 using namespace MessageList::Core;
 
 QuickSearchWarning::QuickSearchWarning(QWidget *parent)
@@ -27,6 +29,11 @@ QuickSearchWarning::QuickSearchWarning(QWidget *parent)
     setMessageType(Warning);
     setWordWrap(true);
     setText(i18n("The words less than 3 letters are ignored."));
+    QAction *action = new QAction(i18n("Do not remember me it."), this);
+    action->setObjectName(QStringLiteral("notrememberit"));
+    connect(action, &QAction::triggered, this, &QuickSearchWarning::slotDoNotRememberIt);
+    addAction(action);
+
 }
 
 QuickSearchWarning::~QuickSearchWarning()
@@ -36,12 +43,20 @@ QuickSearchWarning::~QuickSearchWarning()
 
 void QuickSearchWarning::setSearchText(const QString &text)
 {
-    const QStringList lstText = text.split(QLatin1Char(' '), QString::SkipEmptyParts);
-    Q_FOREACH (const QString &text, lstText) {
-        if (text.trimmed().size() < 3) {
-            animatedShow();
-            break;
+    if (!MessageList::MessageListSettings::quickSearchWarningNotRemember()) {
+        const QStringList lstText = text.split(QLatin1Char(' '), QString::SkipEmptyParts);
+        Q_FOREACH (const QString &text, lstText) {
+            if (text.trimmed().size() < 3) {
+                animatedShow();
+                break;
+            }
         }
     }
 }
 
+
+void QuickSearchWarning::slotDoNotRememberIt()
+{
+    MessageList::MessageListSettings::setQuickSearchWarningNotRemember(true);
+    animatedHide();
+}
