@@ -722,7 +722,10 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
   }
 
   d->mPendingChanges = true;
-  recreateViews();
+
+  connect (calendar()->entityTreeModel(), SIGNAL(collectionTreeFetched(const Akonadi::Collection::List &)),
+           this, SLOT(forceRecreateViews()));
+
   qDeleteAll( oldModels );
 }
 
