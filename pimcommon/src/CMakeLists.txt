@@ -222,8 +222,13 @@ set(libpimcommon_manageserversidesubscription_SRCS
    manageserversidesubscription/manageserversidesubscriptionjob.cpp
 )
 
+set(libpimcommon_shorturl_SRCS
+   customtools/shorturlplugin/shorturl/shorturlengineplugin/shorturlengineplugin.cpp
+)
+
 set(libpimcommon_SRCS
   settings/pimcommonsettings.cpp
+  ${libpimcommon_shorturl_SRCS}
   ${libpimcommon_manageserversidesubscription_SRCS}
   ${libpimcommon_webshortscut_SRCS}
   ${libpimcommon_shareserviceurl_SRCS}
@@ -377,6 +382,15 @@ ecm_generate_headers(PimCommon_CamelCase_HEADERS
   PREFIX PimCommon
   RELATIVE util
 )
+
+ecm_generate_headers(PimCommon_shorturl_HEADERS
+  HEADER_NAMES
+  ShortUrlEnginePlugin
+  REQUIRED_HEADERS PimCommon_shorturl_HEADERS
+  PREFIX PimCommon
+  RELATIVE customtools/shorturlplugin/shorturl/shorturlengineplugin/
+)
+
 
 ecm_generate_headers(PimCommon_storageservice_HEADERS
   HEADER_NAMES

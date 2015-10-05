@@ -30,3 +30,5 @@ if (BUILD_TESTING)
    add_subdirectory(shorturl/tests)
    add_subdirectory(shorturl/autotests)
 endif()
+
+add_subdirectory(shorturl/shorturlengineplugin/tinyurlengineplugin/)
