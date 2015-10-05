@@ -34,7 +34,7 @@ void QuickSearchWarningTest::shouldHaveDefaultValue()
 {
     MessageList::Core::QuickSearchWarning w;
     QVERIFY(!w.isVisible());
-    QAction *act = w.findChild<QAction *>(QStringLiteral("notrememberit"));
+    QAction *act = w.findChild<QAction *>(QStringLiteral("donotshowagain"));
     QVERIFY(act);
 }
 

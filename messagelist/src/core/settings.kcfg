@@ -27,7 +27,7 @@
     <entry name="TagSelected" type="String"/>
   </group>
   <group name="QuickSearchWarning">
-    <entry name="QuickSearchWarningNotRemember" type="Bool">
+    <entry name="QuickSearchWarningDoNotShowAgain" type="Bool">
      <default>false</default>
     </entry>
   </group>

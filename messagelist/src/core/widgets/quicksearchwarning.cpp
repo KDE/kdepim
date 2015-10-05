@@ -29,8 +29,8 @@ QuickSearchWarning::QuickSearchWarning(QWidget *parent)
     setMessageType(Warning);
     setWordWrap(true);
     setText(i18n("The words less than 3 letters are ignored."));
-    QAction *action = new QAction(i18n("Do not remember me it."), this);
-    action->setObjectName(QStringLiteral("notrememberit"));
+    QAction *action = new QAction(i18n("Do not show again"), this);
+    action->setObjectName(QStringLiteral("donotshowagain"));
     connect(action, &QAction::triggered, this, &QuickSearchWarning::slotDoNotRememberIt);
     addAction(action);
 
@@ -43,20 +43,27 @@ QuickSearchWarning::~QuickSearchWarning()
 
 void QuickSearchWarning::setSearchText(const QString &text)
 {
-    if (!MessageList::MessageListSettings::quickSearchWarningNotRemember()) {
+    if (!MessageList::MessageListSettings::quickSearchWarningDoNotShowAgain()) {
         const QStringList lstText = text.split(QLatin1Char(' '), QString::SkipEmptyParts);
+        bool foundLessAsThreeCharacters = false;
         Q_FOREACH (const QString &text, lstText) {
             if (text.trimmed().size() < 3) {
-                animatedShow();
+                foundLessAsThreeCharacters = true;
                 break;
             }
         }
+        if (foundLessAsThreeCharacters) {
+            animatedShow();
+        } else {
+            animatedHide();
+        }
+
     }
 }
 
 
 void QuickSearchWarning::slotDoNotRememberIt()
 {
-    MessageList::MessageListSettings::setQuickSearchWarningNotRemember(true);
+    MessageList::MessageListSettings::setQuickSearchWarningDoNotShowAgain(true);
     animatedHide();
 }
