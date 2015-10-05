@@ -15,6 +15,7 @@ set(pimcommon_shorturlplugin_shorturllib_SRCS
    shorturl/engine/triopabshorturl.cpp
    shorturl/engine/ur1cashorturl.cpp
    shorturl/engine/isgdshorturl.cpp
+   shorturl/shorturlengineplugin/shorturlenginepluginmanager.cpp
 )
 
 add_library(pimcommon_shorturlplugin MODULE ${pimcommon_shorturlplugin_SRCS} ${pimcommon_shorturlplugin_shorturllib_SRCS})

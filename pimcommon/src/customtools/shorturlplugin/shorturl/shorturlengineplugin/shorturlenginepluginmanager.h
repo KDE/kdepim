@@ -15,28 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "shorturlengineplugin.h"
 
-using namespace PimCommon;
+#ifndef SHORTURLENGINEPLUGINMANAGER_H
+#define SHORTURLENGINEPLUGINMANAGER_H
 
-class PimCommon::ShortUrlEnginePluginPrivate
+#include <QObject>
+namespace PimCommon
 {
+class ShortUrlEnginePlugin;
+class ShortUrlEnginePluginManagerPrivate;
+class ShortUrlEnginePluginManager : public QObject
+{
+    Q_OBJECT
 public:
-    ShortUrlEnginePluginPrivate()
-    {
+    explicit ShortUrlEnginePluginManager(QObject *parent = Q_NULLPTR);
+    ~ShortUrlEnginePluginManager();
 
-    }
+    QVector<PimCommon::ShortUrlEnginePlugin *> pluginsList() const;
+
+    ShortUrlEnginePluginManager *self();
+private:
+    ShortUrlEnginePluginManagerPrivate *const d;
 };
-
-ShortUrlEnginePlugin::ShortUrlEnginePlugin(QObject *parent)
-    : QObject(parent),
-      d(new PimCommon::ShortUrlEnginePluginPrivate)
-{
-
 }
 
-ShortUrlEnginePlugin::~ShortUrlEnginePlugin()
-{
-    delete d;
-}
-
+#endif // SHORTURLENGINEPLUGINMANAGER_H
