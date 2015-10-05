@@ -26,7 +26,7 @@
 #include "PimCommon/ImapAclAttribute"
 #include "PimCommon/PimUtil"
 
-#include "Libkdepim/QuotaColorProxyModel"
+#include <AkonadiWidgets/quotacolorproxymodel.h>
 
 #include <AkonadiCore/statisticsproxymodel.h>
 
@@ -73,7 +73,7 @@ public:
     QString oldFilterStr;
     Akonadi::StatisticsProxyModel *filterModel;
     FolderTreeView *folderTreeView;
-    KPIM::QuotaColorProxyModel *quotaModel;
+    Akonadi::QuotaColorProxyModel *quotaModel;
     FolderTreeWidgetProxyModel *readableproxy;
     EntityCollectionOrderProxyModel *entityOrderProxy;
     QLineEdit *filterFolderLineEdit;
@@ -112,7 +112,7 @@ FolderTreeWidget::FolderTreeWidget(
     lay->addWidget(d->filterFolderLineEdit);
 
     // ... with statistics...
-    d->quotaModel = new KPIM::QuotaColorProxyModel(this);
+    d->quotaModel = new Akonadi::QuotaColorProxyModel(this);
     d->quotaModel->setSourceModel(KernelIf->collectionModel());
 
     d->filterModel = new Akonadi::StatisticsProxyModel(this);

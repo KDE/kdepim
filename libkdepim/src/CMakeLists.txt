@@ -15,7 +15,6 @@ add_definitions(-DTRANSLATION_DOMAIN=\"libkdepim\")
 ########### next target ###############
 
 set(kdepim_proxy_LIB_SRCS
-   proxy/quotacolorproxymodel.cpp
    proxy/kcolumnfilterproxymodel.cpp
 )
 
@@ -250,7 +249,6 @@ ecm_generate_headers(libkdepim_multiline_HEADERS
 ecm_generate_headers(libkdepim_proxy_HEADERS
   HEADER_NAMES
   KColumnFilterProxyModel
-  QuotaColorProxyModel 
   REQUIRED_HEADERS libkdepim_proxy_HEADERS
   PREFIX Libkdepim
   RELATIVE proxy
