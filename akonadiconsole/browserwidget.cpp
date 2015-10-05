@@ -44,7 +44,7 @@
 #include <AkonadiWidgets/entitytreeview.h>
 #include <AkonadiWidgets/etmviewstatesaver.h>
 #include <AkonadiCore/favoritecollectionsmodel.h>
-#include <AkonadiWidgets/quotacolorproxymodel.h>
+#include <AkonadiCore/quotacolorproxymodel.h>
 #include <AkonadiCore/tagmodel.h>
 #include <AkonadiCore/statisticsproxymodel.h>
 #include <AkonadiCore/tagdeletejob.h>

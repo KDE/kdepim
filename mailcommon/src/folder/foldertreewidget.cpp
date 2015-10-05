@@ -26,7 +26,7 @@
 #include "PimCommon/ImapAclAttribute"
 #include "PimCommon/PimUtil"
 
-#include <AkonadiWidgets/quotacolorproxymodel.h>
+#include <AkonadiCore/quotacolorproxymodel.h>
 
 #include <AkonadiCore/statisticsproxymodel.h>
 
