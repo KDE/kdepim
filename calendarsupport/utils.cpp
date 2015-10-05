@@ -505,7 +505,6 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
   } else {
     fullCollection = c;
   }
-
   QString cName = fullCollection.name();
   const QString resourceName = fullCollection.resource();
 
@@ -540,39 +539,46 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
           nameStr = cName;
           typeStr = QLatin1String("Notes");
           break;
+        } else if ( tName.toLower().startsWith( QLatin1String( "user" ) ) ||
+                    ownerStr.toUpper() == QLatin1String( "INBOX" ) ) {
+            break;
         } else if ( tName != i18n( "Calendar" ) &&
                     tName != i18n( "Tasks" ) &&
                     tName != i18n( "Journal" ) &&
                     tName != i18n( "Notes" ) ) {
           ownerStr = tName;
-          break;
         } else {
           nameStr = typeStr;
           typeStr = tName;
         }
         p = p.parentCollection();
+        if (!p.isValid()) {
+            kDebug() << "Invalid parent collection.";
+            ownerStr = QString();
+            break;
+        }
       }
     }
 
     if ( !ownerStr.isEmpty() ) {
       if ( ownerStr.toUpper() == QLatin1String( "INBOX" ) ) {
         return i18nc( "%1 is folder contents",
-                      "My Kolab %1", typeStr );
+                      "%1 (Kolab)", typeStr );
       } else if ( ownerStr.toUpper() == QLatin1String( "SHARED" ) ) {
         return i18nc( "%1 is folder name, %2 is folder contents",
                       "Shared Kolab %1 %2", nameStr, typeStr );
       } else {
         if ( nameStr.isEmpty() ) {
           return i18nc( "%1 is folder owner name, %2 is folder contents",
-                        "%1's Kolab %2", ownerStr, typeStr );
+                        "%2 (Kolab/%1)", ownerStr, typeStr );
         } else {
           return i18nc( "%1 is folder owner name, %2 is folder name, %3 is folder contents",
-                        "%1's %2 Kolab %3", ownerStr, nameStr, typeStr );
+                        "%3 (Kolab/%1/%2)", ownerStr, nameStr, typeStr );
         }
       }
     } else {
       return i18nc( "%1 is folder contents",
-                    "Kolab %1", typeStr );
+                    "%1 (Kolab)", typeStr );
     }
   } //end kolab section
 
