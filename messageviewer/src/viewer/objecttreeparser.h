@@ -68,7 +68,7 @@ class CSSHelper;
 class AttachmentStrategy;
 class NodeHelper;
 
-class ProcessResult
+class MESSAGEVIEWER_EXPORT ProcessResult
 {
 public:
     explicit ProcessResult(NodeHelper *nodeHelper, KMMsgSignatureState  inlineSignatureState  = KMMsgNotSigned,
