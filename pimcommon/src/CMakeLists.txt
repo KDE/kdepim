@@ -151,7 +151,6 @@ set(libpimcommon_widgets_SRCS
   widgets/configureimmutablewidgetutils.cpp
   widgets/slidecontainer.cpp
   widgets/annotationdialog.cpp
-  widgets/manageaccountwidget.cpp
   widgets/kactionmenuchangecase.cpp
   widgets/lineeditwithcompleter.cpp
   widgets/spellchecklineedit.cpp
@@ -250,7 +249,6 @@ ecm_qt_declare_logging_category(libpimcommon_SRCS HEADER pimcommon_debug.h IDENT
 
 ki18n_wrap_ui(libpimcommon_SRCS
      autocorrection/ui/autocorrectionwidget.ui
-     widgets/ui/manageaccountwidget.ui
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
@@ -629,7 +627,6 @@ ecm_generate_headers(PimCommon_widgets_HEADERS
   LineEditWithCompleter
   RenameFileDialog
   SimpleStringlistEditor
-  ManageAccountWidget
   KActionMenuChangeCase
   AnnotationDialog
   CustomTextEdit
