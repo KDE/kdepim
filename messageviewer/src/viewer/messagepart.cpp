@@ -226,6 +226,29 @@ void CryptoMessagePart::startVerificationDetached(const QByteArray &text, KMime:
 
 }
 
+void CryptoMessagePart::writeDeferredDecryptionBlock() const
+{
+    Q_ASSERT(!mMetaData->isEncrypted);
+    Q_ASSERT(mDecryptMessage);
+
+    MessageViewer::HtmlWriter* writer = mOtp->htmlWriter();
+    if (!writer) {
+        return;
+    }
+
+    const QString iconName = QLatin1String("file:///") + KIconLoader::global()->iconPath(QStringLiteral("document-decrypt"),
+                             KIconLoader::Small);
+    writer->queue(QLatin1String("<div style=\"font-size:large; text-align:center;"
+                                  "padding-top:20pt;\">")
+                                  + i18n("This message is encrypted.")
+                                  + QLatin1String("</div>"
+                                          "<div style=\"text-align:center; padding-bottom:20pt;\">"
+                                          "<a href=\"kmail:decryptMessage\">"
+                                          "<img src=\"") + iconName + QLatin1String("\"/>")
+                                  + i18n("Decrypt Message")
+                                  + QLatin1String("</a></div>"));
+}
+
 void CryptoMessagePart::html(bool decorate) const
 {
 
@@ -250,14 +273,21 @@ void CryptoMessagePart::html(bool decorate) const
     }
 
     if (mMetaData->isEncrypted && !mDecryptMessage) {
-        mOtp->writeDeferredDecryptionBlock();
+        mMetaData->isDecryptable = true;
+    }
+
+    if (mMetaData->isEncrypted && !mDecryptMessage) {
+        const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
+        writeDeferredDecryptionBlock();
     } else if (mMetaData->inProgress) {
-        mOtp->writeDecryptionInProgressBlock();
+        const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
+        // In progress has no special body
     } else if (mMetaData->isEncrypted && !mMetaData->isDecryptable) {
         const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
         writer->queue(text());           //Do not quote ErrorText
     } else {
         if (mMetaData->isSigned && mVerifiedText.isEmpty() && !hideErrors) {
+            const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
             writer->queue(QStringLiteral("<hr><b><h2>"));
             writer->queue(i18n("The crypto engine returned no cleartext data."));
             writer->queue(QStringLiteral("</h2></b>"));

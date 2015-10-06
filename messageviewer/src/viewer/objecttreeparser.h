@@ -397,14 +397,6 @@ private:
       find out if opaque data is signed or not. */
     bool writeOpaqueOrMultipartSignedData(KMime::Content* data, KMime::Content& sign, const QString& fromAddress, bool hideErrors = false);
 
-    /** Writes out the block that we use when the node is encrypted,
-      but we're deferring decryption for later. */
-    void writeDeferredDecryptionBlock();
-
-    /** Writes out the block that we use when the node is encrypted,
-      but we've just kicked off async decryption. */
-    void writeDecryptionInProgressBlock();
-
     /** Writes out the information contained in a GpgME::ImportResult */
     void writeCertificateImportResult(const GpgME::ImportResult &res);
 

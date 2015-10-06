@@ -101,6 +101,12 @@ public:
     bool mPassphraseError;
     QByteArray mDecryptedData;
     std::vector<GpgME::Signature> mSignatures;
+
+private:
+    /** Writes out the block that we use when the node is encrypted,
+      but we're deferring decryption for later. */
+    void writeDeferredDecryptionBlock() const;
+
 protected:
     const Kleo::CryptoBackend::Protocol *mCryptoProto;
     QString mFromAddress;

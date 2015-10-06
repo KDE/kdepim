@@ -621,53 +621,6 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
     return bIsOpaqueSigned;
 }
 
-void ObjectTreeParser::writeDeferredDecryptionBlock()
-{
-    const QString iconName = QLatin1String("file:///") + KIconLoader::global()->iconPath(QStringLiteral("document-decrypt"),
-                             KIconLoader::Small);
-    const QString decryptedData = QLatin1String("<div style=\"font-size:large; text-align:center;"
-                                  "padding-top:20pt;\">")
-                                  + i18n("This message is encrypted.")
-                                  + QLatin1String("</div>"
-                                          "<div style=\"text-align:center; padding-bottom:20pt;\">"
-                                          "<a href=\"kmail:decryptMessage\">"
-                                          "<img src=\"") + iconName + QLatin1String("\"/>")
-                                  + i18n("Decrypt Message")
-                                  + QLatin1String("</a></div>");
-    PartMetaData messagePart;
-    messagePart.isDecryptable = true;
-    messagePart.isEncrypted = true;
-    messagePart.isSigned = false;
-
-    if (htmlWriter()) {   //TODO: check if this check should be here or at the beginning of the method
-        htmlWriter()->queue(writeSigstatHeader(messagePart,
-                                               cryptoProtocol(),
-                                               QString()));
-        htmlWriter()->queue(decryptedData);
-        htmlWriter()->queue(writeSigstatFooter(messagePart));
-    }
-}
-
-void ObjectTreeParser::writeDecryptionInProgressBlock()
-{
-    if (!htmlWriter()) {
-        return;
-    }
-    // PENDING(marc) find an animated icon here:
-    //const QString iconName = KGlobal::instance()->iconLoader()->iconPath( "decrypted", KIcon::Small );
-    //const QString decryptedData = i18n("Encrypted data not shown");
-    PartMetaData messagePart;
-    messagePart.isDecryptable = true;
-    messagePart.isEncrypted = true;
-    messagePart.isSigned = false;
-    messagePart.inProgress = true;
-    htmlWriter()->queue(writeSigstatHeader(messagePart,
-                                           cryptoProtocol(),
-                                           QString()));
-    //htmlWriter()->queue( decryptedData );
-    htmlWriter()->queue(writeSigstatFooter(messagePart));
-}
-
 void ObjectTreeParser::writeCertificateImportResult(const GpgME::ImportResult &res)
 {
     if (res.error()) {
