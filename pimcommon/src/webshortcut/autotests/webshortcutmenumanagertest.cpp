@@ -53,7 +53,6 @@ void WebShortcutMenuManagerTest::shouldAddActionToMenu()
     //Empty when we don't have selected text
     QVERIFY(menu->actions().isEmpty());
 
-
     const QString selectText = QStringLiteral("foo");
     shortcutManager.setSelectedText(selectText);
     shortcutManager.addWebShortcutsToMenu(menu);

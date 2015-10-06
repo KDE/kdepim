@@ -28,7 +28,6 @@ TinyUrlEngineInterface::TinyUrlEngineInterface(QObject *parent)
     connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &TinyUrlEngineInterface::slotShortUrlFinished);
 }
 
-
 TinyUrlEngineInterface::~TinyUrlEngineInterface()
 {
 

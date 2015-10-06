@@ -17,6 +17,10 @@
 
 #include "isgdshorturlengineinterface.h"
 
+#include <QJsonDocument>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+
 using namespace PimCommon;
 
 IsgdShortUrlEngineInterface::IsgdShortUrlEngineInterface(QObject *parent)
@@ -24,7 +28,6 @@ IsgdShortUrlEngineInterface::IsgdShortUrlEngineInterface(QObject *parent)
 {
 
 }
-
 
 IsgdShortUrlEngineInterface::~IsgdShortUrlEngineInterface()
 {
@@ -38,13 +41,40 @@ void IsgdShortUrlEngineInterface::setShortUrl(const QString &url)
 
 void IsgdShortUrlEngineInterface::generateShortUrl()
 {
-#if 0
     const QString requestUrl = QStringLiteral("http://is.gd/create.php?%1&url=%2").arg(QStringLiteral("format=json")).arg(mOriginalUrl);
     QNetworkRequest request = QNetworkRequest(QUrl(requestUrl));
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &IsGdShortUrl::slotErrorFound);
-#endif
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &IsgdShortUrlEngineInterface::slotErrorFound);
 }
 
+void IsgdShortUrlEngineInterface::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)
+{
+    reply->ignoreSslErrors(error);
+}
+
+void IsgdShortUrlEngineInterface::slotShortUrlFinished(QNetworkReply *reply)
+{
+    if (mErrorFound) {
+        return;
+    }
+
+    const QByteArray data = reply->readAll();
+    QJsonParseError error;
+    const QJsonDocument json = QJsonDocument::fromJson(data, &error);
+    //qCDebug(PIMCOMMON_LOG) << "void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << data;
+
+    reply->deleteLater();
+
+    if (error.error != QJsonParseError::NoError || json.isNull()) {
+        //qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
+        Q_EMIT shortUrlFailed(error.errorString());
+        return;
+    }
+    const QMap<QString, QVariant> map = json.toVariant().toMap();
+
+    if (map.contains(QStringLiteral("shorturl"))) {
+        Q_EMIT shortUrlGenerated(map.value(QStringLiteral("shorturl")).toString());
+    }
+}

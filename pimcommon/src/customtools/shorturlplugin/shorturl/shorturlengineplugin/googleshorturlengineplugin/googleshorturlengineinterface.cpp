@@ -25,7 +25,6 @@ GoogleShortUrlEngineInterface::GoogleShortUrlEngineInterface(QObject *parent)
 
 }
 
-
 GoogleShortUrlEngineInterface::~GoogleShortUrlEngineInterface()
 {
 

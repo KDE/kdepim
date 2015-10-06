@@ -15,7 +15,6 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "shorturlengineplugin.h"
 #include "shorturlenginepluginmanager.h"
 
@@ -64,7 +63,6 @@ QString ShortUrlEnginePluginInfo::saveName() const
 {
     return QFileInfo(metaData.fileName()).baseName();
 }
-
 
 class PimCommon::ShortUrlEnginePluginManagerPrivate
 {
@@ -125,7 +123,6 @@ QVector<ShortUrlEnginePlugin *> ShortUrlEnginePluginManagerPrivate::pluginsList(
     return lst;
 }
 
-
 ShortUrlEnginePluginManager::ShortUrlEnginePluginManager(QObject *parent)
     : QObject(parent),
       d(new PimCommon::ShortUrlEnginePluginManagerPrivate(this))
@@ -143,11 +140,8 @@ ShortUrlEnginePluginManager *ShortUrlEnginePluginManager::self()
     return sInstance->shortUrlEnginePluginManager;
 }
 
-
 QVector<ShortUrlEnginePlugin *> ShortUrlEnginePluginManager::pluginsList() const
 {
     return d->pluginsList();
 }
-
-
 

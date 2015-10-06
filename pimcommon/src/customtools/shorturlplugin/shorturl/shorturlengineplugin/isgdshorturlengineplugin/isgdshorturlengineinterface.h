@@ -20,6 +20,8 @@
 
 #include <pimcommon/shorturlengineinterface.h>
 
+#include <QSslError>
+class QNetworkReply;
 namespace PimCommon
 {
 class IsgdShortUrlEngineInterface : public PimCommon::ShortUrlEngineInterface
@@ -30,6 +32,10 @@ public:
 
     void setShortUrl(const QString &url) Q_DECL_OVERRIDE;
     void generateShortUrl() Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    void slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error);
+    void slotShortUrlFinished(QNetworkReply *reply);
 };
 }
 
