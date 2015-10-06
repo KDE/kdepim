@@ -224,6 +224,7 @@ set(libpimcommon_manageserversidesubscription_SRCS
 
 set(libpimcommon_shorturl_SRCS
    customtools/shorturlplugin/shorturl/shorturlengineplugin/shorturlengineplugin.cpp
+   customtools/shorturlplugin/shorturl/shorturlengineplugin/shorturlengineinterface.cpp
 )
 
 set(libpimcommon_SRCS
