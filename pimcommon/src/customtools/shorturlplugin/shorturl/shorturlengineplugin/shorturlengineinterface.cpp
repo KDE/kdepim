@@ -15,8 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "shorturlengineinterface.h"
+
+#include <KLocalizedString>
 
 #include <QNetworkAccessManager>
 
@@ -33,5 +34,12 @@ ShortUrlEngineInterface::ShortUrlEngineInterface(QObject *parent)
 ShortUrlEngineInterface::~ShortUrlEngineInterface()
 {
 
+}
+
+void ShortUrlEngineInterface::slotErrorFound(QNetworkReply::NetworkError error)
+{
+    mErrorFound = true;
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    Q_EMIT shortUrlFailed(i18n("Error reported by server:\n\'%1\'", (reply ? reply->errorString() : QString::number(error))));
 }
 

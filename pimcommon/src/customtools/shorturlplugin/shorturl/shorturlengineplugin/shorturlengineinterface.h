@@ -15,12 +15,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #ifndef SHORTURLENGINEINTERFACE_H
 #define SHORTURLENGINEINTERFACE_H
 
 #include <QObject>
 #include "pimcommon_export.h"
+#include <QNetworkReply>
 class QNetworkAccessManager;
 namespace PimCommon
 {
@@ -33,6 +33,9 @@ public:
 
     virtual void setShortUrl(const QString &url) = 0;
     virtual void generateShortUrl() = 0;
+
+protected Q_SLOTS:
+    void slotErrorFound(QNetworkReply::NetworkError error);
 
 Q_SIGNALS:
     void shortUrlGenerated(const QString &url);
