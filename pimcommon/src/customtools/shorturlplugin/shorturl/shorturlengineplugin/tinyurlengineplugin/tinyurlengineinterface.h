@@ -19,7 +19,8 @@
 #define TINYURLENGINEINTERFACE_H
 
 #include <pimcommon/shorturlengineinterface.h>
-
+#include <QNetworkReply>
+class QNetworkAccessManager;
 namespace PimCommon
 {
 class TinyUrlEngineInterface : public PimCommon::ShortUrlEngineInterface
@@ -30,6 +31,14 @@ public:
 
     void setShortUrl(const QString &url) Q_DECL_OVERRIDE;
     void generateShortUrl() Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    void slotShortUrlFinished(QNetworkReply *reply);
+    void slotErrorFound(QNetworkReply::NetworkError error);
+private:
+    QString mOriginalUrl;
+    bool mErrorFound;
+    QNetworkAccessManager *mNetworkAccessManager;
 };
 }
 

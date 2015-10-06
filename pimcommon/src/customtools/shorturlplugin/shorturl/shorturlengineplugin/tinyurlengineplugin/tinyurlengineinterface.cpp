@@ -16,13 +16,18 @@
 */
 
 #include "tinyurlengineinterface.h"
+#include <KLocalizedString>
+
+#include <QNetworkAccessManager>
 
 using namespace PimCommon;
 
 TinyUrlEngineInterface::TinyUrlEngineInterface(QObject *parent)
-    : PimCommon::ShortUrlEngineInterface(parent)
+    : PimCommon::ShortUrlEngineInterface(parent),
+      mErrorFound(false),
+      mNetworkAccessManager(new QNetworkAccessManager(this))
 {
-
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &TinyUrlEngineInterface::slotShortUrlFinished);
 }
 
 
@@ -33,10 +38,38 @@ TinyUrlEngineInterface::~TinyUrlEngineInterface()
 
 void TinyUrlEngineInterface::setShortUrl(const QString &url)
 {
-
+    mErrorFound = false;
+    if (!url.trimmed().startsWith(QStringLiteral("http://")) &&
+            !url.trimmed().startsWith(QStringLiteral("https://")) &&
+            !url.trimmed().startsWith(QStringLiteral("ftp://")) &&
+            !url.trimmed().startsWith(QStringLiteral("ftps://"))) {
+        mOriginalUrl = QLatin1String("http://") + url;
+    } else {
+        mOriginalUrl = url;
+    }
 }
 
 void TinyUrlEngineInterface::generateShortUrl()
 {
+    const QString requestUrl = QStringLiteral("http://tinyurl.com/api-create.php?url=%1").arg(mOriginalUrl);
+    QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(QUrl(requestUrl)));
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &TinyUrlEngineInterface::slotErrorFound);
+}
 
+void TinyUrlEngineInterface::slotShortUrlFinished(QNetworkReply *reply)
+{
+    if (!mErrorFound) {
+        const QString data = QString::fromUtf8(reply->readAll());
+        if (!data.isEmpty()) {
+            Q_EMIT shortUrlGenerated(data);
+        }
+    }
+    reply->deleteLater();
+}
+
+void TinyUrlEngineInterface::slotErrorFound(QNetworkReply::NetworkError error)
+{
+    mErrorFound = true;
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    Q_EMIT shortUrlFailed(i18n("Error reported by server:\n\'%1\'", (reply ? reply->errorString() : QString::number(error))));
 }
