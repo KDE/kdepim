@@ -49,11 +49,6 @@ QString GoogleShortUrl::shortUrlName() const
     return QStringLiteral("Google");
 }
 
-bool GoogleShortUrl::isUp() const
-{
-    return true;
-}
-
 void GoogleShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)
 {
     reply->ignoreSslErrors(error);

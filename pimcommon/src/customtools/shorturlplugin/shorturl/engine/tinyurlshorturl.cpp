@@ -35,11 +35,6 @@ QString TinyurlShortUrl::shortUrlName() const
     return QStringLiteral("TinyURL.com");
 }
 
-bool TinyurlShortUrl::isUp() const
-{
-    return true;
-}
-
 void TinyurlShortUrl::start()
 {
     const QString requestUrl = QStringLiteral("http://tinyurl.com/api-create.php?url=%1").arg(mOriginalUrl);

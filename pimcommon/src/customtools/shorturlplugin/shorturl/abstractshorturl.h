@@ -33,7 +33,6 @@ public:
     virtual QString shortUrlName() const = 0;
     virtual void shortUrl(const QString &url);
     virtual void start() = 0;
-    virtual bool isUp() const = 0;
 
 Q_SIGNALS:
     void shortUrlDone(const QString &url);

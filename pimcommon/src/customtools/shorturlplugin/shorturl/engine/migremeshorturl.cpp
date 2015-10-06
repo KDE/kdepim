@@ -35,11 +35,6 @@ QString MigremeShortUrl::shortUrlName() const
     return QStringLiteral("migre.me");
 }
 
-bool MigremeShortUrl::isUp() const
-{
-    return true;
-}
-
 void MigremeShortUrl::start()
 {
     const QString requestUrl = QStringLiteral("http://migre.me/api.txt?url=%1").arg(mOriginalUrl);

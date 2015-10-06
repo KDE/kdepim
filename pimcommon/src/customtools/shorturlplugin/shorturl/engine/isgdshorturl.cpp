@@ -49,11 +49,6 @@ QString IsGdShortUrl::shortUrlName() const
     return QStringLiteral("Is.gd");
 }
 
-bool IsGdShortUrl::isUp() const
-{
-    return true;
-}
-
 void IsGdShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)
 {
     reply->ignoreSslErrors(error);

@@ -31,8 +31,6 @@ public:
     void start() Q_DECL_OVERRIDE;
 
     QString shortUrlName() const Q_DECL_OVERRIDE;
-    bool isUp() const Q_DECL_OVERRIDE;
-
 private Q_SLOTS:
     void slotShortUrlFinished(QNetworkReply *reply) Q_DECL_OVERRIDE;
 };
