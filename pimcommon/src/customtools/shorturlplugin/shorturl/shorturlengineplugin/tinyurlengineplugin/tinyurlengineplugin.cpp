@@ -16,6 +16,7 @@
 */
 
 #include "tinyurlengineplugin.h"
+#include "tinyurlengineinterface.h"
 #include <kpluginfactory.h>
 
 using namespace PimCommon;
@@ -40,8 +41,7 @@ QString TinyUrlEnginePlugin::engineName() const
 
 PimCommon::ShortUrlEngineInterface *TinyUrlEnginePlugin::createInterface(QObject *parent)
 {
-    //TODO
-    return Q_NULLPTR;
+    return new PimCommon::TinyUrlEngineInterface(parent);
 }
 
 #include "tinyurlengineplugin.moc"

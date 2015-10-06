@@ -16,6 +16,7 @@
 */
 
 #include "googleshorturlengineplugin.h"
+#include "googleshorturlengineinterface.h"
 #include <kpluginfactory.h>
 
 using namespace PimCommon;
@@ -40,8 +41,7 @@ QString GoogleShortUrlEnginePlugin::engineName() const
 
 PimCommon::ShortUrlEngineInterface *GoogleShortUrlEnginePlugin::createInterface(QObject *parent)
 {
-    //TODO
-    return Q_NULLPTR;
+    return new PimCommon::GoogleShortUrlEngineInterface(parent);
 }
 
 #include "googleshorturlengineplugin.moc"
