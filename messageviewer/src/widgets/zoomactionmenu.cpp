@@ -22,8 +22,10 @@
 #include <viewer/mailwebview.h>
 
 using namespace MessageViewer;
-namespace {
-qreal zoomBy() {
+namespace
+{
+qreal zoomBy()
+{
     return 20;
 }
 }

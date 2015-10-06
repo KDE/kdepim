@@ -44,7 +44,6 @@ void ViewerPluginTranslatorTest::shouldHaveDefaultValue()
 
 }
 
-
 void ViewerPluginTranslatorTest::shouldCreateAction()
 {
     MessageViewer::ViewerPluginTranslator *translator = new MessageViewer::ViewerPluginTranslator(this);

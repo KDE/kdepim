@@ -223,7 +223,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     mHtmlLoadExternalGlobalSetting = false;
     mHtmlMailGlobalSetting = false;
 
-
     mUpdateReaderWinTimer.setObjectName(QStringLiteral("mUpdateReaderWinTimer"));
     mResizeTimer.setObjectName(QStringLiteral("mResizeTimer"));
 
@@ -1600,7 +1599,6 @@ void ViewerPrivate::createActions()
     ac->addAction(QStringLiteral("toggle_fixedfont"), mToggleFixFontAction);
     connect(mToggleFixFontAction, &QAction::triggered, this, &ViewerPrivate::slotToggleFixedFont);
     ac->setDefaultShortcut(mToggleFixFontAction, QKeySequence(Qt::Key_X));
-
 
     // Show message structure viewer
     mToggleMimePartTreeAction = new KToggleAction(i18n("Show Message Structure"), this);
