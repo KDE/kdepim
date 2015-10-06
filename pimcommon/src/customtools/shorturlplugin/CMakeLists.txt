@@ -34,3 +34,4 @@ endif()
 
 add_subdirectory(shorturl/shorturlengineplugin/tinyurlengineplugin/)
 add_subdirectory(shorturl/shorturlengineplugin/googleshorturlengineplugin)
+add_subdirectory(shorturl/shorturlengineplugin/isgdshorturlengineplugin)

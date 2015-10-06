@@ -16,7 +16,7 @@
 */
 
 #include "isgdshorturlengineplugin.h"
-#include "googleshorturlengineinterface.h"
+#include "isgdshorturlengineinterface.h"
 #include <kpluginfactory.h>
 
 using namespace PimCommon;
@@ -36,12 +36,12 @@ IsgdShortUrlEnginePlugin::~IsgdShortUrlEnginePlugin()
 
 QString IsgdShortUrlEnginePlugin::engineName() const
 {
-    return QStringLiteral("googleshorturl");
+    return QStringLiteral("isdgshorturl");
 }
 
 PimCommon::ShortUrlEngineInterface *IsgdShortUrlEnginePlugin::createInterface(QObject *parent)
 {
-    return new PimCommon::GoogleShortUrlEngineInterface(parent);
+    return new PimCommon::IsgdShortUrlEngineInterface(parent);
 }
 
 #include "isgdshorturlengineplugin.moc"
