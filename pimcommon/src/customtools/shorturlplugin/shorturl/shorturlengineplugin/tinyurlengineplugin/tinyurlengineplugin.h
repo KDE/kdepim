@@ -33,6 +33,7 @@ public:
     ~TinyUrlEnginePlugin();
 
     QString engineName() const Q_DECL_OVERRIDE;
+    PimCommon::ShortUrlEngineInterface *createInterface(QObject *parent) Q_DECL_OVERRIDE;
 };
 }
 

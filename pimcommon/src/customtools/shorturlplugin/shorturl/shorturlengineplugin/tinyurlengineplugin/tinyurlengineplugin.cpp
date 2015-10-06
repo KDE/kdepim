@@ -38,4 +38,10 @@ QString TinyUrlEnginePlugin::engineName() const
     return QStringLiteral("tinyurl");
 }
 
+PimCommon::ShortUrlEngineInterface *TinyUrlEnginePlugin::createInterface(QObject *parent)
+{
+    //TODO
+    return Q_NULLPTR;
+}
+
 #include "tinyurlengineplugin.moc"

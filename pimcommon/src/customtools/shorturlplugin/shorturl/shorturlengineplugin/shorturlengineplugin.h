@@ -24,6 +24,7 @@
 namespace PimCommon
 {
 class ShortUrlEnginePluginPrivate;
+class ShortUrlEngineInterface;
 class PIMCOMMON_EXPORT ShortUrlEnginePlugin : public QObject
 {
     Q_OBJECT
@@ -31,6 +32,7 @@ public:
     explicit ShortUrlEnginePlugin(QObject *parent = Q_NULLPTR);
     ~ShortUrlEnginePlugin();
     virtual QString engineName() const = 0;
+    virtual PimCommon::ShortUrlEngineInterface *createInterface(QObject *parent) = 0;
 
 private:
     ShortUrlEnginePluginPrivate *const d;

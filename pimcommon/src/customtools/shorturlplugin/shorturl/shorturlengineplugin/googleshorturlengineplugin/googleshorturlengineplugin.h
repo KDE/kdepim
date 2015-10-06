@@ -33,6 +33,7 @@ public:
     ~GoogleShortUrlEnginePlugin();
 
     QString engineName() const Q_DECL_OVERRIDE;
+    ShortUrlEngineInterface *createInterface(QObject *parent) Q_DECL_OVERRIDE;
 };
 }
 

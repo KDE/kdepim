@@ -38,4 +38,10 @@ QString GoogleShortUrlEnginePlugin::engineName() const
     return QStringLiteral("googleshorturl");
 }
 
+PimCommon::ShortUrlEngineInterface *GoogleShortUrlEnginePlugin::createInterface(QObject *parent)
+{
+    //TODO
+    return Q_NULLPTR;
+}
+
 #include "googleshorturlengineplugin.moc"
