@@ -2462,13 +2462,6 @@ void ObjectTreeParser::writeAttachmentMarkFooter()
 }
 
 //-----------------------------------------------------------------------------
-void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aCodec,
-                                    const QString &fromAddress)
-{
-    KMMsgSignatureState dummy1;
-    KMMsgEncryptionState dummy2;
-    writeBodyStr(aStr, aCodec, fromAddress, dummy1, dummy2, false);
-}
 
 bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBackend::Protocol *cryptProto, PartMetaData &messagePart, QByteArray &verifiedText, std::vector <GpgME::Signature> &signatures, const QByteArray &signature, KMime::Content *sign)
 {

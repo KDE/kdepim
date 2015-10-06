@@ -474,10 +474,7 @@ public:// (during refactoring)
 
     bool isMailmanMessage(KMime::Content *curNode);
 
-public: // KMReaderWin still needs this...
-    void writeBodyStr(const QByteArray &bodyString,
-                      const QTextCodec *aCodec,
-                      const QString &fromAddress);
+public:
     static KMime::Content *findType(KMime::Content *content, const QByteArray &mimeType, bool deep, bool wide);
 
     static KMime::Content *findType(KMime::Content *content, const QByteArray &mediaType, const QByteArray &subType, bool deep, bool wide);
