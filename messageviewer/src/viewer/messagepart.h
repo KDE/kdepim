@@ -69,6 +69,8 @@ public:
                 PartMetaData *block,
                 const QString &text);
 
+    virtual ~MessagePart() {}
+
     virtual QString text() const;
     void setText(const QString &text);
     virtual void html(bool decorate) const;
@@ -92,6 +94,8 @@ public:
                 const QString &fromAddress,
                 KMime::Content *node);
 
+    virtual ~CryptoMessagePart();
+
     void startDecryption(const QByteArray &text, const QTextCodec *aCodec);
     void startDecryption(KMime::Content *data = 0);
     void startVerification(const QByteArray &text, const QTextCodec *aCodec);
@@ -108,9 +112,10 @@ private:
     void writeDeferredDecryptionBlock() const;
 
 protected:
+    ObjectTreeParser *mSubOtp;
     const Kleo::CryptoBackend::Protocol *mCryptoProto;
     QString mFromAddress;
-    KMime::Content *mNode, *mTextNode;
+    KMime::Content *mNode;
     bool mDecryptMessage;
     QByteArray mVerifiedText;
 };

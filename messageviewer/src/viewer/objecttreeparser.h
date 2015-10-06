@@ -511,6 +511,7 @@ private:
 private:
     ObjectTreeSourceIf *mSource;
     NodeHelper *mNodeHelper;
+    HtmlWriter *mHtmlWriter;
     QByteArray mPlainTextContentCharset;
     QByteArray mHtmlContentCharset;
     QString mPlainTextContent;

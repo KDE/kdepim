@@ -154,6 +154,7 @@ set(libmessageviewer_utils_SRCS
 
 set(libmessageviewer_htmlwriter_SRCS
   htmlwriter/filehtmlwriter.cpp
+  htmlwriter/queuehtmlwriter.cpp
   htmlwriter/teehtmlwriter.cpp
   htmlwriter/webkitparthtmlwriter.cpp
 )
