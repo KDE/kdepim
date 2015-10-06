@@ -44,8 +44,7 @@ using namespace PimCommon;
 ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     : QWidget(parent),
       mShorturlServiceName(Q_NULLPTR),
-      mEngine(Q_NULLPTR),
-      mStandalone(false)
+      mEngine(Q_NULLPTR)
 {
     loadEngine();
     QGridLayout *grid = new QGridLayout;
@@ -208,17 +207,10 @@ void ShortUrlWidget::slotCloseWidget()
     mShortUrl->clear();
     mIndicatorLabel->stop();
 
-    if (mStandalone) {
-        hide();
-    }
 
     Q_EMIT toolsWasClosed();
 }
 
-void ShortUrlWidget::setStandalone(bool b)
-{
-    mStandalone = b;
-}
 
 void ShortUrlWidget::slotOpenShortUrl()
 {

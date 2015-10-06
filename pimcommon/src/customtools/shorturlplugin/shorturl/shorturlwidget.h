@@ -72,7 +72,6 @@ private:
     AbstractShortUrl *mEngine;
     KPIM::ProgressIndicatorLabel *mIndicatorLabel;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
-    bool mStandalone;
 };
 }
 
