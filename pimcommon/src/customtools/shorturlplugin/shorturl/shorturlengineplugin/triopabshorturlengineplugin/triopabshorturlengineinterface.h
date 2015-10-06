@@ -27,10 +27,11 @@ namespace PimCommon
 class TripAbShortUrlEngineInterface : public PimCommon::ShortUrlEngineInterface
 {
 public:
-    explicit TripAbShortUrlEngineInterface(QObject *parent = Q_NULLPTR);
+    explicit TripAbShortUrlEngineInterface(PimCommon::ShortUrlEnginePlugin *plugin, QObject *parent = Q_NULLPTR);
     ~TripAbShortUrlEngineInterface();
 
     void generateShortUrl() Q_DECL_OVERRIDE;
+    QString engineName() const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotShortUrlFinished(QNetworkReply *reply);

@@ -16,14 +16,15 @@
 */
 
 #include "tinyurlengineinterface.h"
+#include "pimcommon/shorturlengineplugin.h"
 #include <KLocalizedString>
 
 #include <QNetworkAccessManager>
 
 using namespace PimCommon;
 
-TinyUrlEngineInterface::TinyUrlEngineInterface(QObject *parent)
-    : PimCommon::ShortUrlEngineInterface(parent)
+TinyUrlEngineInterface::TinyUrlEngineInterface(PimCommon::ShortUrlEnginePlugin *plugin, QObject *parent)
+    : PimCommon::ShortUrlEngineInterface(plugin, parent)
 {
     connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &TinyUrlEngineInterface::slotShortUrlFinished);
 }
@@ -31,6 +32,11 @@ TinyUrlEngineInterface::TinyUrlEngineInterface(QObject *parent)
 TinyUrlEngineInterface::~TinyUrlEngineInterface()
 {
 
+}
+
+QString TinyUrlEngineInterface::engineName() const
+{
+    return mEnginePlugin->engineName();
 }
 
 void TinyUrlEngineInterface::generateShortUrl()

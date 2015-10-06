@@ -20,7 +20,7 @@
 #include <KLocalizedString>
 #include <QHBoxLayout>
 #include <kactioncollection.h>
-#include <shorturl/shorturlwidget.h>
+#include <shorturl/shorturlwidgetng.h>
 
 using namespace PimCommon;
 
@@ -32,9 +32,9 @@ ShorturlView::ShorturlView(KActionCollection *ac, QWidget *parent)
     QHBoxLayout *layout = new QHBoxLayout;
     layout->setMargin(0);
     createAction(ac);
-    mShorturl = new PimCommon::ShortUrlWidget(this);
-    connect(mShorturl, &PimCommon::ShortUrlWidget::toolsWasClosed, this, &ShorturlView::toolsWasClosed);
-    connect(mShorturl, &PimCommon::ShortUrlWidget::insertText, this, &ShorturlView::insertText);
+    mShorturl = new PimCommon::ShortUrlWidgetNg(this);
+    connect(mShorturl, &PimCommon::ShortUrlWidgetNg::toolsWasClosed, this, &ShorturlView::toolsWasClosed);
+    connect(mShorturl, &PimCommon::ShortUrlWidgetNg::insertText, this, &ShorturlView::insertText);
 
     layout->addWidget(mShorturl);
     setLayout(layout);

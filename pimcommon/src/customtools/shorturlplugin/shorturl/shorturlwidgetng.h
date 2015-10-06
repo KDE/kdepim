@@ -33,7 +33,6 @@ class ProgressIndicatorLabel;
 namespace PimCommon
 {
 class ShortUrlEngineInterface;
-class AbstractShortUrl;
 class ShortUrlWidgetNg : public QWidget
 {
     Q_OBJECT
@@ -71,10 +70,10 @@ private:
     QPushButton *mCopyToClipboard;
     QPushButton *mInsertShortUrl;
     QPushButton *mOpenShortUrl;
-    AbstractShortUrl *mEngine;
     KPIM::ProgressIndicatorLabel *mIndicatorLabel;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
     QHash<QString, PimCommon::ShortUrlEngineInterface *> mLstInterface;
+    PimCommon::ShortUrlEngineInterface *mCurrentEngine;
 };
 }
 

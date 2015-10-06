@@ -34,11 +34,6 @@ GoogleShortUrlEnginePlugin::~GoogleShortUrlEnginePlugin()
 
 }
 
-QString GoogleShortUrlEnginePlugin::engineName() const
-{
-    return QStringLiteral("googleshorturl");
-}
-
 PimCommon::ShortUrlEngineInterface *GoogleShortUrlEnginePlugin::createInterface(QObject *parent)
 {
     return new PimCommon::GoogleShortUrlEngineInterface(parent);

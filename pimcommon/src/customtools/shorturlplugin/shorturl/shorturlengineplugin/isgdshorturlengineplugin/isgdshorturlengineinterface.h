@@ -27,10 +27,11 @@ namespace PimCommon
 class IsgdShortUrlEngineInterface : public PimCommon::ShortUrlEngineInterface
 {
 public:
-    explicit IsgdShortUrlEngineInterface(QObject *parent = Q_NULLPTR);
+    explicit IsgdShortUrlEngineInterface(PimCommon::ShortUrlEnginePlugin *plugin, QObject *parent = Q_NULLPTR);
     ~IsgdShortUrlEngineInterface();
 
     void generateShortUrl() Q_DECL_OVERRIDE;
+    QString engineName() const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error);

@@ -34,14 +34,19 @@ TriopAbShortUrlEnginePlugin::~TriopAbShortUrlEnginePlugin()
 
 }
 
+PimCommon::ShortUrlEngineInterface *TriopAbShortUrlEnginePlugin::createInterface(QObject *parent)
+{
+    return new PimCommon::TripAbShortUrlEngineInterface(this, parent);
+}
+
 QString TriopAbShortUrlEnginePlugin::engineName() const
 {
     return QStringLiteral("triopabshorturl");
 }
 
-PimCommon::ShortUrlEngineInterface *TriopAbShortUrlEnginePlugin::createInterface(QObject *parent)
+QString TriopAbShortUrlEnginePlugin::pluginName() const
 {
-    return new PimCommon::TripAbShortUrlEngineInterface(parent);
+    return QString(); //TODO
 }
 
 #include "triopabshorturlengineplugin.moc"

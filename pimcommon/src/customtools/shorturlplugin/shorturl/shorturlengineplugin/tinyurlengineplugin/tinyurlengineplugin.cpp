@@ -34,14 +34,19 @@ TinyUrlEnginePlugin::~TinyUrlEnginePlugin()
 
 }
 
+PimCommon::ShortUrlEngineInterface *TinyUrlEnginePlugin::createInterface(QObject *parent)
+{
+    return new PimCommon::TinyUrlEngineInterface(this, parent);
+}
+
 QString TinyUrlEnginePlugin::engineName() const
 {
     return QStringLiteral("tinyurl");
 }
 
-PimCommon::ShortUrlEngineInterface *TinyUrlEnginePlugin::createInterface(QObject *parent)
+QString TinyUrlEnginePlugin::pluginName() const
 {
-    return new PimCommon::TinyUrlEngineInterface(parent);
+    return QString(); //TODO
 }
 
 #include "tinyurlengineplugin.moc"

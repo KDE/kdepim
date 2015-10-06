@@ -22,7 +22,7 @@
 class KActionCollection;
 namespace PimCommon
 {
-class ShortUrlWidget;
+class ShortUrlWidgetNg;
 class ShorturlView : public PimCommon::CustomToolsViewInterface
 {
     Q_OBJECT
@@ -37,7 +37,7 @@ private Q_SLOTS:
 private:
     void createAction(KActionCollection *ac);
     KToggleAction *mAction;
-    PimCommon::ShortUrlWidget *mShorturl;
+    PimCommon::ShortUrlWidgetNg *mShorturl;
 };
 }
 #endif // SHORTURLVIEW_H

@@ -23,7 +23,7 @@
 namespace PimCommon
 {
 class ShortUrlConfigureWidget;
-class ShortUrlWidget;
+class ShortUrlWidgetNg;
 }
 
 class ShortUrlMainWidgetNg : public QWidget
@@ -37,7 +37,7 @@ private Q_SLOTS:
 
 private:
     PimCommon::ShortUrlConfigureWidget *mConfigWidget;
-    PimCommon::ShortUrlWidget *mShortUrlWidget;
+    PimCommon::ShortUrlWidgetNg *mShortUrlWidget;
 };
 
 #endif // SHORTURLMAINWIDGETNg_H

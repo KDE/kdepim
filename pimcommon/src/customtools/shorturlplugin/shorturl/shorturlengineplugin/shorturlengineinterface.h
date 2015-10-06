@@ -24,15 +24,17 @@
 class QNetworkAccessManager;
 namespace PimCommon
 {
+class ShortUrlEnginePlugin;
 class PIMCOMMON_EXPORT ShortUrlEngineInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit ShortUrlEngineInterface(QObject *parent = Q_NULLPTR);
+    explicit ShortUrlEngineInterface(ShortUrlEnginePlugin *plugin, QObject *parent = Q_NULLPTR);
     ~ShortUrlEngineInterface();
 
     void setShortUrl(const QString &url);
     virtual void generateShortUrl() = 0;
+    virtual QString engineName() const = 0;
 
 protected Q_SLOTS:
     void slotErrorFound(QNetworkReply::NetworkError error);
@@ -45,6 +47,7 @@ protected:
     QString mOriginalUrl;
     bool mErrorFound;
     QNetworkAccessManager *mNetworkAccessManager;
+    PimCommon::ShortUrlEnginePlugin *mEnginePlugin;
 };
 }
 #endif // SHORTURLENGINEINTERFACE_H

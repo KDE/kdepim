@@ -16,7 +16,7 @@
 */
 
 #include "shorturlmainwidgetng.h"
-#include "../shorturlwidget.h"
+#include "../shorturlwidgetng.h"
 #include "../shorturlconfigurewidget.h"
 
 #include <QVBoxLayout>
@@ -34,9 +34,9 @@ ShortUrlMainWidgetNg::ShortUrlMainWidgetNg(QWidget *parent)
     connect(saveConfig, &QPushButton::clicked, this, &ShortUrlMainWidgetNg::slotSaveConfig);
     lay->addWidget(saveConfig);
 
-    mShortUrlWidget = new PimCommon::ShortUrlWidget();
+    mShortUrlWidget = new PimCommon::ShortUrlWidgetNg();
     lay->addWidget(mShortUrlWidget);
-    connect(mConfigWidget, &PimCommon::ShortUrlConfigureWidget::settingsChanged, mShortUrlWidget, &PimCommon::ShortUrlWidget::settingsUpdated);
+    connect(mConfigWidget, &PimCommon::ShortUrlConfigureWidget::settingsChanged, mShortUrlWidget, &PimCommon::ShortUrlWidgetNg::settingsUpdated);
 }
 
 void ShortUrlMainWidgetNg::slotSaveConfig()

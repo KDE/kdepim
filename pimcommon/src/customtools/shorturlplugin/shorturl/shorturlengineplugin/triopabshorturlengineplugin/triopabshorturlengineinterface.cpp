@@ -16,6 +16,7 @@
 */
 
 #include "triopabshorturlengineinterface.h"
+#include "pimcommon/shorturlengineplugin.h"
 
 #include <QJsonDocument>
 #include <QNetworkReply>
@@ -23,8 +24,8 @@
 
 using namespace PimCommon;
 
-TripAbShortUrlEngineInterface::TripAbShortUrlEngineInterface(QObject *parent)
-    : PimCommon::ShortUrlEngineInterface(parent)
+TripAbShortUrlEngineInterface::TripAbShortUrlEngineInterface(ShortUrlEnginePlugin *plugin, QObject *parent)
+    : PimCommon::ShortUrlEngineInterface(plugin, parent)
 {
 
 }
@@ -33,6 +34,12 @@ TripAbShortUrlEngineInterface::~TripAbShortUrlEngineInterface()
 {
 
 }
+
+QString TripAbShortUrlEngineInterface::engineName() const
+{
+    return mEnginePlugin->engineName();
+}
+
 
 void TripAbShortUrlEngineInterface::generateShortUrl()
 {

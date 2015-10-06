@@ -31,8 +31,9 @@ public:
     explicit TinyUrlEnginePlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
     ~TinyUrlEnginePlugin();
 
-    QString engineName() const Q_DECL_OVERRIDE;
     PimCommon::ShortUrlEngineInterface *createInterface(QObject *parent) Q_DECL_OVERRIDE;
+    QString engineName() const Q_DECL_OVERRIDE;
+    QString pluginName() const Q_DECL_OVERRIDE;
 };
 }
 

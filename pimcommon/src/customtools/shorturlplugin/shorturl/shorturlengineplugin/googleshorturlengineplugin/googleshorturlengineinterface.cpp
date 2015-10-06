@@ -35,3 +35,8 @@ void GoogleShortUrlEngineInterface::generateShortUrl()
 
 }
 
+QString GoogleShortUrlEngineInterface::engineName() const
+{
+    return QStringLiteral("googleshorturl");
+}
+

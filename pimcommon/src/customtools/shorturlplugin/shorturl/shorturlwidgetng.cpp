@@ -16,8 +16,8 @@
 */
 
 #include "shorturlwidgetng.h"
-#include "shorturlutils.h"
-#include "shorturl/abstractshorturl.h"
+#include "shorturlengineplugin/shorturlengineplugin.h"
+#include "shorturlengineplugin/shorturlengineinterface.h"
 #include "shorturl/shorturlconfiguredialog.h"
 #include "Libkdepim/ProgressIndicatorLabel"
 #include "shorturlengineplugin/shorturlenginepluginmanager.h"
@@ -26,6 +26,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KToggleAction>
+#include <KSharedConfig>
 #include <KRun>
 #include <QIcon>
 #include <QNetworkConfigurationManager>
@@ -47,9 +48,8 @@ using namespace PimCommon;
 ShortUrlWidgetNg::ShortUrlWidgetNg(QWidget *parent)
     : QWidget(parent),
       mShorturlServiceName(Q_NULLPTR),
-      mEngine(Q_NULLPTR)
+      mCurrentEngine(Q_NULLPTR)
 {
-    loadEngine();
     QGridLayout *grid = new QGridLayout;
     grid->setMargin(2);
     setLayout(grid);
@@ -73,7 +73,7 @@ ShortUrlWidgetNg::ShortUrlWidgetNg(QWidget *parent)
     connect(configure, &QPushButton::clicked, this, &ShortUrlWidgetNg::slotConfigure);
     grid->addWidget(configure, 0, 2);
 
-    mShorturlServiceName = new QLabel(mEngine->shortUrlName());
+    mShorturlServiceName = new QLabel(/*mEngine->shortUrlName()*/);
     grid->addWidget(mShorturlServiceName, 1, 1);
 
     mConvertButton = new QPushButton(i18n("Convert"));
@@ -118,7 +118,7 @@ ShortUrlWidgetNg::ShortUrlWidgetNg(QWidget *parent)
 
     mNetworkConfigurationManager = new QNetworkConfigurationManager();
     initializePlugins();
-
+    loadEngine();
 }
 
 ShortUrlWidgetNg::~ShortUrlWidgetNg()
@@ -131,7 +131,7 @@ void ShortUrlWidgetNg::initializePlugins()
     const QVector<PimCommon::ShortUrlEnginePlugin *>  lstPlugin = PimCommon::ShortUrlEnginePluginManager::self()->pluginsList();
     Q_FOREACH (PimCommon::ShortUrlEnginePlugin *plugin, lstPlugin) {
         PimCommon::ShortUrlEngineInterface *interface = plugin->createInterface(this);
-        mLstInterface.insert(plugin->engineName(), interface);
+        mLstInterface.insert(interface->engineName(), interface);
     }
 }
 
@@ -159,17 +159,25 @@ void ShortUrlWidgetNg::settingsUpdated()
 
 void ShortUrlWidgetNg::loadEngine()
 {
-    delete mEngine;
-    mEngine = PimCommon::ShortUrlUtils::loadEngine(this);
-    if (mShorturlServiceName) {
-        mShorturlServiceName->setText(mEngine->shortUrlName());
+    KConfigGroup grp(KSharedConfig::openConfig(), "ShortUrl");
+    const QString engineName = grp.readEntry("EngineName");
+    mCurrentEngine = mLstInterface.value(engineName);
+    if (!mCurrentEngine) {
+        mCurrentEngine = mLstInterface.cbegin().value();
     }
-    connect(mEngine, &AbstractShortUrl::shortUrlDone, this, &ShortUrlWidgetNg::slotShortUrlDone);
-    connect(mEngine, &AbstractShortUrl::shortUrlFailed, this, &ShortUrlWidgetNg::slotShortUrlFailed);
+    mShorturlServiceName->setText(mCurrentEngine->engineName()); //TODO use correct name
+
+    if (mCurrentEngine) {
+        connect(mCurrentEngine, &ShortUrlEngineInterface::shortUrlGenerated, this, &ShortUrlWidgetNg::slotShortUrlDone);
+        connect(mCurrentEngine, &ShortUrlEngineInterface::shortUrlFailed, this, &ShortUrlWidgetNg::slotShortUrlFailed);
+    }
 }
 
 void ShortUrlWidgetNg::slotConvertUrl()
 {
+    if (!mCurrentEngine) {
+        return;
+    }
     if (!mNetworkConfigurationManager->isOnline()) {
         KMessageBox::information(this, i18n("No network connection detected, we cannot shorten url."), i18n("No network"));
         return;
@@ -178,9 +186,9 @@ void ShortUrlWidgetNg::slotConvertUrl()
         return;
     }
     mIndicatorLabel->start();
-    mEngine->shortUrl(mOriginalUrl->text());
+    mCurrentEngine->setShortUrl(mOriginalUrl->text());
     mShortUrl->clear();
-    mEngine->start();
+    mCurrentEngine->generateShortUrl();
 }
 
 void ShortUrlWidgetNg::slotPasteToClipboard()

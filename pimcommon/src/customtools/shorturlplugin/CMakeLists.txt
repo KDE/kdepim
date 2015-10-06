@@ -4,18 +4,9 @@ set(pimcommon_shorturlplugin_SRCS
 )
 
 set(pimcommon_shorturlplugin_shorturllib_SRCS
-   shorturl/abstractshorturl.cpp
-   shorturl/shorturlwidget.cpp
    shorturl/shorturlwidgetng.cpp
-   shorturl/engine/tinyurlshorturl.cpp
-   shorturl/engine/googleshorturl.cpp
    shorturl/shorturlconfigurewidget.cpp
-   shorturl/shorturlutils.cpp
    shorturl/shorturlconfiguredialog.cpp
-   shorturl/engine/migremeshorturl.cpp
-   shorturl/engine/triopabshorturl.cpp
-   shorturl/engine/ur1cashorturl.cpp
-   shorturl/engine/isgdshorturl.cpp
    shorturl/shorturlengineplugin/shorturlenginepluginmanager.cpp
 )
 
@@ -34,6 +25,6 @@ if (BUILD_TESTING)
 endif()
 
 add_subdirectory(shorturl/shorturlengineplugin/tinyurlengineplugin/)
-add_subdirectory(shorturl/shorturlengineplugin/googleshorturlengineplugin)
+#add_subdirectory(shorturl/shorturlengineplugin/googleshorturlengineplugin)
 add_subdirectory(shorturl/shorturlengineplugin/isgdshorturlengineplugin)
 add_subdirectory(shorturl/shorturlengineplugin/triopabshorturlengineplugin/)

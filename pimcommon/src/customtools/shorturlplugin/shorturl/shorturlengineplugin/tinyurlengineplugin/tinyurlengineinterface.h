@@ -26,11 +26,12 @@ namespace PimCommon
 class TinyUrlEngineInterface : public PimCommon::ShortUrlEngineInterface
 {
 public:
-    explicit TinyUrlEngineInterface(QObject *parent = Q_NULLPTR);
+    explicit TinyUrlEngineInterface(PimCommon::ShortUrlEnginePlugin *plugin, QObject *parent = Q_NULLPTR);
     ~TinyUrlEngineInterface();
 
     void generateShortUrl() Q_DECL_OVERRIDE;
 
+    QString engineName() const Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void slotShortUrlFinished(QNetworkReply *reply);
     void slotErrorFound(QNetworkReply::NetworkError error);

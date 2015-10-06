@@ -16,6 +16,7 @@
 */
 
 #include "isgdshorturlengineinterface.h"
+#include "pimcommon/shorturlengineplugin.h"
 
 #include <QJsonDocument>
 #include <QNetworkReply>
@@ -23,8 +24,8 @@
 
 using namespace PimCommon;
 
-IsgdShortUrlEngineInterface::IsgdShortUrlEngineInterface(QObject *parent)
-    : PimCommon::ShortUrlEngineInterface(parent)
+IsgdShortUrlEngineInterface::IsgdShortUrlEngineInterface(PimCommon::ShortUrlEnginePlugin *plugin, QObject *parent)
+    : PimCommon::ShortUrlEngineInterface(plugin, parent)
 {
 
 }
@@ -32,6 +33,11 @@ IsgdShortUrlEngineInterface::IsgdShortUrlEngineInterface(QObject *parent)
 IsgdShortUrlEngineInterface::~IsgdShortUrlEngineInterface()
 {
 
+}
+
+QString IsgdShortUrlEngineInterface::engineName() const
+{
+    return mEnginePlugin->engineName();
 }
 
 void IsgdShortUrlEngineInterface::generateShortUrl()

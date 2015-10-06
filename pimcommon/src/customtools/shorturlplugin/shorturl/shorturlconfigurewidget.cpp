@@ -16,7 +16,7 @@
 */
 
 #include "shorturlconfigurewidget.h"
-#include "shorturlutils.h"
+#include "shorturlengineplugin/shorturlenginepluginmanager.h"
 
 #include <KLocalizedString>
 
@@ -69,14 +69,17 @@ void ShortUrlConfigureWidget::slotChanged()
 
 void ShortUrlConfigureWidget::init()
 {
+#if 0
     //Google doesn't work now.
     for (int i = PimCommon::ShortUrlUtils::Tinyurl; i < PimCommon::ShortUrlUtils::EndListEngine; ++i) {
         d->mShortUrlServer->addItem(PimCommon::ShortUrlUtils::stringFromEngineType(static_cast<PimCommon::ShortUrlUtils::EngineType>(i)), i);
     }
+#endif
 }
 
 void ShortUrlConfigureWidget::loadConfig()
 {
+#if 0
     const int engineType = PimCommon::ShortUrlUtils::readEngineSettings();
     int index = d->mShortUrlServer->findData(engineType);
     if (index < 0) {
@@ -84,12 +87,13 @@ void ShortUrlConfigureWidget::loadConfig()
     }
     d->mShortUrlServer->setCurrentIndex(index);
     d->mChanged = false;
+#endif
 }
 
 void ShortUrlConfigureWidget::writeConfig()
 {
     if (d->mChanged) {
-        PimCommon::ShortUrlUtils::writeEngineSettings(d->mShortUrlServer->itemData(d->mShortUrlServer->currentIndex()).toInt());
+        //PORT PimCommon::ShortUrlUtils::writeEngineSettings(d->mShortUrlServer->itemData(d->mShortUrlServer->currentIndex()).toInt());
         Q_EMIT settingsChanged();
     }
     d->mChanged = false;

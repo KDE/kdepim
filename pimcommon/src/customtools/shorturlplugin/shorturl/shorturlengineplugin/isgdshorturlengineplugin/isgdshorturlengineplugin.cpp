@@ -34,14 +34,19 @@ IsgdShortUrlEnginePlugin::~IsgdShortUrlEnginePlugin()
 
 }
 
+PimCommon::ShortUrlEngineInterface *IsgdShortUrlEnginePlugin::createInterface(QObject *parent)
+{
+    return new PimCommon::IsgdShortUrlEngineInterface(this, parent);
+}
+
 QString IsgdShortUrlEnginePlugin::engineName() const
 {
     return QStringLiteral("isdgshorturl");
 }
 
-PimCommon::ShortUrlEngineInterface *IsgdShortUrlEnginePlugin::createInterface(QObject *parent)
+QString IsgdShortUrlEnginePlugin::pluginName() const
 {
-    return new PimCommon::IsgdShortUrlEngineInterface(parent);
+    return QString(); //TODO
 }
 
 #include "isgdshorturlengineplugin.moc"

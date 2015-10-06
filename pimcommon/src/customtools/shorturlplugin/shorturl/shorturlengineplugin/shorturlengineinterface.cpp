@@ -23,10 +23,11 @@
 
 using namespace PimCommon;
 
-ShortUrlEngineInterface::ShortUrlEngineInterface(QObject *parent)
+ShortUrlEngineInterface::ShortUrlEngineInterface(PimCommon::ShortUrlEnginePlugin *plugin, QObject *parent)
     : QObject(parent),
       mErrorFound(false),
-      mNetworkAccessManager(new QNetworkAccessManager(this))
+      mNetworkAccessManager(new QNetworkAccessManager(this)),
+      mEnginePlugin(plugin)
 {
 
 }

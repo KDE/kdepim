@@ -31,7 +31,6 @@ public:
     explicit GoogleShortUrlEnginePlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
     ~GoogleShortUrlEnginePlugin();
 
-    QString engineName() const Q_DECL_OVERRIDE;
     ShortUrlEngineInterface *createInterface(QObject *parent) Q_DECL_OVERRIDE;
 };
 }
