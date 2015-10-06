@@ -20,6 +20,7 @@
 #include "shorturl/abstractshorturl.h"
 #include "shorturl/shorturlconfiguredialog.h"
 #include "Libkdepim/ProgressIndicatorLabel"
+#include "shorturlengineplugin/shorturlenginepluginmanager.h"
 
 #include <KLineEdit>
 #include <KLocalizedString>
@@ -38,6 +39,8 @@
 #include <QToolButton>
 #include <QPointer>
 #include <KActionCollection>
+
+#include <shorturl/shorturlengineplugin/shorturlengineplugin.h>
 
 using namespace PimCommon;
 
@@ -114,11 +117,22 @@ ShortUrlWidgetNg::ShortUrlWidgetNg(QWidget *parent)
     mOpenShortUrl->setEnabled(false);
 
     mNetworkConfigurationManager = new QNetworkConfigurationManager();
+    initializePlugins();
+
 }
 
 ShortUrlWidgetNg::~ShortUrlWidgetNg()
 {
     delete mNetworkConfigurationManager;
+}
+
+void ShortUrlWidgetNg::initializePlugins()
+{
+    const QVector<PimCommon::ShortUrlEnginePlugin *>  lstPlugin = PimCommon::ShortUrlEnginePluginManager::self()->pluginsList();
+    Q_FOREACH (PimCommon::ShortUrlEnginePlugin *plugin, lstPlugin) {
+        PimCommon::ShortUrlEngineInterface *interface = plugin->createInterface(this);
+        mLstInterface.insert(plugin->engineName(), interface);
+    }
 }
 
 void ShortUrlWidgetNg::slotInsertShortUrl()

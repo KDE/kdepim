@@ -32,6 +32,7 @@ class ProgressIndicatorLabel;
 
 namespace PimCommon
 {
+class ShortUrlEngineInterface;
 class AbstractShortUrl;
 class ShortUrlWidgetNg : public QWidget
 {
@@ -61,6 +62,7 @@ Q_SIGNALS:
     void insertText(const QString &Url);
 
 private:
+    void initializePlugins();
     void loadEngine();
     QLabel *mShorturlServiceName;
     KLineEdit *mOriginalUrl;
@@ -72,6 +74,7 @@ private:
     AbstractShortUrl *mEngine;
     KPIM::ProgressIndicatorLabel *mIndicatorLabel;
     QNetworkConfigurationManager *mNetworkConfigurationManager;
+    QHash<QString, PimCommon::ShortUrlEngineInterface *> mLstInterface;
 };
 }
 

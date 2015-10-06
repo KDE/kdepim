@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013-2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,27 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SHORTURLENGINEPLUGINMANAGER_H
-#define SHORTURLENGINEPLUGINMANAGER_H
+#ifndef SHORTURLMAINWIDGETNg_H
+#define SHORTURLMAINWIDGETNg_H
 
-#include <QObject>
+#include <QWidget>
+
 namespace PimCommon
 {
-class ShortUrlEnginePlugin;
-class ShortUrlEnginePluginManagerPrivate;
-class ShortUrlEnginePluginManager : public QObject
+class ShortUrlConfigureWidget;
+class ShortUrlWidget;
+}
+
+class ShortUrlMainWidgetNg : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ShortUrlEnginePluginManager(QObject *parent = Q_NULLPTR);
-    ~ShortUrlEnginePluginManager();
+    explicit ShortUrlMainWidgetNg(QWidget *parent = Q_NULLPTR);
 
-    QVector<PimCommon::ShortUrlEnginePlugin *> pluginsList() const;
+private Q_SLOTS:
+    void slotSaveConfig();
 
-    static ShortUrlEnginePluginManager *self();
 private:
-    ShortUrlEnginePluginManagerPrivate *const d;
+    PimCommon::ShortUrlConfigureWidget *mConfigWidget;
+    PimCommon::ShortUrlWidget *mShortUrlWidget;
 };
-}
 
-#endif // SHORTURLENGINEPLUGINMANAGER_H
+#endif // SHORTURLMAINWIDGETNg_H
