@@ -1,5 +1,6 @@
 set(pimcommon_googleshorturlengineplugin_SRCS
     googleshorturlengineplugin.cpp
+    googleshorturlengineinterface.cpp
 )
 
 add_library(pimcommon_googleshorturlengineplugin MODULE ${pimcommon_googleshorturlengineplugin_SRCS})

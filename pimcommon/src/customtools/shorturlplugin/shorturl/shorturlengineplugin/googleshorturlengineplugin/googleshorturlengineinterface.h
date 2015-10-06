@@ -15,27 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "tinyurlengineplugin.h"
-#include <kpluginfactory.h>
+#ifndef GOOGLESHORTURLENGINEINTERFACE_H
+#define GOOGLESHORTURLENGINEINTERFACE_H
 
-using namespace PimCommon;
+#include <pimcommon/shorturlengineinterface.h>
 
-K_PLUGIN_FACTORY_WITH_JSON(TinyUrlEnginePluginFactory, "pimcommon_tinyurlengineplugin.json", registerPlugin<TinyUrlEnginePlugin>();)
-
-TinyUrlEnginePlugin::TinyUrlEnginePlugin(QObject *parent, const QList<QVariant> &)
-    : PimCommon::ShortUrlEnginePlugin(parent)
+namespace PimCommon
 {
+class GoogleShortUrlEngineInterface : public PimCommon::ShortUrlEngineInterface
+{
+public:
+    explicit GoogleShortUrlEngineInterface(QObject *parent = Q_NULLPTR);
+    ~GoogleShortUrlEngineInterface();
 
+    void setShortUrl(const QString &url) Q_DECL_OVERRIDE;
+    void generateShortUrl() Q_DECL_OVERRIDE;
+};
 }
 
-TinyUrlEnginePlugin::~TinyUrlEnginePlugin()
-{
-
-}
-
-QString TinyUrlEnginePlugin::engineName() const
-{
-    return QStringLiteral("tinyurl");
-}
-
-#include "tinyurlengineplugin.moc"
+#endif

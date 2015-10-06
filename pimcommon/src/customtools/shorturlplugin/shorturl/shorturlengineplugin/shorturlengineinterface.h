@@ -20,14 +20,22 @@
 #define SHORTURLENGINEINTERFACE_H
 
 #include <QObject>
+#include "pimcommon_export.h"
 namespace PimCommon
 {
-class ShortUrlEngineInterface : public QObject
+class PIMCOMMON_EXPORT ShortUrlEngineInterface : public QObject
 {
     Q_OBJECT
 public:
     explicit ShortUrlEngineInterface(QObject *parent = Q_NULLPTR);
     ~ShortUrlEngineInterface();
+
+    virtual void setShortUrl(const QString &url) = 0;
+    virtual void generateShortUrl() = 0;
+
+Q_SIGNALS:
+    void shortUrlGenerated(const QString &url);
+    void shortUrlFailed(const QString &error);
 };
 }
 #endif // SHORTURLENGINEINTERFACE_H

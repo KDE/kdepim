@@ -31,12 +31,6 @@ public:
     explicit ShortUrlEnginePlugin(QObject *parent = Q_NULLPTR);
     ~ShortUrlEnginePlugin();
     virtual QString engineName() const = 0;
-    virtual void setShortUrl(const QString &url) = 0;
-    virtual void generateShortUrl() = 0;
-
-Q_SIGNALS:
-    void shortUrlGenerated(const QString &url);
-    void shortUrlFailed(const QString &error);
 
 private:
     ShortUrlEnginePluginPrivate *const d;

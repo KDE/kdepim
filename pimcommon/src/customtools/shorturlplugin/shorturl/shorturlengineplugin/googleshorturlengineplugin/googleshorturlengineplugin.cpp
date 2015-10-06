@@ -38,14 +38,4 @@ QString GoogleShortUrlEnginePlugin::engineName() const
     return QStringLiteral("googleshorturl");
 }
 
-void GoogleShortUrlEnginePlugin::setShortUrl(const QString &url)
-{
-    //TODO
-}
-
-void GoogleShortUrlEnginePlugin::generateShortUrl()
-{
-    //TODO
-}
-
 #include "googleshorturlengineplugin.moc"

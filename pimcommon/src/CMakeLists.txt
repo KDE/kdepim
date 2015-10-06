@@ -387,6 +387,7 @@ ecm_generate_headers(PimCommon_CamelCase_HEADERS
 ecm_generate_headers(PimCommon_shorturl_HEADERS
   HEADER_NAMES
   ShortUrlEnginePlugin
+  ShortUrlEngineInterface
   REQUIRED_HEADERS PimCommon_shorturl_HEADERS
   PREFIX PimCommon
   RELATIVE customtools/shorturlplugin/shorturl/shorturlengineplugin/

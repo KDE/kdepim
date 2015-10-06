@@ -1,5 +1,6 @@
 set(pimcommon_tinyplugin_SRCS
     tinyurlengineplugin.cpp
+    tinyurlengineinterface.cpp
 )
 
 add_library(pimcommon_tinyurlengineplugin MODULE ${pimcommon_tinyplugin_SRCS})
