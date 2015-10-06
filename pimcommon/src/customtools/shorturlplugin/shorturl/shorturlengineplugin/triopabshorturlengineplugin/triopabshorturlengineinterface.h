@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ISGDSHORTURLENGINEINTERFACE_H
-#define ISGDSHORTURLENGINEINTERFACE_H
+#ifndef TRIOPABSHORTURLENGINEINTERFACE_H
+#define TRIOPABSHORTURLENGINEINTERFACE_H
 
 #include <pimcommon/shorturlengineinterface.h>
 
@@ -24,16 +24,15 @@
 class QNetworkReply;
 namespace PimCommon
 {
-class IsgdShortUrlEngineInterface : public PimCommon::ShortUrlEngineInterface
+class TripAbShortUrlEngineInterface : public PimCommon::ShortUrlEngineInterface
 {
 public:
-    explicit IsgdShortUrlEngineInterface(QObject *parent = Q_NULLPTR);
-    ~IsgdShortUrlEngineInterface();
+    explicit TripAbShortUrlEngineInterface(QObject *parent = Q_NULLPTR);
+    ~TripAbShortUrlEngineInterface();
 
     void generateShortUrl() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-    void slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error);
     void slotShortUrlFinished(QNetworkReply *reply);
 };
 }

@@ -28,7 +28,6 @@ public:
     explicit GoogleShortUrlEngineInterface(QObject *parent = Q_NULLPTR);
     ~GoogleShortUrlEngineInterface();
 
-    void setShortUrl(const QString &url) Q_DECL_OVERRIDE;
     void generateShortUrl() Q_DECL_OVERRIDE;
 };
 }

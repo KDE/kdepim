@@ -43,3 +43,15 @@ void ShortUrlEngineInterface::slotErrorFound(QNetworkReply::NetworkError error)
     Q_EMIT shortUrlFailed(i18n("Error reported by server:\n\'%1\'", (reply ? reply->errorString() : QString::number(error))));
 }
 
+void ShortUrlEngineInterface::setShortUrl(const QString &url)
+{
+    mErrorFound = false;
+    if (!url.trimmed().startsWith(QStringLiteral("http://")) &&
+            !url.trimmed().startsWith(QStringLiteral("https://")) &&
+            !url.trimmed().startsWith(QStringLiteral("ftp://")) &&
+            !url.trimmed().startsWith(QStringLiteral("ftps://"))) {
+        mOriginalUrl = QLatin1String("http://") + url;
+    } else {
+        mOriginalUrl = url;
+    }
+}

@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=PimCommonShortUrlEngine/Plugin
+X-KDE-Library=pimcommon_triopabshorturlengineplugin

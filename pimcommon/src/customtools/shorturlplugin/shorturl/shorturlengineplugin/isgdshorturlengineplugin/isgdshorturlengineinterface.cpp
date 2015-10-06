@@ -34,11 +34,6 @@ IsgdShortUrlEngineInterface::~IsgdShortUrlEngineInterface()
 
 }
 
-void IsgdShortUrlEngineInterface::setShortUrl(const QString &url)
-{
-
-}
-
 void IsgdShortUrlEngineInterface::generateShortUrl()
 {
     const QString requestUrl = QStringLiteral("http://is.gd/create.php?%1&url=%2").arg(QStringLiteral("format=json")).arg(mOriginalUrl);

@@ -15,27 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ISGDSHORTURLENGINEINTERFACE_H
-#define ISGDSHORTURLENGINEINTERFACE_H
+#ifndef ISGDSHORTURLENGINEPLUGIN_H
+#define ISGDSHORTURLENGINEPLUGIN_H
 
-#include <pimcommon/shorturlengineinterface.h>
+#include "../shorturlengineplugin.h"
 
-#include <QSslError>
-class QNetworkReply;
+#include <QVariant>
+
 namespace PimCommon
 {
-class IsgdShortUrlEngineInterface : public PimCommon::ShortUrlEngineInterface
+class TriopAbShortUrlEnginePlugin : public PimCommon::ShortUrlEnginePlugin
 {
+    Q_OBJECT
 public:
-    explicit IsgdShortUrlEngineInterface(QObject *parent = Q_NULLPTR);
-    ~IsgdShortUrlEngineInterface();
+    explicit TriopAbShortUrlEnginePlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
+    ~TriopAbShortUrlEnginePlugin();
 
-    void generateShortUrl() Q_DECL_OVERRIDE;
-
-private Q_SLOTS:
-    void slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error);
-    void slotShortUrlFinished(QNetworkReply *reply);
+    QString engineName() const Q_DECL_OVERRIDE;
+    ShortUrlEngineInterface *createInterface(QObject *parent) Q_DECL_OVERRIDE;
 };
 }
 
-#endif
+#endif // ISGDSHORTURLENGINEPLUGIN_H

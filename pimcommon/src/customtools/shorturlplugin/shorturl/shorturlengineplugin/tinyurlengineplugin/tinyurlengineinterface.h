@@ -29,7 +29,6 @@ public:
     explicit TinyUrlEngineInterface(QObject *parent = Q_NULLPTR);
     ~TinyUrlEngineInterface();
 
-    void setShortUrl(const QString &url) Q_DECL_OVERRIDE;
     void generateShortUrl() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:

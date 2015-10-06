@@ -31,7 +31,7 @@ public:
     explicit ShortUrlEngineInterface(QObject *parent = Q_NULLPTR);
     ~ShortUrlEngineInterface();
 
-    virtual void setShortUrl(const QString &url) = 0;
+    void setShortUrl(const QString &url);
     virtual void generateShortUrl() = 0;
 
 protected Q_SLOTS:

@@ -15,32 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "tinyurlengineinterface.h"
-#include <KLocalizedString>
+#include "triopabshorturlengineinterface.h"
 
-#include <QNetworkAccessManager>
+#include <QJsonDocument>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 
 using namespace PimCommon;
 
-TinyUrlEngineInterface::TinyUrlEngineInterface(QObject *parent)
+TripAbShortUrlEngineInterface::TripAbShortUrlEngineInterface(QObject *parent)
     : PimCommon::ShortUrlEngineInterface(parent)
 {
-    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &TinyUrlEngineInterface::slotShortUrlFinished);
+
 }
 
-TinyUrlEngineInterface::~TinyUrlEngineInterface()
+TripAbShortUrlEngineInterface::~TripAbShortUrlEngineInterface()
 {
 
 }
 
-void TinyUrlEngineInterface::generateShortUrl()
+void TripAbShortUrlEngineInterface::generateShortUrl()
 {
-    const QString requestUrl = QStringLiteral("http://tinyurl.com/api-create.php?url=%1").arg(mOriginalUrl);
+    const QString requestUrl = QStringLiteral("http://to.ly/api.php?longurl=%1").arg(mOriginalUrl);
     QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(QUrl(requestUrl)));
-    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &TinyUrlEngineInterface::slotErrorFound);
+    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &TripAbShortUrlEngineInterface::slotErrorFound);
 }
 
-void TinyUrlEngineInterface::slotShortUrlFinished(QNetworkReply *reply)
+void TripAbShortUrlEngineInterface::slotShortUrlFinished(QNetworkReply *reply)
 {
     if (!mErrorFound) {
         const QString data = QString::fromUtf8(reply->readAll());
@@ -49,11 +50,4 @@ void TinyUrlEngineInterface::slotShortUrlFinished(QNetworkReply *reply)
         }
     }
     reply->deleteLater();
-}
-
-void TinyUrlEngineInterface::slotErrorFound(QNetworkReply::NetworkError error)
-{
-    mErrorFound = true;
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    Q_EMIT shortUrlFailed(i18n("Error reported by server:\n\'%1\'", (reply ? reply->errorString() : QString::number(error))));
 }

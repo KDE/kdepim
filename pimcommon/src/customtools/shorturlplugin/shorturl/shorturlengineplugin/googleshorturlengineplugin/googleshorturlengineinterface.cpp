@@ -30,11 +30,6 @@ GoogleShortUrlEngineInterface::~GoogleShortUrlEngineInterface()
 
 }
 
-void GoogleShortUrlEngineInterface::setShortUrl(const QString &url)
-{
-
-}
-
 void GoogleShortUrlEngineInterface::generateShortUrl()
 {
 
