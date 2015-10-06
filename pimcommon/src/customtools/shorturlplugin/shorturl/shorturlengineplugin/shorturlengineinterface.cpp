@@ -18,10 +18,14 @@
 
 #include "shorturlengineinterface.h"
 
+#include <QNetworkAccessManager>
+
 using namespace PimCommon;
 
 ShortUrlEngineInterface::ShortUrlEngineInterface(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mErrorFound(false),
+      mNetworkAccessManager(new QNetworkAccessManager(this))
 {
 
 }

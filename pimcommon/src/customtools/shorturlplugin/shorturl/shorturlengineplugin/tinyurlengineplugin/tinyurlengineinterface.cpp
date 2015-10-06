@@ -23,9 +23,7 @@
 using namespace PimCommon;
 
 TinyUrlEngineInterface::TinyUrlEngineInterface(QObject *parent)
-    : PimCommon::ShortUrlEngineInterface(parent),
-      mErrorFound(false),
-      mNetworkAccessManager(new QNetworkAccessManager(this))
+    : PimCommon::ShortUrlEngineInterface(parent)
 {
     connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &TinyUrlEngineInterface::slotShortUrlFinished);
 }

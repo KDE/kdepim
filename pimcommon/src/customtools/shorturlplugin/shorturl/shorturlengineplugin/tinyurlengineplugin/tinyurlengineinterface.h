@@ -35,10 +35,6 @@ public:
 private Q_SLOTS:
     void slotShortUrlFinished(QNetworkReply *reply);
     void slotErrorFound(QNetworkReply::NetworkError error);
-private:
-    QString mOriginalUrl;
-    bool mErrorFound;
-    QNetworkAccessManager *mNetworkAccessManager;
 };
 }
 

@@ -21,6 +21,7 @@
 
 #include <QObject>
 #include "pimcommon_export.h"
+class QNetworkAccessManager;
 namespace PimCommon
 {
 class PIMCOMMON_EXPORT ShortUrlEngineInterface : public QObject
@@ -36,6 +37,11 @@ public:
 Q_SIGNALS:
     void shortUrlGenerated(const QString &url);
     void shortUrlFailed(const QString &error);
+
+protected:
+    QString mOriginalUrl;
+    bool mErrorFound;
+    QNetworkAccessManager *mNetworkAccessManager;
 };
 }
 #endif // SHORTURLENGINEINTERFACE_H
