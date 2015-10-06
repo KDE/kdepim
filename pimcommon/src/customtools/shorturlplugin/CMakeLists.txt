@@ -6,6 +6,7 @@ set(pimcommon_shorturlplugin_SRCS
 set(pimcommon_shorturlplugin_shorturllib_SRCS
    shorturl/abstractshorturl.cpp
    shorturl/shorturlwidget.cpp
+   shorturl/shorturlwidgetng.cpp
    shorturl/engine/tinyurlshorturl.cpp
    shorturl/engine/googleshorturl.cpp
    shorturl/shorturlconfigurewidget.cpp
