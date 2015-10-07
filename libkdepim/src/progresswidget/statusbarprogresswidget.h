@@ -71,6 +71,7 @@ public Q_SLOTS:
     void slotProgressItemAdded(KPIM::ProgressItem *i);
     void slotProgressItemCompleted(KPIM::ProgressItem *i);
     void slotProgressItemProgress(KPIM::ProgressItem *i, unsigned int value);
+    void slotProgressButtonClicked();
 
 protected Q_SLOTS:
     void slotProgressDialogVisible(bool);
@@ -96,6 +97,7 @@ private:
 
     uint mode;
     bool m_bShowButton;
+    bool m_bShowDetailedProgress;
 
     QStackedWidget *stack;
     ProgressItem *mCurrentItem;

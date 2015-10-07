@@ -61,6 +61,7 @@ using namespace KPIM;
 StatusbarProgressWidget::StatusbarProgressWidget(ProgressDialog *progressDialog, QWidget *parent, bool button)
     : QFrame(parent),
       mShowTypeProgressItem(0),
+      m_bShowDetailedProgress(false),
       mCurrentItem(Q_NULLPTR),
       mProgressDialog(progressDialog),
       mDelayTimer(Q_NULLPTR),
@@ -105,7 +106,7 @@ StatusbarProgressWidget::StatusbarProgressWidget(ProgressDialog *progressDialog,
     setMode();
 
     connect(m_pButton, &QAbstractButton::clicked,
-            progressDialog, &ProgressDialog::slotToggleVisibility);
+            this, &StatusbarProgressWidget::slotProgressButtonClicked);
 
     connect(ProgressManager::instance(), &ProgressManager::progressItemAdded,
             this, &StatusbarProgressWidget::slotProgressItemAdded);
@@ -283,23 +284,32 @@ bool StatusbarProgressWidget::eventFilter(QObject *, QEvent *ev)
         if (e->button() == Qt::LeftButton && mode != None) {      // toggle view on left mouse button
             // Consensus seems to be that we should show/hide the fancy dialog when the user
             // clicks anywhere in the small one.
-            mProgressDialog->slotToggleVisibility();
+            slotProgressButtonClicked();
             return true;
         }
     }
     return false;
 }
 
+void StatusbarProgressWidget::slotProgressButtonClicked()
+{
+    if (m_bShowDetailedProgress) {
+        m_bShowDetailedProgress = false;
+        m_pButton->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
+        m_pButton->setToolTip(i18n("Show detailed progress window"));
+    } else {
+        m_bShowDetailedProgress = true;
+        m_pButton->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
+        m_pButton->setToolTip(i18n("Hide detailed progress window"));
+    }
+    mProgressDialog->slotToggleVisibility();
+}
+
 void StatusbarProgressWidget::slotProgressDialogVisible(bool b)
 {
     // Update the hide/show button when the detailed one is shown/hidden
     if (b) {
-        m_pButton->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
-        m_pButton->setToolTip(i18n("Hide detailed progress window"));
         setMode();
-    } else {
-        m_pButton->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
-        m_pButton->setToolTip(i18n("Show detailed progress window"));
     }
 }
 
