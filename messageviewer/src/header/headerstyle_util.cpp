@@ -101,7 +101,7 @@ QString subjectDirectionString(KMime::Message *message)
 QString spamStatus(KMime::Message *message)
 {
     QString spamHTML;
-    if (GlobalSettings::self()->showSpamStatus()) {
+    if (MessageViewer::GlobalSettings::self()->showSpamStatus()) {
         const SpamScores scores = SpamHeaderAnalyzer::getSpamScores(message);
 
         for (SpamScores::const_iterator it = scores.constBegin(), end = scores.constEnd() ; it != end ; ++it)

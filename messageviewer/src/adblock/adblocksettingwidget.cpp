@@ -179,10 +179,10 @@ void AdBlockSettingWidget::removeRule()
 void AdBlockSettingWidget::doResetToDefaultsOther()
 {
     const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults(true);
-    loadWidget(checkEnableAdblock, GlobalSettings::self()->adBlockEnabledItem());
-    tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
-    saveCheckBox(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
-    loadWidget(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
+    loadWidget(checkEnableAdblock, MessageViewer::GlobalSettings::self()->adBlockEnabledItem());
+    tabWidget->setEnabled(MessageViewer::GlobalSettings::self()->adBlockEnabled());
+    saveCheckBox(checkHideAds, MessageViewer::GlobalSettings::self()->hideAdsEnabledItem());
+    loadWidget(spinBox, MessageViewer::GlobalSettings::self()->adBlockUpdateIntervalItem());
     MessageViewer::GlobalSettings::self()->useDefaults(bUseDefaults);
 }
 
@@ -190,12 +190,12 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
 {
     manualFiltersListWidget->clear();
     automaticFiltersListWidget->clear();
-    loadWidget(checkEnableAdblock, GlobalSettings::self()->adBlockEnabledItem());
+    loadWidget(checkEnableAdblock, MessageViewer::GlobalSettings::self()->adBlockEnabledItem());
 
     // update enabled status
-    tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
-    loadWidget(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
-    loadWidget(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
+    tabWidget->setEnabled(MessageViewer::GlobalSettings::self()->adBlockEnabled());
+    loadWidget(checkHideAds, MessageViewer::GlobalSettings::self()->hideAdsEnabledItem());
+    loadWidget(spinBox, MessageViewer::GlobalSettings::self()->adBlockUpdateIntervalItem());
 
     // ------------------------------------------------------------------------------
 
@@ -254,9 +254,9 @@ void AdBlockSettingWidget::save()
     }
 
     // General settings
-    saveCheckBox(checkEnableAdblock, GlobalSettings::self()->adBlockEnabledItem());
-    saveCheckBox(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
-    saveSpinBox(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
+    saveCheckBox(checkEnableAdblock, MessageViewer::GlobalSettings::self()->adBlockEnabledItem());
+    saveCheckBox(checkHideAds, MessageViewer::GlobalSettings::self()->hideAdsEnabledItem());
+    saveSpinBox(spinBox, MessageViewer::GlobalSettings::self()->adBlockUpdateIntervalItem());
 
     // automatic filters
     KConfig config(QStringLiteral("messagevieweradblockrc"));

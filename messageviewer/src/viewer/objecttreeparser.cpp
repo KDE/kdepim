@@ -1067,7 +1067,7 @@ bool ObjectTreeParser::processTextHtmlSubtype(KMime::Content *curNode, ProcessRe
         if (mSource->htmlMail()) {
             QString bodyText = bodyHTML;
             HTMLQuoteColorer colorer;
-            colorer.setEnableHtmlQuoteColorer(GlobalSettings::self()->htmlQuoteColorerEnabled());
+            colorer.setEnableHtmlQuoteColorer(MessageViewer::GlobalSettings::self()->htmlQuoteColorerEnabled());
             QString extraHead;
             for (int i = 0; i < 3; ++i) {
                 colorer.setQuoteColor(i, cssHelper()->quoteColor(i));
@@ -3122,7 +3122,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
     assert(cssHelper());
 
     KTextToHTML::Options convertFlags = KTextToHTML::PreserveSpaces | KTextToHTML::HighlightText;
-    if (decorate && GlobalSettings::self()->showEmoticons()) {
+    if (decorate && MessageViewer::GlobalSettings::self()->showEmoticons()) {
         convertFlags |= KTextToHTML::ReplaceSmileys;
     }
     QString htmlStr;
@@ -3152,7 +3152,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
     int currQuoteLevel = -2; // -2 == no previous lines
     bool curHidden = false; // no hide any block
 
-    if (GlobalSettings::self()->showExpandQuotesMark()) {
+    if (MessageViewer::GlobalSettings::self()->showExpandQuotesMark()) {
         // Cache Icons
         if (mCollapseIcon.isEmpty()) {
             mCollapseIcon = iconToDataUrl(IconNameCache::instance()->iconPath(QStringLiteral("quotecollapse"), 0));
@@ -3194,7 +3194,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
         bool actHidden = false;
 
         // This quoted line needs be hidden
-        if (GlobalSettings::self()->showExpandQuotesMark() && mSource->levelQuote() >= 0
+        if (MessageViewer::GlobalSettings::self()->showExpandQuotesMark() && mSource->levelQuote() >= 0
                 && mSource->levelQuote() <= (actQuoteLevel)) {
             actHidden = true;
         }
@@ -3211,7 +3211,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
             if (actQuoteLevel == -1) {
                 htmlStr += normalStartTag;
             } else {
-                if (GlobalSettings::self()->showExpandQuotesMark()) {
+                if (MessageViewer::GlobalSettings::self()->showExpandQuotesMark()) {
                     if (actHidden) {
                         //only show the QuoteMark when is the first line of the level hidden
                         if (!curHidden) {

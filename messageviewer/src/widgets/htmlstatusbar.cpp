@@ -165,7 +165,7 @@ QString HtmlStatusBar::toolTip() const
 
 QColor HtmlStatusBar::fgColor() const
 {
-    KConfigGroup conf(GlobalSettings::self()->config(), "Reader");
+    KConfigGroup conf(MessageViewer::GlobalSettings::self()->config(), "Reader");
     QColor defaultColor, color;
     switch (mode()) {
     case Util::Html:
@@ -191,7 +191,7 @@ QColor HtmlStatusBar::fgColor() const
 
 QColor HtmlStatusBar::bgColor() const
 {
-    KConfigGroup conf(GlobalSettings::self()->config(), "Reader");
+    KConfigGroup conf(MessageViewer::GlobalSettings::self()->config(), "Reader");
 
     QColor defaultColor, color;
     switch (mode()) {

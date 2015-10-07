@@ -66,11 +66,11 @@ ConfigureWidget::ConfigureWidget(QWidget *parent)
     d->mSettingsUi->overrideCharacterEncoding->setWhatsThis(
         MessageCore::GlobalSettings::self()->overrideCharacterEncodingItem()->whatsThis());
     d->mSettingsUi->kcfg_ShowEmoticons->setWhatsThis(
-        GlobalSettings::self()->showEmoticonsItem()->whatsThis());
+        MessageViewer::GlobalSettings::self()->showEmoticonsItem()->whatsThis());
     d->mSettingsUi->kcfg_ShrinkQuotes->setWhatsThis(
-        GlobalSettings::self()->shrinkQuotesItem()->whatsThis());
+        MessageViewer::GlobalSettings::self()->shrinkQuotesItem()->whatsThis());
     d->mSettingsUi->kcfg_ShowExpandQuotesMark->setWhatsThis(
-        GlobalSettings::self()->showExpandQuotesMarkItem()->whatsThis());
+        MessageViewer::GlobalSettings::self()->showExpandQuotesMarkItem()->whatsThis());
 
     connect(d->mSettingsUi->overrideCharacterEncoding, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ConfigureWidget::settingsChanged);
 
@@ -86,7 +86,7 @@ void ConfigureWidget::readConfig()
 {
     readCurrentOverrideCodec();
     d->mSettingsUi->kcfg_CollapseQuoteLevelSpin->setEnabled(
-        GlobalSettings::self()->showExpandQuotesMark());
+        MessageViewer::GlobalSettings::self()->showExpandQuotesMark());
 }
 
 void ConfigureWidget::writeConfig()

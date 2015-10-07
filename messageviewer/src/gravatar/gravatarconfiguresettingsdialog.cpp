@@ -108,7 +108,7 @@ void GravatarConfigureSettingsDialog::slotRestoreDefault()
 {
     const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults(true);
     load();
-    GlobalSettings::self()->useDefaults(bUseDefaults);
+    MessageViewer::GlobalSettings::self()->useDefaults(bUseDefaults);
 }
 
 void GravatarConfigureSettingsDialog::save()

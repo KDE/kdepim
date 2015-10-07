@@ -234,7 +234,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     initHtmlWidget();
     readConfig();
 
-    mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
+    mLevelQuote = MessageViewer::GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
 
     mResizeTimer.setSingleShot(true);
     connect(&mResizeTimer, &QTimer::timeout,
@@ -265,7 +265,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
 
 ViewerPrivate::~ViewerPrivate()
 {
-    GlobalSettings::self()->save();
+    MessageViewer::GlobalSettings::self()->save();
     delete mHtmlWriter; mHtmlWriter = 0;
     delete mViewer; mViewer = 0;
     delete mCSSHelper;
@@ -608,7 +608,7 @@ void ViewerPrivate::showAttachmentPopup(KMime::Content *node, const QString &nam
                            (mMessageItem.parentCollection().rights() != Akonadi::Collection::ReadOnly) &&
                            !isEncapsulatedMessage;
 
-    if (GlobalSettings::self()->allowAttachmentEditing()) {
+    if (MessageViewer::GlobalSettings::self()->allowAttachmentEditing()) {
         action = menu->addAction(QIcon::fromTheme(QStringLiteral("document-properties")), i18n("Edit Attachment"));
         connect(action, SIGNAL(triggered()), attachmentMapper, SLOT(map()));
         attachmentMapper->setMapping(action, Viewer::Edit);
@@ -892,7 +892,7 @@ void ViewerPrivate::collectionFetchedForStoringDecryptedMessage(KJob *job)
 
 void ViewerPrivate::postProcessMessage(ObjectTreeParser *otp, KMMsgEncryptionState encryptionState)
 {
-    if (GlobalSettings::self()->storeDisplayedMessagesUnencrypted()) {
+    if (MessageViewer::GlobalSettings::self()->storeDisplayedMessagesUnencrypted()) {
 
         // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
         // of german government:
@@ -1109,23 +1109,23 @@ void ViewerPrivate::readConfig()
     delete mCSSHelper;
     mCSSHelper = new CSSHelper(mViewer);
 
-    mUseFixedFont = GlobalSettings::self()->useFixedFont();
+    mUseFixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
     if (mToggleFixFontAction) {
         mToggleFixFontAction->setChecked(mUseFixedFont);
     }
 
-    mHtmlMailGlobalSetting = GlobalSettings::self()->htmlMail();
-    mHtmlLoadExternalGlobalSetting = GlobalSettings::self()->htmlLoadExternal();
+    mHtmlMailGlobalSetting = MessageViewer::GlobalSettings::self()->htmlMail();
+    mHtmlLoadExternalGlobalSetting = MessageViewer::GlobalSettings::self()->htmlLoadExternal();
 
     if (mZoomActionMenu) {
-        mZoomActionMenu->setZoomTextOnly(GlobalSettings::self()->zoomTextOnly());
+        mZoomActionMenu->setZoomTextOnly(MessageViewer::GlobalSettings::self()->zoomTextOnly());
     }
     readGravatarConfig();
     if (mHeaderStyleMenuManager) {
         mHeaderStyleMenuManager->readConfig();
     }
 
-    setAttachmentStrategy(AttachmentStrategy::create(GlobalSettings::self()->attachmentStrategy()));
+    setAttachmentStrategy(AttachmentStrategy::create(MessageViewer::GlobalSettings::self()->attachmentStrategy()));
     KToggleAction *raction = actionForAttachmentStrategy(attachmentStrategy());
     if (raction) {
         raction->setChecked(true);
@@ -1135,9 +1135,9 @@ void ViewerPrivate::readConfig()
 
     readGlobalOverrideCodec();
 
-    mViewer->settings()->setFontSize(QWebSettings::MinimumFontSize, GlobalSettings::self()->minimumFontSize());
-    mViewer->settings()->setFontSize(QWebSettings::MinimumLogicalFontSize, GlobalSettings::self()->minimumFontSize());
-    mViewer->settings()->setAttribute(QWebSettings::PrintElementBackgrounds, GlobalSettings::self()->printBackgroundColorImages());
+    mViewer->settings()->setFontSize(QWebSettings::MinimumFontSize, MessageViewer::GlobalSettings::self()->minimumFontSize());
+    mViewer->settings()->setFontSize(QWebSettings::MinimumLogicalFontSize, MessageViewer::GlobalSettings::self()->minimumFontSize());
+    mViewer->settings()->setAttribute(QWebSettings::PrintElementBackgrounds, MessageViewer::GlobalSettings::self()->printBackgroundColorImages());
 
     if (mMessage) {
         update();
@@ -1147,7 +1147,7 @@ void ViewerPrivate::readConfig()
 
 void ViewerPrivate::readGravatarConfig()
 {
-    PimCommon::GravatarCache::self()->setMaximumSize(GlobalSettings::self()->gravatarCacheSize());
+    PimCommon::GravatarCache::self()->setMaximumSize(MessageViewer::GlobalSettings::self()->gravatarCacheSize());
     if (!GlobalSettings::self()->gravatarSupportEnabled()) {
         PimCommon::GravatarCache::self()->clear();
     }
@@ -1164,11 +1164,11 @@ void ViewerPrivate::slotGeneralFontChanged()
 
 void ViewerPrivate::writeConfig(bool sync)
 {
-    GlobalSettings::self()->setUseFixedFont(mUseFixedFont);
+    MessageViewer::GlobalSettings::self()->setUseFixedFont(mUseFixedFont);
     if (attachmentStrategy()) {
-        GlobalSettings::self()->setAttachmentStrategy(QLatin1String(attachmentStrategy()->name()));
+        MessageViewer::GlobalSettings::self()->setAttachmentStrategy(QLatin1String(attachmentStrategy()->name()));
     }
-    GlobalSettings::self()->setZoomTextOnly(mZoomActionMenu->zoomTextOnly());
+    MessageViewer::GlobalSettings::self()->setZoomTextOnly(mZoomActionMenu->zoomTextOnly());
 
     saveSplitterSizes();
     if (sync) {
@@ -1367,7 +1367,7 @@ void ViewerPrivate::showHideMimeTree()
         return;
     }
     bool showMimeTree = false;
-    if (GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always) {
+    if (MessageViewer::GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always) {
         mMimePartTree->show();
         showMimeTree = true;
     } else {
@@ -1391,15 +1391,15 @@ void ViewerPrivate::atmViewMsg(KMime::Message::Ptr message)
 void ViewerPrivate::adjustLayout()
 {
 #ifndef QT_NO_TREEVIEW
-    const int mimeH = GlobalSettings::self()->mimePaneHeight();
-    const int messageH = GlobalSettings::self()->messagePaneHeight();
+    const int mimeH = MessageViewer::GlobalSettings::self()->mimePaneHeight();
+    const int messageH = MessageViewer::GlobalSettings::self()->messagePaneHeight();
     QList<int> splitterSizes;
     splitterSizes << messageH << mimeH;
 
     mSplitter->addWidget(mMimePartTree);
     mSplitter->setSizes(splitterSizes);
 
-    if (GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always &&
+    if (MessageViewer::GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always &&
             mMsgDisplay) {
         mMimePartTree->show();
     } else {
@@ -1407,7 +1407,7 @@ void ViewerPrivate::adjustLayout()
     }
 #endif
 
-    if (GlobalSettings::self()->showColorBar() && mMsgDisplay) {
+    if (MessageViewer::GlobalSettings::self()->showColorBar() && mMsgDisplay) {
         mColorBar->show();
     } else {
         mColorBar->hide();
@@ -1423,8 +1423,8 @@ void ViewerPrivate::saveSplitterSizes() const
     if (mMimePartTree->isHidden()) {
         return;    // don't rely on QSplitter maintaining sizes for hidden widgets.
     }
-    GlobalSettings::self()->setMimePaneHeight(mSplitter->sizes()[1]);
-    GlobalSettings::self()->setMessagePaneHeight(mSplitter->sizes()[0]);
+    MessageViewer::GlobalSettings::self()->setMimePaneHeight(mSplitter->sizes()[1]);
+    MessageViewer::GlobalSettings::self()->setMessagePaneHeight(mSplitter->sizes()[0]);
 #endif
 }
 
@@ -1758,7 +1758,7 @@ void ViewerPrivate::showContextMenu(KMime::Content *content, const QPoint &pos)
             popup.addAction(QIcon::fromTheme("edit-delete"), i18n("Delete Attachment"),
                             this, SLOT(slotAttachmentDelete()));
 #endif
-            if (GlobalSettings::self()->allowAttachmentEditing())
+            if (MessageViewer::GlobalSettings::self()->allowAttachmentEditing())
                 popup.addAction(QIcon::fromTheme(QStringLiteral("document-properties")), i18n("Edit Attachment"),
                                 this, SLOT(slotAttachmentEdit()));
         }
@@ -2050,9 +2050,9 @@ void ViewerPrivate::slotToggleFixedFont()
 void ViewerPrivate::slotToggleMimePartTree()
 {
     if (mToggleMimePartTreeAction->isChecked()) {
-        GlobalSettings::self()->setMimeTreeMode(GlobalSettings::EnumMimeTreeMode::Always);
+        MessageViewer::GlobalSettings::self()->setMimeTreeMode(GlobalSettings::EnumMimeTreeMode::Always);
     } else {
-        GlobalSettings::self()->setMimeTreeMode(GlobalSettings::EnumMimeTreeMode::Never);
+        MessageViewer::GlobalSettings::self()->setMimeTreeMode(GlobalSettings::EnumMimeTreeMode::Never);
     }
     showHideMimeTree();
 }
@@ -2117,7 +2117,7 @@ void ViewerPrivate::updateReaderWin()
     htmlWriter()->reset();
     //TODO: if the item doesn't have the payload fetched, try to fetch it? Maybe not here, but in setMessageItem.
     if (mMessage) {
-        if (GlobalSettings::self()->showColorBar()) {
+        if (MessageViewer::GlobalSettings::self()->showColorBar()) {
             mColorBar->show();
         } else {
             mColorBar->hide();

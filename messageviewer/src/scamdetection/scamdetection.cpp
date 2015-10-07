@@ -63,7 +63,7 @@ ScamCheckShortUrl *ScamDetection::scamCheckShortUrl() const
 
 void ScamDetection::scanPage(QWebFrame *frame)
 {
-    if (GlobalSettings::self()->scamDetectionEnabled()) {
+    if (MessageViewer::GlobalSettings::self()->scamDetectionEnabled()) {
         d->mDetails.clear();
         d->mDetails = QLatin1String("<b>") + i18n("Details:") + QLatin1String("</b><ul>");
         bool foundScam = false;

@@ -55,13 +55,13 @@ MimeTreeModel *MimePartTreeView::mimePartModel() const
 
 void MimePartTreeView::restoreMimePartTreeConfig()
 {
-    KConfigGroup grp(GlobalSettings::self()->config(), "MimePartTree");
+    KConfigGroup grp(MessageViewer::GlobalSettings::self()->config(), "MimePartTree");
     header()->restoreState(grp.readEntry("State", QByteArray()));
 }
 
 void MimePartTreeView::saveMimePartTreeConfig()
 {
-    KConfigGroup grp(GlobalSettings::self()->config(), "MimePartTree");
+    KConfigGroup grp(MessageViewer::GlobalSettings::self()->config(), "MimePartTree");
     grp.writeEntry("State", header()->saveState());
 }
 
