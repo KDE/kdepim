@@ -24,7 +24,6 @@
 #include <AkonadiCore/Item>
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
-#include <pimcommon/vcardutil.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include "PimCommon/AttachmentTemporaryFilesDirs"
 #include "kaddressbook_debug.h"
@@ -69,8 +68,7 @@ bool SendVcardsJob::start()
             const KContacts::Addressee contact = item.payload<KContacts::Addressee>();
             QByteArray data = item.payloadData();
             //Workaround about broken kaddressbook fields.
-            PimCommon::VCardUtil vcardUtil;
-            vcardUtil.adaptVcard(data);
+            KContacts::adaptIMAttributes(data);
             createTemporaryDir();
             const QString contactRealName(contact.realName());
             const QString attachmentName = (contactRealName.isEmpty() ? QStringLiteral("vcard") : contactRealName) + QLatin1String(".vcf");

@@ -189,7 +189,6 @@ set(libpimcommon_util_SRCS
   util/pimutil.cpp
   util/editorutil.cpp
   util/imapresourcecapabilitiesmanager.cpp
-  util/vcardutil.cpp
   util/networkutil.cpp
 )
 
@@ -376,7 +375,6 @@ ecm_generate_headers(PimCommon_CamelCase_HEADERS
   NetworkUtil
   EditorUtil
   CreateResource
-  VCardUtil
   MetaType
   ImapResourceCapabilitiesManager
   REQUIRED_HEADERS PimCommon_CamelCase_HEADERS
