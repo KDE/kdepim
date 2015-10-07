@@ -29,10 +29,10 @@ CustomHeaderStrategy::CustomHeaderStrategy()
 
 void CustomHeaderStrategy::loadConfig()
 {
-    mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
+    mHeadersToDisplay = MessageViewer::MessageViewerSettings::self()->headersToDisplay();
 
-    mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
+    mHeadersToHide = MessageViewer::MessageViewerSettings::self()->headersToHide();
 
-    mDefaultPolicy = MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy() == MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
+    mDefaultPolicy = MessageViewer::MessageViewerSettings::self()->customHeadersDefaultPolicy() == MessageViewer::MessageViewerSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
 }
 

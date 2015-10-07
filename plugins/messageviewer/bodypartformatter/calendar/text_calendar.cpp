@@ -220,7 +220,7 @@ public:
                 const QString html =
                     KCalUtils::IncidenceFormatter::formatICalInvitationNoHtml(
                         source, cl, &helper, message->sender()->asUnicodeString(),
-                        GlobalSettings::self()->outlookCompatibleInvitationComparisons());
+                        MessageViewer::MessageViewerSettings::self()->outlookCompatibleInvitationComparisons());
 
                 if (html.isEmpty()) {
                     return AsIcon;
@@ -518,7 +518,7 @@ public:
         qCDebug(TEXT_CALENDAR_LOG) << "Mailing message:" << iCal;
 
         KMime::Message::Ptr msg(new KMime::Message);
-        if (GlobalSettings::self()->exchangeCompatibleInvitations()) {
+        if (MessageViewer::MessageViewerSettings::self()->exchangeCompatibleInvitations()) {
             msg->subject()->fromUnicodeString(status, "utf-8");
             QString tsubject = subject;
             tsubject.remove(i18n("Answer: "));
@@ -541,7 +541,7 @@ public:
         msg->from()->fromUnicodeString(receiver, "utf-8");
         msg->date()->setDateTime(QDateTime::currentDateTime());
 
-        if (!GlobalSettings::self()->legacyBodyInvites()) {
+        if (!MessageViewer::MessageViewerSettings::self()->legacyBodyInvites()) {
             msg->contentType()->from7BitString("text/calendar; method=reply; charset=\"utf-8\"");
             msg->contentTransferEncoding()->setEncoding(KMime::Headers::CEquPr);
             msg->setBody(KMime::CRLFtoLF(iCal.toUtf8()));
@@ -592,7 +592,7 @@ public:
 
         // Outlook will only understand the reply if the From: header is the
         // same as the To: header of the invitation message.
-        if (!GlobalSettings::self()->legacyMangleFromToHeaders()) {
+        if (!MessageViewer::MessageViewerSettings::self()->legacyMangleFromToHeaders()) {
             if (identity != KIdentityManagement::Identity::null()) {
                 msg->from()->fromUnicodeString(identity.fullEmailAddr(), "utf-8");
             }
@@ -607,7 +607,7 @@ public:
         // cWin->setCharset( "", true );
         cWin->disableWordWrap();
         cWin->setSigningAndEncryptionDisabled(true);
-        if (GlobalSettings::self()->exchangeCompatibleInvitations()) {
+        if (MessageViewer::MessageViewerSettings::self()->exchangeCompatibleInvitations()) {
             // For Exchange, send ical as attachment, with proper parameters
             msg->setSubject(status);
             msg->setCharset("utf-8");
@@ -624,7 +624,7 @@ public:
         cWin->forceDisableHtml();
         cWin->disableRecipientNumberCheck();
         cWin->disableForgottenAttachmentsCheck();
-        if (GlobalSettings::self()->automaticSending()) {
+        if (MessageViewer::MessageViewerSettings::self()->automaticSending()) {
             cWin->setAttribute(Qt::WA_DeleteOnClose);
             cWin->slotSendNow();
         } else {
@@ -658,7 +658,7 @@ public:
         }
         // We are not notified when mail was sent, so assume it was sent when queued.
         if (delMessage &&
-                GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
+                MessageViewer::MessageViewerSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
             viewerInstance->deleteMessage();
         }
 #endif
@@ -893,7 +893,7 @@ public:
                     i18n("You forgot to add proposal. Please add it. Thanks"));
                 return true;
             } else {
-                if (GlobalSettings::self()->outlookCompatibleInvitationReplyComments()) {
+                if (MessageViewer::MessageViewerSettings::self()->outlookCompatibleInvitationReplyComments()) {
                     incidence->setDescription(comment);
                 } else {
                     incidence->addComment(comment);
@@ -985,7 +985,7 @@ public:
                 ok = mail(viewerInstance, incidence, dir, iTIPReply, receiver);
             }
         } else {
-            if (GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
+            if (MessageViewer::MessageViewerSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
                 viewerInstance->deleteMessage();
             }
         }
@@ -1224,7 +1224,7 @@ public:
                 return true;
 
             } else {
-                if (GlobalSettings::self()->outlookCompatibleInvitationReplyComments()) {
+                if (MessageViewer::MessageViewerSettings::self()->outlookCompatibleInvitationReplyComments()) {
                     incidence->setDescription(comment);
                 } else {
                     incidence->addComment(comment);
@@ -1327,7 +1327,7 @@ public:
             // These should just be saved with their type as the dir
             const QString p = (path == QLatin1String("accept_counter") ? QStringLiteral("reply") : path);
             if (saveFile(QStringLiteral("Receiver Not Searched"), iCal, p)) {
-                if (GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
+                if (MessageViewer::MessageViewerSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
                     viewerInstance->deleteMessage();
                 }
                 result = true;
@@ -1368,7 +1368,7 @@ public:
             //fall through
             case KMessageBox::Yes: // means "do not send"
                 if (saveFile(QStringLiteral("Receiver Not Searched"), iCal, QStringLiteral("reply"))) {
-                    if (GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
+                    if (MessageViewer::MessageViewerSettings::self()->deleteInvitationEmailsAfterSendingReply()) {
                         viewerInstance->deleteMessage();
                         result = true;
                     }
@@ -1480,10 +1480,10 @@ public:
     bool askForComment(Attendee::PartStat status) const
     {
         if (status != Attendee::NeedsAction && ((status != Attendee::Accepted &&
-                                                GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
-                                                GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AskForAllButAcceptance) ||
-                                                (GlobalSettings::self()->askForCommentWhenReactingToInvitation() ==
-                                                        GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AlwaysAsk))) {
+                                                MessageViewer::MessageViewerSettings::self()->askForCommentWhenReactingToInvitation() ==
+                                                MessageViewer::MessageViewerSettings::EnumAskForCommentWhenReactingToInvitation::AskForAllButAcceptance) ||
+                                                (MessageViewer::MessageViewerSettings::self()->askForCommentWhenReactingToInvitation() ==
+                                                        MessageViewer::MessageViewerSettings::EnumAskForCommentWhenReactingToInvitation::AlwaysAsk))) {
             return true;
         }
         return false;

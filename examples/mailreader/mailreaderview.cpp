@@ -92,7 +92,7 @@ void mailreaderView::slotConfigure()
     if (KConfigDialog::showDialog(QLatin1String("mailviewersettings"))) {
         return;
     }
-    KConfigDialog *dialog = new KConfigDialog(this, QLatin1String("mailviewersettings"), MessageViewer::GlobalSettings::self());
+    KConfigDialog *dialog = new KConfigDialog(this, QLatin1String("mailviewersettings"), MessageViewer::MessageViewerSettings::self());
     QWidget *widget = m_readerWin->configWidget();
     dialog->addPage(widget, i18n("Viewer"), QLatin1String("kmail"));
 

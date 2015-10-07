@@ -55,24 +55,24 @@ PrintingSettings::~PrintingSettings()
 
 void PrintingSettings::save()
 {
-    saveCheckBox(d->mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
-    saveCheckBox(d->mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
-    saveCheckBox(d->mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
+    saveCheckBox(d->mPrintingUi->mPrintEmptySelectedText, MessageViewer::MessageViewerSettings::self()->printSelectedTextItem());
+    saveCheckBox(d->mPrintingUi->respectExpandCollapseSettings, MessageViewer::MessageViewerSettings::self()->respectExpandCollapseSettingsItem());
+    saveCheckBox(d->mPrintingUi->printBackgroundColorAndImages, MessageViewer::MessageViewerSettings::self()->printBackgroundColorImagesItem());
 }
 
 void PrintingSettings::doLoadFromGlobalSettings()
 {
-    loadWidget(d->mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
-    loadWidget(d->mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
-    loadWidget(d->mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
+    loadWidget(d->mPrintingUi->mPrintEmptySelectedText, MessageViewer::MessageViewerSettings::self()->printSelectedTextItem());
+    loadWidget(d->mPrintingUi->respectExpandCollapseSettings, MessageViewer::MessageViewerSettings::self()->respectExpandCollapseSettingsItem());
+    loadWidget(d->mPrintingUi->printBackgroundColorAndImages, MessageViewer::MessageViewerSettings::self()->printBackgroundColorImagesItem());
 }
 
 void PrintingSettings::doResetToDefaultsOther()
 {
-    const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults(true);
-    loadWidget(d->mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
-    loadWidget(d->mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
-    loadWidget(d->mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
-    MessageViewer::GlobalSettings::self()->useDefaults(bUseDefaults);
+    const bool bUseDefaults = MessageViewer::MessageViewerSettings::self()->useDefaults(true);
+    loadWidget(d->mPrintingUi->mPrintEmptySelectedText, MessageViewer::MessageViewerSettings::self()->printSelectedTextItem());
+    loadWidget(d->mPrintingUi->respectExpandCollapseSettings, MessageViewer::MessageViewerSettings::self()->respectExpandCollapseSettingsItem());
+    loadWidget(d->mPrintingUi->printBackgroundColorAndImages, MessageViewer::MessageViewerSettings::self()->printBackgroundColorImagesItem());
+    MessageViewer::MessageViewerSettings::self()->useDefaults(bUseDefaults);
 }
 

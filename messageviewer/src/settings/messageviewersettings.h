@@ -21,8 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef MESSAGEVIEWER_GLOBALSETTINGS_H
-#define MESSAGEVIEWER_GLOBALSETTINGS_H
+#ifndef MESSAGEVIEWER_MESSAGEVIEWERSETTINGS_H
+#define MESSAGEVIEWER_MESSAGEVIEWERSETTINGS_H
 
 #include "globalsettings_messageviewer.h"
 
@@ -31,11 +31,11 @@ class QTimer;
 namespace MessageViewer
 {
 
-class MESSAGEVIEWER_EXPORT GlobalSettings : public MessageViewer::GlobalSettingsBase
+class MESSAGEVIEWER_EXPORT MessageViewerSettings : public MessageViewer::GlobalSettingsBase
 {
     Q_OBJECT
 public:
-    static GlobalSettings *self();
+    static MessageViewerSettings *self();
 
     /** Call this slot instead of directly @ref KConfig::sync() to
         minimize the overall config writes. Calling this slot will
@@ -48,9 +48,9 @@ private Q_SLOTS:
     void slotSyncNow();
 
 private:
-    GlobalSettings();
-    virtual ~GlobalSettings();
-    static GlobalSettings *mSelf;
+    MessageViewerSettings();
+    virtual ~MessageViewerSettings();
+    static MessageViewerSettings *mSelf;
 
     QTimer *mConfigSyncTimer;
 
@@ -58,4 +58,4 @@ private:
 
 }
 
-#endif /* KMAIL_GLOBALSETTINGS_H */
+#endif

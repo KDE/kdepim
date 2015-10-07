@@ -411,7 +411,7 @@ void MailWebView::clearFindSelection()
 
 void MailWebView::keyReleaseEvent(QKeyEvent *e)
 {
-    if (MessageViewer::GlobalSettings::self()->accessKeyEnabled() && mAccessKeyActivated == PreActivated) {
+    if (MessageViewer::MessageViewerSettings::self()->accessKeyEnabled() && mAccessKeyActivated == PreActivated) {
         // Activate only when the CTRL key is pressed and released by itself.
         if (e->key() == Qt::Key_Control && e->modifiers() == Qt::NoModifier) {
             showAccessKeys();
@@ -426,7 +426,7 @@ void MailWebView::keyReleaseEvent(QKeyEvent *e)
 void MailWebView::keyPressEvent(QKeyEvent *e)
 {
     if (e && hasFocus()) {
-        if (MessageViewer::GlobalSettings::self()->accessKeyEnabled()) {
+        if (MessageViewer::MessageViewerSettings::self()->accessKeyEnabled()) {
             if (mAccessKeyActivated == Activated) {
                 if (checkForAccessKey(e)) {
                     hideAccessKeys();
@@ -444,7 +444,7 @@ void MailWebView::keyPressEvent(QKeyEvent *e)
 
 void MailWebView::wheelEvent(QWheelEvent *e)
 {
-    if (MessageViewer::GlobalSettings::self()->accessKeyEnabled() && mAccessKeyActivated == PreActivated && (e->modifiers() & Qt::ControlModifier)) {
+    if (MessageViewer::MessageViewerSettings::self()->accessKeyEnabled() && mAccessKeyActivated == PreActivated && (e->modifiers() & Qt::ControlModifier)) {
         mAccessKeyActivated = NotActivated;
     }
     SuperClass::wheelEvent(e);

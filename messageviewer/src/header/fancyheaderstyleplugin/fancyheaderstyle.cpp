@@ -106,7 +106,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
     // the subject line and box below for details
     if (strategy->showHeader(QStringLiteral("subject"))) {
         KTextToHTML::Options flags = KTextToHTML::PreserveSpaces;
-        if (MessageViewer::GlobalSettings::self()->showEmoticons()) {
+        if (MessageViewer::MessageViewerSettings::self()->showEmoticons()) {
             flags |= KTextToHTML::ReplaceSmileys;
         }
 
@@ -184,7 +184,7 @@ QString FancyHeaderStyle::format(KMime::Message *message) const
                          .arg(i18n("Date: "))
                          .arg(MessageViewer::HeaderStyleUtil::directionOf(MessageViewer::HeaderStyleUtil::dateStr(message->date()->dateTime())))
                          .arg(MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ false))));
-    if (MessageViewer::GlobalSettings::self()->showUserAgent()) {
+    if (MessageViewer::MessageViewerSettings::self()->showUserAgent()) {
         if (strategy->showHeader(QStringLiteral("user-agent"))) {
             if (auto hdr = message->userAgent(false)) {
                 headerStr.append(QStringLiteral("<tr><th>%1</th>\n"

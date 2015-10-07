@@ -48,7 +48,7 @@ namespace MessageViewer
 CSSHelper::CSSHelper(const QPaintDevice *pd) :
     CSSHelperBase(pd)
 {
-    KConfig *config = MessageViewer::GlobalSettings::self()->config();
+    KConfig *config = MessageViewer::MessageViewerSettings::self()->config();
 
     KConfigGroup reader(config, "Reader");
     KConfigGroup fonts(config, "Fonts");
@@ -94,7 +94,7 @@ CSSHelper::CSSHelper(const QPaintDevice *pd) :
         }
     }
 
-    mShrinkQuotes = MessageViewer::GlobalSettings::self()->shrinkQuotes();
+    mShrinkQuotes = MessageViewer::MessageViewerSettings::self()->shrinkQuotes();
 
     mBackingPixmapStr = pixmaps.readPathEntry("Readerwin", QString());
     mBackingPixmapOn = !mBackingPixmapStr.isEmpty();

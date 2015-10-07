@@ -75,12 +75,12 @@ AdBlockManager::~AdBlockManager()
 
 bool AdBlockManager::isEnabled()
 {
-    return MessageViewer::GlobalSettings::self()->adBlockEnabled();
+    return MessageViewer::MessageViewerSettings::self()->adBlockEnabled();
 }
 
 bool AdBlockManager::isHidingElements()
 {
-    return MessageViewer::GlobalSettings::self()->hideAdsEnabled();
+    return MessageViewer::MessageViewerSettings::self()->hideAdsEnabled();
 }
 
 void AdBlockManager::reloadConfig()
@@ -107,7 +107,7 @@ void AdBlockManager::loadSettings()
     // ----------------------------------------------------------
 
     QDateTime today = QDateTime::currentDateTime();
-    const int days = MessageViewer::GlobalSettings::self()->adBlockUpdateInterval();
+    const int days = MessageViewer::MessageViewerSettings::self()->adBlockUpdateInterval();
 
     const QStringList itemList = config.groupList().filter(QRegExp(QStringLiteral("FilterList \\d+")));
     Q_FOREACH (const QString &item, itemList) {
@@ -213,7 +213,7 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
         return false;
     }
 
-    const QStringList whiteRefererList = MessageViewer::GlobalSettings::self()->whiteReferer();
+    const QStringList whiteRefererList = MessageViewer::MessageViewerSettings::self()->whiteReferer();
     const QString referer = QString::fromLatin1(request.rawHeader("referer"));
     Q_FOREACH (const QString &host, whiteRefererList) {
         if (referer.contains(host)) {
@@ -389,7 +389,7 @@ void AdBlockManager::applyHidingRules(bool ok)
     }
 
     QString mainPageHost = page->loadingUrl().host();
-    const QStringList hosts = MessageViewer::GlobalSettings::self()->whiteReferer();
+    const QStringList hosts = MessageViewer::MessageViewerSettings::self()->whiteReferer();
     if (hosts.contains(mainPageHost)) {
         return;
     }

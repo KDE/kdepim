@@ -182,7 +182,7 @@ QPair< bool, KMime::MDN::SendingMode > MDNAdviceHelper::checkAndSetMDNInfo(
     KMime::MDN::SendingMode s = KMime::MDN::SentAutomatically; // set to manual if asked user
     bool doSend = false;
     // default:
-    int mode = MessageViewer::GlobalSettings::self()->defaultPolicy();
+    int mode = MessageViewer::MessageViewerSettings::self()->defaultPolicy();
     if (forceSend) {   //We must send it
         mode = 3;
     } else {

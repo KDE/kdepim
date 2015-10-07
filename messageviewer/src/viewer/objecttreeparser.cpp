@@ -1067,7 +1067,7 @@ bool ObjectTreeParser::processTextHtmlSubtype(KMime::Content *curNode, ProcessRe
         if (mSource->htmlMail()) {
             QString bodyText = bodyHTML;
             HTMLQuoteColorer colorer;
-            colorer.setEnableHtmlQuoteColorer(MessageViewer::GlobalSettings::self()->htmlQuoteColorerEnabled());
+            colorer.setEnableHtmlQuoteColorer(MessageViewer::MessageViewerSettings::self()->htmlQuoteColorerEnabled());
             QString extraHead;
             for (int i = 0; i < 3; ++i) {
                 colorer.setQuoteColor(i, cssHelper()->quoteColor(i));
@@ -1771,7 +1771,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
             return false;
         }
 
-        if (!GlobalSettings::self()->autoImportKeys()) {
+        if (!MessageViewer::MessageViewerSettings::self()->autoImportKeys()) {
             return false;
         }
 
@@ -1948,15 +1948,15 @@ bool ObjectTreeParser::decryptChiasmus(const QByteArray &data, QByteArray &bodyD
     }
 
     AutoQPointer<ChiasmusKeySelector> selectorDlg(new ChiasmusKeySelector(/*mReader*/0, i18n("Chiasmus Decryption Key Selection"),
-            keys, GlobalSettings::chiasmusDecryptionKey(),
-            GlobalSettings::chiasmusDecryptionOptions()));
+            keys, MessageViewer::MessageViewerSettings::chiasmusDecryptionKey(),
+            MessageViewer::MessageViewerSettings::chiasmusDecryptionOptions()));
 
     if (selectorDlg->exec() != QDialog::Accepted || !selectorDlg) {
         return false;
     }
-    GlobalSettings::setChiasmusDecryptionOptions(selectorDlg->options());
-    GlobalSettings::setChiasmusDecryptionKey(selectorDlg->key());
-    assert(!GlobalSettings::chiasmusDecryptionKey().isEmpty());
+    MessageViewer::MessageViewerSettings::setChiasmusDecryptionOptions(selectorDlg->options());
+    MessageViewer::MessageViewerSettings::setChiasmusDecryptionKey(selectorDlg->key());
+    assert(!MessageViewer::MessageViewerSettings::chiasmusDecryptionKey().isEmpty());
 
     Kleo::SpecialJob *job = chiasmus->specialJob("x-decrypt", QMap<QString, QVariant>());
     if (!job) {
@@ -1965,8 +1965,8 @@ bool ObjectTreeParser::decryptChiasmus(const QByteArray &data, QByteArray &bodyD
         return false;
     }
 
-    if (!job->setProperty("key", GlobalSettings::chiasmusDecryptionKey()) ||
-            !job->setProperty("options", GlobalSettings::chiasmusDecryptionOptions()) ||
+    if (!job->setProperty("key", MessageViewer::MessageViewerSettings::chiasmusDecryptionKey()) ||
+            !job->setProperty("options", MessageViewer::MessageViewerSettings::chiasmusDecryptionOptions()) ||
             !job->setProperty("input", data)) {
         errorText = i18n("The \"x-decrypt\" function does not accept "
                          "the expected parameters. Please report this bug.");
@@ -3122,7 +3122,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
     assert(cssHelper());
 
     KTextToHTML::Options convertFlags = KTextToHTML::PreserveSpaces | KTextToHTML::HighlightText;
-    if (decorate && MessageViewer::GlobalSettings::self()->showEmoticons()) {
+    if (decorate && MessageViewer::MessageViewerSettings::self()->showEmoticons()) {
         convertFlags |= KTextToHTML::ReplaceSmileys;
     }
     QString htmlStr;
@@ -3152,7 +3152,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
     int currQuoteLevel = -2; // -2 == no previous lines
     bool curHidden = false; // no hide any block
 
-    if (MessageViewer::GlobalSettings::self()->showExpandQuotesMark()) {
+    if (MessageViewer::MessageViewerSettings::self()->showExpandQuotesMark()) {
         // Cache Icons
         if (mCollapseIcon.isEmpty()) {
             mCollapseIcon = iconToDataUrl(IconNameCache::instance()->iconPath(QStringLiteral("quotecollapse"), 0));
@@ -3194,7 +3194,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
         bool actHidden = false;
 
         // This quoted line needs be hidden
-        if (MessageViewer::GlobalSettings::self()->showExpandQuotesMark() && mSource->levelQuote() >= 0
+        if (MessageViewer::MessageViewerSettings::self()->showExpandQuotesMark() && mSource->levelQuote() >= 0
                 && mSource->levelQuote() <= (actQuoteLevel)) {
             actHidden = true;
         }
@@ -3211,7 +3211,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
             if (actQuoteLevel == -1) {
                 htmlStr += normalStartTag;
             } else {
-                if (MessageViewer::GlobalSettings::self()->showExpandQuotesMark()) {
+                if (MessageViewer::MessageViewerSettings::self()->showExpandQuotesMark()) {
                     if (actHidden) {
                         //only show the QuoteMark when is the first line of the level hidden
                         if (!curHidden) {

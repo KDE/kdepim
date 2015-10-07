@@ -52,7 +52,7 @@ CustomHeaderSettingDialog::~CustomHeaderSettingDialog()
 
 void CustomHeaderSettingDialog::readConfig()
 {
-    KConfigGroup group(MessageViewer::GlobalSettings::self()->config(), "CustomHeaderSettingDialog");
+    KConfigGroup group(MessageViewer::MessageViewerSettings::self()->config(), "CustomHeaderSettingDialog");
     const QSize size = group.readEntry("Size", QSize(500, 250));
     if (size.isValid()) {
         resize(size);
@@ -61,7 +61,7 @@ void CustomHeaderSettingDialog::readConfig()
 
 void CustomHeaderSettingDialog::writeConfig()
 {
-    KConfigGroup group(MessageViewer::GlobalSettings::self()->config(), "CustomHeaderSettingDialog");
+    KConfigGroup group(MessageViewer::MessageViewerSettings::self()->config(), "CustomHeaderSettingDialog");
     group.writeEntry("Size", size());
     group.sync();
 }

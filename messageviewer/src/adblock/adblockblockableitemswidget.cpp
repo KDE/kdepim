@@ -65,13 +65,13 @@ AdBlockBlockableItemsWidget::AdBlockBlockableItemsWidget(QWidget *parent)
     lay->addWidget(searchLine);
     lay->addWidget(mListItems);
 
-    KConfigGroup config(MessageViewer::GlobalSettings::self()->config(), "AdBlockHeaders");
+    KConfigGroup config(MessageViewer::MessageViewerSettings::self()->config(), "AdBlockHeaders");
     mListItems->header()->restoreState(config.readEntry("HeaderState", QByteArray()));
 }
 
 AdBlockBlockableItemsWidget::~AdBlockBlockableItemsWidget()
 {
-    KConfigGroup groupHeader(MessageViewer::GlobalSettings::self()->config(), "AdBlockHeaders");
+    KConfigGroup groupHeader(MessageViewer::MessageViewerSettings::self()->config(), "AdBlockHeaders");
     groupHeader.writeEntry("HeaderState", mListItems->header()->saveState());
     groupHeader.sync();
 }

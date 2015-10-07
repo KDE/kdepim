@@ -66,11 +66,11 @@ ConfigureWidget::ConfigureWidget(QWidget *parent)
     d->mSettingsUi->overrideCharacterEncoding->setWhatsThis(
         MessageCore::GlobalSettings::self()->overrideCharacterEncodingItem()->whatsThis());
     d->mSettingsUi->kcfg_ShowEmoticons->setWhatsThis(
-        MessageViewer::GlobalSettings::self()->showEmoticonsItem()->whatsThis());
+        MessageViewer::MessageViewerSettings::self()->showEmoticonsItem()->whatsThis());
     d->mSettingsUi->kcfg_ShrinkQuotes->setWhatsThis(
-        MessageViewer::GlobalSettings::self()->shrinkQuotesItem()->whatsThis());
+        MessageViewer::MessageViewerSettings::self()->shrinkQuotesItem()->whatsThis());
     d->mSettingsUi->kcfg_ShowExpandQuotesMark->setWhatsThis(
-        MessageViewer::GlobalSettings::self()->showExpandQuotesMarkItem()->whatsThis());
+        MessageViewer::MessageViewerSettings::self()->showExpandQuotesMarkItem()->whatsThis());
 
     connect(d->mSettingsUi->overrideCharacterEncoding, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ConfigureWidget::settingsChanged);
 
@@ -86,7 +86,7 @@ void ConfigureWidget::readConfig()
 {
     readCurrentOverrideCodec();
     d->mSettingsUi->kcfg_CollapseQuoteLevelSpin->setEnabled(
-        MessageViewer::GlobalSettings::self()->showExpandQuotesMark());
+        MessageViewer::MessageViewerSettings::self()->showExpandQuotesMark());
 }
 
 void ConfigureWidget::writeConfig()

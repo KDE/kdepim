@@ -101,13 +101,13 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
     if (!PimCommon::NetworkUtil::self()->lowBandwidth()) {
         if (mPhoto.isEmpty() && mPhoto.url().isEmpty()) {
             // No url, no photo => search gravatar
-            if (MessageViewer::GlobalSettings::self()->gravatarSupportEnabled()) {
+            if (MessageViewer::MessageViewerSettings::self()->gravatarSupportEnabled()) {
                 PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
                 job->setEmail(mEmailAddress);
-                job->setUseDefaultPixmap(MessageViewer::GlobalSettings::self()->gravatarUseDefaultImage());
-                job->setUseLibravatar(MessageViewer::GlobalSettings::self()->libravatarSupportEnabled());
-                job->setFallbackGravatar(MessageViewer::GlobalSettings::self()->fallbackToGravatar());
-                job->setUseHttps(MessageViewer::GlobalSettings::self()->gravatarHttpsSupport());
+                job->setUseDefaultPixmap(MessageViewer::MessageViewerSettings::self()->gravatarUseDefaultImage());
+                job->setUseLibravatar(MessageViewer::MessageViewerSettings::self()->libravatarSupportEnabled());
+                job->setFallbackGravatar(MessageViewer::MessageViewerSettings::self()->fallbackToGravatar());
+                job->setUseHttps(MessageViewer::MessageViewerSettings::self()->gravatarHttpsSupport());
                 if (job->canStart()) {
                     connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &ContactDisplayMessageMemento::slotGravatarResolvUrlFinished);
                     job->start();

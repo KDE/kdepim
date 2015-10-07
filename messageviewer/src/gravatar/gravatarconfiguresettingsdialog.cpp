@@ -106,28 +106,28 @@ GravatarConfigureSettingsDialog::~GravatarConfigureSettingsDialog()
 
 void GravatarConfigureSettingsDialog::slotRestoreDefault()
 {
-    const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults(true);
+    const bool bUseDefaults = MessageViewer::MessageViewerSettings::self()->useDefaults(true);
     load();
-    MessageViewer::GlobalSettings::self()->useDefaults(bUseDefaults);
+    MessageViewer::MessageViewerSettings::self()->useDefaults(bUseDefaults);
 }
 
 void GravatarConfigureSettingsDialog::save()
 {
-    saveCheckBox(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
-    saveSpinBox(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
-    saveCheckBox(mFallbackGravatar, MessageViewer::GlobalSettings::self()->fallbackToGravatarItem());
-    saveCheckBox(mUseLibravatar, MessageViewer::GlobalSettings::self()->libravatarSupportEnabledItem());
-    saveCheckBox(mUseHttps, MessageViewer::GlobalSettings::self()->gravatarHttpsSupportItem());
+    saveCheckBox(mUseDefaultPixmap, MessageViewer::MessageViewerSettings::self()->gravatarUseDefaultImageItem());
+    saveSpinBox(mGravatarCacheSize, MessageViewer::MessageViewerSettings::self()->gravatarCacheSizeItem());
+    saveCheckBox(mFallbackGravatar, MessageViewer::MessageViewerSettings::self()->fallbackToGravatarItem());
+    saveCheckBox(mUseLibravatar, MessageViewer::MessageViewerSettings::self()->libravatarSupportEnabledItem());
+    saveCheckBox(mUseHttps, MessageViewer::MessageViewerSettings::self()->gravatarHttpsSupportItem());
     accept();
 }
 
 void GravatarConfigureSettingsDialog::load()
 {
-    loadWidget(mUseDefaultPixmap, MessageViewer::GlobalSettings::self()->gravatarUseDefaultImageItem());
-    loadWidget(mGravatarCacheSize, MessageViewer::GlobalSettings::self()->gravatarCacheSizeItem());
-    loadWidget(mFallbackGravatar, MessageViewer::GlobalSettings::self()->fallbackToGravatarItem());
-    loadWidget(mUseLibravatar, MessageViewer::GlobalSettings::self()->libravatarSupportEnabledItem());
-    loadWidget(mUseHttps, MessageViewer::GlobalSettings::self()->gravatarHttpsSupportItem());
+    loadWidget(mUseDefaultPixmap, MessageViewer::MessageViewerSettings::self()->gravatarUseDefaultImageItem());
+    loadWidget(mGravatarCacheSize, MessageViewer::MessageViewerSettings::self()->gravatarCacheSizeItem());
+    loadWidget(mFallbackGravatar, MessageViewer::MessageViewerSettings::self()->fallbackToGravatarItem());
+    loadWidget(mUseLibravatar, MessageViewer::MessageViewerSettings::self()->libravatarSupportEnabledItem());
+    loadWidget(mUseHttps, MessageViewer::MessageViewerSettings::self()->gravatarHttpsSupportItem());
 }
 
 void GravatarConfigureSettingsDialog::slotClearGravatarCache()

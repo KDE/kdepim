@@ -159,7 +159,7 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     headerObject.insert(QStringLiteral("datelong") , MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting, false)));
     headerObject.insert(QStringLiteral("date"), MessageViewer::HeaderStyleUtil::dateStr(message->date()->dateTime()));
 
-    if (MessageViewer::GlobalSettings::self()->showUserAgent()) {
+    if (MessageViewer::MessageViewerSettings::self()->showUserAgent()) {
         if (auto hdr = message->userAgent(false)) {
             headerObject.insert(QStringLiteral("useragent"), MessageViewer::HeaderStyleUtil::strToHtml(hdr->asUnicodeString()));
         }

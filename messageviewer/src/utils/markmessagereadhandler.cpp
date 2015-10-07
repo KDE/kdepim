@@ -87,8 +87,8 @@ void MarkMessageReadHandler::setItem(const Akonadi::Item &item)
         return;
     }
 
-    if (MessageViewer::GlobalSettings::self()->delayedMarkAsRead()) {
-        const int delayedMarkTime = MessageViewer::GlobalSettings::self()->delayedMarkTime();
+    if (MessageViewer::MessageViewerSettings::self()->delayedMarkAsRead()) {
+        const int delayedMarkTime = MessageViewer::MessageViewerSettings::self()->delayedMarkTime();
         if (delayedMarkTime != 0) {
             d->mTimer.start(delayedMarkTime * 1000);
         } else {

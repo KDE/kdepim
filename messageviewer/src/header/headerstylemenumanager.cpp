@@ -84,10 +84,10 @@ void HeaderStyleMenuManagerPrivate::setPluginName(const QString &pluginName)
 
 void HeaderStyleMenuManagerPrivate::readSettings()
 {
-    QString headerStyleName = MessageViewer::GlobalSettings::self()->headerPluginStyleName();
+    QString headerStyleName = MessageViewer::MessageViewerSettings::self()->headerPluginStyleName();
     if (headerStyleName.isEmpty()) {
-        const QString headerStyle = MessageViewer::GlobalSettings::self()->headerStyle();
-        const QString headerSetDisplayed = MessageViewer::GlobalSettings::self()->headerSetDisplayed();
+        const QString headerStyle = MessageViewer::MessageViewerSettings::self()->headerStyle();
+        const QString headerSetDisplayed = MessageViewer::MessageViewerSettings::self()->headerSetDisplayed();
 
         if ((headerStyle == QLatin1String("custom")) && (headerSetDisplayed == QLatin1String("custom"))) { //Custom
             headerStyleName = QStringLiteral("custom");
@@ -117,8 +117,8 @@ void HeaderStyleMenuManagerPrivate::readSettings()
 
 void HeaderStyleMenuManagerPrivate::writeSettings(const QString &pluginName)
 {
-    MessageViewer::GlobalSettings::self()->setHeaderPluginStyleName(pluginName);
-    MessageViewer::GlobalSettingsBase::self()->save();
+    MessageViewer::MessageViewerSettings::self()->setHeaderPluginStyleName(pluginName);
+    MessageViewer::MessageViewerSettings::self()->save();
 }
 
 void HeaderStyleMenuManagerPrivate::initialize(KActionCollection *ac)

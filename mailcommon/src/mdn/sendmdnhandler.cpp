@@ -62,7 +62,7 @@ void SendMdnHandler::Private::handleMessages()
 
 #if 0
         // should we send an MDN?
-        if (MessageViewer::GlobalSettings::notSendWhenEncrypted() &&
+        if (MessageViewer::MessageViewerSettings::notSendWhenEncrypted() &&
                 message()->encryptionState() != KMMsgNotEncrypted &&
                 message()->encryptionState() != KMMsgEncryptionStateUnknown) {
             return;
@@ -88,7 +88,7 @@ void SendMdnHandler::Private::handleMessages()
         const QPair<bool, KMime::MDN::SendingMode> mdnSend =
             MDNAdviceHelper::instance()->checkAndSetMDNInfo(item, KMime::MDN::Displayed);
         if (mdnSend.first) {
-            const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
+            const int quote =  MessageViewer::MessageViewerSettings::self()->quoteMessage();
 
             MessageComposer::MessageFactory factory(message, Akonadi::Item().id());
             factory.setIdentityManager(mKernel->identityManager());
@@ -127,9 +127,9 @@ void SendMdnHandler::setItem(const Akonadi::Item &item)
 
     d->mItemQueue.enqueue(item);
 
-    if (MessageViewer::GlobalSettings::self()->delayedMarkAsRead() &&
-            MessageViewer::GlobalSettings::self()->delayedMarkTime() != 0) {
-        d->mTimer.start(MessageViewer::GlobalSettings::self()->delayedMarkTime() * 1000);
+    if (MessageViewer::MessageViewerSettings::self()->delayedMarkAsRead() &&
+            MessageViewer::MessageViewerSettings::self()->delayedMarkTime() != 0) {
+        d->mTimer.start(MessageViewer::MessageViewerSettings::self()->delayedMarkTime() * 1000);
         return;
     }
 

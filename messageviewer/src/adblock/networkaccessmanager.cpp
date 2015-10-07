@@ -140,11 +140,11 @@ void MyNetworkAccessManager::slotApplyHidingBlockedElements(bool ok)
         return;
     }
 
-    if (!GlobalSettings::self()->adBlockEnabled()) {
+    if (!MessageViewer::MessageViewerSettings::self()->adBlockEnabled()) {
         return;
     }
 
-    if (!GlobalSettings::self()->hideAdsEnabled()) {
+    if (!MessageViewer::MessageViewerSettings::self()->hideAdsEnabled()) {
         return;
     }
 

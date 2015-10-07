@@ -91,7 +91,7 @@ void GravatarConfigWidget::updateWidgetState(bool state)
 
 void GravatarConfigWidget::save()
 {
-    saveCheckBox(d->mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
+    saveCheckBox(d->mEnableGravatarSupport, MessageViewer::MessageViewerSettings::self()->gravatarSupportEnabledItem());
     if (!d->mEnableGravatarSupport->isChecked()) {
         PimCommon::GravatarCache::self()->clearAllCache();
     }
@@ -99,14 +99,14 @@ void GravatarConfigWidget::save()
 
 void GravatarConfigWidget::doLoadFromGlobalSettings()
 {
-    loadWidget(d->mEnableGravatarSupport, MessageViewer::GlobalSettings::self()->gravatarSupportEnabledItem());
+    loadWidget(d->mEnableGravatarSupport, MessageViewer::MessageViewerSettings::self()->gravatarSupportEnabledItem());
     updateWidgetState(d->mEnableGravatarSupport->isChecked());
 }
 
 void GravatarConfigWidget::doResetToDefaultsOther()
 {
-    const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults(true);
+    const bool bUseDefaults = MessageViewer::MessageViewerSettings::self()->useDefaults(true);
     doLoadFromGlobalSettings();
-    MessageViewer::GlobalSettings::self()->useDefaults(bUseDefaults);
+    MessageViewer::MessageViewerSettings::self()->useDefaults(bUseDefaults);
 }
 

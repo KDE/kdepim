@@ -51,8 +51,8 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
     topLayout->addWidget(mHeaders);
 
     mHeaderGroup = new QButtonGroup(this);
-    mHeaderGroup->addButton(mCbHeaderToHide, MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Hide);
-    mHeaderGroup->addButton(mCbHeaderToShow, MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display);
+    mHeaderGroup->addButton(mCbHeaderToHide, MessageViewer::MessageViewerSettings::EnumCustomHeadersDefaultPolicy::Hide);
+    mHeaderGroup->addButton(mCbHeaderToShow, MessageViewer::MessageViewerSettings::EnumCustomHeadersDefaultPolicy::Display);
     connect(mHeaderGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &CustomHeaderSettingWidget::slotHeaderClicked);
 
     setLayout(topLayout);
@@ -65,11 +65,11 @@ CustomHeaderSettingWidget::~CustomHeaderSettingWidget()
 void CustomHeaderSettingWidget::slotHeaderClicked(int button)
 {
     switch (button) {
-    case MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Hide:
+    case MessageViewer::MessageViewerSettings::EnumCustomHeadersDefaultPolicy::Hide:
         mHeadersToDisplay = mHeaders->stringList();
         mHeaders->setStringList(mHeadersToHide);
         break;
-    case MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display:
+    case MessageViewer::MessageViewerSettings::EnumCustomHeadersDefaultPolicy::Display:
         mHeadersToHide = mHeaders->stringList();
         mHeaders->setStringList(mHeadersToDisplay);
         break;
@@ -79,15 +79,15 @@ void CustomHeaderSettingWidget::slotHeaderClicked(int button)
 
 void CustomHeaderSettingWidget::readConfig()
 {
-    mHeadersToDisplay = MessageViewer::GlobalSettings::self()->headersToDisplay();
-    mHeadersToHide = MessageViewer::GlobalSettings::self()->headersToHide();
+    mHeadersToDisplay = MessageViewer::MessageViewerSettings::self()->headersToDisplay();
+    mHeadersToHide = MessageViewer::MessageViewerSettings::self()->headersToHide();
 
-    switch (MessageViewer::GlobalSettings::self()->customHeadersDefaultPolicy()) {
-    case MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Hide:
+    switch (MessageViewer::MessageViewerSettings::self()->customHeadersDefaultPolicy()) {
+    case MessageViewer::MessageViewerSettings::EnumCustomHeadersDefaultPolicy::Hide:
         mHeaders->setStringList(mHeadersToHide);
         mCbHeaderToHide->setChecked(true);
         break;
-    case MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display:
+    case MessageViewer::MessageViewerSettings::EnumCustomHeadersDefaultPolicy::Display:
         mHeaders->setStringList(mHeadersToDisplay);
         mCbHeaderToShow->setChecked(true);
         break;
@@ -97,25 +97,25 @@ void CustomHeaderSettingWidget::readConfig()
 void CustomHeaderSettingWidget::writeConfig()
 {
     switch (mHeaderGroup->checkedId()) {
-    case MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Hide:
-        MessageViewer::GlobalSettings::self()->setHeadersToDisplay(mHeadersToDisplay);
-        MessageViewer::GlobalSettings::self()->setHeadersToHide(mHeaders->stringList());
+    case MessageViewer::MessageViewerSettings::EnumCustomHeadersDefaultPolicy::Hide:
+        MessageViewer::MessageViewerSettings::self()->setHeadersToDisplay(mHeadersToDisplay);
+        MessageViewer::MessageViewerSettings::self()->setHeadersToHide(mHeaders->stringList());
         break;
-    case MessageViewer::GlobalSettings::EnumCustomHeadersDefaultPolicy::Display:
-        MessageViewer::GlobalSettings::self()->setHeadersToDisplay(mHeaders->stringList());
-        MessageViewer::GlobalSettings::self()->setHeadersToHide(mHeadersToHide);
+    case MessageViewer::MessageViewerSettings::EnumCustomHeadersDefaultPolicy::Display:
+        MessageViewer::MessageViewerSettings::self()->setHeadersToDisplay(mHeaders->stringList());
+        MessageViewer::MessageViewerSettings::self()->setHeadersToHide(mHeadersToHide);
         break;
     }
 
-    MessageViewer::GlobalSettings::self()->setCustomHeadersDefaultPolicy(mHeaderGroup->checkedId());
+    MessageViewer::MessageViewerSettings::self()->setCustomHeadersDefaultPolicy(mHeaderGroup->checkedId());
 }
 
 void CustomHeaderSettingWidget::resetToDefault()
 {
-    const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults(true);
+    const bool bUseDefaults = MessageViewer::MessageViewerSettings::self()->useDefaults(true);
     readConfig();
 
-    MessageViewer::GlobalSettings::self()->useDefaults(bUseDefaults);
+    MessageViewer::MessageViewerSettings::self()->useDefaults(bUseDefaults);
 }
 
 }

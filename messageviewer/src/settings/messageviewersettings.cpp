@@ -26,38 +26,38 @@
 
 using namespace MessageViewer;
 
-GlobalSettings *GlobalSettings::mSelf = 0;
+MessageViewerSettings *MessageViewerSettings::mSelf = 0;
 
-GlobalSettings *GlobalSettings::self()
+MessageViewerSettings *MessageViewerSettings::self()
 {
     if (!mSelf) {
-        mSelf = new GlobalSettings();
+        mSelf = new MessageViewerSettings();
         mSelf->load();
     }
 
     return mSelf;
 }
 
-GlobalSettings::GlobalSettings()
+MessageViewerSettings::MessageViewerSettings()
 {
     mConfigSyncTimer = new QTimer(this);
     mConfigSyncTimer->setSingleShot(true);
-    connect(mConfigSyncTimer, &QTimer::timeout, this, &GlobalSettings::slotSyncNow);
+    connect(mConfigSyncTimer, &QTimer::timeout, this, &MessageViewerSettings::slotSyncNow);
 }
 
-void GlobalSettings::requestSync()
+void MessageViewerSettings::requestSync()
 {
     if (!mConfigSyncTimer->isActive()) {
         mConfigSyncTimer->start(0);
     }
 }
 
-void GlobalSettings::slotSyncNow()
+void MessageViewerSettings::slotSyncNow()
 {
     config()->sync();
 }
 
-GlobalSettings::~GlobalSettings()
+MessageViewerSettings::~MessageViewerSettings()
 {
 }
 

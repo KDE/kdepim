@@ -123,16 +123,16 @@ void AttachmentEncryptWithChiasmusJob::start()
     }
     AutoQPointer<ChiasmusKeySelector> selectorDlg(new ChiasmusKeySelector(mMainWindow,
             i18n("Chiasmus Decryption Key Selection"),
-            keys, GlobalSettings::chiasmusDecryptionKey(),
-            GlobalSettings::chiasmusDecryptionOptions()));
+            keys, MessageViewer::MessageViewerSettings::chiasmusDecryptionKey(),
+            MessageViewer::MessageViewerSettings::chiasmusDecryptionOptions()));
     if (selectorDlg->exec() != QDialog::Accepted || !selectorDlg) {
         deleteLater();
         return;
     }
 
-    GlobalSettings::setChiasmusDecryptionOptions(selectorDlg->options());
-    GlobalSettings::setChiasmusDecryptionKey(selectorDlg->key());
-    assert(!GlobalSettings::chiasmusDecryptionKey().isEmpty());
+    MessageViewer::MessageViewerSettings::setChiasmusDecryptionOptions(selectorDlg->options());
+    MessageViewer::MessageViewerSettings::setChiasmusDecryptionKey(selectorDlg->key());
+    assert(!MessageViewer::MessageViewerSettings::chiasmusDecryptionKey().isEmpty());
     Kleo::SpecialJob *job = chiasmus->specialJob("x-decrypt", QMap<QString, QVariant>());
     if (!job) {
         const QString msg = i18n("Chiasmus backend does not offer the "
@@ -145,8 +145,8 @@ void AttachmentEncryptWithChiasmusJob::start()
     //PORT IT
     const QByteArray input;// = node->msgPart().bodyDecodedBinary();
 
-    if (!job->setProperty("key", GlobalSettings::chiasmusDecryptionKey()) ||
-            !job->setProperty("options", GlobalSettings::chiasmusDecryptionOptions()) ||
+    if (!job->setProperty("key", MessageViewer::MessageViewerSettings::chiasmusDecryptionKey()) ||
+            !job->setProperty("options", MessageViewer::MessageViewerSettings::chiasmusDecryptionOptions()) ||
             !job->setProperty("input", input)) {
         const QString msg = i18n("The \"x-decrypt\" function does not accept "
                                  "the expected parameters. Please report this bug.");
