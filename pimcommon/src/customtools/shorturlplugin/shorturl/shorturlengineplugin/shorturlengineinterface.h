@@ -35,6 +35,7 @@ public:
     void setShortUrl(const QString &url);
     virtual void generateShortUrl() = 0;
     virtual QString engineName() const = 0;
+    QString pluginName() const;
 
 protected Q_SLOTS:
     void slotErrorFound(QNetworkReply::NetworkError error);

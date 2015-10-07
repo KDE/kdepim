@@ -16,6 +16,7 @@
 */
 
 #include "shorturlengineinterface.h"
+#include "shorturlengineplugin.h"
 
 #include <KLocalizedString>
 
@@ -55,4 +56,9 @@ void ShortUrlEngineInterface::setShortUrl(const QString &url)
     } else {
         mOriginalUrl = url;
     }
+}
+
+QString ShortUrlEngineInterface::pluginName() const
+{
+    return mEnginePlugin->pluginName();
 }

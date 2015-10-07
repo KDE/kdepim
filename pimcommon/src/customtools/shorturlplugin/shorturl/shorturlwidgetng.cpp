@@ -170,7 +170,7 @@ void ShortUrlWidgetNg::loadEngine()
     if (!mCurrentEngine) {
         mCurrentEngine = mLstInterface.cbegin().value();
     }
-    mShorturlServiceName->setText(mCurrentEngine->engineName()); //TODO use correct name
+    mShorturlServiceName->setText(mCurrentEngine->pluginName());
 
     if (mCurrentEngine) {
         connect(mCurrentEngine, &ShortUrlEngineInterface::shortUrlGenerated, this, &ShortUrlWidgetNg::slotShortUrlDone);
