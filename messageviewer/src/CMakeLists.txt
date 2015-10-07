@@ -44,7 +44,7 @@ if(BUILD_TESTING)
 endif()
 add_subdirectory(pics)
 add_subdirectory(grantleefilters)
-
+add_subdirectory(kconf_update)
 if(DEBUG_SIGNATURE)
    add_definitions(-DDEBUG_SIGNATURE)
 endif()

@@ -166,7 +166,9 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="HtmlQuoteColorerEnabled" type="Bool">
         <default>false</default>
     </entry>
+  </group>
 
+  <group name="Gravatar">
     <entry name="GravatarSupportEnabled" type="Bool">
         <default>false</default>
     </entry>
