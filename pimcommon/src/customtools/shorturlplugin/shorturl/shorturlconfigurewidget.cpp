@@ -23,6 +23,10 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QHBoxLayout>
+#include <KConfigGroup>
+#include <KSharedConfig>
+
+#include <pimcommon/shorturlengineplugin.h>
 
 using namespace PimCommon;
 
@@ -69,31 +73,31 @@ void ShortUrlConfigureWidget::slotChanged()
 
 void ShortUrlConfigureWidget::init()
 {
-#if 0
-    //Google doesn't work now.
-    for (int i = PimCommon::ShortUrlUtils::Tinyurl; i < PimCommon::ShortUrlUtils::EndListEngine; ++i) {
-        d->mShortUrlServer->addItem(PimCommon::ShortUrlUtils::stringFromEngineType(static_cast<PimCommon::ShortUrlUtils::EngineType>(i)), i);
+    const QVector<PimCommon::ShortUrlEnginePlugin *>  lstPlugin = PimCommon::ShortUrlEnginePluginManager::self()->pluginsList();
+    Q_FOREACH (PimCommon::ShortUrlEnginePlugin *plugin, lstPlugin) {
+        d->mShortUrlServer->addItem(plugin->pluginName(), plugin->engineName());
     }
-#endif
 }
 
 void ShortUrlConfigureWidget::loadConfig()
 {
-#if 0
-    const int engineType = PimCommon::ShortUrlUtils::readEngineSettings();
-    int index = d->mShortUrlServer->findData(engineType);
+    KConfigGroup grp(KSharedConfig::openConfig(), "ShortUrl");
+    const QString engineName = grp.readEntry("EngineName");
+    int index = d->mShortUrlServer->findData(engineName);
     if (index < 0) {
         index = 0;
     }
     d->mShortUrlServer->setCurrentIndex(index);
     d->mChanged = false;
-#endif
 }
 
 void ShortUrlConfigureWidget::writeConfig()
 {
     if (d->mChanged) {
-        //PORT PimCommon::ShortUrlUtils::writeEngineSettings(d->mShortUrlServer->itemData(d->mShortUrlServer->currentIndex()).toInt());
+        KConfigGroup grp(KSharedConfig::openConfig(), "ShortUrl");
+        const QString engineName = grp.readEntry("EngineName");
+        grp.writeEntry("EngineName", d->mShortUrlServer->itemData(d->mShortUrlServer->currentIndex()).toString());
+        grp.sync();
         Q_EMIT settingsChanged();
     }
     d->mChanged = false;

@@ -26,6 +26,7 @@ public:
     {
 
     }
+    QString name;
 };
 
 ShortUrlEnginePlugin::ShortUrlEnginePlugin(QObject *parent)
@@ -38,5 +39,15 @@ ShortUrlEnginePlugin::ShortUrlEnginePlugin(QObject *parent)
 ShortUrlEnginePlugin::~ShortUrlEnginePlugin()
 {
     delete d;
+}
+
+QString ShortUrlEnginePlugin::pluginName() const
+{
+    return d->name;
+}
+
+void ShortUrlEnginePlugin::setPluginName(const QString &pluginname)
+{
+    d->name = pluginname;
 }
 

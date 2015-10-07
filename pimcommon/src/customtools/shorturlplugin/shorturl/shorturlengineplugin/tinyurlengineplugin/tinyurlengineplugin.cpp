@@ -44,9 +44,4 @@ QString TinyUrlEnginePlugin::engineName() const
     return QStringLiteral("tinyurl");
 }
 
-QString TinyUrlEnginePlugin::pluginName() const
-{
-    return QString(); //TODO
-}
-
 #include "tinyurlengineplugin.moc"

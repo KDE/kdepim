@@ -132,6 +132,7 @@ void ShortUrlWidgetNg::initializePlugins()
     Q_FOREACH (PimCommon::ShortUrlEnginePlugin *plugin, lstPlugin) {
         PimCommon::ShortUrlEngineInterface *interface = plugin->createInterface(this);
         mLstInterface.insert(interface->engineName(), interface);
+        qDebug()<<" interface->engineName()"<<interface->engineName();
     }
 }
 
@@ -159,6 +160,11 @@ void ShortUrlWidgetNg::settingsUpdated()
 
 void ShortUrlWidgetNg::loadEngine()
 {
+    if (mCurrentEngine) {
+        disconnect(mCurrentEngine, &ShortUrlEngineInterface::shortUrlGenerated, this, &ShortUrlWidgetNg::slotShortUrlDone);
+        disconnect(mCurrentEngine, &ShortUrlEngineInterface::shortUrlFailed, this, &ShortUrlWidgetNg::slotShortUrlFailed);
+    }
+
     KConfigGroup grp(KSharedConfig::openConfig(), "ShortUrl");
     const QString engineName = grp.readEntry("EngineName");
     mCurrentEngine = mLstInterface.value(engineName);

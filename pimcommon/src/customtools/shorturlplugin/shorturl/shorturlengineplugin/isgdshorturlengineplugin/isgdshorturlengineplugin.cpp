@@ -44,9 +44,4 @@ QString IsgdShortUrlEnginePlugin::engineName() const
     return QStringLiteral("isdgshorturl");
 }
 
-QString IsgdShortUrlEnginePlugin::pluginName() const
-{
-    return QString(); //TODO
-}
-
 #include "isgdshorturlengineplugin.moc"

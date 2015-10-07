@@ -33,7 +33,9 @@ public:
     ~ShortUrlEnginePlugin();
     virtual PimCommon::ShortUrlEngineInterface *createInterface(QObject *parent) = 0;
     virtual QString engineName() const = 0;
-    virtual QString pluginName() const = 0;
+    QString pluginName() const;
+    void setPluginName(const QString &pluginname);
+
 
 private:
     ShortUrlEnginePluginPrivate *const d;
