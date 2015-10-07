@@ -30,32 +30,46 @@
 #include <QVBoxLayout>
 
 using namespace KSieveUi;
+class KSieveUi::SieveEditorPrivate
+{
+public:
+    SieveEditorPrivate()
+        : mSieveEditorWidget(Q_NULLPTR),
+          mOkButton(Q_NULLPTR)
+    {
+
+    }
+    SieveEditorWidget *mSieveEditorWidget;
+    QPushButton *mOkButton;
+};
 
 SieveEditor::SieveEditor(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent),
+      d(new KSieveUi::SieveEditorPrivate)
 {
     setWindowTitle(i18n("Edit Sieve Script"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-    mOkButton->setDefault(true);
-    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    d->mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    d->mOkButton->setDefault(true);
+    d->mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveEditor::slotAccepted);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveEditor::slotCanceled);
-    mSieveEditorWidget = new SieveEditorWidget(true);
-    connect(mSieveEditorWidget, &SieveEditorWidget::valueChanged, this, &SieveEditor::valueChanged);
-    mainLayout->addWidget(mSieveEditorWidget);
+    d->mSieveEditorWidget = new SieveEditorWidget(true);
+    connect(d->mSieveEditorWidget, &SieveEditorWidget::valueChanged, this, &SieveEditor::valueChanged);
+    mainLayout->addWidget(d->mSieveEditorWidget);
     mainLayout->addWidget(buttonBox);
-    connect(mSieveEditorWidget, &SieveEditorWidget::enableButtonOk, this, &SieveEditor::slotEnableButtonOk);
+    connect(d->mSieveEditorWidget, &SieveEditorWidget::enableButtonOk, this, &SieveEditor::slotEnableButtonOk);
     connect(this, &SieveEditor::finished, this, &SieveEditor::cancelClicked);
-    connect(mSieveEditorWidget, &SieveEditorWidget::checkSyntax, this, &SieveEditor::checkSyntax);
+    connect(d->mSieveEditorWidget, &SieveEditorWidget::checkSyntax, this, &SieveEditor::checkSyntax);
     readConfig();
 }
 
 SieveEditor::~SieveEditor()
 {
     writeConfig();
+    delete d;
 }
 
 void SieveEditor::slotAccepted()
@@ -89,7 +103,7 @@ bool SieveEditor::event(QEvent *e)
 
 void SieveEditor::slotEnableButtonOk(bool b)
 {
-    mOkButton->setEnabled(b);
+    d->mOkButton->setEnabled(b);
 }
 
 void SieveEditor::writeConfig()
@@ -109,46 +123,46 @@ void SieveEditor::readConfig()
 
 QString SieveEditor::script() const
 {
-    return mSieveEditorWidget->script();
+    return d->mSieveEditorWidget->script();
 }
 
 QString SieveEditor::originalScript() const
 {
-    return mSieveEditorWidget->originalScript();
+    return d->mSieveEditorWidget->originalScript();
 }
 
 void SieveEditor::setScript(const QString &script)
 {
-    mSieveEditorWidget->setScript(script);
+    d->mSieveEditorWidget->setScript(script);
 }
 
 void SieveEditor::setDebugScript(const QString &debug)
 {
-    mSieveEditorWidget->setDebugScript(debug);
+    d->mSieveEditorWidget->setDebugScript(debug);
 }
 
 void SieveEditor::setScriptName(const QString &name)
 {
-    mSieveEditorWidget->setScriptName(name);
+    d->mSieveEditorWidget->setScriptName(name);
 }
 
 void SieveEditor::resultDone()
 {
-    mSieveEditorWidget->resultDone();
+    d->mSieveEditorWidget->resultDone();
 }
 
 void SieveEditor::setSieveCapabilities(const QStringList &capabilities)
 {
-    mSieveEditorWidget->setSieveCapabilities(capabilities);
+    d->mSieveEditorWidget->setSieveCapabilities(capabilities);
 }
 
 void SieveEditor::addFailedMessage(const QString &err)
 {
-    mSieveEditorWidget->addFailedMessage(err);
+    d->mSieveEditorWidget->addFailedMessage(err);
 }
 
 void SieveEditor::addOkMessage(const QString &msg)
 {
-    mSieveEditorWidget->addOkMessage(msg);
+    d->mSieveEditorWidget->addOkMessage(msg);
 }
 
