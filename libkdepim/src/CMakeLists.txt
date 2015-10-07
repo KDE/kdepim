@@ -13,11 +13,6 @@ add_subdirectory(pics)
 add_definitions(-DTRANSLATION_DOMAIN=\"libkdepim\")
 
 ########### next target ###############
-
-set(kdepim_proxy_LIB_SRCS
-   proxy/kcolumnfilterproxymodel.cpp
-)
-
 set(kdepim_progresswidget_LIB_SRCS
    progresswidget/progressmanager.cpp
    progresswidget/progressmanager_akonadiagent.cpp
@@ -99,7 +94,6 @@ set(kdepim_multiplyingline_LIB_SRCS
 )
 
 set(kdepim_LIB_SRCS
-   ${kdepim_proxy_LIB_SRCS}
    ${kdepim_addressline_blacklist_baloo_LIB_SRCS}
    ${kdepim_progresswidget_LIB_SRCS}
    ${kdepim_job_LIB_SRCS}
@@ -246,13 +240,6 @@ ecm_generate_headers(libkdepim_multiline_HEADERS
   RELATIVE  multiplyingline
 )
 
-ecm_generate_headers(libkdepim_proxy_HEADERS
-  HEADER_NAMES
-  KColumnFilterProxyModel
-  REQUIRED_HEADERS libkdepim_proxy_HEADERS
-  PREFIX Libkdepim
-  RELATIVE proxy
-)
 
 ecm_generate_headers(libkdepim_addressline_HEADERS
   HEADER_NAMES
@@ -311,7 +298,6 @@ install(FILES
     ${libkdepim_misc_HEADERS}
     ${libkdepim_job_HEADERS}
     ${libkdepim_pref_HEADERS}
-    ${libkdepim_proxy_HEADERS}
     ${libkdepim_multiline_HEADERS}
     ${libkdepim_addressline_HEADERS}
     ${libkdepim_recentaddress_HEADERS}
@@ -331,7 +317,6 @@ install(FILES
     ${libkdepim_widgets_HEADERS}
     ${libkdepim_job_HEADERS}
     ${libkdepim_pref_HEADERS}
-    ${libkdepim_proxy_HEADERS}
     ${libkdepim_multiline_HEADERS}
     ${libkdepim_addressline_HEADERS}
     ${libkdepim_recentaddress_HEADERS}

@@ -32,8 +32,6 @@
 
 #include <ETMViewStateSaver>
 
-#include "Libkdepim/KColumnFilterProxyModel"
-using namespace KPIM;
 
 #include <KCalCore/Event>
 
@@ -53,6 +51,7 @@ using namespace KPIM;
 #include <QSortFilterProxyModel>
 #include <QTimer>
 #include <QPainter>
+#include <KRearrangeColumnsProxyModel>
 
 using namespace Akonadi;
 using namespace EventViews;
@@ -714,8 +713,8 @@ void MultiAgendaView::doRestoreConfig(const KConfigGroup &configGroup)
             sortProxy->setSourceModel(calendar()->entityTreeModel());
 
             // Only show the first column
-            KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel(this);
-            columnFilterProxy->setVisibleColumn(Akonadi::ETMCalendar::CollectionTitle);
+            KRearrangeColumnsProxyModel *columnFilterProxy = new KRearrangeColumnsProxyModel(this);
+            columnFilterProxy->setSourceColumns(QVector<int>()<<Akonadi::ETMCalendar::CollectionTitle);
             columnFilterProxy->setSourceModel(sortProxy);
 
             // Keep track of selection.

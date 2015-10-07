@@ -33,9 +33,6 @@
 #include <CalendarSupport/KCalPrefs>
 #include <CalendarSupport/Utils>
 
-#include "Libkdepim/KColumnFilterProxyModel"
-using namespace KPIM;
-
 #include <EntityDisplayAttribute>
 #include <ETMViewStateSaver>
 
@@ -49,6 +46,7 @@ using namespace KPIM;
 #include <KLocalizedString>
 #include <KRandom>
 #include <KViewStateMaintainer>
+#include <KRearrangeColumnsProxyModel>
 #include "calendarview_debug.h"
 
 #include <QApplication>
@@ -550,8 +548,8 @@ void EventView::restoreConfig(const KConfigGroup &configGroup)
             }
 
             // Only show the first column.
-            KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel(this);
-            columnFilterProxy->setVisibleColumn(Akonadi::ETMCalendar::CollectionTitle);
+            KRearrangeColumnsProxyModel *columnFilterProxy = new KRearrangeColumnsProxyModel(this);
+            columnFilterProxy->setSourceColumns(QVector<int>()<<Akonadi::ETMCalendar::CollectionTitle);
             columnFilterProxy->setSourceModel(sortProxy);
 
             // Make the calendar model checkable.
