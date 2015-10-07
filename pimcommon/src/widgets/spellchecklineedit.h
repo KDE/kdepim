@@ -65,11 +65,6 @@ Q_SIGNALS:
     void focusUp();
 
     void focusDown();
-
-private:
-    class Private;
-    Private *const d;
-
 };
 }
 #endif /* SpellCheckLineEdit_H */

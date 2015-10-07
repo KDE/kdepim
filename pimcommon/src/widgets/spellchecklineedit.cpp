@@ -39,21 +39,8 @@
 
 using namespace PimCommon;
 
-class Q_DECL_HIDDEN SpellCheckLineEdit::Private
-{
-public:
-    Private()
-    {
-    }
-    ~Private()
-    {
-    }
-
-};
-
 SpellCheckLineEdit::SpellCheckLineEdit(QWidget *parent, const QString &configFile)
-    : PimCommon::RichTextEditor(parent),
-      d(new Private)
+    : PimCommon::RichTextEditor(parent)
 {
     setSpellCheckingConfigFileName(configFile);
     setSearchSupport(false);
@@ -73,7 +60,6 @@ SpellCheckLineEdit::SpellCheckLineEdit(QWidget *parent, const QString &configFil
 
 SpellCheckLineEdit::~SpellCheckLineEdit()
 {
-    delete d;
 }
 
 void SpellCheckLineEdit::keyPressEvent(QKeyEvent *e)
