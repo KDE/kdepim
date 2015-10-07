@@ -42,16 +42,33 @@
 
 using namespace KSieveUi;
 
+class KSieveUi::SieveTextEditPrivate
+{
+public:
+    SieveTextEditPrivate()
+        : m_sieveLineNumberArea(Q_NULLPTR),
+          mTextEditorCompleter(Q_NULLPTR),
+          mInitialFontSize(0),
+          mShowHelpMenu(true)
+    {
+
+    }
+    PimCommon::SieveSyntaxHighlighterRules mSieveHighliterRules;
+    SieveLineNumberArea *m_sieveLineNumberArea;
+    KPIMTextEdit::TextEditorCompleter *mTextEditorCompleter;
+    int mInitialFontSize;
+    bool mShowHelpMenu;
+};
+
 SieveTextEdit::SieveTextEdit(QWidget *parent)
     : PimCommon::PlainTextEditor(parent),
-      mInitialFontSize(0),
-      mShowHelpMenu(true)
+      d(new KSieveUi::SieveTextEditPrivate)
 {
     setSpellCheckingConfigFileName(QStringLiteral("sieveeditorrc"));
     setWordWrapMode(QTextOption::NoWrap);
     setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-    m_sieveLineNumberArea = new SieveLineNumberArea(this);
-    mInitialFontSize = font().pointSize();
+    d->m_sieveLineNumberArea = new SieveLineNumberArea(this);
+    d->mInitialFontSize = font().pointSize();
 
     connect(this, &SieveTextEdit::blockCountChanged, this, &SieveTextEdit::slotUpdateLineNumberAreaWidth);
     connect(this, &SieveTextEdit::updateRequest, this, &SieveTextEdit::slotUpdateLineNumberArea);
@@ -64,6 +81,7 @@ SieveTextEdit::SieveTextEdit(QWidget *parent)
 
 SieveTextEdit::~SieveTextEdit()
 {
+    delete d;
 }
 
 void SieveTextEdit::updateHighLighter()
@@ -84,7 +102,7 @@ void SieveTextEdit::createHighlighter()
     KSieveUi::SieveSyntaxSpellCheckingHighlighter *highlighter = new KSieveUi::SieveSyntaxSpellCheckingHighlighter(this);
     highlighter->toggleSpellHighlighting(checkSpellingEnabled());
     highlighter->setCurrentLanguage(spellCheckingLanguage());
-    highlighter->setSyntaxHighlighterRules(mSieveHighliterRules.rules());
+    highlighter->setSyntaxHighlighterRules(d->mSieveHighliterRules.rules());
     setHighlighter(highlighter);
 }
 
@@ -93,7 +111,7 @@ void SieveTextEdit::resizeEvent(QResizeEvent *e)
     QPlainTextEdit::resizeEvent(e);
 
     const QRect cr = contentsRect();
-    m_sieveLineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
+    d->m_sieveLineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
 
 int SieveTextEdit::lineNumberAreaWidth() const
@@ -111,7 +129,7 @@ int SieveTextEdit::lineNumberAreaWidth() const
 
 void SieveTextEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
 {
-    QPainter painter(m_sieveLineNumberArea);
+    QPainter painter(d->m_sieveLineNumberArea);
     painter.fillRect(event->rect(), Qt::lightGray);
 
     QTextBlock block = firstVisibleBlock();
@@ -122,7 +140,7 @@ void SieveTextEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
         if (block.isVisible() && bottom >= event->rect().top()) {
             const QString number = QString::number(blockNumber + 1);
             painter.setPen(Qt::black);
-            painter.drawText(0, top, m_sieveLineNumberArea->width(), fontMetrics().height(),
+            painter.drawText(0, top, d->m_sieveLineNumberArea->width(), fontMetrics().height(),
                              Qt::AlignRight, number);
         }
 
@@ -141,9 +159,9 @@ void SieveTextEdit::slotUpdateLineNumberAreaWidth(int)
 void SieveTextEdit::slotUpdateLineNumberArea(const QRect &rect, int dy)
 {
     if (dy) {
-        m_sieveLineNumberArea->scroll(0, dy);
+        d->m_sieveLineNumberArea->scroll(0, dy);
     } else {
-        m_sieveLineNumberArea->update(0, rect.y(), m_sieveLineNumberArea->width(), rect.height());
+        d->m_sieveLineNumberArea->update(0, rect.y(), d->m_sieveLineNumberArea->width(), rect.height());
     }
 
     if (rect.contains(viewport()->rect())) {
@@ -169,15 +187,15 @@ QStringList SieveTextEdit::completerList() const
 
 void SieveTextEdit::setCompleterList(const QStringList &list)
 {
-    mTextEditorCompleter->setCompleterStringList(list);
+    d->mTextEditorCompleter->setCompleterStringList(list);
 }
 
 void SieveTextEdit::initCompleter()
 {
     const QStringList listWord = completerList();
 
-    mTextEditorCompleter = new KPIMTextEdit::TextEditorCompleter(this, this);
-    mTextEditorCompleter->setCompleterStringList(listWord);
+    d->mTextEditorCompleter = new KPIMTextEdit::TextEditorCompleter(this, this);
+    d->mTextEditorCompleter->setCompleterStringList(listWord);
 }
 
 bool SieveTextEdit::event(QEvent *ev)
@@ -224,7 +242,7 @@ bool SieveTextEdit::openVariableHelp()
 
 void SieveTextEdit::keyPressEvent(QKeyEvent *e)
 {
-    if (mTextEditorCompleter->completer()->popup()->isVisible()) {
+    if (d->mTextEditorCompleter->completer()->popup()->isVisible()) {
         switch (e->key()) {
         case Qt::Key_Enter:
         case Qt::Key_Return:
@@ -251,15 +269,15 @@ void SieveTextEdit::keyPressEvent(QKeyEvent *e)
         }
         return;
     }
-    mTextEditorCompleter->completeText();
+    d->mTextEditorCompleter->completeText();
 }
 
 void SieveTextEdit::setSieveCapabilities(const QStringList &capabilities)
 {
-    mSieveHighliterRules.addCapabilities(capabilities);
+    d->mSieveHighliterRules.addCapabilities(capabilities);
     PimCommon::PlainTextSyntaxSpellCheckingHighlighter *hlighter = dynamic_cast<PimCommon::PlainTextSyntaxSpellCheckingHighlighter *>(highlighter());
     if (hlighter) {
-        hlighter->setSyntaxHighlighterRules(mSieveHighliterRules.rules());
+        hlighter->setSyntaxHighlighterRules(d->mSieveHighliterRules.rules());
     }
 
     setCompleterList(completerList() + capabilities);
@@ -267,12 +285,12 @@ void SieveTextEdit::setSieveCapabilities(const QStringList &capabilities)
 
 void SieveTextEdit::setShowHelpMenu(bool b)
 {
-    mShowHelpMenu = b;
+    d->mShowHelpMenu = b;
 }
 
 void SieveTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 {
-    if (!mShowHelpMenu) {
+    if (!d->mShowHelpMenu) {
         return;
     }
 
@@ -412,9 +430,9 @@ void SieveTextEdit::wordWrap(bool state)
 
 void SieveTextEdit::zoomReset()
 {
-    if (mInitialFontSize > 0) {
+    if (d->mInitialFontSize > 0) {
         QFont f = font();
-        f.setPointSize(mInitialFontSize);
+        f.setPointSize(d->mInitialFontSize);
         setFont(f);
     }
 }

@@ -39,6 +39,7 @@ namespace KSieveUi
 {
 
 class SieveLineNumberArea;
+class SieveTextEditPrivate;
 class KSIEVEUI_EXPORT SieveTextEdit : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
@@ -89,11 +90,7 @@ private:
     void setCompleterList(const QStringList &list);
     QString selectedWord(const QPoint &pos = QPoint()) const;
 
-    PimCommon::SieveSyntaxHighlighterRules mSieveHighliterRules;
-    SieveLineNumberArea *m_sieveLineNumberArea;
-    KPIMTextEdit::TextEditorCompleter *mTextEditorCompleter;
-    int mInitialFontSize;
-    bool mShowHelpMenu;
+    SieveTextEditPrivate *const d;
 };
 
 }
