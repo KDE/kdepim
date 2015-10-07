@@ -132,7 +132,6 @@ void ShortUrlWidgetNg::initializePlugins()
     Q_FOREACH (PimCommon::ShortUrlEnginePlugin *plugin, lstPlugin) {
         PimCommon::ShortUrlEngineInterface *interface = plugin->createInterface(this);
         mLstInterface.insert(interface->engineName(), interface);
-        qDebug()<<" interface->engineName()"<<interface->engineName();
     }
 }
 
