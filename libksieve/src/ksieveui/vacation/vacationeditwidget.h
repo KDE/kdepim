@@ -33,7 +33,6 @@ class PlainTextEditorWidget;
 }
 
 class QCheckBox;
-template <typename T> class QList;
 
 namespace KMime
 {
