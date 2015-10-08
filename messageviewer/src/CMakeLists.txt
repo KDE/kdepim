@@ -22,7 +22,6 @@ else()
 endif()
 
 configure_file(settings/messageviewer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messageviewer.kcfg)
-
 include(CheckIncludeFiles)
 check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
 macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
@@ -206,6 +205,7 @@ ecm_qt_declare_logging_category(libmessageviewer_SRCS HEADER messageviewer_debug
 
 kconfig_add_kcfg_files(libmessageviewer_SRCS
   settings/globalsettings_messageviewer.kcfgc
+  gravatar/settings/gravatarsettings.kcfgc
 )
 
 ki18n_wrap_ui(libmessageviewer_SRCS

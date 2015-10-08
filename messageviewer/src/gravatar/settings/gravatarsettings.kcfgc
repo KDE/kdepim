@@ -1,0 +1,10 @@
+File=gravatar.kcfg
+ClassName=MessageViewerGravatarBase
+NameSpace=MessageViewer
+Visibility=MESSAGEVIEWER_EXPORT
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=messageviewer_export.h,messageviewer_debug.h
+CategoryLoggingName=MESSAGEVIEWER_LOG
