@@ -170,9 +170,9 @@ void EventEdit::writeConfig()
 {
     const Akonadi::Collection col = mCollectionCombobox->currentCollection();
     // col might not be valid if the collection wasn't found yet (the combo is async), skip saving in that case.
-    if (col.isValid() && col.id() != MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder()) {
-        MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(col.id());
-        MessageViewer::GlobalSettingsBase::self()->save();
+    if (col.isValid() && col.id() != MessageViewer::MessageViewerSettingsBase::self()->lastEventSelectedFolder()) {
+        MessageViewer::MessageViewerSettingsBase::self()->setLastEventSelectedFolder(col.id());
+        MessageViewer::MessageViewerSettingsBase::self()->save();
     }
 }
 
@@ -195,7 +195,7 @@ void EventEdit::showEventEdit()
 
 void EventEdit::readConfig()
 {
-    const qint64 id = MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder();
+    const qint64 id = MessageViewer::MessageViewerSettingsBase::self()->lastEventSelectedFolder();
     if (id >= 0) {
         mCollectionCombobox->setDefaultCollection(Akonadi::Collection(id));
     }

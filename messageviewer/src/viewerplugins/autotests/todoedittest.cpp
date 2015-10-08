@@ -337,7 +337,7 @@ void TodoEditTest::shouldSaveCollectionSettings()
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
     QPushButton *close = edit.findChild<QPushButton *>(QStringLiteral("close-button"));
     QTest::mouseClick(close, Qt::LeftButton);
-    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder(), id);
+    QCOMPARE(MessageViewer::MessageViewerSettingsBase::self()->lastSelectedFolder(), id);
 }
 
 void TodoEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
@@ -347,7 +347,7 @@ void TodoEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
     akonadicombobox->setCurrentIndex(4);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
     edit.writeConfig();
-    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder(), id);
+    QCOMPARE(MessageViewer::MessageViewerSettingsBase::self()->lastSelectedFolder(), id);
 }
 
 void TodoEditTest::shouldSaveCollectionSettingsWhenDeleteWidget()
@@ -357,7 +357,7 @@ void TodoEditTest::shouldSaveCollectionSettingsWhenDeleteWidget()
     akonadicombobox->setCurrentIndex(4);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
     delete edit;
-    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder(), id);
+    QCOMPARE(MessageViewer::MessageViewerSettingsBase::self()->lastSelectedFolder(), id);
 }
 
 void TodoEditTest::shouldSetFocusWhenWeCallTodoEdit()

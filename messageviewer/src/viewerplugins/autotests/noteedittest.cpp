@@ -329,7 +329,7 @@ void NoteEditTest::shouldSaveCollectionSettings()
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
     QPushButton *close = edit.findChild<QPushButton *>(QStringLiteral("close-button"));
     QTest::mouseClick(close, Qt::LeftButton);
-    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastNoteSelectedFolder(), id);
+    QCOMPARE(MessageViewer::MessageViewerSettingsBase::self()->lastNoteSelectedFolder(), id);
 }
 
 void NoteEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
@@ -339,7 +339,7 @@ void NoteEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
     akonadicombobox->setCurrentIndex(4);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
     edit.writeConfig();
-    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastNoteSelectedFolder(), id);
+    QCOMPARE(MessageViewer::MessageViewerSettingsBase::self()->lastNoteSelectedFolder(), id);
 }
 
 void NoteEditTest::shouldSaveCollectionSettingsWhenDeleteWidget()
@@ -349,7 +349,7 @@ void NoteEditTest::shouldSaveCollectionSettingsWhenDeleteWidget()
     akonadicombobox->setCurrentIndex(4);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
     delete edit;
-    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastNoteSelectedFolder(), id);
+    QCOMPARE(MessageViewer::MessageViewerSettingsBase::self()->lastNoteSelectedFolder(), id);
 }
 
 void NoteEditTest::shouldSetFocusWhenWeCallNoteEdit()

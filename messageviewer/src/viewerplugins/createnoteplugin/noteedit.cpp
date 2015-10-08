@@ -127,9 +127,9 @@ NoteEdit::~NoteEdit()
 
 void NoteEdit::writeConfig()
 {
-    if (mCollectionCombobox->currentCollection().id() != MessageViewer::GlobalSettingsBase::self()->lastNoteSelectedFolder()) {
-        MessageViewer::GlobalSettingsBase::self()->setLastNoteSelectedFolder(mCollectionCombobox->currentCollection().id());
-        MessageViewer::GlobalSettingsBase::self()->save();
+    if (mCollectionCombobox->currentCollection().id() != MessageViewer::MessageViewerSettingsBase::self()->lastNoteSelectedFolder()) {
+        MessageViewer::MessageViewerSettingsBase::self()->setLastNoteSelectedFolder(mCollectionCombobox->currentCollection().id());
+        MessageViewer::MessageViewerSettingsBase::self()->save();
     }
 }
 
@@ -147,7 +147,7 @@ void NoteEdit::showNoteEdit()
 
 void NoteEdit::readConfig()
 {
-    const qint64 id = MessageViewer::GlobalSettingsBase::self()->lastNoteSelectedFolder();
+    const qint64 id = MessageViewer::MessageViewerSettingsBase::self()->lastNoteSelectedFolder();
     if (id != -1) {
         mCollectionCombobox->setDefaultCollection(Akonadi::Collection(id));
     }
