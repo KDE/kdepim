@@ -466,10 +466,10 @@ void MessageFactoryTest::test_multipartAlternative()
     factory.setSelection(selection);
     factory.setQuote(true);
     factory.setReplyStrategy(ReplyAll);
-    TemplateParser::GlobalSettings::self()->setTemplateReplyAll(QLatin1String("%QUOTE"));
+    TemplateParser::TemplateParserSettings::self()->setTemplateReplyAll(QLatin1String("%QUOTE"));
 
     QString str;
-    str = TemplateParser::GlobalSettings::self()->templateReplyAll();
+    str = TemplateParser::TemplateParserSettings::self()->templateReplyAll();
     factory.setTemplate(str);
 
     MessageFactory::MessageReply reply =  factory.createReply();

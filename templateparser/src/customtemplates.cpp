@@ -192,7 +192,7 @@ void CustomTemplates::iconFromType(CustomTemplates::Type type, CustomTemplateIte
 
 void CustomTemplates::load()
 {
-    const QStringList list = GlobalSettings::self()->customTemplates();
+    const QStringList list = TemplateParserSettings::self()->customTemplates();
     mUi->mList->clear();
     QStringList::const_iterator end(list.constEnd());
     for (QStringList::const_iterator it = list.constBegin(); it != end; ++it) {
@@ -243,8 +243,8 @@ void CustomTemplates::save()
         ++lit;
     }
 
-    GlobalSettings::self()->setCustomTemplates(list);
-    GlobalSettings::self()->save();
+    TemplateParserSettings::self()->setCustomTemplates(list);
+    TemplateParserSettings::self()->save();
 
     Q_EMIT templatesUpdated();
 }

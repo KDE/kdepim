@@ -152,31 +152,31 @@ QLabel *TemplatesConfiguration::helpLabel() const
 void TemplatesConfiguration::loadFromGlobal()
 {
     QString str;
-    str = GlobalSettings::self()->templateNewMessage();
+    str = TemplateParserSettings::self()->templateNewMessage();
     if (str.isEmpty()) {
         textEdit_new->setPlainText(DefaultTemplates::defaultNewMessage());
     } else {
         textEdit_new->setPlainText(str);
     }
-    str = GlobalSettings::self()->templateReply();
+    str = TemplateParserSettings::self()->templateReply();
     if (str.isEmpty()) {
         textEdit_reply->setPlainText(DefaultTemplates::defaultReply());
     } else {
         textEdit_reply->setPlainText(str);
     }
-    str = GlobalSettings::self()->templateReplyAll();
+    str = TemplateParserSettings::self()->templateReplyAll();
     if (str.isEmpty()) {
         textEdit_reply_all->setPlainText(DefaultTemplates::defaultReplyAll());
     } else {
         textEdit_reply_all->setPlainText(str);
     }
-    str = GlobalSettings::self()->templateForward();
+    str = TemplateParserSettings::self()->templateForward();
     if (str.isEmpty()) {
         textEdit_forward->setPlainText(DefaultTemplates::defaultForward());
     } else {
         textEdit_forward->setPlainText(str);
     }
-    str = GlobalSettings::self()->quoteString();
+    str = TemplateParserSettings::self()->quoteString();
     if (str.isEmpty()) {
         lineEdit_quote->setText(DefaultTemplates::defaultQuoteString());
     } else {
@@ -186,12 +186,12 @@ void TemplatesConfiguration::loadFromGlobal()
 
 void TemplatesConfiguration::saveToGlobal()
 {
-    GlobalSettings::self()->setTemplateNewMessage(strOrBlank(textEdit_new->toPlainText()));
-    GlobalSettings::self()->setTemplateReply(strOrBlank(textEdit_reply->toPlainText()));
-    GlobalSettings::self()->setTemplateReplyAll(strOrBlank(textEdit_reply_all->toPlainText()));
-    GlobalSettings::self()->setTemplateForward(strOrBlank(textEdit_forward->toPlainText()));
-    GlobalSettings::self()->setQuoteString(lineEdit_quote->text());
-    GlobalSettings::self()->save();
+    TemplateParserSettings::self()->setTemplateNewMessage(strOrBlank(textEdit_new->toPlainText()));
+    TemplateParserSettings::self()->setTemplateReply(strOrBlank(textEdit_reply->toPlainText()));
+    TemplateParserSettings::self()->setTemplateReplyAll(strOrBlank(textEdit_reply_all->toPlainText()));
+    TemplateParserSettings::self()->setTemplateForward(strOrBlank(textEdit_forward->toPlainText()));
+    TemplateParserSettings::self()->setQuoteString(lineEdit_quote->text());
+    TemplateParserSettings::self()->save();
 }
 
 void TemplatesConfiguration::loadFromIdentity(uint id)
@@ -202,7 +202,7 @@ void TemplatesConfiguration::loadFromIdentity(uint id)
 
     str = t.templateNewMessage();
     if (str.isEmpty()) {
-        str = GlobalSettings::self()->templateNewMessage();
+        str = TemplateParserSettings::self()->templateNewMessage();
     }
     if (str.isEmpty()) {
         str = DefaultTemplates::defaultNewMessage();
@@ -211,7 +211,7 @@ void TemplatesConfiguration::loadFromIdentity(uint id)
 
     str = t.templateReply();
     if (str.isEmpty()) {
-        str = GlobalSettings::self()->templateReply();
+        str = TemplateParserSettings::self()->templateReply();
     }
     if (str.isEmpty()) {
         str = DefaultTemplates::defaultReply();
@@ -220,7 +220,7 @@ void TemplatesConfiguration::loadFromIdentity(uint id)
 
     str = t.templateReplyAll();
     if (str.isEmpty()) {
-        str = GlobalSettings::self()->templateReplyAll();
+        str = TemplateParserSettings::self()->templateReplyAll();
     }
     if (str.isEmpty()) {
         str = DefaultTemplates::defaultReplyAll();
@@ -229,7 +229,7 @@ void TemplatesConfiguration::loadFromIdentity(uint id)
 
     str = t.templateForward();
     if (str.isEmpty()) {
-        str = GlobalSettings::self()->templateForward();
+        str = TemplateParserSettings::self()->templateForward();
     }
     if (str.isEmpty()) {
         str = DefaultTemplates::defaultForward();
@@ -238,7 +238,7 @@ void TemplatesConfiguration::loadFromIdentity(uint id)
 
     str = t.quoteString();
     if (str.isEmpty()) {
-        str = GlobalSettings::self()->quoteString();
+        str = TemplateParserSettings::self()->quoteString();
     }
     if (str.isEmpty()) {
         str = DefaultTemplates::defaultQuoteString();
@@ -273,7 +273,7 @@ void TemplatesConfiguration::loadFromFolder(const QString &id, uint identity)
         str = tid->templateNewMessage();
     }
     if (str.isEmpty()) {
-        str = GlobalSettings::self()->templateNewMessage();
+        str = TemplateParserSettings::self()->templateNewMessage();
     }
     if (str.isEmpty()) {
         str = DefaultTemplates::defaultNewMessage();
@@ -285,7 +285,7 @@ void TemplatesConfiguration::loadFromFolder(const QString &id, uint identity)
         str = tid->templateReply();
     }
     if (str.isEmpty()) {
-        str = GlobalSettings::self()->templateReply();
+        str = TemplateParserSettings::self()->templateReply();
     }
     if (str.isEmpty()) {
         str = DefaultTemplates::defaultReply();
@@ -297,7 +297,7 @@ void TemplatesConfiguration::loadFromFolder(const QString &id, uint identity)
         str = tid->templateReplyAll();
     }
     if (str.isEmpty()) {
-        str = GlobalSettings::self()->templateReplyAll();
+        str = TemplateParserSettings::self()->templateReplyAll();
     }
     if (str.isEmpty()) {
         str = DefaultTemplates::defaultReplyAll();
@@ -309,7 +309,7 @@ void TemplatesConfiguration::loadFromFolder(const QString &id, uint identity)
         str = tid->templateForward();
     }
     if (str.isEmpty()) {
-        str = GlobalSettings::self()->templateForward();
+        str = TemplateParserSettings::self()->templateForward();
     }
     if (str.isEmpty()) {
         str = DefaultTemplates::defaultForward();
@@ -321,7 +321,7 @@ void TemplatesConfiguration::loadFromFolder(const QString &id, uint identity)
         str = tid->quoteString();
     }
     if (str.isEmpty()) {
-        str = GlobalSettings::self()->quoteString();
+        str = TemplateParserSettings::self()->quoteString();
     }
     if (str.isEmpty()) {
         str = DefaultTemplates::defaultQuoteString();

@@ -152,7 +152,7 @@ void CustomTemplatesMenu::update()
 {
     clear();
 
-    const QStringList list = GlobalSettings::self()->customTemplates();
+    const QStringList list = TemplateParserSettings::self()->customTemplates();
     QStringList::const_iterator it = list.constBegin();
     QStringList::const_iterator end = list.constEnd();
     int idx = 0;

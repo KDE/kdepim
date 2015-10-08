@@ -97,7 +97,7 @@ namespace TemplateParser
  * \par When "TO" and when "NOT TO" make multipart/alternative Mails
  * User is the master to decide when to and when not to make multipart/alternative mails.
  * <b>For user who <u>don't prefer</u> using HTML mails</b>
- * There is a GlobalSettings::self()->replyUsingHtml() (in GUI as Settings->Configure KMail->
+ * There is a TemplateParserSettings::self()->replyUsingHtml() (in GUI as Settings->Configure KMail->
  * Composer->General->"Reply using HTML if present"), which when not true (checkbox disabled
  * in UI), will clear the htmlBody.
  * An another option within the standard templates, %FORCEDPLAIN command raises the flag,
@@ -118,8 +118,8 @@ namespace TemplateParser
  * Since htmlBody received by addProcessedBodyToMessage() is not empty, multipart/alternative
  * messages are assembled.
  *
- * @NOTE Resolving conflict between GlobalSettings "replyUsingHtml" and FORCEDXXXX command.
- * The conflict is resolved by simply giving preference to the commands over GlobalSettings.
+ * @NOTE Resolving conflict between TemplateParserSettings "replyUsingHtml" and FORCEDXXXX command.
+ * The conflict is resolved by simply giving preference to the commands over TemplateParserSettings.
  *
  * \par Make plain part
  * mMsg is the reply message in which the message text will be replaced by the

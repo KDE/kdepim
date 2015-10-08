@@ -1,5 +1,5 @@
 File=templateparser.kcfg
-ClassName=GlobalSettings
+ClassName=TemplateParserSettings
 NameSpace=TemplateParser
 Visibility=TEMPLATEPARSER_EXPORT
 Mutators=true

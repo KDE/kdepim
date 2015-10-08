@@ -113,7 +113,7 @@ void TemplateParser::setAllowDecryption(const bool allowDecryption)
 bool TemplateParser::shouldStripSignature() const
 {
     // Only strip the signature when replying, it should be preserved when forwarding
-    return (mMode == Reply || mMode == ReplyAll) && GlobalSettings::self()->stripSignature();
+    return (mMode == Reply || mMode == ReplyAll) && TemplateParserSettings::self()->stripSignature();
 }
 
 void TemplateParser::setIdentityManager(KIdentityManagement::IdentityManager *ident)
@@ -1148,7 +1148,7 @@ void TemplateParser::processWithTemplate(const QString &tmpl)
     // OR the original mail has no HTML part.
     const KMime::Content *content = mOrigMsg->mainBodyPart("text/html");
     if (mQuotes == ReplyAsPlain ||
-            (mQuotes != ReplyAsHtml && !GlobalSettings::self()->replyUsingHtml()) ||
+            (mQuotes != ReplyAsHtml && !TemplateParserSettings::self()->replyUsingHtml()) ||
             (!content || !content->hasContent())) {
         htmlBody.clear();
     } else {
@@ -1441,23 +1441,23 @@ QString TemplateParser::findTemplate()
 
     switch (mMode) {  // use the global template
     case NewMessage:
-        tmpl = GlobalSettings::self()->templateNewMessage();
+        tmpl = TemplateParserSettings::self()->templateNewMessage();
         break;
     case Reply:
-        tmpl = GlobalSettings::self()->templateReply();
+        tmpl = TemplateParserSettings::self()->templateReply();
         break;
     case ReplyAll:
-        tmpl = GlobalSettings::self()->templateReplyAll();
+        tmpl = TemplateParserSettings::self()->templateReplyAll();
         break;
     case Forward:
-        tmpl = GlobalSettings::self()->templateForward();
+        tmpl = TemplateParserSettings::self()->templateForward();
         break;
     default:
         qCDebug(TEMPLATEPARSER_LOG) << "Unknown message mode:" << mMode;
         return QString();
     }
 
-    mQuoteString = GlobalSettings::self()->quoteString();
+    mQuoteString = TemplateParserSettings::self()->quoteString();
     return tmpl;
 }
 
@@ -1600,7 +1600,7 @@ QString TemplateParser::quotedPlainText(const QString &selection) const
 
     const QString indentStr =
         MessageCore::StringUtil::formatQuotePrefix(mQuoteString, mOrigMsg->from()->displayString());
-    if (GlobalSettings::self()->smartQuote() && mWrap) {
+    if (TemplateParserSettings::self()->smartQuote() && mWrap) {
         content = MessageCore::StringUtil::smartQuote(content, mColWrap - indentStr.length());
     }
     content.replace(QLatin1Char('\n'), QLatin1Char('\n') + indentStr);
