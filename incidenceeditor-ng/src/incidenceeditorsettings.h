@@ -29,7 +29,7 @@
 namespace IncidenceEditorNG
 {
 
-class INCIDENCEEDITORS_NG_EXPORT IncidenceEditorSettings : public IncidenceEditorNG::GlobalSettingsBase
+class INCIDENCEEDITORS_NG_EXPORT IncidenceEditorSettings : public IncidenceEditorNG::IncidenceEditorSettingsBase
 {
     Q_OBJECT
 

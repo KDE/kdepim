@@ -1,5 +1,5 @@
 File=messageviewer.kcfg
-ClassName=GlobalSettingsBase
+ClassName=MessageViewerSettingsBase
 NameSpace=MessageViewer
 Visibility=MESSAGEVIEWER_EXPORT
 Mutators=true

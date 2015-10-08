@@ -27,7 +27,7 @@
 namespace MessageCore
 {
 
-class MESSAGECORE_EXPORT MessageCoreSettings : public MessageCore::GlobalSettingsBase
+class MESSAGECORE_EXPORT MessageCoreSettings : public MessageCore::MessageCoreSettingsBase
 {
     Q_OBJECT
 

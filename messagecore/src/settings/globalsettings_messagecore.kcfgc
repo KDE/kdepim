@@ -1,5 +1,5 @@
 File=messagecore.kcfg
-ClassName=GlobalSettingsBase
+ClassName=MessageCoreSettingsBase
 NameSpace=MessageCore
 Visibility=MESSAGECORE_EXPORT
 Mutators=true

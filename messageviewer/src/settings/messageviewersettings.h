@@ -31,7 +31,7 @@ class QTimer;
 namespace MessageViewer
 {
 
-class MESSAGEVIEWER_EXPORT MessageViewerSettings : public MessageViewer::GlobalSettingsBase
+class MESSAGEVIEWER_EXPORT MessageViewerSettings : public MessageViewer::MessageViewerSettingsBase
 {
     Q_OBJECT
 public:
