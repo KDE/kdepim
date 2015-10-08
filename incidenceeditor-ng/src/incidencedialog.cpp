@@ -733,9 +733,9 @@ void IncidenceDialog::writeConfig()
 
     const Akonadi::Collection col = d_ptr->mCalSelector->currentCollection();
     // col might not be valid if the collection wasn't found yet (the combo is async), skip saving in that case
-    if (col.isValid() && col.id() != IncidenceEditorNG::GlobalSettings::self()->lastSelectedFolder()) {
-        IncidenceEditorNG::GlobalSettings::self()->setLastSelectedFolder(col.id());
-        IncidenceEditorNG::GlobalSettings::self()->save();
+    if (col.isValid() && col.id() != IncidenceEditorNG::IncidenceEditorSettings::self()->lastSelectedFolder()) {
+        IncidenceEditorNG::IncidenceEditorSettings::self()->setLastSelectedFolder(col.id());
+        IncidenceEditorNG::IncidenceEditorSettings::self()->save();
     }
 }
 

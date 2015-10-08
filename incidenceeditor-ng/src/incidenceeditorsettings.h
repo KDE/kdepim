@@ -29,17 +29,17 @@
 namespace IncidenceEditorNG
 {
 
-class INCIDENCEEDITORS_NG_EXPORT GlobalSettings : public IncidenceEditorNG::GlobalSettingsBase
+class INCIDENCEEDITORS_NG_EXPORT IncidenceEditorSettings : public IncidenceEditorNG::GlobalSettingsBase
 {
     Q_OBJECT
 
 public:
-    static GlobalSettings *self();
+    static IncidenceEditorSettings *self();
 
 private:
-    GlobalSettings();
-    virtual ~GlobalSettings();
-    static GlobalSettings *mSelf;
+    IncidenceEditorSettings();
+    virtual ~IncidenceEditorSettings();
+    static IncidenceEditorSettings *mSelf;
 };
 
 }

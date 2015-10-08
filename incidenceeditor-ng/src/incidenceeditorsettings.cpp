@@ -23,23 +23,23 @@
 
 using namespace IncidenceEditorNG;
 
-GlobalSettings *GlobalSettings::mSelf = 0;
+IncidenceEditorSettings *IncidenceEditorSettings::mSelf = 0;
 
-GlobalSettings *GlobalSettings::self()
+IncidenceEditorSettings *IncidenceEditorSettings::self()
 {
     if (!mSelf) {
-        mSelf = new GlobalSettings();
+        mSelf = new IncidenceEditorSettings();
         mSelf->load();
     }
 
     return mSelf;
 }
 
-GlobalSettings::GlobalSettings()
+IncidenceEditorSettings::IncidenceEditorSettings()
 {
 }
 
-GlobalSettings::~GlobalSettings()
+IncidenceEditorSettings::~IncidenceEditorSettings()
 {
 }
 
