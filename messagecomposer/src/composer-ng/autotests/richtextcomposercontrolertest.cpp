@@ -38,9 +38,54 @@ void RichTextComposerControlerTest::shouldAlignLeft()
     KActionCollection *actionCollection = new KActionCollection(&composer);
     composer.createActions(actionCollection);
     MessageComposer::RichTextComposerControler controler(&composer);
-
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
     controler.alignLeft();
-    //TODO verify if text is align to left.
+    QVERIFY(controler.richTextComposer()->hasFocus());
+    QCOMPARE(controler.richTextComposer()->alignment(), Qt::AlignLeft);
+    QVERIFY(controler.richTextComposer()->acceptRichText());
+}
+
+void RichTextComposerControlerTest::shouldAlignRight()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    controler.alignRight();
+    QVERIFY(controler.richTextComposer()->hasFocus());
+    QCOMPARE(controler.richTextComposer()->alignment(), Qt::AlignRight);
+    QVERIFY(controler.richTextComposer()->acceptRichText());
+}
+
+void RichTextComposerControlerTest::shouldAlignJustify()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    controler.alignJustify();
+    QVERIFY(controler.richTextComposer()->hasFocus());
+    QCOMPARE(controler.richTextComposer()->alignment(), Qt::AlignJustify);
+    QVERIFY(controler.richTextComposer()->acceptRichText());
+}
+
+void RichTextComposerControlerTest::shouldAlignCenter()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    controler.alignCenter();
+    QVERIFY(controler.richTextComposer()->hasFocus());
+    QCOMPARE(controler.richTextComposer()->alignment(), Qt::AlignHCenter);
+    QVERIFY(controler.richTextComposer()->acceptRichText());
 }
 
 void RichTextComposerControlerTest::shouldHaveDefaultValue()
@@ -48,6 +93,20 @@ void RichTextComposerControlerTest::shouldHaveDefaultValue()
     MessageComposer::RichTextComposer composer;
     MessageComposer::RichTextComposerControler controler(&composer);
     QVERIFY(!controler.painterActive());
+    QVERIFY(!controler.richTextComposer()->acceptRichText());
 }
+
+void RichTextComposerControlerTest::shouldAddQuote()
+{
+#if 0
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+
+    controler.alignLeft();
+#endif
+}
+
 
 QTEST_MAIN(RichTextComposerControlerTest)

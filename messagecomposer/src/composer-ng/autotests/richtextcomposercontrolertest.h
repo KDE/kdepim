@@ -26,9 +26,14 @@ class RichTextComposerControlerTest : public QObject
 public:
     explicit RichTextComposerControlerTest(QObject *parent = Q_NULLPTR);
     ~RichTextComposerControlerTest();
+
 private Q_SLOTS:
+    void shouldAlignCenter();
     void shouldAlignLeft();
+    void shouldAlignRight();
+    void shouldAlignJustify();
     void shouldHaveDefaultValue();
+    void shouldAddQuote();
 };
 
 #endif // RICHTEXTCOMPOSERCONTROLERTEST_H
