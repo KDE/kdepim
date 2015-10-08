@@ -21,8 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef MESSAGECOMPOSER_GLOBALSETTINGS_H
-#define MESSAGECOMPOSER_GLOBALSETTINGS_H
+#ifndef MESSAGECOMPOSERSETTINGS_H
+#define MESSAGECOMPOSERSETTINGS_H
 
 #include "messagecomposer_export.h"
 #include "messagecomposersettings_base.h"
