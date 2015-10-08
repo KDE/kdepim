@@ -18,7 +18,7 @@
 #ifndef GOOGLETRANSLATOR_H
 #define GOOGLETRANSLATOR_H
 
-#include "abstracttranslator.h"
+#include <QObject>
 #include <QNetworkReply>
 class QNetworkAccessManager;
 class KComboBox;
@@ -26,22 +26,36 @@ class QNetworkReply;
 
 namespace PimCommon
 {
-class GoogleTranslator : public AbstractTranslator
+class GoogleTranslator : public QObject
 {
     Q_OBJECT
 public:
-    explicit GoogleTranslator();
+    explicit GoogleTranslator(QObject *parent = Q_NULLPTR);
     ~GoogleTranslator();
 
-    QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox *from) Q_DECL_OVERRIDE;
-    void translate() Q_DECL_OVERRIDE;
-    void debug() Q_DECL_OVERRIDE;
-    void clear() Q_DECL_OVERRIDE;
-protected Q_SLOTS:
+    QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox *from);
+    void translate();
+    void debug();
+    void clear();
+
+    QString resultTranslate() const;
+    void setInputText(const QString &text);
+    void setFrom(const QString &language);
+    void setTo(const QString &language);
+
+private Q_SLOTS:
     void slotTranslateFinished(QNetworkReply *);
     void slotError(QNetworkReply::NetworkError /*error*/);
 
+Q_SIGNALS:
+    void translateDone();
+    void translateFailed(bool result, const QString &errorMessage = QString());
+
 private:
+    QString mInputText;
+    QString mFrom;
+    QString mTo;
+    QString mResult;
     QString mJsonData;
     QNetworkAccessManager *mNetworkAccessManager;
 };

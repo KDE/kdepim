@@ -76,7 +76,7 @@ public:
     MinimumComboBox *to;
     QPushButton *translate;
     QPushButton *clear;
-    PimCommon::AbstractTranslator *abstractTranslator;
+    PimCommon::GoogleTranslator *abstractTranslator;
     KPIM::ProgressIndicatorWidget *progressIndictor;
     QPushButton *invert;
     QSplitter *splitter;
@@ -215,8 +215,8 @@ void TranslatorWidget::readConfig()
 void TranslatorWidget::init()
 {
     d->abstractTranslator = new GoogleTranslator();
-    connect(d->abstractTranslator, &PimCommon::AbstractTranslator::translateDone, this, &TranslatorWidget::slotTranslateDone);
-    connect(d->abstractTranslator, &PimCommon::AbstractTranslator::translateFailed, this, &TranslatorWidget::slotTranslateFailed);
+    connect(d->abstractTranslator, &PimCommon::GoogleTranslator::translateDone, this, &TranslatorWidget::slotTranslateDone);
+    connect(d->abstractTranslator, &PimCommon::GoogleTranslator::translateFailed, this, &TranslatorWidget::slotTranslateFailed);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(2);

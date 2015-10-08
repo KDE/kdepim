@@ -27,8 +27,8 @@
 
 using namespace PimCommon;
 
-GoogleTranslator::GoogleTranslator()
-    : AbstractTranslator(),
+GoogleTranslator::GoogleTranslator(QObject *parent)
+    : QObject(parent),
       mNetworkAccessManager(new QNetworkAccessManager(this))
 {
     connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &GoogleTranslator::slotTranslateFinished);
@@ -37,6 +37,27 @@ GoogleTranslator::GoogleTranslator()
 GoogleTranslator::~GoogleTranslator()
 {
 }
+
+void GoogleTranslator::setInputText(const QString &text)
+{
+    mInputText = text;
+}
+
+void GoogleTranslator::setFrom(const QString &language)
+{
+    mFrom = language;
+}
+
+void GoogleTranslator::setTo(const QString &language)
+{
+    mTo = language;
+}
+
+QString GoogleTranslator::resultTranslate() const
+{
+    return mResult;
+}
+
 
 QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KComboBox *from)
 {
