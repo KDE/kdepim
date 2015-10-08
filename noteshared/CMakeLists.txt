@@ -8,7 +8,7 @@ find_package(ECM 5.14.0 CONFIG REQUIRED)
 #set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 #FIXIT when we split it.
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
-
+set(LIBRARY_NAMELINK)
 include(GenerateExportHeader)
 include(ECMSetupVersion)
 include(ECMGenerateHeaders)

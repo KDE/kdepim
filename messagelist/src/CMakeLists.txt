@@ -83,7 +83,7 @@ set_target_properties(KF5MessageList PROPERTIES
 
 install(TARGETS
     KF5MessageList
-    EXPORT KF5MessageListTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5MessageListTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
 ecm_generate_headers(MessageList_core_HEADERS

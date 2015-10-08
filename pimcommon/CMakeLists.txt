@@ -5,7 +5,7 @@ project(pimcommon)
 if(${CMAKE_SOURCE_DIR} STREQUAL ${pimcommon_SOURCE_DIR})
 # ECM setup
 find_package(ECM 5.14.0 CONFIG REQUIRED)
-
+set(LIBRARY_NAMELINK)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
 
 include(GenerateExportHeader)

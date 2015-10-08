@@ -63,7 +63,7 @@ set_target_properties(KF5KDGantt2 PROPERTIES
 
 install(TARGETS
     KF5KDGantt2
-    EXPORT KF5KDGantt2Targets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5KDGantt2Targets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
 ecm_generate_headers(kdgantt2_CamelCase_HEADERS

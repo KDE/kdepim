@@ -37,7 +37,7 @@ set_target_properties(KF5FollowupReminder PROPERTIES
 
 install(TARGETS
     KF5FollowupReminder
-    EXPORT KF5FollowupReminderTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5FollowupReminderTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
 ecm_generate_headers(FollowupReminder_Camelcase_HEADERS

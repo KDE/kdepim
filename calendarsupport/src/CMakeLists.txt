@@ -82,7 +82,7 @@ set_target_properties(KF5CalendarSupport PROPERTIES
 
 install(TARGETS
     KF5CalendarSupport
-    EXPORT KF5CalendarSupportTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5CalendarSupportTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
 ecm_generate_headers(CalendarSupport_CamelCase_HEADERS

@@ -87,7 +87,7 @@ ecm_generate_pri_file(BASE_NAME TemplateParser
 )
 
 
-install(TARGETS KF5TemplateParser EXPORT KF5TemplateParserTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5TemplateParser EXPORT KF5TemplateParserTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK})
 if(${CMAKE_SOURCE_DIR} STREQUAL ${TemplateParser_SOURCE_DIR})
 
 

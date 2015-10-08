@@ -15,6 +15,7 @@ if (KDEPIM_SUPERBUILD)
 
 include(SuperBuild.cmake)
 
+set(LIBRARY_NAMELINK)
 sb_add_project(libfollowupreminder)
 sb_add_project(libsendlater)
 sb_add_project(grantleetheme)
@@ -40,6 +41,8 @@ sb_add_project(mailcommon)
 sb_end()
 
 else()
+
+set(LIBRARY_NAMELINK LIBRARY NAMELINK_SKIP)
 
 # we need some parts of the ECM CMake helpers
 find_package(ECM 5.14.0 REQUIRED NO_MODULE)

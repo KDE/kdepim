@@ -265,7 +265,7 @@ set_target_properties(KF5MessageViewer PROPERTIES
 
 install(TARGETS
     KF5MessageViewer
-    EXPORT KF5MessageViewerTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5MessageViewerTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
 ecm_generate_headers(MessageViewer_viewer_HEADERS

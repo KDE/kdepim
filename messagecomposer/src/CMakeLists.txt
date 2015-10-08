@@ -177,7 +177,7 @@ set_target_properties(KF5MessageComposer PROPERTIES
 
 install(TARGETS
     KF5MessageComposer
-    EXPORT KF5MessageComposerTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5MessageComposerTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
 

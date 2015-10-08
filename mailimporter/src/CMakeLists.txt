@@ -62,7 +62,7 @@ set_target_properties(KF5MailImporter PROPERTIES
 
 install(TARGETS
     KF5MailImporter
-    EXPORT KF5MailImporterTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5MailImporterTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
 ecm_generate_headers(MailImporter_CamelCase_HEADERS

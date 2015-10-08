@@ -47,7 +47,7 @@ set_target_properties(KF5KdepimDBusInterfaces PROPERTIES
 
 install(TARGETS
     KF5KdepimDBusInterfaces
-    EXPORT KF5KdepimDBusInterfacesTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5KdepimDBusInterfacesTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
 ecm_generate_headers(kdepimdbusinterfaces_Camelcase_HEADERS

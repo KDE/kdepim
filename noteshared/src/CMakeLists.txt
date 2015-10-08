@@ -82,7 +82,7 @@ set_target_properties(KF5NoteShared PROPERTIES
 
 install(TARGETS
     KF5NoteShared
-    EXPORT KF5NoteSharedTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5NoteSharedTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
 ecm_generate_headers(NoteShared_CamelCase_HEADERS

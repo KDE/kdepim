@@ -135,7 +135,7 @@ set_target_properties(KF5Libkleo PROPERTIES
 
 install(TARGETS
     KF5Libkleo
-    EXPORT KF5LibkleoTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5LibkleoTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
 

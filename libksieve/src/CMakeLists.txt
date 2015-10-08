@@ -54,7 +54,7 @@ ecm_generate_pri_file(BASE_NAME KSieve
 )
 
 
-install(TARGETS KF5KSieve EXPORT KF5KSieveTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS KF5KSieve EXPORT KF5KSieveTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK})
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libksieve_SOURCE_DIR})
 install(FILES
     ${ksieve_CamelCase_HEADERS}
