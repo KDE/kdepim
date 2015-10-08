@@ -284,13 +284,13 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
         menu->addAction(d->action_spell_check);
         menu->addSeparator();
     }
+    //Don't use "Auto Spell Check" it will confict with search menu entry in spellchecklineedit.
+    QAction *autoSpellCheckingAction = menu->addAction(i18n("Enable Spell Checking"));
+    autoSpellCheckingAction->setCheckable(true);
+    autoSpellCheckingAction->setChecked(d->checkSpellingEnabled());
+    connect(autoSpellCheckingAction, SIGNAL(triggered(bool)), this, SLOT(_k_changeAutoSpellChecking(bool)));
 #endif
     if (PimCommon::TextToSpeech::self()->isReady()) {
-        //Don't use "Auto Spell Check" it will confict with search menu entry in spellchecklineedit.
-        QAction *autoSpellCheckingAction = menu->addAction(i18n("Enable Spell Checking"));
-        autoSpellCheckingAction->setCheckable(true);
-        autoSpellCheckingAction->setChecked(d->checkSpellingEnabled());
-        connect(autoSpellCheckingAction, SIGNAL(triggered(bool)), this, SLOT(_k_changeAutoSpellChecking(bool)));
         QAction *speakAction = menu->addAction(i18n("Speak Text"));
         speakAction->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument);
