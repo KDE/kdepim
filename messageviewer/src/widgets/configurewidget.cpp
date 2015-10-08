@@ -64,7 +64,7 @@ ConfigureWidget::ConfigureWidget(QWidget *parent)
     d->mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
 
     d->mSettingsUi->overrideCharacterEncoding->setWhatsThis(
-        MessageCore::GlobalSettings::self()->overrideCharacterEncodingItem()->whatsThis());
+        MessageCore::MessageCoreSettings::self()->overrideCharacterEncodingItem()->whatsThis());
     d->mSettingsUi->kcfg_ShowEmoticons->setWhatsThis(
         MessageViewer::MessageViewerSettings::self()->showEmoticonsItem()->whatsThis());
     d->mSettingsUi->kcfg_ShrinkQuotes->setWhatsThis(
@@ -91,7 +91,7 @@ void ConfigureWidget::readConfig()
 
 void ConfigureWidget::writeConfig()
 {
-    MessageCore::GlobalSettings::self()->setOverrideCharacterEncoding(
+    MessageCore::MessageCoreSettings::self()->setOverrideCharacterEncoding(
         d->mSettingsUi->overrideCharacterEncoding->currentIndex() == 0 ?
         QString() :
         NodeHelper::encodingForName(d->mSettingsUi->overrideCharacterEncoding->currentText()));
@@ -99,7 +99,7 @@ void ConfigureWidget::writeConfig()
 
 void ConfigureWidget::readCurrentOverrideCodec()
 {
-    const QString &currentOverrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
+    const QString &currentOverrideEncoding = MessageCore::MessageCoreSettings::self()->overrideCharacterEncoding();
     if (currentOverrideEncoding.isEmpty()) {
         d->mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
         return;
@@ -121,7 +121,7 @@ void ConfigureWidget::readCurrentOverrideCodec()
         qCWarning(MESSAGEVIEWER_LOG) << "Unknown override character encoding" << currentOverrideEncoding
                                      << ". Resetting to Auto.";
         d->mSettingsUi->overrideCharacterEncoding->setCurrentIndex(0);
-        MessageCore::GlobalSettings::self()->setOverrideCharacterEncoding(QString());
+        MessageCore::MessageCoreSettings::self()->setOverrideCharacterEncoding(QString());
     }
 }
 

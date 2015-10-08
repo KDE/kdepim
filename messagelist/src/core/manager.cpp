@@ -924,8 +924,8 @@ void Manager::loadGlobalConfiguration()
 {
     // Load the date format
     const KMime::DateFormatter::FormatType type = static_cast<KMime::DateFormatter::FormatType>(
-                MessageCore::GlobalSettings::self()->dateFormat());
-    mDateFormatter->setCustomFormat(MessageCore::GlobalSettings::self()->customDateFormat());
+                MessageCore::MessageCoreSettings::self()->dateFormat());
+    mDateFormatter->setCustomFormat(MessageCore::MessageCoreSettings::self()->customDateFormat());
     mDateFormatter->setFormat(type);
 }
 

@@ -172,7 +172,7 @@ QColor HtmlStatusBar::fgColor() const
     case Util::MultipartHtml:
         defaultColor = Qt::white;
         color = defaultColor;
-        if (!MessageCore::GlobalSettings::self()->useDefaultColors()) {
+        if (!MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
             color = conf.readEntry("ColorbarForegroundHTML", defaultColor);
         }
         return color;
@@ -180,7 +180,7 @@ QColor HtmlStatusBar::fgColor() const
     case Util::MultipartPlain:
         defaultColor = Qt::black;
         color = defaultColor;
-        if (!MessageCore::GlobalSettings::self()->useDefaultColors()) {
+        if (!MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
             color = conf.readEntry("ColorbarForegroundPlain", defaultColor);
         }
         return color;
@@ -199,7 +199,7 @@ QColor HtmlStatusBar::bgColor() const
     case Util::MultipartHtml:
         defaultColor = Qt::black;
         color = defaultColor;
-        if (!MessageCore::GlobalSettings::self()->useDefaultColors()) {
+        if (!MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
             color = conf.readEntry("ColorbarBackgroundHTML", defaultColor);
         }
         return color;
@@ -207,7 +207,7 @@ QColor HtmlStatusBar::bgColor() const
     case Util::MultipartPlain:
         defaultColor = Qt::lightGray;
         color = defaultColor;
-        if (!MessageCore::GlobalSettings::self()->useDefaultColors()) {
+        if (!MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
             color = conf.readEntry("ColorbarBackgroundPlain", defaultColor);
         }
         return color;

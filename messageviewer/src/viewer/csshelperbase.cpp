@@ -97,22 +97,22 @@ CSSHelperBase::CSSHelperBase(const QPaintDevice *pd) :
     cPgpErrH   = MessageCore::Util::pgpSignedBadMessageColor();
     cPgpErrHT  = MessageCore::Util::pgpSignedBadTextColor();
 
-    if (MessageCore::GlobalSettings::self()->useDefaultColors()) {
+    if (MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
         mQuoteColor[0] = MessageCore::Util::quoteLevel1DefaultTextColor();
         mQuoteColor[1] = MessageCore::Util::quoteLevel2DefaultTextColor();
         mQuoteColor[2] = MessageCore::Util::quoteLevel3DefaultTextColor();
     } else {
-        mQuoteColor[0] = MessageCore::GlobalSettings::self()->quotedText1();
-        mQuoteColor[1] = MessageCore::GlobalSettings::self()->quotedText2();
-        mQuoteColor[2] = MessageCore::GlobalSettings::self()->quotedText3();
+        mQuoteColor[0] = MessageCore::MessageCoreSettings::self()->quotedText1();
+        mQuoteColor[1] = MessageCore::MessageCoreSettings::self()->quotedText2();
+        mQuoteColor[2] = MessageCore::MessageCoreSettings::self()->quotedText3();
     }
 
     mRecycleQuoteColors = false;
 
     QFont defaultFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
     QFont defaultFixedFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-    mBodyFont = MessageCore::GlobalSettings::self()->useDefaultFonts() ? defaultFont : MessageCore::GlobalSettings::self()->bodyFont();
-    mPrintFont = MessageCore::GlobalSettings::self()->useDefaultFonts() ? defaultFont : MessageCore::GlobalSettings::self()->printFont();
+    mBodyFont = MessageCore::MessageCoreSettings::self()->useDefaultFonts() ? defaultFont : MessageCore::MessageCoreSettings::self()->bodyFont();
+    mPrintFont = MessageCore::MessageCoreSettings::self()->useDefaultFonts() ? defaultFont : MessageCore::MessageCoreSettings::self()->printFont();
     mFixedFont = mFixedPrintFont = defaultFixedFont;
     defaultFont.setItalic(true);
     for (int i = 0 ; i < 3 ; ++i) {

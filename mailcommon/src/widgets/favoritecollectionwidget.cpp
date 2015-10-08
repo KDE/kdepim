@@ -199,7 +199,7 @@ void FavoriteCollectionWidget::slotGeneralPaletteChanged()
 void FavoriteCollectionWidget::slotGeneralFontChanged()
 {
     // Custom/System font support
-    if (MessageCore::GlobalSettings::self()->useDefaultFonts()) {
+    if (MessageCore::MessageCoreSettings::self()->useDefaultFonts()) {
         setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
     }
 }
@@ -207,7 +207,7 @@ void FavoriteCollectionWidget::slotGeneralFontChanged()
 void FavoriteCollectionWidget::readConfig()
 {
     // Custom/System font support
-    if (!MessageCore::GlobalSettings::self()->useDefaultFonts()) {
+    if (!MessageCore::MessageCoreSettings::self()->useDefaultFonts()) {
         KConfigGroup fontConfig(KernelIf->config(), "Fonts");
         setFont(fontConfig.readEntry("folder-font", QFontDatabase::systemFont(QFontDatabase::GeneralFont)));
     } else {

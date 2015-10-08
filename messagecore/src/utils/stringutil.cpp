@@ -813,12 +813,12 @@ QString stripOffPrefixes(const QString &subject)
     static QStringList defaultForwardPrefixes = QStringList() << QStringLiteral("Fwd:")
             << QStringLiteral("FW:");
 
-    QStringList replyPrefixes = GlobalSettings::self()->replyPrefixes();
+    QStringList replyPrefixes = MessageCoreSettings::self()->replyPrefixes();
     if (replyPrefixes.isEmpty()) {
         replyPrefixes = defaultReplyPrefixes;
     }
 
-    QStringList forwardPrefixes = GlobalSettings::self()->forwardPrefixes();
+    QStringList forwardPrefixes = MessageCoreSettings::self()->forwardPrefixes();
     if (forwardPrefixes.isEmpty()) {
         forwardPrefixes = defaultForwardPrefixes;
     }

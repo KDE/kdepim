@@ -442,7 +442,7 @@ void StorageModel::Private::loadSettings()
     // Custom/System colors
     MessageListSettings *settings = MessageListSettings::self();
 
-    if (MessageCore::GlobalSettings::self()->useDefaultColors()) {
+    if (MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
         Core::MessageItem::setUnreadMessageColor(MessageList::Util::unreadDefaultMessageColor());
         Core::MessageItem::setImportantMessageColor(MessageList::Util::importantDefaultMessageColor());
         Core::MessageItem::setToDoMessageColor(MessageList::Util::todoDefaultMessageColor());
@@ -452,7 +452,7 @@ void StorageModel::Private::loadSettings()
         Core::MessageItem::setToDoMessageColor(settings->todoMessageColor());
     }
 
-    if (MessageCore::GlobalSettings::self()->useDefaultFonts()) {
+    if (MessageCore::MessageCoreSettings::self()->useDefaultFonts()) {
         Core::MessageItem::setGeneralFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
         Core::MessageItem::setUnreadMessageFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
         Core::MessageItem::setImportantMessageFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));

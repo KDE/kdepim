@@ -260,7 +260,7 @@ FolderTreeView *FolderTreeWidget::folderTreeView() const
 void FolderTreeWidget::slotGeneralFontChanged()
 {
     // Custom/System font support
-    if (MessageCore::GlobalSettings::self()->useDefaultFonts()) {
+    if (MessageCore::MessageCoreSettings::self()->useDefaultFonts()) {
         setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
     }
 }
@@ -274,7 +274,7 @@ void FolderTreeWidget::slotGeneralPaletteChanged()
 void FolderTreeWidget::readConfig()
 {
     // Custom/System font support
-    if (!MessageCore::GlobalSettings::self()->useDefaultFonts()) {
+    if (!MessageCore::MessageCoreSettings::self()->useDefaultFonts()) {
         KConfigGroup fontConfig(KernelIf->config(), "Fonts");
         setFont(fontConfig.readEntry("folder-font", QFontDatabase::systemFont(QFontDatabase::GeneralFont)));
     } else {
@@ -328,7 +328,7 @@ void FolderTreeWidget::readQuotaConfig()
 {
     QColor quotaColor = MailCommon::Util::defaultQuotaColor();
     qreal threshold = 100;
-    if (!MessageCore::GlobalSettings::self()->useDefaultColors()) {
+    if (!MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
         KConfigGroup readerConfig(KernelIf->config(), "Reader");
         quotaColor = readerConfig.readEntry("CloseToQuotaColor", quotaColor);
     }

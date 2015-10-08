@@ -216,8 +216,8 @@ QString dateStr(const QDateTime &dateTime)
     const time_t unixTime = dateTime.toTime_t();
     return KMime::DateFormatter::formatDate(
                static_cast<KMime::DateFormatter::FormatType>(
-                   MessageCore::GlobalSettings::self()->dateFormat()),
-               unixTime, MessageCore::GlobalSettings::self()->customDateFormat());
+                   MessageCore::MessageCoreSettings::self()->dateFormat()),
+               unixTime, MessageCore::MessageCoreSettings::self()->customDateFormat());
 }
 
 QString dateShortStr(const QDateTime &dateTime)

@@ -57,7 +57,7 @@ CSSHelper::CSSHelper(const QPaintDevice *pd) :
     mRecycleQuoteColors = reader.readEntry("RecycleQuoteColors", false);
 
     mForegroundColor = KColorScheme(QPalette::Active).foreground().color();
-    if (!MessageCore::GlobalSettings::self()->useDefaultColors()) {
+    if (!MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
         mLinkColor =
             reader.readEntry("LinkColor", mLinkColor);
         mVisitedLinkColor =
@@ -81,7 +81,7 @@ CSSHelper::CSSHelper(const QPaintDevice *pd) :
         mBackgroundColor = reader.readEntry("BackgroundColor", mBackgroundColor);
     }
 
-    if (!MessageCore::GlobalSettings::self()->useDefaultFonts()) {
+    if (!MessageCore::MessageCoreSettings::self()->useDefaultFonts()) {
         mBodyFont = fonts.readEntry("body-font",  mBodyFont);
         mPrintFont = fonts.readEntry("print-font", mPrintFont);
         mFixedFont = fonts.readEntry("fixed-font", mFixedFont);

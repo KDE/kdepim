@@ -37,8 +37,8 @@ MessageCore::AttachmentFromUrlBaseJob *AttachmentFromUrlUtils::createAttachmentJ
         ajob = new MessageCore::AttachmentFromUrlJob(url, parent);
         qCDebug(MESSAGECORE_LOG) << "Creating attachment from file";
     }
-    if (MessageCore::GlobalSettings::maximumAttachmentSize() > 0) {
-        ajob->setMaximumAllowedSize(MessageCore::GlobalSettings::maximumAttachmentSize());
+    if (MessageCore::MessageCoreSettings::maximumAttachmentSize() > 0) {
+        ajob->setMaximumAllowedSize(MessageCore::MessageCoreSettings::maximumAttachmentSize());
     }
     return ajob;
 }

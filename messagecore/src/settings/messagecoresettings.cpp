@@ -21,23 +21,23 @@
 
 using namespace MessageCore;
 
-GlobalSettings *GlobalSettings::mSelf = 0;
+MessageCoreSettings *MessageCoreSettings::mSelf = 0;
 
-GlobalSettings *GlobalSettings::self()
+MessageCoreSettings *MessageCoreSettings::self()
 {
     if (!mSelf) {
-        mSelf = new GlobalSettings();
+        mSelf = new MessageCoreSettings();
         mSelf->load();
     }
 
     return mSelf;
 }
 
-GlobalSettings::GlobalSettings()
+MessageCoreSettings::MessageCoreSettings()
 {
 }
 
-GlobalSettings::~GlobalSettings()
+MessageCoreSettings::~MessageCoreSettings()
 {
 }
 

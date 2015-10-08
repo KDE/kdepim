@@ -89,7 +89,7 @@ void FolderTreeWidgetProxyModel::readConfig()
 {
     KConfigGroup collectionFolderView(KernelIf->config(), "CollectionFolderView");
     KColorScheme scheme(QPalette::Active, KColorScheme::View);
-    if (MessageCore::GlobalSettings::self()->useDefaultColors()) {
+    if (MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
         d->brokenAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
     } else {
         d->brokenAccountColor =
@@ -250,7 +250,7 @@ QVariant FolderTreeWidgetProxyModel::data(const QModelIndex &index, int role) co
 
 void FolderTreeWidgetProxyModel::updatePalette()
 {
-    if (MessageCore::GlobalSettings::self()->useDefaultColors()) {
+    if (MessageCore::MessageCoreSettings::self()->useDefaultColors()) {
         KColorScheme scheme(QPalette::Active, KColorScheme::View);
         d->brokenAccountColor = scheme.foreground(KColorScheme::NegativeText).color();
         invalidate();

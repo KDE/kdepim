@@ -1800,12 +1800,12 @@ KToggleAction *ViewerPrivate::actionForAttachmentStrategy(const AttachmentStrate
 void ViewerPrivate::readGlobalOverrideCodec()
 {
     // if the global character encoding wasn't changed then there's nothing to do
-    if (MessageCore::GlobalSettings::self()->overrideCharacterEncoding() == mOldGlobalOverrideEncoding) {
+    if (MessageCore::MessageCoreSettings::self()->overrideCharacterEncoding() == mOldGlobalOverrideEncoding) {
         return;
     }
 
-    setOverrideEncoding(MessageCore::GlobalSettings::self()->overrideCharacterEncoding());
-    mOldGlobalOverrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
+    setOverrideEncoding(MessageCore::MessageCoreSettings::self()->overrideCharacterEncoding());
+    mOldGlobalOverrideEncoding = MessageCore::MessageCoreSettings::self()->overrideCharacterEncoding();
 }
 
 const QTextCodec *ViewerPrivate::overrideCodec() const
