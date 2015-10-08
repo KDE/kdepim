@@ -435,8 +435,9 @@ install(FILES
 
 endif()
 
-
-install(DIRECTORY themes DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )
+if (KDEPIM_BUILD_EXAMPLES)
+    install(DIRECTORY themes DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer )
+endif()
 
 install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
 
