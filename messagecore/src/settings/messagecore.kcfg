@@ -19,14 +19,6 @@
     <entry name="UseDefaultFonts" type="Bool" key="defaultFonts">
       <default>true</default>
     </entry>
-    <entry name="BodyFont" type="Font" key="body-font">
-      <label>Specifies the font to use for the message body</label>
-      <default code="true">QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
-    </entry>
-    <entry name="PrintFont" type="Font" key="print-font">
-      <label>Specifies the font to use for printing</label>
-      <default code="true">QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
-    </entry>
   </group>
 
   <group name="Reader">

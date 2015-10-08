@@ -29,7 +29,9 @@
     your version.
 */
 
-#include <MessageCore/MessageCoreSettings>
+#include "messageviewer/messageviewersettings.h"
+#include "messagecore/messagecoresettings.h"
+#include "messagecoreutil.h"
 #include "csshelperbase.h"
 
 #include <KColorScheme>
@@ -111,8 +113,8 @@ CSSHelperBase::CSSHelperBase(const QPaintDevice *pd) :
 
     QFont defaultFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
     QFont defaultFixedFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-    mBodyFont = MessageCore::MessageCoreSettings::self()->useDefaultFonts() ? defaultFont : MessageCore::MessageCoreSettings::self()->bodyFont();
-    mPrintFont = MessageCore::MessageCoreSettings::self()->useDefaultFonts() ? defaultFont : MessageCore::MessageCoreSettings::self()->printFont();
+    mBodyFont = MessageCore::MessageCoreSettings::self()->useDefaultFonts() ? defaultFont : MessageViewer::MessageViewerSettings::self()->bodyFont();
+    mPrintFont = MessageCore::MessageCoreSettings::self()->useDefaultFonts() ? defaultFont : MessageViewer::MessageViewerSettings::self()->printFont();
     mFixedFont = mFixedPrintFont = defaultFixedFont;
     defaultFont.setItalic(true);
     for (int i = 0 ; i < 3 ; ++i) {

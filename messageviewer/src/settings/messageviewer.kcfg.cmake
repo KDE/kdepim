@@ -31,6 +31,14 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>When we render html do not use font size inferior to minimum size.</label>
       <default>8</default>
     </entry>
+    <entry name="BodyFont" type="Font" key="body-font">
+      <label>Specifies the font to use for the message body</label>
+      <default code="true">QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
+    </entry>
+    <entry name="PrintFont" type="Font" key="print-font">
+      <label>Specifies the font to use for printing</label>
+      <default code="true">QFontDatabase::systemFont(QFontDatabase::GeneralFont)</default>
+    </entry>
   </group>
 
   <group name="Reader">
