@@ -45,6 +45,8 @@ class Content;
 namespace MessageViewer
 {
 class NodeHelper;
+class ObjectTreeParser;
+class ProcessResult;
 namespace Interface
 {
 
@@ -188,6 +190,12 @@ public:
      * for real-world plugins. Still, there should be a nicer way for this.
      */
     virtual MessageViewer::NodeHelper *nodeHelper() const = 0;
+
+    /**
+     * For making it easier to refactor, add objectTreeParser
+     */
+    virtual MessageViewer::ObjectTreeParser *objectTreeParser() const = 0;
+    virtual MessageViewer::ProcessResult *processResult() const = 0;
 };
 
 } // namespace Interface

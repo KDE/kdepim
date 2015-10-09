@@ -62,6 +62,7 @@ private:
     KMime::Content *mNode;
 };
 
+
 // The attachment mark is a div that is placed around the attchment. It is used for drawing
 // a yellow border around the attachment when scrolling to it. When scrolling to it, the border
 // color of the div is changed, see KMReaderWin::scrollToAttachment().

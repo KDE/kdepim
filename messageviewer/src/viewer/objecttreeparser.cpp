@@ -354,7 +354,7 @@ void ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node)
         // First, try if an external plugin can handle this MIME part
         if (const Interface::BodyPartFormatter * formatter
                 = BodyPartFormatterFactory::instance()->createFor(mediaType, subType)) {
-            PartNodeBodyPart part(mTopLevelContent, node, mNodeHelper, codecFor(node));
+            PartNodeBodyPart part(this, &processResult, mTopLevelContent, node, mNodeHelper, codecFor(node));
             // Set the default display strategy for this body part relying on the
             // identity of Interface::BodyPart::Display and AttachmentStrategy::Display
             part.setDefaultDisplay((Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay(node));

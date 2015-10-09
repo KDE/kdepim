@@ -58,7 +58,7 @@ namespace MessageViewer
 class PartNodeBodyPart : public Interface::BodyPart
 {
 public:
-    explicit PartNodeBodyPart(KMime::Content *topLevelContent, KMime::Content *content,
+    explicit PartNodeBodyPart(ObjectTreeParser *otp, ProcessResult *result, KMime::Content *topLevelContent, KMime::Content *content,
                               NodeHelper *nodeHelper, const QTextCodec *codec = 0);
 
     QString makeLink(const QString &path) const Q_DECL_OVERRIDE;
@@ -87,12 +87,24 @@ public:
         return mNodeHelper;
     }
 
+    ObjectTreeParser *objectTreeParser() const Q_DECL_OVERRIDE
+    {
+        return mObjectTreeParser;
+    }
+
+    ProcessResult *processResult() const Q_DECL_OVERRIDE
+    {
+        return mProcessResult;
+    }
+
 private:
     KMime::Content *mTopLevelContent;
     KMime::Content *mContent;
     const QTextCodec *mCodec;
     BodyPart::Display mDefaultDisplay;
     NodeHelper *mNodeHelper;
+    ObjectTreeParser *mObjectTreeParser;
+    ProcessResult *mProcessResult;
 };
 
 }

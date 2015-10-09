@@ -322,7 +322,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleClick(const QUrl &url, 
         return false;
     }
 
-    PartNodeBodyPart part(w->message().data(), node, w->nodeHelper(), w->overrideCodec());
+    PartNodeBodyPart part(0, 0, w->message().data(), node, w->nodeHelper(), w->overrideCodec());
     BodyPartHandlerList::const_iterator end(mHandlers.constEnd());
 
     for (BodyPartHandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it) {
@@ -342,7 +342,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleContextMenuRequest(cons
         return false;
     }
 
-    PartNodeBodyPart part(w->message().data(), node, w->nodeHelper(), w->overrideCodec());
+    PartNodeBodyPart part(0, 0, w->message().data(), node, w->nodeHelper(), w->overrideCodec());
     BodyPartHandlerList::const_iterator end(mHandlers.constEnd());
     for (BodyPartHandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it)
         if ((*it)->handleContextMenuRequest(&part, path, p)) {
@@ -359,7 +359,7 @@ QString URLHandlerManager::BodyPartURLHandlerManager::statusBarMessage(const QUr
         return QString();
     }
 
-    PartNodeBodyPart part(w->message().data(), node, w->nodeHelper(), w->overrideCodec());
+    PartNodeBodyPart part(0, 0, w->message().data(), node, w->nodeHelper(), w->overrideCodec());
     BodyPartHandlerList::const_iterator end(mHandlers.constEnd());
     for (BodyPartHandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it) {
         const QString msg = (*it)->statusBarMessage(&part, path);

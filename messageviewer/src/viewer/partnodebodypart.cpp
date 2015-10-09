@@ -33,6 +33,7 @@
 
 #include "partnodebodypart.h"
 #include "messageviewer/nodehelper.h"
+#include "messageviewer/objecttreeparser.h"
 #include "messageviewer_debug.h"
 #include <kmime/kmime_content.h>
 
@@ -42,10 +43,12 @@ using namespace MessageViewer;
 
 static int serial = 0;
 
-PartNodeBodyPart::PartNodeBodyPart(KMime::Content *topLevelContent, KMime::Content *content,
+PartNodeBodyPart::PartNodeBodyPart(ObjectTreeParser *otp, ProcessResult *result, KMime::Content *topLevelContent, KMime::Content *content,
                                    NodeHelper *nodeHelper, const QTextCodec *codec)
     : Interface::BodyPart(), mTopLevelContent(topLevelContent), mContent(content), mCodec(codec),
       mDefaultDisplay(Interface::BodyPart::None), mNodeHelper(nodeHelper)
+    , mObjectTreeParser(otp)
+    , mProcessResult(result)
 {}
 
 QString PartNodeBodyPart::makeLink(const QString &path) const
