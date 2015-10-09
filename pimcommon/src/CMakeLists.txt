@@ -196,12 +196,6 @@ set(libpimcommon_temporary_SRCS
    temporaryfile/attachmenttemporaryfilesdirs.cpp
 )
 
-set(libpimcommon_gravatar_SRCS
-   gravatar/gravatarresolvurljob.cpp
-   gravatar/gravatarcache.cpp
-   gravatar/widgets/gravatardownloadpixmapwidget.cpp
-   gravatar/widgets/gravatardownloadpixmapdialog.cpp 
-)
 
 set(libpimcommon_migrate_SRCS
    migration/migrateapplicationfiles.cpp  
@@ -245,7 +239,6 @@ set(libpimcommon_SRCS
   ${libtexttospeech_SRCS}
   ${libpimcommon_baloodebug_SRCS}
   ${libpimcommon_temporary_SRCS}
-  ${libpimcommon_gravatar_SRCS}
   ${libpimcommon_customtools_SRCS}
 )
 
@@ -341,7 +334,6 @@ if (BUILD_TESTING)
    add_subdirectory(temporaryfile/autotests)
    add_subdirectory(migration/autotests)
    add_subdirectory(util/autotests)
-   add_subdirectory(gravatar/autotests)
    add_subdirectory(shareserviceurl/autotests)
    add_subdirectory(webshortcut/autotests)
    add_subdirectory(translator/tests)
@@ -358,7 +350,6 @@ if (BUILD_TESTING)
    add_subdirectory(storageservice/box/tests)
    add_subdirectory(storageservice/dropbox/icons/)
    add_subdirectory(texttospeech/tests)
-   add_subdirectory(gravatar/tests)
    add_subdirectory(customtools/autotests)
 endif()
 
@@ -516,15 +507,6 @@ ecm_generate_headers(PimCommon_acl_HEADERS
   RELATIVE acl
 )
 
-ecm_generate_headers(PimCommon_gravatar_HEADERS
-  HEADER_NAMES
-  GravatarCache
-  GravatarResolvUrlJob
-  REQUIRED_HEADERS PimCommon_gravatar_HEADERS
-  PREFIX PimCommon
-  RELATIVE gravatar
-)
-
 ecm_generate_headers(PimCommon_migrate_HEADERS
   HEADER_NAMES
   MigrateApplicationFiles
@@ -672,7 +654,6 @@ install(FILES
     ${PimCommon_temporaryfile_HEADERS}
     ${PimCommon_sievehighlighter_HEADERS}
     ${PimCommon_acl_HEADERS}
-    ${PimCommon_gravatar_HEADERS}
     ${PimCommon_migrate_HEADERS}
     ${PimCommon_autocorrectionwidgets_HEADERS}
     ${PimCommon_managerserversidesubscription_HEADERS}
@@ -713,7 +694,6 @@ install(FILES
     ${PimCommon_temporaryfile_HEADERS}
     ${PimCommon_sievehighlighter_HEADERS}
     ${PimCommon_acl_HEADERS}
-    ${PimCommon_gravatar_HEADERS}
     ${PimCommon_migrate_HEADERS}
     ${PimCommon_autocorrectionwidgets_HEADERS}
     ${PimCommon_managerserversidesubscription_HEADERS}

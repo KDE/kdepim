@@ -28,7 +28,7 @@
 #include <QObject>
 
 class KJob;
-namespace PimCommon
+namespace Gravatar
 {
 class GravatarResolvUrlJob;
 }
@@ -62,7 +62,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotSearchJobFinished(KJob *job);
 
-    void slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *);
+    void slotGravatarResolvUrlFinished(Gravatar::GravatarResolvUrlJob *);
 private:
     bool searchPhoto(const KContacts::AddresseeList &list);
     Viewer::DisplayFormatMessage mForceDisplayTo;

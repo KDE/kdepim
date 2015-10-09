@@ -20,7 +20,7 @@
 
 #include "gravatarupdatejob.h"
 
-#include <pimcommon/gravatarresolvurljob.h>
+#include <gravatar/gravatarresolvurljob.h>
 
 #include <KContacts/Addressee>
 #include <AkonadiCore/ItemModifyJob>
@@ -42,11 +42,11 @@ GravatarUpdateJob::~GravatarUpdateJob()
 void GravatarUpdateJob::start()
 {
     if (canStart()) {
-        PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
+        Gravatar::GravatarResolvUrlJob *job = new Gravatar::GravatarResolvUrlJob(this);
         job->setEmail(mEmail);
         if (job->canStart()) {
-            connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateJob::slotGravatarResolvUrlFinished);
-            connect(job, &PimCommon::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateJob::resolvedUrl);
+            connect(job, &Gravatar::GravatarResolvUrlJob::finished, this, &GravatarUpdateJob::slotGravatarResolvUrlFinished);
+            connect(job, &Gravatar::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateJob::resolvedUrl);
             job->start();
         } else {
             deleteLater();
@@ -82,7 +82,7 @@ void GravatarUpdateJob::setItem(const Akonadi::Item &item)
     mItem = item;
 }
 
-void GravatarUpdateJob::slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job)
+void GravatarUpdateJob::slotGravatarResolvUrlFinished(Gravatar::GravatarResolvUrlJob *job)
 {
     if (job) {
         const QPixmap pix = job->pixmap();

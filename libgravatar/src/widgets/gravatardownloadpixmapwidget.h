@@ -15,54 +15,41 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GRAVATARUPDATEWIDGET_H
-#define GRAVATARUPDATEWIDGET_H
+#ifndef GRAVATARDOWNLOADPIXMAPWIDGET_H
+#define GRAVATARDOWNLOADPIXMAPWIDGET_H
 
 #include <QWidget>
-#include <QUrl>
+#include "gravatar_export.h"
 class QLabel;
+class QLineEdit;
 class QPushButton;
 class QCheckBox;
-
 namespace Gravatar
 {
 class GravatarResolvUrlJob;
-}
-namespace KABGravatar
-{
-class GravatarUpdateWidget : public QWidget
+class GRAVATAR_EXPORT GravatarDownloadPixmapWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit GravatarUpdateWidget(QWidget *parent = Q_NULLPTR);
-    ~GravatarUpdateWidget();
+    explicit GravatarDownloadPixmapWidget(QWidget *parent = Q_NULLPTR);
+    ~GravatarDownloadPixmapWidget();
 
-    void setEmail(const QString &email);
-    QPixmap pixmap() const;
-    void setOriginalPixmap(const QPixmap &pix);
-    QUrl resolvedUrl() const;
+    QPixmap gravatarPixmap() const;
 
-    void setOriginalUrl(const QString &url);
 private Q_SLOTS:
-    void slotSearchGravatar();
+    void slotSearchButton();
 
-    void slotSearchGravatarFinished(Gravatar::GravatarResolvUrlJob *job);
-    void slotResolvUrl(const QUrl &url);
-
-Q_SIGNALS:
-    void activateDialogButton(bool state);
-
+    void slotTextChanged(const QString &text);
+    void slotResolvUrlFinish(Gravatar::GravatarResolvUrlJob *job);
 private:
-    QString mEmail;
-    QPixmap mPixmap;
-    QUrl mCurrentUrl;
-    QLabel *mEmailLab;
-    QPushButton *mSearchGravatar;
-    QLabel *mResultGravatar;
-    QCheckBox *mUseHttps;
+    QPixmap mGravatarPixmap;
+    QLabel *mResultLabel;
+    QLineEdit *mLineEdit;
+    QPushButton *mGetPixmapButton;
     QCheckBox *mUseLibravatar;
     QCheckBox *mFallbackGravatar;
+    QCheckBox *mUseHttps;
 };
 }
 
-#endif // GRAVATARUPDATEWIDGET_H
+#endif // GRAVATARDOWNLOADPIXMAPWIDGET_H

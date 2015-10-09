@@ -35,7 +35,7 @@
 #include "messageviewer/headerstyle.h"
 #include "messageviewer/headerstrategy.h"
 #include "PimCommon/SlideContainer"
-#include "PimCommon/GravatarCache"
+#include "Gravatar/GravatarCache"
 #include "job/attachmentencryptwithchiasmusjob.h"
 #include "job/attachmenteditjob.h"
 #include "job/modifymessagedisplayformatjob.h"
@@ -1147,9 +1147,9 @@ void ViewerPrivate::readConfig()
 
 void ViewerPrivate::readGravatarConfig()
 {
-    PimCommon::GravatarCache::self()->setMaximumSize(MessageViewer::MessageViewerSettings::self()->gravatarCacheSize());
+    Gravatar::GravatarCache::self()->setMaximumSize(MessageViewer::MessageViewerSettings::self()->gravatarCacheSize());
     if (!MessageViewer::MessageViewerSettings::self()->gravatarSupportEnabled()) {
-        PimCommon::GravatarCache::self()->clear();
+        Gravatar::GravatarCache::self()->clear();
     }
 }
 

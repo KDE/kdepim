@@ -142,6 +142,7 @@ target_link_libraries(kaddressbookprivate
   KF5::KDELibs4Support
   KF5::IconThemes
   Qt5::PrintSupport
+  KF5::Gravatar
 )
 if (WIN32)
    target_link_libraries(kaddressbookprivate KF5::Gpgmepp)

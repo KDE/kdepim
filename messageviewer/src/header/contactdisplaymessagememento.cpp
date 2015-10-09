@@ -18,7 +18,7 @@
 
 #include "contactdisplaymessagememento.h"
 #include "messageviewer_debug.h"
-#include "PimCommon/GravatarResolvUrlJob"
+#include "Gravatar/GravatarResolvUrlJob"
 #include "PimCommon/NetworkUtil"
 #include "settings/messageviewersettings.h"
 #include <Akonadi/Contact/ContactSearchJob>
@@ -102,14 +102,14 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
         if (mPhoto.isEmpty() && mPhoto.url().isEmpty()) {
             // No url, no photo => search gravatar
             if (MessageViewer::MessageViewerSettings::self()->gravatarSupportEnabled()) {
-                PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
+                Gravatar::GravatarResolvUrlJob *job = new Gravatar::GravatarResolvUrlJob(this);
                 job->setEmail(mEmailAddress);
                 job->setUseDefaultPixmap(MessageViewer::MessageViewerSettings::self()->gravatarUseDefaultImage());
                 job->setUseLibravatar(MessageViewer::MessageViewerSettings::self()->libravatarSupportEnabled());
                 job->setFallbackGravatar(MessageViewer::MessageViewerSettings::self()->fallbackToGravatar());
                 job->setUseHttps(MessageViewer::MessageViewerSettings::self()->gravatarHttpsSupport());
                 if (job->canStart()) {
-                    connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &ContactDisplayMessageMemento::slotGravatarResolvUrlFinished);
+                    connect(job, &Gravatar::GravatarResolvUrlJob::finished, this, &ContactDisplayMessageMemento::slotGravatarResolvUrlFinished);
                     job->start();
                 } else {
                     job->deleteLater();
@@ -184,7 +184,7 @@ KContacts::Picture ContactDisplayMessageMemento::photo() const
     return mPhoto;
 }
 
-void ContactDisplayMessageMemento::slotGravatarResolvUrlFinished(PimCommon::GravatarResolvUrlJob *job)
+void ContactDisplayMessageMemento::slotGravatarResolvUrlFinished(Gravatar::GravatarResolvUrlJob *job)
 {
     if (job && job->hasGravatar()) {
         mGravatarPixmap = job->pixmap();

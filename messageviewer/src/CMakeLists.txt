@@ -35,7 +35,6 @@ if(BUILD_TESTING)
    add_subdirectory(findbar/autotests)
    add_subdirectory(scamdetection/tests)
    add_subdirectory(adblock/tests/)
-   add_subdirectory(gravatar/autotests/)
    add_subdirectory(header/tests)
    add_subdirectory(header/autotests)
    add_subdirectory(viewerplugins/tests)
@@ -111,11 +110,6 @@ set(libmessageviewer_widgets_SRCS
   widgets/mailsourceviewer.cpp
   widgets/mailsourceviewtextbrowserwidget.cpp
   widgets/zoomactionmenu.cpp
-)
-
-set(libmessageviewer_gravatar_SRCS
-  gravatar/gravatarconfigwidget.cpp
-  gravatar/gravatarconfiguresettingsdialog.cpp
 )
 
 set(libmessageviewer_header_SRCS
@@ -198,14 +192,12 @@ set(libmessageviewer_SRCS
   ${libmessageviewer_viewerplugins_SRCS}
   settings/messageviewersettings.cpp
   ${_mailwebview_cpp}
-  ${libmessageviewer_gravatar_SRCS}
 )
 
 ecm_qt_declare_logging_category(libmessageviewer_SRCS HEADER messageviewer_debug.h IDENTIFIER MESSAGEVIEWER_LOG CATEGORY_NAME log_messageviewer)
 
 kconfig_add_kcfg_files(libmessageviewer_SRCS
   settings/globalsettings_messageviewer.kcfgc
-  gravatar/settings/gravatarsettings.kcfgc
 )
 
 ki18n_wrap_ui(libmessageviewer_SRCS
@@ -248,6 +240,7 @@ PRIVATE
   KF5::AkonadiNotes
   KF5::PimTextEdit
   KF5::CalendarCore
+  KF5::Gravatar
 )
 if (WIN32)
   target_link_libraries(KF5MessageViewer PUBLIC KF5::Gpgmepp)
@@ -366,14 +359,6 @@ ecm_generate_headers(MessageViewer_adblock_HEADERS
   RELATIVE adblock
 )
 
-ecm_generate_headers(MessageViewer_gravatar_HEADERS
-  HEADER_NAMES
-  GravatarConfigWidget
-  REQUIRED_HEADERS MessageViewer_gravatar_HEADERS
-  PREFIX MessageViewer
-  RELATIVE gravatar
-)
-
 ecm_generate_headers(MessageViewer_viewerplugin_HEADERS
   HEADER_NAMES
   ViewerPluginManager
@@ -395,7 +380,6 @@ install(FILES
     ${MessageViewer_header_HEADERS}
     ${MessageViewer_viewerplugin_HEADERS}
     ${MessageViewer_settings_HEADERS}
-    ${MessageViewer_gravatar_HEADERS}
     ${MessageViewer_adblock_HEADERS}
     ${MessageViewer_htmlwriter_HEADERS}
     ${MessageViewer_utils_HEADERS}
@@ -410,7 +394,6 @@ install(FILES
 install(FILES
     ${MessageViewer_viewerplugin_HEADERS}
     ${MessageViewer_settings_HEADERS}
-    ${MessageViewer_gravatar_HEADERS}
     ${MessageViewer_adblock_HEADERS}
     ${MessageViewer_htmlwriter_HEADERS}
     ${MessageViewer_header_HEADERS}

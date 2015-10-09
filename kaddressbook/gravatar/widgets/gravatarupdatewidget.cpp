@@ -23,7 +23,7 @@
 #include <QPushButton>
 #include <QCheckBox>
 
-#include <pimcommon/gravatarresolvurljob.h>
+#include <gravatar/gravatarresolvurljob.h>
 
 #include <kio/transferjob.h>
 
@@ -118,15 +118,15 @@ void GravatarUpdateWidget::slotSearchGravatar()
 {
     mCurrentUrl.clear();
     if (!mEmail.isEmpty()) {
-        PimCommon::GravatarResolvUrlJob *job = new PimCommon::GravatarResolvUrlJob(this);
+        Gravatar::GravatarResolvUrlJob *job = new Gravatar::GravatarResolvUrlJob(this);
         job->setEmail(mEmail);
         if (job->canStart()) {
             job->setUseDefaultPixmap(false);
             job->setUseHttps(mUseHttps->isChecked());
             job->setUseLibravatar(mUseLibravatar->isChecked());
             job->setFallbackGravatar(mFallbackGravatar->isChecked());
-            connect(job, &PimCommon::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
-            connect(job, &PimCommon::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateWidget::slotResolvUrl);
+            connect(job, &Gravatar::GravatarResolvUrlJob::finished, this, &GravatarUpdateWidget::slotSearchGravatarFinished);
+            connect(job, &Gravatar::GravatarResolvUrlJob::resolvUrl, this, &GravatarUpdateWidget::slotResolvUrl);
             mSearchGravatar->setEnabled(false);
             Q_EMIT activateDialogButton(false);
             mPixmap = QPixmap();
@@ -144,7 +144,7 @@ void GravatarUpdateWidget::slotResolvUrl(const QUrl &url)
     mCurrentUrl = url;
 }
 
-void GravatarUpdateWidget::slotSearchGravatarFinished(PimCommon::GravatarResolvUrlJob *job)
+void GravatarUpdateWidget::slotSearchGravatarFinished(Gravatar::GravatarResolvUrlJob *job)
 {
     if (job) {
         if (job->hasGravatar()) {
