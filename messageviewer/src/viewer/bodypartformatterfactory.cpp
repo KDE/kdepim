@@ -209,5 +209,5 @@ const Interface::BodyPartFormatter *BodyPartFormatterFactory::createFor(const QS
 
 const Interface::BodyPartFormatter *BodyPartFormatterFactory::createFor(const QByteArray &type, const QByteArray &subtype) const
 {
-    return createFor(type.data(), subtype.data());
+    return createFor(type.constData(), subtype.constData());
 }
