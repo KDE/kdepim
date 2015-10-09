@@ -921,14 +921,18 @@ void RichTextComposerControler::slotAddQuotes()
     QTextCursor cursor = richTextComposer()->textCursor();
     cursor.beginEditBlock();
     QString selectedText;
+    bool lastCharacterIsAParagraphChar = false;
     if (!cursor.hasSelection()) {
         cursor.select(QTextCursor::Document);
         selectedText = cursor.selectedText();
         cursor.removeSelectedText();
     } else {
         selectedText = cursor.selectedText();
+        if (selectedText[selectedText.length()-1] == QChar::ParagraphSeparator) {
+            lastCharacterIsAParagraphChar = true;
+        }
     }
-    richTextComposer()->insertPlainText(d->addQuotesToText(selectedText));
+    richTextComposer()->insertPlainText(d->addQuotesToText(selectedText) + (lastCharacterIsAParagraphChar ? QChar::ParagraphSeparator : QChar()));
     cursor.endEditBlock();
 }
 
