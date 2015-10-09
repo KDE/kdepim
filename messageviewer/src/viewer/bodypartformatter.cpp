@@ -32,10 +32,12 @@
 #include "bodypartformatter.h"
 #include "messageviewer_debug.h"
 #include "viewer/bodypartformatterfactory_p.h"
+#include "viewer/attachmentstrategy.h"
 #include "interfaces/bodypartformatter.h"
 #include "interfaces/bodypart.h"
 
 #include "viewer/objecttreeparser.h"
+#include "messagepart.h"
 
 #include <kmime/kmime_content.h>
 
@@ -104,6 +106,47 @@ public:
 
 const ImageTypeBodyPartFormatter *ImageTypeBodyPartFormatter::self = 0;
 
+class MessageRfc822BodyPartFormatter
+    : public BodyPartFormatter
+    , public MessageViewer::Interface::BodyPartFormatter
+{
+    static const MessageRfc822BodyPartFormatter * self;
+public:
+    bool process(ObjectTreeParser *, KMime::Content *, ProcessResult &) const Q_DECL_OVERRIDE;
+    MessageViewer::Interface::BodyPartFormatter::Result format(Interface::BodyPart *, HtmlWriter *) const Q_DECL_OVERRIDE;
+    using MessageViewer::Interface::BodyPartFormatter::format;
+    static const ::BodyPartFormatter *create();
+};
+
+const MessageRfc822BodyPartFormatter *MessageRfc822BodyPartFormatter::self;
+
+const ::BodyPartFormatter *MessageRfc822BodyPartFormatter::create() {
+    if (!self) {
+        self = new MessageRfc822BodyPartFormatter();
+    }
+    return self;
+}
+
+bool MessageRfc822BodyPartFormatter::process(ObjectTreeParser * otp, KMime::Content * node, ProcessResult & result) const
+{
+    PartMetaData metaData;
+    const KMime::Message::Ptr message = node->bodyAsMessage();
+    EncapsulatedRfc822MessagePart mp(otp, &metaData, node, message);
+
+    if (!otp->attachmentStrategy()->inlineNestedMessages() && !otp->showOnlyOneMimePart()) {
+        return false;
+    } else {
+        mp.html(true);
+        return true;
+    }
+}
+
+MessageViewer::Interface::BodyPartFormatter::Result MessageRfc822BodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
+{
+    bool ret = process(part->objectTreeParser(), part->content(), *part->processResult());
+    return ret ? Ok: Failed;
+}
+
 #define CREATE_BODY_PART_FORMATTER(subtype) \
     class subtype##BodyPartFormatter \
         : public BodyPartFormatter \
@@ -141,8 +184,6 @@ CREATE_BODY_PART_FORMATTER(TextHtml)
 CREATE_BODY_PART_FORMATTER(ApplicationPkcs7Mime)
 CREATE_BODY_PART_FORMATTER(ApplicationChiasmusText)
 //CREATE_BODY_PART_FORMATTER(ApplicationPgp)
-
-CREATE_BODY_PART_FORMATTER(MessageRfc822)
 
 CREATE_BODY_PART_FORMATTER(MultiPartMixed)
 CREATE_BODY_PART_FORMATTER(MultiPartAlternative)

@@ -560,67 +560,6 @@ static int signatureToStatus(const GpgME::Signature &sig)
     }
 }
 
-bool ObjectTreeParser::writeOpaqueOrMultipartSignedData(KMime::Content *data,
-        KMime::Content &sign,
-        const QString &fromAddress,
-        bool hideErrors)
-{
-    bool bIsOpaqueSigned = false;
-
-    const Kleo::CryptoBackend::Protocol *cryptProto = cryptoProtocol();
-
-#ifdef DEBUG_SIGNATURE
-#ifndef NDEBUG
-    if (data) {
-        qCDebug(MESSAGEVIEWER_LOG) << "processing Multipart Signed data";
-    } else {
-        qCDebug(MESSAGEVIEWER_LOG) << "processing Opaque Signed data";
-    }
-#endif
-#endif
-
-    QByteArray cleartext;
-    QByteArray signaturetext;
-    const QTextCodec *aCodec(data ? codecFor(data) : codecFor(&sign));
-
-    if (cryptProto) {
-        if (data) {
-            cleartext = data->encodedContent();
-            cleartext = KMime::LFtoCRLF(cleartext);
-        }
-
-        dumpToFile("dat_02_reader_signedtext_after_canonicalization",
-                   cleartext.data(), cleartext.length());
-
-        signaturetext = sign.decodedContent();
-        dumpToFile("dat_03_reader.sig", signaturetext.data(),
-                   signaturetext.size());
-    }
-
-    PartMetaData messagePart;
-
-    CryptoMessagePart mp(this, &messagePart,
-                         aCodec->toUnicode(data ? cleartext : signaturetext), cryptProto,
-                         fromAddress, &sign);
-
-    messagePart.isSigned = true;
-
-    if (cryptProto) {
-        if (data) {   // detached
-            mp.startVerificationDetached(cleartext, data, signaturetext);
-        } else { // opaque
-            mp.startVerificationDetached(signaturetext, Q_NULLPTR, QByteArray());
-            bIsOpaqueSigned = true;
-        }
-    } else {
-        messagePart.auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
-    }
-
-    mp.html(false);
-
-    return bIsOpaqueSigned;
-}
-
 void ObjectTreeParser::writeCertificateImportResult(const GpgME::ImportResult &res)
 {
     if (res.error()) {
@@ -1292,8 +1231,23 @@ bool ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, Proce
     CryptoProtocolSaver saver(this, protocol);
     mNodeHelper->setSignatureState(node, KMMsgFullySigned);
 
-    writeOpaqueOrMultipartSignedData(signedData, *signature,
-                                     NodeHelper::fromAsString(node));
+    const QByteArray cleartext = KMime::LFtoCRLF(signedData->encodedContent());
+    const QTextCodec *aCodec(codecFor(signedData));
+    PartMetaData messagePart;
+
+    CryptoMessagePart mp(this, &messagePart,
+                         aCodec->toUnicode(cleartext), cryptoProtocol(),
+                         NodeHelper::fromAsString(node), signature);
+    messagePart.isSigned = true;
+
+    if (cryptoProtocol()) {
+        mp.startVerificationDetached(cleartext, signedData, signature->decodedContent());
+    } else {
+        messagePart.auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
+    }
+
+    mp.html(false);
+
     return true;
 }
 
@@ -1388,56 +1342,6 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
         }
     }
     mp.html(false);
-    return true;
-}
-
-bool ObjectTreeParser::processMessageRfc822Subtype(KMime::Content *node, ProcessResult &)
-{
-    if (htmlWriter() && !attachmentStrategy()->inlineNestedMessages() && !showOnlyOneMimePart()) {
-        return false;
-    }
-
-    PartMetaData messagePart;
-    messagePart.isEncrypted = false;
-    messagePart.isSigned = false;
-    messagePart.isEncapsulatedRfc822Message = true;
-
-    KMime::Message::Ptr message = node->bodyAsMessage();
-    if (!message) {
-        qCWarning(MESSAGEVIEWER_LOG) << "Node is of type message/rfc822 but doesn't have a message!";
-    }
-
-    if (htmlWriter() && message) {
-
-        // The link to "Encapsulated message" is clickable, therefore the temp file needs to exists,
-        // since the user can click the link and expect to have normal attachment operations there.
-        mNodeHelper->writeNodeToTempFile(message.data());
-
-        // Paint the frame header
-        htmlWriter()->queue(writeSigstatHeader(messagePart,
-                                               cryptoProtocol(),
-                                               message->from()->asUnicodeString(),
-                                               message.data()));
-
-        // Paint the message header
-        htmlWriter()->queue(mSource->createMessageHeader(message.data()));
-
-        // Process the message, i.e. paint it by processing it with an OTP
-        ObjectTreeParser otp(this);
-        otp.parseObjectTreeInternal(message.data());
-
-        // Don't add the resulting textual content to our textual content here.
-        // That is unwanted when inline forwarding a message, since the encapsulated message will
-        // already be in the forward message as attachment, so don't duplicate the textual content
-        // by adding it to the inline body as well
-
-        // Paint the frame footer
-        htmlWriter()->queue(writeSigstatFooter(messagePart));
-    }
-
-    mNodeHelper->setNodeDisplayedEmbedded(node, true);
-    mNodeHelper->setPartMetaData(node, messagePart);
-
     return true;
 }
 
@@ -1551,11 +1455,21 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
             qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  type unknown  -  opaque signed data ?";
         }
 
-        bool sigFound = writeOpaqueOrMultipartSignedData(0,
-                        *signTestNode,
-                        NodeHelper::fromAsString(node),
-                        isEncrypted);
-        if (sigFound) {
+        const QTextCodec *aCodec(codecFor(signTestNode));
+        const QByteArray signaturetext = signTestNode->decodedContent();
+        PartMetaData messagePart;
+        CryptoMessagePart mp(this, &messagePart,
+                             aCodec->toUnicode(signaturetext), cryptoProtocol(),
+                             NodeHelper::fromAsString(node), signTestNode);
+
+        if (cryptoProtocol()) {
+            mp.startVerificationDetached(signaturetext, 0, QByteArray());
+        } else {
+            messagePart.auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
+        }
+
+        mp.html(false /*, hideErrors = isEncrypted*/);
+        if (messagePart.isSigned) {
             if (!isSigned) {
                 qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  signature found  -  opaque signed data !";
                 isSigned = true;

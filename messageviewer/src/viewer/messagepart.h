@@ -102,6 +102,22 @@ protected:
     PartMetaData *mMetaData;
 };
 
+class EncapsulatedRfc822MessagePart : public MessagePart
+{
+public:
+    typedef QSharedPointer<EncapsulatedRfc822MessagePart> Ptr;
+    EncapsulatedRfc822MessagePart(MessageViewer::ObjectTreeParser *otp, MessageViewer::PartMetaData *block, KMime::Content *node, const KMime::Message::Ptr &message);
+    virtual ~EncapsulatedRfc822MessagePart();
+
+    QString text() const Q_DECL_OVERRIDE;
+    void html(bool decorate) const Q_DECL_OVERRIDE;
+
+private:
+    const KMime::Message::Ptr mMessage;
+    KMime::Content* mNode;
+    ObjectTreeParser *mSubOtp;
+};
+
 class CryptoMessagePart : public MessagePart
 {
 public:

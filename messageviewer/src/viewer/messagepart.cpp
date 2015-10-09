@@ -18,6 +18,7 @@
 */
 
 #include "messagepart.h"
+#include "messageviewer_debug.h"
 #include "objecttreeparser.h"
 
 #include <interfaces/htmlwriter.h>
@@ -376,4 +377,67 @@ void CryptoMessagePart::html(bool decorate) const
             MessagePart::html(decorate);
         }
     }
+}
+
+EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser* otp, PartMetaData* block, KMime::Content* node, const KMime::Message::Ptr& message)
+: MessagePart(otp, block, QString())
+, mMessage(message)
+, mNode(node)
+, mSubOtp(0)
+{
+    mMetaData->isEncrypted = false;
+    mMetaData->isSigned = false;
+    mMetaData->isEncapsulatedRfc822Message = true;
+
+    mOtp->nodeHelper()->setNodeDisplayedEmbedded(mNode, true);
+    mOtp->nodeHelper()->setPartMetaData(mNode, *mMetaData);
+
+    if (!mMessage) {
+        qCWarning(MESSAGEVIEWER_LOG) << "Node is of type message/rfc822 but doesn't have a message!";
+        return;
+    }
+
+    // The link to "Encapsulated message" is clickable, therefore the temp file needs to exists,
+    // since the user can click the link and expect to have normal attachment operations there.
+    mOtp->nodeHelper()->writeNodeToTempFile(message.data());
+
+    mSubOtp = new ObjectTreeParser(mOtp, true);
+    mSubOtp->setAllowAsync(mOtp->allowAsync());
+    if (mOtp->htmlWriter()) {
+        mSubOtp->mHtmlWriter = new QueueHtmlWriter(mOtp->htmlWriter());
+    }
+    mSubOtp->parseObjectTreeInternal(message.data());
+}
+
+EncapsulatedRfc822MessagePart::~EncapsulatedRfc822MessagePart()
+{
+
+}
+
+void EncapsulatedRfc822MessagePart::html(bool decorate) const
+{
+    if (!mSubOtp) {
+        return;
+    }
+
+    MessageViewer::HtmlWriter* writer = mOtp->htmlWriter();
+
+    if (!writer) {
+        return;
+    }
+
+    const CryptoBlock block(mOtp, mMetaData, 0, mMessage->from()->asUnicodeString(), mMessage.data());
+    writer->queue(mOtp->mSource->createMessageHeader(mMessage.data()));
+    static_cast<QueueHtmlWriter*>(mSubOtp->htmlWriter())->replay();
+
+    mOtp->nodeHelper()->setPartMetaData(mNode, *mMetaData);
+}
+
+
+QString EncapsulatedRfc822MessagePart::text() const
+{
+    if (!mSubOtp) {
+        return QString();
+    }
+    return mSubOtp->plainTextContent();
 }

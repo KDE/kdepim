@@ -385,18 +385,6 @@ private:
     */
     void createAndParseTempNode(KMime::Content *parentNode, const char *content, const char *cntDesc);
 
-    /** if data is 0:
-      Feeds the HTML widget with the contents of the opaque signed
-          data found in partNode 'sign'.
-      if data is set:
-          Feeds the HTML widget with the contents of the given
-          multipart/signed object.
-      Signature is tested.  May contain body parts.
-
-      Returns whether a signature was found or not: use this to
-      find out if opaque data is signed or not. */
-    bool writeOpaqueOrMultipartSignedData(KMime::Content *data, KMime::Content &sign, const QString &fromAddress, bool hideErrors = false);
-
     /** Writes out the information contained in a GpgME::ImportResult */
     void writeCertificateImportResult(const GpgME::ImportResult &res);
 
@@ -434,8 +422,6 @@ public:// (during refactoring)
     bool processMultiPartParallelSubtype(KMime::Content *node, ProcessResult &result);
     bool processMultiPartSignedSubtype(KMime::Content *node, ProcessResult &result);
     bool processMultiPartEncryptedSubtype(KMime::Content *node, ProcessResult &result);
-
-    bool processMessageRfc822Subtype(KMime::Content *node, ProcessResult &result);
 
     bool processApplicationPkcs7MimeSubtype(KMime::Content *node, ProcessResult &result);
     bool processApplicationChiasmusTextSubtype(KMime::Content *node, ProcessResult &result);
@@ -535,6 +521,7 @@ private:
 
     friend class MessagePart;
     friend class CryptoMessagePart;
+    friend class EncapsulatedRfc822MessagePart;
 };
 
 }
