@@ -136,4 +136,34 @@ void RichTextComposerControlerTest::shouldItalicText()
     //TODO text format.
 }
 
+void RichTextComposerControlerTest::shouldTextUnderline()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    controler.setTextUnderline(true);
+    QVERIFY(controler.richTextComposer()->hasFocus());
+    QVERIFY(controler.richTextComposer()->acceptRichText());
+    //TODO text format.
+
+}
+
+void RichTextComposerControlerTest::shouldTextStrikeOut()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    controler.setTextStrikeOut(true);
+    QVERIFY(controler.richTextComposer()->hasFocus());
+    QVERIFY(controler.richTextComposer()->acceptRichText());
+    //TODO text format.
+
+}
+
 QTEST_MAIN(RichTextComposerControlerTest)

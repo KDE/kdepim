@@ -36,6 +36,9 @@ private Q_SLOTS:
     void shouldAddQuote();
     void shouldBoldText();
     void shouldItalicText();
+    void shouldTextUnderline();
+    void shouldTextStrikeOut();
+
 };
 
 #endif // RICHTEXTCOMPOSERCONTROLERTEST_H
