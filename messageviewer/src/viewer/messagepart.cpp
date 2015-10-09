@@ -71,6 +71,36 @@ void CryptoBlock::internalExit()
     entered = false;
 }
 
+AttachmentMarkBlock::AttachmentMarkBlock(MessageViewer::HtmlWriter* writer, KMime::Content* node)
+   : mWriter(writer)
+   , mNode(node)
+{
+    internalEnter();
+}
+
+AttachmentMarkBlock::~AttachmentMarkBlock()
+{
+    internalExit();
+}
+
+void AttachmentMarkBlock::internalEnter()
+{
+    if (mWriter && !entered) {
+        mWriter->queue(QStringLiteral("<div id=\"attachmentDiv%1\">\n").arg(mNode->index().toString()));
+        entered = true;
+    }
+}
+
+void AttachmentMarkBlock::internalExit()
+{
+    if (!entered) {
+        return;
+    }
+
+    mWriter->queue(QStringLiteral("</div>"));
+    entered = false;
+}
+
 //------MessagePart-----------------------
 MessagePart::MessagePart(ObjectTreeParser *otp,
                          PartMetaData *block,

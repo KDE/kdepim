@@ -359,9 +359,9 @@ void ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node)
             // identity of Interface::BodyPart::Display and AttachmentStrategy::Display
             part.setDefaultDisplay((Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay(node));
 
-            writeAttachmentMarkHeader(node);
             mNodeHelper->setNodeDisplayedEmbedded(node, true);
 
+            AttachmentMarkBlock block(htmlWriter(), node);
             QObject *asyncResultObserver = allowAsync() ? mSource->sourceObject() : 0;
             const Interface::BodyPartFormatter::Result result = formatter->format(&part, htmlWriter(), asyncResultObserver);
             switch (result) {
@@ -378,8 +378,6 @@ void ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node)
                 ;
             }
 
-            writeAttachmentMarkFooter();
-
             // No external plugin can handle the MIME part, handle it internally
         } else {
             const BodyPartFormatter *bpf
@@ -387,11 +385,10 @@ void ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node)
             if (!bpf) {
                 qCCritical(MESSAGEVIEWER_LOG) << "THIS SHOULD NO LONGER HAPPEN:" << mediaType << '/' << subType;
             }
-            writeAttachmentMarkHeader(node);
+            AttachmentMarkBlock block(htmlWriter(), node);
             if (bpf && !bpf->process(this, node, processResult)) {
                 defaultHandling(node, processResult);
             }
-            writeAttachmentMarkFooter();
         }
         mNodeHelper->setNodeProcessed(node, false);
 
@@ -2435,28 +2432,6 @@ QString ObjectTreeParser::writeSigstatFooter(PartMetaData &block)
     }
 
     return htmlStr;
-}
-
-//-----------------------------------------------------------------------------
-
-void ObjectTreeParser::writeAttachmentMarkHeader(KMime::Content *node)
-{
-    if (!htmlWriter()) {
-        return;
-    }
-
-    htmlWriter()->queue(QStringLiteral("<div id=\"attachmentDiv%1\">\n").arg(node->index().toString()));
-}
-
-//-----------------------------------------------------------------------------
-
-void ObjectTreeParser::writeAttachmentMarkFooter()
-{
-    if (!htmlWriter()) {
-        return;
-    }
-
-    htmlWriter()->queue(QStringLiteral("</div>"));
 }
 
 //-----------------------------------------------------------------------------

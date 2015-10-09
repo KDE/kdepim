@@ -459,12 +459,6 @@ public:// (during refactoring)
                                KMime::Content *node = 0);
     QString writeSigstatFooter(PartMetaData &part);
 
-    // The attachment mark is a div that is placed around the attchment. It is used for drawing
-    // a yellow border around the attachment when scrolling to it. When scrolling to it, the border
-    // color of the div is changed, see KMReaderWin::scrollToAttachment().
-    void writeAttachmentMarkHeader(KMime::Content *node);
-    void writeAttachmentMarkFooter();
-
     void writeBodyStr(const QByteArray &bodyString,
                       const QTextCodec *aCodec,
                       const QString &fromAddress,
