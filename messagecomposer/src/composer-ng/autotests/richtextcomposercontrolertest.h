@@ -34,6 +34,8 @@ private Q_SLOTS:
     void shouldAlignJustify();
     void shouldHaveDefaultValue();
     void shouldAddQuote();
+    void shouldBoldText();
+    void shouldItalicText();
 };
 
 #endif // RICHTEXTCOMPOSERCONTROLERTEST_H

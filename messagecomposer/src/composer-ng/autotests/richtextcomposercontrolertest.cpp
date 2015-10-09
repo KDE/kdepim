@@ -108,5 +108,32 @@ void RichTextComposerControlerTest::shouldAddQuote()
 #endif
 }
 
+void RichTextComposerControlerTest::shouldBoldText()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    controler.setTextBold(true);
+    QVERIFY(controler.richTextComposer()->hasFocus());
+    QVERIFY(controler.richTextComposer()->acceptRichText());
+    //TODO text format.
+}
+
+void RichTextComposerControlerTest::shouldItalicText()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    controler.setTextItalic(true);
+    QVERIFY(controler.richTextComposer()->hasFocus());
+    QVERIFY(controler.richTextComposer()->acceptRichText());
+    //TODO text format.
+}
 
 QTEST_MAIN(RichTextComposerControlerTest)
