@@ -205,16 +205,16 @@ void Viewer::slotSaveMessage()
     d->slotSaveMessage();
 }
 
-void Viewer::slotScrollUp(int pixels)
+void Viewer::slotScrollUp()
 {
     Q_D(Viewer);
-    d->mViewer->scrollUp(qAbs(pixels));
+    d->mViewer->scrollUp(10);
 }
 
-void Viewer::slotScrollDown(int pixels)
+void Viewer::slotScrollDown()
 {
     Q_D(Viewer);
-    d->mViewer->scrollDown(qAbs(pixels));
+    d->mViewer->scrollDown(10);
 }
 
 bool Viewer::atBottom() const
