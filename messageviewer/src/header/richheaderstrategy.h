@@ -48,7 +48,7 @@ static const char *const richHeaders[] = {
     "organization", "organisation", "reply-to",
     "user-agent", "x-mailer", "x-bugzilla-url", "disposition-notification-to"
 };
-static const int numRichHeaders = sizeof richHeaders / sizeof *richHeaders;
+static const int numRichHeaders = sizeof richHeaders / sizeof * richHeaders;
 
 class MESSAGEVIEWER_EXPORT RichHeaderStrategy : public HeaderStrategy
 {
