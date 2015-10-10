@@ -37,13 +37,13 @@ public:
     explicit MailModel(ChangeRecorder *monitor, QObject *parent = Q_NULLPTR);
     virtual ~MailModel();
 
-    virtual QVariant entityData(const Item &item, int column, int role = Qt::DisplayRole) const;
+    QVariant entityData(const Item &item, int column, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    virtual QVariant entityData(const Collection &collection, int column, int role = Qt::DisplayRole) const;
+    QVariant entityData(const Collection &collection, int column, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    virtual int columnCount(const QModelIndex &index = QModelIndex()) const;
+    int columnCount(const QModelIndex &index = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    virtual QVariant entityHeaderData(int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup) const;
+    QVariant entityHeaderData(int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup) const Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(MailModel)
