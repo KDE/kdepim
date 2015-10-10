@@ -22,7 +22,7 @@ include(ECMAddTests)
 
 
 set(KF5_VERSION "5.14.0")
-set(KDEPIM_LIB_VERSION "5.43.0")
+set(KDEPIM_LIB_VERSION "5.0.45")
 set(QT_REQUIRED_VERSION "5.4.0")
 
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Network)
