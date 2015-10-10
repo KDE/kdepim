@@ -11,6 +11,8 @@ set(gravatarlib_SRCS
     job/gravatarresolvurljob.cpp
 )
 
+ecm_qt_declare_logging_category(gravatarlib_SRCS HEADER gravatar_debug.h IDENTIFIER GRAVATAR_LOG CATEGORY_NAME log_gravatar)
+
 kconfig_add_kcfg_files(gravatarlib_SRCS
     settings/gravatarsettings.kcfgc
 )

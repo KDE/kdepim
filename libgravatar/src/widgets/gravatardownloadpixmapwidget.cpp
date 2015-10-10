@@ -17,6 +17,7 @@
 
 #include "gravatardownloadpixmapwidget.h"
 #include "gravatar/gravatarresolvurljob.h"
+#include "gravatar_debug.h"
 #include <QLabel>
 #include <KLocalizedString>
 #include <QVBoxLayout>
@@ -76,7 +77,7 @@ QPixmap GravatarDownloadPixmapWidget::gravatarPixmap() const
 void GravatarDownloadPixmapWidget::slotResolvUrlFinish(Gravatar::GravatarResolvUrlJob *job)
 {
     if (job) {
-        //qCDebug(Gravatar_LOG) << job->hasGravatar();
+        qCDebug(GRAVATAR_LOG) << job->hasGravatar();
         if (job->hasGravatar()) {
             mGravatarPixmap = job->pixmap();
             mResultLabel->setPixmap(mGravatarPixmap);

@@ -19,6 +19,7 @@
 
 #include "gravatarresolvurljob.h"
 #include "misc/gravatarcache.h"
+#include "gravatar_debug.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -105,7 +106,7 @@ void GravatarResolvUrlJob::startNetworkManager(const QUrl &url)
         QNetworkReply *reply = d->mNetworkAccessManager->get(QNetworkRequest(url));
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
     } else {
-        //qCDebug(Gravatar_LOG) << " network is not connected";
+        qCDebug(GRAVATAR_LOG) << " network is not connected";
         deleteLater();
         return;
     }
@@ -130,7 +131,7 @@ void GravatarResolvUrlJob::start()
             startNetworkManager(url);
         }
     } else {
-        //qCDebug(Gravatar_LOG) << "Gravatar can not start";
+        qCDebug(GRAVATAR_LOG) << "Gravatar can not start";
         deleteLater();
     }
 }
