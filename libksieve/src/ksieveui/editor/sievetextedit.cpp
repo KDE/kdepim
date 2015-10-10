@@ -81,6 +81,10 @@ SieveTextEdit::SieveTextEdit(QWidget *parent)
 
 SieveTextEdit::~SieveTextEdit()
 {
+    // disconnect these manually as the destruction of PimCommon::PlainTextEditorPrivate will trigger them
+    disconnect(this, &SieveTextEdit::blockCountChanged, this, &SieveTextEdit::slotUpdateLineNumberAreaWidth);
+    disconnect(this, &SieveTextEdit::updateRequest, this, &SieveTextEdit::slotUpdateLineNumberArea);
+
     delete d;
 }
 
