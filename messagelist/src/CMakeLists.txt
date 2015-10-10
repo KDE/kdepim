@@ -57,7 +57,7 @@ generate_export_header(KF5MessageList BASE_NAME messagelist)
 add_library(KF5::MessageList ALIAS KF5MessageList)
 
 target_include_directories(KF5MessageList INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/MessageList/;${KDE_INSTALL_INCLUDEDIR_KF5}/messagelist>")
-target_include_directories(KF5MessageList PUBLIC "$<BUILD_INTERFACE:${MessageList_SOURCE_DIR}/src;${MessageList_BINARY_DIR}/src;${MessageList_BINARY_DIR}/src/core/>")
+target_include_directories(KF5MessageList PUBLIC "$<BUILD_INTERFACE:${MessageList_SOURCE_DIR}/src;${MessageList_BINARY_DIR}/src>")
 
 
 target_link_libraries(KF5MessageList
