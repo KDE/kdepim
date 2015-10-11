@@ -244,7 +244,6 @@ void TranslatorWidget::init()
     hboxLayout->addWidget(label);
     d->to = new MinimumComboBox;
     d->to->setObjectName(QStringLiteral("to"));
-    connect(d->to, static_cast<void (MinimumComboBox::*)(int)>(&MinimumComboBox::currentIndexChanged), this, &TranslatorWidget::slotTranslate);
     connect(d->to, static_cast<void (MinimumComboBox::*)(int)>(&MinimumComboBox::currentIndexChanged), this, &TranslatorWidget::slotConfigChanged);
     hboxLayout->addWidget(d->to);
 
@@ -309,13 +308,15 @@ void TranslatorWidget::init()
     layout->addWidget(d->splitter);
 
     d->initLanguage();
-    connect(d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotFromLanguageChanged(int)));
     connect(d->from, static_cast<void (MinimumComboBox::*)(int)>(&MinimumComboBox::currentIndexChanged), this, &TranslatorWidget::slotConfigChanged);
 
     d->from->setCurrentIndex(0);   //Fill "to" combobox
     slotFromLanguageChanged(0, true);
     slotTextChanged();
     readConfig();
+    connect(d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotFromLanguageChanged(int)));
+    connect(d->to, static_cast<void (MinimumComboBox::*)(int)>(&MinimumComboBox::currentIndexChanged), this, &TranslatorWidget::slotTranslate);
+
     hide();
     setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
     d->languageSettingsChanged = false;
