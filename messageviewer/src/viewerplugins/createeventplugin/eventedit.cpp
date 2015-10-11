@@ -230,7 +230,7 @@ void EventEdit::setMessage(const KMime::Message::Ptr &value)
         mMessage = value;
         const KMime::Headers::Subject *const subject = mMessage ? mMessage->subject(false) : 0;
         if (subject) {
-            mEventEdit->setText(i18n("Event about to \"%1\"", subject->asUnicodeString()));
+            mEventEdit->setText(subject->asUnicodeString());
             mEventEdit->selectAll();
             mEventEdit->setFocus();
         } else {
