@@ -17,6 +17,7 @@
 
 #include "viewerplugincreatenoteinterface.h"
 #include "noteedit.h"
+#include "createnoteplugin_debug.h"
 #include <KLocalizedString>
 #include <KActionCollection>
 
@@ -103,7 +104,7 @@ void ViewerPluginCreatenoteInterface::showCreateNewNoteWidget()
 void ViewerPluginCreatenoteInterface::slotNoteItemFetched(KJob *job)
 {
     if (job->error()) {
-        //qCDebug(MESSAGEVIEWER_LOG) << "There is not valid note:" << job->errorString();
+        qCDebug(CREATENOTEPLUGIN_LOG) << "There is not valid note:" << job->errorString();
         showCreateNewNoteWidget();
     } else {
         Akonadi::ItemFetchJob *fetch = qobject_cast<Akonadi::ItemFetchJob *>(job);

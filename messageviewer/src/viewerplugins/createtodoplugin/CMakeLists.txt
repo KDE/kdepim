@@ -3,7 +3,7 @@ set(messageviewer_createtodoplugin_SRCS
     viewerplugincreatetodointerface.cpp
     todoedit.cpp
 )
-
+ecm_qt_declare_logging_category(messageviewer_createtodoplugin_SRCS HEADER createtodoplugin_debug.h IDENTIFIER CREATETODOPLUGIN_LOG CATEGORY_NAME log_createtodoplugin)
 add_library(messageviewer_createtodoplugin MODULE ${messageviewer_createtodoplugin_SRCS})
 
 target_link_libraries(messageviewer_createtodoplugin

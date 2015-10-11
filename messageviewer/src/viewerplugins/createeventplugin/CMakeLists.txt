@@ -5,6 +5,8 @@ set(messageviewer_createeventplugin_SRCS
     eventdatetimewidget.cpp
 )
 
+ecm_qt_declare_logging_category(messageviewer_createeventplugin_SRCS HEADER createeventplugin_debug.h IDENTIFIER CREATEEVENTPLUGIN_LOG CATEGORY_NAME log_createeventplugin)
+
 add_library(messageviewer_createeventplugin MODULE ${messageviewer_createeventplugin_SRCS})
 
 target_link_libraries(messageviewer_createeventplugin

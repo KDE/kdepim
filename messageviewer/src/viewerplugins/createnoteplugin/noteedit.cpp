@@ -17,7 +17,7 @@
 
 #include "noteedit.h"
 #include "globalsettings_messageviewer.h"
-
+#include "createnoteplugin_debug.h"
 #include <IncidenceEditorsng/IncidenceDialogFactory>
 #include <IncidenceEditorsng/IncidenceDialog>
 
@@ -203,12 +203,12 @@ void NoteEdit::slotCloseWidget()
 void NoteEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        //qCDebug(MESSAGEVIEWER_LOG) << " Message is null";
+        qCDebug(CREATENOTEPLUGIN_LOG) << " Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        //qCDebug(MESSAGEVIEWER_LOG) << " Collection is not valid";
+        qCDebug(CREATENOTEPLUGIN_LOG) << " Collection is not valid";
         return;
     }
 

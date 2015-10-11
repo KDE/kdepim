@@ -64,3 +64,7 @@ log_libkleopatraclientcore libkleopatraclient (kleopatra)
 log_grantleethemeeditor kdepim (grantleethemeeditor)
 log_korganizer_kontactplugins_specialdates kdepim (kontactplugins korganizer special dates)
 log_gravatar kdepim (libgravatar)
+log_createeventplugin kdepim (create event plugin)
+log_createnoteplugin kdepim (create note plugin)
+log_createtodoplugin kdepim (create todo plugin)
+

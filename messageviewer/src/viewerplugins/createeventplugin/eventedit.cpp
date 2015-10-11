@@ -16,7 +16,7 @@
 */
 
 #include "eventedit.h"
-#include "messageviewer_debug.h"
+#include "createeventplugin_debug.h"
 #include "globalsettings_messageviewer.h"
 #include "eventdatetimewidget.h"
 
@@ -253,19 +253,19 @@ void EventEdit::slotCloseWidget()
 void EventEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        //qCDebug(MESSAGEVIEWER_LOG) << " Message is null";
+        qCDebug(CREATEEVENTPLUGIN_LOG) << " Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        //qCDebug(MESSAGEVIEWER_LOG) << " Collection is not valid";
+        qCDebug(CREATEEVENTPLUGIN_LOG) << " Collection is not valid";
         return;
     }
 
     const QDateTime dtstart = mStartDateTimeEdit->dateTime();
     const QDateTime dtend = mEndDateTimeEdit->dateTime();
     if (!dtstart.isValid() || !dtend.isValid()) {
-        //qCDebug(MESSAGEVIEWER_LOG) << " date is not valid !";
+        qCDebug(CREATEEVENTPLUGIN_LOG) << " date is not valid !";
         return;
     }
 
