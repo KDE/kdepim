@@ -27,6 +27,7 @@ target_link_libraries(KF5Gravatar
     KF5::WidgetsAddons
     KF5::ConfigGui
     Qt5::Widgets
+    Qt5::Network
     KF5::PimCommon
 )
 target_include_directories(KF5Gravatar INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/Gravatar/;${KDE_INSTALL_INCLUDEDIR_KF5}/gravatar>")
