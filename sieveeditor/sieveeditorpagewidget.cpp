@@ -41,7 +41,6 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     vbox->addWidget(mSieveEditorWidget);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::checkSyntax, this, &SieveEditorPageWidget::slotCheckSyntaxClicked);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::modeEditorChanged, this, &SieveEditorPageWidget::modeEditorChanged);
-    //qCDebug(SIEVEEDITOR_LOG)<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::undoAvailable, this, &SieveEditorPageWidget::undoAvailable);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::redoAvailable, this, &SieveEditorPageWidget::redoAvailable);
     connect(mSieveEditorWidget, &KSieveUi::SieveEditorWidget::copyAvailable, this, &SieveEditorPageWidget::copyAvailable);
@@ -49,7 +48,6 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
 
 SieveEditorPageWidget::~SieveEditorPageWidget()
 {
-    //qCDebug(SIEVEEDITOR_LOG)<<" SieveEditorPageWidget::~SieveEditorPageWidget"<<this;
 }
 
 void SieveEditorPageWidget::slotCheckSyntaxClicked()
