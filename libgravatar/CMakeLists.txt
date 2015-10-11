@@ -25,7 +25,7 @@ set(KF5_VERSION "5.14.0")
 set(KDEPIM_LIB_VERSION "5.0.45")
 set(QT_REQUIRED_VERSION "5.4.0")
 
-find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Network)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5WidgetsAddons ${KF5_VERSION} CONFIG REQUIRED)
