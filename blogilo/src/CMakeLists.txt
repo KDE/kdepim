@@ -58,6 +58,7 @@ ki18n_wrap_ui(
   ui/uploadmediabase.ui
 )
 ecm_qt_declare_logging_category(blogilo_SRCS HEADER blogilo_debug.h IDENTIFIER BLOGILO_LOG CATEGORY_NAME log_blogilo)
+qt5_add_resources(blogilo_SRCS blogilo.qrc)
 
 kconfig_add_kcfg_files( blogilo_SRCS settings.kcfgc)
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/*-apps-blogilo.png")
@@ -90,4 +91,3 @@ install( TARGETS blogilo ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 install( PROGRAMS ../org.kde.blogilo.desktop  DESTINATION  ${KDE_INSTALL_APPDIR} )
 install( FILES ../blogilo.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 install( FILES blogilo.kcfg  DESTINATION  ${KDE_INSTALL_KCFGDIR} )
-install( FILES blogiloui.rc DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/blogilo )

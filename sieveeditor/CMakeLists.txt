@@ -36,6 +36,8 @@ ki18n_wrap_ui(sieveeditor_SRCS
     ui/sieveeditorconfigureserverwidget.ui
 )
 
+qt5_add_resources(sieveeditor_SRCS sieveeditor.qrc)
+
 ecm_qt_declare_logging_category(sieveeditor_SRCS HEADER sieveeditor_debug.h IDENTIFIER SIEVEEDITOR_LOG CATEGORY_NAME log_sieveeditor)
 
 add_executable(sieveeditor ${sieveeditor_SRCS} )
@@ -52,10 +54,6 @@ target_link_libraries(sieveeditor
 )
 
 install(TARGETS sieveeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
-install(FILES
-  sieveeditorui.rc
-  DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/sieveeditor)
 
 install(PROGRAMS org.kde.sieveeditor.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 

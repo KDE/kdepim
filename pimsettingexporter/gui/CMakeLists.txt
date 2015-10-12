@@ -24,6 +24,7 @@ set(pimsettingexporter_SRCS
     pimsettingexporterwindow.cpp
     pimsettingcommandlineoption.cpp
     main.cpp)
+qt5_add_resources(pimsettingexporter_SRCS pimsettingexporter.qrc)
 
 ecm_qt_declare_logging_category(pimsettingexporter_SRCS HEADER pimsettingexportgui_debug.h IDENTIFIER PIMSETTINGEXPORTERGUI_LOG CATEGORY_NAME log_pimsettingexportergui)
 
@@ -43,11 +44,6 @@ target_link_libraries(pimsettingexporter
 add_subdirectory(kconf_update)
 
 install(TARGETS pimsettingexporter ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
-
-install(FILES
-    pimsettingexporter.rc
-    DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/pimsettingexporter
-)
 
 install(PROGRAMS org.kde.pimsettingexporter.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 

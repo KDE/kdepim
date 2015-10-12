@@ -17,6 +17,7 @@ set(ktnef_SRCS
   messagepropertydialog.cpp
   qwmf.cpp
 )
+qt5_add_resources(ktnef_SRCS ktnef.qrc)
 ecm_qt_declare_logging_category(ktnef_SRCS HEADER ktnef_debug.h IDENTIFIER KTNEFAPPS_LOG CATEGORY_NAME log_ktnefapps)
 
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pics/hicolor/*-apps-ktnef.png")
@@ -32,5 +33,4 @@ install(TARGETS ktnef ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(PROGRAMS org.kde.ktnef.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 
-install(FILES ktnefui.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/ktnef)
 
