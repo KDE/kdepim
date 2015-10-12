@@ -619,13 +619,18 @@ void AttachmentControllerBase::showContextMenu()
     if(numberOfParts>0) {
         if (numberOfParts == 1) {
             const QString mimetype = QString::fromLatin1(d->selectedParts.first()->mimeType());
-            const QStringList parentMimeType = KMimeType::mimeType( mimetype )->allParentMimeTypes();
-            if ((mimetype == QLatin1String("text/plain")) ||
+            QStringList parentMimeTypes;
+            const KMimeType::Ptr kmimetypePtr = KMimeType::mimeType( mimetype );
+            if ( kmimetypePtr ) {
+                parentMimeTypes = kmimetypePtr->allParentMimeTypes();
+            }
+            if (parentMimeTypes.isEmpty() ||
+                (mimetype == QLatin1String("text/plain")) ||
                     (mimetype == QLatin1String("image/png")) ||
                     (mimetype == QLatin1String("image/jpeg")) ||
-                    parentMimeType.contains(QLatin1String("text/plain")) ||
-                    parentMimeType.contains(QLatin1String("image/png")) ||
-                    parentMimeType.contains(QLatin1String("image/jpeg"))
+                    parentMimeTypes.contains(QLatin1String("text/plain")) ||
+                    parentMimeTypes.contains(QLatin1String("image/png")) ||
+                    parentMimeTypes.contains(QLatin1String("image/jpeg"))
                     ) {
                 menu->addAction(d->viewContextAction);
             }
