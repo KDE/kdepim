@@ -15,26 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STORAGESERVICEPLUGINMANAGER_H
-#define STORAGESERVICEPLUGINMANAGER_H
+
+#ifndef STORAGESERVICEPLUGIN_H
+#define STORAGESERVICEPLUGIN_H
 
 #include <QObject>
 #include "pimcommon_export.h"
-
 namespace PimCommon
 {
-class StorageServicePluginManagerPrivate;
-class PIMCOMMON_EXPORT StorageServicePluginManager : public QObject
+class PIMCOMMON_EXPORT StorageServicePlugin : public QObject
 {
     Q_OBJECT
 public:
-    static StorageServicePluginManager *self();
+    explicit StorageServicePlugin(QObject *parent = Q_NULLPTR);
+    ~StorageServicePlugin();
 
-    explicit StorageServicePluginManager(QObject *parent = Q_NULLPTR);
-    ~StorageServicePluginManager();
-private:
-    StorageServicePluginManagerPrivate *const d;
 };
 }
 
-#endif // STORAGESERVICEPLUGINMANAGER_H
+#endif // STORAGESERVICEPLUGIN_H
