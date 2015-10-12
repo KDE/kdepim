@@ -77,6 +77,8 @@ set(libpimcommon_storageservice_SRCS
   storageservice/settings/storageservicesettings.cpp 
  
   storageservice/tests/testsettingsjob.cpp
+
+  storageservice/storageservicepluginmanager.cpp
 )
 
 qt5_add_dbus_adaptor(libpimcommon_storageservice_SRCS storageservice/org.kde.pim.StorageManager.xml storageservice/storageservicemanager.h PimCommon::StorageServiceManager )
