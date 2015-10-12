@@ -18,8 +18,7 @@
 #include "desktopfilepage.h"
 #include "globalsettings_base.h"
 
-#include "PimCommon/SimpleStringlistEditor"
-
+#include <KEditListWidget>
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <KDesktopFile>
@@ -99,9 +98,9 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
         lay->addWidget(lab, row , 0, 1, 2);
 
         ++row;
-        mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
+        mExtraDisplayHeaders = new KEditListWidget;
         lay->addWidget(mExtraDisplayHeaders, row, 0, 1, 2);
-        connect(mExtraDisplayHeaders, &PimCommon::SimpleStringListEditor::changed, this, &DesktopFilePage::slotExtraDisplayHeadersChanged);
+        connect(mExtraDisplayHeaders, &KEditListWidget::changed, this, &DesktopFilePage::slotExtraDisplayHeadersChanged);
     } else {
         lay->setRowStretch(row, 1);
     }
@@ -122,7 +121,7 @@ DesktopFilePage::~DesktopFilePage()
 
 void DesktopFilePage::slotExtraDisplayHeadersChanged()
 {
-    Q_EMIT extraDisplayHeaderChanged(mExtraDisplayHeaders->stringList());
+    Q_EMIT extraDisplayHeaderChanged(mExtraDisplayHeaders->items());
     Q_EMIT changed();
 }
 
@@ -176,7 +175,7 @@ void DesktopFilePage::loadTheme(const QString &path)
     mVersion->setText(desktopFile.desktopGroup().readEntry(QStringLiteral("ThemeVersion")));
     if (mExtraDisplayHeaders) {
         const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QStringLiteral("DisplayExtraVariables"), QStringList());
-        mExtraDisplayHeaders->setStringList(displayExtraHeaders);
+        mExtraDisplayHeaders->setItems(displayExtraHeaders);
     }
 }
 
@@ -195,9 +194,9 @@ void DesktopFilePage::saveAsFilename(const QString &filename)
         desktopFile.desktopGroup().writeEntry(QStringLiteral("FileName"), mFilename->text());
     }
     if (mExtraDisplayHeaders) {
-        const QStringList displayExtraHeaders = mExtraDisplayHeaders->stringList();
+        const QStringList displayExtraHeaders = mExtraDisplayHeaders->items();
         if (!displayExtraHeaders.isEmpty()) {
-            desktopFile.desktopGroup().writeEntry(QStringLiteral("DisplayExtraVariables"), mExtraDisplayHeaders->stringList());
+            desktopFile.desktopGroup().writeEntry(QStringLiteral("DisplayExtraVariables"), displayExtraHeaders);
         }
     }
 

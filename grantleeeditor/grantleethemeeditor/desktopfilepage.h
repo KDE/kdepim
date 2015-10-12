@@ -22,10 +22,9 @@
 #include "grantleethemeeditor_export.h"
 class QLineEdit;
 class KZip;
-
+class KEditListWidget;
 namespace PimCommon
 {
-class SimpleStringListEditor;
 class PlainTextEditorWidget;
 }
 namespace GrantleeThemeEditor
@@ -75,7 +74,7 @@ private:
     QLineEdit *mAuthor;
     QLineEdit *mEmail;
     QLineEdit *mVersion;
-    PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
+    KEditListWidget *mExtraDisplayHeaders;
 };
 }
 
