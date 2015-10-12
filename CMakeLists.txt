@@ -46,7 +46,7 @@ else()
 set(LIBRARY_NAMELINK LIBRARY NAMELINK_SKIP)
 
 # we need some parts of the ECM CMake helpers
-find_package(ECM 5.14.0 REQUIRED NO_MODULE)
+find_package(ECM 5.16.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${kdepim_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
 include(ECMOptionalAddSubdirectory)
 include(ECMInstallIcons)
@@ -121,7 +121,7 @@ set(KDEPIM_LIB_SOVERSION "5")
 set(AKONADINOTES_LIB_VERSION "4.78.0")
 
 set(QT_REQUIRED_VERSION "5.4.0")
-set(KF5_VERSION "5.14.0")
+set(KF5_VERSION "5.16.0")
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_NO_TEXTTOSPEECH "Do not use TextToSpeech in the kdepim applications" FALSE)

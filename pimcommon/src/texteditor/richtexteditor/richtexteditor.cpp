@@ -18,7 +18,6 @@
 #include "richtexteditor.h"
 #include "texteditor/commonwidget/textmessageindicator.h"
 #include "texteditor/richtexteditor/richtextdecorator.h"
-#include "webshortcut/webshortcutsmenumanager.h"
 #include <KLocalizedString>
 #include <KStandardAction>
 #include <KCursor>
@@ -35,6 +34,7 @@
 #include <sonnet/speller.h>
 #include <texttospeech/texttospeech.h>
 #include <SonnetCore/sonnet/backgroundchecker.h>
+#include <KIO/KUriFilterSearchProviderActions>
 
 #include <QMenu>
 #include <QContextMenuEvent>
@@ -56,7 +56,7 @@ public:
           textIndicator(new PimCommon::TextMessageIndicator(q)),
           richTextDecorator(Q_NULLPTR),
           speller(Q_NULLPTR),
-          webshortcutMenuManager(new PimCommon::WebShortcutsMenuManager(q)),
+          webshortcutMenuManager(new KIO::KUriFilterSearchProviderActions(q)),
           customPalette(false),
           activateLanguageMenu(true),
           showAutoCorrectionButton(false)
@@ -84,7 +84,7 @@ public:
     QTextDocumentFragment originalDoc;
     Sonnet::SpellCheckDecorator *richTextDecorator;
     Sonnet::Speller *speller;
-    WebShortcutsMenuManager *webshortcutMenuManager;
+    KIO::KUriFilterSearchProviderActions *webshortcutMenuManager;
     RichTextEditor::SupportFeatures supportFeatures;
     bool customPalette;
     bool checkSpellingEnabled;

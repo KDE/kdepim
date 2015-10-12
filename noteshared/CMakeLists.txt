@@ -4,7 +4,7 @@ project(noteshared)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${noteshared_SOURCE_DIR})
 # ECM setup
-find_package(ECM 5.14.0 CONFIG REQUIRED)
+find_package(ECM 5.16.0 CONFIG REQUIRED)
 #set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 #FIXIT when we split it.
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
@@ -23,7 +23,7 @@ include(ECMQtDeclareLoggingCategory)
 include(ECMAddTests)
 
 
-set(KF5_VERSION "5.14.0")
+set(KF5_VERSION "5.16.0")
 set(KDEPIMLIBS_LIB_VERSION "5.0.46")
 set(KDEPIM_LIB_VERSION "5.0.45")
 set(QT_REQUIRED_VERSION "5.4.0")

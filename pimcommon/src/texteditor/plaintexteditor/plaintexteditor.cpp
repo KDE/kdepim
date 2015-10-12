@@ -17,8 +17,7 @@
 
 #include "plaintexteditor.h"
 #include "texteditor/commonwidget/textmessageindicator.h"
-#include "webshortcut/webshortcutsmenumanager.h"
-
+#include <KIO/KUriFilterSearchProviderActions>
 #include <KLocalizedString>
 #include <KIconTheme>
 #include <KStandardGuiItem>
@@ -59,7 +58,7 @@ public:
     PlainTextEditorPrivate(PlainTextEditor *qq)
         : q(qq),
           mTextIndicator(new PimCommon::TextMessageIndicator(q)),
-          webshortcutMenuManager(new PimCommon::WebShortcutsMenuManager(q)),
+          webshortcutMenuManager(new KIO::KUriFilterSearchProviderActions(q)),
           richTextDecorator(Q_NULLPTR),
           speller(Q_NULLPTR),
           customPalette(false),
@@ -82,7 +81,7 @@ public:
     QStringList ignoreSpellCheckingWords;
     PlainTextEditor *q;
     PimCommon::TextMessageIndicator *mTextIndicator;
-    PimCommon::WebShortcutsMenuManager *webshortcutMenuManager;
+    KIO::KUriFilterSearchProviderActions *webshortcutMenuManager;
     Sonnet::SpellCheckDecorator *richTextDecorator;
     Sonnet::Speller *speller;
 

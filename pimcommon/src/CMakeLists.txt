@@ -207,10 +207,6 @@ set(libpimcommon_shareserviceurl_SRCS
    shareserviceurl/shareserviceurlmanager.cpp
 )
 
-set(libpimcommon_webshortscut_SRCS
-   webshortcut/webshortcutsmenumanager.cpp
-)
-
 set(libpimcommon_manageserversidesubscription_SRCS
    manageserversidesubscription/manageserversidesubscriptionjob.cpp
 )
@@ -224,7 +220,6 @@ set(libpimcommon_SRCS
   settings/pimcommonsettings.cpp
   ${libpimcommon_shorturl_SRCS}
   ${libpimcommon_manageserversidesubscription_SRCS}
-  ${libpimcommon_webshortscut_SRCS}
   ${libpimcommon_shareserviceurl_SRCS}
   ${libpimcommon_migrate_SRCS}
   ${libpimcommon_util_SRCS}
@@ -336,7 +331,6 @@ if (BUILD_TESTING)
    add_subdirectory(migration/autotests)
    add_subdirectory(util/autotests)
    add_subdirectory(shareserviceurl/autotests)
-   add_subdirectory(webshortcut/autotests)
    add_subdirectory(translator/tests)
    add_subdirectory(texteditor/plaintexteditor/tests)
    add_subdirectory(texteditor/richtexteditor/tests)
@@ -439,14 +433,6 @@ ecm_generate_headers(PimCommon_storageservicesettings_HEADERS
   REQUIRED_HEADERS PimCommon_storageservicesettings_HEADERS
   PREFIX PimCommon
   RELATIVE storageservice/settings
-)
-
-ecm_generate_headers(PimCommon_webshortcut_HEADERS
-  HEADER_NAMES
-  WebShortCutsMenuManager
-  REQUIRED_HEADERS PimCommon_webshortcut_HEADERS
-  PREFIX PimCommon
-  RELATIVE webshortcut
 )
 
 ecm_generate_headers(PimCommon_shareserviceurl_HEADERS
@@ -649,7 +635,6 @@ install(FILES
     ${PimCommon_storageservicewidgets_HEADERS}
     ${PimCommon_storageservicedialog_HEADERS}
     ${PimCommon_storageservicedialog_HEADERS}
-    ${PimCommon_webshortcut_HEADERS}
     ${PimCommon_shareserviceurl_HEADERS}
     ${PimCommon_translator_HEADERS}
     ${PimCommon_customtools_HEADERS}
@@ -689,7 +674,6 @@ install(FILES
     ${PimCommon_storageservicewidgets_HEADERS}
     ${PimCommon_storageservicedialog_HEADERS}
     ${PimCommon_storageservicedialog_HEADERS}
-    ${PimCommon_webshortcut_HEADERS}
     ${PimCommon_shareserviceurl_HEADERS}
     ${PimCommon_translator_HEADERS}
     ${PimCommon_customtools_HEADERS}
