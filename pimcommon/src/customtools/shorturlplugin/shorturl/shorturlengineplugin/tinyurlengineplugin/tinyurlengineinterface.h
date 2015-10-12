@@ -20,7 +20,6 @@
 
 #include <pimcommon/shorturlengineinterface.h>
 #include <QNetworkReply>
-class QNetworkAccessManager;
 namespace PimCommon
 {
 class TinyUrlEngineInterface : public PimCommon::ShortUrlEngineInterface
