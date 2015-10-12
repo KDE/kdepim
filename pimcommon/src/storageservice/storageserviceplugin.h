@@ -29,7 +29,7 @@ class PIMCOMMON_EXPORT StorageServicePlugin : public QObject
 public:
     explicit StorageServicePlugin(QObject *parent = Q_NULLPTR);
     ~StorageServicePlugin();
-
+    virtual QString storageServiceName() const = 0;
 };
 }
 
