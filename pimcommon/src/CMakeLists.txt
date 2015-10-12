@@ -388,6 +388,7 @@ ecm_generate_headers(PimCommon_storageservice_HEADERS
   StorageServiceManager
   StorageServiceProgressManager
   StorageServiceJobConfig
+  StorageServicePluginManager
   REQUIRED_HEADERS PimCommon_storageservice_HEADERS
   PREFIX PimCommon
   RELATIVE storageservice
