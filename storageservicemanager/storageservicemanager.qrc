@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/kxmlgui5/storageservicemanager">
+        <file>storageservicemanagerui.rc</file>
+    </qresource>
+</RCC>
+

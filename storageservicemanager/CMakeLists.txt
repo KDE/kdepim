@@ -25,6 +25,7 @@ set(storageservicemanager_SRCS
   storageservicemanagermainwidget.cpp
   storageserviceconfigurestoragewidget.cpp
 )
+qt5_add_resources(storageservicemanager_SRCS storageservicemanager.qrc)
 
 ecm_qt_declare_logging_category(storageservicemanager_SRCS HEADER storageservicemanager_debug.h IDENTIFIER STORAGESERVICEMANAGER_LOG CATEGORY_NAME log_storageservicemanager)
 
@@ -39,10 +40,6 @@ target_link_libraries(storageservicemanager
 )
 
 install(TARGETS storageservicemanager ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
-install(FILES
-  storageservicemanagerui.rc
-  DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/storageservicemanager)
 
 install(PROGRAMS org.kde.storageservicemanager.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 

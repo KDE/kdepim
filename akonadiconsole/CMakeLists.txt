@@ -92,6 +92,9 @@ ki18n_wrap_ui(akonadiconsole_bin_SRCS
   tagpropertiesdialog.ui
 )
 
+
+qt5_add_resources(akonadiconsole_bin_SRCS akonadiconsole.qrc)
+
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-akonadiconsole.png")
 ecm_add_app_icon(akonadiconsole_bin_SRCS ICONS ${ICONS_SRCS})
 
@@ -112,4 +115,3 @@ target_link_libraries(akonadiconsole_bin
 
 install(TARGETS akonadiconsole_bin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS org.kde.akonadiconsole.desktop DESTINATION ${KDE_INSTALL_APPDIR})
-install(FILES akonadiconsoleui.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/akonadiconsole)
