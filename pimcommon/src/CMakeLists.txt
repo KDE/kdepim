@@ -107,7 +107,6 @@ set(libpimcommon_texteditor_SRCS
   texteditor/richtexteditor/richtexteditor.cpp
   texteditor/richtexteditor/richtexteditfindbar.cpp
   texteditor/richtexteditor/richtexteditorwidget.cpp
-  texteditor/richtexteditor/richtextdecorator.cpp
 )
 
 set(libpimcommon_translator_SRCS

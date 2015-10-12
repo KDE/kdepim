@@ -17,7 +17,6 @@
 
 #include "richtexteditor.h"
 #include "texteditor/commonwidget/textmessageindicator.h"
-#include "texteditor/richtexteditor/richtextdecorator.h"
 #include <KLocalizedString>
 #include <KStandardAction>
 #include <KCursor>
@@ -31,6 +30,7 @@
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
 #include <Sonnet/Highlighter>
+#include <sonnet/spellcheckdecorator.h>
 #include <sonnet/speller.h>
 #include <texttospeech/texttospeech.h>
 #include <SonnetCore/sonnet/backgroundchecker.h>
@@ -502,7 +502,7 @@ void RichTextEditor::createHighlighter()
 
 Sonnet::SpellCheckDecorator *RichTextEditor::createSpellCheckDecorator()
 {
-    return new RichTextDecorator(this);
+    return new Sonnet::SpellCheckDecorator(this);
 }
 
 void RichTextEditor::addIgnoreWordsToHighLighter()
