@@ -17,6 +17,12 @@
 
 #include "storageservicepluginmanager.h"
 
+#include <KPluginLoader>
+#include <QFileInfo>
+#include <QVectorIterator>
+#include <kpluginmetadata.h>
+#include <QSet>
+
 using namespace PimCommon;
 
 class StorageServicePluginManagerInstancePrivate
@@ -38,20 +44,87 @@ public:
 Q_GLOBAL_STATIC(StorageServicePluginManagerInstancePrivate, sInstance)
 
 
-class PimCommon::StorageServicePluginManagerPrivate
+class StorageServicePluginInfo
 {
 public:
-    StorageServicePluginManagerPrivate()
+    StorageServicePluginInfo()
+        //: plugin(Q_NULLPTR)
     {
 
     }
+    QString saveName() const;
+
+    KPluginMetaData metaData;
+    //PimCommon::CustomToolsPlugin *plugin;
 };
 
+QString StorageServicePluginInfo::saveName() const
+{
+    return QFileInfo(metaData.fileName()).baseName();
+}
 
+class PimCommon::StorageServicePluginManagerPrivate
+{
+public:
+    StorageServicePluginManagerPrivate(StorageServicePluginManager *qq)
+        : q(qq)
+    {
+
+    }
+    //QVector<PimCommon::CustomToolsPlugin *> pluginsList() const;
+    void initializePluginList();
+    void loadPlugin(StorageServicePluginInfo *item);
+    QVector<StorageServicePluginInfo> mPluginList;
+    StorageServicePluginManager *q;
+};
+
+void StorageServicePluginManagerPrivate::initializePluginList()
+{
+    const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("pimcommon"), [](const KPluginMetaData & md) {
+        return md.serviceTypes().contains(QStringLiteral("PimCommonCustomTools/Plugin"));
+    });
+
+    QVectorIterator<KPluginMetaData> i(plugins);
+    i.toBack();
+    QSet<QString> unique;
+    while (i.hasPrevious()) {
+        StorageServicePluginInfo info;
+        info.metaData = i.previous();
+
+        // only load plugins once, even if found multiple times!
+        if (unique.contains(info.saveName())) {
+            continue;
+        }
+        //info.plugin = Q_NULLPTR;
+        mPluginList.push_back(info);
+        unique.insert(info.saveName());
+    }
+    QVector<StorageServicePluginInfo>::iterator end(mPluginList.end());
+    for (QVector<StorageServicePluginInfo>::iterator it = mPluginList.begin(); it != end; ++it) {
+        loadPlugin(&(*it));
+    }
+}
+#if 0
+QVector<PimCommon::CustomToolsPlugin *> StorageServicePluginManagerPrivate::pluginsList() const
+{
+    QVector<PimCommon::CustomToolsPlugin *> lst;
+    QVector<StorageServicePluginInfo>::ConstIterator end(mPluginList.constEnd());
+    for (QVector<StorageServicePluginInfo>::ConstIterator it = mPluginList.constBegin(); it != end; ++it) {
+        if ((*it).plugin) {
+            lst << (*it).plugin;
+        }
+    }
+    return lst;
+}
+#endif
+void StorageServicePluginManagerPrivate::loadPlugin(StorageServicePluginInfo *item)
+{
+    //item->plugin = KPluginLoader(item->metaData.fileName()).factory()->create<PimCommon::CustomToolsPlugin>(q, QVariantList() << item->saveName());
+}
 
 StorageServicePluginManager::StorageServicePluginManager(QObject *parent)
     : QObject(parent),
-      d(new PimCommon::StorageServicePluginManagerPrivate)
+      d(new PimCommon::StorageServicePluginManagerPrivate(this))
 {
 
 }
