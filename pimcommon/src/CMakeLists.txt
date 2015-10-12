@@ -76,8 +76,6 @@ set(libpimcommon_storageservice_SRCS
  
   storageservice/settings/storageservicesettings.cpp 
  
-  storageservice/tests/testsettingsjob.cpp
-
   storageservice/storageservicepluginmanager.cpp
 )
 
