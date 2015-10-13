@@ -22,11 +22,7 @@
 
 #include "messageviewer/messageviewersettings.h"
 #include "messageviewer_export.h"
-#ifdef KDEPIM_NO_WEBKIT
-# include <QTextBrowser>
-#else
-# include <KWebView>
-#endif
+#include <KWebView>
 
 #include <boost/function.hpp>
 
@@ -35,16 +31,10 @@ class KActionCollection;
 
 namespace MessageViewer
 {
-#ifndef KDEPIM_NO_WEBKIT
 class ScamDetection;
-#endif
 
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
-#ifdef KDEPIM_NO_WEBKIT
-class MESSAGEVIEWER_EXPORT MailWebView : public QTextBrowser // krazy:exclude=qclasses
-#else
 class MESSAGEVIEWER_EXPORT MailWebView : public KWebView
-#endif
 {
     Q_OBJECT
 public:
@@ -97,11 +87,9 @@ public:
     bool isAShortUrl(const QUrl &url) const;
     void expandUrl(const QUrl &url);
 
-#ifndef KDEPIM_NO_WEBKIT
     void scamCheck();
     void saveMainFrameScreenshotInFile(const QString &filename);
     void openBlockableItemsDialog();
-#endif
 
 public Q_SLOTS:
     void slotShowDetails();
@@ -114,9 +102,7 @@ Q_SIGNALS:
     void popupMenu(const QUrl &url, const QUrl &imageUrl, const QPoint &point);
 
     void linkHovered(const QString &link, const QString &title = QString(), const QString &textContent = QString());
-#ifdef KDEPIM_NO_WEBKIT
     void linkClicked(const QUrl &link);
-#endif
     void messageMayBeAScam();
 
 protected:
@@ -131,7 +117,6 @@ private Q_SLOTS:
     void hideAccessKeys();
 
 private:
-#ifndef KDEPIM_NO_WEBKIT
     bool checkForAccessKey(QKeyEvent *event);
     void showAccessKeys();
     void makeAccessKeyLabel(const QChar &accessKey, const QWebElement &element);
@@ -146,7 +131,6 @@ private:
     QHash<QString, QChar> mDuplicateLinkElements;
 
     ScamDetection *mScamDetection;
-#endif
     KActionCollection *mActionCollection;
 };
 

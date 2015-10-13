@@ -47,7 +47,7 @@ if(DEBUG_SIGNATURE)
    add_definitions(-DDEBUG_SIGNATURE)
 endif()
 
-  set(_mailwebview_cpp viewer/mailwebview_webkit.cpp 
+set(_mailwebview_cpp viewer/mailwebview.cpp 
                        adblock/networkaccessmanager.cpp 
                        adblock/webpage.cpp
                        adblock/adblockelementhiding.cpp
@@ -67,7 +67,7 @@ endif()
                        adblock/adblockcreatefilterdialog.cpp
                        adblock/adblockblockableitemswidget.cpp
                        )
-  set(_mailwebview_lib KF5::WebKit Qt5::WebKitWidgets)
+set(_mailwebview_lib KF5::WebKit Qt5::WebKitWidgets)
 
 set(libmessageviewer_viewer_SRCS
   viewer/attachmentstrategy.cpp
