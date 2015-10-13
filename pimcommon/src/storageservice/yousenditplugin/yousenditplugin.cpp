@@ -15,20 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STORAGESERVICEINTERFACE_H
-#define STORAGESERVICEINTERFACE_H
+#include "yousenditplugin.h"
+#include <kpluginfactory.h>
 
-#include <QObject>
+using namespace PimCommon;
+K_PLUGIN_FACTORY_WITH_JSON(PimCommonYouSendItPluginFactory, "pimcommon_yousenditplugin.json", registerPlugin<YouSendItPlugin>();)
 
-#include "pimcommon_export.h"
-namespace PimCommon
+YouSendItPlugin::YouSendItPlugin(QObject *parent, const QList<QVariant> &)
+    : PimCommon::StorageServicePlugin(parent)
 {
-class PIMCOMMON_EXPORT StorageServiceInterface : public QObject
-{
-    Q_OBJECT
-public:
-    explicit StorageServiceInterface(QObject *parent = Q_NULLPTR);
-    ~StorageServiceInterface();
-};
+
 }
-#endif // STORAGESERVICEINTERFACE_H
+
+YouSendItPlugin::~YouSendItPlugin()
+{
+
+}
+
+QString YouSendItPlugin::storageServiceName() const
+{
+    return QStringLiteral("yousendit");
+}
+#include "yousenditplugin.moc"

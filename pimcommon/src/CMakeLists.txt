@@ -706,3 +706,4 @@ endif()
 add_subdirectory(designer)
 
 add_subdirectory(customtools)
+add_subdirectory(storageservice)

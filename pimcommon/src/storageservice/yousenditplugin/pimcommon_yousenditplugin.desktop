@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=PimCommonStorageService/Plugin
+X-KDE-Library=pimcommon_yousenditplugin
+Name=YouSendIt

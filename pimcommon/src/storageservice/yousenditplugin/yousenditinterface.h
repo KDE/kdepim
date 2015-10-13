@@ -15,20 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STORAGESERVICEINTERFACE_H
-#define STORAGESERVICEINTERFACE_H
+#ifndef YOUSENDITINTERFACE_H
+#define YOUSENDITINTERFACE_H
 
-#include <QObject>
+#include <storageservice/storageserviceinterface.h>
 
-#include "pimcommon_export.h"
 namespace PimCommon
 {
-class PIMCOMMON_EXPORT StorageServiceInterface : public QObject
+class YouSendItInterface : public PimCommon::StorageServiceInterface
 {
     Q_OBJECT
 public:
-    explicit StorageServiceInterface(QObject *parent = Q_NULLPTR);
-    ~StorageServiceInterface();
+    explicit YouSendItInterface(QObject *parent = Q_NULLPTR);
+    ~YouSendItInterface();
 };
 }
-#endif // STORAGESERVICEINTERFACE_H
+#endif // YOUSENDITINTERFACE_H
