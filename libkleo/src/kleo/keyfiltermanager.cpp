@@ -233,7 +233,7 @@ void KeyFilterManager::reload()
 
     if (KConfig *config = CryptoBackendFactory::instance()->configObject()) {
         const QStringList groups = config->groupList().filter(QRegExp(QStringLiteral("^Key Filter #\\d+$")));
-        for (QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it) {
+        for (QStringList::const_iterator it = groups.begin(); it != groups.end(); ++it) {
             const KConfigGroup cfg(config, *it);
             d->filters.push_back(shared_ptr<KeyFilter>(new KConfigBasedKeyFilter(cfg)));
         }
@@ -365,6 +365,6 @@ QColor KeyFilterManager::fgColor(const Key &key) const
 QIcon KeyFilterManager::icon(const Key &key) const
 {
     const QString icon = get_string(d->filters, key, &KeyFilter::icon);
-    return icon.isEmpty() ? QIcon() : QIcon::fromTheme(icon) ;
+    return icon.isEmpty() ? QIcon() : QIcon::fromTheme(icon);
 }
 

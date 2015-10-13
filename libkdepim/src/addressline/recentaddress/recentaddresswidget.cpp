@@ -58,7 +58,7 @@ RecentAddressWidget::RecentAddressWidget(QWidget *parent)
     mNewButton = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("&Add"), this);
     mNewButton->setObjectName(QStringLiteral("new_button"));
     connect(mNewButton, &QPushButton::clicked, this, &RecentAddressWidget::slotAddItem);
-    btnsLayout->insertWidget(0 , mNewButton);
+    btnsLayout->insertWidget(0, mNewButton);
 
     mRemoveButton = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("&Remove"), this);
     mRemoveButton->setObjectName(QStringLiteral("remove_button"));

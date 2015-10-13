@@ -98,7 +98,7 @@ void Ldap::create()
     KConfigGroup group = c->group(QStringLiteral("LDAP"));
     bool hasMyServer = false;
     uint selHosts = group.readEntry("NumSelectedHosts", 0);
-    for (uint i = 0 ; i < selHosts && !hasMyServer; ++i) {
+    for (uint i = 0; i < selHosts && !hasMyServer; ++i) {
         if (group.readEntry(QStringLiteral("SelectedHost%1").arg(i), QString()) == host) {
             hasMyServer = true;
             m_entry = i;

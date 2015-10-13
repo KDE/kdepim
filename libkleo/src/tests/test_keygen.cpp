@@ -94,7 +94,7 @@ KeyGenerator::KeyGenerator(QWidget *parent)
     ++row;
     glay->addWidget(new QLabel("<GnupgKeyParms format=\"internal\">", w),
                     row, 0, 1, 2);
-    for (int i = 0 ; i < numKeyParams ; ++i) {
+    for (int i = 0; i < numKeyParams; ++i) {
         ++row;
         glay->addWidget(new QLabel(keyParams[i], w), row, 0);
         glay->addWidget(mLineEdits[i] = new QLineEdit(w), row, 1);
@@ -114,7 +114,7 @@ KeyGenerator::~KeyGenerator() {}
 void KeyGenerator::slotStartKeyGeneration()
 {
     QString params = "<GnupgKeyParms format=\"internal\">\n";
-    for (int i = 0 ; i < numKeyParams ; ++i)
+    for (int i = 0; i < numKeyParams; ++i)
         if (mLineEdits[i] && !mLineEdits[i]->text().trimmed().isEmpty()) {
             params += keyParams[i] + (": " + mLineEdits[i]->text().trimmed()) + '\n';
         }
@@ -122,7 +122,7 @@ void KeyGenerator::slotStartKeyGeneration()
 
     const Kleo::CryptoBackend::Protocol *proto = 0;
     if (protocol) {
-        proto = !strcmp(protocol, "openpgp") ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime() ;
+        proto = !strcmp(protocol, "openpgp") ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime();
     }
     if (!proto) {
         proto = Kleo::CryptoBackendFactory::instance()->smime();

@@ -194,7 +194,7 @@ void FilterActionWidget::updateAddRemoveButton(bool addButtonEnabled, bool remov
 void FilterActionWidget::setAction(const FilterAction *action)
 {
     bool found = false;
-    const int count = d->mComboBox->count() - 1 ; // last entry is the empty one
+    const int count = d->mComboBox->count() - 1; // last entry is the empty one
 
     const QString name = action ? action->name() : QString();
 
@@ -319,7 +319,7 @@ void FilterActionWidgetLister::setActionList(QList<FilterAction *> *list)
         qCDebug(MAILCOMMON_LOG) << "FilterActionWidgetLister: Clipping action list to"
                                 << widgetsMaximum() << "items!";
 
-        for (; superfluousItems ; superfluousItems--) {
+        for (; superfluousItems; superfluousItems--) {
             d->mActionList->removeLast();
         }
     }
@@ -382,7 +382,7 @@ void FilterActionWidgetLister::updateAddRemoveButton()
     }
     QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
-    for (; wIt != wEnd ; ++wIt) {
+    for (; wIt != wEnd; ++wIt) {
         FilterActionWidget *w = qobject_cast<FilterActionWidget *>(*wIt);
         w->updateAddRemoveButton(addButtonEnabled, removeButtonEnabled);
     }
@@ -425,7 +425,7 @@ void FilterActionWidgetLister::clearWidget(QWidget *widget)
         FilterActionWidget *w = static_cast<FilterActionWidget *>(widget);
         w->setAction(0);
         w->disconnect(this);
-        reconnectWidget(w) ;
+        reconnectWidget(w);
         updateAddRemoveButton();
     }
 }

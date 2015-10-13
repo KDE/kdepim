@@ -64,7 +64,7 @@ std::string Kleo::hexdecode(const std::string &in)
 {
     std::string result;
     result.reserve(in.size());
-    for (std::string::const_iterator it = in.begin(), end = in.end() ; it != end ; ++it)
+    for (std::string::const_iterator it = in.begin(), end = in.end(); it != end; ++it)
         if (*it == '%') {
             ++it;
             unsigned char ch = '\0';
@@ -93,7 +93,7 @@ std::string Kleo::hexencode(const std::string &in)
 
     static const char hex[] = "0123456789ABCDEF";
 
-    for (std::string::const_iterator it = in.begin(), end = in.end() ; it != end ; ++it)
+    for (std::string::const_iterator it = in.begin(), end = in.end(); it != end; ++it)
         switch (const unsigned char ch = *it) {
         default:
             if ((ch >= '!' && ch <= '~') || ch > 0xA0) {

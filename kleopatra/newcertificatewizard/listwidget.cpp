@@ -158,7 +158,7 @@ private:
     int selectedRow() const
     {
         const QModelIndexList mil = selectedIndexes();
-        return mil.empty() ? -1 : mil.front().row() ;
+        return mil.empty() ? -1 : mil.front().row();
     }
     void selectRow(int idx)
     {

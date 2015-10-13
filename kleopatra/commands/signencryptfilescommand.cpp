@@ -161,13 +161,13 @@ void SignEncryptFilesCommand::setSigningPolicy(Policy policy)
     switch (policy) {
     case NoPolicy:
     case Allow:
-        mode |= SignEncryptFilesController::SignAllowed ;
+        mode |= SignEncryptFilesController::SignAllowed;
         break;
     case Deny:
-        mode |= SignEncryptFilesController::SignDisallowed ;
+        mode |= SignEncryptFilesController::SignDisallowed;
         break;
     case Force:
-        mode |= SignEncryptFilesController::SignForced ;
+        mode |= SignEncryptFilesController::SignForced;
         break;
     }
     try {
@@ -198,13 +198,13 @@ void SignEncryptFilesCommand::setEncryptionPolicy(Policy policy)
     switch (policy) {
     case NoPolicy:
     case Allow:
-        mode |= SignEncryptFilesController::EncryptAllowed ;
+        mode |= SignEncryptFilesController::EncryptAllowed;
         break;
     case Deny:
-        mode |= SignEncryptFilesController::EncryptDisallowed ;
+        mode |= SignEncryptFilesController::EncryptDisallowed;
         break;
     case Force:
-        mode |= SignEncryptFilesController::EncryptForced ;
+        mode |= SignEncryptFilesController::EncryptForced;
         break;
     }
     try {

@@ -71,7 +71,7 @@ QWidget *SieveActionAddHeader::createParamWidget(QWidget *parent) const
     return w;
 }
 
-bool SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+bool SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     int index = 0;
     QDomNode node = element.firstChild();

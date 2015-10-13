@@ -267,7 +267,7 @@ void OperationsWidget::ensureIndexAvailable(unsigned int idx)
     assert(qobject_cast<QBoxLayout *>(m_ui.scrollArea.widget()->layout()));
     QBoxLayout &blay = *static_cast<QBoxLayout *>(m_ui.scrollArea.widget()->layout());
 
-    for (unsigned int i = m_widgets.size() ; i < idx + 1 ; ++i) {
+    for (unsigned int i = m_widgets.size(); i < idx + 1; ++i) {
         if (i) {
             blay.insertWidget(blay.count() - 1, new HLine(m_ui.scrollArea.widget()));
         }

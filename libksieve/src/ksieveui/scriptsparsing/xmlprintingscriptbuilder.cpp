@@ -42,12 +42,12 @@ void XMLPrintingScriptBuilder::taggedArgument(const QString &tag)
 
 void XMLPrintingScriptBuilder::stringArgument(const QString &string, bool multiLine, const QString & /*fixme*/)
 {
-    write(QStringLiteral("str") , multiLine ? QStringLiteral("type=\"multiline\"") : QStringLiteral("type=\"quoted\""), string);
+    write(QStringLiteral("str"), multiLine ? QStringLiteral("type=\"multiline\"") : QStringLiteral("type=\"quoted\""), string);
 }
 
 void XMLPrintingScriptBuilder::numberArgument(unsigned long number, char quantifier)
 {
-    write(QStringLiteral("num"), (quantifier ? QStringLiteral("quantifier=\"%1\"").arg(quantifier) : QString()) , QString::number(number));
+    write(QStringLiteral("num"), (quantifier ? QStringLiteral("quantifier=\"%1\"").arg(quantifier) : QString()), QString::number(number));
 }
 
 void XMLPrintingScriptBuilder::commandStart(const QString &identifier)

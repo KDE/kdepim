@@ -42,20 +42,20 @@ AuditLogViewer::AuditLogViewer(const QString &log, QWidget *parent)
     setWindowTitle(i18n("View GnuPG Audit Log"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     buttonBox->button(QDialogButtonBox::Close)->setIcon(KIconLoader::global()->loadIcon(
-                                                        QStringLiteral("dialog-close"),
-                                                        KIconLoader::Small));
+                QStringLiteral("dialog-close"),
+                KIconLoader::Small));
 
     QPushButton *copyClipBtn = new QPushButton;
     copyClipBtn->setText(i18n("&Copy to Clipboard"));
     copyClipBtn->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("edit-copy"),
-                                                         KIconLoader::Small));
+                         KIconLoader::Small));
     buttonBox->addButton(copyClipBtn, QDialogButtonBox::ActionRole);
     connect(copyClipBtn, &QPushButton::clicked, this, &AuditLogViewer::slotCopyClip);
 
     QPushButton *saveAsBtn = new QPushButton;
     saveAsBtn->setText(i18n("&Save to Disk..."));
     saveAsBtn->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("document-save-as"),
-                                                       KIconLoader::Small));
+                       KIconLoader::Small));
     buttonBox->addButton(saveAsBtn, QDialogButtonBox::ActionRole);
     connect(saveAsBtn, &QPushButton::clicked, this, &AuditLogViewer::slotSaveAs);
 

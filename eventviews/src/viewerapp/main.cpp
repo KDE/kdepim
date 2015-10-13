@@ -48,7 +48,7 @@ int main(int argc, char **argv)
         viewNames << parser.positionalArguments().at(i).toLower();
     }
 
-    MainWindow *widget = new MainWindow(viewNames) ;
+    MainWindow *widget = new MainWindow(viewNames);
 
     widget->show();
 

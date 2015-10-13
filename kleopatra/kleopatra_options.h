@@ -37,47 +37,48 @@
 #include <QCommandLineParser>
 #include <KLocalizedString>
 
-static void kleopatra_options(QCommandLineParser *parser) {
+static void kleopatra_options(QCommandLineParser *parser)
+{
     QList<QCommandLineOption> options;
 
     options << QCommandLineOption(QStringList() << QStringLiteral("openpgp")
-                                                << QStringLiteral("p"),
+                                  << QStringLiteral("p"),
                                   i18n("Use OpenPGP for the following operation"))
             << QCommandLineOption(QStringList() << QStringLiteral("cms")
-                                                << QStringLiteral("c"),
+                                  << QStringLiteral("c"),
                                   i18n("Use CMS (X.509, S/MIME) for the following operation"))
-            #ifdef HAVE_USABLE_ASSUAN
+#ifdef HAVE_USABLE_ASSUAN
             << QCommandLineOption(QStringLiteral("uiserver-socket"),
                                   i18n("Location of the socket the ui server is listening on"),
                                   QStringLiteral("argument"))
             << QCommandLineOption(QStringLiteral("daemon"),
                                   i18n("Run UI server only, hide main window"))
-            #endif
-            << QCommandLineOption(QStringList() << QStringLiteral("import-certificate") 
-                                                << QStringLiteral("i"),
+#endif
+            << QCommandLineOption(QStringList() << QStringLiteral("import-certificate")
+                                  << QStringLiteral("i"),
                                   i18n("Import certificate file(s)"))
             << QCommandLineOption(QStringList() << QStringLiteral("encrypt")
-                                                << QStringLiteral("e"),
+                                  << QStringLiteral("e"),
                                   i18n("Encrypt file(s)"))
             << QCommandLineOption(QStringList() << QStringLiteral("sign")
-                                                << QStringLiteral("s"),
+                                  << QStringLiteral("s"),
                                   i18n("Sign file(s)"))
             << QCommandLineOption(QStringList() << QStringLiteral("sign-encrypt")
-                                                << QStringLiteral("E"),
+                                  << QStringLiteral("E"),
                                   i18n("Sign and/or encrypt file(s)"))
             << QCommandLineOption(QStringLiteral("encrypt-sign"),
                                   i18n("Same as --sign-encrypt, do not use"))
             << QCommandLineOption(QStringList() << QStringLiteral("decrypt")
-                                                << QStringLiteral("d"),
+                                  << QStringLiteral("d"),
                                   i18n("Decrypt file(s)"))
             << QCommandLineOption(QStringList() << QStringLiteral("verify")
-                                                << QStringLiteral("V"),
+                                  << QStringLiteral("V"),
                                   i18n("Verify file/signature"))
             << QCommandLineOption(QStringList() << QStringLiteral("decrypt-verify")
-                                                << QStringLiteral("D"),
+                                  << QStringLiteral("D"),
                                   i18n("Decrypt and/or verify file(s)"))
             << QCommandLineOption(QStringList() << QStringLiteral("query")
-                                                << QStringLiteral("q"),
+                                  << QStringLiteral("q"),
                                   i18n("Search for Certificate by fingerprint"),
                                   QStringLiteral("fingerprint"))
             << QCommandLineOption(QStringLiteral("parent-windowid"),

@@ -98,7 +98,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
             QMap<QString, QVariant> settings;
             settings.insert(QStringLiteral("Path"), path);
             settings.insert(QStringLiteral("DisplayName"), name);
-            addAddressBookImportInfo(i18n("New addressbook created: %1", createResource(QStringLiteral("akonadi_vcard_resource") , name, settings)));
+            addAddressBookImportInfo(i18n("New addressbook created: %1", createResource(QStringLiteral("akonadi_vcard_resource"), name, settings)));
         }
     } else {
         qCDebug(IMPORTWIZARD_LOG) << " unknown addressbook type :" << type;

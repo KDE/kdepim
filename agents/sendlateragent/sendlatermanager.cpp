@@ -66,7 +66,7 @@ void SendLaterManager::load(bool forcereload)
 
     const QStringList itemList = mConfig->groupList().filter(QRegExp(QStringLiteral("SendLaterItem \\d+")));
     const int numberOfItems = itemList.count();
-    for (int i = 0 ; i < numberOfItems; ++i) {
+    for (int i = 0; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
         SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo(group);
         if (info->isValid()) {

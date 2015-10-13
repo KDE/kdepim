@@ -1037,7 +1037,7 @@ QList< BilboBlog *> DBMan::listBlogs()
             tmp->setLocalDirectory(q.value(8).toString());
             if (d->useWallet) {
                 QString buffer;
-                if (d->mWallet && d->mWallet->readPassword(tmp->url().url() + QLatin1Char('_') + tmp->username() , buffer)
+                if (d->mWallet && d->mWallet->readPassword(tmp->url().url() + QLatin1Char('_') + tmp->username(), buffer)
                         == 0 && !buffer.isEmpty()) {
                     tmp->setPassword(buffer);
                     qCDebug(BLOGILO_LOG) << "Password loaded from kde wallet.";

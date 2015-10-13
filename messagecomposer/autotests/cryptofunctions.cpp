@@ -127,7 +127,7 @@ void ComposerTestUtil::verifySignature(KMime::Content *content, QByteArray signe
 
 }
 
-void ComposerTestUtil::verifyEncryption(KMime::Content *content, QByteArray encrContent, Kleo::CryptoMessageFormat f , bool withAttachment)
+void ComposerTestUtil::verifyEncryption(KMime::Content *content, QByteArray encrContent, Kleo::CryptoMessageFormat f, bool withAttachment)
 {
     // store it in a KMime::Message, that's what OTP needs
     KMime::Message::Ptr resultMessage = KMime::Message::Ptr(new KMime::Message);

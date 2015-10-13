@@ -72,7 +72,7 @@ QWidget *SieveActionConvert::createParamWidget(QWidget *parent) const
     return w;
 }
 
-bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     int index = 0;
     QDomNode node = element.firstChild();

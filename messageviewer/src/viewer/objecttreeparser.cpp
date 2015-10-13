@@ -331,7 +331,7 @@ void ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node)
         htmlWriter()->queue(QStringLiteral("<div style=\"position: relative; word-wrap: break-word\">\n"));
     }
 
-    for (; node ; node = MessageCore::NodeHelper::nextSibling(node)) {
+    for (; node; node = MessageCore::NodeHelper::nextSibling(node)) {
         if (mNodeHelper->nodeProcessed(node)) {
             continue;
         }
@@ -666,7 +666,7 @@ void ObjectTreeParser::writeCertificateImportResult(const GpgME::ImportResult &r
     }
     htmlWriter()->queue(QLatin1String("<b>") + i18n("Certificate import details:") + QLatin1String("</b><br/>"));
     std::vector<GpgME::Import>::const_iterator end(imports.end());
-    for (std::vector<GpgME::Import>::const_iterator it = imports.begin() ; it != end ; ++it) {
+    for (std::vector<GpgME::Import>::const_iterator it = imports.begin(); it != end; ++it) {
         if ((*it).error()) {
             htmlWriter()->queue(i18nc("Certificate import failed.", "Failed: %1 (%2)", QLatin1String((*it).fingerprint()),
                                       QString::fromLocal8Bit((*it).error().asString())));
@@ -1110,7 +1110,7 @@ bool ObjectTreeParser::processTextPlainSubtype(KMime::Content *curNode, ProcessR
 
         const QString fileName;
         mNodeHelper->writeNodeToTempFile(curNode);
-        const QString dir = QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr") ;
+        const QString dir = QApplication::isRightToLeft() ? QStringLiteral("rtl") : QStringLiteral("ltr");
 
         QString htmlStr = QLatin1String("<table cellspacing=\"1\" class=\"textAtm\">"
                                         "<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">");
@@ -1357,7 +1357,6 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
                          data->decodedText(), Kleo::CryptoBackendFactory::instance()->openpgp(),
                          NodeHelper::fromAsString(data), node);
 
-
     if (!mSource->decryptMessage()) {
         mNodeHelper->setNodeProcessed(data, false);  // Set the data node to done to prevent it from being processed
     } else if (KMime::Content *newNode = mNodeHelper->decryptedNodeForContent(data)) {
@@ -1508,7 +1507,6 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
         CryptoMessagePart mp(this, &messagePart,
                              node->decodedText(), cryptoProtocol(),
                              NodeHelper::fromAsString(node), node);
-
 
         if (!mSource->decryptMessage()) {
             isEncrypted = true;
@@ -2548,23 +2546,23 @@ bool ObjectTreeParser::okVerify(const QByteArray &data, const Kleo::CryptoBacken
     if (!cryptProto) {
         QString errorMsg;
         switch (cryptPlugError) {
-            case NOT_INITIALIZED:
-                errorMsg = i18n("Crypto plug-in \"%1\" is not initialized.",
-                                cryptPlugLibName);
-                break;
-            case CANT_VERIFY_SIGNATURES:
-                errorMsg = i18n("Crypto plug-in \"%1\" cannot verify signatures.",
-                                cryptPlugLibName);
-                break;
-            case NO_PLUGIN:
-                if (cryptPlugDisplayName.isEmpty()) {
-                    errorMsg = i18n("No appropriate crypto plug-in was found.");
-                } else {
-                    errorMsg = i18nc("%1 is either 'OpenPGP' or 'S/MIME'",
-                                     "No %1 plug-in was found.",
-                                     cryptPlugDisplayName);
-                }
-                break;
+        case NOT_INITIALIZED:
+            errorMsg = i18n("Crypto plug-in \"%1\" is not initialized.",
+                            cryptPlugLibName);
+            break;
+        case CANT_VERIFY_SIGNATURES:
+            errorMsg = i18n("Crypto plug-in \"%1\" cannot verify signatures.",
+                            cryptPlugLibName);
+            break;
+        case NO_PLUGIN:
+            if (cryptPlugDisplayName.isEmpty()) {
+                errorMsg = i18n("No appropriate crypto plug-in was found.");
+            } else {
+                errorMsg = i18nc("%1 is either 'OpenPGP' or 'S/MIME'",
+                                 "No %1 plug-in was found.",
+                                 cryptPlugDisplayName);
+            }
+            break;
         }
         messagePart.errorText = i18n("The message is signed, but the "
                                      "validity of the signature cannot be "
@@ -2752,19 +2750,19 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
         }
 
         if (htmlWriter()) {
-            foreach(const MessagePart::Ptr &mp, mpl) {
+            foreach (const MessagePart::Ptr &mp, mpl) {
                 mp->html(decorate);
             }
         }
 
         if (updatePlainText || mPlainTextContent.isEmpty()) {
             mPlainTextContent.clear();
-            foreach(const MessagePart::Ptr &mp, mpl) {
+            foreach (const MessagePart::Ptr &mp, mpl) {
                 mPlainTextContent += mp->text();
             }
             mPlainTextContentCharset = aCodec->name();
         }
-        foreach(const MessagePart::Ptr &mp, mpl) {
+        foreach (const MessagePart::Ptr &mp, mpl) {
             delete mp->partMetaData();
         }
     }
@@ -2793,7 +2791,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
     const QString normalStartTag = cssHelper()->nonQuotedFontTag();
     QString quoteFontTag[3];
     QString deepQuoteFontTag[3];
-    for (int i = 0 ; i < 3 ; ++i) {
+    for (int i = 0; i < 3; ++i) {
         quoteFontTag[i] = cssHelper()->quoteFontTag(i);
         deepQuoteFontTag[i] = cssHelper()->quoteFontTag(i + 3);
     }
@@ -2880,7 +2878,7 @@ QString ObjectTreeParser::quotedHTML(const QString &s, bool decorate)
                         //only show the QuoteMark when is the first line of the level hidden
                         if (!curHidden) {
                             //Expand all quotes
-                            htmlStr += QLatin1String("<div class=\"quotelevelmark\" >") ;
+                            htmlStr += QLatin1String("<div class=\"quotelevelmark\" >");
                             htmlStr += QStringLiteral("<a href=\"kmail:levelquote?%1 \">"
                                                       "<img src=\"%2\" alt=\"\" title=\"\"/></a>")
                                        .arg(-1)

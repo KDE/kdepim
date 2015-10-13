@@ -610,7 +610,7 @@ void ImportMailJob::restoreConfig()
                 const int numActions = group.readEntry("actions", 0);
                 QString actName;
                 QString argsName;
-                for (int i = 0 ; i < numActions ; ++i) {
+                for (int i = 0; i < numActions; ++i) {
                     actName.sprintf("action-name-%d", i);
                     argsName.sprintf("action-args-%d", i);
                     const QString actValue = group.readEntry(actName);
@@ -809,7 +809,7 @@ void ImportMailJob::restoreConfig()
     const KArchiveEntry *kmail2Entry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("kmail2/adblockrules_local"));
     if (kmail2Entry && kmail2Entry->isFile()) {
         const KArchiveFile *entry = static_cast<const KArchiveFile *>(kmail2Entry);
-        const QString adblockPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("kmail2/adblockrules_local") ;
+        const QString adblockPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("kmail2/adblockrules_local");
         if (QFile(adblockPath).exists()) {
             if (overwriteConfigMessageBox(QStringLiteral("adblockrules_local"))) {
                 copyToFile(entry, QString(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/") + QLatin1String("kmail2/adblockrules_local")), QStringLiteral("adblockrules_local"), Utils::dataPath() + QLatin1String("kmail2/"));

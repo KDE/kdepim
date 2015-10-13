@@ -150,7 +150,7 @@ void UploadMediaDialog::slotOkClicked()
             return;
         }
         QUrl dest;
-        dest.setUrl(ui.kcfg_FtpPath->text() , QUrl::TolerantMode);
+        dest.setUrl(ui.kcfg_FtpPath->text(), QUrl::TolerantMode);
         if (dest.isValid()) {
             if (dest.scheme() == QLatin1String("ftp") || dest.scheme() == QLatin1String("sftp")) {
                 QUrl src(ui.kcfg_urlLineEdit->text());

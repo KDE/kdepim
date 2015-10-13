@@ -115,7 +115,7 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
     QUrl destUrl = QUrl::fromLocalFile(mTemporaryFile->fileName());
 
     mProgress->start();
-    KIO::FileCopyJob *job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
+    KIO::FileCopyJob *job = KIO::file_copy(subUrl, destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
     job->metaData().insert(QStringLiteral("ssl_no_client_cert"), QStringLiteral("TRUE"));
     job->metaData().insert(QStringLiteral("ssl_no_ui"), QStringLiteral("TRUE"));
     job->metaData().insert(QStringLiteral("UseCache"), QStringLiteral("false"));

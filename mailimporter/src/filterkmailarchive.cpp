@@ -52,7 +52,7 @@ FilterKMailArchive::FilterKMailArchive()
              i18n("<p><b>KMail Archive File Import Filter</b></p>"
                   "<p>This filter will import archives files previously exported by KMail.</p>"
                   "<p>Archive files contain a complete folder subtree compressed into a single file.</p>")),
-    d(new MailImporter::FilterKMailArchivePrivate)
+      d(new MailImporter::FilterKMailArchivePrivate)
 {
 }
 

@@ -325,7 +325,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleClick(const QUrl &url, 
     PartNodeBodyPart part(w->message().data(), node, w->nodeHelper(), w->overrideCodec());
     BodyPartHandlerList::const_iterator end(mHandlers.constEnd());
 
-    for (BodyPartHandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it) {
+    for (BodyPartHandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it) {
         if ((*it)->handleClick(w->viewer(), &part, path)) {
             return true;
         }
@@ -344,7 +344,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleContextMenuRequest(cons
 
     PartNodeBodyPart part(w->message().data(), node, w->nodeHelper(), w->overrideCodec());
     BodyPartHandlerList::const_iterator end(mHandlers.constEnd());
-    for (BodyPartHandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)
+    for (BodyPartHandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it)
         if ((*it)->handleContextMenuRequest(&part, path, p)) {
             return true;
         }
@@ -361,7 +361,7 @@ QString URLHandlerManager::BodyPartURLHandlerManager::statusBarMessage(const QUr
 
     PartNodeBodyPart part(w->message().data(), node, w->nodeHelper(), w->overrideCodec());
     BodyPartHandlerList::const_iterator end(mHandlers.constEnd());
-    for (BodyPartHandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it) {
+    for (BodyPartHandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it) {
         const QString msg = (*it)->statusBarMessage(&part, path);
         if (!msg.isEmpty()) {
             return msg;
@@ -437,7 +437,7 @@ void URLHandlerManager::unregisterHandler(const Interface::BodyPartURLHandler *h
 bool URLHandlerManager::handleClick(const QUrl &url, ViewerPrivate *w) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
-    for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)
+    for (HandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it)
         if ((*it)->handleClick(url, w)) {
             return true;
         }
@@ -447,7 +447,7 @@ bool URLHandlerManager::handleClick(const QUrl &url, ViewerPrivate *w) const
 bool URLHandlerManager::handleShiftClick(const QUrl &url, ViewerPrivate *window) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
-    for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)
+    for (HandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it)
         if ((*it)->handleShiftClick(url, window)) {
             return true;
         }
@@ -458,7 +458,7 @@ bool URLHandlerManager::willHandleDrag(const QUrl &url, ViewerPrivate *window) c
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
 
-    for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)
+    for (HandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it)
         if ((*it)->willHandleDrag(url, window)) {
             return true;
         }
@@ -468,7 +468,7 @@ bool URLHandlerManager::willHandleDrag(const QUrl &url, ViewerPrivate *window) c
 bool URLHandlerManager::handleDrag(const QUrl &url, ViewerPrivate *window) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
-    for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)
+    for (HandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it)
         if ((*it)->handleDrag(url, window)) {
             return true;
         }
@@ -479,7 +479,7 @@ bool URLHandlerManager::handleContextMenuRequest(const QUrl &url, const QPoint &
 {
 
     HandlerList::const_iterator end(mHandlers.constEnd());
-    for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it)
+    for (HandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it)
         if ((*it)->handleContextMenuRequest(url, p, w)) {
             return true;
         }
@@ -489,7 +489,7 @@ bool URLHandlerManager::handleContextMenuRequest(const QUrl &url, const QPoint &
 QString URLHandlerManager::statusBarMessage(const QUrl &url, ViewerPrivate *w) const
 {
     HandlerList::const_iterator end(mHandlers.constEnd());
-    for (HandlerList::const_iterator it = mHandlers.constBegin() ; it != end ; ++it) {
+    for (HandlerList::const_iterator it = mHandlers.constBegin(); it != end; ++it) {
         const QString msg = (*it)->statusBarMessage(url, w);
         if (!msg.isEmpty()) {
             return msg;
@@ -602,7 +602,7 @@ QString KMailProtocolURLHandler::statusBarMessage(const QUrl &url, ViewerPrivate
             return QString();
         }
     }
-    return QString() ;
+    return QString();
 }
 }
 
@@ -636,7 +636,7 @@ QString ExpandCollapseQuoteURLManager::statusBarMessage(const QUrl &url, ViewerP
             }
         }
     }
-    return QString() ;
+    return QString();
 }
 
 }

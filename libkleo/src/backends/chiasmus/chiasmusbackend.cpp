@@ -104,7 +104,7 @@ public:
     to(const QVariant &v)
     {
         const QList<QVariant> vl = v.toList();
-        for (QList<QVariant>::const_iterator it = vl.begin(), end = vl.end() ; it != end ; ++it) {
+        for (QList<QVariant>::const_iterator it = vl.begin(), end = vl.end(); it != end; ++it) {
             m.push_back(to<T>(*it));
         }
     }
@@ -123,7 +123,7 @@ public:
     {
         const QList<QVariant> vl = v.toList();
         m.reserve(m.size() + vl.size());
-        for (QList<QVariant>::const_iterator it = vl.begin(), end = vl.end() ; it != end ; ++it) {
+        for (QList<QVariant>::const_iterator it = vl.begin(), end = vl.end(); it != end; ++it) {
             m.push_back(to<T>(*it));
         }
     }
@@ -157,7 +157,7 @@ template <typename T> struct from_helper< QList<T> > : public QVariant {
     from_helper(const QList<T> &l)
     {
         QList<QVariant> result;
-        for (typename QList<T>::const_iterator it = l.begin(), end = l.end() ; it != end ; ++it) {
+        for (typename QList<T>::const_iterator it = l.begin(), end = l.end(); it != end; ++it) {
             result.push_back(from(*it));
         }
         QVariant::operator=(result);
@@ -167,7 +167,7 @@ template <typename T> struct from_helper< std::vector<T> > : public QVariant {
     from_helper(const std::vector<T> &l)
     {
         QList<QVariant> result;
-        for (typename std::vector<T>::const_iterator it = l.begin(), end = l.end() ; it != end ; ++it) {
+        for (typename std::vector<T>::const_iterator it = l.begin(), end = l.end(); it != end; ++it) {
             result.push_back(from(*it));
         }
         QVariant::operator=(result);
@@ -263,46 +263,38 @@ public:
     {
         return to< QList<QUrl> >(mValue);
     }
-    void resetToDefault() Q_DECL_OVERRIDE
-    {
+    void resetToDefault() Q_DECL_OVERRIDE {
         mValue = defaultValue();
         mDirty = false;
     }
-    void setBoolValue(bool value) Q_DECL_OVERRIDE
-    {
+    void setBoolValue(bool value) Q_DECL_OVERRIDE {
         setValue(QVariant(value));
     }
-    void setStringValue(const QString &value) Q_DECL_OVERRIDE
-    {
+    void setStringValue(const QString &value) Q_DECL_OVERRIDE {
         setValue(value);
     }
-    void setIntValue(int value) Q_DECL_OVERRIDE
-    {
+    void setIntValue(int value) Q_DECL_OVERRIDE {
         setValue(value);
     }
-    void setUIntValue(unsigned int value) Q_DECL_OVERRIDE
-    {
+    void setUIntValue(unsigned int value) Q_DECL_OVERRIDE {
         setValue(value);
     }
-    void setURLValue(const QUrl &value) Q_DECL_OVERRIDE
-    {
-        if (argType() != ArgType_Path) {
+    void setURLValue(const QUrl &value) Q_DECL_OVERRIDE {
+        if (argType() != ArgType_Path)
+        {
             setValue(value.url());
         } else {
             setValue(value.path());
         }
     }
     void setNumberOfTimesSet(unsigned int) Q_DECL_OVERRIDE {}
-    void setIntValueList(const std::vector<int> &l) Q_DECL_OVERRIDE
-    {
+    void setIntValueList(const std::vector<int> &l) Q_DECL_OVERRIDE {
         setValue(from(l));
     }
-    void setUIntValueList(const std::vector<unsigned int> &l) Q_DECL_OVERRIDE
-    {
+    void setUIntValueList(const std::vector<unsigned int> &l) Q_DECL_OVERRIDE {
         setValue(from(l));
     }
-    void setURLValueList(const QList<QUrl> &l) Q_DECL_OVERRIDE
-    {
+    void setURLValueList(const QList<QUrl> &l) Q_DECL_OVERRIDE {
         setValue(from(l));
     }
     bool isDirty() const Q_DECL_OVERRIDE
@@ -417,7 +409,7 @@ public:
     QStringList entryList() const Q_DECL_OVERRIDE
     {
         QStringList result;
-        for (unsigned int i = 0 ; i < kleo_chiasmus_config_entries_dim ; ++i) {
+        for (unsigned int i = 0; i < kleo_chiasmus_config_entries_dim; ++i) {
             result.push_back(QLatin1String(kleo_chiasmus_config_entries[i].name));
         }
         return result;
@@ -428,7 +420,7 @@ public:
             return entry;
         }
         const KConfigGroup group(configObject(), "Chiasmus");
-        for (unsigned int i = 0 ; i < kleo_chiasmus_config_entries_dim ; ++i)
+        for (unsigned int i = 0; i < kleo_chiasmus_config_entries_dim; ++i)
             if (name == QLatin1String(kleo_chiasmus_config_entries[i].name)) {
                 ChiasmusConfigEntry *entry = new ChiasmusConfigEntry(i);
                 entry->read(group);
@@ -440,7 +432,7 @@ public:
     void sync()
     {
         KConfigGroup group(configObject(), "Chiasmus");
-        for (std::map<QString, ChiasmusConfigEntry *>::const_iterator it = mCache.begin(), end = mCache.end() ; it != end ; ++it) {
+        for (std::map<QString, ChiasmusConfigEntry *>::const_iterator it = mCache.begin(), end = mCache.end(); it != end; ++it) {
             it->second->sync(group);
         }
         group.sync();
@@ -458,7 +450,7 @@ private:
     }
     void clear()
     {
-        for (std::map<QString, ChiasmusConfigEntry *>::const_iterator it = mCache.begin(), end = mCache.end() ; it != end ; ++it) {
+        for (std::map<QString, ChiasmusConfigEntry *>::const_iterator it = mCache.begin(), end = mCache.end(); it != end; ++it) {
             delete it->second;
         }
         mCache.clear();
@@ -524,7 +516,7 @@ public:
 
     QStringList componentList() const Q_DECL_OVERRIDE
     {
-        return QStringList() << QStringLiteral("Chiasmus") ;
+        return QStringList() << QStringLiteral("Chiasmus");
     }
     ChiasmusComponent *component(const QString &name) const Q_DECL_OVERRIDE
     {
@@ -536,14 +528,13 @@ public:
         }
         return mComponent;
     }
-    void sync(bool) Q_DECL_OVERRIDE
-    {
-        if (mComponent) {
+    void sync(bool) Q_DECL_OVERRIDE {
+        if (mComponent)
+        {
             mComponent->sync();
         }
     }
-    void clear() Q_DECL_OVERRIDE
-    {
+    void clear() Q_DECL_OVERRIDE {
         delete mComponent;
         mComponent = 0;
     }
@@ -759,5 +750,5 @@ bool Kleo::ChiasmusBackend::supportsProtocol(const char *name) const
 
 const char *Kleo::ChiasmusBackend::enumerateProtocols(int i) const
 {
-    return i == 0 ? "Chiasmus" : 0 ;
+    return i == 0 ? "Chiasmus" : 0;
 }

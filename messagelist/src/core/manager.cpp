@@ -95,7 +95,7 @@ Manager::Manager()
     mPixmapVerticalLine = new QPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("messagelist/pics/mail-vertical-separator-line.png")));
     mPixmapHorizontalSpacer = new QPixmap(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("messagelist/pics/mail-horizontal-space.png")));
 
-    mCachedLocalizedUnknownText = i18nc("Unknown date", "Unknown") ;
+    mCachedLocalizedUnknownText = i18nc("Unknown date", "Unknown");
 
     loadConfiguration();
     connect(MessageListSettings::self(), &MessageListSettings::configChanged, this, &Manager::reloadGlobalConfiguration);

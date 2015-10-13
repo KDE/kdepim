@@ -91,5 +91,4 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(viewer.shareServiceUrlMenu());
 }
 
-
 QTEST_MAIN(ViewerTest)

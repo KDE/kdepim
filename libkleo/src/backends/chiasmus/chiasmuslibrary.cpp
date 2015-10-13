@@ -107,7 +107,7 @@ public:
     ArgvProvider(const QVector<QByteArray> &args)
     {
         mArgv = new char *[args.size()];
-        for (int i = 0 ; i < args.size() ; ++i) {
+        for (int i = 0; i < args.size(); ++i) {
             mArgv[i] = strdup(args[i].data());
         }
     }

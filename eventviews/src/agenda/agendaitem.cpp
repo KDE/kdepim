@@ -819,7 +819,7 @@ void AgendaItem::paintEvent(QPaintEvent *ev)
     const int fmargin = 0; // frame margin
     const int ft = 1; // frame thickness for layout, see drawRoundedRect(),
     // keep multiple of 2
-    const int margin = 5 + ft + fmargin ; // frame + space between frame and content
+    const int margin = 5 + ft + fmargin; // frame + space between frame and content
 
     // General idea is to always show the icons (even in the all-day events).
     // This creates a consistent feeling for the user when the view mode
@@ -827,13 +827,13 @@ void AgendaItem::paintEvent(QPaintEvent *ev)
     // Also look at #17984
 
     if (!alarmPxmp) {
-        alarmPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("task-reminder")).pixmap(16,16));
-        recurPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("appointment-recurring")).pixmap(16,16));
-        readonlyPxmp  = new QPixmap(QIcon::fromTheme(QStringLiteral("object-locked")).pixmap(16,16));
-        replyPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("mail-reply-sender")).pixmap(16,16));
-        groupPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("meeting-attending")).pixmap(16,16));
-        groupPxmpTent = new QPixmap(QIcon::fromTheme(QStringLiteral("meeting-attending-tentative")).pixmap(16,16));
-        organizerPxmp = new QPixmap(QIcon::fromTheme(QStringLiteral("meeting-organizer")).pixmap(16,16));
+        alarmPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("task-reminder")).pixmap(16, 16));
+        recurPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("appointment-recurring")).pixmap(16, 16));
+        readonlyPxmp  = new QPixmap(QIcon::fromTheme(QStringLiteral("object-locked")).pixmap(16, 16));
+        replyPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("mail-reply-sender")).pixmap(16, 16));
+        groupPxmp     = new QPixmap(QIcon::fromTheme(QStringLiteral("meeting-attending")).pixmap(16, 16));
+        groupPxmpTent = new QPixmap(QIcon::fromTheme(QStringLiteral("meeting-attending-tentative")).pixmap(16, 16));
+        organizerPxmp = new QPixmap(QIcon::fromTheme(QStringLiteral("meeting-organizer")).pixmap(16, 16));
     }
 
     QColor bgColor;
@@ -932,7 +932,7 @@ void AgendaItem::paintEvent(QPaintEvent *ev)
     QString longH;
     if (!isMultiItem()) {
         shortH = QLocale::system().toString(mIncidence->dateTime(KCalCore::Incidence::RoleDisplayStart).
-                                               toTimeSpec(mEventView->preferences()->timeSpec()).time(), QLocale::ShortFormat);
+                                            toTimeSpec(mEventView->preferences()->timeSpec()).time(), QLocale::ShortFormat);
 
         if (CalendarSupport::hasEvent(mIncidence)) {
             longH = i18n("%1 - %2",

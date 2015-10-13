@@ -81,9 +81,8 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow(QWidget *parent)
 
     slotReadConfig();
     mSysTray = new KWatchGnuPGTray(this);
-    QAction* act = mSysTray->action(QStringLiteral("quit"));
-    if (act)
-    {
+    QAction *act = mSysTray->action(QStringLiteral("quit"));
+    if (act) {
         connect(act, &QAction::triggered, this, &KWatchGnuPGMainWindow::slotQuit);
     }
 

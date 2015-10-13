@@ -137,17 +137,17 @@ private:
 
     const char *const mEnd;
     const bool mIgnoreComments : 1;
-    const bool mIgnoreLF : 1;
-    QStack<State> mStateStack;
+        const bool mIgnoreLF : 1;
+        QStack<State> mStateStack;
 
-    const char *beginOfLine() const
+        const char *beginOfLine() const
     {
         return mState.beginOfLine;
     }
 
     int _strnicmp(const char *left, const char *right, size_t len) const
     {
-        return charsLeft() >= len ? qstrnicmp(left, right, len) : 1 ;
+        return charsLeft() >= len ? qstrnicmp(left, right, len) : 1;
     }
 
     void clearErrors()
@@ -157,7 +157,7 @@ private:
 
     unsigned int charsLeft() const
     {
-        return mEnd - mState.cursor < 0 ? 0 : mEnd - mState.cursor ;
+        return mEnd - mState.cursor < 0 ? 0 : mEnd - mState.cursor;
     }
     void makeError(Error::Type e)
     {
@@ -197,7 +197,7 @@ private:
     }
     bool skipToCRLF(bool acceptEnd = true)
     {
-        for (; !atEnd() ; ++mState.cursor)
+        for (; !atEnd(); ++mState.cursor)
             if (*mState.cursor == '\n' || *mState.cursor == '\r') {
                 return eatCRLF();
             }

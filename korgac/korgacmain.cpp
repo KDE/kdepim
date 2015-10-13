@@ -41,7 +41,7 @@ Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true); 
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     Kdelibs4ConfigMigrator migrate(QStringLiteral("korgac"));
 
     migrate.setConfigFiles(QStringList() << QStringLiteral("korgacrc"));

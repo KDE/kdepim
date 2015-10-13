@@ -25,14 +25,14 @@
 
 using namespace MailCommon;
 
-FilterImporterThunderbird::FilterImporterThunderbird(QFile *file , bool interactive)
+FilterImporterThunderbird::FilterImporterThunderbird(QFile *file, bool interactive)
     : FilterImporterAbstract(interactive)
 {
     QTextStream stream(file);
     readStream(stream);
 }
 
-FilterImporterThunderbird::FilterImporterThunderbird(QString string , bool interactive)
+FilterImporterThunderbird::FilterImporterThunderbird(QString string, bool interactive)
     : FilterImporterAbstract(interactive)
 {
     QTextStream stream(&string);

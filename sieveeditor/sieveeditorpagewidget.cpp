@@ -61,7 +61,7 @@ void SieveEditorPageWidget::slotCheckSyntaxClicked()
     connect(job, &KManageSieve::SieveJob::errorMessage, this, &SieveEditorPageWidget::slotPutResultDebug);
 }
 
-void SieveEditorPageWidget::slotPutResultDebug(KManageSieve::SieveJob *, bool success , const QString &errorMsg)
+void SieveEditorPageWidget::slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg)
 {
     if (success) {
         mSieveEditorWidget->addOkMessage(i18n("No errors found."));

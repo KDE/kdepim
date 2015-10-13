@@ -46,7 +46,6 @@ int main(int argc, char **argv)
     parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("+[file]"), i18n("File containing an email")));
     parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("headerstyleplugin"), i18n("Header Style Plugin"), QStringLiteral("headerstyleplugin")));
 
-
     QCommandLineOption pluginlistnameOption(QStringList() << QStringLiteral("list"), QStringLiteral("Show list of plugin installed."));
     parser.addOption(pluginlistnameOption);
 
@@ -55,7 +54,7 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     if (parser.isSet(pluginlistnameOption)) {
-        qDebug() << "List of Plugin :"<< MessageViewer::HeaderStylePluginManager::self()->pluginListName();
+        qDebug() << "List of Plugin :" << MessageViewer::HeaderStylePluginManager::self()->pluginListName();
         return 0;
     }
 

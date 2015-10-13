@@ -221,7 +221,7 @@ QModelIndex AbstractKeyListModel::addKey(const Key &key)
 {
     const std::vector<Key> vec(1, key);
     const QList<QModelIndex> l = doAddKeys(vec);
-    return l.empty() ? QModelIndex() : l.front() ;
+    return l.empty() ? QModelIndex() : l.front();
 }
 
 void AbstractKeyListModel::removeKey(const Key &key)
@@ -267,7 +267,7 @@ QVariant AbstractKeyListModel::headerData(int section, Qt::Orientation o, int ro
             case ValidUntil:       return i18n("Valid Until");
             case TechnicalDetails: return i18n("Details");
             case ShortKeyID:       return i18n("Key-ID");
-            case NumColumns:       ;
+            case NumColumns:;
             }
     return QVariant();
 }
@@ -338,7 +338,7 @@ QVariant AbstractKeyListModel::data(const QModelIndex &index, int role) const
     } else if (role == Qt::FontRole) {
         return KeyFilterManager::instance()->font(key, (column == ShortKeyID) ? QFont(QStringLiteral("courier")) : QFont());
     } else if (role == Qt::DecorationRole) {
-        return column == Icon ? returnIfValid(KeyFilterManager::instance()->icon(key)) : QVariant() ;
+        return column == Icon ? returnIfValid(KeyFilterManager::instance()->icon(key)) : QVariant();
     } else if (role == Qt::BackgroundRole) {
         return returnIfValid(KeyFilterManager::instance()->bgColor(key));
     } else if (role == Qt::ForegroundRole) {
@@ -361,7 +361,7 @@ public:
     using Base::index;
     QModelIndex index(int row, int column, const QModelIndex &pidx = QModelIndex()) const Q_DECL_OVERRIDE
     {
-        return this->hasIndex(row, column, pidx) ? this->createIndex(row, column, Q_NULLPTR) : QModelIndex() ;
+        return this->hasIndex(row, column, pidx) ? this->createIndex(row, column, Q_NULLPTR) : QModelIndex();
     }
 
 private:
@@ -371,7 +371,7 @@ private:
     }
     bool hasChildren(const QModelIndex &pidx) const Q_DECL_OVERRIDE
     {
-        return (pidx.model() == this || !pidx.isValid()) && this->rowCount(pidx) > 0 && this->columnCount(pidx) > 0 ;
+        return (pidx.model() == this || !pidx.isValid()) && this->rowCount(pidx) > 0 && this->columnCount(pidx) > 0;
     }
 };
 
@@ -389,7 +389,7 @@ public:
 
     int rowCount(const QModelIndex &pidx) const Q_DECL_OVERRIDE
     {
-        return pidx.isValid() ? 0 : mKeysByFingerprint.size() ;
+        return pidx.isValid() ? 0 : mKeysByFingerprint.size();
     }
 
 private:
@@ -419,7 +419,7 @@ public:
 
     bool hasChildren(const QModelIndex &pidx) const Q_DECL_OVERRIDE
     {
-        return rowCount(pidx) > 0 ;
+        return rowCount(pidx) > 0;
     }
 
 private:
@@ -500,7 +500,7 @@ QList<QModelIndex> FlatKeyListModel::doAddKeys(const std::vector<Key> &keys)
         return QList<QModelIndex>();
     }
 
-    for (std::vector<Key>::const_iterator it = keys.begin(), end = keys.end() ; it != end ; ++it) {
+    for (std::vector<Key>::const_iterator it = keys.begin(), end = keys.end(); it != end; ++it) {
 
         // find an insertion point:
         const std::vector<Key>::iterator pos = std::upper_bound(mKeysByFingerprint.begin(), mKeysByFingerprint.end(), *it, _detail::ByFingerprint<std::less>());
@@ -747,7 +747,7 @@ static std::vector<Key> topological_sort(const std::vector<Key> &keys)
     boost::adjacency_list<> graph(keys.size());
 
     // add edges from children to parents:
-    for (unsigned int i = 0, end = keys.size() ; i != end ; ++i) {
+    for (unsigned int i = 0, end = keys.size(); i != end; ++i) {
         const char *const issuer_fpr = cleanChainID(keys[i]);
         if (!issuer_fpr || !*issuer_fpr) {
             continue;
@@ -863,7 +863,7 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys(const std::vector<Key> &k
             const QModelIndex new_parent = index(key);
             // Q_EMIT the rowMoved() signals in reversed direction, so the
             // implementation can use a stack for mapping.
-            for (int i = children.size() - 1 ; i >= 0 ; --i) {
+            for (int i = children.size() - 1; i >= 0; --i) {
                 Q_EMIT rowMoved(new_parent, i);
             }
         }

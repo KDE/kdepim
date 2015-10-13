@@ -50,7 +50,7 @@ void ContentTypeWidgetTest::shouldChangeComboBoxIndex()
 {
     MailCommon::ContentTypeWidget contentType;
     KComboBox *combo = contentType.findChild<KComboBox *>(QStringLiteral("contentcombobox"));
-    for (int i = 0 ; i < combo->count() ; ++i) {
+    for (int i = 0; i < combo->count(); ++i) {
         contentType.setCurrentIndex(i);
         QCOMPARE(contentType.currentIndex(), i);
         QCOMPARE(combo->currentIndex(), i);
@@ -74,7 +74,7 @@ void ContentTypeWidgetTest::shouldChangeItem()
     contentType.show();
     QTest::qWaitForWindowShown(&contentType);
     KComboBox *combo = contentType.findChild<KComboBox *>(QStringLiteral("contentcombobox"));
-    for (int i = 0 ; i < combo->count() ; ++i) {
+    for (int i = 0; i < combo->count(); ++i) {
         contentType.setCurrentIndex(i);
         QCOMPARE(contentType.currentText(), combo->currentText());
     }

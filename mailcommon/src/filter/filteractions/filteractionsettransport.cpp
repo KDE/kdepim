@@ -69,7 +69,7 @@ bool FilterActionSetTransport::argsFromStringInteractive(const QString &argsStr,
     return needUpdate;
 }
 
-FilterAction::ReturnCode FilterActionSetTransport::process(ItemContext &context , bool) const
+FilterAction::ReturnCode FilterActionSetTransport::process(ItemContext &context, bool) const
 {
     if (isEmpty()) {
         return ErrorButGoOn;

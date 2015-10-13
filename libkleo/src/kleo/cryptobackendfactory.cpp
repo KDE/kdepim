@@ -91,7 +91,7 @@ Kleo::CryptoBackendFactory::~CryptoBackendFactory()
 {
     mSelf = 0; // first!
 
-    for (std::vector<CryptoBackend *>::iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it) {
+    for (std::vector<CryptoBackend *>::iterator it = mBackendList.begin(); it != mBackendList.end(); ++it) {
         delete *it;
         *it = 0;
     }
@@ -175,9 +175,9 @@ bool Kleo::CryptoBackendFactory::hasBackends() const
 
 void Kleo::CryptoBackendFactory::scanForBackends(QStringList *reasons)
 {
-    for (std::vector<CryptoBackend *>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it) {
+    for (std::vector<CryptoBackend *>::const_iterator it = mBackendList.begin(); it != mBackendList.end(); ++it) {
         assert(*it);
-        for (int i = 0 ;; ++i) {
+        for (int i = 0;; ++i) {
             const char *protocol = (*it)->enumerateProtocols(i);
             if (!protocol) {
                 break;
@@ -196,12 +196,12 @@ void Kleo::CryptoBackendFactory::scanForBackends(QStringList *reasons)
 
 const Kleo::CryptoBackend *Kleo::CryptoBackendFactory::backend(unsigned int idx) const
 {
-    return (idx < mBackendList.size()) ? mBackendList[idx] : 0 ;
+    return (idx < mBackendList.size()) ? mBackendList[idx] : 0;
 }
 
 const Kleo::CryptoBackend *Kleo::CryptoBackendFactory::backendByName(const QString &name) const
 {
-    for (std::vector<CryptoBackend *>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it) {
+    for (std::vector<CryptoBackend *>::const_iterator it = mBackendList.begin(); it != mBackendList.end(); ++it) {
         if ((*it)->name() == name) {
             return *it;
         }
@@ -231,7 +231,7 @@ void Kleo::CryptoBackendFactory::setOpenPGPBackend(const CryptoBackend *backend)
 
 void Kleo::CryptoBackendFactory::setProtocolBackend(const char *protocol, const CryptoBackend *backend)
 {
-    const QString name = backend ? backend->name() : QString() ;
+    const QString name = backend ? backend->name() : QString();
     KConfigGroup group(configObject(), "Backends");
     group.writeEntry(protocol, name);
     configObject()->sync();
@@ -250,7 +250,7 @@ static const char *defaultBackend(const char *proto)
         { "Chiasmus", "chiasmus" },
 #endif
     };
-    for (unsigned int i = 0 ; i < sizeof defaults / sizeof * defaults ; ++i)
+    for (unsigned int i = 0; i < sizeof defaults / sizeof * defaults; ++i)
         if (qstricmp(proto, defaults[i].proto) == 0) {
             return defaults[i].backend;
         }
@@ -261,7 +261,7 @@ void Kleo::CryptoBackendFactory::readConfig()
 {
     mBackends.clear();
     const KConfigGroup group(configObject(), "Backends");
-    for (ProtocolSet::const_iterator it = mAvailableProtocols.begin(), end = mAvailableProtocols.end() ; it != end ; ++it) {
+    for (ProtocolSet::const_iterator it = mAvailableProtocols.begin(), end = mAvailableProtocols.end(); it != end; ++it) {
         const QString backend = group.readEntry(*it);
         mBackends[*it] = backendByName(backend.isEmpty() ? QString::fromLatin1(defaultBackend(*it)) : backend);
     }

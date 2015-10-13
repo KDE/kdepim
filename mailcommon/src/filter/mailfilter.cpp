@@ -102,7 +102,7 @@ MailFilter::MailFilter(const MailFilter &aFilter)
     mAccounts.clear();
     QStringList::ConstIterator it2;
     QStringList::ConstIterator end2 = aFilter.mAccounts.constEnd();
-    for (it2 = aFilter.mAccounts.constBegin() ; it2 != end2 ; ++it2) {
+    for (it2 = aFilter.mAccounts.constBegin(); it2 != end2; ++it2) {
         mAccounts.append(*it2);
     }
 }
@@ -128,7 +128,7 @@ MailFilter::ReturnCode MailFilter::execActions(ItemContext &context, bool &stopI
 
     QList<FilterAction *>::const_iterator it(mActions.constBegin());
     QList<FilterAction *>::const_iterator end(mActions.constEnd());
-    for (; it != end ; ++it) {
+    for (; it != end; ++it) {
 
         if (FilterLog::instance()->isLogging()) {
             const QString logText(i18n("<b>Applying filter action:</b> %1",
@@ -249,7 +249,7 @@ SearchRule::RequiredPart MailFilter::requiredPart(const QString &id) const
     }
 
     if (pattern()) {
-        requiredPart = qMax(requiredPart, (int)pattern()->requiredPart()) ;    // no pattern means always matches?
+        requiredPart = qMax(requiredPart, (int)pattern()->requiredPart());    // no pattern means always matches?
     }
 
     int requiredPartByActions = SearchRule::Envelope;
@@ -412,11 +412,11 @@ bool MailFilter::readConfig(const KConfigGroup &config, bool interactive)
 
     int numActions = config.readEntry("actions", 0);
     if (numActions > FILTER_MAX_ACTIONS) {
-        numActions = FILTER_MAX_ACTIONS ;
+        numActions = FILTER_MAX_ACTIONS;
         KMessageBox::information(0, i18n("<qt>Too many filter actions in filter rule <b>%1</b>.</qt>", mPattern.name()));
     }
 
-    for (int i = 0 ; i < numActions ; ++i) {
+    for (int i = 0; i < numActions; ++i) {
         actName.sprintf("action-name-%d", i);
         argsName.sprintf("action-args-%d", i);
         // get the action description...
@@ -476,7 +476,7 @@ void MailFilter::generateSieveScript(QStringList &requires, QString &code)
 
     code += QLatin1String(")\n{\n");
     bool firstAction = true;
-    for (it = mActions.constBegin() ; it != end ; ++it) {
+    for (it = mActions.constBegin(); it != end; ++it) {
         //Add endline here.
         if (firstAction) {
             firstAction = false;
@@ -532,7 +532,7 @@ void MailFilter::writeConfig(KConfigGroup &config, bool exportFilter) const
     QList<FilterAction *>::const_iterator it;
     QList<FilterAction *>::const_iterator end(mActions.constEnd());
 
-    for (i = 0, it = mActions.constBegin() ; it != end ; ++it, ++i) {
+    for (i = 0, it = mActions.constBegin(); it != end; ++it, ++i) {
         config.writeEntry(key.sprintf("action-name-%d", i),
                           (*it)->name());
         config.writeEntry(key.sprintf("action-args-%d", i),
@@ -604,7 +604,7 @@ const QString MailFilter::asString() const
 
     QList<FilterAction *>::const_iterator it(mActions.constBegin());
     QList<FilterAction *>::const_iterator end(mActions.constEnd());
-    for (; it != end ; ++it) {
+    for (; it != end; ++it) {
         result += "    action: ";
         result += (*it)->label();
         result += ' ';
@@ -635,7 +635,7 @@ const QString MailFilter::asString() const
         if (mAccounts.isEmpty()) {
             result += " None";
         } else {
-            for (it2 = mAccounts.begin() ; it2 != mAccounts.end() ; ++it2) {
+            for (it2 = mAccounts.begin(); it2 != mAccounts.end(); ++it2) {
                 if (Akonadi::AgentManager::self()->instance(*it2).isValid()) {
                     result += ' ' + Akonadi::AgentManager::self()->instance(*it2).name();
                 }

@@ -175,14 +175,14 @@ static QString removeCRLF(const QString &s)
     const bool CRLF = s.endsWith(QStringLiteral("\r\n"));
     const bool LF = !CRLF && s.endsWith('\n');
 
-    const int e = CRLF ? 2 : LF ? 1 : 0 ;  // what to chop off at the end
+    const int e = CRLF ? 2 : LF ? 1 : 0;  // what to chop off at the end
 
     return s.left(s.length() - e);
 }
 
 static QString removeDotStuff(const QString &s)
 {
-    return s.startsWith(QStringLiteral("..")) ? s.mid(1) : s ;
+    return s.startsWith(QStringLiteral("..")) ? s.mid(1) : s;
 }
 
 namespace KSieve
@@ -197,8 +197,8 @@ namespace KSieve
 Lexer::Impl::Impl(const char *scursor, const char *send, int options)
     : mState(scursor ? scursor : send),
       mEnd(send ? send : scursor),
-      mIgnoreComments(options &IgnoreComments),
-      mIgnoreLF(options &IgnoreLineFeeds)
+      mIgnoreComments(options & IgnoreComments),
+      mIgnoreLF(options & IgnoreLineFeeds)
 {
     if (!scursor || !send) {
         assert(atEnd());
@@ -213,7 +213,7 @@ Lexer::Token Lexer::Impl::nextToken(QString &result)
 
     const int oldLine = line();
 
-    const bool eatingWSSucceeded = ignoreComments() ? eatCWS() : eatWS() ;
+    const bool eatingWSSucceeded = ignoreComments() ? eatCWS() : eatWS();
 
     if (!ignoreLineFeeds() && oldLine != line()) {
         result.setNum(line() - oldLine);   // return number of linefeeds encountered
@@ -505,7 +505,7 @@ bool Lexer::Impl::parseIdentifier(QString &result)
     }
 
     // rest of identifier chars ( now digits are allowed ):
-    for (++mState.cursor ; !atEnd() && isIText(*mState.cursor) ; ++mState.cursor) ;
+    for (++mState.cursor; !atEnd() && isIText(*mState.cursor); ++mState.cursor);
 
     const int identifierLength = mState.cursor - identifierStart;
 

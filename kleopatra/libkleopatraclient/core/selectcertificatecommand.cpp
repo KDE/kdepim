@@ -142,6 +142,6 @@ void SelectCertificateCommand::setSelectedCertificate(const QString &cert)
 QString SelectCertificateCommand::selectedCertificate() const
 {
     const QStringList sl = selectedCertificates();
-    return sl.empty() ? QString() : sl.front() ;
+    return sl.empty() ? QString() : sl.front();
 }
 

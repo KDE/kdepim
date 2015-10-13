@@ -44,5 +44,4 @@ QString Ur1CaShortUrlEnginePlugin::engineName() const
     return QStringLiteral("urlcashorturl");
 }
 
-
 #include "ur1cashorturlengineplugin.moc"

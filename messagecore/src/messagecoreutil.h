@@ -24,9 +24,11 @@
 
 #include <QColor>
 
-namespace MessageCore {
+namespace MessageCore
+{
 
-namespace Util {
+namespace Util
+{
 
 MESSAGECORE_EXPORT QColor misspelledDefaultTextColor();
 MESSAGECORE_EXPORT QColor quoteLevel1DefaultTextColor();

@@ -51,7 +51,7 @@ void ImportAddressbookJob::start()
 {
     Q_EMIT title(i18n("Start import KAddressBook settings..."));
     mArchiveDirectory = archive()->directory();
-    searchAllFiles(mArchiveDirectory , QString());
+    searchAllFiles(mArchiveDirectory, QString());
     initializeListStep();
     nextStep();
 }

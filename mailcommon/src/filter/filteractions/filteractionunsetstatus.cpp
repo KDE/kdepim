@@ -48,7 +48,7 @@ QString FilterActionUnsetStatus::informationAboutNotValidAction() const
     return i18n("Status not defined.");
 }
 
-FilterAction::ReturnCode FilterActionUnsetStatus::process(ItemContext &context , bool) const
+FilterAction::ReturnCode FilterActionUnsetStatus::process(ItemContext &context, bool) const
 {
     int index = 0;
     if (checkIsValid(index)) {

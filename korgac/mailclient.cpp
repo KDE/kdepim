@@ -170,7 +170,7 @@ bool MailClient::mailTo(const KCalCore::IncidenceBase::Ptr &incidence,
     QString subject;
 
     if (incidence->type() != KCalCore::Incidence::TypeFreeBusy) {
-        KCalCore::Incidence::Ptr inc = incidence.staticCast<KCalCore::Incidence>() ;
+        KCalCore::Incidence::Ptr inc = incidence.staticCast<KCalCore::Incidence>();
         subject = inc->summary();
     } else {
         subject = i18n("Free Busy Message");

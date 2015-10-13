@@ -61,7 +61,7 @@ class GpgConfCheck : public SelfTestImplementation
     QString m_component;
 public:
     explicit GpgConfCheck(const char *component)
-        : SelfTestImplementation(i18nc("@title", "%1 Configuration Check", component  &&*component ? QLatin1String(component) : QLatin1String("gpgconf"))),
+        : SelfTestImplementation(i18nc("@title", "%1 Configuration Check", component  && * component ? QLatin1String(component) : QLatin1String("gpgconf"))),
           m_component(QLatin1String(component))
     {
         runTest();
@@ -72,7 +72,7 @@ public:
         if (m_component.isEmpty()) {
             return QStringList() << QStringLiteral("--check-config");
         } else {
-            return QStringList() << QStringLiteral("--check-options") << m_component ;
+            return QStringList() << QStringLiteral("--check-options") << m_component;
         }
     }
 
@@ -124,7 +124,7 @@ public:
         process.waitForFinished();
 
         const QString output = QString::fromUtf8(process.readAll());
-        const QString message = process.exitStatus() == QProcess::CrashExit ? i18n("The process terminated prematurely") : process.errorString() ;
+        const QString message = process.exitStatus() == QProcess::CrashExit ? i18n("The process terminated prematurely") : process.errorString();
 
         if (process.exitStatus() != QProcess::NormalExit ||
                 process.error()      != QProcess::UnknownError) {
@@ -136,7 +136,7 @@ public:
                      "You might want to execute \"gpgconf %3\" on the command line.\n",
                      message, m_component.isEmpty() ? QStringLiteral("GnuPG") : m_component, arguments().join(QStringLiteral(" ")));
             if (!output.trimmed().isEmpty()) {
-                m_explaination += QLatin1Char('\n') + i18n("Diagnostics:") + QLatin1Char('\n') + output ;
+                m_explaination += QLatin1Char('\n') + i18n("Diagnostics:") + QLatin1Char('\n') + output;
             }
 
             m_proposedFix.clear();

@@ -79,7 +79,7 @@ static const bool HAVE_UNIX = false;
 
 static const QLatin1String CHECKSUM_DEFINITION_ID_ENTRY("checksum-definition-id");
 
-static const Qt::CaseSensitivity fs_cs = HAVE_UNIX ? Qt::CaseSensitive : Qt::CaseInsensitive ; // can we use QAbstractFileEngine::caseSensitive()?
+static const Qt::CaseSensitivity fs_cs = HAVE_UNIX ? Qt::CaseSensitive : Qt::CaseInsensitive; // can we use QAbstractFileEngine::caseSensitive()?
 
 #if 0
 static QStringList fs_sort(QStringList l)
@@ -359,13 +359,13 @@ namespace
 struct less_dir : std::binary_function<QDir, QDir, bool> {
     bool operator()(const QDir &lhs, const QDir &rhs) const
     {
-        return QString::compare(lhs.absolutePath(), rhs.absolutePath(), fs_cs) < 0 ;
+        return QString::compare(lhs.absolutePath(), rhs.absolutePath(), fs_cs) < 0;
     }
 };
 struct less_file : std::binary_function<QString, QString, bool> {
     bool operator()(const QString &lhs, const QString &rhs) const
     {
-        return QString::compare(lhs, rhs, fs_cs) < 0 ;
+        return QString::compare(lhs, rhs, fs_cs) < 0;
     }
 };
 struct sumfile_contains_file : std::unary_function<QString, bool> {
@@ -412,7 +412,7 @@ static QStringList find_base_directiories(const QStringList &files)
     std::set<QDir, less_dir> dirs;
     Q_FOREACH (const QString &file, files) {
         const QFileInfo fi(file);
-        const QDir dir = fi.isDir() ? QDir(file) : fi.dir() ;
+        const QDir dir = fi.isDir() ? QDir(file) : fi.dir();
         dirs.insert(dir);
     }
 
@@ -496,7 +496,7 @@ static std::vector<SumFile> find_sums_by_input_files(const QStringList &files, Q
     std::vector<SumFile> sumfiles;
     sumfiles.reserve(dirs2sums.size());
 
-    for (std::map<QDir, std::set<QString, less_file>, less_dir>::const_iterator it = dirs2sums.begin(), end = dirs2sums.end() ; it != end ; ++it) {
+    for (std::map<QDir, std::set<QString, less_file>, less_dir>::const_iterator it = dirs2sums.begin(), end = dirs2sums.end(); it != end; ++it) {
 
         if (it->second.empty()) {
             continue;
@@ -544,11 +544,11 @@ static const struct {
     { "OK",     VerifyChecksumsDialog::OK     },
     { "FAILED", VerifyChecksumsDialog::Failed },
 };
-static const size_t numStatusStrings = sizeof statusStrings / sizeof * statusStrings ;
+static const size_t numStatusStrings = sizeof statusStrings / sizeof * statusStrings;
 
 static VerifyChecksumsDialog::Status string2status(const QByteArray &str)
 {
-    for (unsigned int i = 0 ; i < numStatusStrings ; ++i)
+    for (unsigned int i = 0; i < numStatusStrings; ++i)
         if (str == statusStrings[i].string) {
             return statusStrings[i].status;
         }
@@ -659,7 +659,7 @@ void VerifyChecksumsController::Private::run()
             const QStringList env = c_lang_environment();
 
             // re-scale 'total' to fit into ints (wish QProgressDialog would use quint64...)
-            const quint64 factor = total / std::numeric_limits<int>::max() + 1 ;
+            const quint64 factor = total / std::numeric_limits<int>::max() + 1;
 
             quint64 done = 0;
             Q_FOREACH (const SumFile &sumFile, sumfiles) {

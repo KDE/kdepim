@@ -56,7 +56,7 @@ public:
     void setDownloadNewStuffConfigFile(const QString &configFileName);
 
     static QString pathFromThemes(const QString &path, const QString &themeName, const QString &defaultDesktopFilename);
-    static GrantleeTheme::Theme loadTheme(const QString &themePath, const QString &dirName , const QString &defaultDesktopFilename);
+    static GrantleeTheme::Theme loadTheme(const QString &themePath, const QString &dirName, const QString &defaultDesktopFilename);
 
 Q_SIGNALS:
     void themesChanged();

@@ -88,7 +88,7 @@ void Log::messageHandler(QtMsgType type, const char *msg)
         toWrite -= written;
     }
     //append newline:
-    while (fprintf(file, "\n") == 0) ;
+    while (fprintf(file, "\n") == 0);
     fflush(file);
 }
 

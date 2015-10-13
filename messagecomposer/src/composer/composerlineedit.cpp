@@ -125,7 +125,7 @@ void ComposerLineEdit::insertEmails(const QStringList &emails)
     QMenu menu(this);
     menu.setTitle(i18n("Select email from contact"));
     menu.setObjectName(QStringLiteral("Addresschooser"));
-    for (QStringList::const_iterator it = emails.constBegin(), end = emails.constEnd() ; it != end; ++it) {
+    for (QStringList::const_iterator it = emails.constBegin(), end = emails.constEnd(); it != end; ++it) {
         menu.addAction(*it);
     }
     const QAction *result = menu.exec(QCursor::pos());

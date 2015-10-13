@@ -174,7 +174,7 @@ GpgME::Error Kleo::ChiasmusJob::finished()
 
 void Kleo::ChiasmusJob::showChiasmusOutput()
 {
-    qDebug() ;
+    qDebug();
     if (mStderr.isEmpty()) {
         return;
     }

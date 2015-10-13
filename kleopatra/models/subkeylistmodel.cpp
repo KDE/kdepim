@@ -123,7 +123,7 @@ std::vector<Subkey> SubkeyListModel::subkeys(const QList<QModelIndex> &indexes) 
 QModelIndex SubkeyListModel::index(const Subkey &subkey, int col) const
 {
     // O(N), but not sorted, so no better way...
-    for (unsigned int row = 0, end = d->key.numSubkeys() ; row != end ; ++row)
+    for (unsigned int row = 0, end = d->key.numSubkeys(); row != end; ++row)
         if (qstricmp(subkey.keyID(), d->key.subkey(row).keyID()) == 0) {
             return index(row, col);
         }
@@ -155,7 +155,7 @@ int SubkeyListModel::columnCount(const QModelIndex &) const
 
 int SubkeyListModel::rowCount(const QModelIndex &pidx) const
 {
-    return pidx.isValid() ? 0 : d->key.numSubkeys() ;
+    return pidx.isValid() ? 0 : d->key.numSubkeys();
 }
 
 QVariant SubkeyListModel::headerData(int section, Qt::Orientation o, int role) const
@@ -169,7 +169,7 @@ QVariant SubkeyListModel::headerData(int section, Qt::Orientation o, int role) c
             case ValidUntil: return i18n("Valid Until");
             case Status:     return i18n("Status");
             case Bits:       return i18n("Strength");
-            case NumColumns:       ;
+            case NumColumns:;
             }
     return QVariant();
 }

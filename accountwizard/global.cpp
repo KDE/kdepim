@@ -100,7 +100,7 @@ QString Global::unpackAssistant(const QUrl &remotePackageUrl)
         localPackageFile = remotePackageUrl.path();
     } else {
         QString remoteFileName = QFileInfo(remotePackageUrl.path()).fileName();
-        localPackageFile = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/accountwizard/") + remoteFileName ;
+        localPackageFile = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/accountwizard/") + remoteFileName;
         KIO::Job *job = KIO::copy(remotePackageUrl, QUrl::fromLocalFile(localPackageFile), KIO::Overwrite | KIO::HideProgressInfo);
         qCDebug(ACCOUNTWIZARD_LOG) << "downloading remote URL" << remotePackageUrl << "to" << localPackageFile;
         if (!job->exec()) {
@@ -111,7 +111,7 @@ QString Global::unpackAssistant(const QUrl &remotePackageUrl)
     const QUrl file(QLatin1String("tar://") + localPackageFile);
     const QFileInfo fi(localPackageFile);
     const QString assistant = fi.baseName();
-    const QString dest = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QLatin1String("/") ;
+    const QString dest = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QLatin1String("/");
     QDir().mkpath(dest + file.fileName());
     KIO::Job *getJob = KIO::copy(file, QUrl::fromLocalFile(dest), KIO::Overwrite | KIO::HideProgressInfo);
     if (getJob->exec()) {

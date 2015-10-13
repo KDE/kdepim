@@ -18,7 +18,7 @@ public:
 
     QWidget *createFunctionWidget(int number,
                                   QStackedWidget *functionStack,
-                                  const QObject *receiver , bool isBalooSearch) const Q_DECL_OVERRIDE;
+                                  const QObject *receiver, bool isBalooSearch) const Q_DECL_OVERRIDE;
 
     QWidget *createValueWidget(int number,
                                QStackedWidget *valueStack,

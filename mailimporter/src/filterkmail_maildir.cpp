@@ -75,7 +75,7 @@ void FilterKMail_maildir::processDirectory(const QString &path)
     QDir dir(path);
     const QStringList rootSubDirs = dir.entryList(QStringList(QStringLiteral("*")), QDir::Dirs | QDir::Hidden, QDir::Name);
     QStringList::ConstIterator end = rootSubDirs.constEnd();
-    for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end ; ++filename) {
+    for (QStringList::ConstIterator filename = rootSubDirs.constBegin(); filename != end; ++filename) {
         if (filterInfo()->shouldTerminate()) {
             break;
         }
@@ -177,13 +177,13 @@ void FilterKMail_maildir::importFiles(const QString &dirName)
                             _cat.remove(0, 1);
                             _cat.remove((_cat.length() - 10), 10);
                         } else if (_cat.startsWith(QLatin1Char('.'))) {
-                            _cat = _cat.remove(0 , 1);
+                            _cat = _cat.remove(0, 1);
                         }
                         _path += QLatin1Char('/') + _cat;
                     }
                 }
                 if (_path.endsWith(QStringLiteral("cur"))) {
-                    _path.remove(_path.length() - 4 , 4);
+                    _path.remove(_path.length() - 4, 4);
                 }
                 QString _info = _path;
                 filterInfo()->addInfoLogEntry(i18n("Import folder %1...", _info.remove(0, 12)));

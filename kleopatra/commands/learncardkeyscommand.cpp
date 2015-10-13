@@ -88,7 +88,7 @@ QString LearnCardKeysCommand::crashExitMessage(const QStringList &args) const
     return xi18nc("@info",
                   "<para>The GPG or GpgSM process that tried to learn the smart card "
                   "ended prematurely because of an unexpected error.</para>"
-                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QStringLiteral(" "))) ;
+                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QStringLiteral(" ")));
 }
 
 QString LearnCardKeysCommand::errorExitMessage(const QStringList &) const

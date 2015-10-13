@@ -41,7 +41,7 @@ CsvXXPort::CsvXXPort(QWidget *parent)
 {
 }
 
-bool CsvXXPort::exportContacts(const ContactList &contacts , VCardExportSelectionWidget::ExportFields) const
+bool CsvXXPort::exportContacts(const ContactList &contacts, VCardExportSelectionWidget::ExportFields) const
 {
     QUrl url = QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromUserInput(QStringLiteral("addressbook.csv")));
     if (url.isEmpty()) {

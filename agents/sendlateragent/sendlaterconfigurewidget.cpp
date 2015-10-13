@@ -152,7 +152,7 @@ void SendLaterWidget::load()
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     const QStringList filterGroups = config->groupList().filter(QRegExp(sendLaterItemPattern()));
     const int numberOfItem = filterGroups.count();
-    for (int i = 0 ; i < numberOfItem; ++i) {
+    for (int i = 0; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
         SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo(group);
         if (info->isValid()) {

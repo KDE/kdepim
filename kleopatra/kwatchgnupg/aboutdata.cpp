@@ -56,7 +56,7 @@ AboutData::AboutData()
 {
     using ::authors;
     //using ::credits;
-    for (unsigned int i = 0 ; i < sizeof authors / sizeof * authors ; ++i)
+    for (unsigned int i = 0; i < sizeof authors / sizeof * authors; ++i)
         addAuthor(i18n(authors[i].name), i18n(authors[i].desc),
                   QLatin1String(authors[i].email), QLatin1String(authors[i].web));
 }

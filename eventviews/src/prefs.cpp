@@ -52,7 +52,7 @@ QByteArray iconSetToArray(const QSet<EventViews::EventView::ItemIcon> &set)
     QByteArray array;
     for (int i = 0; i < EventViews::EventView::IconCount; ++i) {
         const bool contains = set.contains(static_cast<EventViews::EventView::ItemIcon>(i));
-        array.append(contains ? 1 : 0) ;
+        array.append(contains ? 1 : 0);
     }
 
     return array;

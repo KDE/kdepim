@@ -111,7 +111,7 @@ void FollowUpReminderInfoWidget::load()
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     const QStringList filterGroups = config->groupList().filter(QRegExp(followUpItemPattern()));
     const int numberOfItem = filterGroups.count();
-    for (int i = 0 ; i < numberOfItem; ++i) {
+    for (int i = 0; i < numberOfItem; ++i) {
         KConfigGroup group = config->group(filterGroups.at(i));
 
         FollowUpReminder::FollowUpReminderInfo *info = new FollowUpReminder::FollowUpReminderInfo(group);

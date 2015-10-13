@@ -118,7 +118,7 @@ bool FilterActionAddTag::argsFromStringInteractive(const QString &argsStr, const
     return needUpdate;
 }
 
-FilterAction::ReturnCode FilterActionAddTag::process(ItemContext &context , bool) const
+FilterAction::ReturnCode FilterActionAddTag::process(ItemContext &context, bool) const
 {
     if (!mList.contains(mParameter)) {
         return ErrorButGoOn;

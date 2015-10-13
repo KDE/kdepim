@@ -107,3 +107,4 @@ QColor Util::pgpSignedBadTextColor()
 {
     return KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::NegativeText).color();
 }
+

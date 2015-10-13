@@ -122,7 +122,7 @@ void ServiceTestWidget::slotActionFailed(const QString &serviceName, const QStri
     mEdit->insertPlainText(serviceName + QString::fromLatin1(" return an error: %1\n").arg(error));
 }
 
-void ServiceTestWidget::slotuploadDownloadFileProgress(const QString &serviceName, qint64 done , qint64 total)
+void ServiceTestWidget::slotuploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
     mEdit->insertPlainText(serviceName + QString::fromLatin1(" upload in progress: send:%1 total:%2\n").arg(done).arg(total));
 }

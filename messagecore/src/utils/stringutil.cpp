@@ -49,7 +49,7 @@ namespace StringUtil
 // Removes trailing spaces and tabs at the end of the line
 static void removeTrailingSpace(QString &line)
 {
-    int i = line.length() - 1 ;
+    int i = line.length() - 1;
     while ((i >= 0) && ((line[i] == QLatin1Char(' ')) || (line[i] == QLatin1Char('\t')))) {
         i--;
     }
@@ -207,7 +207,7 @@ QString stripSignature(const QString &msg)
     int posDeletingStart = 1; // to start looking at 0
 
     // While there are SB delimiters (start looking just before the deleted SB)
-    while ((posDeletingStart = res.indexOf(sbDelimiterSearch , posDeletingStart - 1)) >= 0) {
+    while ((posDeletingStart = res.indexOf(sbDelimiterSearch, posDeletingStart - 1)) >= 0) {
         QString prefix; // the current prefix
         QString line; // the line to check if is part of the SB
         int posNewLine = -1;
@@ -789,7 +789,7 @@ QString cleanFileName(const QString &name)
     // but don't replace the last '.' before the file extension.
     int i = fileName.lastIndexOf(QLatin1Char('.'));
     if (i != -1) {
-        i = fileName.lastIndexOf(QLatin1Char('.') , i - 1);
+        i = fileName.lastIndexOf(QLatin1Char('.'), i - 1);
     }
 
     while (i != -1) {

@@ -295,7 +295,7 @@ void SieveScriptListBox::slotBottom()
         const int currentIndex = mSieveListScript->currentRow();
         if (currentIndex != mSieveListScript->count() - 1) {
             item = mSieveListScript->takeItem(currentIndex);
-            mSieveListScript->insertItem(mSieveListScript->count() , item);
+            mSieveListScript->insertItem(mSieveListScript->count(), item);
             mSieveListScript->setCurrentItem(item);
             Q_EMIT valueChanged();
         }

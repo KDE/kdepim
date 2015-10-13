@@ -82,7 +82,7 @@ void FilterActionStatus::argsFromString(const QString &argsStr)
     if (argsStr.length() == 1) {
         Akonadi::MessageStatus status;
 
-        for (int i = 0 ; i < FilterActionStatus::StatiCount; ++i) {
+        for (int i = 0; i < FilterActionStatus::StatiCount; ++i) {
             status = stati[i];
             if (realStatusString(status.statusStr()) == QLatin1String(argsStr.toLatin1())) {
                 mParameter = mParameterList.at(i + 1);

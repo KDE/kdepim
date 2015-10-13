@@ -222,12 +222,12 @@ Theme::Row::Row()
 Theme::Row::Row(const Row &src)
 {
     QList< ContentItem * >::ConstIterator end(src.mLeftItems.constEnd());
-    for (QList< ContentItem * >::ConstIterator it = src.mLeftItems.constBegin(); it != end ; ++it) {
+    for (QList< ContentItem * >::ConstIterator it = src.mLeftItems.constBegin(); it != end; ++it) {
         addLeftItem(new ContentItem(*(*it)));
     }
 
     end =  src.mRightItems.constEnd();
-    for (QList< ContentItem * >::ConstIterator it = src.mRightItems.constBegin(); it != end ; ++it) {
+    for (QList< ContentItem * >::ConstIterator it = src.mRightItems.constBegin(); it != end; ++it) {
         addRightItem(new ContentItem(*(*it)));
     }
 }
@@ -273,13 +273,13 @@ void Theme::Row::insertRightItem(int idx, ContentItem *item)
 bool Theme::Row::containsTextItems() const
 {
     QList< ContentItem * >::ConstIterator end(mLeftItems.constEnd());
-    for (QList< ContentItem * >::ConstIterator it = mLeftItems.constBegin(); it != end ; ++it) {
+    for (QList< ContentItem * >::ConstIterator it = mLeftItems.constBegin(); it != end; ++it) {
         if ((*it)->displaysText()) {
             return true;
         }
     }
     end = mRightItems.constEnd();
-    for (QList< ContentItem * >::ConstIterator it = mRightItems.constBegin(); it != end ; ++it) {
+    for (QList< ContentItem * >::ConstIterator it = mRightItems.constBegin(); it != end; ++it) {
         if ((*it)->displaysText()) {
             return true;
         }
@@ -293,7 +293,7 @@ void Theme::Row::save(QDataStream &stream) const
 
     int cnt = mLeftItems.count();
 
-    for (int i = 0; i < cnt ; ++i) {
+    for (int i = 0; i < cnt; ++i) {
         ContentItem *ci = mLeftItems.at(i);
         ci->save(stream);
     }
@@ -302,7 +302,7 @@ void Theme::Row::save(QDataStream &stream) const
 
     cnt = mRightItems.count();
 
-    for (int i = 0; i < cnt ; ++i) {
+    for (int i = 0; i < cnt; ++i) {
         ContentItem *ci = mRightItems.at(i);
         ci->save(stream);
     }
@@ -316,7 +316,7 @@ bool Theme::Row::LoadContentItem(int val, QDataStream &stream, int themeVersion,
 
     // FIXME: Remove code duplication here
 
-    for (int i = 0; i < val ; ++i) {
+    for (int i = 0; i < val; ++i) {
         ContentItem *ci = new ContentItem(ContentItem::Subject);    // dummy type
         if (!ci->load(stream, themeVersion)) {
             qCDebug(MESSAGELIST_LOG) << "Left content item loading failed";
@@ -336,7 +336,7 @@ bool Theme::Row::LoadContentItem(int val, QDataStream &stream, int themeVersion,
                 themeVersion < gThemeMinimumVersionWithAnnotationIcon &&
                 val > 1) {
             qCDebug(MESSAGELIST_LOG) << "Old theme version detected, adding annotation item next to attachment icon.";
-            ContentItem *annotationItem = new ContentItem(ContentItem::AnnotationIcon) ;
+            ContentItem *annotationItem = new ContentItem(ContentItem::AnnotationIcon);
             annotationItem->setHideWhenDisabled(true);
             if (leftItem) {
                 addLeftItem(annotationItem);
@@ -350,7 +350,7 @@ bool Theme::Row::LoadContentItem(int val, QDataStream &stream, int themeVersion,
                 themeVersion < gThemeMinimumVersionWithInvitationIcon &&
                 val > 1) {
             qCDebug(MESSAGELIST_LOG) << "Old theme version detected, adding invitation item next to attachment icon.";
-            ContentItem *invitationItem = new ContentItem(ContentItem::InvitationIcon) ;
+            ContentItem *invitationItem = new ContentItem(ContentItem::InvitationIcon);
             invitationItem->setHideWhenDisabled(true);
             if (leftItem) {
                 addLeftItem(invitationItem);
@@ -445,12 +445,12 @@ Theme::Column::Column(const Column &src)
     mSharedRuntimeData = src.mSharedRuntimeData;
     mSharedRuntimeData->addReference();
     QList< Row * >::ConstIterator end(src.mMessageRows.constEnd());
-    for (QList< Row * >::ConstIterator it = src.mMessageRows.constBegin(); it != end ; ++it) {
+    for (QList< Row * >::ConstIterator it = src.mMessageRows.constBegin(); it != end; ++it) {
         addMessageRow(new Row(*(*it)));
     }
 
     end = src.mGroupHeaderRows.constEnd();
-    for (QList< Row * >::ConstIterator it = src.mGroupHeaderRows.constBegin(); it != end ; ++it) {
+    for (QList< Row * >::ConstIterator it = src.mGroupHeaderRows.constBegin(); it != end; ++it) {
         addGroupHeaderRow(new Row(*(*it)));
     }
 }
@@ -511,13 +511,13 @@ void Theme::Column::insertGroupHeaderRow(int idx, Row *row)
 bool Theme::Column::containsTextItems() const
 {
     QList< Row * >::ConstIterator end(mMessageRows.constEnd());
-    for (QList< Row * >::ConstIterator it = mMessageRows.constBegin(); it != end ; ++it) {
+    for (QList< Row * >::ConstIterator it = mMessageRows.constBegin(); it != end; ++it) {
         if ((*it)->containsTextItems()) {
             return true;
         }
     }
     end = mGroupHeaderRows.constEnd();
-    for (QList< Row * >::ConstIterator it = mGroupHeaderRows.constBegin(); it != end ; ++it) {
+    for (QList< Row * >::ConstIterator it = mGroupHeaderRows.constBegin(); it != end; ++it) {
         if ((*it)->containsTextItems()) {
             return true;
         }
@@ -537,7 +537,7 @@ void Theme::Column::save(QDataStream &stream) const
 
     int cnt = mGroupHeaderRows.count();
 
-    for (int i = 0; i < cnt ; ++i) {
+    for (int i = 0; i < cnt; ++i) {
         Row *row = mGroupHeaderRows.at(i);
         row->save(stream);
     }
@@ -545,7 +545,7 @@ void Theme::Column::save(QDataStream &stream) const
     cnt = mMessageRows.count();
     stream << (int)cnt;
 
-    for (int i = 0; i < cnt ; ++i) {
+    for (int i = 0; i < cnt; ++i) {
         Row *row = mMessageRows.at(i);
         row->save(stream);
     }
@@ -597,7 +597,7 @@ bool Theme::Column::load(QDataStream &stream, int themeVersion)
         return false; // senseless
     }
 
-    for (int i = 0; i < val ; ++i) {
+    for (int i = 0; i < val; ++i) {
         Row *row = new Row();
         if (!row->load(stream, themeVersion)) {
             qCDebug(MESSAGELIST_LOG) << "Group header row loading failed";
@@ -615,7 +615,7 @@ bool Theme::Column::load(QDataStream &stream, int themeVersion)
         return false; // senseless
     }
 
-    for (int i = 0; i < val ; ++i) {
+    for (int i = 0; i < val; ++i) {
         Row *row = new Row();
         if (!row->load(stream, themeVersion)) {
             qCDebug(MESSAGELIST_LOG) << "Message row loading failed";
@@ -667,7 +667,7 @@ Theme::Theme(const Theme &src)
     mViewHeaderPolicy = src.mViewHeaderPolicy;
     mIconSize = src.mIconSize;
     QList< Column * >::ConstIterator end(src.mColumns.constEnd());
-    for (QList< Column * >::ConstIterator it = src.mColumns.constBegin(); it != end ; ++it) {
+    for (QList< Column * >::ConstIterator it = src.mColumns.constBegin(); it != end; ++it) {
         addColumn(new Column(*(*it)));
     }
 }
@@ -680,7 +680,7 @@ Theme::~Theme()
 void Theme::detach()
 {
     QList< Column * >::ConstIterator end(mColumns.constEnd());
-    for (QList< Column * >::ConstIterator it = mColumns.constBegin(); it != end ; ++it) {
+    for (QList< Column * >::ConstIterator it = mColumns.constBegin(); it != end; ++it) {
         (*it)->detach();
     }
 }
@@ -688,7 +688,7 @@ void Theme::detach()
 void Theme::resetColumnState()
 {
     QList< Column * >::ConstIterator end(mColumns.constEnd());
-    for (QList< Column * >::ConstIterator it = mColumns.constBegin(); it != end ; ++it) {
+    for (QList< Column * >::ConstIterator it = mColumns.constBegin(); it != end; ++it) {
         (*it)->setCurrentlyVisible((*it)->visibleByDefault());
         (*it)->setCurrentWidth(-1);
     }
@@ -849,7 +849,7 @@ bool Theme::load(QDataStream &stream)
         return false;    // plain b0rken ( negative, zero or more than 50 columns )
     }
 
-    for (int i = 0; i < val ; ++i) {
+    for (int i = 0; i < val; ++i) {
         Column *col = new Column();
         if (!col->load(stream, themeVersion)) {
             qCDebug(MESSAGELIST_LOG) << "Column loading failed";
@@ -875,7 +875,7 @@ void Theme::save(QDataStream &stream) const
     const int cnt = mColumns.count();
     stream << (int)cnt;
 
-    for (int i = 0; i < cnt ; ++i) {
+    for (int i = 0; i < cnt; ++i) {
         Column *col = mColumns.at(i);
         col->save(stream);
     }

@@ -51,7 +51,7 @@ private Q_SLOTS:
 private:
     void insertAttendees();
     void addAttendee(const QString &email, const KCalCore::FreeBusy::Ptr &fb,
-                     KCalCore::Attendee::Role role = KCalCore::Attendee::ReqParticipant) ;
+                     KCalCore::Attendee::Role role = KCalCore::Attendee::ReqParticipant);
     QList<KPIM::FreeBusyItem::Ptr> attendees;
     QWidget *parent;
     IncidenceEditorNG::ConflictResolver *resolver;

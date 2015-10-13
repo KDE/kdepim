@@ -243,7 +243,7 @@ private:
 
     bool encryptionPossible() const;
     bool signingPossible() const;
-    Kleo::Result resolveEncryptionKeys(bool signingRequested , bool &finalySendUnencrypted);
+    Kleo::Result resolveEncryptionKeys(bool signingRequested, bool &finalySendUnencrypted);
     Kleo::Result resolveSigningKeysForEncryption();
     Kleo::Result resolveSigningKeysForSigningOnly();
     Kleo::Result checkKeyNearExpiry(const GpgME::Key &key,
@@ -294,17 +294,17 @@ private:
 
     bool mEncryptToSelf;
     const bool mShowApprovalDialog : 1;
-    const bool mOpportunisticEncyption : 1;
-    const unsigned int mCryptoMessageFormats;
+        const bool mOpportunisticEncyption : 1;
+        const unsigned int mCryptoMessageFormats;
 
-    const int mEncryptKeyNearExpiryWarningThreshold;
-    const int mSigningKeyNearExpiryWarningThreshold;
-    const int mEncryptRootCertNearExpiryWarningThreshold;
-    const int mSigningRootCertNearExpiryWarningThreshold;
-    const int mEncryptChainCertNearExpiryWarningThreshold;
-    const int mSigningChainCertNearExpiryWarningThreshold;
-};
+        const int mEncryptKeyNearExpiryWarningThreshold;
+        const int mSigningKeyNearExpiryWarningThreshold;
+        const int mEncryptRootCertNearExpiryWarningThreshold;
+        const int mSigningRootCertNearExpiryWarningThreshold;
+        const int mEncryptChainCertNearExpiryWarningThreshold;
+        const int mSigningChainCertNearExpiryWarningThreshold;
+    };
 
-} // namespace Kleo
+    } // namespace Kleo
 
 #endif // __KLEO_KEYRESOLVER_H__

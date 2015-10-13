@@ -55,7 +55,7 @@ void ImportCalendarJob::start()
 {
     Q_EMIT title(i18n("Start import KOrganizer settings..."));
     mArchiveDirectory = archive()->directory();
-    searchAllFiles(mArchiveDirectory , QString());
+    searchAllFiles(mArchiveDirectory, QString());
     initializeListStep();
     nextStep();
 }
@@ -264,7 +264,7 @@ void ImportCalendarJob::restoreConfig()
     if (freebusyentry && freebusyentry->isFile()) {
         const KArchiveFile *freebusyrcFile = static_cast<const KArchiveFile *>(freebusyentry);
 
-        const QString freebusypath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/") + freebusyStr ;
+        const QString freebusypath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/") + freebusyStr;
         if (QFile(freebusypath).exists()) {
             //TODO 4.12 merge it.
             if (overwriteConfigMessageBox(freebusyStr)) {

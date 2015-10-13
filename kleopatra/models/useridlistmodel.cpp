@@ -67,7 +67,7 @@ static inline int extract_uid_number(const QModelIndex &idx)
 
 static inline bool is_signature_level(const QModelIndex &idx)
 {
-    return idx.isValid()/* && idx.internalId() >= 0*/ ;
+    return idx.isValid()/* && idx.internalId() >= 0*/;
 }
 
 }
@@ -115,7 +115,7 @@ void UserIDListModel::setKey(const Key &key)
 
     if (key.numUserIDs() > 0 && oldKey.numUserIDs() == key.numUserIDs()) {
         bool identical = true;
-        for (unsigned int i = 0, end = key.numUserIDs() ; i != end ; ++i) {
+        for (unsigned int i = 0, end = key.numUserIDs(); i != end; ++i) {
             if (key.userID(i).numSignatures() != oldKey.userID(i).numSignatures()) {
                 identical = false;
                 break;
@@ -173,7 +173,7 @@ std::vector<UserID::Signature> UserIDListModel::signatures(const QList<QModelInd
 QModelIndex UserIDListModel::index(const UserID &userID, int col) const
 {
     // O(N), but not sorted, so no better way...
-    for (unsigned int row = 0, end = d->key.numUserIDs() ; row != end ; ++row)
+    for (unsigned int row = 0, end = d->key.numUserIDs(); row != end; ++row)
         if (qstricmp(userID.id(), d->key.userID(row).id()) == 0) {
             return createIndex(row, col, -1);
         }
@@ -284,7 +284,7 @@ QVariant UserIDListModel::headerData(int section, Qt::Orientation o, int role) c
             case ValidFrom:   return i18n("Valid From");
             case ValidUntil:  return i18n("Valid Until");
             case Status:      return i18n("Status");
-            case NumColumns:       ;
+            case NumColumns:;
             }
     return QVariant();
 }

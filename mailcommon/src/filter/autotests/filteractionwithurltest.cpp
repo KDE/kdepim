@@ -29,7 +29,7 @@ public:
     {
 
     }
-    FilterAction::ReturnCode process(MailCommon::ItemContext &context , bool) const
+    FilterAction::ReturnCode process(MailCommon::ItemContext &context, bool) const
     {
         return GoOn;
     }

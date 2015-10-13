@@ -290,7 +290,6 @@ void ThemePreviewWidget::changeEvent(QEvent *event)
     QTreeWidget::changeEvent(event);
 }
 
-
 ThemePreviewWidget::~ThemePreviewWidget()
 {
 }

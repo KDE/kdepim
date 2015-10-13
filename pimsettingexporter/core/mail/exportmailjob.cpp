@@ -218,7 +218,7 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QStringLiteral("messageviewer.notifyrc"));
 
     const QString archiveMailAgentConfigurationStr(QStringLiteral("akonadi_archivemail_agentrc"));
-    const QString archiveMailAgentconfigurationrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + archiveMailAgentConfigurationStr ;
+    const QString archiveMailAgentconfigurationrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + archiveMailAgentConfigurationStr;
     if (QFile(archiveMailAgentconfigurationrc).exists()) {
         KSharedConfigPtr archivemailrc = KSharedConfig::openConfig(archiveMailAgentConfigurationStr);
 
@@ -280,7 +280,7 @@ void ExportMailJob::backupConfig()
         delete templateConfig;
     }
 
-    const QDir themeDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/messageviewer/themes/")) ;
+    const QDir themeDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/messageviewer/themes/"));
     if (themeDirectory.exists()) {
         const bool themeDirAdded = archive()->addLocalDirectory(themeDirectory.path(), Utils::dataPath() + QLatin1String("messageviewer/themes/"));
         if (!themeDirAdded) {
@@ -288,17 +288,17 @@ void ExportMailJob::backupConfig()
         }
     }
 
-    const QDir autocorrectDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/autocorrect/")) ;
+    const QDir autocorrectDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/autocorrect/"));
     if (autocorrectDirectory.exists()) {
         const QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList() << QStringLiteral("*.xml"), QDir::Files);
         const int listSize(listFileInfo.size());
         for (int i = 0; i < listSize; ++i) {
-            backupFile(listFileInfo.at(i).absoluteFilePath(), Utils::dataPath() + QLatin1String("autocorrect/") , listFileInfo.at(i).fileName());
+            backupFile(listFileInfo.at(i).absoluteFilePath(), Utils::dataPath() + QLatin1String("autocorrect/"), listFileInfo.at(i).fileName());
         }
     }
-    const QString adblockFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/adblockrules_local") ;
+    const QString adblockFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/adblockrules_local");
     if (!adblockFilePath.isEmpty()) {
-        backupFile(adblockFilePath, Utils::dataPath() + QLatin1String("kmail2/") , QStringLiteral("adblockrules_local"));
+        backupFile(adblockFilePath, Utils::dataPath() + QLatin1String("kmail2/"), QStringLiteral("adblockrules_local"));
     }
 
     const QString kmailStr(QStringLiteral("kmail2rc"));

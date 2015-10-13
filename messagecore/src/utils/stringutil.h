@@ -96,7 +96,7 @@ MESSAGECORE_EXPORT QString quoteHtmlChars(const QString &text,
    * Removes all private header fields (e.g. *Status: and X-KMail-*) from the given @p message.
    * if cleanUpHeader is false don't remove X-KMail-Identity and X-KMail-Dictionary which is useful when we want restore mail.
    */
-MESSAGECORE_EXPORT void removePrivateHeaderFields(const KMime::Message::Ptr &message , bool cleanUpHeader = true);
+MESSAGECORE_EXPORT void removePrivateHeaderFields(const KMime::Message::Ptr &message, bool cleanUpHeader = true);
 
 /**
    * Returns the @p message contents with the headers that should not be sent stripped off.

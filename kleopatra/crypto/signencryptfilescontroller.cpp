@@ -309,13 +309,13 @@ void SignEncryptFilesController::start()
 
 static const char *extension(bool pgp, bool sign, bool encrypt, bool ascii, bool detached)
 {
-    unsigned int cls = pgp ? Class::OpenPGP : Class::CMS ;
+    unsigned int cls = pgp ? Class::OpenPGP : Class::CMS;
     if (encrypt) {
         cls |= Class::CipherText;
     } else if (sign) {
-        cls |= detached ? Class::DetachedSignature : Class::OpaqueSignature ;
+        cls |= detached ? Class::DetachedSignature : Class::OpaqueSignature;
     }
-    cls |= ascii ? Class::Ascii : Class::Binary ;
+    cls |= ascii ? Class::Ascii : Class::Binary;
     if (const char *const ext = outputFileExtension(cls)) {
         return ext;
     } else {
@@ -370,7 +370,7 @@ createArchiveSignEncryptTaskForFiles(const QStringList &files, const QString &ou
 
     kleo_assert(ad);
 
-    const Protocol proto = pgp ? OpenPGP : CMS ;
+    const Protocol proto = pgp ? OpenPGP : CMS;
 
     task->setInputFileNames(files);
     task->setInput(ad->createInputFromPackCommand(proto, files));

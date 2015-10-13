@@ -469,7 +469,7 @@ QString NodeHelper::iconName(KMime::Content *node, int size)
 
 void NodeHelper::magicSetType(KMime::Content *node, bool aAutoDecode)
 {
-    const QByteArray body = (aAutoDecode) ? node->decodedContent() : node->body() ;
+    const QByteArray body = (aAutoDecode) ? node->decodedContent() : node->body();
     QMimeDatabase db;
     QMimeType mime = db.mimeTypeForData(body);
 
@@ -591,7 +591,7 @@ Interface::BodyPartMemento *NodeHelper::bodyPartMemento(KMime::Content *node,
     }
     const QMap<QByteArray, Interface::BodyPartMemento *>::const_iterator it =
         nit->find(which.toLower());
-    return it != nit->end() ? it.value() : 0 ;
+    return it != nit->end() ? it.value() : 0;
 }
 
 //FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalSetBodyPartMemento replacement

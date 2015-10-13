@@ -199,7 +199,7 @@ void FindReplaceBarPrivate::messageInfo(bool backward, bool isAutoSearch, bool f
 {
     if (!found && !isAutoSearch) {
         if (backward) {
-            KMessageBox::information(q, i18n("Beginning of message reached.\nPhrase '%1' could not be found." , lastSearchStr));
+            KMessageBox::information(q, i18n("Beginning of message reached.\nPhrase '%1' could not be found.", lastSearchStr));
         } else {
             KMessageBox::information(q, i18n("End of message reached.\nPhrase '%1' could not be found.", lastSearchStr));
         }

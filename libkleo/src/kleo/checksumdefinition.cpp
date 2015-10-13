@@ -124,8 +124,8 @@ static QString try_extensions(const QString &path)
     static const char exts[][4] = {
         "", "exe", "bat", "bin", "cmd",
     };
-    static const size_t numExts = sizeof exts / sizeof * exts ;
-    for (unsigned int i = 0 ; i < numExts ; ++i) {
+    static const size_t numExts = sizeof exts / sizeof * exts;
+    for (unsigned int i = 0; i < numExts; ++i) {
         const QFileInfo fi(path + QLatin1Char('.') + QLatin1String(exts[i]));
         if (fi.exists()) {
             return fi.filePath();
@@ -338,7 +338,7 @@ static bool start_command(QProcess *p, const char *functionName,
         }
         const char sep =
             method == ChecksumDefinition::NewlineSeparatedInputFile ? '\n' :
-            /* else */                            '\0' ;
+            /* else */                            '\0';
         const QByteArray stdin = make_input(files, sep);
         if (p->write(stdin) != stdin.size()) {
             return false;

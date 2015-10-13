@@ -98,13 +98,13 @@ QDateTime QWebdavUrlInfo::parseDateTime(const QString &input, const QString &typ
     if (!datetime.isNull()) {
         return datetime;
     }
-    datetime = locale.toDateTime(input.mid(5, 20) , QStringLiteral("dd MMM yyyy hh:mm:ss"));
+    datetime = locale.toDateTime(input.mid(5, 20), QStringLiteral("dd MMM yyyy hh:mm:ss"));
     if (!datetime.isNull()) {
         return datetime;
     }
 
-    const QDate date = locale.toDate(input.mid(5, 11) , QStringLiteral("dd MMM yyyy"));
-    const QTime time = locale.toTime(input.mid(17, 8) , QStringLiteral("hh:mm:ss"));
+    const QDate date = locale.toDate(input.mid(5, 11), QStringLiteral("dd MMM yyyy"));
+    const QTime time = locale.toTime(input.mid(17, 8), QStringLiteral("hh:mm:ss"));
     return QDateTime(date, time);
 }
 
@@ -129,7 +129,7 @@ void QWebdavUrlInfo::davParsePropstats(const QString &path, const QDomNodeList &
         const int code = codeFromResponse(status.text());
 
         if (code == 404) {
-            continue ;
+            continue;
         }
 
         const QDomElement prop = propstat.namedItem(QStringLiteral("prop")).toElement();

@@ -35,7 +35,7 @@ using namespace EventViews;
 
 TimeLabelsZone::TimeLabelsZone(QWidget *parent, const PrefsPtr &preferences, Agenda *agenda)
     : QWidget(parent), mAgenda(agenda), mPrefs(preferences),
-      mParent(qobject_cast<AgendaView *>(parent))
+      mParent(qobject_cast<AgendaView * >(parent))
 {
     mTimeLabelsLayout = new QHBoxLayout(this);
     mTimeLabelsLayout->setMargin(0);

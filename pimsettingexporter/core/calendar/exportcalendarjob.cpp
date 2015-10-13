@@ -141,12 +141,12 @@ void ExportCalendarJob::backupConfig()
     backupConfigFile(QStringLiteral("korgacrc"));
 
     const QString freebusyurlsStr(QStringLiteral("korganizer/freebusyurls"));
-    const QString freebusyurls = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + freebusyurlsStr ;
+    const QString freebusyurls = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + freebusyurlsStr;
     if (QFile(freebusyurls).exists()) {
         backupFile(freebusyurls, Utils::dataPath(), freebusyurlsStr);
     }
 
-    const QString templateDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/templates/") ;
+    const QString templateDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/korganizer/templates/");
     QDir templateDirectory(templateDir);
     if (templateDirectory.exists()) {
         const bool templateDirAdded = archive()->addLocalDirectory(templateDir, Utils::dataPath() +  QLatin1String("/korganizer/templates/"));

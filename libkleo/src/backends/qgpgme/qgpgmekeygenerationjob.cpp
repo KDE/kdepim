@@ -54,7 +54,7 @@ QGpgMEKeyGenerationJob::~QGpgMEKeyGenerationJob() {}
 static QGpgMEKeyGenerationJob::result_type generate_key(Context *ctx, const QString &parameters)
 {
     QGpgME::QByteArrayDataProvider dp;
-    Data data = ctx->protocol() == CMS ? Data(&dp) : Data(Data::null) ;
+    Data data = ctx->protocol() == CMS ? Data(&dp) : Data(Data::null);
     assert(data.isNull() == (ctx->protocol() != CMS));
 
     const KeyGenerationResult res = ctx->generateKey(parameters.toUtf8().constData(), data);

@@ -299,16 +299,14 @@ void StorageModel::fillMessageItemThreadingData(MessageList::Core::MessageItem *
         mi->setSubjectIsPrefixed(subject != strippedSubject);
         // fall through
     }
-    case PerfectThreadingPlusReferences:
-    {
+    case PerfectThreadingPlusReferences: {
         const auto refs = mail->references()->identifiers();
         if (!refs.isEmpty()) {
             mi->setReferencesIdMD5(md5Encode(refs.last()));
         }
     }
     // fall through
-    case PerfectThreadingOnly:
-    {
+    case PerfectThreadingOnly: {
         mi->setMessageIdMD5(md5Encode(mail->messageID()->identifier()));
         const auto inReplyTos = mail->inReplyTo()->identifiers();
         if (!inReplyTos.isEmpty()) {

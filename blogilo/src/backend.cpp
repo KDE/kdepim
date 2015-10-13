@@ -100,7 +100,7 @@ void Backend::getCategoryListFromServer()
     }
 }
 
-void Backend::categoriesListed(const QList< QMap < QString , QString > > &categories)
+void Backend::categoriesListed(const QList< QMap < QString, QString > > &categories)
 {
     qCDebug(BLOGILO_LOG) << "Blog Id: " << d->bBlog->id();
     DBMan::self()->clearCategories(d->bBlog->id());
@@ -196,7 +196,7 @@ void Backend::uploadMedia(BilboMedia *media)
     case BilboBlog::METAWEBLOG_API:
     case BilboBlog::MOVABLETYPE_API:
     case BilboBlog::WORDPRESSBUGGY_API:
-        KBlog::BlogMedia *m = new KBlog::BlogMedia() ;
+        KBlog::BlogMedia *m = new KBlog::BlogMedia();
         KBlog::MetaWeblog *MWBlog = qobject_cast<KBlog::MetaWeblog *>(d->kBlog);
 
         m->setMimetype(media->mimeType());

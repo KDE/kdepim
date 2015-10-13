@@ -228,12 +228,12 @@ void KWidgetLister::setNumberOfShownWidgetsTo(int aNum)
     int missingWidgets     = qMax(aNum - (int)d->mWidgetList.count(), 0);
 
     // remove superfluous widgets
-    for (; superfluousWidgets ; superfluousWidgets--) {
+    for (; superfluousWidgets; superfluousWidgets--) {
         removeLastWidget();
     }
 
     // add missing widgets
-    for (; missingWidgets ; missingWidgets--) {
+    for (; missingWidgets; missingWidgets--) {
         addWidgetAtEnd();
     }
 }

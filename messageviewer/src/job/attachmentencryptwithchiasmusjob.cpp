@@ -37,7 +37,7 @@ using namespace MessageViewer;
 
 static const QString chomp(const QString &base, const QString &suffix, bool cs)
 {
-    return base.endsWith(suffix, cs ? (Qt::CaseSensitive) : (Qt::CaseInsensitive)) ? base.left(base.length() - suffix.length()) : base ;
+    return base.endsWith(suffix, cs ? (Qt::CaseSensitive) : (Qt::CaseInsensitive)) ? base.left(base.length() - suffix.length()) : base;
 }
 
 AttachmentEncryptWithChiasmusJob::AttachmentEncryptWithChiasmusJob(QObject *parent)

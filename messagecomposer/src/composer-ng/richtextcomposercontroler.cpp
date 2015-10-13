@@ -928,7 +928,7 @@ void RichTextComposerControler::slotAddQuotes()
         cursor.removeSelectedText();
     } else {
         selectedText = cursor.selectedText();
-        if (selectedText[selectedText.length()-1] == QChar::ParagraphSeparator) {
+        if (selectedText[selectedText.length() - 1] == QChar::ParagraphSeparator) {
             lastCharacterIsAParagraphChar = true;
         }
     }

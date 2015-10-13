@@ -41,7 +41,7 @@ static const Kleo::CryptoMessageFormat cryptoMessageFormats[] = {
     Kleo::SMIMEFormat,
     Kleo::SMIMEOpaqueFormat
 };
-static const int numCryptoMessageFormats = sizeof cryptoMessageFormats / sizeof * cryptoMessageFormats ;
+static const int numCryptoMessageFormats = sizeof cryptoMessageFormats / sizeof * cryptoMessageFormats;
 
 static const Kleo::CryptoMessageFormat concreteCryptoMessageFormats[] = {
     Kleo::OpenPGPMIMEFormat,
@@ -50,7 +50,7 @@ static const Kleo::CryptoMessageFormat concreteCryptoMessageFormats[] = {
     Kleo::InlineOpenPGPFormat
 };
 static const unsigned int numConcreteCryptoMessageFormats
-    = sizeof concreteCryptoMessageFormats / sizeof * concreteCryptoMessageFormats ;
+    = sizeof concreteCryptoMessageFormats / sizeof * concreteCryptoMessageFormats;
 
 static inline Kleo::CryptoMessageFormat cb2format(int idx)
 {
@@ -59,7 +59,7 @@ static inline Kleo::CryptoMessageFormat cb2format(int idx)
 
 static inline int format2cb(Kleo::CryptoMessageFormat f)
 {
-    for (int i = 0 ; i < numCryptoMessageFormats ; ++i)
+    for (int i = 0; i < numCryptoMessageFormats; ++i)
         if (f == cryptoMessageFormats[i]) {
             return i;
         }
@@ -73,22 +73,22 @@ static inline int format2cb(Kleo::CryptoMessageFormat f)
 
 static inline bool isSMIME(Kleo::CryptoMessageFormat f)
 {
-    return f ==  Kleo::SMIMEFormat || f == Kleo::SMIMEOpaqueFormat ;
+    return f ==  Kleo::SMIMEFormat || f == Kleo::SMIMEOpaqueFormat;
 }
 
 static inline bool isOpenPGP(Kleo::CryptoMessageFormat f)
 {
-    return f == Kleo::InlineOpenPGPFormat || f == Kleo::OpenPGPMIMEFormat ;
+    return f == Kleo::InlineOpenPGPFormat || f == Kleo::OpenPGPMIMEFormat;
 }
 
 static inline bool containsSMIME(unsigned int f)
 {
-    return f & (Kleo::SMIMEFormat | Kleo::SMIMEOpaqueFormat) ;
+    return f & (Kleo::SMIMEFormat | Kleo::SMIMEOpaqueFormat);
 }
 
 static inline bool containsOpenPGP(unsigned int f)
 {
-    return f & (Kleo::OpenPGPMIMEFormat | Kleo::InlineOpenPGPFormat) ;
+    return f & (Kleo::OpenPGPMIMEFormat | Kleo::InlineOpenPGPFormat);
 }
 
 #endif // __KDEPIM_KMAIL_KLEO_UTIL_H__

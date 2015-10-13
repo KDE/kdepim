@@ -131,13 +131,13 @@ QNetworkReply *WebDavJob::proppatch(const QUrl &path, const WebDavJob::PropValue
     query += "<D:prop>";
     for (auto it = props.cbegin(), end = props.cend(); it != end; ++it) {
         const QString &ns = it.key();
-        QMap < QString , QVariant >::const_iterator i;
+        QMap < QString, QVariant >::const_iterator i;
 
         for (i = props[ns].constBegin(); i != props[ns].constEnd(); ++i) {
             if (ns == QStringLiteral("DAV:")) {
                 query += "<D:" + i.key().toLatin1() + ">";
                 query += i.value().toString().toLatin1();
-                query += "</D:" + i.key().toLatin1() + ">" ;
+                query += "</D:" + i.key().toLatin1() + ">";
             } else {
                 query += "<" + i.key().toLatin1() + " xmlns=\"" + ns.toLatin1() + "\">";
                 query += i.value().toString().toLatin1();

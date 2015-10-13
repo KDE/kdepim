@@ -35,7 +35,7 @@ Theme::Theme(const QString &themePath, const QString &dirName, const QString &de
         setDirName(dirName);
         setName(group.readEntry("Name", QString()));
         setDescription(group.readEntry("Description", QString()));
-        setThemeFilename(group.readEntry("FileName" , QString()));
+        setThemeFilename(group.readEntry("FileName", QString()));
         setDisplayExtraVariables(group.readEntry("DisplayExtraVariables", QStringList()));
         setAbsolutePath(themePath);
     }

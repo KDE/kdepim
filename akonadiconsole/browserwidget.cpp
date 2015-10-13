@@ -465,7 +465,7 @@ void BrowserWidget::dumpToXml()
     if (!root.isValid()) {
         return;
     }
-    const QString fileName = QFileDialog::getSaveFileName(this, QStringLiteral("Select XML file") , QString(), QStringLiteral("*.xml"));
+    const QString fileName = QFileDialog::getSaveFileName(this, QStringLiteral("Select XML file"), QString(), QStringLiteral("*.xml"));
     if (fileName.isEmpty()) {
         return;
     }

@@ -425,7 +425,7 @@ void SylpheedSettings::readImapAccount(const KConfigGroup &accountConfig, bool c
     addToManualCheck(agentIdentifyName, enableManualCheck);
 }
 
-void SylpheedSettings::readAccount(const KConfigGroup &accountConfig , bool checkMailOnStartup, int intervalCheckMail)
+void SylpheedSettings::readAccount(const KConfigGroup &accountConfig, bool checkMailOnStartup, int intervalCheckMail)
 {
     if (accountConfig.hasKey(QStringLiteral("protocol"))) {
         const int protocol = accountConfig.readEntry(QStringLiteral("protocol"), 0);
@@ -463,21 +463,21 @@ void SylpheedSettings::readIdentity(const KConfigGroup &accountConfig)
     identity->setPrimaryEmailAddress(email);
 
     QString value;
-    if (SylpheedSettingsUtils::readConfig(QStringLiteral("auto_bcc") , accountConfig, value, true)) {
+    if (SylpheedSettingsUtils::readConfig(QStringLiteral("auto_bcc"), accountConfig, value, true)) {
         identity->setBcc(value);
     }
-    if (SylpheedSettingsUtils::readConfig(QStringLiteral("auto_cc") , accountConfig, value, true)) {
+    if (SylpheedSettingsUtils::readConfig(QStringLiteral("auto_cc"), accountConfig, value, true)) {
         identity->setCc(value);
     }
-    if (SylpheedSettingsUtils::readConfig(QStringLiteral("auto_replyto") , accountConfig, value, true)) {
+    if (SylpheedSettingsUtils::readConfig(QStringLiteral("auto_replyto"), accountConfig, value, true)) {
         identity->setReplyToAddr(value);
     }
 
-    if (SylpheedSettingsUtils::readConfig(QStringLiteral("daft_folder") , accountConfig, value, false)) {
+    if (SylpheedSettingsUtils::readConfig(QStringLiteral("daft_folder"), accountConfig, value, false)) {
         identity->setDrafts(MailCommon::Util::convertFolderPathToCollectionStr(value));
     }
 
-    if (SylpheedSettingsUtils::readConfig(QStringLiteral("sent_folder") , accountConfig, value, false)) {
+    if (SylpheedSettingsUtils::readConfig(QStringLiteral("sent_folder"), accountConfig, value, false)) {
         identity->setFcc(MailCommon::Util::convertFolderPathToCollectionStr(value));
     }
 

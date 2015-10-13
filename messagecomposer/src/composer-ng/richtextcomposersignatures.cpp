@@ -54,12 +54,11 @@ void RichTextComposerSignatures::RichTextComposerSignaturesPrivate::cleanWhitesp
 
     forever {
 
-    // Find the text
-    QString text = richTextComposer->document()->toPlainText();
+        // Find the text
+        QString text = richTextComposer->document()->toPlainText();
         int currentMatch = regExp.indexIn(text, currentSearchPosition);
         currentSearchPosition = currentMatch;
-        if (currentMatch == -1)
-        {
+        if (currentMatch == -1) {
             break;
         }
 
@@ -67,10 +66,9 @@ void RichTextComposerSignatures::RichTextComposerSignaturesPrivate::cleanWhitesp
         QTextCursor cursor(richTextComposer->document());
         cursor.setPosition(currentMatch);
         cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor,
-        regExp.matchedLength());
+                            regExp.matchedLength());
         // Skip quoted text
-        if (richTextComposer->isLineQuoted(cursor.block().text()))
-        {
+        if (richTextComposer->isLineQuoted(cursor.block().text())) {
             currentSearchPosition += regExp.matchedLength();
             continue;
         }
@@ -78,15 +76,13 @@ void RichTextComposerSignatures::RichTextComposerSignaturesPrivate::cleanWhitesp
         bool insideSignature = false;
         QList< QPair<int, int> > sigPositions = signaturePositions(sig);
         QPair<int, int> position;
-        foreach (position, sigPositions)     //krazy:exclude=foreach
-        {
+        foreach (position, sigPositions) {   //krazy:exclude=foreach
             if (cursor.position() >= position.first &&
-            cursor.position() <= position.second) {
+                    cursor.position() <= position.second) {
                 insideSignature = true;
             }
         }
-        if (insideSignature)
-        {
+        if (insideSignature) {
             currentSearchPosition += regExp.matchedLength();
             continue;
         }
@@ -133,17 +129,16 @@ RichTextComposerSignatures::RichTextComposerSignaturesPrivate::signaturePosition
         int currentSearchPosition = 0;
         forever {
 
-        // Find the next occurrence of the signature text
-        const QString text = richTextComposer->document()->toPlainText();
+            // Find the next occurrence of the signature text
+            const QString text = richTextComposer->document()->toPlainText();
             const int currentMatch = text.indexOf(sigText, currentSearchPosition);
             currentSearchPosition = currentMatch + sigText.length();
-            if (currentMatch == -1)
-            {
+            if (currentMatch == -1) {
                 break;
             }
 
             signaturePositions.append(QPair<int, int>(currentMatch,
-            currentMatch + sigText.length()));
+                                      currentMatch + sigText.length()));
         }
     }
     return signaturePositions;
@@ -163,12 +158,11 @@ bool RichTextComposerSignatures::replaceSignature(const KIdentityManagement::Sig
     int currentSearchPosition = 0;
     forever {
 
-    // Find the next occurrence of the signature text
-    const QString text = d->richTextComposer->document()->toPlainText();
+        // Find the next occurrence of the signature text
+        const QString text = d->richTextComposer->document()->toPlainText();
         int currentMatch = text.indexOf(oldSigText, currentSearchPosition);
         currentSearchPosition = currentMatch;
-        if (currentMatch == -1)
-        {
+        if (currentMatch == -1) {
             break;
         }
 
@@ -180,17 +174,15 @@ bool RichTextComposerSignatures::replaceSignature(const KIdentityManagement::Sig
         // signature separator, so include it in the selection
         int additionalMove = 0;
         if (newSig.rawText().isEmpty() &&
-        text.mid(currentMatch - 4, 4) == QLatin1String("-- \n"))
-        {
+                text.mid(currentMatch - 4, 4) == QLatin1String("-- \n")) {
             cursor.movePosition(QTextCursor::PreviousCharacter,
-            QTextCursor::MoveAnchor, 5);
+                                QTextCursor::MoveAnchor, 5);
             additionalMove = 5;
         }
         cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor,
-        oldSigText.length() + additionalMove);
+                            oldSigText.length() + additionalMove);
         // Skip quoted signatures
-        if (d->richTextComposer->isLineQuoted(cursor.block().text()))
-        {
+        if (d->richTextComposer->isLineQuoted(cursor.block().text())) {
             currentSearchPosition += oldSig.toPlainText().length();
             continue;
         }

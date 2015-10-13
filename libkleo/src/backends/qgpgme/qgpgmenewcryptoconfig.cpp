@@ -177,7 +177,7 @@ void QGpgMENewCryptoConfigComponent::setComponent(const Component &component)
         group->m_entryNames.push_back(name);
         group->m_entriesByName[name] = entry;
     } else {
-        qCWarning(GPGPME_BACKEND_LOG) << "found no group for entry" << o.name() << "of component" << name() ;
+        qCWarning(GPGPME_BACKEND_LOG) << "found no group for entry" << o.name() << "of component" << name();
     }
     if (group) {
         m_groupsByName[group->name()] = group;
@@ -248,7 +248,7 @@ QString QGpgMENewCryptoConfigGroup::description() const
 QString QGpgMENewCryptoConfigGroup::path() const
 {
     if (const shared_ptr<QGpgMENewCryptoConfigComponent> c = m_component.lock()) {
-        return c->name() + QLatin1Char('/') + name() ;
+        return c->name() + QLatin1Char('/') + name();
     } else {
         return QString();
     }
@@ -320,7 +320,7 @@ QVariant QGpgMENewCryptoConfigEntry::stringToValue(const QString &str, bool unes
     if (isList()) {
         if (argType() == ArgType_None) {
             bool ok = true;
-            const QVariant v = str.isEmpty() ? 0U : str.toUInt(&ok) ;
+            const QVariant v = str.isEmpty() ? 0U : str.toUInt(&ok);
             if (!ok) {
                 qCWarning(GPGPME_BACKEND_LOG) << "list-of-none should have an unsigned int as value:" << str;
             }
@@ -383,7 +383,7 @@ QString QGpgMENewCryptoConfigEntry::description() const
 QString QGpgMENewCryptoConfigEntry::path() const
 {
     if (const shared_ptr<QGpgMENewCryptoConfigGroup> g = m_group.lock()) {
-        return g->path() + QLatin1Char('/') + name() ;
+        return g->path() + QLatin1Char('/') + name();
     } else {
         return QString();
     }
@@ -391,22 +391,22 @@ QString QGpgMENewCryptoConfigEntry::path() const
 
 bool QGpgMENewCryptoConfigEntry::isOptional() const
 {
-    return m_option.flags() & Optional ;
+    return m_option.flags() & Optional;
 }
 
 bool QGpgMENewCryptoConfigEntry::isReadOnly() const
 {
-    return m_option.flags() & NoChange ;
+    return m_option.flags() & NoChange;
 }
 
 bool QGpgMENewCryptoConfigEntry::isList() const
 {
-    return m_option.flags() & List ;
+    return m_option.flags() & List;
 }
 
 bool QGpgMENewCryptoConfigEntry::isRuntime() const
 {
-    return m_option.flags() & Runtime ;
+    return m_option.flags() & Runtime;
 }
 
 CryptoConfigEntry::Level QGpgMENewCryptoConfigEntry::level() const
@@ -531,7 +531,6 @@ unsigned int QGpgMENewCryptoConfigEntry::numberOfTimesSet() const
     Q_ASSERT(isList());
     return m_option.currentValue().uintValue();
 }
-
 
 std::vector<int> QGpgMENewCryptoConfigEntry::intValueList() const
 {

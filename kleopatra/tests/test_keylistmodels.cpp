@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 {
 
     if (const GpgME::Error initError = GpgME::initializeLibrary(0)) {
-        qCDebug(KLEOPATRA_LOG) << "Error initializing gpgme:" << QString::fromLocal8Bit(initError.asString()) ;
+        qCDebug(KLEOPATRA_LOG) << "Error initializing gpgme:" << QString::fromLocal8Bit(initError.asString());
         return 1;
     }
 

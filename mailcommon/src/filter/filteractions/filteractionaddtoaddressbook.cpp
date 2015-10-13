@@ -57,7 +57,7 @@ bool FilterActionAddToAddressBook::isEmpty() const
     return (mCollectionId == -1) || (mHeaderType == UnknownHeader);
 }
 
-FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &context , bool) const
+FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &context, bool) const
 {
     if (isEmpty()) {
         return ErrorButGoOn;

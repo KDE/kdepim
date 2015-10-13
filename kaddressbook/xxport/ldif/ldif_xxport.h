@@ -32,7 +32,7 @@ class LDIFXXPort : public XXPort
 public:
     explicit LDIFXXPort(QWidget *parent = Q_NULLPTR);
 
-    bool exportContacts(const ContactList &contacts , VCardExportSelectionWidget::ExportFields) const Q_DECL_OVERRIDE;
+    bool exportContacts(const ContactList &contacts, VCardExportSelectionWidget::ExportFields) const Q_DECL_OVERRIDE;
     ContactList importContacts() const Q_DECL_OVERRIDE;
 };
 

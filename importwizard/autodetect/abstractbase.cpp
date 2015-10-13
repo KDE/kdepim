@@ -40,7 +40,7 @@ AbstractBase::~AbstractBase()
     delete mCreateResource;
 }
 
-QString AbstractBase::createResource(const QString &resources , const QString &name, const QMap<QString, QVariant> &settings)
+QString AbstractBase::createResource(const QString &resources, const QString &name, const QMap<QString, QVariant> &settings)
 {
     return mCreateResource->createResource(resources, name, settings);
 }

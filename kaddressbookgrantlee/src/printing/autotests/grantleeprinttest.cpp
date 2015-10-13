@@ -152,11 +152,11 @@ void GrantleePrintTest::shouldDisplayContactInfo()
     address.setPrefix(QStringLiteral("foo-prefix"));
     address.setDepartment(QStringLiteral("foo-department"));
     address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Office"), QStringLiteral("foo-office"));
-    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Profession") , QStringLiteral("foo-profession"));
-    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Office") , QStringLiteral("foo-office"));
-    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-ManagersName") , QStringLiteral("foo-managersname"));
-    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-AssistantsName") , QStringLiteral("foo-assistantsname"));
-    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-SpousesName") , QStringLiteral("foo-spousesname"));
+    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Profession"), QStringLiteral("foo-profession"));
+    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-Office"), QStringLiteral("foo-office"));
+    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-ManagersName"), QStringLiteral("foo-managersname"));
+    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-AssistantsName"), QStringLiteral("foo-assistantsname"));
+    address.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("X-SpousesName"), QStringLiteral("foo-spousesname"));
 
     lst << address;
     grantleePrint->setContent(QStringLiteral("{% if contacts %}{% for contact in contacts %}{% if contact.%1 %}{{ contact.%1 }}{% endif %}{% endfor %}{% endif %}").arg(variable));

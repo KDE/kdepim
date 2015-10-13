@@ -45,7 +45,6 @@ public:
 
 Q_GLOBAL_STATIC(StorageServicePluginManagerInstancePrivate, sInstance)
 
-
 class StorageServicePluginInfo
 {
 public:

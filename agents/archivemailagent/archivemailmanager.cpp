@@ -64,7 +64,7 @@ void ArchiveMailManager::load()
 
     const QStringList collectionList = mConfig->groupList().filter(QRegExp(QStringLiteral("ArchiveMailCollection \\d+")));
     const int numberOfCollection = collectionList.count();
-    for (int i = 0 ; i < numberOfCollection; ++i) {
+    for (int i = 0; i < numberOfCollection; ++i) {
         KConfigGroup group = mConfig->group(collectionList.at(i));
         ArchiveMailInfo *info = new ArchiveMailInfo(group);
 
@@ -189,7 +189,7 @@ QString ArchiveMailManager::printArchiveListInfo()
     QString infoStr;
     const QStringList collectionList = mConfig->groupList().filter(QRegExp(QStringLiteral("ArchiveMailCollection \\d+")));
     const int numberOfCollection = collectionList.count();
-    for (int i = 0 ; i < numberOfCollection; ++i) {
+    for (int i = 0; i < numberOfCollection; ++i) {
         KConfigGroup group = mConfig->group(collectionList.at(i));
         ArchiveMailInfo info(group);
         if (!infoStr.isEmpty()) {

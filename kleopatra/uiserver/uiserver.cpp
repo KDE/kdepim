@@ -186,12 +186,12 @@ bool UiServer::waitForStopped(unsigned int ms)
 
 bool UiServer::isStopped() const
 {
-    return d->connections.empty() && !d->isListening() ;
+    return d->connections.empty() && !d->isListening();
 }
 
 bool UiServer::isStopping() const
 {
-    return !d->connections.empty() && !d->isListening() ;
+    return !d->connections.empty() && !d->isListening();
 }
 
 void UiServer::Private::slotConnectionClosed(Kleo::AssuanServerConnection *conn)

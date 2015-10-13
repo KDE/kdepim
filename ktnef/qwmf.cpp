@@ -381,7 +381,7 @@ bool QWinMetaFile::paint(QPaintDevice *aTarget, bool absolute)
             str += QLatin1String(metaFuncTab[ idx ].name);
             str += QLatin1String(" : ");
 
-            for (i = 0 ; i < cmd->numParm ; ++i) {
+            for (i = 0; i < cmd->numParm; ++i) {
                 param.setNum(cmd->parm[ i ]);
                 str += param;
                 str += QLatin1Char(' ');
@@ -500,9 +500,9 @@ void QWinMetaFile::polyPolygon(long, short *parm)
     // define clipping region
     QRect win = bbox();
     startPolygon = 1 + parm[ 0 ];
-    for (i = 0 ; i < parm[ 0 ] ; ++i) {
+    for (i = 0; i < parm[ 0 ]; ++i) {
         QPolygon pa1(parm[ 1 + i ]);
-        for (j = 0 ; j < parm[ 1 + i ] ; j++) {
+        for (j = 0; j < parm[ 1 + i ]; j++) {
             pa1.setPoint(j, parm[ startPolygon ], parm[ startPolygon + 1 ]);
             startPolygon += 2;
         }
@@ -521,7 +521,7 @@ void QWinMetaFile::polyPolygon(long, short *parm)
 
         QPolygon *pa;
         int idxPolygon = 1 + parm[ 0 ];
-        for (i = 0 ; i < parm[ 0 ] ; ++i) {
+        for (i = 0; i < parm[ 0 ]; ++i) {
             pa = pointArray(parm[ 1 + i ], &parm[ idxPolygon ]);
             mPainter.drawPolygon(*pa);
             idxPolygon += parm[ 1 + i ] * 2;
@@ -553,10 +553,10 @@ void QWinMetaFile::roundRect(long, short *parm)
 
     // convert (xRound, yRound) in percentage
     if ((parm[ 3 ] - parm[ 5 ]) != 0) {
-        xRnd = (parm[ 1 ] * 100) / (parm[ 3 ] - parm[ 5 ])  ;
+        xRnd = (parm[ 1 ] * 100) / (parm[ 3 ] - parm[ 5 ]);
     }
     if ((parm[ 2 ] - parm[ 4 ]) != 0) {
-        yRnd = (parm[ 0 ] * 100) / (parm[ 2 ] - parm[ 4 ])  ;
+        yRnd = (parm[ 0 ] * 100) / (parm[ 2 ] - parm[ 4 ]);
     }
 
     mPainter.drawRoundRect(parm[ 5 ], parm[ 4 ], parm[ 3 ] - parm[ 5 ], parm[ 2 ] - parm[ 4 ], xRnd, yRnd);
@@ -647,7 +647,7 @@ void QWinMetaFile::saveDC(long, short *)
 //-----------------------------------------------------------------------------
 void QWinMetaFile::restoreDC(long, short *parm)
 {
-    for (int i = 0; i > parm[ 0 ] ; i--) {
+    for (int i = 0; i > parm[ 0 ]; i--) {
         mPainter.restore();
     }
 }
@@ -765,7 +765,7 @@ void QWinMetaFile::extTextOut(long num, short *parm)
         // offset for each char
         int left = x;
         mPainter.drawText(left, y, width, height, Qt::AlignLeft | Qt::AlignTop, QLatin1String(text.mid(0, 1)));
-        for (int i = 1; i < parm[ 2 ] ; ++i) {
+        for (int i = 1; i < parm[ 2 ]; ++i) {
             left += parm[ idxOffset + i - 1 ];
             mPainter.drawText(left, y, width, height, Qt::AlignLeft | Qt::AlignTop, QLatin1String(text.mid(i, 1)));
         }
@@ -984,7 +984,7 @@ void QWinMetaFile::createPenIndirect(long, short *parm)
 }
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::createFontIndirect(long , short *parm)
+void QWinMetaFile::createFontIndirect(long, short *parm)
 {
     WinObjFontHandle *handle = new WinObjFontHandle;
     addHandle(handle);
@@ -1113,7 +1113,7 @@ void QWinMetaFile::addHandle(WinObjHandle *handle)
 {
     int idx;
 
-    for (idx = 0; idx < MAX_OBJHANDLE ; idx++)
+    for (idx = 0; idx < MAX_OBJHANDLE; idx++)
         if (mObjHandleTab[ idx ] == NULL) {
             break;
         }
@@ -1196,7 +1196,7 @@ QPainter::CompositionMode  QWinMetaFile::winToQtComposition(long parm) const
     };
 
     int i;
-    for (i = 0 ; i < 15 ; ++i)
+    for (i = 0; i < 15; ++i)
         if (opTab[ i ].winRasterOp == parm) {
             break;
         }

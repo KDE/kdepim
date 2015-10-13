@@ -127,10 +127,10 @@ trim_trailing_spaces(char *string)
         }
     }
     if (mark) {
-        *mark = '\0' ;
+        *mark = '\0';
     }
 
-    return string ;
+    return string;
 }
 
 /* Parse a DN and return an array-ized one.  This is not a validating
@@ -159,7 +159,7 @@ parse_dn_part(DnPair *array, const unsigned char *string)
     p[n] = 0;
     trim_trailing_spaces((char *)p);
     // map OIDs to their names:
-    for (unsigned int i = 0 ; i < numOidMaps ; ++i)
+    for (unsigned int i = 0; i < numOidMaps; ++i)
         if (!strcasecmp((char *)p, oidmap[i].oid)) {
             free(p);
             p = strdup(oidmap[i].name);
@@ -286,7 +286,7 @@ parse_dn(const QString &dn)
 static QString dn_escape(const QString &s)
 {
     QString result;
-    for (unsigned int i = 0, end = s.length() ; i != end ; ++i) {
+    for (unsigned int i = 0, end = s.length(); i != end; ++i) {
         const QChar ch = s[i];
         switch (ch.unicode()) {
         case ',':
@@ -309,7 +309,7 @@ static QString
 serialise(const QVector<Kleo::DN::Attribute> &dn, const QString &sep)
 {
     QStringList result;
-    for (QVector<Kleo::DN::Attribute>::const_iterator it = dn.begin() ; it != dn.end() ; ++it)
+    for (QVector<Kleo::DN::Attribute>::const_iterator it = dn.begin(); it != dn.end(); ++it)
         if (!(*it).name().isEmpty() && !(*it).value().isEmpty()) {
             result.push_back((*it).name().trimmed() + QLatin1Char('=') + dn_escape((*it).value().trimmed()));
         }
@@ -333,14 +333,14 @@ reorder_dn(const Kleo::DN::Attribute::List &dn)
         }
 
     // process the known attrs in the desired order
-    for (QStringList::const_iterator oit = attrOrder.begin() ; oit != attrOrder.end() ; ++oit)
+    for (QStringList::const_iterator oit = attrOrder.begin(); oit != attrOrder.end(); ++oit)
         if (*oit == QLatin1String("_X_")) {
             // insert the unknown attrs
             std::copy(unknownEntries.begin(), unknownEntries.end(),
                       std::back_inserter(result));
             unknownEntries.clear(); // don't produce dup's
         } else {
-            for (Kleo::DN::const_iterator dnit = dn.begin() ; dnit != dn.end() ; ++dnit)
+            for (Kleo::DN::const_iterator dnit = dn.begin(); dnit != dn.end(); ++dnit)
                 if ((*dnit).name() == *oit) {
                     result.push_back(*dnit);
                 }
@@ -423,12 +423,12 @@ QString Kleo::DN::prettyDN() const
 
 QString Kleo::DN::dn() const
 {
-    return d ? serialise(d->attributes, QStringLiteral(",")) : QString() ;
+    return d ? serialise(d->attributes, QStringLiteral(",")) : QString();
 }
 
 QString Kleo::DN::dn(const QString &sep) const
 {
-    return d ? serialise(d->attributes, sep) : QString() ;
+    return d ? serialise(d->attributes, sep) : QString();
 }
 
 // static
@@ -463,8 +463,8 @@ QString Kleo::DN::operator[](const QString &attr) const
         return QString();
     }
     const QString attrUpper = attr.toUpper();
-    for (QVector<Attribute>::const_iterator it = d->attributes.constBegin() ;
-            it != d->attributes.constEnd() ; ++it)
+    for (QVector<Attribute>::const_iterator it = d->attributes.constBegin();
+            it != d->attributes.constEnd(); ++it)
         if ((*it).name() == attrUpper) {
             return (*it).value();
         }
@@ -475,12 +475,12 @@ static QVector<Kleo::DN::Attribute> empty;
 
 Kleo::DN::const_iterator Kleo::DN::begin() const
 {
-    return d ? d->attributes.constBegin() : empty.constBegin() ;
+    return d ? d->attributes.constBegin() : empty.constBegin();
 }
 
 Kleo::DN::const_iterator Kleo::DN::end() const
 {
-    return d ? d->attributes.constEnd() : empty.constEnd() ;
+    return d ? d->attributes.constEnd() : empty.constEnd();
 }
 
 /////////////////////
@@ -490,7 +490,7 @@ namespace
 struct ltstr {
     bool operator()(const char *s1, const char *s2) const
     {
-        return qstrcmp(s1, s2) < 0 ;
+        return qstrcmp(s1, s2) < 0;
     }
 };
 }
@@ -522,7 +522,7 @@ static std::pair<const char *, const char *> const attributeLabels[] = {
     MAKE_PAIR("UID", I18N_NOOP("Unique ID"))
 #undef MAKE_PAIR
 };
-static const unsigned int numAttributeLabels = sizeof attributeLabels / sizeof * attributeLabels ;
+static const unsigned int numAttributeLabels = sizeof attributeLabels / sizeof * attributeLabels;
 
 class Kleo::DNAttributeMapper::Private
 {
@@ -539,7 +539,7 @@ Kleo::DNAttributeMapper::DNAttributeMapper()
 {
     d = new Private();
     const KConfigGroup config(KSharedConfig::openConfig(), "DN");
-    d->attributeOrder = config.readEntry("AttributeOrder" , QStringList());
+    d->attributeOrder = config.readEntry("AttributeOrder", QStringList());
     if (d->attributeOrder.empty())
         std::copy(defaultOrder, defaultOrder + sizeof defaultOrder / sizeof * defaultOrder,
                   std::back_inserter(d->attributeOrder));
@@ -575,7 +575,7 @@ QString Kleo::DNAttributeMapper::name2label(const QString &s) const
 QStringList Kleo::DNAttributeMapper::names() const
 {
     QStringList result;
-    for (std::map<const char *, const char *, ltstr>::const_iterator it = d->map.begin() ; it != d->map.end() ; ++it) {
+    for (std::map<const char *, const char *, ltstr>::const_iterator it = d->map.begin(); it != d->map.end(); ++it) {
         result.push_back(QLatin1String(it->first));
     }
     return result;

@@ -30,7 +30,6 @@ namespace Akonadi
 class IncidenceChanger;
 }
 
-
 namespace EventViews
 {
 class Prefs;

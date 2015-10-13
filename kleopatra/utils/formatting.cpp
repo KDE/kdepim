@@ -187,7 +187,7 @@ QString Formatting::prettyName(const UserID::Signature &sig)
 
 QString Formatting::prettyEMail(const Key &key)
 {
-    for (unsigned int i = 0, end = key.numUserIDs() ; i < end ; ++i) {
+    for (unsigned int i = 0, end = key.numUserIDs(); i < end; ++i) {
         const QString email = prettyEMail(key.userID(i));
         if (!email.isEmpty()) {
             return email;
@@ -333,7 +333,7 @@ QString Formatting::toolTip(const Key &key, int flags)
                                  ? i18n("Subject")
                                  : i18n("User-ID"), prettyUserID(uids.front()));
         if (uids.size() > 1)
-            for (std::vector<UserID>::const_iterator it = uids.begin() + 1, end = uids.end() ; it != end ; ++it)
+            for (std::vector<UserID>::const_iterator it = uids.begin() + 1, end = uids.end(); it != end; ++it)
                 if (!it->isRevoked() && !it->isInvalid()) {
                     result += format_row(i18n("a.k.a."), prettyUserID(*it));
                 }
@@ -350,7 +350,7 @@ QString Formatting::toolTip(const Key &key, int flags)
         result += format_row(i18n("Certificate usage"), format_keyusage(key));
     }
     if (flags & KeyID) {
-        result += format_row(i18n("Key-ID"), QString::fromLatin1(key.shortKeyID())) ;
+        result += format_row(i18n("Key-ID"), QString::fromLatin1(key.shortKeyID()));
     }
     if (flags & Fingerprint) {
         result += format_row(i18n("Fingerprint"), key.primaryFingerprint());
@@ -400,7 +400,7 @@ static QString date2string(const QDate &date)
 template <typename T>
 QString expiration_date_string(const T &tee)
 {
-    return tee.neverExpires() ? QString() : date2string(time_t2date(tee.expirationTime())) ;
+    return tee.neverExpires() ? QString() : date2string(time_t2date(tee.expirationTime()));
 }
 template <typename T>
 QDate creation_date(const T &tee)
@@ -708,7 +708,7 @@ QString Formatting::importMetaData(const Import &import)
     if (status & Import::NewKey)
         return (status & Import::ContainedSecretKey)
                ? i18n("This certificate was new to your keystore. The secret key is available.")
-               : i18n("This certificate is new to your keystore.") ;
+               : i18n("This certificate is new to your keystore.");
 
     QStringList results;
     if (status & Import::NewUserIDs) {

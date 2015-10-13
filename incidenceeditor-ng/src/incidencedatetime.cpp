@@ -942,7 +942,7 @@ void IncidenceDateTime::printDebugInfo() const
     if (mLoadedIncidence->type() == KCalCore::Incidence::TypeEvent) {
         KCalCore::Event::Ptr event = mLoadedIncidence.staticCast<KCalCore::Event>();
         qCDebug(INCIDENCEEDITOR_LOG) << "dirty test2: " << (mUi->mFreeBusyCheck->isChecked() && event->transparency() != KCalCore::Event::Opaque);
-        qCDebug(INCIDENCEEDITOR_LOG) << "dirty test3: " << (!mUi->mFreeBusyCheck->isChecked() && event->transparency() != KCalCore::Event::Transparent) ;
+        qCDebug(INCIDENCEEDITOR_LOG) << "dirty test3: " << (!mUi->mFreeBusyCheck->isChecked() && event->transparency() != KCalCore::Event::Transparent);
     }
 
     if (mLoadedIncidence->allDay()) {

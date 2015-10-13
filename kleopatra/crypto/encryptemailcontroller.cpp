@@ -198,7 +198,7 @@ void EncryptEMailController::setInputsAndOutputs(const std::vector< shared_ptr<I
     const std::vector<Key> keys = d->wizard->resolvedCertificates();
     kleo_assert(!keys.empty());
 
-    for (unsigned int i = 0, end = inputs.size() ; i < end ; ++i) {
+    for (unsigned int i = 0, end = inputs.size(); i < end; ++i) {
 
         const shared_ptr<EncryptEMailTask> task(new EncryptEMailTask);
         task->setInput(inputs[i]);

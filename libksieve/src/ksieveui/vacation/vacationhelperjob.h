@@ -18,7 +18,6 @@
 #ifndef VACATIONHELPERJOB_H
 #define VACATIONHELPERJOB_H
 
-
 #include <QUrl>
 
 #include <QObject>

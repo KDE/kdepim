@@ -33,10 +33,10 @@ using namespace MessageViewer;
 
 //--------CryptoBlock-------------------
 CryptoBlock::CryptoBlock(ObjectTreeParser *otp,
-            PartMetaData *block,
-            const Kleo::CryptoBackend::Protocol *cryptoProto,
-            const QString &fromAddress,
-            KMime::Content *node)
+                         PartMetaData *block,
+                         const Kleo::CryptoBackend::Protocol *cryptoProto,
+                         const QString &fromAddress,
+                         KMime::Content *node)
     : HTMLBlock()
     , mOtp(otp)
     , mMetaData(block)
@@ -54,7 +54,7 @@ CryptoBlock::~CryptoBlock()
 
 void CryptoBlock::internalEnter()
 {
-    MessageViewer::HtmlWriter* writer = mOtp->htmlWriter();
+    MessageViewer::HtmlWriter *writer = mOtp->htmlWriter();
     if (writer && !entered) {
         entered = true;
         writer->queue(mOtp->writeSigstatHeader(*mMetaData, mCryptoProto, mFromAddress, mNode));
@@ -66,19 +66,18 @@ void CryptoBlock::internalExit()
     if (!entered) {
         return;
     }
-    MessageViewer::HtmlWriter* writer = mOtp->htmlWriter();
+    MessageViewer::HtmlWriter *writer = mOtp->htmlWriter();
     writer->queue(mOtp->writeSigstatFooter(*mMetaData));
     entered = false;
 }
 
-
 //------MessagePart-----------------------
 MessagePart::MessagePart(ObjectTreeParser *otp,
-            PartMetaData *block,
-            const QString &text)
-: mOtp(otp)
-, mText(text)
-, mMetaData(block)
+                         PartMetaData *block,
+                         const QString &text)
+    : mOtp(otp)
+    , mText(text)
+    , mMetaData(block)
 {
 
 }
@@ -93,13 +92,14 @@ QString MessagePart::text() const
     return mText;
 }
 
-void MessagePart::setText(const QString &text) {
+void MessagePart::setText(const QString &text)
+{
     mText = text;
 }
 
 void MessagePart::html(bool decorate) const
 {
-    MessageViewer::HtmlWriter* writer = mOtp->htmlWriter();
+    MessageViewer::HtmlWriter *writer = mOtp->htmlWriter();
 
     if (!writer) {
         return;
@@ -112,11 +112,11 @@ void MessagePart::html(bool decorate) const
 //-----CryptMessageBlock---------------------
 
 CryptoMessagePart::CryptoMessagePart(ObjectTreeParser *otp,
-            PartMetaData *block,
-            const QString &text,
-            const Kleo::CryptoBackend::Protocol *cryptoProto,
-            const QString &fromAddress,
-            KMime::Content *node)
+                                     PartMetaData *block,
+                                     const QString &text,
+                                     const Kleo::CryptoBackend::Protocol *cryptoProto,
+                                     const QString &fromAddress,
+                                     KMime::Content *node)
     : MessagePart(otp, block, text)
     , mSubOtp(0)
     , mCryptoProto(cryptoProto)
@@ -142,7 +142,6 @@ CryptoMessagePart::~CryptoMessagePart()
         mSubOtp = 0;
     }
 }
-
 
 void CryptoMessagePart::startDecryption(const QByteArray &text, const QTextCodec *aCodec)
 {
@@ -176,14 +175,14 @@ void CryptoMessagePart::startDecryption(KMime::Content *data)
     bool decryptionStarted;
 
     bool bOkDecrypt = mOtp->okDecryptMIME(*data,
-                                    mDecryptedData,
-                                    signatureFound,
-                                    mSignatures,
-                                    true,
-                                    mPassphraseError,
-                                    actuallyEncrypted,
-                                    decryptionStarted,
-                                    *mMetaData);
+                                          mDecryptedData,
+                                          signatureFound,
+                                          mSignatures,
+                                          true,
+                                          mPassphraseError,
+                                          actuallyEncrypted,
+                                          decryptionStarted,
+                                          *mMetaData);
     if (decryptionStarted) {
         mMetaData->inProgress = true;
         return;
@@ -233,7 +232,7 @@ void CryptoMessagePart::startVerification(const QByteArray &text, const QTextCod
     }
 }
 
-void CryptoMessagePart::startVerificationDetached(const QByteArray &text, KMime::Content *textNode, const QByteArray& signature)
+void CryptoMessagePart::startVerificationDetached(const QByteArray &text, KMime::Content *textNode, const QByteArray &signature)
 {
     mMetaData->isEncrypted = false;
     mMetaData->isDecryptable = false;
@@ -277,7 +276,7 @@ void CryptoMessagePart::writeDeferredDecryptionBlock() const
     Q_ASSERT(!mMetaData->isEncrypted);
     Q_ASSERT(mDecryptMessage);
 
-    MessageViewer::HtmlWriter* writer = mOtp->htmlWriter();
+    MessageViewer::HtmlWriter *writer = mOtp->htmlWriter();
     if (!writer) {
         return;
     }
@@ -285,21 +284,21 @@ void CryptoMessagePart::writeDeferredDecryptionBlock() const
     const QString iconName = QLatin1String("file:///") + KIconLoader::global()->iconPath(QStringLiteral("document-decrypt"),
                              KIconLoader::Small);
     writer->queue(QLatin1String("<div style=\"font-size:large; text-align:center;"
-                                  "padding-top:20pt;\">")
-                                  + i18n("This message is encrypted.")
-                                  + QLatin1String("</div>"
-                                          "<div style=\"text-align:center; padding-bottom:20pt;\">"
-                                          "<a href=\"kmail:decryptMessage\">"
-                                          "<img src=\"") + iconName + QLatin1String("\"/>")
-                                  + i18n("Decrypt Message")
-                                  + QLatin1String("</a></div>"));
+                                "padding-top:20pt;\">")
+                  + i18n("This message is encrypted.")
+                  + QLatin1String("</div>"
+                                  "<div style=\"text-align:center; padding-bottom:20pt;\">"
+                                  "<a href=\"kmail:decryptMessage\">"
+                                  "<img src=\"") + iconName + QLatin1String("\"/>")
+                  + i18n("Decrypt Message")
+                  + QLatin1String("</a></div>"));
 }
 
 void CryptoMessagePart::html(bool decorate) const
 {
 
     bool hideErrors = false;
-    MessageViewer::HtmlWriter* writer = mOtp->htmlWriter();
+    MessageViewer::HtmlWriter *writer = mOtp->htmlWriter();
 
     //TODO: still the following part should not be here
     if (mSubOtp) {
@@ -341,7 +340,7 @@ void CryptoMessagePart::html(bool decorate) const
         } else if (mNode) {
             const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
             if (mSubOtp) {
-                static_cast<QueueHtmlWriter*>(mSubOtp->htmlWriter())->replay();
+                static_cast<QueueHtmlWriter *>(mSubOtp->htmlWriter())->replay();
             }
         } else {
             MessagePart::html(decorate);

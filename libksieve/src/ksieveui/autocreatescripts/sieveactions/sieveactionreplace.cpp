@@ -73,7 +73,7 @@ QWidget *SieveActionReplace::createParamWidget(QWidget *parent) const
     return w;
 }
 
-bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {

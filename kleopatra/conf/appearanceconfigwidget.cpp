@@ -131,7 +131,7 @@ static void set(QListWidgetItem *item, bool on, void (QFont::*func)(bool))
         return;
     }
     const QVariant v = item->data(Qt::FontRole);
-    QFont font = v.isValid() && v.type() == QVariant::Font ? v.value<QFont>() : tryToFindFontFor(item) ;
+    QFont font = v.isValid() && v.type() == QVariant::Font ? v.value<QFont>() : tryToFindFontFor(item);
     (font.*func)(on);
     item->setData(Qt::FontRole, font);
 }
@@ -203,7 +203,7 @@ static void erase_if_allowed(QListWidgetItem *item, int role, int allowRole)
 static void erase_if_allowed(QListWidgetItem *item, const int role[], size_t numRoles, int allowRole)
 {
     if (item && item->data(allowRole).toBool())
-        for (unsigned int i = 0 ; i < numRoles ; ++i) {
+        for (unsigned int i = 0; i < numRoles; ++i) {
             item->setData(role[i], QVariant());
         }
 }
@@ -213,7 +213,7 @@ static void erase_if_allowed(QListWidgetItem *item, int role, const int allowRol
     if (!item) {
         return;
     }
-    for (unsigned int i = 0 ; i < numAllowRoles ; ++i)
+    for (unsigned int i = 0; i < numAllowRoles; ++i)
         if (!item->data(allowRole[i]).toBool()) {
             return;
         }
@@ -226,11 +226,11 @@ static void erase_if_allowed(QListWidgetItem *item, const int role[], size_t num
     if (!item) {
         return;
     }
-    for (unsigned int i = 0 ; i < numAllowRoles ; ++i)
+    for (unsigned int i = 0; i < numAllowRoles; ++i)
         if (!item->data(allowRole[i]).toBool()) {
             return;
         }
-    for (unsigned int i = 0 ; i < numRoles ; ++i) {
+    for (unsigned int i = 0; i < numRoles; ++i) {
         item->setData(role[i], QVariant());
     }
 }
@@ -409,7 +409,7 @@ void AppearanceConfigWidget::Private::slotSelectionChanged()
 QListWidgetItem *AppearanceConfigWidget::Private::selectedItem() const
 {
     const QList<QListWidgetItem *> items = categoriesLV->selectedItems();
-    return items.empty() ? 0 : items.front() ;
+    return items.empty() ? 0 : items.front();
 }
 
 void AppearanceConfigWidget::Private::enableDisableActions(QListWidgetItem *item)
@@ -451,7 +451,7 @@ void AppearanceConfigWidget::defaults()
 {
 
     // This simply means "default look for every category"
-    for (int i = 0, end = d->categoriesLV->count() ; i != end ; ++i) {
+    for (int i = 0, end = d->categoriesLV->count(); i != end; ++i) {
         set_default_appearance(d->categoriesLV->item(i));
     }
     d->tooltipValidityCheckBox->setChecked(true);
@@ -507,12 +507,12 @@ void AppearanceConfigWidget::save()
     if (groups.isEmpty()) {
         // If we created the default categories ourselves just now, then we need to make up their list
         Q3ListViewItemIterator lvit(categoriesLV);
-        for (; lvit.current() ; ++lvit) {
+        for (; lvit.current(); ++lvit) {
             groups << lvit.current()->text(0);
         }
     }
 #endif
-    for (int i = 0, end = std::min(groups.size(), d->categoriesLV->count()) ; i != end ; ++i) {
+    for (int i = 0, end = std::min(groups.size(), d->categoriesLV->count()); i != end; ++i) {
         const QListWidgetItem *const item = d->categoriesLV->item(i);
         assert(item);
         KConfigGroup group(config, groups[i]);
@@ -593,7 +593,7 @@ void AppearanceConfigWidget::Private::slotFontClicked()
 
     bool ok = false;
     const QFont defaultFont = tryToFindFontFor(item);
-    const QFont initial = v.isValid() && v.type() == QVariant::Font ? v.value<QFont>() : defaultFont ;
+    const QFont initial = v.isValid() && v.type() == QVariant::Font ? v.value<QFont>() : defaultFont;
     QFont f = QFontDialog::getFont(&ok, initial, q);
     if (!ok) {
         return;

@@ -187,7 +187,7 @@ void AddEditBlog::autoConfigure()
         return;
     }
     qCDebug(BLOGILO_LOG) << "Trying to guess API type by Homepage contents";
-    KIO::StoredTransferJob *httpGetJob = KIO::storedGet(d->ui.txtUrl->text() , KIO::NoReload, KIO::HideProgressInfo);
+    KIO::StoredTransferJob *httpGetJob = KIO::storedGet(d->ui.txtUrl->text(), KIO::NoReload, KIO::HideProgressInfo);
     connect(httpGetJob, &KIO::StoredTransferJob::result, this, &AddEditBlog::gotHtml);
     d->mFetchAPITimer = new QTimer(this);
     d->mFetchAPITimer->setSingleShot(true);
@@ -365,7 +365,7 @@ void AddEditBlog::handleFetchError(KBlog::Blog::ErrorType type, const QString &e
     KMessageBox::detailedError(this, i18n("Fetching BlogID Failed.\nPlease check your Internet connection."), errorMsg);
 }
 
-void AddEditBlog::fetchedBlogId(const QList< QMap < QString , QString > > &list)
+void AddEditBlog::fetchedBlogId(const QList< QMap < QString, QString > > &list)
 {
     if (d->mFetchBlogIdTimer) {
         d->mFetchBlogIdTimer->deleteLater();

@@ -49,7 +49,7 @@ protected:
 
     QString uniqueIdentityName(const QString &name);
 
-    QString createResource(const QString &resources , const QString &name, const QMap<QString, QVariant> &settings);
+    QString createResource(const QString &resources, const QString &name, const QMap<QString, QVariant> &settings);
 
     KIdentityManagement::Identity *createIdentity(QString &name);
 

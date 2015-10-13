@@ -190,7 +190,7 @@ void NotesManager::updateNetworkListener()
 
     if (NoteShared::NoteSharedGlobalConfig::receiveNotes()) {
         // create the socket and start listening for connections
-        mListener = KSocketFactory::listen(QStringLiteral("knotes") , QHostAddress::Any,
+        mListener = KSocketFactory::listen(QStringLiteral("knotes"), QHostAddress::Any,
                                            NoteShared::NoteSharedGlobalConfig::port());
         connect(mListener, &QTcpServer::newConnection, this, &NotesManager::slotAcceptConnection);
     }

@@ -125,7 +125,7 @@ void TimelineView::Private::insertIncidence(const Akonadi::Item &aitem, const QD
     }
 
     if (incidence->recurs()) {
-        KCalCore::OccurrenceIterator occurIter(*(q->calendar()), incidence, KDateTime(day, QTime(0, 0 , 0)), KDateTime(day, QTime(23, 59, 59)));
+        KCalCore::OccurrenceIterator occurIter(*(q->calendar()), incidence, KDateTime(day, QTime(0, 0, 0)), KDateTime(day, QTime(23, 59, 59)));
         while (occurIter.hasNext()) {
             occurIter.next();
             const Akonadi::Item akonadiItem = q->calendar()->item(occurIter.incidence());

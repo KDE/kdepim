@@ -297,7 +297,7 @@ bool Filter::checkForDuplicates(const QString &msgID,
 
     // Check if this message has a duplicate
     QMultiMap<QString, QString>::const_iterator endMsgID(d->messageFolderMessageIDMap.constEnd());
-    for (QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin(); it != endMsgID ; ++it) {
+    for (QMultiMap<QString, QString>::const_iterator it = d->messageFolderMessageIDMap.constBegin(); it != endMsgID; ++it) {
         if (it.key() == messageFolder &&
                 it.value() == msgID) {
             return true;
@@ -394,7 +394,7 @@ int Filter::countDirectory(const QDir &dir, bool searchHiddenDirectory)
     }
 
     QStringList::ConstIterator end = subDirs.constEnd();
-    for (QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end ; ++filename) {
+    for (QStringList::ConstIterator filename = subDirs.constBegin(); filename != end; ++filename) {
         if (!(*filename == QLatin1String(".") || *filename == QLatin1String(".."))) {
             countDir += countDirectory(QDir(dir.filePath(*filename)), searchHiddenDirectory) + 1;
         }

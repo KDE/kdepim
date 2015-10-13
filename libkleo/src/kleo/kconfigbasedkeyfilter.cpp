@@ -114,13 +114,13 @@ QFont KeyFilter::FontDescription::font(const QFont &base) const
 KeyFilter::FontDescription KeyFilter::FontDescription::resolve(const FontDescription &other) const
 {
     FontDescription fd;
-    fd.d->fullFont = this->d->fullFont || other.d->fullFont ;
+    fd.d->fullFont = this->d->fullFont || other.d->fullFont;
     if (fd.d->fullFont) {
-        fd.d->font = this->d->fullFont ? this->d->font : other.d->font ;
+        fd.d->font = this->d->fullFont ? this->d->font : other.d->font;
     }
-    fd.d->bold = this->d->bold || other.d->bold ;
-    fd.d->italic = this->d->italic || other.d->italic ;
-    fd.d->strikeOut = this->d->strikeOut || other.d->strikeOut ;
+    fd.d->bold = this->d->bold || other.d->bold;
+    fd.d->italic = this->d->italic || other.d->italic;
+    fd.d->strikeOut = this->d->strikeOut || other.d->strikeOut;
     return fd;
 }
 
@@ -139,7 +139,7 @@ static const struct {
 
 static Key::OwnerTrust map2OwnerTrust(const QString &s)
 {
-    for (unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof * ownerTrustAndValidityMap ; ++i)
+    for (unsigned int i = 0; i < sizeof ownerTrustAndValidityMap / sizeof * ownerTrustAndValidityMap; ++i)
         if (s.toLower() == QLatin1String(ownerTrustAndValidityMap[i].name)) {
             return ownerTrustAndValidityMap[i].trust;
         }
@@ -148,7 +148,7 @@ static Key::OwnerTrust map2OwnerTrust(const QString &s)
 
 static UserID::Validity map2Validity(const QString &s)
 {
-    for (unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof * ownerTrustAndValidityMap ; ++i)
+    for (unsigned int i = 0; i < sizeof ownerTrustAndValidityMap / sizeof * ownerTrustAndValidityMap; ++i)
         if (s.toLower() == QLatin1String(ownerTrustAndValidityMap[i].name)) {
             return ownerTrustAndValidityMap[i].validity;
         }
@@ -234,7 +234,7 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter(const KConfigGroup &config)
         { "is-at-least-", IsAtLeast },
         { "is-at-most-", IsAtMost },
     };
-    for (unsigned int i = 0 ; i < sizeof prefixMap / sizeof * prefixMap ; ++i) {
+    for (unsigned int i = 0; i < sizeof prefixMap / sizeof * prefixMap; ++i) {
         const QString key = QLatin1String(prefixMap[i].prefix) + QLatin1String("ownertrust");
         if (config.hasKey(key)) {
             mOwnerTrust = prefixMap[i].state;
@@ -243,7 +243,7 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter(const KConfigGroup &config)
             break;
         }
     }
-    for (unsigned int i = 0 ; i < sizeof prefixMap / sizeof * prefixMap ; ++i) {
+    for (unsigned int i = 0; i < sizeof prefixMap / sizeof * prefixMap; ++i) {
         const QString key = QLatin1String(prefixMap[i].prefix) + QLatin1String("validity");
         if (config.hasKey(key)) {
             mValidity = prefixMap[i].state;
@@ -264,7 +264,7 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter(const KConfigGroup &config)
     mMatchContexts = NoMatchContext;
     Q_FOREACH (const QString &ctx, contexts) {
         bool found = false;
-        for (unsigned int i = 0 ; i < sizeof matchMap / sizeof * matchMap ; ++i)
+        for (unsigned int i = 0; i < sizeof matchMap / sizeof * matchMap; ++i)
             if (ctx == QLatin1String(matchMap[i].key)) {
                 mMatchContexts |= matchMap[i].context;
                 found = true;
@@ -289,7 +289,7 @@ static bool is_card_key(const Key &key)
 {
     const std::vector<Subkey> sks = key.subkeys();
     return std::find_if(sks.begin(), sks.end(),
-                        mem_fn(&Subkey::isCardKey)) != sks.end() ;
+                        mem_fn(&Subkey::isCardKey)) != sks.end();
 }
 
 bool KeyFilterImplBase::matches(const Key &key, MatchContexts contexts) const

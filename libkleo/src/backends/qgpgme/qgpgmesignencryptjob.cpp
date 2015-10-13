@@ -77,7 +77,7 @@ static QGpgMESignEncryptJob::result_type sign_encrypt(Context *ctx, QThread *thr
     const Data indata(&in);
 
     const Context::EncryptionFlags eflags =
-        alwaysTrust ? Context::AlwaysTrust : Context::None ;
+        alwaysTrust ? Context::AlwaysTrust : Context::None;
 
     ctx->clearSigningKeys();
     Q_FOREACH (const Key &signer, signers)

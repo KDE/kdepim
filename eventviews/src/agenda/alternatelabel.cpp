@@ -33,7 +33,7 @@ AlternateLabel::AlternateLabel(const QString &shortlabel, const QString &longlab
     if (mExtensiveText.isEmpty()) {
         mExtensiveText = mLongText;
     }
-    const QFontMetrics& fm = fontMetrics();
+    const QFontMetrics &fm = fontMetrics();
     // We use at least averageCharWidth * 2 here to avoid misalignment
     // for single char labels.
     setMinimumWidth(qMax(fm.averageCharWidth() * 2, fm.width(shortlabel)) + getIndent());

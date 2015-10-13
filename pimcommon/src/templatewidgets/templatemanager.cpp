@@ -115,7 +115,7 @@ TemplateInfo TemplateManager::loadTemplate(const QString &themePath, const QStri
     KConfigGroup group(&config, QStringLiteral("Desktop Entry"));
 
     info.name = group.readEntry("Name", QString());
-    const QString filename = group.readEntry("FileName" , QString());
+    const QString filename = group.readEntry("FileName", QString());
     if (!filename.isEmpty()) {
         QFile file(themePath + QDir::separator() + filename);
         if (file.exists()) {

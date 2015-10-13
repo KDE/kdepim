@@ -83,9 +83,8 @@ void QueueHtmlWriter::flush()
 
 void QueueHtmlWriter::replay()
 {
-    foreach(auto entry, mQueue)
-    {
-        switch(entry.type) {
+    foreach (auto entry, mQueue) {
+        switch (entry.type) {
         case Command::Begin:
             mBase->begin(entry.s);
             break;
@@ -129,3 +128,4 @@ void QueueHtmlWriter::extraHead(const QString &extra)
     cmd.s = extra;
     mQueue.append(cmd);
 }
+

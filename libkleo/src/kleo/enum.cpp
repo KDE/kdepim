@@ -63,14 +63,14 @@ static const struct {
     },
 };
 static const unsigned int numCryptoMessageFormats
-    = sizeof cryptoMessageFormats / sizeof * cryptoMessageFormats ;
+    = sizeof cryptoMessageFormats / sizeof * cryptoMessageFormats;
 
 const char *Kleo::cryptoMessageFormatToString(Kleo::CryptoMessageFormat f)
 {
     if (f == AutoFormat) {
         return "auto";
     }
-    for (unsigned int i = 0 ; i < numCryptoMessageFormats ; ++i)
+    for (unsigned int i = 0; i < numCryptoMessageFormats; ++i)
         if (f == cryptoMessageFormats[i].format) {
             return cryptoMessageFormats[i].configName;
         }
@@ -80,7 +80,7 @@ const char *Kleo::cryptoMessageFormatToString(Kleo::CryptoMessageFormat f)
 QStringList Kleo::cryptoMessageFormatsToStringList(unsigned int f)
 {
     QStringList result;
-    for (unsigned int i = 0 ; i < numCryptoMessageFormats ; ++i)
+    for (unsigned int i = 0; i < numCryptoMessageFormats; ++i)
         if (f & cryptoMessageFormats[i].format) {
             result.push_back(QLatin1String(cryptoMessageFormats[i].configName));
         }
@@ -92,7 +92,7 @@ QString Kleo::cryptoMessageFormatToLabel(Kleo::CryptoMessageFormat f)
     if (f == AutoFormat) {
         return i18n("Any");
     }
-    for (unsigned int i = 0 ; i < numCryptoMessageFormats ; ++i)
+    for (unsigned int i = 0; i < numCryptoMessageFormats; ++i)
         if (f == cryptoMessageFormats[i].format) {
             return i18n(cryptoMessageFormats[i].displayName);
         }
@@ -102,7 +102,7 @@ QString Kleo::cryptoMessageFormatToLabel(Kleo::CryptoMessageFormat f)
 Kleo::CryptoMessageFormat Kleo::stringToCryptoMessageFormat(const QString &s)
 {
     const QString t = s.toLower();
-    for (unsigned int i = 0 ; i < numCryptoMessageFormats ; ++i)
+    for (unsigned int i = 0; i < numCryptoMessageFormats; ++i)
         if (t == QLatin1String(cryptoMessageFormats[i].configName)) {
             return cryptoMessageFormats[i].format;
         }
@@ -112,7 +112,7 @@ Kleo::CryptoMessageFormat Kleo::stringToCryptoMessageFormat(const QString &s)
 unsigned int Kleo::stringListToCryptoMessageFormats(const QStringList &sl)
 {
     unsigned int result = 0;
-    for (QStringList::const_iterator it = sl.begin() ; it != sl.end() ; ++it) {
+    for (QStringList::const_iterator it = sl.begin(); it != sl.end(); ++it) {
         result |= stringToCryptoMessageFormat(*it);
     }
     return result;

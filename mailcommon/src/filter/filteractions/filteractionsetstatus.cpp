@@ -44,7 +44,7 @@ QString FilterActionSetStatus::informationAboutNotValidAction() const
     return i18n("Status not specified.");
 }
 
-FilterAction::ReturnCode FilterActionSetStatus::process(ItemContext &context , bool) const
+FilterAction::ReturnCode FilterActionSetStatus::process(ItemContext &context, bool) const
 {
     const int index = mParameterList.indexOf(mParameter);
     if (index < 1) {

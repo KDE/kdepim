@@ -431,7 +431,7 @@ static bool check_event_counter_changed(shared_ptr<Context> &gpg_agent, unsigned
     counter = get_event_counter(gpg_agent);
     if (oldCounter != counter) {
 #ifdef DEBUG_SCREADER
-        qCDebug(KLEOPATRA_LOG) << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter ;
+        qCDebug(KLEOPATRA_LOG) << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter;
 #endif
         return true;
     } else {
@@ -562,13 +562,13 @@ private Q_SLOTS:
     }
 
 private:
-    void run() Q_DECL_OVERRIDE
-    {
+    void run() Q_DECL_OVERRIDE {
 
         shared_ptr<Context> gpgAgent;
         unsigned int eventCounter = -1;
 
-        while (true) {
+        while (true)
+        {
 
             QByteArray command;
             bool nullSlot;
@@ -640,7 +640,7 @@ private:
 
                 std::vector<CardInfo>::const_iterator
                 nit = newCardInfos.begin(), nend = newCardInfos.end(),
-                oit = oldCardInfos.begin(), oend = oldCardInfos.end() ;
+                oit = oldCardInfos.begin(), oend = oldCardInfos.end();
 
                 unsigned int idx = 0;
                 bool anyLC = false;

@@ -411,11 +411,11 @@ static const struct {
         SLOT(setKeyFilter(boost::shared_ptr<Kleo::KeyFilter>))
     },
 };
-static const unsigned int numConnections = sizeof connections / sizeof * connections ;
+static const unsigned int numConnections = sizeof connections / sizeof * connections;
 
 void KeyTreeView::disconnectSearchBar(const QObject *bar)
 {
-    for (unsigned int i = 0 ; i < numConnections ; ++i) {
+    for (unsigned int i = 0; i < numConnections; ++i) {
         disconnect(this, connections[i].signal, bar,  connections[i].slot);
         disconnect(bar,  connections[i].signal, this, connections[i].slot);
     }
@@ -423,7 +423,7 @@ void KeyTreeView::disconnectSearchBar(const QObject *bar)
 
 bool KeyTreeView::connectSearchBar(const QObject *bar)
 {
-    for (unsigned int i = 0 ; i < numConnections ; ++i)
+    for (unsigned int i = 0; i < numConnections; ++i)
         if (!connect(this, connections[i].signal, bar,  connections[i].slot) ||
                 !connect(bar,  connections[i].signal, this, connections[i].slot)) {
             return false;

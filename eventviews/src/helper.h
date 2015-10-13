@@ -56,10 +56,10 @@ QColor getTextColor(const QColor &c);
                    determine which  subresource needs to be used)
 */
 QColor resourceColor(const Akonadi::Item &incidence,
-                                       const PrefsPtr &preferences);
+                     const PrefsPtr &preferences);
 
 QColor resourceColor(const Akonadi::Collection &collection,
-                                       const PrefsPtr &preferences);
+                     const PrefsPtr &preferences);
 
 /**
   Returns the number of years between the @p start QDate and the @p end QDate

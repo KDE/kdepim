@@ -50,7 +50,7 @@ struct Command {
 class MESSAGEVIEWER_DEPRECATED_EXPORT QueueHtmlWriter : public HtmlWriter
 {
 public:
-    explicit QueueHtmlWriter( MessageViewer::HtmlWriter* base );
+    explicit QueueHtmlWriter(MessageViewer::HtmlWriter *base);
     virtual ~QueueHtmlWriter();
 
     void begin(const QString &cssDefs) Q_DECL_OVERRIDE;

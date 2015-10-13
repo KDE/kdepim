@@ -439,7 +439,7 @@ void AutoCorrectionWidget::enableAddRemoveButton()
 
 }
 
-void AutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem *item , int column)
+void AutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem *item, int column)
 {
     Q_UNUSED(column);
     ui->find->setText(item->text(0));
@@ -545,7 +545,7 @@ void AutoCorrectionWidget::slotImportAutoCorrection(QAction *act)
             filter = i18n("KMail Autocorrection File (*.xml)");
             break;
         }
-        const QString fileName = QFileDialog::getOpenFileName(this, title ,  QString(), filter);
+        const QString fileName = QFileDialog::getOpenFileName(this, title,  QString(), filter);
         if (!fileName.isEmpty()) {
             PimCommon::ImportAbstractAutocorrection *importAutoCorrection = Q_NULLPTR;
             switch (type) {

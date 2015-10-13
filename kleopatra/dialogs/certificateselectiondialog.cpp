@@ -275,7 +275,7 @@ std::vector<Key> CertificateSelectionDialog::selectedCertificates() const
 Key CertificateSelectionDialog::selectedCertificate() const
 {
     const std::vector<Key> keys = selectedCertificates();
-    return keys.empty() ? Key() : keys.front() ;
+    return keys.empty() ? Key() : keys.front();
 }
 
 void CertificateSelectionDialog::hideEvent(QHideEvent *e)
@@ -290,7 +290,7 @@ void CertificateSelectionDialog::hideEvent(QHideEvent *e)
 void CertificateSelectionDialog::Private::slotKeysMayHaveChanged()
 {
     q->setEnabled(true);
-    std::vector<Key> keys = (options & SecretKeys) ? KeyCache::instance()->secretKeys() : KeyCache::instance()->keys() ;
+    std::vector<Key> keys = (options & SecretKeys) ? KeyCache::instance()->secretKeys() : KeyCache::instance()->keys();
     filterAllowedKeys(keys);
     const std::vector<Key> selected = q->selectedCertificates();
     if (AbstractKeyListModel *const model = ui.tabWidget.flatModel()) {

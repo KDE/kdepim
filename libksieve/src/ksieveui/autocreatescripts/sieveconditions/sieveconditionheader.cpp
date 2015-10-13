@@ -91,7 +91,7 @@ QString SieveConditionHeader::help() const
     return i18n("The \"header\" test evaluates to true if the value of any of the named headers, ignoring leading and trailing whitespace, matches any key.");
 }
 
-bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
+bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error)
 {
     int index = 0;
     QDomNode node = element.firstChild();

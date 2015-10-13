@@ -99,7 +99,7 @@ public:
                                << "\n domain        :" << domain
                                << "\n domainEncoded :" << domainEncoded
                                << "\n domainRestored:" << domainRestored
-                               << "\n encoded       :" << encoded ;
+                               << "\n encoded       :" << encoded;
         if (domain != domainRestored) {
             return Invalid;
         }
@@ -110,7 +110,7 @@ public:
         // regexValidate (e.g. adding a . after marc in
         // marc@kdab.com, intending to eventually arrive at
         // marc.mutz@kdab.com)
-        int adjustedPos = pos <= atIdx ? pos : encoded.size() ;
+        int adjustedPos = pos <= atIdx ? pos : encoded.size();
         return regexValidate(encoded, adjustedPos);
     }
 

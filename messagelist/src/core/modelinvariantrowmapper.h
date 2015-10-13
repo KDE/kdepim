@@ -27,7 +27,6 @@
 
 #include <core/modelinvariantindex.h>
 
-
 namespace MessageList
 {
 

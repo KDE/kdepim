@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 
     if (dlg.exec() == QDialog::Accepted) {
         qDebug() << "accepted; selected key:" << (dlg.selectedKey().userID(0).id() ? dlg.selectedKey().userID(0).id() : "<null>") << "\nselected _keys_:";
-        for (std::vector<GpgME::Key>::const_iterator it = dlg.selectedKeys().begin() ; it != dlg.selectedKeys().end() ; ++it) {
+        for (std::vector<GpgME::Key>::const_iterator it = dlg.selectedKeys().begin(); it != dlg.selectedKeys().end(); ++it) {
             qDebug() << (it->userID(0).id() ? it->userID(0).id() : "<null>");
         }
     } else {

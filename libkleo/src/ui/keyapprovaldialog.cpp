@@ -155,7 +155,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog(const std::vector<Item> &recipients,
 
     const QStringList prefs = preferencesStrings();
 
-    for (std::vector<Item>::const_iterator it = recipients.begin() ; it != recipients.end() ; ++it) {
+    for (std::vector<Item>::const_iterator it = recipients.begin(); it != recipients.end(); ++it) {
         ++row;
         glay->addWidget(new QLabel(i18n("Recipient:"), view), row, 0);
         glay->addWidget(new QLabel(it->address, view), row, 1);
@@ -194,7 +194,7 @@ Kleo::KeyApprovalDialog::~KeyApprovalDialog()
 
 std::vector<GpgME::Key> Kleo::KeyApprovalDialog::senderKeys() const
 {
-    return d->selfRequester ? d->selfRequester->keys() : std::vector<GpgME::Key>() ;
+    return d->selfRequester ? d->selfRequester->keys() : std::vector<GpgME::Key>();
 }
 
 std::vector<Kleo::KeyApprovalDialog::Item> Kleo::KeyApprovalDialog::items() const

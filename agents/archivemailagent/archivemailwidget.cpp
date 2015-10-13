@@ -147,7 +147,7 @@ void ArchiveMailWidget::load()
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     const QStringList collectionList = config->groupList().filter(QRegExp(archiveMailCollectionPattern()));
     const int numberOfCollection = collectionList.count();
-    for (int i = 0 ; i < numberOfCollection; ++i) {
+    for (int i = 0; i < numberOfCollection; ++i) {
         KConfigGroup group = config->group(collectionList.at(i));
         ArchiveMailInfo *info = new ArchiveMailInfo(group);
         if (info->isValid()) {

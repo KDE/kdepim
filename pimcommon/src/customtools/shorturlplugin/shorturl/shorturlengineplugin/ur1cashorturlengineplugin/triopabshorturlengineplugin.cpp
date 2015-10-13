@@ -44,5 +44,4 @@ QString TriopAbShortUrlEnginePlugin::engineName() const
     return QStringLiteral("triopabshorturl");
 }
 
-
 #include "triopabshorturlengineplugin.moc"

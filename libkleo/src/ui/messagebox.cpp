@@ -119,7 +119,7 @@ static QString to_information_string(const SigningResult &result)
 {
     return result.error()
            ? i18n("Signing failed: %1", QString::fromLocal8Bit(result.error().asString()))
-           : i18n("Signing successful") ;
+           : i18n("Signing successful");
 }
 
 static QString to_error_string(const SigningResult &result)
@@ -131,7 +131,7 @@ static QString to_information_string(const EncryptionResult &result)
 {
     return result.error()
            ? i18n("Encryption failed: %1", QString::fromLocal8Bit(result.error().asString()))
-           : i18n("Encryption successful") ;
+           : i18n("Encryption successful");
 }
 
 static QString to_error_string(const EncryptionResult &result)

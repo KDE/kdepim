@@ -359,7 +359,7 @@ void QGpgMECryptoConfigComponent::sync(bool runtime)
     const QString gpgconf = QGpgMECryptoConfig::gpgConfPath();
     QString commandLine = gpgconf.isEmpty()
                           ? QStringLiteral("gpgconf")
-                          : KShell::quoteArg(gpgconf) ;
+                          : KShell::quoteArg(gpgconf);
     if (runtime) {
         commandLine += QLatin1String(" --runtime");
     }
@@ -455,7 +455,8 @@ static QString gpgconf_escape(const QString &str, bool handleComma = true)
     return esc;
 }
 
-static QString urlpart_escape(const QString &str) {
+static QString urlpart_escape(const QString &str)
+{
     /* We need to double escape here, as a username or password
      * or an LDAP Base-DN may contain : or , and in that
      * case we would break gpgconf's format if we only escaped
@@ -465,7 +466,8 @@ static QString urlpart_escape(const QString &str) {
     return gpgconf_escape(gpgconf_escape(str, false), false);
 }
 
-static QString urlpart_unescape(const QString &str) {
+static QString urlpart_unescape(const QString &str)
+{
     /* See urlpart_escape */
     return gpgconf_unescape(gpgconf_unescape(str, false), false);
 }
@@ -546,7 +548,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue(const QString &str, bool unescap
     if (isList()) {
         if (argType() == ArgType_None) {
             bool ok = true;
-            const QVariant v = str.isEmpty() ? 0U : str.toUInt(&ok) ;
+            const QVariant v = str.isEmpty() ? 0U : str.toUInt(&ok);
             if (!ok) {
                 qCWarning(GPGPME_BACKEND_LOG) << "list-of-none should have an unsigned int as value:" << str;
             }

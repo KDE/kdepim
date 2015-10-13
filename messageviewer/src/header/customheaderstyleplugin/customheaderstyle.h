@@ -34,7 +34,7 @@ public:
 
 private:
     QString format(KMime::Message *message) const Q_DECL_OVERRIDE;
-    QString formatAllMessageHeaders(KMime::Message *message , const QStringList &headersToHide) const;
+    QString formatAllMessageHeaders(KMime::Message *message, const QStringList &headersToHide) const;
 };
 }
 

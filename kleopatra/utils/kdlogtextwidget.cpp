@@ -385,7 +385,7 @@ void KDLogTextWidget::paintEvent(QPaintEvent *e)
         p.drawRect(visible);
 
 #if 0 // leaves garbage
-        for (unsigned int i = visibleLines.first % 2 ? visibleLines.first + 1 : visibleLines.first,   end = visibleLines.second ; i < end ; i += 2) {
+        for (unsigned int i = visibleLines.first % 2 ? visibleLines.first + 1 : visibleLines.first,   end = visibleLines.second; i < end; i += 2) {
             p.drawRect(d->lineRect(i));
         }
 
@@ -398,7 +398,7 @@ void KDLogTextWidget::paintEvent(QPaintEvent *e)
 #endif
 
         p.setBrush(palette().alternateBase());
-        for (unsigned int i = visibleLines.first % 2 ? visibleLines.first   : visibleLines.first + 1, end = visibleLines.second ; i < end ; i += 2) {
+        for (unsigned int i = visibleLines.first % 2 ? visibleLines.first   : visibleLines.first + 1, end = visibleLines.second; i < end; i += 2) {
             p.drawRect(d->lineRect(i));
         }
 
@@ -409,10 +409,10 @@ void KDLogTextWidget::paintEvent(QPaintEvent *e)
     }
 
     // ### unused optimization: paint lines by styles to minimise pen changes.
-    for (unsigned int i = visibleLines.first, end = visibleLines.second ; i != end ; ++i) {
+    for (unsigned int i = visibleLines.first, end = visibleLines.second; i != end; ++i) {
         const Private::LineItem &li = d->lines[i];
         assert(!li.styleID || d->styleByID.contains(li.styleID));
-        const Private::Style &st = li.styleID ? d->styleByID[li.styleID] : defaultStyle ;
+        const Private::Style &st = li.styleID ? d->styleByID[li.styleID] : defaultStyle;
 
         p.setPen(st.color);
         p.drawText(0, i * cache.fontMetrics.lineSpacing + cache.fontMetrics.ascent, li.text);
@@ -521,7 +521,7 @@ void KDLogTextWidget::Private::enforceHistorySize()
     if (numLimes <= historySize) {
         return;
     }
-    const int remove = numLimes - historySize ;
+    const int remove = numLimes - historySize;
     lines.erase(lines.begin(), lines.begin() + remove);
 
     // can't quickly update the dimensions if the fontMetrics aren't uptodate.
@@ -564,7 +564,7 @@ void KDLogTextWidget::Private::updateScrollRanges()
     updateCache();
 
     if (QScrollBar *const sb = q->verticalScrollBar()) {
-        const int document = lines.size() * cache.fontMetrics.lineSpacing ;
+        const int document = lines.size() * cache.fontMetrics.lineSpacing;
         const int viewport = q->viewport()->height();
         const int singleStep = cache.fontMetrics.lineSpacing;
         set_scrollbar_properties(*sb, document, viewport, singleStep, Qt::Vertical);
@@ -623,7 +623,7 @@ int KDLogTextWidget::Private::lineByYCoordinate(int y) const
     if (cache.fontMetrics.lineSpacing == 0) {
         return -1;
     }
-    const int raw = y / cache.fontMetrics.lineSpacing ;
+    const int raw = y / cache.fontMetrics.lineSpacing;
     if (raw < 0) {
         return -1;
     }
@@ -635,7 +635,7 @@ int KDLogTextWidget::Private::lineByYCoordinate(int y) const
 
 static int get_scrollbar_offset(const QScrollBar *sb)
 {
-    return sb ? sb->value() : 0 ;
+    return sb ? sb->value() : 0;
 }
 
 QPoint KDLogTextWidget::Private::scrollOffset() const

@@ -61,15 +61,15 @@ public:
      * If ignoreNewInstance is set this function does nothing.
      * The parser should have been initialized with kleopatra_options and
      * already processed.
-     * If kleopatra is not session restored 
+     * If kleopatra is not session restored
      *
      * @param parser: The command line parser to use.
      * @param workingDirectory: Optional working directory for file arguments.
      *
      * @returns an empty QString on success. A localized error message otherwise.
      * */
-    QString newInstance(const QCommandLineParser& parser,
-                        const QString& workingDirectory=QString());
+    QString newInstance(const QCommandLineParser &parser,
+                        const QString &workingDirectory = QString());
 
     void setMainWindow(MainWindow *mw);
 

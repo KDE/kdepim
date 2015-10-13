@@ -142,7 +142,7 @@ bool DecryptVerifyClipboardCommand::canDecryptVerifyCurrentClipboard()
 {
     try {
         return Input::createFromClipboard()->classification()
-               & (Class::CipherText | Class::ClearsignedMessage | Class::OpaqueSignature) ;
+               & (Class::CipherText | Class::ClearsignedMessage | Class::OpaqueSignature);
     } catch (...) {}
     return false;
 }

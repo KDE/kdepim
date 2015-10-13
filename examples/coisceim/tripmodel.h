@@ -40,7 +40,7 @@ public:
     };
     explicit TripModel(Akonadi::ChangeRecorder *monitor, QObject *parent = Q_NULLPTR);
 
-    virtual bool removeRows(int , int , const QModelIndex & = QModelIndex());
+    virtual bool removeRows(int, int, const QModelIndex & = QModelIndex());
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;

@@ -106,7 +106,7 @@ namespace
 template <typename T>
 boost::shared_ptr<T> make_shared_ptr(T *t)
 {
-    return t ? boost::shared_ptr<T>(t) : boost::shared_ptr<T>() ;
+    return t ? boost::shared_ptr<T>(t) : boost::shared_ptr<T>();
 }
 }
 
@@ -118,7 +118,7 @@ static QPixmap UserIcon_nocached(const char *name)
     KIconLoader *const il = KIconLoader::global();
     assert(il);
     const QString iconPath = il->iconPath(QLatin1String(name), KIconLoader::User);
-    return iconPath.isEmpty() ? il->unknown() : QPixmap(iconPath) ;
+    return iconPath.isEmpty() ? il->unknown() : QPixmap(iconPath);
 }
 
 #ifndef QT_NO_SPLASHSCREEN
@@ -217,9 +217,9 @@ int main(int argc, char **argv)
     QObject::connect(&service, &KDBusService::activateRequested,
                      &app, &KleopatraApplication::slotActivateRequested);
     QObject::connect(&app, &KleopatraApplication::setExitValue,
-                     &service, [&service](int i) {
-                         service.setExitValue(i);
-                     });
+    &service, [&service](int i) {
+        service.setExitValue(i);
+    });
 
     AboutData aboutData;
 

@@ -124,7 +124,7 @@ protected:
         //
         const QModelIndex index = sourceModel()->index(source_row, 0, source_parent);
         assert(index.isValid());
-        for (int i = 0, end = sourceModel()->rowCount(index) ; i != end ; ++i)
+        for (int i = 0, end = sourceModel()->rowCount(index); i != end; ++i)
             if (filterAcceptsRow(i, index)) {
                 return true;
             }
@@ -145,11 +145,11 @@ private:
         m_importsByFingerprint.clear();
         m_idsByFingerprint.clear();
         m_results = results;
-        for (unsigned int i = 0, end = results.size() ; i != end ; ++i) {
+        for (unsigned int i = 0, end = results.size(); i != end; ++i) {
             const std::vector<Import> imports = results[i].imports();
             m_importsByFingerprint.insert(m_importsByFingerprint.end(), imports.begin(), imports.end());
             const QString &id = ids[i];
-            for (std::vector<Import>::const_iterator it = imports.begin(), end = imports.end() ; it != end ; ++it) {
+            for (std::vector<Import>::const_iterator it = imports.begin(), end = imports.end(); it != end; ++it) {
                 m_idsByFingerprint[it->fingerprint()].insert(id);
             }
         }
@@ -397,7 +397,7 @@ void ImportCertificatesCommand::Private::tryToFinish()
         if (kdtools::all(results, boost::bind(&Error::isCanceled, boost::bind(&ImportResult::error, _1)))) {
             Q_EMIT q->canceled();
         } else
-            for (unsigned int i = 0, end = results.size() ; i != end ; ++i)
+            for (unsigned int i = 0, end = results.size(); i != end; ++i)
                 if (const Error err = results[i].error()) {
                     showError(err, ids[i]);
                 }

@@ -316,11 +316,11 @@ class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
 public:
     const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const Q_DECL_OVERRIDE
     {
-        return validIndex(idx) ? new Formatter() : 0 ;
+        return validIndex(idx) ? new Formatter() : 0;
     }
     const char *type(int idx) const Q_DECL_OVERRIDE
     {
-        return validIndex(idx) ? "text" : 0 ;
+        return validIndex(idx) ? "text" : 0;
     }
     const char *subtype(int idx) const Q_DECL_OVERRIDE
     {
@@ -338,7 +338,7 @@ public:
 
     const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int idx) const Q_DECL_OVERRIDE
     {
-        return validIndex(idx) ? new UrlHandler() : 0 ;
+        return validIndex(idx) ? new UrlHandler() : 0;
     }
 
 private:

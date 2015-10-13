@@ -505,7 +505,7 @@ QVariant Model::data(const QModelIndex &index, int role) const
     case Qt::AccessibleTextRole:
         if (item->type() == MessageList::Core::Item::Message) {
             MessageItem *mItem = static_cast<MessageItem *>(item);
-            return mItem->accessibleText(d->mTheme , index.column());
+            return mItem->accessibleText(d->mTheme, index.column());
         } else if (item->type() == MessageList::Core::Item::GroupHeader) {
             if (index.column() > 0) {
                 return QString();
@@ -3766,7 +3766,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternal()
                 QList< Item * > *rootChildItems = mRootItem->childItems();
                 if (rootChildItems) {
                     QList< Item * >::ConstIterator end(rootChildItems->constEnd());
-                    for (QList< Item * >::ConstIterator it = rootChildItems->constBegin(); it != end ; ++it) {
+                    for (QList< Item * >::ConstIterator it = rootChildItems->constBegin(); it != end; ++it) {
                         if ((*it)->initialExpandStatus() == Item::ExpandNeeded) {
                             syncExpandedStateOfSubtree(*it);
                         }

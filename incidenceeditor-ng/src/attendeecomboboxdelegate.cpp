@@ -176,7 +176,7 @@ bool AttendeeComboBoxDelegate::helpEvent(QHelpEvent *event, QAbstractItemView *v
         QHelpEvent *he = static_cast<QHelpEvent *>(event);
         QWhatsThis::showText(he->globalPos(), mWhatsThis, view);
         return true;
-        break ;
+        break;
     }
 #endif
     default:

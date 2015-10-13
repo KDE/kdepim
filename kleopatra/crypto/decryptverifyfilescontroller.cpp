@@ -139,7 +139,7 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
             isOpenPGP(classification) ? OpenPGP :
             isCMS(classification)     ? CMS :
             ad /* _needs_ the info */   ? throw Exception(gpg_error(GPG_ERR_CONFLICT), i18n("Cannot determine whether input data is OpenPGP or CMS")) :
-            /* else we don't care */      UnknownProtocol ;
+            /* else we don't care */      UnknownProtocol;
 
         const shared_ptr<Input> input = Input::createFromFile(fileName);
         const shared_ptr<Output> output =
@@ -409,7 +409,7 @@ std::vector< shared_ptr<Task> > DecryptVerifyFilesController::Private::buildTask
     kleo_assert(!useOutDir || outDir.exists());
 
     std::vector<shared_ptr<Task> > tasks;
-    for (unsigned int i = 0, end  = fileNames.size() ; i != end ; ++i)
+    for (unsigned int i = 0, end  = fileNames.size(); i != end; ++i)
         try {
             const QDir fileDir = QFileInfo(fileNames[i]).absoluteDir();
             kleo_assert(fileDir.exists());

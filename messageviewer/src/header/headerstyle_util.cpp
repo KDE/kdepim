@@ -104,7 +104,7 @@ QString spamStatus(KMime::Message *message)
     if (MessageViewer::MessageViewerSettings::self()->showSpamStatus()) {
         const SpamScores scores = SpamHeaderAnalyzer::getSpamScores(message);
 
-        for (SpamScores::const_iterator it = scores.constBegin(), end = scores.constEnd() ; it != end ; ++it)
+        for (SpamScores::const_iterator it = scores.constBegin(), end = scores.constEnd(); it != end; ++it)
             spamHTML += (*it).agent() + QLatin1Char(' ') +
                         MessageViewer::HeaderStyleUtil::drawSpamMeter((*it).error(), (*it).score(), (*it).confidence(), (*it).spamHeader(), (*it).confidenceHeader());
     }

@@ -818,7 +818,7 @@ void Agenda::startSelectAction(const QPoint &viewportPos)
     d->mSelectionStartPoint = viewportPos;
     d->mHasSelection = true;
 
-    QPoint pos =  viewportPos ;
+    QPoint pos =  viewportPos;
     QPoint gpos = contentsToGrid(pos);
 
     // Store new selection
@@ -1050,7 +1050,7 @@ void Agenda::performItemAction(const QPoint &pos)
                         } else {
                             newFirst = insertItem(moveItem->incidence(), moveItem->occurrenceDateTime(),
                                                   moveItem->cellXLeft() - 1, rows() + newY, rows() - 1,
-                                                  moveItem->itemPos(), moveItem->itemCount(), false) ;
+                                                  moveItem->itemPos(), moveItem->itemCount(), false);
                         }
                         if (newFirst) {
                             newFirst->show();
@@ -1095,13 +1095,13 @@ void Agenda::performItemAction(const QPoint &pos)
                             d->mItems.append(newLast);
                             moveItem->resize(int(d->mGridSpacingX * newLast->cellWidth()),
                                              int(d->mGridSpacingY * newLast->cellHeight()));
-                            QPoint cpos = gridToContents(QPoint(newLast->cellXLeft(), newLast->cellYTop())) ;
+                            QPoint cpos = gridToContents(QPoint(newLast->cellXLeft(), newLast->cellYTop()));
                             newLast->setParent(this);
                             newLast->move(cpos.x(), cpos.y());
                         } else {
                             newLast = insertItem(moveItem->incidence(), moveItem->occurrenceDateTime(),
                                                  moveItem->cellXLeft() + 1, 0, newY - rows() - 1,
-                                                 moveItem->itemPos(), moveItem->itemCount(), false) ;
+                                                 moveItem->itemPos(), moveItem->itemCount(), false);
                         }
                         moveItem->appendMoveItem(newLast);
                         newLast->show();
@@ -1798,7 +1798,7 @@ AgendaItem::QPtr Agenda::insertAllDayItem(const KCalCore::Incidence::Ptr &incide
 
     agendaItem->installEventFilter(this);
     agendaItem->setResourceColor(d->mCalendar->resourceColor(incidence));
-    agendaItem->move(int(XBegin * d->mGridSpacingX), 0) ;
+    agendaItem->move(int(XBegin * d->mGridSpacingX), 0);
     d->mItems.append(agendaItem);
 
     placeSubCells(agendaItem);

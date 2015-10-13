@@ -33,6 +33,6 @@ void CustomHeaderStrategy::loadConfig()
 
     mHeadersToHide = MessageViewer::MessageViewerSettings::self()->headersToHide();
 
-    mDefaultPolicy = MessageViewer::MessageViewerSettings::self()->customHeadersDefaultPolicy() == MessageViewer::MessageViewerSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide ;
+    mDefaultPolicy = MessageViewer::MessageViewerSettings::self()->customHeadersDefaultPolicy() == MessageViewer::MessageViewerSettings::EnumCustomHeadersDefaultPolicy::Display ?  Display : Hide;
 }
 

@@ -60,7 +60,7 @@ CryptoPagePlugin::CryptoPagePlugin()
     topLayout->addWidget(protGB, 0, 0, 1, 2);
 
     uint msgFormat = 1;
-    for (uint i = 0 ; i < NumberOfProtocols ; ++i) {
+    for (uint i = 0; i < NumberOfProtocols; ++i) {
         Kleo::CryptoMessageFormat f = static_cast<Kleo::CryptoMessageFormat>(msgFormat);
         mProtocolCB[ i ] = new QCheckBox(Kleo::cryptoMessageFormatToLabel(f), protGB);
         protGBLayout->addWidget(mProtocolCB[i]);
@@ -98,7 +98,7 @@ CryptoPagePlugin::CryptoPagePlugin()
     hboxHBoxLayout->addWidget(mSignPref);
     l->setBuddy(mSignPref);
     mSignPref->setEditable(false);
-    for (unsigned int i = Kleo::UnknownSigningPreference; i < Kleo::MaxSigningPreference ; ++i)
+    for (unsigned int i = Kleo::UnknownSigningPreference; i < Kleo::MaxSigningPreference; ++i)
         mSignPref->addItem(Kleo::signingPreferenceToLabel(
                                static_cast<Kleo::SigningPreference>(i)));
     boxLayout->addWidget(hbox);
@@ -115,7 +115,7 @@ CryptoPagePlugin::CryptoPagePlugin()
     hboxHBoxLayout->addWidget(mCryptPref);
     l->setBuddy(mCryptPref);
     mCryptPref->setEditable(false);
-    for (unsigned int i = Kleo::UnknownPreference; i < Kleo::MaxEncryptionPreference ; ++i)
+    for (unsigned int i = Kleo::UnknownPreference; i < Kleo::MaxEncryptionPreference; ++i)
         mCryptPref->addItem(Kleo::encryptionPreferenceToLabel(
                                 static_cast<Kleo::EncryptionPreference>(i)));
     boxLayout->addWidget(hbox);
@@ -137,7 +137,7 @@ void CryptoPagePlugin::loadContact(const KContacts::Addressee &contact)
     const uint cryptoFormats = Kleo::stringListToCryptoMessageFormats(protocolPrefs);
 
     uint msgFormat = 1;
-    for (uint i = 0 ; i < NumberOfProtocols ; ++i, msgFormat *= 2) {
+    for (uint i = 0; i < NumberOfProtocols; ++i, msgFormat *= 2) {
         mProtocolCB[i]->setChecked(cryptoFormats & msgFormat);
     }
 
@@ -155,7 +155,7 @@ void CryptoPagePlugin::storeContact(KContacts::Addressee &contact) const
 {
     uint cryptoFormats = 0;
     uint msgFormat = 1;
-    for (uint i = 0 ; i < NumberOfProtocols ; ++i, msgFormat *= 2) {
+    for (uint i = 0; i < NumberOfProtocols; ++i, msgFormat *= 2) {
         if (mProtocolCB[ i ]->isChecked()) {
             cryptoFormats |= msgFormat;
         }
@@ -201,7 +201,7 @@ void CryptoPagePlugin::storeContact(KContacts::Addressee &contact) const
 void CryptoPagePlugin::setReadOnly(bool readOnly)
 {
     mReadOnly = readOnly;
-    for (uint i = 0 ; i < NumberOfProtocols ; ++i) {
+    for (uint i = 0; i < NumberOfProtocols; ++i) {
         mProtocolCB[ i ]->setEnabled(!readOnly);
     }
 

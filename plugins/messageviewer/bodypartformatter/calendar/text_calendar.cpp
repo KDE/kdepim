@@ -268,7 +268,7 @@ static QString directoryForStatus(Attendee::PartStat status)
 
 static Incidence::Ptr stringToIncidence(const QString &iCal)
 {
-    MemoryCalendar::Ptr calendar(new MemoryCalendar(KSystemTimeZones::local())) ;
+    MemoryCalendar::Ptr calendar(new MemoryCalendar(KSystemTimeZones::local()));
     ICalFormat format;
     ScheduleMessage::Ptr message = format.parseScheduleMessage(calendar, iCal);
     if (!message) {
@@ -1059,7 +1059,7 @@ public:
         }
 
         // get the saveas file name
-        const QString saveAsFile = QFileDialog::getSaveFileName(0, i18n("Save Invitation Attachment") , name, QString());
+        const QString saveAsFile = QFileDialog::getSaveFileName(0, i18n("Save Invitation Attachment"), name, QString());
 
         if (saveAsFile.isEmpty() ||
                 (QFile(saveAsFile).exists() &&
@@ -1110,7 +1110,7 @@ public:
         bool result = true;
         QString dbusService;
 
-    #if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN32)
         //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
         QDBusInterface *interface = new QDBusInterface(QLatin1String("org.kde.korganizer"), QStringLiteral("/MainApplication"));
         if (!interface->isValid()) {
@@ -1133,13 +1133,13 @@ public:
             delete watcher;
         }
         delete interface;
-    #else
+#else
         QString constraint;
 
         result = KDBusServiceStarter::self()->findServiceFor(QStringLiteral("DBUS/Organizer"),
                  constraint,
                  &error, &dbusService) == 0;
-    #endif
+#endif
         if (result) {
             // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
             QDBusInterface iface(QStringLiteral("org.kde.korganizer"), QStringLiteral("/MainApplication"),
@@ -1148,14 +1148,14 @@ public:
                 if (switchTo) {
                     iface.call(QStringLiteral("newInstance"));   // activate korganizer window
                 }
-    #if 0 //Not exist
+#if 0 //Not exist
                 QDBusInterface pimIface("org.kde.korganizer", "/korganizer_PimApplication",
                                         "org.kde.PIMUniqueApplication");
                 QDBusReply<bool> r = pimIface.call("load");
                 if (!r.isValid() || !r.value()) {
                     qCWarning(TEXT_CALENDAR_LOG) << "Loading korganizer failed: " << pimIface.lastError().message();
                 }
-    #endif
+#endif
             } else {
                 qCWarning(TEXT_CALENDAR_LOG) << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
             }
@@ -1167,7 +1167,6 @@ public:
         }
         return result;
     }
-
 
     void showCalendar(const QDate &date) const
     {
@@ -1350,8 +1349,7 @@ public:
             switch (response) {
             case KMessageBox::Cancel:
                 break;
-            case KMessageBox::No: // means "send email"
-            {
+            case KMessageBox::No: { // means "send email"
                 summary = incidence->summary();
                 if (!summary.isEmpty()) {
                     summary = i18n("Re: %1", summary);

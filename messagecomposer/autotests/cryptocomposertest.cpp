@@ -147,7 +147,7 @@ void CryptoComposerTest::testEncryptSameAttachments()
 
     //qDebug()<< "message:" << message.data()->encodedContent();
     ComposerTestUtil::verifyEncryption(message.data(), data.toUtf8(),
-                                       (Kleo::CryptoMessageFormat) format , true);
+                                       (Kleo::CryptoMessageFormat) format, true);
 
     QCOMPARE(message->from()->asUnicodeString(), QString::fromLocal8Bit("me@me.me"));
     QCOMPARE(message->to()->asUnicodeString(), QString::fromLocal8Bit("you@you.you"));
@@ -163,7 +163,7 @@ void CryptoComposerTest::testEncryptSameAttachments()
     otp.parseObjectTree(message.data());
     KMime::Message::Ptr  unencrypted = nh->unencryptedMessage(message);
 
-    KMime::Content *testAttachment = MessageViewer::ObjectTreeParser::findType(unencrypted.data() , "x-some", "x-type", true, true);
+    KMime::Content *testAttachment = MessageViewer::ObjectTreeParser::findType(unencrypted.data(), "x-some", "x-type", true, true);
 
     QCOMPARE(testAttachment->body(), QString::fromLatin1("abc").toUtf8());
     QCOMPARE(testAttachment->contentDisposition()->filename(), QString::fromLatin1("anattachment.txt"));

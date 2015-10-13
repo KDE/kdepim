@@ -30,7 +30,6 @@
 
 class QMenu;
 
-
 namespace Akonadi
 {
 class MessageStatus;

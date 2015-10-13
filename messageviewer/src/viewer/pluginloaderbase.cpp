@@ -39,7 +39,7 @@ QStringList PluginLoaderBase::types() const
     QStringList result;
     result.reserve(mPluginMap.count());
     QMap< QString, PluginMetaData >::const_iterator end(mPluginMap.constEnd());
-    for (QMap< QString, PluginMetaData >::const_iterator it = mPluginMap.constBegin(); it != end ; ++it) {
+    for (QMap< QString, PluginMetaData >::const_iterator it = mPluginMap.constBegin(); it != end; ++it) {
         result.push_back(it.key());
     }
     return result;
@@ -47,7 +47,7 @@ QStringList PluginLoaderBase::types() const
 
 const PluginMetaData *PluginLoaderBase::infoForName(const QString &type) const
 {
-    return mPluginMap.contains(type) ? &(const_cast<PluginLoaderBase *>(this)->mPluginMap[type]) : 0 ;
+    return mPluginMap.contains(type) ? &(const_cast<PluginLoaderBase *>(this)->mPluginMap[type]) : 0;
 }
 
 void PluginLoaderBase::doScan(const char *path)

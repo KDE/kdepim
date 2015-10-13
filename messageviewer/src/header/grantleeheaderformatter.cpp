@@ -145,8 +145,8 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
         headerObject.insert(QStringLiteral("bccExpandable"), val);
     }
     headerObject.insert(QStringLiteral("fromi18n"), i18n("From:"));
-    headerObject.insert(QStringLiteral("from") ,  StringUtil::emailAddrAsAnchor(message->from(), StringUtil::DisplayFullAddress));
-    headerObject.insert(QStringLiteral("fromStr") , message->from()->asUnicodeString());
+    headerObject.insert(QStringLiteral("from"),  StringUtil::emailAddrAsAnchor(message->from(), StringUtil::DisplayFullAddress));
+    headerObject.insert(QStringLiteral("fromStr"), message->from()->asUnicodeString());
 
     const QString spamHtml = MessageViewer::HeaderStyleUtil::spamStatus(message);
     if (!spamHtml.isEmpty()) {
@@ -155,8 +155,8 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     }
     headerObject.insert(QStringLiteral("datei18n"), i18n("Date:"));
 
-    headerObject.insert(QStringLiteral("dateshort") , MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting, true)));
-    headerObject.insert(QStringLiteral("datelong") , MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting, false)));
+    headerObject.insert(QStringLiteral("dateshort"), MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting, true)));
+    headerObject.insert(QStringLiteral("datelong"), MessageViewer::HeaderStyleUtil::strToHtml(MessageViewer::HeaderStyleUtil::dateString(message, isPrinting, false)));
     headerObject.insert(QStringLiteral("date"), MessageViewer::HeaderStyleUtil::dateStr(message->date()->dateTime()));
 
     if (MessageViewer::MessageViewerSettings::self()->showUserAgent()) {
@@ -182,18 +182,18 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     }
 
     if (auto organization = message->organization(false)) {
-        headerObject.insert(QStringLiteral("organization") , MessageViewer::HeaderStyleUtil::strToHtml(organization->asUnicodeString()));
+        headerObject.insert(QStringLiteral("organization"), MessageViewer::HeaderStyleUtil::strToHtml(organization->asUnicodeString()));
     }
 
     if (!style->vCardName().isEmpty()) {
-        headerObject.insert(QStringLiteral("vcardname") , style->vCardName());
+        headerObject.insert(QStringLiteral("vcardname"), style->vCardName());
     }
 
     if (isPrinting) {
         //provide a bit more left padding when printing
         //kolab/issue3254 (printed mail cut at the left side)
         //Use it just for testing if we are in printing mode
-        headerObject.insert(QStringLiteral("isprinting") , i18n("Printing mode"));
+        headerObject.insert(QStringLiteral("isprinting"), i18n("Printing mode"));
     }
 
     // colors depend on if it is encapsulated or not
@@ -211,13 +211,13 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
     // 3D borders
     headerObject.insert(QStringLiteral("activecolordark"), activeColorDark.name());
     headerObject.insert(QStringLiteral("fontcolor"), fontColor.name());
-    headerObject.insert(QStringLiteral("linkcolor") , linkColor);
+    headerObject.insert(QStringLiteral("linkcolor"), linkColor);
 
     MessageViewer::HeaderStyleUtil::xfaceSettings xface = MessageViewer::HeaderStyleUtil::xface(style, message);
     if (!xface.photoURL.isEmpty()) {
-        headerObject.insert(QStringLiteral("photowidth") , xface.photoWidth);
-        headerObject.insert(QStringLiteral("photoheight") , xface.photoHeight);
-        headerObject.insert(QStringLiteral("photourl") , xface.photoURL);
+        headerObject.insert(QStringLiteral("photowidth"), xface.photoWidth);
+        headerObject.insert(QStringLiteral("photoheight"), xface.photoHeight);
+        headerObject.insert(QStringLiteral("photourl"), xface.photoURL);
     }
 
     Q_FOREACH (QString header, displayExtraHeaders) {
@@ -225,7 +225,7 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
         if (message->headerByType(baHeader)) {
             //Grantlee doesn't support '-' in variable name => remove it.
             header = header.remove(QLatin1Char('-'));
-            headerObject.insert(header , message->headerByType(baHeader)->asUnicodeString());
+            headerObject.insert(header, message->headerByType(baHeader)->asUnicodeString());
         }
     }
 

@@ -111,9 +111,9 @@ public:
     explicit TemporaryFile(QObject *parent) : QTemporaryFile(parent) {}
     explicit TemporaryFile(const QString &templateName, QObject *parent) : QTemporaryFile(templateName, parent) {}
 
-    void close() Q_DECL_OVERRIDE
-    {
-        if (isOpen()) {
+    void close() Q_DECL_OVERRIDE {
+        if (isOpen())
+        {
             m_oldFileName = fileName();
         }
         QTemporaryFile::close();
@@ -197,16 +197,14 @@ public:
     {
         return m_customLabel.isEmpty() ? m_defaultLabel : m_customLabel;
     }
-    void setLabel(const QString &label) Q_DECL_OVERRIDE
-    {
+    void setLabel(const QString &label) Q_DECL_OVERRIDE {
         m_customLabel = label;
     }
     void setDefaultLabel(const QString &l)
     {
         m_defaultLabel = l;
     }
-    void setBinaryOpt(bool value) Q_DECL_OVERRIDE
-    {
+    void setBinaryOpt(bool value) Q_DECL_OVERRIDE {
         m_binaryOpt = value;
     }
     bool binaryOpt() const Q_DECL_OVERRIDE
@@ -226,32 +224,35 @@ public:
     {
         return m_isFinalized;
     }
-    void finalize() Q_DECL_OVERRIDE
-    {
+    void finalize() Q_DECL_OVERRIDE {
         qCDebug(KLEOPATRA_LOG) << this;
-        if (m_isFinalized || m_isFinalizing) {
+        if (m_isFinalized || m_isFinalizing)
+        {
             return;
         }
         m_isFinalizing = true;
         try {
             doFinalize();
-        } catch (...) {
+        } catch (...)
+        {
             m_isFinalizing = false;
             throw;
         }
         m_isFinalizing = false;
         m_isFinalized = true;
-        if (m_cancelPending) {
+        if (m_cancelPending)
+        {
             cancel();
         }
     }
 
-    void cancel() Q_DECL_OVERRIDE
-    {
+    void cancel() Q_DECL_OVERRIDE {
         qCDebug(KLEOPATRA_LOG) << this;
-        if (m_isFinalizing) {
+        if (m_isFinalizing)
+        {
             m_cancelPending = true;
-        } else if (!m_canceled) {
+        } else if (!m_canceled)
+        {
             m_isFinalizing = true;
             try {
                 doCancel();
@@ -292,12 +293,10 @@ public:
     {
         return m_io;
     }
-    void doFinalize() Q_DECL_OVERRIDE
-    {
+    void doFinalize() Q_DECL_OVERRIDE {
         m_io->reallyClose();
     }
-    void doCancel() Q_DECL_OVERRIDE
-    {
+    void doCancel() Q_DECL_OVERRIDE {
         doFinalize();
     }
 private:
@@ -313,8 +312,7 @@ public:
     {
         return m_proc;
     }
-    void doFinalize() Q_DECL_OVERRIDE
-    {
+    void doFinalize() Q_DECL_OVERRIDE {
         /*
           Make sure the data is written in the output here. If this
           is not done the output will be written in small chunks
@@ -324,16 +322,16 @@ public:
           take ~30 seconds to write out a 10MB file in the 512 byte
           chunks gpgme serves. */
         qCDebug(KLEOPATRA_LOG) << "Waiting for " << m_proc->bytesToWrite()
-                               << " Bytes to be written";
+        << " Bytes to be written";
         while (m_proc->waitForBytesWritten(PROCESS_MAX_RUNTIME_TIMEOUT));
 
-        if (!m_proc->isClosed()) {
+        if (!m_proc->isClosed())
+        {
             m_proc->close();
         }
         m_proc->waitForFinished(PROCESS_MAX_RUNTIME_TIMEOUT);
     }
-    void doCancel() Q_DECL_OVERRIDE
-    {
+    void doCancel() Q_DECL_OVERRIDE {
         m_proc->terminate();
         QTimer::singleShot(PROCESS_TERMINATE_TIMEOUT, m_proc.get(), &QProcess::kill);
     }
@@ -366,8 +364,7 @@ public:
         return m_tmpFile;
     }
     void doFinalize() Q_DECL_OVERRIDE;
-    void doCancel() Q_DECL_OVERRIDE
-    {
+    void doCancel() Q_DECL_OVERRIDE {
         qCDebug(KLEOPATRA_LOG) << this;
     }
 private:
@@ -493,7 +490,7 @@ void FileOutput::doFinalize()
     m_tmpFile.reset(); // really close the file - needed on Windows for renaming :/
     kleo_assert(!guard);   // if this triggers, we need to audit for holder of shared_ptr<QIODevice>s.
 
-    qCDebug(KLEOPATRA_LOG) << this << " renaming " << tmpFileName << "->" << m_fileName ;
+    qCDebug(KLEOPATRA_LOG) << this << " renaming " << tmpFileName << "->" << m_fileName;
 
     if (QFile::rename(tmpFileName, m_fileName)) {
         qCDebug(KLEOPATRA_LOG) << this << "succeeded";
@@ -506,7 +503,7 @@ void FileOutput::doFinalize()
         throw Exception(gpg_error(GPG_ERR_CANCELED),
                         i18n("Overwriting declined"));
 
-    qCDebug(KLEOPATRA_LOG) << this << "going to overwrite" << m_fileName ;
+    qCDebug(KLEOPATRA_LOG) << this << "going to overwrite" << m_fileName;
 
     if (!QFile::remove(m_fileName))
         throw Exception(errno ? gpg_error_from_errno(errno) : gpg_error(GPG_ERR_EIO),

@@ -711,7 +711,7 @@ void LdapSearchDialog::Private::restoreSettings()
 
     // First clean the list to make sure it is empty at
     // the beginning of the process
-    qDeleteAll(mLdapClientList) ;
+    qDeleteAll(mLdapClientList);
     mLdapClientList.clear();
 
     KConfig *config = KLDAP::LdapClientSearchConfig::config();

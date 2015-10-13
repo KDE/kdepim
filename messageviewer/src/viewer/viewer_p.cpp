@@ -1777,7 +1777,7 @@ KToggleAction *ViewerPrivate::actionForAttachmentStrategy(const AttachmentStrate
     if (!mActionCollection) {
         return 0;
     }
-    QString actionName ;
+    QString actionName;
     if (as == AttachmentStrategy::iconic()) {
         actionName = QStringLiteral("view_attachments_as_icons");
     } else if (as == AttachmentStrategy::smart()) {
@@ -2700,7 +2700,7 @@ void ViewerPrivate::scrollToAttachment(KMime::Content *node)
     // Remove any old color markings which might be there
     const KMime::Content *root = node->topLevel();
     const int totalChildCount = Util::allContents(root).size();
-    for (int i = 0 ; i < totalChildCount + 1 ; ++i) {
+    for (int i = 0; i < totalChildCount + 1; ++i) {
         mViewer->removeAttachmentMarking(QStringLiteral("attachmentDiv%1").arg(i + 1));
     }
 

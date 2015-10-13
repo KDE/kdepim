@@ -55,7 +55,7 @@ static std::vector<int> section_sizes(const QHeaderView *view)
     assert(view);
     std::vector<int> result;
     result.reserve(view->count());
-    for (int i = 0, end = view->count() ; i != end ; ++i) {
+    for (int i = 0, end = view->count(); i != end; ++i) {
         result.push_back(view->sectionSize(i));
     }
     return result;
@@ -64,7 +64,7 @@ static std::vector<int> section_sizes(const QHeaderView *view)
 static void apply_section_sizes(QHeaderView *view, const std::vector<int> &newSizes)
 {
     assert(view);
-    for (unsigned int i = 0, end = newSizes.size() ; i != end ; ++i) {
+    for (unsigned int i = 0, end = newSizes.size(); i != end; ++i) {
         view->resizeSection(i, newSizes[i]);
     }
 }
@@ -75,7 +75,7 @@ namespace
 template <typename T_container>
 inline typename T_container::value_type lookup(const T_container &c, unsigned int i, const typename T_container::value_type &defaultValue)
 {
-    return i < c.size() ? c[i] : defaultValue ;
+    return i < c.size() ? c[i] : defaultValue;
 }
 
 }
@@ -119,7 +119,7 @@ public:
             return;
         }
         ensureNumSections(newCount);
-        for (unsigned int i = 0, end = std::min<unsigned int>(newCount, modes.size()) ; i < end ; ++i) {
+        for (unsigned int i = 0, end = std::min<unsigned int>(newCount, modes.size()); i < end; ++i) {
             q->QHeaderView::setResizeMode(i, modes[i]);
         }
         apply_section_sizes(q, sizes);
@@ -166,7 +166,7 @@ static std::vector<int> calculate_section_sizes(const std::vector<int> &oldSizes
 
     int oldLength = 0, fixedLength = 0, stretchLength = 0;
     int numStretchSections = 0;
-    for (unsigned int i = 0, end = oldSizes.size() ; i != end ; ++i) {
+    for (unsigned int i = 0, end = oldSizes.size(); i != end; ++i) {
         oldLength += oldSizes[i];
         if (lookup(modes, i, QHeaderView::Fixed) == QHeaderView::Stretch) {
             stretchLength += oldSizes[i];
@@ -185,7 +185,7 @@ static std::vector<int> calculate_section_sizes(const std::vector<int> &oldSizes
 
     std::vector<int> newSizes;
     newSizes.reserve(oldSizes.size());
-    for (unsigned int i = 0, end = oldSizes.size() ; i != end ; ++i)
+    for (unsigned int i = 0, end = oldSizes.size(); i != end; ++i)
         newSizes.push_back(std::max(minSize,
                                     lookup(modes, i, QHeaderView::Fixed) == QHeaderView::Stretch
                                     ? stretchLength ? stretchableSpace * oldSizes[i] / stretchLength : stretchableSpace / numStretchSections
@@ -255,7 +255,7 @@ void HeaderView::mouseReleaseEvent(QMouseEvent *e)
 void HeaderView::updateGeometries()
 {
 
-    const std::vector<int> oldSizes = d->mousePressed ? section_sizes(this) : d->sizes ;
+    const std::vector<int> oldSizes = d->mousePressed ? section_sizes(this) : d->sizes;
 
     hvDebug() << "before" << section_sizes(this) << '(' << d->sizes << ')';
 

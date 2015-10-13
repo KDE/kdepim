@@ -221,7 +221,7 @@ double MailWebView::relativePosition() const
     if (hasVerticalScrollBar()) {
         const double pos = page()->mainFrame()->scrollBarValue(Qt::Vertical);
         const int height = page()->mainFrame()->scrollBarMaximum(Qt::Vertical);
-        return height ? pos / height : 0.0 ;
+        return height ? pos / height : 0.0;
     } else {
         return 0.0;
     }

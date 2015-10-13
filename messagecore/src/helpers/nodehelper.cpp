@@ -54,7 +54,7 @@ KMime::Content *MessageCore::NodeHelper::next(KMime::Content *node, bool allowCh
         return sibling;
     }
 
-    for (KMime::Content *parent = node->parent() ; parent ;
+    for (KMime::Content *parent = node->parent(); parent;
             parent = parent->parent()) {
         if (KMime::Content *sibling = nextSibling(parent)) {
             return sibling;

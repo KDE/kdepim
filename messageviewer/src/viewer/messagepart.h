@@ -26,12 +26,13 @@
 
 class QTextCodec;
 
-namespace MessageViewer {
+namespace MessageViewer
+{
 class HTMLBlock
 {
 public:
     HTMLBlock()
-    : entered(false)
+        : entered(false)
     { }
 
     virtual ~HTMLBlock() { }
@@ -88,18 +89,18 @@ class CryptoMessagePart : public MessagePart
 public:
     typedef QSharedPointer<CryptoMessagePart> Ptr;
     CryptoMessagePart(ObjectTreeParser *otp,
-                PartMetaData *block,
-                const QString &text,
-                const Kleo::CryptoBackend::Protocol *cryptoProto,
-                const QString &fromAddress,
-                KMime::Content *node);
+                      PartMetaData *block,
+                      const QString &text,
+                      const Kleo::CryptoBackend::Protocol *cryptoProto,
+                      const QString &fromAddress,
+                      KMime::Content *node);
 
     virtual ~CryptoMessagePart();
 
     void startDecryption(const QByteArray &text, const QTextCodec *aCodec);
     void startDecryption(KMime::Content *data = 0);
     void startVerification(const QByteArray &text, const QTextCodec *aCodec);
-    void startVerificationDetached(const QByteArray& text, KMime::Content* textNode, const QByteArray& signature );
+    void startVerificationDetached(const QByteArray &text, KMime::Content *textNode, const QByteArray &signature);
     void html(bool decorate) const Q_DECL_OVERRIDE;
 
     bool mPassphraseError;

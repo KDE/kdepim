@@ -219,7 +219,7 @@ private:
         qCDebug(LIBKSIEVE_LOG) << (found ? "found:" : "not found:")
                                << mState << "->"
                                << (found ? expected.if_found : expected.if_not_found);
-        mState = found ? expected.if_found : expected.if_not_found ;
+        mState = found ? expected.if_found : expected.if_not_found;
         assert(mState < mNodes.size());
         if (found)
             if (const char *save_tag = expected.save_tag) {
@@ -230,62 +230,62 @@ private:
         }
     }
     void commandStart(const QString &identifier) Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(CommandStart, identifier);
     }
     void commandEnd() Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(CommandEnd);
     }
     void testStart(const QString &identifier) Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(TestStart, identifier);
     }
     void testEnd() Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(TestEnd);
     }
     void testListStart() Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(TestListStart);
     }
     void testListEnd() Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(TestListEnd);
     }
     void blockStart() Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(BlockStart);
         ++mNestingDepth;
     }
     void blockEnd() Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         --mNestingDepth;
         process(BlockEnd);
     }
     void hashComment(const QString &) Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
     }
     void bracketComment(const QString &) Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
     }
     void lineFeed() Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
     }
     void error(const KSieve::Error &) Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         mState = 0;
     }
     void finished() Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
     }
 
     void taggedArgument(const QString &tag) Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(TaggedArgument, tag);
     }
     void stringArgument(const QString &string, bool, const QString &) Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(StringArgument, string);
     }
     void numberArgument(unsigned long number, char) Q_DECL_OVERRIDE {
@@ -293,15 +293,15 @@ private:
         process(NumberArgument, QString::number(number));
     }
     void stringListArgumentStart() Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(StringListArgumentStart);
     }
     void stringListEntry(const QString &string, bool, const QString &) Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(StringListEntry, string);
     }
     void stringListArgumentEnd() Q_DECL_OVERRIDE {
-        qCDebug(LIBKSIEVE_LOG) ;
+        qCDebug(LIBKSIEVE_LOG);
         process(StringListArgumentEnd);
     }
 };
@@ -338,7 +338,7 @@ static const GenericInformationExtractor::StateNode spamNodes[] = {
 
     { -1, GIE::Any, Q_NULLPTR, 20, 20, Q_NULLPTR }, // 20 end state
 };
-static const unsigned int numSpamNodes = sizeof spamNodes / sizeof *spamNodes ;
+static const unsigned int numSpamNodes = sizeof spamNodes / sizeof * spamNodes;
 
 class SpamDataExtractor : public GenericInformationExtractor
 {
@@ -353,7 +353,7 @@ public:
     {
         return mResults.count(QStringLiteral("x-spam-flag")) &&
                mResults.count(QStringLiteral("spam-flag-yes")) &&
-               mResults.count(QStringLiteral("stop")) ;
+               mResults.count(QStringLiteral("stop"));
     }
 };
 
@@ -396,7 +396,7 @@ static const GenericInformationExtractor::StateNode domainNodes[] = {
 
     { -1, GIE::Any, Q_NULLPTR, 23, 23, Q_NULLPTR }  // 23 end state
 };
-static const unsigned int numDomainNodes = sizeof domainNodes / sizeof *domainNodes ;
+static const unsigned int numDomainNodes = sizeof domainNodes / sizeof * domainNodes;
 
 class DomainRestrictionDataExtractor : public GenericInformationExtractor
 {
@@ -456,7 +456,7 @@ static const GenericInformationExtractor::StateNode datesNodes[] = {
     { -1, GIE::Any, Q_NULLPTR, 27, 27, Q_NULLPTR }                   // 29 end state
 };
 
-static const unsigned int numDatesNodes = sizeof datesNodes / sizeof *datesNodes;
+static const unsigned int numDatesNodes = sizeof datesNodes / sizeof * datesNodes;
 
 class DateExtractor : public GenericInformationExtractor
 {

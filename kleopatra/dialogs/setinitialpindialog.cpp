@@ -188,13 +188,13 @@ SetInitialPinDialog::~SetInitialPinDialog() {}
 
 void SetInitialPinDialog::setNksPinPresent(bool on)
 {
-    d->nksState = on ? AlreadySet : NotSet ;
+    d->nksState = on ? AlreadySet : NotSet;
     d->updateWidgets();
 }
 
 void SetInitialPinDialog::setSigGPinPresent(bool on)
 {
-    d->sigGState = on ? AlreadySet : NotSet ;
+    d->sigGState = on ? AlreadySet : NotSet;
     d->updateWidgets();
 }
 
@@ -204,7 +204,7 @@ void SetInitialPinDialog::setNksPinSettingResult(const Error &err)
     d->nksState =
         err.isCanceled() ? NotSet :
         err              ? Failed :
-        Ok ;
+        Ok;
     d->updateWidgets();
 }
 
@@ -214,7 +214,7 @@ void SetInitialPinDialog::setSigGPinSettingResult(const Error &err)
     d->sigGState =
         err.isCanceled() ? NotSet :
         err              ? Failed :
-        Ok ;
+        Ok;
     d->updateWidgets();
 }
 

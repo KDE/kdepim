@@ -95,8 +95,7 @@ public:
     }
 
 public Q_SLOTS:
-    void accept() Q_DECL_OVERRIDE
-    {
+    void accept() Q_DECL_OVERRIDE {
         EMailOperationsPreferences prefs;
         prefs.setDecryptVerifyPopupGeometry(geometry());
         prefs.save();
@@ -320,7 +319,7 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailControlle
 
     std::vector< shared_ptr<AbstractDecryptVerifyTask> > tasks;
 
-    for (unsigned int i = 0 ; i < numInputs ; ++i) {
+    for (unsigned int i = 0; i < numInputs; ++i) {
         shared_ptr<AbstractDecryptVerifyTask> task;
         switch (m_operation) {
         case Decrypt: {

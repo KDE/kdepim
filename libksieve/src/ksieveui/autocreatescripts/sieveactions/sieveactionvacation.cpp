@@ -56,10 +56,10 @@ QWidget *SieveActionVacation::createParamWidget(QWidget *parent) const
         SelectVacationComboBox *vacation = new SelectVacationComboBox;
         vacation->setObjectName(QStringLiteral("vacationcombobox"));
         connect(vacation, &SelectVacationComboBox::valueChanged, this, &SieveActionVacation::valueChanged);
-        grid->addWidget(vacation, 0 , 0);
+        grid->addWidget(vacation, 0, 0);
     } else {
         lab = new QLabel(i18n("day:"));
-        grid->addWidget(lab, 0 , 0);
+        grid->addWidget(lab, 0, 0);
     }
 
     QSpinBox *day = new QSpinBox;
@@ -67,31 +67,31 @@ QWidget *SieveActionVacation::createParamWidget(QWidget *parent) const
     day->setMaximum(999);
     day->setObjectName(QStringLiteral("day"));
     connect(day, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &SieveActionVacation::valueChanged);
-    grid->addWidget(day, 0 , 1);
+    grid->addWidget(day, 0, 1);
 
     lab = new QLabel(i18n("Message subject:"));
-    grid->addWidget(lab, 1 , 0);
+    grid->addWidget(lab, 1, 0);
 
     QLineEdit *subject = new QLineEdit;
     subject->setObjectName(QStringLiteral("subject"));
     connect(subject, &QLineEdit::textChanged, this, &SieveActionVacation::valueChanged);
-    grid->addWidget(subject, 1 , 1);
+    grid->addWidget(subject, 1, 1);
 
     lab = new QLabel(i18n("Additional email:"));
-    grid->addWidget(lab, 2 , 0);
+    grid->addWidget(lab, 2, 0);
 
     QLineEdit *addresses = new QLineEdit;
     addresses->setObjectName(QStringLiteral("addresses"));
     connect(addresses, &QLineEdit::textChanged, this, &SieveActionVacation::valueChanged);
-    grid->addWidget(addresses, 2 , 1);
+    grid->addWidget(addresses, 2, 1);
 
     lab = new QLabel(i18n("Vacation reason:"));
-    grid->addWidget(lab, 3 , 0);
+    grid->addWidget(lab, 3, 0);
 
     MultiLineEdit *text = new MultiLineEdit;
     connect(text, &MultiLineEdit::valueChanged, this, &SieveActionVacation::valueChanged);
     text->setObjectName(QStringLiteral("text"));
-    grid->addWidget(text, 3 , 1);
+    grid->addWidget(text, 3, 1);
 
     return w;
 }

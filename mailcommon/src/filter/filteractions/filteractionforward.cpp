@@ -49,7 +49,7 @@ FilterActionForward::FilterActionForward(QObject *parent)
 {
 }
 
-FilterAction::ReturnCode FilterActionForward::process(ItemContext &context , bool) const
+FilterAction::ReturnCode FilterActionForward::process(ItemContext &context, bool) const
 {
     if (mParameter.isEmpty()) {
         return ErrorButGoOn;

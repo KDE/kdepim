@@ -92,7 +92,7 @@ public:
     explicit SearchRuleStatus(Akonadi::MessageStatus status,
                               Function function = FuncContains);
 
-    bool isEmpty() const Q_DECL_OVERRIDE ;
+    bool isEmpty() const Q_DECL_OVERRIDE;
     bool matches(const Akonadi::Item &item) const Q_DECL_OVERRIDE;
 
     /**

@@ -84,7 +84,7 @@ static QString attributeLabel(const QString &attr, bool pgp)
     if (attr.isEmpty()) {
         return QString();
     }
-    const QString label = /*pgp ?*/ pgpLabel(attr) /*: Kleo::DNAttributeMapper::instance()->name2label( attr )*/ ;
+    const QString label = /*pgp ?*/ pgpLabel(attr) /*: Kleo::DNAttributeMapper::instance()->name2label( attr )*/;
     if (!label.isEmpty())
         if (pgp) {
             return label;
@@ -214,13 +214,13 @@ private:
                 int row;
                 QValidator *validator = 0;
                 if (attr == QLatin1String("EMAIL")) {
-                    validator = regex.isEmpty() ? Validation::email() : Validation::email(QRegExp(regex)) ;
+                    validator = regex.isEmpty() ? Validation::email() : Validation::email(QRegExp(regex));
                     row = row_index_of(emailLE, gridLayout);
                 } else if (attr == QLatin1String("NAME")) {
-                    validator = regex.isEmpty() ? Validation::pgpName() : Validation::pgpName(QRegExp(regex)) ;
+                    validator = regex.isEmpty() ? Validation::pgpName() : Validation::pgpName(QRegExp(regex));
                     row = row_index_of(nameLE, gridLayout);
                 } else if (attr == QLatin1String("COMMENT")) {
-                    validator = regex.isEmpty() ? Validation::pgpComment() : Validation::pgpComment(QRegExp(regex)) ;
+                    validator = regex.isEmpty() ? Validation::pgpComment() : Validation::pgpComment(QRegExp(regex));
                     row = row_index_of(commentLE, gridLayout);
                 } else {
                     continue;
@@ -285,7 +285,7 @@ static bool has_intermediate_input(const QLineEdit *le)
     QString text = le->text();
     int pos = le->cursorPosition();
     const QValidator *const v = le->validator();
-    return !v || v->validate(text, pos) == QValidator::Intermediate ;
+    return !v || v->validate(text, pos) == QValidator::Intermediate;
 }
 
 static bool requirementsAreMet(const QVector<Line> &list, QString &error)

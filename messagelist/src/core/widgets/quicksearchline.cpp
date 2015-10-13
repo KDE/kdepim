@@ -97,7 +97,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     hbox->addWidget(mMoreOptions);
 
     // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
-    mTagFilterCombo = new KComboBox(this) ;
+    mTagFilterCombo = new KComboBox(this);
     mTagFilterCombo->setMaximumWidth(300);
     mTagFilterCombo->setMaximumWidth(200);
     mTagFilterCombo->hide();

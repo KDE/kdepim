@@ -102,7 +102,7 @@ void PartNodeBodyPart::setBodyPartMemento(Interface::BodyPartMemento *memento)
 {
     /*TODO(Andras) Volker suggests to use a ContentIndex->Memento mapping
     Also review if the reader's bodyPartMemento should be set or the NodeHelper's one */
-    mNodeHelper->setBodyPartMemento(mContent, "__plugin__" , memento);
+    mNodeHelper->setBodyPartMemento(mContent, "__plugin__", memento);
 }
 
 Interface::BodyPart::Display PartNodeBodyPart::defaultDisplay() const

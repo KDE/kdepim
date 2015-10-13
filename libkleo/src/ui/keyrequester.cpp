@@ -157,7 +157,7 @@ const GpgME::Key &Kleo::KeyRequester::key() const
 void Kleo::KeyRequester::setKeys(const std::vector<GpgME::Key> &keys)
 {
     mKeys.clear();
-    for (std::vector<GpgME::Key>::const_iterator it = keys.begin() ; it != keys.end() ; ++it)
+    for (std::vector<GpgME::Key>::const_iterator it = keys.begin(); it != keys.end(); ++it)
         if (!it->isNull()) {
             mKeys.push_back(*it);
         }
@@ -185,7 +185,7 @@ QString Kleo::KeyRequester::fingerprint() const
 QStringList Kleo::KeyRequester::fingerprints() const
 {
     QStringList result;
-    for (std::vector<GpgME::Key>::const_iterator it = mKeys.begin() ; it != mKeys.end() ; ++it)
+    for (std::vector<GpgME::Key>::const_iterator it = mKeys.begin(); it != mKeys.end(); ++it)
         if (!it->isNull())
             if (const char *fpr = it->primaryFingerprint()) {
                 result.push_back(QLatin1String(fpr));
@@ -215,7 +215,7 @@ void Kleo::KeyRequester::updateKeys()
 
     QStringList labelTexts;
     QString toolTipText;
-    for (std::vector<GpgME::Key>::const_iterator it = mKeys.begin() ; it != mKeys.end() ; ++it) {
+    for (std::vector<GpgME::Key>::const_iterator it = mKeys.begin(); it != mKeys.end(); ++it) {
         if (it->isNull()) {
             continue;
         }
@@ -245,7 +245,7 @@ static void showKeyListError(QWidget *parent, const GpgME::Error &err)
     assert(err);
     const QString msg = i18n("<qt><p>An error occurred while fetching "
                              "the keys from the backend:</p>"
-                             "<p><b>%1</b></p></qt>" ,
+                             "<p><b>%1</b></p></qt>",
                              QString::fromLocal8Bit(err.asString()));
 
     KMessageBox::error(parent, msg, i18n("Key Listing Failed"));
@@ -262,7 +262,7 @@ void Kleo::KeyRequester::startKeyListJob(const QStringList &fingerprints)
     mJobs = 0;
 
     unsigned int count = 0;
-    for (QStringList::const_iterator it = fingerprints.begin() ; it != fingerprints.end() ; ++it)
+    for (QStringList::const_iterator it = fingerprints.begin(); it != fingerprints.end(); ++it)
         if (!(*it).trimmed().isEmpty()) {
             ++count;
         }
@@ -352,7 +352,7 @@ void Kleo::KeyRequester::slotDialogButtonClicked()
 {
     KeySelectionDialog *dlg = mKeys.empty()
                               ? new KeySelectionDialog(mDialogCaption, mDialogMessage, mInitialQuery, mKeyUsage, mMulti, false, this)
-                              : new KeySelectionDialog(mDialogCaption, mDialogCaption, mKeys, mKeyUsage, mMulti, false, this) ;
+                              : new KeySelectionDialog(mDialogCaption, mDialogCaption, mKeys, mKeyUsage, mMulti, false, this);
 
     if (dlg->exec() == QDialog::Accepted) {
         if (mMulti) {
@@ -475,7 +475,7 @@ static inline unsigned int signingKeyUsage(bool openpgp, bool smime, bool truste
 Kleo::EncryptionKeyRequester::EncryptionKeyRequester(bool multi, unsigned int proto,
         QWidget *parent,
         bool onlyTrusted, bool onlyValid)
-    : KeyRequester(encryptionKeyUsage(proto &OpenPGP, proto &SMIME, onlyTrusted, onlyValid), multi,
+    : KeyRequester(encryptionKeyUsage(proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid), multi,
                    parent), d(0)
 {
 }
@@ -495,7 +495,7 @@ void Kleo::EncryptionKeyRequester::setAllowedKeys(unsigned int proto, bool onlyT
 Kleo::SigningKeyRequester::SigningKeyRequester(bool multi, unsigned int proto,
         QWidget *parent,
         bool onlyTrusted, bool onlyValid)
-    : KeyRequester(signingKeyUsage(proto &OpenPGP, proto &SMIME, onlyTrusted, onlyValid), multi,
+    : KeyRequester(signingKeyUsage(proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid), multi,
                    parent), d(0)
 {
 }

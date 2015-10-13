@@ -23,7 +23,6 @@
 #ifndef EVENTVIEWS_ALTERNATELABEL_H
 #define EVENTVIEWS_ALTERNATELABEL_H
 
-
 #include <QLabel>
 
 namespace EventViews

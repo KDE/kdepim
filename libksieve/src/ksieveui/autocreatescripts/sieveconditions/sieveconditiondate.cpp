@@ -106,7 +106,7 @@ QString SieveConditionDate::help() const
     return i18n("The date test matches date/time information derived from headers containing date-time values.");
 }
 
-bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
+bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error)
 {
     int index = 0;
     QString type;

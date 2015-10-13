@@ -449,7 +449,7 @@ static const TestCase testcases[] = {
 
 };
 
-static const int numTestCases = sizeof testcases / sizeof * testcases ;
+static const int numTestCases = sizeof testcases / sizeof * testcases;
 
 int main(int argc, char *argv[])
 {
@@ -480,13 +480,13 @@ int main(int argc, char *argv[])
 
     } else if (argc == 1) {   // automated test
         bool success = true;
-        for (int i = 0 ; i < numTestCases ; ++i) {
+        for (int i = 0; i < numTestCases; ++i) {
             bool ok = true;
             const TestCase &t = testcases[i];
             const char *const send = t.string + qstrlen(t.string);
             Lexer lexer(t.string, send, Lexer::IncludeComments);
             cerr << t.name << ":";
-            for (int j = 0 ; !lexer.atEnd() ; ++j) {
+            for (int j = 0; !lexer.atEnd(); ++j) {
                 QString result;
                 Lexer::Token token = lexer.nextToken(result);
                 Error error = lexer.error();

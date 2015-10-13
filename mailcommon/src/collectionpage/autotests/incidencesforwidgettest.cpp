@@ -51,7 +51,7 @@ void IncidencesForWidgetTest::shouldChangeComboBoxIndex()
 {
     MailCommon::IncidencesForWidget contentType;
     KComboBox *combo = contentType.findChild<KComboBox *>(QStringLiteral("contentstypecombobox"));
-    for (int i = 0 ; i < combo->count() ; ++i) {
+    for (int i = 0; i < combo->count(); ++i) {
         contentType.setCurrentIndex(i);
         QCOMPARE(contentType.currentIndex(), i);
         QCOMPARE(combo->currentIndex(), i);

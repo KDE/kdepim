@@ -160,7 +160,7 @@ void FilterThunderbird::importMails(const QString  &maildir)
         const QStringList rootSubDirs = dir.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
         QStringList::ConstIterator end = rootSubDirs.constEnd();
-        for (QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != end; ++filename, ++currentDir) {
+        for (QStringList::ConstIterator filename = rootSubDirs.constBegin(); filename != end; ++filename, ++currentDir) {
             if (filterInfo()->shouldTerminate()) {
                 break;
             }
@@ -179,7 +179,7 @@ void FilterThunderbird::importMails(const QString  &maildir)
             QString temp_mailfile = *mailFile;
             if (!excludeFiles(temp_mailfile)) {
                 filterInfo()->addInfoLogEntry(i18n("Start import file %1...", temp_mailfile));
-                importMBox(mailDir() + temp_mailfile , temp_mailfile, QString());
+                importMBox(mailDir() + temp_mailfile, temp_mailfile, QString());
             }
         }
 
@@ -220,7 +220,7 @@ void FilterThunderbird::importDirContents(const QString &dirName, const QString 
         QString temp_mailfile = *mailFile;
         if (!excludeFiles(temp_mailfile)) {
             filterInfo()->addInfoLogEntry(i18n("Start import file %1...", temp_mailfile));
-            importMBox((dirName + QLatin1Char('/') + temp_mailfile) , KMailRootDir, KMailSubDir);
+            importMBox((dirName + QLatin1Char('/') + temp_mailfile), KMailRootDir, KMailSubDir);
         }
     }
 
@@ -228,7 +228,7 @@ void FilterThunderbird::importDirContents(const QString &dirName, const QString 
     QDir subfolders(dirName);
     const QStringList subDirs = subfolders.entryList(QStringList(QStringLiteral("[^\\.]*")), QDir::Dirs, QDir::Name);
     QStringList::ConstIterator end = subDirs.constEnd();
-    for (QStringList::ConstIterator filename = subDirs.constBegin() ; filename != end; ++filename) {
+    for (QStringList::ConstIterator filename = subDirs.constBegin(); filename != end; ++filename) {
         if (filterInfo()->shouldTerminate()) {
             break;
         }

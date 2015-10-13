@@ -123,7 +123,7 @@ private:
     mutable bool m_dirty;
 };
 
-KConfigBasedRecipientPreferences::Private::Private(KSharedConfigPtr config , KConfigBasedRecipientPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
+KConfigBasedRecipientPreferences::Private::Private(KSharedConfigPtr config, KConfigBasedRecipientPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
 {
     assert(m_config);
 }
@@ -223,7 +223,7 @@ private:
     mutable bool m_dirty;
 };
 
-KConfigBasedSigningPreferences::Private::Private(KSharedConfigPtr config , KConfigBasedSigningPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
+KConfigBasedSigningPreferences::Private::Private(KSharedConfigPtr config, KConfigBasedSigningPreferences *qq) : q(qq), m_config(config), m_parsed(false), m_dirty(false)
 {
     assert(m_config);
 }

@@ -94,7 +94,7 @@ FolderRequester::FolderRequester(QWidget *parent)
 //-----------------------------------------------------------------------------
 void FolderRequester::slotOpenDialog()
 {
-    FolderSelectionDialog::SelectionFolderOptions options = FolderSelectionDialog::EnableCheck ;
+    FolderSelectionDialog::SelectionFolderOptions options = FolderSelectionDialog::EnableCheck;
     options |= FolderSelectionDialog::HideVirtualFolder;
     options |= FolderSelectionDialog::NotUseGlobalSettings;
     if (d->mNotCreateNewFolder) {

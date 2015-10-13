@@ -54,7 +54,7 @@ void FollowUpReminderManager::load(bool forceReloadConfig)
     const QStringList itemList = mConfig->groupList().filter(QRegExp(QStringLiteral("FollowupReminderItem \\d+")));
     const int numberOfItems = itemList.count();
     QList<FollowUpReminder::FollowUpReminderInfo *> noAnswerList;
-    for (int i = 0 ; i < numberOfItems; ++i) {
+    for (int i = 0; i < numberOfItems; ++i) {
 
         KConfigGroup group = mConfig->group(itemList.at(i));
 

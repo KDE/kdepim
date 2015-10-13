@@ -74,7 +74,7 @@ int Kleo::makeGnuPGError(int code)
 static QString findGpgExe(GpgME::Engine engine, const QString &exe)
 {
     const GpgME::EngineInfo info = GpgME::engineInfo(engine);
-    return info.fileName() ? QFile::decodeName(info.fileName()) : QStandardPaths::findExecutable(exe) ;
+    return info.fileName() ? QFile::decodeName(info.fileName()) : QStandardPaths::findExecutable(exe);
 }
 
 QString Kleo::gpgConfPath()

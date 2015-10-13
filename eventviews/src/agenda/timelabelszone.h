@@ -26,7 +26,6 @@
 
 #include <QWidget>
 
-
 class QHBoxLayout;
 class QScrollArea;
 

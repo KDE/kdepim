@@ -70,7 +70,7 @@ struct select1st;
 
 template <typename U, typename V>
 struct select1st< std::pair<U, V> >
-        : std::unary_function<std::pair<U, V>, U> {
+    : std::unary_function<std::pair<U, V>, U> {
     typename boost::call_traits<U>::param_type
     operator()(const std::pair<U, V> &pair) const
     {
@@ -83,7 +83,7 @@ struct select2nd;
 
 template <typename U, typename V>
 struct select2nd< std::pair<U, V> >
-        : std::unary_function<std::pair<U, V>, V> {
+    : std::unary_function<std::pair<U, V>, V> {
     typename boost::call_traits<V>::param_type
     operator()(const std::pair<U, V> &pair) const
     {
@@ -398,7 +398,7 @@ find_if(const C &c, P p)
 template <typename C, typename V>
 bool contains(const C &c, const V &v)
 {
-    return find(c, v) != boost::end(c) ;
+    return find(c, v) != boost::end(c);
 }
 
 template <typename C, typename P>

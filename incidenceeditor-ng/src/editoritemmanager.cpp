@@ -299,7 +299,7 @@ Akonadi::Item EditorItemManager::item(ItemState state) const
         break;
     default:
         qCDebug(INCIDENCEEDITOR_LOG) << "state = " << state;
-        Q_ASSERT_X(false, "EditorItemManager::item", "Unknown enum value") ;
+        Q_ASSERT_X(false, "EditorItemManager::item", "Unknown enum value");
     }
     return Akonadi::Item();
 }

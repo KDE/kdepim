@@ -165,7 +165,7 @@ static const bool HAVE_UNIX = true;
 static const bool HAVE_UNIX = false;
 #endif
 
-static const Qt::CaseSensitivity fs_cs = HAVE_UNIX ? Qt::CaseSensitive : Qt::CaseInsensitive ; // can we use QAbstractFileEngine::caseSensitive()?
+static const Qt::CaseSensitivity fs_cs = HAVE_UNIX ? Qt::CaseSensitive : Qt::CaseInsensitive; // can we use QAbstractFileEngine::caseSensitive()?
 
 static QStringList fs_sort(QStringList l)
 {
@@ -522,7 +522,7 @@ namespace
 struct less_dir : std::binary_function<QDir, QDir, bool> {
     bool operator()(const QDir &lhs, const QDir &rhs) const
     {
-        return QString::compare(lhs.absolutePath(), rhs.absolutePath(), fs_cs) < 0 ;
+        return QString::compare(lhs.absolutePath(), rhs.absolutePath(), fs_cs) < 0;
     }
 };
 }
@@ -568,7 +568,7 @@ static std::vector<Dir> find_dirs_by_input_files(const QStringList &files, const
     std::vector<Dir> dirs;
     dirs.reserve(dirs2files.size());
 
-    for (std::map<QDir, QStringList, less_dir>::const_iterator it = dirs2files.begin(), end = dirs2files.end() ; it != end ; ++it) {
+    for (std::map<QDir, QStringList, less_dir>::const_iterator it = dirs2files.begin(), end = dirs2files.end(); it != end; ++it) {
 
         const QStringList inputFiles = remove_checksum_files(it->second, patterns);
         if (inputFiles.empty()) {
@@ -672,7 +672,7 @@ void CreateChecksumsController::Private::run()
     const function<void(int)> progressCb = boost::bind(&Private::progress, this, _1, 0, scanning);
     const std::vector<Dir> dirs = haveSumFiles
                                   ? find_dirs_by_sum_files(files, allowAddition, progressCb, checksumDefinitions)
-                                  : find_dirs_by_input_files(files, checksumDefinition, allowAddition, progressCb, checksumDefinitions) ;
+                                  : find_dirs_by_input_files(files, checksumDefinition, allowAddition, progressCb, checksumDefinitions);
 
     Q_FOREACH (const Dir &dir, dirs) {
         qCDebug(KLEOPATRA_LOG) << dir;
@@ -692,7 +692,7 @@ void CreateChecksumsController::Private::run()
             //
 
             // re-scale 'total' to fit into ints (wish QProgressDialog would use quint64...)
-            const quint64 factor = total / std::numeric_limits<int>::max() + 1 ;
+            const quint64 factor = total / std::numeric_limits<int>::max() + 1;
 
             quint64 done = 0;
             Q_FOREACH (const Dir &dir, dirs) {

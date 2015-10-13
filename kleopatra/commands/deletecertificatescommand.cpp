@@ -314,14 +314,14 @@ void DeleteCertificatesCommand::Private::slotDialogAccepted()
     pgpEnd = std::stable_partition(pgpBegin, keys.end(),
                                    boost::bind(&GpgME::Key::protocol, _1) != CMS),
              cmsBegin = pgpEnd,
-             cmsEnd = keys.end() ;
+             cmsEnd = keys.end();
 
     std::vector<Key> openpgp(pgpBegin, pgpEnd);
     std::vector<Key>     cms(cmsBegin, cmsEnd);
 
     const unsigned int errorCase =
         openpgp.empty() << 3U | canDelete(OpenPGP) << 2U |
-        cms.empty() << 1U |     canDelete(CMS) << 0U ;
+        cms.empty() << 1U |     canDelete(CMS) << 0U;
 
     if (const unsigned int actions = deletionErrorCases[errorCase].actions) {
         information(i18n(deletionErrorCases[errorCase].text),
@@ -362,7 +362,7 @@ void DeleteCertificatesCommand::Private::startDeleteJob(GpgME::Protocol protocol
 {
     assert(protocol != GpgME::UnknownProtocol);
 
-    const std::vector<Key> &keys = protocol == CMS ? cmsKeys : pgpKeys ;
+    const std::vector<Key> &keys = protocol == CMS ? cmsKeys : pgpKeys;
 
     const CryptoBackend::Protocol *const backend = CryptoBackendFactory::instance()->protocol(protocol);
     assert(backend);

@@ -95,7 +95,7 @@ static unsigned int num_components_with_options(const Kleo::CryptoConfig *config
     }
     const QStringList components = config->componentList();
     unsigned int result = 0;
-    for (QStringList::const_iterator it = components.begin() ; it != components.end() ; ++it)
+    for (QStringList::const_iterator it = components.begin(); it != components.end(); ++it)
         if (const Kleo::CryptoConfigComponent *const comp = config->component(*it))
             if (!comp->groupList().empty()) {
                 ++result;
@@ -113,7 +113,7 @@ static KPageView::FaceType determineJanusFace(const Kleo::CryptoConfig *config, 
     return
         layout == CryptoConfigModule::LinearizedLayout ? KPageView::Plain :
         layout == CryptoConfigModule::TabbedLayout     ? KPageView::Tabbed :
-        /* else */                                       KPageView::List ;
+        /* else */                                       KPageView::List;
 }
 
 Kleo::CryptoConfigModule::CryptoConfigModule(Kleo::CryptoConfig *config, QWidget *parent)
@@ -278,7 +278,7 @@ Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
     const QStringList groups = mComponent->groupList();
     if (groups.size() > 1) {
         glay->setColumnMinimumWidth(0, KDHorizontalLine::indentHint());
-        for (QStringList::const_iterator it = groups.begin(), end = groups.end() ; it != end; ++it) {
+        for (QStringList::const_iterator it = groups.begin(), end = groups.end(); it != end; ++it) {
             Kleo::CryptoConfigGroup *group = mComponent->group(*it);
             Q_ASSERT(group);
             if (!group) {
@@ -333,7 +333,7 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
 {
     const int startRow = glay->rowCount();
     const QStringList entries = mGroup->entryList();
-    for (QStringList::const_iterator it = entries.begin(), end = entries.end() ; it != end; ++it) {
+    for (QStringList::const_iterator it = entries.begin(), end = entries.end(); it != end; ++it) {
         Kleo::CryptoConfigEntry *entry = group->entry(*it);
         Q_ASSERT(entry);
         if (entry->level() > CryptoConfigEntry::Level_Advanced) {
@@ -443,7 +443,7 @@ CryptoConfigEntryGUI *Kleo::CryptoConfigEntryGUIFactory::createEntryGUI(CryptoCo
 
     // try to lookup by path:
     const QString path = entry->path();
-    for (unsigned int i = 0 ; i < numWidgetsByEntryName ; ++i)
+    for (unsigned int i = 0; i < numWidgetsByEntryName; ++i)
         if (QRegExp(QLatin1String(widgetsByEntryName[i].entryGlob), Qt::CaseSensitive, QRegExp::Wildcard).exactMatch(path)) {
             return widgetsByEntryName[i].create(module, entry, entryName, glay, widget);
         }
@@ -555,7 +555,7 @@ Kleo::CryptoConfigEntryDebugLevel::CryptoConfigEntryDebugLevel(CryptoConfigModul
     QLabel *label = new QLabel(i18n("Set the debugging level to"), widget);
     label->setBuddy(mComboBox);
 
-    for (unsigned int i = 0 ; i < numDebugLevels ; ++i) {
+    for (unsigned int i = 0; i < numDebugLevels; ++i) {
         mComboBox->addItem(i18n(debugLevels[i].label));
     }
 
@@ -584,7 +584,7 @@ void Kleo::CryptoConfigEntryDebugLevel::doSave()
 void Kleo::CryptoConfigEntryDebugLevel::doLoad()
 {
     const QString str = mEntry->stringValue();
-    for (unsigned int i = 0 ; i < numDebugLevels ; ++i)
+    for (unsigned int i = 0; i < numDebugLevels; ++i)
         if (str == QLatin1String(debugLevels[i].name)) {
             mComboBox->setCurrentIndex(i);
             return;
@@ -925,9 +925,9 @@ QString Kleo::assembleKeyserver(const ParsedKeyserver &keyserver)
     typedef QPair<QString, QString> Pair;
     Q_FOREACH (const Pair &pair, keyserver.options)
         if (pair.second.isNull()) {
-            result += QLatin1Char(' ') + pair.first ;
+            result += QLatin1Char(' ') + pair.first;
         } else {
-            result += QLatin1Char(' ') + pair.first + QLatin1Char('=') + pair.second ;
+            result += QLatin1Char(' ') + pair.first + QLatin1Char('=') + pair.second;
         }
     return result;
 }
@@ -956,7 +956,7 @@ static QList<QUrl> string2urls(const QString &str)
 
 static QString urls2string(const QList<QUrl> &urls)
 {
-    return urls.empty() ? QString() : urls.front().url() ;
+    return urls.empty() ? QString() : urls.front().url();
 }
 
 void Kleo::CryptoConfigEntryKeyserver::slotOpenDialog()

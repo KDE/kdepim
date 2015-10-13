@@ -92,7 +92,7 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor(const KMime::Messa
     int lastSeen = -2;
     QString tempFileName;
     QList<int>::ConstIterator end(argList.constEnd());
-    for (QList<int>::ConstIterator it = argList.constBegin() ; it != end ; ++it) {
+    for (QList<int>::ConstIterator it = argList.constBegin(); it != end; ++it) {
         // setup temp files with check for duplicate %n's
         if ((*it) != lastSeen) {
             QTemporaryFile *tempFile = new QTemporaryFile();

@@ -49,7 +49,7 @@ bool FilterActionAddHeader::isEmpty() const
     return (mParameter.isEmpty() || mValue.isEmpty());
 }
 
-FilterAction::ReturnCode FilterActionAddHeader::process(ItemContext &context , bool) const
+FilterAction::ReturnCode FilterActionAddHeader::process(ItemContext &context, bool) const
 {
     if (isEmpty()) {
         return ErrorButGoOn;

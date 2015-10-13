@@ -78,8 +78,6 @@ public:
     SieveTreeWidgetProgress *mProgress;
 };
 
-
-
 SieveTreeWidgetItem::SieveTreeWidgetItem(QTreeWidget *treeWidget, QTreeWidgetItem *item)
     : QTreeWidgetItem(treeWidget, item),
       d(new KSieveUi::SieveTreeWidgetItemPrivate)

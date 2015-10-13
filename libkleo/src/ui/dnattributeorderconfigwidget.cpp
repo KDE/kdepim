@@ -136,7 +136,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget(DNAttributeMapp
         { "go-bottom",  4, 1, I18N_NOOP("Move to bottom"), SLOT(slotDoubleDownButtonClicked()), false }
     };
 
-    for (unsigned int i = 0 ; i < sizeof navButtons / sizeof * navButtons ; ++i) {
+    for (unsigned int i = 0; i < sizeof navButtons / sizeof * navButtons; ++i) {
         QToolButton *tb = d->navTB[i] = new QToolButton(this);
         tb->setIcon(QIcon::fromTheme(QLatin1String(navButtons[i].icon)));
         tb->setEnabled(false);
@@ -167,7 +167,7 @@ void Kleo::DNAttributeOrderConfigWidget::load()
 
     // fill the RHS listview:
     QTreeWidgetItem *last = 0;
-    for (QStringList::const_iterator it = order.begin() ; it != order.end() ; ++it) {
+    for (QStringList::const_iterator it = order.begin(); it != order.end(); ++it) {
         const QString attr = (*it).toUpper();
         if (attr == QLatin1String("_X_")) {
             takePlaceHolderItem();
@@ -184,7 +184,7 @@ void Kleo::DNAttributeOrderConfigWidget::load()
 
     const QStringList all = Kleo::DNAttributeMapper::instance()->names();
     const QStringList::const_iterator end(all.end());
-    for (QStringList::const_iterator it = all.begin() ; it != end ; ++it) {
+    for (QStringList::const_iterator it = all.begin(); it != end; ++it) {
         if (!order.contains(*it)) {
             QTreeWidgetItem *item = new QTreeWidgetItem(d->availableLV);
             item->setText(0, *it);
@@ -211,7 +211,7 @@ void Kleo::DNAttributeOrderConfigWidget::save() const
 {
 #ifndef QT_NO_TREEWIDGET
     QStringList order;
-    for (QTreeWidgetItemIterator it(d->currentLV) ; (*it) ; ++it) {
+    for (QTreeWidgetItemIterator it(d->currentLV); (*it); ++it) {
         order.push_back((*it)->text(0));
     }
 

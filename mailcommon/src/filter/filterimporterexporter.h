@@ -82,7 +82,7 @@ public:
      * is asked from the user. The list to export is also
      * presented for confirmation/selection.
      */
-    void exportFilters(const QList<MailFilter *> &filters , const QUrl &fileName = QUrl(), bool saveAll = false);
+    void exportFilters(const QList<MailFilter *> &filters, const QUrl &fileName = QUrl(), bool saveAll = false);
 
     /**
      * Imports filters. Ask the user where to import them from

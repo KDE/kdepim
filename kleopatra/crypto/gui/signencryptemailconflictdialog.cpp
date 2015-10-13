@@ -153,15 +153,15 @@ public Q_SLOTS:
     }
 
 protected:
-    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE
-    {
+    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE {
         QStylePainter p(this);
         p.setPen(palette().color(QPalette::Text));
         QStyleOptionComboBox opt;
         initStyleOption(&opt);
         p.drawComplexControl(QStyle::CC_ComboBox, opt);
 
-        if (currentIndex() == -1) {
+        if (currentIndex() == -1)
+        {
             opt.currentText = m_initialText;
             opt.currentIcon = m_initialIcon;
         }
@@ -208,7 +208,7 @@ public:
     {
         std::vector<Key> result;
         result.reserve(count());
-        for (int i = 0, end = count() ; i != end ; ++i) {
+        for (int i = 0, end = count(); i != end; ++i) {
             result.push_back(qvariant_cast<Key>(itemData(i)));
         }
         return result;;
@@ -216,7 +216,7 @@ public:
 
     int findOrAdd(const Key &key)
     {
-        for (int i = 0, end = count() ; i != end ; ++i)
+        for (int i = 0, end = count(); i != end; ++i)
             if (_detail::ByFingerprint<std::equal_to>()(key, qvariant_cast<Key>(itemData(i)))) {
                 return i;
             }
@@ -350,7 +350,7 @@ public:
 
     bool wasInitiallyAmbiguous(Protocol proto) const
     {
-        return    (proto == OpenPGP && pgpAmbiguous)
+        return (proto == OpenPGP && pgpAmbiguous)
                || (proto == CMS     && cmsAmbiguous);
     }
 
@@ -358,7 +358,7 @@ public:
     {
         kleo_assert(proto == OpenPGP || proto == CMS);
         const KeysComboBox *const cb = comboBox(proto);
-        return cb->currentIndex() == -1 ;
+        return cb->currentIndex() == -1;
     }
 
     Key key(Protocol proto) const
@@ -441,7 +441,7 @@ static QString make_top_label_conflict_text(bool sign, bool enc)
         enc         ? i18n("Kleopatra cannot unambiguously determine matching certificates "
                            "for all recipients of the message.\n"
                            "Please select the correct certificates for each recipient:") :
-        /* else */ (kleo_assert_fail(sign || enc), QString()) ;
+        /* else */ (kleo_assert_fail(sign || enc), QString());
 }
 
 static QString make_top_label_quickmode_text(bool sign, bool enc)
@@ -449,7 +449,7 @@ static QString make_top_label_quickmode_text(bool sign, bool enc)
     return
         enc    ? i18n("Please verify that correct certificates have been selected for each recipient:") :
         sign   ? i18n("Please verify that the correct certificate has been selected for the sender:") :
-        /*else*/ (kleo_assert_fail(sign || enc), QString()) ;
+        /*else*/ (kleo_assert_fail(sign || enc), QString());
 }
 
 class SignEncryptEMailConflictDialog::Private
@@ -481,7 +481,7 @@ private:
         const Protocol proto = q->selectedProtocol();
         const bool quickMode = q->isQuickMode();
 
-        const bool needProtocolSelection = presetProtocol == UnknownProtocol ;
+        const bool needProtocolSelection = presetProtocol == UnknownProtocol;
 
         const bool needShowAllRecipientsCB =
             quickMode             ? false :
@@ -861,7 +861,7 @@ void SignEncryptEMailConflictDialog::pickProtocol()
 bool SignEncryptEMailConflictDialog::isComplete() const
 {
     const Protocol proto = selectedProtocol();
-    return proto != UnknownProtocol && d->isComplete(proto) ;
+    return proto != UnknownProtocol && d->isComplete(proto);
 }
 
 bool SignEncryptEMailConflictDialog::Private::isComplete(Protocol proto) const
@@ -888,12 +888,12 @@ static std::vector<Key> get_keys(const std::vector<Line> &lines, Protocol proto)
 
 std::vector<Key> SignEncryptEMailConflictDialog::resolvedSigningKeys() const
 {
-    return d->sign    ? get_keys(d->ui.signers,    selectedProtocol()) : std::vector<Key>() ;
+    return d->sign    ? get_keys(d->ui.signers,    selectedProtocol()) : std::vector<Key>();
 }
 
 std::vector<Key> SignEncryptEMailConflictDialog::resolvedEncryptionKeys() const
 {
-    return d->encrypt ? get_keys(d->ui.recipients, selectedProtocol()) : std::vector<Key>() ;
+    return d->encrypt ? get_keys(d->ui.recipients, selectedProtocol()) : std::vector<Key>();
 }
 
 void SignEncryptEMailConflictDialog::setQuickMode(bool on)

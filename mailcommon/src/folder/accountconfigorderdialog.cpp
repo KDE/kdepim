@@ -167,7 +167,7 @@ void AccountConfigOrderDialog::slotMoveDown()
     QListWidgetItem *item = d->mListAccount->takeItem(pos);
     // now selected item is at idx(idx-1), so
     // insert the other item at idx, ie. above(below).
-    d->mListAccount->insertItem(pos + 1 , item);
+    d->mListAccount->insertItem(pos + 1, item);
     d->mListAccount->blockSignals(false);
     d->mListAccount->setCurrentRow(pos + 1);
 }

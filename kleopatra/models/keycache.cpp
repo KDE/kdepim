@@ -474,7 +474,7 @@ struct ready_for_signing : std::unary_function<Key, bool> {
         return true;
 #else
         return key.hasSecret() &&
-               key.canReallySign() && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid() ;
+               key.canReallySign() && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid();
 #endif
 #undef DO
     }
@@ -493,7 +493,7 @@ struct ready_for_encryption : std::unary_function<Key, bool> {
         return true;
 #else
         return
-            key.canEncrypt()    && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid() ;
+            key.canEncrypt()    && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid();
 #endif
     }
 #undef DO
@@ -1051,7 +1051,7 @@ Error KeyCache::RefreshKeysJob::Private::startKeyListing(const char *backend)
 
     const QString label = protocol == Kleo::CryptoBackendFactory::instance()->smime()
                           ? i18n("Listing X.509 certificates")
-                          : i18n("Listing OpenPGP certificates") ;
+                          : i18n("Listing OpenPGP certificates");
     (void)ProgressManager::createForJob(job, label);
 
     connect(q, &RefreshKeysJob::canceled,

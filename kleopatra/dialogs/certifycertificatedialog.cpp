@@ -83,7 +83,7 @@ void UserIDModel::setCertificateToCertify(const Key &key)
 void UserIDModel::setCheckedUserIDs(const std::vector<unsigned int> &uids)
 {
     const std::vector<unsigned int> sorted = kdtools::sorted(uids);
-    for (unsigned int i = 0, end = rowCount() ; i != end ; ++i) {
+    for (unsigned int i = 0, end = rowCount(); i != end; ++i) {
         item(i)->setCheckState(kdtools::binary_search(sorted, i) ? Qt::Checked : Qt::Unchecked);
     }
 }
@@ -354,7 +354,7 @@ public:
 
     Key key() const
     {
-        return selectUserIDsPage ? selectUserIDsPage->certificateToCertify() : Key() ;
+        return selectUserIDsPage ? selectUserIDsPage->certificateToCertify() : Key();
     }
 
     void ensureSummaryPageVisible();
@@ -473,7 +473,7 @@ struct UidEqual : std::binary_function<UserID, UserID, bool> {
     {
         return qstrcmp(lhs.parent().primaryFingerprint(),
                        rhs.parent().primaryFingerprint()) == 0
-               && qstrcmp(lhs.id(), rhs.id()) == 0 ;
+               && qstrcmp(lhs.id(), rhs.id()) == 0;
     }
 };
 }

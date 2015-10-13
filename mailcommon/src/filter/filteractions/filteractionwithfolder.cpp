@@ -66,7 +66,7 @@ void FilterActionWithFolder::clearParamWidget(QWidget *paramWidget) const
     static_cast<FolderRequester *>(paramWidget)->setCollection(CommonKernel->draftsCollectionFolder());
 }
 
-bool FilterActionWithFolder::argsFromStringInteractive(const QString &argsStr , const QString &name)
+bool FilterActionWithFolder::argsFromStringInteractive(const QString &argsStr, const QString &name)
 {
     bool needUpdate = false;
     argsFromString(argsStr);

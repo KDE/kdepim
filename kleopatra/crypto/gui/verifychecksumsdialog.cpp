@@ -136,7 +136,7 @@ public Q_SLOTS:
         QHash<QString, VerifyChecksumsDialog::Status> oldStatusMap;
         swap(statusMap, oldStatusMap);
 
-        for (QHash<QString, VerifyChecksumsDialog::Status>::const_iterator it = oldStatusMap.constBegin(), end = oldStatusMap.constEnd() ; it != end ; ++it) {
+        for (QHash<QString, VerifyChecksumsDialog::Status>::const_iterator it = oldStatusMap.constBegin(), end = oldStatusMap.constEnd(); it != end; ++it) {
             emitDataChangedFor(it.key());
         }
     }
@@ -158,7 +158,7 @@ private:
 
 static int find_layout_item(const QBoxLayout &blay)
 {
-    for (int i = 0, end = blay.count() ; i < end ; ++i)
+    for (int i = 0, end = blay.count(); i < end; ++i)
         if (QLayoutItem *item = blay.itemAt(i))
             if (item->layout()) {
                 return i;
@@ -331,12 +331,12 @@ private:
         {
 
             // create new BaseWidgets:
-            for (unsigned int i = baseWidgets.size(), end = bases.size() ; i < end ; ++i) {
+            for (unsigned int i = baseWidgets.size(), end = bases.size(); i < end; ++i) {
                 baseWidgets.push_back(new BaseWidget(model, vlay.parentWidget(), &vlay));
             }
 
             // shed surplus BaseWidgets:
-            for (unsigned int i = bases.size(), end = baseWidgets.size() ; i < end ; ++i) {
+            for (unsigned int i = bases.size(), end = baseWidgets.size(); i < end; ++i) {
                 delete baseWidgets.back();
                 baseWidgets.pop_back();
             }
@@ -344,7 +344,7 @@ private:
             assert(static_cast<unsigned>(bases.size()) == baseWidgets.size());
 
             // update bases:
-            for (unsigned int i = 0 ; i < baseWidgets.size() ; ++i) {
+            for (unsigned int i = 0; i < baseWidgets.size(); ++i) {
                 baseWidgets[i]->setBase(bases[i]);
             }
 
@@ -360,7 +360,7 @@ private:
         {
             const int tot = progressBar.maximum();
             const int cur = progressBar.value();
-            return !tot || cur != tot ;
+            return !tot || cur != tot;
         }
 
     } ui;

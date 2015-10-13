@@ -67,7 +67,7 @@ static const bool HAVE_FD_PASSING = false;
 static const bool HAVE_FD_PASSING = true;
 #endif
 
-static const unsigned int ASSUAN_CONNECT_FLAGS = HAVE_FD_PASSING ? 1 : 0 ;
+static const unsigned int ASSUAN_CONNECT_FLAGS = HAVE_FD_PASSING ? 1 : 0;
 
 static std::vector<int> inFDs, outFDs, msgFDs;
 static std::vector<std::string> inFiles, outFiles, msgFiles;
@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
     std::vector<const char *> options;
 
     std::string command;
-    for (int optind = 2 ; optind < argc ; ++optind) {
+    for (int optind = 2; optind < argc; ++optind) {
         const char *const arg = argv[optind];
         if (qstrcmp(arg, "--input") == 0) {
             const std::string file = argv[++optind];
@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
     assuan_set_log_stream(ctx, stderr);
 
 #ifndef Q_OS_WIN32
-    for (std::vector<int>::const_iterator it = inFDs.begin(), end = inFDs.end() ; it != end ; ++it) {
+    for (std::vector<int>::const_iterator it = inFDs.begin(), end = inFDs.end(); it != end; ++it) {
         if (const gpg_error_t err = assuan_sendfd(ctx, *it)) {
             qDebug("%s", Exception(err, "assuan_sendfd( inFD )").what());
             return 1;
@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    for (std::vector<int>::const_iterator it = msgFDs.begin(), end = msgFDs.end() ; it != end ; ++it) {
+    for (std::vector<int>::const_iterator it = msgFDs.begin(), end = msgFDs.end(); it != end; ++it) {
         if (const gpg_error_t err = assuan_sendfd(ctx, *it)) {
             qDebug("%s", Exception(err, "assuan_sendfd( msgFD )").what());
             return 1;
@@ -255,7 +255,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    for (std::vector<int>::const_iterator it = outFDs.begin(), end = outFDs.end() ; it != end ; ++it) {
+    for (std::vector<int>::const_iterator it = outFDs.begin(), end = outFDs.end(); it != end; ++it) {
         if (const gpg_error_t err = assuan_sendfd(ctx, *it)) {
             qDebug("%s", Exception(err, "assuan_sendfd( outFD )").what());
             return 1;
@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    for (std::vector<std::string>::const_iterator it = inFiles.begin(), end = inFiles.end() ; it != end ; ++it) {
+    for (std::vector<std::string>::const_iterator it = inFiles.begin(), end = inFiles.end(); it != end; ++it) {
         char buffer[1024];
         sprintf(buffer, "INPUT FILE=%s", hexencode(*it).c_str());
 
@@ -278,7 +278,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    for (std::vector<std::string>::const_iterator it = msgFiles.begin(), end = msgFiles.end() ; it != end ; ++it) {
+    for (std::vector<std::string>::const_iterator it = msgFiles.begin(), end = msgFiles.end(); it != end; ++it) {
         char buffer[1024];
         sprintf(buffer, "MESSAGE FILE=%s", hexencode(*it).c_str());
 
@@ -288,7 +288,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    for (std::vector<std::string>::const_iterator it = outFiles.begin(), end = outFiles.end() ; it != end ; ++it) {
+    for (std::vector<std::string>::const_iterator it = outFiles.begin(), end = outFiles.end(); it != end; ++it) {
         char buffer[1024];
         sprintf(buffer, "OUTPUT FILE=%s", hexencode(*it).c_str());
 

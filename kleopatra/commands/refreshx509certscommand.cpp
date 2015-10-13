@@ -92,7 +92,7 @@ QString RefreshX509CertsCommand::crashExitMessage(const QStringList &args) const
     return xi18nc("@info",
                   "<para>The GpgSM process that tried to refresh X.509 certificates "
                   "ended prematurely because of an unexpected error.</para>"
-                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QStringLiteral(" "))) ;
+                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join(QStringLiteral(" ")));
 }
 
 QString RefreshX509CertsCommand::errorExitMessage(const QStringList &args) const

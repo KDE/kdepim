@@ -63,7 +63,7 @@ static std::string hexencode(const std::string &in)
 
     static const char hex[] = "0123456789ABCDEF";
 
-    for (std::string::const_iterator it = in.begin(), end = in.end() ; it != end ; ++it)
+    for (std::string::const_iterator it = in.begin(), end = in.end(); it != end; ++it)
         switch (const unsigned char ch = *it) {
         default:
             if ((ch >= '!' && ch <= '~') || ch > 0xA0) {
@@ -619,7 +619,7 @@ void Command::Private::run()
         }
 
         // give it a bit of time to start up and try a couple of times
-        for (int i = 0 ; err && i < 20 ; ++i) {
+        for (int i = 0; err && i < 20; ++i) {
             msleep(500);
 #ifndef HAVE_ASSUAN2
             err = assuan_socket_connect(&naked_ctx, QFile::encodeName(socketName).constData(), -1);
@@ -670,7 +670,7 @@ void Command::Private::run()
         }
     }
 
-    for (std::map<std::string, Option>::const_iterator it = in.options.begin(), end = in.options.end() ; it != end ; ++it)
+    for (std::map<std::string, Option>::const_iterator it = in.options.begin(), end = in.options.end(); it != end; ++it)
         if ((err = send_option(ctx, it->first.c_str(), it->second.hasValue ? it->second.value.toString() : QVariant()))) {
             if (it->second.isCritical) {
                 out.errorString = i18n("Failed to send critical option %1: %2", QString::fromLatin1(it->first.c_str()), to_error_string(err));

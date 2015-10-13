@@ -108,8 +108,8 @@ static inline unsigned long factorForQuantifier(char ch)
 
 static inline bool willOverflowULong(unsigned long result, unsigned long add)
 {
-    static const unsigned long maxULongByTen = (unsigned long)(ULONG_MAX / 10.0) ;
-    return result > maxULongByTen || ULONG_MAX - 10 * result < add ;
+    static const unsigned long maxULongByTen = (unsigned long)(ULONG_MAX / 10.0);
+    return result > maxULongByTen || ULONG_MAX - 10 * result < add;
 }
 
 namespace KSieve
@@ -132,7 +132,7 @@ Parser::Impl::Impl(const char *scursor, const char *const send, int options)
 bool Parser::Impl::isStringToken() const
 {
     return token() == Lexer::QuotedString ||
-           token() == Lexer::MultiLineString ;
+           token() == Lexer::MultiLineString;
 }
 
 bool Parser::Impl::isArgumentToken() const
@@ -166,7 +166,7 @@ bool Parser::Impl::obtainToken()
             consumeToken();
             break;
         case Lexer::LineFeeds:
-            for (unsigned int i = 0, end = tokenValue().toUInt() ; i < end ; ++i)
+            for (unsigned int i = 0, end = tokenValue().toUInt(); i < end; ++i)
                 if (scriptBuilder())   // better check every iteration, b/c
                     // we call out to ScriptBuilder,
                     // where nasty things might happen!
@@ -175,7 +175,7 @@ bool Parser::Impl::obtainToken()
                 }
             consumeToken();
             break;
-        default: ; // make compiler happy
+        default:; // make compiler happy
         }
     }
     if (lexer.error() && scriptBuilder()) {
@@ -684,13 +684,13 @@ bool Parser::Impl::parseNumber()
     unsigned long result = 0;
     int i = 0;
     const QByteArray s = tokenValue().toLatin1();
-    for (const int len = s.length() ; i < len && isdigit(s[i]) ; ++i) {
-        const unsigned long digitValue = s[i] - '0' ;
+    for (const int len = s.length(); i < len && isdigit(s[i]); ++i) {
+        const unsigned long digitValue = s[i] - '0';
         if (willOverflowULong(result, digitValue)) {
             makeError(Error::NumberOutOfRange);
             return false;
         } else {
-            result *= 10 ; result += digitValue ;
+            result *= 10; result += digitValue;
         }
     }
 

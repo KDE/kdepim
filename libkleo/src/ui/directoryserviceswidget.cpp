@@ -94,11 +94,11 @@ static const struct {
     { I18N_NOOP("ldap"),  389, DirectoryServicesWidget::LDAP },
     { I18N_NOOP("ldaps"), 636, DirectoryServicesWidget::LDAP },
 };
-static const unsigned int numProtocols = sizeof protocols / sizeof *protocols;
+static const unsigned int numProtocols = sizeof protocols / sizeof * protocols;
 
 static unsigned short default_port(const QString &scheme)
 {
-    for (unsigned int i = 0 ; i < numProtocols ; ++i)
+    for (unsigned int i = 0; i < numProtocols; ++i)
         if (QString::compare(scheme, QLatin1String(protocols[i].label), Qt::CaseInsensitive) == 0) {
             return protocols[i].port;
         }
@@ -135,7 +135,7 @@ static unsigned short display_port(const QUrl &url)
 
 static bool is_default_port(const QUrl &url)
 {
-    return display_port(url) == default_port(display_scheme(url)) ;
+    return display_port(url) == default_port(display_scheme(url));
 }
 
 static QRect calculate_geometry(const QRect &cell, const QSize &sizeHint)
@@ -179,7 +179,7 @@ public:
             return;
         }
         m_openPGPReadOnly = ro;
-        for (unsigned int row = 0, end = rowCount() ; row != end ; ++row)
+        for (unsigned int row = 0, end = rowCount(); row != end; ++row)
             if (isOpenPGPService(row)) {
                 Q_EMIT dataChanged(index(row, 0), index(row, NumColumns));
             }
@@ -191,7 +191,7 @@ public:
             return;
         }
         m_x509ReadOnly = ro;
-        for (unsigned int row = 0, end = rowCount() ; row != end ; ++row)
+        for (unsigned int row = 0, end = rowCount(); row != end; ++row)
             if (isX509Service(row)) {
                 Q_EMIT dataChanged(index(row, 0), index(row, NumColumns));
             }
@@ -207,13 +207,13 @@ public:
     }
     QModelIndex addService(const QUrl &url, bool x509, bool pgp, bool force)
     {
-        const std::vector<Item>::iterator it = force ? m_items.end() : findExistingUrl(url) ;
+        const std::vector<Item>::iterator it = force ? m_items.end() : findExistingUrl(url);
         unsigned int row;
         if (it != m_items.end()) {
             // existing item:
             it->x509 |= x509;
             it->pgp  |= pgp;
-            row = it - m_items.begin() ;
+            row = it - m_items.begin();
             Q_EMIT dataChanged(index(row, std::min(X509, OpenPGP)), index(row, std::max(X509, OpenPGP)));
         } else {
             // append new item
@@ -236,11 +236,11 @@ public:
     }
     bool    isX509Service(unsigned int row) const
     {
-        return row < m_items.size() && m_items[row].x509 && isLdapRow(row) ;
+        return row < m_items.size() && m_items[row].x509 && isLdapRow(row);
     }
     QUrl          service(unsigned int row) const
     {
-        return row < m_items.size() ?  m_items[row].url : QUrl() ;
+        return row < m_items.size() ?  m_items[row].url : QUrl();
     }
 
     bool isReadOnlyRow(unsigned int row) const
@@ -424,7 +424,7 @@ private:
             return 0;
         }
         QComboBox *cb = new QComboBox(parent);
-        for (unsigned int i = 0 ; i < numProtocols ; ++i)
+        for (unsigned int i = 0; i < numProtocols; ++i)
             if (m_schemes & protocols[i].base) {
                 cb->addItem(i18n(protocols[i].label), QLatin1String(protocols[i].label));
             }
@@ -554,15 +554,15 @@ private:
     int currentRow() const
     {
         const QModelIndex idx = ui.treeView->selectionModel()->currentIndex();
-        return idx.isValid() ? idx.row() : -1 ;
+        return idx.isValid() ? idx.row() : -1;
     }
 
     void showHideColumns();
 
     void enableDisableActions()
     {
-        const bool x509 = (protocols & X509Protocol) && !(readOnlyProtocols & X509Protocol) ;
-        const bool pgp  = (protocols & OpenPGPProtocol) && !(readOnlyProtocols & OpenPGPProtocol) ;
+        const bool x509 = (protocols & X509Protocol) && !(readOnlyProtocols & X509Protocol);
+        const bool pgp  = (protocols & OpenPGPProtocol) && !(readOnlyProtocols & OpenPGPProtocol);
         ui.newX509Action.setEnabled(x509);
         ui.newOpenPGPAction.setEnabled(pgp);
         if (x509 && pgp) {
@@ -674,7 +674,7 @@ void DirectoryServicesWidget::addOpenPGPServices(const QList<QUrl> &urls)
 QList<QUrl> DirectoryServicesWidget::openPGPServices() const
 {
     QList<QUrl> result;
-    for (unsigned int i = 0, end = d->model.numServices() ; i != end ; ++i)
+    for (unsigned int i = 0, end = d->model.numServices(); i != end; ++i)
         if (d->model.isOpenPGPService(i)) {
             result.push_back(d->model.service(i));
         }
@@ -691,7 +691,7 @@ void DirectoryServicesWidget::addX509Services(const QList<QUrl> &urls)
 QList<QUrl> DirectoryServicesWidget::x509Services() const
 {
     QList<QUrl> result;
-    for (unsigned int i = 0, end = d->model.numServices() ; i != end ; ++i)
+    for (unsigned int i = 0, end = d->model.numServices(); i != end; ++i)
         if (d->model.isX509Service(i)) {
             result.push_back(d->model.service(i));
         }
@@ -789,9 +789,9 @@ QVariant Model::data(const QModelIndex &index, int role) const
         case Qt::CheckStateRole:
             switch (index.column()) {
             case X509:
-                return m_items[row].x509 && isLdapRow(row) ? Qt::Checked : Qt::Unchecked ;
+                return m_items[row].x509 && isLdapRow(row) ? Qt::Checked : Qt::Unchecked;
             case OpenPGP:
-                return m_items[row].pgp  ? Qt::Checked : Qt::Unchecked ;
+                return m_items[row].pgp  ? Qt::Checked : Qt::Unchecked;
             default:
                 return QVariant();
             }
@@ -812,7 +812,7 @@ Qt::ItemFlags Model::flags(const QModelIndex &index) const
     const unsigned int row = index.row();
     Qt::ItemFlags flags = QAbstractTableModel::flags(index);
     if (isReadOnlyRow(row)) {
-        flags &= ~Qt::ItemIsSelectable ;
+        flags &= ~Qt::ItemIsSelectable;
     }
     if (index.isValid() && row < m_items.size())
         switch (index.column()) {
@@ -820,7 +820,7 @@ Qt::ItemFlags Model::flags(const QModelIndex &index) const
             switch (m_schemes) {
             default:
                 if (!isReadOnlyRow(row)) {
-                    return flags | Qt::ItemIsEditable ;
+                    return flags | Qt::ItemIsEditable;
                 }
             // else fall through
             case DirectoryServicesWidget::HKP:
@@ -828,38 +828,38 @@ Qt::ItemFlags Model::flags(const QModelIndex &index) const
             case DirectoryServicesWidget::FTP:
             case DirectoryServicesWidget::LDAP:
                 // only one scheme allowed -> no editing possible
-                return flags & ~(Qt::ItemIsEditable | Qt::ItemIsEnabled) ;
+                return flags & ~(Qt::ItemIsEditable | Qt::ItemIsEnabled);
             }
         case Host:
         case Port:
             if (isReadOnlyRow(row)) {
-                return flags & ~(Qt::ItemIsEditable | Qt::ItemIsEnabled) ;
+                return flags & ~(Qt::ItemIsEditable | Qt::ItemIsEnabled);
             } else {
-                return flags | Qt::ItemIsEditable ;
+                return flags | Qt::ItemIsEditable;
             }
         case BaseDN:
             if (isLdapRow(row) && !isReadOnlyRow(row)) {
-                return flags | Qt::ItemIsEditable ;
+                return flags | Qt::ItemIsEditable;
             } else {
-                return flags & ~(Qt::ItemIsEditable | Qt::ItemIsEnabled) ;
+                return flags & ~(Qt::ItemIsEditable | Qt::ItemIsEnabled);
             }
         case UserName:
         case Password:
             if (isReadOnlyRow(row)) {
-                return flags & ~(Qt::ItemIsEditable | Qt::ItemIsEnabled) ;
+                return flags & ~(Qt::ItemIsEditable | Qt::ItemIsEnabled);
             } else {
-                return flags | Qt::ItemIsEditable ;
+                return flags | Qt::ItemIsEditable;
             }
         case X509:
             if (!isLdapRow(row)) {
-                return flags & ~(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled) ;
+                return flags & ~(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
             }
         // fall through
         case OpenPGP:
             if (isReadOnlyRow(row)) {
-                return flags & ~(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled) ;
+                return flags & ~(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
             } else {
-                return flags | Qt::ItemIsUserCheckable ;
+                return flags | Qt::ItemIsUserCheckable;
             }
         }
     return flags;
@@ -925,10 +925,10 @@ bool Model::doSetData(unsigned int row, unsigned int column, const QVariant &val
     if (role == Qt::CheckStateRole)
         switch (column) {
         case X509:
-            m_items[row].x509 = value.toInt() == Qt::Checked ;
+            m_items[row].x509 = value.toInt() == Qt::Checked;
             return true;
         case OpenPGP: {
-            const bool on = value.toInt() == Qt::Checked ;
+            const bool on = value.toInt() == Qt::Checked;
             if (on) {
                 setExclusivePgpFlag(row);
             } else {
@@ -946,7 +946,7 @@ void Model::setExclusivePgpFlag(unsigned int row)
         return;
     }
     m_items[row].pgp = true; // dataChanged() for this one is supposed to be emitted by the caller
-    for (unsigned int i = 0, end = m_items.size() ; i < end ; ++i)
+    for (unsigned int i = 0, end = m_items.size(); i < end; ++i)
         if (i != row)
             if (m_items[i].pgp) {
                 m_items[i].pgp = false;

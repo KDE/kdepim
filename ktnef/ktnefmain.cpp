@@ -303,7 +303,7 @@ void KTNEFMain::extractFile()
 
 void KTNEFMain::extractFileTo()
 {
-    QString dir = QFileDialog::getExistingDirectory(this , QString(),  mLastDir);
+    QString dir = QFileDialog::getExistingDirectory(this, QString(),  mLastDir);
     if (!dir.isEmpty()) {
         extractTo(dir);
         mLastDir = dir;
@@ -312,7 +312,7 @@ void KTNEFMain::extractFileTo()
 
 void KTNEFMain::extractAllFiles()
 {
-    QString dir = QFileDialog::getExistingDirectory(this , QString(),  mLastDir);
+    QString dir = QFileDialog::getExistingDirectory(this, QString(),  mLastDir);
     if (!dir.isEmpty()) {
         mLastDir = dir;
         dir.append(QLatin1String("/"));
@@ -341,7 +341,7 @@ void KTNEFMain::propertiesFile()
 
 void KTNEFMain::optionDefaultDir()
 {
-    const QString dirname = QFileDialog::getExistingDirectory(this , QString(),  mDefaultDir);
+    const QString dirname = QFileDialog::getExistingDirectory(this, QString(),  mDefaultDir);
     if (!dirname.isEmpty()) {
         mDefaultDir = dirname;
 
@@ -528,7 +528,7 @@ void KTNEFMain::slotSaveMessageText()
     }
 
     QString rtf = mParser->message()->rtfString();
-    QString filename = QFileDialog::getSaveFileName(this , QString(), QString(), QString());
+    QString filename = QFileDialog::getSaveFileName(this, QString(), QString(), QString());
     if (!filename.isEmpty()) {
         QFile f(filename);
         if (f.open(QIODevice::WriteOnly)) {

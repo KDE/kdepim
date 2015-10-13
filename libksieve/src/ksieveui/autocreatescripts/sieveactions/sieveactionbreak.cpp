@@ -55,7 +55,7 @@ QWidget *SieveActionBreak::createParamWidget(QWidget *parent) const
     return w;
 }
 
-bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {

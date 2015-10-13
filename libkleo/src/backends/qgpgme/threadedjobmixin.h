@@ -213,9 +213,9 @@ protected:
         doEmitResult(r);
         this->deleteLater();
     }
-    void slotCancel() Q_DECL_OVERRIDE
-    {
-        if (m_ctx) {
+    void slotCancel() Q_DECL_OVERRIDE {
+        if (m_ctx)
+        {
             m_ctx->cancelPendingOperation();
         }
     }

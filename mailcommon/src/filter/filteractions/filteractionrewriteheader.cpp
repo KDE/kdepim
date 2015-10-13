@@ -69,7 +69,7 @@ QString FilterActionRewriteHeader::informationAboutNotValidAction() const
     return info;
 }
 
-FilterAction::ReturnCode FilterActionRewriteHeader::process(ItemContext &context , bool) const
+FilterAction::ReturnCode FilterActionRewriteHeader::process(ItemContext &context, bool) const
 {
     if (isEmpty()) {
         return ErrorButGoOn;

@@ -91,13 +91,13 @@ public:
 
     QString title() const
     {
-        return m_title.isEmpty() && keyFilter() ? keyFilter()->name() : m_title ;
+        return m_title.isEmpty() && keyFilter() ? keyFilter()->name() : m_title;
     }
     void setTitle(const QString &title);
 
     QString toolTip() const
     {
-        return m_toolTip.isEmpty() ? title() : m_toolTip ;
+        return m_toolTip.isEmpty() ? title() : m_toolTip;
     }
     void setToolTip(const QString &tip);
 
@@ -192,14 +192,14 @@ Page::Page(const KConfigGroup &group, QWidget *parent)
     : KeyTreeView(group.readEntry(STRING_FILTER_ENTRY),
                   KeyFilterManager::instance()->keyFilterByID(group.readEntry(KEY_FILTER_ENTRY)),
                   0, parent),
-    m_title(group.readEntry(TITLE_ENTRY)),
-    m_toolTip(),
-    m_isTemporary(false),
-    m_canBeClosed(!group.isImmutable()),
-    m_canBeRenamed(!group.isEntryImmutable(TITLE_ENTRY)),
-    m_canChangeStringFilter(!group.isEntryImmutable(STRING_FILTER_ENTRY)),
-    m_canChangeKeyFilter(!group.isEntryImmutable(KEY_FILTER_ENTRY)),
-    m_canChangeHierarchical(!group.isEntryImmutable(HIERARCHICAL_VIEW_ENTRY))
+      m_title(group.readEntry(TITLE_ENTRY)),
+      m_toolTip(),
+      m_isTemporary(false),
+      m_canBeClosed(!group.isImmutable()),
+      m_canBeRenamed(!group.isEntryImmutable(TITLE_ENTRY)),
+      m_canChangeStringFilter(!group.isEntryImmutable(STRING_FILTER_ENTRY)),
+      m_canChangeKeyFilter(!group.isEntryImmutable(KEY_FILTER_ENTRY)),
+      m_canChangeHierarchical(!group.isEntryImmutable(HIERARCHICAL_VIEW_ENTRY))
 {
     init();
     setHierarchicalView(group.readEntry(HIERARCHICAL_VIEW_ENTRY, true));
@@ -439,9 +439,9 @@ TabWidget::Private::Private(TabWidget *qq)
     tabWidget.tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(&tabWidget, SIGNAL(currentChanged(int)), q, SLOT(currentIndexChanged(int)));
-    connect(tabWidget.tabBar(), &QWidget::customContextMenuRequested, q, [this](const QPoint& p) {
-                slotContextMenu(p);
-            });
+    connect(tabWidget.tabBar(), &QWidget::customContextMenuRequested, q, [this](const QPoint & p) {
+        slotContextMenu(p);
+    });
 
     const action_data actionDataNew = {
         "window_new_tab", i18n("New Tab"), i18n("Open a new tab"),
@@ -485,11 +485,11 @@ TabWidget::Private::Private(TabWidget *qq)
         },
     };
 
-    for (unsigned int i = 0 ; i < NumPageActions ; ++i) {
+    for (unsigned int i = 0; i < NumPageActions; ++i) {
         currentPageActions[i] = make_action_from_data(actionData[i], q);
     }
 
-    for (unsigned int i = 0 ; i < NumPageActions ; ++i) {
+    for (unsigned int i = 0; i < NumPageActions; ++i) {
         action_data ad = actionData[i];
         assert(QString::fromLatin1(ad.name).startsWith(QStringLiteral("window_")));
         ad.name = ad.name + strlen("window_");
@@ -509,7 +509,7 @@ void TabWidget::Private::slotContextMenu(const QPoint &p)
     Page *const contextMenuPage = static_cast<Page *>(tabWidget.widget(tabUnderPos));
     const Page *const current = currentPage();
 
-    QAction **const actions = contextMenuPage == current ? currentPageActions : otherPageActions ;
+    QAction **const actions = contextMenuPage == current ? currentPageActions : otherPageActions;
 
     enableDisablePageActions(actions, contextMenuPage);
 
@@ -579,9 +579,9 @@ void TabWidget::Private::enableDisablePageActions(QAction *actions[], const Page
     actions[CollapseAll] ->setEnabled(p && p->isHierarchicalView());
 
     if (tabWidget.count() < 2) {
-       tabWidget.tabBar()->hide();
+        tabWidget.tabBar()->hide();
     } else {
-       tabWidget.tabBar()->show();
+        tabWidget.tabBar()->show();
     }
 }
 
@@ -718,7 +718,7 @@ void TabWidget::setFlatModel(AbstractKeyListModel *model)
         return;
     }
     d->flatModel = model;
-    for (unsigned int i = 0, end = count() ; i != end ; ++i)
+    for (unsigned int i = 0, end = count(); i != end; ++i)
         if (Page *const page = d->page(i)) {
             page->setFlatModel(model);
         }
@@ -735,7 +735,7 @@ void TabWidget::setHierarchicalModel(AbstractKeyListModel *model)
         return;
     }
     d->hierarchicalModel = model;
-    for (unsigned int i = 0, end = count() ; i != end ; ++i)
+    for (unsigned int i = 0, end = count(); i != end; ++i)
         if (Page *const page = d->page(i)) {
             page->setHierarchicalModel(model);
         }
@@ -775,7 +775,7 @@ std::vector<QAbstractItemView *> TabWidget::views() const
     std::vector<QAbstractItemView *> result;
     const unsigned int N = count();
     result.reserve(N);
-    for (unsigned int i = 0 ; i != N ; ++i)
+    for (unsigned int i = 0; i != N; ++i)
         if (const Page *const p = d->page(i)) {
             result.push_back(p->view());
         }
@@ -798,7 +798,7 @@ unsigned int TabWidget::count() const
 
 void TabWidget::setMultiSelection(bool on)
 {
-    for (unsigned int i = 0, end = count() ; i != end ; ++i)
+    for (unsigned int i = 0, end = count(); i != end; ++i)
         if (const Page *const p = d->page(i))
             if (QTreeView *const view = p->view()) {
                 view->setSelectionMode(on ? QAbstractItemView::ExtendedSelection : QAbstractItemView::SingleSelection);
@@ -811,7 +811,7 @@ void TabWidget::createActions(KActionCollection *coll)
         return;
     }
     coll->addAction(d->newAction->objectName(), d->newAction);
-    for (unsigned int i = 0 ; i < Private::NumPageActions ; ++i) {
+    for (unsigned int i = 0; i < Private::NumPageActions; ++i) {
         QAction *a = d->currentPageActions[i];
         coll->addAction(a->objectName(), a);
     }
@@ -871,7 +871,7 @@ QTreeView *TabWidget::Private::addView(Page *page, Page *columnReference)
 
 static QStringList extractViewGroups(const KConfig *config)
 {
-    return config ? config->groupList().filter(QRegExp(QStringLiteral("^View #\\d+$"))) : QStringList() ;
+    return config ? config->groupList().filter(QRegExp(QStringLiteral("^View #\\d+$"))) : QStringList();
 }
 
 // work around deleteGroup() not deleting groups out of groupList():
@@ -906,7 +906,7 @@ void TabWidget::saveViews(KConfig *config) const
         config->deleteGroup(group);
     }
     unsigned int vg = 0;
-    for (unsigned int i = 0, end = count() ; i != end ; ++i) {
+    for (unsigned int i = 0, end = count(); i != end; ++i) {
         if (const Page *const p = d->page(i)) {
             if (p->isTemporary()) {
                 continue;

@@ -1046,7 +1046,7 @@ void MergeContactsTest::shouldMergeBlogFeed()
     const QString valueCustomStr = QStringLiteral("BlogFeed");
     Akonadi::Item::List lst;
     Addressee addressA;
-    addressA.insertCustom(QStringLiteral("KADDRESSBOOK"), valueCustomStr , nameItemA);
+    addressA.insertCustom(QStringLiteral("KADDRESSBOOK"), valueCustomStr, nameItemA);
     Akonadi::Item itemA;
     itemA.setPayload<Addressee>(addressA);
     lst << itemA;

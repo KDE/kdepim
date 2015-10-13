@@ -55,7 +55,7 @@ FilterMailApp::~FilterMailApp()
 
 void FilterMailApp::import()
 {
-    const QString directory = QFileDialog::getExistingDirectory(filterInfo()->parent() , QString(),  QDir::homePath());
+    const QString directory = QFileDialog::getExistingDirectory(filterInfo()->parent(), QString(),  QDir::homePath());
     importMails(directory);
 }
 

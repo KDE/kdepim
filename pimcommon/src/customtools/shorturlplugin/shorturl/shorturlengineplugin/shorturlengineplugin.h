@@ -36,7 +36,6 @@ public:
     QString pluginName() const;
     void setPluginName(const QString &pluginname);
 
-
 private:
     ShortUrlEnginePluginPrivate *const d;
 };

@@ -95,7 +95,7 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
 
     //Second row for text color
     d->mTextColorCheck = new QCheckBox(i18n("Change te&xt color:"),
-                                    this);
+                                       this);
     settings->addWidget(d->mTextColorCheck, 2, 0);
 
     d->mTextColorCombo = new KColorCombo(this);
@@ -110,7 +110,7 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
 
     //Third row for text background color
     d->mBackgroundColorCheck = new QCheckBox(i18n("Change &background color:"),
-                                          this);
+            this);
     settings->addWidget(d->mBackgroundColorCheck, 3, 0);
 
     d->mBackgroundColorCombo = new KColorCombo(this);
@@ -138,7 +138,6 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     d->mItalicCheckBox = new QCheckBox(i18n("&Italics"));
     d->mItalicCheckBox->setEnabled(false);
     fontLayout->addWidget(d->mItalicCheckBox);
-
 
     connect(d->mTextFontCheck, &QAbstractButton::toggled,
             d->mBoldCheckBox, &QWidget::setEnabled);
@@ -173,7 +172,7 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
     //Sixth for shortcut
     d->mKeySequenceWidget = new KKeySequenceWidget(this);
     settings->addWidget(d->mKeySequenceWidget, 6, 1);
-    QLabel *sclabel = new QLabel(i18n("Shortc&ut:") , this);
+    QLabel *sclabel = new QLabel(i18n("Shortc&ut:"), this);
     sclabel->setBuddy(d->mKeySequenceWidget);
     settings->addWidget(sclabel, 6, 0);
     if (!actionCollections.isEmpty()) {
@@ -186,7 +185,7 @@ TagWidget::TagWidget(const QList<KActionCollection *> &actionCollections, QWidge
 
     //Seventh for Toolbar checkbox
     d->mInToolbarCheck = new QCheckBox(i18n("Enable &toolbar button"),
-                                    this);
+                                       this);
     settings->addWidget(d->mInToolbarCheck, 7, 0);
     connect(d->mInToolbarCheck, &QCheckBox::stateChanged,
             this, &TagWidget::slotEmitChangeCheck);

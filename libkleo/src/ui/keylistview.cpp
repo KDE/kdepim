@@ -100,7 +100,7 @@ Kleo::KeyListView::KeyListView(const ColumnStrategy *columnStrategy, const Displ
 
     const QFontMetrics fm = fontMetrics();
 
-    for (int col = 0 ; !columnStrategy->title(col).isEmpty() ; ++col) {
+    for (int col = 0; !columnStrategy->title(col).isEmpty(); ++col) {
         headerItem()->setText(col, columnStrategy->title(col));
         header()->resizeSection(col, columnStrategy->width(col, fm));
         header()->setResizeMode(col, columnStrategy->resizeMode(col));
@@ -108,7 +108,7 @@ Kleo::KeyListView::KeyListView(const ColumnStrategy *columnStrategy, const Displ
 
     setAllColumnsShowFocus(true);
 
-    for (int i = 0 ; i < numSignalReplacements ; ++i) {
+    for (int i = 0; i < numSignalReplacements; ++i) {
         connect(this, signalReplacements[i].source, signalReplacements[i].target);
     }
 
@@ -177,12 +177,12 @@ void Kleo::KeyListView::slotUpdateTimeout()
     qCDebug(KLEO_UI_LOG) << "Kleo::KeyListView::slotUpdateTimeout(): processing"
                          << d->keyBuffer.size() << "items en block";
     if (hierarchical()) {
-        for (std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin() ; it != d->keyBuffer.end() ; ++it) {
+        for (std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin(); it != d->keyBuffer.end(); ++it) {
             doHierarchicalInsert(*it);
         }
         gatherScattered();
     } else {
-        for (std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin() ; it != d->keyBuffer.end() ; ++it) {
+        for (std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin(); it != d->keyBuffer.end(); ++it) {
             (void)new KeyListViewItem(this, *it);
         }
     }
@@ -416,13 +416,13 @@ void Kleo::KeyListViewItem::setKey(const GpgME::Key &key)
 
     // the ColumnStrategy operations might be very slow, so cache their
     // result here, where we're non-const :)
-    const Kleo::KeyListView::ColumnStrategy *cs = lv ? lv->columnStrategy() : 0 ;
+    const Kleo::KeyListView::ColumnStrategy *cs = lv ? lv->columnStrategy() : 0;
     if (!cs) {
         return;
     }
-    const KeyListView::DisplayStrategy *ds = lv ? lv->displayStrategy() : 0 ;
-    const int numCols = lv ? lv->columnCount() : 0 ;
-    for (int i = 0 ; i < numCols ; ++i) {
+    const KeyListView::DisplayStrategy *ds = lv ? lv->displayStrategy() : 0;
+    const int numCols = lv ? lv->columnCount() : 0;
+    for (int i = 0; i < numCols; ++i) {
         setText(i, cs->text(key, i));
         setToolTip(i, cs->toolTip(key, i));
         const QIcon icon = cs->icon(key, i);
@@ -441,7 +441,7 @@ QString Kleo::KeyListViewItem::toolTip(int col) const
 {
     return listView() && listView()->columnStrategy()
            ? listView()->columnStrategy()->toolTip(key(), col)
-           : QString() ;
+           : QString();
 }
 
 bool Kleo::KeyListViewItem::operator<(const QTreeWidgetItem &other) const

@@ -375,12 +375,12 @@ void Item::setViewable(Model *model, bool bViewable)
         }
 
         QList< Item * >::ConstIterator end(d_ptr->mChildItems->constEnd());
-        for (QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end ; ++it) {
+        for (QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end; ++it) {
             (*it)->setViewable(model, bViewable);
         }
     } else {
         QList< Item * >::ConstIterator end(d_ptr->mChildItems->constEnd());
-        for (QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end ; ++it) {
+        for (QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end; ++it) {
             (*it)->setViewable(model, bViewable);
         }
 
@@ -591,7 +591,7 @@ void Item::dump(const QString &prefix)
     }
 
     QList< Item * >::ConstIterator end(d_ptr->mChildItems->constEnd());
-    for (QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end ; ++it) {
+    for (QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end; ++it) {
         (*it)->dump(nPrefix);
     }
 }

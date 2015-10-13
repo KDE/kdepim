@@ -32,7 +32,6 @@
 
 #include <ETMViewStateSaver>
 
-
 #include <KCalCore/Event>
 
 #include <KCheckableProxyModel>
@@ -101,7 +100,7 @@ private:
     class ElidedLabel: public QFrame
     {
     public:
-        ElidedLabel(const QString & text): mText(text) {}
+        ElidedLabel(const QString &text): mText(text) {}
 
         QSize minimumSizeHint() const Q_DECL_OVERRIDE;
 
@@ -714,7 +713,7 @@ void MultiAgendaView::doRestoreConfig(const KConfigGroup &configGroup)
 
             // Only show the first column
             KRearrangeColumnsProxyModel *columnFilterProxy = new KRearrangeColumnsProxyModel(this);
-            columnFilterProxy->setSourceColumns(QVector<int>()<<Akonadi::ETMCalendar::CollectionTitle);
+            columnFilterProxy->setSourceColumns(QVector<int>() << Akonadi::ETMCalendar::CollectionTitle);
             columnFilterProxy->setSourceModel(sortProxy);
 
             // Keep track of selection.
@@ -815,6 +814,6 @@ void MultiAgendaView::Private::ElidedLabel::paintEvent(QPaintEvent *event)
 
 QSize MultiAgendaView::Private::ElidedLabel::minimumSizeHint() const
 {
-    const QFontMetrics& fm = fontMetrics();
+    const QFontMetrics &fm = fontMetrics();
     return QSize(fm.width(QStringLiteral("...")), fm.height());
 }

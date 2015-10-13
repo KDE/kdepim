@@ -25,7 +25,6 @@
 
 #include <QListWidget>
 
-
 namespace MessageList
 {
 

@@ -179,7 +179,7 @@ bool SystemTrayIcon::eventFilter(QObject *o, QEvent *e)
         case QEvent::Show:
         case QEvent::DeferredDelete:
             QMetaObject::invokeMethod(this, "slotEnableDisableActions", Qt::QueuedConnection);
-        default: ;
+        default:;
         }
     else if (o == d->attentionWindow)
         switch (e->type()) {
@@ -189,7 +189,7 @@ bool SystemTrayIcon::eventFilter(QObject *o, QEvent *e)
         case QEvent::Show:
         case QEvent::DeferredDelete:
             QMetaObject::invokeMethod(this, "slotEnableDisableActions", Qt::QueuedConnection);
-        default: ;
+        default:;
         }
     return false;
 }

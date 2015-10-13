@@ -57,20 +57,20 @@ namespace Types
 static bool operator==(const AddrSpec &lhs, const AddrSpec &rhs)
 {
     return lhs.localPart == rhs.localPart
-           && lhs.domain == rhs.domain ;
+           && lhs.domain == rhs.domain;
 }
 
 static bool operator==(const Mailbox &lhs, const Mailbox &rhs)
 {
     return lhs.name() == rhs.name()
-           && lhs.addrSpec() == rhs.addrSpec() ;
+           && lhs.addrSpec() == rhs.addrSpec();
 }
 
 static bool determine_ambiguous(const Mailbox &mb, const std::vector<Key> &keys)
 {
     Q_UNUSED(mb);
     // ### really do check when we don't only show matching keys
-    return keys.size() != 1 ;
+    return keys.size() != 1;
 }
 
 } // namespace Types
@@ -152,7 +152,7 @@ const std::vector<Key> &Recipient::encryptionCertificateCandidates(GpgME::Protoc
         proto == OpenPGP ? d->pgpEncryptionKeys :
         proto == CMS     ? d->cmsEncryptionKeys :
         // even though gcc warns about this line, it's completely ok, promise:
-        kleo_assert_fail(proto == OpenPGP || proto == CMS) ;
+        kleo_assert_fail(proto == OpenPGP || proto == CMS);
 #endif
 }
 

@@ -107,7 +107,7 @@ private:
                 { disableLDAPCB, SIGNAL(toggled(bool)) },
                 { customLDAPProxy, SIGNAL(textChanged(QString)) },
             };
-            for (unsigned int i = 0 ; i < sizeof sources / sizeof * sources ; ++i) {
+            for (unsigned int i = 0; i < sizeof sources / sizeof * sources; ++i) {
                 connect(sources[i].object, sources[i].signal, q, SIGNAL(changed()));
             }
             connect(useCustomHTTPProxyRB, SIGNAL(toggled(bool)),

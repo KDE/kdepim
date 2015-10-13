@@ -228,7 +228,6 @@ void SieveEditorMainWindow::setupActions()
     mDebugSieveScriptAction->setText(i18n("Debug Sieve Script..."));
     ac->setDefaultShortcut(mDebugSieveScriptAction, QKeySequence(Qt::CTRL + Qt::Key_D));
 
-
     mWrapTextAction = new QAction(i18n("Wordwarp"), this);
     mWrapTextAction->setCheckable(true);
     ac->addAction(QStringLiteral("wordwrap"), mWrapTextAction);

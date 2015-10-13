@@ -146,7 +146,7 @@ public:
     }
     QString path() const Q_DECL_OVERRIDE
     {
-        return mComponent->name() + QLatin1Char('/') + mName ;
+        return mComponent->name() + QLatin1Char('/') + mName;
     }
     Kleo::CryptoConfigEntry::Level level() const Q_DECL_OVERRIDE
     {
@@ -181,7 +181,7 @@ public:
     }
     QString path() const Q_DECL_OVERRIDE
     {
-        return mGroup->path() + QLatin1Char('/') + mName ;
+        return mGroup->path() + QLatin1Char('/') + mName;
     }
     bool isOptional() const Q_DECL_OVERRIDE;
     bool isReadOnly() const Q_DECL_OVERRIDE;

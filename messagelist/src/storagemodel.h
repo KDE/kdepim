@@ -30,8 +30,9 @@
 class QAbstractItemModel;
 class QItemSelectionModel;
 
-namespace Akonadi {
-    class Item;
+namespace Akonadi
+{
+class Item;
 }
 
 namespace MessageList

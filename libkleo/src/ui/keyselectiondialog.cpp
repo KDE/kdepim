@@ -142,7 +142,7 @@ static bool checkKeyUsage(const GpgME::Key &key, unsigned int keyUsage)
             // Seems validity isn't checked for secret keylistings...
             !key.hasSecret()) {
         std::vector<GpgME::UserID> uids = key.userIDs();
-        for (std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it)
+        for (std::vector<GpgME::UserID>::const_iterator it = uids.begin(); it != uids.end(); ++it)
             if (!it->isRevoked() && it->validity() >= GpgME::UserID::Marginal) {
                 return true;
             }
@@ -157,7 +157,7 @@ static bool checkKeyUsage(const GpgME::Key &key, unsigned int keyUsage)
 
 static bool checkKeyUsage(const std::vector<GpgME::Key> &keys, unsigned int keyUsage)
 {
-    for (std::vector<GpgME::Key>::const_iterator it = keys.begin() ; it != keys.end() ; ++it)
+    for (std::vector<GpgME::Key>::const_iterator it = keys.begin(); it != keys.end(); ++it)
         if (!checkKeyUsage(*it, keyUsage)) {
             return false;
         }
@@ -223,7 +223,7 @@ int ColumnStrategy::width(int col, const QFontMetrics &fm) const
     if (col == 0) {
         static const char hexchars[] = "0123456789ABCDEF";
         int maxWidth = 0;
-        for (unsigned int i = 0 ; i < 16 ; ++i) {
+        for (unsigned int i = 0; i < 16; ++i) {
             maxWidth = qMax(fm.width(QLatin1Char(hexchars[i])), maxWidth);
         }
         return 8 * maxWidth + 2 * KIconLoader::SizeSmall;
@@ -245,7 +245,7 @@ QString ColumnStrategy::text(const GpgME::Key &key, int col) const
     case 1: {
         const char *uid = key.userID(0).id();
         if (key.protocol() == GpgME::OpenPGP) {
-            return uid && *uid ? QString::fromUtf8(uid) : QString() ;
+            return uid && *uid ? QString::fromUtf8(uid) : QString();
         } else { // CMS
             return Kleo::DN(uid).prettyDN();
         }
@@ -261,7 +261,7 @@ QString ColumnStrategy::toolTip(const GpgME::Key &key, int) const
     const char *fpr = key.primaryFingerprint();
     const char *issuer = key.issuerName();
     const GpgME::Subkey subkey = key.subkey(0);
-    const QString expiry = subkey.neverExpires() ? i18n("never") : time_t2string(subkey.expirationTime()) ;
+    const QString expiry = subkey.neverExpires() ? i18n("never") : time_t2string(subkey.expirationTime());
     const QString creation = time_t2string(subkey.creationTime());
     if (key.protocol() == GpgME::OpenPGP)
         return i18n("OpenPGP key for %1\n"
@@ -444,7 +444,7 @@ void Kleo::KeySelectionDialog::init(bool rememberChoice, bool extendedSelection,
     le->setClearButtonEnabled(true);
     le->setText(initialQuery);
 
-    QLabel *lbSearchFor =  new QLabel(i18n("&Search for:"), page) ;
+    QLabel *lbSearchFor =  new QLabel(i18n("&Search for:"), page);
     lbSearchFor->setBuddy(le);
 
     hlay->addWidget(lbSearchFor);
@@ -558,7 +558,7 @@ QString Kleo::KeySelectionDialog::fingerprint() const
 QStringList Kleo::KeySelectionDialog::fingerprints() const
 {
     QStringList result;
-    for (std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it)
+    for (std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin(); it != mSelectedKeys.end(); ++it)
         if (const char *fpr = it->primaryFingerprint()) {
             result.push_back(QLatin1String(fpr));
         }
@@ -568,7 +568,7 @@ QStringList Kleo::KeySelectionDialog::fingerprints() const
 QStringList Kleo::KeySelectionDialog::pgpKeyFingerprints() const
 {
     QStringList result;
-    for (std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it)
+    for (std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin(); it != mSelectedKeys.end(); ++it)
         if (it->protocol() == GpgME::OpenPGP)
             if (const char *fpr = it->primaryFingerprint()) {
                 result.push_back(QLatin1String(fpr));
@@ -579,7 +579,7 @@ QStringList Kleo::KeySelectionDialog::pgpKeyFingerprints() const
 QStringList Kleo::KeySelectionDialog::smimeFingerprints() const
 {
     QStringList result;
-    for (std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin() ; it != mSelectedKeys.end() ; ++it)
+    for (std::vector<GpgME::Key>::const_iterator it = mSelectedKeys.begin(); it != mSelectedKeys.end(); ++it)
         if (it->protocol() == GpgME::CMS)
             if (const char *fpr = it->primaryFingerprint()) {
                 result.push_back(QLatin1String(fpr));
@@ -643,7 +643,7 @@ static void showKeyListError(QWidget *parent, const GpgME::Error &err)
     assert(err);
     const QString msg = i18n("<qt><p>An error occurred while fetching "
                              "the keys from the backend:</p>"
-                             "<p><b>%1</b></p></qt>" ,
+                             "<p><b>%1</b></p></qt>",
                              QString::fromLocal8Bit(err.asString()));
 
     KMessageBox::error(parent, msg, i18n("Key Listing Failed"));
@@ -698,7 +698,7 @@ static void selectKeys(Kleo::KeyListView *klv, const std::vector<GpgME::Key> &se
     if (selectedKeys.empty()) {
         return;
     }
-    for (std::vector<GpgME::Key>::const_iterator it = selectedKeys.begin() ; it != selectedKeys.end() ; ++it)
+    for (std::vector<GpgME::Key>::const_iterator it = selectedKeys.begin(); it != selectedKeys.end(); ++it)
         if (Kleo::KeyListViewItem *item = klv->itemByFingerprint(it->primaryFingerprint())) {
             item->setSelected(true);
         }
@@ -758,7 +758,7 @@ namespace
 struct AlreadyChecked {
     bool operator()(const GpgME::Key &key) const
     {
-        return key.keyListMode() & GpgME::Validate ;
+        return key.keyListMode() & GpgME::Validate;
     }
 };
 }
@@ -777,7 +777,7 @@ void Kleo::KeySelectionDialog::slotCheckSelection(KeyListViewItem *item)
         }
     }
 
-    for (KeyListViewItem *it = mKeyListView->firstChild() ; it ; it = it->nextSibling())
+    for (KeyListViewItem *it = mKeyListView->firstChild(); it; it = it->nextSibling())
         if (it->isSelected()) {
             mSelectedKeys.push_back(it->key());
         }
@@ -810,7 +810,7 @@ void Kleo::KeySelectionDialog::startValidatingKeyListing()
     mKeyListView->setEnabled(false);
 
     std::vector<GpgME::Key> smime, openpgp;
-    for (std::vector<GpgME::Key>::const_iterator it = mKeysToCheck.begin() ; it != mKeysToCheck.end() ; ++it)
+    for (std::vector<GpgME::Key>::const_iterator it = mKeysToCheck.begin(); it != mKeysToCheck.end(); ++it)
         if (it->protocol() == GpgME::OpenPGP) {
             openpgp.push_back(*it);
         } else {
@@ -831,7 +831,7 @@ void Kleo::KeySelectionDialog::startValidatingKeyListing()
 
 bool Kleo::KeySelectionDialog::rememberSelection() const
 {
-    return mRememberCB && mRememberCB->isChecked() ;
+    return mRememberCB && mRememberCB->isChecked();
 }
 
 void Kleo::KeySelectionDialog::slotRMB(Kleo::KeyListViewItem *item, const QPoint &p)
@@ -930,7 +930,7 @@ void Kleo::KeySelectionDialog::filterByKeyID(const QString &keyID)
     if (keyID.isEmpty()) {
         showAllItems();
     } else
-        for (KeyListViewItem *item = mKeyListView->firstChild() ; item ; item = item->nextSibling()) {
+        for (KeyListViewItem *item = mKeyListView->firstChild(); item; item = item->nextSibling()) {
             item->setHidden(!item->text(0).toUpper().startsWith(keyID));
         }
 }
@@ -942,7 +942,7 @@ static bool anyUIDMatches(const Kleo::KeyListViewItem *item, QRegExp &rx)
     }
 
     const std::vector<GpgME::UserID> uids = item->key().userIDs();
-    for (std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it)
+    for (std::vector<GpgME::UserID>::const_iterator it = uids.begin(); it != uids.end(); ++it)
         if (it->id() && rx.indexIn(QString::fromUtf8(it->id())) >= 0) {
             return true;
         }
@@ -956,7 +956,7 @@ void Kleo::KeySelectionDialog::filterByKeyIDOrUID(const QString &str)
     // match beginnings of words:
     QRegExp rx(QLatin1String("\\b") + QRegExp::escape(str), Qt::CaseInsensitive);
 
-    for (KeyListViewItem *item = mKeyListView->firstChild() ; item ; item = item->nextSibling()) {
+    for (KeyListViewItem *item = mKeyListView->firstChild(); item; item = item->nextSibling()) {
         item->setHidden(!item->text(0).toUpper().startsWith(str) && !anyUIDMatches(item, rx));
     }
 
@@ -969,14 +969,14 @@ void Kleo::KeySelectionDialog::filterByUID(const QString &str)
     // match beginnings of words:
     QRegExp rx(QLatin1String("\\b") + QRegExp::escape(str), Qt::CaseInsensitive);
 
-    for (KeyListViewItem *item = mKeyListView->firstChild() ; item ; item = item->nextSibling()) {
+    for (KeyListViewItem *item = mKeyListView->firstChild(); item; item = item->nextSibling()) {
         item->setHidden(!anyUIDMatches(item, rx));
     }
 }
 
 void Kleo::KeySelectionDialog::showAllItems()
 {
-    for (KeyListViewItem *item = mKeyListView->firstChild() ; item ; item = item->nextSibling()) {
+    for (KeyListViewItem *item = mKeyListView->firstChild(); item; item = item->nextSibling()) {
         item->setHidden(false);
     }
 }

@@ -74,7 +74,7 @@ CSSHelper::CSSHelper(const QPaintDevice *pd) :
             reader.readEntry("PGPMessageErr", cPgpErrH);
         cHtmlWarning =
             reader.readEntry("HTMLWarningColor", cHtmlWarning);
-        for (int i = 0 ; i < 3 ; ++i) {
+        for (int i = 0; i < 3; ++i) {
             const QString key = QLatin1String("QuotedText") + QString::number(i + 1);
             mQuoteColor[i] = reader.readEntry(key, mQuoteColor[i]);
         }
@@ -88,7 +88,7 @@ CSSHelper::CSSHelper(const QPaintDevice *pd) :
         mFixedPrintFont = mFixedFont; // FIXME when we have a separate fixed print font
         QFont defaultFont = mBodyFont;
         defaultFont.setItalic(true);
-        for (int i = 0 ; i < 3 ; ++i) {
+        for (int i = 0; i < 3; ++i) {
             const QString key = QStringLiteral("quote%1-font").arg(i + 1);
             mQuoteFont[i] = fonts.readEntry(key, defaultFont);
         }

@@ -323,7 +323,7 @@ void CollectionGeneralPage::save(Collection &collection)
         const CollectionTypeUtil::FolderContentsType type =
             collectionUtil.contentsTypeFromString(mContentsComboBox->currentText());
 
-        const QByteArray kolabName = collectionUtil.kolabNameFromType(type) ;
+        const QByteArray kolabName = collectionUtil.kolabNameFromType(type);
         if (!kolabName.isEmpty()) {
             const QString iconName = collectionUtil.iconNameFromContentsType(type);
             Akonadi::EntityDisplayAttribute *attribute =

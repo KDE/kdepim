@@ -129,7 +129,7 @@ ConstraintGraphicsItem *GraphicsScene::Private::findConstraintItem(const Constra
         QList<ConstraintGraphicsItem *> clst = item->startConstraints();
         QList<ConstraintGraphicsItem *>::iterator it = clst.begin();
         //qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::findConstraintItem start:"<<c<<item<<clst;
-        for (; it != clst.end() ; ++it)
+        for (; it != clst.end(); ++it)
             if ((*it)->constraint() == c) {
                 break;
             }
@@ -142,7 +142,7 @@ ConstraintGraphicsItem *GraphicsScene::Private::findConstraintItem(const Constra
         QList<ConstraintGraphicsItem *> clst = item->endConstraints();
         QList<ConstraintGraphicsItem *>::iterator it = clst.begin();
         //qCDebug(KDGANTT_LOG)<<"GraphicsScene::Private::findConstraintItem end:"<<c<<item<<clst;
-        for (; it != clst.end() ; ++it)
+        for (; it != clst.end(); ++it)
             if ((*it)->constraint() == c) {
                 break;
             }

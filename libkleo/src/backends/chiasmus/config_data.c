@@ -88,5 +88,5 @@ const struct kleo_chiasmus_config_data kleo_chiasmus_config_entries[] = {
 #endif /* HAVE_C99_INITIALIZERS */
 };
 const unsigned int kleo_chiasmus_config_entries_dim
-    = sizeof kleo_chiasmus_config_entries / sizeof * kleo_chiasmus_config_entries ;
+    = sizeof kleo_chiasmus_config_entries / sizeof * kleo_chiasmus_config_entries;
 

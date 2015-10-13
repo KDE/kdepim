@@ -369,7 +369,7 @@ void Toolbox::setSelectedCategories(const QStringList &list)
 QStringList Toolbox::currentTags()
 {
     QStringList t = txtCatTags->text().split(QRegExp(QStringLiteral(",|،")), QString::SkipEmptyParts);
-    for (int i = 0; i < t.count() ; ++i) {
+    for (int i = 0; i < t.count(); ++i) {
         t[i] = t[i].trimmed();
     }
     return t;
@@ -479,7 +479,7 @@ void Toolbox::clearEntries()
     if (DBMan::self()->clearPosts(d->mCurrentBlogId)) {
         lstEntriesList->clear();
     } else {
-        KMessageBox::detailedSorry(this, i18n("Cannot clear the list of entries.") , DBMan::self()->lastErrorText());
+        KMessageBox::detailedSorry(this, i18n("Cannot clear the list of entries."), DBMan::self()->lastErrorText());
     }
 }
 

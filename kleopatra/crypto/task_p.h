@@ -63,8 +63,7 @@ public:
     }
     void cancel() Q_DECL_OVERRIDE {}
 private:
-    void doStart() Q_DECL_OVERRIDE
-    {
+    void doStart() Q_DECL_OVERRIDE {
         QTimer::singleShot(0, this, &SimpleTask::slotEmitResult);
     }
     unsigned long long inputSize() const Q_DECL_OVERRIDE

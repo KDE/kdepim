@@ -68,7 +68,7 @@ QWidget *SieveActionRedirect::createParamWidget(QWidget *parent) const
     return w;
 }
 
-bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {

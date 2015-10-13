@@ -75,7 +75,7 @@ QStringList HeaderStrategy::stringList(const char *const headers[], int numHeade
 {
     QStringList sl;
     sl.reserve(numHeaders);
-    for (int i = 0 ; i < numHeaders ; ++i) {
+    for (int i = 0; i < numHeaders; ++i) {
         sl.push_back(QLatin1String(headers[i]));
     }
     return sl;

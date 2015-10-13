@@ -383,7 +383,7 @@ public:
     bool showSignatureDetails() const;
 
     /** Show signature details. */
-    void setShowSignatureDetails(bool showDetails = true) ;
+    void setShowSignatureDetails(bool showDetails = true);
 
     /* show or hide the list that points to the attachments */
     bool showAttachmentQuicklist() const;

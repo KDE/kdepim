@@ -128,7 +128,7 @@ int SelectCertificateCommand::doStart()
     d->ensureDialogCreated();
 
     CertificateSelectionDialog::Options opts;
-    for (unsigned int i = 0 ; i < sizeof option_table / sizeof * option_table ; ++i)
+    for (unsigned int i = 0; i < sizeof option_table / sizeof * option_table; ++i)
         if (hasOption(option_table[i].name)) {
             opts |= option_table[i].option;
         }

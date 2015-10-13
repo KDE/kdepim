@@ -450,7 +450,7 @@ private:
         AssuanServerConnection::Private &conn = *static_cast<AssuanServerConnection::Private *>(assuan_get_pointer(ctx_));
 
         if (qstrcmp(line, "version") == 0) {
-            static const char version[] = "Kleopatra " KLEOPATRA_VERSION_STRING ;
+            static const char version[] = "Kleopatra " KLEOPATRA_VERSION_STRING;
             return assuan_process_done(ctx_, assuan_send_data(ctx_, version, sizeof version - 1));
         }
 
@@ -795,7 +795,7 @@ private:
     QByteArray dumpOptions() const
     {
         QByteArray result;
-        for (std::map<std::string, QVariant>::const_iterator it = options.begin(), end = options.end() ; it != end ; ++it) {
+        for (std::map<std::string, QVariant>::const_iterator it = options.begin(), end = options.end(); it != end; ++it) {
             result += it->first.c_str() + it->second.toString().toUtf8() + '\n';
         }
         return result;
@@ -837,7 +837,7 @@ private:
     QByteArray dumpMementos() const
     {
         QByteArray result;
-        for (std::map< QByteArray, shared_ptr<AssuanCommand::Memento> >::const_iterator it = mementos.begin(), end = mementos.end() ; it != end ; ++it) {
+        for (std::map< QByteArray, shared_ptr<AssuanCommand::Memento> >::const_iterator it = mementos.begin(), end = mementos.end(); it != end; ++it) {
             char buf[2 + 2 * sizeof(void *) + 2];
             sprintf(buf, "0x%p\n", (void *)it->second.get());
             buf[sizeof(buf) - 1] = '\0';
@@ -969,7 +969,7 @@ AssuanServerConnection::Private::Private(assuan_fd_t fd_, const std::vector< sha
     }
 
     notifiers.reserve(notifiers.size() + numFDs);
-    for (int i = 0 ; i < numFDs ; ++i) {
+    for (int i = 0; i < numFDs; ++i) {
         const shared_ptr<QSocketNotifier> sn(new QSocketNotifier((intptr_t)fds[i], QSocketNotifier::Read), mem_fn(&QObject::deleteLater));
         connect(sn.get(), &QSocketNotifier::activated, this, &Private::slotReadActivity);
         notifiers.push_back(sn);
@@ -1272,7 +1272,7 @@ std::vector<U> keys(const std::map<U, V> &map)
 {
     std::vector<U> result;
     result.resize(map.size());
-    for (typename std::map<U, V>::const_iterator it = map.begin(), end = map.end() ; it != end ; ++it) {
+    for (typename std::map<U, V>::const_iterator it = map.begin(), end = map.end(); it != end; ++it) {
         result.push_back(it->first);
     }
     return result;
@@ -1290,7 +1290,7 @@ const std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > &AssuanCommand:
 bool AssuanCommand::hasMemento(const QByteArray &tag) const
 {
     if (const unsigned int id = sessionId()) {
-        return SessionDataHandler::instance()->sessionData(id)->mementos.count(tag) || mementos().count(tag) ;
+        return SessionDataHandler::instance()->sessionData(id)->mementos.count(tag) || mementos().count(tag);
     } else {
         return mementos().count(tag);
     }
@@ -1563,7 +1563,7 @@ gpg_error_t AssuanCommandFactory::_handle(assuan_context_t ctx, char *line, cons
         cmd->d->sessionId             = conn.sessionId;
 
         const std::map<std::string, std::string> cmdline_options = parse_commandline(line);
-        for (std::map<std::string, std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it) {
+        for (std::map<std::string, std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end(); it != end; ++it) {
             cmd->d->options[it->first] = QString::fromUtf8(it->second.c_str());
         }
 

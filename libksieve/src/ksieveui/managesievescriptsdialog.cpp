@@ -230,7 +230,7 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
     }
 }
 
-void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob *, bool success , const QString &errorMsg)
+void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg)
 {
     if (success) {
         d->mSieveEditor->addOkMessage(i18n("No errors found."));

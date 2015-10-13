@@ -395,7 +395,7 @@ private:
 
       Returns whether a signature was found or not: use this to
       find out if opaque data is signed or not. */
-    bool writeOpaqueOrMultipartSignedData(KMime::Content* data, KMime::Content& sign, const QString& fromAddress, bool hideErrors = false);
+    bool writeOpaqueOrMultipartSignedData(KMime::Content *data, KMime::Content &sign, const QString &fromAddress, bool hideErrors = false);
 
     /** Writes out the information contained in a GpgME::ImportResult */
     void writeCertificateImportResult(const GpgME::ImportResult &res);
@@ -421,7 +421,7 @@ private:
       we only check whether @p str contains 'xxx="http[s]:' where xxx is
       not href. Obfuscated external references are ignored on purpose.
     */
-    static bool containsExternalReferences(const QString &str , const QString &extraHead);
+    static bool containsExternalReferences(const QString &str, const QString &extraHead);
 
 public:// (during refactoring)
 

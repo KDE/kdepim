@@ -1756,7 +1756,7 @@ void View::markMessageItemsAsAboutToBeRemoved(QList< MessageItem * > &items, boo
         clearingEntireSelection = false;
     } else {
         // the selection has same size or is smaller: we can clear it completely with our removal
-        foreach (const QModelIndex &selectedIndex , selectedIndexes) {
+        foreach (const QModelIndex &selectedIndex, selectedIndexes) {
             Q_ASSERT(selectedIndex.isValid());
             Q_ASSERT(selectedIndex.column() == 0);
 

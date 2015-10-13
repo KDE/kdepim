@@ -67,7 +67,7 @@ void GravatarCache::saveGravatarPixmap(const QString &hashStr, const QPixmap &pi
             const QString path = d->mGravatarPath + hashStr + QLatin1String(".png");
             qCDebug(GRAVATAR_LOG) << " path " << path;
             if (pixmap.save(path)) {
-                qCDebug(GRAVATAR_LOG) <<" saved in cache "<< hashStr << path;
+                qCDebug(GRAVATAR_LOG) << " saved in cache " << hashStr << path;
                 d->mCachePixmap.insert(hashStr, new QPixmap(pixmap));
             }
         }
@@ -77,10 +77,10 @@ void GravatarCache::saveGravatarPixmap(const QString &hashStr, const QPixmap &pi
 QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatarStored)
 {
     gravatarStored = false;
-    qCDebug(GRAVATAR_LOG) <<" hashStr"<<hashStr;
+    qCDebug(GRAVATAR_LOG) << " hashStr" << hashStr;
     if (!hashStr.isEmpty()) {
         if (d->mCachePixmap.contains(hashStr)) {
-            qCDebug(GRAVATAR_LOG) <<" contains in cache "<< hashStr;
+            qCDebug(GRAVATAR_LOG) << " contains in cache " << hashStr;
             gravatarStored = true;
             return *(d->mCachePixmap.object(hashStr));
         } else {
@@ -89,7 +89,7 @@ QPixmap GravatarCache::loadGravatarPixmap(const QString &hashStr, bool &gravatar
             if (fi.exists()) {
                 QPixmap pix;
                 if (pix.load(path)) {
-                    qCDebug(GRAVATAR_LOG) << " add to cache "<<hashStr << path;
+                    qCDebug(GRAVATAR_LOG) << " add to cache " << hashStr << path;
                     d->mCachePixmap.insert(hashStr, new QPixmap(pix));
                     gravatarStored = true;
                     return pix;

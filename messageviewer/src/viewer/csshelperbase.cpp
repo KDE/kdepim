@@ -117,7 +117,7 @@ CSSHelperBase::CSSHelperBase(const QPaintDevice *pd) :
     mPrintFont = MessageCore::MessageCoreSettings::self()->useDefaultFonts() ? defaultFont : MessageViewer::MessageViewerSettings::self()->printFont();
     mFixedFont = mFixedPrintFont = defaultFixedFont;
     defaultFont.setItalic(true);
-    for (int i = 0 ; i < 3 ; ++i) {
+    for (int i = 0; i < 3; ++i) {
         mQuoteFont[i] = defaultFont;
     }
 
@@ -211,7 +211,7 @@ QString CSSHelperBase::quoteFontTag(int level) const
     static const int numQuoteLevels = sizeof mQuoteFont / sizeof * mQuoteFont;
     const int effectiveLevel = mRecycleQuoteColors
                                ? level % numQuoteLevels + 1
-                               : qMin(level + 1, numQuoteLevels) ;
+                               : qMin(level + 1, numQuoteLevels);
     if (level >= numQuoteLevels) {
         return QStringLiteral("<div class=\"deepquotelevel%1\">").arg(effectiveLevel);
     } else {
@@ -239,7 +239,7 @@ namespace
 {
 int pointsToPixel(const QPaintDevice *pd, int pointSize)
 {
-    return (pointSize * pd->logicalDpiY() + 36) / 72 ;
+    return (pointSize * pd->logicalDpiY() + 36) / 72;
 }
 }
 
@@ -363,7 +363,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
     }
 
     // CSS definitions for quote levels 1-3
-    for (int i = 0 ; i < 3 ; ++i) {
+    for (int i = 0; i < 3; ++i) {
         quoteCSS += QStringLiteral("div.quotelevel%1 {\n"
                                    "  color: %2 ! important;\n")
                     .arg(QString::number(i + 1), mQuoteColor[i].name());
@@ -380,7 +380,7 @@ QString CSSHelperBase::screenCssDefinitions(const CSSHelperBase *helper, bool fi
     }
 
     // CSS definitions for quote levels 4+
-    for (int i = 0 ; i < 3 ; ++i) {
+    for (int i = 0; i < 3; ++i) {
         quoteCSS += QStringLiteral("div.deepquotelevel%1 {\n"
                                    "  color: %2 ! important;\n")
                     .arg(QString::number(i + 1), mQuoteColor[i].name());

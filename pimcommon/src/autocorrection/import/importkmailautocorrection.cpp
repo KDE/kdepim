@@ -109,7 +109,7 @@ bool ImportKMailAutocorrection::import(const QString &fileName, LoadAttribute lo
         if (!superScript.isNull()) {
             const QDomNodeList nl = superScript.childNodes();
             const int numberOfNl(nl.count());
-            for (int i = 0; i < numberOfNl ; ++i) {
+            for (int i = 0; i < numberOfNl; ++i) {
                 mSuperScriptEntries.insert(nl.item(i).toElement().attribute(QStringLiteral("find")), nl.item(i).toElement().attribute(QStringLiteral("super")));
             }
         }

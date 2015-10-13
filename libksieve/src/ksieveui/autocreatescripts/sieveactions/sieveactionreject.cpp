@@ -54,7 +54,7 @@ QWidget *SieveActionReject::createParamWidget(QWidget *parent) const
     return w;
 }
 
-bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {

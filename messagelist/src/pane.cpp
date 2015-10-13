@@ -804,10 +804,10 @@ void Pane::Private::updateTabControls()
 {
     const bool enableAction = (q->count() > 1);
     if (enableAction) {
-      q->setCornerWidget( mCloseTabButton, Qt::TopRightCorner);
-      mCloseTabButton->setVisible(true);
+        q->setCornerWidget(mCloseTabButton, Qt::TopRightCorner);
+        mCloseTabButton->setVisible(true);
     } else {
-      q->setCornerWidget( Q_NULLPTR, Qt::TopRightCorner);
+        q->setCornerWidget(Q_NULLPTR, Qt::TopRightCorner);
     }
     if (mCloseTabAction) {
         mCloseTabAction->setEnabled(enableAction);
@@ -828,14 +828,14 @@ void Pane::Private::updateTabControls()
     if (MessageListSettings::self()->autoHideTabBarWithSingleTab()) {
         q->tabBar()->setVisible(enableAction);
         if (enableAction) {
-          q->setCornerWidget( mNewTabButton, Qt::TopLeftCorner);
-          mNewTabButton->setVisible(true);
+            q->setCornerWidget(mNewTabButton, Qt::TopLeftCorner);
+            mNewTabButton->setVisible(true);
         } else {
-          q->setCornerWidget( Q_NULLPTR, Qt::TopLeftCorner);
+            q->setCornerWidget(Q_NULLPTR, Qt::TopLeftCorner);
         }
     } else {
         q->tabBar()->setVisible(true);
-        q->setCornerWidget( mNewTabButton, Qt::TopLeftCorner);
+        q->setCornerWidget(mNewTabButton, Qt::TopLeftCorner);
         mNewTabButton->setVisible(true);
     }
 

@@ -234,10 +234,8 @@ void ShortUrlWidgetNg::slotCloseWidget()
     mShortUrl->clear();
     mIndicatorLabel->stop();
 
-
     Q_EMIT toolsWasClosed();
 }
-
 
 void ShortUrlWidgetNg::slotOpenShortUrl()
 {

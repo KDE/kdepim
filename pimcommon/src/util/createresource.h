@@ -32,7 +32,7 @@ public:
     explicit CreateResource();
     ~CreateResource();
 
-    QString createResource(const QString &resources, const QString &name, const QMap<QString, QVariant> &settings , bool synchronizeTree = false);
+    QString createResource(const QString &resources, const QString &name, const QMap<QString, QVariant> &settings, bool synchronizeTree = false);
 
 Q_SIGNALS:
     void createResourceInfo(const QString &);

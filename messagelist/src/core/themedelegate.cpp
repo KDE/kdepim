@@ -93,8 +93,6 @@ void ThemeDelegate::setTheme(const Theme *theme)
 
 }
 
-
-
 enum FontType {
     Normal,
     Bold,
@@ -111,18 +109,18 @@ static int sFontHeightCache = 0;
 static inline const QFontMetrics &cachedFontMetrics(const Theme::ContentItem *ci)
 {
     return (!ci->isBold() && !ci->isItalic()) ? sFontMetricsCache[Normal] :
-            (ci->isBold() && !ci->isItalic()) ? sFontMetricsCache[Bold] :
-            (!ci->isBold() && ci->isItalic()) ? sFontMetricsCache[Italic] :
-                                                sFontMetricsCache[BoldItalic];
+           (ci->isBold() && !ci->isItalic()) ? sFontMetricsCache[Bold] :
+           (!ci->isBold() && ci->isItalic()) ? sFontMetricsCache[Italic] :
+           sFontMetricsCache[BoldItalic];
 
 }
 
 static inline const QFont &cachedFont(const Theme::ContentItem *ci)
 {
     return (!ci->isBold() && !ci->isItalic()) ? sFontCache[Normal] :
-            (ci->isBold() && !ci->isItalic()) ? sFontCache[Bold] :
-            (!ci->isBold() && ci->isItalic()) ? sFontCache[Italic] :
-                                                sFontCache[BoldItalic];
+           (ci->isBold() && !ci->isItalic()) ? sFontCache[Bold] :
+           (!ci->isBold() && ci->isItalic()) ? sFontCache[Italic] :
+           sFontCache[BoldItalic];
 }
 
 static inline const QFont &cachedFont(const Theme::ContentItem *ci, const Item *i)
@@ -135,9 +133,9 @@ static inline const QFont &cachedFont(const Theme::ContentItem *ci, const Item *
     const bool bold = ci->isBold() || mi->isBold();
     const bool italic = ci->isItalic() || mi->isItalic();
     return (!bold && !italic) ? sFontCache[Normal] :
-            (bold && !italic) ? sFontCache[Bold] :
-            (!bold && italic) ? sFontCache[Italic] :
-                                sFontCache[BoldItalic];
+           (bold && !italic) ? sFontCache[Bold] :
+           (!bold && italic) ? sFontCache[Italic] :
+           sFontCache[BoldItalic];
 }
 
 static inline void paint_right_aligned_elided_text(const QString &text, Theme::ContentItem *ci, QPainter *painter, int &left, int top, int &right, Qt::LayoutDirection layoutDir, const QFont &font)
@@ -719,7 +717,7 @@ void ThemeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                     );
                 } else if (opt.viewItemPosition == QStyleOptionViewItemV4::End) {
                     painter->fillRect(
-                        QRect(opt.rect.left(), top, 10 , opt.rect.height() - (gGroupHeaderInnerVerticalMargin * 2)),
+                        QRect(opt.rect.left(), top, 10, opt.rect.height() - (gGroupHeaderInnerVerticalMargin * 2)),
                         QBrush(mGroupHeaderBackgroundColor)
                     );
                 }
@@ -764,7 +762,7 @@ void ThemeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                     );
                 } else if (opt.viewItemPosition == QStyleOptionViewItemV4::End) {
                     painter->fillRect(
-                        QRect(opt.rect.left(), top, 10 , opt.rect.height() - (gGroupHeaderInnerVerticalMargin * 2)),
+                        QRect(opt.rect.left(), top, 10, opt.rect.height() - (gGroupHeaderInnerVerticalMargin * 2)),
                         QBrush(gradient)
                     );
                 }
@@ -799,7 +797,7 @@ void ThemeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                 opt.rect = QRect(left, top, right - left, opt.rect.height() - (gGroupHeaderInnerVerticalMargin * 2));
                 opt.state |= QStyle::State_Selected;
                 opt.viewItemPosition = QStyleOptionViewItemV4::OnlyOne;
-                opt.palette.setColor(cg , QPalette::Highlight, mGroupHeaderBackgroundColor);
+                opt.palette.setColor(cg, QPalette::Highlight, mGroupHeaderBackgroundColor);
                 style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, mItemView);
             }
             break;
@@ -808,7 +806,7 @@ void ThemeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                 int rright = (opt.viewItemPosition == QStyleOptionViewItemV4::End) || (opt.viewItemPosition == QStyleOptionViewItemV4::OnlyOne) ? right : opt.rect.left() + opt.rect.width();
                 opt.rect = QRect(rleft, top, rright - rleft, opt.rect.height() - (gGroupHeaderInnerVerticalMargin * 2));
                 opt.state |= QStyle::State_Selected;
-                opt.palette.setColor(cg , QPalette::Highlight, mGroupHeaderBackgroundColor);
+                opt.palette.setColor(cg, QPalette::Highlight, mGroupHeaderBackgroundColor);
                 style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, mItemView);
             }
             break;
@@ -842,7 +840,7 @@ void ThemeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
         int r = right;
         int l = left;
         QList< Theme::ContentItem * >::ConstIterator endit(items->constEnd());
-        for (QList< Theme::ContentItem * >::ConstIterator itemit = items->constBegin(); itemit != endit ; ++itemit) {
+        for (QList< Theme::ContentItem * >::ConstIterator itemit = items->constBegin(); itemit != endit; ++itemit) {
             Theme::ContentItem *ci = const_cast< Theme::ContentItem * >(*itemit);
 
             if (ci->canUseCustomColor()) {
@@ -1001,7 +999,7 @@ void ThemeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
         items = &((*rowit)->leftItems());
 
         QList< Theme::ContentItem * >::ConstIterator endItem(items->constEnd());
-        for (QList< Theme::ContentItem * >::ConstIterator itemit = items->constBegin(); itemit != endItem ; ++itemit) {
+        for (QList< Theme::ContentItem * >::ConstIterator itemit = items->constBegin(); itemit != endItem; ++itemit) {
             Theme::ContentItem *ci = const_cast< Theme::ContentItem * >(*itemit);
 
             if (ci->canUseCustomColor()) {
@@ -1271,7 +1269,7 @@ bool ThemeDelegate::hitTest(const QPoint &viewportPoint, bool exact)
         int l = left;
         QList< Theme::ContentItem * >::ConstIterator itemEnd(items->end());
 
-        for (itemit = items->begin(); itemit != itemEnd ; ++itemit) {
+        for (itemit = items->begin(); itemit != itemEnd; ++itemit) {
             Theme::ContentItem *ci = const_cast< Theme::ContentItem * >(*itemit);
 
             mHitContentItemRect = QRect();
@@ -1417,7 +1415,7 @@ bool ThemeDelegate::hitTest(const QPoint &viewportPoint, bool exact)
 
         mHitContentItemRight = false;
 
-        for (itemit = items->constBegin(); itemit != items->constEnd() ; ++itemit) {
+        for (itemit = items->constBegin(); itemit != items->constEnd(); ++itemit) {
             Theme::ContentItem *ci = const_cast< Theme::ContentItem * >(*itemit);
 
             mHitContentItemRect = QRect();
@@ -1617,7 +1615,7 @@ QSize ThemeDelegate::sizeHintForItemTypeAndColumn(Item::Type type, int column, c
         }
     }
 
-    return QSize(maxw + marginw , totalh + marginh);
+    return QSize(maxw + marginw, totalh + marginh);
 }
 
 QSize ThemeDelegate::sizeHint(const QStyleOptionViewItem &, const QModelIndex &index) const
@@ -1638,7 +1636,7 @@ QSize ThemeDelegate::sizeHint(const QStyleOptionViewItem &, const QModelIndex &i
     const Item::Type type = item->type();
     if (type == Item::Message) {
         if (!mCachedMessageItemSizeHint.isValid()) {
-            mCachedMessageItemSizeHint= sizeHintForItemTypeAndColumn(Item::Message, index.column(), item);
+            mCachedMessageItemSizeHint = sizeHintForItemTypeAndColumn(Item::Message, index.column(), item);
         }
         return mCachedMessageItemSizeHint;
     } else if (type == Item::GroupHeader) {

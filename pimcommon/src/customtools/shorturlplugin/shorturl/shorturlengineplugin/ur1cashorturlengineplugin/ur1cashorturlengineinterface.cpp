@@ -40,7 +40,6 @@ QString Ur1CaShortUrlEngineInterface::engineName() const
     return mEnginePlugin->engineName();
 }
 
-
 void Ur1CaShortUrlEngineInterface::generateShortUrl()
 {
     QNetworkRequest request(QUrl(QStringLiteral("http://ur1.ca/")));

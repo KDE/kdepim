@@ -369,7 +369,6 @@ void RichTextComposerActions::createActions(KActionCollection *ac)
     ac->addAction(QStringLiteral("tools_quote"), d->action_add_quote_chars);
     connect(d->action_add_quote_chars, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotAddQuotes);
 
-
     d->action_remove_quote_chars = new QAction(i18n("Re&move Quote Characters"), this);
     d->action_remove_quote_chars->setObjectName(QStringLiteral("tools_unquote"));
     connect(d->action_remove_quote_chars, &QAction::triggered, d->composerControler, &RichTextComposerControler::slotRemoveQuotes);

@@ -1008,7 +1008,7 @@ void AgendaView::zoomInHorizontally(const QDate &date)
             count = 1;
         } else {
             newBegin = dateToZoom.addDays(-ndays / 2 + 1);
-            count = ndays - 1 ;
+            count = ndays - 1;
         }
         Q_EMIT zoomViewHorizontally(newBegin, count);
     }
@@ -1031,7 +1031,7 @@ void AgendaView::zoomOutHorizontally(const QDate &date)
 
     if (!dateToZoom.isValid()) {
         newBegin = begin.addDays(-1);
-        count = ndays + 3 ;
+        count = ndays + 3;
     } else {
         newBegin = dateToZoom.addDays(-ndays / 2 - 1);
         count = ndays + 3;
@@ -1894,7 +1894,7 @@ bool AgendaView::displayIncidence(const  KCalCore::Incidence::Ptr &incidence, bo
     if (event && makesDayBusy && event->isMultiDay()) {
         const QDate lastVisibleDate = d->mSelectedDates.last();
         for (QDate date = event->dtStart().date();
-                date <= event->dtEnd().date() && date <= lastVisibleDate ;
+                date <= event->dtEnd().date() && date <= lastVisibleDate;
                 date = date.addDays(1)) {
             KCalCore::Event::List &busyEvents = d->mBusyDays[date];
             busyEvents.append(event);

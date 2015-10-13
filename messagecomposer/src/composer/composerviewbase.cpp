@@ -255,7 +255,7 @@ void MessageComposer::ComposerViewBase::saveMailSettings()
     m_msg->setHeader(header);
 
     header = new KMime::Headers::Generic("X-KMail-Fcc");
-    header->fromUnicodeString(QString::number(m_fccCollection.id()) , "utf-8");
+    header->fromUnicodeString(QString::number(m_fccCollection.id()), "utf-8");
     m_msg->setHeader(header);
     header = new KMime::Headers::Generic("X-KMail-Identity");
     header->fromUnicodeString(QString::number(identity.uoid()), "utf-8");
@@ -715,7 +715,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
 
     if (encryptSomething || signSomething) {
         Kleo::CryptoMessageFormat concreteFormat = Kleo::AutoFormat;
-        for (unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i) {
+        for (unsigned int i = 0; i < numConcreteCryptoMessageFormats; ++i) {
             concreteFormat = concreteCryptoMessageFormats[i];
             if (keyResolver->encryptionItems(concreteFormat).empty()) {
                 continue;
@@ -761,7 +761,7 @@ QList< MessageComposer::Composer * > MessageComposer::ComposerViewBase::generate
     }
 
     if (composers.isEmpty() && (signSomething || encryptSomething)) {
-        Q_ASSERT_X(false, "ComposerViewBase::fillCryptoInfo" , "No concrete sign or encrypt method selected");
+        Q_ASSERT_X(false, "ComposerViewBase::fillCryptoInfo", "No concrete sign or encrypt method selected");
     }
 
     return composers;
@@ -1016,7 +1016,7 @@ void MessageComposer::ComposerViewBase::initAutoSave()
     qCDebug(MESSAGECOMPOSER_LOG) << "initalising autosave";
 
     // Ensure that the autosave directory exists.
-    QDir dataDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/")) ;
+    QDir dataDirectory(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/"));
     if (!dataDirectory.exists(QStringLiteral("autosave"))) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Creating autosave directory.";
         dataDirectory.mkdir(QStringLiteral("autosave"));
@@ -1236,7 +1236,7 @@ void MessageComposer::ComposerViewBase::saveMessage(KMime::Message::Ptr message,
             }
         }
         Akonadi::CollectionFetchJob *saveMessageJob = new Akonadi::CollectionFetchJob(target, Akonadi::CollectionFetchJob::Base);
-        saveMessageJob->setProperty("Akonadi::Item" , QVariant::fromValue(item));
+        saveMessageJob->setProperty("Akonadi::Item", QVariant::fromValue(item));
         QObject::connect(saveMessageJob, &Akonadi::CollectionFetchJob::result, this, &ComposerViewBase::slotSaveMessage);
     } else {
         // preinitialize with the default collections

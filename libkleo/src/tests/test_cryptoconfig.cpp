@@ -143,7 +143,7 @@ int main(int argc, char **argv)
                         QList<QUrl> urls = entry->urlValueList();
                         cout << " url values ";
                         Q_FOREACH (const QUrl &url, urls) {
-                           cout << url.toString().toLocal8Bit().constData() << " ";
+                            cout << url.toString().toLocal8Bit().constData() << " ";
                         }
                         cout << endl;
                     }
@@ -328,7 +328,7 @@ int main(int argc, char **argv)
             QList<QUrl> val = entry->urlValueList();
             cout << "URL list initially: ";
             Q_FOREACH (const QUrl &url, val) {
-               cout << url.toString().toLocal8Bit().constData() << ", ";
+                cout << url.toString().toLocal8Bit().constData() << ", ";
             }
             cout << endl;
 
@@ -359,7 +359,7 @@ int main(int argc, char **argv)
             QList<QUrl> newlst = entry->urlValueList();
             cout << "URL list now: ";
             Q_FOREACH (const QUrl &url, newlst) {
-               cout << url.toString().toLocal8Bit().constData() << endl;
+                cout << url.toString().toLocal8Bit().constData() << endl;
             }
             cout << endl;
             assert(newlst.count() == 3);
@@ -374,7 +374,7 @@ int main(int argc, char **argv)
 
             cout << "URL list reset to initial: ";
             Q_FOREACH (const QUrl &url, newlst) {
-               cout << url.toString().toLocal8Bit().constData() << ", ";
+                cout << url.toString().toLocal8Bit().constData() << ", ";
             }
             cout << endl;
         } else {

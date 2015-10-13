@@ -31,7 +31,6 @@
 #include <core/sortorder.h>
 #include <QFontDatabase>
 
-
 namespace MessageList
 {
 

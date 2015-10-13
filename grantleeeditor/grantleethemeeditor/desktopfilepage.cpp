@@ -66,7 +66,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     lab = new QLabel(i18n("Description:"));
     mDescription = new PimCommon::PlainTextEditorWidget;
     mDescription->editor()->setSearchSupport(false);
-    lay->addWidget(lab, row , 0);
+    lay->addWidget(lab, row, 0);
     lay->addWidget(mDescription, row, 1);
 
     if (options & SpecifyFileName) {
@@ -95,7 +95,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
         ++row;
         lab = new QLabel(QStringLiteral("<qt><b>") + i18n("Be careful, Grantlee does not support '-' in variable name. So when you want to add extra header as \"X-Original-To\" add \"X-Original-To\" in list, but use \"XOriginalTo\" as variable in Grantlee (remove '-' in name).") + QStringLiteral("</b></qt>"));
         lab->setWordWrap(true);
-        lay->addWidget(lab, row , 0, 1, 2);
+        lay->addWidget(lab, row, 0, 1, 2);
 
         ++row;
         mExtraDisplayHeaders = new KEditListWidget;

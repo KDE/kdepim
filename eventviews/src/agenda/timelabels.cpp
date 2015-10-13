@@ -132,7 +132,7 @@ void TimeLabels::updateConfig()
     QFont sFont = font();
     sFont.setPointSize(sFont.pointSize() / 2);
     QFontMetrics fmS(sFont);
-    mMiniWidth += fmS.width(test) + frameWidth() * 2 + 4 ;
+    mMiniWidth += fmS.width(test) + frameWidth() * 2 + 4;
 
     /** Can happen if all resources are disabled */
     if (!mAgenda) {
@@ -230,7 +230,7 @@ void TimeLabels::paintEvent(QPaintEvent *)
     QFont suffixFont = hourFont;
     suffixFont.setPointSize(suffixFont.pointSize() / 2);
     QFontMetrics fmS(suffixFont);
-    const int startW = cw - frameWidth() - 2 ;
+    const int startW = cw - frameWidth() - 2;
     const int tw2 = fmS.width(suffix);
     const int divTimeHeight = (timeHeight - 1) / 2 - 1;
     //testline
@@ -269,7 +269,7 @@ void TimeLabels::paintEvent(QPaintEvent *)
         // draw the time label
         p.setPen(textColor);
         const int timeWidth = fm.width(hour);
-        int offset = startW - timeWidth - tw2 - 1 ;
+        int offset = startW - timeWidth - tw2 - 1;
         p.setFont(hourFont);
         p.drawText(offset, static_cast<int>(y + timeHeight), hour);
         p.setFont(suffixFont);

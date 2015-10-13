@@ -60,7 +60,7 @@ bool FilterActionSetIdentity::argsFromStringInteractive(const QString &argsStr, 
     return needUpdate;
 }
 
-FilterAction::ReturnCode FilterActionSetIdentity::process(ItemContext &context , bool applyOnOutbound) const
+FilterAction::ReturnCode FilterActionSetIdentity::process(ItemContext &context, bool applyOnOutbound) const
 {
     const KIdentityManagement::Identity &ident =
         KernelIf->identityManager()->identityForUoid(mParameter);

@@ -60,5 +60,5 @@ int EventViews::yearDiff(const QDate &start, const QDate &end)
 
 QPixmap EventViews::cachedSmallIcon(const QString &name)
 {
-    return QIcon::fromTheme(name).pixmap(16,16);
+    return QIcon::fromTheme(name).pixmap(16, 16);
 }

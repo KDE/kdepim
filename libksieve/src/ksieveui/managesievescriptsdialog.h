@@ -49,7 +49,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotGetResult(KManageSieve::SieveJob *, bool, const QString &, bool);
     void slotPutResult(KManageSieve::SieveJob *, bool);
-    void slotPutResultDebug(KManageSieve::SieveJob *, bool success , const QString &errorMsg);
+    void slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg);
 
     void slotSieveEditorOkClicked();
     void slotSieveEditorCancelClicked();

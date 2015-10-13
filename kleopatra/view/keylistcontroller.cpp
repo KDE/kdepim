@@ -315,7 +315,7 @@ static const struct {
     { SIGNAL(viewAboutToBeRemoved(QAbstractItemView*)), SLOT(removeView(QAbstractItemView*))             },
     { SIGNAL(currentViewChanged(QAbstractItemView*)),   SLOT(slotCurrentViewChanged(QAbstractItemView*)) },
 };
-static const unsigned int numTabs2Controller = sizeof tabs2controller / sizeof * tabs2controller ;
+static const unsigned int numTabs2Controller = sizeof tabs2controller / sizeof * tabs2controller;
 
 void KeyListController::Private::connectTabWidget()
 {
@@ -323,7 +323,7 @@ void KeyListController::Private::connectTabWidget()
         return;
     }
     kdtools::for_each(tabWidget->views(), boost::bind(&Private::addView, this, _1));
-    for (unsigned int i = 0 ; i < numTabs2Controller ; ++i) {
+    for (unsigned int i = 0; i < numTabs2Controller; ++i) {
         connect(tabWidget, tabs2controller[i].signal, q, tabs2controller[i].slot);
     }
 }
@@ -333,7 +333,7 @@ void KeyListController::Private::disconnectTabWidget()
     if (!tabWidget) {
         return;
     }
-    for (unsigned int i = 0 ; i < numTabs2Controller ; ++i) {
+    for (unsigned int i = 0; i < numTabs2Controller; ++i) {
         disconnect(tabWidget, tabs2controller[i].signal, q, tabs2controller[i].slot);
     }
     kdtools::for_each(tabWidget->views(), boost::bind(&Private::removeView, this, _1));

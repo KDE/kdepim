@@ -101,7 +101,7 @@ QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const 
             suggestedName = basename + dotSuffix;
         }
     } else { // no spacer yet
-        suggestedName = basename + spacer + QLatin1Char('1') + dotSuffix ;
+        suggestedName = basename + spacer + QLatin1Char('1') + dotSuffix;
     }
 
     // Check if suggested name already exists

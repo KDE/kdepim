@@ -66,7 +66,7 @@ QWidget *SieveActionExtractText::createParamWidget(QWidget *parent) const
     return w;
 }
 
-bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {

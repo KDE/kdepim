@@ -211,7 +211,7 @@ void SignEMailController::setInputsAndOutputs(const std::vector< shared_ptr<Inpu
     const std::vector<Key> keys = d->wizard->resolvedSigners();
     kleo_assert(!keys.empty());
 
-    for (unsigned int i = 0, end = inputs.size() ; i < end ; ++i) {
+    for (unsigned int i = 0, end = inputs.size(); i < end; ++i) {
 
         const shared_ptr<SignEMailTask> task(new SignEMailTask);
         task->setInput(inputs[i]);

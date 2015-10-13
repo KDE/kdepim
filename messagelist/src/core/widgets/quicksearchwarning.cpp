@@ -61,7 +61,6 @@ void QuickSearchWarning::setSearchText(const QString &text)
     }
 }
 
-
 void QuickSearchWarning::slotDoNotRememberIt()
 {
     MessageList::MessageListSettings::setQuickSearchWarningDoNotShowAgain(true);

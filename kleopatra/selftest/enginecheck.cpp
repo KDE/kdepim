@@ -172,7 +172,7 @@ static bool is_version(const char *actual, int major, int minor, int patch)
     }
     bool ok;
     int actual_version[3];
-    for (int i = 0 ; i < 3 ; ++i) {
+    for (int i = 0; i < 3; ++i) {
         ok = false;
         actual_version[i] = rx.cap(i + 1).toUInt(&ok);
         assert(ok);
@@ -181,7 +181,7 @@ static bool is_version(const char *actual, int major, int minor, int patch)
     qCDebug(KLEOPATRA_LOG) << "Parsed" << actual << "as: "
                            << actual_version[0] << '.'
                            << actual_version[1] << '.'
-                           << actual_version[2] << '.' ;
+                           << actual_version[2] << '.';
 
     const int required_version[] = { major, minor, patch };
 
@@ -189,9 +189,9 @@ static bool is_version(const char *actual, int major, int minor, int patch)
     ok = !std::lexicographical_compare(begin(actual_version), end(actual_version),
                                        begin(required_version), end(required_version));
     if (ok) {
-        qCDebug(KLEOPATRA_LOG)  << QStringLiteral("%1.%2.%3").arg(major).arg(minor).arg(patch) << "<=" << actual ;
+        qCDebug(KLEOPATRA_LOG)  << QStringLiteral("%1.%2.%3").arg(major).arg(minor).arg(patch) << "<=" << actual;
     } else {
-        qCDebug(KLEOPATRA_LOG) << QStringLiteral("%1.%2.%3").arg(major).arg(minor).arg(patch) << ">" << actual ;
+        qCDebug(KLEOPATRA_LOG) << QStringLiteral("%1.%2.%3").arg(major).arg(minor).arg(patch) << ">" << actual;
     }
     return ok;
 }

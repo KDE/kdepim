@@ -168,7 +168,7 @@ QDate ExpiryDialog::dateOfExpiry() const
     return
         d->ui.inRB->isChecked() ? d->inDate() :
         d->ui.onRB->isChecked() ? d->ui.onCW->selectedDate() :
-        QDate() ;
+        QDate();
 }
 
 void ExpiryDialog::Private::slotInUnitChanged()

@@ -61,7 +61,7 @@ Q_SIGNALS:
 
 protected Q_SLOTS:
     void slotScaleChanged(int);
-    void slotCenterOnStart() ;
+    void slotCenterOnStart();
     void slotZoomToTime();
     void slotPickDate();
     void showAttendeeStatusMenu();

@@ -106,7 +106,7 @@ void SoundTestWidget::playSound()
 {
     const QString parameter = m_urlRequester->lineEdit()->text();
     if (parameter.isEmpty()) {
-        return ;
+        return;
     }
 
     const QString file = QStringLiteral("file:");

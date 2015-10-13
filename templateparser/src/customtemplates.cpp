@@ -116,7 +116,7 @@ void CustomTemplates::slotHelpLinkClicked(const QString &)
 CustomTemplates::~CustomTemplates()
 {
     disconnect(mUi->mEdit->editor(), &QPlainTextEdit::textChanged,
-            this, &CustomTemplates::slotTextChanged);
+               this, &CustomTemplates::slotTextChanged);
     disconnect(mUi->mToEdit, &Akonadi::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
     disconnect(mUi->mCCEdit, &Akonadi::EmailAddressRequester::textChanged, this, &CustomTemplates::slotTextChanged);
     delete mUi;

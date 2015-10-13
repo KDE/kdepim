@@ -98,7 +98,7 @@ QString SieveConditionBody::help() const
     return i18n("The body test matches content in the body of an email message, that is, anything following the first empty line after the header.  (The empty line itself, if present, is not considered to be part of the body.)");
 }
 
-bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
+bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error)
 {
     int index = 0;
     int indexStr = 0;

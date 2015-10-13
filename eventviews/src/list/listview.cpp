@@ -313,7 +313,7 @@ Akonadi::Item::List ListView::selectedIncidences() const
 {
     Akonadi::Item::List eventList;
     QTreeWidgetItem *item = d->mTreeWidget->selectedItems().isEmpty() ? Q_NULLPTR :
-                            d->mTreeWidget->selectedItems().first() ;
+                            d->mTreeWidget->selectedItems().first();
     if (item) {
         ListViewItem *i = static_cast<ListViewItem *>(item);
         eventList.append(i->mIncidence);

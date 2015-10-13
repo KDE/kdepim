@@ -215,7 +215,7 @@ public:
     *         FoundMissingAttachmentAndAddedAttachment, if mail might miss attachment and we added an attachment
     *         FoundMissingAttachmentAndCancel, if mail might miss attachment and cancel sending
     */
-    ComposerViewBase::MissingAttachment checkForMissingAttachments(const QStringList &attachmentKeywords) ;
+    ComposerViewBase::MissingAttachment checkForMissingAttachments(const QStringList &attachmentKeywords);
 
     bool hasMissingAttachments(const QStringList &attachmentKeywords);
 
@@ -300,8 +300,8 @@ private:
 
     void markAllAttachmentsForSigning(bool sign);
     void markAllAttachmentsForEncryption(bool encrypt);
-    bool determineWhetherToSign(bool doSignCompletely , Kleo::KeyResolver *keyResolver, bool signSomething, bool &result, bool &canceled);
-    bool determineWhetherToEncrypt(bool doEncryptCompletely , Kleo::KeyResolver *keyResolver, bool encryptSomething, bool signSomething, bool &result, bool &canceled);
+    bool determineWhetherToSign(bool doSignCompletely, Kleo::KeyResolver *keyResolver, bool signSomething, bool &result, bool &canceled);
+    bool determineWhetherToEncrypt(bool doEncryptCompletely, Kleo::KeyResolver *keyResolver, bool encryptSomething, bool signSomething, bool &result, bool &canceled);
 
     /**
     * Writes out autosave data to the disk from the KMime::Message message.

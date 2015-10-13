@@ -151,7 +151,7 @@ private:
         tests.push_back(makeGpgSmEngineCheckSelfTest());
         //Q_EMIT q->info( i18n("Checking gpgconf installation...") );
         tests.push_back(makeGpgConfEngineCheckSelfTest());
-        for (unsigned int i = 0 ; i < numComponents ; ++i) {
+        for (unsigned int i = 0; i < numComponents; ++i) {
             //Q_EMIT q->info( i18n("Checking %1 configuration...", components[i]) );
             tests.push_back(makeGpgConfCheckConfigurationSelfTest(components[i]));
         }

@@ -204,7 +204,7 @@ void LdapClientSearch::Private::readConfig()
 
         q->connect(&mDataTimer, SIGNAL(timeout()), SLOT(slotDataTimer()));
     }
-    mConfigFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QStringLiteral("/kabldaprc") ;
+    mConfigFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QStringLiteral("/kabldaprc");
     KDirWatch::self()->addFile(mConfigFile);
 }
 

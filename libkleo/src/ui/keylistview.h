@@ -54,14 +54,14 @@ TEMPLATE_TYPENAME(T)
 inline T *lvi_cast(QTreeWidgetItem *item)
 {
     return item && (item->type() == T::RTTI)
-           ? static_cast<T *>(item) : 0 ;
+           ? static_cast<T *>(item) : 0;
 }
 
 TEMPLATE_TYPENAME(T)
 inline const T *lvi_cast(const QTreeWidgetItem *item)
 {
     return item && (item->type() == T::RTTI)
-           ? static_cast<const T *>(item) : 0 ;
+           ? static_cast<const T *>(item) : 0;
 }
 #undef TEMPLATE_TYPENAME
 

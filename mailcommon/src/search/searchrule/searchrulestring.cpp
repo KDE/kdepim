@@ -132,7 +132,7 @@ bool SearchRuleString::matches(const Akonadi::Item &item) const
             return
                 matchesInternal(msg->to()->asUnicodeString()) ||
                 matchesInternal(msg->cc()->asUnicodeString()) ||
-                matchesInternal(msg->bcc()->asUnicodeString()) ;
+                matchesInternal(msg->bcc()->asUnicodeString());
         }
         msgContents = msg->to()->asUnicodeString();
         msgContents += ", " + msg->cc()->asUnicodeString();
@@ -184,7 +184,7 @@ bool SearchRuleString::matches(const Akonadi::Item &item) const
     return rc;
 }
 
-void SearchRuleString::addQueryTerms(Akonadi::SearchTerm &groupTerm , bool &emptyIsNotAnError) const
+void SearchRuleString::addQueryTerms(Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError) const
 {
     using namespace Akonadi;
     emptyIsNotAnError = false;

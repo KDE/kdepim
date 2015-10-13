@@ -154,7 +154,7 @@ GpgME::Error Kleo::HierarchicalKeyListJob::startAJob()
     connect(mJob.data(), &KeyListJob::result, this, &HierarchicalKeyListJob::slotResult);
 
     QStringList patterns;
-    for (std::set<QString>::const_iterator it = mNextSet.begin() ; it != mNextSet.end() ; ++it) {
+    for (std::set<QString>::const_iterator it = mNextSet.begin(); it != mNextSet.end(); ++it) {
         patterns.push_back(*it);
     }
 

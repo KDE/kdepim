@@ -100,7 +100,7 @@ void GnuPGViewer::slotStdout()
 {
     QString line = mProcess-> readAllStandardOutput();
     const QStringList l = split(line, mLastStdout);
-    for (QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it) {
+    for (QStringList::const_iterator it = l.begin(); it != l.end(); ++it) {
         append("stdout: " + escape(*it));
     }
 }
@@ -109,7 +109,7 @@ void GnuPGViewer::slotStderr()
 {
     QString line = mProcess->readAllStandardError();
     const QStringList l = split(line, mLastStderr);
-    for (QStringList::const_iterator it = l.begin() ; it != l.end() ; ++it) {
+    for (QStringList::const_iterator it = l.begin(); it != l.end(); ++it) {
         append("<b>stderr: " + escape(*it) + "</b>");
     }
 }
@@ -143,7 +143,7 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     Kleo::GnuPGProcessBase gpg;
-    for (int i = 1 ; i < argc ; ++i) {
+    for (int i = 1; i < argc; ++i) {
         gpg << argv[i];
     }
 

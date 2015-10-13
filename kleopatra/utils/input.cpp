@@ -342,7 +342,7 @@ ProcessStdOutInput::ProcessStdOutInput(const QString &cmd, const QStringList &ar
       m_proc(new Process)
 {
     const QIODevice::OpenMode openMode =
-        stdin_.isEmpty() ? QIODevice::ReadOnly : QIODevice::ReadWrite ;
+        stdin_.isEmpty() ? QIODevice::ReadOnly : QIODevice::ReadWrite;
     qCDebug(KLEOPATRA_LOG) << "cd" << wd.absolutePath() << endl << cmd << args << Outputter(stdin_);
     if (cmd.isEmpty())
         throw Exception(gpg_error(GPG_ERR_INV_ARG),

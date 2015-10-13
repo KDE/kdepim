@@ -159,7 +159,7 @@ public:
 
         const QByteArray envOptions = qgetenv("KLEOPATRA_LOGOPTIONS");
         const bool logAll = envOptions.trimmed() == "all";
-        const QList<QByteArray> options = envOptions.isEmpty() ? default_logging_options() : envOptions.split(',') ;
+        const QList<QByteArray> options = envOptions.isEmpty() ? default_logging_options() : envOptions.split(',');
 
         const QByteArray dirNative = qgetenv("KLEOPATRA_LOGDIR");
         if (dirNative.isEmpty()) {
@@ -213,8 +213,8 @@ namespace
 typedef void (KleopatraApplication::*Func)(const QStringList &, GpgME::Protocol);
 }
 
-void KleopatraApplication::slotActivateRequested(const QStringList& arguments,
-                                                 const QString &workingDirectory)
+void KleopatraApplication::slotActivateRequested(const QStringList &arguments,
+        const QString &workingDirectory)
 {
     QCommandLineParser parser;
 
@@ -239,8 +239,8 @@ void KleopatraApplication::slotActivateRequested(const QStringList& arguments,
     }
 }
 
-QString KleopatraApplication::newInstance(const QCommandLineParser& parser,
-                                          const QString &workingDirectory)
+QString KleopatraApplication::newInstance(const QCommandLineParser &parser,
+        const QString &workingDirectory)
 {
     if (d->ignoreNewInstance) {
         qCDebug(KLEOPATRA_LOG) << "New instance ignored because of ignoreNewInstance";
@@ -249,7 +249,7 @@ QString KleopatraApplication::newInstance(const QCommandLineParser& parser,
 
     QStringList files;
     const QDir cwd = QDir(workingDirectory);
-    Q_FOREACH (const QString& file, parser.positionalArguments()) {
+    Q_FOREACH (const QString &file, parser.positionalArguments()) {
         // We do not check that file exists here. Better handle
         // these errors in the UI.
         if (QFileInfo(file).isAbsolute()) {
@@ -269,7 +269,7 @@ QString KleopatraApplication::newInstance(const QCommandLineParser& parser,
     if (parser.isSet(QStringLiteral("cms"))) {
         qCDebug(KLEOPATRA_LOG) << "found CMS";
         if (protocol == GpgME::OpenPGP) {
-           return i18n("Ambiguous protocol: --openpgp and --cms");
+            return i18n("Ambiguous protocol: --openpgp and --cms");
         }
         protocol = GpgME::CMS;
     }

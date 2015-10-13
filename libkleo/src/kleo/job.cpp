@@ -94,7 +94,7 @@ GpgME::Error Kleo::Job::auditLogError() const
 
 bool Kleo::Job::isAuditLogSupported() const
 {
-    return auditLogError().code() != GPG_ERR_NOT_IMPLEMENTED ;
+    return auditLogError().code() != GPG_ERR_NOT_IMPLEMENTED;
 }
 
 #define make_job_subclass_ext(x,y)                \

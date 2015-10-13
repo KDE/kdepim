@@ -65,7 +65,7 @@ private:
 
     const Error &error() const
     {
-        return mError == Error::None ? lexer.error() : mError ;
+        return mError == Error::None ? lexer.error() : mError;
     }
 
     bool parseCommandList();
@@ -97,7 +97,7 @@ private:
 
     bool atEnd() const
     {
-        return !mToken && lexer.atEnd() ;
+        return !mToken && lexer.atEnd();
     }
     bool obtainToken();
     void consumeToken()

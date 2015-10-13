@@ -433,7 +433,7 @@ void NewSignEncryptEMailController::startEncryption(const std::vector< shared_pt
 
     kleo_assert(!d->recipients.empty());
 
-    for (unsigned int i = 0, end = inputs.size() ; i < end ; ++i) {
+    for (unsigned int i = 0, end = inputs.size(); i < end; ++i) {
 
         const shared_ptr<EncryptEMailTask> task(new EncryptEMailTask);
 
@@ -482,7 +482,7 @@ void NewSignEncryptEMailController::startSigning(const std::vector< shared_ptr<I
     kleo_assert(!d->signers.empty());
     kleo_assert(kdtools::none_of(d->signers, mem_fn(&Key::isNull)));
 
-    for (unsigned int i = 0, end = inputs.size() ; i < end ; ++i) {
+    for (unsigned int i = 0, end = inputs.size(); i < end; ++i) {
 
         const shared_ptr<SignEMailTask> task(new SignEMailTask);
 

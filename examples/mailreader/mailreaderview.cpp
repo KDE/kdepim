@@ -80,7 +80,7 @@ void mailreaderView::displayAboutPage()
     m_readerWin->displaySplashPage(info.toString());
 }
 
-void mailreaderView::urlClicked(const Akonadi::Item &item , const QUrl &url)
+void mailreaderView::urlClicked(const Akonadi::Item &item, const QUrl &url)
 {
     Q_UNUSED(item);
     //TODO "Handle click"

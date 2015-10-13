@@ -53,7 +53,7 @@ namespace _detail
 inline int mystrcmp(const char *s1, const char *s2)
 {
     using namespace std;
-    return s1 ? s2 ? strcmp(s1, s2) : 1 : s2 ? -1 : 0 ;
+    return s1 ? s2 ? strcmp(s1, s2) : 1 : s2 ? -1 : 0;
 }
 
 #define make_comparator_str_impl( Name, expr, cmp )                     \

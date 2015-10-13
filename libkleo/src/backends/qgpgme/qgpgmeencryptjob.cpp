@@ -82,7 +82,7 @@ static QGpgMEEncryptJob::result_type encrypt(Context *ctx, QThread *thread,
     const Data indata(&in);
 
     const Context::EncryptionFlags eflags =
-        alwaysTrust ? Context::AlwaysTrust : Context::None ;
+        alwaysTrust ? Context::AlwaysTrust : Context::None;
 
     if (!cipherText) {
         QGpgME::QByteArrayDataProvider out;

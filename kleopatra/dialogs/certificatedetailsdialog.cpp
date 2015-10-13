@@ -446,8 +446,8 @@ private:
             const QBrush &fg = ui.chainTW->palette().brush(QPalette::Disabled, QPalette::WindowText);
             last->setForeground(0, fg);
         }
-        for (std::vector<Key>::const_reverse_iterator it = chain.rbegin(), end = chain.rend() ; it != end ; ++it) {
-            last = last ? new QTreeWidgetItem(last) : new QTreeWidgetItem(ui.chainTW) ;
+        for (std::vector<Key>::const_reverse_iterator it = chain.rbegin(), end = chain.rend(); it != end; ++it) {
+            last = last ? new QTreeWidgetItem(last) : new QTreeWidgetItem(ui.chainTW);
             last->setText(0, DN(it->userID(0).id()).prettyDN());
             //last->setSelectable( true );
         }
@@ -493,7 +493,7 @@ private:
             setupUi(mainWidget);
 
             QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Help |
-                                                               QDialogButtonBox::Close);
+                    QDialogButtonBox::Close);
             chainTW->header()->setResizeMode(0, QHeaderView::Stretch);
 
             dumpLTW->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
@@ -509,8 +509,8 @@ private:
 
             QObject::connect(buttonBox, &QDialogButtonBox::rejected, qq, &QDialog::reject);
             QObject::connect(buttonBox, &QDialogButtonBox::helpRequested, qq, [] {
-                                 KHelpClient::invokeHelp(QStringLiteral("kleopatra"));
-                             });
+                KHelpClient::invokeHelp(QStringLiteral("kleopatra"));
+            });
         }
     } ui;
 };

@@ -33,7 +33,7 @@ FilterActionReplyTo::FilterActionReplyTo(QObject *parent)
 {
 }
 
-FilterAction::ReturnCode FilterActionReplyTo::process(ItemContext &context , bool) const
+FilterAction::ReturnCode FilterActionReplyTo::process(ItemContext &context, bool) const
 {
     if (mParameter.isEmpty()) {
         return ErrorButGoOn;

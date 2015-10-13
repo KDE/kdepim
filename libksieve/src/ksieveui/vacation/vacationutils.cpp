@@ -73,7 +73,7 @@ QStringList VacationUtils::defaultMailAliases()
     QStringList sl;
     KIdentityManagement::IdentityManager manager(true);
     KIdentityManagement::IdentityManager::ConstIterator end(manager.end());
-    for (KIdentityManagement::IdentityManager::ConstIterator it = manager.begin(); it != end ; ++it) {
+    for (KIdentityManagement::IdentityManager::ConstIterator it = manager.begin(); it != end; ++it) {
         if (!(*it).primaryEmailAddress().isEmpty()) {
             sl.push_back((*it).primaryEmailAddress());
         }
@@ -103,10 +103,10 @@ QDate VacationUtils::defaultEndDate()
 }
 
 bool VacationUtils::parseScript(const QString &script, QString &messageText,
-        QString &subject,
-        int &notificationInterval, QStringList &aliases,
-        bool &sendForSpam, QString &domainName,
-        QDate &startDate, QDate &endDate)
+                                QString &subject,
+                                int &notificationInterval, QStringList &aliases,
+                                bool &sendForSpam, QString &domainName,
+                                QDate &startDate, QDate &endDate)
 {
     if (script.trimmed().isEmpty()) {
         messageText = VacationUtils::defaultMessageText();
@@ -150,11 +150,11 @@ bool VacationUtils::parseScript(const QString &script, QString &messageText,
 }
 
 QString VacationUtils::composeScript(const QString &messageText,
-        const QString &subject,
-        int notificationInterval,
-        const AddrSpecList &addrSpecs,
-        bool sendForSpam, const QString &domain,
-        const QDate &startDate, const QDate &endDate)
+                                     const QString &subject,
+                                     int notificationInterval,
+                                     const AddrSpecList &addrSpecs,
+                                     bool sendForSpam, const QString &domain,
+                                     const QDate &startDate, const QDate &endDate)
 {
     QString addressesArgument;
     QStringList aliases;
@@ -162,7 +162,7 @@ QString VacationUtils::composeScript(const QString &messageText,
         addressesArgument += QLatin1String(":addresses [ ");
         QStringList sl;
         AddrSpecList::const_iterator end = addrSpecs.constEnd();
-        for (AddrSpecList::const_iterator it = addrSpecs.begin() ; it != end; ++it) {
+        for (AddrSpecList::const_iterator it = addrSpecs.begin(); it != end; ++it) {
             sl.push_back(QLatin1Char('"') + (*it).asString().replace(QLatin1Char('\\'), QStringLiteral("\\\\")).replace(QLatin1Char('"'), QStringLiteral("\\\"")) + QLatin1Char('"'));
             aliases.push_back((*it).asString());
         }

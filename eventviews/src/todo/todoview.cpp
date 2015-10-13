@@ -341,9 +341,9 @@ TodoView::TodoView(const EventViews::PrefsPtr &prefs,
                                       this, SIGNAL(printTodo()));
 
     mItemPopupMenuItemOnlyEntries << mItemPopupMenu->addAction(
-                                         QIcon::fromTheme(QStringLiteral("document-print-preview")),
-                                         i18nc("@action:inmenu print preview the to-do", "Print Previe&w..."),
-                                         this, SIGNAL(printPreviewTodo()));
+                                      QIcon::fromTheme(QStringLiteral("document-print-preview")),
+                                      i18nc("@action:inmenu print preview the to-do", "Print Previe&w..."),
+                                      this, SIGNAL(printPreviewTodo()));
     mItemPopupMenu->addSeparator();
     a = mItemPopupMenu->addAction(
             KIconLoader::global()->loadIcon(QStringLiteral("edit-delete"), KIconLoader::NoGroup, KIconLoader::SizeSmall),

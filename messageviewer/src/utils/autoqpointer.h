@@ -72,7 +72,7 @@ public:
 #if 0 // enable when all users of operator T*() have been converted to use .get()
     operator save_bool() const
     {
-        return isNull() ? 0 : &SafeBool::func ;
+        return isNull() ? 0 : &SafeBool::func;
     }
 #else
     // unsafe - only provided to prevent the above warning in bool contexts

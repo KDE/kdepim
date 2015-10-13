@@ -468,7 +468,7 @@ void GMXXXPort::doExport(QFile *fp, const KContacts::AddresseeList &list) const
         if (categories.count() > 0) {
             for (int i = 0; i < categories.count(); ++i) {
                 if (categoryMap.contains(categories[i])) {
-                    category |= 1 << categoryMap.indexOf(categories[i], 0) ;
+                    category |= 1 << categoryMap.indexOf(categories[i], 0);
                 }
             }
         }

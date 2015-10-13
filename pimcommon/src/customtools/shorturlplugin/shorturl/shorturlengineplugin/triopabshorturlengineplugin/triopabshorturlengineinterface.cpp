@@ -40,7 +40,6 @@ QString TripAbShortUrlEngineInterface::engineName() const
     return mEnginePlugin->engineName();
 }
 
-
 void TripAbShortUrlEngineInterface::generateShortUrl()
 {
     const QString requestUrl = QStringLiteral("http://to.ly/api.php?longurl=%1").arg(mOriginalUrl);

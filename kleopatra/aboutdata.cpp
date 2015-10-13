@@ -94,16 +94,16 @@ static const about_data credits[] = {
 
 AboutData::AboutData()
     : KAboutData(QStringLiteral("kleopatra"), i18n("Kleopatra"),
-                  QLatin1String(kleopatra_version), i18n(description), KAboutLicense::GPL,
-                  i18n("(c) 2002 Steffen\xC2\xA0Hansen, Matthias\xC2\xA0Kalle\xC2\xA0" "Dalheimer, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB\n"
-                       "(c) 2004, 2007, 2008, 2009 Marc\xC2\xA0Mutz, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB"))
+                 QLatin1String(kleopatra_version), i18n(description), KAboutLicense::GPL,
+                 i18n("(c) 2002 Steffen\xC2\xA0Hansen, Matthias\xC2\xA0Kalle\xC2\xA0" "Dalheimer, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB\n"
+                      "(c) 2004, 2007, 2008, 2009 Marc\xC2\xA0Mutz, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB"))
 {
     using ::authors;
     using ::credits;
-    for (unsigned int i = 0 ; i < sizeof authors / sizeof * authors ; ++i)
+    for (unsigned int i = 0; i < sizeof authors / sizeof * authors; ++i)
         addAuthor(i18n(authors[i].name), i18n(authors[i].desc),
                   QLatin1String(authors[i].email), QLatin1String(authors[i].web));
-    for (unsigned int i = 0 ; i < sizeof credits / sizeof * credits ; ++i)
+    for (unsigned int i = 0; i < sizeof credits / sizeof * credits; ++i)
         addCredit(i18n(credits[i].name), i18n(credits[i].desc),
                   QLatin1String(credits[i].email), QLatin1String(credits[i].web));
 }
@@ -148,7 +148,7 @@ static QString gpg4win_version()
     if (!p.waitForFinished())
         return QStringLiteral("%1 (%2)").arg(QLatin1String(gpg4win_version_guessed),
                                              i18nc("Version string is a guess", "guessed"));
-    const QString output = QTextStream(&p).readAll() ;
+    const QString output = QTextStream(&p).readAll();
     QRegExp rx(QStringLiteral("\\(Gpg4win\\s+([^\\s)]+)\\)"));
     if (rx.indexIn(output) != -1) {
         return rx.cap(1);
@@ -165,13 +165,13 @@ static QPixmap UserIcon_nocached2(const char *name)
     KIconLoader *const il = KIconLoader::global();
     assert(il);
     const QString iconPath = il->iconPath(QLatin1String(name), KIconLoader::User);
-    return iconPath.isEmpty() ? il->unknown() : QPixmap(iconPath) ;
+    return iconPath.isEmpty() ? il->unknown() : QPixmap(iconPath);
 }
 
 AboutGpg4WinData::AboutGpg4WinData()
     : KAboutData(QStringLiteral("gpg4win"), i18n("Gpg4win"),
-                  gpg4win_version(), i18n(gpg4win_description),
-                  KAboutLicense::GPL, QString(), QString(), QStringLiteral("http://www.gpg4win.de"))
+                 gpg4win_version(), i18n(gpg4win_description),
+                 KAboutLicense::GPL, QString(), QString(), QStringLiteral("http://www.gpg4win.de"))
 {
     setCustomAuthorText(i18n(gpg4win_credits_description), i18n(gpg4win_credits_description));
     addAuthor(i18n(gpg4win_credits_persons), QString(), QString(), QString());

@@ -128,15 +128,15 @@ class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
 public:
     const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const Q_DECL_OVERRIDE
     {
-        return idx == 0 ? new Formatter() : 0 ;
+        return idx == 0 ? new Formatter() : 0;
     }
     const char *type(int idx) const Q_DECL_OVERRIDE
     {
-        return idx == 0 ? "text" : 0 ;
+        return idx == 0 ? "text" : 0;
     }
     const char *subtype(int idx) const Q_DECL_OVERRIDE
     {
-        return idx == 0 ? "x-diff" : 0 ;
+        return idx == 0 ? "x-diff" : 0;
     }
 
     const MessageViewer::Interface::BodyPartURLHandler *urlHandler(int) const Q_DECL_OVERRIDE

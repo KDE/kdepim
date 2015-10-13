@@ -809,7 +809,7 @@ void AttachmentControllerBase::saveAttachmentAs(AttachmentPart::Ptr part)
         pname = i18n("unnamed");
     }
 
-    QUrl url = QFileDialog::getSaveFileUrl(d->wParent, i18n("Save Attachment As"), QUrl::fromLocalFile(pname) );
+    QUrl url = QFileDialog::getSaveFileUrl(d->wParent, i18n("Save Attachment As"), QUrl::fromLocalFile(pname));
 
     if (url.isEmpty()) {
         qCDebug(MESSAGECOMPOSER_LOG) << "Save Attachment As dialog canceled.";

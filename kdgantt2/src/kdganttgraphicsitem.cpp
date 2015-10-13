@@ -393,13 +393,13 @@ void GraphicsItem::updateModel()
             const QModelIndex sourceIdx = scene()->summaryHandlingModel()->mapToSource(index());
             Q_UNUSED(sourceIdx);
             QList<Constraint> constraints;
-            for (QList<ConstraintGraphicsItem *>::iterator it1 = m_startConstraints.begin() ;
-                    it1 != m_startConstraints.end() ;
+            for (QList<ConstraintGraphicsItem *>::iterator it1 = m_startConstraints.begin();
+                    it1 != m_startConstraints.end();
                     ++it1) {
                 constraints.push_back((*it1)->proxyConstraint());
             }
-            for (QList<ConstraintGraphicsItem *>::iterator it2 = m_endConstraints.begin() ;
-                    it2 != m_endConstraints.end() ;
+            for (QList<ConstraintGraphicsItem *>::iterator it2 = m_endConstraints.begin();
+                    it2 != m_endConstraints.end();
                     ++it2) {
                 constraints.push_back((*it2)->proxyConstraint());
             }

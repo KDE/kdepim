@@ -247,7 +247,7 @@ void SieveConditionWidgetLister::updateAddRemoveButton()
     }
     QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
-    for (; wIt != wEnd ; ++wIt) {
+    for (; wIt != wEnd; ++wIt) {
         SieveConditionWidget *w = qobject_cast<SieveConditionWidget *>(*wIt);
         w->updateAddRemoveButton(addButtonEnabled, removeButtonEnabled);
     }
@@ -280,7 +280,7 @@ void SieveConditionWidgetLister::generatedScript(QString &script, int &numberOfC
     QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
     bool wasFirst = true;
-    for (; wIt != wEnd ; ++wIt) {
+    for (; wIt != wEnd; ++wIt) {
         QString condition;
         SieveConditionWidget *w = qobject_cast<SieveConditionWidget *>(*wIt);
         w->generatedScript(condition, requires);

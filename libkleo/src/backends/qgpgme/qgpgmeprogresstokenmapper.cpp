@@ -108,10 +108,10 @@ QString Kleo::QGpgMEProgressTokenMapper::map(const QString &token, int subtoken)
 
     qCDebug(GPGPME_BACKEND_LOG) << token << subtoken;
 
-    for (const _tokens *it = boost::begin(tokens), *end = boost::end(tokens) ; it != end ; ++it) {
+    for (const _tokens *it = boost::begin(tokens), *end = boost::end(tokens); it != end; ++it) {
         if (token.compare(QLatin1String(it->token), Qt::CaseInsensitive) == 0) {
             if (it->desc && it->numDesc) {
-                for (unsigned int i = 0, e = it->numDesc ; i != e ; ++i)
+                for (unsigned int i = 0, e = it->numDesc; i != e; ++i)
                     if (it->desc[i].type == subtoken) {
                         return i18n(it->desc[i].display);
                     }

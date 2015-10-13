@@ -52,7 +52,7 @@ FilterLNotes::FilterLNotes() :
                 "<p><b>Note:</b> Since it is possible to recreate the folder structure, the imported "
                 "messages will be stored in subfolders named by the files they came from under: "
                 "\"LNotes-Import\" in your local folder.</p>"))
-  ,d(new MailImporter::FilterLNotesPrivate)
+    , d(new MailImporter::FilterLNotesPrivate)
 {
 }
 

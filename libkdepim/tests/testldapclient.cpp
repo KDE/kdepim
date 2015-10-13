@@ -91,7 +91,7 @@ void TestLDAPClient::cleanup()
 
 void TestLDAPClient::testIntevation()
 {
-    qDebug() ;
+    qDebug();
     mClient = new KLDAP::LdapClient(0, this);
 
 #ifdef __GNUC__
@@ -190,7 +190,7 @@ void TestLDAPClient::slotLDAPError(const QString &err)
 
 void TestLDAPClient::slotLDAPDone()
 {
-    qDebug() ;
+    qDebug();
     Q_EMIT leaveModality();
 }
 

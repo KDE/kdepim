@@ -77,7 +77,7 @@ public:
 
     unsigned int bytesInBuffer() const
     {
-        return (wptr + sizeof buffer - rptr) % sizeof buffer ;
+        return (wptr + sizeof buffer - rptr) % sizeof buffer;
     }
 
     bool bufferFull() const
@@ -93,7 +93,7 @@ public:
     bool bufferContains(char ch)
     {
         const unsigned int bib = bytesInBuffer();
-        for (unsigned int i = rptr ; i < rptr + bib ; ++i)
+        for (unsigned int i = rptr; i < rptr + bib; ++i)
             if (buffer[i % sizeof buffer] == ch) {
                 return true;
             }
@@ -531,7 +531,7 @@ bool KDPipeIODevice::waitForBytesWritten(int msecs)
     LOCKED(w);
     QDebug("KDPipeIODevice::waitForBytesWritten (%p,w=%p): entered locked area",
            (void *)this, (void *) w);
-    return w->bufferEmpty() || w->error || w->bufferEmptyCondition.wait(&w->mutex, msecs) ;
+    return w->bufferEmpty() || w->error || w->bufferEmptyCondition.wait(&w->mutex, msecs);
 }
 
 bool KDPipeIODevice::waitForReadyRead(int msecs)
@@ -553,7 +553,7 @@ bool KDPipeIODevice::waitForReadyRead(int msecs)
         return true;
     }
     assert(false);   // ### wtf?
-    return r->bufferNotEmptyCondition.wait(&r->mutex, msecs) ;
+    return r->bufferNotEmptyCondition.wait(&r->mutex, msecs);
 }
 
 template <typename T>
@@ -633,7 +633,7 @@ qint64 KDPipeIODevice::readData(char *data, qint64 maxSize)
         // woken with an empty buffer must mean either EOF or error:
         assert(r->eof || r->error);
         r->eofShortCut = true;
-        return r->eof ? 0 : -1 ;
+        return r->eof ? 0 : -1;
     }
 
     QDebug("%p: KDPipeIODevice::readData: got bufferNotEmptyCondition, trying to read %lld bytes",
@@ -647,7 +647,7 @@ qint64 KDPipeIODevice::readData(char *data, qint64 maxSize)
 
 qint64 Reader::readData(char *data, qint64 maxSize)
 {
-    qint64 numRead = rptr < wptr ? wptr - rptr : sizeof buffer - rptr ;
+    qint64 numRead = rptr < wptr ? wptr - rptr : sizeof buffer - rptr;
     if (numRead > maxSize) {
         numRead = maxSize;
     }
@@ -657,7 +657,7 @@ qint64 Reader::readData(char *data, qint64 maxSize)
 
     memcpy(data, buffer + rptr, numRead);
 
-    rptr = (rptr + numRead) % sizeof buffer ;
+    rptr = (rptr + numRead) % sizeof buffer;
 
     if (!bufferFull()) {
         QDebug("%p: KDPipeIODevice::readData: signal bufferNotFullCondition", (void *) this);

@@ -56,7 +56,7 @@ static inline bool isUtf8TripleIndicator(unsigned char ch)
 
 static inline bool isUtf8OverlongTriple(unsigned char ch1, unsigned char ch2)
 {
-    return (ch1 & 0xFF) == 0xE0  && (ch2 & 0xE0) == 0x80 ;
+    return (ch1 & 0xFF) == 0xE0  && (ch2 & 0xE0) == 0x80;
 }
 
 static inline bool isUtf8QuartetIndicator(unsigned char ch)
@@ -66,7 +66,7 @@ static inline bool isUtf8QuartetIndicator(unsigned char ch)
 
 static inline bool isUtf8OverlongQuartet(unsigned char ch1, unsigned char ch2)
 {
-    return (ch1 & 0xFF) == 0xF0  && (ch2 & 0xF0) == 0x80 ;
+    return (ch1 & 0xFF) == 0xF0  && (ch2 & 0xF0) == 0x80;
 }
 
 static inline bool isUtf8QuintetIndicator(unsigned char ch)
@@ -76,7 +76,7 @@ static inline bool isUtf8QuintetIndicator(unsigned char ch)
 
 static inline bool isUtf8OverlongQuintet(unsigned char ch1, unsigned char ch2)
 {
-    return (ch1 & 0xFF) == 0xF8  && (ch2 & 0xF8) == 0x80 ;
+    return (ch1 & 0xFF) == 0xF8  && (ch2 & 0xF8) == 0x80;
 }
 
 static inline bool isUtf8SextetIndicator(unsigned char ch)
@@ -86,7 +86,7 @@ static inline bool isUtf8SextetIndicator(unsigned char ch)
 
 static inline bool isUtf8OverlongSextet(unsigned char ch1, unsigned char ch2)
 {
-    return (ch1 & 0xFF) == 0xFC  && (ch2 & 0xFC) == 0x80 ;
+    return (ch1 & 0xFF) == 0xFC  && (ch2 & 0xFC) == 0x80;
 }
 
 static inline bool isUtf8Continuation(unsigned char ch)
@@ -96,7 +96,7 @@ static inline bool isUtf8Continuation(unsigned char ch)
 
 bool KSieve::isValidUtf8(const char *s, unsigned int len)
 {
-    for (unsigned int i = 0 ; i < len ; ++i) {
+    for (unsigned int i = 0; i < len; ++i) {
         const unsigned char ch = s[i];
         if (!is8Bit(ch)) {
             continue;

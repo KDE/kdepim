@@ -75,7 +75,6 @@ void ServerSieveSettingsDialog::writeConfig()
     group.sync();
 }
 
-
 void ServerSieveSettingsDialog::slotEnableButtonOk(bool b)
 {
     mOkButton->setEnabled(b);

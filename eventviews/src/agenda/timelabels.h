@@ -28,7 +28,6 @@
 
 #include <QFrame>
 
-
 namespace EventViews
 {
 

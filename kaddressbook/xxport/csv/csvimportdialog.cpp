@@ -482,7 +482,6 @@ void CSVImportDialog::initGUI()
     mUser2Button->setEnabled(false);
     mainLayout->addWidget(buttonBox);
 
-
     resize(500, 400);
 }
 

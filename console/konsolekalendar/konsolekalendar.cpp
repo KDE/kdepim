@@ -329,7 +329,7 @@ bool KonsoleKalendar::showInstance()
 //         htmlSettings.setTaskDueDate( true );
 
                 htmlSettings.setDateStart(QDateTime(firstdate));
-                htmlSettings.setDateEnd(QDateTime(lastdate)) ;
+                htmlSettings.setDateEnd(QDateTime(lastdate));
 
                 KCalUtils::HtmlExport *exp = new KCalUtils::HtmlExport(calendar.data(), &htmlSettings);
                 status = exp->save(&ts);

@@ -343,7 +343,7 @@ bool Util::saveContent(QWidget *parent, KMime::Content *content, const QUrl &url
                 // carefully look for the part that is *not* the signature part:
                 if (ObjectTreeParser::findType(topContent, "application/pgp-signature", true, false)) {
                     dataNode = ObjectTreeParser::findTypeNot(topContent, "application", "pgp-signature", true, false);
-                } else if (ObjectTreeParser::findType(topContent, "application/pkcs7-mime" , true, false)) {
+                } else if (ObjectTreeParser::findType(topContent, "application/pkcs7-mime", true, false)) {
                     dataNode = ObjectTreeParser::findTypeNot(topContent, "application", "pkcs7-mime", true, false);
                 } else {
                     dataNode = ObjectTreeParser::findTypeNot(topContent, "multipart", "", true, false);
@@ -488,9 +488,9 @@ bool Util::saveMessageInMbox(const Akonadi::Item::List &retrievedMsgs, QWidget *
         KMBox::MBox mbox;
         if (!mbox.load(localFileName)) {
             if (appendMessages) {
-                KMessageBox::error(parent, i18n("File %1 could not be loaded.", localFileName) , i18n("Error loading message"));
+                KMessageBox::error(parent, i18n("File %1 could not be loaded.", localFileName), i18n("Error loading message"));
             } else {
-                KMessageBox::error(parent, i18n("File %1 could not be created.", localFileName) , i18n("Error saving message"));
+                KMessageBox::error(parent, i18n("File %1 could not be created.", localFileName), i18n("Error saving message"));
             }
             delete dlg;
             return false;
@@ -502,7 +502,7 @@ bool Util::saveMessageInMbox(const Akonadi::Item::List &retrievedMsgs, QWidget *
         }
 
         if (!mbox.save()) {
-            KMessageBox::error(parent, i18n("We cannot save message.") , i18n("Error saving message"));
+            KMessageBox::error(parent, i18n("We cannot save message."), i18n("Error saving message"));
             delete dlg;
             return false;
         }

@@ -195,9 +195,9 @@ AddrSpecList VacationEditWidget::mailAliases() const
 
     AddrSpecList asl;
     AddressList::const_iterator end(al.constEnd());
-    for (AddressList::const_iterator it = al.constBegin() ; it != end; ++it) {
+    for (AddressList::const_iterator it = al.constBegin(); it != end; ++it) {
         const MailboxList &mbl = (*it).mailboxList;
-        for (MailboxList::const_iterator jt = mbl.constBegin() ; jt != mbl.constEnd() ; ++jt) {
+        for (MailboxList::const_iterator jt = mbl.constBegin(); jt != mbl.constEnd(); ++jt) {
             asl.push_back((*jt).addrSpec());
         }
     }
@@ -208,7 +208,7 @@ void VacationEditWidget::setMailAliases(const AddrSpecList &aliases)
 {
     QStringList sl;
     AddrSpecList::const_iterator end(aliases.constEnd());
-    for (AddrSpecList::const_iterator it = aliases.constBegin() ; it != end; ++it) {
+    for (AddrSpecList::const_iterator it = aliases.constBegin(); it != end; ++it) {
         sl.push_back((*it).asString());
     }
     mMailAliasesEdit->setText(sl.join(QStringLiteral(", ")));
@@ -226,7 +226,7 @@ void VacationEditWidget::slotIntervalSpinChanged(int value)
 
 QString VacationEditWidget::domainName() const
 {
-    return mDomainCheck->isChecked() ? mDomainEdit->text() : QString() ;
+    return mDomainCheck->isChecked() ? mDomainEdit->text() : QString();
 }
 
 void VacationEditWidget::setDomainName(const QString &domain)

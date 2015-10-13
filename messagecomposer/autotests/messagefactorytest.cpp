@@ -99,10 +99,10 @@ String very_simplistic_diff(const String &a, const String &b)
             //qDebug( "result ( a@%d b@%d ):\n%s\n--end", ai, bi, result.constData() );
         }
 
-    for (int i = ai ; i < al.size() ; ++i) {
+    for (int i = ai; i < al.size(); ++i) {
         result += "- " + al[i] + '\n';
     }
-    for (int i = bi ; i < bl.size() ; ++i) {
+    for (int i = bi; i < bl.size(); ++i) {
         result += "+ " + bl[i] + '\n';
     }
     return result;

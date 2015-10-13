@@ -56,7 +56,7 @@ HtmlStatusBar::~HtmlStatusBar() {}
 
 Util::HtmlMode HtmlStatusBar::mode() const
 {
-    return mMode ;
+    return mMode;
 }
 
 bool HtmlStatusBar::isHtml() const

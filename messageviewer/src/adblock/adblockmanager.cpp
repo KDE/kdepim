@@ -264,7 +264,7 @@ void AdBlockManager::updateSubscription(const QString &path, const QString &url,
     const QString rulesFilePath = path;
     QUrl destUrl = QUrl::fromLocalFile(rulesFilePath);
 
-    KIO::FileCopyJob *job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
+    KIO::FileCopyJob *job = KIO::file_copy(subUrl, destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
     job->metaData().insert(QStringLiteral("ssl_no_client_cert"), QStringLiteral("TRUE"));
     job->metaData().insert(QStringLiteral("ssl_no_ui"), QStringLiteral("TRUE"));
     job->metaData().insert(QStringLiteral("UseCache"), QStringLiteral("false"));

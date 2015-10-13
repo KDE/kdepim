@@ -31,7 +31,6 @@
 #include <KConfigSkeleton>
 #include <KDateTime>
 
-
 namespace EventViews
 {
 

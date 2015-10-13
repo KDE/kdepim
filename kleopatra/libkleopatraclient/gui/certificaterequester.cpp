@@ -234,7 +234,7 @@ void CertificateRequester::setSelectedCertificate(const QString &cert)
 
 QString CertificateRequester::selectedCertificate() const
 {
-    return d->selectedCertificates.empty() ? QString() : d->selectedCertificates.front() ;
+    return d->selectedCertificates.empty() ? QString() : d->selectedCertificates.front();
 }
 
 void CertificateRequester::Private::slotButtonClicked()

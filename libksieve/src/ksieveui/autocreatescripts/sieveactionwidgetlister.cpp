@@ -299,7 +299,7 @@ void SieveActionWidgetLister::updateAddRemoveButton()
     }
     QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
-    for (; wIt != wEnd ; ++wIt) {
+    for (; wIt != wEnd; ++wIt) {
         SieveActionWidget *w = qobject_cast<SieveActionWidget *>(*wIt);
         w->updateAddRemoveButton(addButtonEnabled, removeButtonEnabled);
     }
@@ -310,7 +310,7 @@ void SieveActionWidgetLister::generatedScript(QString &script, QStringList &requ
     const QList<QWidget *> widgetList = widgets();
     QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
-    for (; wIt != wEnd ; ++wIt) {
+    for (; wIt != wEnd; ++wIt) {
         SieveActionWidget *w = qobject_cast<SieveActionWidget *>(*wIt);
         w->generatedScript(script, requires, onlyActions);
     }

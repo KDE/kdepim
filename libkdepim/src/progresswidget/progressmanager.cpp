@@ -241,7 +241,7 @@ ProgressManager::~ProgressManager()
 
 ProgressManager *ProgressManager::instance()
 {
-    return progressManagerPrivate.isDestroyed() ? Q_NULLPTR : &progressManagerPrivate->instance ;
+    return progressManagerPrivate.isDestroyed() ? Q_NULLPTR : &progressManagerPrivate->instance;
 }
 
 QString ProgressManager::getUniqueID()

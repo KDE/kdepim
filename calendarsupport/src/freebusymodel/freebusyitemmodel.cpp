@@ -262,7 +262,7 @@ void FreeBusyItemModel::setFreeBusyPeriods(const QModelIndex &parent,
     QModelIndex last = index(childCount - 1, 0, parent);
 
     if (childCount > 0 && fb_count < childCount) {
-        beginRemoveRows(parent, fb_count - 1 < 0 ? 0 : fb_count - 1 , childCount - 1);
+        beginRemoveRows(parent, fb_count - 1 < 0 ? 0 : fb_count - 1, childCount - 1);
         for (int i = childCount - 1; i > fb_count; --i) {
             delete parentData->removeChild(i);
         }

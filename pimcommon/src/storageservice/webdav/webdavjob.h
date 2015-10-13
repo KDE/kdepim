@@ -59,7 +59,7 @@ private Q_SLOTS:
 private:
     //QWebDav API
     typedef QMap < QString, QMap < QString, QVariant > > PropValues;
-    typedef QMap < QString , QStringList > PropNames;
+    typedef QMap < QString, QStringList > PropNames;
 
     QNetworkReply *list(const QString &dir);
     QNetworkReply *search(const QString &path, const QString &q);

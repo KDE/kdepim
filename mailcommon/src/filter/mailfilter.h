@@ -103,7 +103,7 @@ public:
       true if the caller may apply other filters and false if he shall
       stop the filtering of this message.
     */
-    ReturnCode execActions(ItemContext &context, bool &stopIt , bool applyOnOutbound) const ;
+    ReturnCode execActions(ItemContext &context, bool &stopIt, bool applyOnOutbound) const;
 
     /**
     * Returns the required part from the item that is needed for the filter to

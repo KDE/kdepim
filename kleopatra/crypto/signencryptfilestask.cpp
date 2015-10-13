@@ -462,7 +462,7 @@ QString SignEncryptFilesTask::tag() const
 
 unsigned long long SignEncryptFilesTask::inputSize() const
 {
-    return d->input ? d->input->size() : 0U ;
+    return d->input ? d->input->size() : 0U;
 }
 
 void SignEncryptFilesTask::doStart()
@@ -673,7 +673,7 @@ QString SignEncryptFilesResult::errorString() const
 
     return
         sign   ? makeResultDetails(m_sresult, m_inputErrorString, m_outputErrorString) :
-        /*else*/ makeResultDetails(m_eresult, m_inputErrorString, m_outputErrorString) ;
+        /*else*/ makeResultDetails(m_eresult, m_inputErrorString, m_outputErrorString);
 }
 
 Task::Result::VisualCode SignEncryptFilesResult::code() const

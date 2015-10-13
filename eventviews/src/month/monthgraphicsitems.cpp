@@ -305,7 +305,7 @@ void MonthGraphicsItem::paint(QPainter *p, const QStyleOptionGraphicsItem *, QWi
 
         int curXPos = textRect.left();
         if (alignFlag & Qt::AlignRight) {
-            curXPos += textRect.width() - textWidth - iconWidths ;
+            curXPos += textRect.width() - textWidth - iconWidths;
         } else if (alignFlag & Qt::AlignHCenter) {
             curXPos += (textRect.width() - textWidth - iconWidths) / 2;
         }

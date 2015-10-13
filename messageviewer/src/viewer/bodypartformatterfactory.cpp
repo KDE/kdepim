@@ -117,14 +117,14 @@ static void loadPlugins()
     }
     const QStringList types = pl->types();
     qCDebug(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: found" << types.size() << "plugins.";
-    for (QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it) {
+    for (QStringList::const_iterator it = types.begin(); it != types.end(); ++it) {
         const Interface::BodyPartFormatterPlugin *plugin = pl->createForName(*it);
         if (!plugin) {
             qCWarning(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: plugin" << *it << "is not valid!";
             continue;
         }
         const Interface::BodyPartFormatter *bfp;
-        for (int i = 0 ; (bfp = plugin->bodyPartFormatter(i)) ; ++i) {
+        for (int i = 0; (bfp = plugin->bodyPartFormatter(i)); ++i) {
             const char *type = plugin->type(i);
             if (!type || !*type) {
                 qCWarning(MESSAGEVIEWER_LOG) << "BodyPartFormatterFactory: plugin" << *it
@@ -142,7 +142,7 @@ static void loadPlugins()
             insertBodyPartFormatter(type, subtype, bfp);
         }
         const Interface::BodyPartURLHandler *handler;
-        for (int i = 0 ; (handler = plugin->urlHandler(i)) ; ++i) {
+        for (int i = 0; (handler = plugin->urlHandler(i)); ++i) {
             URLHandlerManager::instance()->registerHandler(handler);
         }
     }

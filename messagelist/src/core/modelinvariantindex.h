@@ -23,7 +23,6 @@
 
 #include <qglobal.h> // defines uint, at least.
 
-
 namespace MessageList
 {
 

@@ -522,7 +522,7 @@ void Composer::addAttachmentPart(AttachmentPart::Ptr part, bool autoresizeImage)
     d->attachmentParts.append(part);
 }
 
-void Composer::addAttachmentParts(const AttachmentPart::List &parts , bool autoresizeImage)
+void Composer::addAttachmentParts(const AttachmentPart::List &parts, bool autoresizeImage)
 {
     foreach (const AttachmentPart::Ptr &part, parts) {
         addAttachmentPart(part, autoresizeImage);

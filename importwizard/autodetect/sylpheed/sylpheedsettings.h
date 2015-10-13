@@ -35,11 +35,11 @@ public:
 protected:
     void readCustomHeader(QFile *customHeaderFile);
     virtual void readGlobalSettings(const KConfigGroup &group);
-    void readAccount(const KConfigGroup &accountConfig, bool checkMailOnStartup , int intervalCheckMail);
+    void readAccount(const KConfigGroup &accountConfig, bool checkMailOnStartup, int intervalCheckMail);
     void readIdentity(const KConfigGroup &accountConfig);
     QString readTransport(const KConfigGroup &accountConfig);
-    void readPop3Account(const KConfigGroup &accountConfig, bool checkMailOnStartup , int intervalCheckMail);
-    void readImapAccount(const KConfigGroup &accountConfig, bool checkMailOnStartup , int intervalCheckMail);
+    void readPop3Account(const KConfigGroup &accountConfig, bool checkMailOnStartup, int intervalCheckMail);
+    void readImapAccount(const KConfigGroup &accountConfig, bool checkMailOnStartup, int intervalCheckMail);
     void readSignature(const KConfigGroup &accountConfig, KIdentityManagement::Identity *identity);
 
     virtual void readSettingsColor(const KConfigGroup &group);

@@ -48,7 +48,7 @@ public:
     AutoconfigKolabLdap *execIspdb(const QString &file)
     {
         const QString filePath = QStringLiteral(AUTOCONFIG_DATA_DIR) + QLatin1Char('/') + file;
-        [](const QString &file) {
+        [](const QString & file) {
             QVERIFY(QFile(file).exists());
         }(filePath);
 

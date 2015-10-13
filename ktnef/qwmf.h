@@ -173,7 +173,7 @@ public: // should be protected but cannot
 
     /****************** misc *******************/
     /** nothing to do */
-    void noop(long , short *);
+    void noop(long, short *);
     /** end of meta file */
     void end(long /*num*/, short * /*parms*/);
     /** Resolution of the image in dots per inch */

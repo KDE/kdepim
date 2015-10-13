@@ -86,7 +86,7 @@ static const int SpecialRuleFieldsCount =
 //=============================================================================
 
 SearchRuleWidget::SearchRuleWidget(QWidget *parent, SearchRule::Ptr aRule,
-                                   SearchPatternEdit::SearchPatternEditOptions options ,
+                                   SearchPatternEdit::SearchPatternEditOptions options,
                                    SearchPatternEdit::SearchModeType modeType)
     : QWidget(parent),
       mRuleField(0),
@@ -462,7 +462,7 @@ void SearchRuleWidgetLister::setRuleList(QList<SearchRule::Ptr> *aList)
     if (superfluousItems > 0) {
         qCDebug(MAILCOMMON_LOG) << "Clipping rule list to" << widgetsMaximum() << "items!";
 
-        for (; superfluousItems ; superfluousItems--) {
+        for (; superfluousItems; superfluousItems--) {
             mRuleList->removeLast();
         }
     }
@@ -527,7 +527,7 @@ void SearchRuleWidgetLister::updateAddRemoveButton()
     }
     QList<QWidget *>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget *>::ConstIterator wEnd = widgetList.constEnd();
-    for (; wIt != wEnd ; ++wIt) {
+    for (; wIt != wEnd; ++wIt) {
         SearchRuleWidget *w = qobject_cast<SearchRuleWidget *>(*wIt);
         w->updateAddRemoveButton(addButtonEnabled, removeButtonEnabled);
     }

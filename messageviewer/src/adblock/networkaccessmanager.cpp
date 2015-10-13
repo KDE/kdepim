@@ -75,7 +75,7 @@ MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent)
     if (c == QLatin1String("C")) {
         c = QStringLiteral("en-US");
     } else {
-        c = c.replace(QLatin1Char('_') , QLatin1Char('-'));
+        c = c.replace(QLatin1Char('_'), QLatin1Char('-'));
     }
 
     c.append(QLatin1String(", en-US; q=0.8, en; q=0.6"));

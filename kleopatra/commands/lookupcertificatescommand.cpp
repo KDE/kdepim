@@ -110,12 +110,12 @@ private:
     KeyListJob *createKeyListJob(GpgME::Protocol proto) const
     {
         const CryptoBackend::Protocol *const cbp = CryptoBackendFactory::instance()->protocol(proto);
-        return cbp ? cbp->keyListJob(true) : 0 ;
+        return cbp ? cbp->keyListJob(true) : 0;
     }
     ImportFromKeyserverJob *createImportJob(GpgME::Protocol proto) const
     {
         const CryptoBackend::Protocol *const cbp = CryptoBackendFactory::instance()->protocol(proto);
-        return cbp ? cbp->importFromKeyserverJob() : 0 ;
+        return cbp ? cbp->importFromKeyserverJob() : 0;
     }
     void startKeyListJob(GpgME::Protocol proto, const QString &str);
     bool checkConfig() const;

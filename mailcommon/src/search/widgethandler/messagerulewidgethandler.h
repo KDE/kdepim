@@ -35,7 +35,7 @@ public:
 
     QWidget *createFunctionWidget(int number,
                                   QStackedWidget *functionStack,
-                                  const QObject *receiver , bool isBalooSearch) const Q_DECL_OVERRIDE;
+                                  const QObject *receiver, bool isBalooSearch) const Q_DECL_OVERRIDE;
 
     QWidget *createValueWidget(int number,
                                QStackedWidget *valueStack,
@@ -59,7 +59,7 @@ public:
 
     bool setRule(QStackedWidget *functionStack,
                  QStackedWidget *valueStack,
-                 const SearchRule::Ptr rule , bool isBalooSearch) const Q_DECL_OVERRIDE;
+                 const SearchRule::Ptr rule, bool isBalooSearch) const Q_DECL_OVERRIDE;
 
     bool update(const QByteArray &field,
                 QStackedWidget *functionStack,
