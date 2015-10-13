@@ -78,6 +78,7 @@ set(libpimcommon_storageservice_SRCS
  
   storageservice/storageservicepluginmanager.cpp
   storageservice/storageserviceplugin.cpp
+  storageservice/storageserviceinterface.cpp
 )
 
 qt5_add_dbus_adaptor(libpimcommon_storageservice_SRCS storageservice/org.kde.pim.StorageManager.xml storageservice/storageservicemanager.h PimCommon::StorageServiceManager )
@@ -384,6 +385,7 @@ ecm_generate_headers(PimCommon_storageservice_HEADERS
   StorageServiceJobConfig
   StorageServicePluginManager
   StorageServicePlugin
+  StorageServiceInterface
   REQUIRED_HEADERS PimCommon_storageservice_HEADERS
   PREFIX PimCommon
   RELATIVE storageservice
