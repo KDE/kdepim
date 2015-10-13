@@ -342,6 +342,8 @@ set(_kleopatra_mainwindow_SRCS mainwindow_desktop.cpp)
 file(GLOB ICONS_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/*-apps-kleopatra.png")
 ecm_add_app_icon(_kleopatra_mainwindow_SRCS ICONS ${ICONS_SRCS})
 
+qt5_add_resources(_kleopatra_SRCS kleopatra.qrc)
+
 add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS})
 set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
 
@@ -378,7 +380,5 @@ install(
         data/kleopatra_decryptverifyfolders.desktop
   DESTINATION ${KDE_INSTALL_KSERVICES5DIR}
 )
-
-install(FILES kleopatra.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/kleopatra)
 
 add_subdirectory(icons)
