@@ -45,7 +45,7 @@ void Ur1CaShortUrlEngineInterface::generateShortUrl()
 {
     QNetworkRequest request(QUrl(QStringLiteral("http://ur1.ca/")));
     const QString data = QStringLiteral("longurl=\"%1\"").arg(mOriginalUrl);
-
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toUtf8());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &Ur1CaShortUrlEngineInterface::slotErrorFound);
 }
