@@ -15,6 +15,7 @@ set(contactprintthemeeditor_SRCS
   contactprintthemepreview.cpp
 )
 ecm_qt_declare_logging_category(contactprintthemeeditor_SRCS HEADER contactprintthemeeditor_debug.h IDENTIFIER CONTACTPRINTTHEMEEDITOR_LOG CATEGORY_NAME log_contactprintthemeeditor)
+qt5_add_resources(contactprintthemeeditor_SRCS contactprintthemeeditor.qrc)
 
 add_executable(contactprintthemeeditor ${contactprintthemeeditor_SRCS} )
 target_link_libraries(contactprintthemeeditor
@@ -28,9 +29,5 @@ target_link_libraries(contactprintthemeeditor
 )
 
 install(TARGETS contactprintthemeeditor ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
-install(FILES
-  contactprintthemeeditorui.rc
-  DESTINATION  ${KDE_INSTALL_KXMLGUI5DIR}/contactprintthemeeditor)
 
 install(PROGRAMS org.kde.contactprintthemeeditor.desktop DESTINATION ${KDE_INSTALL_APPDIR})
