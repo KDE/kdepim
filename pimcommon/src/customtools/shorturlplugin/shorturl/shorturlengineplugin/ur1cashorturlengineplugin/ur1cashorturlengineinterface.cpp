@@ -17,6 +17,7 @@
 
 #include "ur1cashorturlengineinterface.h"
 #include "pimcommon/shorturlengineplugin.h"
+#include "ur1cashorturlengineplugin_debug.h"
 
 #include <QJsonDocument>
 #include <QNetworkReply>
@@ -62,14 +63,14 @@ void Ur1CaShortUrlEngineInterface::slotShortUrlFinished(QNetworkReply *reply)
     }
 
     QString output = QLatin1String(reply->readAll());
-    //qCDebug(PIMCOMMON_LOG) << "void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << output;
+    qCDebug(UR1CASHORTURLENGINEPLUGIN_LOG) << "void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << output;
     QRegExp rx(QStringLiteral("<p class=[\'\"]success[\'\"]>(.*)</p>"));
     rx.setMinimal(true);
     output = rx.cap(1);
     rx.setPattern(QStringLiteral("href=[\'\"](.*)[\'\"]"));
     rx.indexIn(output);
     output = rx.cap(1);
-    //qCDebug(PIMCOMMON_LOG) << "Short url is: " << output;
+    qCDebug(UR1CASHORTURLENGINEPLUGIN_LOG) << "Short url is: " << output;
     if (!output.isEmpty()) {
         Q_EMIT shortUrlGenerated(output);
     } else {

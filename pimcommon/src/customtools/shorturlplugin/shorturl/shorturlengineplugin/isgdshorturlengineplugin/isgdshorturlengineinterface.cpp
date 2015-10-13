@@ -17,6 +17,7 @@
 
 #include "isgdshorturlengineinterface.h"
 #include "pimcommon/shorturlengineplugin.h"
+#include "isgdshorturlengineplugin_debug.h"
 
 #include <QJsonDocument>
 #include <QNetworkReply>
@@ -64,12 +65,12 @@ void IsgdShortUrlEngineInterface::slotShortUrlFinished(QNetworkReply *reply)
     const QByteArray data = reply->readAll();
     QJsonParseError error;
     const QJsonDocument json = QJsonDocument::fromJson(data, &error);
-    //qCDebug(PIMCOMMON_LOG) << "void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << data;
+    qCDebug(ISGDSHORTURLENGINEPLUGIN_LOG) << "void IsGdShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << data;
 
     reply->deleteLater();
 
     if (error.error != QJsonParseError::NoError || json.isNull()) {
-        //qCDebug(PIMCOMMON_LOG) << " Error during parsing" << error.errorString();
+        qCDebug(ISGDSHORTURLENGINEPLUGIN_LOG) << " Error during parsing" << error.errorString();
         Q_EMIT shortUrlFailed(error.errorString());
         return;
     }

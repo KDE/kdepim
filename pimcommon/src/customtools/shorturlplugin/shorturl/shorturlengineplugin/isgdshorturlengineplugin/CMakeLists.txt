@@ -2,6 +2,7 @@ set(pimcommon_isgdshorturlengineplugin_SRCS
     isgdshorturlengineplugin.cpp
     isgdshorturlengineinterface.cpp
 )
+ecm_qt_declare_logging_category(pimcommon_isgdshorturlengineplugin_SRCS HEADER isgdshorturlengineplugin_debug.h IDENTIFIER ISGDSHORTURLENGINEPLUGIN_LOG CATEGORY_NAME log_isgdshorturlengineplugin)
 
 add_library(pimcommon_isgdshorturlengineplugin MODULE ${pimcommon_isgdshorturlengineplugin_SRCS})
 

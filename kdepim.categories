@@ -67,4 +67,5 @@ log_gravatar kdepim (libgravatar)
 log_createeventplugin kdepim (create event plugin)
 log_createnoteplugin kdepim (create note plugin)
 log_createtodoplugin kdepim (create todo plugin)
-
+log_isgdshorturlengineplugin kdepim (shorturl engine isgd)
+log_ur1cashorturlengineplugin kdepim (shorturl engine ur1ca)
