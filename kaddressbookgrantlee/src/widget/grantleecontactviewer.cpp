@@ -17,8 +17,8 @@
 
 #include "grantleecontactviewer.h"
 #include "KaddressbookGrantlee/GrantleeContactFormatter"
-#include <globalsettings_grantleetheme.h>
 #include <KSharedConfig>
+
 #include <grantleetheme/grantleethememanager.h>
 
 using namespace KAddressBookGrantlee;
@@ -37,7 +37,7 @@ GrantleeContactViewer::~GrantleeContactViewer()
 
 QString GrantleeContactViewer::kaddressBookAbsoluteThemePath()
 {
-    QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeAddressBookThemeName();
+    QString themeName = GrantleeTheme::ThemeManager::configuredThemeName(QStringLiteral("addressbook"));
     if (themeName.isEmpty()) {
         themeName = QStringLiteral("default");
     }

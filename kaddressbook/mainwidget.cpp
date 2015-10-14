@@ -41,7 +41,6 @@
 #include "KaddressbookGrantlee/GrantleeContactFormatter"
 #include "KaddressbookGrantlee/GrantleeContactGroupFormatter"
 #include "grantleetheme/grantleethememanager.h"
-#include "globalsettings_grantleetheme.h"
 
 #include "Libkdepim/UiStateSaver"
 
@@ -970,7 +969,7 @@ void MainWidget::restoreSplitterStates()
 
 void MainWidget::initGrantleeThemeName()
 {
-    QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeAddressBookThemeName();
+    QString themeName = mGrantleeThemeManager->configuredThemeName();
     if (themeName.isEmpty()) {
         themeName = QStringLiteral("default");
     }

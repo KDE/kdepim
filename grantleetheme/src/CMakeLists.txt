@@ -12,10 +12,6 @@ set(libgrantleetheme_SRCS
 
 configure_file(config-grantleetheme.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-grantleetheme.h)
 
-kconfig_add_kcfg_files(libgrantleetheme_SRCS
-  globalsettings_grantleetheme.kcfgc
-)
-
 ecm_qt_declare_logging_category(libgrantleetheme_SRCS HEADER grantleetheme_debug.h IDENTIFIER GRANTLEETHEME_LOG CATEGORY_NAME log_grantleetheme)
 
 add_library(KF5GrantleeTheme ${libgrantleetheme_SRCS})

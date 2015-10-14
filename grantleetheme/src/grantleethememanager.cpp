@@ -17,15 +17,15 @@
 
 #include "grantleethememanager.h"
 #include "grantleetheme_p.h"
-#include "globalsettings_grantleetheme.h"
 
 #include <KDirWatch>
+#include <KSharedConfig>
 #include <KConfigGroup>
-#include <KConfig>
 #include <KActionCollection>
 #include <KToggleAction>
 #include <KLocalizedString>
 #include <KNS3/DownloadDialog>
+#include <KCoreAddons/kaboutdata.h>
 #include <KActionMenu>
 #include <QDebug>
 #include <QAction>
@@ -68,7 +68,7 @@ public:
 
         // Migrate the old configuration format that only support mail and addressbook
         // theming to the new generic format
-        KSharedConfig::Ptr config = GrantleeSettings::self()->sharedConfig();
+        KSharedConfig::Ptr config = KSharedConfig::openConfig();
         if (config->hasGroup(QStringLiteral("GrantleeTheme"))) {
             const KConfigGroup group = config->group(QStringLiteral("GrantleeTheme"));
             const QString mailTheme = group.readEntry(QStringLiteral("grantleeMailThemeName"));
@@ -212,9 +212,10 @@ public:
     void selectTheme(KToggleAction *act)
     {
         if (act) {
-            KConfigGroup group = GrantleeSettings::self()->sharedConfig()->group(applicationType);
+            KSharedConfig::Ptr config = KSharedConfig::openConfig();
+            KConfigGroup group = config->group(applicationType);
             group.writeEntry(QStringLiteral("themeName"), act->data().toString());
-            GrantleeSettings::self()->save();
+            config->sync();
         }
     }
 
@@ -229,7 +230,8 @@ public:
 
     KToggleAction *actionForTheme()
     {
-        const KConfigGroup group = GrantleeSettings::self()->sharedConfig()->group(applicationType);
+        const KSharedConfig::Ptr config = KSharedConfig::openConfig();
+        const KConfigGroup group = config->group(applicationType);
         const QString themeName = group.readEntry(QStringLiteral("themeName"), QStringLiteral("default"));
 
         if (themeName.isEmpty()) {
@@ -375,5 +377,18 @@ GrantleeTheme::Theme ThemeManager::loadTheme(const QString &themePath,
     const GrantleeTheme::Theme theme(themePath, dirName, defaultDesktopFileName);
     return theme;
 }
+
+QString ThemeManager::configuredThemeName() const
+{
+    return configuredThemeName(d->applicationType);
+}
+
+QString ThemeManager::configuredThemeName(const QString &themeType)
+{
+    const KSharedConfig::Ptr config = KSharedConfig::openConfig();
+    const KConfigGroup grp = config->group(themeType);
+    return grp.readEntry(QStringLiteral("themeName"));
+}
+
 
 #include "moc_grantleethememanager.cpp"
