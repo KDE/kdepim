@@ -39,6 +39,13 @@ private Q_SLOTS:
     void shouldTextUnderline();
     void shouldTextStrikeOut();
 
+    void shouldFontFamily();
+    void shouldFontSize();
+    void shouldFont();
+    void shouldTextSuperScript();
+    void shouldTextSubScript();
+
+
 };
 
 #endif // RICHTEXTCOMPOSERCONTROLERTEST_H

@@ -166,4 +166,70 @@ void RichTextComposerControlerTest::shouldTextStrikeOut()
 
 }
 
+void RichTextComposerControlerTest::shouldFontFamily()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    //TODO
+}
+
+void RichTextComposerControlerTest::shouldFontSize()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    //TODO
+
+}
+
+void RichTextComposerControlerTest::shouldFont()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    //TODO
+
+}
+
+void RichTextComposerControlerTest::shouldTextSuperScript()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    controler.setTextSuperScript(true);
+    QVERIFY(controler.richTextComposer()->hasFocus());
+    QVERIFY(controler.richTextComposer()->acceptRichText());
+    //TODO
+
+}
+
+void RichTextComposerControlerTest::shouldTextSubScript()
+{
+    MessageComposer::RichTextComposer composer;
+    KActionCollection *actionCollection = new KActionCollection(&composer);
+    composer.createActions(actionCollection);
+    MessageComposer::RichTextComposerControler controler(&composer);
+    composer.show();
+    QTest::qWaitForWindowShown(&composer);
+    controler.setTextSubScript(true);
+    QVERIFY(controler.richTextComposer()->hasFocus());
+    QVERIFY(controler.richTextComposer()->acceptRichText());
+
+    //TODO
+
+}
+
 QTEST_MAIN(RichTextComposerControlerTest)
