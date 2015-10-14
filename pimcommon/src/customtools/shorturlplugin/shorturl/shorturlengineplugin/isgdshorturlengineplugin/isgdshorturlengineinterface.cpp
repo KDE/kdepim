@@ -28,7 +28,7 @@ using namespace PimCommon;
 IsgdShortUrlEngineInterface::IsgdShortUrlEngineInterface(PimCommon::ShortUrlEnginePlugin *plugin, QObject *parent)
     : PimCommon::ShortUrlEngineInterface(plugin, parent)
 {
-
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &IsgdShortUrlEngineInterface::slotShortUrlFinished);
 }
 
 IsgdShortUrlEngineInterface::~IsgdShortUrlEngineInterface()

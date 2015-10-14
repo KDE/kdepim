@@ -29,6 +29,7 @@ Ur1CaShortUrlEngineInterface::Ur1CaShortUrlEngineInterface(ShortUrlEnginePlugin 
     : PimCommon::ShortUrlEngineInterface(plugin, parent)
 {
     connect(mNetworkAccessManager, &QNetworkAccessManager::sslErrors, this, &Ur1CaShortUrlEngineInterface::slotSslErrors);
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished, this, &Ur1CaShortUrlEngineInterface::slotShortUrlFinished);
 }
 
 Ur1CaShortUrlEngineInterface::~Ur1CaShortUrlEngineInterface()
@@ -45,7 +46,7 @@ void Ur1CaShortUrlEngineInterface::generateShortUrl()
 {
     QNetworkRequest request(QUrl(QStringLiteral("http://ur1.ca/")));
     const QString data = QStringLiteral("longurl=\"%1\"").arg(mOriginalUrl);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("text/plain"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toUtf8());
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &Ur1CaShortUrlEngineInterface::slotErrorFound);
 }
@@ -61,7 +62,6 @@ void Ur1CaShortUrlEngineInterface::slotShortUrlFinished(QNetworkReply *reply)
         reply->deleteLater();
         return;
     }
-
     QString output = QLatin1String(reply->readAll());
     qCDebug(UR1CASHORTURLENGINEPLUGIN_LOG) << "void Ur1CaShortUrl::slotShortUrlFinished(QNetworkReply *reply) " << output;
     QRegExp rx(QStringLiteral("<p class=[\'\"]success[\'\"]>(.*)</p>"));
