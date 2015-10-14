@@ -22,6 +22,7 @@
 #include <QJsonDocument>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QUrlQuery>
 
 using namespace PimCommon;
 
@@ -44,10 +45,17 @@ QString Ur1CaShortUrlEngineInterface::engineName() const
 
 void Ur1CaShortUrlEngineInterface::generateShortUrl()
 {
-    QNetworkRequest request(QUrl(QStringLiteral("http://ur1.ca/")));
-    const QString data = QStringLiteral("longurl=\"%1\"").arg(mOriginalUrl);
+    QUrl url(QStringLiteral("http://ur1.ca/"));
+    QUrlQuery query;
+    query.addQueryItem(QLatin1Literal("longurl"), mOriginalUrl);
+
+    url.setQuery(query);
+    QByteArray postData;
+    postData = url.encodedQuery();
+    QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("text/plain"));
-    QNetworkReply *reply = mNetworkAccessManager->post(request, data.toUtf8());
+
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData);
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error), this, &Ur1CaShortUrlEngineInterface::slotErrorFound);
 }
 
