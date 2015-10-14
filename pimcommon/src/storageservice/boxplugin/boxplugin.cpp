@@ -17,6 +17,8 @@
 
 #include "boxplugin.h"
 #include <kpluginfactory.h>
+#include <KLocalizedString>
+#include <QUrl>
 
 using namespace PimCommon;
 K_PLUGIN_FACTORY_WITH_JSON(PimCommonBoxPluginFactory, "pimcommon_boxplugin.json", registerPlugin<BoxPlugin>();)
@@ -37,7 +39,6 @@ QString BoxPlugin::storageServiceName() const
     return QStringLiteral("box");
 }
 
-
 StorageServicePlugin::Capabilities BoxPlugin::capabilities() const
 {
     StorageServicePlugin::Capabilities cap;
@@ -56,6 +57,16 @@ StorageServicePlugin::Capabilities BoxPlugin::capabilities() const
     cap |= CopyFileCapability;
     cap |= CopyFolderCapability;
     return cap;
+}
+
+QString BoxPlugin::description() const
+{
+    return i18n("Box.com is a file hosting that offers cloud storage, file synchronization, and client software.");
+}
+
+QUrl BoxPlugin::serviceUrl() const
+{
+    return QUrl(QStringLiteral("https://app.box.com/"));
 }
 
 

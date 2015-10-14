@@ -29,6 +29,23 @@ class PIMCOMMON_EXPORT StorageServiceInterface : public QObject
 public:
     explicit StorageServiceInterface(QObject *parent = Q_NULLPTR);
     ~StorageServiceInterface();
+
+    virtual void downloadFile(const QString &name, const QString &fileId, const QString &destination);
+    virtual void uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination);
+    virtual void accountInfo();
+    virtual void createFolder(const QString &foldername, const QString &destination);
+    virtual void listFolder(const QString &folder = QString());
+    virtual void authentication();
+    virtual void shareLink(const QString &root, const QString &path);
+    virtual void createServiceFolder();
+    virtual void deleteFile(const QString &filename);
+    virtual void deleteFolder(const QString &foldername);
+    virtual void renameFolder(const QString &source, const QString &destination);
+    virtual void renameFile(const QString &source, const QString &destination);
+    virtual void moveFile(const QString &source, const QString &destination);
+    virtual void moveFolder(const QString &source, const QString &destination);
+    virtual void copyFile(const QString &source, const QString &destination);
+    virtual void copyFolder(const QString &source, const QString &destination);
 };
 }
 #endif // STORAGESERVICEINTERFACE_H

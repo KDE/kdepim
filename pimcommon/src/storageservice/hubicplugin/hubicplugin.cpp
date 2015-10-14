@@ -17,6 +17,8 @@
 
 #include "hubicplugin.h"
 #include <kpluginfactory.h>
+#include <KLocalizedString>
+#include <QUrl>
 
 using namespace PimCommon;
 K_PLUGIN_FACTORY_WITH_JSON(PimCommonHubicPluginFactory, "pimcommon_hubicplugin.json", registerPlugin<HubicPlugin>();)
@@ -58,6 +60,17 @@ StorageServicePlugin::Capabilities HubicPlugin::capabilities() const
 #endif
 
     return cap;
-
 }
+
+QString HubicPlugin::description() const
+{
+    return i18n("Hubic is a file hosting service operated by Ovh, Inc. that offers cloud storage, file synchronization, and client software.");
+}
+
+QUrl HubicPlugin::serviceUrl() const
+{
+    return QUrl(QStringLiteral("https://hubic.com"));
+}
+
+
 #include "hubicplugin.moc"

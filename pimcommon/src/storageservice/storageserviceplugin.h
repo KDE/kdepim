@@ -57,7 +57,8 @@ public:
 
     virtual StorageServicePlugin::Capabilities capabilities() const = 0;
     virtual QIcon icon() const;
-
+    virtual QString description() const = 0;
+    virtual QUrl serviceUrl() const = 0;
 };
 }
 

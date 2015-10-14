@@ -17,6 +17,8 @@
 
 #include "yousenditplugin.h"
 #include <kpluginfactory.h>
+#include <QUrl>
+#include <KLocalizedString>
 
 using namespace PimCommon;
 K_PLUGIN_FACTORY_WITH_JSON(PimCommonYouSendItPluginFactory, "pimcommon_yousenditplugin.json", registerPlugin<YouSendItPlugin>();)
@@ -30,6 +32,16 @@ YouSendItPlugin::YouSendItPlugin(QObject *parent, const QList<QVariant> &)
 YouSendItPlugin::~YouSendItPlugin()
 {
 
+}
+
+QString YouSendItPlugin::description() const
+{
+    return i18n("YouSendIt is a file hosting that offers cloud storage, file synchronization, and client software.");
+}
+
+QUrl YouSendItPlugin::serviceUrl() const
+{
+    return QUrl(QStringLiteral("https://www.yousendit.com/"));
 }
 
 QString YouSendItPlugin::storageServiceName() const

@@ -29,3 +29,83 @@ StorageServiceInterface::~StorageServiceInterface()
 
 }
 
+void StorageServiceInterface::downloadFile(const QString &name, const QString &fileId, const QString &destination)
+{
+
+}
+
+void StorageServiceInterface::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
+{
+
+}
+
+void StorageServiceInterface::accountInfo()
+{
+
+}
+
+void StorageServiceInterface::createFolder(const QString &foldername, const QString &destination)
+{
+
+}
+
+void StorageServiceInterface::listFolder(const QString &folder)
+{
+
+}
+
+void StorageServiceInterface::authentication()
+{
+
+}
+
+void StorageServiceInterface::shareLink(const QString &root, const QString &path)
+{
+
+}
+
+void StorageServiceInterface::createServiceFolder()
+{
+
+}
+
+void StorageServiceInterface::deleteFile(const QString &filename)
+{
+
+}
+
+void StorageServiceInterface::deleteFolder(const QString &foldername)
+{
+
+}
+
+void StorageServiceInterface::renameFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void StorageServiceInterface::renameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void StorageServiceInterface::moveFile(const QString &source, const QString &destination)
+{
+
+}
+
+void StorageServiceInterface::moveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void StorageServiceInterface::copyFile(const QString &source, const QString &destination)
+{
+
+}
+
+void StorageServiceInterface::copyFolder(const QString &source, const QString &destination)
+{
+
+}
+

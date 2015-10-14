@@ -17,6 +17,8 @@
 
 #include "dropboxplugin.h"
 #include <kpluginfactory.h>
+#include <KLocalizedString>
+#include <QUrl>
 
 using namespace PimCommon;
 K_PLUGIN_FACTORY_WITH_JSON(PimCommonDropBoxPluginFactory, "pimcommon_dropboxplugin.json", registerPlugin<DropBoxPlugin>();)
@@ -56,6 +58,16 @@ StorageServicePlugin::Capabilities DropBoxPlugin::capabilities() const
     cap |= CopyFolderCapability;
 
     return cap;
+}
+
+QString DropBoxPlugin::description() const
+{
+    return i18n("Dropbox is a file hosting service operated by Dropbox, Inc. that offers cloud storage, file synchronization, and client software.");
+}
+
+QUrl DropBoxPlugin::serviceUrl() const
+{
+    return QUrl(QStringLiteral("https://www.dropbox.com/"));
 }
 
 #include "dropboxplugin.moc"
