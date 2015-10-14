@@ -1,3 +1,4 @@
 add_subdirectory(yousenditplugin)
 add_subdirectory(dropboxplugin)
 add_subdirectory(boxplugin)
+add_subdirectory(hubicplugin)
