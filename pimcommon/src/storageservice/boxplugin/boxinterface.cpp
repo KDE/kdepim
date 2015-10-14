@@ -29,4 +29,3 @@ BoxInterface::~BoxInterface()
 {
 
 }
-

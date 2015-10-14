@@ -33,6 +33,7 @@ public:
     ~HubicPlugin();
 
     QString storageServiceName() const Q_DECL_OVERRIDE;
+    StorageServicePlugin::Capabilities capabilities() const Q_DECL_OVERRIDE;
 };
 }
 #endif // HUBICPLUGIN_H

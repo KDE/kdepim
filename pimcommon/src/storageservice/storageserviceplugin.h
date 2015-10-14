@@ -28,7 +28,35 @@ class PIMCOMMON_EXPORT StorageServicePlugin : public QObject
 public:
     explicit StorageServicePlugin(QObject *parent = Q_NULLPTR);
     ~StorageServicePlugin();
+    enum Capability {
+        NoCapability = 0,
+        //Account
+        AccountInfoCapability = 1,
+        //File
+        UploadFileCapability = 2,
+        DeleteFileCapability = 4,
+        DownloadFileCapability = 8,
+        RenameFileCapabilitity = 16,
+        MoveFileCapability = 32,
+        CopyFileCapability = 64,
+        //Folder
+        CreateFolderCapability = 128,
+        DeleteFolderCapability = 256,
+        ListFolderCapability = 512,
+        RenameFolderCapability = 1024,
+        MoveFolderCapability = 2048,
+        CopyFolderCapability = 4096,
+        //Share
+        ShareLinkCapability = 8192
+    };
+
     virtual QString storageServiceName() const = 0;
+
+    Q_ENUMS(Capability)
+    Q_DECLARE_FLAGS(Capabilities, Capability)
+
+    virtual StorageServicePlugin::Capabilities capabilities() const = 0;
+
 };
 }
 

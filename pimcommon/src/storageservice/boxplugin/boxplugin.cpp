@@ -36,4 +36,27 @@ QString BoxPlugin::storageServiceName() const
 {
     return QStringLiteral("box");
 }
+
+
+StorageServicePlugin::Capabilities BoxPlugin::capabilities() const
+{
+    StorageServicePlugin::Capabilities cap;
+    cap |= AccountInfoCapability;
+    //cap |= UploadFileCapability;
+    cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= ListFolderCapability;
+    cap |= DeleteFileCapability;
+    cap |= ShareLinkCapability;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
+    cap |= MoveFileCapability;
+    cap |= MoveFolderCapability;
+    cap |= CopyFileCapability;
+    cap |= CopyFolderCapability;
+    return cap;
+}
+
+
 #include "boxplugin.moc"

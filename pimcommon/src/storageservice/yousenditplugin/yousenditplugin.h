@@ -33,6 +33,7 @@ public:
     ~YouSendItPlugin();
 
     QString storageServiceName() const Q_DECL_OVERRIDE;
+    StorageServicePlugin::Capabilities capabilities() const Q_DECL_OVERRIDE;
 };
 }
 #endif // YOUSENDITPLUGIN_H

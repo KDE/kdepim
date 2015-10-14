@@ -36,4 +36,28 @@ QString YouSendItPlugin::storageServiceName() const
 {
     return QStringLiteral("yousendit");
 }
+
+StorageServicePlugin::Capabilities YouSendItPlugin::capabilities() const
+{
+    StorageServicePlugin::Capabilities cap;
+    cap |= AccountInfoCapability;
+    cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= ListFolderCapability;
+    //cap |= ShareLinkCapability;
+    cap |= DeleteFileCapability;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
+    cap |= MoveFileCapability;
+    cap |= MoveFolderCapability;
+
+    //Can not be implemented.
+    //cap |= CopyFileCapability;
+    //cap |= CopyFolderCapability;
+
+    return cap;
+
+}
 #include "yousenditplugin.moc"

@@ -36,4 +36,28 @@ QString HubicPlugin::storageServiceName() const
 {
     return QStringLiteral("hubic");
 }
+
+StorageServicePlugin::Capabilities HubicPlugin::capabilities() const
+{
+    StorageServicePlugin::Capabilities cap;
+#if 0 //Disable for the moment
+    cap |= AccountInfoCapability;
+    //cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= ListFolderCapability;
+    //cap |= ShareLinkCapability;
+    cap |= DeleteFileCapability;
+    //cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+    //cap |= CopyFileCapability;
+    //cap |= CopyFolderCapability;
+#endif
+
+    return cap;
+
+}
 #include "hubicplugin.moc"

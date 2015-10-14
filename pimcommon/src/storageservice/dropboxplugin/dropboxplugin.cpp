@@ -36,4 +36,26 @@ QString DropBoxPlugin::storageServiceName() const
 {
     return QStringLiteral("dropbox");
 }
+
+StorageServicePlugin::Capabilities DropBoxPlugin::capabilities() const
+{
+    StorageServicePlugin::Capabilities cap;
+    cap |= AccountInfoCapability;
+    cap |= UploadFileCapability;
+    cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= DeleteFileCapability;
+    cap |= ListFolderCapability;
+    cap |= ShareLinkCapability;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
+    cap |= MoveFileCapability;
+    cap |= MoveFolderCapability;
+    cap |= CopyFileCapability;
+    cap |= CopyFolderCapability;
+
+    return cap;
+}
+
 #include "dropboxplugin.moc"
