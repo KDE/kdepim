@@ -34,7 +34,7 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QTest::qWaitForWindowExposed(&viewer);
 
     QVERIFY(!viewer.message());
-    QWidget *createtodowidget = viewer.findChild<QWidget *>(QStringLiteral("createtodowidget"));
+    QWidget *createtodowidget = viewer.findChild<QWidget *>(QStringLiteral("todoedit"));
     QVERIFY(createtodowidget);
     QCOMPARE(createtodowidget->isVisible(), false);
 
@@ -57,11 +57,11 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(openattachementfolderwidget);
     QVERIFY(!openattachementfolderwidget->isVisible());
 
-    QWidget *createeventwidget = viewer.findChild<QWidget *>(QStringLiteral("createeventwidget"));
+    QWidget *createeventwidget = viewer.findChild<QWidget *>(QStringLiteral("eventedit"));
     QVERIFY(createeventwidget);
     QCOMPARE(createeventwidget->isVisible(), false);
 
-    QWidget *createnotewidget = viewer.findChild<QWidget *>(QStringLiteral("createnotewidget"));
+    QWidget *createnotewidget = viewer.findChild<QWidget *>(QStringLiteral("noteedit"));
     QVERIFY(createnotewidget);
     QCOMPARE(createnotewidget->isVisible(), false);
 

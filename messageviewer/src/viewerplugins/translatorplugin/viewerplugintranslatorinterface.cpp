@@ -32,6 +32,7 @@ ViewerPluginTranslatorInterface::ViewerPluginTranslatorInterface(KActionCollecti
       mAction(Q_NULLPTR)
 {
     mTranslatorWidget = new PimCommon::TranslatorWidget(parent);
+    mTranslatorWidget->setObjectName(QStringLiteral("translatorwidget"));
     parent->layout()->addWidget(mTranslatorWidget);
     createAction(ac);
 }
