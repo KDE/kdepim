@@ -16,6 +16,7 @@
 */
 
 #include "storageserviceplugin.h"
+#include <QIcon>
 
 using namespace PimCommon;
 
@@ -28,5 +29,10 @@ StorageServicePlugin::StorageServicePlugin(QObject *parent)
 StorageServicePlugin::~StorageServicePlugin()
 {
 
+}
+
+QIcon StorageServicePlugin::icon() const
+{
+    return QIcon();
 }
 

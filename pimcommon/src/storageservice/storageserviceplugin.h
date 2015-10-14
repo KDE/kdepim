@@ -56,6 +56,7 @@ public:
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
     virtual StorageServicePlugin::Capabilities capabilities() const = 0;
+    virtual QIcon icon() const;
 
 };
 }
