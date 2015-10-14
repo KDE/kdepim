@@ -2356,10 +2356,10 @@ void ViewerPrivate::setPluginName(const QString &pluginName)
     mHeaderStyleMenuManager->setPluginName(pluginName);
 }
 
-QList<QAction *> ViewerPrivate::viewerPluginActionList(bool needValidMessage)
+QList<QAction *> ViewerPrivate::viewerPluginActionList(ViewerPluginInterface::SpecificFeatureTypes features)
 {
     if (mViewerPluginToolManager) {
-        return mViewerPluginToolManager->viewerPluginActionList(needValidMessage);
+        return mViewerPluginToolManager->viewerPluginActionList(features);
     }
     return QList<QAction *>();
 }

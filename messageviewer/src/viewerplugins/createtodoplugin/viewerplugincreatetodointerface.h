@@ -38,7 +38,7 @@ public:
     void closePlugin() Q_DECL_OVERRIDE;
     void showWidget() Q_DECL_OVERRIDE;
     void setMessageItem(const Akonadi::Item &item) Q_DECL_OVERRIDE;
-    bool needValidMessageItem() const Q_DECL_OVERRIDE;
+    ViewerPluginInterface::SpecificFeatureTypes featureTypes() const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotCreateTodo(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection);

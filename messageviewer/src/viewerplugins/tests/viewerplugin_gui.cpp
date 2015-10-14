@@ -53,7 +53,25 @@ ViewerPluginTest::ViewerPluginTest(QWidget *parent)
     toolManager->createView();
     QMenu *menu = new QMenu(this);
     menu->setTitle(QStringLiteral("tools"));
-    menu->addActions(toolManager->viewerPluginActionList());
+    menu->addActions(toolManager->viewerPluginActionList(MessageViewer::ViewerPluginInterface::All));
+    menuBar->addMenu(menu);
+
+    menu = new QMenu(this);
+    menu->setTitle(QStringLiteral("selected tools"));
+    menu->addActions(toolManager->viewerPluginActionList(MessageViewer::ViewerPluginInterface::NeedSelection));
+    menuBar->addMenu(menu);
+
+    menu = new QMenu(this);
+    menu->setTitle(QStringLiteral("message tools"));
+    menu->addActions(toolManager->viewerPluginActionList(MessageViewer::ViewerPluginInterface::NeedMessage));
+    menuBar->addMenu(menu);
+
+    menu = new QMenu(this);
+    menu->setTitle(QStringLiteral("message tools and selected tools"));
+    MessageViewer::ViewerPluginInterface::SpecificFeatureTypes featureTypes;
+    featureTypes |= MessageViewer::ViewerPluginInterface::NeedMessage;
+    featureTypes |= MessageViewer::ViewerPluginInterface::NeedSelection;
+    menu->addActions(toolManager->viewerPluginActionList(featureTypes));
     menuBar->addMenu(menu);
 }
 

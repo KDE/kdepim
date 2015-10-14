@@ -39,7 +39,7 @@ public:
     void closeAllTools();
     void setActionCollection(KActionCollection *ac);
     void updateActions(const Akonadi::Item &messageItem);
-    QList<QAction *> actionList(bool needValidMessage) const;
+    QList<QAction *> actionList(ViewerPluginInterface::SpecificFeatureTypes features) const;
     QList<MessageViewer::ViewerPluginInterface *> mListInterface;
     KActionCollection *mActionCollection;
     QWidget *mParentWidget;
@@ -68,16 +68,16 @@ void ViewerPluginToolManagerPrivate::setActionCollection(KActionCollection *ac)
     mActionCollection = ac;
 }
 
-QList<QAction *> ViewerPluginToolManagerPrivate::actionList(bool needValidMessage) const
+QList<QAction *> ViewerPluginToolManagerPrivate::actionList(ViewerPluginInterface::SpecificFeatureTypes features) const
 {
     QList<QAction *> lstAction;
     Q_FOREACH (MessageViewer::ViewerPluginInterface *interface, mListInterface) {
-        if (needValidMessage) {
-            if (interface->needValidMessageItem()) {
+        if (features & ViewerPluginInterface::All) {
+            lstAction.append(interface->action());
+        } else {
+            if (interface->featureTypes() & features) {
                 lstAction.append(interface->action());
             }
-        } else {
-            lstAction.append(interface->action());
         }
     }
     return lstAction;
@@ -116,9 +116,9 @@ void ViewerPluginToolManager::setActionCollection(KActionCollection *ac)
     d->setActionCollection(ac);
 }
 
-QList<QAction *> ViewerPluginToolManager::viewerPluginActionList(bool needValidMessage) const
+QList<QAction *> ViewerPluginToolManager::viewerPluginActionList(ViewerPluginInterface::SpecificFeatureTypes features) const
 {
-    return d->actionList(needValidMessage);
+    return d->actionList(features);
 }
 
 void ViewerPluginToolManager::updateActions(const Akonadi::Item &messageItem)

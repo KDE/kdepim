@@ -23,6 +23,7 @@
 #define MESSAGEVIEWER_H
 
 #include "messageviewer_export.h"
+#include "messageviewer/viewerplugininterface.h"
 
 #include <kmime/kmime_message.h>
 
@@ -336,7 +337,7 @@ public:
     bool mimePartTreeIsEmpty() const;
 
     void showOpenAttachmentFolderWidget(const QUrl &url);
-    QList<QAction *> viewerPluginActionList(bool needValidMessage = false);
+    QList<QAction *> viewerPluginActionList(MessageViewer::ViewerPluginInterface::SpecificFeatureTypes features);
 
 Q_SIGNALS:
     void moveMessageToTrash();

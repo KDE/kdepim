@@ -696,10 +696,10 @@ void Viewer::showOpenAttachmentFolderWidget(const QUrl &url)
     d->showOpenAttachmentFolderWidget(url);
 }
 
-QList<QAction *> Viewer::viewerPluginActionList(bool needValidMessage)
+QList<QAction *> Viewer::viewerPluginActionList(ViewerPluginInterface::SpecificFeatureTypes features)
 {
     Q_D(Viewer);
-    return d->viewerPluginActionList(needValidMessage);
+    return d->viewerPluginActionList(features);
 }
 
 }

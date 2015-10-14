@@ -21,6 +21,7 @@
 #include <Item>
 #include <QObject>
 #include "messageviewer_export.h"
+#include "viewerplugininterface.h"
 class KActionCollection;
 class QAction;
 namespace MessageViewer
@@ -39,7 +40,7 @@ public:
     void createView();
     void setActionCollection(KActionCollection *ac);
 
-    QList<QAction *> viewerPluginActionList(bool needValidMessage = false) const;
+    QList<QAction *> viewerPluginActionList(ViewerPluginInterface::SpecificFeatureTypes features) const;
 
     void updateActions(const Akonadi::Item &messageItem);
 Q_SIGNALS:

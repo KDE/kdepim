@@ -45,6 +45,11 @@ ViewerPluginCreateEventInterface::~ViewerPluginCreateEventInterface()
 
 }
 
+ViewerPluginInterface::SpecificFeatureTypes ViewerPluginCreateEventInterface::featureTypes() const
+{
+    return ViewerPluginInterface::NeedMessage;
+}
+
 void ViewerPluginCreateEventInterface::setText(const QString &text)
 {
     Q_UNUSED(text);
@@ -74,11 +79,6 @@ void ViewerPluginCreateEventInterface::showWidget()
 void ViewerPluginCreateEventInterface::setMessageItem(const Akonadi::Item &item)
 {
     mMessageItem = item;
-}
-
-bool ViewerPluginCreateEventInterface::needValidMessageItem() const
-{
-    return true;
 }
 
 void ViewerPluginCreateEventInterface::createAction(KActionCollection *ac)

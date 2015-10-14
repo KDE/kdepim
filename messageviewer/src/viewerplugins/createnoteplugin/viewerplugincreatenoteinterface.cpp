@@ -124,9 +124,9 @@ void ViewerPluginCreatenoteInterface::setMessageItem(const Akonadi::Item &item)
     mMessageItem = item;
 }
 
-bool ViewerPluginCreatenoteInterface::needValidMessageItem() const
+ViewerPluginInterface::SpecificFeatureTypes ViewerPluginCreatenoteInterface::featureTypes() const
 {
-    return true;
+    return ViewerPluginInterface::NeedMessage;
 }
 
 void ViewerPluginCreatenoteInterface::updateAction(const Akonadi::Item &item)

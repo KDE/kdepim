@@ -56,9 +56,9 @@ void ViewerPluginTranslatorInterface::showWidget()
     mTranslatorWidget->show();
 }
 
-bool ViewerPluginTranslatorInterface::needValidMessageItem() const
+ViewerPluginInterface::SpecificFeatureTypes ViewerPluginTranslatorInterface::featureTypes() const
 {
-    return false;
+    return NeedSelection;
 }
 
 void ViewerPluginTranslatorInterface::createAction(KActionCollection *ac)

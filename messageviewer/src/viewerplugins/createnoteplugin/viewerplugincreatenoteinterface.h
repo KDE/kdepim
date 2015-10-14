@@ -37,8 +37,8 @@ public:
     void closePlugin() Q_DECL_OVERRIDE;
     void showWidget() Q_DECL_OVERRIDE;
     void setMessageItem(const Akonadi::Item &item) Q_DECL_OVERRIDE;
-    bool needValidMessageItem() const Q_DECL_OVERRIDE;
     void updateAction(const Akonadi::Item &item) Q_DECL_OVERRIDE;
+    ViewerPluginInterface::SpecificFeatureTypes featureTypes() const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void slotCreateNote(const KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection);

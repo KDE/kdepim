@@ -24,6 +24,7 @@
 #include "messageviewer/nodehelper.h"
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 #include "PimCommon/ShareServiceUrlManager"
+#include "messageviewer/viewerplugininterface.h"
 
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/monitor.h>
@@ -425,7 +426,7 @@ public:
 
     void setPluginName(const QString &pluginName);
 
-    QList<QAction *> viewerPluginActionList(bool needValidMessage = false);
+    QList<QAction *> viewerPluginActionList(MessageViewer::ViewerPluginInterface::SpecificFeatureTypes features);
 
 private Q_SLOTS:
     void slotActivatePlugin(MessageViewer::ViewerPluginInterface *interface);
