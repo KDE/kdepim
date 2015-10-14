@@ -22,7 +22,7 @@
 
 namespace GrantleeTheme
 {
-class GrantleeThemeManager;
+class ThemeManager;
 }
 
 namespace MessageViewer
@@ -40,7 +40,7 @@ public:
 private Q_SLOTS:
     void slotGrantleeHeaders();
 private:
-    GrantleeTheme::GrantleeThemeManager *mThemeManager;
+    GrantleeTheme::ThemeManager *mThemeManager;
 };
 
 }

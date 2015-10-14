@@ -29,17 +29,16 @@ class KActionMenu;
 
 namespace GrantleeTheme
 {
-class GRANTLEETHEME_EXPORT GrantleeThemeManager : public QObject
+class GRANTLEETHEME_EXPORT ThemeManager : public QObject
 {
     Q_OBJECT
 public:
-    enum Application {
-        Mail = 0,
-        Addressbook
-    };
-
-    explicit GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Application applicationType, const QString &defaultDesktopFileName, KActionCollection *actionCollection, const QString &path, QObject *parent = Q_NULLPTR);
-    ~GrantleeThemeManager();
+    explicit ThemeManager(const QString &themeType,
+                          const QString &defaultDesktopFileName,
+                          KActionCollection *actionCollection = Q_NULLPTR,
+                          const QString &path = QString(),
+                          QObject *parent = Q_NULLPTR);
+    ~ThemeManager();
 
     QMap<QString, GrantleeTheme::Theme> themes() const;
 
@@ -55,8 +54,11 @@ public:
 
     void setDownloadNewStuffConfigFile(const QString &configFileName);
 
-    static QString pathFromThemes(const QString &path, const QString &themeName, const QString &defaultDesktopFilename);
-    static GrantleeTheme::Theme loadTheme(const QString &themePath, const QString &dirName, const QString &defaultDesktopFilename);
+    static QString pathFromThemes(const QString &path, const QString &themeName,
+                                  const QString &defaultDesktopFilename);
+    static GrantleeTheme::Theme loadTheme(const QString &themePath,
+                                          const QString &dirName,
+                                          const QString &defaultDesktopFilename);
 
 Q_SIGNALS:
     void themesChanged();

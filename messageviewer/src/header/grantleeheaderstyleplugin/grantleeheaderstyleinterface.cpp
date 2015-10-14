@@ -37,10 +37,12 @@ GrantleeHeaderStyleInterface::~GrantleeHeaderStyleInterface()
 
 void GrantleeHeaderStyleInterface::createAction(KActionMenu *menu, QActionGroup *actionGroup, KActionCollection *ac)
 {
-    mThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Mail, QStringLiteral("header.desktop"), ac, QStringLiteral("messageviewer/themes/"));
+    mThemeManager = new GrantleeTheme::ThemeManager(QStringLiteral("mail"),
+                                                    QStringLiteral("header.desktop"), ac,
+                                                    QStringLiteral("messageviewer/themes/"));
     mThemeManager->setDownloadNewStuffConfigFile(QStringLiteral("messageviewer_header_themes.knsrc"));
-    connect(mThemeManager, &GrantleeTheme::GrantleeThemeManager::grantleeThemeSelected, this, &GrantleeHeaderStyleInterface::slotGrantleeHeaders);
-    connect(mThemeManager, &GrantleeTheme::GrantleeThemeManager::updateThemes, this, &HeaderStyleInterface::styleUpdated);
+    connect(mThemeManager, &GrantleeTheme::ThemeManager::grantleeThemeSelected, this, &GrantleeHeaderStyleInterface::slotGrantleeHeaders);
+    connect(mThemeManager, &GrantleeTheme::ThemeManager::updateThemes, this, &HeaderStyleInterface::styleUpdated);
 
     mThemeManager->setActionGroup(actionGroup);
     mThemeManager->setThemeMenu(menu);

@@ -573,10 +573,13 @@ void MainWidget::setupGui()
 
 void MainWidget::setupActions(KActionCollection *collection)
 {
-    mGrantleeThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Addressbook, QStringLiteral("theme.desktop"), collection, QStringLiteral("kaddressbook/viewertemplates/"));
+    mGrantleeThemeManager = new GrantleeTheme::ThemeManager(QStringLiteral("addressbook"),
+                                                            QStringLiteral("theme.desktop"),
+                                                            collection,
+                                                            QStringLiteral("kaddressbook/viewertemplates/"));
     mGrantleeThemeManager->setDownloadNewStuffConfigFile(QStringLiteral("kaddressbook_themes.knsrc"));
-    connect(mGrantleeThemeManager, &GrantleeTheme::GrantleeThemeManager::grantleeThemeSelected, this, &MainWidget::slotGrantleeThemeSelected);
-    connect(mGrantleeThemeManager, &GrantleeTheme::GrantleeThemeManager::updateThemes, this, &MainWidget::slotGrantleeThemesUpdated);
+    connect(mGrantleeThemeManager, &GrantleeTheme::ThemeManager::grantleeThemeSelected, this, &MainWidget::slotGrantleeThemeSelected);
+    connect(mGrantleeThemeManager, &GrantleeTheme::ThemeManager::updateThemes, this, &MainWidget::slotGrantleeThemesUpdated);
 
     KActionMenu *themeMenu  = new KActionMenu(i18n("&Themes"), this);
     collection->addAction(QStringLiteral("theme_menu"), themeMenu);

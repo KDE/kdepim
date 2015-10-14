@@ -18,52 +18,52 @@
 #define GRANTLEETHEME_H
 
 #include "grantleetheme_export.h"
+
 #include <QString>
 #include <QStringList>
+#include <QVariantHash>
+#include <QSharedDataPointer>
+
+class GrantleeThemeTest;
+
 namespace GrantleeTheme
 {
+
+class ThemeManager;
+class ThemePrivate;
+
 class GRANTLEETHEME_EXPORT Theme
 {
 public:
-    Theme();
-    Theme(const QString &themePath, const QString &dirName, const QString &defaultDesktopFileName);
+    explicit Theme();
+    Theme(const Theme &other);
     ~Theme();
+
+    bool operator==(const Theme &other) const;
+    Theme &operator=(const Theme &other);
 
     bool isValid() const;
 
     QString description() const;
-    void setDescription(const QString &description);
-
     QString themeFilename() const;
-    void setThemeFilename(const QString &file);
-
     QString name() const;
-    void setName(const QString &);
-
     QStringList displayExtraVariables() const;
-    void setDisplayExtraVariables(const QStringList &);
-
-    void setDirName(const QString &name);
     QString dirName() const;
-
-    void setAbsolutePath(const QString &absPath);
     QString absolutePath() const;
-
-    void setAuthor(const QString &);
     QString author() const;
-
-    void setAuthorEmail(const QString &);
     QString authorEmail() const;
 
+
+    QString render(const QString &templateName, const QVariantHash &data);
+
+    static void addPluginPath(const QString &path);
+
 private:
-    QStringList mDisplayExtraVariables;
-    QString mThemeFileName;
-    QString mDescription;
-    QString mName;
-    QString mDirName;
-    QString mAbsolutePath;
-    QString mAuthor;
-    QString mEmail;
+    friend class ::GrantleeThemeTest;
+    friend class ThemeManager;
+    Theme(const QString &themePath, const QString &dirName, const QString &defaultDesktopFileName);
+
+    QSharedDataPointer<ThemePrivate> d;
 };
 }
 

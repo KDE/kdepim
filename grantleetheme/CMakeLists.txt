@@ -24,10 +24,13 @@ include(ECMAddTests)
 set(KF5_VERSION "5.16.0")
 set(KDEPIM_LIB_VERSION "5.0.45")
 set(QT_REQUIRED_VERSION "5.4.0")
+set(GRANTLEE_VERSION "5.0.0")
 
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Network)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
+
+find_package(Grantlee5 ${GRANTLEE_VERSION} CONFIG REQUIRED)
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX GRANTLEETHEME
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/grantleetheme_version.h"

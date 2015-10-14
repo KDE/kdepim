@@ -28,7 +28,7 @@
 
 namespace GrantleeTheme
 {
-class GrantleeThemeManager;
+class ThemeManager;
 }
 class QAction;
 namespace Akonadi
@@ -166,7 +166,7 @@ private:
     KXMLGUIClient *mXmlGuiClient;
     KAddressBookGrantlee::GrantleeContactFormatter *mFormatter;
     KAddressBookGrantlee::GrantleeContactGroupFormatter *mGroupFormatter;
-    GrantleeTheme::GrantleeThemeManager *mGrantleeThemeManager;
+    GrantleeTheme::ThemeManager *mGrantleeThemeManager;
     Akonadi::EntityTreeModel *entityTreeModel() const;
     QAction *mQuickSearchAction;
     QAction *mServerSideSubscription;

@@ -2,14 +2,21 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_definitions(-DTRANSLATION_DOMAIN=\"libgrantleetheme\")
 
+add_subdirectory(plugin)
+
 set(libgrantleetheme_SRCS
     grantleetheme.cpp
     grantleethememanager.cpp
+    grantleeki18nlocalizer.cpp
 )
+
+configure_file(config-grantleetheme.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-grantleetheme.h)
 
 kconfig_add_kcfg_files(libgrantleetheme_SRCS
   globalsettings_grantleetheme.kcfgc
 )
+
+ecm_qt_declare_logging_category(libgrantleetheme_SRCS HEADER grantleetheme_debug.h IDENTIFIER GRANTLEETHEME_LOG CATEGORY_NAME log_grantleetheme)
 
 add_library(KF5GrantleeTheme ${libgrantleetheme_SRCS})
 generate_export_header(KF5GrantleeTheme BASE_NAME grantleetheme)
@@ -21,8 +28,10 @@ target_include_directories(KF5GrantleeTheme PUBLIC "$<BUILD_INTERFACE:${Grantlee
 
 
 target_link_libraries(KF5GrantleeTheme
-PRIVATE
-  KF5::NewStuff KF5::I18n
+  PRIVATE
+    KF5::NewStuff
+    KF5::I18n
+    Grantlee5::Templates
 )
 
 set_target_properties(KF5GrantleeTheme PROPERTIES
