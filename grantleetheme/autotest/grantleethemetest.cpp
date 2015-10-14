@@ -21,11 +21,12 @@
 #include <qtest.h>
 #include <QDir>
 #include <QProcess>
+#include <QStandardPaths>
 
 GrantleeThemeTest::GrantleeThemeTest(QObject *parent)
     : QObject(parent)
 {
-
+    QStandardPaths::setTestModeEnabled(true);
 }
 
 GrantleeThemeTest::~GrantleeThemeTest()
