@@ -150,6 +150,9 @@
 #include <viewerplugins/viewerplugininterface.h>
 #include <widgets/zoomactionmenu.h>
 
+#include <grantleetheme/grantleethememanager.h>
+#include <grantleetheme/grantleetheme.h>
+
 using namespace boost;
 using namespace MailTransport;
 using namespace MessageViewer;
@@ -767,30 +770,31 @@ int ViewerPrivate::pointsToPixel(int pointSize) const
     return (pointSize * mViewer->logicalDpiY() + 36) / 72;
 }
 
-void ViewerPrivate::displaySplashPage(const QString &info)
+void ViewerPrivate::displaySplashPage(const QString &message)
+{
+    displaySplashPage(QStringLiteral("status.html"),
+                      { { QStringLiteral("icon"), QStringLiteral("kmail") },
+                        { QStringLiteral("name"), i18n("KMail") },
+                        { QStringLiteral("subtitle"), i18n("The KDE Mail Client") },
+                        { QStringLiteral("message"), message } });
+}
+
+void ViewerPrivate::displaySplashPage(const QString &templateName, const QVariantHash &data)
 {
     mMsgDisplay = false;
     adjustLayout();
 
-    const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kmail2/about/main.html"));  //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
-    const QString stylesheet = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/kf5/infopage/kde_infopage.css"));
-    QString rtlStylesheet;
-    if (QApplication::isRightToLeft()) {
-        rtlStylesheet = QLatin1String("@import \"") + QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/kf5/infopage/kde_infopage_rtl.css")) +  QLatin1String("\";");
+    GrantleeTheme::ThemeManager manager(QStringLiteral("splashPage"),
+                                        QStringLiteral("splash.theme"),
+                                        Q_NULLPTR,
+                                        QStringLiteral("messageviewer/about/"));
+    GrantleeTheme::Theme theme = manager.theme(QStringLiteral("default"));
+    if (!theme.isValid()) {
+        qCDebug(MESSAGEVIEWER_LOG) << "Theme error: failed to find splash theme";
+    } else {
+        mViewer->setHtml(theme.render(templateName, data),
+                         QUrl::fromLocalFile(theme.absolutePath() + QLatin1Char('/')));
     }
-    QFile f(location);
-    if (!f.open(QIODevice::ReadOnly)) {
-        qCWarning(MESSAGEVIEWER_LOG) << "Failed to read splash page: " << f.errorString();
-        return;
-    }
-    const QString content = QString::fromLocal8Bit(f.readAll()).arg(stylesheet, rtlStylesheet);
-    f.close();
-
-    const QString fontSize = QString::number(pointsToPixel(mCSSHelper->bodyFont().pointSize()));
-    const QString catchPhrase; //not enough space for a catch phrase at default window size i18n("Part of the Kontact Suite");
-    const QString quickDescription = i18n("The KDE email client.");
-
-    mViewer->setHtml(content.arg(fontSize).arg(mAppName).arg(catchPhrase).arg(quickDescription).arg(info), QUrl::fromLocalFile(location));
     mViewer->show();
 }
 

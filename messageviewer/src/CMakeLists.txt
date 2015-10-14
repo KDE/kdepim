@@ -43,6 +43,8 @@ endif()
 add_subdirectory(pics)
 add_subdirectory(grantleefilters)
 add_subdirectory(kconf_update)
+add_subdirectory(about)
+
 if(DEBUG_SIGNATURE)
    add_definitions(-DDEBUG_SIGNATURE)
 endif()

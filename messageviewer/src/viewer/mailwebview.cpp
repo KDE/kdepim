@@ -131,6 +131,11 @@ MailWebView::MailWebView(KActionCollection *actionCollection, QWidget *parent)
     settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
     settings()->setAttribute(QWebSettings::JavaEnabled, false);
     settings()->setAttribute(QWebSettings::PluginsEnabled, false);
+
+    const QFontInfo font(QFontDatabase().systemFont(QFontDatabase::GeneralFont));
+    settings()->setFontFamily(QWebSettings::StandardFont, font.family());
+    settings()->setFontSize(QWebSettings::DefaultFontSize, font.pixelSize());
+
     connect(page(), &QWebPage::linkHovered,
             this,   &MailWebView::linkHovered);
     connect(this, &QWebView::loadStarted, this, &MailWebView::hideAccessKeys);

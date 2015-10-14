@@ -132,10 +132,10 @@ void Viewer::setMessagePath(const QString &path)
     d->mMessagePath = path;
 }
 
-void Viewer::displaySplashPage(const QString &info)
+void Viewer::displaySplashPage(const QString &templateName, const QVariantHash &data)
 {
     Q_D(Viewer);
-    d->displaySplashPage(info);
+    d->displaySplashPage(templateName, data);
 }
 
 void Viewer::enableMessageDisplay()

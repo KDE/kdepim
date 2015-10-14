@@ -248,10 +248,10 @@ public:
     /** Calculate the pixel size */
     int pointsToPixel(int pointSize) const;
 
-    /** Display a generic HTML splash page instead of a message.
-    * @param info - the text to be displayed in HTML format
-    */
-    void displaySplashPage(const QString &info);
+    /** Display a generic HTML splash page instead of a message. */
+    void displaySplashPage(const QString &templateName, const QVariantHash &data);
+
+    void displaySplashPage(const QString &message);
 
     /** Enable the displaying of messages again after an splash (or other) page was displayed */
     void enableMessageDisplay();
