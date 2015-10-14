@@ -15,22 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BALOOSYNTAXHIGHLIGHTER_H
-#define BALOOSYNTAXHIGHLIGHTER_H
+#ifndef AKONADISEARCHDEBUGSEARCHPATHCOMBOBOX_H
+#define AKONADISEARCHDEBUGSEARCHPATHCOMBOBOX_H
 
-#include <KPIMTextEdit/SyntaxHighlighterBase>
-
+#include <QComboBox>
+#include "pimcommon_export.h"
 namespace PimCommon
 {
-class BalooSyntaxHighlighter : public KPIMTextEdit::SyntaxHighlighterBase
+class PIMCOMMON_EXPORT AkonadiSearchDebugSearchPathComboBox : public QComboBox
 {
     Q_OBJECT
 public:
-    explicit BalooSyntaxHighlighter(QTextDocument *doc);
-    ~BalooSyntaxHighlighter();
+    explicit AkonadiSearchDebugSearchPathComboBox(QWidget *parent = Q_NULLPTR);
+    enum SearchType {
+        Contacts = 0,
+        ContactCompleter,
+        Emails,
+        Notes,
+        Calendars
+    };
+    ~AkonadiSearchDebugSearchPathComboBox();
 
+    QString searchPath() const;
+
+    QString pathFromEnum(SearchType type) const;
+    void setSearchType(SearchType type);
 private:
-    void init() Q_DECL_OVERRIDE;
+    void initialize();
 };
 }
-#endif // BALOOSYNTAXHIGHLIGHTER_H
+
+#endif // AKONADISEARCHDEBUGSEARCHPATHCOMBOBOX_H
+

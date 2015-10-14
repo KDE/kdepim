@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "baloodebug/baloodebugdialog.h"
+#include "akonadisearchdebug/akonadisearchdebugdialog.h"
 
 #include <KLocalizedString>
 #include <QApplication>
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     parser.addHelpOption();
     parser.process(app);
 
-    PimCommon::BalooDebugDialog *dlg = new PimCommon::BalooDebugDialog();
+    PimCommon::AkonadiSearchDebugDialog *dlg = new PimCommon::AkonadiSearchDebugDialog();
     dlg->resize(800, 600);
     dlg->show();
     app.exec();

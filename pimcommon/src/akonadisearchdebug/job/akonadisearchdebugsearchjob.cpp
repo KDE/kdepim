@@ -15,26 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "baloodebugsearchjob.h"
+#include "akonadisearchdebugsearchjob.h"
 
 #include <QProcess>
-#include "pimcommon_debug.h"
 #include <QStandardPaths>
 
 using namespace PimCommon;
-BalooDebugSearchJob::BalooDebugSearchJob(QObject *parent)
+AkonadiSearchDebugSearchJob::AkonadiSearchDebugSearchJob(QObject *parent)
     : QObject(parent),
       mProcess(Q_NULLPTR)
 {
 
 }
 
-BalooDebugSearchJob::~BalooDebugSearchJob()
+AkonadiSearchDebugSearchJob::~AkonadiSearchDebugSearchJob()
 {
 
 }
 
-void BalooDebugSearchJob::start()
+void AkonadiSearchDebugSearchJob::start()
 {
     const QString delvePath = QStandardPaths::findExecutable(QStringLiteral("delve"));
     if (delvePath.isEmpty()) {
@@ -44,8 +43,8 @@ void BalooDebugSearchJob::start()
         return;
     } else {
         mProcess = new QProcess(this);
-        connect(mProcess, &QProcess::readyReadStandardOutput, this, &BalooDebugSearchJob::slotReadStandard);
-        connect(mProcess, &QProcess::readyReadStandardError, this, &BalooDebugSearchJob::slotReadError);
+        connect(mProcess, &QProcess::readyReadStandardOutput, this, &AkonadiSearchDebugSearchJob::slotReadStandard);
+        connect(mProcess, &QProcess::readyReadStandardError, this, &AkonadiSearchDebugSearchJob::slotReadError);
         mProcess->setWorkingDirectory(mPath);
         QStringList arguments;
         arguments << QStringLiteral("-r") << mAkonadiId;
@@ -54,7 +53,7 @@ void BalooDebugSearchJob::start()
     }
 }
 
-void BalooDebugSearchJob::slotReadStandard()
+void AkonadiSearchDebugSearchJob::slotReadStandard()
 {
     const QByteArray stdStrg = mProcess->readAllStandardOutput();
     Q_EMIT result(QString::fromUtf8(stdStrg));
@@ -64,7 +63,7 @@ void BalooDebugSearchJob::slotReadStandard()
     deleteLater();
 }
 
-void BalooDebugSearchJob::slotReadError()
+void AkonadiSearchDebugSearchJob::slotReadError()
 {
     const QByteArray errorStrg = mProcess->readAllStandardOutput();
     Q_EMIT error(QString::fromUtf8(errorStrg));
@@ -74,17 +73,17 @@ void BalooDebugSearchJob::slotReadError()
     deleteLater();
 }
 
-void BalooDebugSearchJob::setAkonadiId(const QString &id)
+void AkonadiSearchDebugSearchJob::setAkonadiId(const QString &id)
 {
     mAkonadiId = id;
 }
 
-void BalooDebugSearchJob::setArguments(const QStringList &args)
+void AkonadiSearchDebugSearchJob::setArguments(const QStringList &args)
 {
     mArguments = args;
 }
 
-void BalooDebugSearchJob::setSearchPath(const QString &path)
+void AkonadiSearchDebugSearchJob::setSearchPath(const QString &path)
 {
     mPath = path;
 }

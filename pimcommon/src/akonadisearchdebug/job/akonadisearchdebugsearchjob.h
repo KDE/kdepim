@@ -15,23 +15,42 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BALOODEBUGSEARCHPATHCOMBOBOXTEST_H
-#define BALOODEBUGSEARCHPATHCOMBOBOXTEST_H
+#ifndef AKONADISEARCHDEBUGSEARCHJOB_H
+#define AKONADISEARCHDEBUGSEARCHJOB_H
 
 #include <QObject>
-
-class BalooDebugSearchPathComboBoxTest : public QObject
+#include <QStringList>
+class QProcess;
+namespace PimCommon
+{
+class AkonadiSearchDebugSearchJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit BalooDebugSearchPathComboBoxTest(QObject *parent = Q_NULLPTR);
-    ~BalooDebugSearchPathComboBoxTest();
-private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldReturnPath();
-    void shouldReturnCorrectSearchPath();
-    void shouldSelectCorrectType();
-};
+    explicit AkonadiSearchDebugSearchJob(QObject *parent = Q_NULLPTR);
+    ~AkonadiSearchDebugSearchJob();
 
-#endif // BALOODEBUGSEARCHPATHCOMBOBOXTEST_H
+    void start();
+
+    void setAkonadiId(const QString &id);
+    void setArguments(const QStringList &args);
+    void setSearchPath(const QString &path);
+
+Q_SIGNALS:
+    void error(const QString &errorString);
+    void result(const QString &text);
+
+private Q_SLOTS:
+    void slotReadStandard();
+    void slotReadError();
+
+private:
+    QStringList mArguments;
+    QString mAkonadiId;
+    QString mPath;
+    QProcess *mProcess;
+};
+}
+
+#endif // AKONADISEARCHDEBUGSEARCHJOB_H
 

@@ -15,27 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BALOODEBUGWIDGET_H
-#define BALOODEBUGWIDGET_H
+#ifndef AKONADISEARCHDEBUGWIDGET_H
+#define AKONADISEARCHDEBUGWIDGET_H
 
 #include <QWidget>
 #include "pimcommon_export.h"
-#include "baloodebugsearchpathcombobox.h"
+#include "akonadisearchdebugsearchpathcombobox.h"
 #include <AkonadiCore/Item>
 class KLineEdit;
 class QPushButton;
 namespace PimCommon
 {
 class PlainTextEditorWidget;
-class PIMCOMMON_EXPORT BalooDebugWidget : public QWidget
+class PIMCOMMON_EXPORT AkonadiSearchDebugWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BalooDebugWidget(QWidget *parent = Q_NULLPTR);
-    ~BalooDebugWidget();
+    explicit AkonadiSearchDebugWidget(QWidget *parent = Q_NULLPTR);
+    ~AkonadiSearchDebugWidget();
 
     void setAkonadiId(Akonadi::Item::Id akonadiId);
-    void setSearchType(BalooDebugSearchPathComboBox::SearchType type);
+    void setSearchType(AkonadiSearchDebugSearchPathComboBox::SearchType type);
     void doSearch();
 
     QString plainText() const;
@@ -48,11 +48,11 @@ private Q_SLOTS:
 
 private:
     PimCommon::PlainTextEditorWidget *mPlainTextEditor;
-    PimCommon::BalooDebugSearchPathComboBox *mSearchPathComboBox;
+    PimCommon::AkonadiSearchDebugSearchPathComboBox *mSearchPathComboBox;
     KLineEdit *mLineEdit;
     QPushButton *mSearchButton;
 };
 }
 
-#endif // BALOODEBUGWIDGET_H
+#endif // AKONADISEARCHDEBUGWIDGET_H
 

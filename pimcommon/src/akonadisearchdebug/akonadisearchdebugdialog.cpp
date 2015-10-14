@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "baloodebugdialog.h"
-#include "baloodebugwidget.h"
+#include "akonadisearchdebugdialog.h"
+#include "akonadisearchdebugwidget.h"
 #include "util/pimutil.h"
 
 #include <KLocalizedString>
@@ -28,78 +28,78 @@
 
 using namespace PimCommon;
 
-class PimCommon::BalooDebugDialogPrivate
+class PimCommon::AkonadiSearchDebugDialogPrivate
 {
 public:
-    BalooDebugDialogPrivate()
+    AkonadiSearchDebugDialogPrivate()
         : mBalooDebugWidget(Q_NULLPTR)
     {
 
     }
 
-    BalooDebugWidget *mBalooDebugWidget;
+    AkonadiSearchDebugWidget *mBalooDebugWidget;
 };
 
-BalooDebugDialog::BalooDebugDialog(QWidget *parent)
+AkonadiSearchDebugDialog::AkonadiSearchDebugDialog(QWidget *parent)
     : QDialog(parent),
-      d(new PimCommon::BalooDebugDialogPrivate)
+      d(new PimCommon::AkonadiSearchDebugDialogPrivate)
 {
     //Don't translate it's just a dialog to debug
-    setWindowTitle(QStringLiteral("Debug baloo"));
+    setWindowTitle(QStringLiteral("Debug Akonadi Search"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QPushButton *user1Button = new QPushButton;
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
     //Don't translate it.
     user1Button->setText(QStringLiteral("Save As..."));
-    connect(user1Button, &QPushButton::clicked, this, &BalooDebugDialog::slotSaveAs);
+    connect(user1Button, &QPushButton::clicked, this, &AkonadiSearchDebugDialog::slotSaveAs);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &BalooDebugDialog::reject);
-    d->mBalooDebugWidget = new BalooDebugWidget(this);
-    d->mBalooDebugWidget->setObjectName(QStringLiteral("baloodebugwidget"));
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &AkonadiSearchDebugDialog::reject);
+    d->mBalooDebugWidget = new AkonadiSearchDebugWidget(this);
+    d->mBalooDebugWidget->setObjectName(QStringLiteral("akonadisearchdebugwidget"));
     mainLayout->addWidget(d->mBalooDebugWidget);
     mainLayout->addWidget(buttonBox);
     readConfig();
 }
 
-BalooDebugDialog::~BalooDebugDialog()
+AkonadiSearchDebugDialog::~AkonadiSearchDebugDialog()
 {
     writeConfig();
     delete d;
 }
 
-void BalooDebugDialog::readConfig()
+void AkonadiSearchDebugDialog::readConfig()
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "BalooDebugDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "AkonadiSearchDebugDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(800, 600));
     if (sizeDialog.isValid()) {
         resize(sizeDialog);
     }
 }
 
-void BalooDebugDialog::writeConfig()
+void AkonadiSearchDebugDialog::writeConfig()
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "BalooDebugDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "AkonadiSearchDebugDialog");
     group.writeEntry("Size", size());
 }
 
-void BalooDebugDialog::setAkonadiId(Akonadi::Item::Id akonadiId)
+void AkonadiSearchDebugDialog::setAkonadiId(Akonadi::Item::Id akonadiId)
 {
     d->mBalooDebugWidget->setAkonadiId(akonadiId);
 }
 
-void BalooDebugDialog::setSearchType(BalooDebugSearchPathComboBox::SearchType type)
+void AkonadiSearchDebugDialog::setSearchType(AkonadiSearchDebugSearchPathComboBox::SearchType type)
 {
     d->mBalooDebugWidget->setSearchType(type);
 }
 
-void BalooDebugDialog::doSearch()
+void AkonadiSearchDebugDialog::doSearch()
 {
     d->mBalooDebugWidget->doSearch();
 }
 
-void BalooDebugDialog::slotSaveAs()
+void AkonadiSearchDebugDialog::slotSaveAs()
 {
     const QString filter = i18n("Text Files (*.txt);;All Files (*)");
     PimCommon::Util::saveTextAs(d->mBalooDebugWidget->plainText(), filter, this);

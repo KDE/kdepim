@@ -15,24 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BALOODEBUGDIALOGTEST_H
-#define BALOODEBUGDIALOGTEST_H
+#ifndef BALOODEBUGDIALOG_H
+#define BALOODEBUGDIALOG_H
 
-#include <QObject>
+#include <QDialog>
+#include "pimcommon_export.h"
+#include "akonadisearchdebugsearchpathcombobox.h"
+#include <AkonadiCore/Item>
 
-class BalooDebugDialogTest : public QObject
+namespace PimCommon
+{
+class AkonadiSearchDebugDialogPrivate;
+class PIMCOMMON_EXPORT AkonadiSearchDebugDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit BalooDebugDialogTest(QObject *parent = Q_NULLPTR);
-    ~BalooDebugDialogTest();
+    explicit AkonadiSearchDebugDialog(QWidget *parent = Q_NULLPTR);
+    ~AkonadiSearchDebugDialog();
 
+    void setAkonadiId(Akonadi::Item::Id akonadiId);
+    void setSearchType(AkonadiSearchDebugSearchPathComboBox::SearchType type);
+    void doSearch();
 private Q_SLOTS:
-    void shouldHaveDefaultValue();
-    void shouldFillLineEditWhenWeWantToSearchItem();
-
-    void initTestCase();
+    void slotSaveAs();
+private:
+    void readConfig();
+    void writeConfig();
+    AkonadiSearchDebugDialogPrivate *const d;
 };
+}
 
-#endif // BALOODEBUGDIALOGTEST_H
+#endif // BALOODEBUGDIALOG_H
 

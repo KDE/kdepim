@@ -15,23 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BALOODEBUGWIDGETTEST_H
-#define BALOODEBUGWIDGETTEST_H
+#ifndef AKONADISEARCHDEBUGSEARCHPATHCOMBOBOXTEST_H
+#define AKONADISEARCHDEBUGSEARCHPATHCOMBOBOXTEST_H
 
 #include <QObject>
 
-class BalooDebugWidgetTest : public QObject
+class AkonadiSearchDebugSearchPathComboBoxTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit BalooDebugWidgetTest(QObject *parent = Q_NULLPTR);
-    ~BalooDebugWidgetTest();
+    explicit AkonadiSearchDebugSearchPathComboBoxTest(QObject *parent = Q_NULLPTR);
+    ~AkonadiSearchDebugSearchPathComboBoxTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();
-    void shouldFillLineEditWhenWeWantToSearchItem();
-    void shouldEnabledPushButtonWhenLineEditIsNotEmpty();
-    void shouldChangeSearchType();
+    void shouldReturnPath();
+    void shouldReturnCorrectSearchPath();
+    void shouldSelectCorrectType();
 };
 
-#endif // BALOODEBUGWIDGETTEST_H
+#endif // AKONADISEARCHDEBUGSEARCHPATHCOMBOBOXTEST_H
 

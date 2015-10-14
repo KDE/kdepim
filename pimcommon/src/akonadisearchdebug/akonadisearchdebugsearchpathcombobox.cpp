@@ -15,35 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "baloodebugsearchpathcombobox.h"
+#include "akonadisearchdebugsearchpathcombobox.h"
 #include <QStandardPaths>
 
 #include "pimcommon_debug.h"
 
 using namespace PimCommon;
-BalooDebugSearchPathComboBox::BalooDebugSearchPathComboBox(QWidget *parent)
+AkonadiSearchDebugSearchPathComboBox::AkonadiSearchDebugSearchPathComboBox(QWidget *parent)
     : QComboBox(parent)
 {
     initialize();
 }
 
-BalooDebugSearchPathComboBox::~BalooDebugSearchPathComboBox()
+AkonadiSearchDebugSearchPathComboBox::~AkonadiSearchDebugSearchPathComboBox()
 {
 
 }
 
-QString BalooDebugSearchPathComboBox::searchPath() const
+QString AkonadiSearchDebugSearchPathComboBox::searchPath() const
 {
     const int currentPathIndex = currentIndex();
     if (currentPathIndex > -1) {
-        const QString value = pathFromEnum(static_cast<PimCommon::BalooDebugSearchPathComboBox::SearchType>(itemData(currentPathIndex).toInt()));
+        const QString value = pathFromEnum(static_cast<PimCommon::AkonadiSearchDebugSearchPathComboBox::SearchType>(itemData(currentPathIndex).toInt()));
         return value;
     } else {
         return QString();
     }
 }
 
-void BalooDebugSearchPathComboBox::initialize()
+void AkonadiSearchDebugSearchPathComboBox::initialize()
 {
     addItem(QStringLiteral("Contacts"), Contacts);
     addItem(QStringLiteral("ContactCompleter"), ContactCompleter);
@@ -52,7 +52,7 @@ void BalooDebugSearchPathComboBox::initialize()
     addItem(QStringLiteral("Calendars"), Calendars);
 }
 
-QString BalooDebugSearchPathComboBox::pathFromEnum(SearchType type) const
+QString AkonadiSearchDebugSearchPathComboBox::pathFromEnum(SearchType type) const
 {
     const QString xdgpath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/');
     switch (type) {
@@ -70,7 +70,7 @@ QString BalooDebugSearchPathComboBox::pathFromEnum(SearchType type) const
     return QString();
 }
 
-void BalooDebugSearchPathComboBox::setSearchType(BalooDebugSearchPathComboBox::SearchType type)
+void AkonadiSearchDebugSearchPathComboBox::setSearchType(AkonadiSearchDebugSearchPathComboBox::SearchType type)
 {
     const int indexType = findData(type);
     if (indexType >= 0) {

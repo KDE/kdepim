@@ -56,7 +56,7 @@
 #include <AkonadiCore/MimeTypeChecker>
 #include <AkonadiCore/AttributeFactory>
 #include <AkonadiWidgets/CollectionPropertiesDialog>
-#include <PimCommon/BalooDebugDialog>
+#include <PimCommon/AkonadiSearchDebugDialog>
 #include <KContacts/Addressee>
 #include <QPointer>
 #include "PimCommon/ManageServerSideSubscriptionJob"
@@ -1091,10 +1091,10 @@ void MainWidget::slotDebugBaloo()
     if (lst.isEmpty()) {
         return;
     }
-    QPointer<PimCommon::BalooDebugDialog> dlg = new PimCommon::BalooDebugDialog;
+    QPointer<PimCommon::AkonadiSearchDebugDialog> dlg = new PimCommon::AkonadiSearchDebugDialog;
     dlg->setAkonadiId(lst.at(0).id());
     dlg->setAttribute(Qt::WA_DeleteOnClose);
-    dlg->setSearchType(PimCommon::BalooDebugSearchPathComboBox::Contacts);
+    dlg->setSearchType(PimCommon::AkonadiSearchDebugSearchPathComboBox::Contacts);
     dlg->doSearch();
     dlg->show();
 }

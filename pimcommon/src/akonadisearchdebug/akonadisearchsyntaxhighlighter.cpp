@@ -15,23 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "baloosyntaxhighlighter.h"
+#include "akonadisearchsyntaxhighlighter.h"
 #include <QRegExp>
 
 using namespace PimCommon;
 
-BalooSyntaxHighlighter::BalooSyntaxHighlighter(QTextDocument *doc)
+AkonadiSearchSyntaxHighlighter::AkonadiSearchSyntaxHighlighter(QTextDocument *doc)
     : SyntaxHighlighterBase(doc)
 {
     init();
 }
 
-BalooSyntaxHighlighter::~BalooSyntaxHighlighter()
+AkonadiSearchSyntaxHighlighter::~AkonadiSearchSyntaxHighlighter()
 {
 
 }
 
-void BalooSyntaxHighlighter::init()
+void AkonadiSearchSyntaxHighlighter::init()
 {
     QTextCharFormat testFormat;
     testFormat.setForeground(Qt::black);

@@ -15,10 +15,10 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "baloodebugwidget.h"
-#include "job/baloodebugsearchjob.h"
-#include "baloodebugsearchpathcombobox.h"
-#include "baloosyntaxhighlighter.h"
+#include "akonadisearchdebugwidget.h"
+#include "job/akonadisearchdebugsearchjob.h"
+#include "akonadisearchdebugsearchpathcombobox.h"
+#include "akonadisearchsyntaxhighlighter.h"
 #include <KLineEdit>
 #include <QPushButton>
 
@@ -30,7 +30,7 @@
 
 using namespace PimCommon;
 
-BalooDebugWidget::BalooDebugWidget(QWidget *parent)
+AkonadiSearchDebugWidget::AkonadiSearchDebugWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -44,79 +44,79 @@ BalooDebugWidget::BalooDebugWidget(QWidget *parent)
     mLineEdit->setTrapReturnKey(true);
     mLineEdit->setClearButtonShown(true);
     mLineEdit->setObjectName(QStringLiteral("lineedit"));
-    connect(mLineEdit, &KLineEdit::textChanged, this, &BalooDebugWidget::slotSearchLineTextChanged);
+    connect(mLineEdit, &KLineEdit::textChanged, this, &AkonadiSearchDebugWidget::slotSearchLineTextChanged);
     hbox->addWidget(mLineEdit);
 
-    mSearchPathComboBox = new PimCommon::BalooDebugSearchPathComboBox;
+    mSearchPathComboBox = new PimCommon::AkonadiSearchDebugSearchPathComboBox;
     hbox->addWidget(mSearchPathComboBox);
     mSearchPathComboBox->setObjectName(QStringLiteral("searchpathcombo"));
 
     mSearchButton = new QPushButton(QStringLiteral("Search"));
     mSearchButton->setObjectName(QStringLiteral("searchbutton"));
-    connect(mSearchButton, &QPushButton::clicked, this, &BalooDebugWidget::slotSearch);
+    connect(mSearchButton, &QPushButton::clicked, this, &AkonadiSearchDebugWidget::slotSearch);
     hbox->addWidget(mSearchButton);
     mSearchButton->setEnabled(false);
 
     mPlainTextEditor = new PimCommon::PlainTextEditorWidget;
-    new PimCommon::BalooSyntaxHighlighter(mPlainTextEditor->editor()->document());
+    new PimCommon::AkonadiSearchSyntaxHighlighter(mPlainTextEditor->editor()->document());
     mPlainTextEditor->setReadOnly(true);
     mainLayout->addWidget(mPlainTextEditor);
     mPlainTextEditor->setObjectName(QStringLiteral("plaintexteditor"));
 
-    connect(mLineEdit, &KLineEdit::returnPressed, this, &BalooDebugWidget::slotSearch);
+    connect(mLineEdit, &KLineEdit::returnPressed, this, &AkonadiSearchDebugWidget::slotSearch);
 
 }
 
-BalooDebugWidget::~BalooDebugWidget()
+AkonadiSearchDebugWidget::~AkonadiSearchDebugWidget()
 {
 
 }
 
-void BalooDebugWidget::slotSearchLineTextChanged(const QString &text)
+void AkonadiSearchDebugWidget::slotSearchLineTextChanged(const QString &text)
 {
     mSearchButton->setEnabled(!text.trimmed().isEmpty());
 }
 
-void BalooDebugWidget::setAkonadiId(Akonadi::Item::Id akonadiId)
+void AkonadiSearchDebugWidget::setAkonadiId(Akonadi::Item::Id akonadiId)
 {
     mLineEdit->setText(QString::number(akonadiId));
 }
 
-void BalooDebugWidget::setSearchType(BalooDebugSearchPathComboBox::SearchType type)
+void AkonadiSearchDebugWidget::setSearchType(AkonadiSearchDebugSearchPathComboBox::SearchType type)
 {
     mSearchPathComboBox->setSearchType(type);
 }
 
-void BalooDebugWidget::doSearch()
+void AkonadiSearchDebugWidget::doSearch()
 {
     slotSearch();
 }
 
-QString BalooDebugWidget::plainText() const
+QString AkonadiSearchDebugWidget::plainText() const
 {
     return QStringLiteral("Item: %1\n").arg(mLineEdit->text()) + mPlainTextEditor->toPlainText();
 }
 
-void BalooDebugWidget::slotSearch()
+void AkonadiSearchDebugWidget::slotSearch()
 {
     const QString searchId = mLineEdit->text();
     if (searchId.isEmpty()) {
         return;
     }
-    PimCommon::BalooDebugSearchJob *job = new PimCommon::BalooDebugSearchJob(this);
+    PimCommon::AkonadiSearchDebugSearchJob *job = new PimCommon::AkonadiSearchDebugSearchJob(this);
     job->setAkonadiId(searchId);
     job->setSearchPath(mSearchPathComboBox->searchPath());
-    connect(job, &PimCommon::BalooDebugSearchJob::result, this, &BalooDebugWidget::slotResult);
-    connect(job, &PimCommon::BalooDebugSearchJob::error, this, &BalooDebugWidget::slotError);
+    connect(job, &PimCommon::AkonadiSearchDebugSearchJob::result, this, &AkonadiSearchDebugWidget::slotResult);
+    connect(job, &PimCommon::AkonadiSearchDebugSearchJob::error, this, &AkonadiSearchDebugWidget::slotError);
     job->start();
 }
 
-void BalooDebugWidget::slotResult(const QString &result)
+void AkonadiSearchDebugWidget::slotResult(const QString &result)
 {
     mPlainTextEditor->setPlainText(result);
 }
 
-void BalooDebugWidget::slotError(const QString &errorStr)
+void AkonadiSearchDebugWidget::slotError(const QString &errorStr)
 {
     mPlainTextEditor->setPlainText(QStringLiteral("Error found:\n") + errorStr);
 }

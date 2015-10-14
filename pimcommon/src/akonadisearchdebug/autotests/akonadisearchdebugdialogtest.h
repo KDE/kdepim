@@ -15,42 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BALOODEBUGSEARCHJOB_H
-#define BALOODEBUGSEARCHJOB_H
+#ifndef AKONADISEARCHDEBUGDIALOGTEST_H
+#define AKONADISEARCHDEBUGDIALOGTEST_H
 
 #include <QObject>
-#include <QStringList>
-class QProcess;
-namespace PimCommon
-{
-class BalooDebugSearchJob : public QObject
+
+class AkonadiSearchDebugDialogTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit BalooDebugSearchJob(QObject *parent = Q_NULLPTR);
-    ~BalooDebugSearchJob();
-
-    void start();
-
-    void setAkonadiId(const QString &id);
-    void setArguments(const QStringList &args);
-    void setSearchPath(const QString &path);
-
-Q_SIGNALS:
-    void error(const QString &errorString);
-    void result(const QString &text);
+    explicit AkonadiSearchDebugDialogTest(QObject *parent = Q_NULLPTR);
+    ~AkonadiSearchDebugDialogTest();
 
 private Q_SLOTS:
-    void slotReadStandard();
-    void slotReadError();
+    void shouldHaveDefaultValue();
+    void shouldFillLineEditWhenWeWantToSearchItem();
 
-private:
-    QStringList mArguments;
-    QString mAkonadiId;
-    QString mPath;
-    QProcess *mProcess;
+    void initTestCase();
 };
-}
 
-#endif // BALOODEBUGSEARCHJOB_H
+#endif // AKONADISEARCHDEBUGDIALOGTEST_H
 

@@ -15,34 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "baloodebugdialogtest.h"
-#include "../baloodebugdialog.h"
-#include "../baloodebugwidget.h"
+#include "akonadisearchdebugdialogtest.h"
+#include "../akonadisearchdebugdialog.h"
+#include "../akonadisearchdebugwidget.h"
 #include "texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include <QStandardPaths>
 #include <KLineEdit>
 #include <qtest.h>
 
-BalooDebugDialogTest::BalooDebugDialogTest(QObject *parent)
+AkonadiSearchDebugDialogTest::AkonadiSearchDebugDialogTest(QObject *parent)
     : QObject(parent)
 {
 
 }
 
-BalooDebugDialogTest::~BalooDebugDialogTest()
+AkonadiSearchDebugDialogTest::~AkonadiSearchDebugDialogTest()
 {
 
 }
 
-void BalooDebugDialogTest::initTestCase()
+void AkonadiSearchDebugDialogTest::initTestCase()
 {
     QStandardPaths::setTestModeEnabled(true);
 }
 
-void BalooDebugDialogTest::shouldHaveDefaultValue()
+void AkonadiSearchDebugDialogTest::shouldHaveDefaultValue()
 {
-    PimCommon::BalooDebugDialog dlg;
-    PimCommon::BalooDebugWidget *debugWidget = dlg.findChild<PimCommon::BalooDebugWidget *>(QStringLiteral("baloodebugwidget"));
+    PimCommon::AkonadiSearchDebugDialog dlg;
+    PimCommon::AkonadiSearchDebugWidget *debugWidget = dlg.findChild<PimCommon::AkonadiSearchDebugWidget *>(QStringLiteral("akonadisearchdebugwidget"));
     QVERIFY(debugWidget);
     PimCommon::PlainTextEditorWidget *editorWidget = debugWidget->findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("plaintexteditor"));
     QVERIFY(editorWidget);
@@ -51,10 +51,10 @@ void BalooDebugDialogTest::shouldHaveDefaultValue()
     QVERIFY(lineEdit->text().isEmpty());
 }
 
-void BalooDebugDialogTest::shouldFillLineEditWhenWeWantToSearchItem()
+void AkonadiSearchDebugDialogTest::shouldFillLineEditWhenWeWantToSearchItem()
 {
-    PimCommon::BalooDebugDialog dlg;
-    PimCommon::BalooDebugWidget *debugWidget = dlg.findChild<PimCommon::BalooDebugWidget *>(QStringLiteral("baloodebugwidget"));
+    PimCommon::AkonadiSearchDebugDialog dlg;
+    PimCommon::AkonadiSearchDebugWidget *debugWidget = dlg.findChild<PimCommon::AkonadiSearchDebugWidget *>(QStringLiteral("akonadisearchdebugwidget"));
     QVERIFY(debugWidget);
     KLineEdit *lineEdit = debugWidget->findChild<KLineEdit *>(QStringLiteral("lineedit"));
     QVERIFY(lineEdit);
@@ -64,5 +64,5 @@ void BalooDebugDialogTest::shouldFillLineEditWhenWeWantToSearchItem()
     QCOMPARE(lineEdit->text(), akonadiItem);
 }
 
-QTEST_MAIN(BalooDebugDialogTest)
+QTEST_MAIN(AkonadiSearchDebugDialogTest)
 
