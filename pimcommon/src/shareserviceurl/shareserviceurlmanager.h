@@ -51,16 +51,13 @@ public:
 
     void openUrl(const QUrl &url);
 
-private Q_SLOTS:
+public Q_SLOTS:
     void slotSelectServiceUrl(QAction *act);
 
 Q_SIGNALS:
     void serviceUrlSelected(PimCommon::ShareServiceUrlManager::ServiceType type);
 
 private:
-    QIcon typeToIcon(ServiceType type);
-    QString typeToI18n(ServiceType type);
-    void initializeMenu();
     ShareServiceUrlManagerPrivate *const d;
 };
 }
