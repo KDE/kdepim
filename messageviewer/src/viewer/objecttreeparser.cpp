@@ -150,8 +150,8 @@ ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
                                    bool includeSignatures,
                                    const AttachmentStrategy *strategy)
     : mSource(topLevelParser->mSource),
-      mHtmlWriter(topLevelParser->mHtmlWriter),
       mNodeHelper(topLevelParser->mNodeHelper),
+      mHtmlWriter(topLevelParser->mHtmlWriter),
       mTopLevelContent(topLevelParser->mTopLevelContent),
       mCryptoProtocol(topLevelParser->mCryptoProtocol),
       mShowOnlyOneMimePart(showOnlyOneMimePart),
@@ -172,8 +172,8 @@ ObjectTreeParser::ObjectTreeParser(ObjectTreeSourceIf *source,
                                    bool includeSignatures,
                                    const AttachmentStrategy *strategy)
     : mSource(source),
-      mHtmlWriter(0),
       mNodeHelper(nodeHelper),
+      mHtmlWriter(0),
       mTopLevelContent(0),
       mCryptoProtocol(protocol),
       mShowOnlyOneMimePart(showOnlyOneMimePart),
@@ -204,8 +204,8 @@ void ObjectTreeParser::init()
 
 ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser &other)
     : mSource(other.mSource),
-      mHtmlWriter(other.mHtmlWriter),
       mNodeHelper(other.nodeHelper()),   //TODO(Andras) hm, review what happens if mDeleteNodeHelper was true in the source
+      mHtmlWriter(other.mHtmlWriter),
       mTopLevelContent(other.mTopLevelContent),
       mCryptoProtocol(other.cryptoProtocol()),
       mShowOnlyOneMimePart(other.showOnlyOneMimePart()),

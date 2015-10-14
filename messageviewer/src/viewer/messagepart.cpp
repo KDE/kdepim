@@ -106,8 +106,8 @@ void AttachmentMarkBlock::internalExit()
 MessagePart::MessagePart(ObjectTreeParser *otp,
                          PartMetaData *block,
                          const QString &text)
-    : mOtp(otp)
-    , mText(text)
+    : mText(text)
+    , mOtp(otp)
     , mMetaData(block)
 {
 
