@@ -56,6 +56,7 @@ public:
     {
         delete nestedListHelper;
     }
+    void selectLinkText(QTextCursor *cursor) const;
     void fixupTextEditString(QString &text) const;
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
     QString toWrappedPlainText() const;
@@ -72,6 +73,44 @@ public:
     RichTextComposerImages *richTextImages;
     RichTextComposerControler *q;
 };
+
+void RichTextComposerControler::RichTextComposerControlerPrivate::selectLinkText(QTextCursor *cursor) const
+{
+    // If the cursor is on a link, select the text of the link.
+    if (cursor->charFormat().isAnchor()) {
+        QString aHref = cursor->charFormat().anchorHref();
+
+        // Move cursor to start of link
+        while (cursor->charFormat().anchorHref() == aHref) {
+            if (cursor->atStart()) {
+                break;
+            }
+            cursor->setPosition(cursor->position() - 1);
+        }
+        if (cursor->charFormat().anchorHref() != aHref) {
+            cursor->setPosition(cursor->position() + 1, QTextCursor::KeepAnchor);
+        }
+
+        // Move selection to the end of the link
+        while (cursor->charFormat().anchorHref() == aHref) {
+            if (cursor->atEnd()) {
+                break;
+            }
+            cursor->setPosition(cursor->position() + 1, QTextCursor::KeepAnchor);
+        }
+        if (cursor->charFormat().anchorHref() != aHref) {
+            cursor->setPosition(cursor->position() - 1, QTextCursor::KeepAnchor);
+        }
+    } else if (cursor->hasSelection()) {
+        // Nothing to to. Using the currently selected text as the link text.
+    } else {
+
+        // Select current word
+        cursor->movePosition(QTextCursor::StartOfWord);
+        cursor->movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+    }
+}
+
 
 void RichTextComposerControler::RichTextComposerControlerPrivate::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
 {
@@ -349,52 +388,15 @@ QString RichTextComposerControler::currentLinkUrl() const
 QString RichTextComposerControler::currentLinkText() const
 {
     QTextCursor cursor = richTextComposer()->textCursor();
-    selectLinkText(&cursor);
+    d->selectLinkText(&cursor);
     return cursor.selectedText();
 }
 
 void RichTextComposerControler::selectLinkText() const
 {
     QTextCursor cursor = richTextComposer()->textCursor();
-    selectLinkText(&cursor);
+    d->selectLinkText(&cursor);
     richTextComposer()->setTextCursor(cursor);
-}
-
-void RichTextComposerControler::selectLinkText(QTextCursor *cursor) const
-{
-    // If the cursor is on a link, select the text of the link.
-    if (cursor->charFormat().isAnchor()) {
-        QString aHref = cursor->charFormat().anchorHref();
-
-        // Move cursor to start of link
-        while (cursor->charFormat().anchorHref() == aHref) {
-            if (cursor->atStart()) {
-                break;
-            }
-            cursor->setPosition(cursor->position() - 1);
-        }
-        if (cursor->charFormat().anchorHref() != aHref) {
-            cursor->setPosition(cursor->position() + 1, QTextCursor::KeepAnchor);
-        }
-
-        // Move selection to the end of the link
-        while (cursor->charFormat().anchorHref() == aHref) {
-            if (cursor->atEnd()) {
-                break;
-            }
-            cursor->setPosition(cursor->position() + 1, QTextCursor::KeepAnchor);
-        }
-        if (cursor->charFormat().anchorHref() != aHref) {
-            cursor->setPosition(cursor->position() - 1, QTextCursor::KeepAnchor);
-        }
-    } else if (cursor->hasSelection()) {
-        // Nothing to to. Using the currently selected text as the link text.
-    } else {
-
-        // Select current word
-        cursor->movePosition(QTextCursor::StartOfWord);
-        cursor->movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
-    }
 }
 
 void RichTextComposerControler::manageLink()
@@ -549,9 +551,9 @@ void RichTextComposerControler::indentListLess()
     d->nestedListHelper->handleOnIndentLess();
 }
 
-void RichTextComposerControler::setListStyle(int _styleIndex)
+void RichTextComposerControler::setListStyle(int styleIndex)
 {
-    d->nestedListHelper->handleOnBulletType(-_styleIndex);
+    d->nestedListHelper->handleOnBulletType(-styleIndex);
     richTextComposer()->setFocus();
     richTextComposer()->activateRichText();
 }

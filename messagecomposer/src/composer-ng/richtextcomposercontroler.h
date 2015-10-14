@@ -41,7 +41,6 @@ public:
 
     QString currentLinkText() const;
     void selectLinkText() const;
-    void selectLinkText(QTextCursor *cursor) const;
     QString toCleanHtml() const;
 
     bool canIndentList() const;
@@ -85,7 +84,7 @@ public Q_SLOTS:
     void manageLink();
     void indentListMore();
     void indentListLess();
-    void setListStyle(int _styleIndex);
+    void setListStyle(int styleIndex);
     void slotAddEmoticon(const QString &text);
     void slotInsertHtml();
     void slotFormatReset();
