@@ -49,7 +49,6 @@
 #include "interfaces/htmlwriter.h"
 #include "widgets/htmlstatusbar.h"
 #include "csshelper.h"
-#include "bodypartformatter.h"
 #include "viewer/bodypartformatterfactory.h"
 #include "viewer/partnodebodypart.h"
 #include "interfaces/bodypartformatter.h"
@@ -380,15 +379,9 @@ void ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node)
 
             // No external plugin can handle the MIME part, handle it internally
         } else {
-            const BodyPartFormatter *bpf
-                = BodyPartFormatter::createFor(mediaType, subType);
-            if (!bpf) {
-                qCCritical(MESSAGEVIEWER_LOG) << "THIS SHOULD NO LONGER HAPPEN:" << mediaType << '/' << subType;
-            }
+            qCCritical(MESSAGEVIEWER_LOG) << "THIS SHOULD NO LONGER HAPPEN:" << mediaType << '/' << subType;
             AttachmentMarkBlock block(htmlWriter(), node);
-            if (bpf && !bpf->process(this, node, processResult)) {
-                defaultHandling(node, processResult);
-            }
+            defaultHandling(node, processResult);
         }
         mNodeHelper->setNodeProcessed(node, false);
 
