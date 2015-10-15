@@ -108,10 +108,21 @@ MessagePart::MessagePart(ObjectTreeParser *otp,
                          const QString &text)
     : mText(text)
     , mOtp(otp)
+    , mSubOtp(Q_NULLPTR)
     , mMetaData(block)
 {
 
 }
+
+MessagePart::~MessagePart()
+{
+    if (mSubOtp) {
+        delete mSubOtp->mHtmlWriter;
+        delete mSubOtp;
+        mSubOtp = Q_NULLPTR;
+    }
+}
+
 
 PartMetaData *MessagePart::partMetaData() const
 {
@@ -140,6 +151,31 @@ void MessagePart::html(bool decorate) const
     writer->queue(mOtp->quotedHTML(text(), decorate));
 }
 
+void MessagePart::parseInternal(KMime::Content* node)
+{
+    mSubOtp = new ObjectTreeParser(mOtp, true);
+    mSubOtp->setAllowAsync(mOtp->allowAsync());
+    if (mOtp->htmlWriter()) {
+        mSubOtp->mHtmlWriter = new QueueHtmlWriter(mOtp->htmlWriter());
+    }
+    mSubOtp->parseObjectTreeInternal(node);
+}
+
+void MessagePart::renderInternalHtml() const
+{
+    if (mSubOtp) {
+        static_cast<QueueHtmlWriter *>(mSubOtp->htmlWriter())->replay();
+    }
+}
+
+QString MessagePart::renderInternalText() const
+{
+    if (!mSubOtp) {
+        return QString();
+    }
+    return mSubOtp->plainTextContent();
+}
+
 //-----CryptMessageBlock---------------------
 
 CryptoMessagePart::CryptoMessagePart(ObjectTreeParser *otp,
@@ -149,7 +185,6 @@ CryptoMessagePart::CryptoMessagePart(ObjectTreeParser *otp,
                                      const QString &fromAddress,
                                      KMime::Content *node)
     : MessagePart(otp, block, text)
-    , mSubOtp(0)
     , mCryptoProto(cryptoProto)
     , mFromAddress(fromAddress)
     , mNode(node)
@@ -167,11 +202,7 @@ CryptoMessagePart::CryptoMessagePart(ObjectTreeParser *otp,
 
 CryptoMessagePart::~CryptoMessagePart()
 {
-    if (mSubOtp) {
-        delete mSubOtp->mHtmlWriter;
-        delete mSubOtp;
-        mSubOtp = 0;
-    }
+
 }
 
 void CryptoMessagePart::startDecryption(const QByteArray &text, const QTextCodec *aCodec)
@@ -244,12 +275,7 @@ void CryptoMessagePart::startDecryption(KMime::Content *data)
             }
             mOtp->mNodeHelper->attachExtraContent(mNode, tempNode);
 
-            mSubOtp = new ObjectTreeParser(mOtp, true);
-            mSubOtp->setAllowAsync(mOtp->allowAsync());
-            if (mOtp->htmlWriter()) {
-                mSubOtp->mHtmlWriter = new QueueHtmlWriter(mOtp->htmlWriter());
-            }
-            mSubOtp->parseObjectTreeInternal(tempNode);
+            parseInternal(tempNode);
         }
     }
 }
@@ -291,15 +317,9 @@ void CryptoMessagePart::startVerificationDetached(const QByteArray &text, KMime:
         }
 
         if (!mVerifiedText.isEmpty() && textNode) {
-            mSubOtp = new ObjectTreeParser(mOtp, true);
-            mSubOtp->setAllowAsync(mOtp->allowAsync());
-            if (mOtp->htmlWriter()) {
-                mSubOtp->mHtmlWriter = new QueueHtmlWriter(mOtp->htmlWriter());
-            }
-            mSubOtp->parseObjectTreeInternal(textNode);
+            parseInternal(textNode);
         }
     }
-
 }
 
 void CryptoMessagePart::writeDeferredDecryptionBlock() const
@@ -370,9 +390,7 @@ void CryptoMessagePart::html(bool decorate) const
             }
         } else if (mNode) {
             const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
-            if (mSubOtp) {
-                static_cast<QueueHtmlWriter *>(mSubOtp->htmlWriter())->replay();
-            }
+            renderInternalHtml();
         } else {
             MessagePart::html(decorate);
         }
@@ -383,7 +401,6 @@ EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser *o
     : MessagePart(otp, block, QString())
     , mMessage(message)
     , mNode(node)
-    , mSubOtp(0)
 {
     mMetaData->isEncrypted = false;
     mMetaData->isSigned = false;
@@ -401,12 +418,7 @@ EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser *o
     // since the user can click the link and expect to have normal attachment operations there.
     mOtp->nodeHelper()->writeNodeToTempFile(message.data());
 
-    mSubOtp = new ObjectTreeParser(mOtp, true);
-    mSubOtp->setAllowAsync(mOtp->allowAsync());
-    if (mOtp->htmlWriter()) {
-        mSubOtp->mHtmlWriter = new QueueHtmlWriter(mOtp->htmlWriter());
-    }
-    mSubOtp->parseObjectTreeInternal(message.data());
+    parseInternal(message.data());
 }
 
 EncapsulatedRfc822MessagePart::~EncapsulatedRfc822MessagePart()
@@ -416,6 +428,7 @@ EncapsulatedRfc822MessagePart::~EncapsulatedRfc822MessagePart()
 
 void EncapsulatedRfc822MessagePart::html(bool decorate) const
 {
+    Q_UNUSED(decorate)
     if (!mSubOtp) {
         return;
     }
@@ -428,15 +441,13 @@ void EncapsulatedRfc822MessagePart::html(bool decorate) const
 
     const CryptoBlock block(mOtp, mMetaData, 0, mMessage->from()->asUnicodeString(), mMessage.data());
     writer->queue(mOtp->mSource->createMessageHeader(mMessage.data()));
-    static_cast<QueueHtmlWriter *>(mSubOtp->htmlWriter())->replay();
+    renderInternalHtml();
 
     mOtp->nodeHelper()->setPartMetaData(mNode, *mMetaData);
 }
 
 QString EncapsulatedRfc822MessagePart::text() const
 {
-    if (!mSubOtp) {
-        return QString();
-    }
-    return mSubOtp->plainTextContent();
+    return renderInternalText();
 }
+

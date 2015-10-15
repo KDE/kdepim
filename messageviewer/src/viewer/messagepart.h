@@ -87,7 +87,7 @@ public:
                 PartMetaData *block,
                 const QString &text);
 
-    virtual ~MessagePart() {}
+    virtual ~MessagePart();
 
     virtual QString text() const;
     void setText(const QString &text);
@@ -96,8 +96,12 @@ public:
     PartMetaData *partMetaData() const;
 
 protected:
+    void parseInternal(KMime::Content* node);
+    void renderInternalHtml() const;
+    QString renderInternalText() const;
     QString mText;
     ObjectTreeParser *mOtp;
+    ObjectTreeParser *mSubOtp;
     PartMetaData *mMetaData;
 };
 
@@ -114,7 +118,6 @@ public:
 private:
     const KMime::Message::Ptr mMessage;
     KMime::Content *mNode;
-    ObjectTreeParser *mSubOtp;
 };
 
 class CryptoMessagePart : public MessagePart
@@ -146,7 +149,6 @@ private:
     void writeDeferredDecryptionBlock() const;
 
 protected:
-    ObjectTreeParser *mSubOtp;
     const Kleo::CryptoBackend::Protocol *mCryptoProto;
     QString mFromAddress;
     KMime::Content *mNode;
