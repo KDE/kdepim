@@ -16,7 +16,7 @@
 */
 
 #include "richtextcomposeremailquotehighlighter.h"
-#include "MessageComposer/RichTextComposer"
+#include "richtextcomposer.h"
 using namespace MessageComposer;
 
 class Q_DECL_HIDDEN MessageComposer::RichTextComposerEmailQuoteHighlighter::RichTextComposerEmailQuoteHighlighterPrivate

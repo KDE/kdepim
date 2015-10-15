@@ -405,7 +405,7 @@ static bool isSpecial(const QTextCharFormat &charFormat)
            charFormat.isListFormat() || charFormat.isTableFormat() || charFormat.isTableCellFormat();
 }
 
-void RichTextComposer::keyPressEvent(QKeyEvent *e)
+bool RichTextComposer::processKeyEvent(QKeyEvent *e)
 {
     if (d->externalComposer->useExternalEditor() &&
             (e->key() != Qt::Key_Shift) &&
@@ -419,7 +419,7 @@ void RichTextComposer::keyPressEvent(QKeyEvent *e)
         if (!d->externalComposer->isInProgress()) {
             d->externalComposer->startExternalEditor();
         }
-        return;
+        return true;
     }
 
     if (e->key() == Qt::Key_Up && e->modifiers() != Qt::ShiftModifier &&
@@ -467,12 +467,18 @@ void RichTextComposer::keyPressEvent(QKeyEvent *e)
                         }
                         setTextCursor(cur);
                     }
-                    return;
+                    return true;
                 }
             }
         }
         evaluateReturnKeySupport(e);
     }
+    return true;
+}
+
+void RichTextComposer::keyPressEvent(QKeyEvent *e)
+{
+    processKeyEvent(e);
 }
 
 Sonnet::SpellCheckDecorator *RichTextComposer::createSpellCheckDecorator()

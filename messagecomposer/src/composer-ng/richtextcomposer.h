@@ -144,11 +144,13 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void clearDecorator() Q_DECL_OVERRIDE;
     void updateHighLighter() Q_DECL_OVERRIDE;
+    bool processKeyEvent(QKeyEvent *e);
+    void evaluateReturnKeySupport(QKeyEvent *event);
+
 private Q_SLOTS:
     void slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode);
 
 private:
-    void evaluateReturnKeySupport(QKeyEvent *event);
     void evaluateListSupport(QKeyEvent *event);
     class RichTextComposerPrivate;
     RichTextComposerPrivate *const d;
