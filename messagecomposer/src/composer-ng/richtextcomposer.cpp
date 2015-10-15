@@ -405,6 +405,49 @@ static bool isSpecial(const QTextCharFormat &charFormat)
            charFormat.isListFormat() || charFormat.isTableFormat() || charFormat.isTableCellFormat();
 }
 
+void RichTextComposer::processAutoCorrection(QKeyEvent *e)
+{
+    if (d->autoCorrection && d->autoCorrection->isEnabledAutoCorrection()) {
+        if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
+            if (!isLineQuoted(textCursor().block().text()) && !textCursor().hasSelection()) {
+                const QTextCharFormat initialTextFormat = textCursor().charFormat();
+                const bool richText = (textMode() == RichTextComposer::Rich);
+                int position = textCursor().position();
+                const bool addSpace = d->autoCorrection->autocorrect(richText, *document(), position);
+                QTextCursor cur = textCursor();
+                cur.setPosition(position);
+                if (overwriteMode() && e->key() == Qt::Key_Space) {
+                    if (addSpace) {
+                        const QChar insertChar = QLatin1Char(' ');
+                        if (!cur.atBlockEnd()) {
+                            cur.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, 1);
+                        }
+                        if (richText && !isSpecial(initialTextFormat)) {
+                            cur.insertText(insertChar, initialTextFormat);
+                        } else {
+                            cur.insertText(insertChar);
+                        }
+                        setTextCursor(cur);
+                    }
+                } else {
+                    const bool spacePressed = (e->key() == Qt::Key_Space);
+                    const QChar insertChar = spacePressed ? QLatin1Char(' ') : QLatin1Char('\n');
+                    if (richText && !isSpecial(initialTextFormat)) {
+                        if ((spacePressed && addSpace) || !spacePressed) {
+                            cur.insertText(insertChar, initialTextFormat);
+                        }
+                    } else {
+                        if ((spacePressed && addSpace) || !spacePressed) {
+                            cur.insertText(insertChar);
+                        }
+                    }
+                    setTextCursor(cur);
+                }
+            }
+        }
+    }
+}
+
 bool RichTextComposer::processKeyEvent(QKeyEvent *e)
 {
     if (d->externalComposer->useExternalEditor() &&
@@ -431,46 +474,7 @@ bool RichTextComposer::processKeyEvent(QKeyEvent *e)
         textCursor().clearSelection();
         Q_EMIT focusUp();
     } else {
-        if (d->autoCorrection && d->autoCorrection->isEnabledAutoCorrection()) {
-            if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
-                if (!isLineQuoted(textCursor().block().text()) && !textCursor().hasSelection()) {
-                    const QTextCharFormat initialTextFormat = textCursor().charFormat();
-                    const bool richText = (textMode() == RichTextComposer::Rich);
-                    int position = textCursor().position();
-                    const bool addSpace = d->autoCorrection->autocorrect(richText, *document(), position);
-                    QTextCursor cur = textCursor();
-                    cur.setPosition(position);
-                    if (overwriteMode() && e->key() == Qt::Key_Space) {
-                        if (addSpace) {
-                            const QChar insertChar = QLatin1Char(' ');
-                            if (!cur.atBlockEnd()) {
-                                cur.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, 1);
-                            }
-                            if (richText && !isSpecial(initialTextFormat)) {
-                                cur.insertText(insertChar, initialTextFormat);
-                            } else {
-                                cur.insertText(insertChar);
-                            }
-                            setTextCursor(cur);
-                        }
-                    } else {
-                        const bool spacePressed = (e->key() == Qt::Key_Space);
-                        const QChar insertChar = spacePressed ? QLatin1Char(' ') : QLatin1Char('\n');
-                        if (richText && !isSpecial(initialTextFormat)) {
-                            if ((spacePressed && addSpace) || !spacePressed) {
-                                cur.insertText(insertChar, initialTextFormat);
-                            }
-                        } else {
-                            if ((spacePressed && addSpace) || !spacePressed) {
-                                cur.insertText(insertChar);
-                            }
-                        }
-                        setTextCursor(cur);
-                    }
-                    return true;
-                }
-            }
-        }
+        processAutoCorrection(e);
         evaluateReturnKeySupport(e);
     }
     return true;
