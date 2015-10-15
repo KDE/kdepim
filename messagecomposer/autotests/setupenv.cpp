@@ -40,7 +40,6 @@ void MessageComposer::Test::setupEnv()
             qWarning() << reason;
         }
     }
-    QVERIFY(reasons.isEmpty());
 }
 
 std::vector< GpgME::Key, std::allocator< GpgME::Key > > MessageComposer::Test::getKeys(bool smime)
