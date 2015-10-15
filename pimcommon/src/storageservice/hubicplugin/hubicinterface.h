@@ -28,6 +28,7 @@ class HubicInterface : public PimCommon::StorageServiceInterface
 public:
     explicit HubicInterface(QObject *parent = Q_NULLPTR);
     ~HubicInterface();
+    void shutdownService() Q_DECL_OVERRIDE;
 };
 }
 #endif // HUBICINTERFACE_H

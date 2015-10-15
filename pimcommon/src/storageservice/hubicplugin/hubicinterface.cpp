@@ -30,3 +30,7 @@ HubicInterface::~HubicInterface()
 
 }
 
+void HubicInterface::shutdownService()
+{
+
+}

@@ -29,3 +29,8 @@ BoxInterface::~BoxInterface()
 {
 
 }
+
+void BoxInterface::shutdownService()
+{
+
+}

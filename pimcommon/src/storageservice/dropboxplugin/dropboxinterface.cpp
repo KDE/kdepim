@@ -30,3 +30,7 @@ DropBoxInterface::~DropBoxInterface()
 
 }
 
+void DropBoxInterface::shutdownService()
+{
+
+}

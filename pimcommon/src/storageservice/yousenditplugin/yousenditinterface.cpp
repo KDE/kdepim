@@ -30,3 +30,8 @@ YouSendItInterface::~YouSendItInterface()
 
 }
 
+void YouSendItInterface::shutdownService()
+{
+
+}
+

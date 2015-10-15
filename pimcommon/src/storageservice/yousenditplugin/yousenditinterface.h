@@ -28,6 +28,7 @@ class YouSendItInterface : public PimCommon::StorageServiceInterface
 public:
     explicit YouSendItInterface(QObject *parent = Q_NULLPTR);
     ~YouSendItInterface();
+    void shutdownService() Q_DECL_OVERRIDE;
 };
 }
 #endif // YOUSENDITINTERFACE_H

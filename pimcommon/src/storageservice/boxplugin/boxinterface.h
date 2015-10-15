@@ -28,6 +28,7 @@ class BoxInterface : public PimCommon::StorageServiceInterface
 public:
     explicit BoxInterface(QObject *parent = Q_NULLPTR);
     ~BoxInterface();
+    void shutdownService() Q_DECL_OVERRIDE;
 };
 }
 #endif // BOXINTERFACE_H

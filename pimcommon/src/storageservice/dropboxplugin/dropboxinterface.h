@@ -28,6 +28,7 @@ class DropBoxInterface : public PimCommon::StorageServiceInterface
 public:
     explicit DropBoxInterface(QObject *parent = Q_NULLPTR);
     ~DropBoxInterface();
+    void shutdownService() Q_DECL_OVERRIDE;
 };
 }
 #endif // DROPBOXINTERFACE_H
