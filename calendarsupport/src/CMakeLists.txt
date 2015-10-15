@@ -85,7 +85,7 @@ install(TARGETS
     EXPORT KF5CalendarSupportTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
-ecm_generate_headers(CalendarSupport_CamelCase_HEADERS
+ecm_generate_headers(CalendarSupport_HEADERS
   HEADER_NAMES
   Utils
   CategoryConfig
@@ -103,7 +103,7 @@ ecm_generate_headers(CalendarSupport_CamelCase_HEADERS
   PREFIX CalendarSupport
 )
 
-ecm_generate_headers(CalendarSupport_printer_HEADERS
+ecm_generate_headers(CalendarSupport_CamelCaseprinter_HEADERS
   HEADER_NAMES
   PrintPlugin
   CalPrinter
@@ -114,7 +114,7 @@ ecm_generate_headers(CalendarSupport_printer_HEADERS
   RELATIVE printing
 )
 
-ecm_generate_headers(CalendarSupport_next_HEADERS
+ecm_generate_headers(CalendarSupport_CamelCasenext_HEADERS
   HEADER_NAMES
   IncidenceViewer
   REQUIRED_HEADERS CalendarSupport_next_HEADERS
@@ -122,7 +122,7 @@ ecm_generate_headers(CalendarSupport_next_HEADERS
   RELATIVE next
 )
 
-ecm_generate_headers(CalendarSupport_freebusy_HEADERS
+ecm_generate_headers(CalendarSupport_CamelCasefreebusy_HEADERS
   HEADER_NAMES
   FreeBusyItem
   FreeBusyItemModel
@@ -143,9 +143,9 @@ ecm_generate_pri_file(BASE_NAME CalendarSupport
 if(${CMAKE_SOURCE_DIR} STREQUAL ${calendarsupport_SOURCE_DIR})
 install(FILES
     ${CalendarSupport_CamelCase_HEADERS}
-    ${CalendarSupport_printer_HEADERS}
-    ${CalendarSupport_next_HEADERS}
-    ${CalendarSupport_freebusy_HEADERS}
+    ${CalendarSupport_CamelCaseprinter_HEADERS}
+    ${CalendarSupport_CamelCasenext_HEADERS}
+    ${CalendarSupport_CamelCasefreebusy_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/CalendarSupport
     COMPONENT Devel
 )
@@ -160,7 +160,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/ui_calprinttodoconfig_base.h
 
     ${CMAKE_CURRENT_BINARY_DIR}/kcalprefs_base.h
-    ${CalendarSupport_CamelCase_HEADERS}
+    ${CalendarSupport_HEADERS}
     ${CalendarSupport_printer_HEADERS}
     ${CalendarSupport_next_HEADERS}
     ${CalendarSupport_freebusy_HEADERS}

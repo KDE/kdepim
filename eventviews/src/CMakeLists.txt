@@ -120,7 +120,7 @@ ecm_generate_headers(eventviews_CamelCase_HEADERS
   PREFIX EventViews
 )
 
-ecm_generate_headers(eventviews_agenda_HEADERS
+ecm_generate_headers(eventviews_CamelCaseagenda_HEADERS
   HEADER_NAMES
   CalendarDecoration
   AgendaView
@@ -130,7 +130,7 @@ ecm_generate_headers(eventviews_agenda_HEADERS
   RELATIVE agenda
 )
 
-ecm_generate_headers(eventviews_todo_HEADERS
+ecm_generate_headers(eventviews_CamelCasetodo_HEADERS
   HEADER_NAMES
   TodoView
   REQUIRED_HEADERS eventviews_todo_HEADERS
@@ -138,7 +138,7 @@ ecm_generate_headers(eventviews_todo_HEADERS
   RELATIVE todo
 )
 
-ecm_generate_headers(eventviews_month_HEADERS
+ecm_generate_headers(eventviews_CamelCasemonth_HEADERS
   HEADER_NAMES
   MonthView
   REQUIRED_HEADERS eventviews_month_HEADERS
@@ -146,7 +146,7 @@ ecm_generate_headers(eventviews_month_HEADERS
   RELATIVE month
 )
 
-ecm_generate_headers(eventviews_list_HEADERS
+ecm_generate_headers(eventviews_CamelCaselist_HEADERS
   HEADER_NAMES
   ListView
   REQUIRED_HEADERS eventviews_list_HEADERS
@@ -154,7 +154,7 @@ ecm_generate_headers(eventviews_list_HEADERS
   RELATIVE list
 )
 
-ecm_generate_headers(eventviews_journal_HEADERS
+ecm_generate_headers(eventviews_CamelCasejournal_HEADERS
   HEADER_NAMES
   JournalView
   REQUIRED_HEADERS eventviews_journal_HEADERS
@@ -162,7 +162,7 @@ ecm_generate_headers(eventviews_journal_HEADERS
   RELATIVE journal
 )
 
-ecm_generate_headers(eventviews_multiagenda_HEADERS
+ecm_generate_headers(eventviews_CamelCasemultiagenda_HEADERS
   HEADER_NAMES
   MultiAgendaView
   ConfigDialogInterface
@@ -171,7 +171,7 @@ ecm_generate_headers(eventviews_multiagenda_HEADERS
   RELATIVE multiagenda
 )
 
-ecm_generate_headers(eventviews_timeline_HEADERS
+ecm_generate_headers(eventviews_CamelCasetimeline_HEADERS
   HEADER_NAMES
   TimeLineView
   REQUIRED_HEADERS eventviews_timeline_HEADERS
@@ -179,7 +179,7 @@ ecm_generate_headers(eventviews_timeline_HEADERS
   RELATIVE timeline
 )
 
-ecm_generate_headers(eventviews_timespent_HEADERS
+ecm_generate_headers(eventviews_CamelCasetimespent_HEADERS
   HEADER_NAMES
   TimeSpentView
   REQUIRED_HEADERS eventviews_timespent_HEADERS
@@ -187,7 +187,7 @@ ecm_generate_headers(eventviews_timespent_HEADERS
   RELATIVE timespent
 )
 
-ecm_generate_headers(eventviews_whatsnext_HEADERS
+ecm_generate_headers(eventviews_CamelCasewhatsnext_HEADERS
   HEADER_NAMES
   WhatsNextView
   REQUIRED_HEADERS eventviews_whatsnext_HEADERS
@@ -203,15 +203,15 @@ ecm_generate_pri_file(BASE_NAME EventViews
 if(${CMAKE_SOURCE_DIR} STREQUAL ${eventviews_SOURCE_DIR})
 install(FILES
     ${eventviews_CamelCase_HEADERS}
-    ${eventviews_agenda_HEADERS}
-    ${eventviews_todo_HEADERS}
-    ${eventviews_timespent_HEADERS}
-    ${eventviews_whatsnext_HEADERS}
-    ${eventviews_timeline_HEADERS}
-    ${eventviews_multiagenda_HEADERS}
-    ${eventviews_journal_HEADERS}
-    ${eventviews_list_HEADERS}
-    ${eventviews_month_HEADERS}
+    ${eventviews_CamelCaseagenda_HEADERS}
+    ${eventviews_CamelCasetodo_HEADERS}
+    ${eventviews_CamelCasetimespent_HEADERS}
+    ${eventviews_CamelCasewhatsnext_HEADERS}
+    ${eventviews_CamelCasetimeline_HEADERS}
+    ${eventviews_CamelCasemultiagenda_HEADERS}
+    ${eventviews_CamelCasejournal_HEADERS}
+    ${eventviews_CamelCaselist_HEADERS}
+    ${eventviews_CamelCasemonth_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/EventViews
     COMPONENT Devel
 )

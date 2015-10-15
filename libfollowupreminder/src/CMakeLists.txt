@@ -44,7 +44,7 @@ ecm_generate_headers(FollowupReminder_Camelcase_HEADERS
   HEADER_NAMES
   FollowUpReminderInfo
   FollowUpReminderUtil
-  REQUIRED_HEADERS FollowupReminder_Camelcase_HEADERS
+  REQUIRED_HEADERS FollowupReminder_HEADERS
   PREFIX FollowupReminder
 )
 

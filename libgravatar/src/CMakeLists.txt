@@ -49,7 +49,7 @@ install(TARGETS
 ecm_generate_headers(Gravatar_Camelcase_job_HEADERS
   HEADER_NAMES
   GravatarResolvUrlJob
-  REQUIRED_HEADERS Gravatar_Camelcase_job_HEADERS
+  REQUIRED_HEADERS Gravatar_job_HEADERS
   PREFIX Gravatar
   RELATIVE job
 )
@@ -57,7 +57,7 @@ ecm_generate_headers(Gravatar_Camelcase_job_HEADERS
 ecm_generate_headers(Gravatar_Camelcase_misc_HEADERS
   HEADER_NAMES
   GravatarCache
-  REQUIRED_HEADERS Gravatar_Camelcase_misc_HEADERS
+  REQUIRED_HEADERS Gravatar_misc_HEADERS
   PREFIX Gravatar
   RELATIVE misc
 )
@@ -67,7 +67,7 @@ ecm_generate_headers(Gravatar_Camelcase_widgets_HEADERS
   GravatarConfigureSettingsDialog
   GravatarConfigWidget
   GravatarDownloadPixmapWidget
-  REQUIRED_HEADERS Gravatar_Camelcase_widgets_HEADERS
+  REQUIRED_HEADERS Gravatar_widgets_HEADERS
   PREFIX Gravatar
   RELATIVE widgets
 )
@@ -88,9 +88,9 @@ install(FILES
 )
 
 install(FILES
-    ${Gravatar_Camelcase_widgets_HEADERS}
-    ${Gravatar_Camelcase_job_HEADERS}
-    ${Gravatar_Camelcase_misc_HEADERS}
+    ${Gravatar_widgets_HEADERS}
+    ${Gravatar_job_HEADERS}
+    ${Gravatar_misc_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/gravatar_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/gravatarsettings.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/gravatar

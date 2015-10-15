@@ -349,12 +349,12 @@ ecm_generate_headers(PimCommon_CamelCase_HEADERS
   CreateResource
   MetaType
   ImapResourceCapabilitiesManager
-  REQUIRED_HEADERS PimCommon_CamelCase_HEADERS
+  REQUIRED_HEADERS PimCommon_HEADERS
   PREFIX PimCommon
   RELATIVE util
 )
 
-ecm_generate_headers(PimCommon_shorturl_HEADERS
+ecm_generate_headers(PimCommon_Camelcaseshorturl_HEADERS
   HEADER_NAMES
   ShortUrlEnginePlugin
   ShortUrlEngineInterface
@@ -364,7 +364,7 @@ ecm_generate_headers(PimCommon_shorturl_HEADERS
 )
 
 
-ecm_generate_headers(PimCommon_storageservice_HEADERS
+ecm_generate_headers(PimCommon_Camelcasestorageservice_HEADERS
   HEADER_NAMES
   StorageServiceAbstract
   StorageServiceManager
@@ -378,7 +378,7 @@ ecm_generate_headers(PimCommon_storageservice_HEADERS
   RELATIVE storageservice
 )
 
-ecm_generate_headers(PimCommon_storageservice_dialog_HEADERS
+ecm_generate_headers(PimCommon_Camelcasestorageservice_dialog_HEADERS
   HEADER_NAMES
   StorageServiceCheckNameDialog
   REQUIRED_HEADERS PimCommon_storageservice_dialog_HEADERS
@@ -387,7 +387,7 @@ ecm_generate_headers(PimCommon_storageservice_dialog_HEADERS
 )
 
 
-ecm_generate_headers(PimCommon_settings_HEADERS
+ecm_generate_headers(PimCommon_Camelcasesettings_HEADERS
   HEADER_NAMES
   PimCommonSettings
   REQUIRED_HEADERS PimCommon_settings_HEADERS
@@ -395,7 +395,7 @@ ecm_generate_headers(PimCommon_settings_HEADERS
   RELATIVE settings
 )
 
-ecm_generate_headers(PimCommon_storageservicewidgets_HEADERS
+ecm_generate_headers(PimCommon_Camelcasestorageservicewidgets_HEADERS
   HEADER_NAMES
   StorageServiceProgressWidget
   StorageServiceTreeWidget
@@ -406,7 +406,7 @@ ecm_generate_headers(PimCommon_storageservicewidgets_HEADERS
   RELATIVE storageservice/widgets
 )
 
-ecm_generate_headers(PimCommon_storageservicedialog_HEADERS
+ecm_generate_headers(PimCommon_Camelcasestorageservicedialog_HEADERS
   HEADER_NAMES
   StorageServiceConfigureDialog
   REQUIRED_HEADERS PimCommon_storageservicedialog_HEADERS
@@ -414,7 +414,7 @@ ecm_generate_headers(PimCommon_storageservicedialog_HEADERS
   RELATIVE storageservice/dialog
 )
 
-ecm_generate_headers(PimCommon_storageservicesettings_HEADERS
+ecm_generate_headers(PimCommon_Camelcasestorageservicesettings_HEADERS
   HEADER_NAMES
   StorageServiceSettings
   StorageServiceSettingsWidget
@@ -423,7 +423,7 @@ ecm_generate_headers(PimCommon_storageservicesettings_HEADERS
   RELATIVE storageservice/settings
 )
 
-ecm_generate_headers(PimCommon_shareserviceurl_HEADERS
+ecm_generate_headers(PimCommon_Camelcaseshareserviceurl_HEADERS
   HEADER_NAMES
   ShareServiceUrlManager
   REQUIRED_HEADERS PimCommon_shareserviceurl_HEADERS
@@ -431,7 +431,7 @@ ecm_generate_headers(PimCommon_shareserviceurl_HEADERS
   RELATIVE shareserviceurl
 )
 
-ecm_generate_headers(PimCommon_translator_HEADERS
+ecm_generate_headers(PimCommon_Camelcasetranslator_HEADERS
   HEADER_NAMES
   TranslatorWidget
   REQUIRED_HEADERS PimCommon_translator_HEADERS
@@ -439,7 +439,7 @@ ecm_generate_headers(PimCommon_translator_HEADERS
   RELATIVE translator
 )
 
-ecm_generate_headers(PimCommon_customtools_HEADERS
+ecm_generate_headers(PimCommon_Camelcasecustomtools_HEADERS
   HEADER_NAMES
   CustomToolsWidgetng
   REQUIRED_HEADERS PimCommon_customtools_HEADERS
@@ -447,7 +447,7 @@ ecm_generate_headers(PimCommon_customtools_HEADERS
   RELATIVE customtools
 )
 
-ecm_generate_headers(PimCommon_storageserviceinterface_HEADERS
+ecm_generate_headers(PimCommon_Camelcasestorageserviceinterface_HEADERS
   HEADER_NAMES
   StorageServiceInterface
   REQUIRED_HEADERS PimCommon_storageserviceinterface_HEADERS
@@ -455,7 +455,7 @@ ecm_generate_headers(PimCommon_storageserviceinterface_HEADERS
   RELATIVE storageservice/interface
 )
 
-ecm_generate_headers(PimCommon_temporaryfile_HEADERS
+ecm_generate_headers(PimCommon_Camelcasetemporaryfile_HEADERS
   HEADER_NAMES
   AttachmentTemporaryFilesDirs
   REQUIRED_HEADERS PimCommon_temporaryfile_HEADERS
@@ -463,7 +463,7 @@ ecm_generate_headers(PimCommon_temporaryfile_HEADERS
   RELATIVE temporaryfile
 )
 
-ecm_generate_headers(PimCommon_sievehighlighter_HEADERS
+ecm_generate_headers(PimCommon_Camelcasesievehighlighter_HEADERS
   HEADER_NAMES
   SieveSyntaxHighlighterUtil
   SieveSyntaxHighlighter
@@ -474,7 +474,7 @@ ecm_generate_headers(PimCommon_sievehighlighter_HEADERS
 )
 
 
-ecm_generate_headers(PimCommon_acl_HEADERS
+ecm_generate_headers(PimCommon_Camelcaseacl_HEADERS
   HEADER_NAMES
   CollectionAclPage
   ImapAclAttribute
@@ -484,7 +484,7 @@ ecm_generate_headers(PimCommon_acl_HEADERS
   RELATIVE acl
 )
 
-ecm_generate_headers(PimCommon_migrate_HEADERS
+ecm_generate_headers(PimCommon_Camelcasemigrate_HEADERS
   HEADER_NAMES
   MigrateApplicationFiles
   MigrateFileInfo
@@ -493,7 +493,7 @@ ecm_generate_headers(PimCommon_migrate_HEADERS
   RELATIVE migration
 )
 
-ecm_generate_headers(PimCommon_autocorrectionwidgets_HEADERS
+ecm_generate_headers(PimCommon_Camelcaseautocorrectionwidgets_HEADERS
   HEADER_NAMES
   RichTexteditWithAutoCorrection
   LineEditWithAutoCorrection
@@ -502,7 +502,7 @@ ecm_generate_headers(PimCommon_autocorrectionwidgets_HEADERS
   RELATIVE autocorrection/widgets/
 )
 
-ecm_generate_headers(PimCommon_managerserversidesubscription_HEADERS
+ecm_generate_headers(PimCommon_Camelcasemanagerserversidesubscription_HEADERS
   HEADER_NAMES
   ManageServerSideSubscriptionJob
   REQUIRED_HEADERS PimCommon_managerserversidesubscription_HEADERS
@@ -510,7 +510,7 @@ ecm_generate_headers(PimCommon_managerserversidesubscription_HEADERS
   RELATIVE manageserversidesubscription
 )
 
-ecm_generate_headers(PimCommon_autocorrection_HEADERS
+ecm_generate_headers(PimCommon_Camelcaseautocorrection_HEADERS
   HEADER_NAMES
   AutoCorrectionWidget
   AutoCorrectionLanguage
@@ -520,7 +520,7 @@ ecm_generate_headers(PimCommon_autocorrection_HEADERS
   RELATIVE autocorrection/
 )
 
-ecm_generate_headers(PimCommon_richtexteditor_HEADERS
+ecm_generate_headers(PimCommon_Camelcaserichtexteditor_HEADERS
   HEADER_NAMES
   RichTextEditorWidget
   RichTextEditor
@@ -529,7 +529,7 @@ ecm_generate_headers(PimCommon_richtexteditor_HEADERS
   RELATIVE texteditor/richtexteditor
 )
 
-ecm_generate_headers(PimCommon_folderdialog_HEADERS
+ecm_generate_headers(PimCommon_Camelcasefolderdialog_HEADERS
   HEADER_NAMES
   CheckedCollectionWidget
   SelectMultiCollectionDialog
@@ -538,7 +538,7 @@ ecm_generate_headers(PimCommon_folderdialog_HEADERS
   RELATIVE folderdialog
 )
 
-ecm_generate_headers(PimCommon_texttospeechs_HEADERS
+ecm_generate_headers(PimCommon_Camelcasetexttospeechs_HEADERS
   HEADER_NAMES
   TextToSpeech
   TextToSpeechActions
@@ -550,7 +550,7 @@ ecm_generate_headers(PimCommon_texttospeechs_HEADERS
   RELATIVE texttospeech
 )
 
-ecm_generate_headers(PimCommon_templatelist_HEADERS
+ecm_generate_headers(PimCommon_Camelcasetemplatelist_HEADERS
   HEADER_NAMES
   TemplateListWidget
   TemplateManager
@@ -560,7 +560,7 @@ ecm_generate_headers(PimCommon_templatelist_HEADERS
 )
 
 
-ecm_generate_headers(PimCommon_plaintexteditor_HEADERS
+ecm_generate_headers(PimCommon_Camelcaseplaintexteditor_HEADERS
   HEADER_NAMES
   PlainTextEditor
   PlainTextEditorWidget
@@ -571,7 +571,7 @@ ecm_generate_headers(PimCommon_plaintexteditor_HEADERS
   RELATIVE texteditor/plaintexteditor
 )
 
-ecm_generate_headers(PimCommon_texteditor_commonwidget_HEADERS
+ecm_generate_headers(PimCommon_Camelcasetexteditor_commonwidget_HEADERS
   HEADER_NAMES
   TextGotoLineWidget
   TextEditFindBarBase 
@@ -580,7 +580,7 @@ ecm_generate_headers(PimCommon_texteditor_commonwidget_HEADERS
   RELATIVE texteditor/commonwidget
 )
 
-ecm_generate_headers(PimCommon_widgets_HEADERS
+ecm_generate_headers(PimCommon_Camelcasewidgets_HEADERS
   HEADER_NAMES
   CustomTreeView
   SpellCheckLineEdit
@@ -606,32 +606,32 @@ ecm_generate_pri_file(BASE_NAME PimCommon
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${pimcommon_SOURCE_DIR})
 install(FILES
-    ${PimCommon_storageservicesettings_HEADERS}
-    ${PimCommon_storageservice_dialog_HEADERS}
+    ${PimCommon_Camelcasestorageservicesettings_HEADERS}
+    ${PimCommon_Camelcasestorageservice_dialog_HEADERS}
     ${PimCommon_CamelCase_HEADERS}
-    ${PimCommon_storageservice_HEADERS}
-    ${PimCommon_settings_HEADERS}
-    ${PimCommon_storageservicewidgets_HEADERS}
-    ${PimCommon_storageservicedialog_HEADERS}
-    ${PimCommon_storageservicedialog_HEADERS}
-    ${PimCommon_shareserviceurl_HEADERS}
-    ${PimCommon_translator_HEADERS}
-    ${PimCommon_customtools_HEADERS}
-    ${PimCommon_storageserviceinterface_HEADERS}
-    ${PimCommon_temporaryfile_HEADERS}
-    ${PimCommon_sievehighlighter_HEADERS}
-    ${PimCommon_acl_HEADERS}
-    ${PimCommon_migrate_HEADERS}
-    ${PimCommon_autocorrectionwidgets_HEADERS}
-    ${PimCommon_managerserversidesubscription_HEADERS}
-    ${PimCommon_autocorrection_HEADERS}
-    ${PimCommon_richtexteditor_HEADERS}
-    ${PimCommon_folderdialog_HEADERS}
-    ${PimCommon_texttospeechs_HEADERS}
-    ${PimCommon_templatelist_HEADERS}
-    ${PimCommon_plaintexteditor_HEADERS}
-    ${PimCommon_texteditor_commonwidget_HEADERS}
-    ${PimCommon_widgets_HEADERS}
+    ${PimCommon_Camelcasestorageservice_HEADERS}
+    ${PimCommon_Camelcasesettings_HEADERS}
+    ${PimCommon_Camelcasestorageservicewidgets_HEADERS}
+    ${PimCommon_Camelcasestorageservicedialog_HEADERS}
+    ${PimCommon_Camelcasestorageservicedialog_HEADERS}
+    ${PimCommon_Camelcaseshareserviceurl_HEADERS}
+    ${PimCommon_Camelcasetranslator_HEADERS}
+    ${PimCommon_Camelcasecustomtools_HEADERS}
+    ${PimCommon_Camelcasestorageserviceinterface_HEADERS}
+    ${PimCommon_Camelcasetemporaryfile_HEADERS}
+    ${PimCommon_Camelcasesievehighlighter_HEADERS}
+    ${PimCommon_Camelcaseacl_HEADERS}
+    ${PimCommon_Camelcasemigrate_HEADERS}
+    ${PimCommon_Camelcaseautocorrectionwidgets_HEADERS}
+    ${PimCommon_Camelcasemanagerserversidesubscription_HEADERS}
+    ${PimCommon_Camelcaseautocorrection_HEADERS}
+    ${PimCommon_Camelcaserichtexteditor_HEADERS}
+    ${PimCommon_Camelcasefolderdialog_HEADERS}
+    ${PimCommon_Camelcasetexttospeechs_HEADERS}
+    ${PimCommon_Camelcasetemplatelist_HEADERS}
+    ${PimCommon_Camelcaseplaintexteditor_HEADERS}
+    ${PimCommon_Camelcasetexteditor_commonwidget_HEADERS}
+    ${PimCommon_Camelcasewidgets_HEADERS}
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/PimCommon
     COMPONENT Devel
@@ -646,7 +646,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/config-pimcommon.h
     ${PimCommon_storageservicesettings_HEADERS}
     ${PimCommon_storageservice_dialog_HEADERS}
-    ${PimCommon_CamelCase_HEADERS}
+    ${PimCommon_HEADERS}
     ${PimCommon_storageservice_HEADERS}
     ${PimCommon_settings_HEADERS}
     ${PimCommon_storageservicewidgets_HEADERS}

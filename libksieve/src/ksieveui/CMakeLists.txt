@@ -222,11 +222,11 @@ target_include_directories(KF5KSieveUi PUBLIC "$<BUILD_INTERFACE:${libksieve_SOU
 ecm_generate_headers(ksieveui_CamelCase_HEADERS
   HEADER_NAMES
   ManageSieveScriptsDialog
-  REQUIRED_HEADERS ksieveui_CamelCase_HEADERS
+  REQUIRED_HEADERS ksieveui_HEADERS
   PREFIX KSieveUi
 )
 
-ecm_generate_headers(ksieveui_util_HEADERS
+ecm_generate_headers(ksieveui_Camelcaseutil_HEADERS
   HEADER_NAMES
   Util
   REQUIRED_HEADERS ksieveui_util_HEADERS
@@ -235,7 +235,7 @@ ecm_generate_headers(ksieveui_util_HEADERS
 
 )
 
-ecm_generate_headers(ksieveui_editor_HEADERS
+ecm_generate_headers(ksieveui_Camelcaseeditor_HEADERS
   HEADER_NAMES
   SieveEditor
   SieveEditorWidget
@@ -245,7 +245,7 @@ ecm_generate_headers(ksieveui_editor_HEADERS
 
 )
 
-ecm_generate_headers(ksieveui_vacation_HEADERS
+ecm_generate_headers(ksieveui_Camelcasevacation_HEADERS
   HEADER_NAMES
   VacationManager
   REQUIRED_HEADERS ksieveui_vacation_HEADERS
@@ -254,7 +254,7 @@ ecm_generate_headers(ksieveui_vacation_HEADERS
 
 )
 
-ecm_generate_headers(ksieveui_debug_HEADERS
+ecm_generate_headers(ksieveui_Camelcasedebug_HEADERS
   HEADER_NAMES
   SieveDebugDialog
   REQUIRED_HEADERS ksieveui_debug_HEADERS
@@ -263,7 +263,7 @@ ecm_generate_headers(ksieveui_debug_HEADERS
 
 )
 
-ecm_generate_headers(ksieveui_widgets_HEADERS
+ecm_generate_headers(ksieveui_Camelcasewidgets_HEADERS
   HEADER_NAMES
   ManageSieveWidget
   SieveTreeWidgetItem
@@ -288,7 +288,7 @@ install(FILES
     ${ksieveui_widgets_HEADERS}
     ${ksieveui_debug_HEADERS}
     ${ksieveui_vacation_HEADERS}
-    ${ksieveui_CamelCase_HEADERS}
+    ${ksieveui_HEADERS}
     ${ksieveui_editor_HEADERS}
     ${ksieveui_util_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KSieveUi
@@ -297,12 +297,12 @@ install(FILES
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/ksieveui_export.h
-    ${ksieveui_widgets_HEADERS}
-    ${ksieveui_debug_HEADERS}
-    ${ksieveui_vacation_HEADERS}
+    ${ksieveui_Camelcasewidgets_HEADERS}
+    ${ksieveui_Camelcasedebug_HEADERS}
+    ${ksieveui_Camelcasevacation_HEADERS}
     ${ksieveui_CamelCase_HEADERS}
-    ${ksieveui_editor_HEADERS}
-    ${ksieveui_util_HEADERS}
+    ${ksieveui_Camelcaseeditor_HEADERS}
+    ${ksieveui_Camelcaseutil_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/ksieveui
     COMPONENT Devel
 )

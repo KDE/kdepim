@@ -77,7 +77,7 @@ ecm_generate_headers(TemplateParser_CamelCase_HEADERS
   TemplatesTextEdit
   TemplatesUtil
   TemplatesInsertCommand
-  REQUIRED_HEADERS TemplateParser_CamelCase_HEADERS
+  REQUIRED_HEADERS TemplateParser_HEADERS
   PREFIX TemplateParser
 )
 
@@ -104,7 +104,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/customtemplates_kfg.h
     ${CMAKE_CURRENT_BINARY_DIR}/ui_templatesconfiguration_base.h
     ${CMAKE_CURRENT_BINARY_DIR}/templatesconfiguration_kfg.h
-    ${TemplateParser_CamelCase_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/templateparser
     COMPONENT Devel
 )

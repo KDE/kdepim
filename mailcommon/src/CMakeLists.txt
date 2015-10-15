@@ -255,19 +255,19 @@ ecm_generate_headers(MailCommon_CamelCase_HEADERS
   HEADER_NAMES
   MailUtil
   MetaType
-  REQUIRED_HEADERS MailCommon_CamelCase_HEADERS
+  REQUIRED_HEADERS MailCommon_HEADERS
   PREFIX MailCommon
   RELATIVE util
 )
 
-ecm_generate_headers(MailCommon_top_HEADERS
+ecm_generate_headers(MailCommon_Camelcasetop_HEADERS
   HEADER_NAMES
   DBusOperators
   REQUIRED_HEADERS MailCommon_top_HEADERS
   PREFIX MailCommon
 )
 
-ecm_generate_headers(MailCommon_tag_HEADERS
+ecm_generate_headers(MailCommon_Camelcasetag_HEADERS
   HEADER_NAMES
   TagWidget
   Tag
@@ -277,7 +277,7 @@ ecm_generate_headers(MailCommon_tag_HEADERS
   RELATIVE tag
 )
 
-ecm_generate_headers(MailCommon_folder_HEADERS
+ecm_generate_headers(MailCommon_Camelcasefolder_HEADERS
   HEADER_NAMES
   FolderCollection
   FolderRequester
@@ -292,7 +292,7 @@ ecm_generate_headers(MailCommon_folder_HEADERS
   RELATIVE folder
 )
 
-ecm_generate_headers(MailCommon_kernel_HEADERS
+ecm_generate_headers(MailCommon_Camelcasekernel_HEADERS
   HEADER_NAMES
   MailKernel
   REQUIRED_HEADERS MailCommon_kernel_HEADERS
@@ -300,7 +300,7 @@ ecm_generate_headers(MailCommon_kernel_HEADERS
   RELATIVE kernel
 )
 
-ecm_generate_headers(MailCommon_interfaces_HEADERS
+ecm_generate_headers(MailCommon_Camelcaseinterfaces_HEADERS
   HEADER_NAMES
   MailInterfaces
   REQUIRED_HEADERS MailCommon_interfaces_HEADERS
@@ -309,7 +309,7 @@ ecm_generate_headers(MailCommon_interfaces_HEADERS
 )
 
 
-ecm_generate_headers(MailCommon_filter_HEADERS
+ecm_generate_headers(MailCommon_Camelcasefilter_HEADERS
   HEADER_NAMES
   FilterLog
   MailFilter
@@ -322,17 +322,17 @@ ecm_generate_headers(MailCommon_filter_HEADERS
   RELATIVE filter
 )
 
-ecm_generate_headers(MailCommon_job_HEADERS
+ecm_generate_headers(MailCommon_Camelcasejob_HEADERS
   HEADER_NAMES
   BackupJob
   JobScheduler
   FolderJob
-  REQUIRED_HEADERS MailCommon_job_HEADERS
+  REQUIRED_HEADERS MailCommon_Camelcasejob_HEADERS
   PREFIX MailCommon
   RELATIVE job
 )
 
-ecm_generate_headers(MailCommon_filteraction_HEADERS
+ecm_generate_headers(MailCommon_Camelcasefilteraction_HEADERS
   HEADER_NAMES
   FilterAction
   FilterActionDict
@@ -341,7 +341,7 @@ ecm_generate_headers(MailCommon_filteraction_HEADERS
   RELATIVE filter/filteractions/
 )
 
-ecm_generate_headers(MailCommon_mdn_HEADERS
+ecm_generate_headers(MailCommon_Camelcasemdn_HEADERS
   HEADER_NAMES
   SendMdnHandler
   MDNStateAttribute
@@ -351,7 +351,7 @@ ecm_generate_headers(MailCommon_mdn_HEADERS
 )
 
 
-ecm_generate_headers(MailCommon_collectionpage_HEADERS
+ecm_generate_headers(MailCommon_Camelcasecollectionpage_HEADERS
   HEADER_NAMES
   IncidencesForWidget
   CollectionTypeUtil
@@ -362,7 +362,7 @@ ecm_generate_headers(MailCommon_collectionpage_HEADERS
   RELATIVE collectionpage
 )
 
-ecm_generate_headers(MailCommon_collectionpageattributes_HEADERS
+ecm_generate_headers(MailCommon_Camelcasecollectionpageattributes_HEADERS
   HEADER_NAMES
   CollectionAnnotationsAttribute
   ExpireCollectionAttribute
@@ -371,7 +371,7 @@ ecm_generate_headers(MailCommon_collectionpageattributes_HEADERS
   RELATIVE collectionpage/attributes
 )
 
-ecm_generate_headers(MailCommon_filterimporter_HEADERS
+ecm_generate_headers(MailCommon_Camelcasefilterimporter_HEADERS
   HEADER_NAMES
   FilterImporterBalsa
   FilterImporterClawsMail
@@ -381,7 +381,7 @@ ecm_generate_headers(MailCommon_filterimporter_HEADERS
   RELATIVE filter/filterimporter/
 )
 
-ecm_generate_headers(MailCommon_snippets_HEADERS
+ecm_generate_headers(MailCommon_Camelcasesnippets_HEADERS
   HEADER_NAMES
   SnippetsManager
   REQUIRED_HEADERS MailCommon_snippets_HEADERS
@@ -389,7 +389,7 @@ ecm_generate_headers(MailCommon_snippets_HEADERS
   RELATIVE snippets
 )
 
-ecm_generate_headers(MailCommon_kernel_HEADERS
+ecm_generate_headers(MailCommon_Camelcasekernel_HEADERS
   HEADER_NAMES
   SearchPattern
   SearchPatternEdit
@@ -398,7 +398,7 @@ ecm_generate_headers(MailCommon_kernel_HEADERS
   RELATIVE search
 )
 
-ecm_generate_headers(MailCommon_widgets_HEADERS
+ecm_generate_headers(MailCommon_Camelcasewidgets_HEADERS
   HEADER_NAMES
   RedirectDialog
   FavoriteCollectionWidget
@@ -407,7 +407,7 @@ ecm_generate_headers(MailCommon_widgets_HEADERS
   RELATIVE widgets
 )
 
-ecm_generate_headers(MailCommon_searchrule_HEADERS
+ecm_generate_headers(MailCommon_Camelcasesearchrule_HEADERS
   HEADER_NAMES
   SearchRule
   SearchRuleStatus
@@ -423,34 +423,33 @@ ecm_generate_pri_file(BASE_NAME MailCommon
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${mailcommon_SOURCE_DIR})
 install(FILES
-    ${MailCommon_searchrule_HEADERS}
+    ${MailCommon_Camelcasesearchrule_HEADERS}
     ${MailCommon_CamelCase_HEADERS}
-    ${MailCommon_top_HEADERS}
-    ${MailCommon_tag_HEADERS}
-    ${MailCommon_folder_HEADERS}
-    ${MailCommon_kernel_HEADERS}
-    ${MailCommon_interfaces_HEADERS}
-    ${MailCommon_filter_HEADERS}
-    ${MailCommon_job_HEADERS}
-    ${MailCommon_filteraction_HEADERS}
-    ${MailCommon_mdn_HEADERS}
-    ${MailCommon_collectionpage_HEADERS}
-    ${MailCommon_collectionpageattributes_HEADERS}
-    ${MailCommon_filterimporter_HEADERS}
-    ${MailCommon_snippets_HEADERS}
-    ${MailCommon_kernel_HEADERS}
-    ${MailCommon_widgets_HEADERS}
+    ${MailCommon_Camelcasetop_HEADERS}
+    ${MailCommon_Camelcasetag_HEADERS}
+    ${MailCommon_Camelcasefolder_HEADERS}
+    ${MailCommon_Camelcasekernel_HEADERS}
+    ${MailCommon_Camelcaseinterfaces_HEADERS}
+    ${MailCommon_Camelcasefilter_HEADERS}
+    ${MailCommon_Camelcasejob_HEADERS}
+    ${MailCommon_Camelcasefilteraction_HEADERS}
+    ${MailCommon_Camelcasemdn_HEADERS}
+    ${MailCommon_Camelcasecollectionpage_HEADERS}
+    ${MailCommon_Camelcasecollectionpageattributes_HEADERS}
+    ${MailCommon_Camelcasefilterimporter_HEADERS}
+    ${MailCommon_Camelcasesnippets_HEADERS}
+    ${MailCommon_Camelcasekernel_HEADERS}
+    ${MailCommon_Camelcasewidgets_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MailCommon
     COMPONENT Devel
 )
 
 install(FILES
-    ${MailCommon_HEADERS}
     ${MailCommon_searchrule_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/mailcommon_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/pop3settings.h
     ${CMAKE_CURRENT_BINARY_DIR}/mailcommonsettings_base.h
-    ${MailCommon_CamelCase_HEADERS}
+    ${MailCommon_HEADERS}
     ${MailCommon_top_HEADERS}
     ${MailCommon_tag_HEADERS}
     ${MailCommon_folder_HEADERS}

@@ -182,12 +182,12 @@ ecm_generate_headers(libkleo_CamelCase_HEADERS
   ListAllKeysJob
   Predicates
   AbstractImportJob
-  REQUIRED_HEADERS libkleo_CamelCase_HEADERS
+  REQUIRED_HEADERS libkleo_HEADERS
   PREFIX Libkleo
   RELATIVE kleo
 )
 
-ecm_generate_headers(libkeo_ui_HEADERS
+ecm_generate_headers(libkeo_Camelcaseui_HEADERS
   HEADER_NAMES
   ProgressDialog
   KeyApprovalDialog
@@ -214,7 +214,7 @@ ecm_generate_pri_file(BASE_NAME Libkleo
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libkleo_SOURCE_DIR})
 install(FILES
     ${libkleo_CamelCase_HEADERS}
-    ${libkeo_ui_HEADERS}
+    ${libkeo_Camelcaseui_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/Libkleo
     COMPONENT Devel
 )
@@ -222,7 +222,7 @@ install(FILES
 install(FILES
     ${libkleo_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/kleo_export.h
-    ${libkleo_CamelCase_HEADERS}
+    ${libkleo_HEADERS}
     ${libkeo_ui_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/libkleo
     COMPONENT Devel

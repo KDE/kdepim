@@ -42,12 +42,6 @@ target_include_directories(KF5KSieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURC
 target_include_directories(KF5KSieve PUBLIC "$<BUILD_INTERFACE:${libksieve_SOURCE_DIR}/src/parser>")
 
 
-#ecm_generate_headers(ksieve_CamelCase_HEADERS
-#  HEADER_NAMES
-#  REQUIRED_HEADERS ksieve_CamelCase_HEADERS
-#  PREFIX KSieve
-#)
-
 ecm_generate_pri_file(BASE_NAME KSieve
     LIB_NAME KF5KSieve
     DEPS "" FILENAME_VAR PRI_FILENAME

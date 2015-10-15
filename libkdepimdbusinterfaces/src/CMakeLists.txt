@@ -73,7 +73,6 @@ install(FILES
 
 install(FILES
     ${kdepimdbusinterfaces_HEADERS}
-    ${kdepimdbusinterfaces_Camelcase_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/kdepimdbusinterfaces_export.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kdepimdbusinterfaces
     COMPONENT Devel

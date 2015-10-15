@@ -62,7 +62,7 @@ install(TARGETS
 )
 
 
-ecm_generate_headers(KaddressbookGrantlee_formatter_HEADERS
+ecm_generate_headers(KaddressbookGrantlee_CamelCaseformatter_HEADERS
   HEADER_NAMES
   GrantleeContactFormatter
   GrantleeContactGroupFormatter
@@ -71,7 +71,7 @@ ecm_generate_headers(KaddressbookGrantlee_formatter_HEADERS
   PREFIX KaddressbookGrantlee
 )
 
-ecm_generate_headers(KaddressbookGrantlee_widgets_HEADERS
+ecm_generate_headers(KaddressbookGrantlee_CamelCasewidgets_HEADERS
   HEADER_NAMES
   GrantleeContactViewer
   REQUIRED_HEADERS KaddressbookGrantlee_widgets_HEADERS
@@ -79,7 +79,7 @@ ecm_generate_headers(KaddressbookGrantlee_widgets_HEADERS
   PREFIX KaddressbookGrantlee
 )
 
-ecm_generate_headers(KaddressbookGrantlee_printing_HEADERS
+ecm_generate_headers(KaddressbookGrantlee_CamelCaseprinting_HEADERS
   HEADER_NAMES
   GrantleePrint
   REQUIRED_HEADERS KaddressbookGrantlee_printing_HEADERS
@@ -95,9 +95,9 @@ ecm_generate_pri_file(BASE_NAME KaddressbookGrantlee
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${kaddressbookgrantlee_SOURCE_DIR})
 install(FILES
-    ${KaddressbookGrantlee_widgets_HEADERS}
-    ${KaddressbookGrantlee_formatter_HEADERS}
-    ${KaddressbookGrantlee_printing_HEADERS}
+    ${KaddressbookGrantlee_CamelCasewidgets_HEADERS}
+    ${KaddressbookGrantlee_CamelCaseformatter_HEADERS}
+    ${KaddressbookGrantlee_CamelCaseprinting_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KaddressbookGrantlee
     COMPONENT Devel
 )

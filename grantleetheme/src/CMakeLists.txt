@@ -45,7 +45,7 @@ ecm_generate_headers(GrantleeTheme_CamelCase_HEADERS
   HEADER_NAMES
   GrantleeThemeManager
   GrantleeTheme
-  REQUIRED_HEADERS GrantleeTheme_CamelCase_HEADERS
+  REQUIRED_HEADERS GrantleeTheme_HEADERS
   PREFIX GrantleeTheme
 )
 
@@ -57,7 +57,7 @@ ecm_generate_pri_file(BASE_NAME GrantleeTheme
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${GrantleeTheme_SOURCE_DIR})
 install(FILES
-    ${GrantleeTheme_CamelCase_HEADERS}
+    ${GrantleeTheme_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/GrantleeTheme
     COMPONENT Devel
 )

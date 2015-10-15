@@ -85,7 +85,7 @@ install(TARGETS
 )
 
 
-ecm_generate_headers(MessageCore_main_HEADERS
+ecm_generate_headers(MessageCore_Camelcasemain_HEADERS
   HEADER_NAMES
   MessageCoreUtil
 
@@ -94,7 +94,7 @@ ecm_generate_headers(MessageCore_main_HEADERS
 )
 
 
-ecm_generate_headers(MessageCore_misc_HEADERS
+ecm_generate_headers(MessageCore_Camelcasemisc_HEADERS
   HEADER_NAMES
   ImageCollector
   MailingList
@@ -104,7 +104,7 @@ ecm_generate_headers(MessageCore_misc_HEADERS
   RELATIVE misc
 )
 
-ecm_generate_headers(MessageCore_utils_HEADERS
+ecm_generate_headers(MessageCore_Camelcaseutils_HEADERS
   HEADER_NAMES
   StringUtil
   REQUIRED_HEADERS MessageCore_utils_HEADERS
@@ -112,7 +112,7 @@ ecm_generate_headers(MessageCore_utils_HEADERS
   RELATIVE utils
 )
 
-ecm_generate_headers(MessageCore_settings_HEADERS
+ecm_generate_headers(MessageCore_Camelcasesettings_HEADERS
   HEADER_NAMES
   MessageCoreSettings
   REQUIRED_HEADERS MessageCore_settings_HEADERS
@@ -121,7 +121,7 @@ ecm_generate_headers(MessageCore_settings_HEADERS
 )
 
 
-ecm_generate_headers(MessageCore_attachment_HEADERS
+ecm_generate_headers(MessageCore_Camelcaseattachment_HEADERS
   HEADER_NAMES
   AttachmentFromMimeContentJob
   AttachmentFromUrlBaseJob
@@ -139,7 +139,7 @@ ecm_generate_headers(MessageCore_attachment_HEADERS
   RELATIVE attachment
 )
 
-ecm_generate_headers(MessageCore_helpers_HEADERS
+ecm_generate_headers(MessageCore_Camelcasehelpers_HEADERS
   HEADER_NAMES
   NodeHelper
   MessageHelpers
@@ -156,12 +156,12 @@ ecm_generate_pri_file(BASE_NAME MessageCore
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${messagecore_SOURCE_DIR})
 install(FILES
-    ${MessageCore_helpers_HEADERS}
-    ${MessageCore_settings_HEADERS}
-    ${MessageCore_utils_HEADERS}
-    ${MessageCore_attachment_HEADERS}
-    ${MessageCore_misc_HEADERS}
-    ${MessageCore_main_HEADERS}
+    ${MessageCore_Camelcasehelpers_HEADERS}
+    ${MessageCore_Camelcasesettings_HEADERS}
+    ${MessageCore_Camelcaseutils_HEADERS}
+    ${MessageCore_Camelcaseattachment_HEADERS}
+    ${MessageCore_Camelcasemisc_HEADERS}
+    ${MessageCore_Camelcasemain_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageCore
     COMPONENT Devel
 )

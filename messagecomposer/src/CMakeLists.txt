@@ -181,7 +181,7 @@ install(TARGETS
 )
 
 
-ecm_generate_headers(MessageComposer_attachement_HEADERS
+ecm_generate_headers(MessageComposer_Camelcaseattachement_HEADERS
   HEADER_NAMES
   AttachmentModel
   AttachmentControllerBase
@@ -190,7 +190,7 @@ ecm_generate_headers(MessageComposer_attachement_HEADERS
   RELATIVE attachment
 )
 
-ecm_generate_headers(MessageComposer_composer_HEADERS
+ecm_generate_headers(MessageComposer_Camelcasecomposer_HEADERS
   HEADER_NAMES
   Composer
   ComposerLineEdit
@@ -201,7 +201,7 @@ ecm_generate_headers(MessageComposer_composer_HEADERS
   RELATIVE composer
 )
 
-ecm_generate_headers(MessageComposer_composerng_HEADERS
+ecm_generate_headers(MessageComposer_Camelcasecomposerng_HEADERS
   HEADER_NAMES
   RichTextComposer
   RichTextComposerControler
@@ -215,7 +215,7 @@ ecm_generate_headers(MessageComposer_composerng_HEADERS
   RELATIVE composer-ng
 )
 
-ecm_generate_headers(MessageComposer_sender_HEADERS
+ecm_generate_headers(MessageComposer_Camelcasesender_HEADERS
   HEADER_NAMES
   AkonadiSender
   MessageSender
@@ -224,7 +224,7 @@ ecm_generate_headers(MessageComposer_sender_HEADERS
   RELATIVE sender
 )
 
-ecm_generate_headers(MessageComposer_utils_HEADERS
+ecm_generate_headers(MessageComposer_Camelcaseutils_HEADERS
   HEADER_NAMES
   Util
   Kleo_Util
@@ -233,7 +233,7 @@ ecm_generate_headers(MessageComposer_utils_HEADERS
   RELATIVE utils
 )
 
-ecm_generate_headers(MessageComposer_helper_HEADERS
+ecm_generate_headers(MessageComposer_Camelcasehelper_HEADERS
   HEADER_NAMES
   MessageFactory
   MessageHelper
@@ -242,7 +242,7 @@ ecm_generate_headers(MessageComposer_helper_HEADERS
   RELATIVE helper
 )
 
-ecm_generate_headers(MessageComposer_settings_HEADERS
+ecm_generate_headers(MessageComposer_Camelcasesettings_HEADERS
   HEADER_NAMES
   MessageComposerSettings
   REQUIRED_HEADERS MessageComposer_settings_HEADERS
@@ -250,7 +250,7 @@ ecm_generate_headers(MessageComposer_settings_HEADERS
   RELATIVE settings
 )
 
-ecm_generate_headers(MessageComposer_part_HEADERS
+ecm_generate_headers(MessageComposer_Camelcasepart_HEADERS
   HEADER_NAMES
   TextPart
   GlobalPart
@@ -261,7 +261,7 @@ ecm_generate_headers(MessageComposer_part_HEADERS
   RELATIVE part
 )
 
-ecm_generate_headers(MessageComposer_followupreminder_HEADERS
+ecm_generate_headers(MessageComposer_Camelcasefollowupreminder_HEADERS
   HEADER_NAMES
   FollowupReminderCreateJob
   FollowUpReminderSelectDateDialog
@@ -270,7 +270,7 @@ ecm_generate_headers(MessageComposer_followupreminder_HEADERS
   RELATIVE followupreminder
 )
 
-ecm_generate_headers(MessageComposer_recipient_HEADERS
+ecm_generate_headers(MessageComposer_Camelcaserecipient_HEADERS
   HEADER_NAMES
   Recipient
   RecipientsEditor
@@ -281,7 +281,7 @@ ecm_generate_headers(MessageComposer_recipient_HEADERS
   RELATIVE recipient
 )
 
-ecm_generate_headers(MessageComposer_imagescaling_HEADERS
+ecm_generate_headers(MessageComposer_Camelcaseimagescaling_HEADERS
   HEADER_NAMES
   ImageScalingWidget
   REQUIRED_HEADERS MessageComposer_imagescaling_HEADERS
@@ -289,7 +289,7 @@ ecm_generate_headers(MessageComposer_imagescaling_HEADERS
   RELATIVE imagescaling
 )
 
-ecm_generate_headers(MessageComposer_job_HEADERS
+ecm_generate_headers(MessageComposer_Camelcasejob_HEADERS
   HEADER_NAMES
   InsertTextFileJob
   AttachmentJob
@@ -316,18 +316,18 @@ ecm_generate_pri_file(BASE_NAME MessageComposer
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${messagecomposer_SOURCE_DIR})
 install(FILES
-    ${MessageComposer_composer_HEADERS}
-    ${MessageComposer_composerng_HEADERS}
-    ${MessageComposer_sender_HEADERS}
-    ${MessageComposer_utils_HEADERS}
-    ${MessageComposer_helper_HEADERS}
-    ${MessageComposer_settings_HEADERS}
-    ${MessageComposer_part_HEADERS}
-    ${MessageComposer_followupreminder_HEADERS}
-    ${MessageComposer_recipient_HEADERS}
-    ${MessageComposer_imagescaling_HEADERS}
-    ${MessageComposer_job_HEADERS}
-    ${MessageComposer_attachement_HEADERS}
+    ${MessageComposer_Camelcasecomposer_HEADERS}
+    ${MessageComposer_Camelcasecomposerng_HEADERS}
+    ${MessageComposer_Camelcasesender_HEADERS}
+    ${MessageComposer_Camelcaseutils_HEADERS}
+    ${MessageComposer_Camelcasehelper_HEADERS}
+    ${MessageComposer_Camelcasesettings_HEADERS}
+    ${MessageComposer_Camelcasepart_HEADERS}
+    ${MessageComposer_Camelcasefollowupreminder_HEADERS}
+    ${MessageComposer_Camelcaserecipient_HEADERS}
+    ${MessageComposer_Camelcaseimagescaling_HEADERS}
+    ${MessageComposer_Camelcasejob_HEADERS}
+    ${MessageComposer_Camelcaseattachement_HEADERS}
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageComposer
     COMPONENT Devel

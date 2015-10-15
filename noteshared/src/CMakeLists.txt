@@ -88,11 +88,11 @@ install(TARGETS
 ecm_generate_headers(NoteShared_CamelCase_HEADERS
   HEADER_NAMES
   NoteUtils
-  REQUIRED_HEADERS NoteShared_CamelCase_HEADERS
+  REQUIRED_HEADERS NoteShared_HEADERS
   PREFIX NoteShared
 )
 
-ecm_generate_headers(NoteShared_dialog_HEADERS
+ecm_generate_headers(NoteShared_Camelcasedialog_HEADERS
   HEADER_NAMES
   SelectedNotefolderDialog
   REQUIRED_HEADERS NoteShared_dialog_HEADERS
@@ -102,7 +102,7 @@ ecm_generate_headers(NoteShared_dialog_HEADERS
 
 
 
-ecm_generate_headers(NoteShared_resources_HEADERS
+ecm_generate_headers(NoteShared_Camelcaseresources_HEADERS
   HEADER_NAMES
   LocalResourceCreator
   REQUIRED_HEADERS NoteShared_resources_HEADERS
@@ -111,7 +111,7 @@ ecm_generate_headers(NoteShared_resources_HEADERS
 )
 
 
-ecm_generate_headers(NoteShared_network_HEADERS
+ecm_generate_headers(NoteShared_Camelcasenetwork_HEADERS
   HEADER_NAMES
   NotesNetworkReceiver
   REQUIRED_HEADERS NoteShared_network_HEADERS
@@ -120,7 +120,7 @@ ecm_generate_headers(NoteShared_network_HEADERS
 )
 
 
-ecm_generate_headers(NoteShared_akonadi_HEADERS
+ecm_generate_headers(NoteShared_Camelcaseakonadi_HEADERS
   HEADER_NAMES
   NotesChangeRecorder
   NotesAkonadiTreeModel
@@ -130,7 +130,7 @@ ecm_generate_headers(NoteShared_akonadi_HEADERS
 )
 
 
-ecm_generate_headers(NoteShared_widget_HEADERS
+ecm_generate_headers(NoteShared_Camelcasewidget_HEADERS
   HEADER_NAMES
   NoteListWidget
   REQUIRED_HEADERS NoteShared_widget_HEADERS
@@ -138,7 +138,7 @@ ecm_generate_headers(NoteShared_widget_HEADERS
   RELATIVE widget
 )
 
-ecm_generate_headers(NoteShared_attributes_HEADERS
+ecm_generate_headers(NoteShared_Camelcaseattributes_HEADERS
   HEADER_NAMES
   NoteAlarmAttribute
   ShowFolderNotesAttribute
@@ -149,7 +149,7 @@ ecm_generate_headers(NoteShared_attributes_HEADERS
   RELATIVE attributes
 )
 
-ecm_generate_headers(NoteShared_editor_HEADERS
+ecm_generate_headers(NoteShared_Camelcaseeditor_HEADERS
   HEADER_NAMES
   NoteEditorUtils
   REQUIRED_HEADERS NoteShared_editor_HEADERS
@@ -157,7 +157,7 @@ ecm_generate_headers(NoteShared_editor_HEADERS
   RELATIVE editor
 )
 
-ecm_generate_headers(NoteShared_alarms_HEADERS
+ecm_generate_headers(NoteShared_Camelcasealarms_HEADERS
   HEADER_NAMES
   NoteAlarmDialog
   REQUIRED_HEADERS NoteShared_alarms_HEADERS
@@ -165,7 +165,7 @@ ecm_generate_headers(NoteShared_alarms_HEADERS
   RELATIVE alarms
 )
 
-ecm_generate_headers(NoteShared_config_HEADERS
+ecm_generate_headers(NoteShared_Camelcaseconfig_HEADERS
   HEADER_NAMES
   NoteActionConfig
   NoteNetworkConfig
@@ -174,7 +174,7 @@ ecm_generate_headers(NoteShared_config_HEADERS
   RELATIVE config
 )
 
-ecm_generate_headers(NoteShared_job_HEADERS
+ecm_generate_headers(NoteShared_Camelcasejob_HEADERS
   HEADER_NAMES
   CreateNewNoteJob
   REQUIRED_HEADERS NoteShared_job_HEADERS
@@ -191,23 +191,23 @@ ecm_generate_pri_file(BASE_NAME NoteShared
 if(${CMAKE_SOURCE_DIR} STREQUAL ${noteshared_SOURCE_DIR})
 install(FILES
     ${NoteShared_CamelCase_HEADERS}
-    ${NoteShared_network_HEADERS}
-    ${NoteShared_akonadi_HEADERS}
-    ${NoteShared_widget_HEADERS}
-    ${NoteShared_attributes_HEADERS}
-    ${NoteShared_editor_HEADERS}
-    ${NoteShared_alarms_HEADERS}
-    ${NoteShared_config_HEADERS}
-    ${NoteShared_job_HEADERS}
-    ${NoteShared_dialog_HEADERS}
-    ${NoteShared_resources_HEADERS}
+    ${NoteShared_Camelcasenetwork_HEADERS}
+    ${NoteShared_Camelcaseakonadi_HEADERS}
+    ${NoteShared_Camelcasewidget_HEADERS}
+    ${NoteShared_Camelcaseattributes_HEADERS}
+    ${NoteShared_Camelcaseeditor_HEADERS}
+    ${NoteShared_Camelcasealarms_HEADERS}
+    ${NoteShared_Camelcaseconfig_HEADERS}
+    ${NoteShared_Camelcasejob_HEADERS}
+    ${NoteShared_Camelcasedialog_HEADERS}
+    ${NoteShared_Camelcaseresources_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/NoteShared
     COMPONENT Devel
 )
 
 install(FILES
     ${NoteShared_dialog_HEADERS}
-    ${NoteShared_CamelCase_HEADERS}
+    ${NoteShared_HEADERS}
     ${NoteShared_network_HEADERS}
     ${NoteShared_akonadi_HEADERS}
     ${NoteShared_widget_HEADERS}

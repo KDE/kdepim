@@ -265,7 +265,7 @@ install(TARGETS
     EXPORT KF5MessageViewerTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
-ecm_generate_headers(MessageViewer_viewer_HEADERS
+ecm_generate_headers(MessageViewer_Camelcaseviewer_HEADERS
   HEADER_NAMES
   Viewer
   CSSHelper
@@ -283,7 +283,7 @@ ecm_generate_headers(MessageViewer_viewer_HEADERS
   RELATIVE viewer
 )
 
-ecm_generate_headers(MessageViewer_main_HEADERS
+ecm_generate_headers(MessageViewer_Camelcasemain_HEADERS
   HEADER_NAMES
   ObjectTreeSourceIf
   REQUIRED_HEADERS MessageViewer_main_HEADERS
@@ -291,7 +291,7 @@ ecm_generate_headers(MessageViewer_main_HEADERS
 )
 
 
-ecm_generate_headers(MessageViewer_widgets_HEADERS
+ecm_generate_headers(MessageViewer_Camelcasewidgets_HEADERS
   HEADER_NAMES
   InvitationSettings
   PrintingSettings
@@ -301,7 +301,7 @@ ecm_generate_headers(MessageViewer_widgets_HEADERS
   RELATIVE widgets
 )
 
-ecm_generate_headers(MessageViewer_utils_HEADERS
+ecm_generate_headers(MessageViewer_Camelcaseutils_HEADERS
   HEADER_NAMES
   MessageViewerUtil
   AutoQPointer
@@ -311,7 +311,7 @@ ecm_generate_headers(MessageViewer_utils_HEADERS
   RELATIVE utils
 )
 
-ecm_generate_headers(MessageViewer_interfaces_HEADERS
+ecm_generate_headers(MessageViewer_Camelcaseinterfaces_HEADERS
   HEADER_NAMES
   BodyPartFormatter
   BodyPart
@@ -323,7 +323,7 @@ ecm_generate_headers(MessageViewer_interfaces_HEADERS
   RELATIVE interfaces
 )
 
-ecm_generate_headers(MessageViewer_settings_HEADERS
+ecm_generate_headers(MessageViewer_Camelcasesettings_HEADERS
   HEADER_NAMES
   MessageViewerSettings
   REQUIRED_HEADERS MessageViewer_settings_HEADERS
@@ -332,7 +332,7 @@ ecm_generate_headers(MessageViewer_settings_HEADERS
 )
 
 
-ecm_generate_headers(MessageViewer_header_HEADERS
+ecm_generate_headers(MessageViewer_Camelcaseheader_HEADERS
   HEADER_NAMES
   HeaderStrategy
   GrantleeHeaderTestStyle
@@ -346,7 +346,7 @@ ecm_generate_headers(MessageViewer_header_HEADERS
   RELATIVE header
 )
 
-ecm_generate_headers(MessageViewer_htmlwriter_HEADERS
+ecm_generate_headers(MessageViewer_Camelcasehtmlwriter_HEADERS
   HEADER_NAMES
   WebKitPartHtmlWriter
   REQUIRED_HEADERS MessageViewer_htmlwriter_HEADERS
@@ -354,7 +354,7 @@ ecm_generate_headers(MessageViewer_htmlwriter_HEADERS
   RELATIVE htmlwriter
 )
 
-ecm_generate_headers(MessageViewer_adblock_HEADERS
+ecm_generate_headers(MessageViewer_Camelcaseadblock_HEADERS
   HEADER_NAMES
   AdBlockSettingWidget  
   AdBlockListWidget
@@ -363,7 +363,7 @@ ecm_generate_headers(MessageViewer_adblock_HEADERS
   RELATIVE adblock
 )
 
-ecm_generate_headers(MessageViewer_viewerplugin_HEADERS
+ecm_generate_headers(MessageViewer_Camelcaseviewerplugin_HEADERS
   HEADER_NAMES
   ViewerPluginManager
   ViewerPlugin
@@ -381,16 +381,16 @@ ecm_generate_pri_file(BASE_NAME MessageViewer
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageViewer_SOURCE_DIR})
 install(FILES
-    ${MessageViewer_header_HEADERS}
-    ${MessageViewer_viewerplugin_HEADERS}
-    ${MessageViewer_settings_HEADERS}
-    ${MessageViewer_adblock_HEADERS}
-    ${MessageViewer_htmlwriter_HEADERS}
-    ${MessageViewer_utils_HEADERS}
-    ${MessageViewer_interfaces_HEADERS}
-    ${MessageViewer_viewer_HEADERS}
-    ${MessageViewer_widgets_HEADERS}
-    ${MessageViewer_main_HEADERS}
+    ${MessageViewer_Camelcaseheader_HEADERS}
+    ${MessageViewer_Camelcaseviewerplugin_HEADERS}
+    ${MessageViewer_Camelcasesettings_HEADERS}
+    ${MessageViewer_Camelcaseadblock_HEADERS}
+    ${MessageViewer_Camelcasehtmlwriter_HEADERS}
+    ${MessageViewer_Camelcaseutils_HEADERS}
+    ${MessageViewer_Camelcaseinterfaces_HEADERS}
+    ${MessageViewer_Camelcaseviewer_HEADERS}
+    ${MessageViewer_Camelcasewidgets_HEADERS}
+    ${MessageViewer_Camelcasemain_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageViewer
     COMPONENT Devel
 )

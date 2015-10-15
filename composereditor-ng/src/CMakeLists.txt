@@ -74,7 +74,7 @@ ecm_generate_headers(composereditorng_CamelCase_HEADERS
   HEADER_NAMES
   ComposerEditor
   ComposerView
-  REQUIRED_HEADERS composereditorng_CamelCase_HEADERS
+  REQUIRED_HEADERS composereditorng_HEADERS
   PREFIX ComposerEditorNG
 )
 
@@ -94,7 +94,7 @@ install(FILES
 install(FILES
     ${composereditorng_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/composereditorng_export.h
-    ${composereditorng_CamelCase_HEADERS}
+    ${composereditorng_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/composereditorng
     COMPONENT Devel
 )

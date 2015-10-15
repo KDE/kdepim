@@ -53,7 +53,7 @@ ecm_generate_headers(SendLater_Camelcase_HEADERS
   SendLaterInfo
   SendLaterDialog
   SendLaterUtil
-  REQUIRED_HEADERS SendLater_Camelcase_HEADERS
+  REQUIRED_HEADERS SendLater_HEADERS
   PREFIX SendLater
 )
 

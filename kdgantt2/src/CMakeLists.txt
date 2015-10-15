@@ -79,7 +79,7 @@ ecm_generate_headers(kdgantt2_CamelCase_HEADERS
   KDGanttStyleOptionGanttItem
   KDGanttAbstractGrid
   KDGanttConstraint
-  REQUIRED_HEADERS kdgantt2_CamelCase_HEADERS
+  REQUIRED_HEADERS kdgantt2_HEADERS
   PREFIX KDGantt2
 )
 
@@ -98,7 +98,7 @@ install(FILES
 install(FILES
     ${kdgantt2_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/kdgantt_export.h
-    ${kdgantt2_CamelCase_HEADERS}
+    ${kdgantt2_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kdgantt2
     COMPONENT Devel
 )

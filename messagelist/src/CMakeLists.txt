@@ -86,7 +86,7 @@ install(TARGETS
     EXPORT KF5MessageListTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
-ecm_generate_headers(MessageList_core_HEADERS
+ecm_generate_headers(MessageList_Camelcasecore_HEADERS
   HEADER_NAMES
   View
   Enums
@@ -97,7 +97,7 @@ ecm_generate_headers(MessageList_core_HEADERS
 
 )
 
-ecm_generate_headers(MessageList_util_HEADERS
+ecm_generate_headers(MessageList_Camelcaseutil_HEADERS
   HEADER_NAMES
   AggregationComboBox
   ThemeComboBox
@@ -109,7 +109,7 @@ ecm_generate_headers(MessageList_util_HEADERS
 
 )
 
-ecm_generate_headers(MessageList_widgets_HEADERS
+ecm_generate_headers(MessageList_Camelcasewidgets_HEADERS
   HEADER_NAMES
   QuickSearchLine
   REQUIRED_HEADERS MessageList_widgets_HEADERS
@@ -124,7 +124,7 @@ ecm_generate_headers(MessageList_CamelCase_HEADERS
   Pane
   StorageModel
   MessageListUtil
-  REQUIRED_HEADERS MessageList_CamelCase_HEADERS
+  REQUIRED_HEADERS MessageList_HEADERS
   PREFIX MessageList
 )
 
@@ -135,10 +135,10 @@ ecm_generate_pri_file(BASE_NAME MessageList
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${MessageList_SOURCE_DIR})
 install(FILES
-    ${MessageList_widgets_HEADERS}
+    ${MessageList_Camelcasewidgets_HEADERS}
     ${MessageList_CamelCase_HEADERS}
-    ${MessageList_core_HEADERS}
-    ${MessageList_util_HEADERS}
+    ${MessageList_Camelcasecore_HEADERS}
+    ${MessageList_Camelcaseutil_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/MessageList
     COMPONENT Devel
 )
@@ -148,7 +148,6 @@ install(FILES
     ${MessageList_widgets_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/messagelist_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/messagelistsettings.h
-    ${MessageList_CamelCase_HEADERS}
     ${MessageList_core_HEADERS}
     ${MessageList_util_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/messagelist

@@ -36,7 +36,7 @@ target_include_directories(KF5KManageSieve PUBLIC "$<BUILD_INTERFACE:${libksieve
 ecm_generate_headers(kmanagesieve_CamelCase_HEADERS
   HEADER_NAMES
   SieveJob
-  REQUIRED_HEADERS kmanagesieve_CamelCase_HEADERS
+  REQUIRED_HEADERS kmanagesieve_HEADERS
   PREFIX KManageSieve
 )
 
@@ -54,7 +54,7 @@ install(FILES
 )
 
 install(FILES
-    ${kmanagesieve_CamelCase_HEADERS}
+    ${kmanagesieve_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/kmanagesieve_export.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/kmanagesieve
     COMPONENT Devel

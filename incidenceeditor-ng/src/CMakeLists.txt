@@ -138,7 +138,7 @@ ecm_generate_headers(IncidenceEditorsng_CamelCase_HEADERS
   EditorItemManager
   OpenComposerJob
   IncidenceEditor-Ng
-  REQUIRED_HEADERS IncidenceEditorsng_CamelCase_HEADERS
+  REQUIRED_HEADERS IncidenceEditorsng_HEADERS
   PREFIX IncidenceEditorsng
 )
 
@@ -158,7 +158,7 @@ install(FILES
     ${IncidenceEditorsng_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/globalsettings_incidenceeditor.h
     ${CMAKE_CURRENT_BINARY_DIR}/incidenceeditors_ng_export.h
-    ${IncidenceEditorsng_CamelCase_HEADERS}
+    ${IncidenceEditorsng_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/incidenceeditorsng
     COMPONENT Devel
 )

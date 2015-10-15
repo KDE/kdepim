@@ -154,7 +154,7 @@ install(TARGETS
     EXPORT KF5LibkdepimTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
-ecm_generate_headers(libkdepim_ldap_HEADERS
+ecm_generate_headers(libkdepim_Camelcaseldap_HEADERS
   HEADER_NAMES
   LdapClientSearchConfig
   LdapClientSearch
@@ -166,7 +166,7 @@ ecm_generate_headers(libkdepim_ldap_HEADERS
   RELATIVE ldap
 )
 
-ecm_generate_headers(libkdepim_widgets_HEADERS
+ecm_generate_headers(libkdepim_Camelcasewidgets_HEADERS
   HEADER_NAMES
   CustomLogWidget
   ProgressIndicatorWidget
@@ -180,12 +180,12 @@ ecm_generate_headers(libkdepim_widgets_HEADERS
   PIMMessageBox
   TagSelectionCombo
   OverlayWidget
-  REQUIRED_HEADERS libkdepim_widgets_HEADERS
+  REQUIRED_HEADERS libkdepim_Camelcasewidgets_HEADERS
   PREFIX Libkdepim
   RELATIVE widgets
 )
 
-ecm_generate_headers(libkdepim_misc_HEADERS
+ecm_generate_headers(libkdepim_Camelcasemisc_HEADERS
   HEADER_NAMES
   EmailValidator
   BroadcastStatus
@@ -197,7 +197,7 @@ ecm_generate_headers(libkdepim_misc_HEADERS
   RELATIVE misc
 )
 
-ecm_generate_headers(libkdepim_progresswidget_HEADERS
+ecm_generate_headers(libkdepim_Camelcaseprogresswidget_HEADERS
   HEADER_NAMES
   ProgressStatusBarWidget
   StatusbarProgressWidget
@@ -208,7 +208,7 @@ ecm_generate_headers(libkdepim_progresswidget_HEADERS
   RELATIVE progresswidget
 )
 
-ecm_generate_headers(libkdepim_job_HEADERS
+ecm_generate_headers(libkdepim_Camelcasejob_HEADERS
   HEADER_NAMES
   AddContactJob
   AddEmailAddressJob
@@ -223,7 +223,7 @@ ecm_generate_headers(libkdepim_job_HEADERS
   RELATIVE job
 )
 
-ecm_generate_headers(libkdepim_pref_HEADERS
+ecm_generate_headers(libkdepim_Camelcasepref_HEADERS
   HEADER_NAMES
   KPrefsDialog 
   REQUIRED_HEADERS libkdepim_pref_HEADERS
@@ -231,7 +231,7 @@ ecm_generate_headers(libkdepim_pref_HEADERS
   RELATIVE prefs
 )
 
-ecm_generate_headers(libkdepim_multiline_HEADERS
+ecm_generate_headers(libkdepim_Camelcasemultiline_HEADERS
   HEADER_NAMES
   MultiplyingLine  
   MultiplyingLineEditor
@@ -241,7 +241,7 @@ ecm_generate_headers(libkdepim_multiline_HEADERS
 )
 
 
-ecm_generate_headers(libkdepim_addressline_HEADERS
+ecm_generate_headers(libkdepim_Camelcaseaddressline_HEADERS
   HEADER_NAMES
   AddresseeLineEdit 
   REQUIRED_HEADERS libkdepim_addressline_HEADERS
@@ -249,7 +249,7 @@ ecm_generate_headers(libkdepim_addressline_HEADERS
   RELATIVE  addressline/addresslineedit/
 )
 
-ecm_generate_headers(libkdepim_recentaddress_HEADERS
+ecm_generate_headers(libkdepim_Camelcaserecentaddress_HEADERS
   HEADER_NAMES
   RecentAddresses  
   REQUIRED_HEADERS libkdepim_recentaddress_HEADERS
@@ -257,7 +257,7 @@ ecm_generate_headers(libkdepim_recentaddress_HEADERS
   RELATIVE addressline/recentaddress/
 )
 
-ecm_generate_headers(libkdepim_completionorder_HEADERS
+ecm_generate_headers(libkdepim_Camelcasecompletionorder_HEADERS
   HEADER_NAMES
   CompletionOrderEditor
   REQUIRED_HEADERS libkdepim_completionorder_HEADERS
@@ -265,7 +265,7 @@ ecm_generate_headers(libkdepim_completionorder_HEADERS
   RELATIVE addressline/completionorder
 )
 
-ecm_generate_headers(libkdepim_completionconfiguredialog_HEADERS
+ecm_generate_headers(libkdepim_Camelcasecompletionconfiguredialog_HEADERS
   HEADER_NAMES
   CompletionConfigureDialog
   REQUIRED_HEADERS libkdepim_completionconfiguredialog_HEADERS
@@ -273,7 +273,7 @@ ecm_generate_headers(libkdepim_completionconfiguredialog_HEADERS
   RELATIVE addressline/completionconfiguredialog/
 )
 
-ecm_generate_headers(libkdepim_blacklistbaloocompletion_HEADERS
+ecm_generate_headers(libkdepim_Camelcaseblacklistbaloocompletion_HEADERS
   HEADER_NAMES
   BlackListBalooEmailCompletionDialog
   REQUIRED_HEADERS libkdepim_blacklistbaloocompletion_HEADERS
@@ -288,19 +288,19 @@ ecm_generate_pri_file(BASE_NAME Libkdepim
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${libkdepim_SOURCE_DIR})
 install(FILES
-    ${libkdepim_blacklistbaloocompletion_HEADERS}
-    ${libkdepim_completionconfiguredialog_HEADERS}
-    ${libkdepim_completionorder_HEADERS}
-    ${libkdepim_CamelCase_HEADERS}
-    ${libkdepim_ldap_HEADERS}
-    ${libkdepim_widgets_HEADERS}
-    ${libkdepim_progresswidget_HEADERS}
-    ${libkdepim_misc_HEADERS}
-    ${libkdepim_job_HEADERS}
-    ${libkdepim_pref_HEADERS}
-    ${libkdepim_multiline_HEADERS}
-    ${libkdepim_addressline_HEADERS}
-    ${libkdepim_recentaddress_HEADERS}
+    ${libkdepim_Camelcaseblacklistbaloocompletion_HEADERS}
+    ${libkdepim_Camelcasecompletionconfiguredialog_HEADERS}
+    ${libkdepim_Camelcasecompletionorder_HEADERS}
+    ${libkdepim_CamelcaseCamelCase_HEADERS}
+    ${libkdepim_Camelcaseldap_HEADERS}
+    ${libkdepim_Camelcasewidgets_HEADERS}
+    ${libkdepim_Camelcaseprogresswidget_HEADERS}
+    ${libkdepim_Camelcasemisc_HEADERS}
+    ${libkdepim_Camelcasejob_HEADERS}
+    ${libkdepim_Camelcasepref_HEADERS}
+    ${libkdepim_Camelcasemultiline_HEADERS}
+    ${libkdepim_Camelcaseaddressline_HEADERS}
+    ${libkdepim_Camelcaserecentaddress_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/Libkdepim
     COMPONENT Devel
 )
