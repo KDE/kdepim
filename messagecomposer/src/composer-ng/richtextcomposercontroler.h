@@ -19,7 +19,7 @@
 #define RICHTEXTCOMPOSERCONTROLER_H
 
 #include <QObject>
-#include "richtextcomposer.h"
+#include "messagecomposer/richtextcomposer.h"
 #include "messagecomposer_export.h"
 class QTextCursor;
 namespace MessageComposer

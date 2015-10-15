@@ -20,7 +20,7 @@
 
 #include <QObject>
 #include "messagecomposer_export.h"
-#include "MessageComposer/RichTextComposer"
+#include "messagecomposer/richtextcomposer.h"
 class KActionCollection;
 class QTextCharFormat;
 class QAction;

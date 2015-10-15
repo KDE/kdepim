@@ -145,13 +145,13 @@ protected:
     void clearDecorator() Q_DECL_OVERRIDE;
     void updateHighLighter() Q_DECL_OVERRIDE;
     bool processKeyEvent(QKeyEvent *e);
-    void evaluateReturnKeySupport(QKeyEvent *event);
-    void processAutoCorrection(QKeyEvent *e);
 private Q_SLOTS:
     void slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode);
 
 private:
     void evaluateListSupport(QKeyEvent *event);
+    void evaluateReturnKeySupport(QKeyEvent *event);
+    void processAutoCorrection(QKeyEvent *e);
     class RichTextComposerPrivate;
     RichTextComposerPrivate *const d;
 };
