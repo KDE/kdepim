@@ -174,14 +174,6 @@ set(libtexttospeech_SRCS
   texttospeech/texttospeechactions.cpp
 )
 
-set(libpimcommon_akonadisearchdebug_SRCS
-  akonadisearchdebug/akonadisearchdebugdialog.cpp
-  akonadisearchdebug/akonadisearchdebugwidget.cpp
-  akonadisearchdebug/job/akonadisearchdebugsearchjob.cpp
-  akonadisearchdebug/akonadisearchdebugsearchpathcombobox.cpp
-  akonadisearchdebug/akonadisearchsyntaxhighlighter.cpp
-)
-
 set(libpimcommon_util_SRCS
   util/createresource.cpp
   util/pimutil.cpp
@@ -231,7 +223,6 @@ set(libpimcommon_SRCS
   ${libpimcommon_sieve_SRCS}
   ${libpimcommon_widgets_SRCS}
   ${libtexttospeech_SRCS}
-  ${libpimcommon_akonadisearchdebug_SRCS}
   ${libpimcommon_temporary_SRCS}
   ${libpimcommon_customtools_SRCS}
 )
@@ -322,8 +313,6 @@ if (BUILD_TESTING)
    add_subdirectory(autocorrection/autotests)
    add_subdirectory(widgets/autotests)
    add_subdirectory(texttospeech/autotests)
-   add_subdirectory(akonadisearchdebug/autotests)
-   add_subdirectory(akonadisearchdebug/tests)
    add_subdirectory(acl/autotests)
    add_subdirectory(temporaryfile/autotests)
    add_subdirectory(migration/autotests)
@@ -531,15 +520,6 @@ ecm_generate_headers(PimCommon_autocorrection_HEADERS
   RELATIVE autocorrection/
 )
 
-ecm_generate_headers(PimCommon_akonadiseachdebug_HEADERS
-  HEADER_NAMES
-  AkonadiSearchDebugDialog
-  AkonadiSearchDebugSearchPathComboBox
-  REQUIRED_HEADERS PimCommon_akonadisearchdebug_HEADERS
-  PREFIX PimCommon
-  RELATIVE akonadisearchdebug
-)
-
 ecm_generate_headers(PimCommon_richtexteditor_HEADERS
   HEADER_NAMES
   RichTextEditorWidget
@@ -645,7 +625,6 @@ install(FILES
     ${PimCommon_autocorrectionwidgets_HEADERS}
     ${PimCommon_managerserversidesubscription_HEADERS}
     ${PimCommon_autocorrection_HEADERS}
-    ${PimCommon_akonadisearchdebug_HEADERS}
     ${PimCommon_richtexteditor_HEADERS}
     ${PimCommon_folderdialog_HEADERS}
     ${PimCommon_texttospeechs_HEADERS}
@@ -684,7 +663,6 @@ install(FILES
     ${PimCommon_autocorrectionwidgets_HEADERS}
     ${PimCommon_managerserversidesubscription_HEADERS}
     ${PimCommon_autocorrection_HEADERS}
-    ${PimCommon_akonadisearchdebug_HEADERS}
     ${PimCommon_richtexteditor_HEADERS}
     ${PimCommon_folderdialog_HEADERS}
     ${PimCommon_texttospeechs_HEADERS}

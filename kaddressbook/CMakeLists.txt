@@ -143,6 +143,7 @@ target_link_libraries(kaddressbookprivate
   KF5::IconThemes
   Qt5::PrintSupport
   KF5::Gravatar
+  KF5::AkonadiSearchDebug
 )
 if (WIN32)
    target_link_libraries(kaddressbookprivate KF5::Gpgmepp)
