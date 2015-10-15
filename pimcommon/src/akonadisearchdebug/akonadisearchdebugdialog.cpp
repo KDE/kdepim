@@ -17,14 +17,16 @@
 
 #include "akonadisearchdebugdialog.h"
 #include "akonadisearchdebugwidget.h"
-#include "util/pimutil.h"
 
 #include <KLocalizedString>
+#include <KMessageBox>
 #include <QVBoxLayout>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QPointer>
+#include <QFileDialog>
 
 using namespace PimCommon;
 
@@ -102,6 +104,36 @@ void AkonadiSearchDebugDialog::doSearch()
 void AkonadiSearchDebugDialog::slotSaveAs()
 {
     const QString filter = i18n("Text Files (*.txt);;All Files (*)");
-    PimCommon::Util::saveTextAs(d->mBalooDebugWidget->plainText(), filter, this);
+    saveTextAs(d->mBalooDebugWidget->plainText(), filter);
 }
 
+void AkonadiSearchDebugDialog::saveTextAs(const QString &text, const QString &filter)
+{
+    QPointer<QFileDialog> fdlg(new QFileDialog(this, QString(), QString(), filter));
+    fdlg->setAcceptMode(QFileDialog::AcceptSave);
+    if (fdlg->exec() == QDialog::Accepted && fdlg) {
+        const QString fileName = fdlg->selectedFiles().at(0);
+        if (!saveToFile(fileName, text)) {
+            KMessageBox::error(this,
+                               i18n("Could not write the file %1:\n"
+                                    "\"%2\" is the detailed error description.",
+                                    fileName,
+                                    QString::fromLocal8Bit(strerror(errno))),
+                               i18n("Save File Error"));
+        }
+    }
+    delete fdlg;
+}
+
+bool AkonadiSearchDebugDialog::saveToFile(const QString &filename, const QString &text)
+{
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return false;
+    }
+    QTextStream out(&file);
+    out.setCodec("UTF-8");
+    out << text;
+    file.close();
+    return true;
+}

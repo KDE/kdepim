@@ -18,19 +18,33 @@
 #ifndef AKONADISEARCHSYNTAXHIGHLIGHTER_H
 #define AKONADISEARCHSYNTAXHIGHLIGHTER_H
 
-#include <KPIMTextEdit/SyntaxHighlighterBase>
+#include <QSyntaxHighlighter>
 
 namespace PimCommon
 {
-class AkonadiSearchSyntaxHighlighter : public KPIMTextEdit::SyntaxHighlighterBase
+class Rule
+{
+public:
+    Rule() {}
+    Rule(const QRegExp &r, const QTextCharFormat &f)
+        : pattern(r), format(f) {}
+
+    QRegExp pattern;
+    QTextCharFormat format;
+};
+
+class AkonadiSearchSyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
     explicit AkonadiSearchSyntaxHighlighter(QTextDocument *doc);
     ~AkonadiSearchSyntaxHighlighter();
 
-private:
-    void init() Q_DECL_OVERRIDE;
+    void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
+
+protected:
+    void init();
+    QVector<Rule> m_rules;
 };
 }
 #endif // AKONADISEARCHSYNTAXHIGHLIGHTER_H

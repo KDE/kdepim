@@ -21,7 +21,7 @@
 using namespace PimCommon;
 
 AkonadiSearchSyntaxHighlighter::AkonadiSearchSyntaxHighlighter(QTextDocument *doc)
-    : SyntaxHighlighterBase(doc)
+    : QSyntaxHighlighter(doc)
 {
     init();
 }
@@ -29,6 +29,19 @@ AkonadiSearchSyntaxHighlighter::AkonadiSearchSyntaxHighlighter(QTextDocument *do
 AkonadiSearchSyntaxHighlighter::~AkonadiSearchSyntaxHighlighter()
 {
 
+}
+
+void AkonadiSearchSyntaxHighlighter::highlightBlock(const QString &text)
+{
+    Q_FOREACH (const Rule &rule, m_rules) {
+        const QRegExp expression(rule.pattern);
+        int index = expression.indexIn(text);
+        int length = 0;
+        while (index >= 0 && (length = expression.matchedLength()) > 0) {
+            setFormat(index, length, rule.format);
+            index = expression.indexIn(text, index + length);
+        }
+    }
 }
 
 void AkonadiSearchSyntaxHighlighter::init()
@@ -79,7 +92,7 @@ void AkonadiSearchSyntaxHighlighter::init()
     testType << QStringLiteral("\\bL");
     Q_FOREACH (const QString &s, testType) {
         const QRegExp regex(s, Qt::CaseSensitive);
-        m_rules.append(KPIMTextEdit::Rule(regex, testFormat));
+        m_rules.append(Rule(regex, testFormat));
     }
 }
 

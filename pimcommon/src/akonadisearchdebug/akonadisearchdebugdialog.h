@@ -41,7 +41,9 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
+    void saveTextAs(const QString &text, const QString &filter);
     AkonadiSearchDebugDialogPrivate *const d;
+    bool saveToFile(const QString &filename, const QString &text);
 };
 }
 
