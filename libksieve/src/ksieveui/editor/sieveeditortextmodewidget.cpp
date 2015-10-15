@@ -31,7 +31,7 @@
 
 #include "PimCommon/PlainTextEditFindBar"
 #include "PimCommon/PlainTextEditorWidget"
-#include "PimCommon/TextGotoLineWidget"
+#include "kpimtextedit/textgotolinewidget.h"
 #include "KSplitterCollapserButton"
 #include "kpimtextedit/slidecontainer.h"
 
@@ -92,10 +92,10 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     textEditLayout->addWidget(mTabWidget);
     connect(mTextEdit, &SieveTextEdit::openHelp, mTabWidget, &SieveEditorTabWidget::slotAddHelpPage);
 
-    mGoToLine = new PimCommon::TextGoToLineWidget;
+    mGoToLine = new KPIMTextEdit::TextGoToLineWidget;
     mGoToLine->hide();
     textEditLayout->addWidget(mGoToLine);
-    connect(mGoToLine, &PimCommon::TextGoToLineWidget::moveToLine, this, &SieveEditorTextModeWidget::slotGoToLine);
+    connect(mGoToLine, &KPIMTextEdit::TextGoToLineWidget::moveToLine, this, &SieveEditorTextModeWidget::slotGoToLine);
 
     mSliderContainer = new KPIMTextEdit::SlideContainer(this);
     mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, textEditWidget);

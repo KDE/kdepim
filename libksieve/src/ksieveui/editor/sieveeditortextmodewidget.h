@@ -25,13 +25,13 @@ class QSplitter;
 namespace KPIMTextEdit
 {
 class SlideContainer;
+class TextGoToLineWidget;
 }
 
 namespace PimCommon
 {
 class PlainTextEditFindBar;
 class PlainTextEditor;
-class TextGoToLineWidget;
 class PlainTextEditorWidget;
 }
 
@@ -130,7 +130,7 @@ private:
     SieveEditorWarning *mSieveEditorWarning;
     SieveEditorParsingMissingFeatureWarning *mSieveParsingWarning;
     SieveEditorTabWidget *mTabWidget;
-    PimCommon::TextGoToLineWidget *mGoToLine;
+    KPIMTextEdit::TextGoToLineWidget *mGoToLine;
     KPIMTextEdit::SlideContainer *mSliderContainer;
     SieveTemplateWidget *mSieveTemplateWidget;
 };
