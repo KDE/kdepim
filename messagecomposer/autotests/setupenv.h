@@ -34,6 +34,7 @@ namespace Test
 * setup a environment variables for tests:
 * * set LC_ALL to C
 * * set KDEHOME
+* * verify that Kleo has correctly loaded all backends
 */
 void setupEnv();
 
