@@ -16,7 +16,7 @@
 */
 
 #include "akonadisearchdebugwidgettest.h"
-#include "texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include <QPlainTextEdit>
 #include "../akonadisearchdebugwidget.h"
 #include <qtest.h>
 #include "../akonadisearchdebugsearchpathcombobox.h"
@@ -45,7 +45,7 @@ void AkonadiSearchDebugWidgetTest::shouldHaveDefaultValue()
     QVERIFY(lineEdit->text().isEmpty());
     QVERIFY(lineEdit->trapReturnKey());
     QVERIFY(lineEdit->isClearButtonShown());
-    PimCommon::PlainTextEditorWidget *editorWidget = widget.findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("plaintexteditor"));
+    QPlainTextEdit *editorWidget = widget.findChild<QPlainTextEdit *>(QStringLiteral("plaintexteditor"));
     QVERIFY(editorWidget->isReadOnly());
     QVERIFY(editorWidget);
     QVERIFY(editorWidget->toPlainText().isEmpty());

@@ -18,7 +18,7 @@
 #include "akonadisearchdebugdialogtest.h"
 #include "../akonadisearchdebugdialog.h"
 #include "../akonadisearchdebugwidget.h"
-#include "texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include <QPlainTextEdit>
 #include <QStandardPaths>
 #include <KLineEdit>
 #include <qtest.h>
@@ -44,7 +44,7 @@ void AkonadiSearchDebugDialogTest::shouldHaveDefaultValue()
     PimCommon::AkonadiSearchDebugDialog dlg;
     PimCommon::AkonadiSearchDebugWidget *debugWidget = dlg.findChild<PimCommon::AkonadiSearchDebugWidget *>(QStringLiteral("akonadisearchdebugwidget"));
     QVERIFY(debugWidget);
-    PimCommon::PlainTextEditorWidget *editorWidget = debugWidget->findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("plaintexteditor"));
+    QPlainTextEdit *editorWidget = debugWidget->findChild<QPlainTextEdit *>(QStringLiteral("plaintexteditor"));
     QVERIFY(editorWidget);
     KLineEdit *lineEdit = debugWidget->findChild<KLineEdit *>(QStringLiteral("lineedit"));
     QVERIFY(lineEdit);

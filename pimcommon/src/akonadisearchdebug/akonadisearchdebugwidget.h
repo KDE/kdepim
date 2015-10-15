@@ -24,9 +24,9 @@
 #include <AkonadiCore/Item>
 class KLineEdit;
 class QPushButton;
+class QPlainTextEdit;
 namespace PimCommon
 {
-class PlainTextEditorWidget;
 class PIMCOMMON_EXPORT AkonadiSearchDebugWidget : public QWidget
 {
     Q_OBJECT
@@ -47,7 +47,7 @@ private Q_SLOTS:
     void slotError(const QString &errorStr);
 
 private:
-    PimCommon::PlainTextEditorWidget *mPlainTextEditor;
+    QPlainTextEdit *mPlainTextEditor;
     PimCommon::AkonadiSearchDebugSearchPathComboBox *mSearchPathComboBox;
     KLineEdit *mLineEdit;
     QPushButton *mSearchButton;

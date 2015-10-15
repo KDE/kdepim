@@ -25,8 +25,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-#include "texteditor/plaintexteditor/plaintexteditorwidget.h"
-#include "texteditor/plaintexteditor/plaintexteditor.h"
+#include <QPlainTextEdit>
 
 using namespace PimCommon;
 
@@ -57,8 +56,8 @@ AkonadiSearchDebugWidget::AkonadiSearchDebugWidget(QWidget *parent)
     hbox->addWidget(mSearchButton);
     mSearchButton->setEnabled(false);
 
-    mPlainTextEditor = new PimCommon::PlainTextEditorWidget;
-    new PimCommon::AkonadiSearchSyntaxHighlighter(mPlainTextEditor->editor()->document());
+    mPlainTextEditor = new QPlainTextEdit;
+    new PimCommon::AkonadiSearchSyntaxHighlighter(mPlainTextEditor->document());
     mPlainTextEditor->setReadOnly(true);
     mainLayout->addWidget(mPlainTextEditor);
     mPlainTextEditor->setObjectName(QStringLiteral("plaintexteditor"));

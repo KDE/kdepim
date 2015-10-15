@@ -18,8 +18,6 @@
 #include "akonadisearchdebugsearchpathcombobox.h"
 #include <QStandardPaths>
 
-#include "pimcommon_debug.h"
-
 using namespace PimCommon;
 AkonadiSearchDebugSearchPathComboBox::AkonadiSearchDebugSearchPathComboBox(QWidget *parent)
     : QComboBox(parent)
