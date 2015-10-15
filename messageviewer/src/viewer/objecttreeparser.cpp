@@ -337,11 +337,6 @@ void ObjectTreeParser::parseObjectTreeInternal(KMime::Content *node)
 
         ProcessResult processResult(mNodeHelper);
 
-        KMime::ContentIndex contentIndex = node->index();
-        if (htmlWriter() /*&& contentIndex.isValid()*/) {
-            htmlWriter()->queue(QStringLiteral("<a name=\"att%1\"></a>").arg(contentIndex.toString()));
-        }
-
         QByteArray mediaType("text");
         QByteArray subType("plain");
         if (node->contentType(false) && !node->contentType()->mediaType().isEmpty() &&

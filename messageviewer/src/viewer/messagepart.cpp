@@ -87,7 +87,9 @@ AttachmentMarkBlock::~AttachmentMarkBlock()
 void AttachmentMarkBlock::internalEnter()
 {
     if (mWriter && !entered) {
-        mWriter->queue(QStringLiteral("<div id=\"attachmentDiv%1\">\n").arg(mNode->index().toString()));
+        const QString index = mNode->index().toString();
+        mWriter->queue(QStringLiteral("<a name=\"att%1\"></a>").arg(index));
+        mWriter->queue(QStringLiteral("<div id=\"attachmentDiv%1\">\n").arg(index));
         entered = true;
     }
 }
