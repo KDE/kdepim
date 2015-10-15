@@ -20,7 +20,7 @@
 #include <QTest>
 #include <editor/sievetextedit.h>
 #include <pimcommon/plaintexteditfindbar.h>
-#include <pimcommon/slidecontainer.h>
+#include <kpimtextedit/slidecontainer.h>
 
 SieveTextEditWidgetTest::SieveTextEditWidgetTest(QObject *parent)
     : QObject(parent)
@@ -40,7 +40,7 @@ void SieveTextEditWidgetTest::shouldHaveDefaultValue()
     QVERIFY(textedit);
     QVERIFY(!textedit->isReadOnly());
 
-    PimCommon::SlideContainer *slider = w.findChild<PimCommon::SlideContainer *>(QStringLiteral("slidercontainer"));
+    KPIMTextEdit::SlideContainer *slider = w.findChild<KPIMTextEdit::SlideContainer *>(QStringLiteral("slidercontainer"));
     QVERIFY(slider);
     QWidget *contentWidget = slider->content();
     QVERIFY(contentWidget);

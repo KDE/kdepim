@@ -19,7 +19,7 @@
 #include "editor/sievetextedit.h"
 
 #include "PimCommon/PlainTextEditFindBar"
-#include "PimCommon/SlideContainer"
+#include "kpimtextedit/slidecontainer.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>

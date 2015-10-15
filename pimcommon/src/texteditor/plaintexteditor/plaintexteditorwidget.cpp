@@ -19,7 +19,7 @@
 #include "plaintexteditor.h"
 #include "plaintexteditfindbar.h"
 #include "texttospeech/texttospeechwidget.h"
-#include "widgets/slidecontainer.h"
+#include "kpimtextedit/slidecontainer.h"
 
 #include <QVBoxLayout>
 #include <QShortcut>
@@ -41,7 +41,7 @@ public:
     PimCommon::PlainTextEditFindBar *mFindBar;
     PlainTextEditor *mEditor;
     PimCommon::TextToSpeechWidget *mTextToSpeechWidget;
-    PimCommon::SlideContainer *mSliderContainer;
+    KPIMTextEdit::SlideContainer *mSliderContainer;
 };
 
 PlainTextEditorWidget::PlainTextEditorWidget(PlainTextEditor *customEditor, QWidget *parent)
@@ -102,12 +102,12 @@ void PlainTextEditorWidget::init(PlainTextEditor *customEditor)
     lay->addWidget(d->mEditor);
     connect(d->mEditor, &PlainTextEditor::say, d->mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::say);
 
-    d->mSliderContainer = new PimCommon::SlideContainer(this);
+    d->mSliderContainer = new KPIMTextEdit::SlideContainer(this);
 
     d->mFindBar = new PimCommon::PlainTextEditFindBar(d->mEditor, this);
     d->mFindBar->setHideWhenClose(false);
     connect(d->mFindBar, &PimCommon::PlainTextEditFindBar::displayMessageIndicator, d->mEditor, &PlainTextEditor::slotDisplayMessageIndicator);
-    connect(d->mFindBar, &PimCommon::PlainTextEditFindBar::hideFindBar, d->mSliderContainer, &PimCommon::SlideContainer::slideOut);
+    connect(d->mFindBar, &PimCommon::PlainTextEditFindBar::hideFindBar, d->mSliderContainer, &KPIMTextEdit::SlideContainer::slideOut);
     d->mSliderContainer->setContent(d->mFindBar);
 
     lay->addWidget(d->mSliderContainer);

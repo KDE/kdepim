@@ -34,7 +34,7 @@
 #include "messageviewer/messageviewerutil.h"
 #include "findbar/findbarsourceview.h"
 #include <kpimtextedit/htmlhighlighter.h>
-#include "PimCommon/SlideContainer"
+#include "kpimtextedit/slidecontainer.h"
 #include "PimCommon/PimUtil"
 #include "PimCommon/TextToSpeechWidget"
 #include "PimCommon/TextToSpeechInterface"
@@ -80,11 +80,11 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget(QWidget *parent
     mTextBrowser->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     connect(mTextBrowser, &MailSourceViewTextBrowser::findText, this, &MailSourceViewTextBrowserWidget::slotFind);
     lay->addWidget(mTextBrowser);
-    mSliderContainer = new PimCommon::SlideContainer(this);
+    mSliderContainer = new KPIMTextEdit::SlideContainer(this);
 
     mFindBar = new FindBarSourceView(mTextBrowser, this);
     mFindBar->setObjectName(QStringLiteral("findbar"));
-    connect(mFindBar, &FindBarSourceView::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
+    connect(mFindBar, &FindBarSourceView::hideFindBar, mSliderContainer, &KPIMTextEdit::SlideContainer::slideOut);
     mSliderContainer->setContent(mFindBar);
 
     lay->addWidget(mSliderContainer);

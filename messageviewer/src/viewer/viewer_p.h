@@ -54,9 +54,12 @@ class QPoint;
 class QSplitter;
 class QModelIndex;
 
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class SlideContainer;
+}
+namespace PimCommon
+{
 class ShareServiceUrlManager;
 }
 
@@ -672,7 +675,7 @@ public:
     MessageViewer::ScamDetectionWarningWidget *mScamDetectionWarning;
     MessageViewer::OpenAttachmentFolderWidget *mOpenAttachmentFolderWidget;
     Viewer::DisplayFormatMessage mDisplayFormatMessageOverwrite;
-    PimCommon::SlideContainer *mSliderContainer;
+    KPIMTextEdit::SlideContainer *mSliderContainer;
     PimCommon::ShareServiceUrlManager *mShareServiceManager;
     KActionMenu *mShareServiceUrlMenu;
     MessageViewer::HeaderStylePlugin *mHeaderStylePlugin;

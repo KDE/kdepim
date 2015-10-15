@@ -34,7 +34,7 @@
 #include "widgets/openattachmentfolderwidget.h"
 #include "messageviewer/headerstyle.h"
 #include "messageviewer/headerstrategy.h"
-#include "PimCommon/SlideContainer"
+#include "kpimtextedit/slidecontainer.h"
 #include "Gravatar/GravatarCache"
 #include "job/attachmentencryptwithchiasmusjob.h"
 #include "job/attachmenteditjob.h"
@@ -1480,11 +1480,11 @@ void ViewerPrivate::createWidgets()
     mViewerPluginToolManager->createView();
     connect(mViewerPluginToolManager, &MessageViewer::ViewerPluginToolManager::activatePlugin, this, &ViewerPrivate::slotActivatePlugin);
 
-    mSliderContainer = new PimCommon::SlideContainer(readerBox);
+    mSliderContainer = new KPIMTextEdit::SlideContainer(readerBox);
     mSliderContainer->setObjectName(QStringLiteral("slidercontainer"));
     readerBoxVBoxLayout->addWidget(mSliderContainer);
     mFindBar = new FindBarMailWebView(mViewer, q);
-    connect(mFindBar, &FindBarBase::hideFindBar, mSliderContainer, &PimCommon::SlideContainer::slideOut);
+    connect(mFindBar, &FindBarBase::hideFindBar, mSliderContainer, &KPIMTextEdit::SlideContainer::slideOut);
     mSliderContainer->setContent(mFindBar);
 
 #ifndef QT_NO_TREEVIEW

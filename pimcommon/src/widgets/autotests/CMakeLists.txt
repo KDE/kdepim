@@ -1,9 +1,3 @@
-ecm_add_test(slidecontainertest.cpp
-    TEST_NAME slidecontainertest
-    NAME_PREFIX pimcommon-widget
-    LINK_LIBRARIES Qt5::Test Qt5::Gui KF5::PimCommon
-)
-
 ecm_add_test(kactionmenuchangecasetest.cpp ../kactionmenuchangecase.cpp
     TEST_NAME kactionmenuchangecasetest
     NAME_PREFIX pimcommon-widget

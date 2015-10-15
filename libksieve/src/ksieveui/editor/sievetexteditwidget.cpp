@@ -20,7 +20,7 @@
 #include "editor/sievetextedit.h"
 
 #include "PimCommon/PlainTextEditFindBar"
-#include "PimCommon/SlideContainer"
+#include "kpimtextedit/slidecontainer.h"
 #include <QDebug>
 using namespace KSieveUi;
 
@@ -35,7 +35,7 @@ public:
 
     }
     KSieveUi::SieveTextEdit *mTextEdit;
-    PimCommon::SlideContainer *mSliderContainer;
+    KPIMTextEdit::SlideContainer *mSliderContainer;
     PimCommon::PlainTextEditFindBar *mFindBar;
 };
 
@@ -72,12 +72,12 @@ void SieveTextEditWidget::initialize(KSieveUi::SieveTextEdit *custom)
     d->mTextEdit->setShowHelpMenu(false);
     mainLayout->addWidget(d->mTextEdit);
 
-    d->mSliderContainer = new PimCommon::SlideContainer(this);
+    d->mSliderContainer = new KPIMTextEdit::SlideContainer(this);
     d->mSliderContainer->setObjectName(QStringLiteral("slidercontainer"));
     d->mFindBar = new PimCommon::PlainTextEditFindBar(d->mTextEdit, this);
     d->mFindBar->setObjectName(QStringLiteral("findbar"));
     d->mFindBar->setHideWhenClose(false);
-    connect(d->mFindBar, &PimCommon::TextEditFindBarBase::hideFindBar, d->mSliderContainer, &PimCommon::SlideContainer::slideOut);
+    connect(d->mFindBar, &PimCommon::TextEditFindBarBase::hideFindBar, d->mSliderContainer, &KPIMTextEdit::SlideContainer::slideOut);
     d->mSliderContainer->setContent(d->mFindBar);
     mainLayout->addWidget(d->mSliderContainer);
     connect(d->mTextEdit, &SieveTextEdit::findText, this, &SieveTextEditWidget::slotFind);

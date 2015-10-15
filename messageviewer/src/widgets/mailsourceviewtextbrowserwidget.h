@@ -36,10 +36,13 @@
 #include <QPlainTextEdit>
 #include <QDialog>
 #include <KConfigGroup>
+namespace KPIMTextEdit
+{
+class SlideContainer;
+}
 
 namespace PimCommon
 {
-class SlideContainer;
 class TextToSpeechWidget;
 class TextToSpeechInterface;
 }
@@ -81,7 +84,7 @@ private Q_SLOTS:
 private:
     MailSourceViewTextBrowser *mTextBrowser;
     FindBarSourceView *mFindBar;
-    PimCommon::SlideContainer *mSliderContainer;
+    KPIMTextEdit::SlideContainer *mSliderContainer;
     PimCommon::TextToSpeechWidget *mTextToSpeechWidget;
 
 };

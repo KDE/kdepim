@@ -24,7 +24,7 @@
 #include <QTextCursor>
 #include <texttospeech/texttospeechwidget.h>
 
-#include "widgets/slidecontainer.h"
+#include "kpimtextedit/slidecontainer.h"
 
 using namespace PimCommon;
 
@@ -42,7 +42,7 @@ public:
     PimCommon::RichTextEditFindBar *mFindBar;
     RichTextEditor *mEditor;
     PimCommon::TextToSpeechWidget *mTextToSpeechWidget;
-    PimCommon::SlideContainer *mSliderContainer;
+    KPIMTextEdit::SlideContainer *mSliderContainer;
 };
 
 RichTextEditorWidget::RichTextEditorWidget(RichTextEditor *customEditor, QWidget *parent)
@@ -123,13 +123,13 @@ void RichTextEditorWidget::init(RichTextEditor *customEditor)
     connect(d->mEditor, &RichTextEditor::say, d->mTextToSpeechWidget, &PimCommon::TextToSpeechWidget::say);
     lay->addWidget(d->mEditor);
 
-    d->mSliderContainer = new PimCommon::SlideContainer(this);
+    d->mSliderContainer = new KPIMTextEdit::SlideContainer(this);
 
     d->mFindBar = new PimCommon::RichTextEditFindBar(d->mEditor, this);
     d->mFindBar->setHideWhenClose(false);
     connect(d->mFindBar, &PimCommon::RichTextEditFindBar::displayMessageIndicator, d->mEditor, &RichTextEditor::slotDisplayMessageIndicator);
 
-    connect(d->mFindBar, &PimCommon::RichTextEditFindBar::hideFindBar, d->mSliderContainer, &PimCommon::SlideContainer::slideOut);
+    connect(d->mFindBar, &PimCommon::RichTextEditFindBar::hideFindBar, d->mSliderContainer, &KPIMTextEdit::SlideContainer::slideOut);
     d->mSliderContainer->setContent(d->mFindBar);
     lay->addWidget(d->mSliderContainer);
 

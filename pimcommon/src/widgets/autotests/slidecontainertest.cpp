@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Cambridge, MA 02110-1301, USA
 #include "slidecontainertest.h"
 
 // Local
-#include "widgets/slidecontainer.h"
+#include "kpimtextedit/slidecontainer.h"
 
 #include <qtest.h>
 #include <QTextEdit>

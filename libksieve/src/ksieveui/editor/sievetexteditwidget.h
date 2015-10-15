@@ -20,9 +20,13 @@
 
 #include <QWidget>
 #include "ksieveui_export.h"
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class SlideContainer;
+}
+
+namespace PimCommon
+{
 class PlainTextEditFindBar;
 }
 namespace KSieveUi
@@ -48,7 +52,7 @@ private:
     void initialize(KSieveUi::SieveTextEdit *custom = Q_NULLPTR);
     SieveTextEditWidgetPrivate *const d;
     KSieveUi::SieveTextEdit *mTextEdit;
-    PimCommon::SlideContainer *mSliderContainer;
+    KPIMTextEdit::SlideContainer *mSliderContainer;
     PimCommon::PlainTextEditFindBar *mFindBar;
 };
 }

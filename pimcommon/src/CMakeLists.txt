@@ -147,7 +147,6 @@ set(libpimcommon_widgets_SRCS
   widgets/customtextedit.cpp
   widgets/customtreeview.cpp
   widgets/configureimmutablewidgetutils.cpp
-  widgets/slidecontainer.cpp
   widgets/annotationdialog.cpp
   widgets/kactionmenuchangecase.cpp
   widgets/lineeditwithcompleter.cpp
@@ -287,6 +286,7 @@ PRIVATE
     KF5::DBusAddons
     KF5::KDELibs4Support
     KF5::XmlGui
+    KF5::PimTextEdit
 )
 
 target_include_directories(KF5PimCommon INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/PimCommon/;${KDE_INSTALL_INCLUDEDIR_KF5}/pimcommon>")
@@ -585,7 +585,6 @@ ecm_generate_headers(PimCommon_Camelcasewidgets_HEADERS
   CustomTreeView
   SpellCheckLineEdit
   MinimumComboBox
-  SlideContainer
   ConfigureImmutableWidgetUtils
   LineEditWithCompleter
   RenameFileDialog

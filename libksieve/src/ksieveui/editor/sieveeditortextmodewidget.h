@@ -22,6 +22,10 @@
 #include "sieveeditorabstractwidget.h"
 
 class QSplitter;
+namespace KPIMTextEdit
+{
+class SlideContainer;
+}
 
 namespace PimCommon
 {
@@ -29,7 +33,6 @@ class PlainTextEditFindBar;
 class PlainTextEditor;
 class TextGoToLineWidget;
 class PlainTextEditorWidget;
-class SlideContainer;
 }
 
 namespace KSieveUi
@@ -128,7 +131,7 @@ private:
     SieveEditorParsingMissingFeatureWarning *mSieveParsingWarning;
     SieveEditorTabWidget *mTabWidget;
     PimCommon::TextGoToLineWidget *mGoToLine;
-    PimCommon::SlideContainer *mSliderContainer;
+    KPIMTextEdit::SlideContainer *mSliderContainer;
     SieveTemplateWidget *mSieveTemplateWidget;
 };
 
