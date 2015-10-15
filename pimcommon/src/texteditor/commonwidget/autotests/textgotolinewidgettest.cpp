@@ -133,7 +133,7 @@ void TextGoToLineWidgetTest::shouldChangeMaximumValue()
 {
     PimCommon::TextGoToLineWidget edit;
     edit.show();
-    QTest::qWaitForWindowShown(&edit);
+    QTest::qWaitForWindowExposed(&edit);
     QSpinBox *line = edit.findChild<QSpinBox *>(QStringLiteral("line"));
 
     QCOMPARE(line->value(), 1);

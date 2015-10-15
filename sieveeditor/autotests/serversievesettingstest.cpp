@@ -59,7 +59,7 @@ void ServerSieveSettingsTest::shouldEmitEnableOkButtonSignal()
 {
     ServerSieveSettings widget;
     widget.show();
-    QTest::qWaitForWindowShown(&widget);
+    QTest::qWaitForWindowExposed(&widget);
     QSignalSpy spy(&widget, SIGNAL(enableOkButton(bool)));
     widget.setPassword(QStringLiteral("foo"));
     QCOMPARE(spy.count(), 0);
@@ -82,7 +82,7 @@ void ServerSieveSettingsTest::shouldEmitSignalWithValueTrue()
 {
     ServerSieveSettings widget;
     widget.show();
-    QTest::qWaitForWindowShown(&widget);
+    QTest::qWaitForWindowExposed(&widget);
     QSignalSpy spy(&widget, SIGNAL(enableOkButton(bool)));
     widget.setServerName(QStringLiteral("foo"));
     QCOMPARE(spy.count(), 1);

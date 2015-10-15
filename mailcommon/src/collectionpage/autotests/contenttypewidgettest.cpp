@@ -61,7 +61,7 @@ void ContentTypeWidgetTest::shouldEmitSignalWhenIndexChanged()
 {
     MailCommon::ContentTypeWidget contentType;
     contentType.show();
-    QTest::qWaitForWindowShown(&contentType);
+    QTest::qWaitForWindowExposed(&contentType);
     QSignalSpy spy(&contentType, SIGNAL(activated(int)));
     contentType.setCurrentIndex(1);
     //FIXME
@@ -72,7 +72,7 @@ void ContentTypeWidgetTest::shouldChangeItem()
 {
     MailCommon::ContentTypeWidget contentType;
     contentType.show();
-    QTest::qWaitForWindowShown(&contentType);
+    QTest::qWaitForWindowExposed(&contentType);
     KComboBox *combo = contentType.findChild<KComboBox *>(QStringLiteral("contentcombobox"));
     for (int i = 0; i < combo->count(); ++i) {
         contentType.setCurrentIndex(i);
