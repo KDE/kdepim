@@ -108,7 +108,7 @@ class MessageRfc822BodyPartFormatter
 {
     static const MessageRfc822BodyPartFormatter *self;
 public:
-    bool process(ObjectTreeParser *, KMime::Content *, ProcessResult &) const;
+    MessagePart::Ptr process(Interface::BodyPart *) const;
     MessageViewer::Interface::BodyPartFormatter::Result format(Interface::BodyPart *, HtmlWriter *) const Q_DECL_OVERRIDE;
     using MessageViewer::Interface::BodyPartFormatter::format;
     static const MessageViewer::Interface::BodyPartFormatter *create();
@@ -123,26 +123,26 @@ const MessageViewer::Interface::BodyPartFormatter *MessageRfc822BodyPartFormatte
     return self;
 }
 
-bool MessageRfc822BodyPartFormatter::process(ObjectTreeParser *otp, KMime::Content *node, ProcessResult &result) const
+MessagePart::Ptr MessageRfc822BodyPartFormatter::process(Interface::BodyPart *part) const
 {
-    Q_UNUSED(result)
-    PartMetaData metaData;
-    const KMime::Message::Ptr message = node->bodyAsMessage();
-    EncapsulatedRfc822MessagePart mp(otp, &metaData, node, message);
-
-    if (!otp->attachmentStrategy()->inlineNestedMessages() && !otp->showOnlyOneMimePart()) {
-        return false;
-    } else {
-        mp.html(true);
-        return true;
-    }
+    PartMetaData *metaData = new PartMetaData;
+    const KMime::Message::Ptr message = part->content()->bodyAsMessage();
+    return MessagePart::Ptr(new EncapsulatedRfc822MessagePart(part->objectTreeParser(), metaData, part->content(), message));
 }
 
 MessageViewer::Interface::BodyPartFormatter::Result MessageRfc822BodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
 {
     Q_UNUSED(writer)
-    bool ret = process(part->objectTreeParser(), part->content(), *part->processResult());
-    return ret ? Ok : Failed;
+    const ObjectTreeParser *otp = part->objectTreeParser();
+    const MessagePart::Ptr mp = process(part);
+     if (mp && !otp->attachmentStrategy()->inlineNestedMessages() && !otp->showOnlyOneMimePart()) {
+         delete mp->partMetaData();
+        return Failed;
+    } else {
+        mp->html(true);
+        delete mp->partMetaData();
+        return Ok;
+    }
 }
 
 #define CREATE_BODY_PART_FORMATTER(subtype) \
