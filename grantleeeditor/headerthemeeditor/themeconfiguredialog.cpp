@@ -17,7 +17,7 @@
 
 #include "themeconfiguredialog.h"
 #include "themeeditorutil.h"
-#include "PimCommon/PlainTextEditorWidget"
+#include "kpimtextedit/plaintexteditorwidget.h"
 
 #include "configurewidget.h"
 
@@ -50,11 +50,11 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Default email:"));
     lay->addWidget(lab);
 
-    mDefaultEmail = new PimCommon::PlainTextEditorWidget;
+    mDefaultEmail = new KPIMTextEdit::PlainTextEditorWidget;
     lay->addWidget(mDefaultEmail);
     tab->addTab(w, i18n("General"));
 
-    mDefaultTemplate = new PimCommon::PlainTextEditorWidget;
+    mDefaultTemplate = new KPIMTextEdit::PlainTextEditorWidget;
     tab->addTab(mDefaultTemplate, i18n("Default Template"));
 
     QVBoxLayout *mainLayout = new QVBoxLayout;

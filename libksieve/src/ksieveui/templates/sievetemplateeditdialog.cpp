@@ -18,7 +18,7 @@
 #include "sievetemplateeditdialog.h"
 #include "editor/sievetextedit.h"
 
-#include "PimCommon/PlainTextEditFindBar"
+#include "kpimtextedit/plaintexteditfindbar.h"
 #include "kpimtextedit/slidecontainer.h"
 
 #include <KLocalizedString>

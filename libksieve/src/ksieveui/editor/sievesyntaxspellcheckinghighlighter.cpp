@@ -20,7 +20,7 @@
 using namespace KSieveUi;
 
 SieveSyntaxSpellCheckingHighlighter::SieveSyntaxSpellCheckingHighlighter(SieveTextEdit *plainText, const QColor &misspelledColor)
-    : PimCommon::PlainTextSyntaxSpellCheckingHighlighter(plainText, misspelledColor)
+    : KPIMTextEdit::PlainTextSyntaxSpellCheckingHighlighter(plainText, misspelledColor)
 {
 
 }

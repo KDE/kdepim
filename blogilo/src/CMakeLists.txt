@@ -76,6 +76,7 @@ target_link_libraries(blogilo
     KF5::Wallet
     KF5::DBusAddons
     KF5::XmlGui
+    KF5::PimTextEdit
 )
 
 if (KF5GAPI_FOUND)

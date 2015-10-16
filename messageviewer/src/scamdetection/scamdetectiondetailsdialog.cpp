@@ -19,7 +19,7 @@
 #include "messageviewer_debug.h"
 #include "settings/messageviewersettings.h"
 #include "messageviewer/autoqpointer.h"
-#include "PimCommon/RichTextEditorWidget"
+#include "kpimtextedit/richtexteditorwidget.h"
 
 #include <KLocalizedString>
 
@@ -51,7 +51,7 @@ ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ScamDetectionDetailsDialog::reject);
     KGuiItem::assign(user1Button, KStandardGuiItem::saveAs());
     setModal(false);
-    mDetails = new PimCommon::RichTextEditorWidget;
+    mDetails = new KPIMTextEdit::RichTextEditorWidget;
     mainLayout->addWidget(mDetails);
     mainLayout->addWidget(buttonBox);
     mDetails->setReadOnly(true);

@@ -21,7 +21,7 @@
 using namespace NoteShared;
 
 NoteEditor::NoteEditor(QWidget *parent)
-    : PimCommon::RichTextEditorWidget(new PimCommon::RichTextEditWithAutoCorrection(parent))
+    : KPIMTextEdit::RichTextEditorWidget(new PimCommon::RichTextEditWithAutoCorrection(parent))
 {
 }
 

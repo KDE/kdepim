@@ -17,7 +17,7 @@
 
 #include "translatortest.h"
 #include "translator/translatorwidget.h"
-#include "texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditorwidget.h"
 
 #include <QPushButton>
 
@@ -41,7 +41,7 @@ void TranslatorTest::shouldHaveDefaultValuesOnCreation()
     QComboBox *to = edit.findChild<QComboBox *>(QStringLiteral("to"));
 
     PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QStringLiteral("inputtext"));
-    PimCommon::PlainTextEditorWidget *translatedText = edit.findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("translatedtext"));
+    KPIMTextEdit::PlainTextEditorWidget *translatedText = edit.findChild<KPIMTextEdit::PlainTextEditorWidget *>(QStringLiteral("translatedtext"));
     QPushButton *translate = edit.findChild<QPushButton *>(QStringLiteral("translate-button"));
     QPushButton *clear = edit.findChild<QPushButton *>(QStringLiteral("clear-button"));
     QPushButton *invert = edit.findChild<QPushButton *>(QStringLiteral("invert-button"));
@@ -74,7 +74,7 @@ void TranslatorTest::shouldDisableTranslateButtonAndClearTextWhenClickOnClearBut
     PimCommon::TranslatorWidget edit;
     PimCommon::TranslatorTextEdit *inputtext = edit.findChild<PimCommon::TranslatorTextEdit *>(QStringLiteral("inputtext"));
     QPushButton *translate = edit.findChild<QPushButton *>(QStringLiteral("translate-button"));
-    PimCommon::PlainTextEditorWidget *translatedText = edit.findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("translatedtext"));
+    KPIMTextEdit::PlainTextEditorWidget *translatedText = edit.findChild<KPIMTextEdit::PlainTextEditorWidget *>(QStringLiteral("translatedtext"));
     inputtext->setPlainText(QStringLiteral("Foo"));
     QPushButton *clear = edit.findChild<QPushButton *>(QStringLiteral("clear-button"));
     QTest::mouseClick(clear, Qt::LeftButton);

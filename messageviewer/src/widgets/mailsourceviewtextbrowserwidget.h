@@ -39,13 +39,10 @@
 namespace KPIMTextEdit
 {
 class SlideContainer;
-}
-
-namespace PimCommon
-{
 class TextToSpeechWidget;
 class TextToSpeechInterface;
 }
+
 namespace MessageViewer
 {
 class FindBarSourceView;
@@ -85,7 +82,7 @@ private:
     MailSourceViewTextBrowser *mTextBrowser;
     FindBarSourceView *mFindBar;
     KPIMTextEdit::SlideContainer *mSliderContainer;
-    PimCommon::TextToSpeechWidget *mTextToSpeechWidget;
+    KPIMTextEdit::TextToSpeechWidget *mTextToSpeechWidget;
 
 };
 
@@ -93,7 +90,7 @@ class MailSourceViewTextBrowser: public QPlainTextEdit
 {
     Q_OBJECT
 public:
-    explicit MailSourceViewTextBrowser(PimCommon::TextToSpeechInterface *textToSpeechInterface, QWidget *parent = Q_NULLPTR);
+    explicit MailSourceViewTextBrowser(KPIMTextEdit::TextToSpeechInterface *textToSpeechInterface, QWidget *parent = Q_NULLPTR);
 protected:
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 private Q_SLOTS:
@@ -102,7 +99,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void findText();
 private:
-    PimCommon::TextToSpeechInterface *mTextToSpeechInterface;
+    KPIMTextEdit::TextToSpeechInterface *mTextToSpeechInterface;
 };
 
 }

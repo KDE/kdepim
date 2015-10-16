@@ -36,8 +36,8 @@
 #include <kpimtextedit/htmlhighlighter.h>
 #include "kpimtextedit/slidecontainer.h"
 #include "PimCommon/PimUtil"
-#include "PimCommon/TextToSpeechWidget"
-#include "PimCommon/TextToSpeechInterface"
+#include "kpimtextedit/texttospeechwidget.h"
+#include "kpimtextedit/texttospeechinterface.h"
 
 #include <kiconloader.h>
 #include <KLocalizedString>
@@ -68,11 +68,11 @@ MailSourceViewTextBrowserWidget::MailSourceViewTextBrowserWidget(QWidget *parent
     QVBoxLayout *lay = new QVBoxLayout;
     setLayout(lay);
     lay->setMargin(0);
-    mTextToSpeechWidget = new PimCommon::TextToSpeechWidget;
+    mTextToSpeechWidget = new KPIMTextEdit::TextToSpeechWidget;
     mTextToSpeechWidget->setObjectName(QStringLiteral("texttospeech"));
     lay->addWidget(mTextToSpeechWidget);
 
-    PimCommon::TextToSpeechInterface *textToSpeechInterface = new PimCommon::TextToSpeechInterface(mTextToSpeechWidget, this);
+    KPIMTextEdit::TextToSpeechInterface *textToSpeechInterface = new KPIMTextEdit::TextToSpeechInterface(mTextToSpeechWidget, this);
 
     mTextBrowser = new MailSourceViewTextBrowser(textToSpeechInterface);
     mTextBrowser->setObjectName(QStringLiteral("textbrowser"));
@@ -122,7 +122,7 @@ MessageViewer::MailSourceViewTextBrowser *MailSourceViewTextBrowserWidget::textB
     return mTextBrowser;
 }
 
-MailSourceViewTextBrowser::MailSourceViewTextBrowser(PimCommon::TextToSpeechInterface *textToSpeechInterface, QWidget *parent)
+MailSourceViewTextBrowser::MailSourceViewTextBrowser(KPIMTextEdit::TextToSpeechInterface *textToSpeechInterface, QWidget *parent)
     : QPlainTextEdit(parent),
       mTextToSpeechInterface(textToSpeechInterface)
 {

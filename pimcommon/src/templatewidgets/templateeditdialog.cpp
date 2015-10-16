@@ -16,8 +16,8 @@
 */
 
 #include "templateeditdialog.h"
-#include "texteditor/plaintexteditor/plaintexteditorwidget.h"
-#include "texteditor/plaintexteditor/plaintexteditor.h"
+#include "kpimtextedit/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditor.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -69,7 +69,7 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
 
     vbox->addLayout(hbox);
 
-    mTextEdit = new PimCommon::PlainTextEditorWidget;
+    mTextEdit = new KPIMTextEdit::PlainTextEditorWidget;
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 

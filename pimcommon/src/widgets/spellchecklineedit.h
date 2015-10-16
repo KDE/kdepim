@@ -29,13 +29,13 @@
 #ifndef SpellCheckLineEdit_H
 #define SpellCheckLineEdit_H
 #include "pimcommon_export.h"
-#include "pimcommon/richtexteditor.h"
+#include "kpimtextedit/richtexteditor.h"
 
 class QMimeData;
 namespace PimCommon
 {
 
-class PIMCOMMON_EXPORT SpellCheckLineEdit : public PimCommon::RichTextEditor
+class PIMCOMMON_EXPORT SpellCheckLineEdit : public KPIMTextEdit::RichTextEditor
 {
     Q_OBJECT
 

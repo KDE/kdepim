@@ -72,7 +72,7 @@ public:
 };
 
 RichTextComposer::RichTextComposer(QWidget *parent)
-    : PimCommon::RichTextEditor(parent),
+    : KPIMTextEdit::RichTextEditor(parent),
       d(new RichTextComposerPrivate(this))
 {
     setAcceptRichText(false);
@@ -390,7 +390,7 @@ void RichTextComposer::evaluateListSupport(QKeyEvent *event)
     }
 
     if (!handled) {
-        PimCommon::RichTextEditor::keyPressEvent(event);
+        KPIMTextEdit::RichTextEditor::keyPressEvent(event);
     }
 
     if (textCursor().currentList()) {
@@ -578,7 +578,7 @@ void RichTextComposer::insertFromMimeData(const QMimeData *source)
         }
     }
 
-    PimCommon::RichTextEditor::insertFromMimeData(source);
+    KPIMTextEdit::RichTextEditor::insertFromMimeData(source);
 }
 
 bool RichTextComposer::canInsertFromMimeData(const QMimeData *source) const
@@ -595,7 +595,7 @@ bool RichTextComposer::canInsertFromMimeData(const QMimeData *source) const
         return true;
     }
 
-    return PimCommon::RichTextEditor::canInsertFromMimeData(source);
+    return KPIMTextEdit::RichTextEditor::canInsertFromMimeData(source);
 }
 
 static bool isCursorAtEndOfLine(const QTextCursor &cursor)
@@ -724,7 +724,7 @@ void RichTextComposer::mouseReleaseEvent(QMouseEvent *event)
         d->composerControler->disablePainter();
         d->richTextComposerActions->uncheckActionFormatPainter();
     }
-    PimCommon::RichTextEditor::mouseReleaseEvent(event);
+    KPIMTextEdit::RichTextEditor::mouseReleaseEvent(event);
 }
 
 void RichTextComposer::slotTextModeChanged(MessageComposer::RichTextComposer::Mode mode)

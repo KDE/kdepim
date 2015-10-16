@@ -20,7 +20,7 @@
 #include <QDialogButtonBox>
 #include <qtest.h>
 #include <QPushButton>
-#include <pimcommon/plaintexteditorwidget.h>
+#include <kpimtextedit/plaintexteditorwidget.h>
 FilterConvertToSieveResultDialogTest::FilterConvertToSieveResultDialogTest(QObject *parent)
     : QObject(parent)
 {
@@ -41,7 +41,7 @@ void FilterConvertToSieveResultDialogTest::shouldHaveDefaultValue()
     QPushButton *saveButton = dlg.findChild<QPushButton *>(QStringLiteral("savebutton"));
     QVERIFY(saveButton);
 
-    PimCommon::PlainTextEditorWidget *editor = dlg.findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("editor"));
+    KPIMTextEdit::PlainTextEditorWidget *editor = dlg.findChild<KPIMTextEdit::PlainTextEditorWidget *>(QStringLiteral("editor"));
     QVERIFY(editor);
     QVERIFY(editor->toPlainText().isEmpty());
 }
@@ -50,7 +50,7 @@ void FilterConvertToSieveResultDialogTest::shouldAddCode()
 {
     MailCommon::FilterConvertToSieveResultDialog dlg;
 
-    PimCommon::PlainTextEditorWidget *editor = dlg.findChild<PimCommon::PlainTextEditorWidget *>(QStringLiteral("editor"));
+    KPIMTextEdit::PlainTextEditorWidget *editor = dlg.findChild<KPIMTextEdit::PlainTextEditorWidget *>(QStringLiteral("editor"));
     QVERIFY(editor->toPlainText().isEmpty());
     const QString code = QStringLiteral("foo");
     dlg.setCode(code);

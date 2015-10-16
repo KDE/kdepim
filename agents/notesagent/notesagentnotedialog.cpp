@@ -20,8 +20,8 @@
 #include <ItemFetchJob>
 #include <ItemFetchScope>
 #include "NoteShared/NoteDisplayAttribute"
-#include "PimCommon/RichTextEditorWidget"
-#include "PimCommon/RichTextEditor"
+#include "kpimtextedit/richtexteditorwidget.h"
+#include "kpimtextedit/richtexteditor.h"
 
 #include <KSharedConfig>
 
@@ -52,7 +52,7 @@ NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
     mSubject->setReadOnly(true);
     vbox->addWidget(mSubject);
 
-    mNote = new PimCommon::RichTextEditorWidget;
+    mNote = new KPIMTextEdit::RichTextEditorWidget;
     mNote->setReadOnly(true);
     vbox->addWidget(mNote);
     mainLayout->addWidget(w);

@@ -12,8 +12,8 @@
 */
 
 #include "sievedebugdialog.h"
-#include "PimCommon/PlainTextEditorWidget"
-#include "PimCommon/PlainTextEditor"
+#include "kpimtextedit/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditor.h"
 
 #include <agentinstance.h>
 #include "libksieve_debug.h"
@@ -47,7 +47,7 @@ SieveDebugDialog::SieveDebugDialog(QWidget *parent)
         mResourceIdentifier << type.identifier();
     }
 
-    mEdit = new PimCommon::PlainTextEditorWidget(this);
+    mEdit = new KPIMTextEdit::PlainTextEditorWidget(this);
     mEdit->setReadOnly(true);
     mainLayout->addWidget(mEdit);
     mainLayout->addWidget(buttonBox);

@@ -28,7 +28,7 @@ namespace KPIM
 class ProgressIndicatorLabel;
 }
 
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class PlainTextEditorWidget;
 }
@@ -58,7 +58,7 @@ private:
     void downLoadList(const QString &url);
 
     QString mListName;
-    PimCommon::PlainTextEditorWidget *mTextEdit;
+    KPIMTextEdit::PlainTextEditorWidget *mTextEdit;
     QTemporaryFile *mTemporaryFile;
     KPIM::ProgressIndicatorLabel *mProgress;
     QPushButton *mUser1Button;

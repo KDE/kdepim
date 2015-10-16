@@ -29,7 +29,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-#include <pimcommon/plaintexteditorwidget.h>
+#include <kpimtextedit/plaintexteditorwidget.h>
 
 using namespace MailCommon;
 
@@ -57,7 +57,7 @@ SnippetVariableDialog::SnippetVariableDialog(const QString &variableName,
     label->setText(i18n("Enter the replacement values for '%1':", variableName));
     layout->addWidget(label);
 
-    mVariableValueText = new PimCommon::PlainTextEditorWidget;
+    mVariableValueText = new KPIMTextEdit::PlainTextEditorWidget;
     layout->addWidget(mVariableValueText);
 
     mSaveVariable = new QCheckBox;

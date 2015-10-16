@@ -17,7 +17,7 @@
 
 #include "translatordebugdialog.h"
 #include "util/pimutil.h"
-#include "texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditorwidget.h"
 
 #include <KLocalizedString>
 #include <KConfigGroup>
@@ -40,7 +40,7 @@ TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
     mUser1Button->setText(i18n("Save As..."));
     connect(mUser1Button, &QPushButton::clicked, this, &TranslatorDebugDialog::slotSaveAs);
 
-    mEdit = new PimCommon::PlainTextEditorWidget;
+    mEdit = new KPIMTextEdit::PlainTextEditorWidget;
     mEdit->setReadOnly(true);
     mainLayout->addWidget(mEdit);
     mainLayout->addWidget(buttonBox);

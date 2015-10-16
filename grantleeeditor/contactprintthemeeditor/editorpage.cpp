@@ -22,7 +22,7 @@
 #include "themetemplatewidget.h"
 #include "contactprintthemepreview.h"
 #include "contactprintthemeeditorutil.h"
-#include "PimCommon/PlainTextEditor"
+#include "kpimtextedit/plaintexteditor.h"
 #include "KSplitterCollapserButton"
 
 #include <KLocalizedString>

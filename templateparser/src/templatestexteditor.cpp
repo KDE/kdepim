@@ -28,12 +28,12 @@
 #include <QAbstractItemView>
 #include <QFontDatabase>
 
-#include <PimCommon/PlainTextSyntaxSpellCheckingHighlighter>
+#include <kpimtextedit/plaintextsyntaxspellcheckinghighlighter.h>
 
 using namespace TemplateParser;
 
 TemplatesTextEditor::TemplatesTextEditor(QWidget *parent)
-    : PimCommon::PlainTextEditor(parent)
+    : KPIMTextEdit::PlainTextEditor(parent)
 {
     setFocus();
     const QFont f = QFontDatabase::systemFont(QFontDatabase::FixedFont);
@@ -55,7 +55,7 @@ TemplatesTextEditor::~TemplatesTextEditor()
 
 void TemplatesTextEditor::updateHighLighter()
 {
-    PimCommon::PlainTextSyntaxSpellCheckingHighlighter *hlighter = dynamic_cast<PimCommon::PlainTextSyntaxSpellCheckingHighlighter *>(highlighter());
+    KPIMTextEdit::PlainTextSyntaxSpellCheckingHighlighter *hlighter = dynamic_cast<KPIMTextEdit::PlainTextSyntaxSpellCheckingHighlighter *>(highlighter());
     if (hlighter) {
         hlighter->toggleSpellHighlighting(checkSpellingEnabled());
     }
@@ -68,7 +68,7 @@ void TemplatesTextEditor::clearDecorator()
 
 void TemplatesTextEditor::createHighlighter()
 {
-    PimCommon::PlainTextSyntaxSpellCheckingHighlighter *highlighter = new PimCommon::PlainTextSyntaxSpellCheckingHighlighter(this);
+    KPIMTextEdit::PlainTextSyntaxSpellCheckingHighlighter *highlighter = new KPIMTextEdit::PlainTextSyntaxSpellCheckingHighlighter(this);
     highlighter->toggleSpellHighlighting(checkSpellingEnabled());
     highlighter->setCurrentLanguage(spellCheckingLanguage());
     TemplatesSyntaxHighlighterRules rules;
@@ -102,6 +102,6 @@ void TemplatesTextEditor::keyPressEvent(QKeyEvent *e)
             break;
         }
     }
-    PimCommon::PlainTextEditor::keyPressEvent(e);
+    KPIMTextEdit::PlainTextEditor::keyPressEvent(e);
     mTextEditorCompleter->completeText();
 }

@@ -17,7 +17,7 @@
 
 #include "backupfilestructureinfodialog.h"
 
-#include "PimCommon/PlainTextEditorWidget"
+#include "kpimtextedit/plaintexteditorwidget.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -52,7 +52,7 @@ BackupFileStructureInfoDialog::BackupFileStructureInfoDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Backup Archive Structure:"));
     lay->addWidget(lab);
 
-    mEditor = new PimCommon::PlainTextEditorWidget;
+    mEditor = new KPIMTextEdit::PlainTextEditorWidget;
     mEditor->setReadOnly(true);
     lay->addWidget(mEditor);
     mainLayout->addWidget(w);

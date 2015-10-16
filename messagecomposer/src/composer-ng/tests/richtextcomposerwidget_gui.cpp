@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "PimCommon/RichTextEditorWidget"
+#include "kpimtextedit/richtexteditorwidget.h"
 #include "MessageComposer/RichTextComposer"
 
 #include <KLocalizedString>
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     MessageComposer::RichTextComposer *richtextcomposerwidget = new MessageComposer::RichTextComposer;
     KActionCollection *ac = new KActionCollection(richtextcomposerwidget);
     richtextcomposerwidget->createActions(ac);
-    PimCommon::RichTextEditorWidget *editor = new PimCommon::RichTextEditorWidget(richtextcomposerwidget);
+    KPIMTextEdit::RichTextEditorWidget *editor = new KPIMTextEdit::RichTextEditorWidget(richtextcomposerwidget);
     editor->resize(800, 600);
     editor->show();
 

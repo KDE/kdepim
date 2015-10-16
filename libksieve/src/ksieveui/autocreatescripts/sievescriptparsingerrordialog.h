@@ -19,7 +19,7 @@
 #define SIEVESCRIPTPARSINGERRORDIALOG_H
 #include "ksieveui_export.h"
 #include <QDialog>
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class RichTextEditorWidget;
 }
@@ -42,7 +42,7 @@ private:
     void writeConfig();
 
 private:
-    PimCommon::RichTextEditorWidget *mTextEdit;
+    KPIMTextEdit::RichTextEditorWidget *mTextEdit;
 };
 }
 #endif // SIEVESCRIPTPARSINGERRORDIALOG_H

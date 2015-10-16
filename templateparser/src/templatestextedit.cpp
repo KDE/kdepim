@@ -22,7 +22,7 @@
 using namespace TemplateParser;
 
 TemplatesTextEdit::TemplatesTextEdit(QWidget *parent)
-    : PimCommon::PlainTextEditorWidget(new TemplatesTextEditor, parent)
+    : KPIMTextEdit::PlainTextEditorWidget(new TemplatesTextEditor, parent)
 {
 }
 

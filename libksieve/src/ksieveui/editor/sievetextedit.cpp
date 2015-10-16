@@ -22,7 +22,7 @@
 #include "editor/sieveeditorutil.h"
 #include "pimcommon/editorutil.h"
 #include "editor/sievetexteditorspellcheckdecorator.h"
-#include "PimCommon/PlainTextSyntaxSpellCheckingHighlighter"
+#include "kpimtextedit/plaintextsyntaxspellcheckinghighlighter.h"
 #include <KLocalizedString>
 #include <QAction>
 #include <QIcon>
@@ -61,7 +61,7 @@ public:
 };
 
 SieveTextEdit::SieveTextEdit(QWidget *parent)
-    : PimCommon::PlainTextEditor(parent),
+    : KPIMTextEdit::PlainTextEditor(parent),
       d(new KSieveUi::SieveTextEditPrivate)
 {
     setSpellCheckingConfigFileName(QStringLiteral("sieveeditorrc"));
@@ -81,7 +81,7 @@ SieveTextEdit::SieveTextEdit(QWidget *parent)
 
 SieveTextEdit::~SieveTextEdit()
 {
-    // disconnect these manually as the destruction of PimCommon::PlainTextEditorPrivate will trigger them
+    // disconnect these manually as the destruction of KPIMTextEdit::PlainTextEditorPrivate will trigger them
     disconnect(this, &SieveTextEdit::blockCountChanged, this, &SieveTextEdit::slotUpdateLineNumberAreaWidth);
     disconnect(this, &SieveTextEdit::updateRequest, this, &SieveTextEdit::slotUpdateLineNumberArea);
 
@@ -211,7 +211,7 @@ bool SieveTextEdit::event(QEvent *ev)
             return true;
         }
     }
-    return PimCommon::PlainTextEditor::event(ev);
+    return KPIMTextEdit::PlainTextEditor::event(ev);
 }
 
 Sonnet::SpellCheckDecorator *SieveTextEdit::createSpellCheckDecorator()
@@ -279,7 +279,7 @@ void SieveTextEdit::keyPressEvent(QKeyEvent *e)
 void SieveTextEdit::setSieveCapabilities(const QStringList &capabilities)
 {
     d->mSieveHighliterRules.addCapabilities(capabilities);
-    PimCommon::PlainTextSyntaxSpellCheckingHighlighter *hlighter = dynamic_cast<PimCommon::PlainTextSyntaxSpellCheckingHighlighter *>(highlighter());
+    KPIMTextEdit::PlainTextSyntaxSpellCheckingHighlighter *hlighter = dynamic_cast<KPIMTextEdit::PlainTextSyntaxSpellCheckingHighlighter *>(highlighter());
     if (hlighter) {
         hlighter->setSyntaxHighlighterRules(d->mSieveHighliterRules.rules());
     }

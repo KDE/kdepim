@@ -18,8 +18,8 @@
 #include "parsingresultdialog.h"
 #include "xmlprintingsyntaxhighlighter.h"
 #include "PimCommon/PimUtil"
-#include "PimCommon/PlainTextEditorWidget"
-#include "PimCommon/PlainTextEditor"
+#include "kpimtextedit/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditor.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -43,7 +43,7 @@ ParsingResultDialog::ParsingResultDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ParsingResultDialog::reject);
     user1Button->setText(i18n("Save As..."));
 
-    mTextEdit = new PimCommon::PlainTextEditorWidget(this);
+    mTextEdit = new KPIMTextEdit::PlainTextEditorWidget(this);
     new XMLPrintingSyntaxHighLighter(mTextEdit->editor()->document());
     mTextEdit->setReadOnly(true);
     mainLayout->addWidget(mTextEdit);

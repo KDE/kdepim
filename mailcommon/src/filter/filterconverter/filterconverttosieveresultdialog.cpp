@@ -18,8 +18,8 @@
 #include "filterconverttosieveresultdialog.h"
 #include "PimCommon/SieveSyntaxHighlighter"
 #include "PimCommon/SieveSyntaxHighlighterUtil"
-#include "PimCommon/PlainTextEditor"
-#include "PimCommon/PlainTextEditorWidget"
+#include "kpimtextedit/plaintexteditor.h"
+#include "kpimtextedit/plaintexteditorwidget.h"
 #include "PimCommon/PimUtil"
 
 #include <KLocalizedString>
@@ -51,7 +51,7 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     setModal(true);
     connect(saveButton, &QPushButton::clicked, this, &FilterConvertToSieveResultDialog::slotSave);
 
-    mEditor = new PimCommon::PlainTextEditorWidget;
+    mEditor = new KPIMTextEdit::PlainTextEditorWidget;
     mEditor->editor()->setSpellCheckingSupport(false);
     mEditor->setObjectName(QStringLiteral("editor"));
     PimCommon::SieveSyntaxHighlighter *syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter(mEditor->editor()->document());

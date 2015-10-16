@@ -17,8 +17,8 @@
 
 #include "adblockshowlistdialog.h"
 #include "adblocksyntaxhighlighter.h"
-#include "PimCommon/PlainTextEditorWidget"
-#include "PimCommon/PlainTextEditor"
+#include "kpimtextedit/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditor.h"
 #include "messageviewer_debug.h"
 #include "Libkdepim/ProgressIndicatorLabel"
 
@@ -52,7 +52,7 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     connect(mUser1Button, &QPushButton::clicked, this, &AdBlockShowListDialog::slotDeleteBrokenList);
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
-    mTextEdit = new PimCommon::PlainTextEditorWidget;
+    mTextEdit = new KPIMTextEdit::PlainTextEditorWidget;
     (void)new MessageViewer::AdBlockSyntaxHighlighter(mTextEdit->editor()->document());
     mTextEdit->setReadOnly(true);
     lay->addWidget(mTextEdit);

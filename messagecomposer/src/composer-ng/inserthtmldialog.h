@@ -24,7 +24,7 @@
 #include <KTextEdit>
 #include <QDialog>
 
-#include "PimCommon/PlainTextEditor"
+#include "kpimtextedit/plaintexteditor.h"
 
 namespace KPIMTextEdit
 {
@@ -34,7 +34,7 @@ namespace MessageComposer
 {
 class TextEditorCompleter;
 class InsertHtmlDialogPrivate;
-class InsertHtmlEditor : public PimCommon::PlainTextEditor
+class InsertHtmlEditor : public KPIMTextEdit::PlainTextEditor
 {
     Q_OBJECT
 public:

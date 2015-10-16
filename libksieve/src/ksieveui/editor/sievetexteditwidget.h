@@ -23,12 +23,9 @@
 namespace KPIMTextEdit
 {
 class SlideContainer;
-}
-
-namespace PimCommon
-{
 class PlainTextEditFindBar;
 }
+
 namespace KSieveUi
 {
 class SieveTextEdit;
@@ -53,7 +50,7 @@ private:
     SieveTextEditWidgetPrivate *const d;
     KSieveUi::SieveTextEdit *mTextEdit;
     KPIMTextEdit::SlideContainer *mSliderContainer;
-    PimCommon::PlainTextEditFindBar *mFindBar;
+    KPIMTextEdit::PlainTextEditFindBar *mFindBar;
 };
 }
 #endif // SIEVETEXTEDITWIDGET_H

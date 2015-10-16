@@ -16,7 +16,7 @@
 */
 
 #include "sievescriptdescriptiondialog.h"
-#include "PimCommon/PlainTextEditorWidget"
+#include "kpimtextedit/plaintexteditorwidget.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -39,7 +39,7 @@ SieveScriptDescriptionDialog::SieveScriptDescriptionDialog(QWidget *parent)
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &SieveScriptDescriptionDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SieveScriptDescriptionDialog::reject);
-    mEdit = new PimCommon::PlainTextEditorWidget;
+    mEdit = new KPIMTextEdit::PlainTextEditorWidget;
     mainLayout->addWidget(mEdit);
     mainLayout->addWidget(buttonBox);
 

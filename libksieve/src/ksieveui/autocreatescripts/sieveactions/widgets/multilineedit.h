@@ -18,11 +18,11 @@
 #ifndef MULTILINEEDIT_H
 #define MULTILINEEDIT_H
 
-#include "PimCommon/PlainTextEditor"
+#include "kpimtextedit/plaintexteditor.h"
 
 namespace KSieveUi
 {
-class MultiLineEdit : public PimCommon::PlainTextEditor
+class MultiLineEdit : public KPIMTextEdit::PlainTextEditor
 {
     Q_OBJECT
 public:

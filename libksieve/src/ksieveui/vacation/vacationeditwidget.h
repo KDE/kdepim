@@ -27,7 +27,7 @@ class KDateComboBox;
 
 class QDate;
 
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class PlainTextEditorWidget;
 }
@@ -95,7 +95,7 @@ protected:
     QCheckBox *mActiveCheck;
     QSpinBox *mIntervalSpin;
     QLineEdit *mMailAliasesEdit;
-    PimCommon::PlainTextEditorWidget *mTextEdit;
+    KPIMTextEdit::PlainTextEditorWidget *mTextEdit;
     QCheckBox *mSpamCheck;
     QCheckBox *mDomainCheck;
     QLineEdit *mDomainEdit;

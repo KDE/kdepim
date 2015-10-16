@@ -17,7 +17,7 @@
 
 #ifndef TEMPLATESTEXTEDITOR_H
 #define TEMPLATESTEXTEDITOR_H
-#include "PimCommon/PlainTextEditor"
+#include "kpimtextedit/plaintexteditor.h"
 class QKeyEvent;
 namespace KPIMTextEdit
 {
@@ -25,7 +25,7 @@ class TextEditorCompleter;
 }
 namespace TemplateParser
 {
-class TemplatesTextEditor : public PimCommon::PlainTextEditor
+class TemplatesTextEditor : public KPIMTextEdit::PlainTextEditor
 {
     Q_OBJECT
 public:

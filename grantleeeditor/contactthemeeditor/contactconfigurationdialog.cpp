@@ -17,7 +17,7 @@
 
 #include "contactconfigurationdialog.h"
 #include "contacteditorutil.h"
-#include "PimCommon/PlainTextEditorWidget"
+#include "kpimtextedit/plaintexteditorwidget.h"
 
 #include "configurewidget.h"
 
@@ -59,7 +59,7 @@ ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
 
     tab->addTab(w, i18n("General"));
 
-    mDefaultTemplate = new PimCommon::PlainTextEditorWidget;
+    mDefaultTemplate = new KPIMTextEdit::PlainTextEditorWidget;
     tab->addTab(mDefaultTemplate, i18n("Default Template"));
 
     QVBoxLayout *mainLayout = new QVBoxLayout;

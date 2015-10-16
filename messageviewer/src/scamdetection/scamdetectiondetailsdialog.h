@@ -20,7 +20,7 @@
 
 #include <QDialog>
 
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class RichTextEditorWidget;
 }
@@ -42,7 +42,7 @@ private Q_SLOTS:
 private:
     void writeConfig();
     void readConfig();
-    PimCommon::RichTextEditorWidget *mDetails;
+    KPIMTextEdit::RichTextEditorWidget *mDetails;
 };
 }
 

@@ -20,7 +20,7 @@
 #include "widgets/minimumcombobox.h"
 #include "translatorutil.h"
 #include "googletranslator.h"
-#include "texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditorwidget.h"
 #include "Libkdepim/ProgressIndicatorWidget"
 
 #include <QPushButton>
@@ -70,7 +70,7 @@ public:
     QMap<QString, QMap<QString, QString> > listLanguage;
     QByteArray data;
     TranslatorTextEdit *inputText;
-    PimCommon::PlainTextEditorWidget *translatedText;
+    KPIMTextEdit::PlainTextEditorWidget *translatedText;
     TranslatorResultTextEdit *translatorResultTextEdit;
     MinimumComboBox *from;
     MinimumComboBox *to;
@@ -106,7 +106,7 @@ void TranslatorWidget::TranslatorWidgetPrivate::initLanguage()
 }
 
 TranslatorResultTextEdit::TranslatorResultTextEdit(QWidget *parent)
-    : PimCommon::PlainTextEditor(parent),
+    : KPIMTextEdit::PlainTextEditor(parent),
       mResultFailed(false)
 {
     setReadOnly(true);
@@ -133,12 +133,12 @@ void TranslatorResultTextEdit::paintEvent(QPaintEvent *event)
 
         p.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, i18n("Problem when connecting to the translator web site."));
     } else {
-        PimCommon::PlainTextEditor::paintEvent(event);
+        KPIMTextEdit::PlainTextEditor::paintEvent(event);
     }
 }
 
 TranslatorTextEdit::TranslatorTextEdit(QWidget *parent)
-    : PimCommon::PlainTextEditor(parent)
+    : KPIMTextEdit::PlainTextEditor(parent)
 {
 }
 
@@ -156,7 +156,7 @@ void TranslatorTextEdit::dropEvent(QDropEvent *event)
             return;
         }
     }
-    PimCommon::PlainTextEditor::dropEvent(event);
+    KPIMTextEdit::PlainTextEditor::dropEvent(event);
 }
 
 TranslatorWidget::TranslatorWidget(QWidget *parent)
@@ -292,7 +292,7 @@ void TranslatorWidget::init()
     d->splitter = new QSplitter;
     d->splitter->setChildrenCollapsible(false);
     d->inputText = new TranslatorTextEdit(this);
-    PimCommon::PlainTextEditorWidget *editorWidget = new PimCommon::PlainTextEditorWidget(d->inputText);
+    KPIMTextEdit::PlainTextEditorWidget *editorWidget = new KPIMTextEdit::PlainTextEditorWidget(d->inputText);
     d->inputText->setObjectName(QStringLiteral("inputtext"));
     d->inputText->setPlaceholderText(i18n("Drag text that you want to translate."));
     connect(d->inputText, &TranslatorTextEdit::textChanged, this, &TranslatorWidget::slotTextChanged);
@@ -300,7 +300,7 @@ void TranslatorWidget::init()
 
     d->splitter->addWidget(editorWidget);
     d->translatorResultTextEdit = new TranslatorResultTextEdit;
-    d->translatedText = new PimCommon::PlainTextEditorWidget(d->translatorResultTextEdit, this);
+    d->translatedText = new KPIMTextEdit::PlainTextEditorWidget(d->translatorResultTextEdit, this);
     d->translatedText->setObjectName(QStringLiteral("translatedtext"));
     d->translatedText->setReadOnly(true);
     d->splitter->addWidget(d->translatedText);

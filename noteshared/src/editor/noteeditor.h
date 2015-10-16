@@ -18,11 +18,11 @@
 #ifndef NOTEEDITOR_H
 #define NOTEEDITOR_H
 
-#include "PimCommon/RichTextEditorWidget"
+#include <kpimtextedit/richtexteditorwidget.h>
 
 namespace NoteShared
 {
-class NoteEditor : public PimCommon::RichTextEditorWidget
+class NoteEditor : public KPIMTextEdit::RichTextEditorWidget
 {
 public:
     explicit NoteEditor(QWidget *parent);

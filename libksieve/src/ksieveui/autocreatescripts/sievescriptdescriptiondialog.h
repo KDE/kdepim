@@ -20,7 +20,7 @@
 
 #include <QDialog>
 
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class PlainTextEditorWidget;
 }
@@ -41,7 +41,7 @@ private:
     void writeConfig();
 
 private:
-    PimCommon::PlainTextEditorWidget *mEdit;
+    KPIMTextEdit::PlainTextEditorWidget *mEdit;
 };
 }
 

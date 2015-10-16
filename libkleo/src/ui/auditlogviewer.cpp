@@ -19,7 +19,7 @@
 */
 #include "auditlogviewer.h"
 
-#include "PimCommon/RichTextEditor"
+#include "kpimtextedit/richtexteditor.h"
 #include <QSaveFile>
 #include <QFileDialog>
 #include <KConfigGroup>
@@ -37,7 +37,7 @@ using namespace Kleo::Private;
 AuditLogViewer::AuditLogViewer(const QString &log, QWidget *parent)
     : QDialog(parent),
       m_log(/* sic */),
-      m_textEdit(new PimCommon::RichTextEditorWidget(this))
+      m_textEdit(new KPIMTextEdit::RichTextEditorWidget(this))
 {
     setWindowTitle(i18n("View GnuPG Audit Log"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);

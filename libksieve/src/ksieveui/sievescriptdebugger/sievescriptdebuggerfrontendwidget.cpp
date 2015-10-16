@@ -29,7 +29,7 @@
 #include <QFormLayout>
 #include "editor/sievetexteditwidget.h"
 #include "editor/sievetextedit.h"
-#include <pimcommon/plaintexteditorwidget.h>
+#include <kpimtextedit/plaintexteditorwidget.h>
 #include <QLabel>
 #include <KUrlRequester>
 #include <KLineEdit>
@@ -84,7 +84,7 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     splitter->addWidget(mSieveTextEditWidget);
     splitter->setChildrenCollapsible(false);
 
-    mSieveTestResult = new PimCommon::PlainTextEditorWidget(new KSieveUi::SieveScriptDebuggerResultEditor(this), this);
+    mSieveTestResult = new KPIMTextEdit::PlainTextEditorWidget(new KSieveUi::SieveScriptDebuggerResultEditor(this), this);
     mSieveTestResult->setObjectName(QStringLiteral("sievetextresult"));
     mSieveTestResult->setReadOnly(true);
     splitter->addWidget(mSieveTestResult);

@@ -18,11 +18,11 @@
 #ifndef SIEVESCRIPTDEBUGGERRESULTEDITOR_H
 #define SIEVESCRIPTDEBUGGERRESULTEDITOR_H
 
-#include <pimcommon/plaintexteditor.h>
+#include <kpimtextedit/plaintexteditor.h>
 
 namespace KSieveUi
 {
-class SieveScriptDebuggerResultEditor : public PimCommon::PlainTextEditor
+class SieveScriptDebuggerResultEditor : public KPIMTextEdit::PlainTextEditor
 {
     Q_OBJECT
 public:

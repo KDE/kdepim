@@ -22,7 +22,7 @@
 #include <Item>
 class QLineEdit;
 class KJob;
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class RichTextEditorWidget;
 }
@@ -41,7 +41,7 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    PimCommon::RichTextEditorWidget *mNote;
+    KPIMTextEdit::RichTextEditorWidget *mNote;
     QLineEdit *mSubject;
 };
 

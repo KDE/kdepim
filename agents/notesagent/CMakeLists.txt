@@ -29,6 +29,7 @@ target_link_libraries(akonadi_notes_agent
   KF5::KDELibs4Support
   KF5::NoteShared
   KF5::PimCommon
+  KF5::PimTextEdit
 )
 
 if( APPLE )

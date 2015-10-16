@@ -18,12 +18,12 @@
 #ifndef SIEVESYNTAXSPELLCHECKINGHIGHLIGHTER_H
 #define SIEVESYNTAXSPELLCHECKINGHIGHLIGHTER_H
 
-#include <PimCommon/PlainTextSyntaxSpellCheckingHighlighter>
+#include <kpimtextedit/plaintextsyntaxspellcheckinghighlighter.h>
 
 namespace KSieveUi
 {
 class SieveTextEdit;
-class SieveSyntaxSpellCheckingHighlighter : public PimCommon::PlainTextSyntaxSpellCheckingHighlighter
+class SieveSyntaxSpellCheckingHighlighter : public KPIMTextEdit::PlainTextSyntaxSpellCheckingHighlighter
 {
 public:
     explicit SieveSyntaxSpellCheckingHighlighter(SieveTextEdit *plainText, const QColor &misspelledColor = Qt::red);

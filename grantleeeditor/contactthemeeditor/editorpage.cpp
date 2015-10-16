@@ -20,7 +20,7 @@
 #include "previewwidget.h"
 #include "contacteditorwidget.h"
 #include "contacttemplatewidget.h"
-#include "PimCommon/PlainTextEditor"
+#include "kpimtextedit/plaintexteditor.h"
 
 #include <KSplitterCollapserButton>
 

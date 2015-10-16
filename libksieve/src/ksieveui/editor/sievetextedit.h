@@ -21,7 +21,7 @@
 
 #include "ksieveui_export.h"
 
-#include "PimCommon/PlainTextEditor"
+#include "kpimtextedit/plaintexteditor.h"
 
 #include "PimCommon/SieveSyntaxHighlighterRules"
 
@@ -40,7 +40,7 @@ namespace KSieveUi
 
 class SieveLineNumberArea;
 class SieveTextEditPrivate;
-class KSIEVEUI_EXPORT SieveTextEdit : public PimCommon::PlainTextEditor
+class KSIEVEUI_EXPORT SieveTextEdit : public KPIMTextEdit::PlainTextEditor
 {
     Q_OBJECT
 

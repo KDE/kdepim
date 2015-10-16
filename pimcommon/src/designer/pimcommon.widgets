@@ -7,19 +7,6 @@ WhatsThis=A listbox which lets organize list order.
 IncludeFile=pimcommon/simplestringlisteditor.h
 Group=Input (KDE-PIM)
 
-[PimCommon::PlainTextEditorWidget]
-ToolTip=A QPlaintEditor with integrate search/replace function (KDE-PIM)
-WhatsThis=QPlaintEditor with integrate search/replace function
-IncludeFile=pimcommon/plaintexteditorwidget.h
-Group=Input (KDE-PIM)
-
-[PimCommon::RichTextEditorWidget]
-ToolTip=A RichTextEditor with integrate search/replace function (KDE-PIM)
-WhatsThis=RichTextEditor with integrate search/replace function
-IncludeFile=pimcommon/richtexteditorwidget.h
-Group=Input (KDE-PIM)
-
-
 [PimCommon::TranslatorWidget]
 ToolTip=A widget to make translate string (KDE-PIM)
 WhatsThis=A widget to make translate string

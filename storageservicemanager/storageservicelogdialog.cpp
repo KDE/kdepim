@@ -19,8 +19,8 @@
 */
 
 #include "storageservicelogdialog.h"
-#include "PimCommon/RichTextEditorWidget"
-#include "PimCommon/RichTextEditor"
+#include "kpimtextedit/richtexteditorwidget.h"
+#include "kpimtextedit/richtexteditor.h"
 #include "PimCommon/PimUtil"
 
 #include <KLocalizedString>
@@ -45,7 +45,7 @@ StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &StorageServiceLogDialog::reject);
     mUser1Button->setText(i18n("Clear Log"));
     mUser2Button->setText(i18n("Save As..."));
-    mLog = new PimCommon::RichTextEditorWidget;
+    mLog = new KPIMTextEdit::RichTextEditorWidget;
     mLog->setReadOnly(true);
     readConfig();
     mainLayout->addWidget(mLog);

@@ -20,7 +20,7 @@
 */
 
 #include "annotationdialog.h"
-#include "texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditorwidget.h"
 
 #include <KMessageBox>
 #include <KLocalizedString>
@@ -52,7 +52,7 @@ public:
     }
 
     Akonadi::Item mItem;
-    PimCommon::PlainTextEditorWidget *mTextEdit;
+    KPIMTextEdit::PlainTextEditorWidget *mTextEdit;
     KComboBox *mNoteType;
     bool mHasAnnotation;
 };
@@ -89,7 +89,7 @@ AnnotationEditDialog::AnnotationEditDialog(const Akonadi::Item &item, QWidget *p
 
     QLabel *label = new QLabel(i18n("Enter the text that should be stored as a note to the mail:"));
     QVBoxLayout *vbox = new QVBoxLayout(mainWidget);
-    d->mTextEdit = new PimCommon::PlainTextEditorWidget(this);
+    d->mTextEdit = new KPIMTextEdit::PlainTextEditorWidget(this);
     vbox->addWidget(label);
     vbox->addWidget(d->mTextEdit);
     d->mTextEdit->setFocus();

@@ -40,7 +40,7 @@
 using namespace PimCommon;
 
 SpellCheckLineEdit::SpellCheckLineEdit(QWidget *parent, const QString &configFile)
-    : PimCommon::RichTextEditor(parent)
+    : KPIMTextEdit::RichTextEditor(parent)
 {
     setSpellCheckingConfigFileName(configFile);
     setSearchSupport(false);

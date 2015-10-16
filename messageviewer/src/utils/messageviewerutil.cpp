@@ -37,7 +37,7 @@
 *******************************************************************************/
 
 #include "messageviewer/messageviewerutil.h"
-#include "PimCommon/TextToSpeech"
+#include "kpimtextedit/texttospeech.h"
 #include "utils/iconnamecache.h"
 #include "messageviewer/nodehelper.h"
 #include "messageviewer_debug.h"
@@ -516,7 +516,7 @@ void Util::speakSelectedText(const QString &text)
     if (text.isEmpty()) {
         return;
     }
-    PimCommon::TextToSpeech::self()->say(text);
+    KPIMTextEdit::TextToSpeech::self()->say(text);
 }
 
 QAction *Util::createAppAction(const KService::Ptr &service, bool singleOffer, QActionGroup *actionGroup, QObject *parent)

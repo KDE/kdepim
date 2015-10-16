@@ -21,7 +21,7 @@
 #include <QWidget>
 #include "ksieveui_export.h"
 
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class PlainTextEditorWidget;
 }
@@ -54,7 +54,7 @@ private Q_SLOTS:
 private:
     KSieveUi::SieveTextEditWidget *mSieveTextEditWidget;
     KSieveUi::SieveScriptDebuggerWarning *mSieveScriptDebuggerWarning;
-    PimCommon::PlainTextEditorWidget *mSieveTestResult;
+    KPIMTextEdit::PlainTextEditorWidget *mSieveTestResult;
     KUrlRequester *mEmailPath;
     QPushButton *mDebugScript;
     QProcess *mProcess;

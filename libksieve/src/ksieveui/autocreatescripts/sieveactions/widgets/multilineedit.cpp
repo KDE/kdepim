@@ -22,7 +22,7 @@
 using namespace KSieveUi;
 
 MultiLineEdit::MultiLineEdit(QWidget *parent)
-    : PimCommon::PlainTextEditor(parent)
+    : KPIMTextEdit::PlainTextEditor(parent)
 {
     setSearchSupport(false);
     setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));

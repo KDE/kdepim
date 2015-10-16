@@ -20,7 +20,7 @@
 
 #include <QDialog>
 
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class PlainTextEditorWidget;
 }
@@ -45,8 +45,8 @@ private Q_SLOTS:
 
 private:
     GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    PimCommon::PlainTextEditorWidget *mDefaultTemplate;
-    PimCommon::PlainTextEditorWidget *mDefaultEmail;
+    KPIMTextEdit::PlainTextEditorWidget *mDefaultTemplate;
+    KPIMTextEdit::PlainTextEditorWidget *mDefaultEmail;
 };
 
 #endif // THEMECONFIGUREDIALOG_H

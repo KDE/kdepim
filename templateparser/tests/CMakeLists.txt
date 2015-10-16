@@ -8,6 +8,7 @@ target_link_libraries(templateeditor_gui
   Qt5::WebKitWidgets
   KF5::KIOCore
   KF5::TemplateParser
+  KF5::PimTextEdit
 )
 
 set(templateconfigurewidget_gui_SRCS templateconfigurewidget_gui.cpp)
@@ -17,4 +18,5 @@ target_link_libraries(templateconfigurewidget_gui
   KF5::KIOCore
   KF5::TemplateParser
   KF5::I18n
+  KF5::PimTextEdit
 )

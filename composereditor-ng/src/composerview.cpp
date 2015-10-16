@@ -25,7 +25,7 @@
 #include "globalsetting_composereditorng.h"
 
 #include <kpimtextedit/emoticontexteditaction.h>
-#include "PimCommon/TextToSpeech"
+#include "kpimtextedit/texttospeech.h"
 
 #include <KLocalizedString>
 #include <QAction>
@@ -290,7 +290,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
     autoSpellCheckingAction->setChecked(d->checkSpellingEnabled());
     connect(autoSpellCheckingAction, SIGNAL(triggered(bool)), this, SLOT(_k_changeAutoSpellChecking(bool)));
 #endif
-    if (PimCommon::TextToSpeech::self()->isReady()) {
+    if (KPIMTextEdit::TextToSpeech::self()->isReady()) {
         QAction *speakAction = menu->addAction(i18n("Speak Text"));
         speakAction->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument);

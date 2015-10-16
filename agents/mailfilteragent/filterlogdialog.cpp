@@ -30,8 +30,8 @@
 #include "filterlogdialog.h"
 #include <MailCommon/FilterLog>
 #include <messageviewer/autoqpointer.h>
-#include "PimCommon/PlainTextEditorWidget"
-#include "PimCommon/PlainTextEditor"
+#include "kpimtextedit/plaintexteditorwidget.h"
+#include "kpimtextedit/plaintexteditor.h"
 
 #include "mailfilteragent_debug.h"
 #include <QFileDialog>
@@ -81,7 +81,7 @@ FilterLogDialog::FilterLogDialog(QWidget *parent)
     pageVBoxLayout->setMargin(0);
     mainLayout->addWidget(page);
 
-    mTextEdit = new PimCommon::PlainTextEditorWidget(page);
+    mTextEdit = new KPIMTextEdit::PlainTextEditorWidget(page);
     pageVBoxLayout->addWidget(mTextEdit);
 
     mTextEdit->setReadOnly(true);

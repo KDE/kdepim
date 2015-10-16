@@ -22,7 +22,7 @@
 #include "agentwidget.h"
 #include "agentconfigdialog.h"
 #include "akonadiconsole_debug.h"
-#include "PimCommon/PlainTextEditorWidget"
+#include "kpimtextedit/plaintexteditorwidget.h"
 #include <AkonadiWidgets/agenttypedialog.h>
 #include <AkonadiWidgets/agentinstancewidget.h>
 #include <AkonadiCore/agentmanager.h>
@@ -66,7 +66,7 @@ public:
         connect(buttonBox, &QDialogButtonBox::accepted, this, &TextDialog::accept);
         connect(buttonBox, &QDialogButtonBox::rejected, this, &TextDialog::reject);
 
-        mText = new PimCommon::PlainTextEditorWidget;
+        mText = new KPIMTextEdit::PlainTextEditorWidget;
         mainLayout->addWidget(mText);
         mainLayout->addWidget(buttonBox);
         mText->setReadOnly(true);
@@ -79,7 +79,7 @@ public:
     }
 
 private:
-    PimCommon::PlainTextEditorWidget *mText;
+    KPIMTextEdit::PlainTextEditorWidget *mText;
 };
 
 using namespace Akonadi;

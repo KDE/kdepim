@@ -19,12 +19,12 @@
 #define RICHTEXTEDITWITHAUTOCORRECTION_H
 
 #include "pimcommon_export.h"
-#include "pimcommon/richtexteditor.h"
+#include "kpimtextedit/richtexteditor.h"
 
 namespace PimCommon
 {
 class AutoCorrection;
-class PIMCOMMON_EXPORT RichTextEditWithAutoCorrection : public PimCommon::RichTextEditor
+class PIMCOMMON_EXPORT RichTextEditWithAutoCorrection : public KPIMTextEdit::RichTextEditor
 {
     Q_OBJECT
 public:

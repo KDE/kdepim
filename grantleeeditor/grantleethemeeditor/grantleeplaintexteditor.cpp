@@ -29,7 +29,7 @@
 using namespace GrantleeThemeEditor;
 
 GrantleePlainTextEditor::GrantleePlainTextEditor(QWidget *parent)
-    : PimCommon::PlainTextEditor(parent)
+    : KPIMTextEdit::PlainTextEditor(parent)
 {
     mHtmlHighlighter = new KPIMTextEdit::HtmlHighlighter(document());
     setSpellCheckingSupport(false);
@@ -68,7 +68,7 @@ void GrantleePlainTextEditor::keyPressEvent(QKeyEvent *e)
             break;
         }
     }
-    PimCommon::PlainTextEditor::keyPressEvent(e);
+    KPIMTextEdit::PlainTextEditor::keyPressEvent(e);
     mTextEditorCompleter->completeText();
 }
 

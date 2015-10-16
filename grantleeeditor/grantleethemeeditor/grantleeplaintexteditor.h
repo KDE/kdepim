@@ -18,7 +18,7 @@
 #ifndef GRANTLEEPLAINTEXTEDITOR_H
 #define GRANTLEEPLAINTEXTEDITOR_H
 
-#include "PimCommon/PlainTextEditor"
+#include "kpimtextedit/plaintexteditor.h"
 
 namespace KPIMTextEdit
 {
@@ -30,7 +30,7 @@ class HtmlHighlighter;
 }
 namespace GrantleeThemeEditor
 {
-class GrantleePlainTextEditor : public PimCommon::PlainTextEditor
+class GrantleePlainTextEditor : public KPIMTextEdit::PlainTextEditor
 {
     Q_OBJECT
 public:

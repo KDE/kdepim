@@ -23,7 +23,7 @@
 using namespace PimCommon;
 
 RichTextEditWithAutoCorrection::RichTextEditWithAutoCorrection(QWidget *parent)
-    : PimCommon::RichTextEditor(parent),
+    : KPIMTextEdit::RichTextEditor(parent),
       mAutoCorrection(new PimCommon::AutoCorrection()),
       mNeedToDelete(true)
 {
@@ -86,5 +86,5 @@ void RichTextEditWithAutoCorrection::keyPressEvent(QKeyEvent *e)
             }
         }
     }
-    PimCommon::RichTextEditor::keyPressEvent(e);
+    KPIMTextEdit::RichTextEditor::keyPressEvent(e);
 }

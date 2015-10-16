@@ -37,8 +37,8 @@
 #include <AkonadiCore/servermanager.h>
 #include <AkonadiWidgets/controlgui.h>
 
-#include "PimCommon/RichTextEditorWidget"
-#include "PimCommon/RichTextEditor"
+#include "kpimtextedit/richtexteditorwidget.h"
+#include "kpimtextedit/richtexteditor.h"
 #include <KTextEdit>
 #include <KLocalizedString>
 #include <QFontDatabase>
@@ -254,7 +254,7 @@ QueryDebugger::QueryDebugger(QWidget *parent):
 
     layout->addWidget(queryList);
 
-    mView = new PimCommon::RichTextEditorWidget(this);
+    mView = new KPIMTextEdit::RichTextEditorWidget(this);
     mView->setReadOnly(true);
     mView->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     layout->addWidget(mView);

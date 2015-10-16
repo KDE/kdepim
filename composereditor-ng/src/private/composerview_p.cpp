@@ -33,7 +33,7 @@
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
 #include <kpimtextedit/selectspecialchardialog.h>
-#include "PimCommon/TextToSpeech"
+#include "kpimtextedit/texttospeech.h"
 
 #include <Sonnet/Dialog>
 #include <sonnet/backgroundchecker.h>
@@ -908,7 +908,7 @@ void ComposerViewPrivate::_k_slotSpeakText()
     if (text.isEmpty()) {
         text = q->page()->mainFrame()->toPlainText();
     }
-    PimCommon::TextToSpeech::self()->say(text);
+    KPIMTextEdit::TextToSpeech::self()->say(text);
 }
 
 void ComposerViewPrivate::_k_slotPasteWithoutFormatting()

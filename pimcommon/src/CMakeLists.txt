@@ -96,20 +96,6 @@ set(libpimcommon_autocorrection_SRCS
   autocorrection/widgets/richtexteditwithautocorrection.cpp
 )
 
-set(libpimcommon_texteditor_SRCS
-  texteditor/plaintexteditor/plaintexteditfindbar.cpp
-  texteditor/plaintexteditor/plaintexteditor.cpp
-  texteditor/plaintexteditor/plaintexteditorwidget.cpp
-  texteditor/plaintexteditor/plaintextsyntaxspellcheckinghighlighter.cpp
-  texteditor/commonwidget/textfindreplacewidget.cpp
-  texteditor/commonwidget/texteditfindbarbase.cpp
-  texteditor/commonwidget/textgotolinewidget.cpp
-  texteditor/commonwidget/textmessageindicator.cpp
-  texteditor/richtexteditor/richtexteditor.cpp
-  texteditor/richtexteditor/richtexteditfindbar.cpp
-  texteditor/richtexteditor/richtexteditorwidget.cpp
-)
-
 set(libpimcommon_translator_SRCS
   translator/translatorutil.cpp
   translator/translatorwidget.cpp
@@ -160,18 +146,6 @@ set(libpimcommon_customtools_SRCS
   customtools/customtoolsviewinterface.cpp
 )
 
-set(libtexttospeech_SRCS
-  texttospeech/texttospeech.cpp
-  texttospeech/texttospeechwidget.cpp
-  texttospeech/texttospeechconfigwidget.cpp
-  texttospeech/texttospeechinterface.cpp
-  texttospeech/abstracttexttospeechinterface.cpp
-  texttospeech/abstracttexttospeechconfiginterface.cpp
-  texttospeech/texttospeechconfiginterface.cpp
-  texttospeech/texttospeechconfigdialog.cpp
-  texttospeech/texttospeechlanguagecombobox.cpp
-  texttospeech/texttospeechactions.cpp
-)
 
 set(libpimcommon_util_SRCS
   util/createresource.cpp
@@ -221,7 +195,6 @@ set(libpimcommon_SRCS
   ${libpimcommon_acl_SRCS}
   ${libpimcommon_sieve_SRCS}
   ${libpimcommon_widgets_SRCS}
-  ${libtexttospeech_SRCS}
   ${libpimcommon_temporary_SRCS}
   ${libpimcommon_customtools_SRCS}
 )
@@ -307,20 +280,14 @@ install(TARGETS
 
 if (BUILD_TESTING)
    add_subdirectory(translator/autotests)
-   add_subdirectory(texteditor/plaintexteditor/autotests)
-   add_subdirectory(texteditor/richtexteditor/autotests)
-   add_subdirectory(texteditor/commonwidget/autotests)
    add_subdirectory(autocorrection/autotests)
    add_subdirectory(widgets/autotests)
-   add_subdirectory(texttospeech/autotests)
    add_subdirectory(acl/autotests)
    add_subdirectory(temporaryfile/autotests)
    add_subdirectory(migration/autotests)
    add_subdirectory(util/autotests)
    add_subdirectory(shareserviceurl/autotests)
    add_subdirectory(translator/tests)
-   add_subdirectory(texteditor/plaintexteditor/tests)
-   add_subdirectory(texteditor/richtexteditor/tests)
    add_subdirectory(widgets/tests)
    add_subdirectory(autocorrection/tests)
    add_subdirectory(folderdialog/tests/)
@@ -331,7 +298,6 @@ if (BUILD_TESTING)
    add_subdirectory(storageservice/webdav/tests)
    add_subdirectory(storageservice/box/tests)
    add_subdirectory(storageservice/dropbox/icons/)
-   add_subdirectory(texttospeech/tests)
    add_subdirectory(customtools/autotests)
 endif()
 
@@ -520,15 +486,6 @@ ecm_generate_headers(PimCommon_Camelcaseautocorrection_HEADERS
   RELATIVE autocorrection/
 )
 
-ecm_generate_headers(PimCommon_Camelcaserichtexteditor_HEADERS
-  HEADER_NAMES
-  RichTextEditorWidget
-  RichTextEditor
-  REQUIRED_HEADERS PimCommon_richtexteditor_HEADERS
-  PREFIX PimCommon
-  RELATIVE texteditor/richtexteditor
-)
-
 ecm_generate_headers(PimCommon_Camelcasefolderdialog_HEADERS
   HEADER_NAMES
   CheckedCollectionWidget
@@ -536,18 +493,6 @@ ecm_generate_headers(PimCommon_Camelcasefolderdialog_HEADERS
   REQUIRED_HEADERS PimCommon_folderdialog_HEADERS
   PREFIX PimCommon
   RELATIVE folderdialog
-)
-
-ecm_generate_headers(PimCommon_Camelcasetexttospeechs_HEADERS
-  HEADER_NAMES
-  TextToSpeech
-  TextToSpeechActions
-  TextToSpeechInterface
-  TextToSpeechWidget
-  AbstractTextToSpeechInterface
-  REQUIRED_HEADERS PimCommon_texttospeechs_HEADERS
-  PREFIX PimCommon
-  RELATIVE texttospeech
 )
 
 ecm_generate_headers(PimCommon_Camelcasetemplatelist_HEADERS
@@ -559,26 +504,6 @@ ecm_generate_headers(PimCommon_Camelcasetemplatelist_HEADERS
   RELATIVE templatewidgets
 )
 
-
-ecm_generate_headers(PimCommon_Camelcaseplaintexteditor_HEADERS
-  HEADER_NAMES
-  PlainTextEditor
-  PlainTextEditorWidget
-  PlainTextEditFindBar
-  PlainTextSyntaxSpellCheckingHighlighter
-  REQUIRED_HEADERS PimCommon_plaintexteditor_HEADERS
-  PREFIX PimCommon
-  RELATIVE texteditor/plaintexteditor
-)
-
-ecm_generate_headers(PimCommon_Camelcasetexteditor_commonwidget_HEADERS
-  HEADER_NAMES
-  TextGotoLineWidget
-  TextEditFindBarBase 
-  REQUIRED_HEADERS PimCommon_texteditor_commonwidget_HEADERS
-  PREFIX PimCommon
-  RELATIVE texteditor/commonwidget
-)
 
 ecm_generate_headers(PimCommon_Camelcasewidgets_HEADERS
   HEADER_NAMES
@@ -626,7 +551,6 @@ install(FILES
     ${PimCommon_Camelcaseautocorrection_HEADERS}
     ${PimCommon_Camelcaserichtexteditor_HEADERS}
     ${PimCommon_Camelcasefolderdialog_HEADERS}
-    ${PimCommon_Camelcasetexttospeechs_HEADERS}
     ${PimCommon_Camelcasetemplatelist_HEADERS}
     ${PimCommon_Camelcaseplaintexteditor_HEADERS}
     ${PimCommon_Camelcasetexteditor_commonwidget_HEADERS}
@@ -664,7 +588,6 @@ install(FILES
     ${PimCommon_autocorrection_HEADERS}
     ${PimCommon_richtexteditor_HEADERS}
     ${PimCommon_folderdialog_HEADERS}
-    ${PimCommon_texttospeechs_HEADERS}
     ${PimCommon_templatelist_HEADERS}
     ${PimCommon_plaintexteditor_HEADERS}
     ${PimCommon_texteditor_commonwidget_HEADERS}

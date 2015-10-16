@@ -26,10 +26,6 @@ namespace KPIMTextEdit
 {
 class SlideContainer;
 class TextGoToLineWidget;
-}
-
-namespace PimCommon
-{
 class PlainTextEditFindBar;
 class PlainTextEditor;
 class PlainTextEditorWidget;
@@ -121,8 +117,8 @@ private:
     QString mOriginalScript;
     QStringList mSieveCapabilities;
     SieveTextEdit *mTextEdit;
-    PimCommon::PlainTextEditorWidget *mDebugTextEdit;
-    PimCommon::PlainTextEditFindBar *mFindBar;
+    KPIMTextEdit::PlainTextEditorWidget *mDebugTextEdit;
+    KPIMTextEdit::PlainTextEditFindBar *mFindBar;
     SieveInfoWidget *mSieveInfo;
     QSplitter *mMainSplitter;
     QSplitter *mExtraSplitter;

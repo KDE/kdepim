@@ -25,7 +25,7 @@
 
 #include <KPIMTextEdit/TextEditorCompleter>
 #include <kpimtextedit/htmlhighlighter.h>
-#include "PimCommon/PlainTextEditorWidget"
+#include "kpimtextedit/plaintexteditorwidget.h"
 
 #include <QCompleter>
 #include <QAbstractItemView>
@@ -49,7 +49,7 @@ public:
         QLabel *label = new QLabel(i18n("Insert HTML tags and texts:"));
         lay->addWidget(label);
         editor = new InsertHtmlEditor;
-        PimCommon::PlainTextEditorWidget *editorWidget = new PimCommon::PlainTextEditorWidget(editor);
+        KPIMTextEdit::PlainTextEditorWidget *editorWidget = new KPIMTextEdit::PlainTextEditorWidget(editor);
         lay->addWidget(editorWidget);
         label = new QLabel(i18n("Example: <i> Hello word </i>"));
         QFont font = label->font();
@@ -99,7 +99,7 @@ QString InsertHtmlDialog::html() const
 }
 
 InsertHtmlEditor::InsertHtmlEditor(QWidget *parent)
-    : PimCommon::PlainTextEditor(parent)
+    : KPIMTextEdit::PlainTextEditor(parent)
 {
     new KPIMTextEdit::HtmlHighlighter(document());
     setFocus();
@@ -133,7 +133,7 @@ void InsertHtmlEditor::keyPressEvent(QKeyEvent *e)
             break;
         }
     }
-    PimCommon::PlainTextEditor::keyPressEvent(e);
+    KPIMTextEdit::PlainTextEditor::keyPressEvent(e);
     mTextEditorCompleter->completeText();
 }
 

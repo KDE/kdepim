@@ -19,7 +19,7 @@
 #include "../sievetexteditwidget.h"
 #include <QTest>
 #include <editor/sievetextedit.h>
-#include <pimcommon/plaintexteditfindbar.h>
+#include <kpimtextedit/plaintexteditfindbar.h>
 #include <kpimtextedit/slidecontainer.h>
 
 SieveTextEditWidgetTest::SieveTextEditWidgetTest(QObject *parent)
@@ -44,7 +44,7 @@ void SieveTextEditWidgetTest::shouldHaveDefaultValue()
     QVERIFY(slider);
     QWidget *contentWidget = slider->content();
     QVERIFY(contentWidget);
-    QVERIFY(dynamic_cast<PimCommon::PlainTextEditFindBar *>(contentWidget));
+    QVERIFY(dynamic_cast<KPIMTextEdit::PlainTextEditFindBar *>(contentWidget));
 
     QVERIFY(w.textEdit());
 }

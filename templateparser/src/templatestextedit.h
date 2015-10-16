@@ -21,11 +21,11 @@
 
 #include "templateparser_export.h"
 
-#include "PimCommon/PlainTextEditorWidget"
+#include "kpimtextedit/plaintexteditorwidget.h"
 
 namespace TemplateParser
 {
-class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public PimCommon::PlainTextEditorWidget
+class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public KPIMTextEdit::PlainTextEditorWidget
 {
     Q_OBJECT
 public:

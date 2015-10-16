@@ -21,7 +21,7 @@
 #include <QDialog>
 #include <KConfigGroup>
 
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class PlainTextEditorWidget;
 }
@@ -43,7 +43,7 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    PimCommon::PlainTextEditorWidget *mEditor;
+    KPIMTextEdit::PlainTextEditorWidget *mEditor;
 };
 }
 

@@ -23,7 +23,7 @@
 #include <QSpinBox>
 #include <QLineEdit>
 
-#include <PimCommon/PlainTextEditorWidget>
+#include <kpimtextedit/plaintexteditorwidget.h>
 
 #include <kmime/kmime_header_parsing.h>
 
@@ -61,7 +61,7 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     // Message text edit:
     ++row;
     glay->setRowStretch(row, 1);
-    mTextEdit = new PimCommon::PlainTextEditorWidget(this);
+    mTextEdit = new KPIMTextEdit::PlainTextEditorWidget(this);
     mTextEdit->setObjectName(QStringLiteral("mTextEdit"));
     glay->addWidget(mTextEdit, row, 0, 1, 2);
 

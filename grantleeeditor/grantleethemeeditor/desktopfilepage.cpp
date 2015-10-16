@@ -30,8 +30,8 @@
 #include <QLabel>
 #include <QDir>
 
-#include <pimcommon/plaintexteditorwidget.h>
-#include <pimcommon/plaintexteditor.h>
+#include <kpimtextedit/plaintexteditorwidget.h>
+#include <kpimtextedit/plaintexteditor.h>
 
 using namespace GrantleeThemeEditor;
 
@@ -64,7 +64,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
 
     ++row;
     lab = new QLabel(i18n("Description:"));
-    mDescription = new PimCommon::PlainTextEditorWidget;
+    mDescription = new KPIMTextEdit::PlainTextEditorWidget;
     mDescription->editor()->setSearchSupport(false);
     lay->addWidget(lab, row, 0);
     lay->addWidget(mDescription, row, 1);

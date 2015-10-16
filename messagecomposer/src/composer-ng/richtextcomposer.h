@@ -18,7 +18,7 @@
 #ifndef RICHTEXTCOMPOSER_H
 #define RICHTEXTCOMPOSER_H
 
-#include "PimCommon/RichTextEditor"
+#include "kpimtextedit/richtexteditor.h"
 #include "messagecomposer_export.h"
 #include <KIdentityManagement/Signature>
 class KActionCollection;
@@ -34,7 +34,7 @@ class RichTextComposerControler;
 class RichTextComposerActions;
 class RichTextExternalComposer;
 class RichTextComposerEmailQuoteHighlighter;
-class MESSAGECOMPOSER_EXPORT RichTextComposer : public PimCommon::RichTextEditor
+class MESSAGECOMPOSER_EXPORT RichTextComposer : public KPIMTextEdit::RichTextEditor
 {
     Q_OBJECT
 public:

@@ -25,7 +25,7 @@
 using namespace KSieveUi;
 
 SieveScriptDebuggerResultEditor::SieveScriptDebuggerResultEditor(QWidget *parent)
-    : PimCommon::PlainTextEditor(parent)
+    : KPIMTextEdit::PlainTextEditor(parent)
 {
 
 }
@@ -37,7 +37,7 @@ SieveScriptDebuggerResultEditor::~SieveScriptDebuggerResultEditor()
 
 void SieveScriptDebuggerResultEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 {
-    PimCommon::PlainTextEditor::addExtraMenuEntry(menu, pos);
+    KPIMTextEdit::PlainTextEditor::addExtraMenuEntry(menu, pos);
     if (isReadOnly() && !document()->isEmpty()) {
         QAction *clearAction = new QAction(i18n("Clear"), menu);
         connect(clearAction, &QAction::triggered, this, &SieveScriptDebuggerResultEditor::slotClear);

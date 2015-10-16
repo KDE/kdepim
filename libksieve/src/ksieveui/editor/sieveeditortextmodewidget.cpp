@@ -29,8 +29,8 @@
 #include "scriptsparsing/xmlprintingscriptbuilder.h"
 #include "scriptsparsing/parsingresultdialog.h"
 
-#include "PimCommon/PlainTextEditFindBar"
-#include "PimCommon/PlainTextEditorWidget"
+#include "kpimtextedit/plaintexteditfindbar.h"
+#include "kpimtextedit/plaintexteditorwidget.h"
 #include "kpimtextedit/textgotolinewidget.h"
 #include "KSplitterCollapserButton"
 #include "kpimtextedit/slidecontainer.h"
@@ -98,10 +98,10 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect(mGoToLine, &KPIMTextEdit::TextGoToLineWidget::moveToLine, this, &SieveEditorTextModeWidget::slotGoToLine);
 
     mSliderContainer = new KPIMTextEdit::SlideContainer(this);
-    mFindBar = new PimCommon::PlainTextEditFindBar(mTextEdit, textEditWidget);
+    mFindBar = new KPIMTextEdit::PlainTextEditFindBar(mTextEdit, textEditWidget);
     mFindBar->setHideWhenClose(false);
-    connect(mFindBar, &PimCommon::TextEditFindBarBase::hideFindBar, mSliderContainer, &KPIMTextEdit::SlideContainer::slideOut);
-    connect(mFindBar, &PimCommon::TextEditFindBarBase::displayMessageIndicator, mTextEdit, &PimCommon::PlainTextEditor::slotDisplayMessageIndicator);
+    connect(mFindBar, &KPIMTextEdit::TextEditFindBarBase::hideFindBar, mSliderContainer, &KPIMTextEdit::SlideContainer::slideOut);
+    connect(mFindBar, &KPIMTextEdit::TextEditFindBarBase::displayMessageIndicator, mTextEdit, &KPIMTextEdit::PlainTextEditor::slotDisplayMessageIndicator);
     mSliderContainer->setContent(mFindBar);
     textEditLayout->addWidget(mSliderContainer);
 
@@ -132,7 +132,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect(shortcut, &QShortcut::activated, this, &SieveEditorTextModeWidget::slotReplace);
     connect(mTextEdit, &SieveTextEdit::replaceText, this, &SieveEditorTextModeWidget::slotReplace);
 
-    mDebugTextEdit = new PimCommon::PlainTextEditorWidget;
+    mDebugTextEdit = new KPIMTextEdit::PlainTextEditorWidget;
     mDebugTextEdit->editor()->setSearchSupport(false);
     mDebugTextEdit->editor()->setReadOnly(true);
     mMainSplitter->addWidget(mTemplateSplitter);

@@ -22,9 +22,9 @@
 #define AUDITLOGVIEWER_H
 
 #include <QDialog>
-#include "PimCommon/RichTextEditorWidget"
+#include "kpimtextedit/richtexteditorwidget.h"
 
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class RichTextEditorWidget;
 }
@@ -53,7 +53,7 @@ private:
     void readConfig();
 
     QString m_log;
-    PimCommon::RichTextEditorWidget *m_textEdit;
+    KPIMTextEdit::RichTextEditorWidget *m_textEdit;
 };
 
 }

@@ -7,6 +7,7 @@ add_library(pimcommon_translatorplugin MODULE ${pimcommon_translatorplugin_SRCS}
 
 target_link_libraries(pimcommon_translatorplugin
   KF5::PimCommon
+  KF5::PimTextEdit
   KF5::XmlGui
 )
 

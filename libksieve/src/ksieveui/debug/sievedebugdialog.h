@@ -25,7 +25,7 @@ namespace KManageSieve
 {
 class SieveJob;
 }
-namespace PimCommon
+namespace KPIMTextEdit
 {
 class PlainTextEditorWidget;
 }
@@ -59,7 +59,7 @@ private:
     KManageSieve::SieveJob *mSieveJob;
     QUrl mUrl;
 
-    PimCommon::PlainTextEditorWidget *mEdit;
+    KPIMTextEdit::PlainTextEditorWidget *mEdit;
     QStringList mResourceIdentifier;
     QStringList mScriptList;
 };
