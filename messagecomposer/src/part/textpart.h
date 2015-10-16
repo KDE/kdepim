@@ -26,7 +26,6 @@
 #include "messagepart.h"
 
 #include "messagecomposer/richtextcomposerimages.h"
-#include <kpimtextedit/textedit.h>
 
 namespace MessageComposer
 {
