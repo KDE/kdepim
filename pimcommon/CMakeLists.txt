@@ -52,21 +52,6 @@ find_package(KF5TextWidgets ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Libkdepim ${KDEPIM_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5PimTextEdit ${KPIMTEXTEDIT_LIB_VERSION} CONFIG REQUIRED)
 
-option(KDEPIM_NO_TEXTTOSPEECH "Do not use TextToSpeech in the kdepim applications" FALSE)
-
-if (NOT KDEPIM_NO_TEXTTOSPEECH)
-   find_package(Qt5 OPTIONAL_COMPONENTS TextToSpeech)
-endif()
-
-if (KDEPIM_NO_TEXTTOSPEECH)
-  set(KDEPIM_HAVE_TEXTTOSPEECH FALSE)
-else()
-  if (${Qt5TextToSpeech_FOUND})
-    set(KDEPIM_HAVE_TEXTTOSPEECH TRUE)
-  endif()
-endif()
-
-
 
 ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX PIMCOMMON
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/pimcommon_version.h"
@@ -113,8 +98,6 @@ ecm_setup_version(${KDEPIM_LIB_VERSION} VARIABLE_PREFIX PIMCOMMON
                         SOVERSION 5
 )
 endif()
-
-configure_file(config-pimcommon.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/config-pimcommon.h )
 
 add_subdirectory(src)
 

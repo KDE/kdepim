@@ -124,13 +124,9 @@ set(QT_REQUIRED_VERSION "5.4.0")
 set(KF5_VERSION "5.16.0")
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
-option(KDEPIM_NO_TEXTTOSPEECH "Do not use TextToSpeech in the kdepim applications" FALSE)
 
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools OpenGL)
 find_package(Qt5X11Extras NO_MODULE)
-if (NOT KDEPIM_NO_TEXTTOSPEECH)
-   find_package(Qt5 OPTIONAL_COMPONENTS TextToSpeech)
-endif()
 find_package(Grantlee5 "5.0" CONFIG REQUIRED)
 
 find_package(Qt5Designer NO_MODULE)
@@ -224,13 +220,6 @@ if (NOT APPLE)
 endif()
 
 set(KDEPIM_HAVE_X11 ${X11_FOUND})
-if (KDEPIM_NO_TEXTTOSPEECH)
-  set(KDEPIM_HAVE_TEXTTOSPEECH FALSE)
-else()
-  if (${Qt5TextToSpeech_FOUND}) 
-    set(KDEPIM_HAVE_TEXTTOSPEECH TRUE)
-  endif()
-endif()
 configure_file(config-kdepim.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kdepim.h )
 
 
