@@ -101,7 +101,12 @@ set(messagecomposer_composerng_SRCS
 )
 
 
+set(messagecomposer_richtextcomposerng_SRCS
+     composer-ng/richtextcomposerng.cpp
+)
+
 set( messagecomposer_src
+     ${messagecomposer_richtextcomposerng_SRCS}
      ${messagecomposer_part_src}
      ${messagecomposer_imagescaling_src}
      ${messagecomposer_job_src}
