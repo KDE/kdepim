@@ -405,7 +405,7 @@ static bool isSpecial(const QTextCharFormat &charFormat)
            charFormat.isListFormat() || charFormat.isTableFormat() || charFormat.isTableCellFormat();
 }
 
-void RichTextComposer::processAutoCorrection(QKeyEvent *e)
+bool RichTextComposer::processAutoCorrection(QKeyEvent *e)
 {
     if (d->autoCorrection && d->autoCorrection->isEnabledAutoCorrection()) {
         if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
@@ -443,9 +443,11 @@ void RichTextComposer::processAutoCorrection(QKeyEvent *e)
                     }
                     setTextCursor(cur);
                 }
+                return true;
             }
         }
     }
+    return false;
 }
 
 bool RichTextComposer::processKeyEvent(QKeyEvent *e)
@@ -474,8 +476,9 @@ bool RichTextComposer::processKeyEvent(QKeyEvent *e)
         textCursor().clearSelection();
         Q_EMIT focusUp();
     } else {
-        processAutoCorrection(e);
-        evaluateReturnKeySupport(e);
+        if (!processAutoCorrection(e)) {
+            evaluateReturnKeySupport(e);
+        }
     }
     return true;
 }

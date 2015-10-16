@@ -151,7 +151,7 @@ private Q_SLOTS:
 private:
     void evaluateListSupport(QKeyEvent *event);
     void evaluateReturnKeySupport(QKeyEvent *event);
-    void processAutoCorrection(QKeyEvent *e);
+    bool processAutoCorrection(QKeyEvent *e);
     class RichTextComposerPrivate;
     RichTextComposerPrivate *const d;
 };
