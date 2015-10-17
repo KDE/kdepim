@@ -419,11 +419,11 @@ KBlog::BlogPost *Backend::preparePost(KBlog::BlogPost *post)
         i = found;
         found = content.indexOf(QStringLiteral("</pre>"), i, Qt::CaseInsensitive);
         if (found != -1) {
-            html1 += content.mid(i, found + 5 - i);
+            html1 += content.midRef(i, found + 5 - i);
             i = found + 5;
             found = content.indexOf(QStringLiteral("<pre>"), i, Qt::CaseInsensitive);
         } else {
-            html1 += content.mid(i, content.length() - i);
+            html1 += content.midRef(i, content.length() - i);
             i = -1;
         }
     }
@@ -441,11 +441,11 @@ KBlog::BlogPost *Backend::preparePost(KBlog::BlogPost *post)
         i = found;
         found = content.indexOf(QStringLiteral("</pre>"), i, Qt::CaseInsensitive);
         if (found != -1) {
-            html2 += content.mid(i, found + 5 - i);
+            html2 += content.midRef(i, found + 5 - i);
             i = found + 5;
             found = content.indexOf(QStringLiteral("<pre>"), i, Qt::CaseInsensitive);
         } else {
-            html2 += content.mid(i, content.length() - i);
+            html2 += content.midRef(i, content.length() - i);
             i = -1;
         }
     }

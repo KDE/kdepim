@@ -943,7 +943,7 @@ bool ObjectTreeParser::processMailmanMessage(KMime::Content *curNode)
 
     // at least one message found: build a mime tree
     digestHeaderStr = QStringLiteral("Content-Type: text/plain\nContent-Description: digest header\n\n");
-    digestHeaderStr += str.mid(0, thisDelim);
+    digestHeaderStr += str.midRef(0, thisDelim);
     createAndParseTempNode(mTopLevelContent, digestHeaderStr.toLatin1(), "Digest Header");
     //mReader->queueHtml("<br><hr><br>");
     // temporarily change curent node's Content-Type
@@ -970,7 +970,7 @@ bool ObjectTreeParser::processMailmanMessage(KMime::Content *curNode)
 
         partStr = QStringLiteral("Content-Type: message/rfc822\nContent-Description: embedded message\n\n");
         partStr += QLatin1String("Content-Type: text/plain\n");
-        partStr += str.mid(thisDelim, nextDelim - thisDelim);
+        partStr += str.midRef(thisDelim, nextDelim - thisDelim);
         QString subject = QStringLiteral("embedded message");
         QString subSearch = QStringLiteral("\nSubject:");
         int subPos = partStr.indexOf(subSearch, 0, Qt::CaseInsensitive);
@@ -1009,7 +1009,7 @@ bool ObjectTreeParser::processMailmanMessage(KMime::Content *curNode)
         thisDelim = thisDelim + 1;
     }
     partStr = QStringLiteral("Content-Type: text/plain\nContent-Description: digest footer\n\n");
-    partStr += str.mid(thisDelim);
+    partStr += str.midRef(thisDelim);
     createAndParseTempNode(mTopLevelContent, partStr.toLatin1(), "Digest Footer");
     return true;
 }
