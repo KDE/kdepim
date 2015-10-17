@@ -76,7 +76,7 @@ int QWebdavUrlInfo::codeFromResponse(const QString &response)
 {
     const int firstSpace = response.indexOf(QLatin1Char(' '));
     const int secondSpace = response.indexOf(QLatin1Char(' '), firstSpace + 1);
-    return response.mid(firstSpace + 1, secondSpace - firstSpace - 1).toInt();
+    return response.midRef(firstSpace + 1, secondSpace - firstSpace - 1).toInt();
 }
 
 QDateTime QWebdavUrlInfo::parseDateTime(const QString &input, const QString &type)

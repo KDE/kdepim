@@ -231,7 +231,7 @@ void ExportMailJob::backupConfig()
 
         Q_FOREACH (const QString &str, archiveList) {
             bool found = false;
-            const int collectionId = str.right(str.length() - archiveGroupPattern.length()).toInt(&found);
+            const int collectionId = str.rightRef(str.length() - archiveGroupPattern.length()).toInt(&found);
             if (found) {
                 KConfigGroup oldGroup = archiveConfig->group(str);
                 const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionId));
@@ -263,7 +263,7 @@ void ExportMailJob::backupConfig()
         const QStringList templateList = templateConfig->groupList().filter(QRegExp(QStringLiteral("Templates #\\d+")));
         Q_FOREACH (const QString &str, templateList) {
             bool found = false;
-            const int collectionId = str.right(str.length() - templateGroupPattern.length()).toInt(&found);
+            const int collectionId = str.rightRef(str.length() - templateGroupPattern.length()).toInt(&found);
             if (found) {
                 KConfigGroup oldGroup = templateConfig->group(str);
                 const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionId));
@@ -314,7 +314,7 @@ void ExportMailJob::backupConfig()
         const QStringList folderList = kmailConfig->groupList().filter(QRegExp(QStringLiteral("Folder-\\d+")));
         Q_FOREACH (const QString &str, folderList) {
             bool found = false;
-            const int collectionId = str.right(str.length() - folderGroupPattern.length()).toInt(&found);
+            const int collectionId = str.rightRef(str.length() - folderGroupPattern.length()).toInt(&found);
             if (found) {
                 KConfigGroup oldGroup = kmailConfig->group(str);
                 const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionId));
@@ -358,7 +358,7 @@ void ExportMailJob::backupConfig()
             const QStringList storageList = storageGroup.keyList().filter(QRegExp(QStringLiteral("MessageUniqueIdForStorageModel\\d+")));
             Q_FOREACH (const QString &str, storageList) {
                 bool found = false;
-                const int collectionId = str.right(str.length() - storageModelSelectedPattern.length()).toInt(&found);
+                const int collectionId = str.rightRef(str.length() - storageModelSelectedPattern.length()).toInt(&found);
                 const QString oldValue = storageGroup.readEntry(str);
                 if (found) {
                     const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection(collectionId));

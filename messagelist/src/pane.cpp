@@ -517,7 +517,7 @@ void Pane::Private::onSelectionChanged(const QItemSelection &selected, const QIt
 
 void Pane::Private::activateTab()
 {
-    q->tabBar()->setCurrentIndex(q->sender()->objectName().right(2).toInt() - 1);
+    q->tabBar()->setCurrentIndex(q->sender()->objectName().rightRef(2).toInt() - 1);
 }
 
 void Pane::Private::moveTabRight()

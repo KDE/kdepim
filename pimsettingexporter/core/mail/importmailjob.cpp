@@ -1077,7 +1077,7 @@ void ImportMailJob::importTemplatesConfig(const KArchiveFile *templatesconfigura
     const QStringList templateListIdentity = templateConfig->groupList().filter(templateGroupIdentityPattern);
     Q_FOREACH (const QString &str, templateListIdentity) {
         bool found = false;
-        const int identity = str.right(str.length() - templateGroupIdentityPattern.length()).toInt(&found);
+        const int identity = str.rightRef(str.length() - templateGroupIdentityPattern.length()).toInt(&found);
         if (found) {
             KConfigGroup oldGroup = templateConfig->group(str);
             if (mHashIdentity.contains(identity)) {

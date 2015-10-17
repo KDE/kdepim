@@ -195,7 +195,7 @@ public:
         }
         KContacts::VCardConverter vcc;
         const KContacts::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
-        const int index = path.right(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
+        const int index = path.rightRef(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
         if (index == -1 || index >= al.count()) {
             return true;
         }
@@ -222,7 +222,7 @@ public:
         if (!vCard.isEmpty()) {
             KContacts::VCardConverter vcc;
             const KContacts::Addressee::List al = vcc.parseVCards(vCard.toUtf8());
-            const int index = path.right(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
+            const int index = path.rightRef(path.length() - path.lastIndexOf(QLatin1Char(':')) - 1).toInt();
             if (index >= 0 && index < al.count()) {
                 return al.at(index);
             }

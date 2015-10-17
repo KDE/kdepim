@@ -79,7 +79,7 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor(const KMime::Messa
 
         // and save the encountered 'n' in a list.
         bool ok = false;
-        const int n = result.mid(start + 1, len - 1).toInt(&ok);
+        const int n = result.midRef(start + 1, len - 1).toInt(&ok);
         if (ok) {
             argList.append(n);
         }
