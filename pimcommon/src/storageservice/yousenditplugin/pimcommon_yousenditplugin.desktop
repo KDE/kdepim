@@ -4,6 +4,7 @@ ServiceTypes=PimCommonStorageService/Plugin
 X-KDE-Library=pimcommon_yousenditplugin
 Name=YouSendIt
 Name[ca]=YouSendIt
+Name[en_GB]=YouSendIt
 Name[nl]=YouSendIt
 Name[pl]=YouSendIt
 Name[pt]=YouSendIt
