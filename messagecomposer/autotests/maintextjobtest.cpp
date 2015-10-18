@@ -33,8 +33,8 @@ using namespace KMime;
 #include <MessageComposer/MainTextJob>
 #include <MessageComposer/TextPart>
 #include <MessageComposer/RichTextComposerNg>
-//#include <MessageComposer/RichTextComposerImages>
-//#include <MessageComposer/RichTextComposerControler>
+#include <KPIMTextEdit/RichTextComposerControler>
+#include <KPIMTextEdit/RichTextComposerImages>
 
 #include <KActionCollection>
 
@@ -168,11 +168,11 @@ void MainTextJobTest::testFallbackCharset()
 
 void MainTextJobTest::testHtml()
 {
-#if 0 //FIXME REACTIVATE IT
     QLatin1String originalHtml("<html><head></head><body>Test <em>with</em> formatting...<br>The end.</body></html>");
-    KPIMTextEdit::TextEdit editor;
+    MessageComposer::RichTextComposerNg editor;
+    editor.createActions(new KActionCollection(this));
     editor.setTextOrHtml(originalHtml);
-    QVERIFY(editor.isFormattingUsed());
+    QVERIFY(editor.composerControler()->isFormattingUsed());
 
     Composer *composer = new Composer;
     composer->globalPart()->setGuiEnabled(false);
@@ -208,27 +208,23 @@ void MainTextJobTest::testHtml()
             QCOMPARE(QLatin1String(html->body()), editor.toCleanHtml());
         }
     }
-#endif
 }
 
 void MainTextJobTest::testHtmlWithImages()
 {
-#if 0 //FIXME REACTIVATE IT
     KActionCollection ac(this);
-    MessageComposer::RichTextComposerNg richTextcomposer;
-    KPIMTextEdit::RichTextComposerControler controler(&richTextcomposer);
-    richTextcomposer.createActions(&ac);
+    MessageComposer::RichTextComposerNg editor;
+    editor.createActions(new KActionCollection(this));
 
-    KPIMTextEdit::TextEdit editor;
     QString image1 = KIconLoader::global()->iconPath(QLatin1String("folder-new"), KIconLoader::Small, false);
     QString image2 = KIconLoader::global()->iconPath(QLatin1String("message"), KIconLoader::Small, false);
     QString data = QStringLiteral("dust in the wind");
     editor.setTextOrHtml(data);
-    editor.addImage(QUrl::fromLocalFile(image1));
-    controler.composerImages()->addImage(QUrl::fromLocalFile(image1));
-    editor.addImage(QUrl::fromLocalFile(image2));
-    controler.composerImages()->addImage(QUrl::fromLocalFile(image2));
-    MessageComposer::ImageList images = controler.composerImages()->embeddedImages();
+    editor.composerControler()->composerImages()->addImage(QUrl::fromLocalFile(image1));
+    editor.composerControler()->composerImages()->addImage(QUrl::fromLocalFile(image1));
+    editor.composerControler()->composerImages()->addImage(QUrl::fromLocalFile(image2));
+    editor.composerControler()->composerImages()->addImage(QUrl::fromLocalFile(image2));
+    KPIMTextEdit::ImageList images = editor.composerControler()->composerImages()->embeddedImages();
     QCOMPARE(images.count(), 2);
     QString cid1 = images[0]->contentID;
     QString cid2 = images[1]->contentID;
@@ -242,7 +238,7 @@ void MainTextJobTest::testHtmlWithImages()
     textPart->setWordWrappingEnabled(false);
     textPart->setCleanPlainText(editor.toCleanPlainText());
     textPart->setCleanHtml(editor.toCleanHtml());
-    textPart->setEmbeddedImages(controler.composerImages()->embeddedImages());
+    textPart->setEmbeddedImages(editor.composerControler()->composerImages()->embeddedImages());
     MainTextJob *mjob = new MainTextJob(textPart, composer);
     QVERIFY(mjob->exec());
     Content *result = mjob->content();
@@ -299,6 +295,5 @@ void MainTextJobTest::testHtmlWithImages()
             QCOMPARE(cid->identifier(), cid2.toLatin1());
         }
     }
-#endif
 }
 
