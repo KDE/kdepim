@@ -73,8 +73,8 @@ void CryptoBlock::internalExit()
 }
 
 AttachmentMarkBlock::AttachmentMarkBlock(MessageViewer::HtmlWriter* writer, KMime::Content* node)
-   : mWriter(writer)
-   , mNode(node)
+   : mNode(node)
+   , mWriter(writer)
 {
     internalEnter();
 }
@@ -151,9 +151,9 @@ CryptoMessagePart::CryptoMessagePart(ObjectTreeParser *otp,
     : MessagePart(otp, block, text)
     , mSubOtp(0)
     , mCryptoProto(cryptoProto)
-    , mDecryptMessage(false)
     , mFromAddress(fromAddress)
     , mNode(node)
+    , mDecryptMessage(false)
 {
     mMetaData->technicalProblem = (mCryptoProto == 0);
     mMetaData->isSigned = false;
