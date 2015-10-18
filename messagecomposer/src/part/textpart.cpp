@@ -36,7 +36,7 @@ public:
     QString cleanPlainText;
     QString wrappedPlainText;
     QString cleanHtml;
-    ImageList embeddedImages;
+    KPIMTextEdit::ImageList embeddedImages;
 };
 
 TextPart::TextPart(QObject *parent)
@@ -110,12 +110,12 @@ bool TextPart::hasEmbeddedImages() const
     return !d->embeddedImages.isEmpty();
 }
 
-ImageList TextPart::embeddedImages() const
+KPIMTextEdit::ImageList TextPart::embeddedImages() const
 {
     return d->embeddedImages;
 }
 
-void TextPart::setEmbeddedImages(const MessageComposer::ImageList &images)
+void TextPart::setEmbeddedImages(const KPIMTextEdit::ImageList &images)
 {
     d->embeddedImages = images;
 }

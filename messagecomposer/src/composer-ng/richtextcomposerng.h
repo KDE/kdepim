@@ -20,6 +20,7 @@
 
 #include "messagecomposer_export.h"
 #include <kpimtextedit/richtextcomposer.h>
+#include <KIdentityManagement/Signature>
 
 namespace PimCommon
 {
@@ -29,6 +30,7 @@ class AutoCorrection;
 namespace MessageComposer
 {
 class TextPart;
+class RichTextComposerSignatures;
 class RichTextComposerNgPrivate;
 class MESSAGECOMPOSER_EXPORT RichTextComposerNg : public KPIMTextEdit::RichTextComposer
 {
@@ -41,7 +43,10 @@ public:
     void setAutocorrection(PimCommon::AutoCorrection *autocorrect);
     void setAutocorrectionLanguage(const QString &lang);
 
-    //void fillComposerTextPart(MessageComposer::TextPart *textPart);
+    void fillComposerTextPart(MessageComposer::TextPart *textPart);
+    MessageComposer::RichTextComposerSignatures *composerSignature() const;
+
+    void insertSignature(const KIdentityManagement::Signature &signature, KIdentityManagement::Signature::Placement placement, KIdentityManagement::Signature::AddedText addedText);
 private:
     bool processAutoCorrection(QKeyEvent *event) Q_DECL_OVERRIDE;
     RichTextComposerNgPrivate *const d;

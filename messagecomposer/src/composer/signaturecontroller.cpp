@@ -23,9 +23,8 @@
  */
 
 #include "signaturecontroller.h"
-#include "composer-ng/richtextcomposer.h"
+#include "composer-ng/richtextcomposerng.h"
 #include "composer-ng/richtextcomposersignatures.h"
-#include "composer-ng/richtextcomposercontroler.h"
 #include "settings/messagecomposersettings.h"
 
 #include <KIdentityManagement/kidentitymanagement/identity.h>
@@ -44,7 +43,7 @@ public:
     {
     }
 
-    MessageComposer::RichTextComposer *m_editor;
+    MessageComposer::RichTextComposerNg *m_editor;
     KIdentityManagement::IdentityCombo *m_identityCombo;
     uint m_currentIdentityId;
 };
@@ -60,7 +59,7 @@ SignatureController::~SignatureController()
     delete d;
 }
 
-void SignatureController::setEditor(MessageComposer::RichTextComposer *editor)
+void SignatureController::setEditor(MessageComposer::RichTextComposerNg *editor)
 {
     d->m_editor = editor;
 }
@@ -84,7 +83,6 @@ void SignatureController::identityChanged(uint id)
 
     const KIdentityManagement::Signature oldSig = const_cast<KIdentityManagement::Identity &>(oldIdentity).signature();
     const KIdentityManagement::Signature newSig = const_cast<KIdentityManagement::Identity &>(newIdentity).signature();
-
     const bool replaced = d->m_editor->composerSignature()->replaceSignature(oldSig, newSig);
 
     // Just append the signature if there was no old signature

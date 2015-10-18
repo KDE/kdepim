@@ -7,10 +7,8 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 if(BUILD_TESTING)
-   add_subdirectory( composer-ng/autotests )
    add_subdirectory( imagescaling/autotests )
    add_subdirectory( imagescaling/tests )
-   add_subdirectory( composer-ng/tests )
 endif()
 
 
@@ -86,23 +84,9 @@ set(messagecomposer_followupreminder_SRCS
      followupreminder/followupremindercreatejob.cpp
 )
 
-set(messagecomposer_composerng_SRCS
-     composer-ng/richtextcomposer.cpp
-     composer-ng/richtextcomposercontroler.cpp
-     composer-ng/richtextcomposeractions.cpp
-     composer-ng/klinkdialog.cpp
-     composer-ng/nestedlisthelper.cpp
-     composer-ng/richtextexternalcomposer.cpp
-     composer-ng/richtextcomposerimages.cpp
-     composer-ng/richtextcomposersignatures.cpp
-     composer-ng/richtextcomposeremailquotedecorator.cpp
-     composer-ng/richtextcomposeremailquotehighlighter.cpp
-     composer-ng/inserthtmldialog.cpp
-)
-
-
 set(messagecomposer_richtextcomposerng_SRCS
      composer-ng/richtextcomposerng.cpp
+     composer-ng/richtextcomposersignatures.cpp
 )
 
 set( messagecomposer_src
@@ -116,7 +100,6 @@ set( messagecomposer_src
      ${messagecomposer_helper_src}
      ${messagecomposer_sender_src}
      ${messagecomposer_followupreminder_SRCS}
-     ${messagecomposer_composerng_SRCS}
      utils/util.cpp
      settings/messagecomposersettings.cpp
 )
@@ -208,13 +191,8 @@ ecm_generate_headers(MessageComposer_Camelcasecomposer_HEADERS
 
 ecm_generate_headers(MessageComposer_Camelcasecomposerng_HEADERS
   HEADER_NAMES
-  RichTextComposer
-  RichTextComposerControler
-  RichTextComposerImages
-  RichTextExternalComposer
-  RichTextComposerActions
+  RichTextComposerNg
   RichTextComposerSignatures
-  RichTextComposerEmailQuoteHighlighter
   REQUIRED_HEADERS MessageComposer_composerng_HEADERS
   PREFIX MessageComposer
   RELATIVE composer-ng

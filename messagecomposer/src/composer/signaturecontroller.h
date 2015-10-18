@@ -36,7 +36,7 @@ class IdentityCombo;
 
 namespace MessageComposer
 {
-class RichTextComposer;
+class RichTextComposerNg;
 
 /** Controls signature (the footer thing, not the crypto thing) operations
  *  happening on a KMEditor triggerd by identity selection or menu actions.
@@ -50,7 +50,7 @@ public:
     explicit SignatureController(QObject *parent = Q_NULLPTR);
     ~SignatureController();
 
-    void setEditor(MessageComposer::RichTextComposer *editor);
+    void setEditor(MessageComposer::RichTextComposerNg *editor);
     void setIdentityCombo(KIdentityManagement::IdentityCombo *combo);
 
     /** Temporarily disable identity tracking, useful for initial loading for example. */

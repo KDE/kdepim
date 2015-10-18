@@ -36,7 +36,7 @@ using namespace KMime;
 
 #include <MessageComposer/Composer>
 #include <MessageComposer/ComposerViewBase>
-#include <MessageComposer/RichTextComposer>
+#include <MessageComposer/RichTextComposerNg>
 #include <MessageComposer/GlobalPart>
 #include <MessageComposer/InfoPart>
 #include <MessageComposer/TextPart>
@@ -209,7 +209,7 @@ void CryptoComposerTest::testEditEncryptAttachments()
     ComposerViewBase view(this, 0);
     AttachmentModel model(this);
     AttachmentControllerBase controller(&model, 0, 0);
-    MessageComposer::RichTextComposer editor;
+    MessageComposer::RichTextComposerNg editor;
     view.setAttachmentModel(&model);
     view.setAttachmentController(&controller);
     view.setEditor(&editor);
@@ -275,7 +275,7 @@ void CryptoComposerTest::testEditEncryptAndLateAttachments()
     ComposerViewBase view(this, 0);
     AttachmentModel model(this);
     AttachmentControllerBase controller(&model, 0, 0);
-    MessageComposer::RichTextComposer editor;
+    MessageComposer::RichTextComposerNg editor;
     view.setAttachmentModel(&model);
     view.setAttachmentController(&controller);
     view.setEditor(&editor);

@@ -23,10 +23,10 @@
 #include "attachment/attachmentcontrollerbase.h"
 #include "attachment/attachmentmodel.h"
 #include "composer/signaturecontroller.h"
-#include "composer-ng/richtextcomposer.h"
-#include "composer-ng/richtextcomposercontroler.h"
-#include "composer-ng/richtextcomposerimages.h"
+#include "composer-ng/richtextcomposerng.h"
+#include <KPIMTextEdit/RichTextComposerImages>
 #include "composer-ng/richtextcomposersignatures.h"
+#include "KPIMTextEdit/RichTextComposerControler"
 #include "job/emailaddressresolvejob.h"
 #include "composer/keyresolver.h"
 #include "part/globalpart.h"
@@ -502,7 +502,7 @@ void MessageComposer::ComposerViewBase::slotEmailAddressResolved(KJob *job)
     // Compose each message and prepare it for queueing, sending, or storing
     foreach (MessageComposer::Composer *composer, m_composers) {
         fillGlobalPart(composer->globalPart());
-        m_editor->composerControler()->fillComposerTextPart(composer->textPart());
+        m_editor->fillComposerTextPart(composer->textPart());
         fillInfoPart(composer->infoPart(), UseExpandedRecipients);
 
         if (m_attachmentModel) {
@@ -1372,7 +1372,7 @@ MessageComposer::Composer *MessageComposer::ComposerViewBase::createSimpleCompos
 {
     MessageComposer::Composer *composer = new MessageComposer::Composer;
     fillGlobalPart(composer->globalPart());
-    m_editor->composerControler()->fillComposerTextPart(composer->textPart());
+    m_editor->fillComposerTextPart(composer->textPart());
     fillInfoPart(composer->infoPart(), UseUnExpandedRecipients);
     if (m_attachmentModel)  {
         composer->addAttachmentParts(m_attachmentModel->attachments());
@@ -1520,13 +1520,13 @@ void MessageComposer::ComposerViewBase::identityChanged(const KIdentityManagemen
 
 }
 
-void MessageComposer::ComposerViewBase::setEditor(MessageComposer::RichTextComposer *editor)
+void MessageComposer::ComposerViewBase::setEditor(MessageComposer::RichTextComposerNg *editor)
 {
     m_editor = editor;
     m_editor->document()->setModified(false);
 }
 
-MessageComposer::RichTextComposer *MessageComposer::ComposerViewBase::editor()
+MessageComposer::RichTextComposerNg *MessageComposer::ComposerViewBase::editor()
 {
     return m_editor;
 }

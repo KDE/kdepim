@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "richtextcomposer.h"
+#include "richtextcomposerng.h"
 #include "richtextcomposersignatures.h"
 
 #include <KIdentityManagement/Signature>
@@ -25,17 +25,17 @@ using namespace MessageComposer;
 class Q_DECL_HIDDEN RichTextComposerSignatures::RichTextComposerSignaturesPrivate
 {
 public:
-    RichTextComposerSignaturesPrivate(RichTextComposer *composer)
+    RichTextComposerSignaturesPrivate(RichTextComposerNg *composer)
         : richTextComposer(composer)
     {
 
     }
     void cleanWhitespaceHelper(const QRegExp &regExp, const QString &newText, const KIdentityManagement::Signature &sig);
     QList<QPair<int, int> > signaturePositions(const KIdentityManagement::Signature &sig) const;
-    RichTextComposer *richTextComposer;
+    RichTextComposerNg *richTextComposer;
 };
 
-RichTextComposerSignatures::RichTextComposerSignatures(RichTextComposer *composer, QObject *parent)
+RichTextComposerSignatures::RichTextComposerSignatures(MessageComposer::RichTextComposerNg *composer, QObject *parent)
     : QObject(parent), d(new RichTextComposerSignaturesPrivate(composer))
 {
 

@@ -24,14 +24,15 @@ namespace KIdentityManagement
 {
 class Signature;
 }
+
 namespace MessageComposer
 {
-class RichTextComposer;
+class RichTextComposerNg;
 class MESSAGECOMPOSER_EXPORT RichTextComposerSignatures : public QObject
 {
     Q_OBJECT
 public:
-    explicit RichTextComposerSignatures(RichTextComposer *composer, QObject *parent = Q_NULLPTR);
+    explicit RichTextComposerSignatures(MessageComposer::RichTextComposerNg *composer, QObject *parent = Q_NULLPTR);
     ~RichTextComposerSignatures();
 
     void cleanWhitespace(const KIdentityManagement::Signature &sig);

@@ -52,7 +52,7 @@ public:
     bool encodeTexts();
     SinglepartJob *createPlainTextJob();
     SinglepartJob *createHtmlJob();
-    SinglepartJob *createImageJob(const QSharedPointer<MessageComposer::EmbeddedImage> &image);
+    SinglepartJob *createImageJob(const QSharedPointer<KPIMTextEdit::EmbeddedImage> &image);
 
     TextPart *textPart;
     QByteArray chosenCharset;
@@ -183,14 +183,14 @@ SinglepartJob *MainTextJobPrivate::createHtmlJob()
     SinglepartJob *cjob = new SinglepartJob; // No parent.
     cjob->contentType()->setMimeType("text/html");
     cjob->contentType()->setCharset(chosenCharset);
-    const QByteArray data = MessageComposer::RichTextComposerImages::imageNamesToContentIds(encodedHtml,
+    const QByteArray data = KPIMTextEdit::RichTextComposerImages::imageNamesToContentIds(encodedHtml,
                             textPart->embeddedImages());
     cjob->setData(data);
     // TODO standard recommends Content-ID.
     return cjob;
 }
 
-SinglepartJob *MainTextJobPrivate::createImageJob(const QSharedPointer<MessageComposer::EmbeddedImage> &image)
+SinglepartJob *MainTextJobPrivate::createImageJob(const QSharedPointer<KPIMTextEdit::EmbeddedImage> &image)
 {
     Q_Q(MainTextJob);
 
@@ -273,7 +273,7 @@ void MainTextJob::doStart()
             MultipartJob *multipartJob = new MultipartJob;
             multipartJob->setMultipartSubtype("related");
             multipartJob->appendSubjob(alternativeJob);
-            foreach (const QSharedPointer<MessageComposer::EmbeddedImage> &image, d->textPart->embeddedImages()) {
+            foreach (const QSharedPointer<KPIMTextEdit::EmbeddedImage> &image, d->textPart->embeddedImages()) {
                 multipartJob->appendSubjob(d->createImageJob(image));
             }
             appendSubjob(multipartJob);
