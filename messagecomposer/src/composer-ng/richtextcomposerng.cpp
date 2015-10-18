@@ -428,3 +428,13 @@ void RichTextComposerNg::insertSignature(const KIdentityManagement::Signature &s
 
     }
 }
+
+QString RichTextComposerNg::toCleanHtml() const
+{
+    return d->toCleanHtml();
+}
+
+QString RichTextComposerNg::toCleanPlainText(const QString &plainText) const
+{
+    return d->toCleanPlainText(plainText);
+}

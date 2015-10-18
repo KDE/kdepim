@@ -47,6 +47,9 @@ public:
     MessageComposer::RichTextComposerSignatures *composerSignature() const;
 
     void insertSignature(const KIdentityManagement::Signature &signature, KIdentityManagement::Signature::Placement placement, KIdentityManagement::Signature::AddedText addedText);
+    QString toCleanHtml() const;
+
+    QString toCleanPlainText(const QString &plainText = QString()) const;
 private:
     bool processAutoCorrection(QKeyEvent *event) Q_DECL_OVERRIDE;
     RichTextComposerNgPrivate *const d;
