@@ -116,11 +116,13 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
 
     mProgress->start();
     KIO::FileCopyJob *job = KIO::file_copy(subUrl, destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
-    job->metaData().insert(QStringLiteral("ssl_no_client_cert"), QStringLiteral("TRUE"));
-    job->metaData().insert(QStringLiteral("ssl_no_ui"), QStringLiteral("TRUE"));
-    job->metaData().insert(QStringLiteral("UseCache"), QStringLiteral("false"));
-    job->metaData().insert(QStringLiteral("cookies"), QStringLiteral("none"));
-    job->metaData().insert(QStringLiteral("no-auth"), QStringLiteral("true"));
+    KIO::MetaData metadata = job->metaData();
+    metadata.insert(QStringLiteral("ssl_no_client_cert"), QStringLiteral("TRUE"));
+    metadata.insert(QStringLiteral("ssl_no_ui"), QStringLiteral("TRUE"));
+    metadata.insert(QStringLiteral("UseCache"), QStringLiteral("false"));
+    metadata.insert(QStringLiteral("cookies"), QStringLiteral("none"));
+    metadata.insert(QStringLiteral("no-auth"), QStringLiteral("true"));
+    job->setMetaData(metadata);
 
     connect(job, &KIO::FileCopyJob::finished, this, &AdBlockShowListDialog::slotFinished);
 }
