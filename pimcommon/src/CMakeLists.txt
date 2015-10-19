@@ -562,7 +562,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/pimcommon_debug.h
     ${CMAKE_CURRENT_BINARY_DIR}/pimcommonsetting_base.h
     ${CMAKE_CURRENT_BINARY_DIR}/imapresourcesettings.h
-    ${CMAKE_CURRENT_BINARY_DIR}/config-pimcommon.h
     ${PimCommon_storageservicesettings_HEADERS}
     ${PimCommon_storageservice_dialog_HEADERS}
     ${PimCommon_HEADERS}
