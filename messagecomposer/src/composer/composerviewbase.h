@@ -154,13 +154,13 @@ public:
     KIdentityManagement::IdentityManager *identityManager();
 
     void setEditor(MessageComposer::RichTextComposerNg *editor);
-    MessageComposer::RichTextComposerNg *editor();
+    MessageComposer::RichTextComposerNg *editor() const;
 
     void setTransportCombo(MailTransport::TransportComboBox *transpCombo);
-    MailTransport::TransportComboBox *transportComboBox();
+    MailTransport::TransportComboBox *transportComboBox() const;
 
     void setFccCombo(Akonadi::CollectionComboBox *fcc);
-    Akonadi::CollectionComboBox *fccCombo();
+    Akonadi::CollectionComboBox *fccCombo() const;
     void setFcc(const Akonadi::Collection &id);
 
     Sonnet::DictionaryComboBox *dictionary() const;

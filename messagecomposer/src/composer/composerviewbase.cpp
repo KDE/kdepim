@@ -1526,7 +1526,7 @@ void MessageComposer::ComposerViewBase::setEditor(MessageComposer::RichTextCompo
     m_editor->document()->setModified(false);
 }
 
-MessageComposer::RichTextComposerNg *MessageComposer::ComposerViewBase::editor()
+MessageComposer::RichTextComposerNg *MessageComposer::ComposerViewBase::editor() const
 {
     return m_editor;
 }
@@ -1536,7 +1536,7 @@ void MessageComposer::ComposerViewBase::setTransportCombo(MailTransport::Transpo
     m_transport = transpCombo;
 }
 
-MailTransport::TransportComboBox *MessageComposer::ComposerViewBase::transportComboBox()
+MailTransport::TransportComboBox *MessageComposer::ComposerViewBase::transportComboBox() const
 {
     return m_transport;
 }
@@ -1581,7 +1581,7 @@ void MessageComposer::ComposerViewBase::setFccCombo(Akonadi::CollectionComboBox 
     m_fccCombo = fcc;
 }
 
-Akonadi::CollectionComboBox *MessageComposer::ComposerViewBase::fccCombo()
+Akonadi::CollectionComboBox *MessageComposer::ComposerViewBase::fccCombo() const
 {
     return m_fccCombo;
 }
