@@ -730,7 +730,7 @@ void MainWidget::setupActions(KActionCollection *collection)
     mSendVcardAction->setIcon(KIconLoader::global()->loadIcon(QStringLiteral("mail-message-new"), KIconLoader::Small));
     connect(mSendVcardAction, &QAction::triggered, this, &MainWidget::slotSendVcards);
 
-    if (!qgetenv("KDEPIM_BALOO_DEBUG").isEmpty()) {
+    if (!qEnvironmentVariableIsEmpty("KDEPIM_BALOO_DEBUG")) {
         action = collection->addAction(QStringLiteral("debug_baloo"));
         //Don't translate it. It's just for debug
         action->setText(QStringLiteral("Debug baloo..."));
