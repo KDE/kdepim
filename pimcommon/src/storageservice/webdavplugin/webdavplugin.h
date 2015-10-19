@@ -15,24 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BOXINTERFACE_H
-#define BOXINTERFACE_H
+#ifndef WEBDAVPLUGIN_H
+#define WEBDAVPLUGIN_H
 
-#include <storageservice/storageserviceinterface.h>
+#include <storageservice/storageserviceplugin.h>
+
+#include <QVariant>
+
 
 namespace PimCommon
 {
-class BoxPlugin;
-class BoxInterface : public PimCommon::StorageServiceInterface
+class WebDavPlugin : public PimCommon::StorageServicePlugin
 {
     Q_OBJECT
 public:
-    explicit BoxInterface(BoxPlugin *plugin, QObject *parent = Q_NULLPTR);
-    ~BoxInterface();
-    void shutdownService() Q_DECL_OVERRIDE;
-    bool isConfigurated() const Q_DECL_OVERRIDE;
-private:
-    BoxPlugin *mPlugin;
+    explicit WebDavPlugin(QObject *parent = Q_NULLPTR, const QList<QVariant> & = QList<QVariant>());
+    ~WebDavPlugin();
+
+    QString storageServiceName() const Q_DECL_OVERRIDE;
+    StorageServicePlugin::Capabilities capabilities() const Q_DECL_OVERRIDE;
+    QString description() const Q_DECL_OVERRIDE;
+    QUrl serviceUrl() const Q_DECL_OVERRIDE;
 };
 }
-#endif // BOXINTERFACE_H
+#endif // WEBDAVPLUGIN_H

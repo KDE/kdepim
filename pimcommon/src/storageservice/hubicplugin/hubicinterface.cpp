@@ -19,8 +19,9 @@
 
 using namespace PimCommon;
 
-HubicInterface::HubicInterface(QObject *parent)
-    : PimCommon::StorageServiceInterface(parent)
+HubicInterface::HubicInterface(HubicPlugin *plugin, QObject *parent)
+    : PimCommon::StorageServiceInterface(parent),
+      mPlugin(plugin)
 {
 
 }

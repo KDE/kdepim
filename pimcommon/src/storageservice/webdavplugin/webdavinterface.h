@@ -15,24 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BOXINTERFACE_H
-#define BOXINTERFACE_H
+#ifndef WEBDAVINTERFACE_H
+#define WEBDAVINTERFACE_H
 
 #include <storageservice/storageserviceinterface.h>
 
 namespace PimCommon
 {
-class BoxPlugin;
-class BoxInterface : public PimCommon::StorageServiceInterface
+class WebDavPlugin;
+class WebDavInterface : public PimCommon::StorageServiceInterface
 {
     Q_OBJECT
 public:
-    explicit BoxInterface(BoxPlugin *plugin, QObject *parent = Q_NULLPTR);
-    ~BoxInterface();
+    explicit WebDavInterface(WebDavPlugin *plugin, QObject *parent = Q_NULLPTR);
+    ~WebDavInterface();
     void shutdownService() Q_DECL_OVERRIDE;
     bool isConfigurated() const Q_DECL_OVERRIDE;
 private:
-    BoxPlugin *mPlugin;
+    WebDavPlugin *mPlugin;
 };
 }
-#endif // BOXINTERFACE_H
+#endif // WEBDAVINTERFACE_H

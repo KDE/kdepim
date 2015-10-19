@@ -22,14 +22,17 @@
 
 namespace PimCommon
 {
+class HubicPlugin;
 class HubicInterface : public PimCommon::StorageServiceInterface
 {
     Q_OBJECT
 public:
-    explicit HubicInterface(QObject *parent = Q_NULLPTR);
+    explicit HubicInterface(HubicPlugin *plugin, QObject *parent = Q_NULLPTR);
     ~HubicInterface();
     void shutdownService() Q_DECL_OVERRIDE;
     bool isConfigurated() const Q_DECL_OVERRIDE;
+private:
+    HubicPlugin *mPlugin;
 };
 }
 #endif // HUBICINTERFACE_H

@@ -34,6 +34,24 @@ DropBoxPlugin::~DropBoxPlugin()
 
 }
 
+QString DropBoxPlugin::dropboxOauthConsumerKey() const
+{
+    //TODO
+    return QString();
+}
+
+QString DropBoxPlugin::dropboxOauthSignature() const
+{
+    //TODO
+    return QString();
+}
+
+QString DropBoxPlugin::dropboxRootPath() const
+{
+    //TODO
+    return QString();
+}
+
 QString DropBoxPlugin::storageServiceName() const
 {
     return QStringLiteral("dropbox");

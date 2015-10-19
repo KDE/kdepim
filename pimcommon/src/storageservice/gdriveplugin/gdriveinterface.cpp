@@ -15,24 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BOXINTERFACE_H
-#define BOXINTERFACE_H
+#include "gdriveinterface.h"
 
-#include <storageservice/storageserviceinterface.h>
+using namespace PimCommon;
 
-namespace PimCommon
+GDriveInterface::GDriveInterface(GDrivePlugin *plugin, QObject *parent)
+    : PimCommon::StorageServiceInterface(parent),
+      mPlugin(plugin)
 {
-class BoxPlugin;
-class BoxInterface : public PimCommon::StorageServiceInterface
-{
-    Q_OBJECT
-public:
-    explicit BoxInterface(BoxPlugin *plugin, QObject *parent = Q_NULLPTR);
-    ~BoxInterface();
-    void shutdownService() Q_DECL_OVERRIDE;
-    bool isConfigurated() const Q_DECL_OVERRIDE;
-private:
-    BoxPlugin *mPlugin;
-};
+
 }
-#endif // BOXINTERFACE_H
+
+GDriveInterface::~GDriveInterface()
+{
+
+}
+
+void GDriveInterface::shutdownService()
+{
+
+}
+
+bool GDriveInterface::isConfigurated() const
+{
+    //TODO
+    return true;
+}

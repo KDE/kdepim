@@ -37,6 +37,10 @@ public:
     StorageServicePlugin::Capabilities capabilities() const Q_DECL_OVERRIDE;
     QString description() const Q_DECL_OVERRIDE;
     QUrl serviceUrl() const Q_DECL_OVERRIDE;
+
+    QString dropboxOauthConsumerKey() const;
+    QString dropboxOauthSignature() const;
+    QString dropboxRootPath() const;
 };
 }
 #endif // DROPBOXPLUGIN_H

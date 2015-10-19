@@ -37,14 +37,16 @@ public:
     void registerConfigIf(ISettingsJob *settingsJob);
 
     QString youSendItApiKey() const;
+
     QString dropboxOauthConsumerKey() const;
     QString dropboxOauthSignature() const;
+    QString dropboxRootPath() const;
+
     QString defaultUploadFolder() const;
     QString boxClientId() const;
     QString boxClientSecret() const;
     QString hubicClientId() const;
     QString hubicClientSecret() const;
-    QString dropboxRootPath() const;
     QString oauth2RedirectUrl() const;
     QString hubicScope() const;
     QString gdriveClientId() const;

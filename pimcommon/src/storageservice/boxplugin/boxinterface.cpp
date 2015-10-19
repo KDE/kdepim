@@ -19,8 +19,9 @@
 
 using namespace PimCommon;
 
-BoxInterface::BoxInterface(QObject *parent)
-    : PimCommon::StorageServiceInterface(parent)
+BoxInterface::BoxInterface(BoxPlugin *plugin, QObject *parent)
+    : PimCommon::StorageServiceInterface(parent),
+      mPlugin(plugin)
 {
 
 }

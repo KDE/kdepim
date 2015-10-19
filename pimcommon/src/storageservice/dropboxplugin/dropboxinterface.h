@@ -22,14 +22,17 @@
 
 namespace PimCommon
 {
+class DropBoxPlugin;
 class DropBoxInterface : public PimCommon::StorageServiceInterface
 {
     Q_OBJECT
 public:
-    explicit DropBoxInterface(QObject *parent = Q_NULLPTR);
+    explicit DropBoxInterface(DropBoxPlugin *plugin, QObject *parent = Q_NULLPTR);
     ~DropBoxInterface();
     void shutdownService() Q_DECL_OVERRIDE;
     bool isConfigurated() const Q_DECL_OVERRIDE;
+private:
+    DropBoxPlugin *mPlugin;
 };
 }
 #endif // DROPBOXINTERFACE_H

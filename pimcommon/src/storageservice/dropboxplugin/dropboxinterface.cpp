@@ -19,8 +19,9 @@
 
 using namespace PimCommon;
 
-DropBoxInterface::DropBoxInterface(QObject *parent)
-    : PimCommon::StorageServiceInterface(parent)
+DropBoxInterface::DropBoxInterface(DropBoxPlugin *plugin, QObject *parent)
+    : PimCommon::StorageServiceInterface(parent),
+      mPlugin(plugin)
 {
 
 }

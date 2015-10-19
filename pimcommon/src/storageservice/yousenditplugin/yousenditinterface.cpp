@@ -19,8 +19,9 @@
 
 using namespace PimCommon;
 
-YouSendItInterface::YouSendItInterface(QObject *parent)
-    : PimCommon::StorageServiceInterface(parent)
+YouSendItInterface::YouSendItInterface(YouSendItPlugin *plugin, QObject *parent)
+    : PimCommon::StorageServiceInterface(parent),
+      mPlugin(plugin)
 {
 
 }
