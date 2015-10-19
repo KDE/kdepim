@@ -34,7 +34,7 @@ set(kdepim_job_LIB_SRCS
 
 set(kdepim_widgets_LIB_SRCS
    widgets/customlogwidget.cpp
-   widgets/selectedcollectiondialog.cpp
+   widgets/selectedaddressbookdialog.cpp
    widgets/kdatepickerpopup.cpp
    widgets/kcheckcombobox.cpp
    widgets/kweekdaycheckcombo.cpp

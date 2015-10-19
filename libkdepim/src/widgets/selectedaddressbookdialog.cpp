@@ -26,7 +26,7 @@
  *  your version.
  */
 
-#include "selectedcollectiondialog.h"
+#include "selectedaddressbookdialog.h"
 
 #include <KLocalizedString>
 #include <KConfigGroup>
@@ -37,7 +37,7 @@
 namespace KPIM
 {
 
-SelectedCollectionDialog::SelectedCollectionDialog(QWidget *parent)
+SelectedAddressBookDialog::SelectedAddressBookDialog(QWidget *parent)
     : Akonadi::CollectionDialog(parent)
 {
     const QStringList mimeTypes(KContacts::Addressee::mimeType());
@@ -51,23 +51,23 @@ SelectedCollectionDialog::SelectedCollectionDialog(QWidget *parent)
     readConfig();
 }
 
-SelectedCollectionDialog::~SelectedCollectionDialog()
+SelectedAddressBookDialog::~SelectedAddressBookDialog()
 {
     writeConfig();
 }
 
-void SelectedCollectionDialog::readConfig()
+void SelectedAddressBookDialog::readConfig()
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "SelectedCollectionDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectedAddressBookDialog");
     const QSize size = group.readEntry("Size", QSize(600, 400));
     if (size.isValid()) {
         resize(size);
     }
 }
 
-void SelectedCollectionDialog::writeConfig()
+void SelectedAddressBookDialog::writeConfig()
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "SelectedCollectionDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectedAddressBookDialog");
     group.writeEntry("Size", size());
     group.sync();
 }

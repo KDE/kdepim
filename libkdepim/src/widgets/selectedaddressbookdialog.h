@@ -34,12 +34,12 @@
 namespace KPIM
 {
 
-class SelectedCollectionDialog : public Akonadi::CollectionDialog
+class SelectedAddressBookDialog : public Akonadi::CollectionDialog
 {
     Q_OBJECT
 public:
-    explicit SelectedCollectionDialog(QWidget *parent = Q_NULLPTR);
-    ~SelectedCollectionDialog();
+    explicit SelectedAddressBookDialog(QWidget *parent = Q_NULLPTR);
+    ~SelectedAddressBookDialog();
 
 private:
     void readConfig();
