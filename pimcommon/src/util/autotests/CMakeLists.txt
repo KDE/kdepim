@@ -7,5 +7,4 @@ macro(add_pimcommon_util_unittest _name)
     )
 endmacro()
 
-add_pimcommon_util_unittest(editorutiltest editorutiltest.cpp ../editorutil.cpp)
 add_pimcommon_util_unittest(networkutiltest networkutiltest.cpp)

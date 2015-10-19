@@ -20,7 +20,7 @@
 #include "sievetextedit.h"
 #include "editor/sievelinenumberarea.h"
 #include "editor/sieveeditorutil.h"
-#include "pimcommon/editorutil.h"
+#include "KPIMTextEdit/EditorUtil"
 #include "editor/sievetexteditorspellcheckdecorator.h"
 #include "kpimtextedit/plaintextsyntaxspellcheckinghighlighter.h"
 #include <KLocalizedString>
@@ -361,28 +361,28 @@ void SieveTextEdit::comment()
 
 void SieveTextEdit::upperCase()
 {
-    PimCommon::EditorUtil editorUtil;
+    KPIMTextEdit::EditorUtil editorUtil;
     QTextCursor cursorText = textCursor();
     editorUtil.upperCase(cursorText);
 }
 
 void SieveTextEdit::lowerCase()
 {
-    PimCommon::EditorUtil editorUtil;
+    KPIMTextEdit::EditorUtil editorUtil;
     QTextCursor cursorText = textCursor();
     editorUtil.lowerCase(cursorText);
 }
 
 void SieveTextEdit::sentenceCase()
 {
-    PimCommon::EditorUtil editorUtil;
+    KPIMTextEdit::EditorUtil editorUtil;
     QTextCursor cursorText = textCursor();
     editorUtil.sentenceCase(cursorText);
 }
 
 void SieveTextEdit::reverseCase()
 {
-    PimCommon::EditorUtil editorUtil;
+    KPIMTextEdit::EditorUtil editorUtil;
     QTextCursor cursorText = textCursor();
     editorUtil.reverseCase(cursorText);
 }

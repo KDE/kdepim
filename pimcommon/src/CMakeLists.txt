@@ -150,7 +150,6 @@ set(libpimcommon_customtools_SRCS
 set(libpimcommon_util_SRCS
   util/createresource.cpp
   util/pimutil.cpp
-  util/editorutil.cpp
   util/imapresourcecapabilitiesmanager.cpp
   util/networkutil.cpp
 )
@@ -311,7 +310,6 @@ ecm_generate_headers(PimCommon_CamelCase_HEADERS
   HEADER_NAMES
   PimUtil
   NetworkUtil
-  EditorUtil
   CreateResource
   MetaType
   ImapResourceCapabilitiesManager
