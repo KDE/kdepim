@@ -34,3 +34,9 @@ void HubicInterface::shutdownService()
 {
 
 }
+
+bool HubicInterface::isConfigurated() const
+{
+    //TODO
+    return true;
+}

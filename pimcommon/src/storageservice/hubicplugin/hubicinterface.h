@@ -29,6 +29,7 @@ public:
     explicit HubicInterface(QObject *parent = Q_NULLPTR);
     ~HubicInterface();
     void shutdownService() Q_DECL_OVERRIDE;
+    bool isConfigurated() const Q_DECL_OVERRIDE;
 };
 }
 #endif // HUBICINTERFACE_H

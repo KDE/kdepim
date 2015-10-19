@@ -34,3 +34,9 @@ void BoxInterface::shutdownService()
 {
 
 }
+
+bool BoxInterface::isConfigurated() const
+{
+    //TODO
+    return true;
+}

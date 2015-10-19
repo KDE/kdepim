@@ -34,3 +34,9 @@ void DropBoxInterface::shutdownService()
 {
 
 }
+
+bool DropBoxInterface::isConfigurated() const
+{
+    //TODO
+    return true;
+}

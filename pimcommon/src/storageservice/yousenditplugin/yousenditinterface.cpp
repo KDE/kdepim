@@ -35,3 +35,8 @@ void YouSendItInterface::shutdownService()
 
 }
 
+bool YouSendItInterface::isConfigurated() const
+{
+    //TODO
+    return true;
+}

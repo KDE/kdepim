@@ -29,6 +29,7 @@ public:
     explicit DropBoxInterface(QObject *parent = Q_NULLPTR);
     ~DropBoxInterface();
     void shutdownService() Q_DECL_OVERRIDE;
+    bool isConfigurated() const Q_DECL_OVERRIDE;
 };
 }
 #endif // DROPBOXINTERFACE_H

@@ -109,3 +109,8 @@ void StorageServiceInterface::copyFolder(const QString &source, const QString &d
 
 }
 
+void StorageServiceInterface::removeConfig()
+{
+    //TODO
+}
+

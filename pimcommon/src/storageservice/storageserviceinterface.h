@@ -47,6 +47,9 @@ public:
     virtual void copyFile(const QString &source, const QString &destination);
     virtual void copyFolder(const QString &source, const QString &destination);
     virtual void shutdownService() = 0;
+
+    virtual bool isConfigurated() const = 0;
+    virtual void removeConfig();
 };
 }
 #endif // STORAGESERVICEINTERFACE_H
