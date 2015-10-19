@@ -24,6 +24,7 @@
 namespace PimCommon
 {
 class AutoCorrection;
+class RichTextEditWithAutoCorrectionPrivate;
 class PIMCOMMON_EXPORT RichTextEditWithAutoCorrection : public KPIMTextEdit::RichTextEditor
 {
     Q_OBJECT
@@ -41,6 +42,7 @@ protected:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
 
 private:
+    RichTextEditWithAutoCorrectionPrivate *const d;
     PimCommon::AutoCorrection *mAutoCorrection;
     bool mNeedToDelete;
 };

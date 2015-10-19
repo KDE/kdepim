@@ -21,46 +21,62 @@
 #include <QKeyEvent>
 
 using namespace PimCommon;
+class PimCommon::LineEditWithAutoCorrectionPrivate
+{
+public:
+    LineEditWithAutoCorrectionPrivate()
+        : mAutoCorrection(new PimCommon::AutoCorrection()),
+          mNeedToDeleteAutoCorrection(true)
+    {
+
+    }
+    ~LineEditWithAutoCorrectionPrivate()
+    {
+        if (mNeedToDeleteAutoCorrection) {
+            delete mAutoCorrection;
+        }
+    }
+
+    PimCommon::AutoCorrection *mAutoCorrection;
+    bool mNeedToDeleteAutoCorrection;
+};
 
 LineEditWithAutoCorrection::LineEditWithAutoCorrection(QWidget *parent, const QString &configFile)
     : PimCommon::SpellCheckLineEdit(parent, configFile),
-      mAutoCorrection(new PimCommon::AutoCorrection()),
-      mNeedToDeleteAutoCorrection(true)
+      d(new PimCommon::LineEditWithAutoCorrectionPrivate)
 {
 }
 
 LineEditWithAutoCorrection::~LineEditWithAutoCorrection()
 {
-    if (mNeedToDeleteAutoCorrection) {
-        delete mAutoCorrection;
-    }
+    delete d;
 }
 
 AutoCorrection *LineEditWithAutoCorrection::autocorrection() const
 {
-    return mAutoCorrection;
+    return d->mAutoCorrection;
 }
 
 void LineEditWithAutoCorrection::setAutocorrection(PimCommon::AutoCorrection *autocorrect)
 {
-    mNeedToDeleteAutoCorrection = false;
-    delete mAutoCorrection;
-    mAutoCorrection = autocorrect;
+    d->mNeedToDeleteAutoCorrection = false;
+    delete d->mAutoCorrection;
+    d->mAutoCorrection = autocorrect;
 }
 
 void LineEditWithAutoCorrection::setAutocorrectionLanguage(const QString &language)
 {
-    mAutoCorrection->setLanguage(language);
+    d->mAutoCorrection->setLanguage(language);
 }
 
 void LineEditWithAutoCorrection::keyPressEvent(QKeyEvent *e)
 {
-    if (mAutoCorrection && mAutoCorrection->isEnabledAutoCorrection()) {
+    if (d->mAutoCorrection && d->mAutoCorrection->isEnabledAutoCorrection()) {
         if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
             if (!textCursor().hasSelection()) {
                 // no Html format in subject.
                 int position = textCursor().position();
-                const bool addSpace = mAutoCorrection->autocorrect(false, *document(), position);
+                const bool addSpace = d->mAutoCorrection->autocorrect(false, *document(), position);
                 QTextCursor cur = textCursor();
                 cur.setPosition(position);
                 if (e->key() == Qt::Key_Space) {

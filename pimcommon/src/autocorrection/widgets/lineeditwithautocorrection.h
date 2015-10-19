@@ -25,6 +25,7 @@
 namespace PimCommon
 {
 class AutoCorrection;
+class LineEditWithAutoCorrectionPrivate;
 class PIMCOMMON_EXPORT LineEditWithAutoCorrection : public PimCommon::SpellCheckLineEdit
 {
     Q_OBJECT
@@ -41,8 +42,7 @@ protected:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
 
 private:
-    PimCommon::AutoCorrection *mAutoCorrection;
-    bool mNeedToDeleteAutoCorrection;
+    LineEditWithAutoCorrectionPrivate *const d;
 };
 }
 

@@ -38,68 +38,91 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 using namespace PimCommon;
 
 Q_DECLARE_METATYPE(AutoCorrectionWidget::ImportFileType)
+class PimCommon::AutoCorrectionWidgetPrivate
+{
+public:
+    AutoCorrectionWidgetPrivate()
+        : ui(new Ui::AutoCorrectionWidget),
+          mAutoCorrection(Q_NULLPTR),
+          mWasChanged(false)
+    {
+
+    }
+    ~AutoCorrectionWidgetPrivate()
+    {
+        delete ui;
+    }
+
+    AutoCorrection::TypographicQuotes m_singleQuotes;
+    AutoCorrection::TypographicQuotes m_doubleQuotes;
+    QSet<QString> m_upperCaseExceptions;
+    QSet<QString> m_twoUpperLetterExceptions;
+    QHash<QString, QString> m_autocorrectEntries;
+    Ui::AutoCorrectionWidget *ui;
+    AutoCorrection *mAutoCorrection;
+    bool mWasChanged;
+};
+
 
 AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::AutoCorrectionWidget),
-    mAutoCorrection(Q_NULLPTR),
-    mWasChanged(false)
+    d(new PimCommon::AutoCorrectionWidgetPrivate)
 {
-    ui->setupUi(this);
+    d->ui->setupUi(this);
 
-    ui->treeWidget->setSortingEnabled(true);
-    ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);
+    d->ui->treeWidget->setSortingEnabled(true);
+    d->ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);
 
-    ui->add1->setEnabled(false);
-    ui->add2->setEnabled(false);
+    d->ui->add1->setEnabled(false);
+    d->ui->add2->setEnabled(false);
 
-    connect(ui->autoChangeFormat, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->autoFormatUrl, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->upperCase, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->upperUpper, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->ignoreDoubleSpace, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->autoReplaceNumber, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->capitalizeDaysName, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->advancedAutocorrection, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->enabledAutocorrection, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->typographicSingleQuotes, &QCheckBox::clicked, this, &AutoCorrectionWidget::enableSingleQuotes);
-    connect(ui->typographicDoubleQuotes, &QCheckBox::clicked, this, &AutoCorrectionWidget::enableDoubleQuotes);
-    connect(ui->autoSuperScript, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->singleQuote1, &QPushButton::clicked, this, &AutoCorrectionWidget::selectSingleQuoteCharOpen);
-    connect(ui->singleQuote2, &QPushButton::clicked, this, &AutoCorrectionWidget::selectSingleQuoteCharClose);
-    connect(ui->singleDefault, &QPushButton::clicked, this, &AutoCorrectionWidget::setDefaultSingleQuotes);
-    connect(ui->doubleQuote1, &QPushButton::clicked, this, &AutoCorrectionWidget::selectDoubleQuoteCharOpen);
-    connect(ui->doubleQuote2, &QPushButton::clicked, this, &AutoCorrectionWidget::selectDoubleQuoteCharClose);
-    connect(ui->doubleDefault, &QPushButton::clicked, this, &AutoCorrectionWidget::setDefaultDoubleQuotes);
-    connect(ui->advancedAutocorrection, &QCheckBox::clicked, this, &AutoCorrectionWidget::enableAdvAutocorrection);
-    connect(ui->addButton, &QPushButton::clicked, this, &AutoCorrectionWidget::addAutocorrectEntry);
-    connect(ui->removeButton, &QPushButton::clicked, this, &AutoCorrectionWidget::removeAutocorrectEntry);
-    connect(ui->treeWidget, &PimCommon::AutoCorrectionTreeWidget::itemClicked, this, &AutoCorrectionWidget::setFindReplaceText);
-    connect(ui->treeWidget, &PimCommon::AutoCorrectionTreeWidget::deleteSelectedItems, this, &AutoCorrectionWidget::removeAutocorrectEntry);
-    connect(ui->treeWidget, &PimCommon::AutoCorrectionTreeWidget::itemSelectionChanged, this, &AutoCorrectionWidget::updateAddRemoveButton);
-    connect(ui->find, &KLineEdit::textChanged, this, &AutoCorrectionWidget::enableAddRemoveButton);
-    connect(ui->replace, &KLineEdit::textChanged, this, &AutoCorrectionWidget::enableAddRemoveButton);
-    connect(ui->abbreviation, &KLineEdit::textChanged, this, &AutoCorrectionWidget::abbreviationChanged);
-    connect(ui->twoUpperLetter, &KLineEdit::textChanged, this, &AutoCorrectionWidget::twoUpperLetterChanged);
-    connect(ui->add1, &QPushButton::clicked, this, &AutoCorrectionWidget::addAbbreviationEntry);
-    connect(ui->remove1, &QPushButton::clicked, this, &AutoCorrectionWidget::removeAbbreviationEntry);
-    connect(ui->add2, &QPushButton::clicked, this, &AutoCorrectionWidget::addTwoUpperLetterEntry);
-    connect(ui->remove2, &QPushButton::clicked, this, &AutoCorrectionWidget::removeTwoUpperLetterEntry);
-    connect(ui->typographicDoubleQuotes, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->typographicSingleQuotes, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->abbreviationList, &PimCommon::AutoCorrectionListWidget::itemSelectionChanged, this, &AutoCorrectionWidget::slotEnableDisableAbreviationList);
-    connect(ui->abbreviationList, &PimCommon::AutoCorrectionListWidget::deleteSelectedItems, this, &AutoCorrectionWidget::removeAbbreviationEntry);
-    connect(ui->twoUpperLetterList, &PimCommon::AutoCorrectionListWidget::itemSelectionChanged, this, &AutoCorrectionWidget::slotEnableDisableTwoUpperEntry);
-    connect(ui->twoUpperLetterList, &PimCommon::AutoCorrectionListWidget::deleteSelectedItems, this, &AutoCorrectionWidget::removeTwoUpperLetterEntry);
-    connect(ui->autocorrectionLanguage, SIGNAL(activated(int)), SLOT(changeLanguage(int)));
-    connect(ui->addNonBreakingSpaceInFrench, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
-    connect(ui->twoUpperLetter, &KLineEdit::returnPressed, this, &AutoCorrectionWidget::addTwoUpperLetterEntry);
-    connect(ui->abbreviation, &KLineEdit::returnPressed, this, &AutoCorrectionWidget::addAbbreviationEntry);
+    connect(d->ui->autoChangeFormat, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->autoFormatUrl, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->upperCase, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->upperUpper, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->ignoreDoubleSpace, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->autoReplaceNumber, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->capitalizeDaysName, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->advancedAutocorrection, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->enabledAutocorrection, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->typographicSingleQuotes, &QCheckBox::clicked, this, &AutoCorrectionWidget::enableSingleQuotes);
+    connect(d->ui->typographicDoubleQuotes, &QCheckBox::clicked, this, &AutoCorrectionWidget::enableDoubleQuotes);
+    connect(d->ui->autoSuperScript, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->singleQuote1, &QPushButton::clicked, this, &AutoCorrectionWidget::selectSingleQuoteCharOpen);
+    connect(d->ui->singleQuote2, &QPushButton::clicked, this, &AutoCorrectionWidget::selectSingleQuoteCharClose);
+    connect(d->ui->singleDefault, &QPushButton::clicked, this, &AutoCorrectionWidget::setDefaultSingleQuotes);
+    connect(d->ui->doubleQuote1, &QPushButton::clicked, this, &AutoCorrectionWidget::selectDoubleQuoteCharOpen);
+    connect(d->ui->doubleQuote2, &QPushButton::clicked, this, &AutoCorrectionWidget::selectDoubleQuoteCharClose);
+    connect(d->ui->doubleDefault, &QPushButton::clicked, this, &AutoCorrectionWidget::setDefaultDoubleQuotes);
+    connect(d->ui->advancedAutocorrection, &QCheckBox::clicked, this, &AutoCorrectionWidget::enableAdvAutocorrection);
+    connect(d->ui->addButton, &QPushButton::clicked, this, &AutoCorrectionWidget::addAutocorrectEntry);
+    connect(d->ui->removeButton, &QPushButton::clicked, this, &AutoCorrectionWidget::removeAutocorrectEntry);
+    connect(d->ui->treeWidget, &PimCommon::AutoCorrectionTreeWidget::itemClicked, this, &AutoCorrectionWidget::setFindReplaceText);
+    connect(d->ui->treeWidget, &PimCommon::AutoCorrectionTreeWidget::deleteSelectedItems, this, &AutoCorrectionWidget::removeAutocorrectEntry);
+    connect(d->ui->treeWidget, &PimCommon::AutoCorrectionTreeWidget::itemSelectionChanged, this, &AutoCorrectionWidget::updateAddRemoveButton);
+    connect(d->ui->find, &KLineEdit::textChanged, this, &AutoCorrectionWidget::enableAddRemoveButton);
+    connect(d->ui->replace, &KLineEdit::textChanged, this, &AutoCorrectionWidget::enableAddRemoveButton);
+    connect(d->ui->abbreviation, &KLineEdit::textChanged, this, &AutoCorrectionWidget::abbreviationChanged);
+    connect(d->ui->twoUpperLetter, &KLineEdit::textChanged, this, &AutoCorrectionWidget::twoUpperLetterChanged);
+    connect(d->ui->add1, &QPushButton::clicked, this, &AutoCorrectionWidget::addAbbreviationEntry);
+    connect(d->ui->remove1, &QPushButton::clicked, this, &AutoCorrectionWidget::removeAbbreviationEntry);
+    connect(d->ui->add2, &QPushButton::clicked, this, &AutoCorrectionWidget::addTwoUpperLetterEntry);
+    connect(d->ui->remove2, &QPushButton::clicked, this, &AutoCorrectionWidget::removeTwoUpperLetterEntry);
+    connect(d->ui->typographicDoubleQuotes, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->typographicSingleQuotes, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->abbreviationList, &PimCommon::AutoCorrectionListWidget::itemSelectionChanged, this, &AutoCorrectionWidget::slotEnableDisableAbreviationList);
+    connect(d->ui->abbreviationList, &PimCommon::AutoCorrectionListWidget::deleteSelectedItems, this, &AutoCorrectionWidget::removeAbbreviationEntry);
+    connect(d->ui->twoUpperLetterList, &PimCommon::AutoCorrectionListWidget::itemSelectionChanged, this, &AutoCorrectionWidget::slotEnableDisableTwoUpperEntry);
+    connect(d->ui->twoUpperLetterList, &PimCommon::AutoCorrectionListWidget::deleteSelectedItems, this, &AutoCorrectionWidget::removeTwoUpperLetterEntry);
+    connect(d->ui->autocorrectionLanguage, SIGNAL(activated(int)), SLOT(changeLanguage(int)));
+    connect(d->ui->addNonBreakingSpaceInFrench, &QCheckBox::clicked, this, &AutoCorrectionWidget::changed);
+    connect(d->ui->twoUpperLetter, &KLineEdit::returnPressed, this, &AutoCorrectionWidget::addTwoUpperLetterEntry);
+    connect(d->ui->abbreviation, &KLineEdit::returnPressed, this, &AutoCorrectionWidget::addAbbreviationEntry);
     slotEnableDisableAbreviationList();
     slotEnableDisableTwoUpperEntry();
 
     QMenu *menu = new QMenu();
-    ui->importAutoCorrection->setMenu(menu);
+    d->ui->importAutoCorrection->setMenu(menu);
 
     QAction *act = new QAction(i18n("LibreOffice Autocorrection"), this);
     act->setData(QVariant::fromValue(AutoCorrectionWidget::LibreOffice));
@@ -111,160 +134,160 @@ AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
 
     connect(menu, &QMenu::triggered, this, &AutoCorrectionWidget::slotImportAutoCorrection);
 
-    connect(ui->exportAutoCorrection, &QPushButton::clicked, this, &AutoCorrectionWidget::slotExportAutoCorrection);
+    connect(d->ui->exportAutoCorrection, &QPushButton::clicked, this, &AutoCorrectionWidget::slotExportAutoCorrection);
 }
 
 AutoCorrectionWidget::~AutoCorrectionWidget()
 {
-    delete ui;
+    delete d;
 }
 
 void AutoCorrectionWidget::setAutoCorrection(AutoCorrection *autoCorrect)
 {
-    mAutoCorrection = autoCorrect;
-    setLanguage(ui->autocorrectionLanguage->language());
+    d->mAutoCorrection = autoCorrect;
+    setLanguage(d->ui->autocorrectionLanguage->language());
 }
 
 void AutoCorrectionWidget::loadConfig()
 {
-    if (!mAutoCorrection) {
+    if (!d->mAutoCorrection) {
         return;
     }
 
-    ui->autoChangeFormat->setChecked(mAutoCorrection->isAutoBoldUnderline());
-    ui->autoFormatUrl->setChecked(mAutoCorrection->isAutoFormatUrl());
-    ui->enabledAutocorrection->setChecked(mAutoCorrection->isEnabledAutoCorrection());
-    ui->upperCase->setChecked(mAutoCorrection->isUppercaseFirstCharOfSentence());
-    ui->upperUpper->setChecked(mAutoCorrection->isFixTwoUppercaseChars());
-    ui->ignoreDoubleSpace->setChecked(mAutoCorrection->isSingleSpaces());
-    ui->autoReplaceNumber->setChecked(mAutoCorrection->isAutoFractions());
-    ui->capitalizeDaysName->setChecked(mAutoCorrection->isCapitalizeWeekDays());
-    ui->advancedAutocorrection->setChecked(mAutoCorrection->isAdvancedAutocorrect());
-    ui->autoSuperScript->setChecked(mAutoCorrection->isSuperScript());
-    ui->typographicDoubleQuotes->setChecked(mAutoCorrection->isReplaceDoubleQuotes());
-    ui->typographicSingleQuotes->setChecked(mAutoCorrection->isReplaceSingleQuotes());
-    ui->addNonBreakingSpaceInFrench->setChecked(mAutoCorrection->isAddNonBreakingSpace());
+    d->ui->autoChangeFormat->setChecked(d->mAutoCorrection->isAutoBoldUnderline());
+    d->ui->autoFormatUrl->setChecked(d->mAutoCorrection->isAutoFormatUrl());
+    d->ui->enabledAutocorrection->setChecked(d->mAutoCorrection->isEnabledAutoCorrection());
+    d->ui->upperCase->setChecked(d->mAutoCorrection->isUppercaseFirstCharOfSentence());
+    d->ui->upperUpper->setChecked(d->mAutoCorrection->isFixTwoUppercaseChars());
+    d->ui->ignoreDoubleSpace->setChecked(d->mAutoCorrection->isSingleSpaces());
+    d->ui->autoReplaceNumber->setChecked(d->mAutoCorrection->isAutoFractions());
+    d->ui->capitalizeDaysName->setChecked(d->mAutoCorrection->isCapitalizeWeekDays());
+    d->ui->advancedAutocorrection->setChecked(d->mAutoCorrection->isAdvancedAutocorrect());
+    d->ui->autoSuperScript->setChecked(d->mAutoCorrection->isSuperScript());
+    d->ui->typographicDoubleQuotes->setChecked(d->mAutoCorrection->isReplaceDoubleQuotes());
+    d->ui->typographicSingleQuotes->setChecked(d->mAutoCorrection->isReplaceSingleQuotes());
+    d->ui->addNonBreakingSpaceInFrench->setChecked(d->mAutoCorrection->isAddNonBreakingSpace());
     loadAutoCorrectionAndException();
-    mWasChanged = false;
+    d->mWasChanged = false;
 }
 
 void AutoCorrectionWidget::loadAutoCorrectionAndException()
 {
     /* tab 2 - Custom Quotes */
-    m_singleQuotes = mAutoCorrection->typographicSingleQuotes();
-    ui->singleQuote1->setText(m_singleQuotes.begin);
-    ui->singleQuote2->setText(m_singleQuotes.end);
-    m_doubleQuotes = mAutoCorrection->typographicDoubleQuotes();
-    ui->doubleQuote1->setText(m_doubleQuotes.begin);
-    ui->doubleQuote2->setText(m_doubleQuotes.end);
-    enableSingleQuotes(ui->typographicSingleQuotes->isChecked());
-    enableDoubleQuotes(ui->typographicDoubleQuotes->isChecked());
+    d->m_singleQuotes = d->mAutoCorrection->typographicSingleQuotes();
+    d->ui->singleQuote1->setText(d->m_singleQuotes.begin);
+    d->ui->singleQuote2->setText(d->m_singleQuotes.end);
+    d->m_doubleQuotes = d->mAutoCorrection->typographicDoubleQuotes();
+    d->ui->doubleQuote1->setText(d->m_doubleQuotes.begin);
+    d->ui->doubleQuote2->setText(d->m_doubleQuotes.end);
+    enableSingleQuotes(d->ui->typographicSingleQuotes->isChecked());
+    enableDoubleQuotes(d->ui->typographicDoubleQuotes->isChecked());
 
     /* tab 3 - Advanced Autocorrection */
-    m_autocorrectEntries = mAutoCorrection->autocorrectEntries();
+    d->m_autocorrectEntries = d->mAutoCorrection->autocorrectEntries();
     addAutoCorrectEntries();
 
-    enableAdvAutocorrection(ui->advancedAutocorrection->isChecked());
+    enableAdvAutocorrection(d->ui->advancedAutocorrection->isChecked());
     /* tab 4 - Exceptions */
-    m_upperCaseExceptions = mAutoCorrection->upperCaseExceptions();
-    m_twoUpperLetterExceptions = mAutoCorrection->twoUpperLetterExceptions();
+    d->m_upperCaseExceptions = d->mAutoCorrection->upperCaseExceptions();
+    d->m_twoUpperLetterExceptions = d->mAutoCorrection->twoUpperLetterExceptions();
 
-    ui->twoUpperLetterList->clear();
-    ui->twoUpperLetterList->addItems(m_twoUpperLetterExceptions.toList());
+    d->ui->twoUpperLetterList->clear();
+    d->ui->twoUpperLetterList->addItems(d->m_twoUpperLetterExceptions.toList());
 
-    ui->abbreviationList->clear();
-    ui->abbreviationList->addItems(m_upperCaseExceptions.toList());
+    d->ui->abbreviationList->clear();
+    d->ui->abbreviationList->addItems(d->m_upperCaseExceptions.toList());
 
 }
 
 void AutoCorrectionWidget::addAutoCorrectEntries()
 {
-    ui->treeWidget->clear();
-    QHash<QString, QString>::const_iterator i = m_autocorrectEntries.constBegin();
+    d->ui->treeWidget->clear();
+    QHash<QString, QString>::const_iterator i = d->m_autocorrectEntries.constBegin();
     QTreeWidgetItem *item = Q_NULLPTR;
-    while (i != m_autocorrectEntries.constEnd()) {
-        item = new QTreeWidgetItem(ui->treeWidget, item);
+    while (i != d->m_autocorrectEntries.constEnd()) {
+        item = new QTreeWidgetItem(d->ui->treeWidget, item);
         item->setText(0, i.key());
         item->setText(1, i.value());
         ++i;
     }
-    ui->treeWidget->setSortingEnabled(true);
-    ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);
+    d->ui->treeWidget->setSortingEnabled(true);
+    d->ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);
 }
 
 void AutoCorrectionWidget::writeConfig()
 {
-    if (!mAutoCorrection) {
+    if (!d->mAutoCorrection) {
         return;
     }
-    mAutoCorrection->setAutoBoldUnderline(ui->autoChangeFormat->isChecked());
-    mAutoCorrection->setAutoFormatUrl(ui->autoFormatUrl->isChecked());
-    mAutoCorrection->setEnabledAutoCorrection(ui->enabledAutocorrection->isChecked());
-    mAutoCorrection->setUppercaseFirstCharOfSentence(ui->upperCase->isChecked());
-    mAutoCorrection->setFixTwoUppercaseChars(ui->upperUpper->isChecked());
-    mAutoCorrection->setSingleSpaces(ui->ignoreDoubleSpace->isChecked());
-    mAutoCorrection->setCapitalizeWeekDays(ui->capitalizeDaysName->isChecked());
-    mAutoCorrection->setAdvancedAutocorrect(ui->advancedAutocorrection->isChecked());
-    mAutoCorrection->setSuperScript(ui->autoSuperScript->isChecked());
+    d->mAutoCorrection->setAutoBoldUnderline(d->ui->autoChangeFormat->isChecked());
+    d->mAutoCorrection->setAutoFormatUrl(d->ui->autoFormatUrl->isChecked());
+    d->mAutoCorrection->setEnabledAutoCorrection(d->ui->enabledAutocorrection->isChecked());
+    d->mAutoCorrection->setUppercaseFirstCharOfSentence(d->ui->upperCase->isChecked());
+    d->mAutoCorrection->setFixTwoUppercaseChars(d->ui->upperUpper->isChecked());
+    d->mAutoCorrection->setSingleSpaces(d->ui->ignoreDoubleSpace->isChecked());
+    d->mAutoCorrection->setCapitalizeWeekDays(d->ui->capitalizeDaysName->isChecked());
+    d->mAutoCorrection->setAdvancedAutocorrect(d->ui->advancedAutocorrection->isChecked());
+    d->mAutoCorrection->setSuperScript(d->ui->autoSuperScript->isChecked());
 
-    mAutoCorrection->setAutoFractions(ui->autoReplaceNumber->isChecked());
+    d->mAutoCorrection->setAutoFractions(d->ui->autoReplaceNumber->isChecked());
 
-    mAutoCorrection->setAutocorrectEntries(m_autocorrectEntries);
-    mAutoCorrection->setUpperCaseExceptions(m_upperCaseExceptions);
-    mAutoCorrection->setTwoUpperLetterExceptions(m_twoUpperLetterExceptions);
+    d->mAutoCorrection->setAutocorrectEntries(d->m_autocorrectEntries);
+    d->mAutoCorrection->setUpperCaseExceptions(d->m_upperCaseExceptions);
+    d->mAutoCorrection->setTwoUpperLetterExceptions(d->m_twoUpperLetterExceptions);
 
-    mAutoCorrection->setReplaceDoubleQuotes(ui->typographicDoubleQuotes->isChecked());
-    mAutoCorrection->setReplaceSingleQuotes(ui->typographicSingleQuotes->isChecked());
-    mAutoCorrection->setTypographicSingleQuotes(m_singleQuotes);
-    mAutoCorrection->setTypographicDoubleQuotes(m_doubleQuotes);
-    mAutoCorrection->setAddNonBreakingSpace(ui->addNonBreakingSpaceInFrench->isChecked());
-    mAutoCorrection->writeConfig();
-    mWasChanged = false;
+    d->mAutoCorrection->setReplaceDoubleQuotes(d->ui->typographicDoubleQuotes->isChecked());
+    d->mAutoCorrection->setReplaceSingleQuotes(d->ui->typographicSingleQuotes->isChecked());
+    d->mAutoCorrection->setTypographicSingleQuotes(d->m_singleQuotes);
+    d->mAutoCorrection->setTypographicDoubleQuotes(d->m_doubleQuotes);
+    d->mAutoCorrection->setAddNonBreakingSpace(d->ui->addNonBreakingSpaceInFrench->isChecked());
+    d->mAutoCorrection->writeConfig();
+    d->mWasChanged = false;
 }
 
 void AutoCorrectionWidget::resetToDefault()
 {
-    ui->autoChangeFormat->setChecked(false);
-    ui->autoFormatUrl->setChecked(false);
-    ui->upperCase->setChecked(false);
-    ui->upperUpper->setChecked(false);
-    ui->ignoreDoubleSpace->setChecked(false);
-    ui->capitalizeDaysName->setChecked(false);
-    ui->advancedAutocorrection->setChecked(false);
-    ui->typographicDoubleQuotes->setChecked(false);
-    ui->typographicSingleQuotes->setChecked(false);
-    ui->autoSuperScript->setChecked(false);
-    ui->autoReplaceNumber->setChecked(false);
-    ui->typographicDoubleQuotes->setChecked(false);
-    ui->typographicSingleQuotes->setChecked(false);
-    ui->addNonBreakingSpaceInFrench->setChecked(false);
+    d->ui->autoChangeFormat->setChecked(false);
+    d->ui->autoFormatUrl->setChecked(false);
+    d->ui->upperCase->setChecked(false);
+    d->ui->upperUpper->setChecked(false);
+    d->ui->ignoreDoubleSpace->setChecked(false);
+    d->ui->capitalizeDaysName->setChecked(false);
+    d->ui->advancedAutocorrection->setChecked(false);
+    d->ui->typographicDoubleQuotes->setChecked(false);
+    d->ui->typographicSingleQuotes->setChecked(false);
+    d->ui->autoSuperScript->setChecked(false);
+    d->ui->autoReplaceNumber->setChecked(false);
+    d->ui->typographicDoubleQuotes->setChecked(false);
+    d->ui->typographicSingleQuotes->setChecked(false);
+    d->ui->addNonBreakingSpaceInFrench->setChecked(false);
 
     loadGlobalAutoCorrectionAndException();
 }
 
 void AutoCorrectionWidget::enableSingleQuotes(bool state)
 {
-    ui->singleQuote1->setEnabled(state);
-    ui->singleQuote2->setEnabled(state);
-    ui->singleDefault->setEnabled(state);
+    d->ui->singleQuote1->setEnabled(state);
+    d->ui->singleQuote2->setEnabled(state);
+    d->ui->singleDefault->setEnabled(state);
 }
 
 void AutoCorrectionWidget::enableDoubleQuotes(bool state)
 {
-    ui->doubleQuote1->setEnabled(state);
-    ui->doubleQuote2->setEnabled(state);
-    ui->doubleDefault->setEnabled(state);
+    d->ui->doubleQuote1->setEnabled(state);
+    d->ui->doubleQuote2->setEnabled(state);
+    d->ui->doubleDefault->setEnabled(state);
 }
 
 void AutoCorrectionWidget::selectSingleQuoteCharOpen()
 {
     KPIMTextEdit::SelectSpecialCharDialog dlg(this);
-    dlg.setCurrentChar(m_singleQuotes.begin);
+    dlg.setCurrentChar(d->m_singleQuotes.begin);
     dlg.showSelectButton(false);
     dlg.autoInsertChar();
     if (dlg.exec()) {
-        m_singleQuotes.begin = dlg.currentChar();
-        ui->singleQuote1->setText(m_singleQuotes.begin);
+        d->m_singleQuotes.begin = dlg.currentChar();
+        d->ui->singleQuote1->setText(d->m_singleQuotes.begin);
         emitChanged();
     }
 }
@@ -273,20 +296,20 @@ void AutoCorrectionWidget::selectSingleQuoteCharClose()
 {
     KPIMTextEdit::SelectSpecialCharDialog dlg(this);
     dlg.showSelectButton(false);
-    dlg.setCurrentChar(m_singleQuotes.end);
+    dlg.setCurrentChar(d->m_singleQuotes.end);
     dlg.autoInsertChar();
     if (dlg.exec()) {
-        m_singleQuotes.end = dlg.currentChar();
-        ui->singleQuote2->setText(m_singleQuotes.end);
+        d->m_singleQuotes.end = dlg.currentChar();
+        d->ui->singleQuote2->setText(d->m_singleQuotes.end);
         emitChanged();
     }
 }
 
 void AutoCorrectionWidget::setDefaultSingleQuotes()
 {
-    m_singleQuotes = mAutoCorrection->typographicDefaultSingleQuotes();
-    ui->singleQuote1->setText(m_singleQuotes.begin);
-    ui->singleQuote2->setText(m_singleQuotes.end);
+    d->m_singleQuotes = d->mAutoCorrection->typographicDefaultSingleQuotes();
+    d->ui->singleQuote1->setText(d->m_singleQuotes.begin);
+    d->ui->singleQuote2->setText(d->m_singleQuotes.end);
     emitChanged();
 }
 
@@ -294,11 +317,11 @@ void AutoCorrectionWidget::selectDoubleQuoteCharOpen()
 {
     KPIMTextEdit::SelectSpecialCharDialog dlg(this);
     dlg.showSelectButton(false);
-    dlg.setCurrentChar(m_doubleQuotes.begin);
+    dlg.setCurrentChar(d->m_doubleQuotes.begin);
     dlg.autoInsertChar();
     if (dlg.exec()) {
-        m_doubleQuotes.begin = dlg.currentChar();
-        ui->doubleQuote1->setText(m_doubleQuotes.begin);
+        d->m_doubleQuotes.begin = dlg.currentChar();
+        d->ui->doubleQuote1->setText(d->m_doubleQuotes.begin);
         emitChanged();
     }
 }
@@ -307,43 +330,43 @@ void AutoCorrectionWidget::selectDoubleQuoteCharClose()
 {
     KPIMTextEdit::SelectSpecialCharDialog dlg(this);
     dlg.showSelectButton(false);
-    dlg.setCurrentChar(m_doubleQuotes.end);
+    dlg.setCurrentChar(d->m_doubleQuotes.end);
     dlg.autoInsertChar();
     if (dlg.exec()) {
-        m_doubleQuotes.end = dlg.currentChar();
-        ui->doubleQuote2->setText(m_doubleQuotes.end);
+        d->m_doubleQuotes.end = dlg.currentChar();
+        d->ui->doubleQuote2->setText(d->m_doubleQuotes.end);
         emitChanged();
     }
 }
 
 void AutoCorrectionWidget::setDefaultDoubleQuotes()
 {
-    m_doubleQuotes = mAutoCorrection->typographicDefaultDoubleQuotes();
-    ui->doubleQuote1->setText(m_doubleQuotes.begin);
-    ui->doubleQuote2->setText(m_doubleQuotes.end);
+    d->m_doubleQuotes = d->mAutoCorrection->typographicDefaultDoubleQuotes();
+    d->ui->doubleQuote1->setText(d->m_doubleQuotes.begin);
+    d->ui->doubleQuote2->setText(d->m_doubleQuotes.end);
     emitChanged();
 }
 
 void AutoCorrectionWidget::enableAdvAutocorrection(bool state)
 {
-    ui->findLabel->setEnabled(state);
-    ui->find->setEnabled(state);
-    ui->replaceLabel->setEnabled(state);
-    ui->replace->setEnabled(state);
+    d->ui->findLabel->setEnabled(state);
+    d->ui->find->setEnabled(state);
+    d->ui->replaceLabel->setEnabled(state);
+    d->ui->replace->setEnabled(state);
 
-    const QString find = ui->find->text();
-    const QString replace = ui->replace->text();
+    const QString find = d->ui->find->text();
+    const QString replace = d->ui->replace->text();
 
-    ui->addButton->setEnabled(state && !find.isEmpty() && !replace.isEmpty());
-    ui->removeButton->setEnabled(state && ui->treeWidget->currentItem());
-    ui->treeWidget->setEnabled(state);
+    d->ui->addButton->setEnabled(state && !find.isEmpty() && !replace.isEmpty());
+    d->ui->removeButton->setEnabled(state && d->ui->treeWidget->currentItem());
+    d->ui->treeWidget->setEnabled(state);
 }
 
 void AutoCorrectionWidget::addAutocorrectEntry()
 {
-    QTreeWidgetItem *item = ui->treeWidget->currentItem();
-    const QString find = ui->find->text();
-    const QString replace = ui->replace->text();
+    QTreeWidgetItem *item = d->ui->treeWidget->currentItem();
+    const QString find = d->ui->find->text();
+    const QString replace = d->ui->replace->text();
     if (find == replace) {
         KMessageBox::error(this, i18n("\"Replace\" string is the same as \"Find\" string."), i18n("Add Autocorrection Entry"));
         return;
@@ -353,34 +376,34 @@ void AutoCorrectionWidget::addAutocorrectEntry()
 
     // Modify actually, not add, so we want to remove item from hash
     if (item && (find == item->text(0))) {
-        m_autocorrectEntries.remove(find);
+        d->m_autocorrectEntries.remove(find);
         modify = true;
     }
 
-    m_autocorrectEntries.insert(find, replace);
-    ui->treeWidget->setSortingEnabled(false);
+    d->m_autocorrectEntries.insert(find, replace);
+    d->ui->treeWidget->setSortingEnabled(false);
     if (modify) {
         item->setText(0, find);
         item->setText(1, replace);
     } else {
-        item = new QTreeWidgetItem(ui->treeWidget, item);
+        item = new QTreeWidgetItem(d->ui->treeWidget, item);
         item->setText(0, find);
         item->setText(1, replace);
     }
 
-    ui->treeWidget->setSortingEnabled(true);
-    ui->treeWidget->setCurrentItem(item);
+    d->ui->treeWidget->setSortingEnabled(true);
+    d->ui->treeWidget->setCurrentItem(item);
     emitChanged();
 }
 
 void AutoCorrectionWidget::removeAutocorrectEntry()
 {
-    QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems();
+    QList<QTreeWidgetItem *> listItems = d->ui->treeWidget->selectedItems();
     if (listItems.isEmpty()) {
         return;
     }
     Q_FOREACH (QTreeWidgetItem *item, listItems) {
-        QTreeWidgetItem *below = ui->treeWidget->itemBelow(item);
+        QTreeWidgetItem *below = d->ui->treeWidget->itemBelow(item);
 
         QString findStr;
         if (below) {
@@ -388,34 +411,34 @@ void AutoCorrectionWidget::removeAutocorrectEntry()
             findStr = item->text(0);
             delete item;
             item = Q_NULLPTR;
-        } else if (ui->treeWidget->topLevelItemCount() > 0) {
+        } else if (d->ui->treeWidget->topLevelItemCount() > 0) {
             findStr = item->text(0);
             delete item;
             item = Q_NULLPTR;
         }
         if (!findStr.isEmpty()) {
-            m_autocorrectEntries.remove(findStr);
+            d->m_autocorrectEntries.remove(findStr);
         }
     }
-    ui->treeWidget->setSortingEnabled(false);
+    d->ui->treeWidget->setSortingEnabled(false);
 
     emitChanged();
 }
 
 void AutoCorrectionWidget::updateAddRemoveButton()
 {
-    QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems();
-    ui->removeButton->setEnabled(!listItems.isEmpty());
+    QList<QTreeWidgetItem *> listItems = d->ui->treeWidget->selectedItems();
+    d->ui->removeButton->setEnabled(!listItems.isEmpty());
 }
 
 void AutoCorrectionWidget::enableAddRemoveButton()
 {
-    const QString find = ui->find->text();
-    const QString replace = ui->replace->text();
+    const QString find = d->ui->find->text();
+    const QString replace = d->ui->replace->text();
 
     QTreeWidgetItem *item = Q_NULLPTR;
-    if (m_autocorrectEntries.contains(find)) {
-        item = ui->treeWidget->findItems(find, Qt::MatchCaseSensitive).first();
+    if (d->m_autocorrectEntries.contains(find)) {
+        item = d->ui->treeWidget->findItems(find, Qt::MatchCaseSensitive).first();
     }
 
     bool enable = false;
@@ -424,61 +447,61 @@ void AutoCorrectionWidget::enableAddRemoveButton()
     } else if (item && find == item->text(0)) {
         // We disable add / remove button if no text for the replacement
         enable = !item->text(1).isEmpty();
-        ui->addButton->setText(i18n("&Modify"));
+        d->ui->addButton->setText(i18n("&Modify"));
     } else if (!item || !item->text(1).isEmpty()) {
         enable = true;
-        ui->addButton->setText(i18n("&Add"));
+        d->ui->addButton->setText(i18n("&Add"));
     }
 
     if (item && replace == item->text(1)) {
-        ui->addButton->setEnabled(false);
+        d->ui->addButton->setEnabled(false);
     } else {
-        ui->addButton->setEnabled(enable);
+        d->ui->addButton->setEnabled(enable);
     }
-    ui->removeButton->setEnabled(enable);
+    d->ui->removeButton->setEnabled(enable);
 
 }
 
 void AutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem *item, int column)
 {
     Q_UNUSED(column);
-    ui->find->setText(item->text(0));
-    ui->replace->setText(item->text(1));
+    d->ui->find->setText(item->text(0));
+    d->ui->replace->setText(item->text(1));
 }
 
 void AutoCorrectionWidget::abbreviationChanged(const QString &text)
 {
-    ui->add1->setEnabled(!text.isEmpty());
+    d->ui->add1->setEnabled(!text.isEmpty());
 }
 
 void AutoCorrectionWidget::twoUpperLetterChanged(const QString &text)
 {
-    ui->add2->setEnabled(!text.isEmpty());
+    d->ui->add2->setEnabled(!text.isEmpty());
 }
 
 void AutoCorrectionWidget::addAbbreviationEntry()
 {
-    const QString text = ui->abbreviation->text();
+    const QString text = d->ui->abbreviation->text();
     if (text.isEmpty()) {
         return;
     }
-    if (!m_upperCaseExceptions.contains(text)) {
-        m_upperCaseExceptions.insert(text);
-        ui->abbreviationList->addItem(text);
+    if (!d->m_upperCaseExceptions.contains(text)) {
+        d->m_upperCaseExceptions.insert(text);
+        d->ui->abbreviationList->addItem(text);
     }
-    ui->abbreviation->clear();
+    d->ui->abbreviation->clear();
     slotEnableDisableAbreviationList();
     emitChanged();
 }
 
 void AutoCorrectionWidget::removeAbbreviationEntry()
 {
-    QList<QListWidgetItem *> listItem = ui->abbreviationList->selectedItems();
+    QList<QListWidgetItem *> listItem = d->ui->abbreviationList->selectedItems();
     if (listItem.isEmpty()) {
         return;
     }
     Q_FOREACH (QListWidgetItem *item, listItem) {
-        m_upperCaseExceptions.remove(item->text());
+        d->m_upperCaseExceptions.remove(item->text());
         delete item;
     }
     slotEnableDisableAbreviationList();
@@ -487,28 +510,28 @@ void AutoCorrectionWidget::removeAbbreviationEntry()
 
 void AutoCorrectionWidget::addTwoUpperLetterEntry()
 {
-    const QString text = ui->twoUpperLetter->text();
+    const QString text = d->ui->twoUpperLetter->text();
     if (text.isEmpty()) {
         return;
     }
-    if (!m_twoUpperLetterExceptions.contains(text)) {
-        m_twoUpperLetterExceptions.insert(text);
-        ui->twoUpperLetterList->addItem(text);
+    if (!d->m_twoUpperLetterExceptions.contains(text)) {
+        d->m_twoUpperLetterExceptions.insert(text);
+        d->ui->twoUpperLetterList->addItem(text);
         emitChanged();
     }
     slotEnableDisableTwoUpperEntry();
-    ui->twoUpperLetter->clear();
+    d->ui->twoUpperLetter->clear();
 
 }
 
 void AutoCorrectionWidget::removeTwoUpperLetterEntry()
 {
-    QList<QListWidgetItem *> listItem = ui->twoUpperLetterList->selectedItems();
+    QList<QListWidgetItem *> listItem = d->ui->twoUpperLetterList->selectedItems();
     if (listItem.isEmpty()) {
         return;
     }
     Q_FOREACH (QListWidgetItem *item, listItem) {
-        m_twoUpperLetterExceptions.remove(item->text());
+        d->m_twoUpperLetterExceptions.remove(item->text());
         delete item;
     }
     slotEnableDisableTwoUpperEntry();
@@ -517,16 +540,16 @@ void AutoCorrectionWidget::removeTwoUpperLetterEntry()
 
 void AutoCorrectionWidget::slotEnableDisableAbreviationList()
 {
-    const bool enable = (!ui->abbreviationList->selectedItems().isEmpty());
-    ui->add1->setEnabled(!ui->abbreviation->text().isEmpty());
-    ui->remove1->setEnabled(enable);
+    const bool enable = (!d->ui->abbreviationList->selectedItems().isEmpty());
+    d->ui->add1->setEnabled(!d->ui->abbreviation->text().isEmpty());
+    d->ui->remove1->setEnabled(enable);
 }
 
 void AutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
 {
-    const bool enable = (!ui->twoUpperLetterList->selectedItems().isEmpty());
-    ui->add2->setEnabled(!ui->twoUpperLetter->text().isEmpty());
-    ui->remove2->setEnabled(enable);
+    const bool enable = (!d->ui->twoUpperLetterList->selectedItems().isEmpty());
+    d->ui->add2->setEnabled(!d->ui->twoUpperLetter->text().isEmpty());
+    d->ui->remove2->setEnabled(enable);
 }
 
 void AutoCorrectionWidget::slotImportAutoCorrection(QAction *act)
@@ -559,19 +582,19 @@ void AutoCorrectionWidget::slotImportAutoCorrection(QAction *act)
                 return;
             }
             if (importAutoCorrection->import(fileName, ImportAbstractAutocorrection::All)) {
-                m_autocorrectEntries = importAutoCorrection->autocorrectEntries();
+                d->m_autocorrectEntries = importAutoCorrection->autocorrectEntries();
                 addAutoCorrectEntries();
 
-                enableAdvAutocorrection(ui->advancedAutocorrection->isChecked());
+                enableAdvAutocorrection(d->ui->advancedAutocorrection->isChecked());
 
-                m_upperCaseExceptions = importAutoCorrection->upperCaseExceptions();
-                m_twoUpperLetterExceptions = importAutoCorrection->twoUpperLetterExceptions();
+                d->m_upperCaseExceptions = importAutoCorrection->upperCaseExceptions();
+                d->m_twoUpperLetterExceptions = importAutoCorrection->twoUpperLetterExceptions();
 
-                ui->twoUpperLetterList->clear();
-                ui->twoUpperLetterList->addItems(m_twoUpperLetterExceptions.toList());
+                d->ui->twoUpperLetterList->clear();
+                d->ui->twoUpperLetterList->addItems(d->m_twoUpperLetterExceptions.toList());
 
-                ui->abbreviationList->clear();
-                ui->abbreviationList->addItems(m_upperCaseExceptions.toList());
+                d->ui->abbreviationList->clear();
+                d->ui->abbreviationList->addItems(d->m_upperCaseExceptions.toList());
             }
             delete importAutoCorrection;
         }
@@ -580,9 +603,9 @@ void AutoCorrectionWidget::slotImportAutoCorrection(QAction *act)
 
 void AutoCorrectionWidget::setLanguage(const QString &lang)
 {
-    mAutoCorrection->setLanguage(lang);
+    d->mAutoCorrection->setLanguage(lang);
     loadAutoCorrectionAndException();
-    mWasChanged = false;
+    d->mWasChanged = false;
 }
 
 void AutoCorrectionWidget::changeLanguage(int index)
@@ -590,30 +613,30 @@ void AutoCorrectionWidget::changeLanguage(int index)
     if (index == -1) {
         return;
     }
-    if (mWasChanged) {
+    if (d->mWasChanged) {
         const int rc = KMessageBox::warningYesNo(this, i18n("Language was changed, do you want to save config for previous language?"), i18n("Save config"));
         if (rc == KMessageBox::Yes) {
             writeConfig();
         }
     }
-    const QString lang = ui->autocorrectionLanguage->itemData(index).toString();
-    mAutoCorrection->setLanguage(lang);
+    const QString lang = d->ui->autocorrectionLanguage->itemData(index).toString();
+    d->mAutoCorrection->setLanguage(lang);
     loadAutoCorrectionAndException();
-    mWasChanged = false;
+    d->mWasChanged = false;
 }
 
 void AutoCorrectionWidget::emitChanged()
 {
-    mWasChanged = true;
+    d->mWasChanged = true;
     Q_EMIT changed();
 }
 
 void AutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
 {
-    const QString lang = ui->autocorrectionLanguage->itemData(ui->autocorrectionLanguage->currentIndex()).toString();
-    mAutoCorrection->setLanguage(lang, true);
+    const QString lang = d->ui->autocorrectionLanguage->itemData(d->ui->autocorrectionLanguage->currentIndex()).toString();
+    d->mAutoCorrection->setLanguage(lang, true);
     loadAutoCorrectionAndException();
-    mWasChanged = true;
+    d->mWasChanged = true;
     Q_EMIT changed();
 }
 
@@ -623,6 +646,6 @@ void AutoCorrectionWidget::slotExportAutoCorrection()
     if (saveUrl.isEmpty()) {
         return;
     }
-    mAutoCorrection->writeAutoCorrectionXmlFile(saveUrl);
+    d->mAutoCorrection->writeAutoCorrectionXmlFile(saveUrl);
 }
 

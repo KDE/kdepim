@@ -31,7 +31,7 @@ class AutoCorrectionWidget;
 
 namespace PimCommon
 {
-
+class AutoCorrectionWidgetPrivate;
 class PIMCOMMON_EXPORT AutoCorrectionWidget : public QWidget
 {
     Q_OBJECT
@@ -94,14 +94,8 @@ private:
     void loadAutoCorrectionAndException();
     void loadGlobalAutoCorrectionAndException();
     void setLanguage(const QString &lang);
-    AutoCorrection::TypographicQuotes m_singleQuotes;
-    AutoCorrection::TypographicQuotes m_doubleQuotes;
-    QSet<QString> m_upperCaseExceptions;
-    QSet<QString> m_twoUpperLetterExceptions;
-    QHash<QString, QString> m_autocorrectEntries;
-    Ui::AutoCorrectionWidget *ui;
-    AutoCorrection *mAutoCorrection;
-    bool mWasChanged;
+
+    AutoCorrectionWidgetPrivate *const d;
 };
 
 }

@@ -22,35 +22,52 @@
 
 using namespace PimCommon;
 
+class PimCommon::RichTextEditWithAutoCorrectionPrivate
+{
+public:
+    RichTextEditWithAutoCorrectionPrivate()
+        : mAutoCorrection(new PimCommon::AutoCorrection()),
+          mNeedToDelete(true)
+    {
+
+    }
+    ~RichTextEditWithAutoCorrectionPrivate()
+    {
+        if (mNeedToDelete) {
+            delete mAutoCorrection;
+        }
+    }
+
+    PimCommon::AutoCorrection *mAutoCorrection;
+    bool mNeedToDelete;
+};
+
 RichTextEditWithAutoCorrection::RichTextEditWithAutoCorrection(QWidget *parent)
     : KPIMTextEdit::RichTextEditor(parent),
-      mAutoCorrection(new PimCommon::AutoCorrection()),
-      mNeedToDelete(true)
+      d(new PimCommon::RichTextEditWithAutoCorrectionPrivate)
 {
 }
 
 RichTextEditWithAutoCorrection::~RichTextEditWithAutoCorrection()
 {
-    if (mNeedToDelete) {
-        delete mAutoCorrection;
-    }
+    delete d;
 }
 
 void RichTextEditWithAutoCorrection::setAutocorrection(PimCommon::AutoCorrection *autocorrect)
 {
-    mNeedToDelete = false;
-    delete mAutoCorrection;
-    mAutoCorrection = autocorrect;
+    d->mNeedToDelete = false;
+    delete d->mAutoCorrection;
+    d->mAutoCorrection = autocorrect;
 }
 
 AutoCorrection *RichTextEditWithAutoCorrection::autocorrection() const
 {
-    return mAutoCorrection;
+    return d->mAutoCorrection;
 }
 
 void RichTextEditWithAutoCorrection::setAutocorrectionLanguage(const QString &language)
 {
-    mAutoCorrection->setLanguage(language);
+    d->mAutoCorrection->setLanguage(language);
 }
 
 static bool isSpecial(const QTextCharFormat &charFormat)
@@ -61,13 +78,13 @@ static bool isSpecial(const QTextCharFormat &charFormat)
 
 void RichTextEditWithAutoCorrection::keyPressEvent(QKeyEvent *e)
 {
-    if (mAutoCorrection && mAutoCorrection->isEnabledAutoCorrection()) {
+    if (d->mAutoCorrection && d->mAutoCorrection->isEnabledAutoCorrection()) {
         if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
             if (!textCursor().hasSelection()) {
                 const QTextCharFormat initialTextFormat = textCursor().charFormat();
                 const bool richText = acceptRichText();
                 int position = textCursor().position();
-                const bool addSpace = mAutoCorrection->autocorrect(richText, *document(), position);
+                const bool addSpace = d->mAutoCorrection->autocorrect(richText, *document(), position);
                 QTextCursor cur = textCursor();
                 cur.setPosition(position);
                 const bool spacePressed = (e->key() == Qt::Key_Space);
