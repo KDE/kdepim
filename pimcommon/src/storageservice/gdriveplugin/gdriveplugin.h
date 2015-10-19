@@ -36,6 +36,7 @@ public:
     StorageServicePlugin::Capabilities capabilities() const Q_DECL_OVERRIDE;
     QString description() const Q_DECL_OVERRIDE;
     QUrl serviceUrl() const Q_DECL_OVERRIDE;
+    QIcon icon() const Q_DECL_OVERRIDE;
 };
 }
 #endif // HUBICPLUGIN_H

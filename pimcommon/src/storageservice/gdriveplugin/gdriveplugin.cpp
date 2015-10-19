@@ -19,6 +19,7 @@
 #include <kpluginfactory.h>
 #include <KLocalizedString>
 #include <QUrl>
+#include <QIcon>
 
 using namespace PimCommon;
 K_PLUGIN_FACTORY_WITH_JSON(PimCommonGDrivePluginFactory, "pimcommon_gdriveplugin.json", registerPlugin<GDrivePlugin>();)
@@ -39,20 +40,39 @@ QString GDrivePlugin::storageServiceName() const
     return QStringLiteral("googledrive");
 }
 
+QIcon GDrivePlugin::icon() const
+{
+    return QIcon::fromTheme(QStringLiteral("kdepim-googledrive"));
+}
+
 StorageServicePlugin::Capabilities GDrivePlugin::capabilities() const
 {
     StorageServicePlugin::Capabilities cap;
+    cap |= AccountInfoCapability;
+    cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= ListFolderCapability;
+    cap |= DeleteFileCapability;
+    //cap |= ShareLinkCapability;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+    cap |= CopyFileCapability;
+    //cap |= CopyFolderCapability;
     return cap;
 }
 
 QString GDrivePlugin::description() const
 {
-    return i18n("GDrive is a file hosting service operated by Ovh, Inc. that offers cloud storage, file synchronization, and client software.");
+    return i18n("Googledrive is a file hosting that offers cloud storage, file synchronization, and client software.");
 }
 
 QUrl GDrivePlugin::serviceUrl() const
 {
-    return QUrl(QStringLiteral("https://hubic.com"));
+    return QUrl(QStringLiteral("http://www.google.com/drive"));
 }
 
 
