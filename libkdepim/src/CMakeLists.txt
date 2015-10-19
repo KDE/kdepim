@@ -180,7 +180,7 @@ ecm_generate_headers(libkdepim_Camelcasewidgets_HEADERS
   PIMMessageBox
   TagSelectionCombo
   OverlayWidget
-  REQUIRED_HEADERS libkdepim_Camelcasewidgets_HEADERS
+  REQUIRED_HEADERS libkdepim_widgets_HEADERS
   PREFIX Libkdepim
   RELATIVE widgets
 )
