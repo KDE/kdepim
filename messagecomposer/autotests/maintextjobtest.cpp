@@ -179,7 +179,7 @@ void MainTextJobTest::testHtml()
     composer->globalPart()->setFallbackCharsetEnabled(true);
     TextPart *textPart = new TextPart;
     textPart->setWordWrappingEnabled(false);
-    textPart->setCleanPlainText(editor.toCleanPlainText());
+    textPart->setCleanPlainText(editor.composerControler()->toCleanPlainText());
     textPart->setCleanHtml(editor.toCleanHtml());
     MainTextJob *mjob = new MainTextJob(textPart, composer);
     QVERIFY(mjob->exec());
@@ -197,7 +197,7 @@ void MainTextJobTest::testHtml()
             Content *plain = result->contents().at(0);
             QVERIFY(plain->contentType(false));
             QCOMPARE(plain->contentType()->mimeType(), QByteArray("text/plain"));
-            QCOMPARE(QString::fromLatin1(plain->body()), editor.toCleanPlainText());
+            QCOMPARE(QString::fromLatin1(plain->body()), editor.composerControler()->toCleanPlainText());
         }
         // text/html
         {
@@ -236,8 +236,8 @@ void MainTextJobTest::testHtmlWithImages()
     composer->globalPart()->setFallbackCharsetEnabled(true);
     TextPart *textPart = new TextPart;
     textPart->setWordWrappingEnabled(false);
-    textPart->setCleanPlainText(editor.toCleanPlainText());
-    textPart->setCleanHtml(editor.toCleanHtml());
+    textPart->setCleanPlainText(editor.composerControler()->toCleanPlainText());
+    textPart->setCleanHtml(editor.composerControler()->toCleanHtml());
     textPart->setEmbeddedImages(editor.composerControler()->composerImages()->embeddedImages());
     MainTextJob *mjob = new MainTextJob(textPart, composer);
     QVERIFY(mjob->exec());

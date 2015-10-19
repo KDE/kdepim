@@ -41,12 +41,7 @@ public:
     }
 
     void fixHtmlFontSize(QString &cleanHtml);
-    QString toWrappedPlainText() const;
-    QString toWrappedPlainText(QTextDocument *doc) const;
-    QString toCleanPlainText(const QString &plainText = QString()) const;
-    void fixupTextEditString(QString &text) const;
     QString toCleanHtml() const;
-
     PimCommon::AutoCorrection *autoCorrection;
     RichTextComposerNg *richtextComposer;
     MessageComposer::RichTextComposerSignatures *richTextComposerSignatures;
@@ -162,67 +157,7 @@ void RichTextComposerNgPrivate::fixHtmlFontSize(QString &cleanHtml)
     }
 }
 
-QString RichTextComposerNgPrivate::toWrappedPlainText() const
-{
-    QTextDocument *doc = richtextComposer->document();
-    return toWrappedPlainText(doc);
-}
 
-QString RichTextComposerNgPrivate::toWrappedPlainText(QTextDocument *doc) const
-{
-    QString temp;
-    QRegExp rx(QStringLiteral("(http|ftp|ldap)s?\\S+-$"));
-    QTextBlock block = doc->begin();
-    while (block.isValid()) {
-        QTextLayout *layout = block.layout();
-        const int numberOfLine(layout->lineCount());
-        bool urlStart = false;
-        for (int i = 0; i < numberOfLine; ++i) {
-            QTextLine line = layout->lineAt(i);
-            QString lineText = block.text().mid(line.textStart(), line.textLength());
-
-            if (lineText.contains(rx) ||
-                    (urlStart && !lineText.contains(QLatin1Char(' ')) &&
-                     lineText.endsWith(QLatin1Char('-')))) {
-                // don't insert line break in URL
-                temp += lineText;
-                urlStart = true;
-            } else {
-                temp += lineText + QLatin1Char('\n');
-            }
-        }
-        block = block.next();
-    }
-
-    // Remove the last superfluous newline added above
-    if (temp.endsWith(QLatin1Char('\n'))) {
-        temp.chop(1);
-    }
-
-    fixupTextEditString(temp);
-    return temp;
-}
-
-
-void RichTextComposerNgPrivate::fixupTextEditString(QString &text) const
-{
-    // Remove line separators. Normal \n chars are still there, so no linebreaks get lost here
-    text.remove(QChar::LineSeparator);
-
-    // Get rid of embedded images, see QTextImageFormat documentation:
-    // "Inline images are represented by an object replacement character (0xFFFC in Unicode) "
-    text.remove(0xFFFC);
-
-    // In plaintext mode, each space is non-breaking.
-    text.replace(QChar::Nbsp, QChar::fromLatin1(' '));
-}
-
-QString RichTextComposerNgPrivate::toCleanPlainText(const QString &plainText) const
-{
-    QString temp = plainText.isEmpty() ? richtextComposer->toPlainText() : plainText;
-    fixupTextEditString(temp);
-    return temp;
-}
 
 void RichTextComposerNg::fillComposerTextPart(MessageComposer::TextPart *textPart)
 {
@@ -232,17 +167,17 @@ void RichTextComposerNg::fillComposerTextPart(MessageComposer::TextPart *textPar
         Grantlee::MarkupDirector *pmd = new Grantlee::MarkupDirector(pb);
         pmd->processDocument(document());
         const QString plainText = pb->getResult();
-        textPart->setCleanPlainText(d->toCleanPlainText(plainText));
+        textPart->setCleanPlainText(composerControler()->toCleanPlainText(plainText));
         QTextDocument *doc = new QTextDocument(plainText);
         doc->adjustSize();
 
-        textPart->setWrappedPlainText(d->toWrappedPlainText(doc));
+        textPart->setWrappedPlainText(composerControler()->toWrappedPlainText(doc));
         delete doc;
         delete pmd;
         delete pb;
     } else {
-        textPart->setCleanPlainText(d->toCleanPlainText());
-        textPart->setWrappedPlainText(d->toWrappedPlainText());
+        textPart->setCleanPlainText(composerControler()->toCleanPlainText());
+        textPart->setWrappedPlainText(composerControler()->toWrappedPlainText());
     }
     textPart->setWordWrappingEnabled(lineWrapMode() == QTextEdit::FixedColumnWidth);
     if (composerControler()->isFormattingUsed()) {
@@ -432,9 +367,4 @@ void RichTextComposerNg::insertSignature(const KIdentityManagement::Signature &s
 QString RichTextComposerNg::toCleanHtml() const
 {
     return d->toCleanHtml();
-}
-
-QString RichTextComposerNg::toCleanPlainText(const QString &plainText) const
-{
-    return d->toCleanPlainText(plainText);
 }
