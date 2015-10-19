@@ -28,6 +28,7 @@ set(GRANTLEE_VERSION "5.0.0")
 
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Widgets Test Network)
 find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
 
 find_package(Grantlee5 ${GRANTLEE_VERSION} CONFIG REQUIRED)

@@ -65,7 +65,6 @@ install(FILES
 install(FILES
     ${GrantleeTheme_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/grantleetheme_export.h
-    ${CMAKE_CURRENT_BINARY_DIR}/globalsettings_grantleetheme.h
     ${GrantleeTheme_CamelCase_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/grantleetheme
     COMPONENT Devel
