@@ -175,29 +175,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
         <default>false</default>
     </entry>
   </group>
-
-  <group name="Gravatar">
-    <entry name="GravatarSupportEnabled" type="Bool">
-        <default>false</default>
-    </entry>
-    <entry name="GravatarUseDefaultImage" type="Bool">
-        <default>false</default>
-    </entry>
-    <entry name="GravatarCacheSize" type="Int">
-      <default>20</default>
-    </entry>
-    <entry name="FallbackToGravatar" type="Bool">
-        <default>false</default>
-    </entry>
-    <entry name="LibravatarSupportEnabled" type="Bool">
-        <default>false</default>
-    </entry>
-    <entry name="GravatarHttpsSupport" type="Bool">
-        <default>false</default>
-    </entry>
-
-  </group>
-
   <group name="MDN">
     <entry name="notSendWhenEncrypted" type="Bool" key="not-send-when-encrypted">
       <label>Do not send MDNs in response to encrypted messages</label>

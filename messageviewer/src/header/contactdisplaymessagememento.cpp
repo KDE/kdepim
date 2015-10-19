@@ -19,6 +19,7 @@
 #include "contactdisplaymessagememento.h"
 #include "messageviewer_debug.h"
 #include "Gravatar/GravatarResolvUrlJob"
+#include "gravatarsettings.h"
 #include "PimCommon/NetworkUtil"
 #include "settings/messageviewersettings.h"
 #include <Akonadi/Contact/ContactSearchJob>
@@ -101,13 +102,13 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
     if (!PimCommon::NetworkUtil::self()->lowBandwidth()) {
         if (mPhoto.isEmpty() && mPhoto.url().isEmpty()) {
             // No url, no photo => search gravatar
-            if (MessageViewer::MessageViewerSettings::self()->gravatarSupportEnabled()) {
+            if (Gravatar::GravatarSettings::self()->gravatarSupportEnabled()) {
                 Gravatar::GravatarResolvUrlJob *job = new Gravatar::GravatarResolvUrlJob(this);
                 job->setEmail(mEmailAddress);
-                job->setUseDefaultPixmap(MessageViewer::MessageViewerSettings::self()->gravatarUseDefaultImage());
-                job->setUseLibravatar(MessageViewer::MessageViewerSettings::self()->libravatarSupportEnabled());
-                job->setFallbackGravatar(MessageViewer::MessageViewerSettings::self()->fallbackToGravatar());
-                job->setUseHttps(MessageViewer::MessageViewerSettings::self()->gravatarHttpsSupport());
+                job->setUseDefaultPixmap(Gravatar::GravatarSettings::self()->gravatarUseDefaultImage());
+                job->setUseLibravatar(Gravatar::GravatarSettings::self()->libravatarSupportEnabled());
+                job->setFallbackGravatar(Gravatar::GravatarSettings::self()->fallbackToGravatar());
+                job->setUseHttps(Gravatar::GravatarSettings::self()->gravatarHttpsSupport());
                 if (job->canStart()) {
                     connect(job, &Gravatar::GravatarResolvUrlJob::finished, this, &ContactDisplayMessageMemento::slotGravatarResolvUrlFinished);
                     job->start();
