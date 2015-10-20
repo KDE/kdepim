@@ -54,7 +54,7 @@ public Q_SLOTS:
 private Q_SLOTS:
     void onCollectionsReceived(const Akonadi::Collection::List &);
     void onCollectionsFetched(KJob *);
-    void onLDAPSearchData(const QList<KLDAP::LdapResultObject> &);
+    void onLDAPSearchData(const KLDAP::LdapResultObject::List &);
     void onLDAPSearchDone();
     void updatePersonCollection(const Person &person);
     void modifyResult(KJob *job);

@@ -123,12 +123,12 @@ private Q_SLOTS:
     /* Slot for founded collections
      *
      */
-    void slotLDAPCollectionData(const QList<KLDAP::LdapResultObject> &);
+    void slotLDAPCollectionData(const KLDAP::LdapResultObject::List &);
 
     /* Slot for matching resources
      *
      */
-    void slotLDAPSearchData(const QList<KLDAP::LdapResultObject> &);
+    void slotLDAPSearchData(const KLDAP::LdapResultObject::List &);
 };
 
 }

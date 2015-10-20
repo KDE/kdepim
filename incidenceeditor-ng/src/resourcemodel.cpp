@@ -45,8 +45,8 @@ ResourceModel::ResourceModel(const QStringList &headers,
     ldapSearchCollections.setAttributes(attrs);
     ldapSearch.setAttributes(headers);
 
-    connect(&ldapSearchCollections, static_cast<void (KLDAP::LdapClientSearch::*)(const QList<KLDAP::LdapResultObject> &)>(&KLDAP::LdapClientSearch::searchData), this, &ResourceModel::slotLDAPCollectionData);
-    connect(&ldapSearch, static_cast<void (KLDAP::LdapClientSearch::*)(const QList<KLDAP::LdapResultObject> &)>(&KLDAP::LdapClientSearch::searchData), this, &ResourceModel::slotLDAPSearchData);
+    connect(&ldapSearchCollections, static_cast<void (KLDAP::LdapClientSearch::*)(const KLDAP::LdapResultObject::List &)>(&KLDAP::LdapClientSearch::searchData), this, &ResourceModel::slotLDAPCollectionData);
+    connect(&ldapSearch, static_cast<void (KLDAP::LdapClientSearch::*)(const KLDAP::LdapResultObject::List &)>(&KLDAP::LdapClientSearch::searchData), this, &ResourceModel::slotLDAPSearchData);
 
     ldapSearchCollections.startSearch("*");
 }
@@ -188,7 +188,7 @@ void ResourceModel::startSearch()
     }
 }
 
-void ResourceModel::slotLDAPCollectionData(const QList<KLDAP::LdapResultObject> &results)
+void ResourceModel::slotLDAPCollectionData(const KLDAP::LdapResultObject::List &results)
 {
     emit layoutAboutToBeChanged();
 
@@ -216,7 +216,7 @@ void ResourceModel::slotLDAPCollectionData(const QList<KLDAP::LdapResultObject> 
     startSearch();
 }
 
-void ResourceModel::slotLDAPSearchData(const QList<KLDAP::LdapResultObject> &results)
+void ResourceModel::slotLDAPSearchData(const KLDAP::LdapResultObject::List &results)
 {
     foreach (const KLDAP::LdapResultObject &result, results) {
         //Add the found items to all collections, where it is member

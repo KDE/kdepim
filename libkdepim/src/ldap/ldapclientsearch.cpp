@@ -84,7 +84,7 @@ public:
     QTimer mDataTimer;
     int mActiveClients;
     bool mNoLDAPLookup;
-    QList<LdapResultObject> mResults;
+    LdapResultObject::List mResults;
     QString mConfigFile;
     LdapClientSearchConfig *mClientSearchConfig;
 };
@@ -315,8 +315,8 @@ void LdapClientSearch::Private::finish()
 void LdapClientSearch::Private::makeSearchData(QStringList &ret, LdapResult::List &resList)
 {
 
-    QList< LdapResultObject >::ConstIterator it1;
-    QList< LdapResultObject >::ConstIterator end1(mResults.constEnd());
+    LdapResultObject::List::ConstIterator it1;
+    LdapResultObject::List::ConstIterator end1(mResults.constEnd());
     for (it1 = mResults.constBegin(); it1 != end1; ++it1) {
         QString name, mail, givenname, sn;
         QStringList mails;

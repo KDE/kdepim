@@ -37,7 +37,7 @@ PersonSearchJob::PersonSearchJob(const QString &searchString, QObject *parent)
       mCollectionSearchDone(false),
       mLdapSearchDone(false)
 {
-    connect(&mLdapSearch, static_cast<void (KLDAP::LdapClientSearch::*)(const QList<KLDAP::LdapResultObject> &)>(&KLDAP::LdapClientSearch::searchData),
+    connect(&mLdapSearch, static_cast<void (KLDAP::LdapClientSearch::*)(const KLDAP::LdapResultObject::List &)>(&KLDAP::LdapClientSearch::searchData),
             this, &PersonSearchJob::onLDAPSearchData);
 
     connect(&mLdapSearch, &KLDAP::LdapClientSearch::searchDone, this, &PersonSearchJob::onLDAPSearchDone);
@@ -88,7 +88,7 @@ void PersonSearchJob::start()
     //the ldap query can then be used to update the name (entitydisplayattribute) for the person.
 }
 
-void PersonSearchJob::onLDAPSearchData(const QList< KLDAP::LdapResultObject > &list)
+void PersonSearchJob::onLDAPSearchData(const KLDAP::LdapResultObject::List &list)
 {
     QList<Person> persons;
     Q_FOREACH (const KLDAP::LdapResultObject &item, list) {

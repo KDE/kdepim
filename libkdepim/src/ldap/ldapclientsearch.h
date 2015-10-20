@@ -37,6 +37,7 @@ class LdapClient;
  * @since 4.14
  */
 struct LdapResultObject {
+    typedef QVector<LdapResultObject> List;
     const LdapClient *client;
     KLDAP::LdapObject object;
 };
@@ -159,7 +160,7 @@ Q_SIGNALS:
      *
      * @param results The list of found contacts.
      */
-    void searchData(const QList<KLDAP::LdapResultObject> &results);
+    void searchData(const KLDAP::LdapResultObject::List &results);
 
     /**
      * This signal is emitted whenever the lookup is complete or the
@@ -182,5 +183,6 @@ private:
 
 }
 Q_DECLARE_TYPEINFO(KLDAP::LdapResult, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(KLDAP::LdapResultObject, Q_MOVABLE_TYPE);
 
 #endif // LDAPCLIENTSEARCH_H
