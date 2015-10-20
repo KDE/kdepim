@@ -85,7 +85,7 @@ install(TARGETS
     EXPORT KF5CalendarSupportTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
-ecm_generate_headers(CalendarSupport_HEADERS
+ecm_generate_headers(CalendarSupport_CamelCase_HEADERS
   HEADER_NAMES
   Utils
   CategoryConfig
@@ -99,7 +99,7 @@ ecm_generate_headers(CalendarSupport_HEADERS
   CalendarSingleton
   MessageWidget
   ArchiveDialog
-  REQUIRED_HEADERS CalendarSupport_CamelCase_HEADERS
+  REQUIRED_HEADERS CalendarSupport_HEADERS
   PREFIX CalendarSupport
 )
 
