@@ -1428,8 +1428,8 @@ void ViewerPrivate::saveSplitterSizes() const
     if (mMimePartTree->isHidden()) {
         return;    // don't rely on QSplitter maintaining sizes for hidden widgets.
     }
-    MessageViewer::MessageViewerSettings::self()->setMimePaneHeight(mSplitter->sizes()[1]);
-    MessageViewer::MessageViewerSettings::self()->setMessagePaneHeight(mSplitter->sizes()[0]);
+    MessageViewer::MessageViewerSettings::self()->setMimePaneHeight(mSplitter->sizes().at(1));
+    MessageViewer::MessageViewerSettings::self()->setMessagePaneHeight(mSplitter->sizes().at(0));
 #endif
 }
 

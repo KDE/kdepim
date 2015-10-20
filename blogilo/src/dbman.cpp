@@ -518,7 +518,7 @@ int DBMan::addPost(const BilboPost &post, int blog_id)
             for (int i = 0; i < cat_count; ++i) {
                 q2.addBindValue(blog_id);
                 q2.addBindValue(post.postId());
-                q2.addBindValue(post.categories()[i]);
+                q2.addBindValue(post.categories().at(i));
                 q2.addBindValue(blog_id);
                 if (!q2.exec()) {
                     qCDebug(BLOGILO_LOG) << "Cannot add one of categories to Post, SQL Error: " << q2.lastError().text();
@@ -589,7 +589,7 @@ bool DBMan::editPost(const BilboPost &post, int blog_id)
         for (int i = 0; i < cat_count; ++i) {
             q2.addBindValue(blog_id);
             q2.addBindValue(post.postId());
-            q2.addBindValue(post.categories()[i]);
+            q2.addBindValue(post.categories().at(i));
             q2.addBindValue(blog_id);
             if (!q2.exec()) {
                 d->mLastErrorText = q2.lastError().text();
@@ -888,7 +888,7 @@ int DBMan::saveTemp_LocalEntry(const BilboPost &basePost, int blog_id, LocalPost
         VALUES(?, (SELECT categoryId FROM category WHERE name = ? AND blog_id= ?))"));
         for (int i = 0; i < cat_count; ++i) {
             q2.addBindValue(localId);
-            q2.addBindValue(post.categories()[i]);
+            q2.addBindValue(post.categories().at(i));
             q2.addBindValue(blog_id);
             if (!q2.exec()) {
                 d->mLastErrorText = q.lastError().text();

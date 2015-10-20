@@ -61,7 +61,7 @@ int SetupIspdb::countIdentities() const
 
 void SetupIspdb::fillIdentitiy(int i, QObject *o) const
 {
-    identity isp = mIspdb->identities()[i];
+    identity isp = mIspdb->identities().at(i);
 
     Identity *id = qobject_cast<Identity *>(o);
 
@@ -77,7 +77,7 @@ void SetupIspdb::fillImapServer(int i, QObject *o) const
     if (mIspdb->imapServers().isEmpty()) {
         return;
     }
-    Server isp = mIspdb->imapServers()[i];
+    Server isp = mIspdb->imapServers().at(i);
     Resource *imapRes = qobject_cast<Resource *>(o);
 
     imapRes->setName(isp.hostname);
@@ -101,7 +101,7 @@ int SetupIspdb::countImapServers() const
 
 void SetupIspdb::fillSmtpServer(int i, QObject *o) const
 {
-    Server isp = mIspdb->smtpServers()[i];
+    Server isp = mIspdb->smtpServers().at(i);
     Transport *smtpRes = qobject_cast<Transport *>(o);
 
     smtpRes->setName(isp.hostname);

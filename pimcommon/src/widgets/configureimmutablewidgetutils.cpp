@@ -93,7 +93,7 @@ void ConfigureImmutableWidgetUtils::loadWidget(QGroupBox *box, QButtonGroup *gro
 {
     Q_ASSERT(group->buttons().size() == e->choices().size());
     checkLockDown(box, e);
-    group->buttons()[e->value()]->setChecked(true);
+    group->buttons().at(e->value())->setChecked(true);
 }
 
 void ConfigureImmutableWidgetUtils::loadWidget(QSpinBox *b, const KCoreConfigSkeleton::ItemInt *e)

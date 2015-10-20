@@ -110,7 +110,7 @@ public:
             createContact();
         } else {
             Akonadi::Item item = items.at(0);
-            KContacts::Addressee contact = searchJob->contacts()[0];
+            KContacts::Addressee contact = searchJob->contacts().at(0);
             contact.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("MailPreferedFormatting"), mShowAsHTML ? QStringLiteral("HTML") : QStringLiteral("TEXT"));
             contact.insertCustom(QStringLiteral("KADDRESSBOOK"), QStringLiteral("MailAllowToRemoteContent"), mRemoteContent ? QStringLiteral("TRUE") : QStringLiteral("FALSE"));
             item.setPayload<KContacts::Addressee>(contact);
