@@ -285,24 +285,24 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${libksieve_SOURCE_DIR})
 
 
 install(FILES
-    ${ksieveui_widgets_HEADERS}
-    ${ksieveui_debug_HEADERS}
-    ${ksieveui_vacation_HEADERS}
-    ${ksieveui_HEADERS}
-    ${ksieveui_editor_HEADERS}
-    ${ksieveui_util_HEADERS}
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KSieveUi
-    COMPONENT Devel
-)
-
-install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/ksieveui_export.h
     ${ksieveui_Camelcasewidgets_HEADERS}
     ${ksieveui_Camelcasedebug_HEADERS}
     ${ksieveui_Camelcasevacation_HEADERS}
     ${ksieveui_CamelCase_HEADERS}
     ${ksieveui_Camelcaseeditor_HEADERS}
     ${ksieveui_Camelcaseutil_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KSieveUi
+    COMPONENT Devel
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/ksieveui_export.h
+    ${ksieveui_widgets_HEADERS}
+    ${ksieveui_debug_HEADERS}
+    ${ksieveui_vacation_HEADERS}
+    ${ksieveui_HEADERS}
+    ${ksieveui_editor_HEADERS}
+    ${ksieveui_util_HEADERS}
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/ksieveui
     COMPONENT Devel
 )
