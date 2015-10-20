@@ -22,7 +22,7 @@
 #define TESTSETTINGSJOB_H
 
 #include "pimcommon_export.h"
-#include "storageservice/interface/storageserviceinterface.h"
+#include "storageservice/interface/isettingsjob.h"
 
 namespace PimCommon
 {

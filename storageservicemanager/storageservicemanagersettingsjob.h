@@ -21,7 +21,7 @@
 #ifndef STORAGESERVICEMANAGERSETTINGSJOB_H
 #define STORAGESERVICEMANAGERSETTINGSJOB_H
 
-#include "pimcommon/storageserviceinterface.h"
+#include "pimcommon/isettingsjob.h"
 
 class StorageServiceManagerSettingsJob : public PimCommon::ISettingsJob
 {

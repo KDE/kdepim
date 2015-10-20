@@ -19,7 +19,7 @@
 */
 
 #include "storageservicejobconfig.h"
-#include "interface/storageserviceinterface.h"
+#include "interface/isettingsjob.h"
 
 #include "pimcommon_debug.h"
 

@@ -412,7 +412,7 @@ ecm_generate_headers(PimCommon_Camelcasecustomtools_HEADERS
 
 ecm_generate_headers(PimCommon_Camelcasestorageserviceinterface_HEADERS
   HEADER_NAMES
-  StorageServiceInterface
+  ISettingsJob
   REQUIRED_HEADERS PimCommon_storageserviceinterface_HEADERS
   PREFIX PimCommon
   RELATIVE storageservice/interface
