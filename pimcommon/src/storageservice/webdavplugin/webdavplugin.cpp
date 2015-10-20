@@ -36,24 +36,38 @@ WebDavPlugin::~WebDavPlugin()
 
 QString WebDavPlugin::storageServiceName() const
 {
-    return QStringLiteral("hubic");
+    return QStringLiteral("webdav");
 }
 
 StorageServicePlugin::Capabilities WebDavPlugin::capabilities() const
 {
     StorageServicePlugin::Capabilities cap;
+    cap |= AccountInfoCapability;
+    cap |= UploadFileCapability;
+    cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= ListFolderCapability;
+    //cap |= ShareLinkCapability;
+    cap |= DeleteFileCapability;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
+    cap |= MoveFileCapability;
+    cap |= MoveFolderCapability;
+    cap |= CopyFileCapability;
+    cap |= CopyFolderCapability;
 
     return cap;
 }
 
 QString WebDavPlugin::description() const
 {
-    return i18n("WebDav is a file hosting service operated by Ovh, Inc. that offers cloud storage, file synchronization, and client software.");
+    return i18n("The WebDAV service allows access to any Web application that uses the WebDAV protocol, such as ownCloud, Kolab, and others.");
 }
 
 QUrl WebDavPlugin::serviceUrl() const
 {
-    return QUrl(QStringLiteral("https://hubic.com"));
+    return QUrl();
 }
 
 
