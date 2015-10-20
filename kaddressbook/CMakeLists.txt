@@ -130,8 +130,10 @@ kconfig_add_kcfg_files(kaddressbook_LIB_SRCS settings/settings.kcfgc)
 add_library(kaddressbookprivate ${kaddressbook_LIB_SRCS})
 generate_export_header(kaddressbookprivate BASE_NAME kaddressbook)
 target_link_libraries(kaddressbookprivate
-  KF5::Libkdepim
+PUBLIC
   KF5::PimCommon
+PRIVATE
+  KF5::Libkdepim
   KF5::KaddressbookGrantlee
   KF5::AkonadiCore
   KF5::Contacts
@@ -148,7 +150,7 @@ target_link_libraries(kaddressbookprivate
 if (WIN32)
    target_link_libraries(kaddressbookprivate KF5::Gpgmepp)
 else()
-   target_link_libraries(kaddressbookprivate KF5::Gpgmepp-pthread)
+   target_link_libraries(kaddressbookprivate PRIVATE KF5::Gpgmepp-pthread)
 endif()
 if (BUILD_TESTING)
    add_subdirectory(merge/autotests)
@@ -160,10 +162,10 @@ if (BUILD_TESTING)
 endif()
 
 if(KF5Gpgmepp_FOUND)
-   target_link_libraries(kaddressbookprivate KF5::QGpgme)
+   target_link_libraries(kaddressbookprivate PRIVATE KF5::QGpgme)
 endif()
 if(KF5Prison_FOUND)
-   target_link_libraries(kaddressbookprivate KF5::Prison)
+   target_link_libraries(kaddressbookprivate PRIVATE KF5::Prison)
 endif()
 
 target_include_directories(kaddressbookprivate PUBLIC "$<BUILD_INTERFACE:${kaddressbook_SOURCE_DIR};${kaddressbook_BINARY_DIR}>")
@@ -187,6 +189,7 @@ add_executable(kaddressbook ${kaddressbook_SRCS})
 target_link_libraries(kaddressbook
   KF5::KontactInterface
   kaddressbookprivate
+  KF5::Parts
 )
 
 if(KF5Gpgmepp_FOUND)
@@ -200,7 +203,7 @@ install(FILES kaddressbookui.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/kaddressb
 
 set(kaddressbook_PART_SRCS kaddressbookpart.cpp kaddressbook_debug.cpp)
 add_library(kaddressbookpart MODULE ${kaddressbook_PART_SRCS})
-target_link_libraries(kaddressbookpart  kaddressbookprivate)
+target_link_libraries(kaddressbookpart  kaddressbookprivate KF5::Parts KF5::IconThemes)
 install(TARGETS kaddressbookpart DESTINATION ${KDE_INSTALL_PLUGINDIR})
 install(FILES data/kaddressbookpart.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 
