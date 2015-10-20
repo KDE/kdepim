@@ -115,10 +115,7 @@ private Q_SLOTS:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
-    ///* reimp */void incidencesAdded( const Akonadi::Item::List &incidences );
-    ///* reimp */void incidencesAboutToBeRemoved( const Akonadi::Item::List &incidences );
-    ///* reimp */void incidencesChanged( const Akonadi::Item::List &incidences );
-    /* reimp */QPair<KDateTime, KDateTime> actualDateRange(
+    QPair<KDateTime, KDateTime> actualDateRange(
         const KDateTime &start, const KDateTime &end, const QDate &preferredMonth = QDate()) const Q_DECL_OVERRIDE;
 
     // Compute and update the whole view
