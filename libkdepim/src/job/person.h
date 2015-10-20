@@ -53,5 +53,6 @@ struct KDEPIM_EXPORT Person {
 }
 
 Q_DECLARE_METATYPE(KPIM::Person)
+Q_DECLARE_TYPEINFO(KPIM::Person, Q_MOVABLE_TYPE);
 
 #endif
