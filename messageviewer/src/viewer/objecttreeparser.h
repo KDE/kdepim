@@ -414,7 +414,7 @@ public:// (during refactoring)
     bool processMultiPartDigestSubtype(KMime::Content *node, ProcessResult &result);
     bool processMultiPartParallelSubtype(KMime::Content *node, ProcessResult &result);
     MessagePart::Ptr processMultiPartSignedSubtype(KMime::Content *node, ProcessResult &result);
-    bool processMultiPartEncryptedSubtype(KMime::Content *node, ProcessResult &result);
+    MessagePart::Ptr processMultiPartEncryptedSubtype(KMime::Content *node, ProcessResult &result);
 
     bool processApplicationPkcs7MimeSubtype(KMime::Content *node, ProcessResult &result);
     bool processApplicationChiasmusTextSubtype(KMime::Content *node, ProcessResult &result);

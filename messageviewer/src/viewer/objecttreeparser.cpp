@@ -1218,11 +1218,12 @@ MessagePart::Ptr ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content 
     return mp;
 }
 
-bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, ProcessResult &result)
+MessagePart::Ptr ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content* node, ProcessResult& result)
 {
     KMime::Content *child = MessageCore::NodeHelper::firstChild(node);
     if (!child) {
-        return false;
+        Q_ASSERT(false);
+        return MessagePart::Ptr();
     }
 
     const Kleo::CryptoBackend::Protocol *useThisCryptProto = 0;
@@ -1245,35 +1246,31 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
     */
 
     if (!data) {
-        standardChildHandling(child);
-        return true;
+        return MessagePart::Ptr(new MimeMessagePart(this, child, false));
     }
 
     CryptoProtocolSaver cpws(this, useThisCryptProto);
 
     KMime::Content *dataChild = MessageCore::NodeHelper::firstChild(data);
     if (dataChild) {
-        standardChildHandling(dataChild);
-        return MessagePart::Ptr();
+        Q_ASSERT(false);
+        return MessagePart::Ptr(new MimeMessagePart(this, dataChild, false));
     }
 
     mNodeHelper->setEncryptionState(node, KMMsgFullyEncrypted);
 
-    CryptoMessagePart mp(this,
+    CryptoMessagePart::Ptr mp(new CryptoMessagePart(this,
                          data->decodedText(), Kleo::CryptoBackendFactory::instance()->openpgp(),
-                         NodeHelper::fromAsString(data), node);
+                         NodeHelper::fromAsString(data), node));
 
-    PartMetaData *messagePart(mp.partMetaData());
+    PartMetaData *messagePart(mp->partMetaData());
     if (!mSource->decryptMessage()) {
         mNodeHelper->setNodeProcessed(data, false);  // Set the data node to done to prevent it from being processed
     } else if (KMime::Content *newNode = mNodeHelper->decryptedNodeForContent(data)) {
         // if we already have a decrypted node for this encrypted node, don't do the decryption again
-        ObjectTreeParser otp(this);
-        otp.parseObjectTreeInternal(newNode);
-        copyContentFrom(&otp);
-        return true;
+        return MessagePart::Ptr(new MimeMessagePart(this, newNode, mShowOnlyOneMimePart));
     } else {
-        mp.startDecryption(data);
+        mp->startDecryption(data);
 
         qCDebug(MESSAGEVIEWER_LOG) << "decrypted, signed?:" << messagePart->isSigned;
 
@@ -1296,8 +1293,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
             }
         }
     }
-    mp.html(false);
-    return true;
+    return mp;
 }
 
 bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, ProcessResult &result)

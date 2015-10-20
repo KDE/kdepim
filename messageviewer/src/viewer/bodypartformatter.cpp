@@ -182,6 +182,45 @@ MessageViewer::Interface::BodyPartFormatter::Result MultiPartSignedBodyPartForma
     return Failed;
 }
 
+class MultiPartEncryptedBodyPartFormatter
+    : public MessageViewer::Interface::BodyPartFormatter
+{
+public:
+    MessagePart::Ptr process(const Interface::BodyPart &part) const;
+    MessageViewer::Interface::BodyPartFormatter::Result format(Interface::BodyPart *, HtmlWriter *) const Q_DECL_OVERRIDE;
+    using MessageViewer::Interface::BodyPartFormatter::format;
+    static const MessageViewer::Interface::BodyPartFormatter *create();
+private:
+    static const MultiPartEncryptedBodyPartFormatter *self;
+};
+
+const MultiPartEncryptedBodyPartFormatter *MultiPartEncryptedBodyPartFormatter::self;
+
+const MessageViewer::Interface::BodyPartFormatter *MultiPartEncryptedBodyPartFormatter::create()
+{
+    if (!self) {
+        self = new MultiPartEncryptedBodyPartFormatter();
+    }
+    return self;
+}
+
+MessagePart::Ptr MultiPartEncryptedBodyPartFormatter::process(const Interface::BodyPart &part) const
+{
+    return part.objectTreeParser()->processMultiPartEncryptedSubtype(part.content(), *part.processResult());
+}
+
+MessageViewer::Interface::BodyPartFormatter::Result MultiPartEncryptedBodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
+{
+    Q_UNUSED(writer)
+    MessagePart::Ptr mp = process(*part);
+    if (!mp.isNull()) {
+        mp->html(false);
+        return Ok;
+    }
+
+    return Failed;
+}
+
 #define CREATE_BODY_PART_FORMATTER(subtype) \
     class subtype##BodyPartFormatter \
         : public MessageViewer::Interface::BodyPartFormatter \
@@ -214,15 +253,12 @@ MessageViewer::Interface::BodyPartFormatter::Result MultiPartSignedBodyPartForma
 
 CREATE_BODY_PART_FORMATTER(TextPlain)
 CREATE_BODY_PART_FORMATTER(TextHtml)
-//CREATE_BODY_PART_FORMATTER(TextEnriched)
 
 CREATE_BODY_PART_FORMATTER(ApplicationPkcs7Mime)
 CREATE_BODY_PART_FORMATTER(ApplicationChiasmusText)
-//CREATE_BODY_PART_FORMATTER(ApplicationPgp)
 
 CREATE_BODY_PART_FORMATTER(MultiPartMixed)
 CREATE_BODY_PART_FORMATTER(MultiPartAlternative)
-CREATE_BODY_PART_FORMATTER(MultiPartEncrypted)
 
 typedef TextPlainBodyPartFormatter ApplicationPgpBodyPartFormatter;
 
