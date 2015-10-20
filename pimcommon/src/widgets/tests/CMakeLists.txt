@@ -1,10 +1,3 @@
-set(customtextedit_gui_SRCS customtextedit_gui.cpp)
-add_executable(customtextedit_gui ${customtextedit_gui_SRCS})
-target_link_libraries(customtextedit_gui
-  KF5::PimCommon
-  KF5::PimTextEdit
-)
-
 set(testspellchecklineedit_SRCS testspellchecklineedit.cpp)
 
 add_executable(testspellchecklineedit ${testspellchecklineedit_SRCS})

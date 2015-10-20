@@ -481,7 +481,7 @@
           </widget>
          </item>
          <item>
-          <widget class="PimCommon::CustomTextEdit" name="txtSummary">
+          <widget class="KTextEdit" name="txtSummary">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -611,11 +611,6 @@
    <class>KTextEdit</class>
    <extends>QTextEdit</extends>
    <header>ktextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>PimCommon::CustomTextEdit</class>
-   <extends>KTextEdit</extends>
-   <header>PimCommon/CustomTextEdit</header>
   </customwidget>
  </customwidgets>
  <tabstops>

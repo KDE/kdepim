@@ -130,7 +130,6 @@ set(libpimcommon_widgets_SRCS
   widgets/minimumcombobox.cpp
   widgets/renamefiledialog.cpp
   widgets/simplestringlisteditor.cpp
-  widgets/customtextedit.cpp
   widgets/customtreeview.cpp
   widgets/configureimmutablewidgetutils.cpp
   widgets/annotationdialog.cpp
@@ -514,7 +513,6 @@ ecm_generate_headers(PimCommon_Camelcasewidgets_HEADERS
   SimpleStringlistEditor
   KActionMenuChangeCase
   AnnotationDialog
-  CustomTextEdit
   REQUIRED_HEADERS PimCommon_widgets_HEADERS
   PREFIX PimCommon
   RELATIVE widgets
