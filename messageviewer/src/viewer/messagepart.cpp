@@ -106,12 +106,10 @@ void AttachmentMarkBlock::internalExit()
 
 //------MessagePart-----------------------
 MessagePart::MessagePart(ObjectTreeParser *otp,
-                         PartMetaData *block,
                          const QString &text)
     : mText(text)
     , mOtp(otp)
     , mSubOtp(Q_NULLPTR)
-    , mMetaData(block)
 {
 
 }
@@ -126,9 +124,9 @@ MessagePart::~MessagePart()
 }
 
 
-PartMetaData *MessagePart::partMetaData() const
+PartMetaData *MessagePart::partMetaData()
 {
-    return mMetaData;
+    return &mMetaData;
 }
 
 QString MessagePart::text() const
@@ -141,7 +139,7 @@ void MessagePart::setText(const QString &text)
     mText = text;
 }
 
-void MessagePart::html(bool decorate) const
+void MessagePart::html(bool decorate)
 {
     MessageViewer::HtmlWriter *writer = mOtp->htmlWriter();
 
@@ -149,7 +147,7 @@ void MessagePart::html(bool decorate) const
         return;
     }
 
-    const CryptoBlock block(mOtp, mMetaData, Q_NULLPTR, QString(), Q_NULLPTR);
+    const CryptoBlock block(mOtp, &mMetaData, Q_NULLPTR, QString(), Q_NULLPTR);
     writer->queue(mOtp->quotedHTML(text(), decorate));
 }
 
@@ -220,25 +218,24 @@ QString MimeMessagePart::text() const
 //-----CryptMessageBlock---------------------
 
 CryptoMessagePart::CryptoMessagePart(ObjectTreeParser *otp,
-                                     PartMetaData *block,
                                      const QString &text,
                                      const Kleo::CryptoBackend::Protocol *cryptoProto,
                                      const QString &fromAddress,
                                      KMime::Content *node)
-    : MessagePart(otp, block, text)
+    : MessagePart(otp, text)
     , mCryptoProto(cryptoProto)
     , mFromAddress(fromAddress)
     , mNode(node)
     , mDecryptMessage(false)
 {
-    mMetaData->technicalProblem = (mCryptoProto == 0);
-    mMetaData->isSigned = false;
-    mMetaData->isGoodSignature = false;
-    mMetaData->isEncrypted = false;
-    mMetaData->isDecryptable = false;
-    mMetaData->keyTrust = GpgME::Signature::Unknown;
-    mMetaData->status = i18n("Wrong Crypto Plug-In.");
-    mMetaData->status_code = GPGME_SIG_STAT_NONE;
+    mMetaData.technicalProblem = (mCryptoProto == 0);
+    mMetaData.isSigned = false;
+    mMetaData.isGoodSignature = false;
+    mMetaData.isEncrypted = false;
+    mMetaData.isDecryptable = false;
+    mMetaData.keyTrust = GpgME::Signature::Unknown;
+    mMetaData.status = i18n("Wrong Crypto Plug-In.");
+    mMetaData.status_code = GPGME_SIG_STAT_NONE;
 }
 
 CryptoMessagePart::~CryptoMessagePart()
@@ -256,7 +253,7 @@ void CryptoMessagePart::startDecryption(const QByteArray &text, const QTextCodec
 
     startDecryption(content);
 
-    if (!mMetaData->inProgress && mMetaData->isDecryptable) {
+    if (!mMetaData.inProgress && mMetaData.isDecryptable) {
         setText(aCodec->toUnicode(mDecryptedData));
     }
 }
@@ -285,26 +282,30 @@ void CryptoMessagePart::startDecryption(KMime::Content *data)
                                           mPassphraseError,
                                           actuallyEncrypted,
                                           decryptionStarted,
-                                          *mMetaData);
+                                          mMetaData);
     if (decryptionStarted) {
-        mMetaData->inProgress = true;
+        mMetaData.inProgress = true;
         return;
     }
-    mMetaData->isDecryptable = bOkDecrypt;
-    mMetaData->isEncrypted = actuallyEncrypted;
-    mMetaData->isSigned = signatureFound;
+    mMetaData.isDecryptable = bOkDecrypt;
+    mMetaData.isEncrypted = actuallyEncrypted;
+    mMetaData.isSigned = signatureFound;
 
-    if (!mMetaData->isDecryptable) {
+    if (!mMetaData.isDecryptable) {
         setText(QString::fromUtf8(mDecryptedData.constData()));
     }
 
-    if (mMetaData->isSigned) {
-        mOtp->sigStatusToMetaData(mSignatures, mCryptoProto, *mMetaData, GpgME::Key());
+    if (mMetaData.isSigned) {
+        mOtp->sigStatusToMetaData(mSignatures, mCryptoProto, mMetaData, GpgME::Key());
         mVerifiedText = mDecryptedData;
     }
 
+    if (mMetaData.isEncrypted && !mDecryptMessage) {
+        mMetaData.isDecryptable = true;
+    }
+
     if (mNode) {
-        mOtp->mNodeHelper->setPartMetaData(mNode, *mMetaData);
+        mOtp->mNodeHelper->setPartMetaData(mNode, mMetaData);
 
         if (mDecryptMessage) {
             auto tempNode = new KMime::Content();
@@ -325,22 +326,22 @@ void CryptoMessagePart::startVerification(const QByteArray &text, const QTextCod
 {
     startVerificationDetached(text, 0, QByteArray());
 
-    if (!mNode && mMetaData->isSigned) {
+    if (!mNode && mMetaData.isSigned) {
         setText(aCodec->toUnicode(mVerifiedText));
     }
 }
 
 void CryptoMessagePart::startVerificationDetached(const QByteArray &text, KMime::Content *textNode, const QByteArray &signature)
 {
-    mMetaData->isEncrypted = false;
-    mMetaData->isDecryptable = false;
+    mMetaData.isEncrypted = false;
+    mMetaData.isDecryptable = false;
 
-    mOtp->okVerify(text, mCryptoProto, *mMetaData, mVerifiedText, mSignatures, signature, mNode);
+    mOtp->okVerify(text, mCryptoProto, mMetaData, mVerifiedText, mSignatures, signature, mNode);
 
-    if (mMetaData->isSigned) {
-        mOtp->sigStatusToMetaData(mSignatures, mCryptoProto, *mMetaData, GpgME::Key());
+    if (mMetaData.isSigned) {
+        mOtp->sigStatusToMetaData(mSignatures, mCryptoProto, mMetaData, GpgME::Key());
     } else {
-        mMetaData->creationTime = QDateTime();
+        mMetaData.creationTime = QDateTime();
     }
 
     if (mNode) {
@@ -366,7 +367,7 @@ void CryptoMessagePart::startVerificationDetached(const QByteArray &text, KMime:
 
 void CryptoMessagePart::writeDeferredDecryptionBlock() const
 {
-    Q_ASSERT(!mMetaData->isEncrypted);
+    Q_ASSERT(!mMetaData.isEncrypted);
     Q_ASSERT(mDecryptMessage);
 
     MessageViewer::HtmlWriter *writer = mOtp->htmlWriter();
@@ -387,7 +388,7 @@ void CryptoMessagePart::writeDeferredDecryptionBlock() const
                   + QLatin1String("</a></div>"));
 }
 
-void CryptoMessagePart::html(bool decorate) const
+void CryptoMessagePart::html(bool decorate)
 {
 
     bool hideErrors = false;
@@ -396,40 +397,38 @@ void CryptoMessagePart::html(bool decorate) const
     //TODO: still the following part should not be here
     copyContentFrom();
 
-    if (mMetaData->isEncrypted && !mDecryptMessage) {
-        mMetaData->isDecryptable = true;
-    }
+
 
     if (!writer) {
         return;
     }
 
-    if (mMetaData->isEncrypted && !mDecryptMessage) {
-        const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
+    if (mMetaData.isEncrypted && !mDecryptMessage) {
+        const CryptoBlock block(mOtp, &mMetaData, mCryptoProto, mFromAddress, mNode);
         writeDeferredDecryptionBlock();
-    } else if (mMetaData->inProgress) {
-        const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
+    } else if (mMetaData.inProgress) {
+        const CryptoBlock block(mOtp, &mMetaData, mCryptoProto, mFromAddress, mNode);
         // In progress has no special body
-    } else if (mMetaData->isEncrypted && !mMetaData->isDecryptable) {
-        const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
+    } else if (mMetaData.isEncrypted && !mMetaData.isDecryptable) {
+        const CryptoBlock block(mOtp, &mMetaData, mCryptoProto, mFromAddress, mNode);
         writer->queue(text());           //Do not quote ErrorText
     } else {
-        if (mMetaData->isSigned && mVerifiedText.isEmpty() && !hideErrors) {
-            const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
+        if (mMetaData.isSigned && mVerifiedText.isEmpty() && !hideErrors) {
+            const CryptoBlock block(mOtp, &mMetaData, mCryptoProto, mFromAddress, mNode);
             writer->queue(QStringLiteral("<hr><b><h2>"));
             writer->queue(i18n("The crypto engine returned no cleartext data."));
             writer->queue(QStringLiteral("</h2></b>"));
             writer->queue(QStringLiteral("<br/>&nbsp;<br/>"));
             writer->queue(i18n("Status: "));
-            if (!mMetaData->status.isEmpty()) {
+            if (!mMetaData.status.isEmpty()) {
                 writer->queue(QStringLiteral("<i>"));
-                writer->queue(mMetaData->status);
+                writer->queue(mMetaData.status);
                 writer->queue(QStringLiteral("</i>"));
             } else {
                 writer->queue(i18nc("Status of message unknown.", "(unknown)"));
             }
         } else if (mNode) {
-            const CryptoBlock block(mOtp, mMetaData, mCryptoProto, mFromAddress, mNode);
+            const CryptoBlock block(mOtp, &mMetaData, mCryptoProto, mFromAddress, mNode);
             renderInternalHtml();
         } else {
             MessagePart::html(decorate);
@@ -437,17 +436,17 @@ void CryptoMessagePart::html(bool decorate) const
     }
 }
 
-EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser *otp, PartMetaData *block, KMime::Content *node, const KMime::Message::Ptr &message)
-    : MessagePart(otp, block, QString())
-    , mMessage(message)
-    , mNode(node)
+EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser *otp, KMime::Content *node, const KMime::Message::Ptr &message)
+: MessagePart(otp, QString())
+, mMessage(message)
+, mNode(node)
 {
-    mMetaData->isEncrypted = false;
-    mMetaData->isSigned = false;
-    mMetaData->isEncapsulatedRfc822Message = true;
+    mMetaData.isEncrypted = false;
+    mMetaData.isSigned = false;
+    mMetaData.isEncapsulatedRfc822Message = true;
 
     mOtp->nodeHelper()->setNodeDisplayedEmbedded(mNode, true);
-    mOtp->nodeHelper()->setPartMetaData(mNode, *mMetaData);
+    mOtp->nodeHelper()->setPartMetaData(mNode, mMetaData);
 
     if (!mMessage) {
         qCWarning(MESSAGEVIEWER_LOG) << "Node is of type message/rfc822 but doesn't have a message!";
@@ -466,7 +465,7 @@ EncapsulatedRfc822MessagePart::~EncapsulatedRfc822MessagePart()
 
 }
 
-void EncapsulatedRfc822MessagePart::html(bool decorate) const
+void EncapsulatedRfc822MessagePart::html(bool decorate)
 {
     Q_UNUSED(decorate)
     if (!mSubOtp) {
@@ -479,11 +478,11 @@ void EncapsulatedRfc822MessagePart::html(bool decorate) const
         return;
     }
 
-    const CryptoBlock block(mOtp, mMetaData, 0, mMessage->from()->asUnicodeString(), mMessage.data());
+    const CryptoBlock block(mOtp, &mMetaData, Q_NULLPTR, mMessage->from()->asUnicodeString(), mMessage.data());
     writer->queue(mOtp->mSource->createMessageHeader(mMessage.data()));
     renderInternalHtml();
 
-    mOtp->nodeHelper()->setPartMetaData(mNode, *mMetaData);
+    mOtp->nodeHelper()->setPartMetaData(mNode, mMetaData);
 }
 
 QString EncapsulatedRfc822MessagePart::text() const

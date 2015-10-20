@@ -1221,7 +1221,6 @@ bool ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, Proce
 
     const QByteArray cleartext = KMime::LFtoCRLF(signedData->encodedContent());
     const QTextCodec *aCodec(codecFor(signedData));
-    PartMetaData messagePart;
 
     CryptoMessagePart mp(this, &messagePart,
                          aCodec->toUnicode(cleartext), cryptoProtocol(),
@@ -1231,7 +1230,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, Proce
     if (cryptoProtocol()) {
         mp.startVerificationDetached(cleartext, signedData, signature->decodedContent());
     } else {
-        messagePart.auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
+        messagePart->auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
     }
 
     mp.html(false);
@@ -1285,17 +1284,17 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
     KMime::Content *dataChild = MessageCore::NodeHelper::firstChild(data);
     if (dataChild) {
         standardChildHandling(dataChild);
-        return true;
+        return MessagePart::Ptr();
     }
 
     mNodeHelper->setEncryptionState(node, KMMsgFullyEncrypted);
 
-    PartMetaData messagePart;
 
-    CryptoMessagePart mp(this, &messagePart,
+    CryptoMessagePart mp(this,
                          data->decodedText(), Kleo::CryptoBackendFactory::instance()->openpgp(),
                          NodeHelper::fromAsString(data), node);
 
+    PartMetaData *messagePart(mp->partMetaData());
     if (!mSource->decryptMessage()) {
         mNodeHelper->setNodeProcessed(data, false);  // Set the data node to done to prevent it from being processed
     } else if (KMime::Content *newNode = mNodeHelper->decryptedNodeForContent(data)) {
@@ -1303,16 +1302,15 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
         ObjectTreeParser otp(this);
         otp.parseObjectTreeInternal(newNode);
         copyContentFrom(&otp);
-        messagePart = mNodeHelper->partMetaData(node);
         return true;
     } else {
-        mp.startDecryption(data);
+        mp->startDecryption(data);
 
-        qCDebug(MESSAGEVIEWER_LOG) << "decrypted, signed?:" << messagePart.isSigned;
+        qCDebug(MESSAGEVIEWER_LOG) << "decrypted, signed?:" << messagePart->isSigned;
 
-        if (!messagePart.inProgress) {
+        if (!messagePart->inProgress) {
             mNodeHelper->setNodeProcessed(data, false);   // Set the data node to done to prevent it from being processed
-            if (messagePart.isDecryptable && messagePart.isSigned) {
+            if (messagePart->isDecryptable && messagePart->isSigned) {
                 // Note: Multipart/Encrypted might also be signed
                 //       without encapsulating a nicely formatted
                 //       ~~~~~~~                 Multipart/Signed part.
@@ -1391,22 +1389,22 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
         } else {
             qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  type unknown  -  enveloped (encrypted) data ?";
         }
-        PartMetaData messagePart;
 
-        CryptoMessagePart mp(this, &messagePart,
+        CryptoMessagePart mp(this,
                              node->decodedText(), cryptoProtocol(),
                              NodeHelper::fromAsString(node), node);
 
+        PartMetaData *messagePart(mp.partMetaData());
         if (!mSource->decryptMessage()) {
             isEncrypted = true;
             signTestNode = 0; // PENDING(marc) to be abs. sure, we'd need to have to look at the content
         } else {
             mp.startDecryption();
-            if (messagePart.isDecryptable) {
+            if (messagePart->isDecryptable) {
                 qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  encryption found  -  enveloped (encrypted) data !";
                 isEncrypted = true;
                 mNodeHelper->setEncryptionState(node, KMMsgFullyEncrypted);
-                if (messagePart.isSigned) {
+                if (messagePart->isSigned) {
                     mNodeHelper->setSignatureState(node, KMMsgFullySigned);
                 }
                 signTestNode = 0;
@@ -1416,7 +1414,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
                 // decryption failed, or because we didn't know if it was encrypted, tried,
                 // and failed. If the message was not actually encrypted, we continue
                 // assuming it's signed
-                if (mp.mPassphraseError || (smimeType.isEmpty() && messagePart.isEncrypted)) {
+                if (mp.mPassphraseError || (smimeType.isEmpty() && messagePart->isEncrypted)) {
                     isEncrypted = true;
                     signTestNode = 0;
                 }
@@ -1445,19 +1443,19 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype(KMime::Content *node, 
 
         const QTextCodec *aCodec(codecFor(signTestNode));
         const QByteArray signaturetext = signTestNode->decodedContent();
-        PartMetaData messagePart;
-        CryptoMessagePart mp(this, &messagePart,
+        CryptoMessagePart mp(this,
                              aCodec->toUnicode(signaturetext), cryptoProtocol(),
                              NodeHelper::fromAsString(node), signTestNode);
 
+        PartMetaData *messagePart(mp.partMetaData());
         if (cryptoProtocol()) {
             mp.startVerificationDetached(signaturetext, 0, QByteArray());
         } else {
-            messagePart.auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
+            messagePart->auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
         }
 
         mp.html(false /*, hideErrors = isEncrypted*/);
-        if (messagePart.isSigned) {
+        if (messagePart->isSigned) {
             if (!isSigned) {
                 qCDebug(MESSAGEVIEWER_LOG) << "pkcs7 mime  -  signature found  -  opaque signed data !";
                 isSigned = true;
@@ -2572,9 +2570,6 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
         bool fullySignedOrEncryptedTmp = true;
 
         Q_FOREACH (const Block &block, blocks) {
-            PartMetaData *messagePart = new PartMetaData;
-            messagePart->isEncrypted = false;
-            messagePart->isSigned = false;
 
             if (!fullySignedOrEncryptedTmp) {
                 fullySignedOrEncrypted = false;
@@ -2582,26 +2577,28 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
 
             if (block.type() == NoPgpBlock && !block.text().trimmed().isEmpty()) {
                 fullySignedOrEncryptedTmp = false;
-                mpl.append(MessagePart::Ptr(new MessagePart(this, messagePart, aCodec->toUnicode(block.text()))));
+                mpl.append(MessagePart::Ptr(new MessagePart(this, aCodec->toUnicode(block.text()))));
             } else if (block.type() == PgpMessageBlock) {
                 updatePlainText = true;
-                CryptoMessagePart::Ptr mp(new CryptoMessagePart(this, messagePart, QString(), cryptoProtocol(), fromAddress, 0));
+                CryptoMessagePart::Ptr mp(new CryptoMessagePart(this, QString(), cryptoProtocol(), fromAddress, 0));
                 mpl.append(mp);
                 if (!mSource->decryptMessage()) {
                     continue;
                 }
                 mp->startDecryption(block.text(), aCodec);
-                if (messagePart->inProgress) {
+                if (mp->partMetaData()->inProgress) {
                     continue;
                 }
             } else if (block.type() == ClearsignedBlock) {
-                CryptoMessagePart::Ptr mp(new CryptoMessagePart(this, messagePart, QString(), cryptoProtocol(), fromAddress, 0));
+                CryptoMessagePart::Ptr mp(new CryptoMessagePart(this, QString(), cryptoProtocol(), fromAddress, 0));
                 mpl.append(mp);
                 updatePlainText = true;
                 mp->startVerification(block.text(), aCodec);
             } else {
                 continue;
             }
+
+            const PartMetaData *messagePart(mpl.last()->partMetaData());
 
             if (!messagePart->isEncrypted && !messagePart->isSigned && !block.text().trimmed().isEmpty()) {
                 mpl.last()->setText(aCodec->toUnicode(block.text()));
@@ -2638,9 +2635,6 @@ void ObjectTreeParser::writeBodyStr(const QByteArray &aStr, const QTextCodec *aC
                 mPlainTextContent += mp->text();
             }
             mPlainTextContentCharset = aCodec->name();
-        }
-        foreach (const MessagePart::Ptr &mp, mpl) {
-            delete mp->partMetaData();
         }
     }
 }

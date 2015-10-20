@@ -125,9 +125,8 @@ const MessageViewer::Interface::BodyPartFormatter *MessageRfc822BodyPartFormatte
 
 MessagePart::Ptr MessageRfc822BodyPartFormatter::process(Interface::BodyPart *part) const
 {
-    PartMetaData *metaData = new PartMetaData;
     const KMime::Message::Ptr message = part->content()->bodyAsMessage();
-    return MessagePart::Ptr(new EncapsulatedRfc822MessagePart(part->objectTreeParser(), metaData, part->content(), message));
+    return MessagePart::Ptr(new EncapsulatedRfc822MessagePart(part->objectTreeParser(), part->content(), message));
 }
 
 MessageViewer::Interface::BodyPartFormatter::Result MessageRfc822BodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
@@ -136,11 +135,9 @@ MessageViewer::Interface::BodyPartFormatter::Result MessageRfc822BodyPartFormatt
     const ObjectTreeParser *otp = part->objectTreeParser();
     const MessagePart::Ptr mp = process(part);
      if (mp && !otp->attachmentStrategy()->inlineNestedMessages() && !otp->showOnlyOneMimePart()) {
-         delete mp->partMetaData();
         return Failed;
     } else {
         mp->html(true);
-        delete mp->partMetaData();
         return Ok;
     }
 }
