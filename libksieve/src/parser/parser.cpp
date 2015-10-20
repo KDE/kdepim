@@ -411,8 +411,8 @@ bool Parser::Impl::parseTestList()
             break;
         case Lexer::Special:
             assert(tokenValue().length() == 1);
-            assert(tokenValue()[0].toLatin1());
-            switch (tokenValue()[0].toLatin1()) {
+            assert(tokenValue().at(0).toLatin1());
+            switch (tokenValue().at(0).toLatin1()) {
             case ')':
                 consumeToken();
                 if (lastWasComma) {
@@ -618,7 +618,7 @@ bool Parser::Impl::parseStringList()
             break;
         case Lexer::Special:
             assert(tokenValue().length() == 1);
-            switch (tokenValue()[0].toLatin1()) {
+            switch (tokenValue().at(0).toLatin1()) {
             case ']':
                 consumeToken();
                 if (lastWasComma) {
