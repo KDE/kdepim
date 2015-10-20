@@ -36,7 +36,6 @@
 
 #include <KConfig>
 #include <KConfigGroup>
-#include "libkdepim_debug.h"
 #include <KDirWatch>
 #include <KProtocolInfo>
 #include <Kdelibs4ConfigMigrator>

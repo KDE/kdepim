@@ -29,7 +29,6 @@
 #include <kldap/ldapurl.h>
 #include <kldap/ldif.h>
 
-#include "libkdepim_debug.h"
 #include <kio/job.h>
 
 #include <QPointer>
