@@ -18,7 +18,7 @@
 #include "shorturlwidgetng.h"
 #include "shorturlengineplugin/shorturlengineplugin.h"
 #include "shorturlengineplugin/shorturlengineinterface.h"
-#include "shorturl/shorturlconfiguredialog.h"
+#include "shorturlconfiguredialog.h"
 #include "Libkdepim/ProgressIndicatorLabel"
 #include "shorturlengineplugin/shorturlenginepluginmanager.h"
 
@@ -41,7 +41,7 @@
 #include <QPointer>
 #include <KActionCollection>
 
-#include <shorturl/shorturlengineplugin/shorturlengineplugin.h>
+#include <pimcommon/shorturlengineplugin.h>
 
 using namespace PimCommon;
 
