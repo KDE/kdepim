@@ -36,20 +36,46 @@ using namespace KLDAP;
 class KLDAP::AddHostDialogPrivate
 {
 public:
-    AddHostDialogPrivate()
+    AddHostDialogPrivate(AddHostDialog *qq)
         : mCfg(Q_NULLPTR),
           mServer(Q_NULLPTR),
-          mOkButton(Q_NULLPTR)
+          mOkButton(Q_NULLPTR),
+          q(qq)
     {
     }
+    ~AddHostDialogPrivate()
+    {
+        writeConfig();
+    }
+
+    void readConfig();
+    void writeConfig();
     KLDAP::LdapConfigWidget *mCfg;
     KLDAP::LdapServer *mServer;
     QPushButton *mOkButton;
+    AddHostDialog *q;
 };
+
+void AddHostDialogPrivate::readConfig()
+{
+    KConfigGroup group(KSharedConfig::openConfig(), "AddHostDialog");
+    const QSize size = group.readEntry("Size", QSize(600, 400));
+    if (size.isValid()) {
+        q->resize(size);
+    }
+}
+
+void AddHostDialogPrivate::writeConfig()
+{
+    KConfigGroup group(KSharedConfig::openConfig(), "AddHostDialog");
+    group.writeEntry("Size", q->size());
+    group.sync();
+}
+
 
 AddHostDialog::AddHostDialog(KLDAP::LdapServer *server, QWidget *parent)
     : QDialog(parent),
-      d(new KLDAP::AddHostDialogPrivate)
+      d(new KLDAP::AddHostDialogPrivate(this))
 {
     setWindowTitle(i18n("Add Host"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -126,12 +152,11 @@ AddHostDialog::AddHostDialog(KLDAP::LdapServer *server, QWidget *parent)
     connect(d->mCfg, &KLDAP::LdapConfigWidget::hostNameChanged, this, &AddHostDialog::slotHostEditChanged);
     connect(d->mOkButton, &QPushButton::clicked, this, &AddHostDialog::slotOk);
     d->mOkButton->setEnabled(!d->mServer->host().isEmpty());
-    readConfig();
+    d->readConfig();
 }
 
 AddHostDialog::~AddHostDialog()
 {
-    writeConfig();
     delete d;
 }
 
@@ -140,21 +165,6 @@ void AddHostDialog::slotHostEditChanged(const QString &text)
     d->mOkButton->setEnabled(!text.isEmpty());
 }
 
-void AddHostDialog::readConfig()
-{
-    KConfigGroup group(KSharedConfig::openConfig(), "AddHostDialog");
-    const QSize size = group.readEntry("Size", QSize(600, 400));
-    if (size.isValid()) {
-        resize(size);
-    }
-}
-
-void AddHostDialog::writeConfig()
-{
-    KConfigGroup group(KSharedConfig::openConfig(), "AddHostDialog");
-    group.writeEntry("Size", size());
-    group.sync();
-}
 
 void AddHostDialog::slotOk()
 {

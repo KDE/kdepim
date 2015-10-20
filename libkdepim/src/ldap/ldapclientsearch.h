@@ -181,5 +181,6 @@ private:
 };
 
 }
+Q_DECLARE_TYPEINFO(KLDAP::LdapResult, Q_MOVABLE_TYPE);
 
 #endif // LDAPCLIENTSEARCH_H

@@ -45,8 +45,6 @@ private Q_SLOTS:
     void slotOk();
 
 private:
-    void writeConfig();
-    void readConfig();
     AddHostDialogPrivate *const d;
 };
 
