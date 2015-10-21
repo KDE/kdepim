@@ -109,7 +109,7 @@ set_target_properties(KF5EventViews PROPERTIES
 
 install(TARGETS
     KF5EventViews
-    EXPORT KF5EventViewsTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    EXPORT KF5EventViewsTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS} ${LIBRARY_NAMELINK}
 )
 
 ecm_generate_headers(eventviews_CamelCase_HEADERS
