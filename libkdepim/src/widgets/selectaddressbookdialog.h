@@ -33,17 +33,20 @@
 
 namespace KPIM
 {
-
-class SelectedAddressBookDialog : public Akonadi::CollectionDialog
+class SelectAddressBookDialogPrivate;
+/**
+ * @brief The SelectAddressBookDialog class This class allows to select addressbook where saving contacts
+ * @since 5.1
+ */
+class SelectAddressBookDialog : public Akonadi::CollectionDialog
 {
     Q_OBJECT
 public:
-    explicit SelectedAddressBookDialog(QWidget *parent = Q_NULLPTR);
-    ~SelectedAddressBookDialog();
+    explicit SelectAddressBookDialog(QWidget *parent = Q_NULLPTR);
+    ~SelectAddressBookDialog();
 
 private:
-    void readConfig();
-    void writeConfig();
+    SelectAddressBookDialogPrivate *const d;
 };
 }
 

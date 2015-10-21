@@ -26,7 +26,7 @@
  *  your version.
  */
 
-#include "selectedaddressbookdialog.h"
+#include "selectaddressbookdialog.h"
 
 #include <KLocalizedString>
 #include <KConfigGroup>
@@ -34,41 +34,58 @@
 #include <kcontacts/addressee.h>
 #include <KSharedConfig>
 
-namespace KPIM
+using namespace KPIM;
+class KPIM::SelectAddressBookDialogPrivate
 {
+public:
+    SelectAddressBookDialogPrivate(SelectAddressBookDialog *qq)
+        : q(qq)
+    {
+        const QStringList mimeTypes(KContacts::Addressee::mimeType());
+        q->setMimeTypeFilter(mimeTypes);
+        q->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+        q->setWindowTitle(i18nc("@title:window", "Select Address Book"));
+        q->setDescription(
+            i18nc("@info",
+                  "Select the address book where the contact will be saved:"));
+        q->changeCollectionDialogOptions(Akonadi::CollectionDialog::KeepTreeExpanded);
+        readConfig();
+    }
+    ~SelectAddressBookDialogPrivate()
+    {
+        writeConfig();
+    }
 
-SelectedAddressBookDialog::SelectedAddressBookDialog(QWidget *parent)
-    : Akonadi::CollectionDialog(parent)
-{
-    const QStringList mimeTypes(KContacts::Addressee::mimeType());
-    setMimeTypeFilter(mimeTypes);
-    setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
-    setWindowTitle(i18nc("@title:window", "Select Address Book"));
-    setDescription(
-        i18nc("@info",
-              "Select the address book where the contact will be saved:"));
-    changeCollectionDialogOptions(Akonadi::CollectionDialog::KeepTreeExpanded);
-    readConfig();
-}
+    SelectAddressBookDialog *q;
+    void readConfig();
+    void writeConfig();
+};
 
-SelectedAddressBookDialog::~SelectedAddressBookDialog()
+void SelectAddressBookDialogPrivate::readConfig()
 {
-    writeConfig();
-}
-
-void SelectedAddressBookDialog::readConfig()
-{
-    KConfigGroup group(KSharedConfig::openConfig(), "SelectedAddressBookDialog");
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectAddressBookDialog");
     const QSize size = group.readEntry("Size", QSize(600, 400));
     if (size.isValid()) {
-        resize(size);
+        q->resize(size);
     }
 }
 
-void SelectedAddressBookDialog::writeConfig()
+void SelectAddressBookDialogPrivate::writeConfig()
 {
-    KConfigGroup group(KSharedConfig::openConfig(), "SelectedAddressBookDialog");
-    group.writeEntry("Size", size());
+    KConfigGroup group(KSharedConfig::openConfig(), "SelectAddressBookDialog");
+    group.writeEntry("Size", q->size());
     group.sync();
 }
+
+
+SelectAddressBookDialog::SelectAddressBookDialog(QWidget *parent)
+    : Akonadi::CollectionDialog(parent),
+      d(new KPIM::SelectAddressBookDialogPrivate(this))
+{
 }
+
+SelectAddressBookDialog::~SelectAddressBookDialog()
+{
+    delete d;
+}
+
