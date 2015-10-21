@@ -113,6 +113,7 @@ CustomTemplatesMenu::~CustomTemplatesMenu()
     delete d->mCustomReplyMapper;
     delete d->mCustomReplyAllMapper;
     delete d->mCustomForwardMapper;
+    delete d;
 }
 
 KActionMenu *CustomTemplatesMenu::replyActionMenu() const

@@ -62,20 +62,6 @@ private Q_SLOTS:
 private:
     void clear();
     CustomTemplatesMenuPrivate *const d;
-    KActionCollection *mOwnerActionCollection;
-
-    QStringList mCustomTemplates;
-    QList<QAction *> mCustomTemplateActions;
-
-    // Custom template actions menu
-    KActionMenu *mCustomReplyActionMenu;
-    KActionMenu *mCustomReplyAllActionMenu;
-    KActionMenu *mCustomForwardActionMenu;
-
-    // Signal mappers for custom template actions
-    QSignalMapper *mCustomReplyMapper;
-    QSignalMapper *mCustomReplyAllMapper;
-    QSignalMapper *mCustomForwardMapper;
 };
 
 }
