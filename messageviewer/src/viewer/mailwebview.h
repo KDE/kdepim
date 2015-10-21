@@ -102,7 +102,6 @@ Q_SIGNALS:
     void popupMenu(const QUrl &url, const QUrl &imageUrl, const QPoint &point);
 
     void linkHovered(const QString &link, const QString &title = QString(), const QString &textContent = QString());
-    void linkClicked(const QUrl &link);
     void messageMayBeAScam();
 
 protected:
