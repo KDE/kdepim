@@ -36,3 +36,18 @@ QIcon StorageServicePlugin::icon() const
     return QIcon();
 }
 
+QRegExp StorageServicePlugin::disallowedSymbols() const
+{
+    return QRegExp();
+}
+
+QString StorageServicePlugin::disallowedSymbolsStr() const
+{
+    return QString();
+}
+
+qlonglong StorageServicePlugin::maximumUploadFileSize() const
+{
+    return -1;
+}
+
