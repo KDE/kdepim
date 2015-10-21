@@ -26,7 +26,7 @@
 #include <kopenwithdialog.h>
 #include <kprocess.h>
 #include <kmimetypetrader.h>
-#include <krun.h>
+#include <KIO/DesktopExecParser>
 
 #include <qsocketnotifier.h>
 
@@ -109,7 +109,9 @@ EditorWatcher::ErrorEditorWatcher EditorWatcher::start()
 #endif
 
     // start the editor
-    const QStringList params = KRun::processDesktopExec(*offer, list, false);
+    KIO::DesktopExecParser parser(*offer, list);
+    parser.setUrlsAreTempFiles(false);
+    const QStringList params = parser.resultingArguments();
     mEditor = new KProcess(this);
     mEditor->setProgram(params);
     connect(mEditor, static_cast<void (KProcess::*)(int, QProcess::ExitStatus)>(&KProcess::finished), this, &EditorWatcher::editorExited);
