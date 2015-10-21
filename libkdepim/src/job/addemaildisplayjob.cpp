@@ -19,7 +19,7 @@
 
 #include "addemaildisplayjob.h"
 #include "misc/broadcaststatus.h"
-#include "widgets/selectaddressbookdialog.h"
+#include "akonadi/contact/selectaddressbookdialog.h"
 
 #include <CollectionDialog>
 #include <Akonadi/Contact/ContactSearchJob>
@@ -194,7 +194,7 @@ public:
             addressBook = canCreateItemCollections[0];
         } else {
             // ask user in which address book the new contact shall be stored
-            QPointer<SelectAddressBookDialog> dlg = new SelectAddressBookDialog(mParentWidget);
+            QPointer<Akonadi::SelectAddressBookDialog> dlg = new Akonadi::SelectAddressBookDialog(mParentWidget);
 
             bool gotIt = true;
             if (dlg->exec()) {

@@ -19,7 +19,7 @@
 
 #include "addcontactjob.h"
 #include <Collection>
-#include "widgets/selectaddressbookdialog.h"
+#include "akonadi/contact/selectaddressbookdialog.h"
 
 #include <Akonadi/Contact/ContactSearchJob>
 #include <item.h>
@@ -74,7 +74,7 @@ public:
 
         if (!mCollection.isValid()) {
             // ask user in which address book the new contact shall be stored
-            QPointer<SelectAddressBookDialog> dlg = new SelectAddressBookDialog(mParentWidget);
+            QPointer<Akonadi::SelectAddressBookDialog> dlg = new Akonadi::SelectAddressBookDialog(mParentWidget);
 
             bool gotIt = true;
             if (!dlg->exec()) {
