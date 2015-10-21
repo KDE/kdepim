@@ -66,7 +66,7 @@ void ExportMailJob::start()
         return;
     }
 
-    Q_EMIT title(i18n("Start export KNotes settings..."));
+    Q_EMIT title(i18n("Start export KMail settings..."));
     createProgressDialog();
 
     if (mTypeSelected & Utils::Identity) {
