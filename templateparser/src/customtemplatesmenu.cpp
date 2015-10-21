@@ -105,14 +105,6 @@ CustomTemplatesMenu::CustomTemplatesMenu(QWidget *owner, KActionCollection *ac)
 CustomTemplatesMenu::~CustomTemplatesMenu()
 {
     clear();
-
-    delete d->mCustomReplyActionMenu;
-    delete d->mCustomReplyAllActionMenu;
-    delete d->mCustomForwardActionMenu;
-
-    delete d->mCustomReplyMapper;
-    delete d->mCustomReplyAllMapper;
-    delete d->mCustomForwardMapper;
     delete d;
 }
 
