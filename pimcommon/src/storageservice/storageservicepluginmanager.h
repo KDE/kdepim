@@ -23,6 +23,7 @@
 
 namespace PimCommon
 {
+class StorageServicePlugin;
 class StorageServicePluginManagerPrivate;
 class PIMCOMMON_EXPORT StorageServicePluginManager : public QObject
 {
@@ -32,6 +33,9 @@ public:
 
     explicit StorageServicePluginManager(QObject *parent = Q_NULLPTR);
     ~StorageServicePluginManager();
+
+    QVector<PimCommon::StorageServicePlugin *> pluginsList() const;
+
 private:
     StorageServicePluginManagerPrivate *const d;
 };

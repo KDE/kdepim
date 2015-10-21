@@ -135,6 +135,11 @@ StorageServicePluginManager::~StorageServicePluginManager()
     delete d;
 }
 
+QVector<StorageServicePlugin *> StorageServicePluginManager::pluginsList() const
+{
+    return d->pluginsList();
+}
+
 StorageServicePluginManager *StorageServicePluginManager::self()
 {
     return sInstance->storageServicePluginManager;
