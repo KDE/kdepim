@@ -72,9 +72,9 @@ void CryptoBlock::internalExit()
     entered = false;
 }
 
-AttachmentMarkBlock::AttachmentMarkBlock(MessageViewer::HtmlWriter* writer, KMime::Content* node)
-   : mNode(node)
-   , mWriter(writer)
+AttachmentMarkBlock::AttachmentMarkBlock(MessageViewer::HtmlWriter *writer, KMime::Content *node)
+    : mNode(node)
+    , mWriter(writer)
 {
     internalEnter();
 }
@@ -379,11 +379,11 @@ void CryptoMessagePart::html(bool decorate) const
     }
 }
 
-EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser* otp, PartMetaData* block, KMime::Content* node, const KMime::Message::Ptr& message)
-: MessagePart(otp, block, QString())
-, mMessage(message)
-, mNode(node)
-, mSubOtp(0)
+EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser *otp, PartMetaData *block, KMime::Content *node, const KMime::Message::Ptr &message)
+    : MessagePart(otp, block, QString())
+    , mMessage(message)
+    , mNode(node)
+    , mSubOtp(0)
 {
     mMetaData->isEncrypted = false;
     mMetaData->isSigned = false;
@@ -420,7 +420,7 @@ void EncapsulatedRfc822MessagePart::html(bool decorate) const
         return;
     }
 
-    MessageViewer::HtmlWriter* writer = mOtp->htmlWriter();
+    MessageViewer::HtmlWriter *writer = mOtp->htmlWriter();
 
     if (!writer) {
         return;
@@ -428,11 +428,10 @@ void EncapsulatedRfc822MessagePart::html(bool decorate) const
 
     const CryptoBlock block(mOtp, mMetaData, 0, mMessage->from()->asUnicodeString(), mMessage.data());
     writer->queue(mOtp->mSource->createMessageHeader(mMessage.data()));
-    static_cast<QueueHtmlWriter*>(mSubOtp->htmlWriter())->replay();
+    static_cast<QueueHtmlWriter *>(mSubOtp->htmlWriter())->replay();
 
     mOtp->nodeHelper()->setPartMetaData(mNode, *mMetaData);
 }
-
 
 QString EncapsulatedRfc822MessagePart::text() const
 {

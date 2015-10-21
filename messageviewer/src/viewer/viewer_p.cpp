@@ -773,11 +773,12 @@ int ViewerPrivate::pointsToPixel(int pointSize) const
 
 void ViewerPrivate::displaySplashPage(const QString &message)
 {
-    displaySplashPage(QStringLiteral("status.html"),
-                      { { QStringLiteral("icon"), QStringLiteral("kmail") },
-                        { QStringLiteral("name"), i18n("KMail") },
-                        { QStringLiteral("subtitle"), i18n("The KDE Mail Client") },
-                        { QStringLiteral("message"), message } });
+    displaySplashPage(QStringLiteral("status.html"), {
+        { QStringLiteral("icon"), QStringLiteral("kmail") },
+        { QStringLiteral("name"), i18n("KMail") },
+        { QStringLiteral("subtitle"), i18n("The KDE Mail Client") },
+        { QStringLiteral("message"), message }
+    });
 }
 
 void ViewerPrivate::displaySplashPage(const QString &templateName, const QVariantHash &data)

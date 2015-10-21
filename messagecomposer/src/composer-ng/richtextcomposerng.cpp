@@ -47,7 +47,6 @@ public:
     MessageComposer::RichTextComposerSignatures *richTextComposerSignatures;
 };
 
-
 RichTextComposerNg::RichTextComposerNg(QWidget *parent)
     : KPIMTextEdit::RichTextComposer(parent),
       d(new MessageComposer::RichTextComposerNgPrivate(this))
@@ -156,8 +155,6 @@ void RichTextComposerNgPrivate::fixHtmlFontSize(QString &cleanHtml)
         offset = styleRegex.indexIn(cleanHtml, offset);
     }
 }
-
-
 
 void RichTextComposerNg::fillComposerTextPart(MessageComposer::TextPart *textPart)
 {

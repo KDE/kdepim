@@ -72,7 +72,6 @@ void AddHostDialogPrivate::writeConfig()
     group.sync();
 }
 
-
 AddHostDialog::AddHostDialog(KLDAP::LdapServer *server, QWidget *parent)
     : QDialog(parent),
       d(new KLDAP::AddHostDialogPrivate(this))
@@ -164,7 +163,6 @@ void AddHostDialog::slotHostEditChanged(const QString &text)
 {
     d->mOkButton->setEnabled(!text.isEmpty());
 }
-
 
 void AddHostDialog::slotOk()
 {

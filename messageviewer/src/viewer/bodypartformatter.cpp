@@ -110,7 +110,7 @@ class MessageRfc822BodyPartFormatter
     : public BodyPartFormatter
     , public MessageViewer::Interface::BodyPartFormatter
 {
-    static const MessageRfc822BodyPartFormatter * self;
+    static const MessageRfc822BodyPartFormatter *self;
 public:
     bool process(ObjectTreeParser *, KMime::Content *, ProcessResult &) const Q_DECL_OVERRIDE;
     MessageViewer::Interface::BodyPartFormatter::Result format(Interface::BodyPart *, HtmlWriter *) const Q_DECL_OVERRIDE;
@@ -120,14 +120,15 @@ public:
 
 const MessageRfc822BodyPartFormatter *MessageRfc822BodyPartFormatter::self;
 
-const ::BodyPartFormatter *MessageRfc822BodyPartFormatter::create() {
+const ::BodyPartFormatter *MessageRfc822BodyPartFormatter::create()
+{
     if (!self) {
         self = new MessageRfc822BodyPartFormatter();
     }
     return self;
 }
 
-bool MessageRfc822BodyPartFormatter::process(ObjectTreeParser * otp, KMime::Content * node, ProcessResult & result) const
+bool MessageRfc822BodyPartFormatter::process(ObjectTreeParser *otp, KMime::Content *node, ProcessResult &result) const
 {
     PartMetaData metaData;
     const KMime::Message::Ptr message = node->bodyAsMessage();
@@ -144,14 +145,14 @@ bool MessageRfc822BodyPartFormatter::process(ObjectTreeParser * otp, KMime::Cont
 MessageViewer::Interface::BodyPartFormatter::Result MessageRfc822BodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
 {
     bool ret = process(part->objectTreeParser(), part->content(), *part->processResult());
-    return ret ? Ok: Failed;
+    return ret ? Ok : Failed;
 }
 
 #define CREATE_BODY_PART_FORMATTER(subtype) \
     class subtype##BodyPartFormatter \
         : public BodyPartFormatter \
         , public MessageViewer::Interface::BodyPartFormatter \
-        { \
+    { \
         static const subtype##BodyPartFormatter * self; \
     public: \
         bool process(ObjectTreeParser *, KMime::Content *, ProcessResult &) const Q_DECL_OVERRIDE;\
