@@ -260,7 +260,7 @@ void BackupJob::processMessage(const Akonadi::Item &item)
 
     // PORT ME: user and group!
     qCDebug(MAILCOMMON_LOG) << "AKONDI PORT: disabled code here!";
-    if (!mArchive->writeFile(fileName, QStringLiteral("user"), QStringLiteral("group"), messageData, messageSize, archivePerms, mArchiveTime, mArchiveTime, mArchiveTime)) {
+    if (!mArchive->writeFile(fileName, messageData, archivePerms, QStringLiteral("user"), QStringLiteral("group"), mArchiveTime, mArchiveTime, mArchiveTime)) {
         abort(i18n("Failed to write a message into the archive folder '%1'.",
                    mCurrentFolder.name()));
         return;

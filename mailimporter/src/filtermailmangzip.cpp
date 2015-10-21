@@ -58,7 +58,7 @@ void FilterMailmanGzip::importMails(const QStringList &filenames)
     filterInfo()->setOverall(0);
     QStringList::ConstIterator end(filenames.constEnd());
     for (QStringList::ConstIterator filename = filenames.constBegin(); filename != end; ++filename, ++currentFile) {
-        QIODevice *device = KFilterDev::deviceForFile(*filename, QStringLiteral("application/x-gzip"), false);
+        QIODevice *device = new KCompressionDevice(*filename, KCompressionDevice::GZip);
         if (!device) {
             qCDebug(MAILIMPORTER_LOG) << "Could not create KFilterDev";
             filterInfo()->alert(i18n("Unable to open archive file '%1', skipping", *filename));
