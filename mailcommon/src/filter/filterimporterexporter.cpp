@@ -362,7 +362,7 @@ void FilterImporterExporter::exportFilters(const QList<MailFilter *> &filters, c
     KSharedConfig::Ptr config = KSharedConfig::openConfig(saveUrl.toLocalFile());
     if (saveAll) {
         writeFiltersToConfig(filters, config, true);
-        qDeleteAll(filters);
+        //qDeleteAll(filters);
     } else {
         MessageViewer::AutoQPointer<FilterSelectionDialog> dlg(new FilterSelectionDialog(d->mParent));
         dlg->setFilters(filters);
