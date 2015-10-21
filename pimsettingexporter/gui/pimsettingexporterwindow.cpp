@@ -105,7 +105,7 @@ void PimSettingExporterWindow::slotJobFinished()
 
 void PimSettingExporterWindow::slotJobFailed()
 {
-    //Nothing
+    mPimSettingsBackupRestoreUI->closeArchive();
 }
 
 void PimSettingExporterWindow::slotShowBackupFinishDialogInformation()

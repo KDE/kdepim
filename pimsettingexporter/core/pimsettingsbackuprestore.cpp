@@ -168,17 +168,22 @@ void PimSettingsBackupRestore::backupNextStep()
     }
 }
 
-void PimSettingsBackupRestore::backupFinished()
+void PimSettingsBackupRestore::closeArchive()
 {
-    Q_EMIT addInfo(i18n("Backup in \'%1\' done.", mArchiveStorage->filename()));
-    //At the end
     mArchiveStorage->closeArchive();
     delete mArchiveStorage;
     mArchiveStorage = Q_NULLPTR;
     delete mImportExportData;
     mImportExportData = Q_NULLPTR;
-    Q_EMIT backupDone();
     Q_EMIT updateActions(false);
+}
+
+void PimSettingsBackupRestore::backupFinished()
+{
+    Q_EMIT addInfo(i18n("Backup in \'%1\' done.", mArchiveStorage->filename()));
+    //At the end
+    closeArchive();
+    Q_EMIT backupDone();
     deleteLater();
 }
 

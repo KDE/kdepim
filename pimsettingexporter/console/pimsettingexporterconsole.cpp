@@ -52,6 +52,7 @@ void PimSettingExporterConsole::initializeLogInFile()
 void PimSettingExporterConsole::slotJobFailed()
 {
     qCWarning(PIMSETTINGEXPORTERCONSOLE_LOG) << "job failed";
+    mPimSettingsBackupRestore->closeArchive();
 }
 
 void PimSettingExporterConsole::slotBackupDone()
