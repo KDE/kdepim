@@ -76,7 +76,6 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
         KMessageBox::error(this, i18n("Zip program not found. Install it before to launch this application."), i18n("Zip program not found."));
     }
     statusBar()->hide();
-    initializeBackupRestoreUi();
 }
 
 PimSettingExporterWindow::~PimSettingExporterWindow()
@@ -101,7 +100,7 @@ void PimSettingExporterWindow::initializeBackupRestoreUi()
 
 void PimSettingExporterWindow::slotJobFinished()
 {
-    //TODO ?
+    mPimSettingsBackupRestoreUI->nextStep();
 }
 
 void PimSettingExporterWindow::slotJobFailed()
@@ -219,6 +218,7 @@ void PimSettingExporterWindow::backupData(const QString &filename, const QString
     dialog->loadTemplate(templateFile);
     if (dialog->exec()) {
         mLogWidget->clear();
+        initializeBackupRestoreUi();
         mPimSettingsBackupRestoreUI->setStoredParameters(dialog->storedType());
         delete dialog;
         if (!mPimSettingsBackupRestoreUI->backupStart(filename)) {
