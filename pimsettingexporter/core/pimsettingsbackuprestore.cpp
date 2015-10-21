@@ -102,6 +102,18 @@ bool PimSettingsBackupRestore::backupStart(const QString &filename)
     return true;
 }
 
+void PimSettingsBackupRestore::nextStep()
+{
+    mStoreIterator++;
+    switch(mAction) {
+    case Backup:
+        backupNextStep();
+        break;
+    case Restore:
+        restoreNextStep();
+    }
+}
+
 void PimSettingsBackupRestore::backupNextStep()
 {
     if (mStoreIterator != mStored.constEnd()) {

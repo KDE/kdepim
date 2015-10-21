@@ -62,6 +62,7 @@ void PimSettingExporterConsole::slotBackupDone()
 void PimSettingExporterConsole::slotJobFinished()
 {
     qCDebug(PIMSETTINGEXPORTERCONSOLE_LOG) << "job finished";
+    mPimSettingsBackupRestore->nextStep();
 }
 
 void PimSettingExporterConsole::slotAddEndLine()
