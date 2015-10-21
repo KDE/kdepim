@@ -19,6 +19,7 @@
 #include <kpluginfactory.h>
 #include <KLocalizedString>
 #include <QUrl>
+#include <QIcon>
 
 using namespace PimCommon;
 K_PLUGIN_FACTORY_WITH_JSON(PimCommonWebDavPluginFactory, "pimcommon_webdavplugin.json", registerPlugin<WebDavPlugin>();)
@@ -70,5 +71,9 @@ QUrl WebDavPlugin::serviceUrl() const
     return QUrl();
 }
 
+QIcon WebDavPlugin::icon() const
+{
+    return QIcon::fromTheme(QStringLiteral("folder-remote"));
+}
 
 #include "webdavplugin.moc"
