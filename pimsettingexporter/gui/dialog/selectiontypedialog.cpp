@@ -128,7 +128,9 @@ void SelectionTypeDialog::slotLoadTemplate()
 
 void SelectionTypeDialog::saveDefaultTemplate()
 {
-    //TODO
+    if (mUseTemplateByDefault->isChecked()) {
+        //TODO
+    }
 }
 
 void SelectionTypeDialog::loadDefaultTemplate()
