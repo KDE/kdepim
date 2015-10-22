@@ -75,6 +75,7 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
 
 SelectionTypeDialog::~SelectionTypeDialog()
 {
+    saveDefaultTemplate();
     writeConfig();
 }
 
@@ -129,11 +130,11 @@ void SelectionTypeDialog::slotLoadTemplate()
 void SelectionTypeDialog::saveDefaultTemplate()
 {
     if (mUseTemplateByDefault->isChecked()) {
-        //TODO
+        mSelectionTreeWidget->saveAsDefaultTemplate();
     }
 }
 
 void SelectionTypeDialog::loadDefaultTemplate()
 {
-    //TODO
+    mSelectionTreeWidget->loadDefaultTemplate();
 }

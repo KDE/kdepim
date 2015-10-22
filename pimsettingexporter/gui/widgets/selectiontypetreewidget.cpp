@@ -270,6 +270,14 @@ void SelectionTypeTreeWidget::loadFileName(const QString &fileName)
     setParameters(params);
 }
 
+void SelectionTypeTreeWidget::loadDefaultTemplate()
+{
+    QString ret = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("/pimsettingexporter/defaulttemplate.xml"));
+    if (!ret.isEmpty()) {
+        loadFileName(ret);
+    }
+}
+
 void SelectionTypeTreeWidget::loadTemplate(const QString &fileName)
 {
     if (fileName.isEmpty()) {
@@ -283,6 +291,19 @@ void SelectionTypeTreeWidget::loadTemplate(const QString &fileName)
     } else {
         loadFileName(fileName);
     }
+}
+
+void SelectionTypeTreeWidget::saveAsDefaultTemplate()
+{
+    TemplateSelection templateSelection;
+    templateSelection.createTemplate(storedType());
+    const QString templateStr = templateSelection.document().toString(2);
+    QString ret = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QStringLiteral("pimsettingexporter/");
+    QFileInfo fileInfo(ret);
+    QDir().mkpath(fileInfo.absolutePath());
+    qDebug()<<" ret :"<<ret;
+
+    PimCommon::Util::saveToFile(ret + QStringLiteral("defaulttemplate.xml"),templateStr);
 }
 
 void SelectionTypeTreeWidget::saveAsTemplate()

@@ -39,6 +39,8 @@ public:
     void saveAsTemplate();
 
     void loadTemplate(const QString &fileName = QString());
+    void saveAsDefaultTemplate();
+    void loadDefaultTemplate();
 private Q_SLOTS:
     void slotItemChanged(QTreeWidgetItem *, int);
 
