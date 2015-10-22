@@ -1,4 +1,4 @@
-2014-2-20:
+2015-10-22:
 -----------
 
 2015-1-29: New VERSION for archive => VERSION_2 => knote-akonadi
@@ -78,6 +78,7 @@ Root
 |       |---------akonadi_mailfilter_agent.notifyrc
 |       |---------storageservicerc
 |       |---------kpimbalooblacklist
+|       |---------kleopatrarc
 |
 |-----akonadi
 |       |---------<archive akonadi>

@@ -770,6 +770,7 @@ void ImportMailJob::restoreConfig()
     restoreConfigFile(QStringLiteral("kontact_summaryrc"));
     restoreConfigFile(QStringLiteral("storageservicerc"));
     restoreConfigFile(QStringLiteral("kpimbalooblacklist"));
+    restoreConfigFile(QStringLiteral("kleopatrarc"));
     //Restore notify file
     QStringList lstNotify;
     lstNotify << QStringLiteral("akonadi_mailfilter_agent.notifyrc")
