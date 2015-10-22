@@ -19,7 +19,7 @@
 #define STORAGESERVICEMENUS_H
 
 #include <QObject>
-
+class KActionMenu;
 namespace PimCommon
 {
 class StorageServiceMenusPrivate;
@@ -29,6 +29,12 @@ class StorageServiceMenus : public QObject
 public:
     explicit StorageServiceMenus(QObject *parent = Q_NULLPTR);
     ~StorageServiceMenus();
+
+    KActionMenu *shareLinkServices(QWidget *parent) const;
+    KActionMenu *downloadServices(QWidget *parent) const;
+    KActionMenu *uploadServices(QWidget *parent) const;
+    //KActionMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability mainCapability, const QList<PimCommon::StorageServiceAbstract::Capability> &lstCapability, QWidget *parent) const;
+
 private:
     StorageServiceMenusPrivate *const d;
 };

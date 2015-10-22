@@ -17,6 +17,8 @@
 
 #include "storageservicemenus.h"
 
+#include <KActionMenu>
+
 using namespace PimCommon;
 
 class PimCommon::StorageServiceMenusPrivate
@@ -38,4 +40,22 @@ StorageServiceMenus::StorageServiceMenus(QObject *parent)
 StorageServiceMenus::~StorageServiceMenus()
 {
     delete d;
+}
+
+KActionMenu *StorageServiceMenus::shareLinkServices(QWidget *parent) const
+{
+    //TODO
+    return Q_NULLPTR;
+}
+
+KActionMenu *StorageServiceMenus::downloadServices(QWidget *parent) const
+{
+    //TODO
+    return Q_NULLPTR;
+}
+
+KActionMenu *StorageServiceMenus::uploadServices(QWidget *parent) const
+{
+    //TODO
+    return Q_NULLPTR;
 }
