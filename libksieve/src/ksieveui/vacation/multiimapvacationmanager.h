@@ -19,10 +19,17 @@
 #define MULTIIMAPVACATIONMANAGER_H
 
 #include <QObject>
+#include <QMap>
+
+#include "ksieveui_export.h"
+
+class QUrl;
 
 namespace KSieveUi
 {
-class MultiImapVacationManager : public QObject
+class CheckKolabKep14SupportJob;
+class VacationCheckJob;
+class KSIEVEUI_EXPORT MultiImapVacationManager : public QObject
 {
     Q_OBJECT
 public:
@@ -30,18 +37,24 @@ public:
     ~MultiImapVacationManager();
 
     void checkVacation();
+    QMap<QString, QUrl> serverList() const;
+    void checkVacation(const QString &serverName, const QUrl &url);
+
+    bool kep14Support(const QString &serverName) const;
 
 Q_SIGNALS:
     void scriptActive(bool active, const QString &serverName);
-    void requestEditVacation();
+    void scriptAvailable(const QString &serverName, const QStringList &sieveCapabilities, const QString &scriptName, const QString &script, bool active);
 
 private Q_SLOTS:
-    void slotScriptActive(bool active, const QString &serverName);
+    void slotScriptActive(VacationCheckJob *job, QString scriptName, bool active);
+    void slotCheckKep14Ended(KSieveUi::CheckKolabKep14SupportJob *job, bool success);
 
 private:
     int mNumberOfJobs;
-    bool mQuestionAsked;
     bool mCheckInProgress;
+
+    QMap<QString, bool> mKep14Support;      //if the server has KEP:14 support
 };
 }
 #endif // MULTIIMAPVACATIONMANAGER_H

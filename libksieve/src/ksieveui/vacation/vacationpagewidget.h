@@ -31,6 +31,8 @@ namespace KSieveUi
 class VacationEditWidget;
 class VacationWarningWidget;
 class VacationCreateScriptJob;
+class MultiImapVacationManager;
+class ParseUserScriptJob;
 class VacationPageWidget : public QWidget
 {
     Q_OBJECT
@@ -42,11 +44,15 @@ public:
     void setServerName(const QString &serverName);
     KSieveUi::VacationCreateScriptJob *writeScript();
     void setDefault();
+    void setVacationManager(MultiImapVacationManager *vacationManager);
 
 private Q_SLOTS:
-    void slotGetResult(KManageSieve::SieveJob *job, bool success, const QString &script, bool active);
+    void slotGetResult(const QString &serverName, const QStringList &sieveCapabilities, const QString &scriptName, const QString &script, bool active);
 
 private:
+
+    void fillWithDefaults();
+
     enum PageType {
         Script = 0,
         ScriptNotSupported = 1
@@ -57,7 +63,7 @@ private:
     QStackedWidget *mStackWidget;
     VacationEditWidget *mVacationEditWidget;
     VacationWarningWidget *mVacationWarningWidget;
-    KManageSieve::SieveJob *mSieveJob;
+    MultiImapVacationManager *mVacationManager;
     PageType mPageScript;
     bool mWasActive;
     bool mHasDateSupport;

@@ -25,21 +25,28 @@ using namespace KSieveUi;
 GenerateGlobalScriptJob::GenerateGlobalScriptJob(const QUrl &url, QObject *parent)
     : QObject(parent),
       mCurrentUrl(url),
-      mMasterjob(Q_NULLPTR),
+      mMasterJob(Q_NULLPTR),
       mUserJob(Q_NULLPTR)
 {
 }
 
 GenerateGlobalScriptJob::~GenerateGlobalScriptJob()
 {
-    if (mMasterjob) {
-        mMasterjob->kill();
-        mMasterjob = Q_NULLPTR;
+    kill();
+}
+
+void GenerateGlobalScriptJob::kill()
+{
+    if (mMasterJob) {
+        mMasterJob->kill();
     }
+    mMasterJob = Q_NULLPTR;
+
     if (mUserJob) {
         mUserJob->kill();
         mUserJob = Q_NULLPTR;
     }
+    mUserJob = Q_NULLPTR;
 }
 
 void GenerateGlobalScriptJob::addUserActiveScripts(const QStringList &lstScript)
@@ -53,7 +60,7 @@ void GenerateGlobalScriptJob::start()
         Q_EMIT error(i18n("Path is not specified."));
         return;
     }
-    writeMasterScript();
+    writeUserScript();
 }
 
 void GenerateGlobalScriptJob::writeMasterScript()
@@ -84,8 +91,8 @@ void GenerateGlobalScriptJob::writeMasterScript()
     QUrl url(mCurrentUrl);
     url = url.adjusted(QUrl::RemoveFilename);
     url.setPath(url.path() + QLatin1String("MASTER"));
-    mMasterjob = KManageSieve::SieveJob::put(url, masterScript, true, true);
-    connect(mMasterjob, &KManageSieve::SieveJob::result, this, &GenerateGlobalScriptJob::slotPutMasterResult);
+    mMasterJob = KManageSieve::SieveJob::put(url, masterScript, true, true);
+    connect(mMasterJob, &KManageSieve::SieveJob::result, this, &GenerateGlobalScriptJob::slotPutMasterResult);
 }
 
 void GenerateGlobalScriptJob::slotPutMasterResult(KManageSieve::SieveJob *, bool success)
@@ -94,7 +101,7 @@ void GenerateGlobalScriptJob::slotPutMasterResult(KManageSieve::SieveJob *, bool
         Q_EMIT error(i18n("Error when we wrote \"MASTER\" script on server."));
         return;
     }
-    mMasterjob = Q_NULLPTR;
+    mMasterJob = Q_NULLPTR;
     writeUserScript();
 }
 

@@ -17,6 +17,7 @@
 
 #include "multiimapvacationdialog.h"
 #include "vacationpagewidget.h"
+#include "multiimapvacationmanager.h"
 #include "ksieveui/util.h"
 
 #include <AgentInstance>
@@ -43,8 +44,9 @@ class KSieveUi::MultiImapVacationDialogPrivate
 {
 public:
     MultiImapVacationDialogPrivate()
-        : mTabWidget(Q_NULLPTR),
-          mStackedWidget(Q_NULLPTR)
+        : mTabWidget(Q_NULLPTR)
+        , mStackedWidget(Q_NULLPTR)
+        , mVacationManager(Q_NULLPTR)
     {
 
     }
@@ -52,12 +54,15 @@ public:
     QList<VacationCreateScriptJob *> mListCreateJob;
     QTabWidget *mTabWidget;
     QStackedWidget *mStackedWidget;
+    MultiImapVacationManager *mVacationManager;
 };
 
-MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
+MultiImapVacationDialog::MultiImapVacationDialog(MultiImapVacationManager *manager, QWidget *parent)
     : QDialog(parent),
       d(new KSieveUi::MultiImapVacationDialogPrivate)
 {
+    d->mVacationManager = manager;
+
     setWindowTitle(i18n("Configure \"Out of Office\" Replies"));
 
     KWindowSystem::setIcons(winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop), IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small), IconSize(KIconLoader::Small)));
@@ -104,26 +109,21 @@ void MultiImapVacationDialog::init()
                                   "IMAP server for this. "
                                   "You can do this on the \"Filtering\" tab of the IMAP "
                                   "account configuration."));
+    lab->setWordWrap(true);
     vbox->addWidget(lab);
     vbox->addStretch();
     lab->setWordWrap(true);
     d->mStackedWidget->addWidget(w);
     d->mStackedWidget->setCurrentIndex(0);
     bool foundOneImap = false;
-    const Akonadi::AgentInstance::List instances = KSieveUi::Util::imapAgentInstances();
-    foreach (const Akonadi::AgentInstance &instance, instances) {
-        if (instance.status() == Akonadi::AgentInstance::Broken) {
-            continue;
-        }
-
-        const QUrl url = KSieveUi::Util::findSieveUrlForAccount(instance.identifier());
-        if (!url.isEmpty()) {
-            const QString serverName = instance.name();
-            createPage(serverName, url);
-            foundOneImap = true;
-        }
-    }
     QDialogButtonBox *buttonBox = Q_NULLPTR;
+
+    const QMap <QString, QUrl> list = d->mVacationManager->serverList();
+    foreach(const QString &serverName, list.keys()) {
+        const QUrl url = list.value(serverName);
+        createPage(serverName, url);
+        foundOneImap = true;
+    }
     if (foundOneImap) {
         buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
         QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
@@ -155,6 +155,7 @@ void MultiImapVacationDialog::createPage(const QString &serverName, const QUrl &
     VacationPageWidget *page = new VacationPageWidget;
     page->setServerUrl(url);
     page->setServerName(serverName);
+    page->setVacationManager(d->mVacationManager);
     d->mTabWidget->addTab(page, serverName + QStringLiteral(" (%1)").arg(url.userName()));
 }
 

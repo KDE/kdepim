@@ -22,13 +22,19 @@
 #include <KLocalizedString>
 
 using namespace KSieveUi;
-ParseUserScriptJob::ParseUserScriptJob(QObject *parent)
-    : QObject(parent),
-      mSieveJob(Q_NULLPTR)
+ParseUserScriptJob::ParseUserScriptJob(const QUrl &url, QObject *parent)
+    : QObject(parent)
+    , mCurrentUrl(url)
+    , mSieveJob(Q_NULLPTR)
 {
 }
 
 ParseUserScriptJob::~ParseUserScriptJob()
+{
+    kill();
+}
+
+void ParseUserScriptJob::kill()
 {
     if (mSieveJob) {
         mSieveJob->kill();
@@ -36,20 +42,22 @@ ParseUserScriptJob::~ParseUserScriptJob()
     mSieveJob = Q_NULLPTR;
 }
 
-void ParseUserScriptJob::scriptUrl(const QUrl &url)
+QUrl ParseUserScriptJob::scriptUrl() const
 {
-    mCurrentUrl = url;
+    return mCurrentUrl;
 }
 
 void ParseUserScriptJob::start()
 {
     if (mCurrentUrl.isEmpty()) {
-        Q_EMIT error(i18n("Path is not specified."));
+        emitError(i18n("Path is not specified."));
         return;
     }
     if (mSieveJob) {
         mSieveJob->kill();
     }
+    mActiveScripts = QStringList();
+    mError = QString();
     mSieveJob = KManageSieve::SieveJob::get(mCurrentUrl);
     connect(mSieveJob, &KManageSieve::SieveJob::result, this, &ParseUserScriptJob::slotGetResult);
 }
@@ -58,16 +66,28 @@ void ParseUserScriptJob::slotGetResult(KManageSieve::SieveJob *, bool, const QSt
 {
     mSieveJob = Q_NULLPTR;
     if (script.isEmpty()) {
-        Q_EMIT error(i18n("Script is empty."));
+        emitError(i18n("Script is empty."));
         return;
     }
     bool result;
     const QStringList lst = parsescript(script, result);
     if (result) {
-        Q_EMIT success(lst);
+        emitSuccess(lst);
     } else {
-        Q_EMIT error(i18n("Script parsing error"));
+        emitError(i18n("Script parsing error"));
     }
+}
+
+void ParseUserScriptJob::emitError(const QString &msgError)
+{
+    mError = msgError;
+    Q_EMIT finished(this);
+}
+
+void ParseUserScriptJob::emitSuccess(const QStringList &activeScriptList)
+{
+    mActiveScripts = activeScriptList;
+    Q_EMIT finished(this);
 }
 
 QStringList ParseUserScriptJob::parsescript(const QString &script, bool &result)
@@ -78,6 +98,16 @@ QStringList ParseUserScriptJob::parsescript(const QString &script, bool &result)
         lst = extractActiveScript(doc);
     }
     return lst;
+}
+
+QStringList ParseUserScriptJob::activeScriptList() const
+{
+    return mActiveScripts;
+}
+
+QString ParseUserScriptJob::error() const
+{
+    return mError;
 }
 
 QStringList ParseUserScriptJob::extractActiveScript(const QDomDocument &doc)

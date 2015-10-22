@@ -22,6 +22,7 @@
 #include <QStandardPaths>
 
 #include "vacation/multiimapvacationdialog.h"
+#include "vacation/multiimapvacationmanager.h"
 
 int main(int argc, char **argv)
 {
@@ -41,9 +42,10 @@ int main(int argc, char **argv)
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-    app.setQuitOnLastWindowClosed(false);
+    app.setQuitOnLastWindowClosed(true);
 
-    KSieveUi::MultiImapVacationDialog dlg;
+    KSieveUi::MultiImapVacationManager manager;
+    KSieveUi::MultiImapVacationDialog dlg(&manager);
 
     dlg.show();
     app.exec();

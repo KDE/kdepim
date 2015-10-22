@@ -35,6 +35,8 @@ namespace KSieveUi
 {
 class ManageSieveTreeView;
 class ManageSieveWidgetPrivate;
+class ParseUserScriptJob;
+
 class KSIEVEUI_EXPORT ManageSieveWidget : public QWidget
 {
     Q_OBJECT
@@ -66,6 +68,7 @@ private Q_SLOTS:
     void slotDoubleClicked(QTreeWidgetItem *item);
     void slotSystemNetworkOnlineStateChanged(bool state);
     void slotCheckNetworkStatus();
+    void setActiveScripts(ParseUserScriptJob *job);
 
     void slotCancelFetch();
 public Q_SLOTS:
@@ -92,7 +95,6 @@ private:
     bool isFileNameItem(QTreeWidgetItem *item) const;
     bool itemIsActived(QTreeWidgetItem *item) const;
     void changeActiveScript(QTreeWidgetItem *item, bool activate);
-    bool isProtectedName(const QString &name);
 
     ManageSieveWidgetPrivate *const d;
 };

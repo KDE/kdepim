@@ -20,6 +20,8 @@
 #include "vacationwarningwidget.h"
 #include "vacationcreatescriptjob.h"
 #include "vacationutils.h"
+#include "multiimapvacationmanager.h"
+#include <managescriptsjob/parseuserscriptjob.h>
 #include "sieve-vacation.h"
 
 #include <kmime/kmime_header_parsing.h>
@@ -33,10 +35,12 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
+#include "libksieve_debug.h"
+
 using namespace KSieveUi;
 VacationPageWidget::VacationPageWidget(QWidget *parent)
     : QWidget(parent),
-      mSieveJob(Q_NULLPTR),
+      mVacationManager(Q_NULLPTR),
       mPageScript(Script),
       mWasActive(false),
       mHasDateSupport(false)
@@ -80,18 +84,19 @@ VacationPageWidget::VacationPageWidget(QWidget *parent)
 
 VacationPageWidget::~VacationPageWidget()
 {
-    if (mSieveJob) {
-        mSieveJob->kill();
-    }
-    mSieveJob = Q_NULLPTR;
 }
 
 void VacationPageWidget::setServerUrl(const QUrl &url)
 {
     mUrl = url;
     mVacationEditWidget->setEnabled(false);
-    mSieveJob = KManageSieve::SieveJob::get(url);
-    connect(mSieveJob, &KManageSieve::SieveJob::gotScript, this, &VacationPageWidget::slotGetResult);
+}
+
+void VacationPageWidget::setVacationManager(MultiImapVacationManager *vacationManager)
+{
+    mVacationManager = vacationManager;
+    connect(mVacationManager, &MultiImapVacationManager::scriptAvailable, this, &VacationPageWidget::slotGetResult);
+    mVacationManager->checkVacation(mServerName, mUrl);
 }
 
 void VacationPageWidget::setServerName(const QString &serverName)
@@ -99,19 +104,25 @@ void VacationPageWidget::setServerName(const QString &serverName)
     mServerName = serverName;
 }
 
-void VacationPageWidget::slotGetResult(KManageSieve::SieveJob *job, bool success, const QString &script, bool active)
+void VacationPageWidget::slotGetResult(const QString &serverName, const QStringList &sieveCapabilities, const QString &scriptName, const QString &script, bool active)
 {
-    qCDebug(LIBKSIEVE_LOG) << success
-                           << ", ?," << active << ")" << endl
-                           << "script:" << endl
-                           << script;
-    mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
+    if (mServerName != serverName) {
+        return;
+    }
+    qCDebug(LIBKSIEVE_LOG) << serverName << sieveCapabilities << endl
+                           << scriptName << "(" << active << ")" << endl;
 
-    if (mUrl.scheme() == QLatin1String("sieve") &&
-            !job->sieveCapabilities().contains(QStringLiteral("vacation"))) {
+    if (mUrl.scheme() == QStringLiteral("sieve") &&
+            !sieveCapabilities.contains(QStringLiteral("vacation"))) {
         mStackWidget->setCurrentIndex(ScriptNotSupported);
         return;
     }
+
+    mUrl = mUrl.adjusted(QUrl::RemoveFilename);
+    mUrl.setPath(mUrl.path() + scriptName);
+
+    // Whether the server supports the "date" extension
+    const bool supportsSieveDate = mUrl.scheme() == QStringLiteral("sieve") && sieveCapabilities.contains(QStringLiteral("date"));
 
     KSieveUi::VacationUtils::Vacation vacation = KSieveUi::VacationUtils::parseScript(script);
 
@@ -130,8 +141,8 @@ void VacationPageWidget::slotGetResult(KManageSieve::SieveJob *job, bool success
     mVacationEditWidget->setDomainName(vacation.excludeDomain);
     mVacationEditWidget->enableDomainAndSendForSpam(!VacationSettings::allowOutOfOfficeUploadButNoSettings());
 
-    mVacationEditWidget->enableDates(mHasDateSupport);
-    if (mHasDateSupport) {
+    mVacationEditWidget->enableDates(supportsSieveDate);
+    if (supportsSieveDate) {
         mVacationEditWidget->setStartDate(vacation.startDate);
         mVacationEditWidget->setEndDate(vacation.endDate);
     }

@@ -29,6 +29,8 @@ class SieveJob;
 
 namespace KSieveUi
 {
+class ParseUserScriptJob;
+class GenerateGlobalScriptJob;
 class VacationCreateScriptJob : public QObject
 {
     Q_OBJECT
@@ -37,28 +39,39 @@ public:
     ~VacationCreateScriptJob();
 
     void start();
+    void kill();
 
     void setServerUrl(const QUrl &url);
     void setScript(const QString &script);
     void setServerName(const QString &servername);
+    const QString &serverName() const;
     void setStatus(bool activate, bool wasActive);
+    void setKep14Support(bool kep14Support);
 
 Q_SIGNALS:
     void result(bool);
     void scriptActive(bool activated, const QString &serverName);
 
 private Q_SLOTS:
-    void slotPutActiveResult(KManageSieve::SieveJob *job, bool success);
-    void slotPutInactiveResult(KManageSieve::SieveJob *job, bool success);
+    void slotPutResult(KManageSieve::SieveJob *job, bool success);
+    void slotGetScript(KManageSieve::SieveJob *job, bool success, const QString &oldScript, bool active);
+    void slotGotActiveScripts(ParseUserScriptJob *job);
+    void slotGenerateDone(const QString &error = QString());
 
 private:
-    void handlePutResult(KManageSieve::SieveJob *, bool success, bool activated);
+    void handleResult();
     QUrl mUrl;
     QString mScript;
     QString mServerName;
     bool mActivate;
-    bool mWasActive;
+    bool mScriptActive;
+    bool mKep14Support;
+    bool mUserJobRunning;
+    bool mScriptJobRunning;
+    bool mSuccess;
     KManageSieve::SieveJob *mSieveJob;
+    ParseUserScriptJob *mParseUserJob;
+    GenerateGlobalScriptJob *mCreateJob;
 };
 }
 

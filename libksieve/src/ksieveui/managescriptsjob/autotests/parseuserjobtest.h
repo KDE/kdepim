@@ -19,6 +19,8 @@
 #define PARSEUSERJOBTEST_H
 
 #include <QObject>
+namespace KSieveUi
+{
 class ParseUserTest : public QObject
 {
     Q_OBJECT
@@ -29,5 +31,5 @@ private Q_SLOTS:
     void testParseUserDuplicateActiveScriptJob();
     void testParseUserErrorScriptJob();
 };
-
+}
 #endif // PARSEUSERJOBTEST_H

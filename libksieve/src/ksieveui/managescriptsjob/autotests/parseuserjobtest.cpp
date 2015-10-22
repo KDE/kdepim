@@ -18,6 +18,8 @@
 #include "ksieveui/managescriptsjob/parseuserscriptjob.h"
 #include <qtest.h>
 
+using namespace KSieveUi;
+
 QTEST_MAIN(ParseUserTest)
 
 void ParseUserTest::testParseEmptyUserJob()

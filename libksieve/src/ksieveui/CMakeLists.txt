@@ -170,6 +170,7 @@ set(ksieveui_LIB_SRCS
   widgets/managesievewidget.cpp
   debug/sievedebugdialog.cpp
   util/util.cpp
+  managescriptsjob/checkkolabkep14supportjob.cpp
   managescriptsjob/generateglobalscriptjob.cpp
   managescriptsjob/parseuserscriptjob.cpp
   templates/sievetemplatewidget.cpp
@@ -313,8 +314,6 @@ install(FILES
 )
 
 endif()
-
-
 
 install(FILES data/ksieve_script.knsrc DESTINATION ${KDE_INSTALL_CONFDIR} )
 install(DIRECTORY data/scripts/ DESTINATION ${KDE_INSTALL_DATADIR}/sieve/scripts/ )

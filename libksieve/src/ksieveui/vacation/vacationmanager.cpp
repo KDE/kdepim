@@ -22,6 +22,9 @@
 
 #include <QWidget>
 
+#include <KLocalizedString>
+#include <KMessageBox>
+
 using namespace KSieveUi;
 
 class KSieveUi::VacationManagerPrivate
@@ -29,19 +32,26 @@ class KSieveUi::VacationManagerPrivate
 public:
     VacationManagerPrivate(QWidget *parent)
         : mWidget(parent)
+        , mMultiImapVacationDialog(Q_NULLPTR)
+        , mCheckVacation(Q_NULLPTR)
+        , mQuestionAsked(false)
     {
 
     }
 
+    QWidget *mWidget;
     QPointer<KSieveUi::MultiImapVacationDialog> mMultiImapVacationDialog;
     QPointer<KSieveUi::MultiImapVacationManager> mCheckVacation;
-    QWidget *mWidget;
+    bool mQuestionAsked;
 };
 
 VacationManager::VacationManager(QWidget *parent)
     : QObject(parent),
       d(new KSieveUi::VacationManagerPrivate(parent))
 {
+    d->mCheckVacation = new KSieveUi::MultiImapVacationManager(this);
+    connect(d->mCheckVacation.data(), &KSieveUi::MultiImapVacationManager::scriptActive, this, &VacationManager::updateVacationScriptStatus);
+    connect(d->mCheckVacation.data(), &KSieveUi::MultiImapVacationManager::scriptActive, this, &VacationManager::slotUpdateVacationScriptStatus);
 }
 
 VacationManager::~VacationManager()
@@ -51,30 +61,37 @@ VacationManager::~VacationManager()
 
 void VacationManager::checkVacation()
 {
-    delete d->mCheckVacation;
-
-    d->mCheckVacation = new KSieveUi::MultiImapVacationManager(this);
-    connect(d->mCheckVacation.data(), &MultiImapVacationManager::scriptActive, this, &VacationManager::updateVacationScriptStatus);
-    connect(d->mCheckVacation.data(), &MultiImapVacationManager::requestEditVacation, this, &VacationManager::editVacation);
     d->mCheckVacation->checkVacation();
+}
+
+void VacationManager::slotUpdateVacationScriptStatus(bool active, const QString &serverName)
+{
+    if (active) {
+        if (!d->mQuestionAsked) {
+            d->mQuestionAsked = true;
+            if (KMessageBox::questionYesNo(0, i18n("There is still an active out-of-office reply configured.\n"
+                                                   "Do you want to edit it?"), i18n("Out-of-office reply still active"),
+                                           KGuiItem(i18n("Edit"), QStringLiteral("document-properties")),
+                                           KGuiItem(i18n("Ignore"), QStringLiteral("dialog-cancel")))
+                    == KMessageBox::Yes) {
+                slotEditVacation(serverName);
+            }
+        }
+    }
 }
 
 void VacationManager::slotEditVacation(const QString &serverName)
 {
     if (d->mMultiImapVacationDialog) {
-        d->mMultiImapVacationDialog->show();
         d->mMultiImapVacationDialog->raise();
         d->mMultiImapVacationDialog->activateWindow();
-        if (!serverName.isEmpty()) {
-            d->mMultiImapVacationDialog->switchToServerNamePage(serverName);
-        }
-        return;
+    } else {
+        d->mMultiImapVacationDialog = new KSieveUi::MultiImapVacationDialog(d->mCheckVacation, d->mWidget);
+        connect(d->mMultiImapVacationDialog.data(), &KSieveUi::MultiImapVacationDialog::okClicked, this, &VacationManager::slotDialogOk);
+        connect(d->mMultiImapVacationDialog.data(), &KSieveUi::MultiImapVacationDialog::cancelClicked, this, &VacationManager::slotDialogCanceled);
     }
-
-    d->mMultiImapVacationDialog = new KSieveUi::MultiImapVacationDialog(d->mWidget);
-    connect(d->mMultiImapVacationDialog.data(), &KSieveUi::MultiImapVacationDialog::okClicked, this, &VacationManager::slotDialogOk);
-    connect(d->mMultiImapVacationDialog.data(), &KSieveUi::MultiImapVacationDialog::cancelClicked, this, &VacationManager::slotDialogCanceled);
     d->mMultiImapVacationDialog->show();
+
     if (!serverName.isEmpty()) {
         d->mMultiImapVacationDialog->switchToServerNamePage(serverName);
     }
@@ -94,8 +111,9 @@ void VacationManager::slotDialogCanceled()
 void VacationManager::slotDialogOk()
 {
     QList<KSieveUi::VacationCreateScriptJob *> listJob = d->mMultiImapVacationDialog->listCreateJob();
-    Q_FOREACH (KSieveUi::VacationCreateScriptJob *job, listJob) {
+    Q_FOREACH(KSieveUi::VacationCreateScriptJob *job, listJob) {
         connect(job, &VacationCreateScriptJob::scriptActive, this, &VacationManager::updateVacationScriptStatus);
+        job->setKep14Support(d->mCheckVacation->kep14Support(job->serverName()));
         job->start();
     }
     if (d->mMultiImapVacationDialog->isVisible()) {

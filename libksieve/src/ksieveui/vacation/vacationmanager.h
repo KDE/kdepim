@@ -40,12 +40,13 @@ public Q_SLOTS:
     void slotEditVacation(const QString &serverName);
 
 Q_SIGNALS:
-    void updateVacationScriptStatus(bool, const QString &);
+    void updateVacationScriptStatus(bool active, const QString &serverName);
     void editVacation();
 
 private Q_SLOTS:
     void slotDialogCanceled();
     void slotDialogOk();
+    void slotUpdateVacationScriptStatus(bool active, const QString &serverName);
 
 private:
     VacationManagerPrivate *const d;

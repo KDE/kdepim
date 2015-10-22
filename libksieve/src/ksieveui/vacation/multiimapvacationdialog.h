@@ -25,12 +25,13 @@
 namespace KSieveUi
 {
 class VacationCreateScriptJob;
+class MultiImapVacationManager;
 class MultiImapVacationDialogPrivate;
 class KSIEVEUI_EXPORT MultiImapVacationDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MultiImapVacationDialog(QWidget *parent = Q_NULLPTR);
+    explicit MultiImapVacationDialog(MultiImapVacationManager *manager, QWidget *parent = Q_NULLPTR);
     ~MultiImapVacationDialog();
 
     QList<VacationCreateScriptJob *> listCreateJob() const;
