@@ -3,6 +3,7 @@ Type=Service
 ServiceTypes=PimCommonStorageService/Plugin
 X-KDE-Library=pimcommon_gdriveplugin
 Name=GDrive
+Name[ca]=GDrive
 Name[nl]=GDrive
 Name[pt]=GDrive
 Name[pt_BR]=GDrive

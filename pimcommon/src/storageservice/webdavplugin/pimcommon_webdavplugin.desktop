@@ -3,6 +3,7 @@ Type=Service
 ServiceTypes=PimCommonStorageService/Plugin
 X-KDE-Library=pimcommon_webdavplugin
 Name=Webdav
+Name[ca]=Webdav
 Name[nl]=Webdav
 Name[pt]=WebDAV
 Name[pt_BR]=Webdav
