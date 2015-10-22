@@ -320,7 +320,7 @@ void VacationEditWidget::setDefault()
     setMessageText(VacationUtils::defaultMessageText());
     setSubject(VacationUtils::defaultSubject());
     setNotificationInterval(VacationUtils::defaultNotificationInterval());
-    setMailAliases(VacationUtils::defaultMailAliases().join(QStringLiteral(", ")));
+    setMailAliases(VacationUtils::defaultMailAliases());
     setSendForSpam(VacationUtils::defaultSendForSpam());
     setDomainName(VacationUtils::defaultDomainName());
     setDomainCheck(false);

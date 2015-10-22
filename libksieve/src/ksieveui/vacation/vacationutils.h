@@ -19,17 +19,9 @@
 #define VACATIONUTILS_H
 #include <QStringList>
 #include <QString>
+#include <kmime/kmime_header_parsing.h>
 
 class QDate;
-
-namespace KMime
-{
-namespace Types
-{
-struct AddrSpec;
-typedef QVector<AddrSpec> AddrSpecList;
-}
-}
 
 namespace KSieveUi
 {
@@ -45,24 +37,54 @@ enum MailAction {
 
 QString defaultMessageText();
 QString defaultSubject();
+MailAction defaultMailAction();
 int defaultNotificationInterval();
-QStringList defaultMailAliases();
+KMime::Types::AddrSpecList defaultMailAliases();
 bool defaultSendForSpam();
 QString defaultDomainName();
 QDate defaultStartDate();
 QDate defaultEndDate();
 
-QString composeScript(const QString &messageText,
-                      const QString &subject,
-                      int notificationInterval,
-                      const KMime::Types::AddrSpecList &aliases,
-                      bool sendForSpam, const QString &excludeDomain,
-                      const QDate &startDate, const QDate &endDate);
-bool parseScript(const QString &script, QString &messageText,
-                 QString &subject,
-                 int &notificationInterval, QStringList &aliases,
-                 bool &sendForSpam, QString &domainName,
-                 QDate &startDate, QDate &endDate);
+struct Vacation {
+    Vacation()
+        : notificationInterval(1)
+        , mailAction(Keep)
+        , valid(false)
+        , active(false)
+        , sendForSpam(true)
+    {
+    }
+
+    bool isValid() const
+    {
+        return valid;
+    }
+
+    QString mailActionRecipient;
+    QString messageText;
+    QString subject;
+    KMime::Types::AddrSpecList aliases;
+    QString excludeDomain;
+    QDate startDate;
+    QTime startTime;
+    QDate endDate;
+    QTime endTime;
+    int notificationInterval;
+    MailAction mailAction;
+    bool valid;
+    bool active;
+    bool sendForSpam;
+};
+
+QString composeScript(const Vacation &vacation);
+
+KSieveUi::VacationUtils::Vacation parseScript(const QString &script);
+
+QString mergeRequireLine(const QString &script, const QString &scriptUpdate);
+
+QString updateVacationBlock(const QString &oldScript, const QString &newScript);
+
+QString mailAction(MailAction action);
 
 }
 }

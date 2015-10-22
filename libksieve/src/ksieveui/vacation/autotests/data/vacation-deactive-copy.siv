@@ -1,0 +1,10 @@
+require ["vacation", "copy"];
+# EDITOR Roundcube (Managesieve)
+# EDITOR_VERSION 8.2
+# rule:[Urlaub]
+if false
+{
+        vacation :days 7 :addresses "test@test.de" :subject "XXX" "dsfgsdfgsdfg";
+        redirect :copy "copy@example.org";
+}
+discard;

@@ -1,0 +1,19 @@
+require ["vacation"];
+
+if true
+{
+      testcommand;
+}
+
+# EDITOR Roundcube (Managesieve)
+# EDITOR_VERSION 8.2
+# rule:[Urlaub]
+if false # true
+{
+       vacation :subject "XXX" "dsfgsdfgsdfg";
+}
+
+if true
+{
+      testcommand;
+}

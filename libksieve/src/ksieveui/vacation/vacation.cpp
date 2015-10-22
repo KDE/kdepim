@@ -78,7 +78,7 @@ QString Vacation::serverName() const
 QUrl Vacation::findURL(QString &serverName) const
 {
     const Akonadi::AgentInstance::List instances = Util::imapAgentInstances();
-    foreach (const Akonadi::AgentInstance &instance, instances) {
+    foreach(const Akonadi::AgentInstance &instance, instances) {
         if (instance.status() == Akonadi::AgentInstance::Broken) {
             continue;
         }
@@ -113,42 +113,41 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
         return;
     }
 
+    const bool supportsDate = job->sieveCapabilities().contains(QStringLiteral("date"));
+
     if (!mDialog && !mCheckOnly) {
         mDialog = new VacationDialog(i18n("Configure \"Out of Office\" Replies"), Q_NULLPTR, false);
     }
 
-    QString messageText = VacationUtils::defaultMessageText();
-    QString subject = VacationUtils::defaultSubject();
-    int notificationInterval = VacationUtils::defaultNotificationInterval();
-    QStringList aliases = VacationUtils::defaultMailAliases();
-    bool sendForSpam = VacationUtils::defaultSendForSpam();
-    QString domainName = VacationUtils::defaultDomainName();
-    QDate startDate = VacationUtils::defaultStartDate();
-    QDate endDate = VacationUtils::defaultEndDate();
     if (!success) {
         active = false;    // default to inactive
     }
 
-    if (!mCheckOnly && (!success || !KSieveUi::VacationUtils::parseScript(script, messageText, subject, notificationInterval, aliases, sendForSpam, domainName, startDate, endDate)))
+    KSieveUi::VacationUtils::Vacation vacation = KSieveUi::VacationUtils::parseScript(script);
+
+    if (!mCheckOnly && (!success || (!vacation.isValid()  && !script.trimmed().isEmpty()))) {
         KMessageBox::information(Q_NULLPTR, i18n("Someone (probably you) changed the "
                                  "vacation script on the server.\n"
                                  "KMail is no longer able to determine "
                                  "the parameters for the autoreplies.\n"
                                  "Default values will be used."));
-
+    }
     mWasActive = active;
     if (mDialog) {
-        mDialog->setActivateVacation(active);
-        mDialog->setSubject(subject);
-        mDialog->setMessageText(messageText);
-        mDialog->setNotificationInterval(notificationInterval);
-        mDialog->setMailAliases(aliases.join(QStringLiteral(", ")));
-        mDialog->setSendForSpam(sendForSpam);
-        mDialog->setDomainName(domainName);
+        mDialog->setActivateVacation(active && vacation.active);
+        mDialog->setSubject(vacation.subject);
+        mDialog->setMessageText(vacation.messageText);
+        mDialog->setNotificationInterval(vacation.notificationInterval);
+        mDialog->setMailAliases(vacation.aliases);
+        mDialog->setSendForSpam(vacation.sendForSpam);
+        mDialog->setDomainName(vacation.excludeDomain);
         mDialog->enableDomainAndSendForSpam(!VacationSettings::allowOutOfOfficeUploadButNoSettings());
-        mDialog->enableDates(job->sieveCapabilities().contains(QStringLiteral("date")));
-        mDialog->setStartDate(startDate);
-        mDialog->setEndDate(endDate);
+        mDialog->enableDates(supportsDate);
+
+        if (supportsDate) {
+            mDialog->setStartDate(vacation.startDate);
+            mDialog->setEndDate(vacation.endDate);
+        }
 
         connect(mDialog, &VacationDialog::okClicked, this, &Vacation::slotDialogOk);
         connect(mDialog, &VacationDialog::cancelClicked, this, &Vacation::slotDialogCancel);
@@ -171,16 +170,20 @@ void Vacation::slotDialogOk()
 {
     qCDebug(LIBKSIEVE_LOG);
     // compose a new script:
-    const QString script = VacationUtils::composeScript(mDialog->messageText(),
-                           mDialog->subject(),
-                           mDialog->notificationInterval(),
-                           mDialog->mailAliases(),
-                           mDialog->sendForSpam(),
-                           mDialog->domainName(),
-                           mDialog->startDate(),
-                           mDialog->endDate());
     const bool active = mDialog->activateVacation();
-    Q_EMIT scriptActive(active, mServerName);
+    VacationUtils::Vacation vacation;
+    vacation.valid = true;
+    vacation.active = active;
+    vacation.messageText = mDialog->messageText();
+    vacation.subject = mDialog->subject();
+    vacation.notificationInterval = mDialog->notificationInterval();
+    vacation.aliases = mDialog->mailAliases();
+    vacation.sendForSpam = mDialog->sendForSpam();
+    vacation.excludeDomain =  mDialog->domainName();
+    vacation.startDate = mDialog->startDate();
+    vacation.endDate = mDialog->endDate();
+    const QString script = VacationUtils::composeScript(vacation);
+    emit scriptActive(active, mServerName);
 
     qCDebug(LIBKSIEVE_LOG) << "script:" << endl << script;
 

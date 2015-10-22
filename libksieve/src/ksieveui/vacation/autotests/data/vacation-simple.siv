@@ -1,0 +1,6 @@
+require ["vacation"];
+
+# EDITOR Roundcube (Managesieve)
+# EDITOR_VERSION 8.2
+# rule:[Urlaub]
+vacation :subject "XXX" "dsfgsdfgsdfg";

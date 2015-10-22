@@ -1,0 +1,8 @@
+require ["date","relational","vacation"];
+# EDITOR Roundcube (Managesieve)
+# EDITOR_VERSION 8.2
+# rule:[Urlaub]
+if false # allof (currentdate :zone "+0100" :value "ge" "date" "2015-01-02", currentdate :zone "+0100" :value "le" "date" "2015-03-04", not header :contains "X-Spam-Flag" "YES")
+{
+        vacation :days 7 :addresses "test@test.de" :subject "XXX" "dsfgsdfgsdfg";
+}

@@ -48,20 +48,13 @@ void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool succe
         active = false;    // default to inactive
     }
 
-    QDate startDate, endDate;
-
-    QString dummyStr;
-    QStringList dummyStrList;
-    int dummyInt;
-    bool dummyBool;
-
     // If the script is active then parse it, and verify whether it has date range set
     if (active) {
-        bool valid = VacationUtils::parseScript(script, dummyStr, dummyStr, dummyInt, dummyStrList, dummyBool, dummyStr, startDate, endDate);
+        const VacationUtils::Vacation vacation = VacationUtils::parseScript(script);
         // If the date range is set, mark the script as active only if the date range
         // includes now/today
-        if (valid && startDate.isValid() && endDate.isValid()) {
-            active = (startDate <= QDate::currentDate() && endDate >= QDate::currentDate());
+        if (vacation.isValid() && vacation.startDate.isValid() && vacation.endDate.isValid()) {
+            active = (vacation.startDate <= QDate::currentDate() && vacation.endDate >= QDate::currentDate());
         }
     }
 
