@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../gui/dialog/showarchivestructuredialog.h"
+#include "../dialog/showarchivestructuredialog.h"
 
 #include <KLocalizedString>
 #include <QFileDialog>
