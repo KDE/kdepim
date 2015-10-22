@@ -119,7 +119,7 @@ MessagePart::MessagePart(ObjectTreeParser *otp,
 MessagePart::~MessagePart()
 {
     if (mSubOtp) {
-        delete mSubOtp->mHtmlWriter;
+        delete mSubOtp->htmlWriter();
         delete mSubOtp;
         mSubOtp = Q_NULLPTR;
     }
@@ -153,9 +153,9 @@ void MessagePart::html(bool decorate) const
     writer->queue(mOtp->quotedHTML(text(), decorate));
 }
 
-void MessagePart::parseInternal(KMime::Content* node)
+void MessagePart::parseInternal(KMime::Content* node, bool onlyOneMimePart)
 {
-    mSubOtp = new ObjectTreeParser(mOtp, true);
+    mSubOtp = new ObjectTreeParser(mOtp, onlyOneMimePart);
     mSubOtp->setAllowAsync(mOtp->allowAsync());
     if (mOtp->htmlWriter()) {
         mSubOtp->mHtmlWriter = new QueueHtmlWriter(mOtp->htmlWriter());
@@ -170,12 +170,51 @@ void MessagePart::renderInternalHtml() const
     }
 }
 
+void MessagePart::copyContentFrom() const
+{
+    if (mSubOtp) {
+        mOtp->copyContentFrom(mSubOtp);
+    }
+}
+
 QString MessagePart::renderInternalText() const
 {
     if (!mSubOtp) {
         return QString();
     }
     return mSubOtp->plainTextContent();
+}
+
+
+//-----MimeMessageBlock----------------------
+
+MimeMessagePart::MimeMessagePart(ObjectTreeParser* otp, KMime::Content* node, bool onlyOneMimePart)
+: MessagePart(otp, QString())
+, mNode(node)
+, mOnlyOneMimePart(onlyOneMimePart)
+{
+    if (!mNode) {
+        qCWarning(MESSAGEVIEWER_LOG) << "not a valid node";
+        return;
+    }
+
+    parseInternal(mNode, mOnlyOneMimePart);
+}
+
+MimeMessagePart::~MimeMessagePart()
+{
+
+}
+
+void MimeMessagePart::html(bool decorate)
+{
+    copyContentFrom();
+    renderInternalHtml();
+}
+
+QString MimeMessagePart::text() const
+{
+    return renderInternalText();
 }
 
 //-----CryptMessageBlock---------------------
@@ -277,7 +316,7 @@ void CryptoMessagePart::startDecryption(KMime::Content *data)
             }
             mOtp->mNodeHelper->attachExtraContent(mNode, tempNode);
 
-            parseInternal(tempNode);
+            parseInternal(tempNode, false);
         }
     }
 }
@@ -319,9 +358,10 @@ void CryptoMessagePart::startVerificationDetached(const QByteArray &text, KMime:
         }
 
         if (!mVerifiedText.isEmpty() && textNode) {
-            parseInternal(textNode);
+            parseInternal(textNode, false);
         }
     }
+
 }
 
 void CryptoMessagePart::writeDeferredDecryptionBlock() const
@@ -354,9 +394,7 @@ void CryptoMessagePart::html(bool decorate) const
     MessageViewer::HtmlWriter *writer = mOtp->htmlWriter();
 
     //TODO: still the following part should not be here
-    if (mSubOtp) {
-        mOtp->copyContentFrom(mSubOtp);
-    }
+    copyContentFrom();
 
     if (mMetaData->isEncrypted && !mDecryptMessage) {
         mMetaData->isDecryptable = true;
@@ -420,7 +458,7 @@ EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser *o
     // since the user can click the link and expect to have normal attachment operations there.
     mOtp->nodeHelper()->writeNodeToTempFile(message.data());
 
-    parseInternal(message.data());
+    parseInternal(message.data(), false);
 }
 
 EncapsulatedRfc822MessagePart::~EncapsulatedRfc822MessagePart()

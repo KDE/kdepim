@@ -96,13 +96,29 @@ public:
     PartMetaData *partMetaData() const;
 
 protected:
-    void parseInternal(KMime::Content* node);
+    void parseInternal(KMime::Content* node, bool onlyOneMimePart);
     void renderInternalHtml() const;
+    void copyContentFrom() const;
     QString renderInternalText() const;
     QString mText;
     ObjectTreeParser *mOtp;
     ObjectTreeParser *mSubOtp;
     PartMetaData *mMetaData;
+};
+
+class MimeMessagePart : public MessagePart
+{
+public:
+    typedef QSharedPointer<MimeMessagePart> Ptr;
+    MimeMessagePart( MessageViewer::ObjectTreeParser* otp, KMime::Content* node, bool onlyOneMimePart );
+    virtual ~MimeMessagePart();
+
+    QString text() const Q_DECL_OVERRIDE;
+    void html(bool decorate) Q_DECL_OVERRIDE;
+
+private:
+    KMime::Content* mNode;
+    bool mOnlyOneMimePart;
 };
 
 class EncapsulatedRfc822MessagePart : public MessagePart
