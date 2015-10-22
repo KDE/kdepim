@@ -20,6 +20,7 @@
 
 #include "sieve-vacation.h"
 #include "util/util.h"
+#include "vacationutils.h"
 
 #include <kmime/kmime_header_parsing.h>
 #include <ksieve/error.h>
@@ -82,12 +83,12 @@ private:
 #ifdef FOREACH
 #undef FOREACH
 #endif
-#define FOREACH for ( std::vector<KSieve::ScriptBuilder*>::const_iterator it = mBuilders.begin(), end = mBuilders.end() ; it != end ; ++it ) (*it)->
-    void commandStart(const QString &identifier) Q_DECL_OVERRIDE {
-        FOREACH commandStart(identifier);
+#define FOREACH for (std::vector<KSieve::ScriptBuilder*>::const_iterator it = mBuilders.begin(), end = mBuilders.end() ; it != end ; ++it) (*it)->
+    void commandStart(const QString &identifier, int lineNumber) Q_DECL_OVERRIDE {
+        FOREACH commandStart(identifier, lineNumber);
     }
-    void commandEnd() Q_DECL_OVERRIDE {
-        FOREACH commandEnd();
+    void commandEnd(int lineNumber) Q_DECL_OVERRIDE {
+        FOREACH commandEnd(lineNumber);
     }
     void testStart(const QString &identifier) Q_DECL_OVERRIDE {
         FOREACH testStart(identifier);
@@ -101,11 +102,11 @@ private:
     void testListEnd() Q_DECL_OVERRIDE {
         FOREACH testListEnd();
     }
-    void blockStart() Q_DECL_OVERRIDE {
-        FOREACH blockStart();
+    void blockStart(int lineNumber) Q_DECL_OVERRIDE {
+        FOREACH blockStart(lineNumber);
     }
-    void blockEnd() Q_DECL_OVERRIDE {
-        FOREACH blockEnd();
+    void blockEnd(int lineNumber) Q_DECL_OVERRIDE {
+        FOREACH blockEnd(lineNumber);
     }
     void hashComment(const QString &comment) Q_DECL_OVERRIDE {
         FOREACH hashComment(comment);
@@ -186,9 +187,11 @@ public:
     unsigned int mState;
     int mNestingDepth;
 
+    int mLineNumber;
+
 public:
     GenericInformationExtractor(const std::vector<StateNode> &nodes)
-        : KSieve::ScriptBuilder(), mNodes(nodes), mState(0), mNestingDepth(0) {}
+        : KSieve::ScriptBuilder(), mNodes(nodes), mState(0), mNestingDepth(0), mLineNumber(0) {}
 
     const std::map<QString, QString> &results() const
     {
@@ -201,6 +204,7 @@ private:
         doProcess(method, string);
         mRecursionGuard.clear();
     }
+
     void doProcess(BuilderMethod method, const QString &string)
     {
         mRecursionGuard.insert(mState);
@@ -229,11 +233,13 @@ private:
             doProcess(method, string);
         }
     }
-    void commandStart(const QString &identifier) Q_DECL_OVERRIDE {
+    void commandStart(const QString &identifier, int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber)
         qCDebug(LIBKSIEVE_LOG);
         process(CommandStart, identifier);
     }
-    void commandEnd() Q_DECL_OVERRIDE {
+    void commandEnd(int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber)
         qCDebug(LIBKSIEVE_LOG);
         process(CommandEnd);
     }
@@ -253,12 +259,14 @@ private:
         qCDebug(LIBKSIEVE_LOG);
         process(TestListEnd);
     }
-    void blockStart() Q_DECL_OVERRIDE {
+    void blockStart(int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber)
         qCDebug(LIBKSIEVE_LOG);
         process(BlockStart);
         ++mNestingDepth;
     }
-    void blockEnd() Q_DECL_OVERRIDE {
+    void blockEnd(int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber)
         qCDebug(LIBKSIEVE_LOG);
         --mNestingDepth;
         process(BlockEnd);
@@ -308,35 +316,40 @@ private:
 
 typedef GenericInformationExtractor GIE;
 static const GenericInformationExtractor::StateNode spamNodes[] = {
-    { 0, GIE::CommandStart, "if",  1, 0, Q_NULLPTR },              // 0
-    { 0,   GIE::TestStart, "header", 2, 0, Q_NULLPTR },            // 1
-    { 0,     GIE::TaggedArgument, "contains", 3, 0, Q_NULLPTR },   // 2
+    { 0, GIE::CommandStart, "if",  1, 0, 0 },              // 0
+    { 0,   GIE::TestStart, "allof", 2, 3, 0 },             // 1
+    { 0,       GIE::TestListStart, 0, 3, 0, 0 },           // 2
+    { 0,   GIE::TestStart, "not", 4, 3, 0 },               // 3
+    { 0,   GIE::TestStart, "header", 5, 3, 0 },            // 4
+    { 0,     GIE::TaggedArgument, "contains", 6, 0, 0 },   // 5
 
     // accept both string and string-list:
-    { 0,     GIE::StringArgument, "x-spam-flag", 9, 4, "x-spam-flag" },    // 3
-    { 0,     GIE::StringListArgumentStart, Q_NULLPTR, 5, 0, Q_NULLPTR },                   // 4
-    { 0,       GIE::StringListEntry, "x-spam-flag", 6, 7, "x-spam-flag" }, // 5
-    { 0,       GIE::StringListEntry, Q_NULLPTR, 6, 8, Q_NULLPTR },                         // 6
-    { 0,     GIE::StringListArgumentEnd, Q_NULLPTR, 0, 5, Q_NULLPTR },                     // 7
-    { 0,     GIE::StringListArgumentEnd, Q_NULLPTR, 9, 0, Q_NULLPTR },                     // 8
+    { 0,     GIE::StringArgument, "x-spam-flag", 12, 7, "x-spam-flag" },    // 6
+    { 0,     GIE::StringListArgumentStart, 0, 8, 0, 0 },                   // 7
+    { 0,       GIE::StringListEntry, "x-spam-flag", 9, 10, "x-spam-flag" }, // 8
+    { 0,       GIE::StringListEntry, 0, 9, 11, 0 },                         // 9
+    { 0,     GIE::StringListArgumentEnd, 0, 0, 8, 0 },                     // 10
+    { 0,     GIE::StringListArgumentEnd, 0, 12, 0, 0 },                     // 11
 
     // accept both string and string-list:
-    { 0,     GIE::StringArgument, "yes", 15, 10, "spam-flag-yes" },    // 9
-    { 0,     GIE::StringListArgumentStart, Q_NULLPTR, 11, 0, Q_NULLPTR },              // 10
-    { 0,       GIE::StringListEntry, "yes", 12, 13, "spam-flag-yes" }, // 11
-    { 0,       GIE::StringListEntry, Q_NULLPTR, 12, 14, Q_NULLPTR },                   // 12
-    { 0,     GIE::StringListArgumentEnd, Q_NULLPTR, 0, 11, Q_NULLPTR },                // 13
-    { 0,     GIE::StringListArgumentEnd, Q_NULLPTR, 15, 0, Q_NULLPTR },                // 14
+    { 0,     GIE::StringArgument, "yes", 18, 13, "spam-flag-yes" },    // 12
+    { 0,     GIE::StringListArgumentStart, 0, 14, 0, 0 },              // 13
+    { 0,       GIE::StringListEntry, "yes", 15, 16, "spam-flag-yes" }, // 14
+    { 0,       GIE::StringListEntry, 0, 15, 17, 0 },                   // 15
+    { 0,     GIE::StringListArgumentEnd, 0, 0, 14, 0 },                // 16
+    { 0,     GIE::StringListArgumentEnd, 0, 18, 0, 0 },                // 17
 
-    { 0,   GIE::TestEnd, Q_NULLPTR, 16, 0, Q_NULLPTR }, // 15
+    { 0,   GIE::TestEnd, 0, 21, 20, 0 },     // 18
+    { 0,   GIE::Any, 0, 21, 0, 0 },          // 19
+    { 0,   GIE::TestListEnd, 0, 21, 19, 0 }, // 20
 
     // block of command, find "stop", take nested if's into account:
-    { 0,   GIE::BlockStart, Q_NULLPTR, 17, 0, Q_NULLPTR },                // 16
-    { 1,     GIE::CommandStart, "stop", 20, 19, "stop" }, // 17
-    { -1,    GIE::Any, Q_NULLPTR, 17, 0, Q_NULLPTR },                     // 18
-    { 0,   GIE::BlockEnd, Q_NULLPTR, 0, 18, Q_NULLPTR },                  // 19
+    { 0,   GIE::BlockStart, 0, 22, 18, 0 },                       // 21
+    { 1,     GIE::CommandStart, "vacation", 24, 22, "vacation" }, // 22
+    { 1,    GIE::Any, 0, 24, 0, 0 },                              // 23
+    { 0,   GIE::BlockEnd, 0, 25, 23, 0 },                         // 24
 
-    { -1, GIE::Any, Q_NULLPTR, 20, 20, Q_NULLPTR }, // 20 end state
+    { -1, GIE::Any, 0, 25, 25, 0 },   // 25 end state
 };
 static const unsigned int numSpamNodes = sizeof spamNodes / sizeof * spamNodes;
 
@@ -353,7 +366,7 @@ public:
     {
         return mResults.count(QStringLiteral("x-spam-flag")) &&
                mResults.count(QStringLiteral("spam-flag-yes")) &&
-               mResults.count(QStringLiteral("stop"));
+               mResults.count(QStringLiteral("vacation")) ;
     }
 };
 
@@ -361,40 +374,41 @@ public:
 // libksieve/tests/parsertest
 //   'if not address :domain :contains ["from"] ["mydomain.org"] { keep; stop; }'
 static const GenericInformationExtractor::StateNode domainNodes[] = {
-    { 0, GIE::CommandStart, "if", 1, 0, Q_NULLPTR },       // 0
-    { 0,   GIE::TestStart, "not", 2, 0, Q_NULLPTR, },      // 1
-    { 0,     GIE::TestStart, "address", 3, 0, Q_NULLPTR }, // 2
+    { 0, GIE::CommandStart, "if", 1, 0, 0 },       // 0
+    { 0,   GIE::TestStart, "allof", 2, 3, 0 },     // 1
+    { 0,       GIE::TestListStart, 0, 3, 0, 0 },   // 2
+    { 0,     GIE::TestStart, "address", 4, 3, 0 }, // 3
 
     // :domain and :contains in arbitrary order:
-    { 0,       GIE::TaggedArgument, "domain", 4, 5, Q_NULLPTR },     // 3
-    { 0,       GIE::TaggedArgument, "contains", 7, 0, Q_NULLPTR },   // 4
-    { 0,       GIE::TaggedArgument, "contains", 6, 0, Q_NULLPTR },   // 5
-    { 0,       GIE::TaggedArgument, "domain", 7, 0, Q_NULLPTR },     // 6
+    { 0,       GIE::TaggedArgument, "domain", 5, 6, 0 },     // 4
+    { 0,       GIE::TaggedArgument, "contains", 8, 0, 0 },   // 5
+    { 0,       GIE::TaggedArgument, "contains", 7, 0, 0 },   // 6
+    { 0,       GIE::TaggedArgument, "domain", 8, 0, 0 },     // 7
 
     // accept both string and string-list:
-    { 0,       GIE::StringArgument, "from", 13, 8, "from" },     // 7
-    { 0,       GIE::StringListArgumentStart, Q_NULLPTR, 9, 0, Q_NULLPTR },       // 8
-    { 0,         GIE::StringListEntry, "from", 10, 11, "from" }, // 9
-    { 0,         GIE::StringListEntry, Q_NULLPTR, 10, 12, Q_NULLPTR },           // 10
-    { 0,       GIE::StringListArgumentEnd, Q_NULLPTR, 0, 9, Q_NULLPTR },         // 11
-    { 0,       GIE::StringListArgumentEnd, Q_NULLPTR, 13, 0, Q_NULLPTR },        // 12
+    { 0,       GIE::StringArgument, "from", 14, 9, "from" },     // 8
+    { 0,       GIE::StringListArgumentStart, 0, 10, 0, 0 },       // 9
+    { 0,         GIE::StringListEntry, "from", 11, 12, "from" }, // 10
+    { 0,         GIE::StringListEntry, 0, 11, 13, 0 },           // 11
+    { 0,       GIE::StringListArgumentEnd, 0, 0, 10, 0 },         // 12
+    { 0,       GIE::StringListArgumentEnd, 0, 14, 0, 0 },        // 13
 
     // string: save, string-list: save last
-    { 0,       GIE::StringArgument, Q_NULLPTR, 17, 14, "domainName" },    // 13
-    { 0,       GIE::StringListArgumentStart, Q_NULLPTR, 15, 0, Q_NULLPTR },       // 14
-    { 0,         GIE::StringListEntry, Q_NULLPTR, 15, 16, "domainName" }, // 15
-    { 0,       GIE::StringListArgumentEnd, Q_NULLPTR, 17, 0, Q_NULLPTR },         // 16
+    { 0,       GIE::StringArgument, 0, 18, 15, "domainName" },    // 14
+    { 0,       GIE::StringListArgumentStart, 0, 16, 0, 0 },       // 15
+    { 0,         GIE::StringListEntry, 0, 16, 17, "domainName" }, // 16
+    { 0,       GIE::StringListArgumentEnd, 0, 18, 0, 0 },         // 17
 
-    { 0,     GIE::TestEnd, Q_NULLPTR, 18, 0, Q_NULLPTR },  // 17
-    { 0,   GIE::TestEnd, Q_NULLPTR, 19, 0, Q_NULLPTR },    // 18
+    { 0,   GIE::TestEnd, 0, 18, 20, 0 },    // 18
+    { 0,   GIE::Any, 0, 18, 0, 0 },        // 19
 
     // block of commands, find "stop", take nested if's into account:
-    { 0,   GIE::BlockStart, Q_NULLPTR, 20, 0, Q_NULLPTR },                 // 19
-    { 1,     GIE::CommandStart, "stop", 23, 22, "stop" },  // 20
-    { -1,    GIE::Any, Q_NULLPTR, 20, 0, Q_NULLPTR },                      // 21
-    { 0,   GIE::BlockEnd, Q_NULLPTR, 0, 21, Q_NULLPTR },                   // 22
+    { 0,   GIE::BlockStart, 0, 21, 19, 0 },                        // 20
+    { 1,     GIE::CommandStart, "vacation", 23, 21, "vacation" },  // 21
+    { 1,     GIE::Any, 0, 23, 0, 0 },                              // 22
+    { 0,   GIE::BlockEnd, 0, 24, 22, 0 },                          // 23
 
-    { -1, GIE::Any, Q_NULLPTR, 23, 23, Q_NULLPTR }  // 23 end state
+    { -1, GIE::Any, 0, 24, 24, 0 }  // 24 end state
 };
 static const unsigned int numDomainNodes = sizeof domainNodes / sizeof * domainNodes;
 
@@ -409,51 +423,61 @@ public:
 
     QString domainName() /*not const, since map::op[] isn't const*/
     {
-        return mResults.count(QStringLiteral("stop")) && mResults.count(QStringLiteral("from"))
+        return mResults.count(QStringLiteral("vacation")) && mResults.count(QStringLiteral("from"))
                ? mResults[QStringLiteral("domainName")] : QString();
     }
 };
 
-// if not allof (currentDate :value "ge" date "YYYY-MM-DD",
-//               currentDate :value "le" date "YYYY-MM-DD") { keep; stop; }
+// if not allof (currentdate :value "ge" date "YYYY-MM-DD",
+//               currentfate :value "le" date "YYYY-MM-DD) { keep; stop; }
 static const GenericInformationExtractor::StateNode datesNodes[] = {
-    { 0, GIE::CommandStart, "if", 1, 0, Q_NULLPTR },          // 0
-    { 0,   GIE::TestStart, "not", 2, 0, Q_NULLPTR },            // 1
-    { 0,     GIE::TestStart, "allof", 3, 0, Q_NULLPTR },        // 2
+    { 0, GIE::CommandStart, "if", 1, 0, 0 },            // 0
+    { 0,     GIE::TestStart, "allof", 2, 0, 0 },        // 1
 
     // handle startDate and endDate in arbitrary order
-    { 0,       GIE::TestListStart, Q_NULLPTR, 4, 0, Q_NULLPTR },                 // 3
-    { 0,         GIE::TestStart, "currentdate", 5, 0, Q_NULLPTR },         // 4
-    { 0,           GIE::TaggedArgument, "value", 6, 0, Q_NULLPTR },          // 5
-    { 0,           GIE::StringArgument, "ge", 7, 9, Q_NULLPTR },             // 6
-    { 0,           GIE::StringArgument, "date", 8, 0, Q_NULLPTR },           // 7
-    { 0,           GIE::StringArgument, Q_NULLPTR, 12, 0, "startDate" },      // 8
-    { 0,           GIE::StringArgument, "le", 10, 0, Q_NULLPTR },             // 9
-    { 0,           GIE::StringArgument, "date", 11, 0, Q_NULLPTR },          // 10
-    { 0,           GIE::StringArgument, Q_NULLPTR, 12, 0, "endDate" },       // 11
-    { 0,         GIE::TestEnd, Q_NULLPTR, 13, 0, Q_NULLPTR },                      // 12
+    { 0,       GIE::TestListStart, 0, 3, 0, 0 },                 // 2
+    { 0,         GIE::TestStart, "currentdate", 4, 3, 0 },          // 3
+    { 0,           GIE::TaggedArgument, "value", 5, 4, 0 },         // 4
+    { 0,           GIE::StringArgument, "ge", 6, 10, 0 },           // 5
+    { 0,           GIE::StringArgument, "date", 7, 8, 0 },          // 6
+    { 0,           GIE::StringArgument, 0, 15, 0, "startDate" },    // 7
+    { 0,           GIE::StringArgument, "iso8601", 9, 0, 0 },       // 8
+    { 0,           GIE::StringArgument, 0, 15, 0, "startDateTime" },// 9
+    { 0,           GIE::StringArgument, "le", 11, 0, 0 },           // 10
+    { 0,           GIE::StringArgument, "date", 12, 13, 0 },        // 11
+    { 0,           GIE::StringArgument, 0, 15, 0, "endDate" },      // 12
+    { 0,           GIE::StringArgument, "iso8601", 14, 0, 0 },      // 13
+    { 0,           GIE::StringArgument, 0, 15, 0, "endDateTime" },  // 14
+    { 0,         GIE::TestEnd, 0, 16, 0, 0 },                    // 15
 
-    { 0,         GIE::TestStart, "currentdate", 14, 0, Q_NULLPTR },        // 13
-    { 0,           GIE::TaggedArgument, "value", 15, 0, Q_NULLPTR },         // 14
-    { 0,           GIE::StringArgument, "le", 16, 18, Q_NULLPTR },           // 15
-    { 0,           GIE::StringArgument, "date", 17, 0, Q_NULLPTR },          // 16
-    { 0,           GIE::StringArgument, Q_NULLPTR, 21, 0, "endDate" },       // 17
-    { 0,           GIE::StringArgument, "ge", 19, 0, Q_NULLPTR },            // 18
-    { 0,           GIE::StringArgument, "date", 20, 0, Q_NULLPTR },          // 19
-    { 0,           GIE::StringArgument, Q_NULLPTR, 21, 0, "startDate" },     // 20
-    { 0,         GIE::TestEnd, Q_NULLPTR, 22, 0, Q_NULLPTR },                      // 21
-    { 0,      GIE::TestListEnd, Q_NULLPTR, 23, 0, Q_NULLPTR },                   // 22
+    { 0,         GIE::TestStart, "currentdate", 17, 16, 0 },        // 16
+    { 0,           GIE::TaggedArgument, "value", 18, 17, 0 },         // 17
+    { 0,           GIE::StringArgument, "le", 19, 23, 0 },            // 18
+    { 0,           GIE::StringArgument, "date", 20, 21, 0 },          // 19
+    { 0,           GIE::StringArgument, 0, 28, 0, "endDate" },        // 20
+    { 0,           GIE::StringArgument, "iso8601", 22, 0, 0 },        // 21
+    { 0,           GIE::StringArgument, 0, 28, 0, "endDateTime" },    // 22
+    { 0,           GIE::StringArgument, "ge", 24, 0, 0 },             // 23
+    { 0,           GIE::StringArgument, "date", 25, 26, 0 },          // 24
+    { 0,           GIE::StringArgument, 0, 28, 0, "startDate" },      // 25
+    { 0,           GIE::StringArgument, "iso8601", 27, 0, 0 },        // 26
+    { 0,           GIE::StringArgument, 0, 28, 0, "startDateTime" },  // 27
+    { 0,         GIE::TestEnd, 0, 32, 0, 0 },                      // 28
+    { 0,         GIE::TestStart, 0, 31, 30, 0 },        // 29
+    { -1,          GIE::Any, 0, 32, 0, 0 },                      // 30
+    { 0,         GIE::TestEnd, 0, 32, 30, 0 },        // 31
+    { 0,      GIE::TestListEnd, 0, 33, 29, 0 },                   // 32
 
-    { 0,     GIE::TestEnd, Q_NULLPTR, 24, 0, Q_NULLPTR },               // 23
-    { 0,   GIE::TestEnd, Q_NULLPTR, 25, 0, Q_NULLPTR },                 // 24
+    { 0,   GIE::TestEnd, 0, 34, 0, 0 },                 // 33
 
     // block of commands, find "stop", take nested if's into account:
-    { 0,   GIE::BlockStart, Q_NULLPTR, 26, 0, Q_NULLPTR },              // 25
-    { 1,     GIE::CommandStart, "stop", 29, 28, "stop" },  // 26
-    { -1,    GIE::Any, Q_NULLPTR, 26, 0, Q_NULLPTR },                      // 27
-    { 0,   GIE::BlockEnd, Q_NULLPTR, 0, 27, Q_NULLPTR },                // 28
+    { 0,   GIE::BlockStart, 0, 36, 33, 0 },                 // 34
+    { -1,    GIE::Any, 0, 36, 0, 0 },                      // 35
+    { 1,     GIE::CommandStart, "vacation", 38, 35, "vacation" },  // 36
+    { -1,    GIE::Any, 0, 38, 0, 0 },                      // 37
+    { 0,   GIE::BlockEnd, 0, 39, 37, 0 },                   // 38
 
-    { -1, GIE::Any, Q_NULLPTR, 27, 27, Q_NULLPTR }                   // 29 end state
+    { -1, GIE::Any, 0, 39, 39, 0 }                      // 39 end state
 };
 
 static const unsigned int numDatesNodes = sizeof datesNodes / sizeof * datesNodes;
@@ -468,21 +492,48 @@ public:
 
     QDate endDate() const
     {
-        return date(QStringLiteral("endDate"));
+        if (results().count(QStringLiteral("endDateTime")) == 1) {
+            return datetime(QStringLiteral("endDateTime")).date();
+        } else {
+            return date(QStringLiteral("endDate"));
+        }
     }
 
     QDate startDate() const
     {
-        return date(QStringLiteral("startDate"));
+        if (results().count(QStringLiteral("startDateTime")) == 1) {
+            return datetime(QStringLiteral("startDateTime")).date();
+        } else {
+            return date(QStringLiteral("startDate"));
+        }
+    }
+
+    QTime endTime() const
+    {
+        return datetime(QStringLiteral("endDateTime")).time();
+    }
+
+    QTime startTime() const
+    {
+        return datetime(QStringLiteral("startDateTime")).time();
     }
 
 private:
     QDate date(const QString &name) const
     {
-        if (mResults.count(name) == 0) {
+        if (results().count(name) == 0) {
             return QDate();
         } else {
-            return QDate::fromString(mResults.at(name), Qt::ISODate);
+            return QDate::fromString(results().at(name), Qt::ISODate);
+        }
+    }
+
+    QDateTime datetime(const QString &name) const
+    {
+        if (results().count(name) == 0) {
+            return QDateTime();
+        } else {
+            return QDateTime::fromString(results().at(name), Qt::ISODate);
         }
     }
 };
@@ -494,12 +545,23 @@ class VacationDataExtractor : public KSieve::ScriptBuilder
         // command itself:
         VacationCommand,
         // tagged args:
-        Days, Addresses, Subject
+        Days, Addresses, Subject,
+        VacationEnd,
+        IfBlock,
+        RedirectCommand
     };
 public:
     VacationDataExtractor();
     virtual ~VacationDataExtractor();
 
+    bool commandFound() const
+    {
+        return mContext == VacationEnd;
+    }
+    bool active() const
+    {
+        return mActive;
+    }
     int notificationInterval() const
     {
         return mNotificationInterval;
@@ -512,24 +574,46 @@ public:
     {
         return mAliases;
     }
+    const QString &ifComment() const
+    {
+        return mIfComment;
+    }
+    VacationUtils::MailAction mailAction() const
+    {
+        return mMailAction;
+    }
+    const QString &mailActionRecipient() const
+    {
+        return mMailActionRecipient;
+    }
 
     const QString &subject() const
     {
         return mSubject;
     }
 
+    int lineStart() const
+    {
+        return mLineStart;
+    }
+
+    int lineEnd() const
+    {
+        return mLineEnd;
+    }
+
 private:
-    void commandStart(const QString &identifier) Q_DECL_OVERRIDE;
+    void commandStart(const QString &identifier, int lineNumber) Q_DECL_OVERRIDE;
 
-    void commandEnd() Q_DECL_OVERRIDE;
+    void commandEnd(int lineNumber) Q_DECL_OVERRIDE;
 
-    void testStart(const QString &) Q_DECL_OVERRIDE {}
+    void testStart(const QString &) Q_DECL_OVERRIDE;
     void testEnd() Q_DECL_OVERRIDE {}
     void testListStart() Q_DECL_OVERRIDE {}
     void testListEnd() Q_DECL_OVERRIDE {}
-    void blockStart() Q_DECL_OVERRIDE {}
-    void blockEnd() Q_DECL_OVERRIDE {}
-    void hashComment(const QString &) Q_DECL_OVERRIDE {}
+    void blockStart(int lineNumber) Q_DECL_OVERRIDE;
+    void blockEnd(int lineNumber) Q_DECL_OVERRIDE;
+    void hashComment(const QString &) Q_DECL_OVERRIDE;
     void bracketComment(const QString &) Q_DECL_OVERRIDE {}
     void lineFeed() Q_DECL_OVERRIDE {}
     void error(const KSieve::Error &e) Q_DECL_OVERRIDE;
@@ -551,10 +635,95 @@ private:
     QString mMessageText;
     QString mSubject;
     QStringList mAliases;
+    bool mActive;
+    bool mInIfBlock;
+    bool mFoundInBlock;
+    int mBlockLevel;
+    QString mIfComment;
+    int mLineStart;
+    int mLineEnd;
+
+    VacationUtils::MailAction mMailAction;
+    Context mMailActionContext;
+    QString mMailActionRecipient;
 
     void reset();
 };
 
+class RequireExtractor : public KSieve::ScriptBuilder
+{
+    enum Context {
+        None = 0,
+        // command itself:
+        RequireCommand,
+        EndState
+    };
+public:
+    RequireExtractor();
+    virtual ~RequireExtractor();
+
+    bool commandFound() const
+    {
+        return mContext == EndState;
+    }
+    const QStringList &requirements() const
+    {
+        return mRequirements;
+    }
+
+    int lineStart() const
+    {
+        return mLineStart;
+    }
+    int lineEnd() const
+    {
+        return mLineEnd;
+    }
+
+private:
+    void commandStart(const QString &identifier, int lineNumber);
+
+    void commandEnd(int lineNumber);
+
+    void testStart(const QString &) {}
+    void testEnd() {}
+    void testListStart() {}
+    void testListEnd() {}
+    void blockStart(int lineNumber)
+    {
+        Q_UNUSED(lineNumber)
+    }
+    void blockEnd(int lineNumber)
+    {
+        Q_UNUSED(lineNumber)
+    }
+    void hashComment(const QString &) {}
+    void bracketComment(const QString &) {}
+    void lineFeed() {}
+    void error(const KSieve::Error &e);
+    void finished();
+
+    void taggedArgument(const QString &tag)
+    {
+        Q_UNUSED(tag)
+    }
+    void numberArgument(unsigned long number, char)
+    {
+        Q_UNUSED(number)
+    }
+
+    void stringArgument(const QString &string, bool, const QString &);
+
+    void stringListArgumentStart() {}
+    void stringListEntry(const QString &string, bool, const QString &);
+    void stringListArgumentEnd() {}
+
+private:
+    Context mContext;
+    QStringList mRequirements;
+    int mLineStart;
+    int mLineEnd;
+};
 }
 
 #endif // VACATIONSCRIPTEXTRACTOR_H

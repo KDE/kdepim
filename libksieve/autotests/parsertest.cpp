@@ -462,12 +462,14 @@ public:
         const QString txt = "number" + (quantifier ? QStringLiteral(" quantifier=\"%1\"").arg(quantifier) : QString());
         write(txt.toLatin1(), QString::number(number));
     }
-    void commandStart(const QString &identifier) Q_DECL_OVERRIDE {
+    void commandStart(const QString &identifier, int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber);
         write("<command>");
         ++indent;
         write("identifier", identifier);
     }
-    void commandEnd() Q_DECL_OVERRIDE {
+    void commandEnd(int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber);
         --indent;
         write("</command>");
     }
@@ -488,11 +490,13 @@ public:
         --indent;
         write("</testlist>");
     }
-    void blockStart() Q_DECL_OVERRIDE {
+    void blockStart(int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber);
         write("<block>");
         ++indent;
     }
-    void blockEnd() Q_DECL_OVERRIDE {
+    void blockEnd(int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber);
         --indent;
         write("</block>");
     }
@@ -583,12 +587,14 @@ public:
         checkEquals(QString::number(number) + (quantifier ? quantifier : ' '));
         ++mNextResponse;
     }
-    void commandStart(const QString &identifier) Q_DECL_OVERRIDE {
+    void commandStart(const QString &identifier, int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber);
         checkIs(CommandStart);
         checkEquals(identifier);
         ++mNextResponse;
     }
-    void commandEnd() Q_DECL_OVERRIDE {
+    void commandEnd(int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber);
         checkIs(CommandEnd);
         ++mNextResponse;
     }
@@ -609,11 +615,13 @@ public:
         checkIs(TestListEnd);
         ++mNextResponse;
     }
-    void blockStart() Q_DECL_OVERRIDE {
+    void blockStart(int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber);
         checkIs(BlockStart);
         ++mNextResponse;
     }
-    void blockEnd() Q_DECL_OVERRIDE {
+    void blockEnd(int lineNumber) Q_DECL_OVERRIDE {
+        Q_UNUSED(lineNumber);
         checkIs(BlockEnd);
         ++mNextResponse;
     }

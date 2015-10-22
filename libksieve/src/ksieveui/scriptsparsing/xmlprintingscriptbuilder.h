@@ -34,14 +34,14 @@ public:
     void taggedArgument(const QString &tag) Q_DECL_OVERRIDE;
     void stringArgument(const QString &string, bool multiLine, const QString & /*fixme*/) Q_DECL_OVERRIDE;
     void numberArgument(unsigned long number, char quantifier) Q_DECL_OVERRIDE;
-    void commandStart(const QString &identifier) Q_DECL_OVERRIDE;
-    void commandEnd() Q_DECL_OVERRIDE;
+    void commandStart(const QString &identifier, int lineNumber) Q_DECL_OVERRIDE;
+    void commandEnd(int lineNumber) Q_DECL_OVERRIDE;
     void testStart(const QString &identifier) Q_DECL_OVERRIDE;
     void testEnd() Q_DECL_OVERRIDE;
     void testListStart() Q_DECL_OVERRIDE;
     void testListEnd() Q_DECL_OVERRIDE;
-    void blockStart() Q_DECL_OVERRIDE;
-    void blockEnd() Q_DECL_OVERRIDE;
+    void blockStart(int lineNumber) Q_DECL_OVERRIDE;
+    void blockEnd(int lineNumber) Q_DECL_OVERRIDE;
     void stringListArgumentStart() Q_DECL_OVERRIDE;
     void stringListArgumentEnd() Q_DECL_OVERRIDE;
     void stringListEntry(const QString &string, bool multiline, const QString &hashComment) Q_DECL_OVERRIDE;

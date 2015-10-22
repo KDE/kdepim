@@ -244,7 +244,7 @@ bool Parser::Impl::parseCommand()
     }
 
     if (scriptBuilder()) {
-        scriptBuilder()->commandStart(tokenValue());
+        scriptBuilder()->commandStart(tokenValue(), lexer.line());
     }
     consumeToken();
 
@@ -321,7 +321,7 @@ bool Parser::Impl::parseCommand()
     }
 
     if (scriptBuilder()) {
-        scriptBuilder()->commandEnd();
+        scriptBuilder()->commandEnd(lexer.line());
     }
     return true;
 }
@@ -543,7 +543,7 @@ bool Parser::Impl::parseBlock()
         return false;
     }
     if (scriptBuilder()) {
-        scriptBuilder()->blockStart();
+        scriptBuilder()->blockStart(lexer.line());
     }
     consumeToken();
 
@@ -577,7 +577,7 @@ bool Parser::Impl::parseBlock()
         return false;
     }
     if (scriptBuilder()) {
-        scriptBuilder()->blockEnd();
+        scriptBuilder()->blockEnd(lexer.line());
     }
     consumeToken();
     return true;

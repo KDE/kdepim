@@ -35,6 +35,14 @@ namespace KSieveUi
 {
 namespace VacationUtils
 {
+
+enum MailAction {
+    Keep,
+    Discard,
+    Sendto,
+    CopyTo,
+};
+
 QString defaultMessageText();
 QString defaultSubject();
 int defaultNotificationInterval();

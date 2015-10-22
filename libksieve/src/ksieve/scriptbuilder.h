@@ -53,8 +53,8 @@ public:
     virtual void stringListEntry(const QString &string, bool multiLine, const QString &embeddedHashComment) = 0;
     virtual void stringListArgumentEnd() = 0;
 
-    virtual void commandStart(const QString &identifier) = 0;
-    virtual void commandEnd() = 0;
+    virtual void commandStart(const QString &identifier, int lineNumber) = 0;
+    virtual void commandEnd(int lineNumber) = 0;
 
     virtual void testStart(const QString &identifier) = 0;
     virtual void testEnd() = 0;
@@ -62,8 +62,8 @@ public:
     virtual void testListStart() = 0;
     virtual void testListEnd() = 0;
 
-    virtual void blockStart() = 0;
-    virtual void blockEnd() = 0;
+    virtual void blockStart(int lineNumber) = 0;
+    virtual void blockEnd(int lineNumber) = 0;
 
     /** A hash comment always includes an implicit lineFeed() at it's end. */
     virtual void hashComment(const QString &comment) = 0;
