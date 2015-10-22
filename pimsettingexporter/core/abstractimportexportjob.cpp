@@ -436,7 +436,6 @@ bool AbstractImportExportJob::backupFullDirectory(const QUrl &url, const QString
         delete archiveFile;
         return false;
     }
-    const QString filename = url.fileName();
     const bool vcarddirAdded = archiveFile->addLocalDirectory(url.path(), QString());
     //TODO add MessageBox
     if (!vcarddirAdded) {
@@ -449,9 +448,9 @@ bool AbstractImportExportJob::backupFullDirectory(const QUrl &url, const QString
 
     const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + archivename);
     if (fileAdded) {
-        Q_EMIT info(i18n("\"%1\" was backed up.", filename));
+        Q_EMIT info(i18n("\"%1\" was backed up.", url.path()));
     } else {
-        Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
+        Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", url.path()));
     }
 
     delete archiveFile;

@@ -85,7 +85,7 @@ void ExportAddressbookJob::backupResources()
                             Q_EMIT error(errorStr);
                         }
                         url = Utils::akonadiAgentConfigPath(identifier);
-                        if (!url.isEmpty()) {
+                        if (url.isValid()) {
                             const QString filename = url.fileName();
                             const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
                             if (fileAdded) {
