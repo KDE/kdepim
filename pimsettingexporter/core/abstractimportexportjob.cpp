@@ -429,22 +429,22 @@ bool AbstractImportExportJob::backupFullDirectory(const QUrl &url, const QString
 {
     QTemporaryFile tmp;
     tmp.open();
-    KZip *vcarddirArchive = new KZip(tmp.fileName());
-    vcarddirArchive->setCompression(KZip::NoCompression);
-    bool result = vcarddirArchive->open(QIODevice::WriteOnly);
+    KZip *archiveFile = new KZip(tmp.fileName());
+    archiveFile->setCompression(KZip::NoCompression);
+    bool result = archiveFile->open(QIODevice::WriteOnly);
     if (!result) {
-        delete vcarddirArchive;
+        delete archiveFile;
         return false;
     }
     const QString filename = url.fileName();
-    const bool vcarddirAdded = vcarddirArchive->addLocalDirectory(url.path(), QString());
+    const bool vcarddirAdded = archiveFile->addLocalDirectory(url.path(), QString());
     //TODO add MessageBox
     if (!vcarddirAdded) {
-        delete vcarddirArchive;
+        delete archiveFile;
         return false;
     }
-    vcarddirArchive->setCompression(KZip::DeflateCompression);
-    vcarddirArchive->close();
+    archiveFile->setCompression(KZip::DeflateCompression);
+    archiveFile->close();
     tmp.close();
 
     const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + archivename);
@@ -454,7 +454,7 @@ bool AbstractImportExportJob::backupFullDirectory(const QUrl &url, const QString
         Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
     }
 
-    delete vcarddirArchive;
+    delete archiveFile;
     return fileAdded;
 }
 
