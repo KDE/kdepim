@@ -39,7 +39,6 @@ public:
 
     QVector<KPIMTextEdit::Rule> rules() const;
 private:
-    void init();
     SieveSyntaxHighlighterRulesPrivate *const d;
 };
 }
