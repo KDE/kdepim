@@ -433,12 +433,14 @@ bool AbstractImportExportJob::backupFullDirectory(const QUrl &url, const QString
     archiveFile->setCompression(KZip::NoCompression);
     bool result = archiveFile->open(QIODevice::WriteOnly);
     if (!result) {
+        Q_EMIT error(i18n("Impossible to open archive file."));
         delete archiveFile;
         return false;
     }
     const bool vcarddirAdded = archiveFile->addLocalDirectory(url.path(), QString());
     //TODO add MessageBox
     if (!vcarddirAdded) {
+        Q_EMIT error(i18n("Impossible to backup \"%1\".", url.path()));
         delete archiveFile;
         return false;
     }
