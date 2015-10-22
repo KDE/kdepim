@@ -289,12 +289,10 @@ public:
                               NodeHelper *nodeHelper = 0,
                               const Kleo::CryptoBackend::Protocol *protocol = 0,
                               bool showOneMimePart = false, bool keepEncryptions = false,
-                              bool includeSignatures = true,
                               const AttachmentStrategy *attachmentStrategy = 0);
 
     explicit ObjectTreeParser(const ObjectTreeParser *topLevelParser,
                               bool showOneMimePart = false, bool keepEncryptions = false,
-                              bool includeSignatures = true,
                               const AttachmentStrategy *attachmentStrategy = 0);
     virtual ~ObjectTreeParser();
 
@@ -346,9 +344,6 @@ public:
 
     bool keepEncryptions() const;
     void setKeepEncryptions(bool keep);
-
-    bool includeSignatures() const;
-    void setIncludeSignatures(bool include);
 
     const AttachmentStrategy *attachmentStrategy() const;
 
@@ -509,7 +504,6 @@ private:
     bool mShowOnlyOneMimePart;
 
     bool mKeepEncryptions;
-    bool mIncludeSignatures;
     bool mHasPendingAsyncJobs;
     bool mAllowAsync;
     const AttachmentStrategy *mAttachmentStrategy;

@@ -146,7 +146,6 @@ public:
 
 ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
                                    bool showOnlyOneMimePart, bool keepEncryptions,
-                                   bool includeSignatures,
                                    const AttachmentStrategy *strategy)
     : mSource(topLevelParser->mSource),
       mNodeHelper(topLevelParser->mNodeHelper),
@@ -155,7 +154,6 @@ ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser *topLevelParser,
       mCryptoProtocol(topLevelParser->mCryptoProtocol),
       mShowOnlyOneMimePart(showOnlyOneMimePart),
       mKeepEncryptions(keepEncryptions),
-      mIncludeSignatures(includeSignatures),
       mHasPendingAsyncJobs(false),
       mAllowAsync(topLevelParser->mAllowAsync),
       mAttachmentStrategy(strategy),
@@ -168,7 +166,6 @@ ObjectTreeParser::ObjectTreeParser(ObjectTreeSourceIf *source,
                                    MessageViewer::NodeHelper *nodeHelper,
                                    const Kleo::CryptoBackend::Protocol *protocol,
                                    bool showOnlyOneMimePart, bool keepEncryptions,
-                                   bool includeSignatures,
                                    const AttachmentStrategy *strategy)
     : mSource(source),
       mNodeHelper(nodeHelper),
@@ -177,7 +174,6 @@ ObjectTreeParser::ObjectTreeParser(ObjectTreeSourceIf *source,
       mCryptoProtocol(protocol),
       mShowOnlyOneMimePart(showOnlyOneMimePart),
       mKeepEncryptions(keepEncryptions),
-      mIncludeSignatures(includeSignatures),
       mHasPendingAsyncJobs(false),
       mAllowAsync(false),
       mAttachmentStrategy(strategy),
@@ -209,7 +205,6 @@ ObjectTreeParser::ObjectTreeParser(const ObjectTreeParser &other)
       mCryptoProtocol(other.cryptoProtocol()),
       mShowOnlyOneMimePart(other.showOnlyOneMimePart()),
       mKeepEncryptions(other.keepEncryptions()),
-      mIncludeSignatures(other.includeSignatures()),
       mHasPendingAsyncJobs(other.hasPendingAsyncJobs()),
       mAllowAsync(other.allowAsync()),
       mAttachmentStrategy(other.attachmentStrategy()),
@@ -3030,16 +3025,6 @@ bool ObjectTreeParser::keepEncryptions() const
 void ObjectTreeParser::setKeepEncryptions(bool keep)
 {
     mKeepEncryptions = keep;
-}
-
-bool ObjectTreeParser::includeSignatures() const
-{
-    return mIncludeSignatures;
-}
-
-void ObjectTreeParser::setIncludeSignatures(bool include)
-{
-    mIncludeSignatures = include;
 }
 
 const AttachmentStrategy *ObjectTreeParser::attachmentStrategy() const
