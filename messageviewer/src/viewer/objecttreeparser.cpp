@@ -1168,16 +1168,14 @@ bool ObjectTreeParser::processMultiPartParallelSubtype(KMime::Content *node, Pro
     return processMultiPartMixedSubtype(node, result);
 }
 
-bool ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, ProcessResult &)
+MessagePart::Ptr ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, ProcessResult &)
 {
     KMime::Content *child = MessageCore::NodeHelper::firstChild(node);
     if (node->contents().size() != 2) {
         qCDebug(MESSAGEVIEWER_LOG) << "mulitpart/signed must have exactly two child parts!" << endl
                                    << "processing as multipart/mixed";
-        if (child) {
-            standardChildHandling(child);
-        }
-        return child;
+
+        return MessagePart::Ptr(new MimeMessagePart(this, child, false));
     }
 
     KMime::Content *signedData = child;
@@ -1189,8 +1187,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, Proce
     mNodeHelper->setNodeProcessed(signature, true);
 
     if (!includeSignatures()) {
-        standardChildHandling(signedData);
-        return true;
+        return MessagePart::Ptr(new MimeMessagePart(this, signedData, false));
     }
 
     QString protocolContentType = node->contentType()->parameter(QStringLiteral("protocol")).toLower();
@@ -1212,8 +1209,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, Proce
 
     if (!protocol) {
         mNodeHelper->setNodeProcessed(signature, true);
-        standardChildHandling(signedData);
-        return true;
+        return MessagePart::Ptr(new MimeMessagePart(this, signedData, false));
     }
 
     CryptoProtocolSaver saver(this, protocol);
@@ -1222,20 +1218,19 @@ bool ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, Proce
     const QByteArray cleartext = KMime::LFtoCRLF(signedData->encodedContent());
     const QTextCodec *aCodec(codecFor(signedData));
 
-    CryptoMessagePart mp(this, &messagePart,
+    CryptoMessagePart::Ptr mp(new CryptoMessagePart(this,
                          aCodec->toUnicode(cleartext), cryptoProtocol(),
-                         NodeHelper::fromAsString(node), signature);
-    messagePart.isSigned = true;
+                         NodeHelper::fromAsString(node), signature));
+    PartMetaData *messagePart(mp->partMetaData());
+    messagePart->isSigned = true;
 
     if (cryptoProtocol()) {
-        mp.startVerificationDetached(cleartext, signedData, signature->decodedContent());
+        mp->startVerificationDetached(cleartext, signedData, signature->decodedContent());
     } else {
         messagePart->auditLogError = GpgME::Error(GPG_ERR_NOT_IMPLEMENTED);
     }
 
-    mp.html(false);
-
-    return true;
+    return mp;
 }
 
 bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, ProcessResult &result)

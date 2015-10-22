@@ -420,7 +420,7 @@ public:// (during refactoring)
     bool processMultiPartAlternativeSubtype(KMime::Content *node, ProcessResult &result);
     bool processMultiPartDigestSubtype(KMime::Content *node, ProcessResult &result);
     bool processMultiPartParallelSubtype(KMime::Content *node, ProcessResult &result);
-    bool processMultiPartSignedSubtype(KMime::Content *node, ProcessResult &result);
+    MessagePart::Ptr processMultiPartSignedSubtype(KMime::Content *node, ProcessResult &result);
     bool processMultiPartEncryptedSubtype(KMime::Content *node, ProcessResult &result);
 
     bool processApplicationPkcs7MimeSubtype(KMime::Content *node, ProcessResult &result);

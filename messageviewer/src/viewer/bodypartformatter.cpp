@@ -142,6 +142,45 @@ MessageViewer::Interface::BodyPartFormatter::Result MessageRfc822BodyPartFormatt
     }
 }
 
+class MultiPartSignedBodyPartFormatter
+    : public MessageViewer::Interface::BodyPartFormatter
+{
+public:
+    MessagePart::Ptr process(const Interface::BodyPart &part) const;
+    MessageViewer::Interface::BodyPartFormatter::Result format(Interface::BodyPart *, HtmlWriter *) const Q_DECL_OVERRIDE;
+    using MessageViewer::Interface::BodyPartFormatter::format;
+    static const MessageViewer::Interface::BodyPartFormatter *create();
+private:
+    static const MultiPartSignedBodyPartFormatter *self;
+};
+
+const MultiPartSignedBodyPartFormatter *MultiPartSignedBodyPartFormatter::self;
+
+const MessageViewer::Interface::BodyPartFormatter *MultiPartSignedBodyPartFormatter::create()
+{
+    if (!self) {
+        self = new MultiPartSignedBodyPartFormatter();
+    }
+    return self;
+}
+
+MessagePart::Ptr MultiPartSignedBodyPartFormatter::process(const Interface::BodyPart &part) const
+{
+    return part.objectTreeParser()->processMultiPartSignedSubtype(part.content(), *part.processResult());
+}
+
+MessageViewer::Interface::BodyPartFormatter::Result MultiPartSignedBodyPartFormatter::format(Interface::BodyPart *part, HtmlWriter *writer) const
+{
+    Q_UNUSED(writer)
+    MessagePart::Ptr mp = process(*part);
+    if (!mp.isNull()) {
+        mp->html(false);
+        return Ok;
+    }
+
+    return Failed;
+}
+
 #define CREATE_BODY_PART_FORMATTER(subtype) \
     class subtype##BodyPartFormatter \
         : public MessageViewer::Interface::BodyPartFormatter \
@@ -182,7 +221,6 @@ CREATE_BODY_PART_FORMATTER(ApplicationChiasmusText)
 
 CREATE_BODY_PART_FORMATTER(MultiPartMixed)
 CREATE_BODY_PART_FORMATTER(MultiPartAlternative)
-CREATE_BODY_PART_FORMATTER(MultiPartSigned)
 CREATE_BODY_PART_FORMATTER(MultiPartEncrypted)
 
 typedef TextPlainBodyPartFormatter ApplicationPgpBodyPartFormatter;
