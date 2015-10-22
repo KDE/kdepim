@@ -88,4 +88,20 @@ QUrl DropBoxPlugin::serviceUrl() const
     return QUrl(QStringLiteral("https://www.dropbox.com/"));
 }
 
+QRegExp DropBoxPlugin::disallowedSymbols() const
+{
+    return QRegExp(QStringLiteral("[/:?*<>\"|]"));
+}
+
+QString DropBoxPlugin::disallowedSymbolsStr() const
+{
+    return QStringLiteral("\\ / : ? * < > \" |");
+}
+
+qlonglong DropBoxPlugin::maximumUploadFileSize() const
+{
+    return 150000000;
+}
+
+
 #include "dropboxplugin.moc"

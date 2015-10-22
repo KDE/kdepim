@@ -69,5 +69,15 @@ QUrl BoxPlugin::serviceUrl() const
     return QUrl(QStringLiteral("https://app.box.com/"));
 }
 
+QRegExp BoxPlugin::disallowedSymbols() const
+{
+    return QRegExp(QStringLiteral("[/:?*\\|]"));
+}
+
+QString BoxPlugin::disallowedSymbolsStr() const
+{
+    return QStringLiteral("\\ / : ? * < > |");
+}
+
 
 #include "boxplugin.moc"
