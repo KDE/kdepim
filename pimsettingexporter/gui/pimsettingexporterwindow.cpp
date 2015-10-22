@@ -232,21 +232,25 @@ void PimSettingExporterWindow::backupData(const QString &filename, const QString
 void PimSettingExporterWindow::slotAddInfo(const QString &info)
 {
     mLogWidget->addInfoLogEntry(info);
+    qApp->processEvents();
 }
 
 void PimSettingExporterWindow::slotAddError(const QString &info)
 {
     mLogWidget->addErrorLogEntry(info);
+    qApp->processEvents();
 }
 
 void PimSettingExporterWindow::slotAddTitle(const QString &info)
 {
     mLogWidget->addTitleLogEntry(info);
+    qApp->processEvents();
 }
 
 void PimSettingExporterWindow::slotAddEndLine()
 {
     mLogWidget->addEndLineLogEntry();
+    qApp->processEvents();
 }
 
 void PimSettingExporterWindow::slotRestoreData()
