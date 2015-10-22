@@ -43,8 +43,6 @@ protected:
 
 private:
     RichTextEditWithAutoCorrectionPrivate *const d;
-    PimCommon::AutoCorrection *mAutoCorrection;
-    bool mNeedToDelete;
 };
 }
 
