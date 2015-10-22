@@ -70,6 +70,7 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     mAddNewHeader->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     connect(mAddNewHeader, &QPushButton::clicked, this, &SelectHeadersDialog::slotAddNewHeader);
     connect(mNewHeader, &KLineEdit::textChanged, this, &SelectHeadersDialog::slotNewHeaderTextChanged);
+    hbox->addWidget(mNewHeader);
     hbox->addWidget(mAddNewHeader);
 
     lay->addLayout(hbox);
