@@ -105,6 +105,7 @@ bool PimSettingsBackupRestore::backupStart(const QString &filename)
 void PimSettingsBackupRestore::nextStep()
 {
     mStoreIterator++;
+    Q_EMIT addEndLine();
     switch(mAction) {
     case Backup:
         backupNextStep();
