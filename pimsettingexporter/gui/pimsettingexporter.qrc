@@ -1,7 +1,8 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
+<RCC>
     <qresource prefix="/kxmlgui5/pimsettingexporter">
         <file>pimsettingexporter.rc</file>
     </qresource>
+    <qresource prefix="/structure">
+        <file>backup-structure.txt</file>
+    </qresource>
 </RCC>
-

@@ -31,6 +31,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include <ktreewidgetsearchline.h>
+
 ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, QWidget *parent)
     : QDialog(parent),
       mFileName(filename)
@@ -46,6 +48,8 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     mTreeWidget = new QTreeWidget;
     mTreeWidget->header()->hide();
     mTreeWidget->setAlternatingRowColors(true);
+    KTreeWidgetSearchLine *searchLine = new KTreeWidgetSearchLine(this, mTreeWidget);
+    mainLayout->addWidget(searchLine);
     mainLayout->addWidget(mTreeWidget);
     mainLayout->addWidget(buttonBox);
     const bool result = fillTree();
