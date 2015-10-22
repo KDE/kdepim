@@ -135,6 +135,7 @@ void VacationPageWidget::slotGetResult(const QString &serverName, const QStringL
     mVacationEditWidget->setActivateVacation(active && vacation.active);
     mVacationEditWidget->setMessageText(vacation.messageText);
     mVacationEditWidget->setSubject(vacation.subject);
+    mVacationEditWidget->setMailAction(vacation.mailAction, vacation.mailActionRecipient);
     mVacationEditWidget->setNotificationInterval(vacation.notificationInterval);
     mVacationEditWidget->setMailAliases(vacation.aliases);
     mVacationEditWidget->setSendForSpam(vacation.sendForSpam);
@@ -144,7 +145,9 @@ void VacationPageWidget::slotGetResult(const QString &serverName, const QStringL
     mVacationEditWidget->enableDates(supportsSieveDate);
     if (supportsSieveDate) {
         mVacationEditWidget->setStartDate(vacation.startDate);
+        mVacationEditWidget->setStartTime(vacation.startTime);
         mVacationEditWidget->setEndDate(vacation.endDate);
+        mVacationEditWidget->setEndTime(vacation.endTime);
     }
 }
 
@@ -160,12 +163,16 @@ KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
         vacation.active = active;
         vacation.messageText = mVacationEditWidget->messageText();
         vacation.subject = mVacationEditWidget->subject();
+        vacation.mailAction = mVacationEditWidget->mailAction();
+        vacation.mailActionRecipient = mVacationEditWidget->mailActionRecipient();
         vacation.notificationInterval = mVacationEditWidget->notificationInterval();
         vacation.aliases = mVacationEditWidget->mailAliases();
         vacation.sendForSpam = mVacationEditWidget->sendForSpam();
         vacation.excludeDomain =  mVacationEditWidget->domainName();
         vacation.startDate = mVacationEditWidget->startDate();
+        vacation.startTime = mVacationEditWidget->startTime();
         vacation.endDate = mVacationEditWidget->endDate();
+        vacation.endTime = mVacationEditWidget->endTime();
         const QString script = VacationUtils::composeScript(vacation);
         createJob->setStatus(active, mWasActive);
         createJob->setScript(script);

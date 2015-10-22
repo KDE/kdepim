@@ -14,10 +14,13 @@
 #ifndef KSIEVE_KSIEVEUI_VACATIONDIALOG_H
 #define KSIEVE_KSIEVEUI_VACATIONDIALOG_H
 
+#include "vacationutils.h"
+
 #include <QDialog>
 
 template <typename T> class QList;
 class QDate;
+class QTime;
 
 namespace KMime
 {
@@ -55,6 +58,10 @@ public:
     QString subject() const;
     void setSubject(const QString &subject);
 
+    VacationUtils::MailAction mailAction() const;
+    QString mailActionRecipient() const;
+    void setMailAction(KSieveUi::VacationUtils::MailAction action, const QString &recipient);
+
     int notificationInterval() const;
     void setNotificationInterval(int days);
 
@@ -71,8 +78,14 @@ public:
     QDate startDate() const;
     void setStartDate(const QDate &startDate);
 
+    QTime startTime() const;
+    void setStartTime(const QTime &startTime);
+
     QDate endDate() const;
     void setEndDate(const QDate &endDate);
+
+    QTime endTime() const;
+    void setEndTime(const QTime &endTime);
 
 Q_SIGNALS:
     void okClicked();

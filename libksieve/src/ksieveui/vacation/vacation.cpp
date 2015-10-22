@@ -135,6 +135,7 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
     mWasActive = active;
     if (mDialog) {
         mDialog->setActivateVacation(active && vacation.active);
+        mDialog->setMailAction(vacation.mailAction, vacation.mailActionRecipient);
         mDialog->setSubject(vacation.subject);
         mDialog->setMessageText(vacation.messageText);
         mDialog->setNotificationInterval(vacation.notificationInterval);
@@ -146,7 +147,9 @@ void Vacation::slotGetResult(KManageSieve::SieveJob *job, bool success,
 
         if (supportsDate) {
             mDialog->setStartDate(vacation.startDate);
+            mDialog->setStartTime(vacation.startTime);
             mDialog->setEndDate(vacation.endDate);
+            mDialog->setEndTime(vacation.endTime);
         }
 
         connect(mDialog, &VacationDialog::okClicked, this, &Vacation::slotDialogOk);
@@ -176,12 +179,16 @@ void Vacation::slotDialogOk()
     vacation.active = active;
     vacation.messageText = mDialog->messageText();
     vacation.subject = mDialog->subject();
+    vacation.mailAction = mDialog->mailAction();
+    vacation.mailActionRecipient = mDialog->mailActionRecipient();
     vacation.notificationInterval = mDialog->notificationInterval();
     vacation.aliases = mDialog->mailAliases();
     vacation.sendForSpam = mDialog->sendForSpam();
     vacation.excludeDomain =  mDialog->domainName();
     vacation.startDate = mDialog->startDate();
+    vacation.startTime = mDialog->startTime();
     vacation.endDate = mDialog->endDate();
+    vacation.endTime = mDialog->endTime();
     const QString script = VacationUtils::composeScript(vacation);
     emit scriptActive(active, mServerName);
 

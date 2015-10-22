@@ -19,6 +19,13 @@
 #define VACATIONEDITWIDGET_H
 
 #include <QWidget>
+#include "vacationutils.h"
+class KDateComboBox;
+class KTimeComboBox;
+
+class QComboBox;
+class QDate;
+class QTime;
 
 class QLabel;
 class QSpinBox;
@@ -83,13 +90,24 @@ public:
     QDate startDate() const;
     void setStartDate(const QDate &startDate);
 
+    QTime startTime() const;
+    void setStartTime(const QTime &startTime);
+
     QDate endDate() const;
     void setEndDate(const QDate &endDate);
+
+    QTime endTime() const;
+    void setEndTime(const QTime &endTime);
+
+    VacationUtils::MailAction mailAction() const;
+    QString mailActionRecipient() const;
+    void setMailAction(VacationUtils::MailAction action, const QString &recipient);
 
     void setDefault();
 
 private Q_SLOTS:
     void slotIntervalSpinChanged(int value);
+    void mailActionChanged(int index);
 
 protected:
     QCheckBox *mActiveCheck;
@@ -100,9 +118,15 @@ protected:
     QCheckBox *mDomainCheck;
     QLineEdit *mDomainEdit;
     QLineEdit *mSubject;
+    QComboBox *mMailAction;
+    QLineEdit *mMailActionRecipient;
     KDateComboBox *mStartDate;
+    KTimeComboBox *mStartTime;
+    QCheckBox *mStartTimeActive;
     QLabel *mStartDateLabel;
     KDateComboBox *mEndDate;
+    KTimeComboBox *mEndTime;
+    QCheckBox *mEndTimeActive;
     QLabel *mEndDateLabel;
 };
 }

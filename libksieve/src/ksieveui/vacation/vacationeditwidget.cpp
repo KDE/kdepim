@@ -20,10 +20,12 @@
 
 #include <KLocalizedString>
 #include <KDateComboBox>
+#include <KTimeComboBox>
 #include <QSpinBox>
 #include <QLineEdit>
 
 #include <kpimtextedit/plaintexteditorwidget.h>
+#include "libksieve_debug.h"
 
 #include <kmime/kmime_header_parsing.h>
 
@@ -31,6 +33,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QDialog>
+#include <QVBoxLayout>
 
 using KMime::Types::AddrSpecList;
 using KMime::Types::AddressList;
@@ -75,22 +78,51 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     glay->addWidget(tmpLabel, row, 0);
     glay->addWidget(mSubject, row, 1);
 
+    QHBoxLayout *timeLayout = new QHBoxLayout(this);
     // Start date
-    ++row;
     mStartDate = new KDateComboBox(this);
     mStartDate->setObjectName(QStringLiteral("mStartDate"));
     mStartDate->setOptions(KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords);
+
+    mStartTime = new KTimeComboBox(this);
+    mStartTime->setObjectName(QStringLiteral("mStartTime"));
+    mStartTime->setOptions(KTimeComboBox::EditTime | KTimeComboBox::SelectTime | KTimeComboBox::EditTime | KTimeComboBox::WarnOnInvalid);
+    mStartTime->setEnabled(false); // Disable by default - we need an extension to support this
+
+    mStartTimeActive = new QCheckBox(this);
+    connect(mStartTimeActive, &QCheckBox::toggled, mStartTime, &KTimeComboBox::setEnabled);
+
+    timeLayout->addWidget(mStartDate);
+    timeLayout->addWidget(mStartTimeActive);
+    timeLayout->addWidget(mStartTime);
+
+    ++row;
     mStartDateLabel = new QLabel(i18n("&Start date:"), this);
     mStartDateLabel->setObjectName(QStringLiteral("mStartDateLabel"));
     mStartDateLabel->setBuddy(mStartDate);
     glay->addWidget(mStartDateLabel, row, 0);
-    glay->addWidget(mStartDate, row, 1);
+    glay->addLayout(timeLayout, row, 1);
 
     // End date
-    ++row;
+    timeLayout = new QHBoxLayout(this);
+
     mEndDate = new KDateComboBox(this);
     mEndDate->setObjectName(QStringLiteral("mEndDate"));
     mEndDate->setOptions(KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::DateKeywords);
+
+    mEndTime = new KTimeComboBox(this);
+    mEndTime->setObjectName(QStringLiteral("mEndTime"));
+    mEndTime->setOptions(KTimeComboBox::EditTime | KTimeComboBox::SelectTime | KTimeComboBox::EditTime | KTimeComboBox::WarnOnInvalid);
+    mEndTime->setEnabled(false); // Disable by default - we need an extension to support this
+
+    mEndTimeActive = new QCheckBox(this);
+    connect(mEndTimeActive, &QCheckBox::toggled, mEndTime, &KTimeComboBox::setEnabled);
+
+    timeLayout->addWidget(mEndDate);
+    timeLayout->addWidget(mEndTimeActive);
+    timeLayout->addWidget(mEndTime);
+
+    ++row;
     mEndDateLabel = new QLabel(i18n("&End date:"), this);
     mEndDateLabel->setObjectName(QStringLiteral("mStartDateLabel"));
     mEndDateLabel->setBuddy(mEndDate);
@@ -126,6 +158,30 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     tmpLabel->setBuddy(mMailAliasesEdit);
     glay->addWidget(tmpLabel, row, 0);
     glay->addWidget(mMailAliasesEdit, row, 1);
+
+    // Action for incomming mails
+    mMailAction = new QComboBox(this);
+    for (int i = 0; i < 4; ++i) {
+        mMailAction->addItem(VacationUtils::mailAction((VacationUtils::MailAction) i));
+    }
+    mMailAction->setObjectName(QStringLiteral("mMailAction"));
+    connect(mMailAction, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &VacationEditWidget::mailActionChanged);
+
+    mMailActionRecipient = new QLineEdit(this);
+    mMailActionRecipient->setObjectName(QStringLiteral("mMailActionRecipient"));
+    mMailActionRecipient->setClearButtonEnabled(true);
+    mMailActionRecipient->setEnabled(false);
+
+    QHBoxLayout *hLayout = new QHBoxLayout(this);
+
+    hLayout->addWidget(mMailAction);
+    hLayout->addWidget(mMailActionRecipient);
+
+    ++row;
+    tmpLabel = new QLabel(i18n("&Action for incomming mails:"), this);
+    tmpLabel->setBuddy(mMailAction);
+    glay->addWidget(tmpLabel, row, 0);
+    glay->addLayout(hLayout, row, 1);
 
     // "Send responses also to SPAM mail" checkbox:
     ++row;
@@ -271,6 +327,22 @@ void VacationEditWidget::setEndDate(const QDate &endDate)
     mEndDate->setDate(endDate);
 }
 
+QTime VacationEditWidget::endTime() const
+{
+    if (mEndTime->isEnabled()) {
+        return mEndTime->time();
+    } else {
+        return QTime();
+    }
+}
+
+void VacationEditWidget::setEndTime(const QTime &endTime)
+{
+    mEndTimeActive->setChecked(endTime.isValid());
+    mEndTime->setEnabled(endTime.isValid());
+    mEndTime->setTime(endTime);
+}
+
 QDate VacationEditWidget::startDate() const
 {
     if (mStartDate->isEnabled()) {
@@ -283,6 +355,22 @@ QDate VacationEditWidget::startDate() const
 void VacationEditWidget::setStartDate(const QDate &startDate)
 {
     mStartDate->setDate(startDate);
+}
+
+QTime VacationEditWidget::startTime() const
+{
+    if (mStartTime->isEnabled()) {
+        return mStartTime->time();
+    } else {
+        return QTime();
+    }
+}
+
+void VacationEditWidget::setStartTime(const QTime &startTime)
+{
+    mStartTimeActive->setChecked(startTime.isValid());
+    mStartTime->setEnabled(startTime.isValid());
+    mStartTime->setTime(startTime);
 }
 
 void VacationEditWidget::setSubject(const QString &subject)
@@ -307,6 +395,28 @@ void VacationEditWidget::enableDates(bool enable)
     mEndDateLabel->setVisible(enable);
 }
 
+void VacationEditWidget::mailActionChanged(int action)
+{
+    bool enable = (action == VacationUtils::CopyTo || action == VacationUtils::Sendto);
+    mMailActionRecipient->setEnabled(enable);
+}
+
+void VacationEditWidget::setMailAction(VacationUtils::MailAction action, const QString &recipient)
+{
+    mMailAction->setCurrentIndex(action);
+    mMailActionRecipient->setText(recipient);
+}
+
+VacationUtils::MailAction VacationEditWidget::mailAction() const
+{
+    return static_cast<VacationUtils::MailAction>(mMailAction->currentIndex());
+}
+
+QString VacationEditWidget::mailActionRecipient() const
+{
+    return mMailActionRecipient->text();
+}
+
 void VacationEditWidget::enableDomainAndSendForSpam(bool enable)
 {
     mDomainCheck->setEnabled(enable);
@@ -323,5 +433,6 @@ void VacationEditWidget::setDefault()
     setMailAliases(VacationUtils::defaultMailAliases());
     setSendForSpam(VacationUtils::defaultSendForSpam());
     setDomainName(VacationUtils::defaultDomainName());
+    setMailAction(VacationUtils::defaultMailAction(), QString());
     setDomainCheck(false);
 }
