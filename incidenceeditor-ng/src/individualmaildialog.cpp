@@ -54,8 +54,10 @@ IndividualMailDialog::IndividualMailDialog(const QString &question, const KCalCo
         layout->addWidget(options, row, 1);
         ++row;
     }
-    widget->sizePolicy().setHorizontalStretch(1);
-    widget->sizePolicy().setVerticalStretch(1);
+    QSizePolicy sizePolicy = widget->sizePolicy();
+    sizePolicy.setHorizontalStretch(1);
+    sizePolicy.setVerticalStretch(1);
+    widget->setSizePolicy(sizePolicy);
 
     QWidget *mW = new QLabel(question);
 
