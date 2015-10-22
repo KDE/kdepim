@@ -1165,25 +1165,17 @@ bool ObjectTreeParser::processMultiPartParallelSubtype(KMime::Content *node, Pro
 
 MessagePart::Ptr ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content *node, ProcessResult &)
 {
-    KMime::Content *child = MessageCore::NodeHelper::firstChild(node);
+    KMime::Content *signedData = MessageCore::NodeHelper::firstChild(node);
+    assert(signedData);
     if (node->contents().size() != 2) {
         qCDebug(MESSAGEVIEWER_LOG) << "mulitpart/signed must have exactly two child parts!" << endl
                                    << "processing as multipart/mixed";
 
-        return MessagePart::Ptr(new MimeMessagePart(this, child, false));
+        return MessagePart::Ptr(new MimeMessagePart(this, signedData, false));
     }
-
-    KMime::Content *signedData = child;
-    assert(signedData);
 
     KMime::Content *signature = node->contents().at(1);
     assert(signature);
-
-    mNodeHelper->setNodeProcessed(signature, true);
-
-    if (!includeSignatures()) {
-        return MessagePart::Ptr(new MimeMessagePart(this, signedData, false));
-    }
 
     QString protocolContentType = node->contentType()->parameter(QStringLiteral("protocol")).toLower();
     const QString signatureContentType = QLatin1String(signature->contentType()->mimeType().toLower());
@@ -1203,9 +1195,10 @@ MessagePart::Ptr ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content 
     }
 
     if (!protocol) {
-        mNodeHelper->setNodeProcessed(signature, true);
         return MessagePart::Ptr(new MimeMessagePart(this, signedData, false));
     }
+
+    mNodeHelper->setNodeProcessed(signature, true);
 
     CryptoProtocolSaver saver(this, protocol);
     mNodeHelper->setSignatureState(node, KMMsgFullySigned);
