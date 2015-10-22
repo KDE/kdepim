@@ -21,7 +21,7 @@
 #include <QDialog>
 #include "utils.h"
 class SelectionTypeTreeWidget;
-
+class QCheckBox;
 class SelectionTypeDialog : public QDialog
 {
     Q_OBJECT
@@ -42,7 +42,10 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
+    void loadDefaultTemplate();
+    void saveDefaultTemplate();
     SelectionTypeTreeWidget *mSelectionTreeWidget;
+    QCheckBox *mUseTemplateByDefault;
 };
 
 #endif // SELECTIONTYPEDIALOG_H
