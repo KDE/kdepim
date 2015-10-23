@@ -50,6 +50,7 @@ Q_GLOBAL_STATIC(AddresseeLineEditStatic, s_static)
 AddresseeLineEditPrivate::AddresseeLineEditPrivate(KPIM::AddresseeLineEdit *qq, bool enableCompletion)
     : QObject(qq),
       q(qq),
+      m_recentAddressConfig(Q_NULLPTR),
       m_useCompletion(enableCompletion),
       m_completionInitialized(false),
       m_smartPaste(false),
@@ -873,9 +874,19 @@ void AddresseeLineEditPrivate::slotConfigureBalooBlackList()
     delete dlg;
 }
 
+KConfig *AddresseeLineEditPrivate::recentAddressConfig() const
+{
+    return m_recentAddressConfig;
+}
+
 bool AddresseeLineEditPrivate::showRecentAddresses() const
 {
     return mShowRecentAddresses;
+}
+
+void AddresseeLineEditPrivate::setRecentAddressConfig(KConfig *config)
+{
+    m_recentAddressConfig = config;
 }
 
 KContacts::ContactGroup::List AddresseeLineEditPrivate::groups() const

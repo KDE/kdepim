@@ -30,6 +30,8 @@
 #include <KLDAP/LdapServer>
 #include <kcontacts/contactgroup.h>
 
+class KConfig;
+
 namespace KPIM
 {
 class AddresseeLineEdit;
@@ -109,6 +111,9 @@ public:
     bool groupsIsEmpty() const;
     void setShowRecentAddresses(bool b);
     bool showRecentAddresses() const;
+    void setRecentAddressConfig(KConfig *config);
+
+    KConfig *recentAddressConfig() const;
 
 public Q_SLOTS:
     void slotShowOUChanged(bool);
@@ -138,6 +143,7 @@ private:
     QString m_searchString;
     QList<KJob *> mMightBeGroupJobs;
     KContacts::ContactGroup::List mGroups;
+    KConfig *m_recentAddressConfig;
     bool m_useCompletion;
     bool m_completionInitialized;
     bool m_smartPaste;

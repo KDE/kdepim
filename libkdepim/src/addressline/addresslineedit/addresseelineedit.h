@@ -38,6 +38,7 @@ class QMenu;
 class QMouseEvent;
 class QObject;
 class KJob;
+class KConfig;
 namespace Akonadi
 {
 class Item;
@@ -160,6 +161,9 @@ public:
     bool autoGroupExpand() const;
     void setShowRecentAddresses(bool b);
     bool showRecentAddresses() const;
+    void setRecentAddressConfig(KConfig *config);
+    KConfig *recentAddressConfig() const;
+    void configureCompletion();
 protected:
     /**
      * Reimplemented for smart insertion of email addresses.
@@ -210,9 +214,11 @@ protected:
     QStringList cleanupEmailList(const QStringList &inputList);
     virtual void configureCompletionOrder(QMenu *menu);
     void insertEmails(const QStringList &emails);
+    void loadContacts();
 
 private Q_SLOTS:
     void groupExpandResult(KJob *job);
+    void slotToggleExpandGroups();
 private:
     bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
 

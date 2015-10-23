@@ -30,7 +30,6 @@ class KJob;
 class KConfig;
 namespace MessageComposer
 {
-class ComposerLineEditPrivate;
 class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
 {
     Q_OBJECT
@@ -38,7 +37,6 @@ class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
 public:
     explicit ComposerLineEdit(bool useCompletion, QWidget *parent = Q_NULLPTR);
     ~ComposerLineEdit();
-    void setRecentAddressConfig(KConfig *config);
 
 Q_SIGNALS:
     void focusUp();
@@ -46,22 +44,7 @@ Q_SIGNALS:
 
 protected:
 
-    // Inherited. Always called by the parent when this widget is created.
-    virtual void loadContacts();
-
     void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
-
-    void configureCompletionOrder(QMenu *menu) Q_DECL_OVERRIDE;
-#ifndef QT_NO_CONTEXTMENU
-    void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
-#endif
-
-private Q_SLOTS:
-    void slotToggleExpandGroups();
-    void configureCompletion();
-
-private:
-    ComposerLineEditPrivate *const d;
 };
 
 }
