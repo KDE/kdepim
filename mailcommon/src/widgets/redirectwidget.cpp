@@ -25,7 +25,7 @@
 #include <KIconLoader>
 #include <MessageComposer/ComposerLineEdit>
 
-#include <messageviewer/autoqpointer.h>
+#include <libkdepim/autoqpointer.h>
 
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
@@ -83,7 +83,7 @@ void RedirectWidget::setFocus()
 
 void RedirectWidget::slotAddressSelection()
 {
-    MessageViewer::AutoQPointer<Akonadi::EmailAddressSelectionDialog> dlg(
+    KPIM::AutoQPointer<Akonadi::EmailAddressSelectionDialog> dlg(
         new Akonadi::EmailAddressSelectionDialog(this));
 
     dlg->view()->view()->setSelectionMode(QAbstractItemView::MultiSelection);

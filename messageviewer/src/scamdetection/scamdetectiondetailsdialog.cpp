@@ -18,7 +18,7 @@
 #include "scamdetectiondetailsdialog.h"
 #include "messageviewer_debug.h"
 #include "settings/messageviewersettings.h"
-#include "messageviewer/autoqpointer.h"
+#include "libkdepim/autoqpointer.h"
 #include "kpimtextedit/richtexteditorwidget.h"
 
 #include <KLocalizedString>
@@ -67,7 +67,7 @@ ScamDetectionDetailsDialog::~ScamDetectionDetailsDialog()
 void ScamDetectionDetailsDialog::slotSaveAs()
 {
     QUrl url;
-    MessageViewer::AutoQPointer<QFileDialog> fdlg(new QFileDialog(this, QString(), url.path()));
+    KPIM::AutoQPointer<QFileDialog> fdlg(new QFileDialog(this, QString(), url.path()));
     fdlg->setAcceptMode(QFileDialog::AcceptSave);
     fdlg->setFileMode(QFileDialog::AnyFile);
     fdlg->selectFile(QStringLiteral("scam-detection.html"));

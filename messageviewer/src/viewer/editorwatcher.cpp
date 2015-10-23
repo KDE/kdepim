@@ -18,7 +18,7 @@
 
 #include <config-messageviewer.h>
 #include "editorwatcher.h"
-#include "messageviewer/autoqpointer.h"
+#include "libkdepim/autoqpointer.h"
 #include "messageviewer_debug.h"
 
 #include <KLocalizedString>
@@ -77,7 +77,7 @@ EditorWatcher::ErrorEditorWatcher EditorWatcher::start()
     list.append(mUrl);
     KService::Ptr offer = KMimeTypeTrader::self()->preferredService(mMimeType, QStringLiteral("Application"));
     if ((mOpenWithOption == OpenWithDialog) || !offer) {
-        AutoQPointer<KOpenWithDialog> dlg(new KOpenWithDialog(list, i18n("Edit with:"),
+        KPIM::AutoQPointer<KOpenWithDialog> dlg(new KOpenWithDialog(list, i18n("Edit with:"),
                                           QString(), mParentWidget));
         const int dlgrc = dlg->exec();
         if (dlgrc && dlg) {

@@ -41,7 +41,7 @@
 #include "filterimporter/filterimportergmail.h"
 #include "dialog/selectthunderbirdfilterfilesdialog.h"
 
-#include <messageviewer/autoqpointer.h>
+#include <libkdepim/autoqpointer.h>
 #include <MessageViewer/MessageViewerUtil>
 
 #include <KConfig>
@@ -364,7 +364,7 @@ void FilterImporterExporter::exportFilters(const QList<MailFilter *> &filters, c
         writeFiltersToConfig(filters, config, true);
         //qDeleteAll(filters);
     } else {
-        MessageViewer::AutoQPointer<FilterSelectionDialog> dlg(new FilterSelectionDialog(d->mParent));
+        KPIM::AutoQPointer<FilterSelectionDialog> dlg(new FilterSelectionDialog(d->mParent));
         dlg->setFilters(filters);
         if (dlg->exec() == QDialog::Accepted && dlg) {
             QList<MailFilter *> lst = dlg->selectedFilters();

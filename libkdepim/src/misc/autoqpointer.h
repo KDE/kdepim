@@ -19,13 +19,13 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef MESSAGEVIEWER_AUTOQPOINTER_H
-#define MESSAGEVIEWER_AUTOQPOINTER_H
+#ifndef KPIM_AUTOQPOINTER_H
+#define KPIM_AUTOQPOINTER_H
 
 #include <QPointer>
 #include <QObject>
 
-namespace MessageViewer
+namespace KPIM
 {
 
 /**
@@ -86,4 +86,4 @@ public:
 
 }
 
-#endif // MESSAGEVIEWER_AUTOQPOINTER_H
+#endif // KPIM_AUTOQPOINTER_H

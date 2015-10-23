@@ -304,7 +304,6 @@ ecm_generate_headers(MessageViewer_Camelcasewidgets_HEADERS
 ecm_generate_headers(MessageViewer_Camelcaseutils_HEADERS
   HEADER_NAMES
   MessageViewerUtil
-  AutoQPointer
   MarkMessageReadHandler
   REQUIRED_HEADERS MessageViewer_utils_HEADERS
   PREFIX MessageViewer

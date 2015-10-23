@@ -32,7 +32,7 @@
 #include "util/mailutil.h"
 #include "kernel/mailkernel.h"
 
-#include <messageviewer/autoqpointer.h>
+#include <libkdepim/autoqpointer.h>
 
 #include <CollectionFetchJob>
 
@@ -104,7 +104,7 @@ void FolderRequester::slotOpenDialog()
         options |= FolderSelectionDialog::HideOutboxFolder;
     }
 
-    MessageViewer::AutoQPointer<FolderSelectionDialog> dlg(
+    KPIM::AutoQPointer<FolderSelectionDialog> dlg(
         new FolderSelectionDialog(this, options));
 
     dlg->setWindowTitle(i18n("Select Folder"));
