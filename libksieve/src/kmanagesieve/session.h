@@ -22,20 +22,26 @@
 #define KSIEVE_KMANAGESIEVE_SESSION_H
 
 #include "response.h"
-#include "sasl-common.h"
 
 #include <QUrl>
 #include <QObject>
 #include <QQueue>
 #include <QStringList>
 
-class QTimer;
-class KTcpSocket;
+class KSslErrorUiData;
 
 namespace KManageSieve
 {
 
 class SieveJob;
+class SessionThread;
+
+struct AuthDetails {
+    QString username;
+    QString password;
+    bool valid;
+};
+
 
 /** A network session with a manage sieve server.
  * @internal
@@ -43,6 +49,7 @@ class SieveJob;
 class Session : public QObject
 {
     Q_OBJECT
+
 public:
     explicit Session(QObject *parent = Q_NULLPTR);
     ~Session();
@@ -62,28 +69,22 @@ public:
 
 private:
     bool requestCapabilitiesAfterStartTls() const;
-    void startAuthentication();
+
     QStringList requestedSaslMethod() const;
     bool allowUnencrypted() const;
-    bool saslInteract(void *in);
-    bool saslClientStep(const QByteArray &challenge);
-    void processResponse(const Response &response, const QByteArray &data);
 
 private Q_SLOTS:
-    void dataReceived();
-    void socketError();
-    void startSsl();
+    void processResponse(const KManageSieve::Response &response, const QByteArray &data);
+    KManageSieve::AuthDetails requestAuthDetails(const QUrl &url);
+    void authenticationDone();
+    void sslError(const KSslErrorUiData &data);
+    void sslDone();
+
     void executeNextJob();
-    void slotSslTimeout();
-    void slotEncryptedDone();
 
 private:
-    void sslResult(bool encrypted);
-
+    SessionThread *m_thread;
     QUrl m_url;
-    KTcpSocket *m_socket;
-    sasl_conn_t *m_sasl_conn;
-    sasl_interact_t *m_sasl_client_interact;
     QQueue<SieveJob *> m_jobs;
     SieveJob *m_currentJob;
     QStringList m_sieveExtensions;
@@ -96,13 +97,12 @@ private:
         StartTls,
         Authenticating
     };
-    QTimer *m_sslCheck;
-    Response m_lastResponse;
-    QByteArray m_data;
     QString m_errorMsg;
-    qint64 m_pendingQuantity;
     State m_state;
     bool m_supportsStartTls;
+    bool m_connected;
+
+    friend class SessionThread;
 };
 
 }

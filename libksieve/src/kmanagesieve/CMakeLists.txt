@@ -6,6 +6,7 @@ include_directories(${SASL2_INCLUDE_DIR})
 set(kmanagesieve_LIB_SRCS
   response.cpp
   session.cpp
+  sessionthread.cpp
   sievejob.cpp
 )
 ecm_qt_declare_logging_category(kmanagesieve_LIB_SRCS HEADER kmanagersieve_debug.h IDENTIFIER KMANAGERSIEVE_LOG CATEGORY_NAME log_kmanagersieve)
