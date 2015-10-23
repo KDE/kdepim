@@ -19,17 +19,26 @@
 #define PIMSETTINGBACKUPTHREAD_H
 
 #include <QThread>
-
+class KZip;
 class PimSettingBackupThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit PimSettingBackupThread(QObject *parent = Q_NULLPTR);
+    explicit PimSettingBackupThread(KZip *zip, const QString &url, const QString &archivePath, const QString &archivename, QObject *parent = Q_NULLPTR);
     ~PimSettingBackupThread();
 
-    // QThread interface
+Q_SIGNALS:
+    void error(const QString &str);
+    void info(const QString &str);
+    void terminated(bool success);
+
 protected:
     void run() Q_DECL_OVERRIDE;
+private:
+    QString mUrl;
+    QString mArchivePath;
+    QString mArchiveName;
+    KZip *mZip;
 };
 
 #endif // PIMSETTINGBACKUPTHREAD_H
