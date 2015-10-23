@@ -100,21 +100,6 @@ void ExportNotesJob::backupData()
     showInfo(i18n("Backing up data..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 
-#if 0  //Code for knote <knote-akonadi
-    const QString icsfileStr = QLatin1String("notes.ics");
-    const QString icsfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/knotes/") + icsfileStr;
-
-    backupFile(icsfile, Utils::dataPath() +  QLatin1String("/knotes/"), icsfileStr);
-
-    const QString notesDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/knotes/notes/");
-    QDir notesDirectory(notesDir);
-    if (notesDirectory.exists()) {
-        const bool notesDirAdded = archive()->addLocalDirectory(notesDir, Utils::dataPath() +  QLatin1String("/knotes/notes/"));
-        if (!notesDirAdded) {
-            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", notesDir));
-        }
-    }
-#endif
     const QString notesThemeDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/knotes/print/");
 
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
