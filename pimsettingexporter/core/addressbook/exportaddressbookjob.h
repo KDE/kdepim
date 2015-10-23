@@ -32,11 +32,13 @@ public:
     void start() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-    void slotStartExport();
     void slotCheckBackupConfig();
+    void slotCheckBackupResource();
+    void slotWriteResource();
+    void slotAddressbookJobTerminated();
 private:
-    void backupResources();
     void backupConfig();
+    int mIndexIdentifier;
 };
 
 #endif // EXPORTADDRESSBOOKJOB_H

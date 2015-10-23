@@ -16,11 +16,16 @@
 */
 
 #include "exportaddressbookresourcejob.h"
-
+#include "utils.h"
 #include <pimsettingbackupthread.h>
+#include <KLocalizedString>
+#include <KZip>
+#include <QDebug>
+#include <QFileInfo>
 
-ExportAddressbookResourceJob::ExportAddressbookResourceJob(KZip *zip, const QString &url, const QString &archivePath, const QString &archivename, QObject *parent)
-    : QObject(parent)
+ExportAddressbookResourceJob::ExportAddressbookResourceJob(QObject *parent)
+    : QObject(parent),
+      mZip(Q_NULLPTR)
 {
 
 }
@@ -30,27 +35,44 @@ ExportAddressbookResourceJob::~ExportAddressbookResourceJob()
 
 }
 
+void ExportAddressbookResourceJob::setArchive(KZip *zip)
+{
+    mZip = zip;
+}
+
+void ExportAddressbookResourceJob::finished()
+{
+    Q_EMIT terminated();
+    deleteLater();
+}
+
 void ExportAddressbookResourceJob::start()
 {
-    PimSettingBackupThread *thread = new PimSettingBackupThread(archive(), url, archivePath, QStringLiteral("addressbook.zip"));
-    connect(thread, &PimSettingBackupThread::error, this, &ExportAddressbookResourceJob::error);
-    connect(thread, &PimSettingBackupThread::info, this, &ExportAddressbookResourceJob::info);
-    connect(thread, &PimSettingBackupThread::terminated, this, &ExportAddressbookResourceJob::slotTerminated);
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    if (mZip) {
+        PimSettingBackupThread *thread = new PimSettingBackupThread(mZip, mUrl, mArchivePath, QStringLiteral("addressbook.zip"));
+        connect(thread, &PimSettingBackupThread::error, this, &ExportAddressbookResourceJob::error);
+        connect(thread, &PimSettingBackupThread::info, this, &ExportAddressbookResourceJob::info);
+        connect(thread, &PimSettingBackupThread::terminated, this, &ExportAddressbookResourceJob::slotTerminated);
+        connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+        thread->start();
+    } else {
+        qDebug() << "zip not defined !";
+        finished();
+    }
 }
 
 void ExportAddressbookResourceJob::slotTerminated(bool success)
 {
     if (success) {
-        const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+        const QString errorStr = Utils::storeResources(mZip, mIdentifier, mArchivePath);
         if (!errorStr.isEmpty()) {
             Q_EMIT error(errorStr);
         }
-        url = Utils::akonadiAgentConfigPath(identifier);
+        QString url = Utils::akonadiAgentConfigPath(mIdentifier);
         if (!url.isEmpty()) {
             QFileInfo fi(url);
             const QString filename = fi.fileName();
-            const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
+            const bool fileAdded  = mZip->addLocalFile(mUrl, mArchivePath + filename);
             if (fileAdded) {
                 Q_EMIT info(i18n("\"%1\" was backed up.", filename));
             } else {
@@ -58,5 +80,20 @@ void ExportAddressbookResourceJob::slotTerminated(bool success)
             }
         }
     }
-    Q_EMIT terminated();
+    finished();
+}
+
+void ExportAddressbookResourceJob::setIdentifier(const QString &identifier)
+{
+    mIdentifier = identifier;
+}
+
+void ExportAddressbookResourceJob::setUrl(const QString &url)
+{
+    mUrl = url;
+}
+
+void ExportAddressbookResourceJob::setArchivePath(const QString &archivePath)
+{
+    mArchivePath = archivePath;
 }

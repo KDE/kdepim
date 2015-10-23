@@ -20,7 +20,7 @@
 #define EXPORTADDRESSBOOKRESOURCEJOB_H
 
 #include <QObject>
-
+class KZip;
 class ExportAddressbookResourceJob : public QObject
 {
     Q_OBJECT
@@ -28,6 +28,14 @@ public:
     explicit ExportAddressbookResourceJob(QObject *parent = Q_NULLPTR);
     ~ExportAddressbookResourceJob();
 
+    void setArchivePath(const QString &archivePath);
+
+    void setUrl(const QString &url);
+
+    void setIdentifier(const QString &identifier);
+
+    void setArchive(KZip *zip);
+    void start();
 Q_SIGNALS:
     void error(const QString &str);
     void info(const QString &str);
@@ -35,6 +43,12 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void slotTerminated(bool success);
+private:
+    void finished();
+    QString mUrl;
+    QString mArchivePath;
+    QString mIdentifier;
+    KZip *mZip;
 };
 
 #endif // EXPORTADDRESSBOOKRESOURCEJOB_H

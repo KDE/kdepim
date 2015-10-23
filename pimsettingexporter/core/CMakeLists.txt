@@ -12,6 +12,7 @@ set(pimsettingexporter_calendar_SRCS
 set(pimsettingexporter_addressbook_SRCS
   addressbook/exportaddressbookjob.cpp
   addressbook/importaddressbookjob.cpp
+  addressbook/exportaddressbookresourcejob.cpp
 )
 
 set(pimsettingexporter_mail_SRCS
