@@ -108,7 +108,7 @@ void ExportNotesJob::backupData()
         const QString identifier = agent.identifier();
         if (identifier.contains(QStringLiteral("akonadi_akonotes_resource_"))) {
             const QString archivePath = Utils::notePath() + identifier + QDir::separator();
-            QUrl url = Utils::resourcePath(agent);
+            QString url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
                 const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("notes.zip"));
                 if (fileAdded) {
@@ -118,8 +118,9 @@ void ExportNotesJob::backupData()
                     }
                     url = Utils::akonadiAgentConfigPath(identifier);
                     if (!url.isEmpty()) {
-                        const QString filename = url.fileName();
-                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                        QFileInfo fi(url);
+                        const QString filename = fi.fileName();
+                        const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
                         if (fileAdded) {
                             Q_EMIT info(i18n("\"%1\" was backed up.", filename));
                         } else {

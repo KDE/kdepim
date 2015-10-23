@@ -74,9 +74,9 @@ void ExportAddressbookJob::backupResources()
         if (identifier.contains(QStringLiteral("akonadi_vcarddir_resource_")) || identifier.contains(QStringLiteral("akonadi_contacts_resource_"))) {
             const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
-            QUrl url = Utils::resourcePath(agent, QStringLiteral("$HOME/.local/share/contacts/"));
-            if (!mAgentPaths.contains(url.path())) {
-                mAgentPaths << url.path();
+            QString url = Utils::resourcePath(agent, QStringLiteral("$HOME/.local/share/contacts/"));
+            if (!mAgentPaths.contains(url)) {
+                mAgentPaths << url;
                 if (!url.isEmpty()) {
                     const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("addressbook.zip"));
                     if (fileAdded) {
@@ -85,9 +85,10 @@ void ExportAddressbookJob::backupResources()
                             Q_EMIT error(errorStr);
                         }
                         url = Utils::akonadiAgentConfigPath(identifier);
-                        if (url.isValid()) {
-                            const QString filename = url.fileName();
-                            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                        if (!url.isEmpty()) {
+                            QFileInfo fi(url);
+                            const QString filename = fi.fileName();
+                            const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
                             if (fileAdded) {
                                 Q_EMIT info(i18n("\"%1\" was backed up.", filename));
                             } else {

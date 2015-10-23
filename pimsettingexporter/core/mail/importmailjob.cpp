@@ -475,7 +475,7 @@ void ImportMailJob::restoreMails()
             //qCDebug(PIMSETTINGEXPORTERCORE_LOG)<<" filename "<<filename<<" resourceName"<<resourceName;
             KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-            const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails());
+            const QString newUrl = Utils::adaptResourcePath(resourceConfig, storeMails());
 
             const QString agentConfigFile = value.akonadiAgentConfigFile;
             if (!agentConfigFile.isEmpty()) {
@@ -494,9 +494,9 @@ void ImportMailJob::restoreMails()
                 const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                 if (dataResouceEntry->isFile()) {
                     const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
-                    file->copyTo(newUrl.path());
+                    file->copyTo(newUrl);
                 }
-                settings.insert(QStringLiteral("Path"), newUrl.path());
+                settings.insert(QStringLiteral("Path"), newUrl);
 
                 KConfigGroup general = resourceConfig->group(QStringLiteral("General"));
                 if (general.hasKey(QStringLiteral("DisplayName"))) {
@@ -535,7 +535,7 @@ void ImportMailJob::restoreMails()
 
             } else if (resourceName.contains(QStringLiteral("akonadi_maildir_resource_")) ||
                        resourceName.contains(QStringLiteral("akonadi_mixedmaildir_resource_"))) {
-                settings.insert(QStringLiteral("Path"), newUrl.path());
+                settings.insert(QStringLiteral("Path"), newUrl);
                 KConfigGroup general = resourceConfig->group(QStringLiteral("General"));
                 if (general.hasKey(QStringLiteral("TopLevelIsContainer"))) {
                     settings.insert(QStringLiteral("TopLevelIsContainer"), general.readEntry(QStringLiteral("TopLevelIsContainer"), false));
@@ -561,7 +561,7 @@ void ImportMailJob::restoreMails()
                 if (dataResouceEntry && dataResouceEntry->isFile()) {
                     const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                     //TODO Fix me not correct zip filename.
-                    extractZipFile(file, copyToDirName, newUrl.path());
+                    extractZipFile(file, copyToDirName, newUrl);
                 }
                 listResourceToSync << newResource;
             } else {

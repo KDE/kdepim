@@ -475,7 +475,7 @@ void ExportMailJob::backupMails()
                 } else if (identifier.contains(QStringLiteral("akonadi_maildir_resource_")) ||
                            identifier.contains(QStringLiteral("akonadi_mixedmaildir_resource_"))) {
                     //Store akonadi agent config
-                    QUrl url = Utils::resourcePath(agent);
+                    QString url = Utils::resourcePath(agent);
 
                     const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("mail.zip"));
                     if (fileAdded) {
@@ -485,8 +485,9 @@ void ExportMailJob::backupMails()
                         }
                         url = Utils::akonadiAgentConfigPath(identifier);
                         if (!url.isEmpty()) {
-                            const QString filename = url.fileName();
-                            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                            QFileInfo fi(url);
+                            const QString filename = fi.fileName();
+                            const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
                             if (fileAdded) {
                                 Q_EMIT info(i18n("\"%1\" was backed up.", filename));
                             } else {

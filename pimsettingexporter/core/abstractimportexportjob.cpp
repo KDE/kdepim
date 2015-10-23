@@ -256,11 +256,12 @@ void AbstractImportExportJob::backupResourceDirectory(const Akonadi::AgentInstan
     const QString identifier = agent.identifier();
     const QString archivePath = defaultPath + identifier + QDir::separator();
 
-    QUrl url = Utils::resourcePath(agent);
+    QString url = Utils::resourcePath(agent);
     if (!url.isEmpty()) {
-        QString filename = url.fileName();
-        if (QDir(url.path()).exists()) {
-            const bool fileAdded  = archive()->addLocalDirectory(url.path(), archivePath + filename);
+        QFileInfo fi(url);
+        QString filename = fi.fileName();
+        if (QDir(url).exists()) {
+            const bool fileAdded  = archive()->addLocalDirectory(url, archivePath + filename);
             if (fileAdded) {
                 const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                 if (!errorStr.isEmpty()) {
@@ -270,10 +271,11 @@ void AbstractImportExportJob::backupResourceDirectory(const Akonadi::AgentInstan
 
                 url = Utils::akonadiAgentConfigPath(identifier);
                 if (!url.isEmpty()) {
-                    filename = url.fileName();
+                    fi = QFileInfo(url);
+                    filename = fi.fileName();
 
-                    if (QDir(url.path()).exists()) {
-                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                    if (QDir(url).exists()) {
+                        const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
                         if (fileAdded) {
                             Q_EMIT info(i18n("\"%1\" was backed up.", filename));
                         } else {
@@ -296,10 +298,11 @@ void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &a
     const QString identifier = agent.identifier();
     const QString archivePath = defaultPath + identifier + QDir::separator();
 
-    QUrl url = Utils::resourcePath(agent);
+    QString url = Utils::resourcePath(agent);
     if (!url.isEmpty()) {
-        QString filename = url.fileName();
-        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+        QFileInfo fi(url);
+        QString filename = fi.fileName();
+        const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
         if (fileAdded) {
             const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
             if (!errorStr.isEmpty()) {
@@ -309,8 +312,9 @@ void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &a
 
             url = Utils::akonadiAgentConfigPath(identifier);
             if (!url.isEmpty()) {
-                filename = url.fileName();
-                const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                fi = QFileInfo(url);
+                filename = fi.fileName();
+                const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
                 if (fileAdded) {
                     Q_EMIT info(i18n("\"%1\" was backed up.", filename));
                 } else {
@@ -349,7 +353,7 @@ QStringList AbstractImportExportJob::restoreResourceFile(const QString &resource
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    QUrl newUrl;
+                    QString newUrl;
                     if (overwriteResources) {
                         newUrl = Utils::resourcePath(resourceConfig);
                     } else {
@@ -359,9 +363,9 @@ QStringList AbstractImportExportJob::restoreResourceFile(const QString &resource
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
-                        file->copyTo(newUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path());
+                        file->copyTo(newUrl);
                     }
-                    settings.insert(QStringLiteral("Path"), newUrl.path());
+                    settings.insert(QStringLiteral("Path"), newUrl);
 
                     const QString agentConfigFile = value.akonadiAgentConfigFile;
                     if (!agentConfigFile.isEmpty()) {

@@ -79,7 +79,7 @@ struct importExportParameters {
     Utils::StoredTypes types;
 };
 
-QUrl resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath = QString());
+QString resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath = QString());
 PIMSETTINGEXPORTER_EXPORT QString transportsPath();
 PIMSETTINGEXPORTER_EXPORT QString resourcesPath();
 PIMSETTINGEXPORTER_EXPORT QString identitiesPath();
@@ -100,10 +100,10 @@ void convertCollectionListToRealPath(KConfigGroup &group, const QString &current
 void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey);
 void convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentKey);
 
-QUrl resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath = QString());
-QUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
+QString resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath = QString());
+QString adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
 QString storeResources(KZip *archive, const QString &identifier, const QString &path);
-QUrl akonadiAgentConfigPath(const QString &identifier);
+QString akonadiAgentConfigPath(const QString &identifier);
 KZip *openZip(const QString &filename, QString &errorMsg);
 
 void addVersion(KZip *archive);

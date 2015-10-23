@@ -79,10 +79,10 @@ void ExportCalendarJob::backupResources()
         if (identifier.contains(QStringLiteral("akonadi_icaldir_resource_"))) {
             const QString archivePath = Utils::calendarPath() + identifier + QDir::separator();
 
-            QUrl url = Utils::resourcePath(agent);
-            if (!mAgentPaths.contains(url.path())) {
+            QString url = Utils::resourcePath(agent);
+            if (!mAgentPaths.contains(url)) {
                 if (!url.isEmpty()) {
-                    mAgentPaths << url.path();
+                    mAgentPaths << url;
                     const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("calendar.zip"));
                     if (fileAdded) {
                         const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
@@ -91,8 +91,9 @@ void ExportCalendarJob::backupResources()
                         }
                         url = Utils::akonadiAgentConfigPath(identifier);
                         if (!url.isEmpty()) {
-                            const QString filename = url.fileName();
-                            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                            QFileInfo fi(url);
+                            const QString filename = fi.fileName();
+                            const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
                             if (fileAdded) {
                                 Q_EMIT info(i18n("\"%1\" was backed up.", filename));
                             } else {

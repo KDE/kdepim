@@ -100,15 +100,15 @@ void ImportAddressbookJob::restoreResources()
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
                     //TODO fix default path
-                    const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, QDir::homePath() + QLatin1String("/.local/share/contacts/"));
+                    const QString newUrl = Utils::adaptResourcePath(resourceConfig, QDir::homePath() + QLatin1String("/.local/share/contacts/"));
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                         //TODO  adapt directory name too
-                        extractZipFile(file, copyToDirName, newUrl.path());
+                        extractZipFile(file, copyToDirName, newUrl);
                     }
-                    settings.insert(QStringLiteral("Path"), newUrl.path());
+                    settings.insert(QStringLiteral("Path"), newUrl);
 
                     const QString agentConfigFile = value.akonadiAgentConfigFile;
                     if (!agentConfigFile.isEmpty()) {

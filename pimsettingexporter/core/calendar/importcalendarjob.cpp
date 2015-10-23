@@ -106,16 +106,16 @@ void ImportCalendarJob::restoreResources()
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    const QUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeCalendar());
+                    const QString newUrl = Utils::adaptResourcePath(resourceConfig, storeCalendar());
 
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry *dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
                         const KArchiveFile *file = static_cast<const KArchiveFile *>(dataResouceEntry);
                         //TODO  adapt directory name too
-                        extractZipFile(file, copyToDirName, newUrl.path());
+                        extractZipFile(file, copyToDirName, newUrl);
                     }
-                    settings.insert(QStringLiteral("Path"), newUrl.path());
+                    settings.insert(QStringLiteral("Path"), newUrl);
 
                     const QString agentConfigFile = value.akonadiAgentConfigFile;
                     if (!agentConfigFile.isEmpty()) {

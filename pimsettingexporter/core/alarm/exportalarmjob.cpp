@@ -79,7 +79,7 @@ void ExportAlarmJob::backupResources()
         } else if (identifier.contains(QStringLiteral("akonadi_kalarm_dir_resource_"))) {
             const QString archivePath = Utils::alarmPath() + identifier + QDir::separator();
 
-            QUrl url = Utils::resourcePath(agent);
+            QString url = Utils::resourcePath(agent);
             if (!url.isEmpty()) {
                 const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("alarm.zip"));
                 if (fileAdded) {
@@ -89,8 +89,9 @@ void ExportAlarmJob::backupResources()
                     }
                     url = Utils::akonadiAgentConfigPath(identifier);
                     if (!url.isEmpty()) {
-                        const QString filename = url.fileName();
-                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                        QFileInfo fi(url);
+                        const QString filename = fi.fileName();
+                        const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
                         if (fileAdded) {
                             Q_EMIT info(i18n("\"%1\" was backed up.", filename));
                         } else {
