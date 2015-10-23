@@ -62,6 +62,7 @@ set(pimsettingexporter_LIB_SRCS
   synchronizeresourcejob.cpp
   pimsettingsbackuprestore.cpp
   importexportprogressindicatorbase.cpp
+  #pimsettingbackupthread.cpp
 )
 
 ecm_qt_declare_logging_category(pimsettingexporter_LIB_SRCS HEADER pimsettingexportcore_debug.h IDENTIFIER PIMSETTINGEXPORTERCORE_LOG CATEGORY_NAME log_pimsettingexportercore)
