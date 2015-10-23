@@ -61,7 +61,7 @@ void ExportAddressbookJob::slotCheckBackupResource()
     //TODO verify it.
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     increaseProgressDialog();
-    QTimer::singleShot(0, this, SLOT(slotWriteResource()));
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
 }
 
 void ExportAddressbookJob::slotCheckBackupConfig()
@@ -82,10 +82,10 @@ void ExportAddressbookJob::slotAddressbookJobTerminated()
         return;
     }
     mIndexIdentifier++;
-    QTimer::singleShot(0, this, SLOT(slotWriteResource()));
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
 }
 
-void ExportAddressbookJob::slotWriteResource()
+void ExportAddressbookJob::slotWriteNextArchiveResource()
 {
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
