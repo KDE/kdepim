@@ -438,13 +438,11 @@ bool AbstractImportExportJob::backupFullDirectory(const QUrl &url, const QString
         return false;
     }
     const bool vcarddirAdded = archiveFile->addLocalDirectory(url.path(), QString());
-    //TODO add MessageBox
     if (!vcarddirAdded) {
         Q_EMIT error(i18n("Impossible to backup \"%1\".", url.path()));
         delete archiveFile;
         return false;
     }
-    archiveFile->setCompression(KZip::DeflateCompression);
     archiveFile->close();
     tmp.close();
 
