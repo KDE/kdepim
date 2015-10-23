@@ -61,8 +61,6 @@ public:
 
     }
     KConfig *m_recentAddressConfig;
-    QList<KJob *> mMightBeGroupJobs;
-    KContacts::ContactGroup::List mGroups;
 };
 
 ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
@@ -70,13 +68,12 @@ ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
       d(new MessageComposer::ComposerLineEditPrivate)
 {
     allowSemicolonAsSeparator(MessageComposerSettings::allowSemicolonAsAddressSeparator());
+    setShowRecentAddresses(MessageComposerSettings::self()->showRecentAddressesInComposer());
     loadContacts();
     setEnableBalooSearch(MessageComposerSettings::showBalooSearchInComposer());
     connect(this, &ComposerLineEdit::editingFinished, this, &ComposerLineEdit::slotEditingFinished);
     connect(this, &ComposerLineEdit::textCompleted, this, &ComposerLineEdit::slotEditingFinished);
 
-    KConfigGroup group(KSharedConfig::openConfig(), "AddressLineEdit");
-    setAutoGroupExpand(group.readEntry("AutoGroupExpand", false));
 }
 
 ComposerLineEdit::~ComposerLineEdit()
@@ -102,87 +99,6 @@ void ComposerLineEdit::keyPressEvent(QKeyEvent *e)
     AddresseeLineEdit::keyPressEvent(e);
 }
 
-
-
-void ComposerLineEdit::groupExpandResult(KJob *job)
-{
-    Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
-
-    if (!expandJob) {
-        return;
-    }
-
-    const KContacts::Addressee::List contacts = expandJob->contacts();
-    foreach (const KContacts::Addressee &addressee, contacts) {
-        if (expandIntern() || text().isEmpty()) {
-            insertEmails(QStringList() << addressee.fullEmail());
-        } else {
-            Q_EMIT addAddress(addressee.fullEmail());
-        }
-    }
-
-    job->deleteLater();
-}
-
-void ComposerLineEdit::slotEditingFinished()
-{
-    foreach (KJob *job, d->mMightBeGroupJobs) {
-        disconnect(job);
-        job->deleteLater();
-    }
-
-    d->mMightBeGroupJobs.clear();
-    d->mGroups.clear();
-
-    if (!text().isEmpty()) {
-        const QStringList addresses = KEmailAddress::splitAddressList(text());
-        Q_FOREACH (const QString &address, addresses) {
-            Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
-            connect(job, &Akonadi::ContactGroupSearchJob::result, this, &ComposerLineEdit::slotGroupSearchResult);
-            d->mMightBeGroupJobs.append(job);
-            job->setQuery(Akonadi::ContactGroupSearchJob::Name, address);
-        }
-    }
-}
-
-void ComposerLineEdit::slotGroupSearchResult(KJob *job)
-{
-    Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob *>(job);
-
-    // Laurent I don't understand why Akonadi::ContactGroupSearchJob send two "result(...)" signal. For the moment
-    // avoid to go in this method twice, until I understand it.
-    if (!d->mMightBeGroupJobs.contains(searchJob)) {
-        return;
-    }
-    //Q_ASSERT(d->mMightBeGroupJobs.contains(searchJob));
-    d->mMightBeGroupJobs.removeOne(searchJob);
-
-    const KContacts::ContactGroup::List contactGroups = searchJob->contactGroups();
-    if (contactGroups.isEmpty()) {
-        return; // Nothing todo, probably a normal email address was entered
-    }
-
-    d->mGroups << contactGroups;
-    searchJob->deleteLater();
-
-    if (autoGroupExpand()) {
-        expandGroups();
-    }
-}
-
-void ComposerLineEdit::expandGroups()
-{
-    QStringList addresses = KEmailAddress::splitAddressList(text());
-
-    foreach (const KContacts::ContactGroup &group, d->mGroups) {
-        Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group);
-        connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &ComposerLineEdit::groupExpandResult);
-        addresses.removeAll(group.name());
-        expandJob->start();
-    }
-    setText(addresses.join(QStringLiteral(", ")));
-    d->mGroups.clear();
-}
 
 void ComposerLineEdit::slotToggleExpandGroups()
 {
@@ -216,7 +132,7 @@ void ComposerLineEdit::configureCompletionOrder(QMenu *menu)
         act->setChecked(autoGroupExpand());
         connect(act, &QAction::triggered, this, &ComposerLineEdit::slotToggleExpandGroups);
 
-        if (!d->mGroups.isEmpty()) {
+        if (!groupsIsEmpty()) {
             act = menu->addAction(i18n("Expand Groups..."));
             connect(act, &QAction::triggered, this, &ComposerLineEdit::expandGroups);
         }
@@ -245,7 +161,7 @@ void ComposerLineEdit::configureCompletion()
 void ComposerLineEdit::loadContacts()
 {
     const QString recentAddressGroupName = i18n("Recent Addresses");
-    if (MessageComposerSettings::self()->showRecentAddressesInComposer()) {
+    if (showRecentAddresses()) {
         const QStringList recent =
             cleanupEmailList(KPIM::RecentAddresses::self(d->m_recentAddressConfig)->addresses());
         QStringList::ConstIterator it = recent.constBegin();

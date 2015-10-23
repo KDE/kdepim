@@ -60,7 +60,8 @@ AddresseeLineEditPrivate::AddresseeLineEditPrivate(KPIM::AddresseeLineEdit *qq, 
       m_showOU(false),
       m_enableBalooSearch(true),
       mExpandIntern(true),
-      mAutoGroupExpand(false)
+      mAutoGroupExpand(false),
+      mShowRecentAddresses(true)
 {
     if (!s_networkConfigMgr) {
         s_networkConfigMgr = new QNetworkConfigurationManager(QCoreApplication::instance());
@@ -169,6 +170,8 @@ void AddresseeLineEditPrivate::init()
 
         KConfigGroup group(KSharedConfig::openConfig(), "AddressLineEdit");
         m_showOU = group.readEntry("ShowOU", false);
+        mAutoGroupExpand = group.readEntry("AutoGroupExpand", false);
+
         loadBalooBlackList();
     }
 }
@@ -870,6 +873,31 @@ void AddresseeLineEditPrivate::slotConfigureBalooBlackList()
     delete dlg;
 }
 
+bool AddresseeLineEditPrivate::showRecentAddresses() const
+{
+    return mShowRecentAddresses;
+}
+
+KContacts::ContactGroup::List AddresseeLineEditPrivate::groups() const
+{
+    return mGroups;
+}
+
+void AddresseeLineEditPrivate::setGroups(const KContacts::ContactGroup::List &groups)
+{
+    mGroups = groups;
+}
+
+QList<KJob *> AddresseeLineEditPrivate::mightBeGroupJobs() const
+{
+    return mMightBeGroupJobs;
+}
+
+void AddresseeLineEditPrivate::setMightBeGroupJobs(const QList<KJob *> &mightBeGroupJobs)
+{
+    mMightBeGroupJobs = mightBeGroupJobs;
+}
+
 bool AddresseeLineEditPrivate::autoGroupExpand() const
 {
     return mAutoGroupExpand;
@@ -991,6 +1019,41 @@ void AddresseeLineEditPrivate::removeCompletionSource(const QString &source)
 int AddresseeLineEditPrivate::addCompletionSource(const QString &source, int weight)
 {
     return s_static->addCompletionSource(source, weight);
+}
+
+void AddresseeLineEditPrivate::mightBeGroupJobsClear()
+{
+    mMightBeGroupJobs.clear();
+}
+
+bool AddresseeLineEditPrivate::groupsIsEmpty() const
+{
+    return mGroups.isEmpty();
+}
+
+void AddresseeLineEditPrivate::setShowRecentAddresses(bool b)
+{
+    mShowRecentAddresses = b;
+}
+
+void AddresseeLineEditPrivate::groupsClear()
+{
+    mGroups.clear();
+}
+
+void AddresseeLineEditPrivate::addGroups(const KContacts::ContactGroup::List &lst)
+{
+    mGroups << lst;
+}
+
+void AddresseeLineEditPrivate::mightBeGroupJobsRemoveOne(Akonadi::ContactGroupSearchJob *search)
+{
+    mMightBeGroupJobs.removeOne(search);
+}
+
+void AddresseeLineEditPrivate::mightBeGroupJobsAdd(Akonadi::ContactGroupSearchJob *job)
+{
+    mMightBeGroupJobs.append(job);
 }
 
 }

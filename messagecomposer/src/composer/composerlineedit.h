@@ -56,13 +56,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent *e) Q_DECL_OVERRIDE;
 #endif
 
-public Q_SLOTS:
-    void expandGroups();
-
 private Q_SLOTS:
-    void groupExpandResult(KJob *);
-    void slotEditingFinished();
-    void slotGroupSearchResult(KJob *);
     void slotToggleExpandGroups();
     void configureCompletion();
 

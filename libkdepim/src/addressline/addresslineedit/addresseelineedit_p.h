@@ -22,11 +22,13 @@
 #include <QTimer>
 #include <QList>
 #include <QColor>
+#include <ContactGroupSearchJob>
 #include "Libkdepim/LdapClient"
 #include "ldap/ldapclientsearch.h"
 #include <AkonadiCore/Item>
 #include <AkonadiCore/Collection>
 #include <KLDAP/LdapServer>
+#include <kcontacts/contactgroup.h>
 
 namespace KPIM
 {
@@ -93,6 +95,21 @@ public:
     bool autoGroupExpand() const;
     void setAutoGroupExpand(bool autoGroupExpand);
 
+    QList<KJob *> mightBeGroupJobs() const;
+    void setMightBeGroupJobs(const QList<KJob *> &mightBeGroupJobs);
+
+    KContacts::ContactGroup::List groups() const;
+    void setGroups(const KContacts::ContactGroup::List &groups);
+
+    void mightBeGroupJobsClear();
+    void groupsClear();
+    void addGroups(const KContacts::ContactGroup::List &lst);
+    void mightBeGroupJobsRemoveOne(Akonadi::ContactGroupSearchJob *search);
+    void mightBeGroupJobsAdd(Akonadi::ContactGroupSearchJob *job);
+    bool groupsIsEmpty() const;
+    void setShowRecentAddresses(bool b);
+    bool showRecentAddresses() const;
+
 public Q_SLOTS:
     void slotShowOUChanged(bool);
 
@@ -119,6 +136,8 @@ private:
     QStringList m_domainExcludeList;
     QString m_previousAddresses;
     QString m_searchString;
+    QList<KJob *> mMightBeGroupJobs;
+    KContacts::ContactGroup::List mGroups;
     bool m_useCompletion;
     bool m_completionInitialized;
     bool m_smartPaste;
@@ -130,6 +149,7 @@ private:
     bool m_enableBalooSearch;
     bool mExpandIntern;
     bool mAutoGroupExpand;
+    bool mShowRecentAddresses;
 };
 }
 

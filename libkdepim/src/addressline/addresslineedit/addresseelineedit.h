@@ -91,6 +91,7 @@ public:
 
     void setExpandIntern(bool);
     bool expandIntern() const;
+    bool groupsIsEmpty() const;
 
 Q_SIGNALS:
     void textCompleted();
@@ -112,6 +113,10 @@ public Q_SLOTS:
      * Danger: This is _not_ virtual in the base class!
      */
     void setText(const QString &text) Q_DECL_OVERRIDE;
+
+    void expandGroups();
+    void slotEditingFinished();
+    void slotGroupSearchResult(KJob *job);
 
 public:
     /**
@@ -153,6 +158,8 @@ public:
 
     void setAutoGroupExpand(bool autoGroupExpand);
     bool autoGroupExpand() const;
+    void setShowRecentAddresses(bool b);
+    bool showRecentAddresses() const;
 protected:
     /**
      * Reimplemented for smart insertion of email addresses.

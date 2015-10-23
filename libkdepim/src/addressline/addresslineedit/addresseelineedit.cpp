@@ -40,6 +40,9 @@
 #include <KContacts/VCardConverter>
 #include <kcontacts/contactgrouptool.h>
 #include <KIO/StoredTransferJob>
+#include <Akonadi/Contact/ContactGroupExpandJob>
+#include <Akonadi/Contact/ContactGroupSearchJob>
+
 
 #include <KLDAP/LdapServer>
 
@@ -117,6 +120,11 @@ bool AddresseeLineEdit::expandIntern() const
     return d->expandIntern();
 }
 
+bool AddresseeLineEdit::groupsIsEmpty() const
+{
+    return d->groupsIsEmpty();
+}
+
 void AddresseeLineEdit::setExpandIntern(bool expand)
 {
     d->setExpandIntern(expand);
@@ -140,6 +148,16 @@ void AddresseeLineEdit::setEnableBalooSearch(bool enable)
 void AddresseeLineEdit::allowSemicolonAsSeparator(bool useSemicolonAsSeparator)
 {
     d->setUseSemicolonAsSeparator(useSemicolonAsSeparator);
+}
+
+bool AddresseeLineEdit::showRecentAddresses() const
+{
+    return d->showRecentAddresses();
+}
+
+void AddresseeLineEdit::setShowRecentAddresses(bool b)
+{
+    d->setShowRecentAddresses(b);
 }
 
 void AddresseeLineEdit::keyPressEvent(QKeyEvent *event)
@@ -821,4 +839,64 @@ KLDAP::LdapClientSearch *AddresseeLineEdit::ldapSearch() const
 QStringList AddresseeLineEdit::balooBlackList() const
 {
     return d->balooBlackList();
+}
+
+void AddresseeLineEdit::slotEditingFinished()
+{
+    foreach (KJob *job, d->mightBeGroupJobs()) {
+        disconnect(job);
+        job->deleteLater();
+    }
+
+    d->mightBeGroupJobsClear();
+    d->groupsClear();
+
+    if (!text().isEmpty()) {
+        const QStringList addresses = KEmailAddress::splitAddressList(text());
+        Q_FOREACH (const QString &address, addresses) {
+            Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
+            connect(job, &Akonadi::ContactGroupSearchJob::result, this, &AddresseeLineEdit::slotGroupSearchResult);
+            d->mightBeGroupJobsAdd(job);
+            job->setQuery(Akonadi::ContactGroupSearchJob::Name, address);
+        }
+    }
+}
+
+void AddresseeLineEdit::slotGroupSearchResult(KJob *job)
+{
+    Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob *>(job);
+
+    // Laurent I don't understand why Akonadi::ContactGroupSearchJob send two "result(...)" signal. For the moment
+    // avoid to go in this method twice, until I understand it.
+    if (!d->mightBeGroupJobs().contains(searchJob)) {
+        return;
+    }
+    //Q_ASSERT(d->mMightBeGroupJobs.contains(searchJob));
+    d->mightBeGroupJobsRemoveOne(searchJob);
+
+    const KContacts::ContactGroup::List contactGroups = searchJob->contactGroups();
+    if (contactGroups.isEmpty()) {
+        return; // Nothing todo, probably a normal email address was entered
+    }
+
+    d->addGroups(contactGroups);
+    searchJob->deleteLater();
+
+    if (autoGroupExpand()) {
+        expandGroups();
+    }
+}
+
+void AddresseeLineEdit::expandGroups()
+{
+    QStringList addresses = KEmailAddress::splitAddressList(text());
+
+    foreach (const KContacts::ContactGroup &group, d->groups()) {
+        Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group);
+        connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &AddresseeLineEdit::groupExpandResult);
+        addresses.removeAll(group.name());
+        expandJob->start();
+    }
+    setText(addresses.join(QStringLiteral(", ")));
+    d->groupsClear();
 }
