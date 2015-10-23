@@ -44,10 +44,8 @@ void ImportExportProgressIndicatorGui::increaseProgressDialog()
 void ImportExportProgressIndicatorGui::createProgressDialog()
 {
     if (!mProgressDialog) {
-        mProgressDialog = new QProgressDialog(mParentWidget);
+        mProgressDialog = new QProgressDialog(QString(), i18n("Cancel"), 0, mNumberOfStep, mParentWidget);
         mProgressDialog->setWindowModality(Qt::WindowModal);
-        mProgressDialog->setMinimum(0);
-        mProgressDialog->setMaximum(mNumberOfStep);
     }
     mProgressDialog->show();
     mProgressDialog->setValue(0);
