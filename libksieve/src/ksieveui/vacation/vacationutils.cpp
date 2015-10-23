@@ -17,6 +17,7 @@
 
 #include "vacationutils.h"
 #include "vacationscriptextractor.h"
+#include "legacy/vacationutils.h"
 #include "sieve-vacation.h"
 #include <KIdentityManagement/IdentityManager>
 #include <KIdentityManagement/Identity>
@@ -131,6 +132,19 @@ QDate VacationUtils::defaultEndDate()
     return defaultStartDate().addDays(7);
 }
 
+//TODO: delete this function after 06.2016 until than all vacation scripts should be updated
+VacationUtils::Vacation parseScriptLegacy(const QString &script)
+{
+    KSieveUi::VacationUtils::Vacation vacation;
+    vacation.active = true;
+    vacation.valid =  Legacy::VacationUtils::parseScript(script, vacation.messageText,
+                                vacation.subject,
+                                vacation.notificationInterval, vacation.aliases,
+                                vacation.sendForSpam, vacation.excludeDomain,
+                                vacation.startDate, vacation.endDate);
+    return vacation;
+}
+
 VacationUtils::Vacation VacationUtils::parseScript(const QString &script)
 {
     KSieveUi::VacationUtils::Vacation vacation;
@@ -161,6 +175,10 @@ VacationUtils::Vacation VacationUtils::parseScript(const QString &script)
     KSieveExt::MultiScriptBuilder tsb(&vdx , &sdx, &drdx, &dx);
     parser.setScriptBuilder(&tsb);
     if (!parser.parse() || !vdx.commandFound()) {
+        const auto vac = parseScriptLegacy(script);
+        if (vac.isValid()) {
+            return vac;
+        }
         vacation.active = false;
         vacation.valid = false;
         return vacation;
@@ -199,6 +217,19 @@ VacationUtils::Vacation VacationUtils::parseScript(const QString &script)
     vacation.startTime = dx.startTime();
     vacation.endDate = dx.endDate();
     vacation.endTime = dx.endTime();
+
+    if (vacation.sendForSpam && vacation.excludeDomain.isEmpty() && !vacation.startDate.isValid() && !vacation.endDate.isValid()) {
+        const auto vac = parseScriptLegacy(script);
+        if (vac.isValid()) {
+            vacation.sendForSpam = vac.sendForSpam;
+            vacation.excludeDomain = vac.excludeDomain;
+            vacation.startDate = vac.startDate;
+            vacation.startTime = vac.startTime;
+            vacation.endDate = vac.endDate;
+            vacation.endTime = vac.endTime;
+        }
+    }
+
     return vacation;
 }
 

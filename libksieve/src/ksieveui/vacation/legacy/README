@@ -1,0 +1,5 @@
+This is a legacy code to read/write the old vacation scripts for KDE 4 version of kontact.
+If once this new version is rolled out, there is no need to keep the legacy way of read/write the vacation script,
+because it is not compatible to any other system. The only need to keep this code is for migration old vacation scripts to new one.
+
+23. October 2015 - Sndro Knauß <sknauss@kde.org>
