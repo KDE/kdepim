@@ -25,10 +25,8 @@
 #include <QObject>
 #include <QStringList>
 
-class QSignalMapper;
 
 class KActionCollection;
-class QAction;
 class KActionMenu;
 
 namespace TemplateParser
