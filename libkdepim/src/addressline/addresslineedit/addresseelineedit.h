@@ -91,35 +91,10 @@ public:
     bool isCompletionEnabled() const;
 
     void setExpandIntern(bool);
+
     bool expandIntern() const;
+
     bool groupsIsEmpty() const;
-
-Q_SIGNALS:
-    void textCompleted();
-    void addAddress(const QString &address);
-
-public Q_SLOTS:
-    /**
-     * Moves the cursor at the end of the line edit.
-     */
-    void cursorAtEnd();
-
-    /**
-     * Sets whether autocompletion shall be enabled.
-     */
-    void enableCompletion(bool enable);
-
-    /**
-     * Reimplemented for stripping whitespace after completion
-     * Danger: This is _not_ virtual in the base class!
-     */
-    void setText(const QString &text) Q_DECL_OVERRIDE;
-
-    void expandGroups();
-    void slotEditingFinished();
-    void slotGroupSearchResult(KJob *job);
-
-public:
     /**
      * Adds a new @p contact to the completion with a given
      * @p weight
@@ -164,6 +139,33 @@ public:
     void setRecentAddressConfig(KConfig *config);
     KConfig *recentAddressConfig() const;
     void configureCompletion();
+
+
+Q_SIGNALS:
+    void textCompleted();
+    void addAddress(const QString &address);
+
+public Q_SLOTS:
+    /**
+     * Moves the cursor at the end of the line edit.
+     */
+    void cursorAtEnd();
+
+    /**
+     * Sets whether autocompletion shall be enabled.
+     */
+    void enableCompletion(bool enable);
+
+    /**
+     * Reimplemented for stripping whitespace after completion
+     * Danger: This is _not_ virtual in the base class!
+     */
+    void setText(const QString &text) Q_DECL_OVERRIDE;
+
+    void expandGroups();
+    void slotEditingFinished();
+    void slotGroupSearchResult(KJob *job);
+
 protected:
     /**
      * Reimplemented for smart insertion of email addresses.
@@ -212,7 +214,6 @@ protected:
 #endif
 
     QStringList cleanupEmailList(const QStringList &inputList);
-    virtual void configureCompletionOrder(QMenu *menu);
     void insertEmails(const QStringList &emails);
     void loadContacts();
 

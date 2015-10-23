@@ -675,19 +675,6 @@ void AddresseeLineEdit::loadContacts()
     }
 }
 
-
-void KPIM::AddresseeLineEdit::configureCompletionOrder(QMenu *menu)
-{
-    if (d->useCompletion()) {
-        menu->addAction(i18n("Configure Completion Order..."),
-                        d, SLOT(slotEditCompletionOrder()));
-
-        QAction *configureBalooBlackList = new QAction(i18n("Configure Email Blacklist..."), menu);
-        connect(configureBalooBlackList, SIGNAL(triggered(bool)), d, SLOT(slotConfigureBalooBlackList()));
-        menu->addAction(configureBalooBlackList);
-    }
-}
-
 void KPIM::AddresseeLineEdit::removeCompletionSource(const QString &source)
 {
     d->removeCompletionSource(source);
