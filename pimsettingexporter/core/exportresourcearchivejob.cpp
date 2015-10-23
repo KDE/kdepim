@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "exportaddressbookresourcejob.h"
+#include "exportresourcearchivejob.h"
 #include "utils.h"
 #include <pimsettingbackupthread.h>
 #include <KLocalizedString>
@@ -23,50 +23,50 @@
 #include <QDebug>
 #include <QFileInfo>
 
-ExportAddressbookResourceJob::ExportAddressbookResourceJob(QObject *parent)
+ExportResourceArchiveJob::ExportResourceArchiveJob(QObject *parent)
     : QObject(parent),
       mZip(Q_NULLPTR)
 {
 
 }
 
-ExportAddressbookResourceJob::~ExportAddressbookResourceJob()
+ExportResourceArchiveJob::~ExportResourceArchiveJob()
 {
 
 }
 
-void ExportAddressbookResourceJob::setArchive(KZip *zip)
+void ExportResourceArchiveJob::setArchive(KZip *zip)
 {
     mZip = zip;
 }
 
-void ExportAddressbookResourceJob::setIdentifier(const QString &identifier)
+void ExportResourceArchiveJob::setIdentifier(const QString &identifier)
 {
     mIdentifier = identifier;
 }
 
-void ExportAddressbookResourceJob::setUrl(const QString &url)
+void ExportResourceArchiveJob::setUrl(const QString &url)
 {
     mUrl = url;
 }
 
-void ExportAddressbookResourceJob::setArchivePath(const QString &archivePath)
+void ExportResourceArchiveJob::setArchivePath(const QString &archivePath)
 {
     mArchivePath = archivePath;
 }
 
-void ExportAddressbookResourceJob::setArchiveName(const QString &archiveName)
+void ExportResourceArchiveJob::setArchiveName(const QString &archiveName)
 {
     mArchiveName = archiveName;
 }
 
-void ExportAddressbookResourceJob::start()
+void ExportResourceArchiveJob::start()
 {
     if (mZip) {
         PimSettingBackupThread *thread = new PimSettingBackupThread(mZip, mUrl, mArchivePath, mArchiveName);
-        connect(thread, &PimSettingBackupThread::error, this, &ExportAddressbookResourceJob::error);
-        connect(thread, &PimSettingBackupThread::info, this, &ExportAddressbookResourceJob::info);
-        connect(thread, &PimSettingBackupThread::terminated, this, &ExportAddressbookResourceJob::slotTerminated);
+        connect(thread, &PimSettingBackupThread::error, this, &ExportResourceArchiveJob::error);
+        connect(thread, &PimSettingBackupThread::info, this, &ExportResourceArchiveJob::info);
+        connect(thread, &PimSettingBackupThread::terminated, this, &ExportResourceArchiveJob::slotTerminated);
         connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
         thread->start();
     } else {
@@ -75,7 +75,7 @@ void ExportAddressbookResourceJob::start()
     }
 }
 
-void ExportAddressbookResourceJob::slotTerminated(bool success)
+void ExportResourceArchiveJob::slotTerminated(bool success)
 {
     if (success) {
         const QString errorStr = Utils::storeResources(mZip, mIdentifier, mArchivePath);
@@ -97,7 +97,7 @@ void ExportAddressbookResourceJob::slotTerminated(bool success)
     finished();
 }
 
-void ExportAddressbookResourceJob::finished()
+void ExportResourceArchiveJob::finished()
 {
     Q_EMIT terminated();
     deleteLater();

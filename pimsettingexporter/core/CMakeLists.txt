@@ -12,7 +12,6 @@ set(pimsettingexporter_calendar_SRCS
 set(pimsettingexporter_addressbook_SRCS
   addressbook/exportaddressbookjob.cpp
   addressbook/importaddressbookjob.cpp
-  addressbook/exportaddressbookresourcejob.cpp
 )
 
 set(pimsettingexporter_mail_SRCS
@@ -64,6 +63,7 @@ set(pimsettingexporter_LIB_SRCS
   pimsettingsbackuprestore.cpp
   importexportprogressindicatorbase.cpp
   pimsettingbackupthread.cpp
+  exportresourcearchivejob.cpp
 )
 
 ecm_qt_declare_logging_category(pimsettingexporter_LIB_SRCS HEADER pimsettingexportcore_debug.h IDENTIFIER PIMSETTINGEXPORTERCORE_LOG CATEGORY_NAME log_pimsettingexportercore)

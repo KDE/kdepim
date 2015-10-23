@@ -16,7 +16,7 @@
 */
 
 #include "exportaddressbookjob.h"
-#include "exportaddressbookresourcejob.h"
+#include "exportresourcearchivejob.h"
 #include "Libkdepim/KCursorSaver"
 
 #include <AkonadiCore/AgentManager>
@@ -99,15 +99,15 @@ void ExportAddressbookJob::slotWriteResource()
             if (!mAgentPaths.contains(url)) {
                 mAgentPaths << url;
                 if (!url.isEmpty()) {
-                    ExportAddressbookResourceJob *resourceJob = new ExportAddressbookResourceJob(this);
+                    ExportResourceArchiveJob *resourceJob = new ExportResourceArchiveJob(this);
                     resourceJob->setArchivePath(archivePath);
                     resourceJob->setUrl(url);
                     resourceJob->setIdentifier(identifier);
                     resourceJob->setArchive(archive());
                     resourceJob->setArchiveName(QStringLiteral("addressbook.zip"));
-                    connect(resourceJob, &ExportAddressbookResourceJob::error, this, &ExportAddressbookJob::error);
-                    connect(resourceJob, &ExportAddressbookResourceJob::info, this, &ExportAddressbookJob::info);
-                    connect(resourceJob, &ExportAddressbookResourceJob::terminated, this, &ExportAddressbookJob::slotAddressbookJobTerminated);
+                    connect(resourceJob, &ExportResourceArchiveJob::error, this, &ExportAddressbookJob::error);
+                    connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportAddressbookJob::info);
+                    connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportAddressbookJob::slotAddressbookJobTerminated);
                     resourceJob->start();
                 }
             } else {

@@ -21,12 +21,12 @@
 
 #include <QObject>
 class KZip;
-class ExportAddressbookResourceJob : public QObject
+class ExportResourceArchiveJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit ExportAddressbookResourceJob(QObject *parent = Q_NULLPTR);
-    ~ExportAddressbookResourceJob();
+    explicit ExportResourceArchiveJob(QObject *parent = Q_NULLPTR);
+    ~ExportResourceArchiveJob();
 
     void setArchivePath(const QString &archivePath);
 
