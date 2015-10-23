@@ -88,6 +88,10 @@ public:
     void setEnableBalooSearch(bool enable);
 
     bool isCompletionEnabled() const;
+
+    void setExpandIntern(bool);
+    bool expandIntern() const;
+
 Q_SIGNALS:
     void textCompleted();
     void addAddress(const QString &address);

@@ -86,6 +86,10 @@ public:
     KLDAP::LdapClientSearch *ldapSearch();
     QStringList balooBlackList() const;
 
+    void setExpandIntern(bool);
+    bool expandIntern() const;
+
+
 public Q_SLOTS:
     void slotShowOUChanged(bool);
 
@@ -121,6 +125,7 @@ private:
     bool m_useSemicolonAsSeparator;
     bool m_showOU;
     bool m_enableBalooSearch;
+    bool mExpandIntern;
 };
 }
 

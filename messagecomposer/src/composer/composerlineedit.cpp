@@ -57,8 +57,7 @@ class MessageComposer::ComposerLineEditPrivate
 public:
     ComposerLineEditPrivate()
         : m_recentAddressConfig(MessageComposerSettings::self()->config()),
-          mAutoGroupExpand(false),
-          mExpandIntern(true)
+          mAutoGroupExpand(false)
     {
 
     }
@@ -66,7 +65,6 @@ public:
     QList<KJob *> mMightBeGroupJobs;
     KContacts::ContactGroup::List mGroups;
     bool mAutoGroupExpand;
-    bool mExpandIntern;
 };
 
 ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
@@ -118,7 +116,7 @@ void ComposerLineEdit::groupExpandResult(KJob *job)
 
     const KContacts::Addressee::List contacts = expandJob->contacts();
     foreach (const KContacts::Addressee &addressee, contacts) {
-        if (d->mExpandIntern || text().isEmpty()) {
+        if (expandIntern() || text().isEmpty()) {
             insertEmails(QStringList() << addressee.fullEmail());
         } else {
             Q_EMIT addAddress(addressee.fullEmail());
@@ -284,12 +282,3 @@ void ComposerLineEdit::setRecentAddressConfig(KConfig *config)
     d->m_recentAddressConfig = config;
 }
 
-bool ComposerLineEdit::expandIntern() const
-{
-    return d->mExpandIntern;
-}
-
-void ComposerLineEdit::setExpandIntern(bool expand)
-{
-    d->mExpandIntern = expand;
-}

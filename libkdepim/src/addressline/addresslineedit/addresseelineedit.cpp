@@ -112,6 +112,17 @@ void AddresseeLineEdit::setFont(const QFont &font)
     }
 }
 
+bool AddresseeLineEdit::expandIntern() const
+{
+    return d->expandIntern();
+}
+
+void AddresseeLineEdit::setExpandIntern(bool expand)
+{
+    d->setExpandIntern(expand);
+}
+
+
 void AddresseeLineEdit::setEnableBalooSearch(bool enable)
 {
     d->setEnableBalooSearch(enable);

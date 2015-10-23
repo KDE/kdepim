@@ -58,7 +58,8 @@ AddresseeLineEditPrivate::AddresseeLineEditPrivate(KPIM::AddresseeLineEdit *qq, 
       m_searchExtended(false),
       m_useSemicolonAsSeparator(false),
       m_showOU(false),
-      m_enableBalooSearch(true)
+      m_enableBalooSearch(true),
+      mExpandIntern(true)
 {
     if (!s_networkConfigMgr) {
         s_networkConfigMgr = new QNetworkConfigurationManager(QCoreApplication::instance());
@@ -870,6 +871,16 @@ void AddresseeLineEditPrivate::slotConfigureBalooBlackList()
 QStringList AddresseeLineEditPrivate::balooBlackList() const
 {
     return m_balooBlackList;
+}
+
+void AddresseeLineEditPrivate::setExpandIntern(bool b)
+{
+    mExpandIntern = b;
+}
+
+bool AddresseeLineEditPrivate::expandIntern() const
+{
+    return mExpandIntern;
 }
 
 bool AddresseeLineEditPrivate::useSemicolonAsSeparator() const

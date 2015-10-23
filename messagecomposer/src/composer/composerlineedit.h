@@ -40,9 +40,6 @@ public:
     ~ComposerLineEdit();
     void setRecentAddressConfig(KConfig *config);
 
-    void setExpandIntern(bool);
-    bool expandIntern() const;
-
 Q_SIGNALS:
     void focusUp();
     void focusDown();
