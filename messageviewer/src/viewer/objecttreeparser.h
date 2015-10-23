@@ -44,6 +44,7 @@
 
 #include <QList>
 #include "objecttreeemptysource.h"
+#include "messagepart.h"
 
 class QString;
 

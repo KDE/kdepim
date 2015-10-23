@@ -1277,7 +1277,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
                          data->decodedText(), Kleo::CryptoBackendFactory::instance()->openpgp(),
                          NodeHelper::fromAsString(data), node);
 
-    PartMetaData *messagePart(mp->partMetaData());
+    PartMetaData *messagePart(mp.partMetaData());
     if (!mSource->decryptMessage()) {
         mNodeHelper->setNodeProcessed(data, false);  // Set the data node to done to prevent it from being processed
     } else if (KMime::Content *newNode = mNodeHelper->decryptedNodeForContent(data)) {
@@ -1287,7 +1287,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
         copyContentFrom(&otp);
         return true;
     } else {
-        mp->startDecryption(data);
+        mp.startDecryption(data);
 
         qCDebug(MESSAGEVIEWER_LOG) << "decrypted, signed?:" << messagePart->isSigned;
 
