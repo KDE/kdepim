@@ -20,35 +20,10 @@
 */
 
 #include "composerlineedit.h"
-
-#include "libkdepim/recentaddresses.h"
-#include "libkdepim/completionconfiguredialog.h"
-#include "settings/messagecomposersettings.h"
-#include "messageviewer/autoqpointer.h"
-
-#include <MessageCore/StringUtil>
-
-#include <KEmailAddress>
-#include <kcontacts/vcarddrag.h>
-#include <kcontacts/contactgroup.h>
-#include <kcontacts/vcardconverter.h>
-
-#include <kmessagebox.h>
-#include <kcompletionbox.h>
-#include <KLocalizedString>
-#include <KIO/StoredTransferJob>
-#include <KJobWidgets>
-
-#include <qmenu.h>
-#include <qurl.h>
-#include <QFile>
-#include <QCursor>
+#include <KCompletionBox>
 #include <QKeyEvent>
-#include <QDropEvent>
-#include <kcontacts/contactgrouptool.h>
-#include <Akonadi/Contact/ContactGroupExpandJob>
-#include <Akonadi/Contact/ContactGroupSearchJob>
-#include <QBuffer>
+
+#include "settings/messagecomposersettings.h"
 
 using namespace MessageComposer;
 

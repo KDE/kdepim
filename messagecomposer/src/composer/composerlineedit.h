@@ -24,10 +24,6 @@
 
 #include "messagecomposer_export.h"
 #include <Libkdepim/AddresseeLineEdit>
-#include <Libkdepim/LdapClientSearch>
-#include <kcontacts/contactgroup.h>
-class KJob;
-class KConfig;
 namespace MessageComposer
 {
 class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
