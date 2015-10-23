@@ -429,7 +429,7 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
     }
 }
 
-bool AbstractImportExportJob::backupFullDirectory(const QUrl &url, const QString &archivePath, const QString &archivename)
+bool AbstractImportExportJob::backupFullDirectory(const QString &url, const QString &archivePath, const QString &archivename)
 {
     QTemporaryFile tmp;
     tmp.open();
@@ -441,9 +441,9 @@ bool AbstractImportExportJob::backupFullDirectory(const QUrl &url, const QString
         delete archiveFile;
         return false;
     }
-    const bool vcarddirAdded = archiveFile->addLocalDirectory(url.path(), QString());
+    const bool vcarddirAdded = archiveFile->addLocalDirectory(url, QString());
     if (!vcarddirAdded) {
-        Q_EMIT error(i18n("Impossible to backup \"%1\".", url.path()));
+        Q_EMIT error(i18n("Impossible to backup \"%1\".", url));
         delete archiveFile;
         return false;
     }
@@ -452,9 +452,9 @@ bool AbstractImportExportJob::backupFullDirectory(const QUrl &url, const QString
 
     const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + archivename);
     if (fileAdded) {
-        Q_EMIT info(i18n("\"%1\" was backed up.", url.path()));
+        Q_EMIT info(i18n("\"%1\" was backed up.", url));
     } else {
-        Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", url.path()));
+        Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", url));
     }
 
     delete archiveFile;
