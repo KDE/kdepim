@@ -17,6 +17,7 @@
 
 #include "exportaddressbookjob.h"
 #include "Libkdepim/KCursorSaver"
+#include "pimsettingbackupthread.h"
 
 #include <AkonadiCore/AgentManager>
 
@@ -29,6 +30,7 @@
 #include <QWidget>
 #include <QDir>
 #include <QStandardPaths>
+#include <QTimer>
 
 ExportAddressbookJob::ExportAddressbookJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -37,10 +39,10 @@ ExportAddressbookJob::ExportAddressbookJob(QObject *parent, Utils::StoredTypes t
 
 ExportAddressbookJob::~ExportAddressbookJob()
 {
-
 }
 
-void ExportAddressbookJob::start()
+
+void ExportAddressbookJob::slotStartExport()
 {
     Q_EMIT title(i18n("Start export KAddressBook settings..."));
     mArchiveDirectory = archive()->directory();
@@ -52,6 +54,16 @@ void ExportAddressbookJob::start()
             return;
         }
     }
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+}
+
+void ExportAddressbookJob::start()
+{
+    QTimer::singleShot(0, this, SLOT(slotStartExport()));
+}
+
+void ExportAddressbookJob::slotCheckBackupConfig()
+{
     if (mTypeSelected & Utils::Config) {
         backupConfig();
         increaseProgressDialog();
@@ -78,7 +90,15 @@ void ExportAddressbookJob::backupResources()
             if (!mAgentPaths.contains(url)) {
                 mAgentPaths << url;
                 if (!url.isEmpty()) {
+#if 0
+                    PimSettingBackupThread *thread = new PimSettingBackupThread(archive(), url, archivePath, QStringLiteral("addressbook.zip"));
+                    connect(thread, &PimSettingBackupThread::error, this, &ExportAddressbookJob::error);
+                    connect(thread, &PimSettingBackupThread::info, this, &ExportAddressbookJob::info);
+                    thread->start();
+                    const bool fileAdded = /*backupFullDirectory(url, archivePath, QStringLiteral("addressbook.zip"))*/true;
+#else
                     const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("addressbook.zip"));
+#endif
                     if (fileAdded) {
                         const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
                         if (!errorStr.isEmpty()) {

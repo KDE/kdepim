@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013-2015 Montel Laurent <montel@kde.org>
+  Copyright (c) 2015 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,28 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef EXPORTADDRESSBOOKJOB_H
-#define EXPORTADDRESSBOOKJOB_H
 
-#include "abstractimportexportjob.h"
+#ifndef EXPORTADDRESSBOOKRESOURCEJOB_H
+#define EXPORTADDRESSBOOKRESOURCEJOB_H
 
-class ArchiveStorage;
+#include <QObject>
 
-class ExportAddressbookJob : public AbstractImportExportJob
+class ExportAddressbookResourceJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit ExportAddressbookJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
-    ~ExportAddressbookJob();
+    explicit ExportAddressbookResourceJob(QObject *parent = Q_NULLPTR);
+    ~ExportAddressbookResourceJob();
 
-    void start() Q_DECL_OVERRIDE;
+Q_SIGNALS:
+    void error(const QString &str);
+    void info(const QString &str);
+    void terminated();
 
 private Q_SLOTS:
-    void slotStartExport();
-    void slotCheckBackupConfig();
-private:
-    void backupResources();
-    void backupConfig();
+    void slotTerminated(bool success);
 };
 
-#endif // EXPORTADDRESSBOOKJOB_H
+#endif // EXPORTADDRESSBOOKRESOURCEJOB_H
