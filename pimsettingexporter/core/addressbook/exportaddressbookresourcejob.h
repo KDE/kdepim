@@ -36,6 +36,8 @@ public:
 
     void setArchive(KZip *zip);
     void start();
+    void setArchiveName(const QString &archiveName);
+
 Q_SIGNALS:
     void error(const QString &str);
     void info(const QString &str);
@@ -45,6 +47,7 @@ private Q_SLOTS:
     void slotTerminated(bool success);
 private:
     void finished();
+    QString mArchiveName;
     QString mUrl;
     QString mArchivePath;
     QString mIdentifier;

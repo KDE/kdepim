@@ -104,6 +104,7 @@ void ExportAddressbookJob::slotWriteResource()
                     resourceJob->setUrl(url);
                     resourceJob->setIdentifier(identifier);
                     resourceJob->setArchive(archive());
+                    resourceJob->setArchiveName(QStringLiteral("addressbook.zip"));
                     connect(resourceJob, &ExportAddressbookResourceJob::error, this, &ExportAddressbookJob::error);
                     connect(resourceJob, &ExportAddressbookResourceJob::info, this, &ExportAddressbookJob::info);
                     connect(resourceJob, &ExportAddressbookResourceJob::terminated, this, &ExportAddressbookJob::slotAddressbookJobTerminated);

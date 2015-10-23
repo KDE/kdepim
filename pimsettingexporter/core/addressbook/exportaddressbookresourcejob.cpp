@@ -40,16 +40,30 @@ void ExportAddressbookResourceJob::setArchive(KZip *zip)
     mZip = zip;
 }
 
-void ExportAddressbookResourceJob::finished()
+void ExportAddressbookResourceJob::setIdentifier(const QString &identifier)
 {
-    Q_EMIT terminated();
-    deleteLater();
+    mIdentifier = identifier;
+}
+
+void ExportAddressbookResourceJob::setUrl(const QString &url)
+{
+    mUrl = url;
+}
+
+void ExportAddressbookResourceJob::setArchivePath(const QString &archivePath)
+{
+    mArchivePath = archivePath;
+}
+
+void ExportAddressbookResourceJob::setArchiveName(const QString &archiveName)
+{
+    mArchiveName = archiveName;
 }
 
 void ExportAddressbookResourceJob::start()
 {
     if (mZip) {
-        PimSettingBackupThread *thread = new PimSettingBackupThread(mZip, mUrl, mArchivePath, QStringLiteral("addressbook.zip"));
+        PimSettingBackupThread *thread = new PimSettingBackupThread(mZip, mUrl, mArchivePath, mArchiveName);
         connect(thread, &PimSettingBackupThread::error, this, &ExportAddressbookResourceJob::error);
         connect(thread, &PimSettingBackupThread::info, this, &ExportAddressbookResourceJob::info);
         connect(thread, &PimSettingBackupThread::terminated, this, &ExportAddressbookResourceJob::slotTerminated);
@@ -83,17 +97,8 @@ void ExportAddressbookResourceJob::slotTerminated(bool success)
     finished();
 }
 
-void ExportAddressbookResourceJob::setIdentifier(const QString &identifier)
+void ExportAddressbookResourceJob::finished()
 {
-    mIdentifier = identifier;
-}
-
-void ExportAddressbookResourceJob::setUrl(const QString &url)
-{
-    mUrl = url;
-}
-
-void ExportAddressbookResourceJob::setArchivePath(const QString &archivePath)
-{
-    mArchivePath = archivePath;
+    Q_EMIT terminated();
+    deleteLater();
 }
