@@ -33,9 +33,14 @@
 
 #include <KEmailAddress>
 #include <KColorScheme>
+#include <KJobWidgets>
 #include <kdelibs4configmigrator.h>
 #include <KContacts/Addressee>
 #include <KContacts/ContactGroup>
+#include <KContacts/VCardConverter>
+#include <kcontacts/contactgrouptool.h>
+#include <KIO/StoredTransferJob>
+
 #include <KLDAP/LdapServer>
 
 #include <KCompletionBox>
@@ -47,6 +52,7 @@
 #include <QMimeData>
 #include <QApplication>
 #include <QObject>
+#include <QBuffer>
 #include <QRegExp>
 #include <QEvent>
 #include <QClipboard>
@@ -55,6 +61,10 @@
 #include <QMouseEvent>
 #include <QMenu>
 #include <KSharedConfig>
+#include <KMessageBox>
+#include <ContactGroupExpandJob>
+#include <kcontacts/vcarddrag.h>
+
 
 using namespace KPIM;
 
@@ -259,63 +269,185 @@ void AddresseeLineEdit::mouseReleaseEvent(QMouseEvent *event)
 #ifndef QT_NO_DRAGANDDROP
 void AddresseeLineEdit::dropEvent(QDropEvent *event)
 {
-    if (!isReadOnly()) {
-        const QList<QUrl> uriList = event->mimeData()->urls();
-        if (!uriList.isEmpty()) {
-            QString contents = text();
-            // remove trailing white space and comma
-            int eot = contents.length();
-            while ((eot > 0) && contents.at(eot - 1).isSpace()) {
-                --eot;
-            }
-            if (eot == 0) {
-                contents.clear();
-            } else if (contents.at(eot - 1) == QLatin1Char(',')) {
-                --eot;
-                contents.truncate(eot);
-            }
-            bool mailtoURL = false;
-            // append the mailto URLs
-            foreach (const QUrl &url, uriList) {
-                if (url.scheme() == QLatin1String("mailto")) {
-                    mailtoURL = true;
-                    QString address;
-                    address = QUrl::fromPercentEncoding(url.path().toLatin1());
-                    address = KCodecs::decodeRFC2047String(address);
-                    if (!contents.isEmpty()) {
-                        contents.append(QStringLiteral(", "));
-                    }
-                    contents.append(address);
-                }
-            }
-            if (mailtoURL) {
-                setText(contents);
-                setModified(true);
-                return;
-            }
-        } else {
-            // Let's see if this drop contains a comma separated list of emails
-            const QMimeData *mimeData = event->mimeData();
-            if (mimeData->hasText()) {
-                const QString dropData = mimeData->text();
-                const QStringList addrs = KEmailAddress::splitAddressList(dropData);
-                if (!addrs.isEmpty()) {
-                    setText(KEmailAddress::normalizeAddressesAndDecodeIdn(dropData));
-                    setModified(true);
-                    return;
-                }
-            }
+    const QMimeData *md = event->mimeData();
+
+    // Case one: The user dropped a text/directory (i.e. vcard), so decode its
+    //           contents
+    if (KContacts::VCardDrag::canDecode(md)) {
+        KContacts::Addressee::List list;
+        KContacts::VCardDrag::fromMimeData(md, list);
+
+        KContacts::Addressee::List::ConstIterator ait;
+        KContacts::Addressee::List::ConstIterator end(list.constEnd());
+        for (ait = list.constBegin(); ait != end; ++ait) {
+            insertEmails((*ait).emails());
         }
     }
 
-    if (d->useCompletion()) {
-        d->setSmartPaste(true);
+    // Case two: The user dropped a list or Urls.
+    // Iterate over that list. For mailto: Urls, just add the addressee to the list,
+    // and for other Urls, download the Url and assume it points to a vCard
+    else if (md->hasUrls()) {
+        QList<QUrl> urls = md->urls();
+        KContacts::Addressee::List list;
+
+        foreach (const QUrl &url, urls) {
+
+            // First, let's deal with mailto Urls. The path() part contains the
+            // email-address.
+            if (url.scheme() == QLatin1String("mailto")) {
+                KContacts::Addressee addressee;
+                addressee.insertEmail(KEmailAddress::decodeMailtoUrl(url), true /* preferred */);
+                list += addressee;
+            }
+
+            // Otherwise, download the vCard to which the Url points
+            else {
+                KContacts::VCardConverter converter;
+                auto job = KIO::storedGet(url);
+                KJobWidgets::setWindow(job, parentWidget());
+                if (job->exec()) {
+                    QByteArray data = job->data();
+                    list += converter.parseVCards(data);
+
+                    if (list.isEmpty()) {  // try to parse a contact group
+                        KContacts::ContactGroup group;
+                        QBuffer dataStream(&data);
+                        dataStream.open(QIODevice::ReadOnly);
+                        QString error;
+                        if (KContacts::ContactGroupTool::convertFromXml(&dataStream, group, &error)) {
+                            Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob(group);
+                            connect(expandJob, &Akonadi::ContactGroupExpandJob::result, this, &AddresseeLineEdit::groupExpandResult);
+                            expandJob->start();
+                        }
+                    }
+                } else {
+                    const QString caption(i18n("vCard Import Failed"));
+                    const QString text = i18n("<qt>Unable to access <b>%1</b>.</qt>", url.url());
+                    KMessageBox::error(parentWidget(), text, caption);
+                }
+            }
+        }
+
+        // Now, let the user choose which addressee to add.
+        foreach (const KContacts::Addressee &addressee, list) {
+            insertEmails(addressee.emails());
+        }
     }
 
-    QLineEdit::dropEvent(event);
-    d->setSmartPaste(false);
+    // Case three: Let AddresseeLineEdit deal with the rest
+    else {
+        if (!isReadOnly()) {
+            const QList<QUrl> uriList = event->mimeData()->urls();
+            if (!uriList.isEmpty()) {
+                QString contents = text();
+                // remove trailing white space and comma
+                int eot = contents.length();
+                while ((eot > 0) && contents.at(eot - 1).isSpace()) {
+                    --eot;
+                }
+                if (eot == 0) {
+                    contents.clear();
+                } else if (contents.at(eot - 1) == QLatin1Char(',')) {
+                    --eot;
+                    contents.truncate(eot);
+                }
+                bool mailtoURL = false;
+                // append the mailto URLs
+                foreach (const QUrl &url, uriList) {
+                    if (url.scheme() == QLatin1String("mailto")) {
+                        mailtoURL = true;
+                        QString address;
+                        address = QUrl::fromPercentEncoding(url.path().toLatin1());
+                        address = KCodecs::decodeRFC2047String(address);
+                        if (!contents.isEmpty()) {
+                            contents.append(QStringLiteral(", "));
+                        }
+                        contents.append(address);
+                    }
+                }
+                if (mailtoURL) {
+                    setText(contents);
+                    setModified(true);
+                    return;
+                }
+            } else {
+                // Let's see if this drop contains a comma separated list of emails
+                const QMimeData *mimeData = event->mimeData();
+                if (mimeData->hasText()) {
+                    const QString dropData = mimeData->text();
+                    const QStringList addrs = KEmailAddress::splitAddressList(dropData);
+                    if (!addrs.isEmpty()) {
+                        setText(KEmailAddress::normalizeAddressesAndDecodeIdn(dropData));
+                        setModified(true);
+                        return;
+                    }
+                }
+            }
+        }
+
+        if (d->useCompletion()) {
+            d->setSmartPaste(true);
+        }
+
+        QLineEdit::dropEvent(event);
+        d->setSmartPaste(false);
+    }
 }
 #endif // QT_NO_DRAGANDDROP
+
+void AddresseeLineEdit::groupExpandResult(KJob *job)
+{
+#if 0
+    Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
+
+    if (!expandJob) {
+        return;
+    }
+
+    const KContacts::Addressee::List contacts = expandJob->contacts();
+    foreach (const KContacts::Addressee &addressee, contacts) {
+        if (d->mExpandIntern || text().isEmpty()) {
+            insertEmails(QStringList() << addressee.fullEmail());
+        } else {
+            Q_EMIT addAddress(addressee.fullEmail());
+        }
+    }
+
+    job->deleteLater();
+#endif
+}
+
+void AddresseeLineEdit::insertEmails(const QStringList &emails)
+{
+    if (emails.empty()) {
+        return;
+    }
+
+    QString contents = text();
+    if (!contents.isEmpty()) {
+        contents += QLatin1Char(',');
+    }
+    // only one address, don't need kpopup to choose
+    if (emails.size() == 1) {
+        setText(contents + emails.front());
+        return;
+    }
+    //multiple emails, let the user choose one
+    QMenu menu(this);
+    menu.setTitle(i18n("Select email from contact"));
+    menu.setObjectName(QStringLiteral("Addresschooser"));
+    for (QStringList::const_iterator it = emails.constBegin(), end = emails.constEnd(); it != end; ++it) {
+        menu.addAction(*it);
+    }
+    const QAction *result = menu.exec(QCursor::pos());
+    if (!result) {
+        return;
+    }
+    setText(contents + KLocalizedString::removeAcceleratorMarker(result->text()));
+}
+
+
 
 void AddresseeLineEdit::cursorAtEnd()
 {

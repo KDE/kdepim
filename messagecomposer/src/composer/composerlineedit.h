@@ -46,7 +46,6 @@ public:
 Q_SIGNALS:
     void focusUp();
     void focusDown();
-    void addAddress(const QString &address);
 
 protected:
 
@@ -69,11 +68,6 @@ private Q_SLOTS:
     void slotGroupSearchResult(KJob *);
     void slotToggleExpandGroups();
     void configureCompletion();
-private:
-#ifndef QT_NO_DRAGANDDROP
-    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
-#endif
-    void insertEmails(const QStringList &emails);
 
 private:
     ComposerLineEditPrivate *const d;

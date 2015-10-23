@@ -37,7 +37,7 @@ class QKeyEvent;
 class QMenu;
 class QMouseEvent;
 class QObject;
-
+class KJob;
 namespace Akonadi
 {
 class Item;
@@ -90,6 +90,7 @@ public:
     bool isCompletionEnabled() const;
 Q_SIGNALS:
     void textCompleted();
+    void addAddress(const QString &address);
 
 public Q_SLOTS:
     /**
@@ -195,6 +196,10 @@ protected:
 
     QStringList cleanupEmailList(const QStringList &inputList);
     virtual void configureCompletionOrder(QMenu *menu);
+    void insertEmails(const QStringList &emails);
+
+private Q_SLOTS:
+    void groupExpandResult(KJob *job);
 private:
     bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
 
