@@ -151,6 +151,8 @@ public:
     KLDAP::LdapClientSearch *ldapSearch() const;
     QStringList balooBlackList() const;
 
+    void setAutoGroupExpand(bool autoGroupExpand);
+    bool autoGroupExpand() const;
 protected:
     /**
      * Reimplemented for smart insertion of email addresses.

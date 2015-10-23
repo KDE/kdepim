@@ -122,6 +122,15 @@ void AddresseeLineEdit::setExpandIntern(bool expand)
     d->setExpandIntern(expand);
 }
 
+bool AddresseeLineEdit::autoGroupExpand() const
+{
+    return d->autoGroupExpand();
+}
+
+void AddresseeLineEdit::setAutoGroupExpand(bool autoGroupExpand)
+{
+    d->setAutoGroupExpand(autoGroupExpand);
+}
 
 void AddresseeLineEdit::setEnableBalooSearch(bool enable)
 {
@@ -409,7 +418,6 @@ void AddresseeLineEdit::dropEvent(QDropEvent *event)
 
 void AddresseeLineEdit::groupExpandResult(KJob *job)
 {
-#if 0
     Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob *>(job);
 
     if (!expandJob) {
@@ -418,7 +426,7 @@ void AddresseeLineEdit::groupExpandResult(KJob *job)
 
     const KContacts::Addressee::List contacts = expandJob->contacts();
     foreach (const KContacts::Addressee &addressee, contacts) {
-        if (d->mExpandIntern || text().isEmpty()) {
+        if (d->expandIntern() || text().isEmpty()) {
             insertEmails(QStringList() << addressee.fullEmail());
         } else {
             Q_EMIT addAddress(addressee.fullEmail());
@@ -426,7 +434,6 @@ void AddresseeLineEdit::groupExpandResult(KJob *job)
     }
 
     job->deleteLater();
-#endif
 }
 
 void AddresseeLineEdit::insertEmails(const QStringList &emails)

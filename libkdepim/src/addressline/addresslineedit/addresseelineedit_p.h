@@ -90,6 +90,9 @@ public:
     bool expandIntern() const;
 
 
+    bool autoGroupExpand() const;
+    void setAutoGroupExpand(bool autoGroupExpand);
+
 public Q_SLOTS:
     void slotShowOUChanged(bool);
 
@@ -126,6 +129,7 @@ private:
     bool m_showOU;
     bool m_enableBalooSearch;
     bool mExpandIntern;
+    bool mAutoGroupExpand;
 };
 }
 

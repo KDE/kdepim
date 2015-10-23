@@ -56,15 +56,13 @@ class MessageComposer::ComposerLineEditPrivate
 {
 public:
     ComposerLineEditPrivate()
-        : m_recentAddressConfig(MessageComposerSettings::self()->config()),
-          mAutoGroupExpand(false)
+        : m_recentAddressConfig(MessageComposerSettings::self()->config())
     {
 
     }
     KConfig *m_recentAddressConfig;
     QList<KJob *> mMightBeGroupJobs;
     KContacts::ContactGroup::List mGroups;
-    bool mAutoGroupExpand;
 };
 
 ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
@@ -78,7 +76,7 @@ ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
     connect(this, &ComposerLineEdit::textCompleted, this, &ComposerLineEdit::slotEditingFinished);
 
     KConfigGroup group(KSharedConfig::openConfig(), "AddressLineEdit");
-    d->mAutoGroupExpand = group.readEntry("AutoGroupExpand", false);
+    setAutoGroupExpand(group.readEntry("AutoGroupExpand", false));
 }
 
 ComposerLineEdit::~ComposerLineEdit()
@@ -167,7 +165,7 @@ void ComposerLineEdit::slotGroupSearchResult(KJob *job)
     d->mGroups << contactGroups;
     searchJob->deleteLater();
 
-    if (d->mAutoGroupExpand) {
+    if (autoGroupExpand()) {
         expandGroups();
     }
 }
@@ -188,9 +186,9 @@ void ComposerLineEdit::expandGroups()
 
 void ComposerLineEdit::slotToggleExpandGroups()
 {
-    d->mAutoGroupExpand = !d->mAutoGroupExpand;
+    setAutoGroupExpand(!autoGroupExpand());
     KConfigGroup group(KSharedConfig::openConfig(), "AddressLineEdit");
-    group.writeEntry("AutoGroupExpand", d->mAutoGroupExpand);
+    group.writeEntry("AutoGroupExpand", autoGroupExpand());
 }
 
 #ifndef QT_NO_CONTEXTMENU
@@ -215,7 +213,7 @@ void ComposerLineEdit::configureCompletionOrder(QMenu *menu)
         menu->addSeparator();
         QAction *act = menu->addAction(i18n("Automatically expand groups"));
         act->setCheckable(true);
-        act->setChecked(d->mAutoGroupExpand);
+        act->setChecked(autoGroupExpand());
         connect(act, &QAction::triggered, this, &ComposerLineEdit::slotToggleExpandGroups);
 
         if (!d->mGroups.isEmpty()) {
