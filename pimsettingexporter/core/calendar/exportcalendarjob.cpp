@@ -49,6 +49,7 @@ void ExportCalendarJob::start()
 {
     Q_EMIT title(i18n("Start export KOrganizer settings..."));
     mArchiveDirectory = archive()->directory();
+    createProgressDialog();
     if (mTypeSelected & Utils::Resources) {
         QTimer::singleShot(0, this, SLOT(slotCheckBackupResource()));
     } else if (mTypeSelected & Utils::Config) {

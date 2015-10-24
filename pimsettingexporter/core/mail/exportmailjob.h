@@ -33,6 +33,7 @@ public:
     void start() Q_DECL_OVERRIDE;
 
 private:
+    bool checkBackupType(Utils::StoredType type);
     void backupTransports();
     void backupResources();
     void backupMails();

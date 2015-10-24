@@ -59,17 +59,24 @@ bool ExportMailJob::checkProgram()
     return true;
 }
 
+bool ExportMailJob::checkBackupType(Utils::StoredType type)
+{
+    return (mTypeSelected & type);
+}
+
 void ExportMailJob::start()
 {
+#if 0 //We don't save akonadidb => comment it
     if (!checkProgram()) {
         Q_EMIT jobFinished();
         return;
     }
+#endif
 
     Q_EMIT title(i18n("Start export KMail settings..."));
     createProgressDialog();
 
-    if (mTypeSelected & Utils::Identity) {
+    if (checkBackupType(Utils::Identity)) {
         backupIdentity();
         increaseProgressDialog();
         if (wasCanceled()) {
@@ -77,7 +84,7 @@ void ExportMailJob::start()
             return;
         }
     }
-    if (mTypeSelected & Utils::MailTransport) {
+    if (checkBackupType(Utils::MailTransport)) {
         backupTransports();
         increaseProgressDialog();
         if (wasCanceled()) {
@@ -85,7 +92,7 @@ void ExportMailJob::start()
             return;
         }
     }
-    if (mTypeSelected & Utils::Mails) {
+    if (checkBackupType(Utils::Mails)) {
         backupMails();
         increaseProgressDialog();
         if (wasCanceled()) {
@@ -93,7 +100,7 @@ void ExportMailJob::start()
             return;
         }
     }
-    if (mTypeSelected & Utils::Resources) {
+    if (checkBackupType(Utils::Resources)) {
         backupResources();
         increaseProgressDialog();
         if (wasCanceled()) {
@@ -101,7 +108,7 @@ void ExportMailJob::start()
             return;
         }
     }
-    if (mTypeSelected & Utils::Config) {
+    if (checkBackupType(Utils::Config)) {
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
@@ -109,7 +116,7 @@ void ExportMailJob::start()
             return;
         }
     }
-    if (mTypeSelected & Utils::AkonadiDb) {
+    if (checkBackupType(Utils::AkonadiDb)) {
         backupAkonadiDb();
         increaseProgressDialog();
         if (wasCanceled()) {

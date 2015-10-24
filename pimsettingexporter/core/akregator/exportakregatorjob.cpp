@@ -41,6 +41,7 @@ ExportAkregatorJob::~ExportAkregatorJob()
 void ExportAkregatorJob::start()
 {
     Q_EMIT title(i18n("Start export Akregator settings..."));
+    createProgressDialog();
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Config) {
         backupConfig();
