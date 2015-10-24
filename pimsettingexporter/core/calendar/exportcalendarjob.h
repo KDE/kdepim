@@ -31,7 +31,7 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
-private slots:
+private Q_SLOTS:
     void slotCheckBackupResource();
     void slotCheckBackupConfig();
     void slotCalendarJobTerminated();

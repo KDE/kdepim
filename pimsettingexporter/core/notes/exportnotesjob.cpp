@@ -100,8 +100,6 @@ void ExportNotesJob::backupData()
     showInfo(i18n("Backing up data..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 
-    const QString notesThemeDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/knotes/print/");
-
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach (const Akonadi::AgentInstance &agent, list) {
@@ -132,6 +130,7 @@ void ExportNotesJob::backupData()
         }
     }
 
+    const QString notesThemeDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/knotes/print/");
     QDir notesThemeDirectory(notesThemeDir);
     if (notesThemeDirectory.exists()) {
         const bool notesDirAdded = archive()->addLocalDirectory(notesThemeDir, Utils::dataPath() +  QLatin1String("/knotes/print"));
