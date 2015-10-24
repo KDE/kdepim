@@ -19,7 +19,7 @@
 #include "viewer/chiasmuskeyselector.h"
 #include "messageviewer/messageviewerutil.h"
 #include "settings/messageviewersettings.h"
-#include "libkdepim/autoqpointer.h"
+
 #include <gpgme++/error.h>
 
 #include <kio/jobuidelegate.h>
@@ -121,7 +121,7 @@ void AttachmentEncryptWithChiasmusJob::start()
         deleteLater();
         return;
     }
-    KPIM::AutoQPointer<ChiasmusKeySelector> selectorDlg(new ChiasmusKeySelector(mMainWindow,
+    QScopedPointer<ChiasmusKeySelector> selectorDlg(new ChiasmusKeySelector(mMainWindow,
             i18n("Chiasmus Decryption Key Selection"),
             keys, MessageViewer::MessageViewerSettings::chiasmusDecryptionKey(),
             MessageViewer::MessageViewerSettings::chiasmusDecryptionOptions()));

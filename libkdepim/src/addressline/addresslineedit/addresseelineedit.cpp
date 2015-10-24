@@ -68,7 +68,7 @@
 #include <ContactGroupExpandJob>
 #include <kcontacts/vcarddrag.h>
 #include <addressline/completionconfiguredialog/completionconfiguredialog.h>
-#include <libkdepim/autoqpointer.h>
+
 
 
 using namespace KPIM;
@@ -619,7 +619,7 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
 
 void AddresseeLineEdit::configureCompletion()
 {
-    KPIM::AutoQPointer<KPIM::CompletionConfigureDialog> dlg(new KPIM::CompletionConfigureDialog(this));
+    QScopedPointer<KPIM::CompletionConfigureDialog> dlg(new KPIM::CompletionConfigureDialog(this));
     dlg->setRecentAddresses(KPIM::RecentAddresses::self(recentAddressConfig())->addresses());
     dlg->setLdapClientSearch(ldapSearch());
     dlg->setEmailBlackList(balooBlackList());

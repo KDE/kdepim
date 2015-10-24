@@ -42,7 +42,7 @@
 #include "memento/decryptverifybodypartmemento.h"
 #include "messagepart.h"
 #include "objecttreesourceif.h"
-#include "libkdepim/autoqpointer.h"
+
 #include "viewer/viewer_p.h"
 #include "partmetadata.h"
 #include "attachmentstrategy.h"
@@ -1492,7 +1492,7 @@ bool ObjectTreeParser::decryptChiasmus(const QByteArray &data, QByteArray &bodyD
         return false;
     }
 
-    KPIM::AutoQPointer<ChiasmusKeySelector> selectorDlg(new ChiasmusKeySelector(/*mReader*/0, i18n("Chiasmus Decryption Key Selection"),
+    QScopedPointer<ChiasmusKeySelector> selectorDlg(new ChiasmusKeySelector(/*mReader*/0, i18n("Chiasmus Decryption Key Selection"),
             keys, MessageViewer::MessageViewerSettings::chiasmusDecryptionKey(),
             MessageViewer::MessageViewerSettings::chiasmusDecryptionOptions()));
 

@@ -30,7 +30,7 @@
 
 #include "settings/messagecomposersettings.h"
 #include <MessageComposer/DistributionListDialog>
-#include "libkdepim/autoqpointer.h"
+
 #include "messagecomposer_debug.h"
 
 #include <KMime/Headers>
@@ -189,7 +189,7 @@ void RecipientsEditor::removeRecipient(const QString &recipient, Recipient::Type
 
 void RecipientsEditor::saveDistributionList()
 {
-    KPIM::AutoQPointer<MessageComposer::DistributionListDialog> dlg(new MessageComposer::DistributionListDialog(this));
+    QScopedPointer<MessageComposer::DistributionListDialog> dlg(new MessageComposer::DistributionListDialog(this));
     dlg->setRecipients(recipients());
     dlg->exec();
 }

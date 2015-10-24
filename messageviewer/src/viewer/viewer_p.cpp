@@ -111,7 +111,7 @@
 #include <AkonadiCore/attributefactory.h>
 #include <Akonadi/KMime/MessageParts>
 
-#include "libkdepim/autoqpointer.h"
+
 
 //own includes
 #include "widgets/attachmentdialog.h"
@@ -2229,7 +2229,7 @@ void ViewerPrivate::slotPrintMsg()
     }
     QPrinter printer;
 
-    KPIM::AutoQPointer<QPrintDialog> dlg(new QPrintDialog(&printer));
+    QScopedPointer<QPrintDialog> dlg(new QPrintDialog(&printer));
 
     if (dlg && dlg->exec() == QDialog::Accepted) {
         mViewer->print(&printer);

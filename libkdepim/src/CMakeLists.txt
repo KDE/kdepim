@@ -191,7 +191,6 @@ ecm_generate_headers(libkdepim_Camelcasemisc_HEADERS
   MaillistDrag
   UiStateSaver
   KCursorSaver
-  AutoQPointer
   REQUIRED_HEADERS libkdepim_misc_HEADERS
   PREFIX Libkdepim
   RELATIVE misc

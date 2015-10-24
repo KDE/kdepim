@@ -29,7 +29,6 @@
 
 #include "filterlogdialog.h"
 #include <MailCommon/FilterLog>
-#include <libkdepim/autoqpointer.h>
 #include "kpimtextedit/plaintexteditorwidget.h"
 #include "kpimtextedit/plaintexteditor.h"
 
@@ -344,7 +343,7 @@ void FilterLogDialog::slotUser1()
 void FilterLogDialog::slotUser2()
 {
     QUrl url;
-    KPIM::AutoQPointer<QFileDialog> fdlg(new QFileDialog(this));
+    QScopedPointer<QFileDialog> fdlg(new QFileDialog(this));
 
     fdlg->setAcceptMode(QFileDialog::AcceptSave);
     fdlg->setFileMode(QFileDialog::AnyFile);
