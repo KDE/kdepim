@@ -27,13 +27,16 @@
 #include <KConfigGroup>
 #include <KZip>
 
+#include <QTimer>
 #include <QFile>
 #include <QDir>
 #include <QWidget>
 #include <QStandardPaths>
+#include <exportresourcearchivejob.h>
 
 ExportCalendarJob::ExportCalendarJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
-    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
+    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep),
+      mIndexIdentifier(0)
 {
 }
 
@@ -46,69 +49,84 @@ void ExportCalendarJob::start()
 {
     Q_EMIT title(i18n("Start export KOrganizer settings..."));
     mArchiveDirectory = archive()->directory();
-    createProgressDialog();
-
     if (mTypeSelected & Utils::Resources) {
-        backupResources();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupResource()));
+    } else if (mTypeSelected & Utils::Config) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    } else {
+        Q_EMIT jobFinished();
     }
-    if (mTypeSelected & Utils::Config) {
-        backupConfig();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
+}
+
+void ExportCalendarJob::slotCheckBackupResource()
+{
+    showInfo(i18n("Backing up resources..."));
+    //TODO verify it.
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
+    increaseProgressDialog();
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+}
+
+void ExportCalendarJob::slotCheckBackupConfig()
+{
+    backupConfig();
+    increaseProgressDialog();
+    if (wasCanceled()) {
+        Q_EMIT jobFinished();
+        return;
     }
     Q_EMIT jobFinished();
 }
 
-void ExportCalendarJob::backupResources()
+void ExportCalendarJob::slotCalendarJobTerminated()
 {
-    showInfo(i18n("Backing up resources..."));
-    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
+    if (wasCanceled()) {
+        Q_EMIT jobFinished();
+        return;
+    }
+    mIndexIdentifier++;
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+}
 
+
+void ExportCalendarJob::slotWriteNextArchiveResource()
+{
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
-    foreach (const Akonadi::AgentInstance &agent, list) {
+    if (mIndexIdentifier < list.count()) {
+        Akonadi::AgentInstance agent = list.at(mIndexIdentifier);
         const QString identifier = agent.identifier();
         if (identifier.contains(QStringLiteral("akonadi_icaldir_resource_"))) {
             const QString archivePath = Utils::calendarPath() + identifier + QDir::separator();
 
             QString url = Utils::resourcePath(agent);
             if (!mAgentPaths.contains(url)) {
+                mAgentPaths << url;
                 if (!url.isEmpty()) {
-                    mAgentPaths << url;
-                    const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("calendar.zip"));
-                    if (fileAdded) {
-                        const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                        if (!errorStr.isEmpty()) {
-                            Q_EMIT error(errorStr);
-                        }
-                        url = Utils::akonadiAgentConfigPath(identifier);
-                        if (!url.isEmpty()) {
-                            QFileInfo fi(url);
-                            const QString filename = fi.fileName();
-                            const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
-                            if (fileAdded) {
-                                Q_EMIT info(i18n("\"%1\" was backed up.", filename));
-                            } else {
-                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
-                            }
-                        }
-                    }
+                    ExportResourceArchiveJob *resourceJob = new ExportResourceArchiveJob(this);
+                    resourceJob->setArchivePath(archivePath);
+                    resourceJob->setUrl(url);
+                    resourceJob->setIdentifier(identifier);
+                    resourceJob->setArchive(archive());
+                    resourceJob->setArchiveName(QStringLiteral("calendar.zip"));
+                    connect(resourceJob, &ExportResourceArchiveJob::error, this, &ExportCalendarJob::error);
+                    connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportCalendarJob::info);
+                    connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportCalendarJob::slotCalendarJobTerminated);
+                    resourceJob->start();
                 }
+            } else {
+                QTimer::singleShot(0, this, SLOT(slotCalendarJobTerminated()));
             }
         } else if (identifier.contains(QStringLiteral("akonadi_ical_resource_"))) {
             backupResourceFile(agent, Utils::calendarPath());
+            QTimer::singleShot(0, this, SLOT(slotCalendarJobTerminated()));
+        } else {
+            QTimer::singleShot(0, this, SLOT(slotCalendarJobTerminated()));
         }
+    } else {
+        Q_EMIT info(i18n("Resources backup done."));
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
     }
-
-    Q_EMIT info(i18n("Resources backup done."));
 }
 
 void ExportCalendarJob::backupConfig()
