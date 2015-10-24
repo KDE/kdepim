@@ -503,25 +503,6 @@ void ExportMailJob::backupMails()
     Q_EMIT info(i18n("Mails backup done."));
 }
 
-void ExportMailJob::writeDirectory(const QString &path, const QString &relativePath, KZip *mailArchive)
-{
-    QDir dir(path);
-    QString currentPath(path);
-    currentPath = currentPath.remove(relativePath);
-    mailArchive->writeDir(currentPath, QString(), QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime);
-
-    const QFileInfoList lst = dir.entryInfoList(QDir::NoDot | QDir::NoDotDot | QDir::Dirs | QDir::AllDirs | QDir::Hidden | QDir::Files);
-    const int numberItems(lst.count());
-    for (int i = 0; i < numberItems; ++i) {
-        const QString filename(lst.at(i).fileName());
-        if (lst.at(i).isDir()) {
-            writeDirectory(relativePath + path + QLatin1Char('/') + filename, relativePath, mailArchive);
-        } else {
-            mailArchive->addLocalFile(lst.at(i).absoluteFilePath(), currentPath + QLatin1Char('/') + filename);
-        }
-    }
-}
-
 void ExportMailJob::backupAkonadiDb()
 {
     showInfo(i18n("Backing up Akonadi Database..."));
@@ -573,14 +554,4 @@ void ExportMailJob::backupAkonadiDb()
     } else {
         Q_EMIT info(i18n("Akonadi Database backup done."));
     }
-}
-
-QUrl ExportMailJob::subdirPath(const QUrl &url) const
-{
-    const QString filename(url.fileName());
-    QString path = url.path();
-    const int parentDirEndIndex = path.lastIndexOf(filename);
-    path = path.left(parentDirEndIndex);
-    path.append(QLatin1Char('.') + filename + QLatin1String(".directory"));
-    return QUrl(path);
 }

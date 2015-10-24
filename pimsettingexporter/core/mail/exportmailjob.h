@@ -22,7 +22,6 @@
 #include <KSharedConfig>
 #include <QDateTime>
 #include <time.h>
-class QUrl;
 class ArchiveStorage;
 
 class ExportMailJob : public AbstractImportExportJob
@@ -34,15 +33,12 @@ public:
     void start() Q_DECL_OVERRIDE;
 
 private:
-    QUrl subdirPath(const QUrl &url) const;
-
     void backupTransports();
     void backupResources();
     void backupMails();
     void backupConfig();
     void backupIdentity();
     void backupAkonadiDb();
-    void writeDirectory(const QString &path, const QString &relativePath, KZip *mailArchive);
     bool checkProgram();
     QDateTime mArchiveTime;
 };
