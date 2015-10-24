@@ -78,7 +78,7 @@ EditorWatcher::ErrorEditorWatcher EditorWatcher::start()
     KService::Ptr offer = KMimeTypeTrader::self()->preferredService(mMimeType, QStringLiteral("Application"));
     if ((mOpenWithOption == OpenWithDialog) || !offer) {
         QScopedPointer<KOpenWithDialog> dlg(new KOpenWithDialog(list, i18n("Edit with:"),
-                                          QString(), mParentWidget));
+                                            QString(), mParentWidget));
         const int dlgrc = dlg->exec();
         if (dlgrc && dlg) {
             offer = dlg->service();

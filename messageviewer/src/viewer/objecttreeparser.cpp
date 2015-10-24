@@ -1207,8 +1207,8 @@ MessagePart::Ptr ObjectTreeParser::processMultiPartSignedSubtype(KMime::Content 
     const QTextCodec *aCodec(codecFor(signedData));
 
     CryptoMessagePart::Ptr mp(new CryptoMessagePart(this,
-                         aCodec->toUnicode(cleartext), cryptoProtocol(),
-                         NodeHelper::fromAsString(node), signature));
+                              aCodec->toUnicode(cleartext), cryptoProtocol(),
+                              NodeHelper::fromAsString(node), signature));
     PartMetaData *messagePart(mp->partMetaData());
     messagePart->isSigned = true;
 
@@ -1271,7 +1271,6 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Content *node, Pr
     }
 
     mNodeHelper->setEncryptionState(node, KMMsgFullyEncrypted);
-
 
     CryptoMessagePart mp(this,
                          data->decodedText(), Kleo::CryptoBackendFactory::instance()->openpgp(),

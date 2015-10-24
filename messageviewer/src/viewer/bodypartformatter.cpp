@@ -116,7 +116,8 @@ public:
 
 const MessageRfc822BodyPartFormatter *MessageRfc822BodyPartFormatter::self;
 
-const MessageViewer::Interface::BodyPartFormatter *MessageRfc822BodyPartFormatter::create() {
+const MessageViewer::Interface::BodyPartFormatter *MessageRfc822BodyPartFormatter::create()
+{
     if (!self) {
         self = new MessageRfc822BodyPartFormatter();
     }
@@ -134,7 +135,7 @@ MessageViewer::Interface::BodyPartFormatter::Result MessageRfc822BodyPartFormatt
     Q_UNUSED(writer)
     const ObjectTreeParser *otp = part->objectTreeParser();
     const MessagePart::Ptr mp = process(part);
-     if (mp && !otp->attachmentStrategy()->inlineNestedMessages() && !otp->showOnlyOneMimePart()) {
+    if (mp && !otp->attachmentStrategy()->inlineNestedMessages() && !otp->showOnlyOneMimePart()) {
         return Failed;
     } else {
         mp->html(true);

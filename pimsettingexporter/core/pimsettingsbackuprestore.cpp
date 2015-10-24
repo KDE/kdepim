@@ -106,7 +106,7 @@ void PimSettingsBackupRestore::nextStep()
 {
     mStoreIterator++;
     Q_EMIT addEndLine();
-    switch(mAction) {
+    switch (mAction) {
     case Backup:
         backupNextStep();
         break;

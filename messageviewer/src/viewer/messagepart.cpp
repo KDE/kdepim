@@ -123,7 +123,6 @@ MessagePart::~MessagePart()
     }
 }
 
-
 PartMetaData *MessagePart::partMetaData()
 {
     return &mMetaData;
@@ -151,7 +150,7 @@ void MessagePart::html(bool decorate)
     writer->queue(mOtp->quotedHTML(text(), decorate));
 }
 
-void MessagePart::parseInternal(KMime::Content* node, bool onlyOneMimePart)
+void MessagePart::parseInternal(KMime::Content *node, bool onlyOneMimePart)
 {
     mSubOtp = new ObjectTreeParser(mOtp, onlyOneMimePart);
     mSubOtp->setAllowAsync(mOtp->allowAsync());
@@ -183,13 +182,12 @@ QString MessagePart::renderInternalText() const
     return mSubOtp->plainTextContent();
 }
 
-
 //-----MimeMessageBlock----------------------
 
-MimeMessagePart::MimeMessagePart(ObjectTreeParser* otp, KMime::Content* node, bool onlyOneMimePart)
-: MessagePart(otp, QString())
-, mNode(node)
-, mOnlyOneMimePart(onlyOneMimePart)
+MimeMessagePart::MimeMessagePart(ObjectTreeParser *otp, KMime::Content *node, bool onlyOneMimePart)
+    : MessagePart(otp, QString())
+    , mNode(node)
+    , mOnlyOneMimePart(onlyOneMimePart)
 {
     if (!mNode) {
         qCWarning(MESSAGEVIEWER_LOG) << "not a valid node";
@@ -397,8 +395,6 @@ void CryptoMessagePart::html(bool decorate)
     //TODO: still the following part should not be here
     copyContentFrom();
 
-
-
     if (!writer) {
         return;
     }
@@ -437,9 +433,9 @@ void CryptoMessagePart::html(bool decorate)
 }
 
 EncapsulatedRfc822MessagePart::EncapsulatedRfc822MessagePart(ObjectTreeParser *otp, KMime::Content *node, const KMime::Message::Ptr &message)
-: MessagePart(otp, QString())
-, mMessage(message)
-, mNode(node)
+    : MessagePart(otp, QString())
+    , mMessage(message)
+    , mNode(node)
 {
     mMetaData.isEncrypted = false;
     mMetaData.isSigned = false;

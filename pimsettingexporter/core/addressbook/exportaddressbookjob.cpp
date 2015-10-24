@@ -125,7 +125,6 @@ void ExportAddressbookJob::slotWriteNextArchiveResource()
     }
 }
 
-
 void ExportAddressbookJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));

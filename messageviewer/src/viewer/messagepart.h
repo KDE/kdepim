@@ -108,7 +108,7 @@ public:
     PartMetaData *partMetaData();
 
 protected:
-    void parseInternal(KMime::Content* node, bool onlyOneMimePart);
+    void parseInternal(KMime::Content *node, bool onlyOneMimePart);
     void renderInternalHtml() const;
     void copyContentFrom() const;
     QString renderInternalText() const;
@@ -122,14 +122,14 @@ class MimeMessagePart : public MessagePart
 {
 public:
     typedef QSharedPointer<MimeMessagePart> Ptr;
-    MimeMessagePart( MessageViewer::ObjectTreeParser* otp, KMime::Content* node, bool onlyOneMimePart );
+    MimeMessagePart(MessageViewer::ObjectTreeParser *otp, KMime::Content *node, bool onlyOneMimePart);
     virtual ~MimeMessagePart();
 
     QString text() const Q_DECL_OVERRIDE;
     void html(bool decorate) Q_DECL_OVERRIDE;
 
 private:
-    KMime::Content* mNode;
+    KMime::Content *mNode;
     bool mOnlyOneMimePart;
 };
 

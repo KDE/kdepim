@@ -111,8 +111,6 @@
 #include <AkonadiCore/attributefactory.h>
 #include <Akonadi/KMime/MessageParts>
 
-
-
 //own includes
 #include "widgets/attachmentdialog.h"
 #include "viewer/attachmentstrategy.h"
