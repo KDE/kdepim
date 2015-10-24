@@ -39,8 +39,8 @@ private:
     void backupMails();
     void backupConfig();
     void backupIdentity();
-    void backupAkonadiDb();
-    bool checkProgram();
+    //void backupAkonadiDb();
+    //bool checkProgram();
     QDateTime mArchiveTime;
 };
 

@@ -50,6 +50,7 @@ ExportMailJob::~ExportMailJob()
 {
 }
 
+#if 0
 bool ExportMailJob::checkProgram()
 {
     if (QStandardPaths::findExecutable(QStringLiteral("mysqldump")).isEmpty()) {
@@ -58,6 +59,7 @@ bool ExportMailJob::checkProgram()
     }
     return true;
 }
+#endif
 
 bool ExportMailJob::checkBackupType(Utils::StoredType type)
 {
@@ -116,6 +118,7 @@ void ExportMailJob::start()
             return;
         }
     }
+#if 0
     if (checkBackupType(Utils::AkonadiDb)) {
         backupAkonadiDb();
         increaseProgressDialog();
@@ -124,6 +127,7 @@ void ExportMailJob::start()
             return;
         }
     }
+#endif
     Q_EMIT jobFinished();
 }
 
@@ -509,7 +513,7 @@ void ExportMailJob::backupMails()
 
     Q_EMIT info(i18n("Mails backup done."));
 }
-
+#if 0
 void ExportMailJob::backupAkonadiDb()
 {
     showInfo(i18n("Backing up Akonadi Database..."));
@@ -562,3 +566,4 @@ void ExportMailJob::backupAkonadiDb()
         Q_EMIT info(i18n("Akonadi Database backup done."));
     }
 }
+#endif
