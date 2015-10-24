@@ -34,6 +34,7 @@ Q_SIGNALS:
 
 protected:
     void run() Q_DECL_OVERRIDE;
+
 private:
     QString mUrl;
     QString mArchivePath;

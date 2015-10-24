@@ -82,9 +82,9 @@ void ExportResourceArchiveJob::slotTerminated(bool success)
         if (!errorStr.isEmpty()) {
             Q_EMIT error(errorStr);
         }
-        QString url = Utils::akonadiAgentConfigPath(mIdentifier);
+        const QString url = Utils::akonadiAgentConfigPath(mIdentifier);
         if (!url.isEmpty()) {
-            QFileInfo fi(url);
+            const QFileInfo fi(url);
             const QString filename = fi.fileName();
             const bool fileAdded  = mZip->addLocalFile(mUrl, mArchivePath + filename);
             if (fileAdded) {

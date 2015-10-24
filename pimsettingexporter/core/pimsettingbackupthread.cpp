@@ -40,7 +40,6 @@ PimSettingBackupThread::~PimSettingBackupThread()
 
 void PimSettingBackupThread::run()
 {
-    qDebug()<<" PimSettingBackupThread::run()";
     QTemporaryFile tmp;
     tmp.open();
     KZip *archiveFile = new KZip(tmp.fileName());
