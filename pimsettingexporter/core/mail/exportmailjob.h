@@ -26,22 +26,31 @@ class ArchiveStorage;
 
 class ExportMailJob : public AbstractImportExportJob
 {
+    Q_OBJECT
 public:
     explicit ExportMailJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ExportMailJob();
 
     void start() Q_DECL_OVERRIDE;
 
+private Q_SLOTS:
+    void slotCheckBackupIdentity();
+    void slotCheckBackupMailTransport();
+    void slotCheckBackupConfig();
+    void slotCheckBackupMails();
+    void slotCheckBackupResources();
+    void slotMailsJobTerminated();
+    void slotWriteNextArchiveResource();
 private:
-    bool checkBackupType(Utils::StoredType type);
+    bool checkBackupType(Utils::StoredType type) const;
     void backupTransports();
     void backupResources();
-    void backupMails();
     void backupConfig();
     void backupIdentity();
     //void backupAkonadiDb();
     //bool checkProgram();
     QDateTime mArchiveTime;
+    int mIndexIdentifier;
 };
 
 #endif // ExportMailJob_H

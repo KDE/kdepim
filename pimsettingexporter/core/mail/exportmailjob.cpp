@@ -38,11 +38,14 @@
 
 #include <QFile>
 #include <QDir>
+#include <QTimer>
 #include <QStandardPaths>
+#include <exportresourcearchivejob.h>
 
 ExportMailJob::ExportMailJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep),
-      mArchiveTime(QDateTime::currentDateTime())
+      mArchiveTime(QDateTime::currentDateTime()),
+      mIndexIdentifier(0)
 {
 }
 
@@ -61,23 +64,32 @@ bool ExportMailJob::checkProgram()
 }
 #endif
 
-bool ExportMailJob::checkBackupType(Utils::StoredType type)
+bool ExportMailJob::checkBackupType(Utils::StoredType type) const
 {
     return (mTypeSelected & type);
 }
 
 void ExportMailJob::start()
 {
-#if 0 //We don't save akonadidb => comment it
-    if (!checkProgram()) {
-        Q_EMIT jobFinished();
-        return;
-    }
-#endif
-
     Q_EMIT title(i18n("Start export KMail settings..."));
     createProgressDialog();
+    if (checkBackupType(Utils::Identity)) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupIdentity()));
+    } else if (checkBackupType(Utils::MailTransport)) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupMailTransport()));
+    } else if (checkBackupType(Utils::Config)) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    } else if (checkBackupType(Utils::Mails)) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupMails()));
+    } else if (checkBackupType(Utils::Resources)) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupResources()));
+    } else {
+        Q_EMIT jobFinished();
+    }
+}
 
+void ExportMailJob::slotCheckBackupIdentity()
+{
     if (checkBackupType(Utils::Identity)) {
         backupIdentity();
         increaseProgressDialog();
@@ -86,6 +98,11 @@ void ExportMailJob::start()
             return;
         }
     }
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupMailTransport()));
+}
+
+void ExportMailJob::slotCheckBackupMailTransport()
+{
     if (checkBackupType(Utils::MailTransport)) {
         backupTransports();
         increaseProgressDialog();
@@ -94,22 +111,11 @@ void ExportMailJob::start()
             return;
         }
     }
-    if (checkBackupType(Utils::Mails)) {
-        backupMails();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
-    }
-    if (checkBackupType(Utils::Resources)) {
-        backupResources();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
-    }
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+}
+
+void ExportMailJob::slotCheckBackupConfig()
+{
     if (checkBackupType(Utils::Config)) {
         backupConfig();
         increaseProgressDialog();
@@ -118,17 +124,83 @@ void ExportMailJob::start()
             return;
         }
     }
-#if 0
-    if (checkBackupType(Utils::AkonadiDb)) {
-        backupAkonadiDb();
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupMails()));
+}
+
+void ExportMailJob::slotCheckBackupMails()
+{
+    if (checkBackupType(Utils::Mails)) {
+        //TODO verify it.
+        KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
         increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
+        QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+        return;
     }
-#endif
-    Q_EMIT jobFinished();
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupResources()));
+}
+
+void ExportMailJob::slotMailsJobTerminated()
+{
+    if (wasCanceled()) {
+        Q_EMIT jobFinished();
+        return;
+    }
+    mIndexIdentifier++;
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+}
+
+
+void ExportMailJob::slotWriteNextArchiveResource()
+{
+    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+    const Akonadi::AgentInstance::List list = manager->instances();
+    if (mIndexIdentifier < list.count()) {
+        const Akonadi::AgentInstance agent = list.at(mIndexIdentifier);
+        const QStringList capabilities(agent.type().capabilities());
+        if (agent.type().mimeTypes().contains(KMime::Message::mimeType())) {
+            if (capabilities.contains(QStringLiteral("Resource")) &&
+                    !capabilities.contains(QStringLiteral("Virtual")) &&
+                    !capabilities.contains(QStringLiteral("MailTransport"))) {
+
+                const QString identifier = agent.identifier();
+                if (identifier.contains(QStringLiteral("akonadi_maildir_resource_")) ||
+                        identifier.contains(QStringLiteral("akonadi_mixedmaildir_resource_"))) {
+                    const QString archivePath = Utils::mailsPath() + identifier + QDir::separator();
+
+                    const QString url = Utils::resourcePath(agent);
+                    if (!mAgentPaths.contains(url)) {
+                        mAgentPaths << url;
+                        if (!url.isEmpty()) {
+                            ExportResourceArchiveJob *resourceJob = new ExportResourceArchiveJob(this);
+                            resourceJob->setArchivePath(archivePath);
+                            resourceJob->setUrl(url);
+                            resourceJob->setIdentifier(identifier);
+                            resourceJob->setArchive(archive());
+                            resourceJob->setArchiveName(QStringLiteral("mail.zip"));
+                            connect(resourceJob, &ExportResourceArchiveJob::error, this, &ExportMailJob::error);
+                            connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportMailJob::info);
+                            connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportMailJob::slotMailsJobTerminated);
+                            resourceJob->start();
+                        }
+                    } else {
+                        QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+                    }
+                } else if (identifier.contains(QStringLiteral("akonadi_mbox_resource_"))) {
+                    backupResourceFile(agent, Utils::addressbookPath());
+                    QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+                } else {
+                    QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+                }
+            } else {
+                QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+            }
+        } else {
+            QTimer::singleShot(0, this, SLOT(slotMailsJobTerminated()));
+        }
+    } else {
+        Q_EMIT info(i18n("Resources backup done."));
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupResources()));
+    }
 }
 
 void ExportMailJob::backupTransports()
@@ -156,6 +228,19 @@ void ExportMailJob::backupTransports()
             Q_EMIT error(i18n("Transport file cannot be added to backup file."));
         }
     }
+}
+
+void ExportMailJob::slotCheckBackupResources()
+{
+    if (checkBackupType(Utils::Resources)) {
+        backupResources();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            Q_EMIT jobFinished();
+            return;
+        }
+    }
+    Q_EMIT jobFinished();
 }
 
 void ExportMailJob::backupResources()
@@ -467,52 +552,6 @@ void ExportMailJob::backupIdentity()
     }
 }
 
-void ExportMailJob::backupMails()
-{
-    showInfo(i18n("Backing up Mails..."));
-    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
-    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
-    const Akonadi::AgentInstance::List list = manager->instances();
-    foreach (const Akonadi::AgentInstance &agent, list) {
-        const QStringList capabilities(agent.type().capabilities());
-        if (agent.type().mimeTypes().contains(KMime::Message::mimeType())) {
-            if (capabilities.contains(QStringLiteral("Resource")) &&
-                    !capabilities.contains(QStringLiteral("Virtual")) &&
-                    !capabilities.contains(QStringLiteral("MailTransport"))) {
-                const QString identifier = agent.identifier();
-                const QString archivePath = Utils::mailsPath() + identifier + QDir::separator();
-                if (identifier.contains(QStringLiteral("akonadi_mbox_resource_"))) {
-                    backupResourceFile(agent, Utils::mailsPath());
-                } else if (identifier.contains(QStringLiteral("akonadi_maildir_resource_")) ||
-                           identifier.contains(QStringLiteral("akonadi_mixedmaildir_resource_"))) {
-                    //Store akonadi agent config
-                    QString url = Utils::resourcePath(agent);
-
-                    const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("mail.zip"));
-                    if (fileAdded) {
-                        const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                        if (!errorStr.isEmpty()) {
-                            Q_EMIT error(errorStr);
-                        }
-                        url = Utils::akonadiAgentConfigPath(identifier);
-                        if (!url.isEmpty()) {
-                            QFileInfo fi(url);
-                            const QString filename = fi.fileName();
-                            const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
-                            if (fileAdded) {
-                                Q_EMIT info(i18n("\"%1\" was backed up.", filename));
-                            } else {
-                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    Q_EMIT info(i18n("Mails backup done."));
-}
 #if 0
 void ExportMailJob::backupAkonadiDb()
 {
