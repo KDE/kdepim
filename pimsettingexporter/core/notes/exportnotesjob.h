@@ -30,9 +30,15 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
+private Q_SLOTS:
+    void slotCheckBackupResource();
+    void slotCheckBackupConfig();
+    void slotAddressbookJobTerminated();
+    void slotWriteNextArchiveResource();
 private:
     void backupConfig();
-    void backupData();
+    void backupTheme();
+    int mIndexIdentifier;
 };
 
 #endif // EXPORTNOTESJOB_H

@@ -28,10 +28,13 @@
 
 #include <QWidget>
 #include <QDir>
+#include <QTimer>
 #include <QStandardPaths>
+#include <exportresourcearchivejob.h>
 
 ExportNotesJob::ExportNotesJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
-    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
+    : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep),
+      mIndexIdentifier(0)
 {
 }
 
@@ -44,23 +47,94 @@ void ExportNotesJob::start()
 {
     Q_EMIT title(i18n("Start export KNotes settings..."));
     mArchiveDirectory = archive()->directory();
-    if (mTypeSelected & Utils::Config) {
-        backupConfig();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
+    if (mTypeSelected & Utils::Data) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupResource()));
+    } else if (mTypeSelected & Utils::Config) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    } else {
+        Q_EMIT jobFinished();
+    }
+}
+
+void ExportNotesJob::backupTheme()
+{
+    const QString notesThemeDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/knotes/print/");
+    QDir notesThemeDirectory(notesThemeDir);
+    if (notesThemeDirectory.exists()) {
+        const bool notesDirAdded = archive()->addLocalDirectory(notesThemeDir, Utils::dataPath() +  QLatin1String("/knotes/print"));
+        if (!notesDirAdded) {
+            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", notesThemeDir));
         }
     }
-    if (mTypeSelected & Utils::Data) {
-        backupData();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
+}
+
+void ExportNotesJob::slotCheckBackupResource()
+{
+    showInfo(i18n("Backing up resources..."));
+    //TODO verify it.
+    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
+    increaseProgressDialog();
+    backupTheme();
+
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+}
+
+void ExportNotesJob::slotCheckBackupConfig()
+{
+    backupConfig();
+    increaseProgressDialog();
+    if (wasCanceled()) {
+        Q_EMIT jobFinished();
+        return;
     }
     Q_EMIT jobFinished();
+}
+
+void ExportNotesJob::slotAddressbookJobTerminated()
+{
+    if (wasCanceled()) {
+        Q_EMIT jobFinished();
+        return;
+    }
+    mIndexIdentifier++;
+    QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
+}
+
+void ExportNotesJob::slotWriteNextArchiveResource()
+{
+    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+    const Akonadi::AgentInstance::List list = manager->instances();
+    if (mIndexIdentifier < list.count()) {
+        Akonadi::AgentInstance agent = list.at(mIndexIdentifier);
+        const QString identifier = agent.identifier();
+        if (identifier.contains(QStringLiteral("akonadi_akonotes_resource_"))) {
+            const QString archivePath = Utils::notePath() + identifier + QDir::separator();
+
+            QString url = Utils::resourcePath(agent);
+            if (!mAgentPaths.contains(url)) {
+                mAgentPaths << url;
+                if (!url.isEmpty()) {
+                    ExportResourceArchiveJob *resourceJob = new ExportResourceArchiveJob(this);
+                    resourceJob->setArchivePath(archivePath);
+                    resourceJob->setUrl(url);
+                    resourceJob->setIdentifier(identifier);
+                    resourceJob->setArchive(archive());
+                    resourceJob->setArchiveName(QStringLiteral("notes.zip"));
+                    connect(resourceJob, &ExportResourceArchiveJob::error, this, &ExportNotesJob::error);
+                    connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportNotesJob::info);
+                    connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportNotesJob::slotAddressbookJobTerminated);
+                    resourceJob->start();
+                }
+            } else {
+                QTimer::singleShot(0, this, SLOT(slotAddressbookJobTerminated()));
+            }
+        } else {
+            QTimer::singleShot(0, this, SLOT(slotAddressbookJobTerminated()));
+        }
+    } else {
+        Q_EMIT info(i18n("Resources backup done."));
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    }
 }
 
 void ExportNotesJob::backupConfig()
@@ -94,50 +168,3 @@ void ExportNotesJob::backupConfig()
     }
     Q_EMIT info(i18n("Config backup done."));
 }
-
-void ExportNotesJob::backupData()
-{
-    showInfo(i18n("Backing up data..."));
-    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
-
-    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
-    const Akonadi::AgentInstance::List list = manager->instances();
-    foreach (const Akonadi::AgentInstance &agent, list) {
-        const QString identifier = agent.identifier();
-        if (identifier.contains(QStringLiteral("akonadi_akonotes_resource_"))) {
-            const QString archivePath = Utils::notePath() + identifier + QDir::separator();
-            QString url = Utils::resourcePath(agent);
-            if (!url.isEmpty()) {
-                const bool fileAdded = backupFullDirectory(url, archivePath, QStringLiteral("notes.zip"));
-                if (fileAdded) {
-                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                    if (!errorStr.isEmpty()) {
-                        Q_EMIT error(errorStr);
-                    }
-                    url = Utils::akonadiAgentConfigPath(identifier);
-                    if (!url.isEmpty()) {
-                        QFileInfo fi(url);
-                        const QString filename = fi.fileName();
-                        const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
-                        if (fileAdded) {
-                            Q_EMIT info(i18n("\"%1\" was backed up.", filename));
-                        } else {
-                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    const QString notesThemeDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/knotes/print/");
-    QDir notesThemeDirectory(notesThemeDir);
-    if (notesThemeDirectory.exists()) {
-        const bool notesDirAdded = archive()->addLocalDirectory(notesThemeDir, Utils::dataPath() +  QLatin1String("/knotes/print"));
-        if (!notesDirAdded) {
-            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", notesThemeDir));
-        }
-    }
-    Q_EMIT info(i18n("Data backup done."));
-}
-
