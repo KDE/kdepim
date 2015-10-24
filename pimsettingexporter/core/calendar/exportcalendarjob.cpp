@@ -69,11 +69,13 @@ void ExportCalendarJob::slotCheckBackupResource()
 
 void ExportCalendarJob::slotCheckBackupConfig()
 {
-    backupConfig();
-    increaseProgressDialog();
-    if (wasCanceled()) {
-        Q_EMIT jobFinished();
-        return;
+    if (mTypeSelected & Utils::Config) {
+        backupConfig();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            Q_EMIT jobFinished();
+            return;
+        }
     }
     Q_EMIT jobFinished();
 }
