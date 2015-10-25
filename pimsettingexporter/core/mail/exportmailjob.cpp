@@ -133,6 +133,7 @@ void ExportMailJob::slotCheckBackupMails()
         //TODO verify it.
         KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
         increaseProgressDialog();
+        setProgressDialogLabel(i18n("Backing up Mails..."));
         QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
         return;
     }
