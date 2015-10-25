@@ -40,7 +40,7 @@ void ImportExportProgressIndicatorBase::createProgressDialog(const QString &titl
     //Nothing
 }
 
-void ImportExportProgressIndicatorBase::showInfo(const QString &text)
+void ImportExportProgressIndicatorBase::setProgressDialogLabel(const QString &text)
 {
     Q_EMIT info(text);
 }

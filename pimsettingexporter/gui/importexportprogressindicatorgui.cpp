@@ -52,7 +52,7 @@ void ImportExportProgressIndicatorGui::createProgressDialog(const QString &title
     mProgressDialog->setValue(0);
 }
 
-void ImportExportProgressIndicatorGui::showInfo(const QString &text)
+void ImportExportProgressIndicatorGui::setProgressDialogLabel(const QString &text)
 {
     if (mProgressDialog) {
         mProgressDialog->setLabelText(text);

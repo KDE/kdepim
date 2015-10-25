@@ -28,7 +28,7 @@ ImportExportProgressIndicatorConsole::~ImportExportProgressIndicatorConsole()
 {
 }
 
-void ImportExportProgressIndicatorConsole::showInfo(const QString &text)
+void ImportExportProgressIndicatorConsole::setProgressDialogLabel(const QString &text)
 {
     Q_EMIT info(text);
 }
