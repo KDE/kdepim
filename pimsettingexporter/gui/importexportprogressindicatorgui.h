@@ -28,7 +28,7 @@ public:
     ~ImportExportProgressIndicatorGui();
 
     void increaseProgressDialog() Q_DECL_OVERRIDE;
-    void createProgressDialog() Q_DECL_OVERRIDE;
+    void createProgressDialog(const QString &title) Q_DECL_OVERRIDE;
 
     void showInfo(const QString &text) Q_DECL_OVERRIDE;
     bool wasCanceled() const Q_DECL_OVERRIDE;

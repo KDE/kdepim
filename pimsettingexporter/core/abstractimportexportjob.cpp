@@ -60,9 +60,9 @@ AbstractImportExportJob::~AbstractImportExportJob()
     delete mTempDir;
 }
 
-void AbstractImportExportJob::createProgressDialog()
+void AbstractImportExportJob::createProgressDialog(const QString &title)
 {
-    mImportExportProgressIndicator->createProgressDialog();
+    mImportExportProgressIndicator->createProgressDialog(title);
 }
 
 bool AbstractImportExportJob::wasCanceled() const

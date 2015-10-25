@@ -101,7 +101,7 @@ protected:
     KZip *archive() const;
 
     void increaseProgressDialog();
-    void createProgressDialog();
+    void createProgressDialog(const QString &title = QString());
 
     void showInfo(const QString &text);
 

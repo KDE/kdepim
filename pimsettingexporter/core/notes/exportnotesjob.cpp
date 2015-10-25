@@ -47,7 +47,7 @@ void ExportNotesJob::start()
 {
     Q_EMIT title(i18n("Start export KNotes settings..."));
     mArchiveDirectory = archive()->directory();
-    createProgressDialog();
+    createProgressDialog(i18n("Export KNotes settings"));
     if (mTypeSelected & Utils::Data) {
         QTimer::singleShot(0, this, SLOT(slotCheckBackupResource()));
     } else if (mTypeSelected & Utils::Config) {

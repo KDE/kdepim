@@ -72,7 +72,7 @@ bool ExportMailJob::checkBackupType(Utils::StoredType type) const
 void ExportMailJob::start()
 {
     Q_EMIT title(i18n("Start export KMail settings..."));
-    createProgressDialog();
+    createProgressDialog(i18n("Export KMail settings"));
     if (checkBackupType(Utils::Identity)) {
         QTimer::singleShot(0, this, SLOT(slotCheckBackupIdentity()));
     } else if (checkBackupType(Utils::MailTransport)) {

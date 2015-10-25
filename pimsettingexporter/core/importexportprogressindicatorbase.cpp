@@ -35,7 +35,7 @@ void ImportExportProgressIndicatorBase::increaseProgressDialog()
     //Nothing
 }
 
-void ImportExportProgressIndicatorBase::createProgressDialog()
+void ImportExportProgressIndicatorBase::createProgressDialog(const QString &title)
 {
     //Nothing
 }

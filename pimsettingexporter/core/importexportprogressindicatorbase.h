@@ -28,7 +28,7 @@ public:
     ~ImportExportProgressIndicatorBase();
 
     virtual void increaseProgressDialog();
-    virtual void createProgressDialog();
+    virtual void createProgressDialog(const QString &title);
 
     virtual void showInfo(const QString &text);
     virtual bool wasCanceled() const;

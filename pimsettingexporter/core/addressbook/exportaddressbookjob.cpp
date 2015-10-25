@@ -45,7 +45,7 @@ ExportAddressbookJob::~ExportAddressbookJob()
 void ExportAddressbookJob::start()
 {
     Q_EMIT title(i18n("Start export KAddressBook settings..."));
-    createProgressDialog();
+    createProgressDialog(i18n("Export KAddressBook settings"));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Resources) {
         QTimer::singleShot(0, this, SLOT(slotCheckBackupResource()));
