@@ -41,7 +41,6 @@ ExportBlogiloJob::~ExportBlogiloJob()
 void ExportBlogiloJob::start()
 {
     Q_EMIT title(i18n("Start export Blogilo settings..."));
-    mArchiveDirectory = archive()->directory();
     createProgressDialog(i18n("Export Blogilo settings"));
     if (mTypeSelected & Utils::Config) {
         backupConfig();

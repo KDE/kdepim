@@ -48,7 +48,6 @@ ExportAlarmJob::~ExportAlarmJob()
 void ExportAlarmJob::start()
 {
     Q_EMIT title(i18n("Start export KAlarm settings..."));
-    mArchiveDirectory = archive()->directory();
     createProgressDialog(i18n("Export KAlarm settings"));
     if (mTypeSelected & Utils::Resources) {
         QTimer::singleShot(0, this, SLOT(slotCheckBackupResource()));
