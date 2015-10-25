@@ -32,7 +32,7 @@ public:
     ~QuickSearchWarning();
     void setSearchText(const QString &text);
 
-private slots:
+private Q_SLOTS:
     void slotDoNotRememberIt();
 };
 }

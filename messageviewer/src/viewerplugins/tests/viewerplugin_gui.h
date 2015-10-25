@@ -31,7 +31,7 @@ public:
     explicit ViewerPluginTest(QWidget *parent = Q_NULLPTR);
     ~ViewerPluginTest();
 
-private slots:
+private Q_SLOTS:
     void slotActivatePlugin(MessageViewer::ViewerPluginInterface *interface);
 };
 
