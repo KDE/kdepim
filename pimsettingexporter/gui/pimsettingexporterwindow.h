@@ -52,7 +52,6 @@ private:
     void initializeBackupRestoreUi();
     void backupData(const QString &filename, const QString &templateFile = QString());
     void loadData(const QString &filename, const QString &templateFile = QString());
-    bool canZip() const;
     void setupActions(bool canZipFile);
     LogWidget *mLogWidget;
     KRecentFilesAction *mRecentFilesAction;

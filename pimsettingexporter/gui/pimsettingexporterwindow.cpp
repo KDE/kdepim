@@ -64,17 +64,13 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     CommonKernel->registerKernelIf(kernel);   //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf(kernel);   //SettingsIf is used in FolderTreeWidget
 
-    bool canZipFile = canZip();
-    setupActions(canZipFile);
+    setupActions(true);
     setupGUI(Keys | StatusBar | Save | Create, QStringLiteral("pimsettingexporter.rc"));
     mLogWidget = new LogWidget(this);
 
     setCentralWidget(mLogWidget);
     resize(800, 600);
     Akonadi::ControlGui::widgetNeedsAkonadi(this);
-    if (!canZipFile) {
-        KMessageBox::error(this, i18n("Zip program not found. Install it before to launch this application."), i18n("Zip program not found."));
-    }
     statusBar()->hide();
 }
 
@@ -279,15 +275,6 @@ void PimSettingExporterWindow::loadData(const QString &filename, const QString &
     } else {
         delete dialog;
     }
-}
-
-bool PimSettingExporterWindow::canZip() const
-{
-    const QString zip = QStandardPaths::findExecutable(QStringLiteral("zip"));
-    if (zip.isEmpty()) {
-        return false;
-    }
-    return true;
 }
 
 void PimSettingExporterWindow::slotShowStructureInfos()
