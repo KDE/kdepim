@@ -85,23 +85,18 @@ void ImportMailJob::nextStep()
 {
     ++mIndex;
     if (mIndex < mListStep.count()) {
-        Utils::StoredType type = mListStep.at(mIndex);
+        const Utils::StoredType type = mListStep.at(mIndex);
         if (type == Utils::MailTransport) {
             restoreTransports();
-        }
-        if (type == Utils::Mails) {
+        } else if (type == Utils::Mails) {
             restoreMails();
-        }
-        if (type == Utils::Resources) {
+        } else if (type == Utils::Resources) {
             restoreResources();
-        }
-        if (type == Utils::Identity) {
+        } else if (type == Utils::Identity) {
             restoreIdentity();
-        }
-        if (type == Utils::Config) {
+        } else if (type == Utils::Config) {
             restoreConfig();
-        }
-        if (type == Utils::AkonadiDb) {
+        } else if (type == Utils::AkonadiDb) {
             restoreAkonadiDb();
         }
     } else {

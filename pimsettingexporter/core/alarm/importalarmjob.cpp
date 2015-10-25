@@ -62,11 +62,10 @@ void ImportAlarmJob::nextStep()
 {
     ++mIndex;
     if (mIndex < mListStep.count()) {
-        Utils::StoredType type = mListStep.at(mIndex);
+        const Utils::StoredType type = mListStep.at(mIndex);
         if (type == Utils::Resources) {
             restoreResources();
-        }
-        if (type == Utils::Config) {
+        } else if (type == Utils::Config) {
             restoreConfig();
         }
     } else {
