@@ -71,7 +71,7 @@ void ExportNotesJob::backupTheme()
 
 void ExportNotesJob::slotCheckBackupResource()
 {
-    showInfo(i18n("Backing up resources..."));
+    setProgressDialogLabel(i18n("Backing up resources..."));
     //TODO verify it.
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     increaseProgressDialog();
@@ -142,7 +142,7 @@ void ExportNotesJob::slotWriteNextArchiveResource()
 
 void ExportNotesJob::backupConfig()
 {
-    showInfo(i18n("Backing up config..."));
+    setProgressDialogLabel(i18n("Backing up config..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     const QString knotesStr(QStringLiteral("knotesrc"));
     const QString knotesrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + knotesStr;

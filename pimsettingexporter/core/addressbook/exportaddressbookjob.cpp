@@ -58,7 +58,7 @@ void ExportAddressbookJob::start()
 
 void ExportAddressbookJob::slotCheckBackupResource()
 {
-    showInfo(i18n("Backing up resources..."));
+    setProgressDialogLabel(i18n("Backing up resources..."));
     //TODO verify it.
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     increaseProgressDialog();
@@ -130,7 +130,7 @@ void ExportAddressbookJob::slotWriteNextArchiveResource()
 
 void ExportAddressbookJob::backupConfig()
 {
-    showInfo(i18n("Backing up config..."));
+    setProgressDialogLabel(i18n("Backing up config..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 
     const QString kaddressbookStr(QStringLiteral("kaddressbookrc"));

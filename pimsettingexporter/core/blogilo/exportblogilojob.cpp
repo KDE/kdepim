@@ -64,7 +64,7 @@ void ExportBlogiloJob::start()
 
 void ExportBlogiloJob::backupConfig()
 {
-    showInfo(i18n("Backing up config..."));
+    setProgressDialogLabel(i18n("Backing up config..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     const QString blogiloStr(QStringLiteral("blogilorc"));
     const QString blogilorc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + blogiloStr;
@@ -75,7 +75,7 @@ void ExportBlogiloJob::backupConfig()
 
 void ExportBlogiloJob::backupData()
 {
-    showInfo(i18n("Backing up data..."));
+    setProgressDialogLabel(i18n("Backing up data..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     const QString dbfileStr = QStringLiteral("blogilo.db");
     const QString dbfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/blogilo/") + dbfileStr;

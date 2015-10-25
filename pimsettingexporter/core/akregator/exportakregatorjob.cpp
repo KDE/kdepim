@@ -64,7 +64,7 @@ void ExportAkregatorJob::start()
 
 void ExportAkregatorJob::backupConfig()
 {
-    showInfo(i18n("Backing up config..."));
+    setProgressDialogLabel(i18n("Backing up config..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     const QString akregatorStr(QStringLiteral("akregatorrc"));
     const QString akregatorsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + akregatorStr;
@@ -74,7 +74,7 @@ void ExportAkregatorJob::backupConfig()
 
 void ExportAkregatorJob::backupData()
 {
-    showInfo(i18n("Backing up data..."));
+    setProgressDialogLabel(i18n("Backing up data..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/akregator");
     QDir akregatorDirectory(akregatorDir);

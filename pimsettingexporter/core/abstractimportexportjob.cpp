@@ -76,7 +76,7 @@ void AbstractImportExportJob::increaseProgressDialog()
 
 }
 
-void AbstractImportExportJob::showInfo(const QString &text)
+void AbstractImportExportJob::setProgressDialogLabel(const QString &text)
 {
     mImportExportProgressIndicator->setProgressDialogLabel(text);
 }

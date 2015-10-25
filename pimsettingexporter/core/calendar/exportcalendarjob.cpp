@@ -61,7 +61,7 @@ void ExportCalendarJob::start()
 
 void ExportCalendarJob::slotCheckBackupResource()
 {
-    showInfo(i18n("Backing up resources..."));
+    setProgressDialogLabel(i18n("Backing up resources..."));
     //TODO verify it.
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     increaseProgressDialog();
@@ -134,7 +134,7 @@ void ExportCalendarJob::slotWriteNextArchiveResource()
 
 void ExportCalendarJob::backupConfig()
 {
-    showInfo(i18n("Backing up config..."));
+    setProgressDialogLabel(i18n("Backing up config..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 
     const QString korganizerStr(QStringLiteral("korganizerrc"));

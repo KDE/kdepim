@@ -110,7 +110,7 @@ void PimSettingExporterWindow::slotJobFailed()
 
 void PimSettingExporterWindow::slotShowBackupFinishDialogInformation()
 {
-    KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QStringLiteral("ShowInfoBackupInfos"));
+    KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QStringLiteral("setProgressDialogLabelBackupInfos"));
 }
 
 void PimSettingExporterWindow::handleCommandLine(const QCommandLineParser &parser)

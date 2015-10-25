@@ -205,7 +205,7 @@ void ExportMailJob::slotWriteNextArchiveResource()
 
 void ExportMailJob::backupTransports()
 {
-    showInfo(i18n("Backing up transports..."));
+    setProgressDialogLabel(i18n("Backing up transports..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 
     const QString mailtransportsStr(QStringLiteral("mailtransports"));
@@ -245,7 +245,7 @@ void ExportMailJob::slotCheckBackupResources()
 
 void ExportMailJob::backupResources()
 {
-    showInfo(i18n("Backing up resources..."));
+    setProgressDialogLabel(i18n("Backing up resources..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
 
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
@@ -276,7 +276,7 @@ void ExportMailJob::backupResources()
 
 void ExportMailJob::backupConfig()
 {
-    showInfo(i18n("Backing up config..."));
+    setProgressDialogLabel(i18n("Backing up config..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     QList<MailCommon::MailFilter *> lstFilter = MailCommon::FilterManager::instance()->filters();
     if (!lstFilter.isEmpty()) {
@@ -496,7 +496,7 @@ void ExportMailJob::backupConfig()
 
 void ExportMailJob::backupIdentity()
 {
-    showInfo(i18n("Backing up identity..."));
+    setProgressDialogLabel(i18n("Backing up identity..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     const QString emailidentitiesStr(QStringLiteral("emailidentities"));
     const QString emailidentitiesrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + emailidentitiesStr;
@@ -555,7 +555,7 @@ void ExportMailJob::backupIdentity()
 #if 0
 void ExportMailJob::backupAkonadiDb()
 {
-    showInfo(i18n("Backing up Akonadi Database..."));
+    setProgressDialogLabel(i18n("Backing up Akonadi Database..."));
     KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
     AkonadiDataBase akonadiDataBase;
     const QString dbDriver(akonadiDataBase.driver());
