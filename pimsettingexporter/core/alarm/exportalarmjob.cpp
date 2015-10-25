@@ -17,7 +17,7 @@
 
 #include "exportalarmjob.h"
 
-#include "Libkdepim/KCursorSaver"
+
 
 #include <AkonadiCore/AgentManager>
 
@@ -62,7 +62,7 @@ void ExportAlarmJob::slotCheckBackupResource()
 {
     setProgressDialogLabel(i18n("Backing up resources..."));
     //TODO verify it.
-    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
+
     increaseProgressDialog();
     QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
 }
@@ -134,7 +134,7 @@ void ExportAlarmJob::slotWriteNextArchiveResource()
 void ExportAlarmJob::backupConfig()
 {
     setProgressDialogLabel(i18n("Backing up config..."));
-    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
+
     const QString kalarmStr(QStringLiteral("kalarmrc"));
     const QString kalarmrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kalarmStr;
     if (QFile(kalarmrc).exists()) {

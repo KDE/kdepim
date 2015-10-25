@@ -17,7 +17,7 @@
 
 #include "exportcalendarjob.h"
 
-#include "Libkdepim/KCursorSaver"
+
 
 #include <AkonadiCore/AgentManager>
 
@@ -62,7 +62,7 @@ void ExportCalendarJob::slotCheckBackupResource()
 {
     setProgressDialogLabel(i18n("Backing up resources..."));
     //TODO verify it.
-    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
+
     increaseProgressDialog();
     QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
 }
@@ -134,7 +134,7 @@ void ExportCalendarJob::slotWriteNextArchiveResource()
 void ExportCalendarJob::backupConfig()
 {
     setProgressDialogLabel(i18n("Backing up config..."));
-    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
+
 
     const QString korganizerStr(QStringLiteral("korganizerrc"));
     const QString korganizerrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korganizerStr;

@@ -17,7 +17,7 @@
 
 #include "exportaddressbookjob.h"
 #include "exportresourcearchivejob.h"
-#include "Libkdepim/KCursorSaver"
+
 
 #include <AkonadiCore/AgentManager>
 
@@ -59,7 +59,7 @@ void ExportAddressbookJob::slotCheckBackupResource()
 {
     setProgressDialogLabel(i18n("Backing up resources..."));
     //TODO verify it.
-    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
+
     increaseProgressDialog();
     QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
 }
@@ -130,7 +130,7 @@ void ExportAddressbookJob::slotWriteNextArchiveResource()
 void ExportAddressbookJob::backupConfig()
 {
     setProgressDialogLabel(i18n("Backing up config..."));
-    KPIM::KCursorSaver busy(KPIM::KBusyPtr::busy());
+
 
     const QString kaddressbookStr(QStringLiteral("kaddressbookrc"));
     const QString kaddressbookrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kaddressbookStr;
