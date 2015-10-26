@@ -114,7 +114,6 @@ bool MESSAGEVIEWER_EXPORT saveMessageInMbox(const Akonadi::Item::List &retrieved
 
 bool MESSAGEVIEWER_EXPORT saveAttachments(const KMime::Content::List &contents, QWidget *parent, QUrl &currentFolder);
 
-void speakSelectedText(const QString &text);
 MESSAGEVIEWER_EXPORT QAction *createAppAction(const KService::Ptr &service, bool singleOffer, QActionGroup *actionGroup, QObject *parent);
 
 /**

@@ -57,6 +57,7 @@ class QModelIndex;
 namespace KPIMTextEdit
 {
 class SlideContainer;
+class TextToSpeechWidget;
 }
 namespace PimCommon
 {
@@ -674,6 +675,7 @@ public:
 
     MessageViewer::ScamDetectionWarningWidget *mScamDetectionWarning;
     MessageViewer::OpenAttachmentFolderWidget *mOpenAttachmentFolderWidget;
+    KPIMTextEdit::TextToSpeechWidget *mTextToSpeechWidget;
     Viewer::DisplayFormatMessage mDisplayFormatMessageOverwrite;
     KPIMTextEdit::SlideContainer *mSliderContainer;
     PimCommon::ShareServiceUrlManager *mShareServiceManager;

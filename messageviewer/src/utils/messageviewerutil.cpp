@@ -511,14 +511,6 @@ bool Util::saveMessageInMbox(const Akonadi::Item::List &retrievedMsgs, QWidget *
     return true;
 }
 
-void Util::speakSelectedText(const QString &text)
-{
-    if (text.isEmpty()) {
-        return;
-    }
-    KPIMTextEdit::TextToSpeech::self()->say(text);
-}
-
 QAction *Util::createAppAction(const KService::Ptr &service, bool singleOffer, QActionGroup *actionGroup, QObject *parent)
 {
     QString actionName(service->name().replace(QLatin1Char('&'), QStringLiteral("&&")));

@@ -148,6 +148,7 @@
 #include <header/headerstyleplugin.h>
 #include <viewerplugins/viewerplugininterface.h>
 #include <widgets/zoomactionmenu.h>
+#include <kpimtextedit/texttospeechwidget.h>
 
 #include <grantleetheme/grantleethememanager.h>
 #include <grantleetheme/grantleetheme.h>
@@ -1471,6 +1472,10 @@ void ViewerPrivate::createWidgets()
     mOpenAttachmentFolderWidget->setObjectName(QStringLiteral("openattachementfolderwidget"));
     readerBoxVBoxLayout->addWidget(mOpenAttachmentFolderWidget);
 
+    mTextToSpeechWidget = new KPIMTextEdit::TextToSpeechWidget(readerBox);
+    mTextToSpeechWidget->setObjectName(QStringLiteral("texttospeechwidget"));
+    readerBoxVBoxLayout->addWidget(mTextToSpeechWidget);
+
     mViewer = new MailWebView(mActionCollection, readerBox);
     readerBoxVBoxLayout->addWidget(mViewer);
     mViewer->setObjectName(QStringLiteral("mViewer"));
@@ -2554,8 +2559,7 @@ void ViewerPrivate::slotHandleAttachment(int choice)
 void ViewerPrivate::slotSpeakText()
 {
     const QString text = mViewer->selectedText();
-    //TODO add texttospeech widget ?
-    MessageViewer::Util::speakSelectedText(text);
+    mTextToSpeechWidget->say(text);
 }
 
 void ViewerPrivate::slotCopyImageLocation()
