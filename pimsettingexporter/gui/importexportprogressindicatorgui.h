@@ -36,6 +36,7 @@ public:
     bool overwriteConfigMessageBox(const QString &configName) const Q_DECL_OVERRIDE;
     bool overwriteDirectoryMessageBox(const QString &directory) const Q_DECL_OVERRIDE;
     void showErrorMessage(const QString &message, const QString &title) Q_DECL_OVERRIDE;
+
 private:
     QProgressDialog *mProgressDialog;
     QWidget *mParentWidget;

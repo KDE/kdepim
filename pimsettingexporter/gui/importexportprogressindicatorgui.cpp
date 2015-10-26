@@ -47,6 +47,7 @@ void ImportExportProgressIndicatorGui::createProgressDialog(const QString &title
         mProgressDialog = new QProgressDialog(QString(), i18n("Cancel"), 0, mNumberOfStep, mParentWidget);
         mProgressDialog->setWindowTitle(title);
         mProgressDialog->setWindowModality(Qt::WindowModal);
+        connect(mProgressDialog, &QProgressDialog::canceled, this, &ImportExportProgressIndicatorBase::canceled);
     }
     mProgressDialog->show();
     mProgressDialog->setValue(0);

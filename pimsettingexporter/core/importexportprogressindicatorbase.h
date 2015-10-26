@@ -41,6 +41,7 @@ public:
 
 Q_SIGNALS:
     void info(const QString &text);
+    void canceled();
 
 protected:
     int mNumberOfStep;
