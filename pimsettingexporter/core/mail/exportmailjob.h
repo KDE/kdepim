@@ -33,6 +33,9 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
+Q_SIGNALS:
+    void taskCanceled();
+
 private Q_SLOTS:
     void slotCheckBackupIdentity();
     void slotCheckBackupMailTransport();

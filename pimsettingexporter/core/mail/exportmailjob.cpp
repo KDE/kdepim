@@ -21,6 +21,7 @@
 #include "MailCommon/MailUtil"
 #include "MailCommon/FilterManager"
 #include "MailCommon/FilterImporterExporter"
+#include "importexportprogressindicatorbase.h"
 
 #include <AkonadiCore/AgentManager>
 #include <AkonadiCore/Collection>
@@ -73,6 +74,7 @@ void ExportMailJob::start()
 {
     Q_EMIT title(i18n("Start export KMail settings..."));
     createProgressDialog(i18n("Export KMail settings"));
+    connect(importExportProgressIndicator(), &ImportExportProgressIndicatorBase::canceled, this, &ExportMailJob::taskCanceled);
     if (checkBackupType(Utils::Identity)) {
         QTimer::singleShot(0, this, SLOT(slotCheckBackupIdentity()));
     } else if (checkBackupType(Utils::MailTransport)) {
@@ -181,6 +183,7 @@ void ExportMailJob::slotWriteNextArchiveResource()
                             connect(resourceJob, &ExportResourceArchiveJob::error, this, &ExportMailJob::error);
                             connect(resourceJob, &ExportResourceArchiveJob::info, this, &ExportMailJob::info);
                             connect(resourceJob, &ExportResourceArchiveJob::terminated, this, &ExportMailJob::slotMailsJobTerminated);
+                            connect(this, &ExportMailJob::taskCanceled, resourceJob, &ExportResourceArchiveJob::slotTaskCanceled);
                             resourceJob->start();
                         }
                     } else {

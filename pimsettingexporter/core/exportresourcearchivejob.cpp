@@ -26,7 +26,8 @@
 
 ExportResourceArchiveJob::ExportResourceArchiveJob(QObject *parent)
     : QObject(parent),
-      mZip(Q_NULLPTR)
+      mZip(Q_NULLPTR),
+      mThread(Q_NULLPTR)
 {
 
 }
@@ -64,12 +65,12 @@ void ExportResourceArchiveJob::setArchiveName(const QString &archiveName)
 void ExportResourceArchiveJob::start()
 {
     if (mZip) {
-        PimSettingBackupThread *thread = new PimSettingBackupThread(mZip, mUrl, mArchivePath, mArchiveName);
-        connect(thread, &PimSettingBackupThread::error, this, &ExportResourceArchiveJob::error);
-        connect(thread, &PimSettingBackupThread::info, this, &ExportResourceArchiveJob::info);
-        connect(thread, &PimSettingBackupThread::terminated, this, &ExportResourceArchiveJob::slotTerminated);
-        connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-        thread->start();
+        mThread = new PimSettingBackupThread(mZip, mUrl, mArchivePath, mArchiveName);
+        connect(mThread, &PimSettingBackupThread::error, this, &ExportResourceArchiveJob::error);
+        connect(mThread, &PimSettingBackupThread::info, this, &ExportResourceArchiveJob::info);
+        connect(mThread, &PimSettingBackupThread::terminated, this, &ExportResourceArchiveJob::slotTerminated);
+        connect(mThread, SIGNAL(finished()), mThread, SLOT(deleteLater()));
+        mThread->start();
     } else {
         qCDebug(PIMSETTINGEXPORTERCORE_LOG) << "zip not defined !";
         finished();
@@ -96,6 +97,12 @@ void ExportResourceArchiveJob::slotTerminated(bool success)
         }
     }
     finished();
+}
+
+void ExportResourceArchiveJob::slotTaskCanceled()
+{
+    //TODO
+    mThread->exit();
 }
 
 void ExportResourceArchiveJob::finished()

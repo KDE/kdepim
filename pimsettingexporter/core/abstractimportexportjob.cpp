@@ -81,6 +81,11 @@ void AbstractImportExportJob::setProgressDialogLabel(const QString &text)
     mImportExportProgressIndicator->setProgressDialogLabel(text);
 }
 
+ImportExportProgressIndicatorBase *AbstractImportExportJob::importExportProgressIndicator() const
+{
+    return mImportExportProgressIndicator;
+}
+
 void AbstractImportExportJob::setImportExportProgressIndicator(ImportExportProgressIndicatorBase *importExportProgressIndicator)
 {
     delete mImportExportProgressIndicator;

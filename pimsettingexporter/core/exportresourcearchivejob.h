@@ -20,6 +20,7 @@
 
 #include <QObject>
 class KZip;
+class PimSettingBackupThread;
 class ExportResourceArchiveJob : public QObject
 {
     Q_OBJECT
@@ -42,8 +43,13 @@ Q_SIGNALS:
     void info(const QString &str);
     void terminated();
 
+
 private Q_SLOTS:
     void slotTerminated(bool success);
+
+public Q_SLOTS:
+    void slotTaskCanceled();
+
 private:
     void finished();
     QString mArchiveName;
@@ -51,6 +57,7 @@ private:
     QString mArchivePath;
     QString mIdentifier;
     KZip *mZip;
+    PimSettingBackupThread *mThread;
 };
 
 #endif // EXPORTADDRESSBOOKRESOURCEJOB_H

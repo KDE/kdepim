@@ -59,6 +59,8 @@ public:
 
     void setImportExportProgressIndicator(ImportExportProgressIndicatorBase *importExportProgressIndicator);
 
+    ImportExportProgressIndicatorBase *importExportProgressIndicator() const;
+
 Q_SIGNALS:
     void info(const QString &);
     void error(const QString &);
