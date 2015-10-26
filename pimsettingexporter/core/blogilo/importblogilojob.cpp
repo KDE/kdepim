@@ -39,6 +39,7 @@ ImportBlogiloJob::~ImportBlogiloJob()
 void ImportBlogiloJob::start()
 {
     Q_EMIT title(i18n("Start import Blogilo settings..."));
+    createProgressDialog(i18n("Import Blogilo settings"));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Config) {
         restoreConfig();
@@ -51,6 +52,7 @@ void ImportBlogiloJob::start()
 
 void ImportBlogiloJob::restoreConfig()
 {
+    increaseProgressDialog();
     const QString blogiloStr(QStringLiteral("blogilorc"));
     restoreConfigFile(blogiloStr);
     Q_EMIT info(i18n("Config restored."));
@@ -58,6 +60,7 @@ void ImportBlogiloJob::restoreConfig()
 
 void ImportBlogiloJob::restoreData()
 {
+    increaseProgressDialog();
     const KArchiveEntry *blogiloEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("blogilo/"));
     if (blogiloEntry && blogiloEntry->isDirectory()) {
         const QString blogiloPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("blogilo/");

@@ -71,6 +71,7 @@ ImportMailJob::~ImportMailJob()
 void ImportMailJob::start()
 {
     Q_EMIT title(i18n("Start import KMail settings..."));
+    createProgressDialog(i18n("Import KMail settings"));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory, QString());
     if (!mFileList.isEmpty() || !mListResourceFile.isEmpty()) {
@@ -156,6 +157,7 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory *dir, const
 
 void ImportMailJob::restoreTransports()
 {
+    increaseProgressDialog();
     const QString path = Utils::transportsPath() + QLatin1String("mailtransports");
     if (!mFileList.contains(path)) {
         Q_EMIT error(i18n("mailtransports file could not be found in the archive."));
@@ -248,6 +250,7 @@ void ImportMailJob::restoreTransports()
 
 void ImportMailJob::restoreResources()
 {
+    increaseProgressDialog();
     Q_EMIT info(i18n("Restore resources..."));
     
     QDir dir(mTempDirName);
@@ -449,6 +452,7 @@ void ImportMailJob::restoreResources()
 
 void ImportMailJob::restoreMails()
 {
+    increaseProgressDialog();
     QStringList listResourceToSync;
     Q_EMIT info(i18n("Restore mails..."));
     
@@ -571,7 +575,7 @@ void ImportMailJob::restoreMails()
 
 void ImportMailJob::restoreConfig()
 {
-    
+    increaseProgressDialog();
     const QString filtersPath(Utils::configsPath() + QLatin1String("filters"));
     if (!mFileList.contains(filtersPath)) {
         Q_EMIT error(i18n("filters file could not be found in the archive."));
@@ -840,6 +844,7 @@ void ImportMailJob::restoreConfig()
 
 void ImportMailJob::restoreIdentity()
 {
+    increaseProgressDialog();
     const QString path(Utils::identitiesPath() + QLatin1String("emailidentities"));
     if (!mFileList.contains(path)) {
         Q_EMIT error(i18n("emailidentities file could not be found in the archive."));

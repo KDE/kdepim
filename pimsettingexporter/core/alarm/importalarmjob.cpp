@@ -52,6 +52,7 @@ ImportAlarmJob::~ImportAlarmJob()
 void ImportAlarmJob::start()
 {
     Q_EMIT title(i18n("Start import KAlarm settings..."));
+    createProgressDialog(i18n("Import KAlarm settings"));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory, QString());
     initializeListStep();
@@ -76,6 +77,7 @@ void ImportAlarmJob::slotNextStep()
 void ImportAlarmJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
+    increaseProgressDialog();
     QStringList listResource;
     listResource << restoreResourceFile(QStringLiteral("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm(), false);
     if (!mListResourceFile.isEmpty()) {
@@ -180,6 +182,7 @@ void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, con
 
 void ImportAlarmJob::restoreConfig()
 {
+    increaseProgressDialog();
     const QString kalarmStr(QStringLiteral("kalarmrc"));
     const KArchiveEntry *kalarmrcentry  = mArchiveDirectory->entry(Utils::configsPath() + kalarmStr);
     if (kalarmrcentry && kalarmrcentry->isFile()) {

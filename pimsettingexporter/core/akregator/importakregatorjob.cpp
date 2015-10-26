@@ -40,6 +40,7 @@ void ImportAkregatorJob::start()
 {
     Q_EMIT title(i18n("Start import Akregator settings..."));
     mArchiveDirectory = archive()->directory();
+    createProgressDialog(i18n("Import Akregator settings"));
     if (mTypeSelected & Utils::Config) {
         restoreConfig();
     }
@@ -52,12 +53,14 @@ void ImportAkregatorJob::start()
 void ImportAkregatorJob::restoreConfig()
 {
     const QString akregatorStr(QStringLiteral("akregatorrc"));
+    increaseProgressDialog();
     restoreConfigFile(akregatorStr);
     Q_EMIT info(i18n("Config restored."));
 }
 
 void ImportAkregatorJob::restoreData()
 {
+    increaseProgressDialog();
     const KArchiveEntry *akregatorEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("akregator/"));
     if (akregatorEntry && akregatorEntry->isDirectory()) {
         const QString akregatorPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("akregator/");
