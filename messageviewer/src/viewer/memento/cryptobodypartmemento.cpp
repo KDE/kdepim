@@ -17,14 +17,6 @@
 
 #include "cryptobodypartmemento.h"
 
-#include <Libkleo/DecryptVerifyJob>
-#include <Libkleo/VerifyDetachedJob>
-#include <Libkleo/VerifyOpaqueJob>
-#include <Libkleo/KeyListJob>
-
-#include <gpgme++/keylistresult.h>
-
-using namespace Kleo;
 using namespace GpgME;
 using namespace MessageViewer;
 

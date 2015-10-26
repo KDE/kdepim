@@ -18,9 +18,7 @@
 #ifndef CRYPTOBODYPARTMEMENTO_H
 #define CRYPTOBODYPARTMEMENTO_H
 
-#include <gpgme++/verificationresult.h>
-#include <gpgme++/decryptionresult.h>
-#include <gpgme++/key.h>
+#include <gpgme++/error.h>
 
 #include <QObject>
 #include <QString>

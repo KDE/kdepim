@@ -20,7 +20,6 @@
 
 #include "cryptobodypartmemento.h"
 #include <gpgme++/verificationresult.h>
-#include <gpgme++/decryptionresult.h>
 #include <gpgme++/key.h>
 
 #include <QObject>

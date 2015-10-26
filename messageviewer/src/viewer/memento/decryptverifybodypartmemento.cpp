@@ -19,8 +19,6 @@
 
 #include <Libkleo/DecryptVerifyJob>
 
-#include <gpgme++/keylistresult.h>
-
 #include <qstringlist.h>
 
 using namespace Kleo;
