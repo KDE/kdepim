@@ -44,6 +44,7 @@ private Q_SLOTS:
     void slotCheckBackupResources();
     void slotMailsJobTerminated();
     void slotWriteNextArchiveResource();
+    void slotTaskCanceled();
 private:
     bool checkBackupType(Utils::StoredType type) const;
     void backupTransports();

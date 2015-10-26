@@ -74,7 +74,7 @@ void ExportMailJob::start()
 {
     Q_EMIT title(i18n("Start export KMail settings..."));
     createProgressDialog(i18n("Export KMail settings"));
-    connect(importExportProgressIndicator(), &ImportExportProgressIndicatorBase::canceled, this, &ExportMailJob::taskCanceled);
+    connect(importExportProgressIndicator(), &ImportExportProgressIndicatorBase::canceled, this, &ExportMailJob::slotTaskCanceled);
     if (checkBackupType(Utils::Identity)) {
         QTimer::singleShot(0, this, SLOT(slotCheckBackupIdentity()));
     } else if (checkBackupType(Utils::MailTransport)) {
@@ -88,6 +88,12 @@ void ExportMailJob::start()
     } else {
         Q_EMIT jobFinished();
     }
+}
+
+void ExportMailJob::slotTaskCanceled()
+{
+    qDebug()<<" void ExportMailJob::slotTaskCanceled()";
+    Q_EMIT jobFinished();
 }
 
 void ExportMailJob::slotCheckBackupIdentity()
