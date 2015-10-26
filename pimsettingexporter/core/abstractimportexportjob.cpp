@@ -63,6 +63,14 @@ AbstractImportExportJob::~AbstractImportExportJob()
 void AbstractImportExportJob::createProgressDialog(const QString &title)
 {
     mImportExportProgressIndicator->createProgressDialog(title);
+    connect(mImportExportProgressIndicator, &ImportExportProgressIndicatorBase::canceled, this, &AbstractImportExportJob::slotTaskCanceled);
+}
+
+void AbstractImportExportJob::slotTaskCanceled()
+{
+    qDebug()<<" void ExportMailJob::slotTaskCanceled()";
+    Q_EMIT error(i18n("Task Canceled"));
+    Q_EMIT jobFinished();
 }
 
 bool AbstractImportExportJob::wasCanceled() const
