@@ -147,6 +147,11 @@ void RecentAddresses::setMaxCount(int count)
     }
 }
 
+uint RecentAddresses::maxCount() const
+{
+    return m_maxCount;
+}
+
 void RecentAddresses::adjustSize()
 {
     while (m_addresseeList.count() > m_maxCount) {

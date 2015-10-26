@@ -64,10 +64,6 @@ public:
      * like "Foo <foo@bar.org>, Bar Baz <bar@baz.org>".
      */
     QStringList     addresses() const;
-    const KContacts::Addressee::List &kabcAddresses() const
-    {
-        return m_addresseeList;
-    }
 
     /**
      * Adds an entry to the list.
@@ -85,10 +81,7 @@ public:
     /**
      * @returns the current maximum number of entries.
      */
-    uint maxCount() const
-    {
-        return m_maxCount;
-    }
+    uint maxCount() const;
 
     /**
      * Loads the list of recently used addresses from the configfile.
