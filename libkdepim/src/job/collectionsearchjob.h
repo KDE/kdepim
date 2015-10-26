@@ -49,10 +49,6 @@ private Q_SLOTS:
 
 private:
     CollectionSearchJobPrivate *const d;
-    QString mSearchString;
-    QStringList mMimeTypeFilter;
-    Akonadi::Collection::List mMatchingCollections;
-    Akonadi::Collection::List mAncestors;
 };
 
 }
