@@ -4,6 +4,7 @@ ServiceTypes=MessageViewer/ViewerPlugin
 X-KDE-Library=messageviewer_createtodoplugin
 Name=Create Todo
 Name[ca]=Crea una pendent
+Name[de]=Aufgabe erstellen
 Name[en_GB]=Create Todo
 Name[es]=Crear tarea pendiente
 Name[fi]=Luo tehtävä

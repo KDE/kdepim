@@ -4,6 +4,7 @@ ServiceTypes=PimCommonStorageService/Plugin
 X-KDE-Library=pimcommon_hubicplugin
 Name=Hubic
 Name[ca]=Hubic
+Name[de]=Hubic
 Name[en_GB]=Hubic
 Name[es]=Hubic
 Name[nl]=Hubic

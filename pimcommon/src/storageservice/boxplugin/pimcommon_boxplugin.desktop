@@ -4,6 +4,7 @@ ServiceTypes=PimCommonStorageService/Plugin
 X-KDE-Library=pimcommon_boxplugin
 Name=box
 Name[ca]=box
+Name[de]=box
 Name[en_GB]=box
 Name[es]=box
 Name[nl]=box

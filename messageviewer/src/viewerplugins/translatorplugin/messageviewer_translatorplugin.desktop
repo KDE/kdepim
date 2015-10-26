@@ -4,6 +4,7 @@ ServiceTypes=MessageViewer/ViewerPlugin
 X-KDE-Library=messageviewer_translatorplugin
 Name=Translator
 Name[ca]=Traductor
+Name[de]=Übersetzer
 Name[en_GB]=Translator
 Name[es]=Traductor
 Name[fi]=Käännösohjelma

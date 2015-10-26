@@ -4,6 +4,7 @@ ServiceTypes=PimCommonCustomTools/Plugin
 X-KDE-Library=pimcommon_shorturlplugin
 Name=Shorturl
 Name[ca]=URL curt
+Name[de]=Shorturl
 Name[en_GB]=Shorturl
 Name[es]=Url corta
 Name[fi]=Lyhytosoite

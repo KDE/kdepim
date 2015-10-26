@@ -4,6 +4,7 @@ ServiceTypes=PimCommonShortUrlEngine/Plugin
 X-KDE-Library=pimcommon_triopabshorturlengineplugin
 Name=to.ly
 Name[ca]=to.ly
+Name[de]=to.ly
 Name[en_GB]=to.ly
 Name[es]=to.ly
 Name[nl]=to.ly

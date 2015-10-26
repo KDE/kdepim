@@ -4,6 +4,7 @@ ServiceTypes=MessageViewer/ViewerPlugin
 X-KDE-Library=messageviewer_createeventplugin
 Name=Create Event
 Name[ca]=Crea un esdeveniment
+Name[de]=Ereignis erstellen
 Name[en_GB]=Create Event
 Name[es]=Crear evento
 Name[fi]=Luo tapahtuma
