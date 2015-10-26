@@ -16,8 +16,11 @@
 */
 
 #include "storageservicemenus.h"
+#include "storageservicepluginmanager.h"
+#include "storageserviceplugin.h"
 
 #include <KActionMenu>
+#include <KLocalizedString>
 
 using namespace PimCommon;
 
@@ -28,6 +31,13 @@ public:
     {
 
     }
+    KActionMenu *menuWithCapability(PimCommon::StorageServicePlugin::Capability mainCapability, const QList<PimCommon::StorageServicePlugin::Capability> &lstCapability, QWidget *parent) const
+    {
+        KActionMenu *menuService = new KActionMenu(i18n("Storage service"), parent);
+        //TODO
+        return menuService;
+    }
+
 };
 
 StorageServiceMenus::StorageServiceMenus(QObject *parent)
@@ -44,18 +54,22 @@ StorageServiceMenus::~StorageServiceMenus()
 
 KActionMenu *StorageServiceMenus::shareLinkServices(QWidget *parent) const
 {
-    //TODO
-    return Q_NULLPTR;
+    QList<PimCommon::StorageServicePlugin::Capability> lstCapability;
+    lstCapability << PimCommon::StorageServicePlugin::ShareLinkCapability;
+    lstCapability << PimCommon::StorageServicePlugin::UploadFileCapability;
+    return d->menuWithCapability(PimCommon::StorageServicePlugin::ShareLinkCapability, lstCapability, parent);
 }
 
 KActionMenu *StorageServiceMenus::downloadServices(QWidget *parent) const
 {
-    //TODO
-    return Q_NULLPTR;
+    QList<PimCommon::StorageServicePlugin::Capability> lstCapability;
+    lstCapability << PimCommon::StorageServicePlugin::DownloadFileCapability;
+    return d->menuWithCapability(PimCommon::StorageServicePlugin::DownloadFileCapability, lstCapability, parent);
 }
 
 KActionMenu *StorageServiceMenus::uploadServices(QWidget *parent) const
 {
-    //TODO
-    return Q_NULLPTR;
+    QList<PimCommon::StorageServicePlugin::Capability> lstCapability;
+    lstCapability << PimCommon::StorageServicePlugin::UploadFileCapability;
+    return d->menuWithCapability(PimCommon::StorageServicePlugin::UploadFileCapability, lstCapability, parent);
 }
