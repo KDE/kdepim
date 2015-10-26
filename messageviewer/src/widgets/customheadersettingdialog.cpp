@@ -16,7 +16,7 @@
 */
 
 #include "customheadersettingdialog.h"
-#include "header/customheadersettingwidget.h"
+#include "customheadersettingwidget.h"
 #include "settings/messageviewersettings.h"
 
 #include <QDialogButtonBox>

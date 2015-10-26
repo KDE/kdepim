@@ -113,6 +113,7 @@ set(libmessageviewer_widgets_SRCS
   widgets/mailsourceviewer.cpp
   widgets/mailsourceviewtextbrowserwidget.cpp
   widgets/zoomactionmenu.cpp
+  widgets/customheadersettingwidget.cpp
 )
 
 set(libmessageviewer_header_SRCS
@@ -124,7 +125,6 @@ set(libmessageviewer_header_SRCS
   header/plainheaderstyle.cpp
   header/enterpriseheaderstyleplugin/enterpriseheaderstyle.cpp
   header/headerstyle_util.cpp
-  header/customheadersettingwidget.cpp
   header/grantleeheaderformatter.cpp
   header/grantleeheaderteststyle.cpp
   header/kxface.cpp
