@@ -32,7 +32,7 @@
 
 namespace KPIM
 {
-
+class PersonSearchJobPrivate;
 class KDEPIM_EXPORT PersonSearchJob : public KJob
 {
     Q_OBJECT
@@ -60,11 +60,7 @@ private Q_SLOTS:
     void modifyResult(KJob *job);
 
 private:
-    QString mSearchString;
-    QHash<QString, Person> mMatches;
-    KLDAP::LdapClientSearch mLdapSearch;
-    bool mCollectionSearchDone;
-    bool mLdapSearchDone;
+    PersonSearchJobPrivate *const d;
 };
 
 }

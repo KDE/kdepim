@@ -31,26 +31,48 @@
 
 using namespace KPIM;
 
+class KPIM::PersonSearchJobPrivate
+{
+public:
+    PersonSearchJobPrivate(const QString &searchString)
+        : mSearchString(searchString),
+          mCollectionSearchDone(false),
+          mLdapSearchDone(false)
+
+    {
+
+    }
+
+    ~PersonSearchJobPrivate()
+    {
+        mLdapSearch.cancelSearch();
+    }
+
+    QString mSearchString;
+    QHash<QString, Person> mMatches;
+    KLDAP::LdapClientSearch mLdapSearch;
+    bool mCollectionSearchDone;
+    bool mLdapSearchDone;
+};
+
 PersonSearchJob::PersonSearchJob(const QString &searchString, QObject *parent)
     : KJob(parent),
-      mSearchString(searchString),
-      mCollectionSearchDone(false),
-      mLdapSearchDone(false)
+      d(new KPIM::PersonSearchJobPrivate(searchString))
 {
-    connect(&mLdapSearch, static_cast<void (KLDAP::LdapClientSearch::*)(const KLDAP::LdapResultObject::List &)>(&KLDAP::LdapClientSearch::searchData),
+    connect(&d->mLdapSearch, static_cast<void (KLDAP::LdapClientSearch::*)(const KLDAP::LdapResultObject::List &)>(&KLDAP::LdapClientSearch::searchData),
             this, &PersonSearchJob::onLDAPSearchData);
 
-    connect(&mLdapSearch, &KLDAP::LdapClientSearch::searchDone, this, &PersonSearchJob::onLDAPSearchDone);
+    connect(&d->mLdapSearch, &KLDAP::LdapClientSearch::searchDone, this, &PersonSearchJob::onLDAPSearchDone);
 }
 
 PersonSearchJob::~PersonSearchJob()
 {
-    mLdapSearch.cancelSearch();
+    delete d;
 }
 
 bool PersonSearchJob::kill(KJob::KillVerbosity verbosity)
 {
-    mLdapSearch.cancelSearch();
+    d->mLdapSearch.cancelSearch();
     return KJob::kill(verbosity);
 }
 
@@ -58,7 +80,7 @@ void PersonSearchJob::start()
 {
     Akonadi::Search::PIM::CollectionQuery query;
     query.setNamespace(QStringList() << QStringLiteral("usertoplevel"));
-    query.nameMatches(mSearchString);
+    query.nameMatches(d->mSearchString);
     query.setLimit(200);
     Akonadi::Search::PIM::ResultIterator it = query.exec();
     Akonadi::Collection::List collections;
@@ -67,14 +89,14 @@ void PersonSearchJob::start()
     }
     qCDebug(LIBKDEPIM_LOG) << "Found persons " << collections.size();
 
-    mCollectionSearchDone = false;
-    mLdapSearchDone = false;
+    d->mCollectionSearchDone = false;
+    d->mLdapSearchDone = false;
     if (collections.isEmpty()) {
         //We didn't find anything
-        mCollectionSearchDone = true;
+        d->mCollectionSearchDone = true;
     }
 
-    mLdapSearch.startSearch(QStringLiteral("*") + mSearchString);
+    d->mLdapSearch.startSearch(QStringLiteral("*") + d->mSearchString);
 
     if (!collections.isEmpty()) {
         Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(collections, Akonadi::CollectionFetchJob::Base, this);
@@ -108,20 +130,20 @@ void PersonSearchJob::onLDAPSearchData(const KLDAP::LdapResultObject::List &list
         if (parts.count() == 2) {
             const QString &uid = parts.at(0);
             person.uid = uid;
-            if (mMatches.contains(uid)) {
-                const Person &p = mMatches.value(uid);
+            if (d->mMatches.contains(uid)) {
+                const Person &p = d->mMatches.value(uid);
                 if (p.mail != person.mail) {
                     if (p.rootCollection > -1) {
                         person.rootCollection = p.rootCollection;
                         person.updateDisplayName = p.updateDisplayName;
                         updatePersonCollection(person);
-                        mMatches.insert(uid, person);
+                        d->mMatches.insert(uid, person);
                     } else {
                         qCWarning(LIBKDEPIM_LOG) << "That should not happen: we found two times persons with the same uid (" << uid << "), but differnet name:" << p.name << "vs" << person.name;
                     }
                 }
             } else {            //New person found
-                mMatches.insert(uid, person);
+                d->mMatches.insert(uid, person);
                 persons << person;
             }
         } else {
@@ -135,8 +157,8 @@ void PersonSearchJob::onLDAPSearchData(const KLDAP::LdapResultObject::List &list
 
 void PersonSearchJob::onLDAPSearchDone()
 {
-    mLdapSearchDone = true;
-    if (mCollectionSearchDone) {
+    d->mLdapSearchDone = true;
+    if (d->mCollectionSearchDone) {
         emitResult();
     }
 }
@@ -164,8 +186,8 @@ void PersonSearchJob::onCollectionsReceived(const Akonadi::Collection::List &lis
                 person.updateDisplayName = true;
             }
         }
-        if (mMatches.contains(uid)) {
-            Person p = mMatches.value(uid);
+        if (d->mMatches.contains(uid)) {
+            Person p = d->mMatches.value(uid);
             if (p.rootCollection > -1) {
                 //two collection with the same uid ?!
                 qCWarning(LIBKDEPIM_LOG) << "Two collections match to same person" << p.rootCollection << person.rootCollection;
@@ -174,11 +196,11 @@ void PersonSearchJob::onCollectionsReceived(const Akonadi::Collection::List &lis
                 p.updateDisplayName = person.updateDisplayName;
                 updatePersonCollection(p);
             } else {
-                mMatches.insert(uid, person);
+                d->mMatches.insert(uid, person);
                 emit personUpdate(person);
             }
         } else {
-            mMatches.insert(uid, person);
+            d->mMatches.insert(uid, person);
             persons << person;
         }
     }
@@ -214,15 +236,15 @@ void PersonSearchJob::onCollectionsFetched(KJob *job)
     if (job->error()) {
         qCWarning(LIBKDEPIM_LOG) << job->errorString();
     }
-    mCollectionSearchDone = true;
-    if (mLdapSearchDone) {
+    d->mCollectionSearchDone = true;
+    if (d->mLdapSearchDone) {
         emitResult();
     }
 }
 
 QList<Person> PersonSearchJob::matches() const
 {
-    return mMatches.values();
+    return d->mMatches.values();
 }
 
 void PersonSearchJob::modifyResult(KJob *job)
@@ -238,7 +260,7 @@ void PersonSearchJob::modifyResult(KJob *job)
     const Akonadi::CollectionIdentificationAttribute *const attr = col.attribute<Akonadi::CollectionIdentificationAttribute>();
     const Akonadi::EntityDisplayAttribute *const displayname = col.attribute<Akonadi::EntityDisplayAttribute>();
     const QString &uid = col.name();
-    Person &person = mMatches[col.name()];
+    Person &person = d->mMatches[col.name()];
     person.rootCollection = col.id();
     person.uid = uid;
     if (attr) {
@@ -251,6 +273,6 @@ void PersonSearchJob::modifyResult(KJob *job)
     }
     qCDebug(LIBKDEPIM_LOG) << "modified person to" << person.uid << person.name << person.rootCollection;
 
-    mMatches.insert(person.uid, person);
+    d->mMatches.insert(person.uid, person);
     Q_EMIT personUpdate(person);
 }
