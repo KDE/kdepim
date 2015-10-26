@@ -5,5 +5,4 @@ Visibility=GRAVATAR_EXPORT
 Mutators=true
 Singleton=true
 ItemAccessors=true
-SetUserTexts=true
 IncludeFiles=gravatar_export.h
