@@ -62,10 +62,11 @@ QStringList HeaderStrategy::headersToHide() const
 
 bool HeaderStrategy::showHeader(const QString &header) const
 {
-    if (headersToDisplay().contains(header.toLower())) {
+    const QString headerLower(header.toLower());
+    if (headersToDisplay().contains(headerLower)) {
         return true;
     }
-    if (headersToHide().contains(header.toLower())) {
+    if (headersToHide().contains(headerLower)) {
         return false;
     }
     return defaultPolicy() == Display;

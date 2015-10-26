@@ -36,12 +36,7 @@
 
 #include <KLocalizedString>
 
-#include "MessageCore/MessageCoreSettings"
-
-using namespace MessageCore;
-
-namespace MessageViewer
-{
+using namespace MessageViewer;
 // #####################
 
 //
@@ -166,6 +161,4 @@ void HeaderStyle::setTheme(const GrantleeTheme::Theme &theme)
 GrantleeTheme::Theme HeaderStyle::theme() const
 {
     return mTheme;
-}
-
 }
