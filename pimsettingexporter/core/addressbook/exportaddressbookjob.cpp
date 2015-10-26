@@ -58,8 +58,6 @@ void ExportAddressbookJob::start()
 void ExportAddressbookJob::slotCheckBackupResource()
 {
     setProgressDialogLabel(i18n("Backing up resources..."));
-    //TODO verify it.
-
     increaseProgressDialog();
     QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));
 }

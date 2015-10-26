@@ -131,8 +131,6 @@ void ExportMailJob::slotCheckBackupConfig()
 void ExportMailJob::slotCheckBackupMails()
 {
     if (checkBackupType(Utils::Mails)) {
-        //TODO verify it.
-
         increaseProgressDialog();
         setProgressDialogLabel(i18n("Backing up Mails..."));
         QTimer::singleShot(0, this, SLOT(slotWriteNextArchiveResource()));

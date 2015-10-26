@@ -55,12 +55,13 @@ void ImportCalendarJob::start()
 {
     Q_EMIT title(i18n("Start import KOrganizer settings..."));
     mArchiveDirectory = archive()->directory();
+    createProgressDialog(i18n("Import KOrganizer settings"));
     searchAllFiles(mArchiveDirectory, QString());
     initializeListStep();
-    nextStep();
+    slotNextStep();
 }
 
-void ImportCalendarJob::nextStep()
+void ImportCalendarJob::slotNextStep()
 {
     ++mIndex;
     if (mIndex < mListStep.count()) {
@@ -78,6 +79,7 @@ void ImportCalendarJob::nextStep()
 void ImportCalendarJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
+    increaseProgressDialog();
     QStringList listResource;
     listResource << restoreResourceFile(QStringLiteral("akonadi_ical_resource"), Utils::calendarPath(), storeCalendar());
 
@@ -202,6 +204,7 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
 
 void ImportCalendarJob::restoreConfig()
 {
+    increaseProgressDialog();
     const QString korganizerPrinterrcStr(QStringLiteral("calendar_printing.rc"));
     const QString oldKorganizerPrintrrcStr(QStringLiteral("korganizer_printing.rc"));
     const KArchiveEntry *oldKorganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + oldKorganizerPrintrrcStr);
@@ -285,7 +288,7 @@ void ImportCalendarJob::restoreConfig()
     }
 
     Q_EMIT info(i18n("Config restored."));
-    nextStep();
+    slotNextStep();
 }
 
 void ImportCalendarJob::importkorganizerConfig(const KArchiveFile *file, const QString &config, const QString &filename, const QString &prefix)

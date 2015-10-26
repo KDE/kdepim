@@ -75,13 +75,13 @@ void ImportMailJob::start()
     searchAllFiles(mArchiveDirectory, QString());
     if (!mFileList.isEmpty() || !mListResourceFile.isEmpty()) {
         initializeListStep();
-        nextStep();
+        slotNextStep();
     } else {
         Q_EMIT jobFinished();
     }
 }
 
-void ImportMailJob::nextStep()
+void ImportMailJob::slotNextStep()
 {
     ++mIndex;
     if (mIndex < mListStep.count()) {
@@ -243,7 +243,7 @@ void ImportMailJob::restoreTransports()
             Q_EMIT error(i18n("Failed to restore transports file."));
         }
     }
-    nextStep();
+    slotNextStep();
 }
 
 void ImportMailJob::restoreResources()
@@ -444,7 +444,7 @@ void ImportMailJob::restoreResources()
     //TODO synctree ?
 
     Q_EMIT info(i18n("Resources restored."));
-    nextStep();
+    slotNextStep();
 }
 
 void ImportMailJob::restoreMails()
@@ -835,7 +835,7 @@ void ImportMailJob::restoreConfig()
     }
 
     Q_EMIT info(i18n("Config restored."));
-    nextStep();
+    slotNextStep();
 }
 
 void ImportMailJob::restoreIdentity()
@@ -916,7 +916,7 @@ void ImportMailJob::restoreIdentity()
             Q_EMIT error(i18n("Failed to restore identity file."));
         }
     }
-    nextStep();
+    slotNextStep();
 }
 
 QString ImportMailJob::uniqueIdentityName(const QString &name)
@@ -970,7 +970,7 @@ void ImportMailJob::restoreAkonadiDb()
                        << QStringLiteral("--database=") + akonadiDataBase.name();
             } else {
                 Q_EMIT error(i18n("Database driver \"%1\" not supported.", dbDriver));
-                nextStep();
+                slotNextStep();
                 return;
             }
 
@@ -978,7 +978,7 @@ void ImportMailJob::restoreAkonadiDb()
 
             if (dbRestoreApp.isEmpty()) {
                 Q_EMIT error(i18n("Could not find \"%1\" necessary to restore database.", dbRestoreAppName));
-                nextStep();
+                slotNextStep();
                 return;
             }
             KProcess *proc = new KProcess(this);
@@ -988,13 +988,13 @@ void ImportMailJob::restoreAkonadiDb()
             delete proc;
             if (result != 0) {
                 Q_EMIT error(i18n("Failed to restore Akonadi Database."));
-                nextStep();
+                slotNextStep();
                 return;
             }
         }
         Q_EMIT info(i18n("Akonadi Database restored."));
     }
-    nextStep();
+    slotNextStep();
 }
 
 void ImportMailJob::importArchiveConfig(const KArchiveFile *archiveconfiguration, const QString &archiveconfigurationrc, const QString &filename, const QString &prefix)

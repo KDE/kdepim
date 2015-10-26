@@ -69,8 +69,6 @@ void ExportNotesJob::backupTheme()
 void ExportNotesJob::slotCheckBackupResource()
 {
     setProgressDialogLabel(i18n("Backing up resources..."));
-    //TODO verify it.
-
     increaseProgressDialog();
     backupTheme();
 

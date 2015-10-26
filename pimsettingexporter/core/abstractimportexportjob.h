@@ -76,9 +76,11 @@ private Q_SLOTS:
     void slotTaskCanceled();
 
 protected:
+    virtual void slotNextStep();
+
+protected:
     void initializeListStep();
     void startSynchronizeResources(const QStringList &listResourceToSync);
-    virtual void nextStep();
     void infoAboutNewResource(const QString &resourceName);
     void copyToDirectory(const KArchiveEntry *entry, const QString &dest);
     void extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination);

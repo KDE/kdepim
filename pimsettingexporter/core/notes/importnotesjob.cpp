@@ -52,6 +52,7 @@ void ImportNotesJob::start()
 {
     Q_EMIT title(i18n("Start import KNotes settings..."));
     mArchiveDirectory = archive()->directory();
+    createProgressDialog(i18n("Import KNotes settings"));
     if (mTypeSelected & Utils::Config) {
         restoreConfig();
     }
@@ -63,6 +64,7 @@ void ImportNotesJob::start()
 
 void ImportNotesJob::restoreConfig()
 {
+    increaseProgressDialog();
     const QString knotesStr(QStringLiteral("knotesrc"));
     restoreConfigFile(knotesStr);
     if (archiveVersion() <= 1) {
@@ -90,6 +92,7 @@ void ImportNotesJob::restoreConfig()
 
 void ImportNotesJob::restoreData()
 {
+    increaseProgressDialog();
     if (archiveVersion() <= 1) {
         //Knote < knote-akonadi
         const KArchiveEntry *notesEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String("knotes/"));

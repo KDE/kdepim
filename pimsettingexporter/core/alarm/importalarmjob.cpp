@@ -55,10 +55,10 @@ void ImportAlarmJob::start()
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory, QString());
     initializeListStep();
-    nextStep();
+    slotNextStep();
 }
 
-void ImportAlarmJob::nextStep()
+void ImportAlarmJob::slotNextStep()
 {
     ++mIndex;
     if (mIndex < mListStep.count()) {
@@ -133,11 +133,6 @@ void ImportAlarmJob::restoreResources()
     startSynchronizeResources(listResource);
 }
 
-void ImportAlarmJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
-{
-
-}
-
 void ImportAlarmJob::searchAllFiles(const KArchiveDirectory *dir, const QString &prefix)
 {
     Q_FOREACH (const QString &entryName, dir->entries()) {
@@ -199,7 +194,7 @@ void ImportAlarmJob::restoreConfig()
         }
     }
     Q_EMIT info(i18n("Config restored."));
-    nextStep();
+    slotNextStep();
 }
 
 void ImportAlarmJob::importkalarmConfig(const KArchiveFile *kalarmFile, const QString &kalarmrc, const QString &filename, const QString &prefix)

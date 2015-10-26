@@ -68,7 +68,6 @@ void AbstractImportExportJob::createProgressDialog(const QString &title)
 
 void AbstractImportExportJob::slotTaskCanceled()
 {
-    qDebug()<<" void ExportMailJob::slotTaskCanceled()";
     Q_EMIT error(i18n("Task Canceled"));
     Q_EMIT jobFinished();
 }
@@ -519,10 +518,10 @@ void AbstractImportExportJob::slotSynchronizeInstanceDone(const QString &instanc
 void AbstractImportExportJob::slotAllResourceSynchronized()
 {
     Q_EMIT info(i18n("All resources synchronized."));
-    nextStep();
+    slotNextStep();
 }
 
-void AbstractImportExportJob::nextStep()
+void AbstractImportExportJob::slotNextStep()
 {
     //Implement in sub class.
 }

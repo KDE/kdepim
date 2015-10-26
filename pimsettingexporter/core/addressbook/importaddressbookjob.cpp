@@ -24,6 +24,7 @@
 #include <KZip>
 #include <KArchiveEntry>
 
+#include <QTimer>
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
@@ -53,10 +54,10 @@ void ImportAddressbookJob::start()
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory, QString());
     initializeListStep();
-    nextStep();
+    QTimer::singleShot(0, this, SLOT(slotNextStep()));
 }
 
-void ImportAddressbookJob::nextStep()
+void ImportAddressbookJob::slotNextStep()
 {
     ++mIndex;
     if (mIndex < mListStep.count()) {
@@ -220,7 +221,7 @@ void ImportAddressbookJob::restoreConfig()
         }
     }
     Q_EMIT info(i18n("Config restored."));
-    nextStep();
+    slotNextStep();
 }
 
 void ImportAddressbookJob::importkaddressBookConfig(const KArchiveFile *file, const QString &config, const QString &filename, const QString &prefix)

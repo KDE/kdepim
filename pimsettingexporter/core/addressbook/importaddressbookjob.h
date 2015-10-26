@@ -32,8 +32,8 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
-protected:
-    void nextStep() Q_DECL_OVERRIDE;
+protected Q_SLOTS:
+    void slotNextStep() Q_DECL_OVERRIDE;
 
 private:
     void searchAllFiles(const KArchiveDirectory *dir, const QString &prefix);
