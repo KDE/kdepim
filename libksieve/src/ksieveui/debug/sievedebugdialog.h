@@ -53,6 +53,7 @@ private Q_SLOTS:
     void slotDiagNextAccount();
     void slotDiagNextScript();
 
+    void slotShutDownJob();
 private:
     void writeConfig();
     void readConfig();
@@ -62,6 +63,7 @@ private:
     KPIMTextEdit::PlainTextEditorWidget *mEdit;
     QStringList mResourceIdentifier;
     QStringList mScriptList;
+    QTimer *mShutDownJob;
 };
 
 }

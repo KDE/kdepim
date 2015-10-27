@@ -33,7 +33,8 @@ using namespace KSieveUi;
 
 SieveDebugDialog::SieveDebugDialog(QWidget *parent)
     : QDialog(parent),
-      mSieveJob(Q_NULLPTR)
+      mSieveJob(Q_NULLPTR),
+      mShutDownJob(Q_NULLPTR)
 {
     setWindowTitle(i18n("Sieve Diagnostics"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
@@ -86,11 +87,27 @@ void SieveDebugDialog::writeConfig()
     group.writeEntry("Size", size());
 }
 
+void SieveDebugDialog::slotShutDownJob()
+{
+    disconnect(mSieveJob, &KManageSieve::SieveJob::gotList, this, &SieveDebugDialog::slotGetScriptList);
+    mSieveJob->kill();
+    mSieveJob = Q_NULLPTR;
+    mEdit->editor()->appendPlainText(i18n("Unable to info\n\n"));
+    mResourceIdentifier.pop_front();
+    QTimer::singleShot(0, this, &SieveDebugDialog::slotDiagNextAccount);
+}
+
 void SieveDebugDialog::slotDiagNextAccount()
 {
     if (mResourceIdentifier.isEmpty()) {
         return;
     }
+    if (!mShutDownJob) {
+        mShutDownJob = new QTimer(this);
+        mShutDownJob->setSingleShot(true);
+        connect(mShutDownJob, &QTimer::timeout, this, &SieveDebugDialog::slotShutDownJob);
+    }
+    mShutDownJob->start(30*1000); // 30 seconds
     QString ident = mResourceIdentifier.first();
 
     mEdit->editor()->appendPlainText(i18n("Collecting data for account '%1'...\n", ident));
@@ -167,6 +184,9 @@ void SieveDebugDialog::slotGetScript(KManageSieve::SieveJob * /* job */, bool su
 void SieveDebugDialog::slotGetScriptList(KManageSieve::SieveJob *job, bool success,
         const QStringList &scriptList, const QString &activeScript)
 {
+    if (mShutDownJob->isActive()) {
+        mShutDownJob->stop();
+    }
     qCDebug(LIBKSIEVE_LOG) << "Success:" << success << ", List:" << scriptList.join(QStringLiteral(",")) <<
                            ", active:" << activeScript;
     mSieveJob = Q_NULLPTR; // job deletes itself after returning from this slot!
