@@ -30,6 +30,7 @@
 #include "editor/sievetexteditwidget.h"
 #include "editor/sievetextedit.h"
 #include <kpimtextedit/plaintexteditorwidget.h>
+#include <kpimtextedit/texttospeechwidget.h>
 #include <QLabel>
 #include <KUrlRequester>
 #include <KLineEdit>
@@ -79,9 +80,22 @@ SieveScriptDebuggerFrontEndWidget::SieveScriptDebuggerFrontEndWidget(QWidget *pa
     splitter->setObjectName(QStringLiteral("splitter"));
     mainLayout->addWidget(splitter);
 
+    QWidget *sieveEditorWidget = new QWidget(this);
+    QVBoxLayout *vboxSieveEditorLayout = new QVBoxLayout;
+    sieveEditorWidget->setLayout(vboxSieveEditorLayout);
+    vboxSieveEditorLayout->setMargin(0);
+
+    KPIMTextEdit::TextToSpeechWidget *textToSpeechWidget = new KPIMTextEdit::TextToSpeechWidget(this);
+    textToSpeechWidget->setObjectName(QStringLiteral("texttospeechwidget"));
+    vboxSieveEditorLayout->addWidget(textToSpeechWidget);
+
+
     mSieveTextEditWidget = new KSieveUi::SieveTextEditWidget(new KSieveUi::SieveScriptDebuggerTextEdit(this), this);
     mSieveTextEditWidget->setObjectName(QStringLiteral("sievetexteditwidget"));
-    splitter->addWidget(mSieveTextEditWidget);
+    vboxSieveEditorLayout->addWidget(mSieveTextEditWidget);
+    connect(mSieveTextEditWidget->textEdit(), &SieveTextEdit::say, textToSpeechWidget, &KPIMTextEdit::TextToSpeechWidget::say);
+
+    splitter->addWidget(sieveEditorWidget);
     splitter->setChildrenCollapsible(false);
 
     mSieveTestResult = new KPIMTextEdit::PlainTextEditorWidget(new KSieveUi::SieveScriptDebuggerResultEditor(this), this);

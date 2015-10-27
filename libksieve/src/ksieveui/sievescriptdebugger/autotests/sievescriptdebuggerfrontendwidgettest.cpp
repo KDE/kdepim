@@ -18,6 +18,7 @@
 #include "sievescriptdebuggerfrontendwidgettest.h"
 #include "../sievescriptdebuggerfrontendwidget.h"
 #include <KLineEdit>
+#include <KPIMTextEdit/kpimtextedit/texttospeechwidget.h>
 #include <KUrlRequester>
 #include <QLabel>
 #include <QSplitter>
@@ -65,6 +66,10 @@ void SieveScriptDebuggerFrontEndWidgetTest::shouldHaveDefaultValue()
     QVERIFY(extension->text().isEmpty());
     QVERIFY(extension->isClearButtonEnabled());
     QVERIFY(extension->trapReturnKey());
+
+
+    KPIMTextEdit::TextToSpeechWidget *textToSpeechWidget = w.findChild<KPIMTextEdit::TextToSpeechWidget *>(QStringLiteral("texttospeechwidget"));
+    QVERIFY(textToSpeechWidget);
 }
 
 void SieveScriptDebuggerFrontEndWidgetTest::shouldChangeButtonEnabledState()

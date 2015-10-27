@@ -29,6 +29,7 @@ class TextGoToLineWidget;
 class PlainTextEditFindBar;
 class PlainTextEditor;
 class PlainTextEditorWidget;
+class TextToSpeechWidget;
 }
 
 namespace KSieveUi
@@ -119,6 +120,7 @@ private:
     SieveTextEdit *mTextEdit;
     KPIMTextEdit::PlainTextEditorWidget *mDebugTextEdit;
     KPIMTextEdit::PlainTextEditFindBar *mFindBar;
+    KPIMTextEdit::TextToSpeechWidget *mTextToSpeechWidget;
     SieveInfoWidget *mSieveInfo;
     QSplitter *mMainSplitter;
     QSplitter *mExtraSplitter;

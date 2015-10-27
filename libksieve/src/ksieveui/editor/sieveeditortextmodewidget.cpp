@@ -31,6 +31,7 @@
 
 #include "kpimtextedit/plaintexteditfindbar.h"
 #include "kpimtextedit/plaintexteditorwidget.h"
+#include "kpimtextedit/texttospeechwidget.h"
 #include "kpimtextedit/textgotolinewidget.h"
 #include "KSplitterCollapserButton"
 #include "kpimtextedit/slidecontainer.h"
@@ -84,6 +85,8 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     textEditLayout->setMargin(0);
 
     mTabWidget = new SieveEditorTabWidget;
+    mTextToSpeechWidget = new KPIMTextEdit::TextToSpeechWidget(this);
+    textEditLayout->addWidget(mTextToSpeechWidget);
 
     mTextEdit = new SieveTextEdit;
     connect(mTextEdit, &SieveTextEdit::textChanged, this, &SieveEditorTextModeWidget::valueChanged);
@@ -91,6 +94,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTabWidget->tabBar()->hide();
     textEditLayout->addWidget(mTabWidget);
     connect(mTextEdit, &SieveTextEdit::openHelp, mTabWidget, &SieveEditorTabWidget::slotAddHelpPage);
+    connect(mTextEdit, &SieveTextEdit::say, mTextToSpeechWidget, &KPIMTextEdit::TextToSpeechWidget::say);
 
     mGoToLine = new KPIMTextEdit::TextGoToLineWidget;
     mGoToLine->hide();
