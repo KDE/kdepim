@@ -147,6 +147,10 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     mShowArchiveInformationsAction = ac->addAction(QStringLiteral("show_archive_info"), this, SLOT(slotShowArchiveInformations()));
     mShowArchiveInformationsAction->setText(i18n("Show Archive Information..."));
 
+    mShowArchiveInformationsAboutCurrentArchiveAction = ac->addAction(QStringLiteral("show_current_archive_info"), this, SLOT(slotShowCurrentArchiveInformations()));
+    mShowArchiveInformationsAboutCurrentArchiveAction->setText(i18n("Show Information on current Archive..."));
+    mShowArchiveInformationsAboutCurrentArchiveAction->setEnabled(false);
+
     KStandardAction::quit(this, SLOT(close()), ac);
     mRecentFilesAction = KStandardAction::openRecent(this, SLOT(slotRestoreFile(QUrl)), ac);
 
@@ -162,6 +166,7 @@ void PimSettingExporterWindow::slotUpdateActions(bool inAction)
     mSaveLogAction->setEnabled(!inAction);
     mArchiveStructureInfo->setEnabled(!inAction);
     mShowArchiveInformationsAction->setEnabled(!inAction);
+    mShowArchiveInformationsAboutCurrentArchiveAction->setEnabled(!inAction && !mLastArchiveFileName.isEmpty());
 }
 
 void PimSettingExporterWindow::slotRestoreFile(const QUrl &url)
@@ -220,6 +225,7 @@ void PimSettingExporterWindow::backupData(const QString &filename, const QString
         if (!mPimSettingsBackupRestoreUI->backupStart(filename)) {
             qCDebug(PIMSETTINGEXPORTERGUI_LOG) << " backup Start failed";
         }
+        mLastArchiveFileName = filename;
     } else {
         delete dialog;
     }
@@ -284,3 +290,12 @@ void PimSettingExporterWindow::slotShowStructureInfos()
     delete dlg;
 }
 
+
+void PimSettingExporterWindow::slotShowCurrentArchiveInformations()
+{
+    if (!mLastArchiveFileName.isEmpty()) {
+        QPointer<ShowArchiveStructureDialog> dlg = new ShowArchiveStructureDialog(mLastArchiveFileName, this);
+        dlg->exec();
+        delete dlg;
+    }
+}
