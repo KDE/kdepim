@@ -63,13 +63,15 @@ void SieveEditorMenuBar::initActions()
     connect(mGoToLine, &QAction::triggered, this, &SieveEditorMenuBar::gotoLine);
 
     mCommentCodeAction = new QAction(i18n("Comment"), this);
+    mCommentCodeAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
     connect(mCommentCodeAction, &QAction::triggered, this, &SieveEditorMenuBar::comment);
 
     mUncommentCodeAction = new QAction(i18n("Uncomment"), this);
+    mUncommentCodeAction->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_D));
     connect(mUncommentCodeAction, &QAction::triggered, this, &SieveEditorMenuBar::uncomment);
 
     mDebugSieveAction = new QAction(i18n("Debug Sieve Script..."), this);
-    mDebugSieveAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
+    mDebugSieveAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_D));
     connect(mDebugSieveAction, &QAction::triggered, this, &SieveEditorMenuBar::debugSieveScript);
 
     mFindAction = KStandardAction::find(this, SIGNAL(find()), this);

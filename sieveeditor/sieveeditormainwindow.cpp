@@ -192,23 +192,25 @@ void SieveEditorMainWindow::setupActions()
     mAutoGenerateScriptAction->setEnabled(false);
 
     mCommentAction = ac->addAction(QStringLiteral("comment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotComment()));
+    ac->setDefaultShortcut(mCommentAction, Qt::CTRL+ Qt::Key_D);
     mCommentAction->setText(i18n("Comment"));
 
     mUncommentAction = ac->addAction(QStringLiteral("uncomment_code"), mMainWidget->sieveEditorMainWidget(), SLOT(slotUncomment()));
+    ac->setDefaultShortcut(mUncommentAction, Qt::CTRL + Qt::SHIFT + Qt::Key_D );
     mUncommentAction->setText(i18n("Uncomment"));
 
     mZoomInAction = new QAction(QIcon::fromTheme(QStringLiteral("zoom-in")), i18n("&Zoom In"), this);
     ac->addAction(QStringLiteral("zoom_in"), mZoomInAction);
     connect(mZoomInAction, &QAction::triggered, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotZoomIn);
-    ac->setDefaultShortcut(mZoomInAction, QKeySequence(Qt::CTRL | Qt::Key_Plus));
+    ac->setDefaultShortcut(mZoomInAction, QKeySequence(Qt::CTRL + Qt::Key_Plus));
 
     mZoomOutAction = new QAction(QIcon::fromTheme(QStringLiteral("zoom-out")), i18n("Zoom &Out"), this);
     ac->addAction(QStringLiteral("zoom_out"), mZoomOutAction);
     connect(mZoomOutAction, &QAction::triggered, mMainWidget->sieveEditorMainWidget(), &SieveEditorMainWidget::slotZoomOut);
-    ac->setDefaultShortcut(mZoomOutAction, QKeySequence(Qt::CTRL | Qt::Key_Minus));
+    ac->setDefaultShortcut(mZoomOutAction, QKeySequence(Qt::CTRL + Qt::Key_Minus));
 
     mZoomResetAction = ac->addAction(QStringLiteral("zoom_reset"), mMainWidget->sieveEditorMainWidget(), SLOT(slotZoomReset()));
-    ac->setDefaultShortcut(mZoomResetAction, QKeySequence(Qt::CTRL | Qt::Key_0));
+    ac->setDefaultShortcut(mZoomResetAction, QKeySequence(Qt::CTRL + Qt::Key_0));
     mZoomResetAction->setText(i18nc("Reset the zoom", "Reset"));
 
     mMenuChangeCaseAction = new PimCommon::KActionMenuChangeCase(this);
@@ -226,7 +228,7 @@ void SieveEditorMainWindow::setupActions()
 
     mDebugSieveScriptAction = ac->addAction(QStringLiteral("debug_sieve"), mMainWidget->sieveEditorMainWidget(), SLOT(slotDebugSieveScript()));
     mDebugSieveScriptAction->setText(i18n("Debug Sieve Script..."));
-    ac->setDefaultShortcut(mDebugSieveScriptAction, QKeySequence(Qt::CTRL + Qt::Key_D));
+    ac->setDefaultShortcut(mDebugSieveScriptAction, QKeySequence(Qt::SHIFT + Qt::ALT + Qt::Key_D));
 
     mWrapTextAction = new QAction(i18n("Wordwarp"), this);
     mWrapTextAction->setCheckable(true);
