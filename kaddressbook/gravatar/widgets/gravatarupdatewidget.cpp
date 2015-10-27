@@ -146,15 +146,17 @@ void GravatarUpdateWidget::slotResolvUrl(const QUrl &url)
 
 void GravatarUpdateWidget::slotSearchGravatarFinished(Gravatar::GravatarResolvUrlJob *job)
 {
+    bool foundGravatar = false;
     if (job) {
         if (job->hasGravatar()) {
             mPixmap = job->pixmap();
             mResultGravatar->setPixmap(mPixmap);
+            foundGravatar = true;
         } else {
             mResultGravatar->setText(i18n("No Gravatar Found."));
         }
     }
-    Q_EMIT activateDialogButton(true);
+    Q_EMIT activateDialogButton(foundGravatar);
     mSearchGravatar->setEnabled(true);
 }
 
