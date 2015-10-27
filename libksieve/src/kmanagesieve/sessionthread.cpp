@@ -214,7 +214,7 @@ void SessionThread::slotSocketError()
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
-    qCDebug(KMANAGERSIEVE_LOG) << m_socket->errorString();
+    qCDebug(KMANAGERSIEVE_LOG) << Q_FUNC_INFO << m_socket->errorString();
     doDisconnectFromHost(false);
 }
 
@@ -343,7 +343,7 @@ bool SessionThread::saslInteract(void *in)
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
-    qCDebug(KMANAGERSIEVE_LOG);
+    qCDebug(KMANAGERSIEVE_LOG) << "SessionThread::saslInteract";
     sasl_interact_t *interact = (sasl_interact_t *) in;
 
     //some mechanisms do not require username && pass, so it doesn't need a popup
@@ -448,7 +448,7 @@ void SessionThread::doStartSsl()
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
-    qCDebug(KMANAGERSIEVE_LOG);
+    qCDebug(KMANAGERSIEVE_LOG) << "SessionThread::doStartSsl()";
     if (!m_sslCheck) {
         m_sslCheck = new QTimer(this);
         m_sslCheck->setInterval(60 * 1000);

@@ -75,13 +75,13 @@ Session::Session(QObject *parent) :
 
 Session::~Session()
 {
-    qCDebug(KMANAGERSIEVE_LOG);
+    qCDebug(KMANAGERSIEVE_LOG) << Q_FUNC_INFO;
     delete m_thread;
 }
 
 void Session::connectToHost(const QUrl &url)
 {
-    qCDebug(KMANAGERSIEVE_LOG) << url;
+    qCDebug(KMANAGERSIEVE_LOG) << "connect to host url: "<<url;
     m_url = url;
     m_thread->connectToHost(url);
     m_state = PreTlsCapabilities;
@@ -200,14 +200,14 @@ void Session::processResponse(const KManageSieve::Response &response, const QByt
 
 void Session::scheduleJob(SieveJob *job)
 {
-    qCDebug(KMANAGERSIEVE_LOG) << job;
+    qCDebug(KMANAGERSIEVE_LOG) << Q_FUNC_INFO << job;
     m_jobs.enqueue(job);
     QMetaObject::invokeMethod(this, "executeNextJob", Qt::QueuedConnection);
 }
 
 void Session::killJob(SieveJob *job)
 {
-    qCDebug(KMANAGERSIEVE_LOG) << job;
+    qCDebug(KMANAGERSIEVE_LOG) << Q_FUNC_INFO << job;
     if (m_currentJob == job) {
         m_currentJob->d->killed();
         m_currentJob = Q_NULLPTR;

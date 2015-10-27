@@ -98,6 +98,7 @@ void SieveDebugDialog::slotDiagNextAccount()
 
     // Detect URL for this IMAP account
     const QUrl url = KSieveUi::Util::findSieveUrlForAccount(ident);
+    qDebug()<<" url "<<url;
     if (!url.isValid()) {
         mEdit->editor()->appendPlainText(i18n("(Account does not support Sieve)\n\n"));
     } else {
