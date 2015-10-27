@@ -90,14 +90,12 @@ protected:
     void copyToFile(const KArchiveFile *archivefile, const QString &dest, const QString &filename, const QString &prefix);
     void initializeImportJob();
     void backupFile(const QString &filename, const QString &path, const QString &storedName);
-    void backupResourceDirectory(const Akonadi::AgentInstance &agent, const QString &defaultPath);
     void backupConfigFile(const QString &configFileName);
     int mergeConfigMessageBox(const QString &configName) const;
     bool overwriteConfigMessageBox(const QString &configName) const;
     Akonadi::Collection::Id convertPathToId(const QString &path);
     void backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath);
     QStringList restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath, bool overwriteResources = false);
-    bool backupFullDirectory(const QString &url, const QString &archivePath, const QString &archivename);
     virtual void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
     void restoreConfigFile(const QString &configNameStr);
     bool overwriteDirectoryMessageBox(const QString &directory) const;

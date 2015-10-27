@@ -264,47 +264,6 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
     }
 }
 
-void AbstractImportExportJob::backupResourceDirectory(const Akonadi::AgentInstance &agent, const QString &defaultPath)
-{
-    const QString identifier = agent.identifier();
-    const QString archivePath = defaultPath + identifier + QDir::separator();
-
-    QString url = Utils::resourcePath(agent);
-    if (!url.isEmpty()) {
-        QFileInfo fi(url);
-        QString filename = fi.fileName();
-        if (QDir(url).exists()) {
-            const bool fileAdded  = archive()->addLocalDirectory(url, archivePath + filename);
-            if (fileAdded) {
-                const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                if (!errorStr.isEmpty()) {
-                    Q_EMIT error(errorStr);
-                }
-                Q_EMIT info(i18n("\"%1\" was backed up.", filename));
-
-                url = Utils::akonadiAgentConfigPath(identifier);
-                if (!url.isEmpty()) {
-                    fi = QFileInfo(url);
-                    filename = fi.fileName();
-
-                    if (QDir(url).exists()) {
-                        const bool fileAdded  = archive()->addLocalFile(url, archivePath + filename);
-                        if (fileAdded) {
-                            Q_EMIT info(i18n("\"%1\" was backed up.", filename));
-                        } else {
-                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
-                        }
-                    }
-                }
-
-            } else {
-                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", filename));
-            }
-        } else {
-            Q_EMIT error(i18n("Resource was not configured correctly, not archiving it."));
-        }
-    }
-}
 
 void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath)
 {
@@ -441,38 +400,6 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
     } else {
         Q_EMIT error(errorMsg);
     }
-}
-
-bool AbstractImportExportJob::backupFullDirectory(const QString &url, const QString &archivePath, const QString &archivename)
-{
-    QTemporaryFile tmp;
-    tmp.open();
-    KZip *archiveFile = new KZip(tmp.fileName());
-    archiveFile->setCompression(KZip::NoCompression);
-    bool result = archiveFile->open(QIODevice::WriteOnly);
-    if (!result) {
-        Q_EMIT error(i18n("Impossible to open archive file."));
-        delete archiveFile;
-        return false;
-    }
-    const bool vcarddirAdded = archiveFile->addLocalDirectory(url, QString());
-    if (!vcarddirAdded) {
-        Q_EMIT error(i18n("Impossible to backup \"%1\".", url));
-        delete archiveFile;
-        return false;
-    }
-    archiveFile->close();
-    tmp.close();
-
-    const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath  + archivename);
-    if (fileAdded) {
-        Q_EMIT info(i18n("\"%1\" was backed up.", url));
-    } else {
-        Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", url));
-    }
-
-    delete archiveFile;
-    return fileAdded;
 }
 
 void AbstractImportExportJob::restoreConfigFile(const QString &configNameStr)
