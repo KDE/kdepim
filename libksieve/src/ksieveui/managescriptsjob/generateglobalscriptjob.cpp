@@ -34,9 +34,11 @@ GenerateGlobalScriptJob::~GenerateGlobalScriptJob()
 {
     if (mMasterjob) {
         mMasterjob->kill();
+        mMasterjob = Q_NULLPTR;
     }
     if (mUserJob) {
         mUserJob->kill();
+        mUserJob = Q_NULLPTR;
     }
 }
 
