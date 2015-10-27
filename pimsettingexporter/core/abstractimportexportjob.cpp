@@ -34,6 +34,7 @@
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
+#include <QCoreApplication>
 
 int AbstractImportExportJob::sArchiveVersion = -1;
 
@@ -434,6 +435,7 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
                     dir->copyTo(destination);
                 }
             }
+            qApp->processEvents();
         }
         delete zip;
     } else {
