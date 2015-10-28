@@ -32,6 +32,7 @@
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
+#include <QTimer>
 
 namespace
 {
@@ -58,7 +59,7 @@ void ImportCalendarJob::start()
     createProgressDialog(i18n("Import KOrganizer settings"));
     searchAllFiles(mArchiveDirectory, QString());
     initializeListStep();
-    slotNextStep();
+    QTimer::singleShot(0, this, &ImportCalendarJob::slotNextStep);
 }
 
 void ImportCalendarJob::slotNextStep()
@@ -288,7 +289,7 @@ void ImportCalendarJob::restoreConfig()
     }
 
     Q_EMIT info(i18n("Config restored."));
-    slotNextStep();
+    QTimer::singleShot(0, this, &ImportCalendarJob::slotNextStep);
 }
 
 void ImportCalendarJob::importkorganizerConfig(const KArchiveFile *file, const QString &config, const QString &filename, const QString &prefix)

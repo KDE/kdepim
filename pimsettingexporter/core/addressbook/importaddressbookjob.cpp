@@ -224,7 +224,7 @@ void ImportAddressbookJob::restoreConfig()
         }
     }
     Q_EMIT info(i18n("Config restored."));
-    slotNextStep();
+    QTimer::singleShot(0, this, &ImportAddressbookJob::slotNextStep);
 }
 
 void ImportAddressbookJob::importkaddressBookConfig(const KArchiveFile *file, const QString &config, const QString &filename, const QString &prefix)

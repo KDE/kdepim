@@ -48,6 +48,7 @@
 #include <QMetaMethod>
 #include <QDir>
 #include <QStandardPaths>
+#include <QTimer>
 
 using namespace Akonadi;
 namespace
@@ -76,7 +77,7 @@ void ImportMailJob::start()
     searchAllFiles(mArchiveDirectory, QString());
     if (!mFileList.isEmpty() || !mListResourceFile.isEmpty()) {
         initializeListStep();
-        slotNextStep();
+        QTimer::singleShot(0, this, &ImportMailJob::slotNextStep);
     } else {
         Q_EMIT jobFinished();
     }

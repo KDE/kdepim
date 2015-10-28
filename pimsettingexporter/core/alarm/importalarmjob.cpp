@@ -29,6 +29,7 @@
 #include <QDir>
 #include <QFile>
 #include <QStandardPaths>
+#include <QTimer>
 
 namespace
 {
@@ -56,7 +57,7 @@ void ImportAlarmJob::start()
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory, QString());
     initializeListStep();
-    slotNextStep();
+    QTimer::singleShot(0, this, &ImportAlarmJob::slotNextStep);
 }
 
 void ImportAlarmJob::slotNextStep()
@@ -197,7 +198,7 @@ void ImportAlarmJob::restoreConfig()
         }
     }
     Q_EMIT info(i18n("Config restored."));
-    slotNextStep();
+    QTimer::singleShot(0, this, &ImportAlarmJob::slotNextStep);
 }
 
 void ImportAlarmJob::importkalarmConfig(const KArchiveFile *kalarmFile, const QString &kalarmrc, const QString &filename, const QString &prefix)

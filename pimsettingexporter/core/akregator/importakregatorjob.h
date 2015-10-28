@@ -31,6 +31,9 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
+private Q_SLOTS:
+    void slotNextStep() Q_DECL_OVERRIDE;
+
 private:
     void restoreConfig();
     void restoreData();

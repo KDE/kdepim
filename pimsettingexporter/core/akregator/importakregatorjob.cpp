@@ -23,6 +23,7 @@
 #include <KArchive>
 #include <KLocalizedString>
 #include <KZip>
+#include <QTimer>
 
 #include <QStandardPaths>
 
@@ -40,14 +41,24 @@ void ImportAkregatorJob::start()
 {
     Q_EMIT title(i18n("Start import Akregator settings..."));
     mArchiveDirectory = archive()->directory();
+    initializeListStep();
     createProgressDialog(i18n("Import Akregator settings"));
-    if (mTypeSelected & Utils::Config) {
-        restoreConfig();
+    QTimer::singleShot(0, this, &ImportAkregatorJob::slotNextStep);
+}
+
+void ImportAkregatorJob::slotNextStep()
+{
+    ++mIndex;
+    if (mIndex < mListStep.count()) {
+        const Utils::StoredType type = mListStep.at(mIndex);
+        if (type == Utils::Config) {
+            restoreConfig();
+        } else if (type == Utils::Data) {
+            restoreData();
+        }
+    } else {
+        Q_EMIT jobFinished();
     }
-    if (mTypeSelected & Utils::Data) {
-        restoreData();
-    }
-    Q_EMIT jobFinished();
 }
 
 void ImportAkregatorJob::restoreConfig()
@@ -56,6 +67,7 @@ void ImportAkregatorJob::restoreConfig()
     increaseProgressDialog();
     restoreConfigFile(akregatorStr);
     Q_EMIT info(i18n("Config restored."));
+    QTimer::singleShot(0, this, &ImportAkregatorJob::slotNextStep);
 }
 
 void ImportAkregatorJob::restoreData()
@@ -67,5 +79,6 @@ void ImportAkregatorJob::restoreData()
         overwriteDirectory(akregatorPath, akregatorEntry);
     }
     Q_EMIT info(i18n("Data restored."));
+    QTimer::singleShot(0, this, &ImportAkregatorJob::slotNextStep);
 }
 
