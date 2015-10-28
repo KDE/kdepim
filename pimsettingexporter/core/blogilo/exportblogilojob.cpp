@@ -17,16 +17,14 @@
 
 #include "exportblogilojob.h"
 
-
-
 #include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
 
 #include <KZip>
 
-#include <QWidget>
 #include <QStandardPaths>
+#include <QTimer>
 
 ExportBlogiloJob::ExportBlogiloJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -43,25 +41,15 @@ void ExportBlogiloJob::start()
     Q_EMIT title(i18n("Start export Blogilo settings..."));
     createProgressDialog(i18n("Export Blogilo settings"));
     if (mTypeSelected & Utils::Config) {
-        backupConfig();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    } else if (mTypeSelected & Utils::Data) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
+    } else {
+        Q_EMIT jobFinished();
     }
-    if (mTypeSelected & Utils::Data) {
-        backupData();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
-    }
-    Q_EMIT jobFinished();
 }
 
-void ExportBlogiloJob::backupConfig()
+void ExportBlogiloJob::slotCheckBackupConfig()
 {
     setProgressDialogLabel(i18n("Backing up config..."));
 
@@ -70,17 +58,21 @@ void ExportBlogiloJob::backupConfig()
     backupFile(blogilorc, Utils::configsPath(), blogiloStr);
 
     Q_EMIT info(i18n("Config backup done."));
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
 }
 
-void ExportBlogiloJob::backupData()
+void ExportBlogiloJob::slotCheckBackupData()
 {
-    setProgressDialogLabel(i18n("Backing up data..."));
+    if (mTypeSelected & Utils::Data) {
+        setProgressDialogLabel(i18n("Backing up data..."));
 
-    const QString dbfileStr = QStringLiteral("blogilo.db");
-    const QString dbfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/blogilo/") + dbfileStr;
+        const QString dbfileStr = QStringLiteral("blogilo.db");
+        const QString dbfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/blogilo/") + dbfileStr;
 
-    backupFile(dbfile, Utils::dataPath() +  QLatin1String("/blogilo/"), dbfileStr);
+        backupFile(dbfile, Utils::dataPath() +  QLatin1String("/blogilo/"), dbfileStr);
 
-    Q_EMIT info(i18n("Data backup done."));
+        Q_EMIT info(i18n("Data backup done."));
+    }
+    Q_EMIT jobFinished();
 }
 
