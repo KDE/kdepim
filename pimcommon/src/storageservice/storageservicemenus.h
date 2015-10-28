@@ -33,7 +33,6 @@ public:
     KActionMenu *shareLinkServices(QWidget *parent) const;
     KActionMenu *downloadServices(QWidget *parent) const;
     KActionMenu *uploadServices(QWidget *parent) const;
-    //KActionMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability mainCapability, const QList<PimCommon::StorageServiceAbstract::Capability> &lstCapability, QWidget *parent) const;
 
 private:
     StorageServiceMenusPrivate *const d;

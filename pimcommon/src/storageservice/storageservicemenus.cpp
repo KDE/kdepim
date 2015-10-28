@@ -73,3 +73,4 @@ KActionMenu *StorageServiceMenus::uploadServices(QWidget *parent) const
     lstCapability << PimCommon::StorageServicePlugin::UploadFileCapability;
     return d->menuWithCapability(PimCommon::StorageServicePlugin::UploadFileCapability, lstCapability, parent);
 }
+
