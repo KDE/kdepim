@@ -31,9 +31,9 @@ public:
 
     void start() Q_DECL_OVERRIDE;
 
-private:
-    void backupConfig();
-    void backupData();
+private Q_SLOTS:
+    void slotCheckBackupConfig();
+    void slotCheckBackupData();
 };
 
 #endif // EXPORTAKREGATORJOB_H

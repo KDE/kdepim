@@ -27,6 +27,7 @@
 #include <QWidget>
 #include <QDir>
 #include <QStandardPaths>
+#include <QTimer>
 
 ExportAkregatorJob::ExportAkregatorJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -43,25 +44,15 @@ void ExportAkregatorJob::start()
     Q_EMIT title(i18n("Start export Akregator settings..."));
     createProgressDialog(i18n("Export Akregator settings"));
     if (mTypeSelected & Utils::Config) {
-        backupConfig();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupConfig()));
+    } else if (mTypeSelected & Utils::Data) {
+        QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
+    } else {
+        Q_EMIT jobFinished();
     }
-    if (mTypeSelected & Utils::Data) {
-        backupData();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
-    }
-    Q_EMIT jobFinished();
 }
 
-void ExportAkregatorJob::backupConfig()
+void ExportAkregatorJob::slotCheckBackupConfig()
 {
     setProgressDialogLabel(i18n("Backing up config..."));
 
@@ -69,20 +60,24 @@ void ExportAkregatorJob::backupConfig()
     const QString akregatorsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + akregatorStr;
     backupFile(akregatorsrc, Utils::configsPath(), akregatorStr);
     Q_EMIT info(i18n("Config backup done."));
+    QTimer::singleShot(0, this, SLOT(slotCheckBackupData()));
 }
 
-void ExportAkregatorJob::backupData()
+void ExportAkregatorJob::slotCheckBackupData()
 {
-    setProgressDialogLabel(i18n("Backing up data..."));
+    if (mTypeSelected & Utils::Data) {
+        setProgressDialogLabel(i18n("Backing up data..."));
 
-    const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/akregator");
-    QDir akregatorDirectory(akregatorDir);
-    if (akregatorDirectory.exists()) {
-        const bool akregatorDirAdded = archive()->addLocalDirectory(akregatorDir, Utils::dataPath() +  QLatin1String("/akregator"));
-        if (!akregatorDirAdded) {
-            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", akregatorDir));
+        const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/akregator");
+        QDir akregatorDirectory(akregatorDir);
+        if (akregatorDirectory.exists()) {
+            const bool akregatorDirAdded = archive()->addLocalDirectory(akregatorDir, Utils::dataPath() +  QLatin1String("/akregator"));
+            if (!akregatorDirAdded) {
+                Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", akregatorDir));
+            }
         }
+        Q_EMIT info(i18n("Data backup done."));
     }
-    Q_EMIT info(i18n("Data backup done."));
+    Q_EMIT jobFinished();
 }
 
