@@ -297,6 +297,7 @@ if (BUILD_TESTING)
    add_subdirectory(storageservice/webdav/tests)
    add_subdirectory(storageservice/box/tests)
    add_subdirectory(storageservice/dropbox/icons/)
+   add_subdirectory(storageservice/autotests)
    add_subdirectory(customtools/autotests)
 endif()
 
