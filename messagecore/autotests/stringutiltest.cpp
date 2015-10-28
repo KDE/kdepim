@@ -195,7 +195,7 @@ void StringUtilTest::test_SmartQuote_data()
 void StringUtilTest::test_signatureStripping()
 {
     //QStringList tests;
-    const QString test1 = QLatin1String(
+    const QString test1 = QStringLiteral(
                               "text1\n"
                               "-- \n"
                               "Signature Block1\n"
@@ -220,7 +220,7 @@ void StringUtilTest::test_signatureStripping()
                               "-- \n"
                               "Signature Block 6\n");
 
-    const QString test1Result = QLatin1String(
+    const QString test1Result = QStringLiteral(
                                     "text1\n"
                                     "> text2\n"
                                     ">> text3 -- not a signature block\n"
@@ -233,7 +233,7 @@ void StringUtilTest::test_signatureStripping()
 
     QCOMPARE(StringUtil::stripSignature(test1), test1Result);
 
-    const QString test2 = QLatin1String(
+    const QString test2 = QStringLiteral(
                               "text1\n"
                               "> text2\n"
                               ">> text3 -- not a signature block\n"
@@ -247,7 +247,7 @@ void StringUtilTest::test_signatureStripping()
     // No actual signature - should stay the same
     QCOMPARE(StringUtil::stripSignature(test2), test2);
 
-    const QString test3 = QLatin1String(
+    const QString test3 = QStringLiteral(
                               "text1\n"
                               "-- \n"
                               "Signature Block1\n"
@@ -269,7 +269,7 @@ void StringUtilTest::test_signatureStripping()
                               "-- \n"
                               "Signature Block 5");
 
-    const QString test3Result = QLatin1String(
+    const QString test3Result = QStringLiteral(
                                     "text1\n"
                                     ">text2\n"
                                     "> >text3\n"
@@ -281,7 +281,7 @@ void StringUtilTest::test_signatureStripping()
 
     QCOMPARE(StringUtil::stripSignature(test3), test3Result);
 
-    const QString test4 = QLatin1String(
+    const QString test4 = QStringLiteral(
                               "Text 1\n"
                               "-- \n"
                               "First sign\n\n\n"
@@ -295,7 +295,7 @@ void StringUtilTest::test_signatureStripping()
                               ">> --\n"
                               ">> Not Signature block 3\n");
 
-    const QString test4Result = QLatin1String(
+    const QString test4Result = QStringLiteral(
                                     "Text 1\n"
                                     "> From: bla\n"
                                     "> Texto 2\n\n"
@@ -309,7 +309,7 @@ void StringUtilTest::test_signatureStripping()
 
     QCOMPARE(StringUtil::stripSignature(test4), test4Result);
 
-    const QString test5 = QLatin1String(
+    const QString test5 = QStringLiteral(
                               "-- \n"
                               "-- ACME, Inc\n"
                               "-- Joe User\n"
@@ -319,7 +319,7 @@ void StringUtilTest::test_signatureStripping()
 
     QCOMPARE(StringUtil::stripSignature(test5), QString());
 
-    const QString test6 = QLatin1String(
+    const QString test6 = QStringLiteral(
                               "Text 1\n\n\n\n"
                               "> From: bla\n"
                               "> Texto 2\n\n"
@@ -336,7 +336,7 @@ void StringUtilTest::test_signatureStripping()
 
 void StringUtilTest::test_stripOffMessagePrefixBenchmark()
 {
-    const QString subject = QLatin1String("Fwd: Hello World Subject");
+    const QString subject = QStringLiteral("Fwd: Hello World Subject");
     QBENCHMARK {
         StringUtil::stripOffPrefixes(subject);
     }

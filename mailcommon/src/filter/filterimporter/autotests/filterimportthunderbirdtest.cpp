@@ -32,7 +32,7 @@ void FilterImportThunderbirdtest::initTestCase()
 
 void FilterImportThunderbirdtest::testImportFiltersAllCondition()
 {
-    const QString filter = QLatin1String("version=\"9\"\n"
+    const QString filter = QStringLiteral("version=\"9\"\n"
                                          "logging=\"no\"\n"
                                          "name=\"Match All Messages\"\n"
                                          "enabled=\"yes\"\n"
@@ -60,7 +60,7 @@ void FilterImportThunderbirdtest::testImportFiltersEmpty()
 
 void FilterImportThunderbirdtest::testImportFiltersStopExecution()
 {
-    const QString filter = QLatin1String("version=\"9\"\n"
+    const QString filter = QStringLiteral("version=\"9\"\n"
                                          "logging=\"no\"\n"
                                          "name=\"Match All Messages\"\n"
                                          "enabled=\"yes\"\n"
@@ -78,7 +78,7 @@ void FilterImportThunderbirdtest::testImportFiltersStopExecution()
 
 void FilterImportThunderbirdtest::testImportFiltersDisabled()
 {
-    const QString filter = QLatin1String("version=\"9\"\n"
+    const QString filter = QStringLiteral("version=\"9\"\n"
                                          "logging=\"no\"\n"
                                          "name=\"Match All Messages\"\n"
                                          "enabled=\"no\"\n"
@@ -96,7 +96,7 @@ void FilterImportThunderbirdtest::testImportFiltersDisabled()
 
 void FilterImportThunderbirdtest::testImportTwoFilters()
 {
-    const QString filter = QLatin1String("version=\"9\"\n"
+    const QString filter = QStringLiteral("version=\"9\"\n"
                                          "logging=\"no\"\n"
                                          "name=\"Subject contains: kde\"\n"
                                          "enabled=\"yes\"\n"
@@ -126,7 +126,7 @@ void FilterImportThunderbirdtest::testImportTwoFilters()
 
 void FilterImportThunderbirdtest::testImportAndFilters()
 {
-    const QString filter = QLatin1String("version=\"9\"\n"
+    const QString filter = QStringLiteral("version=\"9\"\n"
                                          "logging=\"no\"\n"
                                          "name=\"Subject contains: kde\"\n"
                                          "enabled=\"yes\"\n"
@@ -143,7 +143,7 @@ void FilterImportThunderbirdtest::testImportAndFilters()
 
 void FilterImportThunderbirdtest::testImportOrFilters()
 {
-    const QString filter = QLatin1String("version=\"9\"\n"
+    const QString filter = QStringLiteral("version=\"9\"\n"
                                          "logging=\"no\"\n"
                                          "name=\"Subject contains: kde\"\n"
                                          "enabled=\"yes\"\n"
@@ -160,7 +160,7 @@ void FilterImportThunderbirdtest::testImportOrFilters()
 
 void FilterImportThunderbirdtest::testImportTypeFilters()
 {
-    const QString filter = QLatin1String("version=\"9\"\n"
+    const QString filter = QStringLiteral("version=\"9\"\n"
                                          "logging=\"no\"\n"
                                          "name=\"Subject contains: kde\"\n"
                                          "enabled=\"yes\"\n"

@@ -100,7 +100,7 @@ void ComposerTest::testNonAsciiHeaders()
     Composer *composer = new Composer;
     fillComposerData(composer);
 
-    const QString mailbox = QLatin1String(" <bla@example.com>");
+    const QString mailbox = QStringLiteral(" <bla@example.com>");
     const QString fromDisplayName = QStringLiteral("Hellö");
     const QString toDisplayName = QStringLiteral("æſłĸð");
     const QString ccDisplayName = QStringLiteral("Вася");
@@ -141,7 +141,7 @@ void ComposerTest::testNonAsciiHeaders()
 void ComposerTest::testBug271192()
 {
     const QString displayName = QStringLiteral("Интернет-компания example");
-    const QString mailbox = QLatin1String("example@example.com");
+    const QString mailbox = QStringLiteral("example@example.com");
     Composer *composer = new Composer;
     fillComposerData(composer);
     composer->infoPart()->setTo(QStringList() << (displayName + QLatin1String(" <") + mailbox + QLatin1String(">")));

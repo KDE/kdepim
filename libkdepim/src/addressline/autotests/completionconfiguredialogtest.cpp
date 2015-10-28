@@ -45,10 +45,10 @@ void CompletionConfigureDialogTest::shouldHaveDefaultValue()
 {
     KPIM::CompletionConfigureDialog dlg;
 
-    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QLatin1String("buttonbox"));
+    QDialogButtonBox *buttonBox = dlg.findChild<QDialogButtonBox *>(QStringLiteral("buttonbox"));
     QVERIFY(buttonBox);
 
-    QTabWidget *tabWidget = dlg.findChild<QTabWidget *>(QLatin1String("tabwidget"));
+    QTabWidget *tabWidget = dlg.findChild<QTabWidget *>(QStringLiteral("tabwidget"));
     QVERIFY(tabWidget);
     QVERIFY(tabWidget->count() > 0);
     for (int i = 0; i < tabWidget->count(); ++i) {

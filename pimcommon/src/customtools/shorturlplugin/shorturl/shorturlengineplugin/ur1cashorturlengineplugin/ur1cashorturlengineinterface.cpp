@@ -47,7 +47,7 @@ void Ur1CaShortUrlEngineInterface::generateShortUrl()
 {
     QUrl url(QStringLiteral("http://ur1.ca/"));
     QUrlQuery query;
-    query.addQueryItem(QLatin1Literal("longurl"), mOriginalUrl);
+    query.addQueryItem(QStringLiteral("longurl"), mOriginalUrl);
 
     url.setQuery(query);
     QByteArray postData;

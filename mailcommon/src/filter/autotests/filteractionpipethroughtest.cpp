@@ -78,7 +78,7 @@ void FilterActionPipeThroughTest::testWithInvalidCommandPath()
     item.setPayload<KMime::Message::Ptr>(msgPtr);
     ItemContext context(item, true);
 
-    filter.argsFromString(QLatin1String("/home/cat "));
+    filter.argsFromString(QStringLiteral("/home/cat "));
     QCOMPARE(filter.process(context, false), FilterAction::ErrorButGoOn);
     QCOMPARE(context.needsPayloadStore(), false);
     QCOMPARE(msgPtr->encodedContent(), data);
@@ -169,7 +169,7 @@ void FilterActionPipeThroughTest::testCopyMail()
     item.setPayload<KMime::Message::Ptr>(msgPtr);
     ItemContext context(item, true);
 
-    filter.argsFromString(QLatin1String("cat "));
+    filter.argsFromString(QStringLiteral("cat "));
     QCOMPARE(filter.process(context, false), FilterAction::GoOn);
     QCOMPARE(context.needsPayloadStore(), true);
     QCOMPARE(msgPtr->encodedContent(), data);
@@ -206,7 +206,7 @@ void FilterActionPipeThroughTest::testXUidUnchange()
     item.setPayload<KMime::Message::Ptr>(msgPtr);
     ItemContext context(item, true);
 
-    filter.argsFromString(QLatin1String("cat "));
+    filter.argsFromString(QStringLiteral("cat "));
     QCOMPARE(filter.process(context, false), FilterAction::GoOn);
     QCOMPARE(context.needsPayloadStore(), true);
     QCOMPARE(QString::fromAscii(msgPtr->encodedContent()), QString::fromAscii(data));

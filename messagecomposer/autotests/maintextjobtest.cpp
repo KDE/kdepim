@@ -216,8 +216,8 @@ void MainTextJobTest::testHtmlWithImages()
     MessageComposer::RichTextComposerNg editor;
     editor.createActions(new KActionCollection(this));
 
-    QString image1 = KIconLoader::global()->iconPath(QLatin1String("folder-new"), KIconLoader::Small, false);
-    QString image2 = KIconLoader::global()->iconPath(QLatin1String("message"), KIconLoader::Small, false);
+    QString image1 = KIconLoader::global()->iconPath(QStringLiteral("folder-new"), KIconLoader::Small, false);
+    QString image2 = KIconLoader::global()->iconPath(QStringLiteral("message"), KIconLoader::Small, false);
     QString data = QStringLiteral("dust in the wind");
     editor.setTextOrHtml(data);
     editor.composerControler()->composerImages()->addImage(QUrl::fromLocalFile(image1));

@@ -63,7 +63,7 @@ void PluginLoaderBase::doScan(const char *path)
 void PluginLoaderBase::doScanOneFolder(const QString &folder)
 {
     QDir dir(folder);
-    const auto list = dir.entryList(QStringList() << QLatin1String("*.desktop"), QDir::Files | QDir::Readable);
+    const auto list = dir.entryList(QStringList() << QStringLiteral("*.desktop"), QDir::Files | QDir::Readable);
     for (QStringList::const_iterator it = list.constBegin(); it != list.constEnd(); ++it) {
         const QString fileName = folder + QLatin1Char('/') + *it;
         KConfig config(fileName, KConfig::SimpleConfig);

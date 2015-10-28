@@ -46,7 +46,7 @@ private Q_SLOTS:
         QTest::addColumn<QString>("referenceFileName");
         QTest::addColumn<QString>("outFileName");
 
-        QDir dir(QLatin1String(MAIL_DATA_DIR));
+        QDir dir(QStringLiteral(MAIL_DATA_DIR));
         foreach (const QString &file, dir.entryList(QStringList(QLatin1String("*.mbox")), QDir::Files | QDir::Readable | QDir::NoSymLinks)) {
             if (!QFile::exists(dir.path() + QLatin1Char('/') + file + QLatin1String(".html"))) {
                 continue;
@@ -86,7 +86,7 @@ private Q_SLOTS:
 
         otp.parseObjectTree(msg.data());
 
-        fileWriter.queue(QLatin1String("</body></html>"));
+        fileWriter.queue(QStringLiteral("</body></html>"));
         fileWriter.flush();
         fileWriter.end();
 
@@ -109,7 +109,7 @@ private Q_SLOTS:
             QVERIFY(f.open(QIODevice::ReadOnly));
             QString content = QString::fromUtf8(f.readAll());
             f.close();
-            content.replace(QRegExp(QLatin1String("\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"")), QStringLiteral("\"file:\\1\""));
+            content.replace(QRegExp(QStringLiteral("\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"")), QStringLiteral("\"file:\\1\""));
             QVERIFY(f.open(QIODevice::WriteOnly | QIODevice::Truncate));
             f.write(content.toUtf8());
             f.close();
@@ -122,7 +122,7 @@ private Q_SLOTS:
                << htmlFileName;
         QProcess proc;
         proc.setProcessChannelMode(QProcess::ForwardedChannels);
-        proc.start(QLatin1String("diff"), args);
+        proc.start(QStringLiteral("diff"), args);
         QVERIFY(proc.waitForFinished());
 
         QCOMPARE(proc.exitCode(), 0);

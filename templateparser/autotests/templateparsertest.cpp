@@ -38,7 +38,7 @@ void TemplateParserTester::test_convertedHtml_data()
     QTest::addColumn<QString>("mailFileName");
     QTest::addColumn<QString>("referenceFileName");
 
-    QDir dir(QLatin1String(MAIL_DATA_DIR));
+    QDir dir(QStringLiteral(MAIL_DATA_DIR));
     foreach (const QString &file, dir.entryList(QStringList(QLatin1String("plain*.mbox")), QDir::Files | QDir::Readable | QDir::NoSymLinks)) {
         QTest::newRow(file.toLatin1()) << QString(dir.path() + QLatin1Char('/') +  file) << QString(dir.path() + QLatin1Char('/') + file + QLatin1String(".html"));
     }
@@ -83,7 +83,7 @@ void TemplateParserTester::test_convertedHtml()
 
 void TemplateParserTester::test_bodyFromHtml()
 {
-    const QString content(QLatin1String("<html><head><title>Plain mail with signature</title></head>"
+    const QString content(QStringLiteral("<html><head><title>Plain mail with signature</title></head>"
                                         "<body>This is the message text from Sudhendu Kumar&lt;"
                                         "dontspamme@yoohoo.com&gt;.<br /><br />-- <br />Thanks &amp; "
                                         "Regards<br />Sudhendu Kumar</body></html>"));
@@ -97,11 +97,11 @@ void TemplateParserTester::test_bodyFromHtml()
     page.settings()->setAttribute(QWebSettings::JavascriptEnabled, true);
 
     const QString bodyElement = page.currentFrame()->evaluateJavaScript(
-                                    QLatin1String("document.getElementsByTagName('body')[0].innerHTML")).toString();
+                                    QStringLiteral("document.getElementsByTagName('body')[0].innerHTML")).toString();
 
     page.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
 
-    const QString expectedBody(QLatin1String("This is the message text from Sudhendu Kumar"
+    const QString expectedBody(QStringLiteral("This is the message text from Sudhendu Kumar"
                                "&lt;dontspamme@yoohoo.com&gt;.<br><br>-- <br>"
                                "Thanks &amp; Regards<br>Sudhendu Kumar"));
 
@@ -110,11 +110,11 @@ void TemplateParserTester::test_bodyFromHtml()
     page.settings()->setAttribute(QWebSettings::JavascriptEnabled, true);
 
     const QString headElement = page.currentFrame()->evaluateJavaScript(
-                                    QLatin1String("document.getElementsByTagName('head')[0].innerHTML")).toString();
+                                    QStringLiteral("document.getElementsByTagName('head')[0].innerHTML")).toString();
 
     page.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
 
-    const QString expectedHead(QLatin1String("<title>Plain mail with signature</title>"));
+    const QString expectedHead(QStringLiteral("<title>Plain mail with signature</title>"));
 
     QCOMPARE(headElement, expectedHead);
 }
@@ -172,7 +172,7 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
     QTest::addColumn<QString>("expectedBody");
     QTest::addColumn<bool>("hasDictionary");
 
-    QDir dir(QLatin1String(MAIL_DATA_DIR));
+    QDir dir(QStringLiteral(MAIL_DATA_DIR));
     const QString file = QStringLiteral("plain-message.mbox");
     const QString fileName = QString(dir.path() + QLatin1Char('/') +  file);
     QTest::newRow("%OTIME") << "%OTIME" << fileName << QLocale::system().toString(QTime(11, 30, 27), QLocale::ShortFormat) << false;

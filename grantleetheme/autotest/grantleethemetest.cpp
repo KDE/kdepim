@@ -133,7 +133,7 @@ bool GrantleeThemeTest::compareHtml(const QString &themePath, const QString &nam
         }
         QString content = QString::fromUtf8(f.readAll());
         f.close();
-        content.replace(QRegExp(QLatin1String("\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"")), QStringLiteral("\"file:\\1\""));
+        content.replace(QRegExp(QStringLiteral("\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"")), QStringLiteral("\"file:\\1\""));
         if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             return false;
         }
@@ -150,7 +150,7 @@ bool GrantleeThemeTest::compareHtml(const QString &themePath, const QString &nam
 
     QProcess proc;
     proc.setProcessChannelMode(QProcess::ForwardedChannels);
-    proc.start(QLatin1String("diff"), args);
+    proc.start(QStringLiteral("diff"), args);
     if (!proc.waitForFinished()) {
         return false;
     }

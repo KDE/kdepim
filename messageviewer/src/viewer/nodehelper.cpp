@@ -726,7 +726,7 @@ KMime::Content *NodeHelper::fromHREF(const KMime::Message::Ptr &mMessage, const 
         // start of the index is something that is not a number followed by a dot: \D.
         // index is only made of numbers,"." and ":": ([0-9.:]+)
         // index is the last part of the folder name: /
-        const QRegExp rIndex(QLatin1String("\\D\\.([0-9.:]+)/"));
+        const QRegExp rIndex(QStringLiteral("\\D\\.([0-9.:]+)/"));
 
         //search the occurence at most at the end
         if (rIndex.lastIndexIn(path) != -1) {

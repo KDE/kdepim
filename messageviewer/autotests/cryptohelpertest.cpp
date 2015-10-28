@@ -41,28 +41,28 @@ void CryptoHelperTest::testPMFDWithNoPGPBlock()
 
 void CryptoHelperTest::testPGPBlockType()
 {
-    const QString blockText = QLatin1String("text");
-    const QString preString = QLatin1String("before\n");
+    const QString blockText = QStringLiteral("text");
+    const QString preString = QStringLiteral("before\n");
     for (int i = 1; i <= PrivateKeyBlock; ++i) {
         QString name;
         switch (i) {
         case PgpMessageBlock:
-            name = QLatin1String("MESSAGE");
+            name = QStringLiteral("MESSAGE");
             break;
         case MultiPgpMessageBlock:
-            name = QLatin1String("MESSAGE PART");
+            name = QStringLiteral("MESSAGE PART");
             break;
         case SignatureBlock:
-            name = QLatin1String("SIGNATURE");
+            name = QStringLiteral("SIGNATURE");
             break;
         case ClearsignedBlock:
-            name = QLatin1String("SIGNED MESSAGE");
+            name = QStringLiteral("SIGNED MESSAGE");
             break;
         case PublicKeyBlock:
-            name = QLatin1String("PUBLIC KEY BLOCK");
+            name = QStringLiteral("PUBLIC KEY BLOCK");
             break;
         case PrivateKeyBlock:
-            name = QLatin1String("PRIVATE KEY BLOCK");
+            name = QStringLiteral("PRIVATE KEY BLOCK");
             break;
         }
         QString text = QLatin1String("-----BEGIN PGP ") + name + QLatin1String("\n") + blockText;
@@ -80,28 +80,28 @@ void CryptoHelperTest::testPGPBlockType()
 
 void CryptoHelperTest::testDeterminePGPBlockType()
 {
-    const QString blockText = QLatin1String("text");
+    const QString blockText = QStringLiteral("text");
     for (int i = 1; i <= PrivateKeyBlock; ++i) {
         QString name;
         switch (i) {
 
         case PgpMessageBlock:
-            name = QLatin1String("MESSAGE");
+            name = QStringLiteral("MESSAGE");
             break;
         case MultiPgpMessageBlock:
-            name = QLatin1String("MESSAGE PART");
+            name = QStringLiteral("MESSAGE PART");
             break;
         case SignatureBlock:
-            name = QLatin1String("SIGNATURE");
+            name = QStringLiteral("SIGNATURE");
             break;
         case ClearsignedBlock:
-            name = QLatin1String("SIGNED MESSAGE");
+            name = QStringLiteral("SIGNED MESSAGE");
             break;
         case PublicKeyBlock:
-            name = QLatin1String("PUBLIC KEY BLOCK");
+            name = QStringLiteral("PUBLIC KEY BLOCK");
             break;
         case PrivateKeyBlock:
-            name = QLatin1String("PRIVATE KEY BLOCK");
+            name = QStringLiteral("PRIVATE KEY BLOCK");
             break;
         }
         const QString text = QLatin1String("-----BEGIN PGP ") + name + QLatin1String("\n") + blockText + QLatin1String("\n");
