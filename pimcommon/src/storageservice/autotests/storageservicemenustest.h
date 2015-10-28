@@ -26,6 +26,9 @@ class StorageServiceMenusTest : public QObject
 public:
     explicit StorageServiceMenusTest(QObject *parent = Q_NULLPTR);
     ~StorageServiceMenusTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
 #endif // STORAGESERVICEMENUSTEST_H

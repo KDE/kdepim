@@ -16,6 +16,7 @@
 */
 
 #include "storageservicemenustest.h"
+#include "../storageservicemenus.h"
 #include <QTest>
 
 StorageServiceMenusTest::StorageServiceMenusTest(QObject *parent)
@@ -27,6 +28,16 @@ StorageServiceMenusTest::StorageServiceMenusTest(QObject *parent)
 StorageServiceMenusTest::~StorageServiceMenusTest()
 {
 
+}
+
+void StorageServiceMenusTest::shouldHaveDefaultValue()
+{
+    PimCommon::StorageServiceMenus menu;
+    QWidget *parent = new QWidget;
+    QVERIFY(menu.downloadServices(parent));
+    QVERIFY(menu.uploadServices(parent));
+    QVERIFY(menu.shareLinkServices(parent));
+    delete parent;
 }
 
 QTEST_MAIN(StorageServiceMenusTest)

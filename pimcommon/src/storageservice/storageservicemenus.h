@@ -19,11 +19,12 @@
 #define STORAGESERVICEMENUS_H
 
 #include <QObject>
+#include "pimcommon_export.h"
 class KActionMenu;
 namespace PimCommon
 {
 class StorageServiceMenusPrivate;
-class StorageServiceMenus : public QObject
+class PIMCOMMON_EXPORT StorageServiceMenus : public QObject
 {
     Q_OBJECT
 public:
