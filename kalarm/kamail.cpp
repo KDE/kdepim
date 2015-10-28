@@ -160,6 +160,12 @@ int KAMail::send(JobData& jobdata, QStringList& errmsgs)
     if (Preferences::emailClient() == Preferences::sendmail)
     {
         kDebug() << "Sending via sendmail";
+        if (KStandardDirs::findExe(QLatin1String("akonadi_mailfilter_agent")).isEmpty())
+        {
+            kError() << "Sendmail requires akonadi_mailfilter_agent to be installed";
+            errmsgs = errors(i18nc("@info", "Sendmail option requires <filename>%1</filename> to be installed", QLatin1String("akonadi_mailfilter_agent")));
+            return -1;
+        }
         const QList<MailTransport::Transport*> transports = manager->transports();
         for (int i = 0, count = transports.count();  i < count;  ++i)
         {
@@ -189,7 +195,7 @@ int KAMail::send(JobData& jobdata, QStringList& errmsgs)
     {
         kDebug() << "Sending via KDE";
         const int transportId = identity.transport().isEmpty() ? -1 : identity.transport().toInt();
-        transport = manager->transportById( transportId, true );
+        transport = manager->transportById(transportId, true);
         if (!transport)
         {
             kError() << "No mail transport found for identity" << identity.identityName() << "uoid" << identity.uoid();
