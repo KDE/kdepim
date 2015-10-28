@@ -24,7 +24,7 @@
 #include <KLocalizedString>
 #include <KZip>
 
-#include <QWidget>
+
 #include <QDir>
 #include <QStandardPaths>
 #include <QTimer>

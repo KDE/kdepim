@@ -30,7 +30,7 @@
 #include <QTimer>
 #include <QFile>
 #include <QDir>
-#include <QWidget>
+
 #include <QStandardPaths>
 #include <exportresourcearchivejob.h>
 

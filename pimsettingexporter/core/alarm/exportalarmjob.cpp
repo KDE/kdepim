@@ -28,7 +28,7 @@
 #include <KConfigGroup>
 #include <KZip>
 
-#include <QWidget>
+
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
