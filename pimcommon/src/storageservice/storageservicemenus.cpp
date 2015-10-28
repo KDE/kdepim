@@ -34,7 +34,13 @@ public:
     KActionMenu *menuWithCapability(PimCommon::StorageServicePlugin::Capability mainCapability, const QList<PimCommon::StorageServicePlugin::Capability> &lstCapability, QWidget *parent) const
     {
         KActionMenu *menuService = new KActionMenu(i18n("Storage service"), parent);
-        //TODO
+        if (PimCommon::StorageServicePluginManager::self()->pluginsList().isEmpty()) {
+            QAction *act = new QAction(i18n("No Storage service configured"), menuService);
+            act->setEnabled(false);
+            menuService->addAction(act);
+        } else {
+            //TODO
+        }
         return menuService;
     }
 

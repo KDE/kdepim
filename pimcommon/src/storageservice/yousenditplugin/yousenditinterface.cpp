@@ -31,7 +31,92 @@ YouSendItInterface::~YouSendItInterface()
 
 }
 
+void YouSendItInterface::downloadFile(const QString &name, const QString &fileId, const QString &destination)
+{
+
+}
+
+void YouSendItInterface::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
+{
+
+}
+
+void YouSendItInterface::accountInfo()
+{
+
+}
+
+void YouSendItInterface::createFolder(const QString &foldername, const QString &destination)
+{
+
+}
+
+void YouSendItInterface::listFolder(const QString &folder)
+{
+
+}
+
+void YouSendItInterface::authentication()
+{
+
+}
+
+void YouSendItInterface::shareLink(const QString &root, const QString &path)
+{
+
+}
+
+void YouSendItInterface::createServiceFolder()
+{
+
+}
+
+void YouSendItInterface::deleteFile(const QString &filename)
+{
+
+}
+
+void YouSendItInterface::deleteFolder(const QString &foldername)
+{
+
+}
+
+void YouSendItInterface::renameFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void YouSendItInterface::renameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void YouSendItInterface::moveFile(const QString &source, const QString &destination)
+{
+
+}
+
+void YouSendItInterface::moveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void YouSendItInterface::copyFile(const QString &source, const QString &destination)
+{
+
+}
+
+void YouSendItInterface::copyFolder(const QString &source, const QString &destination)
+{
+
+}
+
 void YouSendItInterface::shutdownService()
+{
+
+}
+
+void YouSendItInterface::removeConfig()
 {
 
 }
