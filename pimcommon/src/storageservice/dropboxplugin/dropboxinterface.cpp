@@ -41,3 +41,88 @@ bool DropBoxInterface::isConfigurated() const
     //TODO
     return true;
 }
+
+void DropBoxInterface::downloadFile(const QString &name, const QString &fileId, const QString &destination)
+{
+
+}
+
+void DropBoxInterface::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
+{
+
+}
+
+void DropBoxInterface::accountInfo()
+{
+
+}
+
+void DropBoxInterface::createFolder(const QString &foldername, const QString &destination)
+{
+
+}
+
+void DropBoxInterface::listFolder(const QString &folder)
+{
+
+}
+
+void DropBoxInterface::authentication()
+{
+
+}
+
+void DropBoxInterface::shareLink(const QString &root, const QString &path)
+{
+
+}
+
+void DropBoxInterface::createServiceFolder()
+{
+
+}
+
+void DropBoxInterface::deleteFile(const QString &filename)
+{
+
+}
+
+void DropBoxInterface::deleteFolder(const QString &foldername)
+{
+
+}
+
+void DropBoxInterface::renameFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void DropBoxInterface::renameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void DropBoxInterface::moveFile(const QString &source, const QString &destination)
+{
+
+}
+
+void DropBoxInterface::moveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void DropBoxInterface::copyFile(const QString &source, const QString &destination)
+{
+
+}
+
+void DropBoxInterface::copyFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void DropBoxInterface::removeConfig()
+{
+
+}

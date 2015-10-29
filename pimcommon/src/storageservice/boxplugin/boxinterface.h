@@ -31,6 +31,24 @@ public:
     ~BoxInterface();
     void shutdownService() Q_DECL_OVERRIDE;
     bool isConfigurated() const Q_DECL_OVERRIDE;
+    void downloadFile(const QString &name, const QString &fileId, const QString &destination) Q_DECL_OVERRIDE;
+    void uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination) Q_DECL_OVERRIDE;
+    void accountInfo() Q_DECL_OVERRIDE;
+    void createFolder(const QString &foldername, const QString &destination) Q_DECL_OVERRIDE;
+    void listFolder(const QString &folder) Q_DECL_OVERRIDE;
+    void authentication() Q_DECL_OVERRIDE;
+    void shareLink(const QString &root, const QString &path) Q_DECL_OVERRIDE;
+    void createServiceFolder() Q_DECL_OVERRIDE;
+    void deleteFile(const QString &filename) Q_DECL_OVERRIDE;
+    void deleteFolder(const QString &foldername) Q_DECL_OVERRIDE;
+    void renameFolder(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void renameFile(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void moveFile(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void moveFolder(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void copyFile(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void copyFolder(const QString &source, const QString &destination) Q_DECL_OVERRIDE;
+    void removeConfig() Q_DECL_OVERRIDE;
+
 private:
     BoxPlugin *mPlugin;
 };

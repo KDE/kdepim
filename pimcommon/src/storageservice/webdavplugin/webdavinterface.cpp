@@ -41,3 +41,88 @@ bool WebDavInterface::isConfigurated() const
     //TODO
     return true;
 }
+
+void WebDavInterface::downloadFile(const QString &name, const QString &fileId, const QString &destination)
+{
+
+}
+
+void WebDavInterface::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
+{
+
+}
+
+void WebDavInterface::accountInfo()
+{
+
+}
+
+void WebDavInterface::createFolder(const QString &foldername, const QString &destination)
+{
+
+}
+
+void WebDavInterface::listFolder(const QString &folder)
+{
+
+}
+
+void WebDavInterface::authentication()
+{
+
+}
+
+void WebDavInterface::shareLink(const QString &root, const QString &path)
+{
+
+}
+
+void WebDavInterface::createServiceFolder()
+{
+
+}
+
+void WebDavInterface::deleteFile(const QString &filename)
+{
+
+}
+
+void WebDavInterface::deleteFolder(const QString &foldername)
+{
+
+}
+
+void WebDavInterface::renameFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void WebDavInterface::renameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void WebDavInterface::moveFile(const QString &source, const QString &destination)
+{
+
+}
+
+void WebDavInterface::moveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void WebDavInterface::copyFile(const QString &source, const QString &destination)
+{
+
+}
+
+void WebDavInterface::copyFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void WebDavInterface::removeConfig()
+{
+
+}

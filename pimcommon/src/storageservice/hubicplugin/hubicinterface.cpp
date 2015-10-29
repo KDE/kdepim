@@ -41,3 +41,88 @@ bool HubicInterface::isConfigurated() const
     //TODO
     return true;
 }
+
+void HubicInterface::downloadFile(const QString &name, const QString &fileId, const QString &destination)
+{
+
+}
+
+void HubicInterface::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
+{
+
+}
+
+void HubicInterface::accountInfo()
+{
+
+}
+
+void HubicInterface::createFolder(const QString &foldername, const QString &destination)
+{
+
+}
+
+void HubicInterface::listFolder(const QString &folder)
+{
+
+}
+
+void HubicInterface::authentication()
+{
+
+}
+
+void HubicInterface::shareLink(const QString &root, const QString &path)
+{
+
+}
+
+void HubicInterface::createServiceFolder()
+{
+
+}
+
+void HubicInterface::deleteFile(const QString &filename)
+{
+
+}
+
+void HubicInterface::deleteFolder(const QString &foldername)
+{
+
+}
+
+void HubicInterface::renameFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void HubicInterface::renameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void HubicInterface::moveFile(const QString &source, const QString &destination)
+{
+
+}
+
+void HubicInterface::moveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void HubicInterface::copyFile(const QString &source, const QString &destination)
+{
+
+}
+
+void HubicInterface::copyFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void HubicInterface::removeConfig()
+{
+
+}

@@ -41,3 +41,89 @@ bool GDriveInterface::isConfigurated() const
     //TODO
     return true;
 }
+
+
+void GDriveInterface::downloadFile(const QString &name, const QString &fileId, const QString &destination)
+{
+
+}
+
+void GDriveInterface::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
+{
+
+}
+
+void GDriveInterface::accountInfo()
+{
+
+}
+
+void GDriveInterface::createFolder(const QString &foldername, const QString &destination)
+{
+
+}
+
+void GDriveInterface::listFolder(const QString &folder)
+{
+
+}
+
+void GDriveInterface::authentication()
+{
+
+}
+
+void GDriveInterface::shareLink(const QString &root, const QString &path)
+{
+
+}
+
+void GDriveInterface::createServiceFolder()
+{
+
+}
+
+void GDriveInterface::deleteFile(const QString &filename)
+{
+
+}
+
+void GDriveInterface::deleteFolder(const QString &foldername)
+{
+
+}
+
+void GDriveInterface::renameFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void GDriveInterface::renameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void GDriveInterface::moveFile(const QString &source, const QString &destination)
+{
+
+}
+
+void GDriveInterface::moveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void GDriveInterface::copyFile(const QString &source, const QString &destination)
+{
+
+}
+
+void GDriveInterface::copyFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void GDriveInterface::removeConfig()
+{
+
+}
