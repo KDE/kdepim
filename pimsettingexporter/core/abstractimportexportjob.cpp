@@ -124,6 +124,8 @@ void AbstractImportExportJob::backupFile(const QString &filename, const QString 
         } else {
             Q_EMIT error(i18n("\"%1\" cannot be exported.", storedName));
         }
+    } else {
+        Q_EMIT error(i18n("\"%1\" does not exist.", filename));
     }
 }
 
