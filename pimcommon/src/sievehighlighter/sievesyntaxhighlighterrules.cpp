@@ -34,7 +34,6 @@ public:
     QVector<KPIMTextEdit::Rule> m_rules;
 };
 
-
 void SieveSyntaxHighlighterRulesPrivate::init()
 {
     // Comments
@@ -216,7 +215,6 @@ void SieveSyntaxHighlighterRulesPrivate::init()
     QRegExp literalRegex(QStringLiteral("(\"[^\"]*\")"));
     m_rules.append(KPIMTextEdit::Rule(literalRegex, literalFormat));
 }
-
 
 SieveSyntaxHighlighterRules::SieveSyntaxHighlighterRules()
     : d(new PimCommon::SieveSyntaxHighlighterRulesPrivate)

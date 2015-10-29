@@ -22,7 +22,6 @@
 
 #include <QVariant>
 
-
 namespace PimCommon
 {
 class DropBoxPlugin : public PimCommon::StorageServicePlugin

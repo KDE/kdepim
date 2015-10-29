@@ -79,5 +79,4 @@ QString BoxPlugin::disallowedSymbolsStr() const
     return QStringLiteral("\\ / : ? * < > |");
 }
 
-
 #include "boxplugin.moc"

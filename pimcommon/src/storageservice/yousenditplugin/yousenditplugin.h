@@ -22,7 +22,6 @@
 
 #include <QVariant>
 
-
 namespace PimCommon
 {
 class YouSendItPlugin : public PimCommon::StorageServicePlugin

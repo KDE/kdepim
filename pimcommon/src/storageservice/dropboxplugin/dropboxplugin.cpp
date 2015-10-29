@@ -103,5 +103,4 @@ qlonglong DropBoxPlugin::maximumUploadFileSize() const
     return 150000000;
 }
 
-
 #include "dropboxplugin.moc"

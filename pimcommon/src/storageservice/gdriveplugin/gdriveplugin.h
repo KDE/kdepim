@@ -22,7 +22,6 @@
 
 #include <QVariant>
 
-
 namespace PimCommon
 {
 class GDrivePlugin : public PimCommon::StorageServicePlugin

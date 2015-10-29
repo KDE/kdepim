@@ -72,5 +72,4 @@ QUrl HubicPlugin::serviceUrl() const
     return QUrl(QStringLiteral("https://hubic.com"));
 }
 
-
 #include "hubicplugin.moc"

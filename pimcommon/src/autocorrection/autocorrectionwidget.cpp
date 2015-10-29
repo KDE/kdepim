@@ -63,7 +63,6 @@ public:
     bool mWasChanged;
 };
 
-
 AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
     QWidget(parent),
     d(new PimCommon::AutoCorrectionWidgetPrivate)

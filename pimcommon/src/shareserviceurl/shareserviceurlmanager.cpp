@@ -57,7 +57,6 @@ void ShareServiceUrlManagerPrivate::initializeMenu()
     q->connect(mMenu->menu(), &QMenu::triggered, q, &ShareServiceUrlManager::slotSelectServiceUrl);
 }
 
-
 QIcon ShareServiceUrlManagerPrivate::typeToIcon(ShareServiceUrlManager::ServiceType type)
 {
     QIcon icon;
@@ -124,7 +123,6 @@ QString ShareServiceUrlManagerPrivate::typeToI18n(ShareServiceUrlManager::Servic
     return str;
 }
 
-
 ShareServiceUrlManager::ShareServiceUrlManager(QObject *parent)
     : QObject(parent),
       d(new PimCommon::ShareServiceUrlManagerPrivate(this))
@@ -141,7 +139,6 @@ KActionMenu *ShareServiceUrlManager::menu() const
 {
     return d->mMenu;
 }
-
 
 void ShareServiceUrlManager::slotSelectServiceUrl(QAction *act)
 {

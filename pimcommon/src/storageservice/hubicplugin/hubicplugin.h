@@ -22,7 +22,6 @@
 
 #include <QVariant>
 
-
 namespace PimCommon
 {
 class HubicPlugin : public PimCommon::StorageServicePlugin

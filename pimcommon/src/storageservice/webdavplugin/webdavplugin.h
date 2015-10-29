@@ -22,7 +22,6 @@
 
 #include <QVariant>
 
-
 namespace PimCommon
 {
 class WebDavPlugin : public PimCommon::StorageServicePlugin
