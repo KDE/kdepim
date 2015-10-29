@@ -68,7 +68,7 @@ LDIFXXPort::LDIFXXPort(QWidget *parentWidget)
 ContactList LDIFXXPort::importContacts() const
 {
     ContactList contactList;
-    const QString fileName = QFileDialog::getOpenFileName(parentWidget(), QString(),  QDir::homePath(), i18n("LDIF file (%1)", QStringLiteral("*.ldif")));
+    const QString fileName = QFileDialog::getOpenFileName(parentWidget(), QString(),  QDir::homePath(), i18n("LDif Files (*.ldif)"));
     if (fileName.isEmpty()) {
         return contactList;
     }
@@ -97,7 +97,7 @@ ContactList LDIFXXPort::importContacts() const
 bool LDIFXXPort::exportContacts(const ContactList &list, VCardExportSelectionWidget::ExportFields) const
 {
     const QUrl url =
-        QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.ldif")), QStringLiteral("text/x-ldif"));
+        QFileDialog::getSaveFileUrl(parentWidget(), QString(), QUrl::fromLocalFile(QDir::homePath() + QLatin1String("/addressbook.ldif")), i18n("LDif Files (*.ldif)"));
     if (url.isEmpty()) {
         return true;
     }
