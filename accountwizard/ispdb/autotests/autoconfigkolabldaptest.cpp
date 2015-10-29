@@ -21,6 +21,7 @@
 #include <QDir>
 #include <QProcess>
 #include <QTest>
+#include <QTcpSocket>
 
 #include "../autoconfigkolabldap.h"
 
@@ -83,6 +84,13 @@ public:
         QCOMPARE(test.pageSize, expected.pageSize);
         QCOMPARE(test.timeLimit, expected.timeLimit);
         QCOMPARE(test.sizeLimit, expected.sizeLimit);
+    }
+
+    bool checkServerReady() const
+    {
+        QTcpSocket socket;
+        socket.connectToHost(QStringLiteral("localhost"), 8000);
+        return socket.waitForConnected(5000);
     }
 
 private Q_SLOTS:
@@ -194,6 +202,9 @@ private Q_SLOTS:
         process.start(QStringLiteral("python"), QStringList() << filePath);
         process.waitForStarted();
         QCOMPARE(process.state(), QProcess::Running);
+
+        // Wait for the server to start listening
+        QTRY_VERIFY(checkServerReady());
     }
 
     void cleanupTestCase()

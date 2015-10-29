@@ -21,6 +21,7 @@
 #include <QDir>
 #include <QTest>
 #include <QProcess>
+#include <QTcpSocket>
 
 #include "../autoconfigkolabfreebusy.h"
 
@@ -77,6 +78,14 @@ public:
         QCOMPARE(test.password, expected.password);
         QCOMPARE(test.path, expected.path);
     }
+
+    bool checkServerReady() const
+    {
+        QTcpSocket socket;
+        socket.connectToHost(QStringLiteral("localhost"), 8000);
+        return socket.waitForConnected(5000);
+    }
+
 private Q_SLOTS:
     void testFreebusyParsing()
     {
@@ -159,6 +168,9 @@ private Q_SLOTS:
         process.start(QStringLiteral("python"), QStringList() << filePath);
         process.waitForStarted();
         QCOMPARE(process.state(), QProcess::Running);
+
+        // Wait for the server to start listening
+        QTRY_VERIFY(checkServerReady());
     }
 
     void cleanupTestCase()
