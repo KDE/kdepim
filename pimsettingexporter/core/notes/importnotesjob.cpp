@@ -119,11 +119,11 @@ void ImportNotesJob::restoreData()
             const QString notesPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("knotes/");
             overwriteDirectory(notesPath, notesEntry);
         }
+        QTimer::singleShot(0, this, &ImportNotesJob::slotNextStep);
     } else {
         restoreResources();
     }
     Q_EMIT info(i18n("Data restored."));
-    QTimer::singleShot(0, this, &ImportNotesJob::slotNextStep);
 }
 
 void ImportNotesJob::restoreResources()
@@ -185,10 +185,10 @@ void ImportNotesJob::restoreResources()
     startSynchronizeResources(listResource);
 }
 
-void ImportNotesJob::importKNoteGlobalSettings(const KArchiveFile *kmailsnippet, const QString &kmail2rc, const QString &filename, const QString &prefix)
+void ImportNotesJob::importKNoteGlobalSettings(const KArchiveFile *archive, const QString &configrc, const QString &filename, const QString &prefix)
 {
-    copyToFile(kmailsnippet, kmail2rc, filename, prefix);
-    KSharedConfig::Ptr kmailConfig = KSharedConfig::openConfig(kmail2rc);
+    copyToFile(archive, configrc, filename, prefix);
+    KSharedConfig::Ptr kmailConfig = KSharedConfig::openConfig(configrc);
 
     const QString composerStr(QStringLiteral("SelectNoteFolder"));
     if (kmailConfig->hasGroup(composerStr)) {
