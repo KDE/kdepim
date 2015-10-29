@@ -914,7 +914,7 @@ void AgendaView::slotIncidenceSelected(const KCalCore::Incidence::Ptr &incidence
 {
     Akonadi::Item item = d->mViewCalendar->item(incidence);
     if (item.isValid()) {
-        emit incidenceSelected(item, date);
+        Q_EMIT incidenceSelected(item, date);
     }
 }
 
@@ -923,7 +923,7 @@ void AgendaView::slotShowIncidencePopup(const KCalCore::Incidence::Ptr &incidenc
     Akonadi::Item item = d->mViewCalendar->item(incidence);
     //qDebug() << "wanna see the popup for " << incidence->uid() << item.id();
     if (item.isValid()) {
-        emit showIncidencePopupSignal(item, date);
+        Q_EMIT showIncidencePopupSignal(item, date);
     }
 }
 
@@ -931,7 +931,7 @@ void AgendaView::slotShowIncidence(const KCalCore::Incidence::Ptr &incidence)
 {
     Akonadi::Item item = d->mViewCalendar->item(incidence);
     if (item.isValid()) {
-        emit showIncidenceSignal(item);
+        Q_EMIT showIncidenceSignal(item);
     }
 }
 
@@ -939,7 +939,7 @@ void AgendaView::slotEditIncidence(const KCalCore::Incidence::Ptr &incidence)
 {
     Akonadi::Item item = d->mViewCalendar->item(incidence);
     if (item.isValid()) {
-        emit editIncidenceSignal(item);
+        Q_EMIT editIncidenceSignal(item);
     }
 }
 
@@ -947,7 +947,7 @@ void AgendaView::slotDeleteIncidence(const KCalCore::Incidence::Ptr &incidence)
 {
     Akonadi::Item item = d->mViewCalendar->item(incidence);
     if (item.isValid()) {
-        emit deleteIncidenceSignal(item);
+        Q_EMIT deleteIncidenceSignal(item);
     }
 }
 

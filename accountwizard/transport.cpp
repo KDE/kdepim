@@ -110,7 +110,7 @@ void Transport::create()
     if (m_editMode) {
         edit();
     }
-    emit finished(i18n("Mail transport account set up."));
+    Q_EMIT finished(i18n("Mail transport account set up."));
 }
 
 void Transport::destroy()
@@ -123,7 +123,7 @@ void Transport::edit()
 {
     MailTransport::Transport *mt = MailTransport::TransportManager::self()->transportById(m_transportId, false);
     if (!mt) {
-        emit error(i18n("Could not load config dialog for UID '%1'", m_transportId));
+        Q_EMIT error(i18n("Could not load config dialog for UID '%1'", m_transportId));
     } else {
         MailTransport::TransportManager::self()->configureTransport(mt, 0);
     }

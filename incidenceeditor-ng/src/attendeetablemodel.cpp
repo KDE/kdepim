@@ -150,7 +150,7 @@ bool AttendeeTableModel::setData(const QModelIndex &index, const QVariant &value
         default:
             return false;
         }
-        emit dataChanged(index, index);
+        Q_EMIT dataChanged(index, index);
         return true;
     }
     return false;
@@ -228,14 +228,14 @@ bool AttendeeTableModel::insertAttendee(int position, const KCalCore::Attendee::
 
 void AttendeeTableModel::setAttendees(const KCalCore::Attendee::List &attendees)
 {
-    emit layoutAboutToBeChanged();
+    Q_EMIT layoutAboutToBeChanged();
 
     mAttendeeList = attendees;
     mAttendeeAvailable = QMap<KCalCore::Attendee::Ptr, AvailableStatus>();
 
     addEmptyAttendee();
 
-    emit layoutChanged();
+    Q_EMIT layoutChanged();
 }
 
 KCalCore::Attendee::List AttendeeTableModel::attendees() const

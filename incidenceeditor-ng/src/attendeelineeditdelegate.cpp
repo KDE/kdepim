@@ -78,12 +78,12 @@ void AttendeeLineEditDelegate::updateEditorGeometry(QWidget *editor, const QStyl
 
 void AttendeeLineEditDelegate::leftPressed()
 {
-    emit closeEditor(static_cast<QWidget *>(QObject::sender()), QAbstractItemDelegate::EditPreviousItem);
+    Q_EMIT closeEditor(static_cast<QWidget *>(QObject::sender()), QAbstractItemDelegate::EditPreviousItem);
 }
 
 void AttendeeLineEditDelegate::rightPressed()
 {
-    emit closeEditor(static_cast<QWidget *>(QObject::sender()), QAbstractItemDelegate::EditNextItem);
+    Q_EMIT closeEditor(static_cast<QWidget *>(QObject::sender()), QAbstractItemDelegate::EditNextItem);
 }
 
 void AttendeeLineEditDelegate::setCompletionMode(KCompletion::CompletionMode mode)

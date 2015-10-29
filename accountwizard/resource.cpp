@@ -94,7 +94,7 @@ void Resource::create()
                 if (m_editMode) {
                     edit();
                 }
-                emit finished(i18n("Resource '%1' is already set up.", type.name()));
+                Q_EMIT finished(i18n("Resource '%1' is already set up.", type.name()));
                 return;
             }
         }
@@ -150,7 +150,7 @@ void Resource::instanceCreateResult(KJob *job)
     if (m_editMode) {
         edit();
     }
-    emit finished(i18n("Resource setup completed."));
+    Q_EMIT finished(i18n("Resource setup completed."));
 }
 
 void Resource::edit()

@@ -879,7 +879,7 @@ void IncidenceAttendee::filterLayoutChanged()
 
 void IncidenceAttendee::updateCount()
 {
-    emit attendeeCountChanged(attendeeCount());
+    Q_EMIT attendeeCountChanged(attendeeCount());
 
     checkDirtyStatus();
 }

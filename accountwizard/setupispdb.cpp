@@ -150,7 +150,7 @@ int SetupIspdb::countSmtpServers() const
 void SetupIspdb::start()
 {
     mIspdb->start();
-    emit info(i18n("Searching for autoconfiguration..."));
+    Q_EMIT info(i18n("Searching for autoconfiguration..."));
 }
 
 void SetupIspdb::setEmail(const QString &email)
@@ -173,7 +173,7 @@ void SetupIspdb::destroy()
 
 void SetupIspdb::onIspdbFinished(bool status)
 {
-    emit ispdbFinished(status);
+    Q_EMIT ispdbFinished(status);
     if (status) {
         Q_EMIT info(i18n("Autoconfiguration found."));
     } else {

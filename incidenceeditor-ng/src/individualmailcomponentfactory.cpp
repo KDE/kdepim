@@ -166,11 +166,11 @@ void IndividualMailITIPHandlerDialogDelegate::openDialog(const QString &question
     default:
         switch (CalendarSupport::KCalPrefs::instance()->sendPolicy()) {
         case (CalendarSupport::KCalPrefs::InvitationPolicySend):
-            emit setUpdate(mIncidence, attendees);
-            emit dialogClosed(KMessageBox::Yes, mMethod, mIncidence);
+            Q_EMIT setUpdate(mIncidence, attendees);
+            Q_EMIT dialogClosed(KMessageBox::Yes, mMethod, mIncidence);
             break;
         case (CalendarSupport::KCalPrefs::InvitationPolicyDontSend):
-            emit dialogClosed(KMessageBox::No, mMethod, mIncidence);
+            Q_EMIT dialogClosed(KMessageBox::No, mMethod, mIncidence);
             break;
         case (CalendarSupport::KCalPrefs::InvitationPolicyAsk):
         default:

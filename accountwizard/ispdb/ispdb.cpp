@@ -154,7 +154,7 @@ void Ispdb::parseResult(const QDomDocument &document)
     QDomNodeList l = docElem.elementsByTagName(QStringLiteral("emailProvider"));
 
     if (l.isEmpty()) {
-        emit finished(false);
+        Q_EMIT finished(false);
         return;
     }
 

@@ -413,7 +413,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving(bool closeAfterSaving, boo
             QPointer<MailCommon::InvalidFilterDialog> dlg = new MailCommon::InvalidFilterDialog(Q_NULLPTR);
             dlg->setInvalidFilters(listInvalidFilters);
             if (!dlg->exec()) {
-                emit abortClosing();
+                Q_EMIT abortClosing();
                 wasCanceled = true;
             }
             delete dlg;

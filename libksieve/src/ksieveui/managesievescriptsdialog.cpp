@@ -138,7 +138,7 @@ ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
 void ManageSieveScriptsDialog::hideEvent(QHideEvent *event)
 {
     if (!event->spontaneous()) {
-        emit finished();
+        Q_EMIT finished();
     }
 }
 

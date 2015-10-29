@@ -69,7 +69,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished(KJob *job)
         if (!mPhoto.isEmpty()) {
             //We have a data raw => we can update message
             if (mPhoto.isIntern()) {
-                emit update(Viewer::Delayed);
+                Q_EMIT update(Viewer::Delayed);
             } else {
                 QUrl url = QUrl(mPhoto.url());
                 QImage image;
@@ -189,6 +189,6 @@ void ContactDisplayMessageMemento::slotGravatarResolvUrlFinished(Gravatar::Grava
 {
     if (job && job->hasGravatar()) {
         mGravatarPixmap = job->pixmap();
-        emit update(Viewer::Delayed);
+        Q_EMIT update(Viewer::Delayed);
     }
 }

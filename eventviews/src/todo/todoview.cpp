@@ -1262,7 +1262,7 @@ void TodoView::createEvent()
 
     const Akonadi::Item todoItem = selection[0].data(TodoModel::TodoRole).value<Akonadi::Item>();
 
-    emit createEvent(todoItem);
+    Q_EMIT createEvent(todoItem);
 }
 
 void TodoView::createNote()
@@ -1274,5 +1274,5 @@ void TodoView::createNote()
 
     const Akonadi::Item todoItem = selection[0].data(TodoModel::TodoRole).value<Akonadi::Item>();
 
-    emit createNote(todoItem);
+    Q_EMIT createNote(todoItem);
 }

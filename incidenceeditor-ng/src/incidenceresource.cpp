@@ -178,7 +178,7 @@ void IncidenceResource::layoutChanged()
 
 void IncidenceResource::updateCount()
 {
-    emit resourceCountChanged(resourceCount());
+    Q_EMIT resourceCountChanged(resourceCount());
 }
 
 int IncidenceResource::resourceCount() const

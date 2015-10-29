@@ -135,7 +135,7 @@ void CombinedIncidenceEditor::load(const Akonadi::Item &item)
 
     mWasDirty = false;
     mDirtyEditorCount = 0;
-    emit dirtyStatusChanged(false);
+    Q_EMIT dirtyStatusChanged(false);
 }
 
 void CombinedIncidenceEditor::save(const KCalCore::Incidence::Ptr &incidence)

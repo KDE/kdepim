@@ -190,7 +190,7 @@ void ResourceModel::startSearch()
 
 void ResourceModel::slotLDAPCollectionData(const KLDAP::LdapResultObject::List &results)
 {
-    emit layoutAboutToBeChanged();
+    Q_EMIT layoutAboutToBeChanged();
 
     foundCollection = true;
     ldapCollectionsMap.clear();
@@ -211,7 +211,7 @@ void ResourceModel::slotLDAPCollectionData(const KLDAP::LdapResultObject::List &
         }
     }
 
-    emit layoutChanged();
+    Q_EMIT layoutChanged();
 
     startSearch();
 }

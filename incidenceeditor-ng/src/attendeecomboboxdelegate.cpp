@@ -145,12 +145,12 @@ void AttendeeComboBoxDelegate::doCloseEditor(QWidget *editor)
 
 void AttendeeComboBoxDelegate::leftPressed()
 {
-    emit closeEditor(static_cast<QWidget *>(QObject::sender()), QAbstractItemDelegate::EditPreviousItem);
+    Q_EMIT closeEditor(static_cast<QWidget *>(QObject::sender()), QAbstractItemDelegate::EditPreviousItem);
 }
 
 void AttendeeComboBoxDelegate::rightPressed()
 {
-    emit closeEditor(static_cast<QWidget *>(QObject::sender()), QAbstractItemDelegate::EditNextItem);
+    Q_EMIT closeEditor(static_cast<QWidget *>(QObject::sender()), QAbstractItemDelegate::EditNextItem);
 }
 
 bool AttendeeComboBoxDelegate::helpEvent(QHelpEvent *event, QAbstractItemView *view,

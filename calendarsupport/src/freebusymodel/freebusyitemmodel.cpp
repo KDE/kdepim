@@ -269,7 +269,7 @@ void FreeBusyItemModel::setFreeBusyPeriods(const QModelIndex &parent,
         endRemoveRows();
         if (fb_count > 0) {
             last = index(fb_count - 1, 0, parent);
-            emit dataChanged(first, last);
+            Q_EMIT dataChanged(first, last);
         }
     } else if (fb_count > childCount) {
         beginInsertRows(parent, childCount, fb_count - 1);
@@ -280,10 +280,10 @@ void FreeBusyItemModel::setFreeBusyPeriods(const QModelIndex &parent,
         endInsertRows();
         if (childCount > 0) {
             last = index(childCount - 1, 0, parent);
-            emit dataChanged(first, last);
+            Q_EMIT dataChanged(first, last);
         }
     } else if (fb_count == childCount && fb_count > 0) {
-        emit dataChanged(first, last);
+        Q_EMIT dataChanged(first, last);
     }
 }
 
@@ -387,7 +387,7 @@ void FreeBusyItemModel::slotInsertFreeBusy(const KCalCore::FreeBusy::Ptr &fb,
             item->setFreeBusy(fb);
             const int row = d->mFreeBusyItems.indexOf(item);
             const QModelIndex parent = index(row, 0);
-            emit dataChanged(parent, parent);
+            Q_EMIT dataChanged(parent, parent);
             setFreeBusyPeriods(parent, fb->fullBusyPeriods());
         }
     }
