@@ -1226,7 +1226,7 @@ MessagePart::Ptr ObjectTreeParser::processMultiPartEncryptedSubtype(KMime::Conte
         return MessagePart::Ptr();
     }
 
-    const Kleo::CryptoBackend::Protocol *useThisCryptProto = 0;
+    const Kleo::CryptoBackend::Protocol *useThisCryptProto = Q_NULLPTR;
 
     /*
     ATTENTION: This code is to be replaced by the new 'auto-detect' feature. --------------------------------------
