@@ -29,6 +29,7 @@
 #include <QFile>
 #include <QStandardPaths>
 #include <QDir>
+#include <QTimer>
 
 namespace
 {
@@ -48,18 +49,32 @@ ImportNotesJob::~ImportNotesJob()
 {
 }
 
+void ImportNotesJob::slotNextStep()
+{
+    ++mIndex;
+    if (mIndex < mListStep.count()) {
+        const Utils::StoredType type = mListStep.at(mIndex);
+        if (type == Utils::Resources) {
+            restoreResources();
+        } else if (type == Utils::Config) {
+            restoreConfig();
+        } else if (type == Utils::Data) {
+            restoreData();
+        }
+    } else {
+        Q_EMIT jobFinished();
+    }
+}
+
+
 void ImportNotesJob::start()
 {
     Q_EMIT title(i18n("Start import KNotes settings..."));
     mArchiveDirectory = archive()->directory();
+    // FIXME search archive ? searchAllFiles(mArchiveDirectory, QString());
     createProgressDialog(i18n("Import KNotes settings"));
-    if (mTypeSelected & Utils::Config) {
-        restoreConfig();
-    }
-    if (mTypeSelected & Utils::Data) {
-        restoreData();
-    }
-    Q_EMIT jobFinished();
+    initializeListStep();
+    QTimer::singleShot(0, this, &ImportNotesJob::slotNextStep);
 }
 
 void ImportNotesJob::restoreConfig()
@@ -88,6 +103,7 @@ void ImportNotesJob::restoreConfig()
     }
 
     Q_EMIT info(i18n("Config restored."));
+    QTimer::singleShot(0, this, &ImportNotesJob::slotNextStep);
 }
 
 void ImportNotesJob::restoreData()
@@ -104,6 +120,7 @@ void ImportNotesJob::restoreData()
         restoreResources();
     }
     Q_EMIT info(i18n("Data restored."));
+    QTimer::singleShot(0, this, &ImportNotesJob::slotNextStep);
 }
 
 void ImportNotesJob::restoreResources()
