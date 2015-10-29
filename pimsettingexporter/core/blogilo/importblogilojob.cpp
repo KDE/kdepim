@@ -25,6 +25,7 @@
 
 #include <KZip>
 #include <QStandardPaths>
+#include <QTimer>
 
 ImportBlogiloJob::ImportBlogiloJob(QObject *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -41,13 +42,23 @@ void ImportBlogiloJob::start()
     Q_EMIT title(i18n("Start import Blogilo settings..."));
     createProgressDialog(i18n("Import Blogilo settings"));
     mArchiveDirectory = archive()->directory();
-    if (mTypeSelected & Utils::Config) {
-        restoreConfig();
+    initializeListStep();
+    QTimer::singleShot(0, this, &ImportBlogiloJob::slotNextStep);
+}
+
+void ImportBlogiloJob::slotNextStep()
+{
+    ++mIndex;
+    if (mIndex < mListStep.count()) {
+        const Utils::StoredType type = mListStep.at(mIndex);
+        if (type == Utils::Config) {
+            restoreConfig();
+        } else if (type == Utils::Data) {
+            restoreData();
+        }
+    } else {
+        Q_EMIT jobFinished();
     }
-    if (mTypeSelected & Utils::Data) {
-        restoreData();
-    }
-    Q_EMIT jobFinished();
 }
 
 void ImportBlogiloJob::restoreConfig()
@@ -56,6 +67,7 @@ void ImportBlogiloJob::restoreConfig()
     const QString blogiloStr(QStringLiteral("blogilorc"));
     restoreConfigFile(blogiloStr);
     Q_EMIT info(i18n("Config restored."));
+    QTimer::singleShot(0, this, &ImportBlogiloJob::slotNextStep);
 }
 
 void ImportBlogiloJob::restoreData()
@@ -67,5 +79,6 @@ void ImportBlogiloJob::restoreData()
         overwriteDirectory(blogiloPath, blogiloEntry);
     }
     Q_EMIT info(i18n("Data restored."));
+    QTimer::singleShot(0, this, &ImportBlogiloJob::slotNextStep);
 }
 
